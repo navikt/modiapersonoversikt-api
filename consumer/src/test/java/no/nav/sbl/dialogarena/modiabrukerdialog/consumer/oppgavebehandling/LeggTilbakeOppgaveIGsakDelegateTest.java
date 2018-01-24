@@ -18,6 +18,7 @@ import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.LagreOppgaveOptimistiskLa
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.OppgavebehandlingV3;
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.meldinger.WSEndreOppgave;
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.meldinger.WSLagreOppgaveRequest;
+import no.nav.tjeneste.virksomhet.tildeloppgave.v1.TildelOppgaveV1;
 import no.nav.virksomhet.tjenester.ruting.meldinger.v1.WSEnhet;
 import no.nav.virksomhet.tjenester.ruting.meldinger.v1.WSFinnAnsvarligEnhetForOppgavetypeRequest;
 import no.nav.virksomhet.tjenester.ruting.meldinger.v1.WSFinnAnsvarligEnhetForOppgavetypeResponse;
@@ -51,6 +52,7 @@ class LeggTilbakeOppgaveIGsakDelegateTest {
     private OppgaveV3 oppgaveServiceMock;
     private AnsattService ansattServiceMock;
     private OppgavebehandlingV3 oppgavebehandlingMock;
+    private TildelOppgaveV1 tildelOppgaveMock;
     private Ruting rutingMock;
     private SaksbehandlerInnstillingerService saksbehandlerInnstillingerService;
 
@@ -71,13 +73,14 @@ class LeggTilbakeOppgaveIGsakDelegateTest {
     @BeforeEach
     void before() {
         mockTjenester();
-        oppgaveBehandlingService = new OppgaveBehandlingServiceImpl(oppgavebehandlingMock, oppgaveServiceMock, ansattServiceMock, rutingMock);
+        oppgaveBehandlingService = new OppgaveBehandlingServiceImpl(oppgavebehandlingMock, tildelOppgaveMock, oppgaveServiceMock, ansattServiceMock, rutingMock);
     }
 
     private void mockTjenester() {
         oppgaveServiceMock = mock(OppgaveV3.class);
         ansattServiceMock = mockAnsattService();
         oppgavebehandlingMock = mock(OppgavebehandlingV3.class);
+        tildelOppgaveMock = mock(TildelOppgaveV1.class);
         rutingMock = mockRutingService();
         saksbehandlerInnstillingerService = mock(SaksbehandlerInnstillingerService.class);
     }

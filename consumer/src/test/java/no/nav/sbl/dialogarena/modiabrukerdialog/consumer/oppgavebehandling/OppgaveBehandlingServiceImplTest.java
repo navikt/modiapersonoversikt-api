@@ -18,6 +18,9 @@ import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.LagreOppgaveOptimistiskLa
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.OppgavebehandlingV3;
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.TildelOppgaveUgyldigInput;
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.meldinger.*;
+import no.nav.tjeneste.virksomhet.tildeloppgave.v1.TildelOppgaveV1;
+import no.nav.tjeneste.virksomhet.tildeloppgave.v1.WSTildelFlereOppgaverRequest;
+import no.nav.tjeneste.virksomhet.tildeloppgave.v1.WSTildelFlereOppgaverResponse;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -27,6 +30,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import static java.util.stream.Collectors.toSet;
+import static no.nav.sbl.dialogarena.common.collections.Collections.asSet;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.oppgavebehandling.OppgaveBehandlingServiceImpl.DEFAULT_ENHET;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.oppgavebehandling.OppgaveMockFactory.lagWSOppgave;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.oppgavebehandling.OppgaveMockFactory.mockHentOppgaveResponseMedTilordning;
@@ -35,6 +40,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -47,7 +53,7 @@ public class OppgaveBehandlingServiceImplTest {
     @Captor
     ArgumentCaptor<WSLagreOppgaveRequest> lagreOppgaveRequestCaptor;
     @Captor
-    ArgumentCaptor<WSTildelOppgaveRequest> tildelOppgaveRequestCaptor;
+    ArgumentCaptor<WSTildelFlereOppgaverRequest> tildelFlereOppgaverRequestCaptor;
     @Captor
     ArgumentCaptor<WSHentOppgaveRequest> hentOppgaveRequestCaptor;
 
@@ -59,9 +65,14 @@ public class OppgaveBehandlingServiceImplTest {
     private OppgaveV3 oppgaveWS;
     @Mock
     private OppgavebehandlingV3 oppgavebehandlingWS;
+    @Mock
+    private TildelOppgaveV1 tildelOppgaveWS;
 
     @InjectMocks
     private OppgaveBehandlingServiceImpl oppgaveBehandlingService;
+
+    private static final String OPPGAVE_ID_1 = "123";
+    private static final String OPPGAVE_ID_2 = "456";
 
     @Before
     public void init() {
@@ -82,24 +93,33 @@ public class OppgaveBehandlingServiceImplTest {
     }
 
     @Test
-    public void skalPlukkeOppgaveFraGsak() throws TildelOppgaveUgyldigInput, HentOppgaveOppgaveIkkeFunnet {
-        WSTildelOppgaveResponse tildelOppgaveResponse = new WSTildelOppgaveResponse();
-        tildelOppgaveResponse.setOppgaveId(lagWSOppgave().getOppgaveId());
+    public void skalPlukkeOppgaverFraGsak() throws TildelOppgaveUgyldigInput, HentOppgaveOppgaveIkkeFunnet {
+        WSTildelFlereOppgaverResponse tildelFlereOppgaverResponse = new WSTildelFlereOppgaverResponse()
+                .withOppgaveIder(Integer.valueOf(OPPGAVE_ID_1), Integer.valueOf(OPPGAVE_ID_2));
 
-        WSHentOppgaveResponse hentOppgaveResponse = new WSHentOppgaveResponse();
-        hentOppgaveResponse.setOppgave(lagWSOppgave());
+        WSHentOppgaveResponse hentOppgaveResponse1 = new WSHentOppgaveResponse()
+                .withOppgave(lagWSOppgave().withOppgaveId(OPPGAVE_ID_1));
+        WSHentOppgaveResponse hentOppgaveResponse2 = new WSHentOppgaveResponse()
+                .withOppgave(lagWSOppgave().withOppgaveId(OPPGAVE_ID_2));
 
-        when(oppgavebehandlingWS.tildelOppgave(any(WSTildelOppgaveRequest.class))).thenReturn(tildelOppgaveResponse);
-        when(oppgaveWS.hentOppgave(any(WSHentOppgaveRequest.class))).thenReturn(hentOppgaveResponse);
-        when(saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet()).thenReturn(SAKSBEHANDLERS_VALGTE_ENHET);
+        when(tildelOppgaveWS.tildelFlereOppgaver(any(WSTildelFlereOppgaverRequest.class)))
+                .thenReturn(tildelFlereOppgaverResponse);
+        when(oppgaveWS.hentOppgave(any(WSHentOppgaveRequest.class)))
+                .thenReturn(hentOppgaveResponse1, hentOppgaveResponse2);
+        when(saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet())
+                .thenReturn(SAKSBEHANDLERS_VALGTE_ENHET);
 
-        oppgaveBehandlingService.plukkOppgaveFraGsak(Temagruppe.ARBD, SAKSBEHANDLERS_VALGTE_ENHET);
-        verify(oppgavebehandlingWS).tildelOppgave(tildelOppgaveRequestCaptor.capture());
-        verify(oppgaveWS).hentOppgave(hentOppgaveRequestCaptor.capture());
-        assertNotNull(tildelOppgaveRequestCaptor.getValue().getSok());
-        assertThat(tildelOppgaveRequestCaptor.getValue().getSok().getFagomradeKodeListe().get(0), is("KNA"));
-        assertThat(tildelOppgaveRequestCaptor.getValue().getFilter().getOppgavetypeKodeListe().get(0), is("SPM_OG_SVR"));
-        assertThat(hentOppgaveRequestCaptor.getValue().getOppgaveId(), is(tildelOppgaveResponse.getOppgaveId()));
+        oppgaveBehandlingService.plukkOppgaverFraGsak(Temagruppe.ARBD, SAKSBEHANDLERS_VALGTE_ENHET);
+
+        verify(tildelOppgaveWS).tildelFlereOppgaver(tildelFlereOppgaverRequestCaptor.capture());
+        verify(oppgaveWS, times(2)).hentOppgave(hentOppgaveRequestCaptor.capture());
+        assertThat(hentOppgaveRequestCaptor.getAllValues().stream()
+                .map(WSHentOppgaveRequest::getOppgaveId)
+                .collect(toSet()),
+                is(asSet(OPPGAVE_ID_1, OPPGAVE_ID_2)));
+        assertNotNull(tildelFlereOppgaverRequestCaptor.getValue());
+        assertThat(tildelFlereOppgaverRequestCaptor.getValue().getFagomrade(), is("KNA"));
+        assertThat(tildelFlereOppgaverRequestCaptor.getValue().getOppgavetype(), is("SPM_OG_SVR"));
     }
 
     @Test

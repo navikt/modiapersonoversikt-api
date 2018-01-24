@@ -1,8 +1,8 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel;
 
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.SessionParametere;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.GrunnInfo;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Oppgave;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype;
@@ -29,7 +29,7 @@ import static java.util.stream.Collectors.toList;
 import static no.nav.modig.modia.utils.ComponentFinder.in;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.hasCssClassIf;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.Events.SporsmalOgSvar.*;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.URLParametere.*;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.URLParametere.BESVARES;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype.*;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.fortsettdialogpanel.LeggTilbakePanel.LEGG_TILBAKE_FERDIG;
 import static org.apache.commons.lang3.StringUtils.isBlank;
@@ -39,6 +39,8 @@ public class DialogPanel extends Panel {
     public static final String NY_DIALOG_LENKE_VALGT = "dialogpanel.ny.dialog.lenke.valgt";
     public static final String NY_DIALOG_AVBRUTT = "dialogpanel.ny.dialog.avbrutt";
     private static final String AKTIVT_PANEL_ID = "aktivtPanel";
+    private final DialogSession session;
+    private Oppgave oppgave;
 
     @Inject
     private HenvendelseUtsendingService henvendelseUtsendingService;
@@ -49,18 +51,17 @@ public class DialogPanel extends Panel {
 
     private final OppgavetilordningFeilet oppgavetilordningFeiletModal;
     private final GrunnInfo grunnInfo;
-    private String oppgaveIdFraParametere;
-    private String henvendelsesIdFraParametere;
-    private Boolean besvaresFraParametere;
+    private Boolean skalSvarePaaTraad;
     private Component aktivtPanel;
 
     public DialogPanel(String id, GrunnInfo grunnInfo) {
         super(id);
         this.grunnInfo = grunnInfo;
 
-        henvendelsesIdFraParametere = getHenvendelsesIdFraParametere();
-        oppgaveIdFraParametere = getOppgaveIdFraParametere();
-        besvaresFraParametere = getBesvaresFraParametere();
+        session = DialogSession.read(this);
+        oppgave = session.getOppgaveSomBesvares().orElseGet(session::getOppgaveFraUrl);
+        skalSvarePaaTraad = session.oppgaverBlePlukket();
+        session.withOppgaverBlePlukket(false);
 
         aktivtPanel = new NyDialogPanel(AKTIVT_PANEL_ID, grunnInfo);
         oppgavetilordningFeiletModal = new OppgavetilordningFeilet("oppgavetilordningModal");
@@ -70,31 +71,19 @@ public class DialogPanel extends Panel {
         settOppRiktigMeldingPanel();
     }
 
-    private String getHenvendelsesIdFraParametere() {
-        return (String) getSession().getAttribute(HENVENDELSEID);
-    }
-
-    private String getOppgaveIdFraParametere() {
-        return (String) getSession().getAttribute(OPPGAVEID);
-    }
-
-    private Boolean getBesvaresFraParametere() {
+    private Boolean getBesvaresFraSession() {
         String besvares = (String) getSession().getAttribute(BESVARES);
         return !isBlank(besvares) && Boolean.valueOf(besvares);
     }
 
     private void settOppRiktigMeldingPanel() {
-        if (!isBlank(henvendelsesIdFraParametere) && !isBlank(oppgaveIdFraParametere)) {
-            if (besvaresFraParametere) {
-                List<Melding> traad = henvendelseUtsendingService.hentTraad(grunnInfo.bruker.fnr, henvendelsesIdFraParametere,
+        if (oppgave != null && oppgave.henvendelseId != null) {
+            if (skalSvarePaaTraad) {
+
+                List<Melding> traad = henvendelseUtsendingService.hentTraad(grunnInfo.bruker.fnr, oppgave.henvendelseId,
                         saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet());
                 if (!traad.isEmpty() && !erEnkeltstaaendeSamtalereferat(traad)) {
-                    try {
-                        oppgaveBehandlingService.tilordneOppgaveIGsak(oppgaveIdFraParametere, Temagruppe.valueOf(traad.get(0).temagruppe), saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet());
-                        erstattDialogPanelMedFortsettDialogPanel(traad, oppgaveIdFraParametere);
-                    } catch (OppgaveBehandlingService.FikkIkkeTilordnet fikkIkkeTilordnet) {
-                        throw new RuntimeException(fikkIkkeTilordnet);
-                    }
+                    erstattDialogPanelMedFortsettDialogPanel(traad, oppgave.oppgaveId);
                     clearLokaleParameterVerdier();
                 }
             } else {
@@ -108,26 +97,30 @@ public class DialogPanel extends Panel {
         List<Melding> traad = henvendelseUtsendingService.hentTraad(grunnInfo.bruker.fnr, traadId,
                 saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet());
         String oppgaveId = null;
-        if (!isBlank(henvendelsesIdFraParametere) && !isBlank(oppgaveIdFraParametere)
-                && traadId.equals(henvendelsesIdFraParametere)
-                && !traad.isEmpty()
-                && !erEnkeltstaaendeSamtalereferat(traad)) {
-            oppgaveId = oppgaveIdFraParametere;
+
+        boolean harTrykketNyMeldingPaaAlleredePlukketOppgave = oppgave != null && traadId.equals(oppgave.henvendelseId);
+
+        if (harTrykketNyMeldingPaaAlleredePlukketOppgave && !erEnkeltstaaendeSamtalereferat(traad)) {
+            oppgaveId = oppgave.oppgaveId;
             clearLokaleParameterVerdier();
         } else {
             if (erEnkeltstaaendeSporsmalFraBruker(traad)) {
                 try {
                     Melding sporsmal = traad.get(0);
-                    String sporsmalOppgaveId = sporsmal.oppgaveId;
-                    oppgaveBehandlingService.tilordneOppgaveIGsak(sporsmalOppgaveId, Temagruppe.valueOf(sporsmal.temagruppe), saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet());
-                    oppgaveId = sporsmalOppgaveId;
+                    oppgaveBehandlingService.tilordneOppgaveIGsak(sporsmal.oppgaveId, Temagruppe.valueOf(sporsmal.temagruppe),
+                            saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet());
+                    oppgaveId = sporsmal.oppgaveId;
                 } catch (OppgaveBehandlingService.FikkIkkeTilordnet fikkIkkeTilordnet) {
                     oppgavetilordningFeiletModal.vis(target);
                 }
             }
         }
         erstattDialogPanelMedFortsettDialogPanel(traad, oppgaveId);
-        getSession().setAttribute(SessionParametere.SporsmalOgSvar.BESVARMODUS, traadId);
+        if (oppgaveId != null) {
+            session.withOppgaveSomBesvares(new Oppgave(oppgaveId, grunnInfo.bruker.fnr, traadId));
+        } else {
+            session.withOppgaveSomBesvares(null);
+        }
         target.add(aktivtPanel);
     }
 
@@ -162,9 +155,8 @@ public class DialogPanel extends Panel {
     }
 
     private void clearLokaleParameterVerdier() {
-        oppgaveIdFraParametere = null;
-        henvendelsesIdFraParametere = null;
-        besvaresFraParametere = false;
+        oppgave = null;
+        skalSvarePaaTraad = false;
     }
 
     @RunOnEvents({NY_DIALOG_LENKE_VALGT})
@@ -188,6 +180,6 @@ public class DialogPanel extends Panel {
 
     @RunOnEvents({SVAR_AVBRUTT, LEGG_TILBAKE_UTFORT, MELDING_SENDT_TIL_BRUKER})
     public void unsetBesvartModus() {
-        getSession().setAttribute(SessionParametere.SporsmalOgSvar.BESVARMODUS, null);
+        session.withOppgaveSomBesvares(null);
     }
 }

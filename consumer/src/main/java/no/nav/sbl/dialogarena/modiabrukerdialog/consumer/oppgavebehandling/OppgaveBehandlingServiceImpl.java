@@ -6,25 +6,31 @@ import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.LeggTilbakeOppgaveIGsakRequest;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveBehandlingService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.AnsattService;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
 import no.nav.tjeneste.virksomhet.oppgave.v3.HentOppgaveOppgaveIkkeFunnet;
 import no.nav.tjeneste.virksomhet.oppgave.v3.OppgaveV3;
 import no.nav.tjeneste.virksomhet.oppgave.v3.informasjon.oppgave.WSOppgave;
 import no.nav.tjeneste.virksomhet.oppgave.v3.meldinger.WSHentOppgaveRequest;
+import no.nav.tjeneste.virksomhet.oppgave.v3.meldinger.WSHentOppgaveResponse;
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.LagreOppgaveOppgaveIkkeFunnet;
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.LagreOppgaveOptimistiskLasing;
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.OppgavebehandlingV3;
-import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.TildelOppgaveUgyldigInput;
-import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.meldinger.*;
+import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.meldinger.WSEndreOppgave;
+import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.meldinger.WSFerdigstillOppgaveBolkRequest;
+import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.meldinger.WSLagreOppgaveRequest;
+import no.nav.tjeneste.virksomhet.tildeloppgave.v1.TildelOppgaveV1;
+import no.nav.tjeneste.virksomhet.tildeloppgave.v1.WSTildelFlereOppgaverRequest;
 import no.nav.virksomhet.tjenester.ruting.v1.Ruting;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
+import java.util.List;
+import java.util.Objects;
 
 import static java.util.Arrays.asList;
+import static java.util.Collections.emptyList;
+import static java.util.stream.Collectors.toList;
 import static no.nav.brukerdialog.security.context.SubjectHandler.getSubjectHandler;
-import static no.nav.modig.lang.option.Optional.none;
 import static no.nav.modig.lang.option.Optional.optional;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe.*;
 import static org.apache.commons.lang3.StringUtils.equalsIgnoreCase;
@@ -41,13 +47,15 @@ public class OppgaveBehandlingServiceImpl implements OppgaveBehandlingService {
     public static final String KONTAKT_NAV = "KNA";
 
     private final OppgavebehandlingV3 oppgavebehandlingWS;
+    private final TildelOppgaveV1 tildelOppgaveWS;
     private final OppgaveV3 oppgaveWS;
     private final AnsattService ansattWS;
     private LeggTilbakeOppgaveIGsakDelegate leggTilbakeOppgaveIGsakDelegate;
 
     @Inject
-    public OppgaveBehandlingServiceImpl(OppgavebehandlingV3 oppgavebehandlingWS, OppgaveV3 oppgaveWS, AnsattService ansattWS, Ruting ruting) {
+    public OppgaveBehandlingServiceImpl(OppgavebehandlingV3 oppgavebehandlingWS, TildelOppgaveV1 tildelOppgaveWS, OppgaveV3 oppgaveWS,  AnsattService ansattWS, Ruting ruting) {
         this.oppgavebehandlingWS = oppgavebehandlingWS;
+        this.tildelOppgaveWS = tildelOppgaveWS;
         this.oppgaveWS = oppgaveWS;
         this.ansattWS = ansattWS;
         this.leggTilbakeOppgaveIGsakDelegate = new LeggTilbakeOppgaveIGsakDelegate(this, ruting);
@@ -59,15 +67,11 @@ public class OppgaveBehandlingServiceImpl implements OppgaveBehandlingService {
     }
 
     @Override
-    public Optional<Oppgave> plukkOppgaveFraGsak(Temagruppe temagruppe, String saksbehandlersValgteEnhet) {
+    public List<Oppgave> plukkOppgaverFraGsak(Temagruppe temagruppe, String saksbehandlersValgteEnhet) {
         int enhetsId = Integer.parseInt(saksbehandlersValgteEnhet);
-        Optional<WSOppgave> tilordnetOptional = tildelEldsteLedigeOppgave(temagruppe, enhetsId, saksbehandlersValgteEnhet);
-        if (tilordnetOptional.isSome()) {
-            WSOppgave tilordnet = tilordnetOptional.get();
-            return optional(new Oppgave(tilordnet.getOppgaveId(), tilordnet.getGjelder().getBrukerId(), tilordnet.getHenvendelseId()));
-        } else {
-            return none();
-        }
+        return tildelEldsteLedigeOppgaver(temagruppe, enhetsId).stream()
+                .map(oppgave -> new Oppgave(oppgave.getOppgaveId(), oppgave.getGjelder().getBrukerId(), oppgave.getHenvendelseId()))
+                .collect(toList());
     }
 
     @Override
@@ -164,39 +168,36 @@ public class OppgaveBehandlingServiceImpl implements OppgaveBehandlingService {
         }
     }
 
-    private Optional<WSOppgave> tildelEldsteLedigeOppgave(Temagruppe temagruppe, int enhetsId, String saksbehandlersValgteEnhet) {
-        WSOppgave oppgave;
+    private List<WSOppgave> tildelEldsteLedigeOppgaver(Temagruppe temagruppe, int enhetsId) {
+        List<WSOppgave> oppgaver;
+        List<Integer> tildelteOppgaveIder = tildelOppgaveWS.tildelFlereOppgaver(
+                new WSTildelFlereOppgaverRequest()
+                        .withUnderkategori(underkategoriKode(temagruppe))
+                        .withOppgavetype(SPORSMAL_OG_SVAR)
+                        .withFagomrade(KONTAKT_NAV)
+                        .withIkkeTidligereTildeltSaksbehandlerId(getSubjectHandler().getUid())
+                        .withTildeltAvEnhetId(enhetsId)
+                        .withTildelesSaksbehandlerId(getSubjectHandler().getUid()))
+                .getOppgaveIder();
+
+        if (tildelteOppgaveIder == null) {
+            return emptyList();
+        }
+        return tildelteOppgaveIder.stream()
+                .map(this::hentOppgave)
+                .filter(Objects::nonNull)
+                .map(WSHentOppgaveResponse::getOppgave)
+                .collect(toList());
+    }
+
+    private WSHentOppgaveResponse hentOppgave(Integer oppgaveId) {
         try {
-            String tildeltOppgaveId = oppgavebehandlingWS.tildelOppgave(
-                    new WSTildelOppgaveRequest()
-                            .withFilter(new WSTildelOppgaveFilter()
-                                    .withOppgavetypeKodeListe(SPORSMAL_OG_SVAR)
-                                    .withUnderkategoriKode(underkategoriKode(temagruppe)))
-                            .withSok(new WSTildelOppgaveSok()
-                                    .withAnsvarligEnhetId(enhetFor(temagruppe, saksbehandlersValgteEnhet))
-                                    .withFagomradeKodeListe(KONTAKT_NAV))
-                            .withIkkeTidligereTildeltSaksbehandlerId(getSubjectHandler().getUid())
-                            .withTildeltAvEnhetId(enhetsId)
-                            .withTildelesSaksbehandlerId(getSubjectHandler().getUid()))
-                    .getOppgaveId();
-
-            if (tildeltOppgaveId == null) {
-                return none();
-            }
-            oppgave = oppgaveWS.hentOppgave(
-                    new WSHentOppgaveRequest()
-                            .withOppgaveId(tildeltOppgaveId))
-                    .getOppgave();
-
-        } catch (TildelOppgaveUgyldigInput exc) {
-            logger.warn(exc.getFaultInfo().getErrorMessage());
-            return none();
+            return oppgaveWS.hentOppgave(new WSHentOppgaveRequest()
+                    .withOppgaveId(String.valueOf(oppgaveId)));
         } catch (HentOppgaveOppgaveIkkeFunnet exc) {
             logger.warn(exc.getFaultInfo().getErrorMessage());
-            return none();
+            return null;
         }
-
-        return optional(oppgave);
     }
 
     private String enhetFor(Temagruppe temagruppe, String saksbehandlersValgteEnhet) {

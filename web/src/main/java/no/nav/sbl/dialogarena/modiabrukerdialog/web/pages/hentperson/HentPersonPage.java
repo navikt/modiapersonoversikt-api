@@ -61,7 +61,7 @@ public class HentPersonPage extends BasePage {
         Hode hode = new Hode("hode", oppgiBegrunnelseModal, personKjerneinfoServiceBi, urlFnr);
         add(
                 hode,
-                new PlukkOppgavePanel("plukkOppgave"),
+                new PlukkOppgavePanel("plukkOppgaver"),
                 new PersonsokPanel("personsokPanel").setVisible(true),
                 oppgiBegrunnelseModal
         );
@@ -168,17 +168,9 @@ public class HentPersonPage extends BasePage {
         send(getPage(), DEPTH, new NamedEventPayload(HENTPERSON_CLEAR_MESSAGES, query));
     }
 
-    /**
-     * Hente forskjellige teksten fra en payload (JSONobjekt).
-     *
-     * @param query
-     * @param jsonField
-     * @return
-     * @throws JSONException
-     */
-    protected String getTextFromPayload(String query, String jsonField) throws JSONException {
-        return getJsonField(query, jsonField);
-    }
+	protected String getTextFromPayload(String query, String jsonField) throws JSONException {
+		return getJsonField(query, jsonField);
+	}
 
     private String getJsonField(String query, String field) throws JSONException {
         JSONObject jsonObject = new JSONObject(query);

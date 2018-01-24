@@ -12,12 +12,13 @@ import no.nav.modig.modia.lamell.*;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.Events;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.GrunnInfo;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Oppgave;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.lameller.oversikt.OversiktLerret;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.DialogSession;
 import no.nav.sbl.dialogarena.sak.lamell.SaksoversiktLerret;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.GsakService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.HenvendelseBehandlingService;
-import no.nav.sbl.dialogarena.sporsmalogsvar.domain.InnboksProps;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.Innboks;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.InnboksVM;
 import no.nav.sbl.dialogarena.utbetaling.lamell.UtbetalingLerret;
@@ -25,7 +26,6 @@ import no.nav.sbl.dialogarena.varsel.lamell.VarselLerret;
 import no.nav.sykmeldingsperioder.SykmeldingsperiodePanel;
 import no.nav.sykmeldingsperioder.foreldrepenger.ForeldrepengerPanel;
 import no.nav.sykmeldingsperioder.pleiepenger.PleiepengerPanel;
-import org.apache.commons.collections15.Predicate;
 import org.apache.wicket.Session;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.event.IEvent;
@@ -44,15 +44,11 @@ import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.lang.option.Optional.none;
 import static no.nav.modig.lang.option.Optional.optional;
 import static no.nav.modig.modia.lamell.DefaultLamellFactory.newLamellFactory;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.SessionParametere.SporsmalOgSvar.BESVARMODUS;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.URLParametere.*;
 import static no.nav.sykmeldingsperioder.widget.SykepengerWidgetServiceImpl.*;
 
-/**
- * Holder på lameller og tilhørende lerreter
- */
 public class LamellContainer extends TokenLamellPanel implements Serializable {
 
+    private final DialogSession dialogSession;
     private Logger logger = LoggerFactory.getLogger(LamellContainer.class);
 
     public static final String LAMELL_KONTRAKTER = "kontrakter";
@@ -84,12 +80,13 @@ public class LamellContainer extends TokenLamellPanel implements Serializable {
     @Named("pep")
     private EnforcementPoint pep;
 
-    public LamellContainer(String id, String fnrFromRequest, Session session, GrunnInfo grunnInfo) {
-        super(id, createLamellFactories(fnrFromRequest, grunnInfo));
-        this.fnrFromRequest = fnrFromRequest;
+    public LamellContainer(String id, Session session, GrunnInfo grunnInfo) {
+        super(id, createLamellFactories(grunnInfo.bruker));
+        this.fnrFromRequest = grunnInfo.bruker.fnr;
 
-        addNewFactory(createUtbetalingLamell(fnrFromRequest));
-        addNewFactory(createMeldingerLamell(fnrFromRequest, session));
+        addNewFactory(createUtbetalingLamell(grunnInfo.bruker));
+        this.dialogSession = DialogSession.read(session);
+        addNewFactory(createMeldingerLamell(grunnInfo.bruker, dialogSession));
     }
 
     @Override
@@ -130,7 +127,7 @@ public class LamellContainer extends TokenLamellPanel implements Serializable {
     }
 
     public boolean hasUnsavedChanges() {
-        return on(getLameller()).exists(IS_LAMELL_MODIFIED);
+        return on(getLameller()).exists(Lamell::isModified);
     }
 
     private String createLamellIfMissing(String type, String itemId) {
@@ -177,33 +174,33 @@ public class LamellContainer extends TokenLamellPanel implements Serializable {
         return SYKEPENGER_TYPE.equalsIgnoreCase(type) || FORELDREPENGER_TYPE.equalsIgnoreCase(type) || PLEIEPENGER_TYPE.equalsIgnoreCase(type);
     }
 
-    private static List<LamellFactory> createLamellFactories(final String fnrFromRequest, final GrunnInfo grunnInfo) {
+    private static List<LamellFactory> createLamellFactories(final GrunnInfo.Bruker bruker) {
         List<LamellFactory> lamellFactories = new ArrayList<>();
-        lamellFactories.add(createOversiktLamell(fnrFromRequest));
-        lamellFactories.add(createKontrakterLamell(fnrFromRequest));
-        lamellFactories.add(createBrukerprofilLamell(fnrFromRequest));
-        lamellFactories.add(createSaksoversiktLamell(fnrFromRequest, grunnInfo));
-        lamellFactories.add(createVarslingsLamell(fnrFromRequest));
+        lamellFactories.add(createOversiktLamell(bruker));
+        lamellFactories.add(createKontrakterLamell(bruker));
+        lamellFactories.add(createBrukerprofilLamell(bruker));
+        lamellFactories.add(createSaksoversiktLamell(bruker));
+        lamellFactories.add(createVarslingsLamell(bruker));
 
         return lamellFactories;
     }
 
-    private static LamellFactory createBrukerprofilLamell(final String fnrFromRequest) {
-        return newLamellFactory(LAMELL_BRUKERPROFIL, "B", (LerretFactory) (id, name) -> new BrukerprofilPanel(id, Model.of(fnrFromRequest)));
+    private static LamellFactory createBrukerprofilLamell(final GrunnInfo.Bruker bruker) {
+        return newLamellFactory(LAMELL_BRUKERPROFIL, "B", (LerretFactory) (id, name) -> new BrukerprofilPanel(id, Model.of(bruker.fnr)));
     }
 
-    private static LamellFactory createKontrakterLamell(final String fnrFromRequest) {
-        return newLamellFactory(LAMELL_KONTRAKTER, "T", (LerretFactory) (id, name) -> new GenericLerret(id, new KontrakterPanel(PANEL, Model.of(fnrFromRequest))));
+    private static LamellFactory createKontrakterLamell(final GrunnInfo.Bruker bruker) {
+        return newLamellFactory(LAMELL_KONTRAKTER, "T", (LerretFactory) (id, name) -> new GenericLerret(id, new KontrakterPanel(PANEL, Model.of(bruker.fnr))));
     }
 
-    private static LamellFactory createOversiktLamell(final String fnrFromRequest) {
-        return newLamellFactory(LAMELL_OVERSIKT, "O", false, (LerretFactory) (id, name) -> new OversiktLerret(id, fnrFromRequest));
+    private static LamellFactory createOversiktLamell(final GrunnInfo.Bruker bruker) {
+        return newLamellFactory(LAMELL_OVERSIKT, "O", false, (LerretFactory) (id, name) -> new OversiktLerret(id, bruker.fnr));
     }
 
-    private static LamellFactory createUtbetalingLamell(final String fnrFromRequest) {
+    private static LamellFactory createUtbetalingLamell(final GrunnInfo.Bruker bruker) {
         return newLamellFactory(LAMELL_UTBETALINGER, "U", true, (LerretFactory) (id, name) -> new AjaxLazyLoadLerret(id, name) {
 
-            final UtbetalingLerret utbetalinglerret = new UtbetalingLerret("content", fnrFromRequest);
+            final UtbetalingLerret utbetalinglerret = new UtbetalingLerret("content", bruker.fnr);
 
             @Override
             public Lerret getLazyLoadComponent(String markupId) {
@@ -212,34 +209,36 @@ public class LamellContainer extends TokenLamellPanel implements Serializable {
         });
     }
 
-    private static LamellFactory createSaksoversiktLamell(final String fnrFromRequest, GrunnInfo grunnInfo) {
+    private static LamellFactory createSaksoversiktLamell(final GrunnInfo.Bruker bruker) {
         String norgUrl = System.getProperty("server.norg2-frontend.url");
-        return newLamellFactory(LAMELL_SAKSOVERSIKT, "S", true, (LerretFactory) (id, name) -> new SaksoversiktLerret(id, fnrFromRequest, grunnInfo.bruker.geografiskTilknytning, grunnInfo.bruker.diskresjonskode, norgUrl, grunnInfo.bruker.navn));
+        return newLamellFactory(LAMELL_SAKSOVERSIKT, "S", true, (LerretFactory) (id, name) -> new SaksoversiktLerret(id, bruker.fnr, bruker.geografiskTilknytning, bruker.diskresjonskode, norgUrl, bruker.navn));
     }
 
-    private static LamellFactory createVarslingsLamell(final String fnrFromRequest) {
-        return newLamellFactory(LAMELL_VARSLING, "V", true, (LerretFactory) (id, name) -> new VarselLerret(id, fnrFromRequest));
+    private static LamellFactory createVarslingsLamell(final GrunnInfo.Bruker bruker) {
+        return newLamellFactory(LAMELL_VARSLING, "V", true, (LerretFactory) (id, name) -> new VarselLerret(id, bruker.fnr));
     }
 
-    private LamellFactory createMeldingerLamell(final String fnrFromRequest, final Session session) {
-        innboksVM = new InnboksVM(fnrFromRequest, henvendelseBehandlingService, pep, saksbehandlerInnstillingerService);
-        InnboksProps props = new InnboksProps(
-                optional((String) session.getAttribute(HENVENDELSEID)),
-                optional((String) session.getAttribute(OPPGAVEID)),
-                optional((String) session.getAttribute(BESVARMODUS)),
-                optional(Boolean.valueOf((String) session.getAttribute(BESVARES))));
+    private LamellFactory createMeldingerLamell(final GrunnInfo.Bruker bruker, final DialogSession session) {
+        innboksVM = new InnboksVM(bruker.fnr, henvendelseBehandlingService, pep, saksbehandlerInnstillingerService);
 
-        if (props.henvendelseId.isSome()) {
-            innboksVM.setSessionHenvendelseId(props.henvendelseId.get());
+        innboksVM.tildelteOppgaver = session.getPlukkedeOppgaver();
+
+        java.util.Optional<Oppgave> oppgaveSomBesvares = session.getOppgaveSomBesvares();
+
+        oppgaveSomBesvares.ifPresent((oppgave) -> {
+            innboksVM.setSessionHenvendelseId(oppgave.henvendelseId);
+            assert oppgave.oppgaveId != null;
+            if (gsakService.oppgaveKanManuelltAvsluttes(oppgave.oppgaveId)) {
+                innboksVM.setSessionOppgaveId(oppgave.oppgaveId);
+            }
+            innboksVM.traadBesvares = oppgave.henvendelseId;
+        });
+
+        if (!oppgaveSomBesvares.isPresent() && session.getOppgaveFraUrl() != null) {
+            innboksVM.setSessionHenvendelseId(session.getOppgaveFraUrl().henvendelseId);
+            innboksVM.setSessionOppgaveId(session.getOppgaveFraUrl().oppgaveId);
         }
-        if (props.oppgaveId.isSome() && gsakService.oppgaveKanManuelltAvsluttes(props.oppgaveId.get())) {
-            innboksVM.setSessionOppgaveId(props.oppgaveId.get());
-        }
-        if (props.oppgaveId.isSome() && props.henvendelseId.isSome() && props.fortsettModus.getOrElse(false)) {
-            innboksVM.traadBesvares = props.henvendelseId.get();
-        } else if (props.besvarModus.isSome()) {
-            innboksVM.traadBesvares = props.besvarModus.get();
-        }
+
         return newLamellFactory(LAMELL_MELDINGER, "M", (LerretFactory) (id, name) -> new AjaxLazyLoadLerret(id, name) {
             @Override
             public Lerret getLazyLoadComponent(String markupId) {
@@ -248,10 +247,12 @@ public class LamellContainer extends TokenLamellPanel implements Serializable {
         });
     }
 
-    private static final Predicate<Lamell> IS_LAMELL_MODIFIED = Lamell::isModified;
-
     @RunOnEvents({Events.SporsmalOgSvar.SVAR_AVBRUTT, Events.SporsmalOgSvar.LEGG_TILBAKE_UTFORT, Events.SporsmalOgSvar.MELDING_SENDT_TIL_BRUKER, Events.SporsmalOgSvar.FERDIGSTILT_UTEN_SVAR})
     public void unsetBesvartModus(AjaxRequestTarget target) {
+        DialogSession.read(this)
+                .withOppgaveSomBesvares(null)
+                .getPlukkedeOppgaver()
+                .removeIf(o -> o.henvendelseId.equals(innboksVM.traadBesvares));
         innboksVM.traadBesvares = null;
         innboksVM.setSessionHenvendelseId(null);
         innboksVM.setSessionOppgaveId(null);

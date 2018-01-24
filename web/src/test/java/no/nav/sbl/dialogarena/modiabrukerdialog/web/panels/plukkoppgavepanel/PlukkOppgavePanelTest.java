@@ -1,6 +1,5 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.plukkoppgavepanel;
 
-import no.nav.modig.lang.option.Optional;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Oppgave;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
@@ -9,6 +8,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.HenvendelseUtse
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.WicketPageTest;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.PersonPageMockContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.PersonPage;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.DialogSession;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.fortsettdialogpanel.FortsettDialogPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.nydialogpanel.NyDialogPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.service.plukkoppgave.PlukkOppgaveService;
@@ -19,17 +19,16 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import javax.inject.Inject;
-import java.io.Serializable;
 import java.util.List;
 
 import static java.util.Arrays.asList;
-import static no.nav.modig.lang.option.Optional.optional;
+import static java.util.Collections.emptyList;
+import static java.util.Collections.singletonList;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.ofType;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.withId;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe.ARBD;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype.SPORSMAL_SKRIFTLIG;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.PersonPage.*;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.plukkoppgavepanel.PlukkOppgavePanel.TEMAGRUPPE_ATTR;
 import static org.apache.wicket.authorization.IAuthorizationStrategy.ALLOW_ALL;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
@@ -62,24 +61,20 @@ public class PlukkOppgavePanelTest extends WicketPageTest {
 
     @Test
     public void plukkerOppgaveOgSetterSessionAttributes() {
-        when(plukkOppgaveService.plukkOppgave(any(Temagruppe.class), anyString())).thenReturn(optional(new Oppgave("oppgaveId", "fnr", "henvendelseId")));
+        when(plukkOppgaveService.plukkOppgaver(any(Temagruppe.class), anyString())).thenReturn(singletonList(new Oppgave("oppgaveId", "fnr", "henvendelseId")));
 
         wicket.goToPageWith(new PlukkOppgavePanel("plukkoppgave"))
                 .inForm(withId("plukkOppgaveForm"))
                 .select("temagruppe", 0)
-                .submitWithAjaxButton(withId("plukkOppgave"))
+                .submitWithAjaxButton(withId("plukkOppgaver"))
                 .should().beOn(PersonPage.class)
                 .should().containComponent(ofType(FortsettDialogPanel.class))
                 .should().notContainComponent(ofType(NyDialogPanel.class));
 
-        Serializable temagruppeAttribute = wicket.tester.getSession().getAttribute(TEMAGRUPPE_ATTR);
-        Serializable fnrAttribute = wicket.tester.getSession().getAttribute(VALGT_OPPGAVE_FNR_ATTR);
-        Serializable oppgaveidAttribute = wicket.tester.getSession().getAttribute(VALGT_OPPGAVE_ID_ATTR);
-        Serializable henvendelseidAttribute = wicket.tester.getSession().getAttribute(VALGT_OPPGAVE_HENVENDELSEID_ATTR);
-        assertThat(temagruppeAttribute, is(notNullValue()));
-        assertThat(fnrAttribute, is(notNullValue()));
-        assertThat(oppgaveidAttribute, is(notNullValue()));
-        assertThat(henvendelseidAttribute, is(notNullValue()));
+        DialogSession session = DialogSession.read(wicket.tester.getSession());
+        assertThat(session.getTemagruppe(), is(notNullValue()));
+        assertThat(session.getPlukkedeOppgaver().isEmpty(), is(false));
+        assertThat(session.getOppgaveSomBesvares().isPresent(), is(true));
     }
 
     @Test
@@ -87,7 +82,7 @@ public class PlukkOppgavePanelTest extends WicketPageTest {
         PlukkOppgavePanel plukkoppgave = new PlukkOppgavePanel("plukkoppgave");
         wicket.goToPageWith(plukkoppgave)
                 .inForm(withId("plukkOppgaveForm"))
-                .submitWithAjaxButton(withId("plukkOppgave"));
+                .submitWithAjaxButton(withId("plukkOppgaver"));
 
         List<String> errorMessages = wicket.get().errorMessages();
         assertThat(errorMessages, hasItem(plukkoppgave.getString("temagruppe.Required")));
@@ -98,29 +93,30 @@ public class PlukkOppgavePanelTest extends WicketPageTest {
         reset(plukkOppgaveService);
 
         wicket.goToPageWith(new PlukkOppgavePanel("plukkoppgave"));
-        wicket.tester.getSession().setAttribute(VALGT_OPPGAVE_FNR_ATTR, "fnr");
-        wicket.tester.getSession().setAttribute(VALGT_OPPGAVE_ID_ATTR, "oppgaveid");
-        wicket.tester.getSession().setAttribute(VALGT_OPPGAVE_HENVENDELSEID_ATTR, "henvendelseid");
+
+        Oppgave oppgave1 = new Oppgave("oppgave1", "fnr1", "henvendelse1");
+        DialogSession session = DialogSession.read(wicket.tester.getSession())
+                .withPlukkedeOppgaver(singletonList(oppgave1));
 
         wicket.inForm(withId("plukkOppgaveForm"))
                 .select("temagruppe", 0)
-                .submitWithAjaxButton(withId("plukkOppgave"))
+                .submitWithAjaxButton(withId("plukkOppgaver"))
                 .should().beOn(PersonPage.class)
                 .should().containComponent(ofType(FortsettDialogPanel.class))
                 .should().notContainComponent(ofType(NyDialogPanel.class));
 
-        verify(plukkOppgaveService, never()).plukkOppgave(any(Temagruppe.class), anyString());
+        verify(plukkOppgaveService, never()).plukkOppgaver(any(Temagruppe.class), anyString());
     }
 
     @Test
     public void girFeilmeldingHvisIngenOppgaverPaaTema() {
-        when(plukkOppgaveService.plukkOppgave(any(Temagruppe.class), anyString())).thenReturn(Optional.<Oppgave>none());
+        when(plukkOppgaveService.plukkOppgaver(any(Temagruppe.class), anyString())).thenReturn(emptyList());
 
         PlukkOppgavePanel plukkoppgave = new PlukkOppgavePanel("plukkoppgave");
         wicket.goToPageWith(plukkoppgave)
                 .inForm(withId("plukkOppgaveForm"))
                 .select("temagruppe", 0)
-                .submitWithAjaxButton(withId("plukkOppgave"));
+                .submitWithAjaxButton(withId("plukkOppgaver"));
 
         List<String> errorMessages = wicket.get().errorMessages();
         assertThat(errorMessages, hasItem(plukkoppgave.getString("plukkoppgave.ingenoppgaverpaatemagruppe")));
@@ -130,24 +126,25 @@ public class PlukkOppgavePanelTest extends WicketPageTest {
     public void brukerIkkeOppgavePaaSesjonHvisDenErFerdigstilt() {
         reset(plukkOppgaveService);
 
+        Oppgave oppgave1 = new Oppgave("oppgave1", "fnr1", "henvendelse1");
+        Oppgave oppgave2 = new Oppgave("oppgave2", "fnr2", "henvendelse2");
+
         when(plukkOppgaveService.oppgaveErFerdigstilt(anyString())).thenReturn(true);
-        when(plukkOppgaveService.plukkOppgave(any(Temagruppe.class), anyString())).thenReturn(optional(new Oppgave("oppgave2", "fnr2", "henvendelse2")));
+        when(plukkOppgaveService.plukkOppgaver(any(Temagruppe.class), anyString())).thenReturn(singletonList(oppgave1));
+
+        DialogSession session = DialogSession.read(wicket.tester.getSession())
+                .withPlukkedeOppgaver(singletonList(oppgave2));
 
         wicket.goToPageWith(new PlukkOppgavePanel("plukkoppgave"));
-        wicket.tester.getSession().setAttribute(VALGT_OPPGAVE_FNR_ATTR, "fnr");
-        wicket.tester.getSession().setAttribute(VALGT_OPPGAVE_ID_ATTR, "oppgaveid");
-        wicket.tester.getSession().setAttribute(VALGT_OPPGAVE_HENVENDELSEID_ATTR, "henvendelseid");
 
         wicket.inForm(withId("plukkOppgaveForm"))
                 .select("temagruppe", 0)
-                .submitWithAjaxButton(withId("plukkOppgave"))
+                .submitWithAjaxButton(withId("plukkOppgaver"))
                 .should().beOn(PersonPage.class)
                 .should().containComponent(ofType(FortsettDialogPanel.class))
                 .should().notContainComponent(ofType(NyDialogPanel.class));
 
-        verify(plukkOppgaveService, times(1)).plukkOppgave(any(Temagruppe.class), anyString());
-        assertThat(wicket.tester.getSession().getAttribute(VALGT_OPPGAVE_ID_ATTR), is((Serializable) "oppgave2"));
-        assertThat(wicket.tester.getSession().getAttribute(VALGT_OPPGAVE_FNR_ATTR), is((Serializable) "fnr2"));
-        assertThat(wicket.tester.getSession().getAttribute(VALGT_OPPGAVE_HENVENDELSEID_ATTR), is((Serializable) "henvendelse2"));
+        verify(plukkOppgaveService, times(1)).plukkOppgaver(any(Temagruppe.class), anyString());
+        assertThat(session.getOppgaveSomBesvares().orElse(null), is(oppgave1));
     }
 }

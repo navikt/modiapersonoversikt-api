@@ -1,6 +1,8 @@
 package no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain;
 
-public class Oppgave {
+import java.io.Serializable;
+
+public class Oppgave implements Serializable {
 
     public final String oppgaveId, fnr, henvendelseId;
 
@@ -9,4 +11,5 @@ public class Oppgave {
         this.fnr = fnr;
         this.henvendelseId = henvendelseId;
     }
+
 }

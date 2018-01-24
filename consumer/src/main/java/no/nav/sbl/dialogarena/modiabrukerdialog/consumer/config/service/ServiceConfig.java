@@ -40,6 +40,7 @@ import no.nav.tjeneste.virksomhet.oppgave.v3.OppgaveV3;
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.OppgavebehandlingV3;
 import no.nav.tjeneste.virksomhet.organisasjonenhetkontaktinformasjon.v1.binding.OrganisasjonEnhetKontaktinformasjonV1;
 import no.nav.tjeneste.virksomhet.pensjonsak.v1.PensjonSakV1;
+import no.nav.tjeneste.virksomhet.tildeloppgave.v1.TildelOppgaveV1;
 import no.nav.virksomhet.tjenester.ruting.v1.Ruting;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -81,9 +82,10 @@ public class ServiceConfig {
     }
 
     @Bean
-    public OppgaveBehandlingService oppgaveBehandlingService(OppgavebehandlingV3 oppgavebehandlingV3, OppgaveV3 oppgaveV3,
+    public OppgaveBehandlingService oppgaveBehandlingService(OppgavebehandlingV3 oppgavebehandlingV3, TildelOppgaveV1 tildelOppgaveV1,OppgaveV3 oppgaveV3,
+
                                                              AnsattService ansattService, Ruting ruting) {
-        return new OppgaveBehandlingServiceImpl(oppgavebehandlingV3, oppgaveV3, ansattService, ruting);
+        return new OppgaveBehandlingServiceImpl(oppgavebehandlingV3, tildelOppgaveV1, oppgaveV3, ansattService, ruting);
     }
 
     @Bean

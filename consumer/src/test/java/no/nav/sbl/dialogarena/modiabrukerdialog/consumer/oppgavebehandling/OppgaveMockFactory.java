@@ -8,7 +8,7 @@ import static org.joda.time.DateTime.now;
 class OppgaveMockFactory {
 
     public static final String ANSVARLIG_SAKSBEHANDLER = "z554455";
-    public static final String OPPGAVE_ID = "oppgaveid";
+    public static final String OPPGAVE_ID = "123123123";
 
     static WSHentOppgaveResponse mockHentOppgaveResponseMedTilordning() {
         return new WSHentOppgaveResponse().withOppgave(lagWSOppgave().withBeskrivelse("opprinnelig beskrivelse"));

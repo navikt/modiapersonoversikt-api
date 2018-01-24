@@ -27,6 +27,7 @@ import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.LagreOppgaveOptimistiskLa
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.OppgavebehandlingV3;
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.meldinger.WSEndreOppgave;
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.meldinger.WSLagreOppgaveRequest;
+import no.nav.tjeneste.virksomhet.tildeloppgave.v1.TildelOppgaveV1;
 import no.nav.virksomhet.tjenester.ruting.meldinger.v1.WSFinnAnsvarligEnhetForOppgavetypeResponse;
 import no.nav.virksomhet.tjenester.ruting.v1.Ruting;
 import org.junit.jupiter.api.*;
@@ -54,6 +55,7 @@ class OppgaveControllerTest {
 
     private OppgaveController oppgaveController;
     private OppgavebehandlingV3 oppgaveBehandlingMock;
+    private TildelOppgaveV1 tildelOppgaveMock;
     private OppgaveV3 oppgaveWSMock;
     private Ruting rutingMock;
     private AnsattServiceImpl ansattWSMock;
@@ -73,13 +75,14 @@ class OppgaveControllerTest {
             HentNAVAnsattEnhetListeFaultGOSYSNAVAnsattIkkeFunnetMsg {
         SubjectHandlerUtil.setInnloggetSaksbehandler(SAKSBEHANDLERS_IDENT);
         setupMocks();
-        OppgaveBehandlingServiceImpl oppgaveBehandlingService = new OppgaveBehandlingServiceImpl(oppgaveBehandlingMock, oppgaveWSMock, ansattWSMock, rutingMock);
+        OppgaveBehandlingServiceImpl oppgaveBehandlingService = new OppgaveBehandlingServiceImpl(oppgaveBehandlingMock, tildelOppgaveMock, oppgaveWSMock, ansattWSMock, rutingMock);
 
         oppgaveController = new OppgaveController(oppgaveBehandlingService);
     }
 
     private void setupMocks() throws HentOppgaveOppgaveIkkeFunnet, HentNAVAnsattEnhetListeFaultGOSYSGeneriskMsg, HentNAVAnsattEnhetListeFaultGOSYSNAVAnsattIkkeFunnetMsg, HentNAVAnsattFaultGOSYSGeneriskfMsg, HentNAVAnsattFaultGOSYSNAVAnsattIkkeFunnetMsg {
         oppgaveBehandlingMock = mock(OppgavebehandlingV3.class);
+        tildelOppgaveMock = mock(TildelOppgaveV1.class);
         oppgaveWSMock = mockOppgaveWs();
         rutingMock = mockRuting();
         ansattWSMock = new AnsattServiceImpl(mockGosysNavAnsatt());
