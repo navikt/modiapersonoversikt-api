@@ -135,21 +135,17 @@
   }
 
   .checkboks {
-    & + .skjemaelement__label {
-      width: auto;
-      &:before {
-        content: '';
-        width: 35px;
-        height: 35px;
-      }
+    & + .skjemaelement__label:before {
+      content: '';
+      left: 7px;
+      top: 10px;
     }
     &:checked + .skjemaelement__label:before {
       content: '';
-      background-size: 45px;
+      left: 7px;
+      top: 10px;
       box-shadow: 0 0 2px white;
     }
-    min-height: 0;
-    padding: 0;
   }
 
   .velgPanel .feedbacklabel{
