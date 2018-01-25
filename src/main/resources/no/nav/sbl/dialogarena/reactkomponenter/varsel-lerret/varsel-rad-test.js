@@ -1,7 +1,7 @@
 /* eslint no-unused-expressions:0 */
 import './../test-config';
 import React from 'react';
-import { shallow } from 'enzyme';
+import { shallow, mount } from 'enzyme';
 import { expect } from 'chai';
 import sinon from 'sinon';
 import ResourceMap from '../utils/resource-map';
@@ -19,7 +19,7 @@ describe('VarselRad', () => {
         };
         varsel = {
             mottattTidspunkt: new Date(2016, 0, 1),
-            meldingListe: [{ kanal: 'kanal1' }, { kanal: 'kanal2' }]
+            meldingListe: [{ kanal: 'kanal1', utsendingsTidspunkt: '0' }, { kanal: 'kanal2', utsendingsTidspunkt: '1' }]
         };
     });
 
@@ -33,7 +33,7 @@ describe('VarselRad', () => {
     });
 
     it('kaller ekspandert i storen ved klikk', () => {
-        const element = shallow(<VarselRad store={store} varsel={varsel} />);
+        const element = mount(<VarselRad store={store} varsel={varsel} />);
 
         element.find('button').simulate('click');
 

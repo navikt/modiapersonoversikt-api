@@ -17,7 +17,8 @@ describe('VarselRadElement', () => {
         melding = {
             kanal: 'EPOST',
             epostemne: 'test-emne',
-            innhold: 'test-innhold'
+            innhold: 'test-innhold',
+            mottakerInformasjon: ''
         };
     });
 
