@@ -69,6 +69,7 @@ public class FortsettDialogPanel extends GenericPanel<HenvendelseVM> {
     private final String oppgaveId;
     private final Melding sporsmal;
     private final List<Melding> svar;
+    private final boolean flereOppgaverBlePlukket;
     private final WebMarkupContainer svarContainer;
     private final LeggTilbakePanel leggTilbakePanel;
     private final LeggTilbakeDelvisSvarPanel leggTilbakeDelvisSvarPanel;
@@ -83,12 +84,13 @@ public class FortsettDialogPanel extends GenericPanel<HenvendelseVM> {
     public static final String FLERE_HENVENDELSER_REACT_MODULE = "FlereHenvendelser";
     public static final String FLERE_HENVENDELSER_WICKET_CONTAINER_ID = "reactFlereHenvendelserAlertContainer";
 
-    public FortsettDialogPanel(String id, GrunnInfo grunnInfo, final List<Melding> traad, String oppgaveId) {
+    public FortsettDialogPanel(String id, GrunnInfo grunnInfo, final List<Melding> traad, String oppgaveId, boolean flereOppgaverBlePlukket) {
         super(id, new CompoundPropertyModel<>(new HenvendelseVM()));
         this.grunnInfo = grunnInfo;
         this.oppgaveId = oppgaveId;
         this.sporsmal = traad.get(0);
         this.svar = new ArrayList<>(traad.subList(1, traad.size()));
+        this.flereOppgaverBlePlukket = flereOppgaverBlePlukket;
         getModelObject().oppgaveTilknytning = erTilknyttetAnsatt(traad);
         settOppModellMedDefaultKanalOgTemagruppe(getModelObject());
         setOutputMarkupId(true);
@@ -113,7 +115,7 @@ public class FortsettDialogPanel extends GenericPanel<HenvendelseVM> {
 
     private Map<String,Object> flereHenvendelserProps() {
         Map<String, Object> props = new HashMap<>();
-        props.put("flereOppgaverErTildeltFraBruker", true); //TODO Send inn flagg her
+        props.put("flereOppgaverErTildeltFraBruker", flereOppgaverBlePlukket);
         return props;
     }
 

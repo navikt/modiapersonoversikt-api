@@ -164,6 +164,7 @@ public class PersonPage extends BasePage {
             lamellContainer.setStartLamell(LAMELL_MELDINGER);
         }
         HentPersonPage.configureModalWindow(oppgiBegrunnelseModal, pageParameters);
+        session.withOppgaverBlePlukket(false);
     }
 
     private String hentFodselsnummerFraRequest() {

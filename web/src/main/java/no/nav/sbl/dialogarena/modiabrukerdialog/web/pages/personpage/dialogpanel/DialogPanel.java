@@ -61,7 +61,6 @@ public class DialogPanel extends Panel {
         session = DialogSession.read(this);
         oppgave = session.getOppgaveSomBesvares().orElseGet(session::getOppgaveFraUrl);
         skalSvarePaaTraad = session.oppgaverBlePlukket();
-        session.withOppgaverBlePlukket(false);
 
         aktivtPanel = new NyDialogPanel(AKTIVT_PANEL_ID, grunnInfo);
         oppgavetilordningFeiletModal = new OppgavetilordningFeilet("oppgavetilordningModal");
@@ -140,7 +139,7 @@ public class DialogPanel extends Panel {
     }
 
     private void erstattDialogPanelMedFortsettDialogPanel(List<Melding> traad, String oppgaveId) {
-        aktivtPanel = aktivtPanel.replaceWith(new FortsettDialogPanel(AKTIVT_PANEL_ID, grunnInfo, traad, oppgaveId));
+        aktivtPanel = aktivtPanel.replaceWith(new FortsettDialogPanel(AKTIVT_PANEL_ID, grunnInfo, traad, oppgaveId, session.getPlukkedeOppgaver().size() > 1));
     }
 
     private void erstattDialogPanelMedKvitteringspanel(AjaxRequestTarget target) {
