@@ -100,7 +100,7 @@
         <!-- Modia-komponenter-->
         <reactkomponenter.version>8520e2e0cf339bde0d68e15c49cb4e35c10a875a</reactkomponenter.version>
         <personsok.version>4.0.2</personsok.version>
-        <kjerneinfo.versjon>6.0.10</kjerneinfo.versjon>
+        <kjerneinfo.versjon>6.0.11</kjerneinfo.versjon>
         <utbetaling.version>4.0.0</utbetaling.version>
         <saksoversikt.version>9.0.2.1</saksoversikt.version>
         <varsling.modia.version>2.0</varsling.modia.version>
