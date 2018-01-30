@@ -285,7 +285,7 @@ function settled(promises) {
 
                             handler(markupId, fnr, redirectModal);
                         }, function (error) {
-                            decoratorFeilmelding = error ? 'Feil ved tilkobling av til eventdistribution' : '';
+                            decoratorFeilmelding = error ? 'Feil ved tilkobling til eventdistribution' : '';
                             decoratorConfig = lagDecoratorConfig(fnr, valgtEnhet, autoSubmit, decoratorFeilmelding);
                             window.renderDecoratorHead(decoratorConfig, markupId);
                         });
