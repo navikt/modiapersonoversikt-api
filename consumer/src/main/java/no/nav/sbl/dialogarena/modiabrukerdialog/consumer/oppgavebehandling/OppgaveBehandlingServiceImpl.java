@@ -19,6 +19,7 @@ import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.meldinger.WSFerdigstillOp
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.meldinger.WSLagreOppgaveRequest;
 import no.nav.tjeneste.virksomhet.tildeloppgave.v1.TildelOppgaveV1;
 import no.nav.tjeneste.virksomhet.tildeloppgave.v1.WSTildelFlereOppgaverRequest;
+import no.nav.tjeneste.virksomhet.tildeloppgave.v1.WSTildelFlereOppgaverResponse;
 import no.nav.virksomhet.tjenester.ruting.v1.Ruting;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -169,34 +170,32 @@ public class OppgaveBehandlingServiceImpl implements OppgaveBehandlingService {
     }
 
     private List<WSOppgave> tildelEldsteLedigeOppgaver(Temagruppe temagruppe, int enhetsId) {
-        List<WSOppgave> oppgaver;
-        List<Integer> tildelteOppgaveIder = tildelOppgaveWS.tildelFlereOppgaver(
+        WSTildelFlereOppgaverResponse response = tildelOppgaveWS.tildelFlereOppgaver(
                 new WSTildelFlereOppgaverRequest()
                         .withUnderkategori(underkategoriKode(temagruppe))
                         .withOppgavetype(SPORSMAL_OG_SVAR)
                         .withFagomrade(KONTAKT_NAV)
                         .withIkkeTidligereTildeltSaksbehandlerId(getSubjectHandler().getUid())
                         .withTildeltAvEnhetId(enhetsId)
-                        .withTildelesSaksbehandlerId(getSubjectHandler().getUid()))
-                .getOppgaveIder();
+                        .withTildelesSaksbehandlerId(getSubjectHandler().getUid()));
 
-        if (tildelteOppgaveIder == null) {
+        if (response == null) {
             return emptyList();
         }
-        return tildelteOppgaveIder.stream()
-                .map(this::hentOppgave)
+
+        return response.getOppgaveIder().stream()
+                .map(this::hentTildeltOppgave)
                 .filter(Objects::nonNull)
                 .map(WSHentOppgaveResponse::getOppgave)
                 .collect(toList());
     }
 
-    private WSHentOppgaveResponse hentOppgave(Integer oppgaveId) {
+    private WSHentOppgaveResponse hentTildeltOppgave(Integer oppgaveId) {
         try {
             return oppgaveWS.hentOppgave(new WSHentOppgaveRequest()
                     .withOppgaveId(String.valueOf(oppgaveId)));
         } catch (HentOppgaveOppgaveIkkeFunnet exc) {
-            logger.warn(exc.getFaultInfo().getErrorMessage());
-            return null;
+            throw new IllegalStateException(exc);
         }
     }
 

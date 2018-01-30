@@ -39,8 +39,6 @@ public class DialogPanel extends Panel {
     public static final String NY_DIALOG_LENKE_VALGT = "dialogpanel.ny.dialog.lenke.valgt";
     public static final String NY_DIALOG_AVBRUTT = "dialogpanel.ny.dialog.avbrutt";
     private static final String AKTIVT_PANEL_ID = "aktivtPanel";
-    private final DialogSession session;
-    private Oppgave oppgave;
 
     @Inject
     private HenvendelseUtsendingService henvendelseUtsendingService;
@@ -51,8 +49,10 @@ public class DialogPanel extends Panel {
 
     private final OppgavetilordningFeilet oppgavetilordningFeiletModal;
     private final GrunnInfo grunnInfo;
+    private final DialogSession session;
     private Boolean skalSvarePaaTraad;
     private Component aktivtPanel;
+    private Oppgave oppgave;
 
     public DialogPanel(String id, GrunnInfo grunnInfo) {
         super(id);
@@ -68,11 +68,6 @@ public class DialogPanel extends Panel {
         add(aktivtPanel, oppgavetilordningFeiletModal);
 
         settOppRiktigMeldingPanel();
-    }
-
-    private Boolean getBesvaresFraSession() {
-        String besvares = (String) getSession().getAttribute(BESVARES);
-        return !isBlank(besvares) && Boolean.valueOf(besvares);
     }
 
     private void settOppRiktigMeldingPanel() {
@@ -177,8 +172,4 @@ public class DialogPanel extends Panel {
         target.add(aktivtPanel);
     }
 
-    @RunOnEvents({SVAR_AVBRUTT, LEGG_TILBAKE_UTFORT, MELDING_SENDT_TIL_BRUKER})
-    public void unsetBesvartModus() {
-        session.withOppgaveSomBesvares(null);
-    }
 }

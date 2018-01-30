@@ -93,7 +93,7 @@ public class OppgaveBehandlingServiceImplTest {
     }
 
     @Test
-    public void skalPlukkeOppgaverFraGsak() throws TildelOppgaveUgyldigInput, HentOppgaveOppgaveIkkeFunnet {
+    public void skalPlukkeOppgaverFraGsak() throws HentOppgaveOppgaveIkkeFunnet {
         WSTildelFlereOppgaverResponse tildelFlereOppgaverResponse = new WSTildelFlereOppgaverResponse()
                 .withOppgaveIder(Integer.valueOf(OPPGAVE_ID_1), Integer.valueOf(OPPGAVE_ID_2));
 

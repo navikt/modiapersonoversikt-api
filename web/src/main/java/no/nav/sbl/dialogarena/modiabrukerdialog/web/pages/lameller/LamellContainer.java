@@ -227,7 +227,6 @@ public class LamellContainer extends TokenLamellPanel implements Serializable {
 
         oppgaveSomBesvares.ifPresent((oppgave) -> {
             innboksVM.setSessionHenvendelseId(oppgave.henvendelseId);
-            assert oppgave.oppgaveId != null;
             if (gsakService.oppgaveKanManuelltAvsluttes(oppgave.oppgaveId)) {
                 innboksVM.setSessionOppgaveId(oppgave.oppgaveId);
             }
@@ -251,8 +250,9 @@ public class LamellContainer extends TokenLamellPanel implements Serializable {
     public void unsetBesvartModus(AjaxRequestTarget target) {
         DialogSession.read(this)
                 .withOppgaveSomBesvares(null)
+                .withOppgaverBlePlukket(false)
                 .getPlukkedeOppgaver()
-                .removeIf(o -> o.henvendelseId.equals(innboksVM.traadBesvares));
+                .removeIf(oppgave -> oppgave.henvendelseId.equals(innboksVM.traadBesvares));
         innboksVM.traadBesvares = null;
         innboksVM.setSessionHenvendelseId(null);
         innboksVM.setSessionOppgaveId(null);

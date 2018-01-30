@@ -110,23 +110,6 @@ public class DialogPanelTest extends WicketPageTest {
                 .should().containComponent(ofType(FortsettDialogPanel.class));
     }
 
-//    @Test
-//    public void tilordnerOppgaveHvisOppgaveIdOgHenvendelseIdOgBesvaresParametereErSatt() throws FikkIkkeTilordnet {
-//        DialogSession.read(wicket.tester.getSession())
-//                .withURLParametre(
-//                        new PageParameters()
-//                                .set(OPPGAVEID, OPPGAVEID_VERDI)
-//                                .set(HENVENDELSEID, HENVENDELSEID_VERDI)
-//                                .set(BESVARES, true)
-//                );
-//
-//        wicket.goToPageWith(new DialogPanel(ID, getMockGrunnInfo()))
-//                .should().containComponent(ofType(FortsettDialogPanel.class));
-//
-//        verify(oppgaveBehandlingServiceMock, times(1))
-//                .tilordneOppgaveIGsak(eq(OPPGAVEID_VERDI), any(Temagruppe.class), anyString());
-//    }
-
     @Test
     @SuppressWarnings("unchecked")
     public void fortsettDialogPanelHarRiktigOppgaveIdVedSVAR_PAA_MELDINGEventUtenParametereSatt() {

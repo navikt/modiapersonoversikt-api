@@ -17,6 +17,7 @@ import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.URLPara
 public class DialogSession implements Serializable {
 
     private static final String DIALOGSESSION = "dialogsession";
+
     private Temagruppe temagruppe;
     private List<Oppgave> plukkedeOppgaver = emptyList();
     private boolean oppgaverBlePlukket;
@@ -28,13 +29,13 @@ public class DialogSession implements Serializable {
     }
 
     public static DialogSession read(Session session) {
-        DialogSession s = (DialogSession) session.getAttribute(DIALOGSESSION);
-        if (s != null) {
-            return s;
+        DialogSession dialogSession = (DialogSession) session.getAttribute(DIALOGSESSION);
+        if (dialogSession != null) {
+            return dialogSession;
         }
-        s = new DialogSession();
-        session.setAttribute(DIALOGSESSION, s);
-        return s;
+        dialogSession = new DialogSession();
+        session.setAttribute(DIALOGSESSION, dialogSession);
+        return dialogSession;
     }
 
     public DialogSession withPlukkedeOppgaver(List<Oppgave> oppgaver) {

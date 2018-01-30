@@ -82,9 +82,6 @@ public class PersonPage extends BasePage {
 
     private static final Logger logger = getLogger(PersonPage.class);
 
-    public static final String VALGT_OPPGAVE_HENVENDELSEID_ATTR = "valgt-oppgave-henvendelseid";
-    public static final String VALGT_OPPGAVE_ID_ATTR = "valgt-oppgave-id";
-    public static final String VALGT_OPPGAVE_FNR_ATTR = "valgt-oppgave-fnr";
     public static final String ERROR = "error";
     public static final String SOKT_FNR = "soektfnr";
     public static final String SIKKERHETSTILTAK = "sikkerhetstiltak";
@@ -105,12 +102,6 @@ public class PersonPage extends BasePage {
     private EnforcementPoint pep;
     @Inject
     private PersonKjerneinfoServiceBi personKjerneinfoServiceBi;
-    @Inject
-    private SaksbehandlerInnstillingerService saksbehandlerInnstillingerService;
-    @Inject
-    private LDAPService ldapService;
-    @Inject
-    private OrganisasjonEnhetV2Service organisasjonEnhetV2Service;
     @Inject
     private GrunninfoService grunninfoService;
 
