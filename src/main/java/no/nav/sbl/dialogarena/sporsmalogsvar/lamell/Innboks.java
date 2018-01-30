@@ -4,6 +4,8 @@ import no.nav.modig.modia.events.FeedItemPayload;
 import no.nav.modig.modia.lamell.Lerret;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.Events;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Traad;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.LeggTilbakeOppgaveIGsakRequest;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveBehandlingService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
@@ -23,10 +25,11 @@ import org.apache.wicket.request.resource.JavaScriptResourceReference;
 
 import javax.inject.Inject;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import static java.util.Collections.singletonList;
+import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
 import static no.nav.modig.modia.events.InternalEvents.FEED_ITEM_CLICKED;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
@@ -103,10 +106,13 @@ public class Innboks extends Lerret {
                 target.add(innboksButtonContainer);
             }
         };
-        slaaSammenTraader.addCallback("oppdater", Void.class, (target, data) -> {
-            // TODO
+        slaaSammenTraader.addCallback("slaaSammen", List.class, (target, data) -> {
+            System.out.println(data);
+            // TODO Sjekk at trådene finnes i tildelteOppgaver
+            // TODO kall ny tjeneste i Henvendelse for å slå sammen trådene
+            // TODO Ferdigstill alle unntatt én oppgave (den eldste?) i Gsak
 //            innboksVM.oppdaterMeldinger();
-//            target.add(alleMeldingerPanel, traaddetaljerPanel);
+            target.add(alleMeldingerPanel, traaddetaljerPanel);
         });
         innboksButtonContainer.add(slaaSammenTraaderToggleButton);
 
@@ -136,7 +142,19 @@ public class Innboks extends Lerret {
     }
 
     private Map<String, Object> getSlaaSammenTraaderProps() {
-        Map<String, Object> props = getMeldingerSokProps();
+        Map<String, Object> props = new HashMap<>();
+        List<Traad> traader = innboksVM.getTraader().values().stream()
+                .map(traadVM -> new Traad(
+                        traadVM.getEldsteMelding().getTraadId(),
+                        traadVM.getMeldinger().size(),
+                        traadVM.getMeldinger().stream()
+                                .map(meldingVM -> meldingVM.melding)
+                                .collect(toList())))
+                .filter(traad -> innboksVM.tildelteOppgaver.stream()
+                        .anyMatch(oppgave -> traad.traadId.equals(oppgave.henvendelseId)))
+                .filter(traad -> traad.meldinger.get(0).meldingstype.equals(Meldingstype.SPORSMAL_SKRIFTLIG))
+                .collect(toList());
+        props.put("traader", traader);
         return props;
     }
 
