@@ -19,9 +19,6 @@ import no.nav.modig.wicket.events.NamedEventPayload;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.Events;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.GrunnInfo;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.ldap.LDAPService;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.organisasjonsEnhetV2.OrganisasjonEnhetV2Service;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
 import no.nav.personsok.PersonsokPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.GrunninfoService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.BasePage;
@@ -116,9 +113,7 @@ public class PersonPage extends BasePage {
         sjekkTilgang(fnr, pageParameters);
         grunnInfo = grunninfoService.hentGrunninfo(fnr);
 
-        boolean eksternRequest = !pageParameters.get(OPPGAVEID).isEmpty() || !pageParameters.get(HENVENDELSEID).isEmpty();
-
-        if (eksternRequest) {
+        if (erRequestFraGosys(pageParameters)) {
             session.withURLParametre(pageParameters);
         }
         pageParameters.remove(OPPGAVEID, HENVENDELSEID, BESVARMODUS);
@@ -156,6 +151,10 @@ public class PersonPage extends BasePage {
         }
         HentPersonPage.configureModalWindow(oppgiBegrunnelseModal, pageParameters);
         session.withOppgaverBlePlukket(false);
+    }
+
+    private boolean erRequestFraGosys(PageParameters pageParameters) {
+        return !pageParameters.get(OPPGAVEID).isEmpty() || !pageParameters.get(HENVENDELSEID).isEmpty();
     }
 
     private String hentFodselsnummerFraRequest() {

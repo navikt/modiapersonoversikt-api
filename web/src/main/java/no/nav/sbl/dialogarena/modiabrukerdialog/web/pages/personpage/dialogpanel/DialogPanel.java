@@ -29,10 +29,8 @@ import static java.util.stream.Collectors.toList;
 import static no.nav.modig.modia.utils.ComponentFinder.in;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.hasCssClassIf;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.Events.SporsmalOgSvar.*;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.URLParametere.BESVARES;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype.*;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.fortsettdialogpanel.LeggTilbakePanel.LEGG_TILBAKE_FERDIG;
-import static org.apache.commons.lang3.StringUtils.isBlank;
 
 public class DialogPanel extends Panel {
 
