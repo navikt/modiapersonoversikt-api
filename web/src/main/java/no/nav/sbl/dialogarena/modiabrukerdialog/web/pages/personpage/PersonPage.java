@@ -1,16 +1,13 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage;
 
+import no.nav.brukerdialog.security.tilgangskontroll.policy.pep.EnforcementPoint;
 import no.nav.kjerneinfo.consumer.fim.person.PersonKjerneinfoServiceBi;
 import no.nav.kjerneinfo.consumer.fim.person.to.HentKjerneinformasjonRequest;
 import no.nav.kjerneinfo.consumer.fim.person.to.RecoverableAuthorizationException;
-import no.nav.kjerneinfo.domain.person.Personfakta;
-import no.nav.kjerneinfo.hent.panels.HentPersonPanel;
-import no.nav.kjerneinfo.web.pages.kjerneinfo.panel.eksternelenker.EksterneLenkerPanel;
 import no.nav.kjerneinfo.web.pages.kjerneinfo.panel.kjerneinfo.PersonKjerneinfoPanel;
 import no.nav.kjerneinfo.web.pages.kjerneinfo.panel.tab.AbstractTabPanel;
 import no.nav.kjerneinfo.web.pages.kjerneinfo.panel.tab.VisitkortTabListePanel;
 import no.nav.kjerneinfo.web.pages.kjerneinfo.panel.visittkort.VisittkortPanel;
-import no.nav.metrics.Timer;
 import no.nav.modig.core.exception.ApplicationException;
 import no.nav.modig.frontend.ConditionalCssResource;
 import no.nav.modig.modia.constants.ModiaConstants;
@@ -18,26 +15,28 @@ import no.nav.modig.modia.events.FeedItemPayload;
 import no.nav.modig.modia.events.LamellPayload;
 import no.nav.modig.modia.events.WidgetHeaderPayload;
 import no.nav.modig.modia.lamell.ReactSjekkForlatModal;
-import no.nav.modig.security.tilgangskontroll.policy.pep.EnforcementPoint;
 import no.nav.modig.wicket.events.NamedEventPayload;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.Events;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Person;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.AnsattEnhet;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.GrunnInfo;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.ldap.LDAPService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.organisasjonsEnhetV2.OrganisasjonEnhetV2Service;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.Feature;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.FeatureToggle;
 import no.nav.personsok.PersonsokPanel;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.GrunninfoService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.BasePage;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.hentperson.HentPersonPage;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.lameller.LamellContainer;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.DialogPanel;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.GrunnInfo;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.HenvendelseVM;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.visittkort.navkontor.NavKontorPanel;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.hode.Hode;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.hode.begrunnelse.ReactBegrunnelseModal;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.hode.jscallback.SokOppBrukerCallback;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.hode.jscallback.VoidCallback;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.plukkoppgavepanel.PlukkOppgavePanel;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.saksbehandlernavnpanel.SaksbehandlernavnPanel;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.saksbehandlerpanel.SaksbehandlerInnstillingerPanel;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.saksbehandlerpanel.SaksbehandlerInnstillingerTogglerPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.timeout.ReactTimeoutBoksModal;
 import no.nav.sbl.dialogarena.reactkomponenter.utils.wicket.ReactComponentCallback;
 import org.apache.commons.collections15.Closure;
@@ -52,7 +51,7 @@ import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.event.IEvent;
 import org.apache.wicket.extensions.markup.html.tabs.AbstractTab;
 import org.apache.wicket.markup.html.WebMarkupContainer;
-import org.apache.wicket.markup.html.form.Button;
+import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.CssResourceReference;
 import org.apache.wicket.request.resource.PackageResourceReference;
@@ -63,17 +62,15 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
-import static no.nav.metrics.MetricsFactory.createTimer;
-import static no.nav.modig.core.context.SubjectHandler.getSubjectHandler;
+import static no.nav.brukerdialog.security.tilgangskontroll.utils.AttributeUtils.actionId;
+import static no.nav.brukerdialog.security.tilgangskontroll.utils.AttributeUtils.resourceId;
+import static no.nav.brukerdialog.security.tilgangskontroll.utils.RequestUtils.forRequest;
+import static no.nav.metrics.MetricsFactory.createEvent;
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.modia.constants.ModiaConstants.HENT_PERSON_BEGRUNNET;
 import static no.nav.modig.modia.events.InternalEvents.*;
 import static no.nav.modig.modia.lamell.ReactSjekkForlatModal.getJavascriptSaveButtonFocus;
-import static no.nav.modig.security.tilgangskontroll.utils.AttributeUtils.actionId;
-import static no.nav.modig.security.tilgangskontroll.utils.AttributeUtils.resourceId;
-import static no.nav.modig.security.tilgangskontroll.utils.RequestUtils.forRequest;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.SessionParametere.SporsmalOgSvar.BESVARMODUS;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.URLParametere.HENVENDELSEID;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.URLParametere.URL_TIL_SESSION_PARAMETERE;
@@ -108,29 +105,31 @@ public class PersonPage extends BasePage {
 
     private LamellContainer lamellContainer;
     private ReactSjekkForlatModal redirectPopup;
+    private ReactBegrunnelseModal oppgiBegrunnelseModal = null;
 
     @Inject
     @Named("pep")
     private EnforcementPoint pep;
-
     @Inject
     private PersonKjerneinfoServiceBi personKjerneinfoServiceBi;
-
     @Inject
     private SaksbehandlerInnstillingerService saksbehandlerInnstillingerService;
     @Inject
     private LDAPService ldapService;
-
     @Inject
     private OrganisasjonEnhetV2Service organisasjonEnhetV2Service;
+    @Inject
+    private GrunninfoService grunninfoService;
 
     public PersonPage(PageParameters pageParameters) {
         super(pageParameters);
-        fnr = pageParameters.get("fnr").toString();
+        if (pageParameters.get("fnr").isEmpty()) {
+            fnr = hentFodselsnummerFraRequest();
+        } else {
+            fnr = pageParameters.get("fnr").toString();
+        }
         sjekkTilgang(fnr, pageParameters);
-        grunnInfo = new GrunnInfo(
-                hentBrukerInfo(fnr),
-                hentSaksbehandlerInfo());
+        grunnInfo = grunninfoService.hentGrunninfo(fnr);
 
         if (pageParameters.getNamedKeys().size() > 1) {//FNR er alltid i url
             clearSession();
@@ -147,28 +146,37 @@ public class PersonPage extends BasePage {
 
         lamellContainer = new LamellContainer("lameller", grunnInfo.bruker.fnr, getSession(), grunnInfo);
 
-        SaksbehandlerInnstillingerPanel saksbehandlerInnstillingerPanel = new SaksbehandlerInnstillingerPanel("saksbehandlerInnstillingerPanel");
         final boolean hasPesysTilgang = pep.hasAccess(forRequest(actionId(PEN_SAKSBEH_ACTION), resourceId("")));
+
+        oppgiBegrunnelseModal = new ReactBegrunnelseModal("oppgiBegrunnelseModal");
+        Hode hode = new Hode("hode", oppgiBegrunnelseModal, personKjerneinfoServiceBi, grunnInfo, null);
+        hode.addCallback("fjernperson", new VoidCallback((target, component) -> {
+            clearSession();
+            handleRedirect(target, new PageParameters(), HentPersonPage.class);
+        }));
+
         add(
-                new HentPersonPanel("searchPanel", false, pageParameters),
-                new Button("toggle-sok"),
-                new NullstillLink("nullstill"),
+                hode,
                 lamellContainer,
                 redirectPopup,
-                saksbehandlerInnstillingerPanel,
-                new SaksbehandlerInnstillingerTogglerPanel("saksbehandlerInnstillingerToggler", saksbehandlerInnstillingerPanel.getMarkupId()),
                 new PlukkOppgavePanel("plukkOppgave"),
-                new SaksbehandlernavnPanel("saksbehandlerNavn"),
                 new PersonsokPanel("personsokPanel").setVisible(true),
                 new VisittkortPanel("visittkort", fnr).setVisible(true),
-                new VisitkortTabListePanel("kjerneinfotabs", createTabs(), fnr, hasPesysTilgang),
+                new NavKontorPanel("brukersNavKontor", fnr),
+                new VisitkortTabListePanel("kjerneinfotabs", createTabs()),
                 new DialogPanel("dialogPanel", grunnInfo),
-                new ReactTimeoutBoksModal("timeoutBoks", fnr)
+                new ReactTimeoutBoksModal("timeoutBoks", fnr),
+                oppgiBegrunnelseModal
         );
 
         if (isNotBlank((String) getSession().getAttribute(HENVENDELSEID))) {
             lamellContainer.setStartLamell(LAMELL_MELDINGER);
         }
+        HentPersonPage.configureModalWindow(oppgiBegrunnelseModal, pageParameters);
+    }
+
+    private String hentFodselsnummerFraRequest() {
+        return RequestCycle.get().getRequest().getUrl().getSegments().get(1);
     }
 
     private void clearSession() {
@@ -180,43 +188,6 @@ public class PersonPage extends BasePage {
             }
         });
         session.removeAttribute(BESVARMODUS);
-    }
-
-    private GrunnInfo.Bruker hentBrukerInfo(String fnr) {
-        try {
-            HentKjerneinformasjonRequest request = new HentKjerneinformasjonRequest(fnr);
-            request.setBegrunnet(true);
-            no.nav.kjerneinfo.domain.person.Person person = personKjerneinfoServiceBi.hentKjerneinformasjon(request).getPerson();
-            Personfakta personfakta = person.getPersonfakta();
-
-            return new GrunnInfo.Bruker(person.getFodselsnummer().getNummer())
-                    .withPersonnavn(personfakta.getPersonnavn())
-                    .withEnhet(hentEnhet(personfakta));
-        } catch (Exception e) {
-            return new GrunnInfo.Bruker(fnr, "", "", "");
-        }
-    }
-
-    private GrunnInfo.Saksbehandler hentSaksbehandlerInfo() {
-        Person saksbehandler = ldapService.hentSaksbehandler(getSubjectHandler().getUid());
-        String valgtEnhet = saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet();
-
-        final Optional<AnsattEnhet> ansattEnhet = organisasjonEnhetV2Service.hentEnhetGittEnhetId(valgtEnhet, OrganisasjonEnhetV2Service.WSOppgavebehandlerfilter.KUN_OPPGAVEBEHANDLERE);
-        return new GrunnInfo.Saksbehandler(
-                ansattEnhet.map(ae -> ae.enhetNavn).orElse(""),
-                saksbehandler.fornavn,
-                saksbehandler.etternavn
-        );
-    }
-
-    private String hentEnhet(Personfakta personfakta) {
-        if (personfakta != null && personfakta.getAnsvarligEnhet() != null
-                && personfakta.getAnsvarligEnhet().getOrganisasjonsenhet() != null
-                && StringUtils.isNotEmpty(personfakta.getAnsvarligEnhet().getOrganisasjonsenhet().getOrganisasjonselementNavn())) {
-            return personfakta.getAnsvarligEnhet().getOrganisasjonsenhet().getOrganisasjonselementNavn();
-        } else {
-            return "";
-        }
     }
 
     @Override
@@ -233,16 +204,6 @@ public class PersonPage extends BasePage {
                 return new PersonKjerneinfoPanel(panelId, fnr);
             }
         });
-        tabs.add(new AbstractTabPanel("Lenker") {
-            @Override
-            public WebMarkupContainer getPanel(String panelId) {
-
-                boolean hasAaregTilgang = pep.hasAccess(forRequest(actionId("aaregles"), resourceId("")));
-                boolean hasPesysTilgang = pep.hasAccess(forRequest(actionId(PEN_SAKSBEH_ACTION), resourceId("")));
-                return new EksterneLenkerPanel(panelId, fnr, hasAaregTilgang, hasPesysTilgang);
-            }
-        });
-
         return tabs;
     }
 
@@ -275,7 +236,7 @@ public class PersonPage extends BasePage {
         redirectPopup.addCallback(ReactSjekkForlatModal.CONFIRM, Void.class, new ReactComponentCallback<Void>() {
             @Override
             public void onCallback(AjaxRequestTarget target, Void data) {
-                redirectPopup.hide(target);
+                redirectPopup.hide();
                 target.appendJavaScript(getJavascriptSaveButtonFocus());
             }
         });
@@ -307,9 +268,9 @@ public class PersonPage extends BasePage {
 
     @RunOnEvents(GOTO_HENT_PERSONPAGE)
     public void gotoHentPersonPage(AjaxRequestTarget target, String query) throws JSONException {
-        String errorText = getTextFromPayload(query, HentPersonPanel.JSON_ERROR_TEXT);
-        String sikkerhetstiltak = getTextFromPayload(query, HentPersonPanel.JSON_SIKKERHETTILTAKS_BESKRIVELSE);
-        String soktFnr = getTextFromPayload(query, HentPersonPanel.JSON_SOKT_FNR);
+        String errorText = getTextFromPayload(query, SokOppBrukerCallback.JSON_ERROR_TEXT);
+        String sikkerhetstiltak = getTextFromPayload(query, SokOppBrukerCallback.JSON_SIKKERHETTILTAKS_BESKRIVELSE);
+        String soktFnr = getTextFromPayload(query, SokOppBrukerCallback.JSON_SOKT_FNR);
 
         PageParameters pageParameters = new PageParameters();
         if (!StringUtils.isEmpty(sikkerhetstiltak)) {
@@ -323,16 +284,12 @@ public class PersonPage extends BasePage {
 
     @RunOnEvents(FEED_ITEM_CLICKED)
     public void feedItemClicked(AjaxRequestTarget target, IEvent<?> event, FeedItemPayload feedItemPayload) {
-        Timer timer = createTimer("hendelse.feeditem.klikk." + feedItemPayload.getType().toLowerCase());
-        timer.start();
+        createEvent("hendelse.feeditem.klikk." + feedItemPayload.getType().toLowerCase()).report();
         try {
             lamellContainer.handleFeedItemEvent(event, feedItemPayload);
         } catch (ApplicationException e) {
             logger.warn("Burde ikke skje, klarte ikke håndtere feeditemevent: {}", e.getMessage(), e);
             target.appendJavaScript("alert('" + e.getMessage() + "');");
-        } finally {
-            timer.stop();
-            timer.report();
         }
     }
 
@@ -348,6 +305,7 @@ public class PersonPage extends BasePage {
 
     @RunOnEvents(WIDGET_HEADER_CLICKED)
     public void widgetHeaderClicked(AjaxRequestTarget target, IEvent<?> event, WidgetHeaderPayload widgetHeaderPayload) {
+        createEvent("hendelse.widgetheader.klikk." + widgetHeaderPayload.getType().toLowerCase()).report();
         try {
             lamellContainer.handleWidgetHeaderEvent(event, widgetHeaderPayload);
         } catch (ApplicationException e) {
@@ -391,7 +349,7 @@ public class PersonPage extends BasePage {
     private void handleRedirect(AjaxRequestTarget target, PageParameters pageParameters, Class<? extends Page> redirectTo) {
         redirectPopup.setTarget(redirectTo, pageParameters);
         if (lamellContainer.hasUnsavedChanges()) {
-            redirectPopup.show(target);
+            redirectPopup.show();
         } else {
             redirectPopup.redirect();
         }

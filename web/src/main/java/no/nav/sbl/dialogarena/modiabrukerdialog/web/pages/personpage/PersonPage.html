@@ -1,39 +1,19 @@
 <!DOCTYPE html>
 <html lang="no" xmlns:wicket="http://wicket.apache.org">
 <wicket:head>
-    <title>Modia</title>
+    <title>Personoversikt</title>
 </wicket:head>
 <wicket:extend>
     <body>
+    <div wicket:id="hode" class="interndekorator"></div>
     <div id="modia-app">
         <div wicket:id="redirectModal">[]</div>
-        <section wicket:id="saksbehandlerInnstillingerPanel" aria-expanded="false"></section>
-        <section class="personpanel clearfix">
-            <section class="navbar menu-intern active">
-                <div class="sokeboks clearfix">
-                    <wicket:container wicket:id="searchPanel"/>
-                    <button wicket:id="toggle-sok" class="personsok-button" id="toggle-personsok"
-                            wicket:message="aria-label:personsok.apnetekst,
-						title:personsok.apnetekst,
-						data-apne:personsok.apnetekst,
-						data-lukke:personsok.lukketekst">
-                        <span>
-                            A
-                            <span class="personsok-pil"></span>
-                        </span>
-                    </button>
-                    <button class="nullstill-button" wicket:message="aria-label:hentperson.nullstillbruker,
-					title:hentperson.nullstillbruker" wicket:id="nullstill"><span></span>
-                    </button>
-                </div>
-                <div wicket:id="saksbehandlerInnstillingerToggler"></div>
-                <wicket:container wicket:id="plukkOppgave"/>
-                <wicket:container wicket:id="saksbehandlerNavn"/>
-            </section>
+            <wicket:container wicket:id="plukkOppgave"/>
             <div class="app-content">
                     <aside class="sidebar-venstre">
                         <div wicket:id="visittkort">[]</div>
-                         <div wicket:id="kjerneinfotabs" class="kjerneinfo clearfix flexbox row flex1">[]</div>
+                        <div wicket:id="brukersNavKontor" class="kjerneinfo">[]</div>
+                        <div wicket:id="kjerneinfotabs" class="kjerneinfo clearfix flexbox row flex1">[]</div>
                     </aside>
                     <div class="main-content intern">
                         <wicket:container wicket:id="personsokPanel"/>
@@ -43,7 +23,7 @@
                         <div wicket:id="dialogPanel"></div>
                     </aside>
             </div>
-        </section>
+        <!--</section>-->
         <wicket:container wicket:id="timeoutBoks"/>
 
     </div>
@@ -53,6 +33,7 @@
 
         <div class="content"></div>
     </div>
+    <wicket:container wicket:id="oppgiBegrunnelseModal"/>
     </body>
 </wicket:extend>
 </html>

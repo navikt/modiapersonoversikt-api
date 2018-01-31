@@ -7,7 +7,6 @@ import no.nav.kjerneinfo.consumer.fim.person.to.HentKjerneinformasjonResponse;
 import no.nav.kjerneinfo.domain.person.*;
 import no.nav.kjerneinfo.domain.person.fakta.AnsvarligEnhet;
 import no.nav.kjerneinfo.domain.person.fakta.Organisasjonsenhet;
-import no.nav.kjerneinfo.hent.panels.HentPersonPanel;
 import no.nav.kjerneinfo.web.pages.kjerneinfo.panel.tab.VisitkortTabListePanel;
 import no.nav.modig.modia.lamell.ReactSjekkForlatModal;
 import no.nav.modig.modia.lamell.TokenLamellPanel;
@@ -22,6 +21,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.HenvendelseUtse
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.WicketPageTest;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.PersonPageMockContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.lameller.LamellContainer;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.hode.jscallback.SokOppBrukerCallback;
 import org.apache.wicket.ajax.AjaxRequestHandler;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.json.JSONException;
@@ -84,11 +84,9 @@ public class PersonPageTest extends WicketPageTest {
     @Test
     public void lasterPersonPageUtenFeil() {
         wicket.goTo(PersonPage.class, with().param("fnr", testFnr))
-                .should().containComponent(withId("searchPanel").and(ofType(HentPersonPanel.class)))
                 .should().containComponent(withId("kjerneinfotabs").and(ofType(VisitkortTabListePanel.class)))
                 .should().containComponent(withId("personsokPanel").and(ofType(PersonsokPanel.class)))
-                .should().containComponent(withId("lameller").and(ofType(TokenLamellPanel.class)))
-                .should().containComponent(withId("nullstill").and(ofType(AbstractLink.class)));
+                .should().containComponent(withId("lameller").and(ofType(TokenLamellPanel.class)));
     }
 
     @Test
@@ -104,7 +102,7 @@ public class PersonPageTest extends WicketPageTest {
         AjaxRequestTarget target = new AjaxRequestHandler(personPage);
         personPage.refreshKjerneinfo(target, new PageParameters());
 
-        verify(redirectPopup, times(1)).show(target);
+        verify(redirectPopup, times(1)).show();
         verify(redirectPopup, times(0)).redirect();
     }
 
@@ -121,7 +119,7 @@ public class PersonPageTest extends WicketPageTest {
         AjaxRequestTarget target = new AjaxRequestHandler(personPage);
         personPage.refreshKjerneinfo(target, new PageParameters());
 
-        verify(redirectPopup, times(0)).show(target);
+        verify(redirectPopup, times(0)).show();
         verify(redirectPopup, times(1)).redirect();
     }
 
@@ -170,7 +168,7 @@ public class PersonPageTest extends WicketPageTest {
 
     @Test
     public void vellykketGotoHentPersonPageErrortextAndWrongFnr() {
-        wicket.goTo(PersonPage.class, with().param("soektfnr", "wrongFnr").param("error", "errorMessage"))
+        wicket.goTo(PersonPage.class, with().param("fnr", testFnr).param("soektfnr", "wrongFnr").param("error", "errorMessage"))
                 .should().containPatterns("wrongFnr")
                 .should().containPatterns("errorMessage");
 
@@ -187,41 +185,41 @@ public class PersonPageTest extends WicketPageTest {
 
     @Test
     public void shouldExtractSikkerhetstiltaksbeskrivelse() throws JSONException {
-        PersonPage page = new PersonPage(new PageParameters());
+        PersonPage page = new PersonPage(new PageParameters().add("fnr", testFnr));
         String sikkerhetstiltak =
                 page.getTextFromPayload("{\"errortext\":\"Feil tekst\",\"sikkerhettiltaksbeskrivelse\":\"Farlig.\"}",
-                        HentPersonPanel.JSON_SIKKERHETTILTAKS_BESKRIVELSE);
+                        SokOppBrukerCallback.JSON_SIKKERHETTILTAKS_BESKRIVELSE);
         assertEquals("Farlig.", sikkerhetstiltak);
     }
 
 
     @Test
     public void shouldExtractErrortext() throws JSONException {
-        PersonPage page = new PersonPage(new PageParameters());
+        PersonPage page = new PersonPage(new PageParameters().add("fnr", testFnr));
         String errorTxt =
                 page.getTextFromPayload("{\"errortext\":\"Feil tekst\",\"sikkerhettiltaksbeskrivelse\":\"Farlig.\"}",
-                        HentPersonPanel.JSON_ERROR_TEXT);
+                        SokOppBrukerCallback.JSON_ERROR_TEXT);
         assertEquals("Feil tekst", errorTxt);
     }
 
     @Test
     public void shouldExtractErrortextAndFnr() throws JSONException {
-        PersonPage page = new PersonPage(new PageParameters());
+        PersonPage page = new PersonPage(new PageParameters().add("fnr", "10108000398"));
         String errorTxt =
                 page.getTextFromPayload("{\"errortext\":\"Feil tekst\",\"soektfnr\":\"wrongFnr\"}",
-                        HentPersonPanel.JSON_ERROR_TEXT);
+                        SokOppBrukerCallback.JSON_ERROR_TEXT);
         String soektfnr =
                 page.getTextFromPayload("{\"errortext\":\"Feil tekst\",\"soektfnr\":\"wrongFnr\"}",
-                        HentPersonPanel.JSON_SOKT_FNR);
+                        SokOppBrukerCallback.JSON_SOKT_FNR);
         assertEquals("Feil tekst", errorTxt);
         assertEquals("wrongFnr", soektfnr);
     }
 
     @Test
     public void shouldExtractNullWhenFnrtExist() throws JSONException {
-        PersonPage page = new PersonPage(new PageParameters());
+        PersonPage page = new PersonPage(new PageParameters().add("fnr", testFnr));
         String sikkerhetstiltak =
-                page.getTextFromPayload("{\"errortext\":\"Feil tekst\"}", HentPersonPanel.JSON_SIKKERHETTILTAKS_BESKRIVELSE);
+                page.getTextFromPayload("{\"errortext\":\"Feil tekst\"}", SokOppBrukerCallback.JSON_SIKKERHETTILTAKS_BESKRIVELSE);
         Assert.assertNull(sikkerhetstiltak);
     }
 

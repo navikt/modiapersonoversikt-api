@@ -1,10 +1,10 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.oppgavebehandling;
 
-import no.nav.modig.core.context.ModigSecurityConstants;
-import no.nav.modig.core.context.SubjectHandler;
-import no.nav.modig.core.context.SubjectHandlerUtils;
-import no.nav.modig.core.context.ThreadLocalSubjectHandler;
-import no.nav.modig.core.domain.IdentType;
+import no.nav.brukerdialog.security.context.SubjectHandler;
+import no.nav.brukerdialog.security.context.SubjectHandlerUtils;
+import no.nav.brukerdialog.security.context.ThreadLocalSubjectHandler;
+import no.nav.brukerdialog.security.domain.IdentType;
+import no.nav.brukerdialog.tools.SecurityConstants;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.AnsattEnhet;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.LeggTilbakeOppgaveIGsakRequest;
@@ -54,7 +54,7 @@ class LeggTilbakeOppgaveIGsakDelegateTest {
     @BeforeAll
     static void beforeAll() {
         System.setProperty(SubjectHandler.SUBJECTHANDLER_KEY, ThreadLocalSubjectHandler.class.getCanonicalName());
-        System.setProperty(ModigSecurityConstants.SYSTEMUSER_USERNAME, "srvModiabrukerdialog");
+        System.setProperty(SecurityConstants.SYSTEMUSER_USERNAME, "srvModiabrukerdialog");
         setInnloggetSaksbehandler();
     }
 
@@ -74,7 +74,8 @@ class LeggTilbakeOppgaveIGsakDelegateTest {
         ansattServiceMock = mockAnsattService();
         oppgavebehandlingMock = mock(OppgavebehandlingV3.class);
         saksbehandlerInnstillingerService = mock(SaksbehandlerInnstillingerService.class);
-        arbeidsfordelingMock = mock(ArbeidsfordelingV1ServiceImpl.class);
+    arbeidsfordelingMock = mock(ArbeidsfordelingV1ServiceImpl.class);
+
     }
 
     private AnsattService mockAnsattService() {

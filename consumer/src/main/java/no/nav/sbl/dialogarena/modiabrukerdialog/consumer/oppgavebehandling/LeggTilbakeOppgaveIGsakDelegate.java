@@ -11,8 +11,7 @@ import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.LagreOppgaveOptimistiskLa
 import javax.ws.rs.ForbiddenException;
 import java.util.List;
 
-import static java.util.stream.Collectors.toList;
-import static no.nav.modig.core.context.SubjectHandler.getSubjectHandler;
+import static java.util.stream.Collectors.toList;import static no.nav.brukerdialog.security.context.SubjectHandler.getSubjectHandler;
 
 class LeggTilbakeOppgaveIGsakDelegate {
 

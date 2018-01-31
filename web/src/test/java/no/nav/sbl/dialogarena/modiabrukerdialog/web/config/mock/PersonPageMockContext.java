@@ -9,10 +9,15 @@ import no.nav.kjerneinfo.domain.person.Person;
 import no.nav.kjerneinfo.domain.person.Personfakta;
 import no.nav.modig.content.CmsContentRetriever;
 import no.nav.modig.content.PropertyResolver;
-import no.nav.modig.security.tilgangskontroll.policy.pep.EnforcementPoint;
+import no.nav.brukerdialog.security.tilgangskontroll.policy.pep.EnforcementPoint;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Saksbehandler;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.AnsattEnhet;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.oppfolgingsinfo.Oppfolgingsinfo;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.oppfolgingsinfo.OppfolgingsinfoService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.organisasjonsEnhetV2.OrganisasjonEnhetV2Service;
 import no.nav.personsok.consumer.fim.personsok.PersonsokServiceBi;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.GrunninfoService;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.GrunninfoServiceImpl;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.utils.WicketInjectablePropertyResolver;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.service.plukkoppgave.PlukkOppgaveService;
 import org.springframework.context.annotation.Bean;
@@ -47,6 +52,16 @@ public class PersonPageMockContext {
         OrganisasjonEnhetV2Service organisasjonEnhetService = mock(OrganisasjonEnhetV2Service.class);
         when(organisasjonEnhetService.hentEnhetGittEnhetId(anyString(), any())).thenReturn(Optional.of(new AnsattEnhet("", "")));
         return organisasjonEnhetService;
+    }
+
+    @Bean
+    public OppfolgingsinfoService oppfolgingsinfoService() {
+        OppfolgingsinfoService oppfolgingsinfoService = mock(OppfolgingsinfoService.class);
+        when(oppfolgingsinfoService.hentOppfolgingsinfo(anyString()))
+                .thenReturn(new Oppfolgingsinfo(true)
+                        .withVeileder(new Saksbehandler("Daniel", "Testfamilien", "Z900001"))
+                        .withOppfolgingsenhet(new AnsattEnhet("0118", "NAV Aremark")));
+        return oppfolgingsinfoService;
     }
 
     @Bean
@@ -85,6 +100,11 @@ public class PersonPageMockContext {
         when(mock.getDefaultLocale()).thenReturn("nb");
         when(mock.hentTekst(anyString())).thenReturn("Tekst fra mock-cms");
         return mock;
+    }
+
+    @Bean
+    public GrunninfoService grunninfoService() {
+        return new GrunninfoServiceImpl();
     }
 
     @Bean

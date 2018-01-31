@@ -1,17 +1,19 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.lameller;
 
+import no.nav.brukerdialog.security.tilgangskontroll.policy.pep.EnforcementPoint;
 import no.nav.brukerprofil.BrukerprofilPanel;
 import no.nav.kjerneinfo.kontrakter.KontrakterPanel;
 import no.nav.modig.core.exception.ApplicationException;
 import no.nav.modig.lang.option.Optional;
-import no.nav.modig.modia.events.*;
+import no.nav.modig.modia.events.FeedItemPayload;
+import no.nav.modig.modia.events.LamellPayload;
+import no.nav.modig.modia.events.WidgetHeaderPayload;
 import no.nav.modig.modia.lamell.*;
-import no.nav.modig.security.tilgangskontroll.policy.pep.EnforcementPoint;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.Events;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.GrunnInfo;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.lameller.oversikt.OversiktLerret;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.GrunnInfo;
 import no.nav.sbl.dialogarena.sak.lamell.SaksoversiktLerret;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.GsakService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.HenvendelseBehandlingService;
@@ -44,7 +46,6 @@ import static no.nav.modig.lang.option.Optional.optional;
 import static no.nav.modig.modia.lamell.DefaultLamellFactory.newLamellFactory;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.SessionParametere.SporsmalOgSvar.BESVARMODUS;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.URLParametere.*;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.web.util.PropertyUtils.visUtbetalinger;
 import static no.nav.sykmeldingsperioder.widget.SykepengerWidgetServiceImpl.*;
 
 /**
@@ -87,11 +88,8 @@ public class LamellContainer extends TokenLamellPanel implements Serializable {
         super(id, createLamellFactories(fnrFromRequest, grunnInfo));
         this.fnrFromRequest = fnrFromRequest;
 
-        if (visUtbetalinger(saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet())) {
-            addNewFactory(createUtbetalingLamell(fnrFromRequest));
-        }
+        addNewFactory(createUtbetalingLamell(fnrFromRequest));
         addNewFactory(createMeldingerLamell(fnrFromRequest, session));
-
     }
 
     @Override
@@ -215,7 +213,8 @@ public class LamellContainer extends TokenLamellPanel implements Serializable {
     }
 
     private static LamellFactory createSaksoversiktLamell(final String fnrFromRequest, GrunnInfo grunnInfo) {
-        return newLamellFactory(LAMELL_SAKSOVERSIKT, "S", true, (LerretFactory) (id, name) -> new SaksoversiktLerret(id, fnrFromRequest, grunnInfo.bruker.navn));
+        String norgUrl = System.getProperty("server.norg2-frontend.url");
+        return newLamellFactory(LAMELL_SAKSOVERSIKT, "S", true, (LerretFactory) (id, name) -> new SaksoversiktLerret(id, fnrFromRequest, grunnInfo.bruker.geografiskTilknytning, grunnInfo.bruker.diskresjonskode, norgUrl, grunnInfo.bruker.navn));
     }
 
     private static LamellFactory createVarslingsLamell(final String fnrFromRequest) {

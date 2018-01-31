@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel;
 
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.GrunnInfo;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.WicketPageTest;
 import org.apache.wicket.model.Model;
 import org.junit.Test;
@@ -11,7 +12,7 @@ import static no.nav.modig.wicket.test.matcher.ComponentMatchers.*;
 @RunWith(SpringJUnit4ClassRunner.class)
 public class OppgaveTilknytningPanelTest extends WicketPageTest {
 
-    private final GrunnInfo grunnInfo = new GrunnInfo(new GrunnInfo.Bruker("", "", "", ""), new GrunnInfo.Saksbehandler("", "", ""));
+    private final GrunnInfo grunnInfo = new GrunnInfo(new GrunnInfo.Bruker("", "", "", "", "", ""), new GrunnInfo.Saksbehandler("", "", ""));
 
     @Test
     public void viserOppgaveTilknytningPopup() throws Exception {

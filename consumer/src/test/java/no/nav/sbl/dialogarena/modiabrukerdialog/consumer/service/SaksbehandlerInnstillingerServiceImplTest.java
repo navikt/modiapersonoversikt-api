@@ -1,6 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service;
 
-import no.nav.modig.core.context.StaticSubjectHandler;
+import no.nav.brukerdialog.security.context.StaticSubjectHandler;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.AnsattEnhet;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.AnsattService;
 import org.apache.wicket.util.tester.WicketTester;
@@ -16,7 +16,7 @@ import javax.servlet.http.Cookie;
 
 import static java.lang.System.setProperty;
 import static java.util.Arrays.asList;
-import static no.nav.modig.core.context.SubjectHandler.getSubjectHandler;
+import static no.nav.brukerdialog.security.context.SubjectHandler.getSubjectHandler;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;

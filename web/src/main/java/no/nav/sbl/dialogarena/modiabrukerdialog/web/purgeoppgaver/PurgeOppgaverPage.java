@@ -18,7 +18,7 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 
 import javax.inject.Inject;
 
-import static no.nav.modig.core.context.SubjectHandler.getSubjectHandler;
+import static no.nav.brukerdialog.security.context.SubjectHandler.getSubjectHandler;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
 
 public class PurgeOppgaverPage extends BasePage {

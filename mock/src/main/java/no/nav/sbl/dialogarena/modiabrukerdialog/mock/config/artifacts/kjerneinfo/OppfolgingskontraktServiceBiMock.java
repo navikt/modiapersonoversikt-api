@@ -6,25 +6,13 @@ import no.nav.kontrakter.consumer.fim.oppfolgingskontrakt.to.Oppfolgingskontrakt
 import no.nav.kontrakter.consumer.fim.oppfolgingskontrakt.to.OppfolgingskontraktResponse;
 import no.nav.kontrakter.consumer.utils.OppfolgingskontraktMapper;
 import no.nav.kontrakter.domain.oppfolging.SYFOPunkt;
-import no.nav.tjeneste.virksomhet.oppfoelging.v1.informasjon.FimOppAktivitet;
-import no.nav.tjeneste.virksomhet.oppfoelging.v1.informasjon.FimOppBruker;
-import no.nav.tjeneste.virksomhet.oppfoelging.v1.informasjon.FimOppMeldeplikt;
-import no.nav.tjeneste.virksomhet.oppfoelging.v1.informasjon.FimOppOppfoelgingskontrakt;
-import no.nav.tjeneste.virksomhet.oppfoelging.v1.informasjon.FimOppOppfoelgingspunkt;
-import no.nav.tjeneste.virksomhet.oppfoelging.v1.informasjon.FimOppPeriode;
-import no.nav.tjeneste.virksomhet.oppfoelging.v1.informasjon.FimOppPlan;
-import no.nav.tjeneste.virksomhet.oppfoelging.v1.informasjon.FimOppServiceGruppe;
-import no.nav.tjeneste.virksomhet.oppfoelging.v1.informasjon.FimOppTiltaksaktivitet;
-import no.nav.tjeneste.virksomhet.oppfoelging.v1.informasjon.FimOppVedtak;
-import no.nav.tjeneste.virksomhet.oppfoelging.v1.informasjon.FimOppYtelseskontrakt;
-import no.nav.tjeneste.virksomhet.oppfoelging.v1.meldinger.FimOppHentOppfoelgingskontraktListeResponse;
-import org.joda.time.LocalDateTime;
+import no.nav.tjeneste.virksomhet.oppfoelging.v1.informasjon.*;
+import no.nav.tjeneste.virksomhet.oppfoelging.v1.meldinger.WSHentOppfoelgingskontraktListeResponse;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import static no.nav.kjerneinfo.common.mockutils.DateUtils.convertDateTimeToXmlGregorianCalendar;
 import static no.nav.kjerneinfo.common.mockutils.DateUtils.convertDateToXmlGregorianCalendar;
 import static no.nav.kjerneinfo.common.mockutils.DateUtils.getRandomDatePair;
 import static no.nav.kontrakter.consumer.fim.ytelseskontrakt.mock.YtelseskontraktMockFactory.YTELSESSTATUS_AKTIV;
@@ -42,8 +30,8 @@ public class OppfolgingskontraktServiceBiMock {
     }
 
     private static OppfolgingskontraktResponse lagOppfolgingsMockRespons() {
-        FimOppHentOppfoelgingskontraktListeResponse respons = new FimOppHentOppfoelgingskontraktListeResponse();
-        respons.withOppfoelgingskontraktListe(createOppfoelgingskontrakt());
+        WSHentOppfoelgingskontraktListeResponse respons = new WSHentOppfoelgingskontraktListeResponse();
+        respons.getOppfoelgingskontraktListe().add(createOppfoelgingskontrakt());
         OppfolgingskontraktResponse returRespons = OppfolgingskontraktMapper.getInstance().map(respons, OppfolgingskontraktResponse.class);
         returRespons.setSyfoPunkter(createSYFOpunkter());
         return returRespons;
@@ -60,101 +48,61 @@ public class OppfolgingskontraktServiceBiMock {
         return syfoPunkter;
     }
 
-    private static FimOppOppfoelgingskontrakt createOppfoelgingskontrakt() {
-        return new FimOppOppfoelgingskontrakt()
-                .withGjelderBruker(createBruker())
-                .withStatus("Aktiv")
-                .withIhtGjeldendeVedtak(createVedtak(null, null, null, null))
-                .withAvYtelse(createYtelseskontrakt(null, null, DateUtils.getRandomDate()))
-                .withHarOppfoelgingspunkt(
-                        createOppfoelgingspunkt("Individuell samtale", "Avbrutt", DateUtils.getRandomLocalDateTime()),
-                        createOppfoelgingspunkt("Individuell samtale", "Fullført", DateUtils.getRandomLocalDateTime()),
-                        createOppfoelgingspunkt("Gruppeaktiviteter", "Utredning i spesialenhet/andrelinje", DateUtils.getRandomLocalDateTime()),
-                        createOppfoelgingspunkt("Gruppeaktiviteter", "Informasjonsmøte om arbeidsavklaringspenger", DateUtils.getRandomLocalDateTime()))
-                .withMedAktivitet(
-                        createAktivitet("Aktivitetsnavn 1", "Planlagt", null, null, true),
-                        createAktivitet("Aktivitetsnavn 2", "Avbrutt", null, null, false),
-                        createAktivitet("Aktivitetsnavn 3", "Fullført", null, null, false),
-                        createAktivitet("Aktivitetsnavn 4", "Avbrutt gjennomføring", null, null, false),
-                        createTiltaksaktivitet("Planlagt", "Aktuell", null, null),
-                        createTiltaksaktivitet("Planlagt", "Fullført", null, null),
-                        createTiltaksaktivitet("Avbrutt gjennomføring", "Gjennomføres", null, null))
-                .withMedPlan(
-                        createPlan("Godkjent", "aktivitetsplan", "Beholde arbeid", null, null),
-                        createPlan("Avbrutt", "individuellPlan", "Øke deltakelse eller mål om arbeid", null, null),
-                        createPlan("Erstattet av ny", "Kvalifieringsprogram", "Skaffe arbeid", null, null));
+    private static WSOppfoelgingskontrakt createOppfoelgingskontrakt() {
+        WSOppfoelgingskontrakt oppfoelgingskontrakt = new WSOppfoelgingskontrakt();
+        oppfoelgingskontrakt.setGjelderBruker(createBruker());
+        oppfoelgingskontrakt.setStatus("Aktiv");
+        oppfoelgingskontrakt.setIhtGjeldendeVedtak(createVedtak(null, null, null, null));
+        oppfoelgingskontrakt.getAvYtelse().add(createYtelseskontrakt(null, null, DateUtils.getRandomDate()));
+
+        return oppfoelgingskontrakt;
     }
 
-    private static FimOppPlan createPlan(String status, String type, String hovedmal, Date fra, Date til) {
-        return new FimOppPlan()
-                .withHovedmaal(hovedmal)
-                .withPlantype(type)
-                .withPlanstatus(status)
-                .withPeriode(fra == null ? createRandomPeriode() : createPeriode(fra, til));
+    private static WSPeriode createPeriode(Date fom, Date tom) {
+        WSPeriode periode = new WSPeriode();
+        periode.setFom(convertDateToXmlGregorianCalendar(fom));
+        periode.setTom(convertDateToXmlGregorianCalendar(tom));
+        return periode;
     }
 
-    private static FimOppPeriode createPeriode(Date fom, Date tom) {
-        return new FimOppPeriode()
-                .withFom(convertDateToXmlGregorianCalendar(fom))
-                .withTom(convertDateToXmlGregorianCalendar(tom));
-    }
-
-    private static FimOppPeriode createRandomPeriode() {
+    private static WSPeriode createRandomPeriode() {
         Date[] datePair = getRandomDatePair();
         return createPeriode(datePair[0], datePair[1]);
     }
 
-
-    private static FimOppTiltaksaktivitet createTiltaksaktivitet(String status, String deltakelsestatus, Date fra, Date til) {
-        return new FimOppTiltaksaktivitet()
-                .withStatus(status)
-                .withAktivitetsnavn("Tiltaksaktivitetnavn")
-                .withTiltaksdeltakelsestatus(deltakelsestatus)
-                .withPeriode(fra == null ? createRandomPeriode() : createPeriode(fra, til));
+    private static WSYtelseskontrakt createYtelseskontrakt(String status, String type, Date datoKravMottat) {
+        WSYtelseskontrakt ytelseskontrakt = new WSYtelseskontrakt();
+        ytelseskontrakt.setDatoKravMottatt(datoKravMottat == null ? convertDateToXmlGregorianCalendar(new Date()) : convertDateToXmlGregorianCalendar(datoKravMottat));
+        ytelseskontrakt.setStatus(status == null ? "YtelseskontraktStatus" : status);
+        ytelseskontrakt.setYtelsestype(type == null ? "Ytelsestype" : type);
+        return ytelseskontrakt;
     }
 
-    private static FimOppAktivitet createAktivitet(String navn, String status, Date fra, Date til, boolean sensitiv) {
-        return new FimOppAktivitet()
-                .withAktivitetsnavn(navn)
-                .withStatus(status)
-                .withSensitiv(sensitiv)
-                .withPeriode(fra == null ? createRandomPeriode() : createPeriode(fra, til));
+    private static WSVedtak createVedtak(String status, Date fra, Date til, Date datoKravMottatt) {
+        WSVedtak vedtak = new WSVedtak();
+        vedtak.setStatus(status == null ? YTELSESSTATUS_AKTIV : status);
+        vedtak.setVedtaksperiode(fra == null ? createRandomPeriode() : createPeriode(fra, til));
+        vedtak.setOmYtelse(datoKravMottatt == null ? createYtelseskontrakt(null, null, new Date()) : createYtelseskontrakt(null, null, datoKravMottatt));
+        return vedtak;
     }
 
-    private static FimOppOppfoelgingspunkt createOppfoelgingspunkt(String type, String status, LocalDateTime trefftidspunkt) {
-        return new FimOppOppfoelgingspunkt()
-                .withDato(convertDateTimeToXmlGregorianCalendar(trefftidspunkt))
-                .withStatus(status)
-                .withType(type);
+    private static WSBruker createBruker() {
+        WSBruker bruker = new WSBruker();
+        bruker.setFormidlingsgruppe("50000");
+        bruker.getServicegruppe().add(createServicegruppe());
+        bruker.getMeldeplikt().add(createMeldeplikt());
+        return bruker;
     }
 
-    private static FimOppYtelseskontrakt createYtelseskontrakt(String status, String type, Date datoKravMottat) {
-        return new FimOppYtelseskontrakt()
-                .withDatoKravMottatt(datoKravMottat == null ? convertDateToXmlGregorianCalendar(new Date()) : convertDateToXmlGregorianCalendar(datoKravMottat))
-                .withStatus(status == null ? "YtelseskontraktStatus" : status)
-                .withYtelsestype(type == null ? "Ytelsestype" : type);
+    private static WSMeldeplikt createMeldeplikt() {
+        WSMeldeplikt meldeplikt = new WSMeldeplikt();
+        meldeplikt.setMeldeplikt(true);
+        return meldeplikt;
     }
 
-    private static FimOppVedtak createVedtak(String status, Date fra, Date til, Date datoKravMottatt) {
-        return new FimOppVedtak()
-                .withStatus(status == null ? YTELSESSTATUS_AKTIV : status)
-                .withVedtaksperiode(fra == null ? createRandomPeriode() : createPeriode(fra, til))
-                .withOmYtelse(datoKravMottatt == null ? createYtelseskontrakt(null, null, new Date()) : createYtelseskontrakt(null, null, datoKravMottatt));
+    private static WSServiceGruppe createServicegruppe() {
+        WSServiceGruppe serviceGruppe = new WSServiceGruppe();
+        serviceGruppe.setServiceGruppe("Servicegruppe");
+        return serviceGruppe;
     }
-
-    private static FimOppBruker createBruker() {
-        return new FimOppBruker()
-                .withFormidlingsgruppe("50000")
-                .withServicegruppe(createServicegruppe())
-                .withMeldeplikt(createMeldeplikt());
-    }
-
-    private static FimOppMeldeplikt createMeldeplikt() {
-        return new FimOppMeldeplikt().withMeldeplikt(true);
-    }
-
-    private static FimOppServiceGruppe createServicegruppe() {
-        return new FimOppServiceGruppe().withServiceGruppe("Servicegruppe");
-    }
-
 }

@@ -2,7 +2,6 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v1.arb
 
 import no.nav.modig.modia.ping.Pingable;
 import no.nav.modig.modia.ping.PingableWebService;
-import no.nav.modig.security.ws.SystemSAMLOutInterceptor;
 import no.nav.sbl.dialogarena.common.cxf.CXFClient;
 import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.ArbeidsfordelingV1Mock;
 import no.nav.tjeneste.virksomhet.arbeidsfordeling.v1.ArbeidsfordelingV1;
@@ -37,7 +36,7 @@ public class ArbeidsfordelingV1EndpointConfig {
     private ArbeidsfordelingV1 lagEndpoint() {
         return new CXFClient<>(ArbeidsfordelingV1.class)
                 .address(System.getProperty("arbeidsfordeling.v1.url"))
-                .withOutInterceptor(new SystemSAMLOutInterceptor())
+                .configureStsForSystemUserInFSS()
                 .build();
     }
 }

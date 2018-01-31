@@ -4,7 +4,6 @@ import no.nav.modig.modia.ping.FailedPingResult;
 import no.nav.modig.modia.ping.PingResult;
 import no.nav.modig.modia.ping.Pingable;
 import no.nav.modig.wicket.selftest.SelfTestBase;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v1.utbetaling.UtbetalingEndpointConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.WicketApplication;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
@@ -13,9 +12,7 @@ import org.springframework.context.ApplicationContext;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import static no.nav.modig.modia.ping.PingResult.ServiceResult.SERVICE_OK;
 import static org.slf4j.LoggerFactory.getLogger;
@@ -38,27 +35,25 @@ public class SelfTestPage extends SelfTestBase {
         List<AvhengighetStatus> serviceStatuses = new ArrayList<>();
         for (Pingable pingable : pingables) {
             try {
-                if (shouldServiceBeIncluded(pingable)) {
-                    PingResult pingResult = pingable.ping();
-                    String serviceName = pingable.name();
-                    String methodName = pingable.method();
-                    String endpoint = pingable.endpoint();
-                    String status;
-                    if (pingResult.getServiceStatus().equals(SERVICE_OK)) {
-                        status = STATUS_OK;
-                    }
-                    else if(pingResult.getServiceStatus().equals(PingResult.ServiceResult.UNPINGABLE)){
-                        status = STATUS_UNPINGABLE;
-                    }
-                    else {status = STATUS_ERROR;}
-                    AvhengighetStatus avhengighetStatus = new AvhengighetStatus(serviceName, status, pingResult.getElapsedTime(), "", methodName, endpoint);
-                    if(pingResult instanceof FailedPingResult){
-                        FailedPingResult failedPingResult = (FailedPingResult) pingResult;
-                        avhengighetStatus.addExceptionMessage(ExceptionUtils.getMessage(failedPingResult.getThrowable()));
-                        avhengighetStatus.addStackTrace(ExceptionUtils.getStackTrace(failedPingResult.getThrowable()));
-                    }
-                    serviceStatuses.add(avhengighetStatus);
+                PingResult pingResult = pingable.ping();
+                String serviceName = pingable.name();
+                String methodName = pingable.method();
+                String endpoint = pingable.endpoint();
+                String status;
+                if (pingResult.getServiceStatus().equals(SERVICE_OK)) {
+                    status = STATUS_OK;
                 }
+                else if(pingResult.getServiceStatus().equals(PingResult.ServiceResult.UNPINGABLE)){
+                    status = STATUS_UNPINGABLE;
+                }
+                else {status = STATUS_ERROR;}
+                AvhengighetStatus avhengighetStatus = new AvhengighetStatus(serviceName, status, pingResult.getElapsedTime(), "", methodName, endpoint);
+                if(pingResult instanceof FailedPingResult){
+                    FailedPingResult failedPingResult = (FailedPingResult) pingResult;
+                    avhengighetStatus.addExceptionMessage(ExceptionUtils.getMessage(failedPingResult.getThrowable()));
+                    avhengighetStatus.addStackTrace(ExceptionUtils.getStackTrace(failedPingResult.getThrowable()));
+                }
+                serviceStatuses.add(avhengighetStatus);
             } catch (Exception e) {
                 AvhengighetStatus avhengighetStatus = new AvhengighetStatus(pingable.name(), STATUS_ERROR, 0, "Feilet utenfor ping-metode");
                 avhengighetStatus.addExceptionMessage(ExceptionUtils.getMessage(e));
@@ -68,30 +63,6 @@ public class SelfTestPage extends SelfTestBase {
             }
         }
         return serviceStatuses;
-    }
-
-    /**
-     * True hvis tjenesten skal inkluderes i selftesten
-     * @return
-     */
-    private boolean shouldServiceBeIncluded(Pingable pingable) {
-        Map<Class, String> services = possibleServicesToBeExcluded();
-        if (services.containsKey(pingable.getClass())) {
-            return Boolean.valueOf(System.getProperty(services.get(pingable.getClass()), "true"));
-        }
-        return true;
-    }
-
-    /**
-     * Map av properties hvor key er Pingable class og value er systemProperty som styrer
-     * om tjenesten skal legges til i selftesten eller ikke.
-     *
-     * @return
-     */
-    private Map<Class, String> possibleServicesToBeExcluded() {
-        Map<Class, String> serviceMap = new HashMap<Class, String>();
-        serviceMap.put(UtbetalingEndpointConfig.UtbetalingPing.class, "visUtbetalinger");
-        return serviceMap;
     }
 
 }

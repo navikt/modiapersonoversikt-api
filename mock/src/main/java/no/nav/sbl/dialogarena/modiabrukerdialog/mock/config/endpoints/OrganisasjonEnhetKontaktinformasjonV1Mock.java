@@ -8,6 +8,7 @@ import no.nav.tjeneste.virksomhet.organisasjonenhetkontaktinformasjon.v1.melding
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.util.Arrays;
 import java.util.List;
 
 @Configuration
@@ -37,8 +38,8 @@ public class OrganisasjonEnhetKontaktinformasjonV1Mock {
                 enhetstyper.setKodeRef("enhetstypekode");
 
                 Organisasjonsenhet enhet = new Organisasjonsenhet();
-                enhet.setEnhetId("id");
-                enhet.setEnhetNavn("navn");
+                enhet.setEnhetId("7080");
+                enhet.setEnhetNavn("Nav Sør-Varanger");
                 enhet.setKontaktinformasjon(getMockEnhetKontaktInformasjon());
                 enhet.setOrganisasjonsnummer("123465");
                 enhet.setStatus(Enhetsstatus.AKTIV);
@@ -53,8 +54,16 @@ public class OrganisasjonEnhetKontaktinformasjonV1Mock {
                 kontaktinformasjonForOrganisasjonsenhet.setSpesielleOpplysninger("Mocket spesialopplysning");
                 kontaktinformasjonForOrganisasjonsenhet.setBesoeksadresse(createMockGateAdresse());
                 kontaktinformasjonForOrganisasjonsenhet.setPostadresse(createMockStrukturertAdresse());
+                kontaktinformasjonForOrganisasjonsenhet.getPublikumsmottakListe().addAll(Arrays.asList(mockPublikumsmottak(), mockPublikumsmottak()));
 
                 return kontaktinformasjonForOrganisasjonsenhet;
+            }
+
+            private Publikumsmottak mockPublikumsmottak() {
+                Publikumsmottak publikumsmottak = new Publikumsmottak();
+                publikumsmottak.setBesoeksadresse(createMockGateAdresse());
+                publikumsmottak.setAapningstider(mockApningstider());
+                return publikumsmottak;
             }
 
             private StrukturertAdresse createMockStrukturertAdresse() {
@@ -73,6 +82,10 @@ public class OrganisasjonEnhetKontaktinformasjonV1Mock {
                 gateadresse.setPoststed(postnummer);
 
                 return gateadresse;
+            }
+
+            private Aapningstider mockApningstider() {
+                return new Aapningstider();
             }
         };
     }

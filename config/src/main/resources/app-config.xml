@@ -15,7 +15,9 @@
 
     <security serviceUserResourceAlias="srvModiabrukerdialog">
         <logins>
-            <spnego/>
+            <openIdConnect moduleClass="no.nav.aura.loginModule.JWTLoginModule">
+                <contextRoot>/modiabrukerdialog/rest/login</contextRoot>
+            </openIdConnect>
         </logins>
     </security>
 
@@ -37,7 +39,9 @@
         <baseUrl alias="server.aareg" mapToProperty="server.aareg"/>
         <baseUrl alias="server.aktivitetsplan" mapToProperty="server.aktivitetsplan"/>
         <baseUrl alias="server.veilarbportefoljeflatefs" mapToProperty="server.veilarbportefoljeflatefs"/>
+        <baseUrl alias="server.norg2-frontend" mapToProperty="server.norg2-frontend"/>
         <webservice alias="Aktoer_v1" mapToProperty="aktorid.ws"/>
+        <webservice alias="virksomhet:TildelOppgave_v1" mapToProperty="gsak.tildeloppgave.v1"/>
         <webservice alias="virksomhet:Oppgavebehandling_v3" mapToProperty="gsak.oppgavebehandling.v3"/>
         <webservice alias="virksomhet:Oppgave_v3" mapToProperty="gsak.oppgave.v3"/>
         <webservice alias="virksomhet:Sak_v1" mapToProperty="gsak.sak.v1"/>
@@ -46,17 +50,17 @@
         <webservice alias="virksomhet:Person_v3" mapToProperty="tps.person.v3"/>
         <webservice alias="virksomhet:BehandlePerson_v1" mapToProperty="tps.behandleperson.v1"/>
         <webservice alias="virksomhet:Organisasjon_v4" mapToProperty="organisasjonendpoint.v4"/>
-        <webservice alias="virksomhet:Kodeverk_v1" mapToProperty="kodeverkendpoint"/>
         <webservice alias="virksomhet:Kodeverk_v2" mapToProperty="kodeverkendpoint.v2"/>
         <webservice alias="virksomhet:BehandleBrukerprofil_v2" mapToProperty="behandlebrukerprofilendpoint"/>
         <webservice alias="virksomhet:Ytelseskontrakt_v3" mapToProperty="ytelseskontraktendpoint"/>
         <webservice alias="virksomhet:Oppfolging_v1" mapToProperty="oppfolgingendpoint"/>
+        <webservice alias="OppfolgingsinfoV2" mapToProperty="oppfolgingsinfo.v1"/>
         <webservice alias="virksomhet:foreldrepenger_v2" mapToProperty="foreldrepengerendpoint"/>
         <webservice alias="virksomhet:pleiepenger_v1" mapToProperty="pleiepengerendpoint"/>
         <webservice alias="virksomhet:sykepenger_v2" mapToProperty="sykepengerendpoint"/>
         <webservice alias="virksomhet:DigitalKontakinformasjon_v1" mapToProperty="dkifendpoint"/>
         <webservice alias="virksomhet:OrganisasjonEnhet_v2" mapToProperty="norg2.organisasjonenhet.v2"/>
-        <webservice alias="virksomhet:OrganisasjonEnhetKontaktinformasjon_v1" mapToProperty="norg2.organisasjonenhetkontaktinformasjon.v1.url"/>
+        <webservice alias="virksomhet:OrganisasjonEnhetKontaktinformasjon_v1" mapToProperty="norg2.organisasjonenhetkontaktinformasjon.v1"/>
         <webservice alias="virksomhet:EgenAnsatt_V1" mapToProperty="egenansatt.v1" />
         <webservice alias="virksomhet:Arbeidsfordeling_v1" mapToProperty="arbeidsfordeling.v1" />
         <webservice alias="Utbetaling_v1" mapToProperty="utbetalingendpoint"/>
@@ -77,6 +81,16 @@
         <baseUrl alias="appres.cms" mapToProperty="appres.cms"/>
 
         <applicationCertificate alias="srvModiabrukerdialog"/>
+
+        <baseUrl alias="isso-host"/>
+        <baseUrl alias="isso-jwks"/>
+        <baseUrl alias="isso-issuer"/>
+        <baseUrl alias="isso.isalive"/>
+        <credential alias="isso-rp-user"/>
     </resources>
+
+    <serverOptions>
+        <memoryParameters resourceAlias="modiabrukerdialog-memparams"/>
+    </serverOptions>
 
 </application>

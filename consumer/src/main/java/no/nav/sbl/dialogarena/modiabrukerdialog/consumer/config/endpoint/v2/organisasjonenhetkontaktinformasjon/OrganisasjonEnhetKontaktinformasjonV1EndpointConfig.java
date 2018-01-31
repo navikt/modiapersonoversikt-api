@@ -3,12 +3,10 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v2.org
 import no.nav.modig.modia.ping.Pingable;
 import no.nav.modig.modia.ping.PingableWebService;
 import no.nav.modig.modia.ping.UnpingableWebService;
-import no.nav.modig.security.ws.SystemSAMLOutInterceptor;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.Feature;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.FeatureToggle;
 import no.nav.sbl.dialogarena.common.cxf.CXFClient;
-import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.OrganisasjonEnhetV2Mock;
-import no.nav.tjeneste.virksomhet.organisasjonenhet.v2.binding.OrganisasjonEnhetV2;
+import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.OrganisasjonEnhetKontaktinformasjonV1Mock;
 import no.nav.tjeneste.virksomhet.organisasjonenhetkontaktinformasjon.v1.binding.OrganisasjonEnhetKontaktinformasjonV1;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -22,7 +20,9 @@ public class OrganisasjonEnhetKontaktinformasjonV1EndpointConfig {
 
     @Bean
     public OrganisasjonEnhetKontaktinformasjonV1 organisasjonEnhetKontaktinformasjonV1() {
-        final OrganisasjonEnhetKontaktinformasjonV1 organisasjonEnhetKontaktinformasjonV1 = lagEndpoint();
+        final OrganisasjonEnhetKontaktinformasjonV1 organisasjonEnhetKontaktinformasjonV1 = lagEndpoint()
+                .configureStsForOnBehalfOfWithJWT()
+                .build();
         final OrganisasjonEnhetKontaktinformasjonV1 organisasjonEnhetKontaktinformasjonV1Mock = lagMockEnpoint();
 
         return createMetricsProxyWithInstanceSwitcher("organisasjonEnhetKontaktinformasjonV1", organisasjonEnhetKontaktinformasjonV1,
@@ -31,22 +31,20 @@ public class OrganisasjonEnhetKontaktinformasjonV1EndpointConfig {
 
     @Bean
     public Pingable OrganisasjonEnhetKontaktinformasjonPing() {
-        if(FeatureToggle.visFeature(Feature.NORG_ORGENHET_KONTAKTINFORMASJON)) {
-            return new PingableWebService("NORG2 - OrganisasjonEnhetKontaktinformasjonV1", lagEndpoint());
-        } else {
-            return new UnpingableWebService("NORG2 - OrganisasjonEnhetKontaktinformasjonV1 (feature togglet av)", "");
-        }
+        return new PingableWebService(
+                "NORG2 - OrganisasjonEnhetKontaktinformasjonV1",
+                lagEndpoint().configureStsForSystemUserInFSS().build()
+        );
+
     }
 
     private OrganisasjonEnhetKontaktinformasjonV1 lagMockEnpoint() {
-        return null;
+        return OrganisasjonEnhetKontaktinformasjonV1Mock.organisasjonEnhetKontaktinformasjonV1();
     }
 
-    private OrganisasjonEnhetKontaktinformasjonV1 lagEndpoint() {
+    private CXFClient<OrganisasjonEnhetKontaktinformasjonV1> lagEndpoint() {
         return new CXFClient<>(OrganisasjonEnhetKontaktinformasjonV1.class)
-                .address(System.getProperty("norg2.organisasjonenhetkontaktinformasjon.v1.url"))
-                .withOutInterceptor(new SystemSAMLOutInterceptor())
-                .build();
+                .address(System.getProperty("norg2.organisasjonenhetkontaktinformasjon.v1.url"));
     }
 
 }

@@ -1,14 +1,9 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v1.utbetaling;
 
 import no.nav.modig.modia.ping.PingableWebService;
-import no.nav.modig.security.ws.AbstractSAMLOutInterceptor;
-import no.nav.modig.security.ws.SystemSAMLOutInterceptor;
-import no.nav.modig.security.ws.UserSAMLOutInterceptor;
+import no.nav.sbl.dialogarena.common.cxf.CXFClient;
 import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.UtbetalingPortTypeMock;
 import no.nav.tjeneste.virksomhet.utbetaling.v1.UtbetalingV1;
-import org.apache.cxf.feature.LoggingFeature;
-import org.apache.cxf.jaxws.JaxWsProxyFactoryBean;
-import org.apache.cxf.ws.addressing.WSAddressingFeature;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -23,7 +18,7 @@ public class UtbetalingEndpointConfig {
 
     @Bean(name = "utbetalingV1")
     public UtbetalingV1 utbetalingV1() {
-        final UtbetalingV1 prod = createUtbetalingPortType(new UserSAMLOutInterceptor());
+        final UtbetalingV1 prod = createUtbetalingPortType().configureStsForOnBehalfOfWithJWT().build();
         final UtbetalingV1 mock = new UtbetalingPortTypeMock().utbetalingPortType();
 
         return createMetricsProxyWithInstanceSwitcher("UtbetalingV1", prod, mock, UTBETALING_KEY, UtbetalingV1.class);
@@ -31,20 +26,18 @@ public class UtbetalingEndpointConfig {
 
     @Bean
     public UtbetalingPing pingUtbetalingV1() {
-        return new UtbetalingPing("Utbetaling", createUtbetalingPortType(new SystemSAMLOutInterceptor()));
+        UtbetalingV1 pingPorttype = createUtbetalingPortType()
+                .configureStsForSystemUserInFSS()
+                .build();
+        return new UtbetalingPing("Utbetaling", pingPorttype);
     }
 
-    private UtbetalingV1 createUtbetalingPortType(AbstractSAMLOutInterceptor interceptor) {
-        JaxWsProxyFactoryBean proxyFactoryBean = new JaxWsProxyFactoryBean();
-        proxyFactoryBean.setWsdlLocation("classpath:utbetaling/no/nav/tjeneste/virksomhet/utbetaling/v1/Binding.wsdl");
-        proxyFactoryBean.setAddress(System.getProperty("utbetalingendpoint.url"));
-        proxyFactoryBean.setServiceClass(UtbetalingV1.class);
-        proxyFactoryBean.getOutInterceptors().add(interceptor);
-        proxyFactoryBean.setServiceName(new QName("http://nav.no/tjeneste/virksomhet/utbetaling/v1/Binding", "Utbetaling_v1"));
-        proxyFactoryBean.setEndpointName(new QName("http://nav.no/tjeneste/virksomhet/utbetaling/v1/Binding", "Utbetaling_v1Port"));
-        proxyFactoryBean.getFeatures().add(new WSAddressingFeature());
-        proxyFactoryBean.getFeatures().add(new LoggingFeature());
-        return proxyFactoryBean.create(UtbetalingV1.class);
+    private CXFClient<UtbetalingV1> createUtbetalingPortType() {
+        return new CXFClient<>(UtbetalingV1.class)
+                .wsdl("classpath:utbetaling/no/nav/tjeneste/virksomhet/utbetaling/v1/Binding.wsdl")
+                .serviceName(new QName("http://nav.no/tjeneste/virksomhet/utbetaling/v1/Binding", "Utbetaling_v1"))
+                .endpointName(new QName("http://nav.no/tjeneste/virksomhet/utbetaling/v1/Binding", "Utbetaling_v1Port"))
+                .address(System.getProperty("utbetalingendpoint.url"));
     }
 
     public class UtbetalingPing extends PingableWebService {

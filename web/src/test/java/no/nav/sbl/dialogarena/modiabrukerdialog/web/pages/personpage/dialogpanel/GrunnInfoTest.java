@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel;
 
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.GrunnInfo;
 import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.equalTo;
@@ -10,7 +11,7 @@ public class GrunnInfoTest {
     @Test
     public void brukersNavnFaarKorrekteVersaler() {
         GrunnInfo.Bruker bruker = new GrunnInfo.Bruker(
-                "123", "test-test", "o'testeson", "kontoret"
+                "123", "test-test", "o'testeson", "kontoret", "0314", ""
         );
 
         assertThat(bruker.navn, is(equalTo("Test-Test O'Testeson")));

@@ -2,6 +2,7 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpane
 
 import no.nav.modig.content.CmsContentRetriever;
 import no.nav.modig.wicket.component.enhancedtextarea.EnhancedTextArea;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.GrunnInfo;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.Sak;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
@@ -29,7 +30,7 @@ import javax.inject.Inject;
 import java.util.List;
 import java.util.Optional;
 
-import static no.nav.modig.core.context.SubjectHandler.getSubjectHandler;
+import static no.nav.brukerdialog.security.context.SubjectHandler.getSubjectHandler;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.*;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Kanal.TELEFON;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe.ARBD;
@@ -70,7 +71,7 @@ public class NyDialogPanelTest extends WicketPageTest {
 
     @Before
     public void setUp() {
-        grunnInfo = new GrunnInfo(new GrunnInfo.Bruker(FNR, FORNAVN, "", ""), new GrunnInfo.Saksbehandler("", "", ""));
+        grunnInfo = new GrunnInfo(new GrunnInfo.Bruker(FNR, FORNAVN, "", "", "", ""), new GrunnInfo.Saksbehandler("", "", ""));
         testNyDialogPanel = new NyDialogPanel("id", grunnInfo);
 
         when(saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet()).thenReturn(VALGT_ENHET);

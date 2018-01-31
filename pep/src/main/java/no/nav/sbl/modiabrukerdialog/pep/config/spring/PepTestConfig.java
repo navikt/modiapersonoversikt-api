@@ -1,6 +1,6 @@
 package no.nav.sbl.modiabrukerdialog.pep.config.spring;
 
-import no.nav.modig.security.tilgangskontroll.policy.pep.EnforcementPoint;
+import no.nav.brukerdialog.security.tilgangskontroll.policy.pep.EnforcementPoint;
 import no.nav.sbl.modiabrukerdialog.pep.mock.MockPep;
 import org.springframework.context.annotation.Bean;
 

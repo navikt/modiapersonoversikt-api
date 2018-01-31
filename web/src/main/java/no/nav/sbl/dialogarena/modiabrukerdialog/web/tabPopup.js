@@ -82,7 +82,6 @@ function createTabHandler(application, options) {
         ModiaJS.ReactDOM.render(modalComponent, document.getElementById("feilmeldingsmodaler"));
         isModalOpen = true;
     };
-    window.test = createModalDialog;
 
     var storageEventListener = function (e) {
         var tabGuid;

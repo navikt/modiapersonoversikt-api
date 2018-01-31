@@ -110,9 +110,9 @@ public class GsakSakV1PortTypeMock {
 
     private static WSSak createSak(String tema, DateTime opprettet, WSPerson... brukerliste) {
         return new WSSak()
-                .withSakId("" + idGenerator.nextInt(100000000))
+                .withSakId("saksid" + idGenerator.nextInt(100000000))
                 .withGjelderBrukerListe(brukerliste)
-                .withFagsystemSakId("" + idGenerator.nextInt(100000000))
+                .withFagsystemSakId("fagsaksid" + idGenerator.nextInt(100000000))
                 .withFagomraade(new WSFagomraader().withValue(tema))
                 .withOpprettelsetidspunkt(opprettet)
                 .withSakstype(new WSSakstyper().withValue(SAKSTYPE_GENERELL))
