@@ -13,30 +13,33 @@
     <description>Prosjekt med felleskomponenter for løsningsområdet Spørsmål og svar - innside og utside.</description>
     <groupId>no.nav.sbl.dialogarena</groupId>
     <artifactId>sporsmal-og-svar</artifactId>
-    <version>7.1.24-SNAPSHOT</version>
+    <version>8.0.3-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <properties>
-        <wicket.version>6.17.0</wicket.version>
-        <spring.version>3.2.4.RELEASE</spring.version>
+        <oidc.security-authorization.version>2017.11.07.15.26</oidc.security-authorization.version>
+        <oidc.security.version>2018.01.15.10.51</oidc.security.version>
+        <wicket.version>6.20.0</wicket.version>
+        <spring.version>4.3.4.RELEASE</spring.version>
         <lucene.version>4.10.2</lucene.version>
         <slf4j.version>1.7.5</slf4j.version>
         <logback.version>1.0.13</logback.version>
         <modig.scm.plugin.version>1.1.11</modig.scm.plugin.version>
         <modig.frontend.version>1.1.122</modig.frontend.version>
         <modig-core.version>1.0.0</modig-core.version>
-        <kjerneinfo.versjon>5.2.1</kjerneinfo.versjon>
+        <kjerneinfo.versjon>6.0.0</kjerneinfo.versjon>
         <dialogarena.behandlingsinformasjon.version>1.0.4</dialogarena.behandlingsinformasjon.version>
         <handlebars.version>1.1.2</handlebars.version>
-        <modig.security.version>1.0.23</modig.security.version>
+        <modig.security.version>1.0.24</modig.security.version>
         <henvendelse.informasjon.v2.version>0.5</henvendelse.informasjon.v2.version>
         <send.ut.henvendelse.version>0.6.0</send.ut.henvendelse.version>
         <behandle.henvendelse.version>0.21</behandle.henvendelse.version>
         <gsak.oppgave.version>0.0.12</gsak.oppgave.version>
-        <modiabrukerdialog-api.version>8.3.14</modiabrukerdialog-api.version>
-        <reactkomponenter.version>2.9.2</reactkomponenter.version>
-        <modia-felleskomponenter.version>3.3</modia-felleskomponenter.version>
-        <nav-metrics.version>3.2.1</nav-metrics.version>
+        <modiabrukerdialog.version>14.1.3-SNAPSHOT</modiabrukerdialog.version>
+        <reactkomponenter.version>3.0.0</reactkomponenter.version>
+        <modia-felleskomponenter.version>4.2</modia-felleskomponenter.version>
+        <nav-metrics.version>2017.08.30.10.22</nav-metrics.version>
+        <jackson.version>2.5.4</jackson.version>
     </properties>
 
     <dependencies>
@@ -109,11 +112,6 @@
 
         <!--Dialogarena-->
         <dependency>
-            <groupId>no.nav.modig</groupId>
-            <artifactId>modig-security-authorization</artifactId>
-            <version>${modig.security.version}</version>
-        </dependency>
-        <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>dialogarena-behandlingsinformasjon</artifactId>
             <version>${dialogarena.behandlingsinformasjon.version}</version>
@@ -173,11 +171,29 @@
         <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>modiabrukerdialog-api</artifactId>
-            <version>${modiabrukerdialog-api.version}</version>
+            <version>${modiabrukerdialog.version}</version>
             <scope>provided</scope>
         </dependency>
 
         <!--Modig-->
+        <dependency>
+            <groupId>no.nav.dialogarena</groupId>
+            <artifactId>oidc-security</artifactId>
+            <version>${oidc.security.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>no.nav.dialogarena</groupId>
+            <artifactId>oidc-security</artifactId>
+            <version>${oidc.security.version}</version>
+            <type>test-jar</type>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>no.nav.dialogarena</groupId>
+            <artifactId>oidc-security-authorization</artifactId>
+            <version>${oidc.security-authorization.version}</version>
+            <scope>provided</scope>
+        </dependency>
         <dependency>
             <groupId>no.nav.modig</groupId>
             <artifactId>modig-lang</artifactId>
@@ -237,12 +253,6 @@
             <artifactId>modig-core-test</artifactId>
             <version>${modig-core.version}</version>
             <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>no.nav.modig</groupId>
-            <artifactId>modig-security-core</artifactId>
-            <version>${modig.security.version}</version>
-            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>no.nav.modig</groupId>
@@ -394,6 +404,12 @@
             <version>1</version>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>org.glassfish.hk2.external</groupId>
+            <artifactId>javax.inject</artifactId>
+            <version>2.4.0-b34</version>
+            <scope>provided</scope>
+        </dependency>
 
         <dependency>
             <groupId>org.codehaus.groovy</groupId>
@@ -449,7 +465,7 @@
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
-            <version>2.3.2</version>
+            <version>${jackson.version}</version>
             <scope>provided</scope>
         </dependency>
 
@@ -457,7 +473,7 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>4.11</version>
+            <version>4.12</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -484,13 +500,7 @@
             <version>1.3.1</version>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>no.nav.modig</groupId>
-            <artifactId>modig-security-core</artifactId>
-            <version>${modig.security.version}</version>
-            <scope>test</scope>
-            <type>test-jar</type>
-        </dependency>
+
         <dependency>
             <groupId>org.assertj</groupId>
             <artifactId>assertj-core</artifactId>

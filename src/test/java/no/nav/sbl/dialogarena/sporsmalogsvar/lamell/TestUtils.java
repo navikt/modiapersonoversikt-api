@@ -1,13 +1,13 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.lamell;
 
+import no.nav.brukerdialog.security.domain.IdentType;
+import no.nav.brukerdialog.tools.SecurityConstants;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelse;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLJournalfortInformasjon;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLMetadataListe;
-import no.nav.modig.core.context.ModigSecurityConstants;
-import no.nav.modig.core.context.SubjectHandler;
-import no.nav.modig.core.context.SubjectHandlerUtils;
-import no.nav.modig.core.context.ThreadLocalSubjectHandler;
-import no.nav.modig.core.domain.IdentType;
+import no.nav.brukerdialog.security.context.SubjectHandler;
+import no.nav.brukerdialog.security.context.SubjectHandlerUtils;
+import no.nav.brukerdialog.security.context.ThreadLocalSubjectHandler;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.Sak;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
@@ -137,7 +137,7 @@ public class TestUtils {
 
     public static void innloggetBrukerEr(String userId) {
         System.setProperty(SubjectHandler.SUBJECTHANDLER_KEY, ThreadLocalSubjectHandler.class.getCanonicalName());
-        System.setProperty(ModigSecurityConstants.SYSTEMUSER_USERNAME, "srvHenvendelse");
+        System.setProperty(SecurityConstants.SYSTEMUSER_USERNAME, "srvHenvendelse");
         SubjectHandlerUtils.setSubject(new SubjectHandlerUtils.SubjectBuilder(userId, IdentType.EksternBruker).withAuthLevel(4).getSubject());
     }
 

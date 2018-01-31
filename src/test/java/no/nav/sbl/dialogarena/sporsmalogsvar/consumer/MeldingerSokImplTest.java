@@ -1,10 +1,10 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.consumer;
 
-import no.nav.modig.core.context.ModigSecurityConstants;
-import no.nav.modig.core.context.SubjectHandler;
-import no.nav.modig.core.context.SubjectHandlerUtils;
-import no.nav.modig.core.context.ThreadLocalSubjectHandler;
-import no.nav.modig.core.domain.IdentType;
+import no.nav.brukerdialog.tools.SecurityConstants;
+import no.nav.brukerdialog.security.context.SubjectHandler;
+import no.nav.brukerdialog.security.context.SubjectHandlerUtils;
+import no.nav.brukerdialog.security.context.ThreadLocalSubjectHandler;
+import no.nav.brukerdialog.security.domain.IdentType;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.*;
 import org.apache.commons.collections15.Transformer;
 import org.joda.time.DateTime;
@@ -129,7 +129,7 @@ public class MeldingerSokImplTest {
 
     private void innloggetBrukerEr(String ident) {
         setProperty(SubjectHandler.SUBJECTHANDLER_KEY, ThreadLocalSubjectHandler.class.getCanonicalName());
-        setProperty(ModigSecurityConstants.SYSTEMUSER_USERNAME, "srvModiabrukerdialog");
+        setProperty(SecurityConstants.SYSTEMUSER_USERNAME, "srvModiabrukerdialog");
         SubjectHandlerUtils.setSubject(new SubjectHandlerUtils.SubjectBuilder(ident, IdentType.EksternBruker).withAuthLevel(4).getSubject());
     }
 

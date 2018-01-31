@@ -1,10 +1,12 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.lamell;
 
-import no.nav.modig.security.tilgangskontroll.policy.pep.EnforcementPoint;
+import no.nav.brukerdialog.security.tilgangskontroll.policy.pep.EnforcementPoint;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.*;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.*;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.config.ServiceTestContext;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.HenvendelseBehandlingService;
 import org.hamcrest.Matchers;
 import org.joda.time.DateTime;
