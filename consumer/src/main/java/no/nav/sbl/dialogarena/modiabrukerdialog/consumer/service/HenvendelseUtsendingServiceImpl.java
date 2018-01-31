@@ -1,5 +1,7 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service;
 
+import no.nav.brukerdialog.security.tilgangskontroll.policy.pep.EnforcementPoint;
+import no.nav.brukerdialog.security.tilgangskontroll.policy.request.PolicyRequest;
 import no.nav.kjerneinfo.consumer.fim.person.PersonKjerneinfoServiceBi;
 import no.nav.kjerneinfo.consumer.fim.person.to.HentKjerneinformasjonRequest;
 import no.nav.kjerneinfo.domain.person.Person;
@@ -7,23 +9,24 @@ import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendel
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType;
 import no.nav.modig.content.PropertyResolver;
 import no.nav.modig.core.exception.ApplicationException;
-import no.nav.brukerdialog.security.tilgangskontroll.policy.pep.EnforcementPoint;
-import no.nav.brukerdialog.security.tilgangskontroll.policy.request.PolicyRequest;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.Sak;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Fritekst;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.exceptions.TraadAlleredeBesvart;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.HenvendelseUtsendingService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveBehandlingService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.gsak.SakerService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.ldap.LDAPService;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.Feature;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.FeatureToggle;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.behandlehenvendelse.BehandleHenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.senduthenvendelse.SendUtHenvendelsePortType;
+import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.senduthenvendelse.WSBehandlingskjedeErAlleredeBesvart;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.senduthenvendelse.meldinger.WSFerdigstillHenvendelseRequest;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.senduthenvendelse.meldinger.WSSendUtHenvendelseRequest;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.senduthenvendelse.meldinger.WSSendUtHenvendelseResponse;
+import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.senduthenvendelse.meldinger.WSSlaSammenHenvendelserRequest;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.henvendelse.HenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.meldinger.WSHentHenvendelseListeRequest;
 import org.apache.commons.collections15.Transformer;
@@ -35,13 +38,13 @@ import java.util.List;
 import java.util.Optional;
 
 import static java.util.Collections.singletonList;
+import static no.nav.brukerdialog.security.tilgangskontroll.utils.AttributeUtils.*;
+import static no.nav.brukerdialog.security.tilgangskontroll.utils.RequestUtils.forRequest;
 import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.*;
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.lang.collections.PredicateUtils.equalTo;
 import static no.nav.modig.lang.collections.PredicateUtils.where;
 import static no.nav.modig.lang.collections.TransformerUtils.castTo;
-import static no.nav.brukerdialog.security.tilgangskontroll.utils.AttributeUtils.*;
-import static no.nav.brukerdialog.security.tilgangskontroll.utils.RequestUtils.forRequest;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe.ANSOS;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe.OKSOS;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding.ELDSTE_FORST;
@@ -162,7 +165,7 @@ public class HenvendelseUtsendingServiceImpl implements HenvendelseUtsendingServ
                         .withFodselsnummer(fnr))
                         .getAny())
                         .map(castTo(XMLHenvendelse.class))
-                        .filter(where(BEHANDLINGSKJEDE_ID, equalTo(traadId)))
+                        .filter(where(XMLHenvendelse::getBehandlingskjedeId, equalTo(traadId)))
                         .map(tilMelding(propertyResolver, ldapService))
                         .map(journalfortTemaTilgang(valgtEnhet))
                         .collect(ELDSTE_FORST);
@@ -235,7 +238,18 @@ public class HenvendelseUtsendingServiceImpl implements HenvendelseUtsendingServ
         behandleHenvendelsePortType.oppdaterTemagruppe(behandlingsId, temagruppe);
     }
 
-    private static final Transformer<XMLHenvendelse, String> BEHANDLINGSKJEDE_ID = xmlHenvendelse -> xmlHenvendelse.getBehandlingskjedeId();
+    @Override
+    public String slaaSammenTraader(List<String> traadIder) {
+        try {
+            sendUtHenvendelsePortType.slaSammenHenvendelser(
+                    new WSSlaSammenHenvendelserRequest()
+                        .withBehandlingsIder(traadIder)
+            );
+        } catch (WSBehandlingskjedeErAlleredeBesvart e) {
+            throw new TraadAlleredeBesvart(e.getFaultInfo().getBehandlingskjedeId());
+        }
+        return null;
+    }
 
     private String getEnhet(String fnr) {
         HentKjerneinformasjonRequest kjerneinfoRequest = new HentKjerneinformasjonRequest(fnr);

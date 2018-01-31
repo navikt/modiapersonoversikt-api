@@ -100,7 +100,7 @@
         <!-- Modia-komponenter-->
         <reactkomponenter.version>3.0.5-SNAPSHOT</reactkomponenter.version>
         <personsok.version>4.0.2</personsok.version>
-        <kjerneinfo.versjon>6.0.10</kjerneinfo.versjon>
+        <kjerneinfo.versjon>6.0.12-SNAPSHOT</kjerneinfo.versjon>
         <utbetaling.version>4.0.0</utbetaling.version>
         <saksoversikt.version>9.0.2.1</saksoversikt.version>
         <varsling.modia.version>2.0</varsling.modia.version>
@@ -114,7 +114,7 @@
         <utbetaling.tjenestespesifikasjon.version>1.0.15</utbetaling.tjenestespesifikasjon.version>
         <kodeverk.tjenestespesifikasjon.version>2.0.1</kodeverk.tjenestespesifikasjon.version>
         <henvendelse.informasjon.v2.version>0.5</henvendelse.informasjon.v2.version>
-        <send.ut.henvendelse.version>0.6.0</send.ut.henvendelse.version>
+        <send.ut.henvendelse.version>0.6-SNAPSHOT</send.ut.henvendelse.version>
         <behandle.henvendelse.version>0.21</behandle.henvendelse.version>
         <behandle.person.v1.version>1.0.0</behandle.person.v1.version>
         <varsling.tjeneste.version>0.0.5</varsling.tjeneste.version>

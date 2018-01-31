@@ -30,6 +30,7 @@ import java.util.Objects;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
+import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
 import static no.nav.brukerdialog.security.context.SubjectHandler.getSubjectHandler;
 import static no.nav.modig.lang.option.Optional.optional;
@@ -82,13 +83,26 @@ public class OppgaveBehandlingServiceImpl implements OppgaveBehandlingService {
 
     @Override
     public void ferdigstillOppgaveIGsak(String oppgaveId, Optional<Temagruppe> temagruppe, String saksbehandlersValgteEnhet) {
+        ferdigstillOppgaverIGsak(singletonList(oppgaveId), temagruppe, saksbehandlersValgteEnhet);
+    }
+
+    @Override
+    public void ferdigstillOppgaverIGsak(List<String> oppgaveIder, Optional<Temagruppe> temagruppe, String saksbehandlersValgteEnhet) {
+        for (String oppgaveId : oppgaveIder) {
+            oppdaterBeskrivelseIGsak(temagruppe, saksbehandlersValgteEnhet, oppgaveId);
+        }
+
+        oppgavebehandlingWS.ferdigstillOppgaveBolk(new WSFerdigstillOppgaveBolkRequest()
+                .withOppgaveIdListe(oppgaveIder)
+                .withFerdigstiltAvEnhetId(Integer.valueOf(enhetFor(temagruppe, saksbehandlersValgteEnhet))));
+    }
+
+    private void oppdaterBeskrivelseIGsak(Optional<Temagruppe> temagruppe, String saksbehandlersValgteEnhet, String oppgaveId) {
         try {
             WSOppgave oppgave = oppgaveWS.hentOppgave(new WSHentOppgaveRequest().withOppgaveId(oppgaveId)).getOppgave();
             oppgave.withBeskrivelse(leggTilBeskrivelse(oppgave.getBeskrivelse(), "Oppgaven er ferdigstilt i Modia",
                     saksbehandlersValgteEnhet));
             lagreOppgaveIGsak(oppgave, temagruppe, saksbehandlersValgteEnhet);
-
-            oppgavebehandlingWS.ferdigstillOppgaveBolk(new WSFerdigstillOppgaveBolkRequest().withOppgaveIdListe(oppgaveId).withFerdigstiltAvEnhetId(Integer.valueOf(enhetFor(temagruppe, saksbehandlersValgteEnhet))));
         } catch (HentOppgaveOppgaveIkkeFunnet | LagreOppgaveOptimistiskLasing e) {
             throw new RuntimeException(e);
         }

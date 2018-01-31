@@ -1,4 +1,4 @@
-package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service;
+package no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service;
 
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.Sak;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
@@ -20,6 +20,8 @@ public interface HenvendelseUtsendingService {
     void merkSomKontorsperret(String fnr, List<String> meldingsIDer);
 
     void oppdaterTemagruppe(String behandlingsId, String temagruppe);
+
+    String slaaSammenTraader(List<String> traadIder);
 
     class OppgaveErFerdigstilt extends Exception {
     }

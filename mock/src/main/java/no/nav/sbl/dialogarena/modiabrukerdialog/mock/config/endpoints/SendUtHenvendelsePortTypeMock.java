@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Configuration;
 import java.util.List;
 import java.util.UUID;
 
+import static no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.HenvendelsePortTypeMock.BEHANDLINGS_ID1;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.HenvendelsePortTypeMock.HENVENDELSER;
 
 @Configuration
@@ -58,6 +59,11 @@ public class SendUtHenvendelsePortTypeMock {
                 xmlHenvendelse.setGjeldendeTemagruppe(xmlMelding.getTemagruppe());
                 HENVENDELSER.add(xmlHenvendelse);
                 return new WSFerdigstillHenvendelseResponse();
+            }
+
+            @Override
+            public WSSlaSammenHenvendelserResponse slaSammenHenvendelser(WSSlaSammenHenvendelserRequest wsSlaSammenHenvendelserRequest) {
+                return new WSSlaSammenHenvendelserResponse().withBehandlingskjedeId(BEHANDLINGS_ID1);
             }
         };
     }
