@@ -86,7 +86,7 @@ public class MeldingUtils {
 
             XMLMetadata xmlMetadata = xmlHenvendelse.getMetadataListe().getMetadata().get(0);
             if (DOKUMENT_VARSEL.name().equals(xmlHenvendelse.getHenvendelseType())) {
-                oppdaterMeldingMedDokumentVarselData(xmlHenvendelse, melding, xmlMetadata);
+                oppdaterMeldingMedDokumentVarselData(propertyResolver, xmlHenvendelse, melding, xmlMetadata);
                 return melding;
             }
 
@@ -141,10 +141,10 @@ public class MeldingUtils {
         melding.kassert = true;
     }
 
-    private static void oppdaterMeldingMedDokumentVarselData(final XMLHenvendelse xmlHenvendelse, final Melding melding, final XMLMetadata xmlMetadata) {
+    private static void oppdaterMeldingMedDokumentVarselData(final PropertyResolver propertyResolver, final XMLHenvendelse xmlHenvendelse, final Melding melding, final XMLMetadata xmlMetadata) {
         XMLDokumentVarsel dokumentVarsel = (XMLDokumentVarsel) xmlMetadata;
         melding.statusTekst = dokumentVarsel.getDokumenttittel();
-        melding.withFritekst(new Fritekst(dokumentVarsel.getTemanavn(), melding.skrevetAv, melding.opprettetDato));
+        melding.withFritekst(new Fritekst(format(propertyResolver.getProperty("dokument.fritekst"), dokumentVarsel.getTemanavn()), melding.skrevetAv, melding.opprettetDato));
         melding.erDokumentMelding = true;
         melding.withTraadId(xmlHenvendelse.getBehandlingsId());
         melding.lestStatus = lagLestStatusDokumentVarsel(melding);
