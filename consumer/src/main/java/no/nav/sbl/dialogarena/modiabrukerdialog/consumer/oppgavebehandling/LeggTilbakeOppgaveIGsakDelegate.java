@@ -1,29 +1,29 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.oppgavebehandling;
 
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.AnsattEnhet;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.LeggTilbakeOppgaveIGsakRequest;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.arbeidsfordeling.ArbeidsfordelingV1Service;
 import no.nav.tjeneste.virksomhet.oppgave.v3.informasjon.oppgave.WSOppgave;
 import no.nav.tjeneste.virksomhet.oppgave.v3.informasjon.oppgave.WSUnderkategori;
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.LagreOppgaveOptimistiskLasing;
-import no.nav.virksomhet.tjenester.ruting.meldinger.v1.WSEnhet;
-import no.nav.virksomhet.tjenester.ruting.meldinger.v1.WSFinnAnsvarligEnhetForOppgavetypeRequest;
-import no.nav.virksomhet.tjenester.ruting.v1.Ruting;
 
 import javax.ws.rs.ForbiddenException;
 import java.util.List;
-import static no.nav.brukerdialog.security.context.SubjectHandler.getSubjectHandler;
+
+import static java.util.stream.Collectors.toList;import static no.nav.brukerdialog.security.context.SubjectHandler.getSubjectHandler;
 
 class LeggTilbakeOppgaveIGsakDelegate {
 
     private final OppgaveBehandlingServiceImpl oppgaveBehandlingService;
-    private final Ruting ruting;
+    private final ArbeidsfordelingV1Service arbeidsfordelingService;
 
-    LeggTilbakeOppgaveIGsakDelegate(OppgaveBehandlingServiceImpl oppgaveBehandlingService, Ruting ruting) {
+    LeggTilbakeOppgaveIGsakDelegate(OppgaveBehandlingServiceImpl oppgaveBehandlingService, ArbeidsfordelingV1Service arbeidsfordelingService) {
         this.oppgaveBehandlingService = oppgaveBehandlingService;
-        this.ruting = ruting;
+        this.arbeidsfordelingService = arbeidsfordelingService;
     }
 
-     void leggTilbake(WSOppgave oppgaveFraGsak, LeggTilbakeOppgaveIGsakRequest request) {
+    void leggTilbake(WSOppgave oppgaveFraGsak, LeggTilbakeOppgaveIGsakRequest request) {
         validerTilgang(oppgaveFraGsak);
 
         markerOppgaveSomLagtTilbake(oppgaveFraGsak, request);
@@ -32,8 +32,8 @@ class LeggTilbakeOppgaveIGsakDelegate {
             oppdaterForNyTemagruppe(oppgaveFraGsak, request.getNyTemagruppe());
         }
 
-         lagreOppgaveIGsak(oppgaveFraGsak, request);
-     }
+        lagreOppgaveIGsak(oppgaveFraGsak, request);
+    }
 
     private void validerTilgang(WSOppgave oppgaveFraGsak) {
         String innloggetSaksbehandler = getSubjectHandler().getUid();
@@ -69,18 +69,17 @@ class LeggTilbakeOppgaveIGsakDelegate {
     }
 
     private String getAnsvarligEnhet(WSOppgave oppgaveFraGsak, Temagruppe temagruppe) {
-        List<WSEnhet> enhetListe = finnAnsvarligEnhetForOppgavetype(oppgaveFraGsak, temagruppe);
-        return enhetListe.isEmpty() ? oppgaveFraGsak.getAnsvarligEnhetId() : enhetListe.get(0).getEnhetId();
+        List<String> enheter = finnBehandlendeEnhetListe(oppgaveFraGsak, temagruppe).stream()
+                .map(enhet -> enhet.enhetId)
+                .collect(toList());
+        return enheter.isEmpty() ? oppgaveFraGsak.getAnsvarligEnhetId() : enheter.get(0);
     }
 
-    private List<WSEnhet> finnAnsvarligEnhetForOppgavetype(WSOppgave oppgaveFraGsak, Temagruppe temagruppe) {
-        return ruting.finnAnsvarligEnhetForOppgavetype(
-                new WSFinnAnsvarligEnhetForOppgavetypeRequest()
-                        .withBrukerId(oppgaveFraGsak.getGjelder().getBrukerId())
-                        .withOppgaveKode(oppgaveFraGsak.getOppgavetype().getKode())
-                        .withFagomradeKode(oppgaveFraGsak.getFagomrade().getKode())
-                        .withGjelderKode(underkategoriKode(temagruppe)))
-                .getEnhetListe();
+    private List<AnsattEnhet> finnBehandlendeEnhetListe(WSOppgave oppgaveFraGsak, Temagruppe temagruppe) {
+        return arbeidsfordelingService.finnBehandlendeEnhetListe(oppgaveFraGsak.getGjelder().getBrukerId(),
+                oppgaveFraGsak.getFagomrade().getKode(),
+                oppgaveFraGsak.getOppgavetype().getKode(),
+                underkategoriKode(temagruppe));
     }
 
     private void lagreOppgaveIGsak(WSOppgave oppgaveFraGsak, LeggTilbakeOppgaveIGsakRequest request) {

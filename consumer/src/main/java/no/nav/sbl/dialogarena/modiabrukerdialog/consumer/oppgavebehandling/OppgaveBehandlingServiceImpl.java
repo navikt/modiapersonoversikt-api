@@ -5,8 +5,8 @@ import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Oppgave;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.LeggTilbakeOppgaveIGsakRequest;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveBehandlingService;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.arbeidsfordeling.ArbeidsfordelingV1Service;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.AnsattService;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
 import no.nav.tjeneste.virksomhet.oppgave.v3.HentOppgaveOppgaveIkkeFunnet;
 import no.nav.tjeneste.virksomhet.oppgave.v3.OppgaveV3;
 import no.nav.tjeneste.virksomhet.oppgave.v3.informasjon.oppgave.WSOppgave;
@@ -16,7 +16,6 @@ import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.LagreOppgaveOptimistiskLa
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.OppgavebehandlingV3;
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.TildelOppgaveUgyldigInput;
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.meldinger.*;
-import no.nav.virksomhet.tjenester.ruting.v1.Ruting;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -46,11 +45,11 @@ public class OppgaveBehandlingServiceImpl implements OppgaveBehandlingService {
     private LeggTilbakeOppgaveIGsakDelegate leggTilbakeOppgaveIGsakDelegate;
 
     @Inject
-    public OppgaveBehandlingServiceImpl(OppgavebehandlingV3 oppgavebehandlingWS, OppgaveV3 oppgaveWS, AnsattService ansattWS, Ruting ruting) {
+    public OppgaveBehandlingServiceImpl(OppgavebehandlingV3 oppgavebehandlingWS, OppgaveV3 oppgaveWS, AnsattService ansattWS, ArbeidsfordelingV1Service arbeidsfordelingService) {
         this.oppgavebehandlingWS = oppgavebehandlingWS;
         this.oppgaveWS = oppgaveWS;
         this.ansattWS = ansattWS;
-        this.leggTilbakeOppgaveIGsakDelegate = new LeggTilbakeOppgaveIGsakDelegate(this, ruting);
+        this.leggTilbakeOppgaveIGsakDelegate = new LeggTilbakeOppgaveIGsakDelegate(this, arbeidsfordelingService);
     }
 
     @Override
@@ -123,7 +122,7 @@ public class OppgaveBehandlingServiceImpl implements OppgaveBehandlingService {
                 valgtEnhet);
 
         String nyBeskrivelse = header + leggTil;
-        return isBlank(gammelBeskrivelse) ? nyBeskrivelse :  nyBeskrivelse + "\n\n" + gammelBeskrivelse;
+        return isBlank(gammelBeskrivelse) ? nyBeskrivelse : nyBeskrivelse + "\n\n" + gammelBeskrivelse;
     }
 
     WSOppgave hentOppgaveFraGsak(String oppgaveId) {

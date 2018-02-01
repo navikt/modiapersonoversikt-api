@@ -14,7 +14,7 @@ import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.Fe
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.FeatureToggle;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.oppgavebehandling.OppgaveBehandlingServiceImpl;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.AnsattServiceImpl;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.SaksbehandlerInnstillingerServiceImpl;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.arbeidsfordeling.ArbeidsfordelingV1ServiceImpl;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.util.HttpRequestUtil;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.util.SubjectHandlerUtil;
 import no.nav.tjeneste.virksomhet.oppgave.v3.HentOppgaveOppgaveIkkeFunnet;
@@ -27,14 +27,11 @@ import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.LagreOppgaveOptimistiskLa
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.OppgavebehandlingV3;
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.meldinger.WSEndreOppgave;
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.meldinger.WSLagreOppgaveRequest;
-import no.nav.virksomhet.tjenester.ruting.meldinger.v1.WSFinnAnsvarligEnhetForOppgavetypeResponse;
-import no.nav.virksomhet.tjenester.ruting.v1.Ruting;
 import org.junit.jupiter.api.*;
 import org.mockito.ArgumentCaptor;
 import org.springframework.mock.web.MockHttpServletRequest;
 
 import javax.ws.rs.ForbiddenException;
-import java.util.ArrayList;
 
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.Feature.DELVISE_SVAR;
 import static org.hamcrest.CoreMatchers.containsString;
@@ -55,7 +52,6 @@ class OppgaveControllerTest {
     private OppgaveController oppgaveController;
     private OppgavebehandlingV3 oppgaveBehandlingMock;
     private OppgaveV3 oppgaveWSMock;
-    private Ruting rutingMock;
     private AnsattServiceImpl ansattWSMock;
 
     @BeforeAll
@@ -73,7 +69,7 @@ class OppgaveControllerTest {
             HentNAVAnsattEnhetListeFaultGOSYSNAVAnsattIkkeFunnetMsg {
         SubjectHandlerUtil.setInnloggetSaksbehandler(SAKSBEHANDLERS_IDENT);
         setupMocks();
-        OppgaveBehandlingServiceImpl oppgaveBehandlingService = new OppgaveBehandlingServiceImpl(oppgaveBehandlingMock, oppgaveWSMock, ansattWSMock, rutingMock);
+        OppgaveBehandlingServiceImpl oppgaveBehandlingService = new OppgaveBehandlingServiceImpl(oppgaveBehandlingMock, oppgaveWSMock, ansattWSMock, mock(ArbeidsfordelingV1ServiceImpl.class));
 
         oppgaveController = new OppgaveController(oppgaveBehandlingService);
     }
@@ -81,7 +77,6 @@ class OppgaveControllerTest {
     private void setupMocks() throws HentOppgaveOppgaveIkkeFunnet, HentNAVAnsattEnhetListeFaultGOSYSGeneriskMsg, HentNAVAnsattEnhetListeFaultGOSYSNAVAnsattIkkeFunnetMsg, HentNAVAnsattFaultGOSYSGeneriskfMsg, HentNAVAnsattFaultGOSYSNAVAnsattIkkeFunnetMsg {
         oppgaveBehandlingMock = mock(OppgavebehandlingV3.class);
         oppgaveWSMock = mockOppgaveWs();
-        rutingMock = mockRuting();
         ansattWSMock = new AnsattServiceImpl(mockGosysNavAnsatt());
     }
 
@@ -89,12 +84,6 @@ class OppgaveControllerTest {
         OppgaveV3 oppgaveWS = mock(OppgaveV3.class);
         when(oppgaveWS.hentOppgave(any(WSHentOppgaveRequest.class))).thenReturn(new WSHentOppgaveResponse().withOppgave(mockOppgaveFraGSAK()));
         return oppgaveWS;
-    }
-
-    private Ruting mockRuting() {
-        Ruting ruting = mock(Ruting.class);
-        when(ruting.finnAnsvarligEnhetForOppgavetype(any())).thenReturn(new WSFinnAnsvarligEnhetForOppgavetypeResponse().withEnhetListe(new ArrayList<>()));
-        return ruting;
     }
 
     private GOSYSNAVansatt mockGosysNavAnsatt() throws HentNAVAnsattFaultGOSYSNAVAnsattIkkeFunnetMsg, HentNAVAnsattFaultGOSYSGeneriskfMsg, HentNAVAnsattEnhetListeFaultGOSYSGeneriskMsg,
