@@ -27,14 +27,15 @@ public class HaandterMeldingValgPanel extends Panel {
         IModel<Boolean> erSporsmal = new PropertyModel<>(getDefaultModel(), "erMeldingstypeSporsmal()");
         IModel<Boolean> skalViseStandardMerkValg = both(not(eldsteMeldingErJournalfort)).and(not(erFeilsendt)).and(erBehandlet).and(not(erKontorsperret));
         IModel<Boolean> skalViseFerdigstillUtenSvarValg = both(erSporsmal).and(not(erKontorsperret)).and(not(erBehandlet));
-
+        IModel<Boolean> erVarsel = new PropertyModel<>(getDefaultModel(), "erVarsel()");
 
         add(new MeldingValgPanel("journalforingValg",
                 both(not(erKontorsperret))
                         .and(not(erFeilsendt))
                         .and(not(nyesteMeldingErJournalfort))
                         .and(erBehandlet)
-                        .and(not(erTemagruppeSosialeTjenester)),
+                        .and(not(erTemagruppeSosialeTjenester))
+                        .and(not(erVarsel)),
                 meldingActionPanel.journalforPanel));
 
         add(new MeldingValgPanel("nyoppgaveValg", erBehandlet, meldingActionPanel.oppgavePanel));
