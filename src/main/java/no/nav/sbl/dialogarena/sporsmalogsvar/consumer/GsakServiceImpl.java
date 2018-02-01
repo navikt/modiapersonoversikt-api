@@ -1,8 +1,6 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.consumer;
 
-import no.nav.modig.lang.option.Optional;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.GsakKodeTema;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.AnsattEnhet;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.AnsattService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.NyOppgave;
@@ -14,20 +12,13 @@ import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.LagreOppgaveOppgaveIkkeFu
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.LagreOppgaveOptimistiskLasing;
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.OppgavebehandlingV3;
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.meldinger.*;
-import no.nav.virksomhet.tjenester.ruting.meldinger.v1.WSEnhet;
-import no.nav.virksomhet.tjenester.ruting.meldinger.v1.WSFinnAnsvarligEnhetForOppgavetypeRequest;
-import no.nav.virksomhet.tjenester.ruting.meldinger.v1.WSFinnAnsvarligEnhetForOppgavetypeResponse;
-import no.nav.virksomhet.tjenester.ruting.v1.Ruting;
 import org.joda.time.LocalDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
-import java.util.List;
 
-import static java.util.Collections.emptyList;
 import static no.nav.brukerdialog.security.context.SubjectHandler.getSubjectHandler;
-import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.lang.option.Optional.optional;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.DateUtils.arbeidsdagerFraDato;
 import static org.apache.commons.lang3.StringUtils.equalsIgnoreCase;
@@ -49,34 +40,9 @@ public class GsakServiceImpl implements GsakService {
     @Inject
     private OppgavebehandlingV3 oppgavebehandlingWS;
     @Inject
-    private Ruting ruting;
-    @Inject
     private SaksbehandlerInnstillingerService saksbehandlerInnstillingerService;
     @Inject
     private AnsattService ansattWS;
-
-    @Override
-    public List<AnsattEnhet> hentForeslatteEnheter(String fnr, String tema, String type, Optional<GsakKodeTema.Underkategori> underkategori) {
-        try {
-            WSFinnAnsvarligEnhetForOppgavetypeRequest request = new WSFinnAnsvarligEnhetForOppgavetypeRequest()
-                    .withAlleEnheter(true)
-                    .withBrukerId(fnr)
-                    .withFagomradeKode(tema)
-                    .withOppgaveKode(type);
-
-            if (underkategori.isSome() && !isBlank(underkategori.get().kode)) {
-                request.withGjelderKode(underkategori.get().kode);
-            }
-
-            WSFinnAnsvarligEnhetForOppgavetypeResponse enhetForOppgaveResponse = ruting.finnAnsvarligEnhetForOppgavetype(request);
-
-            List<WSEnhet> wsEnheter = enhetForOppgaveResponse.getEnhetListe();
-
-            return on(wsEnheter).map((wsEnhet) -> new AnsattEnhet(wsEnhet.getEnhetId(), wsEnhet.getEnhetNavn())).collect();
-        } catch (Exception e) {
-            return emptyList();
-        }
-    }
 
     @Override
     public boolean oppgaveKanManuelltAvsluttes(String oppgaveId) {
