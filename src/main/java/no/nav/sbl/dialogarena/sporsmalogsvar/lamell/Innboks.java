@@ -7,9 +7,9 @@ import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.DialogSession;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.Events;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Oppgave;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Traad;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.exceptions.TraadAlleredeBesvart;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.HenvendelseUtsendingService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.LeggTilbakeOppgaveIGsakRequest;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveBehandlingService;
@@ -27,7 +27,6 @@ import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
-import org.springframework.remoting.soap.SoapFaultException;
 
 import javax.inject.Inject;
 import java.util.HashMap;
@@ -42,6 +41,7 @@ import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
 import static no.nav.modig.wicket.model.ModelUtils.both;
 import static no.nav.modig.wicket.model.ModelUtils.not;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.Events.SporsmalOgSvar.MELDING_VALGT;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype.SVAR_SKRIFTLIG;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.merke.MerkePanel.TRAAD_MERKET;
 
 public class Innboks extends Lerret {
@@ -107,7 +107,6 @@ public class Innboks extends Lerret {
         AjaxLink slaaSammenTraaderToggleButton = new SokKnapp("slaaSammenTraaderToggle") {
             @Override
             public void onClick(AjaxRequestTarget target) {
-                // TODO
                 innboksVM.oppdaterMeldinger();
                 target.add(alleMeldingerPanel, traaddetaljerPanel);
                 slaaSammenTraaderPanel.call("vis", getSlaaSammenTraaderProps());
@@ -135,15 +134,34 @@ public class Innboks extends Lerret {
             throw new IllegalArgumentException("Ikke-tildelte oppgaver forsøkt slått sammen.");
         }
 
+        String nyTraadId;
         try {
-            henvendelseUtsendingService.slaaSammenTraader(traadIder);
-        } catch (SoapFaultException sfe) {
-            throw new IllegalArgumentException("TODO");
+            nyTraadId = henvendelseUtsendingService.slaaSammenTraader(traadIder);
+        } catch (TraadAlleredeBesvart e) {
+            haandterTraadAlleredeBesvart(e.traadId);
+            return;
         }
 
+        String nySvarHenvendelse = henvendelseUtsendingService.opprettHenvendelse(SVAR_SKRIFTLIG.toString(), oppgaver.get(0).fnr, nyTraadId);
+
         oppgaver.stream()
-                .skip(1)
+                .filter(oppgave -> !oppgave.henvendelseId.equals(nyTraadId))
                 .forEach(this::ferdigstillOppgave);
+
+        oppgaver.stream()
+                .filter(oppgave -> oppgave.henvendelseId.equals(nyTraadId))
+                .findAny()
+                .get()
+                .setSvarHenvendelseId(nySvarHenvendelse);
+    }
+
+    private void haandterTraadAlleredeBesvart(String traadId) {
+        // TODO vis feilmelding
+        innboksVM.tildelteOppgaver
+                .removeIf(oppgave -> traadId.equals(oppgave.henvendelseId));
+        DialogSession.read(this)
+                .getPlukkedeOppgaver()
+                .removeIf(oppgave -> traadId.equals(oppgave.henvendelseId));
     }
 
     private void ferdigstillOppgave(Oppgave oppgave) {
@@ -184,19 +202,10 @@ public class Innboks extends Lerret {
     }
 
     private Map<String, Object> getSlaaSammenTraaderProps() {
-        Map<String, Object> props = new HashMap<>();
-        List<Traad> traader = innboksVM.getTraader().values().stream()
-                .map(traadVM -> new Traad(
-                        traadVM.getEldsteMelding().getTraadId(),
-                        traadVM.getMeldinger().size(),
-                        traadVM.getMeldinger().stream()
-                                .map(meldingVM -> meldingVM.melding)
-                                .collect(toList())))
-                .filter(traad -> innboksVM.tildelteOppgaver.stream()
-                        .anyMatch(oppgave -> traad.traadId.equals(oppgave.henvendelseId)))
-                .filter(traad -> traad.meldinger.get(0).meldingstype.equals(Meldingstype.SPORSMAL_SKRIFTLIG))
-                .collect(toList());
-        props.put("traader", traader);
+        Map<String, Object> props = getMeldingerSokProps();
+        props.put("traadIder", innboksVM.tildelteOppgaver.stream()
+                .map(oppgave -> oppgave.henvendelseId)
+                .collect(toList()));
         return props;
     }
 
