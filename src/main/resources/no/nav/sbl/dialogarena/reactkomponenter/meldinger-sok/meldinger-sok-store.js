@@ -137,6 +137,9 @@ function haandterDelviseSvar(traad) {
 }
 
 function onFulfilled(traader) {
+    if (this.state.traadIder) {
+        traader = traader.filter(traad => this.state.traadIder.indexOf(traad.traadId) >= 0);
+    }
     traader.forEach((traad) => {
         traad.key = traad.traadId;
         traad.datoInMillis = traad.dato.millis;
@@ -172,4 +175,5 @@ MeldingerSokStore.hentSokeresultater =
         MeldingerSokStore._sok(this.state.fnr, fritekst).done(onFulfilled.bind(this), onRejected.bind(this));
     }, 150);
 
+export { haandterDelviseSvar };
 export default MeldingerSokStore;

@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import MeldingerSok from "../meldinger-sok/meldinger-sok-module";
+import WicketSender from '../react-wicket-mixin/wicket-sender';
 
 function findCheckedBoxes() {
     const boxes = document.querySelectorAll('.slaa-sammen-traader-visning .skjemaelement__input.checkboks');
@@ -11,11 +12,13 @@ function findCheckedBoxes() {
 class SlaaSammenTraader extends Component {
 
     constructor(props) {
-        super(props);
+        super();
         this.state = {
+            traadIder: props.traadIder,
             submitError: false,
             vis: () => {}
         };
+        this.sendToWicket = WicketSender.bind(this, props.wicketurl, props.wicketcomponent);
     }
 
     onSubmit(event, state, lukkModalVindu) {
@@ -28,9 +31,8 @@ class SlaaSammenTraader extends Component {
             event.preventDefault();
             return false;
         }
-        lukkModalVindu();
-        console.log('CheckedBoxes', checkedBoxes);
-        return checkedBoxes;
+        return this.sendToWicket('slaaSammen', checkedBoxes)
+            .then(lukkModalVindu);
     }
 
     render() {
