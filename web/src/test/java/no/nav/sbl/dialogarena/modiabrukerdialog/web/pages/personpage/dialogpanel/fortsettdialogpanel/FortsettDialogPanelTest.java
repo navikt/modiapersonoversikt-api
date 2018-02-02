@@ -4,6 +4,7 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpane
 import no.nav.modig.content.CmsContentRetriever;
 import no.nav.modig.wicket.test.matcher.BehaviorMatchers;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Kanal;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Oppgave;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.Sak;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Fritekst;
@@ -210,8 +211,8 @@ public class FortsettDialogPanelTest extends WicketPageTest {
     public void senderOppgaveIdTilFerdigstillelseDersomDenneErSatt() throws Exception {
         reset(henvendelseUtsendingService);
 
-        String oppgaveId = "oppgaveid";
-        wicket.goToPageWith(new FortsettDialogPanel("id", grunnInfo, asList(lagSporsmalFraBruker()), oppgaveId, false))
+        Oppgave oppgave = new Oppgave("oppgaveid", "fnr", "henvendelseid");
+        wicket.goToPageWith(new FortsettDialogPanel("id", grunnInfo, asList(lagSporsmalFraBruker()), oppgave, false))
                 .inForm(withId("fortsettdialogform"))
                 .write("fortsettdialogformelementer:tekstfelt:text", FRITEKST)
                 .select("fortsettdialogformelementer:kanal", 1)
@@ -220,7 +221,7 @@ public class FortsettDialogPanelTest extends WicketPageTest {
         verify(henvendelseUtsendingService).ferdigstillHenvendelse(any(Melding.class), optionalStringArgumentCaptor.capture(), any(Optional.class), anyString(), eq(VALGT_ENHET));
 
         String sendtOppgaveId = optionalStringArgumentCaptor.getValue().get();
-        assertThat(sendtOppgaveId, is(oppgaveId));
+        assertThat(sendtOppgaveId, is(oppgave.oppgaveId));
 
     }
 

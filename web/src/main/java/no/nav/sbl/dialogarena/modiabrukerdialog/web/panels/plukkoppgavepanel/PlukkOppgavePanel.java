@@ -5,6 +5,7 @@ import no.nav.modig.modia.feedbackform.FeedbackLabel;
 import no.nav.modig.wicket.errorhandling.aria.AriaFeedbackPanel;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Oppgave;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.HenvendelseUtsendingService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.PersonPage;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.DialogSession;
@@ -36,6 +37,7 @@ import static no.nav.brukerdialog.security.tilgangskontroll.utils.AttributeUtils
 import static no.nav.brukerdialog.security.tilgangskontroll.utils.AttributeUtils.resourceId;
 import static no.nav.metrics.MetricsFactory.createTimer;
 import static no.nav.modig.modia.security.WicketAutorizationUtils.accessRestriction;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype.SVAR_SKRIFTLIG;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.hentperson.HentPersonPage.FNR;
 import static org.apache.wicket.ajax.attributes.AjaxRequestAttributes.EventPropagation;
 import static org.apache.wicket.markup.head.JavaScriptHeaderItem.forReference;
@@ -49,6 +51,8 @@ public class PlukkOppgavePanel extends Panel {
     private PlukkOppgaveService plukkOppgaveService;
     @Inject
     private SaksbehandlerInnstillingerService saksbehandlerInnstillingerService;
+    @Inject
+    private HenvendelseUtsendingService henvendelseUtsendingService;
 
     private final IModel<Temagruppe> valgtTemagruppe;
     private final AriaFeedbackPanel feedbackPanel;
@@ -125,6 +129,7 @@ public class PlukkOppgavePanel extends Panel {
 
                 List<Oppgave> oppgaver = plukkOppgaveService.plukkOppgaver(valgtTemagruppe.getObject(), saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet());
                 if (!oppgaver.isEmpty()) {
+                    opprettSvarHenvendelserForOppgaver(oppgaver);
                     session.withPlukkedeOppgaver(oppgaver)
                            .withValgtTemagruppe(valgtTemagruppe.getObject())
                            .withOppgaveSomBesvares(oppgaver.get(0));
@@ -138,6 +143,18 @@ public class PlukkOppgavePanel extends Panel {
             } finally {
                 timer.stop();
                 timer.report();
+            }
+        }
+
+        private void opprettSvarHenvendelserForOppgaver(List<Oppgave> oppgaver) {
+            for (Oppgave oppgave : oppgaver) {
+                oppgave.setSvarHenvendelseId(
+                    henvendelseUtsendingService.opprettHenvendelse(
+                            SVAR_SKRIFTLIG.toString(),
+                            oppgave.fnr,
+                            oppgave.henvendelseId
+                    )
+                );
             }
         }
 

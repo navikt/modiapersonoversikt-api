@@ -62,8 +62,8 @@ public class SendUtHenvendelsePortTypeMock {
             }
 
             @Override
-            public WSSlaSammenHenvendelserResponse slaSammenHenvendelser(WSSlaSammenHenvendelserRequest wsSlaSammenHenvendelserRequest) {
-                return new WSSlaSammenHenvendelserResponse().withBehandlingskjedeId(BEHANDLINGS_ID1);
+            public String slaSammenHenvendelser(List<String> traadIder) {
+                return traadIder.get(0);
             }
         };
     }

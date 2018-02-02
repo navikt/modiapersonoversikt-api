@@ -241,14 +241,10 @@ public class HenvendelseUtsendingServiceImpl implements HenvendelseUtsendingServ
     @Override
     public String slaaSammenTraader(List<String> traadIder) {
         try {
-            sendUtHenvendelsePortType.slaSammenHenvendelser(
-                    new WSSlaSammenHenvendelserRequest()
-                        .withBehandlingsIder(traadIder)
-            );
+            return sendUtHenvendelsePortType.slaSammenHenvendelser(traadIder);
         } catch (WSBehandlingskjedeErAlleredeBesvart e) {
-            throw new TraadAlleredeBesvart(e.getFaultInfo().getBehandlingskjedeId());
+            throw new TraadAlleredeBesvart(e.getFaultInfo());
         }
-        return null;
     }
 
     private String getEnhet(String fnr) {

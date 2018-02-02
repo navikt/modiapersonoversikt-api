@@ -76,7 +76,7 @@ public class DialogPanel extends Panel {
                 List<Melding> traad = henvendelseUtsendingService.hentTraad(grunnInfo.bruker.fnr, oppgave.henvendelseId,
                         saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet());
                 if (!traad.isEmpty() && !erEnkeltstaaendeSamtalereferat(traad)) {
-                    erstattDialogPanelMedFortsettDialogPanel(traad, oppgave.oppgaveId);
+                    erstattDialogPanelMedFortsettDialogPanel(traad, oppgave);
                     clearLokaleParameterVerdier();
                 }
             } else {
@@ -108,13 +108,20 @@ public class DialogPanel extends Panel {
                 }
             }
         }
-        erstattDialogPanelMedFortsettDialogPanel(traad, oppgaveId);
+        oppgave.setSvarHenvendelseId(opprettSvar(traadId));
+        erstattDialogPanelMedFortsettDialogPanel(traad, oppgave);
         if (oppgaveId != null) {
-            session.withOppgaveSomBesvares(new Oppgave(oppgaveId, grunnInfo.bruker.fnr, traadId));
+            session.withOppgaveSomBesvares(oppgave);
         } else {
             session.withOppgaveSomBesvares(null);
         }
         target.add(aktivtPanel);
+    }
+
+    private String opprettSvar(String traadId) {
+        String type = SVAR_SKRIFTLIG.toString();
+        String fnr = grunnInfo.bruker.fnr;
+        return henvendelseUtsendingService.opprettHenvendelse(type, fnr, traadId);
     }
 
     private static boolean erEnkeltstaaendeSamtalereferat(List<Melding> traad) {
@@ -132,8 +139,8 @@ public class DialogPanel extends Panel {
                 .collect(toList());
     }
 
-    private void erstattDialogPanelMedFortsettDialogPanel(List<Melding> traad, String oppgaveId) {
-        aktivtPanel = aktivtPanel.replaceWith(new FortsettDialogPanel(AKTIVT_PANEL_ID, grunnInfo, traad, oppgaveId, session.getPlukkedeOppgaver().size() > 1));
+    private void erstattDialogPanelMedFortsettDialogPanel(List<Melding> traad, Oppgave oppgave) {
+        aktivtPanel = aktivtPanel.replaceWith(new FortsettDialogPanel(AKTIVT_PANEL_ID, grunnInfo, traad, oppgave, session.getPlukkedeOppgaver().size() > 1));
     }
 
     private void erstattDialogPanelMedKvitteringspanel(AjaxRequestTarget target) {

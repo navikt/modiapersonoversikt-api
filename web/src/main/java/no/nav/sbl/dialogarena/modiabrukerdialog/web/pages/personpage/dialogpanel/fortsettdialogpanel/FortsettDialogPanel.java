@@ -8,6 +8,7 @@ import no.nav.modig.wicket.events.annotations.RunOnEvents;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.Events;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.GrunnInfo;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Kanal;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Oppgave;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.Sak;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
@@ -84,17 +85,17 @@ public class FortsettDialogPanel extends GenericPanel<HenvendelseVM> {
     public static final String FLERE_HENVENDELSER_REACT_MODULE = "FlereHenvendelser";
     public static final String FLERE_HENVENDELSER_WICKET_CONTAINER_ID = "reactFlereHenvendelserAlertContainer";
 
-    public FortsettDialogPanel(String id, GrunnInfo grunnInfo, final List<Melding> traad, String oppgaveId, boolean flereOppgaverBlePlukket) {
+    public FortsettDialogPanel(String id, GrunnInfo grunnInfo, final List<Melding> traad, Oppgave oppgave, boolean flereOppgaverBlePlukket) {
         super(id, new CompoundPropertyModel<>(new HenvendelseVM()));
         this.grunnInfo = grunnInfo;
-        this.oppgaveId = oppgaveId;
+        this.oppgaveId = oppgave.oppgaveId;
         this.sporsmal = traad.get(0);
         this.svar = new ArrayList<>(traad.subList(1, traad.size()));
         this.flereOppgaverBlePlukket = flereOppgaverBlePlukket;
         getModelObject().oppgaveTilknytning = erTilknyttetAnsatt(traad);
         settOppModellMedDefaultKanalOgTemagruppe(getModelObject());
         setOutputMarkupId(true);
-        behandlingsId = opprettHenvendelse();
+        behandlingsId = oppgave.svarHenvendelseId;
 
         svarContainer = new WebMarkupContainer("svarcontainer");
         leggTilbakePanel = new LeggTilbakePanel("leggtilbakepanel", sporsmal.temagruppe, sporsmal.gjeldendeTemagruppe, oppgaveId, sporsmal, behandlingsId);
@@ -247,14 +248,6 @@ public class FortsettDialogPanel extends GenericPanel<HenvendelseVM> {
         flereHenvendelserVisning.setVisibilityAllowed(true);
         svarContainer.setVisibilityAllowed(true);
         target.add(this);
-    }
-
-    private String opprettHenvendelse() {
-        String type = SVAR_SKRIFTLIG.toString();
-        String fnr = grunnInfo.bruker.fnr;
-        String behandlingskjedeId = sporsmal.traadId;
-
-        return henvendelseUtsendingService.opprettHenvendelse(type, fnr, behandlingskjedeId);
     }
 
     private class FortsettDialogForm extends Form<HenvendelseVM> {
