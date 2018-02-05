@@ -148,11 +148,12 @@ public class Innboks extends Lerret {
                 .filter(oppgave -> !oppgave.henvendelseId.equals(nyTraadId))
                 .forEach(this::ferdigstillOppgave);
 
-        oppgaver.stream()
-                .filter(oppgave -> oppgave.henvendelseId.equals(nyTraadId))
-                .findAny()
-                .get()
-                .setSvarHenvendelseId(nySvarHenvendelse);
+        DialogSession.read(this)
+                .withOppgaveSomBesvares(oppgaver.stream()
+                        .filter(oppgave -> oppgave.henvendelseId.equals(nyTraadId))
+                        .findAny()
+                        .get()
+                        .withSvarHenvendelseId(nySvarHenvendelse));
     }
 
     private void haandterTraadAlleredeBesvart(String traadId) {
