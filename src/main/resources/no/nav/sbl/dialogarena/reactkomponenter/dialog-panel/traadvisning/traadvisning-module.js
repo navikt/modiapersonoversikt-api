@@ -26,15 +26,32 @@ function lagNedtrekkspanel(traad, tittel, skalVisesApen) {
     );
 }
 
+function lagEnkelstaaendePanel(traad) {
+    const skalVisesApen = true;
+    const sporsmal = traad[0];
+    return (
+        <div className="frittstaaende-meldingspanel">
+            {lagMeldingspanel(sporsmal, skalVisesApen)}
+        </div>
+    );
+}
+
 function lagTraadPanel(traad) {
     const sammenslaattTraad = slaaSammenDelviseSvar(traad);
-    const sporsmal = sammenslaattTraad[0];
-    const skalIkkeVisesApen = false;
-    const skalVisesApen = true;
+
+    const ubesvartSporsmaal = erIkkeBesvart(traad) && traad.length === 1;
+    if (ubesvartSporsmaal) {
+        return lagEnkelstaaendePanel(sammenslaattTraad);
+    }
+    const sammenslattOgUbesvart = erIkkeBesvart(traad) && traad.length >= 1;
+    if (sammenslattOgUbesvart) {
+        const tittel = 'Spørsmål fra bruker';
+        const skalVisesApen = true;
+        return lagNedtrekkspanel(sammenslaattTraad, tittel, skalVisesApen);
+    }
     const tittel = 'Vis tidligere meldinger';
-    return erIkkeBesvart(traad)
-        ? <div className="frittstaaende-meldingspanel">{lagMeldingspanel(sporsmal, skalVisesApen)}</div>
-        : lagNedtrekkspanel(sammenslaattTraad, tittel, skalIkkeVisesApen);
+    const skalVisesApen = false;
+    return lagNedtrekkspanel(sammenslaattTraad, tittel, skalVisesApen);
 }
 
 function lagDelviseSvarPanel(traad) {
