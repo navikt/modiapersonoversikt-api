@@ -26,6 +26,7 @@ import javax.inject.Inject;
 import java.util.List;
 
 import static java.util.Arrays.asList;
+import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.toList;
 import static no.nav.modig.modia.utils.ComponentFinder.in;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.hasCssClassIf;
@@ -108,8 +109,11 @@ public class DialogPanel extends Panel {
                 }
             }
         }
-        oppgave.setSvarHenvendelseId(opprettSvar(traadId));
-        erstattDialogPanelMedFortsettDialogPanel(traad, oppgave);
+        String svarHenvendelseId = opprettSvar(traadId);
+        if (oppgave == null) {
+            oppgave = new Oppgave(oppgaveId, grunnInfo.bruker.fnr, traadId);
+        }
+        erstattDialogPanelMedFortsettDialogPanel(traad, oppgave.withSvarHenvendelseId(svarHenvendelseId));
         if (oppgaveId != null) {
             session.withOppgaveSomBesvares(oppgave);
         } else {

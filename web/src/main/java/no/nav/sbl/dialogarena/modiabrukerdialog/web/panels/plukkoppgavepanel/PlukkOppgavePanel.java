@@ -148,7 +148,7 @@ public class PlukkOppgavePanel extends Panel {
 
         private void opprettSvarHenvendelserForOppgaver(List<Oppgave> oppgaver) {
             for (Oppgave oppgave : oppgaver) {
-                oppgave.setSvarHenvendelseId(
+                oppgave.withSvarHenvendelseId(
                     henvendelseUtsendingService.opprettHenvendelse(
                             SVAR_SKRIFTLIG.toString(),
                             oppgave.fnr,

@@ -13,8 +13,9 @@ public class Oppgave implements Serializable {
         this.henvendelseId = henvendelseId;
     }
 
-    public void setSvarHenvendelseId(String svarHenvendelseId) {
+    public Oppgave withSvarHenvendelseId(String svarHenvendelseId) {
         this.svarHenvendelseId = svarHenvendelseId;
+        return this;
     }
 
 }

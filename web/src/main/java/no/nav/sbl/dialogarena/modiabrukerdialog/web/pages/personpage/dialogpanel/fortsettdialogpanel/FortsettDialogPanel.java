@@ -42,6 +42,7 @@ import javax.inject.Inject;
 import java.util.*;
 
 import static java.lang.String.format;
+import static java.util.Optional.ofNullable;
 import static no.nav.brukerdialog.security.context.SubjectHandler.getSubjectHandler;
 import static no.nav.metrics.MetricsFactory.createTimer;
 import static no.nav.modig.lang.collections.IterUtils.on;
@@ -326,7 +327,7 @@ public class FortsettDialogPanel extends GenericPanel<HenvendelseVM> {
             Meldingstype meldingstype = meldingstype(henvendelseVM.kanal, henvendelseVM.brukerKanSvare);
             Melding melding = new MeldingBuilder()
                     .withHenvendelseVM(henvendelseVM)
-                    .withEldsteMeldingITraad(Optional.ofNullable(sporsmal))
+                    .withEldsteMeldingITraad(ofNullable(sporsmal))
                     .withMeldingstype(meldingstype)
                     .withFnr(grunnInfo.bruker.fnr)
                     .withNavident(getSubjectHandler().getUid())
@@ -336,10 +337,10 @@ public class FortsettDialogPanel extends GenericPanel<HenvendelseVM> {
 
             Optional<Sak> sak = Optional.empty();
             if (melding.meldingstype.equals(SPORSMAL_MODIA_UTGAAENDE) && !henvendelseVM.traadJournalfort) {
-                sak = Optional.ofNullable(henvendelseVM.valgtSak);
+                sak = ofNullable(henvendelseVM.valgtSak);
             }
 
-            henvendelseUtsendingService.ferdigstillHenvendelse(melding, Optional.ofNullable(oppgaveId), sak, behandlingsId, saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet());
+            henvendelseUtsendingService.ferdigstillHenvendelse(melding, ofNullable(oppgaveId), sak, behandlingsId, saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet());
         }
 
         private Meldingstype meldingstype(Kanal kanal, boolean brukerKanSvare) {
