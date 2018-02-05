@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import no.nav.kjerneinfo.consumer.fim.person.PersonKjerneinfoServiceBi;
 import no.nav.brukerdialog.security.tilgangskontroll.policy.pep.EnforcementPoint;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Saksbehandler;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.HenvendelseUtsendingService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveBehandlingService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.ldap.LDAPService;
 import no.nav.personsok.consumer.fim.personsok.PersonsokServiceBi;
@@ -38,6 +39,11 @@ public class HentPersonPanelMockContext {
     @Bean
     public OppgaveBehandlingService oppgaveBehandlingService() {
         return mock(OppgaveBehandlingService.class);
+    }
+
+    @Bean
+    public HenvendelseUtsendingService henvendelseUtsendingService() {
+        return mock(HenvendelseUtsendingService.class);
     }
 
     @Bean

@@ -102,7 +102,7 @@ public class FortsettDialogPanelTest extends WicketPageTest {
         grunnInfo = new GrunnInfo(new Bruker(FNR, FORNAVN, "", "", "", ""), new Saksbehandler("", "", ""));
         when(saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet()).thenReturn(VALGT_ENHET);
 
-        testFortsettDialogPanel = new FortsettDialogPanel("id", grunnInfo, asList(lagSporsmalFraBruker()), null, false);
+        testFortsettDialogPanel = new FortsettDialogPanel("id", grunnInfo, asList(lagSporsmalFraBruker()), new Oppgave(null, FNR, SPORSMAL_ID), false);
         MockitoAnnotations.initMocks(this);
     }
 
@@ -315,7 +315,8 @@ public class FortsettDialogPanelTest extends WicketPageTest {
 
     @Test
     public void viserIkkeLeggTilbakeDersomSporsmalIkkeErEtSporsmalFraBruker() {
-        wicket.goToPageWith(new FortsettDialogPanel("id", grunnInfo, asList(lagSporsmalFraNAV().withErTilknyttetAnsatt(true)), null, false))
+        wicket.goToPageWith(new FortsettDialogPanel("id", grunnInfo, asList(lagSporsmalFraNAV().withErTilknyttetAnsatt(true)),
+                new Oppgave(null, FNR, SPORSMAL_ID), false))
                 .should().containComponent(thatIsInvisible().and(withId("leggtilbakepanel")))
                 .click().link(withId("leggtilbake"))
                 .should().containComponent(thatIsInvisible().and(withId("leggtilbakepanel")));
@@ -324,7 +325,8 @@ public class FortsettDialogPanelTest extends WicketPageTest {
     @Test
     public void senderAvbrytTilHenvendelseDersomBrukerAvbryterMelding() {
         when(henvendelseUtsendingService.opprettHenvendelse(anyString(), anyString(), anyString())).thenReturn(BEHANDLINGS_ID);
-        wicket.goToPageWith(new FortsettDialogPanel("id", grunnInfo, asList(lagSporsmalFraNAV().withErTilknyttetAnsatt(true)), null, false))
+        wicket.goToPageWith(new FortsettDialogPanel("id", grunnInfo, asList(lagSporsmalFraNAV().withErTilknyttetAnsatt(true)),
+                new Oppgave(null, FNR, SPORSMAL_ID).withSvarHenvendelseId(BEHANDLINGS_ID), false))
                 .click().link(withId("leggtilbake"));
 
         verify(henvendelseUtsendingService, times(1)).avbrytHenvendelse(BEHANDLINGS_ID);
@@ -334,7 +336,8 @@ public class FortsettDialogPanelTest extends WicketPageTest {
     public void skalViseFornavnISubmitKnapp() {
         when(cmsContentRetriever.hentTekst(anyString())).thenReturn("Tekst fra mock-cms %s");
 
-        wicket.goToPageWith(new FortsettDialogPanel("id", grunnInfo, asList(lagSporsmalFraBruker()), null, false))
+        wicket.goToPageWith(new FortsettDialogPanel("id", grunnInfo, asList(lagSporsmalFraBruker()),
+                new Oppgave(null, FNR, SPORSMAL_ID), false))
                 .should().containPatterns(FORNAVN);
     }
 

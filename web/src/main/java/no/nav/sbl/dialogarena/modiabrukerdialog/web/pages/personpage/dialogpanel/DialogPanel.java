@@ -110,9 +110,7 @@ public class DialogPanel extends Panel {
             }
         }
         String svarHenvendelseId = opprettSvar(traadId);
-        if (oppgave == null) {
-            oppgave = new Oppgave(oppgaveId, grunnInfo.bruker.fnr, traadId);
-        }
+        oppgave = new Oppgave(oppgaveId, grunnInfo.bruker.fnr, traadId);
         erstattDialogPanelMedFortsettDialogPanel(traad, oppgave.withSvarHenvendelseId(svarHenvendelseId));
         if (oppgaveId != null) {
             session.withOppgaveSomBesvares(oppgave);
