@@ -11,7 +11,7 @@
     <name>Dialogarena - modiabrukerdialog</name>
     <groupId>no.nav.sbl.dialogarena</groupId>
     <artifactId>modiabrukerdialog</artifactId>
-    <version>14.1.2-SNAPSHOT</version>
+    <version>14.1.4-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <modules>
@@ -100,11 +100,11 @@
         <!-- Modia-komponenter-->
         <reactkomponenter.version>3.0.5-SNAPSHOT</reactkomponenter.version>
         <personsok.version>4.0.2</personsok.version>
-        <kjerneinfo.versjon>6.0.12-SNAPSHOT</kjerneinfo.versjon>
+        <kjerneinfo.versjon>6.0.11</kjerneinfo.versjon>
         <utbetaling.version>4.0.0</utbetaling.version>
         <saksoversikt.version>9.0.2.1</saksoversikt.version>
         <varsling.modia.version>2.0</varsling.modia.version>
-        <sporsmalogsvar.version>8.0.2-SNAPSHOT</sporsmalogsvar.version>
+        <sporsmalogsvar.version>8.0.4-SNAPSHOT</sporsmalogsvar.version>
         <modia-felleskomponenter.version>4.3</modia-felleskomponenter.version>
 
         <!-- Tjenestespecs -->
@@ -134,9 +134,10 @@
         <organisasjon-enhet-kontaktinformasjon>1.1.0</organisasjon-enhet-kontaktinformasjon>
         <oppfoelging-v1-tjenestespesifikasjon-version>1.1.1</oppfoelging-v1-tjenestespesifikasjon-version>
         <oppfolgingsinfo-v1-tjenestespesifikasjon.version>1.0.5</oppfolgingsinfo-v1-tjenestespesifikasjon.version>
-
+        <arbeidsfordeling-v1.version>1.0.3</arbeidsfordeling-v1.version>
 
         <sonar.skippedModules>modiabrukerdialog-mock</sonar.skippedModules>
+        <apache.http.version>4.4</apache.http.version>
     </properties>
 
     <dependencyManagement>
@@ -476,6 +477,11 @@
                 <groupId>no.nav.sbl.dialogarena</groupId>
                 <artifactId>egenansatt-v1-tjenestespesifikasjon</artifactId>
                 <version>${egenansatt-tjenestespesifikasjon.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>no.nav.sbl.dialogarena</groupId>
+                <artifactId>arbeidsfordeling-v1-tjenestespesifikasjon</artifactId>
+                <version>${arbeidsfordeling-v1.version}</version>
             </dependency>
 
             <!--Dialogarena-->
@@ -1016,6 +1022,16 @@
                 <version>${commons-io.version}</version>
             </dependency>
 
+            <dependency>
+                <groupId>org.apache.httpcomponents</groupId>
+                <artifactId>httpcore</artifactId>
+                <version>${apache.http.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.httpcomponents</groupId>
+                <artifactId>httpclient</artifactId>
+                <version>${apache.http.version}</version>
+            </dependency>
             <dependency>
                 <groupId>org.apache.httpcomponents</groupId>
                 <artifactId>fluent-hc</artifactId>

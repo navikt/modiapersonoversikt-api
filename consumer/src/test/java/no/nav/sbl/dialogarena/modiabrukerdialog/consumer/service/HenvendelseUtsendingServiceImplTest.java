@@ -34,7 +34,6 @@ import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.senduthenvendelse.meld
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.henvendelse.HenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.meldinger.WSHentHenvendelseListeRequest;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.meldinger.WSHentHenvendelseListeResponse;
-import no.nav.virksomhet.tjenester.ruting.v1.Ruting;
 import org.hamcrest.Matchers;
 import org.joda.time.DateTime;
 import org.junit.Before;
@@ -99,8 +98,6 @@ public class HenvendelseUtsendingServiceImplTest {
     public SaksbehandlerInnstillingerService saksbehandlerInnstillingerService;
     @Mock
     public AnsattService ansattWS;
-    @Mock
-    public Ruting ruting;
     @Mock
     public PropertyResolver propertyResolver;
     @Mock

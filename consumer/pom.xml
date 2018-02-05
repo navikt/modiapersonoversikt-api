@@ -6,7 +6,7 @@
     <parent>
         <groupId>no.nav.sbl.dialogarena</groupId>
         <artifactId>modiabrukerdialog</artifactId>
-        <version>14.1.2-SNAPSHOT</version>
+        <version>14.1.4-SNAPSHOT</version>
     </parent>
 
     <artifactId>modiabrukerdialog-consumer</artifactId>
@@ -205,6 +205,11 @@
             <groupId>no.nav.sbl</groupId>
             <artifactId>brukervarsel-v1-tjenestespesifikasjon</artifactId>
         </dependency>
+        <dependency>
+            <groupId>no.nav.sbl.dialogarena</groupId>
+            <artifactId>arbeidsfordeling-v1-tjenestespesifikasjon</artifactId>
+        </dependency>
+
         <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>oppfolgingsinfo-v1-tjenestespesifikasjon</artifactId>
@@ -413,6 +418,20 @@
 
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpcore</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>commons-logging</groupId>
+                    <artifactId>commons-logging</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
             <artifactId>fluent-hc</artifactId>
             <exclusions>
                 <exclusion>
@@ -431,6 +450,11 @@
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-engine</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <!-- Må være compile scope grunnet avhengighet til mock-modul -->

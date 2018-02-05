@@ -33,10 +33,10 @@ import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.cms.CmsSkrivestotteConfig.CMS_SKRIVESTOTTE_KEY;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.joark.JoarkEndpointConfig.JOARK_KEY;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v1.aktor.AktorEndpointConfig.AKTOER_KEY;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v1.arbeidsfordeling.ArbeidsfordelingV1EndpointConfig.NORG2_ARBEIDSFORDELING_V1_KEY;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v1.arena.arbeidogaktivitet.ArbeidOgAktivitetEndpointConfig.ARENA_ARBEIDOGATKIVITET_KEY;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v1.gsak.GsakTildelOppgaveV1EndpointConfig.GSAK_TILDEL_OPPGAVE_KEY;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v1.gsak.hentsaker.GsakSakV1EndpointConfig.GSAK_SAK_KEY;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v1.gsak.ruting.GsakRutingEndpointConfig.GSAK_RUTING_KEY;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v1.henvendelsesoknader.HenvendelseSoknaderEndpointConfig.HENVENDELSESOKNADER_KEY;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v1.norg.NorgEndpointFelles.NORG_KEY;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v1.pensjonsak.PensjonSakEndpointConfig.PENSJONSAK_KEY;
@@ -129,7 +129,6 @@ public class MockSetupPage extends BasePage {
                 new MockSetupModel("Gsak", GSAK_V3_KEY),
                 new MockSetupModel("Gsak sak", GSAK_SAK_KEY),
                 new MockSetupModel("Gsak tildel oppgave", GSAK_TILDEL_OPPGAVE_KEY),
-                new MockSetupModel("Gsak ruting", GSAK_RUTING_KEY),
                 new MockSetupModel("Arena Arbeid og Aktivitet", ARENA_ARBEIDOGATKIVITET_KEY),
                 new MockSetupModel("SakOgBehandling", SAKOGBEHANDLING_KEY),
                 new MockSetupModel("AktoerId", AKTOER_KEY),
@@ -138,6 +137,7 @@ public class MockSetupPage extends BasePage {
                 new MockSetupModel("NORG", NORG_KEY),
                 new MockSetupModel("NORG2 OrganisasjonEnhetV2", NORG2_ORGANISASJON_ENHET_V2_KEY),
                 new MockSetupModel("NORG2 OrganisasjonEnhetKontaktinformasjonV1", NORG2_ORGANISASJON_ENHET_KONTAKTINFORMASJON_V1_KEY),
+                new MockSetupModel("NORG2 ArbeidsfordelingV1", NORG2_ARBEIDSFORDELING_V1_KEY),
                 new MockSetupModel("CMS Skrivestøtte", CMS_SKRIVESTOTTE_KEY),
                 new MockSetupModel("PensjonSak", PENSJONSAK_KEY),
                 new MockSetupModel("Pleiepenger V1", PLEIEPENGER_V1_MOCK_KEY),

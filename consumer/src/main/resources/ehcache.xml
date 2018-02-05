@@ -238,4 +238,12 @@
            diskPersistent="false"
            memoryStoreEvictionPolicy="LRU"/>
 
+	<cache name="kodeverksmapperCache"
+		   maxElementsInMemory="10"
+		   eternal="false"
+		   overflowToDisk="false"
+		   timeToLiveSeconds="86400"
+		   memoryStoreEvictionPolicy="LRU"
+		   timeToIdleSeconds="86400"/>
+
 </ehcache>
