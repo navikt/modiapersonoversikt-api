@@ -71,7 +71,7 @@ public class OppgaveBehandlingServiceImpl implements OppgaveBehandlingService {
     @Override
     public List<Oppgave> plukkOppgaverFraGsak(Temagruppe temagruppe, String saksbehandlersValgteEnhet) {
         int enhetsId = Integer.parseInt(saksbehandlersValgteEnhet);
-        return tildelEldsteLedigeOppgaver(temagruppe, enhetsId).stream()
+        return tildelEldsteLedigeOppgaver(temagruppe, enhetsId, saksbehandlersValgteEnhet).stream()
                 .map(oppgave -> new Oppgave(oppgave.getOppgaveId(), oppgave.getGjelder().getBrukerId(), oppgave.getHenvendelseId()))
                 .collect(toList());
     }
@@ -183,12 +183,13 @@ public class OppgaveBehandlingServiceImpl implements OppgaveBehandlingService {
         }
     }
 
-    private List<WSOppgave> tildelEldsteLedigeOppgaver(Temagruppe temagruppe, int enhetsId) {
+    private List<WSOppgave> tildelEldsteLedigeOppgaver(Temagruppe temagruppe, int enhetsId, String saksbehandlersValgteEnhet) {
         WSTildelFlereOppgaverResponse response = tildelOppgaveWS.tildelFlereOppgaver(
                 new WSTildelFlereOppgaverRequest()
                         .withUnderkategori(underkategoriKode(temagruppe))
                         .withOppgavetype(SPORSMAL_OG_SVAR)
                         .withFagomrade(KONTAKT_NAV)
+                        .withAnsvarligEnhetId(enhetFor(temagruppe, saksbehandlersValgteEnhet))
                         .withIkkeTidligereTildeltSaksbehandlerId(getSubjectHandler().getUid())
                         .withTildeltAvEnhetId(enhetsId)
                         .withTildelesSaksbehandlerId(getSubjectHandler().getUid()));
