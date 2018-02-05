@@ -22,7 +22,7 @@ describe('Skrivestotte Module', () => {
     it('skal rendre i en modal', () => {
         const element = shallow(<Skrivestotte />);
 
-        expect(element.is('Modal')).to.be.true();
+        expect(element.is('Modal')).to.be.true;
     });
 
     it('skal rendre en tom-melding når ingen tekster', () => {
