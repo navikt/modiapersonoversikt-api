@@ -37,7 +37,7 @@ public class InnboksVM implements Serializable {
     public String traadBesvares;
     public boolean focusValgtTraadOnOpen = false;
     EnforcementPoint pep;
-    public List<Oppgave> tildelteOppgaver;
+    public List<Oppgave> tildelteOppgaver = new ArrayList<>();
 
     public InnboksVM(String fnr, HenvendelseBehandlingService henvendelseBehandlingService, EnforcementPoint pep,
                      SaksbehandlerInnstillingerService saksbehandlerInnstillingerService) {
