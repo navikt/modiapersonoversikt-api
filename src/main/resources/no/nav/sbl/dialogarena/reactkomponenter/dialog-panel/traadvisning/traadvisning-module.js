@@ -32,7 +32,7 @@ function lagTraadPanel(traad) {
     const skalIkkeVisesApen = false;
     const skalVisesApen = true;
     const tittel = 'Vis tidligere meldinger';
-    return erIkkeBesvart(traad)
+    return erIkkeBesvart(traad) && traad.length === 1
         ? <div className="frittstaaende-meldingspanel">{lagMeldingspanel(sporsmal, skalVisesApen)}</div>
         : lagNedtrekkspanel(sammenslaattTraad, tittel, skalIkkeVisesApen);
 }
