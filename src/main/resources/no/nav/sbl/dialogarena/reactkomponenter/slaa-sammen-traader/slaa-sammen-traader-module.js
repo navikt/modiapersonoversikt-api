@@ -31,8 +31,8 @@ class SlaaSammenTraader extends Component {
             event.preventDefault();
             return false;
         }
-        return this.sendToWicket('slaaSammen', checkedBoxes)
-            .then(lukkModalVindu);
+        this.sendToWicket('slaaSammen', checkedBoxes);
+        lukkModalVindu();
     }
 
     render() {
