@@ -9,14 +9,14 @@ import Skrivestotte from './skrivestotte-module';
 
 describe('Skrivestotte Module', () => {
 
-    let stub;
+    let componentDidMountStub;
 
     beforeEach(() => {
-        stub = sinon.stub(Skrivestotte.prototype, 'componentDidMount');
+        componentDidMountStub = sinon.stub(Skrivestotte.prototype, 'componentDidMount');
     });
 
     afterEach(() => {
-        stub.restore();
+        componentDidMountStub.restore();
     });
 
     it('skal rendre i en modal', () => {
@@ -26,7 +26,7 @@ describe('Skrivestotte Module', () => {
     });
 
     it('skal rendre en tom-melding når ingen tekster', () => {
-        Skrivestotte.__Rewire__('Modal', (props) => (<div>{props.children}</div>));
+        Skrivestotte.__Rewire__('Modal', (props) => (<div>{props.children}</div>));  //Mocker Modal-komponent. Se babel-plugin-rewire
         const element = mount(<Skrivestotte />);
 
         element.setState({

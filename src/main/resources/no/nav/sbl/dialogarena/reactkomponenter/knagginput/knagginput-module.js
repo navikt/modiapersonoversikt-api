@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import ReactDOM from 'react-dom';
 import PT from 'prop-types';
 
 function ariaLabel(props) {
@@ -33,7 +32,7 @@ function finnKnaggerOgFritekst(fritekst, eksistendeKnagger) {
 }
 
 function IEHack() {
-    // Dette er en IE hack.... Hvis man en gang i fremtiden ikke bruker IE 9, så kanskje man kan fjerne denne.
+    // Dette er en IE hack. Testet å fjerne i IE11, men trengs fortsatt.
     const $knaggcontainer = $(this.knaggcontainerRef);
     if (!$knaggcontainer.is(':visible')) {
         return;
@@ -48,7 +47,6 @@ function IEHack() {
     maxWidth -= 46; // Forstørrelseglass ikon
 
     $input.outerWidth(maxWidth);
-    // End IE hack
 }
 
 class KnaggInput extends Component {
@@ -58,6 +56,11 @@ class KnaggInput extends Component {
             selectionEnd: -1,
             focus: false
         };
+        this.onChangeProxy = this.onChangeProxy.bind(this);
+        this.onKeyDownProxy = this.onKeyDownProxy.bind(this);
+        this.handleKeyUp = this.handleKeyUp.bind(this);
+        this.focusHighlighting = this.focusHighlighting.bind(this);
+        this.focusHighlighting = this.focusHighlighting.bind(this);
     }
     componentDidMount() {
         if (this.props['auto-focus']) {
@@ -124,11 +127,11 @@ class KnaggInput extends Component {
                         placeholder={this.props.placeholder}
                         value={this.props.fritekst}
                         title={this.props.placeholder}
-                        onChange={(e) => this.onChangeProxy(e)}
-                        onKeyDown={(e) => this.onKeyDownProxy(e)}
-                        onKeyUp={(e) => this.handleKeyUp(e)}
-                        onFocus={(e) => this.focusHighlighting(e)}
-                        onBlur={(e) => this.focusHighlighting(e)}
+                        onChange={this.onChangeProxy}
+                        onKeyDown={this.onKeyDownProxy}
+                        onKeyUp={this.handleKeyUp}
+                        onFocus={this.focusHighlighting}
+                        onBlur={this.focusHighlighting}
                         aria-label={ariaLabel(this.props)}
                         aria-controls={this.props['aria-controls']}
                     />
