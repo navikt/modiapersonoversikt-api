@@ -10,18 +10,14 @@ function onClickHandler(event) {
 const alertStripe = (
     <div className="flere-henvendelser-alert">
         <Alertstripe type={'info'} tekst="">
-                <span>
-                    Det ligger flere oppgaver i lista.
-                    <br /><a href="#" onClick={(e) => onClickHandler(e)}>
-                        Slå sammen tråder
-                    </a>
-                </span>
+            <span>
+                Det ligger flere uløste oppgaver i lista
+                <br />
+                <a href="#" onClick={(e) => onClickHandler(e)}>
+                    Slå sammen oppgaver
+                </a>
+            </span>
         </Alertstripe>
-        <input type="button"
-               value="Slå sammen tråder"
-               className="knapp-liten"
-               onClick={(e) => onClickHandler(e)}
-        />
     </div>
 );
 

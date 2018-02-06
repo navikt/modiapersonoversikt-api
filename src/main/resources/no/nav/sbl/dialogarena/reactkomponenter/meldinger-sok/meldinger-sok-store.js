@@ -175,5 +175,4 @@ MeldingerSokStore.hentSokeresultater =
         MeldingerSokStore._sok(this.state.fnr, fritekst).done(onFulfilled.bind(this), onRejected.bind(this));
     }, 150);
 
-export { haandterDelviseSvar };
 export default MeldingerSokStore;
