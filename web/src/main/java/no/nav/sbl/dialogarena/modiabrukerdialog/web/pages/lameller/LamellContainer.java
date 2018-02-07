@@ -10,12 +10,12 @@ import no.nav.modig.modia.events.LamellPayload;
 import no.nav.modig.modia.events.WidgetHeaderPayload;
 import no.nav.modig.modia.lamell.*;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.DialogSession;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.Events;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.GrunnInfo;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Oppgave;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.lameller.oversikt.OversiktLerret;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.DialogSession;
 import no.nav.sbl.dialogarena.sak.lamell.SaksoversiktLerret;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.GsakService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.HenvendelseBehandlingService;
@@ -219,24 +219,7 @@ public class LamellContainer extends TokenLamellPanel implements Serializable {
     }
 
     private LamellFactory createMeldingerLamell(final GrunnInfo.Bruker bruker, final DialogSession session) {
-        innboksVM = new InnboksVM(bruker.fnr, henvendelseBehandlingService, pep, saksbehandlerInnstillingerService);
-
-        innboksVM.tildelteOppgaver = session.getPlukkedeOppgaver();
-
-        java.util.Optional<Oppgave> oppgaveSomBesvares = session.getOppgaveSomBesvares();
-
-        oppgaveSomBesvares.ifPresent((oppgave) -> {
-            innboksVM.setSessionHenvendelseId(oppgave.henvendelseId);
-            if (gsakService.oppgaveKanManuelltAvsluttes(oppgave.oppgaveId)) {
-                innboksVM.setSessionOppgaveId(oppgave.oppgaveId);
-            }
-            innboksVM.traadBesvares = oppgave.henvendelseId;
-        });
-
-        if (!oppgaveSomBesvares.isPresent() && session.getOppgaveFraUrl() != null) {
-            innboksVM.setSessionHenvendelseId(session.getOppgaveFraUrl().henvendelseId);
-            innboksVM.setSessionOppgaveId(session.getOppgaveFraUrl().oppgaveId);
-        }
+        innboksVM = initialiserInnboksVM(bruker, session);
 
         return newLamellFactory(LAMELL_MELDINGER, "M", (LerretFactory) (id, name) -> new AjaxLazyLoadLerret(id, name) {
             @Override
@@ -244,6 +227,24 @@ public class LamellContainer extends TokenLamellPanel implements Serializable {
                 return new Innboks(markupId, innboksVM);
             }
         });
+    }
+
+    private InnboksVM initialiserInnboksVM(GrunnInfo.Bruker bruker, DialogSession session) {
+        innboksVM = new InnboksVM(bruker.fnr, henvendelseBehandlingService, pep, saksbehandlerInnstillingerService);
+
+        innboksVM.tildelteOppgaver = session.getPlukkedeOppgaver();
+
+        Oppgave oppgave = session.getOppgaveSomBesvares().orElseGet(session::getOppgaveFraUrl);
+
+        if (oppgave != null) {
+            innboksVM.traadBesvares = oppgave.henvendelseId;
+            innboksVM.setSessionHenvendelseId(oppgave.henvendelseId);
+            if (gsakService.oppgaveKanManuelltAvsluttes(oppgave.oppgaveId)) {
+                innboksVM.setSessionOppgaveId(oppgave.oppgaveId);
+            }
+        }
+
+        return innboksVM;
     }
 
     @RunOnEvents({Events.SporsmalOgSvar.SVAR_AVBRUTT, Events.SporsmalOgSvar.LEGG_TILBAKE_UTFORT, Events.SporsmalOgSvar.MELDING_SENDT_TIL_BRUKER, Events.SporsmalOgSvar.FERDIGSTILT_UTEN_SVAR})

@@ -7,9 +7,9 @@ import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Oppgave;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.HenvendelseUtsendingService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveBehandlingService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.HenvendelseUtsendingService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.fortsettdialogpanel.FortsettDialogPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.nydialogpanel.NyDialogPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.velgdialogpanel.VelgDialogPanel;
@@ -26,7 +26,6 @@ import javax.inject.Inject;
 import java.util.List;
 
 import static java.util.Arrays.asList;
-import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.toList;
 import static no.nav.modig.modia.utils.ComponentFinder.in;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.hasCssClassIf;
@@ -50,7 +49,8 @@ public class DialogPanel extends Panel {
     private final OppgavetilordningFeilet oppgavetilordningFeiletModal;
     private final GrunnInfo grunnInfo;
     private final DialogSession session;
-    private Boolean skalSvarePaaTraad;
+    private Boolean harOppgaveFraGosys;
+    private Boolean harPlukketOppgave;
     private Component aktivtPanel;
     private Oppgave oppgave;
 
@@ -60,28 +60,24 @@ public class DialogPanel extends Panel {
 
         session = DialogSession.read(this);
         oppgave = session.getOppgaveSomBesvares().orElseGet(session::getOppgaveFraUrl);
-        skalSvarePaaTraad = session.oppgaverBlePlukket();
-
-        aktivtPanel = new NyDialogPanel(AKTIVT_PANEL_ID, grunnInfo);
+        harPlukketOppgave = session.oppgaverBlePlukket();
+        harOppgaveFraGosys = !harPlukketOppgave && oppgave != null;
         oppgavetilordningFeiletModal = new OppgavetilordningFeilet("oppgavetilordningModal");
 
+        aktivtPanel = new NyDialogPanel(AKTIVT_PANEL_ID, grunnInfo);
         add(aktivtPanel, oppgavetilordningFeiletModal);
-
-        settOppRiktigMeldingPanel();
+        settOppForAaBesvareOppgave();
     }
 
-    private void settOppRiktigMeldingPanel() {
-        if (oppgave != null && oppgave.henvendelseId != null) {
-            if (skalSvarePaaTraad) {
-
-                List<Melding> traad = henvendelseUtsendingService.hentTraad(grunnInfo.bruker.fnr, oppgave.henvendelseId,
-                        saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet());
-                if (!traad.isEmpty() && !erEnkeltstaaendeSamtalereferat(traad)) {
-                    erstattDialogPanelMedFortsettDialogPanel(traad, oppgave);
-                    clearLokaleParameterVerdier();
-                }
-            } else {
-                aktivtPanel = aktivtPanel.replaceWith(new VelgDialogPanel(AKTIVT_PANEL_ID));
+    private void settOppForAaBesvareOppgave() {
+        if (harOppgaveFraGosys) {
+            aktivtPanel = aktivtPanel.replaceWith(new VelgDialogPanel(AKTIVT_PANEL_ID));
+        } else if (harPlukketOppgave) {
+            List<Melding> traad = henvendelseUtsendingService.hentTraad(grunnInfo.bruker.fnr, oppgave.henvendelseId,
+                    saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet());
+            if (!traad.isEmpty() && !erEnkeltstaaendeSamtalereferat(traad)) {
+                erstattDialogPanelMedFortsettDialogPanel(traad, oppgave);
+                clearLokaleParameterVerdier();
             }
         }
     }
@@ -110,8 +106,9 @@ public class DialogPanel extends Panel {
             }
         }
         String svarHenvendelseId = opprettSvar(traadId);
-        oppgave = new Oppgave(oppgaveId, grunnInfo.bruker.fnr, traadId);
-        erstattDialogPanelMedFortsettDialogPanel(traad, oppgave.withSvarHenvendelseId(svarHenvendelseId));
+        oppgave = new Oppgave(oppgaveId, grunnInfo.bruker.fnr, traadId)
+                .withSvarHenvendelseId(svarHenvendelseId);
+        erstattDialogPanelMedFortsettDialogPanel(traad, oppgave);
         if (oppgaveId != null) {
             session.withOppgaveSomBesvares(oppgave);
         } else {
@@ -158,7 +155,7 @@ public class DialogPanel extends Panel {
 
     private void clearLokaleParameterVerdier() {
         oppgave = null;
-        skalSvarePaaTraad = false;
+        harPlukketOppgave = false;
     }
 
     @RunOnEvents({NY_DIALOG_LENKE_VALGT})
