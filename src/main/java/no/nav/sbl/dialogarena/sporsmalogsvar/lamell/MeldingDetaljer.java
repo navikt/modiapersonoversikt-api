@@ -7,8 +7,11 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.PropertyModel;
+import org.apache.wicket.model.StringResourceModel;
 
+import static no.nav.modig.wicket.conditional.ConditionalUtils.hasCssClassIf;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
+import static no.nav.modig.wicket.model.ModelUtils.*;
 
 public class MeldingDetaljer extends Panel {
 
@@ -18,16 +21,26 @@ public class MeldingDetaljer extends Panel {
         super(id);
         setOutputMarkupId(true);
         this.innboksVM = innboksVM;
+        String traadId = meldingVM.melding.traadId;
 
         WebMarkupContainer meldingDetaljer = new WebMarkupContainer("meldingDetaljer");
 
-        meldingDetaljer.add(new WebMarkupContainer("besvarIndikator").add(visibleIf(blirBesvart(meldingVM.melding.traadId))).setOutputMarkupPlaceholderTag(true));
+        WebMarkupContainer indikator = new WebMarkupContainer("besvarIndikator");
+        indikator.add(visibleIf(either(blirBesvart(traadId)).or(erTildelt(traadId))))
+                .add(hasCssClassIf("besvarIndikator", blirBesvart(traadId)))
+                .add(hasCssClassIf("tildeltIndikator", both(erTildelt(traadId)).and(not(blirBesvart(traadId)))))
+                .setOutputMarkupPlaceholderTag(true);
+        indikator.add(new Label("tildelt",
+                new StringResourceModel("melding.erTildelt", this, null))
+                .add(visibleIf(both(not(blirBesvart(traadId))).and(erTildelt(traadId)))));
+        meldingDetaljer.add(indikator);
+
         meldingDetaljer.add(new Label("visningsDato"));
 
 
         meldingDetaljer.add(new StatusIkon("statusIkon",
-                innboksVM.getTraader().get(meldingVM.melding.traadId),
-                blirBesvart(meldingVM.melding.traadId).getObject())
+                innboksVM.getTraader().get(traadId),
+                blirBesvart(traadId).getObject())
         );
 
         Label meldingstatus = new Label("meldingstatus", new StringFormatModel("%s – %s",
@@ -51,6 +64,16 @@ public class MeldingDetaljer extends Panel {
 
         add(meldingDetaljer);
 
+    }
+
+    private AbstractReadOnlyModel<Boolean> erTildelt(final String traadId) {
+        return new AbstractReadOnlyModel<Boolean>() {
+            @Override
+            public Boolean getObject() {
+                return innboksVM.tildelteOppgaver.stream()
+                        .anyMatch(oppgave -> traadId.equals(oppgave.henvendelseId));
+            }
+        };
     }
 
     private AbstractReadOnlyModel<Boolean> blirBesvart(final String traadId) {
