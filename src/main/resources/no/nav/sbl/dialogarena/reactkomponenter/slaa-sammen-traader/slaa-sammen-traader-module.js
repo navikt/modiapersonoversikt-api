@@ -14,9 +14,9 @@ class SlaaSammenTraader extends Component {
     constructor(props) {
         super();
         this.state = {
-            traadIder: props.traadIder,
+            ...props,
             submitError: false,
-            vis: () => {}
+            vis: this.vis
         };
         this.sendToWicket = WicketSender.bind(this, props.wicketurl, props.wicketcomponent);
     }
@@ -35,10 +35,15 @@ class SlaaSammenTraader extends Component {
         lukkModalVindu();
     }
 
+    vis(props) {
+        this.setState({...this.state, traadIder: props.traadIder});
+        this.visModal();
+    }
+
     render() {
         return (
             <MeldingerSok
-                {...this.props}
+                {...this.state}
                 className="slaa-sammen-traader-visning"
                 visSok={false}
                 visCheckbox={true}
@@ -46,7 +51,7 @@ class SlaaSammenTraader extends Component {
                 submitErrorMessage="Du må velge minst to tråder som skal slåes sammen."
                 submitError={this.state.submitError}
                 onSubmit={(event, state, onSuccess) => this.onSubmit(event, state, onSuccess)}
-                setVisModalVindu={(func) => this.vis = func}
+                setVisModalVindu={(func) => this.visModal = func}
                 modulNavn="SlaaSammenTraader"
             />
         );
