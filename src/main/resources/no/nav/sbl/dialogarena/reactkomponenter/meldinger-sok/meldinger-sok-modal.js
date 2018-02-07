@@ -37,7 +37,8 @@ function MeldingerSokModal(props) {
 }
 
 MeldingerSokModal.propTypes = {
-    moduleName: PT.string.isRequired
+    moduleName: PT.string.isRequired,
+    setRef: PT.func.isRequired
 };
 
 export default MeldingerSokModal;
