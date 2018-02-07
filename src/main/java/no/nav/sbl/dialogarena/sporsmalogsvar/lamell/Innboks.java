@@ -3,13 +3,12 @@ package no.nav.sbl.dialogarena.sporsmalogsvar.lamell;
 import no.nav.modig.lang.collections.predicate.GreaterThanPredicate;
 import no.nav.modig.modia.events.FeedItemPayload;
 import no.nav.modig.modia.lamell.Lerret;
+import no.nav.modig.wicket.events.NamedEventPayload;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.DialogSession;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.Events;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Oppgave;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Traad;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.exceptions.TraadAlleredeBesvart;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.HenvendelseUtsendingService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.LeggTilbakeOppgaveIGsakRequest;
@@ -43,6 +42,7 @@ import static no.nav.modig.wicket.model.ModelUtils.*;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.Events.SporsmalOgSvar.MELDING_VALGT;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype.SVAR_SKRIFTLIG;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.merke.MerkePanel.TRAAD_MERKET;
+import static org.apache.wicket.event.Broadcast.BREADTH;
 
 public class Innboks extends Lerret {
 
@@ -131,8 +131,12 @@ public class Innboks extends Lerret {
 
     private void slaaSammenTraader(List<String> traadIder) {
         List<Oppgave> oppgaver = hentTildelteOppgaverFraTraadIder(traadIder);
-        if (oppgaver.size() != traadIder.size()) {
-            throw new IllegalArgumentException("Ikke-tildelte oppgaver forsøkt slått sammen.");
+
+        for (Oppgave oppgave : oppgaver) {
+            if (oppgaveBehandlingService.oppgaveErFerdigstilt(oppgave.oppgaveId)) {
+                haandterOppgaveAlleredeFerdigstilt(oppgave.oppgaveId);
+                return;
+            }
         }
 
         String nyTraadId;
@@ -143,18 +147,30 @@ public class Innboks extends Lerret {
             return;
         }
 
-        String nySvarHenvendelse = henvendelseUtsendingService.opprettHenvendelse(SVAR_SKRIFTLIG.toString(), oppgaver.get(0).fnr, nyTraadId);
-
         oppgaver.stream()
-                .filter(oppgave -> !oppgave.henvendelseId.equals(nyTraadId))
+                .filter(oppgave -> !nyTraadId.equals(oppgave.henvendelseId))
                 .forEach(this::ferdigstillOppgave);
+
+        String nySvarHenvendelse = henvendelseUtsendingService.opprettHenvendelse(SVAR_SKRIFTLIG.toString(), oppgaver.get(0).fnr, nyTraadId);
 
         DialogSession.read(this)
                 .withOppgaveSomBesvares(oppgaver.stream()
-                        .filter(oppgave -> oppgave.henvendelseId.equals(nyTraadId))
+                        .filter(oppgave -> nyTraadId.equals(oppgave.henvendelseId))
                         .findAny()
                         .get()
-                        .withSvarHenvendelseId(nySvarHenvendelse));
+                        .withSvarHenvendelseId(nySvarHenvendelse))
+                .withOppgaverBlePlukket(true);
+
+        send(getPage(), BREADTH, new NamedEventPayload(Events.SporsmalOgSvar.SVAR_PAA_MELDING, nyTraadId));
+    }
+
+    private void haandterOppgaveAlleredeFerdigstilt(String oppgaveId) {
+        // TODO vis feilmelding
+        DialogSession.read(this)
+                .getPlukkedeOppgaver()
+                .removeIf(oppgave -> oppgaveId.equals(oppgave.oppgaveId));
+        innboksVM.tildelteOppgaver
+                .removeIf(oppgave -> oppgaveId.equals(oppgave.oppgaveId));
     }
 
     private void haandterTraadAlleredeBesvart(String traadId) {
@@ -179,9 +195,15 @@ public class Innboks extends Lerret {
     }
 
     private List<Oppgave> hentTildelteOppgaverFraTraadIder(List<String> traadIder) {
-        return innboksVM.tildelteOppgaver.stream()
+        List<Oppgave> oppgaver = innboksVM.tildelteOppgaver.stream()
                 .filter(oppgave -> traadIder.contains(oppgave.henvendelseId))
                 .collect(toList());
+
+        if (oppgaver.size() != traadIder.size()) {
+            throw new IllegalArgumentException("Ikke-tildelte oppgaver forsøkt slått sammen.");
+        }
+
+        return oppgaver;
     }
 
     private WebMarkupContainer visFeilMelding(InnboksVM innboksVM) {
