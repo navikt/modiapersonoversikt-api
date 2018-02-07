@@ -47,8 +47,8 @@ class SlaaSammenTraader extends Component {
                 className="slaa-sammen-traader-visning"
                 visSok={false}
                 visCheckbox={true}
-                submitButtonValue="Slå sammen valgte tråder"
-                submitErrorMessage="Du må velge minst to tråder som skal slåes sammen."
+                submitButtonValue="Besvar flere oppgaver"
+                submitErrorMessage="Du må velge minst to oppgaver."
                 submitError={this.state.submitError}
                 onSubmit={(event, state, onSuccess) => this.onSubmit(event, state, onSuccess)}
                 setVisModalVindu={(func) => this.visModal = func}
