@@ -11,8 +11,7 @@ const alertStripe = (
     <div className="flere-henvendelser-alert">
         <Alertstripe type={'info'} tekst="">
             <span>
-                Det ligger flere uløste oppgaver i lista
-                <br />
+                <p>Det ligger flere uløste oppgaver i lista</p>
                 <a href="#" onClick={(e) => onClickHandler(e)}>
                     Slå sammen oppgaver
                 </a>
