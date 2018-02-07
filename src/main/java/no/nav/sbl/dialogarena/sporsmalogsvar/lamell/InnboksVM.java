@@ -1,6 +1,7 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.lamell;
 
 import no.nav.brukerdialog.security.tilgangskontroll.policy.pep.EnforcementPoint;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Oppgave;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.HenvendelseBehandlingService;
@@ -36,6 +37,7 @@ public class InnboksVM implements Serializable {
     public String traadBesvares;
     public boolean focusValgtTraadOnOpen = false;
     EnforcementPoint pep;
+    public List<Oppgave> tildelteOppgaver = new ArrayList<>();
 
     public InnboksVM(String fnr, HenvendelseBehandlingService henvendelseBehandlingService, EnforcementPoint pep,
                      SaksbehandlerInnstillingerService saksbehandlerInnstillingerService) {

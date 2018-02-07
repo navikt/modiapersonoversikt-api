@@ -8,6 +8,7 @@ import no.nav.modig.content.CmsContentRetriever;
 import no.nav.modig.content.PropertyResolver;
 import no.nav.brukerdialog.security.tilgangskontroll.policy.pep.EnforcementPoint;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.AnsattEnhet;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.HenvendelseUtsendingService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveBehandlingService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.arbeidsfordeling.ArbeidsfordelingV1Service;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.gsak.GsakKodeverk;
@@ -81,6 +82,11 @@ public class ServiceTestContext {
     @Bean
     public BehandleHenvendelsePortType behandleHenvendelsePortType() {
         return mock(BehandleHenvendelsePortType.class);
+    }
+
+    @Bean
+    public HenvendelseUtsendingService henvendelseUtsendingService() {
+        return mock(HenvendelseUtsendingService.class);
     }
 
     @Bean

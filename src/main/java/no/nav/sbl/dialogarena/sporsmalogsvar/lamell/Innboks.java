@@ -3,7 +3,14 @@ package no.nav.sbl.dialogarena.sporsmalogsvar.lamell;
 import no.nav.modig.modia.events.FeedItemPayload;
 import no.nav.modig.modia.lamell.Lerret;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.DialogSession;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.Events;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Oppgave;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Traad;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.exceptions.TraadAlleredeBesvart;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.HenvendelseUtsendingService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.LeggTilbakeOppgaveIGsakRequest;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveBehandlingService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
@@ -16,18 +23,25 @@ import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.model.*;
+import org.apache.wicket.model.CompoundPropertyModel;
+import org.apache.wicket.model.PropertyModel;
+import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
 
 import javax.inject.Inject;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
+import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
 import static no.nav.modig.modia.events.InternalEvents.FEED_ITEM_CLICKED;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
 import static no.nav.modig.wicket.model.ModelUtils.both;
 import static no.nav.modig.wicket.model.ModelUtils.not;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.Events.SporsmalOgSvar.MELDING_VALGT;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype.SVAR_SKRIFTLIG;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.merke.MerkePanel.TRAAD_MERKET;
 
 public class Innboks extends Lerret {
@@ -42,6 +56,8 @@ public class Innboks extends Lerret {
     OppgaveBehandlingService oppgaveBehandlingService;
     @Inject
     SaksbehandlerInnstillingerService saksbehandlerInnstillingerService;
+    @Inject
+    HenvendelseUtsendingService henvendelseUtsendingService;
 
     public Innboks(String id, final InnboksVM innboksVM) {
         super(id);
@@ -70,27 +86,101 @@ public class Innboks extends Lerret {
         final ReactComponentPanel meldingerSok = new ReactComponentPanel("meldingerSokContainer", "MeldingerSok", getMeldingerSokProps());
 
 
-        final WebMarkupContainer meldingerSokToggleContainer = new WebMarkupContainer("meldingerSokToggleContainer");
-        meldingerSokToggleContainer.setOutputMarkupId(true);
+        final WebMarkupContainer innboksButtonContainer = new WebMarkupContainer("innboksButtonContainer");
+        innboksButtonContainer.setOutputMarkupId(true);
         AjaxLink meldingerSokToggleButton = new SokKnapp("meldingerSokToggle") {
             @Override
             public void onClick(AjaxRequestTarget target) {
                 innboksVM.oppdaterMeldinger();
                 target.add(alleMeldingerPanel, traaddetaljerPanel);
                 meldingerSok.call("vis", getMeldingerSokProps());
-                target.add(meldingerSokToggleContainer);
+                target.add(innboksButtonContainer);
             }
         };
         meldingerSok.addCallback("oppdater", Void.class, (target, data) -> {
             innboksVM.oppdaterMeldinger();
             target.add(alleMeldingerPanel, traaddetaljerPanel);
         });
-        meldingerSokToggleContainer.add(meldingerSokToggleButton);
+        innboksButtonContainer.add(meldingerSokToggleButton);
+
+        final ReactComponentPanel slaaSammenTraaderPanel = new ReactComponentPanel("slaaSammenTraaderContainer", "SlaaSammenTraader", getSlaaSammenTraaderProps());
+        AjaxLink slaaSammenTraaderToggleButton = new SokKnapp("slaaSammenTraaderToggle") {
+            @Override
+            public void onClick(AjaxRequestTarget target) {
+                innboksVM.oppdaterMeldinger();
+                target.add(alleMeldingerPanel, traaddetaljerPanel);
+                slaaSammenTraaderPanel.call("vis", getSlaaSammenTraaderProps());
+                target.add(innboksButtonContainer);
+            }
+        };
+        slaaSammenTraaderPanel.addCallback("slaaSammen", List.class, (target, data) -> {
+            @SuppressWarnings("unchecked")
+            List<String> traadIder = (List<String>) data;
+            slaaSammenTraader(traadIder);
+            innboksVM.oppdaterMeldinger();
+            target.add(alleMeldingerPanel, traaddetaljerPanel);
+        });
+        innboksButtonContainer.add(slaaSammenTraaderToggleButton);
 
         WebMarkupContainer feilmeldingPanel = visFeilMelding(innboksVM);
 
-        meldingsliste.add(meldingerSok, meldingerSokToggleContainer, alleMeldingerPanel);
+        meldingsliste.add(meldingerSok, slaaSammenTraaderPanel, innboksButtonContainer, alleMeldingerPanel);
         add(meldingsliste, traaddetaljerPanel, feilmeldingPanel);
+    }
+
+    private void slaaSammenTraader(List<String> traadIder) {
+        List<Oppgave> oppgaver = hentTildelteOppgaverFraTraadIder(traadIder);
+        if (oppgaver.size() != traadIder.size()) {
+            throw new IllegalArgumentException("Ikke-tildelte oppgaver forsøkt slått sammen.");
+        }
+
+        String nyTraadId;
+        try {
+            nyTraadId = henvendelseUtsendingService.slaaSammenTraader(traadIder);
+        } catch (TraadAlleredeBesvart e) {
+            haandterTraadAlleredeBesvart(e.traadId);
+            return;
+        }
+
+        String nySvarHenvendelse = henvendelseUtsendingService.opprettHenvendelse(SVAR_SKRIFTLIG.toString(), oppgaver.get(0).fnr, nyTraadId);
+
+        oppgaver.stream()
+                .filter(oppgave -> !oppgave.henvendelseId.equals(nyTraadId))
+                .forEach(this::ferdigstillOppgave);
+
+        DialogSession.read(this)
+                .withOppgaveSomBesvares(oppgaver.stream()
+                        .filter(oppgave -> oppgave.henvendelseId.equals(nyTraadId))
+                        .findAny()
+                        .get()
+                        .withSvarHenvendelseId(nySvarHenvendelse));
+    }
+
+    private void haandterTraadAlleredeBesvart(String traadId) {
+        // TODO vis feilmelding
+        innboksVM.tildelteOppgaver
+                .removeIf(oppgave -> traadId.equals(oppgave.henvendelseId));
+        DialogSession.read(this)
+                .getPlukkedeOppgaver()
+                .removeIf(oppgave -> traadId.equals(oppgave.henvendelseId));
+    }
+
+    private void ferdigstillOppgave(Oppgave oppgave) {
+        oppgaveBehandlingService.ferdigstillOppgaveIGsak(
+                oppgave.oppgaveId,
+                Temagruppe.valueOf(innboksVM.getTraader()
+                        .get(oppgave.henvendelseId)
+                        .getEldsteMelding().melding.temagruppe),
+                saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet()
+        );
+        innboksVM.tildelteOppgaver.remove(oppgave);
+        DialogSession.read(this).getPlukkedeOppgaver().remove(oppgave);
+    }
+
+    private List<Oppgave> hentTildelteOppgaverFraTraadIder(List<String> traadIder) {
+        return innboksVM.tildelteOppgaver.stream()
+                .filter(oppgave -> traadIder.contains(oppgave.henvendelseId))
+                .collect(toList());
     }
 
     private WebMarkupContainer visFeilMelding(InnboksVM innboksVM) {
@@ -110,6 +200,14 @@ public class Innboks extends Lerret {
             innboksVM.setSessionOppgaveId(null);
         }
         return feilmeldingPanel;
+    }
+
+    private Map<String, Object> getSlaaSammenTraaderProps() {
+        Map<String, Object> props = getMeldingerSokProps();
+        props.put("traadIder", innboksVM.tildelteOppgaver.stream()
+                .map(oppgave -> oppgave.henvendelseId)
+                .collect(toList()));
+        return props;
     }
 
     private Map<String, Object> getMeldingerSokProps() {

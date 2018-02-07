@@ -11,7 +11,9 @@ import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.GenericPanel;
-import org.apache.wicket.model.*;
+import org.apache.wicket.model.AbstractReadOnlyModel;
+import org.apache.wicket.model.CompoundPropertyModel;
+import org.apache.wicket.model.PropertyModel;
 
 import static no.nav.modig.wicket.conditional.ConditionalUtils.hasCssClassIf;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
