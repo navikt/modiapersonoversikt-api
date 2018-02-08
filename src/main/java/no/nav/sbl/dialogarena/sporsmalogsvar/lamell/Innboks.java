@@ -252,7 +252,7 @@ public class Innboks extends Lerret {
     public void renderHead(IHeaderResponse response) {
         super.renderHead(response);
         response.render(OnDomReadyHeaderItem.forScript(
-                "$(document).on('click', '.innboksSokToggle button',function(){$(this).hide().siblings('img').show();});"));
+                "$(document).on('click', '.innboksSokToggle button',function(){$(this).addClass('loading');});"));
     }
 
     @Override
