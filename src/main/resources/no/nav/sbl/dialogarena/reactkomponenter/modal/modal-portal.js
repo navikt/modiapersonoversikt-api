@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import PT from 'prop-types';
 import ReactDOM from 'react-dom';
 
@@ -23,38 +23,22 @@ function createAriaOptional(name, data) {
     };
 }
 
-/* eslint "react/prefer-es6-class": 1 */
-const ModalPortal = React.createClass({
-    propTypes: {
-        description: PT.object,
-        closeButton: PT.object,
-        title: PT.object,
-        isOpen: PT.bool,
-        modal: PT.object.isRequired,
-        skipFocus: PT.array,
-        children: PT.node.isRequired,
-        width: PT.number,
-        height: PT.number
-    },
-    getDefaultProps: function getDefaultProps() {
-        return {
-            skipFocus: ['div'],
-            isOpen: false
-        };
-    },
-    getInitialState: function getInitialState() {
-        return {
+class ModalPortal extends Component {
+
+    componentWillMount() {
+        this.focusAfterClose = undefined;
+        this.state = {
             title: createAriaOptional('title', this.props.title),
             description: createAriaOptional('description', this.props.description),
             closeButton: createAriaOptional('closeButton', this.props.closeButton)
         };
-    },
-    componentDidMount: function componentDidMount() {
+    }
+    componentDidMount() {
         if (this.props.isOpen === true) {
             this.focusFirst();
         }
-    },
-    componentDidUpdate: function componentDidUpdate() {
+    }
+    componentDidUpdate() {
         if (this.props.isOpen) {
             if (!$.contains(ReactDOM.findDOMNode(this.refs.content), document.activeElement)) {
                 this.focusFirst();
@@ -62,9 +46,8 @@ const ModalPortal = React.createClass({
         } else {
             this.restoreFocus();
         }
-    },
-    focusAfterClose: undefined,
-    keyHandler: function keyHandler(event) {
+    }
+    keyHandler(event) {
         const keyMap = {
             27: function escHandler() { // ESC
                 this.props.modal.close();
@@ -82,8 +65,8 @@ const ModalPortal = React.createClass({
 
         // No leaks
         event.stopPropagation();
-    },
-    handleTab: function handleTab(isShiftkey) {
+    }
+    handleTab(isShiftkey) {
         const $content = $(ReactDOM.findDOMNode(this.refs.content));
         const focusable = $content.find(':tabbable');
         const lastValidIndex = isShiftkey ? 0 : focusable.length - 1;
@@ -97,8 +80,8 @@ const ModalPortal = React.createClass({
             return true;
         }
         return false;
-    },
-    focusFirst: function focusFirst() {
+    }
+    focusFirst() {
         this.focusAfterClose = document.activeElement;
         let tabbables = $(ReactDOM.findDOMNode(this.refs.content)).find(':tabbable');
         this.props.skipFocus.forEach((skipFocusTag) => {
@@ -108,14 +91,14 @@ const ModalPortal = React.createClass({
         if (tabbables.length > 0) {
             tabbables.eq(0).focus();
         }
-    },
-    restoreFocus: function restoreFocus() {
+    }
+    restoreFocus() {
         if (this.focusAfterClose) {
             this.focusAfterClose.focus();
             this.focusAfterClose = undefined;
         }
-    },
-    render: function render() {
+    }
+    render() {
         let children = this.props.children;
         if (!children.hasOwnProperty('length')) {
             children = [children];
@@ -169,6 +152,24 @@ const ModalPortal = React.createClass({
             </div>
         );
     }
-});
+}
+
+ModalPortal.propTypes = {
+    description: PT.object,
+        closeButton: PT.object,
+        title: PT.object,
+        isOpen: PT.bool,
+        modal: PT.object.isRequired,
+        skipFocus: PT.array,
+        children: PT.node.isRequired,
+        width: PT.number,
+        height: PT.number
+};
+
+ModalPortal.defaultProps = {
+    skipFocus: ['div'],
+    isOpen: false
+};
+
 
 export default ModalPortal;

@@ -17,6 +17,7 @@ public class ReactResources {
                     new PackageResourceReference(ResourceReference.class, "build/redirect-modal.less"),
                     new PackageResourceReference(ResourceReference.class, "build/sok-layout.less"),
                     new PackageResourceReference(ResourceReference.class, "build/meldinger-sok.less"),
+                    new PackageResourceReference(ResourceReference.class, "build/slaa-sammen-traader.less"),
                     new PackageResourceReference(ResourceReference.class, "build/knagginput.less"),
                     new PackageResourceReference(ResourceReference.class, "build/skrivestotte.less"),
                     new PackageResourceReference(ResourceReference.class, "build/journalforing-panel.less"),
@@ -26,6 +27,7 @@ public class ReactResources {
                     new PackageResourceReference(ResourceReference.class, "build/saksoversikt-module.less"),
                     new PackageResourceReference(ResourceReference.class, "build/delvis-svar.less"),
                     new PackageResourceReference(ResourceReference.class, "build/nav-kontor.less"),
-                    new PackageResourceReference(ResourceReference.class, "build/traadvisning.less")
+                    new PackageResourceReference(ResourceReference.class, "build/traadvisning.less"),
+                    new PackageResourceReference(ResourceReference.class, "build/flere-henvendelser-alert.less")
             ).done();
 }

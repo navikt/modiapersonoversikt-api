@@ -23,19 +23,24 @@ function Forhandsvisning(props) {
     });
 
     const meldingBenevnelse = traad.antallMeldingerIOpprinneligTraad === 1 ? 'melding' : 'meldinger';
-    const antallInformasjon = `Viser <b>${meldinger.length}</b> av 
-                <b>${traad.antallMeldingerIOpprinneligTraad}</b> ${meldingBenevnelse} i dialogen`;
-
+    const antallInformasjon = (<span>
+        Viser <b>{meldinger.length}</b> av <b>{traad.antallMeldingerIOpprinneligTraad}</b> {meldingBenevnelse} i dialogen
+    </span>);
+    const error = props.submitError ? <p className="feedbacklabel">{props.submitErrorMessage}</p> : '';
     return (
         <div>
             <ScrollPortal className="traadPanel" innerClassName="traad-panel-wrapper">
                 <div className="traadinfo">
-                    <span dangerouslySetInnerHTML={{ __html: antallInformasjon }}></span>
+                    {antallInformasjon}
                 </div>
                 <div>{meldingElementer}</div>
             </ScrollPortal>
             <div className="velgPanel">
-                <input type="submit" value="Vis dialog" className="knapp-hoved-liten" />
+                <input type="submit"
+                       value={props.submitButtonValue}
+                       className="knapp-hoved-liten"
+                />
+                {error}
             </div>
         </div>
     );
@@ -45,7 +50,15 @@ Forhandsvisning.propTypes = {
     traad: PT.shape({
         meldinger: PT.array,
         antallMeldingerIOpprinneligTraad: PT.number
-    }).isRequired
+    }).isRequired,
+    submitButtonValue: PT.string.isRequired,
+    submitErrorMessage: PT.string,
+    submitError: PT.bool
+};
+
+Forhandsvisning.defaultProps = {
+    submitErrorMessage: '',
+    submitError: false
 };
 
 export default Forhandsvisning;

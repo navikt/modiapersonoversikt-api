@@ -92,12 +92,6 @@ class MeldingerSokStore extends Store {
         this.state.traadMarkupIds = traadMarkupIds;
     }
 
-    submit(afterSubmit, event) {
-        event.preventDefault();
-        document.getElementById(this.state.traadMarkupIds[this.state.valgtTraad.traadId]).click();
-        afterSubmit();
-    }
-
     static _updateScroll(tabliste, valgtIndex) {
         const element = tabliste.querySelectorAll('.sok-element').item(valgtIndex);
         Utils.adjustScroll(tabliste, element);
@@ -143,6 +137,9 @@ function haandterDelviseSvar(traad) {
 }
 
 function onFulfilled(traader) {
+    if (this.state.traadIder) {
+        traader = traader.filter(traad => this.state.traadIder.indexOf(traad.traadId) >= 0);
+    }
     traader.forEach((traad) => {
         traad.key = traad.traadId;
         traad.datoInMillis = traad.dato.millis;

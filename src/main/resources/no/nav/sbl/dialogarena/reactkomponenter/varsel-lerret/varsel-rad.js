@@ -35,7 +35,11 @@ class VarselRad extends React.Component {
             pilClassname += ' opp';
             meldinger = varsel.meldingListe
                 .sort(nyesteDatoForst)
-                .map((melding) => <VarselRadElement melding={melding} store={this.props.store} />);
+                .map((melding) => <VarselRadElement
+                    melding={melding}
+                    store={this.props.store}
+                    key={melding.utsendingsTidspunkt}
+                />);
         } else {
             pilClassname += ' ned';
         }
