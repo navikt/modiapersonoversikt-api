@@ -30,7 +30,7 @@ const toNameCase = (navn) => navn.replace(/\b(?!em)\w+?\b/g,
     (txt) => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
 
 export function erInngaaende(melding) {
-    return [MeldingsTyper.SPORSMAL_SKRIFTLIG, MeldingsTyper.SVAR_SBL_INNGAAENDE].includes(melding.meldingstype);
+    return [MeldingsTyper.SPORSMAL_SKRIFTLIG, MeldingsTyper.SVAR_SBL_INNGAAENDE].indexOf(melding.meldingstype) >= 0;
 }
 
 export function hentForfatterIdent(melding) {
