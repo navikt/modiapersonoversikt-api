@@ -14,6 +14,7 @@ class MeldingerSokStore extends Store {
         this.state.initialisert = false;
         this.state.indeksert = false;
         this.state.feilet = false;
+        this.traadChanged = this.traadChanged.bind(this);
         this.sendToWicket = WicketSender.bind(this, this.state.wicketurl, this.state.wicketcomponent);
     }
 

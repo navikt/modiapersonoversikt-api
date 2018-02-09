@@ -18,7 +18,7 @@
       right: 12px;
     }
   }
-  .sok-visning {
+  .innboks-visning {
     .sok-liste .sok-element {
       border-bottom: solid 1px #d1d1d1;
       background-color: inherit;
@@ -134,6 +134,17 @@
     }
   }
 
+  .checkbox{
+    position: absolute;
+    bottom: 18px;
+    left: 17px;
+    label {
+      overflow: hidden;
+      height: 1px;
+      width: 1px;
+    }
+  }
+
   .checkboks {
     & + .skjemaelement__label:before {
       content: '';
@@ -152,4 +163,16 @@
     text-align: right;
     margin-top: 3px;
   }
+}
+
+.vekk {
+  position: absolute;
+  left: -3000px;
+  clip: rect(1px, 1px, 1px, 1px);
+  padding: 0;
+  border: 0;
+  height: 1px;
+  width: 1px;
+  overflow: hidden;
+  z-index: -1000;
 }
