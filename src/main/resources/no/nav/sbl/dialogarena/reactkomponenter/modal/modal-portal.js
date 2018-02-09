@@ -126,7 +126,7 @@ class ModalPortal extends Component {
                 tabIndex="-1"
                 className={cls}
                 aria-hidden={!this.props.isOpen}
-                onKeyDown={this.keyHandler}
+                onKeyDown={this.keyHandler.bind(this)}
                 role="dialog"
                 aria-labelledby={title.id}
                 aria-describedby={description.id}
