@@ -71,8 +71,8 @@ public class UtbetalingServiceImplTest {
     public void haandtererIkkeGyldigPeriodeFeilFraTjenesten() throws HentUtbetalingsinformasjonPeriodeIkkeGyldig, HentUtbetalingsinformasjonPersonIkkeFunnet, HentUtbetalingsinformasjonIkkeTilgang {
         UtbetalingServiceImpl spyService = spy(utbetalingService);
         String fnr = "***REMOVED***";
-        LocalDate fom = new LocalDate(2015, 1, 1);
-        LocalDate tom = new LocalDate(2015, 1, 2);
+        LocalDate fom = LocalDate.now().withDayOfYear(1);
+        LocalDate tom = LocalDate.now().withDayOfYear(2);
         WSHentUtbetalingsinformasjonRequest request = new WSHentUtbetalingsinformasjonRequest();
         doReturn(request).when(spyService).createRequest(fnr, fom.minusDays(EKSTRA_SOKEPERIODE), tom);
         when(utbetalingV1.hentUtbetalingsinformasjon(request)).thenThrow(new HentUtbetalingsinformasjonPeriodeIkkeGyldig());
