@@ -239,7 +239,7 @@ public class LamellContainer extends TokenLamellPanel implements Serializable {
         if (oppgave != null) {
             innboksVM.traadBesvares = oppgave.henvendelseId;
             innboksVM.setSessionHenvendelseId(oppgave.henvendelseId);
-            if (gsakService.oppgaveKanManuelltAvsluttes(oppgave.oppgaveId)) {
+            if (oppgave.oppgaveId != null && gsakService.oppgaveKanManuelltAvsluttes(oppgave.oppgaveId)) {
                 innboksVM.setSessionOppgaveId(oppgave.oppgaveId);
             }
         }
