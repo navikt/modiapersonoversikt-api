@@ -2,6 +2,10 @@ import React from 'react';
 import PT from 'prop-types';
 import InnboksVisning from './innboks-visning';
 
+function getErTom(props) {
+    return props.state.traader.length === 0;
+}
+
 function lagSokeFelt(props) {
     return (
         <div tabIndex="-1" className="sok-container">
@@ -25,9 +29,32 @@ function lagSokeFelt(props) {
     );
 }
 
+function lagTomVisning(props) {
+    const tomInnhold = () => {
+        if (props.feilet) {
+            return <h1 className="tom" role="alert" aria-atomic="true">Noe feilet</h1>;
+        } else if (props.initialisert) {
+            return <h1 className="tom" role="alert" aria-atomic="true">Ingen treff</h1>;
+        }
+        return (
+            <div className="tom">
+                <img src="../img/ajaxloader/hvit/loader_hvit_128.gif" alt="Henter meldinger"/>
+            </div>
+        );
+    };
+
+    const erTom = getErTom(props);
+    return (
+        <div className={'sok-visning ' + (erTom ? '' : 'hidden')}>
+            {tomInnhold()}
+        </div>
+    );
+}
+
 function MeldingerSokView(props) {
     const sokeFelt = props.state.visSok ? lagSokeFelt(props) : '';
     const cls = `${props.state.className} sok-layout`;
+    const tomVisning = lagTomVisning(props);
     return (
         <form
             className={cls}
@@ -36,7 +63,7 @@ function MeldingerSokView(props) {
         >
             {sokeFelt}
             <InnboksVisning
-                nyTraadValgtCallback={props.nyTraadValgtCallback}
+                nyTraadValgtCallback={props.store.traadChanged}
                 traader={props.state.traader}
                 valgtTraad={props.state.valgtTraad}
                 listePanelId={props.state.listePanelId}
@@ -46,6 +73,7 @@ function MeldingerSokView(props) {
                 visCheckbox={props.state.visCheckbox}
                 submitButtonProps={props.state.submitButtonProps}
             />
+            {tomVisning}
         </form>
     );
 }
@@ -55,7 +83,7 @@ MeldingerSokView.propTypes = {
     store: PT.object.isRequired,
     onChangeProxy: PT.func.isRequired,
     keyDownHandler: PT.func.isRequired,
-    onSubmit: PT.func.isRequired,
+    onSubmit: PT.func.isRequired
 };
 
 export default MeldingerSokView;

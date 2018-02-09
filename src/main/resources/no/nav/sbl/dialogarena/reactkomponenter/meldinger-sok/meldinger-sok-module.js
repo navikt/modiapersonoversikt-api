@@ -63,7 +63,6 @@ class MeldingerSok extends Component {
                     onChangeProxy={e => this.onChangeProxy(e)}
                     keyDownHandler={e => this.keyDownHandler(e)}
                     onSubmit={(e) => this.onSubmit(e)}
-                    nyTraadValgtCallback={this.store.traadChanged} //TODO flytt til meldingersokview
                     state={this.state}
                     store={this.store}
                 />
