@@ -68,16 +68,4 @@ public class MeldingerWidgetTest extends WicketPageTest {
                 is(asList("id3", "id2", "id1")));
     }
 
-    @Test
-    public void filtrererBortDelviseSvar() {
-        when(henvendelseBehandlingService.hentMeldinger(anyString())).thenReturn(asList(
-                createMelding("id1", SPORSMAL_SKRIFTLIG, DateTime.parse("2017-09-01"), Temagruppe.ARBD, "id1"),
-                createMelding("id3", DELVIS_SVAR_SKRIFTLIG, DateTime.parse("2017-11-01"), Temagruppe.ARBD, "id3")
-        ));
-
-        List<WidgetMeldingVM> collect = new MeldingerWidget("meldinger", "M", "fnr").getFeedItems();
-        assertThat(collect.size(), is(1));
-
-    }
-
 }

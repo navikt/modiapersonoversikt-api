@@ -16,12 +16,8 @@ public class WidgetMeldingVM extends MeldingVM implements FeedItemVM, Serializab
     public final boolean erMonolog;
 
     public WidgetMeldingVM(List<Melding> traad, boolean erMonolog) {
-        super(traad.stream().sorted(Melding.NYESTE_FORST).findFirst().get(), getTraadLengde(traad));
+        super(traad.stream().sorted(Melding.NYESTE_FORST).findFirst().get(), traad.size());
         this.erMonolog = erMonolog;
-    }
-
-    private static int getTraadLengde(List<Melding> traad) {
-        return Math.toIntExact(traad.stream().filter(melding -> !melding.erDelvisSvar()).count());
     }
 
     public String getMeldingStatusTekstKey() {

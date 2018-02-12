@@ -126,6 +126,10 @@ public class MeldingVM implements Serializable {
         return melding.erSporsmal();
     }
 
+    public boolean erDelsvar() {
+        return melding.erDelvisSvar();
+    }
+
     @Override
     public boolean equals(Object obj) {
         return obj instanceof MeldingVM && this.melding.id.equals(((MeldingVM) obj).melding.id);
