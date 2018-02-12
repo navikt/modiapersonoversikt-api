@@ -304,12 +304,12 @@ public class MeldingUtilsTest {
     }
 
     @Test
-    public void hentEnonicTekstForDynamiskNokkelSkalReturnereKeyBruktSomParameterDersomKeyIkkeEksiserer() throws Exception {
+    public void getTekstForMeldingStatusForDynamiskNokkelSkalReturnereKeyBruktSomParameterDersomKeyIkkeEksiserer() throws Exception {
         final String key = "melding.status.SVAR_SKRIFTLIG";
         final PropertyResolver propertyResolver = mock(PropertyResolver.class);
         when(propertyResolver.getProperty(anyString())).thenThrow(new NoSuchElementException());
 
-        final String returVerdi = hentEnonicTekstForMeldingStatus(propertyResolver, Meldingstype.SVAR_SKRIFTLIG);
+        final String returVerdi = getTekstForMeldingStatus(propertyResolver, Meldingstype.SVAR_SKRIFTLIG);
 
         assertThat(returVerdi, is(key));
     }
