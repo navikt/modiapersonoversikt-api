@@ -1,13 +1,13 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.lamell;
 
 import no.nav.brukerdialog.security.tilgangskontroll.policy.pep.EnforcementPoint;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Person;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
-import no.nav.sbl.dialogarena.sporsmalogsvar.config.ServiceTestContext;
+import no.nav.sbl.dialogarena.sporsmalogsvar.config.MockServiceTestContext;
 import no.nav.sbl.dialogarena.sporsmalogsvar.config.WicketPageTest;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.HenvendelseBehandlingService;
+import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Traader;
 import org.joda.time.DateTime;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -23,11 +23,12 @@ import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendels
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.TestUtils.createMelding;
 import static org.joda.time.DateTime.now;
 import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER_CLASS;
 
 @DirtiesContext(classMode = AFTER_CLASS)
-@ContextConfiguration(classes = {ServiceTestContext.class})
+@ContextConfiguration(classes = {MockServiceTestContext.class})
 @RunWith(SpringJUnit4ClassRunner.class)
 public class TraaddetaljerPanelTest extends WicketPageTest {
 
@@ -44,16 +45,14 @@ public class TraaddetaljerPanelTest extends WicketPageTest {
 
     @Test
     public void skalKunneBesvareTraadInitiertAvBruker() {
-        when(henvendelseBehandlingService.hentMeldinger(anyString())).thenReturn(asList(createStandardMelding()));
-
         wicket.goToPageWith(new TraaddetaljerPanel("id", innboksVM()))
                 .should().containComponent(thatIsVisible().and(withId(BESVAR_ID)));
     }
 
     @Test
     public void skalIkkeKunneBesvareTraadInitiertAvSaksbehandler() {
-        when(henvendelseBehandlingService.hentMeldinger(anyString())).thenReturn(asList(
-                createMelding("melding1", SAMTALEREFERAT_OPPMOTE, now().minusDays(1), Temagruppe.ARBD, "melding1")));
+        when(henvendelseBehandlingService.hentTraader(anyString(), anyString())).thenReturn(new Traader(asList(
+                createMelding("melding1", SAMTALEREFERAT_OPPMOTE, now().minusDays(1), Temagruppe.ARBD, "melding1"))));
 
         wicket.goToPageWith(new TraaddetaljerPanel("id", innboksVM()))
                 .should().containComponent(thatIsInvisible().and(withId(BESVAR_ID)));
@@ -61,10 +60,6 @@ public class TraaddetaljerPanelTest extends WicketPageTest {
 
     @Test
     public void skalKunneBesvareTraadInitiertAvBrukerMedTidligereSvar() {
-        when(henvendelseBehandlingService.hentMeldinger(anyString())).thenReturn(asList(
-                createStandardMelding(),
-                createMelding("melding2", SVAR_SKRIFTLIG, now(), Temagruppe.ARBD, "melding1")));
-
         wicket.goToPageWith(new TraaddetaljerPanel("id", innboksVM()))
                 .should().containComponent(thatIsVisible().and(withId(BESVAR_ID)));
     }
@@ -74,7 +69,7 @@ public class TraaddetaljerPanelTest extends WicketPageTest {
         Melding melding = createStandardMelding();
         melding.meldingstype = SPORSMAL_MODIA_UTGAAENDE;
         melding.kontorsperretEnhet = "kontorsperretEnhet";
-        when(henvendelseBehandlingService.hentMeldinger(anyString())).thenReturn(asList(melding));
+        when(henvendelseBehandlingService.hentTraader(anyString(), anyString())).thenReturn(new Traader(asList(melding)));
 
         wicket.goToPageWith(new TraaddetaljerPanel("id", innboksVM()))
                 .should().containComponent(thatIsInvisible().and(withId(BESVAR_ID)));
@@ -85,7 +80,6 @@ public class TraaddetaljerPanelTest extends WicketPageTest {
         Melding melding = createStandardMelding();
         melding.meldingstype = SPORSMAL_SKRIFTLIG;
         melding.kontorsperretEnhet = "kontorsperretEnhet";
-        when(henvendelseBehandlingService.hentMeldinger(anyString())).thenReturn(asList(melding));
 
         wicket.goToPageWith(new TraaddetaljerPanel("id", innboksVM("fnr")))
                 .should().containComponent(thatIsVisible().and(withId(BESVAR_ID)));
@@ -95,7 +89,6 @@ public class TraaddetaljerPanelTest extends WicketPageTest {
     public void skalIkkeViseTemanavnDersomTraadensEldsteMeldingIkkeErJournalfort() {
         Melding melding = createStandardMelding();
         melding.journalfortTemanavn = "journalfortTemanavnSomIkkeSkalVises";
-        when(henvendelseBehandlingService.hentMeldinger(anyString())).thenReturn(asList(melding));
 
         wicket.goToPageWith(new TraaddetaljerPanel("id", innboksVM()))
                 .should().notContainPatterns(melding.journalfortTemanavn);
@@ -106,7 +99,7 @@ public class TraaddetaljerPanelTest extends WicketPageTest {
         Melding melding = createStandardMelding();
         melding.journalfortDato = DateTime.now();
         melding.journalfortTemanavn = "journalfortTemanavnSomSkalVises";
-        when(henvendelseBehandlingService.hentMeldinger(anyString())).thenReturn(asList(melding));
+        when(henvendelseBehandlingService.hentTraader(anyString(), anyString())).thenReturn(new Traader(asList(melding)));
 
         wicket.goToPageWith(new TraaddetaljerPanel("id", innboksVM()))
                 .should().containPatterns(melding.journalfortTemanavn);
@@ -117,7 +110,7 @@ public class TraaddetaljerPanelTest extends WicketPageTest {
         Melding melding = createStandardMelding();
         String fnr = "13245679810";
         melding.markertSomFeilsendtAv = "navIdent";
-        when(henvendelseBehandlingService.hentMeldinger(fnr)).thenReturn(asList(melding));
+        when(henvendelseBehandlingService.hentTraader(eq(fnr), anyString())).thenReturn(new Traader(asList(melding)));
 
         wicket.goToPageWith(new TraaddetaljerPanel("id", innboksVM(fnr)))
                 .should().containComponent(thatIsInvisible().and(withId(BESVAR_ID)));
@@ -128,7 +121,6 @@ public class TraaddetaljerPanelTest extends WicketPageTest {
         String fnr = "13245679810";
         Melding melding = createStandardMelding();
         melding.meldingstype = SPORSMAL_SKRIFTLIG;
-        when(henvendelseBehandlingService.hentMeldinger(fnr)).thenReturn(asList(melding));
 
         wicket.goToPageWith(new TraaddetaljerPanel("id", innboksVM(fnr)))
                 .should().containComponent(thatIsInvisible().and(withId("skrevetAvContainer")));
@@ -140,7 +132,7 @@ public class TraaddetaljerPanelTest extends WicketPageTest {
         Melding melding = createStandardMelding();
         melding.meldingstype = SAMTALEREFERAT_OPPMOTE;
         melding.navIdent = "ident";
-        when(henvendelseBehandlingService.hentMeldinger(fnr)).thenReturn(asList(melding));
+        when(henvendelseBehandlingService.hentTraader(eq(fnr), anyString())).thenReturn(new Traader(asList(melding)));
 
         wicket.goToPageWith(new TraaddetaljerPanel("id", innboksVM(fnr)))
                 .should().containComponent(thatIsVisible().and(withId("skrevetAvContainer")));

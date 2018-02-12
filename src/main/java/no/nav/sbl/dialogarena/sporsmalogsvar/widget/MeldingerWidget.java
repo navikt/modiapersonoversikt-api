@@ -4,7 +4,9 @@ import no.nav.modig.modia.widget.async.AsyncWidget;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.Events;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.HenvendelseBehandlingService;
+import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Traader;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.model.IModel;
 
@@ -14,7 +16,6 @@ import java.util.function.Function;
 
 import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.toList;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.MeldingUtils.skillUtTraader;
 
 public class MeldingerWidget extends AsyncWidget<WidgetMeldingVM> {
 
@@ -22,6 +23,8 @@ public class MeldingerWidget extends AsyncWidget<WidgetMeldingVM> {
 
     @Inject
     private HenvendelseBehandlingService henvendelseBehandlingService;
+    @Inject
+    private SaksbehandlerInnstillingerService saksbehandlerInnstillingerService;
 
     public MeldingerWidget(String id, String initial, final String fnr) {
         super(id, initial, new PropertyKeys().withErrorKey("info.feil").withOverflowKey("info.mangemeldinger").withEmptyKey("info.ingenmeldinger"));
@@ -36,10 +39,8 @@ public class MeldingerWidget extends AsyncWidget<WidgetMeldingVM> {
 
     @Override
     public List<WidgetMeldingVM> getFeedItems() {
-        List<Melding> meldinger = henvendelseBehandlingService.hentMeldinger(fnr);
-        List<Melding> filtrerteMeldinger = meldinger.stream()
-                .filter(melding -> !melding.erDelvisSvar()).collect(toList());
-        return skillUtTraader(filtrerteMeldinger)
+        Traader traader = henvendelseBehandlingService.hentTraader(fnr, saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet());
+        return traader.getTraader()
                 .values().stream()
                 .map(TIL_MELDINGVM)
                 .sorted(comparing(WidgetMeldingVM::getDato).reversed())
