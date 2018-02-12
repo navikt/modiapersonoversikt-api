@@ -4,7 +4,7 @@ import ScrollPortal from '../utils/scroll-portal';
 import TraadVisning from './traadvisning';
 import PT from 'prop-types';
 
-function getErTom(props) {
+function erTom(props) {
     return props.traader.length === 0;
 }
 
@@ -12,59 +12,56 @@ function erTraadValgt(traad, valgtTraad) {
     return traad === valgtTraad;
 }
 
-function lagInnboksVisning(props) {
+function lagMeldingsListe(props) {
     const meldingsListeElementer = props.traader.map((traad) => {
-        const valgt = erTraadValgt(traad, props.valgtTraad);
+        const erValgt = erTraadValgt(traad, props.valgtTraad);
         return (
             <ListeElement
-                key={traad.traadId + valgt}
+                key={traad.traadId}
                 traad={traad}
                 onClick={() => props.nyTraadValgtCallback(traad)}
                 visCheckBox={props.visCheckbox}
-                erValgt={valgt}
+                erValgt={erValgt}
             />
         );
     });
-    const erTom = getErTom(props);
-    const submitErrorMessage = props.submitButtonProps.error ? props.submitButtonProps.errorMessage : '';
-    const submittKnappPanel = (
-        <div className="velgPanel">
-            <input
-                type="submit"
-                value={props.submitButtonProps.buttonText}
-                className="knapp-hoved-liten"
+    return (
+        <ScrollPortal
+            id={props.listePanelId}
+            className="sok-liste"
+            role="tablist"
+            tabIndex="-1"
+            aria-live="assertive"
+            aria-atomic="true"
+            aria-controls={props.traadvisningsPanelId}
+        >
+            {meldingsListeElementer}
+        </ScrollPortal>
+    );
+}
+
+function lagInnboksVisning(props) {
+    const meldingsListe = lagMeldingsListe(props);
+
+    const traadVisning = (
+        <div
+            tabIndex="-1"
+            className="sok-forhandsvisning"
+            role="tabpanel"
+            id={props.traadvisningsPanelId}
+            aria-atomic="true"
+            aria-live="polite"
+        >
+            <TraadVisning
+                traad={props.valgtTraad}
             />
-            <p className="feedbacklabel">{submitErrorMessage}</p>
         </div>
     );
 
     return (
-        <div className={'sok-visning ' + (erTom ? 'hidden' : '')}>
-            <ScrollPortal
-                id={props.listePanelId}
-                className="sok-liste"
-                role="tablist"
-                tabIndex="-1"
-                aria-live="assertive"
-                aria-atomic="true"
-                aria-controls={props.forhandsvisningsPanelId}
-            >
-                {meldingsListeElementer}
-            </ScrollPortal>
-            <div
-                tabIndex="-1"
-                className="sok-forhandsvisning"
-                role="tabpanel"
-                id={props.forhandsvisningsPanelId}
-                aria-atomic="true"
-                aria-live="polite"
-            >
-                <TraadVisning
-                    traad={props.valgtTraad}
-                    submitButtonProps={props.submitButtonProps}
-                />
-                {submittKnappPanel}
-            </div>
+        <div className={'sok-visning ' + (erTom(props) ? 'hidden' : '')}>
+            {meldingsListe}
+            {traadVisning}
         </div>
     );
 }
@@ -83,21 +80,12 @@ InnboksVisning.propTypes = {
     nyTraadValgtCallback: PT.func.isRequired,
     valgtTraad: PT.object.isRequired,
     listePanelId: PT.string.isRequired,
-    forhandsvisningsPanelId: PT.string.isRequired,
-    feilet: PT.bool,
-    initialisert: PT.bool,
-    submitButtonProps: PT.shape({
-        buttonText: PT.string,
-        errorMessage: PT.string,
-        error: PT.bool
-    }),
+    traadvisningsPanelId: PT.string.isRequired,
     visCheckbox: PT.bool
 };
 
 InnboksVisning.defaultProps = {
-    visCheckbox: false,
-    feilet: false,
-    initialisert: true
+    visCheckbox: false
 };
 
 export default InnboksVisning;

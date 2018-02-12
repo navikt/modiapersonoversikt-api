@@ -1,6 +1,7 @@
 import React from 'react';
 import PT from 'prop-types';
 import InnboksVisning from './innboks-visning';
+import NavFrontendSpinner from 'nav-frontend-spinner';
 
 function getErTom(props) {
     return props.state.traader.length === 0;
@@ -37,23 +38,50 @@ function lagTomVisning(props) {
             return <h1 className="tom" role="alert" aria-atomic="true">Ingen treff</h1>;
         }
         return (
-            <div className="tom">
-                <img src="../img/ajaxloader/hvit/loader_hvit_128.gif" alt="Henter meldinger"/>
-            </div>
+            <NavFrontendSpinner type="XXL" />
         );
     };
 
     const erTom = getErTom(props);
     return (
-        <div className={'sok-visning ' + (erTom ? '' : 'hidden')}>
+        <div className={(erTom ? 'tom-visning' : 'tom-visning hidden')}>
             {tomInnhold()}
         </div>
     );
 }
 
+function lagSubmitPanel(props) {
+    const submitErrorMessage = props.state.submitButtonProps.error ? props.state.submitButtonProps.errorMessage : '';
+    return (
+        <div className="velgPanel">
+            <input
+                type="submit"
+                value={props.state.submitButtonProps.buttonText}
+                className="knapp-hoved-liten"
+            />
+            <p className="feedbacklabel">{submitErrorMessage}</p>
+        </div>
+    );
+}
+
+function lagInnboks(props) {
+    return (
+        <InnboksVisning
+            nyTraadValgtCallback={props.store.traadChanged}
+            traader={props.state.traader}
+            valgtTraad={props.state.valgtTraad}
+            listePanelId={props.state.listePanelId}
+            traadvisningsPanelId={props.state.traadvisningsPanelId}
+            visCheckbox={props.state.visCheckbox}
+        />
+    );
+}
+
 function MeldingerSokView(props) {
     const sokeFelt = props.state.visSok ? lagSokeFelt(props) : '';
+    const submitPanel = lagSubmitPanel(props);
     const cls = `${props.state.className} sok-layout`;
+    const innboks = lagInnboks(props);
     const tomVisning = lagTomVisning(props);
     return (
         <form
@@ -62,18 +90,9 @@ function MeldingerSokView(props) {
             onKeyDown={props.keyDownHandler}
         >
             {sokeFelt}
-            <InnboksVisning
-                nyTraadValgtCallback={props.store.traadChanged}
-                traader={props.state.traader}
-                valgtTraad={props.state.valgtTraad}
-                listePanelId={props.state.listePanelId}
-                forhandsvisningsPanelId={props.state.forhandsvisningsPanelId}
-                feilet={props.state.feilet}
-                initialisert={props.state.initialisert}
-                visCheckbox={props.state.visCheckbox}
-                submitButtonProps={props.state.submitButtonProps}
-            />
+            {innboks}
             {tomVisning}
+            {submitPanel}
         </form>
     );
 }

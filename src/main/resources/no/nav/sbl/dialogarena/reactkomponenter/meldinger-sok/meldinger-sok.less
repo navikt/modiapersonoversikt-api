@@ -19,6 +19,7 @@
     }
   }
   .innboks-visning {
+    height: 80%;
     .sok-liste .sok-element {
       border-bottom: solid 1px #d1d1d1;
       background-color: inherit;
@@ -78,7 +79,20 @@
     }
   }
 
+  .velgPanel {
+    height: 10%;
+    padding: 1rem;
+    text-align: end;
+    border-top: 1px solid #d1d1d1;
+    .feedbacklabel{
+      text-align: right;
+      margin-top: 3px;
+    }
+  }
+
   .sok-forhandsvisning {
+    overflow: hidden;
+    margin-top: -13px; //TODO margin-top bug, finner ikke årsak
     .traadinfo {
       margin-bottom: 16px;
       text-align: center;
@@ -86,17 +100,11 @@
     .traadPanel {
       padding: 0px 30px;
       overflow: auto;
-      height: 89%;
+      height: 100%;
     }
     .traad-panel-wrapper {
       padding-right: 30px;
       padding-top: 22px;
-    }
-    .velgPanel {
-      height: 11%;
-      text-align: end;
-      border-top: 1px solid #ccc;
-      padding: 15px;
     }
     .melding-header {
       border-bottom: 1px solid #d1d1d1;
@@ -159,20 +167,10 @@
     }
   }
 
-  .velgPanel .feedbacklabel{
-    text-align: right;
-    margin-top: 3px;
+  .tom-visning {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%,-50%);
   }
-}
-
-.vekk {
-  position: absolute;
-  left: -3000px;
-  clip: rect(1px, 1px, 1px, 1px);
-  padding: 0;
-  border: 0;
-  height: 1px;
-  width: 1px;
-  overflow: hidden;
-  z-index: -1000;
 }

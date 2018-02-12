@@ -8,10 +8,10 @@ import { Checkbox } from 'nav-frontend-skjema';
 function ListeElement(props) {
     const { antallMeldingerIOpprinneligTraad, statusKlasse } = props.traad;
     const cls = props.erValgt ? 'meldingsforhandsvisning valgt' : 'meldingsforhandsvisning';
-    const dato = sanitize(props.traad.visningsDato, {allowedTags: ['em']});
+    const dato = sanitize(props.traad.visningsDato, { allowedTags: ['em'] });
     const temagruppe = props.traad.temagruppe ? `, ${props.traad.temagruppe}` : '';
-    const meldingsStatus = sanitize(`${props.traad.statusTekst}${temagruppe}`, {allowedTags: ['em']});
-    const innhold = sanitize(props.traad.innhold, {allowedTags: ['em']});
+    const meldingsStatus = sanitize(`${props.traad.statusTekst}${temagruppe}`, { allowedTags: ['em'] });
+    const innhold = sanitize(props.traad.innhold, { allowedTags: ['em'] });
     const statusIkonTekst = format('{0}, {1} {2}',
         props.traad.ikontekst,
         antallMeldingerIOpprinneligTraad,

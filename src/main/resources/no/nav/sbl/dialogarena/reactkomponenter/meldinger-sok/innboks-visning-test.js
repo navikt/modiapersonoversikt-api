@@ -11,7 +11,7 @@ const innboksVisningPropsMock = {
     nyTraadValgtCallback: () => {},
     valgtTraad: TraadMock,
     listePanelId: '',
-    forhandsvisningsPanelId: '',
+    traadvisningsPanelId: '',
     submitButtonProps: {
         buttonText: '',
         errorMessage: '',
@@ -20,31 +20,7 @@ const innboksVisningPropsMock = {
 };
 
 describe('InnboksVisning', () => {
-    it('skal rendre submit-knapp med riktig tekst', () => {
-        const element = shallow(<InnboksVisning
-            {...innboksVisningPropsMock}
-            submitButtonProps={{
-                buttonText: 'Dette er en knapp',
-                errorMessage: '',
-                error: false
-            }}
-        />);
-
-        expect(element.find('.velgPanel input').props().value).to.equal('Dette er en knapp');
-    });
-    it('skal rendre feilmelding på submitError', () => {
-        const element = shallow(<InnboksVisning
-            {...innboksVisningPropsMock}
-            submitButtonProps={{
-                buttonText: '',
-                errorMessage: 'Det skjedde en feil',
-                error: true
-            }}
-        />);
-
-        expect(element.find('.velgPanel p').text()).to.equal("Det skjedde en feil");
-    });
-    it('Skal rendre tekstlinjekomponenter i en scrollportal', () => {
+    it('Skal rendre liste-elementer i en scrollportal', () => {
         const element = mount(<InnboksVisning
             {...innboksVisningPropsMock}
             traader={[TraadMock, { ...TraadMock, traadId: '02' }]}
