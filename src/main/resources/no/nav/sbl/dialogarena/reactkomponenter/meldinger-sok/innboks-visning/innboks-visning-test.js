@@ -1,9 +1,9 @@
-import '../test-config';
+import '../../test-config';
 import React from 'react';
 import { shallow, mount } from 'enzyme';
 import { expect } from 'chai';
 
-import { TraadMock } from '../utils/traad-utils';
+import { TraadMock } from '../../utils/traad-utils';
 import InnboksVisning from './innboks-visning';
 
 const innboksVisningPropsMock = {

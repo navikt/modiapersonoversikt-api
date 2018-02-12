@@ -1,6 +1,6 @@
 import React from 'react';
 import ListeElement from './listeelement';
-import ScrollPortal from '../utils/scroll-portal';
+import ScrollPortal from '../../utils/scroll-portal';
 import TraadVisning from './traadvisning';
 import PT from 'prop-types';
 

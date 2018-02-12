@@ -1,6 +1,6 @@
 /* eslint-env mocha */
 /* eslint no-unused-expressions:0 new-cap:0*/
-import './../test-config';
+import '../../test-config';
 import React from 'react';
 import chai, { expect } from 'chai';
 import Journalfort from './journalfort';

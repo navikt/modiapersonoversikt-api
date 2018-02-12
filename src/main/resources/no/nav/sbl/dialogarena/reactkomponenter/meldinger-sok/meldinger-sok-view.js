@@ -1,6 +1,6 @@
 import React from 'react';
 import PT from 'prop-types';
-import InnboksVisning from './innboks-visning';
+import InnboksVisning from './innboks-visning/innboks-visning';
 import NavFrontendSpinner from 'nav-frontend-spinner';
 
 function getErTom(props) {

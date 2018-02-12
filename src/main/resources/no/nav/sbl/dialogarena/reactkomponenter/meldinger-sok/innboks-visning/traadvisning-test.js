@@ -1,10 +1,10 @@
-import './../test-config';
+import '../../test-config';
 import React from 'react';
 import { shallow } from 'enzyme';
 import { expect } from 'chai';
 
 import Traadvisning from './traadvisning';
-import { TraadMock } from '../utils/traad-utils';
+import { TraadMock } from '../../utils/traad-utils';
 
 describe('TraadvisningKomponent', () => {
     it('Skal rendre meldinger', () => {

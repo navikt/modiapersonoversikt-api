@@ -3,7 +3,7 @@ import PT from 'prop-types';
 import Melding from './melding';
 import DokumentMelding from './dokument-melding';
 import OppgaveMelding from './oppgave-melding';
-import ScrollPortal from './../utils/scroll-portal';
+import ScrollPortal from '../../utils/scroll-portal';
 
 function TraadVisning(props) {
     if (!props.traad.hasOwnProperty('meldinger')) {
