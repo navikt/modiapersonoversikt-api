@@ -21,7 +21,7 @@ const StateMock = {
     traader: [],
     valgtTraad: {},
     listePanelId: '',
-    forhandsvisningsPanelId: '',
+    traadvisningsPanelId: '',
     visCheckbox: false,
     submitButtonProps: {
         buttonText: '',
@@ -41,7 +41,7 @@ describe('Medinger Sok Module View', () => {
             }}
         />);
 
-        expect(element.find('.sok-visning').find('img').length).to.equal(1);
+        expect(element.find('NavFrontendSpinner').length).to.equal(1);
     });
 
     it('Skal rendre en feilmelding når state er feilet', () => {
@@ -65,6 +65,39 @@ describe('Medinger Sok Module View', () => {
             }}
         />);
 
-        expect(element.find('.sok-visning.hidden').find('.tom').length).to.equal(1);
+        expect(element.find('.tom-visning.hidden').length).to.equal(1);
+    });
+
+    it('skal rendre submit-knapp med riktig tekst', () => {
+        const element = shallow(<MeldingerSokView
+            {...PropsMock}
+            state={{
+                ...StateMock,
+                submitButtonProps: {
+                    buttonText: 'Dette er en knapp',
+                    errorMessage: '',
+                    error: false
+                }
+
+            }}
+        />);
+
+        expect(element.find('.velgPanel input').props().value).to.equal('Dette er en knapp');
+    });
+
+    it('skal rendre feilmelding på submitError', () => {
+        const element = shallow(<MeldingerSokView
+            {...PropsMock}
+            state={{
+                ...StateMock,
+                submitButtonProps: {
+                    buttonText: '',
+                    errorMessage: 'Det skjedde en feil',
+                    error: true
+                }
+            }}
+        />);
+
+        expect(element.find('.velgPanel p').text()).to.equal("Det skjedde en feil");
     });
 });

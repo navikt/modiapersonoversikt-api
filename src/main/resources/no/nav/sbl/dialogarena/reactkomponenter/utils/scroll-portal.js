@@ -4,9 +4,9 @@ import PT from 'prop-types';
 import { omit } from './../utils/utils-module';
 
 function ScrollPortal(props) {
-    const newProps = omit(props, ['children', 'innerClassName']);
+    const filteredProps = omit(props, ['children', 'innerClassName']);
     return (
-        <div {...newProps}>
+        <div {...filteredProps}>
             {props.children}
         </div>
     );

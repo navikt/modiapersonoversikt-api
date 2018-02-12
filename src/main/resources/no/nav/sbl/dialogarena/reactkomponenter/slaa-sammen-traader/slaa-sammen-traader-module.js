@@ -8,7 +8,7 @@ function findCheckedBoxes() {
     return Array.from(boxes)
         .filter((checkbox) => checkbox.checked)
         .map((checkbox) => checkbox.id);
-}
+} //TODO querySelectorAll, serr? do it the react-way
 
 class SlaaSammenTraader extends Component {
     constructor(props) {
