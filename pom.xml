@@ -41,7 +41,7 @@
         <aspectj.version>1.7.2</aspectj.version>
         <lucene.version>4.10.2</lucene.version>
         <jersey.version>2.22.1</jersey.version>
-        <jackson.version>2.5.4</jackson.version>
+        <jackson.version>2.9.4</jackson.version>
         <collections-generic.version>4.01</collections-generic.version>
         <guava.version>r03</guava.version>
         <ehcache.version>2.6.5</ehcache.version>
