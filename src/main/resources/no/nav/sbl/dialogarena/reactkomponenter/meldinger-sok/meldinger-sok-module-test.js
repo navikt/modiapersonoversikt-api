@@ -5,7 +5,6 @@ import { expect } from 'chai';
 import sinon from 'sinon';
 
 import MeldingerSokModule from './meldinger-sok-module';
-import MeldingerSokModal from './meldinger-sok-modal';
 
 describe('Meldinger Sok Module', () => {
     it('Skal rendre en MeldingerSokView inni en MeldingerSokModal', () => {

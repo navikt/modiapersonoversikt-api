@@ -1,15 +1,15 @@
-import React, { Component } from 'react';
+import React from 'react';
 import PT from 'prop-types';
 
 import { omit } from './../utils/utils-module';
 
-class ScrollPortal extends Component {
-    render() {
-        const fiteredProps = omit(this.props, ['children', 'innerClassName']);
-        return (
-            <div ref="wrapper" {...fiteredProps}>{this.props.children}</div>
-        );
-    }
+function ScrollPortal(props) {
+    const filteredProps = omit(props, ['children', 'innerClassName']);
+    return (
+        <div {...filteredProps}>
+            {props.children}
+        </div>
+    );
 }
 
 ScrollPortal.propTypes = {

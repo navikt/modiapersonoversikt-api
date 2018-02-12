@@ -10,11 +10,6 @@ describe('<SlaaSammenTraader> komponent', () => {
         const node = shallow(<SlaaSammenTraader />);
         expect(node.is('MeldingerSok')).to.be.true;
     });
-    it('Sender videre alle props', () => {
-        const node = shallow(<SlaaSammenTraader
-            randomProp="Her er jeg"
-        />);
-
-        expect(node.find('MeldingerSok').props().randomProp).to.equal('Her er jeg');
-    });
 });
+
+//TODO bedre tester

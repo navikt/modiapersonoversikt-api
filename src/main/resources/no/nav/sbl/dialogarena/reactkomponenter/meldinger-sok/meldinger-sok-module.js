@@ -1,5 +1,5 @@
 /* eslint "react/jsx-no-bind": 1 */
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import Utils from './../utils/utils-module';
 import MeldingerSokStore from './meldinger-sok-store';
 import MeldingerSokModal from "./meldinger-sok-modal";
@@ -15,7 +15,7 @@ class MeldingerSok extends Component {
             valgtTraad: {},
             traadMarkupIds: {},
             listePanelId: Utils.generateId('sok-liste-'),
-            forhandsvisningsPanelId: Utils.generateId('sok-forhandsvisningsPanelId-')
+            traadvisningsPanelId: Utils.generateId('sok-traadvisningsPanelId-')
         }, this.props));
         this.state = this.store.getState();
         this.props.setVisModalVindu(() => this.vis());
@@ -38,7 +38,7 @@ class MeldingerSok extends Component {
     }
     keyDownHandler(event) {
         if (event.keyCode === 13) {
-            this.store.submit(this.skjul, event);
+            this.onSubmit(event);
         }
     }
     vis(props = {}) {
@@ -92,9 +92,11 @@ MeldingerSok.defaultProps = {
     modulNavn: 'Meldingersok',
     visSok: true,
     visCheckbox: false,
-    submitButtonValue: 'Vis dialog',
-    submitErrorMessage: '',
-    submitError: false,
+    submitButtonProps: {
+        buttonText: "Velg dialog",
+        errorMessage: "Det skjedde en feil.",
+        error: false
+    },
     className: 'meldinger-sok',
     onSubmit: defaultOnSubmit,
     setVisModalVindu: () => {}
