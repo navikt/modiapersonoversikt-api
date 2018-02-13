@@ -139,7 +139,7 @@ public class DialogPanel extends Panel {
     }
 
     private void erstattDialogPanelMedFortsettDialogPanel(List<Melding> traad, Oppgave oppgave) {
-        aktivtPanel = aktivtPanel.replaceWith(new FortsettDialogPanel(AKTIVT_PANEL_ID, grunnInfo, traad, oppgave, session.getPlukkedeOppgaver().size() > 1));
+        aktivtPanel = aktivtPanel.replaceWith(new FortsettDialogPanel(AKTIVT_PANEL_ID, grunnInfo, traad, oppgave, session.getPlukkedeOppgaver().size()));
     }
 
     private void erstattDialogPanelMedKvitteringspanel(AjaxRequestTarget target) {

@@ -71,7 +71,7 @@ public class FortsettDialogPanel extends GenericPanel<HenvendelseVM> {
     private final String oppgaveId;
     private final Melding sporsmal;
     private final List<Melding> svar;
-    private final boolean flereOppgaverBlePlukket;
+    private final int antallOppgaverFraBruker;
     private final WebMarkupContainer svarContainer;
     private final LeggTilbakePanel leggTilbakePanel;
     private final LeggTilbakeDelvisSvarPanel leggTilbakeDelvisSvarPanel;
@@ -83,16 +83,16 @@ public class FortsettDialogPanel extends GenericPanel<HenvendelseVM> {
     public static final String TRAADVISNING_REACT_MODULE = "TraadVisning";
     public static final String TRAADVISNING_WICKET_CONTAINER_ID = "reactTraadVisningContainer";
     private final ReactComponentPanel flereHenvendelserVisning;
-    public static final String FLERE_HENVENDELSER_REACT_MODULE = "FlereHenvendelser";
+    public static final String FLERE_HENVENDELSER_REACT_MODULE = "FlereOppgaverFraBrukerAlert";
     public static final String FLERE_HENVENDELSER_WICKET_CONTAINER_ID = "reactFlereHenvendelserAlertContainer";
 
-    public FortsettDialogPanel(String id, GrunnInfo grunnInfo, final List<Melding> traad, Oppgave oppgave, boolean flereOppgaverBlePlukket) {
+    public FortsettDialogPanel(String id, GrunnInfo grunnInfo, final List<Melding> traad, Oppgave oppgave, int antallOppgaverFraBruker) {
         super(id, new CompoundPropertyModel<>(new HenvendelseVM()));
         this.grunnInfo = grunnInfo;
         this.oppgaveId = oppgave.oppgaveId;
         this.sporsmal = traad.get(0);
         this.svar = new ArrayList<>(traad.subList(1, traad.size()));
-        this.flereOppgaverBlePlukket = flereOppgaverBlePlukket;
+        this.antallOppgaverFraBruker = antallOppgaverFraBruker;
         getModelObject().oppgaveTilknytning = erTilknyttetAnsatt(traad);
         settOppModellMedDefaultKanalOgTemagruppe(getModelObject());
         setOutputMarkupId(true);
@@ -117,7 +117,7 @@ public class FortsettDialogPanel extends GenericPanel<HenvendelseVM> {
 
     private Map<String,Object> flereHenvendelserProps() {
         Map<String, Object> props = new HashMap<>();
-        props.put("flereOppgaverErTildeltFraBruker", flereOppgaverBlePlukket);
+        props.put("antallOppgaverFraBruker", antallOppgaverFraBruker);
         return props;
     }
 
