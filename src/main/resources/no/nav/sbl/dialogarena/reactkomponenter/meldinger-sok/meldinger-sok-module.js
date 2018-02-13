@@ -1,4 +1,3 @@
-/* eslint "react/jsx-no-bind": 1 */
 import React, { Component } from 'react';
 import Utils from './../utils/utils-module';
 import MeldingerSokStore from './meldinger-sok-store';
