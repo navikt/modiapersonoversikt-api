@@ -49,7 +49,7 @@ class SlaaSammenTraader extends Component {
                 visSok={false}
                 visCheckbox
                 submitButtonProps={{
-                    buttonText: 'Besvar flere oppgaver',
+                    buttonText: 'Besvar valgte oppgaver',
                     errorMessage: 'Du må velge minst to oppgaver.',
                     error: this.state.submitError
                 }}
