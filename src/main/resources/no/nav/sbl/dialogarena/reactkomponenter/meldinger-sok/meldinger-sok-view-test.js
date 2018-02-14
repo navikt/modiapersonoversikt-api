@@ -7,8 +7,6 @@ import { TraadMock } from '../utils/traad-utils';
 import MeldingerSokView from "./meldinger-sok-view";
 
 const PropsMock = {
-    feilet: false,
-    initialisert: false,
     store: {
         traadChanged: () => {}
     },
@@ -18,6 +16,8 @@ const PropsMock = {
 };
 
 const StateMock = {
+    feilet: false,
+    initialisert: false,
     traader: [],
     valgtTraad: {},
     listePanelId: '',
@@ -47,9 +47,9 @@ describe('Medinger Sok Module View', () => {
     it('Skal rendre en feilmelding når state er feilet', () => {
         const element = shallow(<MeldingerSokView
             {...PropsMock}
-            feilet={true}
             state={{
-                ...StateMock
+                ...StateMock,
+                feilet: true
             }}
         />);
 

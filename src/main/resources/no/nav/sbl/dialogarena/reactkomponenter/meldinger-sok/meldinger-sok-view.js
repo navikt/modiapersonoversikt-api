@@ -32,13 +32,13 @@ function lagSokeFelt(props) {
 
 function lagTomVisning(props) {
     const tomInnhold = () => {
-        if (props.feilet) {
+        if (props.state.feilet) {
             return <h1 className="tom" role="alert" aria-atomic="true">Noe feilet</h1>;
-        } else if (props.initialisert) {
+        } else if (props.state.initialisert) {
             return <h1 className="tom" role="alert" aria-atomic="true">Ingen treff</h1>;
         }
         return (
-            <NavFrontendSpinner type="XXL"/>
+            <NavFrontendSpinner type="XXL" />
         );
     };
 
