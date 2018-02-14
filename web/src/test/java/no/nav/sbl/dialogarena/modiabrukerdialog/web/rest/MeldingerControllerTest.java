@@ -1,11 +1,11 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest;
 
 import no.nav.brukerdialog.security.context.ThreadLocalSubjectHandler;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.AnsattEnhet;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.AnsattService;
-import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.HenvendelseBehandlingService;
+import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.henvendelse.HenvendelseBehandlingService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.MeldingerSok;
+import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.henvendelse.domain.Meldinger;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.internal.util.reflection.Whitebox;
@@ -39,7 +39,7 @@ public class MeldingerControllerTest {
         final HenvendelseBehandlingService henvendelseBehandlingServiceMock = mock(HenvendelseBehandlingService.class);
 
         when(ansattServiceMock.hentEnhetsliste()).thenReturn(Collections.singletonList(new AnsattEnhet("0", "")));
-        when(henvendelseBehandlingServiceMock.hentMeldinger(anyString(), anyString())).thenReturn(Collections.<Melding>emptyList());
+        when(henvendelseBehandlingServiceMock.hentMeldinger(anyString(), anyString())).thenReturn(new Meldinger(Collections.emptyList()));
 
         Whitebox.setInternalState(meldingerController, "ansattService", ansattServiceMock);
         Whitebox.setInternalState(meldingerController, "henvendelse", henvendelseBehandlingServiceMock);
