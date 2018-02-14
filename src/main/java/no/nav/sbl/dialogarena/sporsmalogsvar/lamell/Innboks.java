@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.lamell;
 
+import no.nav.metrics.MetricsFactory;
 import no.nav.modig.lang.collections.predicate.GreaterThanPredicate;
 import no.nav.modig.modia.events.FeedItemPayload;
 import no.nav.modig.modia.lamell.Lerret;
@@ -111,6 +112,7 @@ public class Innboks extends Lerret {
                 target.add(alleMeldingerPanel, traaddetaljerPanel);
                 slaaSammenTraaderPanel.call("vis", getSlaaSammenTraaderProps());
                 target.add(innboksButtonContainer);
+                MetricsFactory.createEvent("hendelse.meldinger-lamell-besvar-flere-knapp.klikk").report();
             }
         };
         slaaSammenTraaderToggleButton.add(visibleIf(when(sizeOf(innboksVM.tildelteOppgaver), new GreaterThanPredicate<>(1))));
