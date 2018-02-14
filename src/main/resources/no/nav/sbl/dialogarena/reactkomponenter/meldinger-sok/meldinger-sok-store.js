@@ -137,6 +137,15 @@ function haandterDelviseSvar(traad) {
     }
 }
 
+function beholdValgtTraadFraState(nyeTraader) {
+    const nyInstansAvValgtTraad = nyeTraader.find((traad) => traad.traadId === this.state.valgtTraad.traadId);
+    if (nyInstansAvValgtTraad) {
+        this.state.valgtTraad = nyInstansAvValgtTraad;
+    } else {
+        this.state.valgtTraad = nyeTraader[0] || {};
+    }
+}
+
 function onFulfilled(traader) {
     if (this.state.traadIder) {
         traader = traader.filter(traad => this.state.traadIder.indexOf(traad.traadId) >= 0);
@@ -155,7 +164,7 @@ function onFulfilled(traader) {
         }
     });
     this.state.traader = traader;
-    this.state.valgtTraad = traader[0] || {};
+    beholdValgtTraadFraState.call(this, traader);
     this.state.initialisert = true;
     MeldingerSokStore._updateScroll(this.container.querySelector('.sok-liste'), 0);
     this.fireUpdate(this.listeners);
