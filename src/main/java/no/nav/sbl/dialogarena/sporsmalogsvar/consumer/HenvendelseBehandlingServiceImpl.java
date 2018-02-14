@@ -16,7 +16,7 @@ import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldi
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.kodeverk.StandardKodeverk;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.ldap.LDAPService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.FeatureToggle;
-import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Traader;
+import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Meldinger;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.MeldingVM;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.TraadVM;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.behandlehenvendelse.BehandleHenvendelsePortType;
@@ -65,7 +65,12 @@ public class HenvendelseBehandlingServiceImpl implements HenvendelseBehandlingSe
     private LDAPService ldapService;
 
     @Override
-    public List<Melding> hentMeldinger(String fnr, String valgtEnhet) {
+    public Meldinger hentMeldinger(String fnr, String valgtEnhet) {
+        List<Melding> meldinger = hentMeldingerFraHenvendelse(fnr, valgtEnhet);
+        return new Meldinger(meldinger);
+    }
+
+    private List<Melding> hentMeldingerFraHenvendelse(String fnr, String valgtEnhet) {
         List<String> typer = getAkutelleHenvendelseTyper();
 
         WSHentHenvendelseListeResponse wsHentHenvendelseListeResponse = henvendelsePortType.hentHenvendelseListe(new WSHentHenvendelseListeRequest().withFodselsnummer(fnr).withTyper(typer));
@@ -84,12 +89,6 @@ public class HenvendelseBehandlingServiceImpl implements HenvendelseBehandlingSe
                 .map(okonomiskSosialhjelpTilgang(valgtEnhet))
                 .map(journalfortTemaTilgang(valgtEnhet))
                 .collect();
-    }
-
-    @Override
-    public Traader hentTraader(String fnr, String valgtEnhet) {
-        List<Melding> meldinger = hentMeldinger(fnr, valgtEnhet);
-        return new Traader(meldinger);
     }
 
     private List<String> getAkutelleHenvendelseTyper() {

@@ -22,7 +22,7 @@ class TraaderTest {
     @Test
     @DisplayName("Slår sammen meldinger med samme tråd-id til en tråd")
     void slarSammenMeldingerTilTrader() {
-        Traader traader = new Traader(Arrays.asList(
+        Meldinger meldinger = new Meldinger(Arrays.asList(
                 new Melding()
                         .withId(TRAAD_ID_1)
                         .withTraadId(TRAAD_ID_1)
@@ -35,13 +35,13 @@ class TraaderTest {
                         .withOpprettetDato(DateTime.now())
         ));
 
-        assertEquals( 1, traader.getTraader().size());
+        assertEquals( 1, meldinger.getTraader().size());
     }
 
     @Test
     @DisplayName("Skiller ut meldinger med forskjellige tråd-ider ut i flere tråder")
     void skillerUtMeldingerITraader() {
-        Traader traader = new Traader(Arrays.asList(
+        Meldinger meldinger = new Meldinger(Arrays.asList(
                 new Melding()
                         .withId(TRAAD_ID_1)
                         .withTraadId(TRAAD_ID_1)
@@ -54,15 +54,15 @@ class TraaderTest {
                         .withOpprettetDato(DateTime.now())
         ));
 
-        assertEquals( 2, traader.getTraader().size());
+        assertEquals( 2, meldinger.getTraader().size());
     }
 
     @Test
     @DisplayName("Ingen meldinger gir tom traader")
     void traaderUtenMeldinger() {
-        Traader traader = new Traader(Collections.emptyList());
+        Meldinger meldinger = new Meldinger(Collections.emptyList());
 
-        assertEquals( true, traader.erUtenMeldinger());
+        assertEquals( true, meldinger.erUtenMeldinger());
     }
 
     @Nested()
@@ -71,25 +71,25 @@ class TraaderTest {
         @Test
         @DisplayName("Slår sammen 3 meldinger, hvorav en er et delsvar, til 2 meldinger")
         void slarSammenIkkeAvsluttedeDelsvar() {
-            Traader traader = new Traader(mockMeldingskjedeMedDelsvar());
+            Meldinger meldinger = new Meldinger(mockMeldingskjedeMedDelsvar());
 
-            assertEquals(2, traader.getTraader().get(TRAAD_ID_1).size());
+            assertEquals(2, meldinger.getTraad(TRAAD_ID_1).get().getMeldinger().size());
         }
 
         @Test
         @DisplayName("Slår sammen tråd hvor det er et delsvar fulgt av to svar til 3 meldinger")
         void slarSammenMedToSvar() {
-            Traader traader = new Traader(mockMeldingskjedeMedDelsvarOgToSvar());
+            Meldinger meldinger = new Meldinger(mockMeldingskjedeMedDelsvarOgToSvar());
 
-            assertEquals(3, traader.getTraader().get(TRAAD_ID_1).size());
+            assertEquals(3, meldinger.getTraad(TRAAD_ID_1).get().getMeldinger().size());
         }
 
         @Test
         @DisplayName("Slår friteksten fra delsvaret inn i det avsluttende svaret")
         void slarSammenFritekst() {
-            Traader traader = new Traader(mockMeldingskjedeMedDelsvar());
+            Meldinger meldinger = new Meldinger(mockMeldingskjedeMedDelsvar());
 
-            Melding avsluttendeSvar = getAvsluttendeSvar(traader);
+            Melding avsluttendeSvar = getAvsluttendeSvar(meldinger);
             assertEquals(2, avsluttendeSvar.getFriteksterMedEldsteForst().size());
         }
 
@@ -143,8 +143,8 @@ class TraaderTest {
             );
         }
 
-        private Melding getAvsluttendeSvar(Traader traader) {
-            return traader.getTraader().get(TRAAD_ID_1).stream()
+        private Melding getAvsluttendeSvar(Meldinger traader) {
+            return traader.getTraad(TRAAD_ID_1).get().getMeldinger().stream()
                     .filter(Melding::erSvarSkriftlig)
                     .findFirst()
                     .get();

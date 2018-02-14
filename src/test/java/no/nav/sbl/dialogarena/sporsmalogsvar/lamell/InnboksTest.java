@@ -11,7 +11,7 @@ import no.nav.sbl.dialogarena.sporsmalogsvar.config.MockServiceTestContext;
 import no.nav.sbl.dialogarena.sporsmalogsvar.config.WicketPageTest;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.HenvendelseBehandlingService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.InnboksProps;
-import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Traader;
+import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Meldinger;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.junit.Before;
 import org.junit.Test;
@@ -56,7 +56,7 @@ public class InnboksTest extends WicketPageTest {
 
     @Before
     public void setUp() {
-        when(henvendelseBehandlingService.hentTraader(anyString(), anyString())).thenReturn(new Traader(asList(
+        when(henvendelseBehandlingService.hentMeldinger(anyString(), anyString())).thenReturn(new Meldinger(asList(
                 createMelding(ELDSTE_MELDING_ID_TRAAD1, SPORSMAL_SKRIFTLIG, now().minusDays(1), Temagruppe.ARBD, ELDSTE_MELDING_ID_TRAAD1),
                 createMelding(NYESTE_MELDING_ID_TRAAD1, SVAR_SKRIFTLIG, now(), Temagruppe.ARBD, ELDSTE_MELDING_ID_TRAAD1),
                 createMelding(ENESTE_MELDING_ID_TRAAD2, SPORSMAL_SKRIFTLIG, now().minusDays(2), Temagruppe.ARBD, ENESTE_MELDING_ID_TRAAD2))));
@@ -99,7 +99,7 @@ public class InnboksTest extends WicketPageTest {
         wicket.goToPageWith(testInnboks)
                 .click().link(withId("meldingerSokToggle"));
 
-        verify(henvendelseBehandlingService, atLeast(2)).hentTraader(eq(fnr), anyString());
+        verify(henvendelseBehandlingService, atLeast(2)).hentMeldinger(eq(fnr), anyString());
     }
 
     private InnboksVM innboksVM() {

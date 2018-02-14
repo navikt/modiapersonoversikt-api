@@ -7,7 +7,7 @@ import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.Sa
 import no.nav.sbl.dialogarena.sporsmalogsvar.config.MockServiceTestContext;
 import no.nav.sbl.dialogarena.sporsmalogsvar.config.WicketPageTest;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.HenvendelseBehandlingService;
-import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Traader;
+import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Meldinger;
 import org.joda.time.DateTime;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -51,7 +51,7 @@ public class TraaddetaljerPanelTest extends WicketPageTest {
 
     @Test
     public void skalIkkeKunneBesvareTraadInitiertAvSaksbehandler() {
-        when(henvendelseBehandlingService.hentTraader(anyString(), anyString())).thenReturn(new Traader(asList(
+        when(henvendelseBehandlingService.hentMeldinger(anyString(), anyString())).thenReturn(new Meldinger(asList(
                 createMelding("melding1", SAMTALEREFERAT_OPPMOTE, now().minusDays(1), Temagruppe.ARBD, "melding1"))));
 
         wicket.goToPageWith(new TraaddetaljerPanel("id", innboksVM()))
@@ -69,7 +69,7 @@ public class TraaddetaljerPanelTest extends WicketPageTest {
         Melding melding = createStandardMelding();
         melding.meldingstype = SPORSMAL_MODIA_UTGAAENDE;
         melding.kontorsperretEnhet = "kontorsperretEnhet";
-        when(henvendelseBehandlingService.hentTraader(anyString(), anyString())).thenReturn(new Traader(asList(melding)));
+        when(henvendelseBehandlingService.hentMeldinger(anyString(), anyString())).thenReturn(new Meldinger(asList(melding)));
 
         wicket.goToPageWith(new TraaddetaljerPanel("id", innboksVM()))
                 .should().containComponent(thatIsInvisible().and(withId(BESVAR_ID)));
@@ -99,7 +99,7 @@ public class TraaddetaljerPanelTest extends WicketPageTest {
         Melding melding = createStandardMelding();
         melding.journalfortDato = DateTime.now();
         melding.journalfortTemanavn = "journalfortTemanavnSomSkalVises";
-        when(henvendelseBehandlingService.hentTraader(anyString(), anyString())).thenReturn(new Traader(asList(melding)));
+        when(henvendelseBehandlingService.hentMeldinger(anyString(), anyString())).thenReturn(new Meldinger(asList(melding)));
 
         wicket.goToPageWith(new TraaddetaljerPanel("id", innboksVM()))
                 .should().containPatterns(melding.journalfortTemanavn);
@@ -110,7 +110,7 @@ public class TraaddetaljerPanelTest extends WicketPageTest {
         Melding melding = createStandardMelding();
         String fnr = "13245679810";
         melding.markertSomFeilsendtAv = "navIdent";
-        when(henvendelseBehandlingService.hentTraader(eq(fnr), anyString())).thenReturn(new Traader(asList(melding)));
+        when(henvendelseBehandlingService.hentMeldinger(eq(fnr), anyString())).thenReturn(new Meldinger(asList(melding)));
 
         wicket.goToPageWith(new TraaddetaljerPanel("id", innboksVM(fnr)))
                 .should().containComponent(thatIsInvisible().and(withId(BESVAR_ID)));
@@ -132,7 +132,7 @@ public class TraaddetaljerPanelTest extends WicketPageTest {
         Melding melding = createStandardMelding();
         melding.meldingstype = SAMTALEREFERAT_OPPMOTE;
         melding.navIdent = "ident";
-        when(henvendelseBehandlingService.hentTraader(eq(fnr), anyString())).thenReturn(new Traader(asList(melding)));
+        when(henvendelseBehandlingService.hentMeldinger(eq(fnr), anyString())).thenReturn(new Meldinger(asList(melding)));
 
         wicket.goToPageWith(new TraaddetaljerPanel("id", innboksVM(fnr)))
                 .should().containComponent(thatIsVisible().and(withId("skrevetAvContainer")));

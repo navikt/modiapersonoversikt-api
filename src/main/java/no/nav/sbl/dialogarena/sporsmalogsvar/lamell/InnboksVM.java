@@ -4,7 +4,8 @@ import no.nav.brukerdialog.security.tilgangskontroll.policy.pep.EnforcementPoint
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.HenvendelseBehandlingService;
-import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Traader;
+import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Meldinger;
+import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Traad;
 import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
 import org.slf4j.Logger;
@@ -54,16 +55,16 @@ public class InnboksVM implements Serializable {
         nyesteMeldingerITraader.clear();
         feilmeldingKey = "";
         try {
-            Traader traader = henvendelseBehandlingService.hentTraader(fnr, saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet());
+            Meldinger meldinger = henvendelseBehandlingService.hentMeldinger(fnr, saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet());
 
-            if (traader.erUtenMeldinger()) {
+            if (meldinger.erUtenMeldinger()) {
                 feilmeldingKey = "innboks.feilmelding.ingenmeldinger";
                 return;
             }
 
-            Map<String, List<Melding>> meldingTraader = traader.getTraader();
-            for (Map.Entry<String, List<Melding>> meldingTraad : meldingTraader.entrySet()) {
-                traaderVM.put(meldingTraad.getKey(), new TraadVM(TIL_MELDINGVM_TRAAD.apply(meldingTraad.getValue()), pep,
+            List<Traad> traader = meldinger.getTraader();
+            for (Traad traad : traader) {
+                traaderVM.put(traad.getTraadId(), new TraadVM(TIL_MELDINGVM_TRAAD.apply(traad.getMeldinger()), pep,
                         saksbehandlerInnstillingerService));
             }
             nyesteMeldingerITraader = traaderVM.values().stream()

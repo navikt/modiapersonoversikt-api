@@ -7,7 +7,7 @@ import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.Sa
 import no.nav.sbl.dialogarena.sporsmalogsvar.config.MockServiceTestContext;
 import no.nav.sbl.dialogarena.sporsmalogsvar.config.WicketPageTest;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.HenvendelseBehandlingService;
-import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Traader;
+import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Meldinger;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.HaandterMeldingValgPanel;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.MeldingActionPanel;
 import org.junit.Test;
@@ -49,7 +49,7 @@ public class HaandterMeldingValgPanelTest extends WicketPageTest {
 
     @Test
     public void skalKunneJournalforeHvisNyesteMeldingIkkeErJournalfort() {
-        when(henvendelseBehandlingService.hentTraader(anyString(), anyString())).thenReturn(new Traader(asList(
+        when(henvendelseBehandlingService.hentMeldinger(anyString(), anyString())).thenReturn(new Meldinger(asList(
                 createMelding("melding1", SPORSMAL_SKRIFTLIG, now().minusDays(1), Temagruppe.ARBD, "melding1"),
                 createMelding("melding2", SVAR_SKRIFTLIG, now(), Temagruppe.ARBD, "melding1"))));
 
@@ -104,7 +104,7 @@ public class HaandterMeldingValgPanelTest extends WicketPageTest {
 
     @Test
     public void skalKunneOppretteNyOppgaveHvisTraadenErBehandlet() {
-        when(henvendelseBehandlingService.hentTraader(anyString(), anyString())).thenReturn(new Traader(asList(
+        when(henvendelseBehandlingService.hentMeldinger(anyString(), anyString())).thenReturn(new Meldinger(asList(
                 createMelding("melding1", SAMTALEREFERAT_OPPMOTE, now().minusDays(1), Temagruppe.ARBD, "melding1"))));
 
         InnboksVM innboksVM = innboksVM();
@@ -115,7 +115,7 @@ public class HaandterMeldingValgPanelTest extends WicketPageTest {
 
     @Test
     public void skalIkkeKunneOppretteNyOppgaveHvisTraadenIkkeErBehandlet() {
-        when(henvendelseBehandlingService.hentTraader(anyString(), anyString())).thenReturn(new Traader(asList(
+        when(henvendelseBehandlingService.hentMeldinger(anyString(), anyString())).thenReturn(new Meldinger(asList(
                 createMelding("melding1", SPORSMAL_SKRIFTLIG, now().minusDays(1), Temagruppe.ARBD, "melding1"))));
 
         InnboksVM innboksVM = innboksVM();
@@ -126,7 +126,7 @@ public class HaandterMeldingValgPanelTest extends WicketPageTest {
 
     @Test
     public void skalKunneMerkeMeldingHvisMeldingErSporsmal() {
-        when(henvendelseBehandlingService.hentTraader(anyString(), anyString())).thenReturn(new Traader(asList(
+        when(henvendelseBehandlingService.hentMeldinger(anyString(), anyString())).thenReturn(new Meldinger(asList(
                 createMelding("melding1", SPORSMAL_SKRIFTLIG, now().minusDays(1), Temagruppe.ARBD, "melding1"))));
 
         InnboksVM innboksVM = innboksVM();
