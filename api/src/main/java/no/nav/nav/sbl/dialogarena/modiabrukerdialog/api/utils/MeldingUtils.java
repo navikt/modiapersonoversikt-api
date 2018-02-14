@@ -15,10 +15,7 @@ import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.NoSuchElementException;
+import java.util.*;
 
 import static java.lang.String.format;
 import static java.util.stream.Collectors.groupingBy;
@@ -95,7 +92,7 @@ public class MeldingUtils {
                 return melding;
             }
 
-            melding.statusTekst = hentEnonicTekstForMeldingStatus(propertyResolver, melding.meldingstype);
+            melding.statusTekst = getTekstForMeldingStatus(propertyResolver, melding.meldingstype);
             if (xmlMetadata instanceof XMLMeldingFraBruker) {
                 XMLMeldingFraBruker meldingFraBruker = (XMLMeldingFraBruker) xmlMetadata;
                 settTemagruppe(melding, meldingFraBruker.getTemagruppe(), propertyResolver);
@@ -124,7 +121,7 @@ public class MeldingUtils {
     private static void oppdaterMeldingMedJournalfortInformasjon(final PropertyResolver propertyResolver, final LDAPService ldapService, final XMLHenvendelse xmlHenvendelse, final Melding melding) {
         XMLJournalfortInformasjon journalfortInformasjon = xmlHenvendelse.getJournalfortInformasjon();
         if (journalfortInformasjon != null) {
-            melding.statusTekst = hentEnonicTekstForMeldingStatus(propertyResolver, melding.meldingstype);
+            melding.statusTekst = getTekstForMeldingStatus(propertyResolver, melding.meldingstype);
             melding.journalfortDato = journalfortInformasjon.getJournalfortDato();
             melding.journalfortTema = journalfortInformasjon.getJournalfortTema();
             melding.journalfortSaksId = journalfortInformasjon.getJournalfortSaksId();
@@ -135,7 +132,7 @@ public class MeldingUtils {
 
     private static void oppdaterMeldingMedKasseringData(final PropertyResolver propertyResolver, final Melding melding) {
         settTemagruppe(melding, null, propertyResolver);
-        melding.statusTekst = hentEnonicTekstForMeldingStatus(propertyResolver, melding.meldingstype);
+        melding.statusTekst = getTekstForMeldingStatus(propertyResolver, melding.meldingstype);
         melding.withFritekst(new Fritekst(propertyResolver.getProperty("innhold.kassert"), melding.skrevetAv, melding.opprettetDato));
         melding.kanal = null;
         melding.kassert = true;
@@ -163,18 +160,31 @@ public class MeldingUtils {
         melding.statusKlasse = "oppgave";
     }
 
-    static String hentEnonicTekstForMeldingStatus(PropertyResolver propertyResolver, Meldingstype meldingstype) {
+    static String getTekstForMeldingStatus(PropertyResolver propertyResolver, Meldingstype meldingstype) {
+        return hentEnonicTekstForMeldingStatus(propertyResolver, meldingstype)
+                .orElse(getTekstForMeldingStatus(meldingstype)
+                        .orElse(lagMeldingStatusTekstKey(meldingstype)));
+    }
+
+    static Optional<String> hentEnonicTekstForMeldingStatus(PropertyResolver propertyResolver, Meldingstype meldingstype) {
         if(!skalHenteStatusTekstForMelding(meldingstype)) {
-            return "";
+            return Optional.empty();
         }
 
         String key = lagMeldingStatusTekstKey(meldingstype);
         try {
-            return propertyResolver.getProperty(key);
+            return Optional.ofNullable(propertyResolver.getProperty(key));
         } catch(NoSuchElementException exception) {
             logger.error("Finner ikke cms-oppslag for " + key, exception.getMessage());
-            return key;
+            return Optional.empty();
         }
+    }
+
+    private static Optional<String> getTekstForMeldingStatus(Meldingstype meldingstype) {
+        if (meldingstype.equals(DELVIS_SVAR_SKRIFTLIG)) {
+            return Optional.of("Delsvar – Ikke sendt");
+        }
+        return Optional.empty();
     }
 
     private static boolean skalHenteStatusTekstForMelding(Meldingstype meldingstype) {
