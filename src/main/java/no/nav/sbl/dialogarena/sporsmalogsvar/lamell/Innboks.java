@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.lamell;
 
+import no.nav.metrics.MetricsFactory;
 import no.nav.modig.modia.events.FeedItemPayload;
 import no.nav.modig.modia.lamell.Lerret;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
@@ -79,6 +80,7 @@ public class Innboks extends Lerret {
                 target.add(alleMeldingerPanel, traaddetaljerPanel);
                 meldingerSok.call("vis", getMeldingerSokProps());
                 target.add(meldingerSokToggleContainer);
+                MetricsFactory.createEvent("hendelse.apne-sok-knapp.klikk").report();
             }
         };
         meldingerSok.addCallback("oppdater", Void.class, (target, data) -> {
