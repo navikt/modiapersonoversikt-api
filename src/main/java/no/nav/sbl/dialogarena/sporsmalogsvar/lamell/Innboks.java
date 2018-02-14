@@ -80,7 +80,7 @@ public class Innboks extends Lerret {
                 target.add(alleMeldingerPanel, traaddetaljerPanel);
                 meldingerSok.call("vis", getMeldingerSokProps());
                 target.add(meldingerSokToggleContainer);
-                MetricsFactory.createEvent("hendelse.apne-sok-knapp.klikk").report();
+                MetricsFactory.createEvent("hendelse.meldinger-lamell-apne-sok-knapp.klikk").report();
             }
         };
         meldingerSok.addCallback("oppdater", Void.class, (target, data) -> {
