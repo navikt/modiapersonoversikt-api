@@ -17,6 +17,7 @@ import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.kodeverk.Standar
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.ldap.LDAPService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.FeatureToggle;
+import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.henvendelse.HenvendelseBehandlingServiceImpl;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.TraadVM;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.behandlehenvendelse.BehandleHenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.henvendelse.HenvendelsePortType;

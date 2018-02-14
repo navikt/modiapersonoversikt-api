@@ -3,9 +3,9 @@ package no.nav.sbl.dialogarena.sporsmalogsvar.lamell;
 import no.nav.brukerdialog.security.tilgangskontroll.policy.pep.EnforcementPoint;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
-import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.HenvendelseBehandlingService;
-import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Meldinger;
-import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Traad;
+import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.henvendelse.HenvendelseBehandlingService;
+import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.henvendelse.domain.Meldinger;
+import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.henvendelse.domain.Traad;
 import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
 import org.slf4j.Logger;
@@ -63,7 +63,7 @@ public class InnboksVM implements Serializable {
             }
 
             List<Traad> traader = meldinger.getTraader();
-            for (Traad traad : traader) {
+            for (Traad traad: traader) {
                 traaderVM.put(traad.getTraadId(), new TraadVM(TIL_MELDINGVM_TRAAD.apply(traad.getMeldinger()), pep,
                         saksbehandlerInnstillingerService));
             }

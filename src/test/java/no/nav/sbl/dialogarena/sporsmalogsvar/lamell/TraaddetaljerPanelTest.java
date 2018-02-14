@@ -6,8 +6,8 @@ import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldi
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.config.MockServiceTestContext;
 import no.nav.sbl.dialogarena.sporsmalogsvar.config.WicketPageTest;
-import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.HenvendelseBehandlingService;
-import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Meldinger;
+import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.henvendelse.HenvendelseBehandlingService;
+import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.henvendelse.domain.Meldinger;
 import org.joda.time.DateTime;
 import org.junit.Test;
 import org.junit.runner.RunWith;

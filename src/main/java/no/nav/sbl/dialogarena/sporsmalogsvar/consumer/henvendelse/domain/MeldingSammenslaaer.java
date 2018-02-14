@@ -1,4 +1,4 @@
-package no.nav.sbl.dialogarena.sporsmalogsvar.domain;
+package no.nav.sbl.dialogarena.sporsmalogsvar.consumer.henvendelse.domain;
 
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Fritekst;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;

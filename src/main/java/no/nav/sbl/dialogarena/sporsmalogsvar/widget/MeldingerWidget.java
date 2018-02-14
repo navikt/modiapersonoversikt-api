@@ -5,9 +5,9 @@ import no.nav.modig.wicket.events.annotations.RunOnEvents;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.Events;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
-import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.HenvendelseBehandlingService;
-import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Meldinger;
-import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Traad;
+import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.henvendelse.HenvendelseBehandlingService;
+import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.henvendelse.domain.Meldinger;
+import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.henvendelse.domain.Traad;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.model.IModel;
 
