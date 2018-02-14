@@ -38,7 +38,7 @@ function lagTomVisning(props) {
             return <h1 className="tom" role="alert" aria-atomic="true">Ingen treff</h1>;
         }
         return (
-            <NavFrontendSpinner type="XXL" />
+            <NavFrontendSpinner type="XXL"/>
         );
     };
 
@@ -51,7 +51,12 @@ function lagTomVisning(props) {
 }
 
 function lagSubmitPanel(props) {
-    const submitErrorMessage = props.state.submitButtonProps.error ? props.state.submitButtonProps.errorMessage : '';
+    const submitErrorMarkup = props.state.submitButtonProps.error
+        ? <div role="alert" aria-live="assertive">
+            <p className="feedbacklabel">{props.state.submitButtonProps.errorMessage}</p>
+        </div>
+        : '';
+
     return (
         <div className="velgPanel">
             <input
@@ -59,7 +64,7 @@ function lagSubmitPanel(props) {
                 value={props.state.submitButtonProps.buttonText}
                 className="knapp-hoved-liten"
             />
-            <p className="feedbacklabel">{submitErrorMessage}</p>
+            {submitErrorMarkup}
         </div>
     );
 }
