@@ -19,7 +19,7 @@ class TraaderTest {
                 new Melding().withId("id2").withTraadId("traad-id-1")
         ));
 
-        assertEquals( 1, traader.getTraader().size());
+        assertEquals(1, traader.getTraader().size());
     }
 
     @Test
@@ -30,15 +30,15 @@ class TraaderTest {
                 new Melding().withId("traad-id-2").withTraadId("traad-id-2")
         ));
 
-        assertEquals( 2, traader.getTraader().size());
+        assertEquals(2, traader.getTraader().size());
     }
 
     @Test
-    @DisplayName("Ingen meldinger gir tom traader")
+    @DisplayName("Ingen meldinger gir tomt tråd-objekt")
     void traaderUtenMeldinger() {
         Traader traader = new Traader(Collections.emptyList());
 
-        assertEquals( true, traader.erUtenMeldinger());
+        assertEquals(true, traader.erUtenMeldinger());
     }
 
 }
