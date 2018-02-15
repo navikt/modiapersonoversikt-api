@@ -36,7 +36,7 @@ class TraaderTest {
                         .withOpprettetDato(DateTime.now())
         ));
 
-        assertEquals( 1, meldinger.getTraader().size());
+        assertEquals(1, meldinger.getTraader().size());
     }
 
     @Test
@@ -55,15 +55,15 @@ class TraaderTest {
                         .withOpprettetDato(DateTime.now())
         ));
 
-        assertEquals( 2, meldinger.getTraader().size());
+        assertEquals(2, meldinger.getTraader().size());
     }
 
     @Test
-    @DisplayName("Ingen meldinger gir tom traader")
+    @DisplayName("Ingen meldinger gir tomt tråd-objekt")
     void traaderUtenMeldinger() {
         Meldinger meldinger = new Meldinger(Collections.emptyList());
 
-        assertEquals( true, meldinger.erUtenMeldinger());
+        assertEquals(true, meldinger.erUtenMeldinger());
     }
 
     @Nested()
