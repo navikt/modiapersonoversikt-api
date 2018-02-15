@@ -2,11 +2,16 @@ package no.nav.sbl.dialogarena.sporsmalogsvar.lamell;
 
 import no.nav.modig.modia.model.StringFormatModel;
 import no.nav.sbl.dialogarena.sporsmalogsvar.common.components.StatusIkon;
+import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.meldinger.Etikett;
+import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.meldinger.MeldingEtiketter;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.PropertyModel;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
 
@@ -48,9 +53,23 @@ public class MeldingDetaljer extends Panel {
         }
 
         meldingDetaljer.add(new Label("fritekst", new PropertyModel<String>(meldingVM, "melding.fritekst")));
+        meldingDetaljer.add(new MeldingEtiketter("melding-etiketter", "etikett", lagEtiketter(meldingVM, innboksVM)));
 
         add(meldingDetaljer);
+    }
 
+    private List<Etikett> lagEtiketter(MeldingVM meldingVM, InnboksVM innboksVM) {
+        TraadVM traadVM = getTraad(meldingVM, innboksVM);
+
+        List<Etikett> etiketter = new ArrayList<>();
+        if (traadVM.harDelsvar()) {
+            etiketter.add(new Etikett("Delvis besvart", "delsvar"));
+        }
+        return etiketter;
+    }
+
+    private TraadVM getTraad(MeldingVM meldingVM, InnboksVM innboksVM) {
+        return innboksVM.getTraader().get(meldingVM.getTraadId());
     }
 
     private AbstractReadOnlyModel<Boolean> blirBesvart(final String traadId) {
