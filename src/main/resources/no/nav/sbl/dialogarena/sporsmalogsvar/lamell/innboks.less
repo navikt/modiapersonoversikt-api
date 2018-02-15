@@ -20,13 +20,13 @@
   height: 100%;
   .meldingsliste {
     width: 40%;
-    overflow-y: visible;
-    position: relative;
+    display: flex;
+    flex-flow: column;
   }
   .traad-liste-scroll {
     width: 100%;
-    height: 100%;
-    padding-top: 3.39rem;
+    flex: 1;
+    overflow: auto;
   }
   .traad-liste-visning {
     height: 100%;
@@ -82,7 +82,6 @@
     padding: 0;
 
     .innboksSokToggle {
-      position: absolute;
       width: 100%;
       background-color: @graabakgrunn;
       border-bottom: solid 1px #d1d1d1;
