@@ -20,10 +20,9 @@ public class Traad {
     }
 
     private boolean harAvsluttendeSvarEtterDelsvar(List<Melding> traad) {
-        traad.sort(Comparator.comparing(melding -> melding.opprettetDato));
-        Collections.reverse(traad);
+        List<Melding> sorterMedNyesteForst = sorterMedNyesteForst(traad);
 
-        Iterator<Melding> iterator = traad.iterator();
+        Iterator<Melding> iterator = sorterMedNyesteForst.iterator();
         Melding current = iterator.next();
         while (iterator.hasNext()) {
             Melding next = iterator.next();
@@ -33,6 +32,13 @@ public class Traad {
             current = next;
         }
         return false;
+    }
+
+    private List<Melding> sorterMedNyesteForst(List<Melding> traad) {
+        List<Melding> listCopy = traad.subList(0, traad.size());
+        listCopy.sort(Comparator.comparing(melding -> melding.opprettetDato));
+        Collections.reverse(listCopy);
+        return listCopy;
     }
 
     private List<Melding> sammenslaFullforteDelsvar(List<Melding> meldinger) {
