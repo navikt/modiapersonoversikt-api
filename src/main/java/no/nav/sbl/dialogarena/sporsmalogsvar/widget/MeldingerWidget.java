@@ -5,8 +5,9 @@ import no.nav.modig.wicket.events.annotations.RunOnEvents;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.Events;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
-import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.HenvendelseBehandlingService;
-import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Traader;
+import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.henvendelse.HenvendelseBehandlingService;
+import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.henvendelse.domain.Meldinger;
+import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.henvendelse.domain.Traad;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.model.IModel;
 
@@ -39,9 +40,10 @@ public class MeldingerWidget extends AsyncWidget<WidgetMeldingVM> {
 
     @Override
     public List<WidgetMeldingVM> getFeedItems() {
-        Traader traader = henvendelseBehandlingService.hentTraader(fnr, saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet());
-        return traader.getTraader()
-                .values().stream()
+        Meldinger meldinger = henvendelseBehandlingService.hentMeldinger(fnr, saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet());
+        return meldinger.getTraader()
+                .stream()
+                .map(Traad::getMeldinger)
                 .map(TIL_MELDINGVM)
                 .sorted(comparing(WidgetMeldingVM::getDato).reversed())
                 .collect(toList());

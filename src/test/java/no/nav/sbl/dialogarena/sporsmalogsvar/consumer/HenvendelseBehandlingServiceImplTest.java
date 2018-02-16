@@ -16,8 +16,8 @@ import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldi
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.kodeverk.StandardKodeverk;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.ldap.LDAPService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.Feature;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.FeatureToggle;
+import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.henvendelse.HenvendelseBehandlingServiceImpl;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.TraadVM;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.behandlehenvendelse.BehandleHenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.henvendelse.HenvendelsePortType;
@@ -119,7 +119,7 @@ public class HenvendelseBehandlingServiceImplTest {
 
     @Test
     public void skalHenteMeldingerMedRiktigType() {
-        henvendelseBehandlingService.hentTraader(FNR, VALGT_ENHET);
+        henvendelseBehandlingService.hentMeldinger(FNR, VALGT_ENHET);
 
         verify(henvendelsePortType).hentHenvendelseListe(wsHentHenvendelseListeRequestArgumentCaptor.capture());
         WSHentHenvendelseListeRequest request = wsHentHenvendelseListeRequestArgumentCaptor.getValue();
@@ -137,7 +137,7 @@ public class HenvendelseBehandlingServiceImplTest {
     public void henterDelviseSvarHvisFeatureTogglet() {
         FeatureToggle.toggleFeature(DELVISE_SVAR);
 
-        henvendelseBehandlingService.hentTraader(FNR, VALGT_ENHET);
+        henvendelseBehandlingService.hentMeldinger(FNR, VALGT_ENHET);
         verify(henvendelsePortType).hentHenvendelseListe(wsHentHenvendelseListeRequestArgumentCaptor.capture());
         WSHentHenvendelseListeRequest request = wsHentHenvendelseListeRequestArgumentCaptor.getValue();
 
@@ -147,7 +147,7 @@ public class HenvendelseBehandlingServiceImplTest {
 
     @Test
     public void henterIkkeDelviseSvarHvisIkkeFeatureTogglet() {
-        henvendelseBehandlingService.hentTraader(FNR, VALGT_ENHET);
+        henvendelseBehandlingService.hentMeldinger(FNR, VALGT_ENHET);
 
         verify(henvendelsePortType).hentHenvendelseListe(wsHentHenvendelseListeRequestArgumentCaptor.capture());
         WSHentHenvendelseListeRequest request = wsHentHenvendelseListeRequestArgumentCaptor.getValue();
@@ -157,9 +157,9 @@ public class HenvendelseBehandlingServiceImplTest {
 
     @Test
     public void skalTransformereResponsenTilMeldingsliste() {
-        List<Melding> meldinger = henvendelseBehandlingService.hentTraader(FNR, VALGT_ENHET).getTraader()
-                .values().stream()
-                .flatMap(Collection::stream)
+        List<Melding> meldinger = henvendelseBehandlingService.hentMeldinger(FNR, VALGT_ENHET).getTraader()
+                .stream()
+                .flatMap(traader -> traader.getMeldinger().stream())
                 .collect(Collectors.toList());
 
         assertThat(meldinger).hasSize(1);
@@ -207,8 +207,8 @@ public class HenvendelseBehandlingServiceImplTest {
         when(pep.hasAccess(any(PolicyRequest.class))).thenReturn(false);
         when(henvendelsePortType.hentHenvendelseListe(any(WSHentHenvendelseListeRequest.class))).thenReturn(new WSHentHenvendelseListeResponse().withAny(xmlHenvendelsesListe));
 
-        List<Melding> meldinger = henvendelseBehandlingService.hentTraader(FNR, VALGT_ENHET).getTraader().values().stream()
-                .flatMap(Collection::stream)
+        List<Melding> meldinger = henvendelseBehandlingService.hentMeldinger(FNR, VALGT_ENHET).getTraader().stream()
+                .flatMap(traad -> traad.getMeldinger().stream())
                 .sorted(Comparator.comparing(melding -> melding.opprettetDato))
                 .collect(Collectors.toList());
         Collections.reverse(meldinger);
@@ -228,8 +228,8 @@ public class HenvendelseBehandlingServiceImplTest {
 
         when(pep.hasAccess(any(PolicyRequest.class))).thenReturn(false);
         when(henvendelsePortType.hentHenvendelseListe(any(WSHentHenvendelseListeRequest.class))).thenReturn(new WSHentHenvendelseListeResponse().withAny(xmlHenvendelsesListe));
-        List<Melding> meldinger = henvendelseBehandlingService.hentTraader(FNR, VALGT_ENHET).getTraader().values().stream()
-                .flatMap(Collection::stream)
+        List<Melding> meldinger = henvendelseBehandlingService.hentMeldinger(FNR, VALGT_ENHET).getTraader().stream()
+                .flatMap(traad -> traad.getMeldinger().stream())
                 .sorted(Comparator.comparing(melding -> melding.opprettetDato))
                 .collect(Collectors.toList());
         Collections.reverse(meldinger);
@@ -251,8 +251,8 @@ public class HenvendelseBehandlingServiceImplTest {
 
         when(henvendelsePortType.hentHenvendelseListe(any(WSHentHenvendelseListeRequest.class))).thenReturn(new WSHentHenvendelseListeResponse().withAny(xmlHenvendelsesListe));
 
-        List<Melding> meldinger = henvendelseBehandlingService.hentTraader(FNR, VALGT_ENHET).getTraader().values().stream()
-                .flatMap(Collection::stream)
+        List<Melding> meldinger = henvendelseBehandlingService.hentMeldinger(FNR, VALGT_ENHET).getTraader().stream()
+                .flatMap(traad -> traad.getMeldinger().stream())
                 .collect(Collectors.toList());
 
         assertThat(meldinger.get(0).journalfortTemanavn).isEqualTo(ARKIVTEMANAVN);
@@ -266,8 +266,8 @@ public class HenvendelseBehandlingServiceImplTest {
 
         when(henvendelsePortType.hentHenvendelseListe(any(WSHentHenvendelseListeRequest.class))).thenReturn(new WSHentHenvendelseListeResponse().withAny(xmlHenvendelsesListe));
 
-        List<Melding> meldinger = henvendelseBehandlingService.hentTraader(FNR, VALGT_ENHET).getTraader().values().stream()
-                .flatMap(Collection::stream)
+        List<Melding> meldinger = henvendelseBehandlingService.hentMeldinger(FNR, VALGT_ENHET).getTraader().stream()
+                .flatMap(traad -> traad.getMeldinger().stream())
                 .collect(Collectors.toList());
 
         assertThat(meldinger.get(0).journalfortTemanavn).isNull();
@@ -285,8 +285,8 @@ public class HenvendelseBehandlingServiceImplTest {
         when(henvendelsePortType.hentHenvendelseListe(any(WSHentHenvendelseListeRequest.class))).thenReturn(new WSHentHenvendelseListeResponse().withAny(okonomiskSosialhjelp));
         when(pep.hasAccess(any(PolicyRequest.class))).thenReturn(false);
 
-        List<Melding> meldinger = henvendelseBehandlingService.hentTraader(FNR, VALGT_ENHET).getTraader().values().stream()
-                .flatMap(Collection::stream)
+        List<Melding> meldinger = henvendelseBehandlingService.hentMeldinger(FNR, VALGT_ENHET).getTraader().stream()
+                .flatMap(traad -> traad.getMeldinger().stream())
                 .collect(Collectors.toList());
 
         assertThat(meldinger.get(0).getFritekst()).isNotEqualTo(fritekst);

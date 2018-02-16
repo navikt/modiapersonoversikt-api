@@ -3,6 +3,8 @@ package no.nav.sbl.dialogarena.sporsmalogsvar.context;
 import no.nav.modig.common.SporingsLogger;
 import no.nav.modig.common.SporingsLoggerFactory;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.*;
+import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.henvendelse.HenvendelseBehandlingService;
+import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.henvendelse.HenvendelseBehandlingServiceImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
