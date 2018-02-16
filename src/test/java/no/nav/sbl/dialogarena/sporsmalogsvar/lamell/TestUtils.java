@@ -106,7 +106,7 @@ public class TestUtils {
     }
 
     public static Melding opprettSamtalereferatEksempel() {
-        return createMelding(ID_1, Meldingstype.SVAR_SBL_INNGAAENDE, DateTime.now(), TEMAGRUPPE_1, ID_1);
+        return createMelding(ID_1, Meldingstype.SAMTALEREFERAT_TELEFON, DateTime.now(), TEMAGRUPPE_1, ID_1);
     }
 
     public static List<MeldingVM> createMeldingVMer() {

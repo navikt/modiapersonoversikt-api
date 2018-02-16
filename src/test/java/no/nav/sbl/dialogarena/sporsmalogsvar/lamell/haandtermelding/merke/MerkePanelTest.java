@@ -170,7 +170,6 @@ public class MerkePanelTest extends WicketPageTest {
     }
 
     @Test
-    @Ignore
     public void disablerBidragValgHvisValgtTraadHarTemagruppeSosialeTjenester() {
         wicket.goToPageWith(getMerkePanel(asList(opprettMeldingEksempel(), opprettSamtalereferatEksempel().withGjeldendeTemagruppe(Temagruppe.OKSOS))).setVisibilityAllowed(true))
                 .should().containComponent(thatIsEnabled().withId("feilsendtRadio"))
