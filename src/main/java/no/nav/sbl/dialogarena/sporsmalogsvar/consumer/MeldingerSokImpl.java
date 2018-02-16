@@ -1,14 +1,25 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.consumer;
 
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Person;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.*;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Fritekst;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Traad;
 import no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.DateUtils;
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
-import org.apache.lucene.document.*;
-import org.apache.lucene.index.*;
-import org.apache.lucene.queryparser.classic.*;
-import org.apache.lucene.search.*;
+import org.apache.lucene.document.Document;
+import org.apache.lucene.document.StoredField;
+import org.apache.lucene.document.TextField;
+import org.apache.lucene.index.DirectoryReader;
+import org.apache.lucene.index.IndexWriter;
+import org.apache.lucene.index.IndexWriterConfig;
+import org.apache.lucene.queryparser.classic.MultiFieldQueryParser;
+import org.apache.lucene.queryparser.classic.ParseException;
+import org.apache.lucene.queryparser.classic.QueryParser;
+import org.apache.lucene.search.IndexSearcher;
+import org.apache.lucene.search.Query;
+import org.apache.lucene.search.ScoreDoc;
+import org.apache.lucene.search.TopScoreDocCollector;
 import org.apache.lucene.search.highlight.*;
 import org.apache.lucene.store.RAMDirectory;
 import org.apache.lucene.util.Version;
@@ -199,22 +210,44 @@ public class MeldingerSokImpl implements MeldingerSok {
         Document document = new Document();
         document.add(new StoredField(ID, id));
         document.add(new StoredField(BEHANDLINGS_ID, melding.id));
-        document.add(new TextField(FRITEKST, ofNullable(melding.getFritekst()).orElse(""), YES));
+        document.add(new TextField(FRITEKST, getFritekst(melding), YES));
         document.add(new TextField(TEMAGRUPPE, ofNullable(melding.temagruppeNavn).orElse(""), YES));
         document.add(new TextField(ARKIVTEMA, ofNullable(melding.journalfortTemanavn).orElse(""), YES));
         document.add(new TextField(DATO, ofNullable(melding.visningsDatoTekst).orElse(""), YES));
-        document.add(new TextField(NAVIDENT, ofNullable(melding.navIdent).orElse(""), YES));
+        document.add(new TextField(NAVIDENT, getNavIdent(melding), YES));
         document.add(new TextField(STATUSTEKST, ofNullable(melding.statusTekst).orElse(""), YES));
         document.add(new TextField(IKONTEKST, ofNullable(melding.statusTekst).orElse(""), YES));
         document.add(new TextField(LEST_STATUS, ofNullable(melding.lestStatus).orElse(""), YES));
         document.add(new TextField(KANAL, ofNullable(melding.kanal).orElse(""), YES));
-        document.add(new TextField(SKREVET_AV_NAVN, ofNullable(melding.skrevetAv.navn).orElse(""), YES));
+        document.add(new TextField(SKREVET_AV_NAVN, getForfattere(melding), YES));
         document.add(new TextField(JOURNALFORT_AV_NAVN, ofNullable(melding.journalfortAv.navn).orElse(""), YES));
         document.add(new TextField(JOURNALFORT_AV_IDENT, ofNullable(melding.journalfortAvNavIdent).orElse(""), YES));
         document.add(new TextField(JOURNALFORT_DATO, ofNullable(melding.journalfortDatoTekst).orElse(""), YES));
         document.add(new TextField(JOURNALFORT_SAKSID, ofNullable(melding.journalfortSaksId).orElse(""), YES));
 
         return document;
+    }
+
+    private static String getNavIdent(Melding melding) {
+        return melding.getFriteksterMedEldsteForst().stream()
+                .map(Fritekst::getSaksbehandler)
+                .filter(Optional::isPresent)
+                .map(saksbehandler -> saksbehandler.get().getIdent())
+                .collect(joining(", "));
+    }
+
+    private static String getForfattere(Melding melding) {
+        return melding.getFriteksterMedEldsteForst().stream()
+                .map(Fritekst::getSaksbehandler)
+                .filter(Optional::isPresent)
+                .map(saksbehandler -> saksbehandler.get().navn)
+                .collect(joining(", "));
+    }
+
+    private static String getFritekst(Melding melding) {
+        return String.join("\n\n", melding.getFriteksterMedEldsteForst().stream()
+                .map(Fritekst::getFritekst)
+                .collect(toList()));
     }
 
     private static String query(String soketekst) {
