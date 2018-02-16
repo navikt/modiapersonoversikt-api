@@ -1,4 +1,3 @@
-/* eslint-env mocha */
 import './../../../test-config';
 import React from 'react';
 import { expect } from 'chai';
@@ -16,6 +15,21 @@ import thunkMiddleware from 'redux-thunk';
 const middlewares = [thunkMiddleware];
 const mockStore = configureStore(middlewares);
 
+function noop() {}
+
+const propsMock = {
+    sakstema: [],
+    valgtTema: {},
+    velgSak: noop,
+    brukerNavn: 'brukernavn',
+    visSide: noop,
+    purgeScrollId: noop,
+    velgJournalpost: noop,
+    filtreringsvalg: {},
+    gt: '',
+    norgUrl: ''
+};
+
 describe('SakstemaPage', () => {
     const miljovariabler = {
         'behandlingsstatus.synlig.antallDager': 28,
@@ -27,18 +41,7 @@ describe('SakstemaPage', () => {
         'dokumentinfo.sakstema.ingen.dokumenter.forklaring': 'ingen dokuemnter forklaring',
         'dokumentinfo.sakstema.lenke.gosys': 'lenke gosys'
     };
-    function noop() {}
     it('Gir tom sakstemaside om det ikke finnes saksteamer', () => {
-        const props = {
-            sakstema: [],
-            valgtTema: {},
-            velgSak: noop,
-            brukerNavn: 'brukernavn',
-            visSide: noop,
-            purgeScrollId: noop,
-            velgJournalpost: noop,
-            filtreringsvalg: {}
-        };
 
         const getState = {};
         const store = mockStore(getState);
@@ -47,7 +50,7 @@ describe('SakstemaPage', () => {
             <Provider store={store}>
                 <MiljovariablerProvider miljovariabler={miljovariabler}>
                     <IntlProvider locale="en" messages={messages}>
-                        <SakstemaPage {...props} />
+                        <SakstemaPage {...propsMock} />
                     </IntlProvider>
                 </MiljovariablerProvider>
             </Provider>
@@ -62,6 +65,7 @@ describe('SakstemaPage', () => {
 
     it('Gir sakstemapage med sakstemaliste om det finnes sakstemaer', () => {
         const props = {
+            ...propsMock,
             sakstema: [
                 {
                     temakode: 'DAG',
@@ -88,13 +92,7 @@ describe('SakstemaPage', () => {
             valgtTema: {
                 temakode: 'DAG',
                 dokumentMetadata: []
-            },
-            velgSak: noop,
-            brukerNavn: 'brukernavn',
-            visSide: noop,
-            purgeScrollId: noop,
-            velgJournalpost: noop,
-            filtreringsvalg: {}
+            }
         };
 
         const getState = { lerret: { temakodeliste: []  }};

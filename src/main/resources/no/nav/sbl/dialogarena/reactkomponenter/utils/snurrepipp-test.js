@@ -16,7 +16,7 @@ describe('Snurrepipp test', () => {
     });
 
     it('Skal rendre custom farge og størrelse på bilde', () => {
-        const { dom } = render(<Snurrepipp farge="indigo" storrelse="1337" />);
+        const { dom } = render(<Snurrepipp farge="indigo" storrelse={1337} />);
 
         const image = dom.querySelector('img');
 

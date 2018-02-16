@@ -21,7 +21,17 @@ describe('Folkeregistrert-adresse', () => {
                 postnummer: '0477'
             };
             const tilleggsadresse = 'C/O Jørn Berg';
-            const element = mount(<FolkeregistrertAdresse adresseType={ADRESSETYPER.GATEADRESSE} adresse={adresse} tilleggsadresse={tilleggsadresse} />);
+            const element = mount(
+                <table>
+                    <tbody>
+                        <FolkeregistrertAdresse
+                            adresseType={ADRESSETYPER.GATEADRESSE}
+                            adresse={adresse}
+                            tilleggsadresse={tilleggsadresse}
+                        />
+                    </tbody>
+                </table>
+            );
 
             expect(element.find(Tilleggsadresse).text()).to.equal(tilleggsadresse);
         });
@@ -32,14 +42,26 @@ describe('Folkeregistrert-adresse', () => {
                 poststed: 'OSLO',
                 postnummer: '0477'
             };
-            const element = mount(<FolkeregistrertAdresse adresseType={ADRESSETYPER.GATEADRESSE} adresse={adresse} />);
+            const element = mount(
+                <table>
+                    <tbody>
+                        <FolkeregistrertAdresse adresseType={ADRESSETYPER.GATEADRESSE} adresse={adresse} />
+                    </tbody>
+                </table>
+                );
 
             expect(element.find(Tilleggsadresse).html()).to.equal(null);
         });
     });
     describe('uten registrert adresse', () => {
         it('skal vise relevant melding til bruker', () => {
-            const element = mount(<FolkeregistrertAdresse adresseType={ADRESSETYPER.INGEN_ADRESSE_REGISTRERT} />);
+            const element = mount(
+                <table>
+                    <tbody>
+                        <FolkeregistrertAdresse adresseType={ADRESSETYPER.INGEN_ADRESSE_REGISTRERT} />
+                    </tbody>
+                </table>
+                );
 
             expect(element.find(Adresse).text()).to.equal('INGEN REGISTRERT ADRESSE');
         });
@@ -53,7 +75,13 @@ describe('Folkeregistrert-adresse', () => {
                 poststed: 'OSLO',
                 postnummer: '0477'
             };
-            const element = mount(<FolkeregistrertAdresse adresseType={ADRESSETYPER.GATEADRESSE} adresse={adresse} />);
+            const element = mount(
+                <table>
+                    <tbody>
+                        <FolkeregistrertAdresse adresseType={ADRESSETYPER.GATEADRESSE} adresse={adresse} />
+                    </tbody>
+                </table>
+            );
 
             expect(element.find(Gateadresse).text()).to.equal('SANDAKERVEIEN 111D, 0477 OSLO');
         });
@@ -64,7 +92,13 @@ describe('Folkeregistrert-adresse', () => {
                 poststed: 'OSLO',
                 postnummer: '0477'
             };
-            const element = mount(<FolkeregistrertAdresse adresseType={ADRESSETYPER.GATEADRESSE} adresse={adresse} />);
+            const element = mount(
+                <table>
+                    <tbody>
+                        <FolkeregistrertAdresse adresseType={ADRESSETYPER.GATEADRESSE} adresse={adresse} />
+                    </tbody>
+                </table>
+            );
 
             expect(element.find(Gateadresse).text()).to.equal('SANDAKERVEIEN 111, 0477 OSLO');
         });
@@ -77,7 +111,13 @@ describe('Folkeregistrert-adresse', () => {
                 husbokstav: 'D',
                 bolignummer: 'H0403'
             };
-            const element = mount(<FolkeregistrertAdresse adresseType={ADRESSETYPER.GATEADRESSE} adresse={adresse} />);
+            const element = mount(
+                <table>
+                    <tbody>
+                        <FolkeregistrertAdresse adresseType={ADRESSETYPER.GATEADRESSE} adresse={adresse} />
+                    </tbody>
+                </table>
+            );
 
             expect(element.find(Gateadresse).text()).to.equal('SANDAKERVEIEN 111D H0403, 0477 OSLO');
         });
@@ -89,7 +129,13 @@ describe('Folkeregistrert-adresse', () => {
                 poststed: 'LOM',
                 postnummer: '6052'
             };
-            const element = mount(<FolkeregistrertAdresse adresseType={ADRESSETYPER.MATRIKKELADRESSE} adresse={adresse} />);
+            const element = mount(
+                <table>
+                    <tbody>
+                        <FolkeregistrertAdresse adresseType={ADRESSETYPER.MATRIKKELADRESSE} adresse={adresse} />
+                    </tbody>
+                </table>
+            );
 
             expect(element.find(Matrikkeladresse).text()).to.equal('BØVERDALEN FJELLSTUE, 6052 LOM');
         });
@@ -98,14 +144,29 @@ describe('Folkeregistrert-adresse', () => {
                 poststed: 'LOM',
                 postnummer: '6052'
             };
-            const element = mount(<FolkeregistrertAdresse adresseType={ADRESSETYPER.MATRIKKELADRESSE} adresse={adresse} />);
+            const element = mount(
+                <table>
+                    <tbody>
+                        <FolkeregistrertAdresse adresseType={ADRESSETYPER.MATRIKKELADRESSE} adresse={adresse} />
+                    </tbody>
+                </table>
+            );
 
             expect(element.find(Matrikkeladresse).text()).to.equal('6052 LOM');
         });
     });
     describe('ustrukturert adresse', () => {
         it('skal vises', () => {
-            const element = mount(<FolkeregistrertAdresse adresseType={ADRESSETYPER.USTRUKTURERT} adresse={'Ustrukturert adresse'} />);
+            const element = mount(
+                <table>
+                    <tbody>
+                        <FolkeregistrertAdresse
+                            adresseType={ADRESSETYPER.USTRUKTURERT}
+                            adresse={'Ustrukturert adresse'}
+                        />
+                    </tbody>
+                </table>
+            );
 
             expect(element.find(UstrukturertAdresse).text()).to.equal('Ustrukturert adresse');
         });
