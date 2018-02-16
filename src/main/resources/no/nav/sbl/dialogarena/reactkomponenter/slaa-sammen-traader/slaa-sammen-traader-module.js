@@ -32,6 +32,7 @@ class SlaaSammenTraader extends Component {
             return false;
         }
         this.sendToWicket('slaaSammen', checkedBoxes);
+        event.preventDefault();
     }
 
     vis(props) {
