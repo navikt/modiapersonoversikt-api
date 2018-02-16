@@ -18,7 +18,6 @@ import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.Sa
 import no.nav.sbl.dialogarena.reactkomponenter.utils.wicket.ReactComponentPanel;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
-import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.event.IEvent;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
@@ -43,13 +42,14 @@ import static no.nav.modig.wicket.model.ModelUtils.*;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.Events.SporsmalOgSvar.MELDING_VALGT;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype.SVAR_SKRIFTLIG;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.merke.MerkePanel.TRAAD_MERKET;
-import static org.apache.wicket.event.Broadcast.BREADTH;
+import static org.apache.wicket.event.Broadcast.DEPTH;
 
 public class Innboks extends Lerret {
 
     public static final JavaScriptResourceReference MELDINGER_JS = new JavaScriptResourceReference(Innboks.class, "meldinger.js");
     public static final JavaScriptResourceReference BESVAR_INDIKATOR_JS = new JavaScriptResourceReference(Innboks.class, "besvarIndikator.js");
     public static final String INNBOKS_OPPDATERT_EVENT = "sos.innboks.oppdatert";
+    public static final String TRAADER_SLAATT_SAMMEN = "slaaSammenEvent";
 
     private InnboksVM innboksVM;
 
@@ -121,7 +121,7 @@ public class Innboks extends Lerret {
             List<String> traadIder = (List<String>) data;
             slaaSammenTraader(traadIder);
             innboksVM.oppdaterMeldinger();
-            target.add(alleMeldingerPanel, traaddetaljerPanel);
+            send(getPage(), DEPTH, TRAADER_SLAATT_SAMMEN);
         });
         innboksButtonContainer.add(slaaSammenTraaderToggleButton);
 
@@ -141,9 +141,17 @@ public class Innboks extends Lerret {
             }
         }
 
+        List<String> meldingsIder = traadIder.stream()
+                .flatMap(traadId -> innboksVM.getTraader()
+                        .get(traadId)
+                        .getMeldinger()
+                        .stream()
+                        .map(meldingVM -> meldingVM.melding.id))
+                .collect(toList());
+
         String nyTraadId;
         try {
-            nyTraadId = henvendelseUtsendingService.slaaSammenTraader(traadIder);
+            nyTraadId = henvendelseUtsendingService.slaaSammenTraader(meldingsIder);
         } catch (TraadAlleredeBesvart e) {
             haandterTraadAlleredeBesvart(e.traadId);
             return;
@@ -155,15 +163,17 @@ public class Innboks extends Lerret {
 
         String nySvarHenvendelse = henvendelseUtsendingService.opprettHenvendelse(SVAR_SKRIFTLIG.toString(), oppgaver.get(0).fnr, nyTraadId);
 
-        DialogSession.read(this)
+        innboksVM.setSessionHenvendelseId(nyTraadId);
+        innboksVM.setSessionOppgaveId(DialogSession.read(this)
                 .withOppgaveSomBesvares(oppgaver.stream()
                         .filter(oppgave -> nyTraadId.equals(oppgave.henvendelseId))
                         .findAny()
                         .get()
                         .withSvarHenvendelseId(nySvarHenvendelse))
-                .withOppgaverBlePlukket(true);
+                .withOppgaverBlePlukket(true)
+                .getOppgaveSomBesvares().get().oppgaveId);
 
-        send(getPage(), BREADTH, new NamedEventPayload(Events.SporsmalOgSvar.SVAR_PAA_MELDING, nyTraadId));
+        send(getPage(), DEPTH, new NamedEventPayload(Events.SporsmalOgSvar.SVAR_PAA_MELDING, nyTraadId));
     }
 
     private void haandterOppgaveAlleredeFerdigstilt(String oppgaveId) {
@@ -282,7 +292,7 @@ public class Innboks extends Lerret {
         String itemId = feedItemPayload.getItemId();
         if (!itemId.equals(innboksVM.getValgtTraad().getNyesteMelding().getId())) {
             innboksVM.setValgtMelding(itemId);
-            send(getPage(), Broadcast.DEPTH, MELDING_VALGT);
+            send(getPage(), DEPTH, MELDING_VALGT);
             target.add(this);
         }
         innboksVM.focusValgtTraadOnOpen = true;
@@ -291,7 +301,7 @@ public class Innboks extends Lerret {
     @RunOnEvents(Events.SporsmalOgSvar.MELDING_SENDT_TIL_BRUKER)
     public void oppdatertInnboks(AjaxRequestTarget target) {
         innboksVM.oppdaterMeldinger();
-        send(getPage(), Broadcast.DEPTH, INNBOKS_OPPDATERT_EVENT);
+        send(getPage(), DEPTH, INNBOKS_OPPDATERT_EVENT);
         target.add(this);
     }
 
