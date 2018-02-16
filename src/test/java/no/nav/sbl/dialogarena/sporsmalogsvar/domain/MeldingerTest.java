@@ -16,7 +16,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class TraaderTest {
+class MeldingerTest {
 
     public static final String TRAAD_ID_1 = "traad-id-1";
 
