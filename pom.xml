@@ -104,7 +104,7 @@
         <utbetaling.version>4.0.0</utbetaling.version>
         <saksoversikt.version>9.0.2.1</saksoversikt.version>
         <varsling.modia.version>2.0</varsling.modia.version>
-        <sporsmalogsvar.version>8.0.4-SNAPSHOT</sporsmalogsvar.version>
+        <sporsmalogsvar.version>8.1.0</sporsmalogsvar.version>
         <modia-felleskomponenter.version>4.3</modia-felleskomponenter.version>
 
         <!-- Tjenestespecs -->
