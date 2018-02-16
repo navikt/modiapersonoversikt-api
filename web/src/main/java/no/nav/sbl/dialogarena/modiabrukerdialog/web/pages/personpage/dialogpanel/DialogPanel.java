@@ -88,6 +88,11 @@ public class DialogPanel extends Panel {
                 saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet());
         String oppgaveId = null;
 
+        oppgave = session.getPlukkedeOppgaver().stream()
+                .filter(oppgave1 -> traadId.equals(oppgave1.henvendelseId))
+                .findFirst()
+                .orElse(oppgave);
+
         boolean harTrykketNyMeldingPaaAlleredePlukketOppgave = oppgave != null && traadId.equals(oppgave.henvendelseId);
 
         if (harTrykketNyMeldingPaaAlleredePlukketOppgave && !erEnkeltstaaendeSamtalereferat(traad)) {

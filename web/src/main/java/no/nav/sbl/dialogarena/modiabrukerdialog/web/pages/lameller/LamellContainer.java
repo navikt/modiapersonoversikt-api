@@ -254,6 +254,7 @@ public class LamellContainer extends TokenLamellPanel implements Serializable {
                 .withOppgaverBlePlukket(false)
                 .getPlukkedeOppgaver()
                 .removeIf(oppgave -> oppgave.henvendelseId.equals(innboksVM.traadBesvares));
+        innboksVM.tildelteOppgaver.removeIf(oppgave -> oppgave.henvendelseId.equals(innboksVM.traadBesvares));
         innboksVM.traadBesvares = null;
         innboksVM.setSessionHenvendelseId(null);
         innboksVM.setSessionOppgaveId(null);

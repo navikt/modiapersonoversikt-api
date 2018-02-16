@@ -67,6 +67,7 @@ import static no.nav.modig.modia.lamell.ReactSjekkForlatModal.getJavascriptSaveB
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.SessionParametere.SporsmalOgSvar.BESVARMODUS;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.URLParametere.*;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.lameller.LamellContainer.LAMELL_MELDINGER;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.Innboks.TRAADER_SLAATT_SAMMEN;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.apache.wicket.event.Broadcast.BREADTH;
 import static org.apache.wicket.event.Broadcast.DEPTH;
@@ -289,6 +290,11 @@ public class PersonPage extends BasePage {
             logger.warn("Burde ikke skje, klarte ikke håndtere widgetLink: {}", e.getMessage(), e);
             target.appendJavaScript("alert('" + e.getMessage() + "');");
         }
+    }
+
+    @RunOnEvents(TRAADER_SLAATT_SAMMEN)
+    public void slaaSammen(AjaxRequestTarget target) {
+        target.add(this);
     }
 
     @RunOnEvents(PERSONSOK_FNR_CLICKED)
