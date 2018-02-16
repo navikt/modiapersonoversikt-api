@@ -29,7 +29,7 @@ public class MeldingSammenslaaer {
     private List<Fritekst> getFriteksterFraDelsvar() {
         return meldinger.stream()
                 .filter(Melding::erDelvisSvar)
-                .sorted(Comparator.comparing(a -> a.opprettetDato))
+                .sorted(Comparator.comparing(melding -> melding.opprettetDato))
                 .map(melding -> new Fritekst(melding.getFritekst(), melding.skrevetAv, melding.opprettetDato))
                 .collect(Collectors.toList());
     }
