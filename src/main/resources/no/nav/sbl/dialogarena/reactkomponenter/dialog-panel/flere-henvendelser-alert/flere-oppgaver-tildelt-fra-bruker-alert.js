@@ -6,7 +6,7 @@ function alertStripe(props) {
     return (
         <div className="flere-oppgaver-alert">
             <Alertstripe type={'info'} tekst="">
-                <p>Brukeren har <span className="bold">{props.antallOppgaverFraBruker}</span> ubesvarte oppgaver som er tildelt deg.</p>
+                Brukeren har <span className="bold">{props.antallOppgaverFraBruker}</span> ubesvarte oppgaver som er tildelt deg.
             </Alertstripe>
         </div>
     );
