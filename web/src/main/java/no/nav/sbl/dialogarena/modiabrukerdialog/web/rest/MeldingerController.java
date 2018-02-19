@@ -2,7 +2,7 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest;
 
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.AnsattService;
-import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.HenvendelseBehandlingService;
+import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.henvendelse.HenvendelseBehandlingService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.IkkeIndeksertException;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.MeldingerSok;
 import org.slf4j.Logger;
@@ -16,6 +16,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static javax.ws.rs.core.MediaType.TEXT_PLAIN;
@@ -65,13 +66,19 @@ public class MeldingerController {
     public Response indekser(@PathParam("fnr") String fnr, @Context HttpServletRequest request) {
         String valgtEnhet = hentValgtEnhet(request);
         if(on(ansattService.hentEnhetsliste()).map(ENHET_ID).collect().contains(valgtEnhet)) {
-            List<Melding> meldinger = henvendelse.hentMeldinger(fnr, valgtEnhet);
+            List<Melding> meldinger = hentAlleMeldinger(fnr, valgtEnhet);
             searcher.indekser(fnr, meldinger);
             return Response.status(Response.Status.OK).build();
         } else {
             logger.warn("{} har ikke tilgang til enhet {}.", getSubjectHandler().getUid(), valgtEnhet);
             return Response.status(Response.Status.UNAUTHORIZED).build();
         }
+    }
+
+    private List<Melding> hentAlleMeldinger(@PathParam("fnr") String fnr, String valgtEnhet) {
+        return henvendelse.hentMeldinger(fnr, valgtEnhet).getTraader().stream()
+                .flatMap(traad -> traad.getMeldinger().stream())
+                .collect(Collectors.toList());
     }
 
 }

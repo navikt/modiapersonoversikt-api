@@ -103,7 +103,8 @@
     </cache:advice>
     <cache:advice id="kodeverksmapperAdvice" key-generator="defaultkeygenerator">
         <cache:caching cache="kodeverksmapperCache">
-            <cache:cacheable method="hent*" />
+            <cache:cacheable method="hentOppgavetype" key="'hentOppgavetype'" />
+            <cache:cacheable method="hentUnderkategori" key="'hentUnderkategori'" />
         </cache:caching>
     </cache:advice>
     <cache:advice id="organisasjonEnhetKontantinformasjonAdvice" key-generator="organisasjonEnhetKontantinformasjonGenerator">

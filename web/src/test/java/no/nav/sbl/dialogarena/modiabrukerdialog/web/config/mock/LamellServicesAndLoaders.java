@@ -13,7 +13,7 @@ import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.oppfolgingsinfo.O
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.oppfolgingsinfo.OppfolgingsinfoService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.GsakService;
-import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.HenvendelseBehandlingService;
+import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.henvendelse.HenvendelseBehandlingService;
 import no.nav.sykmeldingsperioder.consumer.foreldrepenger.ForeldrepengerServiceBi;
 import no.nav.sykmeldingsperioder.consumer.pleiepenger.PleiepengerService;
 import no.nav.sykmeldingsperioder.consumer.pleiepenger.PleiepengerServiceImpl;

@@ -35,13 +35,11 @@ public class KodeverksmapperEndpoint implements Kodeverksmapper {
     }
 
     @Override
-    @Cacheable("kodeverksmapperCache")
     public Map<String, String> hentOppgavetype() throws IOException {
         return parseOppgavetypeJson(gjorSporring(OPPGAVETYPE_ENDPOINT));
     }
 
     @Override
-    @Cacheable("kodeverksmapperCache")
     public Map<String, Behandling> hentUnderkategori() throws IOException {
         return parseUnderkategoriJson(gjorSporring(UNDERKATEGORI_ENDPOINT));
     }

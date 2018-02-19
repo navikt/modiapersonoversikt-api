@@ -11,7 +11,7 @@
     <name>Dialogarena - modiabrukerdialog</name>
     <groupId>no.nav.sbl.dialogarena</groupId>
     <artifactId>modiabrukerdialog</artifactId>
-    <version>14.1.4-SNAPSHOT</version>
+    <version>14.3.1-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <modules>
@@ -41,7 +41,7 @@
         <aspectj.version>1.7.2</aspectj.version>
         <lucene.version>4.10.2</lucene.version>
         <jersey.version>2.22.1</jersey.version>
-        <jackson.version>2.5.4</jackson.version>
+        <jackson.version>2.9.4</jackson.version>
         <collections-generic.version>4.01</collections-generic.version>
         <guava.version>r03</guava.version>
         <ehcache.version>2.6.5</ehcache.version>
@@ -98,13 +98,13 @@
         <!-- Samme som Jetty -->
 
         <!-- Modia-komponenter-->
-        <reactkomponenter.version>3.0.5-SNAPSHOT</reactkomponenter.version>
+        <reactkomponenter.version>1640</reactkomponenter.version>
         <personsok.version>4.0.2</personsok.version>
         <kjerneinfo.versjon>6.0.11</kjerneinfo.versjon>
         <utbetaling.version>4.0.0</utbetaling.version>
         <saksoversikt.version>9.0.2.1</saksoversikt.version>
         <varsling.modia.version>2.0</varsling.modia.version>
-        <sporsmalogsvar.version>8.0.4-SNAPSHOT</sporsmalogsvar.version>
+        <sporsmalogsvar.version>8.1.0</sporsmalogsvar.version>
         <modia-felleskomponenter.version>4.3</modia-felleskomponenter.version>
 
         <!-- Tjenestespecs -->
@@ -1155,7 +1155,7 @@
     <scm>
         <developerConnection>scm:git:http://stash.devillo.no/scm/dial/modiabrukerdialog.git</developerConnection>
         <url>http://stash.devillo.no:7990/projects/DIAL/repos/modiabrukerdialog/browse</url>
-        <tag>modiabrukerdialog-13.5.19</tag>
+        <tag>14.2.0</tag>
     </scm>
 
 </project>
