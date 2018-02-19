@@ -54,7 +54,7 @@ function lagTraadPanel(traad) {
     return lagNedtrekkspanel(filtrertTraad, tittel, skalVisesApen);
 }
 
-function lagDelviseSvarPanel(traad) {
+function lagDelsvarPanel(traad) {
     const delviseSvar = traad.filter(erDelvisSvar);
     if (delviseSvar.length === 0 || erBesvart(traad)) {
         return null;
@@ -70,11 +70,11 @@ function lagDelviseSvarPanel(traad) {
 function TraadVisning(props) {
     const traad = props.traad.reverse();
     const traadPanel = lagTraadPanel(traad);
-    const delvisSvarPanel = lagDelviseSvarPanel(traad);
+    const delsvarPanel = lagDelsvarPanel(traad);
     return (
         <div className="reactTraadVisning">
             {traadPanel}
-            {delvisSvarPanel}
+            {delsvarPanel}
         </div>
     );
 }

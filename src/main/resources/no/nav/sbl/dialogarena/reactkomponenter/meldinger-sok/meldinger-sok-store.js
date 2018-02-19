@@ -2,7 +2,6 @@ import Utils from './../utils/utils-module';
 import Store from './../utils/store';
 import WicketSender from './../react-wicket-mixin/wicket-sender';
 import Ajax from './../utils/ajax';
-import { slaaSammenDelviseSvar, erIkkeBesvart, traadInneholderDelvisSvar } from './../utils/traad-utils';
 import { hentForfatterIdent } from '../utils/melding-utils';
 
 class MeldingerSokStore extends Store {
@@ -127,21 +126,6 @@ class MeldingerSokStore extends Store {
     }
 }
 
-function haandterDelviseSvar(traad) {
-    traad.meldinger = slaaSammenDelviseSvar(traad.meldinger);
-    traad.antallMeldingerIOpprinneligTraad = traad.meldinger.length;
-    if (erIkkeBesvart(traad.meldinger)) {
-        const sporsmal = traad.meldinger[0];
-        traad.dato = sporsmal.opprettetDato;
-        traad.erMonolog = true;
-        traad.ikontekst = 'Ubesvart';
-        traad.innhold = sporsmal.fritekst;
-        traad.statusKlasse = 'monolog ubesvart';
-        traad.statusTekst = sporsmal.statusTekst;
-        traad.visningsDato = sporsmal.visningsDatoTekst;
-    }
-}
-
 function onFulfilled(traader) {
     traader.forEach((traad) => {
         traad.key = traad.traadId;
@@ -151,9 +135,6 @@ function onFulfilled(traader) {
         traad.meldinger.forEach((melding) => {
             melding.fraBruker = hentForfatterIdent(melding);
         });
-        if (traadInneholderDelvisSvar(traad.meldinger)) {
-            haandterDelviseSvar(traad);
-        }
     });
     this.state.traader = traader;
     this.state.valgtTraad = traader[0] || {};
