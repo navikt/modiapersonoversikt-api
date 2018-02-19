@@ -4,7 +4,7 @@ import Kategoripanel from './kategoripanel';
 import PT from 'prop-types';
 import { erDelvisSvar } from '../../utils/melding-utils';
 import { meldingITraadVisning } from '../props';
-import { slaaSammenDelviseSvar, erBesvart, erIkkeBesvart } from '../../utils/traad-utils';
+import { erBesvart, erIkkeBesvart, filtrerBortDelviseSvar } from '../../utils/traad-utils';
 
 function lagMeldingspanel(melding, apen) {
     return (
@@ -37,21 +37,21 @@ function lagEnkelstaaendePanel(traad) {
 }
 
 function lagTraadPanel(traad) {
-    const sammenslaattTraad = slaaSammenDelviseSvar(traad);
+    const filtrertTraad = filtrerBortDelviseSvar(traad);
 
     const ubesvartSporsmaal = erIkkeBesvart(traad) && traad.length === 1;
     if (ubesvartSporsmaal) {
-        return lagEnkelstaaendePanel(sammenslaattTraad);
+        return lagEnkelstaaendePanel(filtrertTraad);
     }
     const sammenslattOgUbesvart = erIkkeBesvart(traad) && traad.length >= 1;
     if (sammenslattOgUbesvart) {
         const tittel = 'Spørsmål fra bruker';
         const skalVisesApen = true;
-        return lagNedtrekkspanel(sammenslaattTraad, tittel, skalVisesApen);
+        return lagNedtrekkspanel(filtrertTraad, tittel, skalVisesApen);
     }
     const tittel = 'Vis tidligere meldinger';
     const skalVisesApen = false;
-    return lagNedtrekkspanel(sammenslaattTraad, tittel, skalVisesApen);
+    return lagNedtrekkspanel(filtrertTraad, tittel, skalVisesApen);
 }
 
 function lagDelviseSvarPanel(traad) {
@@ -68,7 +68,7 @@ function lagDelviseSvarPanel(traad) {
 }
 
 function TraadVisning(props) {
-    const traad = props.traad;
+    const traad = props.traad.reverse();
     const traadPanel = lagTraadPanel(traad);
     const delvisSvarPanel = lagDelviseSvarPanel(traad);
     return (
