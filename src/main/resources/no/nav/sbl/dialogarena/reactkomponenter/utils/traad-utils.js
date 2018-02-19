@@ -1,5 +1,5 @@
 import {
-    erInngaaendeSvar, erOppmoteSvar, erSkriftligSvar, erTelefonSvar
+    erInngaaendeSvar, erOppmoteSvar, erSkriftligSvar, erTelefonSvar, erDelvisSvar
 } from './melding-utils';
 
 export function erBesvart(traad) {
