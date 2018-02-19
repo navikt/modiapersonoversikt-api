@@ -1,6 +1,8 @@
 package no.nav.sbl.dialogarena.reactkomponenter.utils.wicket;
 
+import com.fasterxml.jackson.core.JsonpCharacterEscapes;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.joda.JodaModule;
 import no.nav.modig.lang.serialize.OptionalSerializerModule;
@@ -156,14 +158,15 @@ public class ReactComponentPanel extends MarkupContainer {
     }
 
     private String serialize(Object obj) {
-        StringWriter sw = new StringWriter();
+        ObjectWriter objectWriter = mapper.writer(new JsonpCharacterEscapes());
+        StringWriter stringWriter = new StringWriter();
         try {
-            this.mapper.writeValue(sw, obj);
+            objectWriter.writeValue(stringWriter, obj);
         } catch (IOException e) {
             return "";
         }
 
-        return sw.toString();
+        return stringWriter.toString();
     }
 
     private <T> T deserialize(String string, Class<T> type) {
