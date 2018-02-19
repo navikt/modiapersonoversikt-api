@@ -2,9 +2,9 @@ import React from 'react';
 import Meldingspanel from './meldingspanel';
 import Kategoripanel from './kategoripanel';
 import PT from 'prop-types';
-import { erDelvisSvar } from '../../utils/melding-utils';
+import { erDelvisSvar, erIkkeDelvisSvar } from '../../utils/melding-utils';
 import { meldingITraadVisning } from '../props';
-import { slaaSammenDelviseSvar, erBesvart, erIkkeBesvart } from '../../utils/traad-utils';
+import { erBesvart, erIkkeBesvart } from '../../utils/traad-utils';
 
 function lagMeldingspanel(melding, apen) {
     return (
@@ -37,24 +37,23 @@ function lagEnkelstaaendePanel(traad) {
 }
 
 function lagTraadPanel(traad) {
-    const sammenslaattTraad = slaaSammenDelviseSvar(traad);
-
     const ubesvartSporsmaal = erIkkeBesvart(traad) && traad.length === 1;
     if (ubesvartSporsmaal) {
-        return lagEnkelstaaendePanel(sammenslaattTraad);
+        return lagEnkelstaaendePanel(traad);
     }
     const sammenslattOgUbesvart = erIkkeBesvart(traad) && traad.length >= 1;
     if (sammenslattOgUbesvart) {
         const tittel = 'Spørsmål fra bruker';
         const skalVisesApen = true;
-        return lagNedtrekkspanel(sammenslaattTraad, tittel, skalVisesApen);
+        const test = traad.filter(erIkkeDelvisSvar);
+        return lagNedtrekkspanel(test, tittel, skalVisesApen);
     }
     const tittel = 'Vis tidligere meldinger';
     const skalVisesApen = false;
-    return lagNedtrekkspanel(sammenslaattTraad, tittel, skalVisesApen);
+    return lagNedtrekkspanel(traad, tittel, skalVisesApen);
 }
 
-function lagDelviseSvarPanel(traad) {
+function lagDelsvarPanel(traad) {
     const delviseSvar = traad.filter(erDelvisSvar);
     if (delviseSvar.length === 0 || erBesvart(traad)) {
         return null;
@@ -70,11 +69,11 @@ function lagDelviseSvarPanel(traad) {
 function TraadVisning(props) {
     const traad = props.traad;
     const traadPanel = lagTraadPanel(traad);
-    const delvisSvarPanel = lagDelviseSvarPanel(traad);
+    const delsvarPanel = lagDelsvarPanel(traad);
     return (
         <div className="reactTraadVisning">
             {traadPanel}
-            {delvisSvarPanel}
+            {delsvarPanel}
         </div>
     );
 }

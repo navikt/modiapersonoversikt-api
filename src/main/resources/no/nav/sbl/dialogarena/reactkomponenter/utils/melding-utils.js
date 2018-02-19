@@ -56,6 +56,10 @@ export function erDelvisSvar(melding) {
     return melding.meldingstype === MeldingsTyper.DELVIS_SVAR_SKRIFTLIG;
 }
 
+export function erIkkeDelvisSvar(melding) {
+    return !erDelvisSvar(melding);
+}
+
 export function erSkriftligSvar(melding) {
     return melding.meldingstype === MeldingsTyper.SVAR_SKRIFTLIG;
 }
