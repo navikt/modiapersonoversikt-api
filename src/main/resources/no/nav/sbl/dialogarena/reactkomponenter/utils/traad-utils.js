@@ -12,3 +12,7 @@ export function erBesvart(traad) {
 export function erIkkeBesvart(traad) {
     return !erBesvart(traad);
 }
+
+export function filtrerBortDelviseSvar(traad) {
+    return traad.filter(melding => !erDelvisSvar(melding));
+}
