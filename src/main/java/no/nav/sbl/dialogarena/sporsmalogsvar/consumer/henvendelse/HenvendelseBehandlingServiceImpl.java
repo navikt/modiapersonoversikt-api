@@ -1,5 +1,8 @@
-package no.nav.sbl.dialogarena.sporsmalogsvar.consumer;
+package no.nav.sbl.dialogarena.sporsmalogsvar.consumer.henvendelse;
 
+import no.nav.brukerdialog.security.tilgangskontroll.policy.pep.EnforcementPoint;
+import no.nav.brukerdialog.security.tilgangskontroll.policy.request.PolicyRequest;
+import no.nav.brukerdialog.security.tilgangskontroll.policy.request.attributes.PolicyAttribute;
 import no.nav.kjerneinfo.consumer.fim.person.PersonKjerneinfoServiceBi;
 import no.nav.kjerneinfo.consumer.fim.person.to.HentKjerneinformasjonRequest;
 import no.nav.kjerneinfo.domain.person.Person;
@@ -7,17 +10,13 @@ import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendel
 import no.nav.modig.common.SporingsAksjon;
 import no.nav.modig.common.SporingsLogger;
 import no.nav.modig.content.PropertyResolver;
-import no.nav.brukerdialog.security.tilgangskontroll.policy.pep.EnforcementPoint;
-import no.nav.brukerdialog.security.tilgangskontroll.policy.request.PolicyRequest;
-import no.nav.brukerdialog.security.tilgangskontroll.policy.request.attributes.PolicyAttribute;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Fritekst;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.kodeverk.StandardKodeverk;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.ldap.LDAPService;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.Feature;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.FeatureToggle;
+import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.henvendelse.domain.Meldinger;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.MeldingVM;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.TraadVM;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.behandlehenvendelse.BehandleHenvendelsePortType;
@@ -35,11 +34,11 @@ import java.util.List;
 
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
+import static no.nav.brukerdialog.security.tilgangskontroll.utils.AttributeUtils.*;
+import static no.nav.brukerdialog.security.tilgangskontroll.utils.RequestUtils.forRequest;
 import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.*;
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.lang.collections.TransformerUtils.castTo;
-import static no.nav.brukerdialog.security.tilgangskontroll.utils.AttributeUtils.*;
-import static no.nav.brukerdialog.security.tilgangskontroll.utils.RequestUtils.forRequest;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.MeldingUtils.tilMelding;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.Feature.DELVISE_SVAR;
 import static org.apache.commons.lang3.StringUtils.defaultString;
@@ -57,8 +56,6 @@ public class HenvendelseBehandlingServiceImpl implements HenvendelseBehandlingSe
     @Named("pep")
     private EnforcementPoint pep;
     @Inject
-    private SaksbehandlerInnstillingerService saksbehandlerInnstillingerService;
-    @Inject
     private StandardKodeverk standardKodeverk;
     @Inject
     private PropertyResolver propertyResolver;
@@ -68,12 +65,12 @@ public class HenvendelseBehandlingServiceImpl implements HenvendelseBehandlingSe
     private LDAPService ldapService;
 
     @Override
-    public List<Melding> hentMeldinger(String fnr) {
-        return hentMeldinger(fnr, saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet());
+    public Meldinger hentMeldinger(String fnr, String valgtEnhet) {
+        List<Melding> meldinger = hentMeldingerFraHenvendelse(fnr, valgtEnhet);
+        return new Meldinger(meldinger);
     }
 
-    @Override
-    public List<Melding> hentMeldinger(String fnr, String valgtEnhet) {
+    private List<Melding> hentMeldingerFraHenvendelse(String fnr, String valgtEnhet) {
         List<String> typer = getAkutelleHenvendelseTyper();
 
         WSHentHenvendelseListeResponse wsHentHenvendelseListeResponse = henvendelsePortType.hentHenvendelseListe(new WSHentHenvendelseListeRequest().withFodselsnummer(fnr).withTyper(typer));

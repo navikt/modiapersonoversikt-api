@@ -1,15 +1,10 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.lamell;
 
-import no.nav.brukerdialog.security.domain.IdentType;
-import no.nav.brukerdialog.tools.SecurityConstants;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelse;
+import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLJournalfortInformasjon;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLMetadataListe;
-import no.nav.brukerdialog.security.context.SubjectHandler;
-import no.nav.brukerdialog.security.context.SubjectHandlerUtils;
-import no.nav.brukerdialog.security.context.ThreadLocalSubjectHandler;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.Sak;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Status;
@@ -19,15 +14,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static java.util.Arrays.asList;
-import static no.nav.modig.lang.option.Optional.optional;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.Sak.*;
 
 public class TestUtils {
-
-    public final static String SAKS_ID_1 = "11111111";
-    public final static String SAKS_ID_2 = "22222222";
-    public final static String SAKS_ID_3 = "33333333";
-    public final static String SAKS_ID_4 = "44444444";
 
     public final static String ID_1 = "id1";
     public final static String ID_2 = "id2";
@@ -43,43 +31,12 @@ public class TestUtils {
     public final static Temagruppe TEMAGRUPPE_2 = Temagruppe.FMLI;
     public final static Temagruppe TEMAGRUPPE_3 = Temagruppe.HJLPM;
 
-    private static final String SAKSTYPE_FAG = "Fag";
-
     public final static int TRAAD_LENGDE = 3;
-
-    public final static String TEMA_1 = GODKJENTE_TEMA_FOR_GENERELLE.get(0);
-    public final static String TEMA_2 = GODKJENTE_TEMA_FOR_GENERELLE.get(1);
-    public final static String TEMA_3 = GODKJENTE_TEMA_FOR_GENERELLE.get(2);
 
     public static final String JOURNALFORT_ID = "journalfortId";
     public static final DateTime JOURNALFORT_DATO = DateTime.now().minusDays(1);
     public static final String JOURNALFORT_TEMA = "journalfortTema";
     public static final String JOURNALFORT_SAKSID = "journalfortSaksId1";
-
-    public static ArrayList<Sak> createMockSaksliste() {
-        return new ArrayList<>(asList(
-            createSak(SAKS_ID_1, TEMA_1, GODKJENT_FAGSYSTEM_FOR_GENERELLE, SAKSTYPE_GENERELL, DateTime.now().minusDays(4)),
-            createSak(SAKS_ID_2, TEMA_2, GODKJENT_FAGSYSTEM_FOR_GENERELLE, SAKSTYPE_GENERELL, DateTime.now().minusDays(3)),
-            createSak(SAKS_ID_3, TEMA_3, GODKJENT_FAGSYSTEM_FOR_GENERELLE, SAKSTYPE_GENERELL, DateTime.now().minusDays(9)),
-            createSak(SAKS_ID_4, TEMA_1, FAGSYSTEMKODE_ARENA, "UGEN", DateTime.now().minusDays(2))));
-    }
-
-    public static Sak createSak(String saksId, String temaKode, String fagsystemKode, String sakstype, DateTime opprettet) {
-        Sak sak = new Sak();
-        sak.saksId = optional(saksId);
-        sak.fagsystemSaksId = optional(saksId);
-        sak.temaKode = temaKode;
-        sak.fagsystemKode = fagsystemKode;
-        if (sakstype.equals(SAKSTYPE_GENERELL)) {
-            sak.sakstype = sakstype;
-        } else {
-            sak.sakstype = temaKode;
-        }
-
-        sak.opprettetDato = opprettet;
-        return sak;
-    }
-
 
     public static Melding createMelding(String id, Meldingstype type, DateTime opprettetDato, Temagruppe temagruppe, String traadId) {
         Melding melding = new Melding(id, type, opprettetDato);
@@ -93,12 +50,13 @@ public class TestUtils {
         return melding;
     }
 
-    public static Melding createMeldingMedJournalfortDato(String id, Meldingstype type, DateTime opprettetDato, String temagruppe, String traadId, DateTime journalfortDato) {
-        Melding melding = new Melding(id, type, opprettetDato);
-        melding.temagruppe = temagruppe;
-        melding.traadId = traadId;
-        melding.journalfortDato = journalfortDato;
-        return melding;
+    public static XMLHenvendelse createMelding(String id, XMLHenvendelseType type, DateTime opprettetDato, Temagruppe temagruppe, String traadId) {
+        return new XMLHenvendelse()
+                .withBehandlingsId(id)
+                .withBehandlingskjedeId(traadId)
+                .withHenvendelseType(type.name())
+                .withOpprettetDato(opprettetDato)
+                .withGjeldendeTemagruppe(temagruppe.name());
     }
 
     public static Melding opprettMeldingEksempel() {
@@ -133,12 +91,6 @@ public class TestUtils {
                                 .withJournalfortSaksId(JOURNALFORT_SAKSID)
                 )
                 .withMetadataListe(XMLMetadataListe);
-    }
-
-    public static void innloggetBrukerEr(String userId) {
-        System.setProperty(SubjectHandler.SUBJECTHANDLER_KEY, ThreadLocalSubjectHandler.class.getCanonicalName());
-        System.setProperty(SecurityConstants.SYSTEMUSER_USERNAME, "srvHenvendelse");
-        SubjectHandlerUtils.setSubject(new SubjectHandlerUtils.SubjectBuilder(userId, IdentType.EksternBruker).withAuthLevel(4).getSubject());
     }
 
 }

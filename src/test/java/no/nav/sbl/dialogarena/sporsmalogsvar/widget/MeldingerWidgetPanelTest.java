@@ -1,7 +1,7 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.widget;
 
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
-import no.nav.sbl.dialogarena.sporsmalogsvar.config.ServiceTestContext;
+import no.nav.sbl.dialogarena.sporsmalogsvar.config.MockServiceTestContext;
 import no.nav.sbl.dialogarena.sporsmalogsvar.config.WicketPageTest;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.Model;
@@ -17,7 +17,7 @@ import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendels
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.TestUtils.createMelding;
 import static org.joda.time.DateTime.now;
 
-@ContextConfiguration(classes = ServiceTestContext.class)
+@ContextConfiguration(classes = MockServiceTestContext.class)
 @RunWith(SpringJUnit4ClassRunner.class)
 public class MeldingerWidgetPanelTest extends WicketPageTest {
 

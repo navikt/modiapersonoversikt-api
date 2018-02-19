@@ -30,12 +30,10 @@ public class TraadPanel extends Panel {
         add(new PropertyListView<MeldingVM>("valgtTraad.meldinger") {
             @Override
             protected void populateItem(ListItem<MeldingVM> item) {
-                String meldingTypeKlasse = meldingKlasse(item.getModelObject());
-                item.add(cssClass(meldingTypeKlasse));
-                PropertyModel<String> lestStatusModel = new PropertyModel<>(item.getModel(), "melding.lestStatus");
+                leggTilCSSKlasser(item);
 
+                PropertyModel<String> lestStatusModel = new PropertyModel<>(item.getModel(), "melding.lestStatus");
                 item.add(new FeilsendtInfoPanel("feilsendtInfo", item.getModel()));
-                item.add(new AvsenderBilde("avsenderBilde", item.getModel()).add(cssClass(meldingTypeKlasse)));
 
                 WebMarkupContainer meldingstatusContainer = new WebMarkupContainer("meldingstatusContainer");
                 meldingstatusContainer.setOutputMarkupId(true);
@@ -59,6 +57,22 @@ public class TraadPanel extends Panel {
                 skrevetAvContainer.add(new Label("skrevetAv", getSkrevetAv(item.getModelObject().melding)));
                 skrevetAvContainer.setVisible(!item.getModelObject().erDokumentMelding && !item.getModelObject().erOppgaveMelding);
                 item.add(skrevetAvContainer);
+            }
+
+            private void leggTilCSSKlasser(ListItem<MeldingVM> item) {
+                leggTilCSSKlasserForMeldingstype(item);
+
+                MeldingVM meldingVm = item.getModelObject();
+                if (meldingVm.erDelsvar()) {
+                    item.add(cssClass("delsvar"));
+                }
+            }
+
+            private void leggTilCSSKlasserForMeldingstype(ListItem<MeldingVM> item) {
+                MeldingVM meldingVm = item.getModelObject();
+                String meldingTypeKlasse = meldingKlasse(meldingVm);
+                item.add(cssClass(meldingTypeKlasse));
+                item.add(new AvsenderBilde("avsenderBilde", item.getModel()).add(cssClass(meldingTypeKlasse)));
             }
 
             private String getFritekst(Melding melding) {

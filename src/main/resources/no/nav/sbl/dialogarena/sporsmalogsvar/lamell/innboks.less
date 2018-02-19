@@ -366,15 +366,6 @@
   &.is-focused {
     .focus-sammensatt-inset-mixin();
   }
-  .tildeltIndikator > div {
-    padding: 5px 10px;
-    float: right;
-    border-radius: 4px;
-    color: #3e3832;
-    background-color: #c2ebf8;
-    margin-right: -16px;
-    margin-top: -5px;
-  }
   &.valgt {
     background-color: @aktivBakgrunn;
 
@@ -502,6 +493,22 @@
     height: 20px;
     margin-right: 10px;
   }
+
+  .etikett {
+    padding: 5px 10px;
+    float: left;
+    border-radius: 4px;
+    color: #3e3832;
+    margin-top: 15px;
+    margin-right: 10px;
+
+    &.delsvar {
+      background-color: #c1b5d0;
+    }
+    &.tildelt {
+      background-color: #c2ebf8;
+    }
+  }
 }
 
 .melding {
@@ -626,7 +633,6 @@
   }
   .journalpost-element {
     padding: 16px 25px;
-    color: @grayDark;
     text-decoration: none;
     span {
       text-align: center;
@@ -659,6 +665,11 @@
     margin: 12px 0 5px 0;
     color: #767676
   }
+
+  &.delsvar {
+    color: #78706A
+  }
+
 }
 
 hr.linje {

@@ -1,14 +1,14 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.lamell;
 
 import no.nav.brukerdialog.security.tilgangskontroll.policy.pep.EnforcementPoint;
+import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelse;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.*;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.*;
-import no.nav.sbl.dialogarena.sporsmalogsvar.config.ServiceTestContext;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
-import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.HenvendelseBehandlingService;
-import org.hamcrest.Matchers;
+import no.nav.sbl.dialogarena.sporsmalogsvar.config.MockServiceTestContext;
+import no.nav.sbl.dialogarena.sporsmalogsvar.config.ServiceTestContext;
+import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.henvendelse.HenvendelseBehandlingService;
+import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.henvendelse.HenvendelsePortType;
+import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.meldinger.WSHentHenvendelseListeResponse;
 import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
@@ -18,20 +18,21 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import javax.inject.Inject;
-import java.util.*;
-import java.util.stream.Collectors;
+import javax.inject.Named;
+import java.util.Arrays;
+import java.util.Map;
+import java.util.Optional;
 
-import static java.util.Arrays.asList;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype.*;
+import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.*;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.TestUtils.*;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;
-import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD;
 
 @DirtiesContext(classMode = AFTER_EACH_TEST_METHOD)
-@ContextConfiguration(classes = {ServiceTestContext.class})
+@ContextConfiguration(classes = {MockServiceTestContext.class, ServiceTestContext.class})
 @RunWith(SpringJUnit4ClassRunner.class)
 public class InnboksVMTest {
 
@@ -39,13 +40,12 @@ public class InnboksVMTest {
     public final static DateTime DATE_2 = new DateTime().minusDays(2);
     public final static DateTime DATE_3 = new DateTime().minusDays(3);
     public final static DateTime DATE_4 = new DateTime().minusDays(4);
-    public static final String DELVIS_SVAR_FRITEKST = "Jeg svarer deg delvis";
-    public static final String SVAR_FRITEKST = "Jeg fullfører svaret og deler med deg";
-    public static final Saksbehandler SAKSBEHANDLER_1 = new Saksbehandler("Sissel", "Saksbehandler", "ident1");
-    public static final Saksbehandler SAKSBEHANDLER_2 = new Saksbehandler("Sigurd", "Saksbehandler", "ident2");
-    public static final Person BRUKER = new Person("Bjarne", "Bruker");
 
     @Inject
+    HenvendelsePortType henvendelsePortType;
+
+    @Inject
+    @Named("henvendelseBehandlingServiceProd")
     HenvendelseBehandlingService henvendelseBehandlingService;
 
     @Inject
@@ -57,7 +57,7 @@ public class InnboksVMTest {
 
     @Before
     public void setUp() {
-        when(henvendelseBehandlingService.hentMeldinger(anyString())).thenReturn(createMeldingerIToTraader());
+        when(henvendelsePortType.hentHenvendelseListe(any())).thenReturn(createMeldingerIToTraader());
 
         innboksVM = new InnboksVM("fnr", henvendelseBehandlingService, pep, saksbehandlerInnstillingerService);
         innboksVM.oppdaterMeldinger();
@@ -127,7 +127,8 @@ public class InnboksVMTest {
 
     @Test
     public void skalFungereUtenMeldinger() {
-        when(henvendelseBehandlingService.hentMeldinger(anyString())).thenReturn(Collections.<Melding>emptyList());
+        when(henvendelsePortType.hentHenvendelseListe(any())).thenReturn(new WSHentHenvendelseListeResponse());
+
         innboksVM = new InnboksVM("fnr", henvendelseBehandlingService, pep, saksbehandlerInnstillingerService);
 
         assertThat(innboksVM.getTraader().size(), is(0));
@@ -136,10 +137,10 @@ public class InnboksVMTest {
 
     @Test
     public void henterNyesteMeldingITraad() {
-        String fnr = "fnr";
         String traadId = "traadId";
+        when(henvendelsePortType.hentHenvendelseListe(any())).thenReturn(new WSHentHenvendelseListeResponse()
+                .withAny(Arrays.asList(createMelding(traadId, SPORSMAL_SKRIFTLIG, DateTime.now(), Temagruppe.ARBD, traadId))));
 
-        when(henvendelseBehandlingService.hentMeldinger(fnr)).thenReturn(asList(createMelding(traadId, SPORSMAL_SKRIFTLIG, DateTime.now(), Temagruppe.ARBD, traadId)));
         innboksVM = new InnboksVM("fnr", henvendelseBehandlingService, pep, saksbehandlerInnstillingerService);
         innboksVM.oppdaterMeldinger();
         innboksVM.settForsteSomValgtHvisIkkeSatt();
@@ -150,7 +151,8 @@ public class InnboksVMTest {
 
     @Test
     public void henterNyesteMeldingITraadMedUkjentTraadId() {
-        when(henvendelseBehandlingService.hentMeldinger(anyString())).thenReturn(Collections.<Melding>emptyList());
+        when(henvendelsePortType.hentHenvendelseListe(any())).thenReturn(new WSHentHenvendelseListeResponse());
+
         innboksVM = new InnboksVM("fnr", henvendelseBehandlingService, pep, saksbehandlerInnstillingerService);
 
         Optional<MeldingVM> nyesteMeldingITraad = innboksVM.getNyesteMeldingITraad("traadId");
@@ -160,64 +162,23 @@ public class InnboksVMTest {
     @Test
     public void slettGamleMeldinger() {
         assertThat(innboksVM.getTraader().size(), is(2));
-        when(henvendelseBehandlingService.hentMeldinger(anyString())).thenReturn(createMeldingerIEnTraad());
+        when(henvendelsePortType.hentHenvendelseListe(any())).thenReturn(createMeldingerIEnTraad());
 
         innboksVM.oppdaterMeldinger();
 
         assertThat(innboksVM.getTraader().size(), is(1));
     }
 
-    @Test
-    public void skalKombinereSkrevetAvForDelviseSvar() {
-        when(henvendelseBehandlingService.hentMeldinger(anyString()))
-                .thenReturn(mockMeldingskjedeMedDelviseSvar());
-
-        innboksVM.oppdaterMeldinger();
-
-        List<Fritekst> fritekster = innboksVM.getNyesteMeldingINyesteTraad().melding.getFriteksterMedEldsteForst();
-        assertThat(fritekster.stream().map(fritekst -> fritekst.getSaksbehandler().get().navn)
-                .collect(Collectors.toList()), Matchers.contains(SAKSBEHANDLER_1.navn, SAKSBEHANDLER_2.navn));
+    private static WSHentHenvendelseListeResponse createMeldingerIToTraader() {
+        XMLHenvendelse melding1 = createMelding(ID_1, SPORSMAL_SKRIFTLIG, DATE_4, TEMAGRUPPE_1, ID_1);
+        XMLHenvendelse melding2 = createMelding(ID_2, SPORSMAL_SKRIFTLIG, DATE_3, TEMAGRUPPE_2, ID_2);
+        XMLHenvendelse melding3 = createMelding(ID_3, REFERAT_OPPMOTE, DATE_2, TEMAGRUPPE_2, ID_2);
+        XMLHenvendelse melding4 = createMelding(ID_4, SVAR_SKRIFTLIG, DATE_1, TEMAGRUPPE_2, ID_2);
+        return new WSHentHenvendelseListeResponse().withAny(Arrays.asList(melding1, melding2, melding3, melding4));
     }
 
-    @Test
-    public void skalKombinereFritekstForDelviseSvar() {
-        when(henvendelseBehandlingService.hentMeldinger(anyString()))
-                .thenReturn(mockMeldingskjedeMedDelviseSvar());
-
-        innboksVM.oppdaterMeldinger();
-
-        List<String> fritekster = innboksVM.getNyesteMeldingINyesteTraad().melding.getFriteksterMedEldsteForst().stream()
-                .map(Fritekst::getFritekst).collect(Collectors.toList());
-        assertThat(fritekster.size(), is(2));
-        assertThat(fritekster.get(0), is(DELVIS_SVAR_FRITEKST));
-        assertThat(fritekster.get(1), is(SVAR_FRITEKST));
-    }
-
-    private List<Melding> mockMeldingskjedeMedDelviseSvar() {
-        return asList(
-                createMelding(ID_1, Meldingstype.SPORSMAL_SKRIFTLIG, DATE_4, TEMAGRUPPE_1, ID_1)
-                        .withFritekst(new Fritekst("Jeg stiller et spørsmål", BRUKER, DATE_4))
-                        .withSkrevetAv(BRUKER),
-                createMelding(ID_2, Meldingstype.DELVIS_SVAR_SKRIFTLIG, DATE_3, TEMAGRUPPE_1, ID_1)
-                        .withFritekst(new Fritekst(DELVIS_SVAR_FRITEKST, SAKSBEHANDLER_1, DATE_3))
-                        .withSkrevetAv(SAKSBEHANDLER_1),
-                createMelding(ID_3, Meldingstype.SVAR_SKRIFTLIG, DATE_2, TEMAGRUPPE_2, ID_1)
-                        .withFritekst(new Fritekst(SVAR_FRITEKST, SAKSBEHANDLER_2, DATE_2))
-                        .withSkrevetAv(SAKSBEHANDLER_2));
-    }
-
-    public static List<Melding> createMeldingerIToTraader() {
-        Melding melding1 = createMelding(ID_1, SPORSMAL_SKRIFTLIG, DATE_4, TEMAGRUPPE_1, ID_1);
-        Melding melding2 = createMelding(ID_2, SPORSMAL_SKRIFTLIG, DATE_3, TEMAGRUPPE_2, ID_2);
-        Melding melding3 = createMelding(ID_3, SAMTALEREFERAT_OPPMOTE, DATE_2, TEMAGRUPPE_2, ID_2);
-        Melding melding4 = createMelding(ID_4, SVAR_SKRIFTLIG, DATE_1, TEMAGRUPPE_2, ID_2);
-        return asList(melding1, melding2, melding3, melding4);
-    }
-
-    private static List<Melding> createMeldingerIEnTraad() {
-        return asList(
-                createMelding(ID_1, SPORSMAL_SKRIFTLIG, DATE_4, TEMAGRUPPE_1, ID_1)
-        );
+    private static WSHentHenvendelseListeResponse createMeldingerIEnTraad() {
+        return new WSHentHenvendelseListeResponse().withAny(Arrays.asList(createMelding(ID_1, SPORSMAL_SKRIFTLIG, DATE_4, TEMAGRUPPE_1, ID_1)));
     }
 
 }

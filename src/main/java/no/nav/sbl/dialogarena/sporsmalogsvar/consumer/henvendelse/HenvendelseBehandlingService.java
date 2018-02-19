@@ -1,14 +1,11 @@
-package no.nav.sbl.dialogarena.sporsmalogsvar.consumer;
+package no.nav.sbl.dialogarena.sporsmalogsvar.consumer.henvendelse;
 
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
+import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.henvendelse.domain.Meldinger;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.TraadVM;
 
-import java.util.List;
-
 public interface HenvendelseBehandlingService {
-    List<Melding> hentMeldinger(String fnr);
 
-    List<Melding> hentMeldinger(String fnr, String valgtEnhet);
+    Meldinger hentMeldinger(String fnr, String valgtEnhet);
 
     void merkSomKontorsperret(String fnr, TraadVM valgtTraad);
 

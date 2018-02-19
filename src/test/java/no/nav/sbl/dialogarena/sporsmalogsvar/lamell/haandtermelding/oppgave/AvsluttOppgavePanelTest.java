@@ -1,6 +1,6 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.oppgave;
 
-import no.nav.sbl.dialogarena.sporsmalogsvar.config.ServiceTestContext;
+import no.nav.sbl.dialogarena.sporsmalogsvar.config.MockServiceTestContext;
 import no.nav.sbl.dialogarena.sporsmalogsvar.config.WicketPageTest;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.GsakService;
 import no.nav.tjeneste.virksomhet.oppgave.v3.informasjon.oppgave.WSOppgave;
@@ -22,7 +22,7 @@ import static org.mockito.Mockito.*;
 import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER_CLASS;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = ServiceTestContext.class)
+@ContextConfiguration(classes = MockServiceTestContext.class)
 @DirtiesContext(classMode = AFTER_CLASS)
 public class AvsluttOppgavePanelTest extends WicketPageTest {
 

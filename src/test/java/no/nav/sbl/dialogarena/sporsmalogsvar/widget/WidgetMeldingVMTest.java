@@ -6,7 +6,6 @@ import org.junit.Test;
 
 import java.util.Arrays;
 
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype.DELVIS_SVAR_SKRIFTLIG;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype.SPORSMAL_SKRIFTLIG;
 import static org.junit.Assert.assertEquals;
 
@@ -17,12 +16,6 @@ public class WidgetMeldingVMTest {
     public void setterTraadLengdeEtterHvorMangeMeldinger() {
         WidgetMeldingVM widgetMeldingVM = new WidgetMeldingVM(Arrays.asList(mockMelding(), mockMelding().withType(SPORSMAL_SKRIFTLIG)), false);
         assertEquals(2, widgetMeldingVM.traadlengde);
-    }
-
-    @Test
-    public void setterTraadLengdeUtenDelviseSvar() {
-        WidgetMeldingVM widgetMeldingVM = new WidgetMeldingVM(Arrays.asList(mockMelding(), mockMelding().withType(DELVIS_SVAR_SKRIFTLIG)), false);
-        assertEquals(1, widgetMeldingVM.traadlengde);
     }
 
     private Melding mockMelding() {

@@ -4,7 +4,9 @@ import no.nav.brukerdialog.security.tilgangskontroll.policy.pep.EnforcementPoint
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Oppgave;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
-import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.HenvendelseBehandlingService;
+import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.henvendelse.HenvendelseBehandlingService;
+import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.henvendelse.domain.Meldinger;
+import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.henvendelse.domain.Traad;
 import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
 import org.slf4j.Logger;
@@ -16,7 +18,6 @@ import java.util.function.Function;
 import static java.util.Comparator.comparing;
 import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.toList;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.MeldingUtils.skillUtTraader;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 import static org.slf4j.LoggerFactory.getLogger;
@@ -29,7 +30,7 @@ public class InnboksVM implements Serializable {
 
     private SaksbehandlerInnstillingerService saksbehandlerInnstillingerService;
 
-    private Map<String, TraadVM> traader = new HashMap<>();
+    private Map<String, TraadVM> traaderVM = new HashMap<>();
     private List<MeldingVM> nyesteMeldingerITraader = new ArrayList<>();
     private MeldingVM valgtMelding = null;
     private String fnr, feilmeldingKey;
@@ -52,23 +53,23 @@ public class InnboksVM implements Serializable {
     }
 
     public final void oppdaterMeldinger() {
-        traader.clear();
+        traaderVM.clear();
         nyesteMeldingerITraader.clear();
         feilmeldingKey = "";
         try {
-            List<Melding> meldinger = henvendelseBehandlingService.hentMeldinger(fnr);
+            Meldinger meldinger = henvendelseBehandlingService.hentMeldinger(fnr, saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet());
 
-            if (meldinger.isEmpty()) {
+            if (meldinger.erUtenMeldinger()) {
                 feilmeldingKey = "innboks.feilmelding.ingenmeldinger";
                 return;
             }
 
-            Map<String, List<Melding>> meldingTraader = skillUtTraader(meldinger);
-            for (Map.Entry<String, List<Melding>> meldingTraad : meldingTraader.entrySet()) {
-                traader.put(meldingTraad.getKey(), new TraadVM(TIL_MELDINGVM_TRAAD.apply(meldingTraad.getValue()), pep,
+            List<Traad> traader = meldinger.getTraader();
+            for (Traad traad: traader) {
+                traaderVM.put(traad.getTraadId(), new TraadVM(TIL_MELDINGVM_TRAAD.apply(traad.getMeldinger()), pep,
                         saksbehandlerInnstillingerService));
             }
-            nyesteMeldingerITraader = traader.values().stream()
+            nyesteMeldingerITraader = traaderVM.values().stream()
                     .map(TraadVM::getNyesteMelding)
                     .sorted(comparing(MeldingVM::getDato).reversed())
                     .collect(toList());
@@ -80,7 +81,7 @@ public class InnboksVM implements Serializable {
     }
 
     public int getTraadLengde(String id) {
-        return traader.get(id).getTraadLengde();
+        return traaderVM.get(id).getTraadLengde();
     }
 
     public void setValgtMelding(String id) {
@@ -112,7 +113,7 @@ public class InnboksVM implements Serializable {
 
     public TraadVM getValgtTraad() {
         return ofNullable(valgtMelding)
-                .map(meldingVM -> traader.get(meldingVM.melding.traadId))
+                .map(meldingVM -> traaderVM.get(meldingVM.melding.traadId))
                 .orElse(new TraadVM(new ArrayList<>(), pep, saksbehandlerInnstillingerService));
     }
 
@@ -125,11 +126,11 @@ public class InnboksVM implements Serializable {
     }
 
     public Map<String, TraadVM> getTraader() {
-        return traader;
+        return traaderVM;
     }
 
     public boolean harTraader() {
-        return !traader.isEmpty();
+        return !traaderVM.isEmpty();
     }
 
     public AbstractReadOnlyModel<Boolean> harFeilmelding() {
@@ -142,29 +143,12 @@ public class InnboksVM implements Serializable {
     }
 
     private static final Function<List<Melding>, List<MeldingVM>> TIL_MELDINGVM_TRAAD = (meldinger) -> {
-        List<Melding> delviseSvar = meldinger.stream().filter(Melding::erDelvisSvar).collect(toList());
-        if (delviseSvar.size() > 0) {
-            getAvsluttendeSvar(meldinger).map(avsluttendeSvar -> avsluttendeSvar.withDelviseSvar(delviseSvar));
-        }
-
-        int traadLengde = getTraadLengde(meldinger);
+        int traadLengde = meldinger.size();
         return meldinger.stream()
-                .filter(melding -> !melding.erDelvisSvar())
                 .sorted(Melding.NYESTE_FORST)
                 .map(melding -> new MeldingVM(melding, traadLengde))
                 .collect(toList());
     };
-
-    private static Optional<Melding> getAvsluttendeSvar(List<Melding> meldinger) {
-        return meldinger.stream()
-                .filter(Melding::erSvarSkriftlig)
-                .sorted(Melding.ELDSTE_FORST)
-                .findFirst();
-    }
-
-    private static int getTraadLengde(List<Melding> meldinger) {
-        return Math.toIntExact(meldinger.stream().filter(melding -> !melding.erDelvisSvar()).count());
-    }
 
     public Optional<String> getSessionOppgaveId() {
         return ofNullable(sessionOppgaveId);

@@ -1,16 +1,17 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.lamell;
 
+import no.nav.brukerdialog.security.tilgangskontroll.policy.pep.EnforcementPoint;
 import no.nav.modig.lang.option.Optional;
 import no.nav.modig.modia.events.FeedItemPayload;
-import no.nav.brukerdialog.security.tilgangskontroll.policy.pep.EnforcementPoint;
 import no.nav.modig.wicket.events.NamedEventPayload;
 import no.nav.modig.wicket.test.EventGenerator;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
-import no.nav.sbl.dialogarena.sporsmalogsvar.config.ServiceTestContext;
+import no.nav.sbl.dialogarena.sporsmalogsvar.config.MockServiceTestContext;
 import no.nav.sbl.dialogarena.sporsmalogsvar.config.WicketPageTest;
-import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.HenvendelseBehandlingService;
+import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.henvendelse.HenvendelseBehandlingService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.InnboksProps;
+import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.henvendelse.domain.Meldinger;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.junit.Before;
 import org.junit.Test;
@@ -36,7 +37,7 @@ import static org.mockito.Mockito.*;
 import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD;
 
 @DirtiesContext(classMode = AFTER_EACH_TEST_METHOD)
-@ContextConfiguration(classes = {ServiceTestContext.class})
+@ContextConfiguration(classes = {MockServiceTestContext.class})
 @RunWith(SpringJUnit4ClassRunner.class)
 public class InnboksTest extends WicketPageTest {
 
@@ -55,10 +56,10 @@ public class InnboksTest extends WicketPageTest {
 
     @Before
     public void setUp() {
-        when(henvendelseBehandlingService.hentMeldinger(anyString())).thenReturn(asList(
+        when(henvendelseBehandlingService.hentMeldinger(anyString(), anyString())).thenReturn(new Meldinger(asList(
                 createMelding(ELDSTE_MELDING_ID_TRAAD1, SPORSMAL_SKRIFTLIG, now().minusDays(1), Temagruppe.ARBD, ELDSTE_MELDING_ID_TRAAD1),
                 createMelding(NYESTE_MELDING_ID_TRAAD1, SVAR_SKRIFTLIG, now(), Temagruppe.ARBD, ELDSTE_MELDING_ID_TRAAD1),
-                createMelding(ENESTE_MELDING_ID_TRAAD2, SPORSMAL_SKRIFTLIG, now().minusDays(2), Temagruppe.ARBD, ENESTE_MELDING_ID_TRAAD2)));
+                createMelding(ENESTE_MELDING_ID_TRAAD2, SPORSMAL_SKRIFTLIG, now().minusDays(2), Temagruppe.ARBD, ENESTE_MELDING_ID_TRAAD2))));
     }
 
     @Test
@@ -98,7 +99,7 @@ public class InnboksTest extends WicketPageTest {
         wicket.goToPageWith(testInnboks)
                 .click().link(withId("meldingerSokToggle"));
 
-        verify(henvendelseBehandlingService, atLeast(2)).hentMeldinger(fnr);
+        verify(henvendelseBehandlingService, atLeast(2)).hentMeldinger(eq(fnr), anyString());
     }
 
     private InnboksVM innboksVM() {
