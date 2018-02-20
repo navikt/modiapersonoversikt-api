@@ -142,39 +142,50 @@ public class Innboks extends Lerret {
             }
         }
 
-        List<String> meldingsIder = traadIder.stream()
+        String nyTraadId;
+        try {
+            nyTraadId = henvendelseUtsendingService.slaaSammenTraader(hentMeldingsIderFraTraadIder(traadIder));
+        } catch (TraadAlleredeBesvart e) {
+            haandterTraadAlleredeBesvart(e.traadId);
+            return;
+        }
+
+        String nySvarHenvendelse = henvendelseUtsendingService.opprettHenvendelse(SVAR_SKRIFTLIG.toString(), oppgaver.get(0).fnr, nyTraadId);
+
+        ferdigstillAlleUnntattEnOppgave(oppgaver, nyTraadId);
+        Oppgave oppdatertOppgave = finnGjenvaerendeOppgave(oppgaver, nyTraadId)
+                .withSvarHenvendelseId(nySvarHenvendelse);
+
+        innboksVM.setSessionHenvendelseId(nyTraadId);
+        innboksVM.setSessionOppgaveId(oppdatertOppgave.oppgaveId);
+        DialogSession.read(this)
+                .withOppgaveSomBesvares(oppdatertOppgave)
+                .withOppgaverBlePlukket(true);
+
+        send(getPage(), DEPTH, new NamedEventPayload(Events.SporsmalOgSvar.SVAR_PAA_MELDING, nyTraadId));
+    }
+
+    private Oppgave finnGjenvaerendeOppgave(List<Oppgave> oppgaver, String nyTraadId) {
+        return oppgaver.stream()
+                .filter(oppgave -> nyTraadId.equals(oppgave.henvendelseId))
+                .findAny()
+                .get();
+    }
+
+    private void ferdigstillAlleUnntattEnOppgave(List<Oppgave> oppgaver, String unntatt) {
+        oppgaver.stream()
+                .filter(oppgave -> !unntatt.equals(oppgave.henvendelseId))
+                .forEach(this::ferdigstillOppgave);
+    }
+
+    private List<String> hentMeldingsIderFraTraadIder(List<String> traadIder) {
+        return traadIder.stream()
                 .flatMap(traadId -> innboksVM.getTraader()
                         .get(traadId)
                         .getMeldinger()
                         .stream()
                         .map(meldingVM -> meldingVM.melding.id))
                 .collect(toList());
-
-        String nyTraadId;
-        try {
-            nyTraadId = henvendelseUtsendingService.slaaSammenTraader(meldingsIder);
-        } catch (TraadAlleredeBesvart e) {
-            haandterTraadAlleredeBesvart(e.traadId);
-            return;
-        }
-
-        oppgaver.stream()
-                .filter(oppgave -> !nyTraadId.equals(oppgave.henvendelseId))
-                .forEach(this::ferdigstillOppgave);
-
-        String nySvarHenvendelse = henvendelseUtsendingService.opprettHenvendelse(SVAR_SKRIFTLIG.toString(), oppgaver.get(0).fnr, nyTraadId);
-
-        innboksVM.setSessionHenvendelseId(nyTraadId);
-        innboksVM.setSessionOppgaveId(DialogSession.read(this)
-                .withOppgaveSomBesvares(oppgaver.stream()
-                        .filter(oppgave -> nyTraadId.equals(oppgave.henvendelseId))
-                        .findAny()
-                        .get()
-                        .withSvarHenvendelseId(nySvarHenvendelse))
-                .withOppgaverBlePlukket(true)
-                .getOppgaveSomBesvares().get().oppgaveId);
-
-        send(getPage(), DEPTH, new NamedEventPayload(Events.SporsmalOgSvar.SVAR_PAA_MELDING, nyTraadId));
     }
 
     private void haandterOppgaveAlleredeFerdigstilt(String oppgaveId) {
@@ -286,7 +297,6 @@ public class Innboks extends Lerret {
             innboksVM.focusValgtTraadOnOpen = false;
         }
     }
-
 
     @RunOnEvents(FEED_ITEM_CLICKED)
     public void feedItemClicked(AjaxRequestTarget target, IEvent<?> event, FeedItemPayload feedItemPayload) {
