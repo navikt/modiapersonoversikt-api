@@ -14,7 +14,7 @@ import TraadVisning from './dialog-panel/traadvisning/traadvisning-module';
 import RedirectModal from './redirectmodal/redirectmodal-module';
 import BrukersNavKontor from './visittkort/brukers-nav-kontor/nav-kontor-module';
 import FolkeregistrertAdresse from './visittkort/adresse/folkeregistrert-adresse-module';
-import FlereOppgaverFraBrukerAlert from './dialog-panel/flere-henvendelser-alert/flere-oppgaver-tildelt-fra-bruker-alert';
+import TildeltFlereOppgaverAlert from './dialog-panel/flere-henvendelser-alert/tildelt-flere-oppgaver-alert';
 
 import React from './nav-react';
 import ReactDOM from 'react-dom';
@@ -36,7 +36,7 @@ window.ModiaJS = {
         RedirectModal,
         BrukersNavKontor,
         FolkeregistrertAdresse,
-        FlereOppgaverFraBrukerAlert
+        TildeltFlereOppgaverAlert
     },
     InitializedComponents: {},
     React,

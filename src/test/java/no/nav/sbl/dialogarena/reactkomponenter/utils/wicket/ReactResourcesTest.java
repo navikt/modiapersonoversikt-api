@@ -27,7 +27,7 @@ public class ReactResourcesTest {
             "build/nav-core-variabler.less",
             "build/nav-kontor.less",
             "build/slaa-sammen-traader.less",
-            "build/flere-oppgaver-tildelt-fra-bruker-alert.less"
+            "build/tildelt-flere-oppgaver-alert.less"
             );
 
     @Test
