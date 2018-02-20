@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.fortsettdialogpanel;
 
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Fritekst;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
 import no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.DateUtils;
 
@@ -20,7 +21,7 @@ public class TraadVisningProps extends HashMap<String, Object> implements Serial
         meldingsProps.put("temagruppeNavn",melding.temagruppeNavn);
         meldingsProps.put("visningsDatoTekst", DateUtils.toString(melding.erDokumentMelding ?
                 melding.ferdigstiltDato : melding.opprettetDato));
-        meldingsProps.put("fritekst", melding.getFritekst());
+        meldingsProps.put("fritekst", getFritekster(melding));
         meldingsProps.put("erDokumentMelding", melding.erDokumentMelding);
         meldingsProps.put("id", melding.id);
         meldingsProps.put("statusTekst", melding.statusTekst);
@@ -31,4 +32,12 @@ public class TraadVisningProps extends HashMap<String, Object> implements Serial
         meldingsProps.put("opprettetDato", melding.opprettetDato);
         return meldingsProps;
     }
+
+    private String getFritekster(Melding melding) {
+        List<String> fritekster = melding.getFriteksterMedEldsteForst().stream()
+                .map(Fritekst::getFritekst)
+                .collect(Collectors.toList());
+        return String.join("\n\n", fritekster);
+    }
+
 }
