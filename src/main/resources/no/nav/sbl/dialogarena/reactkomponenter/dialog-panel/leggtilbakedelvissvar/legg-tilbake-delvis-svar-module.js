@@ -10,6 +10,7 @@ class LeggTilbakeDelvisSvarPanel extends Component {
         this.svarCallback = this.svarCallback.bind(this);
         this.avbrytCallback = this.avbrytCallback.bind(this);
         this.startNyDialogCallback = this.startNyDialogCallback.bind(this);
+        this.startNesteDialogCallback = this.startNesteDialogCallback.bind(this);
         this.state = {
             erUnderArbeid: true
         };
@@ -28,15 +29,31 @@ class LeggTilbakeDelvisSvarPanel extends Component {
         wicketSender(this.props.wicketurl, this.props.wicketcomponent, this.props.startNyDialogId);
     }
 
+    startNesteDialogCallback() {
+        wicketSender(this.props.wicketurl, this.props.wicketcomponent, this.props.startNesteDialogId);
+    }
+
     lagKvittering() {
+        const nesteDialogKnapp = this.props.startNesteDialogId ? this.lagNesteDialogKnapp() : null;
         return (
             <div className="kvittering">
                 <div className="robust-ikon-gront-sjekk" />
                 <h2 className="medium">Delsvar er registrert</h2>
-                <button className="startNyDialog knapp-stor" onClick={this.startNyDialogCallback}>
-                    Start Ny Dialog
-                </button>
+                <div className="knapper">
+                    {nesteDialogKnapp}
+                    <button className="knapp-stor" onClick={this.startNyDialogCallback}>
+                        Start Ny Dialog
+                    </button>
+                </div>
             </div>
+        );
+    }
+
+    lagNesteDialogKnapp() {
+        return (
+            <button className={"knapp-hoved startNesteDialog"} onClick={this.startNesteDialogCallback}>
+                Gå til neste spørsmål
+            </button>
         );
     }
 
@@ -68,6 +85,7 @@ LeggTilbakeDelvisSvarPanel.propTypes = {
     svarDelvisCallbackId: PT.string.isRequired,
     avbrytCallbackId: PT.string.isRequired,
     startNyDialogId: PT.string.isRequired,
+    startNesteDialogId: PT.string,
     henvendelseId: PT.string.isRequired,
     sporsmal: PT.string.isRequired,
     fodselsnummer: PT.string.isRequired,

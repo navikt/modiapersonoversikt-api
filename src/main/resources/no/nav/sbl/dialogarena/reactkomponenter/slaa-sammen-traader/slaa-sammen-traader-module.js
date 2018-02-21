@@ -9,6 +9,11 @@ function findCheckedBoxes() {
         .filter((checkbox) => checkbox.checked)
         .map((checkbox) => checkbox.id);
 } //TODO querySelectorAll, serr? do it the react-way
+function clearCheckedBoxes() {
+    const boxes = document.querySelectorAll('.slaa-sammen-traader-visning .skjemaelement__input.checkboks');
+    return Array.from(boxes)
+        .map((checkbox) => checkbox.checked = false);
+} //TODO querySelectorAll, serr? do it the react-way
 
 class SlaaSammenTraader extends Component {
     constructor(props) {
@@ -38,6 +43,11 @@ class SlaaSammenTraader extends Component {
     vis(props) {
         this.setState({ ...this.state, traadIder: props.traadIder });
         this.visModal();
+        clearCheckedBoxes();
+    }
+
+    skjul() {
+        this.skjulModal();
     }
 
     render() {
@@ -56,6 +66,7 @@ class SlaaSammenTraader extends Component {
                 }}
                 onSubmit={(event, state, onSuccess) => this.onSubmit(event, state, onSuccess)}
                 setVisModalVindu={(func) => this.visModal = func}
+                setSkjulModalVindu={(func) => this.skjulModal = func}
                 modulNavn="SlaaSammenTraader"
             />
         );
