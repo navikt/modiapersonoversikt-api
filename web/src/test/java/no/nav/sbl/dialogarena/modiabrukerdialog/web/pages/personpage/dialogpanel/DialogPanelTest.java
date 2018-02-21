@@ -209,10 +209,10 @@ public class DialogPanelTest extends WicketPageTest {
         assertErstatterDialogPanelMedNyDialogPanelVedEvent(NY_DIALOG_AVBRUTT, VelgDialogPanel.class);
     }
 
-    private void assertErstatterDialogPanelMedNyDialogPanelVedEvent(String event, Class panelSomSKalVises) {
+    private void assertErstatterDialogPanelMedNyDialogPanelVedEvent(String event, Class panelSomSkalVises) {
         wicket.goToPageWith(new DialogPanel(ID, getMockGrunnInfo()))
                 .sendEvent(createEvent(event))
-                .should().inAjaxResponse().haveComponents(ofType(panelSomSKalVises));
+                .should().inAjaxResponse().haveComponents(ofType(panelSomSkalVises));
     }
 
     private void settSessionVerdier(String oppgaveIdVerdi, String henvendelseIdVerdi, Boolean fortsettDialogModusVerdi) {

@@ -11,6 +11,14 @@
   border-left: 2px solid #a5a5a5;
 }
 
+.kvitteringsknapper {
+  display: inline-flex;
+  flex-direction: column;
+  a, button {
+    margin-bottom: 1rem;
+  }
+}
+
 .dialogpanel {
   text-align: center;
   padding: @sidePadding;
@@ -488,6 +496,9 @@
       font-family: Modus, Arial, Helvetica, sans-serif;
       font-weight: normal;
     }
+    .knapper {
+      .kvitteringsknapper();
+    }
   }
 }
 
@@ -503,8 +514,9 @@
   p {
     padding: 0 30px;
   }
-  a {
+  .knapper {
     margin-top: 100px;
+    .kvitteringsknapper();
   }
   .robust-ikon-gront-sjekk {
     padding-top: 70px;

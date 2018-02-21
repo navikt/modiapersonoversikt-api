@@ -62,7 +62,7 @@ class LeggTilbakeDelvisSvarPropsTest {
     @Test
     @DisplayName("Lager korrekte props til reactkomponenten")
     void lagerPropsSomForventet() {
-        LeggTilbakeDelvisSvarProps leggTilbakeDelvisSvarProps = new LeggTilbakeDelvisSvarProps(BEHANDLINGS_ID, TEMAGRUPPE_MAP, traad, skrivestotteProps);
+        LeggTilbakeDelvisSvarProps leggTilbakeDelvisSvarProps = new LeggTilbakeDelvisSvarProps(BEHANDLINGS_ID, TEMAGRUPPE_MAP, traad, skrivestotteProps, false);
         FORVENTET_TEMAGRUPPE_MAP.remove(ARBD);
 
         assertAll("props",

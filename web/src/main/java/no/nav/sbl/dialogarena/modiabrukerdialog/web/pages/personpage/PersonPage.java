@@ -67,7 +67,6 @@ import static no.nav.modig.modia.lamell.ReactSjekkForlatModal.getJavascriptSaveB
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.SessionParametere.SporsmalOgSvar.BESVARMODUS;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.URLParametere.*;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.lameller.LamellContainer.LAMELL_MELDINGER;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.Innboks.TRAADER_SLAATT_SAMMEN;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.apache.wicket.event.Broadcast.BREADTH;
 import static org.apache.wicket.event.Broadcast.DEPTH;
@@ -90,6 +89,7 @@ public class PersonPage extends BasePage {
 
     private final String fnr;
     private final GrunnInfo grunnInfo;
+    private final DialogPanel dialogPanel;
 
     private LamellContainer lamellContainer;
     private ReactSjekkForlatModal redirectPopup;
@@ -133,6 +133,7 @@ public class PersonPage extends BasePage {
             handleRedirect(target, new PageParameters(), HentPersonPage.class);
         }));
 
+        dialogPanel = new DialogPanel("dialogPanel", grunnInfo);
         add(
                 hode,
                 lamellContainer,
@@ -142,7 +143,7 @@ public class PersonPage extends BasePage {
                 new VisittkortPanel("visittkort", fnr).setVisible(true),
                 new NavKontorPanel("brukersNavKontor", fnr),
                 new VisitkortTabListePanel("kjerneinfotabs", createTabs()),
-                new DialogPanel("dialogPanel", grunnInfo),
+                dialogPanel,
                 new ReactTimeoutBoksModal("timeoutBoks", fnr),
                 oppgiBegrunnelseModal
         );
@@ -290,11 +291,6 @@ public class PersonPage extends BasePage {
             logger.warn("Burde ikke skje, klarte ikke håndtere widgetLink: {}", e.getMessage(), e);
             target.appendJavaScript("alert('" + e.getMessage() + "');");
         }
-    }
-
-    @RunOnEvents(TRAADER_SLAATT_SAMMEN)
-    public void slaaSammen(AjaxRequestTarget target) {
-        target.add(this);
     }
 
     @RunOnEvents(PERSONSOK_FNR_CLICKED)

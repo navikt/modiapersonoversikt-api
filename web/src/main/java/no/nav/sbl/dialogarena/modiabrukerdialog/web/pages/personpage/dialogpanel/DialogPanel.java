@@ -10,10 +10,12 @@ import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldi
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.HenvendelseUtsendingService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveBehandlingService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.PersonPage;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.fortsettdialogpanel.FortsettDialogPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.nydialogpanel.NyDialogPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.velgdialogpanel.VelgDialogPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.modal.OppgavetilordningFeilet;
+import no.nav.sbl.dialogarena.reactkomponenter.utils.wicket.ReactComponentPanel;
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -21,9 +23,12 @@ import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 
 import javax.inject.Inject;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
@@ -31,13 +36,19 @@ import static no.nav.modig.modia.utils.ComponentFinder.in;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.hasCssClassIf;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.Events.SporsmalOgSvar.*;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype.*;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.hentperson.HentPersonPage.FNR;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.fortsettdialogpanel.LeggTilbakePanel.LEGG_TILBAKE_FERDIG;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.Innboks.TRAADER_SLAATT_SAMMEN;
 
 public class DialogPanel extends Panel {
 
+    public static final String NESTE_DIALOG_LENKE_VALGT = "dialogpanel.neste.dialog.lenke.valgt";
     public static final String NY_DIALOG_LENKE_VALGT = "dialogpanel.ny.dialog.lenke.valgt";
     public static final String NY_DIALOG_AVBRUTT = "dialogpanel.ny.dialog.avbrutt";
     private static final String AKTIVT_PANEL_ID = "aktivtPanel";
+    public static final String TILDELT_FLERE_ALERT = "TildeltFlereOppgaverAlert";
+    public static final String TILDELT_FLERE_ALERT_WICKET_CONTAINER_ID = "reactTildeltFlereOppgaverAlertContainer";
+
 
     @Inject
     private HenvendelseUtsendingService henvendelseUtsendingService;
@@ -49,6 +60,7 @@ public class DialogPanel extends Panel {
     private final OppgavetilordningFeilet oppgavetilordningFeiletModal;
     private final GrunnInfo grunnInfo;
     private final DialogSession session;
+    private ReactComponentPanel tildeltFlereAlert;
     private Boolean harOppgaveFraGosys;
     private Boolean harPlukketOppgave;
     private Component aktivtPanel;
@@ -63,9 +75,11 @@ public class DialogPanel extends Panel {
         harPlukketOppgave = session.oppgaverBlePlukket();
         harOppgaveFraGosys = !harPlukketOppgave && oppgave != null;
         oppgavetilordningFeiletModal = new OppgavetilordningFeilet("oppgavetilordningModal");
+        tildeltFlereAlert = new ReactComponentPanel(TILDELT_FLERE_ALERT_WICKET_CONTAINER_ID, TILDELT_FLERE_ALERT, tildeltFlereAlertProps());
 
         aktivtPanel = new NyDialogPanel(AKTIVT_PANEL_ID, grunnInfo);
-        add(aktivtPanel, oppgavetilordningFeiletModal);
+        add(tildeltFlereAlert, aktivtPanel, oppgavetilordningFeiletModal);
+        this.setOutputMarkupId(true);
         settOppForAaBesvareOppgave();
     }
 
@@ -82,8 +96,21 @@ public class DialogPanel extends Panel {
         }
     }
 
+    private Map<String,Object> tildeltFlereAlertProps() {
+        Map<String, Object> props = new HashMap<>();
+        props.put("antallTildelteOppgaver", session.getPlukkedeOppgaver().size());
+        return props;
+    }
+
+    @RunOnEvents({LEGG_TILBAKE_UTFORT, FERDIGSTILT_UTEN_SVAR, MELDING_SENDT_TIL_BRUKER, SVAR_PAA_MELDING, TRAADER_SLAATT_SAMMEN})
+    public void oppdaterTildeltFlereAlert(AjaxRequestTarget target) {
+        tildeltFlereAlert.updateState(tildeltFlereAlertProps());
+        target.add(tildeltFlereAlert);
+    }
+
     @RunOnEvents(SVAR_PAA_MELDING)
     public void visFortsettDialogPanelBasertPaaTraadId(AjaxRequestTarget target, String traadId) {
+        oppdaterTildeltFlereAlert(target);
         List<Melding> traad = henvendelseUtsendingService.hentTraad(grunnInfo.bruker.fnr, traadId,
                 saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet());
         String oppgaveId = null;
@@ -144,7 +171,7 @@ public class DialogPanel extends Panel {
     }
 
     private void erstattDialogPanelMedFortsettDialogPanel(List<Melding> traad, Oppgave oppgave) {
-        aktivtPanel = aktivtPanel.replaceWith(new FortsettDialogPanel(AKTIVT_PANEL_ID, grunnInfo, traad, oppgave, session.getPlukkedeOppgaver().size()));
+        aktivtPanel = aktivtPanel.replaceWith(new FortsettDialogPanel(AKTIVT_PANEL_ID, grunnInfo, traad, oppgave));
     }
 
     private void erstattDialogPanelMedKvitteringspanel(AjaxRequestTarget target) {
@@ -153,9 +180,11 @@ public class DialogPanel extends Panel {
         aktivtPanel = aktivtPanel.replaceWith(kvitteringsPanel);
         aktivtPanel.add(hasCssClassIf("kvittering", Model.of(true)));
 
-        AjaxLink link = (AjaxLink) in((MarkupContainer) aktivtPanel).findComponent(AjaxLink.class).setOutputMarkupId(true);
+        List<AjaxLink> links = (List<AjaxLink>) in((MarkupContainer) aktivtPanel)
+                .findComponents(AjaxLink.class);
+        links.forEach(ajaxLink -> ajaxLink.setOutputMarkupId(true));
         target.add(kvitteringsPanel);
-        target.focusComponent(link);
+        target.focusComponent(links.get(0));
     }
 
     private void clearLokaleParameterVerdier() {
@@ -169,6 +198,13 @@ public class DialogPanel extends Panel {
         target.add(aktivtPanel);
         TextArea textarea = in((MarkupContainer) aktivtPanel).findComponent(TextArea.class);
         target.focusComponent(textarea);
+    }
+
+    @RunOnEvents({NESTE_DIALOG_LENKE_VALGT})
+    public void plukkNesteTildelteOppgave(AjaxRequestTarget target) {
+        session.withOppgaveSomBesvares(session.getPlukkedeOppgaver().get(0))
+                .withOppgaverBlePlukket(true);
+        setResponsePage(PersonPage.class, new PageParameters().set(FNR, session.getOppgaveSomBesvares().get().fnr));
     }
 
     @RunOnEvents({FERDIGSTILT_UTEN_SVAR})
