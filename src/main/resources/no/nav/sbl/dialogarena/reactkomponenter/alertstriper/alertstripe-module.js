@@ -30,7 +30,7 @@ class Alertstripe extends Component {
 }
 
 Alertstripe.propTypes = {
-    tekst: PT.string.isRequired,
+    tekst: PT.string,
     type: PT.oneOf(['suksess', 'advarsel', 'info'])
 };
 Alertstripe.defaultProps = {
