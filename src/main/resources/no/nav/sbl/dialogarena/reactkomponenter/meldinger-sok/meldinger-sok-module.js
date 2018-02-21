@@ -18,6 +18,7 @@ class MeldingerSok extends Component {
         }, this.props));
         this.state = this.store.getState();
         this.props.setVisModalVindu(() => this.vis());
+        this.props.setSkjulModalVindu(() => this.skjul());
     }
     componentDidMount() {
         this.store.setContainerElement(this.modalRef.portalElement);
@@ -78,7 +79,8 @@ MeldingerSok.propTypes = {
     submitErrorMessage: PT.string,
     submitError: PT.bool,
     onSubmit: PT.func,
-    setVisModalVindu: PT.func
+    setVisModalVindu: PT.func,
+    setSkjulModalVindu: PT.func
 };
 
 const defaultOnSubmit = (event, state, onSuccess) => {
@@ -98,7 +100,8 @@ MeldingerSok.defaultProps = {
     },
     className: 'meldinger-sok',
     onSubmit: defaultOnSubmit,
-    setVisModalVindu: () => {}
+    setVisModalVindu: () => {},
+    setSkjulModalVindu: () => {}
 };
 
 export default MeldingerSok;

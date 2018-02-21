@@ -34,12 +34,13 @@ class LeggTilbakeDelvisSvarPanel extends Component {
     }
 
     lagKvittering() {
+        const nesteDialogKnapp = this.props.startNesteDialogId ? this.lagNesteDialogKnapp() : null;
         return (
             <div className="kvittering">
                 <div className="robust-ikon-gront-sjekk" />
                 <h2 className="medium">Delsvar er registrert</h2>
                 <div className="knapper">
-                    {this.lagNesteDialogKnapp()}
+                    {nesteDialogKnapp}
                     <button className="knapp-stor" onClick={this.startNyDialogCallback}>
                         Start Ny Dialog
                     </button>
@@ -49,9 +50,6 @@ class LeggTilbakeDelvisSvarPanel extends Component {
     }
 
     lagNesteDialogKnapp() {
-        if (!this.props.startNesteDialogId) {
-            return null;
-        }
         return (
             <button className={"knapp-hoved startNesteDialog"} onClick={this.startNesteDialogCallback}>
                 Gå til neste spørsmål
