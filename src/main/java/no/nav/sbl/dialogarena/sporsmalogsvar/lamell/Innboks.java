@@ -29,10 +29,7 @@ import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
 
 import javax.inject.Inject;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
@@ -52,6 +49,7 @@ public class Innboks extends Lerret {
     public static final String TRAADER_SLAATT_SAMMEN = "slaaSammenEvent";
 
     private InnboksVM innboksVM;
+    private final ReactComponentPanel slaaSammenTraaderPanel;
 
     @Inject
     OppgaveBehandlingService oppgaveBehandlingService;
@@ -105,10 +103,11 @@ public class Innboks extends Lerret {
         });
         innboksButtonContainer.add(meldingerSokToggleButton);
 
-        final ReactComponentPanel slaaSammenTraaderPanel = new ReactComponentPanel("slaaSammenTraaderContainer", "SlaaSammenTraader", getSlaaSammenTraaderProps());
+        slaaSammenTraaderPanel = new ReactComponentPanel("slaaSammenTraaderContainer", "SlaaSammenTraader", getSlaaSammenTraaderProps());
         AjaxLink slaaSammenTraaderToggleButton = new SokKnapp("slaaSammenTraaderToggle") {
             @Override
             public void onClick(AjaxRequestTarget target) {
+                slaaSammenTraaderPanel.setVisibilityAllowed(true);
                 innboksVM.oppdaterMeldinger();
                 target.add(alleMeldingerPanel, traaddetaljerPanel);
                 slaaSammenTraaderPanel.call("vis", getSlaaSammenTraaderProps());
@@ -122,7 +121,10 @@ public class Innboks extends Lerret {
             List<String> traadIder = (List<String>) data;
             slaaSammenTraader(traadIder);
             innboksVM.oppdaterMeldinger();
+            target.add(this);
             send(getPage(), DEPTH, TRAADER_SLAATT_SAMMEN);
+            slaaSammenTraaderPanel.call("skjul");
+            slaaSammenTraaderPanel.setVisibilityAllowed(false);
         });
         innboksButtonContainer.add(slaaSammenTraaderToggleButton);
 
@@ -142,9 +144,11 @@ public class Innboks extends Lerret {
             }
         }
 
+        List<String> meldingsIder = hentMeldingsIderFraTraadIder(traadIder);
+
         String nyTraadId;
         try {
-            nyTraadId = henvendelseUtsendingService.slaaSammenTraader(hentMeldingsIderFraTraadIder(traadIder));
+            nyTraadId = henvendelseUtsendingService.slaaSammenTraader(meldingsIder);
         } catch (TraadAlleredeBesvart e) {
             haandterTraadAlleredeBesvart(e.traadId);
             return;
@@ -161,6 +165,8 @@ public class Innboks extends Lerret {
         DialogSession.read(this)
                 .withOppgaveSomBesvares(oppdatertOppgave)
                 .withOppgaverBlePlukket(true);
+        innboksVM.oppdaterMeldinger();
+        innboksVM.setValgtMelding(meldingsIder.stream().map(String::toUpperCase).max(Comparator.naturalOrder()).get());
 
         send(getPage(), DEPTH, new NamedEventPayload(Events.SporsmalOgSvar.SVAR_PAA_MELDING, nyTraadId));
     }
