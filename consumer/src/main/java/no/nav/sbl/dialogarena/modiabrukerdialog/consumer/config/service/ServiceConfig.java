@@ -3,6 +3,8 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.service;
 import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navansatt.GOSYSNAVansatt;
 import no.nav.brukerdialog.security.tilgangskontroll.policy.pep.EnforcementPoint;
 import no.nav.kjerneinfo.consumer.fim.person.PersonKjerneinfoServiceBi;
+import no.nav.kjerneinfo.consumer.fim.person.support.DefaultPersonKjerneinfoService;
+import no.nav.kjerneinfo.consumer.fim.person.support.KjerneinfoMapper;
 import no.nav.modig.content.PropertyResolver;
 import no.nav.modig.wicket.services.HealthCheckService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveBehandlingService;
@@ -45,6 +47,7 @@ import no.nav.tjeneste.virksomhet.oppgave.v3.OppgaveV3;
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.OppgavebehandlingV3;
 import no.nav.tjeneste.virksomhet.organisasjonenhetkontaktinformasjon.v1.binding.OrganisasjonEnhetKontaktinformasjonV1;
 import no.nav.tjeneste.virksomhet.pensjonsak.v1.PensjonSakV1;
+import no.nav.tjeneste.virksomhet.person.v3.PersonV3;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -166,6 +169,12 @@ public class ServiceConfig {
     public OppfolgingsenhetService oppfolgingsenhetService(OppfoelgingPortType oppfoelgingPortType,
                                                           OrganisasjonEnhetV2Service organisasjonEnhetV2Service) {
         return new OppfolgingsenhetServiceImpl(oppfoelgingPortType, organisasjonEnhetV2Service);
+    }
+
+    @Bean
+    public PersonKjerneinfoServiceBi personKjerneinfoServiceBi(PersonV3 personPortType, KjerneinfoMapper kjerneinfoMapper,
+                                                               @Named("pep") EnforcementPoint kjerneinfoPep, OrganisasjonEnhetV2Service organisasjonEnhetV2Service) {
+        return new DefaultPersonKjerneinfoService(personPortType, kjerneinfoMapper, kjerneinfoPep, organisasjonEnhetV2Service);
     }
 
 }

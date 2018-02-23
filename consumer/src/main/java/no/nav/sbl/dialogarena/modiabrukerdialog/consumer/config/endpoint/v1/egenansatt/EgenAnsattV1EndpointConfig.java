@@ -12,14 +12,14 @@ import static no.nav.sbl.dialogarena.common.cxf.InstanceSwitcher.createMetricsPr
 @Configuration
 public class EgenAnsattV1EndpointConfig {
 
-    private static final String EGEN_ANSATT_KEY = "egenansatt.v1.url";
+    private static final String PERSON_MOCK_KEY = "start.kjerneinfo.withmock";
 
     @Bean
     public EgenAnsattV1 egenAnsattV1() {
         final EgenAnsattV1 egenAnsattV1 = lagEndpoint();
         final EgenAnsattV1 egenAnsattV1Mock = lagMockEndpoint();
 
-        return createMetricsProxyWithInstanceSwitcher("egenAnsattV1", egenAnsattV1, egenAnsattV1Mock, EGEN_ANSATT_KEY, EgenAnsattV1.class);
+        return createMetricsProxyWithInstanceSwitcher("egenAnsattV1", egenAnsattV1, egenAnsattV1Mock, PERSON_MOCK_KEY, EgenAnsattV1.class);
     }
 
     private EgenAnsattV1 lagMockEndpoint() {
