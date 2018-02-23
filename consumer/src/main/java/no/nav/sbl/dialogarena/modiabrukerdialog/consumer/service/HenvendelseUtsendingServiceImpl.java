@@ -20,6 +20,8 @@ import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.gsak.SakerServic
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.ldap.LDAPService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.Feature;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.FeatureToggle;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.henvendelse.delsvar.DelsvarSammenslaaer;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.henvendelse.delsvar.DelsvarUtils;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.behandlehenvendelse.BehandleHenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.senduthenvendelse.SendUtHenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.senduthenvendelse.WSBehandlingskjedeErAlleredeBesvart;
@@ -174,6 +176,16 @@ public class HenvendelseUtsendingServiceImpl implements HenvendelseUtsendingServ
             throw new ApplicationException(String.format("Fant ingen meldinger for fnr: %s med traadId: %s", fnr, traadId));
         }
 
+        gjorTilgangSjekk(valgtEnhet, meldinger);
+
+        if (DelsvarUtils.harAvsluttendeSvarEtterDelsvar(meldinger)) {
+            meldinger = DelsvarSammenslaaer.sammenslaFullforteDelsvar(meldinger);
+        }
+
+        return meldinger;
+    }
+
+    private void gjorTilgangSjekk(String valgtEnhet, List<Melding> meldinger) {
         Melding sporsmal = meldinger.get(0);
         if (sporsmal.kontorsperretEnhet != null) {
             pep.assertAccess(forRequest(
@@ -189,8 +201,6 @@ public class HenvendelseUtsendingServiceImpl implements HenvendelseUtsendingServ
                     subjectAttribute("urn:nav:ikt:tilgangskontroll:xacml:subject:localenhet", valgtEnhet),
                     resourceAttribute("urn:nav:ikt:tilgangskontroll:xacml:resource:bruker-enhet", defaultString(sporsmal.brukersEnhet))));
         }
-
-        return meldinger;
     }
 
     private String[] getHenvendelseTyper() {

@@ -11,7 +11,7 @@
     <name>Dialogarena - modiabrukerdialog</name>
     <groupId>no.nav.sbl.dialogarena</groupId>
     <artifactId>modiabrukerdialog</artifactId>
-    <version>14.3.1-SNAPSHOT</version>
+    <version>14.3.3-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <modules>
@@ -98,13 +98,13 @@
         <!-- Samme som Jetty -->
 
         <!-- Modia-komponenter-->
-        <reactkomponenter.version>1640</reactkomponenter.version>
+        <reactkomponenter.version>1648</reactkomponenter.version>
         <personsok.version>4.0.2</personsok.version>
         <kjerneinfo.versjon>6.0.11</kjerneinfo.versjon>
         <utbetaling.version>4.0.0</utbetaling.version>
-        <saksoversikt.version>9.0.2.1</saksoversikt.version>
+        <saksoversikt.version>9.0.3</saksoversikt.version>
         <varsling.modia.version>2.0</varsling.modia.version>
-        <sporsmalogsvar.version>8.1.0</sporsmalogsvar.version>
+        <sporsmalogsvar.version>8.1.2</sporsmalogsvar.version>
         <modia-felleskomponenter.version>4.3</modia-felleskomponenter.version>
 
         <!-- Tjenestespecs -->
