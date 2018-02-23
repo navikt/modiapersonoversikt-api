@@ -38,10 +38,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.StringWriter;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.URLParametere.URL_TIL_SESSION_PARAMETERE;
 import static org.apache.commons.lang3.StringUtils.isBlank;
@@ -178,16 +175,15 @@ public class Hode extends WebMarkupContainer {
             modal.show(target, fnr);
         } catch (ApplicationException ex) {
             logger.error("ApplicationException ved kall på getPersonKjerneinfo", ex.getMessage());
-            target.appendJavaScript(component.getUpdateScript(component.getString(ex.getLocalizedMessage())));
+            target.prependJavaScript(component.getUpdateScript(getFeilmelding(component, ex)));
+        }
+    }
 
-            if (ex.getCause() instanceof HentPersonPersonIkkeFunnet) {
-                logger.info("person ikke funnet");
-                sendGotoHentPersonPageEvent(component, component.getString(ex.getLocalizedMessage()), null, fnr);
-            } else {
-                logger.error("ApplicationException ved kall på getPersonKjerneinfo", ex);
-                sendGotoHentPersonPageEvent(component, component.getString(ex.getLocalizedMessage()), null, null);
-            }
-
+    private String getFeilmelding(Hode component, ApplicationException ex) {
+        try {
+            return component.getString(ex.getId());
+        } catch (MissingResourceException exception) {
+            return ex.getMessage();
         }
     }
 
