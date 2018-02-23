@@ -2,6 +2,8 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.service;
 
 import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navansatt.GOSYSNAVansatt;
 import no.nav.brukerdialog.security.tilgangskontroll.policy.pep.EnforcementPoint;
+import no.nav.kjerneinfo.consumer.fim.behandleperson.BehandlePersonServiceBi;
+import no.nav.kjerneinfo.consumer.fim.behandleperson.DefaultBehandlePersonService;
 import no.nav.kjerneinfo.consumer.fim.person.PersonKjerneinfoServiceBi;
 import no.nav.kjerneinfo.consumer.fim.person.support.DefaultPersonKjerneinfoService;
 import no.nav.kjerneinfo.consumer.fim.person.support.KjerneinfoMapper;
@@ -41,6 +43,7 @@ import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.senduthenvendelse.Send
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.henvendelse.HenvendelsePortType;
 import no.nav.tjeneste.virksomhet.arbeidsfordeling.v1.ArbeidsfordelingV1;
 import no.nav.tjeneste.virksomhet.aktoer.v1.AktoerPortType;
+import no.nav.tjeneste.virksomhet.behandleperson.v1.BehandlePersonV1;
 import no.nav.tjeneste.virksomhet.oppfoelging.v1.OppfoelgingPortType;
 import no.nav.tjeneste.virksomhet.oppfolgingsinfo.v1.OppfolgingsinfoV1;
 import no.nav.tjeneste.virksomhet.oppgave.v3.OppgaveV3;
@@ -175,6 +178,11 @@ public class ServiceConfig {
     public PersonKjerneinfoServiceBi personKjerneinfoServiceBi(PersonV3 personPortType, KjerneinfoMapper kjerneinfoMapper,
                                                                @Named("pep") EnforcementPoint kjerneinfoPep, OrganisasjonEnhetV2Service organisasjonEnhetV2Service) {
         return new DefaultPersonKjerneinfoService(personPortType, kjerneinfoMapper, kjerneinfoPep, organisasjonEnhetV2Service);
+    }
+
+    @Bean
+    BehandlePersonServiceBi behandlePersonServiceBi(BehandlePersonV1 behandlePersonV1) {
+        return new DefaultBehandlePersonService(behandlePersonV1);
     }
 
 }
