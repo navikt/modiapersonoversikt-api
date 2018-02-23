@@ -175,7 +175,7 @@ public class Hode extends WebMarkupContainer {
             modal.show(target, fnr);
         } catch (ApplicationException ex) {
             logger.error("ApplicationException ved kall på getPersonKjerneinfo", ex.getMessage());
-            target.prependJavaScript(component.getUpdateScript(getFeilmelding(component, ex)));
+            target.appendJavaScript(component.getUpdateScript(getFeilmelding(component, ex)));
         }
     }
 
