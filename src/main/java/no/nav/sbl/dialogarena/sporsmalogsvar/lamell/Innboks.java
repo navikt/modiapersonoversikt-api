@@ -166,7 +166,7 @@ public class Innboks extends Lerret {
                 .withOppgaveSomBesvares(oppdatertOppgave)
                 .withOppgaverBlePlukket(true);
         innboksVM.oppdaterMeldinger();
-        innboksVM.setValgtMelding(meldingsIder.stream().map(String::toUpperCase).max(Comparator.naturalOrder()).get());
+        innboksVM.setValgtMelding(meldingsIder.stream().max(String::compareToIgnoreCase).get());
 
         send(getPage(), DEPTH, new NamedEventPayload(Events.SporsmalOgSvar.SVAR_PAA_MELDING, nyTraadId));
     }

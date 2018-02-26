@@ -13,7 +13,7 @@
     <description>Prosjekt med felleskomponenter for løsningsområdet Spørsmål og svar - innside og utside.</description>
     <groupId>no.nav.sbl.dialogarena</groupId>
     <artifactId>sporsmal-og-svar</artifactId>
-    <version>8.1.1-SNAPSHOT</version>
+    <version>8.1.1-OPP-24-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <properties>
@@ -35,7 +35,7 @@
         <send.ut.henvendelse.version>0.7</send.ut.henvendelse.version>
         <behandle.henvendelse.version>0.21</behandle.henvendelse.version>
         <gsak.oppgave.version>0.0.12</gsak.oppgave.version>
-        <modiabrukerdialog.version>14.1.4-SNAPSHOT</modiabrukerdialog.version>
+        <modiabrukerdialog.version>14.3.1-OPP-24-SNAPSHOT</modiabrukerdialog.version>
         <reactkomponenter.version>3.0.5-SNAPSHOT</reactkomponenter.version>
         <modia-felleskomponenter.version>4.2</modia-felleskomponenter.version>
         <nav-metrics.version>2017.08.30.10.22</nav-metrics.version>
