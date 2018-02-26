@@ -15,21 +15,7 @@ import static org.mockito.Mockito.when;
 @Configuration
 public class AktoerPortTypeMock {
 
-    /**
-     *
-     *
-     * NB! HUSK Å SETTE FØDSELSNUMMERKOBLING I PersonKjerneinfoServiceBiMock.java
-     *
-     * FORMAT: AKTØRID //FNR
-     *
-     */
-
-//    public static final String AKTOER_ID_MOCK = "1000042149824"; // 15065933818
-//    public static final String AKTOER_ID_MOCK = "***REMOVED***"; // 09076841419
-//    public static final String AKTOER_ID_MOCK = "1000049440885"; // 18108338799
-//    public static final String AKTOER_ID_MOCK = "1000009921291"; // 31018322148
     public static final String AKTOER_ID_MOCK = "***REMOVED***"; // ***REMOVED*** (ikke NPE)
-
 
     @Bean
     public AktoerPortType getAktoerPortTypeMock() {

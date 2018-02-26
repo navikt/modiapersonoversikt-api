@@ -16,10 +16,4 @@ public class Events {
 
     }
 
-    public static class Brukerprofil {
-        private static final String PREFIX = "brukerprofil";
-
-        //Sendes fra no.nav.brukerprofil.BrukerprofilPanel
-        public static final String BRUKERPROFIL_OPPDATERT = PREFIX + "Oppdatert";
-    }
 }

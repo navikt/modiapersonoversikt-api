@@ -19,7 +19,6 @@ import org.mockito.ArgumentCaptor;
 import java.io.IOException;
 import java.util.Optional;
 
-import static no.nav.kjerneinfo.consumer.fim.person.mock.PersonKjerneinfoServiceMock.PERSON;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
@@ -36,6 +35,7 @@ class ArbeidsfordelingV1ServiceTest {
     private static final String BEHANDLINGSTYPE = "ae0106";
     private static final String MAPPET_OPPGAVETYPE = "JFR";
     private static final String GEOGRAFISK_TILKNYTNING = "0219";
+    private static final String PERSON = "11111111111";
 
     private ArbeidsfordelingV1Service arbeidsfordelingService;
     private ArbeidsfordelingV1 arbeidsfordeling;

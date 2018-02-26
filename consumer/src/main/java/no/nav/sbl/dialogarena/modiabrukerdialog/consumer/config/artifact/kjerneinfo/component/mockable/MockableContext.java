@@ -1,5 +1,7 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.artifact.kjerneinfo.component.mockable;
 
+import no.nav.kjerneinfo.consumer.fim.behandleperson.config.BehandlePersonEndpointConfig;
+import no.nav.kjerneinfo.consumer.fim.person.config.PersonV3EndpointConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.artifact.kjerneinfo.component.mockable.wrapper.*;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
@@ -18,8 +20,9 @@ import org.springframework.context.annotation.Import;
         KjerneinfoMapperConfigResolver.class,
         KjerneinfoMapperWrapper.class,
 
-        PersonKjerneinfoConsumerConfigResolver.class,
-        PersonKjerneinfoWrapper.class,
+        PersonV3EndpointConfig.class,
+        KjerneinfoMapperConfigResolver.class,
+        BehandlePersonEndpointConfig.class,
 
         SykmeldingsperioderPanelConfigResolver.class,
         SykmeldingsperioderWrapper.class,
