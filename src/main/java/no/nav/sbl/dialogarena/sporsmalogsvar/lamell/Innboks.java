@@ -259,6 +259,9 @@ public class Innboks extends Lerret {
         Map<String, Object> props = getMeldingerSokProps();
         props.put("traadIder", innboksVM.tildelteOppgaver.stream()
                 .map(oppgave -> oppgave.henvendelseId)
+                .filter(henvendelseId -> !innboksVM.getTraader()
+                        .get(henvendelseId)
+                        .harDelsvar())
                 .collect(toList()));
         return props;
     }
