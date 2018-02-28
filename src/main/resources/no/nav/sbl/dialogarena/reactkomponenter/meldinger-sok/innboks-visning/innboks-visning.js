@@ -36,15 +36,16 @@ function lagMeldingsListe(props) {
             aria-atomic="true"
             aria-controls={props.traadvisningsPanelId}
         >
+            <div className="antall-samtaler">
+                Viser <span className="bold">{meldingsListeElementer.length}</span> samtaler
+            </div>
             {meldingsListeElementer}
         </ScrollPortal>
     );
 }
 
-function lagInnboksVisning(props) {
-    const meldingsListe = lagMeldingsListe(props);
-
-    const traadVisning = (
+function lagTraadVisning(props) {
+    return (
         <div
             tabIndex="-1"
             className="sok-forhandsvisning"
@@ -58,6 +59,12 @@ function lagInnboksVisning(props) {
             />
         </div>
     );
+}
+
+function lagInnboksVisning(props) {
+    const meldingsListe = lagMeldingsListe(props);
+
+    const traadVisning = lagTraadVisning(props);
 
     return (
         <div className={'sok-visning ' + (erTom(props) ? 'hidden' : '')}>
