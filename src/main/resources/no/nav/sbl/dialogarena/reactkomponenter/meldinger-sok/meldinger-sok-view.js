@@ -89,16 +89,21 @@ function MeldingerSokView(props) {
     const innboks = lagInnboks(props);
     const tomVisning = lagTomVisning(props);
     return (
-        <form
-            className={cls}
-            onSubmit={(e) => props.onSubmit(e)}
-            onKeyDown={props.keyDownHandler}
-        >
-            {sokeFelt}
-            {innboks}
-            {tomVisning}
-            {submitPanel}
-        </form>
+        <div className={cls}>
+            <form
+                aria-describedby={`modul-description-${props.state.modulNavn}`}
+                onSubmit={(e) => props.onSubmit(e)}
+                onKeyDown={props.keyDownHandler}
+            >
+                {sokeFelt}
+                {innboks}
+                {tomVisning}
+                {submitPanel}
+            </form>
+            <div id={`modul-description-${props.state.modulNavn}`} className="vekk">
+                {props.state.hjelpetekst}
+            </div>
+        </div>
     );
 }
 

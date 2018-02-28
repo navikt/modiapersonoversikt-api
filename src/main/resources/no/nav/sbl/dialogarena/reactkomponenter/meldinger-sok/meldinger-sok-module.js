@@ -79,7 +79,8 @@ MeldingerSok.propTypes = {
     submitButtonProps,
     onSubmit: PT.func,
     setVisModalVindu: PT.func,
-    setSkjulModalVindu: PT.func
+    setSkjulModalVindu: PT.func,
+    hjelpetekst: PT.oneOfType([PT.string, PT.object])
 };
 
 const defaultOnSubmit = (event, state, onSuccess) => {
@@ -97,14 +98,15 @@ MeldingerSok.defaultProps = {
         checkedBoxes: []
     },
     submitButtonProps: {
-        buttonText: "Velg dialog",
-        errorMessage: "Det skjedde en feil.",
+        buttonText: 'Velg dialog',
+        errorMessage: 'Det skjedde en feil.',
         error: false
     },
     className: 'meldinger-sok',
     onSubmit: defaultOnSubmit,
     setVisModalVindu: () => {},
-    setSkjulModalVindu: () => {}
+    setSkjulModalVindu: () => {},
+    hjelpetekst: <h4>Vindu for å søke i meldinger</h4>
 };
 
 export default MeldingerSok;

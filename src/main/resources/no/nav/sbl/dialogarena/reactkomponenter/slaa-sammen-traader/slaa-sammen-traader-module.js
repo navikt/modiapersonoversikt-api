@@ -63,6 +63,17 @@ class SlaaSammenTraader extends Component {
         const buttonText = antallValgteOppgaver < 2
             ? 'Du må velge minst to oppgaver'
             : `Besvar ${antallValgteOppgaver} valgte oppgaver`;
+        const hjelpetekst = (
+            <div>
+                <h4>Vindu for å velge meldinger du ønsker å besvare samtidig.</h4>
+                <ul>
+                    <li>Trykk på radioknapp for å utvide en melding.</li>
+                    <li>Merk meldingene du ønsker å besvare ved å huke av i avkryssningsboks.</li>
+                    <li>Når du har merket minst to meldinger trykker du på knappen "Besvar x valgte oppgaver".</li>
+                    <li>Meldingene blir slått sammen til en enkelt samtale og kan besvares på vanlig måte.</li>
+                </ul>
+            </div>
+        );
         return (
             <MeldingerSok
                 traadIder={this.state.traadIder}
@@ -83,7 +94,8 @@ class SlaaSammenTraader extends Component {
                 onSubmit={(event, state, onSuccess) => this.onSubmit(event, state, onSuccess)}
                 setVisModalVindu={(func) => this.visModal = func}
                 setSkjulModalVindu={(func) => this.skjulModal = func}
-                modulNavn="SlaaSammenTraader"
+                modulNavn="BesvarFlereOppgaverModul"
+                hjelpetekst={hjelpetekst}
             />
         );
     }

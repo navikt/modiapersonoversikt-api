@@ -30,7 +30,7 @@ class MeldingerSokStore extends Store {
 
     update(props) {
         $.extend(this.state, props);
-        if (props.modulNavn != 'SlaaSammenTraader' || this.state.indeksert === false) {
+        if (props.modulNavn != 'BesvarFlereOppgaverModul' || this.state.indeksert === false) {
             $.ajax({
                 async: false,
                 url: '/modiabrukerdialog/rest/meldinger/' + this.state.fnr + '/indekser'
