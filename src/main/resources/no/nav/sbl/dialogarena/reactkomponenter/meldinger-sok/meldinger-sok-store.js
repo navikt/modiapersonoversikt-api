@@ -30,10 +30,12 @@ class MeldingerSokStore extends Store {
 
     update(props) {
         $.extend(this.state, props);
-        $.ajax({
-            async: false,
-            url: '/modiabrukerdialog/rest/meldinger/' + this.state.fnr + '/indekser'
-        });
+        if (props.modulNavn != 'SlaaSammenTraader' || this.state.indeksert === false) {
+            $.ajax({
+                async: false,
+                url: '/modiabrukerdialog/rest/meldinger/' + this.state.fnr + '/indekser'
+            });
+        }
         this.state.indeksert = true;
 
         this.onChange({ target: { value: this.state.fritekst } });
