@@ -77,7 +77,7 @@ function lagInnboks(props) {
             valgtTraad={props.state.valgtTraad}
             listePanelId={props.state.listePanelId}
             traadvisningsPanelId={props.state.traadvisningsPanelId}
-            visCheckbox={props.state.visCheckbox}
+            checkboxProps={props.state.checkboxProps}
         />
     );
 }

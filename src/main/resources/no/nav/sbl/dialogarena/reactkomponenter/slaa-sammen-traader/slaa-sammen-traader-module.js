@@ -3,31 +3,21 @@ import MeldingerSok from '../meldinger-sok/meldinger-sok-module';
 import PT from 'prop-types';
 import WicketSender from '../react-wicket-mixin/wicket-sender';
 
-function findCheckedBoxes() {
-    const boxes = document.querySelectorAll('.slaa-sammen-traader-visning .skjemaelement__input.checkboks');
-    return Array.from(boxes)
-        .filter((checkbox) => checkbox.checked)
-        .map((checkbox) => checkbox.id);
-} //TODO querySelectorAll, serr? do it the react-way
-function clearCheckedBoxes() {
-    const boxes = document.querySelectorAll('.slaa-sammen-traader-visning .skjemaelement__input.checkboks');
-    return Array.from(boxes)
-        .map((checkbox) => checkbox.checked = false);
-} //TODO querySelectorAll, serr? do it the react-way
-
 class SlaaSammenTraader extends Component {
     constructor(props) {
         super();
         this.state = {
             ...props,
             submitError: false,
+            checkedBoxes: [],
             vis: this.vis
         };
         this.sendToWicket = WicketSender.bind(this, props.wicketurl, props.wicketcomponent);
+        this.checkBoxActionHandler = this.checkBoxActionHandler.bind(this);
     }
 
     onSubmit(event, state, lukkModalVindu) {
-        const checkedBoxes = findCheckedBoxes();
+        const checkedBoxes = this.state.checkedBoxes;
         const mindreEnnToTraaderErValgt = checkedBoxes.length < 2;
         if (mindreEnnToTraaderErValgt) {
             this.setState({
@@ -40,10 +30,28 @@ class SlaaSammenTraader extends Component {
         event.preventDefault();
     }
 
+    checkBoxActionHandler(traad) {
+        const traadId = traad.traadId;
+        const newCheckedBoxes = this.state.checkedBoxes;
+        if (this.state.checkedBoxes.includes(traadId)) {
+            const index = newCheckedBoxes.indexOf(traadId);
+            newCheckedBoxes.splice(index, 1);
+        }
+        else {
+            newCheckedBoxes.push(traadId);
+        }
+        this.setState({
+            submitError: false,
+            checkedBoxes: newCheckedBoxes
+        });
+    }
+
     vis(props) {
-        this.setState({ ...this.state, traadIder: props.traadIder });
+        this.setState({
+            traadIder: props.traadIder,
+            checkedBoxes: []
+        });
         this.visModal();
-        clearCheckedBoxes();
     }
 
     skjul() {
@@ -51,6 +59,10 @@ class SlaaSammenTraader extends Component {
     }
 
     render() {
+        const antallValgteOppgaver = this.state.checkedBoxes.length;
+        const buttonText = antallValgteOppgaver < 2
+            ? 'Du må velge minst to oppgaver'
+            : `Besvar ${antallValgteOppgaver} valgte oppgaver`;
         return (
             <MeldingerSok
                 traadIder={this.state.traadIder}
@@ -58,9 +70,13 @@ class SlaaSammenTraader extends Component {
                 traadMarkupIds={this.props.traadMarkupIds}
                 className="slaa-sammen-traader-visning"
                 visSok={false}
-                visCheckbox
+                checkboxProps={{
+                    visCheckbox: true,
+                    checkBoxAction: this.checkBoxActionHandler,
+                    checkedBoxes: this.state.checkedBoxes
+                }}
                 submitButtonProps={{
-                    buttonText: 'Besvar valgte oppgaver',
+                    buttonText,
                     errorMessage: 'Du må velge minst to oppgaver.',
                     error: this.state.submitError
                 }}
@@ -76,6 +92,7 @@ class SlaaSammenTraader extends Component {
 SlaaSammenTraader.propTypes = {
     fnr: PT.string.isRequired,
     traadIder: PT.arrayOf(PT.string).isRequired,
+    traadMarkupIds: PT.object.isRequired,
     wicketcomponent: PT.string.isRequired,
     wicketurl: PT.string.isRequired
 };
