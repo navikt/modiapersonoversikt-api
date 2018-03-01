@@ -67,7 +67,11 @@ public class TraadVM implements Serializable {
     }
 
     public boolean erBehandlet() {
-        return meldinger.size() > 1 || getEldsteMelding().erFraSaksbehandler() || erFerdigstiltUtenSvar();
+        return minstEnMeldingErFraNav() || erFerdigstiltUtenSvar();
+    }
+
+    private boolean minstEnMeldingErFraNav() {
+        return meldinger.stream().anyMatch((meldingVM) -> meldingVM.melding.erFraSaksbehandler());
     }
 
     public boolean erKontorsperret() {

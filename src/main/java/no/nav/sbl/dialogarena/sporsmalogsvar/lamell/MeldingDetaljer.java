@@ -65,11 +65,19 @@ public class MeldingDetaljer extends Panel {
         if (traadVM.harDelsvar()) {
             etiketter.add(new Etikett("Delvis besvart", "delsvar"));
         }
+        if (erTildelt(traadVM.getEldsteMelding().getTraadId())) {
+            etiketter.add(new Etikett("Tildelt meg", "tildelt"));
+        }
         return etiketter;
     }
 
     private TraadVM getTraad(MeldingVM meldingVM, InnboksVM innboksVM) {
         return innboksVM.getTraader().get(meldingVM.getTraadId());
+    }
+
+    private boolean erTildelt(final String traadId) {
+        return innboksVM.tildelteOppgaver.stream()
+                .anyMatch(oppgave -> traadId.equals(oppgave.henvendelseId));
     }
 
     private AbstractReadOnlyModel<Boolean> blirBesvart(final String traadId) {

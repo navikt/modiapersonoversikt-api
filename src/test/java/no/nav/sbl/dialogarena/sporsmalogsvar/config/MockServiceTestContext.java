@@ -9,6 +9,7 @@ import no.nav.modig.common.SporingsLogger;
 import no.nav.modig.content.CmsContentRetriever;
 import no.nav.modig.content.PropertyResolver;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.AnsattEnhet;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.HenvendelseUtsendingService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveBehandlingService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.arbeidsfordeling.ArbeidsfordelingV1Service;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.gsak.GsakKodeverk;
@@ -72,6 +73,11 @@ public class MockServiceTestContext {
         when(henvendelseBehandlingService.getEnhet(anyString())).thenReturn("1234");
         when(henvendelseBehandlingService.hentMeldinger(anyString(), anyString())).thenReturn(new Meldinger(asList(opprettMeldingEksempel())));
         return henvendelseBehandlingService;
+    }
+
+    @Bean
+    public HenvendelseUtsendingService henvendelseUtsendingService() {
+        return mock(HenvendelseUtsendingService.class);
     }
 
     @Bean

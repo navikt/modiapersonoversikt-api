@@ -221,6 +221,7 @@ public class MerkePanel extends AnimertPanel {
             oppgaveBehandlingService.ferdigstillOppgaveIGsak(innboksVM.getValgtTraad().getEldsteMelding().melding.oppgaveId, none(), saksbehandlerValgteEnhet);
 
             send(getPage(), Broadcast.DEPTH, TRAAD_MERKET);
+            innboksVM.traadBesvares = innboksVM.getValgtTraad().getEldsteMelding().getTraadId();
             send(getPage(), Broadcast.DEPTH, FERDIGSTILT_UTEN_SVAR);
             lukkPanel(target);
         }

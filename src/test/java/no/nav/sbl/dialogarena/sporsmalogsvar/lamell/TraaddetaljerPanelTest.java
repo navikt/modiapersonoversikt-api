@@ -25,9 +25,9 @@ import static org.joda.time.DateTime.now;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER_CLASS;
+import static org.springframework.test.annotation.DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD;
 
-@DirtiesContext(classMode = AFTER_CLASS)
+@DirtiesContext(classMode = BEFORE_EACH_TEST_METHOD)
 @ContextConfiguration(classes = {MockServiceTestContext.class})
 @RunWith(SpringJUnit4ClassRunner.class)
 public class TraaddetaljerPanelTest extends WicketPageTest {
