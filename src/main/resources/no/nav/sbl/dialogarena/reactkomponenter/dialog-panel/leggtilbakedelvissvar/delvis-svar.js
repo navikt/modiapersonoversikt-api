@@ -54,7 +54,7 @@ class DelvisSvar extends Component {
         return Ajax.post(url, data);
     }
 
-    validate() {
+    validerParametere() {
         const ugyldigTemagruppe = this.state.valgtTemagruppe === DEFAULT_VALGT_TEMAGRUPPE;
         const ugyldigTekst = this.state.svarValue.length === 0;
         const valideringfeil = ugyldigTemagruppe || ugyldigTekst;
@@ -67,13 +67,26 @@ class DelvisSvar extends Component {
     }
 
     svarDelvis() {
-        this.validate() && this.leggTilbakeDelvisesvar();
+        if (this.state.panelState === panelState.PENDING) {
+            return;
+        }
+
+        if (this.validerParametere()) {
+            this.leggTilbakeDelvisesvar()
+        }
     }
 
     leggTilbakeDelvisesvar() {
+        this.setState({
+            panelState: panelState.PENDING
+        });
+
         const ferdigstillHenvendelsePromise = this.ferdigstillHenvendelse();
         const leggTilbakeOppgavePromise = this.leggTilbakeOppgave();
         Promise.all([ferdigstillHenvendelsePromise, leggTilbakeOppgavePromise]).then(() => {
+            this.setState({
+                panelState: panelState.INITIALIZED,
+            });
             this.props.svarCallback();
         }, (err) => {
             this.setState({
