@@ -36,7 +36,7 @@
         <behandle.henvendelse.version>0.21</behandle.henvendelse.version>
         <gsak.oppgave.version>0.0.12</gsak.oppgave.version>
         <modiabrukerdialog.version>15.0.0</modiabrukerdialog.version>
-        <reactkomponenter.version>3.0.5-SNAPSHOT</reactkomponenter.version>
+        <reactkomponenter.version>1710</reactkomponenter.version>
         <modia-felleskomponenter.version>4.2</modia-felleskomponenter.version>
         <nav-metrics.version>2017.08.30.10.22</nav-metrics.version>
         <jackson.version>2.5.4</jackson.version>
