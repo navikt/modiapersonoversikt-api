@@ -261,7 +261,9 @@ public class Innboks extends Lerret {
 
     private Map<String, Object> getSlaaSammenTraaderProps() {
         Map<String, Object> props = getMeldingerSokProps();
-        props.put("traadIder", innboksVM.getTildelteOppgaverUtenDelsvar());
+        props.put("traadIder", innboksVM.getTildelteOppgaverUtenDelsvar().stream()
+                .map(oppgave -> oppgave.henvendelseId)
+                .collect(toList()));
         return props;
     }
 
