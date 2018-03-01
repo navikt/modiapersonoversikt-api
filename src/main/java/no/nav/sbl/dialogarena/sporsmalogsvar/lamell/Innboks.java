@@ -29,7 +29,10 @@ import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
 
 import javax.inject.Inject;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
@@ -115,7 +118,8 @@ public class Innboks extends Lerret {
                 MetricsFactory.createEvent("hendelse.meldinger-lamell-besvar-flere-knapp.klikk").report();
             }
         };
-        slaaSammenTraaderToggleButton.add(visibleIf(when(sizeOf(innboksVM.tildelteOppgaver), new GreaterThanPredicate<>(1))));
+        slaaSammenTraaderToggleButton.add(visibleIf(when(sizeOf(innboksVM.getTildelteOppgaverUtenDelsvar()),
+                new GreaterThanPredicate<>(1))));
         slaaSammenTraaderPanel.addCallback("slaaSammen", List.class, (target, data) -> {
             @SuppressWarnings("unchecked")
             List<String> traadIder = (List<String>) data;
@@ -257,12 +261,7 @@ public class Innboks extends Lerret {
 
     private Map<String, Object> getSlaaSammenTraaderProps() {
         Map<String, Object> props = getMeldingerSokProps();
-        props.put("traadIder", innboksVM.tildelteOppgaver.stream()
-                .map(oppgave -> oppgave.henvendelseId)
-                .filter(henvendelseId -> !innboksVM.getTraader()
-                        .get(henvendelseId)
-                        .harDelsvar())
-                .collect(toList()));
+        props.put("traadIder", innboksVM.getTildelteOppgaverUtenDelsvar());
         return props;
     }
 

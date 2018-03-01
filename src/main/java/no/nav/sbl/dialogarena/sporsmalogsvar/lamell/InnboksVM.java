@@ -80,6 +80,14 @@ public class InnboksVM implements Serializable {
         }
     }
 
+    public List<Oppgave> getTildelteOppgaverUtenDelsvar() {
+        return tildelteOppgaver.stream()
+                .filter(oppgave -> !getTraader()
+                        .get(oppgave.henvendelseId)
+                        .harDelsvar())
+                .collect(toList());
+    }
+
     public int getTraadLengde(String id) {
         return traaderVM.get(id).getTraadLengde();
     }
