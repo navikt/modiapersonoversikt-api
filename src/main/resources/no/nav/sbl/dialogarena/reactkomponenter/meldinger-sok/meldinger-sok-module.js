@@ -1,160 +1,113 @@
-/* eslint "react/jsx-no-bind": 1 */
-import React from 'react';
-import Modal from './../modal/modal-module';
-import ListevisningKomponent from './listevisning';
-import ForhandsvisningKomponent from './forhandsvisning';
+import React, { Component } from 'react';
 import Utils from './../utils/utils-module';
 import MeldingerSokStore from './meldinger-sok-store';
-import ScrollPortal from './../utils/scroll-portal';
+import MeldingerSokModal from "./meldinger-sok-modal";
+import MeldingerSokView from "./meldinger-sok-view";
+import PT from 'prop-types';
+import { checkboxProps, submitButtonProps } from './types';
 
-const modalConfig = {
-    title: {
-        text: 'Meldingersøk modal',
-        show: false,
-        tag: 'h1.vekk'
-    },
-    description: {
-        text: '',
-        show: false,
-        tag: 'div.vekk'
-    },
-    closeButton: {
-        text: 'Lukk meldingersøk modal',
-        show: true,
-        tag: 'span.vekk'
-    }
-};
+class MeldingerSok extends Component {
 
-/* eslint "react/prefer-es6-class": 1 */
-const MeldingerSok = React.createClass({
-    getInitialState: function getInitialState() {
+    componentWillMount() {
         this.store = new MeldingerSokStore($.extend({}, {
             fritekst: '',
             traader: [],
             valgtTraad: {},
             traadMarkupIds: {},
             listePanelId: Utils.generateId('sok-liste-'),
-            forhandsvisningsPanelId: Utils.generateId('sok-forhandsvisningsPanelId-')
+            traadvisningsPanelId: Utils.generateId('sok-traadvisningsPanelId-')
         }, this.props));
-        return this.store.getState();
-    },
-    componentDidMount: function componentDidMount() {
-        this.store.setContainerElement(this.refs.modal.portalElement);
-        this.store.addListener(this.storeChanged);
-    },
-    componentWillUnmount: function componentDidUnmount() {
-        this.store.removeListener(this.storeChanged);
-    },
-    onChangeProxy: function onChangeProxy(e) {
+        this.state = this.store.getState();
+        this.props.setVisModalVindu(() => this.vis());
+        this.props.setSkjulModalVindu(() => this.skjul());
+    }
+    componentDidMount() {
+        this.store.setContainerElement(this.modalRef.portalElement);
+        this.store.addListener(this.storeChanged.bind(this));
+    }
+    componentWillUnmount() {
+        this.store.removeListener(this.storeChanged.bind(this));
+    }
+    componentWillReceiveProps(props) {
+        this.store.update(props);
+    }
+    onChangeProxy(e) {
         const value = e.target.value;
         if (this.state.fritekst !== value) {
             this.store.onChange(e);
         }
-    },
-    keyDownHandler: function keyDownHandler(event) {
+    }
+    keyDownHandler(event) {
         if (event.keyCode === 13) {
-            this.store.submit(this.skjul, event);
+            this.onSubmit(event);
         }
-    },
-    vis: function vis(props = {}) {
+    }
+    vis(props = {}) {
         this.store.update(props);
-        this.refs.modal.open();
-    },
-    skjul: function skjul() {
-        this.refs.modal.close();
-    },
-    storeChanged: function storeChanged() {
+        this.modalRef.open();
+    }
+    skjul() {
+        this.modalRef.close();
+        this.store.state.indeksert = false;
+    }
+    storeChanged() {
         this.setState(this.store.getState());
-    },
-    render: function render() {
-        const tekstlistekomponenter = this.state.traader.map((traad) => <ListevisningKomponent
-            key={traad.traadId}
-            traad={traad}
-            valgtTraad={this.state.valgtTraad}
-            store={this.store}
-        />);
-        const erTom = this.state.traader.length === 0;
-        const sokVisning = (
-            <div className={'sok-visning ' + (erTom ? 'hidden' : '')}>
-                <ScrollPortal
-                    id={this.state.listePanelId}
-                    className="sok-liste"
-                    role="tablist"
-                    tabIndex="-1"
-                    aria-live="assertive"
-                    aria-atomic="true"
-                    aria-controls={this.state.forhandsvisningsPanelId}
-                >
-                    {tekstlistekomponenter}
-                </ScrollPortal>
-                <div
-                    tabIndex="-1"
-                    className="sok-forhandsvisning"
-                    role="tabpanel"
-                    id={this.state.forhandsvisningsPanelId}
-                    aria-atomic="true"
-                    aria-live="polite"
-                >
-                    <ForhandsvisningKomponent traad={this.state.valgtTraad} />
-                </div>
-            </div>
-        );
-        let tomInnhold;
-        if (this.state.feilet) {
-            tomInnhold = <h1 className="tom" role="alert" aria-atomic="true">Noe feilet</h1>;
-        } else if (this.state.initialisert) {
-            tomInnhold = <h1 className="tom" role="alert" aria-atomic="true">Ingen treff</h1>;
-        } else {
-            tomInnhold = (
-                <div className="tom">
-                    <img src="../img/ajaxloader/hvit/loader_hvit_128.gif" alt="Henter meldinger"></img>
-                </div>
-            );
-        }
+    }
+    onSubmit(e) {
+        const onSuccess = () => this.skjul();
+        this.props.onSubmit(e, this.state, () => onSuccess());
+    }
 
-        const tomVisning = (
-            <div className={'sok-visning ' + (erTom ? '' : 'hidden')}>
-                {tomInnhold}
-            </div>
-        );
-
+    render() {
         return (
-            <Modal
-                ref="modal"
-                title={modalConfig.title}
-                description={modalConfig.description}
-                closeButton={modalConfig.closeButton}
-            >
-                <form
-                    className="sok-layout meldinger-sok"
-                    onSubmit={this.store.submit.bind(this.store, this.skjul)}
-                    onKeyDown={this.keyDownHandler}
-                >
-                    <div tabIndex="-1" className="sok-container">
-                        <div>
-                            <input
-                                type="text"
-                                placeholder="Søk"
-                                value={this.state.fritekst}
-                                title="Søk"
-                                onChange={this.onChangeProxy}
-                                onKeyDown={
-                                    this.store.onKeyDown.bind(
-                                        this.store,
-                                        document.getElementById(this.state.listePanelId))
-                                }
-                                aria-controls={this.state.listePanelId}
-                            />
-                            <img src="../img/sok.svg" alt="Forstørrelseglass-ikon" aria-hidden="true" />
-                        </div>
-                    </div>
-                    {sokVisning}
-                    {tomVisning}
-                    <input type="submit" value="submit" className="hidden" />
-                </form>
-            </Modal>
+            <MeldingerSokModal setRef={ref => this.modalRef = ref} moduleName={this.props.modulNavn}>
+                <MeldingerSokView
+                    onChangeProxy={e => this.onChangeProxy(e)}
+                    keyDownHandler={e => this.keyDownHandler(e)}
+                    onSubmit={(e) => this.onSubmit(e)}
+                    state={this.state}
+                    store={this.store}
+                />
+            </MeldingerSokModal>
         );
     }
-});
+}
 
-module.exports = MeldingerSok;
+MeldingerSok.propTypes = {
+    modulNavn: PT.string,
+    visSok: PT.bool,
+    checkboxProps,
+    submitButtonProps,
+    onSubmit: PT.func,
+    setVisModalVindu: PT.func,
+    setSkjulModalVindu: PT.func,
+    hjelpetekst: PT.oneOfType([PT.string, PT.object])
+};
+
+const defaultOnSubmit = (event, state, onSuccess) => {
+    event.preventDefault();
+    document.getElementById(state.traadMarkupIds[state.valgtTraad.traadId]).click();
+    onSuccess();
+};
+
+MeldingerSok.defaultProps = {
+    modulNavn: 'Meldingersok',
+    visSok: true,
+    checkboxProps: {
+        visCheckbox: false,
+        checkBoxAction: () => {},
+        checkedBoxes: []
+    },
+    submitButtonProps: {
+        buttonText: 'Velg dialog',
+        errorMessage: 'Det skjedde en feil.',
+        error: false
+    },
+    className: 'meldinger-sok',
+    onSubmit: defaultOnSubmit,
+    setVisModalVindu: () => {},
+    setSkjulModalVindu: () => {},
+    hjelpetekst: <h4>Vindu for å søke i dialoger</h4>
+};
+
+export default MeldingerSok;

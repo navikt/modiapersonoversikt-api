@@ -1,10 +1,9 @@
 @border-color: #ccc;
-@sokHeight: 76px;
+@sokHeight: 10%;
 
 .sok-layout {
   height: 100%;
   border: 1px solid @border-color;
-  position: relative;
 
   h1.tomt {
     text-align: center;
@@ -27,10 +26,9 @@
     }
   }
   .sok-visning {
-    position: absolute;
     top: @sokHeight;
-    bottom: 0px;
     width: 100%;
+    height: 100%;
 
     .sok-liste {
       margin: 0;
@@ -45,7 +43,9 @@
       .sok-element {
         border-bottom: 1px solid @border-color;
         position: relative;
-
+        label {
+          display: flex;
+        }
         input[type=radio] {
           position: absolute;
           opacity: 0;
@@ -72,10 +72,6 @@
           .focus-sammensatt-inset-mixin(2px);
           border: 1px solid #ffbd66;
         }
-
-        .melding-data {
-          margin-left: 2rem;
-        }
       }
     }
     .sok-forhandsvisning {
@@ -83,10 +79,6 @@
       height: 100%;
       float: right;
       word-wrap: break-word;
-
-      > div {
-        height: 100%;
-      }
     }
     .tom {
       margin-top: 150px;

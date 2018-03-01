@@ -17,6 +17,11 @@ import thunkMiddleware from 'redux-thunk';
 const middlewares = [thunkMiddleware];
 const mockStore = configureStore(middlewares);
 
+const visningDokumentListePropsMock = {
+    norgUrl: '',
+    gt: ''
+};
+
 describe('VisningDokumentliste', () => {
     const miljovariabler = {
         'temasider.viktigavitelenke': 'DAG'
@@ -43,7 +48,8 @@ describe('VisningDokumentliste', () => {
         vedlegg: [],
         temakodeVisning: 'Test',
         feilWrapper: {},
-        dato: fromDateToJSON(new Date())
+        dato: fromDateToJSON(new Date()),
+        kategoriNotat: ''
     };
     function noop() {}
     const getState = { lerret: { temakodeliste: []  }};
@@ -62,7 +68,7 @@ describe('VisningDokumentliste', () => {
         const element = renderIntoDocument(
             <MiljovariablerProvider miljovariabler={miljovariabler}>
                 <IntlProvider locale="en" messages={messages} formats={formats}>
-                    <VisningDokumentliste {...props} />
+                    <VisningDokumentliste {...props} {...visningDokumentListePropsMock} />
                 </IntlProvider>
             </MiljovariablerProvider>
         );
@@ -93,7 +99,7 @@ describe('VisningDokumentliste', () => {
             <Provider store={store}>
                 <MiljovariablerProvider miljovariabler={miljovariabler}>
                     <IntlProvider locale="en" messages={messages} formats={formats}>
-                        <VisningDokumentliste {...props} />
+                        <VisningDokumentliste {...props} {...visningDokumentListePropsMock} />
                     </IntlProvider>
                 </MiljovariablerProvider>
             </Provider>
@@ -124,7 +130,7 @@ describe('VisningDokumentliste', () => {
         const element = renderIntoDocument(
             <MiljovariablerProvider miljovariabler={miljovariabler}>
                 <IntlProvider locale="en" messages={messages} formats={formats}>
-                    <VisningDokumentliste {...props} />
+                    <VisningDokumentliste {...props} {...visningDokumentListePropsMock} />
                 </IntlProvider>
             </MiljovariablerProvider>
         );
@@ -153,7 +159,7 @@ describe('VisningDokumentliste', () => {
             <Provider store={store}>
                 <MiljovariablerProvider miljovariabler={miljovariabler}>
                     <IntlProvider locale="en" messages={messages} formats={formats}>
-                        <VisningDokumentliste {...props} />
+                        <VisningDokumentliste {...props} {...visningDokumentListePropsMock} />
                     </IntlProvider>
                 </MiljovariablerProvider>
             </Provider>

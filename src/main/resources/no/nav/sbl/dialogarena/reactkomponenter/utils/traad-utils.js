@@ -16,3 +16,29 @@ export function erIkkeBesvart(traad) {
 export function filtrerBortDelviseSvar(traad) {
     return traad.filter(melding => !erDelvisSvar(melding));
 }
+export const TraadMock = {
+    meldinger: [{
+        id: '02',
+        erInngaaende: false,
+        fritekst: 'Daniel er en kul kille',
+        statusTekst: 'StatusTekst',
+        lestStatus: 'LestStatusTekst',
+        temagruppeNavn: 'Temagruppenavn',
+        journalfortTemanavn: 'JournalførtTemanavn',
+        journalfortDatoTekst: 'Datotekst',
+        journalfortSaksId: '123',
+        journalfortAvNavIdent: 'Aremark',
+        visningsDatoTekst: 'Visningsdatotekst',
+        erDokumentMelding: false,
+        skrevetAv: {
+            navn: 'Daniel Winsvold'
+        },
+        journalfortAv: {
+            navn: 'Daniel Journalførersen'
+        }
+    }],
+    traadId: '01',
+    statusTekst: 'StatusTekst',
+    ikontekst: 'ikontekst',
+    antallMeldingerIOpprinneligTraad: 1
+};

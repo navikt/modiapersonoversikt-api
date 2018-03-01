@@ -12,6 +12,8 @@ describe('KnaggInput', () => {
         fritekst: '',
         knagger: [],
         placeholder: 'Søk',
+        store: {},
+        tablisteId: '',
         onChange: function onChange() {
         },
         onKeyDown: function onKeyDown() {

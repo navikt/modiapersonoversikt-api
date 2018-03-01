@@ -1,9 +1,9 @@
 import React from 'react';
 import PT from 'prop-types';
-import Utils from './../utils/utils-module';
+import Utils from '../../utils/utils-module';
 import sanitize from 'sanitize-html';
 import Journalfort from './journalfort';
-import { finnMeldingsForfattere } from '../utils/melding-utils';
+import { finnMeldingsForfattere } from '../../utils/melding-utils';
 
 class Melding extends React.Component {
 

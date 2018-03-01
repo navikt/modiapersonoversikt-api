@@ -1,6 +1,5 @@
-const React = require('react');
+import React from 'react';
 import PT from 'prop-types';
-
 
 const spraak = {
     nb_NO: 'Norsk (Bokmål)',
@@ -15,30 +14,29 @@ const spraak = {
     ur: 'Urdu'
 };
 
-/* eslint "react/prefer-es6-class": 1 */
-const LocaleSelect = React.createClass({
-    propTypes: {
-        tekst: PT.object.isRequired,
-        store: PT.object.isRequired,
-        locale: PT.string
-    },
-    onChange: function onChange(event) {
-        this.props.store.setLocale(event.target.value);
-    },
-    render: function render() {
-        const uniqueLocales = Object.keys(this.props.tekst.innhold);
-        if (uniqueLocales.length <= 1) {
-            return null;
-        }
-        const options = uniqueLocales.map((locale) => (
-            <option key={locale} value={locale}>{spraak[locale] ? spraak[locale] : locale}</option>
-        ));
-        return (
-            <select onChange={this.onChange} value={this.props.locale}>
-                {options}
-            </select>
-        );
-    }
-});
+function onChange(event, props) {
+    props.store.setLocale(event.target.value);
+}
 
-module.exports = LocaleSelect;
+function LocaleSelect(props) {
+    const uniqueLocales = Object.keys(props.tekst.innhold);
+    if (uniqueLocales.length <= 1) {
+        return null;
+    }
+    const options = uniqueLocales.map((locale) => (
+        <option key={locale} value={locale}>{spraak[locale] ? spraak[locale] : locale}</option>
+    ));
+    return (
+        <select onChange={(event) => onChange(event, props)} value={props.locale}>
+            {options}
+        </select>
+    );
+}
+
+LocaleSelect.propTypes = {
+    tekst: PT.object.isRequired,
+    store: PT.object.isRequired,
+    locale: PT.string
+};
+
+export default LocaleSelect;

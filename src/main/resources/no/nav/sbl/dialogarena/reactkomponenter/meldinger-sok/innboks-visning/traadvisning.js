@@ -3,9 +3,9 @@ import PT from 'prop-types';
 import Melding from './melding';
 import DokumentMelding from './dokument-melding';
 import OppgaveMelding from './oppgave-melding';
-import ScrollPortal from './../utils/scroll-portal';
+import ScrollPortal from '../../utils/scroll-portal';
 
-function Forhandsvisning(props) {
+function TraadVisning(props) {
     if (!props.traad.hasOwnProperty('meldinger')) {
         return <noscript />;
     }
@@ -23,29 +23,26 @@ function Forhandsvisning(props) {
     });
 
     const meldingBenevnelse = traad.antallMeldingerIOpprinneligTraad === 1 ? 'melding' : 'meldinger';
-    const antallInformasjon = `Viser <b>${meldinger.length}</b> av 
-                <b>${traad.antallMeldingerIOpprinneligTraad}</b> ${meldingBenevnelse} i dialogen`;
-
+    const antallInformasjon = (
+        <span>
+            Viser <b>{meldinger.length}</b> av <b>{traad.antallMeldingerIOpprinneligTraad}</b> {meldingBenevnelse} i dialogen
+        </span>
+    );
     return (
-        <div>
-            <ScrollPortal className="traadPanel" innerClassName="traad-panel-wrapper">
-                <div className="traadinfo">
-                    <span dangerouslySetInnerHTML={{ __html: antallInformasjon }}></span>
-                </div>
-                <div>{meldingElementer}</div>
-            </ScrollPortal>
-            <div className="velgPanel">
-                <input type="submit" value="Vis dialog" className="knapp-hoved-liten" />
+        <ScrollPortal className="traadPanel" innerClassName="traad-panel-wrapper">
+            <div className="traadinfo">
+                {antallInformasjon}
             </div>
-        </div>
+            <div>{meldingElementer}</div>
+        </ScrollPortal>
     );
 }
 
-Forhandsvisning.propTypes = {
+TraadVisning.propTypes = {
     traad: PT.shape({
         meldinger: PT.array,
         antallMeldingerIOpprinneligTraad: PT.number
-    }).isRequired
+    }).isRequired,
 };
 
-export default Forhandsvisning;
+export default TraadVisning;

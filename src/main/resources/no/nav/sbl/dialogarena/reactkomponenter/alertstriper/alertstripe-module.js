@@ -18,10 +18,12 @@ class Alertstripe extends Component {
                 aria-live="assertive"
                 aria-atomic="true"
                 role="alert"
+                tabIndex="0"
             >
                 <Icon className="alertstripe__ikon" kind={config.ikon} />
                 <span className="alertstripe__tekst">
                     {this.props.tekst}
+                    {this.props.children}
                 </span>
             </div>
         );
@@ -29,7 +31,7 @@ class Alertstripe extends Component {
 }
 
 Alertstripe.propTypes = {
-    tekst: PT.string.isRequired,
+    tekst: PT.string,
     type: PT.oneOf(['suksess', 'advarsel', 'info'])
 };
 Alertstripe.defaultProps = {

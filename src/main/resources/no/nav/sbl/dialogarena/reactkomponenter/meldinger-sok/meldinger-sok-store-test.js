@@ -1,5 +1,3 @@
-/* eslint-env mocha */
-/* eslint no-unused-expressions:0 new-cap:0*/
 import './../test-config';
 import chai, { expect } from 'chai';
 import sinon from 'sinon';
@@ -23,7 +21,8 @@ describe('MeldingerSokStore', () => {
     const initialState = {
         fritekst: '',
         traader: [],
-        valgtTraad: {}
+        valgtTraad: {},
+        modulNavn: ''
     };
 
     it('setter valgt tråd hvis tråder finnes', () => {

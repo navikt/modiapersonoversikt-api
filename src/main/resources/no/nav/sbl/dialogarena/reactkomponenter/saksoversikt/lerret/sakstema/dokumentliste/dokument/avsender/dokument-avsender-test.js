@@ -3,66 +3,63 @@ import './../../../../../../test-config';
 import React from 'react';
 import { expect } from 'chai';
 import DokumentAvsender from './dokument-avsender';
-import { createRenderer } from 'react-addons-test-utils';
+import { shallow } from 'enzyme';
+
+const mockProps = {
+    mottaker: '',
+    kategoriNotat: ''
+};
 
 describe('DokumentAvsender', () => {
     it('Viser inngaaende hvis retningen er inn', () => {
-        const shallowRenderer = createRenderer();
-
         const props = {
+            ...mockProps,
             retning: 'INN',
             avsender: 'SLUTTBRUKER',
             navn: 'Test testesen'
         };
 
-        shallowRenderer.render(<DokumentAvsender {...props} />);
-        const result = shallowRenderer.getRenderOutput();
+        const result = shallow(<DokumentAvsender {...props} />);
 
-        expect(result.type.name).to.equal('Inngaaende');
+        expect(result.is('Inngaaende')).to.be.true;
     });
 
     it('Viser utgaaende hvis retningen er ut', () => {
-        const shallowRenderer = createRenderer();
-
         const props = {
+            ...mockProps,
             retning: 'UT',
             avsender: 'NAV',
             navn: 'NAV'
         };
 
-        shallowRenderer.render(<DokumentAvsender {...props} />);
-        const result = shallowRenderer.getRenderOutput();
+        const result = shallow(<DokumentAvsender {...props} />);
 
-        expect(result.type.name).to.equal('Utgaaende');
+        expect(result.is('Utgaaende')).to.be.true;
     });
 
     it('Viser intern hvis retningen er intern', () => {
-        const shallowRenderer = createRenderer();
-
         const props = {
+            ...mockProps,
             retning: 'INTERN',
             avsender: 'NAV',
             navn: null
         };
 
-        shallowRenderer.render(<DokumentAvsender {...props} />);
-        const result = shallowRenderer.getRenderOutput();
+        const result = shallow(<DokumentAvsender {...props} />);
 
-        expect(result.type.name).to.equal('Intern');
+        expect(result.is('Intern')).to.be.true;
     });
 
     it('Viser ukjent hvis retningen er udefinert', () => {
-        const shallowRenderer = createRenderer();
-
         const props = {
+            ...mockProps,
             retning: 'NOE_ANNET',
             avsender: 'NAV',
             navn: null
         };
 
-        shallowRenderer.render(<DokumentAvsender {...props} />);
-        const result = shallowRenderer.getRenderOutput();
+        const result = shallow(<DokumentAvsender {...props} />);
 
-        expect(result.type).to.equal('span');
+        expect(result.is('span')).to.be.true;
     });
 });

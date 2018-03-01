@@ -2,6 +2,7 @@
 import './../../../test-config';
 import React from 'react';
 import { expect } from 'chai';
+import sinon from 'sinon';
 import { IntlProvider } from 'react-intl';
 import 'intl/locale-data/jsonp/en';
 import { DokumentVisningPage } from './dokument-visning-page';
@@ -117,6 +118,7 @@ describe('DokumentVisningPage', () => {
     it('Gir visningspage uten dokument hvis alt er ferdig lastet og ingen dokumenter', () => {
         const intlProvider = new IntlProvider({ locale: 'en', messages }, {});
         const { intl } = intlProvider.getChildContext();
+        const intlStub = sinon.stub(intl, 'formatMessage');
 
         const props = {
             fnr,
@@ -147,6 +149,8 @@ describe('DokumentVisningPage', () => {
         expect(renderedDokumentVisningPage.length).to.equal(1);
         const renderedDokumentElement = scryRenderedDOMComponentsWithClass(element, 'dokumentheader');
         expect(renderedDokumentElement.length).to.equal(0);
+
+        intlStub.restore();
     });
 
     it('Gir visningspage med dokument hvis alt er ferdig lastet og ett dokumenter', () => {
