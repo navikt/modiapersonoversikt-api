@@ -3,6 +3,7 @@ import ListeElement from './listeelement';
 import ScrollPortal from '../../utils/scroll-portal';
 import TraadVisning from './traadvisning';
 import PT from 'prop-types';
+import { checkboxProps } from '../types';
 
 function erTom(props) {
     return props.traader.length === 0;
@@ -20,11 +21,12 @@ function lagMeldingsListe(props) {
                 key={traad.traadId}
                 traad={traad}
                 onClick={() => props.nyTraadValgtCallback(traad)}
-                visCheckBox={props.visCheckbox}
+                checkboxProps={props.checkboxProps}
                 erValgt={erValgt}
             />
         );
     });
+    const antallTraader = meldingsListeElementer.length;
     return (
         <ScrollPortal
             id={props.listePanelId}
@@ -35,15 +37,16 @@ function lagMeldingsListe(props) {
             aria-atomic="true"
             aria-controls={props.traadvisningsPanelId}
         >
+            <div className="antall-traader">
+                Viser <span className="bold">{antallTraader}</span> {antallTraader > 1 ? 'dialoger' : 'dialog'}
+            </div>
             {meldingsListeElementer}
         </ScrollPortal>
     );
 }
 
-function lagInnboksVisning(props) {
-    const meldingsListe = lagMeldingsListe(props);
-
-    const traadVisning = (
+function lagTraadVisning(props) {
+    return (
         <div
             tabIndex="-1"
             className="sok-forhandsvisning"
@@ -57,6 +60,12 @@ function lagInnboksVisning(props) {
             />
         </div>
     );
+}
+
+function lagInnboksVisning(props) {
+    const meldingsListe = lagMeldingsListe(props);
+
+    const traadVisning = lagTraadVisning(props);
 
     return (
         <div className={'sok-visning ' + (erTom(props) ? 'hidden' : '')}>
@@ -81,11 +90,7 @@ InnboksVisning.propTypes = {
     valgtTraad: PT.object.isRequired,
     listePanelId: PT.string.isRequired,
     traadvisningsPanelId: PT.string.isRequired,
-    visCheckbox: PT.bool
-};
-
-InnboksVisning.defaultProps = {
-    visCheckbox: false
+    checkboxProps: checkboxProps.isRequired
 };
 
 export default InnboksVisning;

@@ -4,6 +4,7 @@ import sanitize from 'sanitize-html';
 import format from 'string-format';
 import AntallMeldinger from './AntallMeldinger';
 import { Checkbox } from 'nav-frontend-skjema';
+import { checkboxProps } from '../types';
 
 function ListeElement(props) {
     const { antallMeldingerIOpprinneligTraad, statusKlasse } = props.traad;
@@ -17,7 +18,15 @@ function ListeElement(props) {
         antallMeldingerIOpprinneligTraad,
         antallMeldingerIOpprinneligTraad === 1 ? 'melding' : 'meldinger'
     );
-    const checkBox = props.visCheckBox ? <Checkbox className="checkbox" label="Besvar denne oppgaven" id={props.traad.traadId} /> : '';
+    const checkBox = props.checkboxProps.visCheckbox
+        ? <Checkbox
+            onClick={() => props.checkboxProps.checkBoxAction(props.traad)}
+            className="checkbox"
+            label="Velg denne oppgaven"
+            id={props.traad.traadId}
+            checked={props.checkboxProps.checkedBoxes.includes(props.traad.traadId)}
+        />
+        : '';
 
     return (
         <div className="sok-element">
@@ -59,7 +68,7 @@ ListeElement.propTypes = {
         erMonolog: PT.bool,
         innhold: PT.string
     }),
-    visCheckBox: PT.bool.isRequired,
+    checkboxProps: checkboxProps.isRequired,
     onClick: PT.func.isRequired,
     erValgt: PT.bool.isRequired
 };

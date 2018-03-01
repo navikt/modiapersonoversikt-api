@@ -4,6 +4,7 @@ import MeldingerSokStore from './meldinger-sok-store';
 import MeldingerSokModal from "./meldinger-sok-modal";
 import MeldingerSokView from "./meldinger-sok-view";
 import PT from 'prop-types';
+import { checkboxProps, submitButtonProps } from './types';
 
 class MeldingerSok extends Component {
 
@@ -47,6 +48,7 @@ class MeldingerSok extends Component {
     }
     skjul() {
         this.modalRef.close();
+        this.store.state.indeksert = false;
     }
     storeChanged() {
         this.setState(this.store.getState());
@@ -74,13 +76,12 @@ class MeldingerSok extends Component {
 MeldingerSok.propTypes = {
     modulNavn: PT.string,
     visSok: PT.bool,
-    visCheckbox: PT.bool,
-    submitButtonValue: PT.string,
-    submitErrorMessage: PT.string,
-    submitError: PT.bool,
+    checkboxProps,
+    submitButtonProps,
     onSubmit: PT.func,
     setVisModalVindu: PT.func,
-    setSkjulModalVindu: PT.func
+    setSkjulModalVindu: PT.func,
+    hjelpetekst: PT.oneOfType([PT.string, PT.object])
 };
 
 const defaultOnSubmit = (event, state, onSuccess) => {
@@ -92,16 +93,21 @@ const defaultOnSubmit = (event, state, onSuccess) => {
 MeldingerSok.defaultProps = {
     modulNavn: 'Meldingersok',
     visSok: true,
-    visCheckbox: false,
+    checkboxProps: {
+        visCheckbox: false,
+        checkBoxAction: () => {},
+        checkedBoxes: []
+    },
     submitButtonProps: {
-        buttonText: "Velg dialog",
-        errorMessage: "Det skjedde en feil.",
+        buttonText: 'Velg dialog',
+        errorMessage: 'Det skjedde en feil.',
         error: false
     },
     className: 'meldinger-sok',
     onSubmit: defaultOnSubmit,
     setVisModalVindu: () => {},
-    setSkjulModalVindu: () => {}
+    setSkjulModalVindu: () => {},
+    hjelpetekst: <h4>Vindu for å søke i dialoger</h4>
 };
 
 export default MeldingerSok;

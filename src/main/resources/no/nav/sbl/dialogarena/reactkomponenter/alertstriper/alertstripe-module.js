@@ -18,6 +18,7 @@ class Alertstripe extends Component {
                 aria-live="assertive"
                 aria-atomic="true"
                 role="alert"
+                tabIndex="0"
             >
                 <Icon className="alertstripe__ikon" kind={config.ikon} />
                 <span className="alertstripe__tekst">

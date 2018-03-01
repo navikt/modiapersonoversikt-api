@@ -1,4 +1,7 @@
 .meldinger-sok {
+  &> form {
+    height: 100%;
+  }
   em {
     font-style: normal;
     background-color: #eed28c;
@@ -23,6 +26,12 @@
     .sok-liste .sok-element {
       border-bottom: solid 1px #d1d1d1;
       background-color: inherit;
+    }
+    .antall-traader {
+      padding: 0.5em;
+      text-align: center;
+      border-bottom: solid 1px #d1d1d1;
+      background-color: white;
     }
     .sok-liste .sok-element .meldingsforhandsvisning {
       background-color: inherit;
@@ -176,5 +185,9 @@
     left: 50%;
     top: 50%;
     transform: translate(-50%,-50%);
+  }
+
+  .bold {
+    font-weight: bold;
   }
 }
