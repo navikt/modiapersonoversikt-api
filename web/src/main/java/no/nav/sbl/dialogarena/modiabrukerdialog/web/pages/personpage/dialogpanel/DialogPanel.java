@@ -38,6 +38,7 @@ import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.Events.
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype.*;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.hentperson.HentPersonPage.FNR;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.fortsettdialogpanel.LeggTilbakePanel.LEGG_TILBAKE_FERDIG;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.Innboks.TRAADER_SLAATT_SAMMEN;
 
 public class DialogPanel extends Panel {
 
@@ -101,7 +102,7 @@ public class DialogPanel extends Panel {
         return props;
     }
 
-    @RunOnEvents({LEGG_TILBAKE_UTFORT, FERDIGSTILT_UTEN_SVAR, MELDING_SENDT_TIL_BRUKER, SVAR_PAA_MELDING})
+    @RunOnEvents({LEGG_TILBAKE_UTFORT, FERDIGSTILT_UTEN_SVAR, MELDING_SENDT_TIL_BRUKER, SVAR_PAA_MELDING, TRAADER_SLAATT_SAMMEN})
     public void oppdaterTildeltFlereAlert(AjaxRequestTarget target) {
         tildeltFlereAlert.updateState(tildeltFlereAlertProps());
         target.add(tildeltFlereAlert);
