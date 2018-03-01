@@ -48,6 +48,7 @@ class MeldingerSok extends Component {
     }
     skjul() {
         this.modalRef.close();
+        this.store.state.indeksert = false;
     }
     storeChanged() {
         this.setState(this.store.getState());
