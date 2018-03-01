@@ -27,6 +27,7 @@ import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.LagreOppgaveOptimistiskLa
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.OppgavebehandlingV3;
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.meldinger.WSEndreOppgave;
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.meldinger.WSLagreOppgaveRequest;
+import no.nav.tjeneste.virksomhet.tildeloppgave.v1.TildelOppgaveV1;
 import org.junit.jupiter.api.*;
 import org.mockito.ArgumentCaptor;
 import org.springframework.mock.web.MockHttpServletRequest;
@@ -51,6 +52,7 @@ class OppgaveControllerTest {
 
     private OppgaveController oppgaveController;
     private OppgavebehandlingV3 oppgaveBehandlingMock;
+    private TildelOppgaveV1 tildelOppgaveMock;
     private OppgaveV3 oppgaveWSMock;
     private AnsattServiceImpl ansattWSMock;
 
@@ -69,13 +71,14 @@ class OppgaveControllerTest {
             HentNAVAnsattEnhetListeFaultGOSYSNAVAnsattIkkeFunnetMsg {
         SubjectHandlerUtil.setInnloggetSaksbehandler(SAKSBEHANDLERS_IDENT);
         setupMocks();
-        OppgaveBehandlingServiceImpl oppgaveBehandlingService = new OppgaveBehandlingServiceImpl(oppgaveBehandlingMock, oppgaveWSMock, ansattWSMock, mock(ArbeidsfordelingV1ServiceImpl.class));
+        OppgaveBehandlingServiceImpl oppgaveBehandlingService = new OppgaveBehandlingServiceImpl(oppgaveBehandlingMock, tildelOppgaveMock, oppgaveWSMock, ansattWSMock, mock(ArbeidsfordelingV1ServiceImpl.class));
 
         oppgaveController = new OppgaveController(oppgaveBehandlingService);
     }
 
     private void setupMocks() throws HentOppgaveOppgaveIkkeFunnet, HentNAVAnsattEnhetListeFaultGOSYSGeneriskMsg, HentNAVAnsattEnhetListeFaultGOSYSNAVAnsattIkkeFunnetMsg, HentNAVAnsattFaultGOSYSGeneriskfMsg, HentNAVAnsattFaultGOSYSNAVAnsattIkkeFunnetMsg {
         oppgaveBehandlingMock = mock(OppgavebehandlingV3.class);
+        tildelOppgaveMock = mock(TildelOppgaveV1.class);
         oppgaveWSMock = mockOppgaveWs();
         ansattWSMock = new AnsattServiceImpl(mockGosysNavAnsatt());
     }

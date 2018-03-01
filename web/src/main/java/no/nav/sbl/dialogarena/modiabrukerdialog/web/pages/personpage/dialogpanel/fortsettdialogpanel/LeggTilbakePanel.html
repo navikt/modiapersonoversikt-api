@@ -36,7 +36,10 @@
     <div wicket:id="feedbackOppgavePanel" class="oppgaveOpprettetFeedback" role="alert" aria-live="rude">
         <div class="robust-ikon-gront-sjekk"></div>
         <p><wicket:message key="leggtilbake.bekreftelse.tekst" /></p>
-        <a wicket:id="lukkKnapp" class="knapp-hoved-stor" role="button"><wicket:message key="leggtilbake.bekreftelse.knapp" /></a>
+        <div class="knapper">
+            <a wicket:id="nesteOppgaveKnapp" class="knapp-hoved-stor" role="button"><wicket:message key="leggtilbake.bekreftelse.neste.knapp" /></a>
+            <a wicket:id="lukkKnapp" class="knapp-hoved-stor" role="button"><wicket:message key="leggtilbake.bekreftelse.knapp" /></a>
+        </div>
     </div>
 </wicket:panel>
 </body>

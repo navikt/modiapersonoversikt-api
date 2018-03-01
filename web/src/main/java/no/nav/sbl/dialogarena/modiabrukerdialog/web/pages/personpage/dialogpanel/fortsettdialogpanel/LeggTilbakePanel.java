@@ -1,14 +1,17 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.fortsettdialogpanel;
 
 import no.nav.metrics.Timer;
+import no.nav.modig.lang.collections.predicate.GreaterThanPredicate;
 import no.nav.modig.wicket.component.indicatingajaxbutton.IndicatingAjaxButtonWithImageUrl;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.DialogSession;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.HenvendelseUtsendingService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.LeggTilbakeOppgaveIGsakRequest;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveBehandlingService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.HenvendelseUtsendingService;
 import org.apache.wicket.Component;
+import org.apache.wicket.Page;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormChoiceComponentUpdatingBehavior;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
@@ -30,10 +33,10 @@ import java.util.List;
 import static java.util.Collections.singletonList;
 import static no.nav.metrics.MetricsFactory.createTimer;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
-import static no.nav.modig.wicket.model.ModelUtils.isEqualTo;
-import static no.nav.modig.wicket.model.ModelUtils.not;
+import static no.nav.modig.wicket.model.ModelUtils.*;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.Events.SporsmalOgSvar.LEGG_TILBAKE_UTFORT;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe.ANSOS;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.DialogPanel.NESTE_DIALOG_LENKE_VALGT;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.fortsettdialogpanel.LeggTilbakeVM.Aarsak;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.fortsettdialogpanel.LeggTilbakeVM.Aarsak.*;
 import static org.apache.commons.lang3.StringUtils.isBlank;
@@ -60,6 +63,7 @@ public class LeggTilbakePanel extends Panel {
     private final WebMarkupContainer feedbackPanelSuccess;
     private final FeedbackPanel feedbackPanel;
     private final AjaxLink lukkKnapp;
+    private final AjaxLink nesteOppgaveKnapp;
     private final String behandlingsId;
     private final Temagruppe gjeldendeTemagruppe;
     private final Radio<Aarsak> inhabil;
@@ -131,7 +135,17 @@ public class LeggTilbakePanel extends Panel {
                 send(getPage(), DEPTH, LEGG_TILBAKE_FERDIG);
             }
         };
-        feedbackPanelSuccess.add(lukkKnapp);
+        nesteOppgaveKnapp = new AjaxLink("nesteOppgaveKnapp") {
+            @Override
+            public void onClick(AjaxRequestTarget target) {
+                Page page = getPage();
+                send(page, DEPTH, LEGG_TILBAKE_FERDIG);
+                send(page, DEPTH, NESTE_DIALOG_LENKE_VALGT);
+            }
+        };
+        nesteOppgaveKnapp.add(visibleIf(when(getAntallTildelt(), new GreaterThanPredicate<>(0))));
+
+        feedbackPanelSuccess.add(nesteOppgaveKnapp, lukkKnapp);
         add(feedbackPanelSuccess);
 
         form.add(lagSubmitKnapp());
@@ -145,6 +159,15 @@ public class LeggTilbakePanel extends Panel {
             }
         });
         add(form);
+    }
+
+    private AbstractReadOnlyModel<Integer> getAntallTildelt() {
+        return new AbstractReadOnlyModel<Integer>() {
+            @Override
+            public Integer getObject() {
+                return DialogSession.read(LeggTilbakePanel.this).getPlukkedeOppgaver().size();
+            }
+        };
     }
 
     private AjaxButton lagSubmitKnapp() {

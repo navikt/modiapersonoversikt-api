@@ -9,6 +9,7 @@ import no.nav.kjerneinfo.consumer.fim.person.support.DefaultPersonKjerneinfoServ
 import no.nav.kjerneinfo.consumer.fim.person.support.KjerneinfoMapper;
 import no.nav.modig.content.PropertyResolver;
 import no.nav.modig.wicket.services.HealthCheckService;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.HenvendelseUtsendingService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveBehandlingService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.arbeidsfordeling.ArbeidsfordelingV1Service;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.gsak.GsakKodeverk;
@@ -51,6 +52,7 @@ import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.OppgavebehandlingV3;
 import no.nav.tjeneste.virksomhet.organisasjonenhetkontaktinformasjon.v1.binding.OrganisasjonEnhetKontaktinformasjonV1;
 import no.nav.tjeneste.virksomhet.pensjonsak.v1.PensjonSakV1;
 import no.nav.tjeneste.virksomhet.person.v3.PersonV3;
+import no.nav.tjeneste.virksomhet.tildeloppgave.v1.TildelOppgaveV1;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -102,9 +104,12 @@ public class ServiceConfig {
     }
 
     @Bean
-    public OppgaveBehandlingService oppgaveBehandlingService(OppgavebehandlingV3 oppgavebehandlingV3, OppgaveV3 oppgaveV3,
-                                                             AnsattService ansattService, ArbeidsfordelingV1Service arbeidsfordelingV1Service) {
-        return new OppgaveBehandlingServiceImpl(oppgavebehandlingV3, oppgaveV3, ansattService, arbeidsfordelingV1Service);
+    public OppgaveBehandlingService oppgaveBehandlingService(OppgavebehandlingV3 oppgavebehandlingV3,
+                                                             TildelOppgaveV1 tildelOppgaveV1,
+                                                             OppgaveV3 oppgaveV3,
+                                                             AnsattService ansattService,
+                                                             ArbeidsfordelingV1Service arbeidsfordelingV1Service) {
+        return new OppgaveBehandlingServiceImpl(oppgavebehandlingV3, tildelOppgaveV1, oppgaveV3, ansattService, arbeidsfordelingV1Service);
     }
 
     @Bean

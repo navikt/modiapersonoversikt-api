@@ -8,14 +8,15 @@ import no.nav.modig.wicket.events.annotations.RunOnEvents;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.Events;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.GrunnInfo;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Kanal;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Oppgave;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.Sak;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.exceptions.JournalforingFeilet;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.HenvendelseUtsendingService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.FeatureToggle;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.HenvendelseUtsendingService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.HenvendelseVM;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.KvitteringsPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.MeldingBuilder;
@@ -32,7 +33,10 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.panel.GenericPanel;
-import org.apache.wicket.model.*;
+import org.apache.wicket.model.AbstractReadOnlyModel;
+import org.apache.wicket.model.CompoundPropertyModel;
+import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.ResourceModel;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
@@ -40,6 +44,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static java.lang.String.format;
+import static java.util.Optional.ofNullable;
 import static no.nav.brukerdialog.security.context.SubjectHandler.getSubjectHandler;
 import static no.nav.metrics.MetricsFactory.createTimer;
 import static no.nav.modig.lang.collections.IterUtils.on;
@@ -50,8 +55,8 @@ import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Kanal.TEKS
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe.KOMMUNALE_TJENESTER;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding.siste;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype.*;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.HenvendelseUtsendingService.OppgaveErFerdigstilt;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.Feature.DELVISE_SVAR;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.HenvendelseUtsendingService.OppgaveErFerdigstilt;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.HenvendelseVM.OppgaveTilknytning.ENHET;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.HenvendelseVM.OppgaveTilknytning.SAKSBEHANDLER;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.util.AnimasjonsUtils.animertVisningToggle;
@@ -79,16 +84,16 @@ public class FortsettDialogPanel extends GenericPanel<HenvendelseVM> {
     public static final String TRAADVISNING_REACT_MODULE = "TraadVisning";
     public static final String TRAADVISNING_WICKET_CONTAINER_ID = "reactTraadVisningContainer";
 
-    public FortsettDialogPanel(String id, GrunnInfo grunnInfo, final List<Melding> traad, String oppgaveId) {
+    public FortsettDialogPanel(String id, GrunnInfo grunnInfo, final List<Melding> traad, Oppgave oppgave) {
         super(id, new CompoundPropertyModel<>(new HenvendelseVM()));
         this.grunnInfo = grunnInfo;
-        this.oppgaveId = oppgaveId;
+        this.oppgaveId = oppgave.oppgaveId;
         this.sporsmal = traad.get(0);
         this.svar = new ArrayList<>(traad.subList(1, traad.size()));
         getModelObject().oppgaveTilknytning = erTilknyttetAnsatt(traad);
         settOppModellMedDefaultKanalOgTemagruppe(getModelObject());
         setOutputMarkupId(true);
-        behandlingsId = opprettHenvendelse();
+        behandlingsId = oppgave.svarHenvendelseId;
 
         svarContainer = new WebMarkupContainer("svarcontainer");
         leggTilbakePanel = new LeggTilbakePanel("leggtilbakepanel", sporsmal.temagruppe, sporsmal.gjeldendeTemagruppe, oppgaveId, sporsmal, behandlingsId);
@@ -233,14 +238,6 @@ public class FortsettDialogPanel extends GenericPanel<HenvendelseVM> {
         target.add(this);
     }
 
-    private String opprettHenvendelse() {
-        String type = SVAR_SKRIFTLIG.toString();
-        String fnr = grunnInfo.bruker.fnr;
-        String behandlingskjedeId = sporsmal.traadId;
-
-        return henvendelseUtsendingService.opprettHenvendelse(type, fnr, behandlingskjedeId);
-    }
-
     private class FortsettDialogForm extends Form<HenvendelseVM> {
 
         private final FeedbackPanel feedbackPanel;
@@ -308,8 +305,10 @@ public class FortsettDialogPanel extends GenericPanel<HenvendelseVM> {
                 error(getString("dialogpanel.feilmelding.send.henvendelse"));
                 target.add(feedbackPanel);
             } finally {
-                timer.stop();
-                timer.report();
+                if (timer != null) {
+                    timer.stop();
+                    timer.report();
+                }
             }
         }
 
@@ -317,7 +316,7 @@ public class FortsettDialogPanel extends GenericPanel<HenvendelseVM> {
             Meldingstype meldingstype = meldingstype(henvendelseVM.kanal, henvendelseVM.brukerKanSvare);
             Melding melding = new MeldingBuilder()
                     .withHenvendelseVM(henvendelseVM)
-                    .withEldsteMeldingITraad(Optional.ofNullable(sporsmal))
+                    .withEldsteMeldingITraad(ofNullable(sporsmal))
                     .withMeldingstype(meldingstype)
                     .withFnr(grunnInfo.bruker.fnr)
                     .withNavident(getSubjectHandler().getUid())
@@ -327,10 +326,10 @@ public class FortsettDialogPanel extends GenericPanel<HenvendelseVM> {
 
             Optional<Sak> sak = Optional.empty();
             if (melding.meldingstype.equals(SPORSMAL_MODIA_UTGAAENDE) && !henvendelseVM.traadJournalfort) {
-                sak = Optional.ofNullable(henvendelseVM.valgtSak);
+                sak = ofNullable(henvendelseVM.valgtSak);
             }
 
-            henvendelseUtsendingService.ferdigstillHenvendelse(melding, Optional.ofNullable(oppgaveId), sak, behandlingsId, saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet());
+            henvendelseUtsendingService.ferdigstillHenvendelse(melding, ofNullable(oppgaveId), sak, behandlingsId, saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet());
         }
 
         private Meldingstype meldingstype(Kanal kanal, boolean brukerKanSvare) {

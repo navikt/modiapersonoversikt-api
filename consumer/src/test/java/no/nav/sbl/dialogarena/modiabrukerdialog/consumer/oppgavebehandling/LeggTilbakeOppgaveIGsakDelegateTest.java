@@ -21,6 +21,7 @@ import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.LagreOppgaveOptimistiskLa
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.OppgavebehandlingV3;
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.meldinger.WSEndreOppgave;
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.meldinger.WSLagreOppgaveRequest;
+import no.nav.tjeneste.virksomhet.tildeloppgave.v1.TildelOppgaveV1;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -46,6 +47,7 @@ class LeggTilbakeOppgaveIGsakDelegateTest {
     private OppgaveV3 oppgaveServiceMock;
     private AnsattService ansattServiceMock;
     private OppgavebehandlingV3 oppgavebehandlingMock;
+    private TildelOppgaveV1 tildelOppgaveMock;
     private SaksbehandlerInnstillingerService saksbehandlerInnstillingerService;
     private ArbeidsfordelingV1Service arbeidsfordelingMock;
 
@@ -66,16 +68,16 @@ class LeggTilbakeOppgaveIGsakDelegateTest {
     @BeforeEach
     void before() {
         mockTjenester();
-        oppgaveBehandlingService = new OppgaveBehandlingServiceImpl(oppgavebehandlingMock, oppgaveServiceMock, ansattServiceMock, arbeidsfordelingMock);
+        oppgaveBehandlingService = new OppgaveBehandlingServiceImpl(oppgavebehandlingMock, tildelOppgaveMock, oppgaveServiceMock, ansattServiceMock, arbeidsfordelingMock);
     }
 
     private void mockTjenester() {
         oppgaveServiceMock = mock(OppgaveV3.class);
         ansattServiceMock = mockAnsattService();
         oppgavebehandlingMock = mock(OppgavebehandlingV3.class);
+        tildelOppgaveMock = mock(TildelOppgaveV1.class);
         saksbehandlerInnstillingerService = mock(SaksbehandlerInnstillingerService.class);
-    arbeidsfordelingMock = mock(ArbeidsfordelingV1ServiceImpl.class);
-
+        arbeidsfordelingMock = mock(ArbeidsfordelingV1ServiceImpl.class);
     }
 
     private AnsattService mockAnsattService() {

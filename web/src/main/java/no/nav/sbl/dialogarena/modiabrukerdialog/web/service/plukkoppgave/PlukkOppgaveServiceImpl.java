@@ -6,7 +6,6 @@ import no.nav.kjerneinfo.domain.person.Personfakta;
 import no.nav.kjerneinfo.domain.person.fakta.AnsvarligEnhet;
 import no.nav.kjerneinfo.domain.person.fakta.Organisasjonsenhet;
 import no.nav.modig.core.exception.AuthorizationException;
-import no.nav.modig.lang.option.Optional;
 import no.nav.brukerdialog.security.tilgangskontroll.policy.pep.EnforcementPoint;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Oppgave;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
@@ -14,8 +13,8 @@ import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveBehandlin
 
 import javax.annotation.Resource;
 import javax.inject.Inject;
+import java.util.List;
 
-import static no.nav.modig.lang.option.Optional.none;
 import static no.nav.brukerdialog.security.tilgangskontroll.utils.AttributeUtils.actionId;
 import static no.nav.brukerdialog.security.tilgangskontroll.utils.AttributeUtils.resourceAttribute;
 import static no.nav.brukerdialog.security.tilgangskontroll.utils.RequestUtils.forRequest;
@@ -33,17 +32,12 @@ public class PlukkOppgaveServiceImpl implements PlukkOppgaveService {
     private EnforcementPoint pep;
 
     @Override
-    public Optional<Oppgave> plukkOppgave(Temagruppe temagruppe, String saksbehandlersValgteEnhet) {
-        Optional<Oppgave> oppgave = oppgaveBehandlingService.plukkOppgaveFraGsak(temagruppe, saksbehandlersValgteEnhet);
-        if (oppgave.isSome()) {
-            if (saksbehandlerHarTilgangTilBruker(oppgave.get())) {
-                return oppgave;
-            } else {
-                return leggTilbakeOgPlukkNyOppgave(oppgave.get(), temagruppe, saksbehandlersValgteEnhet);
-            }
-        } else {
-            return none();
+    public List<Oppgave> plukkOppgaver(Temagruppe temagruppe, String saksbehandlersValgteEnhet) {
+        List<Oppgave> oppgaver = oppgaveBehandlingService.plukkOppgaverFraGsak(temagruppe, saksbehandlersValgteEnhet);
+        if (!oppgaver.isEmpty() && !saksbehandlerHarTilgangTilBruker(oppgaver.get(0))) {
+            return leggTilbakeOgPlukkNyeOppgaver(oppgaver, temagruppe, saksbehandlersValgteEnhet);
         }
+        return oppgaver;
     }
 
     @Override
@@ -51,9 +45,9 @@ public class PlukkOppgaveServiceImpl implements PlukkOppgaveService {
         return oppgaveBehandlingService.oppgaveErFerdigstilt(oppgaveid);
     }
 
-    private Optional<Oppgave> leggTilbakeOgPlukkNyOppgave(Oppgave oppgave, Temagruppe temagruppe, String saksbehandlersValgteEnhet) {
-        oppgaveBehandlingService.systemLeggTilbakeOppgaveIGsak(oppgave.oppgaveId, temagruppe, saksbehandlersValgteEnhet);
-        return plukkOppgave(temagruppe, saksbehandlersValgteEnhet);
+    private List<Oppgave> leggTilbakeOgPlukkNyeOppgaver(List<Oppgave> oppgaver, Temagruppe temagruppe, String saksbehandlersValgteEnhet) {
+        oppgaver.forEach(oppgave -> oppgaveBehandlingService.systemLeggTilbakeOppgaveIGsak(oppgave.oppgaveId, temagruppe, saksbehandlersValgteEnhet));
+        return plukkOppgaver(temagruppe, saksbehandlersValgteEnhet);
     }
 
     private boolean saksbehandlerHarTilgangTilBruker(Oppgave oppgave) {

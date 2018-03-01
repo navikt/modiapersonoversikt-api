@@ -5,7 +5,6 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel
 
 import java.util.Optional;
 
-
 public class MeldingBuilder {
 
     private HenvendelseVM henvendelseVM;

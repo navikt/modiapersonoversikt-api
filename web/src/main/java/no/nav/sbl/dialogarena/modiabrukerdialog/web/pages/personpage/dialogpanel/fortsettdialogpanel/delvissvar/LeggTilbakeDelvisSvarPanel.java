@@ -1,6 +1,7 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.fortsettdialogpanel.delvissvar;
 
 import no.nav.modig.wicket.events.NamedEventPayload;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.DialogSession;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.Events;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
@@ -18,6 +19,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import static java.lang.String.format;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.DialogPanel.NESTE_DIALOG_LENKE_VALGT;
 import static org.apache.wicket.event.Broadcast.BREADTH;
 
 public class LeggTilbakeDelvisSvarPanel extends Panel {
@@ -28,6 +30,7 @@ public class LeggTilbakeDelvisSvarPanel extends Panel {
     public static final String SVAR_DELVIS_CALLBACK_ID = "delvisSvarSendt";
     public static final String AVBRYT_CALLBACK_ID = "avbrytDelvisSvar";
     public static final String START_NY_DIALOG_CALLBACK_ID = "startNyDialog";
+    public static final String START_NESTE_DIALOG_CALLBACK_ID = "startNesteDialog";
     public static final String DEFAULT_SLIDE_DURATION = "400";
 
     private LeggTilbakeDelvisSvarProps leggTilbakeDelvisSvarProps;
@@ -48,7 +51,9 @@ public class LeggTilbakeDelvisSvarPanel extends Panel {
                         )
                 );
 
-        leggTilbakeDelvisSvarProps = new LeggTilbakeDelvisSvarProps(behandlingsId, temagruppeMapping, traad, skrivestotteProps);
+        boolean flereOppgaverIgjen = DialogSession.read(this).getPlukkedeOppgaver().size() > 1;
+
+        leggTilbakeDelvisSvarProps = new LeggTilbakeDelvisSvarProps(behandlingsId, temagruppeMapping, traad, skrivestotteProps, flereOppgaverIgjen);
         add(lagReactPanel());
     }
 
@@ -57,11 +62,16 @@ public class LeggTilbakeDelvisSvarPanel extends Panel {
         reactComponentPanel.addCallback(SVAR_DELVIS_CALLBACK_ID, Void.class, (target, data) -> oppdaterMeldingerUI());
         reactComponentPanel.addCallback(AVBRYT_CALLBACK_ID, Void.class, (target, data) -> lukkDelvisSvarPanel(target));
         reactComponentPanel.addCallback(START_NY_DIALOG_CALLBACK_ID, Void.class, ((target, data) -> startNyDialog(target)));
+        reactComponentPanel.addCallback(START_NESTE_DIALOG_CALLBACK_ID, Void.class, ((target, data) -> startNesteDialog(target)));
         reactComponentPanel
                 .setOutputMarkupId(true)
                 .setVisibilityAllowed(true);
 
         return reactComponentPanel;
+    }
+
+    private void startNesteDialog(AjaxRequestTarget target) {
+        send(getPage(), BREADTH, NESTE_DIALOG_LENKE_VALGT);
     }
 
     private void oppdaterMeldingerUI() {

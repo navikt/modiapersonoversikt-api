@@ -7,6 +7,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.WicketPageTest;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.JacksonMockContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.LamellServicesAndLoaders;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.GrunnInfo;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.DialogPanelTest;
 import no.nav.sykmeldingsperioder.consumer.pleiepenger.mock.PleiepengerMockFactory;
 import org.apache.wicket.event.IEvent;
 import org.joda.time.LocalDate;
@@ -32,13 +33,16 @@ public class LamellContainerTest extends WicketPageTest {
 
     private LamellContainer lamellContainer;
 
-    @InjectMocks
-    private GrunnInfo grunnInfo;
+    private GrunnInfo getMockGrunnInfo() {
+        GrunnInfo.Bruker bruker = new GrunnInfo.Bruker("10108000398", "test", "testesen", "navKontorX", "1234", "");
+        GrunnInfo.Saksbehandler saksbehandler = new GrunnInfo.Saksbehandler("enhetX", "fornavn", "etternavn");
+        return new GrunnInfo(bruker, saksbehandler);
+    }
 
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        lamellContainer = new LamellContainer("lameller", "22222222222", wicket.tester.getSession(), grunnInfo);
+        lamellContainer = new LamellContainer("lameller", wicket.tester.getSession(), getMockGrunnInfo());
     }
 
     @Test(expected = ApplicationException.class)

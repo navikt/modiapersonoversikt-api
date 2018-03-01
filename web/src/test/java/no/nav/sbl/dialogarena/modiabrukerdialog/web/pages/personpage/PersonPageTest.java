@@ -1,10 +1,12 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage;
 
 import junit.framework.Assert;
-import no.nav.kjerneinfo.consumer.fim.person.PersonKjerneinfoServiceBi;
 import no.nav.kjerneinfo.consumer.egenansatt.EgenAnsattService;
+import no.nav.kjerneinfo.consumer.fim.person.PersonKjerneinfoServiceBi;
 import no.nav.kjerneinfo.consumer.fim.person.to.HentKjerneinformasjonResponse;
-import no.nav.kjerneinfo.domain.person.*;
+import no.nav.kjerneinfo.domain.person.Person;
+import no.nav.kjerneinfo.domain.person.Personfakta;
+import no.nav.kjerneinfo.domain.person.Personnavn;
 import no.nav.kjerneinfo.domain.person.fakta.AnsvarligEnhet;
 import no.nav.kjerneinfo.domain.person.fakta.Organisasjonsenhet;
 import no.nav.kjerneinfo.web.pages.kjerneinfo.panel.tab.VisitkortTabListePanel;
@@ -12,12 +14,16 @@ import no.nav.modig.modia.lamell.ReactSjekkForlatModal;
 import no.nav.modig.modia.lamell.TokenLamellPanel;
 import no.nav.modig.wicket.events.NamedEventPayload;
 import no.nav.modig.wicket.test.EventGenerator;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.DialogSession;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.Events;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Oppgave;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.GsakKodeTema;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.HenvendelseUtsendingService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.gsak.GsakKodeverk;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
 import no.nav.personsok.PersonsokPanel;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.HenvendelseUtsendingService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.WicketPageTest;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.PersonPageMockContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.lameller.LamellContainer;
@@ -25,7 +31,6 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.hode.jscallback.SokOp
 import org.apache.wicket.ajax.AjaxRequestHandler;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.json.JSONException;
-import org.apache.wicket.markup.html.link.AbstractLink;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.junit.Before;
 import org.junit.Test;
@@ -37,6 +42,7 @@ import javax.inject.Inject;
 import java.util.ArrayList;
 
 import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 import static no.nav.modig.lang.reflect.Reflect.on;
 import static no.nav.modig.modia.constants.ModiaConstants.HENT_PERSON_BEGRUNNET;
 import static no.nav.modig.modia.events.InternalEvents.FODSELSNUMMER_FUNNET_MED_BEGRUNNElSE;
@@ -45,8 +51,7 @@ import static no.nav.modig.wicket.test.FluentWicketTester.with;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.ofType;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.withId;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe.ARBD;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.PersonPage.VALGT_OPPGAVE_FNR_ATTR;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.PersonPage.VALGT_OPPGAVE_ID_ATTR;
+import static org.hamcrest.Matchers.is;
 import static org.joda.time.DateTime.now;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
@@ -61,14 +66,14 @@ public class PersonPageTest extends WicketPageTest {
     private HenvendelseUtsendingService henvendelseUtsendingService;
     @Inject
     private GsakKodeverk gsakKodeverk;
-
     @Inject
     private PersonKjerneinfoServiceBi personKjerneinfoServiceBi;
-
     @Inject
     private EgenAnsattService egenAnsattService;
+    @Inject
+    private SaksbehandlerInnstillingerService saksbehandlerInnstillingerService;
 
-    private final static String testFnr = "12037649749";
+    private final static String testFnr = "10108000398";
 
     @Before
     public void setUp() {
@@ -79,6 +84,7 @@ public class PersonPageTest extends WicketPageTest {
                         new ArrayList<>(asList(new GsakKodeTema.OppgaveType("kode", "tekst", 1))),
                         new ArrayList<>(asList(new GsakKodeTema.Prioritet("kode", "tekst"))),
                         new ArrayList<>(asList(new GsakKodeTema.Underkategori("kode", "tekst")))))));
+        when(saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet()).thenReturn("0118");
     }
 
     @Test
@@ -130,14 +136,18 @@ public class PersonPageTest extends WicketPageTest {
     }
 
     private void assertSletterPlukketOppgaveFraSessionVedEvent(String event) {
+        Oppgave oppgave1 = new Oppgave("oppgave1", "fnr1", "henvendelse1");
+        DialogSession session = DialogSession.read(wicket.tester.getSession())
+                .withOppgaveSomBesvares(oppgave1)
+                .withPlukkedeOppgaver(new ArrayList<Oppgave>(singletonList(oppgave1)))
+                .withOppgaverBlePlukket(true);
+
         wicket.goTo(PersonPage.class, with().param("fnr", testFnr));
-        wicket.tester.getSession().setAttribute(VALGT_OPPGAVE_FNR_ATTR, "fnr");
-        wicket.tester.getSession().setAttribute(VALGT_OPPGAVE_ID_ATTR, "oppgaveid");
 
         wicket.sendEvent(createEvent(event));
 
-        assertNull(wicket.tester.getSession().getAttribute(VALGT_OPPGAVE_FNR_ATTR));
-        assertNull(wicket.tester.getSession().getAttribute(VALGT_OPPGAVE_ID_ATTR));
+        assertThat(session.getPlukkedeOppgaver().isEmpty(), is(true));
+        assertThat(session.getOppgaveSomBesvares().isPresent(), is(false));
     }
 
     @Test
@@ -242,7 +252,12 @@ public class PersonPageTest extends WicketPageTest {
     }
 
     private Melding lagMelding() {
-        return new Melding().withId("id").withOpprettetDato(now()).withTemagruppe(ARBD.name()).withOppgaveId("id");
+        return new Melding()
+                .withId("id")
+                .withOpprettetDato(now())
+                .withTemagruppe(ARBD.name())
+                .withOppgaveId("id")
+                .withType(Meldingstype.SPORSMAL_SKRIFTLIG);
     }
 
     private HentKjerneinformasjonResponse lagHentKjerneinformasjonResponse() {

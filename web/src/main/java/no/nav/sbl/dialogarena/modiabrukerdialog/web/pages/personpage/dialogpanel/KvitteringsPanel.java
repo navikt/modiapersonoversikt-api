@@ -1,6 +1,8 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel;
 
+import no.nav.modig.lang.collections.predicate.GreaterThanPredicate;
 import no.nav.modig.wicket.events.NamedEventPayload;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.DialogSession;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -12,12 +14,15 @@ import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.StringResourceModel;
 
 import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
+import static no.nav.modig.wicket.model.ModelUtils.when;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe.ANSOS;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.DialogPanel.NESTE_DIALOG_LENKE_VALGT;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.DialogPanel.NY_DIALOG_LENKE_VALGT;
 
 public class KvitteringsPanel extends Panel {
 
     private final AjaxLink startNyDialogLenke;
+    private final AjaxLink nesteDialogLenke;
 
     private String kvitteringsmelding;
     private Temagruppe valgtTemagruppe;
@@ -50,7 +55,20 @@ public class KvitteringsPanel extends Panel {
                 send(getPage(), Broadcast.BREADTH, new NamedEventPayload(NY_DIALOG_LENKE_VALGT));
             }
         };
-        add(startNyDialogLenke, temagruppemeldingLabel, kvitteringsmeldingLabel);
+        nesteDialogLenke = new AjaxLink("nesteDialogLenke") {
+            @Override
+            public void onClick(AjaxRequestTarget target) {
+                KvitteringsPanel.this.setVisibilityAllowed(false);
+                for (Component component : komponenter) {
+                    component.setVisibilityAllowed(true);
+                }
+                target.add(KvitteringsPanel.this);
+                target.add(komponenter);
+                send(getPage(), Broadcast.BREADTH, new NamedEventPayload(NESTE_DIALOG_LENKE_VALGT));
+            }
+        };
+        nesteDialogLenke.add(visibleIf(when(getAntallTildelt(), new GreaterThanPredicate<>(0))));
+        add(nesteDialogLenke, startNyDialogLenke, temagruppemeldingLabel, kvitteringsmeldingLabel);
     }
 
     private AbstractReadOnlyModel<Boolean> temagruppeErAnsos() {
@@ -71,6 +89,15 @@ public class KvitteringsPanel extends Panel {
         visKvitteringsside(target, kvitteringsmelding, komponenter);
     }
 
+    private AbstractReadOnlyModel<Integer> getAntallTildelt() {
+        return new AbstractReadOnlyModel<Integer>() {
+            @Override
+            public Integer getObject() {
+                return DialogSession.read(KvitteringsPanel.this).getPlukkedeOppgaver().size();
+            }
+        };
+    }
+
     private void visKvitteringsside(AjaxRequestTarget target, String kvitteringsmelding, final Component... komponenter) {
         this.kvitteringsmelding = kvitteringsmelding;
         this.komponenter = komponenter;
@@ -80,7 +107,9 @@ public class KvitteringsPanel extends Panel {
         this.setVisibilityAllowed(true);
         target.add(this);
         target.add(komponenter);
-        if (startNyDialogLenke.hasBeenRendered()) {
+        if (nesteDialogLenke.hasBeenRendered()) {
+            target.focusComponent(nesteDialogLenke);
+        } else if (startNyDialogLenke.hasBeenRendered()) {
             target.focusComponent(startNyDialogLenke);
         }
     }

@@ -14,6 +14,7 @@ jQuery(document).ready(function ($) {
     Modig.shortcutListener.on({alt: true, keyCode: 73}, openPesys);  // Alt+i
     Modig.shortcutListener.on({alt: true, keyCode: 67}, openSkrivestotte);  // Alt+c
     Modig.shortcutListener.on({alt: true, keyCode: 81}, openInnboksSok);  // Alt+q
+    Modig.shortcutListener.on({alt: true, keyCode: 74}, openSlaaSammenTraader);  // Alt+j
 
     addPrintEventListener();
 
@@ -100,7 +101,11 @@ jQuery(document).ready(function ($) {
     }
 
     function openInnboksSok() {
-        $('.innboksSokToggle button').click();
+        $('button.meldingerSokToggle').click();
+    }
+
+    function openSlaaSammenTraader() {
+        $('button.slaaSammenTraaderToggle').click();
     }
 
     function closeResetPerson() {

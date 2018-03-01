@@ -17,13 +17,9 @@ import no.nav.modig.modia.events.WidgetHeaderPayload;
 import no.nav.modig.modia.lamell.ReactSjekkForlatModal;
 import no.nav.modig.wicket.events.NamedEventPayload;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.DialogSession;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.Events;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.GrunnInfo;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.ldap.LDAPService;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.organisasjonsEnhetV2.OrganisasjonEnhetV2Service;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.Feature;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.FeatureToggle;
 import no.nav.personsok.PersonsokPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.GrunninfoService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.BasePage;
@@ -39,11 +35,9 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.hode.jscallback.VoidC
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.plukkoppgavepanel.PlukkOppgavePanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.timeout.ReactTimeoutBoksModal;
 import no.nav.sbl.dialogarena.reactkomponenter.utils.wicket.ReactComponentCallback;
-import org.apache.commons.collections15.Closure;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.wicket.Page;
 import org.apache.wicket.RestartResponseException;
-import org.apache.wicket.Session;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.json.JSONException;
 import org.apache.wicket.ajax.json.JSONObject;
@@ -67,16 +61,13 @@ import static no.nav.brukerdialog.security.tilgangskontroll.utils.AttributeUtils
 import static no.nav.brukerdialog.security.tilgangskontroll.utils.AttributeUtils.resourceId;
 import static no.nav.brukerdialog.security.tilgangskontroll.utils.RequestUtils.forRequest;
 import static no.nav.metrics.MetricsFactory.createEvent;
-import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.modia.constants.ModiaConstants.HENT_PERSON_BEGRUNNET;
 import static no.nav.modig.modia.events.InternalEvents.*;
 import static no.nav.modig.modia.lamell.ReactSjekkForlatModal.getJavascriptSaveButtonFocus;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.SessionParametere.SporsmalOgSvar.BESVARMODUS;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.URLParametere.HENVENDELSEID;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.URLParametere.URL_TIL_SESSION_PARAMETERE;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.URLParametere.*;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.lameller.LamellContainer.LAMELL_MELDINGER;
 import static org.apache.commons.lang3.StringUtils.isBlank;
-import static org.apache.commons.lang3.StringUtils.isNotBlank;
 import static org.apache.wicket.event.Broadcast.BREADTH;
 import static org.apache.wicket.event.Broadcast.DEPTH;
 import static org.slf4j.LoggerFactory.getLogger;
@@ -88,12 +79,8 @@ public class PersonPage extends BasePage {
 
     private static final Logger logger = getLogger(PersonPage.class);
 
-    public static final String VALGT_OPPGAVE_HENVENDELSEID_ATTR = "valgt-oppgave-henvendelseid";
-    public static final String VALGT_OPPGAVE_ID_ATTR = "valgt-oppgave-id";
-    public static final String VALGT_OPPGAVE_FNR_ATTR = "valgt-oppgave-fnr";
     public static final String ERROR = "error";
     public static final String SOKT_FNR = "soektfnr";
-    public static final String FNR = "fnr";
     public static final String SIKKERHETSTILTAK = "sikkerhetstiltak";
     public static final ConditionalCssResource INTERN_IE = new ConditionalCssResource(new CssResourceReference(PersonPage.class, "personpage_ie9.css"), "screen", "lt IE 10");
     public static final PackageResourceReference DIALOGPANEL_LESS = new PackageResourceReference(HenvendelseVM.class, "DialogPanel.less");
@@ -102,6 +89,7 @@ public class PersonPage extends BasePage {
 
     private final String fnr;
     private final GrunnInfo grunnInfo;
+    private final DialogPanel dialogPanel;
 
     private LamellContainer lamellContainer;
     private ReactSjekkForlatModal redirectPopup;
@@ -113,12 +101,6 @@ public class PersonPage extends BasePage {
     @Inject
     private PersonKjerneinfoServiceBi personKjerneinfoServiceBi;
     @Inject
-    private SaksbehandlerInnstillingerService saksbehandlerInnstillingerService;
-    @Inject
-    private LDAPService ldapService;
-    @Inject
-    private OrganisasjonEnhetV2Service organisasjonEnhetV2Service;
-    @Inject
     private GrunninfoService grunninfoService;
 
     public PersonPage(PageParameters pageParameters) {
@@ -128,23 +110,19 @@ public class PersonPage extends BasePage {
         } else {
             fnr = pageParameters.get("fnr").toString();
         }
+        DialogSession session = DialogSession.read(this);
         sjekkTilgang(fnr, pageParameters);
         grunnInfo = grunninfoService.hentGrunninfo(fnr);
 
-        if (pageParameters.getNamedKeys().size() > 1) {//FNR er alltid i url
-            clearSession();
+        if (erRequestFraGosys(pageParameters)) {
+            session.withURLParametre(pageParameters);
         }
-
-        boolean parametereBleFunnetOgFlyttet = flyttURLParametereTilSession(pageParameters);
-        if (parametereBleFunnetOgFlyttet) {
-            setResponsePage(this.getClass(), pageParameters);
-            return;
-        }
+        pageParameters.remove(OPPGAVEID, HENVENDELSEID, BESVARMODUS);
 
         redirectPopup = new ReactSjekkForlatModal("redirectModal");
         konfigurerRedirectPopup();
 
-        lamellContainer = new LamellContainer("lameller", grunnInfo.bruker.fnr, getSession(), grunnInfo);
+        lamellContainer = new LamellContainer("lameller", getSession(), grunnInfo);
 
         oppgiBegrunnelseModal = new ReactBegrunnelseModal("oppgiBegrunnelseModal");
         Hode hode = new Hode("hode", oppgiBegrunnelseModal, personKjerneinfoServiceBi, grunnInfo, null);
@@ -153,45 +131,38 @@ public class PersonPage extends BasePage {
             handleRedirect(target, new PageParameters(), HentPersonPage.class);
         }));
 
+        dialogPanel = new DialogPanel("dialogPanel", grunnInfo);
         add(
                 hode,
                 lamellContainer,
                 redirectPopup,
-                new PlukkOppgavePanel("plukkOppgave"),
+                new PlukkOppgavePanel("plukkOppgaver"),
                 new PersonsokPanel("personsokPanel").setVisible(true),
                 new VisittkortPanel("visittkort", fnr).setVisible(true),
                 new NavKontorPanel("brukersNavKontor", fnr),
                 new VisitkortTabListePanel("kjerneinfotabs", createTabs()),
-                new DialogPanel("dialogPanel", grunnInfo),
+                dialogPanel,
                 new ReactTimeoutBoksModal("timeoutBoks", fnr),
                 oppgiBegrunnelseModal
         );
 
-        if (isNotBlank((String) getSession().getAttribute(HENVENDELSEID))) {
+        if (session.getOppgaveFraUrl() != null || session.oppgaverBlePlukket()) {
             lamellContainer.setStartLamell(LAMELL_MELDINGER);
         }
         HentPersonPage.configureModalWindow(oppgiBegrunnelseModal, pageParameters);
+    }
+
+    private boolean erRequestFraGosys(PageParameters pageParameters) {
+        return !pageParameters.get(OPPGAVEID).isEmpty() || !pageParameters.get(HENVENDELSEID).isEmpty();
     }
 
     private String hentFodselsnummerFraRequest() {
         return RequestCycle.get().getRequest().getUrl().getSegments().get(1);
     }
 
-    private void clearSession() {
-        final Session session = getSession();
-        on(URL_TIL_SESSION_PARAMETERE).forEach(new Closure<String>() {
-            @Override
-            public void execute(String param) {
-                session.removeAttribute(param);
-            }
-        });
-        session.removeAttribute(BESVARMODUS);
-    }
-
     @Override
     protected void onAfterRender() {
         super.onAfterRender();
-        fjernURLParamatereFraSession();
     }
 
     private List<AbstractTab> createTabs() {
@@ -216,12 +187,6 @@ public class PersonPage extends BasePage {
             }
         }
         return fantParamVerdi;
-    }
-
-    private void fjernURLParamatereFraSession() {
-        for (String param : URL_TIL_SESSION_PARAMETERE) {
-            getSession().setAttribute(param, null);
-        }
     }
 
     private void konfigurerRedirectPopup() {
@@ -256,6 +221,10 @@ public class PersonPage extends BasePage {
     public void refreshKjerneinfo(AjaxRequestTarget target, PageParameters pageParameters) {
         clearSession();
         handleRedirect(target, pageParameters, PersonPage.class);
+    }
+
+    private void clearSession() {
+        DialogSession.read(this).withURLParametre(new PageParameters());
     }
 
     @RunOnEvents(FODSELSNUMMER_FUNNET_MED_BEGRUNNElSE)
@@ -333,10 +302,8 @@ public class PersonPage extends BasePage {
     }
 
     @RunOnEvents({Events.SporsmalOgSvar.MELDING_SENDT_TIL_BRUKER, Events.SporsmalOgSvar.LEGG_TILBAKE_UTFORT})
-    public void slettPlukketOppgaveFraSession() {
-        getSession().setAttribute(VALGT_OPPGAVE_FNR_ATTR, null);
-        getSession().setAttribute(VALGT_OPPGAVE_ID_ATTR, null);
-        getSession().setAttribute(VALGT_OPPGAVE_HENVENDELSEID_ATTR, null);
+    public void slettBesvartEllerTilbakelagtOppgaveFraSession() {
+        DialogSession.read(this).withOppgaveSomBesvares(null);
     }
 
     @Override
@@ -365,14 +332,6 @@ public class PersonPage extends BasePage {
         }
     }
 
-    /**
-     * Hente forskjellige teksten fra en payload (JSONobjekt).
-     *
-     * @param query
-     * @param jsonField
-     * @return
-     * @throws JSONException
-     */
     protected String getTextFromPayload(String query, String jsonField) throws JSONException {
         return getJsonField(query, jsonField);
     }

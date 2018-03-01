@@ -18,6 +18,8 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 
 import javax.inject.Inject;
 
+import java.util.List;
+
 import static no.nav.brukerdialog.security.context.SubjectHandler.getSubjectHandler;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
 
@@ -57,12 +59,13 @@ public class PurgeOppgaverPage extends BasePage {
     }
 
     private void purgeTemagruppe(Temagruppe temagruppe) {
-        String saksbehandlerValgtEnhet = saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet();
-        Optional<Oppgave> optionalOppgave = plukkOppgaveService.plukkOppgave(temagruppe, saksbehandlerValgtEnhet);
-        while (optionalOppgave.isSome()) {
-            Oppgave oppgave = optionalOppgave.get();
-            oppgaveBehandlingService.systemLeggTilbakeOppgaveIGsak(oppgave.oppgaveId, temagruppe, saksbehandlerValgtEnhet);
-            optionalOppgave = plukkOppgaveService.plukkOppgave(temagruppe, saksbehandlerValgtEnhet);
+        String saksbehandlersValgteEnhet = saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet();
+        List<Oppgave> oppgaver = plukkOppgaveService.plukkOppgaver(temagruppe, saksbehandlersValgteEnhet);
+        while (!oppgaver.isEmpty()) {
+            for (Oppgave oppgave : oppgaver) {
+                oppgaveBehandlingService.systemLeggTilbakeOppgaveIGsak(oppgave.oppgaveId, temagruppe, saksbehandlersValgteEnhet);
+            }
+            oppgaver = plukkOppgaveService.plukkOppgaver(temagruppe, saksbehandlersValgteEnhet);
         }
     }
 }

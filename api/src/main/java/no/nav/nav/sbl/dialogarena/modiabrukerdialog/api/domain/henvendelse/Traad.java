@@ -2,12 +2,13 @@ package no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse;
 
 import org.joda.time.DateTime;
 
+import java.io.Serializable;
 import java.util.List;
 
 import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.toList;
 
-public class Traad {
+public class Traad implements Serializable {
     public final String traadId, temagruppe, journalfortTema, statusKlasse, statusTekst, ikontekst;
     public final List<Melding> meldinger;
     public final DateTime dato;

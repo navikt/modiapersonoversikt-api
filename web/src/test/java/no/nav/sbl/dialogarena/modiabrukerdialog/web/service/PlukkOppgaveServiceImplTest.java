@@ -9,7 +9,6 @@ import no.nav.kjerneinfo.domain.person.Personfakta;
 import no.nav.kjerneinfo.domain.person.fakta.AnsvarligEnhet;
 import no.nav.kjerneinfo.domain.person.fakta.Organisasjonsenhet;
 import no.nav.modig.core.exception.AuthorizationException;
-import no.nav.modig.lang.option.Optional;
 import no.nav.brukerdialog.security.tilgangskontroll.policy.pep.EnforcementPoint;
 import no.nav.brukerdialog.security.tilgangskontroll.policy.request.PolicyRequest;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Oppgave;
@@ -24,7 +23,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import static no.nav.modig.lang.option.Optional.optional;
+import java.util.List;
+
+import static java.util.Collections.emptyList;
+import static java.util.Collections.singletonList;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.service.plukkoppgave.PlukkOppgaveServiceImpl.ATTRIBUTT_ID_ANSVARLIG_ENHET;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
@@ -65,69 +67,69 @@ public class PlukkOppgaveServiceImplTest {
     }
 
     @Test
-    public void girNoneHvisIngenOppgaveFraTjenesten() {
-        when(oppgaveBehandlingService.plukkOppgaveFraGsak(Temagruppe.FMLI, SAKSBEHANDLERS_VALGTE_ENHET)).thenReturn(Optional.<Oppgave>none());
+    public void girEmptyHvisIngenOppgaveFraTjenesten() {
+        when(oppgaveBehandlingService.plukkOppgaverFraGsak(Temagruppe.FMLI, SAKSBEHANDLERS_VALGTE_ENHET)).thenReturn(emptyList());
 
-        assertThat(plukkOppgaveService.plukkOppgave(Temagruppe.FMLI, SAKSBEHANDLERS_VALGTE_ENHET), is(equalTo(Optional.<Oppgave>none())));
+        assertThat(plukkOppgaveService.plukkOppgaver(Temagruppe.FMLI, SAKSBEHANDLERS_VALGTE_ENHET), is(equalTo(emptyList())));
     }
 
     @Test
     public void girOppgaveHvisSaksbehandlerHarTilgang() {
-        Optional<Oppgave> oppgave = optional(new Oppgave("oppgaveId", "fnr", "henvendelseId"));
+        List<Oppgave> oppgaver = singletonList(new Oppgave("oppgaveId", "fnr", "henvendelseId"));
 
-        when(oppgaveBehandlingService.plukkOppgaveFraGsak(Temagruppe.FMLI, SAKSBEHANDLERS_VALGTE_ENHET)).thenReturn(oppgave);
+        when(oppgaveBehandlingService.plukkOppgaverFraGsak(Temagruppe.FMLI, SAKSBEHANDLERS_VALGTE_ENHET)).thenReturn(oppgaver);
         when(pep.hasAccess(any(PolicyRequest.class))).thenReturn(true);
 
-        assertThat(plukkOppgaveService.plukkOppgave(Temagruppe.FMLI, SAKSBEHANDLERS_VALGTE_ENHET), is(equalTo(oppgave)));
+        assertThat(plukkOppgaveService.plukkOppgaver(Temagruppe.FMLI, SAKSBEHANDLERS_VALGTE_ENHET), is(equalTo(oppgaver)));
     }
 
     @Test
     public void leggerTilbakeOppgaveOgPlukkerNyHvisSaksbehandlerIkkeHarTilgang() {
-        Optional<Oppgave> oppgave1 = optional(new Oppgave("1", "fnr", "1"));
-        Optional<Oppgave> oppgave2 = optional(new Oppgave("2", "fnr", "2"));
+        List<Oppgave> oppgave1 = singletonList(new Oppgave("1", "fnr", "1"));
+        List<Oppgave> oppgave2 = singletonList(new Oppgave("2", "fnr", "2"));
 
-        when(oppgaveBehandlingService.plukkOppgaveFraGsak(Temagruppe.FMLI, SAKSBEHANDLERS_VALGTE_ENHET )).thenReturn(oppgave1, oppgave2);
+        when(oppgaveBehandlingService.plukkOppgaverFraGsak(Temagruppe.FMLI, SAKSBEHANDLERS_VALGTE_ENHET )).thenReturn(oppgave1, oppgave2);
         when(pep.hasAccess(any(PolicyRequest.class))).thenReturn(false, false, false, true);
 
-        assertThat(plukkOppgaveService.plukkOppgave(Temagruppe.FMLI, SAKSBEHANDLERS_VALGTE_ENHET), is(equalTo(oppgave2)));
-        verify(oppgaveBehandlingService).systemLeggTilbakeOppgaveIGsak(eq(oppgave1.get().oppgaveId), eq(Temagruppe.FMLI), eq(SAKSBEHANDLERS_VALGTE_ENHET));
+        assertThat(plukkOppgaveService.plukkOppgaver(Temagruppe.FMLI, SAKSBEHANDLERS_VALGTE_ENHET), is(equalTo(oppgave2)));
+        verify(oppgaveBehandlingService).systemLeggTilbakeOppgaveIGsak(eq(oppgave1.get(0).oppgaveId), eq(Temagruppe.FMLI), eq(SAKSBEHANDLERS_VALGTE_ENHET));
     }
 
     @Test
     public void leggerTilbakeHvisIkkeTilgangTilSamtligePep() {
-        Optional<Oppgave> oppgave1 = optional(new Oppgave("1", "fnr", "henvendelseId"));
+        List<Oppgave> oppgave1 = singletonList(new Oppgave("1", "fnr", "henvendelseId"));
 
-        when(oppgaveBehandlingService.plukkOppgaveFraGsak(Temagruppe.FMLI, SAKSBEHANDLERS_VALGTE_ENHET)).thenReturn(oppgave1, Optional.<Oppgave>none());
+        when(oppgaveBehandlingService.plukkOppgaverFraGsak(Temagruppe.FMLI, SAKSBEHANDLERS_VALGTE_ENHET)).thenReturn(oppgave1, emptyList());
         when(pep.hasAccess(any(PolicyRequest.class))).thenReturn(true, false);
 
-        assertThat(plukkOppgaveService.plukkOppgave(Temagruppe.FMLI, SAKSBEHANDLERS_VALGTE_ENHET), is(equalTo(Optional.<Oppgave>none())));
-        verify(oppgaveBehandlingService).systemLeggTilbakeOppgaveIGsak(eq(oppgave1.get().oppgaveId), eq(Temagruppe.FMLI), eq(SAKSBEHANDLERS_VALGTE_ENHET));
+        assertThat(plukkOppgaveService.plukkOppgaver(Temagruppe.FMLI, SAKSBEHANDLERS_VALGTE_ENHET), is(equalTo(emptyList())));
+        verify(oppgaveBehandlingService).systemLeggTilbakeOppgaveIGsak(eq(oppgave1.get(0).oppgaveId), eq(Temagruppe.FMLI), eq(SAKSBEHANDLERS_VALGTE_ENHET));
     }
 
     @Test
     public void leggerTilbakeHvisIkkeTilgangFraKjerneinfo() {
-        Optional<Oppgave> oppgave1 = optional(new Oppgave("1", "fnr", "henvendelseId"));
+        List<Oppgave> oppgave1 = singletonList(new Oppgave("1", "fnr", "henvendelseId"));
 
-        when(oppgaveBehandlingService.plukkOppgaveFraGsak(Temagruppe.FMLI, SAKSBEHANDLERS_VALGTE_ENHET)).thenReturn(oppgave1, Optional.<Oppgave>none());
+        when(oppgaveBehandlingService.plukkOppgaverFraGsak(Temagruppe.FMLI, SAKSBEHANDLERS_VALGTE_ENHET)).thenReturn(oppgave1, emptyList());
         when(personKjerneinfoServiceBi.hentKjerneinformasjon(any(HentKjerneinformasjonRequest.class))).thenThrow(new AuthorizationException(""));
 
-        assertThat(plukkOppgaveService.plukkOppgave(Temagruppe.FMLI, SAKSBEHANDLERS_VALGTE_ENHET), is(equalTo(Optional.<Oppgave>none())));
-        verify(oppgaveBehandlingService).systemLeggTilbakeOppgaveIGsak(eq(oppgave1.get().oppgaveId), eq(Temagruppe.FMLI), eq(SAKSBEHANDLERS_VALGTE_ENHET));
+        assertThat(plukkOppgaveService.plukkOppgaver(Temagruppe.FMLI, SAKSBEHANDLERS_VALGTE_ENHET), is(equalTo(emptyList())));
+        verify(oppgaveBehandlingService).systemLeggTilbakeOppgaveIGsak(eq(oppgave1.get(0).oppgaveId), eq(Temagruppe.FMLI), eq(SAKSBEHANDLERS_VALGTE_ENHET));
     }
 
     @Test
     public void brukerUtenAnsvarligEnhetTilgangssjekkesPaaTomStreng() {
         when(personKjerneinfoServiceBi.hentKjerneinformasjon(any())).thenReturn(mockPersonUtenAnsvarligEnhet());
-        when(oppgaveBehandlingService.plukkOppgaveFraGsak(Temagruppe.ARBD, SAKSBEHANDLERS_VALGTE_ENHET)).thenReturn(optional(new Oppgave("1", "fnr", "1")));
+        when(oppgaveBehandlingService.plukkOppgaverFraGsak(Temagruppe.ARBD, SAKSBEHANDLERS_VALGTE_ENHET)).thenReturn(singletonList(new Oppgave("1", "fnr", "1")));
         when(pep.hasAccess(any(PolicyRequest.class))).thenReturn(true);
         ArgumentCaptor<PolicyRequest> argumentCaptor = ArgumentCaptor.forClass(PolicyRequest.class);
 
-        Optional<Oppgave> oppgave = plukkOppgaveService.plukkOppgave(Temagruppe.ARBD, SAKSBEHANDLERS_VALGTE_ENHET);
+        List<Oppgave> oppgave = plukkOppgaveService.plukkOppgaver(Temagruppe.ARBD, SAKSBEHANDLERS_VALGTE_ENHET);
         verify(pep, times(2)).hasAccess(argumentCaptor.capture());
         PolicyRequest policyRequestAnsvarligEnhet = argumentCaptor.getAllValues().get(1);
         String attributeValue = getAttributeValue(policyRequestAnsvarligEnhet);
 
-        assertThat(oppgave.isSome(), is(true));
+        assertThat(oppgave.isEmpty(), is(false));
         assertThat(attributeValue, is(""));
     }
 

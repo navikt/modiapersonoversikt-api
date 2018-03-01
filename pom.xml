@@ -98,7 +98,7 @@
         <!-- Samme som Jetty -->
 
         <!-- Modia-komponenter-->
-        <reactkomponenter.version>1648</reactkomponenter.version>
+        <reactkomponenter.version>1710</reactkomponenter.version>
         <personsok.version>4.0.2</personsok.version>
         <kjerneinfo.versjon>6.1.0</kjerneinfo.versjon>
         <utbetaling.version>4.0.0</utbetaling.version>
@@ -110,7 +110,7 @@
         <!-- Tjenestespecs -->
         <soknader.liste.version>2.0.12</soknader.liste.version>
         <gsak.oppgave.tjenestespesifikasjon>1.0.5</gsak.oppgave.tjenestespesifikasjon>
-        <tildeloppgave-v1-tjenestespesifikasjon.version>1.0.0</tildeloppgave-v1-tjenestespesifikasjon.version>
+        <tildeloppgave-v1-tjenestespesifikasjon.version>1.1.0</tildeloppgave-v1-tjenestespesifikasjon.version>
         <utbetaling.tjenestespesifikasjon.version>1.0.15</utbetaling.tjenestespesifikasjon.version>
         <kodeverk.tjenestespesifikasjon.version>2.0.1</kodeverk.tjenestespesifikasjon.version>
         <henvendelse.informasjon.v2.version>0.5</henvendelse.informasjon.v2.version>
@@ -1054,12 +1054,6 @@
             <dependency>
                 <groupId>org.junit.jupiter</groupId>
                 <artifactId>junit-jupiter-engine</artifactId>
-                <version>${junit.jupiter.version}</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.junit.jupiter</groupId>
-                <artifactId>junit-jupiter-api</artifactId>
                 <version>${junit.jupiter.version}</version>
                 <scope>test</scope>
             </dependency>

@@ -13,6 +13,8 @@ import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.Sak;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Fritekst;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.exceptions.TraadAlleredeBesvart;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.HenvendelseUtsendingService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveBehandlingService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.gsak.SakerService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.ldap.LDAPService;
@@ -22,9 +24,11 @@ import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.henvendelse.delsva
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.henvendelse.delsvar.DelsvarUtils;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.behandlehenvendelse.BehandleHenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.senduthenvendelse.SendUtHenvendelsePortType;
+import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.senduthenvendelse.WSBehandlingskjedeErAlleredeBesvart;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.senduthenvendelse.meldinger.WSFerdigstillHenvendelseRequest;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.senduthenvendelse.meldinger.WSSendUtHenvendelseRequest;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.senduthenvendelse.meldinger.WSSendUtHenvendelseResponse;
+import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.senduthenvendelse.meldinger.WSSlaSammenHenvendelserRequest;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.henvendelse.HenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.meldinger.WSHentHenvendelseListeRequest;
 import org.apache.commons.collections15.Transformer;
@@ -163,7 +167,7 @@ public class HenvendelseUtsendingServiceImpl implements HenvendelseUtsendingServ
                         .withFodselsnummer(fnr))
                         .getAny())
                         .map(castTo(XMLHenvendelse.class))
-                        .filter(where(BEHANDLINGSKJEDE_ID, equalTo(traadId)))
+                        .filter(where(XMLHenvendelse::getBehandlingskjedeId, equalTo(traadId)))
                         .map(tilMelding(propertyResolver, ldapService))
                         .map(journalfortTemaTilgang(valgtEnhet))
                         .collect(ELDSTE_FORST);
@@ -244,7 +248,14 @@ public class HenvendelseUtsendingServiceImpl implements HenvendelseUtsendingServ
         behandleHenvendelsePortType.oppdaterTemagruppe(behandlingsId, temagruppe);
     }
 
-    private static final Transformer<XMLHenvendelse, String> BEHANDLINGSKJEDE_ID = xmlHenvendelse -> xmlHenvendelse.getBehandlingskjedeId();
+    @Override
+    public String slaaSammenTraader(List<String> traadIder) {
+        try {
+            return sendUtHenvendelsePortType.slaSammenHenvendelser(traadIder);
+        } catch (WSBehandlingskjedeErAlleredeBesvart e) {
+            throw new TraadAlleredeBesvart(e.getFaultInfo());
+        }
+    }
 
     private String getEnhet(String fnr) {
         HentKjerneinformasjonRequest kjerneinfoRequest = new HentKjerneinformasjonRequest(fnr);
