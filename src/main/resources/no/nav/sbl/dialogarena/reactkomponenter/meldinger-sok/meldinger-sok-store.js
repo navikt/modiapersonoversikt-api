@@ -30,7 +30,7 @@ class MeldingerSokStore extends Store {
 
     update(props) {
         $.extend(this.state, props);
-        if (props.modulNavn != 'BesvarFlereOppgaverModul' || this.state.indeksert === false) { /* Hack fordi meldingersok ikke er laget for å brukes som child av andre komponentner. Det blir gjort et synkronisert /indekser-kall til backend hver gang en checkbox hukes av i slaasammentraader fordi meldingersokmodlue da får nye props og kjører store.update(). Kallet er unødvendig og tar ganske lang tid (2-3sek på aremark). Gjør brukere med mange meldinger veldig lite responsive å jobbe med. */
+        if (this.state.modulNavn !== 'BesvarFlereOppgaverModul' || this.state.indeksert === false) { /* Hack fordi meldingersok ikke er laget for å brukes som child av andre komponentner. Det blir gjort et synkronisert /indekser-kall til backend hver gang en checkbox hukes av i slaasammentraader fordi meldingersokmodlue da får nye props og kjører store.update(). Kallet er unødvendig og tar ganske lang tid (2-3sek på aremark). Gjør brukere med mange meldinger veldig lite responsive å jobbe med. */
             $.ajax({
                 async: false,
                 url: '/modiabrukerdialog/rest/meldinger/' + this.state.fnr + '/indekser'

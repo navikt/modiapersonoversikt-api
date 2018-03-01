@@ -12,11 +12,8 @@ const innboksVisningPropsMock = {
     valgtTraad: TraadMock,
     listePanelId: '',
     traadvisningsPanelId: '',
-    submitButtonProps: {
-        buttonText: '',
-        errorMessage: '',
-        error: false
-    }
+    submitButtonProps: {},
+    checkboxProps: {}
 };
 
 describe('InnboksVisning', () => {
