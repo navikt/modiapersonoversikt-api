@@ -106,7 +106,7 @@ MeldingerSok.defaultProps = {
     onSubmit: defaultOnSubmit,
     setVisModalVindu: () => {},
     setSkjulModalVindu: () => {},
-    hjelpetekst: <h4>Vindu for å søke i meldinger</h4>
+    hjelpetekst: <h4>Vindu for å søke i dialoger</h4>
 };
 
 export default MeldingerSok;

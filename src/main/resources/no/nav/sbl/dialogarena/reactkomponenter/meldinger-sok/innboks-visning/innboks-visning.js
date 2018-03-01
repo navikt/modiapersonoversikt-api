@@ -26,6 +26,7 @@ function lagMeldingsListe(props) {
             />
         );
     });
+    const antallTraader = meldingsListeElementer.length;
     return (
         <ScrollPortal
             id={props.listePanelId}
@@ -36,8 +37,8 @@ function lagMeldingsListe(props) {
             aria-atomic="true"
             aria-controls={props.traadvisningsPanelId}
         >
-            <div className="antall-samtaler">
-                Viser <span className="bold">{meldingsListeElementer.length}</span> samtaler
+            <div className="antall-traader">
+                Viser <span className="bold">{antallTraader}</span> {antallTraader > 1 ? 'dialoger' : 'dialog'}
             </div>
             {meldingsListeElementer}
         </ScrollPortal>

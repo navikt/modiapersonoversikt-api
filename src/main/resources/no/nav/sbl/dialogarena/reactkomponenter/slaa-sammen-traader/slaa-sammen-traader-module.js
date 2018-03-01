@@ -46,6 +46,8 @@ class SlaaSammenTraader extends Component {
         });
     }
 
+    visModal() {}
+
     vis(props) {
         this.setState({
             traadIder: props.traadIder,
@@ -61,16 +63,16 @@ class SlaaSammenTraader extends Component {
     render() {
         const antallValgteOppgaver = this.state.checkedBoxes.length;
         const buttonText = antallValgteOppgaver < 2
-            ? 'Du må velge minst to oppgaver'
-            : `Besvar ${antallValgteOppgaver} valgte oppgaver`;
+            ? 'Du må velge minst to dialoger'
+            : `Besvar ${antallValgteOppgaver} valgte dialoger`;
         const hjelpetekst = (
             <div>
-                <h4>Vindu for å velge meldinger du ønsker å besvare samtidig.</h4>
+                <h4>Vindu for å velge dialoger du ønsker å besvare samtidig.</h4>
                 <ul>
-                    <li>Trykk på radioknapp for å utvide en melding.</li>
-                    <li>Merk meldingene du ønsker å besvare ved å huke av i avkryssningsboks.</li>
-                    <li>Når du har merket minst to meldinger trykker du på knappen "Besvar x valgte oppgaver".</li>
-                    <li>Meldingene blir slått sammen til en enkelt samtale og kan besvares på vanlig måte.</li>
+                    <li>Trykk på radioknapp for å utvide en dialog.</li>
+                    <li>Merk dialogene du ønsker å besvare ved å huke av i avkryssningsboks.</li>
+                    <li>Når du har merket minst to dialoger trykker du på knappen "Besvar x valgte dialoger".</li>
+                    <li>Dialogene blir slått sammen og kan besvares på vanlig måte.</li>
                 </ul>
             </div>
         );
