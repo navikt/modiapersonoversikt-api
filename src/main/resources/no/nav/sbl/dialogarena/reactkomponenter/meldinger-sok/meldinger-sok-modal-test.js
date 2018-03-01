@@ -6,14 +6,18 @@ import { expect } from 'chai';
 
 import MeldingerSokModal from './meldinger-sok-modal';
 
+const mockProps = {
+    setRef: () => {}
+};
+
 describe('Meldinger Sok Modal', () => {
     it('Skal rendre en modal', () => {
-        const element = shallow(<MeldingerSokModal moduleName="Test" />);
+        const element = shallow(<MeldingerSokModal {...mockProps} moduleName="Test" />);
 
         expect(element.is('Modal')).to.be.true;
     });
     it('Skal generere fornuftige modal-props', () => {
-        const element = shallow(<MeldingerSokModal moduleName="Test" />);
+        const element = shallow(<MeldingerSokModal {...mockProps} moduleName="Test" />);
 
         const props = element.props();
 
