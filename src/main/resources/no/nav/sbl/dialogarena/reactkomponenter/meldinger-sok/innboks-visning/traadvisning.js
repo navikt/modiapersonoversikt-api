@@ -25,7 +25,7 @@ function TraadVisning(props) {
     const meldingBenevnelse = traad.antallMeldingerIOpprinneligTraad === 1 ? 'melding' : 'meldinger';
     const antallInformasjon = (
         <span>
-            Viser <b>{meldinger.length}</b> av <b>{traad.antallMeldingerIOpprinneligTraad}</b> {meldingBenevnelse} i dialogen
+            Viser <b>{meldinger.length}</b> av <b>{traad.antallMeldingerIOpprinneligTraad}</b> {meldingBenevnelse} i {props.traadBegrep.bestemtEntall}
         </span>
     );
     return (
@@ -43,6 +43,7 @@ TraadVisning.propTypes = {
         meldinger: PT.array,
         antallMeldingerIOpprinneligTraad: PT.number
     }).isRequired,
+    traadBegrep: PT.object.isRequired
 };
 
 export default TraadVisning;

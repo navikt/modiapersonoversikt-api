@@ -38,7 +38,7 @@ function lagMeldingsListe(props) {
             aria-controls={props.traadvisningsPanelId}
         >
             <div className="antall-traader">
-                Viser <span className="bold">{antallTraader}</span> {antallTraader > 1 ? 'dialoger' : 'dialog'}
+                Viser <span className="bold">{antallTraader}</span> {antallTraader > 1 ? props.traadBegrep.flertall : props.traadBegrep.entall}
             </div>
             {meldingsListeElementer}
         </ScrollPortal>
@@ -57,6 +57,7 @@ function lagTraadVisning(props) {
         >
             <TraadVisning
                 traad={props.valgtTraad}
+                traadBegrep={props.traadBegrep}
             />
         </div>
     );
@@ -90,7 +91,8 @@ InnboksVisning.propTypes = {
     valgtTraad: PT.object.isRequired,
     listePanelId: PT.string.isRequired,
     traadvisningsPanelId: PT.string.isRequired,
-    checkboxProps: checkboxProps.isRequired
+    checkboxProps: checkboxProps.isRequired,
+    traadBegrep: PT.object.isRequired
 };
 
 export default InnboksVisning;
