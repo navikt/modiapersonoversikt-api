@@ -50,6 +50,7 @@ public class Innboks extends Lerret {
     public static final JavaScriptResourceReference BESVAR_INDIKATOR_JS = new JavaScriptResourceReference(Innboks.class, "besvarIndikator.js");
     public static final String INNBOKS_OPPDATERT_EVENT = "sos.innboks.oppdatert";
     public static final String TRAADER_SLAATT_SAMMEN = "slaaSammenEvent";
+    private final DialogSession session;
 
     private InnboksVM innboksVM;
     private final ReactComponentPanel slaaSammenTraaderPanel;
@@ -68,9 +69,14 @@ public class Innboks extends Lerret {
         this.innboksVM = innboksVM;
         innboksVM.oppdaterMeldinger();
         innboksVM.settForsteSomValgtHvisIkkeSatt();
+        session = DialogSession.read(this);
 
-        if (innboksVM.getSessionHenvendelseId().isPresent()) {
-            Optional<MeldingVM> meldingITraad = innboksVM.getNyesteMeldingITraad(innboksVM.getSessionHenvendelseId().get());
+        if (session.getOppgaveSomBesvares().isPresent()) {
+            Optional<MeldingVM> meldingITraad = innboksVM.getNyesteMeldingITraad(
+                    session.getOppgaveSomBesvares()
+                           .map(oppgave -> oppgave.henvendelseId)
+                           .orElse(null)
+            );
             meldingITraad.ifPresent(innboksVM::setValgtMelding);
         }
 
@@ -118,7 +124,7 @@ public class Innboks extends Lerret {
                 MetricsFactory.createEvent("hendelse.meldinger-lamell-besvar-flere-knapp.klikk").report();
             }
         };
-        slaaSammenTraaderToggleButton.add(visibleIf(when(sizeOf(innboksVM.getTildelteOppgaverUtenDelsvar()),
+        slaaSammenTraaderToggleButton.add(visibleIf(when(sizeOf(innboksVM.tildelteOppgaverUtenDelsvar),
                 new GreaterThanPredicate<>(1))));
         slaaSammenTraaderPanel.addCallback("slaaSammen", List.class, (target, data) -> {
             @SuppressWarnings("unchecked")
@@ -261,7 +267,7 @@ public class Innboks extends Lerret {
 
     private Map<String, Object> getSlaaSammenTraaderProps() {
         Map<String, Object> props = getMeldingerSokProps();
-        props.put("traadIder", innboksVM.getTildelteOppgaverUtenDelsvar().stream()
+        props.put("traadIder", innboksVM.tildelteOppgaverUtenDelsvar.stream()
                 .map(oppgave -> oppgave.henvendelseId)
                 .collect(toList()));
         return props;

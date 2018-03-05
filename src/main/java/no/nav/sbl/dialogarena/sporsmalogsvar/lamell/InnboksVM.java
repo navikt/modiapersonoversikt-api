@@ -38,7 +38,8 @@ public class InnboksVM implements Serializable {
     public String traadBesvares;
     public boolean focusValgtTraadOnOpen = false;
     EnforcementPoint pep;
-    public List<Oppgave> tildelteOppgaver = new ArrayList<>();
+    public final List<Oppgave> tildelteOppgaver = new ArrayList<>();
+    public final List<Oppgave> tildelteOppgaverUtenDelsvar = new ArrayList<>();
 
     public InnboksVM(String fnr, HenvendelseBehandlingService henvendelseBehandlingService, EnforcementPoint pep,
                      SaksbehandlerInnstillingerService saksbehandlerInnstillingerService) {
@@ -78,14 +79,12 @@ public class InnboksVM implements Serializable {
             log.warn("Feilet ved henting av henvendelser for fnr {}", fnr, e);
             feilmeldingKey = "innboks.feilmelding.feilet";
         }
-    }
-
-    public List<Oppgave> getTildelteOppgaverUtenDelsvar() {
-        return tildelteOppgaver.stream()
+        tildelteOppgaverUtenDelsvar.clear();
+        tildelteOppgaverUtenDelsvar.addAll(tildelteOppgaver.stream()
                 .filter(oppgave -> !getTraader()
                         .get(oppgave.henvendelseId)
                         .harDelsvar())
-                .collect(toList());
+                .collect(toList()));
     }
 
     public int getTraadLengde(String id) {
