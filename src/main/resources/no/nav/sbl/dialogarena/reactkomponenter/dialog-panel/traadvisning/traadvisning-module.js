@@ -68,7 +68,7 @@ function lagDelsvarPanel(traad) {
 }
 
 function TraadVisning(props) {
-    const traad = props.traad.reverse();
+    const traad = props.traad.slice(0).reverse();
     const traadPanel = lagTraadPanel(traad);
     const delsvarPanel = lagDelsvarPanel(traad);
     return (
