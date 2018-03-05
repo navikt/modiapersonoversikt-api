@@ -243,8 +243,6 @@ public class LamellContainer extends TokenLamellPanel implements Serializable {
             innboksVM.setSessionHenvendelseId(oppgaveFraUrl.henvendelseId);
         }
 
-        innboksVM.oppdaterMeldinger();
-
         return innboksVM;
     }
 
