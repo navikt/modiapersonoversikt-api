@@ -2,6 +2,7 @@
 @shadow-color: #000;
 
 .tekstforslag {
+  position: relative;
   em {
     font-style: normal;
     background-color: #eed28c;
@@ -11,7 +12,12 @@
   div.sok-container {
     padding-right: 76px;
   }
+  .knagger {
+    padding-bottom: 37px;
+  }
   .sok-visning {
+    position: absolute;
+    height: 90%;
     .sok-liste {
       div.sok-element {
         text-transform: none;
@@ -37,6 +43,9 @@
       }
     }
     .sok-forhandsvisning {
+      > div {
+        height: 100%;
+      }
       .tekstPanel {
         padding: 15px 0 15px 32px;
         height: 89%;
