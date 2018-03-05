@@ -6,9 +6,15 @@ import { expect } from 'chai';
 import Traadvisning from './traadvisning';
 import { TraadMock } from '../../utils/traad-utils';
 
+const mockProps = {
+    traadBegrep: {
+        bestemtEntall: ''
+    }
+};
+
 describe('TraadvisningKomponent', () => {
     it('Skal rendre meldinger', () => {
-        const element = shallow(<Traadvisning traad={TraadMock} />);
+        const element = shallow(<Traadvisning {...mockProps} traad={TraadMock} />);
 
         expect(element.find('Melding').length).to.equal(1);
     });

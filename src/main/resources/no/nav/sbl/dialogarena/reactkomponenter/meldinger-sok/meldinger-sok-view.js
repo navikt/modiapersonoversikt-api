@@ -70,6 +70,16 @@ function lagSubmitPanel(props) {
 }
 
 function lagInnboks(props) {
+    const traadBegrep = props.state.modulNavn === 'BesvarFlereOppgaverModul'
+        ? {
+            entall: 'oppgave',
+            bestemtEntall: 'oppgaven',
+            flertall: 'oppgaver'
+        } : {
+            entall: 'dialog',
+            bestemtEntall: 'dialogen',
+            flertall: 'dialoger'
+        };
     return (
         <InnboksVisning
             nyTraadValgtCallback={props.store.traadChanged}
@@ -78,6 +88,7 @@ function lagInnboks(props) {
             listePanelId={props.state.listePanelId}
             traadvisningsPanelId={props.state.traadvisningsPanelId}
             checkboxProps={props.state.checkboxProps}
+            traadBegrep={traadBegrep}
         />
     );
 }

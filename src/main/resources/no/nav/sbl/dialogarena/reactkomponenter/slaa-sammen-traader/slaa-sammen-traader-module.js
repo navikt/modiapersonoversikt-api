@@ -63,16 +63,16 @@ class SlaaSammenTraader extends Component {
     render() {
         const antallValgteOppgaver = this.state.checkedBoxes.length;
         const buttonText = antallValgteOppgaver < 2
-            ? 'Du må velge minst to dialoger'
-            : `Besvar ${antallValgteOppgaver} valgte dialoger`;
+            ? 'Du må velge minst to oppgaver'
+            : `Besvar ${antallValgteOppgaver} valgte oppgaver`;
         const hjelpetekst = (
             <div>
-                <h4>Vindu for å velge dialoger du ønsker å besvare samtidig.</h4>
+                <h4>Vindu for å velge oppgaver du ønsker å besvare samtidig.</h4>
                 <ul>
-                    <li>Trykk på radioknapp for å utvide en dialog.</li>
-                    <li>Merk dialogene du ønsker å besvare ved å huke av i avkryssningsboks.</li>
-                    <li>Når du har merket minst to dialoger trykker du på knappen "Besvar x valgte dialoger".</li>
-                    <li>Dialogene blir slått sammen og kan besvares på vanlig måte.</li>
+                    <li>Trykk på radioknapp for å utvide en oppgave.</li>
+                    <li>Merk oppgavene du ønsker å besvare ved å huke av i avkryssningsboks.</li>
+                    <li>Når du har merket minst to oppgaver trykker du på knappen "Besvar x valgte oppgaver".</li>
+                    <li>Oppgavene blir slått sammen og kan besvares på vanlig måte.</li>
                 </ul>
             </div>
         );

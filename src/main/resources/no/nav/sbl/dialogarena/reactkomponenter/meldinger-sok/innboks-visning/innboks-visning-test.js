@@ -13,7 +13,10 @@ const innboksVisningPropsMock = {
     listePanelId: '',
     traadvisningsPanelId: '',
     submitButtonProps: {},
-    checkboxProps: {}
+    checkboxProps: {},
+    traadBegrep: {
+        flertall: ''
+    }
 };
 
 describe('InnboksVisning', () => {
