@@ -125,6 +125,15 @@ public class TraadVMTest {
     }
 
     @Test
+    public void erIkkeBehandletDersomSvarFraNAVErDelsvar() {
+        MeldingVM meldingFraNav = new MeldingVM(new Melding(ID_4, DELVIS_SVAR_SKRIFTLIG, DATE_4), 4);
+        traadVM.getMeldinger().clear();
+        traadVM.getMeldinger().add(meldingFraNav);
+
+        assertThat(traadVM.erBehandlet(), is(false));
+    }
+
+    @Test
     public void traadenErIkkeKontorsperretDersomEldsteMeldingIkkeErKontorsperret() {
         MeldingVM meldingVM = new MeldingVM(new Melding(ID_4, SPORSMAL_SKRIFTLIG, DATE_4), 4);
         traadVM.getMeldinger().clear();
