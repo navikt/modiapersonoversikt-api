@@ -31,7 +31,8 @@ describe('Folkeregistrert-adresse', () => {
                         />
                     </tbody>
                 </table>
-            );
+            );  // <FolkeregistrertAdresse> returnerer en <tr> siden det er slik den brukes i modia.
+                // For at testen ikke skal kaste feilmelding må den her rendres i en <table> og <tbody>
 
             expect(element.find(Tilleggsadresse).text()).to.equal(tilleggsadresse);
         });

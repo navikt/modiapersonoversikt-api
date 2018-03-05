@@ -26,10 +26,20 @@ describe('DokumentVisningPage', () => {
     function hentDokumentData() {}
     const fnr = '12346578910';
 
-    it('Gir feilmelding om dokumentstatus feilet', () => {
+    let intlStub;
+    let intl;
+    beforeEach(() => {
         const intlProvider = new IntlProvider({ locale: 'en', messages }, {});
-        const { intl } = intlProvider.getChildContext();
+        intl = intlProvider.getChildContext().intl;
+        intlStub = sinon.stub(intl, 'formatMessage');
+        intlStub.withArgs({ id: 'dokumentinfo.internnotat' }).returns('internnotat');
+        intlStub.withArgs({ id: 'dokumentinfo.forvaltningsnotat' }).returns('forvaltningsnotat');
+    });
+    afterEach(() => {
+        intlStub.restore();
+    });
 
+    it('Gir feilmelding om dokumentstatus feilet', () => {
         const props = {
             fnr,
             valgtJournalpost: {
@@ -58,9 +68,6 @@ describe('DokumentVisningPage', () => {
     });
 
     it('Gir snurrepipp om lerretstatus ikke er ferdig lastet', () => {
-        const intlProvider = new IntlProvider({ locale: 'en', messages }, {});
-        const { intl } = intlProvider.getChildContext();
-
         const props = {
             fnr,
             valgtJournalpost: {
@@ -87,9 +94,6 @@ describe('DokumentVisningPage', () => {
     });
 
     it('Gir snurrepipp om dokumentstatus ikke er ferdig lastet', () => {
-        const intlProvider = new IntlProvider({ locale: 'en', messages }, {});
-        const { intl } = intlProvider.getChildContext();
-
         const props = {
             fnr,
             valgtJournalpost: {
@@ -116,10 +120,6 @@ describe('DokumentVisningPage', () => {
     });
 
     it('Gir visningspage uten dokument hvis alt er ferdig lastet og ingen dokumenter', () => {
-        const intlProvider = new IntlProvider({ locale: 'en', messages }, {});
-        const { intl } = intlProvider.getChildContext();
-        const intlStub = sinon.stub(intl, 'formatMessage');
-
         const props = {
             fnr,
             valgtJournalpost: {
@@ -149,14 +149,9 @@ describe('DokumentVisningPage', () => {
         expect(renderedDokumentVisningPage.length).to.equal(1);
         const renderedDokumentElement = scryRenderedDOMComponentsWithClass(element, 'dokumentheader');
         expect(renderedDokumentElement.length).to.equal(0);
-
-        intlStub.restore();
     });
 
     it('Gir visningspage med dokument hvis alt er ferdig lastet og ett dokumenter', () => {
-        const intlProvider = new IntlProvider({ locale: 'en', messages }, {});
-        const { intl } = intlProvider.getChildContext();
-
         const props = {
             fnr,
             valgtJournalpost: {
@@ -194,9 +189,6 @@ describe('DokumentVisningPage', () => {
     });
 
     it('Gir forvaltningsnotat om valgtjournalpost er et forvaltningsnotat', () => {
-        const intlProvider = new IntlProvider({ locale: 'en', messages }, {});
-        const { intl } = intlProvider.getChildContext();
-
         const props = {
             fnr,
             valgtJournalpost: {
@@ -234,9 +226,6 @@ describe('DokumentVisningPage', () => {
     });
 
     it('Gir internnotat om valgtjournalpost er et internnotat', () => {
-        const intlProvider = new IntlProvider({ locale: 'en', messages }, {});
-        const { intl } = intlProvider.getChildContext();
-
         const props = {
             fnr,
             valgtJournalpost: {
@@ -274,9 +263,6 @@ describe('DokumentVisningPage', () => {
     });
 
     it('Gir ingen notattype om valgtjournalposts retning ikke er intern', () => {
-        const intlProvider = new IntlProvider({ locale: 'en', messages }, {});
-        const { intl } = intlProvider.getChildContext();
-
         const props = {
             fnr,
             valgtJournalpost: {

@@ -33,29 +33,41 @@ const mockPeriode = (fraOgMedAr) => ({
         year: fraOgMedAr,
         monthValue: 5,
         dayOfMonth: 12
-    }
+    },
+    antallPleiepengedager: 0
 });
 
 const mockPerioder = [
     mockPeriode(2015), mockPeriode(2016)
 ];
 
+const mockTekst = {
+    periode: '',
+    pleiepengegrad: '',
+    pleiepengedager: '',
+    anvisteUtbetalinger: '',
+    anvistUtbetaling: '',
+    fraOgMedDato: '',
+    bruttoBelop: '',
+    dagsats: '',
+    tilOgMedDato: '',
+    kompensasjonsgrad: ''
+};
+
 describe('Utbetalinger', () => {
     it('lager en liste med periode like lang som antall perioder', () => {
-        const element = shallow(<PleiepengerUtbetalingerPanel perioder={mockPerioder} tekst={{}} />);
+        const element = shallow(<PleiepengerUtbetalingerPanel perioder={mockPerioder} tekst={mockTekst} />);
         expect(element.find('Periode').length).to.equal(2);
     });
 
     describe('periodeliste', () => {
-        describe('sortering av perioder', () => {
-            it('viser periode med siste ID-dato først når nyest er sist i listen', () => {
-                const perioder = sorterEtterIdDato([mockPeriode(2016), mockPeriode(2017)]);
-                expect(perioder[0].fraOgMed.year).to.equal(2017);
-            });
-            it('viser periode med siste ID-dato først når nyest er først i listen', () => {
-                const perioder = sorterEtterIdDato([mockPeriode(2017), mockPeriode(2016)]);
-                expect(perioder[0].fraOgMed.year).to.equal(2017);
-            });
+        it('viser periode med siste ID-dato først når nyest er sist i listen', () => {
+            const perioder = sorterEtterIdDato([mockPeriode(2016), mockPeriode(2017)]);
+            expect(perioder[0].fraOgMed.year).to.equal(2017);
+        });
+        it('viser periode med siste ID-dato først når nyest er først i listen', () => {
+            const perioder = sorterEtterIdDato([mockPeriode(2017), mockPeriode(2016)]);
+            expect(perioder[0].fraOgMed.year).to.equal(2017);
         });
     });
 });
