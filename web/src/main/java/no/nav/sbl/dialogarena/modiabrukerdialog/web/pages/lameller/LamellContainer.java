@@ -232,17 +232,18 @@ public class LamellContainer extends TokenLamellPanel implements Serializable {
     private InnboksVM initialiserInnboksVM(GrunnInfo.Bruker bruker, DialogSession session) {
         innboksVM = new InnboksVM(bruker.fnr, henvendelseBehandlingService, pep, saksbehandlerInnstillingerService);
 
-        innboksVM.tildelteOppgaver = session.getPlukkedeOppgaver();
+        innboksVM.tildelteOppgaver.clear();
+        innboksVM.tildelteOppgaver.addAll(session.getPlukkedeOppgaver());
 
-        Oppgave oppgave = session.getOppgaveSomBesvares().orElseGet(session::getOppgaveFraUrl);
+        session.getOppgaveSomBesvares().ifPresent(oppgave -> innboksVM.traadBesvares = oppgave.henvendelseId);
 
-        if (oppgave != null) {
-            innboksVM.traadBesvares = oppgave.henvendelseId;
-            innboksVM.setSessionHenvendelseId(oppgave.henvendelseId);
-            if (oppgave.oppgaveId != null && gsakService.oppgaveKanManuelltAvsluttes(oppgave.oppgaveId)) {
-                innboksVM.setSessionOppgaveId(oppgave.oppgaveId);
-            }
+        Oppgave oppgaveFraUrl = session.getOppgaveFraUrl();
+        if (oppgaveFraUrl != null && gsakService.oppgaveKanManuelltAvsluttes(oppgaveFraUrl.oppgaveId)) {
+            innboksVM.setSessionOppgaveId(oppgaveFraUrl.oppgaveId);
+            innboksVM.setSessionHenvendelseId(oppgaveFraUrl.henvendelseId);
         }
+
+        innboksVM.oppdaterMeldinger();
 
         return innboksVM;
     }
