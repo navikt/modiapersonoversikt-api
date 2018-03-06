@@ -57,9 +57,6 @@ import javax.inject.Named;
 import java.util.ArrayList;
 import java.util.List;
 
-import static no.nav.brukerdialog.security.tilgangskontroll.utils.AttributeUtils.actionId;
-import static no.nav.brukerdialog.security.tilgangskontroll.utils.AttributeUtils.resourceId;
-import static no.nav.brukerdialog.security.tilgangskontroll.utils.RequestUtils.forRequest;
 import static no.nav.metrics.MetricsFactory.createEvent;
 import static no.nav.modig.modia.constants.ModiaConstants.HENT_PERSON_BEGRUNNET;
 import static no.nav.modig.modia.events.InternalEvents.*;
@@ -113,6 +110,7 @@ public class PersonPage extends BasePage {
         DialogSession session = DialogSession.read(this);
         sjekkTilgang(fnr, pageParameters);
         grunnInfo = grunninfoService.hentGrunninfo(fnr);
+        boolean skalViseMeldingerLamell = session.oppgaverBlePlukket() || erRequestFraGosys(pageParameters);
 
         if (erRequestFraGosys(pageParameters)) {
             session.withURLParametre(pageParameters);
@@ -146,7 +144,7 @@ public class PersonPage extends BasePage {
                 oppgiBegrunnelseModal
         );
 
-        if (session.getOppgaveFraUrl() != null || session.oppgaverBlePlukket()) {
+        if (skalViseMeldingerLamell) {
             lamellContainer.setStartLamell(LAMELL_MELDINGER);
         }
         HentPersonPage.configureModalWindow(oppgiBegrunnelseModal, pageParameters);
