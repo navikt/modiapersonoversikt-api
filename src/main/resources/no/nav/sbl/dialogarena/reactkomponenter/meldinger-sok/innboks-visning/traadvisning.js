@@ -4,6 +4,7 @@ import Melding from './melding';
 import DokumentMelding from './dokument-melding';
 import OppgaveMelding from './oppgave-melding';
 import ScrollPortal from '../../utils/scroll-portal';
+import { TraadBegrep } from './types';
 
 function TraadVisning(props) {
     if (!props.traad.hasOwnProperty('meldinger')) {
@@ -23,8 +24,10 @@ function TraadVisning(props) {
     });
 
     const meldingBenevnelse = traad.antallMeldingerIOpprinneligTraad === 1 ? 'melding' : 'meldinger';
+
+    const cls = props.visAntallMeldingerITraad ? '' : 'vekk';
     const antallInformasjon = (
-        <span>
+        <span className={cls}>
             Viser <b>{meldinger.length}</b> av <b>{traad.antallMeldingerIOpprinneligTraad}</b> {meldingBenevnelse} i {props.traadBegrep.bestemtEntall}
         </span>
     );
@@ -43,7 +46,7 @@ TraadVisning.propTypes = {
         meldinger: PT.array,
         antallMeldingerIOpprinneligTraad: PT.number
     }).isRequired,
-    traadBegrep: PT.object.isRequired
+    traadBegrep: TraadBegrep.isRequired
 };
 
 export default TraadVisning;

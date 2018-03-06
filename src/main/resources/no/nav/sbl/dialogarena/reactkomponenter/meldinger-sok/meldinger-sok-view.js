@@ -89,6 +89,7 @@ function lagInnboks(props) {
             traadvisningsPanelId={props.state.traadvisningsPanelId}
             checkboxProps={props.state.checkboxProps}
             traadBegrep={traadBegrep}
+            visAntallMeldingerITraad={props.state.modulNavn !== 'BesvarFlereOppgaverModul'}
         />
     );
 }
