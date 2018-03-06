@@ -3,12 +3,12 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.plukkoppgavepanel;
 import no.nav.metrics.Timer;
 import no.nav.modig.modia.feedbackform.FeedbackLabel;
 import no.nav.modig.wicket.errorhandling.aria.AriaFeedbackPanel;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.DialogSession;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Oppgave;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.HenvendelseUtsendingService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.PersonPage;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.DialogSession;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.service.plukkoppgave.PlukkOppgaveService;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
@@ -120,6 +120,7 @@ public class PlukkOppgavePanel extends Panel {
             final Timer timer = createTimer("hendelse.plukk");
             timer.start();
             try {
+                session = DialogSession.read(this);
                 if (brukerHarEnAnnenPlukketOppgavePaaSession() && oppgavePaaSessionKanBehandles()) {
                     session.withOppgaveSomBesvares(session.getPlukkedeOppgaver().get(0))
                            .withOppgaverBlePlukket(true);
@@ -170,18 +171,17 @@ public class PlukkOppgavePanel extends Panel {
         }
 
         private boolean oppgavePaaSessionKanBehandles() {
-            if (DialogSession.read(this).getOppgaveSomBesvares()
+            if (session.getOppgaveSomBesvares()
                     .map(o -> plukkOppgaveService.oppgaveErFerdigstilt(o.oppgaveId))
                     .orElse(true)) {
-                DialogSession.read(this)
-                        .withOppgaveSomBesvares(null);
+                session.withOppgaveSomBesvares(null);
                 return false;
             }
             return true;
         }
 
         private boolean brukerHarEnAnnenPlukketOppgavePaaSession() {
-            return !DialogSession.read(this).getPlukkedeOppgaver().isEmpty();
+            return !session.getPlukkedeOppgaver().isEmpty();
         }
 
         @Override
