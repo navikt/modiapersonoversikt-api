@@ -81,9 +81,10 @@ public class MerkePanel extends AnimertPanel {
         IModel<Boolean> erBehandlet = new PropertyModel<>(innboksVM, "valgtTraad.erBehandlet()");
         IModel<Boolean> eldsteMeldingErJournalfort = new PropertyModel<>(innboksVM, "valgtTraad.erJournalfort()");
         IModel<Boolean> erFeilsendt = new PropertyModel<>(innboksVM, "valgtTraad.erFeilsendt()");
+        IModel<Boolean> harDelsvar = new Model<>(innboksVM.getValgtTraad().harDelsvar());
 
         IModel<Boolean> skalViseStandardMerkValg = both(not(eldsteMeldingErJournalfort)).and(not(erFeilsendt)).and(erBehandlet).and(not(valgtTraadErKontorsperret));
-        IModel<Boolean> skalViseFerdigstillUtenSvarValg = both(erMeldingstypeSporsmal).and(not(valgtTraadErKontorsperret)).and(not(erBehandlet));
+        IModel<Boolean> skalViseFerdigstillUtenSvarValg = both(erMeldingstypeSporsmal).and(not(valgtTraadErKontorsperret)).and(not(erBehandlet)).and(not(harDelsvar));
 
         ConjunctionModel bidragErEnablet = both(not(erTemagruppeSosialeTjenester)).and(skalViseStandardMerkValg);
 
