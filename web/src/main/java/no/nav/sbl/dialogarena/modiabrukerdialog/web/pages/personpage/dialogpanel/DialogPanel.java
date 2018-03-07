@@ -71,9 +71,9 @@ public class DialogPanel extends Panel {
         this.grunnInfo = grunnInfo;
 
         session = DialogSession.read(this);
-        oppgave = session.getOppgaveSomBesvares().orElseGet(session::getOppgaveFraUrl);
-        harPlukketOppgave = session.oppgaverBlePlukket();
-        harOppgaveFraGosys = !harPlukketOppgave && oppgave != null;
+        oppgave = session.getOppgaveSomBesvares().orElse(null);
+        harPlukketOppgave = session.oppgaverBlePlukket() && oppgave != null;
+        harOppgaveFraGosys = session.getOppgaveFraUrl() != null && !harPlukketOppgave;
         oppgavetilordningFeiletModal = new OppgavetilordningFeilet("oppgavetilordningModal");
         tildeltFlereAlert = new ReactComponentPanel(TILDELT_FLERE_ALERT_WICKET_CONTAINER_ID, TILDELT_FLERE_ALERT, tildeltFlereAlertProps());
 

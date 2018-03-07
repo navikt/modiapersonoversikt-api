@@ -75,6 +75,11 @@ public class DialogSession implements Serializable {
         return this;
     }
 
+    public void clearOppgaveSomBesvaresOgOppgaveFraUrl() {
+        oppgaveFraUrl = null;
+        oppgaveSomBesvares = null;
+    }
+
     public Optional<Oppgave> getOppgaveSomBesvares() {
         if (oppgaveSomBesvares == null) {
             return plukkedeOppgaver.stream().findFirst();
