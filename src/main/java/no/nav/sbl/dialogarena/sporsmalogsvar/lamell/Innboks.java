@@ -34,6 +34,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import static java.util.Optional.empty;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
 import static no.nav.modig.modia.events.InternalEvents.FEED_ITEM_CLICKED;
@@ -71,14 +72,7 @@ public class Innboks extends Lerret {
         innboksVM.settForsteSomValgtHvisIkkeSatt();
         session = DialogSession.read(this);
 
-        if (session.getOppgaveSomBesvares().isPresent()) {
-            Optional<MeldingVM> meldingITraad = innboksVM.getNyesteMeldingITraad(
-                    session.getOppgaveSomBesvares()
-                           .map(oppgave -> oppgave.henvendelseId)
-                           .orElse(null)
-            );
-            meldingITraad.ifPresent(innboksVM::setValgtMelding);
-        }
+        getMeldingSomSkalVises().ifPresent(innboksVM::setValgtMelding);
 
         PropertyModel<Boolean> harTraader = new PropertyModel<>(innboksVM, "harTraader");
 
@@ -142,6 +136,19 @@ public class Innboks extends Lerret {
 
         meldingsliste.add(meldingerSok, slaaSammenTraaderPanel, innboksButtonContainer, alleMeldingerPanel);
         add(meldingsliste, traaddetaljerPanel, feilmeldingPanel);
+    }
+
+    private Optional<MeldingVM> getMeldingSomSkalVises() {
+        if (session.getOppgaveSomBesvares().isPresent()) {
+            return innboksVM.getNyesteMeldingITraad(
+                    session.getOppgaveSomBesvares()
+                           .map(oppgave -> oppgave.henvendelseId)
+                           .orElse(null)
+            );
+        } else if (session.getOppgaveFraUrl() != null) {
+            return innboksVM.getNyesteMeldingITraad(session.getOppgaveFraUrl().henvendelseId);
+        }
+        return empty();
     }
 
     private void slaaSammenTraader(List<String> traadIder) {
