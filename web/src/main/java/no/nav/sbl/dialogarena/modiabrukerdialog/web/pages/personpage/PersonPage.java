@@ -222,7 +222,7 @@ public class PersonPage extends BasePage {
     }
 
     private void clearSession() {
-        DialogSession.read(this).withURLParametre(new PageParameters());
+        DialogSession.read(this).clearOppgaveSomBesvaresOgOppgaveFraUrl();
     }
 
     @RunOnEvents(FODSELSNUMMER_FUNNET_MED_BEGRUNNElSE)
