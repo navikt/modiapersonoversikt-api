@@ -135,6 +135,8 @@ public class Innboks extends Lerret {
             send(getPage(), DEPTH, TRAADER_SLAATT_SAMMEN);
             slaaSammenTraaderPanel.call("skjul");
             slaaSammenTraaderPanel.setVisibilityAllowed(false);
+            MetricsFactory.createEvent("hendelse.traader-slaatt-sammen").report();
+            traadIder.forEach(traadId -> MetricsFactory.createEvent("hendelse.traad-slaatt-sammen-med-annen").report());
         });
         innboksButtonContainer.add(slaaSammenTraaderToggleButton);
 
