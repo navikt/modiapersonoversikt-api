@@ -10,7 +10,7 @@ import {generateId} from '../../utils/utils-module';
 import {skrivestotteprops} from '../props';
 
 const API_BASE_URL = '/modiabrukerdialog/rest/';
-const DEFAULT_VALGT_TEMAGRUPPE = 'Velg Temagruppe';
+const TEMAGRUPPE_PLACEHOLDER = 'Velg temagruppe';
 
 const panelState = {
     PENDING: 'PENDING',
@@ -29,7 +29,7 @@ class DelvisSvar extends Component {
         this.feilmeldingCloseButtonCallback = this.feilmeldingCloseButtonCallback.bind(this);
         this.state = {
             svarValue: '',
-            valgtTemagruppe: DEFAULT_VALGT_TEMAGRUPPE,
+            valgtTemagruppe: TEMAGRUPPE_PLACEHOLDER,
             panelState: panelState.INITIALIZED,
             valideringsFeil: false,
             tekstValidFiel: false,
@@ -55,13 +55,12 @@ class DelvisSvar extends Component {
     }
 
     validerParametere() {
-        const ugyldigTemagruppe = this.state.valgtTemagruppe === DEFAULT_VALGT_TEMAGRUPPE;
+        const ugyldigTemagruppe = this.state.valgtTemagruppe === TEMAGRUPPE_PLACEHOLDER;
         const ugyldigTekst = this.state.svarValue.length === 0;
         const valideringfeil = ugyldigTemagruppe || ugyldigTekst;
         this.setState({
             temagruppeValidFeil: ugyldigTemagruppe,
-            tekstValidFiel: ugyldigTekst,
-            valideringsFeil: valideringfeil
+            tekstValidFeil: ugyldigTekst
         });
         return !valideringfeil;
     }
@@ -72,7 +71,7 @@ class DelvisSvar extends Component {
         }
 
         if (this.validerParametere()) {
-            this.leggTilbakeDelvisesvar()
+            this.leggTilbakeDelvisesvar();
         }
     }
 
@@ -97,16 +96,17 @@ class DelvisSvar extends Component {
     }
 
     velgTemagruppe(event) {
-        const ugyldigTemagruppe = event.target.value === DEFAULT_VALGT_TEMAGRUPPE;
         this.setState({
             valgtTemagruppe: event.target.value,
-            temagruppeValidFeil: ugyldigTemagruppe,
-            valideringsFeil: ugyldigTemagruppe || this.state.tekstValidFiel
+            temagruppeValidFeil: false
         });
     }
 
     handleSvarEndring(event) {
-        this.setState({svarValue: event.target.value});
+        this.setState({
+            svarValue: event.target.value,
+            tekstValidFeil: false
+        });
     }
 
     feilmeldingCloseButtonCallback() {
@@ -119,7 +119,7 @@ class DelvisSvar extends Component {
                 closeButtonCallback={this.feilmeldingCloseButtonCallback}
                 tekst={this.state.feilmelding} isOpen
             />) :
-            <div/>;
+            <div />;
     }
 
     lagTemagruppeValg() {
@@ -132,31 +132,33 @@ class DelvisSvar extends Component {
     }
 
     valideringsFeilmelding() {
-        return <AlertStripe type='advarsel' solid={true}>
-            <div>
-                {this.state.tekstValidFiel && <p>Tekstfeltet kan ikke være tomt.</p>}
-                {this.state.temagruppeValidFeil && <p>Temagruppe må være valgt.</p>}
-            </div>
-        </AlertStripe>;
+        return (
+            <AlertStripe type="advarsel" solid>
+                <div>
+                    {this.state.tekstValidFeil && <p>Tekstfeltet kan ikke være tomt.</p>}
+                    {this.state.temagruppeValidFeil && <p>Temagruppe må være valgt.</p>}
+                </div>
+            </AlertStripe>
+        );
     }
-
-
 
     render() {
         const valgTemagruppe = this.lagTemagruppeValg();
         const feilmeldingModal = this.lagFeilmeldingModalHvisFeil();
         const hiddenLabel = <span className="vekk">Skriv delsvar</span>;
+        const visValideringsAlert = this.state.tekstValidFeil || this.state.temagruppeValidFeil;
         return (
             <div>
-                <Skrivestotte {...this.props.skrivestotteprops} tekstfeltId={this.textId} ref={(input) => {
-                    this.skrivestoote = input;
-                }}/>
+                <Skrivestotte
+                    {...this.props.skrivestotteprops}
+                    tekstfeltId={this.textId} ref={(input) => { this.skrivestoote = input; }}
+                />
 
                 <h3>Legg tilbake med delsvar</h3>
 
-                <TraadVisning traad={this.props.traad}/>
+                <TraadVisning traad={this.props.traad} />
 
-                {this.state.valideringsFeil && this.valideringsFeilmelding()}
+                {visValideringsAlert && this.valideringsFeilmelding()}
 
                 <div className="svar">
                     <div className="svar-overskrift-boks">
@@ -177,7 +179,7 @@ class DelvisSvar extends Component {
                         maxLength={5000}
                         id={this.textId}
                         label={hiddenLabel}
-                        placeholder="Svaret blir ikke synlig for brukeren"
+                        placeholder={`Alt du skriver i denne boksen blir synlig for bruker når endelig svar foreligger og man har trykket «Del med bruker».`}
                     />
                 </div>
 
@@ -187,18 +189,17 @@ class DelvisSvar extends Component {
                         onChange={this.velgTemagruppe}
                         className={this.state.temagruppeValidFeil === true ? 'valideringFeltFeil' : ''}
                     >
-                        <option value="Velg Temagruppe">Velg Temagruppe</option>
+                        <option value={TEMAGRUPPE_PLACEHOLDER}>{TEMAGRUPPE_PLACEHOLDER}</option>
                         {valgTemagruppe}
                     </select>
                 </div>
 
-                <a
+                <button
                     className="knapp-hoved-stor submit"
-                    role="button"
                     onClick={this.svarDelvis}
                 >
                     Skriv delsvar og legg tilbake
-                </a>
+                </button>
                 {feilmeldingModal}
                 <a
                     role="button"
