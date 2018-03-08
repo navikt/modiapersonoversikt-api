@@ -27,6 +27,9 @@ class DelvisSvar extends Component {
         this.velgTemagruppe = this.velgTemagruppe.bind(this);
         this.lagFeilmeldingModalHvisFeil = this.lagFeilmeldingModalHvisFeil.bind(this);
         this.feilmeldingCloseButtonCallback = this.feilmeldingCloseButtonCallback.bind(this);
+        this.leggTilbakeOppgave = this.leggTilbakeOppgave.bind(this);
+        this.ferdigstillHenvendelse = this.ferdigstillHenvendelse.bind(this);
+
         this.state = {
             svarValue: '',
             valgtTemagruppe: DEFAULT_VALGT_TEMAGRUPPE,
@@ -81,19 +84,22 @@ class DelvisSvar extends Component {
             panelState: panelState.PENDING
         });
 
-        const ferdigstillHenvendelsePromise = this.ferdigstillHenvendelse();
-        const leggTilbakeOppgavePromise = this.leggTilbakeOppgave();
-        Promise.all([ferdigstillHenvendelsePromise, leggTilbakeOppgavePromise]).then(() => {
-            this.setState({
-                panelState: panelState.INITIALIZED,
+        Promise.resolve()
+            .then(this.leggTilbakeOppgave)
+            .then(this.ferdigstillHenvendelse)
+            .then(() => {
+                this.setState({
+                    panelState: panelState.INITIALIZED,
+                });
+                this.props.svarCallback();
+            })
+            .catch((err) => {
+                console.log(err);
+                this.setState({
+                    panelState: panelState.ERROR,
+                    feilmelding: `Teknisk feil: ${err[0].message}`
+                });
             });
-            this.props.svarCallback();
-        }, (err) => {
-            this.setState({
-                panelState: panelState.ERROR,
-                feilmelding: `Teknisk feil: ${err[0].message}`
-            });
-        });
     }
 
     velgTemagruppe(event) {
