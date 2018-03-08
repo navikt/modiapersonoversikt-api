@@ -105,7 +105,7 @@
         <saksoversikt.version>9.0.3</saksoversikt.version>
         <varsling.modia.version>2.0</varsling.modia.version>
         <sporsmalogsvar.version>9.1.1</sporsmalogsvar.version>
-        <modia-felleskomponenter.version>4.3</modia-felleskomponenter.version>
+        <modia-felleskomponenter.version>4.4-SNAPSHOT</modia-felleskomponenter.version>
 
         <!-- Tjenestespecs -->
         <soknader.liste.version>2.0.12</soknader.liste.version>
