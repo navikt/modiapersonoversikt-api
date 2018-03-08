@@ -156,6 +156,7 @@ public class PdfUtils {
     enum MeldingsTypeMapping {
         SAMTALEREFERAT("Samtalereferat"),
         SPORSMAL("Spørsmål"),
+        DELVIS("Delsvar"),
         SVAR("Svar");
 
         public final String beskrivendeNavn;
