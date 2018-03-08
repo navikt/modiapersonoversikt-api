@@ -24,6 +24,7 @@
         <module>pep</module>
         <module>pip</module>
         <module>pdp</module>
+        <module>sporsmalogsvar</module>
     </modules>
 
     <properties>
@@ -104,7 +105,6 @@
         <utbetaling.version>4.0.0</utbetaling.version>
         <saksoversikt.version>9.0.3</saksoversikt.version>
         <varsling.modia.version>2.0</varsling.modia.version>
-        <sporsmalogsvar.version>9.1.1</sporsmalogsvar.version>
         <modia-felleskomponenter.version>4.3</modia-felleskomponenter.version>
 
         <!-- Tjenestespecs -->
@@ -499,11 +499,6 @@
                 <groupId>no.nav.sbl.dialogarena</groupId>
                 <artifactId>modia-varsling</artifactId>
                 <version>${varsling.modia.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>no.nav.sbl.dialogarena</groupId>
-                <artifactId>sporsmal-og-svar</artifactId>
-                <version>${sporsmalogsvar.version}</version>
             </dependency>
             <dependency>
                 <groupId>no.nav.sbl.dialogarena</groupId>
