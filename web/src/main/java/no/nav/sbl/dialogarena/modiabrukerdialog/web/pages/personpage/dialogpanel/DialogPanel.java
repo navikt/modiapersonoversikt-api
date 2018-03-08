@@ -120,6 +120,11 @@ public class DialogPanel extends Panel {
                 .findFirst()
                 .orElse(oppgave);
 
+        if (traadTilhorerOppgaveFraGosys(traadId)) {
+            oppgave = session.getOppgaveFraUrl();
+            session.withOppgaveSomBesvares(oppgave);
+        }
+
         boolean harTrykketNyMeldingPaaAlleredePlukketOppgave = oppgave != null && traadId.equals(oppgave.henvendelseId);
 
         if (harTrykketNyMeldingPaaAlleredePlukketOppgave && !erEnkeltstaaendeSamtalereferat(traad)) {
@@ -147,6 +152,10 @@ public class DialogPanel extends Panel {
             session.withOppgaveSomBesvares(null);
         }
         target.add(aktivtPanel);
+    }
+
+    private boolean traadTilhorerOppgaveFraGosys(String traadId) {
+        return session.getOppgaveFraUrl() != null && traadId.equals(session.getOppgaveFraUrl().henvendelseId);
     }
 
     private String opprettSvar(String traadId) {
