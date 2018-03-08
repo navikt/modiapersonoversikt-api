@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.plukkoppgavepanel;
 
+import no.nav.metrics.MetricsFactory;
 import no.nav.metrics.Timer;
 import no.nav.modig.modia.feedbackform.FeedbackLabel;
 import no.nav.modig.wicket.errorhandling.aria.AriaFeedbackPanel;
@@ -130,6 +131,9 @@ public class PlukkOppgavePanel extends Panel {
 
                 List<Oppgave> oppgaver = plukkOppgaveService.plukkOppgaver(valgtTemagruppe.getObject(), saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet());
                 if (!oppgaver.isEmpty()) {
+                    if (oppgaver.size() > 1) {
+                        MetricsFactory.createEvent("hendelse.plukk.flere-oppgaver-tildelt");
+                    }
                     opprettSvarHenvendelserForOppgaver(oppgaver);
                     session.withPlukkedeOppgaver(oppgaver)
                            .withValgtTemagruppe(valgtTemagruppe.getObject())
