@@ -4,6 +4,7 @@ import ScrollPortal from '../../utils/scroll-portal';
 import TraadVisning from './traadvisning';
 import PT from 'prop-types';
 import { checkboxProps } from '../types';
+import { TraadBegrep } from './types';
 
 function erTom(props) {
     return props.traader.length === 0;
@@ -58,6 +59,7 @@ function lagTraadVisning(props) {
             <TraadVisning
                 traad={props.valgtTraad}
                 traadBegrep={props.traadBegrep}
+                visAntallMeldingerITraad={props.visAntallMeldingerITraad}
             />
         </div>
     );
@@ -85,6 +87,10 @@ function InnboksVisning(props) {
     );
 }
 
+InnboksVisning.defaultProps = {
+    visAntallMeldingerITraad: true
+};
+
 InnboksVisning.propTypes = {
     traader: PT.arrayOf(PT.object).isRequired,
     nyTraadValgtCallback: PT.func.isRequired,
@@ -92,7 +98,8 @@ InnboksVisning.propTypes = {
     listePanelId: PT.string.isRequired,
     traadvisningsPanelId: PT.string.isRequired,
     checkboxProps: checkboxProps.isRequired,
-    traadBegrep: PT.object.isRequired
+    traadBegrep: TraadBegrep.isRequired,
+    visAntallMeldingerITraad: PT.bool
 };
 
 export default InnboksVisning;
