@@ -61,6 +61,11 @@
             <artifactId>modiabrukerdialog-api</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>no.nav.sbl.dialogarena</groupId>
+            <artifactId>sporsmal-og-svar</artifactId>
+            <version>${project.version}</version>
+        </dependency>
 
         <!--Personsok-->
         <dependency>
@@ -125,10 +130,6 @@
         </dependency>
 
         <!--Dialogarena-->
-        <dependency>
-            <groupId>no.nav.sbl.dialogarena</groupId>
-            <artifactId>sporsmal-og-svar</artifactId>
-        </dependency>
         <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>common-time</artifactId>
