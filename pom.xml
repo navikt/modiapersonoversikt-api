@@ -11,7 +11,7 @@
     <name>Dialogarena - modiabrukerdialog</name>
     <groupId>no.nav.sbl.dialogarena</groupId>
     <artifactId>modiabrukerdialog</artifactId>
-    <version>15.1.2-SNAPSHOT</version>
+    <version>15.1.3-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <modules>
@@ -101,11 +101,11 @@
         <!-- Modia-komponenter-->
         <reactkomponenter.version>1718</reactkomponenter.version>
         <personsok.version>4.0.2</personsok.version>
-        <kjerneinfo.versjon>6.1.0</kjerneinfo.versjon>
+        <kjerneinfo.versjon>6.1.1</kjerneinfo.versjon>
         <utbetaling.version>4.0.0</utbetaling.version>
         <saksoversikt.version>9.0.3</saksoversikt.version>
         <varsling.modia.version>2.0</varsling.modia.version>
-        <modia-felleskomponenter.version>4.4-SNAPSHOT</modia-felleskomponenter.version>
+        <modia-felleskomponenter.version>4.4</modia-felleskomponenter.version>
 
         <!-- Tjenestespecs -->
         <soknader.liste.version>2.0.12</soknader.liste.version>
