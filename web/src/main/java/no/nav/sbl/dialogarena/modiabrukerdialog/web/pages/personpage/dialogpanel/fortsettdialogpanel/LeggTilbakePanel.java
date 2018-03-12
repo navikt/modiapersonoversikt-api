@@ -194,7 +194,13 @@ public class LeggTilbakePanel extends Panel {
                     }
 
                     target.add(form, feedbackPanelSuccess);
-                    target.focusComponent(lukkKnapp);
+
+                    if(DialogSession.read(LeggTilbakePanel.this).getPlukkedeOppgaver().size() > 0) {
+                        target.focusComponent(nesteOppgaveKnapp);
+                    }  else {
+                        target.focusComponent(lukkKnapp);
+                    }
+
                     send(getPage(), BREADTH, LEGG_TILBAKE_UTFORT);
                     henvendelseUtsendingService.avbrytHenvendelse(behandlingsId);
                 } finally {
