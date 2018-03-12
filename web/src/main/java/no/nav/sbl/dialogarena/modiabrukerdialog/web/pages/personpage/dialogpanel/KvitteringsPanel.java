@@ -107,9 +107,10 @@ public class KvitteringsPanel extends Panel {
         this.setVisibilityAllowed(true);
         target.add(this);
         target.add(komponenter);
-        if (nesteDialogLenke.hasBeenRendered()) {
+
+        if(DialogSession.read(KvitteringsPanel.this).getPlukkedeOppgaver().size() > 0) {
             target.focusComponent(nesteDialogLenke);
-        } else if (startNyDialogLenke.hasBeenRendered()) {
+        } else {
             target.focusComponent(startNyDialogLenke);
         }
     }
