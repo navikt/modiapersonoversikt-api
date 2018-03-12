@@ -125,6 +125,7 @@ public class DialogPanel extends Panel {
         if (traadTilhorerOppgaveFraGosys(traadId)) {
             oppgave = session.getOppgaveFraUrl();
             session.withOppgaveSomBesvares(oppgave);
+            oppgaveId = oppgave.oppgaveId;
         }
 
         if (harTrykketNyMeldingPaaAlleredePlukketOppgave && !erEnkeltstaaendeSamtalereferat(traad)) {
