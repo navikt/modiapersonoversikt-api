@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PT from 'prop-types';
 import wicketSender from '../../react-wicket-mixin/wicket-sender';
 import DelvisSvar from './delvis-svar';
+import NesteDialogKnapp from './components/neste-dialog-knapp'
 import { skrivestotteprops } from '../props';
 
 class LeggTilbakeDelvisSvarPanel extends Component {
@@ -34,9 +35,9 @@ class LeggTilbakeDelvisSvarPanel extends Component {
     }
 
     lagKvittering() {
-        const nesteDialogKnapp = this.props.startNesteDialogId ? this.lagNesteDialogKnapp() : null;
+        const nesteDialogKnapp = this.props.startNesteDialogId ? <NesteDialogKnapp startNesteDialogCallback={this.startNesteDialogCallback}/> : null;
         return (
-            <div className="kvittering">
+            <div className="kvittering" role="alert">
                 <div className="robust-ikon-gront-sjekk" />
                 <h2 className="medium">Delsvar er registrert</h2>
                 <div className="knapper">
@@ -46,14 +47,6 @@ class LeggTilbakeDelvisSvarPanel extends Component {
                     </button>
                 </div>
             </div>
-        );
-    }
-
-    lagNesteDialogKnapp() {
-        return (
-            <button className={"knapp-hoved startNesteDialog"} onClick={this.startNesteDialogCallback}>
-                Gå til neste spørsmål
-            </button>
         );
     }
 

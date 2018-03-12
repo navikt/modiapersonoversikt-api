@@ -140,7 +140,7 @@ class DelvisSvar extends Component {
     valideringsFeilmelding() {
         return (
             <AlertStripe type="advarsel" solid>
-                <div>
+                <div role="alert">
                     {this.state.tekstValidFeil && <p>Tekstfeltet kan ikke være tomt.</p>}
                     {this.state.temagruppeValidFeil && <p>Temagruppe må være valgt.</p>}
                 </div>
