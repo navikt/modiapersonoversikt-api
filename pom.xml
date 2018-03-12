@@ -99,7 +99,7 @@
         <!-- Samme som Jetty -->
 
         <!-- Modia-komponenter-->
-        <reactkomponenter.version>1718</reactkomponenter.version>
+        <reactkomponenter.version>1726</reactkomponenter.version>
         <personsok.version>4.0.2</personsok.version>
         <kjerneinfo.versjon>6.1.1</kjerneinfo.versjon>
         <utbetaling.version>4.0.0</utbetaling.version>
