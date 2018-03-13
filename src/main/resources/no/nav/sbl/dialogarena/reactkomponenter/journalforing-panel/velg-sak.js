@@ -19,8 +19,14 @@ class VelgSak extends React.Component {
         this.setState({ valgtKategori: kategori });
     }
 
+    filtrerBortGsakerSomFinnesIPsak(saker) {
+        const psakIder = saker.psak.map(sak => sak.fagsystemSaksId);
+        saker.gsak = saker.gsak.filter(sak => psakIder.indexOf(sak.fagsystemSaksId) === -1);
+        return saker;
+    }
+
     render() {
-        const saker = this.props.saker || {};
+        const saker = this.props.saker ? this.filtrerBortGsakerSomFinnesIPsak(this.props.saker) : {};
 
         const advarsler = kvpair(saker)
             .filter(([_, value]) => isUndefined(value))
