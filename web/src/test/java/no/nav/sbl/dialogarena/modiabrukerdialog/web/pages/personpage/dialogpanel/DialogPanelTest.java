@@ -139,10 +139,12 @@ public class DialogPanelTest extends WicketPageTest {
     @Test
     @SuppressWarnings("unchecked")
     public void fortsettDialogPanelHarRiktigOppgaveIdVedSVAR_PAA_MELDINGEventDersomOppgaveIdOgHenvendelseIdParametereErSatt() {
+        when(henvendelseUtsendingServiceMock.hentTraad(anyString(), anyString(), anyString())).thenReturn(asList(lagBrukerSporsmalMedOppgaveId()));
+
         DialogSession.read(wicket.tester.getSession())
                 .withURLParametre(
                         new PageParameters()
-                                .set(OPPGAVEID, OPPGAVEID_VERDI)
+                                .set(OPPGAVEID, OPPGAVEID_FOR_SPORSMAL)
                                 .set(HENVENDELSEID, HENVENDELSEID_VERDI)
                 );
         wicket.goToPageWith(new DialogPanel(ID, getMockGrunnInfo()))
@@ -151,7 +153,7 @@ public class DialogPanelTest extends WicketPageTest {
 
         FortsettDialogPanel fortsettDialogPanel = wicket.get().component(ofType(FortsettDialogPanel.class));
         String oppgaveId = (String) Whitebox.getInternalState(fortsettDialogPanel, "oppgaveId");
-        assertThat(oppgaveId, is(OPPGAVEID_VERDI));
+        assertThat(oppgaveId, is(OPPGAVEID_FOR_SPORSMAL));
     }
 
     @Test

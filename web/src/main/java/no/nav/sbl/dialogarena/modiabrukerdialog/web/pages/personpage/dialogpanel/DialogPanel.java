@@ -120,12 +120,13 @@ public class DialogPanel extends Panel {
                 .findFirst()
                 .orElse(oppgave);
 
+        boolean harTrykketNyMeldingPaaAlleredePlukketOppgave = oppgave != null && traadId.equals(oppgave.henvendelseId);
+
         if (traadTilhorerOppgaveFraGosys(traadId)) {
             oppgave = session.getOppgaveFraUrl();
             session.withOppgaveSomBesvares(oppgave);
+            oppgaveId = oppgave.oppgaveId;
         }
-
-        boolean harTrykketNyMeldingPaaAlleredePlukketOppgave = oppgave != null && traadId.equals(oppgave.henvendelseId);
 
         if (harTrykketNyMeldingPaaAlleredePlukketOppgave && !erEnkeltstaaendeSamtalereferat(traad)) {
             oppgaveId = oppgave.oppgaveId;
