@@ -131,9 +131,9 @@ public class PlukkOppgavePanel extends Panel {
 
                 List<Oppgave> oppgaver = plukkOppgaveService.plukkOppgaver(valgtTemagruppe.getObject(), saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet());
                 if (!oppgaver.isEmpty()) {
-                    if (oppgaver.size() > 1) {
-                        MetricsFactory.createEvent("hendelse.plukk.flere-oppgaver-tildelt").report();
-                    }
+                    MetricsFactory.createEvent("hendelse.plukk.oppgaver-tildelt")
+                            .addFieldToReport("antall", oppgaver.size())
+                            .report();
                     opprettSvarHenvendelserForOppgaver(oppgaver);
                     session.withPlukkedeOppgaver(oppgaver)
                            .withValgtTemagruppe(valgtTemagruppe.getObject())
