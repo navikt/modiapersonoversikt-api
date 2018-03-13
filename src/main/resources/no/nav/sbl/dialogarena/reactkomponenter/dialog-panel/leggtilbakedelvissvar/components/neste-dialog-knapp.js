@@ -17,8 +17,8 @@ class NesteDialogKnapp extends Component {
     }
 }
 
-NesteDialogKnapp.prototype = {
+NesteDialogKnapp.propTypes = {
     startNesteDialogCallback: PT.func.isRequired
-}
+};
 
 export default NesteDialogKnapp;
