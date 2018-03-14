@@ -10,12 +10,14 @@ import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.Sa
 import no.nav.sbl.dialogarena.sporsmalogsvar.config.MockServiceTestContext;
 import no.nav.sbl.dialogarena.sporsmalogsvar.config.WicketPageTest;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.henvendelse.HenvendelseBehandlingService;
-import no.nav.sbl.dialogarena.sporsmalogsvar.domain.InnboksProps;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.henvendelse.domain.Meldinger;
+import no.nav.sbl.dialogarena.sporsmalogsvar.domain.InnboksProps;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.junit.Before;
+import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.junit.runners.MethodSorters;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -37,6 +39,7 @@ import static org.mockito.Mockito.*;
 import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD;
 
 @DirtiesContext(classMode = AFTER_EACH_TEST_METHOD)
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @ContextConfiguration(classes = {MockServiceTestContext.class})
 @RunWith(SpringJUnit4ClassRunner.class)
 public class InnboksTest extends WicketPageTest {
@@ -60,6 +63,11 @@ public class InnboksTest extends WicketPageTest {
                 createMelding(ELDSTE_MELDING_ID_TRAAD1, SPORSMAL_SKRIFTLIG, now().minusDays(1), Temagruppe.ARBD, ELDSTE_MELDING_ID_TRAAD1),
                 createMelding(NYESTE_MELDING_ID_TRAAD1, SVAR_SKRIFTLIG, now(), Temagruppe.ARBD, ELDSTE_MELDING_ID_TRAAD1),
                 createMelding(ENESTE_MELDING_ID_TRAAD2, SPORSMAL_SKRIFTLIG, now().minusDays(2), Temagruppe.ARBD, ENESTE_MELDING_ID_TRAAD2))));
+    }
+
+    @Test
+    public void aaaa() {
+        assert true; // Hack for å få DirtiesContext både før og etter alle metodene
     }
 
     @Test
