@@ -11,7 +11,7 @@
     <name>Dialogarena - modiabrukerdialog</name>
     <groupId>no.nav.sbl.dialogarena</groupId>
     <artifactId>modiabrukerdialog</artifactId>
-    <version>15.2.0</version>
+    <version>15.2.1-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <modules>
@@ -1150,7 +1150,7 @@
     <scm>
         <developerConnection>scm:git:http://stash.devillo.no/scm/dial/modiabrukerdialog.git</developerConnection>
         <url>http://stash.devillo.no:7990/projects/DIAL/repos/modiabrukerdialog/browse</url>
-        <tag>15.2.0</tag>
+        <tag>15.1.4</tag>
     </scm>
 
 </project>
