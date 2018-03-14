@@ -4,7 +4,7 @@ import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.Fe
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.henvendelse.DelsvarRequest;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.henvendelse.DelsvarRequest.DelsvarRequestBuilder;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.henvendelse.DelsvarService;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.util.CookieUtil;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.http.CookieUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

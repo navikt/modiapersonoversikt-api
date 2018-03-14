@@ -1,4 +1,4 @@
-package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.cache;
+package no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.cache;
 
 import no.nav.sbl.dialogarena.common.cxf.InstanceSwitcher;
 import org.springframework.aop.framework.AopProxyUtils;
