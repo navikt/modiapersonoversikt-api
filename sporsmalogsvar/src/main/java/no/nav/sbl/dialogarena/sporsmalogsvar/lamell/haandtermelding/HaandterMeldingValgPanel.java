@@ -25,8 +25,9 @@ public class HaandterMeldingValgPanel extends Panel {
         IModel<Boolean> erBehandlet = new PropertyModel<>(getDefaultModel(), "erBehandlet()");
         IModel<Boolean> erTemagruppeSosialeTjenester = new PropertyModel<>(getDefaultModel(), "erTemagruppeSosialeTjenester()");
         IModel<Boolean> erSporsmal = new PropertyModel<>(getDefaultModel(), "erMeldingstypeSporsmal()");
-        IModel<Boolean> skalViseStandardMerkValg = both(not(eldsteMeldingErJournalfort)).and(not(erFeilsendt)).and(erBehandlet).and(not(erKontorsperret));
-        IModel<Boolean> skalViseFerdigstillUtenSvarValg = both(erSporsmal).and(not(erKontorsperret)).and(not(erBehandlet));
+        IModel<Boolean> erSisteMeldingEtDelsvar = new PropertyModel<>(getDefaultModel(),"erSisteMeldingEtDelsvar()");
+        IModel<Boolean> skalViseStandardMerkValg = both(not(eldsteMeldingErJournalfort)).and(not(erFeilsendt)).and(erBehandlet).and(not(erKontorsperret)).and(not(erSisteMeldingEtDelsvar));
+        IModel<Boolean> skalViseFerdigstillUtenSvarValg = both(erSporsmal).and(not(erKontorsperret)).and(not(erBehandlet)).and(not(erSisteMeldingEtDelsvar));
         IModel<Boolean> erVarsel = new PropertyModel<>(getDefaultModel(), "erVarsel()");
 
         add(new MeldingValgPanel("journalforingValg",
