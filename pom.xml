@@ -100,7 +100,7 @@
 
         <!-- Modia-komponenter-->
         <reactkomponenter.version>1728</reactkomponenter.version>
-        <personsok.version>4.0.2</personsok.version>
+        <personsok.version>4.0.3</personsok.version>
         <kjerneinfo.versjon>6.1.2</kjerneinfo.versjon>
         <utbetaling.version>4.0.0</utbetaling.version>
         <saksoversikt.version>9.0.3</saksoversikt.version>
