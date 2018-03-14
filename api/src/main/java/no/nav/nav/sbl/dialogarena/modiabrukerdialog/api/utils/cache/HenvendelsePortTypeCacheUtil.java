@@ -12,17 +12,17 @@ public class HenvendelsePortTypeCacheUtil {
     public static final String HENT_HENVENDELSE_LISTE_METODE_NAVN = "hentHenvendelseListe";
 
     public static void invaliderHentHenvendelseListeCacheElement(HenvendelsePortType henvendelsePortType, String fodselsnummer, String[] typer) {
-        Class[] parameterTypes = getParameterTyper();
         WSHentHenvendelseListeRequest parameter = new WSHentHenvendelseListeRequest()
                 .withFodselsnummer(fodselsnummer)
                 .withTyper(typer);
 
-        Object cacheKey =  new AutentisertBrukerKeyGenerator().generate(henvendelsePortType, getHentHenvendelseMetode(parameterTypes), parameter);
+        Object cacheKey =  new AutentisertBrukerKeyGenerator().generate(henvendelsePortType, getHentHenvendelseMetode(), parameter);
 
         CacheManager.getCacheManager(CacheUtil.CACHE_MANAGER_NAME).getCache(HENVENDELSE_PORT_TYPE_CACHE_NAME).remove(cacheKey);
     }
 
-    private static Method getHentHenvendelseMetode(Class[] parameterTypes) {
+    private static Method getHentHenvendelseMetode() {
+        Class[] parameterTypes = getParameterTyper();
         try {
             return HenvendelsePortType.class.getMethod(HENT_HENVENDELSE_LISTE_METODE_NAVN, parameterTypes);
         } catch (NoSuchMethodException e) {
