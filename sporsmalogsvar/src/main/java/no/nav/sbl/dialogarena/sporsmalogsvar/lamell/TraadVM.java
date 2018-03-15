@@ -149,6 +149,10 @@ public class TraadVM implements Serializable {
         return getEldsteMelding().getMeldingstype() == Meldingstype.SPORSMAL_SKRIFTLIG;
     }
 
+    public boolean erSisteMeldingEtDelsvar() {
+        return getNyesteMelding().erDelsvar();
+    }
+
     public boolean harDelsvar() {
         return meldinger.stream().anyMatch(MeldingVM::erDelsvar);
     }
