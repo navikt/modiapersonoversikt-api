@@ -10,13 +10,14 @@ import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLMeldingFr
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLMetadataListe;
 import no.nav.modig.content.PropertyResolver;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.cache.CacheTestUtil;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.FeatureToggle;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.http.HttpRequestUtil;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.http.SubjectHandlerUtil;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.HenvendelseUtsendingServiceImpl;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.henvendelse.DelsvarServiceImpl;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.henvendelse.DelsvarController;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.henvendelse.DelsvarRestRequest;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.util.HttpRequestUtil;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.util.SubjectHandlerUtil;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.senduthenvendelse.SendUtHenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.senduthenvendelse.meldinger.WSFerdigstillHenvendelseRequest;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.henvendelse.HenvendelsePortType;
@@ -27,6 +28,7 @@ import org.mockito.ArgumentCaptor;
 import org.springframework.mock.web.MockHttpServletRequest;
 
 import javax.ws.rs.core.Response;
+import java.util.Collections;
 
 import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.SPORSMAL_SKRIFTLIG;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.Feature.DELVISE_SVAR;
@@ -51,11 +53,13 @@ class DelsvarControllerTest {
     static void beforeAll() {
         FeatureToggle.toggleFeature(DELVISE_SVAR);
         SubjectHandlerUtil.setInnloggetSaksbehandler(SAKSBEHANDLERS_IDENT);
+        CacheTestUtil.setupCache(Collections.singletonList("endpointCache"));
     }
 
     @AfterAll
     static void afterAll() {
         FeatureToggle.disableFeature(DELVISE_SVAR);
+        CacheTestUtil.tearDown();
     }
 
     @BeforeEach

@@ -1,4 +1,4 @@
-package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.util;
+package no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.http;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;

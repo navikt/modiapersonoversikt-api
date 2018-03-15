@@ -7,6 +7,7 @@ import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Saksbehandler;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.HenvendelseUtsendingService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveBehandlingService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.ldap.LDAPService;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.organisasjonsEnhetV2.OrganisasjonEnhetV2Service;
 import no.nav.personsok.consumer.fim.personsok.PersonsokServiceBi;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.service.plukkoppgave.PlukkOppgaveService;
 import org.springframework.context.annotation.Bean;
@@ -39,6 +40,11 @@ public class HentPersonPanelMockContext {
     @Bean
     public OppgaveBehandlingService oppgaveBehandlingService() {
         return mock(OppgaveBehandlingService.class);
+    }
+
+    @Bean
+    public OrganisasjonEnhetV2Service organisasjonEnhetV2Service() {
+        return mock(OrganisasjonEnhetV2Service.class);
     }
 
     @Bean

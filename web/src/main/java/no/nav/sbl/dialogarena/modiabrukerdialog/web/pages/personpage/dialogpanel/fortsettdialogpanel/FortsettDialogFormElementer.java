@@ -4,8 +4,8 @@ import no.nav.modig.modia.feedbackform.FeedbackLabel;
 import no.nav.modig.wicket.component.enhancedtextarea.EnhancedTextArea;
 import no.nav.modig.wicket.component.enhancedtextarea.EnhancedTextAreaConfigurator;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Kanal;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.GrunnInfo;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Kanal;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.HenvendelseVM;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.OppgaveTilknytningPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.SkrivestottePanel;
@@ -32,6 +32,7 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static java.util.Arrays.asList;
@@ -71,7 +72,7 @@ public class FortsettDialogFormElementer extends WebMarkupContainer {
 
         final RadioGroup<Kanal> kanalRadioGroup = new RadioGroup<>("kanal");
         kanalRadioGroup.setRequired(true);
-        kanalRadioGroup.add(new ListView<Kanal>("kanalvalg", asList(Kanal.values())) {
+        kanalRadioGroup.add(new ListView<Kanal>("kanalvalg", getKanaler(model.getObject())) {
             @Override
             protected void populateItem(ListItem<Kanal> item) {
                 String kanalType = item.getModelObject().name();
@@ -144,6 +145,13 @@ public class FortsettDialogFormElementer extends WebMarkupContainer {
         avhengerAvKanlOgDelMedBrukerValg.addAll(feedbackLabels);
 
         add(feedbackLabels.toArray(new Component[feedbackLabels.size()]));
+    }
+
+    private List<Kanal> getKanaler(HenvendelseVM henvendelseVM) {
+        if (henvendelseVM.kanKunBesvaresMedSkriftligSvar) {
+            return Collections.singletonList(Kanal.TEKST);
+        }
+        return asList(Kanal.values());
     }
 
     private void oppdaterAlleElementerSomAvhengerAvKanalOgDelMedBrukerValg(AjaxRequestTarget target, List<Component> avhengerAvKanlOgDelMedBrukerValg) {

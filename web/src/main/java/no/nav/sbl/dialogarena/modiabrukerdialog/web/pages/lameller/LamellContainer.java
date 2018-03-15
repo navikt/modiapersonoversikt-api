@@ -3,6 +3,7 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.lameller;
 import no.nav.brukerdialog.security.tilgangskontroll.policy.pep.EnforcementPoint;
 import no.nav.brukerprofil.BrukerprofilPanel;
 import no.nav.kjerneinfo.kontrakter.KontrakterPanel;
+import no.nav.metrics.MetricsFactory;
 import no.nav.modig.core.exception.ApplicationException;
 import no.nav.modig.lang.option.Optional;
 import no.nav.modig.modia.events.FeedItemPayload;
@@ -157,6 +158,7 @@ public class LamellContainer extends TokenLamellPanel implements Serializable {
 
     private void gotoAndSendToLamell(String lamellId, Object payload) {
         if (hasFactory(lamellId)) {
+            MetricsFactory.createEvent("hendelse.lamell." + lamellId + ".aapnet").report();
             goToLamell(lamellId);
             sendToLamell(lamellId, payload);
         } else {

@@ -40,6 +40,7 @@ import org.apache.wicket.model.ResourceModel;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -90,11 +91,14 @@ public class FortsettDialogPanel extends GenericPanel<HenvendelseVM> {
         this.oppgaveId = oppgave.oppgaveId;
         this.sporsmal = traad.get(0);
         this.svar = new ArrayList<>(traad.subList(1, traad.size()));
-        getModelObject().oppgaveTilknytning = erTilknyttetAnsatt(traad);
-        settOppModellMedDefaultKanalOgTemagruppe(getModelObject());
-        setOutputMarkupId(true);
-        behandlingsId = oppgave.svarHenvendelseId;
+        this.behandlingsId = oppgave.svarHenvendelseId;
 
+        HenvendelseVM henvendelseVM = getModelObject();
+        henvendelseVM.oppgaveTilknytning = erTilknyttetAnsatt(traad);
+        henvendelseVM.kanKunBesvaresMedSkriftligSvar = sisteMeldingErDelsvar(traad);
+        settOppModellMedDefaultKanalOgTemagruppe(henvendelseVM);
+
+        setOutputMarkupId(true);
         svarContainer = new WebMarkupContainer("svarcontainer");
         leggTilbakePanel = new LeggTilbakePanel("leggtilbakepanel", sporsmal.temagruppe, sporsmal.gjeldendeTemagruppe, oppgaveId, sporsmal, behandlingsId);
         SkrivestotteProps skrivestotteProps = new SkrivestotteProps(grunnInfo, saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet());
@@ -109,6 +113,14 @@ public class FortsettDialogPanel extends GenericPanel<HenvendelseVM> {
         svarContainer.add(new FortsettDialogForm("fortsettdialogform", grunnInfo, getModel()), leggTilbakeKnapp, leggTilbakeMedDelvisSvarKnap);
 
         add(traadVisning, svarContainer, leggTilbakePanel, leggTilbakeDelvisSvarPanel, kvittering);
+    }
+
+    private boolean sisteMeldingErDelsvar(List<Melding> traad) {
+        return traad.stream()
+                .sorted(Comparator.comparing(melding -> melding.opprettetDato))
+                .reduce((first, second) -> second)
+                .filter(Melding::erDelvisSvar)
+                .isPresent();
     }
 
     private AjaxLink<Void> lagLeggTilbakeKnapp() {

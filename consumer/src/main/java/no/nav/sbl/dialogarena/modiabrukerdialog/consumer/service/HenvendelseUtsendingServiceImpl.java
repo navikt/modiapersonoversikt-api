@@ -18,6 +18,7 @@ import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.HenvendelseUtsen
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveBehandlingService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.gsak.SakerService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.ldap.LDAPService;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.cache.HenvendelsePortTypeCacheUtil;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.Feature;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.FeatureToggle;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.henvendelse.delsvar.DelsvarSammenslaaer;
@@ -28,7 +29,6 @@ import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.senduthenvendelse.WSBe
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.senduthenvendelse.meldinger.WSFerdigstillHenvendelseRequest;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.senduthenvendelse.meldinger.WSSendUtHenvendelseRequest;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.senduthenvendelse.meldinger.WSSendUtHenvendelseResponse;
-import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.senduthenvendelse.meldinger.WSSlaSammenHenvendelserRequest;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.henvendelse.HenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.meldinger.WSHentHenvendelseListeRequest;
 import org.apache.commons.collections15.Transformer;
@@ -125,6 +125,11 @@ public class HenvendelseUtsendingServiceImpl implements HenvendelseUtsendingServ
                 .withBehandlingsId(behandlingsId));
 
         fullbyrdeSendtInnHenvendelse(melding, oppgaveId, sak, behandlingsId, saksbehandlersValgteEnhet);
+        invaliderCacheForHentHenvendelseListe(melding);
+    }
+
+    private void invaliderCacheForHentHenvendelseListe(Melding melding) {
+        HenvendelsePortTypeCacheUtil.invaliderHentHenvendelseListeCacheElement(henvendelsePortType, melding.fnrBruker, getHenvendelseTyper());
     }
 
     @Override

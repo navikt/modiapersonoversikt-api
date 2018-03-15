@@ -11,7 +11,7 @@
     <name>Dialogarena - modiabrukerdialog</name>
     <groupId>no.nav.sbl.dialogarena</groupId>
     <artifactId>modiabrukerdialog</artifactId>
-    <version>15.1.4-SNAPSHOT</version>
+    <version>15.2.1-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <modules>
@@ -99,9 +99,9 @@
         <!-- Samme som Jetty -->
 
         <!-- Modia-komponenter-->
-        <reactkomponenter.version>1726</reactkomponenter.version>
-        <personsok.version>4.0.2</personsok.version>
-        <kjerneinfo.versjon>6.1.1</kjerneinfo.versjon>
+        <reactkomponenter.version>1729</reactkomponenter.version>
+        <personsok.version>4.0.3</personsok.version>
+        <kjerneinfo.versjon>6.1.3</kjerneinfo.versjon>
         <utbetaling.version>4.0.0</utbetaling.version>
         <saksoversikt.version>9.0.3</saksoversikt.version>
         <varsling.modia.version>2.0</varsling.modia.version>
@@ -1150,7 +1150,7 @@
     <scm>
         <developerConnection>scm:git:http://stash.devillo.no/scm/dial/modiabrukerdialog.git</developerConnection>
         <url>http://stash.devillo.no:7990/projects/DIAL/repos/modiabrukerdialog/browse</url>
-        <tag>14.2.0</tag>
+        <tag>15.1.4</tag>
     </scm>
 
 </project>

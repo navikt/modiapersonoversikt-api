@@ -1,5 +1,9 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service;
 
+import no.nav.brukerdialog.security.context.StaticSubjectHandler;
+import no.nav.brukerdialog.security.tilgangskontroll.policy.pep.EnforcementPoint;
+import no.nav.brukerdialog.security.tilgangskontroll.policy.request.PolicyRequest;
+import no.nav.brukerdialog.security.tilgangskontroll.policy.request.attributes.ActionId;
 import no.nav.kjerneinfo.consumer.fim.person.PersonKjerneinfoServiceBi;
 import no.nav.kjerneinfo.consumer.fim.person.to.HentKjerneinformasjonRequest;
 import no.nav.kjerneinfo.consumer.fim.person.to.HentKjerneinformasjonResponse;
@@ -9,11 +13,7 @@ import no.nav.kjerneinfo.domain.person.fakta.AnsvarligEnhet;
 import no.nav.kjerneinfo.domain.person.fakta.Organisasjonsenhet;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.*;
 import no.nav.modig.content.PropertyResolver;
-import no.nav.brukerdialog.security.context.StaticSubjectHandler;
 import no.nav.modig.lang.collections.PredicateUtils;
-import no.nav.brukerdialog.security.tilgangskontroll.policy.pep.EnforcementPoint;
-import no.nav.brukerdialog.security.tilgangskontroll.policy.request.PolicyRequest;
-import no.nav.brukerdialog.security.tilgangskontroll.policy.request.attributes.ActionId;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Saksbehandler;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.Sak;
@@ -24,8 +24,10 @@ import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.gsak.SakerServic
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.ldap.LDAPService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.AnsattService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.cache.CacheTestUtil;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.Feature;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.FeatureToggle;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.http.SubjectHandlerUtil;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.behandlehenvendelse.BehandleHenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.senduthenvendelse.SendUtHenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.senduthenvendelse.meldinger.WSFerdigstillHenvendelseRequest;
@@ -36,7 +38,9 @@ import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.meldinger.WSHentHenven
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.meldinger.WSHentHenvendelseListeResponse;
 import org.hamcrest.Matchers;
 import org.joda.time.DateTime;
+import org.junit.AfterClass;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
@@ -46,6 +50,7 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -78,6 +83,7 @@ public class HenvendelseUtsendingServiceImplTest {
 
     public static final String JOURNALFORT_TEMA = "tema jobb";
     public static final String SAKSBEHANDLERS_VALGTE_ENHET = "4300";
+    public static final String SAKSBEHANDLERS_IDENT = "z123456";
 
     @Captor
     ArgumentCaptor<WSSendUtHenvendelseRequest> wsSendHenvendelseRequestCaptor;
@@ -116,8 +122,20 @@ public class HenvendelseUtsendingServiceImplTest {
     @InjectMocks
     private HenvendelseUtsendingServiceImpl henvendelseUtsendingService;
 
+    @BeforeClass
+    public static void beforeClass() {
+        CacheTestUtil.setupCache(Collections.singletonList("endpointCache"));
+    }
+
+    @AfterClass
+    public static void afterClass() {
+        CacheTestUtil.tearDown();
+    }
+
     @Before
     public void init() {
+        SubjectHandlerUtil.setInnloggetSaksbehandler(SAKSBEHANDLERS_IDENT);
+
         when(sendUtHenvendelsePortType.sendUtHenvendelse(any(WSSendUtHenvendelseRequest.class))).thenReturn(
                 new WSSendUtHenvendelseResponse().withBehandlingsId(BEHANDLINGS_ID)
         );
