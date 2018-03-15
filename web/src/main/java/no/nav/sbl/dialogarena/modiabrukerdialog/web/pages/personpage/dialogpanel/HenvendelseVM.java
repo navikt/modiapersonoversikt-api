@@ -20,7 +20,7 @@ public class HenvendelseVM extends EnhancedTextAreaModel {
     public Modus modus;
     public OppgaveTilknytning oppgaveTilknytning;
     public Sak valgtSak;
-    public boolean brukerKanSvare = false, traadJournalfort = false;
+    public boolean brukerKanSvare = false, traadJournalfort = false, kanKunBesvaresMedSkriftligSvar = false;
 
     public String getFritekst() {
         return text;

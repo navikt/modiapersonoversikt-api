@@ -4,7 +4,7 @@ import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.LeggTilbakeOppgaveIGsakRequest;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveBehandlingService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.FeatureToggle;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.util.CookieUtil;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.http.CookieUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

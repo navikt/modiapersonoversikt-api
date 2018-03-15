@@ -3,7 +3,7 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.GrunnInfo;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.AnsattService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.GrunninfoService;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.util.CookieUtil;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.http.CookieUtil;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletResponse;
