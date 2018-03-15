@@ -47,6 +47,9 @@ public class HenvendelseVM extends EnhancedTextAreaModel {
         return new AbstractReadOnlyModel<Boolean>() {
             @Override
             public Boolean getObject() {
+                if (kanKunBesvaresMedSkriftligSvar) {
+                    return false;
+                }
                 return kanal.equals(Kanal.TEKST);
             }
         };
