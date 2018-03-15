@@ -171,13 +171,11 @@ public class DialogPanel extends Panel {
     }
 
     private static boolean erEnkeltstaaendeSporsmalFraBruker(List<Melding> traad) {
-        return filtrerTraad(traad).size() == 1 && traad.get(0).meldingstype == SPORSMAL_SKRIFTLIG;
-    }
-
-    private static List<Melding> filtrerTraad(List<Melding> traad) {
-        return traad.stream()
-                .filter(melding -> melding.meldingstype != Meldingstype.DELVIS_SVAR_SKRIFTLIG)
+        List<Melding> andreMeldingstyper = traad.stream()
+                .filter(melding -> !(melding.erDelvisSvar()))
+                .filter(melding -> !(melding.meldingstype == SPORSMAL_SKRIFTLIG))
                 .collect(toList());
+        return andreMeldingstyper.isEmpty();
     }
 
     private void erstattDialogPanelMedFortsettDialogPanel(List<Melding> traad, Oppgave oppgave) {
