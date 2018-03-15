@@ -194,6 +194,18 @@ public class DialogPanelTest extends WicketPageTest {
     }
 
     @Test
+    public void tilordnerOppgaveIGsakDersomSammenslattTraad() throws FikkIkkeTilordnet {
+        Melding melding1 = lagBrukerSporsmalMedOppgaveId();
+        Melding melding2 = lagBrukerSporsmalMedOppgaveId();
+        when(henvendelseUtsendingServiceMock.hentTraad(anyString(), anyString(), anyString())).thenReturn(asList(melding1, melding2));
+
+        wicket.goToPageWith(new DialogPanel(ID, getMockGrunnInfo()))
+                .sendEvent(createEvent(Events.SporsmalOgSvar.SVAR_PAA_MELDING));
+
+        verify(oppgaveBehandlingServiceMock).tilordneOppgaveIGsak(melding1.oppgaveId, ARBD, SAKSBEHANDLERS_VALGTE_ENHET);
+    }
+
+    @Test
     public void tilordnerOppgaveIGsakDersomEnkeltstaaendeSporsmalMedDelvisSvar() throws FikkIkkeTilordnet {
         when(henvendelseUtsendingServiceMock.hentTraad(anyString(), anyString(), anyString())).thenReturn(asList(lagBrukerSporsmalMedOppgaveId(), lagDelvisSvar()));
 
