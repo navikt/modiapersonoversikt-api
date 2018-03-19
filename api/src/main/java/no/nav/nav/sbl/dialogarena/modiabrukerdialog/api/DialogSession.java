@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static java.util.Collections.emptyList;
-import static java.util.Optional.of;
+import static java.util.Optional.ofNullable;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.URLParametere.*;
 
 public class DialogSession implements Serializable {
@@ -40,8 +40,10 @@ public class DialogSession implements Serializable {
 
     public DialogSession withPlukkedeOppgaver(List<Oppgave> oppgaver) {
         this.plukkedeOppgaver = oppgaver;
-        this.oppgaveSomBesvares = oppgaver.get(0);
-        this.oppgaverBlePlukket = true;
+        if (!oppgaver.isEmpty()) {
+            this.oppgaveSomBesvares = oppgaver.get(0);
+            this.oppgaverBlePlukket = true;
+        }
         return this;
     }
 
@@ -81,10 +83,7 @@ public class DialogSession implements Serializable {
     }
 
     public Optional<Oppgave> getOppgaveSomBesvares() {
-        if (oppgaveSomBesvares == null) {
-            return plukkedeOppgaver.stream().findFirst();
-        }
-        return of(oppgaveSomBesvares);
+        return ofNullable(oppgaveSomBesvares);
     }
 
     public DialogSession withOppgaveSomBesvares(Oppgave oppgave) {

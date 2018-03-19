@@ -34,6 +34,7 @@ import org.slf4j.Logger;
 import javax.inject.Inject;
 import java.util.List;
 
+import static java.util.stream.Collectors.toList;
 import static no.nav.brukerdialog.security.tilgangskontroll.utils.AttributeUtils.actionId;
 import static no.nav.brukerdialog.security.tilgangskontroll.utils.AttributeUtils.resourceId;
 import static no.nav.metrics.MetricsFactory.createTimer;
@@ -122,7 +123,8 @@ public class PlukkOppgavePanel extends Panel {
             timer.start();
             try {
                 session = DialogSession.read(this);
-                if (brukerHarEnAnnenPlukketOppgavePaaSession() && oppgavePaaSessionKanBehandles()) {
+                fjernFerdigstilteOppgaverFraSession();
+                if (!session.getPlukkedeOppgaver().isEmpty()) {
                     session.withOppgaveSomBesvares(session.getPlukkedeOppgaver().get(0))
                            .withOppgaverBlePlukket(true);
                     redirectForAaBesvareOppgave();
@@ -174,14 +176,12 @@ public class PlukkOppgavePanel extends Panel {
             setResponsePage(PersonPage.class, new PageParameters().set(FNR, session.getOppgaveSomBesvares().get().fnr));
         }
 
-        private boolean oppgavePaaSessionKanBehandles() {
-            if (session.getOppgaveSomBesvares()
-                    .map(o -> plukkOppgaveService.oppgaveErFerdigstilt(o.oppgaveId))
-                    .orElse(true)) {
-                session.withOppgaveSomBesvares(null);
-                return false;
-            }
-            return true;
+        private void fjernFerdigstilteOppgaverFraSession() {
+            session.withPlukkedeOppgaver(
+                    session.getPlukkedeOppgaver().stream()
+                            .filter(oppgave -> !plukkOppgaveService.oppgaveErFerdigstilt(oppgave.oppgaveId))
+                            .collect(toList())
+            );
         }
 
         private boolean brukerHarEnAnnenPlukketOppgavePaaSession() {

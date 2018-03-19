@@ -50,6 +50,7 @@ import static no.nav.modig.modia.events.InternalEvents.GOTO_HENT_PERSONPAGE;
 import static no.nav.modig.wicket.test.FluentWicketTester.with;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.ofType;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.withId;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.URLParametere.FNR;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe.ARBD;
 import static org.hamcrest.Matchers.is;
 import static org.joda.time.DateTime.now;
@@ -136,13 +137,13 @@ public class PersonPageTest extends WicketPageTest {
     }
 
     private void assertSletterPlukketOppgaveFraSessionVedEvent(String event) {
-        Oppgave oppgave1 = new Oppgave("oppgave1", "fnr1", "henvendelse1");
+        Oppgave oppgave1 = new Oppgave("oppgave1", testFnr, "henvendelse1");
         DialogSession session = DialogSession.read(wicket.tester.getSession())
                 .withOppgaveSomBesvares(oppgave1)
                 .withPlukkedeOppgaver(new ArrayList<Oppgave>(singletonList(oppgave1)))
                 .withOppgaverBlePlukket(true);
 
-        wicket.goTo(PersonPage.class, with().param("fnr", testFnr));
+        wicket.goTo(PersonPage.class, with().param(FNR, testFnr));
 
         wicket.sendEvent(createEvent(event));
 

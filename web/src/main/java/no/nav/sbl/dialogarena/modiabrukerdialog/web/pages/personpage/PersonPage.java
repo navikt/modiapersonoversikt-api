@@ -57,11 +57,11 @@ import javax.inject.Named;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.util.Optional.ofNullable;
 import static no.nav.metrics.MetricsFactory.createEvent;
 import static no.nav.modig.modia.constants.ModiaConstants.HENT_PERSON_BEGRUNNET;
 import static no.nav.modig.modia.events.InternalEvents.*;
 import static no.nav.modig.modia.lamell.ReactSjekkForlatModal.getJavascriptSaveButtonFocus;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.SessionParametere.SporsmalOgSvar.BESVARMODUS;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.URLParametere.*;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.lameller.LamellContainer.LAMELL_MELDINGER;
 import static org.apache.commons.lang3.StringUtils.isBlank;
@@ -112,10 +112,13 @@ public class PersonPage extends BasePage {
         grunnInfo = grunninfoService.hentGrunninfo(fnr);
         boolean skalViseMeldingerLamell = session.oppgaverBlePlukket() || erRequestFraGosys(pageParameters);
 
+        if (oppgaverPaSessionTilhorerAnnetFNREnnFraUrl(session)) {
+            session.clearOppgaveSomBesvaresOgOppgaveFraUrl();
+        }
         if (erRequestFraGosys(pageParameters)) {
             session.withURLParametre(pageParameters);
         }
-        pageParameters.remove(OPPGAVEID, HENVENDELSEID, BESVARMODUS);
+        pageParameters.remove(OPPGAVEID, HENVENDELSEID, BESVARES);
 
         redirectPopup = new ReactSjekkForlatModal("redirectModal");
         konfigurerRedirectPopup();
@@ -150,8 +153,14 @@ public class PersonPage extends BasePage {
         HentPersonPage.configureModalWindow(oppgiBegrunnelseModal, pageParameters);
     }
 
+    private boolean oppgaverPaSessionTilhorerAnnetFNREnnFraUrl(DialogSession session) {
+        return session.getOppgaveSomBesvares().map(oppgave -> !fnr.equals(oppgave.fnr)).orElse(false)
+                || ofNullable(session.getOppgaveFraUrl()).map(oppgave -> !fnr.equals(oppgave.fnr)).orElse(false);
+    }
+
     private boolean erRequestFraGosys(PageParameters pageParameters) {
-        return !pageParameters.get(OPPGAVEID).isEmpty() || !pageParameters.get(HENVENDELSEID).isEmpty();
+        return (!pageParameters.get(OPPGAVEID).isEmpty() || !pageParameters.get(HENVENDELSEID).isEmpty())
+                && pageParameters.get(BESVARES).isEmpty();
     }
 
     private String hentFodselsnummerFraRequest() {
