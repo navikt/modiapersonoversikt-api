@@ -111,7 +111,7 @@ public class AlleMeldingerPanel extends Panel {
         if (this.isVisibleInHierarchy()) {
             innboksVM.oppdaterMeldinger();
             if (innboksVM.harTraader()) {
-                if (innboksVM.getValgtTraad() == null) {
+                if (innboksVM.getValgtTraad().getMeldinger().size() == 0) {
                     innboksVM.setValgtMelding(innboksVM.getNyesteMeldingINyesteTraad());
                     send(getPage(), Broadcast.DEPTH, MELDING_VALGT);
                 }
