@@ -63,6 +63,10 @@ class Modal extends React.Component {
         if (!force && !precheck) {
             return;
         }
+        const modalNotFoundOnBody = !document.body.contains(this.portalElement);
+        if (modalNotFoundOnBody) {
+            return;
+        }
 
         this.setState({ isOpen: false });
         document.body.removeChild(this.portalElement);
