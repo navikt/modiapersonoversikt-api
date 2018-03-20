@@ -146,7 +146,7 @@ public class Innboks extends Lerret {
             return innboksVM.getNyesteMeldingITraad(
                     session.getOppgaveSomBesvares()
                            .map(oppgave -> oppgave.henvendelseId)
-                           .orElse(null)
+                           .get()
             );
         } else if (session.getOppgaveFraUrl() != null) {
             return innboksVM.getNyesteMeldingITraad(session.getOppgaveFraUrl().henvendelseId);
@@ -215,7 +215,6 @@ public class Innboks extends Lerret {
     }
 
     private void haandterOppgaveAlleredeFerdigstilt(String oppgaveId) {
-        // TODO vis feilmelding
         DialogSession.read(this)
                 .getPlukkedeOppgaver()
                 .removeIf(oppgave -> oppgaveId.equals(oppgave.oppgaveId));
@@ -224,7 +223,6 @@ public class Innboks extends Lerret {
     }
 
     private void haandterTraadAlleredeBesvart(String traadId) {
-        // TODO vis feilmelding
         innboksVM.tildelteOppgaver
                 .removeIf(oppgave -> traadId.equals(oppgave.henvendelseId));
         DialogSession.read(this)

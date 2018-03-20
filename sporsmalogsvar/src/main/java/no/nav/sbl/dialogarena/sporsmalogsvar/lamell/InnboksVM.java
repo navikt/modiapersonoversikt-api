@@ -81,9 +81,9 @@ public class InnboksVM implements Serializable {
         }
         tildelteOppgaverUtenDelsvar.clear();
         tildelteOppgaverUtenDelsvar.addAll(tildelteOppgaver.stream()
-                .filter(oppgave -> !getTraader()
-                        .get(oppgave.henvendelseId)
-                        .harDelsvar())
+                .filter(oppgave -> !ofNullable(getTraader().get(oppgave.henvendelseId))
+                        .map(TraadVM::harDelsvar)
+                        .orElse(false))
                 .collect(toList()));
     }
 
