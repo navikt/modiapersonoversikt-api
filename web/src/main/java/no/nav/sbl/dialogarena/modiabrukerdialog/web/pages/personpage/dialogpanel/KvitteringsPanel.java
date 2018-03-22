@@ -68,6 +68,8 @@ public class KvitteringsPanel extends Panel {
             }
         };
         nesteDialogLenke.add(visibleIf(when(getAntallTildelt(), new GreaterThanPredicate<>(0))));
+        nesteDialogLenke.setOutputMarkupId(true);
+        startNyDialogLenke.setOutputMarkupId(true);
         add(nesteDialogLenke, startNyDialogLenke, temagruppemeldingLabel, kvitteringsmeldingLabel);
     }
 
