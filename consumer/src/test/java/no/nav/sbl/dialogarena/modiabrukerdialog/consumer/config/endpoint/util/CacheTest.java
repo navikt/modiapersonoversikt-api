@@ -6,9 +6,9 @@ import no.nav.metrics.proxy.MetricProxy;
 import no.nav.metrics.proxy.TimerProxy;
 import no.nav.sbl.dialogarena.common.cxf.InstanceSwitcher;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.cache.CacheConfiguration;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.springframework.aop.framework.Advised;
 import org.springframework.cache.ehcache.EhCacheCache;
 import org.springframework.cache.ehcache.EhCacheCacheManager;
@@ -36,12 +36,12 @@ public abstract class CacheTest {
         cm = eccm;
     }
 
-    @AfterClass
+    @AfterAll
     public static void after() {
         cm.getCacheManager().shutdown();
     }
 
-    @BeforeClass
+    @BeforeAll
     public static void before() {
         System.setProperty(SUBJECTHANDLER_KEY, ThreadLocalSubjectHandler.class.getName());
         System.setProperty("no.nav.modig.security.sts.url", "");
@@ -49,7 +49,7 @@ public abstract class CacheTest {
         System.setProperty("no.nav.modig.security.systemuser.password", "");
     }
 
-    @Before
+    @BeforeEach
     public void teardown() {
         getCache().removeAll();
     }

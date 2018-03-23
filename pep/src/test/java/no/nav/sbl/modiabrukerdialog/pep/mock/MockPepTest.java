@@ -5,15 +5,15 @@ import no.nav.brukerdialog.security.tilgangskontroll.policy.attributes.values.St
 import no.nav.brukerdialog.security.tilgangskontroll.policy.request.PolicyRequest;
 import no.nav.brukerdialog.security.tilgangskontroll.policy.request.attributes.ResourceAttribute;
 import no.nav.brukerdialog.security.tilgangskontroll.policy.response.Decision;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class MockPepTest {
 	MockPep mockPep;
 
-	@Before
+	@BeforeEach
 	public void setUp() {
 		mockPep = new MockPep();
 	}

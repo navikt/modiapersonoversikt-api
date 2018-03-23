@@ -3,7 +3,7 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Person;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
 import org.joda.time.DateTime;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 

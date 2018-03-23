@@ -3,8 +3,8 @@ package no.nav.sbl.modiabrukerdialog.pdp;
 import no.nav.sbl.modiabrukerdialog.pdp.test.util.XACMLRequestBuilder;
 import org.jboss.security.xacml.core.JBossPDP;
 import org.jboss.security.xacml.interfaces.PolicyDecisionPoint;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 
 import static org.jboss.security.xacml.interfaces.XACMLConstants.ATTRIBUTEID_RESOURCE_ID;
 
@@ -24,13 +24,13 @@ public class AbstractPDPTest {
 	protected static final String SUBJECT_ID = "Z999999";
 	protected static PolicyDecisionPoint pdp;
 
-	@BeforeClass
+	@BeforeAll
 	public static void setupOnce() {
 		System.setProperty("DiskresjonskodeLocator.url", "http://www.test.no/");
 		pdp = new JBossPDP(GeografiskPolicyTest.class.getClassLoader().getResourceAsStream(POLICY_FILE));
 	}
 
-	@AfterClass
+	@AfterAll
 	public static void cleanUp() {
 		System.clearProperty("DiskresjonskodeLocator.url");
 	}

@@ -7,8 +7,8 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.ldap.LDAPService;
 import org.joda.time.DateTime;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.List;
 import java.util.Map;
@@ -25,10 +25,11 @@ import static no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Me
 import static no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Status.*;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.MeldingUtils.*;
 import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.nullValue;
 import static org.hamcrest.core.Is.is;
 import static org.joda.time.DateTime.now;
-import static org.junit.Assert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.*;
 
@@ -52,7 +53,7 @@ public class MeldingUtilsTest {
     private PropertyResolver propertyResolver = mock(PropertyResolver.class);
     private LDAPService ldapService = mock(LDAPService.class);
 
-    @Before
+    @BeforeEach
     public void init() {
         when(propertyResolver.getProperty(anyString(), anyString())).thenReturn(mockVerdiFraPropertyResolver);
         when(propertyResolver.getProperty(anyString())).thenReturn(mockVerdiFraPropertyResolver);
@@ -106,9 +107,9 @@ public class MeldingUtilsTest {
         assertThat(STATUS.transform(xmlHenvendelse), is(equalTo(LEST_AV_BRUKER)));
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testStatusTransformerUkjentType() {
-        STATUS.transform(new XMLHenvendelse().withHenvendelseType(""));
+        assertThrows(IllegalArgumentException.class, () -> STATUS.transform(new XMLHenvendelse().withHenvendelseType("")));
     }
 
     @Test
@@ -282,10 +283,10 @@ public class MeldingUtilsTest {
         assertThat(sporsmal.erDokumentMelding, is(false));
     }
 
-    @Test(expected = RuntimeException.class)
+    @Test
     public void kasterExceptionVedUkjentType() {
         XMLHenvendelse xmlHenvendelse = createXMLHenvendelseMedUkjentType();
-        tilMelding(propertyResolver, ldapService).transform(xmlHenvendelse);
+        assertThrows(RuntimeException.class, () -> tilMelding(propertyResolver, ldapService).transform(xmlHenvendelse));
     }
 
     @Test

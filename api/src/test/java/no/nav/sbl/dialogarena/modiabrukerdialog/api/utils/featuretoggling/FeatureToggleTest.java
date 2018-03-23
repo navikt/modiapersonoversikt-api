@@ -1,9 +1,9 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static java.lang.System.setProperty;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class FeatureToggleTest {
 

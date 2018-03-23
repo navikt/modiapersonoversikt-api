@@ -1,7 +1,7 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.api.domain;
 
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.Sak;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static no.nav.modig.lang.option.Optional.optional;
 import static org.hamcrest.MatcherAssert.assertThat;

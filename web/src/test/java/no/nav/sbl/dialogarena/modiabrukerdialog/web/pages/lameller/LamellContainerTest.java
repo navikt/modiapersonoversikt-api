@@ -12,22 +12,24 @@ import no.nav.sykmeldingsperioder.consumer.pleiepenger.mock.PleiepengerMockFacto
 import org.apache.wicket.event.IEvent;
 import org.joda.time.LocalDate;
 import org.joda.time.format.DateTimeFormat;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.MockitoAnnotations;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.lameller.LamellContainer.*;
 import static no.nav.sykmeldingsperioder.widget.SykepengerWidgetServiceImpl.*;
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-@RunWith(SpringJUnit4ClassRunner.class)
+@ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = {LamellServicesAndLoaders.class, JacksonMockContext.class})
 public class LamellContainerTest extends WicketPageTest {
 
@@ -39,15 +41,17 @@ public class LamellContainerTest extends WicketPageTest {
         return new GrunnInfo(bruker, saksbehandler);
     }
 
-    @Before
+    @BeforeEach
     public void setup() {
         MockitoAnnotations.initMocks(this);
         lamellContainer = new LamellContainer("lameller", wicket.tester.getSession(), getMockGrunnInfo());
     }
 
-    @Test(expected = ApplicationException.class)
+    @Test
     public void handleFeedItemEventshouldThrowWhenUnknownEventhappens() {
-        lamellContainer.handleFeedItemEvent(mock(IEvent.class), new FeedItemPayload("widgetid", "itemId", "type"));
+        assertThrows(ApplicationException.class, () ->
+                lamellContainer.handleFeedItemEvent(mock(IEvent.class), new FeedItemPayload("widgetid", "itemId", "type"))
+        );
     }
 
     @Test
@@ -97,9 +101,11 @@ public class LamellContainerTest extends WicketPageTest {
         assertThat(selectedLamell, equalTo(LAMELL_SYKEPENGER + "itemId2"));
     }
 
-    @Test(expected = ApplicationException.class)
+    @Test
     public void handleWidgetItemEventshouldThrowWhenUnknownEventhappens() {
-        lamellContainer.handleWidgetItemEvent("ukjent");
+        assertThrows(ApplicationException.class, () ->
+                lamellContainer.handleWidgetItemEvent("ukjent")
+        );
     }
 
     @Test

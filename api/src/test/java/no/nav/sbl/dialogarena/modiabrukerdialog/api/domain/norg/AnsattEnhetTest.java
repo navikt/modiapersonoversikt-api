@@ -1,9 +1,10 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg;
 
-import org.junit.Test;
 
+import org.junit.jupiter.api.Test;
+
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.*;
 
 public class AnsattEnhetTest {
 
