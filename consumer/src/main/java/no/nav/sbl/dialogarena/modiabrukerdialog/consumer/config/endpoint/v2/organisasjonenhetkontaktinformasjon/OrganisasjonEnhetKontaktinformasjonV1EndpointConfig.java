@@ -3,8 +3,8 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v2.org
 import no.nav.modig.modia.ping.Pingable;
 import no.nav.modig.modia.ping.PingableWebService;
 import no.nav.modig.modia.ping.UnpingableWebService;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.Feature;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.FeatureToggle;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.Feature;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.FeatureToggle;
 import no.nav.sbl.dialogarena.common.cxf.CXFClient;
 import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.OrganisasjonEnhetKontaktinformasjonV1Mock;
 import no.nav.tjeneste.virksomhet.organisasjonenhetkontaktinformasjon.v1.binding.OrganisasjonEnhetKontaktinformasjonV1;

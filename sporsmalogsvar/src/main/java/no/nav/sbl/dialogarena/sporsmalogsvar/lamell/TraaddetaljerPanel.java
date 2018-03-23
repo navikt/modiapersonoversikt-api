@@ -2,7 +2,7 @@ package no.nav.sbl.dialogarena.sporsmalogsvar.lamell;
 
 import no.nav.modig.wicket.events.NamedEventPayload;
 import no.nav.modig.wicket.events.annotations.RefreshOnEvents;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.Events;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.constants.Events;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.HaandterMeldingValgPanel;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.MeldingActionPanel;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -18,7 +18,7 @@ import org.apache.wicket.model.PropertyModel;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.hasCssClassIf;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
 import static no.nav.modig.wicket.model.ModelUtils.not;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.Events.SporsmalOgSvar.MELDING_VALGT;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.api.constants.Events.SporsmalOgSvar.MELDING_VALGT;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.Innboks.INNBOKS_OPPDATERT_EVENT;
 import static org.apache.wicket.event.Broadcast.BREADTH;
 

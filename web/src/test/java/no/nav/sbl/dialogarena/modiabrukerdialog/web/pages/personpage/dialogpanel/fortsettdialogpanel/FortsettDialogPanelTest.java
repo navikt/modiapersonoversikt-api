@@ -3,18 +3,18 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpane
 
 import no.nav.modig.content.CmsContentRetriever;
 import no.nav.modig.wicket.test.matcher.BehaviorMatchers;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.GrunnInfo;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.GrunnInfo.Bruker;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.GrunnInfo.Saksbehandler;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Kanal;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Oppgave;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.Sak;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Fritekst;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.HenvendelseUtsendingService;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.GrunnInfo;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.GrunnInfo.Bruker;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.GrunnInfo.Saksbehandler;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Kanal;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Oppgave;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.Sak;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Fritekst;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.HenvendelseUtsendingService;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.WicketPageTest;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.DialogPanelMockContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.HenvendelseVM.OppgaveTilknytning;
@@ -43,8 +43,8 @@ import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static no.nav.brukerdialog.security.context.SubjectHandler.getSubjectHandler;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.*;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Kanal.TEKST;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype.*;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Kanal.TEKST;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype.*;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.HenvendelseVM.OppgaveTilknytning.ENHET;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.HenvendelseVM.OppgaveTilknytning.SAKSBEHANDLER;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.fortsettdialogpanel.FortsettDialogPanel.erTilknyttetAnsatt;
@@ -395,7 +395,7 @@ public class FortsettDialogPanelTest extends WicketPageTest {
         return new Melding()
                 .withOpprettetDato(now())
                 .withType(SVAR_SKRIFTLIG)
-                .withFritekst(new Fritekst("fritekst", new no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Saksbehandler("", "", ""), now()))
+                .withFritekst(new Fritekst("fritekst", new no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Saksbehandler("", "", ""), now()))
                 .withTemagruppe(TEMAGRUPPE);
     }
 

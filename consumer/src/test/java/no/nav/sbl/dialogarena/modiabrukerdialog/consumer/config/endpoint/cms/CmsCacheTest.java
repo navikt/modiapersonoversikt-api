@@ -5,19 +5,19 @@ import no.nav.modig.content.ContentRetriever;
 import org.junit.After;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.cache.ehcache.EhCacheCacheManager;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import javax.inject.Inject;
 import java.net.URI;
 
 import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.springframework.test.util.MatcherAssertionErrors.assertThat;
+import static org.junit.Assert.assertThat;
 
 
-@RunWith(SpringJUnit4ClassRunner.class)
+@ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = {
         CacheConfig.class,
         CmsEndpointConfig.class,

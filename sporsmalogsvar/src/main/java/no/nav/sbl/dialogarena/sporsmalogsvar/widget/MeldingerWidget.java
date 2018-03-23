@@ -2,9 +2,9 @@ package no.nav.sbl.dialogarena.sporsmalogsvar.widget;
 
 import no.nav.modig.modia.widget.async.AsyncWidget;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.Events;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.constants.Events;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.henvendelse.HenvendelseBehandlingService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.henvendelse.domain.Meldinger;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.henvendelse.domain.Traad;

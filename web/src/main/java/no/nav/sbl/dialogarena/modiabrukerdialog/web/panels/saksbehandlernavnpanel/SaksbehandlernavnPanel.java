@@ -1,7 +1,7 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.saksbehandlernavnpanel;
 
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Person;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.ldap.LDAPService;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Person;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.ldap.LDAPService;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.Panel;
 

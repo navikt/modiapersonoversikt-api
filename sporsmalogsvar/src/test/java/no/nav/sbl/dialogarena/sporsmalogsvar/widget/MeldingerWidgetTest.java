@@ -1,8 +1,8 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.widget;
 
 import no.nav.modig.wicket.test.EventGenerator;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.Events;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.constants.Events;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
 import no.nav.sbl.dialogarena.sporsmalogsvar.config.MockServiceTestContext;
 import no.nav.sbl.dialogarena.sporsmalogsvar.config.WicketPageTest;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.henvendelse.HenvendelseBehandlingService;
@@ -19,7 +19,7 @@ import javax.inject.Inject;
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.ofType;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype.SPORSMAL_SKRIFTLIG;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype.SPORSMAL_SKRIFTLIG;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.TestUtils.createMelding;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;

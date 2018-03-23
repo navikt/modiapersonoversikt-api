@@ -2,11 +2,11 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpane
 
 import no.nav.modig.content.CmsContentRetriever;
 import no.nav.modig.wicket.component.enhancedtextarea.EnhancedTextArea;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.GrunnInfo;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.Sak;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.HenvendelseUtsendingService;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.GrunnInfo;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.Sak;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.HenvendelseUtsendingService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.WicketPageTest;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.DialogPanelMockContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.HenvendelseVM.OppgaveTilknytning;
@@ -32,9 +32,9 @@ import java.util.Optional;
 
 import static no.nav.brukerdialog.security.context.SubjectHandler.getSubjectHandler;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.*;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Kanal.TELEFON;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe.ARBD;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype.SAMTALEREFERAT_TELEFON;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Kanal.TELEFON;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe.ARBD;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype.SAMTALEREFERAT_TELEFON;
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;

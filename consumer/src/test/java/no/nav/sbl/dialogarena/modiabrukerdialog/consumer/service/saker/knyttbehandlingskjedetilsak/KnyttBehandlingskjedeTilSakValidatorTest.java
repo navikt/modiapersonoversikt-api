@@ -1,6 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.saker.knyttbehandlingskjedetilsak;
 
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.Sak;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.Sak;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

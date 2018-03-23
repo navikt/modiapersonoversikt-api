@@ -1,7 +1,7 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel;
 
 import no.nav.modig.modia.aria.AriaHelpers;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.GrunnInfo;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.GrunnInfo;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.HenvendelseVM.OppgaveTilknytning;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;

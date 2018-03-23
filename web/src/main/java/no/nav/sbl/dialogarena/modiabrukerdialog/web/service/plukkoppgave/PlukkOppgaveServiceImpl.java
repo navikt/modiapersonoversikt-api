@@ -7,9 +7,9 @@ import no.nav.kjerneinfo.domain.person.fakta.AnsvarligEnhet;
 import no.nav.kjerneinfo.domain.person.fakta.Organisasjonsenhet;
 import no.nav.modig.core.exception.AuthorizationException;
 import no.nav.brukerdialog.security.tilgangskontroll.policy.pep.EnforcementPoint;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Oppgave;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveBehandlingService;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Oppgave;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveBehandlingService;
 
 import javax.annotation.Resource;
 import javax.inject.Inject;

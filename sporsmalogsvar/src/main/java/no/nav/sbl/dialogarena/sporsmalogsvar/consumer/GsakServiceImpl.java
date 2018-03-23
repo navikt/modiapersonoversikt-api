@@ -1,8 +1,8 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.consumer;
 
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.GsakKodeTema;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.AnsattService;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.GsakKodeTema;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.AnsattService;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.NyOppgave;
 import no.nav.tjeneste.virksomhet.oppgave.v3.HentOppgaveOppgaveIkkeFunnet;
 import no.nav.tjeneste.virksomhet.oppgave.v3.OppgaveV3;

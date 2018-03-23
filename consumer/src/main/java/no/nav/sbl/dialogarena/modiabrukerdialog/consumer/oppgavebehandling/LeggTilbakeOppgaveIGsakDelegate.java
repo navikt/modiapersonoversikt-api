@@ -1,9 +1,9 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.oppgavebehandling;
 
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.AnsattEnhet;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.LeggTilbakeOppgaveIGsakRequest;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.arbeidsfordeling.ArbeidsfordelingV1Service;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.AnsattEnhet;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.LeggTilbakeOppgaveIGsakRequest;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.arbeidsfordeling.ArbeidsfordelingV1Service;
 import no.nav.tjeneste.virksomhet.oppgave.v3.informasjon.oppgave.WSOppgave;
 import no.nav.tjeneste.virksomhet.oppgave.v3.informasjon.oppgave.WSUnderkategori;
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.LagreOppgaveOptimistiskLasing;

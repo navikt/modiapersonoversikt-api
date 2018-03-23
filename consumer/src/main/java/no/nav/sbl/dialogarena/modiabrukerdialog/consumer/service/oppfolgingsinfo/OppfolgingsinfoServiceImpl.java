@@ -1,10 +1,10 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.oppfolgingsinfo;
 
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Saksbehandler;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.oppfolgingsinfo.Oppfolgingsinfo;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.ldap.LDAPService;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.oppfolgingsinfo.OppfolgingsenhetService;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.oppfolgingsinfo.OppfolgingsinfoService;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Saksbehandler;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.oppfolgingsinfo.Oppfolgingsinfo;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.ldap.LDAPService;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.oppfolgingsinfo.OppfolgingsenhetService;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.oppfolgingsinfo.OppfolgingsinfoService;
 import no.nav.tjeneste.virksomhet.aktoer.v1.AktoerPortType;
 import no.nav.tjeneste.virksomhet.aktoer.v1.HentAktoerIdForIdentPersonIkkeFunnet;
 import no.nav.tjeneste.virksomhet.aktoer.v1.meldinger.HentAktoerIdForIdentRequest;

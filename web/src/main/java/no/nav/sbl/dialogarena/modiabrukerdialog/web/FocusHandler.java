@@ -1,6 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web;
 
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.Events;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.constants.Events;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.fortsettdialogpanel.LeggTilbakePanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.saksbehandlerpanel.SaksbehandlerInnstillingerPanel;
 import org.apache.commons.collections15.Closure;

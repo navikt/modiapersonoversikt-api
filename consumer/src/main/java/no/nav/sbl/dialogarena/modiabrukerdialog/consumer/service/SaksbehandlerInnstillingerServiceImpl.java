@@ -1,16 +1,16 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service;
 
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.AnsattService;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.AnsattService;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
 import org.apache.wicket.util.cookies.CookieUtils;
 
 import javax.inject.Inject;
 import java.util.List;
 
 import static no.nav.modig.lang.collections.IterUtils.on;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.AnsattEnhet.ENHET_ID;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.RestUtils.saksbehandlerInnstillingerCookieId;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.RestUtils.saksbehandlerInnstillingerTimeoutCookieId;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.AnsattEnhet.ENHET_ID;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.RestUtils.saksbehandlerInnstillingerCookieId;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.RestUtils.saksbehandlerInnstillingerTimeoutCookieId;
 
 
 public class SaksbehandlerInnstillingerServiceImpl implements SaksbehandlerInnstillingerService {

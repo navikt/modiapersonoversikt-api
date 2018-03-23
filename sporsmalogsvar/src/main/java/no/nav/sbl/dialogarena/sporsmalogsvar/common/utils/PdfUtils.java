@@ -4,9 +4,9 @@ package no.nav.sbl.dialogarena.sporsmalogsvar.common.utils;
 import com.github.jknack.handlebars.Context;
 import com.github.jknack.handlebars.Helper;
 import no.nav.modig.core.exception.ApplicationException;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype;
 import no.nav.sbl.dialogarena.pdf.HandleBarHtmlGenerator;
 import no.nav.sbl.dialogarena.pdf.PDFFabrikk;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.MeldingVM;
@@ -17,9 +17,9 @@ import java.util.*;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.unmodifiableMap;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe.*;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype.SPORSMAL_SKRIFTLIG;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype.SVAR_SBL_INNGAAENDE;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe.*;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype.SPORSMAL_SKRIFTLIG;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype.SVAR_SBL_INNGAAENDE;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.PdfUtils.MeldingsTypeMapping.SAMTALEREFERAT;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 

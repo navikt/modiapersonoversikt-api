@@ -12,7 +12,7 @@ import java.net.URI;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.config.ApplicationContextProvider.context;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.api.config.ApplicationContextProvider.context;
 
 
 /**

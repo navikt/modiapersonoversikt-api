@@ -1,9 +1,9 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.lamell;
 
 import no.nav.brukerdialog.security.tilgangskontroll.policy.pep.EnforcementPoint;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.config.MockServiceTestContext;
 import no.nav.sbl.dialogarena.sporsmalogsvar.config.WicketPageTest;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.henvendelse.HenvendelseBehandlingService;
@@ -19,7 +19,7 @@ import javax.inject.Inject;
 
 import static java.util.Arrays.asList;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.*;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype.*;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype.*;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.TestUtils.createMelding;
 import static org.joda.time.DateTime.now;
 import static org.mockito.Matchers.anyString;

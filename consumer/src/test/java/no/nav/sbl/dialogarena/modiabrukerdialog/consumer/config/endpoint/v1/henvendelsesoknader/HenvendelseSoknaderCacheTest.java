@@ -15,7 +15,7 @@ import static no.nav.modig.testcertificates.TestCertificates.setupKeyAndTrustSto
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v1.henvendelsesoknader.HenvendelseSoknaderEndpointConfig.HENVENDELSESOKNADER_KEY;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.MockUtil.TILLATMOCKSETUP_PROPERTY;
 import static org.hamcrest.core.Is.is;
-import static org.springframework.test.util.MatcherAssertionErrors.assertThat;
+import static org.junit.Assert.assertThat;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = {HenvendelseSoknaderEndpointConfig.class})

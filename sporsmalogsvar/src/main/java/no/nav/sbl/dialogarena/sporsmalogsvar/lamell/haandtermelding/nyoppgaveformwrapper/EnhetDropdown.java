@@ -1,6 +1,6 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.nyoppgaveformwrapper;
 
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.AnsattEnhet;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.AnsattEnhet;
 import org.apache.wicket.extensions.markup.html.form.select.IOptionRenderer;
 import org.apache.wicket.extensions.markup.html.form.select.Select;
 import org.apache.wicket.extensions.markup.html.form.select.SelectOptions;

@@ -1,8 +1,8 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest;
 
 import no.nav.brukerdialog.security.context.ThreadLocalSubjectHandler;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.AnsattEnhet;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.AnsattService;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.AnsattEnhet;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.AnsattService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.henvendelse.HenvendelseBehandlingService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.MeldingerSok;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.henvendelse.domain.Meldinger;

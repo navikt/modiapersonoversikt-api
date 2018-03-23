@@ -1,7 +1,7 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer;
 
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.Sak;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.psak.PsakService;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.Sak;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.psak.PsakService;
 import no.nav.tjeneste.virksomhet.pensjonsak.v1.PensjonSakV1;
 import no.nav.tjeneste.virksomhet.pensjonsak.v1.informasjon.WSPeriode;
 import no.nav.tjeneste.virksomhet.pensjonsak.v1.informasjon.WSSakSammendrag;
@@ -14,7 +14,7 @@ import java.util.List;
 
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.lang.option.Optional.optional;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.Sak.FAGSYSTEMKODE_PSAK;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.Sak.FAGSYSTEMKODE_PSAK;
 
 public class PsakServiceImpl implements PsakService {
 

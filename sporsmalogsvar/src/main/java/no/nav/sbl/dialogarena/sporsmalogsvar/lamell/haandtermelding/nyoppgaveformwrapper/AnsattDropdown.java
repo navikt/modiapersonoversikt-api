@@ -1,6 +1,6 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.nyoppgaveformwrapper;
 
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.Ansatt;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.Ansatt;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
 import org.apache.wicket.markup.html.form.DropDownChoice;

@@ -1,10 +1,10 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.henvendelse;
 
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Kanal;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Fritekst;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.HenvendelseUtsendingService;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Kanal;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Fritekst;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.HenvendelseUtsendingService;
 
 import java.util.NoSuchElementException;
 import java.util.Optional;

@@ -6,7 +6,7 @@ import no.nav.modig.modia.events.FeedItemPayload;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.WicketPageTest;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.JacksonMockContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.LamellServicesAndLoaders;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.GrunnInfo;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.GrunnInfo;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.DialogPanelTest;
 import no.nav.sykmeldingsperioder.consumer.pleiepenger.mock.PleiepengerMockFactory;
 import org.apache.wicket.event.IEvent;

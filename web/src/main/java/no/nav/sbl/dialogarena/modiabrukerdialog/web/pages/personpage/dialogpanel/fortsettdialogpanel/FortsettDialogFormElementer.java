@@ -4,8 +4,8 @@ import no.nav.modig.modia.feedbackform.FeedbackLabel;
 import no.nav.modig.wicket.component.enhancedtextarea.EnhancedTextArea;
 import no.nav.modig.wicket.component.enhancedtextarea.EnhancedTextAreaConfigurator;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.GrunnInfo;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Kanal;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.GrunnInfo;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Kanal;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.HenvendelseVM;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.OppgaveTilknytningPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.SkrivestottePanel;
@@ -40,7 +40,7 @@ import static no.nav.modig.wicket.conditional.ConditionalUtils.*;
 import static no.nav.modig.wicket.model.ModelUtils.both;
 import static no.nav.modig.wicket.model.ModelUtils.not;
 import static no.nav.modig.wicket.shortcuts.Shortcuts.cssClass;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe.KOMMUNALE_TJENESTER;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe.KOMMUNALE_TJENESTER;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.saksbehandlerpanel.SaksbehandlerInnstillingerPanel.SAKSBEHANDLERINNSTILLINGER_VALGT;
 
 public class FortsettDialogFormElementer extends WebMarkupContainer {

@@ -1,10 +1,10 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.fortsettdialogpanel.delvissvar;
 
 import no.nav.modig.wicket.events.NamedEventPayload;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.DialogSession;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.Events;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.DialogSession;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.constants.Events;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.utils.WicketInjectablePropertyResolver;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.DialogPanel;
 import no.nav.sbl.dialogarena.reactkomponenter.utils.wicket.ReactComponentPanel;

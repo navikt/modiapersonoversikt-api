@@ -1,12 +1,12 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.oppgavebehandling;
 
 import no.nav.modig.lang.option.Optional;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Oppgave;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.LeggTilbakeOppgaveIGsakRequest;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveBehandlingService;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.arbeidsfordeling.ArbeidsfordelingV1Service;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.AnsattService;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Oppgave;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.LeggTilbakeOppgaveIGsakRequest;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveBehandlingService;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.arbeidsfordeling.ArbeidsfordelingV1Service;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.AnsattService;
 import no.nav.tjeneste.virksomhet.oppgave.v3.HentOppgaveOppgaveIkkeFunnet;
 import no.nav.tjeneste.virksomhet.oppgave.v3.OppgaveV3;
 import no.nav.tjeneste.virksomhet.oppgave.v3.informasjon.oppgave.WSOppgave;
@@ -34,7 +34,7 @@ import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
 import static no.nav.brukerdialog.security.context.SubjectHandler.getSubjectHandler;
 import static no.nav.modig.lang.option.Optional.optional;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe.*;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe.*;
 import static org.apache.commons.lang3.StringUtils.equalsIgnoreCase;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.joda.time.DateTime.now;

@@ -1,11 +1,11 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.plukkoppgavepanel;
 
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.DialogSession;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Oppgave;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.HenvendelseUtsendingService;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.DialogSession;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Oppgave;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.HenvendelseUtsendingService;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.WicketPageTest;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.PersonPageMockContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.PersonPage;
@@ -26,8 +26,8 @@ import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.ofType;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.withId;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe.ARBD;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype.SPORSMAL_SKRIFTLIG;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe.ARBD;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype.SPORSMAL_SKRIFTLIG;
 import static org.apache.wicket.authorization.IAuthorizationStrategy.ALLOW_ALL;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;

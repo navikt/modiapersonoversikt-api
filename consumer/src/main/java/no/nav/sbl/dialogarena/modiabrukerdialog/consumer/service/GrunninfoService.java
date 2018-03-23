@@ -1,6 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service;
 
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.GrunnInfo;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.GrunnInfo;
 
 public interface GrunninfoService {
 

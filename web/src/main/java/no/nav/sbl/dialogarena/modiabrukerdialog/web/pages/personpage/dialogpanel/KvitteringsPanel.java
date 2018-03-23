@@ -2,8 +2,8 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpane
 
 import no.nav.modig.lang.collections.predicate.GreaterThanPredicate;
 import no.nav.modig.wicket.events.NamedEventPayload;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.DialogSession;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.DialogSession;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
@@ -15,7 +15,7 @@ import org.apache.wicket.model.StringResourceModel;
 
 import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
 import static no.nav.modig.wicket.model.ModelUtils.when;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe.ANSOS;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe.ANSOS;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.DialogPanel.NESTE_DIALOG_LENKE_VALGT;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.DialogPanel.NY_DIALOG_LENKE_VALGT;
 

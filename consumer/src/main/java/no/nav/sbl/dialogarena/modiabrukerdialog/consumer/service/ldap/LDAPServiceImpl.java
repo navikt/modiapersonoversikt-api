@@ -1,8 +1,8 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.ldap;
 
 import no.nav.modig.lang.option.Optional;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Saksbehandler;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.ldap.LDAPService;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Saksbehandler;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.ldap.LDAPService;
 
 import javax.naming.Context;
 import javax.naming.NamingEnumeration;

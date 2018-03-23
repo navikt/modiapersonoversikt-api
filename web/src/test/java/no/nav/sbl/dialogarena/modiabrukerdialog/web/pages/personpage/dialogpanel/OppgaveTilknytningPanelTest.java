@@ -1,6 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel;
 
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.GrunnInfo;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.GrunnInfo;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.WicketPageTest;
 import org.apache.wicket.model.Model;
 import org.junit.Test;

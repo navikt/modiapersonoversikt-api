@@ -3,9 +3,9 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelse;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLMeldingTilBruker;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Saksbehandler;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Fritekst;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Saksbehandler;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Fritekst;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
 import org.joda.time.DateTime;
 import org.junit.Test;
 

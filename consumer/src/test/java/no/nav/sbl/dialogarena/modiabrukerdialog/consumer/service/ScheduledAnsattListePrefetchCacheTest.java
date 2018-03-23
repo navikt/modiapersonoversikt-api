@@ -2,8 +2,8 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service;
 
 import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navansatt.*;
 import net.sf.ehcache.Element;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.AnsattEnhet;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.organisasjonsEnhetV2.OrganisasjonEnhetV2Service;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.AnsattEnhet;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.organisasjonsEnhetV2.OrganisasjonEnhetV2Service;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.util.CacheTest;
 import org.junit.Before;
 import org.junit.Test;

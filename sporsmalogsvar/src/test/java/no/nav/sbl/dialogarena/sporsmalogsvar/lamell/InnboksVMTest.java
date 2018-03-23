@@ -2,8 +2,8 @@ package no.nav.sbl.dialogarena.sporsmalogsvar.lamell;
 
 import no.nav.brukerdialog.security.tilgangskontroll.policy.pep.EnforcementPoint;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelse;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.config.MockServiceTestContext;
 import no.nav.sbl.dialogarena.sporsmalogsvar.config.ServiceTestContext;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.henvendelse.HenvendelseBehandlingService;

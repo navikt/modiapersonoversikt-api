@@ -2,8 +2,8 @@ package no.nav.sbl.dialogarena.sporsmalogsvar.lamell;
 
 import no.nav.modig.lang.option.Optional;
 import no.nav.modig.modia.widget.utils.WidgetDateFormatter;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype;
 import no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.DateUtils;
 import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
@@ -13,7 +13,7 @@ import org.joda.time.DateTime;
 import java.io.Serializable;
 
 import static no.nav.modig.lang.option.Optional.optional;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.VisningUtils.lagMeldingStatusTekstKey;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.VisningUtils.lagMeldingStatusTekstKey;
 
 public class MeldingVM implements Serializable {
 
