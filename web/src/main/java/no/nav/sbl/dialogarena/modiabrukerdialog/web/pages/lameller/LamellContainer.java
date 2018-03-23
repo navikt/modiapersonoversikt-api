@@ -158,7 +158,9 @@ public class LamellContainer extends TokenLamellPanel implements Serializable {
 
     private void gotoAndSendToLamell(String lamellId, Object payload) {
         if (hasFactory(lamellId)) {
-            MetricsFactory.createEvent("hendelse.lamell." + lamellId + ".aapnet").report();
+            MetricsFactory.createEvent("hendelse.lamell.aapnet")
+                    .addTagToReport("lamell", lamellId.split("\\$")[0])
+                    .report();
             goToLamell(lamellId);
             sendToLamell(lamellId, payload);
         } else {
