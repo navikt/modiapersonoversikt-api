@@ -17,20 +17,18 @@ import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.container.ContainerResponseContext;
 import javax.ws.rs.container.ContainerResponseFilter;
 import java.io.IOException;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.Arrays;
+import java.util.List;
 
 import static no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.Feature.PERSON_REST_API;
 
 public class RestConfig extends ResourceConfig {
 
-    private static Set<String> allowedOrigins = new HashSet<String>() {
-        {
-            add(".adeo.no");
-            add(".nais.preprod.local");
-            add("http://localhost:3000");
-        }
-    };
+    private static List<String> allowedOrigins = Arrays.asList(
+            ".adeo.no",
+            ".nais.preprod.local",
+            "http://localhost:3000"
+    );
 
     public RestConfig() {
         super(
