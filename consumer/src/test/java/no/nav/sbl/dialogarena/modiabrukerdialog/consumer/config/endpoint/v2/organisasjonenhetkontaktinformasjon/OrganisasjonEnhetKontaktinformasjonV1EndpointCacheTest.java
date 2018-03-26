@@ -6,11 +6,11 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.util.Ca
 import no.nav.tjeneste.virksomhet.organisasjonenhetkontaktinformasjon.v1.binding.HentKontaktinformasjonForEnhetBolkUgyldigInput;
 import no.nav.tjeneste.virksomhet.organisasjonenhetkontaktinformasjon.v1.binding.OrganisasjonEnhetKontaktinformasjonV1;
 import no.nav.tjeneste.virksomhet.organisasjonenhetkontaktinformasjon.v1.meldinger.HentKontaktinformasjonForEnhetBolkRequest;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import javax.inject.Inject;
 
@@ -19,7 +19,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNull.notNullValue;
 
-@RunWith(SpringJUnit4ClassRunner.class)
+@ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = {Config.class})
 public class OrganisasjonEnhetKontaktinformasjonV1EndpointCacheTest extends CacheTest {
 
@@ -36,7 +36,7 @@ public class OrganisasjonEnhetKontaktinformasjonV1EndpointCacheTest extends Cach
         super(CACHE_NAME);
     }
 
-    @BeforeClass
+    @BeforeAll
     public static void beforeClass() {
         System.setProperty(TILLATMOCKSETUP_PROPERTY, "true");
     }

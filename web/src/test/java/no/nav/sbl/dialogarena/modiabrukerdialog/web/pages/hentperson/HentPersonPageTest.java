@@ -14,10 +14,10 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.hode.jscallback.SokOp
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.json.JSONException;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import static junit.framework.Assert.assertNull;
 import static no.nav.modig.modia.events.InternalEvents.GOTO_HENT_PERSONPAGE;
@@ -26,7 +26,7 @@ import static no.nav.modig.wicket.test.matcher.ComponentMatchers.ofType;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.withId;
 import static org.junit.Assert.assertEquals;
 
-@RunWith(SpringJUnit4ClassRunner.class)
+@ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = {HentPersonPanelMockContext.class})
 public class HentPersonPageTest extends WicketPageTest {
 

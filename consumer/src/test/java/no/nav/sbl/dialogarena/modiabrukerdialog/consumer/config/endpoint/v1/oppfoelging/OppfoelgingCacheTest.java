@@ -1,9 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v1.oppfoelging;
 
 import no.nav.kontrakter.consumer.fim.config.OppfolgingskontraktConsumerConfig;
-import no.nav.metrics.proxy.MetricProxy;
-import no.nav.metrics.proxy.TimerProxy;
-import no.nav.sbl.dialogarena.common.cxf.InstanceSwitcher;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.util.CacheTest;
 import no.nav.tjeneste.virksomhet.oppfoelging.v1.OppfoelgingPortType;
 import no.nav.tjeneste.virksomhet.oppfoelging.v1.informasjon.WSOppfoelgingskontrakt;
@@ -11,17 +8,14 @@ import no.nav.tjeneste.virksomhet.oppfoelging.v1.meldinger.WSHentOppfoelgingskon
 import no.nav.tjeneste.virksomhet.oppfoelging.v1.meldinger.WSHentOppfoelgingskontraktListeResponse;
 import no.nav.tjeneste.virksomhet.oppfoelging.v1.meldinger.WSHentOppfoelgingsstatusRequest;
 import no.nav.tjeneste.virksomhet.oppfoelging.v1.meldinger.WSHentOppfoelgingsstatusResponse;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.aop.framework.Advised;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import javax.inject.Inject;
-import java.lang.reflect.Field;
-import java.lang.reflect.Proxy;
 
 import static java.lang.System.setProperty;
 import static no.nav.kontrakter.consumer.fim.config.OppfolgingskontraktConsumerConfig.MOCK_KEY;
@@ -32,7 +26,7 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 
-@RunWith(SpringJUnit4ClassRunner.class)
+@ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = {OppfolgingskontraktConsumerConfig.class})
 public class OppfoelgingCacheTest extends CacheTest {
 
@@ -49,13 +43,13 @@ public class OppfoelgingCacheTest extends CacheTest {
     @Inject
     private OppfoelgingPortType oppfolgingPortType;
 
-    @BeforeClass
+    @BeforeAll
     public static void setUp() {
         setProperty(MOCK_KEY, "true");
         setProperty(TILLATMOCKSETUP_PROPERTY, "true");
     }
 
-    @Before
+    @BeforeEach
     public void setUpMock() throws Exception {
         OppfoelgingPortType unwrapped = (OppfoelgingPortType) unwrapProxy(oppfolgingPortType);
         reset(unwrapped);

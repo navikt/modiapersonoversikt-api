@@ -13,7 +13,7 @@ import no.nav.modig.modia.constants.ModiaConstants;
 import no.nav.modig.modia.events.InternalEvents;
 import no.nav.modig.wicket.events.NamedEventPayload;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.GrunnInfo;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.GrunnInfo;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.hode.begrunnelse.ReactBegrunnelseModal;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.hode.jscallback.HodeCallbackWrapper;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.hode.jscallback.SokOppBrukerCallback;
@@ -40,7 +40,7 @@ import java.io.IOException;
 import java.io.StringWriter;
 import java.util.*;
 
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.URLParametere.URL_TIL_SESSION_PARAMETERE;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.api.constants.URLParametere.URL_TIL_SESSION_PARAMETERE;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.apache.wicket.markup.head.OnDomReadyHeaderItem.forScript;
 

@@ -16,7 +16,7 @@ import org.apache.wicket.model.ResourceModel;
 import static no.nav.modig.modia.aria.AriaHelpers.toggleButtonConnector;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.*;
 import static no.nav.modig.wicket.model.ModelUtils.not;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.Events.SporsmalOgSvar.MELDING_VALGT;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.api.constants.Events.SporsmalOgSvar.MELDING_VALGT;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.HaandterMeldingValgPanel.PANEL_LUKKET;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.HaandterMeldingValgPanel.PANEL_TOGGLET;
 import static org.apache.wicket.event.Broadcast.BREADTH;

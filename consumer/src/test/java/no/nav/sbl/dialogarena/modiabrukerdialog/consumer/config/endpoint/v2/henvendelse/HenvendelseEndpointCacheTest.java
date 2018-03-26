@@ -4,11 +4,11 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.util.Ca
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.henvendelse.HenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.meldinger.WSHentHenvendelseRequest;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.meldinger.WSHentHenvendelseResponse;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import javax.inject.Inject;
 
@@ -19,7 +19,7 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
 
-@RunWith(SpringJUnit4ClassRunner.class)
+@ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = {HenvendelseEndpointCacheTestConfig.class})
 public class HenvendelseEndpointCacheTest extends CacheTest {
 
@@ -32,7 +32,7 @@ public class HenvendelseEndpointCacheTest extends CacheTest {
         super(CACHE_NAME);
     }
 
-    @BeforeClass
+    @BeforeAll
     public static void setup() {
         System.setProperty(TILLATMOCKSETUP_PROPERTY, "true");
         setupKeyAndTrustStore();

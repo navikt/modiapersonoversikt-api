@@ -5,7 +5,7 @@ import no.nav.brukerdialog.tools.SecurityConstants;
 import no.nav.brukerdialog.security.context.SubjectHandler;
 import no.nav.brukerdialog.security.context.SubjectHandlerUtils;
 import no.nav.brukerdialog.security.context.ThreadLocalSubjectHandler;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.SaksbehandlerInnstillingerPanelMockContext;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeUtils;

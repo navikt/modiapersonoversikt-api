@@ -2,10 +2,10 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.config;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import static java.lang.System.getProperties;
 import static no.nav.modig.testcertificates.TestCertificates.setupKeyAndTrustStore;
@@ -14,7 +14,7 @@ import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.MockUtil.TI
 import static no.nav.sbl.dialogarena.test.SystemProperties.setFrom;
 import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER_CLASS;
 
-@RunWith(SpringJUnit4ClassRunner.class)
+@ExtendWith(SpringExtension.class)
 @DirtiesContext(classMode = AFTER_CLASS)
 @ContextConfiguration(classes = {ModiaApplicationContext.class})
 public class ApplicationContextTest {

@@ -1,7 +1,7 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding;
 
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.Events;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.constants.Events;
 import no.nav.sbl.dialogarena.reactkomponenter.utils.wicket.ReactComponentPanel;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.InnboksVM;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -9,7 +9,7 @@ import org.apache.wicket.event.Broadcast;
 
 import java.util.HashMap;
 
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.TemagruppeTemaMapping.TEMAGRUPPE_TEMA_MAPPING;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.TemagruppeTemaMapping.TEMAGRUPPE_TEMA_MAPPING;
 
 public class ReactJournalforingsPanel extends AnimertPanel {
 

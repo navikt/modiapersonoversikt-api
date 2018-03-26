@@ -1,7 +1,7 @@
 package no.nav.sbl.modiabrukerdialog.pip.journalforing;
 
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.config.ApplicationContextProvider;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.config.ApplicationContextProviderConfig;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.config.ApplicationContextProvider;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.config.ApplicationContextProviderConfig;
 import no.nav.sbl.modiabrukerdialog.pip.journalforing.support.JournalfortTemaAttributeLocatorDelegate;
 import org.jboss.security.xacml.sunxacml.EvaluationCtx;
 import org.jboss.security.xacml.sunxacml.attr.BagAttribute;

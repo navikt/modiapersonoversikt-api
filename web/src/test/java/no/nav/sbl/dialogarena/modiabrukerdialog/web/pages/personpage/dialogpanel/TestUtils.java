@@ -1,11 +1,11 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel;
 
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.Sak;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.Sak;
 import org.joda.time.DateTime;
 
 import static no.nav.modig.lang.option.Optional.optional;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.Sak.GODKJENTE_TEMA_FOR_GENERELLE;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.Sak.SAKSTYPE_GENERELL;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.Sak.GODKJENTE_TEMA_FOR_GENERELLE;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.Sak.SAKSTYPE_GENERELL;
 
 public class TestUtils {
 

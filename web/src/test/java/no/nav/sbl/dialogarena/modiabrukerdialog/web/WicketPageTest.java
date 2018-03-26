@@ -3,8 +3,8 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web;
 import no.nav.brukerdialog.security.context.StaticSubjectHandler;
 import no.nav.modig.wicket.test.FluentWicketTester;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.WicketTesterConfig;
-import org.junit.Before;
-import org.junit.BeforeClass;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 
@@ -23,12 +23,12 @@ public abstract class WicketPageTest {
         System.setProperty("modiabrukerdialog.datadir", System.getProperty("java.io.tmpdir"));
     }
 
-    @BeforeClass
+    @BeforeAll
     public static void staticSetup() {
         System.setProperty(StaticSubjectHandler.SUBJECTHANDLER_KEY, StaticSubjectHandler.class.getName());
     }
 
-    @Before
+    @BeforeEach
     public void setup() {
         wicket.tester.getSession().replaceSession();
         additionalSetup();

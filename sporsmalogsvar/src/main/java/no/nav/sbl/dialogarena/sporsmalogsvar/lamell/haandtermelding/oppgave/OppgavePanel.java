@@ -17,7 +17,7 @@ import java.util.List;
 import static java.util.Arrays.asList;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
 import static no.nav.modig.wicket.model.ModelUtils.*;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.Events.SporsmalOgSvar.OPPGAVE_OPPRETTET_FERDIG;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.api.constants.Events.SporsmalOgSvar.OPPGAVE_OPPRETTET_FERDIG;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.oppgave.OppgavePanel.OppgaveValg.AVSLUTT;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.oppgave.OppgavePanel.OppgaveValg.OPPRETT;
 import static org.apache.wicket.event.Broadcast.BREADTH;

@@ -12,11 +12,11 @@ import no.nav.modig.common.SporingsLogger;
 import no.nav.modig.content.PropertyResolver;
 import no.nav.brukerdialog.security.tilgangskontroll.policy.pep.EnforcementPoint;
 import no.nav.brukerdialog.security.tilgangskontroll.policy.request.PolicyRequest;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.kodeverk.StandardKodeverk;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.ldap.LDAPService;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.FeatureToggle;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.kodeverk.StandardKodeverk;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.ldap.LDAPService;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.FeatureToggle;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.henvendelse.HenvendelseBehandlingServiceImpl;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.TraadVM;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.behandlehenvendelse.BehandleHenvendelsePortType;
@@ -38,8 +38,8 @@ import java.util.stream.Collectors;
 
 import static java.util.Arrays.asList;
 import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.*;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe.OKSOS;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.Feature.DELVISE_SVAR;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe.OKSOS;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.Feature.DELVISE_SVAR;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.TestUtils.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Matchers.any;
@@ -193,7 +193,7 @@ public class HenvendelseBehandlingServiceImplTest {
     @Test
     public void skalAlltidHenteMeldingerSomIkkeErKontorsperret() {
         List<Object> xmlHenvendelsesListe = new ArrayList<>();
-        xmlHenvendelsesListe.add(lagXMLHenvendelse("id1", "id1", DateTime.now(), null, XMLHenvendelseType.SPORSMAL_SKRIFTLIG.name(), null, new XMLMetadataListe().withMetadata(new XMLMeldingFraBruker(TEMAGRUPPE, "fritekst")))
+        xmlHenvendelsesListe.add(lagXMLHenvendelse("id1", "id1", DateTime.now().minusDays(1), null, XMLHenvendelseType.SPORSMAL_SKRIFTLIG.name(), null, new XMLMetadataListe().withMetadata(new XMLMeldingFraBruker(TEMAGRUPPE, "fritekst")))
                 .withJournalfortInformasjon(null)
                 .withKontorsperreEnhet(null));
         final XMLMeldingFraBruker fritekst1 = new XMLMeldingFraBruker("fritekst", TEMAGRUPPE);
@@ -201,7 +201,7 @@ public class HenvendelseBehandlingServiceImplTest {
                 .withJournalfortInformasjon(null)
                 .withKontorsperreEnhet(null));
         final XMLMeldingFraBruker fritekst3 = new XMLMeldingFraBruker("fritekst", TEMAGRUPPE);
-        xmlHenvendelsesListe.add(lagXMLHenvendelse("id4", "id4", DateTime.now(), null, XMLHenvendelseType.SPORSMAL_SKRIFTLIG.name(), null, new XMLMetadataListe().withMetadata(fritekst3))
+        xmlHenvendelsesListe.add(lagXMLHenvendelse("id4", "id4", DateTime.now().plusDays(1), null, XMLHenvendelseType.SPORSMAL_SKRIFTLIG.name(), null, new XMLMetadataListe().withMetadata(fritekst3))
                 .withKontorsperreEnhet("1111"));
 
         when(pep.hasAccess(any(PolicyRequest.class))).thenReturn(false);
@@ -211,7 +211,6 @@ public class HenvendelseBehandlingServiceImplTest {
                 .flatMap(traad -> traad.getMeldinger().stream())
                 .sorted(Comparator.comparing(melding -> melding.opprettetDato))
                 .collect(Collectors.toList());
-        Collections.reverse(meldinger);
 
         assertThat(meldinger).hasSize(2);
         assertThat(meldinger.get(0).id).isEqualTo("id1");
@@ -223,7 +222,7 @@ public class HenvendelseBehandlingServiceImplTest {
         List<Object> xmlHenvendelsesListe = new ArrayList<>();
         xmlHenvendelsesListe.add(lagXMLHenvendelse("id1", "id1", DateTime.now(), null, XMLHenvendelseType.SPORSMAL_SKRIFTLIG.name(), null, new XMLMetadataListe().withMetadata(new XMLMeldingFraBruker(TEMAGRUPPE, "fritekst")))
                 .withJournalfortInformasjon(null));
-        xmlHenvendelsesListe.add(lagXMLHenvendelse("id2", "id2", DateTime.now(), null, XMLHenvendelseType.SPORSMAL_SKRIFTLIG.name(), null, new XMLMetadataListe().withMetadata(new XMLMeldingFraBruker(TEMAGRUPPE, "fritekst")))
+        xmlHenvendelsesListe.add(lagXMLHenvendelse("id2", "id2", DateTime.now().plusDays(1), null, XMLHenvendelseType.SPORSMAL_SKRIFTLIG.name(), null, new XMLMetadataListe().withMetadata(new XMLMeldingFraBruker(TEMAGRUPPE, "fritekst")))
                 .withJournalfortInformasjon(new XMLJournalfortInformasjon().withJournalfortTema("tema")));
 
         when(pep.hasAccess(any(PolicyRequest.class))).thenReturn(false);
@@ -232,7 +231,6 @@ public class HenvendelseBehandlingServiceImplTest {
                 .flatMap(traad -> traad.getMeldinger().stream())
                 .sorted(Comparator.comparing(melding -> melding.opprettetDato))
                 .collect(Collectors.toList());
-        Collections.reverse(meldinger);
 
         assertThat(meldinger).hasSize(2);
         assertThat(meldinger.get(0).getFritekst()).isEqualTo("fritekst");

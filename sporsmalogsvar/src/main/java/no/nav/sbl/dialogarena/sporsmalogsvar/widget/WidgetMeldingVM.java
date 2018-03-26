@@ -1,7 +1,7 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.widget;
 
 import no.nav.modig.modia.model.FeedItemVM;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
 import no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.DateUtils;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.MeldingVM;
 import org.joda.time.DateTime;
@@ -9,7 +9,7 @@ import org.joda.time.DateTime;
 import java.io.Serializable;
 import java.util.List;
 
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.VisningUtils.lagMeldingStatusTekstKey;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.VisningUtils.lagMeldingStatusTekstKey;
 
 public class WidgetMeldingVM extends MeldingVM implements FeedItemVM, Serializable {
 

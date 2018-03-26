@@ -1,7 +1,7 @@
 package no.nav.sbl.modiabrukerdialog.pdp;
 
 import org.jboss.security.xacml.interfaces.RequestContext;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static no.nav.sbl.modiabrukerdialog.pdp.test.util.DecisionTypeAssert.assertThat;
 import static no.nav.sbl.modiabrukerdialog.pip.journalforing.JournalfortTemaAttributeLocator.ATTRIBUTEID_TEMA;

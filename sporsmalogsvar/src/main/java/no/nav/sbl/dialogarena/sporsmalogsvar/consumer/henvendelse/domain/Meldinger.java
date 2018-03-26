@@ -1,7 +1,7 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.consumer.henvendelse.domain;
 
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.MeldingUtils;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.MeldingUtils;
 
 import java.util.List;
 import java.util.Map;

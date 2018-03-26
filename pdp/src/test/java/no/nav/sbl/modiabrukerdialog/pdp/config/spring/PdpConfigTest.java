@@ -3,9 +3,12 @@ package no.nav.sbl.modiabrukerdialog.pdp.config.spring;
 import no.nav.brukerdialog.security.tilgangskontroll.policy.pdp.DecisionPoint;
 import no.nav.brukerdialog.security.tilgangskontroll.policy.pdp.picketlink.PicketLinkDecisionPoint;
 import no.nav.brukerdialog.security.tilgangskontroll.policy.request.PolicyRequest;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class PdpConfigTest {
+
 	@Test
 	public void testModiaPdp() throws Exception {
 		PdpConfig pdpConfig = new PdpConfig();
@@ -21,29 +24,33 @@ public class PdpConfigTest {
 		decisionPoint.evaluate(new PolicyRequest());
 	}
 
-	@Test(expected = java.lang.RuntimeException.class)
+	@Test
 	public void testModiaPdpFNF() throws Exception {
-		PdpConfig pdpConfig = new PdpConfig(){
-			@Override
-			public DecisionPoint modiaPdp() {
-				return new PicketLinkDecisionPoint(getConfigUrl("null"));
-			}
-		};
-		DecisionPoint decisionPoint = pdpConfig.modiaPdp();
+		assertThrows(RuntimeException.class, () -> {
+			PdpConfig pdpConfig = new PdpConfig() {
+				@Override
+				public DecisionPoint modiaPdp() {
+					return new PicketLinkDecisionPoint(getConfigUrl("null"));
+				}
+			};
+			DecisionPoint decisionPoint = pdpConfig.modiaPdp();
 
-		decisionPoint.evaluate(new PolicyRequest());
+			decisionPoint.evaluate(new PolicyRequest());
+		});
 	}
 
-	@Test(expected = java.lang.RuntimeException.class)
+	@Test
 	public void testModiaTestPdpFNF() throws Exception {
-		PdpTestConfig pdpConfig = new PdpTestConfig(){
-			@Override
-			public DecisionPoint modiaPdp() {
-				return new PicketLinkDecisionPoint(getConfigUrl("null"));
-			}
-		};
-		DecisionPoint decisionPoint = pdpConfig.modiaPdp();
+		assertThrows(RuntimeException.class, () -> {
+			PdpTestConfig pdpConfig = new PdpTestConfig() {
+				@Override
+				public DecisionPoint modiaPdp() {
+					return new PicketLinkDecisionPoint(getConfigUrl("null"));
+				}
+			};
+			DecisionPoint decisionPoint = pdpConfig.modiaPdp();
 
-		decisionPoint.evaluate(new PolicyRequest());
+			decisionPoint.evaluate(new PolicyRequest());
+		});
 	}
 }

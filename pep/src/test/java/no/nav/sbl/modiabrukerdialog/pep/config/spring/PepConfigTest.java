@@ -1,17 +1,17 @@
 package no.nav.sbl.modiabrukerdialog.pep.config.spring;
 
-import no.nav.modig.cache.CacheConfig;
 import no.nav.brukerdialog.security.tilgangskontroll.policy.pep.EnforcementPoint;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import no.nav.modig.cache.CacheConfig;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import javax.inject.Inject;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@RunWith(SpringJUnit4ClassRunner.class)
+@ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = {CacheConfig.class, PepConfig.class})
 public class PepConfigTest {
 

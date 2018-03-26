@@ -1,6 +1,6 @@
 package no.nav.sbl.modiabrukerdialog.pip.geografisk;
 
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.config.ApplicationContextProviderConfig;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.config.ApplicationContextProviderConfig;
 import no.nav.sbl.modiabrukerdialog.pip.geografisk.config.EnhetAttributeLocatorTestConfig;
 import no.nav.sbl.modiabrukerdialog.pip.geografisk.config.GeografiskPipConfig;
 import no.nav.sbl.modiabrukerdialog.pip.geografisk.support.EnhetAttributeLocatorDelegate;

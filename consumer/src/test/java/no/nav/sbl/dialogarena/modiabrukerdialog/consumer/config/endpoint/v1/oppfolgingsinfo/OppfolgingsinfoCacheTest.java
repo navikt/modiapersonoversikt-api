@@ -6,12 +6,12 @@ import no.nav.tjeneste.virksomhet.oppfolgingsinfo.v1.OppfolgingsinfoV1;
 import no.nav.tjeneste.virksomhet.oppfolgingsinfo.v1.meldinger.OppfolgingsstatusRequest;
 import no.nav.tjeneste.virksomhet.oppfolgingsinfo.v1.meldinger.OppfolgingsstatusResponse;
 import no.nav.tjeneste.virksomhet.oppfolgingsinfo.v1.meldinger.WSOppfolgingsdata;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import javax.inject.Inject;
 
@@ -24,7 +24,7 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 
-@RunWith(SpringJUnit4ClassRunner.class)
+@ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = {OppfolgingsinfoEndpointConfig.class})
 public class OppfolgingsinfoCacheTest extends CacheTest {
 
@@ -39,13 +39,13 @@ public class OppfolgingsinfoCacheTest extends CacheTest {
     @Inject
     private OppfolgingsinfoV1 oppfolgingsinfoV1;
 
-    @BeforeClass
+    @BeforeAll
     public static void setUp() {
         setProperty(MOCK_KEY, "true");
         setProperty(TILLATMOCKSETUP_PROPERTY, "true");
     }
 
-    @Before
+    @BeforeEach
     public void setUpMock() throws Exception {
         OppfolgingsinfoV1 unwrapped = (OppfolgingsinfoV1) unwrapProxy(oppfolgingsinfoV1);
         reset(unwrapped);
