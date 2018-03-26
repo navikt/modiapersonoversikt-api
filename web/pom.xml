@@ -403,6 +403,7 @@
                 </includes>
                 <excludes>
                     <exclude>**/*.java</exclude>
+                    <exclude>**/*.kt</exclude>
                 </excludes>
             </resource>
         </resources>
@@ -417,6 +418,7 @@
                 </includes>
                 <excludes>
                     <exclude>**/*.java</exclude>
+                    <exclude>**/*.kt</exclude>
                 </excludes>
             </testResource>
         </testResources>

@@ -2,6 +2,7 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling;
 
 public enum Feature {
 
+    PERSON_REST_API("feature.aktiverPersonRestApi", false),
     DELVISE_SVAR("visDelviseSvarFunksjonalitet", false);
 
     public final String propertyKey;
