@@ -25,15 +25,15 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.RadioGroup;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.joda.time.DateTime;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.MockitoAnnotations;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import javax.inject.Inject;
 import java.util.List;
@@ -56,7 +56,7 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.*;
 
-@RunWith(SpringJUnit4ClassRunner.class)
+@ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = {DialogPanelMockContext.class})
 public class FortsettDialogPanelTest extends WicketPageTest {
 
@@ -89,7 +89,7 @@ public class FortsettDialogPanelTest extends WicketPageTest {
 
     private GrunnInfo grunnInfo;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         grunnInfo = new GrunnInfo(new Bruker(FNR, FORNAVN, "", "", "", ""), new Saksbehandler("", "", ""));
         when(saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet()).thenReturn(VALGT_ENHET);

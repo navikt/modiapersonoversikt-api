@@ -3,13 +3,13 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpane
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.GrunnInfo;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.WicketPageTest;
 import org.apache.wicket.model.Model;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.*;
 
-@RunWith(SpringJUnit4ClassRunner.class)
+@ExtendWith(SpringExtension.class)
 public class OppgaveTilknytningPanelTest extends WicketPageTest {
 
     private final GrunnInfo grunnInfo = new GrunnInfo(new GrunnInfo.Bruker("", "", "", "", "", ""), new GrunnInfo.Saksbehandler("", "", ""));
