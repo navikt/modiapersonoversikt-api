@@ -4,7 +4,6 @@ import no.nav.modig.cache.CacheConfig;
 import no.nav.modig.content.ContentRetriever;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.cache.ehcache.EhCacheCacheManager;
@@ -21,12 +20,12 @@ import static org.junit.Assert.assertThat;
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = {
         CacheConfig.class,
-//        CmsEndpointConfig.class,
+        CmsEndpointConfig.class,
         ProperySourcesPlaceholderConfigurer.class})
 public class CmsCacheTest {
 
-//    @Inject
-//    private ContentRetriever cms;
+    @Inject
+    private ContentRetriever cms;
     @Inject
     private EhCacheCacheManager cm;
 
@@ -36,10 +35,9 @@ public class CmsCacheTest {
     }
 
     @Test
-    @Disabled
     public void cacheManager_harEntryForCms_etterKallTilCms() throws Exception {
         URI uri = new URI("http://www.nav.no/");
-//        cms.getContent(uri);
+        cms.getContent(uri);
 
         Object fromCache = cm.getCache("cms.content").get(uri).get();
 
@@ -52,4 +50,3 @@ public class CmsCacheTest {
     }
 
 }
-
