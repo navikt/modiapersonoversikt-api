@@ -5,7 +5,8 @@ import no.nav.kjerneinfo.consumer.fim.person.support.DefaultPersonKjerneinfoServ
 import no.nav.kjerneinfo.consumer.fim.person.support.KjerneinfoMapper
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.organisasjonsEnhetV2.OrganisasjonEnhetV2Service
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.Feature.PERSON_REST_API
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.FeatureToggle
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.disableFeature
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.enableFeature
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.person.PersonController
 import no.nav.tjeneste.virksomhet.person.v3.HentPersonPersonIkkeFunnet
 import no.nav.tjeneste.virksomhet.person.v3.HentPersonSikkerhetsbegrensning
@@ -54,14 +55,10 @@ class PersonControllerTest {
     companion object {
 
         @BeforeAll @JvmStatic
-        fun beforeAll() {
-            FeatureToggle.toggleFeature(PERSON_REST_API)
-        }
+        fun beforeAll() = enableFeature(PERSON_REST_API)
 
         @AfterAll @JvmStatic
-        fun afterAll() {
-            FeatureToggle.disableFeature(PERSON_REST_API)
-        }
+        fun afterAll() = disableFeature(PERSON_REST_API)
 
     }
 

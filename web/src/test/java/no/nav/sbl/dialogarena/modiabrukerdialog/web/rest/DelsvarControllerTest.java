@@ -11,7 +11,6 @@ import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLMetadataL
 import no.nav.modig.content.PropertyResolver;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.cache.CacheTestUtil;
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.FeatureToggle;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.http.HttpRequestUtil;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.http.SubjectHandlerUtil;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.HenvendelseUtsendingServiceImpl;
@@ -32,6 +31,8 @@ import java.util.Collections;
 
 import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.SPORSMAL_SKRIFTLIG;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.Feature.DELVISE_SVAR;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.FeatureToggleKt.disableFeature;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.FeatureToggleKt.enableFeature;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
@@ -51,14 +52,14 @@ class DelsvarControllerTest {
 
     @BeforeAll
     static void beforeAll() {
-        FeatureToggle.toggleFeature(DELVISE_SVAR);
+        enableFeature(DELVISE_SVAR);
         SubjectHandlerUtil.setInnloggetSaksbehandler(SAKSBEHANDLERS_IDENT);
         CacheTestUtil.setupCache(Collections.singletonList("endpointCache"));
     }
 
     @AfterAll
     static void afterAll() {
-        FeatureToggle.disableFeature(DELVISE_SVAR);
+        disableFeature(DELVISE_SVAR);
         CacheTestUtil.tearDown();
     }
 

@@ -3,7 +3,7 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.person
 import no.nav.kjerneinfo.consumer.fim.person.PersonKjerneinfoServiceBi
 import no.nav.kjerneinfo.consumer.fim.person.to.HentKjerneinformasjonRequest
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.Feature.PERSON_REST_API
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.FeatureToggle
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.visFeature
 import no.nav.tjeneste.virksomhet.person.v3.HentPersonPersonIkkeFunnet
 import no.nav.tjeneste.virksomhet.person.v3.HentPersonSikkerhetsbegrensning
 import javax.inject.Inject
@@ -20,9 +20,7 @@ class PersonController @Inject constructor(private val kjerneinfoService: Person
     @Path("/")
     fun hent(@PathParam("fnr") fødselsnummer: String): Map<String, Any> {
 
-        if (!FeatureToggle.visFeature(PERSON_REST_API)) {
-            throw ServerErrorException(NOT_IMPLEMENTED)
-        }
+        check(visFeature(PERSON_REST_API))
 
         val person = try {
             kjerneinfoService.hentKjerneinformasjon(HentKjerneinformasjonRequest(fødselsnummer)).person
