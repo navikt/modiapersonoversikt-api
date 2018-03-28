@@ -3,12 +3,12 @@ Reactkomponenter
 
 ## Forberedelser for å kjøre
 
-* Installer node.js, finnes på *F:\programvare\nodejs*. Bruk versjon 7.9.0.
+* Installer node.js, finnes på *F:\programvare\nodejs*.
 
 * Konfigurer npm - følgende må ligge i .npmrc:
 
 ```
-https-proxy=https://155.55.60.117:8088/
+https.proxy=https://155.55.60.117:8088/
 proxy=http://155.55.60.117:8088/
 registry=http://registry.npmjs.org/
 strict-ssl=false
