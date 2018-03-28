@@ -15,7 +15,6 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Fritekst;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.kodeverk.StandardKodeverk;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.ldap.LDAPService;
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.FeatureToggle;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.henvendelse.domain.Meldinger;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.MeldingVM;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.TraadVM;
@@ -41,6 +40,7 @@ import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.lang.collections.TransformerUtils.castTo;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.MeldingUtils.tilMelding;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.Feature.DELVISE_SVAR;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.FeatureToggleKt.visFeature;
 import static org.apache.commons.lang3.StringUtils.defaultString;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
@@ -105,7 +105,7 @@ public class HenvendelseBehandlingServiceImpl implements HenvendelseBehandlingSe
                 OPPGAVE_VARSEL.name()
         ));
 
-        if (FeatureToggle.visFeature(DELVISE_SVAR)) {
+        if (visFeature(DELVISE_SVAR)) {
             typer.add(DELVIS_SVAR_SKRIFTLIG.name());
         }
 

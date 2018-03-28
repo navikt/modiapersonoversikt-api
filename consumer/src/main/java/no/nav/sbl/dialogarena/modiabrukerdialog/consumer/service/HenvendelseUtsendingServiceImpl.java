@@ -20,7 +20,6 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.gsak.SakerService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.ldap.LDAPService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.cache.HenvendelsePortTypeCacheUtil;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.Feature;
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.FeatureToggle;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.henvendelse.delsvar.DelsvarSammenslaaer;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.henvendelse.delsvar.DelsvarUtils;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.behandlehenvendelse.BehandleHenvendelsePortType;
@@ -52,6 +51,7 @@ import static no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe.OKS
 import static no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding.ELDSTE_FORST;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype.SPORSMAL_MODIA_UTGAAENDE;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.MeldingUtils.tilMelding;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.FeatureToggleKt.visFeature;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.HenvendelseUtils.createXMLHenvendelseMedMeldingTilBruker;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.HenvendelseUtils.getXMLHenvendelseTypeBasertPaaMeldingstype;
 import static org.apache.commons.lang3.StringUtils.defaultString;
@@ -219,7 +219,7 @@ public class HenvendelseUtsendingServiceImpl implements HenvendelseUtsendingServ
         typer.add(SPORSMAL_MODIA_UTGAAENDE.name());
         typer.add(SVAR_SBL_INNGAAENDE.name());
 
-        if (FeatureToggle.visFeature(Feature.DELVISE_SVAR)) {
+        if (visFeature(Feature.DELVISE_SVAR)) {
             typer.add(DELVIS_SVAR_SKRIFTLIG.name());
         }
 

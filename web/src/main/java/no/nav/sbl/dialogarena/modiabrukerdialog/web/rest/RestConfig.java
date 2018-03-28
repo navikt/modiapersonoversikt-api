@@ -1,7 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest;
 
 import no.nav.brukerdialog.isso.RelyingPartyCallback;
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.FeatureToggle;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.JacksonConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.enhet.EnhetController;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.henvendelse.DelsvarController;
@@ -21,6 +20,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.Feature.PERSON_REST_API;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.FeatureToggleKt.visFeature;
 
 public class RestConfig extends ResourceConfig {
 
@@ -47,7 +47,7 @@ public class RestConfig extends ResourceConfig {
                 EnhetController.class,
                 PersonController.class
         );
-        if (!FeatureToggle.visFeature(PERSON_REST_API)) {
+        if (!visFeature(PERSON_REST_API)) {
             return;
         }
         register(new ContainerResponseFilter() {

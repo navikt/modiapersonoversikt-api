@@ -4,7 +4,6 @@ import _0._0.nav_cons_sak_gosys_3.no.nav.asbo.navansatt.ASBOGOSYSNAVAnsatt;
 import _0._0.nav_cons_sak_gosys_3.no.nav.asbo.navorgenhet.ASBOGOSYSNAVEnhetListe;
 import _0._0.nav_cons_sak_gosys_3.no.nav.asbo.navorgenhet.ASBOGOSYSNavEnhet;
 import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navansatt.*;
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.FeatureToggle;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.http.HttpRequestUtil;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.http.SubjectHandlerUtil;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.oppgavebehandling.OppgaveBehandlingServiceImpl;
@@ -28,6 +27,8 @@ import org.springframework.mock.web.MockHttpServletRequest;
 import javax.ws.rs.ForbiddenException;
 
 import static no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.Feature.DELVISE_SVAR;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.FeatureToggleKt.disableFeature;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.FeatureToggleKt.enableFeature;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
@@ -51,12 +52,12 @@ class OppgaveControllerTest {
 
     @BeforeAll
     static void beforeAll() {
-        FeatureToggle.toggleFeature(DELVISE_SVAR);
+        enableFeature(DELVISE_SVAR);
     }
 
     @AfterAll
     static void afterAll() {
-        FeatureToggle.disableFeature(DELVISE_SVAR);
+        disableFeature(DELVISE_SVAR);
     }
 
     @BeforeEach

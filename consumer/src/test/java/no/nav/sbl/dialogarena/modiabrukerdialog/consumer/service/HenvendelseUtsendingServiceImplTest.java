@@ -26,7 +26,6 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.AnsattService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.cache.CacheTestUtil;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.Feature;
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.FeatureToggle;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.http.SubjectHandlerUtil;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.behandlehenvendelse.BehandleHenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.senduthenvendelse.SendUtHenvendelsePortType;
@@ -60,6 +59,8 @@ import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.lang.collections.TransformerUtils.castTo;
 import static no.nav.modig.lang.option.Optional.optional;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype.*;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.FeatureToggleKt.disableFeature;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.FeatureToggleKt.enableFeature;
 import static org.hamcrest.Matchers.*;
 import static org.joda.time.DateTime.now;
 import static org.junit.Assert.assertThat;
@@ -287,7 +288,7 @@ public class HenvendelseUtsendingServiceImplTest {
     public void skalHenteSvarlisteMedRiktigTypeSpesifisert() {
         WSHentHenvendelseListeResponse wsHentHenvendelseListeResponse = new WSHentHenvendelseListeResponse().withAny(createXMLMeldingTilBruker(TRAAD_ID));
         when(henvendelsePortType.hentHenvendelseListe(any(WSHentHenvendelseListeRequest.class))).thenReturn(wsHentHenvendelseListeResponse);
-        FeatureToggle.toggleFeature(Feature.DELVISE_SVAR);
+        enableFeature(Feature.DELVISE_SVAR);
 
         henvendelseUtsendingService.hentTraad(FNR, TRAAD_ID, SAKSBEHANDLERS_VALGTE_ENHET);
 
@@ -304,7 +305,7 @@ public class HenvendelseUtsendingServiceImplTest {
                 XMLHenvendelseType.SPORSMAL_MODIA_UTGAAENDE.name(),
                 XMLHenvendelseType.SVAR_SBL_INNGAAENDE.name()));
         assertThat(hentHenvendelseListeRequestCaptor.getValue().getTyper(), not(Matchers.contains(XMLHenvendelseType.SPORSMAL_SKRIFTLIG.name())));
-        FeatureToggle.disableFeature(Feature.DELVISE_SVAR);
+        disableFeature(Feature.DELVISE_SVAR);
     }
 
     @Test
