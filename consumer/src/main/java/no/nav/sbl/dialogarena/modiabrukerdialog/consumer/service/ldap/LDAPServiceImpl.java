@@ -4,13 +4,12 @@ import no.nav.modig.lang.option.Optional;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Saksbehandler;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.ldap.LDAPService;
 
-import javax.naming.Context;
 import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
 import javax.naming.directory.*;
-import javax.naming.ldap.InitialLdapContext;
 import javax.naming.ldap.LdapContext;
-import java.util.Hashtable;
+import java.util.ArrayList;
+import java.util.List;
 
 import static java.lang.System.getProperty;
 import static no.nav.modig.lang.option.Optional.none;
@@ -18,26 +17,16 @@ import static no.nav.modig.lang.option.Optional.optional;
 
 public class LDAPServiceImpl implements LDAPService {
 
-    @SuppressWarnings("PMD")
-    private static Hashtable<String, String> env = new Hashtable<>();
+    private static LdapContextProvider ldapContextProvider;
 
-    static {
-        env.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory");
-        env.put(Context.PROVIDER_URL, getProperty("ldap.url"));
-        env.put(Context.SECURITY_AUTHENTICATION, "simple");
-        env.put(Context.SECURITY_PRINCIPAL, getProperty("ldap.username"));
-        env.put(Context.SECURITY_CREDENTIALS, getProperty("ldap.password"));
+    public LDAPServiceImpl(LdapContextProvider ldapContextProvider) {
+        LDAPServiceImpl.ldapContextProvider = ldapContextProvider;
     }
 
     @Override
     public Saksbehandler hentSaksbehandler(String ident) {
         try {
-            String searchbase = "OU=Users,OU=NAV,OU=BusinessUnits," + getProperty("ldap.basedn");
-            SearchControls searchCtrl = new SearchControls();
-            searchCtrl.setSearchScope(SearchControls.SUBTREE_SCOPE);
-
-            NamingEnumeration<SearchResult> result = ldapContext().search(searchbase, String.format("(&(objectClass=user)(CN=%s))", ident), searchCtrl);
-
+            NamingEnumeration<SearchResult> result = sokLDAP(ident);
 
             Optional<Attribute> givenname = none();
             Optional<Attribute> surname = none();
@@ -59,8 +48,43 @@ public class LDAPServiceImpl implements LDAPService {
         }
     }
 
-    private static LdapContext ldapContext() throws NamingException {
-        return new InitialLdapContext(env, null);
+    private NamingEnumeration<SearchResult> sokLDAP(String ident) {
+        String searchbase = "OU=Users,OU=NAV,OU=BusinessUnits," + getProperty("ldap.basedn");
+        SearchControls searchCtrl = new SearchControls();
+        searchCtrl.setSearchScope(SearchControls.SUBTREE_SCOPE);
+
+        try {
+            return ldapContext().search(searchbase, String.format("(&(objectClass=user)(CN=%s))", ident), searchCtrl);
+        } catch (NamingException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private static LdapContext ldapContext() {
+        return ldapContextProvider.getInitialLdapContext();
+    }
+
+    @Override
+    public boolean saksbehandlerHarRolle(String ident, String rolle) {
+        NamingEnumeration<SearchResult> result = sokLDAP(ident);
+        return getRoller(result).contains(rolle);
+    }
+
+    private List<String> getRoller(NamingEnumeration<SearchResult> result) {
+        try {
+            NamingEnumeration<?> attributes = result.next().getAttributes().get("memberof").getAll();
+            return parseRollerFraAD(attributes);
+        } catch (NamingException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private List<String> parseRollerFraAD(NamingEnumeration<?> attributes) throws NamingException {
+        List<String> rawRolleStrenger = new ArrayList<>();
+        while (attributes.hasMore()) {
+            rawRolleStrenger.add((String) attributes.next());
+        }
+        return  ADRolleParserKt.parseADRolle(rawRolleStrenger);
     }
 
 }

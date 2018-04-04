@@ -64,7 +64,7 @@
         <oidc.security.version>2018.01.15.10.51</oidc.security.version>
         <modig.frontend.version>1.1.122</modig.frontend.version>
         <modig.log.version>1.1.2</modig.log.version>
-        <modig.wicket.version>3.9.2</modig.wicket.version>
+        <modig.wicket.version>3.9.3-SNAPSHOT</modig.wicket.version>
         <modig.fitnesse.version>1.0.1</modig.fitnesse.version>
         <modig.lang.version>2.0.5</modig.lang.version>
         <modig.core.version>1.0.1</modig.core.version>
@@ -101,7 +101,7 @@
 
         <!-- Modia-komponenter-->
         <reactkomponenter.version>1731</reactkomponenter.version>
-        <personsok.version>4.0.4</personsok.version>
+        <personsok.version>4.0.5-SNAPSHOT</personsok.version>
         <kjerneinfo.versjon>6.1.4</kjerneinfo.versjon>
         <utbetaling.version>4.0.0</utbetaling.version>
         <saksoversikt.version>9.0.4</saksoversikt.version>
