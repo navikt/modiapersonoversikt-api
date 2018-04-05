@@ -37,6 +37,7 @@
         <baseUrl alias="server.pesys" mapToProperty="server.pesys"/>
         <baseUrl alias="server.arena" mapToProperty="server.arena"/>
         <baseUrl alias="server.aareg" mapToProperty="server.aareg"/>
+        <baseUrl alias="server.drek" mapToProperty="server.drek"/>
         <baseUrl alias="server.aktivitetsplan" mapToProperty="server.aktivitetsplan"/>
         <baseUrl alias="server.veilarbportefoljeflatefs" mapToProperty="server.veilarbportefoljeflatefs"/>
         <baseUrl alias="server.norg2-frontend" mapToProperty="server.norg2-frontend"/>
