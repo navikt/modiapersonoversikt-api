@@ -5,4 +5,6 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Saksbehandler;
 
 public interface LDAPService {
     Saksbehandler hentSaksbehandler(String ident);
+
+    boolean saksbehandlerHarRolle(String ident, String rolle);
 }
