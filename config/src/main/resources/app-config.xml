@@ -24,6 +24,10 @@
     <loadBalancer isAlive="/modiabrukerdialog/internal/isAlive" />
     <logging serviceCalls="true" />
 
+    <exposed-resources>
+        <exposedRest path="/modiabrukerdialog/rest" name="personoversiktAPI" />
+    </exposed-resources>
+
     <resources>
         <!-- Felles -->
         <webservice alias="virksomhet:Personsok_v1" mapToProperty="personsokendpoint"/>
