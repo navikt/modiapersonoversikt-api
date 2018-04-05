@@ -24,9 +24,9 @@
     <loadBalancer isAlive="/modiabrukerdialog/internal/isAlive" />
     <logging serviceCalls="true" />
 
-    <exposed-resources>
+    <exposed-services>
         <exposedRest path="/modiabrukerdialog/rest" name="personoversiktAPI" />
-    </exposed-resources>
+    </exposed-services>
 
     <resources>
         <!-- Felles -->
