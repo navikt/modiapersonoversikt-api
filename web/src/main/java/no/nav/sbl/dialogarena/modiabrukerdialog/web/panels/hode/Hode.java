@@ -17,7 +17,6 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.GrunnInfo;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.hode.begrunnelse.ReactBegrunnelseModal;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.hode.jscallback.HodeCallbackWrapper;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.hode.jscallback.SokOppBrukerCallback;
-import no.nav.tjeneste.virksomhet.person.v3.HentPersonPersonIkkeFunnet;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AbstractDefaultAjaxBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -40,7 +39,6 @@ import java.io.IOException;
 import java.io.StringWriter;
 import java.util.*;
 
-import static no.nav.sbl.dialogarena.modiabrukerdialog.api.constants.URLParametere.URL_TIL_SESSION_PARAMETERE;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.apache.wicket.markup.head.OnDomReadyHeaderItem.forScript;
 
@@ -167,7 +165,9 @@ public class Hode extends WebMarkupContainer {
             person = getPersonKjerneinfo(fnr, component);
 
             if (person != null && person.getFodselsnummer() != null) {
-                component.send(component.getPage(), Broadcast.DEPTH, new NamedEventPayload(InternalEvents.FODSELSNUMMER_FUNNET, lagNyePageParametere(component.getPage().getPageParameters(), fnr)));
+                component.send(component.getPage(), Broadcast.DEPTH,
+                        new NamedEventPayload(InternalEvents.FODSELSNUMMER_FUNNET, new PageParameters().set("fnr", fnr))
+                );
             }
         } catch (RecoverableAuthorizationException ex) {
             logger.info("RecoverableAuthorizationException ved kall på getPersonKjerneinfo", ex.getMessage());
@@ -199,20 +199,6 @@ public class Hode extends WebMarkupContainer {
         request.setBegrunnet((erBegrunnet == null) ? false : erBegrunnet);
         HentKjerneinformasjonResponse response = personService.hentKjerneinformasjon(request);
         return response != null ? response.getPerson() : null;
-    }
-
-    private static PageParameters lagNyePageParametere(PageParameters pageParameters, String fnr) {
-        PageParameters params = new PageParameters()
-                .set("fnr", fnr);
-
-        for (String urlParam : URL_TIL_SESSION_PARAMETERE) {
-            String pageParam = pageParameters.get(urlParam).toString();
-            if (!isBlank(pageParam)) {
-                params.set(urlParam, pageParam);
-            }
-        }
-
-        return params;
     }
 
     private void sendGotoHentPersonPageEvent(Component component, String errorText, Sikkerhetstiltak sikkerhetstiltak, String fnr) {
