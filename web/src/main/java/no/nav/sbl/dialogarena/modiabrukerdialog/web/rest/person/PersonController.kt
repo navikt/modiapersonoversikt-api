@@ -42,7 +42,8 @@ class PersonController @Inject constructor(private val kjerneinfoService: Person
                         "fornavn" to person.personfakta.personnavn.fornavn,
                         "mellomnavn" to (person.personfakta.personnavn.mellomnavn ?: ""),
                         "etternavn" to person.personfakta.personnavn.etternavn
-                )
+                ),
+                "diskresjonskode" to (person.personfakta.diskresjonskode?.value ?: "")
         );
 
     }
