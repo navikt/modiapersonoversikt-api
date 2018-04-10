@@ -70,7 +70,7 @@ public class HaandterMeldingValgPanelTest extends WicketPageTest {
     @Test
     public void skalIkkeKunneJournalforeHvisTraadErMerketMedFeilsendt() {
         Melding melding = createMelding("melding1", SPORSMAL_SKRIFTLIG, now().minusDays(1), Temagruppe.ARBD, "melding1");
-        melding.markertSomFeilsendtAv = "feilsendtNavident";
+        melding.markertSomFeilsendtAvNavIdent = "feilsendtNavident";
 
         InnboksVM innboksVM = innboksVM();
         MeldingActionPanel meldingActionPanel = new MeldingActionPanel("actionpanel", innboksVM);

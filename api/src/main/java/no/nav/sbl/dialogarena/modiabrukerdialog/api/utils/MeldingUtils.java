@@ -18,11 +18,11 @@ import org.slf4j.LoggerFactory;
 import java.util.*;
 
 import static java.lang.String.format;
+import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.groupingBy;
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype.*;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Status.*;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.VisningUtils.*;
 
 public class MeldingUtils {
 
@@ -63,18 +63,17 @@ public class MeldingUtils {
             melding.status = STATUS.transform(xmlHenvendelse);
             melding.lestStatus = lagLestStatus(melding);
             melding.statusKlasse = "";
-            melding.kontorsperretEnhet = xmlHenvendelse.getKontorsperreEnhet();
             melding.oppgaveId = xmlHenvendelse.getOppgaveIdGsak();
-            melding.markertSomFeilsendtAv = xmlHenvendelse.getMarkertSomFeilsendtAv();
             melding.eksternAktor = xmlHenvendelse.getEksternAktor();
             melding.tilknyttetEnhet = xmlHenvendelse.getTilknyttetEnhet();
             melding.brukersEnhet = xmlHenvendelse.getBrukersEnhet();
             melding.erTilknyttetAnsatt = xmlHenvendelse.isErTilknyttetAnsatt();
             melding.gjeldendeTemagruppe = xmlHenvendelse.getGjeldendeTemagruppe() != null && !"".equals(xmlHenvendelse.getGjeldendeTemagruppe())
                     ? Temagruppe.valueOf(xmlHenvendelse.getGjeldendeTemagruppe()) : null;
-            melding.erFerdigstiltUtenSvar = unboxBoolean(xmlHenvendelse.isFerdigstiltUtenSvar());
+
 
             oppdaterMeldingMedJournalfortInformasjon(propertyResolver, ldapService, xmlHenvendelse, melding);
+            oppdaterMeldingMedMarkeringer(propertyResolver, ldapService, xmlHenvendelse, melding);
 
             if (innholdErKassert(xmlHenvendelse)) {
                 oppdaterMeldingMedKasseringData(propertyResolver, melding);
@@ -130,6 +129,29 @@ public class MeldingUtils {
         }
     }
 
+    private static void oppdaterMeldingMedMarkeringer(final PropertyResolver propertyResolver, final LDAPService ldapService, final XMLHenvendelse xmlHenvendelse, final Melding melding) {
+        XMLMarkeringer xmlMarkeringer = xmlHenvendelse.getMarkeringer();
+        if (xmlMarkeringer != null) {
+            ofNullable(xmlMarkeringer.getKontorsperre()).ifPresent(xmlKontorsperre -> {
+                melding.kontorsperretAv = ldapService.hentSaksbehandler(xmlKontorsperre.getAktor());
+                melding.kontorsperretAvNavIdent = xmlKontorsperre.getAktor();
+                melding.kontorsperretEnhet = xmlKontorsperre.getEnhet();
+                melding.kontorsperretDato = xmlKontorsperre.getDato();
+            });
+            ofNullable(xmlMarkeringer.getFerdigstiltUtenSvar()).ifPresent(xmlMarkering -> {
+                melding.ferdigstiltUtenSvarAv = ldapService.hentSaksbehandler(xmlMarkering.getAktor());
+                melding.ferdigstiltUtenSvarAvNavIdent = xmlMarkering.getAktor();
+                melding.ferdigstiltUtenSvarDato = xmlMarkering.getDato();
+                melding.erFerdigstiltUtenSvar = true;
+            });
+            ofNullable(xmlMarkeringer.getFeilsendt()).ifPresent(xmlMarkering -> {
+                melding.markertSomFeilsendtAv = ldapService.hentSaksbehandler(xmlMarkering.getAktor());
+                melding.markertSomFeilsendtAvNavIdent = xmlMarkering.getAktor();
+                melding.markertSomFeilsendtDato = xmlMarkering.getDato();
+            });
+        }
+    }
+
     private static void oppdaterMeldingMedKasseringData(final PropertyResolver propertyResolver, final Melding melding) {
         settTemagruppe(melding, null, propertyResolver);
         melding.statusTekst = getTekstForMeldingStatus(propertyResolver, melding.meldingstype);
@@ -173,7 +195,7 @@ public class MeldingUtils {
 
         String key = VisningUtils.lagMeldingStatusTekstKey(meldingstype);
         try {
-            return Optional.ofNullable(propertyResolver.getProperty(key));
+            return ofNullable(propertyResolver.getProperty(key));
         } catch(NoSuchElementException exception) {
             logger.error("Finner ikke cms-oppslag for " + key, exception.getMessage());
             return Optional.empty();

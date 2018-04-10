@@ -2,6 +2,7 @@ package no.nav.sbl.dialogarena.sporsmalogsvar.lamell;
 
 import no.nav.modig.lang.option.Optional;
 import no.nav.modig.modia.widget.utils.WidgetDateFormatter;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Saksbehandler;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
 import no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.DateUtils;
 import no.nav.sbl.dialogarena.sporsmalogsvar.config.WicketPageTest;
@@ -80,7 +81,7 @@ public class MeldingVMTest extends WicketPageTest {
     public void sjekkerOmMeldingErMarkertSomFeilsendt() {
         assertThat(meldingVM.erFeilsendt(), is(false));
 
-        meldingVM.melding.markertSomFeilsendtAv = NAV_IDENT;
+        meldingVM.melding.markertSomFeilsendtAv = new Saksbehandler("", "", NAV_IDENT);
 
         assertThat(meldingVM.erFeilsendt(), is(true));
     }
@@ -89,9 +90,9 @@ public class MeldingVMTest extends WicketPageTest {
     public void henterMarkertSomFeilsendtAv() {
         assertThat(meldingVM.getMarkertSomFeilsendtAv(), is(Optional.none()));
 
-        meldingVM.melding.markertSomFeilsendtAv = NAV_IDENT;
+        meldingVM.melding.markertSomFeilsendtAv = new Saksbehandler("", "", NAV_IDENT);
 
-        assertThat(meldingVM.getMarkertSomFeilsendtAv(), is(optional(NAV_IDENT)));
+        assertThat(meldingVM.getMarkertSomFeilsendtAv().get().getIdent(), is(NAV_IDENT));
     }
 
     @Test

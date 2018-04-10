@@ -200,15 +200,13 @@ public class HenvendelseBehandlingServiceImplTest {
     public void skalAlltidHenteMeldingerSomIkkeErKontorsperret() {
         List<Object> xmlHenvendelsesListe = new ArrayList<>();
         xmlHenvendelsesListe.add(lagXMLHenvendelse("id1", "id1", DateTime.now().minusDays(1), null, XMLHenvendelseType.SPORSMAL_SKRIFTLIG.name(), null, new XMLMetadataListe().withMetadata(new XMLMeldingFraBruker(TEMAGRUPPE, "fritekst")))
-                .withJournalfortInformasjon(null)
-                .withKontorsperreEnhet(null));
+                .withJournalfortInformasjon(null));
         final XMLMeldingFraBruker fritekst1 = new XMLMeldingFraBruker("fritekst", TEMAGRUPPE);
         xmlHenvendelsesListe.add(lagXMLHenvendelse("id2", "id2", DateTime.now(), null, XMLHenvendelseType.SPORSMAL_SKRIFTLIG.name(), null, new XMLMetadataListe().withMetadata(fritekst1))
-                .withJournalfortInformasjon(null)
-                .withKontorsperreEnhet(null));
+                .withJournalfortInformasjon(null));
         final XMLMeldingFraBruker fritekst3 = new XMLMeldingFraBruker("fritekst", TEMAGRUPPE);
         xmlHenvendelsesListe.add(lagXMLHenvendelse("id4", "id4", DateTime.now().plusDays(1), null, XMLHenvendelseType.SPORSMAL_SKRIFTLIG.name(), null, new XMLMetadataListe().withMetadata(fritekst3))
-                .withKontorsperreEnhet("1111"));
+                .withMarkeringer(new XMLMarkeringer().withKontorsperre(new XMLKontorsperre().withEnhet("1111"))));
 
         when(pep.hasAccess(any(PolicyRequest.class))).thenReturn(false);
         when(henvendelsePortType.hentHenvendelseListe(any(WSHentHenvendelseListeRequest.class))).thenReturn(new WSHentHenvendelseListeResponse().withAny(xmlHenvendelsesListe));

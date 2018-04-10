@@ -1,10 +1,11 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.lamell;
 
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Saksbehandler;
 import no.nav.sbl.dialogarena.reactkomponenter.utils.wicket.ReactComponentPanel;
+import no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.DateUtils;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.StringResourceModel;
 
 import java.util.HashMap;
 
@@ -16,21 +17,19 @@ public class FeilsendtInfoPanel extends Panel {
         super(id, meldingVM);
         setOutputMarkupId(true);
 
-        String feilsendtPostString = new StringResourceModel("feilsendtInfo.feilsendtTekst", this, null, "Feilsendt post").getString();
-        String markertAv = new StringResourceModel("feilsendtInfo.markertAv", this, null, "Markert som feilsendt av:").getString();
-        String veilederIdent = meldingVM.getObject().getMarkertSomFeilsendtAv().getOrElse("");
+        String veilederIdent = meldingVM.getObject().getMarkertSomFeilsendtAv()
+                .map(Saksbehandler::getIdent)
+                .getOrElse("<ident mangler>");
+        String veilederNavn = meldingVM.getObject().getMarkertSomFeilsendtAv()
+                .map(person -> person.navn)
+                .getOrElse("<navn mangler>");
+        String markertDato = meldingVM.getObject().getMarkertSomFeilsendtDato()
+                .map(DateUtils::toString)
+                .getOrElse("<dato mangler>");
 
-        String tekst = feilsendtPostString + " | " + markertAv + " " + veilederIdent;
         add(new ReactComponentPanel("markertAv", "AlertStripeSuksessSolid", new HashMap<String, Object>(){{
-            put("tekst", tekst);
+            put("tekst", "Markert som feilsendt av " + veilederNavn + " (" + veilederIdent + "), " + markertDato);
         }}));
-
-        new AbstractReadOnlyModel<Boolean>() {
-            @Override
-            public Boolean getObject() {
-                return meldingVM.getObject().erFeilsendt();
-            }
-        };
 
         add(visibleIf(new AbstractReadOnlyModel<Boolean>() {
             @Override

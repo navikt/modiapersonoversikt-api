@@ -1,9 +1,12 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.lamell;
 
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Saksbehandler;
 import no.nav.sbl.dialogarena.reactkomponenter.utils.wicket.ReactComponentPanel;
+import no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.DateUtils;
 import org.apache.wicket.markup.html.panel.Panel;
-import org.apache.wicket.model.*;
+import org.apache.wicket.model.AbstractReadOnlyModel;
+import org.apache.wicket.model.PropertyModel;
 
 import java.util.HashMap;
 import java.util.Optional;
@@ -44,13 +47,22 @@ public class KontorsperreInfoPanel extends Panel {
     }
 
     private HashMap<String, Object> getProps() {
-        String kontorSperretTekst =
-                new StringResourceModel("kontorsperreInfo.kontorsperretTekst", this, null, "Kontorsperret til enhet:").getString();
-        String enhet = innboksVM.getValgtTraad().getKontorsperretEnhet().orElse("");
-        String tekst =  kontorSperretTekst + " " + enhet;
+        TraadVM valgtTraad = innboksVM.getValgtTraad();
+
+        String enhet = valgtTraad.getKontorsperretEnhet()
+                .orElse("<enhet mangler>");
+        String veilederNavn = valgtTraad.getKontorsperretAv()
+                .map(saksbehandler -> saksbehandler.navn)
+                .orElse("<navn mangler>");
+        String veilederIdent = valgtTraad.getKontorsperretAv()
+                .map(Saksbehandler::getIdent)
+                .orElse("<ident mangler>");
+        String kontorsperretDato = valgtTraad.getKontorsperretDato()
+                .map(DateUtils::toString)
+                .orElse("<dato mangler>");
 
         return new HashMap<String, Object>() {{
-            put("tekst", tekst);
+            put("tekst", "Kontorsperret til enhet " + enhet + " av " + veilederNavn + " (" + veilederIdent + "), " + kontorsperretDato);
         }};
     }
 }
