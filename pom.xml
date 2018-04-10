@@ -102,7 +102,7 @@
         <!-- Modia-komponenter-->
         <reactkomponenter.version>1731</reactkomponenter.version>
         <personsok.version>4.0.7</personsok.version>
-        <kjerneinfo.versjon>4527</kjerneinfo.versjon>
+        <kjerneinfo.versjon>6.1.6-SNAPSHOT</kjerneinfo.versjon>
         <utbetaling.version>4.0.0</utbetaling.version>
         <saksoversikt.version>9.0.4</saksoversikt.version>
         <varsling.modia.version>2.0</varsling.modia.version>
