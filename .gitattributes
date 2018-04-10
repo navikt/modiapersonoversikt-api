@@ -4,5 +4,5 @@
 *.cfg text eol=lf
 *.properties text eol=lf
 *.xml text eol=lf
-*.java text eol=lf
+*.java text diff=java eol=lf
 *.html text eol=lf
