@@ -1,11 +1,7 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.arbeidsfordeling;
 
 import no.nav.kjerneinfo.consumer.fim.person.PersonKjerneinfoServiceBi;
-import no.nav.kjerneinfo.consumer.fim.person.to.HentKjerneinformasjonRequest;
-import no.nav.kjerneinfo.consumer.fim.person.to.HentKjerneinformasjonResponse;
 import no.nav.kjerneinfo.domain.person.GeografiskTilknytning;
-import no.nav.kjerneinfo.domain.person.Person;
-import no.nav.kjerneinfo.domain.person.Personfakta;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.AnsattEnhet;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.arbeidsfordeling.ArbeidsfordelingV1Service;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.arbeidsfordeling.FinnBehandlendeEnhetException;
@@ -44,19 +40,19 @@ public class ArbeidsfordelingV1ServiceImpl implements ArbeidsfordelingV1Service 
     public List<AnsattEnhet> finnBehandlendeEnhetListe(String brukerIdent, String fagomrade, String oppgavetype, String underkategori) {
         try {
             Optional<Behandling> behandling = kodeverksmapper.mapUnderkategori(underkategori);
-            String geografiskTilknytning = hentGeografiskTilknytning(brukerIdent);
+            GeografiskTilknytning geografiskTilknytning = personService.hentGeografiskTilknytning(brukerIdent);
             WSFinnBehandlendeEnhetListeResponse response = arbeidsfordeling.finnBehandlendeEnhetListe(new WSFinnBehandlendeEnhetListeRequest()
                     .withArbeidsfordelingKriterier(new WSArbeidsfordelingKriterier()
                             .withBehandlingstema(new WSBehandlingstema()
                                     .withValue(behandling.map(Behandling::getBehandlingstema).orElse(null)))
                             .withBehandlingstype(new WSBehandlingstyper()
                                     .withValue(behandling.map(Behandling::getBehandlingstype).orElse(null)))
+                            .withDiskresjonskode(new WSDiskresjonskoder().withValue(geografiskTilknytning.getDiskresjonskode()))
                             .withOppgavetype(new WSOppgavetyper()
                                     .withValue(kodeverksmapper.mapOppgavetype(oppgavetype)))
                             .withTema(new WSTema()
                                     .withValue(fagomrade))
-                            .withGeografiskTilknytning(new WSGeografi()
-                                    .withValue(geografiskTilknytning))));
+                            .withGeografiskTilknytning(new WSGeografi().withValue(geografiskTilknytning.getValue()))));
             return response.getBehandlendeEnhetListe().stream()
                     .map(wsEnhet -> new AnsattEnhet(wsEnhet.getEnhetId(), wsEnhet.getEnhetNavn()))
                     .collect(toList());
@@ -66,12 +62,4 @@ public class ArbeidsfordelingV1ServiceImpl implements ArbeidsfordelingV1Service 
         }
     }
 
-    private String hentGeografiskTilknytning(String brukerIdent) {
-        return Optional.ofNullable(personService.hentKjerneinformasjon(new HentKjerneinformasjonRequest(brukerIdent)))
-                .map(HentKjerneinformasjonResponse::getPerson)
-                .map(Person::getPersonfakta)
-                .map(Personfakta::getGeografiskTilknytning)
-                .map(GeografiskTilknytning::getValue)
-                .orElse(null);
-    }
 }

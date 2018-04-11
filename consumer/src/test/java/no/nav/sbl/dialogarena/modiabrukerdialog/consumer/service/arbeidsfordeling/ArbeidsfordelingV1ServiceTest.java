@@ -36,6 +36,7 @@ class ArbeidsfordelingV1ServiceTest {
     private static final String MAPPET_OPPGAVETYPE = "JFR";
     private static final String GEOGRAFISK_TILKNYTNING = "0219";
     private static final String PERSON = "11111111111";
+    private static final String STRENGT_FORTROLIG_ADRESSE ="SPSF";
 
     private ArbeidsfordelingV1Service arbeidsfordelingService;
     private ArbeidsfordelingV1 arbeidsfordeling;
@@ -52,20 +53,9 @@ class ArbeidsfordelingV1ServiceTest {
 
     private PersonKjerneinfoServiceBi lagPersonServiceMock() {
         PersonKjerneinfoServiceBi personServiceMock = mock(PersonKjerneinfoServiceBi.class);
-        when(personServiceMock.hentKjerneinformasjon(any(HentKjerneinformasjonRequest.class))).thenReturn(lagHentKjerneinfoResponse());
+
+        when(personServiceMock.hentGeografiskTilknytning(anyString())).thenReturn(new GeografiskTilknytning().withType(GeografiskTilknytningstyper.KOMMUNE).withValue(GEOGRAFISK_TILKNYTNING));
         return personServiceMock;
-    }
-
-    private HentKjerneinformasjonResponse lagHentKjerneinfoResponse() {
-        Personfakta personfakta = new Personfakta();
-        personfakta.setGeografiskTilknytning(new GeografiskTilknytning().withValue(GEOGRAFISK_TILKNYTNING));
-
-        Person person = new Person();
-        person.setPersonfakta(personfakta);
-
-        HentKjerneinformasjonResponse response = new HentKjerneinformasjonResponse();
-        response.setPerson(person);
-        return response;
     }
 
     private KodeverksmapperService lagKodeverksmapperMock() throws IOException {
@@ -103,7 +93,7 @@ class ArbeidsfordelingV1ServiceTest {
     @Test
     @DisplayName("Kaster exception hvis kall mot PersonService feiler")
     void kasterExceptionHvisKallMotPersonServiceFeiler() {
-        when(personService.hentKjerneinformasjon(any(HentKjerneinformasjonRequest.class))).thenThrow(new RuntimeException());
+        when(personService.hentGeografiskTilknytning(anyString())).thenThrow(new RuntimeException());
 
         assertThrows(FinnBehandlendeEnhetException.class, () -> arbeidsfordelingService.finnBehandlendeEnhetListe(PERSON, FAGOMRADE, OPPGAVETYPE, UNDERKATEGORI));
     }
@@ -128,6 +118,30 @@ class ArbeidsfordelingV1ServiceTest {
         assertAll("request",
                 () -> assertEquals(BEHANDLINGSTEMA, request.getArbeidsfordelingKriterier().getBehandlingstema().getValue()),
                 () -> assertEquals(BEHANDLINGSTYPE, request.getArbeidsfordelingKriterier().getBehandlingstype().getValue()),
+                () -> assertEquals(GEOGRAFISK_TILKNYTNING, request.getArbeidsfordelingKriterier().getGeografiskTilknytning().getValue()),
+                () -> assertEquals(MAPPET_OPPGAVETYPE, request.getArbeidsfordelingKriterier().getOppgavetype().getValue()),
+                () -> assertEquals(FAGOMRADE, request.getArbeidsfordelingKriterier().getTema().getValue()));
+    }
+
+    @Test
+    @DisplayName("Arbeidsfordeling benytter diskresjonskode dersom denne finnes")
+    void kallerArbeidsfordelingMedDiskresjonskodeDersomDenneFinnes() throws FinnBehandlendeEnhetListeUgyldigInput {
+        when(personService.hentGeografiskTilknytning(anyString())).thenReturn(
+                new GeografiskTilknytning()
+                        .withValue(GEOGRAFISK_TILKNYTNING)
+                .withType(GeografiskTilknytningstyper.KOMMUNE)
+                .withDiskresjonskode(STRENGT_FORTROLIG_ADRESSE));
+
+        arbeidsfordelingService.finnBehandlendeEnhetListe(PERSON, FAGOMRADE, OPPGAVETYPE, UNDERKATEGORI);
+
+        ArgumentCaptor<WSFinnBehandlendeEnhetListeRequest> captor = ArgumentCaptor.forClass(WSFinnBehandlendeEnhetListeRequest.class);
+        verify(arbeidsfordeling).finnBehandlendeEnhetListe(captor.capture());
+
+        WSFinnBehandlendeEnhetListeRequest request = captor.getValue();
+        assertAll("request",
+                () -> assertEquals(BEHANDLINGSTEMA, request.getArbeidsfordelingKriterier().getBehandlingstema().getValue()),
+                () -> assertEquals(BEHANDLINGSTYPE, request.getArbeidsfordelingKriterier().getBehandlingstype().getValue()),
+                () -> assertEquals(STRENGT_FORTROLIG_ADRESSE, request.getArbeidsfordelingKriterier().getDiskresjonskode().getValue()),
                 () -> assertEquals(GEOGRAFISK_TILKNYTNING, request.getArbeidsfordelingKriterier().getGeografiskTilknytning().getValue()),
                 () -> assertEquals(MAPPET_OPPGAVETYPE, request.getArbeidsfordelingKriterier().getOppgavetype().getValue()),
                 () -> assertEquals(FAGOMRADE, request.getArbeidsfordelingKriterier().getTema().getValue()));
