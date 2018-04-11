@@ -35,7 +35,9 @@ constructor(private val oekservice: OrganisasjonEnhetKontaktinformasjonService,
 
         check(visFeature(Feature.ENHETER_GEOGRAFISK_TILKNYTNING_API))
 
-        val enhetid = oe2service.finnNAVKontor(geografiskId, diskresjonskode).map { it.enhetId }.orElseThrow{ NotFoundException() }
+        val enhetid = oe2service.finnNAVKontor(geografiskId, diskresjonskode)
+                .map { it.enhetId }
+                .orElseThrow{ NotFoundException() }
 
         return hentMedId(enhetid)
     }
