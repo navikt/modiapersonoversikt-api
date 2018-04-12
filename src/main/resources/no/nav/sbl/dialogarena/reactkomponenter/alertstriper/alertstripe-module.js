@@ -9,8 +9,14 @@ const clsMap = {
 };
 
 class Alertstripe extends Component {
+
+    constructor(props) {
+        super();
+        this.state = props;
+    }
+
     render() {
-        const config = clsMap[this.props.type];
+        const config = clsMap[this.state.type];
 
         return (
             <div
@@ -22,8 +28,8 @@ class Alertstripe extends Component {
             >
                 <Icon className="alertstripe__ikon" kind={config.ikon} />
                 <span className="alertstripe__tekst">
-                    {this.props.tekst}
-                    {this.props.children}
+                    {this.state.tekst}
+                    {this.state.children}
                 </span>
             </div>
         );
