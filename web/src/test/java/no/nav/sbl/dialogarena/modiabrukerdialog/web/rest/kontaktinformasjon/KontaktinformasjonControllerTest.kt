@@ -29,21 +29,9 @@ private const val RESERVASJON = "Reservert"
 class KontaktinformasjonControllerTest {
 
     @Mock
-    private  lateinit var dkifService: DkifService
+    private lateinit var dkifService: DkifService
 
     private lateinit var controller: KontaktinformasjonController
-
-    companion object {
-
-        @BeforeAll
-        @JvmStatic
-        fun beforeAll() = enableFeature(Feature.PERSON_REST_API)
-
-        @AfterAll
-        @JvmStatic
-        fun afterAll() = disableFeature(Feature.PERSON_REST_API)
-
-    }
 
     @BeforeEach
     fun before() {
@@ -105,6 +93,18 @@ class KontaktinformasjonControllerTest {
         date.time = dateFormatter.parse(dateSource)
 
         return DatatypeFactory.newInstance().newXMLGregorianCalendar(date)
+    }
+
+    companion object {
+
+        @BeforeAll
+        @JvmStatic
+        fun beforeAll() = enableFeature(Feature.PERSON_REST_API)
+
+        @AfterAll
+        @JvmStatic
+        fun afterAll() = disableFeature(Feature.PERSON_REST_API)
+
     }
 
 }
