@@ -26,11 +26,11 @@ constructor(private val organisasjonEnhetKontaktinformasjonService: Organisasjon
     @GET
     @Path("/geo/{id}")
     @Produces(APPLICATION_JSON)
-    fun hentMedGeoTilk(@PathParam("id") geografiskId: String, @QueryParam("dkode") diskresjonskode: String): OrganisasjonEnhetKontaktinformasjon {
+    fun hentMedGeoTilk(@PathParam("id") geografiskId: String, @QueryParam("dkode") diskresjonskode: String?): OrganisasjonEnhetKontaktinformasjon {
 
         check(visFeature(Feature.ENHETER_GEOGRAFISK_TILKNYTNING_API))
 
-        val enhetid = organisasjonEnhetV2Service.finnNAVKontor(geografiskId, diskresjonskode)
+        val enhetid = organisasjonEnhetV2Service.finnNAVKontor(geografiskId, diskresjonskode ?: "")
                 .map { it.enhetId }
                 .orElseThrow{ NotFoundException() }
 
