@@ -5,6 +5,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.Featur
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.visFeature
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.organisasjonenhet.kontaktinformasjon.domain.OrganisasjonEnhetKontaktinformasjon
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.organisasjonenhet.kontaktinformasjon.service.OrganisasjonEnhetKontaktinformasjonService
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.enhet.model.EnhetKontaktinformasjon
 
 import javax.inject.Inject
 import javax.ws.rs.*
@@ -26,7 +27,7 @@ constructor(private val organisasjonEnhetKontaktinformasjonService: Organisasjon
     @GET
     @Path("/geo/{id}")
     @Produces(APPLICATION_JSON)
-    fun hentMedGeoTilk(@PathParam("id") geografiskId: String, @QueryParam("dkode") diskresjonskode: String?): OrganisasjonEnhetKontaktinformasjon {
+    fun hentMedGeoTilk(@PathParam("id") geografiskId: String, @QueryParam("dkode") diskresjonskode: String?): EnhetKontaktinformasjon {
 
         check(visFeature(Feature.ENHETER_GEOGRAFISK_TILKNYTNING_API))
 
@@ -34,7 +35,7 @@ constructor(private val organisasjonEnhetKontaktinformasjonService: Organisasjon
                 .map { it.enhetId }
                 .orElseThrow{ NotFoundException() }
 
-        return hentMedId(enhetid)
+        return EnhetKontaktinformasjon(hentMedId(enhetid))
     }
 
 }
