@@ -10,7 +10,6 @@ import no.nav.tjeneste.virksomhet.person.v3.HentPersonSikkerhetsbegrensning
 import javax.inject.Inject
 import javax.ws.rs.*
 import javax.ws.rs.core.MediaType.APPLICATION_JSON
-import javax.ws.rs.core.Response.Status.NOT_IMPLEMENTED
 
 
 @Path("/person/{fnr}")
@@ -45,7 +44,12 @@ class PersonController @Inject constructor(private val kjerneinfoService: Person
                         "etternavn" to person.personfakta.personnavn.etternavn
                 ),
                 "diskresjonskode" to (person.personfakta.diskresjonskode?.value ?: ""),
-                "bankkonto" to hentBankkonto(person)
+                "bankkonto" to hentBankkonto(person),
+                "status" to mapOf(
+                        "dødsdato" to person.personfakta.doedsdato,
+                        "bostatus" to person.personfakta.bostatus?.value
+                ),
+                "statsborgerskap" to (person.personfakta.statsborgerskap?.beskrivelse?: "")
         )
     }
 

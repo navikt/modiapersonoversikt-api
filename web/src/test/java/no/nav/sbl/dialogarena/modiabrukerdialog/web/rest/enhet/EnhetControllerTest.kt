@@ -13,7 +13,7 @@ import org.mockito.MockitoAnnotations
 import java.util.*
 import javax.ws.rs.NotFoundException
 
-class EnhetKontrollerTest {
+class EnhetControllerTest {
     @Mock private lateinit var organisasjonEnhetV2Service: OrganisasjonEnhetV2Service
     @Mock private lateinit var organisasjonEnhetKontaktinformasjonService: OrganisasjonEnhetKontaktinformasjonService
     private lateinit var controller: EnhetController
@@ -34,11 +34,11 @@ class EnhetKontrollerTest {
     companion object {
         @BeforeAll
         @JvmStatic
-        fun beforeAll() = enableFeature(Feature.ENHETER_GEOGRAFISK_TILKNYTNING_API)
+        fun beforeAll() = enableFeature(Feature.PERSON_REST_API)
 
         @AfterAll
         @JvmStatic
-        fun afterAll() = disableFeature(Feature.ENHETER_GEOGRAFISK_TILKNYTNING_API)
+        fun afterAll() = disableFeature(Feature.PERSON_REST_API)
     }
 
 }
