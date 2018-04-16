@@ -119,6 +119,10 @@
             <groupId>no.nav</groupId>
             <artifactId>fellessystemer-components</artifactId>
         </dependency>
+        <dependency>
+            <groupId>no.nav</groupId>
+            <artifactId>dkif-consumer</artifactId>
+        </dependency>
 
         <!--Sykmeldingsperioder-->
         <dependency>

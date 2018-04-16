@@ -4,6 +4,7 @@ import no.nav.brukerdialog.isso.RelyingPartyCallback;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.JacksonConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.enhet.EnhetController;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.henvendelse.DelsvarController;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.kontaktinformasjon.KontaktinformasjonController;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.oppgave.OppgaveController;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.person.PersonController;
 import no.nav.sbl.dialogarena.sak.rest.DokumentController;
@@ -45,7 +46,8 @@ public class RestConfig extends ResourceConfig {
                 RelyingPartyCallback.class,
                 OppgaveController.class,
                 EnhetController.class,
-                PersonController.class
+                PersonController.class,
+                KontaktinformasjonController.class
         );
         if (!visFeature(PERSON_REST_API)) {
             return;
