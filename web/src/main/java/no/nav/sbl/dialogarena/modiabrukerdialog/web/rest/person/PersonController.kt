@@ -50,7 +50,6 @@ class PersonController @Inject constructor(private val kjerneinfoService: Person
                         "sistEndret" to person.personfakta.bankkonto.endringsinformasjon.sistOppdatert,
                         "sistEndretAv" to person.personfakta.bankkonto.endringsinformasjon.endretAv
                 ),
-                "diskresjonskode" to (person.personfakta.diskresjonskode?.value ?: ""),
                 "status" to mapOf(
                         "dødsdato" to person.personfakta.doedsdato,
                         "bostatus" to person.personfakta.bostatus?.value
