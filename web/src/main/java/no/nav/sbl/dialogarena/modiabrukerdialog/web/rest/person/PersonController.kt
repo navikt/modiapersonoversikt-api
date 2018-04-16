@@ -43,7 +43,14 @@ class PersonController @Inject constructor(private val kjerneinfoService: Person
                         "mellomnavn" to (person.personfakta.personnavn.mellomnavn ?: ""),
                         "etternavn" to person.personfakta.personnavn.etternavn
                 ),
-                "diskresjonskode" to (person.personfakta.diskresjonskode?.value ?: "")
+                "diskresjonskode" to (person.personfakta.diskresjonskode?.value ?: ""),
+                "bankkonto" to mapOf(
+                        "erNorskKonto" to person.personfakta.isBankkontoINorge,
+                        "kontonummer" to person.personfakta.bankkonto.kontonummer,
+                        "bank" to person.personfakta.bankkonto.banknavn,
+                        "sistEndret" to person.personfakta.bankkonto.endringsinformasjon.sistOppdatert,
+                        "sistEndretAv" to person.personfakta.bankkonto.endringsinformasjon.endretAv
+                )
         );
 
     }
