@@ -29,7 +29,7 @@ constructor(private val organisasjonEnhetKontaktinformasjonService: Organisasjon
     @Produces(APPLICATION_JSON)
     fun hentMedGeoTilk(@PathParam("id") geografiskId: String, @QueryParam("dkode") diskresjonskode: String?): EnhetKontaktinformasjon {
 
-        check(visFeature(Feature.ENHETER_GEOGRAFISK_TILKNYTNING_API))
+        check(visFeature(Feature.PERSON_REST_API))
 
         val enhetid = organisasjonEnhetV2Service.finnNAVKontor(geografiskId, diskresjonskode ?: "")
                 .map { it.enhetId }
