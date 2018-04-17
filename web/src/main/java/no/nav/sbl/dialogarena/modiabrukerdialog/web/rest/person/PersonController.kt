@@ -28,7 +28,7 @@ class PersonController @Inject constructor(private val kjerneinfoService: Person
             when (exception.cause) {
                 is HentPersonPersonIkkeFunnet -> throw NotFoundException()
                 is HentPersonSikkerhetsbegrensning -> throw NotAuthorizedException("Ingen tilgang til denne brukeren")
-                else -> throw InternalServerErrorException()
+                else -> throw InternalServerErrorException(exception)
             }
         }
 
@@ -49,12 +49,20 @@ class PersonController @Inject constructor(private val kjerneinfoService: Person
                         "dødsdato" to person.personfakta.doedsdato,
                         "bostatus" to person.personfakta.bostatus?.value
                 ),
-                "statsborgerskap" to (person.personfakta.statsborgerskap?.beskrivelse?: ""),
+                "statsborgerskap" to getStatsborgerskap(person),
                 "sivilstand" to mapOf(
                         "value" to person.personfakta.sivilstand?.value,
                         "beskrivelse" to person.personfakta.sivilstand?.beskrivelse
                 )
         )
+    }
+
+    private fun getStatsborgerskap(person: Person): String? {
+        if (person.personfakta.statsborgerskap?.beskrivelse.equals("???")) {
+            return null
+        } else {
+            return person.personfakta.statsborgerskap?.beskrivelse
+        }
     }
 
     private fun hentBankkonto(person: Person): Map<String, Any>? {
