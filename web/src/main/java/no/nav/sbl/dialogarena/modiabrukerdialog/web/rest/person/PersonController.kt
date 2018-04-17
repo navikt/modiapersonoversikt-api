@@ -12,6 +12,8 @@ import javax.ws.rs.*
 import javax.ws.rs.core.MediaType.APPLICATION_JSON
 
 
+private val TPS_UKJENT_VERDI = "???"
+
 @Path("/person/{fnr}")
 @Produces(APPLICATION_JSON)
 class PersonController @Inject constructor(private val kjerneinfoService: PersonKjerneinfoServiceBi) {
@@ -28,7 +30,7 @@ class PersonController @Inject constructor(private val kjerneinfoService: Person
             when (exception.cause) {
                 is HentPersonPersonIkkeFunnet -> throw NotFoundException()
                 is HentPersonSikkerhetsbegrensning -> throw NotAuthorizedException("Ingen tilgang til denne brukeren")
-                else -> throw InternalServerErrorException()
+                else -> throw InternalServerErrorException(exception)
             }
         }
 
@@ -36,7 +38,7 @@ class PersonController @Inject constructor(private val kjerneinfoService: Person
                 "fødselsnummer" to person.fodselsnummer.nummer,
                 "alder" to person.fodselsnummer.alder,
                 "kjønn" to person.personfakta.kjonn.value,
-                "geografiskTilknytning" to person.personfakta.geografiskTilknytning.value,
+                "geografiskTilknytning" to person.personfakta.geografiskTilknytning?.value,
                 "navn" to mapOf(
                         "sammensatt" to person.personfakta.personnavn.sammensattNavn,
                         "fornavn" to person.personfakta.personnavn.fornavn,
@@ -49,8 +51,20 @@ class PersonController @Inject constructor(private val kjerneinfoService: Person
                         "dødsdato" to person.personfakta.doedsdato,
                         "bostatus" to person.personfakta.bostatus?.value
                 ),
-                "statsborgerskap" to (person.personfakta.statsborgerskap?.beskrivelse?: "")
+                "statsborgerskap" to getStatsborgerskap(person),
+                "sivilstand" to mapOf(
+                        "value" to person.personfakta.sivilstand?.value,
+                        "beskrivelse" to person.personfakta.sivilstand?.beskrivelse
+                )
         )
+    }
+
+    private fun getStatsborgerskap(person: Person): String? {
+        if (person.personfakta.statsborgerskap?.beskrivelse == TPS_UKJENT_VERDI) {
+            return null
+        } else {
+            return person.personfakta.statsborgerskap?.beskrivelse
+        }
     }
 
     private fun hentBankkonto(person: Person): Map<String, Any>? {

@@ -79,12 +79,11 @@ class KontaktinformasjonControllerTest {
                 .withDigitalKontaktinformasjon(WSKontaktinformasjon()))
 
         val response = controller.hentKontaktinformasjon(FNR)
-        val epost = response["epost"] as Map<String, String>
-        val mobiltelefon = response["mobiltelefon"] as Map<String, String>
+        val epost = response["epost"];
+        val mobiltelefon = response["mobiltelefon"]
 
-        assertEquals(null, epost["value"])
-        assertEquals(null, mobiltelefon["mobiltelefon"])
-        assertEquals(null, mobiltelefon["reservasjon"])
+        assertEquals(null, epost)
+        assertEquals(null, mobiltelefon)
     }
 
     private fun lagDato(dateSource: String): XMLGregorianCalendar? {
