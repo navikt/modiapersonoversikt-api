@@ -49,7 +49,11 @@ class PersonController @Inject constructor(private val kjerneinfoService: Person
                         "dødsdato" to person.personfakta.doedsdato,
                         "bostatus" to person.personfakta.bostatus?.value
                 ),
-                "statsborgerskap" to (person.personfakta.statsborgerskap?.beskrivelse?: "")
+                "statsborgerskap" to (person.personfakta.statsborgerskap?.beskrivelse?: ""),
+                "sivilstand" to mapOf(
+                        "value" to person.personfakta.sivilstand?.value,
+                        "beskrivelse" to person.personfakta.sivilstand?.beskrivelse
+                )
         )
     }
 
