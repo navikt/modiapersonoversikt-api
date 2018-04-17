@@ -36,7 +36,7 @@ class PersonController @Inject constructor(private val kjerneinfoService: Person
                 "fødselsnummer" to person.fodselsnummer.nummer,
                 "alder" to person.fodselsnummer.alder,
                 "kjønn" to person.personfakta.kjonn.value,
-                "geografiskTilknytning" to person.personfakta.geografiskTilknytning.value,
+                "geografiskTilknytning" to person.personfakta.geografiskTilknytning?.value,
                 "navn" to mapOf(
                         "sammensatt" to person.personfakta.personnavn.sammensattNavn,
                         "fornavn" to person.personfakta.personnavn.fornavn,
