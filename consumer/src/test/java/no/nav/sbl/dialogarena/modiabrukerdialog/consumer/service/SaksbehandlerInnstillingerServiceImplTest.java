@@ -4,13 +4,11 @@ import no.nav.brukerdialog.security.context.StaticSubjectHandler;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.AnsattEnhet;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.AnsattService;
 import org.apache.wicket.util.tester.WicketTester;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
 
 import javax.servlet.http.Cookie;
 
@@ -21,8 +19,8 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
+import static org.mockito.MockitoAnnotations.initMocks;
 
-@RunWith(MockitoJUnitRunner.class)
 public class SaksbehandlerInnstillingerServiceImplTest {
 
     @Mock
@@ -33,13 +31,14 @@ public class SaksbehandlerInnstillingerServiceImplTest {
 
     private WicketTester tester = new WicketTester();
 
-    @BeforeClass
+    @BeforeAll
     public static void setUpStatic() {
         setProperty(StaticSubjectHandler.SUBJECTHANDLER_KEY, StaticSubjectHandler.class.getName());
     }
 
-    @Before
+    @BeforeEach
     public void setUp() {
+        initMocks(this);
         when(ansattService.hentEnhetsliste()).thenReturn(asList(
                 new AnsattEnhet("1111", "Enhet1"),
                 new AnsattEnhet("2222", "Enhet2")));

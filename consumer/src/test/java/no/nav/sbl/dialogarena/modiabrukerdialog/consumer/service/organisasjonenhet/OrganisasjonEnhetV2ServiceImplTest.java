@@ -7,11 +7,10 @@ import no.nav.tjeneste.virksomhet.organisasjonenhet.v2.binding.OrganisasjonEnhet
 import no.nav.tjeneste.virksomhet.organisasjonenhet.v2.informasjon.Enhetstyper;
 import no.nav.tjeneste.virksomhet.organisasjonenhet.v2.informasjon.Organisasjonsenhet;
 import no.nav.tjeneste.virksomhet.organisasjonenhet.v2.meldinger.*;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.List;
 import java.util.Optional;
@@ -25,8 +24,8 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
+import static org.mockito.MockitoAnnotations.initMocks;
 
-@RunWith(MockitoJUnitRunner.class)
 public class OrganisasjonEnhetV2ServiceImplTest {
 
     @Mock
@@ -34,6 +33,11 @@ public class OrganisasjonEnhetV2ServiceImplTest {
 
     @InjectMocks
     private OrganisasjonEnhetV2ServiceImpl organisasjonEnhetServiceImpl;
+
+    @BeforeEach
+    void beforeEach() {
+        initMocks(this);
+    }
 
     @Test
     public void skalSortereEnheterIStigendeRekkefolge() {

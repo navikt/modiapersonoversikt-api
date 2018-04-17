@@ -16,19 +16,18 @@ import no.nav.tjeneste.virksomhet.oppgave.v3.meldinger.WSHentOppgaveResponse;
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.LagreOppgaveOppgaveIkkeFunnet;
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.LagreOppgaveOptimistiskLasing;
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.OppgavebehandlingV3;
-import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.TildelOppgaveUgyldigInput;
-import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.meldinger.*;
+import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.meldinger.WSEndreOppgave;
+import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.meldinger.WSFerdigstillOppgaveBolkRequest;
+import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.meldinger.WSLagreOppgaveRequest;
 import no.nav.tjeneste.virksomhet.tildeloppgave.v1.TildelOppgaveV1;
 import no.nav.tjeneste.virksomhet.tildeloppgave.v1.WSTildelFlereOppgaverRequest;
 import no.nav.tjeneste.virksomhet.tildeloppgave.v1.WSTildelFlereOppgaverResponse;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
 
 import static java.util.stream.Collectors.toSet;
 import static no.nav.sbl.dialogarena.common.collections.Collections.asSet;
@@ -40,11 +39,9 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
+import static org.mockito.MockitoAnnotations.initMocks;
 
-@RunWith(MockitoJUnitRunner.class)
 public class OppgaveBehandlingServiceImplTest {
 
     public static final String SAKSBEHANDLERS_VALGTE_ENHET = "4100";
@@ -74,8 +71,9 @@ public class OppgaveBehandlingServiceImplTest {
     private static final String OPPGAVE_ID_1 = "123";
     private static final String OPPGAVE_ID_2 = "456";
 
-    @Before
+    @BeforeEach
     public void init() {
+        initMocks(this);
         System.setProperty(StaticSubjectHandler.SUBJECTHANDLER_KEY, StaticSubjectHandler.class.getName());
     }
 

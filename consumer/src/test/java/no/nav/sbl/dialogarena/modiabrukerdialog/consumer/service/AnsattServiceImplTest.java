@@ -8,12 +8,10 @@ import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navansatt.*;
 import no.nav.brukerdialog.security.context.ThreadLocalSubjectHandler;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.Ansatt;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.AnsattEnhet;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -23,8 +21,8 @@ import static org.hamcrest.core.Is.is;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.mockito.MockitoAnnotations.initMocks;
 
-@RunWith(MockitoJUnitRunner.class)
 public class AnsattServiceImplTest {
 
     @Mock
@@ -32,9 +30,10 @@ public class AnsattServiceImplTest {
     @InjectMocks
     private AnsattServiceImpl ansattServiceImpl;
 
-    @Before
+    @BeforeEach
     public void setup() {
-        System.setProperty("no.nav.modig.core.context.subjectHandlerImplementationClass", ThreadLocalSubjectHandler.class.getName());
+        initMocks(this);
+        System.setProperty("no.nav.brukerdialog.security.context.subjectHandlerImplementationClass", ThreadLocalSubjectHandler.class.getName());
     }
 
     @Test

@@ -37,16 +37,14 @@ import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.meldinger.WSHentHenven
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.meldinger.WSHentHenvendelseListeResponse;
 import org.hamcrest.Matchers;
 import org.joda.time.DateTime;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -68,8 +66,8 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyList;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.*;
+import static org.mockito.MockitoAnnotations.initMocks;
 
-@RunWith(MockitoJUnitRunner.class)
 public class HenvendelseUtsendingServiceImplTest {
 
     private static final String BEHANDLINGS_ID = "ID_1";
@@ -123,18 +121,19 @@ public class HenvendelseUtsendingServiceImplTest {
     @InjectMocks
     private HenvendelseUtsendingServiceImpl henvendelseUtsendingService;
 
-    @BeforeClass
+    @BeforeAll
     public static void beforeClass() {
         CacheTestUtil.setupCache(Collections.singletonList("endpointCache"));
     }
 
-    @AfterClass
+    @AfterAll
     public static void afterClass() {
         CacheTestUtil.tearDown();
     }
 
-    @Before
+    @BeforeEach
     public void init() {
+        initMocks(this);
         SubjectHandlerUtil.setInnloggetSaksbehandler(SAKSBEHANDLERS_IDENT);
 
         when(sendUtHenvendelsePortType.sendUtHenvendelse(any(WSSendUtHenvendelseRequest.class))).thenReturn(

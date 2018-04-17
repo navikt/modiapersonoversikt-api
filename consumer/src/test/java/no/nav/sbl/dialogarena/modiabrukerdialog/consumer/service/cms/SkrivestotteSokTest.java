@@ -1,17 +1,14 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.cms;
 
 import org.hamcrest.Matchers;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
 import java.util.List;
 
 import static java.util.Arrays.asList;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.cms.SkrivestotteSok.HIGHLIGHTED_BEGIN;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.cms.SkrivestotteSok.HIGHLIGHTED_END;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.cms.SkrivestotteSok.LUCENE_PATTERN;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.cms.SkrivestotteSok.REPLACEMENT_STRING;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.cms.SkrivestotteSok.*;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasSize;
@@ -20,7 +17,7 @@ public class SkrivestotteSokTest {
 
     private SkrivestotteSok skrivestotteSok = new SkrivestotteSok();
 
-    @Before
+    @BeforeEach
     public void setup() {
         skrivestotteSok.indekser(lagMockSkrivestotteTekster());
     }

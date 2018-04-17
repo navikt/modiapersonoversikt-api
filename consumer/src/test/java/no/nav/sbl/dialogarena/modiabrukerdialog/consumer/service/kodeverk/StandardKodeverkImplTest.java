@@ -10,12 +10,10 @@ import no.nav.tjeneste.virksomhet.kodeverk.v2.informasjon.XMLTerm;
 import no.nav.tjeneste.virksomhet.kodeverk.v2.meldinger.XMLHentKodeverkRequest;
 import no.nav.tjeneste.virksomhet.kodeverk.v2.meldinger.XMLHentKodeverkResponse;
 import org.joda.time.DateMidnight;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.io.File;
@@ -24,10 +22,11 @@ import static no.nav.modig.core.test.FilesAndDirs.BUILD_OUTPUT;
 import static org.apache.commons.lang3.RandomStringUtils.randomNumeric;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
+import static org.mockito.MockitoAnnotations.initMocks;
 
-@RunWith(MockitoJUnitRunner.class)
 public class StandardKodeverkImplTest {
 
     private final File dumpDir = new File(BUILD_OUTPUT, "kodeverkdump/" + randomNumeric(10));
@@ -39,8 +38,9 @@ public class StandardKodeverkImplTest {
     @InjectMocks
     private StandardKodeverkImpl kodeverk;
 
-    @Before
+    @BeforeEach
     public void wireUpKodeverk() throws HentKodeverkHentKodeverkKodeverkIkkeFunnet {
+        initMocks(this);
         ReflectionTestUtils.setField(kodeverk, "brukerprofilDataDirectory", dumpDir);
         kodeverk.initKodeverk();
     }
@@ -52,10 +52,10 @@ public class StandardKodeverkImplTest {
         assertThat(kodeverk.getArkivtemaNavn("BID"), is("Bidrag"));
     }
 
-    @Test(expected = SystemException.class)
+    @Test
     public void ugyldigKodeverknavnGirSystemException() throws HentKodeverkHentKodeverkKodeverkIkkeFunnet {
         when(kodeverkPortType.hentKodeverk(any(XMLHentKodeverkRequest.class))).thenThrow(new HentKodeverkHentKodeverkKodeverkIkkeFunnet());
-        kodeverk.lastInnNyeKodeverk();
+        assertThrows(SystemException.class, kodeverk::lastInnNyeKodeverk);
     }
 
     @Test
