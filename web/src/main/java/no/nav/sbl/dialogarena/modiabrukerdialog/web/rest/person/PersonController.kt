@@ -12,6 +12,8 @@ import javax.ws.rs.*
 import javax.ws.rs.core.MediaType.APPLICATION_JSON
 
 
+private val TPS_UKJENT_VERDI = "???"
+
 @Path("/person/{fnr}")
 @Produces(APPLICATION_JSON)
 class PersonController @Inject constructor(private val kjerneinfoService: PersonKjerneinfoServiceBi) {
@@ -58,7 +60,7 @@ class PersonController @Inject constructor(private val kjerneinfoService: Person
     }
 
     private fun getStatsborgerskap(person: Person): String? {
-        if (person.personfakta.statsborgerskap?.beskrivelse.equals("???")) {
+        if (person.personfakta.statsborgerskap?.beskrivelse == TPS_UKJENT_VERDI) {
             return null
         } else {
             return person.personfakta.statsborgerskap?.beskrivelse
