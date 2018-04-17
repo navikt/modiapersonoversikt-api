@@ -4,11 +4,9 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.Sak;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.gsak.GsakKodeverk;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.kodeverk.StandardKodeverk;
 import org.joda.time.DateTime;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.*;
 
@@ -18,8 +16,8 @@ import static no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.Sak.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.mockito.Mockito.when;
+import static org.mockito.MockitoAnnotations.initMocks;
 
-@RunWith(MockitoJUnitRunner.class)
 public class SakerUtilsTest {
     private static final String SAKSTYPE_FAG = "Fag";
     private static final String KODEVERK_TEMAKODE = "Tema kode";
@@ -47,8 +45,9 @@ public class SakerUtilsTest {
     private List<String> alleTemagrupper;
     private String godkjentTemaSomFinnesIEnTemagruppe;
 
-    @Before
+    @BeforeEach
     public void setup() {
+        initMocks(this);
         alleTemaer = getAlleEksisterendeTemaer();
         saksliste = createSakslisteBasertPaTemaMap();
         alleTemagrupper = getAlleEksisterendeTemagrupper();
