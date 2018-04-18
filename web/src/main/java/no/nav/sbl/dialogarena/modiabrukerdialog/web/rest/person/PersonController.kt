@@ -2,7 +2,7 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.person
 
 import no.nav.kjerneinfo.consumer.fim.person.PersonKjerneinfoServiceBi
 import no.nav.kjerneinfo.consumer.fim.person.to.HentKjerneinformasjonRequest
-import no.nav.kjerneinfo.domain.person.Person
+import no.nav.kjerneinfo.domain.person.*
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.Feature.PERSON_REST_API
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.visFeature
 import no.nav.tjeneste.virksomhet.person.v3.HentPersonPersonIkkeFunnet
@@ -13,6 +13,7 @@ import javax.ws.rs.core.MediaType.APPLICATION_JSON
 
 
 private val TPS_UKJENT_VERDI = "???"
+private val DATOFORMAT = "dd-MM-yyyy"
 
 @Path("/person/{fnr}")
 @Produces(APPLICATION_JSON)
@@ -55,7 +56,10 @@ class PersonController @Inject constructor(private val kjerneinfoService: Person
                 "sivilstand" to mapOf(
                         "value" to person.personfakta.sivilstand?.value,
                         "beskrivelse" to person.personfakta.sivilstand?.beskrivelse
-                )
+                ),
+                "folkeregistrertAdresse" to hentAdresse(person.personfakta.bostedsadresse),
+                "alternativAdresse" to hentAdresse(person.personfakta.alternativAdresse),
+                "postadresse" to person.personfakta.postadresse?.adresselinje
         )
     }
 
@@ -78,5 +82,48 @@ class PersonController @Inject constructor(private val kjerneinfoService: Person
             )
         }
         return null
+    }
+
+    private fun hentAdresse(adresselinje: Adresselinje?): Map<String, Any>? {
+        if(adresselinje != null)
+            when(adresselinje) {
+                is Adresse -> return mapOf("gateadresse" to hentGateAdresse(adresselinje))
+                is Matrikkeladresse -> return mapOf("matrikkeladresse" to hentMatrikkeladresse(adresselinje))
+                is AlternativAdresseUtland -> return mapOf("utlandsadresse" to hentAlternativAdresseUtland(adresselinje))
+                else -> return mapOf("ustrukturert" to adresselinje.adresselinje)
+            }
+        return null
+    }
+
+    private fun hentGateAdresse(adresse: Adresse): Map<String, Any?> {
+        return mapOf(
+                "tilleggsadresse" to adresse.tilleggsadresse,
+                "gatenavn" to adresse.gatenavn,
+                "husnummer" to adresse.gatenummer,
+                "postnummer" to adresse.postnummer,
+                "poststed" to adresse.poststednavn,
+                "husbokstav" to adresse.husbokstav,
+                "bolignummer" to adresse.bolignummer
+        )
+    }
+
+    private fun hentMatrikkeladresse(matrikkeladresse: Matrikkeladresse): Map<String, Any?> {
+        return mapOf(
+                "tilleggsadresse" to matrikkeladresse.tilleggsadresseMedType,
+                "eiendomsnavn" to matrikkeladresse.eiendomsnavn,
+                "postnummer" to matrikkeladresse.postnummer,
+                "poststed" to matrikkeladresse.poststed
+        )
+    }
+
+    private fun hentAlternativAdresseUtland(alternativAdresseUtland: AlternativAdresseUtland): Map<String, Any?> {
+        return mapOf(
+                "landkode" to alternativAdresseUtland.landkode.value,
+                "adresselinje" to alternativAdresseUtland.adresselinje,
+                "postleveringsperiode" to mapOf(
+                        "fra" to alternativAdresseUtland.postleveringsPeriode?.from?.toString(DATOFORMAT),
+                        "til" to alternativAdresseUtland.postleveringsPeriode?.to?.toString(DATOFORMAT)
+                )
+        )
     }
 }
