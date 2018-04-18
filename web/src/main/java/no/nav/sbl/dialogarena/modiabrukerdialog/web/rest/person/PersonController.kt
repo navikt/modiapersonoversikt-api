@@ -12,8 +12,8 @@ import javax.ws.rs.*
 import javax.ws.rs.core.MediaType.APPLICATION_JSON
 
 
-private val TPS_UKJENT_VERDI = "???"
-private val DATOFORMAT = "dd-MM-yyyy"
+private const val TPS_UKJENT_VERDI = "???"
+private const val DATO_TID_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS"
 
 @Path("/person/{fnr}")
 @Produces(APPLICATION_JSON)
@@ -57,9 +57,9 @@ class PersonController @Inject constructor(private val kjerneinfoService: Person
                         "value" to person.personfakta.sivilstand?.value,
                         "beskrivelse" to person.personfakta.sivilstand?.beskrivelse
                 ),
-                "folkeregistrertAdresse" to hentAdresse(person.personfakta.bostedsadresse),
-                "alternativAdresse" to hentAdresse(person.personfakta.alternativAdresse),
-                "postadresse" to person.personfakta.postadresse?.adresselinje
+                "folkeregistrertAdresse" to person.personfakta.bostedsadresse?.let{ hentAdresse(it) },
+                "alternativAdresse" to person.personfakta.alternativAdresse?.let { hentAdresse(it) },
+                "postadresse" to person.personfakta.postadresse?.let { hentAdresse(it) }
         )
     }
 
@@ -84,15 +84,15 @@ class PersonController @Inject constructor(private val kjerneinfoService: Person
         return null
     }
 
-    private fun hentAdresse(adresselinje: Adresselinje?): Map<String, Any>? {
-        if(adresselinje != null)
+    private fun hentAdresse(adresselinje: Adresselinje): Map<String, Any?> {
+        return mapOf("endringsinfo" to adresselinje.endringsinformasjon?.let { hentEndringsinformasjon(it) },
             when(adresselinje) {
-                is Adresse -> return mapOf("gateadresse" to hentGateAdresse(adresselinje))
-                is Matrikkeladresse -> return mapOf("matrikkeladresse" to hentMatrikkeladresse(adresselinje))
-                is AlternativAdresseUtland -> return mapOf("utlandsadresse" to hentAlternativAdresseUtland(adresselinje))
-                else -> return mapOf("ustrukturert" to adresselinje.adresselinje)
+                is Adresse -> "gateadresse" to hentGateAdresse(adresselinje)
+                is Matrikkeladresse -> "matrikkeladresse" to hentMatrikkeladresse(adresselinje)
+                is AlternativAdresseUtland -> "utlandsadresse" to hentAlternativAdresseUtland(adresselinje)
+                else -> "ustrukturert" to adresselinje.adresselinje
             }
-        return null
+        )
     }
 
     private fun hentGateAdresse(adresse: Adresse): Map<String, Any?> {
@@ -119,11 +119,14 @@ class PersonController @Inject constructor(private val kjerneinfoService: Person
     private fun hentAlternativAdresseUtland(alternativAdresseUtland: AlternativAdresseUtland): Map<String, Any?> {
         return mapOf(
                 "landkode" to alternativAdresseUtland.landkode.value,
-                "adresselinje" to alternativAdresseUtland.adresselinje,
-                "postleveringsperiode" to mapOf(
-                        "fra" to alternativAdresseUtland.postleveringsPeriode?.from?.toString(DATOFORMAT),
-                        "til" to alternativAdresseUtland.postleveringsPeriode?.to?.toString(DATOFORMAT)
-                )
+                "adresselinje" to alternativAdresseUtland.adresselinje
+        )
+    }
+
+    private fun hentEndringsinformasjon(endringsinformasjon: Endringsinformasjon): Map<String, Any?> {
+        return mapOf(
+                "sistEndretAv" to endringsinformasjon.endretAv,
+                "sistEndret" to endringsinformasjon.sistOppdatert?.toString(DATO_TID_FORMAT)
         )
     }
 }
