@@ -17,6 +17,7 @@ class Alertstripe extends Component {
 
     render() {
         const config = clsMap[this.state.type];
+        const header = this.state.header !== null ? <h4>{this.state.header}</h4> : null;
 
         return (
             <div
@@ -28,6 +29,7 @@ class Alertstripe extends Component {
             >
                 <Icon className="alertstripe__ikon" kind={config.ikon} />
                 <span className="alertstripe__tekst">
+                    {header}
                     {this.state.tekst}
                     {this.state.children}
                 </span>
