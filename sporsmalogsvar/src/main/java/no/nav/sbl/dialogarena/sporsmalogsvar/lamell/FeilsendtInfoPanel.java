@@ -28,7 +28,8 @@ public class FeilsendtInfoPanel extends Panel {
                 .getOrElse("<dato mangler>");
 
         add(new ReactComponentPanel("markertAv", "AlertStripeSuksessSolid", new HashMap<String, Object>(){{
-            put("tekst", "Markert som feilsendt av " + veilederNavn + " (" + veilederIdent + "), " + markertDato);
+            put("header", "Feilsendt post");
+            put("tekst", veilederNavn + " (" + veilederIdent + "), " + markertDato);
         }}));
 
         add(visibleIf(new AbstractReadOnlyModel<Boolean>() {

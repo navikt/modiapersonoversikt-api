@@ -62,7 +62,8 @@ public class KontorsperreInfoPanel extends Panel {
                 .orElse("<dato mangler>");
 
         return new HashMap<String, Object>() {{
-            put("tekst", "Kontorsperret til enhet " + enhet + " av " + veilederNavn + " (" + veilederIdent + "), " + kontorsperretDato);
+            put("header", "Kontorsperret til enhet " + enhet);
+            put("tekst", veilederNavn + " (" + veilederIdent + "), " + kontorsperretDato);
         }};
     }
 }
