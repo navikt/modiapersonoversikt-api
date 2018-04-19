@@ -6,10 +6,10 @@ import no.nav.kontrakter.consumer.fim.ytelseskontrakt.support.DefaultYtelseskont
 import no.nav.kontrakter.consumer.fim.ytelseskontrakt.to.YtelseskontraktRequest;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.artifact.kjerneinfo.component.mockable.KontrakterConsumerConfigResolver;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.Wrapper;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import javax.inject.Inject;
 
@@ -20,7 +20,7 @@ import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.MockUtil.TI
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 
-@RunWith(SpringJUnit4ClassRunner.class)
+@ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = {
         KontrakterConsumerConfigResolver.class,
         KontrakterWrapperTestConfig.class

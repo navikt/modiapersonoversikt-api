@@ -31,12 +31,10 @@ import no.nav.virksomhet.tjenester.sak.meldinger.v1.WSHentSakListeRequest;
 import no.nav.virksomhet.tjenester.sak.meldinger.v1.WSHentSakListeResponse;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -49,9 +47,10 @@ import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.core.Is.is;
 import static org.joda.time.DateTime.now;
 import static org.junit.Assert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
+import static org.mockito.MockitoAnnotations.initMocks;
 
-@RunWith(MockitoJUnitRunner.class)
 public class SakerServiceImplTest {
 
     private static final DateTime FIRE_DAGER_SIDEN = now().minusDays(4);
@@ -81,8 +80,10 @@ public class SakerServiceImplTest {
 
     private List<WSSak> sakerListe;
 
-    @Before
+    @BeforeEach
     public void setUp() throws FinnSakUgyldigInput, FinnSakForMangeForekomster {
+        initMocks(this);
+
         sakerListe = createSaksliste();
 
         when(sakV1.finnSak(any(WSFinnSakRequest.class))).thenReturn(new WSFinnSakResponse().withSakListe(sakerListe));
@@ -201,25 +202,25 @@ public class SakerServiceImplTest {
         verify(behandleHenvendelsePortType, times(1)).knyttBehandlingskjedeTilSak(BEHANDLINGSKJEDEID, SAKS_ID, sak.temaKode, valgtNavEnhet);
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void knyttBehandlingskjedeTilSakKasterFeilHvisEnhetIkkeErSatt() throws JournalforingFeilet, OpprettSakUgyldigInput, OpprettSakSakEksistererAllerede {
         when(behandleSak.opprettSak(any(WSOpprettSakRequest.class))).thenReturn(new WSOpprettSakResponse().withSakId(SAKS_ID));
 
-        sakerService.knyttBehandlingskjedeTilSak(FNR, BEHANDLINGSKJEDEID, lagSak(), "");
+        assertThrows(IllegalArgumentException.class, () -> sakerService.knyttBehandlingskjedeTilSak(FNR, BEHANDLINGSKJEDEID, lagSak(), ""));
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void knyttBehandlingskjedeTilSakKasterFeilHvisBehandlingskjedeIkkeErSatt() throws JournalforingFeilet, OpprettSakUgyldigInput, OpprettSakSakEksistererAllerede {
         when(behandleSak.opprettSak(any(WSOpprettSakRequest.class))).thenReturn(new WSOpprettSakResponse().withSakId(SAKS_ID));
 
-        sakerService.knyttBehandlingskjedeTilSak(FNR, null, lagSak(), "1337");
+        assertThrows(IllegalArgumentException.class, () -> sakerService.knyttBehandlingskjedeTilSak(FNR, null, lagSak(), "1337"));
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void knyttBehandlingskjedeTilSakKasterFeilHvisFnrIkkeErSatt() throws JournalforingFeilet, OpprettSakUgyldigInput, OpprettSakSakEksistererAllerede {
         when(behandleSak.opprettSak(any(WSOpprettSakRequest.class))).thenReturn(new WSOpprettSakResponse().withSakId(SAKS_ID));
 
-        sakerService.knyttBehandlingskjedeTilSak("", BEHANDLINGSKJEDEID, lagSak(), "1337");
+        assertThrows(IllegalArgumentException.class, () -> sakerService.knyttBehandlingskjedeTilSak("", BEHANDLINGSKJEDEID, lagSak(), "1337"));
     }
 
     private ArrayList<WSSak> createSaksliste() {

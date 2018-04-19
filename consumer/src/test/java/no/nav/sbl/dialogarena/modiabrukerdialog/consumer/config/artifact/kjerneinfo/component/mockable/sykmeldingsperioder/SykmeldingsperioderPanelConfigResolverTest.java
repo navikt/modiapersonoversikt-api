@@ -8,12 +8,12 @@ import no.nav.sykmeldingsperioder.consumer.foreldrepenger.ForeldrepengerServiceB
 import no.nav.sykmeldingsperioder.consumer.pleiepenger.PleiepengerService;
 import no.nav.sykmeldingsperioder.consumer.sykepenger.SykepengerServiceBi;
 import no.nav.sykmeldingsperioder.consumer.sykepenger.mapping.to.SykepengerRequest;
-import org.junit.Ignore;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import javax.inject.Inject;
 
@@ -24,7 +24,7 @@ import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.MockUtil.TI
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 
-@RunWith(SpringJUnit4ClassRunner.class)
+@ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = {
         SykmeldingsperioderPanelConfigResolver.class,
         SykmeldingsperioderWrapperTestConfig.class,
@@ -47,7 +47,7 @@ public class SykmeldingsperioderPanelConfigResolverTest {
     @Inject
     private SykmeldingsperioderPanelConfigResolver resolver;
 
-    @Ignore
+    @Disabled
     @Test
     public void medMockSlaattPaaSkalIkkeProdkodeEksekveres() {
         setProperty(TILLATMOCKSETUP_PROPERTY, "true");
