@@ -12,7 +12,7 @@ import javax.ws.rs.*
 import javax.ws.rs.core.MediaType.APPLICATION_JSON
 
 
-private val TPS_UKJENT_VERDI = "???"
+private const val TPS_UKJENT_VERDI = "???"
 
 @Path("/person/{fnr}")
 @Produces(APPLICATION_JSON)
@@ -33,30 +33,55 @@ class PersonController @Inject constructor(private val kjerneinfoService: Person
                 else -> throw InternalServerErrorException(exception)
             }
         }
-
         return mapOf(
                 "fødselsnummer" to person.fodselsnummer.nummer,
                 "alder" to person.fodselsnummer.alder,
                 "kjønn" to person.personfakta.kjonn.value,
                 "geografiskTilknytning" to person.personfakta.geografiskTilknytning?.value,
-                "navn" to mapOf(
-                        "sammensatt" to person.personfakta.personnavn.sammensattNavn,
-                        "fornavn" to person.personfakta.personnavn.fornavn,
-                        "mellomnavn" to (person.personfakta.personnavn.mellomnavn ?: ""),
-                        "etternavn" to person.personfakta.personnavn.etternavn
-                ),
+                "navn" to getNavn(person),
                 "diskresjonskode" to (person.personfakta.diskresjonskode?.value ?: ""),
                 "bankkonto" to hentBankkonto(person),
-                "status" to mapOf(
-                        "dødsdato" to person.personfakta.doedsdato,
-                        "bostatus" to person.personfakta.bostatus?.value
-                ),
+                "personstatus" to getPersonstatus(person),
                 "statsborgerskap" to getStatsborgerskap(person),
                 "sivilstand" to mapOf(
                         "value" to person.personfakta.sivilstand?.value,
-                        "beskrivelse" to person.personfakta.sivilstand?.beskrivelse
-                )
+                        "beskrivelse" to person.personfakta.sivilstand?.beskrivelse,
+                        "fraOgMed" to person.personfakta.sivilstandFom
+                ),
+                "familierelasjoner" to getFamilierelasjoner(person),
+                "fodselsdato" to person.fodselsnummer.fodselsdato
         )
+    }
+
+    private fun getPersonstatus(person: Person): Map<String, Any?> {
+        return mapOf(
+                "dødsdato" to person.personfakta.doedsdato,
+                "bostatus" to person.personfakta.bostatus?.value
+        )
+    }
+
+    private fun getNavn(person: Person): Map<String, String> {
+        return mapOf(
+                "sammensatt" to person.personfakta.personnavn.sammensattNavn,
+                "fornavn" to person.personfakta.personnavn.fornavn,
+                "mellomnavn" to (person.personfakta.personnavn.mellomnavn ?: ""),
+                "etternavn" to person.personfakta.personnavn.etternavn
+        )
+    }
+
+    private fun getFamilierelasjoner(person: Person): List<Map<String, Any>> {
+        return person.personfakta.harFraRolleIList.map {
+            mapOf(
+                    "harSammeBosted" to it.harSammeBosted.toString(),
+                    "tilPerson" to mapOf(
+                            "navn" to getNavn(it.tilPerson),
+                            "alder" to it.tilPerson.fodselsnummer.alder,
+                            "fødselsnummer" to it.tilPerson.fodselsnummer.nummer,
+                            "personstatus" to getPersonstatus(it.tilPerson)
+                    ),
+                    "rolle" to it.tilRolle
+            )
+        }
     }
 
     private fun getStatsborgerskap(person: Person): String? {

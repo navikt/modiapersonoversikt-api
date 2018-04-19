@@ -30,7 +30,7 @@ class KontaktinformasjonController @Inject constructor(private val dkifService: 
     }
 
     private fun getEpost(response: WSHentDigitalKontaktinformasjonResponse): Map<String, Any>? {
-        if (response.digitalKontaktinformasjon.epostadresse == null || response.digitalKontaktinformasjon.epostadresse.value == "") {
+        if (response.digitalKontaktinformasjon.epostadresse?.value.isNullOrEmpty()) {
             return null
         }
         return mapOf(
@@ -40,7 +40,7 @@ class KontaktinformasjonController @Inject constructor(private val dkifService: 
     }
 
     private fun getMobiltelefon(response: WSHentDigitalKontaktinformasjonResponse): Map<String, Any>? {
-        if (response.digitalKontaktinformasjon.mobiltelefonnummer == null || response.digitalKontaktinformasjon.mobiltelefonnummer.value == "") {
+        if (response.digitalKontaktinformasjon.mobiltelefonnummer?.value.isNullOrEmpty()) {
             return null
         }
         return mapOf(
