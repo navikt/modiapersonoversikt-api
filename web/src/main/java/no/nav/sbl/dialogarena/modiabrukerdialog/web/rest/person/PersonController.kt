@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.person
 
+import no.nav.kjerneinfo.common.domain.Periode
 import no.nav.kjerneinfo.consumer.fim.person.PersonKjerneinfoServiceBi
 import no.nav.kjerneinfo.consumer.fim.person.to.HentKjerneinformasjonRequest
 import no.nav.kjerneinfo.domain.person.*
@@ -13,6 +14,7 @@ import javax.ws.rs.core.MediaType.APPLICATION_JSON
 
 
 private const val TPS_UKJENT_VERDI = "???"
+private const val DATOFORMAT = "yyyy-MM-dd"
 private const val DATO_TID_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS"
 
 @Path("/person/{fnr}")
@@ -128,7 +130,8 @@ class PersonController @Inject constructor(private val kjerneinfoService: Person
                 "postnummer" to adresse.postnummer,
                 "poststed" to adresse.poststednavn,
                 "husbokstav" to adresse.husbokstav,
-                "bolignummer" to adresse.bolignummer
+                "bolignummer" to adresse.bolignummer,
+                "periode" to adresse.postleveringsPeriode?.let { hentPostleveringsperiode(it) }
         )
     }
 
@@ -137,14 +140,16 @@ class PersonController @Inject constructor(private val kjerneinfoService: Person
                 "tilleggsadresse" to matrikkeladresse.tilleggsadresseMedType,
                 "eiendomsnavn" to matrikkeladresse.eiendomsnavn,
                 "postnummer" to matrikkeladresse.postnummer,
-                "poststed" to matrikkeladresse.poststed
+                "poststed" to matrikkeladresse.poststed,
+                "periode" to matrikkeladresse.postleveringsPeriode?.let { hentPostleveringsperiode(it) }
         )
     }
 
     private fun hentAlternativAdresseUtland(alternativAdresseUtland: AlternativAdresseUtland): Map<String, Any?> {
         return mapOf(
                 "landkode" to alternativAdresseUtland.landkode.value,
-                "adresselinje" to alternativAdresseUtland.adresselinje
+                "adresselinje" to alternativAdresseUtland.adresselinje,
+                "periode" to alternativAdresseUtland.postleveringsPeriode?.let { hentPostleveringsperiode(it) }
         )
     }
 
@@ -152,6 +157,13 @@ class PersonController @Inject constructor(private val kjerneinfoService: Person
         return mapOf(
                 "sistEndretAv" to endringsinformasjon.endretAv,
                 "sistEndret" to endringsinformasjon.sistOppdatert?.toString(DATO_TID_FORMAT)
+        )
+    }
+
+    private fun hentPostleveringsperiode(postleveringsPeriode: Periode): Map<String, Any?> {
+        return mapOf(
+                "fra" to postleveringsPeriode.from?.toString(DATOFORMAT),
+                "til" to postleveringsPeriode.to?.toString(DATOFORMAT)
         )
     }
 }
