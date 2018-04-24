@@ -10,23 +10,24 @@ function finnMiljoStreng() {
 }
 
 function opprettWebSocket(callback, errorhandler) {
-    const ident = getMe().then(function(me) { return me.ident });
-    const connection = new WebSocket('wss://veilederflatehendelser' + finnMiljoStreng() + '.adeo.no/modiaeventdistribution/ws/' + ident);
-    connection.onmessage = function (event) {
-        errorhandler(undefined);
-        callback(event);
-    };
+    getMe().then(function(me) {
+        const connection = new WebSocket('wss://veilederflatehendelser' + finnMiljoStreng() + '.adeo.no/modiaeventdistribution/ws/' + me.ident);
+        connection.onmessage = function (event) {
+            errorhandler(undefined);
+            callback(event);
+        };
 
-    connection.onerror = function onerror(error) {
-        console.error(error);
-        errorhandler(error);
-    };
+        connection.onerror = function onerror(error) {
+            console.error(error);
+            errorhandler(error);
+        };
 
-    connection.onclose = function onclose() {
-        setTimeout(function () {
-            opprettWebSocket(callback, errorhandler);
-        }, 1000);
-    }
+        connection.onclose = function onclose() {
+            setTimeout(function () {
+                opprettWebSocket(callback, errorhandler);
+            }, 1000);
+        }
+    });
 }
 
 function fetchOkStatus(resp) {
