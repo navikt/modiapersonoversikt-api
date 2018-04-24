@@ -10,7 +10,8 @@ function finnMiljoStreng() {
 }
 
 function opprettWebSocket(callback, errorhandler) {
-    const connection = new WebSocket('wss://veilederflatehendelser' + finnMiljoStreng() + '.adeo.no/modiaeventdistribution/websocket');
+    const ident = getMe().then(function(me) { return me.ident });
+    const connection = new WebSocket('wss://veilederflatehendelser' + finnMiljoStreng() + '.adeo.no/modiaeventdistribution/ws/' + ident);
     connection.onmessage = function (event) {
         errorhandler(undefined);
         callback(event);
