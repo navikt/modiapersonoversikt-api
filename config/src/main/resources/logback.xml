@@ -87,7 +87,7 @@
     </appender>
 
     <appender name="SYSLOG" class="com.spotify.logging.logback.MillisecondPrecisionSyslogAppender">
-        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+        <filter class="com.spotify.logging.logback.LoggerThresholdFilter">
             <level>${syslog.filter.level:-INFO}</level>
         </filter>
         <syslogHost>localhost</syslogHost>
