@@ -1,6 +1,5 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.artifact.kjerneinfo.component.mockable;
 
-import no.nav.modig.wicket.loader.TwoArgumentsModelLoader;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.Wrapper;
 import no.nav.sykmeldingsperioder.consumer.foreldrepenger.ForeldrepengerServiceBi;
 import no.nav.sykmeldingsperioder.consumer.foreldrepenger.mapping.to.ForeldrepengerListeRequest;
@@ -9,12 +8,10 @@ import no.nav.sykmeldingsperioder.consumer.pleiepenger.PleiepengerService;
 import no.nav.sykmeldingsperioder.consumer.sykepenger.SykepengerServiceBi;
 import no.nav.sykmeldingsperioder.consumer.sykepenger.mapping.to.SykepengerRequest;
 import no.nav.sykmeldingsperioder.consumer.sykepenger.mapping.to.SykepengerResponse;
-import no.nav.sykmeldingsperioder.domain.foreldrepenger.Foreldrepengerettighet;
 import no.nav.sykmeldingsperioder.foreldrepenger.loader.ForeldrepengerLoader;
 import no.nav.sykmeldingsperioder.loader.SykmeldingsperiodeLoader;
 import no.nav.sykmeldingsperioder.widget.SykepengerWidgetService;
 import no.nav.sykmeldingsperioder.widget.SykepengerWidgetServiceImpl;
-import org.apache.wicket.model.IModel;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -52,15 +49,13 @@ public class SykmeldingsperioderPanelConfigResolver {
     }
 
     @Bean
-    @Qualifier("sykmeldingsperiodeLoader")
     public SykmeldingsperiodeLoader sykmeldingsperiodeLoader() {
         return new SykmeldingsperiodeLoader(getSykepengerService());
     }
 
     @Bean
-    @Qualifier("foreldrepengerLoader")
-    public TwoArgumentsModelLoader<IModel<String>, String, Foreldrepengerettighet> foreldrepengerLoader() {
-        return new ForeldrepengerLoader(getForeldrepengerService());
+    public ForeldrepengerLoader foreldrepengerLoader() {
+        return new ForeldrepengerLoader();
     }
 
     private ForeldrepengerServiceBi getForeldrepengerService() {
