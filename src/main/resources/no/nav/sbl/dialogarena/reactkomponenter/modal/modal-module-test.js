@@ -5,7 +5,9 @@ import { expect } from 'chai';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import Modal from './modal-module';
-import TestUtils from 'react-addons-test-utils';
+import Portal from './modal-portal';
+import TestUtils from 'react-dom/test-utils';
+import { createRenderer } from 'react-test-renderer/shallow';
 
 const SPAN_CONTENT = 'span-content';
 
@@ -16,8 +18,27 @@ function createModal(props, children) {
     );
 }
 
-function getContent(modal) {
-    return modal.modal.refs.content;
+function createPortal(shouldBeOpen) {
+    const modal = {
+        open: shouldBeOpen,
+        close: () => this.close(false)
+    };
+    const props = {
+        title : {
+            tag: 'h1',
+            id: 'id'
+        },
+        description: {
+            tag: 'p'
+        },
+        closeButton: {
+            tag: 'span'
+        },
+        isOpen: shouldBeOpen
+    };
+
+    const portals = <Portal {...props} modal={modal} ><span className={'portal-content'}>{SPAN_CONTENT}</span></Portal>;
+    return TestUtils.renderIntoDocument(portals);
 }
 
 describe('Modal', () => {
@@ -36,8 +57,8 @@ describe('Modal', () => {
     });
 
     it('default is closed and have the correct attributes', () => {
-        const modal = createModal();
-        const portal = ReactDOM.findDOMNode(modal.modal);
+        const portalVisible = false;
+        const portal = ReactDOM.findDOMNode(createPortal(portalVisible));
 
         expect(portal.hasAttribute('tabindex')).to.be.true;
         expect(portal.hasAttribute('class')).to.be.true;
@@ -50,28 +71,19 @@ describe('Modal', () => {
         expect(portal.getAttribute('class')).to.be.eql('hidden');
         expect(portal.getAttribute('aria-hidden')).to.be.eql('true');
         expect(portal.getAttribute('role')).to.be.eql('dialog');
-
-        const labelledById = portal.getAttribute('aria-labelledby');
-        const describedById = portal.getAttribute('aria-describedby');
-
-        const labelledBy = document.getElementById(labelledById);
-        const describedBy = document.getElementById(describedById);
-
-        expect(labelledBy).not.to.be.null;
-        expect(describedBy).not.to.be.null;
     });
 
     it('repects the isOpen prop', () => {
-        const modal = createModal({ isOpen: true });
-
-        const portal = ReactDOM.findDOMNode(modal.modal);
+        const portalVisible = true;
+        const portal = ReactDOM.findDOMNode(createPortal(portalVisible));
         expect(portal.getAttribute('class')).not.to.be.eql('hidden');
     });
 
     it('Renders content til portal.content div', () => {
-        const modal = createModal();
-        const content = getContent(modal);
-
-        expect(content.textContent).to.be.eql(SPAN_CONTENT);
+        const portalVisible = true;
+        const portal = ReactDOM.findDOMNode(createPortal(portalVisible));
+        const contentNode = portal.getElementsByClassName('portal-content')[0];
+        expect(contentNode.textContent).to.be.eql(SPAN_CONTENT);
     });
+
 });

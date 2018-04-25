@@ -7,7 +7,7 @@ import { IntlProvider } from 'react-intl';
 import 'intl/locale-data/jsonp/en';
 import { DokumentVisningPage } from './dokument-visning-page';
 import { renderIntoDocument, scryRenderedDOMComponentsWithClass,
-    scryRenderedDOMComponentsWithTag } from 'react-addons-test-utils';
+    scryRenderedDOMComponentsWithTag } from 'react-dom/test-utils';
 import * as Const from './../../konstanter';
 import { fromDateToJSON } from './../../utils/dato-utils';
 

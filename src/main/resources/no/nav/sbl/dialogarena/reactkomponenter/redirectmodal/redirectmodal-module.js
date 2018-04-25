@@ -1,4 +1,6 @@
-import React, { Component, PropTypes as PT } from 'react';
+import React, { Component } from 'react';
+import PT from 'prop-types';
+
 import Modal, { AriaPropType, defaultHelper } from './../modal/modal-module';
 import Alertstripe from './../alertstriper/alertstripe-module';
 
@@ -25,6 +27,7 @@ class Redirectmodal extends Component {
     }
 
     render() {
+        console.log('endring');
         const { isOpen, title, description, closeButton } = this.props;
         const modalProps = { isOpen, title, description, closeButton };
 

@@ -38,7 +38,11 @@ class Skrivestotte extends Component {
             listePanelId: Utils.generateId('sok-layout-'),
             forhandsvisningsPanelId: Utils.generateId('sok-layout-')
         }, this.props));
-        this.state = this.store.getState();
+
+        this.setState((prevState, props) => {
+           return this.store.getState();
+        });
+
         this.keyDownHandler = this.keyDownHandler.bind(this);
     }
     componentDidMount() {

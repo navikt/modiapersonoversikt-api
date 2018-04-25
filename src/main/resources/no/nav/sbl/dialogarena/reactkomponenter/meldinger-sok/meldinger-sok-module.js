@@ -17,7 +17,11 @@ class MeldingerSok extends Component {
             listePanelId: Utils.generateId('sok-liste-'),
             traadvisningsPanelId: Utils.generateId('sok-traadvisningsPanelId-')
         }, this.props));
-        this.state = this.store.getState();
+
+        this.setState((prevState, props) => {
+           return this.store.getState();
+        });
+
         this.props.setVisModalVindu(() => this.vis());
         this.props.setSkjulModalVindu(() => this.skjul());
     }

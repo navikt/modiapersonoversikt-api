@@ -5,7 +5,7 @@ import { expect } from 'chai';
 import 'intl/locale-data/jsonp/en';
 import Sakstema from './sakstema';
 import { fromDateToJSON } from './../../utils/dato-utils';
-import { createRenderer } from 'react-addons-test-utils';
+import { createRenderer } from 'react-test-renderer/shallow';
 
 describe('Sakstema', () => {
     function noop() {}

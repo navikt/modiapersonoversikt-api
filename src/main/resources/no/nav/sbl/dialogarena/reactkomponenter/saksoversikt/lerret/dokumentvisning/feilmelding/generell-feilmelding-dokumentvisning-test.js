@@ -5,7 +5,7 @@ import { expect } from 'chai';
 import { IntlProvider } from 'react-intl';
 import 'intl/locale-data/jsonp/en';
 import GenerellFeilmeldingDokumentvisning from './generell-feilmelding-dokumentvisning';
-import { renderIntoDocument, scryRenderedDOMComponentsWithClass } from 'react-addons-test-utils';
+import { renderIntoDocument, scryRenderedDOMComponentsWithClass } from 'react-dom/test-utils';
 
 describe('GenerellFeilmeldingDokumentvisning', () => {
     const messages = {

@@ -3,7 +3,7 @@ import React from 'react';
 import { expect } from 'chai';
 import DokumentVisning from './dokument-visning';
 import { IntlProvider } from 'react-intl';
-import { renderIntoDocument, scryRenderedDOMComponentsWithClass } from 'react-addons-test-utils';
+import { renderIntoDocument, scryRenderedDOMComponentsWithClass } from 'react-dom/test-utils';
 import 'intl/locale-data/jsonp/en';
 
 describe('Dokumentvisning', () => {

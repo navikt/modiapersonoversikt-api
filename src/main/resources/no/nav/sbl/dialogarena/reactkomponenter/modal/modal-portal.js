@@ -27,11 +27,13 @@ class ModalPortal extends Component {
 
     componentWillMount() {
         this.focusAfterClose = undefined;
-        this.state = {
-            title: createAriaOptional('title', this.props.title),
-            description: createAriaOptional('description', this.props.description),
-            closeButton: createAriaOptional('closeButton', this.props.closeButton)
-        };
+        this.setState((prevState, props) => {
+           return {
+               title: createAriaOptional('title', props.title),
+               description: createAriaOptional('description', props.description),
+               closeButton: createAriaOptional('closeButton', props.closeButton)
+           };
+        });
     }
     componentDidMount() {
         if (this.props.isOpen === true) {

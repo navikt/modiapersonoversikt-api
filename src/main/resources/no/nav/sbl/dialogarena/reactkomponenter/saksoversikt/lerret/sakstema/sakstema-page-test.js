@@ -6,7 +6,7 @@ import 'intl/locale-data/jsonp/en';
 import SakstemaPage from './sakstema-page';
 import { fromDateToJSON } from './../../utils/dato-utils';
 import { renderIntoDocument, scryRenderedDOMComponentsWithClass,
-    scryRenderedDOMComponentsWithTag } from 'react-addons-test-utils';
+    scryRenderedDOMComponentsWithTag } from 'react-dom/test-utils';
 import MiljovariablerProvider from './../../miljovariabler-provider';
 import { Provider } from 'react-redux';
 import configureStore from 'redux-mock-store';

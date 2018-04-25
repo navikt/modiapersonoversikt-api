@@ -5,7 +5,7 @@ import { expect } from 'chai';
 import React from 'react';
 import assign from 'object-assign';
 import KnaggInput from './knagginput-module';
-import TestUtils from 'react-addons-test-utils';
+import TestUtils from 'react-dom/test-utils';
 
 describe('KnaggInput', () => {
     const defaultProps = {

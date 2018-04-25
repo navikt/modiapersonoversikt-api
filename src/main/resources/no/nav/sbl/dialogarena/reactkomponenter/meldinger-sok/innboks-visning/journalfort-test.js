@@ -5,7 +5,7 @@ import React from 'react';
 import chai, { expect } from 'chai';
 import Journalfort from './journalfort';
 import sinonChai from 'sinon-chai';
-import { renderIntoDocument, scryRenderedDOMComponentsWithClass } from 'react-addons-test-utils';
+import { renderIntoDocument, scryRenderedDOMComponentsWithClass } from 'react-dom/test-utils';
 
 chai.use(sinonChai);
 
