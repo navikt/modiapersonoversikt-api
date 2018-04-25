@@ -48,7 +48,7 @@ class SakerListe extends React.Component {
         const velgSak = this.props.velgSak;
         const sakerGruppert = toArray(mapValues(grouped, (group) => {
             const saker = group.map((sak) => (
-                <li className="text-row-list">
+                <li className="text-row-list" key={sak.saksId}>
                     <a
                         href="javascript:void(0)"
                         role="button"
@@ -77,6 +77,7 @@ class SakerListe extends React.Component {
                     erEkspandert={erEkspandert}
                     temaKode={temaKode}
                     erPesysSak={erPesysSak}
+                    key={group[0].temaNavn}
                 />);
         }));
 
