@@ -27,7 +27,6 @@ class Redirectmodal extends Component {
     }
 
     render() {
-        console.log('endring');
         const { isOpen, title, description, closeButton } = this.props;
         const modalProps = { isOpen, title, description, closeButton };
 
