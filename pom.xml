@@ -57,6 +57,7 @@
         <commons-io.version>2.4</commons-io.version>
         <findbugs.version>3.0.0</findbugs.version>
         <kotlin.version>1.2.31</kotlin.version>
+        <spotify.logging.version>2.2.2</spotify.logging.version>
 
         <!-- egenlagde biblioteker -->
         <picketbox.version>4.9.6.Final</picketbox.version>
@@ -1098,6 +1099,13 @@
                 <artifactId>kotlin-test-junit</artifactId>
                 <version>${kotlin.version}</version>
                 <scope>test</scope>
+            </dependency>
+
+            <!-- Ny logback config -->
+            <dependency>
+                <groupId>com.spotify</groupId>
+                <artifactId>logging</artifactId>
+                <version>${spotify.logging.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

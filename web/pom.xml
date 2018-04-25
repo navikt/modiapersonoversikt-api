@@ -327,6 +327,10 @@
             <artifactId>jcl-over-slf4j</artifactId>
             <scope>runtime</scope>
         </dependency>
+        <dependency>
+            <groupId>com.spotify</groupId>
+            <artifactId>logging</artifactId>
+        </dependency>
 
         <!-- Denne må være her på grunn av classloading på JBoss -->
         <dependency>
