@@ -4,6 +4,7 @@ import PT from 'prop-types';
 import Portal from './modal-portal';
 
 class Modal extends React.Component {
+
     constructor(props) {
         super(props);
         this.state = {

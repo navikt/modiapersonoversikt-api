@@ -1,7 +1,7 @@
 /* eslint-env mocha */
 /* eslint no-undef:0 */
 import Q from 'q';
-import TestUtils from 'react-addons-test-utils';
+import TestUtils from 'react-dom/test-utils';
 import ReactDOM from 'react-dom';
 
 export function createTestPromise() {

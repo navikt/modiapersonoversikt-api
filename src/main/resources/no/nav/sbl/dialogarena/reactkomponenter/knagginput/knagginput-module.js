@@ -51,11 +51,14 @@ function IEHack() {
 
 class KnaggInput extends Component {
     componentWillMount() {
-        this.state = {
-            selectionStart: -1,
-            selectionEnd: -1,
-            focus: false
-        };
+        this.setState((prevState, props) => {
+            return {
+                selectionStart: -1,
+                selectionEnd: -1,
+                focus: false
+            };
+        });
+
         this.onChangeProxy = this.onChangeProxy.bind(this);
         this.onKeyDownProxy = this.onKeyDownProxy.bind(this);
         this.handleKeyUp = this.handleKeyUp.bind(this);

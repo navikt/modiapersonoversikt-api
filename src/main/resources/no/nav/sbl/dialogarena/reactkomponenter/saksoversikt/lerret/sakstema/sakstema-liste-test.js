@@ -7,7 +7,7 @@ import 'intl/locale-data/jsonp/en';
 import SakstemaListe from './sakstema-liste';
 import { fromDateToJSON } from './../../utils/dato-utils';
 import formats from './../../utils/formater/formats';
-import { renderIntoDocument, scryRenderedDOMComponentsWithClass } from 'react-addons-test-utils';
+import { renderIntoDocument, scryRenderedDOMComponentsWithClass } from 'react-dom/test-utils';
 import MiljovariablerProvider from './../../miljovariabler-provider';
 
 describe('SakstemaListe', () => {

@@ -1,4 +1,6 @@
-import React, { Component, PropTypes as PT } from 'react';
+import React, { Component } from 'react';
+import PT from 'prop-types';
+
 import Modal, { AriaPropType, defaultHelper } from './../modal/modal-module';
 import Alertstripe from './../alertstriper/alertstripe-module';
 

@@ -8,7 +8,7 @@ import VisningDokumentliste from './visning-dokumentliste';
 import { fromDateToJSON } from './../../../utils/dato-utils';
 import formats from './../../../utils/formater/formats';
 import { renderIntoDocument, scryRenderedDOMComponentsWithClass,
-    scryRenderedDOMComponentsWithTag } from 'react-addons-test-utils';
+    scryRenderedDOMComponentsWithTag } from 'react-dom/test-utils';
 import MiljovariablerProvider from './../../../miljovariabler-provider';
 import { Provider } from 'react-redux';
 import configureStore from 'redux-mock-store';

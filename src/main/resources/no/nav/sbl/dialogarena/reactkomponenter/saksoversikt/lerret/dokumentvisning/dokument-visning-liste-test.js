@@ -6,7 +6,7 @@ import { expect } from 'chai';
 import { IntlProvider } from 'react-intl';
 import 'intl/locale-data/jsonp/en';
 import DokumentVisningListe, { hoveddokumentForst } from './dokument-visning-liste';
-import { renderIntoDocument, scryRenderedDOMComponentsWithClass } from 'react-addons-test-utils';
+import { renderIntoDocument, scryRenderedDOMComponentsWithClass } from 'react-dom/test-utils';
 
 describe('DokumentVisningListe', () => {
     const messages = {

@@ -4,7 +4,7 @@ import { expect } from 'chai';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import AdvarselBoks from './advarsel-boks';
-import TestUtils from 'react-addons-test-utils';
+import TestUtils from 'react-dom/test-utils';
 
 describe('AdvarselBoks test', () => {
     it('Skal vise tekst og ha klassen warn', () => {
