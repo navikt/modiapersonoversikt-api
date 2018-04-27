@@ -107,7 +107,7 @@
         <utbetaling.version>4.0.0</utbetaling.version>
         <saksoversikt.version>9.0.4</saksoversikt.version>
         <varsling.modia.version>2.0</varsling.modia.version>
-        <modia-felleskomponenter.version>4.4</modia-felleskomponenter.version>
+        <modia-felleskomponenter.version>4.5-SNAPSHOT-MINDRE-LAMELLHEADERS</modia-felleskomponenter.version>
 
         <!-- Tjenestespecs -->
         <soknader.liste.version>2.0.12</soknader.liste.version>
