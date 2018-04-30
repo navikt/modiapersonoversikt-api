@@ -4,6 +4,7 @@ import no.nav.kjerneinfo.common.domain.Periode
 import no.nav.kjerneinfo.consumer.fim.person.PersonKjerneinfoServiceBi
 import no.nav.kjerneinfo.consumer.fim.person.to.HentKjerneinformasjonRequest
 import no.nav.kjerneinfo.domain.person.*
+import no.nav.kjerneinfo.domain.person.fakta.Sikkerhetstiltak
 import no.nav.kjerneinfo.domain.person.fakta.TilrettelagtKommunikasjon
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.Feature.PERSON_REST_API
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.visFeature
@@ -57,7 +58,8 @@ class PersonController @Inject constructor(private val kjerneinfoService: Person
                 "fodselsdato" to person.fodselsnummer.fodselsdato,
                 "folkeregistrertAdresse" to person.personfakta.bostedsadresse?.let{ hentAdresse(it) },
                 "alternativAdresse" to person.personfakta.alternativAdresse?.let { hentAdresse(it) },
-                "postadresse" to person.personfakta.postadresse?.let { hentAdresse(it) }
+                "postadresse" to person.personfakta.postadresse?.let { hentAdresse(it) },
+                "sikkerhetstiltak" to person.personfakta.sikkerhetstiltak?.let { hentSikkerhetstiltak(it) }
         )
     }
 
@@ -139,7 +141,7 @@ class PersonController @Inject constructor(private val kjerneinfoService: Person
                 "poststed" to adresse.poststednavn,
                 "husbokstav" to adresse.husbokstav,
                 "bolignummer" to adresse.bolignummer,
-                "periode" to adresse.postleveringsPeriode?.let { hentPostleveringsperiode(it) }
+                "periode" to adresse.postleveringsPeriode?.let { hentPeriode(it) }
         )
     }
 
@@ -149,7 +151,7 @@ class PersonController @Inject constructor(private val kjerneinfoService: Person
                 "eiendomsnavn" to matrikkeladresse.eiendomsnavn,
                 "postnummer" to matrikkeladresse.postnummer,
                 "poststed" to matrikkeladresse.poststed,
-                "periode" to matrikkeladresse.postleveringsPeriode?.let { hentPostleveringsperiode(it) }
+                "periode" to matrikkeladresse.postleveringsPeriode?.let { hentPeriode(it) }
         )
     }
 
@@ -157,7 +159,7 @@ class PersonController @Inject constructor(private val kjerneinfoService: Person
         return mapOf(
                 "landkode" to alternativAdresseUtland.landkode.value,
                 "adresselinje" to alternativAdresseUtland.adresselinje,
-                "periode" to alternativAdresseUtland.postleveringsPeriode?.let { hentPostleveringsperiode(it) }
+                "periode" to alternativAdresseUtland.postleveringsPeriode?.let { hentPeriode(it) }
         )
     }
 
@@ -168,10 +170,18 @@ class PersonController @Inject constructor(private val kjerneinfoService: Person
         )
     }
 
-    private fun hentPostleveringsperiode(postleveringsPeriode: Periode): Map<String, Any?> {
+    private fun hentSikkerhetstiltak(sikkerhetstiltak: Sikkerhetstiltak): Map<String, Any?> {
         return mapOf(
-                "fra" to postleveringsPeriode.from?.toString(DATOFORMAT),
-                "til" to postleveringsPeriode.to?.toString(DATOFORMAT)
+                "sikkerhetstiltaksbeskrivelse" to sikkerhetstiltak.sikkerhetstiltaksbeskrivelse,
+                "sikkerhetstiltakskode" to sikkerhetstiltak.sikkerhetstiltakskode,
+                "periode" to sikkerhetstiltak.periode?.let { hentPeriode(it) }
+        )
+    }
+
+    private fun hentPeriode(periode: Periode): Map<String, Any?> {
+        return mapOf(
+                "fra" to periode.from?.toString(DATOFORMAT),
+                "til" to periode.to?.toString(DATOFORMAT)
         )
     }
 }
