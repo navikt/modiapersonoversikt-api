@@ -5,6 +5,7 @@ import no.nav.kjerneinfo.consumer.fim.person.PersonKjerneinfoServiceBi
 import no.nav.kjerneinfo.consumer.fim.person.to.HentKjerneinformasjonRequest
 import no.nav.kjerneinfo.domain.person.*
 import no.nav.kjerneinfo.domain.person.fakta.Sikkerhetstiltak
+import no.nav.kjerneinfo.domain.person.fakta.TilrettelagtKommunikasjon
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.Feature.PERSON_REST_API
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.visFeature
 import no.nav.tjeneste.virksomhet.person.v3.HentPersonPersonIkkeFunnet
@@ -45,6 +46,7 @@ class PersonController @Inject constructor(private val kjerneinfoService: Person
                 "navn" to getNavn(person),
                 "diskresjonskode" to (person.personfakta.diskresjonskode?.value ?: ""),
                 "bankkonto" to hentBankkonto(person),
+                "tilrettelagtKomunikasjon" to hentTilrettelagtKommunikasjon(person.personfakta.tilrettelagtKommunikasjon),
                 "personstatus" to getPersonstatus(person),
                 "statsborgerskap" to getStatsborgerskap(person),
                 "sivilstand" to mapOf(
@@ -66,6 +68,12 @@ class PersonController @Inject constructor(private val kjerneinfoService: Person
                 "dødsdato" to person.personfakta.doedsdato,
                 "bostatus" to person.personfakta.bostatus?.value
         )
+    }
+
+    private fun hentTilrettelagtKommunikasjon(tilrettelagtKommunikasjon: List<TilrettelagtKommunikasjon>): List<Map<String, String>>  {
+            return tilrettelagtKommunikasjon.map {
+                mapOf(it.behov to it.beskrivelse.value)
+            }
     }
 
     private fun getNavn(person: Person): Map<String, String> {

@@ -152,9 +152,10 @@ jQuery(document).ready(function ($) {
         $(id).parent().find('.vis-alle-kommende-utbetalinger').hide();
     }
 
-    function visAlleUtbetalingerSpinner() {
-        $('.vis-alle-historiske-utbetalinger .vis-alle-historiske-utbetalinger-link').hide();
-        $('.vis-alle-historiske-utbetalinger .spinner').show();
+    function visAlleUtbetalingerSpinner(id) {
+        var nodeId = '#' + id.id;
+        $(nodeId).hide();
+        $(nodeId).parent().find('.spinner').show();
     }
 
     function visAlleHistoriskeUtbetalinger(id) {
