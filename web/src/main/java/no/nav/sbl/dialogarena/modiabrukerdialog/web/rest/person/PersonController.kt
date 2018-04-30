@@ -46,7 +46,7 @@ class PersonController @Inject constructor(private val kjerneinfoService: Person
                 "navn" to getNavn(person),
                 "diskresjonskode" to (person.personfakta.diskresjonskode?.value ?: ""),
                 "bankkonto" to hentBankkonto(person),
-                "tilrettelagtKomunikasjon" to hentTilrettelagtKommunikasjon(person.personfakta.tilrettelagtKommunikasjon),
+                "tilrettelagtKomunikasjonsListe" to hentTilrettelagtKommunikasjon(person.personfakta.tilrettelagtKommunikasjon),
                 "personstatus" to getPersonstatus(person),
                 "statsborgerskap" to getStatsborgerskap(person),
                 "sivilstand" to mapOf(
@@ -56,7 +56,7 @@ class PersonController @Inject constructor(private val kjerneinfoService: Person
                 ),
                 "familierelasjoner" to getFamilierelasjoner(person),
                 "fodselsdato" to person.fodselsnummer.fodselsdato,
-                "folkeregistrertAdresse" to person.personfakta.bostedsadresse?.let{ hentAdresse(it) },
+                "folkeregistrertAdresse" to person.personfakta.bostedsadresse?.let { hentAdresse(it) },
                 "alternativAdresse" to person.personfakta.alternativAdresse?.let { hentAdresse(it) },
                 "postadresse" to person.personfakta.postadresse?.let { hentAdresse(it) },
                 "sikkerhetstiltak" to person.personfakta.sikkerhetstiltak?.let { hentSikkerhetstiltak(it) }
@@ -70,10 +70,11 @@ class PersonController @Inject constructor(private val kjerneinfoService: Person
         )
     }
 
-    private fun hentTilrettelagtKommunikasjon(tilrettelagtKommunikasjon: List<TilrettelagtKommunikasjon>): List<Map<String, String>>  {
-            return tilrettelagtKommunikasjon.map {
-                mapOf(it.behov to it.beskrivelse.value)
-            }
+    private fun hentTilrettelagtKommunikasjon(tilrettelagtKommunikasjon: List<TilrettelagtKommunikasjon>): List<Map<String, String>> {
+        return tilrettelagtKommunikasjon.map {
+            mapOf("behovKode" to it.behov,
+                    "beskrivelse" to it.beskrivelse.value)
+        }
     }
 
     private fun getNavn(person: Person): Map<String, String> {
@@ -123,12 +124,12 @@ class PersonController @Inject constructor(private val kjerneinfoService: Person
 
     private fun hentAdresse(adresselinje: Adresselinje): Map<String, Any?> {
         return mapOf("endringsinfo" to adresselinje.endringsinformasjon?.let { hentEndringsinformasjon(it) },
-            when(adresselinje) {
-                is Adresse -> "gateadresse" to hentGateAdresse(adresselinje)
-                is Matrikkeladresse -> "matrikkeladresse" to hentMatrikkeladresse(adresselinje)
-                is AlternativAdresseUtland -> "utlandsadresse" to hentAlternativAdresseUtland(adresselinje)
-                else -> "ustrukturert" to adresselinje.adresselinje
-            }
+                when (adresselinje) {
+                    is Adresse -> "gateadresse" to hentGateAdresse(adresselinje)
+                    is Matrikkeladresse -> "matrikkeladresse" to hentMatrikkeladresse(adresselinje)
+                    is AlternativAdresseUtland -> "utlandsadresse" to hentAlternativAdresseUtland(adresselinje)
+                    else -> "ustrukturert" to adresselinje.adresselinje
+                }
         )
     }
 
