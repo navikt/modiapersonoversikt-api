@@ -8,6 +8,7 @@ import no.nav.kjerneinfo.consumer.fim.behandleperson.DefaultBehandlePersonServic
 import no.nav.kjerneinfo.consumer.fim.person.PersonKjerneinfoServiceBi;
 import no.nav.kjerneinfo.consumer.fim.person.support.DefaultPersonKjerneinfoService;
 import no.nav.kjerneinfo.consumer.fim.person.support.KjerneinfoMapper;
+import no.nav.kjerneinfo.consumer.fim.person.vergemal.VergemalService;
 import no.nav.modig.content.PropertyResolver;
 import no.nav.modig.wicket.services.HealthCheckService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.HenvendelseUtsendingService;
@@ -186,6 +187,11 @@ public class ServiceConfig {
     public PersonKjerneinfoServiceBi personKjerneinfoServiceBi(PersonV3 personPortType, KjerneinfoMapper kjerneinfoMapper,
                                                                @Named("pep") EnforcementPoint kjerneinfoPep, OrganisasjonEnhetV2Service organisasjonEnhetV2Service) {
         return new DefaultPersonKjerneinfoService(personPortType, kjerneinfoMapper, kjerneinfoPep, organisasjonEnhetV2Service);
+    }
+
+    @Bean
+    public VergemalService vergemalService(PersonV3 personPortType, PersonKjerneinfoServiceBi personKjerneinfoServiceBi) {
+        return new VergemalService(personPortType, personKjerneinfoServiceBi);
     }
 
     @Bean
