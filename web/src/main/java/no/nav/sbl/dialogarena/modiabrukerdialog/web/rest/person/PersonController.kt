@@ -89,7 +89,7 @@ class PersonController @Inject constructor(private val kjerneinfoService: Person
     private fun getFamilierelasjoner(person: Person): List<Map<String, Any>> {
         return person.personfakta.harFraRolleIList.map {
             mapOf(
-                    "harSammeBosted" to it.harSammeBosted.toString(),
+                    "harSammeBosted" to it.harSammeBosted,
                     "tilPerson" to mapOf(
                             "navn" to getNavn(it.tilPerson),
                             "alder" to it.tilPerson.fodselsnummer.alder,
