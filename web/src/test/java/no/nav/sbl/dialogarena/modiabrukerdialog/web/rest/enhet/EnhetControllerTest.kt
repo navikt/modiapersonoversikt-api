@@ -28,7 +28,7 @@ class EnhetControllerTest {
     @DisplayName("Kaster 404 hvis enhet ikke ble funnet")
     fun kaster404HvisEnhetIkkeFunnet() {
         `when`(organisasjonEnhetV2Service.finnNAVKontor(Mockito.any(), Mockito.any())).thenReturn(Optional.empty())
-        Assertions.assertThrows(NotFoundException::class.java, { controller.hentMedGeoTilk("", "") })
+        Assertions.assertThrows(NotFoundException::class.java, { controller.finnEnhet("", "") })
     }
 
     companion object {
