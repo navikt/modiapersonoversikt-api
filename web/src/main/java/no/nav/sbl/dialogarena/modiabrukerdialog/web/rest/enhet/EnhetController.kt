@@ -25,11 +25,13 @@ constructor(private val organisasjonEnhetKontaktinformasjonService: Organisasjon
     }
 
     @GET
-    @Path("/geo/{id}")
+    @Path("/geo/")
     @Produces(APPLICATION_JSON)
-    fun hentMedGeoTilk(@PathParam("id") geografiskId: String, @QueryParam("dkode") diskresjonskode: String?): EnhetKontaktinformasjon {
+    fun hentMedGeoTilk(@QueryParam("gt") geografiskId: String?, @QueryParam("dkode") diskresjonskode: String?): EnhetKontaktinformasjon {
 
         check(visFeature(Feature.PERSON_REST_API))
+
+        if (geografiskId.isNullOrEmpty() && diskresjonskode.isNullOrEmpty()) throw NotFoundException();
 
         val enhetid = organisasjonEnhetV2Service.finnNAVKontor(geografiskId, diskresjonskode ?: "")
                 .map { it.enhetId }
