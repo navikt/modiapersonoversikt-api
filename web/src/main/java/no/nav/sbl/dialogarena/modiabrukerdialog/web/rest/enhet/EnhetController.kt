@@ -25,9 +25,8 @@ constructor(private val organisasjonEnhetKontaktinformasjonService: Organisasjon
     }
 
     @GET
-    @Path("/geo/")
     @Produces(APPLICATION_JSON)
-    fun hentMedGeoTilk(@QueryParam("gt") geografiskId: String?, @QueryParam("dkode") diskresjonskode: String?): EnhetKontaktinformasjon {
+    fun finnEnhet(@QueryParam("gt") geografiskId: String?, @QueryParam("dkode") diskresjonskode: String?): EnhetKontaktinformasjon {
 
         check(visFeature(Feature.PERSON_REST_API))
 
