@@ -8,6 +8,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.henvendelse.DelsvarCont
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.kontaktinformasjon.KontaktinformasjonController;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.oppgave.OppgaveController;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.person.PersonController;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.vergemal.VergemalController;
 import no.nav.sbl.dialogarena.sak.rest.DokumentController;
 import no.nav.sbl.dialogarena.sak.rest.InformasjonController;
 import no.nav.sbl.dialogarena.sak.rest.SaksoversiktController;
@@ -48,6 +49,7 @@ public class RestConfig extends ResourceConfig {
                 OppgaveController.class,
                 EnhetController.class,
                 PersonController.class,
+                VergemalController.class,
                 KontaktinformasjonController.class,
                 EgenAnsattController.class
         );
