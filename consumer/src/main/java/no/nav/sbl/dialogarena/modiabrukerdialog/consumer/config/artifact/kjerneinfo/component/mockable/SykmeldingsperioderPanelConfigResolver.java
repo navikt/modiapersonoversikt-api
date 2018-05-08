@@ -50,7 +50,7 @@ public class SykmeldingsperioderPanelConfigResolver {
 
     @Bean
     public SykmeldingsperiodeLoader sykmeldingsperiodeLoader() {
-        return new SykmeldingsperiodeLoader(getSykepengerService());
+        return new SykmeldingsperiodeLoader();
     }
 
     @Bean
