@@ -28,12 +28,12 @@ class MeldingerTest {
                         .withId(TRAAD_ID_1)
                         .withTraadId(TRAAD_ID_1)
                         .withType(Meldingstype.SPORSMAL_SKRIFTLIG)
-                        .withOpprettetDato(DateTime.now()),
+                        .withFerdigstiltDato(DateTime.now()),
                 new Melding()
                         .withId("id2")
                         .withTraadId(TRAAD_ID_1)
                         .withType(Meldingstype.SVAR_SKRIFTLIG)
-                        .withOpprettetDato(DateTime.now())
+                        .withFerdigstiltDato(DateTime.now())
         ));
 
         assertEquals(1, meldinger.getTraader().size());
@@ -47,12 +47,12 @@ class MeldingerTest {
                         .withId(TRAAD_ID_1)
                         .withTraadId(TRAAD_ID_1)
                         .withType(Meldingstype.SPORSMAL_SKRIFTLIG)
-                        .withOpprettetDato(DateTime.now()),
+                        .withFerdigstiltDato(DateTime.now()),
                 new Melding()
                         .withId("traad-id-2")
                         .withTraadId("traad-id-2")
                         .withType(Meldingstype.SPORSMAL_SKRIFTLIG)
-                        .withOpprettetDato(DateTime.now())
+                        .withFerdigstiltDato(DateTime.now())
         ));
 
         assertEquals(2, meldinger.getTraader().size());
@@ -100,18 +100,18 @@ class MeldingerTest {
                        .withId(TRAAD_ID_1)
                        .withTraadId(TRAAD_ID_1)
                        .withType(Meldingstype.SPORSMAL_SKRIFTLIG)
-                       .withOpprettetDato(DateTime.now()),
+                       .withFerdigstiltDato(DateTime.now()),
                new Melding()
                        .withId("id2")
                        .withTraadId(TRAAD_ID_1)
                        .withType(Meldingstype.DELVIS_SVAR_SKRIFTLIG)
-                       .withOpprettetDato(DateTime.now())
+                       .withFerdigstiltDato(DateTime.now())
                        .withFritekst(new Fritekst("Jeg svarer med et delsvar!", new Person("John", "Johnsen"), DateTime.now())),
                new Melding()
                        .withId("id3")
                        .withTraadId(TRAAD_ID_1)
                        .withType(Meldingstype.SVAR_SKRIFTLIG)
-                       .withOpprettetDato(DateTime.now())
+                       .withFerdigstiltDato(DateTime.now())
                        .withFritekst(new Fritekst("Jeg svarer med et endelig svar!", new Person("Anne", "Saksbehandler"), DateTime.now()))
             );
         }
@@ -122,24 +122,24 @@ class MeldingerTest {
                             .withId(TRAAD_ID_1)
                             .withTraadId(TRAAD_ID_1)
                             .withType(Meldingstype.SPORSMAL_SKRIFTLIG)
-                            .withOpprettetDato(DateTime.now()),
+                            .withFerdigstiltDato(DateTime.now()),
                     new Melding()
                             .withId("id2")
                             .withTraadId(TRAAD_ID_1)
                             .withType(Meldingstype.DELVIS_SVAR_SKRIFTLIG)
-                            .withOpprettetDato(DateTime.now())
+                            .withFerdigstiltDato(DateTime.now())
                             .withFritekst(new Fritekst("Jeg svarer med et delsvar!", new Person("John", "Johnsen"), DateTime.now())),
                     new Melding()
                             .withId("id3")
                             .withTraadId(TRAAD_ID_1)
                             .withType(Meldingstype.SVAR_SKRIFTLIG)
-                            .withOpprettetDato(DateTime.now())
+                            .withFerdigstiltDato(DateTime.now())
                             .withFritekst(new Fritekst("Jeg svarer med et endelig svar!", new Person("Anne", "Saksbehandler"), DateTime.now())),
                     new Melding()
                             .withId("id4")
                             .withTraadId(TRAAD_ID_1)
                             .withType(Meldingstype.SVAR_SKRIFTLIG)
-                            .withOpprettetDato(DateTime.now())
+                            .withFerdigstiltDato(DateTime.now())
                             .withFritekst(new Fritekst("Jeg svarer med enda et endelig svar!", new Person("Anne", "Saksbehandler"), DateTime.now()))
             );
         }

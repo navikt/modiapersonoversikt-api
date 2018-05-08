@@ -2,6 +2,7 @@ package no.nav.sbl.dialogarena.sporsmalogsvar.lamell;
 
 import no.nav.modig.lang.option.Optional;
 import no.nav.modig.modia.widget.utils.WidgetDateFormatter;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Saksbehandler;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
 import no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.DateUtils;
 import no.nav.sbl.dialogarena.sporsmalogsvar.config.WicketPageTest;
@@ -23,28 +24,19 @@ import static org.hamcrest.core.Is.is;
 @RunWith(SpringJUnit4ClassRunner.class)
 public class MeldingVMTest extends WicketPageTest {
 
-    public static final DateTime OPPRETTET_DATO = DateTime.now();
     public static final DateTime FERDIGSTILT_DATO = DateTime.now().minusDays(2);
     public static final String NAV_IDENT = "navIdent";
     private MeldingVM meldingVM;
 
     @Before
     public void setUp() {
-        Melding melding = createMelding(ID_1, SPORSMAL_SKRIFTLIG, OPPRETTET_DATO, TEMAGRUPPE_1, ID_1);
+        Melding melding = createMelding(ID_1, SPORSMAL_SKRIFTLIG, FERDIGSTILT_DATO, TEMAGRUPPE_1, ID_1);
         melding.ferdigstiltDato = FERDIGSTILT_DATO;
         meldingVM = new MeldingVM(melding, 1);
     }
 
     @Test
     public void henterAvsenderDatoBasertPaaDato() {
-        String avsenderTekst = meldingVM.getVisningsDato();
-
-        assertThat(avsenderTekst, is(DateUtils.toString(OPPRETTET_DATO)));
-    }
-
-    @Test
-    public void henterFerdigstiltDatoOmDokumentVarsel() {
-        meldingVM.erDokumentMelding = true;
         String avsenderTekst = meldingVM.getVisningsDato();
 
         assertThat(avsenderTekst, is(DateUtils.toString(FERDIGSTILT_DATO)));
@@ -80,7 +72,7 @@ public class MeldingVMTest extends WicketPageTest {
     public void sjekkerOmMeldingErMarkertSomFeilsendt() {
         assertThat(meldingVM.erFeilsendt(), is(false));
 
-        meldingVM.melding.markertSomFeilsendtAv = NAV_IDENT;
+        meldingVM.melding.markertSomFeilsendtAv = new Saksbehandler("", "", NAV_IDENT);
 
         assertThat(meldingVM.erFeilsendt(), is(true));
     }
@@ -89,16 +81,16 @@ public class MeldingVMTest extends WicketPageTest {
     public void henterMarkertSomFeilsendtAv() {
         assertThat(meldingVM.getMarkertSomFeilsendtAv(), is(Optional.none()));
 
-        meldingVM.melding.markertSomFeilsendtAv = NAV_IDENT;
+        meldingVM.melding.markertSomFeilsendtAv = new Saksbehandler("", "", NAV_IDENT);
 
-        assertThat(meldingVM.getMarkertSomFeilsendtAv(), is(optional(NAV_IDENT)));
+        assertThat(meldingVM.getMarkertSomFeilsendtAv().get().getIdent(), is(NAV_IDENT));
     }
 
     @Test
     public void henterAvsenderBildeUrl() {
         assertThat(meldingVM.getAvsenderBildeUrl().contains(BRUKER_LOGO_SVG), is(true));
 
-        Melding melding = createMelding(ID_1, FRA_NAV.get(0), OPPRETTET_DATO, TEMAGRUPPE_1, ID_1);
+        Melding melding = createMelding(ID_1, FRA_NAV.get(0), FERDIGSTILT_DATO, TEMAGRUPPE_1, ID_1);
         meldingVM = new MeldingVM(melding, 1);
 
         assertThat(meldingVM.getAvsenderBildeUrl().contains(NAV_LOGO_SVG), is(true));
@@ -108,7 +100,7 @@ public class MeldingVMTest extends WicketPageTest {
     public void henterAvsenderBilderAltKey() {
         assertThat(meldingVM.getAvsenderBildeAltKey(), is(BRUKER_AVSENDER_BILDE_ALT_KEY));
 
-        Melding melding = createMelding(ID_1, FRA_NAV.get(0), OPPRETTET_DATO, TEMAGRUPPE_1, ID_1);
+        Melding melding = createMelding(ID_1, FRA_NAV.get(0), FERDIGSTILT_DATO, TEMAGRUPPE_1, ID_1);
         meldingVM = new MeldingVM(melding, 1);
 
         assertThat(meldingVM.getAvsenderBildeAltKey(), is(NAV_AVSENDER_BILDE_ALT_KEY));
@@ -121,7 +113,7 @@ public class MeldingVMTest extends WicketPageTest {
 
     @Test
     public void setterErDokumentMeldingOmMeldingErDokumentVarsel() {
-        Melding melding = createMelding(ID_1, SPORSMAL_SKRIFTLIG, OPPRETTET_DATO, TEMAGRUPPE_1, ID_1);
+        Melding melding = createMelding(ID_1, SPORSMAL_SKRIFTLIG, FERDIGSTILT_DATO, TEMAGRUPPE_1, ID_1);
         melding.erDokumentMelding = true;
         meldingVM = new MeldingVM(melding, 1);
         assertThat(meldingVM.erDokumentMelding, is(true));

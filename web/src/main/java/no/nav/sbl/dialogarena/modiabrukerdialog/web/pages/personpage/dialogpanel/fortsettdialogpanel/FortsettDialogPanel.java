@@ -117,7 +117,7 @@ public class FortsettDialogPanel extends GenericPanel<HenvendelseVM> {
 
     private boolean sisteMeldingErDelsvar(List<Melding> traad) {
         return traad.stream()
-                .sorted(Comparator.comparing(melding -> melding.opprettetDato))
+                .sorted(Comparator.comparing(melding -> melding.ferdigstiltDato))
                 .reduce((first, second) -> second)
                 .filter(Melding::erDelvisSvar)
                 .isPresent();

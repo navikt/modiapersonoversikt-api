@@ -2,6 +2,7 @@ package no.nav.sbl.dialogarena.sporsmalogsvar.lamell;
 
 import no.nav.modig.lang.option.Optional;
 import no.nav.modig.modia.widget.utils.WidgetDateFormatter;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Saksbehandler;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype;
 import no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.DateUtils;
@@ -35,10 +36,7 @@ public class MeldingVM implements Serializable {
     }
 
     public String getVisningsDato() {
-        if (erDokumentMelding){
-            return DateUtils.toString(melding.ferdigstiltDato);
-        }
-        return DateUtils.toString(melding.opprettetDato);
+        return DateUtils.toString(melding.ferdigstiltDato);
     }
 
     public String getMeldingStatusTekstKey() {
@@ -87,8 +85,28 @@ public class MeldingVM implements Serializable {
         };
     }
 
-    public Optional<String> getMarkertSomFeilsendtAv() {
+    public Optional<Saksbehandler> getMarkertSomFeilsendtAv() {
         return optional(melding.markertSomFeilsendtAv);
+    }
+
+    public Optional<DateTime> getMarkertSomFeilsendtDato() {
+        return optional(melding.markertSomFeilsendtDato);
+    }
+
+    public Optional<Saksbehandler> getKontorsperretAv() {
+        return optional(melding.kontorsperretAv);
+    }
+
+    public Optional<DateTime> getKontorsperretDato() {
+        return optional(melding.kontorsperretDato);
+    }
+
+    public Optional<Saksbehandler> getFerdigstiltUtenSvarAv() {
+        return optional(melding.ferdigstiltUtenSvarAv);
+    }
+
+    public Optional<DateTime> getFerdigstiltUtenSvarDato() {
+        return optional(melding.ferdigstiltUtenSvarDato);
     }
 
     public String getAvsenderBildeUrl() {
@@ -141,4 +159,5 @@ public class MeldingVM implements Serializable {
         result = 31 * result + traadlengde;
         return result;
     }
+
 }

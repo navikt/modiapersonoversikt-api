@@ -23,7 +23,7 @@ public class DelsvarUtils {
 
     private static List<Melding> sorterMedNyesteForst(List<Melding> traad) {
         List<Melding> listCopy = new ArrayList<>(traad);
-        listCopy.sort(Comparator.comparing(melding -> melding.opprettetDato));
+        listCopy.sort(Comparator.comparing(melding -> melding.ferdigstiltDato));
         Collections.reverse(listCopy);
         return listCopy;
     }

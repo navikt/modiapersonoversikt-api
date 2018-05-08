@@ -1,32 +1,37 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse;
 
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Person;
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Person;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Saksbehandler;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.VisningUtils;
 import org.apache.commons.collections15.Transformer;
 import org.joda.time.DateTime;
 
 import java.io.Serializable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static java.util.Arrays.asList;
 import static java.util.Comparator.comparing;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.VisningUtils.*;
 
 public class Melding implements Serializable {
 
-    public String id, traadId, fnrBruker, navIdent, oppgaveId, temagruppe, temagruppeNavn, kanal, kontorsperretEnhet, journalfortTema,
-            journalfortTemanavn, journalfortSaksId, journalfortAvNavIdent, eksternAktor, tilknyttetEnhet, brukersEnhet, markertSomFeilsendtAv, statusTekst, statusKlasse,
-            lestStatus, visningsDatoTekst , journalfortDatoTekst, ikontekst;
-    public DateTime lestDato, opprettetDato, journalfortDato, ferdigstiltDato, visningsDato;
+    public String id, traadId, fnrBruker, navIdent, oppgaveId, temagruppe, temagruppeNavn, kanal, kontorsperretEnhet,
+            journalfortTema, journalfortTemanavn, journalfortSaksId, journalfortAvNavIdent, eksternAktor,
+            tilknyttetEnhet, brukersEnhet, statusTekst, statusKlasse, lestStatus, visningsDatoTekst,
+            journalfortDatoTekst, ikontekst, kontorsperretAvNavIdent, markertSomFeilsendtAvNavIdent,
+            ferdigstiltUtenSvarAvNavIdent;
+    public DateTime lestDato, opprettetDato, journalfortDato, ferdigstiltDato, ferdigstiltUtenSvarDato,
+            markertSomFeilsendtDato, kontorsperretDato;
     public Meldingstype meldingstype;
     public Temagruppe gjeldendeTemagruppe;
     public Status status;
     public boolean kassert, ingenTilgangJournalfort, erDokumentMelding, erOppgaveMelding, erFerdigstiltUtenSvar;
     public Boolean erTilknyttetAnsatt;
+    public Saksbehandler kontorsperretAv, markertSomFeilsendtAv, ferdigstiltUtenSvarAv;
     public Person journalfortAv = new Person("", "");
     public Person skrevetAv = new Person("", "");
 
@@ -36,10 +41,10 @@ public class Melding implements Serializable {
         fritekster = new ArrayList<>();
     }
 
-    public Melding(String id, Meldingstype meldingstype, DateTime opprettetDato) {
+    public Melding(String id, Meldingstype meldingstype, DateTime dato) {
         this.id = id;
         this.meldingstype = meldingstype;
-        this.opprettetDato = opprettetDato;
+        this.ferdigstiltDato = dato;
         this.fritekster = new ArrayList<>();
     }
 
@@ -92,8 +97,8 @@ public class Melding implements Serializable {
         return this;
     }
 
-    public Melding withOpprettetDato(DateTime opprettetDato) {
-        this.opprettetDato = opprettetDato;
+    public Melding withFerdigstiltDato(DateTime dato) {
+        this.ferdigstiltDato = dato;
         return this;
     }
 
@@ -153,10 +158,7 @@ public class Melding implements Serializable {
     }
 
     public DateTime getVisningsDato() {
-        if (erDokumentMelding) {
-            return ferdigstiltDato;
-        }
-        return opprettetDato;
+        return ferdigstiltDato;
     }
 
     public String getTraadId() {
@@ -209,7 +211,7 @@ public class Melding implements Serializable {
 
     public Melding withDelviseSvar(List<Melding> delviseSvar) {
         fritekster.addAll(delviseSvar.stream()
-                .map(delvisSvar -> new Fritekst(delvisSvar.getFritekst(), delvisSvar.skrevetAv, delvisSvar.opprettetDato))
+                .map(delvisSvar -> new Fritekst(delvisSvar.getFritekst(), delvisSvar.skrevetAv, delvisSvar.ferdigstiltDato))
                 .collect(Collectors.toList()));
         return this;
     }

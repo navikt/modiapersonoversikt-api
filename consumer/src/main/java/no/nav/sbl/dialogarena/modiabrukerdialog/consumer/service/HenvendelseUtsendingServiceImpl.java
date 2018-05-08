@@ -235,7 +235,7 @@ public class HenvendelseUtsendingServiceImpl implements HenvendelseUtsendingServ
                     resourceAttribute("urn:nav:ikt:tilgangskontroll:xacml:resource:tema", defaultString(melding.journalfortTema))
             );
             if (isNotBlank(melding.journalfortTema) && !pep.hasAccess(temagruppePolicyRequest)) {
-                melding.withFritekst(new Fritekst("", melding.skrevetAv, melding.opprettetDato));
+                melding.withFritekst(new Fritekst("", melding.skrevetAv, melding.ferdigstiltDato));
             }
 
             return melding;

@@ -327,7 +327,7 @@ public class MeldingerSokImpl implements MeldingerSok {
     private static Function<Melding, Melding> highlighting(final Map<String, MeldingerSokResultat> resultat) {
         return (melding) -> {
             MeldingerSokResultat meldingerSokResultat = resultat.get(melding.id);
-            melding.withFritekst(new Fritekst(meldingerSokResultat.fritekst, melding.skrevetAv, melding.opprettetDato));
+            melding.withFritekst(new Fritekst(meldingerSokResultat.fritekst, melding.skrevetAv, melding.ferdigstiltDato));
             melding.temagruppeNavn = meldingerSokResultat.temagruppe;
             melding.journalfortTemanavn = meldingerSokResultat.arkivtema;
             melding.visningsDatoTekst = meldingerSokResultat.dato;

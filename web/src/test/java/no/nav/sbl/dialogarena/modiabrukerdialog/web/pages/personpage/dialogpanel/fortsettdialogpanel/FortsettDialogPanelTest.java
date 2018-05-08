@@ -361,10 +361,10 @@ public class FortsettDialogPanelTest extends WicketPageTest {
     @Test
     public void tilknyttetAnsattArverSaksbehandler() {
         Melding sporsmalFraBruker = lagSporsmalFraBruker();
-        sporsmalFraBruker.opprettetDato = DateTime.now().minusDays(2);
+        sporsmalFraBruker.ferdigstiltDato = DateTime.now().minusDays(2);
 
         Melding sporsmalFraNAV = lagSporsmalFraNAV();
-        sporsmalFraNAV.opprettetDato = DateTime.now();
+        sporsmalFraNAV.ferdigstiltDato = DateTime.now();
         sporsmalFraNAV.erTilknyttetAnsatt = true;
         OppgaveTilknytning oppgaveTilknytning = erTilknyttetAnsatt(asList(sporsmalFraBruker, sporsmalFraNAV));
 
@@ -375,7 +375,7 @@ public class FortsettDialogPanelTest extends WicketPageTest {
         Melding sporsmal = new Melding()
                 .withType(SPORSMAL_SKRIFTLIG)
                 .withId(SPORSMAL_ID)
-                .withOpprettetDato(now())
+                .withFerdigstiltDato(now())
                 .withBrukersEnhet(BRUKERS_ENHET)
                 .withErTilknyttetAnsatt(false);
         sporsmal.temagruppe = TEMAGRUPPE;
@@ -386,14 +386,14 @@ public class FortsettDialogPanelTest extends WicketPageTest {
         Melding sporsmal = new Melding()
                 .withType(Meldingstype.SPORSMAL_MODIA_UTGAAENDE)
                 .withId(SPORSMAL_ID)
-                .withOpprettetDato(now());
+                .withFerdigstiltDato(now());
         sporsmal.temagruppe = TEMAGRUPPE;
         return sporsmal;
     }
 
     private Melding lagSvar() {
         return new Melding()
-                .withOpprettetDato(now())
+                .withFerdigstiltDato(now())
                 .withType(SVAR_SKRIFTLIG)
                 .withFritekst(new Fritekst("fritekst", new no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Saksbehandler("", "", ""), now()))
                 .withTemagruppe(TEMAGRUPPE);

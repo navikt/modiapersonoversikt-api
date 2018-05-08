@@ -1,6 +1,7 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.lamell;
 
 import no.nav.brukerdialog.security.tilgangskontroll.policy.pep.EnforcementPoint;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Saksbehandler;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
@@ -109,7 +110,7 @@ public class TraaddetaljerPanelTest extends WicketPageTest {
     public void skalIkkeKunneBesvareTraadSomErMarkertSomFeilsendt() {
         Melding melding = createStandardMelding();
         String fnr = "13245679810";
-        melding.markertSomFeilsendtAv = "navIdent";
+        melding.markertSomFeilsendtAv = new Saksbehandler("", "", "navIdent");
         when(henvendelseBehandlingService.hentMeldinger(eq(fnr), anyString())).thenReturn(new Meldinger(asList(melding)));
 
         wicket.goToPageWith(new TraaddetaljerPanel("id", innboksVM(fnr)))
