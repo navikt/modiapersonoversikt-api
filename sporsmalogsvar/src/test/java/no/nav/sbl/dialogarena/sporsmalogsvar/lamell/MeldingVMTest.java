@@ -24,28 +24,19 @@ import static org.hamcrest.core.Is.is;
 @RunWith(SpringJUnit4ClassRunner.class)
 public class MeldingVMTest extends WicketPageTest {
 
-    public static final DateTime OPPRETTET_DATO = DateTime.now();
     public static final DateTime FERDIGSTILT_DATO = DateTime.now().minusDays(2);
     public static final String NAV_IDENT = "navIdent";
     private MeldingVM meldingVM;
 
     @Before
     public void setUp() {
-        Melding melding = createMelding(ID_1, SPORSMAL_SKRIFTLIG, OPPRETTET_DATO, TEMAGRUPPE_1, ID_1);
+        Melding melding = createMelding(ID_1, SPORSMAL_SKRIFTLIG, FERDIGSTILT_DATO, TEMAGRUPPE_1, ID_1);
         melding.ferdigstiltDato = FERDIGSTILT_DATO;
         meldingVM = new MeldingVM(melding, 1);
     }
 
     @Test
     public void henterAvsenderDatoBasertPaaDato() {
-        String avsenderTekst = meldingVM.getVisningsDato();
-
-        assertThat(avsenderTekst, is(DateUtils.toString(OPPRETTET_DATO)));
-    }
-
-    @Test
-    public void henterFerdigstiltDatoOmDokumentVarsel() {
-        meldingVM.erDokumentMelding = true;
         String avsenderTekst = meldingVM.getVisningsDato();
 
         assertThat(avsenderTekst, is(DateUtils.toString(FERDIGSTILT_DATO)));
@@ -99,7 +90,7 @@ public class MeldingVMTest extends WicketPageTest {
     public void henterAvsenderBildeUrl() {
         assertThat(meldingVM.getAvsenderBildeUrl().contains(BRUKER_LOGO_SVG), is(true));
 
-        Melding melding = createMelding(ID_1, FRA_NAV.get(0), OPPRETTET_DATO, TEMAGRUPPE_1, ID_1);
+        Melding melding = createMelding(ID_1, FRA_NAV.get(0), FERDIGSTILT_DATO, TEMAGRUPPE_1, ID_1);
         meldingVM = new MeldingVM(melding, 1);
 
         assertThat(meldingVM.getAvsenderBildeUrl().contains(NAV_LOGO_SVG), is(true));
@@ -109,7 +100,7 @@ public class MeldingVMTest extends WicketPageTest {
     public void henterAvsenderBilderAltKey() {
         assertThat(meldingVM.getAvsenderBildeAltKey(), is(BRUKER_AVSENDER_BILDE_ALT_KEY));
 
-        Melding melding = createMelding(ID_1, FRA_NAV.get(0), OPPRETTET_DATO, TEMAGRUPPE_1, ID_1);
+        Melding melding = createMelding(ID_1, FRA_NAV.get(0), FERDIGSTILT_DATO, TEMAGRUPPE_1, ID_1);
         meldingVM = new MeldingVM(melding, 1);
 
         assertThat(meldingVM.getAvsenderBildeAltKey(), is(NAV_AVSENDER_BILDE_ALT_KEY));
@@ -122,7 +113,7 @@ public class MeldingVMTest extends WicketPageTest {
 
     @Test
     public void setterErDokumentMeldingOmMeldingErDokumentVarsel() {
-        Melding melding = createMelding(ID_1, SPORSMAL_SKRIFTLIG, OPPRETTET_DATO, TEMAGRUPPE_1, ID_1);
+        Melding melding = createMelding(ID_1, SPORSMAL_SKRIFTLIG, FERDIGSTILT_DATO, TEMAGRUPPE_1, ID_1);
         melding.erDokumentMelding = true;
         meldingVM = new MeldingVM(melding, 1);
         assertThat(meldingVM.erDokumentMelding, is(true));

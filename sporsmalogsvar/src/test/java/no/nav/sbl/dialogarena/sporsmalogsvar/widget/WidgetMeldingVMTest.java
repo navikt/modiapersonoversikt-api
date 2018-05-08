@@ -19,7 +19,7 @@ public class WidgetMeldingVMTest {
     }
 
     private Melding mockMelding() {
-        return new Melding().withOpprettetDato(DateTime.now());
+        return new Melding().withFerdigstiltDato(DateTime.now());
     }
 
 }

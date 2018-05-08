@@ -28,7 +28,7 @@ class LeggTilbakeDelvisSvarProps extends HashMap<String, Object> implements Seri
         put("startNyDialogId", LeggTilbakeDelvisSvarPanel.START_NY_DIALOG_CALLBACK_ID);
         put("oppgaveId", sporsmal.oppgaveId);
         put("temagruppe", temagruppe);
-        put("opprettetDato", Datoformat.kortMedTid(sporsmal.opprettetDato));
+        put("opprettetDato", Datoformat.kortMedTid(sporsmal.ferdigstiltDato));
         put("temagruppeMapping", temagruppeMapping);
         putAll(new TraadVisningProps(traad));
         if (flereOppgaverIgjen) {

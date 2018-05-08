@@ -19,8 +19,7 @@ public class TraadVisningProps extends HashMap<String, Object> implements Serial
     private Map<String, Object> meldingsvinsingsprops(Melding melding){
         HashMap<String, Object> meldingsProps = new HashMap<>();
         meldingsProps.put("temagruppeNavn",melding.temagruppeNavn);
-        meldingsProps.put("visningsDatoTekst", DateUtils.toString(melding.erDokumentMelding ?
-                melding.ferdigstiltDato : melding.opprettetDato));
+        meldingsProps.put("visningsDatoTekst", DateUtils.toString(melding.ferdigstiltDato));
         meldingsProps.put("fritekst", getFritekster(melding));
         meldingsProps.put("erDokumentMelding", melding.erDokumentMelding);
         meldingsProps.put("id", melding.id);

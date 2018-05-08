@@ -414,7 +414,7 @@ public class HenvendelseUtsendingServiceImplTest {
                 new XMLHenvendelse()
                         .withBehandlingsId(TRAAD_ID)
                         .withBehandlingskjedeId(TRAAD_ID)
-                        .withOpprettetDato(now())
+                        .withAvsluttetDato(now())
                         .withHenvendelseType(XMLHenvendelseType.SPORSMAL_SKRIFTLIG.name())
                         .withBrukersEnhet("5678")
                         .withGjeldendeTemagruppe("OKSOS")
@@ -441,7 +441,7 @@ public class HenvendelseUtsendingServiceImplTest {
                 new XMLHenvendelse()
                         .withBehandlingsId(TRAAD_ID)
                         .withBehandlingskjedeId(TRAAD_ID)
-                        .withOpprettetDato(now())
+                        .withAvsluttetDato(now())
                         .withHenvendelseType(XMLHenvendelseType.SPORSMAL_SKRIFTLIG.name())
                         .withGjeldendeTemagruppe("ARBD")
                         .withMetadataListe(new XMLMetadataListe().withMetadata(
@@ -453,7 +453,7 @@ public class HenvendelseUtsendingServiceImplTest {
         return new XMLHenvendelse()
                 .withOppgaveIdGsak("")
                 .withBehandlingskjedeId(TRAAD_ID)
-                .withOpprettetDato(now().minusDays(2))
+                .withAvsluttetDato(now().minusDays(2))
                 .withGjeldendeTemagruppe("ARBD")
                 .withHenvendelseType(XMLHenvendelseType.SPORSMAL_SKRIFTLIG.value())
                 .withMetadataListe(new XMLMetadataListe()
@@ -465,7 +465,7 @@ public class HenvendelseUtsendingServiceImplTest {
         return new XMLHenvendelse()
                 .withFnr("")
                 .withBehandlingskjedeId(sporsmalId)
-                .withOpprettetDato(now())
+                .withAvsluttetDato(now())
                 .withHenvendelseType(XMLHenvendelseType.SVAR_SKRIFTLIG.name())
                 .withGjeldendeTemagruppe("ARBD")
                 .withMetadataListe(new XMLMetadataListe().withMetadata(new XMLMeldingTilBruker().withNavident("")));
@@ -478,7 +478,7 @@ public class HenvendelseUtsendingServiceImplTest {
                         .withBehandlingsId(NYESTE_HENVENDELSE_ID)
                         .withBehandlingskjedeId(sporsmalId)
                         .withHenvendelseType(XMLHenvendelseType.SPORSMAL_SKRIFTLIG.name())
-                        .withOpprettetDato(now().minusDays(1))
+                        .withAvsluttetDato(now().minusDays(1))
                         .withGjeldendeTemagruppe("ARBD")
                         .withMetadataListe(new XMLMetadataListe().withMetadata(
                                 new XMLMeldingFraBruker().withFritekst("").withTemagruppe(""))),
@@ -486,7 +486,7 @@ public class HenvendelseUtsendingServiceImplTest {
                         .withFnr("")
                         .withBehandlingsId(ELDSTE_HENVENDELSE)
                         .withBehandlingskjedeId(sporsmalId)
-                        .withOpprettetDato(now())
+                        .withAvsluttetDato(now())
                         .withGjeldendeTemagruppe("FMLI")
                         .withHenvendelseType(XMLHenvendelseType.SVAR_TELEFON.name())
                         .withMetadataListe(new XMLMetadataListe().withMetadata(

@@ -23,14 +23,14 @@ public class DelsvarSammenslaaer {
     private static List<Fritekst> getFriteksterFraDelsvar(List<Melding> meldinger) {
         return meldinger.stream()
                 .filter(Melding::erDelvisSvar)
-                .sorted(Comparator.comparing(melding -> melding.opprettetDato))
-                .map(melding -> new Fritekst(melding.getFritekst(), melding.skrevetAv, melding.opprettetDato))
+                .sorted(Comparator.comparing(melding -> melding.ferdigstiltDato))
+                .map(melding -> new Fritekst(melding.getFritekst(), melding.skrevetAv, melding.ferdigstiltDato))
                 .collect(Collectors.toList());
     }
 
     private static Melding getAvsluttendeSvar(List<Melding> meldinger) {
         return meldinger.stream()
-                .sorted(Comparator.comparing(melding -> melding.opprettetDato))
+                .sorted(Comparator.comparing(melding -> melding.ferdigstiltDato))
                 .filter(Melding::erSvarSkriftlig)
                 .findFirst()
                 .orElseThrow(IllegalStateException::new);

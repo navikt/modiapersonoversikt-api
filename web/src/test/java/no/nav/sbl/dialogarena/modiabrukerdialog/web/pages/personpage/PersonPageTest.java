@@ -255,7 +255,7 @@ public class PersonPageTest extends WicketPageTest {
     private Melding lagMelding() {
         return new Melding()
                 .withId("id")
-                .withOpprettetDato(now())
+                .withFerdigstiltDato(now())
                 .withTemagruppe(ARBD.name())
                 .withOppgaveId("id")
                 .withType(Meldingstype.SPORSMAL_SKRIFTLIG);
