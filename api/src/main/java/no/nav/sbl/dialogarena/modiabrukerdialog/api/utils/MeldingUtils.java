@@ -56,7 +56,7 @@ public class MeldingUtils {
             melding.id = xmlHenvendelse.getBehandlingsId();
             melding.meldingstype = MELDINGSTYPE_MAP.get(XMLHenvendelseType.fromValue(xmlHenvendelse.getHenvendelseType()));
             melding.opprettetDato = xmlHenvendelse.getOpprettetDato();
-            melding.visningsDato = xmlHenvendelse.getOpprettetDato();
+            melding.ferdigstiltDato = xmlHenvendelse.getAvsluttetDato();
             melding.lestDato = xmlHenvendelse.getLestDato();
             melding.fnrBruker = xmlHenvendelse.getFnr();
             melding.traadId = xmlHenvendelse.getBehandlingskjedeId();
@@ -155,7 +155,7 @@ public class MeldingUtils {
     private static void oppdaterMeldingMedKasseringData(final PropertyResolver propertyResolver, final Melding melding) {
         settTemagruppe(melding, null, propertyResolver);
         melding.statusTekst = getTekstForMeldingStatus(propertyResolver, melding.meldingstype);
-        melding.withFritekst(new Fritekst(propertyResolver.getProperty("innhold.kassert"), melding.skrevetAv, melding.opprettetDato));
+        melding.withFritekst(new Fritekst(propertyResolver.getProperty("innhold.kassert"), melding.skrevetAv, melding.ferdigstiltDato));
         melding.kanal = null;
         melding.kassert = true;
     }
@@ -163,12 +163,11 @@ public class MeldingUtils {
     private static void oppdaterMeldingMedDokumentVarselData(final PropertyResolver propertyResolver, final XMLHenvendelse xmlHenvendelse, final Melding melding, final XMLMetadata xmlMetadata) {
         XMLDokumentVarsel dokumentVarsel = (XMLDokumentVarsel) xmlMetadata;
         melding.statusTekst = dokumentVarsel.getDokumenttittel();
-        melding.withFritekst(new Fritekst(format(propertyResolver.getProperty("dokument.fritekst"), dokumentVarsel.getTemanavn()), melding.skrevetAv, melding.opprettetDato));
+        melding.withFritekst(new Fritekst(format(propertyResolver.getProperty("dokument.fritekst"), dokumentVarsel.getTemanavn()), melding.skrevetAv, dokumentVarsel.getFerdigstiltDato()));
         melding.erDokumentMelding = true;
         melding.withTraadId(xmlHenvendelse.getBehandlingsId());
         melding.lestStatus = lagLestStatusDokumentVarsel(melding);
         melding.ferdigstiltDato = dokumentVarsel.getFerdigstiltDato();
-        melding.visningsDato = dokumentVarsel.getFerdigstiltDato();
         melding.statusKlasse = "dokument";
     }
 

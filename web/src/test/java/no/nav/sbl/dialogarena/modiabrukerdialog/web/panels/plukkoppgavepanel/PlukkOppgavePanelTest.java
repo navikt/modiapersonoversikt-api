@@ -53,7 +53,7 @@ public class PlukkOppgavePanelTest extends WicketPageTest {
     public void setUp() {
         wicket.tester.getApplication().getSecuritySettings().setAuthorizationStrategy(ALLOW_ALL);
 
-        Melding sporsmal = new Melding().withId("sporsmal").withType(SPORSMAL_SKRIFTLIG).withTemagruppe(ARBD.toString()).withOpprettetDato(now());
+        Melding sporsmal = new Melding().withId("sporsmal").withType(SPORSMAL_SKRIFTLIG).withTemagruppe(ARBD.toString()).withFerdigstiltDato(now());
         when(henvendelseUtsendingService.hentTraad(anyString(), anyString(), anyString())).thenReturn(asList(sporsmal));
         when(saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet()).thenReturn("4444");
     }

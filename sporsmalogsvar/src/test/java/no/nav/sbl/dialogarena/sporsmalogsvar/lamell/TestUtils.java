@@ -38,8 +38,8 @@ public class TestUtils {
     public static final String JOURNALFORT_TEMA = "journalfortTema";
     public static final String JOURNALFORT_SAKSID = "journalfortSaksId1";
 
-    public static Melding createMelding(String id, Meldingstype type, DateTime opprettetDato, Temagruppe temagruppe, String traadId) {
-        Melding melding = new Melding(id, type, opprettetDato);
+    public static Melding createMelding(String id, Meldingstype type, DateTime ferdigstiltDato, Temagruppe temagruppe, String traadId) {
+        Melding melding = new Melding(id, type, ferdigstiltDato);
         melding.temagruppe = temagruppe.toString();
         melding.gjeldendeTemagruppe = temagruppe;
         melding.traadId = traadId;
@@ -50,12 +50,12 @@ public class TestUtils {
         return melding;
     }
 
-    public static XMLHenvendelse createMelding(String id, XMLHenvendelseType type, DateTime opprettetDato, Temagruppe temagruppe, String traadId) {
+    public static XMLHenvendelse createMelding(String id, XMLHenvendelseType type, DateTime dato, Temagruppe temagruppe, String traadId) {
         return new XMLHenvendelse()
                 .withBehandlingsId(id)
                 .withBehandlingskjedeId(traadId)
                 .withHenvendelseType(type.name())
-                .withOpprettetDato(opprettetDato)
+                .withAvsluttetDato(dato)
                 .withGjeldendeTemagruppe(temagruppe.name());
     }
 

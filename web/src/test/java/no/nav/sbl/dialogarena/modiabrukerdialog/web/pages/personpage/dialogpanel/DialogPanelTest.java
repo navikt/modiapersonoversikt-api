@@ -245,7 +245,7 @@ public class DialogPanelTest extends WicketPageTest {
     private Melding lagDelvisSvar() {
         return new Melding()
                 .withType(Meldingstype.DELVIS_SVAR_SKRIFTLIG)
-                .withOpprettetDato(DateTime.now());
+                .withFerdigstiltDato(DateTime.now());
     }
 
     private Melding lagBrukerSporsmalMedOppgaveId() {

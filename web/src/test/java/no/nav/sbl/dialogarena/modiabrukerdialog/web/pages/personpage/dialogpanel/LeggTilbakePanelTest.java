@@ -52,7 +52,7 @@ public class LeggTilbakePanelTest extends WicketPageTest {
     }
 
     public void setup(String enhet) {
-        Melding sporsmal = new Melding().withFnr(MELDING_FNR).withId(MELDING_ID).withOpprettetDato(now());
+        Melding sporsmal = new Melding().withFnr(MELDING_FNR).withId(MELDING_ID).withFerdigstiltDato(now());
         sporsmal.oppgaveId = "1";
         sporsmal.temagruppe = "temagruppe";
         sporsmal.gjeldendeTemagruppe = Temagruppe.ARBD;
@@ -188,7 +188,7 @@ public class LeggTilbakePanelTest extends WicketPageTest {
 
     @Test
     public void kanIkkeLeggeTilbakePaaTemagruppeForAndreSosialeTjenester() {
-        Melding sporsmal = new Melding().withFnr(MELDING_FNR).withId(MELDING_ID).withOpprettetDato(now());
+        Melding sporsmal = new Melding().withFnr(MELDING_FNR).withId(MELDING_ID).withFerdigstiltDato(now());
         sporsmal.oppgaveId = "1";
         sporsmal.temagruppe = "temagruppe";
         sporsmal.gjeldendeTemagruppe = Temagruppe.ANSOS;

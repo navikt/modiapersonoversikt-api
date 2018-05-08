@@ -87,6 +87,6 @@ class LeggTilbakeDelvisSvarPropsTest {
                 .withTraadId(TRAAD_ID)
                 .withFritekst(new Fritekst(FRITEKST, new Saksbehandler("Jan", "Saksbehandler", "ident"), DateTime.now()))
                 .withTemagruppe(ARBD.name())
-                .withOpprettetDato(OPPRETTETDATO);
+                .withFerdigstiltDato(OPPRETTETDATO);
     }
 }

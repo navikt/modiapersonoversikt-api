@@ -181,7 +181,7 @@ public class HenvendelseBehandlingServiceImpl implements HenvendelseBehandlingSe
             PolicyRequest okonomiskSosialhjelpPolicyRequest = forRequest(attributes);
 
             if (melding.gjeldendeTemagruppe == Temagruppe.OKSOS && !pep.hasAccess(okonomiskSosialhjelpPolicyRequest)) {
-                melding.withFritekst(new Fritekst(propertyResolver.getProperty("tilgang.OKSOS"), melding.skrevetAv, melding.opprettetDato));
+                melding.withFritekst(new Fritekst(propertyResolver.getProperty("tilgang.OKSOS"), melding.skrevetAv, melding.ferdigstiltDato));
             }
 
             return melding;
@@ -197,7 +197,7 @@ public class HenvendelseBehandlingServiceImpl implements HenvendelseBehandlingSe
                     resourceAttribute("urn:nav:ikt:tilgangskontroll:xacml:resource:tema", defaultString(melding.journalfortTema)));
 
             if (!isBlank(melding.journalfortTema) && !pep.hasAccess(temagruppePolicyRequest)) {
-                melding.withFritekst(new Fritekst(propertyResolver.getProperty("tilgang.journalfort"), melding.skrevetAv, melding.opprettetDato));
+                melding.withFritekst(new Fritekst(propertyResolver.getProperty("tilgang.journalfort"), melding.skrevetAv, melding.ferdigstiltDato));
                 melding.ingenTilgangJournalfort = true;
             }
 

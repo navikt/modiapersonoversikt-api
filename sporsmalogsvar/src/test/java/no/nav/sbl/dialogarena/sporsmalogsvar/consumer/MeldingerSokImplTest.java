@@ -157,7 +157,7 @@ public class MeldingerSokImplTest {
                                       String arkivtema, DateTime dato, String statustekst, String kanal) {
         Melding melding = new Melding(behandlingsId, SAMTALEREFERAT_OPPMOTE, dato);
         melding.traadId = behandlingskjedeId;
-        Fritekst fritekst1 = new Fritekst(fritekst, new Saksbehandler("Johhny", "Saksbehandler", "z123456"), melding.opprettetDato);
+        Fritekst fritekst1 = new Fritekst(fritekst, new Saksbehandler("Johhny", "Saksbehandler", "z123456"), melding.ferdigstiltDato);
         melding.withFritekst(fritekst1, fritekst1);
         melding.temagruppeNavn = temagruppe;
         melding.journalfortTemanavn = arkivtema;

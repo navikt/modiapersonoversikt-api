@@ -25,7 +25,7 @@ public class Melding implements Serializable {
             journalfortDatoTekst, ikontekst, kontorsperretAvNavIdent, markertSomFeilsendtAvNavIdent,
             ferdigstiltUtenSvarAvNavIdent;
     public DateTime lestDato, opprettetDato, journalfortDato, ferdigstiltDato, ferdigstiltUtenSvarDato,
-            markertSomFeilsendtDato, kontorsperretDato, visningsDato;
+            markertSomFeilsendtDato, kontorsperretDato;
     public Meldingstype meldingstype;
     public Temagruppe gjeldendeTemagruppe;
     public Status status;
@@ -41,10 +41,10 @@ public class Melding implements Serializable {
         fritekster = new ArrayList<>();
     }
 
-    public Melding(String id, Meldingstype meldingstype, DateTime opprettetDato) {
+    public Melding(String id, Meldingstype meldingstype, DateTime dato) {
         this.id = id;
         this.meldingstype = meldingstype;
-        this.opprettetDato = opprettetDato;
+        this.ferdigstiltDato = dato;
         this.fritekster = new ArrayList<>();
     }
 
@@ -97,8 +97,8 @@ public class Melding implements Serializable {
         return this;
     }
 
-    public Melding withOpprettetDato(DateTime opprettetDato) {
-        this.opprettetDato = opprettetDato;
+    public Melding withFerdigstiltDato(DateTime dato) {
+        this.ferdigstiltDato = dato;
         return this;
     }
 
@@ -158,10 +158,7 @@ public class Melding implements Serializable {
     }
 
     public DateTime getVisningsDato() {
-        if (erDokumentMelding) {
-            return ferdigstiltDato;
-        }
-        return opprettetDato;
+        return ferdigstiltDato;
     }
 
     public String getTraadId() {
@@ -214,7 +211,7 @@ public class Melding implements Serializable {
 
     public Melding withDelviseSvar(List<Melding> delviseSvar) {
         fritekster.addAll(delviseSvar.stream()
-                .map(delvisSvar -> new Fritekst(delvisSvar.getFritekst(), delvisSvar.skrevetAv, delvisSvar.opprettetDato))
+                .map(delvisSvar -> new Fritekst(delvisSvar.getFritekst(), delvisSvar.skrevetAv, delvisSvar.ferdigstiltDato))
                 .collect(Collectors.toList()));
         return this;
     }

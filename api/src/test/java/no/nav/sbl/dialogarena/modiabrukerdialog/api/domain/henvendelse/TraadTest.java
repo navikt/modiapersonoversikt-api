@@ -28,7 +28,7 @@ public class TraadTest {
     private Melding lagMelding(final String traadId, final String id, final long dato) {
         return new Melding()
                 .withId(id)
-                .withOpprettetDato(new DateTime(dato))
+                .withFerdigstiltDato(new DateTime(dato))
                 .withBrukersEnhet("brukersEnhet")
                 .withEksternAktor("eksternAktor")
                 .withErTilknyttetAnsatt(false)

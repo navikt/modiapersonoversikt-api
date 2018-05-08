@@ -36,10 +36,7 @@ public class MeldingVM implements Serializable {
     }
 
     public String getVisningsDato() {
-        if (erDokumentMelding){
-            return DateUtils.toString(melding.ferdigstiltDato);
-        }
-        return DateUtils.toString(melding.opprettetDato);
+        return DateUtils.toString(melding.ferdigstiltDato);
     }
 
     public String getMeldingStatusTekstKey() {
