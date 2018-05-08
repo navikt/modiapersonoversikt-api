@@ -102,7 +102,7 @@ public class PdfUtils {
             this.journalFortDato = melding.journalfortDato;
             this.journalfortTema = melding.journalfortTema;
             this.kontorsperretEnhet = melding.kontorsperretEnhet;
-            this.markertSomFeilsendtAv = melding.markertSomFeilsendtAv;
+            this.markertSomFeilsendtAv = melding.markertSomFeilsendtAvNavIdent;
         }
 
         private String lagPDFMeldingstype(Melding melding) {

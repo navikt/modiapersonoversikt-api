@@ -2,6 +2,7 @@ package no.nav.sbl.dialogarena.sporsmalogsvar.lamell;
 
 import no.nav.brukerdialog.security.tilgangskontroll.policy.pep.EnforcementPoint;
 import no.nav.brukerdialog.security.tilgangskontroll.policy.request.PolicyRequest;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Saksbehandler;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
@@ -160,7 +161,7 @@ public class TraadVMTest {
     @Test
     public void erFeilsendtDersomEnAvMeldingeneErFeilsendt() {
         MeldingVM meldingVM = new MeldingVM(new Melding(ID_4, SPORSMAL_SKRIFTLIG, DATE_4), 4);
-        meldingVM.melding.markertSomFeilsendtAv = "feilSendtAv";
+        meldingVM.melding.markertSomFeilsendtAv = new Saksbehandler("", "", "feilsendtIdent");
         traadVM.getMeldinger().clear();
         traadVM.getMeldinger().add(meldingVM);
 

@@ -1,32 +1,37 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse;
 
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Person;
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Person;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Saksbehandler;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.VisningUtils;
 import org.apache.commons.collections15.Transformer;
 import org.joda.time.DateTime;
 
 import java.io.Serializable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static java.util.Arrays.asList;
 import static java.util.Comparator.comparing;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.VisningUtils.*;
 
 public class Melding implements Serializable {
 
-    public String id, traadId, fnrBruker, navIdent, oppgaveId, temagruppe, temagruppeNavn, kanal, kontorsperretEnhet, journalfortTema,
-            journalfortTemanavn, journalfortSaksId, journalfortAvNavIdent, eksternAktor, tilknyttetEnhet, brukersEnhet, markertSomFeilsendtAv, statusTekst, statusKlasse,
-            lestStatus, visningsDatoTekst , journalfortDatoTekst, ikontekst;
-    public DateTime lestDato, opprettetDato, journalfortDato, ferdigstiltDato, visningsDato;
+    public String id, traadId, fnrBruker, navIdent, oppgaveId, temagruppe, temagruppeNavn, kanal, kontorsperretEnhet,
+            journalfortTema, journalfortTemanavn, journalfortSaksId, journalfortAvNavIdent, eksternAktor,
+            tilknyttetEnhet, brukersEnhet, statusTekst, statusKlasse, lestStatus, visningsDatoTekst,
+            journalfortDatoTekst, ikontekst, kontorsperretAvNavIdent, markertSomFeilsendtAvNavIdent,
+            ferdigstiltUtenSvarAvNavIdent;
+    public DateTime lestDato, opprettetDato, journalfortDato, ferdigstiltDato, ferdigstiltUtenSvarDato,
+            markertSomFeilsendtDato, kontorsperretDato, visningsDato;
     public Meldingstype meldingstype;
     public Temagruppe gjeldendeTemagruppe;
     public Status status;
     public boolean kassert, ingenTilgangJournalfort, erDokumentMelding, erOppgaveMelding, erFerdigstiltUtenSvar;
     public Boolean erTilknyttetAnsatt;
+    public Saksbehandler kontorsperretAv, markertSomFeilsendtAv, ferdigstiltUtenSvarAv;
     public Person journalfortAv = new Person("", "");
     public Person skrevetAv = new Person("", "");
 

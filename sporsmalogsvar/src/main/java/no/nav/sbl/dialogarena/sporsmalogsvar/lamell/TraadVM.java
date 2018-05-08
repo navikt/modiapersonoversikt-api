@@ -3,13 +3,18 @@ package no.nav.sbl.dialogarena.sporsmalogsvar.lamell;
 import no.nav.brukerdialog.security.tilgangskontroll.policy.pep.EnforcementPoint;
 import no.nav.brukerdialog.security.tilgangskontroll.policy.request.PolicyRequest;
 import no.nav.brukerdialog.security.tilgangskontroll.policy.request.attributes.PolicyAttribute;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Saksbehandler;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.Sak;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
+import org.joda.time.DateTime;
 
 import java.io.Serializable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
 
 import static java.util.Arrays.asList;
 import static java.util.Optional.ofNullable;
@@ -156,4 +161,21 @@ public class TraadVM implements Serializable {
     public boolean harDelsvar() {
         return meldinger.stream().anyMatch(MeldingVM::erDelsvar);
     }
+
+    public Optional<DateTime> getFerdigstiltUtenSvarDato() {
+        return ofNullable(getEldsteMelding().getFerdigstiltUtenSvarDato().orNull());
+    }
+
+    public Optional<Saksbehandler> getFerdigstiltUtenSvarAv() {
+        return ofNullable(getEldsteMelding().getFerdigstiltUtenSvarAv().orNull());
+    }
+
+    public Optional<DateTime> getKontorsperretDato() {
+        return ofNullable(getEldsteMelding().getKontorsperretDato().orNull());
+    }
+
+    public Optional<Saksbehandler> getKontorsperretAv() {
+        return ofNullable(getEldsteMelding().getKontorsperretAv().orNull());
+    }
+
 }
