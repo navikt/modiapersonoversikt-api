@@ -189,7 +189,7 @@ class PersonController @Inject constructor(private val kjerneinfoService: Person
         )
     }
 
-    private fun getTelefoner(personfakta: Personfakta): Any? {
+    private fun getTelefoner(personfakta: Personfakta): Map<String, Any> {
         return mapOf(
                 "mobil" to personfakta.mobil.map { getTelefon(it) }.orElse(null),
                 "jobbTelefon" to personfakta.jobbTlf.map { getTelefon(it) }.orElse(null),
@@ -197,7 +197,7 @@ class PersonController @Inject constructor(private val kjerneinfoService: Person
         )
     }
 
-    private fun getTelefon(telefon: Telefon): Any {
+    private fun getTelefon(telefon: Telefon): Map<String, String?> {
         return mapOf(
                 "nummer" to (telefon.retningsnummer?.value ?:"") + telefon.identifikator,
                 "sistEndretAv" to telefon.endretAv,
