@@ -5,6 +5,7 @@ import no.nav.kjerneinfo.consumer.fim.person.PersonKjerneinfoServiceBi
 import no.nav.kjerneinfo.consumer.fim.person.to.HentKjerneinformasjonRequest
 import no.nav.kjerneinfo.domain.person.*
 import no.nav.kjerneinfo.domain.person.fakta.Sikkerhetstiltak
+import no.nav.kjerneinfo.domain.person.fakta.Telefon
 import no.nav.kjerneinfo.domain.person.fakta.TilrettelagtKommunikasjon
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.Feature.PERSON_REST_API
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.visFeature
@@ -38,6 +39,7 @@ class PersonController @Inject constructor(private val kjerneinfoService: Person
                 else -> throw InternalServerErrorException(exception)
             }
         }
+
         return mapOf(
                 "fødselsnummer" to person.fodselsnummer.nummer,
                 "alder" to person.fodselsnummer.alder,
@@ -59,7 +61,8 @@ class PersonController @Inject constructor(private val kjerneinfoService: Person
                 "folkeregistrertAdresse" to person.personfakta.bostedsadresse?.let { hentAdresse(it) },
                 "alternativAdresse" to person.personfakta.alternativAdresse?.let { hentAdresse(it) },
                 "postadresse" to person.personfakta.postadresse?.let { hentAdresse(it) },
-                "sikkerhetstiltak" to person.personfakta.sikkerhetstiltak?.let { hentSikkerhetstiltak(it) }
+                "sikkerhetstiltak" to person.personfakta.sikkerhetstiltak?.let { hentSikkerhetstiltak(it) },
+                "kontaktinformasjon" to getTelefoner(person.personfakta)
         )
     }
 
@@ -185,4 +188,21 @@ class PersonController @Inject constructor(private val kjerneinfoService: Person
                 "til" to periode.to?.toString(DATOFORMAT)
         )
     }
+
+    private fun getTelefoner(personfakta: Personfakta): Map<String, Any> {
+        return mapOf(
+                "mobil" to personfakta.mobil.map { getTelefon(it) }.orElse(null),
+                "jobbTelefon" to personfakta.jobbTlf.map { getTelefon(it) }.orElse(null),
+                "hjemTelefon" to personfakta.hjemTlf.map { getTelefon(it) }.orElse(null)
+        )
+    }
+
+    private fun getTelefon(telefon: Telefon): Map<String, String?> {
+        return mapOf(
+                "nummer" to (telefon.retningsnummer?.value ?:"") + telefon.identifikator,
+                "sistEndretAv" to telefon.endretAv,
+                "sistEndret" to telefon.endringstidspunkt?.toString(DATO_TID_FORMAT)
+        )
+    }
+
 }
