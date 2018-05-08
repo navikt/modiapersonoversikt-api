@@ -27,6 +27,7 @@ import javax.ws.rs.NotFoundException
 import kotlin.test.assertEquals
 
 private const val FNR = "10108000398"
+private const val TELEFONNUMMER = "10108000398"
 
 class PersonControllerTest {
 
@@ -80,6 +81,45 @@ class PersonControllerTest {
                 .withPersonnavn(WSPersonnavn())
                 .withKjoenn(WSKjoenn().withKjoenn(WSKjoennstyper().withValue("K")))
                 .withAktoer(WSPersonIdent().withIdent(WSNorskIdent().withIdent(FNR))))
+    }
+
+    @Nested
+    inner class Kontaktinformasjon {
+
+        @Test
+        fun medMobil() {
+            val mockPersonResponse = responseMedMobil()
+            `when`(personV3.hentPerson(Mockito.any())).thenReturn(mockPersonResponse)
+
+            val response = controller.hent(FNR)
+            val kontaktinformasjon = response["kontaktinformasjon"] as Map<*, *>
+            val mobil = kontaktinformasjon["mobil"] as Map<*, *>
+            val nummer = mobil["nummer"]
+
+            assertEquals(TELEFONNUMMER, nummer)
+        }
+
+        private fun responseMedMobil(): WSHentPersonResponse {
+            val mockPersonResponse = mockPersonResponse()
+            val bruker = mockPersonResponse.person as WSBruker
+            bruker.withKontaktinformasjon(WSTelefonnummer()
+                    .withIdentifikator(TELEFONNUMMER)
+                    .withType(WSTelefontyper().withValue("MOBI")))
+            return mockPersonResponse
+        }
+
+        @Test
+        fun utenMobil() {
+            val mockPersonResponse = mockPersonResponse()
+            `when`(personV3.hentPerson(Mockito.any())).thenReturn(mockPersonResponse)
+
+            val response = controller.hent(FNR)
+            val kontaktinformasjon = response["kontaktinformasjon"] as Map<*, *>
+            val mobil = kontaktinformasjon["mobil"]
+
+            assertEquals(null, mobil)
+        }
+
     }
 
     companion object {
