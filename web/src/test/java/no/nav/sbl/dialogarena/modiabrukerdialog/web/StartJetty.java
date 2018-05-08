@@ -69,7 +69,6 @@ public class StartJetty {
                 .at("modiabrukerdialog")
                 .port(8083)
                 .overrideWebXml(new File(TEST_RESOURCES, "override-web.xml"))
-                .configureForJaspic()
                 .buildJetty();
 
         // Servlet 3.0-specen fungerer ikke optimalt når man starter fra ide/jar.
