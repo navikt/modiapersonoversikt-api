@@ -3,6 +3,7 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.person
 import no.nav.kjerneinfo.common.domain.Periode
 import no.nav.kjerneinfo.consumer.fim.person.PersonKjerneinfoServiceBi
 import no.nav.kjerneinfo.consumer.fim.person.to.HentKjerneinformasjonRequest
+import no.nav.kjerneinfo.consumer.fim.person.to.HentSikkerhetstiltakRequest
 import no.nav.kjerneinfo.domain.person.*
 import no.nav.kjerneinfo.domain.person.fakta.Sikkerhetstiltak
 import no.nav.kjerneinfo.domain.person.fakta.Telefon
@@ -14,7 +15,6 @@ import no.nav.tjeneste.virksomhet.person.v3.HentPersonSikkerhetsbegrensning
 import javax.inject.Inject
 import javax.ws.rs.*
 import javax.ws.rs.core.MediaType.APPLICATION_JSON
-
 
 private const val TPS_UKJENT_VERDI = "???"
 private const val DATOFORMAT = "yyyy-MM-dd"
@@ -35,7 +35,7 @@ class PersonController @Inject constructor(private val kjerneinfoService: Person
         } catch (exception: RuntimeException) {
             when (exception.cause) {
                 is HentPersonPersonIkkeFunnet -> throw NotFoundException()
-                is HentPersonSikkerhetsbegrensning -> throw NotAuthorizedException("Ingen tilgang til denne brukeren")
+                is HentPersonSikkerhetsbegrensning -> return getBegrensetInnsyn(fødselsnummer, exception.message)
                 else -> throw InternalServerErrorException(exception)
             }
         }
@@ -205,4 +205,11 @@ class PersonController @Inject constructor(private val kjerneinfoService: Person
         )
     }
 
+    private fun getBegrensetInnsyn(fødselsnummer: String, melding: String?): Map<String, Any?> {
+        val sikkerhetstiltak = kjerneinfoService.hentSikkerhetstiltak(HentSikkerhetstiltakRequest(fødselsnummer))
+        return mapOf(
+                "begrunnelse" to melding,
+                "sikkerhetstiltak" to sikkerhetstiltak?.let { hentSikkerhetstiltak(it) }
+        )
+    }
 }
