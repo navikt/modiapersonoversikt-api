@@ -14,6 +14,7 @@ import no.nav.tjeneste.virksomhet.person.v3.HentPersonSikkerhetsbegrensning
 import no.nav.tjeneste.virksomhet.person.v3.PersonV3
 import no.nav.tjeneste.virksomhet.person.v3.informasjon.*
 import no.nav.tjeneste.virksomhet.person.v3.meldinger.WSHentPersonResponse
+import no.nav.tjeneste.virksomhet.person.v3.meldinger.WSHentSikkerhetstiltakResponse
 import org.junit.jupiter.api.*
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.mockito.Mock
@@ -25,6 +26,7 @@ import java.util.*
 import javax.ws.rs.NotAuthorizedException
 import javax.ws.rs.NotFoundException
 import kotlin.test.assertEquals
+import kotlin.test.assertTrue
 
 private const val FNR = "10108000398"
 private const val TELEFONNUMMER = "10108000398"
@@ -57,10 +59,15 @@ class PersonControllerTest {
     }
 
     @Test
-    @DisplayName("Kaster 401 hvis innlogget saksbehandler ikke har tilgang til personen")
-    fun kaster401HvisIkkeTilgang() {
+    @DisplayName("Returnerer begrenset innsyn object ved ikke tilgang")
+    fun returnBegrensetInnsyn() {
         `when`(personV3.hentPerson(Mockito.any())).thenThrow(HentPersonSikkerhetsbegrensning())
-        assertThrows(NotAuthorizedException::class.java, { controller.hent(FNR) })
+        `when`(personV3.hentSikkerhetstiltak(Mockito.any()))
+                .thenReturn(WSHentSikkerhetstiltakResponse()
+                        .withSikkerhetstiltak(WSSikkerhetstiltak()
+                                .withSikkerhetstiltaksbeskrivelse("")))
+        val o = controller.hent(FNR)
+        assertTrue { o.containsKey("begrunnelse") }
     }
 
     @Test
