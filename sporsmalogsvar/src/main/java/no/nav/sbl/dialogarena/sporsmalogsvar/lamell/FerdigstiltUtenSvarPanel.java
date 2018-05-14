@@ -46,7 +46,7 @@ public class FerdigstiltUtenSvarPanel extends Panel {
                 .map(DateUtils::toString)
                 .orElse("<dato mangler>");
         return new HashMap<String, Object>() {{
-            put("header", "Ferdigstilt uten svar");
+            put("header", "Henvendelsen er avsluttet uten å svare bruker");
             put("tekst", veilederNavn + " (" + veilederIdent + "), " + ferdigstiltDato);
         }};
     }
