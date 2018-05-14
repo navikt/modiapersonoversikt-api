@@ -108,10 +108,14 @@
         <saksoversikt.version>9.0.4</saksoversikt.version>
         <varsling.modia.version>2.0</varsling.modia.version>
 <<<<<<< HEAD
+<<<<<<< HEAD
         <modia-felleskomponenter.version>4.5-MINDRE-LAMELLHEADERS-SNAPSHOT</modia-felleskomponenter.version>
 =======
         <modia-felleskomponenter.version>4.5-SNAPSHOT-MINDRE-LAMELLHEADERS</modia-felleskomponenter.version>
 >>>>>>> mindre lamell headers
+=======
+        <modia-felleskomponenter.version>4.5-MINDRE-LAMELLHEADERS-SNAPSHOT</modia-felleskomponenter.version>
+>>>>>>> pom
 
         <!-- Tjenestespecs -->
         <soknader.liste.version>2.0.12</soknader.liste.version>
