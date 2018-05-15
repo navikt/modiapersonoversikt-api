@@ -9,8 +9,16 @@ public class Person implements Serializable {
     public final String fornavn, etternavn, navn;
 
     public Person(String fornavn, String etternavn) {
-        this.fornavn = namifyString(fornavn);
-        this.etternavn = namifyString(etternavn);
+        this(fornavn, etternavn, true);
+    }
+
+    public Person(String fornavn, String etternavn, boolean transformToNameCase) {
+        if (transformToNameCase) {
+            fornavn = namifyString(fornavn);
+            etternavn = namifyString(etternavn);
+        }
+        this.fornavn = fornavn;
+        this.etternavn = etternavn;
         this.navn = String.format("%s %s", this.fornavn, this.etternavn);
     }
 
