@@ -5,7 +5,7 @@ public class Saksbehandler extends Person {
     private final String navIdent;
 
     public Saksbehandler(String fornavn, String etternavn, String navIdent) {
-        super(fornavn, etternavn);
+        super(fornavn, etternavn, false);
         this.navIdent = navIdent;
     }
 

@@ -65,9 +65,9 @@ public class GrunnInfo implements Serializable {
         public String fornavn, etternavn, navn;
 
         public SaksbehandlerNavn(String fornavn, String etternavn) {
-            this.fornavn = namifyString(fornavn);
-            this.etternavn = namifyString(etternavn);
-            this.navn = String.format("%s %s", this.fornavn, this.etternavn);
+            this.fornavn = fornavn;
+            this.etternavn = etternavn;
+            this.navn = kombinerTilFulltNavn(this.fornavn, this.etternavn);
         }
     }
 
@@ -76,8 +76,8 @@ public class GrunnInfo implements Serializable {
 
         public Saksbehandler(String enhet, String fornavn, String etternavn) {
             this.enhet = enhet;
-            this.fornavn = namifyString(fornavn);
-            this.etternavn = namifyString(etternavn);
+            this.fornavn = fornavn;
+            this.etternavn = etternavn;
             this.navn = kombinerTilFulltNavn(this.fornavn, this.etternavn);
         }
     }

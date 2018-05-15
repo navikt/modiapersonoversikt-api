@@ -18,18 +18,9 @@ public class GrunnInfoTest {
     }
 
     @Test
-    public void saksbehandlersNavnFaarKorrekteVersaler() {
-        GrunnInfo.Saksbehandler saksbehandler = new GrunnInfo.Saksbehandler(
-                "123", "go-Sak", "Behandler-son"
-        );
-
-        assertThat(saksbehandler.navn, is(equalTo("Go-Sak Behandler-Son")));
-    }
-
-    @Test
     public void bareVersalerBlirMinusklerOgVersaler() {
-        GrunnInfo.Saksbehandler saksbehandler = new GrunnInfo.Saksbehandler(
-                "123", "BARE STORE", "BOKSTAVER"
+        GrunnInfo.Bruker saksbehandler = new GrunnInfo.Bruker(
+                "10108000398", "BARE STORE", "BOKSTAVER", "NAV Aremark", "0118", ""
         );
 
         assertThat(saksbehandler.navn, is(equalTo("Bare Store Bokstaver")));
