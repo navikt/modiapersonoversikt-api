@@ -171,7 +171,7 @@ function lagDecoratorConfig(fnr, initiellEnhet, autoSubmit, feilmelding) {
                 veileder: '/modiabrukerdialog/rest/hode/me',
                 enheter: '/modiabrukerdialog/rest/hode/enheter'
             },
-            toggles: { visEnhet: false, visEnhetVelger: true, visSokefelt: true, visVeileder: true, veilederNameCase: false },
+            toggles: { visEnhet: false, visEnhetVelger: true, visSokefelt: true, visVeileder: true, nameCaseVeileder: false },
             applicationName: 'Modia personoversikt',
             initiellEnhet: initiellEnhet,
             handleChangeEnhet: oppdatertValgtEnhet,
