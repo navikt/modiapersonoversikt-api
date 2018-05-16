@@ -142,7 +142,7 @@ class PersonController @Inject constructor(private val kjerneinfoService: Person
                     is Adresse -> "gateadresse" to hentGateAdresse(adresselinje)
                     is Matrikkeladresse -> "matrikkeladresse" to hentMatrikkeladresse(adresselinje)
                     is AlternativAdresseUtland -> "utlandsadresse" to hentAlternativAdresseUtland(adresselinje)
-                    else -> "ustrukturert" to adresselinje.adresselinje
+                    else -> "ustrukturert" to mapOf("adresselinje" to adresselinje.adresselinje)
                 }
         )
     }
