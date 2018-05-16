@@ -31,7 +31,9 @@ import org.apache.wicket.Session;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.event.IEvent;
 import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.model.StringResourceModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -147,6 +149,12 @@ public class LamellContainer extends TokenLamellPanel implements Serializable {
             panel = new ForeldrepengerPanel(PANEL, Model.of(fnrFromRequest), Model.of(itemId));
         } else if (PLEIEPENGER_TYPE.equalsIgnoreCase(type)) {
             panel = new PleiepengerPanel(PANEL, Model.of(fnrFromRequest), itemId);
+            return new DefaultLamellFactory(type, itemId, "", true, (LerretFactory) (id, name) -> new GenericLerret(id, panel)) {
+                @Override
+                public IModel<String> getHeading() {
+                    return new StringResourceModel(LamellPanel.RESOURCE_PREFIX_LAMELL + "." + type.toLowerCase() + ".heading", null, new Object[] {((PleiepengerPanel) panel).idDato});
+                }
+            };
         } else {
             ApplicationException exc = new ApplicationException("Ukjent type lerret: " + type);
             logger.warn("ukjent lerret: {}", type, exc);

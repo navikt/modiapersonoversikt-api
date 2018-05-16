@@ -3,23 +3,18 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.lameller;
 
 import no.nav.modig.core.exception.ApplicationException;
 import no.nav.modig.modia.events.FeedItemPayload;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.GrunnInfo;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.WicketPageTest;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.JacksonMockContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.LamellServicesAndLoaders;
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.GrunnInfo;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.DialogPanelTest;
 import no.nav.sykmeldingsperioder.consumer.pleiepenger.mock.PleiepengerMockFactory;
 import org.apache.wicket.event.IEvent;
-import org.joda.time.LocalDate;
-import org.joda.time.format.DateTimeFormat;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.mockito.MockitoAnnotations;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.lameller.LamellContainer.*;
 import static no.nav.sykmeldingsperioder.widget.SykepengerWidgetServiceImpl.*;
@@ -68,8 +63,7 @@ public class LamellContainerTest extends WicketPageTest {
 
     @Test
     public void handleFeedItemEventsShouldGotoPleiePengerLamellWhenPleiePengerEventHappens() {
-        String itemId = LocalDate.fromDateFields(PleiepengerMockFactory.PERIODEFRA)
-                .toString(DateTimeFormat.forPattern("dd.MM.yyyy"));
+        String itemId = PleiepengerMockFactory.BARN_FNR;
         lamellContainer.handleFeedItemEvent(createEvent(), new FeedItemPayload("widgetid", itemId , PLEIEPENGER_TYPE));
         assertThat(getSelectedLamell(), equalTo(LAMELL_PLEIEPENGER + itemId));
     }
