@@ -8,10 +8,13 @@ import no.nav.kjerneinfo.domain.person.*
 import no.nav.kjerneinfo.domain.person.fakta.Sikkerhetstiltak
 import no.nav.kjerneinfo.domain.person.fakta.Telefon
 import no.nav.kjerneinfo.domain.person.fakta.TilrettelagtKommunikasjon
+import no.nav.kodeverk.consumer.fim.kodeverk.KodeverkmanagerBi
+import no.nav.kodeverk.consumer.fim.kodeverk.to.feil.HentKodeverkKodeverkIkkeFunnet
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.Feature.PERSON_REST_API
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.visFeature
 import no.nav.tjeneste.virksomhet.person.v3.HentPersonPersonIkkeFunnet
 import no.nav.tjeneste.virksomhet.person.v3.HentPersonSikkerhetsbegrensning
+import java.util.*
 import javax.inject.Inject
 import javax.ws.rs.*
 import javax.ws.rs.core.MediaType.APPLICATION_JSON
@@ -19,10 +22,12 @@ import javax.ws.rs.core.MediaType.APPLICATION_JSON
 private const val TPS_UKJENT_VERDI = "???"
 private const val DATOFORMAT = "yyyy-MM-dd"
 private const val DATO_TID_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS"
+private const val tilrettelagtKommunikasjonKodeverkref = "TilrettelagtKommunikasjon"
+private const val tilrettelagtKommunikasjonKodeverkSprak = "nb"
 
 @Path("/person/{fnr}")
 @Produces(APPLICATION_JSON)
-class PersonController @Inject constructor(private val kjerneinfoService: PersonKjerneinfoServiceBi) {
+class PersonController @Inject constructor(private val kjerneinfoService: PersonKjerneinfoServiceBi, private val kodeverk: KodeverkmanagerBi) {
 
     @GET
     @Path("/")
@@ -76,7 +81,7 @@ class PersonController @Inject constructor(private val kjerneinfoService: Person
     private fun hentTilrettelagtKommunikasjon(tilrettelagtKommunikasjon: List<TilrettelagtKommunikasjon>): List<Map<String, String>> {
         return tilrettelagtKommunikasjon.map {
             mapOf("behovKode" to it.behov,
-                    "beskrivelse" to it.beskrivelse.value)
+                    "beskrivelse" to hentBeskrivelseForKode(it.behov))
         }
     }
 
@@ -211,5 +216,15 @@ class PersonController @Inject constructor(private val kjerneinfoService: Person
                 "begrunnelse" to melding,
                 "sikkerhetstiltak" to sikkerhetstiltak?.let { hentSikkerhetstiltak(it) }
         )
+    }
+
+    private fun hentBeskrivelseForKode(kode: String): String {
+        val beskrivelseForKode = try {
+            kodeverk.getBeskrivelseForKode(kode, tilrettelagtKommunikasjonKodeverkref, tilrettelagtKommunikasjonKodeverkSprak)
+        } catch(exception: HentKodeverkKodeverkIkkeFunnet) {
+            return kode
+        }
+
+        return beskrivelseForKode ?: kode
     }
 }
