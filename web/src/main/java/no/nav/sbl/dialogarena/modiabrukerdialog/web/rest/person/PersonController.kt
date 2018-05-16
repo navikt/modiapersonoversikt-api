@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.person
 
+import no.nav.kjerneinfo.common.domain.Kodeverdi
 import no.nav.kjerneinfo.common.domain.Periode
 import no.nav.kjerneinfo.consumer.fim.person.PersonKjerneinfoServiceBi
 import no.nav.kjerneinfo.consumer.fim.person.to.HentKjerneinformasjonRequest
@@ -79,10 +80,17 @@ class PersonController @Inject constructor(private val kjerneinfoService: Person
     }
 
     private fun hentTilrettelagtKommunikasjon(tilrettelagtKommunikasjon: List<TilrettelagtKommunikasjon>): List<Map<String, String>> {
-        return tilrettelagtKommunikasjon.map {
-            mapOf("behovKode" to it.behov,
-                    "beskrivelse" to hentBeskrivelseForKode(it.behov))
+        var liste = mutableListOf<Map<String, String>>()
+
+        // Hvorfor gjør vi dette? Jo, fordi kodeverket har bestemt rekkefølgen på elementene
+        hentKodeverkslisteForTilrettelagtKommunikasjon().map {
+            tilrettelagtKommunikasjon.find { k -> k.behov == it.kodeRef }?.let { t ->
+                liste.add(mapOf("behovKode" to t.behov,
+                        "beskrivelse" to hentBeskrivelseForKode(t.behov)))
+            }
         }
+
+        return liste.toList()
     }
 
     private fun getNavn(person: Person): Map<String, String> {
@@ -216,6 +224,14 @@ class PersonController @Inject constructor(private val kjerneinfoService: Person
                 "begrunnelse" to melding,
                 "sikkerhetstiltak" to sikkerhetstiltak?.let { hentSikkerhetstiltak(it) }
         )
+    }
+
+    private fun hentKodeverkslisteForTilrettelagtKommunikasjon(): List<Kodeverdi> {
+        return try {
+            kodeverk.getKodeverkList(tilrettelagtKommunikasjonKodeverkref, tilrettelagtKommunikasjonKodeverkSprak)
+        } catch(exception: HentKodeverkKodeverkIkkeFunnet) {
+            emptyList()
+        }
     }
 
     private fun hentBeskrivelseForKode(kode: String): String {
