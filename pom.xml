@@ -109,6 +109,7 @@
         <varsling.modia.version>2.0</varsling.modia.version>
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
         <modia-felleskomponenter.version>4.5-MINDRE-LAMELLHEADERS-SNAPSHOT</modia-felleskomponenter.version>
 =======
         <modia-felleskomponenter.version>4.5-SNAPSHOT-MINDRE-LAMELLHEADERS</modia-felleskomponenter.version>
@@ -116,6 +117,9 @@
 =======
         <modia-felleskomponenter.version>4.5-MINDRE-LAMELLHEADERS-SNAPSHOT</modia-felleskomponenter.version>
 >>>>>>> pom
+=======
+        <modia-felleskomponenter.version>4.5</modia-felleskomponenter.version>
+>>>>>>> bumper versjon på felleskomponenter
 
         <!-- Tjenestespecs -->
         <soknader.liste.version>2.0.12</soknader.liste.version>
