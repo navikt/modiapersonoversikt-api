@@ -15,7 +15,6 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.Featur
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.visFeature
 import no.nav.tjeneste.virksomhet.person.v3.HentPersonPersonIkkeFunnet
 import no.nav.tjeneste.virksomhet.person.v3.HentPersonSikkerhetsbegrensning
-import java.util.*
 import javax.inject.Inject
 import javax.ws.rs.*
 import javax.ws.rs.core.MediaType.APPLICATION_JSON
@@ -82,8 +81,7 @@ class PersonController @Inject constructor(private val kjerneinfoService: Person
     private fun hentTilrettelagtKommunikasjon(tilrettelagtKommunikasjon: List<TilrettelagtKommunikasjon>): List<Map<String, String>> {
         var liste = mutableListOf<Map<String, String>>()
 
-        // Hvorfor gjør vi dette? Jo, fordi kodeverket har bestemt rekkefølgen på elementene
-        hentKodeverkslisteForTilrettelagtKommunikasjon().map {
+        hentSortertKodeverkslisteForTilrettelagtKommunikasjon().map {
             tilrettelagtKommunikasjon.find { k -> k.behov == it.kodeRef }?.let { t ->
                 liste.add(mapOf("behovKode" to t.behov,
                         "beskrivelse" to hentBeskrivelseForKode(t.behov)))
@@ -226,7 +224,7 @@ class PersonController @Inject constructor(private val kjerneinfoService: Person
         )
     }
 
-    private fun hentKodeverkslisteForTilrettelagtKommunikasjon(): List<Kodeverdi> {
+    private fun hentSortertKodeverkslisteForTilrettelagtKommunikasjon(): List<Kodeverdi> {
         return try {
             kodeverk.getKodeverkList(tilrettelagtKommunikasjonKodeverkref, tilrettelagtKommunikasjonKodeverkSprak)
         } catch(exception: HentKodeverkKodeverkIkkeFunnet) {
