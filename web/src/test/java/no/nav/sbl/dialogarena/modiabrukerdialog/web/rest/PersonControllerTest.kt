@@ -37,6 +37,7 @@ class PersonControllerTest {
     @Mock private lateinit var personV3: PersonV3
     @Mock private lateinit var pep: EnforcementPoint
     @Mock private lateinit var organisasjonenhetV2Service: OrganisasjonEnhetV2Service
+    @Mock private lateinit var kodeverk: KodeverkmanagerBi
     private lateinit var service: DefaultPersonKjerneinfoService
     private lateinit var controller: PersonController
 
@@ -48,7 +49,7 @@ class PersonControllerTest {
         `when`(organisasjonenhetV2Service.finnNAVKontor(Mockito.any(), Mockito.any())).thenReturn(Optional.empty())
 
         service = DefaultPersonKjerneinfoService(personV3, mapper, pep, organisasjonenhetV2Service)
-        controller = PersonController(service)
+        controller = PersonController(service, kodeverk)
     }
 
     @Test

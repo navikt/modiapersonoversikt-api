@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.person
 
+import no.nav.kjerneinfo.common.domain.Kodeverdi
 import no.nav.kjerneinfo.common.domain.Periode
 import no.nav.kjerneinfo.consumer.fim.person.PersonKjerneinfoServiceBi
 import no.nav.kjerneinfo.consumer.fim.person.to.HentKjerneinformasjonRequest
@@ -8,6 +9,8 @@ import no.nav.kjerneinfo.domain.person.*
 import no.nav.kjerneinfo.domain.person.fakta.Sikkerhetstiltak
 import no.nav.kjerneinfo.domain.person.fakta.Telefon
 import no.nav.kjerneinfo.domain.person.fakta.TilrettelagtKommunikasjon
+import no.nav.kodeverk.consumer.fim.kodeverk.KodeverkmanagerBi
+import no.nav.kodeverk.consumer.fim.kodeverk.to.feil.HentKodeverkKodeverkIkkeFunnet
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.Feature.PERSON_REST_API
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.visFeature
 import no.nav.tjeneste.virksomhet.person.v3.HentPersonPersonIkkeFunnet
@@ -19,10 +22,12 @@ import javax.ws.rs.core.MediaType.APPLICATION_JSON
 private const val TPS_UKJENT_VERDI = "???"
 private const val DATOFORMAT = "yyyy-MM-dd"
 private const val DATO_TID_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS"
+private const val tilrettelagtKommunikasjonKodeverkref = "TilrettelagtKommunikasjon"
+private const val tilrettelagtKommunikasjonKodeverkSprak = "nb"
 
 @Path("/person/{fnr}")
 @Produces(APPLICATION_JSON)
-class PersonController @Inject constructor(private val kjerneinfoService: PersonKjerneinfoServiceBi) {
+class PersonController @Inject constructor(private val kjerneinfoService: PersonKjerneinfoServiceBi, private val kodeverk: KodeverkmanagerBi) {
 
     @GET
     @Path("/")
@@ -74,10 +79,16 @@ class PersonController @Inject constructor(private val kjerneinfoService: Person
     }
 
     private fun hentTilrettelagtKommunikasjon(tilrettelagtKommunikasjon: List<TilrettelagtKommunikasjon>): List<Map<String, String>> {
-        return tilrettelagtKommunikasjon.map {
-            mapOf("behovKode" to it.behov,
-                    "beskrivelse" to it.beskrivelse.value)
+        var liste = mutableListOf<Map<String, String>>()
+
+        hentSortertKodeverkslisteForTilrettelagtKommunikasjon().map {
+            tilrettelagtKommunikasjon.find { k -> k.behov == it.kodeRef }?.let { t ->
+                liste.add(mapOf("behovKode" to t.behov,
+                        "beskrivelse" to hentBeskrivelseForKode(t.behov)))
+            }
         }
+
+        return liste.toList()
     }
 
     private fun getNavn(person: Person): Map<String, String> {
@@ -211,5 +222,23 @@ class PersonController @Inject constructor(private val kjerneinfoService: Person
                 "begrunnelse" to melding,
                 "sikkerhetstiltak" to sikkerhetstiltak?.let { hentSikkerhetstiltak(it) }
         )
+    }
+
+    private fun hentSortertKodeverkslisteForTilrettelagtKommunikasjon(): List<Kodeverdi> {
+        return try {
+            kodeverk.getKodeverkList(tilrettelagtKommunikasjonKodeverkref, tilrettelagtKommunikasjonKodeverkSprak)
+        } catch(exception: HentKodeverkKodeverkIkkeFunnet) {
+            emptyList()
+        }
+    }
+
+    private fun hentBeskrivelseForKode(kode: String): String {
+        val beskrivelseForKode = try {
+            kodeverk.getBeskrivelseForKode(kode, tilrettelagtKommunikasjonKodeverkref, tilrettelagtKommunikasjonKodeverkSprak)
+        } catch(exception: HentKodeverkKodeverkIkkeFunnet) {
+            return kode
+        }
+
+        return beskrivelseForKode ?: kode
     }
 }
