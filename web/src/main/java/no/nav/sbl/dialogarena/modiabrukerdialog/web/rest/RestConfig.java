@@ -7,6 +7,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.enhet.EnhetController;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.henvendelse.DelsvarController;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.kodeverk.KodeverkController;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.kontaktinformasjon.KontaktinformasjonController;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.ldap.LdapController;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.oppgave.OppgaveController;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.person.PersonController;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.vergemal.VergemalController;
@@ -53,7 +54,8 @@ public class RestConfig extends ResourceConfig {
                 VergemalController.class,
                 KontaktinformasjonController.class,
                 EgenAnsattController.class,
-                KodeverkController.class
+                KodeverkController.class,
+                LdapController.class
         );
         if (!visFeature(PERSON_REST_API)) {
             return;
