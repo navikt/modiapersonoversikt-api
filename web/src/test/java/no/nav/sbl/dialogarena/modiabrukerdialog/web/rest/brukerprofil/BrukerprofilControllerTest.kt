@@ -24,13 +24,13 @@ import javax.ws.rs.ForbiddenException
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
-private val AREMARK_FNR = "10108000398"
-private val D_NUMMER = "50108000398"
-private val INNLOGGET_SAKSBEHANDLER = "z111111"
+private const val AREMARK_FNR = "10108000398"
+private const val D_NUMMER = "50108000398"
+private const val INNLOGGET_SAKSBEHANDLER = "z111111"
 
-private val FORNAVN = "Peter"
-private val MELLOMNAVN = "Wessel"
-private val ETTERNAVN = "Zapffe"
+private const val FORNAVN = "Peter"
+private const val MELLOMNAVN = "Wessel"
+private const val ETTERNAVN = "Zapffe"
 
 class BrukerprofilControllerTest {
 
@@ -95,13 +95,8 @@ class BrukerprofilControllerTest {
         assertTrue(feilmelding.message!!.contains(ENDRE_NAVN_ROLLE), "Feilmelding skal inneholde påkrevd rolle")
     }
 
-    private fun lagRequest(D_NUMMER: String): EndreNavnRequest {
-        val endreNavnRequest = EndreNavnRequest()
-        endreNavnRequest.fornavn = FORNAVN
-        endreNavnRequest.mellomnavn = MELLOMNAVN
-        endreNavnRequest.etternavn = ETTERNAVN
-        endreNavnRequest.fødselsnummer = D_NUMMER
-        return endreNavnRequest
+    private fun lagRequest(fodselsnummer: String): EndreNavnRequest {
+        return EndreNavnRequest(fornavn = FORNAVN, mellomnavn = MELLOMNAVN, etternavn = ETTERNAVN, fødselsnummer = fodselsnummer)
     }
 
     private fun mockKjerneinformasjonResponse(fødselsnummer: String): HentKjerneinformasjonResponse {

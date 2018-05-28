@@ -15,7 +15,7 @@ import javax.ws.rs.core.MediaType.APPLICATION_JSON
 import javax.ws.rs.core.Response
 import javax.ws.rs.core.Response.ok
 
-val ENDRE_NAVN_ROLLE = "0000-GA-BD06_EndreNavn"
+const val ENDRE_NAVN_ROLLE = "0000-GA-BD06_EndreNavn"
 
 @Path("/brukerprofil/{fnr}")
 @Produces(APPLICATION_JSON)
