@@ -15,8 +15,8 @@ class KodeverkController @Inject constructor(private val kodeverkManager: Kodeve
 
     @GET
     @Path("/")
-    fun endreNavn(@PathParam("kodeverkRef") kodeverkRef: String): MutableList<Kodeverdi>? {
-        return kodeverkManager.getKodeverkList("Retningsnumre", "nb")
+    fun hentKodeverk(@PathParam("kodeverkRef") kodeverkRef: String): MutableList<Kodeverdi>? {
+        return kodeverkManager.getKodeverkList(kodeverkRef, "nb")
     }
 
 }
