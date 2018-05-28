@@ -5,6 +5,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.JacksonConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.egenansatt.EgenAnsattController;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.enhet.EnhetController;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.henvendelse.DelsvarController;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.kodeverk.KodeverkController;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.kontaktinformasjon.KontaktinformasjonController;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.oppgave.OppgaveController;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.person.PersonController;
@@ -51,7 +52,8 @@ public class RestConfig extends ResourceConfig {
                 PersonController.class,
                 VergemalController.class,
                 KontaktinformasjonController.class,
-                EgenAnsattController.class
+                EgenAnsattController.class,
+                KodeverkController.class
         );
         if (!visFeature(PERSON_REST_API)) {
             return;
