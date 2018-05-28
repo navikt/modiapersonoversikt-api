@@ -13,6 +13,7 @@ import javax.naming.directory.BasicAttribute;
 import javax.naming.directory.BasicAttributes;
 import javax.naming.directory.SearchResult;
 import javax.naming.ldap.LdapContext;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -27,6 +28,7 @@ class LDAPServiceImplTest {
     public static final String SAKSBEHANDLER_FORNAVN = "John";
     public static final String IDENT = "IDENT";
     public static final String ENDRE_NAVN_ROLLE = "0000-GA-BD06_EndreNavn";
+    public static final String MODIA_ROLLE = "0000-GA-BD06_ModiaGenerellTilgang";
 
     @BeforeAll
     static void beforeAll() {
@@ -113,6 +115,24 @@ class LDAPServiceImplTest {
             boolean saksbehandlerHarRolle = ldapService.saksbehandlerHarRolle(IDENT, ENDRE_NAVN_ROLLE);
 
             assertEquals(false, saksbehandlerHarRolle);
+        }
+
+        @Test
+        @DisplayName("Henter liste med roller for saksbehandler")
+        void henterRollerForSaksbehandler() {
+            List<String> roller = new ArrayList<>();
+            roller.add(ENDRE_NAVN_ROLLE);
+            roller.add(MODIA_ROLLE);
+
+            LdapContextProvider ldapContextProvider = mockLdapContextProvider(roller);
+            LDAPService ldapService = new LDAPServiceImpl(ldapContextProvider);
+
+            List<String> result = ldapService.hentRollerForVeileder(IDENT);
+
+            assertEquals(2, result.size());
+            assertEquals(true, roller.contains(ENDRE_NAVN_ROLLE));
+            assertEquals(true, roller.contains(MODIA_ROLLE));
+
         }
     }
 
