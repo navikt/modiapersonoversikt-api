@@ -27,7 +27,7 @@ function bundleJS(isDev) {
     props.fullPaths = isDev;
 
     bundler = isDev ? watchify(browserify(props)) : browserify(props);
-    bundler.plugin(fileFilter, { p: '\\.(?:css|less|scss|sass)$' });
+    bundler.plugin(fileFilter, { p: '\\.(?:css|less|scss|sass|svg)$' });
     bundler.transform(babelify);
 
     function rebundle() {

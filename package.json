@@ -55,15 +55,21 @@
   "dependencies": {
     "babel-polyfill": "6.26.0",
     "classnames": "2.2.5",
+    "faker": "^4.1.0",
+    "fetch-mock": "^6.4.2",
+    "fnr-generator": "^2.1.4",
     "intl": "1.1.0",
     "lodash": "4.5.0",
     "lodash.throttle": "4.1.1",
+    "modiapersonoversikt": "0.2.2",
     "nav-frontend-alertstriper": "0.2.21",
     "nav-frontend-alertstriper-style": "0.2.26",
     "nav-frontend-chevron-style": "0.3.4",
     "nav-frontend-core": "4.0.5",
     "nav-frontend-ekspanderbartpanel": "0.2.19",
     "nav-frontend-ekspanderbartpanel-style": "0.3.8",
+    "nav-frontend-etiketter": "^1.0.6",
+    "nav-frontend-etiketter-style": "^0.3.5",
     "nav-frontend-ikoner-assets": "0.2.21",
     "nav-frontend-js-utils": "0.2.10",
     "nav-frontend-paneler-style": "0.3.7",
@@ -79,10 +85,12 @@
     "react-collapse": "4.0.3",
     "react-dom": "16.3.2",
     "react-motion": "0.5.2",
-    "react-redux": "5.0.6",
+    "react-redux": "^5.0.6",
     "redux": "3.3.1",
     "redux-thunk": "1.0.3",
     "string-format": "0.5.0",
-    "superagent": "1.2.0"
+    "styled-components": "^3.2.6",
+    "superagent": "^1.2.0",
+    "yet-another-fetch-mock": "^2.3.2"
   }
 }
