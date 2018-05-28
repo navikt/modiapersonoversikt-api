@@ -1,8 +1,3 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.brukerprofil.domain
 
-class EndreNavnRequest {
-    var fødselsnummer = ""
-    var fornavn = ""
-    var mellomnavn = ""
-    var etternavn = ""
-}
+data class EndreNavnRequest(var fødselsnummer: String = "", var fornavn: String = "", var mellomnavn: String = "", var etternavn: String = "")
