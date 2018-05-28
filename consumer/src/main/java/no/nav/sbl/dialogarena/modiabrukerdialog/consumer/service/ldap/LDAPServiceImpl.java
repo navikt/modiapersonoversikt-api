@@ -48,6 +48,12 @@ public class LDAPServiceImpl implements LDAPService {
         }
     }
 
+    @Override
+    public List<String> hentRollerForVeileder(String ident) {
+        NamingEnumeration<SearchResult> result = sokLDAP(ident);
+        return getRoller(result);
+    }
+
     private NamingEnumeration<SearchResult> sokLDAP(String ident) {
         String searchbase = "OU=Users,OU=NAV,OU=BusinessUnits," + getProperty("ldap.basedn");
         SearchControls searchCtrl = new SearchControls();
