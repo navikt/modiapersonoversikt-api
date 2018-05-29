@@ -29,7 +29,6 @@ import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
 private const val FNR = "10108000398"
-private const val TELEFONNUMMER = "10108000398"
 
 class PersonControllerTest {
 
@@ -94,6 +93,9 @@ class PersonControllerTest {
     @Nested
     inner class Kontaktinformasjon {
 
+        private val RETNINGSNUMMER = "46"
+        private val TELEFONNUMMER = "10108000398"
+
         @Test
         fun medMobil() {
             val mockPersonResponse = responseMedMobil()
@@ -102,9 +104,11 @@ class PersonControllerTest {
             val response = controller.hent(FNR)
             val kontaktinformasjon = response["kontaktinformasjon"] as Map<*, *>
             val mobil = kontaktinformasjon["mobil"] as Map<*, *>
-            val nummer = mobil["nummer"]
+            val retningsnummer = mobil["retningsnummer"]
+            val nummer = mobil["telefonnummer"]
 
             assertEquals(TELEFONNUMMER, nummer)
+            assertEquals(RETNINGSNUMMER, retningsnummer)
         }
 
         private fun responseMedMobil(): WSHentPersonResponse {
@@ -112,6 +116,7 @@ class PersonControllerTest {
             val bruker = mockPersonResponse.person as WSBruker
             bruker.withKontaktinformasjon(WSTelefonnummer()
                     .withIdentifikator(TELEFONNUMMER)
+                    .withRetningsnummer(WSRetningsnumre().withValue(RETNINGSNUMMER))
                     .withType(WSTelefontyper().withValue("MOBI")))
             return mockPersonResponse
         }
