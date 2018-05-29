@@ -35,6 +35,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.hode.jscallback.VoidC
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.plukkoppgavepanel.PlukkOppgavePanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.timeout.ReactTimeoutBoksModal;
 import no.nav.sbl.dialogarena.reactkomponenter.utils.wicket.ReactComponentCallback;
+import no.nav.sbl.dialogarena.reactkomponenter.utils.wicket.ReactComponentPanel;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.wicket.Page;
 import org.apache.wicket.RestartResponseException;
@@ -55,6 +56,7 @@ import org.slf4j.Logger;
 import javax.inject.Inject;
 import javax.inject.Named;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import static java.util.Optional.ofNullable;
@@ -142,6 +144,9 @@ public class PersonPage extends BasePage {
                 new VisittkortPanel("visittkort", fnr).setVisible(true),
                 new NavKontorPanel("brukersNavKontor", fnr),
                 new VisitkortTabListePanel("kjerneinfotabs", createTabs()),
+                new ReactComponentPanel("ny-frontend", "NyFrontend", new HashMap<String, Object>() {{
+                    put("fødselsnummer", fnr);
+                }}),
                 dialogPanel,
                 new ReactTimeoutBoksModal("timeoutBoks", fnr),
                 oppgiBegrunnelseModal
