@@ -55,6 +55,7 @@ public class BasePage extends WebPage {
     public static final JavaScriptResourceReference JS_TAB_POPUP_RESOURCE = new JavaScriptResourceReference(BasePage.class, "tabPopup.js");
     public static final JavaScriptResourceReference JS_AUTO_SCROLL_RESOURCE = new JavaScriptResourceReference(BasePage.class, "auto-scroll.js");
     public static final CssResourceReference PERSONINFO_LESS = new CssResourceReference(PersonPage.class, "personpage.less");
+    public static final CssResourceReference NYTT_VISITTKORT_LESS = new CssResourceReference(PersonPage.class, "nyttvisittkort.less");
     public static final CssResourceReference PERSONSOKRESULT = new CssResourceReference(PersonsokResultPanel.class, "PersonsokResultPanel.css");
     public static final CssResourceReference PERSONSOKSEARCH = new CssResourceReference(PersonsokSearchPanel.class, "PersonsokSearchPanel.css");
     public static final PackageResourceReference MODIA_COMMON_LESS = new PackageResourceReference(BasePage.class, "less/felles/common.less");
