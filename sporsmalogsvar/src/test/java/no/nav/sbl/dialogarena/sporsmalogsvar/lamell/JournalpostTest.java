@@ -8,28 +8,26 @@ import no.nav.sbl.dialogarena.sporsmalogsvar.config.WicketPageTest;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.joda.time.DateTime;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import static no.nav.modig.wicket.test.matcher.ComponentMatchers.thatIsInvisible;
-import static no.nav.modig.wicket.test.matcher.ComponentMatchers.thatIsVisible;
-import static no.nav.modig.wicket.test.matcher.ComponentMatchers.withId;
+import static no.nav.modig.wicket.test.matcher.ComponentMatchers.*;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.TestUtils.createMelding;
 import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER_CLASS;
 
 @DirtiesContext(classMode = AFTER_CLASS)
 @ContextConfiguration(classes = {MockServiceTestContext.class})
-@RunWith(SpringJUnit4ClassRunner.class)
+@ExtendWith(SpringExtension.class)
 public class JournalpostTest extends WicketPageTest {
 
     private Melding melding;
     private IModel<MeldingVM> meldingVMModel;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         melding = createMelding("id", Meldingstype.SPORSMAL_SKRIFTLIG, DateTime.now(), Temagruppe.ARBD, "id");
         meldingVMModel = new Model<>(new MeldingVM(melding, 1));

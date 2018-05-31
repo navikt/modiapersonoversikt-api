@@ -27,7 +27,8 @@ private const val tilrettelagtKommunikasjonKodeverkSprak = "nb"
 
 @Path("/person/{fnr}")
 @Produces(APPLICATION_JSON)
-class PersonController @Inject constructor(private val kjerneinfoService: PersonKjerneinfoServiceBi, private val kodeverk: KodeverkmanagerBi) {
+class PersonController @Inject constructor(private val kjerneinfoService: PersonKjerneinfoServiceBi,
+                                           private val kodeverk: KodeverkmanagerBi) {
 
     @GET
     @Path("/")
@@ -79,7 +80,7 @@ class PersonController @Inject constructor(private val kjerneinfoService: Person
     }
 
     private fun hentTilrettelagtKommunikasjon(tilrettelagtKommunikasjon: List<TilrettelagtKommunikasjon>): List<Map<String, String>> {
-        var liste = mutableListOf<Map<String, String>>()
+        val liste = mutableListOf<Map<String, String>>()
 
         hentSortertKodeverkslisteForTilrettelagtKommunikasjon().map {
             tilrettelagtKommunikasjon.find { k -> k.behov == it.kodeRef }?.let { t ->

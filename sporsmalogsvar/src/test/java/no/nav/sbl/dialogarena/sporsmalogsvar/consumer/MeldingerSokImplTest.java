@@ -1,16 +1,18 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.consumer;
 
-import no.nav.brukerdialog.tools.SecurityConstants;
 import no.nav.brukerdialog.security.context.SubjectHandler;
 import no.nav.brukerdialog.security.context.SubjectHandlerUtils;
 import no.nav.brukerdialog.security.context.ThreadLocalSubjectHandler;
 import no.nav.brukerdialog.security.domain.IdentType;
+import no.nav.brukerdialog.tools.SecurityConstants;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Saksbehandler;
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.*;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Fritekst;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Traad;
 import org.apache.commons.collections15.Transformer;
 import org.joda.time.DateTime;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.Collections;
 import java.util.List;
@@ -31,7 +33,7 @@ public class MeldingerSokImplTest {
     private static final String FNR = "11111111111";
     private MeldingerSokImpl meldingerSok = new MeldingerSokImpl();
 
-    @Before
+    @BeforeEach
     public void setup() {
         innloggetBrukerEr(NAV_IDENT);
         meldingerSok.indekser(FNR, lagMeldinger());

@@ -21,6 +21,7 @@ class DelsvarServiceImplTest {
     public static final String SVAR = "SVAR";
     public static final String SAKSBEHANDLERS_IDENT = "z666777";
     public static final String VALGT_ENHET = "0300";
+    public static final String BEHANDLINGSID = "ABC123";
 
     private HenvendelseUtsendingService henvendelseMock;
     private DelsvarService delsvarService;
@@ -63,6 +64,7 @@ class DelsvarServiceImplTest {
     private DelsvarRequest lagRequest() {
         return new DelsvarRequestBuilder()
                 .withNavIdent(SAKSBEHANDLERS_IDENT)
+                .withHenvendelseId(BEHANDLINGSID)
                 .withTraadId(TRAAD_ID)
                 .withSvar(SVAR)
                 .withFodselsnummer(BRUKERS_FNR)

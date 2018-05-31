@@ -10,11 +10,11 @@ import no.nav.sbl.dialogarena.sporsmalogsvar.config.WicketPageTest;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.henvendelse.HenvendelseBehandlingService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.henvendelse.domain.Meldinger;
 import org.joda.time.DateTime;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import javax.inject.Inject;
 
@@ -26,11 +26,11 @@ import static org.joda.time.DateTime.now;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.annotation.DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD;
+import static org.springframework.test.annotation.DirtiesContext.ClassMode.BEFORE_CLASS;
 
-@DirtiesContext(classMode = BEFORE_EACH_TEST_METHOD)
 @ContextConfiguration(classes = {MockServiceTestContext.class})
-@RunWith(SpringJUnit4ClassRunner.class)
+@DirtiesContext(classMode = BEFORE_CLASS)
+@ExtendWith(SpringExtension.class)
 public class TraaddetaljerPanelTest extends WicketPageTest {
 
     private static final String BESVAR_ID = "besvar";

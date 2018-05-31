@@ -12,7 +12,6 @@ import org.junit.*;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.mockito.internal.util.reflection.Whitebox;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -25,6 +24,7 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.util.ReflectionTestUtils.setField;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = {ApplicationContextProviderConfig.class, EnhetAttributeLocatorTestConfig.class, GeografiskPipConfig.class})
@@ -46,7 +46,7 @@ public class EnhetAttributeLocatorTest {
         locator.getSupportedIds().add(EnhetAttributeLocator.ATTRIBUTEID_FYLKESENHET);
 
         //Normally, initialized within the class.
-        Whitebox.setInternalState(locator, "delegate", mockDelegate);
+        setField(locator, "delegate", mockDelegate);
 
         when(mockDelegate.getLokalEnheterForAnsatt(anyString())).thenReturn(new HashSet<>(Arrays.asList(LOKAL_ENHET_ID)));
         when(mockDelegate.getFylkesenheterForAnsatt(anyString())).thenReturn(new HashSet<>(Arrays.asList(LOKAL_ENHET_ID)));

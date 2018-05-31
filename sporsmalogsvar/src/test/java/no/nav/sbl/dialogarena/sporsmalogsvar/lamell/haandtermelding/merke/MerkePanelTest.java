@@ -12,11 +12,10 @@ import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.henvendelse.domain.Melding
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.InnboksVM;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.TestUtils;
 import org.apache.wicket.ajax.form.AjaxFormChoiceComponentUpdatingBehavior;
-import org.junit.Ignore;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -24,18 +23,18 @@ import java.util.List;
 
 import static java.util.Arrays.asList;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.*;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.TestUtils.opprettSamtalereferatEksempel;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.TestUtils.opprettMeldingEksempel;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.TestUtils.opprettSamtalereferatEksempel;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertNull;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Matchers.eq;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ContextConfiguration(classes = {MockServiceTestContext.class})
-@RunWith(SpringJUnit4ClassRunner.class)
+@ExtendWith(SpringExtension.class)
 public class MerkePanelTest extends WicketPageTest {
 
     private static final String PANEL_MERK_FORM_ID = "panel:merkForm";
@@ -173,9 +172,9 @@ public class MerkePanelTest extends WicketPageTest {
     }
 
     @Test
-    @Ignore
     public void disablerBidragValgHvisValgtTraadHarTemagruppeSosialeTjenester() {
-        wicket.goToPageWith(getMerkePanel(asList(opprettMeldingEksempel(), opprettSamtalereferatEksempel().withGjeldendeTemagruppe(Temagruppe.OKSOS))).setVisibilityAllowed(true))
+        wicket.goToPageWith(getMerkePanel(asList(opprettMeldingEksempel().withGjeldendeTemagruppe(Temagruppe.OKSOS),
+                opprettSamtalereferatEksempel().withGjeldendeTemagruppe(Temagruppe.OKSOS))).setVisibilityAllowed(true))
                 .should().containComponent(thatIsEnabled().withId("feilsendtRadio"))
                 .should().containComponent(thatIsDisabled().withId("bidragRadioValg"))
                 .should().containComponent(thatIsDisabled().withId("bidragRadio"))
@@ -183,7 +182,8 @@ public class MerkePanelTest extends WicketPageTest {
                 .should().containComponent(thatIsEnabled().withId("kontorsperretRadio"))
                 .should().containComponent(thatIsDisabled().withId("avsluttRadio"));
 
-        wicket.goToPageWith(getMerkePanel(asList(opprettMeldingEksempel(), opprettSamtalereferatEksempel().withGjeldendeTemagruppe(Temagruppe.ANSOS))).setVisibilityAllowed(true))
+        wicket.goToPageWith(getMerkePanel(asList(opprettMeldingEksempel().withGjeldendeTemagruppe(Temagruppe.ANSOS),
+                opprettSamtalereferatEksempel().withGjeldendeTemagruppe(Temagruppe.ANSOS))).setVisibilityAllowed(true))
                 .should().containComponent(thatIsEnabled().withId("feilsendtRadio"))
                 .should().containComponent(thatIsDisabled().withId("bidragRadioValg"))
                 .should().containComponent(thatIsDisabled().withId("bidragRadio"))

@@ -6,8 +6,8 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Saksbehandler;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
@@ -26,7 +26,7 @@ public class TraadVMTest {
     private EnforcementPoint pepMock;
     private SaksbehandlerInnstillingerService saksbehandlerInnstillingerServiceMock;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         pepMock = mock(EnforcementPoint.class);
         saksbehandlerInnstillingerServiceMock = mock(SaksbehandlerInnstillingerService.class);
