@@ -103,7 +103,7 @@
         <!-- Modia-komponenter-->
         <reactkomponenter.version>1740</reactkomponenter.version>
         <personsok.version>4.0.8</personsok.version>
-        <kjerneinfo.versjon>4548</kjerneinfo.versjon>
+        <kjerneinfo.versjon>dev</kjerneinfo.versjon>
         <utbetaling.version>4.0.0</utbetaling.version>
         <saksoversikt.version>9.0.4</saksoversikt.version>
         <varsling.modia.version>2.0</varsling.modia.version>

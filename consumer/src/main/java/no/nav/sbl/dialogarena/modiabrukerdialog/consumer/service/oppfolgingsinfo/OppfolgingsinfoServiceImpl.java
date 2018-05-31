@@ -15,6 +15,8 @@ import no.nav.tjeneste.virksomhet.oppfolgingsinfo.v1.meldinger.WSOppfolgingsdata
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.ws.rs.NotAuthorizedException;
+
 import static java.util.Optional.ofNullable;
 
 public class OppfolgingsinfoServiceImpl implements OppfolgingsinfoService {
@@ -69,7 +71,8 @@ public class OppfolgingsinfoServiceImpl implements OppfolgingsinfoService {
                 .orElseThrow(() -> new IllegalStateException("Oppfolgingsinfo returnerte null"));
 
         if (oppfolgingsstatusResponse.getWsSikkerhetsbegrensning() != null) {
-            throw new RuntimeException("Saksbehandler har ikke tilgang til bruker med aktor-id: " + aktorId);
+            String feilmelding = oppfolgingsstatusResponse.getWsSikkerhetsbegrensning().getFeilmelding();
+            throw new NotAuthorizedException("Saksbehandler har ikke tilgang til bruker med aktor-id: " + aktorId + ". Årsak: " + feilmelding);
         }
         if (oppfolgingsstatusResponse.getWsOppfolgingsdata() == null) {
             throw new RuntimeException("OppfolgingsinfoV1 returnerte ingen oppfolgingsdata");
