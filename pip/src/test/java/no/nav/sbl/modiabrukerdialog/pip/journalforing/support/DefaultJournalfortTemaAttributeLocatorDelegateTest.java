@@ -19,7 +19,7 @@ import static org.hamcrest.Matchers.empty;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
-import static org.mockito.internal.util.reflection.Whitebox.setInternalState;
+import static org.springframework.test.util.ReflectionTestUtils.setField;
 
 @RunWith(MockitoJUnitRunner.class)
 public class DefaultJournalfortTemaAttributeLocatorDelegateTest {
@@ -39,7 +39,7 @@ public class DefaultJournalfortTemaAttributeLocatorDelegateTest {
         ASBOGOSYSFagomrade fagomrade2 = new ASBOGOSYSFagomrade();
         fagomrade2.setFagomradeKode("FAML");
 
-        setInternalState(fagomradeListe, "fagomrader", asList(fagomrade1, fagomrade2));
+        setField(fagomradeListe, "fagomrader", asList(fagomrade1, fagomrade2));
 
         when(ansattService.hentNAVAnsattFagomradeListe(any(ASBOGOSYSHentNAVAnsattFagomradeListeRequest.class))).thenReturn(fagomradeListe);
 
