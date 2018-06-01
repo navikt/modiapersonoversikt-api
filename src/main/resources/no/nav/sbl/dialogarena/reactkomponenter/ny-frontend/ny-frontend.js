@@ -3,8 +3,10 @@ import PT from 'prop-types';
 
 import Visittkort from 'modiapersonoversikt/build/dist/components/StandAloneVisittkort/VisittKortStandAlone';
 
-function NyFrontend() {
-    return <Visittkort fødselsnummer={this.props.fødselsnummer} />;
+class NyFrontend extends React.Component {
+    render() {
+        return <Visittkort fødselsnummer={this.props.fødselsnummer}/>;
+    }
 }
 
 NyFrontend.propTypes = {
