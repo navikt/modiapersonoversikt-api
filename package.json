@@ -61,7 +61,7 @@
     "intl": "1.1.0",
     "lodash": "4.5.0",
     "lodash.throttle": "4.1.1",
-    "modiapersonoversikt": "0.4.0",
+    "modiapersonoversikt": "0.4.1",
     "nav-frontend-alertstriper": "0.2.21",
     "nav-frontend-alertstriper-style": "0.2.26",
     "nav-frontend-chevron-style": "0.3.4",
@@ -89,8 +89,6 @@
     "redux": "3.3.1",
     "redux-thunk": "1.0.3",
     "string-format": "0.5.0",
-    "styled-components": "3.2.6",
-    "superagent": "1.2.0",
-    "yet-another-fetch-mock": "2.3.2"
+    "superagent": "1.2.0"
   }
 }
