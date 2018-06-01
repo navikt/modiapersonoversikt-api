@@ -55,9 +55,6 @@
   "dependencies": {
     "babel-polyfill": "6.26.0",
     "classnames": "2.2.5",
-    "faker": "4.1.0",
-    "fetch-mock": "6.4.2",
-    "fnr-generator": "2.1.4",
     "intl": "1.1.0",
     "lodash": "4.5.0",
     "lodash.throttle": "4.1.1",
