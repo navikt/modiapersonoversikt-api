@@ -93,7 +93,7 @@ public class PersonPageTest extends WicketPageTest {
     @Test
     public void lasterPersonPageUtenFeil() {
         wicket.goTo(PersonPage.class, with().param("fnr", testFnr))
-                .should().containComponent(withId("kjerneinfotabs").and(ofType(VisitkortTabListePanel.class)))
+                .should().containComponent(withId("kjerneinfotabs").and(ofType(VisitkortTabListePanel.class)).or(withId("ny-frontend")))
                 .should().containComponent(withId("personsokPanel").and(ofType(PersonsokPanel.class)))
                 .should().containComponent(withId("lameller").and(ofType(TokenLamellPanel.class)));
     }

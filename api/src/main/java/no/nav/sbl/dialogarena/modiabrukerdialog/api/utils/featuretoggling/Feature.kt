@@ -4,6 +4,7 @@ enum class Feature private constructor(val propertyKey: String, val defaultValue
 
     PERSON_REST_API("feature.aktiverPersonRestApi", false),
     ENHETER_GEOGRAFISK_TILKNYTNING_API("feature.aktiverEnheterGeografiskTilknytningApi", false),
-    DELVISE_SVAR("visDelviseSvarFunksjonalitet", false)
-
+    DELVISE_SVAR("visDelviseSvarFunksjonalitet", false),
+    NYTT_VISITTKORT("feature.nyttvisittkort", false)
 }
+

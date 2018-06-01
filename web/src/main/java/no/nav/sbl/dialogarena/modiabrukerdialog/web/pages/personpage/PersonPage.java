@@ -17,10 +17,11 @@ import no.nav.modig.modia.events.WidgetHeaderPayload;
 import no.nav.modig.modia.lamell.ReactSjekkForlatModal;
 import no.nav.modig.wicket.events.NamedEventPayload;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
+import no.nav.personsok.PersonsokPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.DialogSession;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.constants.Events;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.GrunnInfo;
-import no.nav.personsok.PersonsokPanel;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.Feature;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.GrunninfoService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.BasePage;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.hentperson.HentPersonPage;
@@ -35,7 +36,9 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.hode.jscallback.VoidC
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.plukkoppgavepanel.PlukkOppgavePanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.timeout.ReactTimeoutBoksModal;
 import no.nav.sbl.dialogarena.reactkomponenter.utils.wicket.ReactComponentCallback;
+import no.nav.sbl.dialogarena.reactkomponenter.utils.wicket.ReactComponentPanel;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.wicket.Component;
 import org.apache.wicket.Page;
 import org.apache.wicket.RestartResponseException;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -50,11 +53,13 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.CssResourceReference;
 import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.util.string.StringValue;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 
 import javax.inject.Inject;
 import javax.inject.Named;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import static java.util.Optional.ofNullable;
@@ -63,6 +68,7 @@ import static no.nav.modig.modia.constants.ModiaConstants.HENT_PERSON_BEGRUNNET;
 import static no.nav.modig.modia.events.InternalEvents.*;
 import static no.nav.modig.modia.lamell.ReactSjekkForlatModal.getJavascriptSaveButtonFocus;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.api.constants.URLParametere.*;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.FeatureToggleKt.visFeature;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.lameller.LamellContainer.LAMELL_MELDINGER;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.apache.wicket.event.Broadcast.BREADTH;
@@ -139,18 +145,38 @@ public class PersonPage extends BasePage {
                 redirectPopup,
                 new PlukkOppgavePanel("plukkOppgaver"),
                 new PersonsokPanel("personsokPanel").setVisible(true),
-                new VisittkortPanel("visittkort", fnr).setVisible(true),
-                new NavKontorPanel("brukersNavKontor", fnr),
-                new VisitkortTabListePanel("kjerneinfotabs", createTabs()),
                 dialogPanel,
                 new ReactTimeoutBoksModal("timeoutBoks", fnr),
                 oppgiBegrunnelseModal
         );
 
+        add(getVisittkortkomponenter());
+
         if (skalViseMeldingerLamell) {
             lamellContainer.setStartLamell(LAMELL_MELDINGER);
         }
         HentPersonPage.configureModalWindow(oppgiBegrunnelseModal, pageParameters);
+    }
+
+    @NotNull
+    private Component[] getVisittkortkomponenter() {
+        if (visFeature(Feature.NYTT_VISITTKORT)) {
+            return new Component[]{
+                    new WebMarkupContainer("visittkort").setVisible(false),
+                    new WebMarkupContainer("brukersNavKontor").setVisible(false),
+                    new WebMarkupContainer("kjerneinfotabs").setVisible(false),
+                    new ReactComponentPanel("ny-frontend", "NyFrontend", new HashMap<String, Object>() {{
+                        put("fødselsnummer", fnr);
+                    }})
+            };
+        } else {
+            return new Component[]{
+                    new VisittkortPanel("visittkort", fnr).setVisible(true),
+                    new NavKontorPanel("brukersNavKontor", fnr),
+                    new VisitkortTabListePanel("kjerneinfotabs", createTabs()),
+                    new WebMarkupContainer("ny-frontend").setVisible(false)
+            };
+        }
     }
 
     private boolean oppgaverPaSessionTilhorerAnnetFNREnnFraUrl(DialogSession session) {
