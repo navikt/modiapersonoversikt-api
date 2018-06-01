@@ -3,12 +3,11 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest;
 import no.nav.brukerdialog.security.context.ThreadLocalSubjectHandler;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.AnsattEnhet;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.AnsattService;
-import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.henvendelse.HenvendelseBehandlingService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.MeldingerSok;
+import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.henvendelse.HenvendelseBehandlingService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.henvendelse.domain.Meldinger;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.internal.util.reflection.Whitebox;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -22,6 +21,7 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.util.ReflectionTestUtils.setField;
 
 public class MeldingerControllerTest {
 
@@ -41,9 +41,9 @@ public class MeldingerControllerTest {
         when(ansattServiceMock.hentEnhetsliste()).thenReturn(Collections.singletonList(new AnsattEnhet("0", "")));
         when(henvendelseBehandlingServiceMock.hentMeldinger(anyString(), anyString())).thenReturn(new Meldinger(Collections.emptyList()));
 
-        Whitebox.setInternalState(meldingerController, "ansattService", ansattServiceMock);
-        Whitebox.setInternalState(meldingerController, "henvendelse", henvendelseBehandlingServiceMock);
-        Whitebox.setInternalState(meldingerController, "searcher", mock(MeldingerSok.class));
+        setField(meldingerController, "ansattService", ansattServiceMock);
+        setField(meldingerController, "henvendelse", henvendelseBehandlingServiceMock);
+        setField(meldingerController, "searcher", mock(MeldingerSok.class));
     }
 
     @Test

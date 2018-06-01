@@ -68,6 +68,8 @@ public class FortsettDialogPanelTest extends WicketPageTest {
     private static final String VALGT_ENHET = "1307";
     private static final String BRUKERS_ENHET = "1234";
     private static final String BEHANDLINGS_ID = "behandlingsId";
+    private static final String OPPGAVEID = "oppgaveid";
+    private static final String SVARHENVENDELSEID = "svarhenvendelseid";
 
     @Captor
     private ArgumentCaptor<Melding> meldingArgumentCaptor;
@@ -94,7 +96,7 @@ public class FortsettDialogPanelTest extends WicketPageTest {
         grunnInfo = new GrunnInfo(new Bruker(FNR, FORNAVN, "", "", "", ""), new Saksbehandler("", "", ""));
         when(saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet()).thenReturn(VALGT_ENHET);
 
-        testFortsettDialogPanel = new FortsettDialogPanel("id", grunnInfo, asList(lagSporsmalFraBruker()), new Oppgave(null, FNR, SPORSMAL_ID));
+        testFortsettDialogPanel = new FortsettDialogPanel("id", grunnInfo, asList(lagSporsmalFraBruker()), new Oppgave(null, FNR, SPORSMAL_ID).withSvarHenvendelseId(SVARHENVENDELSEID));
         MockitoAnnotations.initMocks(this);
     }
 
@@ -204,7 +206,7 @@ public class FortsettDialogPanelTest extends WicketPageTest {
         reset(henvendelseUtsendingService);
 
         Oppgave oppgave = new Oppgave("oppgaveid", "fnr", "henvendelseid");
-        wicket.goToPageWith(new FortsettDialogPanel("id", grunnInfo, asList(lagSporsmalFraBruker()), oppgave))
+        wicket.goToPageWith(new FortsettDialogPanel("id", grunnInfo, asList(lagSporsmalFraBruker()), oppgave.withSvarHenvendelseId(SVARHENVENDELSEID)))
                 .inForm(withId("fortsettdialogform"))
                 .write("fortsettdialogformelementer:tekstfelt:text", FRITEKST)
                 .select("fortsettdialogformelementer:kanal", 1)

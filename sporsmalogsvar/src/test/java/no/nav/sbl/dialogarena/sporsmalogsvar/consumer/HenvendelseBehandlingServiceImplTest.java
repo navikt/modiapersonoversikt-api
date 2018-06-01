@@ -23,16 +23,13 @@ import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.henvendelse.Henvendels
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.meldinger.WSHentHenvendelseListeRequest;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.meldinger.WSHentHenvendelseListeResponse;
 import org.joda.time.DateTime;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.internal.util.reflection.Whitebox;
 import org.mockito.invocation.InvocationOnMock;
-import org.mockito.runners.MockitoJUnitRunner;
 import org.mockito.stubbing.Answer;
 
 import java.util.ArrayList;
@@ -48,12 +45,13 @@ import static no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling
 import static no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.FeatureToggleKt.enableFeature;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.TestUtils.*;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyString;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.mockito.MockitoAnnotations.initMocks;
+import static org.springframework.test.util.ReflectionTestUtils.setField;
 
-@RunWith(MockitoJUnitRunner.class)
 public class HenvendelseBehandlingServiceImplTest {
 
     private static final String FNR = "11111111";
@@ -97,8 +95,9 @@ public class HenvendelseBehandlingServiceImplTest {
 
     private final TraadVM VALGT_TRAAD = new TraadVM(createMeldingVMer(),pep, saksbehandlerInnstillingerService);
 
-    @Before
+    @BeforeEach
     public void setUp() {
+        initMocks(this);
         when(propertyResolver.getProperty(anyString())).thenAnswer(new Answer<String>() {
 
             @Override
@@ -106,7 +105,7 @@ public class HenvendelseBehandlingServiceImplTest {
                 return ((String) invocation.getArguments()[0]);
             }
         });
-        Whitebox.setInternalState(henvendelseBehandlingService, "propertyResolver", propertyResolver);
+        setField(henvendelseBehandlingService, "propertyResolver", propertyResolver);
         XMLMeldingFraBruker xmlMeldingFraBruker = new XMLMeldingFraBruker()
                 .withFritekst("fritekst")
                 .withTemagruppe(TEMAGRUPPE);

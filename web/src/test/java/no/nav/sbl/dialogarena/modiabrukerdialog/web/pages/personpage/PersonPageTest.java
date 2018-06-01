@@ -14,6 +14,7 @@ import no.nav.modig.modia.lamell.ReactSjekkForlatModal;
 import no.nav.modig.modia.lamell.TokenLamellPanel;
 import no.nav.modig.wicket.events.NamedEventPayload;
 import no.nav.modig.wicket.test.EventGenerator;
+import no.nav.personsok.PersonsokPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.DialogSession;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.constants.Events;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Oppgave;
@@ -22,8 +23,8 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.HenvendelseUtsendingService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.gsak.GsakKodeverk;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.organisasjonsEnhetV2.OrganisasjonEnhetV2Service;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
-import no.nav.personsok.PersonsokPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.WicketPageTest;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.PersonPageMockContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.lameller.LamellContainer;
@@ -73,6 +74,8 @@ public class PersonPageTest extends WicketPageTest {
     private EgenAnsattService egenAnsattService;
     @Inject
     private SaksbehandlerInnstillingerService saksbehandlerInnstillingerService;
+    @Inject
+    private OrganisasjonEnhetV2Service organisasjonEnhetV2Service;
 
     private final static String testFnr = "10108000398";
 
@@ -85,7 +88,6 @@ public class PersonPageTest extends WicketPageTest {
                         new ArrayList<>(asList(new GsakKodeTema.OppgaveType("kode", "tekst", 1))),
                         new ArrayList<>(asList(new GsakKodeTema.Prioritet("kode", "tekst"))),
                         new ArrayList<>(asList(new GsakKodeTema.Underkategori("kode", "tekst")))))));
-        when(saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet()).thenReturn("0118");
     }
 
     @Test

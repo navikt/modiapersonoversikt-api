@@ -4,13 +4,13 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Kanal;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
 import org.junit.Test;
-import org.mockito.internal.util.reflection.Whitebox;
 
 import java.util.Optional;
 
 import static no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype.SVAR_OPPMOTE;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
+import static org.springframework.test.util.ReflectionTestUtils.setField;
 
 public class MeldingBuilderTest {
 
@@ -23,7 +23,7 @@ public class MeldingBuilderTest {
         HenvendelseVM henvendelseVM = new HenvendelseVM();
         henvendelseVM.kanal = Kanal.TEKST;
         henvendelseVM.temagruppe = Temagruppe.ARBD;
-        Whitebox.setInternalState(henvendelseVM, "text", "tekst");
+        setField(henvendelseVM, "text", "tekst");
 
         Melding melding = new MeldingBuilder()
                 .withHenvendelseVM(henvendelseVM)
@@ -49,7 +49,7 @@ public class MeldingBuilderTest {
         HenvendelseVM henvendelseVM = new HenvendelseVM();
         henvendelseVM.kanal = Kanal.TEKST;
         henvendelseVM.temagruppe = Temagruppe.ARBD;
-        Whitebox.setInternalState(henvendelseVM, "text", "tekst");
+        setField(henvendelseVM, "text", "tekst");
 
         Melding eldsteMeldingITraad = new Melding()
                 .withTemagruppe(Temagruppe.BIL.name())

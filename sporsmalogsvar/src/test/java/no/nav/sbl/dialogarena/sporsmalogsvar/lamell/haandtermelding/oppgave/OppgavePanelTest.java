@@ -4,17 +4,18 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
 import no.nav.sbl.dialogarena.sporsmalogsvar.config.MockServiceTestContext;
 import no.nav.sbl.dialogarena.sporsmalogsvar.config.WicketPageTest;
-import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.*;
+import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.InnboksVM;
+import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.MeldingVM;
+import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.TraadVM;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.test.annotation.DirtiesContext;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import static java.util.Arrays.asList;
 import static java.util.Optional.empty;
@@ -28,17 +29,15 @@ import static org.joda.time.DateTime.now;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER_CLASS;
 
 @ContextConfiguration(classes = {MockServiceTestContext.class})
-@RunWith(SpringJUnit4ClassRunner.class)
-@DirtiesContext(classMode = AFTER_CLASS)
+@ExtendWith(SpringExtension.class)
 public class OppgavePanelTest extends WicketPageTest {
 
     private Melding melding;
     private InnboksVM innboksVM = mock(InnboksVM.class);
 
-    @Before
+    @BeforeEach
     public void setUp() {
         TraadVM traadVM = mock(TraadVM.class);
         String eldsteMeldingId = "id";

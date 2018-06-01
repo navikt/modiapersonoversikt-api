@@ -12,12 +12,11 @@ import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.henvendelse.HenvendelseBeh
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.henvendelse.HenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.meldinger.WSHentHenvendelseListeResponse;
 import org.apache.wicket.ajax.AjaxEventBehavior;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.test.annotation.DirtiesContext;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -29,11 +28,9 @@ import static org.hamcrest.core.Is.is;
 import static org.joda.time.DateTime.now;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER_CLASS;
 
-@DirtiesContext(classMode = AFTER_CLASS)
 @ContextConfiguration(classes = {MockServiceTestContext.class, ServiceTestContext.class})
-@RunWith(SpringJUnit4ClassRunner.class)
+@ExtendWith(SpringExtension.class)
 public class AlleMeldingerPanelTest extends WicketPageTest {
 
     @Inject
@@ -49,7 +46,7 @@ public class AlleMeldingerPanelTest extends WicketPageTest {
     @Inject
     private EnforcementPoint pep;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         when(henvendelsePortType.hentHenvendelseListe(any())).thenReturn(new WSHentHenvendelseListeResponse()
                 .withAny(Arrays.asList(createMelding("id1", XMLHenvendelseType.SPORSMAL_SKRIFTLIG, now().minusDays(1), Temagruppe.ARBD, "id1"),

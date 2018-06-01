@@ -19,12 +19,11 @@ import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.nyoppgavefor
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.behavior.AbstractAjaxBehavior;
 import org.apache.wicket.behavior.Behavior;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
@@ -39,16 +38,15 @@ import static no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Me
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.TestUtils.createMelding;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.nyoppgaveformwrapper.NyOppgaveFormWrapper.erGyldigEnhet;
 import static org.apache.wicket.util.tester.WicketTesterHelper.findBehavior;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.joda.time.DateTime.now;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 @ContextConfiguration(classes = {MockServiceTestContext.class})
-@RunWith(SpringJUnit4ClassRunner.class)
+@ExtendWith(SpringExtension.class)
 public class NyOppgaveFormWrapperTest extends WicketPageTest {
 
     public static final List<GsakKodeTema.Tema> TEMALISTE_MOCK =
@@ -71,18 +69,19 @@ public class NyOppgaveFormWrapperTest extends WicketPageTest {
     @Inject
     private SaksbehandlerInnstillingerService saksbehandlerInnstillingerService;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         initMocks(this);
         innboksVM = mock(InnboksVM.class);
         Melding melding = createMelding("id", SPORSMAL_SKRIFTLIG, now(), Temagruppe.ARBD, "id");
         when(innboksVM.getValgtTraad()).thenReturn(new TraadVM(asList(new MeldingVM(melding, 1)), pep, saksbehandlerInnstillingerService));
+        when(innboksVM.getFnr()).thenReturn("10108000398");
         when(gsakKodeverk.hentTemaListe()).thenReturn(TEMALISTE_MOCK);
     }
 
     @Test
     public void girFeilmeldingHvisIkkeAlleFeltUtfyltt() {
-        NyOppgaveFormWrapper nyOppgaveWrapper = new NyOppgaveFormWrapper("panel", mock(InnboksVM.class));
+        NyOppgaveFormWrapper nyOppgaveWrapper = new NyOppgaveFormWrapper("panel", innboksVM);
         wicket.goToPageWith(nyOppgaveWrapper)
                 .inForm("panel:nyoppgaveform")
                 .submit()
@@ -104,6 +103,7 @@ public class NyOppgaveFormWrapperTest extends WicketPageTest {
 
         Behavior temaBehavior = findBehavior(wicket.get().component(withId("tema")), AjaxFormComponentUpdatingBehavior.class);
         Behavior typeBehavior = findBehavior(wicket.get().component(withId("type")), AjaxFormComponentUpdatingBehavior.class);
+        Behavior underkategoriBehavior = findBehavior(wicket.get().component(withId("underkategori")), AjaxFormComponentUpdatingBehavior.class);
 
         wicket.inForm("panel:nyoppgaveform")
                 .select("tema", 0);
@@ -112,6 +112,10 @@ public class NyOppgaveFormWrapperTest extends WicketPageTest {
         wicket.inForm("panel:nyoppgaveform")
                 .select("typeContainer:type", 0);
         wicket.tester.executeBehavior((AbstractAjaxBehavior) typeBehavior);
+
+        wicket.inForm("panel:nyoppgaveform")
+                .select("underkategoriContainer:underkategori", 0);
+        wicket.tester.executeBehavior((AbstractAjaxBehavior) underkategoriBehavior);
 
         wicket.inForm("panel:nyoppgaveform")
                 .select("prioritetContainer:prioritet", 0)
@@ -130,7 +134,7 @@ public class NyOppgaveFormWrapperTest extends WicketPageTest {
         enheter.add(createEnhet("200", "toHundre"));
         List<AnsattEnhet> gyldigeEnheter = on(enheter).filter(enhet -> erGyldigEnhet(enhet)).collect();
 
-        Assert.assertThat(gyldigeEnheter.size(), is(2));
+        assertThat(gyldigeEnheter.size(), is(2));
     }
 
     @Test
@@ -145,7 +149,7 @@ public class NyOppgaveFormWrapperTest extends WicketPageTest {
         enheter.add(createEnhet("606", "stort kontor", "AKTIV"));
         List<AnsattEnhet> gyldigeEnheter = on(enheter).filter(enhet -> erGyldigEnhet(enhet)).collect();
 
-        Assert.assertThat(gyldigeEnheter.size(), is(4));
+        assertThat(gyldigeEnheter.size(), is(4));
     }
 
     private AnsattEnhet createEnhet(String enhetId, String enhetNavn, String status) {
