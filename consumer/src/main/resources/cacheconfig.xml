@@ -79,7 +79,7 @@
             <cache:cacheable method="finn*"/>
         </cache:caching>
     </cache:advice>
-    <cache:advice id="ldapServiceAdvice" key-generator="defaultkeygenerator">
+    <cache:advice id="ldapServiceAdvice" key-generator="userkeygenerator">
         <cache:caching cache="ldap">
             <cache:cacheable method="hent*"/>
             <cache:cacheable method="finn*"/>
