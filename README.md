@@ -46,6 +46,8 @@ url.https://.insteadof=git://
 
 * Under utvikling kjøres `gulp dev` fra rot-katalogen (reactkomponenter). Forandringer i koden vil da automatisk bli bygd inn og lagt i `target` mappen.
 
+* Om du får en feil i gata `Cannot read property "apply" of undefined` prøv å kjøre følgende kommando: `npm i -g gulp-cli` 
+
 ## Test
 
 #### Kjøre tester i kommandolinje
