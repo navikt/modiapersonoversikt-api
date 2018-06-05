@@ -50,3 +50,23 @@ data class EndreAdresseRequest(
     )
 
 }
+
+data class EndreTelefonnummerRequest(
+        val hjem: Telefon? = null,
+        val jobb: Telefon? = null,
+        val mobil: Telefon? = null
+) {
+    data class Telefon(val identifikator: String, val retningsnummer: String)
+}
+
+data class EndreKontonummerRequest(
+        val kontonummer: String,
+        val landkode: String? = null,
+        val banknavn: String? = null,
+        val swift: String? = null,
+        val bankadresse: Adresse? = null
+) {
+    data class Adresse(val linje1: String, var linje2: String, var linje3: String)
+}
+
+typealias EndreTilrettelagtkommunikasjonRequest = List<String>
