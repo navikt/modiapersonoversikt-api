@@ -11,7 +11,6 @@ import no.nav.brukerprofil.domain.adresser.UstrukturertAdresse
 import no.nav.kjerneinfo.common.domain.Kodeverdi
 import no.nav.kjerneinfo.common.domain.Periode
 import no.nav.kjerneinfo.consumer.fim.behandleperson.BehandlePersonServiceBi
-import no.nav.kjerneinfo.consumer.fim.behandleperson.DefaultBehandlePersonService
 import no.nav.kjerneinfo.consumer.fim.person.PersonKjerneinfoServiceBi
 import no.nav.kjerneinfo.consumer.fim.person.to.HentKjerneinformasjonRequest
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.ldap.LDAPService

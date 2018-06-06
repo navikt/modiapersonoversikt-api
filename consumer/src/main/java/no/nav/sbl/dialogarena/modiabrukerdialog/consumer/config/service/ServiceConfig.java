@@ -9,6 +9,7 @@ import no.nav.kjerneinfo.consumer.fim.person.PersonKjerneinfoServiceBi;
 import no.nav.kjerneinfo.consumer.fim.person.support.DefaultPersonKjerneinfoService;
 import no.nav.kjerneinfo.consumer.fim.person.support.KjerneinfoMapper;
 import no.nav.kjerneinfo.consumer.fim.person.vergemal.VergemalService;
+import no.nav.kodeverk.consumer.fim.kodeverk.KodeverkmanagerBi;
 import no.nav.modig.content.PropertyResolver;
 import no.nav.modig.wicket.services.HealthCheckService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.HenvendelseUtsendingService;
@@ -190,8 +191,8 @@ public class ServiceConfig {
     }
 
     @Bean
-    public VergemalService vergemalService(PersonV3 personPortType, PersonKjerneinfoServiceBi personKjerneinfoServiceBi) {
-        return new VergemalService(personPortType, personKjerneinfoServiceBi);
+    public VergemalService vergemalService(PersonV3 personPortType, PersonKjerneinfoServiceBi personKjerneinfoServiceBi, KodeverkmanagerBi kodeverkmanagerBi) {
+        return new VergemalService(personPortType, personKjerneinfoServiceBi, kodeverkmanagerBi);
     }
 
     @Bean
