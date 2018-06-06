@@ -1,6 +1,6 @@
 import React from 'react';
 import PT from 'prop-types';
-import AlertStripeSuksessSolid from '../../alertstriper/alertstripe-module';
+import Markeringer from './markeringer';
 import Utils from '../../utils/utils-module';
 import sanitize from 'sanitize-html';
 import Journalfort from './journalfort';
@@ -29,33 +29,9 @@ class Melding extends React.Component {
         const dato = sanitize(datoTekst || 'Fant ingen data', { allowedTags: ['em'] });
         const meldingsForfatter = finnMeldingsForfattere(melding);
 
-        class HentEventuelleMarkeringer extends React.Component {
-            render()
-            {
-                if (melding.erFerdigstiltUtenSvar) {
-                    return (
-                        <AlertStripeSuksessSolid header={'Henvendelsen er avsluttet uten å svare bruker'}>
-                            {melding.ferdigstiltUtenSvarAv.fornavn} {melding.ferdigstiltUtenSvarAv.etternavn} ({melding.ferdigstiltUtenSvarAv.ident}) {melding.ferdigstiltUtenSvarDatoTekst}
-                        </AlertStripeSuksessSolid>);
-                } else if (melding.markertSomFeilsendtAvNavIdent) {
-                    return (
-                        <AlertStripeSuksessSolid header={'Feilsendt post'}>
-                            {melding.markertSomFeilsendtAv.fornavn} {melding.markertSomFeilsendtAv.etternavn} ({melding.markertSomFeilsendtAv.ident}) {melding.markertSomFeilsendtDatoTekst}
-                        </AlertStripeSuksessSolid>);
-                } else if (melding.kontorsperretAvNavIdent != null && melding.kontorsperretAvNavIdent != '') {
-                    return (
-                        <AlertStripeSuksessSolid header={'Kontorsperret til enhet ' + melding.kontorsperretEnhet}>
-                            {melding.kontorsperretAv.fornavn} {melding.kontorsperretAv.etternavn} ({melding.kontorsperretAv.ident}) {melding.kontorsperretDatoTekst}
-                        </AlertStripeSuksessSolid>);
-                }
-                return (<div></div>);
-            }
-
-        }
-
         return (
             <div>
-                <HentEventuelleMarkeringer melding={melding} />
+                <Markeringer melding={melding} />
                 <div className={cls}>
                     <img className={`avsenderBilde ${clsExt}`} src={src} alt={altTekst} />
                     <div className="meldingData">
