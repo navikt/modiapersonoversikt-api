@@ -22,8 +22,8 @@ import javax.ws.rs.core.MediaType.APPLICATION_JSON
 private const val TPS_UKJENT_VERDI = "???"
 private const val DATOFORMAT = "yyyy-MM-dd"
 private const val DATO_TID_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS"
-private const val tilrettelagtKommunikasjonKodeverkref = "TilrettelagtKommunikasjon"
-private const val tilrettelagtKommunikasjonKodeverkSprak = "nb"
+private const val TILRETTELAGT_KOMMUNIKASJON_KODEVERKREF = "TilrettelagtKommunikasjon"
+private const val TILRETTELAGT_KOMMUNIKASJON_KODEVERKSPRAK = "nb"
 
 @Path("/person/{fnr}")
 @Produces(APPLICATION_JSON)
@@ -72,175 +72,139 @@ class PersonController @Inject constructor(private val kjerneinfoService: Person
         )
     }
 
-    private fun getPersonstatus(person: Person): Map<String, Any?> {
-        return mapOf(
-                "dødsdato" to person.personfakta.doedsdato,
-                "bostatus" to person.personfakta.bostatus?.value
-        )
-    }
+    private fun getPersonstatus(person: Person) = mapOf(
+            "dødsdato" to person.personfakta.doedsdato,
+            "bostatus" to person.personfakta.bostatus?.value
+    )
 
-    private fun hentTilrettelagtKommunikasjon(tilrettelagtKommunikasjon: List<TilrettelagtKommunikasjon>): List<Map<String, String>> {
-        val liste = mutableListOf<Map<String, String>>()
-
-        hentSortertKodeverkslisteForTilrettelagtKommunikasjon().map {
-            tilrettelagtKommunikasjon.find { k -> k.behov == it.kodeRef }?.let { t ->
-                liste.add(mapOf("behovKode" to t.behov,
-                        "beskrivelse" to hentBeskrivelseForKode(t.behov)))
+    private fun hentTilrettelagtKommunikasjon(tilrettelagtKommunikasjon: List<TilrettelagtKommunikasjon>) =
+            hentSortertKodeverkslisteForTilrettelagtKommunikasjon().mapNotNull {
+                tilrettelagtKommunikasjon
+                        .find { tk -> tk.behov == it.kodeRef }
+                        ?.apply { mapOf("behovKode" to behov, "beskrivelse" to hentBeskrivelseForKode(behov)) }
             }
-        }
 
-        return liste.toList()
-    }
+    private fun getNavn(person: Person) = mapOf(
+            "sammensatt" to person.personfakta.personnavn.sammensattNavn,
+            "fornavn" to person.personfakta.personnavn.fornavn,
+            "mellomnavn" to (person.personfakta.personnavn.mellomnavn ?: ""),
+            "etternavn" to person.personfakta.personnavn.etternavn
+    )
 
-    private fun getNavn(person: Person): Map<String, String> {
-        return mapOf(
-                "sammensatt" to person.personfakta.personnavn.sammensattNavn,
-                "fornavn" to person.personfakta.personnavn.fornavn,
-                "mellomnavn" to (person.personfakta.personnavn.mellomnavn ?: ""),
-                "etternavn" to person.personfakta.personnavn.etternavn
+    private fun getFamilierelasjoner(person: Person) = person.personfakta.harFraRolleIList.map {
+        mapOf(
+                "harSammeBosted" to it.harSammeBosted,
+                "tilPerson" to mapOf(
+                        "navn" to getNavn(it.tilPerson),
+                        "alder" to it.tilPerson.fodselsnummer.alder,
+                        "fødselsnummer" to it.tilPerson.fodselsnummer.nummer,
+                        "personstatus" to getPersonstatus(it.tilPerson)
+                ),
+                "rolle" to it.tilRolle
         )
     }
 
-    private fun getFamilierelasjoner(person: Person): List<Map<String, Any>> {
-        return person.personfakta.harFraRolleIList.map {
-            mapOf(
-                    "harSammeBosted" to it.harSammeBosted,
-                    "tilPerson" to mapOf(
-                            "navn" to getNavn(it.tilPerson),
-                            "alder" to it.tilPerson.fodselsnummer.alder,
-                            "fødselsnummer" to it.tilPerson.fodselsnummer.nummer,
-                            "personstatus" to getPersonstatus(it.tilPerson)
-                    ),
-                    "rolle" to it.tilRolle
+    private fun getStatsborgerskap(person: Person) =
+            person.personfakta.statsborgerskap?.beskrivelse.let { if (it == TPS_UKJENT_VERDI) null else it }
+
+    private fun hentBankkonto(person: Person) = person.personfakta.bankkonto?.apply {
+        mapOf(
+                "erNorskKonto" to person.personfakta.isBankkontoINorge,
+                "kontonummer" to kontonummer,
+                "bank" to banknavn,
+                "sistEndret" to endringsinformasjon.sistOppdatert,
+                "sistEndretAv" to endringsinformasjon.endretAv
+        )
+    }
+
+    private fun hentAdresse(adresselinje: Adresselinje) =
+            mapOf("endringsinfo" to adresselinje.endringsinformasjon?.let { hentEndringsinformasjon(it) },
+                    when (adresselinje) {
+                        is Adresse -> "gateadresse" to hentGateAdresse(adresselinje)
+                        is Matrikkeladresse -> "matrikkeladresse" to hentMatrikkeladresse(adresselinje)
+                        is AlternativAdresseUtland -> "utlandsadresse" to hentAlternativAdresseUtland(adresselinje)
+                        else -> "ustrukturert" to mapOf("adresselinje" to adresselinje.adresselinje)
+                    }
             )
-        }
-    }
 
-    private fun getStatsborgerskap(person: Person): String? {
-        if (person.personfakta.statsborgerskap?.beskrivelse == TPS_UKJENT_VERDI) {
-            return null
-        } else {
-            return person.personfakta.statsborgerskap?.beskrivelse
-        }
-    }
-
-    private fun hentBankkonto(person: Person): Map<String, Any>? {
-        if (person.personfakta.bankkonto != null) {
-            return mapOf(
-                    "erNorskKonto" to person.personfakta.isBankkontoINorge,
-                    "kontonummer" to person.personfakta.bankkonto.kontonummer,
-                    "bank" to person.personfakta.bankkonto.banknavn,
-                    "sistEndret" to person.personfakta.bankkonto.endringsinformasjon.sistOppdatert,
-                    "sistEndretAv" to person.personfakta.bankkonto.endringsinformasjon.endretAv
-            )
-        }
-        return null
-    }
-
-    private fun hentAdresse(adresselinje: Adresselinje): Map<String, Any?> {
-        return mapOf("endringsinfo" to adresselinje.endringsinformasjon?.let { hentEndringsinformasjon(it) },
-                when (adresselinje) {
-                    is Adresse -> "gateadresse" to hentGateAdresse(adresselinje)
-                    is Matrikkeladresse -> "matrikkeladresse" to hentMatrikkeladresse(adresselinje)
-                    is AlternativAdresseUtland -> "utlandsadresse" to hentAlternativAdresseUtland(adresselinje)
-                    else -> "ustrukturert" to mapOf("adresselinje" to adresselinje.adresselinje)
-                }
+    private fun hentGateAdresse(adresse: Adresse) = adresse.apply {
+        mapOf(
+                "tilleggsadresse" to tilleggsadresse,
+                "gatenavn" to gatenavn,
+                "husnummer" to gatenummer,
+                "postnummer" to postnummer,
+                "poststed" to poststednavn,
+                "husbokstav" to husbokstav,
+                "bolignummer" to bolignummer,
+                "periode" to postleveringsPeriode?.let { hentPeriode(it) }
         )
     }
 
-    private fun hentGateAdresse(adresse: Adresse): Map<String, Any?> {
-        return mapOf(
-                "tilleggsadresse" to adresse.tilleggsadresse,
-                "gatenavn" to adresse.gatenavn,
-                "husnummer" to adresse.gatenummer,
-                "postnummer" to adresse.postnummer,
-                "poststed" to adresse.poststednavn,
-                "husbokstav" to adresse.husbokstav,
-                "bolignummer" to adresse.bolignummer,
-                "periode" to adresse.postleveringsPeriode?.let { hentPeriode(it) }
+    private fun hentMatrikkeladresse(matrikkeladresse: Matrikkeladresse) = matrikkeladresse.apply {
+        mapOf(
+                "tilleggsadresse" to tilleggsadresseMedType,
+                "eiendomsnavn" to eiendomsnavn,
+                "postnummer" to postnummer,
+                "poststed" to poststed,
+                "periode" to postleveringsPeriode?.let { hentPeriode(it) }
         )
     }
 
-    private fun hentMatrikkeladresse(matrikkeladresse: Matrikkeladresse): Map<String, Any?> {
-        return mapOf(
-                "tilleggsadresse" to matrikkeladresse.tilleggsadresseMedType,
-                "eiendomsnavn" to matrikkeladresse.eiendomsnavn,
-                "postnummer" to matrikkeladresse.postnummer,
-                "poststed" to matrikkeladresse.poststed,
-                "periode" to matrikkeladresse.postleveringsPeriode?.let { hentPeriode(it) }
+    private fun hentAlternativAdresseUtland(adresseUtland: AlternativAdresseUtland) = adresseUtland.apply {
+        mapOf(
+                "landkode" to landkode.value,
+                "adresselinje" to adresselinje,
+                "periode" to postleveringsPeriode?.let { hentPeriode(it) }
         )
     }
 
-    private fun hentAlternativAdresseUtland(alternativAdresseUtland: AlternativAdresseUtland): Map<String, Any?> {
-        return mapOf(
-                "landkode" to alternativAdresseUtland.landkode.value,
-                "adresselinje" to alternativAdresseUtland.adresselinje,
-                "periode" to alternativAdresseUtland.postleveringsPeriode?.let { hentPeriode(it) }
+    private fun hentEndringsinformasjon(endringsinformasjon: Endringsinformasjon) = mapOf(
+            "sistEndretAv" to endringsinformasjon.endretAv,
+            "sistEndret" to endringsinformasjon.sistOppdatert?.toString(DATO_TID_FORMAT)
+    )
+
+    private fun hentSikkerhetstiltak(sikkerhetstiltak: Sikkerhetstiltak) = mapOf(
+            "sikkerhetstiltaksbeskrivelse" to sikkerhetstiltak.sikkerhetstiltaksbeskrivelse,
+            "sikkerhetstiltakskode" to sikkerhetstiltak.sikkerhetstiltakskode,
+            "periode" to sikkerhetstiltak.periode?.let { hentPeriode(it) }
+    )
+
+    private fun hentPeriode(periode: Periode) = mapOf(
+            "fra" to periode.from?.toString(DATOFORMAT),
+            "til" to periode.to?.toString(DATOFORMAT)
+    )
+
+    private fun getTelefoner(personfakta: Personfakta) = personfakta.run {
+        mapOf(
+                "mobil" to personfakta.mobil.map(::getTelefon).orElse(null),
+                "jobbTelefon" to personfakta.jobbTlf.map(::getTelefon).orElse(null),
+                "hjemTelefon" to personfakta.hjemTlf.map(::getTelefon).orElse(null)
         )
     }
 
-    private fun hentEndringsinformasjon(endringsinformasjon: Endringsinformasjon): Map<String, Any?> {
-        return mapOf(
-                "sistEndretAv" to endringsinformasjon.endretAv,
-                "sistEndret" to endringsinformasjon.sistOppdatert?.toString(DATO_TID_FORMAT)
-        )
+    private fun getTelefon(telefon: Telefon) = mapOf(
+            "retningsnummer" to (telefon.retningsnummer?.value ?: ""),
+            "telefonnummer" to telefon.identifikator,
+            "sistEndretAv" to telefon.endretAv,
+            "sistEndret" to telefon.endringstidspunkt?.toString(DATO_TID_FORMAT)
+    )
+
+    private fun getBegrensetInnsyn(fødselsnummer: String, melding: String?) = mapOf(
+            "begrunnelse" to melding,
+            "sikkerhetstiltak" to kjerneinfoService
+                    .hentSikkerhetstiltak(HentSikkerhetstiltakRequest(fødselsnummer))
+                    ?.let { hentSikkerhetstiltak(it) }
+    )
+
+    private fun hentSortertKodeverkslisteForTilrettelagtKommunikasjon() = try {
+        kodeverk.getKodeverkList(TILRETTELAGT_KOMMUNIKASJON_KODEVERKREF, TILRETTELAGT_KOMMUNIKASJON_KODEVERKSPRAK)
+    } catch (exception: HentKodeverkKodeverkIkkeFunnet) {
+        emptyList<Kodeverdi>()
     }
 
-    private fun hentSikkerhetstiltak(sikkerhetstiltak: Sikkerhetstiltak): Map<String, Any?> {
-        return mapOf(
-                "sikkerhetstiltaksbeskrivelse" to sikkerhetstiltak.sikkerhetstiltaksbeskrivelse,
-                "sikkerhetstiltakskode" to sikkerhetstiltak.sikkerhetstiltakskode,
-                "periode" to sikkerhetstiltak.periode?.let { hentPeriode(it) }
-        )
-    }
-
-    private fun hentPeriode(periode: Periode): Map<String, Any?> {
-        return mapOf(
-                "fra" to periode.from?.toString(DATOFORMAT),
-                "til" to periode.to?.toString(DATOFORMAT)
-        )
-    }
-
-    private fun getTelefoner(personfakta: Personfakta): Map<String, Any> {
-        return mapOf(
-                "mobil" to personfakta.mobil.map { getTelefon(it) }.orElse(null),
-                "jobbTelefon" to personfakta.jobbTlf.map { getTelefon(it) }.orElse(null),
-                "hjemTelefon" to personfakta.hjemTlf.map { getTelefon(it) }.orElse(null)
-        )
-    }
-
-    private fun getTelefon(telefon: Telefon): Map<String, String?> {
-        return mapOf(
-                "retningsnummer" to (telefon.retningsnummer?.value ?: ""),
-                "telefonnummer" to telefon.identifikator,
-                "sistEndretAv" to telefon.endretAv,
-                "sistEndret" to telefon.endringstidspunkt?.toString(DATO_TID_FORMAT)
-        )
-    }
-
-    private fun getBegrensetInnsyn(fødselsnummer: String, melding: String?): Map<String, Any?> {
-        val sikkerhetstiltak = kjerneinfoService.hentSikkerhetstiltak(HentSikkerhetstiltakRequest(fødselsnummer))
-        return mapOf(
-                "begrunnelse" to melding,
-                "sikkerhetstiltak" to sikkerhetstiltak?.let { hentSikkerhetstiltak(it) }
-        )
-    }
-
-    private fun hentSortertKodeverkslisteForTilrettelagtKommunikasjon(): List<Kodeverdi> {
-        return try {
-            kodeverk.getKodeverkList(tilrettelagtKommunikasjonKodeverkref, tilrettelagtKommunikasjonKodeverkSprak)
-        } catch(exception: HentKodeverkKodeverkIkkeFunnet) {
-            emptyList()
-        }
-    }
-
-    private fun hentBeskrivelseForKode(kode: String): String {
-        val beskrivelseForKode = try {
-            kodeverk.getBeskrivelseForKode(kode, tilrettelagtKommunikasjonKodeverkref, tilrettelagtKommunikasjonKodeverkSprak)
-        } catch(exception: HentKodeverkKodeverkIkkeFunnet) {
-            return kode
-        }
-
-        return beskrivelseForKode ?: kode
+    private fun hentBeskrivelseForKode(kode: String) = try {
+        kodeverk.getBeskrivelseForKode(kode, TILRETTELAGT_KOMMUNIKASJON_KODEVERKREF, TILRETTELAGT_KOMMUNIKASJON_KODEVERKSPRAK)
+    } catch (exception: HentKodeverkKodeverkIkkeFunnet) {
+        kode
     }
 }

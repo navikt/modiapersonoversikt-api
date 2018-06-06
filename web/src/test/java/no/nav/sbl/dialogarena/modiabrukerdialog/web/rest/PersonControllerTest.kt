@@ -1,8 +1,13 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest
 
+import com.nhaarman.mockito_kotlin.any
+import com.nhaarman.mockito_kotlin.mock
+import com.nhaarman.mockito_kotlin.whenever
 import no.nav.brukerdialog.security.tilgangskontroll.policy.pep.EnforcementPoint
+import no.nav.kjerneinfo.common.domain.Kodeverdi
 import no.nav.kjerneinfo.consumer.fim.person.support.DefaultPersonKjerneinfoService
 import no.nav.kjerneinfo.consumer.fim.person.support.KjerneinfoMapper
+import no.nav.kjerneinfo.domain.person.fakta.TilrettelagtKommunikasjon
 import no.nav.kodeverk.consumer.fim.kodeverk.KodeverkmanagerBi
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.organisasjonsEnhetV2.OrganisasjonEnhetV2Service
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.Feature.PERSON_REST_API
@@ -16,53 +21,41 @@ import no.nav.tjeneste.virksomhet.person.v3.informasjon.*
 import no.nav.tjeneste.virksomhet.person.v3.meldinger.WSHentPersonResponse
 import no.nav.tjeneste.virksomhet.person.v3.meldinger.WSHentSikkerhetstiltakResponse
 import org.junit.jupiter.api.*
-import org.junit.jupiter.api.Assertions.assertThrows
-import org.mockito.Mock
-import org.mockito.Mockito
-import org.mockito.Mockito.`when`
-import org.mockito.Mockito.mock
-import org.mockito.MockitoAnnotations.initMocks
 import java.util.*
-import javax.ws.rs.NotAuthorizedException
 import javax.ws.rs.NotFoundException
 import kotlin.test.assertEquals
+import kotlin.test.assertFailsWith
 import kotlin.test.assertTrue
 
 private const val FNR = "10108000398"
+private const val TOLKEHJELP_KODE = "TOHJ"
+
 
 class PersonControllerTest {
 
-    private lateinit var mapper: KjerneinfoMapper
-    @Mock private lateinit var personV3: PersonV3
-    @Mock private lateinit var pep: EnforcementPoint
-    @Mock private lateinit var organisasjonenhetV2Service: OrganisasjonEnhetV2Service
-    @Mock private lateinit var kodeverk: KodeverkmanagerBi
-    private lateinit var service: DefaultPersonKjerneinfoService
-    private lateinit var controller: PersonController
+    private val personV3: PersonV3 = mock()
+    private val pep: EnforcementPoint = mock()
+    private val organisasjonenhetV2Service: OrganisasjonEnhetV2Service = mock()
+    private val kodeverk: KodeverkmanagerBi = mock()
+    private val mapper = KjerneinfoMapper(kodeverk)
+    private val service = DefaultPersonKjerneinfoService(personV3, mapper, pep, organisasjonenhetV2Service)
+    private val controller = PersonController(service, kodeverk)
 
     @BeforeEach
     fun before() {
-        initMocks(this)
-        val kodeverkManagerMock = mock(KodeverkmanagerBi::class.java)
-        mapper = KjerneinfoMapper(kodeverkManagerMock)
-        `when`(organisasjonenhetV2Service.finnNAVKontor(Mockito.any(), Mockito.any())).thenReturn(Optional.empty())
-
-        service = DefaultPersonKjerneinfoService(personV3, mapper, pep, organisasjonenhetV2Service)
-        controller = PersonController(service, kodeverk)
+        whenever(organisasjonenhetV2Service.finnNAVKontor(any(), any())).thenReturn(Optional.empty())
     }
 
     @Test
-    @DisplayName("Kaster 404 hvis personen ikke ble funnet")
-    fun kaster404HvisPersonIkkeFunnet() {
-        `when`(personV3.hentPerson(Mockito.any())).thenThrow(HentPersonPersonIkkeFunnet())
-        assertThrows(NotFoundException::class.java, { controller.hent(FNR) })
+    fun `Kaster 404 hvis personen ikke ble funnet`() {
+        whenever(personV3.hentPerson(any())).thenThrow(HentPersonPersonIkkeFunnet())
+        assertFailsWith<NotFoundException> { controller.hent(FNR) }
     }
 
     @Test
-    @DisplayName("Returnerer begrenset innsyn object ved ikke tilgang")
-    fun returnBegrensetInnsyn() {
-        `when`(personV3.hentPerson(Mockito.any())).thenThrow(HentPersonSikkerhetsbegrensning())
-        `when`(personV3.hentSikkerhetstiltak(Mockito.any()))
+    fun `Returnerer begrenset innsyn object ved ikke tilgang`() {
+        whenever(personV3.hentPerson(any())).thenThrow(HentPersonSikkerhetsbegrensning())
+        whenever(personV3.hentSikkerhetstiltak(any()))
                 .thenReturn(WSHentSikkerhetstiltakResponse()
                         .withSikkerhetstiltak(WSSikkerhetstiltak()
                                 .withSikkerhetstiltaksbeskrivelse("")))
@@ -71,11 +64,11 @@ class PersonControllerTest {
     }
 
     @Test
-    @DisplayName("Mapper om ukjente statsborgerskap til null")
-    fun mapperUkjentStatsborgerskap() {
-        val mockPersonResponse = mockPersonResponse()
-        mockPersonResponse.person.withStatsborgerskap(WSStatsborgerskap().withLand(WSLandkoder().withValue("???")))
-        `when`(personV3.hentPerson(Mockito.any())).thenReturn(mockPersonResponse)
+    fun `Mapper om ukjente statsborgerskap til null`() {
+        val mockPersonResponse = mockPersonResponse().apply {
+            person.withStatsborgerskap(WSStatsborgerskap().withLand(WSLandkoder().withValue("???")))
+        }
+        whenever(personV3.hentPerson(any())).thenReturn(mockPersonResponse)
 
         val response = controller.hent(FNR)
         val statsborgerskap = response["statsborgerskap"]
@@ -83,12 +76,11 @@ class PersonControllerTest {
         assertEquals(null, statsborgerskap)
     }
 
-    private fun mockPersonResponse(): WSHentPersonResponse {
-        return WSHentPersonResponse().withPerson(WSBruker()
-                .withPersonnavn(WSPersonnavn())
-                .withKjoenn(WSKjoenn().withKjoenn(WSKjoennstyper().withValue("K")))
-                .withAktoer(WSPersonIdent().withIdent(WSNorskIdent().withIdent(FNR))))
-    }
+    private fun mockPersonResponse() = WSHentPersonResponse()
+            .withPerson(WSBruker()
+                    .withPersonnavn(WSPersonnavn())
+                    .withKjoenn(WSKjoenn().withKjoenn(WSKjoennstyper().withValue("K")))
+                    .withAktoer(WSPersonIdent().withIdent(WSNorskIdent().withIdent(FNR))))
 
     @Nested
     inner class Kontaktinformasjon {
@@ -97,9 +89,9 @@ class PersonControllerTest {
         private val TELEFONNUMMER = "10108000398"
 
         @Test
-        fun medMobil() {
+        fun `Med mobil`() {
             val mockPersonResponse = responseMedMobil()
-            `when`(personV3.hentPerson(Mockito.any())).thenReturn(mockPersonResponse)
+            whenever(personV3.hentPerson(any())).thenReturn(mockPersonResponse)
 
             val response = controller.hent(FNR)
             val kontaktinformasjon = response["kontaktinformasjon"] as Map<*, *>
@@ -111,20 +103,17 @@ class PersonControllerTest {
             assertEquals(RETNINGSNUMMER, retningsnummer)
         }
 
-        private fun responseMedMobil(): WSHentPersonResponse {
-            val mockPersonResponse = mockPersonResponse()
-            val bruker = mockPersonResponse.person as WSBruker
-            bruker.withKontaktinformasjon(WSTelefonnummer()
-                    .withIdentifikator(TELEFONNUMMER)
-                    .withRetningsnummer(WSRetningsnumre().withValue(RETNINGSNUMMER))
-                    .withType(WSTelefontyper().withValue("MOBI")))
-            return mockPersonResponse
+        private fun responseMedMobil() = mockPersonResponse().apply {
+            (person as WSBruker)
+                    .withKontaktinformasjon(WSTelefonnummer()
+                            .withIdentifikator(TELEFONNUMMER)
+                            .withRetningsnummer(WSRetningsnumre().withValue(RETNINGSNUMMER))
+                            .withType(WSTelefontyper().withValue("MOBI")))
         }
 
         @Test
-        fun utenMobil() {
-            val mockPersonResponse = mockPersonResponse()
-            `when`(personV3.hentPerson(Mockito.any())).thenReturn(mockPersonResponse)
+        fun `Uten mobil`() {
+            whenever(personV3.hentPerson(any())).thenReturn(mockPersonResponse())
 
             val response = controller.hent(FNR)
             val kontaktinformasjon = response["kontaktinformasjon"] as Map<*, *>
@@ -135,12 +124,40 @@ class PersonControllerTest {
 
     }
 
+    @Nested
+    inner class `Tilrettelagt kommunikasjon` {
+
+        @Test
+        fun `Mapping`() {
+            whenever(kodeverk.getKodeverkList(any(), any())).thenReturn(listOf(Kodeverdi(TOLKEHJELP_KODE, TOLKEHJELP_KODE)))
+            whenever(personV3.hentPerson(any())).thenReturn(mockPersonResponse().apply {
+                (person as WSBruker)
+                        .withTilrettelagtKommunikasjon(
+                                WSTilrettelagtKommunikasjonbehov()
+                                        .withBehov(TOLKEHJELP_KODE)
+                                        .withTilrettelagtKommunikasjon(WSTilrettelagtKommunikasjon()
+                                                .withKodeverksRef("TilrettelagtKommunikasjon")
+                                                .withValue(TOLKEHJELP_KODE)
+                                                .withKodeRef(TOLKEHJELP_KODE))
+                        )
+            })
+
+            val response = controller.hent(FNR)["tilrettelagtKomunikasjonsListe"] as List<*>
+            val tilrettelagtKommunikasjon = response[0] as TilrettelagtKommunikasjon
+
+            assertEquals(tilrettelagtKommunikasjon.behov, TOLKEHJELP_KODE)
+        }
+
+    }
+
     companion object {
 
-        @BeforeAll @JvmStatic
+        @BeforeAll
+        @JvmStatic
         fun beforeAll() = enableFeature(PERSON_REST_API)
 
-        @AfterAll @JvmStatic
+        @AfterAll
+        @JvmStatic
         fun afterAll() = disableFeature(PERSON_REST_API)
 
     }
