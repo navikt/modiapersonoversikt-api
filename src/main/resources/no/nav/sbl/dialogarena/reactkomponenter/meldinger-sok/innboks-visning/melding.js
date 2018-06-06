@@ -1,5 +1,6 @@
 import React from 'react';
 import PT from 'prop-types';
+import AlertStripeSuksessSolid from '../../alertstriper/alertstripe-module';
 import Utils from '../../utils/utils-module';
 import sanitize from 'sanitize-html';
 import Journalfort from './journalfort';
@@ -28,18 +29,45 @@ class Melding extends React.Component {
         const dato = sanitize(datoTekst || 'Fant ingen data', { allowedTags: ['em'] });
         const meldingsForfatter = finnMeldingsForfattere(melding);
 
+        class HentEventuelleMarkeringer extends React.Component {
+            render()
+            {
+                if (melding.erFerdigstiltUtenSvar) {
+                    return (
+                        <AlertStripeSuksessSolid header={'Henvendelsen er avsluttet uten å svare bruker'}>
+                            {melding.ferdigstiltUtenSvarAv.fornavn} {melding.ferdigstiltUtenSvarAv.etternavn} ({melding.ferdigstiltUtenSvarAv.ident}) {melding.ferdigstiltUtenSvarDatoTekst}
+                        </AlertStripeSuksessSolid>);
+                } else if (melding.markertSomFeilsendtAvNavIdent) {
+                    return (
+                        <AlertStripeSuksessSolid header={'Feilsendt post'}>
+                            {melding.markertSomFeilsendtAv.fornavn} {melding.markertSomFeilsendtAv.etternavn} ({melding.markertSomFeilsendtAv.ident}) {melding.markertSomFeilsendtDatoTekst}
+                        </AlertStripeSuksessSolid>);
+                } else if (melding.kontorsperretAvNavIdent != null && melding.kontorsperretAvNavIdent != '') {
+                    return (
+                        <AlertStripeSuksessSolid header={'Kontorsperret til enhet ' + melding.kontorsperretEnhet}>
+                            {melding.kontorsperretAv.fornavn} {melding.kontorsperretAv.etternavn} ({melding.kontorsperretAv.ident}) {melding.kontorsperretDatoTekst}
+                        </AlertStripeSuksessSolid>);
+                }
+                return (<div></div>);
+            }
+
+        }
+
         return (
-            <div className={cls}>
-                <img className={`avsenderBilde ${clsExt}`} src={src} alt={altTekst} />
-                <div className="meldingData">
-                    <article className="melding-header">
-                        <p className="meldingstatus" dangerouslySetInnerHTML={{ __html: meldingsStatusTekst }}></p>
-                        <p>{dato}</p>
-                        <span dangerouslySetInnerHTML={{ __html: meldingsForfatter }}></span>
-                    </article>
-                    <article className="fritekst">{paragrafer}</article>
+            <div>
+                <HentEventuelleMarkeringer melding={melding} />
+                <div className={cls}>
+                    <img className={`avsenderBilde ${clsExt}`} src={src} alt={altTekst} />
+                    <div className="meldingData">
+                        <article className="melding-header">
+                            <p className="meldingstatus" dangerouslySetInnerHTML={{ __html: meldingsStatusTekst }}></p>
+                            <p>{dato}</p>
+                            <span dangerouslySetInnerHTML={{ __html: meldingsForfatter }}></span>
+                        </article>
+                        <article className="fritekst">{paragrafer}</article>
+                    </div>
+                    <Journalfort melding={melding} />
                 </div>
-                <Journalfort melding={melding} />
             </div>
         );
     }
@@ -62,7 +90,33 @@ Melding.propTypes = {
         }),
         journalfortAv: PT.shape({
             navn: PT.string
-        })
+        }),
+        erFerdigstiltUtenSvar: PT.bool,
+        ferdigstiltUtenSvarAv: PT.shape({
+            fornavn: PT.string,
+            etternavn: PT.string,
+            navn: PT.string,
+            ident: PT.string
+        }),
+        ferdigstiltUtenSvarDatoTekst: PT.string,
+        ferdigstiltUtenSvarAvNavIdent: PT.string,
+        markertSomFeilsendtAv: PT.shape({
+            fornavn: PT.string,
+            etternavn: PT.string,
+            navn: PT.string,
+            ident: PT.string
+        }),
+        markertSomFeilsendtAvNavIdent: PT.string,
+        markertSomFeilsendtDatoTekst: PT.string,
+        kontorsperretAv: PT.shape({
+            fornavn: PT.string,
+            etternavn: PT.string,
+            navn: PT.string,
+            ident: PT.string
+        }),
+        kontorsperretAvNavIdent: PT.string,
+        kontorsperretDatoTekst: PT.string,
+        kontorsperretEnhet: PT.string
     }).isRequired
 };
 
