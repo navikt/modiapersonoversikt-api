@@ -69,6 +69,10 @@ public class MeldingerSokImpl implements MeldingerSok {
     private static final String JOURNALFORT_AV_IDENT = "journalfortavident";
     private static final String JOURNALFORT_DATO = "journalfortdato";
     private static final String JOURNALFORT_SAKSID = "journalfortsaksid";
+    private static final String FERDIGSTILT_UTEN_SVAR_DATO = "ferdigstiltutensvardato";
+    private static final String FEILSENDT_DATO = "feilsendtdato";
+    private static final String KONTORSPERRET_DATO = "kontorsperredato";
+
     private static final String[] FIELDS = new String[]{
             FRITEKST,
             TEMAGRUPPE,
@@ -101,6 +105,9 @@ public class MeldingerSokImpl implements MeldingerSok {
         List<Melding> transformerteMeldinger = meldinger.stream().map((melding) -> {
             melding.visningsDatoTekst = ofNullable(melding.getVisningsDato()).map(DateUtils::toString).orElse("");
             melding.journalfortDatoTekst = ofNullable(melding.journalfortDato).map(DateUtils::toString).orElse("");
+            melding.ferdigstiltUtenSvarDatoTekst = ofNullable(melding.ferdigstiltUtenSvarDato).map(DateUtils::toString).orElse("");
+            melding.markertSomFeilsendtDatoTekst = ofNullable(melding.markertSomFeilsendtDato).map(DateUtils::toString).orElse("");
+            melding.kontorsperretDatoTekst = ofNullable(melding.kontorsperretDato).map(DateUtils::toString).orElse("");
             return melding;
         }).collect(toList());
 
@@ -224,6 +231,9 @@ public class MeldingerSokImpl implements MeldingerSok {
         document.add(new TextField(JOURNALFORT_AV_IDENT, ofNullable(melding.journalfortAvNavIdent).orElse(""), YES));
         document.add(new TextField(JOURNALFORT_DATO, ofNullable(melding.journalfortDatoTekst).orElse(""), YES));
         document.add(new TextField(JOURNALFORT_SAKSID, ofNullable(melding.journalfortSaksId).orElse(""), YES));
+        document.add(new TextField(FERDIGSTILT_UTEN_SVAR_DATO, ofNullable(melding.ferdigstiltUtenSvarDatoTekst).orElse(""), YES));
+        document.add(new TextField(FEILSENDT_DATO, ofNullable(melding.markertSomFeilsendtDatoTekst).orElse(""), YES));
+        document.add(new TextField(KONTORSPERRET_DATO, ofNullable(melding.kontorsperretDatoTekst).orElse(""), YES));
 
         return document;
     }

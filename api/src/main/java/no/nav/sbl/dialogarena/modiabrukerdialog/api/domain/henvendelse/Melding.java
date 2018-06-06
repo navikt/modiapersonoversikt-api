@@ -22,7 +22,7 @@ public class Melding implements Serializable {
     public String id, traadId, fnrBruker, navIdent, oppgaveId, temagruppe, temagruppeNavn, kanal, kontorsperretEnhet,
             journalfortTema, journalfortTemanavn, journalfortSaksId, journalfortAvNavIdent, eksternAktor,
             tilknyttetEnhet, brukersEnhet, statusTekst, statusKlasse, lestStatus, visningsDatoTekst,
-            journalfortDatoTekst, ikontekst, kontorsperretAvNavIdent, markertSomFeilsendtAvNavIdent,
+            journalfortDatoTekst, ferdigstiltUtenSvarDatoTekst, markertSomFeilsendtDatoTekst, kontorsperretDatoTekst, ikontekst, kontorsperretAvNavIdent, markertSomFeilsendtAvNavIdent,
             ferdigstiltUtenSvarAvNavIdent;
     public DateTime lestDato, opprettetDato, journalfortDato, ferdigstiltDato, ferdigstiltUtenSvarDato,
             markertSomFeilsendtDato, kontorsperretDato;
