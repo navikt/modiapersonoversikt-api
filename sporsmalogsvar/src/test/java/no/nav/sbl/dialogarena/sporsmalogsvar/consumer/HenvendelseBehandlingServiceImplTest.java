@@ -25,24 +25,16 @@ import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.meldinger.WSHentHenven
 import org.joda.time.DateTime;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Captor;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
+import org.mockito.*;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static java.util.Arrays.asList;
 import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.*;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe.OKSOS;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.Feature.DELVISE_SVAR;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.FeatureToggleKt.disableFeature;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.FeatureToggleKt.enableFeature;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.TestUtils.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -136,28 +128,6 @@ public class HenvendelseBehandlingServiceImplTest {
         assertThat(request.getTyper()).contains(SVAR_TELEFON.name());
         assertThat(request.getTyper()).contains(REFERAT_OPPMOTE.name());
         assertThat(request.getTyper()).contains(REFERAT_TELEFON.name());
-    }
-
-    @Test
-    public void henterDelviseSvarHvisFeatureTogglet() {
-        enableFeature(DELVISE_SVAR);
-
-        henvendelseBehandlingService.hentMeldinger(FNR, VALGT_ENHET);
-        verify(henvendelsePortType).hentHenvendelseListe(wsHentHenvendelseListeRequestArgumentCaptor.capture());
-        WSHentHenvendelseListeRequest request = wsHentHenvendelseListeRequestArgumentCaptor.getValue();
-
-        assertThat(request.getTyper()).contains(DELVIS_SVAR_SKRIFTLIG.name());
-        disableFeature(DELVISE_SVAR);
-    }
-
-    @Test
-    public void henterIkkeDelviseSvarHvisIkkeFeatureTogglet() {
-        henvendelseBehandlingService.hentMeldinger(FNR, VALGT_ENHET);
-
-        verify(henvendelsePortType).hentHenvendelseListe(wsHentHenvendelseListeRequestArgumentCaptor.capture());
-        WSHentHenvendelseListeRequest request = wsHentHenvendelseListeRequestArgumentCaptor.getValue();
-
-        assertThat(request.getTyper()).doesNotContain(DELVIS_SVAR_SKRIFTLIG.name());
     }
 
     @Test

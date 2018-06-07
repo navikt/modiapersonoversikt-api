@@ -27,9 +27,7 @@ import org.apache.commons.collections15.Transformer;
 
 import javax.inject.Inject;
 import javax.inject.Named;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
@@ -39,8 +37,6 @@ import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHe
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.lang.collections.TransformerUtils.castTo;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.MeldingUtils.tilMelding;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.Feature.DELVISE_SVAR;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.FeatureToggleKt.visFeature;
 import static org.apache.commons.lang3.StringUtils.defaultString;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
@@ -102,12 +98,9 @@ public class HenvendelseBehandlingServiceImpl implements HenvendelseBehandlingSe
                 SPORSMAL_MODIA_UTGAAENDE.name(),
                 SVAR_SBL_INNGAAENDE.name(),
                 DOKUMENT_VARSEL.name(),
-                OPPGAVE_VARSEL.name()
+                OPPGAVE_VARSEL.name(),
+                DELVIS_SVAR_SKRIFTLIG.name()
         ));
-
-        if (visFeature(DELVISE_SVAR)) {
-            typer.add(DELVIS_SVAR_SKRIFTLIG.name());
-        }
 
         return typer;
     }

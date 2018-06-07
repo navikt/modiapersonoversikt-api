@@ -15,8 +15,6 @@ import javax.ws.rs.core.Response;
 
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static no.nav.metrics.MetricsFactory.createEvent;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.Feature.DELVISE_SVAR;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.FeatureToggleKt.visFeature;
 
 @Path("/oppgaver/{id}")
 @Produces(APPLICATION_JSON)
@@ -35,9 +33,6 @@ public class OppgaveController {
     @Path("/leggTilbake")
     @Consumes(APPLICATION_JSON)
     public Response leggTilbake(@PathParam("id") String oppgaveId, @Context HttpServletRequest httpRequest, LeggTilbakeRESTRequest request) {
-        if (!visFeature(DELVISE_SVAR)) {
-            return Response.serverError().status(Response.Status.NOT_IMPLEMENTED).build();
-        }
 
         LeggTilbakeOppgaveIGsakRequest leggTilbakeOppgaveIGsakRequest = new LeggTilbakeOppgaveIGsakRequest()
                 .withOppgaveId(oppgaveId)
