@@ -3,6 +3,7 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.person
 import no.nav.kjerneinfo.common.domain.Kodeverdi
 import no.nav.kjerneinfo.common.domain.Periode
 import no.nav.kjerneinfo.consumer.fim.person.PersonKjerneinfoServiceBi
+import no.nav.kjerneinfo.consumer.fim.person.exception.AuthorizationWithSikkerhetstiltakException
 import no.nav.kjerneinfo.consumer.fim.person.to.HentKjerneinformasjonRequest
 import no.nav.kjerneinfo.consumer.fim.person.to.HentSikkerhetstiltakRequest
 import no.nav.kjerneinfo.domain.person.*
@@ -42,6 +43,7 @@ class PersonController @Inject constructor(private val kjerneinfoService: Person
             when (exception.cause) {
                 is HentPersonPersonIkkeFunnet -> throw NotFoundException()
                 is HentPersonSikkerhetsbegrensning -> return getBegrensetInnsyn(fødselsnummer, exception.message)
+                is AuthorizationWithSikkerhetstiltakException -> return getBegrensetInnsyn(fødselsnummer, exception.message)
                 else -> throw InternalServerErrorException(exception)
             }
         }
