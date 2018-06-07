@@ -83,7 +83,7 @@ class PersonController @Inject constructor(private val kjerneinfoService: Person
             hentSortertKodeverkslisteForTilrettelagtKommunikasjon().mapNotNull {
                 tilrettelagtKommunikasjon
                         .find { tk -> tk.behov == it.kodeRef }
-                        ?.apply { mapOf("behovKode" to behov, "beskrivelse" to hentBeskrivelseForKode(behov)) }
+                        ?.run { mapOf("behovKode" to behov, "beskrivelse" to hentBeskrivelseForKode(behov)) }
             }
 
     private fun getNavn(person: Person) = mapOf(
