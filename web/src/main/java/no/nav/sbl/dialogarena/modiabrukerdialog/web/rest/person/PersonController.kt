@@ -99,6 +99,7 @@ class PersonController @Inject constructor(private val kjerneinfoService: Person
                 "tilPerson" to mapOf(
                         "navn" to getNavn(it.tilPerson),
                         "alder" to it.tilPerson.fodselsnummer.alder,
+                        "alderMåneder" to it.tilPerson.fodselsnummer.alderIManeder,
                         "fødselsnummer" to it.tilPerson.fodselsnummer.nummer,
                         "personstatus" to getPersonstatus(it.tilPerson)
                 ),
