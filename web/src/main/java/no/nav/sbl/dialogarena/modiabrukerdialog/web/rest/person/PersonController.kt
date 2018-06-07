@@ -34,16 +34,16 @@ class PersonController @Inject constructor(private val kjerneinfoService: Person
     @GET
     @Path("/")
     fun hent(@PathParam("fnr") fødselsnummer: String): Map<String, Any?> {
-
         check(visFeature(PERSON_REST_API))
 
         val person = try {
             kjerneinfoService.hentKjerneinformasjon(HentKjerneinformasjonRequest(fødselsnummer)).person
+        } catch (exception: AuthorizationWithSikkerhetstiltakException) {
+            return getBegrensetInnsyn(fødselsnummer, exception.message)
         } catch (exception: RuntimeException) {
             when (exception.cause) {
                 is HentPersonPersonIkkeFunnet -> throw NotFoundException()
                 is HentPersonSikkerhetsbegrensning -> return getBegrensetInnsyn(fødselsnummer, exception.message)
-                is AuthorizationWithSikkerhetstiltakException -> return getBegrensetInnsyn(fødselsnummer, exception.message)
                 else -> throw InternalServerErrorException(exception)
             }
         }
