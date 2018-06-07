@@ -7,7 +7,6 @@ import no.nav.brukerdialog.security.tilgangskontroll.policy.pep.EnforcementPoint
 import no.nav.kjerneinfo.common.domain.Kodeverdi
 import no.nav.kjerneinfo.consumer.fim.person.support.DefaultPersonKjerneinfoService
 import no.nav.kjerneinfo.consumer.fim.person.support.KjerneinfoMapper
-import no.nav.kjerneinfo.domain.person.fakta.TilrettelagtKommunikasjon
 import no.nav.kodeverk.consumer.fim.kodeverk.KodeverkmanagerBi
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.organisasjonsEnhetV2.OrganisasjonEnhetV2Service
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.Feature.PERSON_REST_API
@@ -143,9 +142,9 @@ class PersonControllerTest {
             })
 
             val response = controller.hent(FNR)["tilrettelagtKomunikasjonsListe"] as List<*>
-            val tilrettelagtKommunikasjon = response[0] as TilrettelagtKommunikasjon
+            val tilrettelagtKommunikasjon = response[0] as Map<*, *>
 
-            assertEquals(tilrettelagtKommunikasjon.behov, TOLKEHJELP_KODE)
+            assertEquals(tilrettelagtKommunikasjon["behovKode"], TOLKEHJELP_KODE)
         }
 
     }
