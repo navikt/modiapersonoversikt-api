@@ -128,6 +128,7 @@ public class HenvendelseBehandlingServiceImplTest {
         assertThat(request.getTyper()).contains(SVAR_TELEFON.name());
         assertThat(request.getTyper()).contains(REFERAT_OPPMOTE.name());
         assertThat(request.getTyper()).contains(REFERAT_TELEFON.name());
+        assertThat(request.getTyper()).contains(DELVIS_SVAR_SKRIFTLIG.name());
     }
 
     @Test
