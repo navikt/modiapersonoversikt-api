@@ -109,7 +109,7 @@ class PersonController @Inject constructor(private val kjerneinfoService: Person
     private fun getStatsborgerskap(person: Person) =
             person.personfakta.statsborgerskap?.beskrivelse.let { if (it == TPS_UKJENT_VERDI) null else it }
 
-    private fun hentBankkonto(person: Person) = person.personfakta.bankkonto?.apply {
+    private fun hentBankkonto(person: Person) = person.personfakta.bankkonto?.run {
         mapOf(
                 "erNorskKonto" to person.personfakta.isBankkontoINorge,
                 "kontonummer" to kontonummer,
@@ -129,7 +129,7 @@ class PersonController @Inject constructor(private val kjerneinfoService: Person
                     }
             )
 
-    private fun hentGateAdresse(adresse: Adresse) = adresse.apply {
+    private fun hentGateAdresse(adresse: Adresse) = adresse.run {
         mapOf(
                 "tilleggsadresse" to tilleggsadresse,
                 "gatenavn" to gatenavn,
@@ -142,7 +142,7 @@ class PersonController @Inject constructor(private val kjerneinfoService: Person
         )
     }
 
-    private fun hentMatrikkeladresse(matrikkeladresse: Matrikkeladresse) = matrikkeladresse.apply {
+    private fun hentMatrikkeladresse(matrikkeladresse: Matrikkeladresse) = matrikkeladresse.run {
         mapOf(
                 "tilleggsadresse" to tilleggsadresseMedType,
                 "eiendomsnavn" to eiendomsnavn,
@@ -152,7 +152,7 @@ class PersonController @Inject constructor(private val kjerneinfoService: Person
         )
     }
 
-    private fun hentAlternativAdresseUtland(adresseUtland: AlternativAdresseUtland) = adresseUtland.apply {
+    private fun hentAlternativAdresseUtland(adresseUtland: AlternativAdresseUtland) = adresseUtland.run {
         mapOf(
                 "landkode" to landkode.value,
                 "adresselinje" to adresselinje,
