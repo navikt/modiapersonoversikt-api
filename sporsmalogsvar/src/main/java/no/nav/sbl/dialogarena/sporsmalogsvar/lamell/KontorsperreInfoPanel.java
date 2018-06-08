@@ -49,6 +49,13 @@ public class KontorsperreInfoPanel extends Panel {
     private HashMap<String, Object> getProps() {
         TraadVM valgtTraad = innboksVM.getValgtTraad();
 
+        if(valgtTraad.getMeldinger().size() == 0) {
+            return new HashMap<String, Object>() {{
+                put("header", "");
+                put("tekst","");
+            }};
+        }
+
         String enhet = valgtTraad.getKontorsperretEnhet()
                 .orElse("<enhet mangler>");
         String veilederNavn = valgtTraad.getKontorsperretAv()
