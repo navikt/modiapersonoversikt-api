@@ -3,10 +3,13 @@
 @frontEndModuler: "@{nodeModulesPath}nav-frontend-";
 @index-fil: "-style/src/index";
 
-@import "@{frontEndModuler}typografi@{index-fil}";
-@import "@{frontEndModuler}alertstriper@{index-fil}";
-@import "@{frontEndModuler}ekspanderbartpanel@{index-fil}";
-@import "@{frontEndModuler}etiketter@{index-fil}";
-@import "@{frontEndModuler}spinner-style/src/spinner-style";
-@import "@{frontEndModuler}skjema@{index-fil}";
-@import "@{frontEndModuler}knapper@{index-fil}";
+// scoper dette innenfor #modia-app for å øke spesifisitet
+#modia-app {
+  @import "@{frontEndModuler}typografi@{index-fil}";
+  @import "@{frontEndModuler}alertstriper@{index-fil}";
+  @import "@{frontEndModuler}ekspanderbartpanel@{index-fil}";
+  @import "@{frontEndModuler}etiketter@{index-fil}";
+  @import "@{frontEndModuler}spinner-style/src/spinner-style";
+  @import "@{frontEndModuler}skjema@{index-fil}";
+  @import "@{frontEndModuler}knapper@{index-fil}";
+}
