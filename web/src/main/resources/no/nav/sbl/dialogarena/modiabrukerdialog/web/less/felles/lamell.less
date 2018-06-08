@@ -78,13 +78,17 @@
 }
 
 .lameller {
-  min-height: 100%;
+  flex-grow: 1;
+  display: flex;
+  flex-flow: column nowrap;
   position: relative;
-  background-color: @white;
   .lamell {
     position: relative;
     .person {
       margin-left: 0;
+    }
+    &.selected {
+      flex-grow: 1;
     }
     .close {
       position: absolute;
