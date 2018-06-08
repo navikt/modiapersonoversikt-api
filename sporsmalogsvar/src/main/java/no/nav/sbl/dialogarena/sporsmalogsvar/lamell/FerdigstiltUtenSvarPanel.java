@@ -36,6 +36,13 @@ public class FerdigstiltUtenSvarPanel extends Panel {
     }
 
     private HashMap<String, Object> getProps() {
+        if(innboksVM.getValgtTraad().getMeldinger().size() == 0) {
+            return new HashMap<String, Object>() {{
+                put("header", "");
+                put("tekst","");
+            }};
+        }
+
         String veilederNavn = innboksVM.getValgtTraad().getFerdigstiltUtenSvarAv()
                 .map(saksbehandler -> saksbehandler.navn)
                 .orElse("<navn mangler>");
