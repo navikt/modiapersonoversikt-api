@@ -96,7 +96,7 @@ class PersonControllerTest {
             val kontaktinformasjon = response["kontaktinformasjon"] as Map<*, *>
             val mobil = kontaktinformasjon["mobil"] as Map<*, *>
             val retningsnummer = mobil["retningsnummer"]
-            val nummer = mobil["telefonnummer"]
+            val nummer = mobil["identifikator"]
 
             assertEquals(TELEFONNUMMER, nummer)
             assertEquals(RETNINGSNUMMER, retningsnummer)
