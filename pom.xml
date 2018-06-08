@@ -103,13 +103,13 @@
         <!-- Samme som Jetty -->
 
         <!-- Modia-komponenter-->
-        <reactkomponenter.version>1754</reactkomponenter.version>
+        <reactkomponenter.version>1760</reactkomponenter.version>
         <personsok.version>4.0.8</personsok.version>
         <kjerneinfo.versjon>4556</kjerneinfo.versjon>
         <utbetaling.version>4.0.0</utbetaling.version>
         <saksoversikt.version>9.0.4</saksoversikt.version>
         <varsling.modia.version>2.0</varsling.modia.version>
-        <modia-felleskomponenter.version>4.5</modia-felleskomponenter.version>
+        <modia-felleskomponenter.version>4.6</modia-felleskomponenter.version>
 
         <!-- Tjenestespecs -->
         <soknader.liste.version>2.0.12</soknader.liste.version>

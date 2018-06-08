@@ -1,13 +1,54 @@
 #modia-app .app-content {
+
   .sidebar-venstre {
     display: none;
   }
   .sidebar-hoyre {
     flex: 35% 0 0;
   }
+
+  .main-content .lameller {
+    box-shadow: 0 0 0 2px @navLysGra;
+  }
+
   .nyttvisittkort {
+    overflow-y: auto;
+    background-color: @navLysGra;
     p {
       padding: 0;
     }
+    .ekspanderbartPanel__hode {
+      z-index: initial;
+      border-bottom: @navLysGra 2px solid;
+    }
+
+    /* KODE FOR AT NAV-FRONT-END STYLES SKAL OVERSKRIVE MODIA-STYLES */
+    // nav frontend bruker rem, og tar utgangspunkt i at font-size på html er 16px. i modia er den 14px, og derfor må elementer fra nav-frontend få custom styling her
+    .typo-undertittel {
+      font-size: 20px;
+    }
+    .typo-undertekst {
+      font-size: 14px;
+    }
+    .typo-etikett-liten {
+      font-size: 14px;
+    }
+    .typo-element {
+      font-size: 16px;
+    }
+    .etikett {
+      font-size: 16px;
+    }
+    form {
+      label, input, select, textarea, span {
+        color: @textColor;
+        text-transform: inherit;
+        font-size: 16px !important;
+      }
+      .inputPanel, .checkboksPanel, .inputPanel--checked {
+        width: 100%;
+      }
+    }
   }
+
 }
