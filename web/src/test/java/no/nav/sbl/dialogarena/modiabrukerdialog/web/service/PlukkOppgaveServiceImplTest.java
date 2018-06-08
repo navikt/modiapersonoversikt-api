@@ -1,5 +1,7 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.service;
 
+import no.nav.brukerdialog.security.tilgangskontroll.policy.pep.EnforcementPoint;
+import no.nav.brukerdialog.security.tilgangskontroll.policy.request.PolicyRequest;
 import no.nav.kjerneinfo.common.domain.Kodeverdi;
 import no.nav.kjerneinfo.consumer.fim.person.PersonKjerneinfoServiceBi;
 import no.nav.kjerneinfo.consumer.fim.person.to.HentKjerneinformasjonRequest;
@@ -9,19 +11,15 @@ import no.nav.kjerneinfo.domain.person.Personfakta;
 import no.nav.kjerneinfo.domain.person.fakta.AnsvarligEnhet;
 import no.nav.kjerneinfo.domain.person.fakta.Organisasjonsenhet;
 import no.nav.modig.core.exception.AuthorizationException;
-import no.nav.brukerdialog.security.tilgangskontroll.policy.pep.EnforcementPoint;
-import no.nav.brukerdialog.security.tilgangskontroll.policy.request.PolicyRequest;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Oppgave;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveBehandlingService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.service.plukkoppgave.PlukkOppgaveServiceImpl;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.List;
 
@@ -31,11 +29,11 @@ import static no.nav.sbl.dialogarena.modiabrukerdialog.web.service.plukkoppgave.
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
+import static org.mockito.MockitoAnnotations.initMocks;
 
-@RunWith(MockitoJUnitRunner.class)
 public class PlukkOppgaveServiceImplTest {
 
     private static final String SAKSBEHANDLERS_VALGTE_ENHET = "4200";
@@ -56,12 +54,16 @@ public class PlukkOppgaveServiceImplTest {
         Personfakta personfakta = new Personfakta();
         personfakta.setAnsvarligEnhet(new AnsvarligEnhet.With()
                 .organisasjonsenhet(new Organisasjonsenhet.With().organisasjonselementId("1").done()).done());
-        personfakta.setDiskresjonskode(new Kodeverdi(null, "SPFO"));
+        personfakta.setDiskresjonskode(new Kodeverdi("SPFO", null));
         personResponse.setPerson(new Person.With()
                 .personfakta(personfakta).done());
     }
 
-    @Before
+    PlukkOppgaveServiceImplTest() {
+        initMocks(this);
+    }
+
+    @BeforeEach
     public void setUp() {
         when(personKjerneinfoServiceBi.hentKjerneinformasjon(any(HentKjerneinformasjonRequest.class))).thenReturn(personResponse);
     }

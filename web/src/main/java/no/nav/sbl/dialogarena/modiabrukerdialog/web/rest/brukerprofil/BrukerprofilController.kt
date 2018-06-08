@@ -16,7 +16,6 @@ import no.nav.kjerneinfo.common.domain.Periode
 import no.nav.kjerneinfo.consumer.fim.behandleperson.BehandlePersonServiceBi
 import no.nav.kjerneinfo.consumer.fim.person.PersonKjerneinfoServiceBi
 import no.nav.kjerneinfo.consumer.fim.person.to.HentKjerneinformasjonRequest
-import no.nav.kjerneinfo.domain.person.fakta.TilrettelagtKommunikasjon
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.ldap.LDAPService
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.Feature.PERSON_REST_API
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.visFeature
@@ -98,11 +97,7 @@ class BrukerprofilController @Inject constructor(private val behandlePersonServi
             fødselsnummer
                     .also { check(visFeature(PERSON_REST_API)) }
                     .let(kjerneinfoService::hentBrukerprofil)
-                    .apply {
-                        tilrettelagtKommunikasjon = request.map {
-                            TilrettelagtKommunikasjon().apply { behov = it }
-                        }
-                    }
+                    .apply { tilrettelagtKommunikasjon = request.map { Kodeverdi(it, "") } }
                     ?.run(::skrivBrukerOgLagResponse)
 
     @POST
@@ -138,7 +133,7 @@ class BrukerprofilController @Inject constructor(private val behandlePersonServi
     private fun BankkontoUtland.populer(request: EndreKontonummerRequest) {
         banknavn = request.banknavn
         swift = request.swift
-        landkode = Kodeverdi().apply { value = request.landkode }
+        landkode = Kodeverdi().apply { kodeRef = request.landkode }
         bankadresse = request.bankadresse.let {
             UstrukturertAdresse().apply {
                 adresselinje1 = it?.linje1
@@ -174,7 +169,7 @@ private fun mapTelefon(telefonnummer: EndreTelefonnummerRequest.Telefon, telefon
         telefonnummer.let {
             Telefon().apply {
                 identifikator = it.identifikator
-                retningsnummer = Kodeverdi().apply { value = it.retningsnummer }
+                retningsnummer = Kodeverdi().apply { kodeRef = it.retningsnummer }
                 type = Kodeverdi(telefonType, telefonType)
             }
         }
@@ -182,7 +177,7 @@ private fun mapTelefon(telefonnummer: EndreTelefonnummerRequest.Telefon, telefon
 private fun Bruker.setUtenlandskAdresse(adresse: EndreAdresseRequest.UtenlandskAdresse) {
     midlertidigadresseNorge = null
     midlertidigadresseUtland = UstrukturertAdresse().apply {
-        landkode = Kodeverdi().apply { value = adresse.landkode }
+        landkode = Kodeverdi().apply { kodeRef = adresse.landkode }
         adresselinje1 = adresse.adresselinje1
         adresselinje2 = adresse.adresselinje2
         adresselinje3 = adresse.adresselinje3

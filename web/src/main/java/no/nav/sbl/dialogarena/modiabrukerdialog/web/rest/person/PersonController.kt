@@ -6,14 +6,15 @@ import no.nav.kjerneinfo.consumer.fim.person.PersonKjerneinfoServiceBi
 import no.nav.kjerneinfo.consumer.fim.person.exception.AuthorizationWithSikkerhetstiltakException
 import no.nav.kjerneinfo.consumer.fim.person.to.HentKjerneinformasjonRequest
 import no.nav.kjerneinfo.consumer.fim.person.to.HentSikkerhetstiltakRequest
+import no.nav.kjerneinfo.domain.info.BankkontoUtland
 import no.nav.kjerneinfo.domain.person.*
 import no.nav.kjerneinfo.domain.person.fakta.Sikkerhetstiltak
 import no.nav.kjerneinfo.domain.person.fakta.Telefon
-import no.nav.kjerneinfo.domain.person.fakta.TilrettelagtKommunikasjon
 import no.nav.kodeverk.consumer.fim.kodeverk.KodeverkmanagerBi
 import no.nav.kodeverk.consumer.fim.kodeverk.to.feil.HentKodeverkKodeverkIkkeFunnet
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.Feature.PERSON_REST_API
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.visFeature
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.kodeverk.Kode
 import no.nav.tjeneste.virksomhet.person.v3.HentPersonPersonIkkeFunnet
 import no.nav.tjeneste.virksomhet.person.v3.HentPersonSikkerhetsbegrensning
 import javax.inject.Inject
@@ -51,16 +52,16 @@ class PersonController @Inject constructor(private val kjerneinfoService: Person
         return mapOf(
                 "fødselsnummer" to person.fodselsnummer.nummer,
                 "alder" to person.fodselsnummer.alder,
-                "kjønn" to person.personfakta.kjonn.value,
+                "kjønn" to person.personfakta.kjonn.kodeRef,
                 "geografiskTilknytning" to person.personfakta.geografiskTilknytning?.value,
                 "navn" to getNavn(person),
-                "diskresjonskode" to (person.personfakta.diskresjonskode?.value ?: ""),
+                "diskresjonskode" to (person.personfakta.diskresjonskode?.kodeRef ?: ""),
                 "bankkonto" to hentBankkonto(person),
                 "tilrettelagtKomunikasjonsListe" to hentTilrettelagtKommunikasjon(person.personfakta.tilrettelagtKommunikasjon),
                 "personstatus" to getPersonstatus(person),
-                "statsborgerskap" to getStatsborgerskap(person),
+                "statsborgerskap" to mapStatsborgerskap(person.personfakta),
                 "sivilstand" to mapOf(
-                        "value" to person.personfakta.sivilstand?.value,
+                        "kodeRef" to person.personfakta.sivilstand?.kodeRef,
                         "beskrivelse" to person.personfakta.sivilstand?.beskrivelse,
                         "fraOgMed" to person.personfakta.sivilstandFom
                 ),
@@ -74,17 +75,18 @@ class PersonController @Inject constructor(private val kjerneinfoService: Person
         )
     }
 
+    private fun mapStatsborgerskap(personfakta: Personfakta) =
+            personfakta.statsborgerskap?.let { if (it.kodeRef == TPS_UKJENT_VERDI) null else Kode(it) }
+
     private fun getPersonstatus(person: Person) = mapOf(
             "dødsdato" to person.personfakta.doedsdato,
-            "bostatus" to person.personfakta.bostatus?.value
+            "bostatus" to person.personfakta.bostatus?.let(::Kode)
     )
 
-    private fun hentTilrettelagtKommunikasjon(tilrettelagtKommunikasjon: List<TilrettelagtKommunikasjon>) =
-            hentSortertKodeverkslisteForTilrettelagtKommunikasjon().mapNotNull {
-                tilrettelagtKommunikasjon
-                        .find { tk -> tk.behov == it.kodeRef }
-                        ?.run { mapOf("behovKode" to behov, "beskrivelse" to hentBeskrivelseForKode(behov)) }
-            }
+    private fun hentTilrettelagtKommunikasjon(tilrettelagtKommunikasjon: List<Kodeverdi>) =
+            hentSortertKodeverkslisteForTilrettelagtKommunikasjon()
+                    .filter { tilrettelagtKommunikasjon.any { tk -> tk.kodeRef == it.kodeRef } }
+                    .map(::Kode)
 
     private fun getNavn(person: Person) = mapOf(
             "sammensatt" to person.personfakta.personnavn.sammensattNavn,
@@ -107,17 +109,35 @@ class PersonController @Inject constructor(private val kjerneinfoService: Person
         )
     }
 
-    private fun getStatsborgerskap(person: Person) =
-            person.personfakta.statsborgerskap?.beskrivelse.let { if (it == TPS_UKJENT_VERDI) null else it }
-
-    private fun hentBankkonto(person: Person) = person.personfakta.bankkonto?.run {
-        mapOf(
-                "erNorskKonto" to person.personfakta.isBankkontoINorge,
-                "kontonummer" to kontonummer,
-                "bank" to banknavn,
-                "sistEndret" to endringsinformasjon.sistOppdatert,
-                "sistEndretAv" to endringsinformasjon.endretAv
-        )
+    private fun hentBankkonto(person: Person) = person.personfakta.let {
+        it.bankkonto?.run {
+            mapOf(
+                    "kontonummer" to kontonummer,
+                    "banknavn" to banknavn,
+                    "sistEndret" to endringsinformasjon.sistOppdatert,
+                    "sistEndretAv" to endringsinformasjon.endretAv
+            ).plus(
+                    if (it.isBankkontoIUtland) {
+                        (this as BankkontoUtland).let {
+                            mapOf(
+                                    "bankkode" to it.bankkode,
+                                    "swift" to it.swift,
+                                    "landkode" to it.landkode?.let(::Kode),
+                                    "adresse" to it.bankadresse?.let {
+                                        mapOf(
+                                                "linje1" to it.adresselinje1,
+                                                "linje2" to it.adresselinje2,
+                                                "linje3" to it.adresselinje3
+                                        )
+                                    },
+                                    "valuta" to it.valuta?.let(::Kode)
+                            )
+                        }
+                    } else {
+                        emptyMap<String, Any?>()
+                    }
+            )
+        }
     }
 
     private fun hentAdresse(adresselinje: Adresselinje) =
@@ -155,8 +175,8 @@ class PersonController @Inject constructor(private val kjerneinfoService: Person
 
     private fun hentAlternativAdresseUtland(adresseUtland: AlternativAdresseUtland) = adresseUtland.run {
         mapOf(
-                "landkode" to landkode.value,
-                "adresselinje" to adresselinje,
+                "landkode" to Kode(landkode),
+                "adresselinjer" to listOf(adresselinje1, adresselinje2, adresselinje3, adresselinje4),
                 "periode" to postleveringsPeriode?.let { hentPeriode(it) }
         )
     }
@@ -186,7 +206,7 @@ class PersonController @Inject constructor(private val kjerneinfoService: Person
     }
 
     private fun getTelefon(telefon: Telefon) = mapOf(
-            "retningsnummer" to (telefon.retningsnummer?.value ?: ""),
+            "retningsnummer" to Kode(telefon.retningsnummer),
             "identifikator" to telefon.identifikator,
             "sistEndretAv" to telefon.endretAv,
             "sistEndret" to telefon.endringstidspunkt?.toString(DATO_TID_FORMAT)
@@ -205,9 +225,4 @@ class PersonController @Inject constructor(private val kjerneinfoService: Person
         emptyList<Kodeverdi>()
     }
 
-    private fun hentBeskrivelseForKode(kode: String) = try {
-        kodeverk.getBeskrivelseForKode(kode, TILRETTELAGT_KOMMUNIKASJON_KODEVERKREF, TILRETTELAGT_KOMMUNIKASJON_KODEVERKSPRAK)
-    } catch (exception: HentKodeverkKodeverkIkkeFunnet) {
-        kode
-    }
 }

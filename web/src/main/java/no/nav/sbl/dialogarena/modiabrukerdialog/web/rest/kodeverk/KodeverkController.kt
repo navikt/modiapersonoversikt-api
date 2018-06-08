@@ -15,8 +15,14 @@ class KodeverkController @Inject constructor(private val kodeverkManager: Kodeve
 
     @GET
     @Path("/")
-    fun hentKodeverk(@PathParam("kodeverkRef") kodeverkRef: String): Map<String, MutableList<Kodeverdi>> {
-        return mapOf( "kodeverk" to kodeverkManager.getKodeverkList(kodeverkRef, "nb"))
-    }
+    fun hentKodeverk(@PathParam("kodeverkRef") kodeverkRef: String) = mapOf(
+            "kodeverk" to kodeverkManager
+                    .getKodeverkList(kodeverkRef, "nb")
+                    .map(::Kode)
+    )
 
+}
+
+data class Kode(val kodeRef: String, val beskrivelse: String) {
+    constructor(kodeverdi: Kodeverdi) : this(kodeverdi.kodeRef, kodeverdi.beskrivelse)
 }
