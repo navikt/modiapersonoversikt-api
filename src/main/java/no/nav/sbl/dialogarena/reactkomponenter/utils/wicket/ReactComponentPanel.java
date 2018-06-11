@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.joda.JodaModule;
-import no.nav.modig.lang.serialize.OptionalSerializerModule;
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.ajax.AbstractDefaultAjaxBehavior;
@@ -25,7 +24,6 @@ public class ReactComponentPanel extends MarkupContainer {
 
     private static final ObjectMapper mapper = new ObjectMapper();
     static {
-        mapper.registerModule(new OptionalSerializerModule());
         mapper.registerModule(new JodaModule());
         mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
     }
