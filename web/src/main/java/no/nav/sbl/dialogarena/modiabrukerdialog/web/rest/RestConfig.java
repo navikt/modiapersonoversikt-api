@@ -2,6 +2,7 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest;
 
 import no.nav.brukerdialog.isso.RelyingPartyCallback;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.JacksonConfig;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.baseurls.BaseUrlsController;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.brukerprofil.BrukerprofilController;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.egenansatt.EgenAnsattController;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.enhet.EnhetController;
@@ -41,7 +42,8 @@ public class RestConfig extends ResourceConfig {
                 BrukerprofilController.class,
                 EgenAnsattController.class,
                 KodeverkController.class,
-                LdapController.class
+                LdapController.class,
+                BaseUrlsController.class
         );
     }
 }
