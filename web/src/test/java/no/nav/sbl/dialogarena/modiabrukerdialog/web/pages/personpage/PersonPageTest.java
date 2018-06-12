@@ -56,8 +56,8 @@ import static no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe.ARB
 import static org.hamcrest.Matchers.is;
 import static org.joda.time.DateTime.now;
 import static org.junit.Assert.*;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyString;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(SpringExtension.class)

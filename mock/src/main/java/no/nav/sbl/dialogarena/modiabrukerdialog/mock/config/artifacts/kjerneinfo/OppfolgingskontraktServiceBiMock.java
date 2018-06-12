@@ -17,7 +17,7 @@ import static no.nav.kjerneinfo.common.mockutils.DateUtils.convertDateToXmlGrego
 import static no.nav.kjerneinfo.common.mockutils.DateUtils.getRandomDatePair;
 import static no.nav.kontrakter.consumer.fim.ytelseskontrakt.mock.YtelseskontraktMockFactory.YTELSESSTATUS_AKTIV;
 import static org.joda.time.LocalDate.now;
-import static org.mockito.Matchers.any;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 

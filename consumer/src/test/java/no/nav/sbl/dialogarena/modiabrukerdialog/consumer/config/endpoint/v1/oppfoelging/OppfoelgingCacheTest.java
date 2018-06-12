@@ -23,7 +23,7 @@ import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.MockUtil.TI
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Matchers.any;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(SpringExtension.class)
