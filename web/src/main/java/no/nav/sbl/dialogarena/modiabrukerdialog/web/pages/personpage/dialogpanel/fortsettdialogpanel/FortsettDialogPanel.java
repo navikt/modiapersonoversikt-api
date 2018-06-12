@@ -56,8 +56,6 @@ import static no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe.KOM
 import static no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding.siste;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype.*;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.api.service.HenvendelseUtsendingService.OppgaveErFerdigstilt;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.Feature.DELVISE_SVAR;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.FeatureToggleKt.visFeature;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.HenvendelseVM.OppgaveTilknytning.ENHET;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.HenvendelseVM.OppgaveTilknytning.SAKSBEHANDLER;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.util.AnimasjonsUtils.animertVisningToggle;
@@ -182,7 +180,7 @@ public class FortsettDialogPanel extends GenericPanel<HenvendelseVM> {
             }
         };
 
-        if (visFeature(DELVISE_SVAR) && kanBesvaresDelvis()) {
+        if (kanBesvaresDelvis()) {
             leggTilbakeDelvisKnapp.add(new Label("leggtilbakedelvistekst", new ResourceModel("fortsettdialogpanel.leggtilbakedelvis")));
             leggTilbakeDelvisKnapp.add(AttributeModifier.replace("aria-controls", leggTilbakeDelvisSvarPanel.getMarkupId()));
         } else {
@@ -193,7 +191,7 @@ public class FortsettDialogPanel extends GenericPanel<HenvendelseVM> {
 
         return leggTilbakeDelvisKnapp;
     }
-
+        
     private boolean kanBesvaresDelvis() {
         return sporsmal.erSporsmalSkriftlig() && erSporsmalUbesvart();
     }

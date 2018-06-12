@@ -6,15 +6,29 @@ import org.junit.jupiter.api.Test
 class FeatureToggleTest {
 
     @Test
-    fun visDelviseSvarDefaulterTilFalse() {
-        System.clearProperty(Feature.DELVISE_SVAR.propertyKey)
-        assertEquals(false, visFeature(Feature.DELVISE_SVAR))
+    fun visFeatureDefaulterTilDefaultverdi() {
+        System.clearProperty(Feature.SAMPLE_FEATURE.propertyKey)
+        assertEquals(Feature.SAMPLE_FEATURE.defaultValue, visFeature(Feature.SAMPLE_FEATURE))
     }
 
     @Test
-    fun visDelviseSvarLeserProperty() {
-        System.setProperty(Feature.DELVISE_SVAR.propertyKey, "true")
-        assertEquals(true, visFeature(Feature.DELVISE_SVAR))
+    fun visFeatureLeserProperty() {
+        System.setProperty(Feature.SAMPLE_FEATURE.propertyKey, "true")
+        assertEquals(true, visFeature(Feature.SAMPLE_FEATURE))
     }
 
+    @Test
+    fun enableFeatureSetterTilTrue(){
+        enableFeature(Feature.SAMPLE_FEATURE)
+
+        assertEquals("true", System.getProperty(Feature.SAMPLE_FEATURE.propertyKey))
+    }
+
+
+    @Test
+    fun disableFeatureSetterTilFalse(){
+        disableFeature(Feature.SAMPLE_FEATURE)
+
+        assertEquals("false", System.getProperty(Feature.SAMPLE_FEATURE.propertyKey))
+    }
 }

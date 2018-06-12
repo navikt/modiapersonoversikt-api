@@ -39,8 +39,6 @@ import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHe
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.lang.collections.TransformerUtils.castTo;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.MeldingUtils.tilMelding;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.Feature.DELVISE_SVAR;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.FeatureToggleKt.visFeature;
 import static org.apache.commons.lang3.StringUtils.defaultString;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
@@ -102,12 +100,9 @@ public class HenvendelseBehandlingServiceImpl implements HenvendelseBehandlingSe
                 SPORSMAL_MODIA_UTGAAENDE.name(),
                 SVAR_SBL_INNGAAENDE.name(),
                 DOKUMENT_VARSEL.name(),
-                OPPGAVE_VARSEL.name()
+                OPPGAVE_VARSEL.name(),
+                DELVIS_SVAR_SKRIFTLIG.name()
         ));
-
-        if (visFeature(DELVISE_SVAR)) {
-            typer.add(DELVIS_SVAR_SKRIFTLIG.name());
-        }
 
         return typer;
     }

@@ -20,15 +20,14 @@ import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.OppgavebehandlingV3;
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.meldinger.WSEndreOppgave;
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.meldinger.WSLagreOppgaveRequest;
 import no.nav.tjeneste.virksomhet.tildeloppgave.v1.TildelOppgaveV1;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.springframework.mock.web.MockHttpServletRequest;
 
 import javax.ws.rs.ForbiddenException;
 
-import static no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.Feature.DELVISE_SVAR;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.FeatureToggleKt.disableFeature;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.FeatureToggleKt.enableFeature;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
@@ -49,16 +48,6 @@ class OppgaveControllerTest {
     private TildelOppgaveV1 tildelOppgaveMock;
     private OppgaveV3 oppgaveWSMock;
     private AnsattServiceImpl ansattWSMock;
-
-    @BeforeAll
-    static void beforeAll() {
-        enableFeature(DELVISE_SVAR);
-    }
-
-    @AfterAll
-    static void afterAll() {
-        disableFeature(DELVISE_SVAR);
-    }
 
     @BeforeEach
     void before() throws HentOppgaveOppgaveIkkeFunnet, HentNAVAnsattFaultGOSYSGeneriskfMsg, HentNAVAnsattFaultGOSYSNAVAnsattIkkeFunnetMsg, HentNAVAnsattEnhetListeFaultGOSYSGeneriskMsg,

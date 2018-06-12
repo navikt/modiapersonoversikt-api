@@ -16,8 +16,6 @@ import javax.ws.rs.core.Response;
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static no.nav.brukerdialog.security.context.SubjectHandler.getSubjectHandler;
 import static no.nav.metrics.MetricsFactory.createEvent;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.Feature.DELVISE_SVAR;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.FeatureToggleKt.visFeature;
 
 @Path("/personer/{fnr}/traader/{traadId}/henvendelser/{id}")
 @Produces(APPLICATION_JSON)
@@ -39,10 +37,6 @@ public class DelsvarController {
             @PathParam("traadId") String traadId,
             @PathParam("id") String henvendelseId,
             @Context HttpServletRequest httpRequest, DelsvarRestRequest request) {
-
-        if (!visFeature(DELVISE_SVAR)) {
-            return Response.serverError().status(Response.Status.NOT_IMPLEMENTED).build();
-        }
 
         DelsvarRequest delsvarRequest = new DelsvarRequestBuilder()
                 .withFodselsnummer(fnr)

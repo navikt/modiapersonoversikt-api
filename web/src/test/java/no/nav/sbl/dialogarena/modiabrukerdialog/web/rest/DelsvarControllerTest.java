@@ -30,9 +30,6 @@ import javax.ws.rs.core.Response;
 import java.util.Collections;
 
 import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.SPORSMAL_SKRIFTLIG;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.Feature.DELVISE_SVAR;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.FeatureToggleKt.disableFeature;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.FeatureToggleKt.enableFeature;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
@@ -52,14 +49,12 @@ class DelsvarControllerTest {
 
     @BeforeAll
     static void beforeAll() {
-        enableFeature(DELVISE_SVAR);
         SubjectHandlerUtil.setInnloggetSaksbehandler(SAKSBEHANDLERS_IDENT);
         CacheTestUtil.setupCache(Collections.singletonList("endpointCache"));
     }
 
     @AfterAll
     static void afterAll() {
-        disableFeature(DELVISE_SVAR);
         CacheTestUtil.tearDown();
     }
 
