@@ -33,8 +33,8 @@ public class PsakServiceImplTest {
 
         assertThat(saker, hasSize(1));
         Sak sak = saker.iterator().next();
-        assertThat(sak.fagsystemSaksId.get(), is(wsSakSammendrag.getSakId()));
-        assertThat(sak.saksId.get(), is(wsSakSammendrag.getSakId()));
+        assertThat(sak.fagsystemSaksId, is(wsSakSammendrag.getSakId()));
+        assertThat(sak.saksId, is(wsSakSammendrag.getSakId()));
         assertThat(sak.temaKode, is(wsSakSammendrag.getArkivtema().getValue()));
         assertThat(sak.temaNavn, is(wsSakSammendrag.getArkivtema().getValue()));
         assertThat(sak.fagsystemKode, is(FAGSYSTEMKODE_PSAK));

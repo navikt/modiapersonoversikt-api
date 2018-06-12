@@ -216,7 +216,7 @@ public class HenvendelseUtsendingServiceImplTest {
     @Test
     public void skalJournalforeHenvendelseDersomSakErSatt() throws Exception {
         Sak sak = new Sak();
-        sak.saksId = Optional.of("sakid");
+        sak.saksId = "sakid";
         Melding melding = new Melding()
                 .withFnr(FNR)
                 .withFritekst(mockFritekst())

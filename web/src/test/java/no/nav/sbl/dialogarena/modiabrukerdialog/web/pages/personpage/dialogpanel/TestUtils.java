@@ -24,7 +24,7 @@ public class TestUtils {
 
     public static Sak createSak(String saksId, String temaKode, String fagsystemKode, String sakstype, DateTime opprettet) {
         Sak sak = new Sak();
-        sak.saksId = ofNullable(saksId);
+        sak.saksId = saksId;
         sak.temaKode = temaKode;
         sak.fagsystemKode = fagsystemKode;
         if (sakstype.equals(SAKSTYPE_GENERELL)) {

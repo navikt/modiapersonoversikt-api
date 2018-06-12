@@ -36,11 +36,11 @@ public class PsakServiceImpl implements PsakService {
 
     private static final Transformer<WSSakSammendrag, Sak> TIL_SAK = wsSakSammendrag -> {
         Sak sak = new Sak();
-        sak.fagsystemSaksId = ofNullable(wsSakSammendrag.getSakId());
+        sak.fagsystemSaksId = wsSakSammendrag.getSakId();
         sak.temaKode = wsSakSammendrag.getArkivtema().getValue();
         sak.temaNavn = wsSakSammendrag.getArkivtema().getValue();
         sak.fagsystemKode = FAGSYSTEMKODE_PSAK;
-        sak.saksId = ofNullable(wsSakSammendrag.getSakId());
+        sak.saksId = wsSakSammendrag.getSakId();
         sak.finnesIPsak = true;
         sak.opprettetDato = opprettetDato(wsSakSammendrag.getSaksperiode());
         return sak;

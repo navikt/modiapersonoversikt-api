@@ -50,10 +50,8 @@ public class KnyttBehandlingskjedeTilSakValidator {
         };
     }
 
-    private static String getSaksId(Sak sak) {
-        return Optional.ofNullable(sak)
-                            .map(sak1 -> sak1.saksId.orElse("INGEN SAKSID"))
-                            .orElse("INGEN SAKSID");
+    static String getSaksId(Sak sak) {
+        return sak == null ? "INGEN SAKSID" : (sak.saksId == null ? "INGEN SAKSID" : sak.saksId);
     }
 
     private static String getBehandlingskjedeId(String behandlingskjede) {

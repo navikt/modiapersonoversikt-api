@@ -95,7 +95,7 @@ public class SakerServiceImplTest {
     public void transformererResponseTilSaksliste() {
         List<Sak> saksliste = sakerService.hentSammensatteSaker(FNR);
 
-        assertThat(saksliste.get(0).saksId.get(), is("1"));
+        assertThat(saksliste.get(0).saksId, is("1"));
     }
 
     @Test
@@ -117,8 +117,8 @@ public class SakerServiceImplTest {
     public void transformasjonenGenerererRelevanteFelter() {
         Sak sak = SakerServiceImpl.TIL_SAK.transform(sakerListe.get(0));
 
-        assertThat(sak.saksId.get(), is("1"));
-        assertThat(sak.fagsystemSaksId.get(), is("11"));
+        assertThat(sak.saksId, is("1"));
+        assertThat(sak.fagsystemSaksId, is("11"));
         assertThat(sak.temaKode, is(GODKJENTE_TEMA_FOR_GENERELLE.get(0)));
         assertThat(sak.sakstype, is(SAKSTYPE_GENERELL));
         assertThat(sak.fagsystemKode, is(GODKJENT_FAGSYSTEM_FOR_GENERELLE));

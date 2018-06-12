@@ -10,11 +10,9 @@ import org.joda.time.format.DateTimeFormat;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Locale;
-import java.util.Optional;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.unmodifiableList;
-import static java.util.Optional.empty;
 import static org.apache.commons.collections15.FactoryUtils.constantFactory;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -22,8 +20,8 @@ public class Sak implements Serializable, Comparable<Sak> {
 
     private static Factory<Locale> locale = constantFactory(Locale.getDefault());
 
-    public Optional<String> saksId = empty();
-    public Optional<String> fagsystemSaksId = empty();
+    public String saksId = null;
+    public String fagsystemSaksId = null;
     public String temaKode, temaNavn, fagsystemKode, fagsystemNavn, sakstype;
     public DateTime opprettetDato;
     public Boolean finnesIGsak = false, finnesIPsak = false;
@@ -66,7 +64,7 @@ public class Sak implements Serializable, Comparable<Sak> {
     }
 
     public String getSaksIdVisning() {
-        return fagsystemSaksId.orElseGet(() -> saksId.orElse(""));
+        return fagsystemSaksId != null ? fagsystemSaksId : (saksId != null ? saksId : "");
     }
 
     @Override
@@ -84,7 +82,7 @@ public class Sak implements Serializable, Comparable<Sak> {
         }
 
         Sak sak = (Sak) obj;
-        if (saksId.isPresent() && sak.saksId.isPresent() && saksId.get().equals(sak.saksId.get())) {
+        if (saksId != null && saksId.equals(sak.saksId)) {
             return true;
         } else {
             return temaKode != null && sak.temaKode != null
@@ -98,8 +96,8 @@ public class Sak implements Serializable, Comparable<Sak> {
 
     @Override
     public int hashCode() {
-        if (saksId.isPresent()) {
-            return saksId.get().hashCode();
+        if (saksId != null) {
+            return saksId.hashCode();
         } else if (temaKode != null
                 && fagsystemKode != null
                 && sakstype != null) {

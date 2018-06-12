@@ -142,7 +142,7 @@ public class SakerUtilsTest {
 
     private static Sak createSak(String saksId, String temaKode, String fagsystemKode, String sakstype, DateTime opprettet) {
         Sak sak = new Sak();
-        sak.saksId = Optional.ofNullable(saksId);
+        sak.saksId = saksId;
         sak.temaKode = temaKode;
         sak.fagsystemKode = fagsystemKode;
         if (sakstype.equals(SAKSTYPE_GENERELL)) {
