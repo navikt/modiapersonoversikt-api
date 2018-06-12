@@ -18,15 +18,23 @@ class BaseUrlsController {
     fun hent(): Map<String, Any?> {
         check(visFeature(PERSON_REST_API))
 
-        return mapOf("norg2-frontend" to System.getProperty("server.norg2-frontend.url"),
-                "gosys" to System.getProperty("server.gosys.url"),
-                "arena" to System.getProperty("server.arena.url"),
-                "drek" to System.getProperty("server.drek.url"),
-                "aktivitetsplan" to System.getProperty("server.aktivitetsplan.url"),
-                "pesys" to System.getProperty("server.pesys.url"),
-                "aareg" to System.getProperty("server.aareg.url"),
-                "veilarbportefoljeflatefs" to System.getProperty("server.veilarbportefoljeflatefs.url"))
-
+        return mapOf("baseUrlsResponse" to getBaseUrls())
     }
 
+    private fun getBaseUrls(): List<BaseUrl> {
+        val baseUrls = ArrayList<BaseUrl>()
+        baseUrls.add(BaseUrl(key="norg2-frontend", url =  System.getProperty("server.norg2-frontend.url")))
+        baseUrls.add(BaseUrl(key="gosys", url =  System.getProperty("server.gosys.url")))
+        baseUrls.add(BaseUrl(key="arena", url = System.getProperty("server.arena.url")))
+        baseUrls.add(BaseUrl(key="drek", url = System.getProperty("server.drek.url")))
+        baseUrls.add(BaseUrl(key="aktivitetsplan", url = System.getProperty("server.aktivitetsplan.url")))
+        baseUrls.add(BaseUrl(key="pesys", url = System.getProperty("server.pesys.url")))
+        baseUrls.add(BaseUrl(key="aareg", url = System.getProperty("server.aareg.url")))
+        baseUrls.add(BaseUrl(key="veilarbportefoljeflatefs", url = System.getProperty("server.veilarbportefoljeflatefs.url")))
+
+        return baseUrls
+    }
+
+    data class BaseUrl(val key: String = "",
+                       val url: String = "")
 }
