@@ -8,7 +8,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.joda.JodaModule;
 import com.fasterxml.jackson.module.kotlin.KotlinModule;
-import no.nav.modig.lang.serialize.OptionalSerializerModule;
 
 import javax.ws.rs.ext.ContextResolver;
 import javax.ws.rs.ext.Provider;
@@ -21,7 +20,6 @@ public class JacksonConfig implements ContextResolver<ObjectMapper> {
 
     public JacksonConfig() {
         mapper = new ObjectMapper();
-        mapper.registerModule(new OptionalSerializerModule());
         mapper.registerModule(new JodaModule());
         mapper.registerModule(new KotlinModule().addDeserializer(LocalDate.class, new JsonDeserializer<LocalDate>() {
             @Override

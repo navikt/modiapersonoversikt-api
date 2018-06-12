@@ -41,6 +41,7 @@ import java.util.*;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
+import static java.util.Optional.ofNullable;
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.lang.collections.TransformerUtils.castTo;
 import static no.nav.modig.lang.option.Optional.optional;
@@ -215,7 +216,7 @@ public class HenvendelseUtsendingServiceImplTest {
     @Test
     public void skalJournalforeHenvendelseDersomSakErSatt() throws Exception {
         Sak sak = new Sak();
-        sak.saksId = optional("sakid");
+        sak.saksId = Optional.of("sakid");
         Melding melding = new Melding()
                 .withFnr(FNR)
                 .withFritekst(mockFritekst())

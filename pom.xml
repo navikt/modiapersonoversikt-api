@@ -628,11 +628,6 @@
                 <version>${reactkomponenter.version}</version>
             </dependency>
             <dependency>
-                <groupId>no.nav.modig</groupId>
-                <artifactId>modig-lang</artifactId>
-                <version>${modig.lang.version}</version>
-            </dependency>
-            <dependency>
                 <groupId>no.nav.dialogarena</groupId>
                 <artifactId>oidc-security</artifactId>
                 <version>${oidc.security.version}</version>

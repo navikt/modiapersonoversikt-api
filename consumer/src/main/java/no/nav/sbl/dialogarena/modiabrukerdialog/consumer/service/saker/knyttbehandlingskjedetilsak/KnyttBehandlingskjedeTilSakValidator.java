@@ -52,7 +52,7 @@ public class KnyttBehandlingskjedeTilSakValidator {
 
     private static String getSaksId(Sak sak) {
         return Optional.ofNullable(sak)
-                            .map(sak1 -> sak1.saksId.getOrElse("INGEN SAKSID"))
+                            .map(sak1 -> sak1.saksId.orElse("INGEN SAKSID"))
                             .orElse("INGEN SAKSID");
     }
 

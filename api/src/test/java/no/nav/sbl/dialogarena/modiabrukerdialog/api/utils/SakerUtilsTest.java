@@ -11,7 +11,6 @@ import org.mockito.Mock;
 import java.util.*;
 
 import static java.util.Arrays.asList;
-import static no.nav.modig.lang.option.Optional.optional;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.Sak.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
@@ -143,7 +142,7 @@ public class SakerUtilsTest {
 
     private static Sak createSak(String saksId, String temaKode, String fagsystemKode, String sakstype, DateTime opprettet) {
         Sak sak = new Sak();
-        sak.saksId = optional(saksId);
+        sak.saksId = Optional.ofNullable(saksId);
         sak.temaKode = temaKode;
         sak.fagsystemKode = fagsystemKode;
         if (sakstype.equals(SAKSTYPE_GENERELL)) {

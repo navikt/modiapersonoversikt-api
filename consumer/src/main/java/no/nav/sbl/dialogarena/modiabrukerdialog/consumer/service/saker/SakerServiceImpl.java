@@ -31,6 +31,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static java.util.Optional.empty;
+import static java.util.Optional.ofNullable;
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.lang.collections.PredicateUtils.*;
 import static no.nav.modig.lang.option.Optional.none;
@@ -87,7 +89,7 @@ public class SakerServiceImpl implements SakerService {
         KnyttBehandlingskjedeTilSakValidator.validate(fnr, behandlingskjede, sak, enhet);
 
         if (!sak.finnesIPsak && !sak.finnesIGsak) {
-            sak.saksId = optional(opprettSak(fnr, sak));
+            sak.saksId = ofNullable(opprettSak(fnr, sak));
         }
         try {
             behandleHenvendelsePortType.knyttBehandlingskjedeTilSak(
@@ -107,7 +109,7 @@ public class SakerServiceImpl implements SakerService {
                             .withGjelderBrukerListe(new WSPerson().withIdent(fnr))
                             .withFagomraade(new WSFagomraader().withValue(sak.temaKode))
                             .withFagsystem(new WSFagsystemer().withValue(sak.fagsystemKode))
-                            .withFagsystemSakId(sak.saksId.getOrElse(null))
+                            .withFagsystemSakId(sak.saksId.orElse(null))
                             .withSakstype(new WSSakstyper().withValue(sak.sakstype)));
 
             return behandleSakWS.opprettSak(request).getSakId();
@@ -185,8 +187,8 @@ public class SakerServiceImpl implements SakerService {
                     .head()
                     .map(arenaSak -> {
                         Sak sak = new Sak();
-                        sak.saksId = optional(arenaSak.getSaksId());
-                        sak.fagsystemSaksId = optional(arenaSak.getSaksId());
+                        sak.saksId = ofNullable(arenaSak.getSaksId());
+                        sak.fagsystemSaksId = ofNullable(arenaSak.getSaksId());
                         sak.fagsystemKode = FAGSYSTEMKODE_ARENA;
                         sak.sakstype = SAKSTYPE_MED_FAGSAK;
                         sak.temaKode = arenaSak.getFagomradeKode().getKode();
@@ -202,8 +204,8 @@ public class SakerServiceImpl implements SakerService {
     public static final Transformer<no.nav.tjeneste.virksomhet.sak.v1.informasjon.WSSak, Sak> TIL_SAK = wsSak -> {
         Sak sak = new Sak();
         sak.opprettetDato = wsSak.getOpprettelsetidspunkt();
-        sak.saksId = optional(wsSak.getSakId());
-        sak.fagsystemSaksId = isBlank(wsSak.getFagsystemSakId()) ? Optional.<String>none() : optional(wsSak.getFagsystemSakId());
+        sak.saksId = ofNullable(wsSak.getSakId());
+        sak.fagsystemSaksId = isBlank(wsSak.getFagsystemSakId()) ? empty() : ofNullable(wsSak.getFagsystemSakId());
         sak.temaKode = wsSak.getFagomraade().getValue();
         sak.sakstype = wsSak.getSakstype().getValue();
         sak.fagsystemKode = wsSak.getFagsystem().getValue();

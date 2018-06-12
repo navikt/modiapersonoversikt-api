@@ -1,7 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import no.nav.modig.lang.option.Optional;
 import org.apache.commons.collections15.Factory;
 import org.apache.commons.collections15.Predicate;
 import org.apache.commons.collections15.Transformer;
@@ -11,10 +10,11 @@ import org.joda.time.format.DateTimeFormat;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.unmodifiableList;
-import static no.nav.modig.lang.option.Optional.none;
+import static java.util.Optional.empty;
 import static org.apache.commons.collections15.FactoryUtils.constantFactory;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -22,8 +22,8 @@ public class Sak implements Serializable, Comparable<Sak> {
 
     private static Factory<Locale> locale = constantFactory(Locale.getDefault());
 
-    public Optional<String> saksId = none();
-    public Optional<String> fagsystemSaksId = none();
+    public Optional<String> saksId = empty();
+    public Optional<String> fagsystemSaksId = empty();
     public String temaKode, temaNavn, fagsystemKode, fagsystemNavn, sakstype;
     public DateTime opprettetDato;
     public Boolean finnesIGsak = false, finnesIPsak = false;
@@ -45,7 +45,7 @@ public class Sak implements Serializable, Comparable<Sak> {
 
     public static final Transformer<Sak, String> TEMAKODE = sak -> sak.temaKode;
 
-    public static final Transformer<Sak, Boolean> IS_GENERELL_SAK = sak -> sak.isSakstypeForVisningGenerell();
+    public static final Transformer<Sak, Boolean> IS_GENERELL_SAK = Sak::isSakstypeForVisningGenerell;
 
     public static final Predicate<Sak> IS_GODKJENT_FAGSYSTEM_FOR_GENERELLE = sak -> GODKJENT_FAGSYSTEM_FOR_GENERELLE.equals(sak.fagsystemKode);
 
@@ -66,13 +66,7 @@ public class Sak implements Serializable, Comparable<Sak> {
     }
 
     public String getSaksIdVisning() {
-        if (fagsystemSaksId.isSome()) {
-            return fagsystemSaksId.get();
-        } else if (saksId.isSome()) {
-            return saksId.get();
-        } else {
-            return "";
-        }
+        return fagsystemSaksId.orElseGet(() -> saksId.orElse(""));
     }
 
     @Override
@@ -90,7 +84,7 @@ public class Sak implements Serializable, Comparable<Sak> {
         }
 
         Sak sak = (Sak) obj;
-        if (saksId.isSome() && sak.saksId.isSome() && saksId.get().equals(sak.saksId.get())) {
+        if (saksId.isPresent() && sak.saksId.isPresent() && saksId.get().equals(sak.saksId.get())) {
             return true;
         } else {
             return temaKode != null && sak.temaKode != null
@@ -104,7 +98,7 @@ public class Sak implements Serializable, Comparable<Sak> {
 
     @Override
     public int hashCode() {
-        if (saksId.isSome()) {
+        if (saksId.isPresent()) {
             return saksId.get().hashCode();
         } else if (temaKode != null
                 && fagsystemKode != null

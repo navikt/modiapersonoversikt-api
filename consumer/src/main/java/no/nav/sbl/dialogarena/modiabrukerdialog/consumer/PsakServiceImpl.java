@@ -12,8 +12,8 @@ import org.joda.time.LocalDate;
 
 import java.util.List;
 
+import static java.util.Optional.ofNullable;
 import static no.nav.modig.lang.collections.IterUtils.on;
-import static no.nav.modig.lang.option.Optional.optional;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.Sak.FAGSYSTEMKODE_PSAK;
 
 public class PsakServiceImpl implements PsakService {
@@ -36,20 +36,20 @@ public class PsakServiceImpl implements PsakService {
 
     private static final Transformer<WSSakSammendrag, Sak> TIL_SAK = wsSakSammendrag -> {
         Sak sak = new Sak();
-        sak.fagsystemSaksId = optional(wsSakSammendrag.getSakId());
+        sak.fagsystemSaksId = ofNullable(wsSakSammendrag.getSakId());
         sak.temaKode = wsSakSammendrag.getArkivtema().getValue();
         sak.temaNavn = wsSakSammendrag.getArkivtema().getValue();
         sak.fagsystemKode = FAGSYSTEMKODE_PSAK;
-        sak.saksId = optional(wsSakSammendrag.getSakId());
+        sak.saksId = ofNullable(wsSakSammendrag.getSakId());
         sak.finnesIPsak = true;
         sak.opprettetDato = opprettetDato(wsSakSammendrag.getSaksperiode());
         return sak;
     };
 
     private static DateTime opprettetDato(WSPeriode wsPeriode) {
-        return optional(wsPeriode).map(wsPeriode1 -> {
+        return ofNullable(wsPeriode).map(wsPeriode1 -> {
             LocalDate fom = wsPeriode1.getFom();
             return fom == null ? null : fom.toDateTimeAtStartOfDay();
-        }).getOrElse(null);
+        }).orElse(null);
     }
 }
