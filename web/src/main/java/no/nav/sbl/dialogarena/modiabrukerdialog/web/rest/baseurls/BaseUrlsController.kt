@@ -18,7 +18,7 @@ class BaseUrlsController {
     fun hent(): Map<String, Any?> {
         check(visFeature(PERSON_REST_API))
 
-        return mapOf("baseUrlsResponse" to getBaseUrls())
+        return mapOf("baseUrls" to getBaseUrls())
     }
 
     private fun getBaseUrls(): List<BaseUrl> {
