@@ -1,12 +1,10 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.api.service;
 
-import no.nav.modig.lang.option.Optional;
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Oppgave;
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Oppgave;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface OppgaveBehandlingService {
 

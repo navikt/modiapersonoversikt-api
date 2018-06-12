@@ -1,6 +1,5 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.saker;
 
-import no.nav.modig.lang.option.Optional;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.Sak;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.exceptions.JournalforingFeilet;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.gsak.GsakKodeverk;
@@ -29,17 +28,14 @@ import org.apache.commons.collections15.Transformer;
 import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static java.util.Optional.empty;
-import static java.util.Optional.ofNullable;
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.lang.collections.PredicateUtils.*;
-import static no.nav.modig.lang.option.Optional.none;
-import static no.nav.modig.lang.option.Optional.optional;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.Sak.*;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.SakerUtils.leggTilFagsystemnavnOgTemanavn;
-import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.joda.time.DateTime.now;
 
 public class SakerServiceImpl implements SakerService {
@@ -130,7 +126,7 @@ public class SakerServiceImpl implements SakerService {
     private void leggTilFraArena(String fnr, List<Sak> saker) {
         if (!on(saker).exists(IS_ARENA_OPPFOLGING)) {
             Optional<Sak> oppfolging = hentOppfolgingssakFraArena(fnr);
-            if (oppfolging.isSome()) {
+            if (oppfolging.isPresent()) {
                 saker.add(oppfolging.get());
             }
         }
@@ -183,8 +179,8 @@ public class SakerServiceImpl implements SakerService {
                 .withBruker(new WSBruker().withBrukertypeKode("PERSON").withBruker(fnr))
                 .withFagomradeKode("OPP");
         try {
-            return on(arbeidOgAktivitet.hentSakListe(request).getSakListe())
-                    .head()
+            return arbeidOgAktivitet.hentSakListe(request).getSakListe().stream()
+                    .findFirst()
                     .map(arenaSak -> {
                         Sak sak = new Sak();
                         sak.saksId = arenaSak.getSaksId();
@@ -197,7 +193,7 @@ public class SakerServiceImpl implements SakerService {
                         return sak;
                     });
         } catch (Exception e) {
-            return none();
+            return empty();
         }
     }
 

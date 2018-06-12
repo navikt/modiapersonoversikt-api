@@ -29,9 +29,10 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 
 import javax.inject.Inject;
+import java.util.Optional;
 
+import static java.util.Optional.*;
 import static no.nav.metrics.MetricsFactory.createTimer;
-import static no.nav.modig.lang.option.Optional.none;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.enabledIf;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
 import static no.nav.modig.wicket.model.ModelUtils.*;
@@ -219,7 +220,7 @@ public class MerkePanel extends AnimertPanel {
         private void haandterAvsluttet(AjaxRequestTarget target) {
             String saksbehandlerValgteEnhet = saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet();
             henvendelseService.merkSomAvsluttet(innboksVM.getValgtTraad(), saksbehandlerValgteEnhet);
-            oppgaveBehandlingService.ferdigstillOppgaveIGsak(innboksVM.getValgtTraad().getEldsteMelding().melding.oppgaveId, none(), saksbehandlerValgteEnhet);
+            oppgaveBehandlingService.ferdigstillOppgaveIGsak(innboksVM.getValgtTraad().getEldsteMelding().melding.oppgaveId, empty(), saksbehandlerValgteEnhet);
 
             send(getPage(), Broadcast.DEPTH, TRAAD_MERKET);
             innboksVM.traadBesvares = innboksVM.getValgtTraad().getEldsteMelding().getTraadId();
