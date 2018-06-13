@@ -3,10 +3,6 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpane
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.Sak;
 import org.joda.time.DateTime;
 
-import java.util.Optional;
-
-import static java.util.Optional.ofNullable;
-import static no.nav.modig.lang.option.Optional.optional;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.Sak.GODKJENTE_TEMA_FOR_GENERELLE;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.Sak.SAKSTYPE_GENERELL;
 

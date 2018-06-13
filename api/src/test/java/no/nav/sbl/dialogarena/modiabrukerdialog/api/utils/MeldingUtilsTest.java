@@ -91,25 +91,25 @@ public class MeldingUtilsTest {
     }
 
     @Test
-    public void testStatusTransformer() {
+    public void testHenvendelseStatus() {
         XMLHenvendelse xmlHenvendelse = new XMLHenvendelse();
         xmlHenvendelse.withMetadataListe(new XMLMetadataListe().withMetadata(new XMLMeldingFraBruker()));
 
         xmlHenvendelse.withHenvendelseType(XMLHenvendelseType.SPORSMAL_SKRIFTLIG.name());
         xmlHenvendelse.withOpprettetDato(now());
-        assertThat(STATUS.transform(xmlHenvendelse), is(equalTo(IKKE_BESVART)));
+        assertThat(henvendelseStatus(xmlHenvendelse), is(equalTo(IKKE_BESVART)));
 
         xmlHenvendelse.withHenvendelseType(XMLHenvendelseType.SVAR_SKRIFTLIG.name());
         xmlHenvendelse.withMetadataListe(new XMLMetadataListe().withMetadata(new XMLMeldingTilBruker()));
-        assertThat(STATUS.transform(xmlHenvendelse), is(equalTo(IKKE_LEST_AV_BRUKER)));
+        assertThat(henvendelseStatus(xmlHenvendelse), is(equalTo(IKKE_LEST_AV_BRUKER)));
 
         xmlHenvendelse.withLestDato(now()).withMetadataListe(new XMLMetadataListe().withMetadata(new XMLMeldingTilBruker()));
-        assertThat(STATUS.transform(xmlHenvendelse), is(equalTo(LEST_AV_BRUKER)));
+        assertThat(henvendelseStatus(xmlHenvendelse), is(equalTo(LEST_AV_BRUKER)));
     }
 
     @Test
-    public void testStatusTransformerUkjentType() {
-        assertThrows(IllegalArgumentException.class, () -> STATUS.transform(new XMLHenvendelse().withHenvendelseType("")));
+    public void testHenvendelseStatusUkjentType() {
+        assertThrows(IllegalArgumentException.class, () -> henvendelseStatus(new XMLHenvendelse().withHenvendelseType("")));
     }
 
     @Test
@@ -118,7 +118,7 @@ public class MeldingUtilsTest {
                 .withFritekst(FRITEKST)
                 .withTemagruppe(TEMAGRUPPE);
 
-        Melding melding = tilMelding(propertyResolver, ldapService).transform(lagXMLHenvendelse(ID_1, ID_1, OPPRETTET_DATO, null, XMLHenvendelseType.SPORSMAL_SKRIFTLIG.name(), null, new XMLMetadataListe().withMetadata(xmlMeldingFraBruker)));
+        Melding melding = tilMelding(propertyResolver, ldapService).apply(lagXMLHenvendelse(ID_1, ID_1, OPPRETTET_DATO, null, XMLHenvendelseType.SPORSMAL_SKRIFTLIG.name(), null, new XMLMetadataListe().withMetadata(xmlMeldingFraBruker)));
 
         assertThat(melding.id, is(equalTo(ID_1)));
         assertThat(melding.traadId, is(equalTo(ID_1)));
@@ -134,7 +134,7 @@ public class MeldingUtilsTest {
 
     @Test
     public void testTilMeldingTransformer_medSporsmalMedKassertInnhold() {
-        Melding melding = tilMelding(propertyResolver, ldapService).transform(lagXMLHenvendelse(ID_1, ID_1, OPPRETTET_DATO, null, XMLHenvendelseType.SPORSMAL_SKRIFTLIG.name(), null, null));
+        Melding melding = tilMelding(propertyResolver, ldapService).apply(lagXMLHenvendelse(ID_1, ID_1, OPPRETTET_DATO, null, XMLHenvendelseType.SPORSMAL_SKRIFTLIG.name(), null, null));
 
         assertThat(melding.id, is(equalTo(ID_1)));
         assertThat(melding.traadId, is(equalTo(ID_1)));
@@ -152,7 +152,7 @@ public class MeldingUtilsTest {
     public void testTilMeldingTransformer_medSvar() {
         XMLMeldingTilBruker meldingTilBruker = createMeldingTilBruker();
 
-        Melding melding = tilMelding(propertyResolver, ldapService).transform(lagXMLHenvendelse(ID_1, ID_2, OPPRETTET_DATO, LEST_DATO, XMLHenvendelseType.SVAR_SKRIFTLIG.name(), NAVIDENT, new XMLMetadataListe().withMetadata(meldingTilBruker)));
+        Melding melding = tilMelding(propertyResolver, ldapService).apply(lagXMLHenvendelse(ID_1, ID_2, OPPRETTET_DATO, LEST_DATO, XMLHenvendelseType.SVAR_SKRIFTLIG.name(), NAVIDENT, new XMLMetadataListe().withMetadata(meldingTilBruker)));
 
         assertThat(melding.id, is(equalTo(ID_1)));
         assertThat(melding.traadId, is(equalTo(ID_2)));
@@ -173,7 +173,7 @@ public class MeldingUtilsTest {
     @Test
     public void testTilMeldingTransformer_medSvarMedKassertInnhold() {
 
-        Melding melding = tilMelding(propertyResolver, ldapService).transform(lagXMLHenvendelse(ID_1, ID_2, OPPRETTET_DATO, LEST_DATO, XMLHenvendelseType.SVAR_SKRIFTLIG.name(), NAVIDENT, null));
+        Melding melding = tilMelding(propertyResolver, ldapService).apply(lagXMLHenvendelse(ID_1, ID_2, OPPRETTET_DATO, LEST_DATO, XMLHenvendelseType.SVAR_SKRIFTLIG.name(), NAVIDENT, null));
 
         assertThat(melding.id, is(equalTo(ID_1)));
         assertThat(melding.traadId, is(equalTo(ID_2)));
@@ -195,7 +195,7 @@ public class MeldingUtilsTest {
     public void testTilMeldingTransformer_medReferat() {
         XMLMeldingTilBruker xmlMeldingTilBruker = createMeldingTilBruker();
 
-        Melding melding = tilMelding(propertyResolver, ldapService).transform(lagXMLHenvendelse(ID_1, ID_1, OPPRETTET_DATO, LEST_DATO, REFERAT_OPPMOTE.name(), NAVIDENT, new XMLMetadataListe().withMetadata(xmlMeldingTilBruker)));
+        Melding melding = tilMelding(propertyResolver, ldapService).apply(lagXMLHenvendelse(ID_1, ID_1, OPPRETTET_DATO, LEST_DATO, REFERAT_OPPMOTE.name(), NAVIDENT, new XMLMetadataListe().withMetadata(xmlMeldingTilBruker)));
 
         assertThat(melding.id, is(equalTo(ID_1)));
         assertThat(melding.traadId, is(equalTo(ID_1)));
@@ -215,7 +215,7 @@ public class MeldingUtilsTest {
 
     @Test
     public void testTilMeldingTransformer_medReferatMedKassertInnhold() {
-        Melding melding = tilMelding(propertyResolver, ldapService).transform(lagXMLHenvendelse(ID_1, ID_1, OPPRETTET_DATO, LEST_DATO, REFERAT_OPPMOTE.name(), NAVIDENT, null));
+        Melding melding = tilMelding(propertyResolver, ldapService).apply(lagXMLHenvendelse(ID_1, ID_1, OPPRETTET_DATO, LEST_DATO, REFERAT_OPPMOTE.name(), NAVIDENT, null));
 
         assertThat(melding.id, is(equalTo(ID_1)));
         assertThat(melding.traadId, is(equalTo(ID_1)));
@@ -238,7 +238,7 @@ public class MeldingUtilsTest {
         XMLHenvendelse xmlHenvendelse = createXMLHenvendelseMedXmlMeldingFraBruker();
         XMLMeldingFraBruker xmlMeldingFraBruker = (XMLMeldingFraBruker) xmlHenvendelse.getMetadataListe().getMetadata().get(0);
 
-        Melding sporsmal = tilMelding(propertyResolver, ldapService).transform(xmlHenvendelse);
+        Melding sporsmal = tilMelding(propertyResolver, ldapService).apply(xmlHenvendelse);
 
         assertThat(sporsmal.id, is(xmlHenvendelse.getBehandlingsId()));
         assertThat(sporsmal.opprettetDato, is(xmlHenvendelse.getOpprettetDato()));
@@ -253,7 +253,7 @@ public class MeldingUtilsTest {
         XMLHenvendelse xmlHenvendelse = createXMLHenvendelseMedXmlMeldingTilBruker(XMLHenvendelseType.REFERAT_OPPMOTE);
         XMLMeldingTilBruker xmlMeldingTilBruker = (XMLMeldingTilBruker) xmlHenvendelse.getMetadataListe().getMetadata().get(0);
 
-        Melding referat = MeldingUtils.tilMelding(propertyResolver, ldapService).transform(xmlHenvendelse);
+        Melding referat = MeldingUtils.tilMelding(propertyResolver, ldapService).apply(xmlHenvendelse);
 
         verify(ldapService, atLeastOnce()).hentSaksbehandler(xmlMeldingTilBruker.getNavident());
 
@@ -273,7 +273,7 @@ public class MeldingUtilsTest {
         XMLHenvendelse xmlHenvendelse = createXMLHenvendelseMedXmlMeldingFraBruker();
         xmlHenvendelse.setMetadataListe(null);
 
-        Melding sporsmal = tilMelding(propertyResolver, ldapService).transform(xmlHenvendelse);
+        Melding sporsmal = tilMelding(propertyResolver, ldapService).apply(xmlHenvendelse);
 
         assertThat(sporsmal.id, is(xmlHenvendelse.getBehandlingsId()));
         assertThat(sporsmal.opprettetDato, is(xmlHenvendelse.getOpprettetDato()));
@@ -286,7 +286,7 @@ public class MeldingUtilsTest {
     @Test
     public void kasterExceptionVedUkjentType() {
         XMLHenvendelse xmlHenvendelse = createXMLHenvendelseMedUkjentType();
-        assertThrows(RuntimeException.class, () -> tilMelding(propertyResolver, ldapService).transform(xmlHenvendelse));
+        assertThrows(RuntimeException.class, () -> tilMelding(propertyResolver, ldapService).apply(xmlHenvendelse));
     }
 
     @Test
@@ -294,7 +294,7 @@ public class MeldingUtilsTest {
         XMLHenvendelse xmlHenvendelse = createXMLHenvendelseMedDokumentVarsel();
         XMLDokumentVarsel innsendtVarsel = (XMLDokumentVarsel) xmlHenvendelse.getMetadataListe().getMetadata().get(0);
 
-        Melding dokumentVarsel = tilMelding(propertyResolver, ldapService).transform(xmlHenvendelse);
+        Melding dokumentVarsel = tilMelding(propertyResolver, ldapService).apply(xmlHenvendelse);
 
         assertThat(dokumentVarsel.id, is(xmlHenvendelse.getBehandlingsId()));
         assertThat(dokumentVarsel.opprettetDato, is(xmlHenvendelse.getOpprettetDato()));
@@ -333,7 +333,7 @@ public class MeldingUtilsTest {
     public void lagerMeldingSomErOppgaveMeldingOmOppgaveVarsel() throws Exception {
         XMLHenvendelse xmlHenvendelse = lagXMLHenvendelseMedOppgaveVarsel();
 
-        Melding oppgaveVarsel = tilMelding(propertyResolver, ldapService).transform(xmlHenvendelse);
+        Melding oppgaveVarsel = tilMelding(propertyResolver, ldapService).apply(xmlHenvendelse);
 
         assertThat(oppgaveVarsel.id, is(xmlHenvendelse.getBehandlingsId()));
         assertThat(oppgaveVarsel.opprettetDato, is(xmlHenvendelse.getOpprettetDato()));

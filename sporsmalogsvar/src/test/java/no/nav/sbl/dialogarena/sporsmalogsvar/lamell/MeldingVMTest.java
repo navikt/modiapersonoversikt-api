@@ -1,6 +1,5 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.lamell;
 
-import no.nav.modig.lang.option.Optional;
 import no.nav.modig.modia.widget.utils.WidgetDateFormatter;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Saksbehandler;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
@@ -12,6 +11,9 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import java.util.Optional;
+
+import static java.util.Optional.empty;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype.SPORSMAL_SKRIFTLIG;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.VisningUtils.FRA_NAV;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.VisningUtils.lagMeldingStatusTekstKey;
@@ -78,7 +80,7 @@ public class MeldingVMTest extends WicketPageTest {
 
     @Test
     public void henterMarkertSomFeilsendtAv() {
-        assertThat(meldingVM.getMarkertSomFeilsendtAv(), is(Optional.none()));
+        assertThat(meldingVM.getMarkertSomFeilsendtAv(), is(empty()));
 
         meldingVM.melding.markertSomFeilsendtAv = new Saksbehandler("", "", NAV_IDENT);
 

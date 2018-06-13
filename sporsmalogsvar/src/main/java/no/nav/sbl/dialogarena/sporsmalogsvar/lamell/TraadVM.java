@@ -163,19 +163,19 @@ public class TraadVM implements Serializable {
     }
 
     public Optional<DateTime> getFerdigstiltUtenSvarDato() {
-        return ofNullable(getEldsteMelding().getFerdigstiltUtenSvarDato().orNull());
+        return getEldsteMelding().getFerdigstiltUtenSvarDato();
     }
 
     public Optional<Saksbehandler> getFerdigstiltUtenSvarAv() {
-        return ofNullable(getEldsteMelding().getFerdigstiltUtenSvarAv().orNull());
+        return getEldsteMelding().getFerdigstiltUtenSvarAv();
     }
 
     public Optional<DateTime> getKontorsperretDato() {
-        return ofNullable(getEldsteMelding().getKontorsperretDato().orNull());
+        return getEldsteMelding().getKontorsperretDato();
     }
 
     public Optional<Saksbehandler> getKontorsperretAv() {
-        return ofNullable(getEldsteMelding().getKontorsperretAv().orNull());
+        return getEldsteMelding().getKontorsperretAv();
     }
 
 }

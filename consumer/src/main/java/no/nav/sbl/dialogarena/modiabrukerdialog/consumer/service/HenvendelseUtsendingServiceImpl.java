@@ -29,22 +29,19 @@ import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.senduthenvendelse.meld
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.senduthenvendelse.meldinger.WSSendUtHenvendelseResponse;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.henvendelse.HenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.meldinger.WSHentHenvendelseListeRequest;
-import org.apache.commons.collections15.Transformer;
 
 import javax.inject.Inject;
 import javax.inject.Named;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Function;
 
 import static java.util.Collections.singletonList;
+import static java.util.stream.Collectors.toList;
 import static no.nav.brukerdialog.security.tilgangskontroll.utils.AttributeUtils.*;
 import static no.nav.brukerdialog.security.tilgangskontroll.utils.RequestUtils.forRequest;
 import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.*;
-import static no.nav.modig.lang.collections.IterUtils.on;
-import static no.nav.modig.lang.collections.PredicateUtils.equalTo;
-import static no.nav.modig.lang.collections.PredicateUtils.where;
-import static no.nav.modig.lang.collections.TransformerUtils.castTo;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe.ANSOS;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe.OKSOS;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding.ELDSTE_FORST;
@@ -165,15 +162,16 @@ public class HenvendelseUtsendingServiceImpl implements HenvendelseUtsendingServ
     @Override
     public List<Melding> hentTraad(String fnr, String traadId, String valgtEnhet) {
         List<Melding> meldinger =
-                on(henvendelsePortType.hentHenvendelseListe(new WSHentHenvendelseListeRequest()
+                henvendelsePortType.hentHenvendelseListe(new WSHentHenvendelseListeRequest()
                         .withTyper(getHenvendelseTyper())
                         .withFodselsnummer(fnr))
-                        .getAny())
-                        .map(castTo(XMLHenvendelse.class))
-                        .filter(where(XMLHenvendelse::getBehandlingskjedeId, equalTo(traadId)))
+                        .getAny().stream()
+                        .map(melding -> (XMLHenvendelse) melding)
+                        .filter(henvendelse -> henvendelse.getBehandlingskjedeId() == traadId)
                         .map(tilMelding(propertyResolver, ldapService))
                         .map(journalfortTemaTilgang(valgtEnhet))
-                        .collect(ELDSTE_FORST);
+                        .sorted(ELDSTE_FORST)
+                        .collect(toList());
 
         if (meldinger.isEmpty()) {
             throw new ApplicationException(String.format("Fant ingen meldinger for fnr: %s med traadId: %s", fnr, traadId));
@@ -221,7 +219,7 @@ public class HenvendelseUtsendingServiceImpl implements HenvendelseUtsendingServ
         return typer.toArray(new String[typer.size()]);
     }
 
-    private Transformer<Melding, Melding> journalfortTemaTilgang(final String valgtEnhet) {
+    private Function<Melding, Melding> journalfortTemaTilgang(final String valgtEnhet) {
         return melding -> {
             PolicyRequest temagruppePolicyRequest = forRequest(
                     actionId("temagruppe"),

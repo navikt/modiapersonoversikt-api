@@ -5,7 +5,6 @@ import no.nav.brukerprofil.BrukerprofilPanel;
 import no.nav.kjerneinfo.kontrakter.KontrakterPanel;
 import no.nav.metrics.MetricsFactory;
 import no.nav.modig.core.exception.ApplicationException;
-import no.nav.modig.lang.option.Optional;
 import no.nav.modig.modia.events.FeedItemPayload;
 import no.nav.modig.modia.events.LamellPayload;
 import no.nav.modig.modia.events.WidgetHeaderPayload;
@@ -43,9 +42,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import static no.nav.modig.lang.collections.IterUtils.on;
-import static no.nav.modig.lang.option.Optional.none;
-import static no.nav.modig.lang.option.Optional.optional;
 import static no.nav.modig.modia.lamell.DefaultLamellFactory.newLamellFactory;
 import static no.nav.sykmeldingsperioder.widget.SykepengerWidgetServiceImpl.*;
 
@@ -67,7 +63,7 @@ public class LamellContainer extends TokenLamellPanel implements Serializable {
     public static final String PANEL = "panel";
 
     private String fnrFromRequest;
-    private Optional<String> startLamell = none();
+    private String startLamell = null;
 
     @Inject
     private HenvendelseBehandlingService henvendelseBehandlingService;
@@ -95,8 +91,8 @@ public class LamellContainer extends TokenLamellPanel implements Serializable {
     @Override
     protected void onInitialize() {
         super.onInitialize();
-        if (startLamell.isSome()) {
-            goToLamell(startLamell.get());
+        if (startLamell != null) {
+            goToLamell(startLamell);
         }
     }
 
@@ -130,7 +126,7 @@ public class LamellContainer extends TokenLamellPanel implements Serializable {
     }
 
     public boolean hasUnsavedChanges() {
-        return on(getLameller()).exists(Lamell::isModified);
+        return getLameller().stream().anyMatch(Lamell::isModified);
     }
 
     private String createLamellIfMissing(String type, String itemId) {
@@ -179,7 +175,7 @@ public class LamellContainer extends TokenLamellPanel implements Serializable {
     }
 
     public void setStartLamell(String startLamell) {
-        this.startLamell = optional(startLamell);
+        this.startLamell = startLamell;
     }
 
     private static boolean canHaveMoreThanOneLamell(String type) {
