@@ -6,13 +6,13 @@ import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navansatt.*;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.Ansatt;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.AnsattEnhet;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.AnsattService;
-import org.apache.commons.collections15.Transformer;
 
 import javax.inject.Inject;
 import java.util.List;
+import java.util.function.Function;
 
+import static java.util.stream.Collectors.toList;
 import static no.nav.brukerdialog.security.context.SubjectHandler.getSubjectHandler;
-import static no.nav.modig.lang.collections.IterUtils.on;
 
 public class AnsattServiceImpl implements AnsattService {
 
@@ -27,7 +27,7 @@ public class AnsattServiceImpl implements AnsattService {
         ASBOGOSYSNAVAnsatt hentNAVAnsattEnhetListeRequest = new ASBOGOSYSNAVAnsatt();
         hentNAVAnsattEnhetListeRequest.setAnsattId(getSubjectHandler().getUid());
         try {
-            return on(ansattWS.hentNAVAnsattEnhetListe(hentNAVAnsattEnhetListeRequest).getNAVEnheter()).map(TIL_ANSATTENHET).collect();
+            return ansattWS.hentNAVAnsattEnhetListe(hentNAVAnsattEnhetListeRequest).getNAVEnheter().stream().map(TIL_ANSATTENHET).collect(toList());
         } catch (HentNAVAnsattEnhetListeFaultGOSYSNAVAnsattIkkeFunnetMsg | HentNAVAnsattEnhetListeFaultGOSYSGeneriskMsg e) {
             throw new RuntimeException(e);
         }
@@ -49,11 +49,11 @@ public class AnsattServiceImpl implements AnsattService {
         request.setEnhetsId(enhet.enhetId);
         request.setEnhetsNavn(enhet.enhetNavn);
         try {
-            return on(ansattWS.hentNAVAnsattListe(request).getNAVAnsatte()).map(ansatt -> new Ansatt(ansatt.getFornavn(), ansatt.getEtternavn(), ansatt.getAnsattId())).collect();
+            return ansattWS.hentNAVAnsattListe(request).getNAVAnsatte().stream().map(ansatt -> new Ansatt(ansatt.getFornavn(), ansatt.getEtternavn(), ansatt.getAnsattId())).collect(toList());
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
-    protected static final Transformer<ASBOGOSYSNavEnhet, AnsattEnhet> TIL_ANSATTENHET = asbogosysNavEnhet -> new AnsattEnhet(asbogosysNavEnhet.getEnhetsId(), asbogosysNavEnhet.getEnhetsNavn());
+    protected static final Function<ASBOGOSYSNavEnhet, AnsattEnhet> TIL_ANSATTENHET = asbogosysNavEnhet -> new AnsattEnhet(asbogosysNavEnhet.getEnhetsId(), asbogosysNavEnhet.getEnhetsNavn());
 }

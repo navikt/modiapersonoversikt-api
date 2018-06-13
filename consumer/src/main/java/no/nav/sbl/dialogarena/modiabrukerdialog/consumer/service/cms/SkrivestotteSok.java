@@ -1,7 +1,5 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.cms;
 
-import no.nav.modig.lang.collections.ReduceUtils;
-import org.apache.commons.collections15.Transformer;
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
@@ -24,13 +22,14 @@ import org.apache.lucene.store.RAMDirectory;
 import org.apache.lucene.util.Version;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import static java.util.Arrays.asList;
-import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.cms.SkrivestotteTekst.LOCALE_DEFAULT;
 import static org.apache.commons.lang3.StringUtils.*;
 
@@ -119,12 +118,12 @@ public class SkrivestotteSok {
     private static String query(String frisok, List<String> tags) {
         String vasketFrisok = LUCENE_PATTERN.matcher(frisok).replaceAll(REPLACEMENT_STRING).trim();
         String frisokQuery = isBlank(vasketFrisok) ? "*:*" : "*" + vasketFrisok + "*";
-        String tagsQuery = on(tags).map(tag -> TAGS_FILTER + ":" + tag).reduce(ReduceUtils.join(" AND "));
+        String tagsQuery = tags.stream().map(tag -> TAGS_FILTER + ":" + tag).reduce((s1, s2) -> s1 + " AND " + s2).orElse("");
         return frisokQuery + (isBlank(tagsQuery) ? "" : (" AND " + tagsQuery));
     }
 
     private static List<SkrivestotteTekst> lagSkrivestotteTekster(final IndexSearcher searcher, final StandardAnalyzer analyzer, final Highlighter highlighter, ScoreDoc... hits) {
-        return on(hits).map(hit -> {
+        return Arrays.stream(hits).map(hit -> {
             try {
                 Document doc = searcher.doc(hit.doc);
                 String tittel = getHighlightedTekst(TITTEL, doc, searcher, analyzer, highlighter);
@@ -142,7 +141,7 @@ public class SkrivestotteSok {
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
-        }).collect();
+        }).collect(Collectors.toList());
     }
 
     private static String getHighlightedTekst(String felt, Document doc, IndexSearcher searcher, StandardAnalyzer analyzer, Highlighter highlighter) {

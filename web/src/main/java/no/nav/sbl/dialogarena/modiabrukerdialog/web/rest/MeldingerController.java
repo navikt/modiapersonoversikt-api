@@ -18,6 +18,7 @@ import javax.ws.rs.core.Response;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static java.util.stream.Collectors.toList;
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static javax.ws.rs.core.MediaType.TEXT_PLAIN;
 import static javax.ws.rs.core.Response.Status.FORBIDDEN;
@@ -65,7 +66,7 @@ public class MeldingerController {
     @Path("/indekser")
     public Response indekser(@PathParam("fnr") String fnr, @Context HttpServletRequest request) {
         String valgtEnhet = hentValgtEnhet(request);
-        if(on(ansattService.hentEnhetsliste()).map(ENHET_ID).collect().contains(valgtEnhet)) {
+        if(ansattService.hentEnhetsliste().stream().map(ENHET_ID).collect(toList()).contains(valgtEnhet)) {
             List<Melding> meldinger = hentAlleMeldinger(fnr, valgtEnhet);
             searcher.indekser(fnr, meldinger);
             return Response.status(Response.Status.OK).build();
@@ -78,7 +79,7 @@ public class MeldingerController {
     private List<Melding> hentAlleMeldinger(@PathParam("fnr") String fnr, String valgtEnhet) {
         return henvendelse.hentMeldinger(fnr, valgtEnhet).getTraader().stream()
                 .flatMap(traad -> traad.getMeldinger().stream())
-                .collect(Collectors.toList());
+                .collect(toList());
     }
 
 }

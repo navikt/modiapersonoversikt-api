@@ -2,7 +2,6 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.apache.commons.collections15.Factory;
-import org.apache.commons.collections15.Predicate;
 import org.apache.commons.collections15.Transformer;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
@@ -10,6 +9,7 @@ import org.joda.time.format.DateTimeFormat;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Locale;
+import java.util.function.Predicate;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.unmodifiableList;
@@ -43,7 +43,7 @@ public class Sak implements Serializable, Comparable<Sak> {
 
     public static final Transformer<Sak, String> TEMAKODE = sak -> sak.temaKode;
 
-    public static final Transformer<Sak, Boolean> IS_GENERELL_SAK = Sak::isSakstypeForVisningGenerell;
+    public static final Predicate<Sak> IS_GENERELL_SAK = Sak::isSakstypeForVisningGenerell;
 
     public static final Predicate<Sak> IS_GODKJENT_FAGSYSTEM_FOR_GENERELLE = sak -> GODKJENT_FAGSYSTEM_FOR_GENERELLE.equals(sak.fagsystemKode);
 

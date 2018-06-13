@@ -1,8 +1,7 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg;
 
-import org.apache.commons.collections15.Transformer;
-
 import java.io.Serializable;
+import java.util.function.Function;
 
 import static org.apache.commons.lang3.StringUtils.upperCase;
 
@@ -27,5 +26,5 @@ public class AnsattEnhet implements Serializable {
         return "AKTIV".equals(upperCase(status));
     }
 
-    public static final Transformer<AnsattEnhet, String> ENHET_ID = ansattEnhet -> ansattEnhet.enhetId;
+    public static final Function<AnsattEnhet, String> ENHET_ID = ansattEnhet -> ansattEnhet.enhetId;
 }

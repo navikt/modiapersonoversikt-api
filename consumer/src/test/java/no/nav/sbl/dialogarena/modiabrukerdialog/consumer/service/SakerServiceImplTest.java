@@ -41,7 +41,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static java.util.Arrays.asList;
-import static no.nav.modig.lang.collections.IterUtils.on;
+import static java.util.stream.Collectors.toList;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.Sak.*;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.core.Is.is;
@@ -81,7 +81,7 @@ public class SakerServiceImplTest {
     private List<WSSak> sakerListe;
 
     @BeforeEach
-    public void setUp() throws FinnSakUgyldigInput, FinnSakForMangeForekomster {
+    void setUp() throws FinnSakUgyldigInput, FinnSakForMangeForekomster {
         initMocks(this);
 
         sakerListe = createSaksliste();
@@ -92,14 +92,14 @@ public class SakerServiceImplTest {
     }
 
     @Test
-    public void transformererResponseTilSaksliste() {
+    void transformererResponseTilSaksliste() {
         List<Sak> saksliste = sakerService.hentSammensatteSaker(FNR);
 
         assertThat(saksliste.get(0).saksId, is("1"));
     }
 
     @Test
-    public void transformererResponseTilSakslistePensjon() {
+    void transformererResponseTilSakslistePensjon() {
         Sak pensjon = new Sak();
         pensjon.temaKode = "PENS";
         Sak ufore = new Sak();
@@ -114,8 +114,8 @@ public class SakerServiceImplTest {
     }
 
     @Test
-    public void transformasjonenGenerererRelevanteFelter() {
-        Sak sak = SakerServiceImpl.TIL_SAK.transform(sakerListe.get(0));
+    void transformasjonenGenerererRelevanteFelter() {
+        Sak sak = SakerServiceImpl.TIL_SAK.apply(sakerListe.get(0));
 
         assertThat(sak.saksId, is("1"));
         assertThat(sak.fagsystemSaksId, is("11"));
@@ -127,46 +127,46 @@ public class SakerServiceImplTest {
     }
 
     @Test
-    public void oppretterIkkeGenerellOppfolgingssakDersomFagsakerInneholderOppfolgingssak() throws FinnSakUgyldigInput, FinnSakForMangeForekomster {
+    void oppretterIkkeGenerellOppfolgingssakDersomFagsakerInneholderOppfolgingssak() throws FinnSakUgyldigInput, FinnSakForMangeForekomster {
         List<WSSak> wsSaker = Arrays.asList(createWSGenerellSak("4", "44", TEMAKODE_OPPFOLGING, now(), "Fag", GODKJENTE_FAGSYSTEMER_FOR_FAGSAKER.get(0)),
                 createWSGenerellSak("5", "45", TEMAKODE_OPPFOLGING, now(), SAKSTYPE_GENERELL, GODKJENT_FAGSYSTEM_FOR_GENERELLE));
 
         when(sakV1.finnSak(any(WSFinnSakRequest.class))).thenReturn(new WSFinnSakResponse().withSakListe(wsSaker));
 
-        List<Sak> saker = on(sakerService.hentSammensatteSaker(FNR)).filter(harTemaKode(TEMAKODE_OPPFOLGING)).collect();
+        List<Sak> saker = sakerService.hentSammensatteSaker(FNR).stream().filter(harTemaKode(TEMAKODE_OPPFOLGING)).collect(toList());
 
         assertThat(saker.size(), is(1));
         assertThat(saker.get(0).sakstype, not(is(SAKSTYPE_GENERELL)));
     }
 
     @Test
-    public void oppretterIkkeGenerellOppfolgingssakDersomDenneFinnesAlleredeSelvOmFagsakerIkkeInneholderOppfolgingssak() throws FinnSakUgyldigInput, FinnSakForMangeForekomster {
+    void oppretterIkkeGenerellOppfolgingssakDersomDenneFinnesAlleredeSelvOmFagsakerIkkeInneholderOppfolgingssak() throws FinnSakUgyldigInput, FinnSakForMangeForekomster {
         List<WSSak> wsSaker = Arrays.asList(createWSGenerellSak("4", "44", TEMAKODE_OPPFOLGING, now(), SAKSTYPE_GENERELL, GODKJENTE_FAGSYSTEMER_FOR_FAGSAKER.get(0)),
                 createWSGenerellSak("5", "45", TEMAKODE_OPPFOLGING, now(), SAKSTYPE_GENERELL, GODKJENT_FAGSYSTEM_FOR_GENERELLE));
 
         when(sakV1.finnSak(any(WSFinnSakRequest.class))).thenReturn(new WSFinnSakResponse().withSakListe(wsSaker));
 
-        List<Sak> saker = on(sakerService.hentSammensatteSaker(FNR)).filter(harTemaKode(TEMAKODE_OPPFOLGING)).collect();
+        List<Sak> saker = sakerService.hentSammensatteSaker(FNR).stream().filter(harTemaKode(TEMAKODE_OPPFOLGING)).collect(toList());
 
         assertThat(saker.size(), is(1));
         assertThat(saker.get(0).sakstype, is(SAKSTYPE_GENERELL));
     }
 
     @Test
-    public void fjernerGenerellOppfolgingssakDersomDenneFinnesOgOppfolgingssakFinnesIFagsaker() throws FinnSakUgyldigInput, FinnSakForMangeForekomster {
+    void fjernerGenerellOppfolgingssakDersomDenneFinnesOgOppfolgingssakFinnesIFagsaker() throws FinnSakUgyldigInput, FinnSakForMangeForekomster {
         List<WSSak> wsSaker = Arrays.asList(createWSGenerellSak("4", "44", TEMAKODE_OPPFOLGING, now(), SAKSTYPE_GENERELL, GODKJENT_FAGSYSTEM_FOR_GENERELLE),
                 createWSGenerellSak("5", "55", TEMAKODE_OPPFOLGING, now(), "Fag", FAGSYSTEMKODE_ARENA));
 
         when(sakV1.finnSak(any(WSFinnSakRequest.class))).thenReturn(new WSFinnSakResponse().withSakListe(wsSaker));
 
-        List<Sak> saker = on(sakerService.hentSammensatteSaker(FNR)).filter(harTemaKode(TEMAKODE_OPPFOLGING)).collect();
+        List<Sak> saker = sakerService.hentSammensatteSaker(FNR).stream().filter(harTemaKode(TEMAKODE_OPPFOLGING)).collect(toList());
 
         assertThat(saker.size(), is(1));
         assertThat(saker.get(0).sakstype, not(is(SAKSTYPE_GENERELL)));
     }
 
     @Test
-    public void leggerTilOppfolgingssakFraArenaDersomDenneIkkeFinnesIGsak() {
+    void leggerTilOppfolgingssakFraArenaDersomDenneIkkeFinnesIGsak() {
         String saksId = "123456";
         LocalDate dato = LocalDate.now().minusDays(1);
 
@@ -178,7 +178,7 @@ public class SakerServiceImplTest {
                         .withSakstypeKode(new Sakstypekode().withKode("ARBEID"))
         ));
 
-        List<Sak> saker = on(sakerService.hentSammensatteSaker(FNR)).filter(harTemaKode(TEMAKODE_OPPFOLGING)).collect();
+        List<Sak> saker = sakerService.hentSammensatteSaker(FNR).stream().filter(harTemaKode(TEMAKODE_OPPFOLGING)).collect(toList());
 
         assertThat(saker.size(), is(1));
         assertThat(saker.get(0).getSaksIdVisning(), is(saksId));
@@ -188,7 +188,7 @@ public class SakerServiceImplTest {
     }
 
     @Test
-    public void knytterBehandlingsKjedeTilSakUavhengigOmDenFinnesIGsak() throws Exception {
+    void knytterBehandlingsKjedeTilSakUavhengigOmDenFinnesIGsak() throws Exception {
         Sak sak = lagSak();
         String valgtNavEnhet = "0219";
 
@@ -203,21 +203,21 @@ public class SakerServiceImplTest {
     }
 
     @Test
-    public void knyttBehandlingskjedeTilSakKasterFeilHvisEnhetIkkeErSatt() throws JournalforingFeilet, OpprettSakUgyldigInput, OpprettSakSakEksistererAllerede {
+    void knyttBehandlingskjedeTilSakKasterFeilHvisEnhetIkkeErSatt() throws JournalforingFeilet, OpprettSakUgyldigInput, OpprettSakSakEksistererAllerede {
         when(behandleSak.opprettSak(any(WSOpprettSakRequest.class))).thenReturn(new WSOpprettSakResponse().withSakId(SAKS_ID));
 
         assertThrows(IllegalArgumentException.class, () -> sakerService.knyttBehandlingskjedeTilSak(FNR, BEHANDLINGSKJEDEID, lagSak(), ""));
     }
 
     @Test
-    public void knyttBehandlingskjedeTilSakKasterFeilHvisBehandlingskjedeIkkeErSatt() throws JournalforingFeilet, OpprettSakUgyldigInput, OpprettSakSakEksistererAllerede {
+    void knyttBehandlingskjedeTilSakKasterFeilHvisBehandlingskjedeIkkeErSatt() throws JournalforingFeilet, OpprettSakUgyldigInput, OpprettSakSakEksistererAllerede {
         when(behandleSak.opprettSak(any(WSOpprettSakRequest.class))).thenReturn(new WSOpprettSakResponse().withSakId(SAKS_ID));
 
         assertThrows(IllegalArgumentException.class, () -> sakerService.knyttBehandlingskjedeTilSak(FNR, null, lagSak(), "1337"));
     }
 
     @Test
-    public void knyttBehandlingskjedeTilSakKasterFeilHvisFnrIkkeErSatt() throws JournalforingFeilet, OpprettSakUgyldigInput, OpprettSakSakEksistererAllerede {
+    void knyttBehandlingskjedeTilSakKasterFeilHvisFnrIkkeErSatt() throws JournalforingFeilet, OpprettSakUgyldigInput, OpprettSakSakEksistererAllerede {
         when(behandleSak.opprettSak(any(WSOpprettSakRequest.class))).thenReturn(new WSOpprettSakResponse().withSakId(SAKS_ID));
 
         assertThrows(IllegalArgumentException.class, () -> sakerService.knyttBehandlingskjedeTilSak("", BEHANDLINGSKJEDEID, lagSak(), "1337"));
