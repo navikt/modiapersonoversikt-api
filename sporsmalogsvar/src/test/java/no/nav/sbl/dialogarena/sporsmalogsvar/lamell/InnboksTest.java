@@ -1,7 +1,6 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.lamell;
 
 import no.nav.brukerdialog.security.tilgangskontroll.policy.pep.EnforcementPoint;
-import no.nav.modig.lang.option.Optional;
 import no.nav.modig.modia.events.FeedItemPayload;
 import no.nav.modig.wicket.events.NamedEventPayload;
 import no.nav.modig.wicket.test.EventGenerator;
@@ -11,7 +10,6 @@ import no.nav.sbl.dialogarena.sporsmalogsvar.config.MockServiceTestContext;
 import no.nav.sbl.dialogarena.sporsmalogsvar.config.WicketPageTest;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.henvendelse.HenvendelseBehandlingService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.henvendelse.domain.Meldinger;
-import no.nav.sbl.dialogarena.sporsmalogsvar.domain.InnboksProps;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -113,9 +111,4 @@ public class InnboksTest extends WicketPageTest {
     private TraadVM getValgtTraad(Innboks testInnboks) {
         return ((InnboksVM) testInnboks.getDefaultModelObject()).getValgtTraad();
     }
-
-    private InnboksProps tomInnboksProps() {
-        return new InnboksProps(Optional.<String>none(), Optional.<String>none(), Optional.<String>none(), Optional.<Boolean>none());
-    }
-
 }
