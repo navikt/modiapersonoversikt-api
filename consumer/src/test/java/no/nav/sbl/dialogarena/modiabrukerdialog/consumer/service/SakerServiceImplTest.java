@@ -128,8 +128,20 @@ public class SakerServiceImplTest {
 
     @Test
     void oppretterIkkeGenerellOppfolgingssakDersomFagsakerInneholderOppfolgingssak() throws FinnSakUgyldigInput, FinnSakForMangeForekomster {
-        List<WSSak> wsSaker = Arrays.asList(createWSGenerellSak("4", "44", TEMAKODE_OPPFOLGING, now(), "Fag", GODKJENTE_FAGSYSTEMER_FOR_FAGSAKER.get(0)),
-                createWSGenerellSak("5", "45", TEMAKODE_OPPFOLGING, now(), SAKSTYPE_GENERELL, GODKJENT_FAGSYSTEM_FOR_GENERELLE));
+        List<WSSak> wsSaker = Arrays.asList(new WSSak()
+                        .withSakId("4")
+                        .withFagsystemSakId("44")
+                        .withFagomraade(new WSFagomraader().withValue(TEMAKODE_OPPFOLGING))
+                        .withOpprettelsetidspunkt(now())
+                        .withSakstype(new WSSakstyper().withValue("Fag"))
+                        .withFagsystem(new WSFagsystemer().withValue(GODKJENTE_FAGSYSTEMER_FOR_FAGSAKER.get(0))),
+                new WSSak()
+                        .withSakId("5")
+                        .withFagsystemSakId("45")
+                        .withFagomraade(new WSFagomraader().withValue(TEMAKODE_OPPFOLGING))
+                        .withOpprettelsetidspunkt(now())
+                        .withSakstype(new WSSakstyper().withValue(SAKSTYPE_GENERELL))
+                        .withFagsystem(new WSFagsystemer().withValue(GODKJENT_FAGSYSTEM_FOR_GENERELLE)));
 
         when(sakV1.finnSak(any(WSFinnSakRequest.class))).thenReturn(new WSFinnSakResponse().withSakListe(wsSaker));
 
@@ -141,8 +153,20 @@ public class SakerServiceImplTest {
 
     @Test
     void oppretterIkkeGenerellOppfolgingssakDersomDenneFinnesAlleredeSelvOmFagsakerIkkeInneholderOppfolgingssak() throws FinnSakUgyldigInput, FinnSakForMangeForekomster {
-        List<WSSak> wsSaker = Arrays.asList(createWSGenerellSak("4", "44", TEMAKODE_OPPFOLGING, now(), SAKSTYPE_GENERELL, GODKJENTE_FAGSYSTEMER_FOR_FAGSAKER.get(0)),
-                createWSGenerellSak("5", "45", TEMAKODE_OPPFOLGING, now(), SAKSTYPE_GENERELL, GODKJENT_FAGSYSTEM_FOR_GENERELLE));
+        List<WSSak> wsSaker = Arrays.asList(new WSSak()
+                        .withSakId("4")
+                        .withFagsystemSakId("44")
+                        .withFagomraade(new WSFagomraader().withValue(TEMAKODE_OPPFOLGING))
+                        .withOpprettelsetidspunkt(now())
+                        .withSakstype(new WSSakstyper().withValue(SAKSTYPE_GENERELL))
+                        .withFagsystem(new WSFagsystemer().withValue(GODKJENTE_FAGSYSTEMER_FOR_FAGSAKER.get(0))),
+                new WSSak()
+                        .withSakId("5")
+                        .withFagsystemSakId("45")
+                        .withFagomraade(new WSFagomraader().withValue(TEMAKODE_OPPFOLGING))
+                        .withOpprettelsetidspunkt(now())
+                        .withSakstype(new WSSakstyper().withValue(SAKSTYPE_GENERELL))
+                        .withFagsystem(new WSFagsystemer().withValue(GODKJENT_FAGSYSTEM_FOR_GENERELLE)));
 
         when(sakV1.finnSak(any(WSFinnSakRequest.class))).thenReturn(new WSFinnSakResponse().withSakListe(wsSaker));
 
@@ -154,8 +178,20 @@ public class SakerServiceImplTest {
 
     @Test
     void fjernerGenerellOppfolgingssakDersomDenneFinnesOgOppfolgingssakFinnesIFagsaker() throws FinnSakUgyldigInput, FinnSakForMangeForekomster {
-        List<WSSak> wsSaker = Arrays.asList(createWSGenerellSak("4", "44", TEMAKODE_OPPFOLGING, now(), SAKSTYPE_GENERELL, GODKJENT_FAGSYSTEM_FOR_GENERELLE),
-                createWSGenerellSak("5", "55", TEMAKODE_OPPFOLGING, now(), "Fag", FAGSYSTEMKODE_ARENA));
+        List<WSSak> wsSaker = Arrays.asList(new WSSak()
+                        .withSakId("4")
+                        .withFagsystemSakId("44")
+                        .withFagomraade(new WSFagomraader().withValue(TEMAKODE_OPPFOLGING))
+                        .withOpprettelsetidspunkt(now())
+                        .withSakstype(new WSSakstyper().withValue(SAKSTYPE_GENERELL))
+                        .withFagsystem(new WSFagsystemer().withValue(GODKJENT_FAGSYSTEM_FOR_GENERELLE)),
+                new WSSak()
+                        .withSakId("5")
+                        .withFagsystemSakId("55")
+                        .withFagomraade(new WSFagomraader().withValue(TEMAKODE_OPPFOLGING))
+                        .withOpprettelsetidspunkt(now())
+                        .withSakstype(new WSSakstyper().withValue("Fag"))
+                        .withFagsystem(new WSFagsystemer().withValue(FAGSYSTEMKODE_ARENA)));
 
         when(sakV1.finnSak(any(WSFinnSakRequest.class))).thenReturn(new WSFinnSakResponse().withSakListe(wsSaker));
 
@@ -225,20 +261,28 @@ public class SakerServiceImplTest {
 
     private ArrayList<WSSak> createSaksliste() {
         return new ArrayList<>(asList(
-                createWSGenerellSak("1", "11", GODKJENTE_TEMA_FOR_GENERELLE.get(0), FIRE_DAGER_SIDEN, SAKSTYPE_GENERELL, GODKJENT_FAGSYSTEM_FOR_GENERELLE),
-                createWSGenerellSak("2", "22", GODKJENTE_TEMA_FOR_GENERELLE.get(1), now().minusDays(3), SAKSTYPE_GENERELL, GODKJENT_FAGSYSTEM_FOR_GENERELLE),
-                createWSGenerellSak("3", "33", "AAP", now().minusDays(5), "Fag", GODKJENTE_FAGSYSTEMER_FOR_FAGSAKER.get(0))
+                new WSSak()
+                        .withSakId("1")
+                        .withFagsystemSakId("11")
+                        .withFagomraade(new WSFagomraader().withValue(GODKJENTE_TEMA_FOR_GENERELLE.get(0)))
+                        .withOpprettelsetidspunkt(FIRE_DAGER_SIDEN)
+                        .withSakstype(new WSSakstyper().withValue(SAKSTYPE_GENERELL))
+                        .withFagsystem(new WSFagsystemer().withValue(GODKJENT_FAGSYSTEM_FOR_GENERELLE)),
+                new WSSak()
+                        .withSakId("2")
+                        .withFagsystemSakId("22")
+                        .withFagomraade(new WSFagomraader().withValue(GODKJENTE_TEMA_FOR_GENERELLE.get(1)))
+                        .withOpprettelsetidspunkt(now().minusDays(3))
+                        .withSakstype(new WSSakstyper().withValue(SAKSTYPE_GENERELL))
+                        .withFagsystem(new WSFagsystemer().withValue(GODKJENT_FAGSYSTEM_FOR_GENERELLE)),
+                new WSSak()
+                        .withSakId("3")
+                        .withFagsystemSakId("33")
+                        .withFagomraade(new WSFagomraader().withValue("AAP"))
+                        .withOpprettelsetidspunkt(now().minusDays(5))
+                        .withSakstype(new WSSakstyper().withValue("Fag"))
+                        .withFagsystem(new WSFagsystemer().withValue(GODKJENTE_FAGSYSTEMER_FOR_FAGSAKER.get(0)))
         ));
-    }
-
-    private static WSSak createWSGenerellSak(String id, String fagsystemSaksId, String tema, DateTime opprettet, String sakstype, String fagsystem) {
-        return new WSSak()
-                .withSakId(id)
-                .withFagsystemSakId(fagsystemSaksId)
-                .withFagomraade(new WSFagomraader().withValue(tema))
-                .withOpprettelsetidspunkt(opprettet)
-                .withSakstype(new WSSakstyper().withValue(sakstype))
-                .withFagsystem(new WSFagsystemer().withValue(fagsystem));
     }
 
     private Sak lagSak() {

@@ -27,7 +27,12 @@ public class AnsattServiceImpl implements AnsattService {
         ASBOGOSYSNAVAnsatt hentNAVAnsattEnhetListeRequest = new ASBOGOSYSNAVAnsatt();
         hentNAVAnsattEnhetListeRequest.setAnsattId(getSubjectHandler().getUid());
         try {
-            return ansattWS.hentNAVAnsattEnhetListe(hentNAVAnsattEnhetListeRequest).getNAVEnheter().stream().map(TIL_ANSATTENHET).collect(toList());
+            return ansattWS.hentNAVAnsattEnhetListe(hentNAVAnsattEnhetListeRequest)
+                    .getNAVEnheter()
+                    .stream()
+                    .map(TIL_ANSATTENHET)
+                    .collect(toList());
+
         } catch (HentNAVAnsattEnhetListeFaultGOSYSNAVAnsattIkkeFunnetMsg | HentNAVAnsattEnhetListeFaultGOSYSGeneriskMsg e) {
             throw new RuntimeException(e);
         }
@@ -49,11 +54,16 @@ public class AnsattServiceImpl implements AnsattService {
         request.setEnhetsId(enhet.enhetId);
         request.setEnhetsNavn(enhet.enhetNavn);
         try {
-            return ansattWS.hentNAVAnsattListe(request).getNAVAnsatte().stream().map(ansatt -> new Ansatt(ansatt.getFornavn(), ansatt.getEtternavn(), ansatt.getAnsattId())).collect(toList());
+            return ansattWS.hentNAVAnsattListe(request)
+                    .getNAVAnsatte()
+                    .stream()
+                    .map(ansatt -> new Ansatt(ansatt.getFornavn(), ansatt.getEtternavn(), ansatt.getAnsattId()))
+                    .collect(toList());
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
-    protected static final Function<ASBOGOSYSNavEnhet, AnsattEnhet> TIL_ANSATTENHET = asbogosysNavEnhet -> new AnsattEnhet(asbogosysNavEnhet.getEnhetsId(), asbogosysNavEnhet.getEnhetsNavn());
+    protected static final Function<ASBOGOSYSNavEnhet, AnsattEnhet> TIL_ANSATTENHET = asbogosysNavEnhet ->
+            new AnsattEnhet(asbogosysNavEnhet.getEnhetsId(), asbogosysNavEnhet.getEnhetsNavn());
 }

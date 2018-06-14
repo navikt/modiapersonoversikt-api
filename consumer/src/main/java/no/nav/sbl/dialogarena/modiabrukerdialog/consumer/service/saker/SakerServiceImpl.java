@@ -61,7 +61,9 @@ public class SakerServiceImpl implements SakerService {
         leggTilManglendeGenerelleSaker(saker);
         behandleOppfolgingsSaker(saker);
         leggTilFagsystemnavnOgTemanavn(saker, gsakKodeverk.hentFagsystemMapping(), standardKodeverk);
-        return saker.stream().filter(GODKJENT_FAGSAK.or(GODKJENT_GENERELL)).collect(toList());
+        return saker.stream()
+                .filter(GODKJENT_FAGSAK.or(GODKJENT_GENERELL))
+                .collect(toList());
     }
 
     @Override
@@ -113,7 +115,10 @@ public class SakerServiceImpl implements SakerService {
 
     private List<Sak> hentSakerFraGsak(String fnr) {
         try {
-            WSFinnSakResponse response = sakV1.finnSak(new WSFinnSakRequest().withBruker(new no.nav.tjeneste.virksomhet.sak.v1.informasjon.WSPerson().withIdent(fnr)));
+            WSFinnSakResponse response = sakV1.finnSak(
+                    new WSFinnSakRequest()
+                            .withBruker(new no.nav.tjeneste.virksomhet.sak.v1.informasjon.WSPerson().withIdent(fnr)));
+
             return response.getSakListe().stream().map(TIL_SAK).collect(toList());
         } catch (FinnSakUgyldigInput | FinnSakForMangeForekomster e) {
             throw new RuntimeException(e);

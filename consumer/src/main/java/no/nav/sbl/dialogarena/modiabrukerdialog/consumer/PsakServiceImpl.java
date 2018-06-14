@@ -27,8 +27,13 @@ public class PsakServiceImpl implements PsakService {
     @Override
     public List<Sak> hentSakerFor(String fnr) {
         try {
-            List<WSSakSammendrag> sakSammendragListe = pensjonSakV1.hentSakSammendragListe(new WSHentSakSammendragListeRequest().withPersonident(fnr)).getSakSammendragListe();
-            return sakSammendragListe.stream().map(TIL_SAK).collect(toList());
+            List<WSSakSammendrag> sakSammendragListe =
+                    pensjonSakV1.hentSakSammendragListe(new WSHentSakSammendragListeRequest().withPersonident(fnr))
+                            .getSakSammendragListe();
+
+            return sakSammendragListe.stream()
+                    .map(TIL_SAK)
+                    .collect(toList());
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

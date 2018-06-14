@@ -32,7 +32,11 @@ public class MeldingUtils {
 
         Map<String, List<Melding>> ufiltrertTraaderMap = meldinger.stream().collect(groupingBy(Melding::getTraadId));
 
-        List<Map.Entry<String, List<Melding>>> filtrertEntryList = ufiltrertTraaderMap.entrySet().stream().filter(DET_FINNES_EN_ROTMELDING).collect(toList());
+        List<Map.Entry<String, List<Melding>>> filtrertEntryList = ufiltrertTraaderMap
+                .entrySet()
+                .stream()
+                .filter(DET_FINNES_EN_ROTMELDING)
+                .collect(toList());
 
         return lagMap(filtrertEntryList);
     }

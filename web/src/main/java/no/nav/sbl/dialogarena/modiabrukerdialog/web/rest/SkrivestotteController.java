@@ -30,6 +30,8 @@ public class SkrivestotteController {
     @GET
     @Path("alletags")
     public Set<String> hentAlleTags() {
-        return skrivestotteSok.sok("").stream().flatMap(skrivestotteTekst -> skrivestotteTekst.tags.stream()).collect(toSet());
+        return skrivestotteSok.sok("").stream()
+                .flatMap(skrivestotteTekst -> skrivestotteTekst.tags.stream())
+                .collect(toSet());
     }
 }

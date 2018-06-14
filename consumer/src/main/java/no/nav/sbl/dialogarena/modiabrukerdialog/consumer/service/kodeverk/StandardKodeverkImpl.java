@@ -113,7 +113,10 @@ public class StandardKodeverkImpl implements StandardKodeverk {
     }
 
     private List<XMLKode> getGyldigeKodeverk(XMLEnkeltKodeverk enkeltkodeverk) {
-        return enkeltkodeverk.getKode().stream().filter(kode -> GYLDIGHETSPERIODER.apply(kode).stream().anyMatch(periodeMed(now()))).collect(toList());
+        return enkeltkodeverk.getKode().stream()
+                .filter(kode -> GYLDIGHETSPERIODER.apply(kode).stream()
+                        .anyMatch(periodeMed(now())))
+                .collect(toList());
     }
 
     private XMLEnkeltKodeverk kodeverkMedNavn(String kodeverknavn) {

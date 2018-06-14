@@ -24,7 +24,10 @@ public class SaksbehandlerInnstillingerServiceImpl implements SaksbehandlerInnst
 
 
     public String getSaksbehandlerValgtEnhet() {
-        List<String> ansattEnhetsIdListe = ansattService.hentEnhetsliste().stream().map(TIL_ENHET_ID).collect(toList());
+        List<String> ansattEnhetsIdListe = ansattService.hentEnhetsliste().stream()
+                .map(TIL_ENHET_ID)
+                .collect(toList());
+
         String enhetId = ansattEnhetsIdListe.get(0);
 
         if (valgtEnhetCookieEksisterer()) {

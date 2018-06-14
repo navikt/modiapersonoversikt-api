@@ -108,7 +108,9 @@ public class HenvendelseBehandlingServiceImpl implements HenvendelseBehandlingSe
     @Override
     public void merkSomKontorsperret(String fnr, TraadVM valgtTraad) {
         String enhet = getEnhet(fnr);
-        List<String> ider = valgtTraad.getMeldinger().stream().map(MeldingVM::getId).collect(toList());
+        List<String> ider = valgtTraad.getMeldinger().stream()
+                .map(MeldingVM::getId)
+                .collect(toList());
 
         behandleHenvendelsePortType.oppdaterKontorsperre(enhet, ider);
     }

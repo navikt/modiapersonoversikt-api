@@ -31,9 +31,13 @@ public class OrganisasjonEnhetV2ServiceImpl implements OrganisasjonEnhetV2Servic
 
     @Override
     public List<AnsattEnhet> hentAlleEnheter(WSOppgavebehandlerfilter oppgavebehandlerFilter) {
-        final HentFullstendigEnhetListeResponse hentFullstendigEnhetListeResponse = organisasjonEnhetService.hentFullstendigEnhetListe(lagHentFullstendigEnhetListeRequest(oppgavebehandlerFilter));
+        final HentFullstendigEnhetListeResponse hentFullstendigEnhetListeResponse =
+                organisasjonEnhetService.hentFullstendigEnhetListe(lagHentFullstendigEnhetListeRequest(oppgavebehandlerFilter));
 
-        return hentFullstendigEnhetListeResponse.getEnhetListe().stream().map(TIL_ANSATTENHET).sorted(ENHET_ID_STIGENDE).collect(toList());
+        return hentFullstendigEnhetListeResponse.getEnhetListe().stream()
+                .map(TIL_ANSATTENHET)
+                .sorted(ENHET_ID_STIGENDE)
+                .collect(toList());
     }
 
     @Override

@@ -408,7 +408,11 @@ public class HenvendelseUtsendingServiceImplTest {
         verify(pep).assertAccess(captor.capture());
 
         PolicyRequest policyRequest = captor.getValue();
-        ActionId actionId = policyRequest.getAttributes().stream().filter(ActionId.class::isInstance).map(o -> (ActionId) o).findFirst().get();
+        ActionId actionId = policyRequest.getAttributes().stream()
+                .filter(ActionId.class::isInstance)
+                .map(o -> (ActionId) o)
+                .findFirst()
+                .get();
 
         assertThat(actionId.getAttributeValue().getValue(), is("oksos"));
     }

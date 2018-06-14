@@ -37,7 +37,10 @@ public class OversiktLerret extends Lerret {
         add(new VarslerOversiktLink("varsling-lenke", fnr));
         widgets.add(new UtbetalingWidget("utbetalinger", "U", fnr));
 
-        asyncWidgets = widgets.stream().filter(o -> AsyncWidget.class.isInstance(o)).map(o -> (AsyncWidget) o).collect(toList());
+        asyncWidgets = widgets.stream()
+                .filter(o -> AsyncWidget.class.isInstance(o))
+                .map(o -> (AsyncWidget) o)
+                .collect(toList());
 
         widgets.forEach(this::add);
     }

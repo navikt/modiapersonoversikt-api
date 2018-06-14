@@ -168,7 +168,9 @@ class MeldingerSokImplTest {
     }
 
     private static List<Melding> alleMeldinger(List<Traad> traader) {
-        return traader.stream().flatMap(traad -> traad.meldinger.stream()).collect(toList());
+        return traader.stream()
+                .flatMap(traad -> traad.meldinger.stream())
+                .collect(toList());
     }
 
 }

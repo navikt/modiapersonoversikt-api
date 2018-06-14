@@ -133,7 +133,9 @@ public class NyOppgaveFormWrapperTest extends WicketPageTest {
         enheter.add(createEnhet("99", "nittiNi"));
         enheter.add(createEnhet("100", "hundre"));
         enheter.add(createEnhet("200", "toHundre"));
-        List<AnsattEnhet> gyldigeEnheter = enheter.stream().filter(enhet -> erGyldigEnhet(enhet)).collect(toList());
+        List<AnsattEnhet> gyldigeEnheter = enheter.stream()
+                .filter(enhet -> erGyldigEnhet(enhet))
+                .collect(toList());
 
         assertThat(gyldigeEnheter.size(), is(2));
     }
@@ -148,7 +150,9 @@ public class NyOppgaveFormWrapperTest extends WicketPageTest {
         enheter.add(createEnhet("404", "fiktivt kontor 2", "underAvvikling"));
         enheter.add(createEnhet("505", "fiktivt kontor 3", "nedlagt"));
         enheter.add(createEnhet("606", "stort kontor", "AKTIV"));
-        List<AnsattEnhet> gyldigeEnheter = enheter.stream().filter(enhet -> erGyldigEnhet(enhet)).collect(toList());
+        List<AnsattEnhet> gyldigeEnheter = enheter.stream()
+                .filter(enhet -> erGyldigEnhet(enhet))
+                .collect(toList());
 
         assertThat(gyldigeEnheter.size(), is(4));
     }
