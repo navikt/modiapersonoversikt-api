@@ -1,6 +1,5 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel;
 
-import no.nav.modig.lang.collections.predicate.GreaterThanPredicate;
 import no.nav.modig.wicket.events.NamedEventPayload;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.DialogSession;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
@@ -67,7 +66,7 @@ public class KvitteringsPanel extends Panel {
                 send(getPage(), Broadcast.BREADTH, new NamedEventPayload(NESTE_DIALOG_LENKE_VALGT));
             }
         };
-        nesteDialogLenke.add(visibleIf(when(getAntallTildelt(), new GreaterThanPredicate<>(0))));
+        nesteDialogLenke.add(visibleIf(when(getAntallTildelt(), tildelt -> tildelt > 0)));
         nesteDialogLenke.setOutputMarkupId(true);
         startNyDialogLenke.setOutputMarkupId(true);
         add(nesteDialogLenke, startNyDialogLenke, temagruppemeldingLabel, kvitteringsmeldingLabel);

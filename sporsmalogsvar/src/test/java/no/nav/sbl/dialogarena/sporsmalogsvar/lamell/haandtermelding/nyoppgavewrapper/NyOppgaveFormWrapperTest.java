@@ -29,10 +29,11 @@ import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
-import static no.nav.modig.lang.collections.IterUtils.on;
+import static java.util.stream.Collectors.toList;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.withId;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype.SPORSMAL_SKRIFTLIG;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.TestUtils.createMelding;
@@ -132,7 +133,7 @@ public class NyOppgaveFormWrapperTest extends WicketPageTest {
         enheter.add(createEnhet("99", "nittiNi"));
         enheter.add(createEnhet("100", "hundre"));
         enheter.add(createEnhet("200", "toHundre"));
-        List<AnsattEnhet> gyldigeEnheter = on(enheter).filter(enhet -> erGyldigEnhet(enhet)).collect();
+        List<AnsattEnhet> gyldigeEnheter = enheter.stream().filter(enhet -> erGyldigEnhet(enhet)).collect(toList());
 
         assertThat(gyldigeEnheter.size(), is(2));
     }
@@ -147,7 +148,7 @@ public class NyOppgaveFormWrapperTest extends WicketPageTest {
         enheter.add(createEnhet("404", "fiktivt kontor 2", "underAvvikling"));
         enheter.add(createEnhet("505", "fiktivt kontor 3", "nedlagt"));
         enheter.add(createEnhet("606", "stort kontor", "AKTIV"));
-        List<AnsattEnhet> gyldigeEnheter = on(enheter).filter(enhet -> erGyldigEnhet(enhet)).collect();
+        List<AnsattEnhet> gyldigeEnheter = enheter.stream().filter(enhet -> erGyldigEnhet(enhet)).collect(toList());
 
         assertThat(gyldigeEnheter.size(), is(4));
     }

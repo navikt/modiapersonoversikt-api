@@ -16,12 +16,11 @@ import org.slf4j.LoggerFactory;
 import javax.inject.Inject;
 import java.util.*;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
 import static java.util.Comparator.comparing;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
-import static no.nav.modig.lang.collections.IterUtils.on;
+import static java.util.stream.Collectors.toList;
 
 public class OrganisasjonEnhetV2ServiceImpl implements OrganisasjonEnhetV2Service {
 
@@ -33,11 +32,10 @@ public class OrganisasjonEnhetV2ServiceImpl implements OrganisasjonEnhetV2Servic
     @Override
     public List<AnsattEnhet> hentAlleEnheter(WSOppgavebehandlerfilter oppgavebehandlerFilter) {
         final HentFullstendigEnhetListeResponse hentFullstendigEnhetListeResponse = organisasjonEnhetService.hentFullstendigEnhetListe(lagHentFullstendigEnhetListeRequest(oppgavebehandlerFilter));
-        final List<AnsattEnhet> enheter = new ArrayList<>();
 
-        enheter.addAll(hentFullstendigEnhetListeResponse.getEnhetListe().stream().map(TIL_ANSATTENHET).collect(Collectors.toList()));
+        final List<AnsattEnhet> enheter = hentFullstendigEnhetListeResponse.getEnhetListe().stream().map(TIL_ANSATTENHET).collect(toList());
 
-        return on(enheter).collect(ENHET_ID_STIGENDE);
+        return enheter.stream().sorted(ENHET_ID_STIGENDE).collect(toList());
     }
 
     @Override

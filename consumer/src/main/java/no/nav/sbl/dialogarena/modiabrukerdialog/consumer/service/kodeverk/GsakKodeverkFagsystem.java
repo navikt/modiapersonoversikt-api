@@ -1,7 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.kodeverk;
 
 import no.nav.modig.core.exception.ApplicationException;
-import org.apache.commons.collections15.Closure;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
@@ -11,13 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static no.nav.modig.lang.collections.IterUtils.on;
-
-/**
- * Fagsystem kodeverk. Henter mapping mellom fagsystemkode og fagsystemnavn.
- */
-
-public abstract class GsakKodeverkFagsystem implements Serializable {
+abstract class GsakKodeverkFagsystem implements Serializable {
 
     public static class Parser extends GsakKodeParser {
 
@@ -31,7 +24,7 @@ public abstract class GsakKodeverkFagsystem implements Serializable {
                 Document fagsystemerDocument = parseDocument(fagsystemer);
                 List<Node> fagsystemNodes = compileAndEvaluate(fagsystemerDocument, "//fagsystemListe/fagsystem/gosys[not(@erGyldig = 'false')]");
                 final Map<String, String> fagsystemMap = new HashMap<>();
-                on(fagsystemNodes).forEach((Closure<Node>) node -> {
+                fagsystemNodes.forEach(node -> {
                     String fagsystemkode = getParentNodeValue(node, KODE);
                     String fagsystemnavn = getNodeValue(node, DECODE);
                     fagsystemMap.put(fagsystemkode, fagsystemnavn);

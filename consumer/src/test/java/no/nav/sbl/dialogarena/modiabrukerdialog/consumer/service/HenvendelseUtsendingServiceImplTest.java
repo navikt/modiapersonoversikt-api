@@ -13,7 +13,6 @@ import no.nav.kjerneinfo.domain.person.fakta.AnsvarligEnhet;
 import no.nav.kjerneinfo.domain.person.fakta.Organisasjonsenhet;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.*;
 import no.nav.modig.content.PropertyResolver;
-import no.nav.modig.lang.collections.PredicateUtils;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Saksbehandler;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.Sak;
@@ -41,8 +40,6 @@ import java.util.*;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
-import static no.nav.modig.lang.collections.IterUtils.on;
-import static no.nav.modig.lang.collections.TransformerUtils.castTo;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype.*;
 import static org.hamcrest.Matchers.*;
 import static org.joda.time.DateTime.now;
@@ -65,25 +62,25 @@ public class HenvendelseUtsendingServiceImplTest {
     private static final String ELDSTE_HENVENDELSE = "Eldste henvendelse";
     private static final String ENHET = "1234";
 
-    public static final String JOURNALFORT_TEMA = "tema jobb";
-    public static final String SAKSBEHANDLERS_VALGTE_ENHET = "4300";
-    public static final String SAKSBEHANDLERS_IDENT = "z123456";
+    private static final String JOURNALFORT_TEMA = "tema jobb";
+    private static final String SAKSBEHANDLERS_VALGTE_ENHET = "4300";
+    private static final String SAKSBEHANDLERS_IDENT = "z123456";
 
     @Captor
-    ArgumentCaptor<WSSendUtHenvendelseRequest> wsSendHenvendelseRequestCaptor;
+    private ArgumentCaptor<WSSendUtHenvendelseRequest> wsSendHenvendelseRequestCaptor;
     @Captor
-    ArgumentCaptor<WSHentHenvendelseListeRequest> hentHenvendelseListeRequestCaptor;
+    private ArgumentCaptor<WSHentHenvendelseListeRequest> hentHenvendelseListeRequestCaptor;
     @Captor
-    ArgumentCaptor<WSFerdigstillHenvendelseRequest> wsFerdigstillHenvendelseRequestCaptor;
+    private ArgumentCaptor<WSFerdigstillHenvendelseRequest> wsFerdigstillHenvendelseRequestCaptor;
     @Captor
-    ArgumentCaptor<Sak> sakArgumentCaptor;
+    private ArgumentCaptor<Sak> sakArgumentCaptor;
     @Captor
-    ArgumentCaptor<String> stringArgumentCaptor;
+    private ArgumentCaptor<String> stringArgumentCaptor;
 
     @Mock
-    public SakerService sakerService;
+    private SakerService sakerService;
     @Mock
-    public OppgaveBehandlingService oppgaveBehandlingService;
+    private OppgaveBehandlingService oppgaveBehandlingService;
     @Mock
     public SaksbehandlerInnstillingerService saksbehandlerInnstillingerService;
     @Mock
@@ -95,7 +92,7 @@ public class HenvendelseUtsendingServiceImplTest {
     @Mock
     private HenvendelsePortType henvendelsePortType;
     @Mock
-    protected SendUtHenvendelsePortType sendUtHenvendelsePortType;
+    private SendUtHenvendelsePortType sendUtHenvendelsePortType;
     @Mock
     private BehandleHenvendelsePortType behandleHenvendelsePortType;
     @Mock
@@ -107,17 +104,17 @@ public class HenvendelseUtsendingServiceImplTest {
     private HenvendelseUtsendingServiceImpl henvendelseUtsendingService;
 
     @BeforeAll
-    public static void beforeClass() {
+    static void beforeClass() {
         CacheTestUtil.setupCache(Collections.singletonList("endpointCache"));
     }
 
     @AfterAll
-    public static void afterClass() {
+    static void afterClass() {
         CacheTestUtil.tearDown();
     }
 
     @BeforeEach
-    public void init() {
+    void init() {
         initMocks(this);
         SubjectHandlerUtil.setInnloggetSaksbehandler(SAKSBEHANDLERS_IDENT);
 
@@ -139,7 +136,7 @@ public class HenvendelseUtsendingServiceImplTest {
     }
 
     @Test
-    public void henterSporsmal() {
+    void henterSporsmal() {
         System.setProperty(StaticSubjectHandler.SUBJECTHANDLER_KEY, StaticSubjectHandler.class.getName());
         when(henvendelsePortType.hentHenvendelseListe(any(WSHentHenvendelseListeRequest.class))).thenReturn(mockWSHentHenvendelseResponse());
 
@@ -152,7 +149,7 @@ public class HenvendelseUtsendingServiceImplTest {
     }
 
     @Test
-    public void skalSendeSvar() throws Exception {
+    void skalSendeSvar() throws Exception {
         Melding melding = new Melding()
                 .withFnr(FNR)
                 .withFritekst(mockFritekst())
@@ -165,7 +162,7 @@ public class HenvendelseUtsendingServiceImplTest {
     }
 
     @Test
-    public void skalSendeReferat() throws Exception {
+    void skalSendeReferat() throws Exception {
         Melding melding = new Melding()
                 .withFnr(FNR)
                 .withFritekst(mockFritekst())
@@ -178,7 +175,7 @@ public class HenvendelseUtsendingServiceImplTest {
     }
 
     @Test
-    public void skalSendeSporsmal() throws Exception {
+    void skalSendeSporsmal() throws Exception {
         Melding melding = new Melding()
                 .withFnr(FNR)
                 .withFritekst(mockFritekst())
@@ -191,14 +188,14 @@ public class HenvendelseUtsendingServiceImplTest {
     }
 
     @Test
-    public void skalOppretteHenvendelse() {
+    void skalOppretteHenvendelse() {
         henvendelseUtsendingService.opprettHenvendelse(SVAR_SKRIFTLIG.name(), FNR, BEHANDLINGS_ID);
 
         verify(sendUtHenvendelsePortType).opprettHenvendelse(SVAR_SKRIFTLIG.name(), FNR,  BEHANDLINGS_ID);
     }
 
     @Test
-    public void skalFerdigstilleHenvendelse() throws Exception {
+    void skalFerdigstilleHenvendelse() throws Exception {
         Melding melding = new Melding()
                 .withFnr(FNR)
                 .withFritekst(mockFritekst())
@@ -212,7 +209,7 @@ public class HenvendelseUtsendingServiceImplTest {
     }
 
     @Test
-    public void skalJournalforeHenvendelseDersomSakErSatt() throws Exception {
+    void skalJournalforeHenvendelseDersomSakErSatt() throws Exception {
         Sak sak = new Sak();
         sak.saksId = "sakid";
         Melding melding = new Melding()
@@ -229,7 +226,7 @@ public class HenvendelseUtsendingServiceImplTest {
     }
 
     @Test
-    public void skalFerdigstilleOppgaveDersomDenneErSatt() throws Exception {
+    void skalFerdigstilleOppgaveDersomDenneErSatt() throws Exception {
         String oppgaveId = "oppgaveId";
         Melding melding = new Melding()
                 .withFnr(FNR)
@@ -248,7 +245,7 @@ public class HenvendelseUtsendingServiceImplTest {
     }
 
     @Test
-    public void skalHenteTraad() {
+    void skalHenteTraad() {
         WSHentHenvendelseListeResponse wsHentHenvendelseListeResponse =
                 new WSHentHenvendelseListeResponse().withAny(
                         createXMLMeldingFraBruker(),
@@ -269,7 +266,7 @@ public class HenvendelseUtsendingServiceImplTest {
     }
 
     @Test
-    public void skalHenteSvarlisteMedRiktigTypeSpesifisert() {
+    void skalHenteSvarlisteMedRiktigTypeSpesifisert() {
         WSHentHenvendelseListeResponse wsHentHenvendelseListeResponse = new WSHentHenvendelseListeResponse().withAny(createXMLMeldingTilBruker(TRAAD_ID));
         when(henvendelsePortType.hentHenvendelseListe(any(WSHentHenvendelseListeRequest.class))).thenReturn(wsHentHenvendelseListeResponse);
 
@@ -292,7 +289,7 @@ public class HenvendelseUtsendingServiceImplTest {
     }
 
     @Test
-    public void skalHenteSortertListeAvSvarEllerReferatForSporsmalMedEldsteForst() {
+    void skalHenteSortertListeAvSvarEllerReferatForSporsmalMedEldsteForst() {
         WSHentHenvendelseListeResponse wsHentHenvendelseListeResponse =
                 new WSHentHenvendelseListeResponse().withAny(createTraad(TRAAD_ID).toArray());
 
@@ -306,7 +303,7 @@ public class HenvendelseUtsendingServiceImplTest {
     }
 
     @Test
-    public void skalHenteTraadMedBlankFritekstOmManIkkeHarTilgang() {
+    void skalHenteTraadMedBlankFritekstOmManIkkeHarTilgang() {
         WSHentHenvendelseListeResponse resp =
                 new WSHentHenvendelseListeResponse().withAny(createTraadMedJournalfortTemaGruppe(TRAAD_ID, JOURNALFORT_TEMA).toArray());
 
@@ -321,7 +318,7 @@ public class HenvendelseUtsendingServiceImplTest {
     }
 
     @Test
-    public void kontorsperrerHenvendelsePaaAndreSosialeTjenester() throws Exception {
+    void kontorsperrerHenvendelsePaaAndreSosialeTjenester() throws Exception {
         Melding melding = new Melding().withFnr(FNR).withFritekst(mockFritekst()).withType(SAMTALEREFERAT_OPPMOTE).withTemagruppe(Temagruppe.ANSOS.toString());
         henvendelseUtsendingService.sendHenvendelse(melding, Optional.empty(), Optional.empty(), SAKSBEHANDLERS_VALGTE_ENHET);
 
@@ -329,7 +326,7 @@ public class HenvendelseUtsendingServiceImplTest {
     }
 
     @Test
-    public void kontorsperrerIkkeHenvendelsePaaOkonomiskSosialhjelp() throws Exception {
+    void kontorsperrerIkkeHenvendelsePaaOkonomiskSosialhjelp() throws Exception {
         Melding melding = new Melding().withFnr(FNR).withFritekst(mockFritekst()).withType(SAMTALEREFERAT_OPPMOTE).withTemagruppe(Temagruppe.OKSOS.toString());
         henvendelseUtsendingService.sendHenvendelse(melding, Optional.empty(), Optional.empty(), SAKSBEHANDLERS_VALGTE_ENHET);
 
@@ -337,7 +334,7 @@ public class HenvendelseUtsendingServiceImplTest {
     }
 
     @Test
-    public void knyttetHenvendelsenTilBrukersEnhetFraTPS() throws Exception {
+    void knyttetHenvendelsenTilBrukersEnhetFraTPS() throws Exception {
         Melding melding = new Melding().withFnr(FNR).withFritekst(mockFritekst()).withType(SAMTALEREFERAT_OPPMOTE).withTemagruppe(Temagruppe.ARBD.toString());
         henvendelseUtsendingService.sendHenvendelse(melding, Optional.empty(), Optional.empty(), SAKSBEHANDLERS_VALGTE_ENHET);
 
@@ -348,7 +345,7 @@ public class HenvendelseUtsendingServiceImplTest {
     }
 
     @Test
-    public void knyttetHenvendelsenTilBrukersEnhetFraMelding() throws Exception {
+    void knyttetHenvendelsenTilBrukersEnhetFraMelding() throws Exception {
         String brukersEnhet = "0123";
 
         Melding melding = new Melding()
@@ -366,7 +363,7 @@ public class HenvendelseUtsendingServiceImplTest {
     }
 
     @Test
-    public void knyttetHenvendelsenTilTomEnhetDersomBrukerIkkeHarNavkontor() throws Exception {
+    void knyttetHenvendelsenTilTomEnhetDersomBrukerIkkeHarNavkontor() throws Exception {
         String brukersEnhet = null;
 
         HentKjerneinformasjonResponse kjerneinformasjonResponse = new HentKjerneinformasjonResponse();
@@ -391,7 +388,7 @@ public class HenvendelseUtsendingServiceImplTest {
     }
 
     @Test
-    public void sjekkerTilgangPaaOkonomiskSosialhjelp() {
+    void sjekkerTilgangPaaOkonomiskSosialhjelp() {
         String valgtEnhet = "1234";
         when(saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet()).thenReturn(valgtEnhet);
         when(henvendelsePortType.hentHenvendelseListe(any(WSHentHenvendelseListeRequest.class))).thenReturn(new WSHentHenvendelseListeResponse().withAny(
@@ -411,9 +408,9 @@ public class HenvendelseUtsendingServiceImplTest {
         verify(pep).assertAccess(captor.capture());
 
         PolicyRequest policyRequest = captor.getValue();
-        ActionId actionId = on(policyRequest.getAttributes()).filter(PredicateUtils.isA(ActionId.class)).map(castTo(ActionId.class)).head().get();
+        ActionId actionId = policyRequest.getAttributes().stream().filter(ActionId.class::isInstance).map(o -> (ActionId) o).findFirst().get();
 
-        assertThat((String) actionId.getAttributeValue().getValue(), is("oksos"));
+        assertThat(actionId.getAttributeValue().getValue(), is("oksos"));
     }
 
     private Fritekst mockFritekst() {

@@ -8,12 +8,11 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import static java.util.stream.Collectors.toSet;
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
-import static no.nav.modig.lang.collections.IterUtils.on;
 
 @Path("/skrivestotte")
 @Produces(APPLICATION_JSON)
@@ -31,6 +30,6 @@ public class SkrivestotteController {
     @GET
     @Path("alletags")
     public Set<String> hentAlleTags() {
-        return on(skrivestotteSok.sok("")).flatmap(skrivestotteTekst -> skrivestotteTekst.tags).collectIn(new HashSet<>());
+        return skrivestotteSok.sok("").stream().flatMap(skrivestotteTekst -> skrivestotteTekst.tags.stream()).collect(toSet());
     }
 }

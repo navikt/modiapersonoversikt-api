@@ -36,7 +36,6 @@ import static java.util.stream.Collectors.toList;
 import static no.nav.brukerdialog.security.tilgangskontroll.utils.AttributeUtils.*;
 import static no.nav.brukerdialog.security.tilgangskontroll.utils.RequestUtils.forRequest;
 import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.*;
-import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.MeldingUtils.tilMelding;
 import static org.apache.commons.lang3.StringUtils.defaultString;
 import static org.apache.commons.lang3.StringUtils.isBlank;
@@ -109,7 +108,7 @@ public class HenvendelseBehandlingServiceImpl implements HenvendelseBehandlingSe
     @Override
     public void merkSomKontorsperret(String fnr, TraadVM valgtTraad) {
         String enhet = getEnhet(fnr);
-        List<String> ider = on(valgtTraad.getMeldinger()).map(MeldingVM::getId).collect();
+        List<String> ider = valgtTraad.getMeldinger().stream().map(MeldingVM::getId).collect(toList());
 
         behandleHenvendelsePortType.oppdaterKontorsperre(enhet, ider);
     }

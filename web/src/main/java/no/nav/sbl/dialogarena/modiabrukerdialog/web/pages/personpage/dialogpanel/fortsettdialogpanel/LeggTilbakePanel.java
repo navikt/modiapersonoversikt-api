@@ -1,7 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.fortsettdialogpanel;
 
 import no.nav.metrics.Timer;
-import no.nav.modig.lang.collections.predicate.GreaterThanPredicate;
 import no.nav.modig.wicket.component.indicatingajaxbutton.IndicatingAjaxButtonWithImageUrl;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.DialogSession;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
@@ -143,7 +142,7 @@ public class LeggTilbakePanel extends Panel {
                 send(page, DEPTH, NESTE_DIALOG_LENKE_VALGT);
             }
         };
-        nesteOppgaveKnapp.add(visibleIf(when(getAntallTildelt(), new GreaterThanPredicate<>(0))));
+        nesteOppgaveKnapp.add(visibleIf(when(getAntallTildelt(), tildelt -> tildelt > 0)));
 
         feedbackPanelSuccess.add(nesteOppgaveKnapp, lukkKnapp);
         add(feedbackPanelSuccess);

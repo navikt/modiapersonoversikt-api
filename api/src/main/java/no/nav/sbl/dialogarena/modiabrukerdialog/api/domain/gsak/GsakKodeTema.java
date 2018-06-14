@@ -6,6 +6,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.function.Function;
 
 import static java.util.Collections.unmodifiableList;
 
@@ -23,7 +24,7 @@ public abstract class GsakKodeTema implements Serializable {
         this.tekst = tekst;
     }
 
-    public static final Transformer<? super Tema, String> TEKST = (Transformer<Tema, String>) tema -> tema.tekst;
+    public static final Function<? super Tema, String> TEKST = tema -> tema.tekst;
 
     public static class Tema extends GsakKodeTema implements Serializable {
         public final List<OppgaveType> oppgaveTyper;
