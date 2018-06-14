@@ -22,9 +22,7 @@ import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.model.CompoundPropertyModel;
-import org.apache.wicket.model.PropertyModel;
-import org.apache.wicket.model.StringResourceModel;
+import org.apache.wicket.model.*;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
 
 import javax.inject.Inject;
@@ -117,7 +115,13 @@ public class Innboks extends Lerret {
                 MetricsFactory.createEvent("hendelse.meldinger-lamell-besvar-flere-knapp.klikk").report();
             }
         };
-        slaaSammenTraaderToggleButton.add(visibleIf(when(sizeOf(innboksVM.tildelteOppgaverUtenDelsvar), size -> size > 1)));
+
+        slaaSammenTraaderToggleButton.add(visibleIf(new Model<Boolean>() {
+            @Override
+            public Boolean getObject() {
+                return innboksVM.tildelteOppgaverUtenDelsvar.size() > 1;
+            }
+        }));
         slaaSammenTraaderPanel.addCallback("slaaSammen", List.class, (target, data) -> {
             @SuppressWarnings("unchecked")
             List<String> traadIder = (List<String>) data;
