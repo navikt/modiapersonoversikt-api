@@ -26,5 +26,5 @@ public class AnsattEnhet implements Serializable {
         return "AKTIV".equals(upperCase(status));
     }
 
-    public static final Function<AnsattEnhet, String> ENHET_ID = ansattEnhet -> ansattEnhet.enhetId;
+    public static final Function<AnsattEnhet, String> TIL_ENHET_ID = ansattEnhet -> ansattEnhet.enhetId;
 }

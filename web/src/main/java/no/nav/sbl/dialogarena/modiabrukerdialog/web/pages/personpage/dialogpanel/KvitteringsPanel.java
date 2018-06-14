@@ -10,14 +10,10 @@ import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.AbstractReadOnlyModel;
-import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.StringResourceModel;
 
-import java.io.Serializable;
-
 import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
-import static no.nav.modig.wicket.model.ModelUtils.when;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe.ANSOS;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.DialogPanel.NESTE_DIALOG_LENKE_VALGT;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.DialogPanel.NY_DIALOG_LENKE_VALGT;
@@ -70,7 +66,7 @@ public class KvitteringsPanel extends Panel {
                 send(getPage(), Broadcast.BREADTH, new NamedEventPayload(NESTE_DIALOG_LENKE_VALGT));
             }
         };
-        nesteDialogLenke.add(visibleIf( new Model<Boolean>() {
+        nesteDialogLenke.add(visibleIf(new Model<Boolean>() {
             @Override
             public Boolean getObject() {
                 return DialogSession.read(KvitteringsPanel.this).getPlukkedeOppgaver().size() > 0;

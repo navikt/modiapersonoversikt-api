@@ -30,6 +30,7 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import static java.util.Arrays.asList;
+import static java.util.stream.Collectors.joining;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.cms.SkrivestotteTekst.LOCALE_DEFAULT;
 import static org.apache.commons.lang3.StringUtils.*;
 
@@ -118,7 +119,7 @@ public class SkrivestotteSok {
     private static String query(String frisok, List<String> tags) {
         String vasketFrisok = LUCENE_PATTERN.matcher(frisok).replaceAll(REPLACEMENT_STRING).trim();
         String frisokQuery = isBlank(vasketFrisok) ? "*:*" : "*" + vasketFrisok + "*";
-        String tagsQuery = tags.stream().map(tag -> TAGS_FILTER + ":" + tag).reduce((s1, s2) -> s1 + " AND " + s2).orElse("");
+        String tagsQuery = tags.stream().map(tag -> TAGS_FILTER + ":" + tag).collect(joining(" AND "));
         return frisokQuery + (isBlank(tagsQuery) ? "" : (" AND " + tagsQuery));
     }
 

@@ -6,10 +6,9 @@ import org.apache.wicket.util.cookies.CookieUtils;
 
 import javax.inject.Inject;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.AnsattEnhet.ENHET_ID;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.AnsattEnhet.TIL_ENHET_ID;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.RestUtils.saksbehandlerInnstillingerCookieId;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.RestUtils.saksbehandlerInnstillingerTimeoutCookieId;
 
@@ -25,7 +24,7 @@ public class SaksbehandlerInnstillingerServiceImpl implements SaksbehandlerInnst
 
 
     public String getSaksbehandlerValgtEnhet() {
-        List<String> ansattEnhetsIdListe = ansattService.hentEnhetsliste().stream().map(ENHET_ID).collect(toList());
+        List<String> ansattEnhetsIdListe = ansattService.hentEnhetsliste().stream().map(TIL_ENHET_ID).collect(toList());
         String enhetId = ansattEnhetsIdListe.get(0);
 
         if (valgtEnhetCookieEksisterer()) {

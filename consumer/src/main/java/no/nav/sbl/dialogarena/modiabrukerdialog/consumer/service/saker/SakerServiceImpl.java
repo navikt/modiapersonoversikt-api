@@ -61,7 +61,7 @@ public class SakerServiceImpl implements SakerService {
         leggTilManglendeGenerelleSaker(saker);
         behandleOppfolgingsSaker(saker);
         leggTilFagsystemnavnOgTemanavn(saker, gsakKodeverk.hentFagsystemMapping(), standardKodeverk);
-        return saker.stream().filter(GODSKJENT_FAGSAK.or(GODSKJENT_GENERELL)).collect(toList());
+        return saker.stream().filter(GODKJENT_FAGSAK.or(GODKJENT_GENERELL)).collect(toList());
     }
 
     @Override
@@ -121,7 +121,7 @@ public class SakerServiceImpl implements SakerService {
     }
 
     private void leggTilFraArena(String fnr, List<Sak> saker) {
-        if ((saker).stream().noneMatch(IS_ARENA_OPPFOLGING)) {
+        if (saker.stream().noneMatch(IS_ARENA_OPPFOLGING)) {
             Optional<Sak> oppfolging = hentOppfolgingssakFraArena(fnr);
             oppfolging.ifPresent(saker::add);
         }
@@ -219,11 +219,11 @@ public class SakerServiceImpl implements SakerService {
         return sak;
     };
 
-    private static final Predicate<Sak> GODSKJENT_FAGSAK = sak -> !sak.isSakstypeForVisningGenerell() &&
+    private static final Predicate<Sak> GODKJENT_FAGSAK = sak -> !sak.isSakstypeForVisningGenerell() &&
             GODKJENTE_FAGSYSTEMER_FOR_FAGSAKER.contains(sak.fagsystemKode) &&
             !TEMAKODE_KLAGE_ANKE.equals(sak.temaKode);
 
-    private static final Predicate<Sak> GODSKJENT_GENERELL = sak -> sak.isSakstypeForVisningGenerell() &&
+    private static final Predicate<Sak> GODKJENT_GENERELL = sak -> sak.isSakstypeForVisningGenerell() &&
             GODKJENT_FAGSYSTEM_FOR_GENERELLE.equals(sak.fagsystemKode) &&
             GODKJENTE_TEMA_FOR_GENERELLE.contains(sak.temaKode);
 

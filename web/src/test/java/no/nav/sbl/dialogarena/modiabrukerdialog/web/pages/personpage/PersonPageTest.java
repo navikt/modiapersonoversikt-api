@@ -116,12 +116,6 @@ public class PersonPageTest extends WicketPageTest {
         verify(redirectPopup, times(0)).redirect();
     }
 
-    private void setFieldValueReflection(PersonPage personPage, String fieldName, Object value) {
-        Field field = ReflectionUtils.findField(PersonPage.class, fieldName);
-        ReflectionUtils.makeAccessible(field);
-        ReflectionUtils.setField(field, personPage, value);
-    }
-
     @Test
     public void viserIkkeModaldialogVedIngenUlagredeEndringerOgRefresh() {
         wicket.goTo(PersonPage.class, with().param("fnr", testFnr));
@@ -137,6 +131,12 @@ public class PersonPageTest extends WicketPageTest {
 
         verify(redirectPopup, times(0)).show();
         verify(redirectPopup, times(1)).redirect();
+    }
+
+    private void setFieldValueReflection(PersonPage personPage, String fieldName, Object value) {
+        Field field = ReflectionUtils.findField(PersonPage.class, fieldName);
+        ReflectionUtils.makeAccessible(field);
+        ReflectionUtils.setField(field, personPage, value);
     }
 
     @Test
