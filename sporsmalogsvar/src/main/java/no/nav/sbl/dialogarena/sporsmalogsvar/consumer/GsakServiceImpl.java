@@ -18,9 +18,6 @@ import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 
-import java.util.Optional;
-
-import static java.util.Optional.ofNullable;
 import static no.nav.brukerdialog.security.context.SubjectHandler.getSubjectHandler;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.DateUtils.arbeidsdagerFraDato;
 import static org.apache.commons.lang3.StringUtils.equalsIgnoreCase;
