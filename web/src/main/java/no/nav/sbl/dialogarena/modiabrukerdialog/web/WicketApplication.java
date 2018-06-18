@@ -235,6 +235,8 @@ public class WicketApplication extends WebApplication {
                 .withModules(ReactResources.REACT_KOMPONENTER)
                 .withResourcePacking(this.usesDeploymentConfig())
                 .configure(this);
+
+        getResourceSettings().setJavaScriptCompressor(null);
     }
 
     private void mountPages() {
