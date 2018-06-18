@@ -64,7 +64,9 @@ public class Sak implements Serializable, Comparable<Sak> {
     }
 
     public String getSaksIdVisning() {
-        return fagsystemSaksId != null ? fagsystemSaksId : (saksId != null ? saksId : "");
+        if(fagsystemSaksId != null) return fagsystemSaksId;
+        else if (saksId != null) return saksId;
+        else return "";
     }
 
     @Override
