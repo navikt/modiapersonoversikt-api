@@ -167,7 +167,7 @@ public class HenvendelseUtsendingServiceImpl implements HenvendelseUtsendingServ
                         .withFodselsnummer(fnr))
                         .getAny().stream()
                         .map(melding -> (XMLHenvendelse) melding)
-                        .filter(henvendelse -> henvendelse.getBehandlingskjedeId() == traadId)
+                        .filter(henvendelse -> traadId.equals(henvendelse.getBehandlingskjedeId()))
                         .map(tilMelding(propertyResolver, ldapService))
                         .map(journalfortTemaTilgang(valgtEnhet))
                         .sorted(ELDSTE_FORST)
