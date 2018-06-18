@@ -57,7 +57,7 @@ public class PlukkOppgaveServiceImpl implements PlukkOppgaveService {
 
             Personfakta personfakta = personKjerneinfoServiceBi.hentKjerneinformasjon(kjerneinfoRequest).getPerson().getPersonfakta();
 
-            String brukersDiskresjonskode = personfakta.getDiskresjonskode() == null ? "" : personfakta.getDiskresjonskode().getValue();
+            String brukersDiskresjonskode = personfakta.getDiskresjonskode() == null ? "" : personfakta.getDiskresjonskode().getKodeRef();
             String brukersEnhet = getBrukersEnhet(personfakta).orElse("");
 
             return pep.hasAccess(forRequest(resourceAttribute(ATTRIBUTT_ID_DISKRESJONSKODE, brukersDiskresjonskode)))

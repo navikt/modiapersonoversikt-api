@@ -195,13 +195,13 @@ class BrukerprofilControllerTest {
                     assertNull(midlertidigadresseUtland)
                     assertNotNull(midlertidigadresseNorge)
                     (midlertidigadresseNorge as Gateadresse).run {
-                        assertEquals(coadresse, CONAVN)
-                        assertEquals(gatenavn, GATENAVN)
-                        assertEquals(husnummer, HUSNUMMER)
-                        assertEquals(husbokstav, HUSBOKSTAV)
-                        assertEquals(bolignummer, BOLIGNUMMER)
-                        assertEquals(poststed, POSTNUMMER)
-                        assertEquals("${postleveringsPeriode.to}", "$OM_FIRE_UKER")
+                        assertEquals(CONAVN, coadresse)
+                        assertEquals(GATENAVN, gatenavn)
+                        assertEquals(HUSNUMMER, husnummer)
+                        assertEquals(HUSBOKSTAV, husbokstav)
+                        assertEquals(BOLIGNUMMER, bolignummer)
+                        assertEquals(POSTNUMMER, poststed)
+                        assertEquals("$OM_FIRE_UKER", "${postleveringsPeriode.to}")
                     }
                 }
             })
@@ -225,11 +225,11 @@ class BrukerprofilControllerTest {
                     assertNull(midlertidigadresseUtland)
                     assertNotNull(midlertidigadresseNorge)
                     (midlertidigadresseNorge as Postboksadresse).run {
-                        assertEquals(coadresse, CONAVN)
-                        assertEquals(poststed, POSTNUMMER)
-                        assertEquals("${postleveringsPeriode.to}", "$OM_FIRE_UKER")
-                        assertEquals(postboksanlegg, POSTBOKSANLEGG)
-                        assertEquals(postboksnummer, POSTBOKSNUMMER)
+                        assertEquals(CONAVN, coadresse)
+                        assertEquals(POSTNUMMER, poststed)
+                        assertEquals("$OM_FIRE_UKER", "${postleveringsPeriode.to}")
+                        assertEquals(POSTBOKSANLEGG, postboksanlegg)
+                        assertEquals(POSTBOKSNUMMER, postboksnummer)
                     }
                 }
             })
@@ -252,10 +252,10 @@ class BrukerprofilControllerTest {
                     assertNull(midlertidigadresseUtland)
                     assertNotNull(midlertidigadresseNorge)
                     (midlertidigadresseNorge as Matrikkeladresse).run {
-                        assertEquals(coadresse, CONAVN)
-                        assertEquals(poststed, POSTNUMMER)
-                        assertEquals("${postleveringsPeriode.to}", "$OM_FIRE_UKER")
-                        assertEquals(eiendomsnavn, EIENDOMSNAVN)
+                        assertEquals(CONAVN, coadresse)
+                        assertEquals(POSTNUMMER, poststed)
+                        assertEquals("$OM_FIRE_UKER", "${postleveringsPeriode.to}")
+                        assertEquals(EIENDOMSNAVN, eiendomsnavn)
                     }
                 }
             })
@@ -279,11 +279,11 @@ class BrukerprofilControllerTest {
                     assertNotNull(midlertidigadresseUtland)
                     assertNull(midlertidigadresseNorge)
                     midlertidigadresseUtland.run {
-                        assertEquals("${postleveringsPeriode.to}", "$OM_FIRE_UKER")
-                        assertEquals(landkode, Kodeverdi().apply { value = LANDKODE_KODE })
-                        assertEquals(adresselinje1, ADRESSELINJE_1)
-                        assertEquals(adresselinje2, ADRESSELINJE_2)
-                        assertEquals(adresselinje3, ADRESSELINJE_3)
+                        assertEquals("$OM_FIRE_UKER", "${postleveringsPeriode.to}")
+                        assertEquals(Kodeverdi().apply { kodeRef = LANDKODE_KODE }, landkode)
+                        assertEquals(ADRESSELINJE_1, adresselinje1)
+                        assertEquals(ADRESSELINJE_2, adresselinje2)
+                        assertEquals(ADRESSELINJE_3, adresselinje3)
                     }
                 }
             })
@@ -297,7 +297,7 @@ class BrukerprofilControllerTest {
 
             val response = controller.endreAdresse(AREMARK_FNR, EndreAdresseRequest(folkeregistrertAdresse = true))
 
-            assertEquals(response.status, Status.FORBIDDEN.statusCode)
+            assertEquals(Status.FORBIDDEN.statusCode, response.status)
         }
 
         @Test
@@ -329,8 +329,8 @@ class BrukerprofilControllerTest {
                     assertNull(mobil)
                     assertNull(jobbTlf)
                     hjemTlf.run {
-                        assertEquals(identifikator, HJEMIDENTIFIKATOR)
-                        assertEquals(retningsnummer.value, RETNINGSNUMMER_NORGE)
+                        assertEquals(HJEMIDENTIFIKATOR, identifikator)
+                        assertEquals(RETNINGSNUMMER_NORGE, retningsnummer.kodeRef)
                     }
                 }
             })
@@ -350,8 +350,8 @@ class BrukerprofilControllerTest {
                     assertNotNull(mobil)
                     assertNull(jobbTlf)
                     mobil.run {
-                        assertEquals(identifikator, MOBILIDENTIFIKATOR)
-                        assertEquals(retningsnummer.value, RETNINGSNUMMER_IKKE_NORGE)
+                        assertEquals(MOBILIDENTIFIKATOR, identifikator)
+                        assertEquals(RETNINGSNUMMER_IKKE_NORGE, retningsnummer.kodeRef)
                     }
                 }
             })
@@ -367,7 +367,7 @@ class BrukerprofilControllerTest {
                     jobb = EndreTelefonnummerRequest.Telefon(HJEMIDENTIFIKATOR, RETNINGSNUMMER_NORGE)
             ))
 
-            assertEquals(response?.status, Status.BAD_REQUEST.statusCode)
+            assertEquals(Status.BAD_REQUEST.statusCode, response?.status)
         }
 
 
@@ -381,7 +381,7 @@ class BrukerprofilControllerTest {
             controller.endreKontonummer(AREMARK_FNR, EndreKontonummerRequest(KONTONUMMER))
 
             verify(behandleBrukerProfilService).oppdaterKontaktinformasjonOgPreferanser(check {
-                assertEquals(it.bruker.bankkonto.kontonummer, KONTONUMMER)
+                assertEquals(KONTONUMMER, it.bruker.bankkonto.kontonummer)
             })
         }
 
@@ -401,14 +401,14 @@ class BrukerprofilControllerTest {
 
             verify(behandleBrukerProfilService).oppdaterKontaktinformasjonOgPreferanser(check {
                 (it.bruker.bankkonto as BankkontoUtland).run {
-                    assertEquals(kontonummer, KONTONUMMER)
-                    assertEquals(landkode.value, LANDKODE_KODE)
-                    assertEquals(banknavn, BANKNAVN)
-                    assertEquals(swift, SWIFT)
+                    assertEquals(KONTONUMMER, kontonummer)
+                    assertEquals(LANDKODE_KODE, landkode.kodeRef)
+                    assertEquals(BANKNAVN, banknavn)
+                    assertEquals(SWIFT, swift)
                     bankadresse.run {
-                        assertEquals(adresselinje1, ADRESSELINJE_1)
-                        assertEquals(adresselinje2, ADRESSELINJE_2)
-                        assertEquals(adresselinje3, ADRESSELINJE_3)
+                        assertEquals(ADRESSELINJE_1, adresselinje1)
+                        assertEquals(ADRESSELINJE_2, adresselinje2)
+                        assertEquals(ADRESSELINJE_3, adresselinje3)
                     }
                 }
             })
@@ -431,7 +431,7 @@ class BrukerprofilControllerTest {
 
             val response = controller.endreKontonummer(AREMARK_FNR, EndreKontonummerRequest(KONTONUMMER))
 
-            assertEquals(response?.status, Status.NOT_FOUND.statusCode)
+            assertEquals(Status.NOT_FOUND.statusCode, response?.status)
         }
 
     }
@@ -443,7 +443,7 @@ class BrukerprofilControllerTest {
         fun `Kaller tjenesten med tilrettelagt kommunikasjon`() {
             controller.endreTilrettelagtKommunikasjon(AREMARK_FNR, listOf(TOLKEHJELP_KODE))
             verify(behandleBrukerProfilService).oppdaterKontaktinformasjonOgPreferanser(check {
-                assertEquals(it.bruker.tilrettelagtKommunikasjon[0].behov, TOLKEHJELP_KODE)
+                assertEquals(TOLKEHJELP_KODE, it.bruker.tilrettelagtKommunikasjon[0].kodeRef)
             })
         }
 
@@ -454,7 +454,7 @@ class BrukerprofilControllerTest {
 
             val response = controller.endreTilrettelagtKommunikasjon(AREMARK_FNR, listOf(TOLKEHJELP_KODE))
 
-            assertEquals(response?.status, Status.GONE.statusCode)
+            assertEquals(Status.GONE.statusCode, response?.status)
         }
 
     }

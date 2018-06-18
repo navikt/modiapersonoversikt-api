@@ -12,6 +12,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.organisasjonsEnhetV2
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.Feature.PERSON_REST_API
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.disableFeature
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.enableFeature
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.kodeverk.Kode
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.person.PersonController
 import no.nav.tjeneste.virksomhet.person.v3.HentPersonPersonIkkeFunnet
 import no.nav.tjeneste.virksomhet.person.v3.HentPersonSikkerhetsbegrensning
@@ -28,7 +29,11 @@ import kotlin.test.assertTrue
 
 private const val FNR = "10108000398"
 private const val TOLKEHJELP_KODE = "TOHJ"
-
+private const val TOLKEHJELP_BESKRIVELSE = "Tolkehjelp"
+private const val KONTONUMMER = "12341212345"
+private const val BANKNAVN = "Pengebingen ASA"
+private const val SWIFT = "Taylor"
+private const val LANDKODE = "IOT"
 
 class PersonControllerTest {
 
@@ -95,11 +100,11 @@ class PersonControllerTest {
             val response = controller.hent(FNR)
             val kontaktinformasjon = response["kontaktinformasjon"] as Map<*, *>
             val mobil = kontaktinformasjon["mobil"] as Map<*, *>
-            val retningsnummer = mobil["retningsnummer"]
+            val retningsnummer = mobil["retningsnummer"] as Kode
             val nummer = mobil["identifikator"]
 
             assertEquals(TELEFONNUMMER, nummer)
-            assertEquals(RETNINGSNUMMER, retningsnummer)
+            assertEquals(RETNINGSNUMMER, retningsnummer.kodeRef)
         }
 
         private fun responseMedMobil() = mockPersonResponse().apply {
@@ -128,23 +133,62 @@ class PersonControllerTest {
 
         @Test
         fun `Mapping`() {
-            whenever(kodeverk.getKodeverkList(any(), any())).thenReturn(listOf(Kodeverdi(TOLKEHJELP_KODE, TOLKEHJELP_KODE)))
+            whenever(kodeverk.getKodeverkList(any(), any())).thenReturn(listOf(Kodeverdi(TOLKEHJELP_KODE, TOLKEHJELP_BESKRIVELSE)))
             whenever(personV3.hentPerson(any())).thenReturn(mockPersonResponse().apply {
                 (person as WSBruker)
                         .withTilrettelagtKommunikasjon(
                                 WSTilrettelagtKommunikasjonbehov()
-                                        .withBehov(TOLKEHJELP_KODE)
+                                        .withBehov(TOLKEHJELP_BESKRIVELSE)
                                         .withTilrettelagtKommunikasjon(WSTilrettelagtKommunikasjon()
-                                                .withKodeverksRef("TilrettelagtKommunikasjon")
-                                                .withValue(TOLKEHJELP_KODE)
-                                                .withKodeRef(TOLKEHJELP_KODE))
+                                                .withValue(TOLKEHJELP_KODE))
                         )
             })
 
             val response = controller.hent(FNR)["tilrettelagtKomunikasjonsListe"] as List<*>
-            val tilrettelagtKommunikasjon = response[0] as Map<*, *>
+            val tilrettelagtKommunikasjon = response[0] as Kode
 
-            assertEquals(tilrettelagtKommunikasjon["behovKode"], TOLKEHJELP_KODE)
+            assertEquals(TOLKEHJELP_KODE, tilrettelagtKommunikasjon.kodeRef)
+        }
+
+    }
+
+    @Nested
+    inner class Bankkonto {
+
+        @Test
+        fun `Norsk konto`() {
+            whenever(personV3.hentPerson(any())).thenReturn(mockPersonResponse().apply {
+                (person as WSBruker)
+                        .withBankkonto(WSBankkontoNorge()
+                                .withBankkonto(WSBankkontonummer()
+                                        .withBankkontonummer(KONTONUMMER)
+                                        .withBanknavn(BANKNAVN)))
+            })
+
+            val response = controller.hent(FNR)["bankkonto"] as Map<*, *>
+
+            assertEquals(KONTONUMMER, response["kontonummer"])
+            assertEquals(BANKNAVN, response["banknavn"])
+        }
+
+        @Test
+        fun `Utenlandsk konto`() {
+            whenever(personV3.hentPerson(any())).thenReturn(mockPersonResponse().apply {
+                (person as WSBruker)
+                        .withBankkonto(WSBankkontoUtland()
+                                .withBankkontoUtland(WSBankkontonummerUtland()
+                                        .withBankkontonummer(KONTONUMMER)
+                                        .withBanknavn(BANKNAVN)
+                                        .withSwift(SWIFT)
+                                        .withLandkode(WSLandkoder().withValue(LANDKODE))))
+            })
+
+            val response = controller.hent(FNR)["bankkonto"] as Map<*, *>
+
+            assertEquals(KONTONUMMER, response["kontonummer"])
+            assertEquals(BANKNAVN, response["banknavn"])
+            assertEquals(SWIFT, response["swift"])
+            assertEquals(LANDKODE, (response["landkode"] as Kode).kodeRef)
         }
 
     }
