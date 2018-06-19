@@ -206,7 +206,7 @@ class PersonController @Inject constructor(private val kjerneinfoService: Person
     }
 
     private fun getTelefon(telefon: Telefon) = mapOf(
-            "retningsnummer" to Kode(telefon.retningsnummer),
+            "retningsnummer" to telefon.retningsnummer?.let(::Kode),
             "identifikator" to telefon.identifikator,
             "sistEndretAv" to telefon.endretAv,
             "sistEndret" to telefon.endringstidspunkt?.toString(DATO_TID_FORMAT)
