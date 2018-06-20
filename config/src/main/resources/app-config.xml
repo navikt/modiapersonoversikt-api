@@ -96,6 +96,7 @@
 
     <serverOptions>
         <memoryParameters resourceAlias="modiabrukerdialog-memparams"/>
+        <jvmArgs>-XX:+UseG1GC</jvmArgs>
     </serverOptions>
 
 </application>
