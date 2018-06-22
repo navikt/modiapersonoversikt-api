@@ -145,6 +145,7 @@ class PersonController @Inject constructor(private val kjerneinfoService: Person
                     when (adresselinje) {
                         is Adresse -> "gateadresse" to hentGateAdresse(adresselinje)
                         is Matrikkeladresse -> "matrikkeladresse" to hentMatrikkeladresse(adresselinje)
+                        is Postboksadresse -> "postboksadresse" to hentPostboksadresse(adresselinje);
                         is AlternativAdresseUtland -> "utlandsadresse" to hentAlternativAdresseUtland(adresselinje)
                         else -> "ustrukturert" to mapOf("adresselinje" to adresselinje.adresselinje)
                     }
@@ -169,6 +170,17 @@ class PersonController @Inject constructor(private val kjerneinfoService: Person
                 "eiendomsnavn" to eiendomsnavn,
                 "postnummer" to postnummer,
                 "poststed" to poststed,
+                "periode" to postleveringsPeriode?.let { hentPeriode(it) }
+        )
+    }
+
+    private fun hentPostboksadresse(postboksadresse: Postboksadresse) = postboksadresse.run {
+        mapOf(
+                "tilleggsadresse" to tilleggsadresseMedType,
+                "postboksnummer" to postboksnummer,
+                "postboksanlegg" to postboksanlegg,
+                "poststed" to poststednavn,
+                "postnummer" to poststed,
                 "periode" to postleveringsPeriode?.let { hentPeriode(it) }
         )
     }
