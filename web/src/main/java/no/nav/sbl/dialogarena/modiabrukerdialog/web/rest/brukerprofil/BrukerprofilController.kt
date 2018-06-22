@@ -132,8 +132,10 @@ class BrukerprofilController @Inject constructor(private val behandlePersonServi
 
     private fun BankkontoUtland.populer(request: EndreKontonummerRequest) {
         banknavn = request.banknavn
+        bankkode = request.bankkode
         swift = request.swift
         landkode = Kodeverdi().apply { kodeRef = request.landkode }
+        valuta = Kodeverdi().apply { kodeRef = request.valuta }
         bankadresse = request.bankadresse.let {
             UstrukturertAdresse().apply {
                 adresselinje1 = it?.linje1

@@ -62,7 +62,9 @@ data class EndreTelefonnummerRequest(
 data class EndreKontonummerRequest(
         val kontonummer: String,
         val landkode: String? = null,
+        val valuta: String? = null,
         val banknavn: String? = null,
+        val bankkode: String? = null,
         val swift: String? = null,
         val bankadresse: Adresse? = null
 ) {
