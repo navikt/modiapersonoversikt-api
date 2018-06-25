@@ -244,9 +244,8 @@
     </dependencies>
 
     <scm>
-        <developerConnection>scm:git:http://stash.devillo.no/scm/sbl/saksoversikt-service.git</developerConnection>
-        <url>http://stash.devillo.no:7999/projects/sbl/repos/saksoversikt-service/browse</url>
-        <tag>2.3.4</tag>
+        <developerConnection>scm:git:http://stash.devillo.no/scm/dial/modia-saksoversikt-service.git</developerConnection>
+        <url>http://stash.devillo.no:7999/dial/modia-saksoversikt-service.git</url>
     </scm>
 
 </project>
