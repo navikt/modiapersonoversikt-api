@@ -180,7 +180,7 @@ class BrukerprofilControllerTest {
         fun `Kaller tjenesten med gateadresse hvis den skal settes`() {
             controller.endreAdresse(AREMARK_FNR, EndreAdresseRequest(EndreAdresseRequest.NorskAdresse(
                     EndreAdresseRequest.NorskAdresse.Gateadresse(
-                            co = CONAVN,
+                            tilleggsadresse = CONAVN,
                             gatenavn = GATENAVN,
                             husnummer = HUSNUMMER,
                             husbokstav = HUSBOKSTAV,
@@ -212,7 +212,7 @@ class BrukerprofilControllerTest {
         fun `Kaller tjenesten med postboksadresse hvis den skal settes`() {
             controller.endreAdresse(AREMARK_FNR, EndreAdresseRequest(EndreAdresseRequest.NorskAdresse(
                     postboksadresse = EndreAdresseRequest.NorskAdresse.Postboksadresse(
-                            co = CONAVN,
+                            tilleggsadresse= CONAVN,
                             postnummer = POSTNUMMER,
                             gyldigTil = OM_FIRE_UKER,
                             postboksanleggnavn = POSTBOKSANLEGG,
@@ -239,8 +239,8 @@ class BrukerprofilControllerTest {
         @Test
         fun `Kaller tjenesten med matrikkeladresse hvis den skal settes`() {
             controller.endreAdresse(AREMARK_FNR, EndreAdresseRequest(EndreAdresseRequest.NorskAdresse(
-                    områdeadresse = EndreAdresseRequest.NorskAdresse.Områdeadresse(
-                            co = CONAVN,
+                    matrikkeladresse = EndreAdresseRequest.NorskAdresse.Områdeadresse(
+                            tilleggsadresse = CONAVN,
                             postnummer = POSTNUMMER,
                             gyldigTil = OM_FIRE_UKER,
                             områdeadresse = EIENDOMSNAVN
