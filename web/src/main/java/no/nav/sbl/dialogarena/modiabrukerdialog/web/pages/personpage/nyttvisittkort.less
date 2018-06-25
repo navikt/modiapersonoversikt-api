@@ -17,12 +17,12 @@
     p {
       padding: 0;
     }
-    .ekspanderbartPanel {
-      margin: 4px 4px 5px 4px;
-    }
     .ekspanderbartPanel__hode {
       z-index: initial;
       border-bottom: @navLysGra 2px solid;
+      &:focus {
+        box-shadow: inset 0 0 0 3px @fokusFarge;
+      }
     }
 
     /* KODE FOR AT NAV-FRONT-END STYLES SKAL OVERSKRIVE MODIA-STYLES */
