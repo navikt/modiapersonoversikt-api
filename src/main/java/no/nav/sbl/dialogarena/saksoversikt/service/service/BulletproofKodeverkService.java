@@ -50,7 +50,7 @@ public class BulletproofKodeverkService {
 
             return tittel;
         } catch (Exception e) {
-            LOG.error("Fant ikke kodeverkid '" + vedleggsIdOrSkjemaId + "'. Bruker generisk tittel.", e);
+            LOG.warn("Fant ikke kodeverkid '" + vedleggsIdOrSkjemaId + "'. Bruker generisk tittel.", e);
             return vedleggsIdOrSkjemaId;
         }
     }
@@ -74,7 +74,7 @@ public class BulletproofKodeverkService {
             String kodeverdi = lokaltKodeverk.getKoder(vedleggsIdOrSkjemaId).get(nokkel);
             return kodeverdi == null ? vedleggsIdOrSkjemaId : kodeverdi;
         } catch(Exception e) {
-            LOG.error("Fant ikke kodeverkid '" + vedleggsIdOrSkjemaId, e);
+            LOG.warn("Fant ikke kodeverkid '" + vedleggsIdOrSkjemaId, e);
             return vedleggsIdOrSkjemaId;
         }
     }
