@@ -139,6 +139,7 @@
         <oppfoelging-v1-tjenestespesifikasjon-version>1.1.1</oppfoelging-v1-tjenestespesifikasjon-version>
         <oppfolgingsinfo-v1-tjenestespesifikasjon.version>1.0.5</oppfolgingsinfo-v1-tjenestespesifikasjon.version>
         <arbeidsfordeling-v1.version>1.0.3</arbeidsfordeling-v1.version>
+        <unleash.version>3.1.0</unleash.version>
 
         <sonar.skippedModules>modiabrukerdialog-mock</sonar.skippedModules>
         <apache.http.version>4.4</apache.http.version>
@@ -1119,6 +1120,13 @@
                 <groupId>com.spotify</groupId>
                 <artifactId>logging</artifactId>
                 <version>${spotify.logging.version}</version>
+            </dependency>
+
+            <!-- Unleash -->
+            <dependency>
+                <groupId>no.finn.unleash</groupId>
+                <artifactId>unleash-client-java</artifactId>
+                <version>${unleash.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
