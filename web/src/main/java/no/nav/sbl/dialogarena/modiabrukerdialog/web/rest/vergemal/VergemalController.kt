@@ -2,6 +2,7 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.vergemal
 
 import no.nav.kjerneinfo.consumer.fim.person.vergemal.VergemalService
 import no.nav.kjerneinfo.consumer.fim.person.vergemal.domain.Verge
+import no.nav.kjerneinfo.domain.person.Personnavn
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.Feature.PERSON_REST_API
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.visFeature
 import javax.inject.Inject
@@ -29,13 +30,11 @@ class VergemalController @Inject constructor(private val vergemalService: Vergem
         )
     }
 
-    private fun getVerger(vergemal: List<Verge>): List<Map<String, Any>> {
+    private fun getVerger(vergemal: List<Verge>): List<Map<String, Any?>> {
         return vergemal.map {
             mapOf(
                     "ident" to it.ident,
-                    "navn" to mapOf(
-                            "sammensatt" to it.personnavn.sammensattNavn
-                    ),
+                    "navn" to it.personnavn?.let {getNavn(it)},
                     "embete" to it.embete,
                     "mandattekst" to it.mandattekst,
                     "mandattype" to it.mandattype,
@@ -47,6 +46,12 @@ class VergemalController @Inject constructor(private val vergemalService: Vergem
                     )
             )
         }
+    }
+
+    private fun getNavn(personnavn: Personnavn): Map<String, String> {
+        return mapOf(
+                "sammensatt" to personnavn.sammensattNavn
+        )
     }
 
 }
