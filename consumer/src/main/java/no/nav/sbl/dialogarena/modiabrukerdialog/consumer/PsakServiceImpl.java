@@ -6,14 +6,14 @@ import no.nav.tjeneste.virksomhet.pensjonsak.v1.PensjonSakV1;
 import no.nav.tjeneste.virksomhet.pensjonsak.v1.informasjon.WSPeriode;
 import no.nav.tjeneste.virksomhet.pensjonsak.v1.informasjon.WSSakSammendrag;
 import no.nav.tjeneste.virksomhet.pensjonsak.v1.meldinger.WSHentSakSammendragListeRequest;
-import org.apache.commons.collections15.Transformer;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 
 import java.util.List;
+import java.util.function.Function;
 
-import static no.nav.modig.lang.collections.IterUtils.on;
-import static no.nav.modig.lang.option.Optional.optional;
+import static java.util.Optional.ofNullable;
+import static java.util.stream.Collectors.toList;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.Sak.FAGSYSTEMKODE_PSAK;
 
 public class PsakServiceImpl implements PsakService {
@@ -27,29 +27,34 @@ public class PsakServiceImpl implements PsakService {
     @Override
     public List<Sak> hentSakerFor(String fnr) {
         try {
-            List<WSSakSammendrag> sakSammendragListe = pensjonSakV1.hentSakSammendragListe(new WSHentSakSammendragListeRequest().withPersonident(fnr)).getSakSammendragListe();
-            return on(sakSammendragListe).map(TIL_SAK).collect();
+            List<WSSakSammendrag> sakSammendragListe =
+                    pensjonSakV1.hentSakSammendragListe(new WSHentSakSammendragListeRequest().withPersonident(fnr))
+                            .getSakSammendragListe();
+
+            return sakSammendragListe.stream()
+                    .map(TIL_SAK)
+                    .collect(toList());
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
-    private static final Transformer<WSSakSammendrag, Sak> TIL_SAK = wsSakSammendrag -> {
+    private static final Function<WSSakSammendrag, Sak> TIL_SAK = wsSakSammendrag -> {
         Sak sak = new Sak();
-        sak.fagsystemSaksId = optional(wsSakSammendrag.getSakId());
+        sak.fagsystemSaksId = wsSakSammendrag.getSakId();
         sak.temaKode = wsSakSammendrag.getArkivtema().getValue();
         sak.temaNavn = wsSakSammendrag.getArkivtema().getValue();
         sak.fagsystemKode = FAGSYSTEMKODE_PSAK;
-        sak.saksId = optional(wsSakSammendrag.getSakId());
+        sak.saksId = wsSakSammendrag.getSakId();
         sak.finnesIPsak = true;
         sak.opprettetDato = opprettetDato(wsSakSammendrag.getSaksperiode());
         return sak;
     };
 
     private static DateTime opprettetDato(WSPeriode wsPeriode) {
-        return optional(wsPeriode).map(wsPeriode1 -> {
+        return ofNullable(wsPeriode).map(wsPeriode1 -> {
             LocalDate fom = wsPeriode1.getFom();
             return fom == null ? null : fom.toDateTimeAtStartOfDay();
-        }).getOrElse(null);
+        }).orElse(null);
     }
 }

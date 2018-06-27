@@ -15,7 +15,7 @@ import java.util.Collection;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.Sak.FAGSYSTEMKODE_PSAK;
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Matchers.any;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -33,8 +33,8 @@ public class PsakServiceImplTest {
 
         assertThat(saker, hasSize(1));
         Sak sak = saker.iterator().next();
-        assertThat(sak.fagsystemSaksId.get(), is(wsSakSammendrag.getSakId()));
-        assertThat(sak.saksId.get(), is(wsSakSammendrag.getSakId()));
+        assertThat(sak.fagsystemSaksId, is(wsSakSammendrag.getSakId()));
+        assertThat(sak.saksId, is(wsSakSammendrag.getSakId()));
         assertThat(sak.temaKode, is(wsSakSammendrag.getArkivtema().getValue()));
         assertThat(sak.temaNavn, is(wsSakSammendrag.getArkivtema().getValue()));
         assertThat(sak.fagsystemKode, is(FAGSYSTEMKODE_PSAK));

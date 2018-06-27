@@ -9,18 +9,18 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Status;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.ldap.LDAPService;
-import org.apache.commons.collections15.Predicate;
-import org.apache.commons.collections15.Transformer;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.*;
+import java.util.function.Function;
+import java.util.function.Predicate;
 
 import static java.lang.String.format;
 import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.groupingBy;
-import static no.nav.modig.lang.collections.IterUtils.on;
+import static java.util.stream.Collectors.toList;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype.*;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Status.*;
 
@@ -32,7 +32,11 @@ public class MeldingUtils {
 
         Map<String, List<Melding>> ufiltrertTraaderMap = meldinger.stream().collect(groupingBy(Melding::getTraadId));
 
-        List<Map.Entry<String, List<Melding>>> filtrertEntryList = on(ufiltrertTraaderMap).filter(DET_FINNES_EN_ROTMELDING).collect();
+        List<Map.Entry<String, List<Melding>>> filtrertEntryList = ufiltrertTraaderMap
+                .entrySet()
+                .stream()
+                .filter(DET_FINNES_EN_ROTMELDING)
+                .collect(toList());
 
         return lagMap(filtrertEntryList);
     }
@@ -50,7 +54,7 @@ public class MeldingUtils {
                     .stream()
                     .anyMatch(melding -> melding.id.equals(traad.getKey()));
 
-    public static Transformer<XMLHenvendelse, Melding> tilMelding(final PropertyResolver propertyResolver, final LDAPService ldapService) {
+    public static Function<XMLHenvendelse, Melding> tilMelding(final PropertyResolver propertyResolver, final LDAPService ldapService) {
         return xmlHenvendelse -> {
             Melding melding = new Melding();
             melding.id = xmlHenvendelse.getBehandlingsId();
@@ -60,7 +64,7 @@ public class MeldingUtils {
             melding.lestDato = xmlHenvendelse.getLestDato();
             melding.fnrBruker = xmlHenvendelse.getFnr();
             melding.traadId = xmlHenvendelse.getBehandlingskjedeId();
-            melding.status = STATUS.transform(xmlHenvendelse);
+            melding.status = henvendelseStatus(xmlHenvendelse);
             melding.lestStatus = lagLestStatus(melding);
             melding.statusKlasse = "";
             melding.oppgaveId = xmlHenvendelse.getOppgaveIdGsak();
@@ -252,25 +256,23 @@ public class MeldingUtils {
         return xmlHenvendelse.getMetadataListe() == null;
     }
 
-    public static final Transformer<XMLHenvendelse, Status> STATUS = new Transformer<XMLHenvendelse, Status>() {
-        @Override
-        public Status transform(XMLHenvendelse info) {
-            Meldingstype meldingstype = MELDINGSTYPE_MAP.get(XMLHenvendelseType.fromValue(info.getHenvendelseType()));
+    public static final Status henvendelseStatus(XMLHenvendelse henvendelse) {
+        Meldingstype meldingstype = MELDINGSTYPE_MAP.get(XMLHenvendelseType.fromValue(henvendelse.getHenvendelseType()));
 
-            if (VisningUtils.FRA_BRUKER.contains(meldingstype)) {
-                return IKKE_BESVART;
-            } else if (VisningUtils.FRA_NAV.contains(meldingstype)) {
-                DateTime lestDato = info.getLestDato();
-                if (lestDato != null) {
-                    return LEST_AV_BRUKER;
-                } else {
-                    return IKKE_LEST_AV_BRUKER;
-                }
+        if (VisningUtils.FRA_BRUKER.contains(meldingstype)) {
+            return IKKE_BESVART;
+        } else if (VisningUtils.FRA_NAV.contains(meldingstype)) {
+            DateTime lestDato = henvendelse.getLestDato();
+            if (lestDato != null) {
+                return LEST_AV_BRUKER;
             } else {
-                throw new RuntimeException("Ukjent henvendelsestype: " + meldingstype);
+                return IKKE_LEST_AV_BRUKER;
             }
+        } else {
+            throw new RuntimeException("Ukjent henvendelsestype: " + meldingstype);
         }
-    };
+    }
+
 
     public static final Map<XMLHenvendelseType, Meldingstype> MELDINGSTYPE_MAP = new HashMap<XMLHenvendelseType, Meldingstype>() {
         {

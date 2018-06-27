@@ -1,6 +1,5 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.ldap;
 
-import no.nav.modig.lang.option.Optional;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Saksbehandler;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.ldap.LDAPService;
 
@@ -10,10 +9,11 @@ import javax.naming.directory.*;
 import javax.naming.ldap.LdapContext;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static java.lang.System.getProperty;
-import static no.nav.modig.lang.option.Optional.none;
-import static no.nav.modig.lang.option.Optional.optional;
+import static java.util.Optional.empty;
+import static java.util.Optional.ofNullable;
 
 public class LDAPServiceImpl implements LDAPService {
 
@@ -28,18 +28,18 @@ public class LDAPServiceImpl implements LDAPService {
         try {
             NamingEnumeration<SearchResult> result = sokLDAP(ident);
 
-            Optional<Attribute> givenname = none();
-            Optional<Attribute> surname = none();
+            Optional<Attribute> givenname = empty();
+            Optional<Attribute> surname = empty();
             if (result.hasMore()) {
                 Attributes attributes = result.next().getAttributes();
-                givenname = optional(attributes.get("givenname"));
-                surname = optional(attributes.get("sn"));
+                givenname = ofNullable(attributes.get("givenname"));
+                surname = ofNullable(attributes.get("sn"));
             }
 
             BasicAttribute nullAttribute = new BasicAttribute("", "");
             return new Saksbehandler(
-                    (String) givenname.getOrElse(nullAttribute).get(),
-                    (String) surname.getOrElse(nullAttribute).get(),
+                    (String) givenname.orElse(nullAttribute).get(),
+                    (String) surname.orElse(nullAttribute).get(),
                     ident
             );
 

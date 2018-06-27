@@ -1,6 +1,5 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.saker;
 
-import no.nav.modig.lang.option.Optional;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.Sak;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.exceptions.JournalforingFeilet;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.gsak.GsakKodeverk;
@@ -23,21 +22,17 @@ import no.nav.tjeneste.virksomhet.sak.v1.meldinger.WSFinnSakResponse;
 import no.nav.virksomhet.tjenester.sak.arbeidogaktivitet.v1.ArbeidOgAktivitet;
 import no.nav.virksomhet.tjenester.sak.meldinger.v1.WSBruker;
 import no.nav.virksomhet.tjenester.sak.meldinger.v1.WSHentSakListeRequest;
-import org.apache.commons.collections15.Predicate;
-import org.apache.commons.collections15.Transformer;
 
 import javax.inject.Inject;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Optional;
+import java.util.function.Function;
+import java.util.function.Predicate;
 
-import static no.nav.modig.lang.collections.IterUtils.on;
-import static no.nav.modig.lang.collections.PredicateUtils.*;
-import static no.nav.modig.lang.option.Optional.none;
-import static no.nav.modig.lang.option.Optional.optional;
+import static java.util.Optional.empty;
+import static java.util.stream.Collectors.toList;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.Sak.*;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.SakerUtils.leggTilFagsystemnavnOgTemanavn;
-import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.joda.time.DateTime.now;
 
 public class SakerServiceImpl implements SakerService {
@@ -66,7 +61,9 @@ public class SakerServiceImpl implements SakerService {
         leggTilManglendeGenerelleSaker(saker);
         behandleOppfolgingsSaker(saker);
         leggTilFagsystemnavnOgTemanavn(saker, gsakKodeverk.hentFagsystemMapping(), standardKodeverk);
-        return on(saker).filter(either(GODSKJENT_FAGSAK).or(GODSKJENT_GENERELL)).collect();
+        return saker.stream()
+                .filter(GODKJENT_FAGSAK.or(GODKJENT_GENERELL))
+                .collect(toList());
     }
 
     @Override
@@ -87,12 +84,12 @@ public class SakerServiceImpl implements SakerService {
         KnyttBehandlingskjedeTilSakValidator.validate(fnr, behandlingskjede, sak, enhet);
 
         if (!sak.finnesIPsak && !sak.finnesIGsak) {
-            sak.saksId = optional(opprettSak(fnr, sak));
+            sak.saksId = opprettSak(fnr, sak);
         }
         try {
             behandleHenvendelsePortType.knyttBehandlingskjedeTilSak(
                     behandlingskjede,
-                    sak.saksId.get(),
+                    sak.saksId,
                     sak.temaKode,
                     enhet);
         } catch (Exception e) {
@@ -107,7 +104,7 @@ public class SakerServiceImpl implements SakerService {
                             .withGjelderBrukerListe(new WSPerson().withIdent(fnr))
                             .withFagomraade(new WSFagomraader().withValue(sak.temaKode))
                             .withFagsystem(new WSFagsystemer().withValue(sak.fagsystemKode))
-                            .withFagsystemSakId(sak.saksId.getOrElse(null))
+                            .withFagsystemSakId(sak.saksId)
                             .withSakstype(new WSSakstyper().withValue(sak.sakstype)));
 
             return behandleSakWS.opprettSak(request).getSakId();
@@ -118,31 +115,47 @@ public class SakerServiceImpl implements SakerService {
 
     private List<Sak> hentSakerFraGsak(String fnr) {
         try {
-            WSFinnSakResponse response = sakV1.finnSak(new WSFinnSakRequest().withBruker(new no.nav.tjeneste.virksomhet.sak.v1.informasjon.WSPerson().withIdent(fnr)));
-            return on(response.getSakListe()).map(TIL_SAK).collectIn(new ArrayList<>());
+            WSFinnSakResponse response = sakV1.finnSak(
+                    new WSFinnSakRequest()
+                            .withBruker(new no.nav.tjeneste.virksomhet.sak.v1.informasjon.WSPerson().withIdent(fnr)));
+
+            return response.getSakListe().stream().map(TIL_SAK).collect(toList());
         } catch (FinnSakUgyldigInput | FinnSakForMangeForekomster e) {
             throw new RuntimeException(e);
         }
     }
 
     private void leggTilFraArena(String fnr, List<Sak> saker) {
-        if (!on(saker).exists(IS_ARENA_OPPFOLGING)) {
+        if (saker.stream().noneMatch(IS_ARENA_OPPFOLGING)) {
             Optional<Sak> oppfolging = hentOppfolgingssakFraArena(fnr);
-            if (oppfolging.isSome()) {
-                saker.add(oppfolging.get());
-            }
+            oppfolging.ifPresent(saker::add);
         }
     }
 
 
     private void leggTilManglendeGenerelleSaker(List<Sak> saker) {
-        List<Sak> generelleSaker = on(saker).filter(where(IS_GENERELL_SAK, equalTo(true))).collect();
-        saker.addAll(GODKJENTE_TEMA_FOR_GENERELLE.stream().filter(temakode -> !on(generelleSaker).exists(where(TEMAKODE, equalTo(temakode))) && !TEMAKODE_OPPFOLGING.equals(temakode)).map(SakerServiceImpl::lagGenerellSak).collect(Collectors.toList()));
+        List<Sak> generelleSaker = saker.stream()
+                .filter(Sak::isSakstypeForVisningGenerell)
+                .collect(toList());
+
+        saker.addAll(GODKJENTE_TEMA_FOR_GENERELLE.stream()
+                .filter(temakode -> harIngenSakerMedTemakode(temakode, generelleSaker) && !TEMAKODE_OPPFOLGING.equals(temakode))
+                .map(SakerServiceImpl::lagGenerellSakMedTema)
+                .collect(toList()));
+    }
+
+    private boolean harIngenSakerMedTemakode(String temakode, List<Sak> generelleSaker) {
+        return generelleSaker.stream().noneMatch(sak -> temakode.equals(sak.temaKode));
     }
 
     private void behandleOppfolgingsSaker(List<Sak> saker) {
-        List<Sak> generelleSaker = on(saker).filter(where(IS_GENERELL_SAK, equalTo(true))).collect();
-        List<Sak> fagsaker = on(saker).filter(where(IS_GENERELL_SAK, equalTo(false))).collect();
+        List<Sak> generelleSaker = saker.stream()
+                .filter(IS_GENERELL_SAK)
+                .collect(toList());
+
+        List<Sak> fagsaker = saker.stream()
+                .filter(IS_GENERELL_SAK.negate())
+                .collect(toList());
 
         boolean oppfolgingssakFinnesIFagsaker = inneholderOppfolgingssak(fagsaker);
         boolean oppfolgingssakFinnesIGenerelleSaker = inneholderOppfolgingssak(generelleSaker);
@@ -150,12 +163,12 @@ public class SakerServiceImpl implements SakerService {
         if (oppfolgingssakFinnesIFagsaker && oppfolgingssakFinnesIGenerelleSaker) {
             fjernGenerellOppfolgingssak(saker, generelleSaker);
         } else if (!oppfolgingssakFinnesIFagsaker && !oppfolgingssakFinnesIGenerelleSaker) {
-            saker.add(lagGenerellSak(TEMAKODE_OPPFOLGING));
+            saker.add(lagGenerellSakMedTema(TEMAKODE_OPPFOLGING));
         }
     }
 
     private static boolean inneholderOppfolgingssak(List<Sak> saker) {
-        return on(saker).exists(where(TEMAKODE, equalTo(TEMAKODE_OPPFOLGING)));
+        return saker.stream().anyMatch(sak -> TEMAKODE_OPPFOLGING.equals(sak.temaKode));
     }
 
     private void fjernGenerellOppfolgingssak(List<Sak> saker, List<Sak> generelleSaker) {
@@ -166,7 +179,7 @@ public class SakerServiceImpl implements SakerService {
         }
     }
 
-    private static Sak lagGenerellSak(String temakode) {
+    private static Sak lagGenerellSakMedTema(String temakode) {
         Sak sak = new Sak();
         sak.temaKode = temakode;
         sak.finnesIGsak = false;
@@ -181,12 +194,12 @@ public class SakerServiceImpl implements SakerService {
                 .withBruker(new WSBruker().withBrukertypeKode("PERSON").withBruker(fnr))
                 .withFagomradeKode("OPP");
         try {
-            return on(arbeidOgAktivitet.hentSakListe(request).getSakListe())
-                    .head()
+            return arbeidOgAktivitet.hentSakListe(request).getSakListe().stream()
+                    .findFirst()
                     .map(arenaSak -> {
                         Sak sak = new Sak();
-                        sak.saksId = optional(arenaSak.getSaksId());
-                        sak.fagsystemSaksId = optional(arenaSak.getSaksId());
+                        sak.saksId = arenaSak.getSaksId();
+                        sak.fagsystemSaksId = arenaSak.getSaksId();
                         sak.fagsystemKode = FAGSYSTEMKODE_ARENA;
                         sak.sakstype = SAKSTYPE_MED_FAGSAK;
                         sak.temaKode = arenaSak.getFagomradeKode().getKode();
@@ -195,15 +208,15 @@ public class SakerServiceImpl implements SakerService {
                         return sak;
                     });
         } catch (Exception e) {
-            return none();
+            return empty();
         }
     }
 
-    public static final Transformer<no.nav.tjeneste.virksomhet.sak.v1.informasjon.WSSak, Sak> TIL_SAK = wsSak -> {
+    public static final Function<no.nav.tjeneste.virksomhet.sak.v1.informasjon.WSSak, Sak> TIL_SAK = wsSak -> {
         Sak sak = new Sak();
         sak.opprettetDato = wsSak.getOpprettelsetidspunkt();
-        sak.saksId = optional(wsSak.getSakId());
-        sak.fagsystemSaksId = isBlank(wsSak.getFagsystemSakId()) ? Optional.<String>none() : optional(wsSak.getFagsystemSakId());
+        sak.saksId = wsSak.getSakId();
+        sak.fagsystemSaksId = wsSak.getFagsystemSakId();
         sak.temaKode = wsSak.getFagomraade().getValue();
         sak.sakstype = wsSak.getSakstype().getValue();
         sak.fagsystemKode = wsSak.getFagsystem().getValue();
@@ -211,11 +224,11 @@ public class SakerServiceImpl implements SakerService {
         return sak;
     };
 
-    private static final Predicate<Sak> GODSKJENT_FAGSAK = sak -> !sak.isSakstypeForVisningGenerell() &&
+    private static final Predicate<Sak> GODKJENT_FAGSAK = sak -> !sak.isSakstypeForVisningGenerell() &&
             GODKJENTE_FAGSYSTEMER_FOR_FAGSAKER.contains(sak.fagsystemKode) &&
             !TEMAKODE_KLAGE_ANKE.equals(sak.temaKode);
 
-    private static final Predicate<Sak> GODSKJENT_GENERELL = sak -> sak.isSakstypeForVisningGenerell() &&
+    private static final Predicate<Sak> GODKJENT_GENERELL = sak -> sak.isSakstypeForVisningGenerell() &&
             GODKJENT_FAGSYSTEM_FOR_GENERELLE.equals(sak.fagsystemKode) &&
             GODKJENTE_TEMA_FOR_GENERELLE.contains(sak.temaKode);
 

@@ -11,9 +11,10 @@ import org.springframework.context.annotation.Configuration;
 
 import javax.xml.datatype.XMLGregorianCalendar;
 import java.util.List;
+import java.util.stream.Collectors;
 
+import static java.util.stream.Collectors.toList;
 import static no.nav.brukerdialog.security.context.SubjectHandler.getSubjectHandler;
-import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.HenvendelsePortTypeMock.HENVENDELSER;
 
 @Configuration
@@ -103,11 +104,8 @@ public class BehandleHenvendelsePortTypeMock {
     }
 
     private static List<XMLHenvendelse> hentBehandlingskjede(final String behandlingskjedeId) {
-        return on(HENVENDELSER).filter(new Predicate<XMLHenvendelse>() {
-            @Override
-            public boolean evaluate(XMLHenvendelse henvendelse) {
-                return behandlingskjedeId.equals(henvendelse.getBehandlingskjedeId());
-            }
-        }).collect();
+        return HENVENDELSER.stream()
+                .filter(henvendelse -> behandlingskjedeId.equals(henvendelse.getBehandlingskjedeId()))
+                .collect(toList());
     }
 }

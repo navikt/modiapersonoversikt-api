@@ -4,7 +4,6 @@ import _0._0.nav_cons_sak_gosys_3.no.nav.asbo.navorgenhet.ASBOGOSYSNavEnhet;
 import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navansatt.GOSYSNAVansatt;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.AnsattEnhet;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.organisasjonsEnhetV2.OrganisasjonEnhetV2Service;
-import org.apache.commons.collections15.Closure;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cache.CacheManager;
@@ -13,7 +12,6 @@ import org.springframework.scheduling.annotation.Scheduled;
 import javax.inject.Inject;
 import java.util.List;
 
-import static no.nav.modig.lang.collections.IterUtils.on;
 
 public class ScheduledAnsattListePrefetch {
 
@@ -38,7 +36,7 @@ public class ScheduledAnsattListePrefetch {
         cacheManager.getCache(CACHE_NAME).clear();
 
         List<AnsattEnhet> alleEnheter = organisasjonEnhetService.hentAlleEnheter(OrganisasjonEnhetV2Service.WSOppgavebehandlerfilter.KUN_OPPGAVEBEHANDLERE);
-        on(alleEnheter).forEach((Closure<AnsattEnhet>) ansattEnhet -> {
+        alleEnheter.stream().forEach(ansattEnhet -> {
             ASBOGOSYSNavEnhet hentNAVAnsattListeRequest = new ASBOGOSYSNavEnhet();
             hentNAVAnsattListeRequest.setEnhetsId(ansattEnhet.enhetId);
             hentNAVAnsattListeRequest.setEnhetsNavn(ansattEnhet.enhetNavn);

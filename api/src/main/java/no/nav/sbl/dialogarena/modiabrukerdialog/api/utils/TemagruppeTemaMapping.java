@@ -6,7 +6,6 @@ import java.util.*;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
-import static no.nav.modig.lang.option.Optional.optional;
 
 public class TemagruppeTemaMapping {
 
@@ -81,10 +80,10 @@ public class TemagruppeTemaMapping {
     };
 
     public static List<String> hentTemaForTemagruppe(String temagruppe) {
-        return optional(TEMAGRUPPE_TEMA_MAPPING.get(temagruppe)).getOrElse(Collections.emptyList());
+        return TEMAGRUPPE_TEMA_MAPPING.get(temagruppe) == null ? Collections.emptyList() : TEMAGRUPPE_TEMA_MAPPING.get(temagruppe);
     }
 
     public static String hentTemagruppeForTema(String tema) {
-        return optional(TEMA_TEMAGRUPPE_MAPPING.get(tema)).getOrElse(TEMA_UTEN_TEMAGRUPPE.name());
+        return TEMA_TEMAGRUPPE_MAPPING.get(tema) == null ?  TEMA_UTEN_TEMAGRUPPE.name() : TEMA_TEMAGRUPPE_MAPPING.get(tema);
     }
 }

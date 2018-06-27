@@ -7,8 +7,6 @@
         </encoder>
     </appender>
 
-    <logger name="no.nav.modig.lang.reflect.cache.MethodCache" level="WARN"/>
-
     <root level="INFO">
         <appender-ref ref="CONSOLE"/>
     </root>

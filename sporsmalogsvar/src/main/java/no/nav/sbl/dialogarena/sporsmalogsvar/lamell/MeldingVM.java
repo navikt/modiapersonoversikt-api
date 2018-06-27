@@ -1,6 +1,5 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.lamell;
 
-import no.nav.modig.lang.option.Optional;
 import no.nav.modig.modia.widget.utils.WidgetDateFormatter;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Saksbehandler;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
@@ -12,8 +11,9 @@ import org.apache.wicket.protocol.http.WebApplication;
 import org.joda.time.DateTime;
 
 import java.io.Serializable;
+import java.util.Optional;
 
-import static no.nav.modig.lang.option.Optional.optional;
+import static java.util.Optional.ofNullable;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.VisningUtils.lagMeldingStatusTekstKey;
 
 public class MeldingVM implements Serializable {
@@ -52,7 +52,7 @@ public class MeldingVM implements Serializable {
     }
 
     public Boolean erFeilsendt() {
-        return getMarkertSomFeilsendtAv().isSome();
+        return getMarkertSomFeilsendtAv().isPresent();
     }
 
     public boolean erKontorsperret() {
@@ -86,27 +86,27 @@ public class MeldingVM implements Serializable {
     }
 
     public Optional<Saksbehandler> getMarkertSomFeilsendtAv() {
-        return optional(melding.markertSomFeilsendtAv);
+        return ofNullable(melding.markertSomFeilsendtAv);
     }
 
     public Optional<DateTime> getMarkertSomFeilsendtDato() {
-        return optional(melding.markertSomFeilsendtDato);
+        return ofNullable(melding.markertSomFeilsendtDato);
     }
 
     public Optional<Saksbehandler> getKontorsperretAv() {
-        return optional(melding.kontorsperretAv);
+        return ofNullable(melding.kontorsperretAv);
     }
 
     public Optional<DateTime> getKontorsperretDato() {
-        return optional(melding.kontorsperretDato);
+        return ofNullable(melding.kontorsperretDato);
     }
 
     public Optional<Saksbehandler> getFerdigstiltUtenSvarAv() {
-        return optional(melding.ferdigstiltUtenSvarAv);
+        return ofNullable(melding.ferdigstiltUtenSvarAv);
     }
 
     public Optional<DateTime> getFerdigstiltUtenSvarDato() {
-        return optional(melding.ferdigstiltUtenSvarDato);
+        return ofNullable(melding.ferdigstiltUtenSvarDato);
     }
 
     public String getAvsenderBildeUrl() {

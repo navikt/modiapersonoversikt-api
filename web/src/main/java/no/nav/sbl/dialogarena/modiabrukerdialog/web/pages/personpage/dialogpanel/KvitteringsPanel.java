@@ -1,6 +1,5 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel;
 
-import no.nav.modig.lang.collections.predicate.GreaterThanPredicate;
 import no.nav.modig.wicket.events.NamedEventPayload;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.DialogSession;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
@@ -11,10 +10,10 @@ import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.AbstractReadOnlyModel;
+import org.apache.wicket.model.Model;
 import org.apache.wicket.model.StringResourceModel;
 
 import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
-import static no.nav.modig.wicket.model.ModelUtils.when;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe.ANSOS;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.DialogPanel.NESTE_DIALOG_LENKE_VALGT;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.DialogPanel.NY_DIALOG_LENKE_VALGT;
@@ -67,7 +66,12 @@ public class KvitteringsPanel extends Panel {
                 send(getPage(), Broadcast.BREADTH, new NamedEventPayload(NESTE_DIALOG_LENKE_VALGT));
             }
         };
-        nesteDialogLenke.add(visibleIf(when(getAntallTildelt(), new GreaterThanPredicate<>(0))));
+        nesteDialogLenke.add(visibleIf(new Model<Boolean>() {
+            @Override
+            public Boolean getObject() {
+                return DialogSession.read(KvitteringsPanel.this).getPlukkedeOppgaver().size() > 0;
+            }
+        }));
         nesteDialogLenke.setOutputMarkupId(true);
         startNyDialogLenke.setOutputMarkupId(true);
         add(nesteDialogLenke, startNyDialogLenke, temagruppemeldingLabel, kvitteringsmeldingLabel);
@@ -89,15 +93,6 @@ public class KvitteringsPanel extends Panel {
     public void visTemagruppebasertKvittering(AjaxRequestTarget target, String kvitteringsmelding, Temagruppe valgtTemagruppe, final Component... komponenter) {
         this.valgtTemagruppe = valgtTemagruppe;
         visKvitteringsside(target, kvitteringsmelding, komponenter);
-    }
-
-    private AbstractReadOnlyModel<Integer> getAntallTildelt() {
-        return new AbstractReadOnlyModel<Integer>() {
-            @Override
-            public Integer getObject() {
-                return DialogSession.read(KvitteringsPanel.this).getPlukkedeOppgaver().size();
-            }
-        };
     }
 
     private void visKvitteringsside(AjaxRequestTarget target, String kvitteringsmelding, final Component... komponenter) {

@@ -2,9 +2,9 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest;
 
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.AnsattService;
-import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.henvendelse.HenvendelseBehandlingService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.IkkeIndeksertException;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.MeldingerSok;
+import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.henvendelse.HenvendelseBehandlingService;
 import org.slf4j.Logger;
 
 import javax.inject.Inject;
@@ -16,14 +16,13 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import java.util.List;
-import java.util.stream.Collectors;
 
+import static java.util.stream.Collectors.toList;
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static javax.ws.rs.core.MediaType.TEXT_PLAIN;
 import static javax.ws.rs.core.Response.Status.FORBIDDEN;
 import static no.nav.brukerdialog.security.context.SubjectHandler.getSubjectHandler;
-import static no.nav.modig.lang.collections.IterUtils.on;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.AnsattEnhet.ENHET_ID;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.AnsattEnhet.TIL_ENHET_ID;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.RestUtils.hentValgtEnhet;
 import static org.slf4j.LoggerFactory.getLogger;
 
@@ -65,7 +64,7 @@ public class MeldingerController {
     @Path("/indekser")
     public Response indekser(@PathParam("fnr") String fnr, @Context HttpServletRequest request) {
         String valgtEnhet = hentValgtEnhet(request);
-        if(on(ansattService.hentEnhetsliste()).map(ENHET_ID).collect().contains(valgtEnhet)) {
+        if(ansattService.hentEnhetsliste().stream().map(TIL_ENHET_ID).collect(toList()).contains(valgtEnhet)) {
             List<Melding> meldinger = hentAlleMeldinger(fnr, valgtEnhet);
             searcher.indekser(fnr, meldinger);
             return Response.status(Response.Status.OK).build();
@@ -78,7 +77,7 @@ public class MeldingerController {
     private List<Melding> hentAlleMeldinger(@PathParam("fnr") String fnr, String valgtEnhet) {
         return henvendelse.hentMeldinger(fnr, valgtEnhet).getTraader().stream()
                 .flatMap(traad -> traad.getMeldinger().stream())
-                .collect(Collectors.toList());
+                .collect(toList());
     }
 
 }

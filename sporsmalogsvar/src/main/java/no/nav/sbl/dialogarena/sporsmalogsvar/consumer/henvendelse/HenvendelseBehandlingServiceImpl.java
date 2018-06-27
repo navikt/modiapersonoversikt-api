@@ -22,22 +22,20 @@ import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.behandlehenvendelse.Be
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.henvendelse.HenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.meldinger.WSHentHenvendelseListeRequest;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.meldinger.WSHentHenvendelseListeResponse;
-import org.apache.commons.collections15.Predicate;
-import org.apache.commons.collections15.Transformer;
 
 import javax.inject.Inject;
 import javax.inject.Named;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.Function;
+import java.util.function.Predicate;
 
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
 import static no.nav.brukerdialog.security.tilgangskontroll.utils.AttributeUtils.*;
 import static no.nav.brukerdialog.security.tilgangskontroll.utils.RequestUtils.forRequest;
 import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.*;
-import static no.nav.modig.lang.collections.IterUtils.on;
-import static no.nav.modig.lang.collections.TransformerUtils.castTo;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.MeldingUtils.tilMelding;
 import static org.apache.commons.lang3.StringUtils.defaultString;
 import static org.apache.commons.lang3.StringUtils.isBlank;
@@ -47,7 +45,7 @@ public class HenvendelseBehandlingServiceImpl implements HenvendelseBehandlingSe
     @Inject
     private HenvendelsePortType henvendelsePortType;
     @Inject
-    protected BehandleHenvendelsePortType behandleHenvendelsePortType;
+    private BehandleHenvendelsePortType behandleHenvendelsePortType;
     @Inject
     private PersonKjerneinfoServiceBi kjerneinfo;
     @Inject
@@ -79,14 +77,14 @@ public class HenvendelseBehandlingServiceImpl implements HenvendelseBehandlingSe
             sporingsLogger.logg(wsMeldinger.get(0), SporingsAksjon.Les);
         }
 
-        return on(wsMeldinger)
-                .map(castTo(XMLHenvendelse.class))
+        return wsMeldinger.stream()
+                .map(melding -> (XMLHenvendelse) melding)
                 .map(tilMelding(propertyResolver, ldapService))
                 .map(journalfortTemaTilTemanavn)
                 .filter(kontorsperreTilgang(valgtEnhet))
                 .map(okonomiskSosialhjelpTilgang(valgtEnhet))
                 .map(journalfortTemaTilgang(valgtEnhet))
-                .collect();
+                .collect(toList());
     }
 
     private List<String> getAkutelleHenvendelseTyper() {
@@ -110,7 +108,9 @@ public class HenvendelseBehandlingServiceImpl implements HenvendelseBehandlingSe
     @Override
     public void merkSomKontorsperret(String fnr, TraadVM valgtTraad) {
         String enhet = getEnhet(fnr);
-        List<String> ider = on(valgtTraad.getMeldinger()).map(MeldingVM::getId).collect();
+        List<String> ider = valgtTraad.getMeldinger().stream()
+                .map(MeldingVM::getId)
+                .collect(toList());
 
         behandleHenvendelsePortType.oppdaterKontorsperre(enhet, ider);
     }
@@ -150,7 +150,7 @@ public class HenvendelseBehandlingServiceImpl implements HenvendelseBehandlingSe
 
     }
 
-    protected Predicate<Melding> kontorsperreTilgang(final String valgtEnhet) {
+    private Predicate<Melding> kontorsperreTilgang(final String valgtEnhet) {
         return melding -> {
             List<PolicyAttribute> attributes = new ArrayList<>(Arrays.asList(actionId("kontorsperre"),
                     resourceId(""),
@@ -163,7 +163,7 @@ public class HenvendelseBehandlingServiceImpl implements HenvendelseBehandlingSe
         };
     }
 
-    protected Transformer<Melding, Melding> okonomiskSosialhjelpTilgang(final String valgtEnhet) {
+    private Function<Melding, Melding> okonomiskSosialhjelpTilgang(final String valgtEnhet) {
         return melding -> {
             List<PolicyAttribute> attributes = new ArrayList<>(Arrays.asList(
                     actionId("oksos"),
@@ -183,7 +183,7 @@ public class HenvendelseBehandlingServiceImpl implements HenvendelseBehandlingSe
         };
     }
 
-    private Transformer<Melding, Melding> journalfortTemaTilgang(final String valgtEnhet) {
+    private Function<Melding, Melding> journalfortTemaTilgang(final String valgtEnhet) {
         return (melding) -> {
             PolicyRequest temagruppePolicyRequest = forRequest(
                     actionId("temagruppe"),
@@ -200,7 +200,7 @@ public class HenvendelseBehandlingServiceImpl implements HenvendelseBehandlingSe
         };
     }
 
-    private final Transformer<Melding, Melding> journalfortTemaTilTemanavn = (melding) -> {
+    private final Function<Melding, Melding> journalfortTemaTilTemanavn = (melding) -> {
         if (melding.journalfortTema != null) {
             String temaNavn = standardKodeverk.getArkivtemaNavn(melding.journalfortTema);
             melding.journalfortTemanavn = temaNavn != null ? temaNavn : melding.journalfortTema;

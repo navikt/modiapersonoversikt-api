@@ -9,7 +9,6 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Saksbehandler;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Fritekst;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Traad;
-import org.apache.commons.collections15.Transformer;
 import org.joda.time.DateTime;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -19,7 +18,7 @@ import java.util.List;
 
 import static java.lang.System.setProperty;
 import static java.util.Arrays.asList;
-import static no.nav.modig.lang.collections.IterUtils.on;
+import static java.util.stream.Collectors.toList;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype.SAMTALEREFERAT_OPPMOTE;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.consumer.MeldingerSokImpl.*;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -27,26 +26,26 @@ import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.joda.time.DateTimeUtils.setCurrentMillisOffset;
 
-public class MeldingerSokImplTest {
+class MeldingerSokImplTest {
 
     private static final String NAV_IDENT = "Z999999";
     private static final String FNR = "11111111111";
     private MeldingerSokImpl meldingerSok = new MeldingerSokImpl();
 
     @BeforeEach
-    public void setup() {
+    void setup() {
         innloggetBrukerEr(NAV_IDENT);
         meldingerSok.indekser(FNR, lagMeldinger());
     }
 
     @Test
-    public void returnererAlleMeldingerVedTomtSok() throws IkkeIndeksertException {
+    void returnererAlleMeldingerVedTomtSok() throws IkkeIndeksertException {
         List<Melding> meldinger = alleMeldinger(meldingerSok.sok(FNR, ""));
         assertThat(meldinger, hasSize(lagMeldinger().size()));
     }
 
     @Test
-    public void sletterCacheEtterEnGittStund() {
+    void sletterCacheEtterEnGittStund() {
         assertThat(meldingerSok.cache.entrySet(), hasSize(1));
 
         setCurrentMillisOffset((Integer.valueOf(DEFAULT_TIME_TO_LIVE_MINUTES) * 60 * 1000) + 1);
@@ -56,7 +55,7 @@ public class MeldingerSokImplTest {
     }
 
     @Test
-    public void fritekstTemagruppeKanalStatusTekstOgArkivtemaErSokbart() throws IkkeIndeksertException {
+    void fritekstTemagruppeKanalStatusTekstOgArkivtemaErSokbart() throws IkkeIndeksertException {
         assertSok("rbei", "1235");
         assertSok("dagp", "1235");
         assertSok("svar", "1234");
@@ -64,7 +63,7 @@ public class MeldingerSokImplTest {
     }
 
     @Test
-    public void returnererMeldingerSortertEtterDato() throws IkkeIndeksertException {
+    void returnererMeldingerSortertEtterDato() throws IkkeIndeksertException {
         String fnr = "987654321";
         List<Melding> meldinger = asList(
                 lagMelding("1", "1", "", "", "", DateTime.now().minusDays(2), "", ""),
@@ -81,7 +80,7 @@ public class MeldingerSokImplTest {
     }
 
     @Test
-    public void gruppererMeldingerISammeTraad() throws IkkeIndeksertException {
+    void gruppererMeldingerISammeTraad() throws IkkeIndeksertException {
         String fnr = "4561234789";
         DateTime now = DateTime.now();
         List<Melding> meldinger = asList(
@@ -99,9 +98,9 @@ public class MeldingerSokImplTest {
     }
 
     @Test
-    public void forskjelligeSaksbehandlereFaarIkkeSammeResultat() throws IkkeIndeksertException {
+    void forskjelligeSaksbehandlereFaarIkkeSammeResultat() throws IkkeIndeksertException {
         innloggetBrukerEr("Z132456");
-        meldingerSok.indekser(FNR, Collections.<Melding>emptyList());
+        meldingerSok.indekser(FNR, Collections.emptyList());
 
         assertThat(meldingerSok.sok(FNR, ""), hasSize(0));
         assertThat(meldingerSok.cache.entrySet(), hasSize(2));
@@ -110,7 +109,7 @@ public class MeldingerSokImplTest {
     }
 
     @Test
-    public void returnererTraaderMedAntallMeldingerIOpprinneligTraad() throws IkkeIndeksertException {
+    void returnererTraaderMedAntallMeldingerIOpprinneligTraad() throws IkkeIndeksertException {
         List<Traad> pernsjonsTraader = meldingerSok.sok(FNR, "Hjelpemidler");
 
         assertThat(pernsjonsTraader.size(), is(1));
@@ -123,7 +122,7 @@ public class MeldingerSokImplTest {
     }
 
     @Test
-    public void patternetTrefferOgVaskerSpesialtegn() {
+    void patternetTrefferOgVaskerSpesialtegn() {
         String soketekst = "\\+!():^[]{}~?=/|.\"";
         String vasketSoketekst = LUCENE_PATTERN.matcher(soketekst).replaceAll(REPLACEMENT_STRING);
 
@@ -169,12 +168,9 @@ public class MeldingerSokImplTest {
     }
 
     private static List<Melding> alleMeldinger(List<Traad> traader) {
-        return on(traader).flatmap(new Transformer<Traad, List<Melding>>() {
-            @Override
-            public List<Melding> transform(Traad traad) {
-                return traad.meldinger;
-            }
-        }).collect();
+        return traader.stream()
+                .flatMap(traad -> traad.meldinger.stream())
+                .collect(toList());
     }
 
 }

@@ -1,7 +1,6 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.lamell;
 
 import no.nav.metrics.MetricsFactory;
-import no.nav.modig.lang.collections.predicate.GreaterThanPredicate;
 import no.nav.modig.modia.events.FeedItemPayload;
 import no.nav.modig.modia.lamell.Lerret;
 import no.nav.modig.wicket.events.NamedEventPayload;
@@ -23,9 +22,7 @@ import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.model.CompoundPropertyModel;
-import org.apache.wicket.model.PropertyModel;
-import org.apache.wicket.model.StringResourceModel;
+import org.apache.wicket.model.*;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
 
 import javax.inject.Inject;
@@ -49,7 +46,7 @@ public class Innboks extends Lerret {
 
     public static final JavaScriptResourceReference MELDINGER_JS = new JavaScriptResourceReference(Innboks.class, "meldinger.js");
     public static final JavaScriptResourceReference BESVAR_INDIKATOR_JS = new JavaScriptResourceReference(Innboks.class, "besvarIndikator.js");
-    public static final String INNBOKS_OPPDATERT_EVENT = "sos.innboks.oppdatert";
+    static final String INNBOKS_OPPDATERT_EVENT = "sos.innboks.oppdatert";
     public static final String TRAADER_SLAATT_SAMMEN = "slaaSammenEvent";
     private final DialogSession session;
 
@@ -57,11 +54,11 @@ public class Innboks extends Lerret {
     private final ReactComponentPanel slaaSammenTraaderPanel;
 
     @Inject
-    OppgaveBehandlingService oppgaveBehandlingService;
+    private OppgaveBehandlingService oppgaveBehandlingService;
     @Inject
-    SaksbehandlerInnstillingerService saksbehandlerInnstillingerService;
+    private SaksbehandlerInnstillingerService saksbehandlerInnstillingerService;
     @Inject
-    HenvendelseUtsendingService henvendelseUtsendingService;
+    private HenvendelseUtsendingService henvendelseUtsendingService;
 
     public Innboks(String id, final InnboksVM innboksVM) {
         super(id);
@@ -118,8 +115,13 @@ public class Innboks extends Lerret {
                 MetricsFactory.createEvent("hendelse.meldinger-lamell-besvar-flere-knapp.klikk").report();
             }
         };
-        slaaSammenTraaderToggleButton.add(visibleIf(when(sizeOf(innboksVM.tildelteOppgaverUtenDelsvar),
-                new GreaterThanPredicate<>(1))));
+
+        slaaSammenTraaderToggleButton.add(visibleIf(new Model<Boolean>() {
+            @Override
+            public Boolean getObject() {
+                return innboksVM.tildelteOppgaverUtenDelsvar.size() > 1;
+            }
+        }));
         slaaSammenTraaderPanel.addCallback("slaaSammen", List.class, (target, data) -> {
             @SuppressWarnings("unchecked")
             List<String> traadIder = (List<String>) data;

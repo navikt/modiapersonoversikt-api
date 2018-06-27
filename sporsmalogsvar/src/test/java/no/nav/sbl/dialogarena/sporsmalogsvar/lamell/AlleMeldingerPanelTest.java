@@ -26,7 +26,7 @@ import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.TestUtils.createMeldi
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.joda.time.DateTime.now;
-import static org.mockito.Matchers.any;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @ContextConfiguration(classes = {MockServiceTestContext.class, ServiceTestContext.class})

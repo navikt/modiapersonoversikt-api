@@ -28,8 +28,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static java.util.Collections.emptyList;
+import static java.util.stream.Collectors.toList;
 import static no.nav.metrics.MetricsFactory.createTimer;
-import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
 import static no.nav.modig.wicket.model.ModelUtils.*;
 
@@ -61,9 +61,9 @@ public class NyOppgaveFormWrapper extends Panel {
         setOutputMarkupPlaceholderTag(true);
 
         this.innboksVM = innboksVM;
-        this.enheter = on(organisasjonEnhetV2Service.hentAlleEnheter(OrganisasjonEnhetV2Service.WSOppgavebehandlerfilter.KUN_OPPGAVEBEHANDLERE))
-                .filter(enhet -> erGyldigEnhet(enhet))
-                .collect();
+        this.enheter = organisasjonEnhetV2Service.hentAlleEnheter(OrganisasjonEnhetV2Service.WSOppgavebehandlerfilter.KUN_OPPGAVEBEHANDLERE).stream()
+                .filter(NyOppgaveFormWrapper::erGyldigEnhet)
+                .collect(toList());
         this.foreslatteEnheter = new ArrayList<>();
         this.gsakKodeChoiceRenderer = new ChoiceRenderer<>("tekst", "kode");
         this.form = new Form<>("nyoppgaveform", new CompoundPropertyModel<>(new NyOppgave()));
