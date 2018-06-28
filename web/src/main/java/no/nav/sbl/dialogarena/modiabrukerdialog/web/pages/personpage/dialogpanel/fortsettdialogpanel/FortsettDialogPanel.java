@@ -47,9 +47,6 @@ import static java.lang.String.format;
 import static java.util.Optional.ofNullable;
 import static no.nav.brukerdialog.security.context.SubjectHandler.getSubjectHandler;
 import static no.nav.metrics.MetricsFactory.createTimer;
-import static no.nav.modig.lang.collections.IterUtils.on;
-import static no.nav.modig.lang.collections.PredicateUtils.equalTo;
-import static no.nav.modig.lang.collections.PredicateUtils.where;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.api.constants.Events.SporsmalOgSvar.SVAR_AVBRUTT;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Kanal.TEKST;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe.KOMMUNALE_TJENESTER;
@@ -211,7 +208,7 @@ public class FortsettDialogPanel extends GenericPanel<HenvendelseVM> {
     }
 
     private static boolean harUtgaaendeSporsmal(List<Melding> traad) {
-        return on(traad).exists(where(Melding.TYPE, equalTo(SPORSMAL_MODIA_UTGAAENDE)));
+        return traad.stream().anyMatch(melding -> SPORSMAL_MODIA_UTGAAENDE.equals(melding.meldingstype));
     }
 
     private boolean traadenKanLeggesTilbake() {

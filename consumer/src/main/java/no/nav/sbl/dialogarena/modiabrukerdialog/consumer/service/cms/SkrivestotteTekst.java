@@ -1,13 +1,13 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.cms;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import no.nav.modig.lang.option.Optional;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import static java.util.Arrays.asList;
-import static no.nav.modig.lang.option.Optional.optional;
+import static java.util.Optional.ofNullable;
 
 public class SkrivestotteTekst {
 
@@ -35,11 +35,11 @@ public class SkrivestotteTekst {
 
     @JsonIgnore
     public Optional<String> getDefaultLocaleInnhold() {
-        return optional(innhold.get(LOCALE_DEFAULT));
+        return ofNullable(innhold.get(LOCALE_DEFAULT));
     }
 
     @JsonIgnore
     public Boolean isValid() {
-        return getDefaultLocaleInnhold().isSome();
+        return getDefaultLocaleInnhold().isPresent();
     }
 }

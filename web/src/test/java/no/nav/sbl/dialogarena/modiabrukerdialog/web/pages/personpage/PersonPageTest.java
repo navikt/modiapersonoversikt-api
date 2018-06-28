@@ -38,13 +38,14 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.util.ReflectionUtils;
 
 import javax.inject.Inject;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
-import static no.nav.modig.lang.reflect.Reflect.on;
 import static no.nav.modig.modia.constants.ModiaConstants.HENT_PERSON_BEGRUNNET;
 import static no.nav.modig.modia.events.InternalEvents.FODSELSNUMMER_FUNNET_MED_BEGRUNNElSE;
 import static no.nav.modig.modia.events.InternalEvents.GOTO_HENT_PERSONPAGE;
@@ -56,8 +57,8 @@ import static no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe.ARB
 import static org.hamcrest.Matchers.is;
 import static org.joda.time.DateTime.now;
 import static org.junit.Assert.*;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyString;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(SpringExtension.class)
@@ -99,13 +100,13 @@ public class PersonPageTest extends WicketPageTest {
     }
 
     @Test
-    public void viserModaldialVedUlagredeEndringerOgRefresh() {
+    void viserModaldialVedUlagredeEndringerOgRefresh() {
         wicket.goTo(PersonPage.class, with().param("fnr", testFnr));
         PersonPage personPage = (PersonPage) wicket.tester.getLastRenderedPage();
         ReactSjekkForlatModal redirectPopup = mock(ReactSjekkForlatModal.class);
         LamellContainer lamellContainer = mock(LamellContainer.class);
-        on(personPage).setFieldValue("redirectPopup", redirectPopup);
-        on(personPage).setFieldValue("lamellContainer", lamellContainer);
+        setFieldValueReflection(personPage, "redirectPopup", redirectPopup);
+        setFieldValueReflection(personPage, "lamellContainer", lamellContainer);
         when(lamellContainer.hasUnsavedChanges()).thenReturn(true);
 
         AjaxRequestTarget target = new AjaxRequestHandler(personPage);
@@ -121,8 +122,8 @@ public class PersonPageTest extends WicketPageTest {
         PersonPage personPage = (PersonPage) wicket.tester.getLastRenderedPage();
         ReactSjekkForlatModal redirectPopup = mock(ReactSjekkForlatModal.class);
         LamellContainer lamellContainer = mock(LamellContainer.class);
-        on(personPage).setFieldValue("redirectPopup", redirectPopup);
-        on(personPage).setFieldValue("lamellContainer", lamellContainer);
+        setFieldValueReflection(personPage, "redirectPopup", redirectPopup);
+        setFieldValueReflection(personPage, "lamellContainer", lamellContainer);
         when(lamellContainer.hasUnsavedChanges()).thenReturn(false);
 
         AjaxRequestTarget target = new AjaxRequestHandler(personPage);
@@ -130,6 +131,12 @@ public class PersonPageTest extends WicketPageTest {
 
         verify(redirectPopup, times(0)).show();
         verify(redirectPopup, times(1)).redirect();
+    }
+
+    private void setFieldValueReflection(PersonPage personPage, String fieldName, Object value) {
+        Field field = ReflectionUtils.findField(PersonPage.class, fieldName);
+        ReflectionUtils.makeAccessible(field);
+        ReflectionUtils.setField(field, personPage, value);
     }
 
     @Test

@@ -16,9 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static java.util.Arrays.asList;
-import static no.nav.modig.lang.collections.IterUtils.on;
-import static no.nav.modig.lang.collections.PredicateUtils.isA;
-import static no.nav.modig.lang.collections.TransformerUtils.castTo;
+import static java.util.stream.Collectors.toList;
 
 public class OversiktLerret extends Lerret {
 
@@ -39,7 +37,10 @@ public class OversiktLerret extends Lerret {
         add(new VarslerOversiktLink("varsling-lenke", fnr));
         widgets.add(new UtbetalingWidget("utbetalinger", "U", fnr));
 
-        asyncWidgets = on(widgets).filter(isA(AsyncWidget.class)).map(castTo(AsyncWidget.class)).collect();
+        asyncWidgets = widgets.stream()
+                .filter(o -> AsyncWidget.class.isInstance(o))
+                .map(o -> (AsyncWidget) o)
+                .collect(toList());
 
         widgets.forEach(this::add);
     }

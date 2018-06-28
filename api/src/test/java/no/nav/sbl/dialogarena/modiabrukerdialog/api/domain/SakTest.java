@@ -3,7 +3,7 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.api.domain;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.Sak;
 import org.junit.jupiter.api.Test;
 
-import static no.nav.modig.lang.option.Optional.optional;
+import static java.util.Optional.of;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
@@ -19,8 +19,8 @@ public class SakTest {
     @Test
     public void returnererFagsystemSaksIdDersomDenneErSatt() {
         Sak sak = new Sak();
-        sak.fagsystemSaksId = optional(FAGSYSTEM_SAKS_ID);
-        sak.saksId = optional(SAKS_ID);
+        sak.fagsystemSaksId = FAGSYSTEM_SAKS_ID;
+        sak.saksId = SAKS_ID;
 
         assertThat(sak.getSaksIdVisning(), is(FAGSYSTEM_SAKS_ID));
     }
@@ -28,7 +28,7 @@ public class SakTest {
     @Test
     public void returnererSaksIdDersomDenneErSattOgIkkeFagsystemSaksIdErSatt() {
         Sak sak = new Sak();
-        sak.saksId = optional(SAKS_ID);
+        sak.saksId = SAKS_ID;
 
         assertThat(sak.getSaksIdVisning(), is(SAKS_ID));
     }
@@ -41,10 +41,10 @@ public class SakTest {
     @Test
     public void sammenlignerSakerBaertPaaSaksIdDersomDenneErSatt() {
         Sak sak1 = new Sak();
-        sak1.saksId = optional(SAKS_ID);
+        sak1.saksId = SAKS_ID;
 
         Sak sak2 = new Sak();
-        sak2.saksId = optional(SAKS_ID);
+        sak2.saksId = SAKS_ID;
 
         Sak sak3 = new Sak();
 

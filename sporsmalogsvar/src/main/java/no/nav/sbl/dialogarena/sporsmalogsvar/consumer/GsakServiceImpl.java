@@ -19,7 +19,6 @@ import org.slf4j.LoggerFactory;
 import javax.inject.Inject;
 
 import static no.nav.brukerdialog.security.context.SubjectHandler.getSubjectHandler;
-import static no.nav.modig.lang.option.Optional.optional;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.DateUtils.arbeidsdagerFraDato;
 import static org.apache.commons.lang3.StringUtils.equalsIgnoreCase;
 import static org.apache.commons.lang3.StringUtils.isBlank;
@@ -97,7 +96,7 @@ public class GsakServiceImpl implements GsakService {
 
         String beskrivelse = "Fra Modia:\n" + nyOppgave.beskrivelse;
 
-        GsakKodeTema.Underkategori underkategori = optional(nyOppgave.underkategori).getOrElse(new GsakKodeTema.Underkategori(null, null));
+        GsakKodeTema.Underkategori underkategori = nyOppgave.underkategori != null ? nyOppgave.underkategori : new GsakKodeTema.Underkategori(null, null);
 
         oppgavebehandlingWS.opprettOppgave(
                 new WSOpprettOppgaveRequest()

@@ -97,7 +97,7 @@ public class BasePage extends WebPage {
         add(new ExceptionHandlingBehavior() {
                 @Override
                 public IRequestHandler handleException(Component source, Exception ex) {
-                    logger.error("Teknisk feil:", ex.getCause());
+                    logger.error("Teknisk feil:", ex);
                     tekniskFeilModal.getModal().call("vis");
                     return RequestCycle.get().find(AjaxRequestTarget.class);
                 }

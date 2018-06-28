@@ -28,7 +28,7 @@ import static no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.Hen
 import static no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.HenvendelseSoknaderPortTypeMock.KVITTERINGETTERSENDELSE1;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.HenvendelseSoknaderPortTypeMock.KVITTERINGETTERSENDELSE2;
 import static org.joda.time.DateTime.now;
-import static org.mockito.Matchers.any;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 

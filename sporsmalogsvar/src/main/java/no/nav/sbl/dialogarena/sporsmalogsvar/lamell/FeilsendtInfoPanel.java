@@ -19,13 +19,13 @@ public class FeilsendtInfoPanel extends Panel {
 
         String veilederIdent = meldingVM.getObject().getMarkertSomFeilsendtAv()
                 .map(Saksbehandler::getIdent)
-                .getOrElse("<ident mangler>");
+                .orElse("<ident mangler>");
         String veilederNavn = meldingVM.getObject().getMarkertSomFeilsendtAv()
                 .map(person -> person.navn)
-                .getOrElse("<navn mangler>");
+                .orElse("<navn mangler>");
         String markertDato = meldingVM.getObject().getMarkertSomFeilsendtDato()
                 .map(DateUtils::toString)
-                .getOrElse("<dato mangler>");
+                .orElse("<dato mangler>");
 
         add(new ReactComponentPanel("markertAv", "AlertStripeSuksessSolid", new HashMap<String, Object>(){{
             put("header", "Feilsendt post");

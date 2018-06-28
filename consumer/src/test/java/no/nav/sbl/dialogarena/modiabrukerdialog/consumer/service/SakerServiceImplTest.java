@@ -41,7 +41,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static java.util.Arrays.asList;
-import static no.nav.modig.lang.collections.IterUtils.on;
+import static java.util.stream.Collectors.toList;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.Sak.*;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.core.Is.is;
@@ -81,7 +81,7 @@ public class SakerServiceImplTest {
     private List<WSSak> sakerListe;
 
     @BeforeEach
-    public void setUp() throws FinnSakUgyldigInput, FinnSakForMangeForekomster {
+    void setUp() throws FinnSakUgyldigInput, FinnSakForMangeForekomster {
         initMocks(this);
 
         sakerListe = createSaksliste();
@@ -92,14 +92,14 @@ public class SakerServiceImplTest {
     }
 
     @Test
-    public void transformererResponseTilSaksliste() {
+    void transformererResponseTilSaksliste() {
         List<Sak> saksliste = sakerService.hentSammensatteSaker(FNR);
 
-        assertThat(saksliste.get(0).saksId.get(), is("1"));
+        assertThat(saksliste.get(0).saksId, is("1"));
     }
 
     @Test
-    public void transformererResponseTilSakslistePensjon() {
+    void transformererResponseTilSakslistePensjon() {
         Sak pensjon = new Sak();
         pensjon.temaKode = "PENS";
         Sak ufore = new Sak();
@@ -114,11 +114,11 @@ public class SakerServiceImplTest {
     }
 
     @Test
-    public void transformasjonenGenerererRelevanteFelter() {
-        Sak sak = SakerServiceImpl.TIL_SAK.transform(sakerListe.get(0));
+    void transformasjonenGenerererRelevanteFelter() {
+        Sak sak = SakerServiceImpl.TIL_SAK.apply(sakerListe.get(0));
 
-        assertThat(sak.saksId.get(), is("1"));
-        assertThat(sak.fagsystemSaksId.get(), is("11"));
+        assertThat(sak.saksId, is("1"));
+        assertThat(sak.fagsystemSaksId, is("11"));
         assertThat(sak.temaKode, is(GODKJENTE_TEMA_FOR_GENERELLE.get(0)));
         assertThat(sak.sakstype, is(SAKSTYPE_GENERELL));
         assertThat(sak.fagsystemKode, is(GODKJENT_FAGSYSTEM_FOR_GENERELLE));
@@ -127,46 +127,82 @@ public class SakerServiceImplTest {
     }
 
     @Test
-    public void oppretterIkkeGenerellOppfolgingssakDersomFagsakerInneholderOppfolgingssak() throws FinnSakUgyldigInput, FinnSakForMangeForekomster {
-        List<WSSak> wsSaker = Arrays.asList(createWSGenerellSak("4", "44", TEMAKODE_OPPFOLGING, now(), "Fag", GODKJENTE_FAGSYSTEMER_FOR_FAGSAKER.get(0)),
-                createWSGenerellSak("5", "45", TEMAKODE_OPPFOLGING, now(), SAKSTYPE_GENERELL, GODKJENT_FAGSYSTEM_FOR_GENERELLE));
+    void oppretterIkkeGenerellOppfolgingssakDersomFagsakerInneholderOppfolgingssak() throws FinnSakUgyldigInput, FinnSakForMangeForekomster {
+        List<WSSak> wsSaker = Arrays.asList(new WSSak()
+                        .withSakId("4")
+                        .withFagsystemSakId("44")
+                        .withFagomraade(new WSFagomraader().withValue(TEMAKODE_OPPFOLGING))
+                        .withOpprettelsetidspunkt(now())
+                        .withSakstype(new WSSakstyper().withValue("Fag"))
+                        .withFagsystem(new WSFagsystemer().withValue(GODKJENTE_FAGSYSTEMER_FOR_FAGSAKER.get(0))),
+                new WSSak()
+                        .withSakId("5")
+                        .withFagsystemSakId("45")
+                        .withFagomraade(new WSFagomraader().withValue(TEMAKODE_OPPFOLGING))
+                        .withOpprettelsetidspunkt(now())
+                        .withSakstype(new WSSakstyper().withValue(SAKSTYPE_GENERELL))
+                        .withFagsystem(new WSFagsystemer().withValue(GODKJENT_FAGSYSTEM_FOR_GENERELLE)));
 
         when(sakV1.finnSak(any(WSFinnSakRequest.class))).thenReturn(new WSFinnSakResponse().withSakListe(wsSaker));
 
-        List<Sak> saker = on(sakerService.hentSammensatteSaker(FNR)).filter(harTemaKode(TEMAKODE_OPPFOLGING)).collect();
+        List<Sak> saker = sakerService.hentSammensatteSaker(FNR).stream().filter(harTemaKode(TEMAKODE_OPPFOLGING)).collect(toList());
 
         assertThat(saker.size(), is(1));
         assertThat(saker.get(0).sakstype, not(is(SAKSTYPE_GENERELL)));
     }
 
     @Test
-    public void oppretterIkkeGenerellOppfolgingssakDersomDenneFinnesAlleredeSelvOmFagsakerIkkeInneholderOppfolgingssak() throws FinnSakUgyldigInput, FinnSakForMangeForekomster {
-        List<WSSak> wsSaker = Arrays.asList(createWSGenerellSak("4", "44", TEMAKODE_OPPFOLGING, now(), SAKSTYPE_GENERELL, GODKJENTE_FAGSYSTEMER_FOR_FAGSAKER.get(0)),
-                createWSGenerellSak("5", "45", TEMAKODE_OPPFOLGING, now(), SAKSTYPE_GENERELL, GODKJENT_FAGSYSTEM_FOR_GENERELLE));
+    void oppretterIkkeGenerellOppfolgingssakDersomDenneFinnesAlleredeSelvOmFagsakerIkkeInneholderOppfolgingssak() throws FinnSakUgyldigInput, FinnSakForMangeForekomster {
+        List<WSSak> wsSaker = Arrays.asList(new WSSak()
+                        .withSakId("4")
+                        .withFagsystemSakId("44")
+                        .withFagomraade(new WSFagomraader().withValue(TEMAKODE_OPPFOLGING))
+                        .withOpprettelsetidspunkt(now())
+                        .withSakstype(new WSSakstyper().withValue(SAKSTYPE_GENERELL))
+                        .withFagsystem(new WSFagsystemer().withValue(GODKJENTE_FAGSYSTEMER_FOR_FAGSAKER.get(0))),
+                new WSSak()
+                        .withSakId("5")
+                        .withFagsystemSakId("45")
+                        .withFagomraade(new WSFagomraader().withValue(TEMAKODE_OPPFOLGING))
+                        .withOpprettelsetidspunkt(now())
+                        .withSakstype(new WSSakstyper().withValue(SAKSTYPE_GENERELL))
+                        .withFagsystem(new WSFagsystemer().withValue(GODKJENT_FAGSYSTEM_FOR_GENERELLE)));
 
         when(sakV1.finnSak(any(WSFinnSakRequest.class))).thenReturn(new WSFinnSakResponse().withSakListe(wsSaker));
 
-        List<Sak> saker = on(sakerService.hentSammensatteSaker(FNR)).filter(harTemaKode(TEMAKODE_OPPFOLGING)).collect();
+        List<Sak> saker = sakerService.hentSammensatteSaker(FNR).stream().filter(harTemaKode(TEMAKODE_OPPFOLGING)).collect(toList());
 
         assertThat(saker.size(), is(1));
         assertThat(saker.get(0).sakstype, is(SAKSTYPE_GENERELL));
     }
 
     @Test
-    public void fjernerGenerellOppfolgingssakDersomDenneFinnesOgOppfolgingssakFinnesIFagsaker() throws FinnSakUgyldigInput, FinnSakForMangeForekomster {
-        List<WSSak> wsSaker = Arrays.asList(createWSGenerellSak("4", "44", TEMAKODE_OPPFOLGING, now(), SAKSTYPE_GENERELL, GODKJENT_FAGSYSTEM_FOR_GENERELLE),
-                createWSGenerellSak("5", "55", TEMAKODE_OPPFOLGING, now(), "Fag", FAGSYSTEMKODE_ARENA));
+    void fjernerGenerellOppfolgingssakDersomDenneFinnesOgOppfolgingssakFinnesIFagsaker() throws FinnSakUgyldigInput, FinnSakForMangeForekomster {
+        List<WSSak> wsSaker = Arrays.asList(new WSSak()
+                        .withSakId("4")
+                        .withFagsystemSakId("44")
+                        .withFagomraade(new WSFagomraader().withValue(TEMAKODE_OPPFOLGING))
+                        .withOpprettelsetidspunkt(now())
+                        .withSakstype(new WSSakstyper().withValue(SAKSTYPE_GENERELL))
+                        .withFagsystem(new WSFagsystemer().withValue(GODKJENT_FAGSYSTEM_FOR_GENERELLE)),
+                new WSSak()
+                        .withSakId("5")
+                        .withFagsystemSakId("55")
+                        .withFagomraade(new WSFagomraader().withValue(TEMAKODE_OPPFOLGING))
+                        .withOpprettelsetidspunkt(now())
+                        .withSakstype(new WSSakstyper().withValue("Fag"))
+                        .withFagsystem(new WSFagsystemer().withValue(FAGSYSTEMKODE_ARENA)));
 
         when(sakV1.finnSak(any(WSFinnSakRequest.class))).thenReturn(new WSFinnSakResponse().withSakListe(wsSaker));
 
-        List<Sak> saker = on(sakerService.hentSammensatteSaker(FNR)).filter(harTemaKode(TEMAKODE_OPPFOLGING)).collect();
+        List<Sak> saker = sakerService.hentSammensatteSaker(FNR).stream().filter(harTemaKode(TEMAKODE_OPPFOLGING)).collect(toList());
 
         assertThat(saker.size(), is(1));
         assertThat(saker.get(0).sakstype, not(is(SAKSTYPE_GENERELL)));
     }
 
     @Test
-    public void leggerTilOppfolgingssakFraArenaDersomDenneIkkeFinnesIGsak() {
+    void leggerTilOppfolgingssakFraArenaDersomDenneIkkeFinnesIGsak() {
         String saksId = "123456";
         LocalDate dato = LocalDate.now().minusDays(1);
 
@@ -178,7 +214,7 @@ public class SakerServiceImplTest {
                         .withSakstypeKode(new Sakstypekode().withKode("ARBEID"))
         ));
 
-        List<Sak> saker = on(sakerService.hentSammensatteSaker(FNR)).filter(harTemaKode(TEMAKODE_OPPFOLGING)).collect();
+        List<Sak> saker = sakerService.hentSammensatteSaker(FNR).stream().filter(harTemaKode(TEMAKODE_OPPFOLGING)).collect(toList());
 
         assertThat(saker.size(), is(1));
         assertThat(saker.get(0).getSaksIdVisning(), is(saksId));
@@ -188,7 +224,7 @@ public class SakerServiceImplTest {
     }
 
     @Test
-    public void knytterBehandlingsKjedeTilSakUavhengigOmDenFinnesIGsak() throws Exception {
+    void knytterBehandlingsKjedeTilSakUavhengigOmDenFinnesIGsak() throws Exception {
         Sak sak = lagSak();
         String valgtNavEnhet = "0219";
 
@@ -203,21 +239,21 @@ public class SakerServiceImplTest {
     }
 
     @Test
-    public void knyttBehandlingskjedeTilSakKasterFeilHvisEnhetIkkeErSatt() throws JournalforingFeilet, OpprettSakUgyldigInput, OpprettSakSakEksistererAllerede {
+    void knyttBehandlingskjedeTilSakKasterFeilHvisEnhetIkkeErSatt() throws JournalforingFeilet, OpprettSakUgyldigInput, OpprettSakSakEksistererAllerede {
         when(behandleSak.opprettSak(any(WSOpprettSakRequest.class))).thenReturn(new WSOpprettSakResponse().withSakId(SAKS_ID));
 
         assertThrows(IllegalArgumentException.class, () -> sakerService.knyttBehandlingskjedeTilSak(FNR, BEHANDLINGSKJEDEID, lagSak(), ""));
     }
 
     @Test
-    public void knyttBehandlingskjedeTilSakKasterFeilHvisBehandlingskjedeIkkeErSatt() throws JournalforingFeilet, OpprettSakUgyldigInput, OpprettSakSakEksistererAllerede {
+    void knyttBehandlingskjedeTilSakKasterFeilHvisBehandlingskjedeIkkeErSatt() throws JournalforingFeilet, OpprettSakUgyldigInput, OpprettSakSakEksistererAllerede {
         when(behandleSak.opprettSak(any(WSOpprettSakRequest.class))).thenReturn(new WSOpprettSakResponse().withSakId(SAKS_ID));
 
         assertThrows(IllegalArgumentException.class, () -> sakerService.knyttBehandlingskjedeTilSak(FNR, null, lagSak(), "1337"));
     }
 
     @Test
-    public void knyttBehandlingskjedeTilSakKasterFeilHvisFnrIkkeErSatt() throws JournalforingFeilet, OpprettSakUgyldigInput, OpprettSakSakEksistererAllerede {
+    void knyttBehandlingskjedeTilSakKasterFeilHvisFnrIkkeErSatt() throws JournalforingFeilet, OpprettSakUgyldigInput, OpprettSakSakEksistererAllerede {
         when(behandleSak.opprettSak(any(WSOpprettSakRequest.class))).thenReturn(new WSOpprettSakResponse().withSakId(SAKS_ID));
 
         assertThrows(IllegalArgumentException.class, () -> sakerService.knyttBehandlingskjedeTilSak("", BEHANDLINGSKJEDEID, lagSak(), "1337"));
@@ -225,20 +261,28 @@ public class SakerServiceImplTest {
 
     private ArrayList<WSSak> createSaksliste() {
         return new ArrayList<>(asList(
-                createWSGenerellSak("1", "11", GODKJENTE_TEMA_FOR_GENERELLE.get(0), FIRE_DAGER_SIDEN, SAKSTYPE_GENERELL, GODKJENT_FAGSYSTEM_FOR_GENERELLE),
-                createWSGenerellSak("2", "22", GODKJENTE_TEMA_FOR_GENERELLE.get(1), now().minusDays(3), SAKSTYPE_GENERELL, GODKJENT_FAGSYSTEM_FOR_GENERELLE),
-                createWSGenerellSak("3", "33", "AAP", now().minusDays(5), "Fag", GODKJENTE_FAGSYSTEMER_FOR_FAGSAKER.get(0))
+                new WSSak()
+                        .withSakId("1")
+                        .withFagsystemSakId("11")
+                        .withFagomraade(new WSFagomraader().withValue(GODKJENTE_TEMA_FOR_GENERELLE.get(0)))
+                        .withOpprettelsetidspunkt(FIRE_DAGER_SIDEN)
+                        .withSakstype(new WSSakstyper().withValue(SAKSTYPE_GENERELL))
+                        .withFagsystem(new WSFagsystemer().withValue(GODKJENT_FAGSYSTEM_FOR_GENERELLE)),
+                new WSSak()
+                        .withSakId("2")
+                        .withFagsystemSakId("22")
+                        .withFagomraade(new WSFagomraader().withValue(GODKJENTE_TEMA_FOR_GENERELLE.get(1)))
+                        .withOpprettelsetidspunkt(now().minusDays(3))
+                        .withSakstype(new WSSakstyper().withValue(SAKSTYPE_GENERELL))
+                        .withFagsystem(new WSFagsystemer().withValue(GODKJENT_FAGSYSTEM_FOR_GENERELLE)),
+                new WSSak()
+                        .withSakId("3")
+                        .withFagsystemSakId("33")
+                        .withFagomraade(new WSFagomraader().withValue("AAP"))
+                        .withOpprettelsetidspunkt(now().minusDays(5))
+                        .withSakstype(new WSSakstyper().withValue("Fag"))
+                        .withFagsystem(new WSFagsystemer().withValue(GODKJENTE_FAGSYSTEMER_FOR_FAGSAKER.get(0)))
         ));
-    }
-
-    private static WSSak createWSGenerellSak(String id, String fagsystemSaksId, String tema, DateTime opprettet, String sakstype, String fagsystem) {
-        return new WSSak()
-                .withSakId(id)
-                .withFagsystemSakId(fagsystemSaksId)
-                .withFagomraade(new WSFagomraader().withValue(tema))
-                .withOpprettelsetidspunkt(opprettet)
-                .withSakstype(new WSSakstyper().withValue(sakstype))
-                .withFagsystem(new WSFagsystemer().withValue(fagsystem));
     }
 
     private Sak lagSak() {

@@ -1,6 +1,5 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.oppgavebehandling;
 
-import no.nav.modig.lang.option.Optional;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Oppgave;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.LeggTilbakeOppgaveIGsakRequest;
@@ -27,13 +26,14 @@ import org.slf4j.LoggerFactory;
 import javax.inject.Inject;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
+import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.toList;
 import static no.nav.brukerdialog.security.context.SubjectHandler.getSubjectHandler;
-import static no.nav.modig.lang.option.Optional.optional;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe.*;
 import static org.apache.commons.lang3.StringUtils.equalsIgnoreCase;
 import static org.apache.commons.lang3.StringUtils.isBlank;
@@ -65,7 +65,7 @@ public class OppgaveBehandlingServiceImpl implements OppgaveBehandlingService {
 
     @Override
     public void tilordneOppgaveIGsak(String oppgaveId, Temagruppe temagruppe, String saksbehandlersValgteEnhet) throws FikkIkkeTilordnet {
-        tilordneOppgaveIGsak(oppgaveId, optional(temagruppe), saksbehandlersValgteEnhet);
+        tilordneOppgaveIGsak(oppgaveId, ofNullable(temagruppe), saksbehandlersValgteEnhet);
     }
 
     @Override
@@ -78,7 +78,7 @@ public class OppgaveBehandlingServiceImpl implements OppgaveBehandlingService {
 
     @Override
     public void ferdigstillOppgaveIGsak(String oppgaveId, Temagruppe temagruppe, String saksbehandlersValgteEnhet) {
-        ferdigstillOppgaveIGsak(oppgaveId, optional(temagruppe), saksbehandlersValgteEnhet);
+        ferdigstillOppgaveIGsak(oppgaveId, ofNullable(temagruppe), saksbehandlersValgteEnhet);
     }
 
     @Override
@@ -168,7 +168,7 @@ public class OppgaveBehandlingServiceImpl implements OppgaveBehandlingService {
     }
 
     void lagreOppgaveIGsak(WSOppgave wsOppgave, Temagruppe temagruppe, String saksbehandlersValgteEnhet) throws LagreOppgaveOptimistiskLasing {
-        lagreOppgaveIGsak(wsOppgave, optional(temagruppe), saksbehandlersValgteEnhet);
+        lagreOppgaveIGsak(wsOppgave, ofNullable(temagruppe), saksbehandlersValgteEnhet);
     }
 
     private void lagreOppgaveIGsak(WSOppgave wsOppgave, Optional<Temagruppe> temagruppe, String saksbehandlersValgteEnhet) throws LagreOppgaveOptimistiskLasing {
@@ -215,11 +215,11 @@ public class OppgaveBehandlingServiceImpl implements OppgaveBehandlingService {
     }
 
     private String enhetFor(Temagruppe temagruppe, String saksbehandlersValgteEnhet) {
-        return enhetFor(optional(temagruppe), saksbehandlersValgteEnhet);
+        return enhetFor(ofNullable(temagruppe), saksbehandlersValgteEnhet);
     }
 
     private String enhetFor(Optional<Temagruppe> optional, String saksbehandlersValgteEnhet) {
-        if (!optional.isSome()) {
+        if (!optional.isPresent()) {
             return DEFAULT_ENHET.toString();
         }
         Temagruppe temagruppe = optional.get();

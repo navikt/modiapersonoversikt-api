@@ -45,13 +45,14 @@ import org.slf4j.Logger;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
 import static java.lang.String.format;
 import static java.util.Arrays.asList;
+import static java.util.stream.Collectors.toList;
 import static no.nav.brukerdialog.security.context.SubjectHandler.getSubjectHandler;
-import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.titleAttribute;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
 import static no.nav.modig.wicket.model.ModelUtils.isEqualTo;
@@ -175,12 +176,7 @@ public class NyDialogPanel extends GenericPanel<HenvendelseVM> {
     }
 
     private List<FeedbackLabel> leggTilFeedbackLabels(Component... components) {
-        return on(components).map(new Transformer<Component, FeedbackLabel>() {
-            @Override
-            public FeedbackLabel transform(Component component) {
-                return FeedbackLabel.create(component);
-            }
-        }).collect();
+        return Arrays.stream(components).map(FeedbackLabel::create).collect(toList());
     }
 
     private EnhancedTextArea lagTekstFelt(Form<HenvendelseVM> form) {
@@ -266,7 +262,7 @@ public class NyDialogPanel extends GenericPanel<HenvendelseVM> {
     }
 
     private RadioGroup<Kanal> lagKanalVelger(IModel<Modus> modusModel) {
-        RadioGroup<Kanal> radioGroup = new RadioGroup<>("kanal", new PropertyModel<Kanal>(getModel(), "kanal"));
+        RadioGroup<Kanal> radioGroup = new RadioGroup<>("kanal", new PropertyModel<>(getModel(), "kanal"));
         modusKomponenter.add(radioGroup);
 
 

@@ -5,7 +5,6 @@ import no.nav.tjeneste.virksomhet.utbetaling.v1.UtbetalingV1;
 import no.nav.tjeneste.virksomhet.utbetaling.v1.informasjon.*;
 import no.nav.tjeneste.virksomhet.utbetaling.v1.meldinger.WSHentUtbetalingsinformasjonRequest;
 import no.nav.tjeneste.virksomhet.utbetaling.v1.meldinger.WSHentUtbetalingsinformasjonResponse;
-import org.apache.commons.collections15.Predicate;
 import org.joda.time.DateTime;
 import org.joda.time.Interval;
 import org.springframework.context.annotation.Bean;
@@ -13,9 +12,10 @@ import org.springframework.context.annotation.Configuration;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Predicate;
 
 import static java.util.Arrays.asList;
-import static no.nav.modig.lang.collections.IterUtils.on;
+import static java.util.stream.Collectors.toList;
 import static org.joda.time.DateTime.now;
 
 @Configuration
@@ -48,7 +48,7 @@ public class UtbetalingPortTypeMock {
 
         final Interval periode = new Interval(startDato, sluttDato);
         Predicate<WSUtbetaling> innenPeriode = object -> periode.contains(object.getPosteringsdato());
-        return on(utbetalinger).filter(innenPeriode).collect();
+        return utbetalinger.stream().filter(innenPeriode).collect(toList());
     }
 
     private static List<WSUtbetaling> kariNordmannUtbetaling() {

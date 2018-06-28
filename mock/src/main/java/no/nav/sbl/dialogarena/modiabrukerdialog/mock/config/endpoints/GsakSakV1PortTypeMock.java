@@ -17,7 +17,7 @@ import java.util.*;
 import static no.nav.sbl.dialogarena.common.collections.Collections.asList;
 import static no.nav.sbl.dialogarena.common.collections.Collections.asMap;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.AktoerPortTypeMock.AKTOER_ID_MOCK;
-import static org.mockito.Matchers.any;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
