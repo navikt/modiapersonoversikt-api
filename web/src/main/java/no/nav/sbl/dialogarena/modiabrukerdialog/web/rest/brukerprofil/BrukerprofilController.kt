@@ -209,18 +209,18 @@ private fun Bruker.setNorskAdresse(norskAdresse: EndreAdresseRequest.NorskAdress
             husbokstav = adresse.husbokstav
             husnummer = adresse.husnummer
         }
-        is EndreAdresseRequest.NorskAdresse.Områdeadresse -> Matrikkeladresse().apply {
+        is EndreAdresseRequest.NorskAdresse.Matrikkeladresse -> Matrikkeladresse().apply {
             co = "C/O"
             coadresse = adresse.tilleggsadresse
             postleveringsPeriode = Periode(org.joda.time.LocalDate.now(), javaLocalDatetoJoda(adresse.gyldigTil))
-            eiendomsnavn = adresse.områdeadresse
+            eiendomsnavn = adresse.eiendomsnavn
             poststed = adresse.postnummer
         }
         is EndreAdresseRequest.NorskAdresse.Postboksadresse -> Postboksadresse().apply {
             co = "C/O"
             coadresse = adresse.tilleggsadresse
             postleveringsPeriode = Periode(org.joda.time.LocalDate.now(), javaLocalDatetoJoda(adresse.gyldigTil))
-            postboksanlegg = adresse.postboksanleggnavn
+            postboksanlegg = adresse.postboksanlegg
             postboksnummer = adresse.postboksnummer
             poststed = adresse.postnummer
         }
