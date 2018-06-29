@@ -24,6 +24,7 @@ import no.nav.tjeneste.virksomhet.behandlebrukerprofil.v2.OppdaterKontaktinforma
 import no.nav.tjeneste.virksomhet.behandlebrukerprofil.v2.OppdaterKontaktinformasjonOgPreferanserSikkerhetsbegrensning
 import no.nav.tjeneste.virksomhet.behandlebrukerprofil.v2.OppdaterKontaktinformasjonOgPreferanserUgyldigInput
 import no.nav.tjeneste.virksomhet.behandleperson.v1.meldinger.WSEndreNavnRequest
+import org.slf4j.LoggerFactory
 import java.time.LocalDate
 import javax.inject.Inject
 import javax.ws.rs.*
@@ -43,6 +44,8 @@ class BrukerprofilController @Inject constructor(private val behandlePersonServi
                                                  private val behandleBrukerProfilService: BehandleBrukerprofilServiceBi,
                                                  private val kjerneinfoService: PersonKjerneinfoServiceBi,
                                                  private val ldapService: LDAPService) {
+
+    private val logger = LoggerFactory.getLogger(BrukerprofilController::class.java)
 
     @POST
     @Path("/navn")
@@ -155,13 +158,17 @@ class BrukerprofilController @Inject constructor(private val behandlePersonServi
     private fun skrivBrukerOgLagResponse(bruker: Bruker) = try {
         behandleBrukerProfilService.oppdaterKontaktinformasjonOgPreferanser(BehandleBrukerprofilRequest(bruker))
         status(OK)
-    } catch (_: OppdaterKontaktinformasjonOgPreferanserSikkerhetsbegrensning) {
+    } catch (e: OppdaterKontaktinformasjonOgPreferanserSikkerhetsbegrensning) {
+        logger.warn("Saksbehandler har ikke tilgang til å endre brukerprofil for " + bruker.ident, e)
         status(FORBIDDEN)
-    } catch (_: OppdaterKontaktinformasjonOgPreferanserPersonIkkeFunnet) {
+    } catch (e: OppdaterKontaktinformasjonOgPreferanserPersonIkkeFunnet) {
+        logger.warn("Saksbehandler forsøkte å endre brukerprofil til person som ikke ble funnet: " + bruker.ident, e)
         status(NOT_FOUND)
-    } catch (_: OppdaterKontaktinformasjonOgPreferanserUgyldigInput) {
+    } catch (e: OppdaterKontaktinformasjonOgPreferanserUgyldigInput) {
+        logger.warn("Saksbehandler forsøkte å endre brukerprofil til " + bruker.ident + " med ugyldig input", e)
         status(BAD_REQUEST)
-    } catch (_: OppdaterKontaktinformasjonOgPreferanserPersonIdentErUtgaatt) {
+    } catch (e: OppdaterKontaktinformasjonOgPreferanserPersonIdentErUtgaatt) {
+        logger.warn("Saksbehandler forsøkte å endre brukerprofil til person som er utgått: " + bruker.ident, e)
         status(GONE)
     }.build()
 
@@ -202,18 +209,18 @@ private fun Bruker.setNorskAdresse(norskAdresse: EndreAdresseRequest.NorskAdress
             husbokstav = adresse.husbokstav
             husnummer = adresse.husnummer
         }
-        is EndreAdresseRequest.NorskAdresse.Områdeadresse -> Matrikkeladresse().apply {
+        is EndreAdresseRequest.NorskAdresse.Matrikkeladresse -> Matrikkeladresse().apply {
             co = "C/O"
             coadresse = adresse.tilleggsadresse
             postleveringsPeriode = Periode(org.joda.time.LocalDate.now(), javaLocalDatetoJoda(adresse.gyldigTil))
-            eiendomsnavn = adresse.områdeadresse
+            eiendomsnavn = adresse.eiendomsnavn
             poststed = adresse.postnummer
         }
         is EndreAdresseRequest.NorskAdresse.Postboksadresse -> Postboksadresse().apply {
             co = "C/O"
             coadresse = adresse.tilleggsadresse
             postleveringsPeriode = Periode(org.joda.time.LocalDate.now(), javaLocalDatetoJoda(adresse.gyldigTil))
-            postboksanlegg = adresse.postboksanleggnavn
+            postboksanlegg = adresse.postboksanlegg
             postboksnummer = adresse.postboksnummer
             poststed = adresse.postnummer
         }
