@@ -14,7 +14,7 @@ data class EndreAdresseRequest(
 ) {
     data class NorskAdresse(
             val gateadresse: Gateadresse? = null,
-            val matrikkeladresse: Områdeadresse? = null,
+            val matrikkeladresse: Matrikkeladresse? = null,
             val postboksadresse: Postboksadresse? = null
     ) {
         data class Gateadresse(
@@ -26,16 +26,16 @@ data class EndreAdresseRequest(
                 val postnummer: String,
                 val gyldigTil: LocalDate
         )
-        data class Områdeadresse(
+        data class Matrikkeladresse(
                 val tilleggsadresse: String? = null,
-                val områdeadresse: String,
+                val eiendomsnavn: String,
                 val postnummer: String,
                 val gyldigTil: LocalDate
         )
         data class Postboksadresse(
                 val tilleggsadresse: String? = null,
                 val postboksnummer: String,
-                val postboksanleggnavn: String? = null,
+                val postboksanlegg: String? = null,
                 val postnummer: String,
                 val gyldigTil: LocalDate
         )

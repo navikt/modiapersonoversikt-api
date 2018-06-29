@@ -215,7 +215,7 @@ class BrukerprofilControllerTest {
                             tilleggsadresse= CONAVN,
                             postnummer = POSTNUMMER,
                             gyldigTil = OM_FIRE_UKER,
-                            postboksanleggnavn = POSTBOKSANLEGG,
+                            postboksanlegg = POSTBOKSANLEGG,
                             postboksnummer = POSTBOKSNUMMER
                     )
             )))
@@ -239,11 +239,11 @@ class BrukerprofilControllerTest {
         @Test
         fun `Kaller tjenesten med matrikkeladresse hvis den skal settes`() {
             controller.endreAdresse(AREMARK_FNR, EndreAdresseRequest(EndreAdresseRequest.NorskAdresse(
-                    matrikkeladresse = EndreAdresseRequest.NorskAdresse.Områdeadresse(
+                    matrikkeladresse = EndreAdresseRequest.NorskAdresse.Matrikkeladresse(
                             tilleggsadresse = CONAVN,
                             postnummer = POSTNUMMER,
                             gyldigTil = OM_FIRE_UKER,
-                            områdeadresse = EIENDOMSNAVN
+                            eiendomsnavn = EIENDOMSNAVN
                     )
             )))
 
