@@ -4,6 +4,7 @@ import no.finn.unleash.UnleashContext;
 import no.finn.unleash.UnleashContextProvider;
 import no.nav.brukerdialog.security.context.SubjectHandler;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.RestUtils;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
@@ -12,13 +13,10 @@ import java.util.HashMap;
 
 public class UnleashContextProviderImpl implements UnleashContextProvider {
 
-    private SaksbehandlerInnstillingerService saksbehandlerInnstillingerService;
     private SubjectHandler subjectHandler;
 
     @Inject
-    public UnleashContextProviderImpl(SaksbehandlerInnstillingerService saksbehandlerInnstillingerService,
-                                      SubjectHandler subjectHandler) {
-        this.saksbehandlerInnstillingerService = saksbehandlerInnstillingerService;
+    public UnleashContextProviderImpl(SubjectHandler subjectHandler) {
         this.subjectHandler = subjectHandler;
     }
 
@@ -27,7 +25,9 @@ public class UnleashContextProviderImpl implements UnleashContextProvider {
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
         String sessionId = attributes.getSessionId();
         String remoteAddress = attributes.getRequest().getRemoteAddr();
-        String valgtEnhet = saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet();
+
+        String valgtEnhet = RestUtils.hentValgtEnhet(((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest());
+
         String ident = subjectHandler.getUid();
 
         HashMap<String, String> properties = new HashMap<String, String>() {{

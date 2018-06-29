@@ -1,16 +1,18 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.featuretoggle
 
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.Feature
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.visFeature
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.unleash.UnleashService
 import org.slf4j.LoggerFactory
+import javax.inject.Inject
 import javax.ws.rs.GET
 import javax.ws.rs.Path
 import javax.ws.rs.PathParam
 import javax.ws.rs.Produces
 import javax.ws.rs.core.MediaType.APPLICATION_JSON
 
+private const val applicationPrefix = "modiabrukerdialog."
+
 @Path("/featuretoggle")
-class FeatureToggleController {
+class FeatureToggleController @Inject constructor(private val unleashService: UnleashService) {
 
     val logger = LoggerFactory.getLogger(FeatureToggleController::class.java)
 
@@ -18,14 +20,6 @@ class FeatureToggleController {
     @Path("/{id}")
     @Produces(APPLICATION_JSON)
     fun hentMedId(@PathParam("id") toggleId: String): Map<String, Boolean> {
-        val feature = Feature.values()
-                .findLast { it -> it.propertyKey == toggleId }
-
-        if (feature != null) {
-            return mapOf(toggleId to visFeature(feature))
-        } else {
-            logger.warn("Featuretoggle med id $toggleId ikke funnet. Defaulter til false.")
-            return mapOf(toggleId to false)
-        }
+        return mapOf(applicationPrefix + toggleId to unleashService.isEnabled(applicationPrefix + toggleId))
     }
 }

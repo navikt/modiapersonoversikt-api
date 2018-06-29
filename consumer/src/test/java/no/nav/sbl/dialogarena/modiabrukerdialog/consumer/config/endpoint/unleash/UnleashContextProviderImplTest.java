@@ -44,7 +44,7 @@ class UnleashContextProviderImplTest {
 
         RequestContextHolder.setRequestAttributes(requestAttributes);
 
-        contextProvider = new UnleashContextProviderImpl(saksbehandlerInnstillingerService, subjectHandler);
+        contextProvider = new UnleashContextProviderImpl(subjectHandler);
     }
 
     @Test
