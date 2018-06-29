@@ -23,7 +23,6 @@ import no.nav.modig.wicket.component.modal.ModigModalWindow;
 import no.nav.modig.wicket.configuration.ApplicationSettingsConfig;
 import no.nav.modig.wicket.selftest.HealthCheck;
 import no.nav.modig.wicket.selftest.JsonResourceReference;
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.Feature;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.utils.LocaleFromWicketSession;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.mocksetup.MockSetupPage;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.hentperson.HentPersonPage;
@@ -56,7 +55,6 @@ import java.util.Locale;
 
 import static java.lang.Boolean.getBoolean;
 import static no.nav.modig.frontend.FrontendModules.MODIA;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.FeatureToggleKt.visFeature;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.MockUtil.mockSetupErTillatt;
 import static no.nav.sbl.dialogarena.time.Datoformat.brukLocaleFra;
 import static org.apache.wicket.util.time.Duration.ONE_SECOND;
@@ -156,9 +154,7 @@ public class WicketApplication extends WebApplication {
 
         FrontendConfigurator frontendConfigurator = new FrontendConfigurator();
 
-        if (visFeature(Feature.NYTT_VISITTKORT)) {
-            frontendConfigurator.addLess(BasePage.NYTT_VISITTKORT_LESS);
-        }
+        frontendConfigurator.addLess(BasePage.NYTT_VISITTKORT_LESS);
         frontendConfigurator
                 .withModules(MODIA)
                 .addMetas(
