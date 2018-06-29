@@ -21,7 +21,7 @@ import no.nav.personsok.PersonsokPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.DialogSession;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.constants.Events;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.GrunnInfo;
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.Feature;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.unleash.UnleashService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.GrunninfoService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.BasePage;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.hentperson.HentPersonPage;
@@ -48,6 +48,7 @@ import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.event.IEvent;
 import org.apache.wicket.extensions.markup.html.tabs.AbstractTab;
 import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.model.Model;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.CssResourceReference;
@@ -67,8 +68,8 @@ import static no.nav.metrics.MetricsFactory.createEvent;
 import static no.nav.modig.modia.constants.ModiaConstants.HENT_PERSON_BEGRUNNET;
 import static no.nav.modig.modia.events.InternalEvents.*;
 import static no.nav.modig.modia.lamell.ReactSjekkForlatModal.getJavascriptSaveButtonFocus;
+import static no.nav.modig.wicket.conditional.ConditionalUtils.hasCssClassIf;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.api.constants.URLParametere.*;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.FeatureToggleKt.visFeature;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.lameller.LamellContainer.LAMELL_MELDINGER;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.apache.wicket.event.Broadcast.BREADTH;
@@ -105,6 +106,8 @@ public class PersonPage extends BasePage {
     private PersonKjerneinfoServiceBi personKjerneinfoServiceBi;
     @Inject
     private GrunninfoService grunninfoService;
+    @Inject
+    private UnleashService unleashService;
 
     public PersonPage(PageParameters pageParameters) {
         super(pageParameters);
@@ -137,6 +140,7 @@ public class PersonPage extends BasePage {
             clearSession();
             handleRedirect(target, new PageParameters(), HentPersonPage.class);
         }));
+        hode.add(hasCssClassIf("nytt-visittkort-toggle", Model.of(unleashService.isEnabled("modiabrukerdialog.nytt-visittort"))));
 
         dialogPanel = new DialogPanel("dialogPanel", grunnInfo);
         add(
@@ -160,7 +164,7 @@ public class PersonPage extends BasePage {
 
     @NotNull
     private Component[] getVisittkortkomponenter() {
-        if (visFeature(Feature.NYTT_VISITTKORT)) {
+        if (unleashService.isEnabled("modiabrukerdialog.nytt-visittort")) {
             return new Component[]{
                     new WebMarkupContainer("visittkort").setVisible(false),
                     new WebMarkupContainer("brukersNavKontor").setVisible(false),

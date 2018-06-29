@@ -80,6 +80,7 @@
         <rest alias="kodeverksmapper.oppgavetype" mapToProperty="kodeverksmapper.oppgavetype"/>
         <rest alias="kodeverksmapper.underkategori" mapToProperty="kodeverksmapper.underkategori"/>
         <rest alias="kodeverksmapper.ping" mapToProperty="kodeverksmapper.ping"/>
+        <rest alias="unleash-api" mapToProperty="unleash"/>
         <applicationProperties alias="modiabrukerdialog.properties"/>
         <baseUrl alias="modiabrukerdialog.standardtekster.tilbakemelding" mapToProperty="modiabrukerdialog.standardtekster.tilbakemelding"/>
         <!-- App-->
