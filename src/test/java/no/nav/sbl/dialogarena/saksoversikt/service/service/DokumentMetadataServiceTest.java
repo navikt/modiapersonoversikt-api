@@ -42,7 +42,7 @@ public class DokumentMetadataServiceTest {
     private Kodeverk kodeverk;
 
     @Mock
-    private InnsynJournalService innsynJournalService;
+    private JoarkJournalService joarkJournalService;
 
     @InjectMocks
     private DokumentMetadataService dokumentMetadataService;
@@ -187,7 +187,7 @@ public class DokumentMetadataServiceTest {
     }
 
     private void mockJoark(DokumentMetadata... joarkDokumentMetadata){
-        when(innsynJournalService.joarkSakhentTilgjengeligeJournalposter(any(), anyString()))
+        when(joarkJournalService.joarkSakhentTilgjengeligeJournalposter(any(), anyString()))
                 .thenReturn(new ResultatWrapper<>(asList(joarkDokumentMetadata),emptySet()));
     }
 

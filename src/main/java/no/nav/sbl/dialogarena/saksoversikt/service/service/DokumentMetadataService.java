@@ -35,7 +35,7 @@ public class DokumentMetadataService {
             = dokument -> DOKUMENT_LASTET_OPP.equals(dokument.getInnsendingsvalg().name());
 
     @Inject
-    private InnsynJournalService innsynJournalService;
+    private JoarkJournalService joarkJournalService;
 
     @Inject
     private HenvendelseService henvendelseService;
@@ -67,7 +67,7 @@ public class DokumentMetadataService {
         List<DokumentMetadata> innsendteSoknaderIHenvendelse = new ArrayList<>();
 
         try {
-            ResultatWrapper<List<DokumentMetadata>> dokumentMetadataResultatWrapper = innsynJournalService.joarkSakhentTilgjengeligeJournalposter(saker, fnr);
+            ResultatWrapper<List<DokumentMetadata>> dokumentMetadataResultatWrapper = joarkJournalService.joarkSakhentTilgjengeligeJournalposter(saker, fnr);
             joarkMetadataListe.addAll(dokumentMetadataResultatWrapper.resultat);
             feilendeBaksystem.addAll(dokumentMetadataResultatWrapper.feilendeSystemer);
         } catch (FeilendeBaksystemException e) {

@@ -32,8 +32,8 @@ public class ServiceConfig {
     }
 
     @Bean
-    public InnsynJournalService joarkService() {
-        return new InnsynJournalService();
+    public JoarkJournalService joarkService() {
+        return new JoarkJournalService();
     }
 
     @Bean
