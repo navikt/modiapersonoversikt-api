@@ -7,7 +7,7 @@ import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.FeilendeBaksys
 import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Sak;
 import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.resultatwrappere.ResultatWrapper;
 import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.resultatwrappere.TjenesteResultatWrapper;
-import no.nav.sbl.dialogarena.saksoversikt.service.service.interfaces.Innsyn;
+import no.nav.sbl.dialogarena.saksoversikt.service.service.interfaces.JournalV2Service;
 import no.nav.tjeneste.virksomhet.journal.v2.HentDokumentDokumentIkkeFunnet;
 import no.nav.tjeneste.virksomhet.journal.v2.HentDokumentSikkerhetsbegrensning;
 import no.nav.tjeneste.virksomhet.journal.v2.HentJournalpostListeSikkerhetsbegrensning;
@@ -34,15 +34,15 @@ import static org.slf4j.LoggerFactory.getLogger;
 
 //Preserve stacktrace
 @SuppressWarnings("squid:S1166")
-public class InnsynImpl implements Innsyn {
+public class JournalV2ServiceImpl implements JournalV2Service {
 
     @Inject
-    private JournalV2 joarkV2;
+    private JournalV2 journalV2;
 
     @Inject
     private JournalpostTransformer journalpostTransformer;
 
-    private static final Logger logger = getLogger(InnsynImpl.class);
+    private static final Logger logger = getLogger(JournalV2ServiceImpl.class);
 
     public ResultatWrapper<List<DokumentMetadata>> hentTilgjengeligJournalpostListe(List<Sak> saker, String fnr) {
         Map<String, Sak> saksMap = saker.stream().collect(toMap(Sak::getSaksId, Function.identity()));
@@ -56,7 +56,7 @@ public class InnsynImpl implements Innsyn {
         }
 
         try {
-            List<ResultatWrapper<DokumentMetadata>> dokumentMetadataWrappers = joarkV2.hentJournalpostListe(wsRequest)
+            List<ResultatWrapper<DokumentMetadata>> dokumentMetadataWrappers = journalV2.hentJournalpostListe(wsRequest)
                     .getJournalpostListe()
                     .stream()
                     .map(jp -> journalpostTransformer.dokumentMetadataFraJournalPost(jp, fnr, saksMap.get(jp.getGjelderSak().getSakId()).getFagsaksnummer()))
@@ -89,7 +89,7 @@ public class InnsynImpl implements Innsyn {
         );
 
         try {
-            WSHentDokumentResponse wsResponse = joarkV2.hentDokument(wsRequest);
+            WSHentDokumentResponse wsResponse = journalV2.hentDokument(wsRequest);
             return new TjenesteResultatWrapper(wsResponse.getDokument());
         } catch (HentDokumentSikkerhetsbegrensning e) {
             logger.warn("Dokumentet med journalpostid '{}' og dokumentid '{}' ble ikke hentet grunnet en sikkerhetsbegrensning. {}", journalpostid, dokumentreferanse, e.getMessage());

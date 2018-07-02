@@ -50,6 +50,7 @@
         <aktorid-jaxws.version>1.3</aktorid-jaxws.version>
         <nav-innsynJournal-v1-tjenestespesifikasjon.version>1.0</nav-innsynJournal-v1-tjenestespesifikasjon.version>
         <sanntidpdfkonverter.version>1.0</sanntidpdfkonverter.version>
+        <nav-innsynJournal-v2-tjenestespesifikasjon.version>2.0.2</nav-innsynJournal-v2-tjenestespesifikasjon.version>
 
         <!-- Java  -->
         <javax.inject.version>1</javax.inject.version>
@@ -103,6 +104,13 @@
             <artifactId>joark-tjenestespesifikasjon</artifactId>
             <version>${joark-tjenestespesifikasjon.version}</version>
         </dependency>
+        <dependency>
+            <groupId>no.nav.tjenester</groupId>
+            <artifactId>nav-innsynJournal-v2-tjenestespesifikasjon</artifactId>
+            <version>${nav-innsynJournal-v2-tjenestespesifikasjon.version}</version>
+            <classifier>jaxws</classifier>
+        </dependency>
+
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-context</artifactId>

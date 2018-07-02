@@ -1,6 +1,7 @@
 package no.nav.sbl.dialogarena.sak.config;
 
-import no.nav.sbl.dialogarena.sak.service.InnsynImpl;
+import no.nav.sbl.dialogarena.sak.service.InnsynJournalV2ServiceImpl;
+import no.nav.sbl.dialogarena.sak.service.JournalV2ServiceImpl;
 import no.nav.sbl.dialogarena.sak.service.SaksoversiktServiceImpl;
 import no.nav.sbl.dialogarena.sak.service.TilgangskontrollServiceImpl;
 import no.nav.sbl.dialogarena.sak.service.enonic.MiljovariablerService;
@@ -8,7 +9,8 @@ import no.nav.sbl.dialogarena.sak.service.interfaces.SaksoversiktService;
 import no.nav.sbl.dialogarena.sak.service.interfaces.TilgangskontrollService;
 import no.nav.sbl.dialogarena.sak.transformers.JournalpostTransformer;
 import no.nav.sbl.dialogarena.saksoversikt.service.config.ServiceConfig;
-import no.nav.sbl.dialogarena.saksoversikt.service.service.interfaces.Innsyn;
+import no.nav.sbl.dialogarena.saksoversikt.service.service.interfaces.InnsynJournalV2Service;
+import no.nav.sbl.dialogarena.saksoversikt.service.service.interfaces.JournalV2Service;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
@@ -33,8 +35,13 @@ public class SaksoversiktServiceConfig {
     }
 
     @Bean
-    public Innsyn innsyn() {
-        return new InnsynImpl();
+    public JournalV2Service journalV2Service() {
+        return new JournalV2ServiceImpl();
+    }
+
+    @Bean
+    public InnsynJournalV2Service innsynJournalV2Service(){
+        return new InnsynJournalV2ServiceImpl();
     }
 
     @Bean
