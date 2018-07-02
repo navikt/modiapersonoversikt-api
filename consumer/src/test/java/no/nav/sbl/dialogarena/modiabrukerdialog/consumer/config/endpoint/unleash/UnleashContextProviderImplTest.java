@@ -3,13 +3,14 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.unleas
 import no.finn.unleash.UnleashContext;
 import no.finn.unleash.UnleashContextProvider;
 import no.nav.brukerdialog.security.context.SubjectHandler;
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
+import no.nav.brukerdialog.security.context.ThreadLocalSubjectHandler;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpSession;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -23,8 +24,9 @@ class UnleashContextProviderImplTest {
     public static final String IDENT = "Z999999";
     public static final String REMOTE_ADDR = "123.123.123.123";
     public static final String VALGT_ENHET = "0118";
+    public static final String ENHET_COOKIE_PREFIX = "saksbehandlerinnstillinger-";
+    public static final String NULL_IDENT_GRUNNET_MOCK_PROBLEM = "null";
 
-    private SaksbehandlerInnstillingerService saksbehandlerInnstillingerService;
     private SubjectHandler subjectHandler;
     private ServletRequestAttributes requestAttributes;
     private MockHttpServletRequest request;
@@ -33,13 +35,14 @@ class UnleashContextProviderImplTest {
 
     @BeforeEach
     void init() {
-        saksbehandlerInnstillingerService = mock(SaksbehandlerInnstillingerService.class);
+        System.setProperty("no.nav.brukerdialog.security.context.subjectHandlerImplementationClass", ThreadLocalSubjectHandler.class.getName());
         subjectHandler = mock(SubjectHandler.class);
 
         request = new MockHttpServletRequest();
         session = mock(HttpSession.class);
         request.setSession(session);
         request.setRemoteAddr(REMOTE_ADDR);
+        request.setCookies(new Cookie(ENHET_COOKIE_PREFIX + NULL_IDENT_GRUNNET_MOCK_PROBLEM, VALGT_ENHET));
         requestAttributes = new ServletRequestAttributes(request);
 
         RequestContextHolder.setRequestAttributes(requestAttributes);
@@ -50,7 +53,6 @@ class UnleashContextProviderImplTest {
     @Test
     void getContextPopulatesAllFieldsCorrectly() {
         when(subjectHandler.getUid()).thenReturn(IDENT);
-        when(saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet()).thenReturn(VALGT_ENHET);
         when(session.getId()).thenReturn(SESSION_ID);
 
         UnleashContext context = contextProvider.getContext();
@@ -61,5 +63,4 @@ class UnleashContextProviderImplTest {
         assertThat(context.getProperties().size(), is(1));
         assertThat(context.getProperties().get("valgtEnhet"), is(VALGT_ENHET));
     }
-
 }
