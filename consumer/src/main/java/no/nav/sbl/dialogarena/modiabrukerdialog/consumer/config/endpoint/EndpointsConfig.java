@@ -2,6 +2,7 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint;
 
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.cms.CmsEndpointConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.cms.CmsSkrivestotteConfig;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.joark.InnsynJournalEndpointConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.joark.JoarkEndpointConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.kodeverksmapper.KodeverksmapperEndpointConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.oppfolgingsinfo.OppfolgingsinfoEndpointConfig;
@@ -61,7 +62,9 @@ import org.springframework.context.annotation.Import;
         EgenAnsattV1EndpointConfig.class,
         ArbeidsfordelingV1EndpointConfig.class,
         KodeverksmapperEndpointConfig.class,
-        UnleashEndpointConfig.class
+        UnleashEndpointConfig.class,
+        InnsynJournalEndpointConfig.class
+
 })
 public class EndpointsConfig {
 

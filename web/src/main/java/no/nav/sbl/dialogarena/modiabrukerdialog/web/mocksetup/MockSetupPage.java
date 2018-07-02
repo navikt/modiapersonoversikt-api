@@ -31,6 +31,7 @@ import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.artifact.
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.VarslingEndpointConfig.VARSLING_KEY;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.cms.CmsEndpointConfig.CMS_KEY;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.cms.CmsSkrivestotteConfig.CMS_SKRIVESTOTTE_KEY;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.joark.InnsynJournalEndpointConfig.INNSYNJOURNAL_V2_KEY;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.joark.JoarkEndpointConfig.JOARK_KEY;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v1.aktor.AktorEndpointConfig.AKTOER_KEY;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v1.arbeidsfordeling.ArbeidsfordelingV1EndpointConfig.NORG2_ARBEIDSFORDELING_V1_KEY;
@@ -134,6 +135,7 @@ public class MockSetupPage extends BasePage {
                 new MockSetupModel("AktoerId", AKTOER_KEY),
                 new MockSetupModel("HenvendelseSoknader", HENVENDELSESOKNADER_KEY),
                 new MockSetupModel("Joark", JOARK_KEY),
+                new MockSetupModel("Joark InnsynJournalV2Service", JOARK_KEY),
                 new MockSetupModel("NORG", NORG_KEY),
                 new MockSetupModel("NORG2 OrganisasjonEnhetV2", NORG2_ORGANISASJON_ENHET_V2_KEY),
                 new MockSetupModel("NORG2 OrganisasjonEnhetKontaktinformasjonV1", NORG2_ORGANISASJON_ENHET_KONTAKTINFORMASJON_V1_KEY),
