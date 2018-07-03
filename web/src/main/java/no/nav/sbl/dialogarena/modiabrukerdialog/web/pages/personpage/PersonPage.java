@@ -140,7 +140,7 @@ public class PersonPage extends BasePage {
             clearSession();
             handleRedirect(target, new PageParameters(), HentPersonPage.class);
         }));
-        hode.add(hasCssClassIf("nytt-visittkort-toggle", Model.of(unleashService.isEnabled("modiabrukerdialog.nytt-visittort"))));
+        hode.add(hasCssClassIf("nytt-visittkort-toggle", Model.of(unleashService.isEnabled("modiabrukerdialog.nytt-visittkort"))));
 
         dialogPanel = new DialogPanel("dialogPanel", grunnInfo);
         add(
@@ -164,7 +164,7 @@ public class PersonPage extends BasePage {
 
     @NotNull
     private Component[] getVisittkortkomponenter() {
-        if (unleashService.isEnabled("modiabrukerdialog.nytt-visittort")) {
+        if (unleashService.isEnabled("modiabrukerdialog.nytt-visittkort")) {
             return new Component[]{
                     new WebMarkupContainer("visittkort").setVisible(false),
                     new WebMarkupContainer("brukersNavKontor").setVisible(false),
