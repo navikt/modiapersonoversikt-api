@@ -18,7 +18,7 @@ public class JoarkJournalService {
     @Inject
     private InnsynJournalV2Service innsynJournalV2Service;
 
-    public ResultatWrapper<List<DokumentMetadata>> joarkSakhentTilgjengeligeJournalposter(List<Sak> saker, String fnr) {
+    public ResultatWrapper<List<DokumentMetadata>> hentTilgjengeligeJournalposter(List<Sak> saker, String fnr) {
         return journalV2Service.hentTilgjengeligJournalpostListe(saker, fnr);
 
     }
@@ -27,8 +27,8 @@ public class JoarkJournalService {
         return journalV2Service.hentDokument(journalpostId, dokumentId);
     }
 
-    public ResultatWrapper<String> identifiserJournalpost(String fnr){
-        return innsynJournalV2Service.identifiserJournalpost(fnr);
+    public ResultatWrapper<DokumentMetadata> identifiserJournalpost(String behandlingsId){
+        return innsynJournalV2Service.identifiserJournalpost(behandlingsId);
     }
 
 }

@@ -21,6 +21,7 @@ public class DokumentMetadata {
     private Entitet mottaker;
     private String tilhorendeSakid;
     private String tilhorendeFagsakId;
+    private String behandlingsId;
     private Set<Baksystem> baksystem = new HashSet<>();
     private String temakode;
     private String temakodeVisning;
@@ -142,6 +143,16 @@ public class DokumentMetadata {
 
     public DokumentMetadata withTilhorendeSakid(final String tilhorendeSakid) {
         this.tilhorendeSakid = tilhorendeSakid;
+        return this;
+    }
+
+
+    public String getBehandlingsId() {
+        return behandlingsId;
+    }
+
+    public DokumentMetadata withBehandlingsId(String behandlingsId){
+        this.behandlingsId = behandlingsId;
         return this;
     }
 
