@@ -73,9 +73,8 @@ public class UnleashEndpointConfig {
     }
 
     @Bean
-    @Inject
-    public UnleashContextProvider unleashContextProvider(SaksbehandlerInnstillingerService saksbehandlerInnstillingerService) {
-        return new UnleashContextProviderImpl(saksbehandlerInnstillingerService, SubjectHandler.getSubjectHandler());
+    public UnleashContextProvider unleashContextProvider() {
+        return new UnleashContextProviderImpl(SubjectHandler.getSubjectHandler());
     }
 
 }
