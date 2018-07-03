@@ -41,9 +41,6 @@ public class DokumentMetadataService {
     private HenvendelseService henvendelseService;
 
     @Inject
-    private Kodeverk kodeverk;
-
-    @Inject
     private BulletproofKodeverkService bulletproofKodeverkService;
 
     private Predicate<DokumentMetadata> finnesIJoark(List<DokumentMetadata> joarkMetadata) {
@@ -67,7 +64,7 @@ public class DokumentMetadataService {
         List<DokumentMetadata> innsendteSoknaderIHenvendelse = new ArrayList<>();
 
         try {
-            ResultatWrapper<List<DokumentMetadata>> dokumentMetadataResultatWrapper = joarkJournalService.joarkSakhentTilgjengeligeJournalposter(saker, fnr);
+            ResultatWrapper<List<DokumentMetadata>> dokumentMetadataResultatWrapper = joarkJournalService.hentTilgjengeligeJournalposter(saker, fnr);
             joarkMetadataListe.addAll(dokumentMetadataResultatWrapper.resultat);
             feilendeBaksystem.addAll(dokumentMetadataResultatWrapper.feilendeSystemer);
         } catch (FeilendeBaksystemException e) {

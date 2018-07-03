@@ -187,7 +187,7 @@ public class DokumentMetadataServiceTest {
     }
 
     private void mockJoark(DokumentMetadata... joarkDokumentMetadata){
-        when(joarkJournalService.joarkSakhentTilgjengeligeJournalposter(any(), anyString()))
+        when(joarkJournalService.hentTilgjengeligeJournalposter(any(), anyString()))
                 .thenReturn(new ResultatWrapper<>(asList(joarkDokumentMetadata),emptySet()));
     }
 
