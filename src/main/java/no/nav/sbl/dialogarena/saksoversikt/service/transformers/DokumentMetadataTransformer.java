@@ -72,6 +72,7 @@ public class DokumentMetadataTransformer {
                 .withTemakode(temakode)
                 .withBaksystem(Baksystem.HENVENDELSE)
                 .withRetning(Kommunikasjonsretning.INN)
-                .withTemakodeVisning((String) temanavnForTemakode.resultat);
+                .withTemakodeVisning((String) temanavnForTemakode.resultat)
+                .withBehandlingsId(soknad.getBehandlingsId());
     }
 }
