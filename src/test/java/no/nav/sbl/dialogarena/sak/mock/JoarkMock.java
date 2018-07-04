@@ -1,6 +1,5 @@
 package no.nav.sbl.dialogarena.sak.mock;
 
-import no.nav.sbl.dialogarena.saksoversikt.service.service.DokumentMetadataService;
 import no.nav.tjeneste.virksomhet.journal.v2.informasjon.*;
 import org.joda.time.DateTime;
 
@@ -10,6 +9,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static java.util.Arrays.asList;
+import static no.nav.sbl.dialogarena.sak.transformers.JournalpostTransformer.DOKTYPE_HOVEDDOKUMENT;
+import static no.nav.sbl.dialogarena.sak.transformers.JournalpostTransformer.DOKTYPE_VEDLEGG;
+import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Kommunikasjonsretning.JOURNALPOST_UTGAAENDE;
 
 public class JoarkMock {
 
@@ -31,9 +33,9 @@ public class JoarkMock {
         journalpost.setGjelderSak(lagJoarkSak("1"));
         journalpost.setKommunikasjonsretning(lagKommunikasjonsrettning("I"));
         journalpost.setMottatt(DatatypeFactory.newInstance().newXMLGregorianCalendar(new DateTime().minusDays(15).toGregorianCalendar()));
-        journalpost.getDokumentinfoRelasjonListe().add(lagDokumentinfoRelasjons("4562", DokumentMetadataService.DOKTYPE_HOVEDDOKUMENT, "Hoved.tittel", "123Hoved", new ArrayList<>()));
-        journalpost.getDokumentinfoRelasjonListe().add(lagDokumentinfoRelasjons("4563", DokumentMetadataService.DOKTYPE_VEDLEGG, "Vedlegg1.tittel", "234VED", new ArrayList<>()));
-        journalpost.getDokumentinfoRelasjonListe().add(lagDokumentinfoRelasjons("4564", DokumentMetadataService.DOKTYPE_VEDLEGG, "Vedlegg2.tittel", "235VED", new ArrayList<>()));
+        journalpost.getDokumentinfoRelasjonListe().add(lagDokumentinfoRelasjons("4562", DOKTYPE_HOVEDDOKUMENT, "Hoved.tittel", "123Hoved", new ArrayList<>()));
+        journalpost.getDokumentinfoRelasjonListe().add(lagDokumentinfoRelasjons("4563", DOKTYPE_VEDLEGG, "Vedlegg1.tittel", "234VED", new ArrayList<>()));
+        journalpost.getDokumentinfoRelasjonListe().add(lagDokumentinfoRelasjons("4564", DOKTYPE_VEDLEGG, "Vedlegg2.tittel", "235VED", new ArrayList<>()));
 
         return journalpost;
     }
@@ -46,9 +48,9 @@ public class JoarkMock {
         journalpost.setGjelderSak(lagJoarkSak("1"));
         journalpost.setKommunikasjonsretning(lagKommunikasjonsrettning("I"));
         journalpost.setMottatt(DatatypeFactory.newInstance().newXMLGregorianCalendar(new DateTime().minusDays(15).toGregorianCalendar()));
-        journalpost.getDokumentinfoRelasjonListe().add(lagDokumentinfoRelasjons("4562", DokumentMetadataService.DOKTYPE_HOVEDDOKUMENT, "Hoved.tittel", "123Hoved", new ArrayList<>()));
-        journalpost.getDokumentinfoRelasjonListe().add(lagDokumentinfoRelasjons("4563", DokumentMetadataService.DOKTYPE_VEDLEGG, "Vedlegg1.tittel", "234VED", new ArrayList<>()));
-        journalpost.getDokumentinfoRelasjonListe().add(lagDokumentinfoRelasjons("4564", DokumentMetadataService.DOKTYPE_VEDLEGG, "Vedlegg2.tittel", "235VED", new ArrayList<>()));
+        journalpost.getDokumentinfoRelasjonListe().add(lagDokumentinfoRelasjons("4562", DOKTYPE_HOVEDDOKUMENT, "Hoved.tittel", "123Hoved", new ArrayList<>()));
+        journalpost.getDokumentinfoRelasjonListe().add(lagDokumentinfoRelasjons("4563", DOKTYPE_VEDLEGG, "Vedlegg1.tittel", "234VED", new ArrayList<>()));
+        journalpost.getDokumentinfoRelasjonListe().add(lagDokumentinfoRelasjons("4564", DOKTYPE_VEDLEGG, "Vedlegg2.tittel", "235VED", new ArrayList<>()));
 
         return journalpost;
     }
@@ -62,9 +64,9 @@ public class JoarkMock {
         journalpost.setGjelderSak(lagJoarkSak("1"));
         journalpost.setKommunikasjonsretning(lagKommunikasjonsrettning("I"));
         journalpost.setMottatt(DatatypeFactory.newInstance().newXMLGregorianCalendar(new DateTime().minusDays(15).toGregorianCalendar()));
-        journalpost.getDokumentinfoRelasjonListe().add(lagDokumentinfoRelasjons("4562", DokumentMetadataService.DOKTYPE_HOVEDDOKUMENT, "Hoved.tittel", "123Hoved", new ArrayList<>()));
-        journalpost.getDokumentinfoRelasjonListe().add(lagDokumentinfoRelasjons("4563", DokumentMetadataService.DOKTYPE_VEDLEGG, "Vedlegg1.tittel", "234VED", new ArrayList<>()));
-        journalpost.getDokumentinfoRelasjonListe().add(lagDokumentinfoRelasjons("4564", DokumentMetadataService.DOKTYPE_VEDLEGG, "Vedlegg2.tittel", "235VED", new ArrayList<>()));
+        journalpost.getDokumentinfoRelasjonListe().add(lagDokumentinfoRelasjons("4562", DOKTYPE_HOVEDDOKUMENT, "Hoved.tittel", "123Hoved", new ArrayList<>()));
+        journalpost.getDokumentinfoRelasjonListe().add(lagDokumentinfoRelasjons("4563", DOKTYPE_VEDLEGG, "Vedlegg1.tittel", "234VED", new ArrayList<>()));
+        journalpost.getDokumentinfoRelasjonListe().add(lagDokumentinfoRelasjons("4564", DOKTYPE_VEDLEGG, "Vedlegg2.tittel", "235VED", new ArrayList<>()));
         return journalpost;
     }
 
@@ -80,12 +82,12 @@ public class JoarkMock {
         journalpost.setSendt(DatatypeFactory.newInstance().newXMLGregorianCalendar(new DateTime().minusDays(15).toGregorianCalendar()));
         journalpost.setFerdigstilt(DatatypeFactory.newInstance().newXMLGregorianCalendar(new DateTime().minusDays(14).toGregorianCalendar()));
         journalpost.getDokumentinfoRelasjonListe()
-                .add(lagDokumentinfoRelasjons("awd31", DokumentMetadataService.DOKTYPE_HOVEDDOKUMENT, "Hoveddokument.tittel", "5632HOVED", asList(
+                .add(lagDokumentinfoRelasjons("awd31", DOKTYPE_HOVEDDOKUMENT, "Hoveddokument.tittel", "5632HOVED", asList(
                         lagSkannetInnhold("23", "info"),
                         lagSkannetInnhold("34", "annenInfo")
                 )));
-        journalpost.getDokumentinfoRelasjonListe().add(lagDokumentinfoRelasjons("awd32", DokumentMetadataService.DOKTYPE_VEDLEGG, "Vedlegg1.tittel", "231VED", new ArrayList<>()));
-        journalpost.getDokumentinfoRelasjonListe().add(lagDokumentinfoRelasjons("awd33", DokumentMetadataService.DOKTYPE_VEDLEGG, "Vedlegg2.tittel", "453VED", new ArrayList<>()));
+        journalpost.getDokumentinfoRelasjonListe().add(lagDokumentinfoRelasjons("awd32", DOKTYPE_VEDLEGG, "Vedlegg1.tittel", "231VED", new ArrayList<>()));
+        journalpost.getDokumentinfoRelasjonListe().add(lagDokumentinfoRelasjons("awd33", DOKTYPE_VEDLEGG, "Vedlegg2.tittel", "453VED", new ArrayList<>()));
 
 
         return journalpost;
@@ -100,7 +102,7 @@ public class JoarkMock {
         journalpost.setKommunikasjonsretning(lagKommunikasjonsrettning("N"));
         journalpost.setFerdigstilt(DatatypeFactory.newInstance().newXMLGregorianCalendar(new DateTime().minusDays(15).toGregorianCalendar()));
         journalpost.getDokumentinfoRelasjonListe()
-                .add(lagDokumentinfoRelasjons("awd31", DokumentMetadataService.DOKTYPE_HOVEDDOKUMENT, "Hoveddokument.tittel", "5632HOVED", asList(
+                .add(lagDokumentinfoRelasjons("awd31", DOKTYPE_HOVEDDOKUMENT, "Hoveddokument.tittel", "5632HOVED", asList(
                         lagSkannetInnhold("23", "info"),
                         lagSkannetInnhold("34", "annenInfo")
                 )));
@@ -116,7 +118,7 @@ public class JoarkMock {
         journalpost.setKommunikasjonsretning(lagKommunikasjonsrettning("I"));
         journalpost.setMottatt(DatatypeFactory.newInstance().newXMLGregorianCalendar(new DateTime().minusDays(15).toGregorianCalendar()));
         journalpost.getDokumentinfoRelasjonListe()
-                .add(lagDokumentinfoRelasjons("awd31", DokumentMetadataService.DOKTYPE_HOVEDDOKUMENT, "Hoveddokument.tittel", "5632HOVED", asList(
+                .add(lagDokumentinfoRelasjons("awd31", DOKTYPE_HOVEDDOKUMENT, "Hoveddokument.tittel", "5632HOVED", asList(
                         lagSkannetInnhold("23", "info"),
                         lagSkannetInnhold("34", "annenInfo")
                 )));
@@ -140,7 +142,6 @@ public class JoarkMock {
     }
 
     private static WSAktoer brukerenSelv() {
-
         return new WSPerson().withIdent(PERSON_FNR).withNavn(PERSON_NAVN);
     }
 
@@ -154,7 +155,7 @@ public class JoarkMock {
         journalpost.setArkivtema(lagArkivtema("DAG"));
         journalpost.setEksternPart(tredjePartsPerson());
         journalpost.setGjelderSak(lagJoarkSak("2"));
-        journalpost.setKommunikasjonsretning(lagKommunikasjonsrettning(DokumentMetadataService.JOURNALPOST_UTGAAENDE));
+        journalpost.setKommunikasjonsretning(lagKommunikasjonsrettning(JOURNALPOST_UTGAAENDE));
         try {
             journalpost.setSendt(DatatypeFactory.newInstance().newXMLGregorianCalendar(new DateTime().minusDays(14).toGregorianCalendar()));
             journalpost.setFerdigstilt(DatatypeFactory.newInstance().newXMLGregorianCalendar(new DateTime().minusDays(14).toGregorianCalendar()));
@@ -162,7 +163,7 @@ public class JoarkMock {
             e.printStackTrace();
         }
         journalpost.getDokumentinfoRelasjonListe()
-                .add(lagDokumentinfoRelasjons("awd31", DokumentMetadataService.DOKTYPE_HOVEDDOKUMENT, "Hoveddokument.tittel", "5632HOVED", new ArrayList<>()));
+                .add(lagDokumentinfoRelasjons("awd31", DOKTYPE_HOVEDDOKUMENT, "Hoveddokument.tittel", "5632HOVED", new ArrayList<>()));
         return journalpost;
     }
 
@@ -173,7 +174,7 @@ public class JoarkMock {
         journalpost.setEksternPart(null);
         journalpost.setEksternPartNavn(FALLBACK_NAVN);
         journalpost.setGjelderSak(lagJoarkSak("2"));
-        journalpost.setKommunikasjonsretning(lagKommunikasjonsrettning(DokumentMetadataService.JOURNALPOST_UTGAAENDE));
+        journalpost.setKommunikasjonsretning(lagKommunikasjonsrettning(JOURNALPOST_UTGAAENDE));
         try {
             journalpost.setSendt(DatatypeFactory.newInstance().newXMLGregorianCalendar(new DateTime().minusDays(14).toGregorianCalendar()));
             journalpost.setFerdigstilt(DatatypeFactory.newInstance().newXMLGregorianCalendar(new DateTime().minusDays(14).toGregorianCalendar()));
@@ -181,7 +182,7 @@ public class JoarkMock {
             e.printStackTrace();
         }
         journalpost.getDokumentinfoRelasjonListe()
-                .add(lagDokumentinfoRelasjons("awd31", DokumentMetadataService.DOKTYPE_HOVEDDOKUMENT, "Hoveddokument.tittel", "5632HOVED", new ArrayList<>()));
+                .add(lagDokumentinfoRelasjons("awd31", DOKTYPE_HOVEDDOKUMENT, "Hoveddokument.tittel", "5632HOVED", new ArrayList<>()));
         return journalpost;
     }
 
@@ -192,7 +193,7 @@ public class JoarkMock {
         journalpost.setEksternPart(null);
         journalpost.setEksternPartNavn("");
         journalpost.setGjelderSak(lagJoarkSak("2"));
-        journalpost.setKommunikasjonsretning(lagKommunikasjonsrettning(DokumentMetadataService.JOURNALPOST_UTGAAENDE));
+        journalpost.setKommunikasjonsretning(lagKommunikasjonsrettning(JOURNALPOST_UTGAAENDE));
         try {
             journalpost.setSendt(DatatypeFactory.newInstance().newXMLGregorianCalendar(new DateTime().minusDays(14).toGregorianCalendar()));
             journalpost.setFerdigstilt(DatatypeFactory.newInstance().newXMLGregorianCalendar(new DateTime().minusDays(14).toGregorianCalendar()));
@@ -200,7 +201,7 @@ public class JoarkMock {
             e.printStackTrace();
         }
         journalpost.getDokumentinfoRelasjonListe()
-                .add(lagDokumentinfoRelasjons("awd31", DokumentMetadataService.DOKTYPE_HOVEDDOKUMENT, "Hoveddokument.tittel", "5632HOVED", new ArrayList<>()));
+                .add(lagDokumentinfoRelasjons("awd31", DOKTYPE_HOVEDDOKUMENT, "Hoveddokument.tittel", "5632HOVED", new ArrayList<>()));
         return journalpost;
     }
 
