@@ -43,8 +43,7 @@ class UnleashContextProviderImplTest {
         session = mock(HttpSession.class);
         request.setSession(session);
         request.setRemoteAddr(REMOTE_ADDR);
-        request.setCookies(new Cookie(ENHET_COOKIE_PREFIX + NULL_IDENT_GRUNNET_MOCK_PROBLEM, VALGT_ENHET));
-        request.setCookies(new Cookie(ENHET_COOKIE_PREFIX + JENKINS_IDENT, VALGT_ENHET));
+        request.setCookies(new Cookie(ENHET_COOKIE_PREFIX + NULL_IDENT_GRUNNET_MOCK_PROBLEM, VALGT_ENHET), new Cookie(ENHET_COOKIE_PREFIX + JENKINS_IDENT, VALGT_ENHET));
         requestAttributes = new ServletRequestAttributes(request);
 
         RequestContextHolder.setRequestAttributes(requestAttributes);
