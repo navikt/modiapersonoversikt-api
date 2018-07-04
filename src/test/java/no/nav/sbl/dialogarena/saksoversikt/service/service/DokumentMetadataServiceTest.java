@@ -3,6 +3,7 @@ package no.nav.sbl.dialogarena.saksoversikt.service.service;
 import no.nav.sbl.dialogarena.common.kodeverk.Kodeverk;
 import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.*;
 import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.resultatwrappere.ResultatWrapper;
+import no.nav.sbl.dialogarena.saksoversikt.service.transformers.DokumentMetadataTransformer;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -21,31 +22,30 @@ import static junit.framework.TestCase.assertFalse;
 import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.HenvendelseType.SOKNADSINNSENDING;
 import static no.nav.sbl.dialogarena.saksoversikt.service.service.BulletproofKodeverkService.ARKIVTEMA;
 import static no.nav.sbl.dialogarena.saksoversikt.service.utils.Konstanter.DAGPENGER;
+import static no.nav.sbl.dialogarena.saksoversikt.service.utils.Konstanter.FORELDREPENGER;
 import static org.hamcrest.core.Is.is;
 import static org.joda.time.DateTime.now;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class DokumentMetadataServiceTest {
 
-    @Mock
-    private BulletproofKodeverkService bulletproofKodeverkService;
+    private BulletproofKodeverkService bulletproofKodeverkService = mock(BulletproofKodeverkService.class);
 
-    @Mock
-    private HenvendelseService henvendelseService;
+    private DokumentMetadataTransformer dokumentMetadataTransformer = new DokumentMetadataTransformer(bulletproofKodeverkService);
 
-    @Mock
-    private Kodeverk kodeverk;
+    private HenvendelseService henvendelseService = mock(HenvendelseService.class);
 
-    @Mock
-    private JoarkJournalService joarkJournalService;
+    private Kodeverk kodeverk = mock(Kodeverk.class);
 
-    @InjectMocks
-    private DokumentMetadataService dokumentMetadataService;
+    private JoarkJournalService joarkJournalService = mock(JoarkJournalService.class);
+
+    private DokumentMetadataService dokumentMetadataService = new DokumentMetadataService(joarkJournalService, henvendelseService, dokumentMetadataTransformer);
 
     @Before
     public void setup() {
