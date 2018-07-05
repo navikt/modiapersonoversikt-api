@@ -26,7 +26,7 @@
         <junit.version>4.12</junit.version>
 
         <!-- Egenlagde dependencies  -->
-        <saksoversikt-service.version>322</saksoversikt-service.version>
+        <saksoversikt-service.version>322-6-gcd3cd22</saksoversikt-service.version>
         <modig.frontend.version>1.1.122</modig.frontend.version>
         <modig.wicket.version>3.5</modig.wicket.version>
         <modia-felleskomponenter.version>4.2</modia-felleskomponenter.version>
