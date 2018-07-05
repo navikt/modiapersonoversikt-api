@@ -1,9 +1,14 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.enhet
 
+import com.nhaarman.mockito_kotlin.mock
+import no.finn.unleash.Unleash
+import no.finn.unleash.repository.ToggleFetcher
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.organisasjonsEnhetV2.OrganisasjonEnhetV2Service
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.Feature
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.disableFeature
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.enableFeature
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.unleash.UnleashService
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.unleash.UnleashServiceImpl
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.organisasjonenhet.kontaktinformasjon.service.OrganisasjonEnhetKontaktinformasjonService
 import org.junit.jupiter.api.*
 import org.mockito.Mock
@@ -18,10 +23,24 @@ class EnhetControllerTest {
     @Mock private lateinit var organisasjonEnhetKontaktinformasjonService: OrganisasjonEnhetKontaktinformasjonService
     private lateinit var controller: EnhetController
 
+    private val toggleFetcher: ToggleFetcher = mock()
+    private val unleash: Unleash = mock()
+    private val api = "www.unleashurl.com"
+    private var unleashService: UnleashService = UnleashServiceImpl(toggleFetcher, unleash, api)
+
     @BeforeEach
     fun before() {
         MockitoAnnotations.initMocks(this)
-        controller = EnhetController(organisasjonEnhetKontaktinformasjonService, organisasjonEnhetV2Service)
+
+        `when`<Boolean>(unleash!!.isEnabled(Feature.NYTT_VISITTKORT_UNLEASH.propertyKey)).thenReturn(true)
+        controller = EnhetController(organisasjonEnhetKontaktinformasjonService, organisasjonEnhetV2Service, unleashService)
+    }
+
+    @AfterEach
+    fun after() = disableToggle()
+
+    fun disableToggle() {
+        `when`<Boolean>(unleash!!.isEnabled(Feature.NYTT_VISITTKORT_UNLEASH.propertyKey)).thenReturn(false)
     }
 
     @Test
@@ -29,16 +48,6 @@ class EnhetControllerTest {
     fun kaster404HvisEnhetIkkeFunnet() {
         `when`(organisasjonEnhetV2Service.finnNAVKontor(Mockito.any(), Mockito.any())).thenReturn(Optional.empty())
         Assertions.assertThrows(NotFoundException::class.java, { controller.finnEnhet("", "") })
-    }
-
-    companion object {
-        @BeforeAll
-        @JvmStatic
-        fun beforeAll() = enableFeature(Feature.PERSON_REST_API)
-
-        @AfterAll
-        @JvmStatic
-        fun afterAll() = disableFeature(Feature.PERSON_REST_API)
     }
 
 }
