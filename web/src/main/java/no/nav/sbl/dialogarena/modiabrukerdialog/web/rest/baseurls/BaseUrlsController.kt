@@ -1,22 +1,23 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.baseurls
 
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.Feature.PERSON_REST_API
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.visFeature
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.Feature
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.unleash.UnleashService
+import javax.inject.Inject
 import javax.ws.rs.GET
 import javax.ws.rs.Path
-import javax.ws.rs.PathParam
 import javax.ws.rs.Produces
 import javax.ws.rs.core.MediaType.APPLICATION_JSON
 
 
 @Path("/baseurls")
 @Produces(APPLICATION_JSON)
-class BaseUrlsController {
+class BaseUrlsController @Inject
+constructor(private val unleashService: UnleashService) {
 
     @GET
     @Path("/")
     fun hent(): Map<String, Any?> {
-        check(visFeature(PERSON_REST_API))
+        check(unleashService.isEnabled(Feature.NYTT_VISITTKORT_UNLEASH.propertyKey))
 
         return mapOf("baseUrls" to getBaseUrls())
     }

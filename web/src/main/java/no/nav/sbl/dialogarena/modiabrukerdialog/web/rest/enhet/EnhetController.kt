@@ -3,6 +3,7 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.enhet
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.organisasjonsEnhetV2.OrganisasjonEnhetV2Service
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.Feature
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.visFeature
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.unleash.UnleashService
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.organisasjonenhet.kontaktinformasjon.domain.OrganisasjonEnhetKontaktinformasjon
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.organisasjonenhet.kontaktinformasjon.service.OrganisasjonEnhetKontaktinformasjonService
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.enhet.model.EnhetKontaktinformasjon
@@ -15,7 +16,7 @@ import javax.ws.rs.core.MediaType.APPLICATION_JSON
 @Path("/enheter")
 class EnhetController @Inject
 constructor(private val organisasjonEnhetKontaktinformasjonService: OrganisasjonEnhetKontaktinformasjonService,
-            private val organisasjonEnhetV2Service: OrganisasjonEnhetV2Service) {
+            private val organisasjonEnhetV2Service: OrganisasjonEnhetV2Service, private val unleashService: UnleashService) {
 
     @GET
     @Path("/{id}")
@@ -28,7 +29,7 @@ constructor(private val organisasjonEnhetKontaktinformasjonService: Organisasjon
     @Produces(APPLICATION_JSON)
     fun finnEnhet(@QueryParam("gt") geografiskId: String?, @QueryParam("dkode") diskresjonskode: String?): EnhetKontaktinformasjon {
 
-        check(visFeature(Feature.PERSON_REST_API))
+        check(unleashService.isEnabled(Feature.NYTT_VISITTKORT_UNLEASH.propertyKey))
 
         if (geografiskId.isNullOrEmpty() && diskresjonskode.isNullOrEmpty()) throw NotFoundException();
 

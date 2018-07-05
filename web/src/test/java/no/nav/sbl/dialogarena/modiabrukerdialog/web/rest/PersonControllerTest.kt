@@ -3,15 +3,17 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest
 import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.whenever
+import no.finn.unleash.Unleash
+import no.finn.unleash.repository.ToggleFetcher
 import no.nav.brukerdialog.security.tilgangskontroll.policy.pep.EnforcementPoint
 import no.nav.kjerneinfo.common.domain.Kodeverdi
 import no.nav.kjerneinfo.consumer.fim.person.support.DefaultPersonKjerneinfoService
 import no.nav.kjerneinfo.consumer.fim.person.support.KjerneinfoMapper
 import no.nav.kodeverk.consumer.fim.kodeverk.KodeverkmanagerBi
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.organisasjonsEnhetV2.OrganisasjonEnhetV2Service
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.Feature.PERSON_REST_API
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.disableFeature
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.enableFeature
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.Feature
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.unleash.UnleashService
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.unleash.UnleashServiceImpl
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.kodeverk.Kode
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.person.PersonController
 import no.nav.tjeneste.virksomhet.person.v3.HentPersonPersonIkkeFunnet
@@ -20,7 +22,12 @@ import no.nav.tjeneste.virksomhet.person.v3.PersonV3
 import no.nav.tjeneste.virksomhet.person.v3.informasjon.*
 import no.nav.tjeneste.virksomhet.person.v3.meldinger.WSHentPersonResponse
 import no.nav.tjeneste.virksomhet.person.v3.meldinger.WSHentSikkerhetstiltakResponse
-import org.junit.jupiter.api.*
+import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Nested
+import org.junit.jupiter.api.Test
+import org.mockito.Mockito
+import org.mockito.MockitoAnnotations
 import java.util.*
 import javax.ws.rs.NotFoundException
 import kotlin.test.assertEquals
@@ -42,13 +49,30 @@ class PersonControllerTest {
     private val organisasjonenhetV2Service: OrganisasjonEnhetV2Service = mock()
     private val kodeverk: KodeverkmanagerBi = mock()
     private val mapper = KjerneinfoMapper(kodeverk)
+
+    private val toggleFetcher: ToggleFetcher = mock()
+    private val unleash: Unleash = mock()
+    private val api = "www.unleashurl.com"
+    private var unleashService: UnleashService = UnleashServiceImpl(toggleFetcher, unleash, api)
+
     private val service = DefaultPersonKjerneinfoService(personV3, mapper, pep, organisasjonenhetV2Service)
-    private val controller = PersonController(service, kodeverk)
+    private val controller = PersonController(service, kodeverk, unleashService)
 
     @BeforeEach
     fun before() {
+        MockitoAnnotations.initMocks(this)
+
+        Mockito.`when`<Boolean>(unleash!!.isEnabled(Feature.NYTT_VISITTKORT_UNLEASH.propertyKey)).thenReturn(true)
         whenever(organisasjonenhetV2Service.finnNAVKontor(any(), any())).thenReturn(Optional.empty())
     }
+
+    @AfterEach
+    fun after() = disableToggle()
+
+    fun disableToggle() {
+        Mockito.`when`<Boolean>(unleash!!.isEnabled(Feature.NYTT_VISITTKORT_UNLEASH.propertyKey)).thenReturn(false)
+    }
+
 
     @Test
     fun `Kaster 404 hvis personen ikke ble funnet`() {
@@ -192,17 +216,4 @@ class PersonControllerTest {
         }
 
     }
-
-    companion object {
-
-        @BeforeAll
-        @JvmStatic
-        fun beforeAll() = enableFeature(PERSON_REST_API)
-
-        @AfterAll
-        @JvmStatic
-        fun afterAll() = disableFeature(PERSON_REST_API)
-
-    }
-
 }

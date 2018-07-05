@@ -3,8 +3,8 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.vergemal
 import no.nav.kjerneinfo.consumer.fim.person.vergemal.VergemalService
 import no.nav.kjerneinfo.consumer.fim.person.vergemal.domain.Verge
 import no.nav.kjerneinfo.domain.person.Personnavn
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.Feature.PERSON_REST_API
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.visFeature
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.Feature
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.unleash.UnleashService
 import javax.inject.Inject
 import javax.ws.rs.GET
 import javax.ws.rs.Path
@@ -15,13 +15,12 @@ import javax.ws.rs.core.MediaType.APPLICATION_JSON
 
 @Path("/person/{fnr}/vergemal")
 @Produces(APPLICATION_JSON)
-class VergemalController @Inject constructor(private val vergemalService: VergemalService) {
+class VergemalController @Inject constructor(private val vergemalService: VergemalService, private val unleashService: UnleashService) {
 
     @GET
     @Path("/")
     fun hent(@PathParam("fnr") fødselsnummer: String): Map<String, Any?> {
-
-        check(visFeature(PERSON_REST_API))
+        check(unleashService.isEnabled(Feature.NYTT_VISITTKORT_UNLEASH.propertyKey))
 
         val vergemal = vergemalService.hentVergemal(fødselsnummer)
 

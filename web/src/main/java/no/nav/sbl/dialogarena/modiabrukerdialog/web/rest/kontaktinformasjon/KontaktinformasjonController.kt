@@ -3,6 +3,7 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.kontaktinformasjon
 import no.nav.dkif.consumer.DkifService
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.Feature
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.visFeature
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.unleash.UnleashService
 import no.nav.tjeneste.virksomhet.digitalkontaktinformasjon.v1.meldinger.WSHentDigitalKontaktinformasjonResponse
 import javax.inject.Inject
 import javax.ws.rs.GET
@@ -13,12 +14,12 @@ import javax.ws.rs.core.MediaType
 
 @Path("/person/{fnr}/kontaktinformasjon")
 @Produces(MediaType.APPLICATION_JSON)
-class KontaktinformasjonController @Inject constructor(private val dkifService: DkifService) {
+class KontaktinformasjonController @Inject constructor(private val dkifService: DkifService, private val unleashService: UnleashService) {
 
     @GET
     @Path("/")
     fun hentKontaktinformasjon(@PathParam("fnr") fødselsnummer: String): Map<String, Any?> {
-        check(visFeature(Feature.PERSON_REST_API))
+        check(unleashService.isEnabled(Feature.NYTT_VISITTKORT_UNLEASH.propertyKey))
 
         val response = dkifService.hentDigitalKontaktinformasjon(fødselsnummer)
 
