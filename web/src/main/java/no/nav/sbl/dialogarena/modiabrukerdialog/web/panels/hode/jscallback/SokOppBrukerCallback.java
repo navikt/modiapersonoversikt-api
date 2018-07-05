@@ -34,27 +34,28 @@ public class SokOppBrukerCallback implements HodeCallback<String> {
             hode.handlePerson(target, hode, fnr);
         } catch (AuthorizationException ex) {
             logger.warn("AuthorizationException ved kall på getPersonKjerneinfo", ex.getMessage());
-            String message = null;
-
-            if (ex instanceof AuthorizationWithSikkerhetstiltakException) {
-                message = component.getString(ex.getMessage());
-            } else {
-                HentSikkerhetstiltakRequest sikkerhetstiltakRequest = new HentSikkerhetstiltakRequest(fnr);
-                Sikkerhetstiltak sikkerhetstiltak = personKjerneinfoServiceBi.hentSikkerhetstiltak(sikkerhetstiltakRequest);
-                if ( sikkerhetstiltak != null ) {
-                    message = sikkerhetstiltak.getSikkerhetstiltaksbeskrivelse();
-                 } else {
-                    message = component.getString(ex.getMessage());
-                }
-
-            }
+            String message = component.getString(ex.getMessage());
+            HentSikkerhetstiltakRequest sikkerhetstiltakRequest = new HentSikkerhetstiltakRequest(fnr);
+            Sikkerhetstiltak sikkerhetstiltak = personKjerneinfoServiceBi.hentSikkerhetstiltak(sikkerhetstiltakRequest);
+            if ( sikkerhetstiltak != null && sikkerhetstiltak.getSikkerhetstiltaksbeskrivelse() != null ) {
+                message = byggSikkerhetstiltakMelding(message, sikkerhetstiltak.getSikkerhetstiltaksbeskrivelse());
+             }
             if (isBlank(message)) {
                 message = ex.getMessage();
             }
-
             target.appendJavaScript(hode.getUpdateScript(message));
         }
     }
 
+    private String byggSikkerhetstiltakMelding(String message, String sikkerhetsbeskrivelse) {
+        if(isBlank(message)) {
+            return String.format("Sikkerhetstiltak: %s", sikkerhetsbeskrivelse);
+        }
+
+        if(message.endsWith(".")) {
+            return String.format("%s Sikkerhetstiltak: %s", message, sikkerhetsbeskrivelse);
+        }
+        return String.format("%s. Sikkerhetstiltak: %s", message, sikkerhetsbeskrivelse);
+    }
 
 }
