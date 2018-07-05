@@ -63,8 +63,6 @@ public class InnsynJournalV2ServiceImplTest {
             fail("En uventet exception ble kastet");
             return;
         }
-
-
     }
 
     @Test
@@ -87,7 +85,6 @@ public class InnsynJournalV2ServiceImplTest {
         assertJoarkFeilendeBaksystemForException(new IdentifiserJournalpostUgyldingInput());
     }
 
-
     private void assertJoarkFeilendeBaksystemForException(Exception exception) {
         ResultatWrapper<DokumentMetadata> wrapper;
 
@@ -103,7 +100,6 @@ public class InnsynJournalV2ServiceImplTest {
         assertThat(wrapper.resultat, nullValue());
         assertThat(wrapper.feilendeSystemer, contains(JOARK));
     }
-
 
     private IdentifiserJournalpostResponse defaultIdentifiserJournalpostResponse() {
         return new IdentifiserJournalpostResponse()
@@ -124,5 +120,4 @@ public class InnsynJournalV2ServiceImplTest {
                 .withInnsynDokument(InnsynDokument.JA)
                 .withDokumentId(VEDLEGG_ID);
     }
-
 }
