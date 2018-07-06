@@ -6,61 +6,27 @@ import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.resultatwrappe
 import no.nav.sbl.dialogarena.saksoversikt.service.service.BulletproofKodeverkService;
 
 import java.util.List;
-import java.util.function.Predicate;
 
 import static java.util.stream.Collectors.toList;
 
 public class DokumentMetadataTransformer {
 
-    private BulletproofKodeverkService bulletproofKodeverkService;
-
-
     private static final String DOKUMENT_LASTET_OPP = "LASTET_OPP";
+    private static final String TEMAKODE_BIDRAG = "BID";
 
-    private static final Predicate<DokumentFraHenvendelse> erVedlegg
-            = dokument -> !dokument.erHovedskjema();
-    private static final Predicate<DokumentFraHenvendelse> erHoveddokument
-            = dokument -> dokument.erHovedskjema();
-    private static final Predicate<DokumentFraHenvendelse> erLastetOpp
-            = dokument -> DOKUMENT_LASTET_OPP.equals(dokument.getInnsendingsvalg().name());
-
+    private BulletproofKodeverkService bulletproofKodeverkService;
 
     public DokumentMetadataTransformer(BulletproofKodeverkService bulletproofKodeverkService) {
         this.bulletproofKodeverkService = bulletproofKodeverkService;
     }
 
-
     public DokumentMetadata dokumentMetadataFraHenvendelse(Soknad soknad) {
-        String temakode = bulletproofKodeverkService.getKode(soknad.getSkjemanummerRef(), Kodeverk.Nokkel.TEMA);
-        boolean kanVises = !"BID".equals(temakode);
+        String temakode = getTemakode(soknad.getSkjemanummerRef());
+        ResultatWrapper temanavn = getTemanavn(temakode);
 
-        Dokument hovedDokument = soknad.getDokumenter()
-                .stream()
-                .filter(erHoveddokument)
-                .map(dokument ->
-                        new Dokument()
-                                .withTittel(bulletproofKodeverkService.getSkjematittelForSkjemanummer(dokument.getKodeverkRef()))
-                                .withKanVises(kanVises)
-                                .withLogiskDokument(false)
-                                .withDokumentreferanse(dokument.getArkivreferanse())
-                )
-                .findFirst()
-                .orElseThrow(() -> new RuntimeException("Respons fra henvendelse inneholdt ikke hoveddokument"));
+        Dokument hovedDokument = lagHovedDokument(soknad, kanVises(temakode));
+        List<Dokument> vedlegg = lagVedlegg(soknad, kanVises(temakode));
 
-        List<Dokument> vedlegg = soknad.getDokumenter()
-                .stream()
-                .filter(erVedlegg)
-                .filter(erLastetOpp)
-                .map(dokument ->
-                        new Dokument()
-                                .withTittel(bulletproofKodeverkService.getSkjematittelForSkjemanummer(dokument.getKodeverkRef()))
-                                .withKanVises(kanVises)
-                                .withLogiskDokument(false)
-                                .withDokumentreferanse(dokument.getArkivreferanse())
-                )
-                .collect(toList());
-
-        ResultatWrapper temanavnForTemakode = bulletproofKodeverkService.getTemanavnForTemakode(temakode, BulletproofKodeverkService.ARKIVTEMA);
         return new DokumentMetadata()
                 .withJournalpostId(soknad.getJournalpostId())
                 .withHoveddokument(hovedDokument)
@@ -72,7 +38,57 @@ public class DokumentMetadataTransformer {
                 .withTemakode(temakode)
                 .withBaksystem(Baksystem.HENVENDELSE)
                 .withRetning(Kommunikasjonsretning.INN)
-                .withTemakodeVisning((String) temanavnForTemakode.resultat)
+                .withTemakodeVisning((String) temanavn.resultat)
                 .withBehandlingsId(soknad.getBehandlingsId());
+    }
+
+    private ResultatWrapper<String> getTemanavn(String temakode) {
+        return bulletproofKodeverkService.getTemanavnForTemakode(temakode, BulletproofKodeverkService.ARKIVTEMA);
+    }
+
+    private String getTemakode(String skjemanummerRef) {
+        return bulletproofKodeverkService.getKode(skjemanummerRef, Kodeverk.Nokkel.TEMA);
+    }
+
+    private boolean kanVises(String temakode) {
+        return !TEMAKODE_BIDRAG.equals(temakode);
+    }
+
+    private List<Dokument> lagVedlegg(Soknad soknad, boolean kanVises) {
+        return soknad.getDokumenter()
+                .stream()
+                .filter(DokumentMetadataTransformer::erVedlegg)
+                .filter(DokumentMetadataTransformer::erLastetOpp)
+                .map(dokument -> freHenvendelseDokumentTilDokument(dokument, kanVises))
+                .collect(toList());
+    }
+
+    private static boolean erVedlegg(DokumentFraHenvendelse dokument) {
+        return !dokument.erHovedskjema();
+    }
+
+    private static boolean erLastetOpp(DokumentFraHenvendelse dokument) {
+        return DOKUMENT_LASTET_OPP.equals(dokument.getInnsendingsvalg().name());
+    }
+
+    private Dokument lagHovedDokument(Soknad soknad, boolean kanVises) {
+        return soknad.getDokumenter()
+                .stream()
+                .filter(DokumentMetadataTransformer::erHoveddokument)
+                .map(dokument -> freHenvendelseDokumentTilDokument(dokument, kanVises))
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException("Respons fra henvendelse inneholdt ikke hoveddokument"));
+    }
+
+    private static boolean erHoveddokument(DokumentFraHenvendelse dokument) {
+        return dokument.erHovedskjema();
+    }
+
+    private Dokument freHenvendelseDokumentTilDokument(DokumentFraHenvendelse dokument, boolean kanVises) {
+        return new Dokument()
+                .withTittel(bulletproofKodeverkService.getSkjematittelForSkjemanummer(dokument.getKodeverkRef()))
+                .withKanVises(kanVises)
+                .withLogiskDokument(false)
+                .withDokumentreferanse(dokument.getArkivreferanse());
     }
 }
