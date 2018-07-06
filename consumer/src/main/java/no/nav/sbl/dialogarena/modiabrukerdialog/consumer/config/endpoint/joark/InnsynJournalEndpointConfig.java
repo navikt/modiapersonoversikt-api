@@ -6,9 +6,9 @@ import no.nav.sbl.dialogarena.common.cxf.CXFClient;
 import no.nav.tjeneste.virksomhet.innsynjournal.v2.binding.InnsynJournalV2;
 import org.springframework.context.annotation.Bean;
 
-import static java.lang.System.getProperty;
 import static no.nav.sbl.dialogarena.common.cxf.InstanceSwitcher.createMetricsProxyWithInstanceSwitcher;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.InnsynJournalV2PortTypeMock.createInnsynJournalV2PortTypeMock;
+import static no.nav.sbl.util.EnvironmentUtils.getRequiredProperty;
 
 public class InnsynJournalEndpointConfig {
 
@@ -32,7 +32,7 @@ public class InnsynJournalEndpointConfig {
     private CXFClient<InnsynJournalV2> createInnsynJournalV2PortType() {
         return new CXFClient<>(InnsynJournalV2.class)
                 .timeout(30000, 30000)
-                .address(getProperty("innsyn.journal.v2.url"))
+                .address(getRequiredProperty("innsyn.journal.v2.url"))
                 .enableMtom();
     }
 }
