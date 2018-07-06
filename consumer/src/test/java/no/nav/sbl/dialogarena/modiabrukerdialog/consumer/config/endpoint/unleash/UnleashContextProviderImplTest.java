@@ -61,7 +61,5 @@ class UnleashContextProviderImplTest {
         assertThat(context.getUserId().get(), is(IDENT));
         assertThat(context.getSessionId().get(), is(SESSION_ID));
         assertThat(context.getRemoteAddress().get(), is(REMOTE_ADDR));
-        assertThat(context.getProperties().size(), is(1));
-        assertThat(context.getProperties().get("valgtEnhet"), is(VALGT_ENHET));
     }
 }
