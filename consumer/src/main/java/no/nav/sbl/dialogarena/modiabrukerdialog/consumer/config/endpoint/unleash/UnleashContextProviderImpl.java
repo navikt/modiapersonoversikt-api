@@ -26,12 +26,9 @@ public class UnleashContextProviderImpl implements UnleashContextProvider {
         String sessionId = attributes.getSessionId();
         String remoteAddress = attributes.getRequest().getRemoteAddr();
 
-        String valgtEnhet = RestUtils.hentValgtEnhet(((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest());
-
         String ident = subjectHandler.getUid();
 
         HashMap<String, String> properties = new HashMap<String, String>() {{
-            put("valgtEnhet", valgtEnhet);
         }};
 
         return new UnleashContext(ident, sessionId, remoteAddress, properties);
