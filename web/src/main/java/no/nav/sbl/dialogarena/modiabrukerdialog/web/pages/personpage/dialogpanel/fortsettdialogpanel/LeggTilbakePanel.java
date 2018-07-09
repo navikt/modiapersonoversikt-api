@@ -26,6 +26,7 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.*;
 
 import javax.inject.Inject;
+import javax.ws.rs.ForbiddenException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -198,6 +199,10 @@ public class LeggTilbakePanel extends Panel {
 
                     send(getPage(), BREADTH, LEGG_TILBAKE_UTFORT);
                     henvendelseUtsendingService.avbrytHenvendelse(behandlingsId);
+                } catch (ForbiddenException fe) {
+                    error("Du er ikke tildelt oppgaven. Den kan ha blitt tildelt noen andre.");
+                    target.add(form, feedbackPanel);
+                    send(getPage(), BREADTH, LEGG_TILBAKE_UTFORT);
                 } finally {
                     timer.stop();
                     timer.report();
