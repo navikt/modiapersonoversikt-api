@@ -2,7 +2,7 @@ package no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding;
 
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.constants.Events;
-import no.nav.sbl.dialogarena.reactkomponenter.utils.wicket.ReactComponentPanel;
+import no.nav.sbl.dialogarena.modiabrukerdialog.reactkomponenter.utils.wicket.ReactComponentPanel;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.InnboksVM;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.event.Broadcast;

@@ -25,6 +25,7 @@
         <module>pip</module>
         <module>pdp</module>
         <module>sporsmalogsvar</module>
+        <module>reactkomponenter</module>
     </modules>
 
     <properties>
@@ -102,13 +103,12 @@
         <!-- Samme som Jetty -->
 
         <!-- Modia-komponenter-->
-        <reactkomponenter.version>1778</reactkomponenter.version>
         <personsok.version>1655</personsok.version>
-        <kjerneinfo.versjon>4581</kjerneinfo.versjon>
+        <kjerneinfo.versjon>dev</kjerneinfo.versjon>
         <utbetaling.version>4.0.0</utbetaling.version>
         <saksoversikt.version>9.0.5</saksoversikt.version>
         <varsling.modia.version>2.0</varsling.modia.version>
-        <modia-felleskomponenter.version>4.7</modia-felleskomponenter.version>
+        <modia-felleskomponenter.version>dev</modia-felleskomponenter.version>
 
         <!-- Tjenestespecs -->
         <soknader.liste.version>2.0.12</soknader.liste.version>
@@ -621,11 +621,6 @@
                         <artifactId>commons-logging</artifactId>
                     </exclusion>
                 </exclusions>
-            </dependency>
-            <dependency>
-                <groupId>no.nav.sbl.dialogarena</groupId>
-                <artifactId>reactkomponenter</artifactId>
-                <version>${reactkomponenter.version}</version>
             </dependency>
             <dependency>
                 <groupId>no.nav.dialogarena</groupId>

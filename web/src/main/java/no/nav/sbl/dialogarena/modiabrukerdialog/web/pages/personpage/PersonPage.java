@@ -35,8 +35,8 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.hode.jscallback.SokOp
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.hode.jscallback.VoidCallback;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.plukkoppgavepanel.PlukkOppgavePanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.timeout.ReactTimeoutBoksModal;
-import no.nav.sbl.dialogarena.reactkomponenter.utils.wicket.ReactComponentCallback;
-import no.nav.sbl.dialogarena.reactkomponenter.utils.wicket.ReactComponentPanel;
+import no.nav.sbl.dialogarena.modiabrukerdialog.reactkomponenter.utils.wicket.ReactComponentCallback;
+import no.nav.sbl.dialogarena.modiabrukerdialog.reactkomponenter.utils.wicket.ReactComponentPanel;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.wicket.Component;
 import org.apache.wicket.Page;
