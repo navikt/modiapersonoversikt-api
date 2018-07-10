@@ -76,3 +76,32 @@ Roller tilordnet i AD går på tvers av alle miljøer. Hvilke AD-roller som påv
 NORG må få satt rettigheter pr miljø. Systemet bestemmer hvilket Nav-kontor (enhet) saksbehandleren er tilknyttet og hvilke rolle den har der. 
 Det finnes ingen tilsvarende sysdok som forteller om roller i NORG, men `SAKB` og `OPPB_GOS` er de vanligste   
 
+## Releasing ved brekkende endringer i Modia og bibliotek som avhenger av Modia
+
+Hvis det gjøres endringer i Modia som avhenger av endringer i
+biblioteker (f.eks. kjerneinfo) som selv har en av Modias undermoduler
+(f.eks. modiabrukerdialog-api) som avhengighet, kreves det
+litt arbeid for å få releaset det hele.
+
+### I modiabrukerdialog
+
+Release modiabrukerdialog, reactkomponenter og modiabrukerdialog-api:
+
+```console
+$ mvn versions:set -DnewVersion=<gjeldende versjon pluss ett eller annet suffiks>
+$ mvn clean deploy -pl .,reactkomponenter,modiabrukerdialog-api
+$ mvn versions:set -DnewVersion=dev
+$ mvn versions:commit
+```
+
+### I kjerneinfo og/eller modia-felleskomponenter
+
+- Oppdater `modiabrukerdialog.version` i pom.xml til versjonen fra forrige steg
+- Sjekk at det bygger
+- Push til master for å release
+
+### I modiabrukerdialog
+
+- Oppdater versjonen på kjerneinfo eller modia-felleskomponenter
+- Sjekk at det bygger
+- Push til master for å release
