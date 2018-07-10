@@ -172,41 +172,45 @@ public class LeggTilbakePanel extends Panel {
             protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
                 Timer timer = createTimer("hendelse.leggtilbake." + leggTilbakeVM.valgtAarsak);
                 timer.start();
+                leggTilbakeOppgave(target, form);
+                timer.stop();
+                timer.report();
+            }
+
+            private void leggTilbakeOppgave(AjaxRequestTarget target, Form<?> form) {
+                LeggTilbakeOppgaveIGsakRequest request = new LeggTilbakeOppgaveIGsakRequest()
+                        .withSaksbehandlersValgteEnhet(saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet())
+                        .withOppgaveId(oppgaveId)
+                        .withBeskrivelse(leggTilbakeVM.lagBeskrivelse(new StringResourceModel(leggTilbakeVM.getBeskrivelseKey(), LeggTilbakePanel.this, null).getString()))
+                        .withTemagruppe(leggTilbakeVM.nyTemagruppe);
+
                 try {
-                    LeggTilbakeOppgaveIGsakRequest request = new LeggTilbakeOppgaveIGsakRequest()
-                            .withSaksbehandlersValgteEnhet(saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet())
-                            .withOppgaveId(oppgaveId)
-                            .withBeskrivelse(leggTilbakeVM.lagBeskrivelse(new StringResourceModel(leggTilbakeVM.getBeskrivelseKey(), LeggTilbakePanel.this, null).getString()))
-                            .withTemagruppe(leggTilbakeVM.nyTemagruppe);
-
                     oppgaveBehandlingService.leggTilbakeOppgaveIGsak(request);
-                    oppgaveLagtTilbake.setObject(true);
-
-                    if (leggTilbakeVM.valgtAarsak == FEIL_TEMAGRUPPE) {
-                        henvendelseUtsendingService.oppdaterTemagruppe(sporsmal.id, leggTilbakeVM.nyTemagruppe.name());
-                        if (leggTilbakeVM.nyTemagruppe == ANSOS) {
-                            henvendelseUtsendingService.merkSomKontorsperret(sporsmal.fnrBruker, singletonList(sporsmal.id));
-                        }
-                    }
-
-                    target.add(form, feedbackPanelSuccess);
-
-                    if(DialogSession.read(LeggTilbakePanel.this).getPlukkedeOppgaver().size() > 0) {
-                        target.focusComponent(nesteOppgaveKnapp);
-                    }  else {
-                        target.focusComponent(lukkKnapp);
-                    }
-
-                    send(getPage(), BREADTH, LEGG_TILBAKE_UTFORT);
-                    henvendelseUtsendingService.avbrytHenvendelse(behandlingsId);
                 } catch (ForbiddenException fe) {
-                    error("Du er ikke tildelt oppgaven. Den kan ha blitt tildelt noen andre.");
+                    error("Kunne ikke legge tilbake oppgave. Det kan hende oppgaven har blitt tildelt noen andre.");
                     target.add(form, feedbackPanel);
                     send(getPage(), BREADTH, LEGG_TILBAKE_UTFORT);
-                } finally {
-                    timer.stop();
-                    timer.report();
+                    return;
                 }
+                oppgaveLagtTilbake.setObject(true);
+
+                if (leggTilbakeVM.valgtAarsak == FEIL_TEMAGRUPPE) {
+                    henvendelseUtsendingService.oppdaterTemagruppe(sporsmal.id, leggTilbakeVM.nyTemagruppe.name());
+                    if (leggTilbakeVM.nyTemagruppe == ANSOS) {
+                        henvendelseUtsendingService.merkSomKontorsperret(sporsmal.fnrBruker, singletonList(sporsmal.id));
+                    }
+                }
+
+                target.add(form, feedbackPanelSuccess);
+
+                if(DialogSession.read(LeggTilbakePanel.this).getPlukkedeOppgaver().size() > 0) {
+                    target.focusComponent(nesteOppgaveKnapp);
+                }  else {
+                    target.focusComponent(lukkKnapp);
+                }
+
+                send(getPage(), BREADTH, LEGG_TILBAKE_UTFORT);
+                henvendelseUtsendingService.avbrytHenvendelse(behandlingsId);
             }
 
             @Override
