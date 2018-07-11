@@ -5,15 +5,19 @@
 
 @import (inline) "./node_modules/nav-datovelger/dist/datovelger/styles/datovelger.css";
 
+// Denne scopes ikke innenfor #modia-app da den får høy spesifitet som overskriver gamle spinnere og lager trøbbel
+@import "@{frontEndModuler}spinner-style/src/spinner-style";
+
 // scoper dette innenfor #modia-app for å øke spesifisitet
 #modia-app {
   @import "@{frontEndModuler}typografi@{index-fil}";
   @import "@{frontEndModuler}alertstriper@{index-fil}";
   @import "@{frontEndModuler}ekspanderbartpanel@{index-fil}";
   @import "@{frontEndModuler}etiketter@{index-fil}";
-  @import "@{frontEndModuler}spinner-style/src/spinner-style";
   @import "@{frontEndModuler}skjema@{index-fil}";
   @import "@{frontEndModuler}knapper@{index-fil}";
-  @import "@{frontEndModuler}lenker-style/src/lenker-style";
   @import "@{frontEndModuler}modal@{index-fil}";
+  .nyttvisittkort {
+    @import "@{frontEndModuler}lenker-style/src/lenker-style";
+  }
 }
