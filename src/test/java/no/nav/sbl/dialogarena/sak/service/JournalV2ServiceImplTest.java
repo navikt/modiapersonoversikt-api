@@ -37,7 +37,7 @@ import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
-public class InnsynImplTest {
+public class JournalV2ServiceImplTest {
 
     @Mock
     private JournalV2 journalV2;
@@ -46,7 +46,7 @@ public class InnsynImplTest {
     private JournalpostTransformer journalpostTransformer;
 
     @InjectMocks
-    private InnsynImpl innsynImpl;
+    private JournalV2ServiceImpl innsynImpl;
 
     @Test
     public void hentDokumentGirDokumentNaarAltGaaBra() throws HentDokumentSikkerhetsbegrensning, HentDokumentDokumentIkkeFunnet {

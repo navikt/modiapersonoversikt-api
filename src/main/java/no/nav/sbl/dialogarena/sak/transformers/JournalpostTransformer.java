@@ -5,7 +5,6 @@ import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.resultatwrappe
 import no.nav.sbl.dialogarena.saksoversikt.service.service.BulletproofKodeverkService;
 import no.nav.sbl.dialogarena.saksoversikt.service.utils.Java8Utils;
 import no.nav.tjeneste.virksomhet.journal.v2.informasjon.*;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -21,16 +20,18 @@ import static java.util.stream.Collectors.toList;
 import static java.util.stream.Stream.concat;
 import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Baksystem.JOARK;
 import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Entitet.*;
-import static no.nav.sbl.dialogarena.saksoversikt.service.service.DokumentMetadataService.*;
+import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Kommunikasjonsretning.*;
 
 public class JournalpostTransformer {
+
+    public static final String DOKTYPE_HOVEDDOKUMENT = "HOVEDDOKUMENT";
+    public static final String DOKTYPE_VEDLEGG = "VEDLEGG";
 
     @Inject
     private BulletproofKodeverkService bulletproofKodeverkService;
 
     public ResultatWrapper<DokumentMetadata> dokumentMetadataFraJournalPost(WSJournalpost journalpost, String fnr, String fagsakId) throws RuntimeException {
         Map<String, List<WSDokumentinfoRelasjon>> relasjoner = byggRelasjonsMap(journalpost);
-        Set<Baksystem> feilendeBaksystemer = new HashSet<>();
 
         Dokument hoveddokument = finnHoveddokument(opprettDokument, relasjoner);
         Stream<Dokument> vedlegg = finnVedlegg(opprettDokument, relasjoner);
@@ -43,7 +44,7 @@ public class JournalpostTransformer {
         String kategori = hentKategoriNotatNavn(dokumentinfoRelasjonListe, journalpost.getKommunikasjonsretning());
 
         ResultatWrapper temanavnForTemakode = bulletproofKodeverkService.getTemanavnForTemakode(journalpost.getArkivtema().getValue(), BulletproofKodeverkService.ARKIVTEMA);
-        feilendeBaksystemer.addAll(temanavnForTemakode.feilendeSystemer);
+        Set<Baksystem> feilendeBaksystemer = new HashSet<>(temanavnForTemakode.feilendeSystemer);
 
         return new ResultatWrapper<>(new DokumentMetadata()
                 .withJournalpostId(journalpost.getJournalpostId())

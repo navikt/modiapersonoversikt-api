@@ -1,7 +1,7 @@
 package no.nav.sbl.dialogarena.sak.rest;
 
 import no.nav.brukerdialog.security.context.ThreadLocalSubjectHandler;
-import no.nav.sbl.dialogarena.sak.service.InnsynImpl;
+import no.nav.sbl.dialogarena.sak.service.JournalV2ServiceImpl;
 import no.nav.sbl.dialogarena.sak.service.interfaces.TilgangskontrollService;
 import no.nav.sbl.dialogarena.sak.domain.dokumentvisning.JournalpostResultat;
 import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Dokument;
@@ -40,7 +40,7 @@ public class DokumentControllerTest {
 
 
     @Mock
-    private InnsynImpl innsyn;
+    private JournalV2ServiceImpl innsyn;
 
     @Mock
     private SaksService saksService;
