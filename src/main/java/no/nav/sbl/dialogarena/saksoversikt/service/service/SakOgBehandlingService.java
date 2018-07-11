@@ -19,7 +19,7 @@ import java.util.function.Function;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
 import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Baksystem.SAK_OG_BEHANDLING;
-import static no.nav.sbl.dialogarena.saksoversikt.service.service.Transformers.TIL_BEHANDLING;
+import static no.nav.sbl.dialogarena.saksoversikt.service.transformers.Transformers.TIL_BEHANDLING;
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class SakOgBehandlingService {

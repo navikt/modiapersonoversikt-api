@@ -7,7 +7,7 @@ import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.resultatwrappe
 
 import java.util.List;
 
-public interface Innsyn {
+public interface JournalV2Service {
 
     ResultatWrapper<List<DokumentMetadata>> hentTilgjengeligJournalpostListe(List<Sak> saker, String fnr);
     TjenesteResultatWrapper hentDokument(String journalpostid, String dokumentreferanse);

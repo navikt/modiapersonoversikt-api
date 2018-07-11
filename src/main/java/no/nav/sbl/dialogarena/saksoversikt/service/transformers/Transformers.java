@@ -1,4 +1,4 @@
-package no.nav.sbl.dialogarena.saksoversikt.service.service;
+package no.nav.sbl.dialogarena.saksoversikt.service.transformers;
 
 import no.nav.modig.core.exception.ApplicationException;
 import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Behandling;

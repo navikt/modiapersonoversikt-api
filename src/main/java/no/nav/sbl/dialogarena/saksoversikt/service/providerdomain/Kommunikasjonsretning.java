@@ -1,9 +1,13 @@
 package no.nav.sbl.dialogarena.saksoversikt.service.providerdomain;
 
-import static no.nav.sbl.dialogarena.saksoversikt.service.service.DokumentMetadataService.*;
+
 
 public enum Kommunikasjonsretning {
     INN, UT, INTERN;
+
+    public static final String JOURNALPOST_INNGAAENDE = "I";
+    public static final String JOURNALPOST_UTGAAENDE = "U";
+    public static final String JOURNALPOST_INTERN = "N";
 
     public static Kommunikasjonsretning fraJournalpostretning(String kommunikasjonsretning) {
         if (kommunikasjonsretning.equals(JOURNALPOST_INNGAAENDE)) {

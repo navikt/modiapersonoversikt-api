@@ -3,11 +3,10 @@ package no.nav.sbl.dialogarena.saksoversikt.service.service;
 import no.nav.sbl.dialogarena.common.kodeverk.Kodeverk;
 import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.*;
 import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.resultatwrappere.ResultatWrapper;
+import no.nav.sbl.dialogarena.saksoversikt.service.transformers.DokumentMetadataTransformer;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import javax.xml.datatype.DatatypeConfigurationException;
@@ -18,39 +17,46 @@ import java.util.List;
 import static java.util.Arrays.asList;
 import static java.util.Collections.*;
 import static junit.framework.TestCase.assertFalse;
+import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Baksystem.HENVENDELSE;
+import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Baksystem.JOARK;
 import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.HenvendelseType.SOKNADSINNSENDING;
 import static no.nav.sbl.dialogarena.saksoversikt.service.service.BulletproofKodeverkService.ARKIVTEMA;
 import static no.nav.sbl.dialogarena.saksoversikt.service.utils.Konstanter.DAGPENGER;
+import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.core.Is.is;
 import static org.joda.time.DateTime.now;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class DokumentMetadataServiceTest {
 
-    @Mock
-    private BulletproofKodeverkService bulletproofKodeverkService;
+    public static final String JOURNALPOST_ID = "2";
+    public static final String TEMAKODE = "DAG";
+    public static final String BEHANDLINGS_ID = "333";
+    public static final String DOKMOT_TEMA = "BIL";
+    private BulletproofKodeverkService bulletproofKodeverkService = mock(BulletproofKodeverkService.class);
 
-    @Mock
-    private HenvendelseService henvendelseService;
+    private DokumentMetadataTransformer dokumentMetadataTransformer = new DokumentMetadataTransformer(bulletproofKodeverkService);
 
-    @Mock
-    private Kodeverk kodeverk;
+    private HenvendelseService henvendelseService = mock(HenvendelseService.class);
 
-    @Mock
-    private InnsynJournalService innsynJournalService;
+    private Kodeverk kodeverk = mock(Kodeverk.class);
 
-    @InjectMocks
-    private DokumentMetadataService dokumentMetadataService;
+    private JoarkJournalService joarkJournalService = mock(JoarkJournalService.class);
+
+    private DokumentMetadataService dokumentMetadataService = new DokumentMetadataService(joarkJournalService, henvendelseService, dokumentMetadataTransformer);
 
     @Before
     public void setup() {
         when(kodeverk.getKode(anyString(), any())).thenReturn("DAG");
         when(bulletproofKodeverkService.getKode(anyString(), any())).thenReturn("DAG");
+        when(joarkJournalService.identifiserJournalpost(BEHANDLINGS_ID))
+                .thenReturn(new ResultatWrapper<>(new DokumentMetadata().withJournalpostId(JOURNALPOST_ID)));
     }
 
     @Test
@@ -84,15 +90,6 @@ public class DokumentMetadataServiceTest {
         assertThat(dokumentMetadatas.size(), is(1));
     }
 
-    private DokumentMetadata brukerMottattDokumentFraNavMedLogiskeOgVanligeVedlegg() {
-        return new DokumentMetadata()
-                .withJournalpostId("2")
-                .withTemakode("DAG")
-                .withAvsender(Entitet.NAV)
-                .withMottaker(Entitet.SLUTTBRUKER)
-                .withBaksystem(Baksystem.JOARK)
-                .withDato(LocalDateTime.now());
-    }
 
     @Test
     public void hvisViFaarJournalpostFraHenvendelseSomIkkeFinnesIJoarkSkalDenneBrukesVidere() throws DatatypeConfigurationException {
@@ -150,7 +147,7 @@ public class DokumentMetadataServiceTest {
         ResultatWrapper<List<DokumentMetadata>> wrapper = dokumentMetadataService.hentDokumentMetadata(new ArrayList<>(), "");
 
         assertThat(wrapper.resultat.get(0).getBaksystem().size(), is(2));
-        assertTrue(wrapper.resultat.get(0).getBaksystem().contains(Baksystem.JOARK));
+        assertTrue(wrapper.resultat.get(0).getBaksystem().contains(JOARK));
         assertTrue(wrapper.resultat.get(0).getBaksystem().contains(Baksystem.HENVENDELSE));
     }
 
@@ -166,7 +163,7 @@ public class DokumentMetadataServiceTest {
         ResultatWrapper<List<DokumentMetadata>> wrapper = dokumentMetadataService.hentDokumentMetadata(new ArrayList<>(), "");
 
         assertThat(wrapper.resultat.get(0).getBaksystem().size(), is(1));
-        assertTrue(wrapper.resultat.get(0).getBaksystem().contains(Baksystem.JOARK));
+        assertTrue(wrapper.resultat.get(0).getBaksystem().contains(JOARK));
 
     }
 
@@ -186,15 +183,42 @@ public class DokumentMetadataServiceTest {
 
     }
 
+    @Test
+    public void hvisDokmotSoknadIkkeHarJournalpostIdBrukesBehandlingsIdForAFinneJournalpostIdOgMatche() {
+        when(kodeverk.getKode(anyString(), any())).thenReturn(DOKMOT_TEMA);
+        when(bulletproofKodeverkService.getKode(anyString(), any())).thenReturn(DOKMOT_TEMA);
+        mockJoark(brukerMottattDokumentFraNavMedLogiskeOgVanligeVedlegg().withTemakode(DOKMOT_TEMA));
+        when(bulletproofKodeverkService.getTemanavnForTemakode(DOKMOT_TEMA, ARKIVTEMA)).thenReturn(new ResultatWrapper("Bil"));
+        when(kodeverk.getTittel("NAV 14-05.00")).thenReturn("Soknad om bil");
+        when(henvendelseService.hentInnsendteSoknader(anyString())).thenReturn(singletonList(lagHenvendelse(null)));
+
+        List<DokumentMetadata> dokumenter = dokumentMetadataService.hentDokumentMetadata(new ArrayList<>(), "").resultat;
+
+        assertThat(dokumenter.size(), is(1));
+        assertThat(dokumenter.get(0).getBaksystem(), hasItem(JOARK));
+        assertThat(dokumenter.get(0).getBaksystem(), hasItem(HENVENDELSE));
+        assertThat(dokumenter.get(0).getJournalpostId(), is(JOURNALPOST_ID));
+    }
+
     private void mockJoark(DokumentMetadata... joarkDokumentMetadata){
-        when(innsynJournalService.joarkSakhentTilgjengeligeJournalposter(any(), anyString()))
+        when(joarkJournalService.hentTilgjengeligeJournalposter(any(), anyString()))
                 .thenReturn(new ResultatWrapper<>(asList(joarkDokumentMetadata),emptySet()));
+    }
+
+    private DokumentMetadata brukerMottattDokumentFraNavMedLogiskeOgVanligeVedlegg() {
+        return new DokumentMetadata()
+                .withJournalpostId(JOURNALPOST_ID)
+                .withTemakode(TEMAKODE)
+                .withAvsender(Entitet.NAV)
+                .withMottaker(Entitet.SLUTTBRUKER)
+                .withBaksystem(JOARK)
+                .withDato(LocalDateTime.now());
     }
 
     private Soknad lagHenvendelse(String journalpostId) {
         return new Soknad()
                 .withJournalpostId(journalpostId)
-                .withBehandlingsId("12345")
+                .withBehandlingsId(BEHANDLINGS_ID)
                 .withBehandlingskjedeId("98765")
                 .withStatus(Soknad.HenvendelseStatus.FERDIG)
                 .withOpprettetDato(now())
