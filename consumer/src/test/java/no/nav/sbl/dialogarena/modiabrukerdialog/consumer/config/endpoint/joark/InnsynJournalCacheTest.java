@@ -40,18 +40,14 @@ public class InnsynJournalCacheTest extends CacheTest {
         super(INNSYN_CACHE);
     }
 
-    private static InnsynJournalV2 nonWrapped;
-
-    private static InnsynJournalV2 innsynJournalV2;
+    @Inject
+    private InnsynJournalV2 innsynJournalV2;
 
     @BeforeAll
     public static void setUp() {
         setProperty(START_JOARK_WITHMOCK, "true");
         setProperty(TILLATMOCKSETUP_PROPERTY, "true");
         setProperty(INNSYN_JOURNAL_V2_URL, "url");
-
-        nonWrapped = mock(InnsynJournalV2.class);
-        innsynJournalV2 = innsynJournalV2(nonWrapped);
     }
 
     @BeforeEach
