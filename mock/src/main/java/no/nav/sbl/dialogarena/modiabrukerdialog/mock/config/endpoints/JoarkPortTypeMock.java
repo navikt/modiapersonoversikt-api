@@ -13,7 +13,7 @@ import java.util.stream.IntStream;
 import static java.util.Arrays.asList;
 
 public class JoarkPortTypeMock {
-    public static JournalV2 createInnsynJournalV1Mock() {
+    public static JournalV2 createJournalV2Mock() {
 
         return new JournalV2() {
 

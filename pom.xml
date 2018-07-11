@@ -106,7 +106,7 @@
         <personsok.version>1655</personsok.version>
         <kjerneinfo.versjon>4583</kjerneinfo.versjon>
         <utbetaling.version>4.0.0</utbetaling.version>
-        <saksoversikt.version>9.0.5</saksoversikt.version>
+        <saksoversikt.version>1174</saksoversikt.version>
         <varsling.modia.version>2.0</varsling.modia.version>
         <modia-felleskomponenter.version>275</modia-felleskomponenter.version>
 
@@ -129,6 +129,7 @@
         <dial-nav-tjeneste-sak.version>1.7</dial-nav-tjeneste-sak.version>
         <henvendelse-soknader-tjenestespesifikasjon.version>0.0.25</henvendelse-soknader-tjenestespesifikasjon.version>
         <joark-tjenestespesifikasjon.version>2.3</joark-tjenestespesifikasjon.version>
+        <nav-innsynJournal-v2-tjenestespesifikasjon.version>2.0.2</nav-innsynJournal-v2-tjenestespesifikasjon.version>
         <dkif-tjenestespesifikasjon.version>1.2</dkif-tjenestespesifikasjon.version>
         <organisasjonenhet-v2.tjenestespesifikasjon.versjon>2.1.0</organisasjonenhet-v2.tjenestespesifikasjon.versjon>
         <brukervarsel.tjeneste.version>1.0</brukervarsel.tjeneste.version>
@@ -406,6 +407,18 @@
                 <groupId>no.nav.sbl.dialogarena</groupId>
                 <artifactId>joark-tjenestespesifikasjon</artifactId>
                 <version>${joark-tjenestespesifikasjon.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>no.nav.tjenester</groupId>
+                <artifactId>nav-innsynJournal-v2-tjenestespesifikasjon</artifactId>
+                <version>${nav-innsynJournal-v2-tjenestespesifikasjon.version}</version>
+                <classifier>jaxws</classifier>
+                <exclusions>
+                    <exclusion>
+                        <groupId>commons-lang</groupId>
+                        <artifactId>commons-lang</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
             <dependency>
                 <groupId>no.nav.sbl.dialogarena</groupId>

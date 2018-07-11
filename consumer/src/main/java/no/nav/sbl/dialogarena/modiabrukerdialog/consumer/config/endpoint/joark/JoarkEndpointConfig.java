@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Configuration;
 
 import static java.lang.System.getProperty;
 import static no.nav.sbl.dialogarena.common.cxf.InstanceSwitcher.createMetricsProxyWithInstanceSwitcher;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.JoarkPortTypeMock.createInnsynJournalV1Mock;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.JoarkPortTypeMock.createJournalV2Mock;
 
 @Configuration
 public class JoarkEndpointConfig {
@@ -17,14 +17,14 @@ public class JoarkEndpointConfig {
     public static final String JOARK_KEY = "start.joark.withmock";
 
     @Bean
-    public JournalV2 joarkV2() {
+    public JournalV2 journalV2() {
         JournalV2 prod = createJournalV2PortType().configureStsForOnBehalfOfWithJWT().build();
-        JournalV2 mock = createInnsynJournalV1Mock();
-        return createMetricsProxyWithInstanceSwitcher("JournalV2", prod, mock, JOARK_KEY, JournalV2.class);
+        JournalV2 mock = createJournalV2Mock();
+        return createMetricsProxyWithInstanceSwitcher("Joark - JournalV2Service", prod, mock, JOARK_KEY, JournalV2.class);
     }
 
     @Bean
-    public Pingable pingJoark() {
+    public Pingable pingJournalV2() {
         JournalV2 ws = createJournalV2PortType().configureStsForSystemUserInFSS().build();
         return new PingableWebService("Joark", ws);
     }
