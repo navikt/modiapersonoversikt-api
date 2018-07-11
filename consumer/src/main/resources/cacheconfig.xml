@@ -122,6 +122,12 @@
             <cache:cacheable method="hent*" />
         </cache:caching>
     </cache:advice>
+    <cache:advice id="innsynJournalAdvice" key-generator="defaultkeygenerator">
+        <cache:caching cache="innsynJournalCache">
+            <cache:cacheable method="identifiserJournalpost" />
+            <cache:cacheable method="hent*" />
+        </cache:caching>
+    </cache:advice>
 
     <aop:config>
         <aop:advisor advice-ref="aktorAdvice" pointcut="bean(aktoerPortType)"/>
@@ -142,6 +148,7 @@
         <aop:advisor advice-ref="organisasjonEnhetKontantinformasjonAdvice" pointcut="bean(organisasjonEnhetKontaktinformasjonV1)"/>
         <aop:advisor advice-ref="oppfolgingsinfoAdvice" pointcut="bean(oppfolgingsinfo)"/>
         <aop:advisor advice-ref="oppfolgingsAdvice" pointcut="bean(oppfolgingPortType)"/>
+        <aop:advisor advice-ref="innsynJournalAdvice" pointcut="bean(innsynJournalV2)"/>
     </aop:config>
 
 </beans>
