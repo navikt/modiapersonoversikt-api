@@ -15,8 +15,12 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.tekniskfeil.ReactTekniskFeil
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.Innboks;
 import no.nav.sbl.dialogarena.sporsmalogsvar.widget.MeldingerWidget;
 import no.nav.sykmeldingsperioder.SykmeldingsperiodePanel;
+import org.apache.wicket.Application;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.core.request.handler.PageProvider;
+import org.apache.wicket.core.request.handler.RenderPageRequestHandler;
+import org.apache.wicket.core.request.mapper.StalePageException;
 import org.apache.wicket.event.IEvent;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.JavaScriptUrlReferenceHeaderItem;
@@ -97,6 +101,11 @@ public class BasePage extends WebPage {
         add(new ExceptionHandlingBehavior() {
                 @Override
                 public IRequestHandler handleException(Component source, Exception ex) {
+                    if (ex instanceof StalePageException) {
+                        logger.warn("StalePage: ", ex);
+                        getSession().replaceSession();
+                        return new RenderPageRequestHandler(new PageProvider(Application.get().getHomePage()));
+                    }
                     logger.error("Teknisk feil:", ex);
                     tekniskFeilModal.getModal().call("vis");
                     return RequestCycle.get().find(AjaxRequestTarget.class);
