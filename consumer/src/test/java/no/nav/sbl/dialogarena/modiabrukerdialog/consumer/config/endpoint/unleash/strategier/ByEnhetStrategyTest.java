@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
 
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.unleash.strategier.ByEnhetStrategy.ENHETER;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.mock;
@@ -19,6 +20,8 @@ class ByEnhetStrategyTest {
     void enhetTest() {
         assertEnabled("0118", "0118");
         assertEnabled("0118", "1234,0118,0000");
+        assertEnabled("0118,1234,1111", "1234");
+        assertEnabled("0118,1234,1111", "0118,1234,1111");
         assertDisabled("0118", "1234, 4455");
         assertDisabled("0118", "");
         assertDisabled("0118", null);
@@ -27,32 +30,33 @@ class ByEnhetStrategyTest {
         assertDisabled("", "");
         assertDisabled(null, null);
         assertDisabled("", ",,,");
+        assertDisabled(",,,", ",,,");
     }
 
     @Test
     void kallMedIngenContextGirFalse() {
         HashMap<String, String> parameters = new HashMap<String, String>() {{
-            put("valgtEnhet", "0118");
+            put(ENHETER, "0118");
         }};
 
         assertThat(byEnhetStrategy.isEnabled(parameters), is(false));
     }
 
-    private void assertEnabled(String valgtEnhet, String parameter) {
-        addEnhetToContextProperties(valgtEnhet);
+    private void assertEnabled(String enheter, String parameter) {
+        addEnhetToContextProperties(enheter);
 
         assertEnhet(parameter, true);
     }
 
-    private void assertDisabled(String valgtEnhet, String parameter) {
-        addEnhetToContextProperties(valgtEnhet);
+    private void assertDisabled(String enheter, String parameter) {
+        addEnhetToContextProperties(enheter);
 
         assertEnhet(parameter, false);
     }
 
-    private void addEnhetToContextProperties(String valgtEnhet) {
+    private void addEnhetToContextProperties(String enheter) {
         HashMap<String, String> props = new HashMap<String, String>() {{
-            put("valgtEnhet", valgtEnhet);
+            put(ENHETER, enheter);
         }};
         when(context.getProperties()).thenReturn(props);
     }
