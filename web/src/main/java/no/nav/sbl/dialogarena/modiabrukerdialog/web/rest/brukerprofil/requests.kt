@@ -44,8 +44,8 @@ data class EndreAdresseRequest(
     data class UtenlandskAdresse (
         val landkode: String,
         val adresselinje1: String,
-        val adresselinje2: String,
-        val adresselinje3: String,
+        val adresselinje2: String? = null,
+        val adresselinje3: String? = null,
         val gyldigTil: LocalDate
     )
 
