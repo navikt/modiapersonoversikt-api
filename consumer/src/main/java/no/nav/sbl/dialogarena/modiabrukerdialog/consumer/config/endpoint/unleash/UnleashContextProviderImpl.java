@@ -33,9 +33,8 @@ public class UnleashContextProviderImpl implements UnleashContextProvider {
         String ident = subjectHandler.getUid();
         String ansattEnheter = getEnheter();
 
-        HashMap<String, String> properties = new HashMap<String, String>() {{
-            put(ENHETER, ansattEnheter);
-        }};
+        HashMap<String, String> properties = new HashMap<>();
+        properties.put(ENHETER, ansattEnheter);
 
         return new UnleashContext(ident, sessionId, remoteAddress, properties);
     }
