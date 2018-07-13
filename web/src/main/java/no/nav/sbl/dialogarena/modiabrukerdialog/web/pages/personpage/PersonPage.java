@@ -171,6 +171,7 @@ public class PersonPage extends BasePage {
                     new WebMarkupContainer("kjerneinfotabs").setVisible(false),
                     new ReactComponentPanel("ny-frontend", "NyFrontend", new HashMap<String, Object>() {{
                         put("fødselsnummer", fnr);
+                        put("nyBrukerprofil", unleashService.isEnabled("modiabrukerdialog.ny-brukerprofil"));
                     }})
             };
         } else {

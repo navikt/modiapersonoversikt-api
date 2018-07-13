@@ -7,10 +7,26 @@ class NyFrontend extends React.Component {
     render() {
         return <Visittkort fødselsnummer={this.props.fødselsnummer}/>;
     }
+
+    componentDidMount() {
+        this.oppdaterToggle();
+    }
+
+    componentDidUpdate() {
+        this.oppdaterToggle();
+    }
+
+    oppdaterToggle() {
+        if (!this.props.nyBrukerprofil) {
+            document.getElementById('brukerprofillenke').href =
+                '/modiabrukerdialog/person/' + this.props.fødselsnummer + '#!brukerprofil';
+        }
+    }
 }
 
 NyFrontend.propTypes = {
-    fødselsnummer: PT.string.isRequired
+    fødselsnummer: PT.string.isRequired,
+    nyBrukerprofil: PT.bool.isRequired
 };
 
 export default NyFrontend;
