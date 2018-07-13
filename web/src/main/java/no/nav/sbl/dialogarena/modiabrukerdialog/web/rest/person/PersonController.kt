@@ -188,7 +188,7 @@ class PersonController @Inject constructor(private val kjerneinfoService: Person
     private fun hentAlternativAdresseUtland(adresseUtland: AlternativAdresseUtland) = adresseUtland.run {
         mapOf(
                 "landkode" to Kode(landkode),
-                "adresselinjer" to listOf(adresselinje1, adresselinje2, adresselinje3, adresselinje4),
+                "adresselinjer" to listOfNotNull(adresselinje1, adresselinje2, adresselinje3, adresselinje4),
                 "periode" to postleveringsPeriode?.let { hentPeriode(it) }
         )
     }
