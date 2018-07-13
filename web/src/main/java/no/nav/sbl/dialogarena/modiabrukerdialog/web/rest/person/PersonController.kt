@@ -177,7 +177,7 @@ class PersonController @Inject constructor(private val kjerneinfoService: Person
     private fun hentPostboksadresse(postboksadresse: Postboksadresse) = postboksadresse.run {
         mapOf(
                 "tilleggsadresse" to tilleggsadresseMedType,
-                "postboksnummer" to postboksnummer,
+                "postboksnummer" to postboksnummer?.trim(),
                 "postboksanlegg" to postboksanlegg,
                 "poststed" to poststednavn,
                 "postnummer" to poststed,
