@@ -62,7 +62,9 @@ import javax.inject.Named;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 
+import static java.util.Optional.empty;
 import static java.util.Optional.ofNullable;
 import static no.nav.metrics.MetricsFactory.createEvent;
 import static no.nav.modig.modia.constants.ModiaConstants.HENT_PERSON_BEGRUNNET;
@@ -112,7 +114,7 @@ public class PersonPage extends BasePage {
     public PersonPage(PageParameters pageParameters) {
         super(pageParameters);
         if (pageParameters.get("fnr").isEmpty()) {
-            fnr = hentFodselsnummerFraRequest();
+            fnr = hentFodselsnummerFraRequest().orElseThrow(() -> new RestartResponseException(HentPersonPage.class, new PageParameters()));
         } else {
             fnr = pageParameters.get("fnr").toString();
         }
@@ -194,8 +196,12 @@ public class PersonPage extends BasePage {
                 && pageParameters.get(BESVARES).isEmpty();
     }
 
-    private String hentFodselsnummerFraRequest() {
-        return RequestCycle.get().getRequest().getUrl().getSegments().get(1);
+    private Optional<String> hentFodselsnummerFraRequest() {
+        List<String> segments = RequestCycle.get().getRequest().getUrl().getSegments();
+        if ("person".equals(segments.get(0))) {
+            return ofNullable(segments.get(1));
+        }
+        return empty();
     }
 
     @Override

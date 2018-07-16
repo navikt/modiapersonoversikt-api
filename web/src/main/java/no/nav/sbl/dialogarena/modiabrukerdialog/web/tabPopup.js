@@ -40,7 +40,7 @@ function createTabHandler(application, options) {
     var activateTab = function () {
         setActiveTab(getTabGuid());
         setIsReloadingFlag();
-        window.location.reload();
+        window.location = window.location.href.replace(/\?\d+/, '?');
     };
 
     var closeTab = function () {
