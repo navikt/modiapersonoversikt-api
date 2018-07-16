@@ -18,8 +18,21 @@ class NyFrontend extends React.Component {
 
     oppdaterToggle() {
         if (!this.props.nyBrukerprofil) {
+            document.addEventListener('keyup', function(event) {
+                if (event.key === 'b') {
+                    event.stopPropagation();
+                }
+            }, true);
+            setTimeout(this.tryUpdateToggle, 500);
+        }
+    }
+
+    tryUpdateToggle() {
+        if (document.getElementById('brukerprofillenke')) {
             document.getElementById('brukerprofillenke').href =
                 '/modiabrukerdialog/person/' + this.props.fødselsnummer + '#!brukerprofil';
+        } else {
+            setTimeout(this.tryUpdateToggle, 500)
         }
     }
 }
