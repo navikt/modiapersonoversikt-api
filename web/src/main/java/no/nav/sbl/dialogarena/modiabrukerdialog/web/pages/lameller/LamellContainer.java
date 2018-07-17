@@ -79,8 +79,8 @@ public class LamellContainer extends TokenLamellPanel implements Serializable {
     @Named("pep")
     private EnforcementPoint pep;
 
-    public LamellContainer(String id, Session session, GrunnInfo grunnInfo) {
-        super(id, createLamellFactories(grunnInfo.bruker));
+    public LamellContainer(String id, Session session, GrunnInfo grunnInfo, boolean nyBrukerprofilEnabled) {
+        super(id, createLamellFactories(grunnInfo.bruker, nyBrukerprofilEnabled));
         this.fnrFromRequest = grunnInfo.bruker.fnr;
 
         addNewFactory(createUtbetalingLamell(grunnInfo.bruker));
@@ -182,19 +182,19 @@ public class LamellContainer extends TokenLamellPanel implements Serializable {
         return SYKEPENGER_TYPE.equalsIgnoreCase(type) || FORELDREPENGER_TYPE.equalsIgnoreCase(type) || PLEIEPENGER_TYPE.equalsIgnoreCase(type);
     }
 
-    private static List<LamellFactory> createLamellFactories(final GrunnInfo.Bruker bruker) {
+    private static List<LamellFactory> createLamellFactories(final GrunnInfo.Bruker bruker, boolean nyBrukerprofilEnabled) {
         List<LamellFactory> lamellFactories = new ArrayList<>();
         lamellFactories.add(createOversiktLamell(bruker));
         lamellFactories.add(createKontrakterLamell(bruker));
-        lamellFactories.add(createBrukerprofilLamell(bruker));
+        lamellFactories.add(createBrukerprofilLamell(bruker, nyBrukerprofilEnabled));
         lamellFactories.add(createSaksoversiktLamell(bruker));
         lamellFactories.add(createVarslingsLamell(bruker));
 
         return lamellFactories;
     }
 
-    private static LamellFactory createBrukerprofilLamell(final GrunnInfo.Bruker bruker) {
-        return newLamellFactory(LAMELL_BRUKERPROFIL, "B", (LerretFactory) (id, name) -> new BrukerprofilPanel(id, Model.of(bruker.fnr)));
+    private static LamellFactory createBrukerprofilLamell(final GrunnInfo.Bruker bruker, boolean nyBrukerprofilEnabled) {
+        return newLamellFactory(LAMELL_BRUKERPROFIL, nyBrukerprofilEnabled ? null : "B", (LerretFactory) (id, name) -> new BrukerprofilPanel(id, Model.of(bruker.fnr)));
     }
 
     private static LamellFactory createKontrakterLamell(final GrunnInfo.Bruker bruker) {

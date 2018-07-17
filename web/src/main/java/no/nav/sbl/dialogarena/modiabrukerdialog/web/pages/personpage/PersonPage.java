@@ -23,6 +23,8 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.constants.Events;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.GrunnInfo;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.unleash.UnleashService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.GrunninfoService;
+import no.nav.sbl.dialogarena.modiabrukerdialog.reactkomponenter.utils.wicket.ReactComponentCallback;
+import no.nav.sbl.dialogarena.modiabrukerdialog.reactkomponenter.utils.wicket.ReactComponentPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.BasePage;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.hentperson.HentPersonPage;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.lameller.LamellContainer;
@@ -35,8 +37,6 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.hode.jscallback.SokOp
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.hode.jscallback.VoidCallback;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.plukkoppgavepanel.PlukkOppgavePanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.timeout.ReactTimeoutBoksModal;
-import no.nav.sbl.dialogarena.modiabrukerdialog.reactkomponenter.utils.wicket.ReactComponentCallback;
-import no.nav.sbl.dialogarena.modiabrukerdialog.reactkomponenter.utils.wicket.ReactComponentPanel;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.wicket.Component;
 import org.apache.wicket.Page;
@@ -134,7 +134,9 @@ public class PersonPage extends BasePage {
         redirectPopup = new ReactSjekkForlatModal("redirectModal");
         konfigurerRedirectPopup();
 
-        lamellContainer = new LamellContainer("lameller", getSession(), grunnInfo);
+        boolean nyttVisittkortEnabled = unleashService.isEnabled("modiabrukerdialog.nytt-visittkort");
+        boolean nyBrukerprofilEnabled = unleashService.isEnabled("modiabrukerdialog.ny-brukerprofil");
+        lamellContainer = new LamellContainer("lameller", getSession(), grunnInfo, nyBrukerprofilEnabled);
 
         oppgiBegrunnelseModal = new ReactBegrunnelseModal("oppgiBegrunnelseModal");
         Hode hode = new Hode("hode", oppgiBegrunnelseModal, personKjerneinfoServiceBi, grunnInfo, null);
@@ -142,7 +144,7 @@ public class PersonPage extends BasePage {
             clearSession();
             handleRedirect(target, new PageParameters(), HentPersonPage.class);
         }));
-        hode.add(hasCssClassIf("nytt-visittkort-toggle", Model.of(unleashService.isEnabled("modiabrukerdialog.nytt-visittkort"))));
+        hode.add(hasCssClassIf("nytt-visittkort-toggle", Model.of(nyttVisittkortEnabled)));
 
         dialogPanel = new DialogPanel("dialogPanel", grunnInfo);
         add(
@@ -156,7 +158,7 @@ public class PersonPage extends BasePage {
                 oppgiBegrunnelseModal
         );
 
-        add(getVisittkortkomponenter());
+        add(getVisittkortkomponenter(nyBrukerprofilEnabled, nyttVisittkortEnabled));
 
         if (skalViseMeldingerLamell) {
             lamellContainer.setStartLamell(LAMELL_MELDINGER);
@@ -165,15 +167,15 @@ public class PersonPage extends BasePage {
     }
 
     @NotNull
-    private Component[] getVisittkortkomponenter() {
-        if (unleashService.isEnabled("modiabrukerdialog.nytt-visittkort")) {
+    private Component[] getVisittkortkomponenter(boolean nyBrukerprofilEnabled, boolean nyttVisittkortEnabled) {
+        if (nyttVisittkortEnabled) {
             return new Component[]{
                     new WebMarkupContainer("visittkort").setVisible(false),
                     new WebMarkupContainer("brukersNavKontor").setVisible(false),
                     new WebMarkupContainer("kjerneinfotabs").setVisible(false),
                     new ReactComponentPanel("ny-frontend", "NyFrontend", new HashMap<String, Object>() {{
                         put("fødselsnummer", fnr);
-                        put("nyBrukerprofil", unleashService.isEnabled("modiabrukerdialog.ny-brukerprofil"));
+                        put("nyBrukerprofil", nyBrukerprofilEnabled);
                     }})
             };
         } else {
