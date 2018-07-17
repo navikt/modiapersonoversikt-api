@@ -172,9 +172,12 @@ public class LeggTilbakePanel extends Panel {
             protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
                 Timer timer = createTimer("hendelse.leggtilbake." + leggTilbakeVM.valgtAarsak);
                 timer.start();
-                leggTilbakeOppgave(target, form);
-                timer.stop();
-                timer.report();
+                try {
+                    leggTilbakeOppgave(target, form);
+                } finally {
+                    timer.stop();
+                    timer.report();
+                }
             }
 
             private void leggTilbakeOppgave(AjaxRequestTarget target, Form<?> form) {
