@@ -1,12 +1,12 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.service.plukkoppgave;
 
+import no.nav.brukerdialog.security.tilgangskontroll.policy.pep.EnforcementPoint;
 import no.nav.kjerneinfo.consumer.fim.person.PersonKjerneinfoServiceBi;
 import no.nav.kjerneinfo.consumer.fim.person.to.HentKjerneinformasjonRequest;
 import no.nav.kjerneinfo.domain.person.Personfakta;
 import no.nav.kjerneinfo.domain.person.fakta.AnsvarligEnhet;
 import no.nav.kjerneinfo.domain.person.fakta.Organisasjonsenhet;
 import no.nav.modig.core.exception.AuthorizationException;
-import no.nav.brukerdialog.security.tilgangskontroll.policy.pep.EnforcementPoint;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Oppgave;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveBehandlingService;
@@ -15,8 +15,7 @@ import javax.annotation.Resource;
 import javax.inject.Inject;
 import java.util.List;
 
-import static no.nav.brukerdialog.security.tilgangskontroll.utils.AttributeUtils.actionId;
-import static no.nav.brukerdialog.security.tilgangskontroll.utils.AttributeUtils.resourceAttribute;
+import static no.nav.brukerdialog.security.tilgangskontroll.utils.AttributeUtils.*;
 import static no.nav.brukerdialog.security.tilgangskontroll.utils.RequestUtils.forRequest;
 
 public class PlukkOppgaveServiceImpl implements PlukkOppgaveService {
@@ -60,8 +59,8 @@ public class PlukkOppgaveServiceImpl implements PlukkOppgaveService {
             String brukersDiskresjonskode = personfakta.getDiskresjonskode() == null ? "" : personfakta.getDiskresjonskode().getKodeRef();
             String brukersEnhet = getBrukersEnhet(personfakta).orElse("");
 
-            return pep.hasAccess(forRequest(resourceAttribute(ATTRIBUTT_ID_DISKRESJONSKODE, brukersDiskresjonskode)))
-                    && pep.hasAccess(forRequest(actionId("les"), resourceAttribute(ATTRIBUTT_ID_ANSVARLIG_ENHET, brukersEnhet)));
+            return pep.hasAccess(forRequest(resourceAttribute(ATTRIBUTT_ID_DISKRESJONSKODE, brukersDiskresjonskode), resourceId("")))
+                    && pep.hasAccess(forRequest(actionId("les"), resourceAttribute(ATTRIBUTT_ID_ANSVARLIG_ENHET, brukersEnhet), resourceId("")));
         } catch (AuthorizationException e) {
             return false;
         }

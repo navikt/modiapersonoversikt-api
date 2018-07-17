@@ -136,6 +136,11 @@
             <artifactId>joark-tjenestespesifikasjon</artifactId>
         </dependency>
         <dependency>
+            <groupId>no.nav.tjenester</groupId>
+            <artifactId>nav-innsynJournal-v2-tjenestespesifikasjon</artifactId>
+            <classifier>jaxws</classifier>
+        </dependency>
+        <dependency>
             <groupId>no.nav.sbl</groupId>
             <artifactId>pensjon-sak-v1-tjenestespesifikasjon</artifactId>
         </dependency>
@@ -205,6 +210,7 @@
             <artifactId>hamcrest-library</artifactId>
             <scope>runtime</scope>
         </dependency>
+
 
     </dependencies>
 

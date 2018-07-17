@@ -9,6 +9,9 @@ import java.util.Map;
 import static java.util.Optional.ofNullable;
 
 public class ByEnhetStrategy implements Strategy {
+
+    public static final String ENHETER = "enheter";
+
     @Override
     public String getName() {
         return "byEnhet";
@@ -27,11 +30,12 @@ public class ByEnhetStrategy implements Strategy {
                 .filter(s -> !s.isEmpty())
                 .map(enheter -> enheter.split(","))
                 .map(Arrays::stream)
-                .map(enheter -> enheter.anyMatch(enhet -> isValgtEnhet(unleashContext, enhet)))
+                .map(enheter -> enheter.anyMatch(enhet -> ansattHarEnhet(unleashContext, enhet)))
                 .orElse(false);
     }
 
-    private boolean isValgtEnhet(UnleashContext unleashContext, String enhet) {
-        return enhet.equals(unleashContext.getProperties().get("valgtEnhet"));
+    private boolean ansattHarEnhet(UnleashContext unleashContext, String enhet) {
+        String enheter = unleashContext.getProperties().get(ENHETER) != null ? unleashContext.getProperties().get(ENHETER) : "";
+        return Arrays.stream(enheter.split(",")).anyMatch(enhet::equals);
     }
 }

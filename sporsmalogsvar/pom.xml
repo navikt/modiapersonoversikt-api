@@ -136,6 +136,12 @@
             <artifactId>modiabrukerdialog-api</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>no.nav.sbl.dialogarena</groupId>
+            <artifactId>reactkomponenter</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
 
         <!--Modig-->
         <dependency>
@@ -189,12 +195,6 @@
         <dependency>
             <groupId>no.nav.modig</groupId>
             <artifactId>modig-content</artifactId>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>no.nav.sbl.dialogarena</groupId>
-            <artifactId>reactkomponenter</artifactId>
             <scope>provided</scope>
         </dependency>
 

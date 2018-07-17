@@ -181,6 +181,11 @@
             <artifactId>joark-tjenestespesifikasjon</artifactId>
         </dependency>
         <dependency>
+            <groupId>no.nav.tjenester</groupId>
+            <artifactId>nav-innsynJournal-v2-tjenestespesifikasjon</artifactId>
+            <classifier>jaxws</classifier>
+        </dependency>
+        <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>send-ut-henvendelse</artifactId>
         </dependency>

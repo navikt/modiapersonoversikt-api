@@ -4,6 +4,8 @@ import no.finn.unleash.UnleashContext;
 import no.finn.unleash.UnleashContextProvider;
 import no.nav.brukerdialog.security.context.SubjectHandler;
 import no.nav.brukerdialog.security.context.ThreadLocalSubjectHandler;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.AnsattEnhet;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.AnsattService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
@@ -13,6 +15,8 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpSession;
 
+import static java.util.Arrays.asList;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.unleash.strategier.ByEnhetStrategy.ENHETER;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.mock;
@@ -33,11 +37,13 @@ class UnleashContextProviderImplTest {
     private MockHttpServletRequest request;
     private UnleashContextProvider contextProvider;
     private HttpSession session;
+    private AnsattService ansattService;
 
     @BeforeEach
     void init() {
         System.setProperty("no.nav.brukerdialog.security.context.subjectHandlerImplementationClass", ThreadLocalSubjectHandler.class.getName());
         subjectHandler = mock(SubjectHandler.class);
+        ansattService = mock(AnsattService.class);
 
         request = new MockHttpServletRequest();
         session = mock(HttpSession.class);
@@ -48,13 +54,17 @@ class UnleashContextProviderImplTest {
 
         RequestContextHolder.setRequestAttributes(requestAttributes);
 
-        contextProvider = new UnleashContextProviderImpl(subjectHandler);
+        contextProvider = new UnleashContextProviderImpl(subjectHandler, ansattService);
     }
 
     @Test
     void getContextPopulatesAllFieldsCorrectly() {
         when(subjectHandler.getUid()).thenReturn(IDENT);
         when(session.getId()).thenReturn(SESSION_ID);
+        when(ansattService.hentEnhetsliste())
+                .thenReturn(asList(
+                        new AnsattEnhet("1234", "NAV Bærum"),
+                        new AnsattEnhet("0000", "NAV Test")));
 
         UnleashContext context = contextProvider.getContext();
 
@@ -62,6 +72,7 @@ class UnleashContextProviderImplTest {
         assertThat(context.getSessionId().get(), is(SESSION_ID));
         assertThat(context.getRemoteAddress().get(), is(REMOTE_ADDR));
         assertThat(context.getProperties().size(), is(1));
-        assertThat(context.getProperties().get("valgtEnhet"), is(VALGT_ENHET));
+        assertThat(context.getProperties().get(ENHETER), is("1234,0000"));
+
     }
 }

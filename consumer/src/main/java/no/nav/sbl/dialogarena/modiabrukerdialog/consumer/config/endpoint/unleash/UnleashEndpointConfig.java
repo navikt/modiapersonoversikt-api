@@ -8,12 +8,10 @@ import no.finn.unleash.repository.ToggleFetcher;
 import no.finn.unleash.strategy.Strategy;
 import no.finn.unleash.util.UnleashConfig;
 import no.nav.brukerdialog.security.context.SubjectHandler;
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.ldap.LDAPService;
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.AnsattService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.unleash.strategier.ByEnhetStrategy;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.unleash.strategier.ByEnvironmentStrategy;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.unleash.strategier.IsNotProdStrategy;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.GrunninfoService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -73,8 +71,9 @@ public class UnleashEndpointConfig {
     }
 
     @Bean
-    public UnleashContextProvider unleashContextProvider() {
-        return new UnleashContextProviderImpl(SubjectHandler.getSubjectHandler());
+    @Inject
+    public UnleashContextProvider unleashContextProvider(AnsattService ansattService) {
+        return new UnleashContextProviderImpl(SubjectHandler.getSubjectHandler(), ansattService);
     }
 
 }

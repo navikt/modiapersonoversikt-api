@@ -177,7 +177,7 @@ class PersonController @Inject constructor(private val kjerneinfoService: Person
     private fun hentPostboksadresse(postboksadresse: Postboksadresse) = postboksadresse.run {
         mapOf(
                 "tilleggsadresse" to tilleggsadresseMedType,
-                "postboksnummer" to postboksnummer,
+                "postboksnummer" to postboksnummer?.trim(),
                 "postboksanlegg" to postboksanlegg,
                 "poststed" to poststednavn,
                 "postnummer" to poststed,
@@ -188,7 +188,7 @@ class PersonController @Inject constructor(private val kjerneinfoService: Person
     private fun hentAlternativAdresseUtland(adresseUtland: AlternativAdresseUtland) = adresseUtland.run {
         mapOf(
                 "landkode" to Kode(landkode),
-                "adresselinjer" to listOf(adresselinje1, adresselinje2, adresselinje3, adresselinje4),
+                "adresselinjer" to listOfNotNull(adresselinje1, adresselinje2, adresselinje3, adresselinje4),
                 "periode" to postleveringsPeriode?.let { hentPeriode(it) }
         )
     }
