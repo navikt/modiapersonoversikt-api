@@ -5,7 +5,7 @@ import no.nav.modig.modia.lamell.Lerret;
 import no.nav.modig.modia.metrics.TimingMetricsBehaviour;
 import no.nav.modig.modia.widget.Widget;
 import no.nav.modig.modia.widget.async.AsyncWidget;
-import no.nav.sbl.dialogarena.sak.widget.SaksoversiktWidget;
+import no.nav.sbl.dialogarena.modiabrukerdialog.sak.widget.SaksoversiktWidget;
 import no.nav.sbl.dialogarena.sporsmalogsvar.widget.MeldingerWidget;
 import no.nav.sbl.dialogarena.utbetaling.widget.UtbetalingWidget;
 import no.nav.sbl.dialogarena.varsel.lamell.VarslerOversiktLink;

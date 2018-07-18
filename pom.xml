@@ -26,6 +26,7 @@
         <module>pdp</module>
         <module>sporsmalogsvar</module>
         <module>reactkomponenter</module>
+        <module>saksoversikt</module>
     </modules>
 
     <properties>
@@ -106,7 +107,6 @@
         <personsok.version>1655</personsok.version>
         <kjerneinfo.versjon>4585</kjerneinfo.versjon>
         <utbetaling.version>4.0.0</utbetaling.version>
-        <saksoversikt.version>1174</saksoversikt.version>
         <varsling.modia.version>2.0</varsling.modia.version>
         <modia-felleskomponenter.version>275</modia-felleskomponenter.version>
 
@@ -122,7 +122,7 @@
         <behandle.person.v1.version>1.0.0</behandle.person.v1.version>
         <varsling.tjeneste.version>0.0.5</varsling.tjeneste.version>
         <dialogarena.behandlingsinformasjon.version>1.4.0</dialogarena.behandlingsinformasjon.version>
-        <sakogbehandling-tjenestespesifikasjon.version>1.0.14</sakogbehandling-tjenestespesifikasjon.version>
+        <sakogbehandling-tjenestespesifikasjon.version>1.0.15</sakogbehandling-tjenestespesifikasjon.version>
         <dial-nav-tjeneste-behandlesak.version>1.1</dial-nav-tjeneste-behandlesak.version>
         <arena-arbeid-og-aktivitet.version>1.0.6-alpha002</arena-arbeid-og-aktivitet.version>
         <nav-fellessystemer-environment.version>13.5.4</nav-fellessystemer-environment.version>
@@ -506,11 +506,6 @@
                 <groupId>no.nav.sbl.dialogarena</groupId>
                 <artifactId>modia-utbetalinger</artifactId>
                 <version>${utbetaling.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>no.nav.sbl.dialogarena</groupId>
-                <artifactId>modia-saksoversikt</artifactId>
-                <version>${saksoversikt.version}</version>
             </dependency>
             <dependency>
                 <groupId>no.nav.sbl.dialogarena</groupId>

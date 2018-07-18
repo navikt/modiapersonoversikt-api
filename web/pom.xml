@@ -78,6 +78,11 @@
             <artifactId>sporsmal-og-svar</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>no.nav.sbl.dialogarena</groupId>
+            <artifactId>modia-saksoversikt</artifactId>
+            <version>${project.version}</version>
+        </dependency>
 
         <!--Personsok-->
         <dependency>
@@ -153,10 +158,6 @@
         <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>modia-utbetalinger</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>no.nav.sbl.dialogarena</groupId>
-            <artifactId>modia-saksoversikt</artifactId>
         </dependency>
         <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>
