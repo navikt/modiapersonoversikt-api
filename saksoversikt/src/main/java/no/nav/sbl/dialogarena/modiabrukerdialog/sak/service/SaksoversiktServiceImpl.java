@@ -1,9 +1,9 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.sak.service;
 
+import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.Baksystem;
+import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.DokumentMetadata;
+import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.Sakstema;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.interfaces.SaksoversiktService;
-import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Baksystem;
-import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.DokumentMetadata;
-import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Sakstema;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;

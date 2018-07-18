@@ -1,9 +1,9 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.sak.transformers;
 
-import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.*;
-import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.resultatwrappere.ResultatWrapper;
-import no.nav.sbl.dialogarena.saksoversikt.service.service.BulletproofKodeverkService;
-import no.nav.sbl.dialogarena.saksoversikt.service.utils.Java8Utils;
+import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.*;
+import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.resultatwrappere.ResultatWrapper;
+import no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.BulletproofKodeverkService;
+import no.nav.sbl.dialogarena.modiabrukerdialog.sak.utils.Java8Utils;
 import no.nav.tjeneste.virksomhet.journal.v2.informasjon.*;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
@@ -18,9 +18,9 @@ import static java.time.LocalDateTime.now;
 import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Stream.concat;
-import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Baksystem.JOARK;
-import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Entitet.*;
-import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Kommunikasjonsretning.*;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.Baksystem.JOARK;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.Entitet.*;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.Kommunikasjonsretning.*;
 
 public class JournalpostTransformer {
 

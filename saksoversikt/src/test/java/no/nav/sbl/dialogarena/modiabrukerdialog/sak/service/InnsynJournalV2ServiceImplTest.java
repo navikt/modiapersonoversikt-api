@@ -1,9 +1,9 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.sak.service;
 
-import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.DokumentMetadata;
-import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.FeilendeBaksystemException;
-import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.resultatwrappere.ResultatWrapper;
-import no.nav.sbl.dialogarena.saksoversikt.service.service.interfaces.InnsynJournalV2Service;
+import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.DokumentMetadata;
+import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.FeilendeBaksystemException;
+import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.resultatwrappere.ResultatWrapper;
+import no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.interfaces.InnsynJournalV2Service;
 import no.nav.tjeneste.virksomhet.innsynjournal.v2.binding.*;
 import no.nav.tjeneste.virksomhet.innsynjournal.v2.informasjon.Dokument;
 import no.nav.tjeneste.virksomhet.innsynjournal.v2.informasjon.InnsynDokument;
@@ -13,7 +13,7 @@ import org.junit.Test;
 import java.util.Collections;
 
 import static junit.framework.TestCase.fail;
-import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Baksystem.JOARK;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.Baksystem.JOARK;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.mockito.Matchers.any;

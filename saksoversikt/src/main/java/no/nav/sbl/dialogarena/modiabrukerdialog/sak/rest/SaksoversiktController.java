@@ -1,14 +1,14 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.sak.rest;
 
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.domain.widget.ModiaSakstema;
+import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.Baksystem;
+import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.Sak;
+import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.Sakstema;
+import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.resultatwrappere.ResultatWrapper;
+import no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.SaksService;
+import no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.SakstemaService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.interfaces.SaksoversiktService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.interfaces.TilgangskontrollService;
-import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Baksystem;
-import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Sak;
-import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Sakstema;
-import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.resultatwrappere.ResultatWrapper;
-import no.nav.sbl.dialogarena.saksoversikt.service.service.SaksService;
-import no.nav.sbl.dialogarena.saksoversikt.service.service.SakstemaService;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;

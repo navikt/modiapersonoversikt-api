@@ -1,8 +1,8 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.sak.domain.widget;
 
-import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.DokumentMetadata;
-import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Feilmelding;
-import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Sakstema;
+import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.DokumentMetadata;
+import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.Feilmelding;
+import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.Sakstema;
 
 public class ModiaSakstema extends Sakstema {
 

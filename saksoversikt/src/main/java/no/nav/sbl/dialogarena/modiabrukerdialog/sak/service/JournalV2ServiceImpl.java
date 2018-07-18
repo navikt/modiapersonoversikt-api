@@ -1,13 +1,13 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.sak.service;
 
+import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.Baksystem;
+import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.DokumentMetadata;
+import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.FeilendeBaksystemException;
+import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.Sak;
+import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.resultatwrappere.ResultatWrapper;
+import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.resultatwrappere.TjenesteResultatWrapper;
+import no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.interfaces.JournalV2Service;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.transformers.JournalpostTransformer;
-import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Baksystem;
-import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.DokumentMetadata;
-import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.FeilendeBaksystemException;
-import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Sak;
-import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.resultatwrappere.ResultatWrapper;
-import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.resultatwrappere.TjenesteResultatWrapper;
-import no.nav.sbl.dialogarena.saksoversikt.service.service.interfaces.JournalV2Service;
 import no.nav.tjeneste.virksomhet.journal.v2.HentDokumentDokumentIkkeFunnet;
 import no.nav.tjeneste.virksomhet.journal.v2.HentDokumentSikkerhetsbegrensning;
 import no.nav.tjeneste.virksomhet.journal.v2.HentJournalpostListeSikkerhetsbegrensning;
@@ -27,8 +27,8 @@ import java.util.function.Function;
 
 import static java.util.Collections.emptyList;
 import static java.util.stream.Collectors.*;
-import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Baksystem.JOARK_SIKKERHETSBEGRENSNING;
-import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Feilmelding.*;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.Baksystem.JOARK_SIKKERHETSBEGRENSNING;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.Feilmelding.*;
 import static no.nav.tjeneste.virksomhet.journal.v2.informasjon.WSJournalFiltrering.KUN_GYLDIGE_OG_FERDIGSTILTE_FORSENDELSER_OG_DOKUMENTER;
 import static org.slf4j.LoggerFactory.getLogger;
 

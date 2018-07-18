@@ -5,9 +5,9 @@ import no.nav.brukerdialog.security.tilgangskontroll.policy.pep.EnforcementPoint
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.AnsattService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
 import no.nav.sbl.dialogarena.common.kodeverk.KodeverkClient;
-import no.nav.sbl.dialogarena.saksoversikt.service.service.GsakSakerService;
-import no.nav.sbl.dialogarena.saksoversikt.service.service.HenvendelseService;
-import no.nav.sbl.dialogarena.saksoversikt.service.service.SakOgBehandlingService;
+import no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.GsakSakerService;
+import no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.HenvendelseService;
+import no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.SakOgBehandlingService;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsesoknader.v1.HenvendelseSoknaderPortType;
 import no.nav.tjeneste.virksomhet.aktoer.v1.AktoerPortType;
 import no.nav.tjeneste.virksomhet.innsynjournal.v2.binding.InnsynJournalV2;
