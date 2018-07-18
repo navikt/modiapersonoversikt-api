@@ -26,6 +26,7 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.*;
 
 import javax.inject.Inject;
+import javax.ws.rs.ForbiddenException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -172,36 +173,47 @@ public class LeggTilbakePanel extends Panel {
                 Timer timer = createTimer("hendelse.leggtilbake." + leggTilbakeVM.valgtAarsak);
                 timer.start();
                 try {
-                    LeggTilbakeOppgaveIGsakRequest request = new LeggTilbakeOppgaveIGsakRequest()
-                            .withSaksbehandlersValgteEnhet(saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet())
-                            .withOppgaveId(oppgaveId)
-                            .withBeskrivelse(leggTilbakeVM.lagBeskrivelse(new StringResourceModel(leggTilbakeVM.getBeskrivelseKey(), LeggTilbakePanel.this, null).getString()))
-                            .withTemagruppe(leggTilbakeVM.nyTemagruppe);
-
-                    oppgaveBehandlingService.leggTilbakeOppgaveIGsak(request);
-                    oppgaveLagtTilbake.setObject(true);
-
-                    if (leggTilbakeVM.valgtAarsak == FEIL_TEMAGRUPPE) {
-                        henvendelseUtsendingService.oppdaterTemagruppe(sporsmal.id, leggTilbakeVM.nyTemagruppe.name());
-                        if (leggTilbakeVM.nyTemagruppe == ANSOS) {
-                            henvendelseUtsendingService.merkSomKontorsperret(sporsmal.fnrBruker, singletonList(sporsmal.id));
-                        }
-                    }
-
-                    target.add(form, feedbackPanelSuccess);
-
-                    if(DialogSession.read(LeggTilbakePanel.this).getPlukkedeOppgaver().size() > 0) {
-                        target.focusComponent(nesteOppgaveKnapp);
-                    }  else {
-                        target.focusComponent(lukkKnapp);
-                    }
-
-                    send(getPage(), BREADTH, LEGG_TILBAKE_UTFORT);
-                    henvendelseUtsendingService.avbrytHenvendelse(behandlingsId);
+                    leggTilbakeOppgave(target, form);
                 } finally {
                     timer.stop();
                     timer.report();
                 }
+            }
+
+            private void leggTilbakeOppgave(AjaxRequestTarget target, Form<?> form) {
+                LeggTilbakeOppgaveIGsakRequest request = new LeggTilbakeOppgaveIGsakRequest()
+                        .withSaksbehandlersValgteEnhet(saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet())
+                        .withOppgaveId(oppgaveId)
+                        .withBeskrivelse(leggTilbakeVM.lagBeskrivelse(new StringResourceModel(leggTilbakeVM.getBeskrivelseKey(), LeggTilbakePanel.this, null).getString()))
+                        .withTemagruppe(leggTilbakeVM.nyTemagruppe);
+
+                try {
+                    oppgaveBehandlingService.leggTilbakeOppgaveIGsak(request);
+                } catch (ForbiddenException fe) {
+                    error("Kunne ikke legge tilbake oppgave. Det kan hende oppgaven har blitt tildelt noen andre.");
+                    target.add(form, feedbackPanel);
+                    send(getPage(), BREADTH, LEGG_TILBAKE_UTFORT);
+                    return;
+                }
+                oppgaveLagtTilbake.setObject(true);
+
+                if (leggTilbakeVM.valgtAarsak == FEIL_TEMAGRUPPE) {
+                    henvendelseUtsendingService.oppdaterTemagruppe(sporsmal.id, leggTilbakeVM.nyTemagruppe.name());
+                    if (leggTilbakeVM.nyTemagruppe == ANSOS) {
+                        henvendelseUtsendingService.merkSomKontorsperret(sporsmal.fnrBruker, singletonList(sporsmal.id));
+                    }
+                }
+
+                target.add(form, feedbackPanelSuccess);
+
+                if(DialogSession.read(LeggTilbakePanel.this).getPlukkedeOppgaver().size() > 0) {
+                    target.focusComponent(nesteOppgaveKnapp);
+                }  else {
+                    target.focusComponent(lukkKnapp);
+                }
+
+                send(getPage(), BREADTH, LEGG_TILBAKE_UTFORT);
+                henvendelseUtsendingService.avbrytHenvendelse(behandlingsId);
             }
 
             @Override
