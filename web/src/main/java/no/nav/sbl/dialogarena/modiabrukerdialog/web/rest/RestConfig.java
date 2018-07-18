@@ -14,9 +14,9 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.ldap.LdapController;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.oppgave.OppgaveController;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.person.PersonController;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.vergemal.VergemalController;
-import no.nav.sbl.dialogarena.sak.rest.DokumentController;
-import no.nav.sbl.dialogarena.sak.rest.InformasjonController;
-import no.nav.sbl.dialogarena.sak.rest.SaksoversiktController;
+import no.nav.sbl.dialogarena.modiabrukerdialog.sak.rest.DokumentController;
+import no.nav.sbl.dialogarena.modiabrukerdialog.sak.rest.InformasjonController;
+import no.nav.sbl.dialogarena.modiabrukerdialog.sak.rest.SaksoversiktController;
 import no.nav.sbl.dialogarena.varsel.rest.VarslerController;
 import org.glassfish.jersey.server.ResourceConfig;
 
