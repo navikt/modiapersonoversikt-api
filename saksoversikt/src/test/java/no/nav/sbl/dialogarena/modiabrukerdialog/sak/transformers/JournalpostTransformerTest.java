@@ -1,12 +1,12 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.sak.transformers;
 
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.mock.JoarkMock;
-import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.DokumentMetadata;
-import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Entitet;
-import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.KategoriNotat;
-import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Sak;
-import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.resultatwrappere.ResultatWrapper;
-import no.nav.sbl.dialogarena.saksoversikt.service.service.BulletproofKodeverkService;
+import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.DokumentMetadata;
+import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.Entitet;
+import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.KategoriNotat;
+import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.Sak;
+import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.resultatwrappere.ResultatWrapper;
+import no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.BulletproofKodeverkService;
 import no.nav.tjeneste.virksomhet.journal.v2.informasjon.WSJournalpost;
 import no.nav.tjeneste.virksomhet.journal.v2.informasjon.WSJournalstatuser;
 import no.nav.tjeneste.virksomhet.journal.v2.informasjon.WSKommunikasjonsretninger;

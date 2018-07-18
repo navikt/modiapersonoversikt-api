@@ -3,14 +3,14 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.sak.rest;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.domain.dokumentvisning.DokumentFeilmelding;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.domain.dokumentvisning.DokumentResultat;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.domain.dokumentvisning.JournalpostResultat;
+import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.Dokument;
+import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.DokumentMetadata;
+import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.Feilmelding;
+import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.resultatwrappere.TjenesteResultatWrapper;
+import no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.DokumentMetadataService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.JournalV2ServiceImpl;
+import no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.SaksService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.interfaces.TilgangskontrollService;
-import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Dokument;
-import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.DokumentMetadata;
-import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Feilmelding;
-import no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.resultatwrappere.TjenesteResultatWrapper;
-import no.nav.sbl.dialogarena.saksoversikt.service.service.DokumentMetadataService;
-import no.nav.sbl.dialogarena.saksoversikt.service.service.SaksService;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.pdfbox.pdmodel.PDDocument;
@@ -38,10 +38,10 @@ import static javax.ws.rs.core.Response.Status.FORBIDDEN;
 import static javax.ws.rs.core.Response.Status.NOT_FOUND;
 import static javax.ws.rs.core.Response.ok;
 import static javax.ws.rs.core.Response.status;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.Feilmelding.DOKUMENT_IKKE_FUNNET;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.Feilmelding.MANGLER_DOKUMENTMETADATA;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.sak.rest.mock.DokumentControllerMock.mockDokumentResponse;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.sak.rest.mock.DokumentControllerMock.mockJournalpost;
-import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Feilmelding.DOKUMENT_IKKE_FUNNET;
-import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Feilmelding.MANGLER_DOKUMENTMETADATA;
 
 
 //Single Responsibility Principle

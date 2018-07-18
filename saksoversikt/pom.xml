@@ -12,9 +12,9 @@
     <artifactId>modia-saksoversikt</artifactId>
 
     <properties>
+        <jaxb-impl.version>2.2.6</jaxb-impl.version>
         <pdfbox.version>1.8.12</pdfbox.version>
         <sanntidpdfkonverter.version>1.0</sanntidpdfkonverter.version>
-        <saksoversikt-service.version>330</saksoversikt-service.version>
         <common-lokalt-kodeverk.version>1.12.28</common-lokalt-kodeverk.version>
     </properties>
 
@@ -53,6 +53,11 @@
         <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>joark-tjenestespesifikasjon</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>no.nav.sbl</groupId>
+            <artifactId>sanntidpdfkonverter</artifactId>
+            <version>${sanntidpdfkonverter.version}</version>
         </dependency>
         <dependency>
             <groupId>no.nav.tjenester</groupId>
@@ -110,6 +115,11 @@
         <dependency>
             <groupId>joda-time</groupId>
             <artifactId>joda-time</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.sun.xml.bind</groupId>
+            <artifactId>jaxb-impl</artifactId>
+            <version>${jaxb-impl.version}</version>
         </dependency>
         <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>
@@ -198,11 +208,6 @@
         <dependency>
             <groupId>no.nav.sbl</groupId>
             <artifactId>pensjon-sak-v1-tjenestespesifikasjon</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>no.nav.sbl.dialogarena</groupId>
-            <artifactId>modia-saksoversikt-service</artifactId>
-            <version>${saksoversikt-service.version}</version>
         </dependency>
     </dependencies>
 

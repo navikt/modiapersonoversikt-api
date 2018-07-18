@@ -1,7 +1,7 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.sak.mock;
 
 import no.nav.sbl.dialogarena.common.kodeverk.Kodeverk;
-import no.nav.sbl.dialogarena.saksoversikt.service.service.BulletproofKodeverkService;
+import no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.BulletproofKodeverkService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 

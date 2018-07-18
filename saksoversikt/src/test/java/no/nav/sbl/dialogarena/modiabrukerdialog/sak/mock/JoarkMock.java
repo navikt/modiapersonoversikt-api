@@ -11,7 +11,7 @@ import java.util.List;
 import static java.util.Arrays.asList;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.sak.transformers.JournalpostTransformer.DOKTYPE_HOVEDDOKUMENT;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.sak.transformers.JournalpostTransformer.DOKTYPE_VEDLEGG;
-import static no.nav.sbl.dialogarena.saksoversikt.service.providerdomain.Kommunikasjonsretning.JOURNALPOST_UTGAAENDE;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.Kommunikasjonsretning.JOURNALPOST_UTGAAENDE;
 
 public class JoarkMock {
 
