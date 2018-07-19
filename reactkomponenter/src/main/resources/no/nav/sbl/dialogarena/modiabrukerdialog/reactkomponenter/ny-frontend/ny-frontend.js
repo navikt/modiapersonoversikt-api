@@ -18,7 +18,7 @@ class NyFrontend extends React.Component {
 
     oppdaterToggle() {
         if (!this.props.nyBrukerprofil) {
-            document.addEventListener('keyup', function(event) {
+            document.addEventListener('keydown', function(event) {
                 if (event.key === 'b') {
                     event.stopPropagation();
                 }
