@@ -9,8 +9,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.AnsattService;
 import no.nav.tjeneste.virksomhet.oppgave.v3.HentOppgaveOppgaveIkkeFunnet;
 import no.nav.tjeneste.virksomhet.oppgave.v3.OppgaveV3;
 import no.nav.tjeneste.virksomhet.oppgave.v3.informasjon.oppgave.WSOppgave;
-import no.nav.tjeneste.virksomhet.oppgave.v3.meldinger.WSHentOppgaveRequest;
-import no.nav.tjeneste.virksomhet.oppgave.v3.meldinger.WSHentOppgaveResponse;
+import no.nav.tjeneste.virksomhet.oppgave.v3.meldinger.*;
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.LagreOppgaveOppgaveIkkeFunnet;
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.LagreOppgaveOptimistiskLasing;
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.OppgavebehandlingV3;
@@ -55,7 +54,11 @@ public class OppgaveBehandlingServiceImpl implements OppgaveBehandlingService {
     private LeggTilbakeOppgaveIGsakDelegate leggTilbakeOppgaveIGsakDelegate;
 
     @Inject
-    public OppgaveBehandlingServiceImpl(OppgavebehandlingV3 oppgavebehandlingWS, TildelOppgaveV1 tildelOppgaveWS, OppgaveV3 oppgaveWS,  AnsattService ansattWS, ArbeidsfordelingV1Service arbeidsfordelingService) {
+    public OppgaveBehandlingServiceImpl(OppgavebehandlingV3 oppgavebehandlingWS,
+                                        TildelOppgaveV1 tildelOppgaveWS,
+                                        OppgaveV3 oppgaveWS,
+                                        AnsattService ansattWS,
+                                        ArbeidsfordelingV1Service arbeidsfordelingService) {
         this.oppgavebehandlingWS = oppgavebehandlingWS;
         this.tildelOppgaveWS = tildelOppgaveWS;
         this.oppgaveWS = oppgaveWS;
@@ -69,11 +72,30 @@ public class OppgaveBehandlingServiceImpl implements OppgaveBehandlingService {
     }
 
     @Override
+    public List<Oppgave> finnTildelteOppgaverIGsak() {
+        return oppgaveWS
+                .finnOppgaveListe(new WSFinnOppgaveListeRequest()
+                        .withSok(new WSFinnOppgaveListeSok()
+                                .withAnsvarligId(getSubjectHandler().getUid())
+                                .withFagomradeKodeListe(KONTAKT_NAV))
+                        .withFilter(new WSFinnOppgaveListeFilter()
+                                .withAktiv(true)
+                                .withOppgavetypeKodeListe(SPORSMAL_OG_SVAR)))
+                .getOppgaveListe().stream()
+                .map(OppgaveBehandlingServiceImpl::wsOppgaveToOppgave)
+                .collect(toList());
+    }
+
+    @Override
     public List<Oppgave> plukkOppgaverFraGsak(Temagruppe temagruppe, String saksbehandlersValgteEnhet) {
         int enhetsId = Integer.parseInt(saksbehandlersValgteEnhet);
         return tildelEldsteLedigeOppgaver(temagruppe, enhetsId, saksbehandlersValgteEnhet).stream()
-                .map(oppgave -> new Oppgave(oppgave.getOppgaveId(), oppgave.getGjelder().getBrukerId(), oppgave.getHenvendelseId()))
+                .map(OppgaveBehandlingServiceImpl::wsOppgaveToOppgave)
                 .collect(toList());
+    }
+
+    private static Oppgave wsOppgaveToOppgave(WSOppgave wsOppgave) {
+        return new Oppgave(wsOppgave.getOppgaveId(), wsOppgave.getGjelder().getBrukerId(), wsOppgave.getHenvendelseId());
     }
 
     @Override

@@ -4,6 +4,7 @@ import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navansatt.HentNAVAnsattFaultGOSYSGe
 import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navansatt.HentNAVAnsattFaultGOSYSNAVAnsattIkkeFunnetMsg;
 import no.nav.brukerdialog.security.context.StaticSubjectHandler;
 import no.nav.brukerdialog.security.context.SubjectHandler;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Oppgave;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveBehandlingService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.AnsattService;
@@ -11,6 +12,8 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.Saksbe
 import no.nav.tjeneste.virksomhet.oppgave.v3.HentOppgaveOppgaveIkkeFunnet;
 import no.nav.tjeneste.virksomhet.oppgave.v3.OppgaveV3;
 import no.nav.tjeneste.virksomhet.oppgave.v3.informasjon.oppgave.WSOppgave;
+import no.nav.tjeneste.virksomhet.oppgave.v3.meldinger.WSFinnOppgaveListeRequest;
+import no.nav.tjeneste.virksomhet.oppgave.v3.meldinger.WSFinnOppgaveListeResponse;
 import no.nav.tjeneste.virksomhet.oppgave.v3.meldinger.WSHentOppgaveRequest;
 import no.nav.tjeneste.virksomhet.oppgave.v3.meldinger.WSHentOppgaveResponse;
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.LagreOppgaveOppgaveIkkeFunnet;
@@ -28,6 +31,9 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+
+import java.util.Arrays;
+import java.util.List;
 
 import static java.util.stream.Collectors.toSet;
 import static no.nav.sbl.dialogarena.common.collections.Collections.asSet;
@@ -112,8 +118,8 @@ public class OppgaveBehandlingServiceImplTest {
         verify(tildelOppgaveWS).tildelFlereOppgaver(tildelFlereOppgaverRequestCaptor.capture());
         verify(oppgaveWS, times(2)).hentOppgave(hentOppgaveRequestCaptor.capture());
         assertThat(hentOppgaveRequestCaptor.getAllValues().stream()
-                .map(WSHentOppgaveRequest::getOppgaveId)
-                .collect(toSet()),
+                        .map(WSHentOppgaveRequest::getOppgaveId)
+                        .collect(toSet()),
                 is(asSet(OPPGAVE_ID_1, OPPGAVE_ID_2)));
         assertNotNull(tildelFlereOppgaverRequestCaptor.getValue());
         assertThat(tildelFlereOppgaverRequestCaptor.getValue().getFagomrade(), is("KNA"));
@@ -170,6 +176,24 @@ public class OppgaveBehandlingServiceImplTest {
         assertThat(endreOppgave.getSaksnummer(), is(oppgave.getSaksnummer()));
         assertThat(endreOppgave.isLest(), is(oppgave.isLest()));
 
+    }
+
+    @Test
+    void skalFinneTilordnaOppgaver() {
+        List<WSOppgave> oppgaveliste = Arrays.asList(
+                lagWSOppgave().withOppgaveId("1"),
+                lagWSOppgave().withOppgaveId("2")
+        );
+        when(oppgaveWS.finnOppgaveListe(any(WSFinnOppgaveListeRequest.class)))
+                .thenReturn(new WSFinnOppgaveListeResponse()
+                        .withOppgaveListe(oppgaveliste)
+                        .withTotaltAntallTreff(oppgaveliste.size()));
+
+        List<Oppgave> resultat = oppgaveBehandlingService.finnTildelteOppgaverIGsak();
+
+        assertThat(resultat.size(), is(oppgaveliste.size()));
+        assertThat(resultat.get(0).oppgaveId, is(oppgaveliste.get(0).getOppgaveId()));
+        assertThat(resultat.get(1).oppgaveId, is(oppgaveliste.get(1).getOppgaveId()));
     }
 
 }

@@ -1,0 +1,82 @@
+package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.oppgave
+
+import no.nav.metrics.MetricsFactory.createEvent
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Oppgave
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.LeggTilbakeOppgaveIGsakRequest
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveBehandlingService
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.http.CookieUtil
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.mapOfNotNull
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.service.plukkoppgave.PlukkOppgaveService
+import org.slf4j.LoggerFactory
+import javax.inject.Inject
+import javax.servlet.http.HttpServletRequest
+import javax.ws.rs.*
+import javax.ws.rs.core.Context
+import javax.ws.rs.core.MediaType.APPLICATION_JSON
+import javax.ws.rs.core.Response
+
+private val logger = LoggerFactory.getLogger(OppgaveController::class.java)
+
+@Path("/oppgaver")
+@Produces(APPLICATION_JSON)
+class OppgaveController @Inject constructor(
+        private val oppgaveBehandlingService: OppgaveBehandlingService,
+        private val plukkOppgaveService: PlukkOppgaveService,
+        private val saksbehandlerInnstillingerService: SaksbehandlerInnstillingerService
+) {
+
+    @POST
+    @Path("/{id}/leggTilbake")
+    fun leggTilbake(@PathParam("id") oppgaveId: String, @Context httpRequest: HttpServletRequest, request: LeggTilbakeRequest): Response {
+
+        val leggTilbakeOppgaveIGsakRequest = LeggTilbakeOppgaveIGsakRequest()
+                .withOppgaveId(oppgaveId)
+                .withBeskrivelse(request.beskrivelse)
+                .withTemagruppe(getTemagruppefraRequest(request.temagruppe))
+                .withSaksbehandlersValgteEnhet(CookieUtil.getSaksbehandlersValgteEnhet(httpRequest))
+
+        try {
+            oppgaveBehandlingService.leggTilbakeOppgaveIGsak(leggTilbakeOppgaveIGsakRequest)
+        } catch (exception: RuntimeException) {
+            throw handterRuntimeFeil(exception)
+        }
+
+        createEvent("hendelse.oppgavecontroller.leggtilbake.fullfort").report()
+        return Response.ok("{\"message\": \"Success\"}").build()
+    }
+
+    @GET
+    @Path("/plukk/{temagruppe}")
+    fun plukkOppgaver(@PathParam("temagruppe") temagruppe: String, @Context httpRequest: HttpServletRequest) =
+            plukkOppgaveService.plukkOppgaver(
+                    Temagruppe.valueOf(temagruppe.toUpperCase()),
+                    CookieUtil.getSaksbehandlersValgteEnhet(httpRequest))
+                    .map { mapOppgave(it) }
+
+    @GET
+    @Path("/tildelt")
+    fun finnTildelte() = oppgaveBehandlingService.finnTildelteOppgaverIGsak()
+            .map { mapOppgave(it) }
+
+}
+
+private fun mapOppgave(oppgave: Oppgave) = mapOfNotNull(
+        "oppgaveid" to oppgave.oppgaveId,
+        "henvendelseid" to oppgave.henvendelseId,
+        "fødselsnummer" to oppgave.fnr
+)
+
+private fun getTemagruppefraRequest(temagruppe: String) =
+        try {
+            Temagruppe.valueOf(temagruppe)
+        } catch (e: IllegalArgumentException) {
+            throw IllegalArgumentException("Ugyldig temagruppe: $temagruppe")
+        }
+
+private fun handterRuntimeFeil(exception: RuntimeException): RuntimeException {
+    logger.error("Feil ved legging av oppgave tilbake til GSAK", exception)
+    createEvent("hendelse.oppgavecontroller.leggtilbake.runtime-exception").report()
+    return exception
+}

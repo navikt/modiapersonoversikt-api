@@ -2,7 +2,6 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.brukerprofil
 
 import com.nhaarman.mockito_kotlin.*
 import no.finn.unleash.Unleash
-import no.finn.unleash.repository.ToggleFetcher
 import no.nav.behandlebrukerprofil.consumer.BehandleBrukerprofilServiceBi
 import no.nav.behandlebrukerprofil.consumer.support.mock.BehandleBrukerprofilMockFactory.getBruker
 import no.nav.brukerprofil.domain.BankkontoUtland
@@ -29,8 +28,6 @@ import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
-import org.mockito.Mockito.`when`
-import org.mockito.MockitoAnnotations.initMocks
 import java.time.LocalDate
 import javax.ws.rs.BadRequestException
 import javax.ws.rs.ForbiddenException
@@ -82,10 +79,9 @@ class BrukerprofilControllerTest {
     private val kjerneinfoService: PersonKjerneinfoServiceBi = mock()
     private val ldapService: LDAPService = mock()
 
-    private val toggleFetcher: ToggleFetcher = mock()
     private val unleash: Unleash = mock()
     private val api = "www.unleashurl.com"
-    private var unleashService: UnleashService = UnleashServiceImpl(toggleFetcher, unleash, api)
+    private var unleashService: UnleashService = UnleashServiceImpl(mock(), unleash, api)
 
     private val controller = BrukerprofilController(
             behandlePersonService,
@@ -97,9 +93,7 @@ class BrukerprofilControllerTest {
 
     @BeforeEach
     fun before() {
-        initMocks(this)
-
-        `when`<Boolean>(unleash!!.isEnabled(Feature.NYTT_VISITTKORT_UNLEASH.propertyKey)).thenReturn(true)
+        whenever(unleash.isEnabled(Feature.NYTT_VISITTKORT_UNLEASH.propertyKey)).thenReturn(true)
 
         SubjectHandlerUtil.setInnloggetSaksbehandler(INNLOGGET_SAKSBEHANDLER)
         whenever(ldapService.saksbehandlerHarRolle(INNLOGGET_SAKSBEHANDLER, ENDRE_NAVN_ROLLE)).thenReturn(true)
@@ -109,10 +103,8 @@ class BrukerprofilControllerTest {
     }
 
     @AfterEach
-    fun after() = disableToggle()
-
-    fun disableToggle() {
-        `when`<Boolean>(unleash!!.isEnabled(Feature.NYTT_VISITTKORT_UNLEASH.propertyKey)).thenReturn(false)
+    fun after() {
+        whenever(unleash.isEnabled(Feature.NYTT_VISITTKORT_UNLEASH.propertyKey)).thenReturn(false)
     }
 
 
@@ -231,7 +223,7 @@ class BrukerprofilControllerTest {
         fun `Kaller tjenesten med postboksadresse hvis den skal settes`() {
             controller.endreAdresse(AREMARK_FNR, EndreAdresseRequest(EndreAdresseRequest.NorskAdresse(
                     postboksadresse = EndreAdresseRequest.NorskAdresse.Postboksadresse(
-                            tilleggsadresse= CONAVN,
+                            tilleggsadresse = CONAVN,
                             postnummer = POSTNUMMER,
                             gyldigTil = OM_FIRE_UKER,
                             postboksanlegg = POSTBOKSANLEGG,

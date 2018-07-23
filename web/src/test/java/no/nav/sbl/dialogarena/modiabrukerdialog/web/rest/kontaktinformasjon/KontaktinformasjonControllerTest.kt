@@ -1,24 +1,22 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.kontaktinformasjon
 
 import com.nhaarman.mockito_kotlin.mock
+import com.nhaarman.mockito_kotlin.whenever
 import no.finn.unleash.Unleash
-import no.finn.unleash.repository.ToggleFetcher
 import no.nav.dkif.consumer.DkifService
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.Feature
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.disableFeature
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.enableFeature
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.unleash.UnleashService
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.unleash.UnleashServiceImpl
 import no.nav.tjeneste.virksomhet.digitalkontaktinformasjon.v1.informasjon.WSEpostadresse
 import no.nav.tjeneste.virksomhet.digitalkontaktinformasjon.v1.informasjon.WSKontaktinformasjon
 import no.nav.tjeneste.virksomhet.digitalkontaktinformasjon.v1.informasjon.WSMobiltelefonnummer
 import no.nav.tjeneste.virksomhet.digitalkontaktinformasjon.v1.meldinger.WSHentDigitalKontaktinformasjonResponse
-import org.junit.jupiter.api.*
-import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.Assertions.assertAll
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.DisplayName
+import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.function.Executable
-import org.mockito.Mock
-import org.mockito.Mockito.`when`
-import org.mockito.MockitoAnnotations
 import java.text.SimpleDateFormat
 import java.util.*
 import javax.xml.datatype.DatatypeFactory
@@ -32,38 +30,27 @@ private const val RESERVASJON = "Reservert"
 
 class KontaktinformasjonControllerTest {
 
-    @Mock
-    private lateinit var dkifService: DkifService
-
-    private lateinit var controller: KontaktinformasjonController
-
-    private val toggleFetcher: ToggleFetcher = mock()
+    private val dkifService: DkifService = mock()
     private val unleash: Unleash = mock()
     private val api = "www.unleashurl.com"
-    private var unleashService: UnleashService = UnleashServiceImpl(toggleFetcher, unleash, api)
+    private val controller = KontaktinformasjonController(dkifService, UnleashServiceImpl(mock(), unleash, api))
 
     @BeforeEach
     fun before() {
-        MockitoAnnotations.initMocks(this)
-
-        `when`<Boolean>(unleash!!.isEnabled(Feature.NYTT_VISITTKORT_UNLEASH.propertyKey)).thenReturn(true)
-
+        whenever(unleash.isEnabled(Feature.NYTT_VISITTKORT_UNLEASH.propertyKey)).thenReturn(true)
         setupDKIFMock()
-        controller = KontaktinformasjonController(dkifService, unleashService)
     }
 
     @AfterEach
-    fun after() = disableToggle()
-
-    fun disableToggle() {
-        `when`<Boolean>(unleash!!.isEnabled(Feature.NYTT_VISITTKORT_UNLEASH.propertyKey)).thenReturn(false)
+    fun after() {
+        whenever(unleash.isEnabled(Feature.NYTT_VISITTKORT_UNLEASH.propertyKey)).thenReturn(false)
     }
 
     private fun setupDKIFMock() {
         val epost = WSEpostadresse().withValue(EPOST).withSistOppdatert(lagDato(SIST_OPPDATERT))
         val mobiltelefon = WSMobiltelefonnummer().withValue(MOBILTELEFON).withSistOppdatert(lagDato(SIST_OPPDATERT))
 
-        `when`(dkifService.hentDigitalKontaktinformasjon(FNR))
+        whenever(dkifService.hentDigitalKontaktinformasjon(FNR))
                 .thenReturn(WSHentDigitalKontaktinformasjonResponse()
                         .withDigitalKontaktinformasjon(WSKontaktinformasjon()
                                 .withReservasjon(RESERVASJON)
@@ -72,29 +59,27 @@ class KontaktinformasjonControllerTest {
     }
 
     @Test
-    @DisplayName("Henter informasjon fra Digital Kontaktinformasjon registeret")
-    fun henterKontaktinformasjon() {
+    fun `Henter informasjon fra Digital Kontaktinformasjon registeret`() {
         val response = controller.hentKontaktinformasjon(FNR)
         val epost = response["epost"] as Map<String, String>
         val mobiltelefon = response["mobiltelefon"] as Map<String, String>
 
         assertAll("Henter epost",
                 Executable { assertEquals(EPOST, epost["value"]) },
-                Executable { assertEquals(lagDato(SIST_OPPDATERT), epost["sistOppdatert"])}
+                Executable { assertEquals(lagDato(SIST_OPPDATERT), epost["sistOppdatert"]) }
         )
 
         assertAll("Henter mobiltelefon",
                 Executable { assertEquals(MOBILTELEFON, mobiltelefon["value"]) },
-                Executable { assertEquals(lagDato(SIST_OPPDATERT), mobiltelefon["sistOppdatert"])}
+                Executable { assertEquals(lagDato(SIST_OPPDATERT), mobiltelefon["sistOppdatert"]) }
         )
 
         assertEquals(RESERVASJON, response["reservasjon"])
     }
 
     @Test
-    @DisplayName("Når bruker ikke har epost eller mobil")
-    fun brukerUtenEpostOgTelefon() {
-        `when`(dkifService.hentDigitalKontaktinformasjon(FNR)).thenReturn(WSHentDigitalKontaktinformasjonResponse()
+    fun `Når bruker ikke har epost eller mobil`() {
+        whenever(dkifService.hentDigitalKontaktinformasjon(FNR)).thenReturn(WSHentDigitalKontaktinformasjonResponse()
                 .withDigitalKontaktinformasjon(WSKontaktinformasjon()))
 
         val response = controller.hentKontaktinformasjon(FNR)

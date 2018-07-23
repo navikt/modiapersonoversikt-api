@@ -26,9 +26,6 @@ import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
-import org.mockito.ArgumentMatchers.anyString
-import org.mockito.Mockito
-import org.mockito.MockitoAnnotations
 import java.util.*
 import javax.ws.rs.NotFoundException
 import kotlin.test.assertEquals
@@ -43,7 +40,7 @@ private const val BANKNAVN = "Pengebingen ASA"
 private const val SWIFT = "Taylor"
 private const val LANDKODE = "IOT"
 
-class PersonControllerTest {
+internal class PersonControllerTest {
 
     private val personV3: PersonV3 = mock()
     private val pep: EnforcementPoint = mock()
@@ -61,17 +58,13 @@ class PersonControllerTest {
 
     @BeforeEach
     fun before() {
-        MockitoAnnotations.initMocks(this)
-
-        Mockito.`when`<Boolean>(unleash!!.isEnabled(Feature.NYTT_VISITTKORT_UNLEASH.propertyKey)).thenReturn(true)
+        whenever(unleash.isEnabled(Feature.NYTT_VISITTKORT_UNLEASH.propertyKey)).thenReturn(true)
         whenever(organisasjonenhetV2Service.finnNAVKontor(any(), any())).thenReturn(Optional.empty())
     }
 
     @AfterEach
-    fun after() = disableToggle()
-
-    fun disableToggle() {
-        Mockito.`when`<Boolean>(unleash!!.isEnabled(Feature.NYTT_VISITTKORT_UNLEASH.propertyKey)).thenReturn(false)
+    fun after() {
+        whenever(unleash.isEnabled(Feature.NYTT_VISITTKORT_UNLEASH.propertyKey)).thenReturn(false)
     }
 
 
