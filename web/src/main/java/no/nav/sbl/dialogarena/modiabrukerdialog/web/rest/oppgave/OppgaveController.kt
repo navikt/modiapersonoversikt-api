@@ -1,11 +1,12 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.oppgave
 
+import no.nav.brukerdialog.security.context.SubjectHandler.getSubjectHandler
 import no.nav.metrics.MetricsFactory.createEvent
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Oppgave
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.LeggTilbakeOppgaveIGsakRequest
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveBehandlingService
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.ldap.LDAPService
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.http.CookieUtil
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.mapOfNotNull
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.service.plukkoppgave.PlukkOppgaveService
@@ -18,13 +19,14 @@ import javax.ws.rs.core.MediaType.APPLICATION_JSON
 import javax.ws.rs.core.Response
 
 private val logger = LoggerFactory.getLogger(OppgaveController::class.java)
+private const val HENT_OPPGAVE_ROLLE = "BD06_HentOppgave"
 
 @Path("/oppgaver")
 @Produces(APPLICATION_JSON)
 class OppgaveController @Inject constructor(
         private val oppgaveBehandlingService: OppgaveBehandlingService,
         private val plukkOppgaveService: PlukkOppgaveService,
-        private val saksbehandlerInnstillingerService: SaksbehandlerInnstillingerService
+        private val ldapService: LDAPService
 ) {
 
     @POST
@@ -50,15 +52,23 @@ class OppgaveController @Inject constructor(
     @GET
     @Path("/plukk/{temagruppe}")
     fun plukkOppgaver(@PathParam("temagruppe") temagruppe: String, @Context httpRequest: HttpServletRequest) =
-            plukkOppgaveService.plukkOppgaver(
-                    Temagruppe.valueOf(temagruppe.toUpperCase()),
-                    CookieUtil.getSaksbehandlersValgteEnhet(httpRequest))
+            plukkOppgaveService
+                    .also { verifiserTilgang(HENT_OPPGAVE_ROLLE) }
+                    .plukkOppgaver(Temagruppe.valueOf(temagruppe.toUpperCase()),
+                            CookieUtil.getSaksbehandlersValgteEnhet(httpRequest))
                     .map { mapOppgave(it) }
 
     @GET
     @Path("/tildelt")
     fun finnTildelte() = oppgaveBehandlingService.finnTildelteOppgaverIGsak()
             .map { mapOppgave(it) }
+
+    private fun verifiserTilgang(rolle: String) {
+        val consumerId = getSubjectHandler().uid
+        if (!ldapService.saksbehandlerHarRolle(consumerId, rolle)) {
+            throw ForbiddenException("Saksbehandler $consumerId har ikke rollen $rolle")
+        }
+    }
 
 }
 

@@ -6,6 +6,7 @@ import _0._0.nav_cons_sak_gosys_3.no.nav.asbo.navorgenhet.ASBOGOSYSNavEnhet
 import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navansatt.GOSYSNAVansatt
 import com.nhaarman.mockito_kotlin.*
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Oppgave
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.ldap.LDAPService
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.http.HttpRequestUtil
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.http.SubjectHandlerUtil
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.oppgavebehandling.OppgaveBehandlingServiceImpl
@@ -15,7 +16,6 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.service.plukkoppgave.PlukkOp
 import no.nav.tjeneste.virksomhet.oppgave.v3.OppgaveV3
 import no.nav.tjeneste.virksomhet.oppgave.v3.informasjon.oppgave.*
 import no.nav.tjeneste.virksomhet.oppgave.v3.meldinger.WSFinnOppgaveListeResponse
-import no.nav.tjeneste.virksomhet.oppgave.v3.meldinger.WSHentOppgaveRequest
 import no.nav.tjeneste.virksomhet.oppgave.v3.meldinger.WSHentOppgaveResponse
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.OppgavebehandlingV3
 import no.nav.tjeneste.virksomhet.tildeloppgave.v1.TildelOppgaveV1
@@ -40,6 +40,7 @@ internal class OppgaveControllerTest {
     private val oppgaveWSMock: OppgaveV3 = mockOppgaveWs()
     private val ansattWSMock: AnsattServiceImpl = AnsattServiceImpl(mockGosysNavAnsatt())
     private val plukkOppgaveService: PlukkOppgaveService = mock()
+    private val ldapService: LDAPService = mock()
     private val oppgaveController: OppgaveController = OppgaveController(
             OppgaveBehandlingServiceImpl(
                     oppgaveBehandlingMock,
@@ -49,12 +50,13 @@ internal class OppgaveControllerTest {
                     mock()
             ),
             plukkOppgaveService,
-            mock()
+            ldapService
     )
 
     @BeforeEach
     fun before() {
         SubjectHandlerUtil.setInnloggetSaksbehandler(SAKSBEHANDLERS_IDENT)
+        whenever(ldapService.saksbehandlerHarRolle(any(), any())).thenReturn(true)
     }
 
     private fun mockOppgaveWs(): OppgaveV3 {
