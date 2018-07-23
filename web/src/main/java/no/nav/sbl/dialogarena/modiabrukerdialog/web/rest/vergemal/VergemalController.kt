@@ -20,7 +20,7 @@ class VergemalController @Inject constructor(private val vergemalService: Vergem
     @GET
     @Path("/")
     fun hent(@PathParam("fnr") fødselsnummer: String): Map<String, Any?> {
-        check(unleashService.isEnabled(Feature.NYTT_VISITTKORT_UNLEASH.propertyKey))
+        check(unleashService.isEnabled(Feature.NYTT_VISITTKORT))
 
         val vergemal = vergemalService.hentVergemal(fødselsnummer)
 

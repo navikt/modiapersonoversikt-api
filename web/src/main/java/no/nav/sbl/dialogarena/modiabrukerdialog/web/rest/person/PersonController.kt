@@ -35,7 +35,7 @@ class PersonController @Inject constructor(private val kjerneinfoService: Person
     @GET
     @Path("/")
     fun hent(@PathParam("fnr") fødselsnummer: String): Map<String, Any?> {
-        check(unleashService.isEnabled(Feature.NYTT_VISITTKORT_UNLEASH.propertyKey))
+        check(unleashService.isEnabled(Feature.NYTT_VISITTKORT))
 
         val person = try {
             kjerneinfoService.hentKjerneinformasjon(HentKjerneinformasjonRequest(fødselsnummer)).person
@@ -55,7 +55,7 @@ class PersonController @Inject constructor(private val kjerneinfoService: Person
                 "kjønn" to person.personfakta.kjonn.kodeRef,
                 "geografiskTilknytning" to person.personfakta.geografiskTilknytning?.value,
                 "navn" to getNavn(person),
-                "diskresjonskode" to (person.personfakta.diskresjonskode?.let {Kode(it)}),
+                "diskresjonskode" to person.personfakta.diskresjonskode?.let { Kode(it) },
                 "bankkonto" to hentBankkonto(person),
                 "tilrettelagtKomunikasjonsListe" to hentTilrettelagtKommunikasjon(person.personfakta.tilrettelagtKommunikasjon),
                 "personstatus" to getPersonstatus(person),

@@ -2,7 +2,6 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.egenansatt
 
 import no.nav.kjerneinfo.consumer.egenansatt.EgenAnsattService
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.Feature
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.visFeature
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.unleash.UnleashService
 import javax.inject.Inject
 import javax.ws.rs.GET
@@ -19,7 +18,7 @@ class EgenAnsattController @Inject constructor(private val egenAnsattService: Eg
     @Produces(MediaType.APPLICATION_JSON)
     fun erEgenAnsatt(@PathParam("fnr") fødselsnummer: String): Map<String, Boolean> {
 
-        check(unleashService.isEnabled(Feature.NYTT_VISITTKORT_UNLEASH.propertyKey))
+        check(unleashService.isEnabled(Feature.NYTT_VISITTKORT))
 
         return mapOf("erEgenAnsatt" to egenAnsattService.erEgenAnsatt(fødselsnummer))
     }

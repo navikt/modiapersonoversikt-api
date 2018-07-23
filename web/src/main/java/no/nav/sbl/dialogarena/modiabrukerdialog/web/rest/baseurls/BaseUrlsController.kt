@@ -17,7 +17,7 @@ constructor(private val unleashService: UnleashService) {
     @GET
     @Path("/")
     fun hent(): Map<String, Any?> {
-        check(unleashService.isEnabled(Feature.NYTT_VISITTKORT_UNLEASH.propertyKey))
+        check(unleashService.isEnabled(Feature.NYTT_VISITTKORT))
 
         return mapOf("baseUrls" to getBaseUrls())
     }
