@@ -61,7 +61,6 @@ import static no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Kanal.*;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype.*;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.TemagruppeTemaMapping.hentTemagruppeForTema;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.DialogPanel.NY_DIALOG_AVBRUTT;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.saksbehandlerpanel.SaksbehandlerInnstillingerPanel.SAKSBEHANDLERINNSTILLINGER_VALGT;
 import static org.apache.wicket.event.Broadcast.BREADTH;
 import static org.slf4j.LoggerFactory.getLogger;
 
@@ -244,11 +243,6 @@ public class NyDialogPanel extends GenericPanel<HenvendelseVM> {
 
         response.render(OnDomReadyHeaderItem.forScript("$('.temagruppevelger').selectmenu({appendTo:'.temagruppevelger-wrapper'});"));
         response.render(OnDomReadyHeaderItem.forScript(forhindreAtEntertastIModusVelgerApnerSok));
-    }
-
-    @RunOnEvents(SAKSBEHANDLERINNSTILLINGER_VALGT)
-    public void oppdaterReferatVM(AjaxRequestTarget target) {
-        skrivestottePanel.oppdater(target);
     }
 
     private void settOppModellMedDefaultVerdier() {

@@ -2,7 +2,6 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web;
 
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.constants.Events;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.fortsettdialogpanel.LeggTilbakePanel;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.saksbehandlerpanel.SaksbehandlerInnstillingerPanel;
 import org.apache.commons.collections15.Closure;
 import org.apache.wicket.Page;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -31,7 +30,6 @@ public class FocusHandler {
     };
 
     private static final Map<String, Closure<Page>> EVENT_HANDLERS = new HashMap<String, Closure<Page>>() {{
-        put(SaksbehandlerInnstillingerPanel.SAKSBEHANDLERINNSTILLINGER_VALGT, FOKUS_SOK_FELT);
         put(LeggTilbakePanel.LEGG_TILBAKE_FERDIG, FOKUS_SOK_FELT);
         put(Events.SporsmalOgSvar.OPPGAVE_OPPRETTET_FERDIG, FOKUS_SOK_FELT);
     }};

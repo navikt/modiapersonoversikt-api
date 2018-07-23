@@ -41,7 +41,6 @@ import static no.nav.modig.wicket.model.ModelUtils.both;
 import static no.nav.modig.wicket.model.ModelUtils.not;
 import static no.nav.modig.wicket.shortcuts.Shortcuts.cssClass;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe.KOMMUNALE_TJENESTER;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.saksbehandlerpanel.SaksbehandlerInnstillingerPanel.SAKSBEHANDLERINNSTILLINGER_VALGT;
 
 public class FortsettDialogFormElementer extends WebMarkupContainer {
 
@@ -163,11 +162,6 @@ public class FortsettDialogFormElementer extends WebMarkupContainer {
             brukerKanSvare.getModel().setObject(false);
             brukerKanSvare.modelChanged();
         }
-    }
-
-    @RunOnEvents(SAKSBEHANDLERINNSTILLINGER_VALGT)
-    public void oppdaterReferatVM(AjaxRequestTarget target) {
-        skrivestottePanel.oppdater(target);
     }
 
     @Override

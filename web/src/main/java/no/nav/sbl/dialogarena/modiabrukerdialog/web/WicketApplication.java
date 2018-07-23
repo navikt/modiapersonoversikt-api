@@ -29,7 +29,6 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.mocksetup.MockSetupPage;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.hentperson.HentPersonPage;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.PersonPage;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.hode.Hode;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.saksbehandlerpanel.SaksbehandlerInnstillingerTogglerPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.purgeoppgaver.PurgeOppgaverPage;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.selftest.SelfTestPage;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.Innboks;
@@ -222,7 +221,6 @@ public class WicketApplication extends WebApplication {
                         DatePicker.JQUERY_PLACEHOLDER,
                         ModalErrorPanel.JS_RESOURCE,
                         UtbetalingLerret.UTBETALING_LAMELL_JS,
-                        SaksbehandlerInnstillingerTogglerPanel.SAKSBEHANDLER_INNSTILLINGER_JS,
                         Innboks.MELDINGER_JS,
                         Innboks.BESVAR_INDIKATOR_JS,
                         FancySelect.JS,
