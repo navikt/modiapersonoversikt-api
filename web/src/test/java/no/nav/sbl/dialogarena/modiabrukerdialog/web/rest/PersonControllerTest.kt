@@ -26,6 +26,7 @@ import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
+import org.mockito.ArgumentMatchers.anyString
 import org.mockito.Mockito
 import org.mockito.MockitoAnnotations
 import java.util.*
@@ -102,6 +103,46 @@ class PersonControllerTest {
         val statsborgerskap = response["statsborgerskap"]
 
         assertEquals(null, statsborgerskap)
+    }
+
+    @Test
+    fun `Med statsborgerskap`() {
+        val mockPersonResponse = mockPersonResponse().apply {
+            person.withStatsborgerskap(WSStatsborgerskap().withLand(WSLandkoder()
+                    .withValue("NOR")
+                    .withKodeverksRef("Land")))
+        }
+        whenever(kodeverk.getBeskrivelseForKode("NOR", "Land", "nb")).thenReturn("NORGE")
+        whenever(personV3.hentPerson(any())).thenReturn(mockPersonResponse)
+
+        val response = controller.hent(FNR)
+        val statsborgerskap = response["statsborgerskap"] as Kode
+
+        assertEquals("NORGE", statsborgerskap.beskrivelse)
+        assertEquals("NOR", statsborgerskap.kodeRef)
+    }
+
+    @Test
+    fun `Med diskresjonskode`() {
+        val mockPersonResponse = mockPersonResponse().apply {
+            person.withDiskresjonskode(WSDiskresjonskoder().withValue("SPFO"))
+        }
+        whenever(personV3.hentPerson(any())).thenReturn(mockPersonResponse)
+
+        val response = controller.hent(FNR)
+        val diskresjonskode = response["diskresjonskode"] as Kode
+
+        assertEquals("SPFO", diskresjonskode.kodeRef)
+    }
+
+    @Test
+    fun `Uten diskresjonskode`() {
+        whenever(personV3.hentPerson(any())).thenReturn(mockPersonResponse())
+
+        val response = controller.hent(FNR)
+        val diskresjonskode = response["diskresjonskode"]
+
+        assertEquals(null, diskresjonskode)
     }
 
     private fun mockPersonResponse() = WSHentPersonResponse()

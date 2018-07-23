@@ -55,7 +55,7 @@ class PersonController @Inject constructor(private val kjerneinfoService: Person
                 "kjønn" to person.personfakta.kjonn.kodeRef,
                 "geografiskTilknytning" to person.personfakta.geografiskTilknytning?.value,
                 "navn" to getNavn(person),
-                "diskresjonskode" to (person.personfakta.diskresjonskode?.kodeRef ?: ""),
+                "diskresjonskode" to (person.personfakta.diskresjonskode?.let {Kode(it)}),
                 "bankkonto" to hentBankkonto(person),
                 "tilrettelagtKomunikasjonsListe" to hentTilrettelagtKommunikasjon(person.personfakta.tilrettelagtKommunikasjon),
                 "personstatus" to getPersonstatus(person),
