@@ -1,7 +1,7 @@
 import React from 'react';
 import PT from 'prop-types';
 
-import Visittkort from 'modiapersonoversikt/build/dist/components/StandAloneVisittkort/VisittKortStandAlone';
+import Visittkort from 'modiapersonoversikt/build/dist/components/standalone/VisittKort';
 
 class NyFrontend extends React.Component {
     render() {
