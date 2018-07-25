@@ -1,4 +1,4 @@
-package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.unleash.strategier;
+package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.strategier;
 
 import no.finn.unleash.strategy.Strategy;
 

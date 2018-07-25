@@ -1,7 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.brukerprofil
 
 import com.nhaarman.mockito_kotlin.*
-import no.finn.unleash.Unleash
 import no.nav.behandlebrukerprofil.consumer.BehandleBrukerprofilServiceBi
 import no.nav.behandlebrukerprofil.consumer.support.mock.BehandleBrukerprofilMockFactory.getBruker
 import no.nav.brukerprofil.domain.BankkontoUtland
@@ -16,15 +15,13 @@ import no.nav.kjerneinfo.domain.person.Fodselsnummer
 import no.nav.kjerneinfo.domain.person.Person
 import no.nav.kjerneinfo.domain.person.Personfakta
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.ldap.LDAPService
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.Feature
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.Feature
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.http.SubjectHandlerUtil
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.unleash.UnleashService
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.unleash.UnleashServiceImpl
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.UnleashService
 import no.nav.tjeneste.virksomhet.behandlebrukerprofil.v2.OppdaterKontaktinformasjonOgPreferanserPersonIdentErUtgaatt
 import no.nav.tjeneste.virksomhet.behandlebrukerprofil.v2.OppdaterKontaktinformasjonOgPreferanserPersonIkkeFunnet
 import no.nav.tjeneste.virksomhet.behandlebrukerprofil.v2.OppdaterKontaktinformasjonOgPreferanserSikkerhetsbegrensning
 import no.nav.tjeneste.virksomhet.behandlebrukerprofil.v2.OppdaterKontaktinformasjonOgPreferanserUgyldigInput
-import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
@@ -78,10 +75,7 @@ class BrukerprofilControllerTest {
     private val behandleBrukerProfilService: BehandleBrukerprofilServiceBi = mock()
     private val kjerneinfoService: PersonKjerneinfoServiceBi = mock()
     private val ldapService: LDAPService = mock()
-
-    private val unleash: Unleash = mock()
-    private val api = "www.unleashurl.com"
-    private var unleashService: UnleashService = UnleashServiceImpl(mock(), unleash, api)
+    private val unleashService: UnleashService = mock()
 
     private val controller = BrukerprofilController(
             behandlePersonService,
@@ -93,7 +87,7 @@ class BrukerprofilControllerTest {
 
     @BeforeEach
     fun before() {
-        whenever(unleash.isEnabled(Feature.NYTT_VISITTKORT_UNLEASH.propertyKey)).thenReturn(true)
+        whenever(unleashService.isEnabled(Feature.NYTT_VISITTKORT)).thenReturn(true)
 
         SubjectHandlerUtil.setInnloggetSaksbehandler(INNLOGGET_SAKSBEHANDLER)
         whenever(ldapService.saksbehandlerHarRolle(INNLOGGET_SAKSBEHANDLER, ENDRE_NAVN_ROLLE)).thenReturn(true)
@@ -101,12 +95,6 @@ class BrukerprofilControllerTest {
         whenever(ldapService.saksbehandlerHarRolle(INNLOGGET_SAKSBEHANDLER, ENDRE_KONTONUMMER_ROLLE)).thenReturn(true)
         whenever(kjerneinfoService.hentBrukerprofil(any())).thenReturn(getBruker())
     }
-
-    @AfterEach
-    fun after() {
-        whenever(unleash.isEnabled(Feature.NYTT_VISITTKORT_UNLEASH.propertyKey)).thenReturn(false)
-    }
-
 
     @Nested
     inner class Navn {

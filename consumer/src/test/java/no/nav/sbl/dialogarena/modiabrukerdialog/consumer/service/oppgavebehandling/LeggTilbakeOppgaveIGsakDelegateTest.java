@@ -1,4 +1,4 @@
-package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.oppgavebehandling;
+package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.oppgavebehandling;
 
 import no.nav.brukerdialog.security.context.SubjectHandler;
 import no.nav.brukerdialog.security.context.SubjectHandlerUtils;
@@ -31,7 +31,7 @@ import org.mockito.ArgumentCaptor;
 import javax.ws.rs.ForbiddenException;
 import java.util.Collections;
 
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.oppgavebehandling.OppgaveMockFactory.*;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.oppgavebehandling.OppgaveMockFactory.*;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;

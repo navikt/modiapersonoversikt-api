@@ -1,10 +1,10 @@
-package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.unleash;
+package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash;
 
 import no.nav.modig.modia.ping.PingResult;
 
 public class UnleashServiceMock implements UnleashService {
     @Override
-    public boolean isEnabled(String toggleName) {
+    public boolean isEnabled(Feature feature) {
         return false;
     }
 

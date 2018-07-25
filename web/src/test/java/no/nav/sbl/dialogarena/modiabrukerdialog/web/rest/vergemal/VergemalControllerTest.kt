@@ -3,14 +3,12 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.vergemal
 import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.whenever
-import no.finn.unleash.Unleash
 import no.nav.kjerneinfo.consumer.fim.person.vergemal.VergemalService
 import no.nav.kjerneinfo.consumer.fim.person.vergemal.domain.Periode
 import no.nav.kjerneinfo.consumer.fim.person.vergemal.domain.Verge
 import no.nav.kjerneinfo.domain.person.Personnavn
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.Feature
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.unleash.UnleashServiceImpl
-import org.junit.jupiter.api.AfterEach
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.Feature
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.UnleashServiceImpl
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import java.util.*
@@ -22,21 +20,15 @@ private const val VERGES_IDENT = "123"
 class VergemalControllerTest {
 
     private val vergemalService: VergemalService = mock()
-    private val unleash: Unleash = mock()
-    private val api = "www.unleashurl.com"
+    private val unleashService = UnleashServiceImpl(mock(), mock(), "www.unleashurl.com")
     private val controller: VergemalController = VergemalController(
             vergemalService,
-            UnleashServiceImpl(mock(), unleash, api)
+            unleashService
     )
 
     @BeforeEach
     fun before() {
-        whenever(unleash.isEnabled(Feature.NYTT_VISITTKORT_UNLEASH.propertyKey)).thenReturn(true)
-    }
-
-    @AfterEach
-    fun after() {
-        whenever(unleash.isEnabled(Feature.NYTT_VISITTKORT_UNLEASH.propertyKey)).thenReturn(false)
+        whenever(unleashService.isEnabled(Feature.NYTT_VISITTKORT)).thenReturn(true)
     }
 
     @Test

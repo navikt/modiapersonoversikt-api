@@ -1,4 +1,4 @@
-package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.oppgavebehandling;
+package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.oppgavebehandling;
 
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Oppgave;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;

@@ -1,4 +1,4 @@
-package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.unleash;
+package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash;
 
 import no.finn.unleash.Unleash;
 import no.finn.unleash.repository.FeatureToggleResponse;
@@ -6,6 +6,9 @@ import no.finn.unleash.repository.ToggleFetcher;
 import no.nav.modig.modia.ping.FailedPingResult;
 import no.nav.modig.modia.ping.OkPingResult;
 import no.nav.modig.modia.ping.PingResult;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.Feature;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.UnleashService;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.UnleashServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -40,9 +43,9 @@ class UnleashServiceImplTest {
 
     @Test
     void isEnabled() {
-        when(unleash.isEnabled("test-toggle")).thenReturn(true);
+        when(unleash.isEnabled(Feature.SAMPLE_FEATURE.getPropertyKey())).thenReturn(true);
 
-        boolean enabled = unleashService.isEnabled("test-toggle");
+        boolean enabled = unleashService.isEnabled(Feature.SAMPLE_FEATURE);
 
         verify(unleash, times(1)).isEnabled(any());
         assertTrue(enabled);
@@ -50,9 +53,9 @@ class UnleashServiceImplTest {
 
     @Test
     void isDisabled() {
-        when(unleash.isEnabled("test-toggle")).thenReturn(false);
+        when(unleash.isEnabled(Feature.SAMPLE_FEATURE.getPropertyKey())).thenReturn(false);
 
-        boolean enabled = unleashService.isEnabled("test-toggle");
+        boolean enabled = unleashService.isEnabled(Feature.SAMPLE_FEATURE);
 
         verify(unleash, times(1)).isEnabled(any());
         assertFalse(enabled);

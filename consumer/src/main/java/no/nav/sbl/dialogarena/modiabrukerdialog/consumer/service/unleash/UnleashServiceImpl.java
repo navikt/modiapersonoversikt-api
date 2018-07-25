@@ -1,4 +1,4 @@
-package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.unleash;
+package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash;
 
 import no.finn.unleash.Unleash;
 import no.finn.unleash.repository.FeatureToggleResponse;
@@ -30,8 +30,8 @@ public class UnleashServiceImpl implements UnleashService {
     }
 
     @Override
-    public boolean isEnabled(String toggleName) {
-        return defaultUnleash.isEnabled(toggleName);
+    public boolean isEnabled(Feature feature) {
+        return defaultUnleash.isEnabled(feature.getPropertyKey());
     }
 
     @Override

@@ -1,4 +1,4 @@
-package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.unleash;
+package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint;
 
 import no.finn.unleash.DefaultUnleash;
 import no.finn.unleash.Unleash;
@@ -9,9 +9,13 @@ import no.finn.unleash.strategy.Strategy;
 import no.finn.unleash.util.UnleashConfig;
 import no.nav.brukerdialog.security.context.SubjectHandler;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.AnsattService;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.unleash.strategier.ByEnhetStrategy;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.unleash.strategier.ByEnvironmentStrategy;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.unleash.strategier.IsNotProdStrategy;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.strategier.ByEnhetStrategy;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.strategier.ByEnvironmentStrategy;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.strategier.IsNotProdStrategy;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.UnleashContextProviderImpl;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.UnleashService;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.UnleashServiceImpl;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.UnleashServiceMock;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 

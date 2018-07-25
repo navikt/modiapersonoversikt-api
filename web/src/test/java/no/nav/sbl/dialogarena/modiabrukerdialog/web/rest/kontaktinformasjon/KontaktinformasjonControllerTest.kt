@@ -2,19 +2,16 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.kontaktinformasjon
 
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.whenever
-import no.finn.unleash.Unleash
 import no.nav.dkif.consumer.DkifService
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.Feature
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.unleash.UnleashServiceImpl
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.Feature
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.UnleashService
 import no.nav.tjeneste.virksomhet.digitalkontaktinformasjon.v1.informasjon.WSEpostadresse
 import no.nav.tjeneste.virksomhet.digitalkontaktinformasjon.v1.informasjon.WSKontaktinformasjon
 import no.nav.tjeneste.virksomhet.digitalkontaktinformasjon.v1.informasjon.WSMobiltelefonnummer
 import no.nav.tjeneste.virksomhet.digitalkontaktinformasjon.v1.meldinger.WSHentDigitalKontaktinformasjonResponse
-import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertAll
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.function.Executable
 import java.text.SimpleDateFormat
@@ -31,19 +28,13 @@ private const val RESERVASJON = "Reservert"
 class KontaktinformasjonControllerTest {
 
     private val dkifService: DkifService = mock()
-    private val unleash: Unleash = mock()
-    private val api = "www.unleashurl.com"
-    private val controller = KontaktinformasjonController(dkifService, UnleashServiceImpl(mock(), unleash, api))
+    private val unleashService: UnleashService = mock()
+    private val controller = KontaktinformasjonController(dkifService, unleashService)
 
     @BeforeEach
     fun before() {
-        whenever(unleash.isEnabled(Feature.NYTT_VISITTKORT_UNLEASH.propertyKey)).thenReturn(true)
+        whenever(unleashService.isEnabled(Feature.NYTT_VISITTKORT)).thenReturn(true)
         setupDKIFMock()
-    }
-
-    @AfterEach
-    fun after() {
-        whenever(unleash.isEnabled(Feature.NYTT_VISITTKORT_UNLEASH.propertyKey)).thenReturn(false)
     }
 
     private fun setupDKIFMock() {
