@@ -1,4 +1,4 @@
-package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.oppgavebehandling;
+package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.oppgavebehandling;
 
 import no.nav.tjeneste.virksomhet.oppgave.v3.informasjon.oppgave.*;
 import no.nav.tjeneste.virksomhet.oppgave.v3.meldinger.WSHentOppgaveResponse;

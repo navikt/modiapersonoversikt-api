@@ -1,6 +1,7 @@
-package no.nav.sbl.dialogarena.modiabrukerdialog.consumer;
+package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service;
 
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.Sak;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.PsakServiceImpl;
 import no.nav.tjeneste.virksomhet.pensjonsak.v1.PensjonSakV1;
 import no.nav.tjeneste.virksomhet.pensjonsak.v1.informasjon.WSArkivtema;
 import no.nav.tjeneste.virksomhet.pensjonsak.v1.informasjon.WSPeriode;

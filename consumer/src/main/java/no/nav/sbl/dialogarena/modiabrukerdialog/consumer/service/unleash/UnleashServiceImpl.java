@@ -1,4 +1,4 @@
-package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.unleash;
+package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash;
 
 import no.finn.unleash.Unleash;
 import no.finn.unleash.repository.FeatureToggleResponse;
@@ -6,7 +6,6 @@ import no.finn.unleash.repository.ToggleFetcher;
 import no.nav.modig.modia.ping.FailedPingResult;
 import no.nav.modig.modia.ping.OkPingResult;
 import no.nav.modig.modia.ping.PingResult;
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.Feature;
 import org.slf4j.Logger;
 
 import java.net.ConnectException;

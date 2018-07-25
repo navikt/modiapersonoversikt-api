@@ -1,4 +1,4 @@
-package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.unleash;
+package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash;
 
 import no.finn.unleash.UnleashContext;
 import no.finn.unleash.UnleashContextProvider;
@@ -11,7 +11,7 @@ import javax.inject.Inject;
 import java.util.HashMap;
 
 import static java.util.stream.Collectors.joining;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.unleash.strategier.ByEnhetStrategy.ENHETER;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.strategier.ByEnhetStrategy.ENHETER;
 
 public class UnleashContextProviderImpl implements UnleashContextProvider {
 

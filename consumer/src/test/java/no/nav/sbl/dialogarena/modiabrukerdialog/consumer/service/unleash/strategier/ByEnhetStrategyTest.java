@@ -1,11 +1,11 @@
-package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.unleash.strategier;
+package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.strategier;
 
 import no.finn.unleash.UnleashContext;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
 
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.unleash.strategier.ByEnhetStrategy.ENHETER;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.strategier.ByEnhetStrategy.ENHETER;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.mock;

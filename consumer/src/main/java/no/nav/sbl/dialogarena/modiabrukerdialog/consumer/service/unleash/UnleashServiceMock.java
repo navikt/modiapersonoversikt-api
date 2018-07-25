@@ -1,7 +1,6 @@
-package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.unleash;
+package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash;
 
 import no.nav.modig.modia.ping.PingResult;
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.Feature;
 
 public class UnleashServiceMock implements UnleashService {
     @Override

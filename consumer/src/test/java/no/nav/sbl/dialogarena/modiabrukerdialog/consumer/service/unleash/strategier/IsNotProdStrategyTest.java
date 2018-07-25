@@ -1,6 +1,5 @@
-package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.unleash.strategier;
+package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.strategier;
 
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.unleash.strategier.IsNotProdStrategy;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;

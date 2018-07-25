@@ -1,4 +1,4 @@
-package no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling
+package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash
 
 enum class Feature private constructor(val propertyKey: String, val defaultValue: Boolean) {
 
@@ -7,4 +7,3 @@ enum class Feature private constructor(val propertyKey: String, val defaultValue
     NY_BRUKERPROFIL("modiabrukerdialog.ny-brukerprofil", false),
 
 }
-
