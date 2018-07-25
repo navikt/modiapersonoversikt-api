@@ -48,7 +48,7 @@ public class SakOgBehandlingServiceTest {
                 .thenReturn(new FinnSakOgBehandlingskjedeListeResponse().withSak(saker));
         when(filter.filtrerSaker(any())).thenReturn(saker);
 
-        assertThat(sakOgBehandlingService.hentAlleSaker("12345678901").size(), equalTo(3));
+        assertThat(sakOgBehandlingService.hentAlleSaker("11111111111").size(), equalTo(3));
     }
 
 }

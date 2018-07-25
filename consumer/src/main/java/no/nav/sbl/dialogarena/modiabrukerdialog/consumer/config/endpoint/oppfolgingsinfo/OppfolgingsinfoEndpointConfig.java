@@ -52,7 +52,7 @@ public class OppfolgingsinfoEndpointConfig {
                 .thenReturn(new OppfolgingsstatusResponse()
                         .withWsOppfolgingsdata(new WSOppfolgingsdata()
                                 .withErUnderOppfolging(true)
-                                .withVeilederIdent("***REMOVED***")));
+                                .withVeilederIdent("Z900001")));
 
         return mock;
     }

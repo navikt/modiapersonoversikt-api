@@ -71,7 +71,7 @@ public class SakstemaServiceTest {
     @InjectMocks
     private SakstemaService sakstemaService = new SakstemaService();
 
-    private static final String FNR = "12345678901";
+    private static final String FNR = "11111111111";
 
     private Sak lagSakMedAvsluttetDato(Optional<DateTime> date) {
         return new Sak().withSaksId("123")

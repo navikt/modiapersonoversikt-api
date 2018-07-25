@@ -49,7 +49,7 @@ public class GsakSakerServiceTest {
         when(sakV1.finnSak(new WSFinnSakRequest().withBruker(new WSPerson().withIdent(any()))))
                 .thenReturn(new WSFinnSakResponse().withSakListe(fagomraade(DAG), fagomraade(AAP)));
 
-        List<Sak> saker = gsakSakerService.hentSaker("***REMOVED***").get().collect(toList());
+        List<Sak> saker = gsakSakerService.hentSaker("11111111111").get().collect(toList());
 
         assertThat(saker.get(0).getTemakode(), equalTo(DAG));
         assertThat(saker.get(1).getTemakode(), equalTo(AAP));
@@ -60,7 +60,7 @@ public class GsakSakerServiceTest {
         when(sakV1.finnSak(new WSFinnSakRequest().withBruker(new WSPerson().withIdent(any()))))
                 .thenThrow(new FinnSakUgyldigInput());
 
-        assertFalse(gsakSakerService.hentSaker("***REMOVED***").isPresent());
+        assertFalse(gsakSakerService.hentSaker("11111111111").isPresent());
     }
 
     private WSSak fagomraade(String tema) {

@@ -162,7 +162,7 @@ public class PersonPageTest extends WicketPageTest {
 
     @Test
     public void oppdatererKjerneInfoVedFodselsnummerFunnetMedBegrunnelse() {
-        final String newFnr = "12345612345";
+        final String newFnr = "11111111111";
         wicket.goTo(PersonPage.class, with().param("fnr", testFnr));
         wicket.tester.getSession().setAttribute(HENT_PERSON_BEGRUNNET, "");
 

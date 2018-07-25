@@ -9,6 +9,7 @@ class OppgaveMockFactory {
 
     public static final String ANSVARLIG_SAKSBEHANDLER = "z554455";
     public static final String OPPGAVE_ID = "123123123";
+    public static final String FNR_MOSS_TESTFAMILIEN = "07063000250";
 
     static WSHentOppgaveResponse mockHentOppgaveResponseMedTilordning() {
         return new WSHentOppgaveResponse().withOppgave(lagWSOppgave().withBeskrivelse("opprinnelig beskrivelse"));
@@ -18,7 +19,7 @@ class OppgaveMockFactory {
         return new WSOppgave()
                 .withOppgaveId(OPPGAVE_ID)
                 .withAnsvarligId(ANSVARLIG_SAKSBEHANDLER)
-                .withGjelder(new WSBruker().withBrukerId("***REMOVED***").withBrukertypeKode("brukertypekode"))
+                .withGjelder(new WSBruker().withBrukerId(FNR_MOSS_TESTFAMILIEN).withBrukertypeKode("brukertypekode"))
                 .withDokumentId("dokumentid")
                 .withKravId("kravid")
                 .withAnsvarligEnhetId("ansvarligenhetid")

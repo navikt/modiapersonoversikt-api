@@ -29,8 +29,8 @@ import static org.mockito.Mockito.*;
 public class OppfolgingsinfoCacheTest extends CacheTest {
 
     private static final String OPPFOLGINGSINFO_CACHE = "oppfolgingsinfoCache";
-    private static final String AKTOERID_1 = "***REMOVED***";
-    private static final String AKTOERID_2 = "***REMOVED***";
+    private static final String AKTOERID_1 = "1000000000001";
+    private static final String AKTOERID_2 = "1000000000002";
 
     public OppfolgingsinfoCacheTest() {
         super(OPPFOLGINGSINFO_CACHE);

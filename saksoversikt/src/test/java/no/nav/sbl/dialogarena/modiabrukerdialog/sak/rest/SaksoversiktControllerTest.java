@@ -72,7 +72,7 @@ public class SaksoversiktControllerTest {
         MockHttpServletRequest request = new MockHttpServletRequest();
         when(tilgangskontrollService.harGodkjentEnhet(request)).thenReturn(false);
 
-        Response response = saksoversiktController.hentSakstema("12345678901", request);
+        Response response = saksoversiktController.hentSakstema("11111111111", request);
 
         assertThat(response.getStatus(), is(403));
     }

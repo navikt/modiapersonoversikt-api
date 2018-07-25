@@ -93,7 +93,7 @@ public class JournalV2ServiceImplTest {
         ));
 
         when(journalpostTransformer.dokumentMetadataFraJournalPost(any(), anyString(), any(String.class))).thenReturn(new ResultatWrapper<>(new DokumentMetadata().withTilhorendeSakid("1").withTilhorendeFagsakId("fagsak1")));
-        ResultatWrapper<List<DokumentMetadata>> wrapper = innsynImpl.hentTilgjengeligJournalpostListe(asList(new Sak().withSaksId("1").withFagsaksnummer("fagsak1")), "12345678901");
+        ResultatWrapper<List<DokumentMetadata>> wrapper = innsynImpl.hentTilgjengeligJournalpostListe(asList(new Sak().withSaksId("1").withFagsaksnummer("fagsak1")), "11111111111");
 
         List<DokumentMetadata> dokumentmetadata = wrapper.resultat;
 
@@ -104,14 +104,14 @@ public class JournalV2ServiceImplTest {
     public void hentTilgjengeligJournalpostRuntimeExceptionGirFeilendeBaksystemJoark() throws HentJournalpostListeSikkerhetsbegrensning, DatatypeConfigurationException {
         when(journalV2.hentJournalpostListe(any())).thenThrow(new RuntimeException());
 
-        innsynImpl.hentTilgjengeligJournalpostListe(asList(new Sak().withSaksId("123")), "12345678901");
+        innsynImpl.hentTilgjengeligJournalpostListe(asList(new Sak().withSaksId("123")), "11111111111");
     }
 
     @Test
     public void hentTilgjengeligJournalpostSikkerhetsbegrensningGirTomtResultatOgFeilendeSystem() throws HentJournalpostListeSikkerhetsbegrensning, DatatypeConfigurationException {
         when(journalV2.hentJournalpostListe(any())).thenThrow(new HentJournalpostListeSikkerhetsbegrensning());
 
-        ResultatWrapper<List<DokumentMetadata>> wrapper = innsynImpl.hentTilgjengeligJournalpostListe(asList(new Sak().withSaksId("123")), "12345678901");
+        ResultatWrapper<List<DokumentMetadata>> wrapper = innsynImpl.hentTilgjengeligJournalpostListe(asList(new Sak().withSaksId("123")), "11111111111");
         assertThat(wrapper.resultat.size(), is(0));
         assertThat(wrapper.feilendeSystemer.size(), is(1));
     }
@@ -121,7 +121,7 @@ public class JournalV2ServiceImplTest {
     public void feilWrappesiResultObjektet() throws HentJournalpostListeSikkerhetsbegrensning {
         when(journalV2.hentJournalpostListe(any())).thenThrow(new HentJournalpostListeSikkerhetsbegrensning());
 
-        ResultatWrapper<List<DokumentMetadata>> wrapper = innsynImpl.hentTilgjengeligJournalpostListe(asList(new Sak().withSaksId("123")), "12345678901");
+        ResultatWrapper<List<DokumentMetadata>> wrapper = innsynImpl.hentTilgjengeligJournalpostListe(asList(new Sak().withSaksId("123")), "11111111111");
         assertThat(wrapper.resultat.size(),is(0));
     }
 

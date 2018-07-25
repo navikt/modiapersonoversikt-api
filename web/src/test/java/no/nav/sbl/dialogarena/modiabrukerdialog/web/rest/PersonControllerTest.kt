@@ -31,7 +31,7 @@ import kotlin.test.assertTrue
 private const val FNR = "10108000398"
 private const val TOLKEHJELP_KODE = "TOHJ"
 private const val TOLKEHJELP_BESKRIVELSE = "Tolkehjelp"
-private const val KONTONUMMER = "12341212345"
+private const val KONTONUMMER = "11111111111"
 private const val BANKNAVN = "Pengebingen ASA"
 private const val SWIFT = "Taylor"
 private const val LANDKODE = "IOT"
