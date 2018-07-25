@@ -21,7 +21,8 @@ import no.nav.personsok.PersonsokPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.DialogSession;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.constants.Events;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.GrunnInfo;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.unleash.UnleashService;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.Feature;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.UnleashService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.GrunninfoService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.reactkomponenter.utils.wicket.ReactComponentCallback;
 import no.nav.sbl.dialogarena.modiabrukerdialog.reactkomponenter.utils.wicket.ReactComponentPanel;
@@ -134,8 +135,8 @@ public class PersonPage extends BasePage {
         redirectPopup = new ReactSjekkForlatModal("redirectModal");
         konfigurerRedirectPopup();
 
-        boolean nyttVisittkortEnabled = unleashService.isEnabled("modiabrukerdialog.nytt-visittkort");
-        boolean nyBrukerprofilEnabled = unleashService.isEnabled("modiabrukerdialog.ny-brukerprofil");
+        boolean nyttVisittkortEnabled = unleashService.isEnabled(Feature.NYTT_VISITTKORT);
+        boolean nyBrukerprofilEnabled = unleashService.isEnabled(Feature.NY_BRUKERPROFIL);
         lamellContainer = new LamellContainer("lameller", getSession(), grunnInfo, nyBrukerprofilEnabled);
 
         oppgiBegrunnelseModal = new ReactBegrunnelseModal("oppgiBegrunnelseModal");

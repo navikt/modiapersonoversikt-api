@@ -73,7 +73,7 @@ public class HentPersonPage extends BasePage {
     @Override
     public void renderHead(IHeaderResponse response) {
         super.renderHead(response);
-        response.render(forScript("jQuery('#js-deokorator-sokefelt').focus();SaksbehandlerInnstillinger.focus();"));
+        response.render(forScript("jQuery('#js-deokorator-sokefelt').focus();"));
     }
 
     public static void configureModalWindow(ReactBegrunnelseModal oppgiBegrunnelseModal, final PageParameters pageParameters) {
