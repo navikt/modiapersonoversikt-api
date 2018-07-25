@@ -54,7 +54,7 @@ class PersonController @Inject constructor(private val kjerneinfoService: Person
                 "alder" to person.fodselsnummer.alder,
                 "kjønn" to person.personfakta.kjonn.kodeRef,
                 "geografiskTilknytning" to person.personfakta.geografiskTilknytning?.value,
-                "navn" to getNavn(person),
+                "navn" to getNavn(person.personfakta.personnavn),
                 "diskresjonskode" to (person.personfakta.diskresjonskode?.let {Kode(it)}),
                 "bankkonto" to hentBankkonto(person),
                 "tilrettelagtKomunikasjonsListe" to hentTilrettelagtKommunikasjon(person.personfakta.tilrettelagtKommunikasjon),
@@ -88,23 +88,24 @@ class PersonController @Inject constructor(private val kjerneinfoService: Person
                     .filter { tilrettelagtKommunikasjon.any { tk -> tk.kodeRef == it.kodeRef } }
                     .map(::Kode)
 
-    private fun getNavn(person: Person) = mapOf(
-            "sammensatt" to person.personfakta.personnavn.sammensattNavn,
-            "fornavn" to person.personfakta.personnavn.fornavn,
-            "mellomnavn" to (person.personfakta.personnavn.mellomnavn ?: ""),
-            "etternavn" to person.personfakta.personnavn.etternavn
+    private fun getNavn(personnavn: Personnavn) = mapOf(
+            "sammensatt" to personnavn.sammensattNavn,
+            "fornavn" to personnavn.fornavn,
+            "mellomnavn" to (personnavn.mellomnavn ?: ""),
+            "etternavn" to personnavn.etternavn
     )
 
     private fun getFamilierelasjoner(person: Person) = person.personfakta.harFraRolleIList.map {
         mapOf(
                 "harSammeBosted" to it.harSammeBosted,
                 "tilPerson" to mapOf(
-                        "navn" to getNavn(it.tilPerson),
+                        "navn" to it.tilPerson.personfakta.personnavn?.let { getNavn(it) },
                         "alder" to it.tilPerson.fodselsnummer.alder,
                         "alderMåneder" to it.tilPerson.fodselsnummer.alderIManeder,
-                        "fødselsnummer" to it.tilPerson.fodselsnummer.nummer,
-                        "personstatus" to getPersonstatus(it.tilPerson)
-                ),
+                        "fødselsnummer" to if (it.tilPerson.isHideFodselsnummerOgNavn) null else it.tilPerson.fodselsnummer.nummer,
+                        "personstatus" to getPersonstatus(it.tilPerson),
+                        "diskresjonskode" to (it.tilPerson.personfakta.diskresjonskode?.let {Kode(it)})
+                        ),
                 "rolle" to it.tilRolle
         )
     }
