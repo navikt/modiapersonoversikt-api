@@ -59,11 +59,11 @@ public class GosysNavAnsattPortTypeMock {
             public ASBOGOSYSNAVAnsattListe hentNAVAnsattListe(ASBOGOSYSNavEnhet hentNAVAnsattListeRequest)
                     throws HentNAVAnsattListeFaultGOSYSNAVEnhetIkkeFunnetMsg, HentNAVAnsattListeFaultGOSYSGeneriskMsg {
                 ASBOGOSYSNAVAnsattListe liste = new ASBOGOSYSNAVAnsattListe();
-                liste.getNAVAnsatte().add(lagNavAnsatt("Z000001", "Jens", "Hansen"));
-                liste.getNAVAnsatte().add(lagNavAnsatt("Z000002", "Arne", "Jensen"));
-                liste.getNAVAnsatte().add(lagNavAnsatt("Z000003", "Olav", "Nilsen"));
-                liste.getNAVAnsatte().add(lagNavAnsatt("Z000004", "Nina", "Ingebritsen"));
-                liste.getNAVAnsatte().add(lagNavAnsatt("Z000005", "Astrid", "Frank"));
+                liste.getNAVAnsatte().add(lagNavAnsatt("Z900001", "Jens", "Hansen"));
+                liste.getNAVAnsatte().add(lagNavAnsatt("Z900002", "Arne", "Jensen"));
+                liste.getNAVAnsatte().add(lagNavAnsatt("Z900003", "Olav", "Nilsen"));
+                liste.getNAVAnsatte().add(lagNavAnsatt("Z900004", "Nina", "Ingebritsen"));
+                liste.getNAVAnsatte().add(lagNavAnsatt("Z900005", "Astrid", "Frank"));
                 return liste;
             }
 
