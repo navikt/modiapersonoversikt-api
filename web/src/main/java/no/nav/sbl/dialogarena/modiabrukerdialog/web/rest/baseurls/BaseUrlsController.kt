@@ -1,7 +1,7 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.baseurls
 
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.featuretoggling.Feature
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.unleash.UnleashService
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.Feature
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.UnleashService
 import javax.inject.Inject
 import javax.ws.rs.GET
 import javax.ws.rs.Path
@@ -17,7 +17,7 @@ constructor(private val unleashService: UnleashService) {
     @GET
     @Path("/")
     fun hent(): Map<String, Any?> {
-        check(unleashService.isEnabled(Feature.NYTT_VISITTKORT_UNLEASH.propertyKey))
+        check(unleashService.isEnabled(Feature.NYTT_VISITTKORT))
 
         return mapOf("baseUrls" to getBaseUrls())
     }
