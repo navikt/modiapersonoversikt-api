@@ -102,7 +102,7 @@ internal class OppgaveControllerTest {
     }
 
     @Test
-    fun `"Legger tilbake oppgave med ugyldig temagruppe kaster feil"`() {
+    fun `Legger tilbake oppgave med ugyldig temagruppe kaster feil`() {
         val leggTilbakeRequest = LeggTilbakeRequest(temagruppe = "UGYLDIG_TEMAGRUPPE")
 
         val assertion = assertFailsWith<IllegalArgumentException> {
