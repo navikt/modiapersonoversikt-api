@@ -16,6 +16,8 @@ import org.eclipse.jetty.webapp.WebInfConfiguration;
 
 import javax.security.auth.message.config.AuthConfigFactory;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.util.Arrays;
 import java.util.List;
 
@@ -38,6 +40,11 @@ public class StartJetty {
 
     private static void setupProperties() {
         SystemProperties.setFrom("jetty-environment.properties");
+        try {
+            SystemProperties.setFrom(new FileInputStream("credentials.properties"));
+        } catch (FileNotFoundException e) {
+            System.err.println("credentials.properties mangler. Kopier den fra noen andre!");
+        }
         setProperty("org.apache.geronimo.jaspic.configurationFile", "web/src/test/resources/jaspiconf.xml");
         setProperty(AuthConfigFactory.DEFAULT_FACTORY_SECURITY_PROPERTY, AuthConfigFactoryImpl.class.getCanonicalName());
         setProperty("wicket.configuration", "development");
