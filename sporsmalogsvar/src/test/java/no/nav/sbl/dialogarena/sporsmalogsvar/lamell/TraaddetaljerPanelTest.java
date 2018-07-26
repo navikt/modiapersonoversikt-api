@@ -109,7 +109,7 @@ public class TraaddetaljerPanelTest extends WicketPageTest {
     @Test
     public void skalIkkeKunneBesvareTraadSomErMarkertSomFeilsendt() {
         Melding melding = createStandardMelding();
-        String fnr = "13245679810";
+        String fnr = "11111111111";
         melding.markertSomFeilsendtAv = new Saksbehandler("", "", "navIdent");
         when(henvendelseBehandlingService.hentMeldinger(eq(fnr), anyString())).thenReturn(new Meldinger(asList(melding)));
 
@@ -119,7 +119,7 @@ public class TraaddetaljerPanelTest extends WicketPageTest {
 
     @Test
     public void skalIkkeViseSaksbehandlersNavnHvisMeldingFraBruker() {
-        String fnr = "13245679810";
+        String fnr = "11111111111";
         Melding melding = createStandardMelding();
         melding.meldingstype = SPORSMAL_SKRIFTLIG;
 
@@ -129,7 +129,7 @@ public class TraaddetaljerPanelTest extends WicketPageTest {
 
     @Test
     public void skalViseSaksbehandlersNavnHvisMeldingFraNAV() {
-        String fnr = "13245679810";
+        String fnr = "11111111111";
         Melding melding = createStandardMelding();
         melding.meldingstype = SAMTALEREFERAT_OPPMOTE;
         melding.navIdent = "ident";

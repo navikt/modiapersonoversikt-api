@@ -31,8 +31,8 @@ import static org.mockito.Mockito.*;
 public class OppfoelgingCacheTest extends CacheTest {
 
     private static final String OPPFOELGING_CACHE = "oppfolgingCache";
-    private static final String FODSELSNUMMER_1 = "10108000398";
-    private static final String FODSELSNUMMER_2 = "06128074978";
+    private static final String FODSELSNUMMER_AREMARK = "10108000398";
+    private static final String FODSELSNUMMER_TROGSTAD = "06128074978";
     public static final String OPPFOELGINGSENHET_1 = "0118";
     public static final String OPPFOELGINGSENHET_2 = "0119";
 
@@ -75,7 +75,7 @@ public class OppfoelgingCacheTest extends CacheTest {
     @Test
     public void toKallTilHentOppfoelgingsstatusMedSammeIdentGirBareEttTjenestekall() throws Exception {
         WSHentOppfoelgingsstatusRequest request1 = new WSHentOppfoelgingsstatusRequest();
-        request1.setPersonidentifikator(FODSELSNUMMER_1);
+        request1.setPersonidentifikator(FODSELSNUMMER_AREMARK);
 
         WSHentOppfoelgingsstatusResponse response1 = oppfolgingPortType.hentOppfoelgingsstatus(request1);
         WSHentOppfoelgingsstatusResponse response2 = oppfolgingPortType.hentOppfoelgingsstatus(request1);
@@ -89,9 +89,9 @@ public class OppfoelgingCacheTest extends CacheTest {
     @Test
     public void toKallTilHentOppfoelgingsstatusMedForskjelligeIdenterGirToTjenestekall() throws Exception {
         WSHentOppfoelgingsstatusRequest request1 = new WSHentOppfoelgingsstatusRequest();
-        request1.setPersonidentifikator(FODSELSNUMMER_1);
+        request1.setPersonidentifikator(FODSELSNUMMER_AREMARK);
         WSHentOppfoelgingsstatusRequest request2 = new WSHentOppfoelgingsstatusRequest();
-        request1.setPersonidentifikator(FODSELSNUMMER_2);
+        request1.setPersonidentifikator(FODSELSNUMMER_TROGSTAD);
 
         WSHentOppfoelgingsstatusResponse response1 = oppfolgingPortType.hentOppfoelgingsstatus(request1);
         WSHentOppfoelgingsstatusResponse response2 = oppfolgingPortType.hentOppfoelgingsstatus(request2);
@@ -105,7 +105,7 @@ public class OppfoelgingCacheTest extends CacheTest {
     @Test
     public void toKallTilHentOppfoelgingskontraktListeMedSammeIdentGirBareEttTjenestekall() throws Exception {
         WSHentOppfoelgingskontraktListeRequest request1 = new WSHentOppfoelgingskontraktListeRequest();
-        request1.setPersonidentifikator(FODSELSNUMMER_1);
+        request1.setPersonidentifikator(FODSELSNUMMER_AREMARK);
 
         WSHentOppfoelgingskontraktListeResponse response1 = oppfolgingPortType.hentOppfoelgingskontraktListe(request1);
         WSHentOppfoelgingskontraktListeResponse response2 = oppfolgingPortType.hentOppfoelgingskontraktListe(request1);
@@ -119,9 +119,9 @@ public class OppfoelgingCacheTest extends CacheTest {
     @Test
     public void toKallTilHentOppfoelgingskontraktListeMedForskjelligeIdenterGirToTjenestekall() throws Exception {
         WSHentOppfoelgingskontraktListeRequest request1 = new WSHentOppfoelgingskontraktListeRequest();
-        request1.setPersonidentifikator(FODSELSNUMMER_1);
+        request1.setPersonidentifikator(FODSELSNUMMER_AREMARK);
         WSHentOppfoelgingskontraktListeRequest request2 = new WSHentOppfoelgingskontraktListeRequest();
-        request1.setPersonidentifikator(FODSELSNUMMER_2);
+        request1.setPersonidentifikator(FODSELSNUMMER_TROGSTAD);
 
         WSHentOppfoelgingskontraktListeResponse response1 = oppfolgingPortType.hentOppfoelgingskontraktListe(request1);
         WSHentOppfoelgingskontraktListeResponse response2 = oppfolgingPortType.hentOppfoelgingskontraktListe(request2);

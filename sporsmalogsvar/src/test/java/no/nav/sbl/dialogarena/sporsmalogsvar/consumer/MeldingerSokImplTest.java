@@ -28,7 +28,7 @@ import static org.joda.time.DateTimeUtils.setCurrentMillisOffset;
 
 class MeldingerSokImplTest {
 
-    private static final String NAV_IDENT = "Z999999";
+    private static final String NAV_IDENT = "Z000001";
     private static final String FNR = "11111111111";
     private MeldingerSokImpl meldingerSok = new MeldingerSokImpl();
 

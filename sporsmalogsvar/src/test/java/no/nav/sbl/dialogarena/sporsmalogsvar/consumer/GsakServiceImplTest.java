@@ -233,7 +233,7 @@ public class GsakServiceImplTest {
         nyOppgave.tema = new Tema("tema", "", asList(nyOppgave.type), asList(nyOppgave.prioritet), asList(new Underkategori("", "")));
         nyOppgave.underkategori = new Underkategori("underkategori", "");
         nyOppgave.henvendelseId = "henvendelseId";
-        nyOppgave.brukerId = "12345612345";
+        nyOppgave.brukerId = "11111111111";
         return nyOppgave;
     }
 

@@ -46,7 +46,7 @@ public class TilgangskontrollServiceTest {
     @InjectMocks
     private TilgangskontrollService tilgangskontrollService = new TilgangskontrollServiceImpl();
 
-    public static final String BRUKERS_IDENT = "12345678901";
+    public static final String BRUKERS_IDENT = "11111111111";
     private static final String GODKJENT_ENHET = "0000";
     private static final String ANNEN_ENHET = "1000";
     private final static String TEMAKODE = "DAG";

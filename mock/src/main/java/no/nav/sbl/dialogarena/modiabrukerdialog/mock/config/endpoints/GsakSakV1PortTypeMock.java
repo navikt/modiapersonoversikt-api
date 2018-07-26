@@ -16,7 +16,7 @@ import java.util.*;
 
 import static no.nav.sbl.dialogarena.common.collections.Collections.asList;
 import static no.nav.sbl.dialogarena.common.collections.Collections.asMap;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.AktoerPortTypeMock.AKTOER_ID_MOCK;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.AktoerPortTypeMock.AKTOER_ID_AREMARK_TESTFAMILIEN;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -27,8 +27,9 @@ public class GsakSakV1PortTypeMock {
     public static final String SAK_MED_INNSENDER = "15818532";
     public static final String SAK_UTEN_INNSENDER = "85154832";
     public static final String SAKSTYPE_GENERELL = "GEN";
-    private static final WSPerson AKTOR = new WSPerson().withIdent(AKTOER_ID_MOCK);
-    private static final WSPerson ANNEN_INNSENDER = new WSPerson().withIdent("***REMOVED***");
+    private static final WSPerson AKTOR = new WSPerson().withIdent(AKTOER_ID_AREMARK_TESTFAMILIEN);
+    public static final String AKTORID_MOSS_TESTFAMILIEN = "1000096233937";
+    private static final WSPerson ANNEN_INNSENDER = new WSPerson().withIdent(AKTORID_MOSS_TESTFAMILIEN);
     private static Random idGenerator = new Random();
     private static List<WSSak> defaultSaksliste = asList(
             createSak("DAG", DateTime.now().minusDays(1)),
@@ -55,8 +56,8 @@ public class GsakSakV1PortTypeMock {
 
     private static Map<String, List<WSSak>> sakslisteMap =
             asMap(
-                    "11111111111", saksliste2,
-                    "12345678901", saksliste3);
+                    "22222222222", saksliste2,
+                    "11111111111", saksliste3);
 
     private static Map<String, WSSak> sakMap =
             asMap(

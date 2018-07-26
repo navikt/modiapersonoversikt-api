@@ -34,7 +34,7 @@ describe('MeldingerSokStore', () => {
 
     it('indekserer ved update', () => {
         sinon.spy(Ajax, 'get');
-        const fnr = '12345678910';
+        const fnr = '11111111111';
         const store = new MeldingerSokStore(assign({}, initialState, { fnr }));
 
         store.update();

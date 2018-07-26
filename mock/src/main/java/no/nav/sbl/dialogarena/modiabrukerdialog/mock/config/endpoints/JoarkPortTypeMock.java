@@ -84,7 +84,7 @@ public class JoarkPortTypeMock {
     private static WSJournalpost mottattSoknad(String id, String tema, DateTime mottattDato) {
         WSJournalpost journalpost = new WSJournalpost();
         journalpost.setJournalpostId(id);
-        journalpost.setEksternPart(new WSPerson().withIdent("12345678901").withNavn("Andreas"));
+        journalpost.setEksternPart(new WSPerson().withIdent("11111111111").withNavn("Andreas"));
         WSArkivtemaer arkivtemaer = new WSArkivtemaer();
         arkivtemaer.setValue(tema);
         journalpost.setArkivtema(arkivtemaer);
@@ -107,7 +107,7 @@ public class JoarkPortTypeMock {
     private static WSJournalpost soknadUnderBehandling(String id, String tema, DateTime mottattDato) {
         WSJournalpost journalpost = new WSJournalpost();
         journalpost.setJournalpostId(id);
-        journalpost.setEksternPart(new WSPerson().withIdent("12345678901").withNavn("Andreas"));
+        journalpost.setEksternPart(new WSPerson().withIdent("11111111111").withNavn("Andreas"));
         WSArkivtemaer arkivtemaer = new WSArkivtemaer();
         arkivtemaer.setValue(tema);
         journalpost.setArkivtema(arkivtemaer);
@@ -130,7 +130,7 @@ public class JoarkPortTypeMock {
     private static WSJournalpost mottattBekreftelse(String id, String tema, DateTime mottattDato) {
         WSJournalpost journalpost = new WSJournalpost();
         journalpost.setJournalpostId(id);
-        journalpost.setEksternPart(new WSPerson().withIdent("12345678901").withNavn("Andreas"));
+        journalpost.setEksternPart(new WSPerson().withIdent("11111111111").withNavn("Andreas"));
         WSArkivtemaer arkivtemaer = new WSArkivtemaer();
         arkivtemaer.setValue(tema);
         journalpost.setArkivtema(arkivtemaer);

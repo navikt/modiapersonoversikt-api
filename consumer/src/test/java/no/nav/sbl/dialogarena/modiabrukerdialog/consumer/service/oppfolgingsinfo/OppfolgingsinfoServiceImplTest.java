@@ -34,7 +34,7 @@ import static org.mockito.Mockito.*;
 class OppfolgingsinfoServiceImplTest {
 
     private static final boolean ER_UNDER_OPPFOLGING = true;
-    private static final String AKTOERID = "***REMOVED***";
+    private static final String AKTOERID = "1000000000001";
     private static final String OPPFOELGINGSENHET_ID = "0118";
     private static final String OPPFOELGINGSENHET_NAVN = "NAV Aremark";
     private static final String VEILEDER_IDENT = "z151444";

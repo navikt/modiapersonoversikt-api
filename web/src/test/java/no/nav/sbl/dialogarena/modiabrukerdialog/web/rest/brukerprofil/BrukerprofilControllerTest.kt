@@ -35,7 +35,7 @@ import kotlin.test.assertNotNull
 import kotlin.test.assertNull
 
 private const val AREMARK_FNR = "10108000398"
-private const val D_NUMMER = "50108000398"
+private const val D_NUMMER = "44000000000"
 private const val INNLOGGET_SAKSBEHANDLER = "z111111"
 
 private const val FORNAVN = "Peter"
@@ -63,7 +63,7 @@ private const val RETNINGSNUMMER_IKKE_NORGE = "48"
 
 private const val SWIFT = "Ganskelang-medbokstaverogtall-1234"
 private const val BANKNAVN = "Pengebingen ASA"
-private const val KONTONUMMER = "12345612345"
+private const val KONTONUMMER = "11111111111"
 
 private const val TOLKEHJELP_KODE = "TOHJ"
 

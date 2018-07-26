@@ -26,7 +26,7 @@ public class HenvendelsePortTypeMock {
     private static int oppgaveId = 0;
 
     private static final String FNR = "11111111111";
-    private static final String NAVIDENT = "Z999999";
+    private static final String NAVIDENT = "Z123456";
 
     private static final String JOURNALFORT_SAKSID_HJELPEMIDLER = GsakSakV1PortTypeMock.SAK_UTEN_INNSENDER;
     private static final String JOURNALFORER_NAV_IDENT = "567567567";
@@ -142,7 +142,7 @@ public class HenvendelsePortTypeMock {
                 .withHenvendelseType(OPPGAVE_VARSEL.value())
                 .withMetadataListe(new XMLMetadataListe().withMetadata(new XMLOppgaveVarsel()
                         .withOppgaveType("SEND_SYKMELDING")
-                        .withOppgaveURL("https://wwww.google.com")
+                        .withOppgaveURL("https://wwww.example.com")
                         .withTemagruppe("SYK")));
     }
 

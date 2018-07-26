@@ -15,14 +15,14 @@ import static org.mockito.Mockito.when;
 @Configuration
 public class AktoerPortTypeMock {
 
-    public static final String AKTOER_ID_MOCK = "***REMOVED***"; // ***REMOVED*** (ikke NPE)
+    public static final String AKTOER_ID_AREMARK_TESTFAMILIEN = "1000096233942"; // Aremark Testfamilien
 
     @Bean
     public AktoerPortType getAktoerPortTypeMock() {
         AktoerPortType mock = mock(AktoerPortType.class);
         try {
             HentAktoerIdForIdentResponse response = new HentAktoerIdForIdentResponse();
-            response.setAktoerId(AKTOER_ID_MOCK);
+            response.setAktoerId(AKTOER_ID_AREMARK_TESTFAMILIEN);
             when(mock.hentAktoerIdForIdent(any(HentAktoerIdForIdentRequest.class))).thenReturn(response);
         } catch (HentAktoerIdForIdentPersonIkkeFunnet hentAktoerIdForIdentPersonIkkeFunnet) {
             throw new ApplicationException("Mock klarte ikke å returnere aktørid", hentAktoerIdForIdentPersonIkkeFunnet);

@@ -89,7 +89,7 @@ public class UtbetalingPortTypeMock {
                                         .withSkattListe(new WSSkatt().withSkattebeloep(-2267.00))
                                         .withSkattsum(-2267.00)
                                         .withYtelseNettobeloep(4389.00)
-                                        .withBilagsnummer("10201445961"))
+                                        .withBilagsnummer("11111111111"))
                         .withForfallsdato(now().minusYears(1).minusMonths(2))
                         .withUtbetaltTilKonto(new WSBankkonto().withKontonummer("1234567890123456789025896").withKontotype("Konto - Utland"))
                         .withUtbetalingsmetode("Bankkonto")
@@ -129,12 +129,12 @@ public class UtbetalingPortTypeMock {
                                 .withYtelseskomponenttype("Særtillegg")
                                 .withYtelseskomponentbeloep(1456.00))
                 .withYtelseskomponentersum(6656.00)
-                .withTrekkListe(new WSTrekk().withTrekktype("Kreditorsjekk").withTrekkbeloep(-900.00).withKreditor("00911111111"))
+                .withTrekkListe(new WSTrekk().withTrekktype("Kreditorsjekk").withTrekkbeloep(-900.00).withKreditor("11111111111"))
                 .withTrekksum(-900.00)
                 .withSkattListe(new WSSkatt().withSkattebeloep(-1500.00))
                 .withSkattsum(-1500.00)
                 .withYtelseNettobeloep(4256.00)
-                .withBilagsnummer("10201436985");
+                .withBilagsnummer("11111111111");
     }
 
     private static WSYtelse kariNordmannYtelse3() {
@@ -154,7 +154,7 @@ public class UtbetalingPortTypeMock {
                 .withSkattListe(new WSSkatt().withSkattebeloep(-1500.00))
                 .withSkattsum(-1500.00)
                 .withYtelseNettobeloep(5156.00)
-                .withBilagsnummer("10201436985");
+                .withBilagsnummer("11111111111");
     }
 
     private static WSYtelse kariNordmannYtelse2() {
@@ -174,7 +174,7 @@ public class UtbetalingPortTypeMock {
                 .withSkattListe(new WSSkatt().withSkattebeloep(-1500.00))
                 .withSkattsum(-1500.00)
                 .withYtelseNettobeloep(5156.00)
-                .withBilagsnummer("10201436985");
+                .withBilagsnummer("11111111111");
     }
 
     private static WSYtelse kariNordmannYtelse1() {
@@ -193,20 +193,20 @@ public class UtbetalingPortTypeMock {
                 .withSkattListe(new WSSkatt().withSkattebeloep(-1500.00))
                 .withSkattsum(-1500.00)
                 .withYtelseNettobeloep(5156.00)
-                .withBilagsnummer("10201436985");
+                .withBilagsnummer("11111111111");
     }
 
     private static WSUtbetaling createOsloKommuneUtbetaling() {
         return new WSUtbetaling()
                 .withPosteringsdato(now().minusDays(19))
-                .withUtbetaltTil(new WSOrganisasjon().withAktoerId("00999999999").withNavn("Oslo kommune Utbetaling 4"))
+                .withUtbetaltTil(new WSOrganisasjon().withAktoerId("11111111111").withNavn("Oslo kommune Utbetaling 4"))
                 .withUtbetalingNettobeloep(11833.00)
                 .withUtbetalingsmelding("Sykepenger")
                 .withYtelseListe(
                         new WSYtelse()
                                 .withYtelsestype(new WSYtelsestyper().withValue("Sykepenger"))
-                                .withRettighetshaver(new WSPerson().withAktoerId("***REMOVED***").withNavn("Per Pettersen Eksempel 4"))
-                                .withRefundertForOrg(new WSOrganisasjon().withAktoerId("***REMOVED***").withNavn("Plan- og bygningsetaten"))
+                                .withRettighetshaver(new WSPerson().withAktoerId("1000000000001").withNavn("Per Pettersen Eksempel 4"))
+                                .withRefundertForOrg(new WSOrganisasjon().withAktoerId("1000000000002").withNavn("Plan- og bygningsetaten"))
                                 .withYtelsesperiode(new WSPeriode().withFom(now().minusMonths(2).minusDays(15)).withTom(now().minusMonths(1).minusDays(15)))
                                 .withYtelseskomponentListe(
                                         new WSYtelseskomponent()
@@ -217,12 +217,12 @@ public class UtbetalingPortTypeMock {
                                         new WSTrekk()
                                                 .withTrekktype("Kreditortrekk")
                                                 .withTrekkbeloep(-900.00)
-                                                .withKreditor("00911111111"))
+                                                .withKreditor("11111111111"))
                                 .withTrekksum(-900.00)
                                 .withSkattListe(new WSSkatt().withSkattebeloep(-2267.00))
                                 .withSkattsum(-2267.00)
                                 .withYtelseNettobeloep(11833.00)
-                                .withBilagsnummer("10201498456"))
+                                .withBilagsnummer("11111111111"))
                 .withUtbetalingsdato(now().minusMonths(2))
                 .withUtbetaltTilKonto(new WSBankkonto().withKontotype("Konto - Norge").withKontonummer("22222222222"))
                 .withUtbetalingsmetode("Bankkonto")
@@ -234,14 +234,14 @@ public class UtbetalingPortTypeMock {
     private static WSUtbetaling createOsloKommuneUtbetalingUtenPeriode() {
         return new WSUtbetaling()
                 .withPosteringsdato(now().minusDays(19))
-                .withUtbetaltTil(new WSOrganisasjon().withAktoerId("00999999999").withNavn("Oslo kommune Utbetaling 4"))
+                .withUtbetaltTil(new WSOrganisasjon().withAktoerId("11111111111").withNavn("Oslo kommune Utbetaling 4"))
                 .withUtbetalingNettobeloep(11833.00)
                 .withUtbetalingsmelding("Sykepenger")
                 .withYtelseListe(
                         new WSYtelse()
                                 .withYtelsestype(new WSYtelsestyper().withValue("Sykepenger"))
-                                .withRettighetshaver(new WSPerson().withAktoerId("***REMOVED***").withNavn("Per Pettersen Eksempel 4"))
-                                .withRefundertForOrg(new WSOrganisasjon().withAktoerId("***REMOVED***").withNavn("Plan- og bygningsetaten"))
+                                .withRettighetshaver(new WSPerson().withAktoerId("1000000000001").withNavn("Per Pettersen Eksempel 4"))
+                                .withRefundertForOrg(new WSOrganisasjon().withAktoerId("1000000000002").withNavn("Plan- og bygningsetaten"))
                                 .withYtelseskomponentListe(
                                         new WSYtelseskomponent()
                                                 .withYtelseskomponenttype("Sykepenger, arbeidstakere")
@@ -251,12 +251,12 @@ public class UtbetalingPortTypeMock {
                                         new WSTrekk()
                                                 .withTrekktype("Kreditortrekk")
                                                 .withTrekkbeloep(-900.00)
-                                                .withKreditor("00911111111"))
+                                                .withKreditor("11111111111"))
                                 .withTrekksum(-900.00)
                                 .withSkattListe(new WSSkatt().withSkattebeloep(-2267.00))
                                 .withSkattsum(-2267.00)
                                 .withYtelseNettobeloep(11840.00)
-                                .withBilagsnummer("10201498456"))
+                                .withBilagsnummer("11111111111"))
                 .withUtbetalingsdato(now().minusDays(2 * 30))
                 .withUtbetaltTilKonto(new WSBankkonto().withKontotype("Konto - Norge").withKontonummer("22222222222"))
                 .withUtbetalingsmetode("Bankkonto")

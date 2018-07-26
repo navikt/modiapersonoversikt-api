@@ -24,11 +24,11 @@ describe('SaksoversiktLerret module', () => {
         const lerretSpy = sinon.spy();
         shallow(<SaksoversiktLerret {...mockProps}
             hentLerretData={lerretSpy}
-            fnr="12345678901"
+            fnr="11111111111"
             status={LASTER}
         />);
 
-        expect(lerretSpy.withArgs('12345678901').calledOnce).to.be.true;
+        expect(lerretSpy.withArgs('11111111111').calledOnce).to.be.true;
     });
 
     it('skal rendre snurrepipp når status er laster', () => {

@@ -30,7 +30,7 @@ public class PsakServiceImplTest {
         WSSakSammendrag wsSakSammendrag = lagWSSakSammendrag();
         when(ws.hentSakSammendragListe(any(WSHentSakSammendragListeRequest.class))).thenReturn(new WSHentSakSammendragListeResponse().withSakSammendragListe(wsSakSammendrag));
 
-        Collection<? extends Sak> saker = psakService.hentSakerFor("12345679810");
+        Collection<? extends Sak> saker = psakService.hentSakerFor("11111111111");
 
         assertThat(saker, hasSize(1));
         Sak sak = saker.iterator().next();
@@ -48,7 +48,7 @@ public class PsakServiceImplTest {
         WSSakSammendrag wsSakSammendrag = lagWSSakSammendrag().withSaksperiode(null);
         when(ws.hentSakSammendragListe(any(WSHentSakSammendragListeRequest.class))).thenReturn(new WSHentSakSammendragListeResponse().withSakSammendragListe(wsSakSammendrag));
 
-        Collection<? extends Sak> saker = psakService.hentSakerFor("12345679810");
+        Collection<? extends Sak> saker = psakService.hentSakerFor("11111111111");
         Sak sak = saker.iterator().next();
 
         assertThat(sak.opprettetDato, nullValue());
@@ -59,7 +59,7 @@ public class PsakServiceImplTest {
         WSSakSammendrag wsSakSammendrag = lagWSSakSammendrag().withSaksperiode(new WSPeriode().withFom(null));
         when(ws.hentSakSammendragListe(any(WSHentSakSammendragListeRequest.class))).thenReturn(new WSHentSakSammendragListeResponse().withSakSammendragListe(wsSakSammendrag));
 
-        Collection<? extends Sak> saker = psakService.hentSakerFor("12345679810");
+        Collection<? extends Sak> saker = psakService.hentSakerFor("11111111111");
         Sak sak = saker.iterator().next();
 
         assertThat(sak.opprettetDato, nullValue());

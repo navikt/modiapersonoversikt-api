@@ -16,11 +16,11 @@ import static no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.Kommun
 public class JoarkMock {
 
     public static final String PERSON_NAVN = "TestPerson";
-    public static final String PERSON_FNR = "12345678901";
+    public static final String PERSON_FNR = "11111111111";
 
     public static final String TREDJEPERSON_NAVN = "Doktor Proktor";
     public static final String FALLBACK_NAVN = "Fallbacknavn";
-    public static final String TREDJEPERSON_FNR = "09876543212";
+    public static final String TREDJEPERSON_FNR = "22222222222";
 
     public static final String BEDRIFT_NAVN = "Testbedrift";
     public static final String BEDRIFT_ORGNR = "098743212";

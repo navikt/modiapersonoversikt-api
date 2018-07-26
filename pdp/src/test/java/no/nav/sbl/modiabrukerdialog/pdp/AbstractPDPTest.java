@@ -18,15 +18,15 @@ public class AbstractPDPTest {
 	protected static final String POLICY_FILE = "config/modia-policy-config-test.xml";
 	protected static final String ACTION_ID = "les";
 	protected static final String ACTION_ID_MED_BEGRUNNELSE = "lesMedBegrunnelse";
-	protected static final String FNR = "***REMOVED***";
+	protected static final String FNR = "10108000398";
 	protected static final String ENHET = "0313";
 	protected static final String ENHET2 = "1783";
-	protected static final String SUBJECT_ID = "Z999999";
+	protected static final String SUBJECT_ID = "Z911111";
 	protected static PolicyDecisionPoint pdp;
 
 	@BeforeAll
 	public static void setupOnce() {
-		System.setProperty("DiskresjonskodeLocator.url", "http://www.test.no/");
+		System.setProperty("DiskresjonskodeLocator.url", "https://www.nav.no/");
 		pdp = new JBossPDP(GeografiskPolicyTest.class.getClassLoader().getResourceAsStream(POLICY_FILE));
 	}
 
