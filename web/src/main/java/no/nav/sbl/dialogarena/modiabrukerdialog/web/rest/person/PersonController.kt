@@ -55,7 +55,7 @@ class PersonController @Inject constructor(private val kjerneinfoService: Person
                 "kjønn" to person.personfakta.kjonn.kodeRef,
                 "geografiskTilknytning" to person.personfakta.geografiskTilknytning?.value,
                 "navn" to getNavn(person.personfakta.personnavn),
-                "diskresjonskode" to (person.personfakta.diskresjonskode?.let {Kode(it)}),
+                "diskresjonskode" to person.personfakta.diskresjonskode?.let {Kode(it)},
                 "bankkonto" to hentBankkonto(person),
                 "tilrettelagtKomunikasjonsListe" to hentTilrettelagtKommunikasjon(person.personfakta.tilrettelagtKommunikasjon),
                 "personstatus" to getPersonstatus(person),
@@ -104,7 +104,7 @@ class PersonController @Inject constructor(private val kjerneinfoService: Person
                         "alderMåneder" to it.tilPerson.fodselsnummer.alderIManeder,
                         "fødselsnummer" to if (it.tilPerson.isHideFodselsnummerOgNavn) null else it.tilPerson.fodselsnummer.nummer,
                         "personstatus" to getPersonstatus(it.tilPerson),
-                        "diskresjonskode" to (it.tilPerson.personfakta.diskresjonskode?.let {Kode(it)})
+                        "diskresjonskode" to it.tilPerson.personfakta.diskresjonskode?.let { Kode(it) }
                         ),
                 "rolle" to it.tilRolle
         )
