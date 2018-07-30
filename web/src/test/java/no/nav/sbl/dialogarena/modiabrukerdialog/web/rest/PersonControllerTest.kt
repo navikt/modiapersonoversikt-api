@@ -7,6 +7,7 @@ import no.nav.brukerdialog.security.tilgangskontroll.policy.pep.EnforcementPoint
 import no.nav.kjerneinfo.common.domain.Kodeverdi
 import no.nav.kjerneinfo.consumer.fim.person.support.DefaultPersonKjerneinfoService
 import no.nav.kjerneinfo.consumer.fim.person.support.KjerneinfoMapper
+import no.nav.kjerneinfo.domain.person.fakta.Familierelasjon
 import no.nav.kodeverk.consumer.fim.kodeverk.KodeverkmanagerBi
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.organisasjonsEnhetV2.OrganisasjonEnhetV2Service
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.Feature
@@ -24,6 +25,7 @@ import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import java.util.*
 import javax.ws.rs.NotFoundException
+import kotlin.collections.ArrayList
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 import kotlin.test.assertTrue
@@ -102,26 +104,27 @@ internal class PersonControllerTest {
     }
 
     @Test
-    fun `Med diskresjonskode`() {
+    fun `Familierelasjoner`() {
         val mockPersonResponse = mockPersonResponse().apply {
-            person.withDiskresjonskode(WSDiskresjonskoder().withValue("SPFO"))
+            person.withHarFraRolleI(WSFamilierelasjon()
+                    .withTilPerson(WSPerson()
+                            .withPersonnavn(WSPersonnavn().withFornavn("Aremark"))
+                            .withAktoer(WSPersonIdent().withIdent(WSNorskIdent().withIdent("10108000398")))
+                    ))
         }
+
         whenever(personV3.hentPerson(any())).thenReturn(mockPersonResponse)
 
         val response = controller.hent(FNR)
-        val diskresjonskode = response["diskresjonskode"] as Kode
+        val relasjoner = response["familierelasjoner"] as ArrayList<*>
+        val rolle = relasjoner[0] as Map<*, *>
+        val relasjon = rolle["tilPerson"] as Map<*, *>
+        val fodselsnummer = relasjon["fødselsnummer"]
+        val personnavn = relasjon["navn"] as Map<*, *>
+        val fornavn = personnavn["fornavn"]
 
-        assertEquals("SPFO", diskresjonskode.kodeRef)
-    }
-
-    @Test
-    fun `Uten diskresjonskode`() {
-        whenever(personV3.hentPerson(any())).thenReturn(mockPersonResponse())
-
-        val response = controller.hent(FNR)
-        val diskresjonskode = response["diskresjonskode"]
-
-        assertEquals(null, diskresjonskode)
+        assertEquals("10108000398", fodselsnummer)
+        assertEquals("Aremark", fornavn)
     }
 
     private fun mockPersonResponse() = WSHentPersonResponse()
@@ -129,6 +132,57 @@ internal class PersonControllerTest {
                     .withPersonnavn(WSPersonnavn())
                     .withKjoenn(WSKjoenn().withKjoenn(WSKjoennstyper().withValue("K")))
                     .withAktoer(WSPersonIdent().withIdent(WSNorskIdent().withIdent(FNR))))
+
+    @Nested
+    inner class Diskresjonskode {
+
+        @Test
+        fun `Med diskresjonskode`() {
+            val mockPersonResponse = mockPersonResponse().apply {
+                person.withDiskresjonskode(WSDiskresjonskoder().withValue("SPFO"))
+            }
+            whenever(personV3.hentPerson(any())).thenReturn(mockPersonResponse)
+
+            val response = controller.hent(FNR)
+            val diskresjonskode = response["diskresjonskode"] as Kode
+
+            assertEquals("SPFO", diskresjonskode.kodeRef)
+        }
+
+        @Test
+        fun `Uten diskresjonskode`() {
+            whenever(personV3.hentPerson(any())).thenReturn(mockPersonResponse())
+
+            val response = controller.hent(FNR)
+            val diskresjonskode = response["diskresjonskode"]
+
+            assertEquals(null, diskresjonskode)
+        }
+
+        @Test
+        fun `Familiemedlem med diskresjonskode`() {
+            val mockPersonResponse = mockPersonResponse().apply {
+                person.withHarFraRolleI(WSFamilierelasjon()
+                        .withTilPerson(WSPerson()
+                                .withDiskresjonskode(WSDiskresjonskoder().withValue("SPFO"))
+                                .withAktoer(WSPersonIdent().withIdent(WSNorskIdent().withIdent("10108000398")))
+                        ))
+            }
+
+            whenever(personV3.hentPerson(any())).thenReturn(mockPersonResponse)
+
+            val response = controller.hent(FNR)
+            val relasjoner = response["familierelasjoner"] as ArrayList<*>
+            val rolle = relasjoner[0] as Map<*, *>
+            val relasjon = rolle["tilPerson"] as Map<*, *>
+            val fodselsnummer = relasjon["fødselsnummer"]
+            val navn = relasjon["navn"]
+
+            assertEquals(null, fodselsnummer)
+            assertEquals(null, navn)
+        }
+
+    }
 
     @Nested
     inner class Kontaktinformasjon {
