@@ -49,7 +49,7 @@ class OppgaveController @Inject constructor(
         return Response.ok("{\"message\": \"Success\"}").build()
     }
 
-    @GET
+    @POST
     @Path("/plukk/{temagruppe}")
     fun plukkOppgaver(@PathParam("temagruppe") temagruppe: String, @Context httpRequest: HttpServletRequest) =
             plukkOppgaveService
