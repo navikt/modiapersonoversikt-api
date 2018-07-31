@@ -4,43 +4,15 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
-        <groupId>no.nav.sbl</groupId>
-        <artifactId>mor-pom</artifactId>
-        <version>3.2</version>
+        <groupId>no.nav.sbl.dialogarena</groupId>
+        <artifactId>modiabrukerdialog</artifactId>
+        <version>dev</version>
 	</parent>
 
-	<name>modia-utbetalinger</name>
-    <groupId>no.nav.sbl.dialogarena</groupId>
+	<name>${project.artifactId}</name>
 	<artifactId>modia-utbetalinger</artifactId>
-	<version>4.0.1-SNAPSHOT</version>
-	<packaging>jar</packaging>
 
 	<properties>
-        <!-- Tredjeparts -->
-		<spring.version>4.3.4.RELEASE</spring.version>
-		<modig.wicket.version>3.0.0</modig.wicket.version>
-		<wicket.version>6.20.0</wicket.version>
-        <joda.version>2.2</joda.version>
-        <metrics.version>2017.08.30.10.22</metrics.version>
-        <logback.version>1.0.13</logback.version>
-        <commons-lang3.version>3.3.2</commons-lang3.version>
-        <hamcrest.version>1.3</hamcrest.version>
-        <cxf.version>3.1.11</cxf.version>
-        <ehcache.version>2.6.10</ehcache.version>
-        <slf4j.version>1.7.5</slf4j.version>
-        <collections-generic.version>4.01</collections-generic.version>
-
-        <!-- Egenlagde -->
-        <common-test.version>1.2</common-test.version>
-        <common-time.version>3.1.3</common-time.version>
-        <modia-felleskomponenter.version>4.2</modia-felleskomponenter.version>
-        <modig.frontend.version>1.1.108</modig.frontend.version>
-        <utbetaling.tjenestespesifikasjon.version>1.0.15</utbetaling.tjenestespesifikasjon.version>
-
-        <!-- Test -->
-        <mockito.version>1.9.5</mockito.version>
-        <xml-apis.version>1.4.01</xml-apis.version>
-        <modig-wicket-test.version>1.0.0</modig-wicket-test.version>
         <junit.version>4.12</junit.version>
     </properties>
 
@@ -48,37 +20,19 @@
 		<dependency>
 			<groupId>no.nav.sbl.dialogarena</groupId>
 			<artifactId>common-cxf</artifactId>
-			<version>2017.09.19.14.18</version>
 		</dependency>
 		<dependency>
 			<groupId>joda-time</groupId>
 			<artifactId>joda-time</artifactId>
-			<version>${joda.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>no.nav.modig</groupId>
 			<artifactId>modia-felleskomponenter</artifactId>
-			<version>${modia-felleskomponenter.version}</version>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>no.nav</groupId>
-			<artifactId>metrics</artifactId>
-			<version>${metrics.version}</version>
-			<scope>provided</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>net.sf.ehcache</groupId>
-			<artifactId>ehcache-core</artifactId>
-			<version>${ehcache.version}</version>
-			<scope>runtime</scope>
 		</dependency>
 
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-context</artifactId>
-			<version>${spring.version}</version>
 			<exclusions>
 				<exclusion>
 					<groupId>commons-logging</groupId>
@@ -90,7 +44,6 @@
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-beans</artifactId>
-			<version>${spring.version}</version>
 			<exclusions>
 				<exclusion>
 					<groupId>commons-logging</groupId>
@@ -102,13 +55,11 @@
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
-            <version>${commons-lang3.version}</version>
         </dependency>
 
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-web</artifactId>
-			<version>${spring.version}</version>
 			<scope>runtime</scope>
 			<exclusions>
 				<exclusion>
@@ -122,13 +73,11 @@
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-test</artifactId>
 			<scope>test</scope>
-			<version>${spring.version}</version>
 		</dependency>
 
 		<dependency>
 			<groupId>no.nav.modig</groupId>
 			<artifactId>modig-wicket</artifactId>
-			<version>${modig.wicket.version}</version>
 			<exclusions>
 				<exclusion>
 					<groupId>commons-logging</groupId>
@@ -141,19 +90,16 @@
         <dependency>
             <groupId>org.apache.wicket</groupId>
             <artifactId>wicket-util</artifactId>
-            <version>${wicket.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.apache.wicket</groupId>
             <artifactId>wicket-request</artifactId>
-            <version>${wicket.version}</version>
         </dependency>
 
         <dependency>
             <groupId>no.nav.modig</groupId>
             <artifactId>modig-wicket-test</artifactId>
-            <version>${modig-wicket-test.version}</version>
             <exclusions>
                 <exclusion>
                     <groupId>commons-logging</groupId>
@@ -165,7 +111,6 @@
 		<dependency>
 			<groupId>no.nav.modig</groupId>
 			<artifactId>modig-frontend-wicket</artifactId>
-			<version>${modig.frontend.version}</version>
 			<exclusions>
 				<exclusion>
 					<groupId>commons-logging</groupId>
@@ -178,37 +123,31 @@
 		<dependency>
 			<groupId>no.nav.sbl.dialogarena</groupId>
 			<artifactId>utbetaling-tjenestespesifikasjon</artifactId>
-			<version>${utbetaling.tjenestespesifikasjon.version}</version>
 		</dependency>
 
 		<dependency>
 			<groupId>no.nav.sbl.dialogarena</groupId>
 			<artifactId>common-time</artifactId>
-			<version>${common-time.version}</version>
 		</dependency>
 
 		<dependency>
 			<groupId>net.sourceforge.collections</groupId>
 			<artifactId>collections-generic</artifactId>
-			<version>${collections-generic.version}</version>
 		</dependency>
 
 		<dependency>
 			<groupId>no.nav.modig</groupId>
 			<artifactId>modig-core</artifactId>
-			<version>1.0.1</version>
 		</dependency>
 
 		<dependency>
 			<groupId>org.apache.wicket</groupId>
 			<artifactId>wicket-core</artifactId>
-			<version>${wicket.version}</version>
 		</dependency>
 
 		<dependency>
 			<groupId>org.apache.wicket</groupId>
 			<artifactId>wicket-spring</artifactId>
-			<version>${wicket.version}</version>
 		</dependency>
 
 		<dependency>
@@ -220,55 +159,41 @@
 		<dependency>
 			<groupId>org.glassfish.hk2.external</groupId>
 			<artifactId>javax.inject</artifactId>
-			<version>2.4.0-b34</version>
 			<scope>provided</scope>
 		</dependency>
 
 		<dependency>
 			<groupId>ch.qos.logback</groupId>
 			<artifactId>logback-classic</artifactId>
-			<version>${logback.version}</version>
 			<scope>runtime</scope>
 		</dependency>
 
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
-			<version>${slf4j.version}</version>
 		</dependency>
 
 		<!--TEST -->
-        <dependency>
-            <groupId>xml-apis</groupId>
-            <artifactId>xml-apis</artifactId>
-            <version>${xml-apis.version}</version>
-            <scope>test</scope>
-        </dependency>
-
 		<dependency>
 			<groupId>org.mockito</groupId>
 			<artifactId>mockito-core</artifactId>
-			<version>${mockito.version}</version>
 			<scope>test</scope>
 		</dependency>
 
 		<dependency>
 			<groupId>org.hamcrest</groupId>
 			<artifactId>hamcrest-library</artifactId>
-			<version>${hamcrest.version}</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.hamcrest</groupId>
 			<artifactId>hamcrest-core</artifactId>
-			<version>${hamcrest.version}</version>
 			<scope>test</scope>
 		</dependency>
 
 		<dependency>
 			<groupId>no.nav.sbl.dialogarena</groupId>
 			<artifactId>common-test</artifactId>
-			<version>${common-test.version}</version>
 			<scope>test</scope>
 		</dependency>
 
@@ -288,19 +213,11 @@
         <dependency>
             <groupId>org.apache.cxf</groupId>
             <artifactId>cxf-rt-frontend-jaxws</artifactId>
-            <version>${cxf.version}</version>
             <scope>test</scope>
         </dependency>
 		<dependency>
-			<groupId>org.apache.cxf</groupId>
-			<artifactId>cxf-core</artifactId>
-			<version>${cxf.version}</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
             <groupId>no.nav.modig</groupId>
             <artifactId>modig-testcertificates</artifactId>
-            <version>1.1.0</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
