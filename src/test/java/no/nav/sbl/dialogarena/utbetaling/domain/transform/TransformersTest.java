@@ -17,6 +17,10 @@ import static org.junit.Assert.*;
 
 public class TransformersTest {
 
+    public static final String AKTOER_ID = "1";
+    public static final String KONTONUMMER = "123";
+    public static final String ORGANISASJON_AKTOER_ID = "5";
+
     @Test
     public void skattTransformererKorrektFraWSObjekt() {
         WSSkatt wsSkatt = new WSSkatt()
@@ -89,9 +93,9 @@ public class TransformersTest {
 
     @Test
     public void createAktoerFraWSObjekt() {
-        WSPerson wsAktoer = new WSPerson().withAktoerId("***REMOVED***").withNavn("Ola Normann");
+        WSPerson wsAktoer = new WSPerson().withAktoerId(AKTOER_ID).withNavn("Ola Normann");
         Aktoer aktoer = createAktoer(wsAktoer);
-        assertThat(aktoer.getAktoerId(), is("***REMOVED***"));
+        assertThat(aktoer.getAktoerId(), is(AKTOER_ID));
         assertThat(aktoer.getNavn(), is("Ola Normann"));
     }
 
@@ -103,9 +107,9 @@ public class TransformersTest {
 
     @Test
     public void kontoErKontonummerFraRespons() {
-        WSUtbetaling utbetaling = new WSUtbetaling().withUtbetaltTilKonto(new WSBankkonto().withKontonummer("1122334455").withKontotype("Bankkonto - Innland")).withUtbetalingsmetode("Norsk bankkonto");
+        WSUtbetaling utbetaling = new WSUtbetaling().withUtbetaltTilKonto(new WSBankkonto().withKontonummer(KONTONUMMER).withKontotype("Bankkonto - Innland")).withUtbetalingsmetode("Norsk bankkonto");
         String konto = determineKontoUtbetaltTil(utbetaling);
-        assertThat(konto, is("1122334455"));
+        assertThat(konto, is(KONTONUMMER));
     }
 
     @Test
@@ -298,12 +302,12 @@ public class TransformersTest {
     @Test
     public void hovedytelseTransformererKorrektFraWSObjekt() {
         WSUtbetaling wsUtbetaling = new WSUtbetaling()
-                .withUtbetaltTil(new WSPerson().withNavn("Ola Normann").withAktoerId("123123123").withDiskresjonskode("5"))
+                .withUtbetaltTil(new WSPerson().withNavn("Ola Normann").withAktoerId(AKTOER_ID).withDiskresjonskode("5"))
                 .withPosteringsdato(new DateTime(2015, 1, 1, 13, 37))
                 .withUtbetalingsmelding("Dette er en melding")
                 .withUtbetalingsdato(new DateTime(2015, 1, 2, 3, 4))
                 .withForfallsdato(new DateTime(2000, 1, 1, 1, 1))
-                .withUtbetaltTilKonto(new WSBankkonto().withKontotype("Bankkonto").withKontonummer("***REMOVED***3"))
+                .withUtbetaltTilKonto(new WSBankkonto().withKontotype("Bankkonto").withKontonummer(KONTONUMMER))
                 .withUtbetalingsmetode("Overføring via bank")
                 .withUtbetalingsstatus("Utbetalt")
                 .withYtelseListe(
@@ -336,8 +340,8 @@ public class TransformersTest {
                                 .withSkattsum(-6.0)
                                 .withYtelseNettobeloep(12994.0)
                                 .withBilagsnummer("123456789")
-                                .withRettighetshaver(new WSPerson().withAktoerId("***REMOVED***6").withNavn("Kari Normann").withDiskresjonskode("3"))
-                                .withRefundertForOrg(new WSOrganisasjon().withAktoerId("***REMOVED***").withNavn("KariNormann AS")));
+                                .withRettighetshaver(new WSPerson().withAktoerId(AKTOER_ID).withNavn("Kari Normann").withDiskresjonskode("3"))
+                                .withRefundertForOrg(new WSOrganisasjon().withAktoerId(ORGANISASJON_AKTOER_ID).withNavn("KariNormann AS")));
 
         List<Hovedytelse> hovedytelser = TO_HOVEDYTELSE.apply(wsUtbetaling);
         assertThat(hovedytelser.size(), is(1));
@@ -348,13 +352,13 @@ public class TransformersTest {
 
 //        Aktoer utbetaltTilSomAktoer = new Aktoer().withAktoerId("123123123").withNavn("Ola Normann").withDiskresjonskode("5").withAktoerType(AktoerType.PERSON))
         assertThat(ytelse.getUtbetaltTil(), instanceOf(Aktoer.class));
-        assertThat(ytelse.getUtbetaltTil().getAktoerId(), is("123123123"));
+        assertThat(ytelse.getUtbetaltTil().getAktoerId(), is(AKTOER_ID));
         assertThat(ytelse.getUtbetaltTil().getNavn(), is("Ola Normann"));
         assertThat(ytelse.getUtbetaltTil().getDiskresjonskode(), is("5"));
         assertThat(ytelse.getUtbetaltTil().getAktoerType(), is(AktoerType.PERSON));
 
         assertThat(ytelse.getUtbetalingsmelding(), is("Dette er en melding"));
-        assertThat(ytelse.getUtbetaltTilKonto(), is("***REMOVED***3"));
+        assertThat(ytelse.getUtbetaltTilKonto(), is(KONTONUMMER));
         assertThat(ytelse.getUtbetalingsmetode(), is("Overføring via bank"));
         assertThat(ytelse.getUtbetalingsstatus(), is("Utbetalt"));
         assertThat(ytelse.getForfallsdato(), is(new DateTime(2000, 1, 1, 1, 1)));
@@ -393,13 +397,13 @@ public class TransformersTest {
 
         assertThat(ytelse.getRettighetshaver(), instanceOf(Aktoer.class));
         assertThat(ytelse.getRettighetshaver().getNavn(), is("Kari Normann"));
-        assertThat(ytelse.getRettighetshaver().getAktoerId(), is("***REMOVED***6"));
+        assertThat(ytelse.getRettighetshaver().getAktoerId(), is(AKTOER_ID));
         assertThat(ytelse.getRettighetshaver().getDiskresjonskode(), is("3"));
         assertThat(ytelse.getRettighetshaver().getAktoerType(), is(AktoerType.PERSON));
 
         assertThat(ytelse.getRefundertForOrg(), instanceOf(Aktoer.class));
         assertThat(ytelse.getRefundertForOrg().getNavn(), is("KariNormann AS"));
-        assertThat(ytelse.getRefundertForOrg().getAktoerId(), is("***REMOVED***"));
+        assertThat(ytelse.getRefundertForOrg().getAktoerId(), is(ORGANISASJON_AKTOER_ID));
         assertThat(ytelse.getRefundertForOrg().getAktoerType(), is(AktoerType.ORGANISASJON));
 
         assertThat(ytelse.getSammenlagtTrekkBeloep(), is(-9006.0));

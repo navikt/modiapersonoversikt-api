@@ -6,6 +6,8 @@ import java.util.List;
 
 public class LagTestWSYtelse {
 
+    public static final String AREMARK_FNR = "10108000398";
+
     public static WSYtelseskomponent lagYtelseskomponent(String komponenttype, Double komponentbeloep) {
         return new WSYtelseskomponent()
                 .withYtelseskomponenttype(komponenttype)
@@ -39,7 +41,7 @@ public class LagTestWSYtelse {
                 .withYtelsesperiode(ytelsesperiode)
                 .withYtelseskomponentListe(ytelseskomponenter)
                 .withYtelseskomponentersum(finnYtelseskomponentersum(ytelseskomponenter))
-                .withBilagsnummer("***REMOVED***");
+                .withBilagsnummer(AREMARK_FNR);
     }
 
 }

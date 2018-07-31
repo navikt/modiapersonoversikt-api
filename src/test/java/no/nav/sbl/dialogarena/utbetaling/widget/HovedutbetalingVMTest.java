@@ -24,6 +24,7 @@ import static org.junit.Assert.assertThat;
 public class HovedutbetalingVMTest {
 
     private static final String ID = "id";
+    public static final String AKTOER_ID = "5";
 
     @Before
     public void init() {
@@ -121,7 +122,7 @@ public class HovedutbetalingVMTest {
                         new DateTime().withDate(2015,2,1),
                         new DateTime().withDate(2015,3,1)))
                 .withUtbetaltTilKonto("123")
-                .withUtbetaltTil(new Aktoer().withAktoerId("***REMOVED***"))
+                .withUtbetaltTil(new Aktoer().withAktoerId(AKTOER_ID))
                 .withNettoUtbetalt(123.4);
     }
 

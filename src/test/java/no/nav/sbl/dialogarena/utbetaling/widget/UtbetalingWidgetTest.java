@@ -26,7 +26,7 @@ import static org.mockito.Mockito.when;
 
 public class UtbetalingWidgetTest extends AbstractWicketTest {
 
-    private static final String FNR = "***REMOVED***";
+    private static final String FNR = "5";
     private static final int MIDNIGHT_AT_DAY_BEFORE = 1;
 
     private UtbetalingService utbetalingService;

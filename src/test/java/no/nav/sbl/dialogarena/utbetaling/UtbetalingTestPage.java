@@ -8,8 +8,10 @@ import org.apache.wicket.util.string.StringValue;
 
 public class UtbetalingTestPage extends WebPage {
 
+    public static final String AREMARK_FNR = "10108000398";
+
     public UtbetalingTestPage(final PageParameters pageParameters) {
-        String fnr = "***REMOVED***";
+        String fnr = AREMARK_FNR;
         StringValue paramFnr = pageParameters.get("fnr");
         if(!paramFnr.isNull() && !paramFnr.isEmpty()) {
             fnr = paramFnr.toString();

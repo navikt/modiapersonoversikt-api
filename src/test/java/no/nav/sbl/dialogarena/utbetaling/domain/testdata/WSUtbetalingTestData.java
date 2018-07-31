@@ -17,6 +17,12 @@ import static org.joda.time.DateTime.now;
 
 public class WSUtbetalingTestData {
 
+    public static final String BILLAGSNUMMER = "5";
+    public static final String KREDITOR = "2";
+    public static final String OSLO_KOMMUNE_AKTOER_ID = "1";
+    public static final String AKTOER_ID = "5";
+    public static final String KONTONUMMER = "1234";
+
     public static List<WSUtbetaling> getWsUtbetalinger(String fNr, DateTime startDato, DateTime sluttDato) {
         List<WSUtbetaling> utbetalinger = new ArrayList<>();
         utbetalinger.add(createOlaNordmannUtbetaling());
@@ -60,7 +66,7 @@ public class WSUtbetalingTestData {
                                         .withSkattsum(-1500.00)
                                         .withYtelseNettobeloep(5156.00),
                                 LagTestWSYtelse.lagWSYtelse(ytelesestype, testWSPerson, ytelsesperiode, ytelseskomponenter)
-                                        .withTrekkListe(LagTestWSYtelse.lagWSTrekk("Kreditorsjekk", -900.00, "***REMOVED***"))
+                                        .withTrekkListe(LagTestWSYtelse.lagWSTrekk("Kreditorsjekk", -900.00, KREDITOR))
                                         .withTrekksum(-900.00)
                                         .withSkattListe(new WSSkatt().withSkattebeloep(-1500.00))
                                         .withSkattsum(-1500.00)
@@ -88,7 +94,7 @@ public class WSUtbetalingTestData {
                                         .withSkattListe(new WSSkatt().withSkattebeloep(-2267.00))
                                         .withSkattsum(-2267.00)
                                         .withYtelseNettobeloep(4389.00)
-                                        .withBilagsnummer("***REMOVED***"))
+                                        .withBilagsnummer(BILLAGSNUMMER))
                         .withForfallsdato(now().minusYears(1).minusDays(2*NUMBER_OF_DAYS_TO_SHOW))
                         .withUtbetaltTilKonto(new WSBankkonto().withKontonummer("***REMOVED******REMOVED***896").withKontotype("Konto - Utland"))
                         .withUtbetalingsmetode("Bankkonto")
@@ -99,31 +105,31 @@ public class WSUtbetalingTestData {
     private static WSUtbetaling createOsloKommuneUtbetaling() {
         return new WSUtbetaling()
                 .withPosteringsdato(now().minusDays(19))
-                .withUtbetaltTil(new WSOrganisasjon().withAktoerId("***REMOVED***").withNavn("Oslo kommune Utbetaling 4"))
+                .withUtbetaltTil(new WSOrganisasjon().withAktoerId(OSLO_KOMMUNE_AKTOER_ID).withNavn("Oslo kommune Utbetaling 4"))
                 .withUtbetalingsmelding("Sykepenger")
                 .withYtelseListe(
                         new WSYtelse()
                                 .withYtelsestype(new WSYtelsestyper().withValue("Sykepenger"))
-                                .withRettighetshaver(new WSPerson().withAktoerId("***REMOVED***").withNavn("Per Pettersen Eksempel 4"))
-                                .withRefundertForOrg(new WSOrganisasjon().withAktoerId("***REMOVED***").withNavn("Plan- og bygningsetaten"))
+                                .withRettighetshaver(new WSPerson().withAktoerId(AKTOER_ID).withNavn("Per Pettersen Eksempel 4"))
+                                .withRefundertForOrg(new WSOrganisasjon().withAktoerId(OSLO_KOMMUNE_AKTOER_ID).withNavn("Plan- og bygningsetaten"))
                                 .withYtelsesperiode(new WSPeriode().withFom(now().minusDays(2*NUMBER_OF_DAYS_TO_SHOW).minusDays(15)).withTom(now().minusDays(NUMBER_OF_DAYS_TO_SHOW).minusDays(15)))
                                 .withYtelseskomponentListe(
                                         LagTestWSYtelse.lagYtelseskomponent("Sykepenger, arbeidstakere", 15000.00))
                                 .withYtelseskomponentersum(15000.00)
-                                .withTrekkListe(LagTestWSYtelse.lagWSTrekk("Kreditortrekk", 900.00, "***REMOVED***"))
+                                .withTrekkListe(LagTestWSYtelse.lagWSTrekk("Kreditortrekk", 900.00, KREDITOR))
                                 .withTrekksum(900.00)
                                 .withSkattListe(new WSSkatt().withSkattebeloep(-2267.00))
                                 .withSkattsum(-2267.00)
                                 .withYtelseNettobeloep(13633.00)
-                                .withBilagsnummer("***REMOVED***"))
+                                .withBilagsnummer(BILLAGSNUMMER))
                 .withUtbetalingsdato(now().minusDays(2*NUMBER_OF_DAYS_TO_SHOW))
-                .withUtbetaltTilKonto(new WSBankkonto().withKontotype("Konto - Norge").withKontonummer("22222222222"))
+                .withUtbetaltTilKonto(new WSBankkonto().withKontotype("Konto - Norge").withKontonummer(KONTONUMMER))
                 .withUtbetalingsmetode("Bankkonto")
                 .withUtbetalingsstatus("Utbetalt");
     }
 
     private static WSUtbetaling createOlaNordmannUtbetaling() {
-        WSPerson personOlaNordmann = new WSPerson().withAktoerId("22222222222").withNavn("Ola Nordmann Utbetaling 2");
+        WSPerson personOlaNordmann = new WSPerson().withAktoerId(AKTOER_ID).withNavn("Ola Nordmann Utbetaling 2");
         return new WSUtbetaling()
                 .withPosteringsdato(now().minusDays(NUMBER_OF_DAYS_TO_SHOW))
                 .withUtbetaltTil(personOlaNordmann)
@@ -150,7 +156,7 @@ public class WSUtbetalingTestData {
     }
 
     public static WSUtbetaling createUtbetalingMedValgtUtbetalingsdatoForfallsdatoOgPosteringsdato(DateTime utbetalingsdato, DateTime forfallsdato, DateTime posteringsdato ) {
-        WSPerson personOlaNordmann = new WSPerson().withAktoerId("22222222222").withNavn("Ola Nordmann Utbetaling 2");
+        WSPerson personOlaNordmann = new WSPerson().withAktoerId(AKTOER_ID).withNavn("Ola Nordmann Utbetaling 2");
         return new WSUtbetaling()
                 .withPosteringsdato(posteringsdato)
                 .withUtbetaltTil(personOlaNordmann)
@@ -186,17 +192,17 @@ public class WSUtbetalingTestData {
                                 .withBilagsnummer("30742-5731"))
                 .withForfallsdato(forfallsdato)
                 .withUtbetalingsdato(utbetalingsdato)
-                .withUtbetaltTilKonto(new WSBankkonto().withKontotype("Konto - Norge").withKontonummer("22222222222"))
+                .withUtbetaltTilKonto(new WSBankkonto().withKontotype("Konto - Norge").withKontonummer(KONTONUMMER))
                 .withUtbetalingsmetode("Bankkonto")
                 .withUtbetalingsstatus("Utbetalt");
     }
 
     public static WSUtbetaling createRefusjonSykepenger() {
-        WSPerson personOlaNordmann = new WSPerson().withAktoerId("22222222222").withNavn("Utbetaling uten utbetalingsdato");
+        WSPerson personOlaNordmann = new WSPerson().withAktoerId(AKTOER_ID).withNavn("Utbetaling uten utbetalingsdato");
 
         return new WSUtbetaling()
                 .withPosteringsdato(now())
-                .withUtbetaltTilKonto(new WSBankkonto().withKontotype("Konto - Norge").withKontonummer("22222222222"))
+                .withUtbetaltTilKonto(new WSBankkonto().withKontotype("Konto - Norge").withKontonummer(KONTONUMMER))
                 .withUtbetalingsmetode("Bankkonto")
                 .withUtbetalingsstatus("")
                 .withUtbetaltTil(personOlaNordmann)
@@ -222,7 +228,7 @@ public class WSUtbetalingTestData {
                         .withSkattListe(new WSSkatt().withSkattebeloep(-1398.0))
                         .withSkattsum(-2798.0)
                         .withYtelseNettobeloep(11124.0)
-                        .withBilagsnummer("321321321"),
+                        .withBilagsnummer(BILLAGSNUMMER),
                         new WSYtelse()
                                 .withYtelsestype(new WSYtelsestyper().withValue("Dagpenger"))
                                 .withRettighetshaver(personOlaNordmann)
@@ -241,12 +247,12 @@ public class WSUtbetalingTestData {
     }
 
     public static WSUtbetaling createUtbetalingUtenUtbetalingsdato(DateTime forfallsdato, DateTime posteringsdato ) {
-        WSPerson personOlaNordmann = new WSPerson().withAktoerId("22222222222").withNavn("Utbetaling uten utbetalingsdato");
+        WSPerson personOlaNordmann = new WSPerson().withAktoerId(AKTOER_ID).withNavn("Utbetaling uten utbetalingsdato");
         return new WSUtbetaling()
                 .withUtbetalingsdato(null)
                 .withForfallsdato(forfallsdato)
                 .withPosteringsdato(posteringsdato)
-                .withUtbetaltTilKonto(new WSBankkonto().withKontotype("Konto - Norge").withKontonummer("22222222222"))
+                .withUtbetaltTilKonto(new WSBankkonto().withKontotype("Konto - Norge").withKontonummer(KONTONUMMER))
                 .withUtbetalingsmetode("Bankkonto")
                 .withUtbetalingsstatus("")
                 .withUtbetaltTil(personOlaNordmann)
