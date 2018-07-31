@@ -22,6 +22,8 @@ import static org.junit.Assert.assertThat;
 
 public class DetaljPanelTest extends AbstractWicketTest {
 
+    public static final String KONTO_UTBETALT_TIL = "123";
+    public static final String AKTOER_ID = "1";
     private DetaljPanel detaljPanel;
     private UtbetalingVM utbetalingVM;
 
@@ -107,7 +109,7 @@ public class DetaljPanelTest extends AbstractWicketTest {
     @Test
     public void viserRiktigMetadataForUtbetalingen() {
         wicketTester.goToPageWith(detaljPanel)
-                .should().containComponent(withId("konto").and(withTextSaying("***REMOVED***")))
+                .should().containComponent(withId("konto").and(withTextSaying(KONTO_UTBETALT_TIL)))
                 .should().containComponent(withId("utbetalingsmelding").and(withTextSaying("Dette er en testmelding")));
     }
 
@@ -133,7 +135,7 @@ public class DetaljPanelTest extends AbstractWicketTest {
         return new Hovedytelse()
                 .withId("id1")
                 .withUtbetaltTil(createUtbetaltTil())
-                .withUtbetaltTilKonto("***REMOVED***")
+                .withUtbetaltTilKonto(KONTO_UTBETALT_TIL)
                 .withYtelse("Dagpenger")
                 .withUtbetalingsmelding("Dette er en testmelding")
                 .withUnderytelseListe(createUnderytelser())
@@ -177,7 +179,7 @@ public class DetaljPanelTest extends AbstractWicketTest {
 
     private Aktoer createUtbetaltTil() {
         return new Aktoer()
-            .withAktoerId("***REMOVED***")
+            .withAktoerId(AKTOER_ID)
             .withNavn("Ola Nordmann");
     }
 
@@ -185,7 +187,7 @@ public class DetaljPanelTest extends AbstractWicketTest {
         return new Hovedytelse()
                 .withId("id1")
                 .withUtbetaltTil(createUtbetaltTil())
-                .withUtbetaltTilKonto("***REMOVED***")
+                .withUtbetaltTilKonto(KONTO_UTBETALT_TIL)
                 .withYtelse("Dagpenger")
                 .withUtbetalingsmelding("Dette er en testmelding")
                 .withTrekkListe(createTrekkListeMedTilbakeBetaling())

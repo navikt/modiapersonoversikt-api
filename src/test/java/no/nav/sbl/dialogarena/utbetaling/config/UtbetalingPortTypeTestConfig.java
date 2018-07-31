@@ -17,7 +17,7 @@ import static no.nav.sbl.dialogarena.utbetaling.domain.testdata.WSUtbetalingTest
 @Configuration
 public class UtbetalingPortTypeTestConfig {
 
-    private static final String FNR = "***REMOVED***";
+    private static final String AREMARK_FNR = "10108000398";
 
     @Bean
     public UtbetalingV1 utbetalingPortType() {
@@ -38,7 +38,7 @@ public class UtbetalingPortTypeTestConfig {
             public WSHentUtbetalingsinformasjonResponse hentUtbetalingsinformasjon(WSHentUtbetalingsinformasjonRequest request) throws HentUtbetalingsinformasjonPeriodeIkkeGyldig {
                 String ident = request.getId().getIdent();
                 if (ident == null) {
-                    ident = FNR;
+                    ident = AREMARK_FNR;
                 }
                 return new WSHentUtbetalingsinformasjonResponse().withUtbetalingListe(getWsUtbetalinger(ident, request.getPeriode().getFom(), request.getPeriode().getTom()));
             }
