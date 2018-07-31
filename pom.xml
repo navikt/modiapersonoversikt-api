@@ -31,7 +31,6 @@
         <collections-generic.version>4.01</collections-generic.version>
 
         <!-- Egenlagde -->
-        <common-jetty.version>1.0.23</common-jetty.version>
         <common-test.version>1.2</common-test.version>
         <common-time.version>3.1.3</common-time.version>
         <modia-felleskomponenter.version>4.2</modia-felleskomponenter.version>
@@ -263,13 +262,6 @@
 			<groupId>org.hamcrest</groupId>
 			<artifactId>hamcrest-core</artifactId>
 			<version>${hamcrest.version}</version>
-			<scope>test</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>no.nav.sbl.dialogarena</groupId>
-			<artifactId>common-jetty</artifactId>
-			<version>${common-jetty.version}</version>
 			<scope>test</scope>
 		</dependency>
 
