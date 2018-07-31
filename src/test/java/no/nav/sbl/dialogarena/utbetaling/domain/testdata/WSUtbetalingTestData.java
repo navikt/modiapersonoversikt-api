@@ -73,7 +73,7 @@ public class WSUtbetalingTestData {
                                         .withYtelseNettobeloep(4256.00))
                         .withUtbetalingsdato(now().minusYears(1).plusMonths(2))
                         .withForfallsdato(now().minusYears(1).plusMonths(2))
-                        .withUtbetaltTilKonto(new WSBankkonto().withKontonummer("***REMOVED******REMOVED***896").withKontotype("Konto - Utland"))
+                        .withUtbetaltTilKonto(new WSBankkonto().withKontonummer(KONTONUMMER).withKontotype("Konto - Utland"))
                         .withUtbetalingsmetode("Bankkonto")
                         .withUtbetalingsstatus("Utbetalt"),
                 new WSUtbetaling()
@@ -96,7 +96,7 @@ public class WSUtbetalingTestData {
                                         .withYtelseNettobeloep(4389.00)
                                         .withBilagsnummer(BILLAGSNUMMER))
                         .withForfallsdato(now().minusYears(1).minusDays(2*NUMBER_OF_DAYS_TO_SHOW))
-                        .withUtbetaltTilKonto(new WSBankkonto().withKontonummer("***REMOVED******REMOVED***896").withKontotype("Konto - Utland"))
+                        .withUtbetaltTilKonto(new WSBankkonto().withKontonummer(WSUtbetalingTestData.KONTONUMMER).withKontotype("Konto - Utland"))
                         .withUtbetalingsmetode("Bankkonto")
                         .withUtbetalingsstatus("Under saksbehandling")
         );
