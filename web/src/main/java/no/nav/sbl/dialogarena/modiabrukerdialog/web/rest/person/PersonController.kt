@@ -15,7 +15,7 @@ import no.nav.kodeverk.consumer.fim.kodeverk.to.feil.HentKodeverkKodeverkIkkeFun
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.Feature
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.UnleashService
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.kodeverk.Kode
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.mapOfNotNull
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.mapOfNotNullOrEmpty
 import no.nav.tjeneste.virksomhet.person.v3.HentPersonPersonIkkeFunnet
 import no.nav.tjeneste.virksomhet.person.v3.HentPersonSikkerhetsbegrensning
 import javax.inject.Inject
@@ -113,7 +113,7 @@ class PersonController @Inject constructor(private val kjerneinfoService: Person
 
     private fun hentBankkonto(person: Person) = person.personfakta.let {
         it.bankkonto?.run {
-            mapOfNotNull(
+            mapOfNotNullOrEmpty(
                     "kontonummer" to kontonummer,
                     "banknavn" to banknavn,
                     "sistEndret" to endringsinformasjon.sistOppdatert,
@@ -121,12 +121,12 @@ class PersonController @Inject constructor(private val kjerneinfoService: Person
             ).plus(
                     if (it.isBankkontoIUtland) {
                         (this as BankkontoUtland).let {
-                            mapOfNotNull(
+                            mapOfNotNullOrEmpty(
                                     "bankkode" to it.bankkode,
                                     "swift" to it.swift,
                                     "landkode" to it.landkode?.let(::Kode),
                                     "adresse" to it.bankadresse?.let {
-                                        mapOfNotNull(
+                                        mapOfNotNullOrEmpty(
                                                 "linje1" to it.adresselinje1,
                                                 "linje2" to it.adresselinje2,
                                                 "linje3" to it.adresselinje3
