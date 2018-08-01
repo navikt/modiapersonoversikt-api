@@ -8,7 +8,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.LeggTilbakeOppgaveIG
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveBehandlingService
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.ldap.LDAPService
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.http.CookieUtil
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.mapOfNotNull
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.mapOfNotNullOrEmpty
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.service.plukkoppgave.PlukkOppgaveService
 import org.slf4j.LoggerFactory
 import javax.inject.Inject
@@ -72,7 +72,7 @@ class OppgaveController @Inject constructor(
 
 }
 
-private fun mapOppgave(oppgave: Oppgave) = mapOfNotNull(
+private fun mapOppgave(oppgave: Oppgave) = mapOfNotNullOrEmpty(
         "oppgaveid" to oppgave.oppgaveId,
         "henvendelseid" to oppgave.henvendelseId,
         "fødselsnummer" to oppgave.fnr
