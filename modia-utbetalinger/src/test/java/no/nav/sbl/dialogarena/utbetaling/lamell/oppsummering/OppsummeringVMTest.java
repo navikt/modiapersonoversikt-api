@@ -15,7 +15,9 @@ import java.util.List;
 import java.util.Map;
 
 import static java.util.Arrays.asList;
+import static no.nav.sbl.dialogarena.utbetaling.domain.util.ValutaUtil.getBelopString;
 import static no.nav.sbl.dialogarena.utbetaling.domain.util.YtelseUtils.*;
+import static no.nav.sbl.dialogarena.utbetaling.lamell.oppsummering.UtbetalingStatuser.RETURNERT_TIL_NAV;
 import static org.hamcrest.Matchers.is;
 import static org.joda.time.DateTime.now;
 import static org.junit.Assert.assertThat;
@@ -205,6 +207,17 @@ public class OppsummeringVMTest {
     }
 
     @Test
+    public void fitrererBortUrelevanteHovedytelserITotalNetto() {
+        List<Hovedytelse> hovedytelser = new ArrayList<>();
+        hovedytelser.add(getYtelse(DateTime.now()).withNettoUtbetalt(1000.0));
+        hovedytelser.add(getYtelse(DateTime.now()).withNettoUtbetalt(300.0).withUtbetalingsstatus(RETURNERT_TIL_NAV.utbetalingstatus));
+
+        OppsummeringVM oppsummeringVM = new OppsummeringVM(hovedytelser, new LocalDate(), new LocalDate(), new LocalDate());
+
+        assertThat(oppsummeringVM.utbetalt, is(getBelopString(1000.0)));
+    }
+
+    @Test
     public void summererTotalNettoForHovedytelserMedNegativBrutto() {
         List<Hovedytelse> hovedytelser = new ArrayList<>();
         hovedytelser.add(getYtelse(DateTime.now()).withNettoUtbetalt(1000.0));
@@ -305,6 +318,7 @@ public class OppsummeringVMTest {
                 .withSumTrekk(0d)
                 .withSammenlagtTrekkBeloep()
                 .withBruttoUtbetalt(0d)
+                .withUtbetalingsDato(dato)
                 .withYtelsesperiode(new Interval(dato.minusDays(14), dato));
     }
 
