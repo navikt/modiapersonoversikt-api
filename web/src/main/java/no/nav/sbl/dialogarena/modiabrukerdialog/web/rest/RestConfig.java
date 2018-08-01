@@ -13,6 +13,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.kontaktinformasjon.Kont
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.ldap.LdapController;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.oppgave.OppgaveController;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.person.PersonController;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.utbetaling.UtbetalingController;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.vergemal.VergemalController;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.rest.DokumentController;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.rest.InformasjonController;
@@ -45,7 +46,8 @@ public class RestConfig extends ResourceConfig {
                 KodeverkController.class,
                 LdapController.class,
                 BaseUrlsController.class,
-                FeatureToggleController.class
+                FeatureToggleController.class,
+                UtbetalingController.class
         );
     }
 }
