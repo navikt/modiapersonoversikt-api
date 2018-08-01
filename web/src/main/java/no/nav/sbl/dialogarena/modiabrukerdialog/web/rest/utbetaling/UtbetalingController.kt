@@ -1,11 +1,13 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.utbetaling
 
+import no.nav.modig.core.exception.ApplicationException
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.Feature
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.UnleashService
 import no.nav.sbl.dialogarena.utbetaling.service.UtbetalingService
 import no.nav.tjeneste.virksomhet.utbetaling.v1.informasjon.WSPeriode
 import no.nav.tjeneste.virksomhet.utbetaling.v1.informasjon.WSUtbetaling
 import no.nav.tjeneste.virksomhet.utbetaling.v1.informasjon.WSYtelse
+import org.joda.time.IllegalFieldValueException
 import org.joda.time.LocalDate
 import org.joda.time.format.DateTimeFormat
 import javax.inject.Inject
@@ -27,13 +29,10 @@ class UtbetalingController @Inject constructor(private val service: UtbetalingSe
              @QueryParam("startDato") start: String?,
              @QueryParam("sluttDato") slutt: String?): Map<String, Any?> {
         check(unleashService.isEnabled(Feature.NYTT_VISITTKORT))
-
-        val startDato = start?.let { LocalDate.parse(start, DateTimeFormat.forPattern(DATOFORMAT)) }
-        val sluttDato = slutt?.let { LocalDate.parse(slutt, DateTimeFormat.forPattern(DATOFORMAT)) }
-
+git status
         val utbetalinger = service.hentWSUtbetalinger(fødselsnummer,
-                startDato ?: LocalDate.now().minusDays(DAGER_BAKOVER),
-                sluttDato ?: LocalDate.now().plusDays(DAGER_FREMOVER))
+                    lagRiktigDato(start) ?: LocalDate.now().minusDays(DAGER_BAKOVER),
+                    lagRiktigDato(slutt) ?: LocalDate.now().plusDays(DAGER_FREMOVER))
 
         return mapOf(
                 "utbetalinger" to hentUtbetalinger(utbetalinger)
@@ -72,6 +71,16 @@ class UtbetalingController @Inject constructor(private val service: UtbetalingSe
                 "start" to periode.fom?.toString(DATOFORMAT),
                 "slutt" to periode.tom?.toString(DATOFORMAT)
         )
+    }
+
+    private fun lagRiktigDato(dato: String?): LocalDate? {
+        return dato?.let {
+            try {
+                LocalDate.parse(dato, DateTimeFormat.forPattern(DATOFORMAT))
+            } catch(exception: IllegalFieldValueException) {
+                throw ApplicationException(exception.message)
+            }
+        }
     }
 
 }
