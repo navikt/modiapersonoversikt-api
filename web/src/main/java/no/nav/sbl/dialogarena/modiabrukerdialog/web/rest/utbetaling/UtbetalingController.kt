@@ -29,7 +29,7 @@ class UtbetalingController @Inject constructor(private val service: UtbetalingSe
              @QueryParam("startDato") start: String?,
              @QueryParam("sluttDato") slutt: String?): Map<String, Any?> {
         check(unleashService.isEnabled(Feature.NYTT_VISITTKORT))
-git status
+
         val utbetalinger = service.hentWSUtbetalinger(fødselsnummer,
                     lagRiktigDato(start) ?: LocalDate.now().minusDays(DAGER_BAKOVER),
                     lagRiktigDato(slutt) ?: LocalDate.now().plusDays(DAGER_FREMOVER))
