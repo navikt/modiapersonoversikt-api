@@ -3,12 +3,18 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.utbetaling
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.Feature
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.UnleashService
 import no.nav.sbl.dialogarena.utbetaling.service.UtbetalingService
+import no.nav.tjeneste.virksomhet.utbetaling.v1.informasjon.WSPeriode
 import no.nav.tjeneste.virksomhet.utbetaling.v1.informasjon.WSUtbetaling
+import no.nav.tjeneste.virksomhet.utbetaling.v1.informasjon.WSYtelse
 import org.joda.time.LocalDate
-import org.joda.time.format.DateTimeFormatter
+import org.joda.time.format.DateTimeFormat
 import javax.inject.Inject
 import javax.ws.rs.*
 import javax.ws.rs.core.MediaType.APPLICATION_JSON
+
+private const val DATOFORMAT = "yyyy-MM-dd"
+private const val DAGER_BAKOVER = 30
+private const val DAGER_FREMOVER = 100
 
 @Path("/utbetaling/{fnr}")
 @Produces(APPLICATION_JSON)
@@ -22,24 +28,50 @@ class UtbetalingController @Inject constructor(private val service: UtbetalingSe
              @QueryParam("sluttDato") slutt: String?): Map<String, Any?> {
         check(unleashService.isEnabled(Feature.NYTT_VISITTKORT))
 
-        val startDato = start?.let { LocalDate(start) }
-        val sluttDato = slutt?.let { LocalDate(slutt) }
+        val startDato = start?.let { LocalDate.parse(start, DateTimeFormat.forPattern(DATOFORMAT)) }
+        val sluttDato = slutt?.let { LocalDate.parse(slutt, DateTimeFormat.forPattern(DATOFORMAT)) }
 
         val utbetalinger = service.hentWSUtbetalinger(fødselsnummer,
-                startDato ?: LocalDate.now().minusDays(30),
-                sluttDato ?: LocalDate.now().plusDays(100))
+                startDato ?: LocalDate.now().minusDays(DAGER_BAKOVER),
+                sluttDato ?: LocalDate.now().plusDays(DAGER_FREMOVER))
 
         return mapOf(
-                "utbetaling" to hentUtbetalinger(utbetalinger)
+                "utbetalinger" to hentUtbetalinger(utbetalinger)
         )
     }
 
     private fun hentUtbetalinger(utbetalinger: List<WSUtbetaling>): List<Map<String, Any?>> {
         return utbetalinger.map {
             mapOf(
-                "til" to it.utbetaltTil?.navn
+                    "posteringsdato" to it.posteringsdato?.toString(DATOFORMAT),
+                    "utbetalingsdato" to it.utbetalingsdato?.toString(DATOFORMAT),
+                    "forfallsdato" to it.forfallsdato?.toString(DATOFORMAT),
+                    "utbetaltTil" to it.utbetaltTil?.navn,
+                    "nettobeløp" to it.utbetalingNettobeloep,
+                    "melding" to it.utbetalingsmelding,
+                    "metode" to it.utbetalingsmetode,
+                    "status" to it.utbetalingsstatus,
+                    "konto" to it.utbetaltTilKonto?.kontonummer,
+                    "ytelser" to it.ytelseListe?.let { hentYtelserForUtbetaling(it) }
             )
         }
+    }
+
+    private fun hentYtelserForUtbetaling(ytelser: List<WSYtelse>): List<Map<String, Any?>> {
+        return ytelser.map {
+            mapOf(
+                    "type" to it.ytelsestype?.kodeverksRef,
+                    "periode" to it.ytelsesperiode?.let { hentYtelsesperiode(it) },
+                    "nettobeløp" to it.ytelseNettobeloep
+            )
+        }
+    }
+
+    private fun hentYtelsesperiode(periode: WSPeriode): Map<String, Any?> {
+        return mapOf(
+                "start" to periode.fom?.toString(DATOFORMAT),
+                "slutt" to periode.tom?.toString(DATOFORMAT)
+        )
     }
 
 }
