@@ -18,6 +18,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.vergemal.VergemalContro
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.rest.DokumentController;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.rest.InformasjonController;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.rest.SaksoversiktController;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.ytelse.YtelseController;
 import no.nav.sbl.dialogarena.varsel.rest.VarslerController;
 import org.glassfish.jersey.server.ResourceConfig;
 
@@ -47,7 +48,8 @@ public class RestConfig extends ResourceConfig {
                 LdapController.class,
                 BaseUrlsController.class,
                 FeatureToggleController.class,
-                UtbetalingController.class
+                UtbetalingController.class,
+                YtelseController.class
         );
     }
 }

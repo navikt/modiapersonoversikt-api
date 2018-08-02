@@ -71,7 +71,13 @@ class YtelseController @Inject constructor(private val sykepengerService: Sykepe
                         "bruker" to it.bruker?.ident,
                         "perioder" to it.sykmeldingsperioder?.let { hentSykemeldingsperioder(it) }
                 ) },
-                "pleiepenger" to pleiepenger?.pleieepengerettighetListe?.let { hentPleiepenger(it) }
+                "pleiepenger" to pleiepenger?.pleieepengerettighetListe?.let {
+                    if(it.isEmpty()) {
+                        null
+                    } else {
+                        hentPleiepenger(it)
+                    }
+                }
         )
     }
 
