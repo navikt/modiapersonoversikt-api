@@ -98,11 +98,11 @@ class PersonController @Inject constructor(private val kjerneinfoService: Person
 
     private fun getFamilierelasjoner(person: Person) = person.personfakta.harFraRolleIList.map {
         mapOf(
-                "harSammeBosted" to it.harSammeBosted,
+                "harSammeBosted" to if (it.tilPerson.isHideFodselsnummerOgNavn) null else it.harSammeBosted,
                 "tilPerson" to mapOf(
                         "navn" to it.tilPerson.personfakta.personnavn?.let { getNavn(it) },
-                        "alder" to it.tilPerson.fodselsnummer.alder,
-                        "alderMåneder" to it.tilPerson.fodselsnummer.alderIManeder,
+                        "alder" to if (it.tilPerson.isHideFodselsnummerOgNavn) null else it.tilPerson.fodselsnummer.alder,
+                        "alderMåneder" to if (it.tilPerson.isHideFodselsnummerOgNavn) null else it.tilPerson.fodselsnummer.alderIManeder,
                         "fødselsnummer" to if (it.tilPerson.isHideFodselsnummerOgNavn) null else it.tilPerson.fodselsnummer.nummer,
                         "personstatus" to getPersonstatus(it.tilPerson),
                         "diskresjonskode" to it.tilPerson.personfakta.diskresjonskode?.let { Kode(it) }
