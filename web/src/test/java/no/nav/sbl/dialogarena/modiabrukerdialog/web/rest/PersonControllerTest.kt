@@ -175,11 +175,17 @@ internal class PersonControllerTest {
             val relasjoner = response["familierelasjoner"] as ArrayList<*>
             val rolle = relasjoner[0] as Map<*, *>
             val relasjon = rolle["tilPerson"] as Map<*, *>
+            val harSammeBosted = rolle["harSammeBosted"]
             val fodselsnummer = relasjon["fødselsnummer"]
             val navn = relasjon["navn"]
+            val alder = relasjon["alder"]
+            val alderIMåneder = relasjon["alderMåneder"]
 
             assertEquals(null, fodselsnummer)
+            assertEquals(null, harSammeBosted)
             assertEquals(null, navn)
+            assertEquals(null, alder)
+            assertEquals(null, alderIMåneder)
         }
 
     }

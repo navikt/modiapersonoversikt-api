@@ -20,6 +20,7 @@ import static no.nav.sbl.dialogarena.utbetaling.domain.util.DateUtils.isUnixEpoc
 import static no.nav.sbl.dialogarena.utbetaling.domain.util.ValutaUtil.getBelopString;
 import static no.nav.sbl.dialogarena.utbetaling.domain.util.YtelseUtils.groupByHovedytelseAndPeriod;
 import static no.nav.sbl.dialogarena.utbetaling.lamell.oppsummering.HovedYtelseVM.HovedYtelseComparator.HOVEDYTELSE_NAVN;
+import static no.nav.sbl.dialogarena.utbetaling.lamell.oppsummering.UtbetalingStatuser.RETURNERT_TIL_NAV;
 
 
 public class OppsummeringVM implements Serializable {
@@ -48,6 +49,7 @@ public class OppsummeringVM implements Serializable {
 
     private List<Hovedytelse> finnUtbetalteHovedytelser(List<Hovedytelse> hovedytelser) {
         return hovedytelser.stream()
+                .filter(hovedytelse -> !RETURNERT_TIL_NAV.utbetalingstatus.equals(hovedytelse.getUtbetalingsstatus()))
                 .filter(hovedytelse -> hovedytelse.getUtbetalingsDato() != null)
                 .collect(toList());
     }

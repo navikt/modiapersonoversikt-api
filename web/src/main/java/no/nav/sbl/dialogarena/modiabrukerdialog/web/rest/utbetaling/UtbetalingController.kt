@@ -3,6 +3,7 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.utbetaling
 import no.nav.modig.core.exception.ApplicationException
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.Feature
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.UnleashService
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.DATOFORMAT
 import no.nav.sbl.dialogarena.utbetaling.service.UtbetalingService
 import no.nav.tjeneste.virksomhet.utbetaling.v1.informasjon.WSPeriode
 import no.nav.tjeneste.virksomhet.utbetaling.v1.informasjon.WSUtbetaling
@@ -14,7 +15,6 @@ import javax.inject.Inject
 import javax.ws.rs.*
 import javax.ws.rs.core.MediaType.APPLICATION_JSON
 
-private const val DATOFORMAT = "yyyy-MM-dd"
 private const val DAGER_BAKOVER = 30
 private const val DAGER_FREMOVER = 100
 
