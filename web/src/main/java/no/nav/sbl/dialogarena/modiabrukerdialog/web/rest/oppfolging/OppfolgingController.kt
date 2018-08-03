@@ -1,8 +1,11 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.oppfolging
 
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Saksbehandler
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.AnsattEnhet
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.oppfolgingsinfo.OppfolgingsinfoService
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.Feature
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.UnleashService
+import java.util.*
 import javax.inject.Inject
 import javax.ws.rs.GET
 import javax.ws.rs.Path
@@ -24,19 +27,31 @@ class OppfolgingController @Inject constructor(private val service: Oppfolgingsi
 
         return mapOf(
                 "erUnderOppfølging" to oppfølging.erUnderOppfolging,
-                "veileder" to oppfølging.veileder.map {
-                    it?.let { mapOf(
-                            "ident" to it.ident
-                    ) }
-                },
-                "enhet" to oppfølging.oppfolgingsenhet.map {
-                    it?.let { mapOf(
-                            "id" to it.enhetId,
-                            "navn" to it.enhetNavn,
-                            "status" to it.status
-                    ) }
-                }
+                "veileder" to hentVeileder(oppfølging.veileder),
+                "enhet" to hentEnhet(oppfølging.oppfolgingsenhet)
         )
+    }
+
+    private fun hentVeileder(veileder: Optional<Saksbehandler>): Map<String, Any?>? {
+        return if(veileder.isPresent) {
+            mapOf(
+                    "ident" to veileder.get().ident
+            )
+        } else {
+            null
+        }
+    }
+
+    private fun hentEnhet(enhet: Optional<AnsattEnhet>): Map<String, Any?>? {
+        return if(enhet.isPresent) {
+            mapOf(
+                    "id" to enhet.get().enhetId,
+                    "navn" to enhet.get().enhetNavn,
+                    "status" to enhet.get().status
+            )
+        } else {
+            null
+        }
     }
 
 }
