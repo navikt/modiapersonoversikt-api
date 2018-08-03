@@ -15,6 +15,7 @@ import no.nav.kodeverk.consumer.fim.kodeverk.to.feil.HentKodeverkKodeverkIkkeFun
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.Feature
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.UnleashService
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.kodeverk.Kode
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.lagPeriode
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.mapOfNotNullOrEmpty
 import no.nav.tjeneste.virksomhet.person.v3.HentPersonPersonIkkeFunnet
 import no.nav.tjeneste.virksomhet.person.v3.HentPersonSikkerhetsbegrensning
@@ -23,7 +24,6 @@ import javax.ws.rs.*
 import javax.ws.rs.core.MediaType.APPLICATION_JSON
 
 private const val TPS_UKJENT_VERDI = "???"
-private const val DATOFORMAT = "yyyy-MM-dd"
 private const val DATO_TID_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS"
 private const val TILRETTELAGT_KOMMUNIKASJON_KODEVERKREF = "TilrettelagtKommunikasjon"
 private const val TILRETTELAGT_KOMMUNIKASJON_KODEVERKSPRAK = "nb"
@@ -162,7 +162,7 @@ class PersonController @Inject constructor(private val kjerneinfoService: Person
                 "poststed" to poststednavn,
                 "husbokstav" to husbokstav,
                 "bolignummer" to bolignummer,
-                "periode" to postleveringsPeriode?.let { hentPeriode(it) }
+                "periode" to postleveringsPeriode?.let { lagPeriode(it) }
         )
     }
 
@@ -172,7 +172,7 @@ class PersonController @Inject constructor(private val kjerneinfoService: Person
                 "eiendomsnavn" to eiendomsnavn,
                 "postnummer" to postnummer,
                 "poststed" to poststed,
-                "periode" to postleveringsPeriode?.let { hentPeriode(it) }
+                "periode" to postleveringsPeriode?.let { lagPeriode(it) }
         )
     }
 
@@ -183,7 +183,7 @@ class PersonController @Inject constructor(private val kjerneinfoService: Person
                 "postboksanlegg" to postboksanlegg,
                 "poststed" to poststednavn,
                 "postnummer" to poststed,
-                "periode" to postleveringsPeriode?.let { hentPeriode(it) }
+                "periode" to postleveringsPeriode?.let { lagPeriode(it) }
         )
     }
 
@@ -191,7 +191,7 @@ class PersonController @Inject constructor(private val kjerneinfoService: Person
         mapOf(
                 "landkode" to Kode(landkode),
                 "adresselinjer" to listOfNotNull(adresselinje1, adresselinje2, adresselinje3, adresselinje4),
-                "periode" to postleveringsPeriode?.let { hentPeriode(it) }
+                "periode" to postleveringsPeriode?.let { lagPeriode(it) }
         )
     }
 
@@ -203,12 +203,7 @@ class PersonController @Inject constructor(private val kjerneinfoService: Person
     private fun hentSikkerhetstiltak(sikkerhetstiltak: Sikkerhetstiltak) = mapOf(
             "sikkerhetstiltaksbeskrivelse" to sikkerhetstiltak.sikkerhetstiltaksbeskrivelse,
             "sikkerhetstiltakskode" to sikkerhetstiltak.sikkerhetstiltakskode,
-            "periode" to sikkerhetstiltak.periode?.let { hentPeriode(it) }
-    )
-
-    private fun hentPeriode(periode: Periode) = mapOf(
-            "fra" to periode.from?.toString(DATOFORMAT),
-            "til" to periode.to?.toString(DATOFORMAT)
+            "periode" to sikkerhetstiltak.periode?.let { lagPeriode(it) }
     )
 
     private fun getTelefoner(personfakta: Personfakta) = personfakta.run {
