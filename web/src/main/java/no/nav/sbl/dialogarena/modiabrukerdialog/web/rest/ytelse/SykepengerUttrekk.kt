@@ -66,7 +66,7 @@ class SykepengerUttrekk constructor(private val sykepengerService: SykepengerSer
                                 "vedtatt" to it.vedtatt?.toString(DATOFORMAT)
                         )
                     },
-                    "gradAvSykemeldingListe" to it.gradAvSykmeldingListe?.let { hentGraderinger(it) }
+                    "gradAvSykmeldingListe" to it.gradAvSykmeldingListe?.let { hentGraderinger(it) }
             )
         }
     }
@@ -75,7 +75,7 @@ class SykepengerUttrekk constructor(private val sykepengerService: SykepengerSer
         return graderinger.map {
             mapOf(
                     "gradert" to it.gradert?.let { lagPeriode(it) },
-                    "sykemeldingsgrad" to it.sykmeldingsgrad
+                    "sykmeldingsgrad" to it.sykmeldingsgrad
             )
         }
     }
