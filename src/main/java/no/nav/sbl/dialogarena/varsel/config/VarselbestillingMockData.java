@@ -27,7 +27,7 @@ class VarselbestillingMockData {
         return new WSVarselbestilling()
                 .withVarseltypeId("MOTE")
                 .withAktoerId(new WSAktoerId().withAktoerId("321654987"))
-                .withPerson(new WSPerson().withIdent("***REMOVED***"))
+                .withPerson(new WSPerson().withIdent("12345612345"))
                 .withBestilt(new XMLGregorianCalendarImpl(ifjor.toGregorianCalendar()))
                 .withSisteVarselutsendelse(new XMLGregorianCalendarImpl(ifjor.toGregorianCalendar()))
                 .withVarselListe(asList(
@@ -44,7 +44,7 @@ class VarselbestillingMockData {
         return new WSVarselbestilling()
                 .withVarseltypeId("MOTE")
                 .withAktoerId(new WSAktoerId().withAktoerId("321654987"))
-                .withPerson(new WSPerson().withIdent("***REMOVED***"))
+                .withPerson(new WSPerson().withIdent("12345612345"))
                 .withBestilt(new XMLGregorianCalendarImpl(now.minusMinutes(60).toGregorianCalendar()))
                 .withSisteVarselutsendelse(new XMLGregorianCalendarImpl(now.minusMinutes(60).toGregorianCalendar()))
                 .withVarselListe(asList(
@@ -60,7 +60,7 @@ class VarselbestillingMockData {
         return new WSVarselbestilling()
                 .withVarseltypeId("DOKUMENT")
                 .withAktoerId(new WSAktoerId().withAktoerId("321654987"))
-                .withPerson(new WSPerson().withIdent("***REMOVED***"))
+                .withPerson(new WSPerson().withIdent("12345612345"))
                 .withBestilt(new XMLGregorianCalendarImpl(now.minusDays(10).minusMinutes(60).toGregorianCalendar()))
                 .withSisteVarselutsendelse(new XMLGregorianCalendarImpl(now.minusMinutes(60).toGregorianCalendar()))
                 .withReVarselingsintervall(7)
