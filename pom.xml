@@ -28,6 +28,7 @@
         <module>reactkomponenter</module>
         <module>saksoversikt</module>
         <module>modia-utbetalinger</module>
+        <module>modia-varsling</module>
     </modules>
 
     <properties>
@@ -107,7 +108,6 @@
         <!-- Modia-komponenter-->
         <personsok.version>1657</personsok.version>
         <kjerneinfo.versjon>4587</kjerneinfo.versjon>
-        <varsling.modia.version>2.0</varsling.modia.version>
         <modia-felleskomponenter.version>275</modia-felleskomponenter.version>
 
         <!-- Tjenestespecs -->
@@ -502,11 +502,6 @@
             </dependency>
 
             <!--Dialogarena-->
-            <dependency>
-                <groupId>no.nav.sbl.dialogarena</groupId>
-                <artifactId>modia-varsling</artifactId>
-                <version>${varsling.modia.version}</version>
-            </dependency>
             <dependency>
                 <groupId>no.nav.sbl.dialogarena</groupId>
                 <artifactId>dialogarena-behandlingsinformasjon</artifactId>

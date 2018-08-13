@@ -11,3 +11,4 @@
 .settings
 target
 /credentials.properties
+node_modules/

@@ -137,7 +137,7 @@
         <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>modia-varsling</artifactId>
-            <scope>provided</scope>
+            <version>${project.version}</version>
         </dependency>
         <!--Dialogarena tjenestespesifikasjon-->
         <dependency>
