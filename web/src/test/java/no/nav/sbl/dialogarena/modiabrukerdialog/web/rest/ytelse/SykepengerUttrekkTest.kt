@@ -62,8 +62,7 @@ internal class SykepengerUttrekkTest {
 
     private fun unwrapResponse(): Map<String, Any?> {
         val response = uttrekk.hent(FNR)
-        val sykmelding = response.get("sykepenger") as Map<String, Any?>
-        val perioderListe = sykmelding.get("perioder") as List<*>
+        val perioderListe = response.get("sykepenger") as List<*>
         return perioderListe[0] as Map<String, Any?>
     }
 
