@@ -16,10 +16,7 @@ class SykepengerUttrekk constructor(private val sykepengerService: SykepengerSer
         val sykepenger = sykepengerService.hentSykmeldingsperioder(SykepengerRequest(LocalDate.now().minusYears(2), fødselsnummer, LocalDate.now()))
 
         return mapOf(
-                "sykepenger" to sykepenger?.let { mapOf(
-                        "bruker" to it.bruker?.ident,
-                        "perioder" to it.sykmeldingsperioder?.let { hentSykemeldingsperioder(it) }
-                ) }
+                "sykepenger" to sykepenger?.sykmeldingsperioder?.let { hentSykemeldingsperioder(it) }
         )
     }
 
