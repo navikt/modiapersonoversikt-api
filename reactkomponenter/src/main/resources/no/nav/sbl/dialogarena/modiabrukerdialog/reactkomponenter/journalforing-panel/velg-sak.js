@@ -20,8 +20,11 @@ class VelgSak extends React.Component {
     }
 
     filtrerBortGsakerSomFinnesIPsak(saker) {
-        const psakIder = saker.psak.map(sak => sak.fagsystemSaksId);
-        saker.gsak = saker.gsak.filter(sak => psakIder.indexOf(sak.fagsystemSaksId) === -1);
+        if(saker.psak !== undefined) {
+            const psakIder = saker.psak.map(sak => sak.fagsystemSaksId);
+            saker.gsak = saker.gsak.filter(sak => psakIder.indexOf(sak.fagsystemSaksId) === -1);
+        }
+
         return saker;
     }
 
