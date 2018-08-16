@@ -172,6 +172,6 @@ SkrivstotteStore.hentSokeresultater =
             SkrivstotteStore._updateScroll(this.container.querySelector('.sok-liste'), 0);
             this.fireUpdate(this.listeners);
         });
-    }, 150);
+    }, 300);
 
 export default SkrivstotteStore;
