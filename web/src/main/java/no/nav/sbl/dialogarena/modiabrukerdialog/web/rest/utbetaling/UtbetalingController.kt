@@ -5,9 +5,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.Feature
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.UnleashService
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.DATOFORMAT
 import no.nav.sbl.dialogarena.utbetaling.service.UtbetalingService
-import no.nav.tjeneste.virksomhet.utbetaling.v1.informasjon.WSPeriode
-import no.nav.tjeneste.virksomhet.utbetaling.v1.informasjon.WSUtbetaling
-import no.nav.tjeneste.virksomhet.utbetaling.v1.informasjon.WSYtelse
+import no.nav.tjeneste.virksomhet.utbetaling.v1.informasjon.*
 import org.joda.time.IllegalFieldValueException
 import org.joda.time.LocalDate
 import org.joda.time.format.DateTimeFormat
@@ -60,8 +58,45 @@ class UtbetalingController @Inject constructor(private val service: UtbetalingSe
         return ytelser.map {
             mapOf(
                     "type" to it.ytelsestype?.kodeverksRef,
+                    "ytelseskomponentListe" to it.ytelseskomponentListe?.let { hentYtelsekomponentListe(it) },
+                    "ytelsekomponentersum" to it.ytelseskomponentersum,
+                    "trekkListe" to it.trekkListe?.let { hentTrekkListe(it) },
+                    "trekksum" to it.trekksum,
+                    "skattListe" to it.skattListe?.let { hentSkattListe(it) },
+                    "skattsum" to it.skattsum,
                     "periode" to it.ytelsesperiode?.let { hentYtelsesperiode(it) },
-                    "nettobeløp" to it.ytelseNettobeloep
+                    "nettobeløp" to it.ytelseNettobeloep,
+                    "bilagsnummer" to it.bilagsnummer
+            )
+        }
+    }
+
+    private fun hentYtelsekomponentListe(ytelseskomponenter: List<WSYtelseskomponent>): List<Map<String, Any?>> {
+        return ytelseskomponenter.map {
+            mapOf(
+                    "ytelseskomponenttype" to it.ytelseskomponenttype,
+                    "satsbeløp" to it.satsbeloep,
+                    "satstype" to it.satstype,
+                    "satsantall" to it.satsantall,
+                    "ytelseskomponentbeløp" to it.ytelseskomponentbeloep
+            )
+        }
+    }
+
+    private fun hentTrekkListe(trekk: List<WSTrekk>): List<Map<String, Any?>> {
+        return trekk.map {
+            mapOf(
+                    "trekktype" to it.trekktype,
+                    "trekkbeløp" to it.trekkbeloep,
+                    "kreditor" to it.kreditor
+            )
+        }
+    }
+
+    private fun hentSkattListe(skatt: List<WSSkatt>): List<Map<String, Any?>> {
+        return skatt.map {
+            mapOf(
+                    "skattebeløp" to it.skattebeloep
             )
         }
     }
