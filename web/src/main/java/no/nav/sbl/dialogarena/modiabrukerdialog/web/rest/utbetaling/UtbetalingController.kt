@@ -57,7 +57,7 @@ class UtbetalingController @Inject constructor(private val service: UtbetalingSe
     private fun hentYtelserForUtbetaling(ytelser: List<WSYtelse>): List<Map<String, Any?>> {
         return ytelser.map {
             mapOf(
-                    "type" to it.ytelsestype?.kodeverksRef,
+                    "type" to it.ytelsestype?.value,
                     "ytelseskomponentListe" to it.ytelseskomponentListe?.let { hentYtelsekomponentListe(it) },
                     "ytelsekomponentersum" to it.ytelseskomponentersum,
                     "trekkListe" to it.trekkListe?.let { hentTrekkListe(it) },
