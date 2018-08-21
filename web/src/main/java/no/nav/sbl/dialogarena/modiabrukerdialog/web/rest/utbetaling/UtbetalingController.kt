@@ -59,7 +59,7 @@ class UtbetalingController @Inject constructor(private val service: UtbetalingSe
             mapOf(
                     "type" to it.ytelsestype?.value,
                     "ytelseskomponentListe" to it.ytelseskomponentListe?.let { hentYtelsekomponentListe(it) },
-                    "ytelsekomponentersum" to it.ytelseskomponentersum,
+                    "ytelseskomponentersum" to it.ytelseskomponentersum,
                     "trekkListe" to it.trekkListe?.let { hentTrekkListe(it) },
                     "trekksum" to it.trekksum,
                     "skattListe" to it.skattListe?.let { hentSkattListe(it) },
