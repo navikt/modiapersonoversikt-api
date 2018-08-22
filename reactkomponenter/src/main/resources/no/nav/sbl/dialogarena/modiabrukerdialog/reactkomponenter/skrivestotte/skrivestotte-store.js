@@ -1,6 +1,7 @@
 import Utils from './../utils/utils-module';
 import Store from './../utils/store';
 import Ajax from './../utils/ajax';
+import SkrivestotteTracking from './skrivestotte-tracking';
 
 class SkrivstotteStore extends Store {
     constructor(props) {
@@ -113,6 +114,8 @@ class SkrivstotteStore extends Store {
 
             onSubmit();
         }, 0);
+
+        SkrivestotteTracking.trackUsage(this.state.valgtTekst);
     }
 
     static _updateScroll(tabliste, valgtIndex) {

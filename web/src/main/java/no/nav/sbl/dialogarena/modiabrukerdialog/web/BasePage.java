@@ -54,6 +54,8 @@ public class BasePage extends WebPage {
     public static final JavaScriptResourceReference JS_SESSION_TIMEOUT = new JavaScriptResourceReference(BasePage.class, "sessionTimeout.js");
     public static final JavaScriptResourceReference JS_TAB_POPUP_RESOURCE = new JavaScriptResourceReference(BasePage.class, "tabPopup.js");
     public static final JavaScriptResourceReference JS_AUTO_SCROLL_RESOURCE = new JavaScriptResourceReference(BasePage.class, "auto-scroll.js");
+    public static final JavaScriptResourceReference JS_FRONTENDLOGGER_INIT = new JavaScriptResourceReference(BasePage.class, "frontendlogger-init.js");
+    public static final UrlResourceReference JS_FRONTENDLOGGER = new UrlResourceReference(Url.parse(currentDomain + "/frontendlogger/logger.js"));
     public static final CssResourceReference PERSONINFO_LESS = new CssResourceReference(PersonPage.class, "personpage.less");
     public static final CssResourceReference NYTT_VISITTKORT_LESS = new CssResourceReference(PersonPage.class, "nyttvisittkort.less");
     public static final CssResourceReference PERSONSOKRESULT = new CssResourceReference(PersonsokResultPanel.class, "PersonsokResultPanel.css");
@@ -124,6 +126,7 @@ public class BasePage extends WebPage {
         );
 
         response.render(JavaScriptUrlReferenceHeaderItem.forReference(INTERN_DECORATOR));
+        response.render(JavaScriptUrlReferenceHeaderItem.forReference(JS_FRONTENDLOGGER));
         response.render(forScript(script));
     }
 }
