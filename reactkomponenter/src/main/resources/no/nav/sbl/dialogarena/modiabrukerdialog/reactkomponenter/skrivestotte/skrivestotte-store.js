@@ -14,8 +14,9 @@ class SkrivstotteStore extends Store {
         const tabliste = document.getElementById(this.state.listePanelId);
         this.state.valgtTekst = tekst;
 
-        SkrivstotteStore._updateScroll(tabliste, this.state.tekster.indexOf(this.state.valgtTekst));
-
+        if (!this.state.svaksynt) {
+            SkrivstotteStore._updateScroll(tabliste, this.state.tekster.indexOf(this.state.valgtTekst));
+        }
         this.fireUpdate(this.listeners);
     }
 
@@ -23,8 +24,9 @@ class SkrivstotteStore extends Store {
         this.state.knagger = this.state.knagger || [];
         this.state.knagger.push(knagg);
 
-        SkrivstotteStore.hentSokeresultater.bind(this)(this.state.fritekst, this.state.knagger);
-
+        if (!this.state.svaksynt) {
+            SkrivstotteStore.hentSokeresultater.bind(this)(this.state.fritekst, this.state.knagger);
+        }
         this.fireUpdate(this.listeners);
     }
 
@@ -32,9 +34,9 @@ class SkrivstotteStore extends Store {
         const nyeKnagger = this.state.knagger.slice(0);
         const index = nyeKnagger.indexOf(knagg);
         this.state.knagger.splice(index, 1);
-
-        SkrivstotteStore.hentSokeresultater.bind(this)(this.state.fritekst, this.state.knagger);
-
+        if (!this.state.svaksynt) {
+            SkrivstotteStore.hentSokeresultater.bind(this)(this.state.fritekst, this.state.knagger);
+        }
         this.fireUpdate(this.listeners);
     }
 
@@ -46,14 +48,22 @@ class SkrivstotteStore extends Store {
     onChange(data) {
         this.state.fritekst = data.fritekst;
         this.state.knagger = data.knagger;
-
-        SkrivstotteStore.hentSokeresultater.bind(this)(this.state.fritekst, this.state.knagger);
-
+        if (!this.state.svaksynt) {
+            SkrivstotteStore.hentSokeresultater.bind(this)(this.state.fritekst, this.state.knagger);
+        }
         this.fireUpdate(this.listeners);
     }
 
     onKeyDown(tabliste, event) {
         switch (event.keyCode) {
+            case 16:
+                if (this.state.svaksynt) {
+                    event.preventDefault();
+                    SkrivstotteStore.hentSokeresultater.bind(this)(this.state.fritekst, this.state.knagger);
+
+                    this.fireUpdate(this.listeners);
+                }
+                break;
             case 38:
                 event.preventDefault();
                 this.state.valgtTekst = SkrivstotteStore.hentTekst(
@@ -172,6 +182,6 @@ SkrivstotteStore.hentSokeresultater =
             SkrivstotteStore._updateScroll(this.container.querySelector('.sok-liste'), 0);
             this.fireUpdate(this.listeners);
         });
-    }, 900);
+    }, 150);
 
 export default SkrivstotteStore;

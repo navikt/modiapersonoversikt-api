@@ -16,6 +16,7 @@ export const grunnInfoType = PT.shape({
 
 export const skrivestotteprops = PT.shape({
     autofullfor: grunnInfoType.isRequired,
+    svaksynt: PT.bool,
     knagger: PT.array
 });
 
