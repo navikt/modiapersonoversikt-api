@@ -1,10 +1,13 @@
 .oppgaveform {
   position: relative;
+  display: flex;
+  justify-content: flex-end;
+  margin-right: 30px;
   .oppgavepanel {
     position: relative;
     padding: 1em 1em 0 1em;
     display: flex;
-    justify-content: flex-end;
+    justify-content: center;
 
     > a, input {
       padding-top:5px;
@@ -78,6 +81,7 @@
       display: none;
       position: absolute;
       top: 55px;
+      left: 0;
       z-index: 1;
       background-color: white;
       -webkit-box-shadow: 0px 5px 10px 0px rgba(50, 50, 50, 0.3);
@@ -116,6 +120,7 @@
   }
 }
 
-.sidebar-hoyre .oppgaveform .oppgavepanel {
+.sidebar-hoyre .oppgaveform {
   justify-content: center;
+  margin-right: 0;
 }

@@ -43,12 +43,12 @@ class UtbetalingController @Inject constructor(private val service: UtbetalingSe
                     "posteringsdato" to it.posteringsdato?.toString(DATOFORMAT),
                     "utbetalingsdato" to it.utbetalingsdato?.toString(DATOFORMAT),
                     "forfallsdato" to it.forfallsdato?.toString(DATOFORMAT),
-                    "utbetaltTil" to it.utbetaltTil?.navn,
+                    "utbetaltTil" to it.utbetaltTil?.navn?.trim(),
                     "nettobeløp" to it.utbetalingNettobeloep,
-                    "melding" to it.utbetalingsmelding,
-                    "metode" to it.utbetalingsmetode,
-                    "status" to it.utbetalingsstatus,
-                    "konto" to it.utbetaltTilKonto?.kontonummer,
+                    "melding" to it.utbetalingsmelding?.trim(),
+                    "metode" to it.utbetalingsmetode?.trim(),
+                    "status" to it.utbetalingsstatus?.trim(),
+                    "konto" to it.utbetaltTilKonto?.kontonummer?.trim(),
                     "ytelser" to it.ytelseListe?.let { hentYtelserForUtbetaling(it) }
             )
         }
@@ -57,7 +57,7 @@ class UtbetalingController @Inject constructor(private val service: UtbetalingSe
     private fun hentYtelserForUtbetaling(ytelser: List<WSYtelse>): List<Map<String, Any?>> {
         return ytelser.map {
             mapOf(
-                    "type" to it.ytelsestype?.value,
+                    "type" to it.ytelsestype?.value?.trim(),
                     "ytelseskomponentListe" to it.ytelseskomponentListe?.let { hentYtelsekomponentListe(it) },
                     "ytelseskomponentersum" to it.ytelseskomponentersum,
                     "trekkListe" to it.trekkListe?.let { hentTrekkListe(it) },
@@ -66,7 +66,7 @@ class UtbetalingController @Inject constructor(private val service: UtbetalingSe
                     "skattsum" to it.skattsum,
                     "periode" to it.ytelsesperiode?.let { hentYtelsesperiode(it) },
                     "nettobeløp" to it.ytelseNettobeloep,
-                    "bilagsnummer" to it.bilagsnummer
+                    "bilagsnummer" to it.bilagsnummer?.trim()
             )
         }
     }
@@ -74,9 +74,9 @@ class UtbetalingController @Inject constructor(private val service: UtbetalingSe
     private fun hentYtelsekomponentListe(ytelseskomponenter: List<WSYtelseskomponent>): List<Map<String, Any?>> {
         return ytelseskomponenter.map {
             mapOf(
-                    "ytelseskomponenttype" to it.ytelseskomponenttype,
+                    "ytelseskomponenttype" to it.ytelseskomponenttype?.trim(),
                     "satsbeløp" to it.satsbeloep,
-                    "satstype" to it.satstype,
+                    "satstype" to it.satstype?.trim(),
                     "satsantall" to it.satsantall,
                     "ytelseskomponentbeløp" to it.ytelseskomponentbeloep
             )
@@ -86,9 +86,9 @@ class UtbetalingController @Inject constructor(private val service: UtbetalingSe
     private fun hentTrekkListe(trekk: List<WSTrekk>): List<Map<String, Any?>> {
         return trekk.map {
             mapOf(
-                    "trekktype" to it.trekktype,
+                    "trekktype" to it.trekktype?.trim(),
                     "trekkbeløp" to it.trekkbeloep,
-                    "kreditor" to it.kreditor
+                    "kreditor" to it.kreditor?.trim()
             )
         }
     }
