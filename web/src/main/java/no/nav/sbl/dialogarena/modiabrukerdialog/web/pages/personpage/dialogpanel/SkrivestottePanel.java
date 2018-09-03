@@ -3,6 +3,8 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpane
 import no.nav.modig.wicket.component.enhancedtextarea.EnhancedTextArea;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.GrunnInfo;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.Feature;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.UnleashService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.reactkomponenter.utils.wicket.ReactComponentPanel;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.panel.Panel;
@@ -17,6 +19,8 @@ public class SkrivestottePanel extends Panel {
 
     @Inject
     private SaksbehandlerInnstillingerService saksbehandlerInnstillingerService;
+    @Inject
+    private UnleashService unleashService;
 
     private final ReactComponentPanel skrivestotte;
     private final GrunnInfo grunnInfo;
@@ -47,6 +51,8 @@ public class SkrivestottePanel extends Panel {
         if (saksbehandlerInnstillingerService.valgtEnhetErKontaktsenter()) {
             skrivestotteProps.put("knagger", asList("ks"));
         }
+        Boolean isEnabled = unleashService.isEnabled(Feature.SVAKSYNT_MODUS);
+        skrivestotteProps.put("svaksynt", isEnabled);
         return skrivestotteProps;
     }
 }
