@@ -25,8 +25,8 @@ const createTekstValgtEvent = ({ tags }) => {
         name: 'modiabrukerdialog.skrivestotte.tekstValgt',
         fields,
         tags: {
-            ...(fagomraade && {fagomraade}),
-            ...(tema && {tema})
+            ...(fagomraade ? {fagomraade} : { fagomraade: "ukjent" }),
+            ...(tema ? {tema} : { tema: "ukjent" })
         }
     }
 };
