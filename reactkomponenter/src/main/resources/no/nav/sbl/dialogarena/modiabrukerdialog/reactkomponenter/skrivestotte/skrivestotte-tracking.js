@@ -1,5 +1,20 @@
-const NAV_FAGOMRAADE = ['arbeid', 'helse'];
-const NAV_TEMA = ['dagpenger', 'sykepenger', 'jobbsøkere', 'oppfølging', 'arbeidsavklaringspenger'];
+const NAV_FAGOMRAADE = [
+    'generell',
+    'arbeid',
+    'bidrag',
+    'helse'
+];
+const NAV_TEMA = [
+    'aap',
+    'arbeidsavklaringspenger',
+    'bil',
+    'dagpenger',
+    'hjelpemiddelsentralen',
+    'hjelpemidler',
+    'jobbsøkere',
+    'oppfølging',
+    'sykepenger'
+];
 
 const createTekstValgtEvent = ({ tags }) => {
     const fagomraade = createTagForKeywords(tags, NAV_FAGOMRAADE);
@@ -12,11 +27,11 @@ const createTekstValgtEvent = ({ tags }) => {
         tags: {
             ...(fagomraade && {fagomraade}),
             ...(tema && {tema})
-        }   
+        }
     }
 };
 const createTagForKeywords = (tags, keywords) => tags
-    .filter(tag => keywords.includes(tag))
+    .filter(tag => keywords.includes(tag.toLowerCase()))
     .join(',');
 
 const createFieldsForEveryTag = (tags) =>
