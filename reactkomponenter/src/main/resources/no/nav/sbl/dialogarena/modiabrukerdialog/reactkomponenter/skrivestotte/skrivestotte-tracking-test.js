@@ -55,4 +55,14 @@ describe('SkrivestotteTracking', () => {
 
         expect(event.tags).to.include({ 'tema': 'ukjent', 'fagomraade': 'ukjent' });
     });
+
+    it('sorterer flere tema i rekkefølge', () => {
+        const tekst = {
+            tags: ['ks', 'sykepenger', 'dagpenger']
+        };
+
+        const event = SkrivestotteTracking.trackUsage(tekst);
+
+        expect(event.tags).to.include({ 'tema': 'dagpenger,sykepenger' });
+    });
 });

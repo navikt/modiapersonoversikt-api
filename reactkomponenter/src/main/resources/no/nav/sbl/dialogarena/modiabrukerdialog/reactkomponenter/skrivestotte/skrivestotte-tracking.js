@@ -32,6 +32,7 @@ const createTekstValgtEvent = ({ tags }) => {
 };
 const createTagForKeywords = (tags, keywords) => tags
     .filter(tag => keywords.includes(tag.toLowerCase()))
+    .sort() 
     .join(',');
 
 const createFieldsForEveryTag = (tags) =>
