@@ -10,9 +10,9 @@ const createTekstValgtEvent = ({ tags }) => {
         name: 'modiabrukerdialog.skrivestotte.tekstValgt',
         fields,
         tags: {
-            fagomraade,
-            tema
-        }
+            ...(fagomraade && {fagomraade}),
+            ...(tema && {tema})
+        }   
     }
 };
 const createTagForKeywords = (tags, keywords) => tags

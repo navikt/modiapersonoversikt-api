@@ -45,4 +45,14 @@ describe('SkrivestotteTracking', () => {
 
         expect(event.tags).to.include({ 'fagomraade': 'arbeid,helse' });
     });
+
+    it('tracker bruk og lager ikke tomme nøkler for fagomraade og tema', () => {
+        const tekst = {
+            tags: ['ks']
+        };
+
+        const event = SkrivestotteTracking.trackUsage(tekst);
+
+        expect(event.tags).to.be.an('object').that.is.empty;
+    });
 });
