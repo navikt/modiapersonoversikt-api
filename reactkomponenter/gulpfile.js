@@ -14,6 +14,11 @@ var less = require('gulp-less');
 
 var config = require('./buildConfig.json');
 
+var LessPluginNPMImport = require('less-plugin-npm-import');
+var npmimportless = new LessPluginNPMImport({
+    prefix: '~'
+});
+
 function bundleJS(isDev) {
     // Our app bundler
     var props;
@@ -75,7 +80,7 @@ function importLessTask(options) { //leger import til egen fil pga less avhengih
     function run() {
         console.log('Importing LESS');
         gulp.src('./import.less')
-            .pipe(less())
+            .pipe(less({  plugins: [npmimportless] }))
             .pipe(gulp.dest(options.dest));
         console.log('imported less from import.less');
     }
