@@ -11,7 +11,6 @@ var chalk = require('chalk');
 var fileFilter = require('browserify-file-filter');
 var less = require('gulp-less');
 
-
 var config = require('./buildConfig.json');
 
 var LessPluginNPMImport = require('less-plugin-npm-import');
