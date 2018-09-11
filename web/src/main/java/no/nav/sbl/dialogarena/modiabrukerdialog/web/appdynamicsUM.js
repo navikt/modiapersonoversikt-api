@@ -29,4 +29,6 @@ if ('https:' === document.location.protocol) {
     document.write(unescape('%3Cscript')
         + " src='http://jsagent.adeo.no/adrum/adrum.js' "
         + " type='text/javascript' charset='UTF-8'"
+        + unescape('%3E%3C/script%3E'));
 }
+
