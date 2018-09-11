@@ -39,6 +39,7 @@ import static java.lang.String.format;
 import static org.apache.wicket.markup.head.OnDomReadyHeaderItem.forScript;
 
 public class BasePage extends WebPage {
+
     private static String currentDomain = System.getProperty("current.domain", "");
 
     private static final Logger logger = LoggerFactory.getLogger(BasePage.class);
@@ -54,6 +55,7 @@ public class BasePage extends WebPage {
     public static final JavaScriptResourceReference JS_SESSION_TIMEOUT = new JavaScriptResourceReference(BasePage.class, "sessionTimeout.js");
     public static final JavaScriptResourceReference JS_TAB_POPUP_RESOURCE = new JavaScriptResourceReference(BasePage.class, "tabPopup.js");
     public static final JavaScriptResourceReference JS_AUTO_SCROLL_RESOURCE = new JavaScriptResourceReference(BasePage.class, "auto-scroll.js");
+    public static final JavaScriptResourceReference JS_APPDYNAMICS_USER_MONITORING = new JavaScriptResourceReference(BasePage.class, "appdynamicsUM.js");
     public static final CssResourceReference PERSONINFO_LESS = new CssResourceReference(PersonPage.class, "personpage.less");
     public static final CssResourceReference NYTT_VISITTKORT_LESS = new CssResourceReference(PersonPage.class, "nyttvisittkort.less");
     public static final CssResourceReference PERSONSOKRESULT = new CssResourceReference(PersonsokResultPanel.class, "PersonsokResultPanel.css");
