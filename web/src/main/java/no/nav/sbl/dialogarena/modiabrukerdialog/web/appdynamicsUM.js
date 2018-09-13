@@ -1,4 +1,5 @@
 (function (config) {
+    window['adrum-start-time'] = new Date().getTime();
     var appKey = "";
     if (window.location.href.indexOf("modapp.adeo.no") > -1) {
         appKey = 'EUM-AAB-AUN';
