@@ -33,7 +33,7 @@ internal class SakerControllerTest {
     }
 
     @Test
-    fun `Tester at man ikke har tilgang ved manipukert cookie`() {
+    fun `Tester at man ikke har tilgang ved manipulert cookie`() {
         whenever(tilgangskontrollService.harGodkjentEnhet(any())).thenReturn(false)
         val request = MockHttpServletRequest()
 

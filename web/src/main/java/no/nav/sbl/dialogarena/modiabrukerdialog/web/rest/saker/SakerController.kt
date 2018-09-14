@@ -136,7 +136,7 @@ class SakerController @Inject constructor(private val saksoversiktService: Sakso
         return mapOf(
                 "år" to date.get().year,
                 "måned" to date.get().monthOfYear,
-                "dato" to date.get().dayOfMonth,
+                "dag" to date.get().dayOfMonth,
                 "time" to date.get().hourOfDay,
                 "minutt" to date.get().minuteOfHour,
                 "sekund" to date.get().secondOfMinute
