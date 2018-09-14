@@ -81,7 +81,7 @@ class SakerController @Inject constructor(private val saksoversiktService: Sakso
                     "vedlegg" to it.vedlegg.map { hentDokument(it) },
                     "avsender" to it.avsender,
                     "mottaker" to it.mottaker,
-                    "tilørendeSaksid" to it.tilhorendeSakid,
+                    "tilhørendeSaksid" to it.tilhorendeSakid,
                     "tilhørendeFagsaksid" to it.tilhorendeFagsakId,
                     "behandlingsid" to it.behandlingsId,
                     "baksystem" to it.baksystem,
