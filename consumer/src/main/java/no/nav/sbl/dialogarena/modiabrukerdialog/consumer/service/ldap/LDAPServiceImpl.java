@@ -17,10 +17,10 @@ import static java.util.Optional.ofNullable;
 
 public class LDAPServiceImpl implements LDAPService {
 
-    private static LdapContextProvider ldapContextProvider;
+    private final LdapContext ldapContext;
 
     public LDAPServiceImpl(LdapContextProvider ldapContextProvider) {
-        LDAPServiceImpl.ldapContextProvider = ldapContextProvider;
+        this.ldapContext = ldapContextProvider.getInitialLdapContext();
     }
 
     @Override
@@ -60,14 +60,10 @@ public class LDAPServiceImpl implements LDAPService {
         searchCtrl.setSearchScope(SearchControls.SUBTREE_SCOPE);
 
         try {
-            return ldapContext().search(searchbase, String.format("(&(objectClass=user)(CN=%s))", ident), searchCtrl);
+            return ldapContext.search(searchbase, String.format("(&(objectClass=user)(CN=%s))", ident), searchCtrl);
         } catch (NamingException e) {
             throw new RuntimeException(e);
         }
-    }
-
-    private static LdapContext ldapContext() {
-        return ldapContextProvider.getInitialLdapContext();
     }
 
     @Override
