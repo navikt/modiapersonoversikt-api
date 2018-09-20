@@ -39,7 +39,9 @@ class PersonController @Inject constructor(private val kjerneinfoService: Person
         check(unleashService.isEnabled(Feature.NYTT_VISITTKORT))
 
         val person = try {
-            kjerneinfoService.hentKjerneinformasjon(HentKjerneinformasjonRequest(fødselsnummer)).person
+            val hentKjerneinformasjonRequest = HentKjerneinformasjonRequest(fødselsnummer)
+            hentKjerneinformasjonRequest.isBegrunnet = true
+            kjerneinfoService.hentKjerneinformasjon(hentKjerneinformasjonRequest).person
         } catch (exception: AuthorizationWithSikkerhetstiltakException) {
             return getBegrensetInnsyn(fødselsnummer, exception.message)
         } catch (exception: RuntimeException) {
