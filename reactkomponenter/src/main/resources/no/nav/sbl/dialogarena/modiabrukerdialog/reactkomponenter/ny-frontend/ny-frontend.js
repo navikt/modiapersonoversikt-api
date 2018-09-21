@@ -23,16 +23,6 @@ class NyFrontend extends React.Component {
                     event.stopPropagation();
                 }
             }, true);
-            setTimeout(this.tryUpdateToggle, 500);
-        }
-    }
-
-    tryUpdateToggle() {
-        if (document.getElementById('brukerprofillenke')) {
-            document.getElementById('brukerprofillenke').href =
-                '/modiabrukerdialog/person/' + this.props.fødselsnummer + '#!brukerprofil';
-        } else {
-            setTimeout(this.tryUpdateToggle, 500)
         }
     }
 }
