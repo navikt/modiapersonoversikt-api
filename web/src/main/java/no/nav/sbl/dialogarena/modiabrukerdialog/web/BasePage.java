@@ -56,6 +56,7 @@ public class BasePage extends WebPage {
     public static final JavaScriptResourceReference JS_AUTO_SCROLL_RESOURCE = new JavaScriptResourceReference(BasePage.class, "auto-scroll.js");
     public static final JavaScriptResourceReference JS_FRONTENDLOGGER_INIT = new JavaScriptResourceReference(BasePage.class, "frontendlogger-init.js");
     public static final UrlResourceReference JS_FRONTENDLOGGER = new UrlResourceReference(Url.parse(currentDomain + "/frontendlogger/logger.js"));
+    public static final JavaScriptResourceReference JS_APPDYNAMICS_USER_MONITORING = new JavaScriptResourceReference(BasePage.class, "appdynamicsUM.js");
     public static final CssResourceReference PERSONINFO_LESS = new CssResourceReference(PersonPage.class, "personpage.less");
     public static final CssResourceReference NYTT_VISITTKORT_LESS = new CssResourceReference(PersonPage.class, "nyttvisittkort.less");
     public static final CssResourceReference PERSONSOKRESULT = new CssResourceReference(PersonsokResultPanel.class, "PersonsokResultPanel.css");

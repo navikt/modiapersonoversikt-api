@@ -209,6 +209,7 @@ public class WicketApplication extends WebApplication {
                         BasePage.JS_TAB_POPUP_RESOURCE,
                         BasePage.JS_AUTO_SCROLL_RESOURCE,
                         BasePage.JS_FRONTENDLOGGER_INIT,
+                        BasePage.JS_APPDYNAMICS_USER_MONITORING,
                         ShortcutListenerResourceReference.get(),
                         KeyNavigationResourceReference.get(),
                         Widget.JS_RESOURCE,
