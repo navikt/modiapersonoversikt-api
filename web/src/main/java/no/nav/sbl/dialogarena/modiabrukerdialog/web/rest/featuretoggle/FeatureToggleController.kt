@@ -21,7 +21,16 @@ class FeatureToggleController @Inject constructor(private val unleashService: Un
     @Path("/{id}")
     @Produces(APPLICATION_JSON)
     fun hentMedId(@PathParam("id") toggleId: String): Map<String, Boolean> {
-        return mapOf(APPLICATION_PREFIX + toggleId to unleashService.isEnabled(Feature.valueOf(APPLICATION_PREFIX + toggleId)))
+        val feature = getFeature(APPLICATION_PREFIX + toggleId)
+
+        if(feature == null) {
+            logger.warn("Featuretoggle-enum ikke funnet: " + APPLICATION_PREFIX + toggleId)
+            return mapOf(APPLICATION_PREFIX + toggleId to false)
+        }
+        return mapOf(APPLICATION_PREFIX + toggleId to unleashService.isEnabled(feature))
     }
 
+    fun getFeature(propertyKey: String) : Feature? {
+        return Feature.values().find { it -> propertyKey.equals(it.propertyKey) }
+    }
 }
