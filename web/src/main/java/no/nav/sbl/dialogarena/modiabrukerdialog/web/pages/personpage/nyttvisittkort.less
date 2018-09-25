@@ -40,27 +40,32 @@
       }
     }
 
-    /* KODE FOR AT NAV-FRONT-END STYLES SKAL OVERSKRIVE MODIA-STYLES */
-    // nav frontend bruker rem, og tar utgangspunkt i at font-size på html er 16px. i modia er den 14px, og derfor må elementer fra nav-frontend få custom styling her
+    /* CSS for å motvikre modia-styles som forsøker overskrive samt kompensere for bruk av arial som font*/
+    /* Vi overstyrer nav-frontend og bruker arial her siden modia ikke greier dra inn "Source Sans Pro" fra google fonts */
+    /* Font-size er satt for å gi en opplevelse som ligner mest mulig på den man får fra nav-frontend */
+    & * {
+      font-family: Arial, Helvetica, sans-serif !important;
+    }
     .typo-undertittel {
-      font-size: 20px;
+      font-size: 18px;
       text-transform: initial;
     }
     .typo-normal {
-      font-size: 16px;
+      font-size: 15px;
     }
     .typo-undertekst {
-      font-size: 14px;
+      font-size: 13px;
     }
     .typo-etikett-liten {
-      font-size: 14px;
+      font-size: 12px;
     }
     .typo-element {
-      font-size: 16px;
+      font-size: 15px;
     }
     .etikett {
-      font-size: 16px;
+      font-size: 15px;
     }
+
     form {
       label, input, select, textarea, span {
         color: @textColor;
@@ -72,38 +77,4 @@
       }
     }
   }
-}
-
-/*
-Source Sans Pro som vi får fra nav-frontend-typografi ser ikke bra ut i noen browsere, feks Chrome i Windows 7 og 10.
-Det finnes allerede et issue på dette: https://github.com/navikt/nav-frontend-moduler/issues/46.
-Som en midlertidig løsning overstyrer vi fonten, ved å laste dem inn fra google fonts.
-*/
-@font-face {
-  font-family: 'Source Sans Pro';
-  font-style: italic;
-  font-weight: 400;
-  src: local('Source Sans Pro Italic'), local('SourceSansPro-Italic'), url(https://fonts.gstatic.com/s/sourcesanspro/v10/M2Jd71oPJhLKp0zdtTvoMxgy2Fsj5sj3EzlXpqVXRKo.woff2) format('woff2');
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215;
-}
-@font-face {
-  font-family: 'Source Sans Pro';
-  font-style: normal;
-  font-weight: 400;
-  src: local('Source Sans Pro Regular'), local('SourceSansPro-Regular'), url(https://fonts.gstatic.com/s/sourcesanspro/v10/ODelI1aHBYDBqgeIAH2zlNV_2ngZ8dMf8fLgjYEouxg.woff2) format('woff2');
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215;
-}
-@font-face {
-  font-family: 'Source Sans Pro';
-  font-style: normal;
-  font-weight: 600;
-  src: local('Source Sans Pro SemiBold'), local('SourceSansPro-SemiBold'), url(https://fonts.gstatic.com/s/sourcesanspro/v10/toadOcfmlt9b38dHJxOBGCOFnW3Jk0f09zW_Yln67Ac.woff2) format('woff2');
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215;
-}
-@font-face {
-  font-family: 'Source Sans Pro';
-  font-style: normal;
-  font-weight: 700;
-  src: local('Source Sans Pro Bold'), local('SourceSansPro-Bold'), url(https://fonts.gstatic.com/s/sourcesanspro/v10/toadOcfmlt9b38dHJxOBGEo0As1BFRXtCDhS66znb_k.woff2) format('woff2');
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215;
 }
