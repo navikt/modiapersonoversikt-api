@@ -23,7 +23,6 @@ import javax.ws.rs.core.MediaType
 import javax.ws.rs.core.Response
 
 @Path("/saker/{fnr}")
-@Produces(MediaType.APPLICATION_JSON)
 class SakerController @Inject constructor(private val saksoversiktService: SaksoversiktService,
                                           private val sakstemaService: SakstemaService,
                                           private val saksService: SaksService,
@@ -33,6 +32,7 @@ class SakerController @Inject constructor(private val saksoversiktService: Sakso
                                           private val unleashService: UnleashService) {
     @GET
     @Path("/sakstema")
+    @Produces(MediaType.APPLICATION_JSON)
     fun hentSakstema(@Context request: HttpServletRequest, @PathParam("fnr") fødselsnummer: String): Map<String, Any?> {
         check(unleashService.isEnabled(Feature.NYTT_VISITTKORT))
         if (!tilgangskontrollService.harGodkjentEnhet(request)) throw NotAuthorizedException("Ikke tilgang.")
@@ -51,6 +51,7 @@ class SakerController @Inject constructor(private val saksoversiktService: Sakso
 
     @GET
     @Path("/dokument/{journalpostId}/{dokumentreferanse}")
+    @Produces("application/pdf")
     fun hentDokument(@Context request: HttpServletRequest, @PathParam("fnr") fødselsnummer: String,
                      @PathParam("journalpostId") journalpostId: String,
                      @PathParam("dokumentreferanse") dokumentreferanse: String): Response {
@@ -65,7 +66,7 @@ class SakerController @Inject constructor(private val saksoversiktService: Sakso
         }
 
         val hentDokumentResultat = innsyn.hentDokument(journalpostId, dokumentreferanse)
-        return hentDokumentResultat.result.map{ Response.ok(byggDokumentResultat(it as ByteArray)).build()}.orElse(Response.status(Response.Status.NOT_FOUND).build())
+        return hentDokumentResultat.result.map{ Response.ok(it).build() }.orElse(Response.status(Response.Status.NOT_FOUND).build())
     }
 
     private fun byggSakstemaResultat(resultat: ResultatWrapper<List<ModiaSakstema>>): Map<String, Any?> {
@@ -178,12 +179,6 @@ class SakerController @Inject constructor(private val saksoversiktService: Sakso
     private fun createModiaSakstema(sakstema: Sakstema, valgtEnhet: String): ModiaSakstema {
         return ModiaSakstema(sakstema)
                 .withTilgang(tilgangskontrollService.harEnhetTilgangTilTema(sakstema.temakode, valgtEnhet))
-    }
-
-    private fun byggDokumentResultat(data: ByteArray): Map<String, Any?> {
-        return mapOf(
-                "pdfSomBase64" to Base64.getEncoder().encode(data)
-        )
     }
 
     private fun hentDokumentMetadata(journalpostId: String, fnr: String): DokumentMetadata {
