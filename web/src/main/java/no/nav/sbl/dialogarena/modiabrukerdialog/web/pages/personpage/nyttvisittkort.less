@@ -19,6 +19,14 @@
     box-shadow: 0 0 0 2px @navLysGra;
   }
 
+  .hook-for-spesialstyling-i-gamlemodia-visittkortbodywrapper {
+    /* for at fokuset skal bli synlig når visittkort åpnes */
+    &:focus {
+      margin: 2px;
+      margin-bottom: 4px;
+    }
+  }
+
   .nyttvisittkort {
     overflow-y: auto;
     background-color: @navLysGra;
@@ -45,6 +53,7 @@
     }
     .typo-normal {
       font-size: 15px;
+      line-height: 22px;
     }
     .typo-undertekst {
       font-size: 13px;
