@@ -6,8 +6,10 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.Unleash
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.domain.widget.ModiaSakstema
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.*
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.resultatwrappere.ResultatWrapper
+import no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.DokumentMetadataService
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.SaksService
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.SakstemaService
+import no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.interfaces.JournalV2Service
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.interfaces.SaksoversiktService
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.interfaces.TilgangskontrollService
 import org.joda.time.DateTime
@@ -18,17 +20,20 @@ import javax.servlet.http.HttpServletRequest
 import javax.ws.rs.*
 import javax.ws.rs.core.Context
 import javax.ws.rs.core.MediaType
+import javax.ws.rs.core.Response
 
 @Path("/saker/{fnr}")
-@Produces(MediaType.APPLICATION_JSON)
 class SakerController @Inject constructor(private val saksoversiktService: SaksoversiktService,
                                           private val sakstemaService: SakstemaService,
                                           private val saksService: SaksService,
                                           private val tilgangskontrollService: TilgangskontrollService,
+                                          private val innsyn: JournalV2Service,
+                                          private val dokumentMetadataService: DokumentMetadataService,
                                           private val unleashService: UnleashService) {
     @GET
-    @Path("/")
-    fun hent(@Context request: HttpServletRequest, @PathParam("fnr") fødselsnummer: String): Map<String, Any?> {
+    @Path("/sakstema")
+    @Produces(MediaType.APPLICATION_JSON)
+    fun hentSakstema(@Context request: HttpServletRequest, @PathParam("fnr") fødselsnummer: String): Map<String, Any?> {
         check(unleashService.isEnabled(Feature.NYTT_VISITTKORT))
         if (!tilgangskontrollService.harGodkjentEnhet(request)) throw NotAuthorizedException("Ikke tilgang.")
 
@@ -41,10 +46,30 @@ class SakerController @Inject constructor(private val saksoversiktService: Sakso
         val resultat = ResultatWrapper(mapTilModiaSakstema(sakstemaWrapper.resultat, RestUtils.hentValgtEnhet(request)),
                 collectFeilendeSystemer(sakerWrapper, sakstemaWrapper))
 
-        return byggResultat(resultat)
+        return byggSakstemaResultat(resultat)
     }
 
-    private fun byggResultat(resultat: ResultatWrapper<List<ModiaSakstema>>): Map<String, Any?> {
+    @GET
+    @Path("/dokument/{journalpostId}/{dokumentreferanse}")
+    @Produces("application/pdf")
+    fun hentDokument(@Context request: HttpServletRequest, @PathParam("fnr") fødselsnummer: String,
+                     @PathParam("journalpostId") journalpostId: String,
+                     @PathParam("dokumentreferanse") dokumentreferanse: String): Response {
+        check(unleashService.isEnabled(Feature.NYTT_VISITTKORT))
+
+        val journalpostMetadata = hentDokumentMetadata(journalpostId, fødselsnummer)
+        val tilgangskontrollResult = tilgangskontrollService.harSaksbehandlerTilgangTilDokument(request,
+                journalpostMetadata, fødselsnummer, journalpostMetadata.temakode)
+
+        if (!tilgangskontrollResult.result.isPresent || !finnesDokumentReferansenIMetadata(journalpostMetadata, dokumentreferanse)) {
+            return Response.status(Response.Status.FORBIDDEN).build()
+        }
+
+        val hentDokumentResultat = innsyn.hentDokument(journalpostId, dokumentreferanse)
+        return hentDokumentResultat.result.map{ Response.ok(it).build() }.orElse(Response.status(Response.Status.NOT_FOUND).build())
+    }
+
+    private fun byggSakstemaResultat(resultat: ResultatWrapper<List<ModiaSakstema>>): Map<String, Any?> {
         return mapOf(
                 "resultat" to resultat.resultat.map {
                     mapOf(
@@ -154,5 +179,17 @@ class SakerController @Inject constructor(private val saksoversiktService: Sakso
     private fun createModiaSakstema(sakstema: Sakstema, valgtEnhet: String): ModiaSakstema {
         return ModiaSakstema(sakstema)
                 .withTilgang(tilgangskontrollService.harEnhetTilgangTilTema(sakstema.temakode, valgtEnhet))
+    }
+
+    private fun hentDokumentMetadata(journalpostId: String, fnr: String): DokumentMetadata {
+        return dokumentMetadataService.hentDokumentMetadata(saksService.hentAlleSaker(fnr).resultat, fnr).resultat
+                .first { dokumentMetadata -> journalpostId == dokumentMetadata.journalpostId }
+                ?: throw RuntimeException("Fant ikke metadata om journalpostId $journalpostId. Dette bør ikke skje.")
+
+    }
+
+    private fun finnesDokumentReferansenIMetadata(dokumentMetadata: DokumentMetadata, dokumentreferanse: String): Boolean {
+        return dokumentMetadata.hoveddokument.dokumentreferanse == dokumentreferanse ||
+                dokumentMetadata.vedlegg.any { dokument -> dokument.dokumentreferanse == dokumentreferanse }
     }
 }
