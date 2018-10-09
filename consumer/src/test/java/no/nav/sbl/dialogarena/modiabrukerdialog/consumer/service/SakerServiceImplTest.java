@@ -134,7 +134,7 @@ public class SakerServiceImplTest {
     }
 
     @Test
-    void transformasjonenBrukerSaksIdForFagsystemIdOmFagsystemErVedtakslosningen(){
+    void transformasjonenBrukerSaksIdForFagsystemIdOgMFSSomSakstypeOmFagsystemErVedtakslosningen(){
         WSSak wsSak = sakerListe.get(0);
         wsSak.withFagsystem(new WSFagsystemer().withValue(VEDTAKSLOSNINGEN));
         Sak sak = SakerServiceImpl.TIL_SAK.apply(wsSak);
@@ -142,7 +142,7 @@ public class SakerServiceImplTest {
         assertThat(sak.saksId, is(SakId_1));
         assertThat(sak.fagsystemSaksId, is(SakId_1));
         assertThat(sak.temaKode, is(GODKJENTE_TEMA_FOR_GENERELLE.get(0)));
-        assertThat(sak.sakstype, is(SAKSTYPE_GENERELL));
+        assertThat(sak.sakstype, is(SAKSTYPE_MED_FAGSAK));
         assertThat(sak.fagsystemKode, is(VEDTAKSLOSNINGEN));
         assertThat(sak.opprettetDato, is(FIRE_DAGER_SIDEN));
         assertThat(sak.finnesIGsak, is(true));

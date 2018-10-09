@@ -220,11 +220,15 @@ public class SakerServiceImpl implements SakerService {
         sak.saksId = wsSak.getSakId();
         sak.fagsystemSaksId = getFagsystemSakId(wsSak);
         sak.temaKode = wsSak.getFagomraade().getValue();
-        sak.sakstype = wsSak.getSakstype().getValue();
+        sak.sakstype = getSakstype(wsSak);
         sak.fagsystemKode = wsSak.getFagsystem().getValue();
         sak.finnesIGsak = true;
         return sak;
     };
+
+    private static String getSakstype(no.nav.tjeneste.virksomhet.sak.v1.informasjon.WSSak wsSak) {
+        return VEDTAKSLOSNINGEN.equals(wsSak.getFagsystem().getValue()) ? SAKSTYPE_MED_FAGSAK : wsSak.getSakstype().getValue();
+    }
 
     private static String getFagsystemSakId(no.nav.tjeneste.virksomhet.sak.v1.informasjon.WSSak wsSak) {
         return VEDTAKSLOSNINGEN.equals(wsSak.getFagsystem().getValue()) ? wsSak.getSakId() : wsSak.getFagsystemSakId();
