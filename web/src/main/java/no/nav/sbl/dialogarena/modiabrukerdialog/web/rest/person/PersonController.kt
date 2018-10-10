@@ -129,9 +129,9 @@ class PersonController @Inject constructor(private val kjerneinfoService: Person
                                     "landkode" to it.landkode?.let(::Kode),
                                     "adresse" to it.bankadresse?.let {
                                         mapOfNotNullOrEmpty(
-                                                "linje1" to it.adresselinje1,
-                                                "linje2" to it.adresselinje2,
-                                                "linje3" to it.adresselinje3
+                                                "linje1" to (it.adresselinje1 ?: ""),
+                                                "linje2" to (it.adresselinje2 ?: ""),
+                                                "linje3" to (it.adresselinje3 ?: "")
                                         )
                                     },
                                     "valuta" to it.valuta?.let(::Kode)
