@@ -92,6 +92,7 @@ class PersonController @Inject constructor(private val kjerneinfoService: Person
                     .map(::Kode)
 
     private fun getNavn(personnavn: Personnavn) = mapOf(
+            "endringsinfo" to personnavn.sistEndret?.let { hentEndringsinformasjon(it) },
             "sammensatt" to personnavn.sammensattNavn,
             "fornavn" to personnavn.fornavn,
             "mellomnavn" to (personnavn.mellomnavn ?: ""),
