@@ -43,6 +43,7 @@ import java.util.List;
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.Sak.*;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.saker.SakerServiceImpl.VEDTAKSLOSNINGEN;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.core.Is.is;
 import static org.joda.time.DateTime.now;
@@ -57,6 +58,12 @@ public class SakerServiceImplTest {
     private static final String FNR = "fnr";
     private static final String BEHANDLINGSKJEDEID = "behandlingsKjedeId";
     public static final String SAKS_ID = "123";
+    public static final String SakId_1 = "1";
+    public static final String FagsystemSakId_1 = "11";
+    public static final String SakId_2 = "2";
+    public static final String FagsystemSakId_2 = "22";
+    public static final String SakId_3 = "3";
+    public static final String FagsystemSakId_3 = "33";
 
     @Mock
     private SakV1 sakV1;
@@ -95,7 +102,7 @@ public class SakerServiceImplTest {
     void transformererResponseTilSaksliste() {
         List<Sak> saksliste = sakerService.hentSammensatteSaker(FNR);
 
-        assertThat(saksliste.get(0).saksId, is("1"));
+        assertThat(saksliste.get(0).saksId, is(SakId_1));
     }
 
     @Test
@@ -117,11 +124,26 @@ public class SakerServiceImplTest {
     void transformasjonenGenerererRelevanteFelter() {
         Sak sak = SakerServiceImpl.TIL_SAK.apply(sakerListe.get(0));
 
-        assertThat(sak.saksId, is("1"));
-        assertThat(sak.fagsystemSaksId, is("11"));
+        assertThat(sak.saksId, is(SakId_1));
+        assertThat(sak.fagsystemSaksId, is(FagsystemSakId_1));
         assertThat(sak.temaKode, is(GODKJENTE_TEMA_FOR_GENERELLE.get(0)));
         assertThat(sak.sakstype, is(SAKSTYPE_GENERELL));
         assertThat(sak.fagsystemKode, is(GODKJENT_FAGSYSTEM_FOR_GENERELLE));
+        assertThat(sak.opprettetDato, is(FIRE_DAGER_SIDEN));
+        assertThat(sak.finnesIGsak, is(true));
+    }
+
+    @Test
+    void transformasjonenBrukerSaksIdForFagsystemIdOgMFSSomSakstypeOmFagsystemErVedtakslosningen(){
+        WSSak wsSak = sakerListe.get(0);
+        wsSak.withFagsystem(new WSFagsystemer().withValue(VEDTAKSLOSNINGEN));
+        Sak sak = SakerServiceImpl.TIL_SAK.apply(wsSak);
+
+        assertThat(sak.saksId, is(SakId_1));
+        assertThat(sak.fagsystemSaksId, is(SakId_1));
+        assertThat(sak.temaKode, is(GODKJENTE_TEMA_FOR_GENERELLE.get(0)));
+        assertThat(sak.sakstype, is(SAKSTYPE_MED_FAGSAK));
+        assertThat(sak.fagsystemKode, is(VEDTAKSLOSNINGEN));
         assertThat(sak.opprettetDato, is(FIRE_DAGER_SIDEN));
         assertThat(sak.finnesIGsak, is(true));
     }
@@ -262,22 +284,22 @@ public class SakerServiceImplTest {
     private ArrayList<WSSak> createSaksliste() {
         return new ArrayList<>(asList(
                 new WSSak()
-                        .withSakId("1")
-                        .withFagsystemSakId("11")
+                        .withSakId(SakId_1)
+                        .withFagsystemSakId(FagsystemSakId_1)
                         .withFagomraade(new WSFagomraader().withValue(GODKJENTE_TEMA_FOR_GENERELLE.get(0)))
                         .withOpprettelsetidspunkt(FIRE_DAGER_SIDEN)
                         .withSakstype(new WSSakstyper().withValue(SAKSTYPE_GENERELL))
                         .withFagsystem(new WSFagsystemer().withValue(GODKJENT_FAGSYSTEM_FOR_GENERELLE)),
                 new WSSak()
-                        .withSakId("2")
-                        .withFagsystemSakId("22")
+                        .withSakId(SakId_2)
+                        .withFagsystemSakId(FagsystemSakId_2)
                         .withFagomraade(new WSFagomraader().withValue(GODKJENTE_TEMA_FOR_GENERELLE.get(1)))
                         .withOpprettelsetidspunkt(now().minusDays(3))
                         .withSakstype(new WSSakstyper().withValue(SAKSTYPE_GENERELL))
                         .withFagsystem(new WSFagsystemer().withValue(GODKJENT_FAGSYSTEM_FOR_GENERELLE)),
                 new WSSak()
-                        .withSakId("3")
-                        .withFagsystemSakId("33")
+                        .withSakId(SakId_3)
+                        .withFagsystemSakId(FagsystemSakId_3)
                         .withFagomraade(new WSFagomraader().withValue("AAP"))
                         .withOpprettelsetidspunkt(now().minusDays(5))
                         .withSakstype(new WSSakstyper().withValue("Fag"))

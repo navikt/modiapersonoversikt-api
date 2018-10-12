@@ -37,6 +37,8 @@ import static org.joda.time.DateTime.now;
 
 public class SakerServiceImpl implements SakerService {
 
+    public static final String VEDTAKSLOSNINGEN = "FS36";
+
     @Inject
     private SakV1 sakV1;
     @Inject
@@ -216,13 +218,21 @@ public class SakerServiceImpl implements SakerService {
         Sak sak = new Sak();
         sak.opprettetDato = wsSak.getOpprettelsetidspunkt();
         sak.saksId = wsSak.getSakId();
-        sak.fagsystemSaksId = wsSak.getFagsystemSakId();
+        sak.fagsystemSaksId = getFagsystemSakId(wsSak);
         sak.temaKode = wsSak.getFagomraade().getValue();
-        sak.sakstype = wsSak.getSakstype().getValue();
+        sak.sakstype = getSakstype(wsSak);
         sak.fagsystemKode = wsSak.getFagsystem().getValue();
         sak.finnesIGsak = true;
         return sak;
     };
+
+    private static String getSakstype(no.nav.tjeneste.virksomhet.sak.v1.informasjon.WSSak wsSak) {
+        return VEDTAKSLOSNINGEN.equals(wsSak.getFagsystem().getValue()) ? SAKSTYPE_MED_FAGSAK : wsSak.getSakstype().getValue();
+    }
+
+    private static String getFagsystemSakId(no.nav.tjeneste.virksomhet.sak.v1.informasjon.WSSak wsSak) {
+        return VEDTAKSLOSNINGEN.equals(wsSak.getFagsystem().getValue()) ? wsSak.getSakId() : wsSak.getFagsystemSakId();
+    }
 
     private static final Predicate<Sak> GODKJENT_FAGSAK = sak -> !sak.isSakstypeForVisningGenerell() &&
             GODKJENTE_FAGSYSTEMER_FOR_FAGSAKER.contains(sak.fagsystemKode) &&
