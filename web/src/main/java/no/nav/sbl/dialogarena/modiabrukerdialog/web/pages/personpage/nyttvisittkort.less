@@ -28,8 +28,12 @@
   }
 
   .nyttvisittkort {
+    display: flex;
     overflow-y: auto;
     background-color: @navLysGra;
+    > article {
+      flex-grow: 1;
+    }
     p {
       padding: 0;
     }
