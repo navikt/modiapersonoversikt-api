@@ -15,6 +15,9 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.constants.Events;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.GrunnInfo;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Oppgave;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.Feature;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.UnleashService;
+import no.nav.sbl.dialogarena.modiabrukerdialog.reactkomponenter.utils.wicket.ReactComponentPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.lameller.oversikt.OversiktLerret;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.lamell.SaksoversiktLerret;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.GsakService;
@@ -26,6 +29,7 @@ import no.nav.sbl.dialogarena.varsel.lamell.VarselLerret;
 import no.nav.sykmeldingsperioder.SykmeldingsperiodePanel;
 import no.nav.sykmeldingsperioder.foreldrepenger.ForeldrepengerPanel;
 import no.nav.sykmeldingsperioder.pleiepenger.PleiepengerPanel;
+import org.apache.wicket.Component;
 import org.apache.wicket.Session;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.event.IEvent;
@@ -40,6 +44,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import static no.nav.modig.modia.lamell.DefaultLamellFactory.newLamellFactory;
@@ -71,6 +76,8 @@ public class LamellContainer extends TokenLamellPanel implements Serializable {
     private GsakService gsakService;
     @Inject
     private SaksbehandlerInnstillingerService saksbehandlerInnstillingerService;
+    @Inject
+    private UnleashService unleashService;
 
     private InnboksVM innboksVM;
 
@@ -83,7 +90,9 @@ public class LamellContainer extends TokenLamellPanel implements Serializable {
         super(id, createLamellFactories(grunnInfo.bruker, nyBrukerprofilEnabled));
         this.fnrFromRequest = grunnInfo.bruker.fnr;
 
-        addNewFactory(createUtbetalingLamell(grunnInfo.bruker));
+        boolean nyUtbetalingEnabled = unleashService.isEnabled(Feature.NY_UTBETALING);
+
+        addNewFactory(createUtbetalingLamell(grunnInfo.bruker, nyUtbetalingEnabled));
         this.dialogSession = DialogSession.read(session);
         addNewFactory(createMeldingerLamell(grunnInfo.bruker, dialogSession));
     }
@@ -205,16 +214,31 @@ public class LamellContainer extends TokenLamellPanel implements Serializable {
         return newLamellFactory(LAMELL_OVERSIKT, "O", false, (LerretFactory) (id, name) -> new OversiktLerret(id, bruker.fnr));
     }
 
-    private static LamellFactory createUtbetalingLamell(final GrunnInfo.Bruker bruker) {
-        return newLamellFactory(LAMELL_UTBETALINGER, "U", true, (LerretFactory) (id, name) -> new AjaxLazyLoadLerret(id, name) {
+    private static LamellFactory createUtbetalingLamell(final GrunnInfo.Bruker bruker, final boolean nyUtbetaling) {
+        if (nyUtbetaling) {
+            return newLamellFactory(LAMELL_UTBETALINGER, "U", true, (LerretFactory) (id, name) -> new AjaxLazyLoadLerret(id, name) {
+                final Component comp = new ReactComponentPanel("utbetalingpanel", "NyUtbetaling", new HashMap<String, Object>() {{
+                    put("fødselsnummer", bruker.fnr);
+                }});
 
-            final UtbetalingLerret utbetalinglerret = new UtbetalingLerret("content", bruker.fnr);
+                final NyUtbetalingLerret utbetalinglerret = new NyUtbetalingLerret("content", comp);
 
-            @Override
-            public Lerret getLazyLoadComponent(String markupId) {
-                return utbetalinglerret;
-            }
-        });
+                @Override
+                public Lerret getLazyLoadComponent(String markupId) {
+                    return utbetalinglerret;
+                }
+            });
+        } else {
+            return newLamellFactory(LAMELL_UTBETALINGER, "U", true, (LerretFactory) (id, name) -> new AjaxLazyLoadLerret(id, name) {
+
+                final UtbetalingLerret utbetalinglerret = new UtbetalingLerret("content", bruker.fnr);
+
+                @Override
+                public Lerret getLazyLoadComponent(String markupId) {
+                    return utbetalinglerret;
+                }
+            });
+        }
     }
 
     private static LamellFactory createSaksoversiktLamell(final GrunnInfo.Bruker bruker) {

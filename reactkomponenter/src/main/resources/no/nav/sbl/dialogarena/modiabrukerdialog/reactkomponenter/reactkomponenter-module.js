@@ -16,6 +16,7 @@ import BrukersNavKontor from './visittkort/brukers-nav-kontor/nav-kontor-module'
 import FolkeregistrertAdresse from './visittkort/adresse/folkeregistrert-adresse-module';
 import TildeltFlereOppgaverAlert from './dialog-panel/flere-henvendelser-alert/tildelt-flere-oppgaver-alert';
 import NyFrontend from './ny-frontend/ny-frontend';
+import NyUtbetaling from './ny-utbetaling/ny-utbetaling';
 
 import React from './nav-react';
 import ReactDOM from 'react-dom';
@@ -38,7 +39,8 @@ window.ModiaJS = {
         BrukersNavKontor,
         FolkeregistrertAdresse,
         TildeltFlereOppgaverAlert,
-        NyFrontend
+        NyFrontend,
+        NyUtbetaling
     },
     InitializedComponents: {},
     React,
