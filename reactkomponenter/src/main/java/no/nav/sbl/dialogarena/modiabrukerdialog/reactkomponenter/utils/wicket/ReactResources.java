@@ -29,6 +29,7 @@ public class ReactResources {
                     new PackageResourceReference(ResourceReference.class, "build/nav-kontor.less"),
                     new PackageResourceReference(ResourceReference.class, "build/traadvisning.less"),
                     new PackageResourceReference(ResourceReference.class, "build/tildelt-flere-oppgaver-alert.less"),
-                    new PackageResourceReference(ResourceReference.class, "build/alertstripe.less")
+                    new PackageResourceReference(ResourceReference.class, "build/alertstripe.less"),
+                    new PackageResourceReference(ResourceReference.class, "build/ny-frontend.less")
             ).done();
 }

@@ -29,8 +29,9 @@ public class ReactResourcesTest {
             "build/nav-kontor.less",
             "build/slaa-sammen-traader.less",
             "build/alertstripe.less",
-            "build/tildelt-flere-oppgaver-alert.less"
-            );
+            "build/tildelt-flere-oppgaver-alert.less",
+            "build/ny-frontend.less"
+    );
 
     @Test
     public void frontModuleInneholderAlleForventedeJSFiler() throws Exception {
