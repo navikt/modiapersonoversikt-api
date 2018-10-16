@@ -174,7 +174,7 @@ public class PersonPage extends BasePage {
                     new WebMarkupContainer("visittkort").setVisible(false),
                     new WebMarkupContainer("brukersNavKontor").setVisible(false),
                     new WebMarkupContainer("kjerneinfotabs").setVisible(false),
-                    new ReactComponentPanel("ny-frontend", "NyFrontend", new HashMap<String, Object>() {{
+                    new ReactComponentPanel("nytt-visittkort", "NyttVisittkort", new HashMap<String, Object>() {{
                         put("fødselsnummer", fnr);
                         put("nyBrukerprofil", nyBrukerprofilEnabled);
                     }})
@@ -184,7 +184,7 @@ public class PersonPage extends BasePage {
                     new VisittkortPanel("visittkort", fnr).setVisible(true),
                     new NavKontorPanel("brukersNavKontor", fnr),
                     new VisitkortTabListePanel("kjerneinfotabs", createTabs()),
-                    new WebMarkupContainer("ny-frontend").setVisible(false)
+                    new WebMarkupContainer("nytt-visittkort").setVisible(false)
             };
         }
     }

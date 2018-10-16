@@ -3,7 +3,7 @@ import PT from 'prop-types';
 
 import Visittkort from 'modiapersonoversikt/build/dist/components/standalone/VisittKort';
 
-class NyFrontend extends React.Component {
+class NyttVisittkort extends React.Component {
     render() {
         return <Visittkort fødselsnummer={this.props.fødselsnummer}/>;
     }
@@ -27,9 +27,9 @@ class NyFrontend extends React.Component {
     }
 }
 
-NyFrontend.propTypes = {
+NyttVisittkort.propTypes = {
     fødselsnummer: PT.string.isRequired,
     nyBrukerprofil: PT.bool.isRequired
 };
 
-export default NyFrontend;
+export default NyttVisittkort;

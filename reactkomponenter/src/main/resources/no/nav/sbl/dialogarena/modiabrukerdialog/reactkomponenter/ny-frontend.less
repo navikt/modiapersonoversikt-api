@@ -1,0 +1,66 @@
+/* Overstyrer styling på lerret i Wicket */
+.ny-frontend-lerret-fix {
+  margin: -10px -30px -30px -30px;
+  padding: 10px;
+}
+
+.ny-frontend {
+  background-color: @navLysGra;
+
+  .visually-hidden {
+    position: absolute !important;
+    height: 1px; width: 1px;
+    overflow: hidden;
+    clip: rect(1px 1px 1px 1px); /* IE6, IE7 */
+    clip: rect(1px, 1px, 1px, 1px);
+  }
+
+  p {
+    padding: 0;
+  }
+  h1, h2, h3, h4 {
+    margin: 0;
+    padding: 0;
+  }
+  label {
+    width: auto;
+  }
+
+  /* CSS for å motvikre modia-styles som forsøker overskrive samt kompensere for bruk av arial som font*/
+  /* Vi overstyrer nav-frontend og bruker arial her siden modia ikke greier dra inn "Source Sans Pro" fra google fonts */
+  /* Font-size er satt for å gi en opplevelse som ligner mest mulig på den man får fra nav-frontend */
+  & * {
+    font-family: Arial, Helvetica, sans-serif !important;
+  }
+  .typo-undertittel {
+    font-size: 18px;
+    text-transform: none;
+  }
+  .typo-normal {
+    font-size: 15px;
+    line-height: 22px;
+  }
+  .typo-undertekst {
+    font-size: 13px;
+  }
+  .typo-etikett-liten {
+    font-size: 12px;
+  }
+  .typo-element {
+    font-size: 15px;
+  }
+  .etikett {
+    font-size: 15px;
+  }
+
+  form {
+    label, input, select, textarea, span {
+      color: @textColor;
+      text-transform: inherit;
+      font-size: 16px !important;
+    }
+    .inputPanel, .checkboksPanel, .inputPanel--checked {
+      width: 100%;
+    }
+  }
+}
