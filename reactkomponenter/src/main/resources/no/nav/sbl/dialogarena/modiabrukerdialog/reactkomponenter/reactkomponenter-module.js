@@ -15,7 +15,7 @@ import RedirectModal from './redirectmodal/redirectmodal-module';
 import BrukersNavKontor from './visittkort/brukers-nav-kontor/nav-kontor-module';
 import FolkeregistrertAdresse from './visittkort/adresse/folkeregistrert-adresse-module';
 import TildeltFlereOppgaverAlert from './dialog-panel/flere-henvendelser-alert/tildelt-flere-oppgaver-alert';
-import NyFrontend from './ny-frontend/ny-frontend';
+import NyttVisittkort from './nytt-visittkort/nytt-visittkort';
 import NyUtbetaling from './ny-utbetaling/ny-utbetaling';
 
 import React from './nav-react';
@@ -39,7 +39,7 @@ window.ModiaJS = {
         BrukersNavKontor,
         FolkeregistrertAdresse,
         TildeltFlereOppgaverAlert,
-        NyFrontend,
+        NyttVisittkort,
         NyUtbetaling
     },
     InitializedComponents: {},
