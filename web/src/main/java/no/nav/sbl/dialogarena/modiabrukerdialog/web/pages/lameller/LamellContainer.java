@@ -86,8 +86,8 @@ public class LamellContainer extends TokenLamellPanel implements Serializable {
     @Named("pep")
     private EnforcementPoint pep;
 
-    public LamellContainer(String id, Session session, GrunnInfo grunnInfo, boolean nyBrukerprofilEnabled) {
-        super(id, createLamellFactories(grunnInfo.bruker, nyBrukerprofilEnabled));
+    public LamellContainer(String id, Session session, GrunnInfo grunnInfo, boolean nyBrukerprofilEnabled, boolean nySaksoversikt) {
+        super(id, createLamellFactories(grunnInfo.bruker, nyBrukerprofilEnabled, nySaksoversikt));
         this.fnrFromRequest = grunnInfo.bruker.fnr;
 
         boolean nyUtbetalingEnabled = unleashService.isEnabled(Feature.NY_UTBETALING);
@@ -191,12 +191,12 @@ public class LamellContainer extends TokenLamellPanel implements Serializable {
         return SYKEPENGER_TYPE.equalsIgnoreCase(type) || FORELDREPENGER_TYPE.equalsIgnoreCase(type) || PLEIEPENGER_TYPE.equalsIgnoreCase(type);
     }
 
-    private static List<LamellFactory> createLamellFactories(final GrunnInfo.Bruker bruker, boolean nyBrukerprofilEnabled) {
+    private static List<LamellFactory> createLamellFactories(final GrunnInfo.Bruker bruker, boolean nyBrukerprofilEnabled, boolean nySaksoversikt) {
         List<LamellFactory> lamellFactories = new ArrayList<>();
         lamellFactories.add(createOversiktLamell(bruker));
         lamellFactories.add(createKontrakterLamell(bruker));
         lamellFactories.add(createBrukerprofilLamell(bruker, nyBrukerprofilEnabled));
-        lamellFactories.add(createSaksoversiktLamell(bruker));
+        lamellFactories.add(createSaksoversiktLamell(bruker, nySaksoversikt));
         lamellFactories.add(createVarslingsLamell(bruker));
 
         return lamellFactories;
@@ -241,9 +241,24 @@ public class LamellContainer extends TokenLamellPanel implements Serializable {
         }
     }
 
-    private static LamellFactory createSaksoversiktLamell(final GrunnInfo.Bruker bruker) {
+    private static LamellFactory createSaksoversiktLamell(final GrunnInfo.Bruker bruker, final boolean nySaksoversikt) {
         String norgUrl = System.getProperty("server.norg2-frontend.url");
-        return newLamellFactory(LAMELL_SAKSOVERSIKT, "S", true, (LerretFactory) (id, name) -> new SaksoversiktLerret(id, bruker.fnr, bruker.geografiskTilknytning, bruker.diskresjonskode, norgUrl, bruker.navn));
+        if (nySaksoversikt) {
+            return newLamellFactory(LAMELL_SAKSOVERSIKT, "S", true, (LerretFactory) (id, name) -> new AjaxLazyLoadLerret(id, name) {
+                final Component comp = new ReactComponentPanel("saksoversiktpanel", "NySaksoversikt", new HashMap<String, Object>() {{
+                    put("fødselsnummer", bruker.fnr);
+                }});
+
+                final NySaksoversiktLerret saksoversiktLerret = new NySaksoversiktLerret("content", comp);
+
+                @Override
+                public Lerret getLazyLoadComponent(String markupId) {
+                    return saksoversiktLerret;
+                }
+            });
+        } else {
+            return newLamellFactory(LAMELL_SAKSOVERSIKT, "S", true, (LerretFactory) (id, name) -> new SaksoversiktLerret(id, bruker.fnr, bruker.geografiskTilknytning, bruker.diskresjonskode, norgUrl, bruker.navn));
+        }
     }
 
     private static LamellFactory createVarslingsLamell(final GrunnInfo.Bruker bruker) {

@@ -137,7 +137,8 @@ public class PersonPage extends BasePage {
 
         boolean nyttVisittkortEnabled = unleashService.isEnabled(Feature.NYTT_VISITTKORT);
         boolean nyBrukerprofilEnabled = unleashService.isEnabled(Feature.NY_BRUKERPROFIL);
-        lamellContainer = new LamellContainer("lameller", getSession(), grunnInfo, nyBrukerprofilEnabled);
+        boolean nySaksoversikt = unleashService.isEnabled(Feature.NY_SAKSOVERSIKT);
+        lamellContainer = new LamellContainer("lameller", getSession(), grunnInfo, nyBrukerprofilEnabled, nySaksoversikt);
 
         oppgiBegrunnelseModal = new ReactBegrunnelseModal("oppgiBegrunnelseModal");
         Hode hode = new Hode("hode", oppgiBegrunnelseModal, personKjerneinfoServiceBi, grunnInfo, null);
