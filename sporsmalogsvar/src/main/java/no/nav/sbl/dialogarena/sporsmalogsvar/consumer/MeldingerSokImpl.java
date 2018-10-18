@@ -131,7 +131,7 @@ public class MeldingerSokImpl implements MeldingerSok {
             MeldingerCacheEntry entry = cache.get(key);
 
             IndexSearcher searcher = new IndexSearcher(DirectoryReader.open(entry.directory));
-            TopScoreDocCollector collector = TopScoreDocCollector.create(1000, true);
+            TopScoreDocCollector collector = TopScoreDocCollector.create(1000);
 
             Query query = queryParser().parse(query(soketekst));
             searcher.search(query, collector);
@@ -198,7 +198,7 @@ public class MeldingerSokImpl implements MeldingerSok {
     private static RAMDirectory indekser(List<Melding> meldinger) {
         try {
             RAMDirectory directory = new RAMDirectory();
-            IndexWriter writer = new IndexWriter(directory, new IndexWriterConfig(Version.LUCENE_4_10_2, ANALYZER));
+            IndexWriter writer = new IndexWriter(directory, new IndexWriterConfig(ANALYZER));
 
             int i = 0;
             for (Melding melding : meldinger) {
