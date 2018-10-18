@@ -56,7 +56,7 @@ public class SkrivestotteSok {
     public void indekser(List<SkrivestotteTekst> skrivestotteTekster) {
         try {
             directory = new RAMDirectory();
-            IndexWriter writer = new IndexWriter(directory, new IndexWriterConfig(Version.LUCENE_4_10_2, analyzer));
+            IndexWriter writer = new IndexWriter(directory, new IndexWriterConfig(analyzer));
             int i = 0;
             for (SkrivestotteTekst skrivestotteTekst : skrivestotteTekster) {
                 if (skrivestotteTekst.isValid()) {
@@ -89,7 +89,7 @@ public class SkrivestotteSok {
     public List<SkrivestotteTekst> sok(String frisok, List<String> tags) {
         try {
             IndexSearcher searcher = new IndexSearcher(DirectoryReader.open(directory));
-            TopScoreDocCollector collector = TopScoreDocCollector.create(1000, true);
+            TopScoreDocCollector collector = TopScoreDocCollector.create(1000);
 
             Query query = queryParser().parse(query(frisok, tags));
             searcher.search(query, collector);
