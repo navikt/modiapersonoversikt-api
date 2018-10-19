@@ -28,12 +28,18 @@ class UtbetalingController @Inject constructor(private val service: UtbetalingSe
              @QueryParam("sluttDato") slutt: String?): Map<String, Any?> {
         check(unleashService.isEnabled(Feature.NYTT_VISITTKORT))
 
+        val startDato = lagRiktigDato(start) ?: LocalDate.now().minusDays(DAGER_BAKOVER)
+        val sluttDato = lagRiktigDato(slutt) ?: LocalDate.now().plusDays(DAGER_FREMOVER)
         val utbetalinger = service.hentWSUtbetalinger(fødselsnummer,
-                    lagRiktigDato(start) ?: LocalDate.now().minusDays(DAGER_BAKOVER),
-                    lagRiktigDato(slutt) ?: LocalDate.now().plusDays(DAGER_FREMOVER))
+                startDato,
+                sluttDato)
 
         return mapOf(
-                "utbetalinger" to hentUtbetalinger(utbetalinger)
+                "utbetalinger" to hentUtbetalinger(utbetalinger),
+                "periode" to mapOf(
+                        "startDato" to startDato.toString(DATOFORMAT),
+                        "sluttDato" to sluttDato.toString(DATOFORMAT)
+                )
         )
     }
 
