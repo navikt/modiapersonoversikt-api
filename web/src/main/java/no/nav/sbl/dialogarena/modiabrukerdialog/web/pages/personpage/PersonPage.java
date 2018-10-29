@@ -147,6 +147,7 @@ public class PersonPage extends BasePage {
             handleRedirect(target, new PageParameters(), HentPersonPage.class);
         }));
         hode.add(hasCssClassIf("nytt-visittkort-toggle", Model.of(nyttVisittkortEnabled)));
+        hode.add(hasCssClassIf("ny-saksoversikt-toggle", Model.of(nySaksoversikt)));
 
         dialogPanel = new DialogPanel("dialogPanel", grunnInfo);
         add(
