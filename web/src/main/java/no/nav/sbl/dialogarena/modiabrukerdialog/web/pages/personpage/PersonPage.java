@@ -136,6 +136,7 @@ public class PersonPage extends BasePage {
         konfigurerRedirectPopup();
 
         boolean nyttVisittkortEnabled = unleashService.isEnabled(Feature.NYTT_VISITTKORT);
+        boolean nyUtbetalingerEnabled = unleashService.isEnabled(Feature.NY_UTBETALING);
         boolean nyBrukerprofilEnabled = unleashService.isEnabled(Feature.NY_BRUKERPROFIL);
         boolean nySaksoversikt = unleashService.isEnabled(Feature.NY_SAKSOVERSIKT);
         lamellContainer = new LamellContainer("lameller", getSession(), grunnInfo, nyBrukerprofilEnabled, nySaksoversikt);
@@ -147,6 +148,7 @@ public class PersonPage extends BasePage {
             handleRedirect(target, new PageParameters(), HentPersonPage.class);
         }));
         hode.add(hasCssClassIf("nytt-visittkort-toggle", Model.of(nyttVisittkortEnabled)));
+        hode.add(hasCssClassIf("ny-utbetalinger-toggle", Model.of(nyUtbetalingerEnabled)));
 
         dialogPanel = new DialogPanel("dialogPanel", grunnInfo);
         add(

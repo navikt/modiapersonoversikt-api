@@ -5,20 +5,20 @@
 
 @import (inline) "./node_modules/nav-datovelger/dist/datovelger/styles/datovelger.css";
 
-// Denne scopes ikke innenfor #modia-app da den får høy spesifitet som overskriver gamle spinnere og lager trøbbel
-@import "@{frontEndModuler}spinner-style/src/spinner-style";
+@import "./node_modules/nav-frontend-spinner-style/src/spinner-style"; // Denne scopes ikke innenfor #modia-app da den får høy spesifitet som overskriver gamle spinnere og lager trøbbel
 
 // scoper dette innenfor #modia-app for å øke spesifisitet
-#modia-app {
-  @import "@{frontEndModuler}typografi@{index-fil}";
-  @import "@{frontEndModuler}alertstriper@{index-fil}";
-  @import "@{frontEndModuler}ekspanderbartpanel@{index-fil}";
-  @import "@{frontEndModuler}etiketter@{index-fil}";
-  @import "@{frontEndModuler}skjema@{index-fil}";
-  @import "@{frontEndModuler}knapper@{index-fil}";
-  @import "@{frontEndModuler}modal@{index-fil}";
-  @import "@{frontEndModuler}chevron@{index-fil}";
+.ReactModalPortal, #modia-app {
+  @import "./node_modules/nav-frontend-modal-style/src/index";
+  @import "./node_modules/nav-frontend-lukknapp-style/src/lukknapp-style";
+  @import "./node_modules/nav-frontend-knapper-style/src/index";
+  @import "./node_modules/nav-frontend-typografi-style/src/index";
+  @import "./node_modules/nav-frontend-alertstriper-style/src/index";
+  @import "./node_modules/nav-frontend-ekspanderbartpanel-style/src/index";
+  @import "./node_modules/nav-frontend-etiketter-style/src/index";
+  @import "./node_modules/nav-frontend-skjema-style/src/index";
+  @import "./node_modules/nav-frontend-chevron-style/src/index";
   .nyttvisittkort {
-    @import "@{frontEndModuler}lenker-style/src/lenker-style";
+    @import "./node_modules/nav-frontend-lenker-style/src/lenker-style";
   }
 }

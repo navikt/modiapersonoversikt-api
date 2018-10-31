@@ -13,7 +13,7 @@
 
     <properties>
         <jaxb-impl.version>2.2.6</jaxb-impl.version>
-        <pdfbox.version>1.8.12</pdfbox.version>
+        <pdfbox.version>1.8.16</pdfbox.version>
         <sanntidpdfkonverter.version>1.0</sanntidpdfkonverter.version>
         <common-lokalt-kodeverk.version>1.12.28</common-lokalt-kodeverk.version>
     </properties>
