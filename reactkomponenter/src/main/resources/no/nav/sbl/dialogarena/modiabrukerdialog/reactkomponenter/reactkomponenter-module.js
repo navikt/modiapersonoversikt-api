@@ -17,6 +17,7 @@ import FolkeregistrertAdresse from './visittkort/adresse/folkeregistrert-adresse
 import TildeltFlereOppgaverAlert from './dialog-panel/flere-henvendelser-alert/tildelt-flere-oppgaver-alert';
 import NyttVisittkort from './nytt-visittkort/nytt-visittkort';
 import NyUtbetaling from './ny-utbetaling/ny-utbetaling';
+import NySaksoversikt from './ny-saksoversikt/ny-saksoversikt';
 
 import React from './nav-react';
 import ReactDOM from 'react-dom';
@@ -40,7 +41,8 @@ window.ModiaJS = {
         FolkeregistrertAdresse,
         TildeltFlereOppgaverAlert,
         NyttVisittkort,
-        NyUtbetaling
+        NyUtbetaling,
+        NySaksoversikt
     },
     InitializedComponents: {},
     React,
