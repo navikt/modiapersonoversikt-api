@@ -30,7 +30,8 @@ public class ReactResourcesTest {
             "build/slaa-sammen-traader.less",
             "build/alertstripe.less",
             "build/tildelt-flere-oppgaver-alert.less",
-            "build/ny-frontend.less"
+            "build/ny-frontend.less",
+            "build/ny-saksoversikt.less"
     );
 
     @Test
