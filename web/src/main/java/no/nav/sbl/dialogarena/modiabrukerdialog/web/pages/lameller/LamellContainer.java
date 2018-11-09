@@ -203,7 +203,22 @@ public class LamellContainer extends TokenLamellPanel implements Serializable {
     }
 
     private static LamellFactory createBrukerprofilLamell(final GrunnInfo.Bruker bruker, boolean nyBrukerprofilEnabled) {
-        return newLamellFactory(LAMELL_BRUKERPROFIL, nyBrukerprofilEnabled ? null : "B", (LerretFactory) (id, name) -> new BrukerprofilPanel(id, Model.of(bruker.fnr)));
+        if (nyBrukerprofilEnabled) {
+            return newLamellFactory(LAMELL_BRUKERPROFIL, "B", true, (LerretFactory) (id, name) -> new AjaxLazyLoadLerret(id, name) {
+                final Component comp = new ReactComponentPanel("brukerprofilpanel", "NyBrukerprofil", new HashMap<String, Object>(){{
+                    put("fødselsnummer", bruker.fnr);
+                }});
+
+                final NyBrukerprofilLerret brukerprofillerret = new NyBrukerprofilLerret("content", comp);
+
+                @Override
+                public Lerret getLazyLoadComponent(String markupId) {
+                    return brukerprofillerret;
+                }
+            });
+        } else {
+            return newLamellFactory(LAMELL_BRUKERPROFIL, "B", (LerretFactory) (id, name) -> new BrukerprofilPanel(id, Model.of(bruker.fnr)));
+        }
     }
 
     private static LamellFactory createKontrakterLamell(final GrunnInfo.Bruker bruker) {
