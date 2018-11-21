@@ -55,7 +55,7 @@ class PersonController @Inject constructor(private val kjerneinfoService: Person
         return mapOf(
                 "fødselsnummer" to person.fodselsnummer.nummer,
                 "alder" to person.fodselsnummer.alder,
-                "kjønn" to person.personfakta.kjonn.kodeRef,
+                "kjønn" to person.personfakta.kjonn?.kodeRef,
                 "geografiskTilknytning" to person.personfakta.geografiskTilknytning?.value,
                 "navn" to getNavn(person.personfakta.personnavn),
                 "diskresjonskode" to person.personfakta.diskresjonskode?.let {Kode(it)},
