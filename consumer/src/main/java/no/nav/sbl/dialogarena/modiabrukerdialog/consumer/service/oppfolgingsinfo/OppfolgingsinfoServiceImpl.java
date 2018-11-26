@@ -28,6 +28,7 @@ public class OppfolgingsinfoServiceImpl implements OppfolgingsinfoService {
     private final AktoerPortType aktoerPortType;
     private final OppfolgingsenhetService oppfolgingsenhetService;
 
+
     public OppfolgingsinfoServiceImpl(OppfolgingsinfoV1 oppfolgingsinfoV1, LDAPService ldapService,
                                       AktoerPortType aktoerPortType, OppfolgingsenhetService oppfolgingsenhetService) {
         this.oppfolgingsinfoV1 = oppfolgingsinfoV1;
