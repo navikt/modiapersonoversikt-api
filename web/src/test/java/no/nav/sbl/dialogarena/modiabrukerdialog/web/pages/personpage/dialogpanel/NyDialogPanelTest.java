@@ -71,7 +71,7 @@ public class NyDialogPanelTest extends WicketPageTest {
 
     @Before
     public void setUp() {
-        grunnInfo = new GrunnInfo(new GrunnInfo.Bruker(FNR, FORNAVN, "", "", "", ""), new GrunnInfo.Saksbehandler("", "", ""));
+        grunnInfo = new GrunnInfo(new GrunnInfo.Bruker(FNR, FORNAVN, "", "", "", "", ""), new GrunnInfo.Saksbehandler("", "", ""));
         testNyDialogPanel = new NyDialogPanel("id", grunnInfo);
 
         when(saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet()).thenReturn(VALGT_ENHET);

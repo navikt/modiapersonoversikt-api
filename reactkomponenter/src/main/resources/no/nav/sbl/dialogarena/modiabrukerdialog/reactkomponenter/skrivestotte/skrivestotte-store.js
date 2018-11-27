@@ -104,9 +104,9 @@ class SkrivstotteStore extends Store {
             eksisterendeTekst += eksisterendeTekst.length === 0 ? '' : '\n';
             tekstfelt.focus();
             tekstfelt.value = eksisterendeTekst + SkrivstotteStore.autofullfor(
-                    SkrivstotteStore.stripEmTags(
-                        Utils.getInnhold(this.state.valgtTekst, this.state.valgtLocale)
-                    ), this.state.autofullfor);
+                SkrivstotteStore.stripEmTags(
+                    Utils.getInnhold(this.state.valgtTekst, this.state.valgtLocale)
+                ), this.state.autofullfor);
             const thisEvent = document.createEvent('Event');
             thisEvent.initEvent('input', true, true);
             thisEvent.simulated = true;
@@ -161,6 +161,8 @@ class SkrivstotteStore extends Store {
             'bruker.etternavn': autofullforMap.bruker.etternavn,
             'bruker.navn': autofullforMap.bruker.navn,
             'bruker.navkontor': autofullforMap.bruker.navkontor,
+            'bruker.subjekt': this.subjektPronomen(autofullforMap.bruker.kjonn),
+            'bruker.objekt': this.objektPronomen(autofullforMap.bruker.kjonn),
             'saksbehandler.fornavn': autofullforMap.saksbehandler.fornavn,
             'saksbehandler.etternavn': autofullforMap.saksbehandler.etternavn,
             'saksbehandler.navn': autofullforMap.saksbehandler.navn,
@@ -174,6 +176,28 @@ class SkrivstotteStore extends Store {
             }
             return nokler[resultat] || '[fant ingen verdi]';
         });
+    }
+
+    static objektPronomen(kjonn) {
+        switch (kjonn) {
+            case 'K':
+                return 'henne';
+            case 'M':
+                return 'ham';
+            default:
+                return null;
+        }
+    }
+
+    static subjektPronomen(kjonn) {
+        switch (kjonn) {
+            case 'K':
+                return 'hun';
+            case 'M':
+                return 'han';
+            default:
+                return null;
+        }
     }
 }
 
