@@ -1,8 +1,7 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.oppfolgingsinfo.rest;
 
-public class Oppfolgingsstatus {
+public class OppfolgingsEnhetOgVeileder {
     private Oppfolgingsenhet oppfolgingsenhet;
-
     private String veilederId;
 
     public Oppfolgingsenhet getOppfolgingsenhet() {
