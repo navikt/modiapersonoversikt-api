@@ -59,20 +59,20 @@ public class OppfolgingsinfoApiServiceImpl implements OppfolgingsinfoApiService 
         return ldapService.hentSaksbehandler(veilederIdent);
     }
 
-    private OppfolgingsEnhetOgVeileder hentOppfolgingsEnhetOgVeileder(String fødselsnummer) throws IOException {
-        return JsonUtils.fromJson(gjorSporring(hentOppfølgingsEnhetOgVeilderURL(fødselsnummer)), OppfolgingsEnhetOgVeileder.class);
+    private OppfolgingsEnhetOgVeileder hentOppfolgingsEnhetOgVeileder(String fodselsnummer) throws IOException {
+        return JsonUtils.fromJson(gjorSporring(hentOppfolgingsEnhetOgVeilederURL(fodselsnummer)), OppfolgingsEnhetOgVeileder.class);
     }
 
-    private OppfolgingsStatus hentOppfolgingStatus(String fødselsnummer) throws IOException {
-        return JsonUtils.fromJson(gjorSporring(hentOppfølgingsstatusURL(fødselsnummer)), OppfolgingsStatus.class);
+    private OppfolgingsStatus hentOppfolgingStatus(String fodselsnummer) throws IOException {
+        return JsonUtils.fromJson(gjorSporring(hentOppfolgingsStatusURL(fodselsnummer)), OppfolgingsStatus.class);
     }
 
-    private String hentOppfølgingsEnhetOgVeilderURL(String fødselsnummer) {
-        return apiUrl + String.format("person/%s/oppfolgingsstatus", fødselsnummer);
+    private String hentOppfolgingsEnhetOgVeilederURL(String fodselsnummer) {
+        return apiUrl + String.format("person/%s/oppfolgingsstatus", fodselsnummer);
     }
 
-    private String hentOppfølgingsstatusURL(String fødselsnummer) {
-        return apiUrl + String.format("oppfolging?fnr=%s", fødselsnummer);
+    private String hentOppfolgingsStatusURL(String fodselsnummer) {
+        return apiUrl + String.format("oppfolging?fnr=%s", fodselsnummer);
     }
 
 
@@ -81,7 +81,7 @@ public class OppfolgingsinfoApiServiceImpl implements OppfolgingsinfoApiService 
         request.addHeader(AUTHORIZATION, "Bearer " + SubjectHandler.getSubjectHandler().getInternSsoToken());
         HttpResponse response = client.execute(request);
         if (response.getStatusLine().getStatusCode() != 200) {
-            throw new IOException(format("Kall på URL=\"%s\" returnerte respons med status=\"%s\"", url, response.getStatusLine()));
+            logger.warn("Oppfølging svarte med statuskode: ",response.getStatusLine().getStatusCode());
         }
 
         return response.getEntity().getContent();

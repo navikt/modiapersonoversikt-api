@@ -14,7 +14,7 @@ public class OppfolgingsinfoApiEndpointConfig {
     private String api = System.getProperty("veilarboppfolging.api.url");
 
     @Bean
-    public OppfolgingsinfoApiService lagOppfølgingsapi() {
+    public OppfolgingsinfoApiService lagOppfolgingsApi() {
         return createMetricsProxyWithInstanceSwitcher(
                 "veilarboppfolgingApi",
                 new OppfolgingsinfoApiServiceImpl(api),
@@ -23,5 +23,6 @@ public class OppfolgingsinfoApiEndpointConfig {
                 OppfolgingsinfoApiService.class
         );
     }
+
 
 }
