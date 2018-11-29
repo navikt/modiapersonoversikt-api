@@ -5,7 +5,8 @@ export const grunnInfoType = PT.shape({
         fnr: PT.string,
         fornavn: PT.string,
         etternavn: PT.string,
-        navkontor: PT.string
+        navkontor: PT.string,
+        kjonn: PT.string
     }),
     Saksbehandler: PT.shape({
         enhet: PT.string,

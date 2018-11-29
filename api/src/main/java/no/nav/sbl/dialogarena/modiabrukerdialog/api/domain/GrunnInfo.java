@@ -22,9 +22,9 @@ public class GrunnInfo implements Serializable {
     }
 
     public static class Bruker implements Serializable {
-        public String fnr, fornavn, etternavn, navn, navkontor, geografiskTilknytning, diskresjonskode;
+        public String fnr, fornavn, etternavn, navn, navkontor, geografiskTilknytning, diskresjonskode, kjonn;
 
-        public Bruker(String fnr, String fornavn, String etternavn, String navkontor, String geografiskTilknytning, String diskresjonskode) {
+        public Bruker(String fnr, String fornavn, String etternavn, String navkontor, String geografiskTilknytning, String diskresjonskode, String kjonn) {
             this.fnr = fnr;
             this.fornavn = namifyString(fornavn);
             this.etternavn = namifyString(etternavn);
@@ -32,6 +32,7 @@ public class GrunnInfo implements Serializable {
             this.navkontor = navkontor;
             this.geografiskTilknytning = geografiskTilknytning;
             this.diskresjonskode = diskresjonskode;
+            this.kjonn = kjonn;
         }
 
         public Bruker(String fnr) {
@@ -57,6 +58,11 @@ public class GrunnInfo implements Serializable {
 
         public Bruker withDiskresjonskode(String diskresjonskode) {
             this.diskresjonskode = diskresjonskode;
+            return this;
+        }
+
+        public Bruker withKjonn(String kjonn) {
+            this.kjonn = kjonn;
             return this;
         }
     }

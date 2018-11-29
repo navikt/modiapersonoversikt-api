@@ -93,7 +93,7 @@ public class FortsettDialogPanelTest extends WicketPageTest {
 
     @BeforeEach
     public void setUp() {
-        grunnInfo = new GrunnInfo(new Bruker(FNR, FORNAVN, "", "", "", ""), new Saksbehandler("", "", ""));
+        grunnInfo = new GrunnInfo(new Bruker(FNR, FORNAVN, "", "", "", "", ""), new Saksbehandler("", "", ""));
         when(saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet()).thenReturn(VALGT_ENHET);
 
         testFortsettDialogPanel = new FortsettDialogPanel("id", grunnInfo, asList(lagSporsmalFraBruker()), new Oppgave(null, FNR, SPORSMAL_ID).withSvarHenvendelseId(SVARHENVENDELSEID));

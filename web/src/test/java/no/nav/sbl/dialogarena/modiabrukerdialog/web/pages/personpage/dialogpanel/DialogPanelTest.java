@@ -71,7 +71,7 @@ public class DialogPanelTest extends WicketPageTest {
     }
 
     private GrunnInfo getMockGrunnInfo() {
-        GrunnInfo.Bruker bruker = new GrunnInfo.Bruker("10108000398", "test", "testesen", "navKontorX", "1234", "");
+        GrunnInfo.Bruker bruker = new GrunnInfo.Bruker("10108000398", "test", "testesen", "navKontorX", "1234", "", "M");
         GrunnInfo.Saksbehandler saksbehandler = new GrunnInfo.Saksbehandler("enhetX", "fornavn", "etternavn");
         return new GrunnInfo(bruker, saksbehandler);
     }
