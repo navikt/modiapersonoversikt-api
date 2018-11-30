@@ -42,10 +42,10 @@ public class OppfolgingsinfoApiServiceImpl implements OppfolgingsinfoApiService 
         Oppfolgingsinfo info = null;
         try {
             OppfolgingsStatus status = hentOppfolgingStatus(fodselsnummer);
-            OppfolgingsEnhetOgVeileder oppf = hentOppfolgingsEnhetOgVeileder(fodselsnummer);
+            OppfolgingsEnhetOgVeileder enhetOgVeileder = hentOppfolgingsEnhetOgVeileder(fodselsnummer);
             info = new Oppfolgingsinfo(status.isUnderOppfolging())
-                    .withVeileder(hentSaksbehandler(oppf.getVeilederId(), ldapService))
-                    .withOppfolgingsenhet(new AnsattEnhet(oppf.getOppfolgingsenhet().getEnhetId(), oppf.getOppfolgingsenhet().getNavn()));
+                    .withVeileder(hentSaksbehandler(enhetOgVeileder.getVeilederId(), ldapService))
+                    .withOppfolgingsenhet(new AnsattEnhet(enhetOgVeileder.getOppfolgingsenhet().getEnhetId(), enhetOgVeileder.getOppfolgingsenhet().getNavn()));
         } catch (IOException ioe) {
             logger.error("Feil i oppfølgingsinfo: ", ioe);
         }
