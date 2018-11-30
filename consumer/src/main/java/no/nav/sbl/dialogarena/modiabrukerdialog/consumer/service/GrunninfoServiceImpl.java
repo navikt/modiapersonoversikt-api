@@ -40,9 +40,10 @@ public class GrunninfoServiceImpl implements GrunninfoService {
                     .withPersonnavn(personfakta.getPersonnavn().getFornavn(), personfakta.getPersonnavn().getEtternavn())
                     .withEnhet(hentEnhet(personfakta))
                     .withGeografiskTilknytning(personfakta.getGeografiskTilknytning() != null ? personfakta.getGeografiskTilknytning().getValue() : "")
-                    .withDiskresjonskode(personfakta.getDiskresjonskode() != null ? personfakta.getDiskresjonskode().getKodeRef() : "");
+                    .withDiskresjonskode(personfakta.getDiskresjonskode() != null ? personfakta.getDiskresjonskode().getKodeRef() : "")
+                    .withKjonn(personfakta.getKjonn() != null ? personfakta.getKjonn().getKodeRef() : "");
         } catch (Exception e) {
-            return new GrunnInfo.Bruker(fnr, "", "", "", "", "");
+            return new GrunnInfo.Bruker(fnr, "", "", "", "", "", "");
         }
     }
 

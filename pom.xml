@@ -125,7 +125,7 @@
         <sakogbehandling-tjenestespesifikasjon.version>1.0.15</sakogbehandling-tjenestespesifikasjon.version>
         <dial-nav-tjeneste-behandlesak.version>1.1</dial-nav-tjeneste-behandlesak.version>
         <arena-arbeid-og-aktivitet.version>1.0.6-alpha002</arena-arbeid-og-aktivitet.version>
-        <nav-fellessystemer-environment.version>13.5.4</nav-fellessystemer-environment.version>
+        <nav-fellessystemer-environment.version>13.5.25</nav-fellessystemer-environment.version>
         <dial-nav-tjeneste-sak.version>1.7</dial-nav-tjeneste-sak.version>
         <henvendelse-soknader-tjenestespesifikasjon.version>0.0.25</henvendelse-soknader-tjenestespesifikasjon.version>
         <joark-tjenestespesifikasjon.version>2.3</joark-tjenestespesifikasjon.version>
@@ -1185,6 +1185,9 @@
             <plugin>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>2.19.1</version>
+                <configuration>
+                    <useSystemClassLoader>false</useSystemClassLoader>
+                </configuration>
                 <dependencies>
                     <dependency>
                         <groupId>org.junit.platform</groupId>

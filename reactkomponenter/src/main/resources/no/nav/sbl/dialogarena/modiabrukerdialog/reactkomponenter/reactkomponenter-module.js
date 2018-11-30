@@ -18,6 +18,7 @@ import TildeltFlereOppgaverAlert from './dialog-panel/flere-henvendelser-alert/t
 import NyttVisittkort from './nytt-visittkort/nytt-visittkort';
 import NyUtbetaling from './ny-utbetaling/ny-utbetaling';
 import NySaksoversikt from './ny-saksoversikt/ny-saksoversikt';
+import NyBrukerprofil from './ny-brukerprofil/ny-brukerprofil';
 
 import React from './nav-react';
 import ReactDOM from 'react-dom';
@@ -42,7 +43,8 @@ window.ModiaJS = {
         TildeltFlereOppgaverAlert,
         NyttVisittkort,
         NyUtbetaling,
-        NySaksoversikt
+        NySaksoversikt,
+        NyBrukerprofil
     },
     InitializedComponents: {},
     React,

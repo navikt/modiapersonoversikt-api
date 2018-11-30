@@ -9,7 +9,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class SkrivestottePropsTest {
     public static final String KONTAKTSENTER_ENHET_NR = "4110";
     public static final String IKKE_KONTAKTSENTER_ENHET_NR = "5110";
-    private final GrunnInfo.Bruker bruker  = new GrunnInfo.Bruker("10108000398", "testesen", "testfamilien", "NAV Aremark", "1234", "");
+    private final GrunnInfo.Bruker bruker  = new GrunnInfo.Bruker("10108000398", "testesen", "testfamilien", "NAV Aremark", "1234", "", "K");
     private final GrunnInfo.Saksbehandler saksbehandler = new GrunnInfo.Saksbehandler("0118", "F_z123456", "E_z123456");
     private final GrunnInfo grunnInfo = new GrunnInfo(bruker, saksbehandler);
 

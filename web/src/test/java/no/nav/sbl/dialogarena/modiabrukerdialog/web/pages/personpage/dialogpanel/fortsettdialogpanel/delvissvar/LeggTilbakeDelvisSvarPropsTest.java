@@ -34,7 +34,7 @@ class LeggTilbakeDelvisSvarPropsTest {
     private static Map<Temagruppe, String> TEMAGRUPPE_MAP = new HashMap<>();
     private final Map<Temagruppe, String> FORVENTET_TEMAGRUPPE_MAP = new HashMap<>(TEMAGRUPPE_MAP);
     private final List<Melding> traad = new ArrayList<>();
-    private final GrunnInfo.Bruker bruker  = new GrunnInfo.Bruker("10108000398", "testesen", "testfamilien", "NAV Aremark", "0122", "");
+    private final GrunnInfo.Bruker bruker  = new GrunnInfo.Bruker("10108000398", "testesen", "testfamilien", "NAV Aremark", "0122", "", "M");
     private final GrunnInfo.Saksbehandler saksbehandler = new GrunnInfo.Saksbehandler("0118", "F_z123456", "E_z123456");
     private final GrunnInfo grunnInfo = new GrunnInfo(bruker, saksbehandler);
     private final SkrivestotteProps skrivestotteProps = new SkrivestotteProps(grunnInfo, "5110");
