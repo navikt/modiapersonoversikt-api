@@ -2,9 +2,11 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.oppfolging
 
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Saksbehandler
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.AnsattEnhet
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.oppfolgingsinfo.OppfolgingsinfoService
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.ldap.LDAPService
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.oppfolgingsinfo.OppfolgingsinfoApiService
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.Feature
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.UnleashService
+import org.slf4j.LoggerFactory
 import java.util.*
 import javax.inject.Inject
 import javax.ws.rs.GET
@@ -15,15 +17,18 @@ import javax.ws.rs.core.MediaType
 
 @Path("/oppfolging/{fnr}")
 @Produces(MediaType.APPLICATION_JSON)
-class OppfolgingController @Inject constructor(private val service: OppfolgingsinfoService,
+class OppfolgingController @Inject constructor(private val service: OppfolgingsinfoApiService,
+                                               private val ldapService: LDAPService,
                                                private val unleashService: UnleashService) {
+
+    private val logger = LoggerFactory.getLogger("Oppfølgingscontroller")
 
     @GET
     @Path("/")
     fun hent(@PathParam("fnr") fødselsnummer: String): Map<String, Any?> {
         check(unleashService.isEnabled(Feature.NYTT_VISITTKORT))
 
-        val oppfølging = service.hentOppfolgingsinfo(fødselsnummer)
+        val oppfølging = service.hentOppfolgingsinfo(fødselsnummer, ldapService)
 
         return mapOf(
                 "erUnderOppfølging" to oppfølging.erUnderOppfolging,
@@ -33,7 +38,7 @@ class OppfolgingController @Inject constructor(private val service: Oppfolgingsi
     }
 
     private fun hentVeileder(veileder: Optional<Saksbehandler>): Map<String, Any?>? {
-        return if(veileder.isPresent) {
+        return if (veileder.isPresent) {
             mapOf(
                     "ident" to veileder.get().ident
             )
@@ -43,7 +48,7 @@ class OppfolgingController @Inject constructor(private val service: Oppfolgingsi
     }
 
     private fun hentEnhet(enhet: Optional<AnsattEnhet>): Map<String, Any?>? {
-        return if(enhet.isPresent) {
+        return if (enhet.isPresent) {
             mapOf(
                     "id" to enhet.get().enhetId,
                     "navn" to enhet.get().enhetNavn,
