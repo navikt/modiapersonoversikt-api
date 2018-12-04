@@ -21,7 +21,7 @@ class OppfolgingController @Inject constructor(private val service: Oppfolgingsi
                                                private val ldapService: LDAPService,
                                                private val unleashService: UnleashService) {
 
-    private val logger = LoggerFactory.getLogger("Oppfolgingcontroller.class")
+    private val logger = LoggerFactory.getLogger("OppfolgingController::java.class")
 
     @GET
     @Path("/")
