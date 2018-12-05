@@ -3,7 +3,7 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.oppfolging
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Saksbehandler
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.AnsattEnhet
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.ldap.LDAPService
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.oppfolgingsinfo.OppfolgingsinfoApiService
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.oppfolgingsinfo.OppfolgingsinfoApiService
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.Feature
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.UnleashService
 import org.slf4j.LoggerFactory
@@ -21,19 +21,19 @@ class OppfolgingController @Inject constructor(private val service: Oppfolgingsi
                                                private val ldapService: LDAPService,
                                                private val unleashService: UnleashService) {
 
-    private val logger = LoggerFactory.getLogger("Oppfølgingscontroller")
+    private val logger = LoggerFactory.getLogger(OppfolgingController::class.java)
 
     @GET
     @Path("/")
-    fun hent(@PathParam("fnr") fødselsnummer: String): Map<String, Any?> {
+    fun hent(@PathParam("fnr") fodselsnummer: String): Map<String, Any?> {
         check(unleashService.isEnabled(Feature.NYTT_VISITTKORT))
 
-        val oppfølging = service.hentOppfolgingsinfo(fødselsnummer, ldapService)
+        val oppfolging = service.hentOppfolgingsinfo(fodselsnummer, ldapService)
 
         return mapOf(
-                "erUnderOppfølging" to oppfølging.erUnderOppfolging,
-                "veileder" to hentVeileder(oppfølging.veileder),
-                "enhet" to hentEnhet(oppfølging.oppfolgingsenhet)
+                "erUnderOppfølging" to oppfolging.erUnderOppfolging,
+                "veileder" to hentVeileder(oppfolging.veileder),
+                "enhet" to hentEnhet(oppfolging.oppfolgingsenhet)
         )
     }
 
