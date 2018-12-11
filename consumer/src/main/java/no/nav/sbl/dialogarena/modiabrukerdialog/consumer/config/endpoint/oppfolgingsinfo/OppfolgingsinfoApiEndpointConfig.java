@@ -59,7 +59,7 @@ public class OppfolgingsinfoApiEndpointConfig {
 
             @Override
             public String endpoint() {
-                return getProperty("oppfolginginfo.ping.url");
+                return getProperty("veilarboppfolging.api.url");
             }
         };
     }
