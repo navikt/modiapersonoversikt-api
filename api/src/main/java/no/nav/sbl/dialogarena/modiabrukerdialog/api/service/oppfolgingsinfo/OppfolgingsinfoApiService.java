@@ -10,5 +10,5 @@ public interface OppfolgingsinfoApiService {
 
     Oppfolgingsinfo hentOppfolgingsinfo(String fodselsnummer, LDAPService ldapService);
 
-    void ping()throws IOException;
+    void ping() throws IOException;
 }

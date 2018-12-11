@@ -15,6 +15,7 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import javax.inject.Inject;
 import java.io.IOException;
 import java.io.InputStream;
@@ -51,7 +52,8 @@ public class OppfolgingsinfoApiServiceImpl implements OppfolgingsinfoApiService 
         }
         return info;
     }
-    public void ping()throws IOException {
+
+    public void ping() throws IOException {
         gjorSporring(hentPingURL());
     }
 
@@ -78,7 +80,7 @@ public class OppfolgingsinfoApiServiceImpl implements OppfolgingsinfoApiService 
         return apiUrl + String.format("oppfolging?fnr=%s", fodselsnummer);
     }
 
-    private String hentPingURL(){
+    private String hentPingURL() {
         return apiUrl + String.format("ping");
     }
 
@@ -87,7 +89,7 @@ public class OppfolgingsinfoApiServiceImpl implements OppfolgingsinfoApiService 
         request.addHeader(AUTHORIZATION, "Bearer " + SubjectHandler.getSubjectHandler().getInternSsoToken());
         HttpResponse response = client.execute(request);
         if (response.getStatusLine().getStatusCode() != 200) {
-            logger.warn("Oppfølging svarte med statuskode: ",response.getStatusLine().getStatusCode());
+            logger.warn("Oppfølging svarte med statuskode: ", response.getStatusLine().getStatusCode());
         }
         return response.getEntity().getContent();
     }
