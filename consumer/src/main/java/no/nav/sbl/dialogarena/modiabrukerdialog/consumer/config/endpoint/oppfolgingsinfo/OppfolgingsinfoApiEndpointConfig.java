@@ -10,9 +10,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.oppfolgingsinfo
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.Timer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
 import java.io.IOException;
-
 import static java.lang.System.getProperty;
 import static no.nav.sbl.dialogarena.common.cxf.InstanceSwitcher.createMetricsProxyWithInstanceSwitcher;
 
@@ -63,6 +61,4 @@ public class OppfolgingsinfoApiEndpointConfig {
             }
         };
     }
-
-
 }

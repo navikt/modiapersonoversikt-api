@@ -50,6 +50,7 @@ class OppfolgingsinfoServiceImplTest {
         ldapServiceMock = mockLdapService();
         oppfolgingsinfoServiceMock = mockOppfolgingsinfoService();
     }
+
     private OppfolgingsinfoApiService mockOppfolgingsinfoService() {
         OppfolgingsinfoApiService mock = mock(OppfolgingsinfoApiService.class);
         when(mock.hentOppfolgingsinfo(anyString(), any())).thenReturn(new Oppfolgingsinfo( ER_UNDER_OPPFOLGING )
@@ -57,7 +58,6 @@ class OppfolgingsinfoServiceImplTest {
                 .withOppfolgingsenhet(new AnsattEnhet(OPPFOELGINGSENHET_ID, OPPFOELGINGSENHET_NAVN )));
         return mock;
     }
-
 
     private OppfolgingsinfoV1 mockOppfolginsinfoV1() {
         OppfolgingsinfoV1 oppfolgingsinfoV1Mock = mock(OppfolgingsinfoV1.class);
@@ -73,9 +73,6 @@ class OppfolgingsinfoServiceImplTest {
         when(ldapService.hentSaksbehandler(anyString())).thenReturn(new Saksbehandler(VEILEDER_FORNAVN, VEILEDER_ETTERNAVN, VEILEDER_IDENT));
         return ldapService;
     }
-
-
-
 
     @Test
     @DisplayName("Henter ut oppfølgingsflagget til bruker fra veilarboppfolging")
@@ -93,7 +90,6 @@ class OppfolgingsinfoServiceImplTest {
         assertThat(oppfolgingsinfo.getVeileder().get().etternavn, is(VEILEDER_ETTERNAVN));
         assertThat(oppfolgingsinfo.getVeileder().get().fornavn, is(VEILEDER_FORNAVN));
     }
-
 
     @Test
     @DisplayName("Returnerer oppfølgingsenhet-id")
@@ -145,6 +141,4 @@ class OppfolgingsinfoServiceImplTest {
 
         verify(ldapServiceMock, never()).hentSaksbehandler(anyString());
     }
-
-
 }

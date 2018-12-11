@@ -14,6 +14,5 @@ public class OppfolgingsinfoApiServiceMock implements OppfolgingsinfoApiService 
 
     @Override
     public void ping() throws IOException {
-
     }
 }

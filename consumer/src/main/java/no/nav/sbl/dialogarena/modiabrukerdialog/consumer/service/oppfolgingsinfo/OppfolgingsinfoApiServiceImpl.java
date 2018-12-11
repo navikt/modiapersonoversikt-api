@@ -2,7 +2,6 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.oppfolgingsinf
 
 import no.nav.brukerdialog.security.context.SubjectHandler;
 import no.nav.json.JsonUtils;
-import no.nav.modig.modia.ping.Pingable;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Saksbehandler;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.AnsattEnhet;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.oppfolgingsinfo.Oppfolgingsinfo;
@@ -16,12 +15,10 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import javax.inject.Inject;
 import java.io.IOException;
 import java.io.InputStream;
 
-import static java.lang.String.format;
 import static javax.ws.rs.core.HttpHeaders.AUTHORIZATION;
 
 public class OppfolgingsinfoApiServiceImpl implements OppfolgingsinfoApiService {
@@ -55,10 +52,8 @@ public class OppfolgingsinfoApiServiceImpl implements OppfolgingsinfoApiService 
         return info;
     }
     public void ping()throws IOException {
-
         gjorSporring(hentPingURL());
-
-    };
+    }
 
     private Saksbehandler hentSaksbehandler(String veilederIdent, LDAPService ldapService) {
         if (veilederIdent == null) {
@@ -82,10 +77,10 @@ public class OppfolgingsinfoApiServiceImpl implements OppfolgingsinfoApiService 
     private String hentOppfolgingsStatusURL(String fodselsnummer) {
         return apiUrl + String.format("oppfolging?fnr=%s", fodselsnummer);
     }
+
     private String hentPingURL(){
         return apiUrl + String.format("ping");
     }
-
 
     private InputStream gjorSporring(String url) throws IOException {
         HttpGet request = new HttpGet(url);
@@ -94,10 +89,6 @@ public class OppfolgingsinfoApiServiceImpl implements OppfolgingsinfoApiService 
         if (response.getStatusLine().getStatusCode() != 200) {
             logger.warn("Oppfølging svarte med statuskode: ",response.getStatusLine().getStatusCode());
         }
-
         return response.getEntity().getContent();
     }
-
-
-
 }

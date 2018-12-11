@@ -133,8 +133,8 @@ public class LamellServicesAndLoaders {
     @Bean
     public UnleashService unleashService() {
         return mock(UnleashService.class);
-
     }
+
     @Bean
     public LDAPService ldapService() {
         LDAPService mock = mock(LDAPService.class);

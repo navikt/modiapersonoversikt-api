@@ -197,7 +197,4 @@ public class ServiceConfig {
     DkifServiceImpl defaultDkifService(DigitalKontaktinformasjonV1 dkifV1) {
         return new DkifServiceImpl(dkifV1);
     }
-
-
-
 }
