@@ -2,6 +2,7 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.oppfolgingsinf
 
 import no.nav.brukerdialog.security.context.SubjectHandler;
 import no.nav.json.JsonUtils;
+import no.nav.modig.modia.ping.Pingable;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Saksbehandler;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.AnsattEnhet;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.oppfolgingsinfo.Oppfolgingsinfo;
@@ -27,6 +28,7 @@ public class OppfolgingsinfoApiServiceImpl implements OppfolgingsinfoApiService 
     private static final Logger logger = LoggerFactory.getLogger(OppfolgingsinfoApiServiceImpl.class);
     private String apiUrl;
     private HttpClient client;
+    private String pingUrl;
 
     @Inject
     public OppfolgingsinfoApiServiceImpl(String apiUrl) {
@@ -52,6 +54,11 @@ public class OppfolgingsinfoApiServiceImpl implements OppfolgingsinfoApiService 
         }
         return info;
     }
+    public void ping()throws IOException {
+
+        gjorSporring(hentPingURL());
+
+    };
 
     private Saksbehandler hentSaksbehandler(String veilederIdent, LDAPService ldapService) {
         if (veilederIdent == null) {
@@ -75,6 +82,9 @@ public class OppfolgingsinfoApiServiceImpl implements OppfolgingsinfoApiService 
     private String hentOppfolgingsStatusURL(String fodselsnummer) {
         return apiUrl + String.format("oppfolging?fnr=%s", fodselsnummer);
     }
+    private String hentPingURL(){
+        return apiUrl + String.format("ping");
+    }
 
 
     private InputStream gjorSporring(String url) throws IOException {
@@ -87,5 +97,7 @@ public class OppfolgingsinfoApiServiceImpl implements OppfolgingsinfoApiService 
 
         return response.getEntity().getContent();
     }
+
+
 
 }
