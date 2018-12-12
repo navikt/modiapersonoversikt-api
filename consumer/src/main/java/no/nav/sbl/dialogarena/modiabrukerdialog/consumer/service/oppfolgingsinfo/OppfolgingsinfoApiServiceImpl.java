@@ -26,7 +26,6 @@ public class OppfolgingsinfoApiServiceImpl implements OppfolgingsinfoApiService 
     private static final Logger logger = LoggerFactory.getLogger(OppfolgingsinfoApiServiceImpl.class);
     private String apiUrl;
     private HttpClient client;
-    private String pingUrl;
 
     @Inject
     public OppfolgingsinfoApiServiceImpl(String apiUrl) {
