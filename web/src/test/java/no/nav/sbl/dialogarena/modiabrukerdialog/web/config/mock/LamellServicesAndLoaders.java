@@ -10,7 +10,8 @@ import no.nav.kontrakter.consumer.fim.ytelseskontrakt.YtelseskontraktServiceBi;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Saksbehandler;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.AnsattEnhet;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.oppfolgingsinfo.Oppfolgingsinfo;
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.oppfolgingsinfo.OppfolgingsinfoService;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.ldap.LDAPService;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.oppfolgingsinfo.OppfolgingsinfoApiService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.UnleashService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.GsakService;
@@ -121,9 +122,9 @@ public class LamellServicesAndLoaders {
     }
 
     @Bean
-    public OppfolgingsinfoService oppfolgingsinfoService() {
-        OppfolgingsinfoService mock = mock(OppfolgingsinfoService.class);
-        when(mock.hentOppfolgingsinfo(anyString())).thenReturn(new Oppfolgingsinfo(true)
+    public OppfolgingsinfoApiService oppfolgingsinfoService() {
+        OppfolgingsinfoApiService mock = mock(OppfolgingsinfoApiService.class);
+        when(mock.hentOppfolgingsinfo(anyString(), any())).thenReturn(new Oppfolgingsinfo(true)
                 .withVeileder(new Saksbehandler("Harald", "Hårfagre", "z991028"))
                 .withOppfolgingsenhet(new AnsattEnhet("0118", "NAV Aremark")));
         return mock;
@@ -132,5 +133,12 @@ public class LamellServicesAndLoaders {
     @Bean
     public UnleashService unleashService() {
         return mock(UnleashService.class);
+    }
+
+    @Bean
+    public LDAPService ldapService() {
+        LDAPService mock = mock(LDAPService.class);
+        when(mock.hentSaksbehandler(anyString())).thenReturn(new Saksbehandler("Test", "McTest", "ident"));
+        return mock;
     }
 }

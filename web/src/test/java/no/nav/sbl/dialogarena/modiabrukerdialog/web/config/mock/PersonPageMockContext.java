@@ -14,7 +14,7 @@ import no.nav.personsok.consumer.fim.personsok.PersonsokServiceBi;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Saksbehandler;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.AnsattEnhet;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.oppfolgingsinfo.Oppfolgingsinfo;
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.oppfolgingsinfo.OppfolgingsinfoService;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.oppfolgingsinfo.OppfolgingsinfoApiService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.organisasjonsEnhetV2.OrganisasjonEnhetV2Service;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.UnleashService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.GrunninfoService;
@@ -56,9 +56,9 @@ public class PersonPageMockContext {
     }
 
     @Bean
-    public OppfolgingsinfoService oppfolgingsinfoService() {
-        OppfolgingsinfoService oppfolgingsinfoService = mock(OppfolgingsinfoService.class);
-        when(oppfolgingsinfoService.hentOppfolgingsinfo(anyString()))
+    public OppfolgingsinfoApiService oppfolgingsinfoService() {
+        OppfolgingsinfoApiService oppfolgingsinfoService = mock(OppfolgingsinfoApiService.class);
+        when(oppfolgingsinfoService.hentOppfolgingsinfo(anyString(), any()))
                 .thenReturn(new Oppfolgingsinfo(true)
                         .withVeileder(new Saksbehandler("Daniel", "Testfamilien", "Z900001"))
                         .withOppfolgingsenhet(new AnsattEnhet("0118", "NAV Aremark")));
