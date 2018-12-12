@@ -36,10 +36,7 @@ public class OppfolgingsinfoApiServiceImpl implements OppfolgingsinfoApiService 
         return url.endsWith("/") ? url : url + "/";
     }
 
-    private HttpClient lagHttpClient() {
-
-        return HttpClientBuilder.create().build();
-    }
+    private HttpClient lagHttpClient() { return HttpClientBuilder.create().build(); }
 
     @Override
     public Oppfolgingsinfo hentOppfolgingsinfo(String fodselsnummer, LDAPService ldapService) {
