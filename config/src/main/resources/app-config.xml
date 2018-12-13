@@ -58,6 +58,8 @@
         <webservice alias="virksomhet:Kodeverk_v2" mapToProperty="kodeverkendpoint.v2"/>
         <webservice alias="virksomhet:BehandleBrukerprofil_v2" mapToProperty="behandlebrukerprofilendpoint"/>
         <webservice alias="virksomhet:Ytelseskontrakt_v3" mapToProperty="ytelseskontraktendpoint"/>
+        <webservice alias="virksomhet:Oppfolging_v1" mapToProperty="oppfolgingendpoint"/>
+        <webservice alias="OppfolgingsinfoV2" mapToProperty="oppfolgingsinfo.v1"/>
         <webservice alias="virksomhet:foreldrepenger_v2" mapToProperty="foreldrepengerendpoint"/>
         <webservice alias="virksomhet:pleiepenger_v1" mapToProperty="pleiepengerendpoint"/>
         <webservice alias="virksomhet:sykepenger_v2" mapToProperty="sykepengerendpoint"/>
@@ -80,7 +82,6 @@
         <rest alias="kodeverksmapper.underkategori" mapToProperty="kodeverksmapper.underkategori"/>
         <rest alias="kodeverksmapper.ping" mapToProperty="kodeverksmapper.ping"/>
         <rest alias="unleash-api" mapToProperty="unleash"/>
-        <webservice alias="virksomhet:Oppfolging_v1" mapToProperty="oppfolgingendpoint"/>
         <rest alias="veilArbOppfolgingAPI" mapToProperty="veilarboppfolging.api"/>
         <applicationProperties alias="modiabrukerdialog.properties"/>
         <baseUrl alias="modiabrukerdialog.standardtekster.tilbakemelding" mapToProperty="modiabrukerdialog.standardtekster.tilbakemelding"/>
