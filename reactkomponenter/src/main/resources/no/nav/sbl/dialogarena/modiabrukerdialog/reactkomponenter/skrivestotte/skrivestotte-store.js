@@ -169,12 +169,13 @@ class SkrivstotteStore extends Store {
             'saksbehandler.enhet': autofullforMap.saksbehandler.enhet
         };
 
-        return tekst.replace(/\[(.*?)]/g, (res, resultat) => {
-            const verdi = nokler[resultat];
-            if (typeof verdi === 'undefined') {
+        return tekst.replace(/(.\s|^)\[(.*?)]/g, (matchedString, precedingPunctiationOrChar, nokkel) => {
+            const startMedStorBokstav = precedingPunctiationOrChar.startsWith('.') || precedingPunctiationOrChar === '';
+            const verdi = nokler[nokkel];
+            if (!verdi) {
                 return '[ukjent nøkkel]';
             }
-            return nokler[resultat] || '[fant ingen verdi]';
+            return precedingPunctiationOrChar + (startMedStorBokstav ? String.capitalize(verdi) : verdi);
         });
     }
 
