@@ -29,13 +29,14 @@ public class OppfolgingsinfoApiServiceImpl implements OppfolgingsinfoApiService 
 
     @Inject
     public OppfolgingsinfoApiServiceImpl(String apiUrl) {
-        this.apiUrl = apiUrl;
+        this.apiUrl = sluttMedSlash(apiUrl);
         this.client = lagHttpClient();
     }
-
-    private HttpClient lagHttpClient() {
-        return HttpClientBuilder.create().build();
+    private String sluttMedSlash(String url) {
+        return url.endsWith("/") ? url : url + "/";
     }
+
+    private HttpClient lagHttpClient() { return HttpClientBuilder.create().build(); }
 
     @Override
     public Oppfolgingsinfo hentOppfolgingsinfo(String fodselsnummer, LDAPService ldapService) {
@@ -87,9 +88,11 @@ public class OppfolgingsinfoApiServiceImpl implements OppfolgingsinfoApiService 
         HttpGet request = new HttpGet(url);
         request.addHeader(AUTHORIZATION, "Bearer " + SubjectHandler.getSubjectHandler().getInternSsoToken());
         HttpResponse response = client.execute(request);
-        if (response.getStatusLine().getStatusCode() != 200) {
-            logger.warn("Oppfølging svarte med statuskode: ", response.getStatusLine().getStatusCode());
+        int statusCode = response.getStatusLine().getStatusCode();
+        if (statusCode != 200) {
+            throw new IllegalStateException("Oppfølging svarte med statuskode: " + statusCode);
+        } else {
+            return response.getEntity().getContent();
         }
-        return response.getEntity().getContent();
     }
 }
