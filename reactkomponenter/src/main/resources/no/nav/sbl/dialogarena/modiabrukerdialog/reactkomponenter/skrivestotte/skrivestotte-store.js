@@ -121,8 +121,10 @@ class SkrivstotteStore extends Store {
     }
 
     autofullfor(tekst, autofullforMap) {
-        return tekst.replace(/((.)\s*|^)\[(.*?)]/g, (entierMatchedString, prefix, precedingPunctiationOrChar, nokkel) => {
-            const startMedStorBokstav = precedingPunctiationOrChar === undefined || precedingPunctiationOrChar.startsWith('.');
+        const FINN_PLACEHOLDER_NOKKEL_OG_TEGN_FOER_WHITESPACE = /((.)\s*|^)\[(.*?)]/g;
+
+        return tekst.replace(FINN_PLACEHOLDER_NOKKEL_OG_TEGN_FOER_WHITESPACE, (entierMatchedString, prefix, tegnOgWhitespaceFoerNokkel, nokkel) => {
+            const startMedStorBokstav = tegnOgWhitespaceFoerNokkel === undefined || tegnOgWhitespaceFoerNokkel.startsWith('.');
             const verdi = getVerdi(autofullforMap, nokkel, this.state.valgtLocale);
             prefix = prefix || '';
             return prefix + (startMedStorBokstav ? capitalize(verdi) : verdi);
