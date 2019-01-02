@@ -6,9 +6,11 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.AnsattEnhet;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.oppfolgingsinfo.Oppfolgingsinfo;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.oppfolgingsinfo.rest.OppfolgingsEnhetOgVeileder;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.oppfolgingsinfo.rest.OppfolgingsStatus;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.oppfolgingsinfo.rest.Oppfolgingsenhet;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.ldap.LDAPService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.oppfolgingsinfo.OppfolgingsinfoApiService;
 import no.nav.sbl.rest.RestUtils;
+import org.jetbrains.annotations.NotNull;
 
 import javax.inject.Inject;
 
@@ -30,10 +32,28 @@ public class OppfolgingsinfoApiServiceImpl implements OppfolgingsinfoApiService 
     @Override
     public Oppfolgingsinfo hentOppfolgingsinfo(String fodselsnummer, LDAPService ldapService) {
         OppfolgingsStatus status = hentOppfolgingStatus(fodselsnummer);
-        OppfolgingsEnhetOgVeileder enhetOgVeileder = hentOppfolgingsEnhetOgVeileder(fodselsnummer);
+        OppfolgingsEnhetOgVeileder enhetOgVeileder;
+        if (status.isUnderOppfolging() == true) {
+            enhetOgVeileder = hentOppfolgingsEnhetOgVeileder(fodselsnummer);
+        } else {
+            enhetOgVeileder = setTomEnhet();
+        }
+
         return new Oppfolgingsinfo(status.isUnderOppfolging())
                 .withVeileder(hentSaksbehandler(enhetOgVeileder.getVeilederId(), ldapService))
                 .withOppfolgingsenhet(new AnsattEnhet(enhetOgVeileder.getOppfolgingsenhet().getEnhetId(), enhetOgVeileder.getOppfolgingsenhet().getNavn()));
+    }
+
+    @NotNull
+    private OppfolgingsEnhetOgVeileder setTomEnhet() {
+        OppfolgingsEnhetOgVeileder enhetOgVeileder;
+        enhetOgVeileder = new OppfolgingsEnhetOgVeileder();
+        Oppfolgingsenhet oppfolgingsenhet = new Oppfolgingsenhet();
+        oppfolgingsenhet.setEnhetId("");
+        oppfolgingsenhet.setNavn("");
+        enhetOgVeileder.setOppfolgingsenhet(oppfolgingsenhet);
+        enhetOgVeileder.setVeilederId("");
+        return enhetOgVeileder;
     }
 
     public void ping() {
