@@ -23,6 +23,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.sak.rest.SaksoversiktController;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.ytelse.YtelseController;
 import no.nav.sbl.dialogarena.varsel.rest.VarslerController;
 import org.glassfish.jersey.server.ResourceConfig;
+import no.nav.kjerneinfo.consumer.organisasjon.OrganisasjonService;
 
 public class RestConfig extends ResourceConfig {
 
@@ -53,7 +54,8 @@ public class RestConfig extends ResourceConfig {
                 UtbetalingController.class,
                 YtelseController.class,
                 OppfolgingController.class,
-                SakerController.class
+                SakerController.class,
+                OrganisasjonService.class
         );
     }
 }

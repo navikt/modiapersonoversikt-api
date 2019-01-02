@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.ytelse
 
+import no.nav.kjerneinfo.consumer.organisasjon.OrganisasjonService
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.Feature
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.UnleashService
 import no.nav.sykmeldingsperioder.consumer.foreldrepenger.ForeldrepengerServiceBi
@@ -17,7 +18,8 @@ import javax.ws.rs.core.MediaType
 class YtelseController @Inject constructor(private val sykepengerService: SykepengerServiceBi,
                                            private val forelderpengerService: ForeldrepengerServiceBi,
                                            private val pleiepengerService: PleiepengerService,
-                                           private val unleashService: UnleashService) {
+                                           private val unleashService: UnleashService,
+                                           private val organisasjonService: OrganisasjonService) {
 
     @GET
     @Path("sykepenger/{fnr}")
@@ -40,6 +42,6 @@ class YtelseController @Inject constructor(private val sykepengerService: Sykepe
     fun hentPleiepenger(@PathParam("fnr") fødselsnummer: String): Map<String, Any?> {
         check(unleashService.isEnabled(Feature.NYTT_VISITTKORT))
 
-        return PleiepengerUttrekk(pleiepengerService).hent(fødselsnummer)
+        return PleiepengerUttrekk(pleiepengerService, organisasjonService).hent(fødselsnummer)
     }
 }
