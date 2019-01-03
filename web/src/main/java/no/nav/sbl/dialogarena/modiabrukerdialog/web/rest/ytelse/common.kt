@@ -51,10 +51,5 @@ private fun hentKreditorTrekk(kreditortrekk: List<Kreditortrekk>): List<Map<Stri
     }
 }
 
-fun hentArbeidsgiverNavn(organisasjonService: OrganisasjonService, orgnr: String): String? {
-    val org = organisasjonService.hentNoekkelinfo(orgnr)
-    if (org.isPresent) {
-        return org.get().navn
-    }
-    return null
-}
+fun hentArbeidsgiverNavn(organisasjonService: OrganisasjonService, orgnr: String): String? =
+    organisasjonService.hentNoekkelinfo(orgnr).orElse(null).navn
