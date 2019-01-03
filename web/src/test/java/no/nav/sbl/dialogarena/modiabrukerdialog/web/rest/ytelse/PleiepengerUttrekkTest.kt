@@ -3,8 +3,11 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.ytelse
 import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.whenever
+import no.nav.kjerneinfo.consumer.organisasjon.OrganisasjonService
+import no.nav.kjerneinfo.consumer.organisasjon.OrganisasjonV4ServiceImpl
 import no.nav.modig.core.exception.AuthorizationException
 import no.nav.sykmeldingsperioder.consumer.pleiepenger.PleiepengerServiceImpl
+import no.nav.tjeneste.virksomhet.organisasjon.v4.OrganisasjonV4
 import no.nav.tjeneste.virksomhet.pleiepenger.v1.HentPleiepengerettighetSikkerhetsbegrensning
 import no.nav.tjeneste.virksomhet.pleiepenger.v1.PleiepengerV1
 import no.nav.tjeneste.virksomhet.pleiepenger.v1.informasjon.WSPerson
@@ -21,10 +24,12 @@ private const val BARNETS_FNR = "01010012345"
 internal class PleiepengerUttrekkTest {
 
     private val pleiepengerV1: PleiepengerV1 = mock()
-
     private val service = PleiepengerServiceImpl(pleiepengerV1)
 
-    private val uttrekk = PleiepengerUttrekk(service)
+    private val org:  OrganisasjonV4 = mock()
+    private val orgService = OrganisasjonV4ServiceImpl(org)
+
+    private val uttrekk = PleiepengerUttrekk(service, orgService)
 
     @Test
     fun`Kaster Auth exception`() {
