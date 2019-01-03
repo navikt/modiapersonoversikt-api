@@ -2,6 +2,8 @@ import Utils from './../utils/utils-module';
 import Store from './../utils/store';
 import Ajax from './../utils/ajax';
 import SkrivestotteTracking from './skrivestotte-tracking';
+import {getVerdi} from "./nokler";
+import {capitalize} from "lodash";
 
 class SkrivstotteStore extends Store {
     constructor(props) {
@@ -103,7 +105,7 @@ class SkrivstotteStore extends Store {
             let eksisterendeTekst = typeof tekstfelt.value === 'undefined' ? '' : tekstfelt.value;
             eksisterendeTekst += eksisterendeTekst.length === 0 ? '' : '\n';
             tekstfelt.focus();
-            tekstfelt.value = eksisterendeTekst + SkrivstotteStore.autofullfor(
+            tekstfelt.value = eksisterendeTekst + this.autofullfor(
                 SkrivstotteStore.stripEmTags(
                     Utils.getInnhold(this.state.valgtTekst, this.state.valgtLocale)
                 ), this.state.autofullfor);
@@ -116,6 +118,17 @@ class SkrivstotteStore extends Store {
         }, 0);
 
         SkrivestotteTracking.trackUsage(this.state.valgtTekst);
+    }
+
+    autofullfor(tekst, autofullforMap) {
+        const FINN_PLACEHOLDER_NOKKEL_OG_TEGN_FOER_WHITESPACE = /((.)\s*|^)\[(.*?)]/g;
+
+        return tekst.replace(FINN_PLACEHOLDER_NOKKEL_OG_TEGN_FOER_WHITESPACE, (entierMatchedString, prefix, tegnOgWhitespaceFoerNokkel, nokkel) => {
+            const startMedStorBokstav = tegnOgWhitespaceFoerNokkel === undefined || tegnOgWhitespaceFoerNokkel.startsWith('.');
+            const verdi = getVerdi(autofullforMap, nokkel, this.state.valgtLocale);
+            prefix = prefix || '';
+            return prefix + (startMedStorBokstav ? capitalize(verdi) : verdi);
+        });
     }
 
     static _updateScroll(tabliste, valgtIndex) {
@@ -152,52 +165,6 @@ class SkrivstotteStore extends Store {
 
     static stripEmTags(tekst) {
         return tekst.replace(/<em>(.*?)<\/em>/g, '$1');
-    }
-
-    static autofullfor(tekst, autofullforMap) {
-        const nokler = {
-            'bruker.fnr': autofullforMap.bruker.fnr,
-            'bruker.fornavn': autofullforMap.bruker.fornavn,
-            'bruker.etternavn': autofullforMap.bruker.etternavn,
-            'bruker.navn': autofullforMap.bruker.navn,
-            'bruker.navkontor': autofullforMap.bruker.navkontor,
-            'bruker.subjekt': this.subjektPronomen(autofullforMap.bruker.kjonn),
-            'bruker.objekt': this.objektPronomen(autofullforMap.bruker.kjonn),
-            'saksbehandler.fornavn': autofullforMap.saksbehandler.fornavn,
-            'saksbehandler.etternavn': autofullforMap.saksbehandler.etternavn,
-            'saksbehandler.navn': autofullforMap.saksbehandler.navn,
-            'saksbehandler.enhet': autofullforMap.saksbehandler.enhet
-        };
-
-        return tekst.replace(/\[(.*?)]/g, (res, resultat) => {
-            const verdi = nokler[resultat];
-            if (typeof verdi === 'undefined') {
-                return '[ukjent nøkkel]';
-            }
-            return nokler[resultat] || '[fant ingen verdi]';
-        });
-    }
-
-    static objektPronomen(kjonn) {
-        switch (kjonn) {
-            case 'K':
-                return 'henne';
-            case 'M':
-                return 'ham';
-            default:
-                return null;
-        }
-    }
-
-    static subjektPronomen(kjonn) {
-        switch (kjonn) {
-            case 'K':
-                return 'hun';
-            case 'M':
-                return 'han';
-            default:
-                return null;
-        }
     }
 }
 
