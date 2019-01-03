@@ -42,7 +42,8 @@ private const val FORNAVN = "Peter"
 private const val MELLOMNAVN = "Wessel"
 private const val ETTERNAVN = "Zapffe"
 
-private const val CONAVN = "Art Vandelay"
+private const val TILLEGGSADRESSE = "Art Vandelay"
+private const val TILLEGGSADRESSETYPE = "C/O"
 private const val GATENAVN = "Storgata"
 private const val HUSNUMMER = "42"
 private const val HUSBOKSTAV = "A"
@@ -179,7 +180,7 @@ class BrukerprofilControllerTest {
         fun `Kaller tjenesten med gateadresse hvis den skal settes`() {
             controller.endreAdresse(AREMARK_FNR, EndreAdresseRequest(EndreAdresseRequest.NorskAdresse(
                     EndreAdresseRequest.NorskAdresse.Gateadresse(
-                            tilleggsadresse = CONAVN,
+                            tilleggsadresse = TILLEGGSADRESSE,
                             gatenavn = GATENAVN,
                             husnummer = HUSNUMMER,
                             husbokstav = HUSBOKSTAV,
@@ -194,7 +195,8 @@ class BrukerprofilControllerTest {
                     assertNull(midlertidigadresseUtland)
                     assertNotNull(midlertidigadresseNorge)
                     (midlertidigadresseNorge as Gateadresse).run {
-                        assertEquals(CONAVN, coadresse)
+                        assertEquals(TILLEGGSADRESSE, tilleggsadresse)
+                        assertEquals(TILLEGGSADRESSETYPE, tilleggsadresseType)
                         assertEquals(GATENAVN, gatenavn)
                         assertEquals(HUSNUMMER, husnummer)
                         assertEquals(HUSBOKSTAV, husbokstav)
@@ -211,7 +213,7 @@ class BrukerprofilControllerTest {
         fun `Kaller tjenesten med postboksadresse hvis den skal settes`() {
             controller.endreAdresse(AREMARK_FNR, EndreAdresseRequest(EndreAdresseRequest.NorskAdresse(
                     postboksadresse = EndreAdresseRequest.NorskAdresse.Postboksadresse(
-                            tilleggsadresse = CONAVN,
+                            tilleggsadresse = TILLEGGSADRESSE,
                             postnummer = POSTNUMMER,
                             gyldigTil = OM_FIRE_UKER,
                             postboksanlegg = POSTBOKSANLEGG,
@@ -224,7 +226,8 @@ class BrukerprofilControllerTest {
                     assertNull(midlertidigadresseUtland)
                     assertNotNull(midlertidigadresseNorge)
                     (midlertidigadresseNorge as Postboksadresse).run {
-                        assertEquals(CONAVN, coadresse)
+                        assertEquals(TILLEGGSADRESSE, tilleggsadresse)
+                        assertEquals(TILLEGGSADRESSETYPE, tilleggsadresseType)
                         assertEquals(POSTNUMMER, poststed)
                         assertEquals("$OM_FIRE_UKER", "${postleveringsPeriode.to}")
                         assertEquals(POSTBOKSANLEGG, postboksanlegg)
@@ -239,7 +242,7 @@ class BrukerprofilControllerTest {
         fun `Kaller tjenesten med matrikkeladresse hvis den skal settes`() {
             controller.endreAdresse(AREMARK_FNR, EndreAdresseRequest(EndreAdresseRequest.NorskAdresse(
                     matrikkeladresse = EndreAdresseRequest.NorskAdresse.Matrikkeladresse(
-                            tilleggsadresse = CONAVN,
+                            tilleggsadresse = TILLEGGSADRESSE,
                             postnummer = POSTNUMMER,
                             gyldigTil = OM_FIRE_UKER,
                             eiendomsnavn = EIENDOMSNAVN
@@ -251,7 +254,8 @@ class BrukerprofilControllerTest {
                     assertNull(midlertidigadresseUtland)
                     assertNotNull(midlertidigadresseNorge)
                     (midlertidigadresseNorge as Matrikkeladresse).run {
-                        assertEquals(CONAVN, coadresse)
+                        assertEquals(TILLEGGSADRESSE, tilleggsadresse)
+                        assertEquals(TILLEGGSADRESSETYPE, tilleggsadresseType)
                         assertEquals(POSTNUMMER, poststed)
                         assertEquals("$OM_FIRE_UKER", "${postleveringsPeriode.to}")
                         assertEquals(EIENDOMSNAVN, eiendomsnavn)
