@@ -38,7 +38,6 @@ public class OppfolgingsinfoApiServiceImpl implements OppfolgingsinfoApiService 
         } else {
             enhetOgVeileder = setTomEnhet();
         }
-
         return new Oppfolgingsinfo(status.isUnderOppfolging())
                 .withVeileder(hentSaksbehandler(enhetOgVeileder.getVeilederId(), ldapService))
                 .withOppfolgingsenhet(new AnsattEnhet(enhetOgVeileder.getOppfolgingsenhet().getEnhetId(), enhetOgVeileder.getOppfolgingsenhet().getNavn()));
@@ -95,5 +94,4 @@ public class OppfolgingsinfoApiServiceImpl implements OppfolgingsinfoApiService 
                 .get(targetClass)
         );
     }
-
 }
