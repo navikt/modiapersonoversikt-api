@@ -1,7 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.ytelse
 
 import no.nav.kjerneinfo.consumer.organisasjon.OrganisasjonService
-import no.nav.kjerneinfo.domain.organisasjon.Organisasjon
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.DATOFORMAT
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.lagPleiepengePeriode
 import no.nav.sykmeldingsperioder.consumer.pleiepenger.PleiepengerService
@@ -11,7 +10,6 @@ import no.nav.sykmeldingsperioder.domain.pleiepenger.Pleiepengeperiode
 import no.nav.sykmeldingsperioder.domain.pleiepenger.Pleiepengerrettighet
 import no.nav.sykmeldingsperioder.domain.pleiepenger.Vedtak
 import java.time.format.DateTimeFormatter
-import java.util.*
 
 class PleiepengerUttrekk constructor(private val pleiepengerService: PleiepengerService,
                                      private val organisasjonService: OrganisasjonService) {
@@ -60,7 +58,7 @@ class PleiepengerUttrekk constructor(private val pleiepengerService: Pleiepenger
     private fun hentArbeidsforhold(arbeidsforhold: List<Arbeidsforhold>): List<Map<String, Any?>> {
         return arbeidsforhold.map {
             mapOf(
-                    "arbeidsgiverNavn" to hentArbeidsgiverNavn(it.arbeidsgiverOrgnr),
+                    "arbeidsgiverNavn" to hentArbeidsgiverNavn(organisasjonService, it.arbeidsgiverOrgnr),
                     "arbeidsgiverKontonr" to it.arbeidsgiverKontonr,
                     "inntektsperiode" to it.inntektsperiode,
                     "inntektForPerioden" to it.inntektForPerioden,
@@ -84,13 +82,5 @@ class PleiepengerUttrekk constructor(private val pleiepengerService: Pleiepenger
                     "pleiepengegrad" to it.pleiepengegrad
             )
         }
-    }
-
-    private fun hentArbeidsgiverNavn(orgnr: String): String? {
-        val org = organisasjonService.hentNoekkelinfo(orgnr)
-        if (org.isPresent) {
-            return org.get().navn
-        }
-        return null
     }
 }
