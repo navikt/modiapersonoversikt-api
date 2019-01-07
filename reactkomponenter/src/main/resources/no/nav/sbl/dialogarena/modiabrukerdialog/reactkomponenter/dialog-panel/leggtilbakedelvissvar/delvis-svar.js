@@ -31,13 +31,14 @@ class DelvisSvar extends Component {
         this.ferdigstillHenvendelse = this.ferdigstillHenvendelse.bind(this);
 
         this.state = {
-            svarValue: '',
+            svarValue: window.dialogTekst,
             valgtTemagruppe: TEMAGRUPPE_PLACEHOLDER,
             panelState: panelState.INITIALIZED,
             valideringsFeil: false,
             tekstValidFiel: false,
             temagruppeValidFeil: false
         };
+        window.dialogTekst = undefined;
     }
 
     ferdigstillHenvendelse() {

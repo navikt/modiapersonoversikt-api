@@ -163,16 +163,12 @@ public class FortsettDialogPanel extends GenericPanel<HenvendelseVM> {
             }
 
             private String settTekstInnIDelvisSvarTekstfeltHack() {
+                // Wicket kjenner ikke innhold i tekstfeltet før form`et submittes.
+                // Alle forsøk på å hente teksten som er skrevet i onClick-funksjonen returnerer null
+                // Mellomlagrer på window, dette hentes ut i delvis.svar.js før variablen settes til undefined.
                 return "(function () {" +
                         "    const value = document.getElementsByClassName('dialogpanel')[0].getElementsByTagName('textarea')[0].value;" +
-                        "    setTimeout(function () {" +
-                        "        const textarea = document.getElementsByClassName('dialogpanel')[0].getElementsByTagName('textarea')[0];" +
-                        "        textarea.value = value;" +
-                        "        const ev = document.createEvent('Event');" +
-                        "        ev.initEvent('input', true, true);" +
-                        "        ev.simulated = true;" +
-                        "        textarea.dispatchEvent(ev);" +
-                        "    }, 1000);" +
+                        "    window.dialogTekst = value; " +
                         "})();";
             }
         };
