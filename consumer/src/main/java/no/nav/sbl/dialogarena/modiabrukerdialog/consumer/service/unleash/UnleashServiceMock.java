@@ -9,6 +9,11 @@ public class UnleashServiceMock implements UnleashService {
     }
 
     @Override
+    public boolean isEnabled(String feature) {
+        return false;
+    }
+
+    @Override
     public PingResult ping() {
         return new PingResult(PingResult.ServiceResult.UNPINGABLE, 0);
     }
