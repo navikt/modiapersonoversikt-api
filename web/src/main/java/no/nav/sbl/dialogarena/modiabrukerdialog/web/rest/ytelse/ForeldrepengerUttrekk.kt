@@ -5,6 +5,9 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.DATOFORMAT
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.lagPeriode
 import no.nav.sykmeldingsperioder.consumer.foreldrepenger.ForeldrepengerServiceBi
 import no.nav.sykmeldingsperioder.consumer.foreldrepenger.mapping.to.ForeldrepengerListeRequest
+import no.nav.sykmeldingsperioder.domain.Arbeidsforhold
+import no.nav.sykmeldingsperioder.domain.foreldrepenger.Adopsjon
+import no.nav.sykmeldingsperioder.domain.foreldrepenger.Foedsel
 import no.nav.sykmeldingsperioder.domain.foreldrepenger.Foreldrepengeperiode
 import org.joda.time.LocalDate
 
@@ -14,23 +17,48 @@ class ForeldrepengerUttrekk constructor(private val forelderpengerService: Forel
         val foreldrepenger = forelderpengerService.hentForeldrepengerListe(ForeldrepengerListeRequest(fødselsnummer, Periode(LocalDate.now().minusYears(2), LocalDate.now())))
 
         return mapOf(
-                "foreldrepenger" to foreldrepenger?.foreldrepengerettighet?.let { mapOf(
-                        "forelder" to it.forelder?.ident,
-                        "andreForeldersFnr" to it.andreForeldersFnr,
-                        "antallBarn" to it.antallBarn,
-                        "barnetsFødselsdato" to it.barnetsFoedselsdato?.toString(DATOFORMAT),
-                        "dekningsgrad" to it.dekningsgrad,
-                        "fedrekvoteTom" to it.fedrekvoteTom?.toString(DATOFORMAT),
-                        "mødrekvoteTom" to it.moedrekvoteTom?.toString(DATOFORMAT),
-                        "foreldrepengetype" to it.foreldrepengetype?.termnavn,
-                        "graderingsdager" to it.graderingsdager,
-                        "restDager" to it.restDager,
-                        "rettighetFom" to it.rettighetFom?.toString(DATOFORMAT),
-                        "eldsteIdDato" to it.eldsteIdDato?.toString(DATOFORMAT),
-                        "foreldreAvSammeKjønn" to it.foreldreAvSammeKjoenn?.termnavn,
-                        "periode" to it.periode?.let { hentForeldrepengeperioder(it) }
-                ) }
+                "foreldrepenger" to foreldrepenger?.foreldrepengerettighet?.let {
+                    mapOf(
+                            "forelder" to it.forelder?.ident,
+                            "andreForeldersFnr" to it.andreForeldersFnr,
+                            "antallBarn" to it.antallBarn,
+                            "barnetsFødselsdato" to it.barnetsFoedselsdato?.toString(DATOFORMAT),
+                            "dekningsgrad" to it.dekningsgrad,
+                            "fedrekvoteTom" to it.fedrekvoteTom?.toString(DATOFORMAT),
+                            "mødrekvoteTom" to it.moedrekvoteTom?.toString(DATOFORMAT),
+                            "foreldrepengetype" to it.foreldrepengetype?.termnavn,
+                            "graderingsdager" to it.graderingsdager,
+                            "restDager" to it.restDager,
+                            "rettighetFom" to it.rettighetFom?.toString(DATOFORMAT),
+                            "eldsteIdDato" to it.eldsteIdDato?.toString(DATOFORMAT),
+                            "foreldreAvSammeKjønn" to it.foreldreAvSammeKjoenn?.termnavn,
+                            "periode" to it.periode?.let { hentForeldrepengeperioder(it) },
+                            "slutt" to it.slutt?.toString(DATOFORMAT),
+                            "arbeidsforhold" to it.arbeidsforholdListe?.let { hentArbeidsforhold(it) },
+                            "erArbeidsgiverperiode" to it.erArbeidsgiverperiode,
+                            "arbeidskategori" to it.arbeidskategori?.termnavn,
+                            when (it) {
+                                is Adopsjon -> "omsorgsovertakelse" to it.omsorgsovertakelse?.toString(DATOFORMAT)
+                                is Foedsel -> "termin" to it.termin?.toString(DATOFORMAT)
+                                else -> throw IllegalArgumentException("Ugyldig foreldrepengetype")
+                            }
+                    )
+                }
         )
+    }
+
+    private fun hentArbeidsforhold(arbeidsforhold: List<Arbeidsforhold>): List<Map<String, Any?>> {
+        return arbeidsforhold.map {
+            mapOf(
+                    "navn" to it.arbeidsgiverNavn,
+                    "kontonr" to it.arbeidsgiverKontonr,
+                    "inntektsperiode" to it.inntektsperiode?.termnavn,
+                    "inntektForPerioden" to it.inntektForPerioden,
+                    "sykepengerFom" to it.sykepengerFom?.toString(DATOFORMAT),
+                    "refusjonTom" to it.refusjonTom?.toString(DATOFORMAT),
+                    "refusjonstype" to it.refusjonstype?.termnavn
+            )
+        }
     }
 
     private fun hentForeldrepengeperioder(foreldrepengeperioder: List<Foreldrepengeperiode>): List<Map<String, Any?>> {
