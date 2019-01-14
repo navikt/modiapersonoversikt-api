@@ -1,6 +1,5 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.featuretoggle
 
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.Feature
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.UnleashService
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -20,17 +19,11 @@ class FeatureToggleController @Inject constructor(private val unleashService: Un
     @GET
     @Path("/{id}")
     @Produces(APPLICATION_JSON)
-    fun hentMedId(@PathParam("id") toggleId: String): Map<String, Boolean> {
-        val feature = getFeature(APPLICATION_PREFIX + toggleId)
+    fun hentMedId(@PathParam("id") toggleId: String): Boolean =
+            unleashService.isEnabled(sjekkPrefix(toggleId))
 
-        if(feature == null) {
-            logger.warn("Featuretoggle-enum ikke funnet: " + APPLICATION_PREFIX + toggleId)
-            return mapOf(APPLICATION_PREFIX + toggleId to false)
-        }
-        return mapOf(APPLICATION_PREFIX + toggleId to unleashService.isEnabled(feature))
-    }
 
-    fun getFeature(propertyKey: String) : Feature? {
-        return Feature.values().find { it -> propertyKey.equals(it.propertyKey) }
+    fun sjekkPrefix(propertyKey: String) : String {
+        return if (propertyKey.contains(".")) propertyKey else APPLICATION_PREFIX + propertyKey
     }
 }

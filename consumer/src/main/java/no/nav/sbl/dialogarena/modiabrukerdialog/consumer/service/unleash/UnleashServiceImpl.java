@@ -35,6 +35,11 @@ public class UnleashServiceImpl implements UnleashService {
     }
 
     @Override
+    public boolean isEnabled(String feature) {
+        return defaultUnleash.isEnabled(feature);
+    }
+
+    @Override
     public PingResult ping() {
         long start = System.currentTimeMillis();
         try {
