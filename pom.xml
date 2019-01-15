@@ -143,6 +143,7 @@
 
         <sonar.skippedModules>modiabrukerdialog-mock</sonar.skippedModules>
         <apache.http.version>4.4</apache.http.version>
+        <gson.version>2.8.5</gson.version>
     </properties>
 
     <dependencyManagement>
@@ -591,6 +592,11 @@
                 <artifactId>oppfoelging-v1-tjenestespesifikasjon</artifactId>
                 <version>${oppfoelging-v1-tjenestespesifikasjon-version}</version>
             </dependency>
+            <dependency>
+                <groupId>no.nav.tjenester</groupId>
+                <artifactId>person-api-oppslag-v1</artifactId>
+                <version>1.9.0</version>
+            </dependency>
 
             <!--Modig-->
             <dependency>
@@ -981,6 +987,11 @@
                 <version>${javax.inject.version}</version>
             </dependency>
 
+            <dependency>
+                <groupId>com.google.code.gson</groupId>
+                <artifactId>gson</artifactId>
+                <version>${gson.version}</version>
+            </dependency>
             <dependency>
                 <groupId>net.sf.ehcache</groupId>
                 <artifactId>ehcache-core</artifactId>
