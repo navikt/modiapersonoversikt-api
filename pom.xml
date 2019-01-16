@@ -595,7 +595,7 @@
             <dependency>
                 <groupId>no.nav.tjenester</groupId>
                 <artifactId>person-api-oppslag-v1</artifactId>
-                <version>1.9.0</version>
+                <version>1.10.0</version>
             </dependency>
 
             <!--Modig-->

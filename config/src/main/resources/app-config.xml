@@ -82,6 +82,8 @@
         <rest alias="kodeverksmapper.ping" mapToProperty="kodeverksmapper.ping"/>
         <rest alias="unleash-api" mapToProperty="unleash"/>
         <rest alias="veilArbOppfolgingAPI" mapToProperty="veilarboppfolging.api"/>
+        <rest alias="security-token-service-token" mapToProperty="sts.token.api"/>
+        <rest alias="Persondokumenter_v1" mapToProperty="persondokumenter.api"/>
         <applicationProperties alias="modiabrukerdialog.properties"/>
         <baseUrl alias="modiabrukerdialog.standardtekster.tilbakemelding" mapToProperty="modiabrukerdialog.standardtekster.tilbakemelding"/>
         <!-- App-->
