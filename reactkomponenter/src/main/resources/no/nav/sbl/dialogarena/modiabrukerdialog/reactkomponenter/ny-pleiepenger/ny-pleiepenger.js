@@ -5,7 +5,11 @@ import PleiepengerLamell from 'modiapersonoversikt/build/dist/components/standal
 
 class NyPleiepenger extends React.Component {
     render() {
-        return <PleiepengerLamell fødselsnummer={this.props.fødselsnummer} barnetsFødselsnummer={this.props.barnetsFødselsnummer}/>
+        return (
+            <div className="ny-frontend">
+                <PleiepengerLamell fødselsnummer={this.props.fødselsnummer} barnetsFødselsnummer={this.props.barnetsFødselsnummer}/>
+            </div>
+        );
     }
 }
 
