@@ -139,6 +139,7 @@ public class PersonPage extends BasePage {
         boolean nyUtbetalingerEnabled = unleashService.isEnabled(Feature.NY_UTBETALING);
         boolean nyBrukerprofilEnabled = unleashService.isEnabled(Feature.NY_BRUKERPROFIL);
         boolean nySaksoversikt = unleashService.isEnabled(Feature.NY_SAKSOVERSIKT);
+        boolean nyPleiepenger = unleashService.isEnabled(Feature.NY_PLEIEPENGER);
         lamellContainer = new LamellContainer("lameller", getSession(), grunnInfo, nyBrukerprofilEnabled, nySaksoversikt);
 
         oppgiBegrunnelseModal = new ReactBegrunnelseModal("oppgiBegrunnelseModal");
@@ -150,6 +151,7 @@ public class PersonPage extends BasePage {
         hode.add(hasCssClassIf("nytt-visittkort-toggle", Model.of(nyttVisittkortEnabled)));
         hode.add(hasCssClassIf("ny-utbetalinger-toggle", Model.of(nyUtbetalingerEnabled)));
         hode.add(hasCssClassIf("ny-saksoversikt-toggle", Model.of(nySaksoversikt)));
+        hode.add(hasCssClassIf("ny-pleiepenger-toggle", Model.of(nyPleiepenger)));
 
         dialogPanel = new DialogPanel("dialogPanel", grunnInfo);
         add(
