@@ -19,6 +19,7 @@ import NyttVisittkort from './nytt-visittkort/nytt-visittkort';
 import NyUtbetaling from './ny-utbetaling/ny-utbetaling';
 import NySaksoversikt from './ny-saksoversikt/ny-saksoversikt';
 import NyBrukerprofil from './ny-brukerprofil/ny-brukerprofil';
+import NyPleiepenger from './ny-pleiepenger/ny-pleiepenger';
 
 import React from './nav-react';
 import ReactDOM from 'react-dom';
@@ -44,7 +45,8 @@ window.ModiaJS = {
         NyttVisittkort,
         NyUtbetaling,
         NySaksoversikt,
-        NyBrukerprofil
+        NyBrukerprofil,
+        NyPleiepenger
     },
     InitializedComponents: {},
     React,
