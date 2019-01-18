@@ -3,7 +3,7 @@ import Store from './../utils/store';
 import Ajax from './../utils/ajax';
 import SkrivestotteTracking from './skrivestotte-tracking';
 import {getVerdi} from "./nokler";
-import {capitalize} from "lodash";
+import {upperFirst} from "lodash";
 
 class SkrivstotteStore extends Store {
     constructor(props) {
@@ -127,7 +127,7 @@ class SkrivstotteStore extends Store {
             const startMedStorBokstav = tegnOgWhitespaceFoerNokkel === undefined || tegnOgWhitespaceFoerNokkel.startsWith('.');
             const verdi = getVerdi(autofullforMap, nokkel, this.state.valgtLocale);
             prefix = prefix || '';
-            return prefix + (startMedStorBokstav ? capitalize(verdi) : verdi);
+            return prefix + (startMedStorBokstav ? upperFirst(verdi) : verdi);
         });
     }
 
