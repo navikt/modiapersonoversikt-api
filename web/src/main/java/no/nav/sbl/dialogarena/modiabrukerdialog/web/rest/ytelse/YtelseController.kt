@@ -9,18 +9,19 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.Wrapper
 import no.nav.sykmeldingsperioder.consumer.foreldrepenger.ForeldrepengerServiceBi
 import no.nav.sykmeldingsperioder.consumer.pleiepenger.PleiepengerService
 import no.nav.sykmeldingsperioder.consumer.sykepenger.SykepengerServiceBi
-import org.springframework.beans.factory.annotation.Qualifier
 import javax.inject.Inject
+import javax.inject.Named
 import javax.ws.rs.GET
 import javax.ws.rs.Path
 import javax.ws.rs.PathParam
 import javax.ws.rs.Produces
 import javax.ws.rs.core.MediaType
+
 @Path("/ytelse")
 @Produces(MediaType.APPLICATION_JSON)
 class YtelseController @Inject constructor(private val sykepengerService: SykepengerServiceBi,
-                                           @Qualifier("foreldrepengerServiceDefault") private val foreldrepengerServiceDefault: Wrapper<ForeldrepengerServiceBi>,
-                                           @Qualifier("foreldrepengerServiceMock") private val foreldrepengerServiceMock: Wrapper<ForeldrepengerServiceBi>,
+                                           @Named("foreldrepengerServiceDefault") private val foreldrepengerServiceDefault: Wrapper<ForeldrepengerServiceBi>,
+                                           @Named("foreldrepengerServiceMock") private val foreldrepengerServiceMock: Wrapper<ForeldrepengerServiceBi>,
                                            private val pleiepengerService: PleiepengerService,
                                            private val unleashService: UnleashService,
                                            private val organisasjonService: OrganisasjonService) {

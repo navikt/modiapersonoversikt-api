@@ -153,7 +153,8 @@ public class LamellContainer extends TokenLamellPanel implements Serializable {
         } else if (FORELDREPENGER_TYPE.equalsIgnoreCase(type)) {
             panel = new ForeldrepengerPanel(PANEL, Model.of(fnrFromRequest), Model.of(itemId));
         } else if (PLEIEPENGER_TYPE.equalsIgnoreCase(type)) {
-            panel = new PleiepengerPanel(PANEL, Model.of(fnrFromRequest), itemId);
+            boolean nyttPleiepengerPanelToggle = unleashService.isEnabled(Feature.NY_PLEIEPENGER);
+            panel = new PleiepengerPanel(PANEL, Model.of(fnrFromRequest), itemId, nyttPleiepengerPanelToggle);
             return new DefaultLamellFactory(type, itemId, "", true, (LerretFactory) (id, name) -> new GenericLerret(id, panel)) {
                 @Override
                 public IModel<String> getHeading() {
