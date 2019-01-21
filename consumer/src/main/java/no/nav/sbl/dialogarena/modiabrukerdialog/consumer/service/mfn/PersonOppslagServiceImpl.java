@@ -35,6 +35,8 @@ public class PersonOppslagServiceImpl implements PersonOppslagService {
                 .header(NAV_CALL_ID_HEADER, MDCOperations.generateCallId())
                 .header(AUTHORIZATION, "Bearer " + veilederOidcToken)
                 .header(NAV_CONSUMER_TOKEN_HEADER, "Bearer " + consumerOidcToken)
+                .header(TEMA_HEADER, ALLE_TEMA_HEADERVERDI)
+                .header(OPPLYSNINGSTYPER_HEADER, OPPLYSNINGSTYPER_HEADERVERDI)
                 .get(targetClass)
         );
     }
