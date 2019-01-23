@@ -25,19 +25,18 @@ public class StsServiceImpl {
     private Logger logger = LoggerFactory.getLogger(StsServiceImpl.class);
 
     public String hentConsumerOidcToken() {
-        String consumerId = "srvModiabrukerdialog";
-        String cachedToken = tokenCache.get(consumerId);
+        String cachedToken = tokenCache.get(MODIABRUKERDIALOG_SYSTEM_USER);
 
         if (cachedToken != null) {
             if (tokenNotExpired(cachedToken)) {
                 return cachedToken;
             } else {
-                tokenCache.remove(consumerId);
+                tokenCache.remove(MODIABRUKERDIALOG_SYSTEM_USER);
             }
         }
 
         String consumerOidcToken = getConsumerOidcToken();
-        tokenCache.put(consumerId, consumerOidcToken);
+        tokenCache.put(MODIABRUKERDIALOG_SYSTEM_USER, consumerOidcToken);
 
         return consumerOidcToken;
     }
