@@ -1,4 +1,4 @@
-package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.mfn;
+package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.person;
 
 import no.nav.brukerdialog.security.context.SubjectHandler;
 import no.nav.modig.common.MDCOperations;

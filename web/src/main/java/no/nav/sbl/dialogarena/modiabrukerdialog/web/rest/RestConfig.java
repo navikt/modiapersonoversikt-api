@@ -14,7 +14,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.henvendelse.DelsvarCont
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.kodeverk.KodeverkController;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.kontaktinformasjon.KontaktinformasjonController;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.ldap.LdapController;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.mfn.PersondokumentController;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.person.PersondokumentController;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.oppfolging.OppfolgingController;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.oppgave.OppgaveController;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.person.PersonController;

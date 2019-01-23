@@ -35,7 +35,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.kodeverk.Standa
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.kodeverksmapper.KodeverksmapperService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.ldap.LDAPServiceImpl;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.ldap.LdapContextProvider;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.mfn.PersonOppslagServiceImpl;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.person.PersonOppslagServiceImpl;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.oppfolgingsinfo.OppfolgingsenhetServiceImpl;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.oppgavebehandling.OppgaveBehandlingServiceImpl;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.organisasjonenhet.OrganisasjonEnhetV2ServiceImpl;

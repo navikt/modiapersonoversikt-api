@@ -1,7 +1,6 @@
-package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.mfn;
+package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.person;
 
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.person.PersonOppslagService
-import no.nav.sbl.dialogarena.utbetaling.domain.util.DateUtils
 import no.nav.tjenester.person.oppslag.v1.domain.personident.utenlandskidentifikasjonsnummer.UtenlandskIdentifikasjonsnummer
 import javax.inject.Inject
 import javax.ws.rs.*
