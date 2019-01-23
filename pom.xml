@@ -32,8 +32,7 @@
     </modules>
 
     <properties>
-        <common.version>2018.05.04.16.48</common.version>
-        <common.json.version>2019.01.18.23.52</common.json.version>
+        <common.version>2019.01.21.13.39-legacy-modiabrukerdialog</common.version>
         <hamcrest.version>1.3</hamcrest.version>
         <junit.version>4.12.1</junit.version>
         <junit.jupiter.version>5.0.2</junit.jupiter.version>
@@ -81,14 +80,10 @@
         <modig-wicket-test.version>1.0.0</modig-wicket-test.version>
         <modig-core-test.version>1.0.0</modig-core-test.version>
         <commons-lang3.version>3.1</commons-lang3.version>
-        <common-time.version>2018.05.09.22.35</common-time.version>
         <common-collections.version>1.0</common-collections.version>
         <common-integrasjonsutils.version>0.0.7</common-integrasjonsutils.version>
-        <common-cxf.version>2018.05.09.22.35</common-cxf.version>
         <common-kodeverk.version>1.1.2</common-kodeverk.version>
-        <common-test.version>2018.05.09.22.35</common-test.version>
         <aktorid-jaxws.version>1.3</aktorid-jaxws.version>
-        <nav-metrics.version>2018.05.09.22.35</nav-metrics.version>
 
         <!-- java-avhengigheter -->
         <javax.inject.version>1</javax.inject.version>
@@ -152,7 +147,7 @@
             <dependency>
                 <groupId>no.nav</groupId>
                 <artifactId>metrics</artifactId>
-                <version>${nav-metrics.version}</version>
+                <version>${common.version}</version>
             </dependency>
             <!-- Personsok -->
             <dependency>
@@ -530,11 +525,6 @@
                 <version>${common.version}</version>
             </dependency>
             <dependency>
-                <groupId>no.nav.common</groupId>
-                <artifactId>json</artifactId>
-                <version>${common.json.version}</version>
-            </dependency>
-            <dependency>
                 <groupId>no.nav.sbl.dialogarena</groupId>
                 <artifactId>common-collections</artifactId>
                 <version>${common-collections.version}</version>
@@ -543,6 +533,11 @@
             <dependency>
                 <groupId>no.nav.sbl.dialogarena</groupId>
                 <artifactId>common-time</artifactId>
+                <version>${common.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>no.nav.sbl</groupId>
+                <artifactId>rest</artifactId>
                 <version>${common.version}</version>
             </dependency>
             <dependency>
@@ -601,7 +596,7 @@
             <dependency>
                 <groupId>no.nav.tjenester</groupId>
                 <artifactId>person-api-oppslag-v1</artifactId>
-                <version>1.10.2</version>
+                <version>1.11.0</version>
             </dependency>
 
             <!--Modig-->

@@ -21,23 +21,24 @@ public class PersonOppslagServiceImpl implements PersonOppslagService {
         String consumerOidcToken = stsService.hentConsumerOidcToken();
         String veilederOidcToken = SubjectHandler.getSubjectHandler().getInternSsoToken();
 
-        // Dateformat?
-        Persondokument persondokument = gjorSporring(PERSONDOKUMENTER_BASEURL, consumerOidcToken, veilederOidcToken, fnr, Persondokument.class);
-
-        return persondokument;
+        return gjorSporring(PERSONDOKUMENTER_BASEURL, consumerOidcToken, veilederOidcToken, fnr, Persondokument.class);
     }
 
     private <T> T gjorSporring(String url, String consumerOidcToken, String veilederOidcToken, String fnr,  Class<T> targetClass) {
-        return RestUtils.withClient(client -> client
-                .target(url)
-                .request()
-                .header(NAV_PERSONIDENT_HEADER, fnr)
-                .header(NAV_CALL_ID_HEADER, MDCOperations.generateCallId())
-                .header(AUTHORIZATION, "Bearer " + veilederOidcToken)
-                .header(NAV_CONSUMER_TOKEN_HEADER, "Bearer " + consumerOidcToken)
-                .header(TEMA_HEADER, ALLE_TEMA_HEADERVERDI)
-                .header(OPPLYSNINGSTYPER_HEADER, OPPLYSNINGSTYPER_HEADERVERDI)
-                .get(targetClass)
-        );
+        try {
+            return RestUtils.withClient(client -> client
+                    .target(url)
+                    .request()
+                    .header(NAV_PERSONIDENT_HEADER, fnr)
+                    .header(NAV_CALL_ID_HEADER, MDCOperations.generateCallId())
+                    .header(AUTHORIZATION, "Bearer " + veilederOidcToken)
+                    .header(NAV_CONSUMER_TOKEN_HEADER, "Bearer " + consumerOidcToken)
+                    .header(TEMA_HEADER, ALLE_TEMA_HEADERVERDI)
+                    .header(OPPLYSNINGSTYPER_HEADER, OPPLYSNINGSTYPER_HEADERVERDI)
+                    .get(targetClass)
+            );
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 }

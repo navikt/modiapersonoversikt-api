@@ -39,7 +39,7 @@ public class StartJetty {
     }
 
     private static void setupProperties() {
-        SystemProperties.setFrom("jetty-environment-q.properties");
+        SystemProperties.setFrom("jetty-environment.properties");
         try {
             SystemProperties.setFrom(new FileInputStream("credentials.properties"));
         } catch (FileNotFoundException e) {
