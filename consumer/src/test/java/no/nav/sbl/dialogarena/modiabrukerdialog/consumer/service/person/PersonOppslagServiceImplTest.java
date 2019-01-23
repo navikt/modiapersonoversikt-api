@@ -1,19 +1,79 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.person;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import no.nav.json.JsonUtils;
-//import no.nav.tjenester.person.oppslag.v1.domain.Persondokument;
-//import no.nav.tjenester.person.oppslag.v1.domain.personident.folkeregisterident.Folkeregisterident;
+import no.nav.tjenester.person.oppslag.v1.domain.Persondokument;
+import no.nav.tjenester.person.oppslag.v1.domain.personident.utenlandskidentifikasjonsnummer.UtenlandskIdentifikasjonsnummer;
 import org.junit.Test;
+
+import java.util.UUID;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class PersonOppslagServiceImplTest {
 
     @Test
-    @JsonDeserialize
-    public void skalMappeDatoRiktig() {
-//        JsonUtils.fromJson("{\"gyldigFom\":\"2018-05-09\"}", Folkeregisterident.class);
+    public void skalMappeFraJsonResponseTilPersondokumentObjekt() {
+        String idnummer = "9999";
+        UUID uuid = java.util.UUID.randomUUID();
+        String land = "POL";
+
+        String opplysningsId = "qwe123";
+        String registrertINav = "2019-01-08T15:26:14.714Z";
+        String master = "NAV";
+        String kilde = "Krankenkasse";
+        String idnummerType = "test";
+        String systemkilde = "srvperson-mottak";
+        String ident = "z999999";
+        String gyldigFom = "2018-01-31";
+        String jsonResponse = "{\n" +
+                "  \"personidenter\": {\n" +
+                "    \"folkeregisteridenter\": [\n" +
+                "      {\n" +
+                "        \"idNummer\": \"10108000398\",\n" +
+                "        \"idNummertype\": \"FNR\",\n" +
+                "        \"opplysningsId\": \"abc\",\n" +
+                "        \"registrertINAV\": \"2018-12-14T10:04:33.938Z\",\n" +
+                "        \"master\": \"Folkeregisteret\",\n" +
+                "        \"kilde\": \"Synutopia\",\n" +
+                "        \"idNummerType\": \"\",\n" +
+                "        \"systemKilde\": \"ukjent\",\n" +
+                "        \"registrertAv\": \"ukjent\",\n" +
+                "        \"gyldigFom\": \"2018-05-09\"\n" +
+                "      }\n" +
+                "    ],\n" +
+                "    \"utenlandskeIdentifikasjonsnummere\": [\n" +
+                "      {\n" +
+                "        \"idNummer\": \"" + idnummer + "\",\n" +
+                "        \"utstederland\": \"" + land + "\",\n" +
+                "        \"opplysningsId\": \"" + opplysningsId + "\",\n" +
+                "        \"registrertINAV\": \"" + registrertINav + "\",\n" +
+                "        \"master\": \"" + master + "\",\n" +
+                "        \"kilde\": \"" + kilde + "\",\n" +
+                "        \"idNummertype\": \"" + idnummerType + "\",\n" +
+                "        \"systemKilde\": \"" + systemkilde + "\",\n" +
+                "        \"registrertAv\": \"" + ident + "\",\n" +
+                "        \"gyldigFom\": \"" + gyldigFom + "\"\n" +
+                "      }\n" +
+                "    ]\n" +
+                "  },\n" +
+                "  \"lineage\": {\n" +
+                "    \"nodeId\": \"" + uuid + "\"\n" +
+                "  }\n" +
+                "}";
 
 
+        Persondokument persondokument = JsonUtils.fromJson(jsonResponse, Persondokument.class);
 
+        UtenlandskIdentifikasjonsnummer utenalandskId = persondokument.getPersonidenter().getUtenlandskeIdentifikasjonsnummere().get(0);
+        assertEquals(idnummer, utenalandskId.getIdNummer());
+        assertEquals(land, utenalandskId.getUtstederland());
+        assertEquals(opplysningsId, utenalandskId.getOpplysningsId());
+        assertEquals(registrertINav, utenalandskId.getRegistrertINAV().toString());
+        assertEquals(master, utenalandskId.getMaster());
+        assertEquals(kilde, utenalandskId.getKilde());
+        assertEquals(idnummerType, utenalandskId.getIdNummertype());
+        assertEquals(systemkilde, utenalandskId.getSystemKilde());
+        assertEquals(ident, utenalandskId.getRegistrertAv());
+        assertEquals(gyldigFom, utenalandskId.getGyldigFom().toString());
     }
 }
