@@ -13,18 +13,13 @@ class PersondokumentController @Inject constructor(private val persondokumentSer
     @GET
     @Path("/")
     fun hentPersonDokument(@PathParam("fnr") fødselsnummer: String): Map<String, Any?> {
-
-        val utenlandskeIdNummerRootElement = "utenlandskeIdentifikasjonsnummere"
         try {
             val response = persondokumentService.hentPersonDokument(fødselsnummer)
             return mapOf(
-                    utenlandskeIdNummerRootElement to hentUtenlandskeIdentifikasjonsNummere(response.personidenter.utenlandskeIdentifikasjonsnummere)
+                    "utenlandskeIdentifikasjonsnummere" to hentUtenlandskeIdentifikasjonsNummere(response.personidenter.utenlandskeIdentifikasjonsnummere)
             )
-        } catch (exception: Exception) {
-            when (exception.cause) {
-                is NotFoundException -> throw NotFoundException(exception)
-                else -> throw InternalServerErrorException(exception)
-            }
+        } catch (exception: NotFoundException) {
+           throw NotFoundException(exception)
         }
     }
 

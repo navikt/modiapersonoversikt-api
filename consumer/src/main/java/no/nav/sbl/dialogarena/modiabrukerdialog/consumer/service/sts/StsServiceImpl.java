@@ -16,10 +16,9 @@ import java.util.Map;
 
 import static javax.ws.rs.core.HttpHeaders.AUTHORIZATION;
 import static javax.ws.rs.core.HttpHeaders.CONTENT_TYPE;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.Constants.*;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.RestConstants.*;
 
 public class StsServiceImpl {
-    public static final String EXPIRARY_URI = "exp";
 
     private Map<String, String> tokenCache = new HashMap<>();
     private Logger logger = LoggerFactory.getLogger(StsServiceImpl.class);
@@ -44,7 +43,7 @@ public class StsServiceImpl {
     private String getConsumerOidcToken() {
         JsonParser jsonParser = new JsonParser();
 
-        String oidcConsumerTokenResponse = gjorSporring(String.class);
+        String oidcConsumerTokenResponse = gjorSporring();
         JsonObject oidcConsumerTokenJsonObject = jsonParser.parse(oidcConsumerTokenResponse).getAsJsonObject();
 
         if (oidcConsumerTokenJsonObject == null || oidcConsumerTokenJsonObject.get("access_token") == null) {
@@ -54,28 +53,40 @@ public class StsServiceImpl {
     }
 
     private boolean tokenNotExpired(String cachedToken) {
-        JsonParser jsonParser = new JsonParser();
-        String base64encodedToken = cachedToken.split("\\.")[1];
-
-        JsonElement oidcToken = jsonParser.parse(new String(Base64.getUrlDecoder().decode(base64encodedToken)));
-        JsonElement expiry = oidcToken.getAsJsonObject().get(EXPIRARY_URI);
-
+        long expiraryInMilliseconds = getExpiraryInMilliseconds(cachedToken);
         DateTime nowPlus5mins = DateTime.now().plusMinutes(5);
 
-        return nowPlus5mins.getMillis() < expiry.getAsLong() * 1000;
+        return nowPlus5mins.getMillis() < expiraryInMilliseconds;
     }
 
-    private <T> T gjorSporring(Class<T> targetClass) {
+    private long getExpiraryInMilliseconds(String cachedToken) {
+        JsonParser jsonParser = new JsonParser();
+        String base64encodedPayload = getPayloadFromOidcToken(cachedToken);
+
+        JsonElement oidcTokenPayload = jsonParser.parse(new String(Base64.getUrlDecoder().decode(base64encodedPayload)));
+        JsonElement expiryInSeconds = oidcTokenPayload.getAsJsonObject().get(OIDC_EXPIRARY_URI);
+        return getMilliseconds(expiryInSeconds);
+    }
+
+    private long getMilliseconds(JsonElement expiry) {
+        return expiry.getAsLong() * 1000;
+    }
+
+    private String getPayloadFromOidcToken(String cachedToken) {
+        return cachedToken.split("\\.")[1];
+    }
+
+    private String gjorSporring() {
         String auth = MODIABRUKERDIALOG_SYSTEM_USER + BASIC_AUTH_SEPERATOR + MODIABRUKERDIALOG_SYSTEM_USER_PASSWORD;
-        String encodedAuth = "Basic " + Base64.getEncoder().encodeToString(auth.getBytes());
+        String encodedAuth = AUTH_METHOD_BASIC + AUTH_SEPERATOR + Base64.getEncoder().encodeToString(auth.getBytes());
 
         return RestUtils.withClient(client -> client
-                .target(SECURITY_TOKEN_SERVICE_BASEURL + "?grant_type=client_credentials&scope=openid")
+                .target(SECURITY_TOKEN_SERVICE_BASEURL + STS_USERNAME_PW_QUERY_PARAMETERS)
                 .request()
                 .header(CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED)
                 .header(NAV_CALL_ID_HEADER, MDCOperations.generateCallId())
                 .header(AUTHORIZATION, encodedAuth)
-                .get(targetClass)
+                .get(String.class)
         );
     }
 }

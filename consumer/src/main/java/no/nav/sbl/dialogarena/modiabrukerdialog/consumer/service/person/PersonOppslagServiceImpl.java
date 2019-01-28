@@ -10,9 +10,10 @@ import no.nav.tjenester.person.oppslag.v1.domain.Persondokument;
 import javax.inject.Inject;
 
 import static javax.ws.rs.core.HttpHeaders.AUTHORIZATION;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.Constants.*;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.RestConstants.*;
 
 public class PersonOppslagServiceImpl implements PersonOppslagService {
+
 
     @Inject
     StsServiceImpl stsService;
@@ -21,24 +22,21 @@ public class PersonOppslagServiceImpl implements PersonOppslagService {
         String consumerOidcToken = stsService.hentConsumerOidcToken();
         String veilederOidcToken = SubjectHandler.getSubjectHandler().getInternSsoToken();
 
-        return gjorSporring(PERSONDOKUMENTER_BASEURL, consumerOidcToken, veilederOidcToken, fnr, Persondokument.class);
+        return gjorSporring(PERSONDOKUMENTER_BASEURL, consumerOidcToken, veilederOidcToken, fnr);
     }
 
-    private <T> T gjorSporring(String url, String consumerOidcToken, String veilederOidcToken, String fnr,  Class<T> targetClass) {
-        try {
+    private Persondokument gjorSporring(String url, String consumerOidcToken, String veilederOidcToken, String fnr) {
             return RestUtils.withClient(client -> client
                     .target(url)
                     .request()
                     .header(NAV_PERSONIDENT_HEADER, fnr)
                     .header(NAV_CALL_ID_HEADER, MDCOperations.generateCallId())
-                    .header(AUTHORIZATION, "Bearer " + veilederOidcToken)
-                    .header(NAV_CONSUMER_TOKEN_HEADER, "Bearer " + consumerOidcToken)
+                    .header(AUTHORIZATION, AUTH_METHOD_BEARER + AUTH_SEPERATOR + veilederOidcToken)
+                    .header(NAV_CONSUMER_TOKEN_HEADER, AUTH_METHOD_BEARER + AUTH_SEPERATOR + consumerOidcToken)
                     .header(TEMA_HEADER, ALLE_TEMA_HEADERVERDI)
                     .header(OPPLYSNINGSTYPER_HEADER, OPPLYSNINGSTYPER_HEADERVERDI)
-                    .get(targetClass)
+                    .get(Persondokument.class)
             );
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+
     }
 }
