@@ -4,7 +4,6 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Saksbehandler
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.AnsattEnhet
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.ldap.LDAPService
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.oppfolgingsinfo.OppfolgingsinfoApiService
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.Feature
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.UnleashService
 import org.slf4j.LoggerFactory
 import java.util.*
@@ -26,8 +25,6 @@ class OppfolgingController @Inject constructor(private val service: Oppfolgingsi
     @GET
     @Path("/")
     fun hent(@PathParam("fnr") fodselsnummer: String): Map<String, Any?> {
-        check(unleashService.isEnabled(Feature.NYTT_VISITTKORT))
-
         val oppfolging = service.hentOppfolgingsinfo(fodselsnummer, ldapService)
 
         return mapOf(

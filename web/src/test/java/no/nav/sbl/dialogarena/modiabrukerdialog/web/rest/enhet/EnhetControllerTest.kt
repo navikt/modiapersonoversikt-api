@@ -3,10 +3,8 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.enhet
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.whenever
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.organisasjonsEnhetV2.OrganisasjonEnhetV2Service
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.Feature
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.UnleashService
 import org.junit.jupiter.api.Assertions
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito
 import java.util.*
@@ -20,11 +18,6 @@ class EnhetControllerTest {
             organisasjonEnhetV2Service,
             unleashService
     )
-
-    @BeforeEach
-    fun before() {
-        whenever(unleashService.isEnabled(Feature.NYTT_VISITTKORT)).thenReturn(true)
-    }
 
     @Test
     fun `Kaster 404 hvis enhet ikke ble funnet`() {

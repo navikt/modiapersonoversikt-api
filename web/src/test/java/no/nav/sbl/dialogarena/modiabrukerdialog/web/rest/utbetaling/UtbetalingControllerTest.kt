@@ -4,10 +4,8 @@ import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.whenever
 import no.nav.modig.core.exception.ApplicationException
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.Feature
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.UnleashService
 import no.nav.sbl.dialogarena.utbetaling.service.UtbetalingService
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import kotlin.test.assertFailsWith
 
@@ -22,11 +20,6 @@ internal class UtbetalingControllerTest {
     private val unleashService: UnleashService = mock()
 
     private val controller: UtbetalingController = UtbetalingController(service, unleashService)
-
-    @BeforeEach
-    fun before() {
-        whenever(unleashService.isEnabled(Feature.NYTT_VISITTKORT)).thenReturn(true)
-    }
 
     @Test
     fun `Kaster ApplicationException`() {

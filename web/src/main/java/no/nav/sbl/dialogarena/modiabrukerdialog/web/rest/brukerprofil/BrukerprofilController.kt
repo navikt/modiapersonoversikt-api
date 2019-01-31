@@ -17,7 +17,6 @@ import no.nav.kjerneinfo.consumer.fim.behandleperson.BehandlePersonServiceBi
 import no.nav.kjerneinfo.consumer.fim.person.PersonKjerneinfoServiceBi
 import no.nav.kjerneinfo.consumer.fim.person.to.HentKjerneinformasjonRequest
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.ldap.LDAPService
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.Feature
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.UnleashService
 import no.nav.tjeneste.virksomhet.behandlebrukerprofil.v2.OppdaterKontaktinformasjonOgPreferanserPersonIdentErUtgaatt
 import no.nav.tjeneste.virksomhet.behandlebrukerprofil.v2.OppdaterKontaktinformasjonOgPreferanserPersonIkkeFunnet
@@ -52,7 +51,6 @@ class BrukerprofilController @Inject constructor(private val behandlePersonServi
     @Path("/navn")
     @Consumes(APPLICATION_JSON)
     fun endreNavn(@PathParam("fnr") fødselsnummer: String, endreNavnRequest: EndreNavnRequest): Response {
-        check(unleashService.isEnabled(Feature.NYTT_VISITTKORT))
         verifyTilgang(ENDRE_NAVN_ROLLE)
 
         val kjerneinformasjon = kjerneinfoService.hentKjerneinformasjon(HentKjerneinformasjonRequest(fødselsnummer))
@@ -74,7 +72,6 @@ class BrukerprofilController @Inject constructor(private val behandlePersonServi
     @Path("/adresse")
     @Consumes(APPLICATION_JSON)
     fun endreAdresse(@PathParam("fnr") fødselsnummer: String, request: EndreAdresseRequest): Response {
-        check(unleashService.isEnabled(Feature.NYTT_VISITTKORT))
         verifyTilgang(ENDRE_ADRESSE_ROLLE)
 
         val bruker = kjerneinfoService.hentBrukerprofil(fødselsnummer)
@@ -99,7 +96,6 @@ class BrukerprofilController @Inject constructor(private val behandlePersonServi
     fun endreTilrettelagtKommunikasjon(@PathParam("fnr") fødselsnummer: String,
                                        request: EndreTilrettelagtkommunikasjonRequest) =
             fødselsnummer
-                    .also { check(unleashService.isEnabled(Feature.NYTT_VISITTKORT)) }
                     .let(kjerneinfoService::hentBrukerprofil)
                     .apply { tilrettelagtKommunikasjon = request.map { Kodeverdi(it, "") } }
                     ?.run(::skrivBrukerOgLagResponse)
@@ -109,7 +105,6 @@ class BrukerprofilController @Inject constructor(private val behandlePersonServi
     @Consumes(APPLICATION_JSON)
     fun endreTelefonnummer(@PathParam("fnr") fødselsnummer: String, request: EndreTelefonnummerRequest) =
             fødselsnummer
-                    .also { check(unleashService.isEnabled(Feature.NYTT_VISITTKORT)) }
                     .let(kjerneinfoService::hentBrukerprofil)
                     .apply {
                         mobil = request.mobil?.let { mapTelefon(it, "MOBI") }
@@ -123,7 +118,6 @@ class BrukerprofilController @Inject constructor(private val behandlePersonServi
     @Consumes(APPLICATION_JSON)
     fun endreKontonummer(@PathParam("fnr") fødselsnummer: String, request: EndreKontonummerRequest) =
             fødselsnummer
-                    .also { check(unleashService.isEnabled(Feature.NYTT_VISITTKORT)) }
                     .also { verifyTilgang(ENDRE_KONTONUMMER_ROLLE) }
                     .let(kjerneinfoService::hentBrukerprofil)
                     .apply {

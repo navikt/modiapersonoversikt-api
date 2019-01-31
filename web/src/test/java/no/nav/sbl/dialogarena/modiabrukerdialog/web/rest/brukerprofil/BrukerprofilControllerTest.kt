@@ -15,7 +15,6 @@ import no.nav.kjerneinfo.domain.person.Fodselsnummer
 import no.nav.kjerneinfo.domain.person.Person
 import no.nav.kjerneinfo.domain.person.Personfakta
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.ldap.LDAPService
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.Feature
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.http.SubjectHandlerUtil
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.UnleashService
 import no.nav.tjeneste.virksomhet.behandlebrukerprofil.v2.OppdaterKontaktinformasjonOgPreferanserPersonIdentErUtgaatt
@@ -88,8 +87,6 @@ class BrukerprofilControllerTest {
 
     @BeforeEach
     fun before() {
-        whenever(unleashService.isEnabled(Feature.NYTT_VISITTKORT)).thenReturn(true)
-
         SubjectHandlerUtil.setInnloggetSaksbehandler(INNLOGGET_SAKSBEHANDLER)
         whenever(ldapService.saksbehandlerHarRolle(INNLOGGET_SAKSBEHANDLER, ENDRE_NAVN_ROLLE)).thenReturn(true)
         whenever(ldapService.saksbehandlerHarRolle(INNLOGGET_SAKSBEHANDLER, ENDRE_ADRESSE_ROLLE)).thenReturn(true)
