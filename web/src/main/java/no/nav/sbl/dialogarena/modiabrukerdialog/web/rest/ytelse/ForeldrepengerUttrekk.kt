@@ -50,8 +50,8 @@ class ForeldrepengerUttrekk constructor(private val forelderpengerService: Forel
     private fun hentArbeidsforhold(arbeidsforhold: List<Arbeidsforhold>): List<Map<String, Any?>> {
         return arbeidsforhold.map {
             mapOf(
-                    "navn" to it.arbeidsgiverNavn,
-                    "kontonr" to it.arbeidsgiverKontonr,
+                    "arbeidsgiverNavn" to it.arbeidsgiverNavn,
+                    "arbeidsgiverKontonr" to it.arbeidsgiverKontonr,
                     "inntektsperiode" to it.inntektsperiode?.termnavn,
                     "inntektForPerioden" to it.inntektForPerioden,
                     "sykepengerFom" to it.sykepengerFom?.toString(DATOFORMAT),
