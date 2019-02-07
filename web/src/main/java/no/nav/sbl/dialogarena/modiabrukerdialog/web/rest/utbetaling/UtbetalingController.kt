@@ -1,14 +1,12 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.utbetaling
 
-import no.nav.modig.core.exception.ApplicationException
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.Feature
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.UnleashService
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.DATOFORMAT
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.lagRiktigDato
 import no.nav.sbl.dialogarena.utbetaling.service.UtbetalingService
 import no.nav.tjeneste.virksomhet.utbetaling.v1.informasjon.*
-import org.joda.time.IllegalFieldValueException
 import org.joda.time.LocalDate
-import org.joda.time.format.DateTimeFormat
 import javax.inject.Inject
 import javax.ws.rs.*
 import javax.ws.rs.core.MediaType.APPLICATION_JSON
@@ -115,16 +113,6 @@ class UtbetalingController @Inject constructor(private val service: UtbetalingSe
                 "start" to periode.fom?.toString(DATOFORMAT),
                 "slutt" to periode.tom?.toString(DATOFORMAT)
         )
-    }
-
-    private fun lagRiktigDato(dato: String?): LocalDate? {
-        return dato?.let {
-            try {
-                LocalDate.parse(dato, DateTimeFormat.forPattern(DATOFORMAT))
-            } catch(exception: IllegalFieldValueException) {
-                throw ApplicationException(exception.message)
-            }
-        }
     }
 
 }
