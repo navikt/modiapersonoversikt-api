@@ -158,7 +158,7 @@ class PersonController @Inject constructor(private val kjerneinfoService: Person
 
     private fun hentGateAdresse(adresse: Adresse) = adresse.run {
         mapOf(
-                "tilleggsadresse" to tilleggsadresse,
+                "tilleggsadresse" to tilleggsadresseMedType,
                 "gatenavn" to gatenavn,
                 "husnummer" to gatenummer,
                 "postnummer" to postnummer,

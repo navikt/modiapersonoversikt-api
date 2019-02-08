@@ -4,6 +4,8 @@ Modia er en intern arbeidsflate som inneholder kjerneinformasjon om brukeren og 
 
 ## Dokumentasjon
 
+Noen nyttige lenker og tips ligger på følgende lenke: https://confluence.adeo.no/pages/viewpage.action?pageId=272512650
+
 ### Caching
 
 Cacheoppsett er hovedsakelig beskrevet i `cacheconfig.xml` og benytter seg av Springs cache abstraction og en underliggende Ehcache-implementasjon.

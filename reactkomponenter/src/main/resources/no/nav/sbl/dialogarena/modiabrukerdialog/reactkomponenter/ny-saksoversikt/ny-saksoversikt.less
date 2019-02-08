@@ -1,7 +1,16 @@
 .ny-saksoversikt-toggle ~ #modia-app .saksoversikt-lerret {
-  overflow-y: scroll !important;
   background-color: @navLysGra;
+  .ajax-content {
+    height: 100%;
+  }
   .ny-frontend {
-    padding: 1rem;
+    display: flex;
+    height: 100%;
+    > article {
+      width: 100%;
+      height: 100%;
+      padding: 1rem;
+      overflow-y: scroll;
+    }
   }
 }

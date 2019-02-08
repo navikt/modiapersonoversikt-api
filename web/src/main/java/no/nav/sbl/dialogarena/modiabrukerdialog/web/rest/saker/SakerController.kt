@@ -98,6 +98,7 @@ class SakerController @Inject constructor(private val saksoversiktService: Sakso
     private fun hentDokumentMetadata(dokumenter: List<DokumentMetadata>): List<Map<String, Any?>> {
         return dokumenter.map {
             mapOf(
+                    "id" to unikId(),
                     "retning" to it.retning,
                     "dato" to hentDato(it.dato),
                     "navn" to it.navn,
@@ -192,4 +193,6 @@ class SakerController @Inject constructor(private val saksoversiktService: Sakso
         return dokumentMetadata.hoveddokument.dokumentreferanse == dokumentreferanse ||
                 dokumentMetadata.vedlegg.any { dokument -> dokument.dokumentreferanse == dokumentreferanse }
     }
+
+    private fun unikId(): String = UUID.randomUUID().toString()
 }

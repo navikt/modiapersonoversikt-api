@@ -201,9 +201,9 @@ private fun Bruker.setNorskAdresse(norskAdresse: EndreAdresseRequest.NorskAdress
     midlertidigadresseUtland = null
     midlertidigadresseNorge = when (adresse) {
         is EndreAdresseRequest.NorskAdresse.Gateadresse -> Gateadresse().apply {
-            co = "C/O"
+            tilleggsadresseType = "C/O"
             postleveringsPeriode = Periode(org.joda.time.LocalDate.now(), javaLocalDatetoJoda(adresse.gyldigTil))
-            coadresse = adresse.tilleggsadresse
+            tilleggsadresse = adresse.tilleggsadresse
             poststed = adresse.postnummer
             gatenavn = adresse.gatenavn
             bolignummer = adresse.bolignummer
@@ -211,15 +211,15 @@ private fun Bruker.setNorskAdresse(norskAdresse: EndreAdresseRequest.NorskAdress
             husnummer = adresse.husnummer
         }
         is EndreAdresseRequest.NorskAdresse.Matrikkeladresse -> Matrikkeladresse().apply {
-            co = "C/O"
-            coadresse = adresse.tilleggsadresse
+            tilleggsadresseType = "C/O"
+            tilleggsadresse = adresse.tilleggsadresse
             postleveringsPeriode = Periode(org.joda.time.LocalDate.now(), javaLocalDatetoJoda(adresse.gyldigTil))
             eiendomsnavn = adresse.eiendomsnavn
             poststed = adresse.postnummer
         }
         is EndreAdresseRequest.NorskAdresse.Postboksadresse -> Postboksadresse().apply {
-            co = "C/O"
-            coadresse = adresse.tilleggsadresse
+            tilleggsadresseType = "C/O"
+            tilleggsadresse = adresse.tilleggsadresse
             postleveringsPeriode = Periode(org.joda.time.LocalDate.now(), javaLocalDatetoJoda(adresse.gyldigTil))
             postboksanlegg = adresse.postboksanlegg
             postboksnummer = adresse.postboksnummer

@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.ytelse
 
+import no.nav.kjerneinfo.consumer.organisasjon.OrganisasjonService
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.DATOFORMAT
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.lagPeriode
 import no.nav.sykmeldingsperioder.domain.HistoriskUtbetaling
@@ -49,3 +50,6 @@ private fun hentKreditorTrekk(kreditortrekk: List<Kreditortrekk>): List<Map<Stri
         )
     }
 }
+
+fun hentArbeidsgiverNavn(organisasjonService: OrganisasjonService, orgnr: String): String? =
+    organisasjonService.hentNoekkelinfo(orgnr).orElse(null).navn

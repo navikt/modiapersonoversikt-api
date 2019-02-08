@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.ytelse
 
+import no.nav.kjerneinfo.consumer.organisasjon.OrganisasjonService
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.DATOFORMAT
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.lagPleiepengePeriode
 import no.nav.sykmeldingsperioder.consumer.pleiepenger.PleiepengerService
@@ -10,7 +11,8 @@ import no.nav.sykmeldingsperioder.domain.pleiepenger.Pleiepengerrettighet
 import no.nav.sykmeldingsperioder.domain.pleiepenger.Vedtak
 import java.time.format.DateTimeFormatter
 
-class PleiepengerUttrekk constructor(private val pleiepengerService: PleiepengerService) {
+class PleiepengerUttrekk constructor(private val pleiepengerService: PleiepengerService,
+                                     private val organisasjonService: OrganisasjonService) {
 
     fun hent(fødselsnummer: String): Map<String, Any?> {
 
@@ -18,7 +20,7 @@ class PleiepengerUttrekk constructor(private val pleiepengerService: Pleiepenger
 
         return mapOf(
                 "pleiepenger" to pleiepenger?.pleieepengerettighetListe?.let {
-                    if(it.isEmpty()) {
+                    if (it.isEmpty()) {
                         null
                     } else {
                         hentPleiepenger(it)
@@ -56,7 +58,7 @@ class PleiepengerUttrekk constructor(private val pleiepengerService: Pleiepenger
     private fun hentArbeidsforhold(arbeidsforhold: List<Arbeidsforhold>): List<Map<String, Any?>> {
         return arbeidsforhold.map {
             mapOf(
-                    "arbeidsgiverNavn" to it.arbeidsgiverNavn,
+                    "arbeidsgiverNavn" to hentArbeidsgiverNavn(organisasjonService, it.arbeidsgiverOrgnr),
                     "arbeidsgiverKontonr" to it.arbeidsgiverKontonr,
                     "inntektsperiode" to it.inntektsperiode,
                     "inntektForPerioden" to it.inntektForPerioden,
@@ -81,5 +83,4 @@ class PleiepengerUttrekk constructor(private val pleiepengerService: Pleiepenger
             )
         }
     }
-
 }
