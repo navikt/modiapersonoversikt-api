@@ -29,7 +29,7 @@ class YtelseController @Inject constructor(private val sykepengerService: Sykepe
 
     @GET
     @Path("foreldrepenger/{fnr}")
-    fun hentForeldrepenger(@PathParam("fnr") fødselsnummer: String): List<Map<String, Any?>> {
+    fun hentForeldrepenger(@PathParam("fnr") fødselsnummer: String): Map<String, Any?> {
         check(unleashService.isEnabled(Feature.NYTT_VISITTKORT))
 
         return ForeldrepengerUttrekk(forelderpengerService).hent(fødselsnummer)
