@@ -53,7 +53,7 @@ internal class ForeldrepengerUttrekkTest {
         whenever(foreldrepengerServiceV2.hentForeldrepengerettighet(any())).thenReturn(mockResponse())
 
         val response = uttrekk.hent(FNR)
-        val foreldrepenger = response.get("foreldrepenger") as Map<String, Any?>
+        val foreldrepenger = response[0].get("foreldrepenger") as Map<String, Any?>
 
         assertEquals(10, foreldrepenger.get("antallBarn"))
     }
@@ -63,7 +63,7 @@ internal class ForeldrepengerUttrekkTest {
         whenever(foreldrepengerServiceV2.hentForeldrepengerettighet(any())).thenReturn(mockResponse())
 
         val response = uttrekk.hent(FNR)
-        val foreldrepenger = response.get("foreldrepenger") as Map<String, Any?>
+        val foreldrepenger = response[0].get("foreldrepenger") as Map<String, Any?>
 
         assertEquals("2000-02-01", foreldrepenger.get("barnetsFødselsdato"))
     }

@@ -7,11 +7,18 @@ import no.nav.sykmeldingsperioder.consumer.foreldrepenger.ForeldrepengerServiceB
 import no.nav.sykmeldingsperioder.consumer.foreldrepenger.mapping.to.ForeldrepengerListeRequest
 import no.nav.sykmeldingsperioder.domain.foreldrepenger.Foreldrepengeperiode
 import org.joda.time.LocalDate
+import java.util.*
 
 class ForeldrepengerUttrekk constructor(private val forelderpengerService: ForeldrepengerServiceBi) {
 
-    fun hent(fødselsnummer: String): Map<String, Any?> {
+    fun hent(fødselsnummer: String): List<Map<String, Any?>> {
+        return Arrays.asList(hentFraInfotrygd(fødselsnummer))
+    }
+
+
+    private fun hentFraInfotrygd(fødselsnummer: String): Map<String, Any?> {
         val foreldrepenger = forelderpengerService.hentForeldrepengerListe(ForeldrepengerListeRequest(fødselsnummer, Periode(LocalDate.now().minusYears(2), LocalDate.now())))
+
 
         return mapOf(
                 "foreldrepenger" to foreldrepenger?.foreldrepengerettighet?.let { mapOf(
