@@ -1,6 +1,10 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest
 
 import no.nav.kjerneinfo.common.domain.Periode
+import no.nav.modig.core.exception.ApplicationException
+import org.joda.time.IllegalFieldValueException
+import org.joda.time.LocalDate
+import org.joda.time.format.DateTimeFormat
 import java.time.format.DateTimeFormatter
 
 const val DATOFORMAT = "yyyy-MM-dd"
@@ -18,3 +22,12 @@ fun lagPeriode(periode: Periode) = mapOf(
 fun lagPleiepengePeriode(periode: no.nav.sykmeldingsperioder.domain.pleiepenger.Periode) = mapOf(
         "fom" to periode.fraOgMed?.format(DateTimeFormatter.ofPattern(DATOFORMAT)),
         "tom" to periode.tilOgMed?.format(DateTimeFormatter.ofPattern(DATOFORMAT)) )
+
+fun lagRiktigDato(dato: String?): LocalDate? = dato?.let {
+        try {
+            LocalDate.parse(dato, DateTimeFormat.forPattern(DATOFORMAT))
+        } catch(exception: IllegalFieldValueException) {
+            throw ApplicationException(exception.message)
+        }
+    }
+
