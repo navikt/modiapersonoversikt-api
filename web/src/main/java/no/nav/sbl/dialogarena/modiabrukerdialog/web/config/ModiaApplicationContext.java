@@ -1,5 +1,7 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.config;
 
+import no.nav.apiapp.ApiApplication;
+import no.nav.apiapp.config.ApiAppConfigurator;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
@@ -9,5 +11,23 @@ import org.springframework.context.annotation.Import;
         ApplicationContextBeans.class,
         ModulesApplicationContext.class
 })
-public class ModiaApplicationContext {
+public class ModiaApplicationContext implements ApiApplication.NaisApiApplication {
+
+    @Override
+    public void configure(ApiAppConfigurator apiAppConfigurator) {
+        apiAppConfigurator
+                .sts()
+                .issoLogin();
+    }
+
+    @Override
+    public String getApplicationName() {
+        return "modiabrukerdialog";
+    }
+
+    @Override
+    public Sone getSone() {
+        return Sone.FSS;
+    }
+
 }
