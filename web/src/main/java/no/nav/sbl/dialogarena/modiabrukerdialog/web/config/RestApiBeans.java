@@ -1,10 +1,13 @@
-package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest;
+package no.nav.sbl.dialogarena.modiabrukerdialog.web.config;
 
 import no.nav.brukerdialog.isso.RelyingPartyCallback;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.rest.DokumentController;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.rest.InformasjonController;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.rest.SaksoversiktController;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.JacksonConfig;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.HodeController;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.JournalforingController;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.MeldingerController;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.SkrivestotteController;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.baseurls.BaseUrlsController;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.brukerprofil.BrukerprofilController;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.egenansatt.EgenAnsattController;
@@ -14,48 +17,45 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.henvendelse.DelsvarCont
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.kodeverk.KodeverkController;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.kontaktinformasjon.KontaktinformasjonController;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.ldap.LdapController;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.person.PersondokumentController;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.oppfolging.OppfolgingController;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.oppgave.OppgaveController;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.person.PersonController;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.person.PersondokumentController;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.saker.SakerController;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.utbetaling.UtbetalingController;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.vergemal.VergemalController;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.ytelse.YtelseController;
 import no.nav.sbl.dialogarena.varsel.rest.VarslerController;
-import org.glassfish.jersey.server.ResourceConfig;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 
-public class RestConfig extends ResourceConfig {
-
-    public RestConfig() {
-        super(
-                JacksonConfig.class,
-                InformasjonController.class,
-                SkrivestotteController.class,
-                MeldingerController.class,
-                JournalforingController.class,
-                HodeController.class,
-                VarslerController.class,
-                DokumentController.class,
-                SaksoversiktController.class,
-                DelsvarController.class,
-                RelyingPartyCallback.class,
-                OppgaveController.class,
-                EnhetController.class,
-                PersonController.class,
-                VergemalController.class,
-                KontaktinformasjonController.class,
-                BrukerprofilController.class,
-                EgenAnsattController.class,
-                KodeverkController.class,
-                LdapController.class,
-                BaseUrlsController.class,
-                FeatureToggleController.class,
-                UtbetalingController.class,
-                YtelseController.class,
-                OppfolgingController.class,
-                SakerController.class,
-                PersondokumentController.class
-        );
-    }
-}
+@Configuration
+@Import({
+        InformasjonController.class,
+        SkrivestotteController.class,
+        MeldingerController.class,
+        JournalforingController.class,
+        HodeController.class,
+        VarslerController.class,
+        DokumentController.class,
+        SaksoversiktController.class,
+        DelsvarController.class,
+        RelyingPartyCallback.class,
+        OppgaveController.class,
+        EnhetController.class,
+        PersonController.class,
+        VergemalController.class,
+        KontaktinformasjonController.class,
+        BrukerprofilController.class,
+        EgenAnsattController.class,
+        KodeverkController.class,
+        LdapController.class,
+        BaseUrlsController.class,
+        FeatureToggleController.class,
+        UtbetalingController.class,
+        YtelseController.class,
+        OppfolgingController.class,
+        SakerController.class,
+        PersondokumentController.class
+})
+public class RestApiBeans { }

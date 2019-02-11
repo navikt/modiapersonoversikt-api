@@ -1,5 +1,7 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.sak.utils;
 
+import no.nav.sbl.util.EnvironmentUtils;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -10,14 +12,14 @@ import java.util.stream.Collectors;
 public class TemagrupperHenter {
 
     public Map<String, List<String>> genererTemagrupperMedTema() {
-        String temagrupperStreng = System.getProperty("saksoversikt.temagrupper");
+        String temagrupperStreng = EnvironmentUtils.getRequiredProperty("saksoversikt.temagrupper");
 
         return kommaseparertTekstTilListe(temagrupperStreng).stream()
                 .collect(Collectors.toMap(Function.identity(), temagruppe -> hentTemaForGruppe(temagruppe)));
     }
 
     private static List<String> hentTemaForGruppe(String gruppe) {
-        String tema = System.getProperty("saksoversikt.temagrupper." + gruppe + ".temaer");
+        String tema = EnvironmentUtils.getRequiredProperty("saksoversikt.temagrupper." + gruppe + ".temaer");
 
         return kommaseparertTekstTilListe(tema);
     }

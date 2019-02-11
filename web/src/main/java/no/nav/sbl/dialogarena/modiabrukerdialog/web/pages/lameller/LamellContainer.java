@@ -26,6 +26,7 @@ import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.Innboks;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.InnboksVM;
 import no.nav.sbl.dialogarena.utbetaling.lamell.UtbetalingLerret;
 import no.nav.sbl.dialogarena.varsel.lamell.VarselLerret;
+import no.nav.sbl.util.EnvironmentUtils;
 import no.nav.sykmeldingsperioder.SykmeldingsperiodePanel;
 import no.nav.sykmeldingsperioder.foreldrepenger.ForeldrepengerPanel;
 import no.nav.sykmeldingsperioder.pleiepenger.PleiepengerPanel;
@@ -258,7 +259,7 @@ public class LamellContainer extends TokenLamellPanel implements Serializable {
     }
 
     private static LamellFactory createSaksoversiktLamell(final GrunnInfo.Bruker bruker, final boolean nySaksoversikt) {
-        String norgUrl = System.getProperty("server.norg2-frontend.url");
+        String norgUrl = EnvironmentUtils.getRequiredProperty("server.norg2-frontend.url");
         if (nySaksoversikt) {
             return newLamellFactory(LAMELL_SAKSOVERSIKT, "S", true, (LerretFactory) (id, name) -> new AjaxLazyLoadLerret(id, name) {
                 final Component comp = new ReactComponentPanel("saksoversiktpanel", "NySaksoversikt", new HashMap<String, Object>() {{

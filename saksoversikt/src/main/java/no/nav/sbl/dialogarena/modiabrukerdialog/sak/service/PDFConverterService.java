@@ -2,6 +2,7 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.sak.service;
 
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.FeilendeBaksystemException;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.resultatwrappere.TjenesteResultatWrapper;
+import no.nav.sbl.util.EnvironmentUtils;
 import no.nav.tjeneste.domene.brevogarkiv.sanntidpdfkonverterer.v1.PdfErKorruptFault;
 import no.nav.tjeneste.domene.brevogarkiv.sanntidpdfkonverterer.v1.SanntidPdfKonvertererV1;
 import no.nav.tjeneste.domene.brevogarkiv.sanntidpdfkonverterer.v1.meldinger.KonverterPdf2BildeRequest;
@@ -16,6 +17,7 @@ import java.util.List;
 import static java.lang.System.getProperty;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.Feilmelding.KORRUPT_PDF;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.Baksystem.PDF_KONVERTERING;
+import static no.nav.sbl.util.EnvironmentUtils.getRequiredProperty;
 import static no.nav.tjeneste.domene.brevogarkiv.sanntidpdfkonverterer.v1.informasjon.WSKonverterFra.FOERSTE_SIDE;
 
 public class PDFConverterService {
@@ -35,7 +37,7 @@ public class PDFConverterService {
             List<String> pdfURLer = new ArrayList<>();
 
             for (int i = 0; i < response.getPages(); i++) {
-                pdfURLer.add(getProperty("tjenester.url") + getProperty("pdfkonverterer.sti") + response.getUid() + "/" + (i+1));
+                pdfURLer.add(getRequiredProperty("tjenester.url") + getRequiredProperty("pdfkonverterer.sti") + response.getUid() + "/" + (i+1));
             }
             return new TjenesteResultatWrapper(pdfURLer);
         } catch (PdfErKorruptFault e) {

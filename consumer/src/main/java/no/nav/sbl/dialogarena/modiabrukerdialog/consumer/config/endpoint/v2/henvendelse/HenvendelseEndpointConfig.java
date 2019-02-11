@@ -7,6 +7,7 @@ import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLMetadataL
 import no.nav.modig.modia.ping.Pingable;
 import no.nav.modig.modia.ping.PingableWebService;
 import no.nav.sbl.dialogarena.common.cxf.CXFClient;
+import no.nav.sbl.util.EnvironmentUtils;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.henvendelse.HenvendelsePortType;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -36,7 +37,7 @@ public class HenvendelseEndpointConfig {
     private static CXFClient<HenvendelsePortType> createHenvendelsePortType() {
         return new CXFClient<>(HenvendelsePortType.class)
                 .wsdl("classpath:Henvendelse.wsdl")
-                .address(System.getProperty("henvendelse.v2.url"))
+                .address(EnvironmentUtils.getRequiredProperty("henvendelse.v2.url"))
                 .timeout(10000, 60000)
                 .withProperty("jaxb.additionalContextClasses", new Class[]{
                         XMLHenvendelse.class,

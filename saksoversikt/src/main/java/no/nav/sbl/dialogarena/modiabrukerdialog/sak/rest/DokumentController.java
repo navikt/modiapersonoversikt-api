@@ -10,6 +10,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.resultatwrapp
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.DokumentMetadataService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.JournalV2ServiceImpl;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.SaksService;
+import no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.interfaces.JournalV2Service;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.interfaces.TilgangskontrollService;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
@@ -53,7 +54,7 @@ public class DokumentController {
     public static final Logger logger = LoggerFactory.getLogger(DokumentController.class);
 
     @Inject
-    private JournalV2ServiceImpl innsyn;
+    private JournalV2Service innsyn;
 
     @Inject
     private SaksService saksService;

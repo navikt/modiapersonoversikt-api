@@ -9,7 +9,8 @@ import org.springframework.context.annotation.Import;
 @Import({
         WicketApplicationBeans.class,
         ApplicationContextBeans.class,
-        ModulesApplicationContext.class
+        ModulesApplicationContext.class,
+        RestApiBeans.class
 })
 public class ModiaApplicationContext implements ApiApplication.NaisApiApplication {
 
@@ -18,6 +19,11 @@ public class ModiaApplicationContext implements ApiApplication.NaisApiApplicatio
         apiAppConfigurator
                 .sts()
                 .issoLogin();
+    }
+
+    @Override
+    public String getApiBasePath() {
+        return "/rest/";
     }
 
     @Override

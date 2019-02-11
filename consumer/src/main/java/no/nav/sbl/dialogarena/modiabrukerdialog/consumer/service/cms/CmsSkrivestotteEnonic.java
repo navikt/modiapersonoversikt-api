@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.cms;
 
+import no.nav.sbl.util.EnvironmentUtils;
 import org.apache.http.client.fluent.Async;
 import org.apache.http.client.fluent.Content;
 import org.apache.http.client.fluent.Request;
@@ -24,7 +25,7 @@ public class CmsSkrivestotteEnonic implements CmsSkrivestotte {
     private String appresUrl;
 
     public CmsSkrivestotteEnonic() {
-        appresUrl = System.getProperty("appres.cms.url");
+        appresUrl = EnvironmentUtils.getRequiredProperty("appres.cms.url");
     }
 
     @Override

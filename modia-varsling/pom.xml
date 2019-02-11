@@ -12,20 +12,6 @@
     <name>${project.artifactId}</name>
     <artifactId>modia-varsling</artifactId>
 
-    <properties>
-        <!--<spring.version>4.3.4.RELEASE</spring.version>-->
-        <!--<modig.wicket.version>3.0.0</modig.wicket.version>-->
-        <!--<wicket.version>6.11.0</wicket.version>-->
-        <!--<modig.frontend.version>1.1.108</modig.frontend.version>-->
-        <!--<common.records.version>1.3</common.records.version>-->
-        <!--<commons-lang3.version>3.3.2</commons-lang3.version>-->
-        <!--<modig.security.version>1.0.24</modig.security.version>-->
-        <!--<collections-generic.version>4.01</collections-generic.version>-->
-        <!--<reactkomponenter.version>3.0.0</reactkomponenter.version>-->
-        <!--<modia-felleskomponenter.version>4.2</modia-felleskomponenter.version>-->
-        <!--<brukervarsel.tjeneste.version>1.0</brukervarsel.tjeneste.version>-->
-    </properties>
-
     <dependencies>
         <dependency>
             <groupId>no.nav.sbl</groupId>
@@ -35,7 +21,6 @@
         <dependency>
             <groupId>no.nav.modig</groupId>
             <artifactId>modia-felleskomponenter</artifactId>
-            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>no.nav.modig</groupId>
@@ -91,19 +76,16 @@
         <dependency>
             <groupId>no.nav.modig</groupId>
             <artifactId>modig-content</artifactId>
-            <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>net.sourceforge.collections</groupId>
             <artifactId>collections-generic</artifactId>
-            <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>no.nav.modig</groupId>
             <artifactId>modig-frontend-wicket</artifactId>
-            <scope>provided</scope>
         </dependency>
 
         <dependency>
@@ -114,18 +96,15 @@
         <dependency>
             <groupId>org.glassfish.hk2.external</groupId>
             <artifactId>javax.inject</artifactId>
-            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>javax.inject</groupId>
             <artifactId>javax.inject</artifactId>
-            <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
-            <scope>runtime</scope>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
@@ -133,13 +112,6 @@
         </dependency>
 
         <!--TEST -->
-        <!--<dependency>-->
-            <!--<groupId>xml-apis</groupId>-->
-            <!--<artifactId>xml-apis</artifactId>-->
-            <!--<scope>test</scope>-->
-            <!--<version>1.4.01</version>-->
-        <!--</dependency>-->
-
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
@@ -160,7 +132,6 @@
         <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>common-jetty</artifactId>
-            <scope>test</scope>
         </dependency>
 
         <dependency>
@@ -172,7 +143,6 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>4.11</version>
             <scope>test</scope>
         </dependency>
 

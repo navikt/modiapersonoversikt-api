@@ -7,8 +7,9 @@ import org.jboss.security.xacml.sunxacml.cond.EvaluationResult;
 import org.jboss.security.xacml.util.JBossXACMLUtil;
 
 import java.net.URI;
+import java.util.HashSet;
 
-import static no.nav.sbl.dialogarena.common.collections.Collections.asSet;
+import static java.util.Arrays.asList;
 import static no.nav.sbl.modiabrukerdialog.pip.journalforing.JournalfortTemaAttributeLocator.ATTRIBUTEID_TEMA;
 
 public class MockAttributeLocator extends AttributeLocator {
@@ -31,8 +32,9 @@ public class MockAttributeLocator extends AttributeLocator {
         }
 
         return new EvaluationResult(
-                new BagAttribute(attributeType, asSet(
+                new BagAttribute(attributeType, new HashSet<>(asList(
                         JBossXACMLUtil.getAttributeValue("ARBD"),
-                        JBossXACMLUtil.getAttributeValue("FAML"))));
+                        JBossXACMLUtil.getAttributeValue("FAML")
+                ))));
     }
 }

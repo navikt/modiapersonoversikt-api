@@ -3,7 +3,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.ModiaApplicationConte
 
 public class Main {
 
-    public static void main(String[] args) {
+    public static void main(String... args) {
         ApiApp.startApp(ModiaApplicationContext.class, args);
     }
 

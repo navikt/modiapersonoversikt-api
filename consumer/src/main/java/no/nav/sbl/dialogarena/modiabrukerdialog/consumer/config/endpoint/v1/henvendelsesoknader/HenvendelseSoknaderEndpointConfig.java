@@ -4,6 +4,7 @@ import no.nav.modig.modia.ping.Pingable;
 import no.nav.modig.modia.ping.PingableWebService;
 import no.nav.sbl.dialogarena.common.cxf.CXFClient;
 import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.HenvendelseSoknaderPortTypeMock;
+import no.nav.sbl.util.EnvironmentUtils;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsesoknader.v1.HenvendelseSoknaderPortType;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -33,7 +34,7 @@ public class HenvendelseSoknaderEndpointConfig {
         return new CXFClient<>(HenvendelseSoknaderPortType.class)
                 .timeout(15000, 15000)
                 .wsdl("classpath:no/nav/tjeneste/domene/brukerdialog/henvendelsesoknader/v1/Soknader.wsdl")
-                .address(System.getProperty("henvendelser.ws.url"));
+                .address(EnvironmentUtils.getRequiredProperty("henvendelser.ws.url"));
     }
 
 }

@@ -5,6 +5,7 @@ import no.nav.kjerneinfo.domain.person.fakta.AnsvarligEnhet;
 import no.nav.kjerneinfo.domain.person.fakta.Organisasjonsenhet;
 import no.nav.kjerneinfo.web.pages.kjerneinfo.panel.kjerneinfo.AbstractKjerneInfoPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.reactkomponenter.utils.wicket.ReactComponentPanel;
+import no.nav.sbl.util.EnvironmentUtils;
 
 import java.util.HashMap;
 import java.util.Optional;
@@ -26,7 +27,7 @@ public class NavKontorPanel extends AbstractKjerneInfoPanel {
 
     private HashMap<String, Object> getNavKontorProps() {
         HashMap<String, Object> props = new HashMap<>();
-        props.put("norg2FrontendBaseUrl", System.getProperty(NORG2_FRONTEND_BASE_URL_PROPERTY_KEY));
+        props.put("norg2FrontendBaseUrl", EnvironmentUtils.getRequiredProperty(NORG2_FRONTEND_BASE_URL_PROPERTY_KEY));
         String navKontorID = getAnsvarligEnhetId(personModel.getObject().getPersonfakta()).orElse("");
         props.put("organisasjonsenhetId", navKontorID);
         return props;

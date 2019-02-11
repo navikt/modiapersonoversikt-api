@@ -3,6 +3,7 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v3.gsa
 import no.nav.modig.modia.ping.Pingable;
 import no.nav.modig.modia.ping.PingableWebService;
 import no.nav.sbl.dialogarena.common.cxf.CXFClient;
+import no.nav.sbl.util.EnvironmentUtils;
 import no.nav.tjeneste.virksomhet.oppgave.v3.OppgaveV3;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -31,7 +32,7 @@ public class GsakOppgaveV3EndpointConfig {
 
     private static CXFClient<OppgaveV3> createOppgavePortType() {
         return new CXFClient<>(OppgaveV3.class)
-                .address(System.getProperty("gsak.oppgave.v3.url"));
+                .address(EnvironmentUtils.getRequiredProperty("gsak.oppgave.v3.url"));
     }
 
 }

@@ -17,8 +17,9 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.test.context.ContextConfiguration;
 
 import java.net.URI;
+import java.util.HashSet;
 
-import static no.nav.sbl.dialogarena.common.collections.Collections.asSet;
+import static java.util.Arrays.asList;
 import static no.nav.sbl.modiabrukerdialog.pip.journalforing.JournalfortTemaAttributeLocator.ATTRIBUTEID_TEMA;
 import static no.nav.sbl.modiabrukerdialog.pip.journalforing.JournalfortTemaAttributeLocator.STRING_TYPE;
 import static org.hamcrest.CoreMatchers.is;
@@ -53,7 +54,7 @@ public class JournalfortTemaAttributeLocatorTest {
 
     @Test
     public void bagMedTemagrupperVedVellykketKallTilDelegate() {
-        when(delegate.getTemagrupperForAnsattesValgteEnhet(anyString(), anyString())).thenReturn(asSet("ARBD", "FAML"));
+        when(delegate.getTemagrupperForAnsattesValgteEnhet(anyString(), anyString())).thenReturn(new HashSet<>(asList("ARBD", "FAML")));
         EvaluationResult evaluationResult =
                 journalfortTemaAttributeLocator.findAttribute(STRING_TYPE, ATTRIBUTEID_TEMA, null, null, context, 0);
 

@@ -3,6 +3,7 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.kodeve
 import no.nav.modig.modia.ping.*;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.kodeverksmapper.domain.Behandling;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.Timer;
+import no.nav.sbl.util.EnvironmentUtils;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -12,6 +13,7 @@ import java.util.Map;
 
 import static java.lang.System.getProperty;
 import static no.nav.sbl.dialogarena.common.cxf.InstanceSwitcher.createMetricsProxyWithInstanceSwitcher;
+import static no.nav.sbl.util.EnvironmentUtils.getRequiredProperty;
 
 @Configuration
 public class KodeverksmapperEndpointConfig {
@@ -54,15 +56,16 @@ public class KodeverksmapperEndpointConfig {
 
             @Override
             public String endpoint() {
-                return getProperty("kodeverksmapper.ping.url");
+                return getRequiredProperty("kodeverksmapper.ping.url");
             }
         };
     }
 
     private Kodeverksmapper lagEndpoint() {
-        return new KodeverksmapperEndpoint(getProperty("kodeverksmapper.oppgavetype.url"),
-                getProperty("kodeverksmapper.underkategori.url"),
-                getProperty("kodeverksmapper.ping.url"));
+        return new KodeverksmapperEndpoint(getRequiredProperty("kodeverksmapper.oppgavetype.url"),
+                getRequiredProperty("kodeverksmapper.underkategori.url"),
+                getRequiredProperty("kodeverksmapper.ping.url")
+        );
     }
 
     private Kodeverksmapper lagMockEnpoint() {

@@ -3,6 +3,7 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v1.pen
 import no.nav.modig.modia.ping.Pingable;
 import no.nav.modig.modia.ping.PingableWebService;
 import no.nav.sbl.dialogarena.common.cxf.CXFClient;
+import no.nav.sbl.util.EnvironmentUtils;
 import no.nav.tjeneste.virksomhet.pensjonsak.v1.PensjonSakV1;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -31,6 +32,6 @@ public class PensjonSakEndpointConfig {
     private static CXFClient<PensjonSakV1> createPensjonSakV1() {
         return new CXFClient<>(PensjonSakV1.class)
                 .timeout(15000, 15000)
-                .address(System.getProperty("pensjon.sak.v1.url"));
+                .address(EnvironmentUtils.getRequiredProperty("pensjon.sak.v1.url"));
     }
 }

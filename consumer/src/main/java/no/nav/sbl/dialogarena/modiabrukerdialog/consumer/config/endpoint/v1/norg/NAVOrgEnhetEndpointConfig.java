@@ -4,6 +4,7 @@ import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navorgenhet.GOSYSNAVOrgEnhet;
 import no.nav.modig.modia.ping.Pingable;
 import no.nav.modig.modia.ping.UnpingableWebService;
 import no.nav.sbl.dialogarena.common.cxf.CXFClient;
+import no.nav.sbl.util.EnvironmentUtils;
 import org.apache.cxf.configuration.jsse.TLSClientParameters;
 import org.apache.cxf.frontend.ClientProxy;
 import org.apache.cxf.transport.http.HTTPConduit;
@@ -21,7 +22,7 @@ import static no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.Gos
 @Configuration
 public class NAVOrgEnhetEndpointConfig {
 
-    private static String address = System.getProperty("tjenestebuss.url") + "nav-cons-sak-gosys-3.0.0Web/sca/GOSYSNAVOrgEnhetWSEXP";
+    private static String address = EnvironmentUtils.getRequiredProperty("tjenestebuss.url") + "nav-cons-sak-gosys-3.0.0Web/sca/GOSYSNAVOrgEnhetWSEXP";
 
     @Bean
     public GOSYSNAVOrgEnhet gosysNavOrgEnhet() {

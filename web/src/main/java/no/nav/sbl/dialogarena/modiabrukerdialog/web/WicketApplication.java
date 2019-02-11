@@ -135,7 +135,7 @@ public class WicketApplication extends WebApplication {
                     return cms.hentTekst(key);
                 } catch (Exception e) {
                     log.trace("Fant ikke " + key + " i cms. Defaulter til properties-fil. " + e.getMessage());
-                    return null;
+                    return key;
                 }
             }
         });

@@ -4,6 +4,7 @@ import no.nav.modig.modia.ping.Pingable;
 import no.nav.modig.modia.ping.PingableWebService;
 import no.nav.sbl.dialogarena.common.cxf.CXFClient;
 import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.OrganisasjonEnhetKontaktinformasjonV1Mock;
+import no.nav.sbl.util.EnvironmentUtils;
 import no.nav.tjeneste.virksomhet.organisasjonenhetkontaktinformasjon.v1.binding.OrganisasjonEnhetKontaktinformasjonV1;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -41,7 +42,7 @@ public class OrganisasjonEnhetKontaktinformasjonV1EndpointConfig {
 
     private CXFClient<OrganisasjonEnhetKontaktinformasjonV1> lagEndpoint() {
         return new CXFClient<>(OrganisasjonEnhetKontaktinformasjonV1.class)
-                .address(System.getProperty("norg2.organisasjonenhetkontaktinformasjon.v1.url"));
+                .address(EnvironmentUtils.getRequiredProperty("norg2.organisasjonenhetkontaktinformasjon.v1.url"));
     }
 
 }
