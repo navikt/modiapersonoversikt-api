@@ -27,7 +27,7 @@ class UtbetalingController @Inject constructor(private val service: UtbetalingSe
         check(unleashService.isEnabled(Feature.NYTT_VISITTKORT))
 
         val startDato = lagRiktigDato(start) ?: LocalDate.now().minusDays(DAGER_BAKOVER)
-        val sluttDato = lagRiktigDato(slutt) ?: LocalDate.now().plusDays(DAGER_FREMOVER)
+        val sluttDato = (lagRiktigDato(slutt) ?: LocalDate.now()).plusDays(DAGER_FREMOVER)
         val utbetalinger = service.hentWSUtbetalinger(fødselsnummer,
                 startDato,
                 sluttDato)
