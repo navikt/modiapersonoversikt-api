@@ -4,6 +4,8 @@ import no.nav.dialogarena.config.fasit.ServiceUser;
 import no.nav.modig.testcertificates.TestCertificates;
 import no.nav.sbl.dialogarena.test.SystemProperties;
 import no.nav.testconfig.ApiAppTest;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import static no.nav.sbl.util.EnvironmentUtils.Type.PUBLIC;
 import static no.nav.sbl.util.EnvironmentUtils.Type.SECRET;
@@ -11,6 +13,7 @@ import static no.nav.sbl.util.EnvironmentUtils.setProperty;
 
 public class MainTest {
 
+    private static final Logger logger = LoggerFactory.getLogger(MainTest.class);
     public static final String APPLICATION_NAME = "modiabrukerdialog";
 
     public static void main(String[] args) {
@@ -22,6 +25,7 @@ public class MainTest {
         setProperty("SRVMODIABRUKERDIALOG_USERNAME", srvModiabrukerdialog.getUsername(), PUBLIC);
         setProperty("SRVMODIABRUKERDIALOG_PASSWORD", srvModiabrukerdialog.getPassword(), SECRET);
 
+        logger.info("Env= " + FasitUtils.getDefaultEnvironment());
         LdapConfig ldapConfig = FasitUtils.getLdapConfig("ldap", APPLICATION_NAME, FasitUtils.getDefaultEnvironment());
         setProperty("ldap.password", ldapConfig.getPassword(), SECRET);
 
