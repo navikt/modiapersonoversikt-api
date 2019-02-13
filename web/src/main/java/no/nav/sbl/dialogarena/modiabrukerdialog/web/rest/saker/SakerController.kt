@@ -1,7 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.saker
 
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.RestUtils
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.Feature
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.UnleashService
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.domain.widget.ModiaSakstema
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.*
@@ -34,7 +33,6 @@ class SakerController @Inject constructor(private val saksoversiktService: Sakso
     @Path("/sakstema")
     @Produces(MediaType.APPLICATION_JSON)
     fun hentSakstema(@Context request: HttpServletRequest, @PathParam("fnr") fødselsnummer: String): Map<String, Any?> {
-        check(unleashService.isEnabled(Feature.NYTT_VISITTKORT))
         if (!tilgangskontrollService.harGodkjentEnhet(request)) throw NotAuthorizedException("Ikke tilgang.")
 
         val sakerWrapper = saksService.hentAlleSaker(fødselsnummer)
@@ -55,7 +53,6 @@ class SakerController @Inject constructor(private val saksoversiktService: Sakso
     fun hentDokument(@Context request: HttpServletRequest, @PathParam("fnr") fødselsnummer: String,
                      @PathParam("journalpostId") journalpostId: String,
                      @PathParam("dokumentreferanse") dokumentreferanse: String): Response {
-        check(unleashService.isEnabled(Feature.NYTT_VISITTKORT))
 
         val journalpostMetadata = hentDokumentMetadata(journalpostId, fødselsnummer)
         val tilgangskontrollResult = tilgangskontrollService.harSaksbehandlerTilgangTilDokument(request,
@@ -66,7 +63,7 @@ class SakerController @Inject constructor(private val saksoversiktService: Sakso
         }
 
         val hentDokumentResultat = innsyn.hentDokument(journalpostId, dokumentreferanse)
-        return hentDokumentResultat.result.map{ Response.ok(it).build() }.orElse(Response.status(Response.Status.NOT_FOUND).build())
+        return hentDokumentResultat.result.map { Response.ok(it).build() }.orElse(Response.status(Response.Status.NOT_FOUND).build())
     }
 
     private fun byggSakstemaResultat(resultat: ResultatWrapper<List<ModiaSakstema>>): Map<String, Any?> {

@@ -1,6 +1,5 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.utbetaling
 
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.Feature
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.UnleashService
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.DATOFORMAT
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.lagRiktigDato
@@ -24,7 +23,6 @@ class UtbetalingController @Inject constructor(private val service: UtbetalingSe
     fun hent(@PathParam("fnr") fødselsnummer: String,
              @QueryParam("startDato") start: String?,
              @QueryParam("sluttDato") slutt: String?): Map<String, Any?> {
-        check(unleashService.isEnabled(Feature.NYTT_VISITTKORT))
 
         val startDato = lagRiktigDato(start) ?: LocalDate.now().minusDays(DAGER_BAKOVER)
         val sluttDato = lagRiktigDato(slutt) ?: LocalDate.now().plusDays(DAGER_FREMOVER)

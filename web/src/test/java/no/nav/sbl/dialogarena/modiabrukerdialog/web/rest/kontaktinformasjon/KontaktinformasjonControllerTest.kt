@@ -3,7 +3,6 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.kontaktinformasjon
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.whenever
 import no.nav.dkif.consumer.DkifService
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.Feature
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.UnleashService
 import no.nav.tjeneste.virksomhet.digitalkontaktinformasjon.v1.informasjon.WSEpostadresse
 import no.nav.tjeneste.virksomhet.digitalkontaktinformasjon.v1.informasjon.WSKontaktinformasjon
@@ -33,7 +32,6 @@ class KontaktinformasjonControllerTest {
 
     @BeforeEach
     fun before() {
-        whenever(unleashService.isEnabled(Feature.NYTT_VISITTKORT)).thenReturn(true)
         setupDKIFMock()
     }
 
