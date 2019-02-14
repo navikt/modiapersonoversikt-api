@@ -1,42 +1,43 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.utbetaling
 
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.UnleashService
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.DATOFORMAT
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.lagRiktigDato
 import no.nav.sbl.dialogarena.utbetaling.service.UtbetalingService
 import no.nav.tjeneste.virksomhet.utbetaling.v1.informasjon.*
-import org.joda.time.LocalDate
 import javax.inject.Inject
 import javax.ws.rs.*
 import javax.ws.rs.core.MediaType.APPLICATION_JSON
-
-private const val DAGER_BAKOVER = 30
-private const val DAGER_FREMOVER = 100
+import javax.ws.rs.core.Response
 
 @Path("/utbetaling/{fnr}")
 @Produces(APPLICATION_JSON)
-class UtbetalingController @Inject constructor(private val service: UtbetalingService,
-                                               private val unleashService: UnleashService) {
+class UtbetalingController @Inject constructor(private val service: UtbetalingService) {
 
     @GET
     @Path("/")
     fun hent(@PathParam("fnr") fødselsnummer: String,
              @QueryParam("startDato") start: String?,
-             @QueryParam("sluttDato") slutt: String?): Map<String, Any?> {
+             @QueryParam("sluttDato") slutt: String?): Response {
 
-        val startDato = lagRiktigDato(start) ?: LocalDate.now().minusDays(DAGER_BAKOVER)
-        val sluttDato = (lagRiktigDato(slutt) ?: LocalDate.now()).plusDays(DAGER_FREMOVER)
+        val startDato = lagRiktigDato(start)
+        val sluttDato = lagRiktigDato(slutt)
+
+        if (startDato == null || sluttDato == null) {
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .entity("queryparam ?startDato=yyyy-MM-dd&sluttDato=yyyy-MM-dd må være satt").build()
+        }
+
         val utbetalinger = service.hentWSUtbetalinger(fødselsnummer,
                 startDato,
                 sluttDato)
 
-        return mapOf(
+        return Response.ok(mapOf(
                 "utbetalinger" to hentUtbetalinger(utbetalinger),
                 "periode" to mapOf(
                         "startDato" to startDato.toString(DATOFORMAT),
                         "sluttDato" to sluttDato.toString(DATOFORMAT)
                 )
-        )
+        )).build()
     }
 
     private fun hentUtbetalinger(utbetalinger: List<WSUtbetaling>): List<Map<String, Any?>> {
