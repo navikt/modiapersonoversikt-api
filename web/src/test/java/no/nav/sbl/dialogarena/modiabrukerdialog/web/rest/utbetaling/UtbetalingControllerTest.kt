@@ -4,9 +4,9 @@ import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.whenever
 import no.nav.modig.core.exception.ApplicationException
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.UnleashService
 import no.nav.sbl.dialogarena.utbetaling.service.UtbetalingService
 import org.junit.jupiter.api.Test
+import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 
 private const val FNR = "10108000398"
@@ -17,9 +17,8 @@ private const val FEIL_DATO_FORMAT = "234-14-7"
 internal class UtbetalingControllerTest {
 
     private val service: UtbetalingService = mock()
-    private val unleashService: UnleashService = mock()
 
-    private val controller: UtbetalingController = UtbetalingController(service, unleashService)
+    private val controller: UtbetalingController = UtbetalingController(service)
 
     @Test
     fun `Kaster ApplicationException`() {
@@ -32,4 +31,8 @@ internal class UtbetalingControllerTest {
         assertFailsWith<ApplicationException> { controller.hent(FNR, FEIL_DATO_FORMAT, FEIL_DATO_FORMAT) }
     }
 
+    @Test
+    fun `Kaster feil ved mangel på dato`() {
+        assertEquals(400, controller.hent(FNR, null, null).status)
+    }
 }
