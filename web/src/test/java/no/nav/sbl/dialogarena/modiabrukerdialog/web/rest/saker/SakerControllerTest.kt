@@ -3,7 +3,6 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.saker
 import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.whenever
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.Feature
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.UnleashService
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.DokumentMetadataService
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.SaksService
@@ -31,9 +30,8 @@ internal class SakerControllerTest {
 
     @BeforeEach
     fun before() {
-        whenever(unleashService.isEnabled(Feature.NYTT_VISITTKORT)).thenReturn(true)
-        whenever(tilgangskontrollService.markerIkkeJournalforte(any())).then {  }
-        whenever(saksoversiktService.fjernGamleDokumenter(any())).then {  }
+        whenever(tilgangskontrollService.markerIkkeJournalforte(any())).then { }
+        whenever(saksoversiktService.fjernGamleDokumenter(any())).then { }
         whenever(tilgangskontrollService.harEnhetTilgangTilTema(any(), any())).thenReturn(true)
     }
 

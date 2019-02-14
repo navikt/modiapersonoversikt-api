@@ -2,7 +2,6 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.ytelse
 
 import no.nav.kjerneinfo.consumer.organisasjon.OrganisasjonService
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.artifact.kjerneinfo.component.mockable.MockableContext.KJERNEINFO_KEY
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.Feature
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.UnleashService
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.MockUtil.mockErTillattOgSlaattPaaForKey
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.Wrapper
@@ -29,24 +28,18 @@ class YtelseController @Inject constructor(private val sykepengerService: Sykepe
     @GET
     @Path("sykepenger/{fnr}")
     fun hentSykepenger(@PathParam("fnr") fødselsnummer: String): Map<String, Any?> {
-        check(unleashService.isEnabled(Feature.NYTT_VISITTKORT))
-
         return SykepengerUttrekk(sykepengerService).hent(fødselsnummer)
     }
 
     @GET
     @Path("foreldrepenger/{fnr}")
     fun hentForeldrepenger(@PathParam("fnr") fødselsnummer: String): Map<String, Any?> {
-        check(unleashService.isEnabled(Feature.NYTT_VISITTKORT))
-
         return ForeldrepengerUttrekk(getForeldrepengerService()).hent(fødselsnummer)
     }
 
     @GET
     @Path("pleiepenger/{fnr}")
     fun hentPleiepenger(@PathParam("fnr") fødselsnummer: String): Map<String, Any?> {
-        check(unleashService.isEnabled(Feature.NYTT_VISITTKORT))
-
         return PleiepengerUttrekk(pleiepengerService, organisasjonService).hent(fødselsnummer)
     }
 

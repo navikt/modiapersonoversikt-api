@@ -2,7 +2,6 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.ldap
 
 import no.nav.brukerdialog.security.context.SubjectHandler.getSubjectHandler
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.ldap.LDAPService
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.Feature
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.UnleashService
 import javax.inject.Inject
 import javax.ws.rs.GET
@@ -18,8 +17,6 @@ constructor(private val ldapService: LDAPService, private val unleashService: Un
     @Path("/roller")
     @Produces(MediaType.APPLICATION_JSON)
     fun hentRollerForInnloggetVeileder(): Map<String, MutableList<String>> {
-        check(unleashService.isEnabled(Feature.NYTT_VISITTKORT))
-
         val ident = getSubjectHandler().uid
         return mapOf("roller" to ldapService.hentRollerForVeileder(ident))
     }
