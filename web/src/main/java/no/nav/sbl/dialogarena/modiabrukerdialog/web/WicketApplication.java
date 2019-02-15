@@ -34,17 +34,17 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.selftest.SelfTestPage;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.Innboks;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.nyoppgaveformwrapper.FancySelect;
 import no.nav.sbl.dialogarena.utbetaling.lamell.UtbetalingLerret;
-import org.apache.wicket.Application;
-import org.apache.wicket.Component;
-import org.apache.wicket.Page;
-import org.apache.wicket.Session;
+import org.apache.wicket.*;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Response;
+import org.apache.wicket.request.resource.IResource;
 import org.apache.wicket.resource.loader.IStringResourceLoader;
 import org.apache.wicket.settings.IMarkupSettings;
+import org.apache.wicket.settings.IResourceSettings;
 import org.apache.wicket.spring.injection.annot.SpringComponentInjector;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.scheduling.annotation.Scheduled;
 
@@ -60,6 +60,8 @@ import static org.apache.wicket.util.time.Duration.ONE_SECOND;
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class WicketApplication extends WebApplication {
+
+    private final Logger logger = LoggerFactory.getLogger(WicketApplication.class);
 
     @Inject
     private ApplicationContext applicationContext;
@@ -116,6 +118,10 @@ public class WicketApplication extends WebApplication {
         setSpringComponentInjector();
 
         brukLocaleFra(LocaleFromWicketSession.INSTANCE);
+
+        for(IStringResourceLoader rl : getResourceSettings().getStringResourceLoaders()) {
+            logger.info(rl.getClass().getName());
+        }
     }
 
     private void configureCmsResourceLoader() {
@@ -135,7 +141,7 @@ public class WicketApplication extends WebApplication {
                     return cms.hentTekst(key);
                 } catch (Exception e) {
                     log.trace("Fant ikke " + key + " i cms. Defaulter til properties-fil. " + e.getMessage());
-                    return key;
+                    return null;
                 }
             }
         });
@@ -265,6 +271,5 @@ public class WicketApplication extends WebApplication {
     private void clearCacheTask() {
         this.getResourceSettings().getLocalizer().clearCache();
     }
-
 
 }
