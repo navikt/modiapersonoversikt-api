@@ -56,15 +56,15 @@ public class KodeverksmapperEndpointConfig {
 
             @Override
             public String endpoint() {
-                return getRequiredProperty("kodeverksmapper.ping.url");
+                return System.getProperty("kodeverksmapper.ping.url");
             }
         };
     }
 
     private Kodeverksmapper lagEndpoint() {
-        return new KodeverksmapperEndpoint(getRequiredProperty("kodeverksmapper.oppgavetype.url"),
-                getRequiredProperty("kodeverksmapper.underkategori.url"),
-                getRequiredProperty("kodeverksmapper.ping.url")
+        return new KodeverksmapperEndpoint(System.getProperty("kodeverksmapper.oppgavetype.url"),
+                System.getProperty("kodeverksmapper.underkategori.url"),
+                System.getProperty("kodeverksmapper.ping.url")
         );
     }
 

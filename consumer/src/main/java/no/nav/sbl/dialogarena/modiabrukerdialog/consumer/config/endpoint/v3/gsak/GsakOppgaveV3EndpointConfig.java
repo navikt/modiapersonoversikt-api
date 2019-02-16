@@ -32,7 +32,7 @@ public class GsakOppgaveV3EndpointConfig {
 
     private static CXFClient<OppgaveV3> createOppgavePortType() {
         return new CXFClient<>(OppgaveV3.class)
-                .address(EnvironmentUtils.getRequiredProperty("gsak.oppgave.v3.url"));
+                .address(System.getProperty("gsak.oppgave.v3.url"));
     }
 
 }

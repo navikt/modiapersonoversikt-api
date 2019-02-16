@@ -12,14 +12,14 @@ import java.util.stream.Collectors;
 public class TemagrupperHenter {
 
     public Map<String, List<String>> genererTemagrupperMedTema() {
-        String temagrupperStreng = EnvironmentUtils.getRequiredProperty("saksoversikt.temagrupper");
+        String temagrupperStreng = System.getProperty("saksoversikt.temagrupper");
 
         return kommaseparertTekstTilListe(temagrupperStreng).stream()
                 .collect(Collectors.toMap(Function.identity(), temagruppe -> hentTemaForGruppe(temagruppe)));
     }
 
     private static List<String> hentTemaForGruppe(String gruppe) {
-        String tema = EnvironmentUtils.getRequiredProperty("saksoversikt.temagrupper." + gruppe + ".temaer");
+        String tema = System.getProperty("saksoversikt.temagrupper." + gruppe + ".temaer");
 
         return kommaseparertTekstTilListe(tema);
     }

@@ -31,7 +31,7 @@ public class SaksoversiktServiceImpl implements SaksoversiktService {
     private List<String> getJournalpostIdAaFjerne(List<Sakstema> resultat) {
         Map<String, DokumentMetadata> muligeJournalpostIdAaFjerne = new HashMap<>();
 
-        final LocalDateTime PROD_SETTNING_DATO = formatDate(getRequiredProperty("saksoversikt.prodsettningsdato"));
+        final LocalDateTime PROD_SETTNING_DATO = formatDate(System.getProperty("saksoversikt.prodsettningsdato"));
         getMuligeJournalpostIdAaFjerne(resultat, muligeJournalpostIdAaFjerne);
 
         return muligeJournalpostIdAaFjerne

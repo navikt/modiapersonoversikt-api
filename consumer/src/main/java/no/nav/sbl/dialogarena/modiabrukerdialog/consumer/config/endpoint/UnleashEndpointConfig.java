@@ -30,7 +30,7 @@ import static no.nav.sbl.dialogarena.common.cxf.InstanceSwitcher.createMetricsPr
 @Configuration
 public class UnleashEndpointConfig {
     private static final String MOCK_KEY = "unleash.withmock";
-    String api = EnvironmentUtils.getRequiredProperty("unleash.url");
+    String api = System.getProperty("unleash.url");
 
     @Bean
     @Inject

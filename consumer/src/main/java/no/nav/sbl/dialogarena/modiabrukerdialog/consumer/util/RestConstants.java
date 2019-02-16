@@ -18,12 +18,12 @@ public class RestConstants {
     public static final String AUTH_METHOD_BEARER = "Bearer";
     public static final String AUTH_METHOD_BASIC = "Basic";
 
-    public static final String SECURITY_TOKEN_SERVICE_BASEURL = EnvironmentUtils.getRequiredProperty("sts.token.api.url");
+    public static final String SECURITY_TOKEN_SERVICE_BASEURL = System.getProperty("sts.token.api.url");
     public static final String STS_USERNAME_PW_QUERY_PARAMETERS = "?grant_type=client_credentials&scope=openid";
     public static final String OIDC_EXPIRARY_URI = "exp";
 
     public static final String MODIABRUKERDIALOG_SYSTEM_USER = "srvModiabrukerdialog";
-    public static final String MODIABRUKERDIALOG_SYSTEM_USER_PASSWORD = EnvironmentUtils.getRequiredProperty("no.nav.modig.security.systemuser.password");
+    public static final String MODIABRUKERDIALOG_SYSTEM_USER_PASSWORD = System.getProperty("no.nav.modig.security.systemuser.password");
 
-    public static final String PERSONDOKUMENTER_BASEURL = EnvironmentUtils.getRequiredProperty("persondokumenter.api.url");
+    public static final String PERSONDOKUMENTER_BASEURL = System.getProperty("persondokumenter.api.url");
 }

@@ -32,6 +32,6 @@ public class VarslingEndpointConfig {
 
     private static CXFClient<BrukervarselV1> createVarslingPortType() {
         return new CXFClient<>(BrukervarselV1.class)
-                .address(EnvironmentUtils.getRequiredProperty("varsler.ws.url"));
+                .address(System.getProperty("varsler.ws.url"));
     }
 }

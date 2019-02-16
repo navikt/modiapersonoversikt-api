@@ -37,7 +37,7 @@ public class PDFConverterService {
             List<String> pdfURLer = new ArrayList<>();
 
             for (int i = 0; i < response.getPages(); i++) {
-                pdfURLer.add(getRequiredProperty("tjenester.url") + getRequiredProperty("pdfkonverterer.sti") + response.getUid() + "/" + (i+1));
+                pdfURLer.add(System.getProperty("tjenester.url") + System.getProperty("pdfkonverterer.sti") + response.getUid() + "/" + (i+1));
             }
             return new TjenesteResultatWrapper(pdfURLer);
         } catch (PdfErKorruptFault e) {

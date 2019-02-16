@@ -27,7 +27,7 @@ public class NavKontorPanel extends AbstractKjerneInfoPanel {
 
     private HashMap<String, Object> getNavKontorProps() {
         HashMap<String, Object> props = new HashMap<>();
-        props.put("norg2FrontendBaseUrl", EnvironmentUtils.getRequiredProperty(NORG2_FRONTEND_BASE_URL_PROPERTY_KEY));
+        props.put("norg2FrontendBaseUrl", System.getProperty(NORG2_FRONTEND_BASE_URL_PROPERTY_KEY));
         String navKontorID = getAnsvarligEnhetId(personModel.getObject().getPersonfakta()).orElse("");
         props.put("organisasjonsenhetId", navKontorID);
         return props;

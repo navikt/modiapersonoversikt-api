@@ -25,7 +25,7 @@ public class CmsSkrivestotteEnonic implements CmsSkrivestotte {
     private String appresUrl;
 
     public CmsSkrivestotteEnonic() {
-        appresUrl = EnvironmentUtils.getRequiredProperty("appres.cms.url");
+        appresUrl = System.getProperty("appres.cms.url");
     }
 
     @Override

@@ -42,7 +42,7 @@ public class OrganisasjonEnhetKontaktinformasjonV1EndpointConfig {
 
     private CXFClient<OrganisasjonEnhetKontaktinformasjonV1> lagEndpoint() {
         return new CXFClient<>(OrganisasjonEnhetKontaktinformasjonV1.class)
-                .address(EnvironmentUtils.getRequiredProperty("norg2.organisasjonenhetkontaktinformasjon.v1.url"));
+                .address(System.getProperty("norg2.organisasjonenhetkontaktinformasjon.v1.url"));
     }
 
 }

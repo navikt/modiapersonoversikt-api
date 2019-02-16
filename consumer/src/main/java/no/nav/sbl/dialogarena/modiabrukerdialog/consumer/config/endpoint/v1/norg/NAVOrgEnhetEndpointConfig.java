@@ -22,7 +22,7 @@ import static no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.Gos
 @Configuration
 public class NAVOrgEnhetEndpointConfig {
 
-    private static String address = EnvironmentUtils.getRequiredProperty("tjenestebuss.url") + "nav-cons-sak-gosys-3.0.0Web/sca/GOSYSNAVOrgEnhetWSEXP";
+    private static String address = System.getProperty("tjenestebuss.url") + "nav-cons-sak-gosys-3.0.0Web/sca/GOSYSNAVOrgEnhetWSEXP";
 
     @Bean
     public GOSYSNAVOrgEnhet gosysNavOrgEnhet() {

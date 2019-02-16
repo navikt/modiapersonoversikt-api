@@ -18,7 +18,7 @@ import static no.nav.sbl.dialogarena.common.cxf.InstanceSwitcher.createMetricsPr
 @Configuration
 public class OppfolgingsinfoApiEndpointConfig {
     private static final String MOCK_KEY = "veilarboppfolging.api.withmock";
-    private String api = EnvironmentUtils.getRequiredProperty("veilarboppfolging.api.url");
+    private String api = System.getProperty("veilarboppfolging.api.url");
 
     @Bean
     public OppfolgingsinfoApiService lagOppfolgingsApi() {

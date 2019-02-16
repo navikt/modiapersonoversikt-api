@@ -34,7 +34,7 @@ public class SakOgBehandlingEndpointConfig {
         return new CXFClient<>(SakOgBehandling_v1PortType.class)
                 .timeout(15000, 15000)
                 .wsdl("classpath:sakOgBehandling/no/nav/tjeneste/virksomhet/sakOgBehandling/v1/sakOgBehandling.wsdl")
-                .address(EnvironmentUtils.getRequiredProperty("sakogbehandling.ws.url"));
+                .address(System.getProperty("sakogbehandling.ws.url"));
     }
 
 }

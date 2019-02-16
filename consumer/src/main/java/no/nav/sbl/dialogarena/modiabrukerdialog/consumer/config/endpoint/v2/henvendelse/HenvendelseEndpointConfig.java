@@ -37,7 +37,7 @@ public class HenvendelseEndpointConfig {
     private static CXFClient<HenvendelsePortType> createHenvendelsePortType() {
         return new CXFClient<>(HenvendelsePortType.class)
                 .wsdl("classpath:Henvendelse.wsdl")
-                .address(EnvironmentUtils.getRequiredProperty("henvendelse.v2.url"))
+                .address(System.getProperty("henvendelse.v2.url"))
                 .timeout(10000, 60000)
                 .withProperty("jaxb.additionalContextClasses", new Class[]{
                         XMLHenvendelse.class,

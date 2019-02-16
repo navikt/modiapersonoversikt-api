@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel;
 
+import no.nav.brukerdialog.security.context.ThreadLocalSubjectHandler;
 import no.nav.modig.content.CmsContentRetriever;
 import no.nav.modig.wicket.component.enhancedtextarea.EnhancedTextArea;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.GrunnInfo;
@@ -106,6 +107,7 @@ public class NyDialogPanelTest extends WicketPageTest {
     @Test
     @SuppressWarnings("unchecked")
     public void senderReferattypeMedRiktigeVerdierTilHenvendelse() throws Exception {
+        System.setProperty("no.nav.brukerdialog.security.context.subjectHandlerImplementationClass", ThreadLocalSubjectHandler.class.getName());
         reset(henvendelseUtsendingService);
 
         wicket.goToPageWith(testNyDialogPanel)
@@ -143,6 +145,7 @@ public class NyDialogPanelTest extends WicketPageTest {
 
     @Test
     public void viserKvitteringNaarManSenderInn() {
+        System.setProperty("no.nav.brukerdialog.security.context.subjectHandlerImplementationClass", ThreadLocalSubjectHandler.class.getName());
         wicket.goToPageWith(lagNyDialogPanelMedKanalSatt())
                 .inForm(withId("nydialogform"))
                 .write("tekstfelt:text", "dette er en fritekst")

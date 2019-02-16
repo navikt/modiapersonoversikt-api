@@ -55,7 +55,7 @@ public class LDAPServiceImpl implements LDAPService {
     }
 
     private NamingEnumeration<SearchResult> sokLDAP(String ident) {
-        String searchbase = "OU=Users,OU=NAV,OU=BusinessUnits," + EnvironmentUtils.getRequiredProperty("ldap.basedn");
+        String searchbase = "OU=Users,OU=NAV,OU=BusinessUnits," + System.getProperty("ldap.basedn");
         SearchControls searchCtrl = new SearchControls();
         searchCtrl.setSearchScope(SearchControls.SUBTREE_SCOPE);
 

@@ -36,7 +36,7 @@ public class EnonicConfig {
     private ValueRetriever siteContentRetriever() throws URISyntaxException {
         Map<String, URI> uris = new HashMap<>();
         uris.put(DEFAULT_LOCALE,
-                new URI(getRequiredProperty("appres.cms.url") + INNHOLDSTEKSTER_NB_NO_REMOTE)
+                new URI(System.getProperty("appres.cms.url") + INNHOLDSTEKSTER_NB_NO_REMOTE)
         );
 
         return new ValuesFromContentWithResourceBundleFallback(

@@ -37,7 +37,7 @@ public class OrganisasjonEnhetV2EndpointConfig {
 
     private CXFClient<OrganisasjonEnhetV2> lagEndpoint() {
         return new CXFClient<>(OrganisasjonEnhetV2.class)
-                .address(EnvironmentUtils.getRequiredProperty("norg2.organisasjonenhet.v2.url"));
+                .address(System.getProperty("norg2.organisasjonenhet.v2.url"));
     }
 
 }

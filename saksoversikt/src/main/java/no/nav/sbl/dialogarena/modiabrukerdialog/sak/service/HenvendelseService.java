@@ -33,7 +33,7 @@ public class HenvendelseService {
     private HenvendelseSoknaderPortType henvendelse;
 
     private Predicate<Soknad> fjernSoknaderInnsendtForHL4I2014 = soknad ->
-            soknad.getSistendretDato().isAfter(new DateTime(EnvironmentUtils.getRequiredProperty("fjern.soknader.for.dato")));
+            soknad.getSistendretDato().isAfter(new DateTime(System.getProperty("fjern.soknader.for.dato")));
 
     private List<Soknad> hentHenvendelsessoknader(String fnr) {
         try {

@@ -36,7 +36,7 @@ public class EgenAnsattV1EndpointConfig {
 
     private EgenAnsattV1 lagEndpoint() {
         return new CXFClient<>(EgenAnsattV1.class)
-                .address(EnvironmentUtils.getRequiredProperty("egenansatt.v1.url"))
+                .address(System.getProperty("egenansatt.v1.url"))
                 .configureStsForSystemUserInFSS()
                 .build();
     }

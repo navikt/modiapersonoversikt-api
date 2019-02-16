@@ -22,7 +22,7 @@ public class VarslingContext {
     private static final String INNHOLDSTEKSTER_NB_NO_LOCAL = "content.modia-varsling";
     public static final String DEFAULT_LOCALE = "nb";
 
-    private String appresUrl = EnvironmentUtils.getRequiredProperty("appres.cms.url");
+    private String appresUrl = System.getProperty("appres.cms.url");
 
     @Bean
     public VarslerService varslerService() {

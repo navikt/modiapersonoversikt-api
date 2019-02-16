@@ -15,10 +15,10 @@ public class LdapContextProvider {
 
     static {
         env.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory");
-        env.put(Context.PROVIDER_URL, getRequiredProperty("ldap.url"));
+        env.put(Context.PROVIDER_URL, System.getProperty("ldap.url"));
         env.put(Context.SECURITY_AUTHENTICATION, "simple");
-        env.put(Context.SECURITY_PRINCIPAL, getRequiredProperty("ldap.username"));
-        env.put(Context.SECURITY_CREDENTIALS, getRequiredProperty("ldap.password"));
+        env.put(Context.SECURITY_PRINCIPAL, System.getProperty("ldap.username"));
+        env.put(Context.SECURITY_CREDENTIALS, System.getProperty("ldap.password"));
     }
 
     public LdapContext getInitialLdapContext() {

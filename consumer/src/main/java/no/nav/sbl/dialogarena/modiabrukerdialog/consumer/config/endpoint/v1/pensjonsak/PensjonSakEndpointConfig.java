@@ -32,6 +32,6 @@ public class PensjonSakEndpointConfig {
     private static CXFClient<PensjonSakV1> createPensjonSakV1() {
         return new CXFClient<>(PensjonSakV1.class)
                 .timeout(15000, 15000)
-                .address(EnvironmentUtils.getRequiredProperty("pensjon.sak.v1.url"));
+                .address(System.getProperty("pensjon.sak.v1.url"));
     }
 }

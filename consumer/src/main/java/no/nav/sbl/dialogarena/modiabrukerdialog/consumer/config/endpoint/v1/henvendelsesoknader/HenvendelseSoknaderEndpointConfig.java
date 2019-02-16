@@ -34,7 +34,7 @@ public class HenvendelseSoknaderEndpointConfig {
         return new CXFClient<>(HenvendelseSoknaderPortType.class)
                 .timeout(15000, 15000)
                 .wsdl("classpath:no/nav/tjeneste/domene/brukerdialog/henvendelsesoknader/v1/Soknader.wsdl")
-                .address(EnvironmentUtils.getRequiredProperty("henvendelser.ws.url"));
+                .address(System.getProperty("henvendelser.ws.url"));
     }
 
 }

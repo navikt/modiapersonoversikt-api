@@ -39,7 +39,7 @@ public class InnsynJournalEndpointConfig {
     private CXFClient<InnsynJournalV2> createInnsynJournalV2PortType() {
         return new CXFClient<>(InnsynJournalV2.class)
                 .timeout(30000, 30000)
-                .address(getRequiredProperty(INNSYN_JOURNAL_V2_URL))
+                .address(System.getProperty(INNSYN_JOURNAL_V2_URL))
                 .enableMtom();
     }
 

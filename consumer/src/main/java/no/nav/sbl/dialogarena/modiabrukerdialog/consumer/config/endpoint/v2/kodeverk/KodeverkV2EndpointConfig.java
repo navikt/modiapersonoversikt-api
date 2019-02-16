@@ -45,7 +45,7 @@ public class KodeverkV2EndpointConfig {
         return new CXFClient<>(KodeverkPortType.class)
                 .timeout(15000, 15000)
                 .wsdl("classpath:kodeverk/no/nav/tjeneste/virksomhet/kodeverk/v2/Kodeverk.wsdl")
-                .address(EnvironmentUtils.getRequiredProperty("kodeverkendpoint.v2.url"))
+                .address(System.getProperty("kodeverkendpoint.v2.url"))
                 .withProperty(MUST_UNDERSTAND, false)
                 .build();
     }
