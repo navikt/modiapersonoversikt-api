@@ -1,0 +1,180 @@
+# ref https://raw.githubusercontent.com/nais/naisd/master/nais_example.yaml
+image: repo.adeo.no:5443/oppfolging/modiabrukerdialog
+team: oppfolging
+replicas:
+  min: 2
+  max: 4
+  cpuThresholdPercentage: 50
+port: 8080
+healthcheck:
+  liveness:
+    path: /internal/isAlive
+    initialDelay: 20
+  readiness:
+    path: /internal/isReady
+    initialDay: 20
+prometheus:
+  enabled: true
+  path: /internal/metrics
+resources:
+  limits:
+    cpu: 3
+    memory: 768Mi
+  requests:
+    cpu: 200m
+    memory: 512Mi
+fasitResources:
+  used:
+  - alias: appdynamics
+    resourceType: applicationproperties
+  - alias: modiabrukerdialog.properties
+    resourceType: applicationproperties
+
+  - alias: isso-jwks
+    resourceType: baseurl
+  - alias: server.drek
+    resourceType: baseurl
+  - alias: tjenester
+    resourceType: baseurl
+  - alias: securityTokenService
+    resourceType: baseurl
+  - alias: isso.user
+    resourceType: baseurl
+  - alias: isso.host
+    resourceType: baseurl
+  - alias: openIdConnect
+    resourceType: baseurl
+  - alias: modiabrukerdialog.standardtekster.tilbakemelding
+    resourceType: baseurl
+  - alias: server.veilarbportefoljeflatefs
+    resourceType: baseurl
+  - alias: server.aktivitetsplan
+    resourceType: baseurl
+  - alias: server.aareg
+    resourceType: baseurl
+  - alias: isso.isalive
+    resourceType: baseurl
+  - alias: server.arena
+    resourceType: baseurl
+  - alias: tjenestebus
+    resourceType: baseurl
+  - alias: server.gosys
+    resourceType: baseurl
+  - alias: appres.cms
+    resourceType: baseurl
+  - alias: server.norg2-frontend
+    resourceType: baseurl
+  - alias: server.pesys
+    resourceType: baseurl
+
+  - alias: srvModiabrukerdialog
+    resourceType: certificate
+
+  - alias: srvModiabrukerdialog
+    resourceType: credential
+  - alias: isso-rp-user
+    resourceType: credential
+  - alias: srv_kjerneinfo_tjenestebuss
+    resourceType: credential
+  - alias: openIdConnectAgent
+    resourceType: credential
+
+  - alias: ldap
+    resourceType: ldap
+
+  - alias: bigip
+    resourceType: loadbalancer
+
+  - alias: loadbalancer:modiabrukerdialog
+    resourceType: loadbalancerconfig
+
+  - alias: modiabrukerdialog-memparams
+    resourceType: memoryparameters
+
+  - alias: unleash-api
+    resourceType: restservice
+  - alias: security-token-service-token
+    resourceType: restservice
+  - alias: person-oppslag-v1
+    resourceType: restservice
+  - alias: kodeverksmapper.ping
+    resourceType: restservice
+  - alias: kodeverksmapper.oppgavetype
+    resourceType: restservice
+  - alias: veilArbOppfolgingAPI
+    resourceType: restservice
+  - alias: kodeverksmapper.underkategori
+    resourceType: restservice
+
+  - alias: virksomhet:Kodeverk_v2
+    resourceType: webserviceendpoint
+  - alias: virksomhet:pleiepenger_v1
+    resourceType: webserviceendpoint
+  - alias: domene.Brukerdialog:SendUtHenvendelse_v1
+    resourceType: webserviceendpoint
+  - alias: virksomhet:BehandlePerson_v1
+    resourceType: webserviceendpoint
+  - alias: virksomhet:Person_v3
+    resourceType: webserviceendpoint
+  - alias: Utbetaling_v1
+    resourceType: webserviceendpoint
+  - alias: domene.Brukerdialog:Henvendelse_v2
+    resourceType: webserviceendpoint
+  - alias: domene.Brukerdialog:BehandleHenvendelse_v1
+    resourceType: webserviceendpoint
+  - alias: virksomhet:Oppgavebehandling_v3
+    resourceType: webserviceendpoint
+  - alias: virksomhet:sykepenger_v2
+    resourceType: webserviceendpoint
+  - alias: virksomhet:DigitalKontakinformasjon_v1
+    resourceType: webserviceendpoint
+  - alias: virksomhet:Oppfolging_v1
+    resourceType: webserviceendpoint
+  - alias: virksomhet:Oppgave_v3
+    resourceType: webserviceendpoint
+  - alias: virksomhet:foreldrepenger_v2
+    resourceType: webserviceendpoint
+  - alias: virksomhet:BehandleSak_v1
+    resourceType: webserviceendpoint
+  - alias: virksomhet:Sak_v1
+    resourceType: webserviceendpoint
+  - alias: Journal_v2
+    resourceType: webserviceendpoint
+  - alias: BrukervarselV1
+    resourceType: webserviceendpoint
+  - alias: virksomhet:Ytelseskontrakt_v3
+    resourceType: webserviceendpoint
+  - alias: Aktoer_v1
+    resourceType: webserviceendpoint
+  - alias: virksomhet:EgenAnsatt_v1
+    resourceType: webserviceendpoint
+  - alias: virksomhet:Organisasjon_v4
+    resourceType: webserviceendpoint
+  - alias: domene.Brukerdialog:HenvendelseSoknaderService_v1
+    resourceType: webserviceendpoint
+  - alias: virksomhet:ArbeidOgAktivitet_v1
+    resourceType: webserviceendpoint
+  - alias: virksomhet:Arbeidsfordeling_v1
+    resourceType: webserviceendpoint
+  - alias: SakOgBehandling
+    resourceType: webserviceendpoint
+  - alias: virksomhet:OrganisasjonEnhet_v2
+    resourceType: webserviceendpoint
+  - alias: InnsynJournal_v2
+    resourceType: webserviceendpoint
+  - alias: virksomhet:Personsok_v1
+    resourceType: webserviceendpoint
+  - alias: virksomhet:TildelOppgave_v1
+    resourceType: webserviceendpoint
+  - alias: virksomhet:OrganisasjonEnhetKontaktinformasjon_v1
+    resourceType: webserviceendpoint
+  - alias: pensjon:PensjonSak_v1
+    resourceType: webserviceendpoint
+  - alias: virksomhet:BehandleBrukerprofil_v2
+    resourceType: webserviceendpoint
+
+  - alias: servicegateway
+    resourceType: webservicegateway
+
+alertProfiles:
+  - common-java-modules
