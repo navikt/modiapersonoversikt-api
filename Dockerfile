@@ -1,4 +1,7 @@
 FROM docker.adeo.no:5000/pus/maven as builder
+
+RUN apk add --update nodejs nodejs-npm
+
 ADD / /source
 WORKDIR /source
 RUN mvn package -DskipTests
