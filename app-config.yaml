@@ -93,10 +93,6 @@ fasitResources:
 
   - alias: unleash-api
     resourceType: restservice
-  - alias: security-token-service-token
-    resourceType: restservice
-  - alias: person-oppslag-v1
-    resourceType: restservice
   - alias: kodeverksmapper.ping
     resourceType: restservice
   - alias: kodeverksmapper.oppgavetype
