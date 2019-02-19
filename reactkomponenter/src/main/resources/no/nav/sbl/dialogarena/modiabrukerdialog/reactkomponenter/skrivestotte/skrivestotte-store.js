@@ -121,7 +121,7 @@ class SkrivstotteStore extends Store {
     }
 
     autofullfor(tekst, autofullforMap) {
-        const FINN_PLACEHOLDER_NOKKEL_OG_TEGN_FOER_WHITESPACE = /((.)\s*|^)\[(.*?)]/g;
+        const FINN_PLACEHOLDER_NOKKEL_OG_TEGN_FOER_WHITESPACE = /((.)\s*|^|\n)\[(.*?)]/g;
 
         return tekst.replace(FINN_PLACEHOLDER_NOKKEL_OG_TEGN_FOER_WHITESPACE, (entierMatchedString, prefix, tegnOgWhitespaceFoerNokkel, nokkel) => {
             const startMedStorBokstav = tegnOgWhitespaceFoerNokkel === undefined || tegnOgWhitespaceFoerNokkel.startsWith('.');
