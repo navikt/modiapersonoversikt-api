@@ -38,9 +38,9 @@ fasitResources:
     resourceType: baseurl
   - alias: securityTokenService
     resourceType: baseurl
-  - alias: isso.user
+  - alias: isso-issuer
     resourceType: baseurl
-  - alias: isso.host
+  - alias: isso-host
     resourceType: baseurl
   - alias: openIdConnect
     resourceType: baseurl
