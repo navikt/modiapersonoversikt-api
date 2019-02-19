@@ -31,6 +31,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.PersonPage;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.hode.Hode;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.purgeoppgaver.PurgeOppgaverPage;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.selftest.SelfTestPage;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.util.IsReady;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.Innboks;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.nyoppgaveformwrapper.FancySelect;
 import no.nav.sbl.dialogarena.utbetaling.lamell.UtbetalingLerret;
@@ -245,6 +246,7 @@ public class WicketApplication extends WebApplication {
         mountPage("/hentPerson/${fnr}", HentPersonPage.class);
         mountPage("/person/${fnr}", PersonPage.class);
         mountPage("internal/isAlive", HealthCheck.class);
+        mountPage("internal/isReady", IsReady.class);
         mountPage("internal/selftest", SelfTestPage.class);
         mountResource("internal/selftest.json", new JsonResourceReference(SelfTestPage.class));
         if (mockSetupErTillatt()) {
