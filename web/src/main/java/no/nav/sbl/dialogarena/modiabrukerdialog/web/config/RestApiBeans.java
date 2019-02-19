@@ -4,10 +4,7 @@ import no.nav.brukerdialog.isso.RelyingPartyCallback;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.rest.DokumentController;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.rest.InformasjonController;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.rest.SaksoversiktController;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.HodeController;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.JournalforingController;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.MeldingerController;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.SkrivestotteController;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.*;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.baseurls.BaseUrlsController;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.brukerprofil.BrukerprofilController;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.egenansatt.EgenAnsattController;
@@ -56,6 +53,7 @@ import org.springframework.context.annotation.Import;
         YtelseController.class,
         OppfolgingController.class,
         SakerController.class,
-        PersondokumentController.class
+        PersondokumentController.class,
+        NaisController.class
 })
 public class RestApiBeans { }

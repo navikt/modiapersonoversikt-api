@@ -8,14 +8,13 @@ replicas:
 port: 8080
 healthcheck:
   liveness:
-    path: /internal/isAlive
+    path: /rest/internal/isAlive
     initialDelay: 20
   readiness:
-    path: /internal/isReady
+    path: /rest/internal/isReady
     initialDay: 20
 prometheus:
-  enabled: true
-  path: /internal/metrics
+  enabled: false
 resources:
   limits:
     cpu: 3
