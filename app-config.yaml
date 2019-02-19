@@ -56,7 +56,7 @@ fasitResources:
     resourceType: baseurl
   - alias: server.arena
     resourceType: baseurl
-  - alias: tjenestebus
+  - alias: tjenestebuss
     resourceType: baseurl
   - alias: server.gosys
     resourceType: baseurl
