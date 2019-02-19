@@ -14,7 +14,8 @@ healthcheck:
     path: /rest/internal/isReady
     initialDay: 20
 prometheus:
-  enabled: false
+  enabled: true
+  path: /internal/metrics
 resources:
   limits:
     cpu: 3
