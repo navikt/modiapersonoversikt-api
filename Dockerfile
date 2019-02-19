@@ -1,4 +1,4 @@
-FROM node:11 as nodeBuilder
+FROM docker.adeo.no:5000/pus/node as nodeBuilder
 
 ADD / /source
 WORKDIR /source/reactkomponenter
