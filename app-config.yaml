@@ -68,6 +68,8 @@ fasitResources:
     resourceType: baseurl
 
   - alias: srvModiabrukerdialog
+    propertyMap:
+        password: certSrvModiabrukerdialog_password
     resourceType: certificate
 
   - alias: srvModiabrukerdialog
