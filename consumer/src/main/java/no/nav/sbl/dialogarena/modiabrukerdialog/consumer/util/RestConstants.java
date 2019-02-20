@@ -25,4 +25,5 @@ public class RestConstants {
     public static final String MODIABRUKERDIALOG_SYSTEM_USER_PASSWORD = System.getProperty("no.nav.modig.security.systemuser.password");
 
     public static final String PERSONDOKUMENTER_BASEURL = System.getProperty("persondokumenter.api.url");
+    public static final String SAF_BASEURL = System.getProperty("saf.api.url");
 }
