@@ -839,6 +839,7 @@
                     <excludes>
                         <exclude>*</exclude>
                     </excludes>
+                    <reuseForks>true</reuseForks>
                 </configuration>
             </plugin>
         </plugins>
