@@ -31,8 +31,6 @@
         <dependency>
             <groupId>no.nav.dialogarena</groupId>
             <artifactId>oidc-security</artifactId>
-            <scope>test</scope>
-            <type>test-jar</type>
         </dependency>
         <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>
@@ -46,7 +44,6 @@
             <groupId>org.apache.geronimo.components</groupId>
             <artifactId>geronimo-jaspi</artifactId>
             <version>2.0.0</version>
-            <scope>test</scope>
         </dependency>
         <!--Interne-->
         <dependency>
@@ -72,8 +69,6 @@
         <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>modiabrukerdialog-api</artifactId>
-            <type>test-jar</type>
-            <scope>test</scope>
             <version>${project.version}</version>
         </dependency>
         <dependency>
