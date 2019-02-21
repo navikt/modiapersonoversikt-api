@@ -842,5 +842,6 @@
                 </configuration>
             </plugin>
         </plugins>
+        <finalName>modiabrukerdialog</finalName>
     </build>
 </project>
