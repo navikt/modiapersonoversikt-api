@@ -15,4 +15,4 @@ COPY --from=nodeBuilder /source/reactkomponenter/target /source/reactkomponenter
 RUN mvn package -DskipTests
 
 FROM docker.adeo.no:5000/pus/nais-java-app
-COPY --from=mavenBuilder /source/web/target /app
+COPY --from=mavenBuilder /source/web/target/modiabrukerdialog-web-dev /app
