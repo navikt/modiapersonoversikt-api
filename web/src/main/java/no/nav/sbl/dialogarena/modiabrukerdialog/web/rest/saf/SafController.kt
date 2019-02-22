@@ -3,11 +3,10 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.saf
 import no.nav.brukerdialog.security.context.SubjectHandler
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.RestConstants.*
 import no.nav.sbl.rest.RestUtils
-import javax.ws.rs.Consumes
-import javax.ws.rs.POST
-import javax.ws.rs.Path
-import javax.ws.rs.Produces
+import javax.ws.rs.*
+import javax.ws.rs.client.Client
 import javax.ws.rs.client.Entity
+import javax.ws.rs.client.Invocation
 import javax.ws.rs.core.HttpHeaders.AUTHORIZATION
 import javax.ws.rs.core.HttpHeaders.CONTENT_TYPE
 import javax.ws.rs.core.MediaType.APPLICATION_JSON
@@ -22,34 +21,66 @@ import javax.ws.rs.core.Response.status
 class SafController {
 
     @POST
-    @Path("/")
+    @Path("/hentSaker/")
     @Consumes(APPLICATION_JSON)
     fun hentSaker(graphQLQuery: GrapQLQuery): Response {
-        val veilederOidcToken = SubjectHandler.getSubjectHandler().internSsoToken
-        val result = gjorSporring(SAF_BASEURL, veilederOidcToken, graphQLQuery)
+        val jsonQuery = graphQLtoJson(graphQLQuery)
 
-        when (result.status) {
+        val result = RestUtils.withClient { client ->
+            veilederAutorisertClient(client, SAF_GRAPHQL_BASEURL).post(Entity.entity(jsonQuery, APPLICATION_JSON))
+        }
+
+        return when (result.status) {
             //TODO: her må det i minste logges litt ved feil, kanskje utvide med flere statuskoder.
-            200 -> return ok().entity(result.entity).build()
-            404 -> return status(NOT_FOUND).build()
-            else -> return status(INTERNAL_SERVER_ERROR).build()
+            200 -> ok().entity(result.entity).build()
+            404 -> status(NOT_FOUND).build()
+            else -> status(INTERNAL_SERVER_ERROR).build()
         }
     }
 
-    private fun gjorSporring(url: String, veilederOidcToken: String, query: GrapQLQuery): Response {
-        val jsonQuery = graphQLtoJson(query)
-        return RestUtils.withClient { client ->
-            client
-                    .target(url)
-                    .request()
-                    .header(AUTHORIZATION, AUTH_METHOD_BEARER + AUTH_SEPERATOR + veilederOidcToken)
-                    .header(CONTENT_TYPE, APPLICATION_JSON)
-                    .post(Entity.entity(jsonQuery, APPLICATION_JSON))
+    @GET
+    @Path("/hentDokument/{journalpostId}/{dokumentInfoId}/{variantFormat}/")
+    @Consumes(APPLICATION_JSON)
+    @Produces("application/pdf")
+    fun hentDokument(
+            @PathParam("journalpostId") journalpostId: String,
+            @PathParam("dokumentInfoId") dokumentInfoId: String,
+            @PathParam("variantFormat") variantFormat: String): Response {
+
+        val url = lagHentDokumentURL(journalpostId, dokumentInfoId, variantFormat)
+
+        val result = RestUtils.withClient { client ->
+            veilederAutorisertClient(client, url).get()
+        }
+
+        return when (result.status) {
+            //TODO: her må det i minste logges litt ved feil, kanskje utvide med flere statuskoder.
+            200 -> ok().entity(result.entity).build()
+            404 -> status(NOT_FOUND).build()
+            else -> status(INTERNAL_SERVER_ERROR).build()
         }
     }
 
-    private fun graphQLtoJson(grapQLQuery: GrapQLQuery): String {
-        val escapedQuery = grapQLQuery.query.replace("\"", "\\\"")
-        return "{\"query\":\"$escapedQuery\"}"
-    }
+
 }
+
+private fun veilederAutorisertClient(client: Client, url: String): Invocation.Builder {
+    val veilederOidcToken = SubjectHandler.getSubjectHandler().internSsoToken
+    return client
+            .target(url)
+            .request()
+            .header(AUTHORIZATION, AUTH_METHOD_BEARER + AUTH_SEPERATOR + veilederOidcToken)
+            .header(CONTENT_TYPE, APPLICATION_JSON)
+}
+
+private fun graphQLtoJson(grapQLQuery: GrapQLQuery): String {
+    val escapedQuery = grapQLQuery.query.replace("\"", "\\\"")
+    return "{\"query\":\"$escapedQuery\"}"
+}
+
+private fun lagHentDokumentURL(journalpostId: String, dokumentInfoId: String, variantFormat: String) =
+        SAF_HENTDOKUMENT_BASEURL + String.format(
+                "/%s/%s/%s/",
+                journalpostId,
+                dokumentInfoId,
+                variantFormat)
