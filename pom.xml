@@ -5,7 +5,7 @@
     <parent>
         <groupId>no.nav.sbl</groupId>
         <artifactId>mor-pom</artifactId>
-        <version>​2019.02.22.12.43-legacy-modiabrukerdialog</version>
+        <version>2019.02.22.12.43-legacy-modiabrukerdialog</version>
     </parent>
 
     <name>Dialogarena - modiabrukerdialog</name>
@@ -32,7 +32,7 @@
     </modules>
 
     <properties>
-        <common.version>​2019.02.22.12.43-legacy-modiabrukerdialog</common.version>
+        <common.version>2019.02.22.12.43-legacy-modiabrukerdialog</common.version>
         <oidc.security-authorization.version>696</oidc.security-authorization.version>
 
         <args4j.version>2.0.23</args4j.version>
