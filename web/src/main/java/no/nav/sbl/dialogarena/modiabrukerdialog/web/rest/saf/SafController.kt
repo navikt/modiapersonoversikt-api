@@ -23,7 +23,7 @@ class SafController {
     @POST
     @Path("/hentSaker/")
     @Consumes(APPLICATION_JSON)
-    fun hentSaker(graphQLQuery: GrapQLQuery): Response {
+    fun hentSaker(graphQLQuery: GraphQLQuery): Response {
         val jsonQuery = graphQLtoJson(graphQLQuery)
 
         val result = RestUtils.withClient { client ->
@@ -73,8 +73,8 @@ private fun veilederAutorisertClient(client: Client, url: String): Invocation.Bu
             .header(CONTENT_TYPE, APPLICATION_JSON)
 }
 
-private fun graphQLtoJson(grapQLQuery: GrapQLQuery): String {
-    val escapedQuery = grapQLQuery.query.replace("\"", "\\\"")
+private fun graphQLtoJson(graphQLQuery: GraphQLQuery): String {
+    val escapedQuery = graphQLQuery.query.replace("\"", "\\\"")
     return "{\"query\":\"$escapedQuery\"}"
 }
 
