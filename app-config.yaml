@@ -138,20 +138,14 @@ fasitResources:
     resourceType: webserviceendpoint
   - alias: Journal_v2
     resourceType: webserviceendpoint
-    propertyMap:
-      endpointurl: JOURNAL_URL
   - alias: BrukervarselV1
     resourceType: Webserviceendpoint
-    propertyMap:
-      url: BRUKERVARSEL_V1_ENDPOINTURL
   - alias: virksomhet:Ytelseskontrakt_v3
-    propertyMap:
-      url: kontrakt_v3_url
     resourceType: webserviceendpoint
   - alias: Aktoer_v1
-    propertyMap:
-      url: aktorid.ws.url
     resourceType: webserviceendpoint
+    propertyMap:
+      endpointUrl: AKTOER_V2_URL
   - alias: virksomhet:EgenAnsatt_v1
     resourceType: webserviceendpoint
   - alias: virksomhet:Organisasjon_v4
