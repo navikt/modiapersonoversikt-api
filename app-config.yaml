@@ -144,7 +144,7 @@ fasitResources:
     resourceType: webserviceendpoint
   - alias: Aktoer_v1
     propertyMap:
-      url: aktorid.ws.url
+      endpointurl: aktorid.ws.url
     resourceType: webserviceendpoint
   - alias: virksomhet:EgenAnsatt_v1
     resourceType: webserviceendpoint
