@@ -72,7 +72,8 @@ class UtbetalingController @Inject constructor(private val service: UtbetalingSe
                     "skattsum" to it.skattsum,
                     "periode" to it.ytelsesperiode?.let { hentYtelsesperiode(it) },
                     "nettobeløp" to it.ytelseNettobeloep,
-                    "bilagsnummer" to it.bilagsnummer?.trim()
+                    "bilagsnummer" to it.bilagsnummer?.trim(),
+                    "arbeidsgiver" to it.refundertForOrg?.let { hentArbeidsgiver(it) }
             )
         }
     }
@@ -114,4 +115,10 @@ class UtbetalingController @Inject constructor(private val service: UtbetalingSe
         )
     }
 
+    private fun hentArbeidsgiver(it: WSAktoer): Map<String, String> {
+        return mapOf(
+                "orgnr" to it.aktoerId,
+                "navn" to it.navn
+        )
+    }
 }
