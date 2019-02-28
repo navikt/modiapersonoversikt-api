@@ -138,6 +138,8 @@ fasitResources:
     resourceType: webserviceendpoint
   - alias: Journal_v2
     resourceType: webserviceendpoint
+    propertyMap:
+      endpointurl: JOURNAL_URL
   - alias: BrukervarselV1
     resourceType: Webserviceendpoint
     propertyMap:
