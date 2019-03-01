@@ -103,6 +103,10 @@ fasitResources:
     resourceType: restservice
   - alias: kodeverksmapper.underkategori
     resourceType: restservice
+  - alias: security-token-service
+    resourceType: restservice
+  - alias: person-oppslag-v1
+    resourceType: restservice
 
   - alias: virksomhet:Kodeverk_v2
     resourceType: webserviceendpoint
@@ -144,8 +148,6 @@ fasitResources:
     resourceType: webserviceendpoint
   - alias: Aktoer_v1
     resourceType: webserviceendpoint
-    propertyMap:
-      endpointUrl: aktorid.ws.url
   - alias: virksomhet:EgenAnsatt_v1
     resourceType: webserviceendpoint
   - alias: virksomhet:Organisasjon_v4
