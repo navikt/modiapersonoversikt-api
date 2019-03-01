@@ -103,7 +103,7 @@ fasitResources:
     resourceType: restservice
   - alias: kodeverksmapper.underkategori
     resourceType: restservice
-  - alias: security-token-service
+  - alias: security-token-service-token
     resourceType: restservice
   - alias: person-oppslag-v1
     resourceType: restservice
