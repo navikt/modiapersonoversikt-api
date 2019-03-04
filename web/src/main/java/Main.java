@@ -10,11 +10,11 @@ public class Main {
 
     public static void main(String... args) {
         setProperty("isso.isalive.url", getEnvVar("ISSO_ISALIVE_URL"), PUBLIC);
-        //setProperty("openAMTokenIssuer.url", getEnvVar("VIRKSOMHET_FORELDREPENGER_V2_ENDPOINTURL"), PUBLIC);
+        setProperty("openAMTokenIssuer.url", getEnvVar("ISSO_JWKS_URL"), PUBLIC);
         setProperty("isso-jwks.url", getEnvVar("ISSO_JWKS_URL"), PUBLIC);
         setProperty("isso-issuer.url", getEnvVar("ISSO_ISSUER_URL"), PUBLIC);
         setProperty("isso-host.url", getEnvVar("ISSO_HOST_URL"), PUBLIC);
-        //setProperty("oidc-redirect.url", getEnvVar("VIRKSOMHET_FORELDREPENGER_V2_ENDPOINTURL"), PUBLIC);
+        setProperty("oidc-redirect.url", getEnvVar("OPENIDCONNECT_URL"), PUBLIC);
         setProperty("server.gosys.url", getEnvVar("SERVER_GOSYS_URL"), PUBLIC);
         setProperty("server.pesys.url", getEnvVar("SERVER_PESYS_URL"), PUBLIC);
         setProperty("server.aktivitetsplan.url", getEnvVar("SERVER_AKTIVITETSPLAN_URL"), PUBLIC);
