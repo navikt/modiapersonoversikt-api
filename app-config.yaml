@@ -9,10 +9,10 @@ port: 8080
 healthcheck:
   liveness:
     path: /rest/internal/isAlive
-    initialDelay: 20
+    initialDelay: 30
   readiness:
     path: /rest/internal/isReady
-    initialDay: 20
+    initialDelay: 30
 prometheus:
   enabled: true
   path: /internal/metrics
