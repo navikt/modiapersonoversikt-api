@@ -3,6 +3,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.ModiaApplicationConte
 import no.nav.sbl.util.EnvironmentUtils;
 
 import static no.nav.sbl.util.EnvironmentUtils.Type.PUBLIC;
+import static no.nav.sbl.util.EnvironmentUtils.Type.SECRET;
 import static no.nav.sbl.util.EnvironmentUtils.setProperty;
 
 public class Main {
@@ -78,8 +79,17 @@ public class Main {
         setProperty("ldap.domain", "LDAP_DOMAIN", PUBLIC);
         setProperty("modiabrukerdialog.datadir", "target/modiabrukerdialog", PUBLIC);
         setProperty("kan.purge.oppgaver", "true", PUBLIC);
-        setProperty("tjenester.url", "TJENESTER_URL", PUBLIC);
+        setProperty("tjenester.url", getEnvVar("TJENESTER_URL"), PUBLIC);
         setProperty("current.domain", "TODO", PUBLIC);
+
+        setProperty("ldap.username", getEnvVar("LDAP_USERNAME"), PUBLIC);
+        setProperty("ldap.password", getEnvVar("LDAP_PASSWORD"), SECRET);
+
+        setProperty("ctjenestebuss.username", getEnvVar("SRV_KJERNEINFO_TJENESTEBUSS_USERNAME"), PUBLIC);
+        setProperty("ctjenestebuss.password", getEnvVar("SRV_KJERNEINFO_TJENESTEBUSS_PASSWORD"), SECRET);
+
+        setProperty("isso-rp-user.username", getEnvVar("ISSO_RP_USER_USERNAME"), PUBLIC);
+        setProperty("isso-rp-user.password", getEnvVar("ISSO_RP_USER_PASSWORD"), SECRET);
 
         ApiApp.startApp(ModiaApplicationContext.class, args);
     }
