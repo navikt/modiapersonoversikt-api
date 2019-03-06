@@ -22,6 +22,7 @@
     </security>
 
     <loadBalancer isAlive="/modiabrukerdialog/internal/isAlive" />
+    <loadBalancer isReady="/modiabrukerdialog/internal/isReady" />
     <logging serviceCalls="true" />
 
     <exposed-services>

@@ -1,7 +1,9 @@
+import no.nav.apiapp.ApiApp;
 import no.nav.dialogarena.config.fasit.FasitUtils;
 import no.nav.dialogarena.config.fasit.LdapConfig;
 import no.nav.dialogarena.config.fasit.ServiceUser;
 import no.nav.modig.testcertificates.TestCertificates;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.ModiaApplicationContext;
 import no.nav.sbl.dialogarena.test.SystemProperties;
 import no.nav.testconfig.ApiAppTest;
 import org.slf4j.Logger;
@@ -36,6 +38,6 @@ public class MainTest {
         setProperty("ctjenestebuss.username", srvKjerneinfoTjenestebuss.getUsername(), PUBLIC);
         setProperty("ctjenestebuss.password", srvKjerneinfoTjenestebuss.getPassword(), SECRET);
 
-        Main.main("8083", "8084");
+        ApiApp.startApp(ModiaApplicationContext.class, new String[]{"8083", "8084"});
     }
 }

@@ -33,6 +33,7 @@
             <url-pattern>/internal/selftest</url-pattern>
             <url-pattern>/internal/selftest.json</url-pattern>
             <url-pattern>/internal/isAlive</url-pattern>
+            <url-pattern>/internal/isReady</url-pattern>
             <url-pattern>/internal/metrics/*</url-pattern>
             <url-pattern>/rest/login</url-pattern>
         </web-resource-collection>
