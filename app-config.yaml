@@ -8,14 +8,14 @@ replicas:
 port: 8080
 healthcheck:
   liveness:
-    path: /internal/isAlive
+    path: /modiabrukerdialog/internal/isAlive
     initialDelay: 50
   readiness:
-    path: /internal/isReady
+    path: /modiabrukerdialog/internal/isReady
     initialDelay: 50
 prometheus:
   enabled: true
-  path: /internal/metrics
+  path: /modiabrukerdialog/internal/metrics
 resources:
   limits:
     cpu: 3
