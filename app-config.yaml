@@ -30,6 +30,8 @@ fasitResources:
   - alias: modiabrukerdialog.properties
     resourceType: applicationproperties
 
+  - alias: oidc.redirect.url
+    resourceType: baseurl
   - alias: isso-jwks
     resourceType: baseurl
   - alias: server.drek
