@@ -14,7 +14,7 @@ public class Main {
         setProperty("isso-jwks.url", getEnvVar("ISSO_JWKS_URL"), PUBLIC);
         setProperty("isso-issuer.url", getEnvVar("ISSO_ISSUER_URL"), PUBLIC);
         setProperty("isso-host.url", getEnvVar("ISSO_HOST_URL"), PUBLIC);
-        setProperty("oidc-redirect.url", getEnvVar("/modiabrukerdialog/rest/login"), PUBLIC);
+        setProperty("oidc-redirect.url", "/modiabrukerdialog/rest/login", PUBLIC);
         setProperty("server.gosys.url", getEnvVar("SERVER_GOSYS_URL"), PUBLIC);
         setProperty("server.pesys.url", getEnvVar("SERVER_PESYS_URL"), PUBLIC);
         setProperty("server.aktivitetsplan.url", getEnvVar("SERVER_AKTIVITETSPLAN_URL"), PUBLIC);
