@@ -1,6 +1,5 @@
 import no.nav.apiapp.ApiApp;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.ModiaApplicationContext;
-import no.nav.sbl.util.EnvironmentUtils;
 
 import static no.nav.sbl.util.EnvironmentUtils.Type.PUBLIC;
 import static no.nav.sbl.util.EnvironmentUtils.Type.SECRET;
