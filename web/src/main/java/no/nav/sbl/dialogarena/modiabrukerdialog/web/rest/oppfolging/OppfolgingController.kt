@@ -51,10 +51,11 @@ class OppfolgingController @Inject constructor(private val service: Oppfolgingsi
         val ytelserResponse = ytelseskontraktService.hentYtelseskontrakter(lagYtelseRequest(fodselsnummer, start, slutt))
 
         return mapOf(
+                "oppfølging" to hent(fodselsnummer),
                 "meldeplikt" to kontraktResponse.bruker?.meldeplikt,
                 "formidlingsgruppe" to kontraktResponse.bruker?.formidlingsgruppe,
                 "innsatsgruppe" to kontraktResponse.bruker?.innsatsgruppe,
-                "sykmeldtFrom" to kontraktResponse.bruker?.sykmeldtFrom?.toString(DATOFORMAT),
+                "sykmeldtFra" to kontraktResponse.bruker?.sykmeldtFrom?.toString(DATOFORMAT),
                 "rettighetsgruppe" to ytelserResponse.rettighetsgruppe,
                 "vedtaksdato" to kontraktResponse.vedtaksdato?.toString(DATOFORMAT),
                 "sykefraværsoppfølging" to hentSyfoPunkt(kontraktResponse.syfoPunkter),
@@ -63,6 +64,8 @@ class OppfolgingController @Inject constructor(private val service: Oppfolgingsi
     }
 
     private fun hentYtelser(ytelser: List<Ytelse>): List<Map<String, Any?>> {
+        if (ytelser == null) return emptyList()
+
         return ytelser.map {
             mapOf(
                     "dagerIgjenMedBortfall" to it.dagerIgjenMedBortfall,
@@ -78,6 +81,8 @@ class OppfolgingController @Inject constructor(private val service: Oppfolgingsi
     }
 
     private fun hentVedtak(vedtak: List<Vedtak>): List<Map<String, Any?>> {
+        if (vedtak == null) return emptyList()
+
         return vedtak.map {
             mapOf(
                     "aktivFra" to it.activeFrom?.toString(DATOFORMAT),
@@ -91,6 +96,8 @@ class OppfolgingController @Inject constructor(private val service: Oppfolgingsi
     }
 
     private fun hentSyfoPunkt(syfoPunkter: List<SYFOPunkt>): List<Map<String, Any?>> {
+        if (syfoPunkter == null) return emptyList()
+
         return syfoPunkter.map {
             mapOf(
                     "dato" to it.dato?.toString(DATOFORMAT),
