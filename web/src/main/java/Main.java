@@ -79,7 +79,7 @@ public class Main {
         setProperty("modiabrukerdialog.datadir", "target/modiabrukerdialog", PUBLIC);
         setProperty("kan.purge.oppgaver", "true", PUBLIC);
         setProperty("tjenester.url", getEnvVar("TJENESTER_URL"), PUBLIC);
-        setProperty("current.domain", "TODO", PUBLIC);
+        setProperty("current.domain", "What put here?", PUBLIC);
 
         setProperty("ldap.username", getEnvVar("LDAP_USERNAME"), PUBLIC);
         setProperty("ldap.password", getEnvVar("LDAP_PASSWORD"), SECRET);
