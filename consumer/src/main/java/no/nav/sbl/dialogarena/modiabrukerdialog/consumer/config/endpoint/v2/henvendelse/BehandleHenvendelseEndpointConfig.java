@@ -4,7 +4,6 @@ import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLJournalfo
 import no.nav.modig.modia.ping.Pingable;
 import no.nav.modig.modia.ping.PingableWebService;
 import no.nav.sbl.dialogarena.common.cxf.CXFClient;
-import no.nav.sbl.util.EnvironmentUtils;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.behandlehenvendelse.BehandleHenvendelsePortType;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

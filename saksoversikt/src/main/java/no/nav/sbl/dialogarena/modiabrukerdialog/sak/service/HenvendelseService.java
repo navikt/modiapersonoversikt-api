@@ -3,7 +3,6 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.sak.service;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.Behandling;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.FeilendeBaksystemException;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.Soknad;
-import no.nav.sbl.util.EnvironmentUtils;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsesoknader.v1.HenvendelseSoknaderPortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsesoknader.v1.informasjon.WSSoknad;
 import org.joda.time.DateTime;

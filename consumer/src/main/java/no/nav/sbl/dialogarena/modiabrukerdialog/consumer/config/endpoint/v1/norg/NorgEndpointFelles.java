@@ -1,17 +1,12 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v1.norg;
 
-
-import no.nav.sbl.util.EnvironmentUtils;
 import org.apache.wss4j.common.ext.WSPasswordCallback;
 import org.apache.wss4j.dom.WSConstants;
 import org.apache.wss4j.dom.handler.WSHandlerConstants;
-import org.omg.CORBA.Environment;
 
 import javax.security.auth.callback.CallbackHandler;
 import java.util.HashMap;
 import java.util.Map;
-
-import static no.nav.sbl.util.EnvironmentUtils.getRequiredProperty;
 
 public class NorgEndpointFelles {
 

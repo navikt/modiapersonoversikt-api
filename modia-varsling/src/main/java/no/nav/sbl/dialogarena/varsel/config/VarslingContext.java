@@ -6,7 +6,6 @@ import no.nav.modig.content.ValueRetriever;
 import no.nav.modig.content.ValuesFromContentWithResourceBundleFallback;
 import no.nav.sbl.dialogarena.varsel.service.VarslerService;
 import no.nav.sbl.dialogarena.varsel.service.VarslerServiceImpl;
-import no.nav.sbl.util.EnvironmentUtils;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 

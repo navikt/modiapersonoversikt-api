@@ -1,7 +1,5 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.sak.utils;
 
-import no.nav.sbl.util.EnvironmentUtils;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;

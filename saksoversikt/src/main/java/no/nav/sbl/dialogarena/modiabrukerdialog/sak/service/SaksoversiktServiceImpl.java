@@ -4,7 +4,6 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.Baksystem;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.DokumentMetadata;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.Sakstema;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.interfaces.SaksoversiktService;
-import no.nav.sbl.util.EnvironmentUtils;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -13,9 +12,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-
-import static java.lang.System.getProperty;
-import static no.nav.sbl.util.EnvironmentUtils.getRequiredProperty;
 
 public class SaksoversiktServiceImpl implements SaksoversiktService {
 

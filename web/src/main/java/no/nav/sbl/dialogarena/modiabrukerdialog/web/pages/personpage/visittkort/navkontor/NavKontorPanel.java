@@ -5,7 +5,6 @@ import no.nav.kjerneinfo.domain.person.fakta.AnsvarligEnhet;
 import no.nav.kjerneinfo.domain.person.fakta.Organisasjonsenhet;
 import no.nav.kjerneinfo.web.pages.kjerneinfo.panel.kjerneinfo.AbstractKjerneInfoPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.reactkomponenter.utils.wicket.ReactComponentPanel;
-import no.nav.sbl.util.EnvironmentUtils;
 
 import java.util.HashMap;
 import java.util.Optional;

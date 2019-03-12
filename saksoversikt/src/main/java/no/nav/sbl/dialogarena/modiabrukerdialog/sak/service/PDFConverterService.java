@@ -2,7 +2,6 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.sak.service;
 
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.FeilendeBaksystemException;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.resultatwrappere.TjenesteResultatWrapper;
-import no.nav.sbl.util.EnvironmentUtils;
 import no.nav.tjeneste.domene.brevogarkiv.sanntidpdfkonverterer.v1.PdfErKorruptFault;
 import no.nav.tjeneste.domene.brevogarkiv.sanntidpdfkonverterer.v1.SanntidPdfKonvertererV1;
 import no.nav.tjeneste.domene.brevogarkiv.sanntidpdfkonverterer.v1.meldinger.KonverterPdf2BildeRequest;

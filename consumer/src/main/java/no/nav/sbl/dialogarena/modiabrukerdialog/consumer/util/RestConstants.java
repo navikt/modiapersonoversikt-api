@@ -1,6 +1,5 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util;
 
-import no.nav.sbl.util.EnvironmentUtils;
 import no.nav.tjenester.person.oppslag.v1.domain.Opplysningstype;
 
 public class RestConstants {

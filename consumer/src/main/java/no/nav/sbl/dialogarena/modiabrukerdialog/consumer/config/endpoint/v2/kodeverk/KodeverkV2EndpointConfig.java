@@ -7,7 +7,6 @@ import no.nav.sbl.dialogarena.common.kodeverk.CachingKodeverkClient;
 import no.nav.sbl.dialogarena.common.kodeverk.DefaultKodeverkClient;
 import no.nav.sbl.dialogarena.common.kodeverk.KodeverkClient;
 import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.KodeverkV2PortTypeMock;
-import no.nav.sbl.util.EnvironmentUtils;
 import no.nav.tjeneste.virksomhet.kodeverk.v2.KodeverkPortType;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
