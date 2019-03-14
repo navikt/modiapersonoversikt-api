@@ -63,7 +63,7 @@ class OppfolgingController @Inject constructor(private val service: Oppfolgingsi
         )
     }
 
-    private fun hentYtelser(ytelser: List<Ytelse>): List<Map<String, Any?>> {
+    private fun hentYtelser(ytelser: List<Ytelse>?): List<Map<String, Any?>> {
         if (ytelser == null) return emptyList()
 
         return ytelser.map {
@@ -80,7 +80,7 @@ class OppfolgingController @Inject constructor(private val service: Oppfolgingsi
         }
     }
 
-    private fun hentVedtak(vedtak: List<Vedtak>): List<Map<String, Any?>> {
+    private fun hentVedtak(vedtak: List<Vedtak>?): List<Map<String, Any?>> {
         if (vedtak == null) return emptyList()
 
         return vedtak.map {
@@ -95,7 +95,7 @@ class OppfolgingController @Inject constructor(private val service: Oppfolgingsi
         }
     }
 
-    private fun hentSyfoPunkt(syfoPunkter: List<SYFOPunkt>): List<Map<String, Any?>> {
+    private fun hentSyfoPunkt(syfoPunkter: List<SYFOPunkt>?): List<Map<String, Any?>> {
         if (syfoPunkter == null) return emptyList()
 
         return syfoPunkter.map {
