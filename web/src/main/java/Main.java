@@ -23,7 +23,6 @@ public class Main {
 
         setProperty("foreldrepengerendpoint.url", getEnvVar("VIRKSOMHET_FORELDREPENGER_V2_ENDPOINTURL"), PUBLIC);
         setProperty("utbetalingendpoint.url", getEnvVar("UTBETALING_V1_ENDPOINTURL"), PUBLIC);
-        //setProperty("brukerprofilendpoint.url", getEnvVar("VIRKSOMHET_FORELDREPENGER_V2_ENDPOINTURL"), PUBLIC);
         setProperty("dkifendpoint.url", getEnvVar("VIRKSOMHET_DIGITALKONTAKINFORMASJON_V1_ENDPOINTURL"), PUBLIC);
         setProperty("oppfolgingendpoint.url", getEnvVar("VIRKSOMHET_OPPFOLGING_V1_ENDPOINTURL"), PUBLIC);
         setProperty("sykepengerendpoint.url", getEnvVar("VIRKSOMHET_SYKEPENGER_V2_ENDPOINTURL"), PUBLIC);
