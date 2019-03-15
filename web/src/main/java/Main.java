@@ -62,7 +62,6 @@ public class Main {
         setProperty("norg2.organisasjonenhetkontaktinformasjon.v1.url", getEnvVar("VIRKSOMHET_ORGANISASJONENHETKONTAKTINFORMASJON_V1_ENDPOINTURL"), PUBLIC);
         setProperty("egenansatt.v1.url", getEnvVar("VIRKSOMHET_EGENANSATT_V1_ENDPOINTURL"), PUBLIC);
         setProperty("tps.behandleperson.v1.url", getEnvVar("VIRKSOMHET_BEHANDLEPERSON_V1_ENDPOINTURL"), PUBLIC);
-        //setProperty("oppfolgingsinfo.v1.url", getEnvVar("VIRKSOMHET_FORELDREPENGER_V2_ENDPOINTURL"), PUBLIC);
         setProperty("arbeidsfordeling.v1.url", getEnvVar("VIRKSOMHET_ARBEIDSFORDELING_V1_ENDPOINTURL"), PUBLIC);
         setProperty("kodeverksmapper.oppgavetype.url", getEnvVar("KODEVERKSMAPPER_OPPGAVETYPE_URL"), PUBLIC);
         setProperty("kodeverksmapper.underkategori.url", getEnvVar("KODEVERKSMAPPER_UNDERKATEGORI_URL"), PUBLIC);
