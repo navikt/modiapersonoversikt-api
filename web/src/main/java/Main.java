@@ -56,7 +56,6 @@ public class Main {
         setProperty("varsler.ws.url", getEnvVar("BRUKERVARSELV1_ENDPOINTURL"), PUBLIC);
         setProperty("journal.v2.url", getEnvVar("JOURNAL_V2_ENDPOINTURL"), PUBLIC);
         setProperty("innsyn.journal.v2.url", getEnvVar("INNSYNJOURNAL_V2_ENDPOINTURL"), PUBLIC);
-        //setProperty("norg2.organisasjonenhet.v1.url", getEnvVar("VIRKSOMHET_FORELDREPENGER_V2_ENDPOINTURL"), PUBLIC);
         setProperty("tps.person.v3.url", getEnvVar("VIRKSOMHET_PERSON_V3_ENDPOINTURL"), PUBLIC);
         setProperty("norg2.organisasjonenhet.v2.url", getEnvVar("VIRKSOMHET_ORGANISASJONENHET_V2_ENDPOINTURL"), PUBLIC);
         setProperty("norg2.organisasjonenhetkontaktinformasjon.v1.url", getEnvVar("VIRKSOMHET_ORGANISASJONENHETKONTAKTINFORMASJON_V1_ENDPOINTURL"), PUBLIC);
