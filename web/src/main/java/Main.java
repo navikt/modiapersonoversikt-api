@@ -43,7 +43,6 @@ public class Main {
         setProperty("pensjon.sak.v1.url", getEnvVar("PENSJON_PENSJONSAK_V1_ENDPOINTURL"), PUBLIC);
         setProperty("gsak.behandlesak.v1.url", getEnvVar("VIRKSOMHET_BEHANDLESAK_V1_ENDPOINTURL"), PUBLIC);
         setProperty("arena.arbeidogaktivitet.v1.url", getEnvVar("VIRKSOMHET_ARBEIDOGAKTIVITET_V1_ENDPOINTURL"), PUBLIC);
-        //setProperty("gsak.ruting.v1.url", getEnvVar("VIRKSOMHET_FORELDREPENGER_V2_ENDPOINTURL"), PUBLIC);
         setProperty("aktorid.ws.url", getEnvVar("AKTOER_V1_ENDPOINTURL"), PUBLIC);
         setProperty("appres.cms.url", getEnvVar("APPRES_CMS_URL"), PUBLIC);
         setProperty("modiabrukerdialog.standardtekster.tilbakemelding.url", getEnvVar("MODIABRUKERDIALOG_STANDARDTEKSTER_TILBAKEMELDING_URL"), PUBLIC);
