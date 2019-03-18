@@ -79,10 +79,8 @@ public class Main {
 
         setProperty("ldap.username", getEnvVar("LDAP_USERNAME"), PUBLIC);
         setProperty("ldap.password", getEnvVar("LDAP_PASSWORD"), SECRET);
-
         setProperty("ctjenestebuss.username", getEnvVar("SRV_KJERNEINFO_TJENESTEBUSS_USERNAME"), PUBLIC);
         setProperty("ctjenestebuss.password", getEnvVar("SRV_KJERNEINFO_TJENESTEBUSS_PASSWORD"), SECRET);
-
         setProperty("isso-rp-user.username", getEnvVar("ISSO_RP_USER_USERNAME"), PUBLIC);
         setProperty("isso-rp-user.password", getEnvVar("ISSO_RP_USER_PASSWORD"), SECRET);
 
