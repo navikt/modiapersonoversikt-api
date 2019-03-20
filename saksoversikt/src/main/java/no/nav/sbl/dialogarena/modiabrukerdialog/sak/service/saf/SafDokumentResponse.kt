@@ -3,7 +3,7 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.saf
 import java.time.LocalDateTime
 
 
-data class SAFSakerResponse(val data: Data?, val errors: List<SafError>?)
+data class SafDokumentResponse(val data: Data?, val errors: List<SafError>?)
 
 data class Data(val dokumentoversiktBruker: DokumentoversiktBruker?)
 
