@@ -33,14 +33,7 @@ public class TemagruppeTemaMappingTest {
     @Test
     public void temaGruppeTilTemaTestUFRTSkalMappeTilUFO() {
         List<String> temaer = TemagruppeTemaMapping.hentTemaForTemagruppe("UFRT");
-
-        boolean ufoFound = false;
-        for (String tema : temaer) {
-            if(tema.equals("UFO")){
-                ufoFound = true;
-            }
-        }
-        assertThat(ufoFound, is(true));
+        assertThat(temaer.contains("UFO"), is(true));
     }
 
     @Test
