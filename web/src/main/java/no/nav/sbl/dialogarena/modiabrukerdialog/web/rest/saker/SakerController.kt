@@ -110,7 +110,6 @@ class SakerController @Inject constructor(private val saksoversiktService: Sakso
                     "temakodeVisning" to it.temakodeVisning,
                     "ettersending" to it.isEttersending,
                     "erJournalført" to it.isErJournalfort,
-                    "kategorinotat" to it.kategoriNotat,
                     "feil" to mapOf(
                             "inneholderFeil" to it.feilWrapper?.inneholderFeil,
                             "feilmelding" to it.feilWrapper?.feilmelding

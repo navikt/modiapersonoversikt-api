@@ -6,7 +6,6 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.Dokument.Vari
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.DokumentMetadata
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.Entitet
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.Entitet.*
-import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.KategoriNotat.INTERN_NOTAT
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.Kommunikasjonsretning
 import org.junit.Assert.assertEquals
 import org.junit.jupiter.api.Assertions.assertThrows
@@ -351,24 +350,6 @@ internal class SafDokumentMapperKtTest {
         val dokumentMetadata = DokumentMetadata().fraSafJournalpost(journalpost)
 
         assertEquals(journalFoertDato, dokumentMetadata.dato)
-    }
-
-    @Test
-    fun `Setter kategoriNotat intern notat om intern`() {
-        val journalpost = lagJournalpost().copy(journalposttype = SAF_JOURNALPOSTTYPE_INTERN)
-
-        val dokumentMetadata = DokumentMetadata().fraSafJournalpost(journalpost)
-
-        assertEquals(INTERN_NOTAT, dokumentMetadata.kategoriNotat)
-    }
-
-    @Test
-    fun `Setter ikke kategoriNotat hvis ikke intern`() {
-        val journalpost = lagJournalpost().copy(journalposttype = SAF_JOURNALPOSTTYPE_UT)
-
-        val dokumentMetadata = DokumentMetadata().fraSafJournalpost(journalpost)
-
-        assertEquals(null, dokumentMetadata.kategoriNotat)
     }
 }
 
