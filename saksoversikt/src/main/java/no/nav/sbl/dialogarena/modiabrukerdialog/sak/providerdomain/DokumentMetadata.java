@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Set;
 
 import static java.lang.Boolean.TRUE;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.KategoriNotat.*;
 
 public class DokumentMetadata {
 
@@ -27,11 +26,15 @@ public class DokumentMetadata {
     private boolean ettersending;
     private boolean erJournalfort = TRUE;
     private FeilWrapper feilWrapper = new FeilWrapper();
-    private KategoriNotat kategoriNotat;
 
 
     public boolean isEttersending() {
         return ettersending;
+    }
+
+    public DokumentMetadata setEttersending(boolean ettersending) {
+        this.ettersending = ettersending;
+        return this;
     }
 
     public DokumentMetadata withEttersending(boolean ettersending) {
@@ -43,40 +46,90 @@ public class DokumentMetadata {
         return baksystem;
     }
 
+    public DokumentMetadata setBaksystem(Set<Baksystem> baksystem) {
+        this.baksystem = baksystem;
+        return this;
+    }
+
     public String getTemakode() {
         return temakode;
+    }
+
+    public DokumentMetadata setTemakode(String temakode) {
+        this.temakode = temakode;
+        return this;
     }
 
     public Kommunikasjonsretning getRetning() {
         return retning;
     }
 
+    public DokumentMetadata setRetning(Kommunikasjonsretning retning) {
+        this.retning = retning;
+        return this;
+    }
+
     public LocalDateTime getDato() {
         return dato;
+    }
+
+    public DokumentMetadata setDato(LocalDateTime dato) {
+        this.dato = dato;
+        return this;
     }
 
     public String getNavn() {
         return navn;
     }
 
+    public DokumentMetadata setNavn(String navn) {
+        this.navn = navn;
+        return this;
+    }
+
     public String getJournalpostId() {
         return journalpostId;
+    }
+
+    public DokumentMetadata setJournalpostId(String journalpostId) {
+        this.journalpostId = journalpostId;
+        return this;
     }
 
     public Dokument getHoveddokument() {
         return hoveddokument;
     }
 
+    public DokumentMetadata setHoveddokument(Dokument hoveddokument) {
+        this.hoveddokument = hoveddokument;
+        return this;
+    }
+
     public List<Dokument> getVedlegg() {
         return vedlegg;
+    }
+
+    public DokumentMetadata setVedlegg(List<Dokument> vedlegg) {
+        this.vedlegg = vedlegg;
+        return this;
     }
 
     public Entitet getAvsender() {
         return avsender;
     }
 
+    public DokumentMetadata setAvsender(Entitet avsender) {
+        this.avsender = avsender;
+        return this;
+    }
+
     public Entitet getMottaker() {
         return mottaker;
+    }
+
+    public DokumentMetadata setMottaker(Entitet mottaker) {
+        this.mottaker = mottaker;
+        return this;
     }
 
     public DokumentMetadata withRetning(final Kommunikasjonsretning retning) {
@@ -140,17 +193,26 @@ public class DokumentMetadata {
         return tilhorendeSakid;
     }
 
+    public DokumentMetadata setTilhorendeSakid(String tilhorendeSakid) {
+        this.tilhorendeSakid = tilhorendeSakid;
+        return this;
+    }
+
     public DokumentMetadata withTilhorendeSakid(final String tilhorendeSakid) {
         this.tilhorendeSakid = tilhorendeSakid;
         return this;
     }
 
-
     public String getBehandlingsId() {
         return behandlingsId;
     }
 
-    public DokumentMetadata withBehandlingsId(String behandlingsId){
+    public DokumentMetadata setBehandlingsId(String behandlingsId) {
+        this.behandlingsId = behandlingsId;
+        return this;
+    }
+
+    public DokumentMetadata withBehandlingsId(String behandlingsId) {
         this.behandlingsId = behandlingsId;
         return this;
     }
@@ -162,6 +224,11 @@ public class DokumentMetadata {
 
     public String getTemakodeVisning() {
         return this.temakodeVisning;
+    }
+
+    public DokumentMetadata setTemakodeVisning(String temakodeVisning) {
+        this.temakodeVisning = temakodeVisning;
+        return this;
     }
 
     public DokumentMetadata withTemakodeVisning(final String temakodeVisning) {
@@ -178,23 +245,18 @@ public class DokumentMetadata {
         return feilWrapper;
     }
 
+    public DokumentMetadata setFeilWrapper(FeilWrapper feilWrapper) {
+        this.feilWrapper = feilWrapper;
+        return this;
+    }
+
     public boolean isErJournalfort() {
         return erJournalfort;
     }
 
-    public DokumentMetadata withKategoriNotat(String kategoriNotat) {
-        if (this.getRetning().equals(Kommunikasjonsretning.INTERN)) {
-            if (kategoriNotat.equals(FORVALTNINGSNOTAT.name()) || kategoriNotat.equals(REFERAT.name())) {
-                this.kategoriNotat = FORVALTNINGSNOTAT;
-            } else {
-                this.kategoriNotat = INTERN_NOTAT;
-            }
-        }
+    public DokumentMetadata setErJournalfort(boolean erJournalfort) {
+        this.erJournalfort = erJournalfort;
         return this;
-    }
-
-    public KategoriNotat getKategoriNotat() {
-        return kategoriNotat;
     }
 
     public String getTilhorendeFagsakId() {
