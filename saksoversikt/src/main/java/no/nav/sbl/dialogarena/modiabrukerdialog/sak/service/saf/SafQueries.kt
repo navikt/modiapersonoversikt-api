@@ -1,6 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.saf
 
-val hentSakerGraphQLQuery = "query {" +
+const val dokumentoversiktBrukerGraphQLQuery = "query {" +
         "  dokumentoversiktBruker(brukerId: {id: \\\"[FNR]\\\", type: FNR}, journalstatuser: [JOURNALFOERT, FERDIGSTILT, EKSPEDERT], foerste: 9999) {" +
         "    journalposter {" +
         "      journalposttype" +
@@ -42,7 +42,7 @@ val hentSakerGraphQLQuery = "query {" +
         "  }" +
         "}"
 
-fun hentSakerJsonQuery(fnr: String): String {
-    val medFnr = hentSakerGraphQLQuery.replace("[FNR]", fnr)
+fun dokumentoversiktBrukerJsonQuery(fnr: String): String {
+    val medFnr = dokumentoversiktBrukerGraphQLQuery.replace("[FNR]", fnr)
     return "{\"query\":\"$medFnr\"}"
 }
