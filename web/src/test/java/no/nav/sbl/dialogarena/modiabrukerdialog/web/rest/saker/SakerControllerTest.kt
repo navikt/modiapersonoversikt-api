@@ -23,10 +23,9 @@ internal class SakerControllerTest {
     private val tilgangskontrollService: TilgangskontrollService = mock()
     private val innsyn: JournalV2Service = mock()
     private val dokumentMetadataService: DokumentMetadataService = mock()
-    private val unleashService: UnleashService = mock()
 
     private val sakerController = SakerController(saksoversiktService, sakstemaService, saksService,
-            tilgangskontrollService, innsyn, dokumentMetadataService, unleashService)
+            tilgangskontrollService, innsyn, dokumentMetadataService)
 
     @BeforeEach
     fun before() {

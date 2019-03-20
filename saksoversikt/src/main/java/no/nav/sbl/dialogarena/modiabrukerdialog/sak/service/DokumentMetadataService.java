@@ -42,6 +42,7 @@ public class DokumentMetadataService {
                                    DokumentMetadataTransformer dokumentMetadataTransformer,
                                    SafService safService) {
 
+        this.innsynJournalV2Service = innsynJournalV2Service;
         this.henvendelseService = henvendelseService;
         this.dokumentMetadataTransformer = dokumentMetadataTransformer;
         this.safService = safService;
@@ -86,7 +87,7 @@ public class DokumentMetadataService {
 
     private String finnJournalpostIdFraBehandlingsId(String behandlingsId) {
         try {
-            ResultatWrapper<DokumentMetadata> wrapper = joarkJournalService.identifiserJournalpost(behandlingsId);
+            ResultatWrapper<DokumentMetadata> wrapper = innsynJournalV2Service.identifiserJournalpost(behandlingsId);
             feilendeBaksystem.addAll(wrapper.feilendeSystemer);
             return wrapper.resultat != null ? wrapper.resultat.getJournalpostId() : null;
         } catch (FeilendeBaksystemException e) {

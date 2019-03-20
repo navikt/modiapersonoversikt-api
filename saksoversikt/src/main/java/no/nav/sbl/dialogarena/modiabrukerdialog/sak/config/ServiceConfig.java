@@ -3,10 +3,12 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.sak.config;
 import no.nav.sbl.dialogarena.common.kodeverk.JsonKodeverk;
 import no.nav.sbl.dialogarena.common.kodeverk.Kodeverk;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.*;
+import no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.interfaces.InnsynJournalV2Service;
+import no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.saf.SafService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.utils.TemagrupperHenter;
-import no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.*;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.filter.Filter;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.transformers.DokumentMetadataTransformer;
+import no.nav.tjeneste.virksomhet.innsynjournal.v2.binding.InnsynJournalV2;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -34,11 +36,6 @@ public class ServiceConfig {
     }
 
     @Bean
-    public JoarkJournalService joarkService() {
-        return new JoarkJournalService();
-    }
-
-    @Bean
     public PesysService pensjonService() {
         return new PesysService();
     }
@@ -62,10 +59,11 @@ public class ServiceConfig {
     }
 
     @Bean
-    public DokumentMetadataService dokumentMetadataService(JoarkJournalService joarkJournalService,
+    public DokumentMetadataService dokumentMetadataService(InnsynJournalV2Service innsynJournalV2Service,
                                                            HenvendelseService henvendelseService,
-                                                           DokumentMetadataTransformer dokumentMetadataTransformer) {
-        return new DokumentMetadataService(joarkJournalService, henvendelseService, dokumentMetadataTransformer);
+                                                           DokumentMetadataTransformer dokumentMetadataTransformer,
+                                                           SafService safService) {
+        return new DokumentMetadataService(innsynJournalV2Service, henvendelseService, dokumentMetadataTransformer, safService);
     }
 
     @Bean
@@ -92,6 +90,12 @@ public class ServiceConfig {
     public DokumentMetadataTransformer dokumentMetadataTransformer(BulletproofKodeverkService bulletproofKodeverkService){
         return new DokumentMetadataTransformer(bulletproofKodeverkService);
     }
+
+    @Bean
+    public SafService safService() {
+        return new SafService();
+    }
+
 }
 
 

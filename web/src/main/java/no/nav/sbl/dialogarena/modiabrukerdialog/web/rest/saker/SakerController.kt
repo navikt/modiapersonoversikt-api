@@ -1,7 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.saker
 
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.RestUtils
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.UnleashService
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.domain.widget.ModiaSakstema
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.*
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.resultatwrappere.ResultatWrapper
@@ -27,8 +26,7 @@ class SakerController @Inject constructor(private val saksoversiktService: Sakso
                                           private val saksService: SaksService,
                                           private val tilgangskontrollService: TilgangskontrollService,
                                           private val innsyn: JournalV2Service,
-                                          private val dokumentMetadataService: DokumentMetadataService,
-                                          private val unleashService: UnleashService) {
+                                          private val dokumentMetadataService: DokumentMetadataService) {
     @GET
     @Path("/sakstema")
     @Produces(MediaType.APPLICATION_JSON)
@@ -180,7 +178,7 @@ class SakerController @Inject constructor(private val saksoversiktService: Sakso
     }
 
     private fun hentDokumentMetadata(journalpostId: String, fnr: String): DokumentMetadata {
-        return dokumentMetadataService.hentDokumentMetadata(saksService.hentAlleSaker(fnr).resultat, fnr).resultat
+        return dokumentMetadataService.hentDokumentMetadata(fnr).resultat
                 .first { dokumentMetadata -> journalpostId == dokumentMetadata.journalpostId }
                 ?: throw RuntimeException("Fant ikke metadata om journalpostId $journalpostId. Dette bør ikke skje.")
 
