@@ -32,9 +32,8 @@ public class DokumentMetadata {
         return ettersending;
     }
 
-    public DokumentMetadata setEttersending(boolean ettersending) {
+    public void setEttersending(boolean ettersending) {
         this.ettersending = ettersending;
-        return this;
     }
 
     public DokumentMetadata withEttersending(boolean ettersending) {
@@ -46,90 +45,80 @@ public class DokumentMetadata {
         return baksystem;
     }
 
-    public DokumentMetadata setBaksystem(Set<Baksystem> baksystem) {
+    public void setBaksystem(Set<Baksystem> baksystem) {
         this.baksystem = baksystem;
-        return this;
     }
 
     public String getTemakode() {
         return temakode;
     }
 
-    public DokumentMetadata setTemakode(String temakode) {
+    public void setTemakode(String temakode) {
         this.temakode = temakode;
-        return this;
     }
 
     public Kommunikasjonsretning getRetning() {
         return retning;
     }
 
-    public DokumentMetadata setRetning(Kommunikasjonsretning retning) {
+    public void setRetning(Kommunikasjonsretning retning) {
         this.retning = retning;
-        return this;
     }
 
     public LocalDateTime getDato() {
         return dato;
     }
 
-    public DokumentMetadata setDato(LocalDateTime dato) {
+    public void setDato(LocalDateTime dato) {
         this.dato = dato;
-        return this;
     }
 
     public String getNavn() {
         return navn;
     }
 
-    public DokumentMetadata setNavn(String navn) {
+    public void setNavn(String navn) {
         this.navn = navn;
-        return this;
     }
 
     public String getJournalpostId() {
         return journalpostId;
     }
 
-    public DokumentMetadata setJournalpostId(String journalpostId) {
+    public void setJournalpostId(String journalpostId) {
         this.journalpostId = journalpostId;
-        return this;
     }
 
     public Dokument getHoveddokument() {
         return hoveddokument;
     }
 
-    public DokumentMetadata setHoveddokument(Dokument hoveddokument) {
+    public void setHoveddokument(Dokument hoveddokument) {
         this.hoveddokument = hoveddokument;
-        return this;
     }
 
     public List<Dokument> getVedlegg() {
         return vedlegg;
     }
 
-    public DokumentMetadata setVedlegg(List<Dokument> vedlegg) {
+    public void setVedlegg(List<Dokument> vedlegg) {
         this.vedlegg = vedlegg;
-        return this;
     }
 
     public Entitet getAvsender() {
         return avsender;
     }
 
-    public DokumentMetadata setAvsender(Entitet avsender) {
+    public void setAvsender(Entitet avsender) {
         this.avsender = avsender;
-        return this;
     }
 
     public Entitet getMottaker() {
         return mottaker;
     }
 
-    public DokumentMetadata setMottaker(Entitet mottaker) {
+    public void setMottaker(Entitet mottaker) {
         this.mottaker = mottaker;
-        return this;
     }
 
     public DokumentMetadata withRetning(final Kommunikasjonsretning retning) {
@@ -193,9 +182,8 @@ public class DokumentMetadata {
         return tilhorendeSakid;
     }
 
-    public DokumentMetadata setTilhorendeSakid(String tilhorendeSakid) {
+    public void setTilhorendeSakid(String tilhorendeSakid) {
         this.tilhorendeSakid = tilhorendeSakid;
-        return this;
     }
 
     public DokumentMetadata withTilhorendeSakid(final String tilhorendeSakid) {
@@ -207,9 +195,8 @@ public class DokumentMetadata {
         return behandlingsId;
     }
 
-    public DokumentMetadata setBehandlingsId(String behandlingsId) {
+    public void setBehandlingsId(String behandlingsId) {
         this.behandlingsId = behandlingsId;
-        return this;
     }
 
     public DokumentMetadata withBehandlingsId(String behandlingsId) {
@@ -226,9 +213,8 @@ public class DokumentMetadata {
         return this.temakodeVisning;
     }
 
-    public DokumentMetadata setTemakodeVisning(String temakodeVisning) {
+    public void setTemakodeVisning(String temakodeVisning) {
         this.temakodeVisning = temakodeVisning;
-        return this;
     }
 
     public DokumentMetadata withTemakodeVisning(final String temakodeVisning) {
@@ -245,18 +231,16 @@ public class DokumentMetadata {
         return feilWrapper;
     }
 
-    public DokumentMetadata setFeilWrapper(FeilWrapper feilWrapper) {
+    public void setFeilWrapper(FeilWrapper feilWrapper) {
         this.feilWrapper = feilWrapper;
-        return this;
     }
 
     public boolean isErJournalfort() {
         return erJournalfort;
     }
 
-    public DokumentMetadata setErJournalfort(boolean erJournalfort) {
+    public void setErJournalfort(boolean erJournalfort) {
         this.erJournalfort = erJournalfort;
-        return this;
     }
 
     public String getTilhorendeFagsakId() {
