@@ -6,5 +6,6 @@ enum class Feature private constructor(val propertyKey: String, val defaultValue
     SVAKSYNT_MODUS("modiabrukerdialog.svaksyntmodus", false),
     NY_UTBETALING("modiabrukerdialog.ny-utbetalinger", false),
     NY_SAKSOVERSIKT("modiabrukerdialog.ny-saksoversikt", false),
-    NY_PLEIEPENGER("modiabrukerdialog.ny-pleiepenger", false)
+    NY_PLEIEPENGER("modiabrukerdialog.ny-pleiepenger", false),
+    NY_OPPFOLGING("modiabrukerdialog.ny-oppfolging", false)
 }

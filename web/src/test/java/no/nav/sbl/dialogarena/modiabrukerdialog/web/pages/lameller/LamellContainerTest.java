@@ -42,7 +42,7 @@ public class LamellContainerTest extends WicketPageTest {
     @BeforeEach
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        lamellContainer = new LamellContainer("lameller", wicket.tester.getSession(), getMockGrunnInfo(), false, false);
+        lamellContainer = new LamellContainer("lameller", wicket.tester.getSession(), getMockGrunnInfo(), false, false, false);
     }
 
     @Test
