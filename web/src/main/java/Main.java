@@ -35,7 +35,6 @@ public class Main {
         setProperty("tjenestebuss.url", getEnvVar("TJENESTEBUSS_URL"), PUBLIC);
         setProperty("ytelseskontraktendpoint.url", getEnvVar("VIRKSOMHET_YTELSESKONTRAKT_V3_ENDPOINTURL"), PUBLIC);
         setProperty("behandlebrukerprofilendpoint.url", getEnvVar("VIRKSOMHET_BEHANDLEBRUKERPROFIL_V2_ENDPOINTURL"), PUBLIC);
-        setProperty("ldap.url", getEnvVar("LDAP_URL"), PUBLIC);
         setProperty("gsak.oppgave.v3.url", getEnvVar("VIRKSOMHET_OPPGAVE_V3_ENDPOINTURL"), PUBLIC);
         setProperty("gsak.oppgavebehandling.v3.url", getEnvVar("VIRKSOMHET_OPPGAVEBEHANDLING_V3_ENDPOINTURL"), PUBLIC);
         setProperty("gsak.tildeloppgave.v1.url", getEnvVar("VIRKSOMHET_TILDELOPPGAVE_V1_ENDPOINTURL"), PUBLIC);
@@ -71,14 +70,16 @@ public class Main {
         setProperty("start.utbetaling.withmock", "false", PUBLIC);
         setProperty("start.kodeverk.withmock", "false", PUBLIC);
         setProperty("start.kjerneinfo.withmock", "false", PUBLIC);
-        setProperty("ldap.domain", "LDAP_DOMAIN", PUBLIC);
         setProperty("modiabrukerdialog.datadir", "target/modiabrukerdialog", PUBLIC);
         setProperty("kan.purge.oppgaver", "true", PUBLIC);
         setProperty("tjenester.url", getEnvVar("TJENESTER_URL"), PUBLIC);
-        setProperty("current.domain", "What put here?", PUBLIC);
+        setProperty("current.domain", getEnvVar("CURRENT_DOMAIN"), PUBLIC);
 
         setProperty("ldap.username", getEnvVar("LDAP_USERNAME"), PUBLIC);
         setProperty("ldap.password", getEnvVar("LDAP_PASSWORD"), SECRET);
+        setProperty("ldap.domain", getEnvVar("LDAP_DOMAIN"), PUBLIC);
+        setProperty("ldap.basedn", getEnvVar("LDAP_BASEDN"), PUBLIC);
+        setProperty("ldap.url", getEnvVar("LDAP_URL"), PUBLIC);
         setProperty("ctjenestebuss.username", getEnvVar("SRV_KJERNEINFO_TJENESTEBUSS_USERNAME"), PUBLIC);
         setProperty("ctjenestebuss.password", getEnvVar("SRV_KJERNEINFO_TJENESTEBUSS_PASSWORD"), SECRET);
         setProperty("isso-rp-user.username", getEnvVar("ISSO_RP_USER_USERNAME"), PUBLIC);
