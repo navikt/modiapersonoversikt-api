@@ -148,6 +148,7 @@ public class PersonPage extends BasePage {
         hode.add(hasCssClassIf("ny-utbetalinger-toggle", Model.of(nyUtbetalingerEnabled)));
         hode.add(hasCssClassIf("ny-saksoversikt-toggle", Model.of(nySaksoversikt)));
         hode.add(hasCssClassIf("ny-pleiepenger-toggle", Model.of(nyPleiepenger)));
+        hode.add(hasCssClassIf("ny-oppfolging-toggle", Model.of(nyOppfolgingEnabled)));
 
         dialogPanel = new DialogPanel("dialogPanel", grunnInfo);
         add(
