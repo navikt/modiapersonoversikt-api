@@ -17,12 +17,12 @@ prometheus:
   enabled: true
   path: /modiabrukerdialog/internal/metrics
 resources:
+  requests:
+    cpu: 2
+    memory: 4096Mi
   limits:
     cpu: 3
-    memory: 768Mi
-  requests:
-    cpu: 200m
-    memory: 512Mi
+    memory: 8192Mi
 fasitResources:
   used:
   - alias: appdynamics
