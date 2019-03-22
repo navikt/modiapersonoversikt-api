@@ -67,7 +67,7 @@ public class TilgangskontrollServiceTest {
         tilgangskontrollService.markerIkkeJournalforte(sakstema);
 
         assertThat(sakstema.get(0).dokumentMetadata.get(0).getFeilWrapper().getInneholderFeil(), is(true));
-        assertThat(sakstema.get(0).dokumentMetadata.get(0).getFeilWrapper().getFeilmelding(), is(IKKE_JOURNALFORT_ELLER_ANNEN_BRUKER));
+        assertThat(sakstema.get(0).dokumentMetadata.get(0).getFeilWrapper().getFeilmelding(), is(IKKE_JOURNALFORT));
     }
 
     @Test
@@ -169,7 +169,7 @@ public class TilgangskontrollServiceTest {
 
 
         assertThat(result.result.isPresent(), is(FALSE));
-        assertThat(result.feilmelding, is(IKKE_JOURNALFORT_ELLER_ANNEN_BRUKER));
+        assertThat(result.feilmelding, is(IKKE_JOURNALFORT));
         assertThat(result.ekstraFeilInfo.size(), is(1));
     }
 

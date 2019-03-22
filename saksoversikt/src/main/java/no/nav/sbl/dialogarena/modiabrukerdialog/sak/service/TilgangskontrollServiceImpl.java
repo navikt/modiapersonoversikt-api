@@ -51,7 +51,7 @@ public class TilgangskontrollServiceImpl implements TilgangskontrollService {
         } else if (erJournalfortPaAnnetTema(urlTemakode, journalpostMetadata)) {
             return new TjenesteResultatWrapper(JOURNALFORT_ANNET_TEMA, journalfortAnnetTemaEktraFeilInfo(journalpostMetadata.getTemakodeVisning(), fnr));
         } else if (!journalpostMetadata.isErJournalfort()) {
-            return new TjenesteResultatWrapper(IKKE_JOURNALFORT_ELLER_ANNEN_BRUKER, ikkeJournalfortEkstraFeilInfo(fnr));
+            return new TjenesteResultatWrapper(IKKE_JOURNALFORT, ikkeJournalfortEkstraFeilInfo(fnr));
         } else if (journalpostMetadata.getFeilWrapper().getInneholderFeil()) {
             return new TjenesteResultatWrapper(journalpostMetadata.getFeilWrapper().getFeilmelding());
         }
@@ -101,7 +101,7 @@ public class TilgangskontrollServiceImpl implements TilgangskontrollService {
                 .forEach(sakstema -> sakstema.dokumentMetadata
                         .stream()
                         .filter(dokumentMetadata -> !dokumentMetadata.isErJournalfort())
-                        .map(dokumentMetadata -> dokumentMetadata.withFeilWrapper(IKKE_JOURNALFORT_ELLER_ANNEN_BRUKER))
+                        .map(dokumentMetadata -> dokumentMetadata.withFeilWrapper(IKKE_JOURNALFORT))
                         .collect(toList()));
     }
 
