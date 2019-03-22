@@ -136,7 +136,8 @@ public class PersonPage extends BasePage {
         boolean nyBrukerprofilEnabled = unleashService.isEnabled(Feature.NY_BRUKERPROFIL);
         boolean nySaksoversikt = unleashService.isEnabled(Feature.NY_SAKSOVERSIKT);
         boolean nyPleiepenger = unleashService.isEnabled(Feature.NY_PLEIEPENGER);
-        lamellContainer = new LamellContainer("lameller", getSession(), grunnInfo, nyBrukerprofilEnabled, nySaksoversikt);
+        boolean nyOppfolgingEnabled = unleashService.isEnabled(Feature.NY_OPPFOLGING);
+        lamellContainer = new LamellContainer("lameller", getSession(), grunnInfo, nyBrukerprofilEnabled, nySaksoversikt, nyOppfolgingEnabled);
 
         oppgiBegrunnelseModal = new ReactBegrunnelseModal("oppgiBegrunnelseModal");
         Hode hode = new Hode("hode", oppgiBegrunnelseModal, personKjerneinfoServiceBi, grunnInfo, null);
@@ -147,6 +148,7 @@ public class PersonPage extends BasePage {
         hode.add(hasCssClassIf("ny-utbetalinger-toggle", Model.of(nyUtbetalingerEnabled)));
         hode.add(hasCssClassIf("ny-saksoversikt-toggle", Model.of(nySaksoversikt)));
         hode.add(hasCssClassIf("ny-pleiepenger-toggle", Model.of(nyPleiepenger)));
+        hode.add(hasCssClassIf("ny-oppfolging-toggle", Model.of(nyOppfolgingEnabled)));
 
         dialogPanel = new DialogPanel("dialogPanel", grunnInfo);
         add(
