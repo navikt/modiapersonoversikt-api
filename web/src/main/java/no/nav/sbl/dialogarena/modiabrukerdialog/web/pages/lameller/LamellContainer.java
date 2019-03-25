@@ -86,8 +86,8 @@ public class LamellContainer extends TokenLamellPanel implements Serializable {
     @Named("pep")
     private EnforcementPoint pep;
 
-    public LamellContainer(String id, Session session, GrunnInfo grunnInfo, boolean nyBrukerprofilEnabled, boolean nySaksoversikt, boolean nyOppfolging) {
-        super(id, createLamellFactories(grunnInfo.bruker, nyBrukerprofilEnabled, nySaksoversikt, nyOppfolging));
+    public LamellContainer(String id, Session session, GrunnInfo grunnInfo, boolean nyBrukerprofilEnabled, boolean nySaksoversikt, boolean nyOppfolging, boolean nyForeldrepenger) {
+        super(id, createLamellFactories(grunnInfo.bruker, nyBrukerprofilEnabled, nySaksoversikt, nyOppfolging, nyForeldrepenger));
         this.fnrFromRequest = grunnInfo.bruker.fnr;
 
         boolean nyUtbetalingEnabled = unleashService.isEnabled(Feature.NY_UTBETALING);
@@ -151,7 +151,8 @@ public class LamellContainer extends TokenLamellPanel implements Serializable {
         if (SYKEPENGER_TYPE.equalsIgnoreCase(type)) {
             panel = new SykmeldingsperiodePanel(PANEL, Model.of(fnrFromRequest), Model.of(itemId));
         } else if (FORELDREPENGER_TYPE.equalsIgnoreCase(type)) {
-            panel = new ForeldrepengerPanel(PANEL, Model.of(fnrFromRequest), Model.of(itemId));
+            panel = chooseForeldrePengerPanel(PANEL, Model.of(fnrFromRequest), Model.of(itemId), nyttForeldrepengerPanelToggle);
+            //panel = new ForeldrepengerPanel(PANEL, Model.of(fnrFromRequest), Model.of(itemId));
         } else if (PLEIEPENGER_TYPE.equalsIgnoreCase(type)) {
             boolean nyttPleiepengerPanelToggle = unleashService.isEnabled(Feature.NY_PLEIEPENGER);
             panel = new PleiepengerPanel(PANEL, Model.of(fnrFromRequest), itemId, nyttPleiepengerPanelToggle);
@@ -192,15 +193,29 @@ public class LamellContainer extends TokenLamellPanel implements Serializable {
         return SYKEPENGER_TYPE.equalsIgnoreCase(type) || FORELDREPENGER_TYPE.equalsIgnoreCase(type) || PLEIEPENGER_TYPE.equalsIgnoreCase(type);
     }
 
-    private static List<LamellFactory> createLamellFactories(final GrunnInfo.Bruker bruker, boolean nyBrukerprofilEnabled, boolean nySaksoversikt,  final boolean nyOppfolging) {
+    private static List<LamellFactory> createLamellFactories(final GrunnInfo.Bruker bruker, boolean nyBrukerprofilEnabled, boolean nySaksoversikt,  final boolean nyOppfolging, boolean nyForeldrepenger) {
+
         List<LamellFactory> lamellFactories = new ArrayList<>();
         lamellFactories.add(createOversiktLamell(bruker));
         lamellFactories.add(createKontrakterLamell(bruker, nyOppfolging));
         lamellFactories.add(createBrukerprofilLamell(bruker, nyBrukerprofilEnabled));
         lamellFactories.add(createSaksoversiktLamell(bruker, nySaksoversikt));
+        lamellFactories.add(createForeldrepengerLamell(bruker, nyForeldrepenger));
         lamellFactories.add(createVarslingsLamell(bruker));
 
         return lamellFactories;
+    }
+
+    private static LamellFactory createForeldrepengerLamell(GrunnInfo.Bruker bruker, boolean nyForeldrepenger) {
+    return null;
+    }
+
+    private Panel chooseForeldrePengerPanel(Panel PANEL, String fnrFromRequest, String itemId, boolean nyttForeldrepengerPanelToggle){
+        if(nyttForeldrepengerPanelToggle){
+            return new ForeldrepengerPanel(PANEL, Model.of(fnrFromRequest), Model.of(itemId));
+        } else{
+             return new ForeldrepengerPanel(PANEL, Model.of(fnrFromRequest), Model.of(itemId));
+        }
     }
 
     private static LamellFactory createBrukerprofilLamell(final GrunnInfo.Bruker bruker, boolean nyBrukerprofilEnabled) {
