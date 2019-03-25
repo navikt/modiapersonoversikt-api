@@ -46,7 +46,6 @@ class SafService {
         }
 
         return when (result.status) {
-            //TODO: her må det i minste logges litt ved feil, kanskje utvide med flere statuskoder.
             200 -> ok().entity(result.entity).build()
             404 -> status(NOT_FOUND).build()
             else -> status(INTERNAL_SERVER_ERROR).build()
