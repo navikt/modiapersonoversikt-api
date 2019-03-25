@@ -108,13 +108,8 @@ public class DokumentMetadataService {
     }
 
     private void hentSafJournalposter(String fnr) {
-        try {
-            List<DokumentMetadata> dokumentMetadata = safService.hentJournalposter(fnr);
-            safJournalposter.addAll(dokumentMetadata);
-        } catch (RuntimeException e) {
-            feilendeBaksystem.add(Baksystem.SAF);
-            LOG.error("Feil i henting av journalposter fra SAF" ,e);
-        }
+        List<DokumentMetadata> journalposter = safService.hentJournalposter(fnr);
+        safJournalposter.addAll(journalposter);
     }
 
     private void leggTilHenvendelseSomBaksystemIJournalposterOmSoknadEksistererIHenvendelse() {

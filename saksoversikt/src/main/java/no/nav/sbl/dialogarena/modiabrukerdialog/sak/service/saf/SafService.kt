@@ -9,8 +9,6 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.DokumentMetad
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.resultatwrappere.ResultatWrapper
 import no.nav.sbl.rest.RestUtils
 import org.slf4j.LoggerFactory
-import javax.ws.rs.InternalServerErrorException
-import javax.ws.rs.NotFoundException
 import javax.ws.rs.client.Client
 import javax.ws.rs.client.Entity
 import javax.ws.rs.client.Invocation
@@ -27,7 +25,6 @@ private val LOG = LoggerFactory.getLogger(SafService::class.java)
 class SafService {
 
     fun hentJournalposter(fnr: String): List<DokumentMetadata> {
-
         val jsonQuery = dokumentoversiktBrukerJsonQuery(fnr)
 
         return RestUtils.withClient { client ->
@@ -39,7 +36,6 @@ class SafService {
     }
 
     fun hentDokument(journalpostId: String, dokumentInfoId: String, variantFormat: String): ResultatWrapper<Any?> {
-
         val url = lagHentDokumentURL(journalpostId, dokumentInfoId, variantFormat)
 
         val response = RestUtils.withClient { client ->
@@ -52,33 +48,26 @@ class SafService {
         }
     }
 
-    private fun håndterDokumentFeilKoder(statuskode: Int): ResultatWrapper<Any?> {
-        when (statuskode) {
-            400 -> LOG.warn("Feil i SAF hentDokument. Ugyldig input. JournalpostId og dokumentInfoId må være tall og variantFormat må være en gyldig kodeverk-verdi")
-            401 -> LOG.warn("Feil i SAF hentDokument. Bruker mangler tilgang for å vise dokumentet. Ugyldig OIDC token.")
-            404 -> LOG.warn("Feil i SAF hentDokument. Dokument eller journalpost ble ikke funnet.")
-        }
-        return ResultatWrapper(null, setOf(Baksystem.SAF))
-    }
 }
 
 private fun håndterStatus(response: Response): List<DokumentMetadata> =
         when (response.status) {
-            200 -> handterResponse(response)
-            404 -> throw NotFoundException("Responskode 404 fra SAF - dokumentoversiktBruker")
-            500 -> throw InternalServerErrorException("Responskode 500 fra SAF - dokumentoversiktBruker")
-            else -> throw RuntimeException("Ukjent feil i kall mot SAF - dokumentoversiktBruker")
+            200 -> håndterResponse(response)
+            else -> {
+                håndterJournalpostFeilKoder(response.status)
+                emptyList()
+            }
         }
 
-private fun handterResponse(response: Response): List<DokumentMetadata> {
-    val safSakerResponse = safResponsFraResponse(response)
+private fun håndterResponse(response: Response): List<DokumentMetadata> {
+    val safDokumentResponse = safDokumentResponsFraResponse(response)
 
-    safSakerResponse.errors?.let { lagErrorOgKast(safSakerResponse.errors) }
+    safDokumentResponse.errors?.let { logJournalpostErrors(safDokumentResponse.errors) }
 
-    return getDokumentMetadata(safSakerResponse)
+    return getDokumentMetadata(safDokumentResponse)
 }
 
-private fun safResponsFraResponse(response: Response): SafDokumentResponse {
+private fun safDokumentResponsFraResponse(response: Response): SafDokumentResponse {
     val rawJson = response.readEntity(String::class.java)
     val mapper = jacksonObjectMapper().registerModule(JavaTimeModule())
 
@@ -104,7 +93,6 @@ private fun getDokumentMetadata(safDokumentResponse: SafDokumentResponse): List<
                 .orEmpty()
                 .map { journalpost -> DokumentMetadata().fraSafJournalpost(journalpost) }
 
-
 private fun veilederAutorisertClient(client: Client, url: String): Invocation.Builder {
     val AUTH_METHOD_BEARER = "Bearer"
     val AUTH_SEPERATOR = " "
@@ -123,3 +111,29 @@ private fun lagHentDokumentURL(journalpostId: String, dokumentInfoId: String, va
                 journalpostId,
                 dokumentInfoId,
                 variantFormat)
+
+private fun logJournalpostErrors(errors: List<SafError>) {
+    val msg = errors
+            .map { err ->
+                err.message +
+                        " Lokasjon: " + err.locations.toString()
+            }.reduce { a, b -> "$a \n $b" }
+    LOG.error("Feil i kall mot SAF - dokumentoversiktBruker \n Mottat feilmelding: $msg")
+}
+
+private fun håndterJournalpostFeilKoder(statuskode: Int) {
+    when (statuskode) {
+        404 -> LOG.error("Responskode 404 fra SAF - dokumentoversiktBruker")
+        500 -> LOG.warn("Responskode 500 fra SAF - dokumentoversiktBruker")
+        else -> LOG.error("Ukjent feil i kall mot SAF - dokumentoversiktBruker")
+    }
+}
+
+private fun håndterDokumentFeilKoder(statuskode: Int): ResultatWrapper<Any?> {
+    when (statuskode) {
+        400 -> LOG.warn("Feil i SAF hentDokument. Ugyldig input. JournalpostId og dokumentInfoId må være tall og variantFormat må være en gyldig kodeverk-verdi")
+        401 -> LOG.warn("Feil i SAF hentDokument. Bruker mangler tilgang for å vise dokumentet. Ugyldig OIDC token.")
+        404 -> LOG.warn("Feil i SAF hentDokument. Dokument eller journalpost ble ikke funnet.")
+    }
+    return ResultatWrapper(null, setOf(Baksystem.SAF))
+}
