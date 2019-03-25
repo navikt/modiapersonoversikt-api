@@ -1,16 +1,15 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.sak.rest;
 
 import no.nav.brukerdialog.security.context.ThreadLocalSubjectHandler;
-import no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.JournalV2ServiceImpl;
-import no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.interfaces.TilgangskontrollService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.domain.dokumentvisning.JournalpostResultat;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.Dokument;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.DokumentMetadata;
-import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.Sak;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.resultatwrappere.ResultatWrapper;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.resultatwrappere.TjenesteResultatWrapper;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.DokumentMetadataService;
-import no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.SaksService;
+import no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.interfaces.TilgangskontrollService;
+import no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.saf.SafService;
+import no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.saf.SafService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -28,22 +27,19 @@ import java.util.List;
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 import static java.util.Arrays.asList;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.TilgangskontrollServiceImpl.TEMAKODE_BIDRAG;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.Feilmelding.*;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.TilgangskontrollServiceImpl.TEMAKODE_BIDRAG;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.mockito.Matchers.*;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class DokumentControllerTest {
 
-
     @Mock
-    private JournalV2ServiceImpl journalV2;
-
-    @Mock
-    private SaksService saksService;
+    private SafService safService;
 
     @Mock
     private DokumentMetadataService dokumentMetadataService;
@@ -69,8 +65,7 @@ public class DokumentControllerTest {
         httpServletRequest.setCookies(lagSaksbehandlerCookie(VALGT_ENHET));
         when(dokumentMetadataService.hentDokumentMetadata(anyString())).thenReturn(lagDokumentMetadataListe("DAG"));
         when(tilgangskontrollService.harSaksbehandlerTilgangTilDokument(any(HttpServletRequest.class), any(DokumentMetadata.class), anyString(), anyString())).thenReturn(new TjenesteResultatWrapper("result"));
-        when(saksService.hentAlleSaker(anyString())).thenReturn(new ResultatWrapper<>(asList(new Sak()), null));
-        when(journalV2.hentDokument(anyString(), anyString())).thenReturn(new TjenesteResultatWrapper("null"));
+        when(safService.hentDokument(anyString(), anyString(), anyString())).thenReturn(new ResultatWrapper<>("null"));
     }
 
     @Test

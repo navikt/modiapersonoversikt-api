@@ -38,15 +38,10 @@ public class TilgangskontrollServiceImpl implements TilgangskontrollService {
     public final static String TEMAKODE_BIDRAG = "BID";
     private static final Logger logger = getLogger(TilgangskontrollService.class);
 
-    //Jeg mener denne er oversiktlig og kun gjor en ting.
-    @SuppressWarnings("squid:MethodCyclomaticComplexity")
     public TjenesteResultatWrapper harSaksbehandlerTilgangTilDokument(HttpServletRequest request, DokumentMetadata journalpostMetadata, String fnr, String urlTemakode) {
-        String valgtEnhet = hentValgtEnhet(request);
         String temakode = journalpostMetadata.getTemakode();
 
-        if (!harGodkjentEnhet(request) || !harEnhetTilgangTilTema(temakode, valgtEnhet)) {
-            return new TjenesteResultatWrapper(SAKSBEHANDLER_IKKE_TILGANG);
-        } else if (temakodeErBidrag(temakode)) {
+        if (temakodeErBidrag(temakode)) {
             return new TjenesteResultatWrapper(TEMAKODE_ER_BIDRAG);
         } else if (erJournalfortPaAnnetTema(urlTemakode, journalpostMetadata)) {
             return new TjenesteResultatWrapper(JOURNALFORT_ANNET_TEMA, journalfortAnnetTemaEktraFeilInfo(journalpostMetadata.getTemakodeVisning(), fnr));

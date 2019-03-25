@@ -4,8 +4,11 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import no.nav.brukerdialog.security.context.SubjectHandler
+import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.Baksystem
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.DokumentMetadata
+import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.resultatwrappere.ResultatWrapper
 import no.nav.sbl.rest.RestUtils
+import org.slf4j.LoggerFactory
 import javax.ws.rs.InternalServerErrorException
 import javax.ws.rs.NotFoundException
 import javax.ws.rs.client.Client
@@ -15,13 +18,11 @@ import javax.ws.rs.core.HttpHeaders.AUTHORIZATION
 import javax.ws.rs.core.HttpHeaders.CONTENT_TYPE
 import javax.ws.rs.core.MediaType.APPLICATION_JSON
 import javax.ws.rs.core.Response
-import javax.ws.rs.core.Response.Status.INTERNAL_SERVER_ERROR
-import javax.ws.rs.core.Response.Status.NOT_FOUND
-import javax.ws.rs.core.Response.ok
-import javax.ws.rs.core.Response.status
 
 val SAF_GRAPHQL_BASEURL = System.getProperty("saf.graphql.url")
 val SAF_HENTDOKUMENT_BASEURL = System.getProperty("saf.hentdokument.url")
+
+private val LOG = LoggerFactory.getLogger(SafService::class.java)
 
 class SafService {
 
@@ -37,19 +38,27 @@ class SafService {
         }
     }
 
-    fun hentDokument(journalpostId: String, dokumentInfoId: String, variantFormat: String): Response {
+    fun hentDokument(journalpostId: String, dokumentInfoId: String, variantFormat: String): ResultatWrapper<Any?> {
 
         val url = lagHentDokumentURL(journalpostId, dokumentInfoId, variantFormat)
 
-        val result = RestUtils.withClient { client ->
+        val response = RestUtils.withClient { client ->
             veilederAutorisertClient(client, url).get()
         }
 
-        return when (result.status) {
-            200 -> ok().entity(result.entity).build()
-            404 -> status(NOT_FOUND).build()
-            else -> status(INTERNAL_SERVER_ERROR).build()
+        return when (response.status) {
+            200 -> ResultatWrapper(response.entity)
+            else -> håndterDokumentFeilKoder(response.status)
         }
+    }
+
+    private fun håndterDokumentFeilKoder(statuskode: Int): ResultatWrapper<Any?> {
+        when (statuskode) {
+            400 -> LOG.warn("Feil i SAF hentDokument. Ugyldig input. JournalpostId og dokumentInfoId må være tall og variantFormat må være en gyldig kodeverk-verdi")
+            401 -> LOG.warn("Feil i SAF hentDokument. Bruker mangler tilgang for å vise dokumentet. Ugyldig OIDC token.")
+            404 -> LOG.warn("Feil i SAF hentDokument. Dokument eller journalpost ble ikke funnet.")
+        }
+        return ResultatWrapper(null, setOf(Baksystem.SAF))
     }
 }
 
@@ -86,7 +95,7 @@ private fun lagErrorOgKast(errors: List<SafError>) {
                 err.message +
                         " Lokasjon: "+ err.locations.toString()
             }.reduce { a, b -> "$a \n $b" }
-    
+
     throw InternalServerErrorException("Feil i kall mot SAF - dokumentoversiktBruker \n Mottat feilmelding: $msg")
 }
 

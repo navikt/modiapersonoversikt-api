@@ -6,10 +6,9 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.sak.domain.dokumentvisning.Journ
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.Dokument;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.DokumentMetadata;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.Feilmelding;
+import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.resultatwrappere.ResultatWrapper;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.resultatwrappere.TjenesteResultatWrapper;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.DokumentMetadataService;
-import no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.JournalV2ServiceImpl;
-import no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.SaksService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.interfaces.TilgangskontrollService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.saf.SafService;
 import org.apache.commons.lang3.tuple.ImmutablePair;
@@ -35,20 +34,18 @@ import java.util.stream.Collectors;
 import static java.lang.String.format;
 import static java.lang.System.getProperty;
 import static java.util.Collections.emptyList;
+import static java.util.Objects.isNull;
 import static java.util.stream.Collectors.toList;
 import static javax.ws.rs.core.Response.Status.FORBIDDEN;
 import static javax.ws.rs.core.Response.Status.NOT_FOUND;
 import static javax.ws.rs.core.Response.ok;
 import static javax.ws.rs.core.Response.status;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.Feilmelding.DOKUMENT_IKKE_FUNNET;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.Feilmelding.MANGLER_DOKUMENTMETADATA;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.Feilmelding.*;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.sak.rest.mock.DokumentControllerMock.mockDokumentResponse;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.sak.rest.mock.DokumentControllerMock.mockJournalpost;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.saf.SafDokumentMapperKt.SAF_VARIANTFORMAT_ARKIV;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.saf.SafDokumentMapperKt.VARIANTFORMAT_ARKIV;
 
 
-//Single Responsibility Principle
-@SuppressWarnings("squid:S1200")
 @Path("/saksoversikt/{fnr}")
 @Produces("application/json")
 public class DokumentController {
@@ -56,10 +53,7 @@ public class DokumentController {
     public static final Logger logger = LoggerFactory.getLogger(DokumentController.class);
 
     @Inject
-    private JournalV2ServiceImpl innsyn;
-
-    @Inject
-    private SaksService saksService;
+    private SafService safService;
 
     @Inject
     private DokumentMetadataService dokumentMetadataService;
@@ -90,12 +84,12 @@ public class DokumentController {
             return status(FORBIDDEN).build();
         }
 
-        TjenesteResultatWrapper hentDokumentResultat = innsyn.hentDokument(journalpostId, dokumentreferanse);
-        return hentDokumentResultat.result
+        ResultatWrapper<Object> hentDokumentResultat = safService.hentDokument(journalpostId, dokumentreferanse, VARIANTFORMAT_ARKIV);
+        return Optional.of(hentDokumentResultat.resultat)
                 .map(res -> ok(res).type("application/pdf").build())
                 .orElse(status(NOT_FOUND).build());
     }
-    
+
     @GET
     @Path("/journalpostmetadata/{journalpostId}")
     public Response hentJournalpostMetadata(@PathParam("fnr") String fnr, @PathParam("journalpostId") String journalpostId,
@@ -169,8 +163,17 @@ public class DokumentController {
         Set<String> dokumentreferanser = getDokumentReferanser(journalpostMetadata);
         return dokumentreferanser
                 .stream()
-                .map(dokumentreferanse -> new ImmutablePair<>(dokumentreferanse, innsyn.hentDokument(journalpostId, dokumentreferanse)))
+                .map(dokumentreferanse -> new ImmutablePair<>(dokumentreferanse, hentDokument(journalpostId, dokumentreferanse)))
                 .collect(toList());
+    }
+
+    private TjenesteResultatWrapper hentDokument(String journalpostId, String dokumentreferanse) {
+        ResultatWrapper<Object> dokumentWrapper = safService.hentDokument(journalpostId, dokumentreferanse, VARIANTFORMAT_ARKIV);
+        if (isNull(dokumentWrapper.resultat)) {
+            return new TjenesteResultatWrapper(UKJENT_FEIL);
+        }
+
+        return new TjenesteResultatWrapper(dokumentWrapper.resultat);
     }
 
     private Set<String> getDokumentReferanser(DokumentMetadata journalpostMetadata) {

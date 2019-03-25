@@ -8,7 +8,6 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.AnsattService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.interfaces.TilgangskontrollService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.DokumentMetadata;
-import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.Feilmelding;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.Sakstema;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.resultatwrappere.TjenesteResultatWrapper;
 import no.nav.tjeneste.virksomhet.aktoer.v1.HentAktoerIdForIdentPersonIkkeFunnet;
@@ -109,30 +108,6 @@ public class TilgangskontrollServiceTest {
 
         assertThat(result.result.isPresent(), is(TRUE));
         assertThat(result.result.get(), is(TRUE));
-    }
-
-    @Test
-    public void saksbehandlerEnhetIkkeTilgang() {
-        when(ansattService.hentEnhetsliste()).thenReturn(mockEnhetsListe());
-        when(pep.hasAccess(any())).thenReturn(false);
-        DokumentMetadata journalpostMetadata = new DokumentMetadata().withTemakode(TEMAKODE);
-        TjenesteResultatWrapper result = tilgangskontrollService.harSaksbehandlerTilgangTilDokument(mockRequest, journalpostMetadata, BRUKERS_IDENT, TEMAKODE);
-
-
-        assertThat(result.result.isPresent(), is(FALSE));
-        assertThat(result.feilmelding, is(SAKSBEHANDLER_IKKE_TILGANG));
-    }
-
-    @Test
-    public void saksbehandlerharIkkeGodkjentEnhet() {
-        when(ansattService.hentEnhetsliste()).thenReturn(mockEnhetsListe());
-        mockRequest.setCookies(lagSaksbehandlerCookie(ANNEN_ENHET));
-        DokumentMetadata journalpostMetadata = new DokumentMetadata().withTemakode(TEMAKODE);
-        TjenesteResultatWrapper result = tilgangskontrollService.harSaksbehandlerTilgangTilDokument(mockRequest, journalpostMetadata, BRUKERS_IDENT, TEMAKODE);
-
-
-        assertThat(result.result.isPresent(), is(FALSE));
-        assertThat(result.feilmelding, is(SAKSBEHANDLER_IKKE_TILGANG));
     }
 
     @Test
