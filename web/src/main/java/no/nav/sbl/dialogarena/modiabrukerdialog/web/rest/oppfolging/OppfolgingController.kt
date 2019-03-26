@@ -70,7 +70,7 @@ class OppfolgingController @Inject constructor(private val service: Oppfolgingsi
             mapOf(
                     "dagerIgjenMedBortfall" to it.dagerIgjenMedBortfall,
                     "ukerIgjenMedBortfall" to it.ukerIgjenMedBortfall,
-                    "datoKravMottat" to it.datoKravMottat?.toString(DATOFORMAT),
+                    "datoKravMottatt" to it.datoKravMottat?.toString(DATOFORMAT),
                     "fom" to it.fom?.toString(DATOFORMAT),
                     "tom" to it.tom?.toString(DATOFORMAT),
                     "status" to it.status,
@@ -87,7 +87,6 @@ class OppfolgingController @Inject constructor(private val service: Oppfolgingsi
             mapOf(
                     "aktivFra" to it.activeFrom?.toString(DATOFORMAT),
                     "aktivTil" to it.activeTo?.toString(DATOFORMAT),
-                    "vedtaksdato" to it.vedtaksdato?.toString(DATOFORMAT),
                     "aktivitetsfase" to it.aktivitetsfase,
                     "vedtakstatus" to it.vedtakstatus,
                     "vedtakstype" to it.vedtakstype
