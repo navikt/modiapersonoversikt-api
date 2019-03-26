@@ -97,7 +97,7 @@ public class TilgangskontrollServiceImpl implements TilgangskontrollService {
     }
 
     public void markerIkkeJournalforte(List<Sakstema> sakstemaList) {
-        sakstemaList.stream()
+        sakstemaList
                 .forEach(sakstema -> sakstema.dokumentMetadata
                         .stream()
                         .filter(dokumentMetadata -> !dokumentMetadata.isErJournalfort())
