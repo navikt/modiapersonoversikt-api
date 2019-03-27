@@ -125,7 +125,8 @@ class OppfolgingController @Inject constructor(private val service: Oppfolgingsi
     private fun hentVeileder(veileder: Optional<Saksbehandler>): Map<String, Any?>? {
         return if (veileder.isPresent) {
             mapOf(
-                    "ident" to veileder.get().ident
+                    "ident" to veileder.get().ident,
+                    "navn" to veileder.get().navn
             )
         } else {
             null
