@@ -35,7 +35,7 @@ class SafService {
         }
     }
 
-    fun hentDokument(journalpostId: String, dokumentInfoId: String, variantFormat: String): ResultatWrapper<ByteArray> {
+    fun hentDokument(journalpostId: String, dokumentInfoId: String, variantFormat: String): ResultatWrapper<ByteArray?> {
         val url = lagHentDokumentURL(journalpostId, dokumentInfoId, variantFormat)
 
         return RestUtils.withClient { client ->
@@ -128,11 +128,11 @@ private fun håndterJournalpostFeilKoder(statuskode: Int) {
     }
 }
 
-private fun håndterDokumentFeilKoder(statuskode: Int): ResultatWrapper<ByteArray> {
+private fun håndterDokumentFeilKoder(statuskode: Int): ResultatWrapper<ByteArray?> {
     when (statuskode) {
         400 -> LOG.warn("Feil i SAF hentDokument. Ugyldig input. JournalpostId og dokumentInfoId må være tall og variantFormat må være en gyldig kodeverk-verdi")
         401 -> LOG.warn("Feil i SAF hentDokument. Bruker mangler tilgang for å vise dokumentet. Ugyldig OIDC token.")
         404 -> LOG.warn("Feil i SAF hentDokument. Dokument eller journalpost ble ikke funnet.")
     }
-    return ResultatWrapper(ByteArray(0), setOf(Baksystem.SAF))
+    return ResultatWrapper(null, setOf(Baksystem.SAF))
 }
