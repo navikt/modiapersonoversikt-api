@@ -69,14 +69,8 @@ class OppfolgingController @Inject constructor(private val service: Oppfolgingsi
 
         return ytelser.map {
             mapOf(
-                    "dagerIgjenMedBortfall" to when (it) {
-                        is Dagpengeytelse -> it.antallDagerIgjen
-                        else -> it.dagerIgjenMedBortfall
-                    },
-                    "ukerIgjenMedBortfall" to when (it) {
-                        is Dagpengeytelse -> it.antallUkerIgjen
-                        else -> it.ukerIgjenMedBortfall
-                    },
+                    "dagerIgjenMedBortfall" to hentDagerIgjenMedBortfall(it),
+                    "ukerIgjenMedBortfall" to hentUkerIgjenMedBortfall(it),
                     "datoKravMottatt" to it.datoKravMottat?.toString(DATOFORMAT),
                     "fom" to it.fom?.toString(DATOFORMAT),
                     "tom" to it.tom?.toString(DATOFORMAT),
@@ -84,6 +78,20 @@ class OppfolgingController @Inject constructor(private val service: Oppfolgingsi
                     "type" to it.type,
                     "vedtak" to hentVedtak(it.vedtak)
             )
+        }
+    }
+
+    private fun hentUkerIgjenMedBortfall(it: Ytelse): Int? {
+        return when (it) {
+            is Dagpengeytelse -> it.antallUkerIgjen
+            else -> it.ukerIgjenMedBortfall
+        }
+    }
+
+    private fun hentDagerIgjenMedBortfall(it: Ytelse): Int? {
+        return when (it) {
+            is Dagpengeytelse -> it.antallDagerIgjen
+            else -> it.dagerIgjenMedBortfall
         }
     }
 
