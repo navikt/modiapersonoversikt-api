@@ -40,7 +40,7 @@ public class DokumentControllerTest {
 
 
     @Mock
-    private JournalV2ServiceImpl innsyn;
+    private JournalV2ServiceImpl journalV2;
 
     @Mock
     private SaksService saksService;
@@ -70,7 +70,7 @@ public class DokumentControllerTest {
         when(dokumentMetadataService.hentDokumentMetadata(anyString())).thenReturn(lagDokumentMetadataListe("DAG"));
         when(tilgangskontrollService.harSaksbehandlerTilgangTilDokument(any(HttpServletRequest.class), any(DokumentMetadata.class), anyString(), anyString())).thenReturn(new TjenesteResultatWrapper("result"));
         when(saksService.hentAlleSaker(anyString())).thenReturn(new ResultatWrapper<>(asList(new Sak()), null));
-        when(innsyn.hentDokument(anyString(), anyString())).thenReturn(new TjenesteResultatWrapper("null"));
+        when(journalV2.hentDokument(anyString(), anyString())).thenReturn(new TjenesteResultatWrapper("null"));
     }
 
     @Test
