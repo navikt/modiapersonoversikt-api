@@ -4,6 +4,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.DATOFORMAT
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.lagPeriode
 import no.nav.sykmeldingsperioder.consumer.sykepenger.SykepengerServiceBi
 import no.nav.sykmeldingsperioder.consumer.sykepenger.mapping.to.SykepengerRequest
+import no.nav.sykmeldingsperioder.domain.Arbeidsforhold
 import no.nav.sykmeldingsperioder.domain.UtbetalingPaVent
 import no.nav.sykmeldingsperioder.domain.sykepenger.Gradering
 import no.nav.sykmeldingsperioder.domain.sykepenger.Sykmelding
@@ -44,8 +45,26 @@ class SykepengerUttrekk constructor(private val sykepengerService: SykepengerSer
                     "kommendeUtbetalinger" to it.kommendeUtbetalinger?.let { hentKommendeUtbetalinger(it) },
                     "utbetalingerPåVent" to it.utbetalingerPaVent?.let { hentUtbetalingerPåVent(it) },
                     "bruker" to it.bruker?.ident,
-                    "midlertidigStanset" to it.midlertidigStanset?.toString(DATOFORMAT)
+                    "midlertidigStanset" to it.midlertidigStanset?.toString(DATOFORMAT),
+                    "slutt" to it.slutt?.toString(DATOFORMAT),
+                    "arbeidsforholdListe" to it.arbeidsforholdListe?.let { hentArbeidsgiverForhold(it) },
+                    "erArbeidsgiverperiode" to it.erArbeidsgiverperiode,
+                    "arbeidskategori" to it.arbeidskategori.termnavn
             )
+        }
+    }
+
+    private fun hentArbeidsgiverForhold(arbeidsgiverforholdListe: List<Arbeidsforhold>): List<Map<String, Any?>> {
+        return arbeidsgiverforholdListe.map {
+            mapOf(
+                    "arbeidsgiverNavn" to it.arbeidsgiverNavn,
+                    "arbeidsgiverKontonr" to it.arbeidsgiverKontonr,
+                    "inntektsperiode" to it.inntektsperiode.termnavn,
+                    "inntektForPerioden" to it.inntektForPerioden,
+                    "refusjonTom" to it.refusjonTom.toString(DATOFORMAT),
+                    "refusjonstype" to it.refusjonstype.termnavn,
+                    "sykepengerFom" to it.sykepengerFom.toString(DATOFORMAT)
+            );
         }
     }
 
