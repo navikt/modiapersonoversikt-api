@@ -8,6 +8,7 @@ import no.nav.sykmeldingsperioder.consumer.sykepenger.DefaultSykepengerService
 import no.nav.sykmeldingsperioder.consumer.sykepenger.mapping.SykepengerMapper
 import no.nav.tjeneste.virksomhet.sykepenger.v2.HentSykepengerListeSikkerhetsbegrensning
 import no.nav.tjeneste.virksomhet.sykepenger.v2.SykepengerV2
+import no.nav.tjeneste.virksomhet.sykepenger.v2.informasjon.FimsykArbeidskategori
 import no.nav.tjeneste.virksomhet.sykepenger.v2.informasjon.FimsykBruker
 import no.nav.tjeneste.virksomhet.sykepenger.v2.informasjon.FimsykStansaarsak
 import no.nav.tjeneste.virksomhet.sykepenger.v2.informasjon.FimsykSykmeldingsperiode
@@ -71,6 +72,7 @@ internal class SykepengerUttrekkTest {
                 .withStansaarsak(FimsykStansaarsak()
                         .withTermnavn(STANS))
                 .withSykmeldtFom(createXMLGregorianCalendar())
+                .withArbeidskategori(FimsykArbeidskategori())
         periode.sykmeldt = FimsykBruker().withIdent(FNR)
 
         return FimHentSykepengerListeResponse().withSykmeldingsperiodeListe(periode)
