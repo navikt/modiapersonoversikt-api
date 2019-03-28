@@ -68,7 +68,7 @@ public class TilgangskontrollServiceImpl implements TilgangskontrollService {
     }
 
     private String settEnhetDersomCookieIkkeErSatt(String valgtEnhet, List<String> enhetsListe) {
-        if("".equals(valgtEnhet)) {
+        if ("".equals(valgtEnhet)) {
             valgtEnhet = enhetsListe.get(0);
         }
         return valgtEnhet;

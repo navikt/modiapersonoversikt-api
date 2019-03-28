@@ -3,12 +3,11 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.sak.config;
 import no.nav.sbl.dialogarena.common.kodeverk.JsonKodeverk;
 import no.nav.sbl.dialogarena.common.kodeverk.Kodeverk;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.*;
+import no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.filter.Filter;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.interfaces.InnsynJournalV2Service;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.saf.SafService;
-import no.nav.sbl.dialogarena.modiabrukerdialog.sak.utils.TemagrupperHenter;
-import no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.filter.Filter;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.transformers.DokumentMetadataTransformer;
-import no.nav.tjeneste.virksomhet.innsynjournal.v2.binding.InnsynJournalV2;
+import no.nav.sbl.dialogarena.modiabrukerdialog.sak.utils.TemagrupperHenter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -46,7 +45,9 @@ public class ServiceConfig {
     }
 
     @Bean
-    public SaksService saksService() { return new SaksService(); }
+    public SaksService saksService() {
+        return new SaksService();
+    }
 
     @Bean
     public GsakSakerService gsakSakerService() {
@@ -87,7 +88,7 @@ public class ServiceConfig {
     }
 
     @Bean
-    public DokumentMetadataTransformer dokumentMetadataTransformer(BulletproofKodeverkService bulletproofKodeverkService){
+    public DokumentMetadataTransformer dokumentMetadataTransformer(BulletproofKodeverkService bulletproofKodeverkService) {
         return new DokumentMetadataTransformer(bulletproofKodeverkService);
     }
 

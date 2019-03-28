@@ -9,7 +9,6 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.resultatwrapp
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.DokumentMetadataService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.interfaces.TilgangskontrollService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.saf.SafService;
-import no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.saf.SafService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -74,7 +73,6 @@ public class DokumentControllerTest {
         when(dokumentMetadataService.hentDokumentMetadata(any(String.class))).thenReturn(lagDokumentMetadataListe(TEMA_KODE));
 
         Response response = dokumentController.hentJournalpostMetadata(FNR, JOURNALPOSTID, TEMA_KODE, httpServletRequest);
-
         assertThat(((JournalpostResultat) response.getEntity()).getFeilendeDokumenter().get(0).getFeilmeldingEnonicKey(), is("feilmelding.saksbehandlerikketilgang"));
     }
 

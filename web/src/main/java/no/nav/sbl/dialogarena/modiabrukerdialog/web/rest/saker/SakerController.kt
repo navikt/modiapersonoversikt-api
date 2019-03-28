@@ -9,8 +9,8 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.SaksService
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.SakstemaService
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.interfaces.SaksoversiktService
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.interfaces.TilgangskontrollService
-import no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.saf.VARIANTFORMAT_ARKIV
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.saf.SafService
+import no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.saf.VARIANTFORMAT_ARKIV
 import org.joda.time.DateTime
 import java.time.LocalDateTime
 import java.util.*
@@ -64,7 +64,7 @@ class SakerController @Inject constructor(private val saksoversiktService: Sakso
         return safService.hentDokument(journalpostId, dokumentreferanse, VARIANTFORMAT_ARKIV)
                 .resultat
                 ?.let { Response.ok(it).build() }
-                ?:Response.status(Response.Status.NOT_FOUND).build()
+                ?: Response.status(Response.Status.NOT_FOUND).build()
     }
 
     private fun byggSakstemaResultat(resultat: ResultatWrapper<List<ModiaSakstema>>): Map<String, Any?> {
