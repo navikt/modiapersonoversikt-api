@@ -28,8 +28,10 @@ const val dokumentoversiktBrukerGraphQLQuery = "query {" +
         "      tema" +
         "      temanavn" +
         "      journalstatus" +
-        "      avsenderMottakerNavn" +
-        "      avsenderMottakerId" +
+        "      avsenderMottaker {" +
+        "        erLikBruker" +
+        "        navn" +
+        "      }" +
         "      bruker{" +
         "        id" +
         "        type" +

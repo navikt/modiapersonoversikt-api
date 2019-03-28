@@ -67,7 +67,7 @@ private fun getRelevantDatoForType(datotype: String, journalpost: Journalpost): 
                 .firstOrNull()
 
 private fun getNavn(journalpost: Journalpost) =
-        journalpost.avsenderMottakerNavn ?: "ukjent"
+        journalpost.avsenderMottaker?.navn ?: "ukjent"
 
 private fun getHoveddokumentet(journalpost: Journalpost): DokumentInfo =
         journalpost.dokumenter?.get(0) ?: throw RuntimeException("Fant sak uten hoveddokument!")
@@ -123,7 +123,7 @@ private fun getAvsenderMottaker(journalpost: Journalpost): Pair<Entitet, Entitet
 }
 
 private fun sluttbrukerErMottakerEllerAvsender(journalpost: Journalpost): Boolean =
-        journalpost.avsenderMottakerId === journalpost.bruker?.id
+        journalpost.avsenderMottaker?.erLikBruker?: false
 
 private fun Dokument.fraSafLogiskVedlegg(logiskVedlegg: LogiskVedlegg): Dokument {
     tittel = logiskVedlegg.tittel

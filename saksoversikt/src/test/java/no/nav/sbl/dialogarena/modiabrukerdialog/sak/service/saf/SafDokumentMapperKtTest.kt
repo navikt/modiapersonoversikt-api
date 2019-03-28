@@ -166,27 +166,38 @@ internal class SafDokumentMapperKtTest {
 
     @Test
     fun `Bruker som avsender mappes korrekt`() {
-        val journalpost = lagJournalpost().copy(avsenderMottakerNavn = "Aremark", journalposttype = SAF_JOURNALPOSTTYPE_INN)
+        val navn = "Aremark"
+        val journalpost = lagJournalpost().copy(
+                avsenderMottaker = AvsenderMottaker(true, navn),
+                journalposttype = SAF_JOURNALPOSTTYPE_INN)
 
         val dokumentMetadata = DokumentMetadata().fraSafJournalpost(journalpost)
 
         assertEquals(SLUTTBRUKER, dokumentMetadata.avsender)
         assertEquals(NAV, dokumentMetadata.mottaker)
+        assertEquals(navn, dokumentMetadata.navn)
+
     }
 
     @Test
     fun `Bruker som mottaker mappes korrekt`() {
-        val journalpost = lagJournalpost().copy(avsenderMottakerNavn = "Aremark", journalposttype = SAF_JOURNALPOSTTYPE_UT)
+        val navn = "Aremark"
+        val journalpost = lagJournalpost().copy(
+                avsenderMottaker = AvsenderMottaker(true, navn),
+                journalposttype = SAF_JOURNALPOSTTYPE_UT)
 
         val dokumentMetadata = DokumentMetadata().fraSafJournalpost(journalpost)
 
         assertEquals(NAV, dokumentMetadata.avsender)
         assertEquals(SLUTTBRUKER, dokumentMetadata.mottaker)
+        assertEquals(navn, dokumentMetadata.navn)
     }
 
     @Test
     fun `Intern retning mappes korrekt`() {
-        val journalpost = lagJournalpost().copy(avsenderMottakerNavn = "Aremark", journalposttype = SAF_JOURNALPOSTTYPE_INTERN)
+        val journalpost = lagJournalpost().copy(
+                avsenderMottaker= AvsenderMottaker(false, "Aremark"),
+                journalposttype = SAF_JOURNALPOSTTYPE_INTERN)
 
         val dokumentMetadata = DokumentMetadata().fraSafJournalpost(journalpost)
 
@@ -199,8 +210,7 @@ internal class SafDokumentMapperKtTest {
         val eksternNavn = "Aremark sin lege"
         val journalpost = lagJournalpost().copy(
                 bruker = lagJournalpost().bruker?.copy(id = "10108000398"),
-                avsenderMottakerNavn = eksternNavn,
-                avsenderMottakerId = "07063000250",
+                avsenderMottaker = AvsenderMottaker(false, eksternNavn),
                 journalposttype = SAF_JOURNALPOSTTYPE_UT)
 
         val dokumentMetadata = DokumentMetadata().fraSafJournalpost(journalpost)
@@ -215,8 +225,7 @@ internal class SafDokumentMapperKtTest {
         val eksternNavn = "Aremark sin lege"
         val journalpost = lagJournalpost().copy(
                 bruker = lagJournalpost().bruker?.copy(id = "10108000398"),
-                avsenderMottakerNavn = eksternNavn,
-                avsenderMottakerId = "07063000250",
+                avsenderMottaker = AvsenderMottaker(false, eksternNavn),
                 journalposttype = SAF_JOURNALPOSTTYPE_INN)
 
         val dokumentMetadata = DokumentMetadata().fraSafJournalpost(journalpost)
@@ -229,7 +238,7 @@ internal class SafDokumentMapperKtTest {
     @Test
     fun `Navn blir ukjent når avsenderMottaker er null`() {
         val journalpost = lagJournalpost().copy(
-                avsenderMottakerNavn = null
+                avsenderMottaker = null
         )
 
         val dokumentMetadata = DokumentMetadata().fraSafJournalpost(journalpost)
@@ -361,8 +370,7 @@ private fun lagJournalpost(): Journalpost {
     val sak = lagSak()
 
     return Journalpost(
-            avsenderMottakerNavn = avsenderMottakerNavn,
-            avsenderMottakerId = aremarkFNR,
+            avsenderMottaker = lagAvsenderMottaker(),
             bruker = bruker,
             dokumenter = dokumenter,
             journalpostId = journalpostId,
@@ -377,6 +385,7 @@ private fun lagJournalpost(): Journalpost {
     )
 }
 
+
 private fun lagSak(): Sak {
     return Sak(
             arkivsaksnummer = arkivsaknummer,
@@ -385,6 +394,7 @@ private fun lagSak(): Sak {
             fagsaksystem = fagsakSystem)
 }
 
+private fun lagAvsenderMottaker() = AvsenderMottaker(true, avsenderMottakerNavn)
 private fun lagVedlegg(): DokumentInfo = lagDokumentInfo(vedleggTittel)
 private fun lagHoveddokument(): DokumentInfo = lagDokumentInfo(hovedDokumentTittel)
 

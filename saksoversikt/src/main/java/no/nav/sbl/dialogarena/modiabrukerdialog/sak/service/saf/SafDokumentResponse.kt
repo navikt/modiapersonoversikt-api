@@ -10,8 +10,7 @@ data class Data(val dokumentoversiktBruker: DokumentoversiktBruker?)
 data class DokumentoversiktBruker(val journalposter: List<Journalpost>?)
 
 data class Journalpost(
-        val avsenderMottakerNavn: String?,
-        val avsenderMottakerId: String?,
+        val avsenderMottaker: AvsenderMottaker?,
         val bruker: Bruker?,
         val dokumenter: List<DokumentInfo>?,
         val datoOpprettet: LocalDateTime,
@@ -23,6 +22,11 @@ data class Journalpost(
         val tema: String?,
         val temanavn: String?,
         val tittel: String?
+)
+
+data class AvsenderMottaker(
+        val erLikBruker: Boolean,
+        val navn: String?
 )
 
 data class Bruker(
