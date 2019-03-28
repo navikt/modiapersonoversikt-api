@@ -48,16 +48,16 @@ private fun getRetning(journalpost: Journalpost): Kommunikasjonsretning? =
 private fun getDato(journalpost: Journalpost): LocalDateTime? =
         when (journalpost.journalposttype) {
             JOURNALPOSTTYPE_INN -> getRelevantDatoForType(DATOTYPE_REGISTRERT, journalpost)
-            JOURNALPOSTTYPE_UT -> getRelevantDatoForTypeMedFallbacks(DATOTYPE_EKSPEDERT, DATOTYPE_SENDT_PRINT, DATOTYPE_JOURNALFOERT, journalpost)
+            JOURNALPOSTTYPE_UT -> getDatoSendt(journalpost)
             JOURNALPOSTTYPE_INTERN -> getRelevantDatoForType(DATOTYPE_JOURNALFOERT, journalpost)
             else -> now()
         }
 
-private fun getRelevantDatoForTypeMedFallbacks(primary: String, secondary: String, tertiary: String, journalpost: Journalpost): LocalDateTime? =
+private fun getDatoSendt(journalpost: Journalpost): LocalDateTime? =
         listOfNotNull(
-                getRelevantDatoForType(primary, journalpost),
-                getRelevantDatoForType(secondary, journalpost),
-                getRelevantDatoForType(tertiary, journalpost)
+                getRelevantDatoForType(DATOTYPE_EKSPEDERT, journalpost),
+                getRelevantDatoForType(DATOTYPE_SENDT_PRINT, journalpost),
+                getRelevantDatoForType(DATOTYPE_JOURNALFOERT, journalpost)
         ).firstOrNull()
 
 private fun getRelevantDatoForType(datotype: String, journalpost: Journalpost): LocalDateTime? =
