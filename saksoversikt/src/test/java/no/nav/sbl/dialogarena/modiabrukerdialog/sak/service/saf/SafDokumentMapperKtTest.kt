@@ -17,7 +17,7 @@ private val datoOpprettet = LocalDateTime.parse("2019-02-04T13:23:57", DateTimeF
 private const val temanavn = "Arbeidsavklaringspenger"
 private const val tema = "AAP"
 private const val journalStatus = "JOURNALFOERT"
-private const val journalpostType = SAF_JOURNALPOSTTYPE_INN
+private const val journalpostType = JOURNALPOSTTYPE_INN
 private const val journalpostTittel = "Journalpost Tittel"
 private const val journalpostId = "456"
 private const val avsenderMottakerNavn = "Aremark"
@@ -25,7 +25,7 @@ private const val fagsakSystem = "FS22"
 private const val fagsakId = "987"
 private const val arkivsaksystem = "GSAK"
 private const val arkivsaknummer = "789"
-private const val datotype = SAF_DATOTYPE_REGISTRERT
+private const val datotype = DATOTYPE_REGISTRERT
 private val relevantdato = LocalDateTime.parse("2011-05-07T13:23:57", DateTimeFormatter.ISO_DATE_TIME)
 private const val logiskVedleggtittel = "Logisk Vedlegg tittel"
 private const val variantformat = "ARKIV"
@@ -85,7 +85,7 @@ internal class SafDokumentMapperKtTest {
 
     @Test
     fun `Retning I mappes korrekt`() {
-        val journalpost = lagJournalpost().copy(journalposttype = SAF_JOURNALPOSTTYPE_INN)
+        val journalpost = lagJournalpost().copy(journalposttype = JOURNALPOSTTYPE_INN)
 
         val dokumentMetadata = DokumentMetadata().fraSafJournalpost(journalpost)
 
@@ -94,7 +94,7 @@ internal class SafDokumentMapperKtTest {
 
     @Test
     fun `Retning U mappes korrekt`() {
-        val journalpost = lagJournalpost().copy(journalposttype = SAF_JOURNALPOSTTYPE_UT)
+        val journalpost = lagJournalpost().copy(journalposttype = JOURNALPOSTTYPE_UT)
 
         val dokumentMetadata = DokumentMetadata().fraSafJournalpost(journalpost)
 
@@ -103,7 +103,7 @@ internal class SafDokumentMapperKtTest {
 
     @Test
     fun `Retning N mappes korrekt`() {
-        val journalpost = lagJournalpost().copy(journalposttype = SAF_JOURNALPOSTTYPE_INTERN)
+        val journalpost = lagJournalpost().copy(journalposttype = JOURNALPOSTTYPE_INTERN)
 
         val dokumentMetadata = DokumentMetadata().fraSafJournalpost(journalpost)
 
@@ -116,15 +116,15 @@ internal class SafDokumentMapperKtTest {
                 dokumenter = listOf(
                         lagHoveddokument().copy(
                                 dokumentvarianter = listOf(
-                                        Dokumentvariant(variantformat = SAF_VARIANTFORMAT_ARKIV, saksbehandlerHarTilgang = true),
-                                        Dokumentvariant(variantformat = SAF_VARIANTFORMAT_SLADDET, saksbehandlerHarTilgang = true),
+                                        Dokumentvariant(variantformat = VARIANTFORMAT_ARKIV, saksbehandlerHarTilgang = true),
+                                        Dokumentvariant(variantformat = VARIANTFORMAT_SLADDET, saksbehandlerHarTilgang = true),
                                         Dokumentvariant(variantformat = "ANNET_FORMAT", saksbehandlerHarTilgang = true)
                                 )
                         ),
                         lagVedlegg().copy(
                                 dokumentvarianter = listOf(
-                                        Dokumentvariant(variantformat = SAF_VARIANTFORMAT_ARKIV, saksbehandlerHarTilgang = true),
-                                        Dokumentvariant(variantformat = SAF_VARIANTFORMAT_SLADDET, saksbehandlerHarTilgang = true),
+                                        Dokumentvariant(variantformat = VARIANTFORMAT_ARKIV, saksbehandlerHarTilgang = true),
+                                        Dokumentvariant(variantformat = VARIANTFORMAT_SLADDET, saksbehandlerHarTilgang = true),
                                         Dokumentvariant(variantformat = "ANNET_FORMAT", saksbehandlerHarTilgang = true)
                                 )
                         )
@@ -144,13 +144,13 @@ internal class SafDokumentMapperKtTest {
                 dokumenter = listOf(
                         lagHoveddokument().copy(
                                 dokumentvarianter = listOf(
-                                        Dokumentvariant(variantformat = SAF_VARIANTFORMAT_ARKIV, saksbehandlerHarTilgang = true),
+                                        Dokumentvariant(variantformat = VARIANTFORMAT_ARKIV, saksbehandlerHarTilgang = true),
                                         Dokumentvariant(variantformat = "ANNET_FORMAT", saksbehandlerHarTilgang = true)
                                 )
                         ),
                         lagVedlegg().copy(
                                 dokumentvarianter = listOf(
-                                        Dokumentvariant(variantformat = SAF_VARIANTFORMAT_ARKIV, saksbehandlerHarTilgang = true),
+                                        Dokumentvariant(variantformat = VARIANTFORMAT_ARKIV, saksbehandlerHarTilgang = true),
                                         Dokumentvariant(variantformat = "ANNET_FORMAT", saksbehandlerHarTilgang = true)
                                 )
                         )
@@ -169,7 +169,7 @@ internal class SafDokumentMapperKtTest {
         val navn = "Aremark"
         val journalpost = lagJournalpost().copy(
                 avsenderMottaker = AvsenderMottaker(true, navn),
-                journalposttype = SAF_JOURNALPOSTTYPE_INN)
+                journalposttype = JOURNALPOSTTYPE_INN)
 
         val dokumentMetadata = DokumentMetadata().fraSafJournalpost(journalpost)
 
@@ -184,7 +184,7 @@ internal class SafDokumentMapperKtTest {
         val navn = "Aremark"
         val journalpost = lagJournalpost().copy(
                 avsenderMottaker = AvsenderMottaker(true, navn),
-                journalposttype = SAF_JOURNALPOSTTYPE_UT)
+                journalposttype = JOURNALPOSTTYPE_UT)
 
         val dokumentMetadata = DokumentMetadata().fraSafJournalpost(journalpost)
 
@@ -197,7 +197,7 @@ internal class SafDokumentMapperKtTest {
     fun `Intern retning mappes korrekt`() {
         val journalpost = lagJournalpost().copy(
                 avsenderMottaker= AvsenderMottaker(false, "Aremark"),
-                journalposttype = SAF_JOURNALPOSTTYPE_INTERN)
+                journalposttype = JOURNALPOSTTYPE_INTERN)
 
         val dokumentMetadata = DokumentMetadata().fraSafJournalpost(journalpost)
 
@@ -211,7 +211,7 @@ internal class SafDokumentMapperKtTest {
         val journalpost = lagJournalpost().copy(
                 bruker = lagJournalpost().bruker?.copy(id = "10108000398"),
                 avsenderMottaker = AvsenderMottaker(false, eksternNavn),
-                journalposttype = SAF_JOURNALPOSTTYPE_UT)
+                journalposttype = JOURNALPOSTTYPE_UT)
 
         val dokumentMetadata = DokumentMetadata().fraSafJournalpost(journalpost)
 
@@ -226,7 +226,7 @@ internal class SafDokumentMapperKtTest {
         val journalpost = lagJournalpost().copy(
                 bruker = lagJournalpost().bruker?.copy(id = "10108000398"),
                 avsenderMottaker = AvsenderMottaker(false, eksternNavn),
-                journalposttype = SAF_JOURNALPOSTTYPE_INN)
+                journalposttype = JOURNALPOSTTYPE_INN)
 
         val dokumentMetadata = DokumentMetadata().fraSafJournalpost(journalpost)
 
@@ -263,7 +263,7 @@ internal class SafDokumentMapperKtTest {
         val journalpost = lagJournalpost().copy(
                 relevanteDatoer = listOf(
                         RelevantDato(
-                                datotype = SAF_DATOTYPE_REGISTRERT,
+                                datotype = DATOTYPE_REGISTRERT,
                                 dato = registrertDato
                         )))
 
@@ -279,18 +279,18 @@ internal class SafDokumentMapperKtTest {
         val journalFoertDato = LocalDateTime.parse("2016-01-01T13:23:57", DateTimeFormatter.ISO_DATE_TIME)
 
         val journalpost = lagJournalpost().copy(
-                journalposttype = SAF_JOURNALPOSTTYPE_UT,
+                journalposttype = JOURNALPOSTTYPE_UT,
                 relevanteDatoer = listOf(
                         RelevantDato(
-                                datotype = SAF_DATOTYPE_EKSPEDERT,
+                                datotype = DATOTYPE_EKSPEDERT,
                                 dato = ekspedertDato
                         ),
                         RelevantDato(
-                                datotype = SAF_DATOTYPE_SENDT_PRINT,
+                                datotype = DATOTYPE_SENDT_PRINT,
                                 dato = sendtPrintDato
                         ),
                         RelevantDato(
-                                datotype = SAF_DATOTYPE_JOURNALFOERT,
+                                datotype = DATOTYPE_JOURNALFOERT,
                                 dato = journalFoertDato
                         ))
         )
@@ -306,14 +306,14 @@ internal class SafDokumentMapperKtTest {
         val journalFoertDato = LocalDateTime.parse("2016-01-01T13:23:57", DateTimeFormatter.ISO_DATE_TIME)
 
         val journalpost = lagJournalpost().copy(
-                journalposttype = SAF_JOURNALPOSTTYPE_UT,
+                journalposttype = JOURNALPOSTTYPE_UT,
                 relevanteDatoer = listOf(
                         RelevantDato(
-                                datotype = SAF_DATOTYPE_SENDT_PRINT,
+                                datotype = DATOTYPE_SENDT_PRINT,
                                 dato = sendtPrintDato
                         ),
                         RelevantDato(
-                                datotype = SAF_DATOTYPE_JOURNALFOERT,
+                                datotype = DATOTYPE_JOURNALFOERT,
                                 dato = journalFoertDato
                         )
                 )
@@ -329,10 +329,10 @@ internal class SafDokumentMapperKtTest {
         val journalFoertDato = LocalDateTime.parse("2016-01-01T13:23:57", DateTimeFormatter.ISO_DATE_TIME)
 
         val journalpost = lagJournalpost().copy(
-                journalposttype = SAF_JOURNALPOSTTYPE_UT,
+                journalposttype = JOURNALPOSTTYPE_UT,
                 relevanteDatoer = listOf(
                         RelevantDato(
-                                datotype = SAF_DATOTYPE_JOURNALFOERT,
+                                datotype = DATOTYPE_JOURNALFOERT,
                                 dato = journalFoertDato
                         )
                 )
@@ -350,10 +350,10 @@ internal class SafDokumentMapperKtTest {
         val journalpost = lagJournalpost().copy(
                 relevanteDatoer = listOf(
                         RelevantDato(
-                                datotype = SAF_DATOTYPE_JOURNALFOERT,
+                                datotype = DATOTYPE_JOURNALFOERT,
                                 dato = journalFoertDato
                         )),
-                journalposttype = SAF_JOURNALPOSTTYPE_INTERN
+                journalposttype = JOURNALPOSTTYPE_INTERN
         )
 
         val dokumentMetadata = DokumentMetadata().fraSafJournalpost(journalpost)

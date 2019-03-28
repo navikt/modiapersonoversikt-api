@@ -5,17 +5,17 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.Dokument.Vari
 import java.time.LocalDateTime
 import java.time.LocalDateTime.now
 
-const val SAF_DATOTYPE_REGISTRERT = "DATO_REGISTRERT"
-const val SAF_DATOTYPE_JOURNALFOERT = "DATO_JOURNALFOERT"
-const val SAF_DATOTYPE_EKSPEDERT = "DATO_EKSPEDERT"
-const val SAF_DATOTYPE_SENDT_PRINT = "DATO_SENDT_PRINT"
+const val DATOTYPE_REGISTRERT = "DATO_REGISTRERT"
+const val DATOTYPE_JOURNALFOERT = "DATO_JOURNALFOERT"
+const val DATOTYPE_EKSPEDERT = "DATO_EKSPEDERT"
+const val DATOTYPE_SENDT_PRINT = "DATO_SENDT_PRINT"
 
-const val SAF_VARIANTFORMAT_ARKIV = "ARKIV"
-const val SAF_VARIANTFORMAT_SLADDET = "SLADDET"
+const val VARIANTFORMAT_ARKIV = "ARKIV"
+const val VARIANTFORMAT_SLADDET = "SLADDET"
 
-const val SAF_JOURNALPOSTTYPE_INN = "I"
-const val SAF_JOURNALPOSTTYPE_UT = "U"
-const val SAF_JOURNALPOSTTYPE_INTERN = "N"
+const val JOURNALPOSTTYPE_INN = "I"
+const val JOURNALPOSTTYPE_UT = "U"
+const val JOURNALPOSTTYPE_INTERN = "N"
 
 const val VEDLEGG_START_INDEX = 1
 
@@ -39,17 +39,17 @@ fun DokumentMetadata.fraSafJournalpost(journalpost: Journalpost): DokumentMetada
 
 private fun getRetning(journalpost: Journalpost): Kommunikasjonsretning? =
         when (journalpost.journalposttype) {
-            SAF_JOURNALPOSTTYPE_INN -> Kommunikasjonsretning.INN
-            SAF_JOURNALPOSTTYPE_UT -> Kommunikasjonsretning.UT
-            SAF_JOURNALPOSTTYPE_INTERN -> Kommunikasjonsretning.INTERN
+            JOURNALPOSTTYPE_INN -> Kommunikasjonsretning.INN
+            JOURNALPOSTTYPE_UT -> Kommunikasjonsretning.UT
+            JOURNALPOSTTYPE_INTERN -> Kommunikasjonsretning.INTERN
             else -> throw RuntimeException("Ukjent journalposttype: " + journalpost.journalposttype)
         }
 
 private fun getDato(journalpost: Journalpost): LocalDateTime? =
         when (journalpost.journalposttype) {
-            SAF_JOURNALPOSTTYPE_INN -> getRelevantDatoForType(SAF_DATOTYPE_REGISTRERT, journalpost)
-            SAF_JOURNALPOSTTYPE_UT -> getRelevantDatoForTypeMedFallbacks(SAF_DATOTYPE_EKSPEDERT, SAF_DATOTYPE_SENDT_PRINT, SAF_DATOTYPE_JOURNALFOERT, journalpost)
-            SAF_JOURNALPOSTTYPE_INTERN -> getRelevantDatoForType(SAF_DATOTYPE_JOURNALFOERT, journalpost)
+            JOURNALPOSTTYPE_INN -> getRelevantDatoForType(DATOTYPE_REGISTRERT, journalpost)
+            JOURNALPOSTTYPE_UT -> getRelevantDatoForTypeMedFallbacks(DATOTYPE_EKSPEDERT, DATOTYPE_SENDT_PRINT, DATOTYPE_JOURNALFOERT, journalpost)
+            JOURNALPOSTTYPE_INTERN -> getRelevantDatoForType(DATOTYPE_JOURNALFOERT, journalpost)
             else -> now()
         }
 
@@ -90,7 +90,7 @@ private fun getVariantformat(dokumentInfo: DokumentInfo): Variantformat {
 }
 
 private fun finnesSladdetVersjon(dokumentInfo: DokumentInfo) =
-        dokumentInfo.dokumentvarianter.any { variant -> variant.variantformat == SAF_VARIANTFORMAT_SLADDET }
+        dokumentInfo.dokumentvarianter.any { variant -> variant.variantformat == VARIANTFORMAT_SLADDET }
 
 private fun getVedlegg(journalpost: Journalpost): List<Dokument> =
         getElektroniskeVedlegg(journalpost).plus(getLogiskeVedlegg(journalpost))
@@ -109,14 +109,14 @@ private fun getLogiskeVedlegg(journalpost: Journalpost): List<Dokument> =
 private fun getAvsender(journalpost: Journalpost): Entitet = getAvsenderMottaker(journalpost).first
 private fun getMottaker(journalpost: Journalpost): Entitet = getAvsenderMottaker(journalpost).second
 private fun getAvsenderMottaker(journalpost: Journalpost): Pair<Entitet, Entitet> {
-    if (journalpost.journalposttype == SAF_JOURNALPOSTTYPE_INTERN) {
+    if (journalpost.journalposttype == JOURNALPOSTTYPE_INTERN) {
         return Pair(Entitet.NAV, Entitet.NAV)
     } else if (sluttbrukerErMottakerEllerAvsender(journalpost)) {
-        if (journalpost.journalposttype == SAF_JOURNALPOSTTYPE_INN) return Pair(Entitet.SLUTTBRUKER, Entitet.NAV)
-        if (journalpost.journalposttype == SAF_JOURNALPOSTTYPE_UT) return Pair(Entitet.NAV, Entitet.SLUTTBRUKER)
+        if (journalpost.journalposttype == JOURNALPOSTTYPE_INN) return Pair(Entitet.SLUTTBRUKER, Entitet.NAV)
+        if (journalpost.journalposttype == JOURNALPOSTTYPE_UT) return Pair(Entitet.NAV, Entitet.SLUTTBRUKER)
     } else {
-        if (journalpost.journalposttype == SAF_JOURNALPOSTTYPE_INN) return Pair(Entitet.EKSTERN_PART, Entitet.NAV)
-        if (journalpost.journalposttype == SAF_JOURNALPOSTTYPE_UT) return Pair(Entitet.NAV, Entitet.EKSTERN_PART)
+        if (journalpost.journalposttype == JOURNALPOSTTYPE_INN) return Pair(Entitet.EKSTERN_PART, Entitet.NAV)
+        if (journalpost.journalposttype == JOURNALPOSTTYPE_UT) return Pair(Entitet.NAV, Entitet.EKSTERN_PART)
     }
 
     return Pair(Entitet.UKJENT, Entitet.UKJENT)
