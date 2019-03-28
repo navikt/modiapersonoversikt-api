@@ -77,16 +77,6 @@ private fun safDokumentResponsFraResponse(response: Response): SafDokumentRespon
     }
 }
 
-private fun lagErrorOgKast(errors: List<SafError>) {
-    val msg = errors
-            .map { err ->
-                err.message +
-                        " Lokasjon: "+ err.locations.toString()
-            }.reduce { a, b -> "$a \n $b" }
-
-    throw InternalServerErrorException("Feil i kall mot SAF - dokumentoversiktBruker \n Mottat feilmelding: $msg")
-}
-
 private fun getDokumentMetadata(safDokumentResponse: SafDokumentResponse): List<DokumentMetadata> =
         safDokumentResponse.data?.dokumentoversiktBruker?.journalposter
                 .orEmpty()
