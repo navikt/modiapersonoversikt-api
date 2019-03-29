@@ -38,20 +38,15 @@ public class TilgangskontrollServiceImpl implements TilgangskontrollService {
     public final static String TEMAKODE_BIDRAG = "BID";
     private static final Logger logger = getLogger(TilgangskontrollService.class);
 
-    //Jeg mener denne er oversiktlig og kun gjor en ting.
-    @SuppressWarnings("squid:MethodCyclomaticComplexity")
     public TjenesteResultatWrapper harSaksbehandlerTilgangTilDokument(HttpServletRequest request, DokumentMetadata journalpostMetadata, String fnr, String urlTemakode) {
-        String valgtEnhet = hentValgtEnhet(request);
         String temakode = journalpostMetadata.getTemakode();
 
-        if (!harGodkjentEnhet(request) || !harEnhetTilgangTilTema(temakode, valgtEnhet)) {
-            return new TjenesteResultatWrapper(SAKSBEHANDLER_IKKE_TILGANG);
-        } else if (temakodeErBidrag(temakode)) {
+        if (temakodeErBidrag(temakode)) {
             return new TjenesteResultatWrapper(TEMAKODE_ER_BIDRAG);
         } else if (erJournalfortPaAnnetTema(urlTemakode, journalpostMetadata)) {
             return new TjenesteResultatWrapper(JOURNALFORT_ANNET_TEMA, journalfortAnnetTemaEktraFeilInfo(journalpostMetadata.getTemakodeVisning(), fnr));
         } else if (!journalpostMetadata.isErJournalfort()) {
-            return new TjenesteResultatWrapper(IKKE_JOURNALFORT_ELLER_ANNEN_BRUKER, ikkeJournalfortEkstraFeilInfo(fnr));
+            return new TjenesteResultatWrapper(IKKE_JOURNALFORT, ikkeJournalfortEkstraFeilInfo(fnr));
         } else if (journalpostMetadata.getFeilWrapper().getInneholderFeil()) {
             return new TjenesteResultatWrapper(journalpostMetadata.getFeilWrapper().getFeilmelding());
         }
@@ -73,7 +68,7 @@ public class TilgangskontrollServiceImpl implements TilgangskontrollService {
     }
 
     private String settEnhetDersomCookieIkkeErSatt(String valgtEnhet, List<String> enhetsListe) {
-        if("".equals(valgtEnhet)) {
+        if ("".equals(valgtEnhet)) {
             valgtEnhet = enhetsListe.get(0);
         }
         return valgtEnhet;
@@ -101,7 +96,7 @@ public class TilgangskontrollServiceImpl implements TilgangskontrollService {
                 .forEach(sakstema -> sakstema.dokumentMetadata
                         .stream()
                         .filter(dokumentMetadata -> !dokumentMetadata.isErJournalfort())
-                        .map(dokumentMetadata -> dokumentMetadata.withFeilWrapper(IKKE_JOURNALFORT_ELLER_ANNEN_BRUKER))
+                        .map(dokumentMetadata -> dokumentMetadata.withFeilWrapper(IKKE_JOURNALFORT))
                         .collect(toList()));
     }
 

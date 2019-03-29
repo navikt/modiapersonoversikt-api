@@ -35,8 +35,6 @@ public class DokumentMetadataService {
     private List<DokumentMetadata> soknader;
     private Set<Baksystem> feilendeBaksystem;
 
-    private static final Logger LOG = LoggerFactory.getLogger(DokumentMetadataService.class);
-
     public DokumentMetadataService(InnsynJournalV2Service innsynJournalV2Service,
                                    HenvendelseService henvendelseService,
                                    DokumentMetadataTransformer dokumentMetadataTransformer,
@@ -108,13 +106,9 @@ public class DokumentMetadataService {
     }
 
     private void hentJournalposter(String fnr) {
-        try {
-            List<DokumentMetadata> dokumentMetadata = safService.hentJournalposter(fnr);
-            journalposter.addAll(dokumentMetadata);
-        } catch (RuntimeException e) {
-            feilendeBaksystem.add(Baksystem.SAF);
-            LOG.error("Feil i henting av journalposter fra SAF" ,e);
-        }
+        ResultatWrapper<List<DokumentMetadata>> journalpostWrapper = safService.hentJournalposter(fnr);
+        journalposter.addAll(journalpostWrapper.resultat);
+        feilendeBaksystem.addAll(journalpostWrapper.feilendeSystemer);
     }
 
     private void leggTilHenvendelseSomBaksystemIJournalposterOmSoknadEksisterer() {

@@ -7,9 +7,10 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.resultatwrapp
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.DokumentMetadataService
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.SaksService
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.SakstemaService
-import no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.interfaces.JournalV2Service
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.interfaces.SaksoversiktService
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.interfaces.TilgangskontrollService
+import no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.saf.SafService
+import no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.saf.VARIANTFORMAT_ARKIV
 import org.joda.time.DateTime
 import java.time.LocalDateTime
 import java.util.*
@@ -25,8 +26,8 @@ class SakerController @Inject constructor(private val saksoversiktService: Sakso
                                           private val sakstemaService: SakstemaService,
                                           private val saksService: SaksService,
                                           private val tilgangskontrollService: TilgangskontrollService,
-                                          private val innsyn: JournalV2Service,
-                                          private val dokumentMetadataService: DokumentMetadataService) {
+                                          private val dokumentMetadataService: DokumentMetadataService,
+                                          private val safService: SafService) {
     @GET
     @Path("/sakstema")
     @Produces(MediaType.APPLICATION_JSON)
@@ -60,8 +61,10 @@ class SakerController @Inject constructor(private val saksoversiktService: Sakso
             return Response.status(Response.Status.FORBIDDEN).build()
         }
 
-        val hentDokumentResultat = innsyn.hentDokument(journalpostId, dokumentreferanse)
-        return hentDokumentResultat.result.map { Response.ok(it).build() }.orElse(Response.status(Response.Status.NOT_FOUND).build())
+        return safService.hentDokument(journalpostId, dokumentreferanse, VARIANTFORMAT_ARKIV)
+                .resultat
+                ?.let { Response.ok(it).build() }
+                ?: Response.status(Response.Status.NOT_FOUND).build()
     }
 
     private fun byggSakstemaResultat(resultat: ResultatWrapper<List<ModiaSakstema>>): Map<String, Any?> {

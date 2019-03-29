@@ -2,15 +2,12 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.sak.service;
 
 
 import no.nav.brukerdialog.security.context.ThreadLocalSubjectHandler;
-import no.nav.brukerdialog.security.tilgangskontroll.policy.pep.EnforcementPoint;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.AnsattEnhet;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.AnsattService;
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
-import no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.interfaces.TilgangskontrollService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.DokumentMetadata;
-import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.Feilmelding;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.Sakstema;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.resultatwrappere.TjenesteResultatWrapper;
+import no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.interfaces.TilgangskontrollService;
 import no.nav.tjeneste.virksomhet.aktoer.v1.HentAktoerIdForIdentPersonIkkeFunnet;
 import no.nav.tjeneste.virksomhet.aktoer.v1.meldinger.HentAktoerIdForIdentResponse;
 import org.junit.Before;
@@ -24,29 +21,26 @@ import org.springframework.mock.web.MockHttpServletRequest;
 import javax.servlet.http.Cookie;
 import java.util.List;
 
-import static java.lang.Boolean.*;
+import static java.lang.Boolean.FALSE;
+import static java.lang.Boolean.TRUE;
 import static java.util.Arrays.asList;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.Feilmelding.*;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.notNull;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class TilgangskontrollServiceTest {
 
     @Mock
-    private EnforcementPoint pep;
-    @Mock
-    private SaksbehandlerInnstillingerService saksbehandlerInnstillingerService;
-    @Mock
     private AnsattService ansattService;
+
     private MockHttpServletRequest mockRequest = new MockHttpServletRequest();
+
     @InjectMocks
     private TilgangskontrollService tilgangskontrollService = new TilgangskontrollServiceImpl();
 
-    public static final String BRUKERS_IDENT = "11111111111";
+    private static final String BRUKERS_IDENT = "11111111111";
     private static final String GODKJENT_ENHET = "0000";
     private static final String ANNEN_ENHET = "1000";
     private final static String TEMAKODE = "DAG";
@@ -67,7 +61,7 @@ public class TilgangskontrollServiceTest {
         tilgangskontrollService.markerIkkeJournalforte(sakstema);
 
         assertThat(sakstema.get(0).dokumentMetadata.get(0).getFeilWrapper().getInneholderFeil(), is(true));
-        assertThat(sakstema.get(0).dokumentMetadata.get(0).getFeilWrapper().getFeilmelding(), is(IKKE_JOURNALFORT_ELLER_ANNEN_BRUKER));
+        assertThat(sakstema.get(0).dokumentMetadata.get(0).getFeilWrapper().getFeilmelding(), is(IKKE_JOURNALFORT));
     }
 
     @Test
@@ -101,8 +95,6 @@ public class TilgangskontrollServiceTest {
 
     @Test
     public void saksbehandlerHarTilgangTilDokumentOk() {
-        when(ansattService.hentEnhetsliste()).thenReturn(mockEnhetsListe());
-        when(pep.hasAccess(any())).thenReturn(true);
         DokumentMetadata journalpostMetadata = new DokumentMetadata().withTemakode(TEMAKODE);
         TjenesteResultatWrapper result = tilgangskontrollService.harSaksbehandlerTilgangTilDokument(mockRequest, journalpostMetadata, BRUKERS_IDENT, TEMAKODE);
 
@@ -112,33 +104,7 @@ public class TilgangskontrollServiceTest {
     }
 
     @Test
-    public void saksbehandlerEnhetIkkeTilgang() {
-        when(ansattService.hentEnhetsliste()).thenReturn(mockEnhetsListe());
-        when(pep.hasAccess(any())).thenReturn(false);
-        DokumentMetadata journalpostMetadata = new DokumentMetadata().withTemakode(TEMAKODE);
-        TjenesteResultatWrapper result = tilgangskontrollService.harSaksbehandlerTilgangTilDokument(mockRequest, journalpostMetadata, BRUKERS_IDENT, TEMAKODE);
-
-
-        assertThat(result.result.isPresent(), is(FALSE));
-        assertThat(result.feilmelding, is(SAKSBEHANDLER_IKKE_TILGANG));
-    }
-
-    @Test
-    public void saksbehandlerharIkkeGodkjentEnhet() {
-        when(ansattService.hentEnhetsliste()).thenReturn(mockEnhetsListe());
-        mockRequest.setCookies(lagSaksbehandlerCookie(ANNEN_ENHET));
-        DokumentMetadata journalpostMetadata = new DokumentMetadata().withTemakode(TEMAKODE);
-        TjenesteResultatWrapper result = tilgangskontrollService.harSaksbehandlerTilgangTilDokument(mockRequest, journalpostMetadata, BRUKERS_IDENT, TEMAKODE);
-
-
-        assertThat(result.result.isPresent(), is(FALSE));
-        assertThat(result.feilmelding, is(SAKSBEHANDLER_IKKE_TILGANG));
-    }
-
-    @Test
     public void temaBidragGirFeilmelding() {
-        when(ansattService.hentEnhetsliste()).thenReturn(mockEnhetsListe());
-        when(pep.hasAccess(any())).thenReturn(true);
         DokumentMetadata journalpostMetadata = new DokumentMetadata().withTemakode("BID");
         TjenesteResultatWrapper result = tilgangskontrollService.harSaksbehandlerTilgangTilDokument(mockRequest, journalpostMetadata, BRUKERS_IDENT, TEMAKODE);
 
@@ -149,8 +115,6 @@ public class TilgangskontrollServiceTest {
 
     @Test
     public void journalfortAnnetTema() {
-        when(ansattService.hentEnhetsliste()).thenReturn(mockEnhetsListe());
-        when(pep.hasAccess(any())).thenReturn(true);
         DokumentMetadata journalpostMetadata = new DokumentMetadata().withTemakode("FOR");
         TjenesteResultatWrapper result = tilgangskontrollService.harSaksbehandlerTilgangTilDokument(mockRequest, journalpostMetadata, BRUKERS_IDENT, TEMAKODE);
 
@@ -162,21 +126,17 @@ public class TilgangskontrollServiceTest {
 
     @Test
     public void journalfortAnnenBruker() {
-        when(ansattService.hentEnhetsliste()).thenReturn(mockEnhetsListe());
-        when(pep.hasAccess(any())).thenReturn(true);
         DokumentMetadata journalpostMetadata = new DokumentMetadata().withTemakode(TEMAKODE).withIsJournalfort(false);
         TjenesteResultatWrapper result = tilgangskontrollService.harSaksbehandlerTilgangTilDokument(mockRequest, journalpostMetadata, BRUKERS_IDENT, TEMAKODE);
 
 
         assertThat(result.result.isPresent(), is(FALSE));
-        assertThat(result.feilmelding, is(IKKE_JOURNALFORT_ELLER_ANNEN_BRUKER));
+        assertThat(result.feilmelding, is(IKKE_JOURNALFORT));
         assertThat(result.ekstraFeilInfo.size(), is(1));
     }
 
     @Test
     public void inneholderFeil() {
-        when(ansattService.hentEnhetsliste()).thenReturn(mockEnhetsListe());
-        when(pep.hasAccess(any())).thenReturn(true);
         DokumentMetadata journalpostMetadata = new DokumentMetadata().withTemakode(TEMAKODE).withFeilWrapper(UKJENT_FEIL);
         TjenesteResultatWrapper result = tilgangskontrollService.harSaksbehandlerTilgangTilDokument(mockRequest, journalpostMetadata, BRUKERS_IDENT, TEMAKODE);
 

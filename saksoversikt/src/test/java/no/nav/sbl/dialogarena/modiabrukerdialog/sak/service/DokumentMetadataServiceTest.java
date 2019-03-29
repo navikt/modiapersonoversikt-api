@@ -181,7 +181,7 @@ public class DokumentMetadataServiceTest {
 
     private void mockSaf(DokumentMetadata... safDokumentMetadata) {
         when(safService.hentJournalposter(anyString()))
-                .thenReturn((asList(safDokumentMetadata)));
+                .thenReturn(new ResultatWrapper((asList(safDokumentMetadata))));
     }
 
     private DokumentMetadata brukerMottattDokumentFraNavMedLogiskeOgVanligeVedlegg() {

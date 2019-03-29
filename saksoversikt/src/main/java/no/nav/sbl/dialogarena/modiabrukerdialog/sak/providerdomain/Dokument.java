@@ -58,29 +58,24 @@ public class Dokument {
         return this;
     }
 
-    public Dokument setTittel(String tittel) {
+    public void setTittel(String tittel) {
         this.tittel = tittel;
-        return this;
     }
 
-    public Dokument setDokumentreferanse(String dokumentreferanse) {
+    public void setDokumentreferanse(String dokumentreferanse) {
         this.dokumentreferanse = dokumentreferanse;
-        return this;
     }
 
-    public Dokument setKanVises(boolean kanVises) {
+    public void setKanVises(boolean kanVises) {
         this.kanVises = kanVises;
-        return this;
     }
 
-    public Dokument setLogiskDokument(boolean logiskDokument) {
+    public void setLogiskDokument(boolean logiskDokument) {
         this.logiskDokument = logiskDokument;
-        return this;
     }
 
-    public Dokument setVariantformat(Variantformat variantformat) {
+    public void setVariantformat(Variantformat variantformat) {
         this.variantformat = variantformat;
-        return this;
     }
 }
 
