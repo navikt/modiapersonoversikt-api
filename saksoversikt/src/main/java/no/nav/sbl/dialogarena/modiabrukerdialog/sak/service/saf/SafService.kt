@@ -117,7 +117,7 @@ private fun håndterJournalpostFeilKoder(statuskode: Int) {
     when (statuskode) {
         404 -> LOG.error("Responskode 404 fra SAF - dokumentoversiktBruker")
         500 -> LOG.warn("Responskode 500 fra SAF - dokumentoversiktBruker")
-        else -> LOG.error("Ukjent feil i kall mot SAF - dokumentoversiktBruker")
+        else -> LOG.error("Ukjent feil i kall mot SAF - dokumentoversiktBruker. Statuskode: $statuskode")
     }
 }
 
