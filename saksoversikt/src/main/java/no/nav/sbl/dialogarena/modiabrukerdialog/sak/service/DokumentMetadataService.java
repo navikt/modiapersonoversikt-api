@@ -35,8 +35,6 @@ public class DokumentMetadataService {
     private List<DokumentMetadata> soknader;
     private Set<Baksystem> feilendeBaksystem;
 
-    private static final Logger LOG = LoggerFactory.getLogger(DokumentMetadataService.class);
-
     public DokumentMetadataService(InnsynJournalV2Service innsynJournalV2Service,
                                    HenvendelseService henvendelseService,
                                    DokumentMetadataTransformer dokumentMetadataTransformer,
@@ -109,7 +107,7 @@ public class DokumentMetadataService {
 
     private void hentJournalposter(String fnr) {
         ResultatWrapper<List<DokumentMetadata>> journalpostWrapper = safService.hentJournalposter(fnr);
-        safJournalposter.addAll(journalpostWrapper.resultat);
+        journalposter.addAll(journalpostWrapper.resultat);
         feilendeBaksystem.addAll(journalpostWrapper.feilendeSystemer);
     }
 
