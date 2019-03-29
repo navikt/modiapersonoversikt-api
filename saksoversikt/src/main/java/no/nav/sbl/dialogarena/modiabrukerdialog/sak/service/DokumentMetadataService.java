@@ -108,8 +108,9 @@ public class DokumentMetadataService {
     }
 
     private void hentSafJournalposter(String fnr) {
-        List<DokumentMetadata> journalposter = safService.hentJournalposter(fnr);
-        safJournalposter.addAll(journalposter);
+        ResultatWrapper<List<DokumentMetadata>> journalpostWrapper = safService.hentJournalposter(fnr);
+        safJournalposter.addAll(journalpostWrapper.resultat);
+        feilendeBaksystem.addAll(journalpostWrapper.feilendeSystemer);
     }
 
     private void leggTilHenvendelseSomBaksystemIJournalposterOmSoknadEksistererIHenvendelse() {

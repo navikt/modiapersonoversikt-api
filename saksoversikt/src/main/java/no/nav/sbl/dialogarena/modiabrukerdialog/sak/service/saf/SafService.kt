@@ -24,7 +24,7 @@ private val LOG = LoggerFactory.getLogger(SafService::class.java)
 
 class SafService {
 
-    fun hentJournalposter(fnr: String): List<DokumentMetadata> {
+    fun hentJournalposter(fnr: String): ResultatWrapper<List<DokumentMetadata>> {
         val jsonQuery = dokumentoversiktBrukerJsonQuery(fnr)
 
         return RestUtils.withClient { client ->
@@ -49,21 +49,24 @@ class SafService {
 
 }
 
-private fun håndterStatus(response: Response): List<DokumentMetadata> =
+private fun håndterStatus(response: Response): ResultatWrapper<List<DokumentMetadata>> =
         when (response.status) {
             200 -> håndterResponse(response)
             else -> {
                 håndterJournalpostFeilKoder(response.status)
-                emptyList()
+                ResultatWrapper(emptyList(), setOf(Baksystem.SAF))
             }
         }
 
-private fun håndterResponse(response: Response): List<DokumentMetadata> {
+private fun håndterResponse(response: Response): ResultatWrapper<List<DokumentMetadata>> {
     val safDokumentResponse = safDokumentResponsFraResponse(response)
 
-    safDokumentResponse.errors?.let { logJournalpostErrors(safDokumentResponse.errors) }
+    safDokumentResponse.errors?.also { logJournalpostErrors(safDokumentResponse.errors) }
 
-    return getDokumentMetadata(safDokumentResponse)
+    return ResultatWrapper(
+            getDokumentMetadata(safDokumentResponse),
+            safDokumentResponse.errors?.let { setOf(Baksystem.SAF) }
+    )
 }
 
 private fun safDokumentResponsFraResponse(response: Response): SafDokumentResponse {
