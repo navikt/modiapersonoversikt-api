@@ -67,7 +67,7 @@
 
         <!-- Modia-komponenter-->
         <personsok.version>1657</personsok.version>
-        <kjerneinfo.versjon>4614</kjerneinfo.versjon>
+        <kjerneinfo.versjon>4622-1-gcd2fe62</kjerneinfo.versjon>
         <modia-felleskomponenter.version>277</modia-felleskomponenter.version>
 
         <!-- Tjenestespecs -->
@@ -119,6 +119,12 @@
                 <groupId>no.nav.dialogarena</groupId>
                 <artifactId>oidc-security-authorization</artifactId>
                 <version>${oidc.security-authorization.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <artifactId>ehcache-core</artifactId>
+                        <groupId>net.sf.ehcache</groupId>
+                    </exclusion>
+                </exclusions>
             </dependency>
 
 
@@ -444,6 +450,12 @@
                 <groupId>no.nav.modig</groupId>
                 <artifactId>modia-felleskomponenter</artifactId>
                 <version>${modia-felleskomponenter.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <artifactId>ehcache-core</artifactId>
+                        <groupId>net.sf.ehcache</groupId>
+                    </exclusion>
+                </exclusions>
             </dependency>
             <dependency>
                 <groupId>no.nav.sbl.dialogarena</groupId>
@@ -533,6 +545,10 @@
                 <artifactId>modig-content</artifactId>
                 <version>${modig-content.version}</version>
                 <exclusions>
+                        <exclusion>
+                            <artifactId>ehcache-core</artifactId>
+                            <groupId>net.sf.ehcache</groupId>
+                        </exclusion>
                     <exclusion>
                         <groupId>commons-logging</groupId>
                         <artifactId>commons-logging</artifactId>
