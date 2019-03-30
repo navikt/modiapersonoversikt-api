@@ -23,6 +23,15 @@ resources:
   limits:
     cpu: 3
     memory: 8192Mi
+redis:
+  hardAntiAffinity: true
+  enabled: true
+  limits:
+    cpu: 1
+    memory: 2048Mi
+  requests:
+    cpu: 1
+    memory: 1024Mi
 fasitResources:
   used:
   - alias: appdynamics
