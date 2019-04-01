@@ -95,5 +95,4 @@ public class Main {
         }
         return var;
     }
-
 }
