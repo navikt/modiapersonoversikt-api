@@ -86,7 +86,7 @@ public class Main {
         setProperty("isso-rp-user.password", getEnvVar("ISSO_RP_USER_PASSWORD"), SECRET);
 
         setProperty("redis.sentinelmode", getEnvVar("REDIS_SENTINELMODE"), PUBLIC);
-        setProperty("redis.host", getEnvVar("REDIS_HOST"), PUBLIC);
+        setProperty("redis.host", getEnvVar("REDIS_HOST"), PUBLIC); // Set by redis
         setProperty("redis.port", getEnvVar("REDIS_PORT"), PUBLIC);
 
         ApiApp.startApp(ModiaApplicationContext.class, args);
