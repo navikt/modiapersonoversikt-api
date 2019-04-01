@@ -85,6 +85,8 @@
         <rest alias="veilArbOppfolgingAPI" mapToProperty="veilarboppfolging.api"/>
         <rest alias="security-token-service-token" mapToProperty="sts.token.api"/>
         <rest alias="person-oppslag-v1" mapToProperty="persondokumenter.api"/>
+        <rest alias="saf.graphql" mapToProperty="saf.graphql"/>
+        <rest alias="saf.hentdokument" mapToProperty="saf.hentdokument"/>
         <applicationProperties alias="modiabrukerdialog.properties"/>
         <baseUrl alias="modiabrukerdialog.standardtekster.tilbakemelding" mapToProperty="modiabrukerdialog.standardtekster.tilbakemelding"/>
         <!-- App-->

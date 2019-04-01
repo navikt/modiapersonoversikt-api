@@ -3,7 +3,6 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.vergemal
 import no.nav.kjerneinfo.consumer.fim.person.vergemal.VergemalService
 import no.nav.kjerneinfo.consumer.fim.person.vergemal.domain.Verge
 import no.nav.kjerneinfo.domain.person.Personnavn
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.Feature
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.UnleashService
 import javax.inject.Inject
 import javax.ws.rs.GET
@@ -20,8 +19,6 @@ class VergemalController @Inject constructor(private val vergemalService: Vergem
     @GET
     @Path("/")
     fun hent(@PathParam("fnr") fødselsnummer: String): Map<String, Any?> {
-        check(unleashService.isEnabled(Feature.NYTT_VISITTKORT))
-
         val vergemal = vergemalService.hentVergemal(fødselsnummer)
 
         return mapOf(
@@ -33,7 +30,7 @@ class VergemalController @Inject constructor(private val vergemalService: Vergem
         return vergemal.map {
             mapOf(
                     "ident" to it.ident,
-                    "navn" to it.personnavn?.let {getNavn(it)},
+                    "navn" to it.personnavn?.let { getNavn(it) },
                     "embete" to it.embete,
                     "mandattekst" to it.mandattekst,
                     "mandattype" to it.mandattype,

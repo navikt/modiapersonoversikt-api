@@ -8,7 +8,6 @@ import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 
 public class TemagruppeTemaMapping {
-
     public static final Temagruppe TEMA_UTEN_TEMAGRUPPE = Temagruppe.OVRG;
 
     public static final Map<String, String> TEMA_TEMAGRUPPE_MAPPING = new HashMap<String, String>() {
@@ -41,6 +40,7 @@ public class TemagruppeTemaMapping {
 
             put("AAR", Temagruppe.OVRG.name());
             put("AGR", Temagruppe.OVRG.name());
+            put("ERS", Temagruppe.OVRG.name());
             put("FEI", Temagruppe.OVRG.name());
             put("FUL", Temagruppe.OVRG.name());
             put("GEN", Temagruppe.OVRG.name());
@@ -48,11 +48,14 @@ public class TemagruppeTemaMapping {
             put("KNA", Temagruppe.OVRG.name());
             put("KTR", Temagruppe.OVRG.name());
             put("MED", Temagruppe.OVRG.name());
+            put("RVE", Temagruppe.OVRG.name());
+            put("RPO", Temagruppe.OVRG.name());
             put("SER", Temagruppe.OVRG.name());
             put("SIK", Temagruppe.OVRG.name());
             put("STO", Temagruppe.OVRG.name());
             put("TRK", Temagruppe.OVRG.name());
             put("TRY", Temagruppe.OVRG.name());
+            put("UFM", Temagruppe.OVRG.name());
 
             put("PEN", Temagruppe.PENS.name());
             put("SUP", Temagruppe.PENS.name());
@@ -68,7 +71,7 @@ public class TemagruppeTemaMapping {
         {
             put(Temagruppe.ARBD.name(), asList("AAP", "DAG", "FOS", "IND", "MOB", "OPP", "REH", "SAK", "SAP", "SYK", "SYM", "VEN", "YRA", "YRK", "TSO", "TSR"));
             put(Temagruppe.FMLI.name(), asList("BAR", "BID", "ENF", "FOR", "GRA", "GRU", "KON", "OMS"));
-            put(Temagruppe.OVRG.name(), asList("AAR", "AGR", "FEI", "FUL", "GEN", "KLA", "KNA", "KTR", "MED", "SER", "SIK", "STO", "TRK", "TRY"));
+            put(Temagruppe.OVRG.name(), asList("AAR", "AGR", "ERS", "FEI", "FUL", "GEN", "KLA", "KNA", "KTR", "MED", "RVE", "RPO", "SER", "SIK", "STO", "TRK", "TRY", "UFM"));
             put(Temagruppe.PENS.name(), asList("PEN", "SUP"));
             put(Temagruppe.HJLPM.name(), asList("HJE", "BIL", "HEL"));
             put(Temagruppe.BIL.name(), asList("HJE", "BIL", "HEL"));

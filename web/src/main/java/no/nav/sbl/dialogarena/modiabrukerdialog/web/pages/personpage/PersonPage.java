@@ -6,8 +6,6 @@ import no.nav.kjerneinfo.consumer.fim.person.to.HentKjerneinformasjonRequest;
 import no.nav.kjerneinfo.consumer.fim.person.to.RecoverableAuthorizationException;
 import no.nav.kjerneinfo.web.pages.kjerneinfo.panel.kjerneinfo.PersonKjerneinfoPanel;
 import no.nav.kjerneinfo.web.pages.kjerneinfo.panel.tab.AbstractTabPanel;
-import no.nav.kjerneinfo.web.pages.kjerneinfo.panel.tab.VisitkortTabListePanel;
-import no.nav.kjerneinfo.web.pages.kjerneinfo.panel.visittkort.VisittkortPanel;
 import no.nav.modig.core.exception.ApplicationException;
 import no.nav.modig.frontend.ConditionalCssResource;
 import no.nav.modig.modia.constants.ModiaConstants;
@@ -21,9 +19,9 @@ import no.nav.personsok.PersonsokPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.DialogSession;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.constants.Events;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.GrunnInfo;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.GrunninfoService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.Feature;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.UnleashService;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.GrunninfoService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.reactkomponenter.utils.wicket.ReactComponentCallback;
 import no.nav.sbl.dialogarena.modiabrukerdialog.reactkomponenter.utils.wicket.ReactComponentPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.BasePage;
@@ -31,7 +29,6 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.hentperson.HentPersonP
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.lameller.LamellContainer;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.DialogPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.HenvendelseVM;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.visittkort.navkontor.NavKontorPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.hode.Hode;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.hode.begrunnelse.ReactBegrunnelseModal;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.hode.jscallback.SokOppBrukerCallback;
@@ -135,12 +132,12 @@ public class PersonPage extends BasePage {
         redirectPopup = new ReactSjekkForlatModal("redirectModal");
         konfigurerRedirectPopup();
 
-        boolean nyttVisittkortEnabled = unleashService.isEnabled(Feature.NYTT_VISITTKORT);
         boolean nyUtbetalingerEnabled = unleashService.isEnabled(Feature.NY_UTBETALING);
         boolean nyBrukerprofilEnabled = unleashService.isEnabled(Feature.NY_BRUKERPROFIL);
         boolean nySaksoversikt = unleashService.isEnabled(Feature.NY_SAKSOVERSIKT);
         boolean nyPleiepenger = unleashService.isEnabled(Feature.NY_PLEIEPENGER);
-        lamellContainer = new LamellContainer("lameller", getSession(), grunnInfo, nyBrukerprofilEnabled, nySaksoversikt);
+        boolean nyOppfolgingEnabled = unleashService.isEnabled(Feature.NY_OPPFOLGING);
+        lamellContainer = new LamellContainer("lameller", getSession(), grunnInfo, nyBrukerprofilEnabled, nySaksoversikt, nyOppfolgingEnabled);
 
         oppgiBegrunnelseModal = new ReactBegrunnelseModal("oppgiBegrunnelseModal");
         Hode hode = new Hode("hode", oppgiBegrunnelseModal, personKjerneinfoServiceBi, grunnInfo, null);
@@ -148,10 +145,10 @@ public class PersonPage extends BasePage {
             clearSession();
             handleRedirect(target, new PageParameters(), HentPersonPage.class);
         }));
-        hode.add(hasCssClassIf("nytt-visittkort-toggle", Model.of(nyttVisittkortEnabled)));
         hode.add(hasCssClassIf("ny-utbetalinger-toggle", Model.of(nyUtbetalingerEnabled)));
         hode.add(hasCssClassIf("ny-saksoversikt-toggle", Model.of(nySaksoversikt)));
         hode.add(hasCssClassIf("ny-pleiepenger-toggle", Model.of(nyPleiepenger)));
+        hode.add(hasCssClassIf("ny-oppfolging-toggle", Model.of(nyOppfolgingEnabled)));
 
         dialogPanel = new DialogPanel("dialogPanel", grunnInfo);
         add(
@@ -165,7 +162,7 @@ public class PersonPage extends BasePage {
                 oppgiBegrunnelseModal
         );
 
-        add(getVisittkortkomponenter(nyBrukerprofilEnabled, nyttVisittkortEnabled));
+        add(getVisittkortkomponenter(nyBrukerprofilEnabled));
 
         if (skalViseMeldingerLamell) {
             lamellContainer.setStartLamell(LAMELL_MELDINGER);
@@ -174,25 +171,16 @@ public class PersonPage extends BasePage {
     }
 
     @NotNull
-    private Component[] getVisittkortkomponenter(boolean nyBrukerprofilEnabled, boolean nyttVisittkortEnabled) {
-        if (nyttVisittkortEnabled) {
-            return new Component[]{
-                    new WebMarkupContainer("visittkort").setVisible(false),
-                    new WebMarkupContainer("brukersNavKontor").setVisible(false),
-                    new WebMarkupContainer("kjerneinfotabs").setVisible(false),
-                    new ReactComponentPanel("nytt-visittkort", "NyttVisittkort", new HashMap<String, Object>() {{
-                        put("fødselsnummer", fnr);
-                        put("nyBrukerprofil", nyBrukerprofilEnabled);
-                    }})
-            };
-        } else {
-            return new Component[]{
-                    new VisittkortPanel("visittkort", fnr).setVisible(true),
-                    new NavKontorPanel("brukersNavKontor", fnr),
-                    new VisitkortTabListePanel("kjerneinfotabs", createTabs()),
-                    new WebMarkupContainer("nytt-visittkort").setVisible(false)
-            };
-        }
+    private Component[] getVisittkortkomponenter(boolean nyBrukerprofilEnabled) {
+        return new Component[]{
+                new WebMarkupContainer("visittkort").setVisible(false),
+                new WebMarkupContainer("brukersNavKontor").setVisible(false),
+                new WebMarkupContainer("kjerneinfotabs").setVisible(false),
+                new ReactComponentPanel("nytt-visittkort", "NyttVisittkort", new HashMap<String, Object>() {{
+                    put("fødselsnummer", fnr);
+                    put("nyBrukerprofil", nyBrukerprofilEnabled);
+                }})
+        };
     }
 
     private boolean oppgaverPaSessionTilhorerAnnetFNREnnFraUrl(DialogSession session) {

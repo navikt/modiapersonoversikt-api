@@ -49,6 +49,15 @@ Denne jobben kjøres derfor hver halvtime for å få oppdatert data fra enonic.
 ## Oppstart av appen på Jetty
 Via StartJetty klassen kan du starte Modiabrukerdialog lokalt. Integrasjon mot andre tjenester kan konfigureres i jetty-environment.properties.
 Nødvendige credentials legges i credentials.properties.
+I tilegg må du legge en fasit.properties fil i din hjemmemappe med følgende innhold:
+```
+testmiljo=q6
+domenebrukernavn=
+domenepassord=
+
+veilederident=
+veilederpassord=
+```
 - Hvis man får OutOfMemoryError ved lokal kjøring så kan man sette opp PermGen space i prosessen som kjører StartJetty,
 ved å legge til -XX:MaxPermSize=256M som VM Option.
 I IntelliJ gjøres dette i ved å klikke "Edit Configurations" i nedtrekksmenyen for prosessen "StartJetty" i topplinjen.

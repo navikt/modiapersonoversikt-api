@@ -1,6 +1,5 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.baseurls
 
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.Feature
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.UnleashService
 import no.nav.sbl.util.EnvironmentUtils
 import javax.inject.Inject
@@ -18,8 +17,6 @@ constructor(private val unleashService: UnleashService) {
     @GET
     @Path("/")
     fun hent(): Map<String, Any?> {
-        check(unleashService.isEnabled(Feature.NYTT_VISITTKORT))
-
         return mapOf("baseUrls" to getBaseUrls())
     }
 

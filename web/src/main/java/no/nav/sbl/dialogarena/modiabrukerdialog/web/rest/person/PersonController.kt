@@ -1,7 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.person
 
 import no.nav.kjerneinfo.common.domain.Kodeverdi
-import no.nav.kjerneinfo.common.domain.Periode
 import no.nav.kjerneinfo.consumer.fim.person.PersonKjerneinfoServiceBi
 import no.nav.kjerneinfo.consumer.fim.person.exception.AuthorizationWithSikkerhetstiltakException
 import no.nav.kjerneinfo.consumer.fim.person.to.HentKjerneinformasjonRequest
@@ -12,7 +11,6 @@ import no.nav.kjerneinfo.domain.person.fakta.Sikkerhetstiltak
 import no.nav.kjerneinfo.domain.person.fakta.Telefon
 import no.nav.kodeverk.consumer.fim.kodeverk.KodeverkmanagerBi
 import no.nav.kodeverk.consumer.fim.kodeverk.to.feil.HentKodeverkKodeverkIkkeFunnet
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.Feature
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.UnleashService
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.kodeverk.Kode
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.lagPeriode
@@ -36,7 +34,6 @@ class PersonController @Inject constructor(private val kjerneinfoService: Person
     @GET
     @Path("/")
     fun hent(@PathParam("fnr") fødselsnummer: String): Map<String, Any?> {
-        check(unleashService.isEnabled(Feature.NYTT_VISITTKORT))
 
         val person = try {
             val hentKjerneinformasjonRequest = HentKjerneinformasjonRequest(fødselsnummer)
@@ -58,7 +55,7 @@ class PersonController @Inject constructor(private val kjerneinfoService: Person
                 "kjønn" to person.personfakta.kjonn?.kodeRef,
                 "geografiskTilknytning" to person.personfakta.geografiskTilknytning?.value,
                 "navn" to getNavn(person.personfakta.personnavn),
-                "diskresjonskode" to person.personfakta.diskresjonskode?.let {Kode(it)},
+                "diskresjonskode" to person.personfakta.diskresjonskode?.let { Kode(it) },
                 "bankkonto" to hentBankkonto(person),
                 "tilrettelagtKomunikasjonsListe" to hentTilrettelagtKommunikasjon(person.personfakta.tilrettelagtKommunikasjon),
                 "personstatus" to getPersonstatus(person),
@@ -109,7 +106,7 @@ class PersonController @Inject constructor(private val kjerneinfoService: Person
                         "fødselsnummer" to if (it.tilPerson.isHideFodselsnummerOgNavn) null else it.tilPerson.fodselsnummer.nummer,
                         "personstatus" to getPersonstatus(it.tilPerson),
                         "diskresjonskode" to it.tilPerson.personfakta.diskresjonskode?.let { Kode(it) }
-                        ),
+                ),
                 "rolle" to it.tilRolle
         )
     }

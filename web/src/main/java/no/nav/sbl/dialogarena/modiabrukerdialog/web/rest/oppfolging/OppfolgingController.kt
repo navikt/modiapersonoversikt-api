@@ -5,6 +5,7 @@ import no.nav.kontrakter.consumer.fim.oppfolgingskontrakt.to.Oppfolgingskontrakt
 import no.nav.kontrakter.consumer.fim.ytelseskontrakt.YtelseskontraktServiceBi
 import no.nav.kontrakter.consumer.fim.ytelseskontrakt.to.YtelseskontraktRequest
 import no.nav.kontrakter.domain.oppfolging.SYFOPunkt
+import no.nav.kontrakter.domain.ytelse.Dagpengeytelse
 import no.nav.kontrakter.domain.ytelse.Vedtak
 import no.nav.kontrakter.domain.ytelse.Ytelse
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Saksbehandler
@@ -45,16 +46,17 @@ class OppfolgingController @Inject constructor(private val service: Oppfolgingsi
     @GET
     @Path("/ytelserogkontrakter")
     fun hentUtvidetOppf(@PathParam("fnr") fodselsnummer: String,
-                    @QueryParam("startDato") start: String?,
-                    @QueryParam("sluttDato") slutt: String?): Map<String, Any?> {
+                        @QueryParam("startDato") start: String?,
+                        @QueryParam("sluttDato") slutt: String?): Map<String, Any?> {
         val kontraktResponse = oppfolgingskontraktService.hentOppfolgingskontrakter(lagOppfolgingskontraktRequest(fodselsnummer, start, slutt))
         val ytelserResponse = ytelseskontraktService.hentYtelseskontrakter(lagYtelseRequest(fodselsnummer, start, slutt))
 
         return mapOf(
+                "oppfølging" to hent(fodselsnummer),
                 "meldeplikt" to kontraktResponse.bruker?.meldeplikt,
                 "formidlingsgruppe" to kontraktResponse.bruker?.formidlingsgruppe,
                 "innsatsgruppe" to kontraktResponse.bruker?.innsatsgruppe,
-                "sykmeldtFrom" to kontraktResponse.bruker?.sykmeldtFrom?.toString(DATOFORMAT),
+                "sykmeldtFra" to kontraktResponse.bruker?.sykmeldtFrom?.toString(DATOFORMAT),
                 "rettighetsgruppe" to ytelserResponse.rettighetsgruppe,
                 "vedtaksdato" to kontraktResponse.vedtaksdato?.toString(DATOFORMAT),
                 "sykefraværsoppfølging" to hentSyfoPunkt(kontraktResponse.syfoPunkter),
@@ -62,12 +64,14 @@ class OppfolgingController @Inject constructor(private val service: Oppfolgingsi
         )
     }
 
-    private fun hentYtelser(ytelser: List<Ytelse>): List<Map<String, Any?>> {
+    private fun hentYtelser(ytelser: List<Ytelse>?): List<Map<String, Any?>> {
+        if (ytelser == null) return emptyList()
+
         return ytelser.map {
             mapOf(
-                    "dagerIgjenMedBortfall" to it.dagerIgjenMedBortfall,
-                    "ukerIgjenMedBortfall" to it.ukerIgjenMedBortfall,
-                    "datoKravMottat" to it.datoKravMottat?.toString(DATOFORMAT),
+                    "dagerIgjen" to hentDagerIgjen(it),
+                    "ukerIgjen" to hentUkerIgjen(it),
+                    "datoKravMottatt" to it.datoKravMottat?.toString(DATOFORMAT),
                     "fom" to it.fom?.toString(DATOFORMAT),
                     "tom" to it.tom?.toString(DATOFORMAT),
                     "status" to it.status,
@@ -77,12 +81,27 @@ class OppfolgingController @Inject constructor(private val service: Oppfolgingsi
         }
     }
 
-    private fun hentVedtak(vedtak: List<Vedtak>): List<Map<String, Any?>> {
+    private fun hentDagerIgjen(it: Ytelse): Int? {
+        return when (it) {
+            is Dagpengeytelse -> it.antallDagerIgjen
+            else -> null
+        }
+    }
+
+    private fun hentUkerIgjen(it: Ytelse): Int? {
+        return when (it) {
+            is Dagpengeytelse -> it.antallUkerIgjen
+            else -> null
+        }
+    }
+
+    private fun hentVedtak(vedtak: List<Vedtak>?): List<Map<String, Any?>> {
+        if (vedtak == null) return emptyList()
+
         return vedtak.map {
             mapOf(
                     "aktivFra" to it.activeFrom?.toString(DATOFORMAT),
                     "aktivTil" to it.activeTo?.toString(DATOFORMAT),
-                    "vedtaksdato" to it.vedtaksdato?.toString(DATOFORMAT),
                     "aktivitetsfase" to it.aktivitetsfase,
                     "vedtakstatus" to it.vedtakstatus,
                     "vedtakstype" to it.vedtakstype
@@ -90,7 +109,9 @@ class OppfolgingController @Inject constructor(private val service: Oppfolgingsi
         }
     }
 
-    private fun hentSyfoPunkt(syfoPunkter: List<SYFOPunkt>): List<Map<String, Any?>> {
+    private fun hentSyfoPunkt(syfoPunkter: List<SYFOPunkt>?): List<Map<String, Any?>> {
+        if (syfoPunkter == null) return emptyList()
+
         return syfoPunkter.map {
             mapOf(
                     "dato" to it.dato?.toString(DATOFORMAT),
@@ -104,7 +125,8 @@ class OppfolgingController @Inject constructor(private val service: Oppfolgingsi
     private fun hentVeileder(veileder: Optional<Saksbehandler>): Map<String, Any?>? {
         return if (veileder.isPresent) {
             mapOf(
-                    "ident" to veileder.get().ident
+                    "ident" to veileder.get().ident,
+                    "navn" to veileder.get().navn
             )
         } else {
             null

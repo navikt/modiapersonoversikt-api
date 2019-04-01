@@ -7,10 +7,8 @@ import no.nav.brukerdialog.security.tilgangskontroll.policy.pep.EnforcementPoint
 import no.nav.kjerneinfo.common.domain.Kodeverdi
 import no.nav.kjerneinfo.consumer.fim.person.support.DefaultPersonKjerneinfoService
 import no.nav.kjerneinfo.consumer.fim.person.support.KjerneinfoMapper
-import no.nav.kjerneinfo.domain.person.fakta.Familierelasjon
 import no.nav.kodeverk.consumer.fim.kodeverk.KodeverkmanagerBi
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.organisasjonsEnhetV2.OrganisasjonEnhetV2Service
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.Feature
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.UnleashService
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.kodeverk.Kode
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.person.PersonController
@@ -25,7 +23,6 @@ import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import java.util.*
 import javax.ws.rs.NotFoundException
-import kotlin.collections.ArrayList
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 import kotlin.test.assertTrue
@@ -52,7 +49,6 @@ internal class PersonControllerTest {
 
     @BeforeEach
     fun before() {
-        whenever(unleashService.isEnabled(Feature.NYTT_VISITTKORT)).thenReturn(true)
         whenever(organisasjonenhetV2Service.finnNAVKontor(any(), any())).thenReturn(Optional.empty())
     }
 

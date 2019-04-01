@@ -7,9 +7,7 @@ import no.nav.kjerneinfo.consumer.fim.person.vergemal.VergemalService
 import no.nav.kjerneinfo.consumer.fim.person.vergemal.domain.Periode
 import no.nav.kjerneinfo.consumer.fim.person.vergemal.domain.Verge
 import no.nav.kjerneinfo.domain.person.Personnavn
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.Feature
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.UnleashServiceImpl
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import java.util.*
 import kotlin.test.assertEquals
@@ -26,10 +24,6 @@ class VergemalControllerTest {
             unleashService
     )
 
-    @BeforeEach
-    fun before() {
-        whenever(unleashService.isEnabled(Feature.NYTT_VISITTKORT)).thenReturn(true)
-    }
 
     @Test
     fun `Henter vergemål`() {
