@@ -96,7 +96,6 @@ private fun getVedlegg(journalpost: Journalpost): List<Dokument> =
         getElektroniskeVedlegg(journalpost).plus(getLogiskeVedlegg(journalpost))
 
 
-
 private fun getElektroniskeVedlegg(journalpost: Journalpost): List<Dokument> =
         journalpost.dokumenter
                 .orEmpty()
@@ -123,7 +122,7 @@ private fun getAvsenderMottaker(journalpost: Journalpost): Pair<Entitet, Entitet
 }
 
 private fun sluttbrukerErMottakerEllerAvsender(journalpost: Journalpost): Boolean =
-        journalpost.avsenderMottaker?.erLikBruker?: false
+        journalpost.avsenderMottaker?.erLikBruker ?: false
 
 private fun Dokument.fraSafLogiskVedlegg(logiskVedlegg: LogiskVedlegg): Dokument {
     tittel = logiskVedlegg.tittel

@@ -41,7 +41,7 @@ class SafService {
         return RestUtils.withClient { client ->
             val response = veilederAutorisertClient(client, url).get()
             when (response.status) {
-                200 -> ResultatWrapper(response.readEntity(ByteArray::class.java))
+                200 -> ResultatWrapper(response.readEntity(ByteArray::class.java), emptySet())
                 else -> håndterDokumentFeilKoder(response.status)
             }
         }
@@ -65,7 +65,7 @@ private fun håndterResponse(response: Response): ResultatWrapper<List<DokumentM
 
     return ResultatWrapper(
             getDokumentMetadata(safDokumentResponse),
-            safDokumentResponse.errors?.let { setOf(Baksystem.SAF) }
+            safDokumentResponse.errors?.let { setOf(Baksystem.SAF) }.orEmpty()
     )
 }
 
