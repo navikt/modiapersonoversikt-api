@@ -151,8 +151,22 @@ public class LamellContainer extends TokenLamellPanel implements Serializable {
         if (SYKEPENGER_TYPE.equalsIgnoreCase(type)) {
             panel = new SykmeldingsperiodePanel(PANEL, Model.of(fnrFromRequest), Model.of(itemId));
         } else if (FORELDREPENGER_TYPE.equalsIgnoreCase(type)) {
-            panel = chooseForeldrePengerPanel(PANEL, Model.of(fnrFromRequest), Model.of(itemId), nyttForeldrepengerPanelToggle);
-            //panel = new ForeldrepengerPanel(PANEL, Model.of(fnrFromRequest), Model.of(itemId));
+            boolean nyForeldrepenger = unleashService.isEnabled(Feature.NY_FORELDREPENGER);
+            if (nyForeldrepenger) {
+                return newLamellFactory(LAMELL_FORELDREPENGER, "", true, (LerretFactory) (id, name) -> new AjaxLazyLoadLerret(id, name) {
+                    final Component comp = new ReactComponentPanel("foreldrepengerpanel", "NyForeldrepenger", new HashMap<String, Object>() {{
+                        put("fødselsnummer", fnrFromRequest);
+                    }});
+
+                    final NyForeldrepengerLerret foreldrepengerLerret = new NyForeldrepengerLerret("content", comp);
+
+                    @Override
+                    public Lerret getLazyLoadComponent(String markupId) {
+                        return foreldrepengerLerret;
+                    }
+                });
+            }
+            panel = new ForeldrepengerPanel(PANEL, Model.of(fnrFromRequest), Model.of(itemId));
         } else if (PLEIEPENGER_TYPE.equalsIgnoreCase(type)) {
             boolean nyttPleiepengerPanelToggle = unleashService.isEnabled(Feature.NY_PLEIEPENGER);
             panel = new PleiepengerPanel(PANEL, Model.of(fnrFromRequest), itemId, nyttPleiepengerPanelToggle);
@@ -200,23 +214,11 @@ public class LamellContainer extends TokenLamellPanel implements Serializable {
         lamellFactories.add(createKontrakterLamell(bruker, nyOppfolging));
         lamellFactories.add(createBrukerprofilLamell(bruker, nyBrukerprofilEnabled));
         lamellFactories.add(createSaksoversiktLamell(bruker, nySaksoversikt));
-        lamellFactories.add(createForeldrepengerLamell(bruker, nyForeldrepenger));
         lamellFactories.add(createVarslingsLamell(bruker));
 
         return lamellFactories;
     }
 
-    private static LamellFactory createForeldrepengerLamell(GrunnInfo.Bruker bruker, boolean nyForeldrepenger) {
-    return null;
-    }
-
-    private Panel chooseForeldrePengerPanel(Panel PANEL, String fnrFromRequest, String itemId, boolean nyttForeldrepengerPanelToggle){
-        if(nyttForeldrepengerPanelToggle){
-            return new ForeldrepengerPanel(PANEL, Model.of(fnrFromRequest), Model.of(itemId));
-        } else{
-             return new ForeldrepengerPanel(PANEL, Model.of(fnrFromRequest), Model.of(itemId));
-        }
-    }
 
     private static LamellFactory createBrukerprofilLamell(final GrunnInfo.Bruker bruker, boolean nyBrukerprofilEnabled) {
         if (nyBrukerprofilEnabled) {
