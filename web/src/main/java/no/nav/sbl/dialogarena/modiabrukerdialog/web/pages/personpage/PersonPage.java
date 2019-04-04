@@ -176,9 +176,10 @@ public class PersonPage extends BasePage {
     private void sjekkOgSettKontrollspørsmålCookie(DialogSession session) {
         WebResponse resp = (WebResponse) RequestCycle.get().getResponse();
         Cookie cookie = new Cookie("COOKIE_JobberMedSpmOgSvar", "true");
-        resp.clearCookie(cookie);
         if(session.erKnyttetTilOppgave()) {
             resp.addCookie(cookie);
+        } else {
+            resp.clearCookie(cookie);
         }
     }
 
