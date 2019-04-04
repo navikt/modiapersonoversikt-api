@@ -32,7 +32,8 @@ public class ReactResourcesTest {
             "build/tildelt-flere-oppgaver-alert.less",
             "build/ny-frontend.less",
             "build/ny-saksoversikt.less",
-            "build/ny-pleiepenger.less"
+            "build/ny-pleiepenger.less",
+            "build/ny-sykepenger.less"
     );
 
     @Test
