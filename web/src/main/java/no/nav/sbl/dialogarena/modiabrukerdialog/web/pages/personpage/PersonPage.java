@@ -48,6 +48,7 @@ import org.apache.wicket.extensions.markup.html.tabs.AbstractTab;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.request.cycle.RequestCycle;
+import org.apache.wicket.request.http.WebResponse;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.CssResourceReference;
 import org.apache.wicket.request.resource.PackageResourceReference;
@@ -57,6 +58,7 @@ import org.slf4j.Logger;
 
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.servlet.http.Cookie;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -117,6 +119,7 @@ public class PersonPage extends BasePage {
             fnr = pageParameters.get("fnr").toString();
         }
         DialogSession session = DialogSession.read(this);
+        sjekkOgSettKontrollspørsmålCookie(session);
         sjekkTilgang(fnr, pageParameters);
         grunnInfo = grunninfoService.hentGrunninfo(fnr);
         boolean skalViseMeldingerLamell = session.oppgaverBlePlukket() || erRequestFraGosys(pageParameters);
@@ -168,6 +171,15 @@ public class PersonPage extends BasePage {
             lamellContainer.setStartLamell(LAMELL_MELDINGER);
         }
         HentPersonPage.configureModalWindow(oppgiBegrunnelseModal, pageParameters);
+    }
+
+    private void sjekkOgSettKontrollspørsmålCookie(DialogSession session) {
+        WebResponse resp = (WebResponse) RequestCycle.get().getResponse();
+        Cookie cookie = new Cookie("COOKIE_JobberMedSpmOgSvar", "true");
+        resp.clearCookie(cookie);
+        if(session.erKnyttetTilOppgave()) {
+            resp.addCookie(cookie);
+        }
     }
 
     @NotNull
