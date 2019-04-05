@@ -18,6 +18,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.Saksbe
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.Feature;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.UnleashService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.reactkomponenter.utils.wicket.ReactComponentPanel;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.lameller.nysykepenger.NyttSykmeldingsperiodePanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.lameller.oversikt.OversiktLerret;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.lamell.SaksoversiktLerret;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.GsakService;
@@ -33,10 +34,12 @@ import org.apache.wicket.Component;
 import org.apache.wicket.Session;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.event.IEvent;
+import org.apache.wicket.markup.html.panel.IMarkupSourcingStrategy;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.StringResourceModel;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -149,7 +152,12 @@ public class LamellContainer extends TokenLamellPanel implements Serializable {
     private LamellFactory createFactory(String type, String itemId) {
         final Panel panel;
         if (SYKEPENGER_TYPE.equalsIgnoreCase(type)) {
-            panel = new SykmeldingsperiodePanel(PANEL, Model.of(fnrFromRequest), Model.of(itemId));
+            boolean nySykepengerToggle = unleashService.isEnabled(Feature.NY_SYKEPENGER);
+            if (nySykepengerToggle){
+                panel = new NyttSykmeldingsperiodePanel(PANEL, Model.of(fnrFromRequest), Model.of(itemId));
+            } else {
+                panel = new SykmeldingsperiodePanel(PANEL, Model.of(fnrFromRequest), Model.of(itemId));
+            }
         } else if (FORELDREPENGER_TYPE.equalsIgnoreCase(type)) {
             panel = new ForeldrepengerPanel(PANEL, Model.of(fnrFromRequest), Model.of(itemId));
         } else if (PLEIEPENGER_TYPE.equalsIgnoreCase(type)) {
