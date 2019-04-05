@@ -28,6 +28,7 @@ import no.nav.sbl.dialogarena.utbetaling.lamell.UtbetalingLerret;
 import no.nav.sbl.dialogarena.varsel.lamell.VarselLerret;
 import no.nav.sykmeldingsperioder.SykmeldingsperiodePanel;
 import no.nav.sykmeldingsperioder.foreldrepenger.ForeldrepengerPanel;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.lameller.nyforeldrepenger.NyttForeldrepengerPanel;
 import no.nav.sykmeldingsperioder.pleiepenger.PleiepengerPanel;
 import org.apache.wicket.Component;
 import org.apache.wicket.Session;
@@ -153,25 +154,7 @@ public class LamellContainer extends TokenLamellPanel implements Serializable {
         } else if (FORELDREPENGER_TYPE.equalsIgnoreCase(type)) {
             boolean nyForeldrepenger = unleashService.isEnabled(Feature.NY_FORELDREPENGER);
             if (nyForeldrepenger) {
-
-
-
-
-
-
-
-               return ( newLamellFactory(LAMELL_FORELDREPENGER, itemId, "", true, (LerretFactory) (id, name) -> new AjaxLazyLoadLerret(id, name) {
-                    final Component comp = new ReactComponentPanel(type, "NyForeldrepenger", new HashMap<String, Object>() {{
-                        put("fødselsnummer", fnrFromRequest);
-                    }});
-
-                    NyForeldrepengerLerret foreldrepengerLerret = new NyForeldrepengerLerret(itemId, comp);
-
-                    @Override
-                    public Lerret getLazyLoadComponent(String markupId) {
-                        return foreldrepengerLerret;
-                    }
-                }));
+                panel = new NyttForeldrepengerPanel(PANEL, Model.of(fnrFromRequest), Model.of(itemId));
             } else {
                 panel = new ForeldrepengerPanel(PANEL, Model.of(fnrFromRequest), Model.of(itemId));
             }
