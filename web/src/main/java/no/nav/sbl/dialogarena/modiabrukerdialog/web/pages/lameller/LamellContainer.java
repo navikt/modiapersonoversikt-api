@@ -89,8 +89,8 @@ public class LamellContainer extends TokenLamellPanel implements Serializable {
     @Named("pep")
     private EnforcementPoint pep;
 
-    public LamellContainer(String id, Session session, GrunnInfo grunnInfo, boolean nyBrukerprofilEnabled, boolean nySaksoversikt, boolean nyOppfolging) {
-        super(id, createLamellFactories(grunnInfo.bruker, nyBrukerprofilEnabled, nySaksoversikt, nyOppfolging));
+    public LamellContainer(String id, Session session, GrunnInfo grunnInfo, boolean nySaksoversikt, boolean nyOppfolging) {
+        super(id, createLamellFactories(grunnInfo.bruker, nySaksoversikt, nyOppfolging));
         this.fnrFromRequest = grunnInfo.bruker.fnr;
 
         boolean nyUtbetalingEnabled = unleashService.isEnabled(Feature.NY_UTBETALING);
@@ -166,7 +166,7 @@ public class LamellContainer extends TokenLamellPanel implements Serializable {
             return new DefaultLamellFactory(type, itemId, "", true, (LerretFactory) (id, name) -> new GenericLerret(id, panel)) {
                 @Override
                 public IModel<String> getHeading() {
-                    return new StringResourceModel(LamellPanel.RESOURCE_PREFIX_LAMELL + "." + type.toLowerCase() + ".heading", null, new Object[] {((PleiepengerPanel) panel).idDato});
+                    return new StringResourceModel(LamellPanel.RESOURCE_PREFIX_LAMELL + "." + type.toLowerCase() + ".heading", null, new Object[]{((PleiepengerPanel) panel).idDato});
                 }
             };
         } else {
@@ -200,34 +200,30 @@ public class LamellContainer extends TokenLamellPanel implements Serializable {
         return SYKEPENGER_TYPE.equalsIgnoreCase(type) || FORELDREPENGER_TYPE.equalsIgnoreCase(type) || PLEIEPENGER_TYPE.equalsIgnoreCase(type);
     }
 
-    private static List<LamellFactory> createLamellFactories(final GrunnInfo.Bruker bruker, boolean nyBrukerprofilEnabled, boolean nySaksoversikt,  final boolean nyOppfolging) {
+    private static List<LamellFactory> createLamellFactories(final GrunnInfo.Bruker bruker, boolean nySaksoversikt, final boolean nyOppfolging) {
         List<LamellFactory> lamellFactories = new ArrayList<>();
         lamellFactories.add(createOversiktLamell(bruker));
         lamellFactories.add(createKontrakterLamell(bruker, nyOppfolging));
-        lamellFactories.add(createBrukerprofilLamell(bruker, nyBrukerprofilEnabled));
+        lamellFactories.add(createBrukerprofilLamell(bruker));
         lamellFactories.add(createSaksoversiktLamell(bruker, nySaksoversikt));
         lamellFactories.add(createVarslingsLamell(bruker));
 
         return lamellFactories;
     }
 
-    private static LamellFactory createBrukerprofilLamell(final GrunnInfo.Bruker bruker, boolean nyBrukerprofilEnabled) {
-        if (nyBrukerprofilEnabled) {
-            return newLamellFactory(LAMELL_BRUKERPROFIL, "B", true, (LerretFactory) (id, name) -> new AjaxLazyLoadLerret(id, name) {
-                final Component comp = new ReactComponentPanel("brukerprofilpanel", "NyBrukerprofil", new HashMap<String, Object>(){{
-                    put("fødselsnummer", bruker.fnr);
-                }});
+    private static LamellFactory createBrukerprofilLamell(final GrunnInfo.Bruker bruker) {
+        return newLamellFactory(LAMELL_BRUKERPROFIL, "B", true, (LerretFactory) (id, name) -> new AjaxLazyLoadLerret(id, name) {
+            final Component comp = new ReactComponentPanel("brukerprofilpanel", "NyBrukerprofil", new HashMap<String, Object>() {{
+                put("fødselsnummer", bruker.fnr);
+            }});
 
-                final NyBrukerprofilLerret brukerprofillerret = new NyBrukerprofilLerret("content", comp);
+            final NyBrukerprofilLerret brukerprofillerret = new NyBrukerprofilLerret("content", comp);
 
-                @Override
-                public Lerret getLazyLoadComponent(String markupId) {
-                    return brukerprofillerret;
-                }
-            });
-        } else {
-            return newLamellFactory(LAMELL_BRUKERPROFIL, "B", (LerretFactory) (id, name) -> new BrukerprofilPanel(id, Model.of(bruker.fnr)));
-        }
+            @Override
+            public Lerret getLazyLoadComponent(String markupId) {
+                return brukerprofillerret;
+            }
+        });
     }
 
     private static LamellFactory createKontrakterLamell(final GrunnInfo.Bruker bruker, final boolean nyOppfolging) {

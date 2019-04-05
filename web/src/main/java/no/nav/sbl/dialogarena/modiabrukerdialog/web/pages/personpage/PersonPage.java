@@ -139,12 +139,11 @@ public class PersonPage extends BasePage {
         konfigurerRedirectPopup();
 
         boolean nyUtbetalingerEnabled = unleashService.isEnabled(Feature.NY_UTBETALING);
-        boolean nyBrukerprofilEnabled = unleashService.isEnabled(Feature.NY_BRUKERPROFIL);
         boolean nySaksoversikt = unleashService.isEnabled(Feature.NY_SAKSOVERSIKT);
         boolean nyPleiepenger = unleashService.isEnabled(Feature.NY_PLEIEPENGER);
         boolean nySykepenger = unleashService.isEnabled(Feature.NY_SYKEPENGER);
         boolean nyOppfolgingEnabled = unleashService.isEnabled(Feature.NY_OPPFOLGING);
-        lamellContainer = new LamellContainer("lameller", getSession(), grunnInfo, nyBrukerprofilEnabled, nySaksoversikt, nyOppfolgingEnabled);
+        lamellContainer = new LamellContainer("lameller", getSession(), grunnInfo, nySaksoversikt, nyOppfolgingEnabled);
 
         oppgiBegrunnelseModal = new ReactBegrunnelseModal("oppgiBegrunnelseModal");
         Hode hode = new Hode("hode", oppgiBegrunnelseModal, personKjerneinfoServiceBi, grunnInfo, null);
@@ -170,7 +169,7 @@ public class PersonPage extends BasePage {
                 oppgiBegrunnelseModal
         );
 
-        add(getVisittkortkomponenter(nyBrukerprofilEnabled));
+        add(getVisittkortkomponenter());
 
         if (skalViseMeldingerLamell) {
             lamellContainer.setStartLamell(LAMELL_MELDINGER);
@@ -189,14 +188,13 @@ public class PersonPage extends BasePage {
     }
 
     @NotNull
-    private Component[] getVisittkortkomponenter(boolean nyBrukerprofilEnabled) {
+    private Component[] getVisittkortkomponenter() {
         return new Component[]{
                 new WebMarkupContainer("visittkort").setVisible(false),
                 new WebMarkupContainer("brukersNavKontor").setVisible(false),
                 new WebMarkupContainer("kjerneinfotabs").setVisible(false),
                 new ReactComponentPanel("nytt-visittkort", "NyttVisittkort", new HashMap<String, Object>() {{
                     put("fødselsnummer", fnr);
-                    put("nyBrukerprofil", nyBrukerprofilEnabled);
                 }})
         };
     }
