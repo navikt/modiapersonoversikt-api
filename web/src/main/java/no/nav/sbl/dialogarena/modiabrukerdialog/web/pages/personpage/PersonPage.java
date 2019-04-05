@@ -128,6 +128,9 @@ public class PersonPage extends BasePage {
             session.clearOppgaveSomBesvaresOgOppgaveFraUrl();
         }
         if (erRequestFraGosys(pageParameters)) {
+            WebResponse resp = (WebResponse) RequestCycle.get().getResponse();
+            Cookie cookie = new Cookie("COOKIE_JobberMedSpmOgSvar", "true");
+            resp.addCookie(cookie);
             session.withURLParametre(pageParameters);
         }
         pageParameters.remove(OPPGAVEID, HENVENDELSEID, BESVARES);
