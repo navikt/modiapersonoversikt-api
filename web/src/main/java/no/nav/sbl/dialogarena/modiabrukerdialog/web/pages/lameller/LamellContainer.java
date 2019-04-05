@@ -153,20 +153,28 @@ public class LamellContainer extends TokenLamellPanel implements Serializable {
         } else if (FORELDREPENGER_TYPE.equalsIgnoreCase(type)) {
             boolean nyForeldrepenger = unleashService.isEnabled(Feature.NY_FORELDREPENGER);
             if (nyForeldrepenger) {
-                return newLamellFactory(LAMELL_FORELDREPENGER, "", true, (LerretFactory) (id, name) -> new AjaxLazyLoadLerret(id, name) {
-                    final Component comp = new ReactComponentPanel("foreldrepengerpanel", "NyForeldrepenger", new HashMap<String, Object>() {{
+
+
+
+
+
+
+
+               return ( newLamellFactory(LAMELL_FORELDREPENGER, itemId, "", true, (LerretFactory) (id, name) -> new AjaxLazyLoadLerret(id, name) {
+                    final Component comp = new ReactComponentPanel(type, "NyForeldrepenger", new HashMap<String, Object>() {{
                         put("fødselsnummer", fnrFromRequest);
                     }});
 
-                    final NyForeldrepengerLerret foreldrepengerLerret = new NyForeldrepengerLerret("content", comp);
+                    NyForeldrepengerLerret foreldrepengerLerret = new NyForeldrepengerLerret(itemId, comp);
 
                     @Override
                     public Lerret getLazyLoadComponent(String markupId) {
                         return foreldrepengerLerret;
                     }
-                });
+                }));
+            } else {
+                panel = new ForeldrepengerPanel(PANEL, Model.of(fnrFromRequest), Model.of(itemId));
             }
-            panel = new ForeldrepengerPanel(PANEL, Model.of(fnrFromRequest), Model.of(itemId));
         } else if (PLEIEPENGER_TYPE.equalsIgnoreCase(type)) {
             boolean nyttPleiepengerPanelToggle = unleashService.isEnabled(Feature.NY_PLEIEPENGER);
             panel = new PleiepengerPanel(PANEL, Model.of(fnrFromRequest), itemId, nyttPleiepengerPanelToggle);
