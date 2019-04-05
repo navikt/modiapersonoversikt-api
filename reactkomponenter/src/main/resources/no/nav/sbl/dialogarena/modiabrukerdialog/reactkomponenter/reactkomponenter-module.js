@@ -21,6 +21,7 @@ import NySaksoversikt from './ny-saksoversikt/ny-saksoversikt';
 import NyBrukerprofil from './ny-brukerprofil/ny-brukerprofil';
 import NyPleiepenger from './ny-pleiepenger/ny-pleiepenger';
 import NyOppfolging from './ny-oppfolging/ny-oppfolging';
+import NySykepenger from './ny-sykepenger/ny-sykepenger';
 
 import React from './nav-react';
 import ReactDOM from 'react-dom';
@@ -48,7 +49,8 @@ window.ModiaJS = {
         NySaksoversikt,
         NyBrukerprofil,
         NyPleiepenger,
-        NyOppfolging
+        NyOppfolging,
+        NySykepenger
     },
     InitializedComponents: {},
     React,
