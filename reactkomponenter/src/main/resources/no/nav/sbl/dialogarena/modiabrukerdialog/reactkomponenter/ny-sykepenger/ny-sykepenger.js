@@ -2,14 +2,16 @@ import React from 'react';
 import PT from 'prop-types';
 
 import SykepengerLamell from 'modiapersonoversikt/build/dist/components/standalone/Sykepenger/SykepengerLamell';
+import moment from 'moment';
+
+function konverterIDDatoTilNormalisertDatoFormat(idDato) {
+    return moment(idDato, ["DD.MM.YYYY"]).format('YYYY-MM-DD');
+}
 
 class NySykepenger extends React.Component {
     render() {
-        return (
-            <div className="ny-frontend">
-                <SykepengerLamell fødselsnummer={this.props.fødselsnummer} sykmeldtFraOgMed={this.props.sykmeldtFraOgMed}/>
-            </div>
-        );
+        const normalisertDato = konverterIDDatoTilNormalisertDatoFormat(this.props.sykmeldtFraOgMed);
+        return <SykepengerLamell fødselsnummer={this.props.fødselsnummer} sykmeldtFraOgMed={normalisertDato}/>;
     }
 }
 
