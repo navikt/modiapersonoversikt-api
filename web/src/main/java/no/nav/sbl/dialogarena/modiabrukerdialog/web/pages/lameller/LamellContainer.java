@@ -18,6 +18,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.Saksbe
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.Feature;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.UnleashService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.reactkomponenter.utils.wicket.ReactComponentPanel;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.lameller.nysykepenger.NyttSykmeldingsperiodePanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.lameller.oversikt.OversiktLerret;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.lamell.SaksoversiktLerret;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.GsakService;
@@ -33,10 +34,12 @@ import org.apache.wicket.Component;
 import org.apache.wicket.Session;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.event.IEvent;
+import org.apache.wicket.markup.html.panel.IMarkupSourcingStrategy;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.StringResourceModel;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -86,8 +89,8 @@ public class LamellContainer extends TokenLamellPanel implements Serializable {
     @Named("pep")
     private EnforcementPoint pep;
 
-    public LamellContainer(String id, Session session, GrunnInfo grunnInfo, boolean nyBrukerprofilEnabled, boolean nySaksoversikt) {
-        super(id, createLamellFactories(grunnInfo.bruker, nyBrukerprofilEnabled, nySaksoversikt));
+    public LamellContainer(String id, Session session, GrunnInfo grunnInfo, boolean nyBrukerprofilEnabled, boolean nySaksoversikt, boolean nyOppfolging) {
+        super(id, createLamellFactories(grunnInfo.bruker, nyBrukerprofilEnabled, nySaksoversikt, nyOppfolging));
         this.fnrFromRequest = grunnInfo.bruker.fnr;
 
         boolean nyUtbetalingEnabled = unleashService.isEnabled(Feature.NY_UTBETALING);
@@ -149,7 +152,12 @@ public class LamellContainer extends TokenLamellPanel implements Serializable {
     private LamellFactory createFactory(String type, String itemId) {
         final Panel panel;
         if (SYKEPENGER_TYPE.equalsIgnoreCase(type)) {
-            panel = new SykmeldingsperiodePanel(PANEL, Model.of(fnrFromRequest), Model.of(itemId));
+            boolean nySykepengerToggle = unleashService.isEnabled(Feature.NY_SYKEPENGER);
+            if (nySykepengerToggle){
+                panel = new NyttSykmeldingsperiodePanel(PANEL, Model.of(fnrFromRequest), Model.of(itemId));
+            } else {
+                panel = new SykmeldingsperiodePanel(PANEL, Model.of(fnrFromRequest), Model.of(itemId));
+            }
         } else if (FORELDREPENGER_TYPE.equalsIgnoreCase(type)) {
             panel = new ForeldrepengerPanel(PANEL, Model.of(fnrFromRequest), Model.of(itemId));
         } else if (PLEIEPENGER_TYPE.equalsIgnoreCase(type)) {
@@ -192,10 +200,10 @@ public class LamellContainer extends TokenLamellPanel implements Serializable {
         return SYKEPENGER_TYPE.equalsIgnoreCase(type) || FORELDREPENGER_TYPE.equalsIgnoreCase(type) || PLEIEPENGER_TYPE.equalsIgnoreCase(type);
     }
 
-    private static List<LamellFactory> createLamellFactories(final GrunnInfo.Bruker bruker, boolean nyBrukerprofilEnabled, boolean nySaksoversikt) {
+    private static List<LamellFactory> createLamellFactories(final GrunnInfo.Bruker bruker, boolean nyBrukerprofilEnabled, boolean nySaksoversikt,  final boolean nyOppfolging) {
         List<LamellFactory> lamellFactories = new ArrayList<>();
         lamellFactories.add(createOversiktLamell(bruker));
-        lamellFactories.add(createKontrakterLamell(bruker));
+        lamellFactories.add(createKontrakterLamell(bruker, nyOppfolging));
         lamellFactories.add(createBrukerprofilLamell(bruker, nyBrukerprofilEnabled));
         lamellFactories.add(createSaksoversiktLamell(bruker, nySaksoversikt));
         lamellFactories.add(createVarslingsLamell(bruker));
@@ -222,8 +230,23 @@ public class LamellContainer extends TokenLamellPanel implements Serializable {
         }
     }
 
-    private static LamellFactory createKontrakterLamell(final GrunnInfo.Bruker bruker) {
-        return newLamellFactory(LAMELL_KONTRAKTER, "T", (LerretFactory) (id, name) -> new GenericLerret(id, new KontrakterPanel(PANEL, Model.of(bruker.fnr))));
+    private static LamellFactory createKontrakterLamell(final GrunnInfo.Bruker bruker, final boolean nyOppfolging) {
+        if (nyOppfolging) {
+            return newLamellFactory(LAMELL_KONTRAKTER, "T", true, (LerretFactory) (id, name) -> new AjaxLazyLoadLerret(id, name) {
+                final Component comp = new ReactComponentPanel("oppfolgingpanel", "NyOppfolging", new HashMap<String, Object>() {{
+                    put("fødselsnummer", bruker.fnr);
+                }});
+
+                final NyOppfolgingLerret oppfolgingLerret = new NyOppfolgingLerret("content", comp);
+
+                @Override
+                public Lerret getLazyLoadComponent(String markupId) {
+                    return oppfolgingLerret;
+                }
+            });
+        } else {
+            return newLamellFactory(LAMELL_KONTRAKTER, "T", (LerretFactory) (id, name) -> new GenericLerret(id, new KontrakterPanel(PANEL, Model.of(bruker.fnr))));
+        }
     }
 
     private static LamellFactory createOversiktLamell(final GrunnInfo.Bruker bruker) {
