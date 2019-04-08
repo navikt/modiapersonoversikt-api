@@ -33,8 +33,9 @@ public class ReactResourcesTest {
             "build/ny-frontend.less",
             "build/ny-saksoversikt.less",
             "build/ny-pleiepenger.less",
-            "build/ny-brukerprofil.less",
-            "build/ny-sykepenger.less"
+            "build/ny-sykepenger.less",
+            "build/ny-oppfolging.less",
+            "build/ny-brukerprofil.less"
     );
 
     @Test
