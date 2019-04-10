@@ -129,7 +129,7 @@ public class PersonPage extends BasePage {
         }
         if (erRequestFraGosys(pageParameters)) {
             WebResponse resp = (WebResponse) RequestCycle.get().getResponse();
-            Cookie cookie = new Cookie("COOKIE_JobberMedSpmOgSvar", "true");
+            Cookie cookie = new Cookie("JobberMedSpmOgSvar", "true");
             resp.addCookie(cookie);
             session.withURLParametre(pageParameters);
         }
