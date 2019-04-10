@@ -82,7 +82,6 @@ public class DialogSession implements Serializable {
         oppgaveSomBesvares = null;
         oppgaverBlePlukket = false;
         plukkedeOppgaver = emptyList();
-        temagruppe = null;
     }
 
     public Optional<Oppgave> getOppgaveSomBesvares() {
