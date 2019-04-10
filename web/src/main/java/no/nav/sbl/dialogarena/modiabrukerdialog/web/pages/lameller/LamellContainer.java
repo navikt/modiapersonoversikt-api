@@ -29,6 +29,7 @@ import no.nav.sbl.dialogarena.utbetaling.lamell.UtbetalingLerret;
 import no.nav.sbl.dialogarena.varsel.lamell.VarselLerret;
 import no.nav.sykmeldingsperioder.SykmeldingsperiodePanel;
 import no.nav.sykmeldingsperioder.foreldrepenger.ForeldrepengerPanel;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.lameller.nyforeldrepenger.NyttForeldrepengerPanel;
 import no.nav.sykmeldingsperioder.pleiepenger.PleiepengerPanel;
 import org.apache.wicket.Component;
 import org.apache.wicket.Session;
@@ -159,7 +160,12 @@ public class LamellContainer extends TokenLamellPanel implements Serializable {
                 panel = new SykmeldingsperiodePanel(PANEL, Model.of(fnrFromRequest), Model.of(itemId));
             }
         } else if (FORELDREPENGER_TYPE.equalsIgnoreCase(type)) {
-            panel = new ForeldrepengerPanel(PANEL, Model.of(fnrFromRequest), Model.of(itemId));
+            boolean nyForeldrepenger = unleashService.isEnabled(Feature.NY_FORELDREPENGER);
+            if (nyForeldrepenger) {
+                panel = new NyttForeldrepengerPanel(PANEL, Model.of(fnrFromRequest), Model.of(itemId));
+            } else {
+                panel = new ForeldrepengerPanel(PANEL, Model.of(fnrFromRequest), Model.of(itemId));
+            }
         } else if (PLEIEPENGER_TYPE.equalsIgnoreCase(type)) {
             boolean nyttPleiepengerPanelToggle = unleashService.isEnabled(Feature.NY_PLEIEPENGER);
             panel = new PleiepengerPanel(PANEL, Model.of(fnrFromRequest), itemId, nyttPleiepengerPanelToggle);

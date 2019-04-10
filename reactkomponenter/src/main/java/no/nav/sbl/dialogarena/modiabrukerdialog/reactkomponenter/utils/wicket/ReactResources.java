@@ -35,6 +35,7 @@ public class ReactResources {
                     new PackageResourceReference(ResourceReference.class, "build/ny-pleiepenger.less"),
                     new PackageResourceReference(ResourceReference.class, "build/ny-sykepenger.less"),
                     new PackageResourceReference(ResourceReference.class, "build/ny-oppfolging.less"),
-                    new PackageResourceReference(ResourceReference.class, "build/ny-brukerprofil.less")
+                    new PackageResourceReference(ResourceReference.class, "build/ny-brukerprofil.less"),
+                    new PackageResourceReference(ResourceReference.class, "build/ny-foreldrepenger.less")
             ).done();
 }

@@ -143,6 +143,7 @@ public class PersonPage extends BasePage {
         boolean nyPleiepenger = unleashService.isEnabled(Feature.NY_PLEIEPENGER);
         boolean nySykepenger = unleashService.isEnabled(Feature.NY_SYKEPENGER);
         boolean nyOppfolgingEnabled = unleashService.isEnabled(Feature.NY_OPPFOLGING);
+        boolean nyForeldrepengerEnabled = unleashService.isEnabled(Feature.NY_FORELDREPENGER);
         lamellContainer = new LamellContainer("lameller", getSession(), grunnInfo, nySaksoversikt, nyOppfolgingEnabled);
 
         oppgiBegrunnelseModal = new ReactBegrunnelseModal("oppgiBegrunnelseModal");
@@ -156,6 +157,7 @@ public class PersonPage extends BasePage {
         hode.add(hasCssClassIf("ny-pleiepenger-toggle", Model.of(nyPleiepenger)));
         hode.add(hasCssClassIf("ny-sykepenger-toggle", Model.of(nySykepenger)));
         hode.add(hasCssClassIf("ny-oppfolging-toggle", Model.of(nyOppfolgingEnabled)));
+        hode.add(hasCssClassIf("ny-foreldrepenger-toggle", Model.of(nyForeldrepengerEnabled)));
 
         dialogPanel = new DialogPanel("dialogPanel", grunnInfo);
         add(
