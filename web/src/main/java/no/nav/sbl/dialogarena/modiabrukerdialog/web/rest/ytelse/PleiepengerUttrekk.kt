@@ -58,7 +58,7 @@ class PleiepengerUttrekk constructor(private val pleiepengerService: Pleiepenger
     private fun hentArbeidsforhold(arbeidsforhold: List<Arbeidsforhold>): List<Map<String, Any?>> {
         return arbeidsforhold.map {
             mapOf(
-                    "arbeidsgiverNavn" to hentArbeidsgiverNavn(organisasjonService, it.arbeidsgiverOrgnr),
+                    "arbeidsgiverNavn" to it.arbeidsgiverOrgnr?.let {hentArbeidsgiverNavn(organisasjonService, it)},
                     "arbeidsgiverKontonr" to it.arbeidsgiverKontonr,
                     "inntektsperiode" to it.inntektsperiode,
                     "inntektForPerioden" to it.inntektForPerioden,
