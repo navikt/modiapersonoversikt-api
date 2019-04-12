@@ -51,7 +51,7 @@ private fun getDato(journalpost: Journalpost): LocalDateTime? =
             JOURNALPOSTTYPE_UT -> getDatoSendt(journalpost)
             JOURNALPOSTTYPE_INTERN -> getRelevantDatoForType(DATOTYPE_JOURNALFOERT, journalpost)
             else -> now()
-        }
+        } ?: now()
 
 private fun getDatoSendt(journalpost: Journalpost): LocalDateTime? =
         listOfNotNull(

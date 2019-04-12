@@ -1,5 +1,7 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.saf
 
+import io.mockk.every
+import io.mockk.mockkStatic
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.Baksystem
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.Dokument.Variantformat.ARKIV
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.Dokument.Variantformat.SLADDET
@@ -257,6 +259,20 @@ internal class SafDokumentMapperKtTest {
     }
 
     @Test
+    fun `Setter nådato om relevant dato for type ikke eksisterer`() {
+
+        val nowDate = mockLocalDateTimeNow()
+
+        val journalpost = lagJournalpost().copy(
+                journalposttype = JOURNALPOSTTYPE_INN,
+                relevanteDatoer = emptyList())
+
+        val dokumentMetadata = DokumentMetadata().fraSafJournalpost(journalpost)
+
+        assertEquals(nowDate, dokumentMetadata.dato)
+    }
+
+    @Test
     fun `Bruker registrert dato for Inngående`() {
         val registrertDato = LocalDateTime.parse("2018-11-11T13:23:57", DateTimeFormatter.ISO_DATE_TIME)
 
@@ -409,3 +425,12 @@ private fun lagDokumentInfo(tittel: String): DokumentInfo {
 
 private fun lagDokumentVariant(): Dokumentvariant =
         Dokumentvariant(saksbehandlerHarTilgang = true, variantformat = variantformat)
+
+private fun mockLocalDateTimeNow(): LocalDateTime {
+    mockkStatic(LocalDateTime::class)
+    val nowDate = LocalDateTime.now()
+    every {
+        LocalDateTime.now()
+    } returns nowDate
+    return nowDate
+}
