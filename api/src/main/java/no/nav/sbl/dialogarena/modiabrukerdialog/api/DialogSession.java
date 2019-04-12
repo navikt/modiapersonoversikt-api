@@ -80,6 +80,8 @@ public class DialogSession implements Serializable {
     public void clearOppgaveSomBesvaresOgOppgaveFraUrl() {
         oppgaveFraUrl = null;
         oppgaveSomBesvares = null;
+        oppgaverBlePlukket = false;
+        plukkedeOppgaver = emptyList();
     }
 
     public Optional<Oppgave> getOppgaveSomBesvares() {
@@ -97,6 +99,10 @@ public class DialogSession implements Serializable {
 
     public Oppgave getOppgaveFraUrl() {
         return oppgaveFraUrl;
+    }
+
+    public boolean erKnyttetTilOppgave() {
+        return oppgaverBlePlukket || oppgaveFraUrl != null || !plukkedeOppgaver.isEmpty();
     }
 
 }

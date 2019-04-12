@@ -62,7 +62,7 @@ class SykepengerUttrekk constructor(private val sykepengerService: SykepengerSer
                     "inntektsperiode" to it.inntektsperiode.termnavn,
                     "inntektForPerioden" to it.inntektForPerioden,
                     "refusjonTom" to it.refusjonTom?.toString(DATOFORMAT),
-                    "refusjonstype" to it.refusjonstype.termnavn,
+                    "refusjonstype" to it.refusjonstype?.termnavn,
                     "sykepengerFom" to it.sykepengerFom?.toString(DATOFORMAT)
             );
         }

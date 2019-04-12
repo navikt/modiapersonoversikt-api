@@ -4,8 +4,14 @@ import React from 'react';
 import { shallow, mount } from 'enzyme';
 import { expect } from 'chai';
 import sinon from 'sinon';
-
 import Skrivestotte from './skrivestotte-module';
+import Modal from '../modal/modal-module';
+
+
+Modal.prototype.render = function() {
+    return this.props.children;
+};
+
 
 describe('Skrivestotte Module', () => {
 
@@ -26,14 +32,11 @@ describe('Skrivestotte Module', () => {
     });
 
     it('skal rendre en tom-melding når ingen tekster', () => {
-        Skrivestotte.__Rewire__('Modal', (props) => (<div>{props.children}</div>));  //Mocker Modal-komponent. Se babel-plugin-rewire
         const element = mount(<Skrivestotte />);
 
         element.setState({
             tekster: []
         });
-
-        Skrivestotte.__ResetDependency__('Modal');
 
         expect(element.find('form.sok-layout').length).to.equal(1);
         expect(element.find('.sok-visning.hidden').length).to.equal(1);
