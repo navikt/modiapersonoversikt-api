@@ -74,7 +74,7 @@ class SakerController @Inject constructor(private val saksoversiktService: Sakso
 
     private fun finnVariantformat(journalpostMetadata: DokumentMetadata, dokumentreferanse: String): Variantformat =
             journalpostMetadata.vedlegg.plus(journalpostMetadata.hoveddokument)
-                    .find { dok -> dok.dokumentreferanse === dokumentreferanse }
+                    .find { dok -> dok.dokumentreferanse == dokumentreferanse }
                     ?.variantformat
                     ?: ARKIV
 
