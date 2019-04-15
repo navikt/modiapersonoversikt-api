@@ -35,6 +35,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.hode.jscallback.SokOp
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.hode.jscallback.VoidCallback;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.plukkoppgavepanel.PlukkOppgavePanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.timeout.ReactTimeoutBoksModal;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.tempnaisgosys.GosysNaisLenke;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.wicket.Component;
 import org.apache.wicket.Page;
@@ -46,8 +47,10 @@ import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.event.IEvent;
 import org.apache.wicket.extensions.markup.html.tabs.AbstractTab;
 import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.markup.html.panel.EmptyPanel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.request.cycle.RequestCycle;
+import org.apache.wicket.request.http.WebResponse;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.CssResourceReference;
 import org.apache.wicket.request.resource.PackageResourceReference;
@@ -57,6 +60,7 @@ import org.slf4j.Logger;
 
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.servlet.http.Cookie;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -90,6 +94,7 @@ public class PersonPage extends BasePage {
     public static final PackageResourceReference DIALOGPANEL_LESS = new PackageResourceReference(HenvendelseVM.class, "DialogPanel.less");
     public static final ConditionalCssResource DIALOGPANEL_IE = new ConditionalCssResource(new CssResourceReference(DialogPanel.class, "DialogPanel_ie9.css"), "screen", "lt IE 10");
     public static final String PEN_SAKSBEH_ACTION = "pensaksbeh";
+    private final String COOKIE_NAVN = "JobberMedSpmOgSvar";
 
     private final String fnr;
     private final GrunnInfo grunnInfo;
@@ -117,6 +122,7 @@ public class PersonPage extends BasePage {
             fnr = pageParameters.get("fnr").toString();
         }
         DialogSession session = DialogSession.read(this);
+        sjekkOgSettKontrollspørsmålCookie(session);
         sjekkTilgang(fnr, pageParameters);
         grunnInfo = grunninfoService.hentGrunninfo(fnr);
         boolean skalViseMeldingerLamell = session.oppgaverBlePlukket() || erRequestFraGosys(pageParameters);
@@ -125,6 +131,9 @@ public class PersonPage extends BasePage {
             session.clearOppgaveSomBesvaresOgOppgaveFraUrl();
         }
         if (erRequestFraGosys(pageParameters)) {
+            WebResponse resp = (WebResponse) RequestCycle.get().getResponse();
+            Cookie cookie = new Cookie(COOKIE_NAVN, "true");
+            resp.addCookie(cookie);
             session.withURLParametre(pageParameters);
         }
         pageParameters.remove(OPPGAVEID, HENVENDELSEID, BESVARES);
@@ -132,12 +141,13 @@ public class PersonPage extends BasePage {
         redirectPopup = new ReactSjekkForlatModal("redirectModal");
         konfigurerRedirectPopup();
 
-        boolean nyUtbetalingerEnabled = unleashService.isEnabled(Feature.NY_UTBETALING);
-        boolean nyBrukerprofilEnabled = unleashService.isEnabled(Feature.NY_BRUKERPROFIL);
         boolean nySaksoversikt = unleashService.isEnabled(Feature.NY_SAKSOVERSIKT);
         boolean nyPleiepenger = unleashService.isEnabled(Feature.NY_PLEIEPENGER);
+        boolean nySykepenger = unleashService.isEnabled(Feature.NY_SYKEPENGER);
         boolean nyOppfolgingEnabled = unleashService.isEnabled(Feature.NY_OPPFOLGING);
-        lamellContainer = new LamellContainer("lameller", getSession(), grunnInfo, nyBrukerprofilEnabled, nySaksoversikt, nyOppfolgingEnabled);
+        boolean nyForeldrepengerEnabled = unleashService.isEnabled(Feature.NY_FORELDREPENGER);
+        boolean naisGosysLenke = unleashService.isEnabled(Feature.NAIS_GOSYS_LENKE);
+        lamellContainer = new LamellContainer("lameller", getSession(), grunnInfo, nySaksoversikt, nyOppfolgingEnabled);
 
         oppgiBegrunnelseModal = new ReactBegrunnelseModal("oppgiBegrunnelseModal");
         Hode hode = new Hode("hode", oppgiBegrunnelseModal, personKjerneinfoServiceBi, grunnInfo, null);
@@ -145,10 +155,12 @@ public class PersonPage extends BasePage {
             clearSession();
             handleRedirect(target, new PageParameters(), HentPersonPage.class);
         }));
-        hode.add(hasCssClassIf("ny-utbetalinger-toggle", Model.of(nyUtbetalingerEnabled)));
+
         hode.add(hasCssClassIf("ny-saksoversikt-toggle", Model.of(nySaksoversikt)));
         hode.add(hasCssClassIf("ny-pleiepenger-toggle", Model.of(nyPleiepenger)));
+        hode.add(hasCssClassIf("ny-sykepenger-toggle", Model.of(nySykepenger)));
         hode.add(hasCssClassIf("ny-oppfolging-toggle", Model.of(nyOppfolgingEnabled)));
+        hode.add(hasCssClassIf("ny-foreldrepenger-toggle", Model.of(nyForeldrepengerEnabled)));
 
         dialogPanel = new DialogPanel("dialogPanel", grunnInfo);
         add(
@@ -162,7 +174,13 @@ public class PersonPage extends BasePage {
                 oppgiBegrunnelseModal
         );
 
-        add(getVisittkortkomponenter(nyBrukerprofilEnabled));
+        if (naisGosysLenke) {
+            add(new GosysNaisLenke("gosysNaisLenke"));
+        } else {
+            add(new EmptyPanel("gosysNaisLenke"));
+        }
+
+        add(getVisittkortkomponenter());
 
         if (skalViseMeldingerLamell) {
             lamellContainer.setStartLamell(LAMELL_MELDINGER);
@@ -170,15 +188,24 @@ public class PersonPage extends BasePage {
         HentPersonPage.configureModalWindow(oppgiBegrunnelseModal, pageParameters);
     }
 
+    private void sjekkOgSettKontrollspørsmålCookie(DialogSession session) {
+        WebResponse resp = (WebResponse) RequestCycle.get().getResponse();
+        Cookie cookie = new Cookie(COOKIE_NAVN, "true");
+        if(session.erKnyttetTilOppgave()) {
+            resp.addCookie(cookie);
+        } else {
+            resp.clearCookie(cookie);
+        }
+    }
+
     @NotNull
-    private Component[] getVisittkortkomponenter(boolean nyBrukerprofilEnabled) {
+    private Component[] getVisittkortkomponenter() {
         return new Component[]{
                 new WebMarkupContainer("visittkort").setVisible(false),
                 new WebMarkupContainer("brukersNavKontor").setVisible(false),
                 new WebMarkupContainer("kjerneinfotabs").setVisible(false),
                 new ReactComponentPanel("nytt-visittkort", "NyttVisittkort", new HashMap<String, Object>() {{
                     put("fødselsnummer", fnr);
-                    put("nyBrukerprofil", nyBrukerprofilEnabled);
                 }})
         };
     }

@@ -12,6 +12,7 @@ import no.nav.personsok.result.PersonsokResultPanel;
 import no.nav.personsok.search.PersonsokSearchPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.PersonPage;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.tekniskfeil.ReactTekniskFeilModal;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.tempnaisgosys.GosysNaisLenke;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.Innboks;
 import no.nav.sbl.dialogarena.sporsmalogsvar.widget.MeldingerWidget;
 import no.nav.sykmeldingsperioder.SykmeldingsperiodePanel;
