@@ -1,5 +1,8 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain;
 
+import static no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.saf.SafDokumentMapperKt.VARIANTFORMAT_ARKIV;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.saf.SafDokumentMapperKt.VARIANTFORMAT_SLADDET;
+
 public class Dokument {
 
     private String tittel;
@@ -8,9 +11,19 @@ public class Dokument {
     private boolean logiskDokument;
     private Variantformat variantformat;
 
-
     public enum Variantformat {
-        ARKIV, SLADDET
+        ARKIV(VARIANTFORMAT_ARKIV),
+        SLADDET(VARIANTFORMAT_SLADDET);
+
+        private String safVariantFormat;
+
+        Variantformat(String safVariantFormat) {
+            this.safVariantFormat = safVariantFormat;
+        }
+
+        public String getSafVariantFormat() {
+            return safVariantFormat;
+        }
     }
 
     public String getTittel() {

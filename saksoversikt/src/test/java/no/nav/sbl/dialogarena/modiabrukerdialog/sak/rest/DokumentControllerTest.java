@@ -64,7 +64,7 @@ public class DokumentControllerTest {
         httpServletRequest.setCookies(lagSaksbehandlerCookie(VALGT_ENHET));
         when(dokumentMetadataService.hentDokumentMetadata(anyString())).thenReturn(lagDokumentMetadataListe("DAG"));
         when(tilgangskontrollService.harSaksbehandlerTilgangTilDokument(any(HttpServletRequest.class), any(DokumentMetadata.class), anyString(), anyString())).thenReturn(new TjenesteResultatWrapper("result"));
-        when(safService.hentDokument(anyString(), anyString(), anyString())).thenReturn(new ResultatWrapper<>(new byte[0]));
+        when(safService.hentDokument(anyString(), anyString(), any())).thenReturn(new ResultatWrapper<>(new byte[0]));
     }
 
     @Test

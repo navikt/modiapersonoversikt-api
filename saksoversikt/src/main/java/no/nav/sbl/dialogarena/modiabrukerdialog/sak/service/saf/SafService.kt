@@ -5,6 +5,7 @@ import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import no.nav.brukerdialog.security.context.SubjectHandler
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.Baksystem
+import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.Dokument
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.DokumentMetadata
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.resultatwrappere.ResultatWrapper
 import no.nav.sbl.rest.RestUtils
@@ -35,7 +36,7 @@ class SafService {
         }
     }
 
-    fun hentDokument(journalpostId: String, dokumentInfoId: String, variantFormat: String): ResultatWrapper<ByteArray?> {
+    fun hentDokument(journalpostId: String, dokumentInfoId: String, variantFormat: Dokument.Variantformat): ResultatWrapper<ByteArray?> {
         val url = lagHentDokumentURL(journalpostId, dokumentInfoId, variantFormat)
 
         return RestUtils.withClient { client ->
@@ -46,7 +47,6 @@ class SafService {
             }
         }
     }
-
 }
 
 private fun håndterStatus(response: Response): ResultatWrapper<List<DokumentMetadata>> =
@@ -97,12 +97,12 @@ private fun veilederAutorisertClient(client: Client, url: String): Invocation.Bu
             .header(CONTENT_TYPE, APPLICATION_JSON)
 }
 
-private fun lagHentDokumentURL(journalpostId: String, dokumentInfoId: String, variantFormat: String) =
+private fun lagHentDokumentURL(journalpostId: String, dokumentInfoId: String, variantFormat: Dokument.Variantformat) =
         SAF_HENTDOKUMENT_BASEURL + String.format(
                 "/%s/%s/%s/",
                 journalpostId,
                 dokumentInfoId,
-                variantFormat)
+                variantFormat.safVariantFormat)
 
 private fun logJournalpostErrors(errors: List<SafError>) {
     val msg = errors

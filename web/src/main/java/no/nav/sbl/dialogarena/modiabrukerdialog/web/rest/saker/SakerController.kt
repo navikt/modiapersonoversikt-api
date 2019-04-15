@@ -3,6 +3,8 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.saker
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.RestUtils
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.domain.widget.ModiaSakstema
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.*
+import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.Dokument.Variantformat
+import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.Dokument.Variantformat.ARKIV
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.resultatwrappere.ResultatWrapper
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.DokumentMetadataService
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.SaksService
@@ -20,6 +22,7 @@ import javax.ws.rs.*
 import javax.ws.rs.core.Context
 import javax.ws.rs.core.MediaType
 import javax.ws.rs.core.Response
+import javax.ws.rs.core.Variant
 
 @Path("/saker/{fnr}")
 class SakerController @Inject constructor(private val saksoversiktService: SaksoversiktService,
@@ -61,11 +64,20 @@ class SakerController @Inject constructor(private val saksoversiktService: Sakso
             return Response.status(Response.Status.FORBIDDEN).build()
         }
 
-        return safService.hentDokument(journalpostId, dokumentreferanse, VARIANTFORMAT_ARKIV)
+        val variantformat = finnVariantformat(journalpostMetadata, dokumentreferanse)
+
+        return safService.hentDokument(journalpostId, dokumentreferanse, variantformat)
                 .resultat
                 ?.let { Response.ok(it).build() }
                 ?: Response.status(Response.Status.NOT_FOUND).build()
     }
+
+    private fun finnVariantformat(journalpostMetadata: DokumentMetadata, dokumentreferanse: String): Variantformat =
+            journalpostMetadata.vedlegg.plus(journalpostMetadata.hoveddokument)
+                    .find { dok -> dok.dokumentreferanse === dokumentreferanse }
+                    ?.variantformat
+                    ?: ARKIV
+
 
     private fun byggSakstemaResultat(resultat: ResultatWrapper<List<ModiaSakstema>>): Map<String, Any?> {
         return mapOf(
