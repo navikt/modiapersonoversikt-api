@@ -141,7 +141,6 @@ public class PersonPage extends BasePage {
         redirectPopup = new ReactSjekkForlatModal("redirectModal");
         konfigurerRedirectPopup();
 
-        boolean nyUtbetalingerEnabled = unleashService.isEnabled(Feature.NY_UTBETALING);
         boolean nySaksoversikt = unleashService.isEnabled(Feature.NY_SAKSOVERSIKT);
         boolean nyPleiepenger = unleashService.isEnabled(Feature.NY_PLEIEPENGER);
         boolean nySykepenger = unleashService.isEnabled(Feature.NY_SYKEPENGER);
@@ -156,7 +155,7 @@ public class PersonPage extends BasePage {
             clearSession();
             handleRedirect(target, new PageParameters(), HentPersonPage.class);
         }));
-        hode.add(hasCssClassIf("ny-utbetalinger-toggle", Model.of(nyUtbetalingerEnabled)));
+
         hode.add(hasCssClassIf("ny-saksoversikt-toggle", Model.of(nySaksoversikt)));
         hode.add(hasCssClassIf("ny-pleiepenger-toggle", Model.of(nyPleiepenger)));
         hode.add(hasCssClassIf("ny-sykepenger-toggle", Model.of(nySykepenger)));
