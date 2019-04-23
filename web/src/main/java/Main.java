@@ -1,13 +1,61 @@
+
 import no.nav.apiapp.ApiApp;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.ModiaApplicationContext;
 
-import static no.nav.sbl.util.EnvironmentUtils.Type.PUBLIC;
-import static no.nav.sbl.util.EnvironmentUtils.Type.SECRET;
-import static no.nav.sbl.util.EnvironmentUtils.setProperty;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
+
+import static java.util.stream.Collectors.toSet;
 
 public class Main {
 
     public static void main(String... args) {
+        loadPropertiesFile(getEnvVar("NAIS_NAMESPACE"));
+
+        ApiApp.startApp(ModiaApplicationContext.class, args);
+    }
+
+    private static void loadPropertiesFile(String naisNamespace) {
+        switch(naisNamespace) {
+            case "q6":
+                loadFromResource("configurations/q6.properties");
+            default:
+                loadFromResource("configurations/q6.properties");
+        }
+    }
+
+    private static void loadFromResource(String resource) {
+        InputStream propsResource = Main.class.getClassLoader().getResourceAsStream(resource);
+        if (propsResource == null) {
+            throw new RuntimeException(resource);
+        }
+        Properties props = new Properties();
+
+        try {
+            props.load(propsResource);
+        } catch (IOException e) {
+            throw new RuntimeException("Kunne ikke lese properties", e);
+        }
+
+        Properties target = System.getProperties();
+
+        for (String name : props.stringPropertyNames().stream().collect(toSet())) {
+            String value = props.getProperty(name);
+            target.setProperty(name, value);
+        }
+    }
+
+    private static String getEnvVar(String s) {
+        String var = System.getenv(s);
+        if (var == null) {
+            return System.getProperty(s);
+        }
+        return var;
+    }
+}
+
+/*
         setProperty("isso.isalive.url", getEnvVar("ISSO_ISALIVE_URL"), PUBLIC);
         setProperty("openAMTokenIssuer.url", getEnvVar("ISSO_JWKS_URL"), PUBLIC);
         setProperty("isso-jwks.url", getEnvVar("ISSO_JWKS_URL"), PUBLIC);
@@ -88,15 +136,4 @@ public class Main {
         setProperty("redis.sentinelmode", getEnvVar("REDIS_SENTINELMODE"), PUBLIC);
         setProperty("redis.host", getEnvVar("REDIS_HOST"), PUBLIC); // Set by redis
         setProperty("redis.port", getEnvVar("REDIS_PORT"), PUBLIC);
-
-        ApiApp.startApp(ModiaApplicationContext.class, args);
-    }
-
-    private static String getEnvVar(String s) {
-        String var = System.getenv(s);
-        if (var == null) {
-            return System.getProperty(s);
-        }
-        return var;
-    }
-}
+ */
