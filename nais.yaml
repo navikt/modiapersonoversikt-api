@@ -6,7 +6,7 @@ metadata:
   labels:
     team: personoversikt
 spec:
-  image: repo.adeo.no:5443/oppfolging/modiabrukerdialog:00
+  image: repo.adeo.no:5443/oppfolging/modiabrukerdialog:15317
   port: 8080
   team: personoversikt
   liveness:
