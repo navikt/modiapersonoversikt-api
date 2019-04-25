@@ -13,6 +13,7 @@ public class Main {
     private static final String VAULT_APPLICATION_PROPERTIES_PATH = "/var/run/secrets/nais.io/vault/application.properties";
 
     public static void main(String... args) {
+        loadVaultSecrets();
         loadPropertiesFile(getEnvVar("NAIS_NAMESPACE"));
 
         ApiApp.startApp(ModiaApplicationContext.class, args);
