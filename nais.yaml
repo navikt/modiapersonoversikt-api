@@ -6,7 +6,7 @@ metadata:
   labels:
     team: personoversikt
 spec:
-  image: repo.adeo.no:5443/oppfolging/modiabrukerdialog:15317
+  image: repo.adeo.no:5443/oppfolging/modiabrukerdialog:15437.20190424.1459
   port: 8080
   team: personoversikt
   liveness:
@@ -21,10 +21,10 @@ spec:
     timeout: 1
   resources:
     requests:
-      cpu: 2
+      cpu: 1000m
       memory: 4096Mi
     limits:
-      cpu: 3
+      cpu: 2000m
       memory: 8192Mi
   ingresses:
     - https://modiapersonoversikt-api-q6.nais.preprod.local

@@ -2,6 +2,7 @@
 import no.nav.apiapp.ApiApp;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.ModiaApplicationContext;
 
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
@@ -9,11 +10,28 @@ import java.util.Properties;
 import static java.util.stream.Collectors.toSet;
 
 public class Main {
+    private static final String VAULT_APPLICATION_PROPERTIES_PATH = "/var/run/secrets/nais.io/vault/application.properties";
 
     public static void main(String... args) {
         loadPropertiesFile(getEnvVar("NAIS_NAMESPACE"));
 
         ApiApp.startApp(ModiaApplicationContext.class, args);
+    }
+
+    private static void loadVaultSecrets() {
+        Properties props = new Properties();
+        try {
+            InputStream stream = new FileInputStream(VAULT_APPLICATION_PROPERTIES_PATH);
+            props.load(stream);
+        } catch(Exception e) {
+            throw new RuntimeException(e);
+        }
+        Properties target = System.getProperties();
+
+        for (String name : props.stringPropertyNames().stream().collect(toSet())) {
+            String value = props.getProperty(name);
+            target.setProperty(name, value);
+        }
     }
 
     private static void loadPropertiesFile(String naisNamespace) {
