@@ -8,6 +8,7 @@ import org.joda.time.format.DateTimeFormat
 import java.time.format.DateTimeFormatter
 
 const val DATOFORMAT = "yyyy-MM-dd"
+const val DATO_TID_FORMAT = "yyyy-MM-dd HH:mm:ss"
 
 fun <K, V> mapOfNotNullOrEmpty(vararg pairs: Pair<K, V>) = pairs
         .filterNot { it.second == null }
@@ -30,4 +31,3 @@ fun lagRiktigDato(dato: String?): LocalDate? = dato?.let {
             throw ApplicationException(exception.message)
         }
     }
-
