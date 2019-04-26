@@ -10,8 +10,7 @@ import org.springframework.context.annotation.Import;
         WicketApplicationBeans.class,
         ApplicationContextBeans.class,
         ModulesApplicationContext.class,
-        RestApiBeans.class,
-        SessionConfig.class
+        RestApiBeans.class
 })
 public class ModiaApplicationContext implements ApiApplication.NaisApiApplication {
 
