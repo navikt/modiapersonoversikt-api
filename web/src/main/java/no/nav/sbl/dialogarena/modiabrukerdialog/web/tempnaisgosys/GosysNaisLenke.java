@@ -6,8 +6,16 @@ import org.apache.wicket.markup.html.panel.Panel;
 public class GosysNaisLenke extends Panel {
     public GosysNaisLenke(String id, String fnr) {
         super(id);
-        String url = hentUrl() + "/personoversikt/fnr=" + fnr;
+        String url = hentUrl() + brukerKontekst(fnr);
         add(new ExternalLink("naisGosys", url));
+    }
+
+    private String brukerKontekst(String fnr) {
+        if(fnr == null) {
+            return "";
+        } else {
+            return "/personoversikt/fnr=" + fnr;
+        }
     }
 
     private String hentUrl() {
