@@ -1,6 +1,8 @@
 
 import no.nav.apiapp.ApiApp;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.ModiaApplicationContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -11,6 +13,7 @@ import static java.util.stream.Collectors.toSet;
 
 public class Main {
     private static final String VAULT_APPLICATION_PROPERTIES_PATH = "/var/run/secrets/nais.io/vault/application.properties";
+    private static final Logger log = LoggerFactory.getLogger(Main.class);
 
     public static void main(String... args) {
         loadVaultSecrets();
@@ -30,6 +33,7 @@ public class Main {
         Properties target = System.getProperties();
 
         for (String name : props.stringPropertyNames().stream().collect(toSet())) {
+            log.info("Laster vault secret " + name);
             String value = props.getProperty(name);
             target.setProperty(name, value);
         }
