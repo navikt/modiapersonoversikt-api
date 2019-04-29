@@ -18,8 +18,7 @@ import java.util.*;
 import static java.util.Arrays.asList;
 import static java.util.Collections.unmodifiableMap;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe.*;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype.SPORSMAL_SKRIFTLIG;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype.SVAR_SBL_INNGAAENDE;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype.*;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.PdfUtils.MeldingsTypeMapping.SAMTALEREFERAT;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
@@ -110,7 +109,7 @@ public class PdfUtils {
         }
 
         private boolean erMeldingInngaaende(Meldingstype meldingstype) {
-            return asList(SPORSMAL_SKRIFTLIG, SVAR_SBL_INNGAAENDE).contains(meldingstype);
+            return asList(SPORSMAL_SKRIFTLIG, SPORSMAL_SKRIFTLIG_DIREKTE, SVAR_SBL_INNGAAENDE).contains(meldingstype);
         }
 
         private String lagTypeBeskrivelse(Melding melding) {

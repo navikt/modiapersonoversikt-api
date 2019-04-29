@@ -207,6 +207,7 @@ public class HenvendelseUtsendingServiceImpl implements HenvendelseUtsendingServ
     private String[] getHenvendelseTyper() {
         List<String> typer = new ArrayList<>();
         typer.add(SPORSMAL_SKRIFTLIG.name());
+        typer.add(SPORSMAL_SKRIFTLIG_DIREKTE.name());
         typer.add(SVAR_SKRIFTLIG.name());
         typer.add(SVAR_OPPMOTE.name());
         typer.add(SVAR_TELEFON.name());
