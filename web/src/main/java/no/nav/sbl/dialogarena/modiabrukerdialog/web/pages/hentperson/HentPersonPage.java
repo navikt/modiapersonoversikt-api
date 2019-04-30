@@ -8,6 +8,8 @@ import no.nav.modig.modia.events.InternalEvents;
 import no.nav.modig.wicket.events.NamedEventPayload;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
 import no.nav.personsok.PersonsokPanel;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.Feature;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.UnleashService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.reactkomponenter.utils.wicket.ReactComponentCallback;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.BasePage;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.PersonPage;
@@ -15,6 +17,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.hode.Hode;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.hode.begrunnelse.ReactBegrunnelseModal;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.hode.jscallback.SokOppBrukerCallback;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.plukkoppgavepanel.PlukkOppgavePanel;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.tempnaisgosys.GosysNaisLenke;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.wicket.RestartResponseException;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -22,6 +25,7 @@ import org.apache.wicket.ajax.json.JSONException;
 import org.apache.wicket.ajax.json.JSONObject;
 import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.markup.head.IHeaderResponse;
+import org.apache.wicket.markup.html.panel.EmptyPanel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.string.StringValue;
 import org.slf4j.Logger;
@@ -52,8 +56,13 @@ public class HentPersonPage extends BasePage {
     private PersonKjerneinfoServiceBi personKjerneinfoServiceBi;
     private final ReactBegrunnelseModal oppgiBegrunnelseModal;
 
+    @Inject
+    private UnleashService unleashService;
+
     public HentPersonPage(PageParameters pageParameters) {
         super(pageParameters);
+
+        boolean naisGosysLenke = unleashService.isEnabled(Feature.NAIS_GOSYS_LENKE);
 
         oppgiBegrunnelseModal = new ReactBegrunnelseModal("oppgiBegrunnelseModal");
         String urlFnr = Optional.ofNullable(pageParameters.get(FNR).toString()).orElse(null);
@@ -65,6 +74,12 @@ public class HentPersonPage extends BasePage {
                 new PersonsokPanel("personsokPanel").setVisible(true),
                 oppgiBegrunnelseModal
         );
+
+        if (naisGosysLenke) {
+            add(new GosysNaisLenke("gosysNaisLenke", urlFnr));
+        } else {
+            add(new EmptyPanel("gosysNaisLenke"));
+        }
 
         setUpSikkerhetstiltakspanel(pageParameters);
         configureModalWindow(oppgiBegrunnelseModal, pageParameters);

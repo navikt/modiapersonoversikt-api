@@ -76,9 +76,17 @@
     margin-top: initial;
     padding: initial;
   }
+
+  table {
+    border-collapse: collapse;
+  }
+
+  .ekspanderbartPanel__hode {
+    text-align: unset;
+  }
 }
 
-.ny-utbetalinger-toggle ~ #modia-app {
+#modia-app {
   .utbetalinger-lerret {
     background-color: #e9e7e7;
   }
@@ -90,6 +98,7 @@
   float: none;
   margin-right: initial;
   margin-top: initial;
+  overflow: hidden;
 
   &--xxs {
     height: 16px;

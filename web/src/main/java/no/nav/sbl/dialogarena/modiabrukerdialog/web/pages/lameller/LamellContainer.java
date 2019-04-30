@@ -94,9 +94,7 @@ public class LamellContainer extends TokenLamellPanel implements Serializable {
         super(id, createLamellFactories(grunnInfo.bruker, nySaksoversikt, nyOppfolging));
         this.fnrFromRequest = grunnInfo.bruker.fnr;
 
-        boolean nyUtbetalingEnabled = unleashService.isEnabled(Feature.NY_UTBETALING);
-
-        addNewFactory(createUtbetalingLamell(grunnInfo.bruker, nyUtbetalingEnabled));
+        addNewFactory(createUtbetalingLamell(grunnInfo.bruker));
         this.dialogSession = DialogSession.read(session);
         addNewFactory(createMeldingerLamell(grunnInfo.bruker, dialogSession));
     }
@@ -255,31 +253,19 @@ public class LamellContainer extends TokenLamellPanel implements Serializable {
         return newLamellFactory(LAMELL_OVERSIKT, "O", false, (LerretFactory) (id, name) -> new OversiktLerret(id, bruker.fnr));
     }
 
-    private static LamellFactory createUtbetalingLamell(final GrunnInfo.Bruker bruker, final boolean nyUtbetaling) {
-        if (nyUtbetaling) {
-            return newLamellFactory(LAMELL_UTBETALINGER, "U", true, (LerretFactory) (id, name) -> new AjaxLazyLoadLerret(id, name) {
-                final Component comp = new ReactComponentPanel("utbetalingpanel", "NyUtbetaling", new HashMap<String, Object>() {{
-                    put("fødselsnummer", bruker.fnr);
-                }});
+    private static LamellFactory createUtbetalingLamell(final GrunnInfo.Bruker bruker) {
+        return newLamellFactory(LAMELL_UTBETALINGER, "U", true, (LerretFactory) (id, name) -> new AjaxLazyLoadLerret(id, name) {
+            final Component comp = new ReactComponentPanel("utbetalingpanel", "NyUtbetaling", new HashMap<String, Object>() {{
+                put("fødselsnummer", bruker.fnr);
+            }});
 
-                final NyUtbetalingLerret utbetalinglerret = new NyUtbetalingLerret("content", comp);
+            final NyUtbetalingLerret utbetalinglerret = new NyUtbetalingLerret("content", comp);
 
-                @Override
-                public Lerret getLazyLoadComponent(String markupId) {
-                    return utbetalinglerret;
-                }
-            });
-        } else {
-            return newLamellFactory(LAMELL_UTBETALINGER, "U", true, (LerretFactory) (id, name) -> new AjaxLazyLoadLerret(id, name) {
-
-                final UtbetalingLerret utbetalinglerret = new UtbetalingLerret("content", bruker.fnr);
-
-                @Override
-                public Lerret getLazyLoadComponent(String markupId) {
-                    return utbetalinglerret;
-                }
-            });
-        }
+            @Override
+            public Lerret getLazyLoadComponent(String markupId) {
+                return utbetalinglerret;
+            }
+        });
     }
 
     private static LamellFactory createSaksoversiktLamell(final GrunnInfo.Bruker bruker, final boolean nySaksoversikt) {

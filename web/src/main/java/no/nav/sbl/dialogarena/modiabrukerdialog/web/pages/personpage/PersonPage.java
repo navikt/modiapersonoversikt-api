@@ -35,6 +35,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.hode.jscallback.SokOp
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.hode.jscallback.VoidCallback;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.plukkoppgavepanel.PlukkOppgavePanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.timeout.ReactTimeoutBoksModal;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.tempnaisgosys.GosysNaisLenke;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.wicket.Component;
 import org.apache.wicket.Page;
@@ -46,6 +47,7 @@ import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.event.IEvent;
 import org.apache.wicket.extensions.markup.html.tabs.AbstractTab;
 import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.markup.html.panel.EmptyPanel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.http.WebResponse;
@@ -139,12 +141,12 @@ public class PersonPage extends BasePage {
         redirectPopup = new ReactSjekkForlatModal("redirectModal");
         konfigurerRedirectPopup();
 
-        boolean nyUtbetalingerEnabled = unleashService.isEnabled(Feature.NY_UTBETALING);
         boolean nySaksoversikt = unleashService.isEnabled(Feature.NY_SAKSOVERSIKT);
         boolean nyPleiepenger = unleashService.isEnabled(Feature.NY_PLEIEPENGER);
         boolean nySykepenger = unleashService.isEnabled(Feature.NY_SYKEPENGER);
         boolean nyOppfolgingEnabled = unleashService.isEnabled(Feature.NY_OPPFOLGING);
         boolean nyForeldrepengerEnabled = unleashService.isEnabled(Feature.NY_FORELDREPENGER);
+        boolean naisGosysLenke = unleashService.isEnabled(Feature.NAIS_GOSYS_LENKE);
         lamellContainer = new LamellContainer("lameller", getSession(), grunnInfo, nySaksoversikt, nyOppfolgingEnabled);
 
         oppgiBegrunnelseModal = new ReactBegrunnelseModal("oppgiBegrunnelseModal");
@@ -153,7 +155,7 @@ public class PersonPage extends BasePage {
             clearSession();
             handleRedirect(target, new PageParameters(), HentPersonPage.class);
         }));
-        hode.add(hasCssClassIf("ny-utbetalinger-toggle", Model.of(nyUtbetalingerEnabled)));
+
         hode.add(hasCssClassIf("ny-saksoversikt-toggle", Model.of(nySaksoversikt)));
         hode.add(hasCssClassIf("ny-pleiepenger-toggle", Model.of(nyPleiepenger)));
         hode.add(hasCssClassIf("ny-sykepenger-toggle", Model.of(nySykepenger)));
@@ -171,6 +173,12 @@ public class PersonPage extends BasePage {
                 new ReactTimeoutBoksModal("timeoutBoks", fnr),
                 oppgiBegrunnelseModal
         );
+
+        if (naisGosysLenke) {
+            add(new GosysNaisLenke("gosysNaisLenke", fnr));
+        } else {
+            add(new EmptyPanel("gosysNaisLenke"));
+        }
 
         add(getVisittkortkomponenter());
 
