@@ -175,7 +175,7 @@ public class PersonPage extends BasePage {
         );
 
         if (naisGosysLenke) {
-            add(new GosysNaisLenke("gosysNaisLenke"));
+            add(new GosysNaisLenke("gosysNaisLenke", fnr));
         } else {
             add(new EmptyPanel("gosysNaisLenke"));
         }
