@@ -69,10 +69,6 @@ class OppfolgingController @Inject constructor(private val service: Oppfolgingsi
 
         return ytelser.map {
             mapOf(
-                    "dagerIgjen" to hentDagerIgjen(it),
-                    "ukerIgjen" to hentUkerIgjen(it),
-                    "dagerIgjenPermittering" to hentDagerIgjenPermittering(it),
-                    "ukerIgjenPermittering" to hentUkerIgjenPermittering(it),
                     "datoKravMottatt" to it.datoKravMottat?.toString(DATOFORMAT),
                     "fom" to it.fom?.toString(DATOFORMAT),
                     "tom" to it.tom?.toString(DATOFORMAT),
@@ -80,36 +76,21 @@ class OppfolgingController @Inject constructor(private val service: Oppfolgingsi
                     "type" to it.type,
                     "vedtak" to hentVedtak(it.vedtak),
                     "dagerIgjenMedBortfall" to it.dagerIgjenMedBortfall,
-                    "ukerIgjenMedBortfall" to it.ukerIgjenMedBortfall
+                    "ukerIgjenMedBortfall" to it.ukerIgjenMedBortfall,
+                    *hentDagPengerFelter(it)
             )
         }
     }
 
-    private fun hentDagerIgjen(it: Ytelse): Int? {
+    private fun hentDagPengerFelter(it: Ytelse): Array<Pair<String, Any?>> {
         return when (it) {
-            is Dagpengeytelse -> it.antallDagerIgjen
-            else -> null
-        }
-    }
-
-    private fun hentUkerIgjen(it: Ytelse): Int? {
-        return when (it) {
-            is Dagpengeytelse -> it.antallUkerIgjen
-            else -> null
-        }
-    }
-
-    private fun hentDagerIgjenPermittering(it: Ytelse): Int? {
-        return when (it) {
-            is Dagpengeytelse -> it.antallDagerIgjenPermittering
-            else -> null
-        }
-    }
-
-    private fun hentUkerIgjenPermittering(it: Ytelse): Int? {
-        return when (it) {
-            is Dagpengeytelse -> it.antallUkerIgjenPermittering
-            else -> null
+            is Dagpengeytelse -> arrayOf(
+                    "dagerIgjenPermittering" to it.antallDagerIgjenPermittering,
+                    "ukerIgjenPermittering" to it.antallUkerIgjenPermittering,
+                    "dagerIgjen" to it.antallDagerIgjen,
+                    "ukerIgjen" to it.antallUkerIgjen
+            )
+            else -> emptyArray()
         }
     }
 
