@@ -82,13 +82,13 @@ class OppfolgingController @Inject constructor(private val service: Oppfolgingsi
         }
     }
 
-    private fun hentDagPengerFelter(it: Ytelse): Array<Pair<String, Any?>> {
-        return when (it) {
+    private fun hentDagPengerFelter(ytelse: Ytelse): Array<Pair<String, Any?>> {
+        return when (ytelse) {
             is Dagpengeytelse -> arrayOf(
-                    "dagerIgjenPermittering" to it.antallDagerIgjenPermittering,
-                    "ukerIgjenPermittering" to it.antallUkerIgjenPermittering,
-                    "dagerIgjen" to it.antallDagerIgjen,
-                    "ukerIgjen" to it.antallUkerIgjen
+                    "dagerIgjenPermittering" to ytelse.antallDagerIgjenPermittering,
+                    "ukerIgjenPermittering" to ytelse.antallUkerIgjenPermittering,
+                    "dagerIgjen" to ytelse.antallDagerIgjen,
+                    "ukerIgjen" to ytelse.antallUkerIgjen
             )
             else -> emptyArray()
         }
