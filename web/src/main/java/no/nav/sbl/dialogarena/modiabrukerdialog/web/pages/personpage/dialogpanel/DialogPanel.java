@@ -174,7 +174,7 @@ public class DialogPanel extends Panel {
     private static boolean erEnkeltstaaendeSporsmalFraBruker(List<Melding> traad) {
         List<Melding> andreMeldingstyper = traad.stream()
                 .filter(melding -> !(melding.erDelvisSvar()))
-                .filter(melding -> !(melding.meldingstype == SPORSMAL_SKRIFTLIG))
+                .filter(melding -> !(melding.meldingstype == SPORSMAL_SKRIFTLIG || melding.meldingstype == SPORSMAL_SKRIFTLIG_DIREKTE))
                 .collect(toList());
         return andreMeldingstyper.isEmpty();
     }
