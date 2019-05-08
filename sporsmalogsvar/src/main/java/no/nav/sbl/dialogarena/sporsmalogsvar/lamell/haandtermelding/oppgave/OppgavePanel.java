@@ -50,11 +50,16 @@ public class OppgavePanel extends AnimertPanel {
             @Override
             public Boolean getObject() {
                 String traadId = innboksVM.getSessionHenvendelseId().orElse("");
+
                 boolean valgtTraadHarSessionHenvendelseId = innboksVM.getValgtTraad().getMeldinger().stream()
                         .map(MeldingVM::getTraadId)
                         .anyMatch(traadId::equals);
 
-                return valgtTraadHarSessionHenvendelseId && innboksVM.getSessionOppgaveId().isPresent();
+                int antallTildelteOppgaver = innboksVM.tildelteOppgaver == null ? 0 : innboksVM.tildelteOppgaver.size();
+                boolean erBehandlet = innboksVM.getValgtTraad().erBehandlet();
+
+                return (valgtTraadHarSessionHenvendelseId && innboksVM.getSessionOppgaveId().isPresent()) ||
+                        (antallTildelteOppgaver == 1 && erBehandlet);
             }
         };
 
