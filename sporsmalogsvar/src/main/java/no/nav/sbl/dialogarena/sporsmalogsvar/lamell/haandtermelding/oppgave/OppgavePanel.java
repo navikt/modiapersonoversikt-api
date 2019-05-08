@@ -55,8 +55,11 @@ public class OppgavePanel extends AnimertPanel {
                         .map(MeldingVM::getTraadId)
                         .anyMatch(traadId::equals);
 
+                int size = innboksVM.tildelteOppgaver == null ? 0 : innboksVM.tildelteOppgaver.size();
+                boolean erBehandlet = innboksVM.getValgtTraad().erBehandlet();
+
                 return (valgtTraadHarSessionHenvendelseId && innboksVM.getSessionOppgaveId().isPresent()) ||
-                        (innboksVM.tildelteOppgaver.size() == 1 && innboksVM.getValgtTraad().erBehandlet());
+                        (size == 1 && erBehandlet);
             }
         };
 
