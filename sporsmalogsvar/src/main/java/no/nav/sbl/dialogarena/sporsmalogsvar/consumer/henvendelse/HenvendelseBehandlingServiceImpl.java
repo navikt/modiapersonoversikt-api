@@ -90,6 +90,7 @@ public class HenvendelseBehandlingServiceImpl implements HenvendelseBehandlingSe
     private List<String> getAkutelleHenvendelseTyper() {
         List<String> typer = new ArrayList<>(asList(
                 SPORSMAL_SKRIFTLIG.name(),
+                SPORSMAL_SKRIFTLIG_DIREKTE.name(),
                 SVAR_SKRIFTLIG.name(),
                 SVAR_OPPMOTE.name(),
                 SVAR_TELEFON.name(),

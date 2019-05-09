@@ -277,6 +277,7 @@ public class MeldingUtils {
     public static final Map<XMLHenvendelseType, Meldingstype> MELDINGSTYPE_MAP = new HashMap<XMLHenvendelseType, Meldingstype>() {
         {
             put(XMLHenvendelseType.SPORSMAL_SKRIFTLIG, SPORSMAL_SKRIFTLIG);
+            put(XMLHenvendelseType.SPORSMAL_SKRIFTLIG_DIREKTE, SPORSMAL_SKRIFTLIG_DIREKTE);
             put(XMLHenvendelseType.SVAR_SKRIFTLIG, SVAR_SKRIFTLIG);
             put(XMLHenvendelseType.SVAR_OPPMOTE, SVAR_OPPMOTE);
             put(XMLHenvendelseType.SVAR_TELEFON, SVAR_TELEFON);

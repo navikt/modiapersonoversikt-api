@@ -117,7 +117,7 @@
         <behandle.henvendelse.version>0.21</behandle.henvendelse.version>
         <behandle.person.v1.version>1.0.0</behandle.person.v1.version>
         <varsling.tjeneste.version>0.0.5</varsling.tjeneste.version>
-        <dialogarena.behandlingsinformasjon.version>1.4.0</dialogarena.behandlingsinformasjon.version>
+        <behandlingsinformasjon.tjenestespec.version>1.2019.04.01-14.11-bd945ca760ae</behandlingsinformasjon.tjenestespec.version>
         <sakogbehandling-tjenestespesifikasjon.version>1.0.15</sakogbehandling-tjenestespesifikasjon.version>
         <dial-nav-tjeneste-behandlesak.version>1.1</dial-nav-tjeneste-behandlesak.version>
         <arena-arbeid-og-aktivitet.version>1.0.6-alpha002</arena-arbeid-og-aktivitet.version>
@@ -451,6 +451,12 @@
                 <groupId>no.nav.sbl.dialogarena</groupId>
                 <artifactId>behandle-henvendelse</artifactId>
                 <version>${behandle.henvendelse.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>no.nav.sbl.dialogarena</groupId>
+                        <artifactId>dialogarena-behandlingsinformasjon</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
             <dependency>
                 <groupId>no.nav.sbl.dialogarena</groupId>
@@ -500,9 +506,9 @@
 
             <!--Dialogarena-->
             <dependency>
-                <groupId>no.nav.sbl.dialogarena</groupId>
+                <groupId>no.nav.tjenestespesifikasjoner</groupId>
                 <artifactId>dialogarena-behandlingsinformasjon</artifactId>
-                <version>${dialogarena.behandlingsinformasjon.version}</version>
+                <version>${behandlingsinformasjon.tjenestespec.version}</version>
             </dependency>
             <dependency>
                 <groupId>no.nav.sbl.dialogarena</groupId>
