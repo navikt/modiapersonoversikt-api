@@ -26,6 +26,7 @@ import NySykepenger from './ny-sykepenger/ny-sykepenger';
 
 import React from './nav-react';
 import ReactDOM from 'react-dom';
+import NyVarsel from './ny-varsel/ny-varsel';
 
 window.ModiaJS = {
     Components: {
