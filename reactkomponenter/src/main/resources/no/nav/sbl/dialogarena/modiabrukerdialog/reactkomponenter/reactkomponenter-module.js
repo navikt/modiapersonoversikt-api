@@ -52,7 +52,8 @@ window.ModiaJS = {
         NyPleiepenger,
         NyOppfolging,
         NySykepenger,
-        NyForeldrepenger
+        NyForeldrepenger,
+        NyVarsel
     },
     InitializedComponents: {},
     React,
