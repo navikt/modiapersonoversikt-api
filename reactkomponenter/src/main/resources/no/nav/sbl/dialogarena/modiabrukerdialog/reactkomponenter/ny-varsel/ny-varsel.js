@@ -1,7 +1,7 @@
 import React from 'react';
 import PT from 'prop-types';
 
-import OppfolgingLamell from 'modiapersonoversikt/build/dist/components/standalone/VarslerLamell';
+import VarslerLamell from 'modiapersonoversikt/build/dist/components/standalone/VarslerLamell';
 
 class NyVarsel extends React.Component {
     render() {

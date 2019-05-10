@@ -19,7 +19,7 @@ public final class VarselLerret extends Lerret {
         super(id);
 
         add(new ReactComponentPanel("varselLerret", "NyVarsel", new HashMap<String, Object>() {{
-            put("fnr", fnr);
+            put("fødselsnummer", fnr);
         }}));
     }
 
