@@ -70,7 +70,7 @@ public class GsakServiceImpl implements GsakService {
     @Override
     public void ferdigstillGsakOppgave(WSOppgave oppgave, String beskrivelse) throws LagreOppgaveOptimistiskLasing, OppgaveErFerdigstilt {
         String valgtEnhetIdString = saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet();
-        int valgtEnhetId = valgtEnhetId;
+        int valgtEnhetId = Integer.parseInt(valgtEnhetIdString);
         try {
             String nyBeskrivelse = "Oppgaven er ferdigstilt i Modia med beskrivelse:\n" + beskrivelse;
             oppgave.withBeskrivelse(leggTilBeskrivelse(oppgave.getBeskrivelse(), nyBeskrivelse, valgtEnhetIdString));
