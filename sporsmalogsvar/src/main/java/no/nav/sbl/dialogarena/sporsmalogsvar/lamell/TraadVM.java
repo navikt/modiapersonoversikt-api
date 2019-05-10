@@ -53,7 +53,7 @@ public class TraadVM implements Serializable {
     }
 
     public MeldingVM getEldsteMelding() {
-        if(meldinger.isEmpty()){
+        if (meldinger.isEmpty()) {
             return null;
         }
         return meldinger.get(meldinger.size() - 1);
@@ -86,7 +86,7 @@ public class TraadVM implements Serializable {
     }
 
     public Optional<String> getKontorsperretEnhet() {
-        if(meldinger.isEmpty()) {
+        if (meldinger.isEmpty()) {
             return Optional.empty();
         }
 
@@ -151,7 +151,8 @@ public class TraadVM implements Serializable {
     }
 
     public boolean erMeldingstypeSporsmal() {
-        return getEldsteMelding().getMeldingstype() == Meldingstype.SPORSMAL_SKRIFTLIG;
+        return getEldsteMelding().getMeldingstype() == Meldingstype.SPORSMAL_SKRIFTLIG
+                || getEldsteMelding().getMeldingstype() == Meldingstype.SPORSMAL_SKRIFTLIG_DIREKTE;
     }
 
     public boolean erSisteMeldingEtDelsvar() {

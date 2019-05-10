@@ -43,6 +43,7 @@ public class OppgaveBehandlingServiceImpl implements OppgaveBehandlingService {
 
     private static final Logger logger = LoggerFactory.getLogger(OppgaveBehandlingServiceImpl.class);
     public static final Integer DEFAULT_ENHET = 4100;
+    public static final String STORD_ENHET = "1221";
     public static final String KODE_OPPGAVE_FERDIGSTILT = "F";
     public static final String SPORSMAL_OG_SVAR = "SPM_OG_SVR";
     public static final String KONTAKT_NAV = "KNA";
@@ -245,7 +246,10 @@ public class OppgaveBehandlingServiceImpl implements OppgaveBehandlingService {
             return DEFAULT_ENHET.toString();
         }
         Temagruppe temagruppe = optional.get();
-        if (asList(ARBD, FMLI, ORT_HJE, PENS, UFRT, PLEIEPENGERSY, UTLAND).contains(temagruppe)) {
+
+        if(temagruppe.equals(FMLI) && saksbehandlersValgteEnhet.equals(STORD_ENHET)){
+            return STORD_ENHET;
+        } else if (asList(ARBD, FMLI, ORT_HJE, PENS, UFRT, PLEIEPENGERSY, UTLAND).contains(temagruppe)) {
             return DEFAULT_ENHET.toString();
         } else {
             return saksbehandlersValgteEnhet;

@@ -1,5 +1,6 @@
 export const MeldingsTyper = {
     SPORSMAL_SKRIFTLIG: 'SPORSMAL_SKRIFTLIG',
+    SPORSMAL_SKRIFTLIG_DIREKTE: 'SPORSMAL_SKRIFTLIG_DIREKTE',
     SVAR_SKRIFTLIG: 'SVAR_SKRIFTLIG',
     SVAR_SBL_INNGAAENDE: 'SVAR_SBL_INNGAAENDE',
     DOKUMENT_VARSEL: 'DOKUMENT_VARSEL',
@@ -14,6 +15,7 @@ export const MeldingsTyper = {
 
 export const MeldingsTyperTekst = {
     SPORSMAL_SKRIFTLIG: 'Spørsmål fra bruker',
+    SPORSMAL_SKRIFTLIG_DIREKTE: 'Spørsmål fra bruker',
     SVAR_SKRIFTLIG: 'Svar fra NAV',
     SVAR_SBL_INNGAAENDE: 'Svar fra bruker',
     DOKUMENT_VARSEL: 'Dokument varsel',
@@ -30,7 +32,11 @@ const toNameCase = (navn) => navn.replace(/\b(?!em)\w+?\b/g,
     (txt) => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
 
 export function erInngaaende(melding) {
-    return [MeldingsTyper.SPORSMAL_SKRIFTLIG, MeldingsTyper.SVAR_SBL_INNGAAENDE].indexOf(melding.meldingstype) >= 0;
+    return [
+        MeldingsTyper.SPORSMAL_SKRIFTLIG,
+        MeldingsTyper.SPORSMAL_SKRIFTLIG_DIREKTE,
+        MeldingsTyper.SVAR_SBL_INNGAAENDE
+    ].indexOf(melding.meldingstype) >= 0;
 }
 
 export function hentForfatterIdent(melding) {
@@ -41,9 +47,11 @@ export function finnMeldingsForfattere(melding) {
     if (melding.skrevetAvFlere !== undefined) {
         return `Skrevet av: ${melding.skrevetAvFlere}`;
     }
-    return melding.erDokumentMelding || melding.meldingstype === MeldingsTyper.SPORSMAL_SKRIFTLIG ?
-        '' :
-        `Skrevet av: ${toNameCase(melding.skrevetAv.navn)} (${hentForfatterIdent(melding)})`;
+    return melding.erDokumentMelding
+    || melding.meldingstype === MeldingsTyper.SPORSMAL_SKRIFTLIG
+    || melding.meldingstype === MeldingsTyper.SPORSMAL_SKRIFTLIG_DIREKTE
+        ? ''
+        : `Skrevet av: ${toNameCase(melding.skrevetAv.navn)} (${hentForfatterIdent(melding)})`;
 }
 
 export function eldsteMeldingForst(melding1, melding2) {

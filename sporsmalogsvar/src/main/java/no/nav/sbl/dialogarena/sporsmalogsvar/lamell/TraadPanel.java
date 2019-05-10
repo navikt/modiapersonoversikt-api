@@ -19,8 +19,7 @@ import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
 import static no.nav.modig.wicket.model.ModelUtils.isEqualTo;
 import static no.nav.modig.wicket.model.ModelUtils.not;
 import static no.nav.modig.wicket.shortcuts.Shortcuts.cssClass;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype.SPORSMAL_SKRIFTLIG;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype.SVAR_SBL_INNGAAENDE;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype.*;
 import static org.apache.wicket.AttributeModifier.append;
 
 public class TraadPanel extends Panel {
@@ -97,6 +96,7 @@ public class TraadPanel extends Panel {
     }
 
     private String meldingKlasse(final MeldingVM meldingVM) {
-        return asList(SPORSMAL_SKRIFTLIG, SVAR_SBL_INNGAAENDE).contains(meldingVM.melding.meldingstype) ? "inngaaende" : "utgaaende";
+        return asList(SPORSMAL_SKRIFTLIG, SPORSMAL_SKRIFTLIG_DIREKTE, SVAR_SBL_INNGAAENDE)
+                .contains(meldingVM.melding.meldingstype) ? "inngaaende" : "utgaaende";
     }
 }
