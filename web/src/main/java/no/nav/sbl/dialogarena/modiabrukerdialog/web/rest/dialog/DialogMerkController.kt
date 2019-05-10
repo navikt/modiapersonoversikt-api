@@ -8,7 +8,7 @@ import javax.ws.rs.POST
 import javax.ws.rs.Path
 import javax.ws.rs.core.Response
 
-@Path("/dialogmerk")
+@Path("/dialogmerking")
 class DialogMerkController @Inject constructor(private val behandleHenvendelsePortType: BehandleHenvendelsePortType,
                                                private val oppgaveBehandlingService: OppgaveBehandlingService) {
 
