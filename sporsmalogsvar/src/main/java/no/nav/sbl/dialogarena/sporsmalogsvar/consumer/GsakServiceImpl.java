@@ -42,6 +42,7 @@ public class GsakServiceImpl implements GsakService {
     private SaksbehandlerInnstillingerService saksbehandlerInnstillingerService;
     @Inject
     private AnsattService ansattWS;
+    private int valgtEnhetId;
 
     @Override
     public boolean oppgaveKanManuelltAvsluttes(String oppgaveId) {
@@ -69,12 +70,13 @@ public class GsakServiceImpl implements GsakService {
     @Override
     public void ferdigstillGsakOppgave(WSOppgave oppgave, String beskrivelse) throws LagreOppgaveOptimistiskLasing, OppgaveErFerdigstilt {
         String valgtEnhetIdString = saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet();
-        int valgtEnhetId = Integer.parseInt(valgtEnhetIdString);
+        int valgtEnhetId = valgtEnhetId;
         try {
             String nyBeskrivelse = "Oppgaven er ferdigstilt i Modia med beskrivelse:\n" + beskrivelse;
             oppgave.withBeskrivelse(leggTilBeskrivelse(oppgave.getBeskrivelse(), nyBeskrivelse, valgtEnhetIdString));
             lagreGsakOppgave(oppgave, valgtEnhetId);
         } catch (LagreOppgaveOptimistiskLasing e) {
+            logger.error("feil i ferdigstillelse av oppgave, lagre ferdigstilt oppgave", e);
             if (oppgaveErFerdigstilt(hentOppgave(oppgave.getOppgaveId()))) {
                 throw new OppgaveErFerdigstilt(e);
             }
