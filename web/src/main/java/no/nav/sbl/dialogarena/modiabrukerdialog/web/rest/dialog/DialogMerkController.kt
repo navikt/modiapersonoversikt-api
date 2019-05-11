@@ -50,6 +50,6 @@ data class BidragRequest(val eldsteMeldingTraadId: String)
 data class KontorsperretRequest(val fnr: String,
                                 val meldingsidListe: List<String>)
 
-data class AvsluttUtenSvarRequest(val saksbehandlerValgteEnhet: String,
+data class AvsluttUtenSvarRequest(val saksbehandlerValgtEnhet: String,
                                   val eldsteMeldingTraadId: String,
                                   val eldsteMeldingOppgaveId: String)
