@@ -36,8 +36,8 @@ class DialogMerkController @Inject constructor(private val behandleHenvendelsePo
     @POST
     @Path("/avslutt")
     fun avsluttUtenSvar(request: AvsluttUtenSvarRequest): Response {
-        behandleHenvendelsePortType.ferdigstillUtenSvar(request.eldsteMeldingTraadId, request.saksbehandlerValgteEnhet)
-        oppgaveBehandlingService.ferdigstillOppgaveIGsak(request.eldsteMeldingOppgaveId, Optional.empty(), request.saksbehandlerValgteEnhet)
+        behandleHenvendelsePortType.ferdigstillUtenSvar(request.eldsteMeldingTraadId, request.saksbehandlerValgtEnhet)
+        oppgaveBehandlingService.ferdigstillOppgaveIGsak(request.eldsteMeldingOppgaveId, Optional.empty(), request.saksbehandlerValgtEnhet)
         return Response.ok().build()
     }
 
