@@ -82,15 +82,21 @@ private fun Dokument.fraSafDokumentInfo(dokumentInfo: DokumentInfo): Dokument {
     return this
 }
 
-private fun getVariantformat(dokumentInfo: DokumentInfo): Variantformat {
-    if (finnesSladdetVersjon(dokumentInfo)) {
-        return Variantformat.SLADDET
-    }
-    return Variantformat.ARKIV
-}
+private fun getVariantformat(dokumentInfo: DokumentInfo): Variantformat =
+        when (getVariant(dokumentInfo).variantformat) {
+            Variantformat.ARKIV.name -> Variantformat.ARKIV
+            Variantformat.SLADDET.name -> Variantformat.SLADDET
+            Variantformat.FULLVERSJON.name -> Variantformat.FULLVERSJON
+            Variantformat.PRODUKSJON.name -> Variantformat.PRODUKSJON
+            Variantformat.PRODUKSJON_DLF.name -> Variantformat.PRODUKSJON_DLF
+            else -> throw RuntimeException("Ugyldig tekst for mapping til variantformat. Tekst: ${getVariant(dokumentInfo).variantformat}")
+        }
 
-private fun finnesSladdetVersjon(dokumentInfo: DokumentInfo) =
-        dokumentInfo.dokumentvarianter.any { variant -> variant.variantformat == VARIANTFORMAT_SLADDET }
+
+private fun getVariant(dokumentInfo: DokumentInfo): Dokumentvariant =
+        dokumentInfo.dokumentvarianter
+                .find { variant -> variant.variantformat == Variantformat.SLADDET.name }
+                ?: dokumentInfo.dokumentvarianter.first()
 
 private fun getVedlegg(journalpost: Journalpost): List<Dokument> =
         getElektroniskeVedlegg(journalpost).plus(getLogiskeVedlegg(journalpost))

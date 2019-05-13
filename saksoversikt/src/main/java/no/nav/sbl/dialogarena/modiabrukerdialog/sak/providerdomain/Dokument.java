@@ -1,8 +1,5 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain;
 
-import static no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.saf.SafDokumentMapperKt.VARIANTFORMAT_ARKIV;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.saf.SafDokumentMapperKt.VARIANTFORMAT_SLADDET;
-
 public class Dokument {
 
     private String tittel;
@@ -10,20 +7,14 @@ public class Dokument {
     private boolean kanVises;
     private boolean logiskDokument;
     private Variantformat variantformat;
+    private String skjerming;
 
     public enum Variantformat {
-        ARKIV(VARIANTFORMAT_ARKIV),
-        SLADDET(VARIANTFORMAT_SLADDET);
-
-        private String safVariantFormat;
-
-        Variantformat(String safVariantFormat) {
-            this.safVariantFormat = safVariantFormat;
-        }
-
-        public String getSafVariantFormat() {
-            return safVariantFormat;
-        }
+        ARKIV,
+        SLADDET,
+        FULLVERSJON,
+        PRODUKSJON,
+        PRODUKSJON_DLF
     }
 
     public String getTittel() {
@@ -44,6 +35,10 @@ public class Dokument {
 
     public Variantformat getVariantformat() {
         return variantformat;
+    }
+
+    public String getSkjerming() {
+        return skjerming;
     }
 
     public Dokument withTittel(final String tittel) {
@@ -71,6 +66,11 @@ public class Dokument {
         return this;
     }
 
+    public Dokument withSkjerming(String skjerming) {
+        this.skjerming = skjerming;
+        return this;
+    }
+
     public void setTittel(String tittel) {
         this.tittel = tittel;
     }
@@ -89,6 +89,10 @@ public class Dokument {
 
     public void setVariantformat(Variantformat variantformat) {
         this.variantformat = variantformat;
+    }
+
+    public void setSkjerming(String skjerming) {
+        this.skjerming = skjerming;
     }
 }
 

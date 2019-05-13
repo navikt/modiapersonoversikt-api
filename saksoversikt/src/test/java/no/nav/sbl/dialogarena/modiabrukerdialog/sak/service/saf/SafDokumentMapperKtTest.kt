@@ -2,13 +2,9 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.saf
 
 import io.mockk.every
 import io.mockk.mockkStatic
-import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.Baksystem
-import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.Dokument.Variantformat.ARKIV
-import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.Dokument.Variantformat.SLADDET
-import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.DokumentMetadata
-import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.Entitet
+import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.*
+import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.Dokument.Variantformat.*
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.Entitet.*
-import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.Kommunikasjonsretning
 import org.junit.Assert.assertEquals
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Test
@@ -31,6 +27,7 @@ private const val datotype = DATOTYPE_REGISTRERT
 private val relevantdato = LocalDateTime.parse("2011-05-07T13:23:57", DateTimeFormatter.ISO_DATE_TIME)
 private const val logiskVedleggtittel = "Logisk Vedlegg tittel"
 private const val variantformat = "ARKIV"
+private const val POL = "POL"
 private const val dokumentinfoid = "123"
 private const val hovedDokumentTittel = "Dokument Tittel"
 private const val vedleggTittel = "Vedleggtittel"
@@ -64,8 +61,8 @@ internal class SafDokumentMapperKtTest {
         assertEquals(false, dokumentMetadata.vedlegg[0].isLogiskDokument)
         assertEquals(ARKIV, dokumentMetadata.vedlegg[0].variantformat)
 
-        assertEquals(Entitet.NAV, dokumentMetadata.mottaker)
-        assertEquals(Entitet.SLUTTBRUKER, dokumentMetadata.avsender)
+        assertEquals(NAV, dokumentMetadata.mottaker)
+        assertEquals(SLUTTBRUKER, dokumentMetadata.avsender)
         assertEquals(arkivsaknummer, dokumentMetadata.tilhorendeSakid)
         assertEquals(fagsakId, dokumentMetadata.tilhorendeFagsakId)
         assert(dokumentMetadata.baksystem.contains(Baksystem.SAF))
@@ -118,16 +115,16 @@ internal class SafDokumentMapperKtTest {
                 dokumenter = listOf(
                         lagHoveddokument().copy(
                                 dokumentvarianter = listOf(
-                                        Dokumentvariant(variantformat = VARIANTFORMAT_ARKIV, saksbehandlerHarTilgang = true),
-                                        Dokumentvariant(variantformat = VARIANTFORMAT_SLADDET, saksbehandlerHarTilgang = true),
-                                        Dokumentvariant(variantformat = "ANNET_FORMAT", saksbehandlerHarTilgang = true)
+                                        Dokumentvariant(true, ARKIV.name, null),
+                                        Dokumentvariant(true, SLADDET.name, null),
+                                        Dokumentvariant(true, "ANNET_FORMAT", null)
                                 )
                         ),
                         lagVedlegg().copy(
                                 dokumentvarianter = listOf(
-                                        Dokumentvariant(variantformat = VARIANTFORMAT_ARKIV, saksbehandlerHarTilgang = true),
-                                        Dokumentvariant(variantformat = VARIANTFORMAT_SLADDET, saksbehandlerHarTilgang = true),
-                                        Dokumentvariant(variantformat = "ANNET_FORMAT", saksbehandlerHarTilgang = true)
+                                        Dokumentvariant(true, ARKIV.name, null),
+                                        Dokumentvariant(true, SLADDET.name, null),
+                                        Dokumentvariant(true, "ANNET_FORMAT", null)
                                 )
                         )
                 )
@@ -146,14 +143,14 @@ internal class SafDokumentMapperKtTest {
                 dokumenter = listOf(
                         lagHoveddokument().copy(
                                 dokumentvarianter = listOf(
-                                        Dokumentvariant(variantformat = VARIANTFORMAT_ARKIV, saksbehandlerHarTilgang = true),
-                                        Dokumentvariant(variantformat = "ANNET_FORMAT", saksbehandlerHarTilgang = true)
+                                        Dokumentvariant(true, ARKIV.name, null),
+                                        Dokumentvariant(true, "ANNET_FORMAT", null)
                                 )
                         ),
                         lagVedlegg().copy(
                                 dokumentvarianter = listOf(
-                                        Dokumentvariant(variantformat = VARIANTFORMAT_ARKIV, saksbehandlerHarTilgang = true),
-                                        Dokumentvariant(variantformat = "ANNET_FORMAT", saksbehandlerHarTilgang = true)
+                                        Dokumentvariant(true, ARKIV.name, null),
+                                        Dokumentvariant(true, "ANNET_FORMAT", null)
                                 )
                         )
                 )
@@ -164,6 +161,69 @@ internal class SafDokumentMapperKtTest {
         assertEquals(ARKIV, dokumentMetadata.hoveddokument.variantformat)
         assertEquals(ARKIV, dokumentMetadata.vedlegg[0].variantformat)
         assertEquals(2, dokumentMetadata.vedlegg.size)
+    }
+
+    @Test
+    fun `Hvis dokumentvarient er kun arkiv skjermet vis arkiv skjermet`() {
+        val journalpost = lagJournalpost().copy(
+                dokumenter = listOf(
+                        lagHoveddokument().copy(
+                                dokumentvarianter = listOf(
+                                        Dokumentvariant(true, ARKIV.name, POL)
+                                )
+                        ),
+                        lagVedlegg().copy(
+                                dokumentvarianter = listOf(
+                                        Dokumentvariant(true, ARKIV.name, POL)
+                                )
+                        )
+                )
+        )
+
+        val dokumentMetadata = DokumentMetadata().fraSafJournalpost(journalpost)
+
+        assertEquals(ARKIV, dokumentMetadata.hoveddokument.variantformat)
+        assertEquals(POL, dokumentMetadata.hoveddokument.skjerming)
+        assertEquals(ARKIV, dokumentMetadata.vedlegg[0].variantformat)
+        assertEquals(POL, dokumentMetadata.vedlegg[0].skjerming)
+    }
+
+    @Test
+    fun `Hvis arkiv skjermet men eksiterer sladdet ikke skjermet, vis sladdet ikke skjermet`() {
+        val journalpost = lagJournalpost().copy(
+                dokumenter = listOf(
+                        lagHoveddokument().copy(
+                                dokumentvarianter = listOf(
+                                        Dokumentvariant(true, ARKIV.name, POL),
+                                        Dokumentvariant(true, SLADDET.name, null)
+                                )
+                        )
+                )
+        )
+
+        val dokumentMetadata = DokumentMetadata().fraSafJournalpost(journalpost)
+
+        assertEquals(SLADDET, dokumentMetadata.hoveddokument.variantformat)
+        assertEquals(null, dokumentMetadata.hoveddokument.skjerming)
+    }
+
+    @Test
+    fun `Hvis arkiv skjermet og eksisterer sladdet som er skjermet vis sladdet skjermet`() {
+        val journalpost = lagJournalpost().copy(
+                dokumenter = listOf(
+                        lagHoveddokument().copy(
+                                dokumentvarianter = listOf(
+                                        Dokumentvariant(true, SLADDET.name, POL),
+                                        Dokumentvariant(true, ARKIV.name, POL)
+                                )
+                        )
+                )
+        )
+
+        val dokumentMetadata = DokumentMetadata().fraSafJournalpost(journalpost)
+
+        assertEquals(SLADDET, dokumentMetadata.hoveddokument.variantformat)
+        assertEquals(POL, dokumentMetadata.hoveddokument.skjerming)
     }
 
     @Test
@@ -198,7 +258,7 @@ internal class SafDokumentMapperKtTest {
     @Test
     fun `Intern retning mappes korrekt`() {
         val journalpost = lagJournalpost().copy(
-                avsenderMottaker= AvsenderMottaker(false, "Aremark"),
+                avsenderMottaker = AvsenderMottaker(false, "Aremark"),
                 journalposttype = JOURNALPOSTTYPE_INTERN)
 
         val dokumentMetadata = DokumentMetadata().fraSafJournalpost(journalpost)
@@ -401,7 +461,6 @@ private fun lagJournalpost(): Journalpost {
     )
 }
 
-
 private fun lagSak(): Sak {
     return Sak(
             arkivsaksnummer = arkivsaknummer,
@@ -424,7 +483,7 @@ private fun lagDokumentInfo(tittel: String): DokumentInfo {
 }
 
 private fun lagDokumentVariant(): Dokumentvariant =
-        Dokumentvariant(saksbehandlerHarTilgang = true, variantformat = variantformat)
+        Dokumentvariant(true, variantformat, null)
 
 private fun mockLocalDateTimeNow(): LocalDateTime {
     mockkStatic(LocalDateTime::class)

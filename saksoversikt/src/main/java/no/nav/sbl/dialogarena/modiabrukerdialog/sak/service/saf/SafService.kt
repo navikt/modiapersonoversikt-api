@@ -102,7 +102,7 @@ private fun lagHentDokumentURL(journalpostId: String, dokumentInfoId: String, va
                 "/%s/%s/%s/",
                 journalpostId,
                 dokumentInfoId,
-                variantFormat.safVariantFormat)
+                variantFormat.name)
 
 private fun logJournalpostErrors(errors: List<SafError>) {
     val msg = errors
