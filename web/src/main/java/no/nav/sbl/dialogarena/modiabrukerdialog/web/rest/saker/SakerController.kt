@@ -12,7 +12,6 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.SakstemaService
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.interfaces.SaksoversiktService
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.interfaces.TilgangskontrollService
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.saf.SafService
-import no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.saf.VARIANTFORMAT_ARKIV
 import org.joda.time.DateTime
 import java.time.LocalDateTime
 import java.util.*
@@ -22,7 +21,6 @@ import javax.ws.rs.*
 import javax.ws.rs.core.Context
 import javax.ws.rs.core.MediaType
 import javax.ws.rs.core.Response
-import javax.ws.rs.core.Variant
 
 @Path("/saker/{fnr}")
 class SakerController @Inject constructor(private val saksoversiktService: SaksoversiktService,

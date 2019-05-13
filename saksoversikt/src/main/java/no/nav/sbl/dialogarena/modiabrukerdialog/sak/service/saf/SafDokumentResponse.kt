@@ -43,7 +43,8 @@ data class DokumentInfo(
 
 data class Dokumentvariant(
         var saksbehandlerHarTilgang: Boolean?,
-        var variantformat: String?
+        var variantformat: String?,
+        var skjerming: String?
 )
 
 data class LogiskVedlegg(

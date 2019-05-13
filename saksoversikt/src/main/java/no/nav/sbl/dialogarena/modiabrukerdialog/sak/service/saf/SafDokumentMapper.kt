@@ -10,9 +10,6 @@ const val DATOTYPE_JOURNALFOERT = "DATO_JOURNALFOERT"
 const val DATOTYPE_EKSPEDERT = "DATO_EKSPEDERT"
 const val DATOTYPE_SENDT_PRINT = "DATO_SENDT_PRINT"
 
-const val VARIANTFORMAT_ARKIV = "ARKIV"
-const val VARIANTFORMAT_SLADDET = "SLADDET"
-
 const val JOURNALPOSTTYPE_INN = "I"
 const val JOURNALPOSTTYPE_UT = "U"
 const val JOURNALPOSTTYPE_INTERN = "N"
@@ -78,6 +75,7 @@ private fun Dokument.fraSafDokumentInfo(dokumentInfo: DokumentInfo): Dokument {
     isKanVises = true
     isLogiskDokument = false
     variantformat = getVariantformat(dokumentInfo)
+    skjerming = getSkjerming(dokumentInfo)
 
     return this
 }
@@ -92,6 +90,8 @@ private fun getVariantformat(dokumentInfo: DokumentInfo): Variantformat =
             else -> throw RuntimeException("Ugyldig tekst for mapping til variantformat. Tekst: ${getVariant(dokumentInfo).variantformat}")
         }
 
+private fun getSkjerming(dokumentInfo: DokumentInfo): String? =
+        getVariant(dokumentInfo).skjerming
 
 private fun getVariant(dokumentInfo: DokumentInfo): Dokumentvariant =
         dokumentInfo.dokumentvarianter

@@ -43,7 +43,6 @@ import static javax.ws.rs.core.Response.status;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.Feilmelding.*;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.sak.rest.mock.DokumentControllerMock.mockDokumentResponse;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.sak.rest.mock.DokumentControllerMock.mockJournalpost;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.saf.SafDokumentMapperKt.VARIANTFORMAT_ARKIV;
 
 
 @Path("/saksoversikt/{fnr}")

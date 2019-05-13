@@ -13,8 +13,9 @@ val dokumentoversiktBrukerGraphQLQuery = """
                 tittel
                 dokumentInfoId
                 dokumentvarianter{
-                  variantformat
                   saksbehandlerHarTilgang
+                  variantformat
+                  skjerming
                 }
                 logiskeVedlegg {
                   tittel
