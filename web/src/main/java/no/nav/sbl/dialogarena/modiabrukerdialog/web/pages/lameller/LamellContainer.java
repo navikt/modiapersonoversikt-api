@@ -289,7 +289,7 @@ public class LamellContainer extends TokenLamellPanel implements Serializable {
     }
 
     private static LamellFactory createVarslingsLamell(final GrunnInfo.Bruker bruker) {
-        return newLamellFactory(LAMELL_VARSLING, "V", true, (LerretFactory) (id, name) -> new VarselLerret(id, bruker.fnr));
+        return newLamellFactory(LAMELL_VARSLING, "V", true, (LerretFactory) (id, name) -> new VarselLerret(id, bruker.fnr, true));
     }
 
     private LamellFactory createMeldingerLamell(final GrunnInfo.Bruker bruker, final DialogSession session) {
