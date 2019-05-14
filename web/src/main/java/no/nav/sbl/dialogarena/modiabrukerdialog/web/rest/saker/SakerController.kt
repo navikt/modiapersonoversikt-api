@@ -149,7 +149,8 @@ class SakerController @Inject constructor(private val saksoversiktService: Sakso
                 "tittel" to dokument.tittel,
                 "dokumentreferanse" to dokument.dokumentreferanse,
                 "kanVises" to dokument.isKanVises,
-                "logiskDokument" to dokument.isLogiskDokument
+                "logiskDokument" to dokument.isLogiskDokument,
+                "skjerming" to dokument.skjerming
         )
     }
 
