@@ -29,10 +29,6 @@ public class DokumentMetadataService {
     private DokumentMetadataTransformer dokumentMetadataTransformer;
     private SafService safService;
 
-    private List<DokumentMetadata> journalposter;
-    private List<DokumentMetadata> soknader;
-    private Set<Baksystem> feilendeBaksystem;
-
     public DokumentMetadataService(InnsynJournalV2Service innsynJournalV2Service,
                                    HenvendelseService henvendelseService,
                                    DokumentMetadataTransformer dokumentMetadataTransformer,
@@ -42,77 +38,71 @@ public class DokumentMetadataService {
         this.henvendelseService = henvendelseService;
         this.dokumentMetadataTransformer = dokumentMetadataTransformer;
         this.safService = safService;
-
     }
 
-    public ResultatWrapper<List<DokumentMetadata>> hentDokumentMetadata(String fnr) {
-        initFields();
+    public synchronized ResultatWrapper<List<DokumentMetadata>> hentDokumentMetadata(String fnr) {
+        DokumentMetadataResultat resultat = new DokumentMetadataResultat();
 
-        hentJournalposter(fnr);
-        hentSoknader(fnr);
+        hentJournalposter(fnr, resultat);
+        hentSoknader(fnr, resultat);
 
-        populerDokmotSoknaderMedJournalpostIdFraJoark();
+        populerDokmotSoknaderMedJournalpostIdFraJoark(resultat);
 
-        leggTilHenvendelseSomBaksystemIJournalposterOmSoknadEksisterer();
+        leggTilHenvendelseSomBaksystemIJournalposterOmSoknadEksisterer(resultat);
 
-        Stream<DokumentMetadata> innsendteSoknaderSomHarEndretTema = finnSoknaderSomHarForskjelligTemaISoknadOgJournalpost();
+        Stream<DokumentMetadata> innsendteSoknaderSomHarEndretTema = finnSoknaderSomHarForskjelligTemaISoknadOgJournalpost(resultat);
 
-        Stream<DokumentMetadata> innsendteSoknaderSomBareIkkeHarJournalpost = finnSoknaderUtenJournalpost();
+        Stream<DokumentMetadata> innsendteSoknaderSomBareIkkeHarJournalpost = finnSoknaderUtenJournalpost(resultat);
 
-        markerJournalposterSomEttersendingOmSoknadErEttersending();
+        markerJournalposterSomEttersendingOmSoknadErEttersending(resultat);
 
         return new ResultatWrapper<>(Java8Utils.concat(
-                journalposter.stream(),
+                resultat.journalposter.stream(),
                 innsendteSoknaderSomBareIkkeHarJournalpost,
                 innsendteSoknaderSomHarEndretTema
-        ).collect(toList()), feilendeBaksystem);
+        ).collect(toList()), resultat.feilendeBaksystem);
     }
 
-    private void initFields() {
-        journalposter = new ArrayList<>();
-        soknader = new ArrayList<>();
-        feilendeBaksystem = new HashSet<>();
-    }
 
-    private void populerDokmotSoknaderMedJournalpostIdFraJoark() {
-        soknader.stream()
+    private void populerDokmotSoknaderMedJournalpostIdFraJoark(DokumentMetadataResultat resultat) {
+        resultat.soknader.stream()
                 .filter(soknad -> soknad.getJournalpostId() == null)
                 .filter(soknad -> soknad.getTemakode().matches(DOKMOT_TEMA_REGEX))
-                .forEach(soknad -> soknad.withJournalpostId(finnJournalpostIdFraBehandlingsId(soknad.getBehandlingsId())));
+                .forEach(soknad -> soknad.withJournalpostId(finnJournalpostIdFraBehandlingsId(soknad.getBehandlingsId(), resultat)));
     }
 
-    private String finnJournalpostIdFraBehandlingsId(String behandlingsId) {
+    private String finnJournalpostIdFraBehandlingsId(String behandlingsId, DokumentMetadataResultat resultat) {
         try {
             ResultatWrapper<DokumentMetadata> wrapper = innsynJournalV2Service.identifiserJournalpost(behandlingsId);
-            feilendeBaksystem.addAll(wrapper.feilendeSystemer);
+            resultat.feilendeBaksystem.addAll(wrapper.feilendeSystemer);
             return wrapper.resultat != null ? wrapper.resultat.getJournalpostId() : null;
         } catch (FeilendeBaksystemException e) {
-            feilendeBaksystem.add(e.getBaksystem());
+            resultat.feilendeBaksystem.add(e.getBaksystem());
             return null;
         }
     }
 
-    private void hentSoknader(String fnr) {
+    private void hentSoknader(String fnr, DokumentMetadataResultat resultat) {
         try {
-            soknader.addAll(henvendelseService.hentInnsendteSoknader(fnr)
+            resultat.soknader.addAll(henvendelseService.hentInnsendteSoknader(fnr)
                     .stream()
                     .map(soknad -> dokumentMetadataTransformer.dokumentMetadataFraHenvendelseSoknader(soknad))
                     .collect(toList()));
         } catch (FeilendeBaksystemException e) {
-            feilendeBaksystem.add(e.getBaksystem());
+            resultat.feilendeBaksystem.add(e.getBaksystem());
         }
     }
 
-    private void hentJournalposter(String fnr) {
+    private void hentJournalposter(String fnr, DokumentMetadataResultat resultat) {
         ResultatWrapper<List<DokumentMetadata>> journalpostWrapper = safService.hentJournalposter(fnr);
-        journalposter.addAll(journalpostWrapper.resultat);
-        feilendeBaksystem.addAll(journalpostWrapper.feilendeSystemer);
+        resultat.journalposter.addAll(journalpostWrapper.resultat);
+        resultat.feilendeBaksystem.addAll(journalpostWrapper.feilendeSystemer);
     }
 
-    private void leggTilHenvendelseSomBaksystemIJournalposterOmSoknadEksisterer() {
-        journalposter
+    private void leggTilHenvendelseSomBaksystemIJournalposterOmSoknadEksisterer(DokumentMetadataResultat resultat) {
+        resultat.journalposter
                 .stream()
-                .filter(jp -> journalpostHarSoknad(jp, soknader))
+                .filter(jp -> journalpostHarSoknad(jp, resultat.soknader))
                 .forEach(jp -> jp.withBaksystem(Baksystem.HENVENDELSE));
     }
 
@@ -120,29 +110,29 @@ public class DokumentMetadataService {
         return innsendteSoknader.stream().anyMatch(soknad -> soknadLikJournalpost(soknad, jp));
     }
 
-    private Stream<DokumentMetadata> finnSoknaderSomHarForskjelligTemaISoknadOgJournalpost() {
-        return soknader
+    private Stream<DokumentMetadata> finnSoknaderSomHarForskjelligTemaISoknadOgJournalpost(DokumentMetadataResultat resultat) {
+        return resultat.soknader
                 .stream()
-                .filter(this::harJournalforingEndretTema)
+                .filter(soknad -> this.harJournalforingEndretTema(soknad, resultat))
                 .map(dokumentMetadata -> dokumentMetadata.withFeilWrapper(JOURNALFORT_ANNET_TEMA));
     }
 
-    private boolean harJournalforingEndretTema(DokumentMetadata soknad) {
-        return journalposter
+    private boolean harJournalforingEndretTema(DokumentMetadata soknad, DokumentMetadataResultat resultat) {
+        return resultat.journalposter
                 .stream()
                 .filter(jp -> soknadLikJournalpost(soknad, jp))
                 .anyMatch(jp -> !jp.getTemakode().equals(soknad.getTemakode()));
     }
 
-    private Stream<DokumentMetadata> finnSoknaderUtenJournalpost() {
-        return soknader
+    private Stream<DokumentMetadata> finnSoknaderUtenJournalpost(DokumentMetadataResultat resultat) {
+        return resultat.soknader
                 .stream()
-                .filter(this::finnesIkkeJournalpost)
+                .filter(soknad -> this.finnesIkkeJournalpost(soknad, resultat))
                 .map(sokand -> sokand.withIsJournalfort(FALSE).withLeggTilEttersendelseTekstDersomEttersendelse());
     }
 
-    private boolean finnesIkkeJournalpost(DokumentMetadata soknad) {
-        return journalposter.stream()
+    private boolean finnesIkkeJournalpost(DokumentMetadata soknad, DokumentMetadataResultat resultat) {
+        return resultat.journalposter.stream()
                 .noneMatch(jp -> soknadLikJournalpost(soknad, jp));
     }
 
@@ -150,13 +140,26 @@ public class DokumentMetadataService {
         return jp.getJournalpostId().equals(soknad.getJournalpostId());
     }
 
-    private void markerJournalposterSomEttersendingOmSoknadErEttersending() {
-        journalposter.forEach(journalpost -> {
-            boolean erEttersending = soknader
+    private void markerJournalposterSomEttersendingOmSoknadErEttersending(DokumentMetadataResultat resultat) {
+        resultat.journalposter.forEach(journalpost -> {
+            boolean erEttersending = resultat.soknader
                     .stream()
                     .anyMatch(soknad -> soknadLikJournalpost(soknad, journalpost) && soknad.isEttersending());
 
             journalpost.withEttersending(erEttersending);
         });
+    }
+}
+
+
+class DokumentMetadataResultat {
+    List<DokumentMetadata> journalposter;
+    List<DokumentMetadata> soknader;
+    Set<Baksystem> feilendeBaksystem;
+
+    DokumentMetadataResultat() {
+        journalposter = new ArrayList<>();
+        soknader = new ArrayList<>();
+        feilendeBaksystem = new HashSet<>();
     }
 }
