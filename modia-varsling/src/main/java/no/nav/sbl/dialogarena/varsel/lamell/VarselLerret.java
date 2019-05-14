@@ -20,10 +20,15 @@ public final class VarselLerret extends Lerret {
 
     public VarselLerret(String id, final String fnr, boolean nyVarsel) {
         super(id);
-
-        add(new ReactComponentPanel("varselLerret", "NyVarsel", new HashMap<String, Object>() {{
-            put("fødselsnummer", fnr);
-        }}));
-        add(hasCssClassIf("ny-frontend", Model.of(nyVarsel)));
+        if(nyVarsel) {
+            add(new ReactComponentPanel("varselLerret", "NyVarsel", new HashMap<String, Object>() {{
+                put("fødselsnummer", fnr);
+            }}));
+            add(hasCssClassIf("ny-frontend", Model.of(nyVarsel)));
+        } else {
+            add(new ReactComponentPanel("varselLerret", "VarselLerret", new HashMap<String, Object>() {{
+                put("fnr", fnr);
+            }}));
+        }
     }
 }

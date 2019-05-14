@@ -147,7 +147,8 @@ public class PersonPage extends BasePage {
         boolean nyOppfolgingEnabled = unleashService.isEnabled(Feature.NY_OPPFOLGING);
         boolean nyForeldrepengerEnabled = unleashService.isEnabled(Feature.NY_FORELDREPENGER);
         boolean naisGosysLenke = unleashService.isEnabled(Feature.NAIS_GOSYS_LENKE);
-        lamellContainer = new LamellContainer("lameller", getSession(), grunnInfo, nySaksoversikt, nyOppfolgingEnabled);
+        boolean nyVarselEnabled = unleashService.isEnabled(Feature.NY_VARSEL);
+        lamellContainer = new LamellContainer("lameller", getSession(), grunnInfo, nySaksoversikt, nyOppfolgingEnabled, nyVarselEnabled);
 
         oppgiBegrunnelseModal = new ReactBegrunnelseModal("oppgiBegrunnelseModal");
         Hode hode = new Hode("hode", oppgiBegrunnelseModal, personKjerneinfoServiceBi, grunnInfo, null);
