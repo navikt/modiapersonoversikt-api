@@ -16,6 +16,7 @@ class EnhetControllerTest {
     private val controller = EnhetController(
             mock(),
             organisasjonEnhetV2Service,
+            mock(),
             unleashService
     )
 
