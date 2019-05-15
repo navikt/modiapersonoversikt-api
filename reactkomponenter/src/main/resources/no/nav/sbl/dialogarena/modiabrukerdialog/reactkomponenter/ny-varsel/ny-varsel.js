@@ -5,7 +5,11 @@ import VarslerLamell from 'modiapersonoversikt/build/dist/components/standalone/
 
 class NyVarsel extends React.Component {
     render() {
-        return <VarslerLamell fødselsnummer={this.props.fødselsnummer}/>
+        return (
+            <div class="ny-varsel">
+                <VarslerLamell fødselsnummer={this.props.fødselsnummer}/>
+            </div>
+    );
     }
 }
 
