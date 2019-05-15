@@ -42,7 +42,6 @@ public class GsakServiceImpl implements GsakService {
     private SaksbehandlerInnstillingerService saksbehandlerInnstillingerService;
     @Inject
     private AnsattService ansattWS;
-    private int valgtEnhetId;
 
     @Override
     public boolean oppgaveKanManuelltAvsluttes(String oppgaveId) {
