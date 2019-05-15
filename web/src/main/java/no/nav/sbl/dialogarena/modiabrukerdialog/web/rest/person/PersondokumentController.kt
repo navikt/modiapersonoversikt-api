@@ -16,7 +16,9 @@ class PersondokumentController @Inject constructor(private val persondokumentSer
         try {
             val response = persondokumentService.hentPersonDokument(fødselsnummer)
             return mapOf(
-                    "utenlandskeIdentifikasjonsnummere" to hentUtenlandskeIdentifikasjonsNummere(response.personidenter.utenlandskeIdentifikasjonsnummere)
+                    "utenlandskeIdentifikasjonsnummere" to hentUtenlandskeIdentifikasjonsNummere(response.personidenter.utenlandskeIdentifikasjonsnummere),
+                    "dødsbo-kontaktinfo" to hentDødsbokontaktinfo(response.),
+                    "dødsbo-adresse" to hentDødsboAdresse(response.)
             )
         } catch (exception: NotFoundException) {
            throw NotFoundException(exception)
@@ -40,4 +42,39 @@ class PersondokumentController @Inject constructor(private val persondokumentSer
         }
 
     }
+    private fun hentDødsboAdresse(adresse: Adresse) = adresse.run {
+        mapOf(
+                "adresselinje" to adresselinje.adresselinje,
+                "postnummer" to postnummer,
+                "poststed" to poststednavn,
+                "landskode" to landskode
+        )
+    }
+
+    mapOf("kontaktinfomasjon" to adresselinje.endringsinformasjon?.let { hentEndringsinformasjon(it) },
+    when (adresselinje) {
+        is egenskap -> "PersonSomKontakt" to hentPersonSomKOntakt()
+        is egenskap -> "PersonUtenIdSomKOntakt" to hentPersonUtenIdSomKontakt()
+        is Matrikkeladresse -> "AdvokatSomKontakt" to hentAdvokatSomKontakt()
+        is Postboksadresse -> "OrganiasjonSomK0ntakt" to hentOrganisasjonSomKontakt(adresselinje);
+        else -> "ustrukturert" to mapOf("adresselinje" to adresselinje.adresselinje)
+    }
+    )
+
+    private fun hentPersonSomKontakt {
+       mapOf(
+        "fornavn" to it.
+
+    }
+    private fun hentPersonUtenIdeSomKontakt {
+
+    }
+    private fun hentAdvokatSomKontakt{
+
+    }
+    private fun hent OrganisasjonSomKOntakt {
+
+    }
+
+
 }
