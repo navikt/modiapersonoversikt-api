@@ -186,7 +186,8 @@ public class Melding implements Serializable {
     }
 
     public boolean erSporsmalSkriftlig() {
-        return meldingstype.equals(Meldingstype.SPORSMAL_SKRIFTLIG);
+        return meldingstype.equals(Meldingstype.SPORSMAL_SKRIFTLIG)
+                || meldingstype.equals(Meldingstype.SPORSMAL_SKRIFTLIG_DIREKTE);
     }
 
     public boolean erDelvisSvar() {
