@@ -83,8 +83,8 @@ public class DokumentController {
             return status(FORBIDDEN).build();
         }
 
-        ResultatWrapper<byte[]> hentDokumentResultat = safService.hentDokument(journalpostId, dokumentreferanse, Dokument.Variantformat.ARKIV);
-        return Optional.of(hentDokumentResultat.resultat)
+        TjenesteResultatWrapper hentDokumentResultat = safService.hentDokument(journalpostId, dokumentreferanse, Dokument.Variantformat.ARKIV);
+        return hentDokumentResultat.result
                 .map(res -> ok(res).type("application/pdf").build())
                 .orElse(status(NOT_FOUND).build());
     }
@@ -167,12 +167,7 @@ public class DokumentController {
     }
 
     private TjenesteResultatWrapper hentDokument(String journalpostId, String dokumentreferanse) {
-        ResultatWrapper<byte[]> dokumentWrapper = safService.hentDokument(journalpostId, dokumentreferanse, Dokument.Variantformat.ARKIV);
-        if (isNull(dokumentWrapper.resultat)) {
-            return new TjenesteResultatWrapper(UKJENT_FEIL);
-        }
-
-        return new TjenesteResultatWrapper(dokumentWrapper.resultat);
+        return safService.hentDokument(journalpostId, dokumentreferanse, Dokument.Variantformat.ARKIV);
     }
 
     private Set<String> getDokumentReferanser(DokumentMetadata journalpostMetadata) {

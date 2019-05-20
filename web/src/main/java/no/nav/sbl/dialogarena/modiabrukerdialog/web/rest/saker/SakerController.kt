@@ -64,10 +64,12 @@ class SakerController @Inject constructor(private val saksoversiktService: Sakso
 
         val variantformat = finnVariantformat(journalpostMetadata, dokumentreferanse)
 
-        return safService.hentDokument(journalpostId, dokumentreferanse, variantformat)
-                .resultat
-                ?.let { Response.ok(it).build() }
-                ?: Response.status(Response.Status.NOT_FOUND).build()
+        return safService.hentDokument(journalpostId, dokumentreferanse, variantformat).let { wrapper ->
+            wrapper.result
+                    .map { Response.ok(it).build() }
+                    .orElseGet { Response.status(wrapper.statuskode).build() }
+        }
+
     }
 
     private fun finnVariantformat(journalpostMetadata: DokumentMetadata, dokumentreferanse: String): Variantformat =

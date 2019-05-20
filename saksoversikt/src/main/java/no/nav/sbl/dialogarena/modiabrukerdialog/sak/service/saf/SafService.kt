@@ -8,6 +8,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.Baksystem
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.Dokument
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.DokumentMetadata
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.resultatwrappere.ResultatWrapper
+import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.resultatwrappere.TjenesteResultatWrapper
 import no.nav.sbl.rest.RestUtils
 import org.slf4j.LoggerFactory
 import javax.ws.rs.client.Client
@@ -17,6 +18,7 @@ import javax.ws.rs.core.HttpHeaders.AUTHORIZATION
 import javax.ws.rs.core.HttpHeaders.CONTENT_TYPE
 import javax.ws.rs.core.MediaType.APPLICATION_JSON
 import javax.ws.rs.core.Response
+import javax.ws.rs.core.Response.Status.fromStatusCode
 
 val SAF_GRAPHQL_BASEURL = System.getProperty("saf.graphql.url")
 val SAF_HENTDOKUMENT_BASEURL = System.getProperty("saf.hentdokument.url")
@@ -36,13 +38,13 @@ class SafService {
         }
     }
 
-    fun hentDokument(journalpostId: String, dokumentInfoId: String, variantFormat: Dokument.Variantformat): ResultatWrapper<ByteArray?> {
+    fun hentDokument(journalpostId: String, dokumentInfoId: String, variantFormat: Dokument.Variantformat): TjenesteResultatWrapper {
         val url = lagHentDokumentURL(journalpostId, dokumentInfoId, variantFormat)
 
         return RestUtils.withClient { client ->
             val response = veilederAutorisertClient(client, url).get()
             when (response.status) {
-                200 -> ResultatWrapper(response.readEntity(ByteArray::class.java), emptySet())
+                200 -> TjenesteResultatWrapper(response.readEntity(ByteArray::class.java))
                 else -> håndterDokumentFeilKoder(response.status)
             }
         }
@@ -121,11 +123,11 @@ private fun håndterJournalpostFeilKoder(statuskode: Int) {
     }
 }
 
-private fun håndterDokumentFeilKoder(statuskode: Int): ResultatWrapper<ByteArray?> {
+private fun håndterDokumentFeilKoder(statuskode: Int): TjenesteResultatWrapper {
     when (statuskode) {
         400 -> LOG.warn("Feil i SAF hentDokument. Ugyldig input. JournalpostId og dokumentInfoId må være tall og variantFormat må være en gyldig kodeverk-verdi")
         401 -> LOG.warn("Feil i SAF hentDokument. Bruker mangler tilgang for å vise dokumentet. Ugyldig OIDC token.")
         404 -> LOG.warn("Feil i SAF hentDokument. Dokument eller journalpost ble ikke funnet.")
     }
-    return ResultatWrapper(null, setOf(Baksystem.SAF))
+    return TjenesteResultatWrapper(null, fromStatusCode(statuskode))
 }
