@@ -17,8 +17,8 @@ class PersondokumentController @Inject constructor(private val persondokumentSer
             val response = persondokumentService.hentPersonDokument(fødselsnummer)
             return mapOf(
                     "utenlandskeIdentifikasjonsnummere" to hentUtenlandskeIdentifikasjonsNummere(response.personidenter.utenlandskeIdentifikasjonsnummere),
-                    "dødsbo-kontaktinfo" to hentDødsbokontaktinfo(response.),
-                    "dødsbo-adresse" to hentDødsboAdresse(response.)
+                    "dødsboKontaktinfo" to hentDødsbokontaktinfo(response.personidenter.),
+                    "dødsboAdresse" to hentDødsboAdresse(response.)
             )
         } catch (exception: NotFoundException) {
            throw NotFoundException(exception)
