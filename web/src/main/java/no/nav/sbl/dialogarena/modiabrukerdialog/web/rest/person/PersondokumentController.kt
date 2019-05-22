@@ -42,7 +42,7 @@ class PersondokumentController @Inject constructor(private val persondokumentSer
         }
 
     }
-    private fun hentDødsboAdresse(adresse: Adresse) = adresse.run {
+    private fun hentDødsboAdresse(adresse: Adresse) : List<Map<String, Any>> {
         mapOf(
                 "adresselinje" to adresselinje.adresselinje,
                 "postnummer" to postnummer,
@@ -51,22 +51,23 @@ class PersondokumentController @Inject constructor(private val persondokumentSer
         )
     }
 
-    mapOf("kontaktinfomasjon" to adresselinje.endringsinformasjon?.let { hentEndringsinformasjon(it) },
+    private fun
+            mapOf("kontaktinfomasjon" to adresselinje.endringsinformasjon?.let {  },
     when (adresselinje) {
-        is egenskap -> "PersonSomKontakt" to hentPersonSomKOntakt()
-        is egenskap -> "PersonUtenIdSomKOntakt" to hentPersonUtenIdSomKontakt()
-        is Matrikkeladresse -> "AdvokatSomKontakt" to hentAdvokatSomKontakt()
-        is Postboksadresse -> "OrganiasjonSomK0ntakt" to hentOrganisasjonSomKontakt(adresselinje);
+        is Person -> "PersonSomKontakt" to hentPersonSomKOntakt()
+        is PersonUtenId -> "PersonUtenIdSomKOntakt" to hentPersonUtenIdSomKontakt()
+        is Advokat -> "AdvokatSomKontakt" to hentAdvokatSomKontakt()
+        is Organisasjon -> "OrganiasjonSomK0ntakt" to hentOrganisasjonSomKontakt(adresselinje);
         else -> "ustrukturert" to mapOf("adresselinje" to adresselinje.adresselinje)
     }
     )
 
     private fun hentPersonSomKontakt {
        mapOf(
-        "fornavn" to it.
+        "fornavn" to 
 
     }
-    private fun hentPersonUtenIdeSomKontakt {
+    private fun hentPersonUtenIdeSomKontakt() {
 
     }
     private fun hentAdvokatSomKontakt{
