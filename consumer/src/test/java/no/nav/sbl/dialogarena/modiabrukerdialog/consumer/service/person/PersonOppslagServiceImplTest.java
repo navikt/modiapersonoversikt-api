@@ -1,8 +1,8 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.person;
 
 import no.nav.json.JsonUtils;
-import no.nav.tjenester.person.oppslag.v1.domain.Persondokument;
-import no.nav.tjenester.person.oppslag.v1.domain.personident.utenlandskidentifikasjonsnummer.UtenlandskIdentifikasjonsnummer;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.personoppslag.PersonOppslagResponse;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.personoppslag.UtenlandskIdentifikasjonsnummer;
 import org.junit.Test;
 
 import java.util.UUID;
@@ -62,7 +62,7 @@ public class PersonOppslagServiceImplTest {
                 "}";
 
 
-        Persondokument persondokument = JsonUtils.fromJson(jsonResponse, Persondokument.class);
+        PersonOppslagResponse persondokument = JsonUtils.fromJson(jsonResponse, PersonOppslagResponse.class);
 
         UtenlandskIdentifikasjonsnummer utenalandskId = persondokument.getPersonidenter().getUtenlandskeIdentifikasjonsnummere().get(0);
         assertEquals(idnummer, utenalandskId.getIdNummer());
@@ -71,9 +71,7 @@ public class PersonOppslagServiceImplTest {
         assertEquals(registrertINav, utenalandskId.getRegistrertINAV().toString());
         assertEquals(master, utenalandskId.getMaster());
         assertEquals(kilde, utenalandskId.getKilde());
-        assertEquals(idnummerType, utenalandskId.getIdNummertype());
         assertEquals(systemkilde, utenalandskId.getSystemKilde());
         assertEquals(ident, utenalandskId.getRegistrertAv());
-        assertEquals(gyldigFom, utenalandskId.getGyldigFom().toString());
     }
 }

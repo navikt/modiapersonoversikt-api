@@ -11,6 +11,8 @@ import no.nav.kjerneinfo.domain.person.fakta.Sikkerhetstiltak
 import no.nav.kjerneinfo.domain.person.fakta.Telefon
 import no.nav.kodeverk.consumer.fim.kodeverk.KodeverkmanagerBi
 import no.nav.kodeverk.consumer.fim.kodeverk.to.feil.HentKodeverkKodeverkIkkeFunnet
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.personoppslag.*
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.person.PersonOppslagService
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.UnleashService
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.kodeverk.Kode
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.lagPeriode
@@ -29,7 +31,9 @@ private const val TILRETTELAGT_KOMMUNIKASJON_KODEVERKSPRAK = "nb"
 @Path("/person/{fnr}")
 @Produces(APPLICATION_JSON)
 class PersonController @Inject constructor(private val kjerneinfoService: PersonKjerneinfoServiceBi,
-                                           private val kodeverk: KodeverkmanagerBi, private val unleashService: UnleashService) {
+                                           private val kodeverk: KodeverkmanagerBi,
+                                           private val persondokumentService: PersonOppslagService,
+                                           private val unleashService: UnleashService) {
 
     @GET
     @Path("/")
@@ -48,6 +52,14 @@ class PersonController @Inject constructor(private val kjerneinfoService: Person
                 else -> throw InternalServerErrorException(exception)
             }
         }
+
+        val response = try {
+            persondokumentService.hentPersonDokument(fødselsnummer)
+        } catch (exception: NotFoundException) {
+            throw NotFoundException(exception)
+        }
+
+        val kontaktinfoForDoedsbo = response.kontaktinformasjonForDoedsbo
 
         return mapOf(
                 "fødselsnummer" to person.fodselsnummer.nummer,
@@ -71,7 +83,8 @@ class PersonController @Inject constructor(private val kjerneinfoService: Person
                 "alternativAdresse" to person.personfakta.alternativAdresse?.let { hentAdresse(it) },
                 "postadresse" to person.personfakta.postadresse?.let { hentAdresse(it) },
                 "sikkerhetstiltak" to person.personfakta.sikkerhetstiltak?.let { hentSikkerhetstiltak(it) },
-                "kontaktinformasjon" to getTelefoner(person.personfakta)
+                "kontaktinformasjon" to getTelefoner(person.personfakta),
+                "kontaktinformasjonForDoedsbo" to kontaktinfoForDoedsbo?.let { kontaktinfoForDoedsbo(it) }
         )
     }
 
@@ -233,5 +246,79 @@ class PersonController @Inject constructor(private val kjerneinfoService: Person
     } catch (exception: HentKodeverkKodeverkIkkeFunnet) {
         emptyList<Kodeverdi>()
     }
+
+    private fun kontaktinfoForDoedsbo(doedsbo: List<KontaktiformasjonForDoedsbo>): List<Map<String, Any?>> =
+            doedsbo.map {
+                mapOf(
+                        "adressat" to hentAdressat(it.adressat),
+                        "adresselinje1" to it.adresselinje1,
+                        "adresselinje2" to it.adresselinje2,
+                        "postnummer" to it.postnummer,
+                        "poststed" to it.poststedsnavn,
+                        "landkode" to it.landkode,
+                        "master" to it.master,
+                        "registrert" to it.registrertINAV
+                )
+            }
+
+    private fun hentAdressat(adressat: Adressat): Map<String, Any?> =
+            mapOf(
+                    "advokatSomAdressat" to adressat.advokatSomAdressat?.let { hentAdvokatSomAdressat(it) },
+                    "kontaktpersonMedIdNummerSomAdressat" to adressat.kontaktpersonMedIdNummerSomAdressat?.let { hentPersonMedId(it) },
+                    "kontaktpersonUtenIdNummerSomAdressat" to adressat.kontaktpersonUtenIdNummerSomAdressat?.let { hentKontaktpersonUtenId(it) },
+                    "organisasjonSomAdressat" to adressat.organisasjonSomAdressat?.let { hentOrganisasjonSomAdressat(it) }
+            )
+
+
+    private fun hentPersonMedId(adressat: KontaktpersonMedIdNummerSomAdressat): Map<String, Any?> {
+        val personnavnV3 = try {
+            val kjerneinfo = kjerneinfoService.hentKjerneinformasjon(kjerneinfoRequestMedBegrunnet(adressat.idNummer as String))
+            kjerneinfo.person.personfakta.personnavn
+        } catch (e: Exception) {
+            null
+        }
+
+        val personNavn = personnavnV3?.let { personoppslagAsPersonNavn(it) }
+
+        return mapOf(
+                "idNummer" to adressat.idNummer,
+                "navn" to personNavn?.let { personNavn(it) }
+        )
+    }
+
+    private fun kjerneinfoRequestMedBegrunnet(ident: String): HentKjerneinformasjonRequest {
+        val request = HentKjerneinformasjonRequest(ident)
+        request.isBegrunnet = true
+        return request
+    }
+
+    private fun personoppslagAsPersonNavn(personnavnV3: Personnavn): PersonNavn =
+            PersonNavn(etternavn = personnavnV3.etternavn, fornavn = personnavnV3.fornavn, mellomnavn = personnavnV3.mellomnavn)
+
+
+    private fun hentAdvokatSomAdressat(adressat: AdvokatSomAdressat): Map<String, Any?> =
+            mapOf(
+                    "kontaktperson" to personNavn(adressat.kontaktperson),
+                    "organisasjonsnavn" to adressat.organisasjonsnavn,
+                    "organisasjonsnummer" to adressat.organisasjonsnummer
+            )
+
+    private fun hentOrganisasjonSomAdressat(adressat: OrganisasjonSomAdressat): Map<String, Any?> =
+            mapOf(
+                    "kontaktperson" to adressat.kontaktperson?.let { personNavn(it) },
+                    "organisasjonsnavn" to adressat.organisasjonsnavn,
+                    "organisasjonsnummer" to adressat.organisasjonsnummer
+            )
+
+    private fun hentKontaktpersonUtenId(adressat: KontaktpersonUtenIdNummerSomAdressat): Map<String, Any?> =
+            mapOf(
+                    "foedselsdato" to adressat.foedselsdato,
+                    "navn" to personNavn(adressat.navn)
+            )
+
+    private fun personNavn(personNavn: PersonNavn): Map<String, Any?> =
+            mapOf("fornavn" to personNavn.fornavn,
+                    "etternavn" to personNavn.etternavn,
+                    "mellomnavn" to personNavn.mellomnavn)
 
 }
