@@ -8,5 +8,6 @@ enum class Feature private constructor(val propertyKey: String, val defaultValue
     NY_SYKEPENGER("modiabrukerdialog.ny-sykepenger", false),
     NY_OPPFOLGING("modiabrukerdialog.ny-oppfolging", false),
     NY_FORELDREPENGER("modiabrukerdialog.ny-foreldrepenger", false),
-    NAIS_GOSYS_LENKE("modiabrukerdialog.gosys-nais-lenke", false)
+    NAIS_GOSYS_LENKE("modiabrukerdialog.gosys-nais-lenke", false),
+    NY_VARSEL("modiabrukerdialog.ny-varsel", false)
 }
