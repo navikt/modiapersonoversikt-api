@@ -316,9 +316,14 @@ class PersonController @Inject constructor(private val kjerneinfoService: Person
                     "navn" to personNavn(adressat.navn)
             )
 
-    private fun personNavn(personNavn: PersonNavn): Map<String, Any?> =
-            mapOf("fornavn" to personNavn.fornavn,
-                    "etternavn" to personNavn.etternavn,
-                    "mellomnavn" to personNavn.mellomnavn)
+    private fun personNavn(personNavn: PersonNavn): Map<String, Any?> {
+        val sammensatNavn = "${personNavn.fornavn} ${personNavn.mellomnavn.textOrEmpty()} ${personNavn.etternavn}"
+        return mapOf("fornavn" to personNavn.fornavn,
+                "etternavn" to personNavn.etternavn,
+                "mellomnavn" to personNavn.mellomnavn,
+                "sammensatt" to sammensatNavn)
+    }
+
+    private fun String?.textOrEmpty(): String = this ?: ""
 
 }
