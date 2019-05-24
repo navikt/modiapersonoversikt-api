@@ -19,6 +19,8 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.lagPeriode
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.mapOfNotNullOrEmpty
 import no.nav.tjeneste.virksomhet.person.v3.HentPersonPersonIkkeFunnet
 import no.nav.tjeneste.virksomhet.person.v3.HentPersonSikkerhetsbegrensning
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import javax.inject.Inject
 import javax.ws.rs.*
 import javax.ws.rs.core.MediaType.APPLICATION_JSON
@@ -34,6 +36,8 @@ class PersonController @Inject constructor(private val kjerneinfoService: Person
                                            private val kodeverk: KodeverkmanagerBi,
                                            private val persondokumentService: PersonOppslagService,
                                            private val unleashService: UnleashService) {
+
+    private val logger = LoggerFactory.getLogger(PersonController::class.java)
 
     @GET
     @Path("/")
@@ -56,10 +60,11 @@ class PersonController @Inject constructor(private val kjerneinfoService: Person
         val response = try {
             persondokumentService.hentPersonDokument(fødselsnummer)
         } catch (exception: NotFoundException) {
-            throw NotFoundException(exception)
+            logger.info("Persondokument ikke funnet for " + fødselsnummer)
+            null
         }
 
-        val kontaktinfoForDoedsbo = response.kontaktinformasjonForDoedsbo
+        val kontaktinfoForDoedsbo = response?.kontaktinformasjonForDoedsbo
 
         return mapOf(
                 "fødselsnummer" to person.fodselsnummer.nummer,
