@@ -16,6 +16,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingst
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.exceptions.JournalforingFeilet;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.HenvendelseUtsendingService;
+import no.nav.sbl.dialogarena.modiabrukerdialog.reactkomponenter.utils.wicket.ReactComponentPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.*;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.HenvendelseVM.Modus;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.HenvendelseVM.OppgaveTilknytning;
@@ -44,10 +45,7 @@ import org.apache.wicket.model.*;
 import org.slf4j.Logger;
 
 import javax.inject.Inject;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static java.lang.String.format;
 import static java.util.Arrays.asList;
@@ -171,7 +169,15 @@ public class NyDialogPanel extends GenericPanel<HenvendelseVM> {
         modusKomponenter.addAll(feedbackLabels);
         form.add(feedbackLabels.toArray(new Component[feedbackLabels.size()]));
 
-        add(form, kvittering);
+        HashMap<String, Object> hurtigReferatProps = new HashMap<String, Object>() {{
+                put("fødselsnummer", "10108000398");
+            }};
+        ReactComponentPanel hurtigreferat = new ReactComponentPanel("hurtigreferat", "HurtigReferat", hurtigReferatProps);
+        hurtigreferat
+                .setOutputMarkupId(true)
+                .setVisibilityAllowed(true);
+
+        add(form, kvittering, hurtigreferat);
     }
 
     private List<FeedbackLabel> leggTilFeedbackLabels(Component... components) {
