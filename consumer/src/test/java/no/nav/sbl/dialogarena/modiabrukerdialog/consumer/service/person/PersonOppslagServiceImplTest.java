@@ -77,6 +77,6 @@ public class PersonOppslagServiceImplTest {
 
         AdvokatSomAdressat addr = kd.getAdressat().getAdvokatSomAdressat();
 
-        assertEquals(addr.getOrganisasjonsnavn(), "Adsvokat AS");
+        assertEquals(addr.getOrganisasjonsnavn(), "Advokat AS");
     }
 }

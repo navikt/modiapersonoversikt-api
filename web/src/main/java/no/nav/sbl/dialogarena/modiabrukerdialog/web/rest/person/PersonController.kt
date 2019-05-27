@@ -298,7 +298,7 @@ class PersonController @Inject constructor(private val kjerneinfoService: Person
     }
 
     private fun personoppslagAsPersonNavn(personnavnV3: Personnavn): PersonNavn =
-            PersonNavn(etternavn = personnavnV3.etternavn, fornavn = personnavnV3.fornavn, mellomnavn = personnavnV3.mellomnavn)
+            PersonNavn(personnavnV3.fornavn, personnavnV3.mellomnavn, personnavnV3.etternavn)
 
 
     private fun hentAdvokatSomAdressat(adressat: AdvokatSomAdressat): Map<String, Any?> =

@@ -53,7 +53,7 @@ internal class PersonControllerTest {
     @BeforeEach
     fun before() {
         whenever(organisasjonenhetV2Service.finnNAVKontor(any(), any())).thenReturn(Optional.empty())
-        whenever(oppslag.hentPersonDokument(any())).thenReturn(PersonOppslagResponse(null))
+        whenever(oppslag.hentPersonDokument(any())).thenReturn(PersonOppslagResponse())
     }
 
     @Test
