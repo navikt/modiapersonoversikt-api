@@ -1,6 +1,8 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util;
 
 public class RestConstants {
+    private static final String MFN_OPPLYSNINGSTYPE_DOEDSBO = "KontaktinformasjonForDoedsbo";
+
     public static final String PERSONDOKUMENTER_BASEURL = System.getProperty("persondokumenter.api.url");
     public static final String NAV_CONSUMER_TOKEN_HEADER = "Nav-Consumer-Token";
     public static final String NAV_PERSONIDENT_HEADER = "Nav-Personident";
@@ -8,7 +10,7 @@ public class RestConstants {
     public static final String TEMA_HEADER = "Tema";
     public static final String OPPLYSNINGSTYPER_HEADER = "Opplysningstyper";
     public static final String ALLE_TEMA_HEADERVERDI = "GEN";
-    public static final String OPPLYSNINGSTYPER_HEADERVERDI = "KontaktinformasjonForDoedsbo";
+    public static final String OPPLYSNINGSTYPER_HEADERVERDI = MFN_OPPLYSNINGSTYPE_DOEDSBO;
 
     public static final String BASIC_AUTH_SEPERATOR = ":";
     public static final String AUTH_SEPERATOR = " ";
