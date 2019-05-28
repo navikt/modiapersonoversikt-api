@@ -16,6 +16,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingst
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.exceptions.JournalforingFeilet;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.HenvendelseUtsendingService;
+import no.nav.sbl.dialogarena.modiabrukerdialog.reactkomponenter.utils.wicket.ReactComponentCallback;
 import no.nav.sbl.dialogarena.modiabrukerdialog.reactkomponenter.utils.wicket.ReactComponentPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.*;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.HenvendelseVM.Modus;
@@ -170,9 +171,15 @@ public class NyDialogPanel extends GenericPanel<HenvendelseVM> {
         form.add(feedbackLabels.toArray(new Component[feedbackLabels.size()]));
 
         HashMap<String, Object> hurtigReferatProps = new HashMap<String, Object>() {{
-                put("fødselsnummer", "10108000398");
+                put("fødselsnummer", grunnInfo.bruker.fnr);
             }};
         ReactComponentPanel hurtigreferat = new ReactComponentPanel("hurtigreferat", "HurtigReferat", hurtigReferatProps);
+        hurtigreferat.addCallback("visKvittering", Void.class, new ReactComponentCallback<Void>() {
+            @Override
+            public void onCallback(AjaxRequestTarget target, Void data) {
+                System.out.println("Den ble sendt!!!!!! WOOOOOOOOOOOOOOOOOOOOOOOOOOOOO");
+            }
+        });
         hurtigreferat
                 .setOutputMarkupId(true)
                 .setVisibilityAllowed(true);
