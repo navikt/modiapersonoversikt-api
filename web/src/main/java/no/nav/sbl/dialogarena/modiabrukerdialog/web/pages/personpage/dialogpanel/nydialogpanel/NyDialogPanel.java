@@ -75,6 +75,7 @@ public class NyDialogPanel extends GenericPanel<HenvendelseVM> {
     private final List<Component> modusKomponenter = new ArrayList<>();
     private final FeedbackPanel feedbackPanel;
     private final SkrivestottePanel skrivestottePanel;
+    ReactComponentPanel hurtigreferat;
 
     private static final Logger logger = getLogger(NyDialogPanel.class);
 
@@ -171,13 +172,13 @@ public class NyDialogPanel extends GenericPanel<HenvendelseVM> {
         form.add(feedbackLabels.toArray(new Component[feedbackLabels.size()]));
 
         HashMap<String, Object> hurtigReferatProps = new HashMap<String, Object>() {{
-                put("fødselsnummer", grunnInfo.bruker.fnr);
-            }};
-        ReactComponentPanel hurtigreferat = new ReactComponentPanel("hurtigreferat", "HurtigReferat", hurtigReferatProps);
+            put("fødselsnummer", grunnInfo.bruker.fnr);
+        }};
+        hurtigreferat = new ReactComponentPanel("hurtigreferat", "HurtigReferat", hurtigReferatProps);
         hurtigreferat.addCallback("visKvittering", Void.class, new ReactComponentCallback<Void>() {
             @Override
             public void onCallback(AjaxRequestTarget target, Void data) {
-                System.out.println("Den ble sendt!!!!!! WOOOOOOOOOOOOOOOOOOOOOOOOOOOOO");
+                kvittering.visKvittering(target, "Hurtigreferat ble sendt til bruker", form, hurtigreferat);
             }
         });
         hurtigreferat
@@ -220,7 +221,6 @@ public class NyDialogPanel extends GenericPanel<HenvendelseVM> {
                 target.add(feedbackPanel);
                 FeedbackLabel.addFormLabelsToTarget(target, form);
             }
-
         };
         submitKnapp.add(new AttributeModifier("value", new AbstractReadOnlyModel() {
             @Override
@@ -337,10 +337,10 @@ public class NyDialogPanel extends GenericPanel<HenvendelseVM> {
             String kvitteringstekstKey = henvendelseVM.getKvitteringsTekstKeyBasertPaaModus("nydialogpanel");
 
             send(getPage(), Broadcast.BREADTH, new NamedEventPayload(Events.SporsmalOgSvar.MELDING_SENDT_TIL_BRUKER));
-            kvittering.visTemagruppebasertKvittering(target, getString(kvitteringstekstKey),  henvendelseVM.temagruppe, form);
+            kvittering.visTemagruppebasertKvittering(target, getString(kvitteringstekstKey), henvendelseVM.temagruppe, form, hurtigreferat);
         } catch (JournalforingFeilet e) {
             send(getPage(), Broadcast.BREADTH, new NamedEventPayload(Events.SporsmalOgSvar.MELDING_SENDT_TIL_BRUKER));
-            kvittering.visKvittering(target, getString("dialogpanel.feilmelding.journalforing"), form);
+            kvittering.visKvittering(target, getString("dialogpanel.feilmelding.journalforing"), form, hurtigreferat);
         } catch (Exception e) {
             logger.error("Sending av henvendelse feilet", e);
             error(getString("dialogpanel.feilmelding.send.henvendelse"));
@@ -385,5 +385,4 @@ public class NyDialogPanel extends GenericPanel<HenvendelseVM> {
 
         henvendelseUtsendingService.sendHenvendelse(melding, Optional.empty(), sak, saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet());
     }
-
 }
