@@ -87,7 +87,7 @@ public class SakstemaServiceTest {
 
         when(kodeverk.getTemanavnForTemakode(anyString(), anyString())).thenReturn(new ResultatWrapper("Dagpenger"));
 
-        when(dokumentMetadataService.hentDokumentMetadata(any(), anyString())).thenReturn(new ResultatWrapper<>(dokumentmetadata, emptySet()));
+        when(dokumentMetadataService.hentDokumentMetadata(anyString())).thenReturn(new ResultatWrapper<>(dokumentmetadata, emptySet()));
 
         Map<String, List<Behandlingskjede>> emptyMap = new HashMap();
         when(sakOgBehandlingService.hentBehandlingskjederGruppertPaaTema(FNR)).thenReturn(emptyMap);
@@ -212,7 +212,7 @@ public class SakstemaServiceTest {
     @Test
     public void sakFraSakogBehandlingUtenTilhoerendeSakstemaOppretterEgetSakstema() {
         when(kodeverk.getTemanavnForTemakode(Konstanter.DAGPENGER, BulletproofKodeverkService.ARKIVTEMA)).thenReturn(new ResultatWrapper("Dagpenger"));
-        when(dokumentMetadataService.hentDokumentMetadata(any(), anyString())).thenReturn(new ResultatWrapper<>(emptyList()));
+        when(dokumentMetadataService.hentDokumentMetadata(anyString())).thenReturn(new ResultatWrapper<>(emptyList()));
 
         Map<String, Set<String>> gruppertTema = new HashMap<String, Set<String>>(){{
             put("RESTERENDE_TEMA", new HashSet(asList("DAG")));
@@ -233,7 +233,7 @@ public class SakstemaServiceTest {
     @Test
     public void sakFraSakogBehandlingMedTilhoerendeSakstemaOppretterIkkeEgetSakstema() {
         when(kodeverk.getTemanavnForTemakode(Konstanter.DAGPENGER, BulletproofKodeverkService.ARKIVTEMA)).thenReturn(new ResultatWrapper("Dagpenger"));
-        when(dokumentMetadataService.hentDokumentMetadata(any(), anyString())).thenReturn(new ResultatWrapper<>(asList(new DokumentMetadata().withTemakode("DAG").withBaksystem(Baksystem.HENVENDELSE))));
+        when(dokumentMetadataService.hentDokumentMetadata(anyString())).thenReturn(new ResultatWrapper<>(asList(new DokumentMetadata().withTemakode("DAG").withBaksystem(Baksystem.HENVENDELSE))));
         Map<String, Set<String>> gruppertTema = new HashMap<>();
         Set set = new HashSet<>();
         set.add("DAG");
@@ -255,7 +255,7 @@ public class SakstemaServiceTest {
     public void forskjelligTemakodeSakOgBehandlingOgAnnet() {
         when(kodeverk.getTemanavnForTemakode(Konstanter.DAGPENGER, BulletproofKodeverkService.ARKIVTEMA)).thenReturn(new ResultatWrapper("Dagpenger"));
         when(kodeverk.getTemanavnForTemakode("FOR", BulletproofKodeverkService.ARKIVTEMA)).thenReturn(new ResultatWrapper("Foreldrepenger"));
-        when(dokumentMetadataService.hentDokumentMetadata(any(), anyString())).thenReturn(new ResultatWrapper<>(asList(new DokumentMetadata().withTemakode("FOR").withBaksystem(Baksystem.HENVENDELSE))));
+        when(dokumentMetadataService.hentDokumentMetadata(anyString())).thenReturn(new ResultatWrapper<>(asList(new DokumentMetadata().withTemakode("FOR").withBaksystem(Baksystem.HENVENDELSE))));
 
         Map<String, Set<String>> gruppertTema = new HashMap<String, Set<String>>(){{
             put("RESTERENDE_TEMA", new HashSet(asList("FOR", "DAG")));
@@ -325,7 +325,7 @@ public class SakstemaServiceTest {
         when(kodeverk.getTemanavnForTemakode(Konstanter.DAGPENGER, BulletproofKodeverkService.ARKIVTEMA)).thenReturn(new ResultatWrapper("Dagpenger"));
         when(kodeverk.getTemanavnForTemakode(Konstanter.ARBEIDSAVKLARINGSPENGER, BulletproofKodeverkService.ARKIVTEMA)).thenReturn(new ResultatWrapper("Arbeidsavklaringspenger"));
 
-        when(dokumentMetadataService.hentDokumentMetadata(any(), anyString()))
+        when(dokumentMetadataService.hentDokumentMetadata(anyString()))
                 .thenReturn(
                         new ResultatWrapper<>(
                                 asList(
@@ -364,7 +364,7 @@ public class SakstemaServiceTest {
         when(kodeverk.getTemanavnForTemakode("SYK", BulletproofKodeverkService.ARKIVTEMA)).thenReturn(new ResultatWrapper("Sykepenger"));
         when(kodeverk.getTemanavnForTemakode("SYM", BulletproofKodeverkService.ARKIVTEMA)).thenReturn(new ResultatWrapper("Sykemeldinger"));
 
-        when(dokumentMetadataService.hentDokumentMetadata(any(), anyString()))
+        when(dokumentMetadataService.hentDokumentMetadata(anyString()))
                 .thenReturn(
                         new ResultatWrapper<>(
                                 asList(
@@ -416,7 +416,7 @@ public class SakstemaServiceTest {
         when(kodeverk.getTemanavnForTemakode("SYK", BulletproofKodeverkService.ARKIVTEMA)).thenReturn(new ResultatWrapper("Sykepenger"));
         when(kodeverk.getTemanavnForTemakode("SYM", BulletproofKodeverkService.ARKIVTEMA)).thenReturn(new ResultatWrapper("Sykemeldinger"));
 
-        when(dokumentMetadataService.hentDokumentMetadata(any(), anyString()))
+        when(dokumentMetadataService.hentDokumentMetadata(anyString()))
                 .thenReturn(
                         new ResultatWrapper<>(
                                 asList(
@@ -464,7 +464,7 @@ public class SakstemaServiceTest {
     public void slaarIkkeSammenSykepengerOgSykemeldingHvisEnErTomtTema (){
         when(kodeverk.getTemanavnForTemakode("SYM", BulletproofKodeverkService.ARKIVTEMA)).thenReturn(new ResultatWrapper("Sykemeldinger"));
 
-        when(dokumentMetadataService.hentDokumentMetadata(any(), anyString()))
+        when(dokumentMetadataService.hentDokumentMetadata(anyString()))
                 .thenReturn(
                         new ResultatWrapper<>(
                                 asList(
@@ -509,7 +509,7 @@ public class SakstemaServiceTest {
         when(kodeverk.getTemanavnForTemakode("SYM", BulletproofKodeverkService.ARKIVTEMA)).thenReturn(new ResultatWrapper("Sykemeldinger"));
         when(kodeverk.getTemanavnForTemakode(SakstemaGrupperer.OPPFOLGING, BulletproofKodeverkService.ARKIVTEMA)).thenReturn(new ResultatWrapper("Oppfølging"));
 
-        when(dokumentMetadataService.hentDokumentMetadata(any(), anyString()))
+        when(dokumentMetadataService.hentDokumentMetadata(anyString()))
                 .thenReturn(
                         new ResultatWrapper<>(
                                 asList(

@@ -1,12 +1,13 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.sak.service;
 
-import no.nav.sbl.dialogarena.modiabrukerdialog.sak.utils.Java8Utils;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.Baksystem;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.DokumentMetadata;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.FeilendeBaksystemException;
-import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.Sak;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.resultatwrappere.ResultatWrapper;
+import no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.interfaces.InnsynJournalV2Service;
+import no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.saf.SafService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.transformers.DokumentMetadataTransformer;
+import no.nav.sbl.dialogarena.modiabrukerdialog.sak.utils.Java8Utils;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -23,139 +24,142 @@ public class DokumentMetadataService {
 
     private static final String DOKMOT_TEMA_REGEX = "BIL|FOR";
 
-    private JoarkJournalService joarkJournalService;
+    private InnsynJournalV2Service innsynJournalV2Service;
     private HenvendelseService henvendelseService;
     private DokumentMetadataTransformer dokumentMetadataTransformer;
+    private SafService safService;
 
-    private List<DokumentMetadata> joarkJournalposter;
-    private List<DokumentMetadata> henvendelseSoknader;
-    private Set<Baksystem> feilendeBaksystem;
-
-    public DokumentMetadataService(JoarkJournalService joarkJournalService,
+    public DokumentMetadataService(InnsynJournalV2Service innsynJournalV2Service,
                                    HenvendelseService henvendelseService,
-                                   DokumentMetadataTransformer dokumentMetadataTransformer) {
-        this.joarkJournalService = joarkJournalService;
+                                   DokumentMetadataTransformer dokumentMetadataTransformer,
+                                   SafService safService) {
+
+        this.innsynJournalV2Service = innsynJournalV2Service;
         this.henvendelseService = henvendelseService;
         this.dokumentMetadataTransformer = dokumentMetadataTransformer;
-
+        this.safService = safService;
     }
 
-    public ResultatWrapper<List<DokumentMetadata>> hentDokumentMetadata(List<Sak> saker, String fnr) {
-        initFields();
+    public synchronized ResultatWrapper<List<DokumentMetadata>> hentDokumentMetadata(String fnr) {
+        DokumentMetadataResultat resultat = new DokumentMetadataResultat();
 
-        hentJoarkJournalposter(saker, fnr);
-        hentHenvendelseSoknader(fnr);
+        hentJournalposter(fnr, resultat);
+        hentSoknader(fnr, resultat);
 
-        populerDokmotSoknaderMedJournalpostIdFraJoark();
+        populerDokmotSoknaderMedJournalpostIdFraJoark(resultat);
 
-        leggTilHenvendelseSomBaksystemIJournalposterOmSoknadEksistererIHenvendelse();
+        leggTilHenvendelseSomBaksystemIJournalposterOmSoknadEksisterer(resultat);
 
-        Stream<DokumentMetadata> innsendteSoknaderSomHarEndretTema = finnSoknaderSomHarForskjelligTemaIHenvendelseOgJoark();
+        Stream<DokumentMetadata> innsendteSoknaderSomHarEndretTema = finnSoknaderSomHarForskjelligTemaISoknadOgJournalpost(resultat);
 
-        Stream<DokumentMetadata> innsendteSoknaderSomBareFinnesIHenvendelse = finnSoknaderBareIHenvendelse();
+        Stream<DokumentMetadata> innsendteSoknaderSomBareIkkeHarJournalpost = finnSoknaderUtenJournalpost(resultat);
 
-        markerJournalposterSomEttersendingOmSoknadErEttersending();
+        markerJournalposterSomEttersendingOmSoknadErEttersending(resultat);
 
         return new ResultatWrapper<>(Java8Utils.concat(
-                joarkJournalposter.stream(),
-                innsendteSoknaderSomBareFinnesIHenvendelse,
+                resultat.journalposter.stream(),
+                innsendteSoknaderSomBareIkkeHarJournalpost,
                 innsendteSoknaderSomHarEndretTema
-        ).collect(toList()), feilendeBaksystem);
+        ).collect(toList()), resultat.feilendeBaksystem);
     }
 
-    private void initFields() {
-        joarkJournalposter = new ArrayList<>();
-        henvendelseSoknader = new ArrayList<>();
-        feilendeBaksystem = new HashSet<>();
-    }
 
-    private void populerDokmotSoknaderMedJournalpostIdFraJoark() {
-        henvendelseSoknader.stream()
+    private void populerDokmotSoknaderMedJournalpostIdFraJoark(DokumentMetadataResultat resultat) {
+        resultat.soknader.stream()
                 .filter(soknad -> soknad.getJournalpostId() == null)
                 .filter(soknad -> soknad.getTemakode().matches(DOKMOT_TEMA_REGEX))
-                .forEach(soknad -> soknad.withJournalpostId(finnJournalpostIdFraBehandlingsId(soknad.getBehandlingsId())));
+                .forEach(soknad -> soknad.withJournalpostId(finnJournalpostIdFraBehandlingsId(soknad.getBehandlingsId(), resultat)));
     }
 
-    private String finnJournalpostIdFraBehandlingsId(String behandlingsId) {
+    private String finnJournalpostIdFraBehandlingsId(String behandlingsId, DokumentMetadataResultat resultat) {
         try {
-            ResultatWrapper<DokumentMetadata> wrapper = joarkJournalService.identifiserJournalpost(behandlingsId);
-            feilendeBaksystem.addAll(wrapper.feilendeSystemer);
+            ResultatWrapper<DokumentMetadata> wrapper = innsynJournalV2Service.identifiserJournalpost(behandlingsId);
+            resultat.feilendeBaksystem.addAll(wrapper.feilendeSystemer);
             return wrapper.resultat != null ? wrapper.resultat.getJournalpostId() : null;
         } catch (FeilendeBaksystemException e) {
-            feilendeBaksystem.add(e.getBaksystem());
+            resultat.feilendeBaksystem.add(e.getBaksystem());
             return null;
         }
     }
 
-    private void hentHenvendelseSoknader(String fnr) {
+    private void hentSoknader(String fnr, DokumentMetadataResultat resultat) {
         try {
-            henvendelseSoknader.addAll(henvendelseService.hentInnsendteSoknader(fnr)
+            resultat.soknader.addAll(henvendelseService.hentInnsendteSoknader(fnr)
                     .stream()
-                    .map(soknad -> dokumentMetadataTransformer.dokumentMetadataFraHenvendelse(soknad))
+                    .map(soknad -> dokumentMetadataTransformer.dokumentMetadataFraHenvendelseSoknader(soknad))
                     .collect(toList()));
         } catch (FeilendeBaksystemException e) {
-            feilendeBaksystem.add(e.getBaksystem());
+            resultat.feilendeBaksystem.add(e.getBaksystem());
         }
     }
 
-    private void hentJoarkJournalposter(List<Sak> saker, String fnr) {
-        try {
-            ResultatWrapper<List<DokumentMetadata>> dokumentMetadataResultatWrapper = joarkJournalService.hentTilgjengeligeJournalposter(saker, fnr);
-            joarkJournalposter.addAll(dokumentMetadataResultatWrapper.resultat);
-            feilendeBaksystem.addAll(dokumentMetadataResultatWrapper.feilendeSystemer);
-        } catch (FeilendeBaksystemException e) {
-            feilendeBaksystem.add(e.getBaksystem());
-        }
+    private void hentJournalposter(String fnr, DokumentMetadataResultat resultat) {
+        ResultatWrapper<List<DokumentMetadata>> journalpostWrapper = safService.hentJournalposter(fnr);
+        resultat.journalposter.addAll(journalpostWrapper.resultat);
+        resultat.feilendeBaksystem.addAll(journalpostWrapper.feilendeSystemer);
     }
 
-    private void leggTilHenvendelseSomBaksystemIJournalposterOmSoknadEksistererIHenvendelse() {
-        joarkJournalposter
+    private void leggTilHenvendelseSomBaksystemIJournalposterOmSoknadEksisterer(DokumentMetadataResultat resultat) {
+        resultat.journalposter
                 .stream()
-                .filter(jp -> journalpostEksistererIHenvendelse(jp, henvendelseSoknader))
+                .filter(jp -> journalpostHarSoknad(jp, resultat.soknader))
                 .forEach(jp -> jp.withBaksystem(Baksystem.HENVENDELSE));
     }
 
-    private boolean journalpostEksistererIHenvendelse(DokumentMetadata jp, List<DokumentMetadata> innsendteSoknaderIHenvendelse) {
-        return innsendteSoknaderIHenvendelse.stream().anyMatch(henvendelse -> henvendelseLikJournalpost(henvendelse, jp));
+    private boolean journalpostHarSoknad(DokumentMetadata jp, List<DokumentMetadata> innsendteSoknader) {
+        return innsendteSoknader.stream().anyMatch(soknad -> soknadLikJournalpost(soknad, jp));
     }
 
-    private Stream<DokumentMetadata> finnSoknaderSomHarForskjelligTemaIHenvendelseOgJoark() {
-        return henvendelseSoknader
+    private Stream<DokumentMetadata> finnSoknaderSomHarForskjelligTemaISoknadOgJournalpost(DokumentMetadataResultat resultat) {
+        return resultat.soknader
                 .stream()
-                .filter(henvendelseDokumentmetadata -> harJournalforingEndretTema(henvendelseDokumentmetadata, joarkJournalposter))
+                .filter(soknad -> this.harJournalforingEndretTema(soknad, resultat))
                 .map(dokumentMetadata -> dokumentMetadata.withFeilWrapper(JOURNALFORT_ANNET_TEMA));
     }
 
-    private boolean harJournalforingEndretTema(DokumentMetadata henvendelseDokumentMetadata, List<DokumentMetadata> joarkDokumentMetadataListe) {
-        return joarkDokumentMetadataListe
+    private boolean harJournalforingEndretTema(DokumentMetadata soknad, DokumentMetadataResultat resultat) {
+        return resultat.journalposter
                 .stream()
-                .filter(dokumentMetadata -> henvendelseLikJournalpost(henvendelseDokumentMetadata, dokumentMetadata))
-                .anyMatch(dokumentMetadata -> !dokumentMetadata.getTemakode().equals(henvendelseDokumentMetadata.getTemakode()));
+                .filter(jp -> soknadLikJournalpost(soknad, jp))
+                .anyMatch(jp -> !jp.getTemakode().equals(soknad.getTemakode()));
     }
 
-    private Stream<DokumentMetadata> finnSoknaderBareIHenvendelse() {
-        return henvendelseSoknader
+    private Stream<DokumentMetadata> finnSoknaderUtenJournalpost(DokumentMetadataResultat resultat) {
+        return resultat.soknader
                 .stream()
-                .filter(this::finnesIkkeIJoark)
-                .map(dokumentMetadata -> dokumentMetadata.withIsJournalfort(FALSE).withLeggTilEttersendelseTekstDersomEttersendelse());
+                .filter(soknad -> this.finnesIkkeJournalpost(soknad, resultat))
+                .map(sokand -> sokand.withIsJournalfort(FALSE).withLeggTilEttersendelseTekstDersomEttersendelse());
     }
 
-    private boolean finnesIkkeIJoark(DokumentMetadata soknad) {
-        return joarkJournalposter.stream()
-                .noneMatch(jp -> henvendelseLikJournalpost(soknad, jp));
+    private boolean finnesIkkeJournalpost(DokumentMetadata soknad, DokumentMetadataResultat resultat) {
+        return resultat.journalposter.stream()
+                .noneMatch(jp -> soknadLikJournalpost(soknad, jp));
     }
 
-    private boolean henvendelseLikJournalpost(DokumentMetadata henvendelseMetadata, DokumentMetadata jp) {
-        return jp.getJournalpostId().equals(henvendelseMetadata.getJournalpostId());
+    private boolean soknadLikJournalpost(DokumentMetadata soknad, DokumentMetadata jp) {
+        return jp.getJournalpostId().equals(soknad.getJournalpostId());
     }
 
-    private void markerJournalposterSomEttersendingOmSoknadErEttersending() {
-        joarkJournalposter.forEach(journalpost -> {
-            boolean erEttersending = henvendelseSoknader
+    private void markerJournalposterSomEttersendingOmSoknadErEttersending(DokumentMetadataResultat resultat) {
+        resultat.journalposter.forEach(journalpost -> {
+            boolean erEttersending = resultat.soknader
                     .stream()
-                    .anyMatch(henvendelse -> henvendelseLikJournalpost(henvendelse, journalpost) && henvendelse.isEttersending());
+                    .anyMatch(soknad -> soknadLikJournalpost(soknad, journalpost) && soknad.isEttersending());
 
             journalpost.withEttersending(erEttersending);
         });
+    }
+}
+
+
+class DokumentMetadataResultat {
+    List<DokumentMetadata> journalposter;
+    List<DokumentMetadata> soknader;
+    Set<Baksystem> feilendeBaksystem;
+
+    DokumentMetadataResultat() {
+        journalposter = new ArrayList<>();
+        soknader = new ArrayList<>();
+        feilendeBaksystem = new HashSet<>();
     }
 }

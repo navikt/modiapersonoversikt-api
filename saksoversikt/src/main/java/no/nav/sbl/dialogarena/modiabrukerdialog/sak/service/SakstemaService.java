@@ -21,7 +21,7 @@ import static no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.SakstemaGrupp
 @SuppressWarnings("squid:S1166") // Either log or rethrow
 public class SakstemaService {
 
-    public static final String RESTERENDE_TEMA = "RESTERENDE_TEMA";
+    private static final String RESTERENDE_TEMA = "RESTERENDE_TEMA";
 
     @Inject
     private DokumentMetadataService dokumentMetadataService;
@@ -36,7 +36,7 @@ public class SakstemaService {
     private SakstemaGrupperer sakstemaGrupperer;
 
     private Map<String, Set<String>> grupperAlleSakstemaSomResterende(Map<String, Set<String>> grupperteSakstema) {
-        Set<String> sakstema = grupperteSakstema.entrySet().stream().map(Map.Entry::getValue)
+        Set<String> sakstema = grupperteSakstema.values().stream()
                 .flatMap(Set::stream).collect(toSet());
         Map<String, Set<String>> map = new HashMap<>();
         map.put(RESTERENDE_TEMA, sakstema);
@@ -44,7 +44,7 @@ public class SakstemaService {
     }
 
     public ResultatWrapper<List<Sakstema>> hentSakstema(List<Sak> saker, String fnr, boolean skalGruppere) {
-        ResultatWrapper<List<DokumentMetadata>> wrapper = dokumentMetadataService.hentDokumentMetadata(saker, fnr);
+        ResultatWrapper<List<DokumentMetadata>> wrapper = dokumentMetadataService.hentDokumentMetadata(fnr);
 
         try {
             Map<String, List<Behandlingskjede>> behandlingskjeder = sakOgBehandlingService.hentBehandlingskjederGruppertPaaTema(fnr);
