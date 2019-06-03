@@ -43,7 +43,7 @@ public class OppgaveBehandlingServiceImpl implements OppgaveBehandlingService {
 
     private static final Logger logger = LoggerFactory.getLogger(OppgaveBehandlingServiceImpl.class);
     public static final Integer DEFAULT_ENHET = 4100;
-    public static final String STORD_ENHET = "1221";
+    public static final String STORD_ENHET = "4842";
     public static final String KODE_OPPGAVE_FERDIGSTILT = "F";
     public static final String SPORSMAL_OG_SVAR = "SPM_OG_SVR";
     public static final String KONTAKT_NAV = "KNA";

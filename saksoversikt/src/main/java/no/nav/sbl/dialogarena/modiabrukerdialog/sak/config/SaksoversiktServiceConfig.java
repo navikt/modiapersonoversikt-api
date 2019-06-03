@@ -9,7 +9,6 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.interfaces.InnsynJou
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.interfaces.JournalV2Service;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.interfaces.SaksoversiktService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.interfaces.TilgangskontrollService;
-import no.nav.sbl.dialogarena.modiabrukerdialog.sak.transformers.JournalpostTransformer;
 import no.nav.tjeneste.virksomhet.innsynjournal.v2.binding.InnsynJournalV2;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -42,11 +41,6 @@ public class SaksoversiktServiceConfig {
     @Bean
     public InnsynJournalV2Service innsynJournalV2Service(InnsynJournalV2 innsynJournalV2){
         return new InnsynJournalV2ServiceImpl(innsynJournalV2);
-    }
-
-    @Bean
-    public JournalpostTransformer journalpostTransformer() {
-        return new JournalpostTransformer();
     }
 
 }
