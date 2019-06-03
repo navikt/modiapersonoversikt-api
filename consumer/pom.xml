@@ -45,11 +45,6 @@
         </dependency>
         <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>
-            <artifactId>modia-saksoversikt</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>modiabrukerdialog-api</artifactId>
             <version>${project.version}</version>
             <type>test-jar</type>

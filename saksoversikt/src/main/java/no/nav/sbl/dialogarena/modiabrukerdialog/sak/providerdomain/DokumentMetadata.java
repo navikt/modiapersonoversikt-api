@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Set;
 
 import static java.lang.Boolean.TRUE;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.KategoriNotat.*;
 
 public class DokumentMetadata {
 
@@ -27,11 +26,14 @@ public class DokumentMetadata {
     private boolean ettersending;
     private boolean erJournalfort = TRUE;
     private FeilWrapper feilWrapper = new FeilWrapper();
-    private KategoriNotat kategoriNotat;
 
 
     public boolean isEttersending() {
         return ettersending;
+    }
+
+    public void setEttersending(boolean ettersending) {
+        this.ettersending = ettersending;
     }
 
     public DokumentMetadata withEttersending(boolean ettersending) {
@@ -43,40 +45,80 @@ public class DokumentMetadata {
         return baksystem;
     }
 
+    public void setBaksystem(Set<Baksystem> baksystem) {
+        this.baksystem = baksystem;
+    }
+
     public String getTemakode() {
         return temakode;
+    }
+
+    public void setTemakode(String temakode) {
+        this.temakode = temakode;
     }
 
     public Kommunikasjonsretning getRetning() {
         return retning;
     }
 
+    public void setRetning(Kommunikasjonsretning retning) {
+        this.retning = retning;
+    }
+
     public LocalDateTime getDato() {
         return dato;
+    }
+
+    public void setDato(LocalDateTime dato) {
+        this.dato = dato;
     }
 
     public String getNavn() {
         return navn;
     }
 
+    public void setNavn(String navn) {
+        this.navn = navn;
+    }
+
     public String getJournalpostId() {
         return journalpostId;
+    }
+
+    public void setJournalpostId(String journalpostId) {
+        this.journalpostId = journalpostId;
     }
 
     public Dokument getHoveddokument() {
         return hoveddokument;
     }
 
+    public void setHoveddokument(Dokument hoveddokument) {
+        this.hoveddokument = hoveddokument;
+    }
+
     public List<Dokument> getVedlegg() {
         return vedlegg;
+    }
+
+    public void setVedlegg(List<Dokument> vedlegg) {
+        this.vedlegg = vedlegg;
     }
 
     public Entitet getAvsender() {
         return avsender;
     }
 
+    public void setAvsender(Entitet avsender) {
+        this.avsender = avsender;
+    }
+
     public Entitet getMottaker() {
         return mottaker;
+    }
+
+    public void setMottaker(Entitet mottaker) {
+        this.mottaker = mottaker;
     }
 
     public DokumentMetadata withRetning(final Kommunikasjonsretning retning) {
@@ -140,17 +182,24 @@ public class DokumentMetadata {
         return tilhorendeSakid;
     }
 
+    public void setTilhorendeSakid(String tilhorendeSakid) {
+        this.tilhorendeSakid = tilhorendeSakid;
+    }
+
     public DokumentMetadata withTilhorendeSakid(final String tilhorendeSakid) {
         this.tilhorendeSakid = tilhorendeSakid;
         return this;
     }
 
-
     public String getBehandlingsId() {
         return behandlingsId;
     }
 
-    public DokumentMetadata withBehandlingsId(String behandlingsId){
+    public void setBehandlingsId(String behandlingsId) {
+        this.behandlingsId = behandlingsId;
+    }
+
+    public DokumentMetadata withBehandlingsId(String behandlingsId) {
         this.behandlingsId = behandlingsId;
         return this;
     }
@@ -162,6 +211,10 @@ public class DokumentMetadata {
 
     public String getTemakodeVisning() {
         return this.temakodeVisning;
+    }
+
+    public void setTemakodeVisning(String temakodeVisning) {
+        this.temakodeVisning = temakodeVisning;
     }
 
     public DokumentMetadata withTemakodeVisning(final String temakodeVisning) {
@@ -178,23 +231,16 @@ public class DokumentMetadata {
         return feilWrapper;
     }
 
+    public void setFeilWrapper(FeilWrapper feilWrapper) {
+        this.feilWrapper = feilWrapper;
+    }
+
     public boolean isErJournalfort() {
         return erJournalfort;
     }
 
-    public DokumentMetadata withKategoriNotat(String kategoriNotat) {
-        if (this.getRetning().equals(Kommunikasjonsretning.INTERN)) {
-            if (kategoriNotat.equals(FORVALTNINGSNOTAT.name()) || kategoriNotat.equals(REFERAT.name())) {
-                this.kategoriNotat = FORVALTNINGSNOTAT;
-            } else {
-                this.kategoriNotat = INTERN_NOTAT;
-            }
-        }
-        return this;
-    }
-
-    public KategoriNotat getKategoriNotat() {
-        return kategoriNotat;
+    public void setErJournalfort(boolean erJournalfort) {
+        this.erJournalfort = erJournalfort;
     }
 
     public String getTilhorendeFagsakId() {
