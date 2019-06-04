@@ -90,6 +90,10 @@ class DoedsboMapping constructor(private val kjerneinfoService: PersonKjerneinfo
 
     private fun String?.textOrEmpty(): String = this ?: ""
 
+    /*
+        Her må vi konvertere Long til String, fordi MFN sender fnr som tall. Da vil f.eks 01234567891 bli 1234567891.
+        Derfor må vi sikre oss at vi får med ledende 0 her.
+     */
     private fun Long.tilFnr(): String {
         val idNummer = this.toString()
         if (idNummer.length == 10) {
