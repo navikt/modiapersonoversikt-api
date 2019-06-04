@@ -21,7 +21,7 @@ public class DokumentMetadataTransformer {
         this.bulletproofKodeverkService = bulletproofKodeverkService;
     }
 
-    public DokumentMetadata dokumentMetadataFraHenvendelse(Soknad soknad) {
+    public DokumentMetadata dokumentMetadataFraHenvendelseSoknader(Soknad soknad) {
         String temakode = getTemakode(soknad.getSkjemanummerRef());
         ResultatWrapper temanavn = getTemanavn(temakode);
 
