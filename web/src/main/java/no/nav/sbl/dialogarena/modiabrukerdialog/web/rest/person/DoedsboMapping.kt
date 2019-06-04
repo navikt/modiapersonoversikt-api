@@ -37,7 +37,7 @@ class DoedsboMapping constructor(private val kjerneinfoService: PersonKjerneinfo
         val personNavn = personnavnV3?.let { personoppslagAsPersonNavn(it) }
 
         return mapOf(
-                "idNummer" to adressat.idNummer,
+                "idNummer" to adressat.idNummer.tilFnr(),
                 "navn" to personNavn?.let { personNavn(it) }
         )
     }
@@ -89,5 +89,13 @@ class DoedsboMapping constructor(private val kjerneinfoService: PersonKjerneinfo
     }
 
     private fun String?.textOrEmpty(): String = this ?: ""
+
+    private fun Long.tilFnr(): String {
+        val idNummer = this.toString()
+        if (idNummer.length == 10) {
+            return "0$idNummer"
+        }
+        return idNummer
+    }
 
 }
