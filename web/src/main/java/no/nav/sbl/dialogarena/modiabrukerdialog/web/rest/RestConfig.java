@@ -56,8 +56,6 @@ public class RestConfig extends ResourceConfig {
                 YtelseController.class,
                 OppfolgingController.class,
                 SakerController.class,
-                SafController.class,
-                PersondokumentController.class,
                 SafService.class,
                 DialogController.class
         );
