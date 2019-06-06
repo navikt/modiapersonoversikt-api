@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+    <title>Modiapersonoversikt - Skrivestøtte</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        body {
+            margin: 0;
+        }
+        html, body, #root {
+            height: 100%;
+            overflow: hidden;
+        }
+    </style>
+    <script type="application/javascript">
+        window.frontendlogger = { info: function(){}, warn: function(){}, error: function(){}, event: function(){}};
+        window.frontendlogger.appname = 'modiapersonoversikt-skrivestotte';
+    </script>
+    <script type="application/javascript" src="/frontendlogger/logger.js"></script>
+</head>
+<body>
+<div id="root"></div>
+<script>
+    function render() {
+        NAVSPA['modiapersonoversikt-skrivestotte'](document.getElementById('root'), {
+            renderHead: true,
+            customDomain: window.skrivestotteDomain // Blir injected fra wicket
+        });
+    }
+    render();
+</script>
+</body>
+</html>

@@ -8,8 +8,7 @@ import no.nav.kjerneinfo.consumer.fim.person.to.HentKjerneinformasjonRequest;
 import no.nav.kjerneinfo.consumer.fim.person.to.HentKjerneinformasjonResponse;
 import no.nav.kjerneinfo.domain.person.Person;
 import no.nav.kjerneinfo.domain.person.Personfakta;
-import no.nav.modig.content.CmsContentRetriever;
-import no.nav.modig.content.PropertyResolver;
+import no.nav.modig.content.ContentRetriever;
 import no.nav.personsok.consumer.fim.personsok.PersonsokServiceBi;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Saksbehandler;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.AnsattEnhet;
@@ -96,8 +95,8 @@ public class PersonPageMockContext {
     }
 
     @Bean
-    public CmsContentRetriever cmsContentRetriever() {
-        CmsContentRetriever mock = mock(CmsContentRetriever.class);
+    public ContentRetriever cmsContentRetriever() {
+        ContentRetriever mock = mock(ContentRetriever.class);
         when(mock.getDefaultLocale()).thenReturn("nb");
         when(mock.hentTekst(anyString())).thenReturn("Tekst fra mock-cms");
         return mock;
@@ -123,8 +122,8 @@ public class PersonPageMockContext {
 
 
     @Bean
-    public PropertyResolver propertyResolver() {
-        return mock(PropertyResolver.class);
+    public ContentRetriever propertyResolver() {
+        return mock(ContentRetriever.class);
     }
 
     private HentKjerneinformasjonResponse lagMockKjerneinfoResponse() {

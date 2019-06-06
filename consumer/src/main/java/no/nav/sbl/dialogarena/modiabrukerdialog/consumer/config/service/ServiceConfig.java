@@ -10,7 +10,7 @@ import no.nav.kjerneinfo.consumer.fim.person.support.DefaultPersonKjerneinfoServ
 import no.nav.kjerneinfo.consumer.fim.person.support.KjerneinfoMapper;
 import no.nav.kjerneinfo.consumer.fim.person.vergemal.VergemalService;
 import no.nav.kodeverk.consumer.fim.kodeverk.KodeverkmanagerBi;
-import no.nav.modig.content.PropertyResolver;
+import no.nav.modig.content.ContentRetriever;
 import no.nav.modig.wicket.services.HealthCheckService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.HenvendelseUtsendingService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveBehandlingService;
@@ -81,7 +81,7 @@ public class ServiceConfig {
                                                                    OppgaveBehandlingService oppgaveBehandlingService,
                                                                    SakerService sakerService,
                                                                    @Named("pep") EnforcementPoint pep,
-                                                                   PropertyResolver propertyResolver,
+                                                                   @Named("propertyResolver") ContentRetriever propertyResolver,
                                                                    PersonKjerneinfoServiceBi personKjerneinfoServiceBi,
                                                                    LDAPService ldapService) {
 

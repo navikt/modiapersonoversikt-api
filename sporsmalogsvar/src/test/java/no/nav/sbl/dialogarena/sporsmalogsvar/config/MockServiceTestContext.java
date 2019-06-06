@@ -6,8 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import no.nav.brukerdialog.security.tilgangskontroll.policy.pep.EnforcementPoint;
 import no.nav.kjerneinfo.consumer.fim.person.PersonKjerneinfoServiceBi;
 import no.nav.modig.common.SporingsLogger;
-import no.nav.modig.content.CmsContentRetriever;
-import no.nav.modig.content.PropertyResolver;
+import no.nav.modig.content.ContentRetriever;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.AnsattEnhet;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.HenvendelseUtsendingService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveBehandlingService;
@@ -150,13 +149,8 @@ public class MockServiceTestContext {
     }
 
     @Bean
-    public CmsContentRetriever contentRetriever() {
-        return mock(CmsContentRetriever.class);
-    }
-
-    @Bean
-    public PropertyResolver propertyResolver() {
-        return mock(PropertyResolver.class);
+    public ContentRetriever propertyResolver() {
+        return mock(ContentRetriever.class);
     }
 
     @Bean

@@ -1,8 +1,7 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock;
 
 import no.nav.kjerneinfo.consumer.fim.person.PersonKjerneinfoServiceBi;
-import no.nav.modig.content.CmsContentRetriever;
-import no.nav.modig.content.PropertyResolver;
+import no.nav.modig.content.ContentRetriever;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.UnleashService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.utils.WicketInjectablePropertyResolver;
 import org.springframework.context.annotation.Bean;
@@ -17,9 +16,9 @@ import static org.mockito.Mockito.when;
 @Import(value = {ConsumerServicesMockContext.class, JacksonMockContext.class})
 public class DialogPanelMockContext {
 
-    @Bean
-    public CmsContentRetriever cmsContentRetriever() {
-        return mock(CmsContentRetriever.class);
+    @Bean(name = "contentRetriever")
+    public ContentRetriever cmsContentRetriever() {
+        return mock(ContentRetriever.class);
     }
 
     @Bean
@@ -35,8 +34,8 @@ public class DialogPanelMockContext {
     }
 
     @Bean
-    public PropertyResolver propertyResolver() {
-        return mock(PropertyResolver.class);
+    public ContentRetriever propertyResolver() {
+        return mock(ContentRetriever.class);
     }
 
     @Bean

@@ -1,6 +1,6 @@
 package no.nav.sbl.dialogarena.varsel.rest;
 
-import no.nav.modig.content.CmsContentRetriever;
+import no.nav.modig.content.ContentRetriever;
 import no.nav.sbl.dialogarena.varsel.domain.Varsel;
 import no.nav.sbl.dialogarena.varsel.service.VarslerService;
 
@@ -25,7 +25,7 @@ public class VarslerController {
 
     @Inject
     @Named("varsling-cms-integrasjon")
-    private CmsContentRetriever contentRetriever;
+    private ContentRetriever contentRetriever;
 
     @GET
     @Path("/")

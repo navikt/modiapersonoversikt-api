@@ -1,7 +1,7 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.api.utils;
 
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.*;
-import no.nav.modig.content.PropertyResolver;
+import no.nav.modig.content.ContentRetriever;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Saksbehandler;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Fritekst;
@@ -54,7 +54,7 @@ public class MeldingUtils {
                     .stream()
                     .anyMatch(melding -> melding.id.equals(traad.getKey()));
 
-    public static Function<XMLHenvendelse, Melding> tilMelding(final PropertyResolver propertyResolver, final LDAPService ldapService) {
+    public static Function<XMLHenvendelse, Melding> tilMelding(final ContentRetriever propertyResolver, final LDAPService ldapService) {
         return xmlHenvendelse -> {
             Melding melding = new Melding();
             melding.id = xmlHenvendelse.getBehandlingsId();
@@ -121,7 +121,7 @@ public class MeldingUtils {
         return false;
     }
 
-    private static void oppdaterMeldingMedJournalfortInformasjon(final PropertyResolver propertyResolver, final LDAPService ldapService, final XMLHenvendelse xmlHenvendelse, final Melding melding) {
+    private static void oppdaterMeldingMedJournalfortInformasjon(final ContentRetriever propertyResolver, final LDAPService ldapService, final XMLHenvendelse xmlHenvendelse, final Melding melding) {
         XMLJournalfortInformasjon journalfortInformasjon = xmlHenvendelse.getJournalfortInformasjon();
         if (journalfortInformasjon != null) {
             melding.statusTekst = getTekstForMeldingStatus(propertyResolver, melding.meldingstype);
@@ -133,7 +133,7 @@ public class MeldingUtils {
         }
     }
 
-    private static void oppdaterMeldingMedMarkeringer(final PropertyResolver propertyResolver, final LDAPService ldapService, final XMLHenvendelse xmlHenvendelse, final Melding melding) {
+    private static void oppdaterMeldingMedMarkeringer(final ContentRetriever propertyResolver, final LDAPService ldapService, final XMLHenvendelse xmlHenvendelse, final Melding melding) {
         XMLMarkeringer xmlMarkeringer = xmlHenvendelse.getMarkeringer();
         if (xmlMarkeringer != null) {
             ofNullable(xmlMarkeringer.getKontorsperre()).ifPresent(xmlKontorsperre -> {
@@ -156,18 +156,18 @@ public class MeldingUtils {
         }
     }
 
-    private static void oppdaterMeldingMedKasseringData(final PropertyResolver propertyResolver, final Melding melding) {
+    private static void oppdaterMeldingMedKasseringData(final ContentRetriever propertyResolver, final Melding melding) {
         settTemagruppe(melding, null, propertyResolver);
         melding.statusTekst = getTekstForMeldingStatus(propertyResolver, melding.meldingstype);
-        melding.withFritekst(new Fritekst(propertyResolver.getProperty("innhold.kassert"), melding.skrevetAv, melding.ferdigstiltDato));
+        melding.withFritekst(new Fritekst(propertyResolver.hentTekst("innhold.kassert"), melding.skrevetAv, melding.ferdigstiltDato));
         melding.kanal = null;
         melding.kassert = true;
     }
 
-    private static void oppdaterMeldingMedDokumentVarselData(final PropertyResolver propertyResolver, final XMLHenvendelse xmlHenvendelse, final Melding melding, final XMLMetadata xmlMetadata) {
+    private static void oppdaterMeldingMedDokumentVarselData(final ContentRetriever propertyResolver, final XMLHenvendelse xmlHenvendelse, final Melding melding, final XMLMetadata xmlMetadata) {
         XMLDokumentVarsel dokumentVarsel = (XMLDokumentVarsel) xmlMetadata;
         melding.statusTekst = dokumentVarsel.getDokumenttittel();
-        melding.withFritekst(new Fritekst(format(propertyResolver.getProperty("dokument.fritekst"), dokumentVarsel.getTemanavn()), melding.skrevetAv, dokumentVarsel.getFerdigstiltDato()));
+        melding.withFritekst(new Fritekst(format(propertyResolver.hentTekst("dokument.fritekst"), dokumentVarsel.getTemanavn()), melding.skrevetAv, dokumentVarsel.getFerdigstiltDato()));
         melding.erDokumentMelding = true;
         melding.withTraadId(xmlHenvendelse.getBehandlingsId());
         melding.lestStatus = lagLestStatusDokumentVarsel(melding);
@@ -175,7 +175,7 @@ public class MeldingUtils {
         melding.statusKlasse = "dokument";
     }
 
-    private static void oppdaterMeldingMedOppgaveVarselData(final PropertyResolver propertyResolver, final XMLHenvendelse xmlHenvendelse, final Melding melding, final XMLMetadata xmlMetadata) {
+    private static void oppdaterMeldingMedOppgaveVarselData(final ContentRetriever propertyResolver, final XMLHenvendelse xmlHenvendelse, final Melding melding, final XMLMetadata xmlMetadata) {
         XMLOppgaveVarsel oppgaveVarsel = (XMLOppgaveVarsel) xmlMetadata;
         melding.statusTekst = hentEnonicTekstDynamic(propertyResolver, format("oppgave.%s", oppgaveVarsel.getOppgaveType()), "oppgave.GEN");
         melding.withFritekst(new Fritekst(hentEnonicTekstDynamic(propertyResolver, format("oppgave.%s.fritekst", oppgaveVarsel.getOppgaveType()), "oppgave.GEN.fritekst"), melding.skrevetAv, melding.opprettetDato));
@@ -185,20 +185,20 @@ public class MeldingUtils {
         melding.statusKlasse = "oppgave";
     }
 
-    static String getTekstForMeldingStatus(PropertyResolver propertyResolver, Meldingstype meldingstype) {
+    static String getTekstForMeldingStatus(ContentRetriever propertyResolver, Meldingstype meldingstype) {
         return hentEnonicTekstForMeldingStatus(propertyResolver, meldingstype)
                 .orElse(getTekstForMeldingStatus(meldingstype)
                         .orElse(VisningUtils.lagMeldingStatusTekstKey(meldingstype)));
     }
 
-    static Optional<String> hentEnonicTekstForMeldingStatus(PropertyResolver propertyResolver, Meldingstype meldingstype) {
+    static Optional<String> hentEnonicTekstForMeldingStatus(ContentRetriever propertyResolver, Meldingstype meldingstype) {
         if(!skalHenteStatusTekstForMelding(meldingstype)) {
             return Optional.empty();
         }
 
         String key = VisningUtils.lagMeldingStatusTekstKey(meldingstype);
         try {
-            return ofNullable(propertyResolver.getProperty(key));
+            return ofNullable(propertyResolver.hentTekst(key));
         } catch(NoSuchElementException exception) {
             logger.error("Finner ikke cms-oppslag for " + key, exception.getMessage());
             return Optional.empty();
@@ -216,11 +216,11 @@ public class MeldingUtils {
         return meldingstype != DELVIS_SVAR_SKRIFTLIG;
     }
 
-    protected static String hentEnonicTekstDynamic(PropertyResolver resolver, String key, String defaultKey) {
+    protected static String hentEnonicTekstDynamic(ContentRetriever resolver, String key, String defaultKey) {
         try {
-            return resolver.getProperty(key);
+            return resolver.hentTekst(key);
         } catch (Exception e) {
-            return resolver.getProperty(defaultKey);
+            return resolver.hentTekst(defaultKey);
         }
     }
 
@@ -243,12 +243,12 @@ public class MeldingUtils {
         return "Ulest";
     }
 
-    private static void settTemagruppe(Melding melding, String temagruppe, PropertyResolver propertyResolver) {
+    private static void settTemagruppe(Melding melding, String temagruppe, ContentRetriever propertyResolver) {
         melding.temagruppe = temagruppe;
         if (temagruppe == null) {
-            melding.temagruppeNavn = propertyResolver.getProperty("temagruppe.kassert");
+            melding.temagruppeNavn = propertyResolver.hentTekst("temagruppe.kassert");
         } else {
-            melding.temagruppeNavn = propertyResolver.getProperty(temagruppe);
+            melding.temagruppeNavn = propertyResolver.hentTekst(temagruppe);
         }
     }
 

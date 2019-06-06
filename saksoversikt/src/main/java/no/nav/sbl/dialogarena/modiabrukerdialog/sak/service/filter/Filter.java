@@ -1,6 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.filter;
 
-import no.nav.modig.content.CmsContentRetriever;
+import no.nav.modig.content.ContentRetriever;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.Behandling;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.BehandlingsStatus;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.WSBehandlingskjede;
@@ -18,7 +18,7 @@ public class Filter {
     public final static String ULOVLIG_PREFIX = "17";
 
     @Inject
-    private CmsContentRetriever cms;
+    private ContentRetriever cms;
 
     private static List<String> ulovligeSakstema;
     private static List<String> lovligeBehandlingstyper;
