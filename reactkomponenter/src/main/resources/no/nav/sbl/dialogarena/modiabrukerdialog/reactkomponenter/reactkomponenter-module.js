@@ -23,6 +23,7 @@ import NyPleiepenger from './ny-pleiepenger/ny-pleiepenger';
 import NyOppfolging from './ny-oppfolging/ny-oppfolging';
 import NyForeldrepenger from './ny-foreldrepenger/ny-foreldrepenger';
 import NySykepenger from './ny-sykepenger/ny-sykepenger';
+import HurtigReferat from './hurtigreferat/hurtigreferat';
 
 import React from './nav-react';
 import ReactDOM from 'react-dom';
@@ -54,7 +55,8 @@ window.ModiaJS = {
         NyOppfolging,
         NySykepenger,
         NyForeldrepenger,
-        NyVarsel
+        NyVarsel,
+        HurtigReferat
     },
     InitializedComponents: {},
     React,

@@ -1,8 +1,9 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.person;
 
 import no.nav.json.JsonUtils;
-import no.nav.tjenester.person.oppslag.v1.domain.Persondokument;
-import no.nav.tjenester.person.oppslag.v1.domain.personident.utenlandskidentifikasjonsnummer.UtenlandskIdentifikasjonsnummer;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.personoppslag.AdvokatSomAdressat;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.personoppslag.KontaktiformasjonForDoedsbo;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.personoppslag.PersonOppslagResponse;
 import org.junit.Test;
 
 import java.util.UUID;
@@ -13,67 +14,69 @@ public class PersonOppslagServiceImplTest {
 
     @Test
     public void skalMappeFraJsonResponseTilPersondokumentObjekt() {
-        String idnummer = "9999";
-        UUID uuid = java.util.UUID.randomUUID();
-        String land = "POL";
-
-        String opplysningsId = "qwe123";
-        String registrertINav = "2019-01-08T15:26:14.714Z";
-        String master = "NAV";
-        String kilde = "Krankenkasse";
-        String idnummerType = "test";
-        String systemkilde = "srvperson-mottak";
-        String ident = "z999999";
-        String gyldigFom = "2018-01-31";
-        String jsonResponse = "{\n" +
-                "  \"personidenter\": {\n" +
-                "    \"folkeregisteridenter\": [\n" +
-                "      {\n" +
-                "        \"idNummer\": \"10108000398\",\n" +
-                "        \"idNummertype\": \"FNR\",\n" +
-                "        \"opplysningsId\": \"abc\",\n" +
-                "        \"registrertINAV\": \"2018-12-14T10:04:33.938Z\",\n" +
-                "        \"master\": \"Folkeregisteret\",\n" +
-                "        \"kilde\": \"Synutopia\",\n" +
-                "        \"idNummerType\": \"\",\n" +
-                "        \"systemKilde\": \"ukjent\",\n" +
-                "        \"registrertAv\": \"ukjent\",\n" +
-                "        \"gyldigFom\": \"2018-05-09\"\n" +
-                "      }\n" +
-                "    ],\n" +
-                "    \"utenlandskeIdentifikasjonsnummere\": [\n" +
-                "      {\n" +
-                "        \"idNummer\": \"" + idnummer + "\",\n" +
-                "        \"utstederland\": \"" + land + "\",\n" +
-                "        \"opplysningsId\": \"" + opplysningsId + "\",\n" +
-                "        \"registrertINAV\": \"" + registrertINav + "\",\n" +
-                "        \"master\": \"" + master + "\",\n" +
-                "        \"kilde\": \"" + kilde + "\",\n" +
-                "        \"idNummertype\": \"" + idnummerType + "\",\n" +
-                "        \"systemKilde\": \"" + systemkilde + "\",\n" +
-                "        \"registrertAv\": \"" + ident + "\",\n" +
-                "        \"gyldigFom\": \"" + gyldigFom + "\"\n" +
-                "      }\n" +
-                "    ]\n" +
-                "  },\n" +
-                "  \"lineage\": {\n" +
-                "    \"nodeId\": \"" + uuid + "\"\n" +
-                "  }\n" +
+        String jsonResponse = "{  \n" +
+                "\"kontaktinformasjonForDoedsbo\": [\n" +
+                "    {\n" +
+                "      \"adressat\": {\n" +
+                "        \"advokatSomAdressat\": {\n" +
+                "          \"kontaktperson\": {\n" +
+                "            \"etternavn\": \"Gulrot\",\n" +
+                "            \"fornavn\": \"Oransje\",\n" +
+                "            \"mellomnavn\": \"Gul\"\n" +
+                "          },\n" +
+                "          \"organisasjonsnavn\": \"Advokat AS\",\n" +
+                "          \"organisasjonsnummer\": 123456789\n" +
+                "        },\n" +
+                "        \"kontaktpersonMedIdNummerSomAdressat\": {\n" +
+                "          \"idNummer\": 12345678910\n" +
+                "        },\n" +
+                "        \"kontaktpersonUtenIdNummerSomAdressat\": {\n" +
+                "          \"foedselsdato\": \"string\",\n" +
+                "          \"navn\": {\n" +
+                "            \"etternavn\": \"Gulrot\",\n" +
+                "            \"fornavn\": \"Oransje\",\n" +
+                "            \"mellomnavn\": \"Gul\"\n" +
+                "          }\n" +
+                "        },\n" +
+                "        \"organisasjonSomAdressat\": {\n" +
+                "          \"kontaktperson\": {\n" +
+                "            \"etternavn\": \"Gulrot\",\n" +
+                "            \"fornavn\": \"Oransje\",\n" +
+                "            \"mellomnavn\": \"Gul\"\n" +
+                "          },\n" +
+                "          \"organisasjonsnavn\": \"Organisasjon AS\",\n" +
+                "          \"organisasjonsnummer\": 123456789\n" +
+                "        }\n" +
+                "      },\n" +
+                "      \"adresselinje1\": \"TestAdresselinje1\",\n" +
+                "      \"adresselinje2\": \"TestAdresselinje2\",\n" +
+                "      \"gyldigFom\": \"2018-10-26\",\n" +
+                "      \"gyldigTom\": \"2018-10-26\",\n" +
+                "      \"kilde\": \"KILDE_DSF\",\n" +
+                "      \"landkode\": \"POL\",\n" +
+                "      \"master\": \"Folkeregisteret\",\n" +
+                "      \"opplysningsId\": \"85dc7a9c-7e5c-41da-87c9-0320fb74165d\",\n" +
+                "      \"postnummer\": \"string\",\n" +
+                "      \"poststedsnavn\": \"string\",\n" +
+                "      \"registrertAv\": \"Z990000\",\n" +
+                "      \"registrertINAV\": \"2018-10-26T12:47:18.752Z[UTC]\",\n" +
+                "      \"skifteform\": \"offentlig\",\n" +
+                "      \"systemKilde\": \"srveessi\",\n" +
+                "      \"utstedtDato\": \"string\"\n" +
+                "    }\n" +
+                "  ] \n" +
                 "}";
 
 
-        Persondokument persondokument = JsonUtils.fromJson(jsonResponse, Persondokument.class);
+        PersonOppslagResponse persondokument = JsonUtils.fromJson(jsonResponse, PersonOppslagResponse.class);
 
-        UtenlandskIdentifikasjonsnummer utenalandskId = persondokument.getPersonidenter().getUtenlandskeIdentifikasjonsnummere().get(0);
-        assertEquals(idnummer, utenalandskId.getIdNummer());
-        assertEquals(land, utenalandskId.getUtstederland());
-        assertEquals(opplysningsId, utenalandskId.getOpplysningsId());
-        assertEquals(registrertINav, utenalandskId.getRegistrertINAV().toString());
-        assertEquals(master, utenalandskId.getMaster());
-        assertEquals(kilde, utenalandskId.getKilde());
-        assertEquals(idnummerType, utenalandskId.getIdNummertype());
-        assertEquals(systemkilde, utenalandskId.getSystemKilde());
-        assertEquals(ident, utenalandskId.getRegistrertAv());
-        assertEquals(gyldigFom, utenalandskId.getGyldigFom().toString());
+        KontaktiformasjonForDoedsbo kd = persondokument.getKontaktinformasjonForDoedsbo().get(0);
+
+        assertEquals(kd.getAdresselinje1(), "TestAdresselinje1");
+        assertEquals(kd.getLandkode(), "POL");
+
+        AdvokatSomAdressat addr = kd.getAdressat().getAdvokatSomAdressat();
+
+        assertEquals(addr.getOrganisasjonsnavn(), "Advokat AS");
     }
 }
