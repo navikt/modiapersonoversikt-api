@@ -115,10 +115,10 @@
         <kodeverk.tjenestespesifikasjon.version>2.0.1</kodeverk.tjenestespesifikasjon.version>
         <henvendelse.informasjon.v2.version>0.5</henvendelse.informasjon.v2.version>
         <send.ut.henvendelse.version>0.7</send.ut.henvendelse.version>
-        <behandle.henvendelse.version>0.21</behandle.henvendelse.version>
+        <behandle.henvendelse.version>1.2019.04.04-09.14-c6cea90b8e95</behandle.henvendelse.version>
         <behandle.person.v1.version>1.0.0</behandle.person.v1.version>
         <varsling.tjeneste.version>0.0.5</varsling.tjeneste.version>
-        <behandlingsinformasjon.tjenestespec.version>1.2019.04.01-14.11-bd945ca760ae</behandlingsinformasjon.tjenestespec.version>
+        <behandlingsinformasjon.tjenestespec.version>1.2019.05.23-08.28-c9a2c8477f7d</behandlingsinformasjon.tjenestespec.version>
         <sakogbehandling-tjenestespesifikasjon.version>1.0.15</sakogbehandling-tjenestespesifikasjon.version>
         <dial-nav-tjeneste-behandlesak.version>1.1</dial-nav-tjeneste-behandlesak.version>
         <arena-arbeid-og-aktivitet.version>1.0.6-alpha002</arena-arbeid-og-aktivitet.version>
@@ -450,7 +450,7 @@
                 <version>${send.ut.henvendelse.version}</version>
             </dependency>
             <dependency>
-                <groupId>no.nav.sbl.dialogarena</groupId>
+                <groupId>no.nav.tjenestespesifikasjoner</groupId>
                 <artifactId>behandle-henvendelse</artifactId>
                 <version>${behandle.henvendelse.version}</version>
                 <exclusions>

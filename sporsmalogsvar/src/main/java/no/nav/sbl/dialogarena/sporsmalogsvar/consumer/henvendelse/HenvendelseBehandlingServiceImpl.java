@@ -138,6 +138,15 @@ public class HenvendelseBehandlingServiceImpl implements HenvendelseBehandlingSe
     }
 
     @Override
+    public void merkForHastekassering(TraadVM valgtTraad) {
+        List<String> behandlingsIdListe = valgtTraad.getMeldinger().stream()
+                .filter(melding -> !melding.erFeilsendt())
+                .map(MeldingVM::getId)
+                .collect(toList());
+        behandleHenvendelsePortType.markerTraadForHasteKassering(behandlingsIdListe);
+    }
+
+    @Override
     public String getEnhet(String fnr) {
         HentKjerneinformasjonRequest kjerneinfoRequest = new HentKjerneinformasjonRequest(fnr);
         kjerneinfoRequest.setBegrunnet(true);
