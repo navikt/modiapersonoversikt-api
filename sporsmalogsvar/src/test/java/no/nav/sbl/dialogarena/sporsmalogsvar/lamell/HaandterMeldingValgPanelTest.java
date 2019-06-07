@@ -11,11 +11,9 @@ import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.henvendelse.HenvendelseBeh
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.henvendelse.domain.Meldinger;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.HaandterMeldingValgPanel;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.MeldingActionPanel;
-import org.junit.Before;
-import org.junit.BeforeClass;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.runner.RunWith;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -32,7 +30,6 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.annotation.DirtiesContext.ClassMode.BEFORE_CLASS;
 
-@RunWith(SpringJUnit4ClassRunner.class)
 @DirtiesContext(classMode = BEFORE_CLASS)
 @ContextConfiguration(classes = {MockServiceTestContext.class})
 @ExtendWith(SpringExtension.class)
@@ -53,13 +50,8 @@ public class HaandterMeldingValgPanelTest extends WicketPageTest {
     @Inject
     private EnforcementPoint pep;
 
-    @Before
-    public void setUp() {
-        System.setProperty("no.nav.brukerdialog.security.context.subjectHandlerImplementationClass", ThreadLocalSubjectHandler.class.getName());
-    }
-
-    @Override
-    protected void additionalSetup() {
+    @BeforeAll
+    public static void setUp() {
         System.setProperty("no.nav.brukerdialog.security.context.subjectHandlerImplementationClass", ThreadLocalSubjectHandler.class.getName());
     }
 
