@@ -13,6 +13,7 @@ import no.nav.kodeverk.consumer.fim.kodeverk.KodeverkmanagerBi
 import no.nav.kodeverk.consumer.fim.kodeverk.to.feil.HentKodeverkKodeverkIkkeFunnet
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.personoppslag.*
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.person.PersonOppslagService
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.Feature
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.UnleashService
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.kodeverk.Kode
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.lagPeriode
@@ -57,12 +58,17 @@ class PersonController @Inject constructor(private val kjerneinfoService: Person
             }
         }
 
-        val response = try {
-            persondokumentService.hentPersonDokument(fødselsnummer)
-        } catch (exception: NotFoundException) {
-            logger.info("Persondokument ikke funnet for " + fødselsnummer)
-            null
-        }
+        val response = if (unleashService.isEnabled(Feature.DOEDSBO)) {
+            try {
+                persondokumentService.hentPersonDokument(fødselsnummer)
+            } catch (exception: NotFoundException) {
+                logger.info("Persondokument ikke funnet for " + fødselsnummer)
+                null
+            } catch (exception: Exception) {
+                logger.info("Feil i persondokumentoppslag", exception)
+                null
+            }
+        } else { null }
 
         val kontaktinfoForDoedsbo = response?.kontaktinformasjonForDoedsbo
 
