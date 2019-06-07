@@ -1,7 +1,7 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.api.service.person;
 
-import no.nav.tjenester.person.oppslag.v1.domain.Persondokument;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.personoppslag.PersonOppslagResponse;
 
 public interface PersonOppslagService {
-    public Persondokument hentPersonDokument(String fnr);
+    public PersonOppslagResponse hentPersonDokument(String fnr);
 }

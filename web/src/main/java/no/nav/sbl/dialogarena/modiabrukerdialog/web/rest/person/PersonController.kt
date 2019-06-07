@@ -11,12 +11,16 @@ import no.nav.kjerneinfo.domain.person.fakta.Sikkerhetstiltak
 import no.nav.kjerneinfo.domain.person.fakta.Telefon
 import no.nav.kodeverk.consumer.fim.kodeverk.KodeverkmanagerBi
 import no.nav.kodeverk.consumer.fim.kodeverk.to.feil.HentKodeverkKodeverkIkkeFunnet
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.personoppslag.*
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.person.PersonOppslagService
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.UnleashService
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.kodeverk.Kode
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.lagPeriode
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.mapOfNotNullOrEmpty
 import no.nav.tjeneste.virksomhet.person.v3.HentPersonPersonIkkeFunnet
 import no.nav.tjeneste.virksomhet.person.v3.HentPersonSikkerhetsbegrensning
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import javax.inject.Inject
 import javax.ws.rs.*
 import javax.ws.rs.core.MediaType.APPLICATION_JSON
@@ -29,7 +33,11 @@ private const val TILRETTELAGT_KOMMUNIKASJON_KODEVERKSPRAK = "nb"
 @Path("/person/{fnr}")
 @Produces(APPLICATION_JSON)
 class PersonController @Inject constructor(private val kjerneinfoService: PersonKjerneinfoServiceBi,
-                                           private val kodeverk: KodeverkmanagerBi, private val unleashService: UnleashService) {
+                                           private val kodeverk: KodeverkmanagerBi,
+                                           private val persondokumentService: PersonOppslagService,
+                                           private val unleashService: UnleashService) {
+
+    private val logger = LoggerFactory.getLogger(PersonController::class.java)
 
     @GET
     @Path("/")
@@ -48,6 +56,15 @@ class PersonController @Inject constructor(private val kjerneinfoService: Person
                 else -> throw InternalServerErrorException(exception)
             }
         }
+
+        val response = try {
+            persondokumentService.hentPersonDokument(fødselsnummer)
+        } catch (exception: NotFoundException) {
+            logger.info("Persondokument ikke funnet for " + fødselsnummer)
+            null
+        }
+
+        val kontaktinfoForDoedsbo = response?.kontaktinformasjonForDoedsbo
 
         return mapOf(
                 "fødselsnummer" to person.fodselsnummer.nummer,
@@ -71,7 +88,8 @@ class PersonController @Inject constructor(private val kjerneinfoService: Person
                 "alternativAdresse" to person.personfakta.alternativAdresse?.let { hentAdresse(it) },
                 "postadresse" to person.personfakta.postadresse?.let { hentAdresse(it) },
                 "sikkerhetstiltak" to person.personfakta.sikkerhetstiltak?.let { hentSikkerhetstiltak(it) },
-                "kontaktinformasjon" to getTelefoner(person.personfakta)
+                "kontaktinformasjon" to getTelefoner(person.personfakta),
+                "kontaktinformasjonForDoedsbo" to kontaktinfoForDoedsbo?.let { DoedsboMapping(kjerneinfoService, it).mapKontaktinfoForDoedsbo() }
         )
     }
 
@@ -233,5 +251,4 @@ class PersonController @Inject constructor(private val kjerneinfoService: Person
     } catch (exception: HentKodeverkKodeverkIkkeFunnet) {
         emptyList<Kodeverdi>()
     }
-
 }
