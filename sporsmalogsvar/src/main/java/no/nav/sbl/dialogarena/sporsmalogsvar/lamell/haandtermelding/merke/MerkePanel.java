@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.merke;
 
+import no.nav.brukerdialog.security.context.SubjectHandler;
 import no.nav.metrics.Timer;
 import no.nav.modig.wicket.component.indicatingajaxbutton.IndicatingAjaxButtonWithImageUrl;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
@@ -86,6 +87,7 @@ public class MerkePanel extends AnimertPanel {
 
         IModel<Boolean> skalViseStandardMerkValg = both(not(eldsteMeldingErJournalfort)).and(not(erFeilsendt)).and(erBehandlet).and(not(valgtTraadErKontorsperret));
         IModel<Boolean> skalViseFerdigstillUtenSvarValg = both(erMeldingstypeSporsmal).and(not(valgtTraadErKontorsperret)).and(not(erBehandlet)).and(not(harDelsvar));
+        IModel<Boolean> skalViseHastekassering = new Model<>(MerkUtils.kanHastekassere(SubjectHandler.getSubjectHandler().getUid()));
 
         ConjunctionModel bidragErEnablet = both(not(erTemagruppeSosialeTjenester)).and(skalViseStandardMerkValg);
 
@@ -112,12 +114,19 @@ public class MerkePanel extends AnimertPanel {
                 .add(avsluttRadio1)
                 .add(enabledIf(skalViseFerdigstillUtenSvarValg));
 
+        Radio<MerkType> hastekasserRadio1 = new Radio<>("hastekasserRadio", Model.of(HASTEKASSER));
+        hastekasserRadio1.add(AttributeAppender.append("aria-disabled", not(skalViseHastekassering)));
+        Component hastekasserRadio = new WebMarkupContainer("hastekasserRadioValg")
+                .add(hastekasserRadio1)
+                .add(enabledIf(skalViseHastekassering))
+                .add(visibleIf(skalViseHastekassering));
+
         kontorsperrePanel = new KontorsperrePanel("kontorsperrePanel", innboksVM, enhet);
         kontorsperrePanel.add(visibleIf(new PropertyModel<>(merkVM, "erKontorsperret()")));
 
         merkKnapp = new MerkKnapp("merk");
 
-        merkRadioGroup.add(feilsendtRadio, bidragRadioValg, kontorsperretRadioValg, avsluttRadio, kontorsperrePanel);
+        merkRadioGroup.add(feilsendtRadio, bidragRadioValg, kontorsperretRadioValg, avsluttRadio, hastekasserRadio, kontorsperrePanel);
         merkRadioGroup.add(new AjaxFormChoiceComponentUpdatingBehavior() {
             @Override
             protected void onUpdate(AjaxRequestTarget target) {
@@ -167,7 +176,8 @@ public class MerkePanel extends AnimertPanel {
                     either(new PropertyModel<>(kontorsperrePanel, "kanMerkeSomKontorsperret()"))
                             .or(new PropertyModel<>(merkVM, "erFeilsendt()"))
                             .or(new PropertyModel<>(merkVM, "erMerketBidrag()"))
-                            .or(new PropertyModel<>(merkVM, "erAvsluttet()"))));
+                            .or(new PropertyModel<>(merkVM, "erAvsluttet()"))
+                            .or(new PropertyModel<>(merkVM, "erHastekassering()"))));
             setOutputMarkupPlaceholderTag(true);
         }
 
@@ -188,11 +198,21 @@ public class MerkePanel extends AnimertPanel {
                         break;
                     case AVSLUTT:
                         haandterAvsluttet(target);
+                        break;
+                    case HASTEKASSER:
+                        haandterHastekassering(target);
+                        break;
                 }
             } finally {
                 timer.stop();
                 timer.report();
             }
+        }
+
+        private void haandterHastekassering(AjaxRequestTarget target) {
+            henvendelseService.merkForHastekassering(innboksVM.getValgtTraad());
+            send(getPage(), Broadcast.DEPTH, TRAAD_MERKET);
+            lukkPanel(target);
         }
 
         private void haandterFeilsendt(AjaxRequestTarget target) {

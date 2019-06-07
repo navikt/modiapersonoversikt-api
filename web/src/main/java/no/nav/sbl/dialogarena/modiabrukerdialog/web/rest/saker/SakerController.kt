@@ -1,16 +1,17 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.saker
 
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.RestUtils
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.UnleashService
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.domain.widget.ModiaSakstema
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.*
+import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.Dokument.Variantformat
+import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.Dokument.Variantformat.ARKIV
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.resultatwrappere.ResultatWrapper
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.DokumentMetadataService
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.SaksService
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.SakstemaService
-import no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.interfaces.JournalV2Service
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.interfaces.SaksoversiktService
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.interfaces.TilgangskontrollService
+import no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.saf.SafService
 import org.joda.time.DateTime
 import java.time.LocalDateTime
 import java.util.*
@@ -26,9 +27,8 @@ class SakerController @Inject constructor(private val saksoversiktService: Sakso
                                           private val sakstemaService: SakstemaService,
                                           private val saksService: SaksService,
                                           private val tilgangskontrollService: TilgangskontrollService,
-                                          private val innsyn: JournalV2Service,
                                           private val dokumentMetadataService: DokumentMetadataService,
-                                          private val unleashService: UnleashService) {
+                                          private val safService: SafService) {
     @GET
     @Path("/sakstema")
     @Produces(MediaType.APPLICATION_JSON)
@@ -62,9 +62,22 @@ class SakerController @Inject constructor(private val saksoversiktService: Sakso
             return Response.status(Response.Status.FORBIDDEN).build()
         }
 
-        val hentDokumentResultat = innsyn.hentDokument(journalpostId, dokumentreferanse)
-        return hentDokumentResultat.result.map { Response.ok(it).build() }.orElse(Response.status(Response.Status.NOT_FOUND).build())
+        val variantformat = finnVariantformat(journalpostMetadata, dokumentreferanse)
+
+        return safService.hentDokument(journalpostId, dokumentreferanse, variantformat).let { wrapper ->
+            wrapper.result
+                    .map { Response.ok(it).build() }
+                    .orElseGet { Response.status(wrapper.statuskode).build() }
+        }
+
     }
+
+    private fun finnVariantformat(journalpostMetadata: DokumentMetadata, dokumentreferanse: String): Variantformat =
+            journalpostMetadata.vedlegg.plus(journalpostMetadata.hoveddokument)
+                    .find { dok -> dok.dokumentreferanse == dokumentreferanse }
+                    ?.variantformat
+                    ?: ARKIV
+
 
     private fun byggSakstemaResultat(resultat: ResultatWrapper<List<ModiaSakstema>>): Map<String, Any?> {
         return mapOf(
@@ -112,7 +125,6 @@ class SakerController @Inject constructor(private val saksoversiktService: Sakso
                     "temakodeVisning" to it.temakodeVisning,
                     "ettersending" to it.isEttersending,
                     "erJournalført" to it.isErJournalfort,
-                    "kategorinotat" to it.kategoriNotat,
                     "feil" to mapOf(
                             "inneholderFeil" to it.feilWrapper?.inneholderFeil,
                             "feilmelding" to it.feilWrapper?.feilmelding
@@ -139,7 +151,8 @@ class SakerController @Inject constructor(private val saksoversiktService: Sakso
                 "tittel" to dokument.tittel,
                 "dokumentreferanse" to dokument.dokumentreferanse,
                 "kanVises" to dokument.isKanVises,
-                "logiskDokument" to dokument.isLogiskDokument
+                "logiskDokument" to dokument.isLogiskDokument,
+                "skjerming" to dokument.skjerming
         )
     }
 
@@ -180,7 +193,7 @@ class SakerController @Inject constructor(private val saksoversiktService: Sakso
     }
 
     private fun hentDokumentMetadata(journalpostId: String, fnr: String): DokumentMetadata {
-        return dokumentMetadataService.hentDokumentMetadata(saksService.hentAlleSaker(fnr).resultat, fnr).resultat
+        return dokumentMetadataService.hentDokumentMetadata(fnr).resultat
                 .first { dokumentMetadata -> journalpostId == dokumentMetadata.journalpostId }
                 ?: throw RuntimeException("Fant ikke metadata om journalpostId $journalpostId. Dette bør ikke skje.")
 

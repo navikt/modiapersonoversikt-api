@@ -172,6 +172,13 @@ public class HenvendelseBehandlingServiceImplTest {
     }
 
     @Test
+    public void skalMerkeForHastekassering() {
+        henvendelseBehandlingService.merkForHastekassering(VALGT_TRAAD);
+
+        verify(behandleHenvendelsePortType).markerTraadForHasteKassering(IDER_I_VALGT_TRAAD);
+    }
+
+    @Test
     public void skalAlltidHenteMeldingerSomIkkeErKontorsperret() {
         List<Object> xmlHenvendelsesListe = new ArrayList<>();
         xmlHenvendelsesListe.add(lagXMLHenvendelse("id1", "id1", DateTime.now().minusDays(1), null, XMLHenvendelseType.SPORSMAL_SKRIFTLIG.name(), null, new XMLMetadataListe().withMetadata(new XMLMeldingFraBruker(TEMAGRUPPE, "fritekst")))

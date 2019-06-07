@@ -7,6 +7,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.sak.rest.SaksoversiktController;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.JacksonConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.baseurls.BaseUrlsController;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.brukerprofil.BrukerprofilController;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.dialog.DialogController;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.egenansatt.EgenAnsattController;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.enhet.EnhetController;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.featuretoggle.FeatureToggleController;
@@ -14,11 +15,10 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.henvendelse.DelsvarCont
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.kodeverk.KodeverkController;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.kontaktinformasjon.KontaktinformasjonController;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.ldap.LdapController;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.person.PersondokumentController;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.oppfolging.OppfolgingController;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.oppgave.OppgaveController;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.person.PersonController;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.saf.SafController;
+import no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.saf.SafService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.saker.SakerController;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.utbetaling.UtbetalingController;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.vergemal.VergemalController;
@@ -56,8 +56,8 @@ public class RestConfig extends ResourceConfig {
                 YtelseController.class,
                 OppfolgingController.class,
                 SakerController.class,
-                PersondokumentController.class,
-                SafController.class
+                SafService.class,
+                DialogController.class
         );
     }
 }

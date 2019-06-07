@@ -67,6 +67,14 @@ public class BehandleHenvendelsePortTypeMock {
             }
 
             @Override
+            public void markerTraadForHasteKassering(List<String> behandlingsIdListe) {
+                for (String id : behandlingsIdListe) {
+                    XMLHenvendelse xmlHenvendelse = hentHenvendelse(id);
+                    xmlHenvendelse.setMarkertSomFeilsendtAv(getSubjectHandler().getUid());
+                }
+            }
+
+            @Override
             public void knyttBehandlingskjedeTilTema(String s, String s1) {
 
             }
