@@ -137,7 +137,7 @@
         <oppfolgingsinfo-v1-tjenestespesifikasjon.version>1.0.5</oppfolgingsinfo-v1-tjenestespesifikasjon.version>
         <arbeidsfordeling-v1.version>1.0.3</arbeidsfordeling-v1.version>
         <unleash.version>3.1.0</unleash.version>
-        <nav-fim-personsok-v1-tjenestespesifikasjon.version>1.0.1</nav-fim-personsok-v1-tjenestespesifikasjon.version>
+        <nav-fim-personsok-v1-tjenestespesifikasjon.version>1.2019.06.11-13.36-786a4cec3151</nav-fim-personsok-v1-tjenestespesifikasjon.version>
 
         <sonar.skippedModules>modiabrukerdialog-mock</sonar.skippedModules>
         <apache.http.version>4.4</apache.http.version>
@@ -507,7 +507,7 @@
                 <version>${arbeidsfordeling-v1.version}</version>
             </dependency>
             <dependency>
-                <groupId>no.nav.tjenester.fim</groupId>
+                <groupId>no.nav.tjenestespesifikasjoner</groupId>
                 <artifactId>nav-fim-personsok-v1-tjenestespesifikasjon</artifactId>
                 <version>${nav-fim-personsok-v1-tjenestespesifikasjon.version}</version>
             </dependency>

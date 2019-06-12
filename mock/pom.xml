@@ -149,7 +149,7 @@
             <artifactId>dkif-tjenestespesifikasjon</artifactId>
         </dependency>
         <dependency>
-            <groupId>no.nav.tjenester.fim</groupId>
+            <groupId>no.nav.tjenestespesifikasjoner</groupId>
             <artifactId>nav-fim-personsok-v1-tjenestespesifikasjon</artifactId>
         </dependency>
 
