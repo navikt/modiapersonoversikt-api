@@ -36,7 +36,7 @@ public class PersonsokEndpointConfig {
         return new CXFClient<>(PersonsokPortType.class)
                 .wsdl("classpath:no/nav/tjeneste/virksomhet/personsoek/v1/Personsoek.wsdl")
                 .serviceName(new QName("http://nav.no/tjeneste/virksomhet/personsoek/v1/", "Personsok_v1"))
-                .address(System.getProperty("personsok.v1.url"));
+                .address(System.getProperty("personsokendpoint.url"));
     }
 
 }
