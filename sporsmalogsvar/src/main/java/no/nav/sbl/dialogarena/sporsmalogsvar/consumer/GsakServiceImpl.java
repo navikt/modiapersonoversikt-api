@@ -75,7 +75,7 @@ public class GsakServiceImpl implements GsakService {
             oppgave.withBeskrivelse(leggTilBeskrivelse(oppgave.getBeskrivelse(), nyBeskrivelse, valgtEnhetIdString));
             lagreGsakOppgave(oppgave, valgtEnhetId);
         } catch (LagreOppgaveOptimistiskLasing e) {
-            logger.error("feil i ferdigstillelse av oppgave, lagre ferdigstilt oppgave", e);
+            logger.error("LagreOppgaveOptimistiskLasing feil i oppdatering av beskrivelse for oppgave " + oppgave.getOppgaveId(), e);
             if (oppgaveErFerdigstilt(hentOppgave(oppgave.getOppgaveId()))) {
                 throw new OppgaveErFerdigstilt(e);
             }
