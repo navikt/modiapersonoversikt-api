@@ -46,7 +46,8 @@ class PersonsokController @Inject constructor(private val personsokPortType: Per
                     "adresselinje1" to fimUstrukturertAdresse.adresselinje1,
                     "adresselinje2" to fimUstrukturertAdresse.adresselinje2,
                     "adresselinje3" to fimUstrukturertAdresse.adresselinje3,
-                    "adresselinje4" to fimUstrukturertAdresse.adresselinje4
+                    "adresselinje4" to fimUstrukturertAdresse.adresselinje4,
+                    "landkode" to fimUstrukturertAdresse.landkode?.let { lagKodeverdi(it) }
             )
 
     private fun lagStrukturertAdresse(fimStrukturertAdresse: FimStrukturertAdresse): Map<String, Any?> =
