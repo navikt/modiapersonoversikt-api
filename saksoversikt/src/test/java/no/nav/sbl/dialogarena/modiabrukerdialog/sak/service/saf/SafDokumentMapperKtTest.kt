@@ -143,12 +143,14 @@ internal class SafDokumentMapperKtTest {
                 dokumenter = listOf(
                         lagHoveddokument().copy(
                                 dokumentvarianter = listOf(
+                                        Dokumentvariant(true, "ANNET_FORMAT", null),
                                         Dokumentvariant(true, ARKIV.name, null),
                                         Dokumentvariant(true, "ANNET_FORMAT", null)
                                 )
                         ),
                         lagVedlegg().copy(
                                 dokumentvarianter = listOf(
+                                        Dokumentvariant(true, "ANNET_FORMAT", null),
                                         Dokumentvariant(true, ARKIV.name, null),
                                         Dokumentvariant(true, "ANNET_FORMAT", null)
                                 )
@@ -161,6 +163,30 @@ internal class SafDokumentMapperKtTest {
         assertEquals(ARKIV, dokumentMetadata.hoveddokument.variantformat)
         assertEquals(ARKIV, dokumentMetadata.vedlegg[0].variantformat)
         assertEquals(2, dokumentMetadata.vedlegg.size)
+    }
+
+    @Test
+    fun `Kast feil om vi mangler både ARKIV og SLADDET i variantformater`() {
+        val journalpost = lagJournalpost().copy(
+                dokumenter = listOf(
+                        lagHoveddokument().copy(
+                                dokumentvarianter = listOf(
+                                        Dokumentvariant(true, "ANNET_FORMAT", null),
+                                        Dokumentvariant(true, "ANNET_FORMAT", null)
+                                )
+                        ),
+                        lagVedlegg().copy(
+                                dokumentvarianter = listOf(
+                                        Dokumentvariant(true, "ANNET_FORMAT", null),
+                                        Dokumentvariant(true, "ANNET_FORMAT", null)
+                                )
+                        )
+                )
+        )
+
+        assertThrows(RuntimeException::class.java) {
+            DokumentMetadata().fraSafJournalpost(journalpost)
+        }
     }
 
     @Test

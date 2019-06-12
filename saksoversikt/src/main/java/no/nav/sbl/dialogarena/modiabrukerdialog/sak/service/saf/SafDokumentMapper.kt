@@ -94,9 +94,11 @@ private fun getSkjerming(dokumentInfo: DokumentInfo): String? =
         getVariant(dokumentInfo).skjerming
 
 private fun getVariant(dokumentInfo: DokumentInfo): Dokumentvariant =
-        dokumentInfo.dokumentvarianter
-                .find { variant -> variant.variantformat == Variantformat.SLADDET.name }
-                ?: dokumentInfo.dokumentvarianter.first()
+        dokumentInfo.dokumentvarianter.let {
+            it.find { variant -> variant.variantformat == Variantformat.SLADDET.name }
+                    ?: it.find { variant -> variant.variantformat == Variantformat.ARKIV.name }
+                    ?: throw RuntimeException("Dokument med id ${dokumentInfo.dokumentInfoId} mangler både ARKIV og SLADDET variantformat")
+        }
 
 private fun getVedlegg(journalpost: Journalpost): List<Dokument> =
         getElektroniskeVedlegg(journalpost).plus(getLogiskeVedlegg(journalpost))
