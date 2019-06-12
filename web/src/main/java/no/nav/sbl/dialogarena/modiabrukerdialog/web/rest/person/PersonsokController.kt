@@ -27,9 +27,10 @@ class PersonsokController @Inject constructor(private val personsokPortType: Per
 
         return response.personListe.map { lagPersonResponse(it) }
     }
+}
 
-    private fun lagPersonResponse(fimPerson: FimPerson): Map<String, Any?> {
-        return mapOf(
+private fun lagPersonResponse(fimPerson: FimPerson): Map<String, Any?> =
+        mapOf(
                 "diskresjonskode" to fimPerson.diskresjonskode?.let { lagKodeverdi(it) },
                 "postadresse" to fimPerson.postadresse?.ustrukturertAdresse?.let { lagUstrukturertAdresse(it) },
                 "bostedsadresse" to fimPerson.bostedsadresse?.strukturertAdresse?.let { lagStrukturertAdresse(it) },
@@ -39,76 +40,75 @@ class PersonsokController @Inject constructor(private val personsokPortType: Per
                 "ident" to fimPerson.ident?.let { lagNorskIdent(it) },
                 "brukerinfo" to lagBrukerinfo(fimPerson)
         )
-    }
 
-    private fun lagUstrukturertAdresse(fimUstrukturertAdresse: FimUstrukturertAdresse): Map<String, Any?> =
-            mapOf(
-                    "adresselinje1" to fimUstrukturertAdresse.adresselinje1,
-                    "adresselinje2" to fimUstrukturertAdresse.adresselinje2,
-                    "adresselinje3" to fimUstrukturertAdresse.adresselinje3,
-                    "adresselinje4" to fimUstrukturertAdresse.adresselinje4,
-                    "landkode" to fimUstrukturertAdresse.landkode?.let { lagKodeverdi(it) }
-            )
+private fun lagUstrukturertAdresse(fimUstrukturertAdresse: FimUstrukturertAdresse): Map<String, Any?> =
+        mapOf(
+                "adresselinje1" to fimUstrukturertAdresse.adresselinje1,
+                "adresselinje2" to fimUstrukturertAdresse.adresselinje2,
+                "adresselinje3" to fimUstrukturertAdresse.adresselinje3,
+                "adresselinje4" to fimUstrukturertAdresse.adresselinje4,
+                "landkode" to fimUstrukturertAdresse.landkode?.let { lagKodeverdi(it) }
+        )
 
-    private fun lagStrukturertAdresse(fimStrukturertAdresse: FimStrukturertAdresse): Map<String, Any?> =
-            mapOf(
-                    "landkode" to fimStrukturertAdresse.landkode?.let { lagKodeverdi(it) },
-                    "tilleggsadresse" to fimStrukturertAdresse.tilleggsadresse,
-                    "tilleggsadresseType" to fimStrukturertAdresse.tilleggsadresseType
-            )
+private fun lagStrukturertAdresse(fimStrukturertAdresse: FimStrukturertAdresse): Map<String, Any?> =
+        mapOf(
+                "landkode" to fimStrukturertAdresse.landkode?.let { lagKodeverdi(it) },
+                "tilleggsadresse" to fimStrukturertAdresse.tilleggsadresse,
+                "tilleggsadresseType" to fimStrukturertAdresse.tilleggsadresseType
+        )
 
-    private fun lagNavn(fimPersonnavn: FimPersonnavn): Map<String, Any?> =
-            mapOf(
-                    "fornavn" to fimPersonnavn.fornavn,
-                    "etternavn" to fimPersonnavn.etternavn,
-                    "mellomnavn" to fimPersonnavn.mellomnavn,
-                    "sammensatt" to fimPersonnavn.sammensattNavn
-            )
+private fun lagNavn(fimPersonnavn: FimPersonnavn): Map<String, Any?> =
+        mapOf(
+                "fornavn" to fimPersonnavn.fornavn,
+                "etternavn" to fimPersonnavn.etternavn,
+                "mellomnavn" to fimPersonnavn.mellomnavn,
+                "sammensatt" to fimPersonnavn.sammensattNavn
+        )
 
-    private fun lagNorskIdent(fimNorskIdent: FimNorskIdent): Map<String, Any?> =
-            mapOf(
-                    "ident" to fimNorskIdent.ident,
-                    "type" to fimNorskIdent.type?.let { lagKodeverdi(it) }
-            )
+private fun lagNorskIdent(fimNorskIdent: FimNorskIdent): Map<String, Any?> =
+        mapOf(
+                "ident" to fimNorskIdent.ident,
+                "type" to fimNorskIdent.type?.let { lagKodeverdi(it) }
+        )
 
-    private fun lagBrukerinfo(fimPerson: FimPerson): Map<String, Any?>? {
+private fun lagBrukerinfo(fimPerson: FimPerson): Map<String, Any?>? =
         if (fimPerson is FimBruker) {
-            return mapOf(
+            mapOf(
                     "gjeldendePostadresseType" to fimPerson.gjeldendePostadresseType?.let { lagKodeverdi(it) },
                     "midlertidigPostadresse" to fimPerson.midlertidigPostadresse?.let { lagMidlertidigAdresse(it) },
                     "ansvarligEnhet" to fimPerson.harAnsvarligEnhet?.enhet?.organisasjonselementID
             )
         } else {
-            return null
+            null
         }
-    }
 
-    private fun lagMidlertidigAdresse(fimMidlertidigPostadresse: FimMidlertidigPostadresse): Map<String, Any?> =
-            when(fimMidlertidigPostadresse) {
-                is FimMidlertidigPostadresseNorge ->
-                    mapOf(
-                            "type" to "PostadresseNorge",
-                            "ustrukturertAdresse" to lagUstrukturertAdresse(fimMidlertidigPostadresse.ustrukturertAdresse)
-                    )
-                is FimMidlertidigPostadresseUtland ->
-                    mapOf(
-                            "type" to "PostadresseUtland",
-                            "ustrukturertAdresse" to lagUstrukturertAdresse(fimMidlertidigPostadresse.ustrukturertAdresse)
-                    )
-                else ->
-                    mapOf(
-                            "type" to "UkjentAdresse"
-                    )
-            }
 
-    private fun lagKodeverdi(fimKodeverdi: FimKodeverdi):Map<String, Any?> =
-            mapOf(
-                    "kodeRef" to fimKodeverdi.kodeRef,
-                    "beskrivelse" to fimKodeverdi.value
-            )
+private fun lagMidlertidigAdresse(fimMidlertidigPostadresse: FimMidlertidigPostadresse): Map<String, Any?> =
+        when (fimMidlertidigPostadresse) {
+            is FimMidlertidigPostadresseNorge ->
+                mapOf(
+                        "type" to "PostadresseNorge",
+                        "ustrukturertAdresse" to lagUstrukturertAdresse(fimMidlertidigPostadresse.ustrukturertAdresse)
+                )
+            is FimMidlertidigPostadresseUtland ->
+                mapOf(
+                        "type" to "PostadresseUtland",
+                        "ustrukturertAdresse" to lagUstrukturertAdresse(fimMidlertidigPostadresse.ustrukturertAdresse)
+                )
+            else ->
+                mapOf(
+                        "type" to "UkjentAdresse"
+                )
+        }
 
-    private fun lagPersonsokRequest(request: PersonsokRequest): FimFinnPersonRequest =
-            FimFinnPersonRequest()
+private fun lagKodeverdi(fimKodeverdi: FimKodeverdi): Map<String, Any?> =
+        mapOf(
+                "kodeRef" to fimKodeverdi.kodeRef,
+                "beskrivelse" to fimKodeverdi.value
+        )
+
+private fun lagPersonsokRequest(request: PersonsokRequest): FimFinnPersonRequest =
+        FimFinnPersonRequest()
                 .withSoekekriterie(FimSoekekriterie()
                         .withFornavn(request.fornavn)
                         .withEtternavn(request.etternavn)
@@ -125,7 +125,6 @@ class PersonsokController @Inject constructor(private val personsokPortType: Per
                         .withGatenummer(request.husnummer)
                         .withHusbokstav(request.husbokstav)
                         .withPostnummer(request.postnummer))
-}
 
 data class PersonsokRequest(
         val fornavn: String?,
