@@ -32,7 +32,7 @@ public class SakerUtilsTest {
             put(GODKJENTE_FAGSYSTEMER_FOR_FAGSAKER.get(0), "FAGSYSTEMNAVN");
         }
     };
-    private static final List<String> EKSEMPLER_PAA_GODKJENTE_TEMAER_FOR_GENERELLE = new ArrayList<>(asList("FUL", "SER", "SYM", "VEN", "STO"));
+    private static final List<String> EKSEMPLER_PAA_GODKJENTE_TEMAER_FOR_GENERELLE = new ArrayList<>(asList("FUL", "SER", "SYM", "VEN", "STO", "UFM"));
 
     @Mock
     private GsakKodeverk gsakKodeverk;
@@ -122,8 +122,8 @@ public class SakerUtilsTest {
                 createSak("33333333", godkjentTemaSomFinnesIEnTemagruppe, GODKJENT_OPPRETTET_FAGSYSTEM_FOR_GENERELLE, SAKSTYPE_GENERELL, DateTime.now().minusDays(9)),
                 createSak("44444444", unikeTema.get(2), GODKJENT_OPPRETTET_FAGSYSTEM_FOR_GENERELLE, SAKSTYPE_GENERELL, DateTime.now().minusDays(2)),
                 createSak("55555555", "AAP", FAGSYSTEMKODE_ARENA, SAKSTYPE_FAG, DateTime.now().minusDays(5)),
-                createSak("66666666", unikeTema.get(0), "", SAKSTYPE_GENERELL, DateTime.now().minusDays(4)),
-                createSak("77777777", unikeTema.get(1), "", SAKSTYPE_GENERELL, DateTime.now().minusDays(3))
+                createSak("66666666", "STO", "", SAKSTYPE_GENERELL, DateTime.now().minusDays(4))
+
 
 
 
