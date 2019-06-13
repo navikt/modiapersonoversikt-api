@@ -178,6 +178,7 @@ public class NyDialogPanel extends GenericPanel<HenvendelseVM> {
         hurtigreferat.addCallback("visKvittering", Void.class, new ReactComponentCallback<Void>() {
             @Override
             public void onCallback(AjaxRequestTarget target, Void data) {
+                send(getPage(), Broadcast.BREADTH, new NamedEventPayload(Events.SporsmalOgSvar.MELDING_SENDT_TIL_BRUKER));
                 kvittering.visKvittering(target, "Hurtigreferat ble sendt til bruker", form, hurtigreferat);
             }
         });
