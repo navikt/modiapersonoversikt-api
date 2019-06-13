@@ -26,7 +26,6 @@ import no.nav.modig.wicket.selftest.JsonResourceReference;
 import no.nav.sbl.dialogarena.modiabrukerdialog.reactkomponenter.utils.wicket.ReactResources;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.utils.LocaleFromWicketSession;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.mocksetup.MockSetupPage;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.skrivestotteadmin.SkrivestotteAdminPage;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.hentperson.HentPersonPage;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.PersonPage;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.hode.Hode;
@@ -239,7 +238,6 @@ public class WicketApplication extends WebApplication {
     private void mountPages() {
         mountPage("/hentPerson/${fnr}", HentPersonPage.class);
         mountPage("/person/${fnr}", PersonPage.class);
-        mountPage("/skrivestotte", SkrivestotteAdminPage.class);
         mountPage("internal/isAlive", HealthCheck.class);
         mountPage("internal/selftest", SelfTestPage.class);
         mountResource("internal/selftest.json", new JsonResourceReference(SelfTestPage.class));

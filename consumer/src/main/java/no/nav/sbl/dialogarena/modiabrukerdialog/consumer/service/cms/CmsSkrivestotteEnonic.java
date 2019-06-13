@@ -8,21 +8,31 @@ import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.http.client.fluent.Async;
 import org.apache.http.client.fluent.Content;
 import org.apache.http.client.fluent.Request;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
 
 public class CmsSkrivestotteEnonic implements CmsSkrivestotte {
-    public static final String skrivestotteDomain = System.getProperty("skrivestotte.domain", "");
+    private static final Logger log = LoggerFactory.getLogger(CmsSkrivestotteEnonic.class);
+    private static final String currentDomain = optionalProperty("skrivestotte.domain", "loadbalancer.url")
+            .orElseGet(() -> {
+                log.error("Fant ikke en verdi for `customDomain`");
+                return "";
+            });
 
     @Override
     public List<SkrivestotteTekst> hentSkrivestotteTekster() {
-        String modiapersonOversiktUrl = skrivestotteDomain + "/skrivestotte";
+        String modiapersonOversiktUrl = currentDomain + "/modiapersonoversikt-skrivestotte/skrivestotte";
         try {
             Future<Content> resp = Async.newInstance().execute(Request.Get(modiapersonOversiktUrl));
             String content = resp.get(10000, TimeUnit.SECONDS).toString();
@@ -70,5 +80,12 @@ public class CmsSkrivestotteEnonic implements CmsSkrivestotte {
                         entry.getValue().getAsJsonPrimitive().getAsString()
                 ))
                 .collect(toMap(ImmutablePair::getLeft, ImmutablePair::getRight));
+    }
+
+    private static Optional<String> optionalProperty(String... keys) {
+        return Stream.of(keys)
+                .map(System::getProperty)
+                .filter(Objects::nonNull)
+                .findFirst();
     }
 }

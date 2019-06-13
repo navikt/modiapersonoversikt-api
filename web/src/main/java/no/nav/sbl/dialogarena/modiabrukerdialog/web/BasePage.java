@@ -40,7 +40,7 @@ import static java.lang.String.format;
 import static org.apache.wicket.markup.head.OnDomReadyHeaderItem.forScript;
 
 public class BasePage extends WebPage {
-    private static String currentDomain = System.getProperty("current.domain", "");
+    private static String currentDomain = System.getProperty("loadbalancer.url", "");
 
     private static final Logger logger = LoggerFactory.getLogger(BasePage.class);
 
