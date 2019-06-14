@@ -34,7 +34,7 @@ public class Sak implements Serializable, Comparable<Sak> {
     public static final String FAGSYSTEMKODE_PSAK = "PP01";
 
     public static final String GODKJENT_OPPRETTET_FAGSYSTEM_FOR_GENERELLE= "FS22";
-    public static final List<String>  GODKJENT_FAGSYSTEM_FOR_GENERELLE = unmodifiableList(asList("FS22",""));
+    public static final List<String> GODKJENT_FAGSYSTEM_FOR_GENERELLE = unmodifiableList(asList("FS22",""));
     public static final List<String> GODKJENTE_TEMA_FOR_GENERELLE = unmodifiableList(asList("AAP", "AGR", "BAR", "BIL", "DAG", "ENF", "ERS", "FEI", "FOR", "FOS", "FUL", "GEN", "GRA", "GRU", "HEL", "HJE", "IND", "KON", "KTR", "MED", "MOB", "OMS", "REH", "RVE", "RPO", "SAK", "SAP", "SER", "STO", "SUP", "SYK", "SYM", "TRK", "TRY", "TSR", "TSO", "UFM", "VEN", "YRA", "YRK", TEMAKODE_OPPFOLGING));
     public static final List<String> GODKJENTE_FAGSYSTEMER_FOR_FAGSAKER = unmodifiableList(asList(FAGSYSTEMKODE_ARENA, FAGSYSTEMKODE_PSAK, "IT01", "OEBS", "V2", "AO11", "FS36", "FS38"));
 

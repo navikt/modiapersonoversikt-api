@@ -136,7 +136,7 @@ public class SakerServiceImplTest {
     }
 
     @Test
-    void transformasjonenBrukerSaksIdForFagsystemIdOgMFSSomSakstypeOmFagsystemErVedtakslosningen(){
+    void transformasjonenBrukerSaksIdForFagsystemIdOgMFSSomSakstypeOmFagsystemErVedtakslosningen() {
         WSSak wsSak = sakerListe.get(0);
         wsSak.withFagsystem(new WSFagsystemer().withValue(VEDTAKSLOSNINGEN));
         Sak sak = SakerServiceImpl.TIL_SAK.apply(wsSak);
@@ -259,6 +259,7 @@ public class SakerServiceImplTest {
         when(saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet()).thenReturn(valgtNavEnhet);
 
         sakerService.knyttBehandlingskjedeTilSak(FNR, BEHANDLINGSKJEDEID, sak);
+
         verify(behandleHenvendelsePortType, times(1)).knyttBehandlingskjedeTilSak(BEHANDLINGSKJEDEID, SAKS_ID, sak.temaKode, valgtNavEnhet);
     }
 
@@ -274,10 +275,9 @@ public class SakerServiceImplTest {
         when(saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet()).thenReturn(valgtNavEnhet);
 
         sakerService.knyttBehandlingskjedeTilSak(FNR, BEHANDLINGSKJEDEID, sak);
+
         verify(behandleHenvendelsePortType, times(1)).knyttBehandlingskjedeTilSak(BEHANDLINGSKJEDEID, SAKS_ID, sak.temaKode, valgtNavEnhet);
     }
-
-
 
     @Test
     void knyttBehandlingskjedeTilSakKasterFeilHvisEnhetIkkeErSatt() throws JournalforingFeilet, OpprettSakUgyldigInput, OpprettSakSakEksistererAllerede {
@@ -323,8 +323,6 @@ public class SakerServiceImplTest {
                         .withOpprettelsetidspunkt(now().minusDays(5))
                         .withSakstype(new WSSakstyper().withValue("Fag"))
                         .withFagsystem(new WSFagsystemer().withValue(GODKJENTE_FAGSYSTEMER_FOR_FAGSAKER.get(0))),
-
-
                 new WSSak()
                         .withSakId(SakId_4)
                         .withFagsystemSakId(FagsystemSakId_4)
@@ -344,7 +342,8 @@ public class SakerServiceImplTest {
         sak.opprettetDato = now();
         return sak;
     }
-    private Sak lagSakUtenFagsystemId(){
+
+    private Sak lagSakUtenFagsystemId() {
         Sak sak = new Sak();
         sak.temaKode = "STO";
         sak.finnesIGsak = false;

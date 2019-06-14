@@ -55,7 +55,6 @@ public class SakerUtilsTest {
         when(standardKodeverk.getArkivtemaNavn(KODEVERK_TEMAKODE)).thenReturn(KODEVERK_TEMANAVN);
     }
 
-
     @Test
     public void oversetterFagsystemKodeTilFagsystemNavn() {
         Sak sak = createSak("id 1", alleTemaer.get(0), GODKJENTE_FAGSYSTEMER_FOR_FAGSAKER.get(0), "sakstype", DateTime.now().minusDays(1));
@@ -123,11 +122,6 @@ public class SakerUtilsTest {
                 createSak("44444444", unikeTema.get(2), GODKJENT_OPPRETTET_FAGSYSTEM_FOR_GENERELLE, SAKSTYPE_GENERELL, DateTime.now().minusDays(2)),
                 createSak("55555555", "AAP", FAGSYSTEMKODE_ARENA, SAKSTYPE_FAG, DateTime.now().minusDays(5)),
                 createSak("66666666", "STO", "", SAKSTYPE_GENERELL, DateTime.now().minusDays(4))
-
-
-
-
-
         ));
 
         SakerUtils.leggTilFagsystemnavnOgTemanavn(liste, gsakKodeverk.hentFagsystemMapping(), standardKodeverk);
@@ -160,10 +154,4 @@ public class SakerUtilsTest {
         sak.opprettetDato = opprettet;
         return sak;
     }
-
-
-
-
-
-
 }
