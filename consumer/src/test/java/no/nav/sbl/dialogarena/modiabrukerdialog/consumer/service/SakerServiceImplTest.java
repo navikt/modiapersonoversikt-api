@@ -337,7 +337,7 @@ public class SakerServiceImplTest {
         Sak sak = new Sak();
         sak.temaKode = "GEN";
         sak.finnesIGsak = false;
-        sak.fagsystemKode = "FS22";
+        sak.fagsystemKode = FAGSYSTEM_FOR_OPPRETTELSE_AV_GENERELL_SAK;
         sak.sakstype = SAKSTYPE_GENERELL;
         sak.opprettetDato = now();
         return sak;
