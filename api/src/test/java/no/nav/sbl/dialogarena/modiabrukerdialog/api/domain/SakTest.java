@@ -3,7 +3,6 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.api.domain;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.Sak;
 import org.junit.jupiter.api.Test;
 
-import static java.util.Optional.of;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;

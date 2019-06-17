@@ -140,7 +140,7 @@ public class SakerServiceImpl implements SakerService {
                 .filter(Sak::isSakstypeForVisningGenerell)
                 .collect(toList());
 
-        saker.addAll(GODKJENTE_TEMA_FOR_GENERELLE.stream()
+        saker.addAll(GODKJENTE_TEMA_FOR_GENERELL_SAK.stream()
                 .filter(temakode -> harIngenSakerMedTemakode(temakode, generelleSaker) && !TEMAKODE_OPPFOLGING.equals(temakode))
                 .map(SakerServiceImpl::lagGenerellSakMedTema)
                 .collect(toList()));
@@ -185,7 +185,7 @@ public class SakerServiceImpl implements SakerService {
         Sak sak = new Sak();
         sak.temaKode = temakode;
         sak.finnesIGsak = false;
-        sak.fagsystemKode = GODKJENT_FAGSYSTEM_FOR_GENERELLE;
+        sak.fagsystemKode = FAGSYSTEM_FOR_OPPRETTELSE_AV_GENERELL_SAK;
         sak.sakstype = SAKSTYPE_GENERELL;
         sak.opprettetDato = now();
         return sak;
@@ -223,6 +223,7 @@ public class SakerServiceImpl implements SakerService {
         sak.sakstype = getSakstype(wsSak);
         sak.fagsystemKode = wsSak.getFagsystem().getValue();
         sak.finnesIGsak = true;
+
         return sak;
     };
 
@@ -239,7 +240,7 @@ public class SakerServiceImpl implements SakerService {
             !TEMAKODE_KLAGE_ANKE.equals(sak.temaKode);
 
     private static final Predicate<Sak> GODKJENT_GENERELL = sak -> sak.isSakstypeForVisningGenerell() &&
-            GODKJENT_FAGSYSTEM_FOR_GENERELLE.equals(sak.fagsystemKode) &&
-            GODKJENTE_TEMA_FOR_GENERELLE.contains(sak.temaKode);
+            GYLDIGE_FAGSYSTEM_FOR_GENERELLE_SAKER.contains(sak.fagsystemKode) &&
+            GODKJENTE_TEMA_FOR_GENERELL_SAK.contains(sak.temaKode);
 
 }

@@ -3,7 +3,7 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpane
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.Sak;
 import org.joda.time.DateTime;
 
-import static no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.Sak.GODKJENTE_TEMA_FOR_GENERELLE;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.Sak.GODKJENTE_TEMA_FOR_GENERELL_SAK;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.Sak.SAKSTYPE_GENERELL;
 
 public class TestUtils {
@@ -14,8 +14,8 @@ public class TestUtils {
 
     private static final String SAKSTYPE_FAG = "Fag";
 
-    public final static String TEMA_1 = GODKJENTE_TEMA_FOR_GENERELLE.get(0);
-    public final static String TEMA_2 = GODKJENTE_TEMA_FOR_GENERELLE.get(1);
+    public final static String TEMA_1 = GODKJENTE_TEMA_FOR_GENERELL_SAK.get(0);
+    public final static String TEMA_2 = GODKJENTE_TEMA_FOR_GENERELL_SAK.get(1);
 
 
     public static Sak createSak(String saksId, String temaKode, String fagsystemKode, String sakstype, DateTime opprettet) {
