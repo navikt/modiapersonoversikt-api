@@ -128,9 +128,9 @@ public class SakerServiceImplTest {
 
         assertThat(sak.saksId, is(SakId_1));
         assertThat(sak.fagsystemSaksId, is(FagsystemSakId_1));
-        assertThat(sak.temaKode, is(GODKJENTE_TEMA_FOR_GENERELLE.get(0)));
+        assertThat(sak.temaKode, is(GODKJENTE_TEMA_FOR_GENERELL_SAK.get(0)));
         assertThat(sak.sakstype, is(SAKSTYPE_GENERELL));
-        assertThat(sak.fagsystemKode, is(GODKJENT_OPPRETTET_FAGSYSTEM_FOR_GENERELLE));
+        assertThat(sak.fagsystemKode, is(FAGSYSTEM_FOR_OPPRETTELSE_AV_GENERELL_SAK));
         assertThat(sak.opprettetDato, is(FIRE_DAGER_SIDEN));
         assertThat(sak.finnesIGsak, is(true));
     }
@@ -143,7 +143,7 @@ public class SakerServiceImplTest {
 
         assertThat(sak.saksId, is(SakId_1));
         assertThat(sak.fagsystemSaksId, is(SakId_1));
-        assertThat(sak.temaKode, is(GODKJENTE_TEMA_FOR_GENERELLE.get(0)));
+        assertThat(sak.temaKode, is(GODKJENTE_TEMA_FOR_GENERELL_SAK.get(0)));
         assertThat(sak.sakstype, is(SAKSTYPE_MED_FAGSAK));
         assertThat(sak.fagsystemKode, is(VEDTAKSLOSNINGEN));
         assertThat(sak.opprettetDato, is(FIRE_DAGER_SIDEN));
@@ -165,7 +165,7 @@ public class SakerServiceImplTest {
                         .withFagomraade(new WSFagomraader().withValue(TEMAKODE_OPPFOLGING))
                         .withOpprettelsetidspunkt(now())
                         .withSakstype(new WSSakstyper().withValue(SAKSTYPE_GENERELL))
-                        .withFagsystem(new WSFagsystemer().withValue(GODKJENT_OPPRETTET_FAGSYSTEM_FOR_GENERELLE)));
+                        .withFagsystem(new WSFagsystemer().withValue(FAGSYSTEM_FOR_OPPRETTELSE_AV_GENERELL_SAK)));
 
         when(sakV1.finnSak(any(WSFinnSakRequest.class))).thenReturn(new WSFinnSakResponse().withSakListe(wsSaker));
 
@@ -190,7 +190,7 @@ public class SakerServiceImplTest {
                         .withFagomraade(new WSFagomraader().withValue(TEMAKODE_OPPFOLGING))
                         .withOpprettelsetidspunkt(now())
                         .withSakstype(new WSSakstyper().withValue(SAKSTYPE_GENERELL))
-                        .withFagsystem(new WSFagsystemer().withValue(GODKJENT_OPPRETTET_FAGSYSTEM_FOR_GENERELLE)));
+                        .withFagsystem(new WSFagsystemer().withValue(FAGSYSTEM_FOR_OPPRETTELSE_AV_GENERELL_SAK)));
 
         when(sakV1.finnSak(any(WSFinnSakRequest.class))).thenReturn(new WSFinnSakResponse().withSakListe(wsSaker));
 
@@ -208,7 +208,7 @@ public class SakerServiceImplTest {
                         .withFagomraade(new WSFagomraader().withValue(TEMAKODE_OPPFOLGING))
                         .withOpprettelsetidspunkt(now())
                         .withSakstype(new WSSakstyper().withValue(SAKSTYPE_GENERELL))
-                        .withFagsystem(new WSFagsystemer().withValue(GODKJENT_OPPRETTET_FAGSYSTEM_FOR_GENERELLE)),
+                        .withFagsystem(new WSFagsystemer().withValue(FAGSYSTEM_FOR_OPPRETTELSE_AV_GENERELL_SAK)),
                 new WSSak()
                         .withSakId("5")
                         .withFagsystemSakId("55")
@@ -305,17 +305,17 @@ public class SakerServiceImplTest {
                 new WSSak()
                         .withSakId(SakId_1)
                         .withFagsystemSakId(FagsystemSakId_1)
-                        .withFagomraade(new WSFagomraader().withValue(GODKJENTE_TEMA_FOR_GENERELLE.get(0)))
+                        .withFagomraade(new WSFagomraader().withValue(GODKJENTE_TEMA_FOR_GENERELL_SAK.get(0)))
                         .withOpprettelsetidspunkt(FIRE_DAGER_SIDEN)
                         .withSakstype(new WSSakstyper().withValue(SAKSTYPE_GENERELL))
-                        .withFagsystem(new WSFagsystemer().withValue(GODKJENT_OPPRETTET_FAGSYSTEM_FOR_GENERELLE)),
+                        .withFagsystem(new WSFagsystemer().withValue(FAGSYSTEM_FOR_OPPRETTELSE_AV_GENERELL_SAK)),
                 new WSSak()
                         .withSakId(SakId_2)
                         .withFagsystemSakId(FagsystemSakId_2)
-                        .withFagomraade(new WSFagomraader().withValue(GODKJENTE_TEMA_FOR_GENERELLE.get(1)))
+                        .withFagomraade(new WSFagomraader().withValue(GODKJENTE_TEMA_FOR_GENERELL_SAK.get(1)))
                         .withOpprettelsetidspunkt(now().minusDays(3))
                         .withSakstype(new WSSakstyper().withValue(SAKSTYPE_GENERELL))
-                        .withFagsystem(new WSFagsystemer().withValue(GODKJENT_OPPRETTET_FAGSYSTEM_FOR_GENERELLE)),
+                        .withFagsystem(new WSFagsystemer().withValue(FAGSYSTEM_FOR_OPPRETTELSE_AV_GENERELL_SAK)),
                 new WSSak()
                         .withSakId(SakId_3)
                         .withFagsystemSakId(FagsystemSakId_3)

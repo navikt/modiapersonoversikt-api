@@ -116,10 +116,10 @@ public class SakerUtilsTest {
         unikeTema.remove(godkjentTemaSomFinnesIEnTemagruppe);
 
         ArrayList<Sak> liste = new ArrayList<>(asList(
-                createSak("11111111", unikeTema.get(0), GODKJENT_OPPRETTET_FAGSYSTEM_FOR_GENERELLE, SAKSTYPE_GENERELL, DateTime.now().minusDays(4)),
-                createSak("22222222", unikeTema.get(1), GODKJENT_OPPRETTET_FAGSYSTEM_FOR_GENERELLE, SAKSTYPE_GENERELL, DateTime.now().minusDays(3)),
-                createSak("33333333", godkjentTemaSomFinnesIEnTemagruppe, GODKJENT_OPPRETTET_FAGSYSTEM_FOR_GENERELLE, SAKSTYPE_GENERELL, DateTime.now().minusDays(9)),
-                createSak("44444444", unikeTema.get(2), GODKJENT_OPPRETTET_FAGSYSTEM_FOR_GENERELLE, SAKSTYPE_GENERELL, DateTime.now().minusDays(2)),
+                createSak("11111111", unikeTema.get(0), FAGSYSTEM_FOR_OPPRETTELSE_AV_GENERELL_SAK, SAKSTYPE_GENERELL, DateTime.now().minusDays(4)),
+                createSak("22222222", unikeTema.get(1), FAGSYSTEM_FOR_OPPRETTELSE_AV_GENERELL_SAK, SAKSTYPE_GENERELL, DateTime.now().minusDays(3)),
+                createSak("33333333", godkjentTemaSomFinnesIEnTemagruppe, FAGSYSTEM_FOR_OPPRETTELSE_AV_GENERELL_SAK, SAKSTYPE_GENERELL, DateTime.now().minusDays(9)),
+                createSak("44444444", unikeTema.get(2), FAGSYSTEM_FOR_OPPRETTELSE_AV_GENERELL_SAK, SAKSTYPE_GENERELL, DateTime.now().minusDays(2)),
                 createSak("55555555", "AAP", FAGSYSTEMKODE_ARENA, SAKSTYPE_FAG, DateTime.now().minusDays(5)),
                 createSak("66666666", "STO", "", SAKSTYPE_GENERELL, DateTime.now().minusDays(4))
         ));
