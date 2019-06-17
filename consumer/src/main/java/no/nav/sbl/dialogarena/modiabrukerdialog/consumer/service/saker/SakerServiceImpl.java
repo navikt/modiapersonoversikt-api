@@ -240,7 +240,7 @@ public class SakerServiceImpl implements SakerService {
             !TEMAKODE_KLAGE_ANKE.equals(sak.temaKode);
 
     private static final Predicate<Sak> GODKJENT_GENERELL = sak -> sak.isSakstypeForVisningGenerell() &&
-            GYLDIG_FAGSYSTEM_FOR_GENERELLE_SAKER.contains(sak.fagsystemKode) &&
+            GYLDIGE_FAGSYSTEM_FOR_GENERELLE_SAKER.contains(sak.fagsystemKode) &&
             GODKJENTE_TEMA_FOR_GENERELL_SAK.contains(sak.temaKode);
 
 }
