@@ -1,7 +1,7 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web;
 
 import no.nav.brukerdialog.security.tilgangskontroll.policy.pep.EnforcementPoint;
-import no.nav.modig.content.CmsContentRetriever;
+import no.nav.modig.content.ContentRetriever;
 import no.nav.modig.frontend.FrontendConfigurator;
 import no.nav.modig.frontend.MetaTag;
 import no.nav.modig.modia.constants.ModiaConstants;
@@ -65,7 +65,7 @@ public class WicketApplication extends WebApplication {
     private ApplicationContext applicationContext;
 
     @Inject
-    private CmsContentRetriever cms;
+    private ContentRetriever cms;
 
     private static final Logger log = getLogger(WicketApplication.class);
 

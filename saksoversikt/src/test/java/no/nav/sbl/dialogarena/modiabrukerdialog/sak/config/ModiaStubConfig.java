@@ -1,6 +1,5 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.sak.config;
 
-import no.nav.modig.content.ContentRetriever;
 import no.nav.brukerdialog.security.tilgangskontroll.policy.pep.EnforcementPoint;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.AnsattService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
@@ -41,11 +40,6 @@ public class ModiaStubConfig {
         when(mock.finnSakOgBehandlingskjedeListe(any(FinnSakOgBehandlingskjedeListeRequest.class)))
                 .thenReturn(new FinnSakOgBehandlingskjedeListeResponse().withSak(createWSSak()));
         return mock;
-    }
-
-    @Bean
-    public ContentRetriever contentRetriever() {
-        return mock(ContentRetriever.class);
     }
 
     @Bean

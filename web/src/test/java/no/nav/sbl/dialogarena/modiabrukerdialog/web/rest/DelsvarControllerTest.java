@@ -8,7 +8,7 @@ import no.nav.kjerneinfo.domain.person.Personfakta;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelse;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLMeldingFraBruker;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLMetadataListe;
-import no.nav.modig.content.PropertyResolver;
+import no.nav.modig.content.ContentRetriever;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.cache.CacheTestUtil;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.http.HttpRequestUtil;
@@ -66,15 +66,15 @@ class DelsvarControllerTest {
 
     private HenvendelseUtsendingServiceImpl setupHenvendelseUtsendingService() {
         HenvendelsePortType henvendelsePortTypeMock = getHenvendelsePortTypeMock();
-        PropertyResolver propertyResolver = mockPropertyResolver();
+        ContentRetriever propertyResolver = mockPropertyResolver();
         PersonKjerneinfoServiceBi kjerneinfoMock = mockPersonKjerneinfoService();
         sendUtHenvendelsePortTypeMock = mock(SendUtHenvendelsePortType.class);
         return new HenvendelseUtsendingServiceImpl(henvendelsePortTypeMock, sendUtHenvendelsePortTypeMock, null, null, null, null, propertyResolver, kjerneinfoMock, null);
     }
 
-    private PropertyResolver mockPropertyResolver() {
-        PropertyResolver propertyResolver = mock(PropertyResolver.class);
-        when(propertyResolver.getProperty(anyString())).thenReturn("asd");
+    private ContentRetriever mockPropertyResolver() {
+        ContentRetriever propertyResolver = mock(ContentRetriever.class);
+        when(propertyResolver.hentTekst(anyString())).thenReturn("asd");
         return propertyResolver;
     }
 

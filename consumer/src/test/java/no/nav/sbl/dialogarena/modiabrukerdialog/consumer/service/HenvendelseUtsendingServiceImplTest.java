@@ -12,7 +12,7 @@ import no.nav.kjerneinfo.domain.person.Personfakta;
 import no.nav.kjerneinfo.domain.person.fakta.AnsvarligEnhet;
 import no.nav.kjerneinfo.domain.person.fakta.Organisasjonsenhet;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.*;
-import no.nav.modig.content.PropertyResolver;
+import no.nav.modig.content.ContentRetriever;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Saksbehandler;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.Sak;
@@ -86,7 +86,7 @@ public class HenvendelseUtsendingServiceImplTest {
     @Mock
     public AnsattService ansattWS;
     @Mock
-    public PropertyResolver propertyResolver;
+    public ContentRetriever propertyResolver;
     @Mock
     private EnforcementPoint pep;
     @Mock

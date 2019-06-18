@@ -1,6 +1,6 @@
 package no.nav.sbl.dialogarena.varsel.lamell;
 
-import no.nav.modig.content.CmsContentRetriever;
+import no.nav.modig.content.ContentRetriever;
 import no.nav.modig.modia.events.WidgetHeaderPayload;
 import no.nav.modig.wicket.events.NamedEventPayload;
 import no.nav.sbl.dialogarena.varsel.domain.Varsel;
@@ -28,7 +28,7 @@ public class VarslerOversiktLink extends AjaxLink<String> {
     private VarslerService varselService;
     @Inject
     @Named("varsling-cms-integrasjon")
-    private CmsContentRetriever cms;
+    private ContentRetriever cms;
 
     private static final int EN_UKE = 7;
 

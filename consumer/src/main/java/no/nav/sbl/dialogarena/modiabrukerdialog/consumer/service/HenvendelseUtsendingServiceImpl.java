@@ -7,7 +7,7 @@ import no.nav.kjerneinfo.consumer.fim.person.to.HentKjerneinformasjonRequest;
 import no.nav.kjerneinfo.domain.person.Person;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelse;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType;
-import no.nav.modig.content.PropertyResolver;
+import no.nav.modig.content.ContentRetriever;
 import no.nav.modig.core.exception.ApplicationException;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.Sak;
@@ -60,7 +60,7 @@ public class HenvendelseUtsendingServiceImpl implements HenvendelseUtsendingServ
     private final OppgaveBehandlingService oppgaveBehandlingService;
     private final SakerService sakerService;
     private final EnforcementPoint pep;
-    private final PropertyResolver propertyResolver;
+    private final ContentRetriever propertyResolver;
     private final PersonKjerneinfoServiceBi kjerneinfo;
     private final LDAPService ldapService;
 
@@ -71,7 +71,7 @@ public class HenvendelseUtsendingServiceImpl implements HenvendelseUtsendingServ
                                            OppgaveBehandlingService oppgaveBehandlingService,
                                            SakerService sakerService,
                                            @Named("pep") EnforcementPoint pep,
-                                           PropertyResolver propertyResolver,
+                                           @Named("propertyResolver") ContentRetriever propertyResolver,
                                            PersonKjerneinfoServiceBi kjerneinfo,
                                            LDAPService ldapService) {
 

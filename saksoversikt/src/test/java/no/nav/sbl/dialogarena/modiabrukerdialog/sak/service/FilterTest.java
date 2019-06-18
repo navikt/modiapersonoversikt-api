@@ -1,6 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.sak.service;
 
-import no.nav.modig.content.CmsContentRetriever;
+import no.nav.modig.content.ContentRetriever;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.mock.MockCreationUtil;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.Behandling;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.BehandlingsStatus;
@@ -29,7 +29,7 @@ import static org.mockito.Mockito.when;
 public class FilterTest {
 
     @Mock
-    private CmsContentRetriever cms;
+    private ContentRetriever cms;
 
     @InjectMocks
     private Filter filter = new Filter();

@@ -1,6 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock;
 
-import no.nav.modig.content.CmsContentRetriever;
+import no.nav.modig.content.ContentRetriever;
 import no.nav.sbl.dialogarena.varsel.domain.Varsel;
 import no.nav.sbl.dialogarena.varsel.service.VarslerService;
 import org.springframework.context.annotation.Bean;
@@ -21,8 +21,8 @@ public class VarslingMockContext {
 
 
     @Bean(name = "varsling-cms-integrasjon")
-    public CmsContentRetriever varslingCmsContentRetriver() throws URISyntaxException {
-        CmsContentRetriever contentRetriever = mock(CmsContentRetriever.class);
+    public ContentRetriever varslingCmsContentRetriver() throws URISyntaxException {
+        ContentRetriever contentRetriever = mock(ContentRetriever.class);
         when(contentRetriever.hentTekst(anyString())).thenReturn("");
         return contentRetriever;
     }

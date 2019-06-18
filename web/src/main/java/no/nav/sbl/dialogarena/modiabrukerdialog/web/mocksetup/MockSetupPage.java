@@ -30,7 +30,6 @@ import static no.nav.kjerneinfo.consumer.organisasjon.OrganisasjonV4ConsumerConf
 import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.artifact.kjerneinfo.component.mockable.MockableContext.KJERNEINFO_KEY;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.VarslingEndpointConfig.VARSLING_KEY;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.cms.CmsEndpointConfig.CMS_KEY;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.cms.CmsSkrivestotteConfig.CMS_SKRIVESTOTTE_KEY;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.joark.JoarkEndpointConfig.JOARK_KEY;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v1.aktor.AktorEndpointConfig.AKTOER_KEY;
@@ -144,7 +143,6 @@ public class MockSetupPage extends BasePage {
                 new MockSetupModel("Pleiepenger V1", PLEIEPENGER_V1_MOCK_KEY),
                 new MockSetupModel("Organisasjon V4", ORGANISASJON_V4_MOCK_KEY),
                 new MockSetupModel("Varsler", VARSLING_KEY),
-                new MockSetupModel("CMS", CMS_KEY),
                 new MockSetupModel("BehandlePersonV1", TPS_BEHANDLEPERSON_V1_MOCK_KEY)
         );
     }

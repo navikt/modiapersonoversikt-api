@@ -9,7 +9,7 @@ import no.nav.kjerneinfo.domain.person.Person;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelse;
 import no.nav.modig.common.SporingsAksjon;
 import no.nav.modig.common.SporingsLogger;
-import no.nav.modig.content.PropertyResolver;
+import no.nav.modig.content.ContentRetriever;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Fritekst;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
@@ -54,7 +54,8 @@ public class HenvendelseBehandlingServiceImpl implements HenvendelseBehandlingSe
     @Inject
     private StandardKodeverk standardKodeverk;
     @Inject
-    private PropertyResolver propertyResolver;
+    @Named("propertyResolver")
+    private ContentRetriever propertyResolver;
     @Inject
     private SporingsLogger sporingsLogger;
     @Inject
@@ -186,7 +187,7 @@ public class HenvendelseBehandlingServiceImpl implements HenvendelseBehandlingSe
             PolicyRequest okonomiskSosialhjelpPolicyRequest = forRequest(attributes);
 
             if (melding.gjeldendeTemagruppe == Temagruppe.OKSOS && !pep.hasAccess(okonomiskSosialhjelpPolicyRequest)) {
-                melding.withFritekst(new Fritekst(propertyResolver.getProperty("tilgang.OKSOS"), melding.skrevetAv, melding.ferdigstiltDato));
+                melding.withFritekst(new Fritekst(propertyResolver.hentTekst("tilgang.OKSOS"), melding.skrevetAv, melding.ferdigstiltDato));
             }
 
             return melding;
@@ -202,7 +203,7 @@ public class HenvendelseBehandlingServiceImpl implements HenvendelseBehandlingSe
                     resourceAttribute("urn:nav:ikt:tilgangskontroll:xacml:resource:tema", defaultString(melding.journalfortTema)));
 
             if (!isBlank(melding.journalfortTema) && !pep.hasAccess(temagruppePolicyRequest)) {
-                melding.withFritekst(new Fritekst(propertyResolver.getProperty("tilgang.journalfort"), melding.skrevetAv, melding.ferdigstiltDato));
+                melding.withFritekst(new Fritekst(propertyResolver.hentTekst("tilgang.journalfort"), melding.skrevetAv, melding.ferdigstiltDato));
                 melding.ingenTilgangJournalfort = true;
             }
 
