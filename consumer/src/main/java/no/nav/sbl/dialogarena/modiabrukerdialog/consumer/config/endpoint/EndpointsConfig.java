@@ -17,6 +17,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v1.henv
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v1.norg.NAVAnsattEndpointConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v1.norg.NAVOrgEnhetEndpointConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v1.pensjonsak.PensjonSakEndpointConfig;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v1.personsok.PersonsokEndpointConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v1.sakogbehandling.SakOgBehandlingEndpointConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v1.utbetaling.UtbetalingEndpointConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v2.henvendelse.*;
@@ -62,7 +63,8 @@ import org.springframework.context.annotation.Import;
         KodeverksmapperEndpointConfig.class,
         UnleashEndpointConfig.class,
         InnsynJournalEndpointConfig.class,
-        OppfolgingsinfoApiEndpointConfig.class
+        OppfolgingsinfoApiEndpointConfig.class,
+        PersonsokEndpointConfig.class
 })
 public class EndpointsConfig {
 

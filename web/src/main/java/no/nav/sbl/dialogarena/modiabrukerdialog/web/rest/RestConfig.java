@@ -19,6 +19,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.oppfolging.OppfolgingCo
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.oppgave.OppgaveController;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.person.PersonController;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.saf.SafService;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.person.PersonsokController;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.saker.SakerController;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.utbetaling.UtbetalingController;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.vergemal.VergemalController;
@@ -57,7 +58,8 @@ public class RestConfig extends ResourceConfig {
                 OppfolgingController.class,
                 SakerController.class,
                 SafService.class,
-                DialogController.class
+                DialogController.class,
+                PersonsokController.class
         );
     }
 }
