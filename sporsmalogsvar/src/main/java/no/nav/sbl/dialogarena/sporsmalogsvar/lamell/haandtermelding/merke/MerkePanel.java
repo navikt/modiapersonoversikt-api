@@ -80,14 +80,16 @@ public class MerkePanel extends AnimertPanel {
         PropertyModel<Boolean> valgtTraadErKontorsperret = new PropertyModel<>(innboksVM, "valgtTraad.erKontorsperret()");
         IModel<Boolean> erTemagruppeSosialeTjenester = new PropertyModel<>(innboksVM, "valgtTraad.erTemagruppeSosialeTjenester()");
         IModel<Boolean> erMeldingstypeSporsmal = new PropertyModel<>(innboksVM, "valgtTraad.erMeldingstypeSporsmal()");
+        IModel<Boolean> erMeldingstypeSamtalereferat = new PropertyModel<>(innboksVM, "valgtTraad.erMeldingstypeSamtalereferart()");
         IModel<Boolean> erBehandlet = new PropertyModel<>(innboksVM, "valgtTraad.erBehandlet()");
         IModel<Boolean> eldsteMeldingErJournalfort = new PropertyModel<>(innboksVM, "valgtTraad.erJournalfort()");
         IModel<Boolean> erFeilsendt = new PropertyModel<>(innboksVM, "valgtTraad.erFeilsendt()");
         IModel<Boolean> harDelsvar = new Model<>(innboksVM.getValgtTraad().harDelsvar());
+        IModel<Boolean> harTilgangTilHastekassering = new Model<>(MerkUtils.kanHastekassere(SubjectHandler.getSubjectHandler().getUid()));
 
         IModel<Boolean> skalViseStandardMerkValg = both(not(eldsteMeldingErJournalfort)).and(not(erFeilsendt)).and(erBehandlet).and(not(valgtTraadErKontorsperret));
         IModel<Boolean> skalViseFerdigstillUtenSvarValg = both(erMeldingstypeSporsmal).and(not(valgtTraadErKontorsperret)).and(not(erBehandlet)).and(not(harDelsvar));
-        IModel<Boolean> skalViseHastekassering = new Model<>(MerkUtils.kanHastekassere(SubjectHandler.getSubjectHandler().getUid()));
+        IModel<Boolean> skalViseHastekassering = both(erMeldingstypeSamtalereferat).and(harTilgangTilHastekassering);
 
         ConjunctionModel bidragErEnablet = both(not(erTemagruppeSosialeTjenester)).and(skalViseStandardMerkValg);
 
@@ -210,9 +212,11 @@ public class MerkePanel extends AnimertPanel {
         }
 
         private void haandterHastekassering(AjaxRequestTarget target) {
-            henvendelseService.merkForHastekassering(innboksVM.getValgtTraad());
-            send(getPage(), Broadcast.DEPTH, TRAAD_MERKET);
-            lukkPanel(target);
+            if (MerkUtils.kanHastekassere(SubjectHandler.getSubjectHandler().getUid())) {
+                henvendelseService.merkForHastekassering(innboksVM.getValgtTraad());
+                send(getPage(), Broadcast.DEPTH, TRAAD_MERKET);
+                lukkPanel(target);
+            }
         }
 
         private void haandterFeilsendt(AjaxRequestTarget target) {
