@@ -23,6 +23,7 @@ public class CmsEndpointConfig {
     public ContentRetriever propertyResolver() {
         InputStreamReader content = new InputStreamReader(Melding.class.getResourceAsStream("Melding.properties"), Charsets.UTF_8);
         return new ContentRetriever()
+                .load("content.modiabrukerdialog")
                 .load(content);
     }
 }
