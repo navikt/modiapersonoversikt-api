@@ -89,7 +89,7 @@ public class MerkePanel extends AnimertPanel {
 
         IModel<Boolean> skalViseStandardMerkValg = both(not(eldsteMeldingErJournalfort)).and(not(erFeilsendt)).and(erBehandlet).and(not(valgtTraadErKontorsperret));
         IModel<Boolean> skalViseFerdigstillUtenSvarValg = both(erMeldingstypeSporsmal).and(not(valgtTraadErKontorsperret)).and(not(erBehandlet)).and(not(harDelsvar));
-        IModel<Boolean> skalViseHastekassering = both(erMeldingstypeSamtalereferat).and(erMeldingstypeSporsmal).and(harTilgangTilHastekassering);
+        IModel<Boolean> skalViseHastekassering = both(either(erMeldingstypeSamtalereferat).or(erMeldingstypeSporsmal)).and(harTilgangTilHastekassering);
 
         ConjunctionModel bidragErEnablet = both(not(erTemagruppeSosialeTjenester)).and(skalViseStandardMerkValg);
 
