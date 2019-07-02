@@ -1,6 +1,8 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.dialog
 
+import no.nav.brukerdialog.security.context.SubjectHandler
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveBehandlingService
+import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.merke.MerkUtils
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.behandlehenvendelse.BehandleHenvendelsePortType
 import java.util.*
 import javax.inject.Inject
@@ -39,6 +41,17 @@ class DialogMerkController @Inject constructor(private val behandleHenvendelsePo
         behandleHenvendelsePortType.ferdigstillUtenSvar(request.eldsteMeldingTraadId, request.saksbehandlerValgtEnhet)
         oppgaveBehandlingService.ferdigstillOppgaveIGsak(request.eldsteMeldingOppgaveId, Optional.empty(), request.saksbehandlerValgtEnhet)
         return Response.ok().build()
+    }
+
+    @POST
+    @Path("/slett")
+    fun slettBehandlingskjede(request: FeilmerkRequest): Response {
+        if (MerkUtils.kanHastekassere(SubjectHandler.getSubjectHandler().getUid())) {
+            behandleHenvendelsePortType.markerTraadForHasteKassering(request.behandlingsidListe);
+            return Response.ok().build()
+        } else {
+            return Response.status(Response.Status.UNAUTHORIZED).build()
+        }
     }
 
 }
