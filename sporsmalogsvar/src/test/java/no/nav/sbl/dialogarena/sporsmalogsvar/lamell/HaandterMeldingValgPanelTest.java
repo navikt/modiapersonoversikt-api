@@ -1,23 +1,26 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.lamell;
 
+import no.nav.brukerdialog.security.context.SubjectHandlerUtils;
 import no.nav.brukerdialog.security.context.ThreadLocalSubjectHandler;
 import no.nav.brukerdialog.security.tilgangskontroll.policy.pep.EnforcementPoint;
+import no.nav.brukerdialog.tools.SecurityConstants;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
+import no.nav.sbl.dialogarena.sporsmalogsvar.EnvUtils;
 import no.nav.sbl.dialogarena.sporsmalogsvar.config.MockServiceTestContext;
 import no.nav.sbl.dialogarena.sporsmalogsvar.config.WicketPageTest;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.henvendelse.HenvendelseBehandlingService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.henvendelse.domain.Meldinger;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.HaandterMeldingValgPanel;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.MeldingActionPanel;
+import org.joda.time.DateTime;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import javax.inject.Inject;
 
@@ -53,6 +56,9 @@ public class HaandterMeldingValgPanelTest extends WicketPageTest {
     @BeforeAll
     public static void setUp() {
         System.setProperty("no.nav.brukerdialog.security.context.subjectHandlerImplementationClass", ThreadLocalSubjectHandler.class.getName());
+        System.setProperty("hastekassering.tilgang", "Z999999");
+        System.setProperty(SecurityConstants.SYSTEMUSER_USERNAME, "srvModiabrukerdialog");
+        SubjectHandlerUtils.setInternBruker("Z999999", "");
     }
 
     @Test
@@ -141,6 +147,38 @@ public class HaandterMeldingValgPanelTest extends WicketPageTest {
         MeldingActionPanel meldingActionPanel = new MeldingActionPanel("actionpanel", innboksVM);
         wicket.goToPageWith(new HaandterMeldingValgPanel(HAANDTERMELDINGER_ID, innboksVM, meldingActionPanel))
                 .should().containComponent(thatIsEnabled().and(withId(MERKE_VALG_ID)));
+    }
+
+    @Test
+    public void skalDisableMerkKnappOmMeldingErJournalfort() {
+        EnvUtils.withSubject("Z999998", () -> {
+            Melding journalfortMelding = createMelding("melding1", SAMTALEREFERAT_OPPMOTE, now().minusDays(1), Temagruppe.ARBD, "melding1");
+            journalfortMelding.journalfortDato = DateTime.now();
+
+            when(henvendelseBehandlingService.hentMeldinger(anyString(), anyString())).thenReturn(new Meldinger(asList(
+                    journalfortMelding)));
+
+            InnboksVM innboksVM = innboksVM();
+            MeldingActionPanel meldingActionPanel = new MeldingActionPanel("actionpanel", innboksVM);
+            wicket.goToPageWith(new HaandterMeldingValgPanel(HAANDTERMELDINGER_ID, innboksVM, meldingActionPanel))
+                    .should().containComponent(thatIsDisabled().and(withId(MERKE_VALG_ID)));
+        });
+    }
+
+    @Test
+    public void skalEnableMerkKnappOmMeldingErJournalfortOgTilgangTilHastekassering() {
+        EnvUtils.withSubject("Z999999", () -> {
+            Melding journalfortMelding = createMelding("melding1", SAMTALEREFERAT_OPPMOTE, now().minusDays(1), Temagruppe.ARBD, "melding1");
+            journalfortMelding.journalfortDato = DateTime.now();
+
+            when(henvendelseBehandlingService.hentMeldinger(anyString(), anyString())).thenReturn(new Meldinger(asList(
+                    journalfortMelding)));
+
+            InnboksVM innboksVM = innboksVM();
+            MeldingActionPanel meldingActionPanel = new MeldingActionPanel("actionpanel", innboksVM);
+            wicket.goToPageWith(new HaandterMeldingValgPanel(HAANDTERMELDINGER_ID, innboksVM, meldingActionPanel))
+                    .should().containComponent(thatIsEnabled().and(withId(MERKE_VALG_ID)));
+        });
     }
 
     @Test
