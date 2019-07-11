@@ -155,6 +155,11 @@ public class TraadVM implements Serializable {
                 || getEldsteMelding().getMeldingstype() == Meldingstype.SPORSMAL_SKRIFTLIG_DIREKTE;
     }
 
+    public boolean erMeldingstypeSamtalereferart() {
+        return getEldsteMelding().getMeldingstype() == Meldingstype.SAMTALEREFERAT_OPPMOTE
+                || getEldsteMelding().getMeldingstype() == Meldingstype.SAMTALEREFERAT_TELEFON;
+    }
+
     public boolean erSisteMeldingEtDelsvar() {
         return getNyesteMelding().erDelsvar();
     }
