@@ -2,7 +2,7 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.saf
 
 val dokumentoversiktBrukerGraphQLQuery = """
     query {
-          dokumentoversiktBruker(brukerId: {id: \"[FNR]\", type: FNR}, journalstatuser: [JOURNALFOERT, FERDIGSTILT, EKSPEDERT], foerste: 9999) {
+          dokumentoversiktBruker(brukerId: {id: \"[FNR]\", type: FNR}, journalstatuser: [JOURNALFOERT, FERDIGSTILT, EKSPEDERT], fraDato: \"2016-06-04\", foerste: 9999) {
             journalposter {
               journalposttype
               datoOpprettet
