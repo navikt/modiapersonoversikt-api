@@ -118,7 +118,7 @@ class DialogController @Inject constructor(private val ansattService: AnsattServ
                 .withNavIdent(navident)
                 .withEksternAktor(navident)
                 .withKanal("TEKST")
-                .withType(Meldingstype.SPORSMAL_SKRIFTLIG)
+                .withType(Meldingstype.SPORSMAL_MODIA_UTGAAENDE)
                 .withFritekst(Fritekst(sporsmalRequest.fritekst))
                 .withTilknyttetEnhet(valgtEnhet)
                 .withErTilknyttetAnsatt(sporsmalRequest.erOppgaveTilknyttetAnsatt)
