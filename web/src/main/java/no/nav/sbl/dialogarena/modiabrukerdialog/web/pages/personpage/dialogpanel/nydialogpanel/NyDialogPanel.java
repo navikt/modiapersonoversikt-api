@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.nydialogpanel;
 
+import no.nav.metrics.MetricsFactory;
 import no.nav.modig.modia.feedbackform.FeedbackLabel;
 import no.nav.modig.wicket.component.enhancedtextarea.EnhancedTextArea;
 import no.nav.modig.wicket.component.enhancedtextarea.EnhancedTextAreaConfigurator;
@@ -350,6 +351,7 @@ public class NyDialogPanel extends GenericPanel<HenvendelseVM> {
     }
 
     private void sendReferat() throws Exception {
+        MetricsFactory.createEvent("hendelse.send.referat").report();
         sendHenvendelse(getModelObject(), referatType(getModelObject().kanal), Optional.empty());
     }
 
