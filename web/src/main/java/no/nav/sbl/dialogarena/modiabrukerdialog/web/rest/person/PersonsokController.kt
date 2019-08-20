@@ -42,16 +42,16 @@ private fun lagPersonResponse(fimPerson: FimPerson): Map<String, Any?> =
         )
 
 private fun lagPostadresse(adr: FimUstrukturertAdresse): String =
-        arrayOf(adr.adresselinje1, adr.adresselinje2, adr.adresselinje3, adr.adresselinje4, adr.landkode.value).joinToString(" ")
+        arrayOf(adr.adresselinje1, adr.adresselinje2, adr.adresselinje3, adr.adresselinje4, adr.landkode?.value).joinToString(" ")
 
 
 private fun lagBostedsadresse(adr: FimStrukturertAdresse): String? =
     when(adr) {
-        is FimStedsadresseNorge -> arrayOf(adr.tilleggsadresse, adr.bolignummer, adr.poststed.value).joinToString(" ")
-        is FimGateadresse -> arrayOf(adr.gatenavn, adr.husnummer, adr.husbokstav, adr.poststed.value).joinToString(" ")
+        is FimStedsadresseNorge -> arrayOf(adr.tilleggsadresse, adr.bolignummer, adr.poststed?.value).joinToString(" ")
+        is FimGateadresse -> arrayOf(adr.gatenavn, adr.husnummer, adr.husbokstav, adr.poststed?.value).joinToString(" ")
         is FimMatrikkeladresse -> arrayOf(adr.matrikkelnummer.bruksnummer, adr.matrikkelnummer.festenummer, adr.matrikkelnummer.gaardsnummer,
-            adr.matrikkelnummer.seksjonsnummer, adr.matrikkelnummer.undernummer, adr.poststed.value).joinToString(" ")
-        is FimPostboksadresseNorsk -> arrayOf(adr.postboksanlegg, adr.poststed).joinToString(" ")
+            adr.matrikkelnummer.seksjonsnummer, adr.matrikkelnummer.undernummer, adr.poststed?.value).joinToString(" ")
+        is FimPostboksadresseNorsk -> arrayOf(adr.postboksanlegg, adr.poststed?.value).joinToString(" ")
         else -> null
     }
 
