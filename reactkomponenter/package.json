@@ -1,4 +1,4 @@
-{
+mo{
   "name": "react-komponenter",
   "version": "0.0.1",
   "description": "React komponenter",
@@ -58,7 +58,7 @@
     "intl": "1.1.0",
     "lodash": "4.17.5",
     "lodash.throttle": "4.1.1",
-    "modiapersonoversikt": "3217.0.0",
+    "modiapersonoversikt": "3230.0.0",
     "nav-frontend-alertstriper": "3.0.2",
     "nav-frontend-alertstriper-style": "2.0.2",
     "nav-frontend-chevron-style": "0.3.4",
