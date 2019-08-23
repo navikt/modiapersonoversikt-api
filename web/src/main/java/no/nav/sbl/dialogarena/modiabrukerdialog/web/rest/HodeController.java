@@ -35,14 +35,15 @@ public class HodeController {
     private OrganisasjonEnhetV2Service organisasjonEnhetService;
 
     class Me {
-        public final String ident, navn, fornavn, etternavn, enhet;
+        public final String ident, navn, fornavn, etternavn, enhetId, enhetNavn;
 
-        public Me(String ident, String fornavn, String etternavn, String enhet) {
+        public Me(String ident, String fornavn, String etternavn, String enhetId, String enhetNavn) {
             this.ident = ident;
             this.fornavn = fornavn;
             this.etternavn = etternavn;
             this.navn = fornavn + " " + etternavn;
-            this.enhet = enhet;
+            this.enhetId = enhetId;
+            this.enhetNavn = enhetNavn;
         }
     }
 
@@ -74,7 +75,7 @@ public class HodeController {
         String enhetNavn = organisasjonEnhetService.hentEnhetGittEnhetId(enhetId, OrganisasjonEnhetV2Service.WSOppgavebehandlerfilter.UFILTRERT)
                 .map((enhet) -> enhet.enhetNavn)
                 .orElse("[Ukjent enhetId: "+ enhetId+"]");
-        return new Me(ident, saksbehandler.fornavn, saksbehandler.etternavn, enhetNavn);
+        return new Me(ident, saksbehandler.fornavn, saksbehandler.etternavn, enhetId, enhetNavn);
     }
 
     @GET
