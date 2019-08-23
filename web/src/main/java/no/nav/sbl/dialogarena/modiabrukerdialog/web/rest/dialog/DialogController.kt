@@ -56,6 +56,7 @@ class DialogController @Inject constructor(private val ansattService: AnsattServ
         return meldinger.map {
             mapOf(
                     "id" to it.id,
+                    "oppgaveId" to it.oppgaveId,
                     "meldingstype" to it.meldingstype?.name,
                     "temagruppe" to it.gjeldendeTemagruppe?.name,
                     "skrevetAv" to it.skrevetAv?.let(this::hentPerson),
@@ -65,7 +66,11 @@ class DialogController @Inject constructor(private val ansattService: AnsattServ
                     "status" to it.status?.name,
                     "opprettetDato" to it.opprettetDato?.toString(DateTimeFormat.forPattern(DATO_TID_FORMAT)),
                     "journalfortDato" to it.journalfortDato?.toString(DateTimeFormat.forPattern(DATO_TID_FORMAT)),
-                    "ferdigstiltDato" to it.ferdigstiltDato?.toString(DateTimeFormat.forPattern(DATO_TID_FORMAT))
+                    "ferdigstiltDato" to it.ferdigstiltDato?.toString(DateTimeFormat.forPattern(DATO_TID_FORMAT)),
+                    "erFerdigstiltUtenSvar" to it.erFerdigstiltUtenSvar,
+                    "kontorsperretEnhet" to it.kontorsperretEnhet,
+                    "markertSomFeilsendtAv" to it.markertSomFeilsendtAv,
+                    "erDokumentMelding" to it.erDokumentMelding
             )
         }
     }
