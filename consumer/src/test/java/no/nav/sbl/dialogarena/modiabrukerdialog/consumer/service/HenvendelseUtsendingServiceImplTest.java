@@ -219,7 +219,7 @@ public class HenvendelseUtsendingServiceImplTest {
                 .withTemagruppe(TEMAGRUPPE);
         henvendelseUtsendingService.sendHenvendelse(melding, Optional.empty(), Optional.of(sak), SAKSBEHANDLERS_VALGTE_ENHET);
 
-        verify(sakerService).knyttBehandlingskjedeTilSak(anyString(), anyString(), sakArgumentCaptor.capture());
+        verify(sakerService).knyttBehandlingskjedeTilSak(anyString(), anyString(), sakArgumentCaptor.capture(), anyString());
 
         Sak sendtSak = sakArgumentCaptor.getValue();
         assertThat(sendtSak, is(sak));
