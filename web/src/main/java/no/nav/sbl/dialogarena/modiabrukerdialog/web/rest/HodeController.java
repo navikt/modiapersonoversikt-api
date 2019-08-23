@@ -2,10 +2,12 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest;
 
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.GrunnInfo;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.AnsattService;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.organisasjonsEnhetV2.OrganisasjonEnhetV2Service;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.GrunninfoService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.http.CookieUtil;
 
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -17,6 +19,7 @@ import java.util.stream.Collectors;
 
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static no.nav.brukerdialog.security.context.SubjectHandler.getSubjectHandler;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.RestUtils.hentValgtEnhet;
 
 @Path("/hode")
 @Produces(APPLICATION_JSON)
@@ -28,14 +31,18 @@ public class HodeController {
     @Inject
     private AnsattService ansattService;
 
-    class Me {
-        public final String ident, navn, fornavn, etternavn;
+    @Inject
+    private OrganisasjonEnhetV2Service organisasjonEnhetService;
 
-        public Me(String ident, String fornavn, String etternavn) {
+    class Me {
+        public final String ident, navn, fornavn, etternavn, enhet;
+
+        public Me(String ident, String fornavn, String etternavn, String enhet) {
             this.ident = ident;
             this.fornavn = fornavn;
             this.etternavn = etternavn;
             this.navn = fornavn + " " + etternavn;
+            this.enhet = enhet;
         }
     }
 
@@ -60,10 +67,14 @@ public class HodeController {
 
     @GET
     @Path("/me")
-    public Me hentSaksbehandler() {
+    public Me hentSaksbehandler(@Context HttpServletRequest request) {
         String ident = getSubjectHandler().getUid();
         GrunnInfo.SaksbehandlerNavn saksbehandler = grunninfoService.hentSaksbehandlerNavn();
-        return new Me(ident, saksbehandler.fornavn, saksbehandler.etternavn);
+        String enhetId = hentValgtEnhet(request);
+        String enhetNavn = organisasjonEnhetService.hentEnhetGittEnhetId(enhetId, OrganisasjonEnhetV2Service.WSOppgavebehandlerfilter.UFILTRERT)
+                .map((enhet) -> enhet.enhetNavn)
+                .orElse("[Ukjent enhetId: "+ enhetId+"]");
+        return new Me(ident, saksbehandler.fornavn, saksbehandler.etternavn, enhetNavn);
     }
 
     @GET

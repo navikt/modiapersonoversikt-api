@@ -1,6 +1,5 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest;
 
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.organisasjonsEnhetV2.OrganisasjonEnhetV2Service;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.cms.SkrivestotteSok;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.cms.SkrivestotteTekst;
 
@@ -22,9 +21,6 @@ public class SkrivestotteController {
     @Inject
     private SkrivestotteSok skrivestotteSok;
 
-    @Inject
-    private OrganisasjonEnhetV2Service organisasjonEnhetService;
-
     @GET
     @Path("/sok")
     public List<SkrivestotteTekst> hentSkrivestotteTekster(@QueryParam("fritekst") String fritekst, @QueryParam("tags") List<String> tags) {
@@ -37,13 +33,5 @@ public class SkrivestotteController {
         return skrivestotteSok.sok("").stream()
                 .flatMap(skrivestotteTekst -> skrivestotteTekst.tags.stream())
                 .collect(toSet());
-    }
-
-    @GET
-    @Path("/enhetsnavn")
-    public String hentEnhetsnavn(@QueryParam("enhetId") String enhetId) {
-        return organisasjonEnhetService.hentEnhetGittEnhetId(enhetId, OrganisasjonEnhetV2Service.WSOppgavebehandlerfilter.UFILTRERT)
-                .map((enhet) -> enhet.enhetNavn)
-                .orElse("[Ukjent enhetId: "+ enhetId+"]");
     }
 }
