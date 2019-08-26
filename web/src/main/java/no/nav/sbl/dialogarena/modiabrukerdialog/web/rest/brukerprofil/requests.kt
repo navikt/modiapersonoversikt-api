@@ -1,6 +1,5 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.brukerprofil
 
-import no.nav.tjeneste.virksomhet.behandlebrukerprofil.v2.informasjon.FimTilrettelagtKommunikasjon
 import java.time.LocalDate
 
 data class EndreNavnRequest(val fødselsnummer: String = "",
