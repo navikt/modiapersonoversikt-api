@@ -97,7 +97,7 @@ class BrukerprofilController @Inject constructor(private val behandlePersonServi
                                        request: EndreTilrettelagtkommunikasjonRequest) =
             fødselsnummer
                     .let(kjerneinfoService::hentBrukerprofil)
-                    .apply { tilrettelagtKommunikasjon = request.map { Kodeverdi(it, "") } }
+                    .apply { tilrettelagtKommunikasjon = request.tilrettelagtKommunikasjon.map { Kodeverdi(it, "") } }
                     ?.run(::skrivBrukerOgLagResponse)
 
     @POST

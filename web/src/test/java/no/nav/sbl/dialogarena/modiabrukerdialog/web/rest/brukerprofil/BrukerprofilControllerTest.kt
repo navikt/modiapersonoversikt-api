@@ -441,7 +441,7 @@ class BrukerprofilControllerTest {
 
         @Test
         fun `Kaller tjenesten med tilrettelagt kommunikasjon`() {
-            controller.endreTilrettelagtKommunikasjon(AREMARK_FNR, listOf(TOLKEHJELP_KODE))
+            controller.endreTilrettelagtKommunikasjon(AREMARK_FNR, EndreTilrettelagtkommunikasjonRequest(tilrettelagtKommunikasjon = listOf(TOLKEHJELP_KODE)))
             verify(behandleBrukerProfilService).oppdaterKontaktinformasjonOgPreferanser(check {
                 assertEquals(TOLKEHJELP_KODE, it.bruker.tilrettelagtKommunikasjon[0].kodeRef)
             })
@@ -452,7 +452,7 @@ class BrukerprofilControllerTest {
             whenever(behandleBrukerProfilService.oppdaterKontaktinformasjonOgPreferanser(any()))
                     .thenThrow(OppdaterKontaktinformasjonOgPreferanserPersonIdentErUtgaatt())
 
-            val response = controller.endreTilrettelagtKommunikasjon(AREMARK_FNR, listOf(TOLKEHJELP_KODE))
+            val response = controller.endreTilrettelagtKommunikasjon(AREMARK_FNR, EndreTilrettelagtkommunikasjonRequest(tilrettelagtKommunikasjon = listOf(TOLKEHJELP_KODE)))
 
             assertEquals(Status.GONE.statusCode, response?.status)
         }

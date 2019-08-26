@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.brukerprofil
 
+import no.nav.tjeneste.virksomhet.behandlebrukerprofil.v2.informasjon.FimTilrettelagtKommunikasjon
 import java.time.LocalDate
 
 data class EndreNavnRequest(val fødselsnummer: String = "",
@@ -71,4 +72,6 @@ data class EndreKontonummerRequest(
     data class Adresse(val linje1: String, var linje2: String, var linje3: String)
 }
 
-typealias EndreTilrettelagtkommunikasjonRequest = List<String>
+data class EndreTilrettelagtkommunikasjonRequest (
+        val tilrettelagtKommunikasjon: List<String>
+)
