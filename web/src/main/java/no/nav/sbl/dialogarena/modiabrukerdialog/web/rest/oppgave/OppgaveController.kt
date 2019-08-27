@@ -19,7 +19,7 @@ import javax.ws.rs.core.MediaType.APPLICATION_JSON
 import javax.ws.rs.core.Response
 
 private val logger = LoggerFactory.getLogger(OppgaveController::class.java)
-private const val HENT_OPPGAVE_ROLLE = "BD06_HentOppgave"
+private const val HENT_OPPGAVE_ROLLE = "0000-GA-BD06_HentOppgave"
 
 @Path("/oppgaver")
 @Produces(APPLICATION_JSON)

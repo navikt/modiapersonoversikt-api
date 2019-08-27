@@ -1,12 +1,16 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.dialog
 
+import no.nav.brukerdialog.security.context.SubjectHandler
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Person
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Fritekst
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.HenvendelseUtsendingService
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.gsak.SakerService
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.AnsattService
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.RestUtils
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.RestUtils.hentValgtEnhet
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.TemagruppeTemaMapping.hentTemagruppeForTema
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.DATO_TID_FORMAT
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.henvendelse.HenvendelseBehandlingService
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.henvendelse.domain.Traad
@@ -24,7 +28,9 @@ import javax.ws.rs.core.Response
 @Path("/dialog/{fnr}")
 class DialogController @Inject constructor(private val ansattService: AnsattService,
                                            private val henvendelseService: HenvendelseBehandlingService,
-                                           private val henvendelseUtsendingService: HenvendelseUtsendingService) {
+                                           private val henvendelseUtsendingService: HenvendelseUtsendingService,
+                                           private val sakerService: SakerService
+) {
     @GET
     @Path("/meldinger")
     fun hentMeldinger(@Context request: HttpServletRequest,
@@ -72,38 +78,85 @@ class DialogController @Inject constructor(private val ansattService: AnsattServ
             )
 
     @POST
-    @Path("/sendmelding")
+    @Path("/sendreferat")
     fun sendMelding(@Context request: HttpServletRequest,
                     @PathParam("fnr") fødselsnummer: String,
-                    meldingRequest: SendMeldingRequest): Response {
-        // TODO Vi må også sende inn sak og oppgave etterhvert
-        henvendelseUtsendingService.sendHenvendelse(lagMelding(meldingRequest), Optional.empty(), Optional.empty(), hentValgtEnhet(request))
+                    referatRequest: SendReferatRequest): Response {
+        val context = lagSendHenvendelseContext(fødselsnummer, request)
+        henvendelseUtsendingService.sendHenvendelse(lagReferat(referatRequest, context), Optional.empty(), Optional.empty(), context.enhet)
         return Response.ok().build()
     }
 
-    private fun lagMelding(meldingRequest: SendMeldingRequest): Melding =
-            Melding().withFnr(meldingRequest.fnr)
-                    .withNavIdent(meldingRequest.navident)
-                    .withKanal(meldingRequest.kanal)
-                    .withType(meldingRequest.type?.let { Meldingstype.valueOf(it) })
-                    .withFritekst(Fritekst(meldingRequest.fritekst))
-                    .withEksternAktor(meldingRequest.navident)
-                    .withTilknyttetEnhet(meldingRequest.tilknyttetEnhet)
-                    .withErTilknyttetAnsatt(meldingRequest.erTilknyttetAnsatt)
-                    .withTraadId(meldingRequest.traadId)
-                    .withKontorsperretEnhet(meldingRequest.kontorsperretEnhet)
-                    .withTemagruppe(meldingRequest.temagruppe)
+    private fun lagReferat(referatRequest: SendReferatRequest, context: no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.dialog.Context): Melding {
+        return Melding().withFnr(context.fnr)
+                .withNavIdent(context.ident)
+                .withEksternAktor(context.ident)
+                .withKanal(referatRequest.kanal.name)
+                .withType(Meldingstype.valueOf("SAMTALEREFERAT_" + referatRequest.kanal))
+                .withFritekst(Fritekst(referatRequest.fritekst))
+                .withTilknyttetEnhet(context.enhet)
+                .withErTilknyttetAnsatt(true)
+                .withTemagruppe(referatRequest.temagruppe)
+    }
+
+    @POST
+    @Path("/sendsporsmal")
+    fun sendSporsmal(@Context request: HttpServletRequest,
+                     @PathParam("fnr") fødselsnummer: String,
+                     sporsmalsRequest: SendSporsmalRequest): Response {
+        val context: no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.dialog.Context = lagSendHenvendelseContext(fødselsnummer, request);
+        val gsakSaker = sakerService.hentSammensatteSaker(fødselsnummer)
+        val psakSaker = sakerService.hentPensjonSaker(fødselsnummer)
+        val saker = gsakSaker.union(psakSaker)
+
+        val valgtSak = saker.find { it.saksId == sporsmalsRequest.saksID }
+        require(valgtSak != null)
+        henvendelseUtsendingService.sendHenvendelse(lagSporsmal(sporsmalsRequest, valgtSak.temaKode, context), Optional.empty(), Optional.of(valgtSak), context.enhet)
+        return Response.ok().build()
+    }
+
+    private fun lagSporsmal(sporsmalRequest: SendSporsmalRequest, sakstema: String, context: no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.dialog.Context): Melding {
+        return Melding().withFnr(context.fnr)
+                .withNavIdent(context.ident)
+                .withEksternAktor(context.ident)
+                .withKanal("TEKST")
+                .withType(Meldingstype.SPORSMAL_MODIA_UTGAAENDE)
+                .withFritekst(Fritekst(sporsmalRequest.fritekst))
+                .withTilknyttetEnhet(context.enhet)
+                .withErTilknyttetAnsatt(sporsmalRequest.erOppgaveTilknyttetAnsatt)
+                .withTemagruppe(hentTemagruppeForTema(sakstema))
+    }
 }
 
-data class SendMeldingRequest(
-        val fnr: String,
-        val navident: String,
-        val kanal: String,
-        val type: String?,
+data class SendReferatRequest(
         val fritekst: String,
-        val tilknyttetEnhet: String,
-        val erTilknyttetAnsatt: Boolean,
-        val traadId: String?,
-        val kontorsperretEnhet: String?,
-        val temagruppe: String
+        val temagruppe: String,
+        val kanal: Kanal
+)
+
+data class SendSporsmalRequest(
+        val fritekst: String,
+        val saksID: String,
+        val erOppgaveTilknyttetAnsatt: Boolean
+)
+
+enum class Kanal {
+    OPPMOTE,
+    TELEFON
+}
+
+fun lagSendHenvendelseContext(fnr: String, request: HttpServletRequest): no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.dialog.Context {
+    val ident = SubjectHandler.getSubjectHandler().uid
+    val enhet = RestUtils.hentValgtEnhet(request)
+
+    require(fnr != null)
+    require(ident != null)
+    require(enhet != null)
+    return Context(fnr, ident, enhet)
+}
+
+data class Context(
+        val fnr: String,
+        val ident: String,
+        val enhet: String
 )

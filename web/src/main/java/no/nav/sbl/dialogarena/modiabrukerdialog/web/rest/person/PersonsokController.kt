@@ -32,8 +32,8 @@ class PersonsokController @Inject constructor(private val personsokPortType: Per
 private fun lagPersonResponse(fimPerson: FimPerson): Map<String, Any?> =
         mapOf(
                 "diskresjonskode" to fimPerson.diskresjonskode?.let { lagKodeverdi(it) },
-                "postadresse" to fimPerson.postadresse?.ustrukturertAdresse?.let { lagUstrukturertAdresse(it) },
-                "bostedsadresse" to fimPerson.bostedsadresse?.strukturertAdresse?.let { lagStrukturertAdresse(it) },
+                "postadresse" to fimPerson.postadresse?.ustrukturertAdresse?.let { lagPostadresse(it) },
+                "bostedsadresse" to fimPerson.bostedsadresse?.strukturertAdresse?.let { lagBostedsadresse(it) },
                 "kjonn" to fimPerson.kjoenn?.kjoenn?.let { lagKodeverdi(it) },
                 "navn" to fimPerson.personnavn?.let { lagNavn(it) },
                 "status" to fimPerson.personstatus?.personstatus?.let { lagKodeverdi(it) },
@@ -41,21 +41,19 @@ private fun lagPersonResponse(fimPerson: FimPerson): Map<String, Any?> =
                 "brukerinfo" to lagBrukerinfo(fimPerson)
         )
 
-private fun lagUstrukturertAdresse(fimUstrukturertAdresse: FimUstrukturertAdresse): Map<String, Any?> =
-        mapOf(
-                "adresselinje1" to fimUstrukturertAdresse.adresselinje1,
-                "adresselinje2" to fimUstrukturertAdresse.adresselinje2,
-                "adresselinje3" to fimUstrukturertAdresse.adresselinje3,
-                "adresselinje4" to fimUstrukturertAdresse.adresselinje4,
-                "landkode" to fimUstrukturertAdresse.landkode?.let { lagKodeverdi(it) }
-        )
+private fun lagPostadresse(adr: FimUstrukturertAdresse): String =
+        arrayOf(adr.adresselinje1, adr.adresselinje2, adr.adresselinje3, adr.adresselinje4, adr.landkode?.value).filterNotNull().joinToString(" ")
 
-private fun lagStrukturertAdresse(fimStrukturertAdresse: FimStrukturertAdresse): Map<String, Any?> =
-        mapOf(
-                "landkode" to fimStrukturertAdresse.landkode?.let { lagKodeverdi(it) },
-                "tilleggsadresse" to fimStrukturertAdresse.tilleggsadresse,
-                "tilleggsadresseType" to fimStrukturertAdresse.tilleggsadresseType
-        )
+
+private fun lagBostedsadresse(adr: FimStrukturertAdresse): String? =
+    when(adr) {
+        is FimGateadresse -> arrayOf(adr.gatenavn, adr.husnummer, adr.husbokstav, adr.poststed?.value).filterNotNull().joinToString(" ")
+        is FimMatrikkeladresse -> arrayOf(adr.matrikkelnummer.bruksnummer, adr.matrikkelnummer.festenummer, adr.matrikkelnummer.gaardsnummer,
+                adr.matrikkelnummer.seksjonsnummer, adr.matrikkelnummer.undernummer, adr.poststed?.value).filterNotNull().joinToString(" ")
+        is FimStedsadresseNorge -> arrayOf(adr.tilleggsadresse, adr.bolignummer, adr.poststed?.value).filterNotNull().joinToString(" ")
+        is FimPostboksadresseNorsk -> arrayOf(adr.postboksanlegg, adr.poststed?.value).filterNotNull().joinToString(" ")
+        else -> null
+    }
 
 private fun lagNavn(fimPersonnavn: FimPersonnavn): Map<String, Any?> =
         mapOf(
@@ -83,22 +81,11 @@ private fun lagBrukerinfo(fimPerson: FimPerson): Map<String, Any?>? =
         }
 
 
-private fun lagMidlertidigAdresse(fimMidlertidigPostadresse: FimMidlertidigPostadresse): Map<String, Any?> =
+private fun lagMidlertidigAdresse(fimMidlertidigPostadresse: FimMidlertidigPostadresse): String? =
         when (fimMidlertidigPostadresse) {
-            is FimMidlertidigPostadresseNorge ->
-                mapOf(
-                        "type" to "PostadresseNorge",
-                        "ustrukturertAdresse" to lagUstrukturertAdresse(fimMidlertidigPostadresse.ustrukturertAdresse)
-                )
-            is FimMidlertidigPostadresseUtland ->
-                mapOf(
-                        "type" to "PostadresseUtland",
-                        "ustrukturertAdresse" to lagUstrukturertAdresse(fimMidlertidigPostadresse.ustrukturertAdresse)
-                )
-            else ->
-                mapOf(
-                        "type" to "UkjentAdresse"
-                )
+            is FimMidlertidigPostadresseNorge -> lagPostadresse(fimMidlertidigPostadresse.ustrukturertAdresse)
+            is FimMidlertidigPostadresseUtland -> lagPostadresse(fimMidlertidigPostadresse.ustrukturertAdresse)
+            else -> null
         }
 
 private fun lagKodeverdi(fimKodeverdi: FimKodeverdi): Map<String, Any?> =
