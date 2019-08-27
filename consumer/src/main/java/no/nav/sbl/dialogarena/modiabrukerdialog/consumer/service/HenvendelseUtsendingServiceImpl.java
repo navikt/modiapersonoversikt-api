@@ -149,7 +149,7 @@ public class HenvendelseUtsendingServiceImpl implements HenvendelseUtsendingServ
             melding.traadId = melding.id;
         }
         if (sak.isPresent()) {
-            sakerService.knyttBehandlingskjedeTilSak(melding.fnrBruker, melding.traadId, sak.get());
+            sakerService.knyttBehandlingskjedeTilSak(melding.fnrBruker, melding.traadId, sak.get(), saksbehandlersValgteEnhet);
         }
         if (oppgaveId.isPresent()) {
             oppgaveBehandlingService.ferdigstillOppgaveIGsak(oppgaveId.get(), temagruppe, saksbehandlersValgteEnhet);
