@@ -71,4 +71,6 @@ data class EndreKontonummerRequest(
     data class Adresse(val linje1: String, var linje2: String, var linje3: String)
 }
 
-typealias EndreTilrettelagtkommunikasjonRequest = List<String>
+data class EndreTilrettelagtkommunikasjonRequest (
+        val tilrettelagtKommunikasjon: List<String>
+)
