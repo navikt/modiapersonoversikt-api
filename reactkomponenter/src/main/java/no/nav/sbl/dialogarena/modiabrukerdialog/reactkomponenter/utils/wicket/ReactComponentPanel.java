@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.joda.JodaModule;
+import no.nav.metrics.MetricsFactory;
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.ajax.AbstractDefaultAjaxBehavior;
@@ -13,8 +14,7 @@ import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.http.WebRequest;
 
-import java.io.IOException;
-import java.io.StringWriter;
+import java.io.*;
 import java.util.*;
 
 import static java.lang.String.format;
@@ -48,6 +48,15 @@ public class ReactComponentPanel extends MarkupContainer {
             protected void respond(AjaxRequestTarget target) {
                 WebRequest request = ((WebRequest) RequestCycle.get().getRequest());
                 Set<String> paramnames = request.getQueryParameters().getParameterNames();
+
+
+                // Det er lett å tro at  `callbacks` aldri kan være null. Men pga serialisering av wicket-state
+                // og `transient`-keywordet så kan det dessverre skje. Man kan ikke fjerne `transient`
+                // siden objektet ikke kan serialiseres
+                if (callbacks == null) {
+                    MetricsFactory.createEvent("hendelse.reactcomponentpanel.transient.error").report();
+                    return;
+                }
 
                 for (String paramname : paramnames) {
                     String data = request.getQueryParameters().getParameterValue(paramname).toString();
