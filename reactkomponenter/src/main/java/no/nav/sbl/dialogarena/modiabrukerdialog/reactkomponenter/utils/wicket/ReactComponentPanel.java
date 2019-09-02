@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.joda.JodaModule;
 import no.nav.metrics.MetricsFactory;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.ajax.AbstractDefaultAjaxBehavior;
@@ -54,7 +55,10 @@ public class ReactComponentPanel extends MarkupContainer {
                 // og `transient`-keywordet så kan det dessverre skje. Man kan ikke fjerne `transient`
                 // siden objektet ikke kan serialiseres
                 if (callbacks == null) {
-                    MetricsFactory.createEvent("hendelse.reactcomponentpanel.transient.error").report();
+                    MetricsFactory
+                            .createEvent("hendelse.reactcomponentpanel.transient.error")
+                            .addFieldToReport("componentName", componentName)
+                            .report();
                     return;
                 }
 
