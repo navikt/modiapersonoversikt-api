@@ -129,6 +129,7 @@ public class MeldingUtils {
             melding.journalfortTema = journalfortInformasjon.getJournalfortTema();
             melding.journalfortSaksId = journalfortInformasjon.getJournalfortSaksId();
             melding.journalfortAvNavIdent = journalfortInformasjon.getJournalforerNavIdent();
+            melding.journalpostId = journalfortInformasjon.getJournalpostId();
             melding.journalfortAv = ldapService.hentSaksbehandler(journalfortInformasjon.getJournalforerNavIdent());
         }
     }
