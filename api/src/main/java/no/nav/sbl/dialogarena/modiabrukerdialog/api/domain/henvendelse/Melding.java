@@ -20,7 +20,7 @@ import static java.util.Comparator.comparing;
 public class Melding implements Serializable {
 
     public String id, traadId, fnrBruker, navIdent, oppgaveId, temagruppe, temagruppeNavn, kanal, kontorsperretEnhet,
-            journalfortTema, journalfortTemanavn, journalfortSaksId, journalfortAvNavIdent, eksternAktor,
+            journalpostId, journalfortTema, journalfortTemanavn, journalfortSaksId, journalfortAvNavIdent, eksternAktor,
             tilknyttetEnhet, brukersEnhet, statusTekst, statusKlasse, lestStatus, visningsDatoTekst,
             journalfortDatoTekst, ferdigstiltUtenSvarDatoTekst, markertSomFeilsendtDatoTekst, kontorsperretDatoTekst, ikontekst, kontorsperretAvNavIdent, markertSomFeilsendtAvNavIdent,
             ferdigstiltUtenSvarAvNavIdent;
@@ -99,6 +99,11 @@ public class Melding implements Serializable {
 
     public Melding withFerdigstiltDato(DateTime dato) {
         this.ferdigstiltDato = dato;
+        return this;
+    }
+
+    public Melding withJournalpostId(String journalpostId) {
+        this.journalpostId = journalpostId;
         return this;
     }
 

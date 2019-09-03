@@ -22,6 +22,8 @@ import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.behandlehenvendelse.Be
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.henvendelse.HenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.meldinger.WSHentHenvendelseListeRequest;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.meldinger.WSHentHenvendelseListeResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -33,6 +35,7 @@ import java.util.function.Predicate;
 
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
+import static no.nav.brukerdialog.security.context.SubjectHandler.getSubjectHandler;
 import static no.nav.brukerdialog.security.tilgangskontroll.utils.AttributeUtils.*;
 import static no.nav.brukerdialog.security.tilgangskontroll.utils.RequestUtils.forRequest;
 import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.*;
@@ -41,6 +44,7 @@ import static org.apache.commons.lang3.StringUtils.defaultString;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
 public class HenvendelseBehandlingServiceImpl implements HenvendelseBehandlingService {
+    private static Logger logger = LoggerFactory.getLogger(HenvendelseBehandlingService.class);
 
     @Inject
     private HenvendelsePortType henvendelsePortType;
@@ -153,7 +157,7 @@ public class HenvendelseBehandlingServiceImpl implements HenvendelseBehandlingSe
         kjerneinfoRequest.setBegrunnet(true);
         Person person = kjerneinfo.hentKjerneinformasjon(kjerneinfoRequest).getPerson();
 
-        if(person.getPersonfakta().getAnsvarligEnhet() != null) {
+        if (person.getPersonfakta().getAnsvarligEnhet() != null) {
             return person.getPersonfakta().getAnsvarligEnhet().getOrganisasjonsenhet().getOrganisasjonselementId();
         } else {
             return null;
@@ -187,6 +191,13 @@ public class HenvendelseBehandlingServiceImpl implements HenvendelseBehandlingSe
             PolicyRequest okonomiskSosialhjelpPolicyRequest = forRequest(attributes);
 
             if (melding.gjeldendeTemagruppe == Temagruppe.OKSOS && !pep.hasAccess(okonomiskSosialhjelpPolicyRequest)) {
+                logger.info("HenvendelseBehandlingServiceImpl::okonomiskSosialhjelpTilgang feilet. Ident: {} Enhet: {} Tema: {} SaksId: {} JournalpostId: {}",
+                        getSubjectHandler().getUid(),
+                        valgtEnhet,
+                        melding.journalfortTema,
+                        melding.journalfortSaksId,
+                        melding.journalpostId
+                );
                 melding.withFritekst(new Fritekst(propertyResolver.hentTekst("tilgang.OKSOS"), melding.skrevetAv, melding.ferdigstiltDato));
             }
 
@@ -203,6 +214,13 @@ public class HenvendelseBehandlingServiceImpl implements HenvendelseBehandlingSe
                     resourceAttribute("urn:nav:ikt:tilgangskontroll:xacml:resource:tema", defaultString(melding.journalfortTema)));
 
             if (!isBlank(melding.journalfortTema) && !pep.hasAccess(temagruppePolicyRequest)) {
+                logger.info("HenvendelseBehandlingServiceImpl::journalfortTemaTilgang feilet. Ident: {} Enhet: {} Tema: {} SaksId: {} JournalpostId: {}",
+                        getSubjectHandler().getUid(),
+                        valgtEnhet,
+                        melding.journalfortTema,
+                        melding.journalfortSaksId,
+                        melding.journalpostId
+                );
                 melding.withFritekst(new Fritekst(propertyResolver.hentTekst("tilgang.journalfort"), melding.skrevetAv, melding.ferdigstiltDato));
                 melding.ingenTilgangJournalfort = true;
             }
