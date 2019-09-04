@@ -40,6 +40,20 @@
         </encoder>
     </appender>
 
+    <appender name="tematilgangsporing" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <File>${APP_LOG_HOME}/${MAIN_APPLICATION}-tematilgangsporing.log</File>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <FileNamePattern>${APP_LOG_HOME}/${MAIN_APPLICATION}-tematilgangsporing-%d{yyyy-MM-dd}.%i.gz</FileNamePattern>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>400MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+            <maxHistory>10</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%date %level [%thread] - [%file:%line], %X{callId} - %m%n</pattern>
+        </encoder>
+    </appender>
+
     <!-- The sporingslogg-Appender- Logs access to sensitive information -->
     <appender name="sporinglog" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <File>${APP_LOG_HOME}/${MAIN_APPLICATION}-sporing.log</File>
@@ -98,6 +112,10 @@
 
     <logger name="no.nav.modig.common.SporingsLogger" level="INFO">
         <appender-ref ref="sporinglog"/>
+    </logger>
+
+    <logger name="no.nav.sbl.dialogarena.sporsmalogsvar.consumer.henvendelse.HenvendelseBehandlingService" level="INFO" additivity="false">
+        <appender-ref ref="tematilgangsporing"/>
     </logger>
 
     <logger name="personaccess" level="warn" additivity="false">
