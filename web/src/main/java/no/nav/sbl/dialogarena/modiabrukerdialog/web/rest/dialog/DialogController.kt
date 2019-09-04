@@ -2,6 +2,7 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.dialog
 
 import no.nav.brukerdialog.security.context.SubjectHandler
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Person
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Saksbehandler
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Fritekst
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype
@@ -69,8 +70,10 @@ class DialogController @Inject constructor(private val ansattService: AnsattServ
                     "journalfortDato" to it.journalfortDato?.toString(DateTimeFormat.forPattern(DATO_TID_FORMAT)),
                     "ferdigstiltDato" to it.ferdigstiltDato?.toString(DateTimeFormat.forPattern(DATO_TID_FORMAT)),
                     "erFerdigstiltUtenSvar" to it.erFerdigstiltUtenSvar,
+                    "ferdigstiltUtenSvarAv" to it.ferdigstiltUtenSvarAv?.let(this::hentSaksbehandler),
                     "kontorsperretEnhet" to it.kontorsperretEnhet,
-                    "markertSomFeilsendtAv" to it.markertSomFeilsendtAv,
+                    "kontorsperretAv" to it.kontorsperretAv?.let(this::hentSaksbehandler),
+                    "markertSomFeilsendtAv" to it.markertSomFeilsendtAv?.let(this::hentSaksbehandler),
                     "erDokumentMelding" to it.erDokumentMelding
             )
         }
@@ -80,6 +83,13 @@ class DialogController @Inject constructor(private val ansattService: AnsattServ
             mapOf(
                     "fornavn" to person.fornavn,
                     "etternavn" to person.etternavn
+            )
+
+    private fun hentSaksbehandler(saksbehandler: Saksbehandler): Map<String, Any?> =
+            mapOf(
+                    "fornavn" to saksbehandler.fornavn,
+                    "etternavn" to saksbehandler.etternavn,
+                    "ident" to saksbehandler.ident
             )
 
     @POST
