@@ -62,7 +62,7 @@ class DialogController @Inject constructor(private val ansattService: AnsattServ
                     "meldingstype" to it.meldingstype?.name,
                     "temagruppe" to it.gjeldendeTemagruppe?.name,
                     "skrevetAv" to it.skrevetAv?.let(this::hentPerson),
-                    "journalførtAv" to it.journalfortAv?.let(this::hentPerson),
+                    "journalfortAv" to it.journalfortAv?.let(this::hentPerson),
                     "journalfortDato" to it.journalfortDato?.toString(DateTimeFormat.forPattern(DATO_TID_FORMAT)),
                     "journalfortTema" to it.journalfortTema,
                     "journalfortTemanavn" to it.journalfortTemanavn,
