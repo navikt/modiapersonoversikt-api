@@ -1,16 +1,13 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.rsbac
 
-interface Combinable<CONTEXT> : Function<CONTEXT, DecisionEnums> {
-    fun getMessage(): String
-    override fun invoke(context: CONTEXT): DecisionEnums
-}
-
 abstract class CombiningAlgo {
     abstract fun <CONTEXT> combine(policies: List<Combinable<CONTEXT>>, context: CONTEXT): Decision
 
     companion object {
-        @JvmField val denyOverride: CombiningAlgo = DenyOverride()
-        @JvmField val firstApplicable: CombiningAlgo = FirstApplicable()
+        @JvmField
+        val denyOverride: CombiningAlgo = DenyOverride()
+        @JvmField
+        val firstApplicable: CombiningAlgo = FirstApplicable()
     }
 }
 

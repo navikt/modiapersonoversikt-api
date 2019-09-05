@@ -3,9 +3,9 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.GrunnInfo;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.AnsattService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.organisasjonsEnhetV2.OrganisasjonEnhetV2Service;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.GrunninfoService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.http.CookieUtil;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.rsbac.*;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.GrunninfoService;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.tilgangskontroll.Tilgangskontroll;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
@@ -33,7 +33,7 @@ public class HodeController {
     private OrganisasjonEnhetV2Service organisasjonEnhetService;
 
     @Inject
-    RSBAC<GenerellContext> generellTilgang;
+    Tilgangskontroll tilgangskontroll;
 
     class Me {
         public final String ident, navn, fornavn, etternavn, enhetId, enhetNavn;
@@ -70,8 +70,8 @@ public class HodeController {
     @GET
     @Path("/me")
     public Me hentSaksbehandler(@Context HttpServletRequest request) {
-        return generellTilgang
-                .check(GenerellePolicies.tilgangTilModia)
+        return tilgangskontroll
+                .tilgangTilModia()
                 .exception(error -> new WebApplicationException(error, 403))
                 .get(() -> {
                     String ident = getSubjectHandler().getUid();
@@ -79,7 +79,7 @@ public class HodeController {
                     String enhetId = hentValgtEnhet(request);
                     String enhetNavn = organisasjonEnhetService.hentEnhetGittEnhetId(enhetId, OrganisasjonEnhetV2Service.WSOppgavebehandlerfilter.UFILTRERT)
                             .map((enhet) -> enhet.enhetNavn)
-                            .orElse("[Ukjent enhetId: "+ enhetId+"]");
+                            .orElse("[Ukjent enhetId: " + enhetId + "]");
                     return new Me(ident, saksbehandler.fornavn, saksbehandler.etternavn, enhetId, enhetNavn);
                 });
     }
