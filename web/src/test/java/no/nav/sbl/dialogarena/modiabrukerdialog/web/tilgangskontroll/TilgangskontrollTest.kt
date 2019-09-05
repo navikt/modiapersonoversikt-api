@@ -141,7 +141,7 @@ internal class TilgangskontrollTest {
             val decision = Policies.kode6.with("fnr").invoke(context)
 
             verify(context, never()).hentSaksbehandlerId()
-            verify(context, never()).hentRoller(any())
+            verify(context, never()).hentSaksbehandlerRoller()
             assertEquals(DecisionEnums.NOT_APPLICABLE, decision)
         }
 
@@ -170,7 +170,7 @@ internal class TilgangskontrollTest {
             val decision = Policies.kode7.with("fnr").invoke(context)
 
             verify(context, never()).hentSaksbehandlerId()
-            verify(context, never()).hentRoller(any())
+            verify(context, never()).hentSaksbehandlerRoller()
             assertEquals(DecisionEnums.NOT_APPLICABLE, decision)
         }
 
@@ -199,7 +199,10 @@ private fun mockContext(
 ): GenerellContext {
     val context: GenerellContext = mock()
     whenever(context.hentSaksbehandlerId()).thenReturn(saksbehandlerIdent)
-    whenever(context.hentRoller(any())).thenReturn(roller)
+    whenever(context.hentSaksbehandlerRoller()).thenReturn(roller)
     whenever(context.hentDiskresjonkode(any())).thenReturn(diskresjonsKode)
+    whenever(context.harSaksbehandlerRolle(any())).thenAnswer {
+        roller.contains(it.arguments[0])
+    }
     return context
 }
