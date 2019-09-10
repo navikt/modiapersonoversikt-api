@@ -3,16 +3,14 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.GrunnInfo;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.AnsattService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.organisasjonsEnhetV2.OrganisasjonEnhetV2Service;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.GrunninfoService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.http.CookieUtil;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.GrunninfoService;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.tilgangskontroll.Tilgangskontroll;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -33,6 +31,9 @@ public class HodeController {
 
     @Inject
     private OrganisasjonEnhetV2Service organisasjonEnhetService;
+
+    @Inject
+    Tilgangskontroll tilgangskontroll;
 
     class Me {
         public final String ident, navn, fornavn, etternavn, enhetId, enhetNavn;
@@ -69,13 +70,18 @@ public class HodeController {
     @GET
     @Path("/me")
     public Me hentSaksbehandler(@Context HttpServletRequest request) {
-        String ident = getSubjectHandler().getUid();
-        GrunnInfo.SaksbehandlerNavn saksbehandler = grunninfoService.hentSaksbehandlerNavn();
-        String enhetId = hentValgtEnhet(request);
-        String enhetNavn = organisasjonEnhetService.hentEnhetGittEnhetId(enhetId, OrganisasjonEnhetV2Service.WSOppgavebehandlerfilter.UFILTRERT)
-                .map((enhet) -> enhet.enhetNavn)
-                .orElse("[Ukjent enhetId: "+ enhetId+"]");
-        return new Me(ident, saksbehandler.fornavn, saksbehandler.etternavn, enhetId, enhetNavn);
+        return tilgangskontroll
+                .tilgangTilModia()
+                .exception(error -> new WebApplicationException(error, 403))
+                .get(() -> {
+                    String ident = getSubjectHandler().getUid();
+                    GrunnInfo.SaksbehandlerNavn saksbehandler = grunninfoService.hentSaksbehandlerNavn();
+                    String enhetId = hentValgtEnhet(request);
+                    String enhetNavn = organisasjonEnhetService.hentEnhetGittEnhetId(enhetId, OrganisasjonEnhetV2Service.WSOppgavebehandlerfilter.UFILTRERT)
+                            .map((enhet) -> enhet.enhetNavn)
+                            .orElse("[Ukjent enhetId: " + enhetId + "]");
+                    return new Me(ident, saksbehandler.fornavn, saksbehandler.etternavn, enhetId, enhetNavn);
+                });
     }
 
     @GET
