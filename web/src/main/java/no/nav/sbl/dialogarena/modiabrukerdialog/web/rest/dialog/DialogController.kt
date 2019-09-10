@@ -1,10 +1,12 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.dialog
 
 import no.nav.brukerdialog.security.context.SubjectHandler
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Fritekst
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.HenvendelseUtsendingService
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveBehandlingService
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.gsak.SakerService
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.RestUtils
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.TemagruppeTemaMapping.hentTemagruppeForTema
@@ -21,12 +23,14 @@ import javax.ws.rs.core.Response
 
 data class TraadDTO(val traadId: String, val meldinger: List<MeldingDTO>) : DTO
 class MeldingDTO(val map: Map<String, Any?>) : HashMap<String, Any?>(map), DTO
+class FortsettDialogDTO(val behandlingsId: String, val oppgaveId: String?) : DTO
 
 @Path("/dialog/{fnr}")
 class DialogController @Inject constructor(
         private val henvendelseService: HenvendelseBehandlingService,
         private val henvendelseUtsendingService: HenvendelseUtsendingService,
-        private val sakerService: SakerService
+        private val sakerService: SakerService,
+        private val oppgaveBehandlingService: OppgaveBehandlingService
 ) {
     @GET
     @Path("/meldinger")
@@ -74,8 +78,51 @@ class DialogController @Inject constructor(
     }
 
     @POST
-    @Path("/fortsett")
-    fun fortsettDialog(
+    @Path("/fortsett/opprett")
+    fun startFortsettDialog(
+            @Context request: HttpServletRequest,
+            @PathParam("fnr") fnr: String,
+            traadId: String
+    ): FortsettDialogDTO {
+        // TODO tilgangsstyring
+        val context = lagSendHenvendelseContext(fnr, request)
+        val traad = henvendelseService
+                .hentMeldinger(fnr, context.enhet)
+                .traader
+                .find { it.traadId == traadId }
+                ?: throw WebApplicationException("Fant ingen tråd med id: $traadId", 400)
+
+        val oppgaveId: String? = if (erEnkeltstaendeSporsmalFraBruker(traad)) {
+            val sporsmal = traad.meldinger[0]
+            oppgaveBehandlingService.tilordneOppgaveIGsak(
+                    sporsmal.oppgaveId,
+                    Temagruppe.valueOf(sporsmal.temagruppe),
+                    context.enhet
+            )
+
+            sporsmal.oppgaveId
+        } else null
+
+        val behandlingsId = henvendelseUtsendingService.opprettHenvendelse(
+                Meldingstype.SVAR_SKRIFTLIG.name,
+                context.fnr,
+                traadId
+        )
+
+        return FortsettDialogDTO(behandlingsId, oppgaveId)
+    }
+
+    private fun erEnkeltstaendeSporsmalFraBruker(traad: Traad): Boolean {
+        return traad
+                .meldinger
+                .filter { !it.erDelvisSvar() }
+                .filter { !(it.meldingstype == Meldingstype.SPORSMAL_SKRIFTLIG || it.meldingstype == Meldingstype.SPORSMAL_SKRIFTLIG_DIREKTE) }
+                .isEmpty()
+    }
+
+    @POST
+    @Path("/fortsett/ferdigstill")
+    fun sendFortsettDialog(
             @Context request: HttpServletRequest,
             @PathParam("fnr") fnr: String,
             fortsettDialogRequest: FortsettDialogRequest
