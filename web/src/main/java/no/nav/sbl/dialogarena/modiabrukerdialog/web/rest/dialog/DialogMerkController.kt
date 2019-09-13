@@ -17,6 +17,7 @@ class DialogMerkController @Inject constructor(private val behandleHenvendelsePo
     @POST
     @Path("/feilsendt")
     fun merkSomFeilsendt(request: FeilmerkRequest): Response {
+        // TODO tilgangsstyring
         behandleHenvendelsePortType.oppdaterTilKassering(request.behandlingsidListe)
         return Response.ok().build()
     }
@@ -24,6 +25,7 @@ class DialogMerkController @Inject constructor(private val behandleHenvendelsePo
     @POST
     @Path("/bidrag")
     fun merkSomBidrag(request: BidragRequest): Response {
+        // TODO tilgangsstyring
         behandleHenvendelsePortType.knyttBehandlingskjedeTilTema(request.eldsteMeldingTraadId, "BID")
         return Response.ok().build()
     }
@@ -31,6 +33,7 @@ class DialogMerkController @Inject constructor(private val behandleHenvendelsePo
     @POST
     @Path("/kontorsperret")
     fun merkSomKontorsperret(request: KontorsperretRequest): Response {
+        // TODO tilgangsstyring
         behandleHenvendelsePortType.oppdaterKontorsperre(request.fnr, request.meldingsidListe)
         return Response.ok().build()
     }
@@ -38,6 +41,7 @@ class DialogMerkController @Inject constructor(private val behandleHenvendelsePo
     @POST
     @Path("/avslutt")
     fun avsluttUtenSvar(request: AvsluttUtenSvarRequest): Response {
+        // TODO tilgangsstyring
         behandleHenvendelsePortType.ferdigstillUtenSvar(request.eldsteMeldingTraadId, request.saksbehandlerValgtEnhet)
         oppgaveBehandlingService.ferdigstillOppgaveIGsak(request.eldsteMeldingOppgaveId, Optional.empty(), request.saksbehandlerValgtEnhet)
         return Response.ok().build()
@@ -46,6 +50,7 @@ class DialogMerkController @Inject constructor(private val behandleHenvendelsePo
     @POST
     @Path("/slett")
     fun slettBehandlingskjede(request: FeilmerkRequest): Response {
+        // TODO tilgangsstyring
         if (MerkUtils.kanHastekassere(SubjectHandler.getSubjectHandler().getUid())) {
             behandleHenvendelsePortType.markerTraadForHasteKassering(request.behandlingsidListe);
             return Response.ok().build()
