@@ -194,12 +194,32 @@ internal class TilgangskontrollTest {
             assertEquals(DecisionEnums.DENY, decision)
         }
     }
+
+    @Nested
+    inner class `tematilganger policy` {
+        @Test
+        fun `permit om bruker tilgang pa tema`() {
+            val context = mockContext(tematilganger = setOf("OPP", "FMLI"))
+            val decision = Policies.tilgangTilTema.with(TilgangTilTemaData("1234", "FMLI")).invoke(context)
+
+            assertEquals(DecisionEnums.PERMIT, decision)
+        }
+
+        @Test
+        fun `deny om bruker ikke har tilgang pa tema`() {
+            val context = mockContext(tematilganger = setOf("OPP", "ARBD"))
+            val decision = Policies.tilgangTilTema.with(TilgangTilTemaData("1234", "FMLI")).invoke(context)
+
+            assertEquals(DecisionEnums.DENY, decision)
+        }
+    }
 }
 
 private fun mockContext(
         saksbehandlerIdent: String = "Z999999",
         roller: List<String> = emptyList(),
-        diskresjonsKode: String? = null
+        diskresjonsKode: String? = null,
+        tematilganger: Set<String> = setOf()
 ): GenerellContext {
     val context: GenerellContext = mock()
     whenever(context.hentSaksbehandlerId()).thenReturn(saksbehandlerIdent)
@@ -208,5 +228,6 @@ private fun mockContext(
     whenever(context.harSaksbehandlerRolle(any())).thenAnswer {
         roller.contains(it.arguments[0])
     }
+    whenever(context.hentTemagrupperForSaksbehandler(any())).thenReturn(tematilganger)
     return context
 }
