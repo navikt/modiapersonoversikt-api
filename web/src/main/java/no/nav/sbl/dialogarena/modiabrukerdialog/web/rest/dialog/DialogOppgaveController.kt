@@ -24,6 +24,7 @@ class DialogOppgaveController @Inject constructor(private val gsakKodeverk: Gsak
     @POST
     @Path("/opprett")
     fun opprettOppgave(request: OpperettOppgaveRequest): Response {
+        // TODO tilgangsstyring
         oppgavebehandling.opprettOppgave(
                 WSOpprettOppgaveRequest()
                         .withOpprettetAvEnhetId(request.valgtEnhetId)
@@ -51,6 +52,7 @@ class DialogOppgaveController @Inject constructor(private val gsakKodeverk: Gsak
     @Path("/tema")
     @Produces(APPLICATION_JSON)
     fun hentAlleTema(): List<Map<String, Any?>> {
+        // TODO tilgangsstyring
         val gsakTemaListe = gsakKodeverk.hentTemaListe()
         return gsakTemaListe.filter { it.oppgaveTyper.isNotEmpty() }.map {
             mapOf(
