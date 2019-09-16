@@ -135,7 +135,7 @@ internal class RSBACTest {
     fun `should return bias if exceptions are caught in context`() {
         val result = RSBACImpl(ThrowingContext())
                 .check(Policy("Its ok") {
-                    it.thisThrowsAnException()
+                    thisThrowsAnException()
                     DecisionEnums.PERMIT
                 })
                 .getDecision()
