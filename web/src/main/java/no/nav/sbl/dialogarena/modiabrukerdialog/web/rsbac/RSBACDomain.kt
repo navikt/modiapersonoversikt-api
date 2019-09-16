@@ -2,7 +2,7 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.rsbac
 
 typealias Supplier<T> = () -> T
 typealias Function<S, T> = (s: S) -> T
-typealias Rule<CONTEXT> = Function<CONTEXT, DecisionEnums>
+typealias Rule<CONTEXT> = CONTEXT.() -> DecisionEnums
 
 class RSBACException(override val message: String) : RuntimeException(message)
 
@@ -34,7 +34,7 @@ data class Decision(val message: String, val decision: DecisionEnums) {
 interface Combinable<CONTEXT> : Function<CONTEXT, DecisionEnums> {
     fun getMessage(context: CONTEXT): String
     override fun invoke(context: CONTEXT): DecisionEnums
-    fun <DATA> asGenerator(): Generator<CONTEXT, DATA> = PolicyGenerator({ getMessage(it.context) }) { invoke(it.context) }
+    fun <DATA> asGenerator(): Generator<CONTEXT, DATA> = PolicyGenerator({ getMessage(context) }) { invoke(context) }
 }
 
 interface Generator<CONTEXT, DATA> {
@@ -58,12 +58,12 @@ class PolicySet<CONTEXT>(
 }
 
 class Policy<CONTEXT> : Combinable<CONTEXT> {
-    private val message: Function<CONTEXT, String>
+    private val message: CONTEXT.() -> String
     private val rule: Rule<CONTEXT>
 
     constructor(message: String, rule: Function<CONTEXT, Boolean>, effect: DecisionEnums) : this(
             { message },
-            { if (rule.invoke(it)) effect else effect.negate() }
+            { if (rule.invoke(this)) effect else effect.negate() }
     )
 
     constructor(message: String, rule: Rule<CONTEXT>) : this(
@@ -71,7 +71,7 @@ class Policy<CONTEXT> : Combinable<CONTEXT> {
             rule
     )
 
-    constructor(message: Function<CONTEXT, String>, rule: Rule<CONTEXT>) {
+    constructor(message: CONTEXT.() -> String, rule: Rule<CONTEXT>) {
         this.message = message
         this.rule = rule
     }
@@ -87,11 +87,11 @@ class Policy<CONTEXT> : Combinable<CONTEXT> {
 
 class RuleData<CONTEXT, DATA>(val context: CONTEXT, val data: DATA)
 class PolicyGenerator<CONTEXT, DATA>(
-        private val message: Function<RuleData<CONTEXT, DATA>, String>,
+        private val message: RuleData<CONTEXT, DATA>.() -> String,
         private val rule: Rule<RuleData<CONTEXT, DATA>>
 ) : Generator<CONTEXT, DATA> {
-    override fun with(data: DATA): Policy<CONTEXT> = Policy({ this.message(RuleData(it, data))}) {
-        rule.invoke(RuleData(it, data))
+    override fun with(data: DATA): Policy<CONTEXT> = Policy({ message(RuleData(this, data))}) {
+        rule.invoke(RuleData(this, data))
     }
 
     constructor(message: String, rule: Rule<RuleData<CONTEXT, DATA>>) : this({ message }, rule)

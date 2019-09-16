@@ -1,6 +1,7 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.config;
 
 import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navansatt.GOSYSNAVansatt;
+import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navorgenhet.GOSYSNAVOrgEnhet;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.ldap.LDAPService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.ConsumerContext;
@@ -9,7 +10,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.cache.CacheConfigu
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.utils.WicketInjectablePropertyResolver;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.service.plukkoppgave.PlukkOppgaveService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.service.plukkoppgave.PlukkOppgaveServiceImpl;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.tilgangskontroll.GenerellContext;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.tilgangskontroll.TilgangskontrollContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.tilgangskontroll.Tilgangskontroll;
 import no.nav.sbl.modiabrukerdialog.pep.config.spring.PepConfig;
 import org.springframework.context.annotation.Bean;
@@ -49,8 +50,10 @@ public class ApplicationContextBeans {
     public Tilgangskontroll tilgangskontroll(
             LDAPService ldapService,
             GrunninfoService grunninfoService,
-            GOSYSNAVansatt ansattService
+            GOSYSNAVansatt ansattService,
+            GOSYSNAVOrgEnhet enhetService
     ) {
-        return new Tilgangskontroll(new GenerellContext(ldapService, grunninfoService, ansattService));
+        TilgangskontrollContext context = new TilgangskontrollContext(ldapService, grunninfoService, ansattService, enhetService);
+        return new Tilgangskontroll(context);
     }
 }

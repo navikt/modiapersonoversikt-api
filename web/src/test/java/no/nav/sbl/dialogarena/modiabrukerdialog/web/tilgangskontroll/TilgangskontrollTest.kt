@@ -88,6 +88,20 @@ internal class TilgangskontrollTest {
         }
 
         @Test
+        fun `deny om saksbehandler ikke har tilgang til brukers enhet`() {
+            val context = mockContext(
+                    roller = listOf("0000-ga-bd06_modiagenerelltilgang"),
+                    brukersEnhet = "1234"
+            )
+            val (message, decision) = Tilgangskontroll(context)
+                    .tilgangTilBruker("fnr")
+                    .getDecision()
+
+            assertEquals("Saksbehandler (Z999999) har ikke tilgang til bruker basert på geografisk tilgang", message)
+            assertEquals(DecisionEnums.DENY, decision)
+        }
+
+        @Test
         fun `permit om bruker ikke er kode6_7 og saksbehandler har modia-rolle`() {
             val (_, decision) = Tilgangskontroll(mockContext(roller = listOf("0000-ga-bd06_modiagenerelltilgang")))
                     .tilgangTilBruker("fnr")
@@ -101,6 +115,19 @@ internal class TilgangskontrollTest {
             val context = mockContext(
                     roller = listOf("0000-ga-bd06_modiagenerelltilgang", "0000-GA-GOSYS_KODE7"),
                     diskresjonsKode = "7"
+            )
+            val (_, decision) = Tilgangskontroll(context)
+                    .tilgangTilBruker("fnr")
+                    .getDecision()
+
+            assertEquals(DecisionEnums.PERMIT, decision)
+        }
+
+        @Test
+        fun `permit om saksbehandler har nasjonal tilgang`() {
+            val context = mockContext(
+                    roller = listOf("0000-ga-bd06_modiagenerelltilgang", "0000-GA-GOSYS_UTVIDBAR_TIL_NASJONAL"),
+                    brukersEnhet = "1234"
             )
             val (_, decision) = Tilgangskontroll(context)
                     .tilgangTilBruker("fnr")
@@ -196,6 +223,70 @@ internal class TilgangskontrollTest {
     }
 
     @Nested
+    inner class `geografisktilgang policy` {
+        @Test
+        fun `permit om bruker ikke har enhet`() {
+            val context = mockContext()
+            val decision = Policies.geografiskTilgang.with("fnr").invoke(context)
+
+            assertEquals(DecisionEnums.PERMIT, decision)
+        }
+
+        @Test
+        fun `permit om saksbehandler har nasjonal tilgang`() {
+            val context = mockContext(
+                    roller = listOf("0000-GA-GOSYS_NASJONAL"),
+                    brukersEnhet = "1234"
+            )
+            val decision = Policies.geografiskTilgang.with("fnr").invoke(context)
+
+            assertEquals(DecisionEnums.PERMIT, decision)
+        }
+
+        @Test
+        fun `permit om saksbehandler har utvidbar til nasjonal tilgang`() {
+            val context = mockContext(
+                    roller = listOf("0000-GA-GOSYS_UTVIDBAR_TIL_NASJONAL"),
+                    brukersEnhet = "1234"
+            )
+            val decision = Policies.geografiskTilgang.with("fnr").invoke(context)
+
+            assertEquals(DecisionEnums.PERMIT, decision)
+        }
+
+        @Test
+        fun `permit om saksbehandler har tilgang til brukers enhet`() {
+            val context = mockContext(
+                    lokalEnheter = setOf("1234"),
+                    brukersEnhet = "1234"
+            )
+            val decision = Policies.geografiskTilgang.with("fnr").invoke(context)
+
+            assertEquals(DecisionEnums.PERMIT, decision)
+        }
+
+        @Test
+        fun `permit om saksbehandler har regional tilgang til brukers enhet`() {
+            val context = mockContext(
+                    roller = listOf("0000-GA-GOSYS_REGIONAL"),
+                    fylkesEnheter = setOf("1234"),
+                    brukersEnhet = "1234"
+            )
+            val decision = Policies.geografiskTilgang.with("fnr").invoke(context)
+
+            assertEquals(DecisionEnums.PERMIT, decision)
+        }
+
+        @Test
+        fun `deny i alle andre tilfeller`() {
+            val context = mockContext(brukersEnhet = "1234")
+            val decision = Policies.geografiskTilgang.with("fnr").invoke(context)
+
+            assertEquals(DecisionEnums.DENY, decision)
+        }
+    }
+
+    @Nested
     inner class `tematilganger policy` {
         @Test
         fun `permit om bruker tilgang pa tema`() {
@@ -213,15 +304,19 @@ internal class TilgangskontrollTest {
             assertEquals(DecisionEnums.DENY, decision)
         }
     }
+
 }
 
 private fun mockContext(
         saksbehandlerIdent: String = "Z999999",
         roller: List<String> = emptyList(),
         diskresjonsKode: String? = null,
-        tematilganger: Set<String> = setOf()
-): GenerellContext {
-    val context: GenerellContext = mock()
+        tematilganger: Set<String> = setOf(),
+        brukersEnhet: String? = null,
+        lokalEnheter: Set<String> = setOf(),
+        fylkesEnheter: Set<String> = setOf()
+): TilgangskontrollContext {
+    val context: TilgangskontrollContext = mock()
     whenever(context.hentSaksbehandlerId()).thenReturn(saksbehandlerIdent)
     whenever(context.hentSaksbehandlerRoller()).thenReturn(roller)
     whenever(context.hentDiskresjonkode(any())).thenReturn(diskresjonsKode)
@@ -229,5 +324,8 @@ private fun mockContext(
         roller.contains(it.arguments[0])
     }
     whenever(context.hentTemagrupperForSaksbehandler(any())).thenReturn(tematilganger)
+    whenever(context.hentBrukersEnhet(any())).thenReturn(brukersEnhet)
+    whenever(context.hentSaksbehandlerLokalEnheter()).thenReturn(lokalEnheter)
+    whenever(context.hentSaksbehandlersFylkesEnheter()).thenReturn(fylkesEnheter)
     return context
 }
