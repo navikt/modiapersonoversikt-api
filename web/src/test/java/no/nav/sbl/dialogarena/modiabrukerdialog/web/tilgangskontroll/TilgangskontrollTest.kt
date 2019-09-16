@@ -11,10 +11,11 @@ internal class TilgangskontrollTest {
     inner class tilgangTilModia {
         @Test
         fun `deny om saksbehandler mangler modia-roller`() {
-            val (_, decision) = Tilgangskontroll(mockContext())
+            val (message, decision) = Tilgangskontroll(mockContext())
                     .tilgangTilModia()
                     .getDecision()
 
+            assertEquals("Saksbehandler (Z999999) har ikke tilgang til modia", message)
             assertEquals(DecisionEnums.DENY, decision)
         }
 
@@ -50,10 +51,11 @@ internal class TilgangskontrollTest {
     inner class tilgangTilBruker {
         @Test
         fun `deny om saksbehandler mangler modia-roller`() {
-            val (_, decision) = Tilgangskontroll(mockContext())
+            val (message, decision) = Tilgangskontroll(mockContext())
                     .tilgangTilBruker("fnr")
                     .getDecision()
 
+            assertEquals("Saksbehandler (Z999999) har ikke tilgang til modia", message)
             assertEquals(DecisionEnums.DENY, decision)
         }
 
@@ -63,10 +65,11 @@ internal class TilgangskontrollTest {
                     roller = listOf("0000-ga-bd06_modiagenerelltilgang"),
                     diskresjonsKode = "6"
             )
-            val (_, decision) = Tilgangskontroll(context)
+            val (message, decision) = Tilgangskontroll(context)
                     .tilgangTilBruker("fnr")
                     .getDecision()
 
+            assertEquals("Saksbehandler (Z999999) har ikke tilgang til kode6 brukere", message)
             assertEquals(DecisionEnums.DENY, decision)
         }
 
@@ -76,10 +79,11 @@ internal class TilgangskontrollTest {
                     roller = listOf("0000-ga-bd06_modiagenerelltilgang"),
                     diskresjonsKode = "7"
             )
-            val (_, decision) = Tilgangskontroll(context)
+            val (message, decision) = Tilgangskontroll(context)
                     .tilgangTilBruker("fnr")
                     .getDecision()
 
+            assertEquals("Saksbehandler (Z999999) har ikke tilgang til kode7 brukere", message)
             assertEquals(DecisionEnums.DENY, decision)
         }
 
@@ -190,12 +194,32 @@ internal class TilgangskontrollTest {
             assertEquals(DecisionEnums.DENY, decision)
         }
     }
+
+    @Nested
+    inner class `tematilganger policy` {
+        @Test
+        fun `permit om bruker tilgang pa tema`() {
+            val context = mockContext(tematilganger = setOf("OPP", "FMLI"))
+            val decision = Policies.tilgangTilTema.with(TilgangTilTemaData("1234", "FMLI")).invoke(context)
+
+            assertEquals(DecisionEnums.PERMIT, decision)
+        }
+
+        @Test
+        fun `deny om bruker ikke har tilgang pa tema`() {
+            val context = mockContext(tematilganger = setOf("OPP", "ARBD"))
+            val decision = Policies.tilgangTilTema.with(TilgangTilTemaData("1234", "FMLI")).invoke(context)
+
+            assertEquals(DecisionEnums.DENY, decision)
+        }
+    }
 }
 
 private fun mockContext(
         saksbehandlerIdent: String = "Z999999",
         roller: List<String> = emptyList(),
-        diskresjonsKode: String? = null
+        diskresjonsKode: String? = null,
+        tematilganger: Set<String> = setOf()
 ): GenerellContext {
     val context: GenerellContext = mock()
     whenever(context.hentSaksbehandlerId()).thenReturn(saksbehandlerIdent)
@@ -204,5 +228,6 @@ private fun mockContext(
     whenever(context.harSaksbehandlerRolle(any())).thenAnswer {
         roller.contains(it.arguments[0])
     }
+    whenever(context.hentTemagrupperForSaksbehandler(any())).thenReturn(tematilganger)
     return context
 }

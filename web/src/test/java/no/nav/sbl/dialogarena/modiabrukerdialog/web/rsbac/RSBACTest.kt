@@ -1,7 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.rsbac
 
 import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import java.lang.IllegalStateException
@@ -117,7 +116,7 @@ internal class RSBACTest {
     }
 
     @Test
-    fun `should return bias if exceptions are caught`() {
+    fun `should return bias if exceptions are caught in policies`() {
         val rsbac = RSBACImpl("value")
         val denyBiased = rsbac
                 .bias(DecisionEnums.DENY)
@@ -132,6 +131,24 @@ internal class RSBACTest {
         assertEquals(DecisionEnums.PERMIT, permitBiased.decision)
     }
 
+    @Test
+    fun `should return bias if exceptions are caught in context`() {
+        val result = RSBACImpl(ThrowingContext())
+                .check(Policy("Its ok") {
+                    it.thisThrowsAnException()
+                    DecisionEnums.PERMIT
+                })
+                .getDecision()
+
+        assertEquals(DecisionEnums.DENY, result.decision)
+    }
+
     inline fun <reified T : Throwable> assertThrowsMessage(expected: String, noinline executable: () -> Unit) =
             assertEquals(expected, assertThrows<T>(executable).message)
+
+    class ThrowingContext {
+        fun thisThrowsAnException() {
+            throw IllegalStateException("Something went wrong")
+        }
+    }
 }

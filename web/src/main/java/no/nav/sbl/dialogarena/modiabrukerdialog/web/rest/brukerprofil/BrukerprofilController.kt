@@ -144,6 +144,7 @@ class BrukerprofilController @Inject constructor(private val behandlePersonServi
     }
 
     private fun verifyTilgang(rolle: String) {
+        // erstatt med rsbac-tilgangskontroll
         val consumerId = SubjectHandler.getSubjectHandler().uid
         if (!ldapService.saksbehandlerHarRolle(consumerId, rolle)) {
             throw ForbiddenException("Saksbehandler $consumerId har ikke rollen $rolle")

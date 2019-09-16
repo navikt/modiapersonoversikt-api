@@ -19,9 +19,9 @@ private class DenyOverride : CombiningAlgo() {
             val ruleDecision = policy.invoke(context)
 
             combinedDecision = when (ruleDecision) {
-                DecisionEnums.DENY -> return Decision(policy.getMessage(), ruleDecision)
+                DecisionEnums.DENY -> return Decision(policy.getMessage(context), ruleDecision)
                 DecisionEnums.NOT_APPLICABLE -> combinedDecision
-                else -> Decision(policy.getMessage(), ruleDecision)
+                else -> Decision(policy.getMessage(context), ruleDecision)
             }
         }
         return combinedDecision
@@ -35,12 +35,12 @@ private class FirstApplicable : CombiningAlgo() {
             val ruleDecision = policy.invoke(context)
 
             if (ruleDecision.isApplicable()) {
-                return Decision(policy.getMessage(), ruleDecision)
+                return Decision(policy.getMessage(context), ruleDecision)
             }
 
             combinedDecision = when (combinedDecision.decision) {
                 DecisionEnums.DENY, DecisionEnums.PERMIT -> combinedDecision
-                DecisionEnums.NOT_APPLICABLE -> Decision(policy.getMessage(), ruleDecision)
+                DecisionEnums.NOT_APPLICABLE -> Decision(policy.getMessage(context), ruleDecision)
             }
         }
         return combinedDecision

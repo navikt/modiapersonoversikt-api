@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.config;
 
+import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navansatt.GOSYSNAVansatt;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.ldap.LDAPService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.ConsumerContext;
@@ -45,7 +46,11 @@ public class ApplicationContextBeans {
     }
 
     @Bean
-    public Tilgangskontroll tilgangskontroll(LDAPService ldapService, GrunninfoService grunninfoService) {
-        return new Tilgangskontroll(new GenerellContext(ldapService, grunninfoService));
+    public Tilgangskontroll tilgangskontroll(
+            LDAPService ldapService,
+            GrunninfoService grunninfoService,
+            GOSYSNAVansatt ansattService
+    ) {
+        return new Tilgangskontroll(new GenerellContext(ldapService, grunninfoService, ansattService));
     }
 }
