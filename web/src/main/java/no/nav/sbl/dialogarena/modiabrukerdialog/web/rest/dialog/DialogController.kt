@@ -183,7 +183,7 @@ private fun lagReferat(referatRequest: SendReferatRequest, requestContext: Reque
     return Melding().withFnr(requestContext.fnr)
             .withNavIdent(requestContext.ident)
             .withEksternAktor(requestContext.ident)
-//            .withKanal(referatRequest.kanal.name)
+            .withKanal(getKanal(referatRequest.meldingstype))
             .withType(referatRequest.meldingstype)
             .withFritekst(Fritekst(referatRequest.fritekst))
             .withTilknyttetEnhet(requestContext.enhet)
@@ -192,11 +192,12 @@ private fun lagReferat(referatRequest: SendReferatRequest, requestContext: Reque
 }
 
 private fun lagSporsmal(sporsmalRequest: SendSporsmalRequest, sakstema: String, requestContext: RequestContext): Melding {
+    val type = Meldingstype.SPORSMAL_MODIA_UTGAAENDE
     return Melding().withFnr(requestContext.fnr)
             .withNavIdent(requestContext.ident)
             .withEksternAktor(requestContext.ident)
-//            .withKanal(Kanal.TEKST.name)
-            .withType(Meldingstype.SPORSMAL_MODIA_UTGAAENDE)
+            .withKanal(getKanal(type))
+            .withType(type)
             .withFritekst(Fritekst(sporsmalRequest.fritekst))
             .withTilknyttetEnhet(requestContext.enhet)
             .withErTilknyttetAnsatt(sporsmalRequest.erOppgaveTilknyttetAnsatt)
@@ -209,7 +210,7 @@ private fun lagFortsettDialog(request: FortsettDialogRequest, requestContext: Re
             .withFnr(requestContext.fnr)
             .withNavIdent(requestContext.ident)
             .withEksternAktor(requestContext.ident)
-//            .withKanal(request.kanal.name)
+            .withKanal(getKanal(request.meldingstype))
             .withType(request.meldingstype)
             .withFritekst(Fritekst(request.fritekst))
             .withTilknyttetEnhet(requestContext.enhet)
@@ -219,6 +220,20 @@ private fun lagFortsettDialog(request: FortsettDialogRequest, requestContext: Re
             .withTemagruppe(eldsteMelding.temagruppe)
             .withBrukersEnhet(eldsteMelding.brukersEnhet)
 
+}
+
+enum class Kanal {
+    TEKST,
+    OPPMOTE,
+    TELEFON
+}
+
+fun getKanal(type: Meldingstype): String {
+    return when(type) {
+        Meldingstype.SAMTALEREFERAT_OPPMOTE, Meldingstype.SVAR_OPPMOTE -> Kanal.OPPMOTE.name
+        Meldingstype.SAMTALEREFERAT_TELEFON, Meldingstype.SVAR_TELEFON -> Kanal.TELEFON.name
+        else -> Kanal.TEKST.name
+    }
 }
 
 data class SendReferatRequest(
