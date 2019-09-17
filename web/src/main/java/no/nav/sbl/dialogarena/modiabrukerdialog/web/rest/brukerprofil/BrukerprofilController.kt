@@ -2,7 +2,6 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.brukerprofil
 
 import no.nav.behandlebrukerprofil.consumer.BehandleBrukerprofilServiceBi
 import no.nav.behandlebrukerprofil.consumer.messages.BehandleBrukerprofilRequest
-import no.nav.brukerdialog.security.context.SubjectHandler
 import no.nav.brukerprofil.domain.Bankkonto
 import no.nav.brukerprofil.domain.BankkontoUtland
 import no.nav.brukerprofil.domain.Bruker
@@ -16,8 +15,7 @@ import no.nav.kjerneinfo.common.domain.Periode
 import no.nav.kjerneinfo.consumer.fim.behandleperson.BehandlePersonServiceBi
 import no.nav.kjerneinfo.consumer.fim.person.PersonKjerneinfoServiceBi
 import no.nav.kjerneinfo.consumer.fim.person.to.HentKjerneinformasjonRequest
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.ldap.LDAPService
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.UnleashService
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.tilgangskontroll.Tilgangskontroll
 import no.nav.tjeneste.virksomhet.behandlebrukerprofil.v2.OppdaterKontaktinformasjonOgPreferanserPersonIdentErUtgaatt
 import no.nav.tjeneste.virksomhet.behandlebrukerprofil.v2.OppdaterKontaktinformasjonOgPreferanserPersonIkkeFunnet
 import no.nav.tjeneste.virksomhet.behandlebrukerprofil.v2.OppdaterKontaktinformasjonOgPreferanserSikkerhetsbegrensning
@@ -33,69 +31,68 @@ import javax.ws.rs.core.Response.Status.*
 import javax.ws.rs.core.Response.ok
 import javax.ws.rs.core.Response.status
 
-const val ENDRE_NAVN_ROLLE = "0000-GA-BD06_EndreNavn"
-const val ENDRE_ADRESSE_ROLLE = "0000-GA-BD06_EndreKontaktAdresse"
-const val ENDRE_KONTONUMMER_ROLLE = "0000-GA-BD06_EndreKontonummer"
-
 @Path("/brukerprofil/{fnr}")
 @Produces(APPLICATION_JSON)
 class BrukerprofilController @Inject constructor(private val behandlePersonService: BehandlePersonServiceBi,
                                                  private val behandleBrukerProfilService: BehandleBrukerprofilServiceBi,
                                                  private val kjerneinfoService: PersonKjerneinfoServiceBi,
-                                                 private val ldapService: LDAPService,
-                                                 private val unleashService: UnleashService) {
+                                                 private val tilgangskontroll: Tilgangskontroll) {
 
     private val logger = LoggerFactory.getLogger(BrukerprofilController::class.java)
 
     @POST
     @Path("/navn")
     @Consumes(APPLICATION_JSON)
-    fun endreNavn(@PathParam("fnr") fødselsnummer: String, endreNavnRequest: EndreNavnRequest): Response {
-        verifyTilgang(ENDRE_NAVN_ROLLE)
+    fun endreNavn(@PathParam("fnr") fnr: String, endreNavnRequest: EndreNavnRequest): Response {
+        return tilgangskontroll
+                .tilgangTilEndreNavn()
+                .get {
+                    val kjerneinformasjon = kjerneinfoService.hentKjerneinformasjon(HentKjerneinformasjonRequest(fnr))
 
-        val kjerneinformasjon = kjerneinfoService.hentKjerneinformasjon(HentKjerneinformasjonRequest(fødselsnummer))
+                    if (!kjerneinformasjon.person.kanEndreNavn()) {
+                        throw ForbiddenException("Det er ikke lovlig å endre navn til person med fnr: $fnr")
+                    }
 
-        if (!kjerneinformasjon.person.kanEndreNavn()) {
-            throw ForbiddenException("Det er ikke lovlig å endre navn til person med fødselsnummer: $fødselsnummer")
-        }
+                    behandlePersonService.endreNavn(WSEndreNavnRequest()
+                            .withFnr(fnr)
+                            .withFornavn(endreNavnRequest.fornavn)
+                            .withMellomnavn(endreNavnRequest.mellomnavn)
+                            .withEtternavn(endreNavnRequest.etternavn))
 
-        behandlePersonService.endreNavn(WSEndreNavnRequest()
-                .withFnr(fødselsnummer)
-                .withFornavn(endreNavnRequest.fornavn)
-                .withMellomnavn(endreNavnRequest.mellomnavn)
-                .withEtternavn(endreNavnRequest.etternavn))
-
-        return ok().build()
+                    ok().build()
+                }
     }
 
     @POST
     @Path("/adresse")
     @Consumes(APPLICATION_JSON)
-    fun endreAdresse(@PathParam("fnr") fødselsnummer: String, request: EndreAdresseRequest): Response {
-        verifyTilgang(ENDRE_ADRESSE_ROLLE)
+    fun endreAdresse(@PathParam("fnr") fnr: String, request: EndreAdresseRequest): Response {
+        return tilgangskontroll
+                .tilgangTilEndreAdresse()
+                .get {
+                    val bruker = kjerneinfoService.hentBrukerprofil(fnr)
 
-        val bruker = kjerneinfoService.hentBrukerprofil(fødselsnummer)
+                    val adresse = request.norskAdresse ?: request.utenlandskAdresse ?: request.folkeregistrertAdresse
+                    when (adresse) {
+                        is EndreAdresseRequest.NorskAdresse -> bruker.setNorskAdresse(adresse)
+                        is EndreAdresseRequest.UtenlandskAdresse -> bruker.setUtenlandskAdresse(adresse)
+                        true -> {
+                            bruker.midlertidigadresseNorge = null
+                            bruker.midlertidigadresseUtland = null
+                        }
+                        else -> throw BadRequestException()
+                    }
 
-        val adresse = request.norskAdresse ?: request.utenlandskAdresse ?: request.folkeregistrertAdresse
-        when (adresse) {
-            is EndreAdresseRequest.NorskAdresse -> bruker.setNorskAdresse(adresse)
-            is EndreAdresseRequest.UtenlandskAdresse -> bruker.setUtenlandskAdresse(adresse)
-            true -> {
-                bruker.midlertidigadresseNorge = null
-                bruker.midlertidigadresseUtland = null
-            }
-            else -> throw BadRequestException()
-        }
-
-        return skrivBrukerOgLagResponse(bruker)
+                    skrivBrukerOgLagResponse(bruker)
+                }
     }
 
     @POST
     @Path("/tilrettelagtkommunikasjon")
     @Consumes(APPLICATION_JSON)
-    fun endreTilrettelagtKommunikasjon(@PathParam("fnr") fødselsnummer: String,
+    fun endreTilrettelagtKommunikasjon(@PathParam("fnr") fnr: String,
                                        request: EndreTilrettelagtkommunikasjonRequest) =
-            fødselsnummer
+            fnr
                     .let(kjerneinfoService::hentBrukerprofil)
                     .apply { tilrettelagtKommunikasjon = request.tilrettelagtKommunikasjon.map { Kodeverdi(it, "") } }
                     ?.run(::skrivBrukerOgLagResponse)
@@ -103,8 +100,8 @@ class BrukerprofilController @Inject constructor(private val behandlePersonServi
     @POST
     @Path("/telefonnummer")
     @Consumes(APPLICATION_JSON)
-    fun endreTelefonnummer(@PathParam("fnr") fødselsnummer: String, request: EndreTelefonnummerRequest) =
-            fødselsnummer
+    fun endreTelefonnummer(@PathParam("fnr") fnr: String, request: EndreTelefonnummerRequest) =
+            fnr
                     .let(kjerneinfoService::hentBrukerprofil)
                     .apply {
                         mobil = request.mobil?.let { mapTelefon(it, "MOBI") }
@@ -116,17 +113,20 @@ class BrukerprofilController @Inject constructor(private val behandlePersonServi
     @POST
     @Path("/kontonummer")
     @Consumes(APPLICATION_JSON)
-    fun endreKontonummer(@PathParam("fnr") fødselsnummer: String, request: EndreKontonummerRequest) =
-            fødselsnummer
-                    .also { verifyTilgang(ENDRE_KONTONUMMER_ROLLE) }
-                    .let(kjerneinfoService::hentBrukerprofil)
-                    .apply {
-                        bankkonto = when (request.landkode) {
-                            "NOR", null, "" -> Bankkonto()
-                            else -> BankkontoUtland().apply { populer(request) }
-                        }.apply { kontonummer = request.kontonummer }
+    fun endreKontonummer(@PathParam("fnr") fnr: String, request: EndreKontonummerRequest) =
+            tilgangskontroll
+                    .tilgangTilEndreKontonummer()
+                    .get {
+                        fnr
+                                .let(kjerneinfoService::hentBrukerprofil)
+                                .apply {
+                                    bankkonto = when (request.landkode) {
+                                        "NOR", null, "" -> Bankkonto()
+                                        else -> BankkontoUtland().apply { populer(request) }
+                                    }.apply { kontonummer = request.kontonummer }
+                                }
+                                ?.run(::skrivBrukerOgLagResponse)
                     }
-                    ?.run(::skrivBrukerOgLagResponse)
 
     private fun BankkontoUtland.populer(request: EndreKontonummerRequest) {
         banknavn = request.banknavn
@@ -140,14 +140,6 @@ class BrukerprofilController @Inject constructor(private val behandlePersonServi
                 adresselinje2 = it?.linje2
                 adresselinje3 = it?.linje3
             }
-        }
-    }
-
-    private fun verifyTilgang(rolle: String) {
-        // erstatt med rsbac-tilgangskontroll
-        val consumerId = SubjectHandler.getSubjectHandler().uid
-        if (!ldapService.saksbehandlerHarRolle(consumerId, rolle)) {
-            throw ForbiddenException("Saksbehandler $consumerId har ikke rollen $rolle")
         }
     }
 
