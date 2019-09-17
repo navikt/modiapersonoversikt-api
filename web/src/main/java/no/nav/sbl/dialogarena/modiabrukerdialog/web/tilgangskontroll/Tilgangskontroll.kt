@@ -13,6 +13,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.tilgangskontroll.Policies.Co
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.tilgangskontroll.Policies.Companion.tilgangTilOppfoling
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.tilgangskontroll.Policies.Companion.tilgangTilPesysPolicy
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.tilgangskontroll.Policies.Companion.tilgangTilTema
+import javax.ws.rs.ForbiddenException
 
 private val modiaRoller = setOf("0000-ga-bd06_modiagenerelltilgang", "0000-ga-modia-oppfolging", "0000-ga-syfo-sensitiv")
 private val pesysRoller = setOf(
@@ -163,7 +164,7 @@ internal class Policies {
 data class TilgangTilTemaData(val valgtEnhet: String, val tema: String)
 
 class Tilgangskontroll(context: TilgangskontrollContext) {
-    private val rsbac: RSBAC<TilgangskontrollContext> = RSBACImpl(context)
+    private val rsbac: RSBAC<TilgangskontrollContext> = RSBACImpl(context, { ForbiddenException(it) })
 
     fun tilgangTilModia() = rsbac.check(modiaRolle)
     fun tilgangTilBruker(fnr: String) = rsbac.check(tilgangTilBruker.with(fnr))

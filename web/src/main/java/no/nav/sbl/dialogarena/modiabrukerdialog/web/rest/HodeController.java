@@ -72,7 +72,6 @@ public class HodeController {
     public Me hentSaksbehandler(@Context HttpServletRequest request) {
         return tilgangskontroll
                 .tilgangTilModia()
-                .exception(error -> new WebApplicationException(error, 403))
                 .get(() -> {
                     String ident = getSubjectHandler().getUid();
                     GrunnInfo.SaksbehandlerNavn saksbehandler = grunninfoService.hentSaksbehandlerNavn();
