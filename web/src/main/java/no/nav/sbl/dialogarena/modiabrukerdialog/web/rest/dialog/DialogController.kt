@@ -27,6 +27,7 @@ class MeldingDTO(val map: Map<String, Any?>) : HashMap<String, Any?>(map), DTO
 class FortsettDialogDTO(val behandlingsId: String, val oppgaveId: String?) : DTO
 
 @Path("/dialog/{fnr}")
+@Produces("application/json")
 class DialogController @Inject constructor(
         private val tilgangskontroll: Tilgangskontroll,
         private val henvendelseService: HenvendelseBehandlingService,
@@ -93,11 +94,12 @@ class DialogController @Inject constructor(
     fun startFortsettDialog(
             @Context request: HttpServletRequest,
             @PathParam("fnr") fnr: String,
-            traadId: String
+            oprettHenvendelseRequest: OpprettHenvendelseRequest
     ): FortsettDialogDTO {
         return gittTilgangTilBruker(fnr)
                 .get {
                     // TODO tilgangsstyring
+                    val traadId = oprettHenvendelseRequest.traadId
                     val context = lagSendHenvendelseContext(fnr, request)
                     val traad = henvendelseService
                             .hentMeldinger(fnr, context.enhet)
@@ -235,6 +237,10 @@ fun getKanal(type: Meldingstype): String {
         else -> Kanal.TEKST.name
     }
 }
+
+data class OpprettHenvendelseRequest(
+        val traadId: String
+)
 
 data class SendReferatRequest(
         val fritekst: String,
