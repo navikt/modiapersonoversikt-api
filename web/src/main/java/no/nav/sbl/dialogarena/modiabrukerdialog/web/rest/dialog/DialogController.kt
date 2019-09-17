@@ -183,8 +183,8 @@ private fun lagReferat(referatRequest: SendReferatRequest, requestContext: Reque
     return Melding().withFnr(requestContext.fnr)
             .withNavIdent(requestContext.ident)
             .withEksternAktor(requestContext.ident)
-            .withKanal(referatRequest.kanal.name)
-            .withType(Meldingstype.valueOf("SAMTALEREFERAT_" + referatRequest.kanal))
+//            .withKanal(referatRequest.kanal.name)
+            .withType(referatRequest.meldingstype)
             .withFritekst(Fritekst(referatRequest.fritekst))
             .withTilknyttetEnhet(requestContext.enhet)
             .withErTilknyttetAnsatt(true)
@@ -195,7 +195,7 @@ private fun lagSporsmal(sporsmalRequest: SendSporsmalRequest, sakstema: String, 
     return Melding().withFnr(requestContext.fnr)
             .withNavIdent(requestContext.ident)
             .withEksternAktor(requestContext.ident)
-            .withKanal(Kanal.TEKST.name)
+//            .withKanal(Kanal.TEKST.name)
             .withType(Meldingstype.SPORSMAL_MODIA_UTGAAENDE)
             .withFritekst(Fritekst(sporsmalRequest.fritekst))
             .withTilknyttetEnhet(requestContext.enhet)
@@ -209,8 +209,8 @@ private fun lagFortsettDialog(request: FortsettDialogRequest, requestContext: Re
             .withFnr(requestContext.fnr)
             .withNavIdent(requestContext.ident)
             .withEksternAktor(requestContext.ident)
-            .withKanal(request.kanal.name)
-            .withType(meldingstype(request.kanal, request.kanBesvares))
+//            .withKanal(request.kanal.name)
+            .withType(request.meldingstype)
             .withFritekst(Fritekst(request.fritekst))
             .withTilknyttetEnhet(requestContext.enhet)
             .withErTilknyttetAnsatt(request.erOppgaveTilknyttetAnsatt)
@@ -224,7 +224,7 @@ private fun lagFortsettDialog(request: FortsettDialogRequest, requestContext: Re
 data class SendReferatRequest(
         val fritekst: String,
         val temagruppe: String,
-        val kanal: Kanal
+        val meldingstype: Meldingstype
 )
 
 data class SendSporsmalRequest(
@@ -239,27 +239,9 @@ data class FortsettDialogRequest(
         val fritekst: String,
         val saksId: String?,
         val erOppgaveTilknyttetAnsatt: Boolean,
-        val kanal: Kanal,
-        val kanBesvares: Boolean,
+        val meldingstype: Meldingstype,
         val oppgaveId: String?
 )
-
-enum class Kanal {
-    TEKST,
-    OPPMOTE,
-    TELEFON
-}
-
-private fun meldingstype(kanal: Kanal, kanBesvares: Boolean): Meldingstype {
-    return if (kanBesvares && kanal == Kanal.TEKST)
-        Meldingstype.SPORSMAL_MODIA_UTGAAENDE
-    else
-        when (kanal) {
-            Kanal.TEKST -> Meldingstype.SVAR_SKRIFTLIG
-            Kanal.OPPMOTE -> Meldingstype.SVAR_OPPMOTE
-            Kanal.TELEFON -> Meldingstype.SVAR_TELEFON
-        }
-}
 
 fun lagSendHenvendelseContext(fnr: String, request: HttpServletRequest): RequestContext {
     val ident = SubjectHandler.getSubjectHandler().uid
