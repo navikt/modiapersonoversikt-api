@@ -40,7 +40,8 @@ class DialogController @Inject constructor(
             @Context request: HttpServletRequest,
             @PathParam("fnr") fnr: String
     ): List<TraadDTO> {
-        return gittTilgangTilBruker(fnr)
+        return tilgangskontroll
+                .tilgangTilBruker(fnr)
                 .get {
                     val valgtEnhet = RestUtils.hentValgtEnhet(request)
                     henvendelseService
@@ -57,7 +58,8 @@ class DialogController @Inject constructor(
             @PathParam("fnr") fnr: String,
             referatRequest: SendReferatRequest
     ): Response {
-        return gittTilgangTilBruker(fnr)
+        return tilgangskontroll
+                .tilgangTilBruker(fnr)
                 .get {
                     val context = lagSendHenvendelseContext(fnr, request)
                     henvendelseUtsendingService.sendHenvendelse(lagReferat(referatRequest, context), Optional.empty(), Optional.empty(), context.enhet)
@@ -72,7 +74,8 @@ class DialogController @Inject constructor(
             @PathParam("fnr") fnr: String,
             sporsmalsRequest: SendSporsmalRequest
     ): Response {
-        return gittTilgangTilBruker(fnr)
+        return tilgangskontroll
+                .tilgangTilBruker(fnr)
                 .get {
                     val context = lagSendHenvendelseContext(fnr, request)
                     val gsakSaker = sakerService.hentSammensatteSaker(fnr)
@@ -95,9 +98,9 @@ class DialogController @Inject constructor(
             @PathParam("fnr") fnr: String,
             traadId: String
     ): FortsettDialogDTO {
-        return gittTilgangTilBruker(fnr)
+        return tilgangskontroll
+                .tilgangTilBruker(fnr)
                 .get {
-                    // TODO tilgangsstyring
                     val context = lagSendHenvendelseContext(fnr, request)
                     val traad = henvendelseService
                             .hentMeldinger(fnr, context.enhet)
@@ -133,9 +136,9 @@ class DialogController @Inject constructor(
             @PathParam("fnr") fnr: String,
             fortsettDialogRequest: FortsettDialogRequest
     ): Response {
-        return gittTilgangTilBruker(fnr)
+        return tilgangskontroll
+                .tilgangTilBruker(fnr)
                 .get {
-                    // TODO tilgangsstyring
                     val context = lagSendHenvendelseContext(fnr, request)
                     val traad = henvendelseService
                             .hentMeldinger(fnr, context.enhet)
@@ -165,10 +168,6 @@ class DialogController @Inject constructor(
                     Response.ok().build()
                 }
     }
-
-    private fun gittTilgangTilBruker(fnr: String) = tilgangskontroll
-            .tilgangTilBruker(fnr)
-            .exception { WebApplicationException(it, 403) }
 }
 
 private fun erEnkeltstaendeSporsmalFraBruker(traad: Traad): Boolean {
