@@ -1,13 +1,17 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.person
 
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.lagXmlGregorianDato
+import no.nav.tjeneste.virksomhet.personsoek.v1.FinnPersonForMangeForekomster
+import no.nav.tjeneste.virksomhet.personsoek.v1.FinnPersonUgyldigInput
 import no.nav.tjeneste.virksomhet.personsoek.v1.PersonsokPortType
 import no.nav.tjeneste.virksomhet.personsoek.v1.informasjon.*
 import no.nav.tjeneste.virksomhet.personsoek.v1.meldinger.FimAdresseFilter
 import no.nav.tjeneste.virksomhet.personsoek.v1.meldinger.FimFinnPersonRequest
 import no.nav.tjeneste.virksomhet.personsoek.v1.meldinger.FimPersonFilter
 import no.nav.tjeneste.virksomhet.personsoek.v1.meldinger.FimSoekekriterie
+import org.slf4j.LoggerFactory
 import javax.inject.Inject
+import javax.ws.rs.InternalServerErrorException
 import javax.ws.rs.POST
 import javax.ws.rs.Path
 import javax.ws.rs.Produces
@@ -17,9 +21,21 @@ import javax.ws.rs.core.MediaType
 @Produces(MediaType.APPLICATION_JSON)
 class PersonsokController @Inject constructor(private val personsokPortType: PersonsokPortType) {
 
+    private val logger = LoggerFactory.getLogger(PersonsokController::class.java)
+
     @POST
     fun sok(personsokRequest: PersonsokRequest): List<Map<String, Any?>> {
-        val response = personsokPortType.finnPerson(lagPersonsokRequest(personsokRequest))
+        val response = try {
+            personsokPortType.finnPerson(lagPersonsokRequest(personsokRequest))
+        } catch(em: FinnPersonForMangeForekomster) {
+            throw InternalServerErrorException("Søket gav mer enn 200 treff. Forsøk å begrense søket.")
+        } catch(ei: FinnPersonUgyldigInput) {
+            logger.warn("Ugyldig input mottat fra personsøk, sjekk validator: " + ei.message)
+            throw InternalServerErrorException("Ugyldig input mottatt til søketjeneste")
+        } catch (ex: Exception) {
+            logger.error("Feil i personsøk.", ex)
+            throw InternalServerErrorException(ex)
+        }
 
         if (response.personListe == null) {
             return emptyList()
