@@ -2,6 +2,7 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.dialog
 
 import no.nav.brukerdialog.security.context.SubjectHandler
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.Sak
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Fritekst
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype
@@ -147,9 +148,7 @@ class DialogController @Inject constructor(
 
                     val valgtSak = fortsettDialogRequest.saksId
                             ?.let {
-                                val gsakSaker = sakerService.hentSammensatteSaker(fnr)
-                                val psakSaker = sakerService.hentPensjonSaker(fnr)
-                                val saker = gsakSaker.union(psakSaker)
+                                val saker = hentSaker(fnr)
 
                                 saker
                                         .find { it.saksId == fortsettDialogRequest.saksId }
@@ -166,6 +165,22 @@ class DialogController @Inject constructor(
 
                     Response.ok().build()
                 }
+    }
+
+    private fun hentSaker(fnr: String): Set<Sak> {
+        val gsakSaker = try {
+            sakerService.hentSammensatteSaker(fnr)
+        } catch (e: Exception) {
+            emptyList<Sak>()
+        }
+
+        val psakSaker = try {
+            sakerService.hentPensjonSaker(fnr)
+        } catch (e: Exception) {
+            emptyList<Sak>()
+        }
+
+        return gsakSaker.union(psakSaker)
     }
 
     private fun gittTilgangTilBruker(fnr: String) = tilgangskontroll
