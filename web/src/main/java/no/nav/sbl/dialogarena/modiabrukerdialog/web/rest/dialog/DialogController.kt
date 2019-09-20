@@ -95,12 +95,12 @@ class DialogController @Inject constructor(
     fun startFortsettDialog(
             @Context request: HttpServletRequest,
             @PathParam("fnr") fnr: String,
-            oprettHenvendelseRequest: OpprettHenvendelseRequest
+            opprettHenvendelseRequest: OpprettHenvendelseRequest
     ): FortsettDialogDTO {
         return gittTilgangTilBruker(fnr)
                 .get {
                     // TODO tilgangsstyring
-                    val traadId = oprettHenvendelseRequest.traadId
+                    val traadId = opprettHenvendelseRequest.traadId
                     val context = lagSendHenvendelseContext(fnr, request)
                     val traad = henvendelseService
                             .hentMeldinger(fnr, context.enhet)
