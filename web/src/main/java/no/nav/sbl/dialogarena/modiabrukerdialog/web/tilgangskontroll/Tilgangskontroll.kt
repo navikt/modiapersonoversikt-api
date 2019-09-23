@@ -2,6 +2,7 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.tilgangskontroll
 
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rsbac.*
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.tilgangskontroll.Policies.Companion.aaregTilgang
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.tilgangskontroll.Policies.Companion.behandlingsIderTilhorerFnrPolicy
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.tilgangskontroll.Policies.Companion.endreAdresse
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.tilgangskontroll.Policies.Companion.endreKontonummer
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.tilgangskontroll.Policies.Companion.endreNavn
@@ -9,7 +10,8 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.tilgangskontroll.Policies.Co
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.tilgangskontroll.Policies.Companion.modiaRolle
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.tilgangskontroll.Policies.Companion.oksosSperretMelding
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.tilgangskontroll.Policies.Companion.plukkOppgave
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.tilgangskontroll.Policies.Companion.tilgangTilBruker
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.tilgangskontroll.Policies.Companion.saksbehandlerKanHastekasserePolicy
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.tilgangskontroll.Policies.Companion.tilgangTilBrukerPolicy
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.tilgangskontroll.Policies.Companion.tilgangTilOppfoling
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.tilgangskontroll.Policies.Companion.tilgangTilPesysPolicy
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.tilgangskontroll.Policies.Companion.tilgangTilTema
@@ -99,7 +101,7 @@ internal class Policies {
                 policies = listOf(brukerUtenEnhet, nasjonalTilgang, tilgangTilLokalKontor, regionalTilgang, denyPolicy.asGenerator())
         )
 
-        val tilgangTilBruker = PolicySetGenerator(
+        val tilgangTilBrukerPolicy = PolicySetGenerator(
                 policies = listOf(modiaRolle.asGenerator(), geografiskTilgang, kode6, kode7)
         )
 
@@ -158,24 +160,39 @@ internal class Policies {
         val plukkOppgave = Policy<TilgangskontrollContext>({ "Saksbehandler (${hentSaksbehandlerId()}) har ikke tilgang til plukk oppgave" }) {
             if (harSaksbehandlerRolle("0000-GA-BD06_HentOppgave")) DecisionEnums.PERMIT else DecisionEnums.DENY
         }
+
+        val behandlingsIderTilhorerFnrPolicy = PolicyGenerator<TilgangskontrollContext, BehandlingsIdTilgangData>({ "Ikke alle behandlingsIder tilhørte medsendt fødselsnummer. Spørring gjort av ${context.hentSaksbehandlerId()}" }) {
+            if (context.alleBehandlingsIderTilhorerBruker(data.fnr, data.behandlingsIder))
+                DecisionEnums.PERMIT
+            else
+                DecisionEnums.DENY
+        }
+
+        val saksbehandlerKanHastekasserePolicy = Policy<TilgangskontrollContext>({ "Saksbehandler (${hentSaksbehandlerId()}) har ikke tilgang til hastekassering" }) {
+            val identer = hentSaksbehandlereMedTilgangTilHastekassering()
+            if (identer.contains(hentSaksbehandlerId())) DecisionEnums.PERMIT else DecisionEnums.DENY
+        }
     }
 }
 
+data class BehandlingsIdTilgangData(val fnr: String, val behandlingsIder: List<String>)
 data class TilgangTilTemaData(val valgtEnhet: String, val tema: String)
 
-class Tilgangskontroll(context: TilgangskontrollContext) {
-    private val rsbac: RSBAC<TilgangskontrollContext> = RSBACImpl(context, { ForbiddenException(it) })
+class Tilgangskontroll(context: TilgangskontrollContext) : RSBACImpl<TilgangskontrollContext>(context, { ForbiddenException(it) })
 
-    fun tilgangTilModia() = rsbac.check(modiaRolle)
-    fun tilgangTilBruker(fnr: String) = rsbac.check(tilgangTilBruker.with(fnr))
-    fun tilgangTilTema(valgtEnhet: String, tema: String) = rsbac.check(tilgangTilTema.with(TilgangTilTemaData(valgtEnhet, tema)))
-    fun tilgangTilEndreAdresse() = rsbac.check(endreAdresse)
-    fun tilgangTilEndreNavn() = rsbac.check(endreNavn)
-    fun tilgangTilEndreKontonummer() = rsbac.check(endreKontonummer)
-    fun tilgangTilMelding(kontorSperretEnhet: String?) = rsbac.check(kontorSperretMelding.with(kontorSperretEnhet))
-    fun tilgangTilOksos(fnr: String) = rsbac.check(oksosSperretMelding.with(fnr))
-    fun tilgangTilAareg() = rsbac.check(aaregTilgang)
-    fun tilgangTilOppfolging() = rsbac.check(tilgangTilOppfoling)
-    fun tilgangTilPesys() = rsbac.check(tilgangTilPesysPolicy)
-    fun tilgangTilPlukkOppgave() = rsbac.check(plukkOppgave)
-}
+fun RSBAC<TilgangskontrollContext>.tilgangTilBruker(fnr: String) = this.check(tilgangTilBrukerPolicy.with(fnr))
+fun RSBAC<TilgangskontrollContext>.tilgangTilModia() = this.check(modiaRolle)
+fun RSBAC<TilgangskontrollContext>.tilgangTilTema(valgtEnhet: String, tema: String) = this.check(tilgangTilTema.with(TilgangTilTemaData(valgtEnhet, tema)))
+fun RSBAC<TilgangskontrollContext>.tilgangTilEndreAdresse() = this.check(endreAdresse)
+fun RSBAC<TilgangskontrollContext>.tilgangTilEndreNavn() = this.check(endreNavn)
+fun RSBAC<TilgangskontrollContext>.tilgangTilEndreKontonummer() = this.check(endreKontonummer)
+fun RSBAC<TilgangskontrollContext>.tilgangTilMelding(kontorSperretEnhet: String?) = this.check(kontorSperretMelding.with(kontorSperretEnhet))
+fun RSBAC<TilgangskontrollContext>.tilgangTilOksos(fnr: String) = this.check(oksosSperretMelding.with(fnr))
+fun RSBAC<TilgangskontrollContext>.tilgangTilAareg() = this.check(aaregTilgang)
+fun RSBAC<TilgangskontrollContext>.tilgangTilOppfolging() = this.check(tilgangTilOppfoling)
+fun RSBAC<TilgangskontrollContext>.tilgangTilPesys() = this.check(tilgangTilPesysPolicy)
+fun RSBAC<TilgangskontrollContext>.tilgangTilPlukkOppgave() = this.check(plukkOppgave)
+fun RSBAC<TilgangskontrollContext>.saksbehandlerKanHastekassere() = this.check(saksbehandlerKanHastekasserePolicy)
+fun RSBAC<TilgangskontrollContext>.behandlingsIderTilhorerFnr(fnr: String, behandlingsIder: List<String>) =
+        this.check(behandlingsIderTilhorerFnrPolicy.with(BehandlingsIdTilgangData(fnr, behandlingsIder)))
+

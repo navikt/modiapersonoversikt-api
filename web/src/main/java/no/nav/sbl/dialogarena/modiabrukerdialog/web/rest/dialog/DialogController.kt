@@ -13,6 +13,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.TemagruppeTemaMapping.
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.api.DTO
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.api.toDTO
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.tilgangskontroll.Tilgangskontroll
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.tilgangskontroll.tilgangTilBruker
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.henvendelse.HenvendelseBehandlingService
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.henvendelse.domain.Traad
 import java.util.*

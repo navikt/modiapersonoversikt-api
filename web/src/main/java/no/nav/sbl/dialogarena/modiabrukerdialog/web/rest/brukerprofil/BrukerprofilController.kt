@@ -16,6 +16,9 @@ import no.nav.kjerneinfo.consumer.fim.behandleperson.BehandlePersonServiceBi
 import no.nav.kjerneinfo.consumer.fim.person.PersonKjerneinfoServiceBi
 import no.nav.kjerneinfo.consumer.fim.person.to.HentKjerneinformasjonRequest
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.tilgangskontroll.Tilgangskontroll
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.tilgangskontroll.tilgangTilEndreAdresse
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.tilgangskontroll.tilgangTilEndreKontonummer
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.tilgangskontroll.tilgangTilEndreNavn
 import no.nav.tjeneste.virksomhet.behandlebrukerprofil.v2.OppdaterKontaktinformasjonOgPreferanserPersonIdentErUtgaatt
 import no.nav.tjeneste.virksomhet.behandlebrukerprofil.v2.OppdaterKontaktinformasjonOgPreferanserPersonIkkeFunnet
 import no.nav.tjeneste.virksomhet.behandlebrukerprofil.v2.OppdaterKontaktinformasjonOgPreferanserSikkerhetsbegrensning

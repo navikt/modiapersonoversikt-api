@@ -21,7 +21,7 @@ interface RSBACInstance<CONTEXT> : RSBAC<CONTEXT> {
     fun getDecision(): Decision
 }
 
-class RSBACImpl<CONTEXT>(private val context: CONTEXT, private val exception:  Function<String, RuntimeException> = { RSBACException(it) }) : RSBAC<CONTEXT> {
+open class RSBACImpl<CONTEXT>(private val context: CONTEXT, private val exception:  Function<String, RuntimeException> = { RSBACException(it) }) : RSBAC<CONTEXT> {
     override fun permit(message: String, rule: Function<CONTEXT, Boolean>) = RSBACInstanceImpl<CONTEXT, Void>(context, exception).permit(message, rule)
     override fun deny(message: String, rule: Function<CONTEXT, Boolean>) = RSBACInstanceImpl<CONTEXT, Void>(context, exception).deny(message, rule)
     override fun check(policy: Policy<CONTEXT>) = RSBACInstanceImpl<CONTEXT, Void>(context, exception).check(policy)
