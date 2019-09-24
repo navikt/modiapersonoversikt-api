@@ -2,6 +2,7 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.dialog
 
 import no.nav.brukerdialog.security.context.SubjectHandler
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.Sak
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Fritekst
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype
@@ -28,6 +29,7 @@ class MeldingDTO(val map: Map<String, Any?>) : HashMap<String, Any?>(map), DTO
 class FortsettDialogDTO(val behandlingsId: String, val oppgaveId: String?) : DTO
 
 @Path("/dialog/{fnr}")
+@Produces("application/json")
 class DialogController @Inject constructor(
         private val tilgangskontroll: Tilgangskontroll,
         private val henvendelseService: HenvendelseBehandlingService,
@@ -97,11 +99,12 @@ class DialogController @Inject constructor(
     fun startFortsettDialog(
             @Context request: HttpServletRequest,
             @PathParam("fnr") fnr: String,
-            traadId: String
+            opprettHenvendelseRequest: OpprettHenvendelseRequest
     ): FortsettDialogDTO {
         return tilgangskontroll
                 .tilgangTilBruker(fnr)
                 .get {
+                    val traadId = opprettHenvendelseRequest.traadId
                     val context = lagSendHenvendelseContext(fnr, request)
                     val traad = henvendelseService
                             .hentMeldinger(fnr, context.enhet)
@@ -149,9 +152,7 @@ class DialogController @Inject constructor(
 
                     val valgtSak = fortsettDialogRequest.saksId
                             ?.let {
-                                val gsakSaker = sakerService.hentSammensatteSaker(fnr)
-                                val psakSaker = sakerService.hentPensjonSaker(fnr)
-                                val saker = gsakSaker.union(psakSaker)
+                                val saker = hentSaker(fnr)
 
                                 saker
                                         .find { it.saksId == fortsettDialogRequest.saksId }
@@ -169,6 +170,22 @@ class DialogController @Inject constructor(
                     Response.ok().build()
                 }
     }
+
+    private fun hentSaker(fnr: String): Set<Sak> {
+        val gsakSaker = try {
+            sakerService.hentSammensatteSaker(fnr)
+        } catch (e: Exception) {
+            emptyList<Sak>()
+        }
+
+        val psakSaker = try {
+            sakerService.hentPensjonSaker(fnr)
+        } catch (e: Exception) {
+            emptyList<Sak>()
+        }
+
+        return gsakSaker.union(psakSaker)
+    }
 }
 
 private fun erEnkeltstaendeSporsmalFraBruker(traad: Traad): Boolean {
@@ -183,8 +200,8 @@ private fun lagReferat(referatRequest: SendReferatRequest, requestContext: Reque
     return Melding().withFnr(requestContext.fnr)
             .withNavIdent(requestContext.ident)
             .withEksternAktor(requestContext.ident)
-            .withKanal(referatRequest.kanal.name)
-            .withType(Meldingstype.valueOf("SAMTALEREFERAT_" + referatRequest.kanal))
+            .withKanal(getKanal(referatRequest.meldingstype))
+            .withType(referatRequest.meldingstype)
             .withFritekst(Fritekst(referatRequest.fritekst))
             .withTilknyttetEnhet(requestContext.enhet)
             .withErTilknyttetAnsatt(true)
@@ -192,11 +209,12 @@ private fun lagReferat(referatRequest: SendReferatRequest, requestContext: Reque
 }
 
 private fun lagSporsmal(sporsmalRequest: SendSporsmalRequest, sakstema: String, requestContext: RequestContext): Melding {
+    val type = Meldingstype.SPORSMAL_MODIA_UTGAAENDE
     return Melding().withFnr(requestContext.fnr)
             .withNavIdent(requestContext.ident)
             .withEksternAktor(requestContext.ident)
-            .withKanal(Kanal.TEKST.name)
-            .withType(Meldingstype.SPORSMAL_MODIA_UTGAAENDE)
+            .withKanal(getKanal(type))
+            .withType(type)
             .withFritekst(Fritekst(sporsmalRequest.fritekst))
             .withTilknyttetEnhet(requestContext.enhet)
             .withErTilknyttetAnsatt(sporsmalRequest.erOppgaveTilknyttetAnsatt)
@@ -209,8 +227,8 @@ private fun lagFortsettDialog(request: FortsettDialogRequest, requestContext: Re
             .withFnr(requestContext.fnr)
             .withNavIdent(requestContext.ident)
             .withEksternAktor(requestContext.ident)
-            .withKanal(request.kanal.name)
-            .withType(meldingstype(request.kanal, request.kanBesvares))
+            .withKanal(getKanal(request.meldingstype))
+            .withType(request.meldingstype)
             .withFritekst(Fritekst(request.fritekst))
             .withTilknyttetEnhet(requestContext.enhet)
             .withErTilknyttetAnsatt(request.erOppgaveTilknyttetAnsatt)
@@ -221,10 +239,28 @@ private fun lagFortsettDialog(request: FortsettDialogRequest, requestContext: Re
 
 }
 
+enum class Kanal {
+    TEKST,
+    OPPMOTE,
+    TELEFON
+}
+
+fun getKanal(type: Meldingstype): String {
+    return when(type) {
+        Meldingstype.SAMTALEREFERAT_OPPMOTE, Meldingstype.SVAR_OPPMOTE -> Kanal.OPPMOTE.name
+        Meldingstype.SAMTALEREFERAT_TELEFON, Meldingstype.SVAR_TELEFON -> Kanal.TELEFON.name
+        else -> Kanal.TEKST.name
+    }
+}
+
+data class OpprettHenvendelseRequest(
+        val traadId: String
+)
+
 data class SendReferatRequest(
         val fritekst: String,
         val temagruppe: String,
-        val kanal: Kanal
+        val meldingstype: Meldingstype
 )
 
 data class SendSporsmalRequest(
@@ -239,27 +275,9 @@ data class FortsettDialogRequest(
         val fritekst: String,
         val saksId: String?,
         val erOppgaveTilknyttetAnsatt: Boolean,
-        val kanal: Kanal,
-        val kanBesvares: Boolean,
+        val meldingstype: Meldingstype,
         val oppgaveId: String?
 )
-
-enum class Kanal {
-    TEKST,
-    OPPMOTE,
-    TELEFON
-}
-
-private fun meldingstype(kanal: Kanal, kanBesvares: Boolean): Meldingstype {
-    return if (kanBesvares && kanal == Kanal.TEKST)
-        Meldingstype.SPORSMAL_MODIA_UTGAAENDE
-    else
-        when (kanal) {
-            Kanal.TEKST -> Meldingstype.SVAR_SKRIFTLIG
-            Kanal.OPPMOTE -> Meldingstype.SVAR_OPPMOTE
-            Kanal.TELEFON -> Meldingstype.SVAR_TELEFON
-        }
-}
 
 fun lagSendHenvendelseContext(fnr: String, request: HttpServletRequest): RequestContext {
     val ident = SubjectHandler.getSubjectHandler().uid
