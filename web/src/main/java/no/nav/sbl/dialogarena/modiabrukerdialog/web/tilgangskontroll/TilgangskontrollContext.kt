@@ -89,6 +89,9 @@ class TilgangskontrollContext(
         return henvendelseLesService.alleBehandlingsIderTilhorerBruker(fnr, behandlingsIder)
     }
 
+    fun alleHenvendelseIderTilhorerBruker(fnr: String, behandlingsIder: List<String>): Boolean {
+        return henvendelseLesService.alleHenvendelseIderTilhorerBruker(fnr, behandlingsIder)
+    }
 
     private fun hentUnderenheterForLokalEnhet(enhet: ASBOGOSYSNavEnhet): Set<String> {
         // Spesial enhet

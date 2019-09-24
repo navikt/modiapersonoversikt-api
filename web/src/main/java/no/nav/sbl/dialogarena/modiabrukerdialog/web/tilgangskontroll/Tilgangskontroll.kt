@@ -6,6 +6,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.tilgangskontroll.Policies.Co
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.tilgangskontroll.Policies.Companion.endreAdresse
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.tilgangskontroll.Policies.Companion.endreKontonummer
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.tilgangskontroll.Policies.Companion.endreNavn
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.tilgangskontroll.Policies.Companion.henvendelsesIdTilhorerFnrPolicy
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.tilgangskontroll.Policies.Companion.kontorSperretMelding
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.tilgangskontroll.Policies.Companion.modiaRolle
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.tilgangskontroll.Policies.Companion.oksosSperretMelding
@@ -168,6 +169,13 @@ internal class Policies {
                 DecisionEnums.DENY
         }
 
+        val henvendelsesIdTilhorerFnrPolicy = PolicyGenerator<TilgangskontrollContext, BehandlingsIdTilgangData>({ "Ikke alle behandlingsIder tilhørte medsendt fødselsnummer. Spørring gjort av ${context.hentSaksbehandlerId()}" }) {
+            if (context.alleHenvendelseIderTilhorerBruker(data.fnr, data.behandlingsIder))
+                DecisionEnums.PERMIT
+            else
+                DecisionEnums.DENY
+        }
+
         val saksbehandlerKanHastekasserePolicy = Policy<TilgangskontrollContext>({ "Saksbehandler (${hentSaksbehandlerId()}) har ikke tilgang til hastekassering" }) {
             val identer = hentSaksbehandlereMedTilgangTilHastekassering()
             if (identer.contains(hentSaksbehandlerId())) DecisionEnums.PERMIT else DecisionEnums.DENY
@@ -193,6 +201,8 @@ fun RSBAC<TilgangskontrollContext>.tilgangTilOppfolging() = this.check(tilgangTi
 fun RSBAC<TilgangskontrollContext>.tilgangTilPesys() = this.check(tilgangTilPesysPolicy)
 fun RSBAC<TilgangskontrollContext>.tilgangTilPlukkOppgave() = this.check(plukkOppgave)
 fun RSBAC<TilgangskontrollContext>.saksbehandlerKanHastekassere() = this.check(saksbehandlerKanHastekasserePolicy)
-fun RSBAC<TilgangskontrollContext>.behandlingsIderTilhorerFnr(fnr: String, behandlingsIder: List<String>) =
+fun RSBAC<TilgangskontrollContext>.behandlingsIderTilhorerBruker(fnr: String, behandlingsIder: List<String>) =
         this.check(behandlingsIderTilhorerFnrPolicy.with(BehandlingsIdTilgangData(fnr, behandlingsIder)))
+fun RSBAC<TilgangskontrollContext>.henvendelsesIdTilhorerBruker(fnr: String, henvendelseIder: List<String>) =
+        this.check(henvendelsesIdTilhorerFnrPolicy.with(BehandlingsIdTilgangData(fnr, henvendelseIder)))
 

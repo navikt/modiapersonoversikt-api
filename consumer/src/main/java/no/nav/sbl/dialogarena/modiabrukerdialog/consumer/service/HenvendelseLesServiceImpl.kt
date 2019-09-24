@@ -17,6 +17,14 @@ class HenvendelseLesServiceImpl : HenvendelseLesService {
         return fetch("$baseUrl/behandlingsider?$queryparams")
     }
 
+    override fun alleHenvendelseIderTilhorerBruker(fnr: String, henvendelseIder: List<String>): Boolean {
+        val queryparams = byggQueryparams(
+                "fnr" to fnr,
+                "id" to henvendelseIder
+        )
+        return fetch("$baseUrl/henvendelseider?$queryparams")
+    }
+
     private inline fun <reified T> fetch(url: String): T {
         return RestUtils.withClient {
             it

@@ -2,6 +2,10 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.dialog
 
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.GsakKodeTema
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.gsak.GsakKodeverk
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.tilgangskontroll.Tilgangskontroll
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.tilgangskontroll.henvendelsesIdTilhorerBruker
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.tilgangskontroll.tilgangTilBruker
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.tilgangskontroll.tilgangTilModia
 import no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.DateUtils.arbeidsdagerFraDato
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.OppgavebehandlingV3
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.meldinger.WSOpprettOppgave
@@ -18,50 +22,61 @@ import javax.ws.rs.core.Response
 private const val HENVENDELSESTYPE_KODE: String = "DIALOG"
 
 @Path("/dialogoppgave")
-class DialogOppgaveController @Inject constructor(private val gsakKodeverk: GsakKodeverk,
-                                                  private val oppgavebehandling: OppgavebehandlingV3) {
+class DialogOppgaveController @Inject constructor(
+        private val gsakKodeverk: GsakKodeverk,
+        private val oppgavebehandling: OppgavebehandlingV3,
+        private val tilgangskontroll: Tilgangskontroll
+) {
 
     @POST
     @Path("/opprett")
     fun opprettOppgave(request: OpperettOppgaveRequest): Response {
         // TODO tilgangsstyring
-        oppgavebehandling.opprettOppgave(
-                WSOpprettOppgaveRequest()
-                        .withOpprettetAvEnhetId(request.valgtEnhetId)
-                        .withHenvendelsetypeKode(HENVENDELSESTYPE_KODE)
-                        .withOpprettOppgave(
-                                WSOpprettOppgave()
-                                        .withHenvendelseId(request.henvendelseId)
-                                        .withAktivFra(LocalDate.now())
-                                        .withAktivTil(arbeidsdagerFraDato(request.dagerFrist, LocalDate.now()))
-                                        .withAnsvarligEnhetId(request.ansvarligEnhetId)
-                                        .withAnsvarligId(request.ansvarligIdent)
-                                        .withBeskrivelse(request.beskrivelse)
-                                        .withFagomradeKode(request.temaKode)
-                                        .withUnderkategoriKode(request.underkategoriKode)
-                                        .withBrukerId(request.brukerid)
-                                        .withOppgavetypeKode(request.oppgaveTypeKode)
-                                        .withPrioritetKode(request.prioritetKode)
-                                        .withLest(false)
-                        )
-        )
-        return Response.ok().build()
+        return tilgangskontroll
+                .tilgangTilBruker(request.fnr)
+                .henvendelsesIdTilhorerBruker(request.fnr, listOf(request.henvendelseId))
+                .get {
+                    oppgavebehandling.opprettOppgave(
+                            WSOpprettOppgaveRequest()
+                                    .withOpprettetAvEnhetId(request.valgtEnhetId)
+                                    .withHenvendelsetypeKode(HENVENDELSESTYPE_KODE)
+                                    .withOpprettOppgave(
+                                            WSOpprettOppgave()
+                                                    .withHenvendelseId(request.henvendelseId)
+                                                    .withAktivFra(LocalDate.now())
+                                                    .withAktivTil(arbeidsdagerFraDato(request.dagerFrist, LocalDate.now()))
+                                                    .withAnsvarligEnhetId(request.ansvarligEnhetId)
+                                                    .withAnsvarligId(request.ansvarligIdent)
+                                                    .withBeskrivelse(request.beskrivelse)
+                                                    .withFagomradeKode(request.temaKode)
+                                                    .withUnderkategoriKode(request.underkategoriKode)
+                                                    .withBrukerId(request.brukerid)
+                                                    .withOppgavetypeKode(request.oppgaveTypeKode)
+                                                    .withPrioritetKode(request.prioritetKode)
+                                                    .withLest(false)
+                                    )
+                    )
+                    Response.ok().build()
+                }
     }
 
     @GET
     @Path("/tema")
     @Produces(APPLICATION_JSON)
     fun hentAlleTema(): List<Map<String, Any?>> {
-        // TODO tilgangsstyring
-        val gsakTemaListe = gsakKodeverk.hentTemaListe()
-        return gsakTemaListe.filter { it.oppgaveTyper.isNotEmpty() }.map {
-            mapOf(
-                    *hentGsakKodeTema(it),
-                    "oppgavetyper" to hentOppgavetyper(it.oppgaveTyper),
-                    "prioriteter" to hentPrioriteter(it.prioriteter),
-                    "underkategorier" to hentUnderkategorier(it.underkategorier)
-            )
-        }
+        return tilgangskontroll
+                .tilgangTilModia()
+                .get {
+                    val gsakTemaListe = gsakKodeverk.hentTemaListe()
+                    gsakTemaListe.filter { it.oppgaveTyper.isNotEmpty() }.map {
+                        mapOf(
+                                *hentGsakKodeTema(it),
+                                "oppgavetyper" to hentOppgavetyper(it.oppgaveTyper),
+                                "prioriteter" to hentPrioriteter(it.prioriteter),
+                                "underkategorier" to hentUnderkategorier(it.underkategorier)
+                        )
+                    }
+                }
     }
 
     private fun hentOppgavetyper(oppgavetyper: List<GsakKodeTema.OppgaveType>): List<Map<String, Any?>> =
@@ -92,14 +107,17 @@ class DialogOppgaveController @Inject constructor(private val gsakKodeverk: Gsak
 
 }
 
-data class OpperettOppgaveRequest(val valgtEnhetId: Int,
-                                  val henvendelseId: String,
-                                  val dagerFrist: Int,
-                                  val ansvarligEnhetId: String,
-                                  val ansvarligIdent: String?,
-                                  val beskrivelse: String,
-                                  val temaKode: String,
-                                  val underkategoriKode: String,
-                                  val brukerid: String,
-                                  val oppgaveTypeKode: String,
-                                  val prioritetKode: String)
+data class OpperettOppgaveRequest(
+        val fnr: String,
+        val valgtEnhetId: Int,
+        val henvendelseId: String,
+        val dagerFrist: Int,
+        val ansvarligEnhetId: String,
+        val ansvarligIdent: String?,
+        val beskrivelse: String,
+        val temaKode: String,
+        val underkategoriKode: String,
+        val brukerid: String,
+        val oppgaveTypeKode: String,
+        val prioritetKode: String
+)
