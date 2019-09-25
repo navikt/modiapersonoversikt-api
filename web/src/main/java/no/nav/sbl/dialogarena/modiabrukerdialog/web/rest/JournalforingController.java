@@ -32,12 +32,14 @@ public class JournalforingController {
     @GET
     @Path("/saker/sammensatte")
     public List<Sak> hentSammensatteSaker(@PathParam("fnr") String fnr) {
+        // TODO tilgangsstyring
         return sakerService.hentSammensatteSaker(fnr);
     }
 
     @GET
     @Path("/saker/pensjon")
     public List<Sak> hentPensjonSaker(@PathParam("fnr") String fnr) {
+        // TODO tilgangsstyring
         return sakerService.hentPensjonSaker(fnr);
     }
 
@@ -45,6 +47,7 @@ public class JournalforingController {
     @Path("/{traadId}")
     @Consumes(APPLICATION_JSON)
     public Response knyttTilSak(@PathParam("fnr") String fnr, @PathParam("traadId") String traadId, Sak sak, @Context HttpServletRequest request) throws JournalforingFeilet {
+        // TODO tilgangsstyring
         String enhet = hentValgtEnhet(request);
         try {
             sakerService.knyttBehandlingskjedeTilSak(fnr, traadId, sak, enhet);

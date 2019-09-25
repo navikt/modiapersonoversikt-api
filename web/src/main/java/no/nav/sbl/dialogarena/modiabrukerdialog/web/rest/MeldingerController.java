@@ -42,6 +42,7 @@ public class MeldingerController {
     @GET
     @Path("/traader")
     public Response hentTraader(@PathParam("fnr") String fnr, @Context HttpServletRequest request) {
+        // TODO tilgangsstyring
         indekser(fnr, request);
         try {
             return Response.ok(searcher.sok(fnr, "")).build();
@@ -53,6 +54,7 @@ public class MeldingerController {
     @GET
     @Path("/sok/{fritekst: .*}")
     public Response sok(@PathParam("fnr") String fnr, @PathParam("fritekst") String fritekst) {
+        // TODO tilgangsstyring
         try {
             return Response.ok(searcher.sok(fnr, fritekst)).build();
         } catch (IkkeIndeksertException e) {
@@ -63,6 +65,7 @@ public class MeldingerController {
     @GET
     @Path("/indekser")
     public Response indekser(@PathParam("fnr") String fnr, @Context HttpServletRequest request) {
+        // TODO tilgangsstyring
         String valgtEnhet = hentValgtEnhet(request);
         if(ansattService.hentEnhetsliste().stream().map(TIL_ENHET_ID).collect(toList()).contains(valgtEnhet)) {
             List<Melding> meldinger = hentAlleMeldinger(fnr, valgtEnhet);

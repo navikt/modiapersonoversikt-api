@@ -17,6 +17,7 @@ constructor(private val ldapService: LDAPService, private val unleashService: Un
     @Path("/roller")
     @Produces(MediaType.APPLICATION_JSON)
     fun hentRollerForInnloggetVeileder(): Map<String, MutableList<String>> {
+        // TODO tilgangsstyring
         val ident = getSubjectHandler().uid
         return mapOf("roller" to ldapService.hentRollerForVeileder(ident))
     }

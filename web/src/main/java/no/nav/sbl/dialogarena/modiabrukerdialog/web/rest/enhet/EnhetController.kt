@@ -22,12 +22,14 @@ constructor(private val organisasjonEnhetKontaktinformasjonService: Organisasjon
     @Path("/{id}")
     @Produces(APPLICATION_JSON)
     fun hentMedId(@PathParam("id") organisasjonsid: String): OrganisasjonEnhetKontaktinformasjon {
+        // TODO tilgangsstyring
         return organisasjonEnhetKontaktinformasjonService.hentKontaktinformasjon(organisasjonsid)
     }
 
     @GET
     @Produces(APPLICATION_JSON)
     fun finnEnhet(@QueryParam("gt") geografiskId: String?, @QueryParam("dkode") diskresjonskode: String?): EnhetKontaktinformasjon {
+        // TODO tilgangsstyring
         if (geografiskId.isNullOrEmpty() && diskresjonskode.isNullOrEmpty()) throw NotFoundException();
 
         val enhetid = organisasjonEnhetV2Service.finnNAVKontor(geografiskId, diskresjonskode ?: "")
@@ -41,6 +43,7 @@ constructor(private val organisasjonEnhetKontaktinformasjonService: Organisasjon
     @Path("/dialog/oppgave/alle")
     @Produces(APPLICATION_JSON)
     fun hentAlleEnheterForOppgave(): List<Map<String, Any?>> {
+        // TODO tilgangsstyring
         val enheter = organisasjonEnhetV2Service.hentAlleEnheter(OrganisasjonEnhetV2Service.WSOppgavebehandlerfilter.KUN_OPPGAVEBEHANDLERE)
         return enheter.filter { erGyldigEnhet(it) }.map {
             mapOf(
@@ -56,6 +59,7 @@ constructor(private val organisasjonEnhetKontaktinformasjonService: Organisasjon
                              @QueryParam("temakode") temakode: String,
                              @QueryParam("typekode") typekode: String,
                              @QueryParam("underkategorikode") underkategorikode: String?): List<Map<String, Any?>> {
+        // TODO tilgangsstyring
         val enheter = arbeidsfordeling.finnBehandlendeEnhetListe(fødselsnummer, temakode, typekode, underkategorikode)
         return enheter.map {
             mapOf(

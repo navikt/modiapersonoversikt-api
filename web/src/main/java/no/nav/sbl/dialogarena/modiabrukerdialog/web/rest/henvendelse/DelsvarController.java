@@ -37,7 +37,7 @@ public class DelsvarController {
             @PathParam("traadId") String traadId,
             @PathParam("id") String henvendelseId,
             @Context HttpServletRequest httpRequest, DelsvarRestRequest request) {
-
+        // TODO tilgangsstyring
         DelsvarRequest delsvarRequest = new DelsvarRequestBuilder()
                 .withFodselsnummer(fnr)
                 .withTraadId(traadId)

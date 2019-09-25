@@ -28,18 +28,21 @@ class YtelseController @Inject constructor(private val sykepengerService: Sykepe
     @GET
     @Path("sykepenger/{fnr}")
     fun hentSykepenger(@PathParam("fnr") fødselsnummer: String): Map<String, Any?> {
+        // TODO tilgangsstyring
         return SykepengerUttrekk(sykepengerService).hent(fødselsnummer)
     }
 
     @GET
     @Path("foreldrepenger/{fnr}")
     fun hentForeldrepenger(@PathParam("fnr") fødselsnummer: String): Map<String, Any?> {
+        // TODO tilgangsstyring
         return ForeldrepengerUttrekk(getForeldrepengerService()).hent(fødselsnummer)
     }
 
     @GET
     @Path("pleiepenger/{fnr}")
     fun hentPleiepenger(@PathParam("fnr") fødselsnummer: String): Map<String, Any?> {
+        // TODO tilgangsstyring
         return PleiepengerUttrekk(pleiepengerService, organisasjonService).hent(fødselsnummer)
     }
 

@@ -43,7 +43,7 @@ class PersonController @Inject constructor(private val kjerneinfoService: Person
     @GET
     @Path("/")
     fun hent(@PathParam("fnr") fødselsnummer: String): Map<String, Any?> {
-
+        // TODO tilgangsstyring
         val person = try {
             val hentKjerneinformasjonRequest = HentKjerneinformasjonRequest(fødselsnummer)
             hentKjerneinformasjonRequest.isBegrunnet = true

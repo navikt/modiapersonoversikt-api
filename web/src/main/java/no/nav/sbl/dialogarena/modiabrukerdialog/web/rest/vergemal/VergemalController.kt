@@ -19,6 +19,7 @@ class VergemalController @Inject constructor(private val vergemalService: Vergem
     @GET
     @Path("/")
     fun hent(@PathParam("fnr") fødselsnummer: String): Map<String, Any?> {
+        // TODO tilgangsstyring
         val vergemal = vergemalService.hentVergemal(fødselsnummer)
 
         return mapOf(

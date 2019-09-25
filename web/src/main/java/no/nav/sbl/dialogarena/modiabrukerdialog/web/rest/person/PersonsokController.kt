@@ -24,6 +24,7 @@ class PersonsokController @Inject constructor(private val personsokPortType: Per
 
     @POST
     fun sok(personsokRequest: PersonsokRequest): Response {
+        // TODO tilgangsstyring
         val response = try {
             personsokPortType.finnPerson(lagPersonsokRequest(personsokRequest))
         } catch (ex: Exception) {

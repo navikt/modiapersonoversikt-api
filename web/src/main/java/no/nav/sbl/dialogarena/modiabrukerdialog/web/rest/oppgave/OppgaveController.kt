@@ -32,7 +32,7 @@ class OppgaveController @Inject constructor(
     @POST
     @Path("/{id}/leggTilbake")
     fun leggTilbake(@PathParam("id") oppgaveId: String, @Context httpRequest: HttpServletRequest, request: LeggTilbakeRequest): Response {
-
+        // TODO tilgangsstyring
         val leggTilbakeOppgaveIGsakRequest = LeggTilbakeOppgaveIGsakRequest()
                 .withOppgaveId(oppgaveId)
                 .withBeskrivelse(request.beskrivelse)
@@ -52,6 +52,7 @@ class OppgaveController @Inject constructor(
     @POST
     @Path("/plukk/{temagruppe}")
     fun plukkOppgaver(@PathParam("temagruppe") temagruppe: String, @Context httpRequest: HttpServletRequest) =
+            // TODO tilgangsstyring
             plukkOppgaveService
                     .also { verifiserTilgang(HENT_OPPGAVE_ROLLE) }
                     .plukkOppgaver(Temagruppe.valueOf(temagruppe.toUpperCase()),
@@ -60,6 +61,7 @@ class OppgaveController @Inject constructor(
 
     @GET
     @Path("/tildelt")
+    // TODO tilgangsstyring
     fun finnTildelte() = oppgaveBehandlingService.finnTildelteOppgaverIGsak()
             .map { mapOppgave(it) }
 

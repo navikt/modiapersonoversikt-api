@@ -16,7 +16,7 @@ class EgenAnsattController @Inject constructor(private val egenAnsattService: Eg
     @Path("/")
     @Produces(MediaType.APPLICATION_JSON)
     fun erEgenAnsatt(@PathParam("fnr") fødselsnummer: String): Map<String, Boolean> {
-
+        // TODO tilgangsstyring
         return mapOf("erEgenAnsatt" to egenAnsattService.erEgenAnsatt(fødselsnummer))
     }
 }

@@ -15,6 +15,7 @@ class KodeverkController @Inject constructor(private val kodeverkManager: Kodeve
 
     @GET
     @Path("/")
+    // TODO tilgangsstyring
     fun hentKodeverk(@PathParam("kodeverkRef") kodeverkRef: String) = mapOf(
             "kodeverk" to kodeverkManager
                     .getKodeverkList(kodeverkRef, "nb")

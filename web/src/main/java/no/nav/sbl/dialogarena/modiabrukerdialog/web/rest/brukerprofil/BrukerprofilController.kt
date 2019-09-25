@@ -93,6 +93,7 @@ class BrukerprofilController @Inject constructor(private val behandlePersonServi
     @POST
     @Path("/tilrettelagtkommunikasjon")
     @Consumes(APPLICATION_JSON)
+    // TODO tilgangsstyring
     fun endreTilrettelagtKommunikasjon(@PathParam("fnr") fnr: String,
                                        request: EndreTilrettelagtkommunikasjonRequest) =
             fnr
@@ -103,6 +104,7 @@ class BrukerprofilController @Inject constructor(private val behandlePersonServi
     @POST
     @Path("/telefonnummer")
     @Consumes(APPLICATION_JSON)
+    // TODO tilgangsstyring
     fun endreTelefonnummer(@PathParam("fnr") fnr: String, request: EndreTelefonnummerRequest) =
             fnr
                     .let(kjerneinfoService::hentBrukerprofil)
@@ -116,6 +118,7 @@ class BrukerprofilController @Inject constructor(private val behandlePersonServi
     @POST
     @Path("/kontonummer")
     @Consumes(APPLICATION_JSON)
+    // TODO tilgangsstyring
     fun endreKontonummer(@PathParam("fnr") fnr: String, request: EndreKontonummerRequest) =
             tilgangskontroll
                     .tilgangTilEndreKontonummer()

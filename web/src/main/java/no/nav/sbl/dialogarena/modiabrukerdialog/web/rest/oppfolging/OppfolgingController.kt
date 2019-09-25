@@ -34,6 +34,7 @@ class OppfolgingController @Inject constructor(private val service: Oppfolgingsi
     @GET
     @Path("/")
     fun hent(@PathParam("fnr") fodselsnummer: String): Map<String, Any?> {
+        // TODO tilgangsstyring
         val oppfolging = service.hentOppfolgingsinfo(fodselsnummer, ldapService)
 
         return mapOf(
@@ -48,6 +49,7 @@ class OppfolgingController @Inject constructor(private val service: Oppfolgingsi
     fun hentUtvidetOppf(@PathParam("fnr") fodselsnummer: String,
                         @QueryParam("startDato") start: String?,
                         @QueryParam("sluttDato") slutt: String?): Map<String, Any?> {
+        // TODO tilgangsstyring
         val kontraktResponse = oppfolgingskontraktService.hentOppfolgingskontrakter(lagOppfolgingskontraktRequest(fodselsnummer, start, slutt))
         val ytelserResponse = ytelseskontraktService.hentYtelseskontrakter(lagYtelseRequest(fodselsnummer, start, slutt))
 

@@ -17,7 +17,7 @@ class KontaktinformasjonController @Inject constructor(private val dkifService: 
     @GET
     @Path("/")
     fun hentKontaktinformasjon(@PathParam("fnr") fødselsnummer: String): Map<String, Any?> {
-
+        // TODO tilgangsstyring
         val response = dkifService.hentDigitalKontaktinformasjon(fødselsnummer)
 
         return mapOf(

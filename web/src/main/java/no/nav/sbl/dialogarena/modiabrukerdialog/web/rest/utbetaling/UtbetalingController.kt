@@ -18,7 +18,7 @@ class UtbetalingController @Inject constructor(private val service: UtbetalingSe
     fun hent(@PathParam("fnr") fødselsnummer: String,
              @QueryParam("startDato") start: String?,
              @QueryParam("sluttDato") slutt: String?): Response {
-
+        // TODO tilgangsstyring
         val startDato = lagRiktigDato(start)
         val sluttDato = lagRiktigDato(slutt)
 
