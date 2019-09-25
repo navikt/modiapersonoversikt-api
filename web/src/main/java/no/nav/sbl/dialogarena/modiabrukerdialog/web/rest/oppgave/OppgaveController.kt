@@ -7,6 +7,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.LeggTilbakeOppgaveIGsakRequest
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveBehandlingService
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.ldap.LDAPService
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.RestUtils
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.http.CookieUtil
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.mapOfNotNullOrEmpty
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.service.plukkoppgave.PlukkOppgaveService
@@ -20,6 +21,7 @@ import javax.ws.rs.core.Response
 
 private val logger = LoggerFactory.getLogger(OppgaveController::class.java)
 private const val HENT_OPPGAVE_ROLLE = "0000-GA-BD06_HentOppgave"
+private const val AARSAK_PREFIX = "Oppgave lagt tilbake. Årsak: "
 
 @Path("/oppgaver")
 @Produces(APPLICATION_JSON)
@@ -30,14 +32,11 @@ class OppgaveController @Inject constructor(
 ) {
 
     @POST
-    @Path("/{id}/leggTilbake")
-    fun leggTilbake(@PathParam("id") oppgaveId: String, @Context httpRequest: HttpServletRequest, request: LeggTilbakeRequest): Response {
+    @Path("/legg-tilbake")
+    fun leggTilbake(@Context httpRequest: HttpServletRequest, request: LeggTilbakeRequest): Response {
 
-        val leggTilbakeOppgaveIGsakRequest = LeggTilbakeOppgaveIGsakRequest()
-                .withOppgaveId(oppgaveId)
-                .withBeskrivelse(request.beskrivelse)
-                .withTemagruppe(getTemagruppefraRequest(request.temagruppe))
-                .withSaksbehandlersValgteEnhet(CookieUtil.getSaksbehandlersValgteEnhet(httpRequest))
+        val valgtEnhet = RestUtils.hentValgtEnhet(httpRequest)
+        val leggTilbakeOppgaveIGsakRequest = lagLeggTilbakeRequest(request, valgtEnhet)
 
         try {
             oppgaveBehandlingService.leggTilbakeOppgaveIGsak(leggTilbakeOppgaveIGsakRequest)
@@ -47,6 +46,31 @@ class OppgaveController @Inject constructor(
 
         createEvent("hendelse.oppgavecontroller.leggtilbake.fullfort").report()
         return Response.ok("{\"message\": \"Success\"}").build()
+    }
+
+    private fun lagLeggTilbakeRequest(request: LeggTilbakeRequest, valgtEnhet: String): LeggTilbakeOppgaveIGsakRequest? {
+        require(request.oppgaveId != null)
+        return when (request.type) {
+            LeggTilbakeAarsak.Innhabil -> LeggTilbakeOppgaveIGsakRequest()
+                    .withOppgaveId(request.oppgaveId)
+                    .withBeskrivelse(AARSAK_PREFIX + "inhabil")
+                    .withSaksbehandlersValgteEnhet(valgtEnhet)
+            LeggTilbakeAarsak.FeilTema -> {
+                require(request.temagruppe != null)
+                return LeggTilbakeOppgaveIGsakRequest()
+                        .withOppgaveId(request.oppgaveId)
+                        .withBeskrivelse(AARSAK_PREFIX + "feil temagruppe")
+                        .withTemagruppe(request.temagruppe)
+                        .withSaksbehandlersValgteEnhet(valgtEnhet)
+            }
+            LeggTilbakeAarsak.AnnenAarsak -> {
+                require(request.beskrivelse != null)
+                return LeggTilbakeOppgaveIGsakRequest()
+                        .withOppgaveId(request.oppgaveId)
+                        .withBeskrivelse("Oppgave lagt tilbake. Årsak: " + request.beskrivelse)
+                        .withSaksbehandlersValgteEnhet(valgtEnhet)
+            }
+        }
     }
 
     @POST
@@ -78,15 +102,21 @@ private fun mapOppgave(oppgave: Oppgave) = mapOfNotNullOrEmpty(
         "fødselsnummer" to oppgave.fnr
 )
 
-private fun getTemagruppefraRequest(temagruppe: String) =
-        try {
-            Temagruppe.valueOf(temagruppe)
-        } catch (e: IllegalArgumentException) {
-            throw IllegalArgumentException("Ugyldig temagruppe: $temagruppe")
-        }
-
 private fun handterRuntimeFeil(exception: RuntimeException): RuntimeException {
     logger.error("Feil ved legging av oppgave tilbake til GSAK", exception)
     createEvent("hendelse.oppgavecontroller.leggtilbake.runtime-exception").report()
     return exception
 }
+
+enum class LeggTilbakeAarsak {
+    Innhabil,
+    FeilTema,
+    AnnenAarsak
+}
+
+data class LeggTilbakeRequest(
+        val type: LeggTilbakeAarsak,
+        val oppgaveId: String,
+        val temagruppe: Temagruppe?,
+        val beskrivelse: String?
+)
