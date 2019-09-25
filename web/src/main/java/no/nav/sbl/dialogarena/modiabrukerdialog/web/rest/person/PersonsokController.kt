@@ -3,31 +3,50 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.person
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.lagXmlGregorianDato
 import no.nav.tjeneste.virksomhet.personsoek.v1.PersonsokPortType
 import no.nav.tjeneste.virksomhet.personsoek.v1.informasjon.*
-import no.nav.tjeneste.virksomhet.personsoek.v1.meldinger.FimAdresseFilter
-import no.nav.tjeneste.virksomhet.personsoek.v1.meldinger.FimFinnPersonRequest
-import no.nav.tjeneste.virksomhet.personsoek.v1.meldinger.FimPersonFilter
-import no.nav.tjeneste.virksomhet.personsoek.v1.meldinger.FimSoekekriterie
+import no.nav.tjeneste.virksomhet.personsoek.v1.meldinger.*
+import org.slf4j.LoggerFactory
 import javax.inject.Inject
 import javax.ws.rs.POST
 import javax.ws.rs.Path
 import javax.ws.rs.Produces
 import javax.ws.rs.core.MediaType
+import javax.ws.rs.core.Response
+
+private enum class OppslagFeil {
+    FOR_MANGE, UKJENT
+}
 
 @Path("/personsok")
 @Produces(MediaType.APPLICATION_JSON)
 class PersonsokController @Inject constructor(private val personsokPortType: PersonsokPortType) {
 
-    @POST
-    fun sok(personsokRequest: PersonsokRequest): List<Map<String, Any?>> {
-        val response = personsokPortType.finnPerson(lagPersonsokRequest(personsokRequest))
+    private val logger = LoggerFactory.getLogger(PersonsokController::class.java)
 
-        if (response.personListe == null) {
-            return emptyList()
+    @POST
+    fun sok(personsokRequest: PersonsokRequest): Response {
+        val response = try {
+            personsokPortType.finnPerson(lagPersonsokRequest(personsokRequest))
+        } catch (ex: Exception) {
+            return when (haandterOppslagFeil(ex)) {
+                OppslagFeil.FOR_MANGE -> Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Søket gav mer enn 200 treff. Forsøk å begrense søket.").build()
+                else                  -> Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Feil fra søketjeneste: " + ex.message).build()
+            }
         }
 
-        return response.personListe.map { lagPersonResponse(it) }
+        if (response.personListe == null) {
+            return Response.ok(emptyList<Map<String, Any?>>()).build()
+        }
+
+        val liste = response.personListe.map { lagPersonResponse(it) }
+        return Response.ok(liste).build()
     }
 }
+
+private fun haandterOppslagFeil(ex: Exception): OppslagFeil =
+        when (ex.message) {
+            "For mange forekomster funnet" -> OppslagFeil.FOR_MANGE
+            else -> OppslagFeil.UKJENT
+        }
 
 private fun lagPersonResponse(fimPerson: FimPerson): Map<String, Any?> =
         mapOf(
