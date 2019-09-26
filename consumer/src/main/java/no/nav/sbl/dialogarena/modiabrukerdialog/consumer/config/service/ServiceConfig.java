@@ -91,8 +91,8 @@ public class ServiceConfig {
     }
 
     @Bean
-    public DelsvarService HenvendelseService(HenvendelseUtsendingService henvendelseUtsendingService) {
-        return new DelsvarServiceImpl(henvendelseUtsendingService);
+    public DelsvarService HenvendelseService(HenvendelseUtsendingService henvendelseUtsendingService, OppgaveBehandlingService oppgaveBehandlingService) {
+        return new DelsvarServiceImpl(henvendelseUtsendingService, oppgaveBehandlingService);
     }
 
     @Bean
