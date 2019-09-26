@@ -24,14 +24,12 @@ public class SkrivestotteController {
     @GET
     @Path("/sok")
     public List<SkrivestotteTekst> hentSkrivestotteTekster(@QueryParam("fritekst") String fritekst, @QueryParam("tags") List<String> tags) {
-        // TODO tilgangsstyring
         return skrivestotteSok.sok(fritekst, tags);
     }
 
     @GET
     @Path("alletags")
     public Set<String> hentAlleTags() {
-        // TODO tilgangsstyring
         return skrivestotteSok.sok("").stream()
                 .flatMap(skrivestotteTekst -> skrivestotteTekst.tags.stream())
                 .collect(toSet());

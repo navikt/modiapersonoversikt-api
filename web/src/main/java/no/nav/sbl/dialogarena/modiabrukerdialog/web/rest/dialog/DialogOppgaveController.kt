@@ -31,7 +31,6 @@ class DialogOppgaveController @Inject constructor(
     @POST
     @Path("/opprett")
     fun opprettOppgave(request: OpperettOppgaveRequest): Response {
-        // TODO tilgangsstyring
         return tilgangskontroll
                 .tilgangTilBruker(request.fnr)
                 .henvendelsesIdTilhorerBruker(request.fnr, listOf(request.henvendelseId))

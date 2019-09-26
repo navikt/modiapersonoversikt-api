@@ -15,10 +15,7 @@ import no.nav.kjerneinfo.common.domain.Periode
 import no.nav.kjerneinfo.consumer.fim.behandleperson.BehandlePersonServiceBi
 import no.nav.kjerneinfo.consumer.fim.person.PersonKjerneinfoServiceBi
 import no.nav.kjerneinfo.consumer.fim.person.to.HentKjerneinformasjonRequest
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.tilgangskontroll.Tilgangskontroll
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.tilgangskontroll.tilgangTilEndreAdresse
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.tilgangskontroll.tilgangTilEndreKontonummer
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.tilgangskontroll.tilgangTilEndreNavn
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.tilgangskontroll.*
 import no.nav.tjeneste.virksomhet.behandlebrukerprofil.v2.OppdaterKontaktinformasjonOgPreferanserPersonIdentErUtgaatt
 import no.nav.tjeneste.virksomhet.behandlebrukerprofil.v2.OppdaterKontaktinformasjonOgPreferanserPersonIkkeFunnet
 import no.nav.tjeneste.virksomhet.behandlebrukerprofil.v2.OppdaterKontaktinformasjonOgPreferanserSikkerhetsbegrensning
@@ -93,32 +90,37 @@ class BrukerprofilController @Inject constructor(private val behandlePersonServi
     @POST
     @Path("/tilrettelagtkommunikasjon")
     @Consumes(APPLICATION_JSON)
-    // TODO tilgangsstyring
     fun endreTilrettelagtKommunikasjon(@PathParam("fnr") fnr: String,
                                        request: EndreTilrettelagtkommunikasjonRequest) =
-            fnr
-                    .let(kjerneinfoService::hentBrukerprofil)
-                    .apply { tilrettelagtKommunikasjon = request.tilrettelagtKommunikasjon.map { Kodeverdi(it, "") } }
-                    ?.run(::skrivBrukerOgLagResponse)
+            tilgangskontroll
+                    .tilgangTilBruker(fnr)
+                    .get {
+                        fnr
+                                .let(kjerneinfoService::hentBrukerprofil)
+                                .apply { tilrettelagtKommunikasjon = request.tilrettelagtKommunikasjon.map { Kodeverdi(it, "") } }
+                                ?.run(::skrivBrukerOgLagResponse)
+                    }
 
     @POST
     @Path("/telefonnummer")
     @Consumes(APPLICATION_JSON)
-    // TODO tilgangsstyring
     fun endreTelefonnummer(@PathParam("fnr") fnr: String, request: EndreTelefonnummerRequest) =
-            fnr
-                    .let(kjerneinfoService::hentBrukerprofil)
-                    .apply {
-                        mobil = request.mobil?.let { mapTelefon(it, "MOBI") }
-                        hjemTlf = request.hjem?.let { mapTelefon(it, "HJET") }
-                        jobbTlf = request.jobb?.let { mapTelefon(it, "ARBT") }
+            tilgangskontroll
+                    .tilgangTilBruker(fnr)
+                    .get {
+                        fnr
+                                .let(kjerneinfoService::hentBrukerprofil)
+                                .apply {
+                                    mobil = request.mobil?.let { mapTelefon(it, "MOBI") }
+                                    hjemTlf = request.hjem?.let { mapTelefon(it, "HJET") }
+                                    jobbTlf = request.jobb?.let { mapTelefon(it, "ARBT") }
+                                }
+                                ?.run(::skrivBrukerOgLagResponse)
                     }
-                    ?.run(::skrivBrukerOgLagResponse)
 
     @POST
     @Path("/kontonummer")
     @Consumes(APPLICATION_JSON)
-    // TODO tilgangsstyring
     fun endreKontonummer(@PathParam("fnr") fnr: String, request: EndreKontonummerRequest) =
             tilgangskontroll
                     .tilgangTilEndreKontonummer()

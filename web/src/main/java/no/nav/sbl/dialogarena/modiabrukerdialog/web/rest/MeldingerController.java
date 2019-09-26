@@ -2,6 +2,7 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest;
 
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.AnsattService;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.tilgangskontroll.Tilgangskontroll;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.IkkeIndeksertException;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.MeldingerSok;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.henvendelse.HenvendelseBehandlingService;
@@ -24,6 +25,7 @@ import static javax.ws.rs.core.Response.Status.FORBIDDEN;
 import static no.nav.brukerdialog.security.context.SubjectHandler.getSubjectHandler;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.AnsattEnhet.TIL_ENHET_ID;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.RestUtils.hentValgtEnhet;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.web.tilgangskontroll.Policies.tilgangTilBrukerPolicy;
 import static org.slf4j.LoggerFactory.getLogger;
 
 @Path("/meldinger/{fnr}")
@@ -36,45 +38,56 @@ public class MeldingerController {
     private HenvendelseBehandlingService henvendelse;
     @Inject
     private MeldingerSok searcher;
+    @Inject
+    private Tilgangskontroll tilgangskontroll;
 
     private static final Logger logger = getLogger(MeldingerController.class);
 
     @GET
     @Path("/traader")
     public Response hentTraader(@PathParam("fnr") String fnr, @Context HttpServletRequest request) {
-        // TODO tilgangsstyring
-        indekser(fnr, request);
-        try {
-            return Response.ok(searcher.sok(fnr, "")).build();
-        } catch (IkkeIndeksertException e) {
-            return Response.status(FORBIDDEN).type(TEXT_PLAIN).entity(e.getMessage()).build();
-        }
+        return tilgangskontroll
+                .check(tilgangTilBrukerPolicy.with(fnr))
+                .get(() -> {
+                    indekser(fnr, request);
+                    try {
+                        return Response.ok(searcher.sok(fnr, "")).build();
+                    } catch (IkkeIndeksertException e) {
+                        return Response.status(FORBIDDEN).type(TEXT_PLAIN).entity(e.getMessage()).build();
+                    }
+                });
     }
 
     @GET
     @Path("/sok/{fritekst: .*}")
     public Response sok(@PathParam("fnr") String fnr, @PathParam("fritekst") String fritekst) {
-        // TODO tilgangsstyring
-        try {
-            return Response.ok(searcher.sok(fnr, fritekst)).build();
-        } catch (IkkeIndeksertException e) {
-            return Response.status(FORBIDDEN).type(TEXT_PLAIN).entity(e.getMessage()).build();
-        }
+        return tilgangskontroll
+                .check(tilgangTilBrukerPolicy.with(fnr))
+                .get(() -> {
+                    try {
+                        return Response.ok(searcher.sok(fnr, fritekst)).build();
+                    } catch (IkkeIndeksertException e) {
+                        return Response.status(FORBIDDEN).type(TEXT_PLAIN).entity(e.getMessage()).build();
+                    }
+                });
     }
 
     @GET
     @Path("/indekser")
     public Response indekser(@PathParam("fnr") String fnr, @Context HttpServletRequest request) {
-        // TODO tilgangsstyring
-        String valgtEnhet = hentValgtEnhet(request);
-        if(ansattService.hentEnhetsliste().stream().map(TIL_ENHET_ID).collect(toList()).contains(valgtEnhet)) {
-            List<Melding> meldinger = hentAlleMeldinger(fnr, valgtEnhet);
-            searcher.indekser(fnr, meldinger);
-            return Response.status(Response.Status.OK).build();
-        } else {
-            logger.warn("{} har ikke tilgang til enhet {}.", getSubjectHandler().getUid(), valgtEnhet);
-            return Response.status(Response.Status.UNAUTHORIZED).build();
-        }
+        return tilgangskontroll
+                .check(tilgangTilBrukerPolicy.with(fnr))
+                .get(() -> {
+                    String valgtEnhet = hentValgtEnhet(request);
+                    if(ansattService.hentEnhetsliste().stream().map(TIL_ENHET_ID).collect(toList()).contains(valgtEnhet)) {
+                        List<Melding> meldinger = hentAlleMeldinger(fnr, valgtEnhet);
+                        searcher.indekser(fnr, meldinger);
+                        return Response.status(Response.Status.OK).build();
+                    } else {
+                        logger.warn("{} har ikke tilgang til enhet {}.", getSubjectHandler().getUid(), valgtEnhet);
+                        return Response.status(Response.Status.UNAUTHORIZED).build();
+                    }
+                });
     }
 
     private List<Melding> hentAlleMeldinger(@PathParam("fnr") String fnr, String valgtEnhet) {

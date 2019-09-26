@@ -1,9 +1,14 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.person
 
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.lagXmlGregorianDato
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.tilgangskontroll.Tilgangskontroll
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.tilgangskontroll.tilgangTilModia
 import no.nav.tjeneste.virksomhet.personsoek.v1.PersonsokPortType
 import no.nav.tjeneste.virksomhet.personsoek.v1.informasjon.*
-import no.nav.tjeneste.virksomhet.personsoek.v1.meldinger.*
+import no.nav.tjeneste.virksomhet.personsoek.v1.meldinger.FimAdresseFilter
+import no.nav.tjeneste.virksomhet.personsoek.v1.meldinger.FimFinnPersonRequest
+import no.nav.tjeneste.virksomhet.personsoek.v1.meldinger.FimPersonFilter
+import no.nav.tjeneste.virksomhet.personsoek.v1.meldinger.FimSoekekriterie
 import org.slf4j.LoggerFactory
 import javax.inject.Inject
 import javax.ws.rs.POST
@@ -18,28 +23,30 @@ private enum class OppslagFeil {
 
 @Path("/personsok")
 @Produces(MediaType.APPLICATION_JSON)
-class PersonsokController @Inject constructor(private val personsokPortType: PersonsokPortType) {
+class PersonsokController @Inject constructor(private val personsokPortType: PersonsokPortType, val tilgangskontroll: Tilgangskontroll) {
 
     private val logger = LoggerFactory.getLogger(PersonsokController::class.java)
 
     @POST
     fun sok(personsokRequest: PersonsokRequest): Response {
-        // TODO tilgangsstyring
-        val response = try {
-            personsokPortType.finnPerson(lagPersonsokRequest(personsokRequest))
-        } catch (ex: Exception) {
-            return when (haandterOppslagFeil(ex)) {
-                OppslagFeil.FOR_MANGE -> Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Søket gav mer enn 200 treff. Forsøk å begrense søket.").build()
-                else                  -> Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Feil fra søketjeneste: " + ex.message).build()
-            }
-        }
-
-        if (response.personListe == null) {
-            return Response.ok(emptyList<Map<String, Any?>>()).build()
-        }
-
-        val liste = response.personListe.map { lagPersonResponse(it) }
-        return Response.ok(liste).build()
+        return tilgangskontroll
+                .tilgangTilModia()
+                .get {
+                    try {
+                        val response = personsokPortType.finnPerson(lagPersonsokRequest(personsokRequest))
+                        if (response.personListe == null) {
+                            Response.ok(emptyList<Map<String, Any?>>()).build()
+                        } else {
+                            val liste = response.personListe.map { lagPersonResponse(it) }
+                            Response.ok(liste).build()
+                        }
+                    } catch (ex: Exception) {
+                        when (haandterOppslagFeil(ex)) {
+                            OppslagFeil.FOR_MANGE -> Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Søket gav mer enn 200 treff. Forsøk å begrense søket.").build()
+                            else -> Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Feil fra søketjeneste: " + ex.message).build()
+                        }
+                    }
+                }
     }
 }
 
@@ -66,14 +73,14 @@ private fun lagPostadresse(adr: FimUstrukturertAdresse): String =
 
 
 private fun lagBostedsadresse(adr: FimStrukturertAdresse): String? =
-    when(adr) {
-        is FimGateadresse -> arrayOf(adr.gatenavn, adr.husnummer, adr.husbokstav, adr.poststed?.value).filterNotNull().joinToString(" ")
-        is FimMatrikkeladresse -> arrayOf(adr.matrikkelnummer.bruksnummer, adr.matrikkelnummer.festenummer, adr.matrikkelnummer.gaardsnummer,
-                adr.matrikkelnummer.seksjonsnummer, adr.matrikkelnummer.undernummer, adr.poststed?.value).filterNotNull().joinToString(" ")
-        is FimStedsadresseNorge -> arrayOf(adr.tilleggsadresse, adr.bolignummer, adr.poststed?.value).filterNotNull().joinToString(" ")
-        is FimPostboksadresseNorsk -> arrayOf(adr.postboksanlegg, adr.poststed?.value).filterNotNull().joinToString(" ")
-        else -> null
-    }
+        when (adr) {
+            is FimGateadresse -> arrayOf(adr.gatenavn, adr.husnummer, adr.husbokstav, adr.poststed?.value).filterNotNull().joinToString(" ")
+            is FimMatrikkeladresse -> arrayOf(adr.matrikkelnummer.bruksnummer, adr.matrikkelnummer.festenummer, adr.matrikkelnummer.gaardsnummer,
+                    adr.matrikkelnummer.seksjonsnummer, adr.matrikkelnummer.undernummer, adr.poststed?.value).filterNotNull().joinToString(" ")
+            is FimStedsadresseNorge -> arrayOf(adr.tilleggsadresse, adr.bolignummer, adr.poststed?.value).filterNotNull().joinToString(" ")
+            is FimPostboksadresseNorsk -> arrayOf(adr.postboksanlegg, adr.poststed?.value).filterNotNull().joinToString(" ")
+            else -> null
+        }
 
 private fun lagNavn(fimPersonnavn: FimPersonnavn): Map<String, Any?> =
         mapOf(

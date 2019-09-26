@@ -16,7 +16,6 @@ constructor(private val unleashService: UnleashService) {
     @GET
     @Path("/")
     fun hent(): Map<String, Any?> {
-        // TODO tilgangsstyring
         return mapOf("baseUrls" to getBaseUrls())
     }
 

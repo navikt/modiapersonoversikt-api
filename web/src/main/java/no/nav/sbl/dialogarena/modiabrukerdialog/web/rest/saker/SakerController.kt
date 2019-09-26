@@ -33,7 +33,7 @@ class SakerController @Inject constructor(private val saksoversiktService: Sakso
     @Path("/sakstema")
     @Produces(MediaType.APPLICATION_JSON)
     fun hentSakstema(@Context request: HttpServletRequest, @PathParam("fnr") fødselsnummer: String): Map<String, Any?> {
-        // TODO tilgangsstyring
+        // TODO erstatt tilgangsstyring
         if (!tilgangskontrollService.harGodkjentEnhet(request)) throw NotAuthorizedException("Ikke tilgang.")
 
         val sakerWrapper = saksService.hentAlleSaker(fødselsnummer)
@@ -54,7 +54,7 @@ class SakerController @Inject constructor(private val saksoversiktService: Sakso
     fun hentDokument(@Context request: HttpServletRequest, @PathParam("fnr") fødselsnummer: String,
                      @PathParam("journalpostId") journalpostId: String,
                      @PathParam("dokumentreferanse") dokumentreferanse: String): Response {
-        // TODO tilgangsstyring
+        // TODO erstatt tilgangsstyring
         val journalpostMetadata = hentDokumentMetadata(journalpostId, fødselsnummer)
         val tilgangskontrollResult = tilgangskontrollService.harSaksbehandlerTilgangTilDokument(request,
                 journalpostMetadata, fødselsnummer, journalpostMetadata.temakode)

@@ -29,7 +29,7 @@ private val pesysRoller = setOf(
         "0000-GA-Pensjon_Okonomi"
 )
 
-internal class Policies {
+class Policies {
     companion object {
         val modiaRolle = Policy<TilgangskontrollContext>({ "Saksbehandler (${hentSaksbehandlerId()}) har ikke tilgang til modia" }) {
             if (modiaRoller.any { rolle -> harSaksbehandlerRolle(rolle) })
@@ -102,6 +102,7 @@ internal class Policies {
                 policies = listOf(brukerUtenEnhet, nasjonalTilgang, tilgangTilLokalKontor, regionalTilgang, denyPolicy.asGenerator())
         )
 
+        @JvmField
         val tilgangTilBrukerPolicy = PolicySetGenerator(
                 policies = listOf(modiaRolle.asGenerator(), geografiskTilgang, kode6, kode7)
         )
@@ -162,6 +163,7 @@ internal class Policies {
             if (harSaksbehandlerRolle("0000-GA-BD06_HentOppgave")) DecisionEnums.PERMIT else DecisionEnums.DENY
         }
 
+        @JvmField
         val behandlingsIderTilhorerFnrPolicy = PolicyGenerator<TilgangskontrollContext, BehandlingsIdTilgangData>({ "Ikke alle behandlingsIder tilhørte medsendt fødselsnummer. Spørring gjort av ${context.hentSaksbehandlerId()}" }) {
             if (context.alleBehandlingsIderTilhorerBruker(data.fnr, data.behandlingsIder))
                 DecisionEnums.PERMIT

@@ -17,7 +17,6 @@ class FeatureToggleController @Inject constructor(private val unleashService: Un
     @Path("/{id}")
     @Produces(APPLICATION_JSON)
     fun hentMedId(@PathParam("id") toggleId: String): Boolean =
-            // TODO tilgangsstyring
             unleashService.isEnabled(sjekkPrefix(toggleId))
 
 
