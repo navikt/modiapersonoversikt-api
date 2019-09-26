@@ -7,7 +7,7 @@ import no.nav.kjerneinfo.consumer.fim.person.vergemal.VergemalService
 import no.nav.kjerneinfo.consumer.fim.person.vergemal.domain.Periode
 import no.nav.kjerneinfo.consumer.fim.person.vergemal.domain.Verge
 import no.nav.kjerneinfo.domain.person.Personnavn
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.UnleashServiceImpl
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.tilgangskontroll.TilgangskontrollMock
 import org.junit.jupiter.api.Test
 import java.util.*
 import kotlin.test.assertEquals
@@ -18,10 +18,9 @@ private const val VERGES_IDENT = "123"
 class VergemalControllerTest {
 
     private val vergemalService: VergemalService = mock()
-    private val unleashService = UnleashServiceImpl(mock(), mock(), "www.unleashurl.com")
     private val controller: VergemalController = VergemalController(
             vergemalService,
-            unleashService
+            TilgangskontrollMock.get()
     )
 
 

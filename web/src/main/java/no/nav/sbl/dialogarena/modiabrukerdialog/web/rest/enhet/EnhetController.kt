@@ -6,9 +6,8 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.organisasjonsEnhetV2
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.organisasjonenhet.kontaktinformasjon.domain.OrganisasjonEnhetKontaktinformasjon
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.organisasjonenhet.kontaktinformasjon.service.OrganisasjonEnhetKontaktinformasjonService
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.enhet.model.EnhetKontaktinformasjon
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.tilgangskontroll.Policies
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.tilgangskontroll.Tilgangskontroll
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.tilgangskontroll.tilgangTilBruker
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.tilgangskontroll.tilgangTilModia
 import javax.inject.Inject
 import javax.ws.rs.*
 import javax.ws.rs.core.MediaType.APPLICATION_JSON
@@ -25,7 +24,7 @@ constructor(private val organisasjonEnhetKontaktinformasjonService: Organisasjon
     @Produces(APPLICATION_JSON)
     fun hentMedId(@PathParam("id") organisasjonsid: String): OrganisasjonEnhetKontaktinformasjon {
         return tilgangskontroll
-                .tilgangTilModia()
+                .check(Policies.tilgangTilModia)
                 .get {
                     organisasjonEnhetKontaktinformasjonService.hentKontaktinformasjon(organisasjonsid)
                 }
@@ -35,7 +34,7 @@ constructor(private val organisasjonEnhetKontaktinformasjonService: Organisasjon
     @Produces(APPLICATION_JSON)
     fun finnEnhet(@QueryParam("gt") geografiskId: String?, @QueryParam("dkode") diskresjonskode: String?): EnhetKontaktinformasjon {
         return tilgangskontroll
-                .tilgangTilModia()
+                .check(Policies.tilgangTilModia)
                 .get {
                     if (geografiskId.isNullOrEmpty() && diskresjonskode.isNullOrEmpty()) throw NotFoundException();
 
@@ -52,7 +51,7 @@ constructor(private val organisasjonEnhetKontaktinformasjonService: Organisasjon
     @Produces(APPLICATION_JSON)
     fun hentAlleEnheterForOppgave(): List<Map<String, Any?>> {
         return tilgangskontroll
-                .tilgangTilModia()
+                .check(Policies.tilgangTilModia)
                 .get {
                     val enheter = organisasjonEnhetV2Service.hentAlleEnheter(OrganisasjonEnhetV2Service.WSOppgavebehandlerfilter.KUN_OPPGAVEBEHANDLERE)
                     enheter.filter { erGyldigEnhet(it) }.map {
@@ -71,7 +70,7 @@ constructor(private val organisasjonEnhetKontaktinformasjonService: Organisasjon
                              @QueryParam("typekode") typekode: String,
                              @QueryParam("underkategorikode") underkategorikode: String?): List<Map<String, Any?>> {
         return tilgangskontroll
-                .tilgangTilBruker(fnr)
+                .check(Policies.tilgangTilBruker.with(fnr))
                 .get {
                     val enheter = arbeidsfordeling.finnBehandlendeEnhetListe(fnr, temakode, typekode, underkategorikode)
                     enheter.map {
@@ -85,5 +84,5 @@ constructor(private val organisasjonEnhetKontaktinformasjonService: Organisasjon
     private fun hentAnsattEnhet(ansattEnhet: AnsattEnhet): Array<Pair<String, Any?>> =
             arrayOf(Pair("enhetId", ansattEnhet.enhetId), Pair("enhetNavn", ansattEnhet.enhetNavn), Pair("status", ansattEnhet.status))
 
-    private fun erGyldigEnhet(ansattEnhet: AnsattEnhet): Boolean = ansattEnhet.erAktiv() && (ansattEnhet.enhetId as Int) >= 100
+    private fun erGyldigEnhet(ansattEnhet: AnsattEnhet): Boolean = ansattEnhet.erAktiv() && Integer.parseInt(ansattEnhet.enhetId) >= 100
 }

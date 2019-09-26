@@ -13,8 +13,8 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.RestUtils
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.TemagruppeTemaMapping.hentTemagruppeForTema
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.api.DTO
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.api.toDTO
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.tilgangskontroll.Policies
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.tilgangskontroll.Tilgangskontroll
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.tilgangskontroll.tilgangTilBruker
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.henvendelse.HenvendelseBehandlingService
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.henvendelse.domain.Traad
 import java.util.*
@@ -44,7 +44,7 @@ class DialogController @Inject constructor(
             @PathParam("fnr") fnr: String
     ): List<TraadDTO> {
         return tilgangskontroll
-                .tilgangTilBruker(fnr)
+                .check(Policies.tilgangTilBruker.with(fnr))
                 .get {
                     val valgtEnhet = RestUtils.hentValgtEnhet(request)
                     henvendelseService
@@ -62,7 +62,7 @@ class DialogController @Inject constructor(
             referatRequest: SendReferatRequest
     ): Response {
         return tilgangskontroll
-                .tilgangTilBruker(fnr)
+                .check(Policies.tilgangTilBruker.with(fnr))
                 .get {
                     val context = lagSendHenvendelseContext(fnr, request)
                     henvendelseUtsendingService.sendHenvendelse(lagReferat(referatRequest, context), Optional.empty(), Optional.empty(), context.enhet)
@@ -78,7 +78,7 @@ class DialogController @Inject constructor(
             sporsmalsRequest: SendSporsmalRequest
     ): Response {
         return tilgangskontroll
-                .tilgangTilBruker(fnr)
+                .check(Policies.tilgangTilBruker.with(fnr))
                 .get {
                     val context = lagSendHenvendelseContext(fnr, request)
                     val gsakSaker = sakerService.hentSammensatteSaker(fnr)
@@ -102,7 +102,7 @@ class DialogController @Inject constructor(
             opprettHenvendelseRequest: OpprettHenvendelseRequest
     ): FortsettDialogDTO {
         return tilgangskontroll
-                .tilgangTilBruker(fnr)
+                .check(Policies.tilgangTilBruker.with(fnr))
                 .get {
                     val traadId = opprettHenvendelseRequest.traadId
                     val context = lagSendHenvendelseContext(fnr, request)
@@ -141,7 +141,7 @@ class DialogController @Inject constructor(
             fortsettDialogRequest: FortsettDialogRequest
     ): Response {
         return tilgangskontroll
-                .tilgangTilBruker(fnr)
+                .check(Policies.tilgangTilBruker.with(fnr))
                 .get {
                     val context = lagSendHenvendelseContext(fnr, request)
                     val traad = henvendelseService

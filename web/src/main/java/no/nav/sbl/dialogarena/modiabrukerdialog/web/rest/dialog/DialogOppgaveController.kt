@@ -2,10 +2,9 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.dialog
 
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.GsakKodeTema
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.gsak.GsakKodeverk
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.tilgangskontroll.BehandlingsIdTilgangData
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.tilgangskontroll.Policies
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.tilgangskontroll.Tilgangskontroll
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.tilgangskontroll.henvendelsesIdTilhorerBruker
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.tilgangskontroll.tilgangTilBruker
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.tilgangskontroll.tilgangTilModia
 import no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.DateUtils.arbeidsdagerFraDato
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.OppgavebehandlingV3
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.meldinger.WSOpprettOppgave
@@ -32,8 +31,8 @@ class DialogOppgaveController @Inject constructor(
     @Path("/opprett")
     fun opprettOppgave(request: OpperettOppgaveRequest): Response {
         return tilgangskontroll
-                .tilgangTilBruker(request.fnr)
-                .henvendelsesIdTilhorerBruker(request.fnr, listOf(request.henvendelseId))
+                .check(Policies.tilgangTilBruker.with(request.fnr))
+                .check(Policies.henvendelsesIdTilhorerBruker.with(BehandlingsIdTilgangData(request.fnr, listOf(request.henvendelseId))))
                 .get {
                     oppgavebehandling.opprettOppgave(
                             WSOpprettOppgaveRequest()
@@ -64,7 +63,7 @@ class DialogOppgaveController @Inject constructor(
     @Produces(APPLICATION_JSON)
     fun hentAlleTema(): List<Map<String, Any?>> {
         return tilgangskontroll
-                .tilgangTilModia()
+                .check(Policies.tilgangTilModia)
                 .get {
                     val gsakTemaListe = gsakKodeverk.hentTemaListe()
                     gsakTemaListe.filter { it.oppgaveTyper.isNotEmpty() }.map {

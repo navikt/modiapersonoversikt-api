@@ -21,8 +21,8 @@ class DialogMerkController @Inject constructor(private val behandleHenvendelsePo
     @Path("/feilsendt")
     fun merkSomFeilsendt(request: FeilmerkRequest): Response {
         return tilgangskontroll
-                .tilgangTilBruker(request.fnr)
-                .behandlingsIderTilhorerBruker(request.fnr, request.behandlingsidListe)
+                .check(Policies.tilgangTilBruker.with(request.fnr))
+                .check(Policies.behandlingsIderTilhorerBruker.with(BehandlingsIdTilgangData(request.fnr, request.behandlingsidListe)))
                 .get {
                     behandleHenvendelsePortType.oppdaterTilKassering(request.behandlingsidListe)
                     Response.ok().build()
@@ -33,8 +33,8 @@ class DialogMerkController @Inject constructor(private val behandleHenvendelsePo
     @Path("/bidrag")
     fun merkSomBidrag(request: BidragRequest): Response {
         return tilgangskontroll
-                .tilgangTilBruker(request.fnr)
-                .behandlingsIderTilhorerBruker(request.fnr, listOf(request.eldsteMeldingTraadId))
+                .check(Policies.tilgangTilBruker.with(request.fnr))
+                .check(Policies.behandlingsIderTilhorerBruker.with(BehandlingsIdTilgangData(request.fnr, listOf(request.eldsteMeldingTraadId))))
                 .get {
                     behandleHenvendelsePortType.knyttBehandlingskjedeTilTema(request.eldsteMeldingTraadId, "BID")
                     Response.ok().build()
@@ -45,8 +45,8 @@ class DialogMerkController @Inject constructor(private val behandleHenvendelsePo
     @Path("/kontorsperret")
     fun merkSomKontorsperret(request: KontorsperretRequest): Response {
         return tilgangskontroll
-                .tilgangTilBruker(request.fnr)
-                .behandlingsIderTilhorerBruker(request.fnr, request.meldingsidListe)
+                .check(Policies.tilgangTilBruker.with(request.fnr))
+                .check(Policies.behandlingsIderTilhorerBruker.with(BehandlingsIdTilgangData(request.fnr, request.meldingsidListe)))
                 .get {
                     behandleHenvendelsePortType.oppdaterKontorsperre(request.fnr, request.meldingsidListe)
                     Response.ok().build()
@@ -57,8 +57,8 @@ class DialogMerkController @Inject constructor(private val behandleHenvendelsePo
     @Path("/avslutt")
     fun avsluttUtenSvar(request: AvsluttUtenSvarRequest): Response {
         return tilgangskontroll
-                .tilgangTilBruker(request.fnr)
-                .behandlingsIderTilhorerBruker(request.fnr, listOf(request.eldsteMeldingTraadId))
+                .check(Policies.tilgangTilBruker.with(request.fnr))
+                .check(Policies.behandlingsIderTilhorerBruker.with(BehandlingsIdTilgangData(request.fnr, listOf(request.eldsteMeldingTraadId))))
                 .get {
                     behandleHenvendelsePortType.ferdigstillUtenSvar(request.eldsteMeldingTraadId, request.saksbehandlerValgtEnhet)
                     oppgaveBehandlingService.ferdigstillOppgaveIGsak(request.eldsteMeldingOppgaveId, Optional.empty(), request.saksbehandlerValgtEnhet)
@@ -70,9 +70,9 @@ class DialogMerkController @Inject constructor(private val behandleHenvendelsePo
     @Path("/slett")
     fun slettBehandlingskjede(request: FeilmerkRequest): Response {
         return tilgangskontroll
-                .saksbehandlerKanHastekassere()
-                .tilgangTilBruker(request.fnr)
-                .behandlingsIderTilhorerBruker(request.fnr, request.behandlingsidListe)
+                .check(Policies.kanHastekassere)
+                .check(Policies.tilgangTilBruker.with(request.fnr))
+                .check(Policies.behandlingsIderTilhorerBruker.with(BehandlingsIdTilgangData(request.fnr, request.behandlingsidListe)))
                 .get {
                     if (MerkUtils.kanHastekassere(SubjectHandler.getSubjectHandler().getUid())) {
                         behandleHenvendelsePortType.markerTraadForHasteKassering(request.behandlingsidListe);

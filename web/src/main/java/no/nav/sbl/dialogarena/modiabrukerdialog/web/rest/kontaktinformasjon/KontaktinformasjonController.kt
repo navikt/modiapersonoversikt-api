@@ -1,8 +1,8 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.kontaktinformasjon
 
 import no.nav.dkif.consumer.DkifService
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.tilgangskontroll.Policies
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.tilgangskontroll.Tilgangskontroll
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.tilgangskontroll.tilgangTilBruker
 import no.nav.tjeneste.virksomhet.digitalkontaktinformasjon.v1.meldinger.WSHentDigitalKontaktinformasjonResponse
 import javax.inject.Inject
 import javax.ws.rs.GET
@@ -19,7 +19,7 @@ class KontaktinformasjonController @Inject constructor(private val dkifService: 
     @Path("/")
     fun hentKontaktinformasjon(@PathParam("fnr") fnr: String): Map<String, Any?> {
         return tilgangskontroll
-                .tilgangTilBruker(fnr)
+                .check(Policies.tilgangTilBruker.with(fnr))
                 .get {
                     val response = dkifService.hentDigitalKontaktinformasjon(fnr)
 

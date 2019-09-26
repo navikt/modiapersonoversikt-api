@@ -2,8 +2,8 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.utbetaling
 
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.DATOFORMAT
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.lagRiktigDato
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.tilgangskontroll.Policies
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.tilgangskontroll.Tilgangskontroll
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.tilgangskontroll.tilgangTilBruker
 import no.nav.sbl.dialogarena.utbetaling.service.UtbetalingService
 import no.nav.tjeneste.virksomhet.utbetaling.v1.informasjon.*
 import javax.inject.Inject
@@ -21,7 +21,7 @@ class UtbetalingController @Inject constructor(private val service: UtbetalingSe
              @QueryParam("startDato") start: String?,
              @QueryParam("sluttDato") slutt: String?): Response {
         return tilgangskontroll
-                .tilgangTilBruker(fodselsnummer)
+                .check(Policies.tilgangTilBruker.with(fodselsnummer))
                 .get {
                     val startDato = lagRiktigDato(start)
                     val sluttDato = lagRiktigDato(slutt)

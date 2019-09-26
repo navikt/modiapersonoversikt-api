@@ -17,8 +17,8 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.Unleash
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.kodeverk.Kode
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.lagPeriode
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.mapOfNotNullOrEmpty
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.tilgangskontroll.Policies
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.tilgangskontroll.Tilgangskontroll
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.tilgangskontroll.tilgangTilBruker
 import no.nav.tjeneste.virksomhet.person.v3.HentPersonPersonIkkeFunnet
 import no.nav.tjeneste.virksomhet.person.v3.HentPersonSikkerhetsbegrensning
 import org.slf4j.LoggerFactory
@@ -45,7 +45,7 @@ class PersonController @Inject constructor(private val kjerneinfoService: Person
     @Path("/")
     fun hent(@PathParam("fnr") fodselsnummer: String): Map<String, Any?> {
         return tilgangskontroll
-                .tilgangTilBruker(fodselsnummer)
+                .check(Policies.tilgangTilBruker.with(fodselsnummer))
                 .get {
                     try {
                         val hentKjerneinformasjonRequest = HentKjerneinformasjonRequest(fodselsnummer)

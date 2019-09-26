@@ -18,8 +18,8 @@ import java.util.List;
 import static java.util.Arrays.asList;
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.RestUtils.hentValgtEnhet;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.web.tilgangskontroll.Policies.behandlingsIderTilhorerFnrPolicy;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.web.tilgangskontroll.Policies.tilgangTilBrukerPolicy;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.web.tilgangskontroll.Policies.behandlingsIderTilhorerBruker;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.web.tilgangskontroll.Policies.tilgangTilBruker;
 
 @Path("/journalforing/{fnr}")
 @Produces(APPLICATION_JSON)
@@ -40,7 +40,7 @@ public class JournalforingController {
     @Path("/saker/sammensatte")
     public List<Sak> hentSammensatteSaker(@PathParam("fnr") String fnr) {
         return tilgangskontroll
-                .check(tilgangTilBrukerPolicy.with(fnr))
+                .check(tilgangTilBruker.with(fnr))
                 .get(() -> sakerService.hentSammensatteSaker(fnr));
     }
 
@@ -48,7 +48,7 @@ public class JournalforingController {
     @Path("/saker/pensjon")
     public List<Sak> hentPensjonSaker(@PathParam("fnr") String fnr) {
         return tilgangskontroll
-                .check(tilgangTilBrukerPolicy.with(fnr))
+                .check(tilgangTilBruker.with(fnr))
                 .get(() -> sakerService.hentPensjonSaker(fnr));
     }
 
@@ -57,8 +57,8 @@ public class JournalforingController {
     @Consumes(APPLICATION_JSON)
     public Response knyttTilSak(@PathParam("fnr") String fnr, @PathParam("traadId") String traadId, Sak sak, @Context HttpServletRequest request) throws JournalforingFeilet {
         return tilgangskontroll
-                .check(tilgangTilBrukerPolicy.with(fnr))
-                .check(behandlingsIderTilhorerFnrPolicy.with(new BehandlingsIdTilgangData(fnr, asList(traadId))))
+                .check(tilgangTilBruker.with(fnr))
+                .check(behandlingsIderTilhorerBruker.with(new BehandlingsIdTilgangData(fnr, asList(traadId))))
                 .get(() -> {
                     String enhet = hentValgtEnhet(request);
                     try {

@@ -2,9 +2,8 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.ldap
 
 import no.nav.brukerdialog.security.context.SubjectHandler.getSubjectHandler
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.ldap.LDAPService
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.UnleashService
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.tilgangskontroll.Policies
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.tilgangskontroll.Tilgangskontroll
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.tilgangskontroll.tilgangTilModia
 import javax.inject.Inject
 import javax.ws.rs.GET
 import javax.ws.rs.Path
@@ -20,7 +19,7 @@ constructor(private val ldapService: LDAPService, private val tilgangskontroll: 
     @Produces(MediaType.APPLICATION_JSON)
     fun hentRollerForInnloggetVeileder(): Map<String, MutableList<String>> {
         return tilgangskontroll
-                .tilgangTilModia()
+                .check(Policies.tilgangTilModia)
                 .get {
                     val ident = getSubjectHandler().uid
                     mapOf("roller" to ldapService.hentRollerForVeileder(ident))

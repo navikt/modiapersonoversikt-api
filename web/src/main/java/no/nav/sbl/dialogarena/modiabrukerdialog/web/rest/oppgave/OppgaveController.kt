@@ -10,8 +10,8 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.ldap.LDAPService
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.http.CookieUtil
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.mapOfNotNullOrEmpty
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.service.plukkoppgave.PlukkOppgaveService
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.tilgangskontroll.Policies
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.tilgangskontroll.Tilgangskontroll
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.tilgangskontroll.tilgangTilModia
 import org.slf4j.LoggerFactory
 import javax.inject.Inject
 import javax.servlet.http.HttpServletRequest
@@ -36,7 +36,7 @@ class OppgaveController @Inject constructor(
     @Path("/{id}/leggTilbake")
     fun leggTilbake(@PathParam("id") oppgaveId: String, @Context httpRequest: HttpServletRequest, request: LeggTilbakeRequest): Response {
         return tilgangkontroll
-                .tilgangTilModia()
+                .check(Policies.tilgangTilModia)
                 // TODO tilgangsstyring, burde også sjekke tilgang til oppgave
                 .get {
                     val leggTilbakeOppgaveIGsakRequest = LeggTilbakeOppgaveIGsakRequest()
@@ -60,7 +60,7 @@ class OppgaveController @Inject constructor(
     @Path("/plukk/{temagruppe}")
     fun plukkOppgaver(@PathParam("temagruppe") temagruppe: String, @Context httpRequest: HttpServletRequest) =
             tilgangkontroll
-                    .tilgangTilModia()
+                    .check(Policies.tilgangTilModia)
                     .get {
                         plukkOppgaveService
                                 .also { verifiserTilgang(HENT_OPPGAVE_ROLLE) }
@@ -73,7 +73,7 @@ class OppgaveController @Inject constructor(
     @Path("/tildelt")
     fun finnTildelte() =
             tilgangkontroll
-                    .tilgangTilModia()
+                    .check(Policies.tilgangTilModia)
                     .get {
                         oppgaveBehandlingService.finnTildelteOppgaverIGsak()
                                 .map { mapOppgave(it) }

@@ -7,6 +7,8 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.RestUtils;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.http.SubjectHandlerUtil;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.saker.knyttbehandlingskjedetilsak.EnhetIkkeSatt;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.api.Feilmelding;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.tilgangskontroll.Tilgangskontroll;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.tilgangskontroll.TilgangskontrollMock;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -33,7 +35,7 @@ class JournalforingControllerTest {
     @Test
     @DisplayName("Knytter til sak og returnerer 200 OK")
     void journalforingKnytterTilSak() throws JournalforingFeilet {
-        JournalforingController journalforingController = new JournalforingController(mock(SakerService.class));
+        JournalforingController journalforingController = new JournalforingController(mock(SakerService.class), TilgangskontrollMock.get());
 
         Response response = journalforingController.knyttTilSak("10108000398", "traad-id", new Sak(),
                 mockHttpRequest());
@@ -46,7 +48,7 @@ class JournalforingControllerTest {
     void journalforingSomFeilerKasterFeil() throws JournalforingFeilet {
         SakerService mock = mock(SakerService.class);
         doThrow(RuntimeException.class).when(mock).knyttBehandlingskjedeTilSak(any(), any(), any(), any());
-        JournalforingController journalforingController = new JournalforingController(mock);
+        JournalforingController journalforingController = new JournalforingController(mock, TilgangskontrollMock.get());
 
         Response response = journalforingController.knyttTilSak("10108000398", "traad-id", new Sak(),
                 mockHttpRequest());
@@ -59,7 +61,7 @@ class JournalforingControllerTest {
     void journalforingUtenEnhetKasterFeil() throws JournalforingFeilet {
         SakerService mock = mock(SakerService.class);
         doThrow(EnhetIkkeSatt.class).when(mock).knyttBehandlingskjedeTilSak(any(), any(), any(), any());
-        JournalforingController journalforingController = new JournalforingController(mock);
+        JournalforingController journalforingController = new JournalforingController(mock, TilgangskontrollMock.get());
 
         Response response = journalforingController.knyttTilSak("10108000398", "traad-id", new Sak(),
                 mockHttpRequest());

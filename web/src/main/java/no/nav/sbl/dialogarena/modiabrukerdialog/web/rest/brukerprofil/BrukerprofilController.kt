@@ -45,7 +45,7 @@ class BrukerprofilController @Inject constructor(private val behandlePersonServi
     @Consumes(APPLICATION_JSON)
     fun endreNavn(@PathParam("fnr") fnr: String, endreNavnRequest: EndreNavnRequest): Response {
         return tilgangskontroll
-                .tilgangTilEndreNavn()
+                .check(Policies.kanEndreNavn)
                 .get {
                     val kjerneinformasjon = kjerneinfoService.hentKjerneinformasjon(HentKjerneinformasjonRequest(fnr))
 
@@ -68,7 +68,7 @@ class BrukerprofilController @Inject constructor(private val behandlePersonServi
     @Consumes(APPLICATION_JSON)
     fun endreAdresse(@PathParam("fnr") fnr: String, request: EndreAdresseRequest): Response {
         return tilgangskontroll
-                .tilgangTilEndreAdresse()
+                .check(Policies.kanEndreAdresse)
                 .get {
                     val bruker = kjerneinfoService.hentBrukerprofil(fnr)
 
@@ -93,7 +93,7 @@ class BrukerprofilController @Inject constructor(private val behandlePersonServi
     fun endreTilrettelagtKommunikasjon(@PathParam("fnr") fnr: String,
                                        request: EndreTilrettelagtkommunikasjonRequest) =
             tilgangskontroll
-                    .tilgangTilBruker(fnr)
+                    .check(Policies.tilgangTilBruker.with(fnr))
                     .get {
                         fnr
                                 .let(kjerneinfoService::hentBrukerprofil)
@@ -106,7 +106,7 @@ class BrukerprofilController @Inject constructor(private val behandlePersonServi
     @Consumes(APPLICATION_JSON)
     fun endreTelefonnummer(@PathParam("fnr") fnr: String, request: EndreTelefonnummerRequest) =
             tilgangskontroll
-                    .tilgangTilBruker(fnr)
+                    .check(Policies.tilgangTilBruker.with(fnr))
                     .get {
                         fnr
                                 .let(kjerneinfoService::hentBrukerprofil)
@@ -123,7 +123,7 @@ class BrukerprofilController @Inject constructor(private val behandlePersonServi
     @Consumes(APPLICATION_JSON)
     fun endreKontonummer(@PathParam("fnr") fnr: String, request: EndreKontonummerRequest) =
             tilgangskontroll
-                    .tilgangTilEndreKontonummer()
+                    .check(Policies.kanEndreKontonummer)
                     .get {
                         fnr
                                 .let(kjerneinfoService::hentBrukerprofil)

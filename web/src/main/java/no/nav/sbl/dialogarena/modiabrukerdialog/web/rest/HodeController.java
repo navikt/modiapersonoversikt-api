@@ -72,7 +72,7 @@ public class HodeController {
     @Path("/me")
     public Me hentSaksbehandler(@Context HttpServletRequest request) {
         return tilgangskontroll
-                .check(Policies.Companion.getModiaRolle())
+                .check(Policies.tilgangTilModia)
                 .get(() -> {
                     String ident = getSubjectHandler().getUid();
                     GrunnInfo.SaksbehandlerNavn saksbehandler = grunninfoService.hentSaksbehandlerNavn();

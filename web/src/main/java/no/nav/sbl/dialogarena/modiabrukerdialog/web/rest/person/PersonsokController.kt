@@ -1,8 +1,8 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.person
 
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.lagXmlGregorianDato
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.tilgangskontroll.Policies
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.tilgangskontroll.Tilgangskontroll
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.tilgangskontroll.tilgangTilModia
 import no.nav.tjeneste.virksomhet.personsoek.v1.PersonsokPortType
 import no.nav.tjeneste.virksomhet.personsoek.v1.informasjon.*
 import no.nav.tjeneste.virksomhet.personsoek.v1.meldinger.FimAdresseFilter
@@ -30,7 +30,7 @@ class PersonsokController @Inject constructor(private val personsokPortType: Per
     @POST
     fun sok(personsokRequest: PersonsokRequest): Response {
         return tilgangskontroll
-                .tilgangTilModia()
+                .check(Policies.tilgangTilModia)
                 .get {
                     try {
                         val response = personsokPortType.finnPerson(lagPersonsokRequest(personsokRequest))

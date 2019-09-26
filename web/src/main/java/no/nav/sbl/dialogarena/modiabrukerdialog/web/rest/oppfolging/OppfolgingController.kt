@@ -12,11 +12,10 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Saksbehandler
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.AnsattEnhet
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.ldap.LDAPService
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.oppfolgingsinfo.OppfolgingsinfoApiService
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.UnleashService
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.DATOFORMAT
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.lagRiktigDato
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.tilgangskontroll.Policies
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.tilgangskontroll.Tilgangskontroll
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.tilgangskontroll.tilgangTilBruker
 import org.slf4j.LoggerFactory
 import java.util.*
 import javax.inject.Inject
@@ -37,7 +36,7 @@ class OppfolgingController @Inject constructor(private val service: Oppfolgingsi
     @Path("/")
     fun hent(@PathParam("fnr") fodselsnummer: String): Map<String, Any?> {
         return tilgangskontroll
-                .tilgangTilBruker(fodselsnummer)
+                .check(Policies.tilgangTilBruker.with(fodselsnummer))
                 .get {
                     val oppfolging = service.hentOppfolgingsinfo(fodselsnummer, ldapService)
 
@@ -55,7 +54,7 @@ class OppfolgingController @Inject constructor(private val service: Oppfolgingsi
                         @QueryParam("startDato") start: String?,
                         @QueryParam("sluttDato") slutt: String?): Map<String, Any?> {
         return tilgangskontroll
-                .tilgangTilBruker(fodselsnummer)
+                .check(Policies.tilgangTilBruker.with(fodselsnummer))
                 .get {
                     val kontraktResponse = oppfolgingskontraktService.hentOppfolgingskontrakter(lagOppfolgingskontraktRequest(fodselsnummer, start, slutt))
                     val ytelserResponse = ytelseskontraktService.hentYtelseskontrakter(lagYtelseRequest(fodselsnummer, start, slutt))

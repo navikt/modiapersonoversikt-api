@@ -25,7 +25,7 @@ import static javax.ws.rs.core.Response.Status.FORBIDDEN;
 import static no.nav.brukerdialog.security.context.SubjectHandler.getSubjectHandler;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.AnsattEnhet.TIL_ENHET_ID;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.RestUtils.hentValgtEnhet;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.web.tilgangskontroll.Policies.tilgangTilBrukerPolicy;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.web.tilgangskontroll.Policies.tilgangTilBruker;
 import static org.slf4j.LoggerFactory.getLogger;
 
 @Path("/meldinger/{fnr}")
@@ -47,7 +47,7 @@ public class MeldingerController {
     @Path("/traader")
     public Response hentTraader(@PathParam("fnr") String fnr, @Context HttpServletRequest request) {
         return tilgangskontroll
-                .check(tilgangTilBrukerPolicy.with(fnr))
+                .check(tilgangTilBruker.with(fnr))
                 .get(() -> {
                     indekser(fnr, request);
                     try {
@@ -62,7 +62,7 @@ public class MeldingerController {
     @Path("/sok/{fritekst: .*}")
     public Response sok(@PathParam("fnr") String fnr, @PathParam("fritekst") String fritekst) {
         return tilgangskontroll
-                .check(tilgangTilBrukerPolicy.with(fnr))
+                .check(tilgangTilBruker.with(fnr))
                 .get(() -> {
                     try {
                         return Response.ok(searcher.sok(fnr, fritekst)).build();
@@ -76,7 +76,7 @@ public class MeldingerController {
     @Path("/indekser")
     public Response indekser(@PathParam("fnr") String fnr, @Context HttpServletRequest request) {
         return tilgangskontroll
-                .check(tilgangTilBrukerPolicy.with(fnr))
+                .check(tilgangTilBruker.with(fnr))
                 .get(() -> {
                     String valgtEnhet = hentValgtEnhet(request);
                     if(ansattService.hentEnhetsliste().stream().map(TIL_ENHET_ID).collect(toList()).contains(valgtEnhet)) {
