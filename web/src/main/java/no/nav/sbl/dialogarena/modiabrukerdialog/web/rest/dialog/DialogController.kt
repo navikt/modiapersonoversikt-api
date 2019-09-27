@@ -6,6 +6,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.Sak
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Fritekst
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.exceptions.TraadAlleredeBesvart
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.HenvendelseUtsendingService
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveBehandlingService
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.gsak.SakerService
@@ -167,6 +168,38 @@ class DialogController @Inject constructor(
                 }
     }
 
+    @POST
+    @Path("slaasammen")
+    fun slaaSammenTraader(
+            @Context request: HttpServletRequest,
+            @PathParam("fnr") fnr: String,
+            slaaSammenRequest: SlaaSammenRequest
+    ): List<TraadDTO> = gittTilgangTilBruker(fnr).get {
+        slaaSammenRequest.oppgaver.map { it.oppgaveId }.forEach {
+            if (oppgaveBehandlingService.oppgaveErFerdigstilt(it)) {
+                throw WebApplicationException("Oppgave $it er allerede ferdigstilt")
+            }
+        }
+
+        val nyTraadId = try {
+            henvendelseUtsendingService.slaaSammenTraader(slaaSammenRequest.oppgaver.map { it.meldingsId })
+        } catch(e: TraadAlleredeBesvart) {
+            throw WebApplicationException("Tråd allerede besvart")
+        }
+
+        val valgtEnhet = RestUtils.hentValgtEnhet(request)
+        henvendelseUtsendingService.opprettHenvendelse(Meldingstype.SVAR_SKRIFTLIG.name, fnr, nyTraadId)
+        slaaSammenRequest.oppgaver.filter { it.henvendelsesId != nyTraadId }.forEach {
+            oppgaveBehandlingService.ferdigstillOppgaveIGsak(it.oppgaveId, slaaSammenRequest.temagruppe, valgtEnhet)
+        }
+
+        henvendelseService
+                .hentMeldinger(fnr, valgtEnhet)
+                .traader
+                .toDTO()
+    }
+
+
     private fun hentSaker(fnr: String): Set<Sak> {
         val gsakSaker = try {
             sakerService.hentSammensatteSaker(fnr)
@@ -292,4 +325,15 @@ data class RequestContext(
         val fnr: String,
         val ident: String,
         val enhet: String
+)
+
+data class SlaaSammenRequest(
+        val oppgaver: List<Oppgave>,
+        val temagruppe: Temagruppe
+)
+
+data class Oppgave(
+        val oppgaveId: String,
+        val meldingsId: String,
+        val henvendelsesId: String
 )
