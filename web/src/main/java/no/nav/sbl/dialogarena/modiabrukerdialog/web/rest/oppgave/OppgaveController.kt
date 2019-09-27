@@ -50,25 +50,22 @@ class OppgaveController @Inject constructor(
 
     private fun lagLeggTilbakeRequest(request: LeggTilbakeRequest, valgtEnhet: String): LeggTilbakeOppgaveIGsakRequest? {
         require(request.oppgaveId != null)
+        val baseRequest = LeggTilbakeOppgaveIGsakRequest()
+                .withOppgaveId(request.oppgaveId)
+                .withSaksbehandlersValgteEnhet(valgtEnhet)
         return when (request.type) {
-            LeggTilbakeAarsak.Innhabil -> LeggTilbakeOppgaveIGsakRequest()
-                    .withOppgaveId(request.oppgaveId)
+            LeggTilbakeAarsak.Innhabil -> baseRequest
                     .withBeskrivelse(AARSAK_PREFIX + "inhabil")
-                    .withSaksbehandlersValgteEnhet(valgtEnhet)
             LeggTilbakeAarsak.FeilTema -> {
                 require(request.temagruppe != null)
-                return LeggTilbakeOppgaveIGsakRequest()
-                        .withOppgaveId(request.oppgaveId)
+                return baseRequest
                         .withBeskrivelse(AARSAK_PREFIX + "feil temagruppe")
                         .withTemagruppe(request.temagruppe)
-                        .withSaksbehandlersValgteEnhet(valgtEnhet)
             }
             LeggTilbakeAarsak.AnnenAarsak -> {
                 require(request.beskrivelse != null)
-                return LeggTilbakeOppgaveIGsakRequest()
-                        .withOppgaveId(request.oppgaveId)
-                        .withBeskrivelse("Oppgave lagt tilbake. Årsak: " + request.beskrivelse)
-                        .withSaksbehandlersValgteEnhet(valgtEnhet)
+                return baseRequest
+                        .withBeskrivelse(AARSAK_PREFIX + request.beskrivelse)
             }
         }
     }
