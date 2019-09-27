@@ -174,7 +174,7 @@ class DialogController @Inject constructor(
             @Context request: HttpServletRequest,
             @PathParam("fnr") fnr: String,
             slaaSammenRequest: SlaaSammenRequest
-    ): List<TraadDTO> = gittTilgangTilBruker(fnr).get {
+    ): Map<String, Any?> = gittTilgangTilBruker(fnr).get {
         slaaSammenRequest.oppgaver.map { it.oppgaveId }.forEach {
             if (oppgaveBehandlingService.oppgaveErFerdigstilt(it)) {
                 throw WebApplicationException("Oppgave $it er allerede ferdigstilt")
@@ -193,10 +193,15 @@ class DialogController @Inject constructor(
             oppgaveBehandlingService.ferdigstillOppgaveIGsak(it.oppgaveId, slaaSammenRequest.temagruppe, valgtEnhet)
         }
 
-        henvendelseService
+        val traader: List<TraadDTO> = henvendelseService
                 .hentMeldinger(fnr, valgtEnhet)
                 .traader
                 .toDTO()
+
+        mapOf(
+                "traader" to traader,
+                "nyTraadId" to nyTraadId
+        )
     }
 
 
