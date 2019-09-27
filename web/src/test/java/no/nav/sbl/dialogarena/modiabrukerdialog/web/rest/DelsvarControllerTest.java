@@ -10,6 +10,7 @@ import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLMeldingFr
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLMetadataListe;
 import no.nav.modig.content.ContentRetriever;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveBehandlingService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.cache.CacheTestUtil;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.http.HttpRequestUtil;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.http.SubjectHandlerUtil;
@@ -23,10 +24,12 @@ import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.senduthenvendelse.meld
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.henvendelse.HenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.meldinger.WSHentHenvendelseListeRequest;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.meldinger.WSHentHenvendelseListeResponse;
+import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.*;
 import org.mockito.ArgumentCaptor;
 import org.springframework.mock.web.MockHttpServletRequest;
 
+import javax.inject.Inject;
 import javax.ws.rs.core.Response;
 import java.util.Collections;
 
@@ -44,6 +47,7 @@ class DelsvarControllerTest {
     public static final String SAKSBEHANDLERS_IDENT = "z999666";
     private static final String VALGT_ENHET = "0300";
 
+    private OppgaveBehandlingService oppgaveBehandlingServiceMock = mock(OppgaveBehandlingService.class);
     private MockHttpServletRequest httpMockRequest;
     private DelsvarController delsvarController;
     private SendUtHenvendelsePortType sendUtHenvendelsePortTypeMock;
@@ -62,7 +66,7 @@ class DelsvarControllerTest {
     @BeforeEach
     void before() {
         httpMockRequest = HttpRequestUtil.mockHttpServletRequestMedCookie(SAKSBEHANDLERS_IDENT, VALGT_ENHET);
-        delsvarController = new DelsvarController(new DelsvarServiceImpl(setupHenvendelseUtsendingService()), TilgangskontrollMock.get());
+        delsvarController = new DelsvarController(new DelsvarServiceImpl(setupHenvendelseUtsendingService(), oppgaveBehandlingServiceMock));
     }
 
     private HenvendelseUtsendingServiceImpl setupHenvendelseUtsendingService() {
@@ -113,10 +117,10 @@ class DelsvarControllerTest {
     void ferdigstillerHenvendelse() {
         ArgumentCaptor<WSFerdigstillHenvendelseRequest> argumentCaptor = ArgumentCaptor.forClass(WSFerdigstillHenvendelseRequest.class);
 
-        delsvarController.svarDelvis(BRUKERS_FNR, TRAAD_ID, HENVENDELSES_ID, httpMockRequest, new DelsvarRestRequest());
+        delsvarController.svarDelvis(BRUKERS_FNR, httpMockRequest, lagDelsvarRequest());
 
         verify(sendUtHenvendelsePortTypeMock).ferdigstillHenvendelse(argumentCaptor.capture());
-        assertEquals(argumentCaptor.getValue().getBehandlingsId().get(0), HENVENDELSES_ID);
+        assertEquals(HENVENDELSES_ID, argumentCaptor.getValue().getBehandlingsId().get(0));
     }
 
     @Test
@@ -124,19 +128,23 @@ class DelsvarControllerTest {
     void leserValgtEnhetFraCookie() {
         ArgumentCaptor<WSFerdigstillHenvendelseRequest> argumentCaptor = ArgumentCaptor.forClass(WSFerdigstillHenvendelseRequest.class);
 
-        delsvarController.svarDelvis(BRUKERS_FNR, TRAAD_ID, HENVENDELSES_ID, httpMockRequest, new DelsvarRestRequest());
+        delsvarController.svarDelvis(BRUKERS_FNR, httpMockRequest, lagDelsvarRequest());
 
         verify(sendUtHenvendelsePortTypeMock).ferdigstillHenvendelse(argumentCaptor.capture());
         XMLHenvendelse xmlHenvendelse = (XMLHenvendelse) argumentCaptor.getValue().getAny();
-        assertEquals(xmlHenvendelse.getTilknyttetEnhet(), VALGT_ENHET);
+        assertEquals(VALGT_ENHET, xmlHenvendelse.getTilknyttetEnhet());
     }
 
     @Test
     @DisplayName("Delvis svar returnerer 200 OK")
     void ferdigstillHenvendelseReturer200OK() {
-        Response response = delsvarController.svarDelvis(BRUKERS_FNR, TRAAD_ID, HENVENDELSES_ID, httpMockRequest, new DelsvarRestRequest());
+        Response response = delsvarController.svarDelvis(BRUKERS_FNR, httpMockRequest, lagDelsvarRequest());
 
-        assertEquals(response.getStatus(), Response.Status.OK.getStatusCode());
+        assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
     }
 
+    @NotNull
+    private DelsvarRestRequest lagDelsvarRequest() {
+        return new DelsvarRestRequest("", TRAAD_ID,HENVENDELSES_ID, Temagruppe.ARBD.name(), "");
+    }
 }

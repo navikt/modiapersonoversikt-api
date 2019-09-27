@@ -1,10 +1,13 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.henvendelse;
 
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Kanal;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Fritekst;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.HenvendelseUtsendingService;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.LeggTilbakeOppgaveIGsakRequest;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveBehandlingService;
 
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -12,16 +15,19 @@ import java.util.Optional;
 public class DelsvarServiceImpl implements DelsvarService {
 
     private final HenvendelseUtsendingService henvendelseUtsendingService;
+    private final OppgaveBehandlingService oppgaveBehandlingService;
 
-    public DelsvarServiceImpl(HenvendelseUtsendingService henvendelseUtsendingService) {
+    public DelsvarServiceImpl(HenvendelseUtsendingService henvendelseUtsendingService, OppgaveBehandlingService oppgaveBehandlingService) {
         this.henvendelseUtsendingService = henvendelseUtsendingService;
+        this.oppgaveBehandlingService = oppgaveBehandlingService;
     }
 
     public void svarDelvis(DelsvarRequest request) {
         Melding delsvar = lagDelsvar(hentBrukersSporsmal(request), request);
         try {
-            henvendelseUtsendingService.ferdigstillHenvendelse(delsvar, Optional.empty(),
-                    Optional.empty(), request.henvendelseId, request.saksbehandlersValgteEnhet);
+            leggTilbakePaaNyttTema(request);
+            henvendelseUtsendingService
+                    .ferdigstillHenvendelse(delsvar, Optional.empty(), Optional.empty(), request.behandlingsId, request.saksbehandlersValgteEnhet);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -49,4 +55,20 @@ public class DelsvarServiceImpl implements DelsvarService {
                 .orElseThrow(NoSuchElementException::new);
     }
 
+    private void leggTilbakePaaNyttTema(DelsvarRequest request) {
+        LeggTilbakeOppgaveIGsakRequest leggTilbakeOppgaveIGsakRequest = new LeggTilbakeOppgaveIGsakRequest()
+                .withOppgaveId(request.oppgaveId)
+                .withBeskrivelse("Henvendelsen er besvart delvis og lagt tilbake med ny temagruppe " + request.temagruppe)
+                .withTemagruppe(getTemagruppefraRequest(request.temagruppe))
+                .withSaksbehandlersValgteEnhet(request.saksbehandlersValgteEnhet);
+        oppgaveBehandlingService.leggTilbakeOppgaveIGsak(leggTilbakeOppgaveIGsakRequest);
+    }
+
+    private Temagruppe getTemagruppefraRequest(String temagruppe) {
+        try {
+            return Temagruppe.valueOf(temagruppe);
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("Ugyldig temagruppe " + temagruppe);
+        }
+    }
 }

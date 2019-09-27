@@ -140,7 +140,7 @@ public class OppgaveBehandlingServiceImpl implements OppgaveBehandlingService {
 
     @Override
     public void leggTilbakeOppgaveIGsak(LeggTilbakeOppgaveIGsakRequest request) {
-        if (request.getOppgaveId() == null) {
+        if (request.getOppgaveId() == null || request.getBeskrivelse() == null) {
             return;
         }
 
