@@ -9,8 +9,9 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.dialog.TraadDTO
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.henvendelse.domain.Traad
 import org.joda.time.format.DateTimeFormat
 import java.lang.IllegalStateException
-import java.util.function.Function
 
+
+typealias Function<S, T> = (s: S) -> T
 interface DTO
 
 public inline fun <reified TO> Any.toDTO(): TO where TO : DTO {
@@ -39,7 +40,7 @@ class Mapper {
                     .get(fromCls)
                     ?.get(toCls)
                     ?.let { it as Function<FROM, TO> }
-                    ?.apply(from)
+                    ?.invoke(from)
                     ?: throw IllegalStateException()
         }
 
