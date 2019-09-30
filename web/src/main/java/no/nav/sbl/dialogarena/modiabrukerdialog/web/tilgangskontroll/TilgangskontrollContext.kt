@@ -7,6 +7,7 @@ import _0._0.nav_cons_sak_gosys_3.no.nav.asbo.navorgenhet.ASBOGOSYSNavEnhet
 import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navansatt.*
 import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navorgenhet.GOSYSNAVOrgEnhet
 import no.nav.brukerdialog.security.context.SubjectHandler
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.HenvendelseLesService
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.ldap.LDAPService
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.GrunninfoService
 import org.slf4j.LoggerFactory
@@ -15,11 +16,12 @@ class TilgangskontrollContext(
         private val ldap: LDAPService,
         private val grunninfo: GrunninfoService,
         private val ansattService: GOSYSNAVansatt,
-        private val enhetService: GOSYSNAVOrgEnhet
+        private val enhetService: GOSYSNAVOrgEnhet,
+        private val henvendelseLesService: HenvendelseLesService
 ) {
     private val logger = LoggerFactory.getLogger(TilgangskontrollContext::class.java)
 
-    fun hentSaksbehandlerId(): String = SubjectHandler.getSubjectHandler().uid
+    fun hentSaksbehandlerId(): String = SubjectHandler.getSubjectHandler().uid.toUpperCase()
     fun hentSaksbehandlerRoller(): List<String> = ldap.hentRollerForVeileder(hentSaksbehandlerId()).map { it.toLowerCase() }
     fun harSaksbehandlerRolle(rolle: String) = hentSaksbehandlerRoller().contains(rolle.toLowerCase())
     fun hentDiskresjonkode(fnr: String): String? = grunninfo.hentBrukerInfo(fnr).diskresjonskode
@@ -72,6 +74,23 @@ class TilgangskontrollContext(
                 .toSet()
     } catch (e: Exception) {
         emptySet()
+    }
+
+    fun hentSaksbehandlereMedTilgangTilHastekassering(): List<String> {
+        return System.getProperty("hastekassering.tilgang", "")
+                .let {
+                    it.split(",")
+                            .map(String::trim)
+                            .map(String::toUpperCase)
+                }
+    }
+
+    fun alleBehandlingsIderTilhorerBruker(fnr: String, behandlingsIder: List<String>): Boolean {
+        return henvendelseLesService.alleBehandlingsIderTilhorerBruker(fnr, behandlingsIder)
+    }
+
+    fun alleHenvendelseIderTilhorerBruker(fnr: String, behandlingsIder: List<String>): Boolean {
+        return henvendelseLesService.alleHenvendelseIderTilhorerBruker(fnr, behandlingsIder)
     }
 
     private fun hentUnderenheterForLokalEnhet(enhet: ASBOGOSYSNavEnhet): Set<String> {

@@ -3,6 +3,7 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest;
 import no.nav.brukerdialog.security.context.ThreadLocalSubjectHandler;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.AnsattEnhet;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.AnsattService;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.tilgangskontroll.TilgangskontrollMock;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.MeldingerSok;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.henvendelse.HenvendelseBehandlingService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.henvendelse.domain.Meldinger;
@@ -44,6 +45,7 @@ public class MeldingerControllerTest {
         setField(meldingerController, "ansattService", ansattServiceMock);
         setField(meldingerController, "henvendelse", henvendelseBehandlingServiceMock);
         setField(meldingerController, "searcher", mock(MeldingerSok.class));
+        setField(meldingerController, "tilgangskontroll", TilgangskontrollMock.get());
     }
 
     @Test

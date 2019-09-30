@@ -14,6 +14,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.oppgavebehandli
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.AnsattServiceImpl
 import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.GsakOppgaveV3PortTypeMock.lagWSOppgave
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.service.plukkoppgave.PlukkOppgaveService
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.tilgangskontroll.TilgangskontrollMock
 import no.nav.tjeneste.virksomhet.oppgave.v3.OppgaveV3
 import no.nav.tjeneste.virksomhet.oppgave.v3.informasjon.oppgave.*
 import no.nav.tjeneste.virksomhet.oppgave.v3.meldinger.WSFinnOppgaveListeResponse
@@ -49,7 +50,8 @@ internal class OppgaveControllerTest {
                     mock()
             ),
             plukkOppgaveService,
-            ldapService
+            ldapService,
+            TilgangskontrollMock.get()
     )
 
     @BeforeEach
