@@ -179,7 +179,8 @@ class DialogController @Inject constructor(
             @PathParam("fnr") fnr: String,
             @PathParam("traadId") traadId: String,
             @Context request: HttpServletRequest
-    ) : Response = gittTilgangTilBruker(fnr)
+    ) : Response = tilgangskontroll
+            .check(Policies.tilgangTilBruker.with(fnr))
             .get {
                 val valgtEnhet = RestUtils.hentValgtEnhet(request)
                 henvendelseService
