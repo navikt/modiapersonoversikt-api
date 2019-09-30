@@ -12,7 +12,7 @@ internal class TilgangskontrollTest {
         @Test
         fun `deny om saksbehandler mangler modia-roller`() {
             val (message, decision) = Tilgangskontroll(mockContext())
-                    .tilgangTilModia()
+                    .check(Policies.tilgangTilModia)
                     .getDecision()
 
             assertEquals("Saksbehandler (Z999999) har ikke tilgang til modia", message)
@@ -22,7 +22,7 @@ internal class TilgangskontrollTest {
         @Test
         fun `permit om saksbehandler har modiagenerell-rollen`() {
             val (_, decision) = Tilgangskontroll(mockContext(roller = listOf("0000-ga-bd06_modiagenerelltilgang")))
-                    .tilgangTilModia()
+                    .check(Policies.tilgangTilModia)
                     .getDecision()
 
             assertEquals(DecisionEnums.PERMIT, decision)
@@ -31,7 +31,7 @@ internal class TilgangskontrollTest {
         @Test
         fun `permit om saksbehandler har modiaoppfolging-rollen`() {
             val (_, decision) = Tilgangskontroll(mockContext(roller = listOf("0000-ga-modia-oppfolging")))
-                    .tilgangTilModia()
+                    .check(Policies.tilgangTilModia)
                     .getDecision()
 
             assertEquals(DecisionEnums.PERMIT, decision)
@@ -40,7 +40,7 @@ internal class TilgangskontrollTest {
         @Test
         fun `permit om saksbehandler har modiasyfo-rollen`() {
             val (_, decision) = Tilgangskontroll(mockContext(roller = listOf("0000-ga-syfo-sensitiv")))
-                    .tilgangTilModia()
+                    .check(Policies.tilgangTilModia)
                     .getDecision()
 
             assertEquals(DecisionEnums.PERMIT, decision)
@@ -52,7 +52,7 @@ internal class TilgangskontrollTest {
         @Test
         fun `deny om saksbehandler mangler modia-roller`() {
             val (message, decision) = Tilgangskontroll(mockContext())
-                    .tilgangTilBruker("fnr")
+                    .check(Policies.tilgangTilBruker.with("fnr"))
                     .getDecision()
 
             assertEquals("Saksbehandler (Z999999) har ikke tilgang til modia", message)
@@ -66,7 +66,7 @@ internal class TilgangskontrollTest {
                     diskresjonsKode = "6"
             )
             val (message, decision) = Tilgangskontroll(context)
-                    .tilgangTilBruker("fnr")
+                    .check(Policies.tilgangTilBruker.with("fnr"))
                     .getDecision()
 
             assertEquals("Saksbehandler (Z999999) har ikke tilgang til kode6 brukere", message)
@@ -80,7 +80,7 @@ internal class TilgangskontrollTest {
                     diskresjonsKode = "7"
             )
             val (message, decision) = Tilgangskontroll(context)
-                    .tilgangTilBruker("fnr")
+                    .check(Policies.tilgangTilBruker.with("fnr"))
                     .getDecision()
 
             assertEquals("Saksbehandler (Z999999) har ikke tilgang til kode7 brukere", message)
@@ -94,7 +94,7 @@ internal class TilgangskontrollTest {
                     brukersEnhet = "1234"
             )
             val (message, decision) = Tilgangskontroll(context)
-                    .tilgangTilBruker("fnr")
+                    .check(Policies.tilgangTilBruker.with("fnr"))
                     .getDecision()
 
             assertEquals("Saksbehandler (Z999999) har ikke tilgang til bruker basert på geografisk tilgang", message)
@@ -104,7 +104,7 @@ internal class TilgangskontrollTest {
         @Test
         fun `permit om bruker ikke er kode6_7 og saksbehandler har modia-rolle`() {
             val (_, decision) = Tilgangskontroll(mockContext(roller = listOf("0000-ga-bd06_modiagenerelltilgang")))
-                    .tilgangTilBruker("fnr")
+                    .check(Policies.tilgangTilBruker.with("fnr"))
                     .getDecision()
 
             assertEquals(DecisionEnums.PERMIT, decision)
@@ -117,7 +117,7 @@ internal class TilgangskontrollTest {
                     diskresjonsKode = "7"
             )
             val (_, decision) = Tilgangskontroll(context)
-                    .tilgangTilBruker("fnr")
+                    .check(Policies.tilgangTilBruker.with("fnr"))
                     .getDecision()
 
             assertEquals(DecisionEnums.PERMIT, decision)
@@ -130,7 +130,7 @@ internal class TilgangskontrollTest {
                     brukersEnhet = "1234"
             )
             val (_, decision) = Tilgangskontroll(context)
-                    .tilgangTilBruker("fnr")
+                    .check(Policies.tilgangTilBruker.with("fnr"))
                     .getDecision()
 
             assertEquals(DecisionEnums.PERMIT, decision)
@@ -141,25 +141,25 @@ internal class TilgangskontrollTest {
     inner class `modiaRolle policy` {
         @Test
         fun `deny om saksbehandler mangler modia-roller`() {
-            val decision = Policies.modiaRolle.invoke(mockContext())
+            val decision = Policies.tilgangTilModia.invoke(mockContext())
             assertEquals(DecisionEnums.DENY, decision)
         }
 
         @Test
         fun `permit om saksbehandler har modiagenerell-rollen`() {
-            val decision = Policies.modiaRolle.invoke(mockContext(roller = listOf("0000-ga-bd06_modiagenerelltilgang")))
+            val decision = Policies.tilgangTilModia.invoke(mockContext(roller = listOf("0000-ga-bd06_modiagenerelltilgang")))
             assertEquals(DecisionEnums.PERMIT, decision)
         }
 
         @Test
         fun `permit om saksbehandler har modiaoppfolging-rollen`() {
-            val decision = Policies.modiaRolle.invoke(mockContext(roller = listOf("0000-ga-modia-oppfolging")))
+            val decision = Policies.tilgangTilModia.invoke(mockContext(roller = listOf("0000-ga-modia-oppfolging")))
             assertEquals(DecisionEnums.PERMIT, decision)
         }
 
         @Test
         fun `permit om saksbehandler har modiasyfo-rollen`() {
-            val decision = Policies.modiaRolle.invoke(mockContext(roller = listOf("0000-ga-syfo-sensitiv")))
+            val decision = Policies.tilgangTilModia.invoke(mockContext(roller = listOf("0000-ga-syfo-sensitiv")))
             assertEquals(DecisionEnums.PERMIT, decision)
         }
     }
@@ -169,7 +169,7 @@ internal class TilgangskontrollTest {
         @Test
         fun `n_a om bruker ikke har kode6`() {
             val context = mockContext()
-            val decision = Policies.kode6.with("fnr").invoke(context)
+            val decision = Policies.tilgangTilKode6.with("fnr").invoke(context)
 
             verify(context, never()).hentSaksbehandlerId()
             verify(context, never()).hentSaksbehandlerRoller()
@@ -179,7 +179,7 @@ internal class TilgangskontrollTest {
         @Test
         fun `permit om bruker har kode6 og saksbehandler har riktig rolle`() {
             val context = mockContext(roller = listOf("0000-GA-GOSYS_KODE6"), diskresjonsKode = "6")
-            val decision = Policies.kode6.with("fnr").invoke(context)
+            val decision = Policies.tilgangTilKode6.with("fnr").invoke(context)
 
             assertEquals(DecisionEnums.PERMIT, decision)
         }
@@ -187,7 +187,7 @@ internal class TilgangskontrollTest {
         @Test
         fun `deny om bruker har kode6 og saksbehandler ikke har riktig rolle`() {
             val context = mockContext(roller = listOf("0000-GA-GOSYS_KODE0"), diskresjonsKode = "6")
-            val decision = Policies.kode6.with("fnr").invoke(context)
+            val decision = Policies.tilgangTilKode6.with("fnr").invoke(context)
 
             assertEquals(DecisionEnums.DENY, decision)
         }
@@ -198,7 +198,7 @@ internal class TilgangskontrollTest {
         @Test
         fun `n_a om bruker ikke har kode7`() {
             val context = mockContext()
-            val decision = Policies.kode7.with("fnr").invoke(context)
+            val decision = Policies.tilgangTilKode7.with("fnr").invoke(context)
 
             verify(context, never()).hentSaksbehandlerId()
             verify(context, never()).hentSaksbehandlerRoller()
@@ -208,7 +208,7 @@ internal class TilgangskontrollTest {
         @Test
         fun `permit om bruker har kode7 og saksbehandler har riktig rolle`() {
             val context = mockContext(roller = listOf("0000-GA-GOSYS_KODE7"), diskresjonsKode = "7")
-            val decision = Policies.kode7.with("fnr").invoke(context)
+            val decision = Policies.tilgangTilKode7.with("fnr").invoke(context)
 
             assertEquals(DecisionEnums.PERMIT, decision)
         }
@@ -216,7 +216,7 @@ internal class TilgangskontrollTest {
         @Test
         fun `deny om bruker har kode7 og saksbehandler ikke har riktig rolle`() {
             val context = mockContext(roller = listOf("0000-GA-GOSYS_KODE0"), diskresjonsKode = "7")
-            val decision = Policies.kode7.with("fnr").invoke(context)
+            val decision = Policies.tilgangTilKode7.with("fnr").invoke(context)
 
             assertEquals(DecisionEnums.DENY, decision)
         }

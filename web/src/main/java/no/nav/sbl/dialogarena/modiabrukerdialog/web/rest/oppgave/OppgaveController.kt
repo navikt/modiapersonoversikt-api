@@ -11,6 +11,8 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.RestUtils
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.http.CookieUtil
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.mapOfNotNullOrEmpty
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.service.plukkoppgave.PlukkOppgaveService
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.tilgangskontroll.Policies
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.tilgangskontroll.Tilgangskontroll
 import org.slf4j.LoggerFactory
 import javax.inject.Inject
 import javax.servlet.http.HttpServletRequest
@@ -28,24 +30,29 @@ private const val AARSAK_PREFIX = "Oppgave lagt tilbake. Årsak: "
 class OppgaveController @Inject constructor(
         private val oppgaveBehandlingService: OppgaveBehandlingService,
         private val plukkOppgaveService: PlukkOppgaveService,
-        private val ldapService: LDAPService
+        private val ldapService: LDAPService,
+        private val tilgangkontroll: Tilgangskontroll
 ) {
 
     @POST
     @Path("/legg-tilbake")
     fun leggTilbake(@Context httpRequest: HttpServletRequest, request: LeggTilbakeRequest): Response {
+        return tilgangkontroll
+                .check(Policies.tilgangTilModia)
+                // TODO tilgangsstyring, burde også sjekke tilgang til oppgave
+                .get {
+                    val valgtEnhet = RestUtils.hentValgtEnhet(httpRequest)
+                    val leggTilbakeOppgaveIGsakRequest = lagLeggTilbakeRequest(request, valgtEnhet)
 
-        val valgtEnhet = RestUtils.hentValgtEnhet(httpRequest)
-        val leggTilbakeOppgaveIGsakRequest = lagLeggTilbakeRequest(request, valgtEnhet)
+                    try {
+                        oppgaveBehandlingService.leggTilbakeOppgaveIGsak(leggTilbakeOppgaveIGsakRequest)
+                    } catch (exception: RuntimeException) {
+                        throw handterRuntimeFeil(exception)
+                    }
 
-        try {
-            oppgaveBehandlingService.leggTilbakeOppgaveIGsak(leggTilbakeOppgaveIGsakRequest)
-        } catch (exception: RuntimeException) {
-            throw handterRuntimeFeil(exception)
-        }
-
-        createEvent("hendelse.oppgavecontroller.leggtilbake.fullfort").report()
-        return Response.ok("{\"message\": \"Success\"}").build()
+                    createEvent("hendelse.oppgavecontroller.leggtilbake.fullfort").report()
+                    Response.ok("{\"message\": \"Success\"}").build()
+                }
     }
 
     private fun lagLeggTilbakeRequest(request: LeggTilbakeRequest, valgtEnhet: String): LeggTilbakeOppgaveIGsakRequest? {
@@ -73,16 +80,25 @@ class OppgaveController @Inject constructor(
     @POST
     @Path("/plukk/{temagruppe}")
     fun plukkOppgaver(@PathParam("temagruppe") temagruppe: String, @Context httpRequest: HttpServletRequest) =
-            plukkOppgaveService
-                    .also { verifiserTilgang(HENT_OPPGAVE_ROLLE) }
-                    .plukkOppgaver(Temagruppe.valueOf(temagruppe.toUpperCase()),
-                            CookieUtil.getSaksbehandlersValgteEnhet(httpRequest))
-                    .map { mapOppgave(it) }
+            tilgangkontroll
+                    .check(Policies.tilgangTilModia)
+                    .get {
+                        plukkOppgaveService
+                                .also { verifiserTilgang(HENT_OPPGAVE_ROLLE) }
+                                .plukkOppgaver(Temagruppe.valueOf(temagruppe.toUpperCase()),
+                                        CookieUtil.getSaksbehandlersValgteEnhet(httpRequest))
+                                .map { mapOppgave(it) }
+                    }
 
     @GET
     @Path("/tildelt")
-    fun finnTildelte() = oppgaveBehandlingService.finnTildelteOppgaverIGsak()
-            .map { mapOppgave(it) }
+    fun finnTildelte() =
+            tilgangkontroll
+                    .check(Policies.tilgangTilModia)
+                    .get {
+                        oppgaveBehandlingService.finnTildelteOppgaverIGsak()
+                                .map { mapOppgave(it) }
+                    }
 
     private fun verifiserTilgang(rolle: String) {
         val consumerId = getSubjectHandler().uid

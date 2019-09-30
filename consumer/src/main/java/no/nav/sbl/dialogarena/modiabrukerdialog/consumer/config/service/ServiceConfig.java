@@ -12,6 +12,7 @@ import no.nav.kjerneinfo.consumer.fim.person.vergemal.VergemalService;
 import no.nav.kodeverk.consumer.fim.kodeverk.KodeverkmanagerBi;
 import no.nav.modig.content.ContentRetriever;
 import no.nav.modig.wicket.services.HealthCheckService;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.HenvendelseLesService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.HenvendelseUtsendingService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveBehandlingService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.arbeidsfordeling.ArbeidsfordelingV1Service;
@@ -88,6 +89,11 @@ public class ServiceConfig {
         return new HenvendelseUtsendingServiceImpl(henvendelsePortType, sendUtHenvendelsePortType,
                 behandleHenvendelsePortType, oppgaveBehandlingService, sakerService, pep,
                 propertyResolver, personKjerneinfoServiceBi, ldapService);
+    }
+
+    @Bean
+    public HenvendelseLesService henvendelseLesService() {
+        return new HenvendelseLesServiceImpl();
     }
 
     @Bean

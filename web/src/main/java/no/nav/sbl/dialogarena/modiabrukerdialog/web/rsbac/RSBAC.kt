@@ -21,22 +21,21 @@ interface RSBACInstance<CONTEXT> : RSBAC<CONTEXT> {
     fun getDecision(): Decision
 }
 
-class RSBACImpl<CONTEXT>(private val context: CONTEXT) : RSBAC<CONTEXT> {
-    override fun permit(message: String, rule: Function<CONTEXT, Boolean>) = RSBACInstanceImpl<CONTEXT, Void>(context).permit(message, rule)
-    override fun deny(message: String, rule: Function<CONTEXT, Boolean>) = RSBACInstanceImpl<CONTEXT, Void>(context).deny(message, rule)
-    override fun check(policy: Policy<CONTEXT>) = RSBACInstanceImpl<CONTEXT, Void>(context).check(policy)
-    override fun check(policyset: PolicySet<CONTEXT>) = RSBACInstanceImpl<CONTEXT, Void>(context).check(policyset)
-    override fun check(combinable: Combinable<CONTEXT>) = RSBACInstanceImpl<CONTEXT, Void>(context).check(combinable)
-    override fun combining(combiningAlgo: CombiningAlgo) = RSBACInstanceImpl<CONTEXT, Void>(context).combining(combiningAlgo)
-    override fun bias(bias: DecisionEnums) = RSBACInstanceImpl<CONTEXT, Void>(context).bias(bias)
-    override fun exception(exception: Function<String, RuntimeException>) = RSBACInstanceImpl<CONTEXT, Void>(context).exception(exception)
+open class RSBACImpl<CONTEXT>(private val context: CONTEXT, private val exception:  Function<String, RuntimeException> = { RSBACException(it) }) : RSBAC<CONTEXT> {
+    override fun permit(message: String, rule: Function<CONTEXT, Boolean>) : RSBACInstance<CONTEXT> = RSBACInstanceImpl<CONTEXT, Void>(context, exception).permit(message, rule)
+    override fun deny(message: String, rule: Function<CONTEXT, Boolean>) : RSBACInstance<CONTEXT> = RSBACInstanceImpl<CONTEXT, Void>(context, exception).deny(message, rule)
+    override fun check(policy: Policy<CONTEXT>) : RSBACInstance<CONTEXT> = RSBACInstanceImpl<CONTEXT, Void>(context, exception).check(policy)
+    override fun check(policyset: PolicySet<CONTEXT>) : RSBACInstance<CONTEXT> = RSBACInstanceImpl<CONTEXT, Void>(context, exception).check(policyset)
+    override fun check(combinable: Combinable<CONTEXT>) : RSBACInstance<CONTEXT> = RSBACInstanceImpl<CONTEXT, Void>(context, exception).check(combinable)
+    override fun combining(combiningAlgo: CombiningAlgo) : RSBACInstance<CONTEXT> = RSBACInstanceImpl<CONTEXT, Void>(context, exception).combining(combiningAlgo)
+    override fun bias(bias: DecisionEnums) : RSBACInstance<CONTEXT> = RSBACInstanceImpl<CONTEXT, Void>(context, exception).bias(bias)
+    override fun exception(exception: Function<String, RuntimeException>) : RSBACInstance<CONTEXT> = RSBACInstanceImpl<CONTEXT, Void>(context, exception).exception(exception)
 }
 
-class RSBACInstanceImpl<CONTEXT, OUTPUT>(val context: CONTEXT) : RSBACInstance<CONTEXT> {
+class RSBACInstanceImpl<CONTEXT, OUTPUT>(val context: CONTEXT, var exception:  Function<String, RuntimeException>) : RSBACInstance<CONTEXT> {
     private var combiningAlgo: CombiningAlgo = CombiningAlgo.denyOverride
     private var policies: List<Combinable<CONTEXT>> = emptyList()
     private var bias = DENY
-    private var exception: Function<String, RuntimeException> = { RSBACException(it) }
 
     override fun combining(combiningAlgo: CombiningAlgo): RSBACInstanceImpl<CONTEXT, OUTPUT> {
         this.combiningAlgo = combiningAlgo

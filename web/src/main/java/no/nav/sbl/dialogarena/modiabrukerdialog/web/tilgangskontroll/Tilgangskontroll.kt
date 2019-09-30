@@ -1,18 +1,7 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.tilgangskontroll
 
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rsbac.*
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.tilgangskontroll.Policies.Companion.aaregTilgang
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.tilgangskontroll.Policies.Companion.endreAdresse
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.tilgangskontroll.Policies.Companion.endreKontonummer
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.tilgangskontroll.Policies.Companion.endreNavn
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.tilgangskontroll.Policies.Companion.kontorSperretMelding
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.tilgangskontroll.Policies.Companion.modiaRolle
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.tilgangskontroll.Policies.Companion.oksosSperretMelding
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.tilgangskontroll.Policies.Companion.plukkOppgave
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.tilgangskontroll.Policies.Companion.tilgangTilBruker
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.tilgangskontroll.Policies.Companion.tilgangTilOppfoling
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.tilgangskontroll.Policies.Companion.tilgangTilPesysPolicy
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.tilgangskontroll.Policies.Companion.tilgangTilTema
+import javax.ws.rs.ForbiddenException
 
 private val modiaRoller = setOf("0000-ga-bd06_modiagenerelltilgang", "0000-ga-modia-oppfolging", "0000-ga-syfo-sensitiv")
 private val pesysRoller = setOf(
@@ -25,16 +14,17 @@ private val pesysRoller = setOf(
         "0000-GA-Pensjon_Okonomi"
 )
 
-internal class Policies {
+class Policies {
     companion object {
-        val modiaRolle = Policy<TilgangskontrollContext>({ "Saksbehandler (${hentSaksbehandlerId()}) har ikke tilgang til modia" }) {
+        @JvmField
+        val tilgangTilModia = Policy<TilgangskontrollContext>({ "Saksbehandler (${hentSaksbehandlerId()}) har ikke tilgang til modia" }) {
             if (modiaRoller.any { rolle -> harSaksbehandlerRolle(rolle) })
                 DecisionEnums.PERMIT
             else
                 DecisionEnums.DENY
         }
 
-        val kode6 = PolicyGenerator<TilgangskontrollContext, String>({ "Saksbehandler (${context.hentSaksbehandlerId()}) har ikke tilgang til kode6 brukere" }) {
+        val tilgangTilKode6 = PolicyGenerator<TilgangskontrollContext, String>({ "Saksbehandler (${context.hentSaksbehandlerId()}) har ikke tilgang til kode6 brukere" }) {
             if (context.hentDiskresjonkode(data) == "6") {
                 if (context.harSaksbehandlerRolle("0000-GA-GOSYS_KODE6"))
                     DecisionEnums.PERMIT
@@ -45,7 +35,7 @@ internal class Policies {
             }
         }
 
-        val kode7 = PolicyGenerator<TilgangskontrollContext, String>({ "Saksbehandler (${context.hentSaksbehandlerId()}) har ikke tilgang til kode7 brukere" }) {
+        val tilgangTilKode7 = PolicyGenerator<TilgangskontrollContext, String>({ "Saksbehandler (${context.hentSaksbehandlerId()}) har ikke tilgang til kode7 brukere" }) {
             if (context.hentDiskresjonkode(data) == "7") {
                 if (context.harSaksbehandlerRolle("0000-GA-GOSYS_KODE7"))
                     DecisionEnums.PERMIT
@@ -92,14 +82,15 @@ internal class Policies {
             }
         }
 
-        val denyPolicy = Policy<TilgangskontrollContext>({ "Saksbehandler (${hentSaksbehandlerId()}) har ikke tilgang til bruker basert på geografisk tilgang" }) { DecisionEnums.DENY }
+        val denyAlt = Policy<TilgangskontrollContext>({ "Saksbehandler (${hentSaksbehandlerId()}) har ikke tilgang til bruker basert på geografisk tilgang" }) { DecisionEnums.DENY }
         val geografiskTilgang = PolicySetGenerator(
                 combining = CombiningAlgo.firstApplicable,
-                policies = listOf(brukerUtenEnhet, nasjonalTilgang, tilgangTilLokalKontor, regionalTilgang, denyPolicy.asGenerator())
+                policies = listOf(brukerUtenEnhet, nasjonalTilgang, tilgangTilLokalKontor, regionalTilgang, denyAlt.asGenerator())
         )
 
+        @JvmField
         val tilgangTilBruker = PolicySetGenerator(
-                policies = listOf(modiaRolle.asGenerator(), geografiskTilgang, kode6, kode7)
+                policies = listOf(tilgangTilModia.asGenerator(), geografiskTilgang, tilgangTilKode6, tilgangTilKode7)
         )
 
         val tilgangTilTema = PolicyGenerator<TilgangskontrollContext, TilgangTilTemaData>({ "Saksbehandler (${context.hentSaksbehandlerId()}) har ikke tilgang til tema: ${data.tema} enhet: ${data.valgtEnhet}" }) {
@@ -111,23 +102,23 @@ internal class Policies {
             }
         }
 
-        val aaregTilgang = Policy<TilgangskontrollContext>({ "Saksbehandler (${hentSaksbehandlerId()}) har ikke tilgang til aareg" }) {
+        val tilgangTilAareg = Policy<TilgangskontrollContext>({ "Saksbehandler (${hentSaksbehandlerId()}) har ikke tilgang til aareg" }) {
             if (harSaksbehandlerRolle("0000-GA-Aa-register-Lese")) DecisionEnums.PERMIT else DecisionEnums.DENY
         }
 
-        val endreAdresse = Policy<TilgangskontrollContext>({ "Saksbehandler (${hentSaksbehandlerId()}) har ikke tilgang til å endre adresse" }) {
+        val kanEndreAdresse = Policy<TilgangskontrollContext>({ "Saksbehandler (${hentSaksbehandlerId()}) har ikke tilgang til å endre adresse" }) {
             if (harSaksbehandlerRolle("0000-GA-BD06_EndreKontaktAdresse")) DecisionEnums.PERMIT else DecisionEnums.DENY
         }
 
-        val endreKontonummer = Policy<TilgangskontrollContext>({ "Saksbehandler (${hentSaksbehandlerId()}) har ikke tilgang til å endre bankkontonummer" }) {
+        val kanEndreKontonummer = Policy<TilgangskontrollContext>({ "Saksbehandler (${hentSaksbehandlerId()}) har ikke tilgang til å endre bankkontonummer" }) {
             if (harSaksbehandlerRolle("0000-GA-BD06_EndreKontonummer")) DecisionEnums.PERMIT else DecisionEnums.DENY
         }
 
-        val endreNavn = Policy<TilgangskontrollContext>({ "Saksbehandler (${hentSaksbehandlerId()}) har ikke tilgang til å endre navn" }) {
+        val kanEndreNavn = Policy<TilgangskontrollContext>({ "Saksbehandler (${hentSaksbehandlerId()}) har ikke tilgang til å endre navn" }) {
             if (harSaksbehandlerRolle("0000-GA-BD06_EndreNavn")) DecisionEnums.PERMIT else DecisionEnums.DENY
         }
 
-        val kontorSperretMelding = PolicyGenerator<TilgangskontrollContext, String?>({ "Saksbehandler (${context.hentSaksbehandlerId()}) har ikke tilgang til kontorsperret melding" }) {
+        val tilgangTilKontorsperretMelding = PolicyGenerator<TilgangskontrollContext, String?>({ "Saksbehandler (${context.hentSaksbehandlerId()}) har ikke tilgang til kontorsperret melding" }) {
             when {
                 data == null -> DecisionEnums.PERMIT
                 context.hentSaksbehandlerLokalEnheter().contains(data) -> DecisionEnums.PERMIT
@@ -135,7 +126,7 @@ internal class Policies {
             }
         }
 
-        val oksosSperretMelding = PolicyGenerator<TilgangskontrollContext, String>({ "Saksbehandler (${context.hentSaksbehandlerId()}) har ikke tilgang til økonomisk sosialhjelp" }) {
+        val tilgangTilOksosMelding = PolicyGenerator<TilgangskontrollContext, String>({ "Saksbehandler (${context.hentSaksbehandlerId()}) har ikke tilgang til økonomisk sosialhjelp" }) {
             when {
                 context.harSaksbehandlerRolle("0000-GA-Okonomisk_Sosialhjelp") -> DecisionEnums.PERMIT
                 context.hentSaksbehandlerLokalEnheter().contains(context.hentBrukersEnhet(data)) -> DecisionEnums.PERMIT
@@ -147,34 +138,40 @@ internal class Policies {
             if (harSaksbehandlerRolle("0000-GA-Modia-Oppfolging")) DecisionEnums.PERMIT else DecisionEnums.DENY
         }
 
-        val tilgangTilPesysPolicy = Policy<TilgangskontrollContext>({ "Saksbehandler (${hentSaksbehandlerId()}) har ikke tilgang til pesys" }) {
+        val tilgangTilPesys = Policy<TilgangskontrollContext>({ "Saksbehandler (${hentSaksbehandlerId()}) har ikke tilgang til pesys" }) {
             if (pesysRoller.any { rolle -> harSaksbehandlerRolle(rolle) })
                 DecisionEnums.PERMIT
             else
                 DecisionEnums.DENY
         }
 
-        val plukkOppgave = Policy<TilgangskontrollContext>({ "Saksbehandler (${hentSaksbehandlerId()}) har ikke tilgang til plukk oppgave" }) {
+        val kanPlukkeOppgave = Policy<TilgangskontrollContext>({ "Saksbehandler (${hentSaksbehandlerId()}) har ikke tilgang til plukk oppgave" }) {
             if (harSaksbehandlerRolle("0000-GA-BD06_HentOppgave")) DecisionEnums.PERMIT else DecisionEnums.DENY
+        }
+
+        @JvmField
+        val behandlingsIderTilhorerBruker = PolicyGenerator<TilgangskontrollContext, BehandlingsIdTilgangData>({ "Ikke alle behandlingsIder tilhørte medsendt fødselsnummer. Spørring gjort av ${context.hentSaksbehandlerId()}" }) {
+            if (context.alleBehandlingsIderTilhorerBruker(data.fnr, data.behandlingsIder))
+                DecisionEnums.PERMIT
+            else
+                DecisionEnums.DENY
+        }
+
+        val henvendelsesIdTilhorerBruker = PolicyGenerator<TilgangskontrollContext, BehandlingsIdTilgangData>({ "Ikke alle behandlingsIder tilhørte medsendt fødselsnummer. Spørring gjort av ${context.hentSaksbehandlerId()}" }) {
+            if (context.alleHenvendelseIderTilhorerBruker(data.fnr, data.behandlingsIder))
+                DecisionEnums.PERMIT
+            else
+                DecisionEnums.DENY
+        }
+
+        val kanHastekassere = Policy<TilgangskontrollContext>({ "Saksbehandler (${hentSaksbehandlerId()}) har ikke tilgang til hastekassering" }) {
+            val identer = hentSaksbehandlereMedTilgangTilHastekassering()
+            if (identer.contains(hentSaksbehandlerId())) DecisionEnums.PERMIT else DecisionEnums.DENY
         }
     }
 }
 
+data class BehandlingsIdTilgangData(val fnr: String, val behandlingsIder: List<String>)
 data class TilgangTilTemaData(val valgtEnhet: String, val tema: String)
 
-class Tilgangskontroll(context: TilgangskontrollContext) {
-    private val rsbac: RSBAC<TilgangskontrollContext> = RSBACImpl(context)
-
-    fun tilgangTilModia() = rsbac.check(modiaRolle)
-    fun tilgangTilBruker(fnr: String) = rsbac.check(tilgangTilBruker.with(fnr))
-    fun tilgangTilTema(valgtEnhet: String, tema: String) = rsbac.check(tilgangTilTema.with(TilgangTilTemaData(valgtEnhet, tema)))
-    fun tilgangTilEndreAdresse() = rsbac.check(endreAdresse)
-    fun tilgangTilEndreNavn() = rsbac.check(endreNavn)
-    fun tilgangTilEndreKontonummer() = rsbac.check(endreKontonummer)
-    fun tilgangTilMelding(kontorSperretEnhet: String?) = rsbac.check(kontorSperretMelding.with(kontorSperretEnhet))
-    fun tilgangTilOksos(fnr: String) = rsbac.check(oksosSperretMelding.with(fnr))
-    fun tilgangTilAareg() = rsbac.check(aaregTilgang)
-    fun tilgangTilOppfolging() = rsbac.check(tilgangTilOppfoling)
-    fun tilgangTilPesys() = rsbac.check(tilgangTilPesysPolicy)
-    fun tilgangTilPlukkOppgave() = rsbac.check(plukkOppgave)
-}
+class Tilgangskontroll(context: TilgangskontrollContext) : RSBACImpl<TilgangskontrollContext>(context, { ForbiddenException(it) })
