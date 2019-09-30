@@ -47,7 +47,7 @@ public class PrintLenke extends DownloadLink {
 
         private byte[] settSammenTilEnPdf() {
             List<MeldingVM> meldinger = model.getObject();
-            return PdfUtils.genererPdfForPrint(meldinger);
+            return PdfUtils.genererPdfForPrintVM(meldinger);
         }
     }
 }
