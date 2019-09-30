@@ -175,23 +175,18 @@ class DialogController @Inject constructor(
             @PathParam("fnr") fnr: String,
             slaaSammenRequest: SlaaSammenRequest
     ): Map<String, Any?> = gittTilgangTilBruker(fnr).get {
-        slaaSammenRequest.oppgaver.map { it.oppgaveId }.forEach {
-            if (oppgaveBehandlingService.oppgaveErFerdigstilt(it)) {
-                throw WebApplicationException("Oppgave $it er allerede ferdigstilt")
-            }
+        if (sjekkOmNoenOppgaverErFerdigstilt(slaaSammenRequest)) {
+            throw BadRequestException("En eller fler av oppgavene er allerede ferdigstilt")
         }
 
         val nyTraadId = try {
             henvendelseUtsendingService.slaaSammenTraader(slaaSammenRequest.oppgaver.map { it.meldingsId })
         } catch(e: TraadAlleredeBesvart) {
-            throw WebApplicationException("Tråd allerede besvart")
+            throw BadRequestException("En eller fler av trådene er allerede besvart")
         }
 
         val valgtEnhet = RestUtils.hentValgtEnhet(request)
-        henvendelseUtsendingService.opprettHenvendelse(Meldingstype.SVAR_SKRIFTLIG.name, fnr, nyTraadId)
-        slaaSammenRequest.oppgaver.filter { it.henvendelsesId != nyTraadId }.forEach {
-            oppgaveBehandlingService.ferdigstillOppgaveIGsak(it.oppgaveId, slaaSammenRequest.temagruppe, valgtEnhet)
-        }
+        ferdigstillAlleSammenslaatteOppgaver(slaaSammenRequest, nyTraadId, valgtEnhet)
 
         val traader: List<TraadDTO> = henvendelseService
                 .hentMeldinger(fnr, valgtEnhet)
@@ -204,6 +199,20 @@ class DialogController @Inject constructor(
         )
     }
 
+    private fun ferdigstillAlleSammenslaatteOppgaver(request: SlaaSammenRequest, nyTraadId: String, enhet: String) {
+        request.oppgaver.filter { it.henvendelsesId != nyTraadId }.forEach {
+            oppgaveBehandlingService.ferdigstillOppgaveIGsak(it.oppgaveId, request.temagruppe, enhet)
+        }
+    }
+
+    private fun sjekkOmNoenOppgaverErFerdigstilt(request: SlaaSammenRequest): Boolean {
+        request.oppgaver.map { it.oppgaveId }.forEach {
+            if (oppgaveBehandlingService.oppgaveErFerdigstilt(it)) {
+                return true
+            }
+        }
+        return false
+    }
 
     private fun hentSaker(fnr: String): Set<Sak> {
         val gsakSaker = try {
