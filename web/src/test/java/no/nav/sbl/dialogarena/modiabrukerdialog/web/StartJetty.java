@@ -4,6 +4,7 @@ import less.LessResourceMarker;
 import no.nav.brukerdialog.security.context.InternbrukerSubjectHandler;
 import no.nav.brukerdialog.security.domain.OidcCredential;
 import no.nav.dialogarena.config.fasit.FasitUtils;
+import no.nav.dialogarena.config.fasit.ServiceUser;
 import no.nav.dialogarena.config.fasit.TestUser;
 import no.nav.dialogarena.config.security.ISSOProvider;
 import no.nav.sbl.dialogarena.common.jetty.Jetty;
@@ -22,6 +23,8 @@ import java.util.Arrays;
 import java.util.List;
 
 import static java.lang.System.setProperty;
+import static no.nav.brukerdialog.security.Constants.ISSO_RP_USER_PASSWORD_PROPERTY_NAME;
+import static no.nav.brukerdialog.security.Constants.ISSO_RP_USER_USERNAME_PROPERTY_NAME;
 import static no.nav.modig.core.test.FilesAndDirs.TEST_RESOURCES;
 import static no.nav.modig.core.test.FilesAndDirs.WEBAPP_SOURCE;
 import static no.nav.modig.testcertificates.TestCertificates.setupKeyAndTrustStore;
@@ -54,6 +57,9 @@ public class StartJetty {
         setupKeyAndTrustStore();
 
         setUpOidcSubjectHandler();
+        ServiceUser issoRpUser = FasitUtils.getServiceUser("isso-rp-user", "modiabrukerdialog", "q1", "preprod.local");
+        setProperty(ISSO_RP_USER_USERNAME_PROPERTY_NAME, issoRpUser.username);
+        setProperty(ISSO_RP_USER_PASSWORD_PROPERTY_NAME, issoRpUser.password);
     }
 
     private static void sjekkAtNodvendigeSystemPropertiesErSatt() {

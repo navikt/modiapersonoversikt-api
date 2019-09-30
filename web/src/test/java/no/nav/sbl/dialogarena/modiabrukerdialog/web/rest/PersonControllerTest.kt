@@ -14,6 +14,8 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.person.PersonOppslag
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.UnleashService
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.kodeverk.Kode
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.person.PersonController
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.tilgangskontroll.Tilgangskontroll
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.tilgangskontroll.TilgangskontrollMock
 import no.nav.tjeneste.virksomhet.person.v3.HentPersonPersonIkkeFunnet
 import no.nav.tjeneste.virksomhet.person.v3.HentPersonSikkerhetsbegrensning
 import no.nav.tjeneste.virksomhet.person.v3.PersonV3
@@ -46,9 +48,10 @@ internal class PersonControllerTest {
     private val mapper = KjerneinfoMapper(kodeverk)
     private val oppslag: PersonOppslagService = mock()
     private val unleashService: UnleashService = mock()
+    private val tilgangskontroll: Tilgangskontroll = TilgangskontrollMock.get()
 
     private val service = DefaultPersonKjerneinfoService(personV3, mapper, pep, organisasjonenhetV2Service)
-    private val controller = PersonController(service, kodeverk, oppslag, unleashService)
+    private val controller = PersonController(service, kodeverk, oppslag, unleashService, tilgangskontroll)
 
     @BeforeEach
     fun before() {

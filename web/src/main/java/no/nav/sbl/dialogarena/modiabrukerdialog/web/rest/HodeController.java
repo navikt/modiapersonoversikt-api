@@ -5,6 +5,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.AnsattService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.organisasjonsEnhetV2.OrganisasjonEnhetV2Service;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.http.CookieUtil;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.GrunninfoService;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.tilgangskontroll.Policies;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.tilgangskontroll.Tilgangskontroll;
 
 import javax.inject.Inject;
@@ -71,8 +72,7 @@ public class HodeController {
     @Path("/me")
     public Me hentSaksbehandler(@Context HttpServletRequest request) {
         return tilgangskontroll
-                .tilgangTilModia()
-                .exception(error -> new WebApplicationException(error, 403))
+                .check(Policies.tilgangTilModia)
                 .get(() -> {
                     String ident = getSubjectHandler().getUid();
                     GrunnInfo.SaksbehandlerNavn saksbehandler = grunninfoService.hentSaksbehandlerNavn();

@@ -12,9 +12,10 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Saksbehandler
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.AnsattEnhet
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.ldap.LDAPService
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.oppfolgingsinfo.OppfolgingsinfoApiService
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.UnleashService
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.DATOFORMAT
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.lagRiktigDato
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.tilgangskontroll.Policies
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.tilgangskontroll.Tilgangskontroll
 import org.slf4j.LoggerFactory
 import java.util.*
 import javax.inject.Inject
@@ -25,7 +26,7 @@ import javax.ws.rs.core.MediaType
 @Produces(MediaType.APPLICATION_JSON)
 class OppfolgingController @Inject constructor(private val service: OppfolgingsinfoApiService,
                                                private val ldapService: LDAPService,
-                                               private val unleashService: UnleashService,
+                                               private val tilgangskontroll: Tilgangskontroll,
                                                private val ytelseskontraktService: YtelseskontraktServiceBi,
                                                private val oppfolgingskontraktService: OppfolgingskontraktServiceBi) {
 
@@ -34,13 +35,17 @@ class OppfolgingController @Inject constructor(private val service: Oppfolgingsi
     @GET
     @Path("/")
     fun hent(@PathParam("fnr") fodselsnummer: String): Map<String, Any?> {
-        val oppfolging = service.hentOppfolgingsinfo(fodselsnummer, ldapService)
+        return tilgangskontroll
+                .check(Policies.tilgangTilBruker.with(fodselsnummer))
+                .get {
+                    val oppfolging = service.hentOppfolgingsinfo(fodselsnummer, ldapService)
 
-        return mapOf(
-                "erUnderOppfølging" to oppfolging.erUnderOppfolging,
-                "veileder" to hentVeileder(oppfolging.veileder),
-                "enhet" to hentEnhet(oppfolging.oppfolgingsenhet)
-        )
+                    mapOf(
+                            "erUnderOppfølging" to oppfolging.erUnderOppfolging,
+                            "veileder" to hentVeileder(oppfolging.veileder),
+                            "enhet" to hentEnhet(oppfolging.oppfolgingsenhet)
+                    )
+                }
     }
 
     @GET
@@ -48,20 +53,24 @@ class OppfolgingController @Inject constructor(private val service: Oppfolgingsi
     fun hentUtvidetOppf(@PathParam("fnr") fodselsnummer: String,
                         @QueryParam("startDato") start: String?,
                         @QueryParam("sluttDato") slutt: String?): Map<String, Any?> {
-        val kontraktResponse = oppfolgingskontraktService.hentOppfolgingskontrakter(lagOppfolgingskontraktRequest(fodselsnummer, start, slutt))
-        val ytelserResponse = ytelseskontraktService.hentYtelseskontrakter(lagYtelseRequest(fodselsnummer, start, slutt))
+        return tilgangskontroll
+                .check(Policies.tilgangTilBruker.with(fodselsnummer))
+                .get {
+                    val kontraktResponse = oppfolgingskontraktService.hentOppfolgingskontrakter(lagOppfolgingskontraktRequest(fodselsnummer, start, slutt))
+                    val ytelserResponse = ytelseskontraktService.hentYtelseskontrakter(lagYtelseRequest(fodselsnummer, start, slutt))
 
-        return mapOf(
-                "oppfølging" to hent(fodselsnummer),
-                "meldeplikt" to kontraktResponse.bruker?.meldeplikt,
-                "formidlingsgruppe" to kontraktResponse.bruker?.formidlingsgruppe,
-                "innsatsgruppe" to kontraktResponse.bruker?.innsatsgruppe,
-                "sykmeldtFra" to kontraktResponse.bruker?.sykmeldtFrom?.toString(DATOFORMAT),
-                "rettighetsgruppe" to ytelserResponse.rettighetsgruppe,
-                "vedtaksdato" to kontraktResponse.vedtaksdato?.toString(DATOFORMAT),
-                "sykefraværsoppfølging" to hentSyfoPunkt(kontraktResponse.syfoPunkter),
-                "ytelser" to hentYtelser(ytelserResponse.ytelser)
-        )
+                    mapOf(
+                            "oppfølging" to hent(fodselsnummer),
+                            "meldeplikt" to kontraktResponse.bruker?.meldeplikt,
+                            "formidlingsgruppe" to kontraktResponse.bruker?.formidlingsgruppe,
+                            "innsatsgruppe" to kontraktResponse.bruker?.innsatsgruppe,
+                            "sykmeldtFra" to kontraktResponse.bruker?.sykmeldtFrom?.toString(DATOFORMAT),
+                            "rettighetsgruppe" to ytelserResponse.rettighetsgruppe,
+                            "vedtaksdato" to kontraktResponse.vedtaksdato?.toString(DATOFORMAT),
+                            "sykefraværsoppfølging" to hentSyfoPunkt(kontraktResponse.syfoPunkter),
+                            "ytelser" to hentYtelser(ytelserResponse.ytelser)
+                    )
+                }
     }
 
     private fun hentYtelser(ytelser: List<Ytelse>?): List<Map<String, Any?>> {
