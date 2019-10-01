@@ -14,9 +14,12 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.RestUtils
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.TemagruppeTemaMapping.hentTemagruppeForTema
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.api.DTO
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.api.toDTO
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.tilgangskontroll.Policies
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.tilgangskontroll.Tilgangskontroll
+import no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.PdfUtils
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.henvendelse.HenvendelseBehandlingService
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.henvendelse.domain.Traad
+import java.io.ByteArrayInputStream
 import java.util.*
 import javax.inject.Inject
 import javax.servlet.http.HttpServletRequest
@@ -43,7 +46,8 @@ class DialogController @Inject constructor(
             @Context request: HttpServletRequest,
             @PathParam("fnr") fnr: String
     ): List<TraadDTO> {
-        return gittTilgangTilBruker(fnr)
+        return tilgangskontroll
+                .check(Policies.tilgangTilBruker.with(fnr))
                 .get {
                     val valgtEnhet = RestUtils.hentValgtEnhet(request)
                     henvendelseService
@@ -60,7 +64,8 @@ class DialogController @Inject constructor(
             @PathParam("fnr") fnr: String,
             referatRequest: SendReferatRequest
     ): Response {
-        return gittTilgangTilBruker(fnr)
+        return tilgangskontroll
+                .check(Policies.tilgangTilBruker.with(fnr))
                 .get {
                     val context = lagSendHenvendelseContext(fnr, request)
                     henvendelseUtsendingService.sendHenvendelse(lagReferat(referatRequest, context), Optional.empty(), Optional.empty(), context.enhet)
@@ -75,7 +80,8 @@ class DialogController @Inject constructor(
             @PathParam("fnr") fnr: String,
             sporsmalsRequest: SendSporsmalRequest
     ): Response {
-        return gittTilgangTilBruker(fnr)
+        return tilgangskontroll
+                .check(Policies.tilgangTilBruker.with(fnr))
                 .get {
                     val context = lagSendHenvendelseContext(fnr, request)
                     val gsakSaker = sakerService.hentSammensatteSaker(fnr)
@@ -98,9 +104,9 @@ class DialogController @Inject constructor(
             @PathParam("fnr") fnr: String,
             opprettHenvendelseRequest: OpprettHenvendelseRequest
     ): FortsettDialogDTO {
-        return gittTilgangTilBruker(fnr)
+        return tilgangskontroll
+                .check(Policies.tilgangTilBruker.with(fnr))
                 .get {
-                    // TODO tilgangsstyring
                     val traadId = opprettHenvendelseRequest.traadId
                     val context = lagSendHenvendelseContext(fnr, request)
                     val traad = henvendelseService
@@ -137,9 +143,9 @@ class DialogController @Inject constructor(
             @PathParam("fnr") fnr: String,
             fortsettDialogRequest: FortsettDialogRequest
     ): Response {
-        return gittTilgangTilBruker(fnr)
+        return tilgangskontroll
+                .check(Policies.tilgangTilBruker.with(fnr))
                 .get {
-                    // TODO tilgangsstyring
                     val context = lagSendHenvendelseContext(fnr, request)
                     val traad = henvendelseService
                             .hentMeldinger(fnr, context.enhet)
@@ -214,6 +220,33 @@ class DialogController @Inject constructor(
         return false
     }
 
+    @GET
+    @Path("/{traadId}/print")
+    fun print(
+            @PathParam("fnr") fnr: String,
+            @PathParam("traadId") traadId: String,
+            @Context request: HttpServletRequest
+    ) : Response = tilgangskontroll
+            .check(Policies.tilgangTilBruker.with(fnr))
+            .get {
+                val valgtEnhet = RestUtils.hentValgtEnhet(request)
+                henvendelseService
+                        .hentMeldinger(fnr, valgtEnhet)
+                        .getTraad(traadId)
+                        .map { it.meldinger }
+                        .map(PdfUtils::genererPdfForPrint)
+                        .map { ByteArrayInputStream(it) }
+                        .map {
+                            Response.ok(it)
+                                    .header("Content-Disposition", "attachment;filename=meldinger.pdf")
+                                    .header("cache-control", "no-store")
+                                    .build()
+                        }
+                        .orElseGet {
+                            Response.status(404).build()
+                        }
+            }
+
     private fun hentSaker(fnr: String): Set<Sak> {
         val gsakSaker = try {
             sakerService.hentSammensatteSaker(fnr)
@@ -229,10 +262,6 @@ class DialogController @Inject constructor(
 
         return gsakSaker.union(psakSaker)
     }
-
-    private fun gittTilgangTilBruker(fnr: String) = tilgangskontroll
-            .tilgangTilBruker(fnr)
-            .exception { WebApplicationException(it, 403) }
 }
 
 private fun erEnkeltstaendeSporsmalFraBruker(traad: Traad): Boolean {

@@ -14,6 +14,7 @@ import org.joda.time.DateTime;
 
 import java.io.IOException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.unmodifiableMap;
@@ -43,12 +44,12 @@ public class PdfUtils {
         TEMAGRUPPE_MAP = unmodifiableMap(map);
     }
 
-    public static byte[] genererPdfForPrint(List<MeldingVM> meldinger) {
+    public static byte[] genererPdfForPrint(List<Melding> meldinger) {
         Map<String, Helper<?>> helpers = generateHelpers();
         List<PDFMelding> pdfMeldinger = new ArrayList<>();
         try {
-            for (MeldingVM melding : meldinger) {
-                pdfMeldinger.add(new PDFMelding(melding.melding));
+            for (Melding melding : meldinger) {
+                pdfMeldinger.add(new PDFMelding(melding));
             }
             PdfMeldingerWrapper innhold = new PdfMeldingerWrapper(pdfMeldinger);
 
@@ -57,6 +58,15 @@ public class PdfUtils {
         } catch (IOException e) {
             throw new ApplicationException("Kunne ikke lage markup av melding for print", e);
         }
+    }
+
+    public static byte[] genererPdfForPrintVM(List<MeldingVM> meldinger) {
+        List<Melding> meldingList = meldinger
+                .stream()
+                .map((melding) -> melding.melding)
+                .collect(Collectors.toList());
+
+        return genererPdfForPrint(meldingList);
     }
 
     private static Map<String, Helper<?>> generateHelpers() {
