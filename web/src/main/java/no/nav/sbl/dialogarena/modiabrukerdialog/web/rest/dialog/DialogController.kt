@@ -180,30 +180,32 @@ class DialogController @Inject constructor(
             @Context request: HttpServletRequest,
             @PathParam("fnr") fnr: String,
             slaaSammenRequest: SlaaSammenRequest
-    ): Map<String, Any?> = gittTilgangTilBruker(fnr).get {
-        if (sjekkOmNoenOppgaverErFerdigstilt(slaaSammenRequest)) {
-            throw BadRequestException("En eller fler av oppgavene er allerede ferdigstilt")
-        }
+    ): Map<String, Any?> = tilgangskontroll
+            .check(Policies.tilgangTilBruker.with(fnr))
+            .get {
+                if (sjekkOmNoenOppgaverErFerdigstilt(slaaSammenRequest)) {
+                    throw BadRequestException("En eller fler av oppgavene er allerede ferdigstilt")
+                }
 
-        val nyTraadId = try {
-            henvendelseUtsendingService.slaaSammenTraader(slaaSammenRequest.oppgaver.map { it.meldingsId })
-        } catch(e: TraadAlleredeBesvart) {
-            throw BadRequestException("En eller fler av trådene er allerede besvart")
-        }
+                val nyTraadId = try {
+                    henvendelseUtsendingService.slaaSammenTraader(slaaSammenRequest.oppgaver.map { it.meldingsId })
+                } catch (e: TraadAlleredeBesvart) {
+                    throw BadRequestException("En eller fler av trådene er allerede besvart")
+                }
 
-        val valgtEnhet = RestUtils.hentValgtEnhet(request)
-        ferdigstillAlleSammenslaatteOppgaver(slaaSammenRequest, nyTraadId, valgtEnhet)
+                val valgtEnhet = RestUtils.hentValgtEnhet(request)
+                ferdigstillAlleSammenslaatteOppgaver(slaaSammenRequest, nyTraadId, valgtEnhet)
 
-        val traader: List<TraadDTO> = henvendelseService
-                .hentMeldinger(fnr, valgtEnhet)
-                .traader
-                .toDTO()
+                val traader: List<TraadDTO> = henvendelseService
+                        .hentMeldinger(fnr, valgtEnhet)
+                        .traader
+                        .toDTO()
 
-        mapOf(
-                "traader" to traader,
-                "nyTraadId" to nyTraadId
-        )
-    }
+                mapOf(
+                        "traader" to traader,
+                        "nyTraadId" to nyTraadId
+                )
+            }
 
     private fun ferdigstillAlleSammenslaatteOppgaver(request: SlaaSammenRequest, nyTraadId: String, enhet: String) {
         request.oppgaver.filter { it.henvendelsesId != nyTraadId }.forEach {
@@ -226,7 +228,7 @@ class DialogController @Inject constructor(
             @PathParam("fnr") fnr: String,
             @PathParam("traadId") traadId: String,
             @Context request: HttpServletRequest
-    ) : Response = tilgangskontroll
+    ): Response = tilgangskontroll
             .check(Policies.tilgangTilBruker.with(fnr))
             .get {
                 val valgtEnhet = RestUtils.hentValgtEnhet(request)
@@ -322,7 +324,7 @@ enum class Kanal {
 }
 
 fun getKanal(type: Meldingstype): String {
-    return when(type) {
+    return when (type) {
         Meldingstype.SAMTALEREFERAT_OPPMOTE, Meldingstype.SVAR_OPPMOTE -> Kanal.OPPMOTE.name
         Meldingstype.SAMTALEREFERAT_TELEFON, Meldingstype.SVAR_TELEFON -> Kanal.TELEFON.name
         else -> Kanal.TEKST.name
