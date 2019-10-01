@@ -12,6 +12,7 @@ import no.nav.modig.core.exception.ApplicationException;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.Sak;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Fritekst;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.HenvendelseUtils;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.exceptions.TraadAlleredeBesvart;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.HenvendelseUtsendingService;
@@ -32,7 +33,6 @@ import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.meldinger.WSHentHenven
 
 import javax.inject.Inject;
 import javax.inject.Named;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
@@ -41,11 +41,9 @@ import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
 import static no.nav.brukerdialog.security.tilgangskontroll.utils.AttributeUtils.*;
 import static no.nav.brukerdialog.security.tilgangskontroll.utils.RequestUtils.forRequest;
-import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.*;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe.ANSOS;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe.OKSOS;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding.ELDSTE_FORST;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype.SPORSMAL_MODIA_UTGAAENDE;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.MeldingUtils.tilMelding;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.HenvendelseUtils.createXMLHenvendelseMedMeldingTilBruker;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.HenvendelseUtils.getXMLHenvendelseTypeBasertPaaMeldingstype;
@@ -124,7 +122,7 @@ public class HenvendelseUtsendingServiceImpl implements HenvendelseUtsendingServ
     }
 
     private void invaliderCacheForHentHenvendelseListe(Melding melding) {
-        HenvendelsePortTypeCacheUtil.invaliderHentHenvendelseListeCacheElement(henvendelsePortType, melding.fnrBruker, getHenvendelseTyper());
+        HenvendelsePortTypeCacheUtil.invaliderHentHenvendelseListeCacheElement(henvendelsePortType, melding.fnrBruker, HenvendelseUtils.AKTUELLE_HENVENDELSE_TYPER);
     }
 
     @Override
@@ -163,7 +161,7 @@ public class HenvendelseUtsendingServiceImpl implements HenvendelseUtsendingServ
     public List<Melding> hentTraad(String fnr, String traadId, String valgtEnhet) {
         List<Melding> meldinger =
                 henvendelsePortType.hentHenvendelseListe(new WSHentHenvendelseListeRequest()
-                        .withTyper(getHenvendelseTyper())
+                        .withTyper(HenvendelseUtils.AKTUELLE_HENVENDELSE_TYPER)
                         .withFodselsnummer(fnr))
                         .getAny().stream()
                         .map(melding -> (XMLHenvendelse) melding)
@@ -202,22 +200,6 @@ public class HenvendelseUtsendingServiceImpl implements HenvendelseUtsendingServ
                     subjectAttribute("urn:nav:ikt:tilgangskontroll:xacml:subject:localenhet", valgtEnhet),
                     resourceAttribute("urn:nav:ikt:tilgangskontroll:xacml:resource:bruker-enhet", defaultString(sporsmal.brukersEnhet))));
         }
-    }
-
-    private String[] getHenvendelseTyper() {
-        List<String> typer = new ArrayList<>();
-        typer.add(SPORSMAL_SKRIFTLIG.name());
-        typer.add(SPORSMAL_SKRIFTLIG_DIREKTE.name());
-        typer.add(SVAR_SKRIFTLIG.name());
-        typer.add(SVAR_OPPMOTE.name());
-        typer.add(SVAR_TELEFON.name());
-        typer.add(REFERAT_OPPMOTE.name());
-        typer.add(REFERAT_TELEFON.name());
-        typer.add(SPORSMAL_MODIA_UTGAAENDE.name());
-        typer.add(SVAR_SBL_INNGAAENDE.name());
-        typer.add(DELVIS_SVAR_SKRIFTLIG.name());
-
-        return typer.toArray(new String[typer.size()]);
     }
 
     private Function<Melding, Melding> journalfortTemaTilgang(final String valgtEnhet) {
