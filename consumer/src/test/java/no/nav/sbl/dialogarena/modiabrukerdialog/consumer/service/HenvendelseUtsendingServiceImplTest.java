@@ -285,7 +285,11 @@ public class HenvendelseUtsendingServiceImplTest {
                 XMLHenvendelseType.REFERAT_OPPMOTE.name(),
                 XMLHenvendelseType.REFERAT_TELEFON.name(),
                 XMLHenvendelseType.SPORSMAL_MODIA_UTGAAENDE.name(),
-                XMLHenvendelseType.SVAR_SBL_INNGAAENDE.name()));
+                XMLHenvendelseType.SVAR_SBL_INNGAAENDE.name(),
+                XMLHenvendelseType.DOKUMENT_VARSEL.name(),
+                XMLHenvendelseType.OPPGAVE_VARSEL.name()
+
+        ));
         assertThat(hentHenvendelseListeRequestCaptor.getValue().getTyper(), not(Matchers.contains(XMLHenvendelseType.SPORSMAL_SKRIFTLIG.name())));
     }
 
