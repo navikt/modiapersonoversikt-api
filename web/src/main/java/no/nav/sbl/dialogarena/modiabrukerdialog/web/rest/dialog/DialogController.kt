@@ -6,6 +6,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.Sak
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Fritekst
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.exceptions.TraadAlleredeBesvart
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.HenvendelseUtsendingService
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveBehandlingService
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.gsak.SakerService
@@ -173,13 +174,61 @@ class DialogController @Inject constructor(
                 }
     }
 
+    @POST
+    @Path("slaasammen")
+    fun slaaSammenTraader(
+            @Context request: HttpServletRequest,
+            @PathParam("fnr") fnr: String,
+            slaaSammenRequest: SlaaSammenRequest
+    ): Map<String, Any?> = tilgangskontroll
+            .check(Policies.tilgangTilBruker.with(fnr))
+            .get {
+                if (sjekkOmNoenOppgaverErFerdigstilt(slaaSammenRequest)) {
+                    throw BadRequestException("En eller fler av oppgavene er allerede ferdigstilt")
+                }
+
+                val nyTraadId = try {
+                    henvendelseUtsendingService.slaaSammenTraader(slaaSammenRequest.oppgaver.map { it.meldingsId })
+                } catch (e: TraadAlleredeBesvart) {
+                    throw BadRequestException("En eller fler av trådene er allerede besvart")
+                }
+
+                val valgtEnhet = RestUtils.hentValgtEnhet(request)
+                ferdigstillAlleSammenslaatteOppgaver(slaaSammenRequest, nyTraadId, valgtEnhet)
+
+                val traader: List<TraadDTO> = henvendelseService
+                        .hentMeldinger(fnr, valgtEnhet)
+                        .traader
+                        .toDTO()
+
+                mapOf(
+                        "traader" to traader,
+                        "nyTraadId" to nyTraadId
+                )
+            }
+
+    private fun ferdigstillAlleSammenslaatteOppgaver(request: SlaaSammenRequest, nyTraadId: String, enhet: String) {
+        request.oppgaver.filter { it.henvendelsesId != nyTraadId }.forEach {
+            oppgaveBehandlingService.ferdigstillOppgaveIGsak(it.oppgaveId, request.temagruppe, enhet)
+        }
+    }
+
+    private fun sjekkOmNoenOppgaverErFerdigstilt(request: SlaaSammenRequest): Boolean {
+        request.oppgaver.map { it.oppgaveId }.forEach {
+            if (oppgaveBehandlingService.oppgaveErFerdigstilt(it)) {
+                return true
+            }
+        }
+        return false
+    }
+
     @GET
     @Path("/{traadId}/print")
     fun print(
             @PathParam("fnr") fnr: String,
             @PathParam("traadId") traadId: String,
             @Context request: HttpServletRequest
-    ) : Response = tilgangskontroll
+    ): Response = tilgangskontroll
             .check(Policies.tilgangTilBruker.with(fnr))
             .get {
                 val valgtEnhet = RestUtils.hentValgtEnhet(request)
@@ -275,7 +324,7 @@ enum class Kanal {
 }
 
 fun getKanal(type: Meldingstype): String {
-    return when(type) {
+    return when (type) {
         Meldingstype.SAMTALEREFERAT_OPPMOTE, Meldingstype.SVAR_OPPMOTE -> Kanal.OPPMOTE.name
         Meldingstype.SAMTALEREFERAT_TELEFON, Meldingstype.SVAR_TELEFON -> Kanal.TELEFON.name
         else -> Kanal.TEKST.name
@@ -321,4 +370,15 @@ data class RequestContext(
         val fnr: String,
         val ident: String,
         val enhet: String
+)
+
+data class SlaaSammenRequest(
+        val oppgaver: List<Oppgave>,
+        val temagruppe: Temagruppe
+)
+
+data class Oppgave(
+        val oppgaveId: String,
+        val meldingsId: String,
+        val henvendelsesId: String
 )
