@@ -8,6 +8,8 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.JacksonConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.baseurls.BaseUrlsController;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.brukerprofil.BrukerprofilController;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.dialog.DialogController;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.dialog.DialogMerkController;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.dialog.DialogOppgaveController;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.egenansatt.EgenAnsattController;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.enhet.EnhetController;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.featuretoggle.FeatureToggleController;
@@ -59,7 +61,9 @@ public class RestConfig extends ResourceConfig {
                 SakerController.class,
                 SafService.class,
                 DialogController.class,
-                PersonsokController.class
+                PersonsokController.class,
+                DialogMerkController.class,
+                DialogOppgaveController.class
         );
     }
 }
