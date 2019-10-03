@@ -74,12 +74,8 @@ class DialogMerkController @Inject constructor(private val behandleHenvendelsePo
                 .check(Policies.tilgangTilBruker.with(request.fnr))
                 .check(Policies.behandlingsIderTilhorerBruker.with(BehandlingsIdTilgangData(request.fnr, request.behandlingsidListe)))
                 .get {
-                    if (MerkUtils.kanHastekassere(SubjectHandler.getSubjectHandler().getUid())) {
                         behandleHenvendelsePortType.markerTraadForHasteKassering(request.behandlingsidListe);
                         Response.ok().build()
-                    } else {
-                        Response.status(Response.Status.UNAUTHORIZED).build()
-                    }
                 }
     }
 
