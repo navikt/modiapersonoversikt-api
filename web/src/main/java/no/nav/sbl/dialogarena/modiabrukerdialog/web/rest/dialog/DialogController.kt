@@ -183,6 +183,10 @@ class DialogController @Inject constructor(
     ): Map<String, Any?> = tilgangskontroll
             .check(Policies.tilgangTilBruker.with(fnr))
             .get {
+                if (slaaSammenRequest.meldinger.groupingBy { it -> it.henvendelsesId }.eachCount().size < 2) {
+                    throw BadRequestException("Du kan ikke slå sammen mindre enn 2 trådeer")
+                }
+
                 if (sjekkOmNoenOppgaverErFerdigstilt(slaaSammenRequest)) {
                     throw BadRequestException("En eller fler av oppgavene er allerede ferdigstilt")
                 }
@@ -206,7 +210,7 @@ class DialogController @Inject constructor(
                         "nyTraadId" to nyTraadId
                 )
             }
-
+    
     private fun ferdigstillAlleSammenslaatteOppgaver(request: SlaaSammenRequest, nyTraadId: String, enhet: String) {
         request.meldinger.filter { it.henvendelsesId != nyTraadId }.forEach {
             oppgaveBehandlingService.ferdigstillOppgaveIGsak(it.oppgaveId, request.temagruppe, enhet)
