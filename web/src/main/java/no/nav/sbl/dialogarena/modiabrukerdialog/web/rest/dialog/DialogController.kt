@@ -188,7 +188,7 @@ class DialogController @Inject constructor(
                 }
 
                 val nyTraadId = try {
-                    henvendelseUtsendingService.slaaSammenTraader(slaaSammenRequest.oppgaver.map { it.meldingsId })
+                    henvendelseUtsendingService.slaaSammenTraader(slaaSammenRequest.meldinger.map { it.meldingsId })
                 } catch (e: TraadAlleredeBesvart) {
                     throw BadRequestException("En eller fler av trådene er allerede besvart")
                 }
@@ -208,13 +208,13 @@ class DialogController @Inject constructor(
             }
 
     private fun ferdigstillAlleSammenslaatteOppgaver(request: SlaaSammenRequest, nyTraadId: String, enhet: String) {
-        request.oppgaver.filter { it.henvendelsesId != nyTraadId }.forEach {
+        request.meldinger.filter { it.henvendelsesId != nyTraadId }.forEach {
             oppgaveBehandlingService.ferdigstillOppgaveIGsak(it.oppgaveId, request.temagruppe, enhet)
         }
     }
 
     private fun sjekkOmNoenOppgaverErFerdigstilt(request: SlaaSammenRequest): Boolean {
-        request.oppgaver.map { it.oppgaveId }.forEach {
+        request.meldinger.map { it.oppgaveId }.forEach {
             if (oppgaveBehandlingService.oppgaveErFerdigstilt(it)) {
                 return true
             }
@@ -373,11 +373,11 @@ data class RequestContext(
 )
 
 data class SlaaSammenRequest(
-        val oppgaver: List<Oppgave>,
+        val meldinger: List<SlaaSammenMelding>,
         val temagruppe: Temagruppe
 )
 
-data class Oppgave(
+data class SlaaSammenMelding(
         val oppgaveId: String,
         val meldingsId: String,
         val henvendelsesId: String
