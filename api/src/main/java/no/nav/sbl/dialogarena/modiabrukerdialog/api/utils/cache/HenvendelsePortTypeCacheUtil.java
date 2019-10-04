@@ -5,13 +5,14 @@ import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.henvendelse.Henvendels
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.meldinger.WSHentHenvendelseListeRequest;
 
 import java.lang.reflect.Method;
+import java.util.List;
 
 public class HenvendelsePortTypeCacheUtil {
 
     public static final String HENVENDELSE_PORT_TYPE_CACHE_NAME = "endpointCache";
     public static final String HENT_HENVENDELSE_LISTE_METODE_NAVN = "hentHenvendelseListe";
 
-    public static void invaliderHentHenvendelseListeCacheElement(HenvendelsePortType henvendelsePortType, String fodselsnummer, String[] typer) {
+    public static void invaliderHentHenvendelseListeCacheElement(HenvendelsePortType henvendelsePortType, String fodselsnummer, List<String> typer) {
         WSHentHenvendelseListeRequest parameter = new WSHentHenvendelseListeRequest()
                 .withFodselsnummer(fodselsnummer)
                 .withTyper(typer);

@@ -12,6 +12,7 @@ import no.nav.modig.common.SporingsLogger;
 import no.nav.modig.content.ContentRetriever;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Fritekst;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.HenvendelseUtils;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.kodeverk.StandardKodeverk;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.ldap.LDAPService;
@@ -33,12 +34,10 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
-import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
 import static no.nav.brukerdialog.security.context.SubjectHandler.getSubjectHandler;
 import static no.nav.brukerdialog.security.tilgangskontroll.utils.AttributeUtils.*;
 import static no.nav.brukerdialog.security.tilgangskontroll.utils.RequestUtils.forRequest;
-import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.*;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.MeldingUtils.tilMelding;
 import static org.apache.commons.lang3.StringUtils.defaultString;
 import static org.apache.commons.lang3.StringUtils.isBlank;
@@ -72,9 +71,8 @@ public class HenvendelseBehandlingServiceImpl implements HenvendelseBehandlingSe
     }
 
     private List<Melding> hentMeldingerFraHenvendelse(String fnr, String valgtEnhet) {
-        List<String> typer = getAkutelleHenvendelseTyper();
-
-        WSHentHenvendelseListeResponse wsHentHenvendelseListeResponse = henvendelsePortType.hentHenvendelseListe(new WSHentHenvendelseListeRequest().withFodselsnummer(fnr).withTyper(typer));
+        WSHentHenvendelseListeResponse wsHentHenvendelseListeResponse = henvendelsePortType
+                .hentHenvendelseListe(new WSHentHenvendelseListeRequest().withFodselsnummer(fnr).withTyper(HenvendelseUtils.AKTUELLE_HENVENDELSE_TYPER));
 
         List<Object> wsMeldinger = wsHentHenvendelseListeResponse.getAny();
 
@@ -90,25 +88,6 @@ public class HenvendelseBehandlingServiceImpl implements HenvendelseBehandlingSe
                 .map(okonomiskSosialhjelpTilgang(valgtEnhet))
                 .map(journalfortTemaTilgang(valgtEnhet))
                 .collect(toList());
-    }
-
-    private List<String> getAkutelleHenvendelseTyper() {
-        List<String> typer = new ArrayList<>(asList(
-                SPORSMAL_SKRIFTLIG.name(),
-                SPORSMAL_SKRIFTLIG_DIREKTE.name(),
-                SVAR_SKRIFTLIG.name(),
-                SVAR_OPPMOTE.name(),
-                SVAR_TELEFON.name(),
-                REFERAT_OPPMOTE.name(),
-                REFERAT_TELEFON.name(),
-                SPORSMAL_MODIA_UTGAAENDE.name(),
-                SVAR_SBL_INNGAAENDE.name(),
-                DOKUMENT_VARSEL.name(),
-                OPPGAVE_VARSEL.name(),
-                DELVIS_SVAR_SKRIFTLIG.name()
-        ));
-
-        return typer;
     }
 
     @Override
