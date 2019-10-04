@@ -210,9 +210,7 @@ class DialogController @Inject constructor(
                         "nyTraadId" to nyTraadId
                 )
             }
-
-
-
+    
     private fun ferdigstillAlleSammenslaatteOppgaver(request: SlaaSammenRequest, nyTraadId: String, enhet: String) {
         request.meldinger.filter { it.henvendelsesId != nyTraadId }.forEach {
             oppgaveBehandlingService.ferdigstillOppgaveIGsak(it.oppgaveId, request.temagruppe, enhet)
