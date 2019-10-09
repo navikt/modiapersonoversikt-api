@@ -79,16 +79,21 @@ class OppgaveController @Inject constructor(
 
     @POST
     @Path("/plukk/{temagruppe}")
-    fun plukkOppgaver(@PathParam("temagruppe") temagruppe: String, @Context httpRequest: HttpServletRequest) =
-            tilgangkontroll
-                    .check(Policies.tilgangTilModia)
-                    .get {
+    fun plukkOppgaver(@PathParam("temagruppe") temagruppe: String, @Context httpRequest: HttpServletRequest): List<Map<String, String>> {
+        return tilgangkontroll
+                .check(Policies.tilgangTilModia)
+                .get {
+                    val tildelteOppgaver = oppgaveBehandlingService.finnTildelteOppgaverIGsak()
+                    if (tildelteOppgaver.isNotEmpty()) {
+                        tildelteOppgaver
+                    } else {
                         plukkOppgaveService
                                 .also { verifiserTilgang(HENT_OPPGAVE_ROLLE) }
                                 .plukkOppgaver(Temagruppe.valueOf(temagruppe.toUpperCase()),
                                         CookieUtil.getSaksbehandlersValgteEnhet(httpRequest))
-                                .map { mapOppgave(it) }
                     }
+                }.map { mapOppgave(it) }
+    }
 
     @GET
     @Path("/tildelt")

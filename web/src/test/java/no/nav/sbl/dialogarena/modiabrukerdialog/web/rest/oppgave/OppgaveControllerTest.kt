@@ -153,6 +153,8 @@ internal class OppgaveControllerTest {
                 .thenReturn(WSTildelFlereOppgaverResponse().withOppgaveIder(1, 2))
         whenever(plukkOppgaveService.plukkOppgaver(any(), any()))
                 .thenReturn(oppgaver)
+        whenever(oppgaveWSMock.finnOppgaveListe(any()))
+                .thenReturn(WSFinnOppgaveListeResponse())
 
         val resultat = oppgaveController.plukkOppgaver(TEMAGRUPPE_ARBEID, httpRequest)
 
@@ -162,11 +164,32 @@ internal class OppgaveControllerTest {
     }
 
     @Test
+    fun `Returnerer tildelt oppgave hvis saksbehandler allerede har en tildelt oppgave ved plukk`() {
+        val httpRequest = HttpRequestUtil.mockHttpServletRequestMedCookie(SAKSBEHANDLERS_IDENT, VALGT_ENHET)
+
+        val oppgaveliste = listOf(lagWSOppgave().withOppgaveId(OPPGAVE_ID_1), lagWSOppgave().withOppgaveId("2"))
+
+        whenever(oppgaveWSMock.finnOppgaveListe(any()))
+                .thenReturn(WSFinnOppgaveListeResponse()
+                        .withOppgaveListe(oppgaveliste))
+        whenever(plukkOppgaveService.plukkOppgaver(any(), any()))
+                .thenReturn(emptyList())
+
+        val resultat = oppgaveController.plukkOppgaver(TEMAGRUPPE_ARBEID, httpRequest)
+
+        verify(plukkOppgaveService, times(0)).plukkOppgaver(any(), any())
+        assertEquals(oppgaveliste.size, resultat.size)
+        assertEquals(oppgaveliste[0].oppgaveId, resultat[0]["oppgaveid"])
+    }
+
+    @Test
     fun `Returnerer tom liste hvis tjenesten returnerer tom liste`() {
         val httpRequest = HttpRequestUtil.mockHttpServletRequestMedCookie(SAKSBEHANDLERS_IDENT, VALGT_ENHET)
 
         whenever(tildelOppgaveMock.tildelFlereOppgaver(any()))
                 .thenReturn(WSTildelFlereOppgaverResponse())
+        whenever(oppgaveWSMock.finnOppgaveListe(any()))
+                .thenReturn(WSFinnOppgaveListeResponse())
 
         val resultat = oppgaveController.plukkOppgaver(TEMAGRUPPE_ARBEID, httpRequest)
 
