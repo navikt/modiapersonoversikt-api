@@ -116,7 +116,7 @@ class DialogController @Inject constructor(
                             ?: throw WebApplicationException("Fant ingen tråd med id: $traadId", 400)
 
                     val oppgaveId: String? = if (erEnkeltstaendeSporsmalFraBruker(traad)) {
-                        val sporsmal = traad.meldinger[0]
+                        val sporsmal = traad.meldinger.filter { it.oppgaveId != null }[0]
                         oppgaveBehandlingService.tilordneOppgaveIGsak(
                                 sporsmal.oppgaveId,
                                 Temagruppe.valueOf(sporsmal.temagruppe),
