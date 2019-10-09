@@ -64,7 +64,7 @@ public class PlukkOppgavePanelTest extends WicketPageTest {
 
     @Test
     public void plukkerOppgaveOgSetterSessionAttributes() {
-        when(plukkOppgaveService.plukkOppgaver(any(Temagruppe.class), anyString())).thenReturn(singletonList(new Oppgave("oppgaveId", "fnr", "henvendelseId")));
+        when(plukkOppgaveService.plukkOppgaver(any(Temagruppe.class), anyString())).thenReturn(singletonList(new Oppgave("oppgaveId", "fnr", "behandlingskjedeId")));
 
         wicket.goToPageWith(new PlukkOppgavePanel("plukkoppgave"))
                 .inForm(withId("plukkOppgaveForm"))
