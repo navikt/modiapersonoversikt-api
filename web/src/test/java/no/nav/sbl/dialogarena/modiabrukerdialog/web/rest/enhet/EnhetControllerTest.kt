@@ -18,6 +18,7 @@ class EnhetControllerTest {
             mock(),
             organisasjonEnhetV2Service,
             mock(),
+            mock(),
             TilgangskontrollMock.get()
     )
 

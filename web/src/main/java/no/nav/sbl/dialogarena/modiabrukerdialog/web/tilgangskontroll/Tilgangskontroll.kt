@@ -157,13 +157,6 @@ class Policies {
                 DecisionEnums.DENY
         }
 
-        val henvendelsesIdTilhorerBruker = PolicyGenerator<TilgangskontrollContext, BehandlingsIdTilgangData>({ "Ikke alle behandlingsIder tilhørte medsendt fødselsnummer. Spørring gjort av ${context.hentSaksbehandlerId()}" }) {
-            if (context.alleHenvendelseIderTilhorerBruker(data.fnr, data.behandlingsIder))
-                DecisionEnums.PERMIT
-            else
-                DecisionEnums.DENY
-        }
-
         val kanHastekassere = Policy<TilgangskontrollContext>({ "Saksbehandler (${hentSaksbehandlerId()}) har ikke tilgang til hastekassering" }) {
             val identer = hentSaksbehandlereMedTilgangTilHastekassering()
             if (identer.contains(hentSaksbehandlerId())) DecisionEnums.PERMIT else DecisionEnums.DENY
