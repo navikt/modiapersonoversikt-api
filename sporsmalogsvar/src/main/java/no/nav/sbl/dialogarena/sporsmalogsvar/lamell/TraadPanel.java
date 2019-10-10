@@ -46,14 +46,14 @@ public class TraadPanel extends Panel {
 
                 item.add(meldingstatusContainer);
                 item.add(new Label("visningsDato"));
-                item.add(new URLParsingMultiLineLabel("fritekst", getFritekst(item.getModelObject().melding)));
+                item.add(new URLParsingMultiLineLabel("fritekst", item.getModelObject().melding.getFritekst()));
                 item.add(new Journalpost("journalpost", item.getModel()));
                 item.add(append("aria-labelledby", meldingstatusContainer.getMarkupId()));
 
                 WebMarkupContainer skrevetAvContainer = new WebMarkupContainer("skrevetAvContainer");
                 skrevetAvContainer.add(visibleIf(new PropertyModel<>(item.getModel(), "erFraSaksbehandler()")));
                 skrevetAvContainer.add(new Label("skrevetAvLabel", new ResourceModel("melding.skrevet-av")));
-                skrevetAvContainer.add(new Label("skrevetAv", getSkrevetAv(item.getModelObject().melding)));
+                skrevetAvContainer.add(new Label("skrevetAv", item.getModelObject().melding.getSkrevetAv()));
                 skrevetAvContainer.setVisible(!item.getModelObject().erDokumentMelding && !item.getModelObject().erOppgaveMelding);
                 item.add(skrevetAvContainer);
             }
@@ -72,25 +72,6 @@ public class TraadPanel extends Panel {
                 String meldingTypeKlasse = meldingKlasse(meldingVm);
                 item.add(cssClass(meldingTypeKlasse));
                 item.add(new AvsenderBilde("avsenderBilde", item.getModel()).add(cssClass(meldingTypeKlasse)));
-            }
-
-            private String getFritekst(Melding melding) {
-                String linjeskift = "\n\u00A0\n";
-                return melding.getFriteksterMedEldsteForst().stream()
-                        .map(Fritekst::getFritekst)
-                        .collect(Collectors.joining(linjeskift));
-            }
-
-            private String getSkrevetAv(Melding melding) {
-                return melding.getFriteksterMedEldsteForst().stream()
-                        .map(this::formaterSaksbehandlersNavnOgIdent)
-                        .collect(Collectors.joining(" og "));
-            }
-
-            private String formaterSaksbehandlersNavnOgIdent(Fritekst fritekst) {
-                return fritekst.getSaksbehandler()
-                        .map(saksbehandler -> String.format("%s (%s)", saksbehandler.navn, saksbehandler.getIdent()))
-                        .orElse("Ukjent");
             }
         });
     }
