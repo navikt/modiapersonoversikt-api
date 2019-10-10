@@ -1,7 +1,8 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.common.utils;
 
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Person;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Saksbehandler;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Fritekst;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype;
 import no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.PdfUtils.PDFMelding;
@@ -33,7 +34,7 @@ public class PdfUtilsTest {
 
         Melding melding2 = new Melding("ID", Meldingstype.SPORSMAL_MODIA_UTGAAENDE, DateTime.now());
         melding2.fnrBruker = "11111111111";
-        melding2.navIdent = "navIdent";
+        melding2.withFritekst(new Fritekst("", new Saksbehandler("", "", "navIdent"), DateTime.now()));
         PDFMelding pdfmelding2 = new PDFMelding(melding2);
 
         assertThat(pdfmelding1.avBruker, is("11111111111"));
