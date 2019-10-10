@@ -77,7 +77,7 @@ public class PlukkOppgaveServiceImplTest {
 
     @Test
     public void girOppgaveHvisSaksbehandlerHarTilgang() {
-        List<Oppgave> oppgaver = singletonList(new Oppgave("oppgaveId", "fnr", "henvendelseId"));
+        List<Oppgave> oppgaver = singletonList(new Oppgave("oppgaveId", "fnr", "behandlingskjedeId"));
 
         when(oppgaveBehandlingService.plukkOppgaverFraGsak(Temagruppe.FMLI, SAKSBEHANDLERS_VALGTE_ENHET)).thenReturn(oppgaver);
         when(pep.hasAccess(any(PolicyRequest.class))).thenReturn(true);
@@ -99,7 +99,7 @@ public class PlukkOppgaveServiceImplTest {
 
     @Test
     public void leggerTilbakeHvisIkkeTilgangTilSamtligePep() {
-        List<Oppgave> oppgave1 = singletonList(new Oppgave("1", "fnr", "henvendelseId"));
+        List<Oppgave> oppgave1 = singletonList(new Oppgave("1", "fnr", "behandlingskjedeId"));
 
         when(oppgaveBehandlingService.plukkOppgaverFraGsak(Temagruppe.FMLI, SAKSBEHANDLERS_VALGTE_ENHET)).thenReturn(oppgave1, emptyList());
         when(pep.hasAccess(any(PolicyRequest.class))).thenReturn(true, false);
@@ -110,7 +110,7 @@ public class PlukkOppgaveServiceImplTest {
 
     @Test
     public void leggerTilbakeHvisIkkeTilgangFraKjerneinfo() {
-        List<Oppgave> oppgave1 = singletonList(new Oppgave("1", "fnr", "henvendelseId"));
+        List<Oppgave> oppgave1 = singletonList(new Oppgave("1", "fnr", "behandlingskjedeId"));
 
         when(oppgaveBehandlingService.plukkOppgaverFraGsak(Temagruppe.FMLI, SAKSBEHANDLERS_VALGTE_ENHET)).thenReturn(oppgave1, emptyList());
         when(personKjerneinfoServiceBi.hentKjerneinformasjon(any(HentKjerneinformasjonRequest.class))).thenThrow(new AuthorizationException(""));

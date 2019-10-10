@@ -32,7 +32,7 @@ class DialogOppgaveController @Inject constructor(
     fun opprettOppgave(request: OpperettOppgaveRequest): Response {
         return tilgangskontroll
                 .check(Policies.tilgangTilBruker.with(request.fnr))
-                .check(Policies.henvendelsesIdTilhorerBruker.with(BehandlingsIdTilgangData(request.fnr, listOf(request.henvendelseId))))
+                .check(Policies.behandlingsIderTilhorerBruker.with(BehandlingsIdTilgangData(request.fnr, listOf(request.behandlingskjedeId))))
                 .get {
                     oppgavebehandling.opprettOppgave(
                             WSOpprettOppgaveRequest()
@@ -40,7 +40,7 @@ class DialogOppgaveController @Inject constructor(
                                     .withHenvendelsetypeKode(HENVENDELSESTYPE_KODE)
                                     .withOpprettOppgave(
                                             WSOpprettOppgave()
-                                                    .withHenvendelseId(request.henvendelseId)
+                                                    .withHenvendelseId(request.behandlingskjedeId)
                                                     .withAktivFra(LocalDate.now())
                                                     .withAktivTil(arbeidsdagerFraDato(request.dagerFrist, LocalDate.now()))
                                                     .withAnsvarligEnhetId(request.ansvarligEnhetId)
@@ -108,7 +108,7 @@ class DialogOppgaveController @Inject constructor(
 data class OpperettOppgaveRequest(
         val fnr: String,
         val valgtEnhetId: Int,
-        val henvendelseId: String,
+        val behandlingskjedeId: String,
         val dagerFrist: Int,
         val ansvarligEnhetId: String,
         val ansvarligIdent: String?,
