@@ -115,8 +115,9 @@ class DialogController @Inject constructor(
                             .find { it.traadId == traadId }
                             ?: throw WebApplicationException("Fant ingen tråd med id: $traadId", 400)
 
-                    val oppgaveId: String? = if (erEnkeltstaendeSporsmalFraBruker(traad)) {
-                        val sporsmal = traad.meldinger.filter { it.oppgaveId != null }[0]
+                    val oppgaveId: String? = if (erUbesvartSporsmalFraBruker(traad)) {
+                        val sporsmal = traad.meldinger.find { it.id == it.traadId }
+                                ?: throw WebApplicationException("Fant ingen spørsmål i tråd med id: $traadId", 400)
                         oppgaveBehandlingService.tilordneOppgaveIGsak(
                                 sporsmal.oppgaveId,
                                 Temagruppe.valueOf(sporsmal.temagruppe),
@@ -270,7 +271,7 @@ class DialogController @Inject constructor(
     }
 }
 
-private fun erEnkeltstaendeSporsmalFraBruker(traad: Traad): Boolean {
+private fun erUbesvartSporsmalFraBruker(traad: Traad): Boolean {
     return traad
             .meldinger
             .filter { !it.erDelvisSvar() }
