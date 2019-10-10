@@ -39,7 +39,7 @@
     "jsdom": "11.5.1",
     "less-plugin-npm-import": "2.1.0",
     "mocha": "2.4.5",
-    "moment": "2.19.3",
+    "moment": "2.24.0",
     "object-assign": "2.0.0",
     "react-intl": "2.4.0",
     "react-scroll": "1.5.5",
