@@ -184,22 +184,21 @@ class DialogController @Inject constructor(
     ): Map<String, Any?> = tilgangskontroll
             .check(Policies.tilgangTilBruker.with(fnr))
             .get {
-                if (slaaSammenRequest.meldinger.groupingBy { it -> it.henvendelsesId }.eachCount().size < 2) {
+                if (slaaSammenRequest.traader.groupingBy { it -> it.traadId }.eachCount().size < 2) {
                     throw BadRequestException("Du kan ikke slå sammen mindre enn 2 trådeer")
                 }
 
                 if (sjekkOmNoenOppgaverErFerdigstilt(slaaSammenRequest)) {
                     throw BadRequestException("En eller fler av oppgavene er allerede ferdigstilt")
                 }
-
                 val nyTraadId = try {
-                    henvendelseUtsendingService.slaaSammenTraader(slaaSammenRequest.meldinger.map { it.meldingsId })
+                    henvendelseUtsendingService.slaaSammenTraader(slaaSammenRequest.traader.map { it.traadId })
                 } catch (e: TraadAlleredeBesvart) {
                     throw BadRequestException("En eller fler av trådene er allerede besvart")
                 }
 
                 val valgtEnhet = RestUtils.hentValgtEnhet(request)
-                ferdigstillAlleSammenslaatteOppgaver(slaaSammenRequest, nyTraadId, valgtEnhet)
+                ferdigstillAlleUnntattEnOppgave(slaaSammenRequest, nyTraadId, valgtEnhet)
 
                 val traader: List<TraadDTO> = henvendelseService
                         .hentMeldinger(fnr, valgtEnhet)
@@ -212,14 +211,14 @@ class DialogController @Inject constructor(
                 )
             }
     
-    private fun ferdigstillAlleSammenslaatteOppgaver(request: SlaaSammenRequest, nyTraadId: String, enhet: String) {
-        request.meldinger.filter { it.henvendelsesId != nyTraadId }.forEach {
+    private fun ferdigstillAlleUnntattEnOppgave(request: SlaaSammenRequest, nyTraadId: String, enhet: String) {
+        request.traader.filter { it.traadId != nyTraadId }.forEach {
             oppgaveBehandlingService.ferdigstillOppgaveIGsak(it.oppgaveId, request.temagruppe, enhet)
         }
     }
 
     private fun sjekkOmNoenOppgaverErFerdigstilt(request: SlaaSammenRequest): Boolean {
-        request.meldinger.map { it.oppgaveId }.forEach {
+        request.traader.map { it.oppgaveId }.forEach {
             if (oppgaveBehandlingService.oppgaveErFerdigstilt(it)) {
                 return true
             }
@@ -378,12 +377,11 @@ data class RequestContext(
 )
 
 data class SlaaSammenRequest(
-        val meldinger: List<SlaaSammenMelding>,
+        val traader: List<SlaaSammenTraad>,
         val temagruppe: Temagruppe
 )
 
-data class SlaaSammenMelding(
+data class SlaaSammenTraad(
         val oppgaveId: String,
-        val meldingsId: String,
-        val henvendelsesId: String
+        val traadId: String
 )
