@@ -1,6 +1,7 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.tilgangskontroll
 
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rsbac.*
+import org.slf4j.LoggerFactory
 import javax.ws.rs.ForbiddenException
 
 private val modiaRoller = setOf("0000-ga-bd06_modiagenerelltilgang", "0000-ga-modia-oppfolging", "0000-ga-syfo-sensitiv")
@@ -167,4 +168,8 @@ class Policies {
 data class BehandlingsIdTilgangData(val fnr: String, val behandlingsIder: List<String>)
 data class TilgangTilTemaData(val valgtEnhet: String, val tema: String)
 
-class Tilgangskontroll(context: TilgangskontrollContext) : RSBACImpl<TilgangskontrollContext>(context, { ForbiddenException(it) })
+val log = LoggerFactory.getLogger(Tilgangskontroll::class.java)
+class Tilgangskontroll(context: TilgangskontrollContext) : RSBACImpl<TilgangskontrollContext>(context, {
+    log.error(it)
+    ForbiddenException(it)
+})
