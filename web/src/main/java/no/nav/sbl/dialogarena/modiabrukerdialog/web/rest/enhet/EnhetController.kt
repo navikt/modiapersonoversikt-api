@@ -1,7 +1,9 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.enhet
 
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.Ansatt
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.AnsattEnhet
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.arbeidsfordeling.ArbeidsfordelingV1Service
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.AnsattService
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.organisasjonsEnhetV2.OrganisasjonEnhetV2Service
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.organisasjonenhet.kontaktinformasjon.domain.OrganisasjonEnhetKontaktinformasjon
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.organisasjonenhet.kontaktinformasjon.service.OrganisasjonEnhetKontaktinformasjonService
@@ -17,6 +19,7 @@ class EnhetController @Inject
 constructor(private val organisasjonEnhetKontaktinformasjonService: OrganisasjonEnhetKontaktinformasjonService,
             private val organisasjonEnhetV2Service: OrganisasjonEnhetV2Service,
             private val arbeidsfordeling: ArbeidsfordelingV1Service,
+            private val ansattService: AnsattService,
             private val tilgangskontroll: Tilgangskontroll) {
 
     @GET
@@ -43,6 +46,17 @@ constructor(private val organisasjonEnhetKontaktinformasjonService: Organisasjon
                             .orElseThrow { NotFoundException() }
 
                     EnhetKontaktinformasjon(hentMedId(enhetid))
+                }
+    }
+
+    @GET
+    @Path("/{enhetId}/ansatte")
+    @Produces(APPLICATION_JSON)
+    fun hentAnsattePaaEnhet(@PathParam("enhetId") enhetId: String): List<Ansatt> {
+        return tilgangskontroll
+                .check(Policies.tilgangTilModia)
+                .get {
+                    ansattService.ansatteForEnhet(AnsattEnhet(enhetId, ""))
                 }
     }
 
