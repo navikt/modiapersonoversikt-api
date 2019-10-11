@@ -19,7 +19,7 @@ class LeggTilbakeDelvisSvarProps extends HashMap<String, Object> implements Seri
         temagruppeMapping.remove(Temagruppe.valueOf(sporsmal.temagruppe));
 
         put("skrivestotteprops", skrivestotteProps);
-        put("behandlingskjedeId", henvendelseId);
+        put("henvendelseId", henvendelseId);
         put("sporsmal", sporsmal.getFritekst());
         put("traadId", sporsmal.traadId);
         put("fodselsnummer", sporsmal.fnrBruker);

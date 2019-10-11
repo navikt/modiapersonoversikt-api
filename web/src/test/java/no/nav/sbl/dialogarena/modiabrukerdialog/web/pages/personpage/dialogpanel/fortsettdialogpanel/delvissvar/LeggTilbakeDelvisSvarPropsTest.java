@@ -66,7 +66,7 @@ class LeggTilbakeDelvisSvarPropsTest {
         FORVENTET_TEMAGRUPPE_MAP.remove(ARBD);
 
         assertAll("props",
-                () -> assertEquals(BEHANDLINGS_ID, leggTilbakeDelvisSvarProps.get("behandlingskjedeId")),
+                () -> assertEquals(BEHANDLINGS_ID, leggTilbakeDelvisSvarProps.get("henvendelseId")),
                 () -> assertEquals(FODSELSNUMMER, leggTilbakeDelvisSvarProps.get("fodselsnummer")),
                 () -> assertEquals(TRAAD_ID, leggTilbakeDelvisSvarProps.get("traadId")),
                 () -> assertEquals(SVAR_DELVIS_CALLBACK_ID, leggTilbakeDelvisSvarProps.get("svarDelvisCallbackId")),
