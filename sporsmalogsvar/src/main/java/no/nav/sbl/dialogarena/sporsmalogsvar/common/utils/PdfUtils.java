@@ -4,9 +4,12 @@ package no.nav.sbl.dialogarena.sporsmalogsvar.common.utils;
 import com.github.jknack.handlebars.Context;
 import com.github.jknack.handlebars.Helper;
 import no.nav.modig.core.exception.ApplicationException;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Saksbehandler;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Fritekst;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.henvendelse.delsvar.DelsvarSammenslaaer;
 import no.nav.sbl.dialogarena.pdf.HandleBarHtmlGenerator;
 import no.nav.sbl.dialogarena.pdf.PDFFabrikk;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.MeldingVM;
@@ -44,7 +47,12 @@ public class PdfUtils {
         TEMAGRUPPE_MAP = unmodifiableMap(map);
     }
 
-    public static byte[] genererPdfForPrint(List<Melding> meldinger) {
+    public static byte[] genererPdfForPrint(List<Melding> alleMeldinger) {
+        List<Melding> meldinger = DelsvarSammenslaaer.sammenslaFullforteDelsvar(alleMeldinger)
+                .stream()
+                .filter((melding) -> !melding.erDelvisSvar())
+                .collect(Collectors.toList());
+
         Map<String, Helper<?>> helpers = generateHelpers();
         List<PDFMelding> pdfMeldinger = new ArrayList<>();
         try {
@@ -103,7 +111,7 @@ public class PdfUtils {
         public PDFMelding(Melding melding) {
             this.fnrBruker = melding.fnrBruker;
             this.meldingstype = lagPDFMeldingstype(melding);
-            this.avBruker = erMeldingInngaaende(melding.meldingstype) ? melding.fnrBruker : melding.navIdent;
+            this.avBruker = erMeldingInngaaende(melding.meldingstype) ? melding.fnrBruker : alleIdenter(melding);
             this.typeBeskrivelse = lagTypeBeskrivelse(melding);
             this.temagruppeBeskrivelse = lagTemagruppeBeskrivelse(melding.temagruppe);
             this.fritekst = escapeHtml(melding.getFritekst());
@@ -112,6 +120,14 @@ public class PdfUtils {
             this.journalfortTema = melding.journalfortTema;
             this.kontorsperretEnhet = melding.kontorsperretEnhet;
             this.markertSomFeilsendtAv = melding.markertSomFeilsendtAvNavIdent;
+        }
+
+        private String alleIdenter(Melding melding) {
+            return melding.getFriteksterMedEldsteForst()
+                    .stream()
+                    .map(Fritekst::getSaksbehandler)
+                    .map(saksbehandler -> saksbehandler.map(Saksbehandler::getIdent).orElse("Ukjent"))
+                    .collect(Collectors.joining(" og "));
         }
 
         private String lagPDFMeldingstype(Melding melding) {
