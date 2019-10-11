@@ -223,11 +223,20 @@ public class Melding implements Serializable {
     }
 
     public String getFritekst() {
-        if (fritekster.isEmpty()) {
-            return "";
-        } else {
-            return this.fritekster.get(0).getFritekst();
-        }
+        return this.getFriteksterMedEldsteForst()
+                .stream()
+                .map(Fritekst::getFritekst)
+                .collect(Collectors.joining("\n\u00A0\n"));
+    }
+
+    public String getSkrevetAv() {
+        return this.getFriteksterMedEldsteForst()
+                .stream()
+                .map((fritekst) ->
+                        fritekst.getSaksbehandler()
+                        .map((saksbehandler) -> String.format("%s (%s)", saksbehandler.navn, saksbehandler.getIdent()))
+                        .orElse("Ukjent"))
+                .collect(Collectors.joining(" og "));
     }
 
     public Melding withNavIdent(String navIdent) {
