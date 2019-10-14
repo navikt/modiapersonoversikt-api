@@ -16,7 +16,7 @@ private typealias RequestContext = Triple<HttpServletRequest, HttpServletRespons
 
 private const val fnr = "12345678910"
 private const val oppgaveid = "123456789"
-private const val henvendelseid = "ACDC1ABBA"
+private const val behandlingsid = "ACDC1ABBA"
 
 internal class RedirectFilterTest {
     companion object {
@@ -67,12 +67,12 @@ internal class RedirectFilterTest {
 
     @Test
     fun `redirect av oppgave-url`() {
-        callsTo("https://modapp-q1.adeo.no/modiabrukerdialog/person/$fnr/?oppgaveid=$oppgaveid&henvendelseid=$henvendelseid")
-                .isRedirectedTo("https://app-q1.adeo.no/modiapersonoversikt/person/$fnr/meldinger?oppgaveid=$oppgaveid&henvendelseid=$henvendelseid")
-        callsTo("https://modapp-q1.adeo.no/modiabrukerdialog/person/$fnr/?henvendelseid=$henvendelseid")
-                .isRedirectedTo("https://app-q1.adeo.no/modiapersonoversikt/person/$fnr/meldinger?henvendelseid=$henvendelseid")
-        callsTo("https://modapp-q1.adeo.no/modiabrukerdialog/person/$fnr/?4&henvendelseid=$henvendelseid")
-                .isRedirectedTo("https://app-q1.adeo.no/modiapersonoversikt/person/$fnr/meldinger?henvendelseid=$henvendelseid")
+        callsTo("https://modapp-q1.adeo.no/modiabrukerdialog/person/$fnr/?oppgaveid=$oppgaveid&behandlingsid=$behandlingsid")
+                .isRedirectedTo("https://app-q1.adeo.no/modiapersonoversikt/person/$fnr/meldinger?oppgaveid=$oppgaveid&behandlingsid=$behandlingsid")
+        callsTo("https://modapp-q1.adeo.no/modiabrukerdialog/person/$fnr/?behandlingsid=$behandlingsid")
+                .isRedirectedTo("https://app-q1.adeo.no/modiapersonoversikt/person/$fnr/meldinger?behandlingsid=$behandlingsid")
+        callsTo("https://modapp-q1.adeo.no/modiabrukerdialog/person/$fnr/?4&behandlingsid=$behandlingsid")
+                .isRedirectedTo("https://app-q1.adeo.no/modiapersonoversikt/person/$fnr/meldinger?behandlingsid=$behandlingsid")
     }
 
     @Test
