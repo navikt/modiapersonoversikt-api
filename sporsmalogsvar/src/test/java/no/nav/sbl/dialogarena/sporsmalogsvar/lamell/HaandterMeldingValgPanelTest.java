@@ -1,7 +1,5 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.lamell;
 
-import no.nav.brukerdialog.security.context.SubjectHandlerUtils;
-import no.nav.brukerdialog.security.context.ThreadLocalSubjectHandler;
 import no.nav.brukerdialog.security.tilgangskontroll.policy.pep.EnforcementPoint;
 import no.nav.brukerdialog.tools.SecurityConstants;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
@@ -55,10 +53,9 @@ public class HaandterMeldingValgPanelTest extends WicketPageTest {
 
     @BeforeAll
     public static void setUp() {
-        System.setProperty("no.nav.brukerdialog.security.context.subjectHandlerImplementationClass", ThreadLocalSubjectHandler.class.getName());
         System.setProperty("hastekassering.tilgang", "Z999999");
         System.setProperty(SecurityConstants.SYSTEMUSER_USERNAME, "srvModiabrukerdialog");
-        SubjectHandlerUtils.setInternBruker("Z999999", "");
+//        SubjectHandlerUtils.setInternBruker("Z999999", "");
     }
 
     @Test

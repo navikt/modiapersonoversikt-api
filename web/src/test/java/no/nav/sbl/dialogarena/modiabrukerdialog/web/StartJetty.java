@@ -1,14 +1,13 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web;
 
 import less.LessResourceMarker;
-import no.nav.brukerdialog.security.context.InternbrukerSubjectHandler;
 import no.nav.brukerdialog.security.domain.OidcCredential;
-import no.nav.dialogarena.config.fasit.FasitUtils;
-import no.nav.dialogarena.config.fasit.ServiceUser;
-import no.nav.dialogarena.config.fasit.TestUser;
-import no.nav.dialogarena.config.security.ISSOProvider;
+import no.nav.fasit.FasitUtils;
+import no.nav.fasit.ServiceUser;
+import no.nav.fasit.TestUser;
 import no.nav.sbl.dialogarena.common.jetty.Jetty;
 import no.nav.sbl.dialogarena.test.SystemProperties;
+import no.nav.testconfig.security.ISSOProvider;
 import org.apache.geronimo.components.jaspi.AuthConfigFactoryImpl;
 import org.eclipse.jetty.util.resource.JarResource;
 import org.eclipse.jetty.util.resource.Resource;
@@ -70,10 +69,10 @@ public class StartJetty {
     private static OidcCredential setUpOidcSubjectHandler() {
         TestUser testUser = new TestUser().setUsername(INNLOGGET_VEILEDER).setPassword(INNLOGGET_VEILEDER_PASSORD);
         OidcCredential credential = new OidcCredential(ISSOProvider.getISSOToken(testUser));
-        InternbrukerSubjectHandler.setVeilederIdent(INNLOGGET_VEILEDER);
-        InternbrukerSubjectHandler.setServicebruker(SERVICEBRUKER);
-        InternbrukerSubjectHandler.setOidcCredential(credential);
-        setProperty("no.nav.brukerdialog.security.context.subjectHandlerImplementationClass", InternbrukerSubjectHandler.class.getName());
+//        InternbrukerSubjectHandler.setVeilederIdent(INNLOGGET_VEILEDER);
+//        InternbrukerSubjectHandler.setServicebruker(SERVICEBRUKER);
+//        InternbrukerSubjectHandler.setOidcCredential(credential);
+//        setProperty("no.nav.brukerdialog.security.context.subjectHandlerImplementationClass", InternbrukerSubjectHandler.class.getName());
         return credential;
     }
 

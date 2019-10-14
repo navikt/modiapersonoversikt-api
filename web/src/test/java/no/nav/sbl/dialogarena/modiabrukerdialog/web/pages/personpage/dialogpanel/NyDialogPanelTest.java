@@ -1,6 +1,5 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel;
 
-import no.nav.brukerdialog.security.context.ThreadLocalSubjectHandler;
 import no.nav.modig.content.ContentRetriever;
 import no.nav.modig.wicket.component.enhancedtextarea.EnhancedTextArea;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.GrunnInfo;
@@ -72,7 +71,7 @@ public class NyDialogPanelTest extends WicketPageTest {
 
     @Before
     public void setUp() {
-        System.setProperty("no.nav.brukerdialog.security.context.subjectHandlerImplementationClass", ThreadLocalSubjectHandler.class.getName());
+//        System.setProperty("no.nav.brukerdialog.security.context.subjectHandlerImplementationClass", ThreadLocalSubjectHandler.class.getName());
         grunnInfo = new GrunnInfo(new GrunnInfo.Bruker(FNR, FORNAVN, "", "", "", "", ""), new GrunnInfo.Saksbehandler("", "", ""));
         testNyDialogPanel = new NyDialogPanel("id", grunnInfo);
 
@@ -108,7 +107,7 @@ public class NyDialogPanelTest extends WicketPageTest {
     @Test
     @SuppressWarnings("unchecked")
     public void senderReferattypeMedRiktigeVerdierTilHenvendelse() throws Exception {
-        System.setProperty("no.nav.brukerdialog.security.context.subjectHandlerImplementationClass", ThreadLocalSubjectHandler.class.getName());
+//        System.setProperty("no.nav.brukerdialog.security.context.subjectHandlerImplementationClass", ThreadLocalSubjectHandler.class.getName());
         reset(henvendelseUtsendingService);
 
         wicket.goToPageWith(testNyDialogPanel)
@@ -146,7 +145,7 @@ public class NyDialogPanelTest extends WicketPageTest {
 
     @Test
     public void viserKvitteringNaarManSenderInn() {
-        System.setProperty("no.nav.brukerdialog.security.context.subjectHandlerImplementationClass", ThreadLocalSubjectHandler.class.getName());
+//        System.setProperty("no.nav.brukerdialog.security.context.subjectHandlerImplementationClass", ThreadLocalSubjectHandler.class.getName());
         wicket.goToPageWith(lagNyDialogPanelMedKanalSatt())
                 .inForm(withId("nydialogform"))
                 .write("tekstfelt:text", "dette er en fritekst")

@@ -1,7 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.util;
 
 import net.sf.ehcache.Ehcache;
-import no.nav.brukerdialog.security.context.ThreadLocalSubjectHandler;
 import no.nav.metrics.proxy.MetricProxy;
 import no.nav.metrics.proxy.TimerProxy;
 import no.nav.sbl.dialogarena.common.cxf.InstanceSwitcher;
@@ -19,7 +18,6 @@ import javax.inject.Inject;
 import java.lang.reflect.Field;
 import java.lang.reflect.Proxy;
 
-import static no.nav.brukerdialog.security.context.SubjectHandler.SUBJECTHANDLER_KEY;
 
 @ContextConfiguration(classes = {CacheConfiguration.class})
 public abstract class CacheTest {
@@ -43,7 +41,6 @@ public abstract class CacheTest {
 
     @BeforeAll
     public static void before() {
-        System.setProperty(SUBJECTHANDLER_KEY, ThreadLocalSubjectHandler.class.getName());
         System.setProperty("no.nav.modig.security.sts.url", "");
         System.setProperty("no.nav.modig.security.systemuser.username", "");
         System.setProperty("no.nav.modig.security.systemuser.password", "");

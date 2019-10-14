@@ -3,9 +3,9 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>no.nav.sbl</groupId>
+        <groupId>no.nav.common</groupId>
         <artifactId>mor-pom</artifactId>
-        <version>2019.03.27.09.40-legacy-modiabrukerdialog</version>
+        <version>1.2019.07.09-10.47-e136333280c1</version>
     </parent>
 
     <name>Dialogarena - modiabrukerdialog</name>
@@ -33,7 +33,6 @@
     </modules>
 
     <properties>
-        <common.version>2019.03.27.09.40-legacy-modiabrukerdialog</common.version>
         <oidc.security-authorization.version>696</oidc.security-authorization.version>
 
         <ehcache.version>2.6.5</ehcache.version>
@@ -115,16 +114,21 @@
     <dependencyManagement>
         <dependencies>
             <dependency>
+                <groupId>no.nav.common</groupId>
+                <artifactId>bom</artifactId>
+                <version>1.2019.07.09-10.47-e136333280c1</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>no.nav.common</groupId>
+                <artifactId>time</artifactId>
+                <version>1.2019.07.09-10.47-e136333280c1</version>
+            </dependency>
+            <dependency>
                 <groupId>net.sf.ehcache</groupId>
                 <artifactId>ehcache-core</artifactId>
                 <version>${ehcache.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>no.nav.sbl</groupId>
-                <artifactId>bom</artifactId>
-                <version>${common.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
             </dependency>
             <dependency>
                 <groupId>no.nav.dialogarena</groupId>

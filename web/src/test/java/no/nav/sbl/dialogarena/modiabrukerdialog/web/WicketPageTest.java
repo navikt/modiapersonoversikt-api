@@ -1,9 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web;
 
-import no.nav.brukerdialog.security.context.StaticSubjectHandler;
 import no.nav.brukerdialog.security.context.SubjectHandler;
-import no.nav.brukerdialog.security.context.SubjectHandlerUtils;
-import no.nav.brukerdialog.security.context.ThreadLocalSubjectHandler;
 import no.nav.brukerdialog.security.domain.IdentType;
 import no.nav.brukerdialog.tools.SecurityConstants;
 import no.nav.modig.wicket.test.FluentWicketTester;
@@ -30,10 +27,10 @@ public abstract class WicketPageTest {
 
     @BeforeAll
     public static void staticSetup() {
-        System.setProperty(StaticSubjectHandler.SUBJECTHANDLER_KEY, StaticSubjectHandler.class.getName());
-        System.setProperty(SubjectHandler.SUBJECTHANDLER_KEY, ThreadLocalSubjectHandler.class.getCanonicalName());
-        System.setProperty(SecurityConstants.SYSTEMUSER_USERNAME, "srvModiabrukerdialog");
-        SubjectHandlerUtils.setSubject(new SubjectHandlerUtils.SubjectBuilder("Z999999", IdentType.EksternBruker).withAuthLevel(4).getSubject());
+//        System.setProperty(StaticSubjectHandler.SUBJECTHANDLER_KEY, StaticSubjectHandler.class.getName());
+//        System.setProperty(SubjectHandler.SUBJECTHANDLER_KEY, ThreadLocalSubjectHandler.class.getCanonicalName());
+//        System.setProperty(SecurityConstants.SYSTEMUSER_USERNAME, "srvModiabrukerdialog");
+//        SubjectHandlerUtils.setSubject(new SubjectHandlerUtils.SubjectBuilder("Z999999", IdentType.EksternBruker).withAuthLevel(4).getSubject());
     }
 
     @BeforeEach

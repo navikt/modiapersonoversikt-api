@@ -7,7 +7,6 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.RestUtils;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.http.SubjectHandlerUtil;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.saker.knyttbehandlingskjedetilsak.EnhetIkkeSatt;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.api.Feilmelding;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.tilgangskontroll.Tilgangskontroll;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.tilgangskontroll.TilgangskontrollMock;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
@@ -29,7 +28,7 @@ class JournalforingControllerTest {
 
     @BeforeAll
     static void beforeAll() {
-        SubjectHandlerUtil.setInnloggetSaksbehandler(SAKSBEHANDLERS_IDENT);
+//        SubjectHandlerUtil.medSaksbehandler(SAKSBEHANDLERS_IDENT);
     }
 
     @Test

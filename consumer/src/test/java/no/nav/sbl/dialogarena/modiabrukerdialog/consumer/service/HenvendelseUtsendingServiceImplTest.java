@@ -1,6 +1,5 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service;
 
-import no.nav.brukerdialog.security.context.StaticSubjectHandler;
 import no.nav.brukerdialog.security.tilgangskontroll.policy.pep.EnforcementPoint;
 import no.nav.brukerdialog.security.tilgangskontroll.policy.request.PolicyRequest;
 import no.nav.brukerdialog.security.tilgangskontroll.policy.request.attributes.ActionId;
@@ -116,7 +115,7 @@ public class HenvendelseUtsendingServiceImplTest {
     @BeforeEach
     void init() {
         initMocks(this);
-        SubjectHandlerUtil.setInnloggetSaksbehandler(SAKSBEHANDLERS_IDENT);
+//        SubjectHandlerUtil.medSaksbehandler(SAKSBEHANDLERS_IDENT);
 
         when(sendUtHenvendelsePortType.sendUtHenvendelse(any(WSSendUtHenvendelseRequest.class))).thenReturn(
                 new WSSendUtHenvendelseResponse().withBehandlingsId(BEHANDLINGS_ID)
@@ -137,7 +136,7 @@ public class HenvendelseUtsendingServiceImplTest {
 
     @Test
     void henterSporsmal() {
-        System.setProperty(StaticSubjectHandler.SUBJECTHANDLER_KEY, StaticSubjectHandler.class.getName());
+//        System.setProperty(StaticSubjectHandler.SUBJECTHANDLER_KEY, StaticSubjectHandler.class.getName());
         when(henvendelsePortType.hentHenvendelseListe(any(WSHentHenvendelseListeRequest.class))).thenReturn(mockWSHentHenvendelseResponse());
 
         Melding sporsmal = henvendelseUtsendingService.hentTraad("fnr", TRAAD_ID, SAKSBEHANDLERS_VALGTE_ENHET).get(0);

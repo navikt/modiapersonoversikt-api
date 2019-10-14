@@ -32,7 +32,7 @@
         </dependency>
         <!--Modig-->
         <dependency>
-            <groupId>no.nav</groupId>
+            <groupId>no.nav.common</groupId>
             <artifactId>metrics</artifactId>
         </dependency>
         <dependency>

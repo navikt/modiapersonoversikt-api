@@ -18,8 +18,8 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>no.nav.sbl.dialogarena</groupId>
-			<artifactId>common-cxf</artifactId>
+			<groupId>no.nav.common</groupId>
+			<artifactId>cxf</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>joda-time</groupId>
@@ -128,11 +128,6 @@
 		</dependency>
 
 		<dependency>
-			<groupId>no.nav.sbl.dialogarena</groupId>
-			<artifactId>common-time</artifactId>
-		</dependency>
-
-		<dependency>
 			<groupId>net.sourceforge.collections</groupId>
 			<artifactId>collections-generic</artifactId>
 		</dependency>
@@ -191,8 +186,12 @@
 		</dependency>
 
 		<dependency>
-			<groupId>no.nav.sbl.dialogarena</groupId>
-			<artifactId>common-test</artifactId>
+			<groupId>no.nav.common</groupId>
+			<artifactId>time</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>no.nav.common</groupId>
+			<artifactId>test</artifactId>
 			<scope>test</scope>
 		</dependency>
 
