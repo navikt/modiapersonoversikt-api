@@ -2,13 +2,13 @@ import no.nav.apiapp.ApiApp;
 import no.nav.fasit.FasitUtils;
 import no.nav.fasit.LdapConfig;
 import no.nav.fasit.ServiceUser;
-import no.nav.modig.testcertificates.TestCertificates;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.ModiaApplicationContext;
 import no.nav.sbl.dialogarena.test.SystemProperties;
 import no.nav.testconfig.ApiAppTest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import static no.nav.sbl.dialogarena.test.ssl.SSLTestUtils.setupKeyAndTrustStore;
 import static no.nav.sbl.util.EnvironmentUtils.Type.PUBLIC;
 import static no.nav.sbl.util.EnvironmentUtils.Type.SECRET;
 import static no.nav.sbl.util.EnvironmentUtils.setProperty;
@@ -19,7 +19,7 @@ public class MainTest {
     public static final String APPLICATION_NAME = "modiabrukerdialog";
 
     public static void main(String[] args) {
-        TestCertificates.setupKeyAndTrustStore();
+        setupKeyAndTrustStore();
         ApiAppTest.setupTestContext(ApiAppTest.Config.builder().build());
         SystemProperties.setFrom("jetty-environment.properties");
         logger.info("Env= " + FasitUtils.getDefaultEnvironment());
