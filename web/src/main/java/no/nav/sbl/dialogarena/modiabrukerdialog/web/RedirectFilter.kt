@@ -43,7 +43,7 @@ class RedirectFilter : Filter {
                         .copy(
                                 host = requestURI.host?.replace("modapp", "app"),
                                 path = guessPath(requestURI),
-                                query = cleanQuery(requestURI.query)
+                                query = rewriteQuery(requestURI.query)
                         )
                 response.sendRedirect(redirectedURI.toString())
             }
@@ -59,6 +59,19 @@ private fun getUrl(request: HttpServletRequest): String {
             ?.let { "?$it" }
             ?: ""
     return request.requestURL.toString() + params
+}
+
+private fun rewriteQuery(query: String?): String? {
+    val cleanedQuery = cleanQuery(query) ?: return null
+
+    return cleanedQuery
+            .split("&")
+            .map{
+                val data = it.split("=")
+                val key = if (data[0].equals("henvendelseid")) "behandlingsid" else data[0]
+                listOf(key, data[1]).joinToString("=")
+            }
+            .joinToString("&")
 }
 
 private fun cleanQuery(query: String?): String? {
