@@ -11,7 +11,6 @@ import no.nav.kjerneinfo.consumer.fim.person.support.KjerneinfoMapper;
 import no.nav.kjerneinfo.consumer.fim.person.vergemal.VergemalService;
 import no.nav.kodeverk.consumer.fim.kodeverk.KodeverkmanagerBi;
 import no.nav.modig.content.ContentRetriever;
-import no.nav.modig.wicket.services.HealthCheckService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.HenvendelseLesService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.HenvendelseUtsendingService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveBehandlingService;
@@ -129,16 +128,6 @@ public class ServiceConfig {
     @Bean
     public OrganisasjonEnhetV2Service organisasjonEnhetServiceV2() {
         return new OrganisasjonEnhetV2ServiceImpl();
-    }
-
-    @Bean
-    public SaksbehandlerInnstillingerService saksbehandlerInnstillingerService(AnsattService ansattService) {
-        return new SaksbehandlerInnstillingerServiceImpl(ansattService);
-    }
-
-    @Bean
-    public HealthCheckService healthCheckService() {
-        return new HealthCheckService();
     }
 
     @Bean

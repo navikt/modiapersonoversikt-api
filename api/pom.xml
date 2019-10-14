@@ -45,11 +45,6 @@
         </dependency>
 
         <dependency>
-            <groupId>org.apache.wicket</groupId>
-            <artifactId>wicket-core</artifactId>
-        </dependency>
-
-        <dependency>
             <groupId>no.nav.modig</groupId>
             <artifactId>modig-content-no-enonic</artifactId>
             <scope>provided</scope>
