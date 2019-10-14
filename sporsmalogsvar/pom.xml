@@ -29,7 +29,7 @@
             <artifactId>send-ut-henvendelse</artifactId>
         </dependency>
         <dependency>
-            <groupId>no.nav.sbl.dialogarena</groupId>
+            <groupId>no.nav.tjenestespesifikasjoner</groupId>
             <artifactId>behandle-henvendelse</artifactId>
         </dependency>
         <dependency>
@@ -73,7 +73,7 @@
 
         <!--Dialogarena-->
         <dependency>
-            <groupId>no.nav.sbl.dialogarena</groupId>
+            <groupId>no.nav.tjenestespesifikasjoner</groupId>
             <artifactId>dialogarena-behandlingsinformasjon</artifactId>
         </dependency>
         <dependency>
@@ -83,12 +83,6 @@
         <dependency>
             <groupId>no.nav.modig</groupId>
             <artifactId>modia-felleskomponenter</artifactId>
-            <exclusions>
-                <exclusion>
-                    <artifactId>ehcache-core</artifactId>
-                    <groupId>net.sf.ehcache</groupId>
-                </exclusion>
-            </exclusions>
         </dependency>
         <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>
@@ -124,10 +118,6 @@
                     <groupId>org.codehaus.woodstox</groupId>
                     <artifactId>stax2-api</artifactId>
                 </exclusion>
-                    <exclusion>
-                        <artifactId>ehcache-core</artifactId>
-                        <groupId>net.sf.ehcache</groupId>
-                    </exclusion>
             </exclusions>
         </dependency>
         <dependency>
@@ -156,12 +146,6 @@
         <dependency>
             <groupId>no.nav.dialogarena</groupId>
             <artifactId>oidc-security-authorization</artifactId>
-            <exclusions>
-                <exclusion>
-                    <artifactId>ehcache-core</artifactId>
-                    <groupId>net.sf.ehcache</groupId>
-                </exclusion>
-            </exclusions>
         </dependency>
         <dependency>
             <groupId>no.nav.modig</groupId>
@@ -178,6 +162,12 @@
         <dependency>
             <groupId>no.nav.modig</groupId>
             <artifactId>modig-wicket</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>no.nav.modig</groupId>
+                    <artifactId>modig-content</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>no.nav.modig</groupId>
@@ -196,13 +186,8 @@
         </dependency>
         <dependency>
             <groupId>no.nav.modig</groupId>
-            <artifactId>modig-content</artifactId>
-            <exclusions>
-                <exclusion>
-                    <artifactId>ehcache-core</artifactId>
-                    <groupId>net.sf.ehcache</groupId>
-                </exclusion>
-            </exclusions>
+            <artifactId>modig-content-no-enonic</artifactId>
+            <scope>provided</scope>
         </dependency>
 
         <!--Wicket-->

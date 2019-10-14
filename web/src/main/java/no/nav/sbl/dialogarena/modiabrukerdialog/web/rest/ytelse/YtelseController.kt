@@ -2,9 +2,10 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.ytelse
 
 import no.nav.kjerneinfo.consumer.organisasjon.OrganisasjonService
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.artifact.kjerneinfo.component.mockable.MockableContext.KJERNEINFO_KEY
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.UnleashService
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.MockUtil.mockErTillattOgSlaattPaaForKey
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.Wrapper
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.tilgangskontroll.Policies
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.tilgangskontroll.Tilgangskontroll
 import no.nav.sykmeldingsperioder.consumer.foreldrepenger.ForeldrepengerServiceBi
 import no.nav.sykmeldingsperioder.consumer.pleiepenger.PleiepengerService
 import no.nav.sykmeldingsperioder.consumer.sykepenger.SykepengerServiceBi
@@ -22,25 +23,31 @@ class YtelseController @Inject constructor(private val sykepengerService: Sykepe
                                            @Named("foreldrepengerServiceDefault") private val foreldrepengerServiceDefault: Wrapper<ForeldrepengerServiceBi>,
                                            @Named("foreldrepengerServiceMock") private val foreldrepengerServiceMock: Wrapper<ForeldrepengerServiceBi>,
                                            private val pleiepengerService: PleiepengerService,
-                                           private val unleashService: UnleashService,
+                                           private val tilgangskontroll: Tilgangskontroll,
                                            private val organisasjonService: OrganisasjonService) {
 
     @GET
     @Path("sykepenger/{fnr}")
-    fun hentSykepenger(@PathParam("fnr") fødselsnummer: String): Map<String, Any?> {
-        return SykepengerUttrekk(sykepengerService).hent(fødselsnummer)
+    fun hentSykepenger(@PathParam("fnr") fodselsnummer: String): Map<String, Any?> {
+        return tilgangskontroll
+                .check(Policies.tilgangTilBruker.with(fodselsnummer))
+                .get { SykepengerUttrekk(sykepengerService).hent(fodselsnummer) }
     }
 
     @GET
     @Path("foreldrepenger/{fnr}")
-    fun hentForeldrepenger(@PathParam("fnr") fødselsnummer: String): Map<String, Any?> {
-        return ForeldrepengerUttrekk(getForeldrepengerService()).hent(fødselsnummer)
+    fun hentForeldrepenger(@PathParam("fnr") fodselsnummer: String): Map<String, Any?> {
+        return tilgangskontroll
+                .check(Policies.tilgangTilBruker.with(fodselsnummer))
+                .get { ForeldrepengerUttrekk(getForeldrepengerService()).hent(fodselsnummer) }
     }
 
     @GET
     @Path("pleiepenger/{fnr}")
-    fun hentPleiepenger(@PathParam("fnr") fødselsnummer: String): Map<String, Any?> {
-        return PleiepengerUttrekk(pleiepengerService, organisasjonService).hent(fødselsnummer)
+    fun hentPleiepenger(@PathParam("fnr") fodselsnummer: String): Map<String, Any?> {
+        return tilgangskontroll
+                .check(Policies.tilgangTilBruker.with(fodselsnummer))
+                .get { PleiepengerUttrekk(pleiepengerService, organisasjonService).hent(fodselsnummer) }
     }
 
     private fun getForeldrepengerService(): ForeldrepengerServiceBi {

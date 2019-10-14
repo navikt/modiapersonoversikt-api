@@ -5,26 +5,32 @@ public class DelsvarRequest {
     public final String fodselsnummer;
     public final String traadId;
     public final String svar;
-    public final String henvendelseId;
+    public final String behandlingsId;
     public final String navIdent;
     public final String saksbehandlersValgteEnhet;
+    public final String oppgaveId;
+    public final String temagruppe;
 
     private DelsvarRequest(DelsvarRequestBuilder builder) {
         this.fodselsnummer = builder.fodselsnummer;
         this.svar = builder.svar;
         this.traadId = builder.traadId;
-        this.henvendelseId = builder.henvendelseId;
+        this.behandlingsId = builder.behandlingsId;
         this.navIdent = builder.navIdent;
         this.saksbehandlersValgteEnhet = builder.saksbehandlersValgteEnhet;
+        this.oppgaveId = builder.oppgaveId;
+        this.temagruppe = builder.temagruppe;
     }
 
     public static class DelsvarRequestBuilder {
         private String svar;
         private String fodselsnummer;
         private String traadId;
-        private String henvendelseId;
+        private String behandlingsId;
         private String navIdent;
         private String saksbehandlersValgteEnhet;
+        private String oppgaveId;
+        private String temagruppe;
 
         public DelsvarRequestBuilder withFodselsnummer(String fodselsnummer) {
             this.fodselsnummer = fodselsnummer;
@@ -36,8 +42,8 @@ public class DelsvarRequest {
             return this;
         }
 
-        public DelsvarRequestBuilder withHenvendelseId(String henvendelseId) {
-            this.henvendelseId = henvendelseId;
+        public DelsvarRequestBuilder withBehandlingsId(String behandlingsId) {
+            this.behandlingsId = behandlingsId;
             return this;
         }
 
@@ -53,6 +59,16 @@ public class DelsvarRequest {
 
         public DelsvarRequestBuilder withValgtEnhet(String saksbehandlersValgteEnhet) {
             this.saksbehandlersValgteEnhet = saksbehandlersValgteEnhet;
+            return this;
+        }
+
+        public DelsvarRequestBuilder withOppgaveId(String oppgaveId) {
+            this.oppgaveId = oppgaveId;
+            return this;
+        }
+
+        public DelsvarRequestBuilder withTemagruppe(String temagruppe) {
+            this.temagruppe = temagruppe;
             return this;
         }
 

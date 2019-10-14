@@ -44,11 +44,6 @@
         </dependency>
         <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>
-            <artifactId>modia-saksoversikt</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>modiabrukerdialog-api</artifactId>
             <version>${project.version}</version>
             <type>test-jar</type>
@@ -187,7 +182,7 @@
             <artifactId>send-ut-henvendelse</artifactId>
         </dependency>
         <dependency>
-            <groupId>no.nav.sbl.dialogarena</groupId>
+            <groupId>no.nav.tjenestespesifikasjoner</groupId>
             <artifactId>behandle-henvendelse</artifactId>
         </dependency>
         <dependency>
@@ -197,12 +192,6 @@
         <dependency>
             <groupId>no.nav.modig</groupId>
             <artifactId>modia-felleskomponenter</artifactId>
-            <exclusions>
-                <exclusion>
-                    <artifactId>ehcache-core</artifactId>
-                    <groupId>net.sf.ehcache</groupId>
-                </exclusion>
-            </exclusions>
         </dependency>
         <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>
@@ -234,6 +223,10 @@
             <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>oppfolgingsinfo-v1-tjenestespesifikasjon</artifactId>
         </dependency>
+        <dependency>
+            <groupId>no.nav.tjenestespesifikasjoner</groupId>
+            <artifactId>nav-fim-personsok-v1-tjenestespesifikasjon</artifactId>
+        </dependency>
 
         <!--Dialogarena-->
         <dependency>
@@ -245,7 +238,7 @@
             <artifactId>henvendelse-informasjon-v2</artifactId>
         </dependency>
         <dependency>
-            <groupId>no.nav.sbl.dialogarena</groupId>
+            <groupId>no.nav.tjenestespesifikasjoner</groupId>
             <artifactId>dialogarena-behandlingsinformasjon</artifactId>
         </dependency>
         <dependency>
@@ -273,6 +266,12 @@
         <dependency>
             <groupId>no.nav.modig</groupId>
             <artifactId>modig-wicket</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>no.nav.modig</groupId>
+                    <artifactId>modig-content</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>no.nav.modig</groupId>
@@ -280,13 +279,7 @@
         </dependency>
         <dependency>
             <groupId>no.nav.modig</groupId>
-            <artifactId>modig-content</artifactId>
-            <exclusions>
-                <exclusion>
-                    <artifactId>ehcache-core</artifactId>
-                    <groupId>net.sf.ehcache</groupId>
-                </exclusion>
-            </exclusions>
+            <artifactId>modig-content-no-enonic</artifactId>
         </dependency>
         <dependency>
             <groupId>no.nav.modig</groupId>
@@ -484,6 +477,11 @@
         <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>egenansatt-v1-tjenestespesifikasjon</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.fasterxml.jackson.module</groupId>
+            <artifactId>jackson-module-kotlin</artifactId>
         </dependency>
 
         <!-- Unleash -->

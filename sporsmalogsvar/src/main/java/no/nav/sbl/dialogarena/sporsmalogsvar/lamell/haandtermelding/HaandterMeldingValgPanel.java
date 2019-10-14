@@ -1,9 +1,12 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding;
 
+import no.nav.brukerdialog.security.context.SubjectHandler;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.InnboksVM;
+import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.merke.MerkUtils;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.print.PrintLenke;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 
 import static no.nav.modig.wicket.model.ModelUtils.both;
@@ -26,6 +29,7 @@ public class HaandterMeldingValgPanel extends Panel {
         IModel<Boolean> erTemagruppeSosialeTjenester = new PropertyModel<>(getDefaultModel(), "erTemagruppeSosialeTjenester()");
         IModel<Boolean> erSporsmal = new PropertyModel<>(getDefaultModel(), "erMeldingstypeSporsmal()");
         IModel<Boolean> erSisteMeldingEtDelsvar = new PropertyModel<>(getDefaultModel(),"erSisteMeldingEtDelsvar()");
+        IModel<Boolean> kanHasteKasseres = new Model<>(MerkUtils.kanHastekassere(SubjectHandler.getSubjectHandler().getUid()));
         IModel<Boolean> skalViseStandardMerkValg = both(not(eldsteMeldingErJournalfort)).and(not(erFeilsendt)).and(erBehandlet).and(not(erKontorsperret)).and(not(erSisteMeldingEtDelsvar));
         IModel<Boolean> skalViseFerdigstillUtenSvarValg = both(erSporsmal).and(not(erKontorsperret)).and(not(erBehandlet)).and(not(erSisteMeldingEtDelsvar));
         IModel<Boolean> erVarsel = new PropertyModel<>(getDefaultModel(), "erVarsel()");
@@ -41,7 +45,7 @@ public class HaandterMeldingValgPanel extends Panel {
 
         add(new MeldingValgPanel("nyoppgaveValg", erBehandlet, meldingActionPanel.oppgavePanel));
 
-        add(new MeldingValgPanel("merkeValg", either(skalViseFerdigstillUtenSvarValg).or(skalViseStandardMerkValg), meldingActionPanel.merkePanel));
+        add(new MeldingValgPanel("merkeValg", either(skalViseFerdigstillUtenSvarValg).or(skalViseStandardMerkValg).or(kanHasteKasseres), meldingActionPanel.merkePanel));
 
         PrintLenke printLenke = new PrintLenke("print", new PropertyModel<>(innboksVM, "valgtTraad.meldinger"));
         add(printLenke);

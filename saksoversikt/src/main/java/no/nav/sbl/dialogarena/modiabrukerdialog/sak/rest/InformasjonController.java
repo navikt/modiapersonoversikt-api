@@ -1,6 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.sak.rest;
 
-import no.nav.modig.content.CmsContentRetriever;
+import no.nav.modig.content.ContentRetriever;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.enonic.MiljovariablerService;
 
 import javax.inject.Inject;
@@ -19,7 +19,7 @@ public class InformasjonController {
 
     @Inject
     @Named("saksoversikt-cms-integrasjon")
-    private CmsContentRetriever contentRetriever;
+    private ContentRetriever contentRetriever;
 
     @Inject
     private MiljovariablerService miljovariablerService;

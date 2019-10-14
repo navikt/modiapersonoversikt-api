@@ -91,8 +91,8 @@ public class LamellContainer extends TokenLamellPanel implements Serializable {
     @Named("pep")
     private EnforcementPoint pep;
 
-    public LamellContainer(String id, Session session, GrunnInfo grunnInfo, boolean nySaksoversikt, boolean nyOppfolging) {
-        super(id, createLamellFactories(grunnInfo.bruker, nySaksoversikt, nyOppfolging));
+    public LamellContainer(String id, Session session, GrunnInfo grunnInfo, boolean nySaksoversikt, boolean nyOppfolging, boolean nyVarsel) {
+        super(id, createLamellFactories(grunnInfo.bruker, nySaksoversikt, nyOppfolging, nyVarsel));
         this.fnrFromRequest = grunnInfo.bruker.fnr;
 
         addNewFactory(createUtbetalingLamell(grunnInfo.bruker));
@@ -205,13 +205,13 @@ public class LamellContainer extends TokenLamellPanel implements Serializable {
         return SYKEPENGER_TYPE.equalsIgnoreCase(type) || FORELDREPENGER_TYPE.equalsIgnoreCase(type) || PLEIEPENGER_TYPE.equalsIgnoreCase(type);
     }
 
-    private static List<LamellFactory> createLamellFactories(final GrunnInfo.Bruker bruker, boolean nySaksoversikt, final boolean nyOppfolging) {
+    private static List<LamellFactory> createLamellFactories(final GrunnInfo.Bruker bruker, boolean nySaksoversikt, final boolean nyOppfolging, final boolean nyVarsel) {
         List<LamellFactory> lamellFactories = new ArrayList<>();
         lamellFactories.add(createOversiktLamell(bruker));
         lamellFactories.add(createKontrakterLamell(bruker, nyOppfolging));
         lamellFactories.add(createBrukerprofilLamell(bruker));
         lamellFactories.add(createSaksoversiktLamell(bruker, nySaksoversikt));
-        lamellFactories.add(createVarslingsLamell(bruker));
+        lamellFactories.add(createVarslingsLamell(bruker, nyVarsel));
 
         return lamellFactories;
     }
@@ -289,8 +289,8 @@ public class LamellContainer extends TokenLamellPanel implements Serializable {
         }
     }
 
-    private static LamellFactory createVarslingsLamell(final GrunnInfo.Bruker bruker) {
-        return newLamellFactory(LAMELL_VARSLING, "V", true, (LerretFactory) (id, name) -> new VarselLerret(id, bruker.fnr));
+    private static LamellFactory createVarslingsLamell(final GrunnInfo.Bruker bruker, boolean nyVarsel) {
+        return newLamellFactory(LAMELL_VARSLING, "V", true, (LerretFactory) (id, name) -> new VarselLerret(id, bruker.fnr, nyVarsel));
     }
 
     private LamellFactory createMeldingerLamell(final GrunnInfo.Bruker bruker, final DialogSession session) {

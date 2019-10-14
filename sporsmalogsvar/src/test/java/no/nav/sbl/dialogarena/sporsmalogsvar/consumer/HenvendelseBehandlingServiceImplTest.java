@@ -11,7 +11,7 @@ import no.nav.kjerneinfo.domain.person.fakta.AnsvarligEnhet;
 import no.nav.kjerneinfo.domain.person.fakta.Organisasjonsenhet;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.*;
 import no.nav.modig.common.SporingsLogger;
-import no.nav.modig.content.PropertyResolver;
+import no.nav.modig.content.ContentRetriever;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.kodeverk.StandardKodeverk;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.ldap.LDAPService;
@@ -77,7 +77,7 @@ public class HenvendelseBehandlingServiceImplTest {
     @Mock
     private StandardKodeverk standardKodeverk;
     @Mock
-    private PropertyResolver propertyResolver;
+    private ContentRetriever propertyResolver;
     @Mock
     private SporingsLogger sporingsLogger;
     @Mock
@@ -95,7 +95,7 @@ public class HenvendelseBehandlingServiceImplTest {
     @BeforeEach
     public void setUp() {
         initMocks(this);
-        when(propertyResolver.getProperty(anyString())).thenAnswer(new Answer<String>() {
+        when(propertyResolver.hentTekst(anyString())).thenAnswer(new Answer<String>() {
 
             @Override
             public String answer(InvocationOnMock invocation) throws Throwable {
@@ -169,6 +169,13 @@ public class HenvendelseBehandlingServiceImplTest {
         henvendelseBehandlingService.merkSomFeilsendt(VALGT_TRAAD);
 
         verify(behandleHenvendelsePortType).oppdaterTilKassering(IDER_I_VALGT_TRAAD);
+    }
+
+    @Test
+    public void skalMerkeForHastekassering() {
+        henvendelseBehandlingService.merkForHastekassering(VALGT_TRAAD);
+
+        verify(behandleHenvendelsePortType).markerTraadForHasteKassering(IDER_I_VALGT_TRAAD);
     }
 
     @Test

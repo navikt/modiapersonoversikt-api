@@ -75,6 +75,7 @@ public class GsakServiceImpl implements GsakService {
             oppgave.withBeskrivelse(leggTilBeskrivelse(oppgave.getBeskrivelse(), nyBeskrivelse, valgtEnhetIdString));
             lagreGsakOppgave(oppgave, valgtEnhetId);
         } catch (LagreOppgaveOptimistiskLasing e) {
+            logger.error("LagreOppgaveOptimistiskLasing feil i oppdatering av beskrivelse for oppgave " + oppgave.getOppgaveId(), e);
             if (oppgaveErFerdigstilt(hentOppgave(oppgave.getOppgaveId()))) {
                 throw new OppgaveErFerdigstilt(e);
             }
@@ -97,6 +98,7 @@ public class GsakServiceImpl implements GsakService {
         String beskrivelse = "Fra Modia:\n" + nyOppgave.beskrivelse;
 
         GsakKodeTema.Underkategori underkategori = nyOppgave.underkategori != null ? nyOppgave.underkategori : new GsakKodeTema.Underkategori(null, null);
+        GsakKodeTema.Prioritet prioritet = nyOppgave.prioritet != null ? nyOppgave.prioritet : new GsakKodeTema.Prioritet("NORM_" + nyOppgave.tema.kode, "Normal");
 
         oppgavebehandlingWS.opprettOppgave(
                 new WSOpprettOppgaveRequest()
@@ -114,7 +116,7 @@ public class GsakServiceImpl implements GsakService {
                                         .withUnderkategoriKode(underkategori.kode)
                                         .withBrukerId(nyOppgave.brukerId)
                                         .withOppgavetypeKode(nyOppgave.type.kode)
-                                        .withPrioritetKode(nyOppgave.prioritet.kode)
+                                        .withPrioritetKode(prioritet.kode)
                                         .withLest(false)
                         )
         );

@@ -1,7 +1,7 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.fortsettdialogpanel;
 
 
-import no.nav.modig.content.CmsContentRetriever;
+import no.nav.modig.content.ContentRetriever;
 import no.nav.modig.wicket.test.matcher.BehaviorMatchers;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.GrunnInfo;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.GrunnInfo.Bruker;
@@ -81,7 +81,7 @@ public class FortsettDialogPanelTest extends WicketPageTest {
     @Inject
     private HenvendelseUtsendingService henvendelseUtsendingService;
     @Inject
-    private CmsContentRetriever cmsContentRetriever;
+    private ContentRetriever contentRetriever;
 
     @Inject
     private SaksbehandlerInnstillingerService saksbehandlerInnstillingerService;
@@ -328,7 +328,7 @@ public class FortsettDialogPanelTest extends WicketPageTest {
 
     @Test
     public void skalViseFornavnISubmitKnapp() {
-        when(cmsContentRetriever.hentTekst(anyString())).thenReturn("Tekst fra mock-cms %s");
+        when(contentRetriever.hentTekst(anyString())).thenReturn("Tekst fra mock-cms %s");
 
         wicket.goToPageWith(new FortsettDialogPanel("id", grunnInfo, asList(lagSporsmalFraBruker()),
                 new Oppgave(null, FNR, SPORSMAL_ID)))

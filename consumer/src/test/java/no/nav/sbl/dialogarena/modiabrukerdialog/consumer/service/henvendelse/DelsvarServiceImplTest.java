@@ -1,8 +1,10 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.henvendelse;
 
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Kanal;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.HenvendelseUtsendingService;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveBehandlingService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.henvendelse.DelsvarRequest.DelsvarRequestBuilder;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -23,14 +25,16 @@ class DelsvarServiceImplTest {
     public static final String VALGT_ENHET = "0300";
     public static final String BEHANDLINGSID = "ABC123";
 
+    private OppgaveBehandlingService oppgaveBehandlingServiceMock;
     private HenvendelseUtsendingService henvendelseMock;
     private DelsvarService delsvarService;
 
     @BeforeEach
     void before() {
         henvendelseMock = mock(HenvendelseUtsendingService.class);
+        oppgaveBehandlingServiceMock = mock(OppgaveBehandlingService.class);
         when(henvendelseMock.hentTraad(BRUKERS_FNR, TRAAD_ID, VALGT_ENHET)).thenReturn(Collections.singletonList(new Melding()));
-        delsvarService = new DelsvarServiceImpl(henvendelseMock);
+        delsvarService = new DelsvarServiceImpl(henvendelseMock, oppgaveBehandlingServiceMock);
     }
 
     @Test
@@ -64,11 +68,13 @@ class DelsvarServiceImplTest {
     private DelsvarRequest lagRequest() {
         return new DelsvarRequestBuilder()
                 .withNavIdent(SAKSBEHANDLERS_IDENT)
-                .withHenvendelseId(BEHANDLINGSID)
+                .withBehandlingsId(BEHANDLINGSID)
                 .withTraadId(TRAAD_ID)
                 .withSvar(SVAR)
                 .withFodselsnummer(BRUKERS_FNR)
                 .withValgtEnhet(VALGT_ENHET)
+                .withTemagruppe(Temagruppe.ARBD.name())
+                .withOppgaveId("123")
                 .build();
     }
 

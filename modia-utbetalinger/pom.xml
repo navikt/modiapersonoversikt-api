@@ -28,12 +28,6 @@
 		<dependency>
 			<groupId>no.nav.modig</groupId>
 			<artifactId>modia-felleskomponenter</artifactId>
-			<exclusions>
-				<exclusion>
-					<artifactId>ehcache-core</artifactId>
-					<groupId>net.sf.ehcache</groupId>
-				</exclusion>
-			</exclusions>
 		</dependency>
 
 		<dependency>
@@ -88,6 +82,10 @@
 				<exclusion>
 					<groupId>commons-logging</groupId>
 					<artifactId>commons-logging</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>no.nav.modig</groupId>
+					<artifactId>modig-content</artifactId>
 				</exclusion>
 			</exclusions>
 		</dependency>

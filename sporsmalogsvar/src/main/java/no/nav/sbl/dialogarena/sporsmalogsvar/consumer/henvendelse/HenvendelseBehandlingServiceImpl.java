@@ -9,9 +9,10 @@ import no.nav.kjerneinfo.domain.person.Person;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelse;
 import no.nav.modig.common.SporingsAksjon;
 import no.nav.modig.common.SporingsLogger;
-import no.nav.modig.content.PropertyResolver;
+import no.nav.modig.content.ContentRetriever;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Fritekst;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.HenvendelseUtils;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.kodeverk.StandardKodeverk;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.ldap.LDAPService;
@@ -22,6 +23,8 @@ import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.behandlehenvendelse.Be
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.henvendelse.HenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.meldinger.WSHentHenvendelseListeRequest;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.meldinger.WSHentHenvendelseListeResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -31,16 +34,16 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
-import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
+import static no.nav.brukerdialog.security.context.SubjectHandler.getSubjectHandler;
 import static no.nav.brukerdialog.security.tilgangskontroll.utils.AttributeUtils.*;
 import static no.nav.brukerdialog.security.tilgangskontroll.utils.RequestUtils.forRequest;
-import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.*;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.MeldingUtils.tilMelding;
 import static org.apache.commons.lang3.StringUtils.defaultString;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
 public class HenvendelseBehandlingServiceImpl implements HenvendelseBehandlingService {
+    private static Logger logger = LoggerFactory.getLogger(HenvendelseBehandlingService.class);
 
     @Inject
     private HenvendelsePortType henvendelsePortType;
@@ -54,7 +57,8 @@ public class HenvendelseBehandlingServiceImpl implements HenvendelseBehandlingSe
     @Inject
     private StandardKodeverk standardKodeverk;
     @Inject
-    private PropertyResolver propertyResolver;
+    @Named("propertyResolver")
+    private ContentRetriever propertyResolver;
     @Inject
     private SporingsLogger sporingsLogger;
     @Inject
@@ -67,9 +71,8 @@ public class HenvendelseBehandlingServiceImpl implements HenvendelseBehandlingSe
     }
 
     private List<Melding> hentMeldingerFraHenvendelse(String fnr, String valgtEnhet) {
-        List<String> typer = getAkutelleHenvendelseTyper();
-
-        WSHentHenvendelseListeResponse wsHentHenvendelseListeResponse = henvendelsePortType.hentHenvendelseListe(new WSHentHenvendelseListeRequest().withFodselsnummer(fnr).withTyper(typer));
+        WSHentHenvendelseListeResponse wsHentHenvendelseListeResponse = henvendelsePortType
+                .hentHenvendelseListe(new WSHentHenvendelseListeRequest().withFodselsnummer(fnr).withTyper(HenvendelseUtils.AKTUELLE_HENVENDELSE_TYPER));
 
         List<Object> wsMeldinger = wsHentHenvendelseListeResponse.getAny();
 
@@ -85,24 +88,6 @@ public class HenvendelseBehandlingServiceImpl implements HenvendelseBehandlingSe
                 .map(okonomiskSosialhjelpTilgang(valgtEnhet))
                 .map(journalfortTemaTilgang(valgtEnhet))
                 .collect(toList());
-    }
-
-    private List<String> getAkutelleHenvendelseTyper() {
-        List<String> typer = new ArrayList<>(asList(
-                SPORSMAL_SKRIFTLIG.name(),
-                SVAR_SKRIFTLIG.name(),
-                SVAR_OPPMOTE.name(),
-                SVAR_TELEFON.name(),
-                REFERAT_OPPMOTE.name(),
-                REFERAT_TELEFON.name(),
-                SPORSMAL_MODIA_UTGAAENDE.name(),
-                SVAR_SBL_INNGAAENDE.name(),
-                DOKUMENT_VARSEL.name(),
-                OPPGAVE_VARSEL.name(),
-                DELVIS_SVAR_SKRIFTLIG.name()
-        ));
-
-        return typer;
     }
 
     @Override
@@ -137,12 +122,21 @@ public class HenvendelseBehandlingServiceImpl implements HenvendelseBehandlingSe
     }
 
     @Override
+    public void merkForHastekassering(TraadVM valgtTraad) {
+        List<String> behandlingsIdListe = valgtTraad.getMeldinger().stream()
+                .filter(melding -> !melding.erFeilsendt())
+                .map(MeldingVM::getId)
+                .collect(toList());
+        behandleHenvendelsePortType.markerTraadForHasteKassering(behandlingsIdListe);
+    }
+
+    @Override
     public String getEnhet(String fnr) {
         HentKjerneinformasjonRequest kjerneinfoRequest = new HentKjerneinformasjonRequest(fnr);
         kjerneinfoRequest.setBegrunnet(true);
         Person person = kjerneinfo.hentKjerneinformasjon(kjerneinfoRequest).getPerson();
 
-        if(person.getPersonfakta().getAnsvarligEnhet() != null) {
+        if (person.getPersonfakta().getAnsvarligEnhet() != null) {
             return person.getPersonfakta().getAnsvarligEnhet().getOrganisasjonsenhet().getOrganisasjonselementId();
         } else {
             return null;
@@ -176,7 +170,14 @@ public class HenvendelseBehandlingServiceImpl implements HenvendelseBehandlingSe
             PolicyRequest okonomiskSosialhjelpPolicyRequest = forRequest(attributes);
 
             if (melding.gjeldendeTemagruppe == Temagruppe.OKSOS && !pep.hasAccess(okonomiskSosialhjelpPolicyRequest)) {
-                melding.withFritekst(new Fritekst(propertyResolver.getProperty("tilgang.OKSOS"), melding.skrevetAv, melding.ferdigstiltDato));
+                logger.info("HenvendelseBehandlingServiceImpl::okonomiskSosialhjelpTilgang feilet. Ident: {} Enhet: {} Tema: {} SaksId: {} JournalpostId: {}",
+                        getSubjectHandler().getUid(),
+                        valgtEnhet,
+                        melding.journalfortTema,
+                        melding.journalfortSaksId,
+                        melding.journalpostId
+                );
+                melding.withFritekst(new Fritekst(propertyResolver.hentTekst("tilgang.OKSOS"), melding.skrevetAv, melding.ferdigstiltDato));
             }
 
             return melding;
@@ -192,7 +193,14 @@ public class HenvendelseBehandlingServiceImpl implements HenvendelseBehandlingSe
                     resourceAttribute("urn:nav:ikt:tilgangskontroll:xacml:resource:tema", defaultString(melding.journalfortTema)));
 
             if (!isBlank(melding.journalfortTema) && !pep.hasAccess(temagruppePolicyRequest)) {
-                melding.withFritekst(new Fritekst(propertyResolver.getProperty("tilgang.journalfort"), melding.skrevetAv, melding.ferdigstiltDato));
+                logger.info("HenvendelseBehandlingServiceImpl::journalfortTemaTilgang feilet. Ident: {} Enhet: {} Tema: {} SaksId: {} JournalpostId: {}",
+                        getSubjectHandler().getUid(),
+                        valgtEnhet,
+                        melding.journalfortTema,
+                        melding.journalfortSaksId,
+                        melding.journalpostId
+                );
+                melding.withFritekst(new Fritekst(propertyResolver.hentTekst("tilgang.journalfort"), melding.skrevetAv, melding.ferdigstiltDato));
                 melding.ingenTilgangJournalfort = true;
             }
 

@@ -12,7 +12,7 @@ import no.nav.kjerneinfo.domain.person.Personfakta;
 import no.nav.kjerneinfo.domain.person.fakta.AnsvarligEnhet;
 import no.nav.kjerneinfo.domain.person.fakta.Organisasjonsenhet;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.*;
-import no.nav.modig.content.PropertyResolver;
+import no.nav.modig.content.ContentRetriever;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Saksbehandler;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.Sak;
@@ -86,7 +86,7 @@ public class HenvendelseUtsendingServiceImplTest {
     @Mock
     public AnsattService ansattWS;
     @Mock
-    public PropertyResolver propertyResolver;
+    public ContentRetriever propertyResolver;
     @Mock
     private EnforcementPoint pep;
     @Mock
@@ -219,7 +219,7 @@ public class HenvendelseUtsendingServiceImplTest {
                 .withTemagruppe(TEMAGRUPPE);
         henvendelseUtsendingService.sendHenvendelse(melding, Optional.empty(), Optional.of(sak), SAKSBEHANDLERS_VALGTE_ENHET);
 
-        verify(sakerService).knyttBehandlingskjedeTilSak(anyString(), anyString(), sakArgumentCaptor.capture());
+        verify(sakerService).knyttBehandlingskjedeTilSak(anyString(), anyString(), sakArgumentCaptor.capture(), anyString());
 
         Sak sendtSak = sakArgumentCaptor.getValue();
         assertThat(sendtSak, is(sak));
@@ -277,6 +277,7 @@ public class HenvendelseUtsendingServiceImplTest {
         assertThat(hentHenvendelseListeRequestCaptor.getValue().getTyper(), is(not(empty())));
         assertThat(hentHenvendelseListeRequestCaptor.getValue().getTyper(), containsInAnyOrder(
                 XMLHenvendelseType.SPORSMAL_SKRIFTLIG.name(),
+                XMLHenvendelseType.SPORSMAL_SKRIFTLIG_DIREKTE.name(),
                 XMLHenvendelseType.SVAR_SKRIFTLIG.name(),
                 XMLHenvendelseType.SVAR_OPPMOTE.name(),
                 XMLHenvendelseType.SVAR_TELEFON.name(),
@@ -284,7 +285,11 @@ public class HenvendelseUtsendingServiceImplTest {
                 XMLHenvendelseType.REFERAT_OPPMOTE.name(),
                 XMLHenvendelseType.REFERAT_TELEFON.name(),
                 XMLHenvendelseType.SPORSMAL_MODIA_UTGAAENDE.name(),
-                XMLHenvendelseType.SVAR_SBL_INNGAAENDE.name()));
+                XMLHenvendelseType.SVAR_SBL_INNGAAENDE.name(),
+                XMLHenvendelseType.DOKUMENT_VARSEL.name(),
+                XMLHenvendelseType.OPPGAVE_VARSEL.name()
+
+        ));
         assertThat(hentHenvendelseListeRequestCaptor.getValue().getTyper(), not(Matchers.contains(XMLHenvendelseType.SPORSMAL_SKRIFTLIG.name())));
     }
 

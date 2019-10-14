@@ -27,8 +27,7 @@ class DelvisSvar extends Component {
         this.velgTemagruppe = this.velgTemagruppe.bind(this);
         this.lagFeilmeldingModalHvisFeil = this.lagFeilmeldingModalHvisFeil.bind(this);
         this.feilmeldingCloseButtonCallback = this.feilmeldingCloseButtonCallback.bind(this);
-        this.leggTilbakeOppgave = this.leggTilbakeOppgave.bind(this);
-        this.ferdigstillHenvendelse = this.ferdigstillHenvendelse.bind(this);
+        this.sendDelsvar = this.sendDelsvar.bind(this);
 
         this.state = {
             svarValue: window.dialogTekst,
@@ -41,19 +40,14 @@ class DelvisSvar extends Component {
         window.dialogTekst = undefined;
     }
 
-    ferdigstillHenvendelse() {
-        const url = `${API_BASE_URL}personer/${this.props.fodselsnummer}/traader/${this.props.traadId}/henvendelser/${this.props.henvendelseId}/delvisSvar`;
+    sendDelsvar() {
+        const url = `${API_BASE_URL}dialog/${this.props.fodselsnummer}/delvis-svar`;
         const data = JSON.stringify({
-            svar: this.state.svarValue
-        });
-        return Ajax.post(url, data);
-    }
-
-    leggTilbakeOppgave() {
-        const url = `${API_BASE_URL}oppgaver/${this.props.oppgaveId}/leggTilbake`;
-        const data = JSON.stringify({
+            fritekst: this.state.svarValue,
+            traadId: this.props.traadId,
+            behandlingsId: this.props.henvendelseId, // TODO riktig navn på props her. Denne ble feilaktig kallt henvendelseId da delsvar ble laget, men dette er egentlig behandlingsId
             temagruppe: this.state.valgtTemagruppe,
-            beskrivelse: `Henvendelsen er besvart delvis og lagt tilbake med ny temagruppe ${this.state.valgtTemagruppe}`
+            oppgaveId: this.props.oppgaveId
         });
         return Ajax.post(url, data);
     }
@@ -85,8 +79,7 @@ class DelvisSvar extends Component {
         });
 
         Promise.resolve()
-            .then(this.leggTilbakeOppgave)
-            .then(this.ferdigstillHenvendelse)
+            .then(this.sendDelsvar)
             .then(() => {
                 this.setState({
                     panelState: panelState.INITIALIZED,

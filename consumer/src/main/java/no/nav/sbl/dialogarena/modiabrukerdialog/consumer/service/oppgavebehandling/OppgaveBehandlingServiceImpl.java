@@ -43,6 +43,7 @@ public class OppgaveBehandlingServiceImpl implements OppgaveBehandlingService {
 
     private static final Logger logger = LoggerFactory.getLogger(OppgaveBehandlingServiceImpl.class);
     public static final Integer DEFAULT_ENHET = 4100;
+    public static final String STORD_ENHET = "4842";
     public static final String KODE_OPPGAVE_FERDIGSTILT = "F";
     public static final String SPORSMAL_OG_SVAR = "SPM_OG_SVR";
     public static final String KONTAKT_NAV = "KNA";
@@ -114,9 +115,15 @@ public class OppgaveBehandlingServiceImpl implements OppgaveBehandlingService {
             oppdaterBeskrivelseIGsak(temagruppe, saksbehandlersValgteEnhet, oppgaveId);
         }
 
-        oppgavebehandlingWS.ferdigstillOppgaveBolk(new WSFerdigstillOppgaveBolkRequest()
-                .withOppgaveIdListe(oppgaveIder)
-                .withFerdigstiltAvEnhetId(Integer.valueOf(enhetFor(temagruppe, saksbehandlersValgteEnhet))));
+        try {
+            oppgavebehandlingWS.ferdigstillOppgaveBolk(new WSFerdigstillOppgaveBolkRequest()
+                    .withOppgaveIdListe(oppgaveIder)
+                    .withFerdigstiltAvEnhetId(Integer.valueOf(enhetFor(temagruppe, saksbehandlersValgteEnhet))));
+        } catch (Exception e) {
+            String ider = String.join(", ", oppgaveIder);
+            logger.warn("Ferdigstilling av oppgavebolk med oppgaveider: " + ider + ", med enhet " + saksbehandlersValgteEnhet + " feilet.", e);
+            throw e;
+        }
     }
 
     private void oppdaterBeskrivelseIGsak(Optional<Temagruppe> temagruppe, String saksbehandlersValgteEnhet, String oppgaveId) {
@@ -126,13 +133,14 @@ public class OppgaveBehandlingServiceImpl implements OppgaveBehandlingService {
                     saksbehandlersValgteEnhet));
             lagreOppgaveIGsak(oppgave, temagruppe, saksbehandlersValgteEnhet);
         } catch (HentOppgaveOppgaveIkkeFunnet | LagreOppgaveOptimistiskLasing e) {
+            logger.info("Feil ved oppdatering av beskrivelse for oppgave " + oppgaveId, e);
             throw new RuntimeException(e);
         }
     }
 
     @Override
     public void leggTilbakeOppgaveIGsak(LeggTilbakeOppgaveIGsakRequest request) {
-        if (request.getOppgaveId() == null) {
+        if (request.getOppgaveId() == null || request.getBeskrivelse() == null) {
             return;
         }
 
@@ -200,8 +208,9 @@ public class OppgaveBehandlingServiceImpl implements OppgaveBehandlingService {
                             .withEndreOppgave(tilWSEndreOppgave(wsOppgave))
                             .withEndretAvEnhetId(Integer.valueOf(enhetFor(temagruppe, saksbehandlersValgteEnhet)))
             );
-        } catch (LagreOppgaveOppgaveIkkeFunnet lagreOppgaveOppgaveIkkeFunnet) {
-            throw new RuntimeException("Oppgaven ble ikke funnet ved tilordning til saksbehandler", lagreOppgaveOppgaveIkkeFunnet);
+        } catch (LagreOppgaveOppgaveIkkeFunnet e) {
+            logger.info("Oppgaven ble ikke funnet ved tilordning til saksbehandler. Oppgaveid: " + wsOppgave.getOppgaveId(), e);
+            throw new RuntimeException("Oppgaven ble ikke funnet ved tilordning til saksbehandler", e);
         }
     }
 
@@ -245,7 +254,10 @@ public class OppgaveBehandlingServiceImpl implements OppgaveBehandlingService {
             return DEFAULT_ENHET.toString();
         }
         Temagruppe temagruppe = optional.get();
-        if (asList(ARBD, FMLI, ORT_HJE, PENS, UFRT, PLEIEPENGERSY, UTLAND).contains(temagruppe)) {
+
+        if (temagruppe.equals(FMLI) && saksbehandlersValgteEnhet.equals(STORD_ENHET)) {
+            return STORD_ENHET;
+        } else if (asList(ARBD, FMLI, ORT_HJE, PENS, UFRT, PLEIEPENGERSY, UTLAND).contains(temagruppe)) {
             return DEFAULT_ENHET.toString();
         } else {
             return saksbehandlersValgteEnhet;

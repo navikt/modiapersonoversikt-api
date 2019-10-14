@@ -1,7 +1,7 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel;
 
 import no.nav.brukerdialog.security.context.ThreadLocalSubjectHandler;
-import no.nav.modig.content.CmsContentRetriever;
+import no.nav.modig.content.ContentRetriever;
 import no.nav.modig.wicket.component.enhancedtextarea.EnhancedTextArea;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.GrunnInfo;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.Sak;
@@ -63,7 +63,7 @@ public class NyDialogPanelTest extends WicketPageTest {
     private SaksbehandlerInnstillingerService saksbehandlerInnstillingerService;
 
     @Inject
-    private CmsContentRetriever cmsContentRetriever;
+    private ContentRetriever contentRetriever;
 
     @InjectMocks
     private NyDialogPanel testNyDialogPanel;
@@ -72,6 +72,7 @@ public class NyDialogPanelTest extends WicketPageTest {
 
     @Before
     public void setUp() {
+        System.setProperty("no.nav.brukerdialog.security.context.subjectHandlerImplementationClass", ThreadLocalSubjectHandler.class.getName());
         grunnInfo = new GrunnInfo(new GrunnInfo.Bruker(FNR, FORNAVN, "", "", "", "", ""), new GrunnInfo.Saksbehandler("", "", ""));
         testNyDialogPanel = new NyDialogPanel("id", grunnInfo);
 
@@ -193,7 +194,7 @@ public class NyDialogPanelTest extends WicketPageTest {
 
     @Test
     public void skalViseFornavnISubmitKnapp() {
-        when(cmsContentRetriever.hentTekst(anyString())).thenReturn("Tekst fra mock-cms %s");
+        when(contentRetriever.hentTekst(anyString())).thenReturn("Tekst fra mock-cms %s");
 
         wicket.goToPageWith(testNyDialogPanel)
                 .should().containPatterns(FORNAVN);

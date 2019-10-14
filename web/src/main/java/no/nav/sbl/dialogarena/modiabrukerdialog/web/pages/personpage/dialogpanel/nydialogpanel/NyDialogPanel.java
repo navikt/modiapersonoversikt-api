@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.nydialogpanel;
 
+import no.nav.metrics.MetricsFactory;
 import no.nav.modig.modia.feedbackform.FeedbackLabel;
 import no.nav.modig.wicket.component.enhancedtextarea.EnhancedTextArea;
 import no.nav.modig.wicket.component.enhancedtextarea.EnhancedTextAreaConfigurator;
@@ -16,6 +17,8 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingst
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.exceptions.JournalforingFeilet;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.HenvendelseUtsendingService;
+import no.nav.sbl.dialogarena.modiabrukerdialog.reactkomponenter.utils.wicket.ReactComponentCallback;
+import no.nav.sbl.dialogarena.modiabrukerdialog.reactkomponenter.utils.wicket.ReactComponentPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.*;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.HenvendelseVM.Modus;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.HenvendelseVM.OppgaveTilknytning;
@@ -44,10 +47,7 @@ import org.apache.wicket.model.*;
 import org.slf4j.Logger;
 
 import javax.inject.Inject;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static java.lang.String.format;
 import static java.util.Arrays.asList;
@@ -76,6 +76,7 @@ public class NyDialogPanel extends GenericPanel<HenvendelseVM> {
     private final List<Component> modusKomponenter = new ArrayList<>();
     private final FeedbackPanel feedbackPanel;
     private final SkrivestottePanel skrivestottePanel;
+    ReactComponentPanel hurtigreferat;
 
     private static final Logger logger = getLogger(NyDialogPanel.class);
 
@@ -171,7 +172,22 @@ public class NyDialogPanel extends GenericPanel<HenvendelseVM> {
         modusKomponenter.addAll(feedbackLabels);
         form.add(feedbackLabels.toArray(new Component[feedbackLabels.size()]));
 
-        add(form, kvittering);
+        HashMap<String, Object> hurtigReferatProps = new HashMap<String, Object>() {{
+            put("fødselsnummer", grunnInfo.bruker.fnr);
+        }};
+        hurtigreferat = new ReactComponentPanel("hurtigreferat", "HurtigReferat", hurtigReferatProps);
+        hurtigreferat.addCallback("visKvittering", Void.class, new ReactComponentCallback<Void>() {
+            @Override
+            public void onCallback(AjaxRequestTarget target, Void data) {
+                send(getPage(), Broadcast.BREADTH, new NamedEventPayload(Events.SporsmalOgSvar.MELDING_SENDT_TIL_BRUKER));
+                kvittering.visKvittering(target, "Hurtigreferat ble sendt til bruker", form, hurtigreferat);
+            }
+        });
+        hurtigreferat
+                .setOutputMarkupId(true)
+                .setVisibilityAllowed(true);
+
+        add(form, kvittering, hurtigreferat);
     }
 
     private List<FeedbackLabel> leggTilFeedbackLabels(Component... components) {
@@ -207,7 +223,6 @@ public class NyDialogPanel extends GenericPanel<HenvendelseVM> {
                 target.add(feedbackPanel);
                 FeedbackLabel.addFormLabelsToTarget(target, form);
             }
-
         };
         submitKnapp.add(new AttributeModifier("value", new AbstractReadOnlyModel() {
             @Override
@@ -324,10 +339,10 @@ public class NyDialogPanel extends GenericPanel<HenvendelseVM> {
             String kvitteringstekstKey = henvendelseVM.getKvitteringsTekstKeyBasertPaaModus("nydialogpanel");
 
             send(getPage(), Broadcast.BREADTH, new NamedEventPayload(Events.SporsmalOgSvar.MELDING_SENDT_TIL_BRUKER));
-            kvittering.visTemagruppebasertKvittering(target, getString(kvitteringstekstKey),  henvendelseVM.temagruppe, form);
+            kvittering.visTemagruppebasertKvittering(target, getString(kvitteringstekstKey), henvendelseVM.temagruppe, form, hurtigreferat);
         } catch (JournalforingFeilet e) {
             send(getPage(), Broadcast.BREADTH, new NamedEventPayload(Events.SporsmalOgSvar.MELDING_SENDT_TIL_BRUKER));
-            kvittering.visKvittering(target, getString("dialogpanel.feilmelding.journalforing"), form);
+            kvittering.visKvittering(target, getString("dialogpanel.feilmelding.journalforing"), form, hurtigreferat);
         } catch (Exception e) {
             logger.error("Sending av henvendelse feilet", e);
             error(getString("dialogpanel.feilmelding.send.henvendelse"));
@@ -336,6 +351,7 @@ public class NyDialogPanel extends GenericPanel<HenvendelseVM> {
     }
 
     private void sendReferat() throws Exception {
+        MetricsFactory.createEvent("hendelse.send.referat").report();
         sendHenvendelse(getModelObject(), referatType(getModelObject().kanal), Optional.empty());
     }
 
@@ -372,5 +388,4 @@ public class NyDialogPanel extends GenericPanel<HenvendelseVM> {
 
         henvendelseUtsendingService.sendHenvendelse(melding, Optional.empty(), sak, saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet());
     }
-
 }

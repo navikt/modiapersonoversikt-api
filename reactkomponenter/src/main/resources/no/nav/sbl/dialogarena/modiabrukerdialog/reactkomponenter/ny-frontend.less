@@ -4,6 +4,10 @@
   padding: 10px;
 }
 
+.dialogpanel .ny-frontend {
+  text-align: left;
+}
+
 #modia-app .ny-frontend {
   background-color: @navLysGra;
 
@@ -21,7 +25,6 @@
   ol, ul, dl {
     list-style: none;
     padding: 0;
-    margin: 0;
   }
   dt, dd {
     padding: 0;
@@ -76,6 +79,14 @@
     margin-top: initial;
     padding: initial;
   }
+
+  table {
+    border-collapse: collapse;
+  }
+
+  .ekspanderbartPanel__hode {
+    text-align: unset;
+  }
 }
 
 #modia-app {
@@ -90,6 +101,7 @@
   float: none;
   margin-right: initial;
   margin-top: initial;
+  overflow: hidden;
 
   &--xxs {
     height: 16px;

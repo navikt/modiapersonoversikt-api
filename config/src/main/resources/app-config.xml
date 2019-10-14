@@ -36,6 +36,7 @@
         <!-- Slutt felles -->
         <baseUrl alias="tjenestebuss" mapToProperty="tjenestebuss"/>
         <baseUrl alias="tjenester" mapToProperty="tjenester"/>
+        <baseUrl alias="gosys.nais" mapToProperty="gosys.nais"/>
         <credential alias="srv_kjerneinfo_tjenestebuss" mapToProperty="ctjenestebuss"/>
         <directory name="modiabrukerdialog" mapToProperty="modiabrukerdialog.datadir"/>
         <baseUrl alias="server.gosys" mapToProperty="server.gosys"/>
@@ -89,8 +90,6 @@
         <rest alias="saf.hentdokument" mapToProperty="saf.hentdokument"/>
         <applicationProperties alias="modiabrukerdialog.properties"/>
         <baseUrl alias="modiabrukerdialog.standardtekster.tilbakemelding" mapToProperty="modiabrukerdialog.standardtekster.tilbakemelding"/>
-        <!-- App-->
-        <baseUrl alias="appres.cms" mapToProperty="appres.cms"/>
 
         <applicationCertificate alias="srvModiabrukerdialog"/>
 

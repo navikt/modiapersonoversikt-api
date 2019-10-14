@@ -20,7 +20,7 @@ import static java.util.Comparator.comparing;
 public class Melding implements Serializable {
 
     public String id, traadId, fnrBruker, navIdent, oppgaveId, temagruppe, temagruppeNavn, kanal, kontorsperretEnhet,
-            journalfortTema, journalfortTemanavn, journalfortSaksId, journalfortAvNavIdent, eksternAktor,
+            journalpostId, journalfortTema, journalfortTemanavn, journalfortSaksId, journalfortAvNavIdent, eksternAktor,
             tilknyttetEnhet, brukersEnhet, statusTekst, statusKlasse, lestStatus, visningsDatoTekst,
             journalfortDatoTekst, ferdigstiltUtenSvarDatoTekst, markertSomFeilsendtDatoTekst, kontorsperretDatoTekst, ikontekst, kontorsperretAvNavIdent, markertSomFeilsendtAvNavIdent,
             ferdigstiltUtenSvarAvNavIdent;
@@ -99,6 +99,11 @@ public class Melding implements Serializable {
 
     public Melding withFerdigstiltDato(DateTime dato) {
         this.ferdigstiltDato = dato;
+        return this;
+    }
+
+    public Melding withJournalpostId(String journalpostId) {
+        this.journalpostId = journalpostId;
         return this;
     }
 
@@ -186,7 +191,8 @@ public class Melding implements Serializable {
     }
 
     public boolean erSporsmalSkriftlig() {
-        return meldingstype.equals(Meldingstype.SPORSMAL_SKRIFTLIG);
+        return meldingstype.equals(Meldingstype.SPORSMAL_SKRIFTLIG)
+                || meldingstype.equals(Meldingstype.SPORSMAL_SKRIFTLIG_DIREKTE);
     }
 
     public boolean erDelvisSvar() {
@@ -217,11 +223,20 @@ public class Melding implements Serializable {
     }
 
     public String getFritekst() {
-        if (fritekster.isEmpty()) {
-            return "";
-        } else {
-            return this.fritekster.get(0).getFritekst();
-        }
+        return this.getFriteksterMedEldsteForst()
+                .stream()
+                .map(Fritekst::getFritekst)
+                .collect(Collectors.joining("\n\u00A0\n"));
+    }
+
+    public String getSkrevetAv() {
+        return this.getFriteksterMedEldsteForst()
+                .stream()
+                .map((fritekst) ->
+                        fritekst.getSaksbehandler()
+                        .map((saksbehandler) -> String.format("%s (%s)", saksbehandler.navn, saksbehandler.getIdent()))
+                        .orElse("Ukjent"))
+                .collect(Collectors.joining(" og "));
     }
 
     public Melding withNavIdent(String navIdent) {

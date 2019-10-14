@@ -4,9 +4,12 @@ package no.nav.sbl.dialogarena.sporsmalogsvar.common.utils;
 import com.github.jknack.handlebars.Context;
 import com.github.jknack.handlebars.Helper;
 import no.nav.modig.core.exception.ApplicationException;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Saksbehandler;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Fritekst;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.henvendelse.delsvar.DelsvarSammenslaaer;
 import no.nav.sbl.dialogarena.pdf.HandleBarHtmlGenerator;
 import no.nav.sbl.dialogarena.pdf.PDFFabrikk;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.MeldingVM;
@@ -14,12 +17,12 @@ import org.joda.time.DateTime;
 
 import java.io.IOException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.unmodifiableMap;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe.*;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype.SPORSMAL_SKRIFTLIG;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype.SVAR_SBL_INNGAAENDE;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype.*;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.PdfUtils.MeldingsTypeMapping.SAMTALEREFERAT;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
@@ -44,12 +47,17 @@ public class PdfUtils {
         TEMAGRUPPE_MAP = unmodifiableMap(map);
     }
 
-    public static byte[] genererPdfForPrint(List<MeldingVM> meldinger) {
+    public static byte[] genererPdfForPrint(List<Melding> alleMeldinger) {
+        List<Melding> meldinger = DelsvarSammenslaaer.sammenslaFullforteDelsvar(alleMeldinger)
+                .stream()
+                .filter((melding) -> !melding.erDelvisSvar())
+                .collect(Collectors.toList());
+
         Map<String, Helper<?>> helpers = generateHelpers();
         List<PDFMelding> pdfMeldinger = new ArrayList<>();
         try {
-            for (MeldingVM melding : meldinger) {
-                pdfMeldinger.add(new PDFMelding(melding.melding));
+            for (Melding melding : meldinger) {
+                pdfMeldinger.add(new PDFMelding(melding));
             }
             PdfMeldingerWrapper innhold = new PdfMeldingerWrapper(pdfMeldinger);
 
@@ -58,6 +66,15 @@ public class PdfUtils {
         } catch (IOException e) {
             throw new ApplicationException("Kunne ikke lage markup av melding for print", e);
         }
+    }
+
+    public static byte[] genererPdfForPrintVM(List<MeldingVM> meldinger) {
+        List<Melding> meldingList = meldinger
+                .stream()
+                .map((melding) -> melding.melding)
+                .collect(Collectors.toList());
+
+        return genererPdfForPrint(meldingList);
     }
 
     private static Map<String, Helper<?>> generateHelpers() {
@@ -94,7 +111,7 @@ public class PdfUtils {
         public PDFMelding(Melding melding) {
             this.fnrBruker = melding.fnrBruker;
             this.meldingstype = lagPDFMeldingstype(melding);
-            this.avBruker = erMeldingInngaaende(melding.meldingstype) ? melding.fnrBruker : melding.navIdent;
+            this.avBruker = erMeldingInngaaende(melding.meldingstype) ? melding.fnrBruker : alleIdenter(melding);
             this.typeBeskrivelse = lagTypeBeskrivelse(melding);
             this.temagruppeBeskrivelse = lagTemagruppeBeskrivelse(melding.temagruppe);
             this.fritekst = escapeHtml(melding.getFritekst());
@@ -105,12 +122,20 @@ public class PdfUtils {
             this.markertSomFeilsendtAv = melding.markertSomFeilsendtAvNavIdent;
         }
 
+        private String alleIdenter(Melding melding) {
+            return melding.getFriteksterMedEldsteForst()
+                    .stream()
+                    .map(Fritekst::getSaksbehandler)
+                    .map(saksbehandler -> saksbehandler.map(Saksbehandler::getIdent).orElse("Ukjent"))
+                    .collect(Collectors.joining(" og "));
+        }
+
         private String lagPDFMeldingstype(Melding melding) {
             return getMeldingsTypeMapping(melding).beskrivendeNavn;
         }
 
         private boolean erMeldingInngaaende(Meldingstype meldingstype) {
-            return asList(SPORSMAL_SKRIFTLIG, SVAR_SBL_INNGAAENDE).contains(meldingstype);
+            return asList(SPORSMAL_SKRIFTLIG, SPORSMAL_SKRIFTLIG_DIREKTE, SVAR_SBL_INNGAAENDE).contains(meldingstype);
         }
 
         private String lagTypeBeskrivelse(Melding melding) {

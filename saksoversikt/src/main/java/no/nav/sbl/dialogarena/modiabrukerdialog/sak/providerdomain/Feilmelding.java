@@ -8,7 +8,7 @@ public enum Feilmelding {
     SIKKERHETSBEGRENSNING("feilmelding.sikkerhetsbegrensning"),
     MANGLER_DOKUMENTMETADATA("feilmelding.manglermetadata"),
     JOURNALFORT_ANNET_TEMA("feilmelding.journalfortannettema"),
-    IKKE_JOURNALFORT_ELLER_ANNEN_BRUKER("feilmelding.journalfortfeil"),
+    IKKE_JOURNALFORT("feilmelding.journalfortfeil"),
     SAKSBEHANDLER_IKKE_TILGANG("feilmelding.saksbehandlerikketilgang"),
     TEMAKODE_ER_BIDRAG("feilmelding.sikkerhetsbegrensning"),
     KORRUPT_PDF("feilmelding.korruptpdf"),

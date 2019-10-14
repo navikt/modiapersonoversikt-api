@@ -76,7 +76,7 @@ public class HentPersonPage extends BasePage {
         );
 
         if (naisGosysLenke) {
-            add(new GosysNaisLenke("gosysNaisLenke"));
+            add(new GosysNaisLenke("gosysNaisLenke", urlFnr));
         } else {
             add(new EmptyPanel("gosysNaisLenke"));
         }

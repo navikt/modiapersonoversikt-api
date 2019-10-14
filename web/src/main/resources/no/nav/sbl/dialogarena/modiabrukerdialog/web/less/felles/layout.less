@@ -140,7 +140,8 @@
   flex: auto;
   display: flex;
   flex-direction: column;
-  height: 100vh;
+  min-height: 0; // hack for at flex skal virke
+  height: 100%;
   .navbar {
     z-index: 1000;
     position: relative;
@@ -148,14 +149,12 @@
   .app-content {
     display: flex;
     flex: auto;
-    height: 100vh;
     overflow-x: hidden;
     .main-content, .sidebar-venstre, .sidebar-hoyre {
       position: relative;
     }
     .sidebar-venstre, .sidebar-hoyre {
       z-index: 500;
-      flex: 25% 0 0;
       overflow-y: scroll;
       overflow-x: auto;
     }
