@@ -60,7 +60,7 @@ private fun meldingMapping(melding: Melding): MeldingDTO =
                         "oppgaveId" to melding.oppgaveId,
                         "meldingstype" to melding.meldingstype?.name,
                         "temagruppe" to melding.gjeldendeTemagruppe?.name,
-                        "skrevetAv" to melding.skrevetAv?.let(::hentPerson),
+                        "skrevetAvTekst" to melding.getSkrevetAv(),
                         "journalfortAv" to melding.journalfortAv?.let(::hentPerson),
                         "journalfortDato" to melding.journalfortDato?.toString(DateTimeFormat.forPattern(DATO_TID_FORMAT)),
                         "journalfortTema" to melding.journalfortTema,
