@@ -16,16 +16,10 @@
 
     <modules>
         <module>api</module>
-        <module>config</module>
         <module>web</module>
-        <module>jee</module>
         <module>mock</module>
         <module>consumer</module>
-        <module>pep</module>
-        <module>pip</module>
-        <module>pdp</module>
         <module>sporsmalogsvar</module>
-        <module>reactkomponenter</module>
         <module>saksoversikt</module>
         <module>modia-utbetalinger</module>
         <module>modia-varsling</module>
@@ -40,8 +34,6 @@
         <jodatime.version>2.7</jodatime.version>
         <lucene.version>7.1.0</lucene.version>
         <guava.version>r03</guava.version>
-        <wicket.version>6.29.0</wicket.version>
-        <cglib.version>2.2.2</cglib.version>
         <jbossxacml.version>2.0.9.Final</jbossxacml.version>
         <fluent-hc.version>4.2.4</fluent-hc.version>
         <findbugs.version>3.0.0</findbugs.version>
@@ -56,12 +48,10 @@
         <picketbox.version>4.9.6.Final</picketbox.version>
         <modig.frontend.version>1.1.122</modig.frontend.version>
         <modig.log.version>1.1.2</modig.log.version>
-        <modig.wicket.version>3.9.3</modig.wicket.version>
         <modig.fitnesse.version>1.0.1</modig.fitnesse.version>
         <modig.core.version>1.0.1</modig.core.version>
         <modig.log.version>1.1.2</modig.log.version>
         <modig-log-jaxws.version>1.1.3</modig-log-jaxws.version>
-        <modig-wicket-test.version>1.0.0</modig-wicket-test.version>
         <modig-core-test.version>1.0.0</modig-core-test.version>
         <common-integrasjonsutils.version>0.0.7</common-integrasjonsutils.version>
         <common-kodeverk.version>1.1.2</common-kodeverk.version>
@@ -559,39 +549,12 @@
                 <artifactId>modig-content-no-enonic</artifactId>
                 <version>${project.version}</version>
             </dependency>
-            <dependency>
-                <groupId>no.nav.modig</groupId>
-                <artifactId>modig-wicket</artifactId>
-                <version>${modig.wicket.version}</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>commons-logging</groupId>
-                        <artifactId>commons-logging</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>no.nav.modig</groupId>
-                        <artifactId>modig-content</artifactId>
-                    </exclusion>
-                </exclusions>
-            </dependency>
-
-            <dependency>
+                        <dependency>
                 <groupId>org.picketbox</groupId>
                 <artifactId>picketbox</artifactId>
                 <version>${picketbox.version}</version>
             </dependency>
 
-            <dependency>
-                <groupId>no.nav.modig</groupId>
-                <artifactId>modig-frontend-wicket</artifactId>
-                <version>${modig.frontend.version}</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>commons-logging</groupId>
-                        <artifactId>commons-logging</artifactId>
-                    </exclusion>
-                </exclusions>
-            </dependency>
             <dependency>
                 <groupId>no.nav.modig</groupId>
                 <artifactId>modig-log-common</artifactId>
@@ -611,12 +574,6 @@
             </dependency>
             <dependency>
                 <groupId>no.nav.modig</groupId>
-                <artifactId>modig-wicket-test</artifactId>
-                <version>${modig-wicket-test.version}</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>no.nav.modig</groupId>
                 <artifactId>modig-testcertificates</artifactId>
                 <version>1.2.5</version>
                 <scope>test</scope>
@@ -625,43 +582,6 @@
                 <groupId>com.google.code.findbugs</groupId>
                 <artifactId>annotations</artifactId>
                 <version>${findbugs.version}</version>
-            </dependency>
-
-            <!--Wicket-->
-            <dependency>
-                <groupId>org.apache.wicket</groupId>
-                <artifactId>wicket-core</artifactId>
-                <version>${wicket.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.wicket</groupId>
-                <artifactId>wicket-devutils</artifactId>
-                <version>${wicket.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.wicket</groupId>
-                <artifactId>wicket-extensions</artifactId>
-                <version>${wicket.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.wicket</groupId>
-                <artifactId>wicket-request</artifactId>
-                <version>${wicket.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.wicket</groupId>
-                <artifactId>wicket-spring</artifactId>
-                <version>${wicket.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.wicket</groupId>
-                <artifactId>wicket-util</artifactId>
-                <version>${wicket.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>cglib</groupId>
-                <artifactId>cglib</artifactId>
-                <version>${cglib.version}</version>
             </dependency>
 
             <!--Lucene-->
