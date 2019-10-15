@@ -11,7 +11,7 @@ import org.springframework.context.annotation.Import;
         ModulesApplicationContext.class,
         RestApiBeans.class
 })
-public class ModiaApplicationContext implements ApiApplication {
+public class ModiaApplicationContext implements ApiApplication.NaisApiApplication {
 
     @Override
     public void configure(ApiAppConfigurator apiAppConfigurator) {
@@ -24,4 +24,15 @@ public class ModiaApplicationContext implements ApiApplication {
     public String getApiBasePath() {
         return "/rest/";
     }
+
+    @Override
+    public String getApplicationName() {
+        return "modiabrukerdialog";
+    }
+
+    @Override
+    public Sone getSone() {
+        return Sone.FSS;
+    }
+
 }

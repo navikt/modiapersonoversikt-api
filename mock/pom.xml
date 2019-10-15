@@ -14,7 +14,7 @@
 
     <dependencies>
         <dependency>
-            <groupId>no.nav.common</groupId>
+            <groupId>no.nav.dialogarena</groupId>
             <artifactId>oidc-security</artifactId>
         </dependency>
         <dependency>

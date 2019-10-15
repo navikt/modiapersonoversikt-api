@@ -56,7 +56,7 @@ internal class OppgaveControllerTest {
 
     @BeforeEach
     fun before() {
-//        SubjectHandlerUtil.medSaksbehandler(SAKSBEHANDLERS_IDENT)
+        SubjectHandlerUtil.setInnloggetSaksbehandler(SAKSBEHANDLERS_IDENT)
         whenever(ldapService.saksbehandlerHarRolle(any(), any())).thenReturn(true)
     }
 
@@ -104,7 +104,7 @@ internal class OppgaveControllerTest {
 
     @Test
     fun `Sjekker at ansvarlig for oppgaven er samme person som forsøker å legge den tilbake`() {
-//        SubjectHandlerUtil.medSaksbehandler("annen-saksbehandler")
+        SubjectHandlerUtil.setInnloggetSaksbehandler("annen-saksbehandler")
 
         assertFailsWith<ForbiddenException> {
             val httpRequest = HttpRequestUtil.mockHttpServletRequestMedCookie("annen-saksbehandler", VALGT_ENHET)

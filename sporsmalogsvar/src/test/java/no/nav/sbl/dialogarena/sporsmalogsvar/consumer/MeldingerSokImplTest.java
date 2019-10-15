@@ -1,15 +1,14 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.consumer;
 
+import no.nav.brukerdialog.security.context.SubjectHandler;
+import no.nav.brukerdialog.security.context.SubjectHandlerUtils;
+import no.nav.brukerdialog.security.context.ThreadLocalSubjectHandler;
 import no.nav.brukerdialog.security.domain.IdentType;
 import no.nav.brukerdialog.tools.SecurityConstants;
-import no.nav.common.auth.SsoToken;
-import no.nav.common.auth.Subject;
-import no.nav.common.auth.SubjectHandler;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Saksbehandler;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Fritekst;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Traad;
-import no.nav.sbl.util.fn.UnsafeRunnable;
 import org.joda.time.DateTime;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -17,8 +16,8 @@ import org.junit.jupiter.api.Test;
 import java.util.Collections;
 import java.util.List;
 
+import static java.lang.System.setProperty;
 import static java.util.Arrays.asList;
-import static java.util.Collections.emptyMap;
 import static java.util.stream.Collectors.toList;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype.SAMTALEREFERAT_OPPMOTE;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.consumer.MeldingerSokImpl.*;
@@ -35,7 +34,7 @@ class MeldingerSokImplTest {
 
     @BeforeEach
     void setup() {
-//        innloggetBrukerEr(NAV_IDENT);
+        innloggetBrukerEr(NAV_IDENT);
         meldingerSok.indekser(FNR, lagMeldinger());
     }
 
@@ -99,15 +98,14 @@ class MeldingerSokImplTest {
     }
 
     @Test
-    void forskjelligeSaksbehandlereFaarIkkeSammeResultat() {
-        innloggetBrukerEr("Z132456", () -> {
-            meldingerSok.indekser(FNR, Collections.emptyList());
+    void forskjelligeSaksbehandlereFaarIkkeSammeResultat() throws IkkeIndeksertException {
+        innloggetBrukerEr("Z132456");
+        meldingerSok.indekser(FNR, Collections.emptyList());
 
-            assertThat(meldingerSok.sok(FNR, ""), hasSize(0));
-            assertThat(meldingerSok.cache.entrySet(), hasSize(2));
+        assertThat(meldingerSok.sok(FNR, ""), hasSize(0));
+        assertThat(meldingerSok.cache.entrySet(), hasSize(2));
 
-            assertThat(meldingerSok.sok(FNR, ""), hasSize(0));
-        });
+        assertThat(meldingerSok.sok(FNR, ""), hasSize(0));
     }
 
     @Test
@@ -131,12 +129,10 @@ class MeldingerSokImplTest {
         assertThat(vasketSoketekst, is(""));
     }
 
-    private void innloggetBrukerEr(String fnr, UnsafeRunnable runnable) {
-        System.setProperty(SecurityConstants.SYSTEMUSER_USERNAME, "srvModiabrukerdialog");
-        SubjectHandler.withSubject(
-                new Subject(fnr, IdentType.EksternBruker, SsoToken.oidcToken("", emptyMap())),
-                runnable
-        );
+    private void innloggetBrukerEr(String ident) {
+        setProperty(SubjectHandler.SUBJECTHANDLER_KEY, ThreadLocalSubjectHandler.class.getCanonicalName());
+        setProperty(SecurityConstants.SYSTEMUSER_USERNAME, "srvModiabrukerdialog");
+        SubjectHandlerUtils.setSubject(new SubjectHandlerUtils.SubjectBuilder(ident, IdentType.EksternBruker).withAuthLevel(4).getSubject());
     }
 
     private void assertSok(String frisok, String id) throws IkkeIndeksertException {

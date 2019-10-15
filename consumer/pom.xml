@@ -21,7 +21,7 @@
 
     <dependencies>
         <dependency>
-            <groupId>no.nav.common</groupId>
+            <groupId>no.nav.dialogarena</groupId>
             <artifactId>oidc-security</artifactId>
             <scope>test</scope>
             <type>test-jar</type>
@@ -194,8 +194,8 @@
             <artifactId>modia-felleskomponenter</artifactId>
         </dependency>
         <dependency>
-            <groupId>no.nav.common</groupId>
-            <artifactId>test</artifactId>
+            <groupId>no.nav.sbl.dialogarena</groupId>
+            <artifactId>common-test</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -242,8 +242,8 @@
             <artifactId>dialogarena-behandlingsinformasjon</artifactId>
         </dependency>
         <dependency>
-            <groupId>no.nav.common</groupId>
-            <artifactId>cxf</artifactId>
+            <groupId>no.nav.sbl.dialogarena</groupId>
+            <artifactId>common-cxf</artifactId>
         </dependency>
 
         <!--Virksomhetstjenester-->
@@ -345,7 +345,6 @@
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>jul-to-slf4j</artifactId>
-            <version>1.7.21</version>
         </dependency>
         <dependency>
             <groupId>no.nav.modig</groupId>
@@ -386,10 +385,10 @@
             <artifactId>collections-generic</artifactId>
         </dependency>
 
-<!--        <dependency>-->
-<!--            <groupId>org.apache.wss4j</groupId>-->
-<!--            <artifactId>wss4j-ws-security-dom</artifactId>-->
-<!--        </dependency>-->
+        <dependency>
+            <groupId>org.apache.wss4j</groupId>
+            <artifactId>wss4j-ws-security-dom</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>javax.inject</groupId>

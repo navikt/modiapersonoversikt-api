@@ -86,7 +86,7 @@ class BrukerprofilControllerTest {
 
     @BeforeEach
     fun before() {
-//        SubjectHandlerUtil.medSaksbehandler(INNLOGGET_SAKSBEHANDLER)
+        SubjectHandlerUtil.setInnloggetSaksbehandler(INNLOGGET_SAKSBEHANDLER)
         whenever(tilgangskontrollContext.harSaksbehandlerRolle(any())).thenReturn(true)
         whenever(kjerneinfoService.hentBrukerprofil(any())).thenReturn(getBruker())
     }

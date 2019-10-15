@@ -42,21 +42,21 @@
             <artifactId>spring-boot-starter-data-redis</artifactId>
         </dependency>-->
         <dependency>
-            <groupId>no.nav.common</groupId>
+            <groupId>no.nav.sbl</groupId>
             <artifactId>api-app</artifactId>
         </dependency>
         <dependency>
-            <groupId>no.nav.common</groupId>
+            <groupId>no.nav.dialogarena</groupId>
             <artifactId>oidc-security</artifactId>
         </dependency>
         <dependency>
-            <groupId>no.nav.common</groupId>
+            <groupId>no.nav.dialogarena</groupId>
             <artifactId>oidc-security</artifactId>
             <scope>test</scope>
             <type>test-jar</type>
         </dependency>
         <dependency>
-            <groupId>no.nav.common</groupId>
+            <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>test-config</artifactId>
         </dependency>
         <dependency>
@@ -176,6 +176,10 @@
         <!--Dialogarena-->
         <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>
+            <artifactId>common-time</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>modia-utbetalinger</artifactId>
             <version>${project.version}</version>
         </dependency>
@@ -185,13 +189,13 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>no.nav.common</groupId>
-            <artifactId>test</artifactId>
+            <groupId>no.nav.sbl.dialogarena</groupId>
+            <artifactId>common-test</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>no.nav.common</groupId>
-            <artifactId>jetty</artifactId>
+            <groupId>no.nav.sbl.dialogarena</groupId>
+            <artifactId>common-jetty</artifactId>
         </dependency>
         <dependency>
             <groupId>org.eclipse.jetty</groupId>
@@ -215,6 +219,11 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-jdbc</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-expression</artifactId>
             <scope>runtime</scope>
         </dependency>
         <dependency>

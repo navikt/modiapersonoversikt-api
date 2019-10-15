@@ -106,13 +106,13 @@
         </dependency>
 
         <dependency>
-            <groupId>no.nav.common</groupId>
-            <artifactId>jetty</artifactId>
+            <groupId>no.nav.sbl.dialogarena</groupId>
+            <artifactId>common-jetty</artifactId>
         </dependency>
 
         <dependency>
-            <groupId>no.nav.common</groupId>
-            <artifactId>test</artifactId>
+            <groupId>no.nav.sbl.dialogarena</groupId>
+            <artifactId>common-test</artifactId>
             <scope>test</scope>
         </dependency>
 
