@@ -52,7 +52,6 @@ public class SykmeldingsperioderPanelConfigResolverTest {
     public void medMockSlaattPaaSkalIkkeProdkodeEksekveres() {
         setProperty(TILLATMOCKSETUP_PROPERTY, "true");
         setProperty(KJERNEINFO_KEY, ALLOW_MOCK);
-        resolver.sykepengerWidgetService().getWidgetContent("");
         verifyZeroInteractions(sykepengerServiceDefault.wrappedObject);
     }
 
@@ -60,7 +59,6 @@ public class SykmeldingsperioderPanelConfigResolverTest {
 //    @Test
     public void perDefaultSkalProdkodeEksekveres() {
         setProperty(TILLATMOCKSETUP_PROPERTY, "false");
-        resolver.sykepengerWidgetService().getWidgetContent("");
         verify(sykepengerServiceDefault.wrappedObject, times(1)).hentSykmeldingsperioder(any(SykepengerRequest.class));
     }
 

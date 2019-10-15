@@ -32,7 +32,7 @@ import org.springframework.context.annotation.Configuration;
 import javax.inject.Named;
 
 import static java.util.Arrays.asList;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.TestUtils.opprettMeldingEksempel;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.legacy.TestUtils.opprettMeldingEksempel;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;

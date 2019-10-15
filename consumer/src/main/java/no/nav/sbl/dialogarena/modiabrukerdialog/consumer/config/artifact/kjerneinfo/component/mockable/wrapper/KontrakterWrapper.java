@@ -1,6 +1,5 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.artifact.kjerneinfo.component.mockable.wrapper;
 
-import no.nav.kjerneinfo.kontrakter.config.KontrakterPanelConfig;
 import no.nav.kontrakter.consumer.fim.config.OppfolgingskontraktConsumerConfig;
 import no.nav.kontrakter.consumer.fim.config.YtelseskontraktConsumerConfig;
 import no.nav.kontrakter.consumer.fim.oppfolgingskontrakt.OppfolgingskontraktServiceBi;
@@ -21,7 +20,6 @@ import static no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.artifacts.kje
 
 @Configuration
 @Import({
-        KontrakterPanelConfig.class,
         OppfolgingskontraktConsumerConfig.class,
         YtelseskontraktConsumerConfig.class})
 public class KontrakterWrapper {

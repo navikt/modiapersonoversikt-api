@@ -1,0 +1,642 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <parent>
+        <groupId>no.nav.sbl.dialogarena</groupId>
+        <artifactId>modiabrukerdialog</artifactId>
+        <version>dev</version>
+    </parent>
+
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>no.nav</groupId>
+    <artifactId>personsok</artifactId>
+    <packaging>pom</packaging>
+    <version>4.0.9-SNAPSHOT</version>
+    <name>NAV :: personsok</name>
+    <description>Mor-POM for personsok</description>
+
+    <prerequisites>
+        <maven>3.0.4</maven>
+    </prerequisites>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <checkstyle.config.location>http://sonar.devillo.no/sonar/profiles/export?format=checkstyle&amp;language=java&amp;name=nav-mod</checkstyle.config.location>
+        <pmd.config.location>
+            http://sonar.devillo.no/sonar/profiles/export?format=pmd&amp;language=java&amp;name=nav-mod
+        </pmd.config.location>
+        <sonar.profile>nav-mod</sonar.profile>
+        <envconfig.url>https://envconfig.adeo.no/conf</envconfig.url>
+        <maven.javadoc.skip>true</maven.javadoc.skip>
+
+        <!--Tjenestespesifikasjoner-->
+        <nav-fim-personsok-v1-tjenestespesifikasjon.version>1.0.1</nav-fim-personsok-v1-tjenestespesifikasjon.version>
+
+        <!-- Dependency versions -->
+        <java.jdk.version>1.7</java.jdk.version>
+        <cxf-codegen.version>3.1.10</cxf-codegen.version>
+        <junit.version>4.11</junit.version>
+        <spring.version>4.3.4.RELEASE</spring.version>
+        <org.jvnet.jaxb2_commons.version>0.6.4</org.jvnet.jaxb2_commons.version>
+        <org.apache.cxf.version>3.1.11</org.apache.cxf.version>
+        <findbugs.version>2.0.1</findbugs.version>
+
+        <!-- Modig -->
+        <oidc-security.version>2017.11.07.15.26</oidc-security.version>
+        <common-cxf.version>2017.11.07.15.26</common-cxf.version>
+        <modig-log-version>1.1.2</modig-log-version>
+        <modig.scm.plugin.version>1.1.13</modig.scm.plugin.version>
+        <modig-testcertificates-version>1.0.0</modig-testcertificates-version>
+
+        <!--Logging-->
+        <slf4j.version>1.7.5</slf4j.version>
+        <jcl-over-slf4j.version>1.7.1</jcl-over-slf4j.version>
+        <logback-core.version>1.0.6</logback-core.version>
+        <logback-classic.version>1.0.6</logback-classic.version>
+
+        <!-- Andre 3.parts -->
+        <commons-lang.version>3.1</commons-lang.version>
+        <joda-time.version>2.2</joda-time.version>
+        <mockito.version>1.9.5</mockito.version>
+        <orika.version>1.5.1</orika.version>
+        <aspectj.version>1.7.2</aspectj.version>
+
+    </properties>
+
+    <distributionManagement>
+        <repository>
+            <id>m2internal</id>
+            <name>NAV Maven2 Internal Repository</name>
+            <url>dav:http://maven.adeo.no/nexus/content/repositories/m2internal</url>
+        </repository>
+        <snapshotRepository>
+            <id>m2snapshot</id>
+            <name>NAV Maven2 Snapshot Repository</name>
+            <url>dav:http://maven.adeo.no/nexus/content/repositories/m2snapshot</url>
+            <uniqueVersion>false</uniqueVersion>
+        </snapshotRepository>
+    </distributionManagement>
+
+    <ciManagement>
+        <system>jenkins</system>
+        <url>http://a34apvl016.devillo.no:8090</url>
+    </ciManagement>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <artifactId>maven-dependency-plugin</artifactId>
+                    <version>2.9</version>
+                    <executions>
+                        <execution>
+                            <id>analyze</id>
+                            <goals>
+                                <goal>analyze-only</goal>
+                            </goals>
+                            <configuration>
+                                <failOnWarning>true</failOnWarning>
+                                <ignoreNonCompile>true</ignoreNonCompile>
+                            </configuration>
+                        </execution>
+                    </executions>
+                </plugin>
+                <plugin>
+                    <groupId>org.jboss.as.plugins</groupId>
+                    <artifactId>jboss-as-maven-plugin</artifactId>
+                    <version>7.1.1.Final</version>
+                    <!-- configuration> <execute-commands> <commands> <command>/subsystem=logging/file-handler=debug:add(level=DEBUG,autoflush=true,file={"relative-to"=>"jboss.server.log.dir",
+                    "path"=>"debug.log"})</command> <command>/subsystem=logging/logger=org.jboss.as:add(level=DEBUG,handlers=[debug])</command>
+                    </commands> </execute-commands> </configuration -->
+                </plugin>
+                <plugin>
+                    <artifactId>maven-clean-plugin</artifactId>
+                    <version>2.5</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-deploy-plugin</artifactId>
+                    <version>2.7</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-install-plugin</artifactId>
+                    <version>2.3.1</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-site-plugin</artifactId>
+                    <version>3.1</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-source-plugin</artifactId>
+                    <version>2.2</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-ear-plugin</artifactId>
+                    <version>2.7</version>
+                    <configuration>
+                        <archive>
+                            <manifest>
+                                <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+                            </manifest>
+                        </archive>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-war-plugin</artifactId>
+                    <version>2.2</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>cobertura-maven-plugin</artifactId>
+                    <version>2.5.1</version>
+                    <configuration>
+                        <formats>
+                            <format>xml</format>
+                        </formats>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-checkstyle-plugin</artifactId>
+                    <version>2.9.1</version>
+                    <configuration>
+                        <sourceDirectory>${basedir}/src</sourceDirectory>
+                        <configLocation>${checkstyle.config.location}</configLocation>
+                        <violationSeverity>warning</violationSeverity>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-pmd-plugin</artifactId>
+                    <version>2.7.1</version>
+                    <configuration>
+                        <targetJdk>${java.jdk.version}</targetJdk>
+                        <rulesets>
+                            <ruleset>${pmd.config.location}</ruleset>
+                        </rulesets>
+                        <format>xml</format>
+                        <linkXRef>true</linkXRef>
+                        <minimumTokens>100</minimumTokens>
+                        <aggregate>true</aggregate>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>2.5.1</version>
+                    <configuration>
+                        <source>${java.jdk.version}</source>
+                        <target>${java.jdk.version}</target>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <version>2.12.2</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-release-plugin</artifactId>
+                    <version>2.5.1</version>
+                    <configuration>
+                        <goals>deploy</goals>
+                        <autoVersionSubmodules>true</autoVersionSubmodules>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-eclipse-plugin</artifactId>
+                    <version>2.9</version>
+                    <configuration>
+                        <downloadSources>true</downloadSources>
+                        <additionalConfig>
+                            <file>
+                                <name>.settings/org.eclipse.core.resources.prefs</name>
+                                <content>eclipse.preferences.version=1
+                                    encoding/&lt;project&gt;=${project.build.sourceEncoding}
+                                </content>
+                            </file>
+                        </additionalConfig>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.jboss.ws.plugins</groupId>
+                    <artifactId>maven-jaxws-tools-plugin</artifactId>
+                    <version>1.1.0.GA</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-assembly-plugin</artifactId>
+                    <version>2.2-beta-2</version>
+                </plugin>
+                <!--This plugin's configuration is used to store Eclipse m2e settings
+                only. It has no influence on the Maven build itself. -->
+
+            </plugins>
+        </pluginManagement>
+        <plugins>
+            <!--
+            <plugin>
+                <groupId>no.nav.maven.plugins</groupId>
+                <artifactId>modig-scm-plugin</artifactId>
+                <version>${modig.scm.plugin.version}</version>
+                <executions>
+                    <execution>
+                        <id>Check illegal or unwanted dependencies</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>failon-unwanted-dependencies</goal>
+                            <goal>report-unapproved-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <trail>true</trail>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-scm-plugin</artifactId>
+                <version>1.9.4</version>
+            </plugin>
+        </plugins>
+        <extensions>
+            <extension>
+                <groupId>org.apache.maven.wagon</groupId>
+                <artifactId>wagon-webdav-jackrabbit</artifactId>
+                <version>1.0</version>
+            </extension>
+        </extensions>
+    </build>
+    <dependencyManagement>
+        <dependencies>
+
+            <dependency>
+                <groupId>no.nav.sbl.dialogarena</groupId>
+                <artifactId>modiabrukerdialog-api</artifactId>
+                <version>${modiabrukerdialog.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>no.nav.sbl.dialogarena</groupId>
+                <artifactId>kodeverk-tjenestespesifikasjon</artifactId>
+                <version>2.0.1</version>
+            </dependency>
+
+            <!-- Javax -->
+            <dependency>
+                <groupId>javax</groupId>
+                <artifactId>javaee-api</artifactId>
+                <version>${jee.version}</version>
+                <scope>provided</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>javax.validation</groupId>
+                <artifactId>validation-api</artifactId>
+                <version>${javax.validation-api.version}</version>
+                <scope>test</scope>
+            </dependency>
+
+            <!-- Jax ws -->
+            <dependency>
+                <groupId>org.apache.cxf</groupId>
+                <artifactId>cxf-core</artifactId>
+                <version>${org.apache.cxf.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.cxf</groupId>
+                <artifactId>cxf-rt-frontend-jaxws</artifactId>
+                <version>${org.apache.cxf.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.cxf</groupId>
+                <artifactId>cxf-rt-bindings-soap</artifactId>
+                <version>${org.apache.cxf.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jboss.security</groupId>
+                <artifactId>jbossxacml</artifactId>
+                <version>2.0.9.Final</version>
+            </dependency>
+
+
+            <!-- Jaxb -->
+            <dependency>
+                <groupId>org.jvnet.jaxb2_commons</groupId>
+                <artifactId>jaxb2-basics-runtime</artifactId>
+                <version>${org.jvnet.jaxb2_commons.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.cxf</groupId>
+                <artifactId>cxf-rt-transports-http</artifactId>
+                <version>${org.apache.cxf.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.cxf</groupId>
+                <artifactId>cxf-rt-ws-security</artifactId>
+                <version>${org.apache.cxf.version}</version>
+            </dependency>
+
+            <!-- Spring -->
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-context</artifactId>
+                <version>${spring.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-beans</artifactId>
+                <version>${spring.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-web</artifactId>
+                <version>${spring.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-orm</artifactId>
+                <version>${spring.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-core</artifactId>
+                <version>${spring.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>commons-logging</groupId>
+                        <artifactId>commons-logging</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-test</artifactId>
+                <version>${spring.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-context-support</artifactId>
+                <version>${spring.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>net.sf.ehcache</groupId>
+                <artifactId>ehcache-core</artifactId>
+                <version>2.6.6</version>
+            </dependency>
+            <!-- MODIG DEPENDENCY -->
+            <dependency>
+                <groupId>no.nav.modig</groupId>
+                <artifactId>modig-core</artifactId>
+                <version>1.0.0</version>
+            </dependency>
+            <dependency>
+                <groupId>no.nav.modig</groupId>
+                <artifactId>modig-lang</artifactId>
+                <version>${modig-lang.version}</version>
+                <scope>test</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>no.nav.modig</groupId>
+                <artifactId>modig-frontend-wicket</artifactId>
+                <version>${modig-frontend-wicket.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>no.nav.modig</groupId>
+                <artifactId>modig-wicket-test</artifactId>
+                <version>${modig-wicket-test.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>no.nav.modig</groupId>
+                <artifactId>modig-wicket</artifactId>
+                <version>${modig.wicket.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>commons-logging</groupId>
+                        <artifactId>commons-logging</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>no.nav.dialogarena</groupId>
+                <artifactId>oidc-security</artifactId>
+                <version>${oidc-security.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>no.nav.dialogarena</groupId>
+                <artifactId>oidc-security-authorization</artifactId>
+                <version>${oidc-security.version}</version>
+                <scope>provided</scope>
+            </dependency>
+            <dependency>
+                <groupId>no.nav.dialogarena</groupId>
+                <artifactId>oidc-security</artifactId>
+                <version>${oidc-security.version}</version>
+                <scope>test</scope>
+                <type>test-jar</type>
+            </dependency>
+            <dependency>
+                <groupId>no.nav.sbl.dialogarena</groupId>
+                <artifactId>common-cxf</artifactId>
+                <version>${common-cxf.version}</version>
+                <scope>provided</scope>
+            </dependency>
+            <dependency>
+                <groupId>no.nav.modig</groupId>
+                <artifactId>modig-log-common</artifactId>
+                <version>${modig-log-version}</version>
+            </dependency>
+            <dependency>
+                <groupId>no.nav.modig</groupId>
+                <artifactId>modig-log-jaxws</artifactId>
+                <version>${modig-log-version}</version>
+            </dependency>
+            <dependency>
+                <groupId>no.nav.modig</groupId>
+                <artifactId>modig-log-filter</artifactId>
+                <version>${modig-log-version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>xml-apis</groupId>
+                <artifactId>xml-apis</artifactId>
+                <version>1.4.01</version>
+            </dependency>
+
+            <!-- Wicket -->
+            <dependency>
+                <groupId>org.apache.wicket</groupId>
+                <artifactId>wicket-core</artifactId>
+                <version>${wicket.version}</version>
+                <scope>provided</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.wicket</groupId>
+                <artifactId>wicket-request</artifactId>
+                <version>${wicket.version}</version>
+                <scope>provided</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.wicket</groupId>
+                <artifactId>wicket-extensions</artifactId>
+                <version>${wicket.version}</version>
+                <scope>provided</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.wicket</groupId>
+                <artifactId>wicket-spring</artifactId>
+                <version>${wicket.version}</version>
+                <scope>provided</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.wicket</groupId>
+                <artifactId>wicket-devutils</artifactId>
+                <version>${wicket.version}</version>
+                <scope>provided</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.wicket</groupId>
+                <artifactId>wicket-datetime</artifactId>
+                <version>${wicket.version}</version>
+                <scope>provided</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.wicket</groupId>
+                <artifactId>wicket-util</artifactId>
+                <version>${wicket.version}</version>
+                <scope>provided</scope>
+            </dependency>
+
+            <!-- JBoss -->
+
+            <dependency>
+                <groupId>junit</groupId>
+                <artifactId>junit</artifactId>
+                <version>${junit.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jboss.ws.cxf</groupId>
+                <artifactId>jbossws-cxf-client</artifactId>
+                <version>${jbossws-cxf-client.version}</version>
+                <optional>true</optional>
+                <exclusions>
+                    <exclusion>
+                        <groupId>log4j</groupId>
+                        <artifactId>log4j</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.jboss.logging</groupId>
+                        <artifactId>jboss-logging</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+
+            <!-- Logging -->
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>jcl-over-slf4j</artifactId>
+                <version>${jcl-over-slf4j.version}</version>
+                <scope>runtime</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-api</artifactId>
+                <version>${slf4j.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>ch.qos.logback</groupId>
+                <artifactId>logback-classic</artifactId>
+                <version>${logback-classic.version}</version>
+                <scope>runtime</scope>
+            </dependency>
+            <dependency>
+                <groupId>ch.qos.logback</groupId>
+                <artifactId>logback-core</artifactId>
+                <version>${logback-core.version}</version>
+                <scope>runtime</scope>
+            </dependency>
+
+            <!-- Andre 3. parts biblioteker -->
+            <dependency>
+                <groupId>org.aspectj</groupId>
+                <artifactId>aspectjweaver</artifactId>
+                <version>${aspectj.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>joda-time</groupId>
+                <artifactId>joda-time</artifactId>
+                <version>${joda-time.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>cglib</groupId>
+                <artifactId>cglib</artifactId>
+                <version>${cglib.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>ma.glasnost.orika</groupId>
+                <artifactId>orika-core</artifactId>
+                <version>${orika.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-lang3</artifactId>
+                <version>${commons-lang.version}</version>
+            </dependency>
+
+
+            <!-- Test dependencies -->
+            <dependency>
+                <groupId>no.nav.modig</groupId>
+                <artifactId>modig-testcertificates</artifactId>
+                <version>${modig-testcertificates-version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.mockito</groupId>
+                <artifactId>mockito-all</artifactId>
+                <version>${mockito.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.mockito</groupId>
+                <artifactId>mockito-core</artifactId>
+                <version>${mockito.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>args4j</groupId>
+                <artifactId>args4j</artifactId>
+                <version>2.0.16</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.webbitserver</groupId>
+                <artifactId>webbit</artifactId>
+                <version>0.4.14</version>
+                <scope>test</scope>
+            </dependency>
+
+        </dependencies>
+    </dependencyManagement>
+    <profiles>
+        <profile>
+            <id>jenkins</id>
+            <activation>
+                <os>
+                    <family>unix</family>
+                </os>
+            </activation>
+        </profile>
+    </profiles>
+    <scm>
+        <developerConnection>scm:git:http://stash.devillo.no/scm/fell/personsok.git</developerConnection>
+        <url>http://stash.devillo.no:7990/projects/fell/repos/personsok/</url>
+        <tag>personsok-3.0.0</tag>
+    </scm>
+    <modules>
+        <module>personsok-consumer</module>
+        <module>personsok-domain</module>
+    </modules>
+</project>

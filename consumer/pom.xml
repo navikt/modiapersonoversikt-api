@@ -61,10 +61,6 @@
             <groupId>no.nav</groupId>
             <artifactId>kontrakter-consumer</artifactId>
         </dependency>
-        <dependency>
-            <groupId>no.nav</groupId>
-            <artifactId>kontrakter-panel</artifactId>
-        </dependency>
 
         <!--Kjerneinfo-->
         <dependency>
@@ -83,20 +79,12 @@
         <!--Sykmeldingsperioder-->
         <dependency>
             <groupId>no.nav</groupId>
-            <artifactId>sykmeldingsperioder-panel</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>no.nav</groupId>
             <artifactId>sykmeldingsperioder-consumer</artifactId>
         </dependency>
 
         <dependency>
             <groupId>no.nav</groupId>
             <artifactId>behandlebrukerprofil-consumer</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>no.nav</groupId>
-            <artifactId>brukerprofil-panel</artifactId>
         </dependency>
         <dependency>
             <groupId>no.nav</groupId>
@@ -298,6 +286,10 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-aop</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-web</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>

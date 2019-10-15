@@ -8,12 +8,7 @@ import no.nav.sykmeldingsperioder.consumer.pleiepenger.PleiepengerService;
 import no.nav.sykmeldingsperioder.consumer.sykepenger.SykepengerServiceBi;
 import no.nav.sykmeldingsperioder.consumer.sykepenger.mapping.to.SykepengerRequest;
 import no.nav.sykmeldingsperioder.consumer.sykepenger.mapping.to.SykepengerResponse;
-import no.nav.sykmeldingsperioder.foreldrepenger.loader.ForeldrepengerLoader;
-import no.nav.sykmeldingsperioder.loader.SykmeldingsperiodeLoader;
-import no.nav.sykmeldingsperioder.widget.SykepengerWidgetService;
-import no.nav.sykmeldingsperioder.widget.SykepengerWidgetServiceImpl;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import javax.inject.Inject;
@@ -42,21 +37,6 @@ public class SykmeldingsperioderPanelConfigResolver {
 
     @Inject
     private PleiepengerService pleiepengerServiceImpl;
-
-    @Bean
-    public SykepengerWidgetService sykepengerWidgetService() {
-        return new SykepengerWidgetServiceImpl(getSykepengerService(), getForeldrepengerService(), pleiepengerServiceImpl);
-    }
-
-    @Bean
-    public SykmeldingsperiodeLoader sykmeldingsperiodeLoader() {
-        return new SykmeldingsperiodeLoader();
-    }
-
-    @Bean
-    public ForeldrepengerLoader foreldrepengerLoader() {
-        return new ForeldrepengerLoader();
-    }
 
     private ForeldrepengerServiceBi getForeldrepengerService() {
         return new ForeldrepengerServiceBi() {

@@ -24,6 +24,7 @@
         <module>modia-utbetalinger</module>
         <module>modia-varsling</module>
         <module>modig-content</module>
+        <module>personsok</module>
     </modules>
 
     <properties>
@@ -126,11 +127,6 @@
             <!-- Personsok -->
             <dependency>
                 <groupId>no.nav</groupId>
-                <artifactId>personsok-panel</artifactId>
-                <version>${personsok.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>no.nav</groupId>
                 <artifactId>personsok-consumer</artifactId>
                 <version>${personsok.version}</version>
                 <exclusions>
@@ -140,29 +136,8 @@
                     </exclusion>
                 </exclusions>
             </dependency>
-            <dependency>
-                <groupId>no.nav</groupId>
-                <artifactId>personsok-search</artifactId>
-                <version>${personsok.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>no.nav</groupId>
-                <artifactId>personsok-result</artifactId>
-                <version>${personsok.version}</version>
-            </dependency>
 
             <!--Kontrakter-->
-            <dependency>
-                <groupId>no.nav</groupId>
-                <artifactId>kontrakter-panel</artifactId>
-                <version>${kjerneinfo.versjon}</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>xml-apis</groupId>
-                        <artifactId>xml-apis</artifactId>
-                    </exclusion>
-                </exclusions>
-            </dependency>
             <dependency>
                 <groupId>no.nav</groupId>
                 <artifactId>kontrakter-domain</artifactId>
@@ -199,11 +174,6 @@
             </dependency>
             <dependency>
                 <groupId>no.nav</groupId>
-                <artifactId>kjerneinfo-panel</artifactId>
-                <version>${kjerneinfo.versjon}</version>
-            </dependency>
-            <dependency>
-                <groupId>no.nav</groupId>
                 <artifactId>kjerneinfo-consumer</artifactId>
                 <version>${kjerneinfo.versjon}</version>
                 <exclusions>
@@ -232,24 +202,8 @@
                     </exclusion>
                 </exclusions>
             </dependency>
-            <dependency>
-                <groupId>no.nav</groupId>
-                <artifactId>fellessystemer-components</artifactId>
-                <version>${kjerneinfo.versjon}</version>
-            </dependency>
 
             <!--Sykmeldingsperioder-->
-            <dependency>
-                <groupId>no.nav</groupId>
-                <artifactId>sykmeldingsperioder-panel</artifactId>
-                <version>${kjerneinfo.versjon}</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>xml-apis</groupId>
-                        <artifactId>xml-apis</artifactId>
-                    </exclusion>
-                </exclusions>
-            </dependency>
             <dependency>
                 <groupId>no.nav</groupId>
                 <artifactId>sykmeldingsperioder-domain</artifactId>
@@ -274,17 +228,6 @@
             </dependency>
 
             <!--Brukerprofil-->
-            <dependency>
-                <groupId>no.nav</groupId>
-                <artifactId>brukerprofil-panel</artifactId>
-                <version>${kjerneinfo.versjon}</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>xml-apis</groupId>
-                        <artifactId>xml-apis</artifactId>
-                    </exclusion>
-                </exclusions>
-            </dependency>
             <dependency>
                 <groupId>no.nav</groupId>
                 <artifactId>brukerprofil-domain</artifactId>

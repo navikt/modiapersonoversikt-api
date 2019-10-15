@@ -9,7 +9,6 @@ import no.nav.testconfig.ApiAppTest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static no.nav.sbl.dialogarena.test.ssl.SSLTestUtils.setupKeyAndTrustStore;
 import static no.nav.sbl.util.EnvironmentUtils.Type.PUBLIC;
 import static no.nav.sbl.util.EnvironmentUtils.Type.SECRET;
 import static no.nav.sbl.util.EnvironmentUtils.setProperty;

@@ -1,0 +1,806 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<con:soapui-project name="Personsok" resourceRoot="" soapui-version="3.6.1" abortOnError="false" runType="SEQUENTIAL" xmlns:con="http://eviware.com/soapui/config"><con:settings/><con:interface xsi:type="con:WsdlInterface" wsaVersion="NONE" name="PersonsokBinding" type="wsdl" bindingName="{http://nav.no/tjeneste/virksomhet/personsok/v1/}PersonsokBinding" soapVersion="1_1" anonymous="optional" definition="file:/W:/soapui/nav-fim-personsok-v1-tjenestespesifikasjon-0.0.1-alpha004/Personsok.wsdl" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:settings/><con:definitionCache type="TEXT" rootPart="file:/W:/soapui/nav-fim-personsok-v1-tjenestespesifikasjon-0.0.1-alpha004/Personsok.wsdl"><con:part><con:url>file:/W:/soapui/nav-fim-personsok-v1-tjenestespesifikasjon-0.0.1-alpha004/Personsok.wsdl</con:url><con:content><![CDATA[<wsdl:definitions name="Personsok" targetNamespace="http://nav.no/tjeneste/virksomhet/personsok/v1/" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://nav.no/tjeneste/virksomhet/personsok/v1/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+  <wsdl:types>
+    <xs:schema targetNamespace="http://nav.no/tjeneste/virksomhet/personsok/v1/" xmlns:meldinger="http://nav.no/tjeneste/virksomhet/personsok/v1/meldinger">
+      <xs:import namespace="http://nav.no/tjeneste/virksomhet/personsok/v1/meldinger" schemaLocation="no/nav/tjeneste/virksomhet/personsok/v1/meldinger/meldinger.xsd"/>
+      <xs:element name="finnPerson">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element maxOccurs="1" minOccurs="1" name="request" type="meldinger:FinnPersonRequest"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="finnPersonResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element maxOccurs="1" minOccurs="1" name="response" type="meldinger:FinnPersonResponse"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:schema>
+  </wsdl:types>
+  <wsdl:message name="finnPersonRequest">
+    <wsdl:part name="parameters" element="tns:finnPerson"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="finnPersonResponse">
+    <wsdl:part name="parameters" element="tns:finnPersonResponse"></wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="PersonsokPortType">
+    <wsdl:operation name="finnPerson">
+      <wsdl:input name="finnPersonRequest" message="tns:finnPersonRequest"></wsdl:input>
+      <wsdl:output name="finnPersonResponse" message="tns:finnPersonResponse"></wsdl:output>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="PersonsokBinding" type="tns:PersonsokPortType">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsaw:UsingAddressing/>
+    <wsdl:operation name="finnPerson">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="finnPersonRequest">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="finnPersonResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="Personsok">
+    <wsdl:port name="Personsok" binding="tns:PersonsokBinding">
+      <soap:address location="http://localhost:9080"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>]]></con:content><con:type>http://schemas.xmlsoap.org/wsdl/</con:type></con:part><con:part><con:url>file:\W:\soapui\nav-fim-personsok-v1-tjenestespesifikasjon-0.0.1-alpha004\no\nav\tjeneste\virksomhet\personsok\v1\meldinger\meldinger.xsd</con:url><con:content><![CDATA[<xs:schema targetNamespace="http://nav.no/tjeneste/virksomhet/personsok/v1/meldinger" xmlns:meldinger="http://nav.no/tjeneste/virksomhet/personsok/v1/meldinger" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:informasjon="http://nav.no/tjeneste/virksomhet/personsok/v1/informasjon/personsok">
+  <xs:import namespace="http://nav.no/tjeneste/virksomhet/personsok/v1/informasjon/personsok" schemaLocation="../informasjon/personsok.xsd"/>
+  <xs:complexType name="AdresseFilter">
+    <xs:annotation>
+      <xs:documentation>GUID:{FE45160F-3E1C-4f02-9DDE-28FD2DEBF9B2}</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="gatenummer" type="xs:int" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="husbokstav" type="xs:string" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="postnummer" type="xs:string" minOccurs="0" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="FinnPersonRequest">
+    <xs:annotation>
+      <xs:documentation>GUID:{6EE1F34D-8D8E-4b46-A54C-921233E1E9A7}</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="soekekriterie" type="meldinger:Soekekriterie" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="personFilter" type="meldinger:PersonFilter" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="adresseFilter" type="meldinger:AdresseFilter" minOccurs="0" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="FinnPersonResponse">
+    <xs:annotation>
+      <xs:documentation>GUID:{15F569B3-0FE3-436c-BD6A-A59F6B2DE2BF}</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="totaltAntallTreff" type="xs:int" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="personListe" type="informasjon:Person" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="PersonFilter">
+    <xs:annotation>
+      <xs:documentation>GUID:{F80281B1-D8D2-47c8-9AB7-338F4FC37306}</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="alderFra" type="xs:int" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="alderTil" type="xs:int" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="enhetId" type="xs:string" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="foedselsdatoFra" type="xs:date" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="foedselsdatoTil" type="xs:date" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="kjoenn" type="informasjon:Kjoenntyper" minOccurs="0" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="Soekekriterie">
+    <xs:annotation>
+      <xs:documentation>GUID:{3EC26559-A3D0-40e0-824D-2F796220A1AB}</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="navn" type="xs:string" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="navnFTE" type="xs:string" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="fornavn" type="xs:string" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="fornavnFTE" type="xs:string" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="etternavn" type="xs:string" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="etternavnFTE" type="xs:string" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="gatenavn" type="xs:string" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="bankkontoNorge" type="xs:string" minOccurs="0" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>]]></con:content><con:type>http://www.w3.org/2001/XMLSchema</con:type></con:part><con:part><con:url>file:\W:\soapui\nav-fim-personsok-v1-tjenestespesifikasjon-0.0.1-alpha004\no\nav\tjeneste\virksomhet\personsok\v1\informasjon\personsok.xsd</con:url><con:content><![CDATA[<xs:schema targetNamespace="http://nav.no/tjeneste/virksomhet/personsok/v1/informasjon/personsok" xmlns:informasjon="http://nav.no/tjeneste/virksomhet/personsok/v1/informasjon/personsok" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:complexType name="AnsvarligEnhet">
+    <xs:annotation>
+      <xs:documentation>GUID:{7CFE7945-A0DA-4960-9CFC-E041474F3148}</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="gyldighetsperiode" type="informasjon:Periode" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="ansvarligEnhet" type="informasjon:Organisasjonsenhet" minOccurs="1" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="BankkontoNorge">
+    <xs:annotation>
+      <xs:documentation>GUID:{06CAC3CE-ED8A-4d77-98F1-A140F5A07F4F}</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="bankkonto" type="informasjon:Bankkontonummer" minOccurs="1" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="Bostedsadresse">
+    <xs:annotation>
+      <xs:documentation>GUID:{839DE511-FF22-42ae-8BAB-5171A8B2BD21}</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="geografiskAdresse" type="informasjon:GeografiskAdresse" minOccurs="1" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="Kjoenn">
+    <xs:annotation>
+      <xs:documentation>GUID:{8E275F69-8D42-49a8-887D-18D351C26703}</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="gyldighetsperiode" type="informasjon:Periode" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="kjoenn" type="informasjon:Kjoenntyper" minOccurs="1" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="NorskIdent">
+    <xs:annotation>
+      <xs:documentation>GUID:{2736C66F-C052-413e-8EA1-0657EAAC0F5B}</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="gyldighetsperiode" type="informasjon:Periode" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="ident" type="informasjon:Identifikator" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="type" type="informasjon:PersonIdenttype" minOccurs="1" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="Personnavn">
+    <xs:annotation>
+      <xs:documentation>GUID:{455C9EFD-AE1A-47dc-A3B4-75A2E7161D3A}</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="etternavn" type="informasjon:Navn" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="fornavn" type="informasjon:Navn" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="gyldighetsperiode" type="informasjon:Periode" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="mellomnavn" type="informasjon:Navn" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="sammensattNavn" type="informasjon:Navn" minOccurs="0" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="Personstatus">
+    <xs:annotation>
+      <xs:documentation>GUID:{12498793-81E3-4e63-9987-6C0693B7886C}</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="personstatus" type="informasjon:Personstatuskoder" minOccurs="1" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="Postadresse">
+    <xs:annotation>
+      <xs:documentation>GUID:{94CE9AFC-CA83-4dc4-8208-CCD9F62FDE0D}</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="geografiskAdresse" type="informasjon:GeografiskAdresse" minOccurs="1" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="PostadresseNorgeNAV">
+    <xs:annotation>
+      <xs:documentation>GUID:{EDF6BDBC-BE0C-460a-9223-C2CB0606C66B}</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="gyldighetsperiode" type="informasjon:Periode" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="geografiskAdresse" type="informasjon:GeografiskAdresse" minOccurs="1" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="PostadresseUtland">
+    <xs:annotation>
+      <xs:documentation>GUID:{6869373D-66C5-47ef-B898-F9EA7D2EEF21}</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="gyldighetsperiode" type="informasjon:Periode" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="harStedsadresseUtland" type="informasjon:StedsadresseUtland" minOccurs="1" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="Statsborgerskap">
+    <xs:annotation>
+      <xs:documentation>GUID:{F825B641-42B8-4de5-87F0-256A00BED62D}</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="gyldighetsperiode" type="informasjon:Periode" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="land" type="informasjon:Landkoder" minOccurs="1" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="Bankkontonummer">
+    <xs:annotation>
+      <xs:documentation>GUID:{318C1492-DAE8-4668-8EB9-C4E16D89B0D4}</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="bankkontonummer" type="xs:string" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="banknavn" type="xs:string" minOccurs="1" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="Gateadresse">
+    <xs:annotation>
+      <xs:documentation>GUID:{40F6BA6A-C34A-4de2-A22C-7EFA372116CB}</xs:documentation>
+    </xs:annotation>
+    <xs:complexContent>
+      <xs:extension base="informasjon:StedsadresseNorge">
+        <xs:sequence>
+          <xs:element name="bolignummer" type="xs:string" minOccurs="1" maxOccurs="1"/>
+          <xs:element name="gatenavn" type="xs:string" minOccurs="1" maxOccurs="1"/>
+          <xs:element name="gatenummer" type="xs:integer" minOccurs="1" maxOccurs="1"/>
+          <xs:element name="husbokstav" type="xs:string" minOccurs="1" maxOccurs="1"/>
+          <xs:element name="kommunenummer" type="xs:string" minOccurs="1" maxOccurs="1"/>
+          <xs:element name="undernummer" type="xs:string" minOccurs="1" maxOccurs="1"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="GateadresseUtland">
+    <xs:annotation>
+      <xs:documentation>GUID:{0216A68D-0909-49a4-A58C-0B0AC5AB9526}</xs:documentation>
+    </xs:annotation>
+    <xs:complexContent>
+      <xs:extension base="informasjon:StedsadresseUtland">
+        <xs:sequence>
+          <xs:element name="annenLokalId" type="xs:string" minOccurs="1" maxOccurs="1"/>
+          <xs:element name="by" type="xs:string" minOccurs="1" maxOccurs="1"/>
+          <xs:element name="bygningsid" type="xs:string" minOccurs="1" maxOccurs="1"/>
+          <xs:element name="coAdresse" type="xs:string" minOccurs="1" maxOccurs="1"/>
+          <xs:element name="distriktsnavn" type="xs:string" minOccurs="1" maxOccurs="1"/>
+          <xs:element name="etasjeId" type="xs:string" minOccurs="1" maxOccurs="1"/>
+          <xs:element name="gate" type="xs:string" minOccurs="1" maxOccurs="1"/>
+          <xs:element name="landsUnderentitet" type="xs:string" minOccurs="1" maxOccurs="1"/>
+          <xs:element name="postboksId" type="xs:string" minOccurs="1" maxOccurs="1"/>
+          <xs:element name="postkode" type="xs:string" minOccurs="1" maxOccurs="1"/>
+          <xs:element name="suiteid" type="xs:string" minOccurs="1" maxOccurs="1"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="GenerellAdresseUtland">
+    <xs:annotation>
+      <xs:documentation>GUID:{E86B41BE-2242-4c5c-A70A-C6FE5FB4FF49}</xs:documentation>
+    </xs:annotation>
+    <xs:complexContent>
+      <xs:extension base="informasjon:StedsadresseUtland">
+        <xs:sequence>
+          <xs:element name="adresselinje1" type="xs:string" minOccurs="1" maxOccurs="1"/>
+          <xs:element name="adresselinje2" type="xs:string" minOccurs="1" maxOccurs="1"/>
+          <xs:element name="adresselinje3" type="xs:string" minOccurs="1" maxOccurs="1"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="GeografiskAdresse">
+    <xs:annotation>
+      <xs:documentation>GUID:{D65029F4-4EC1-49e5-AA90-E761F1AD210A}</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="gyldighetsperiode" type="informasjon:Periode" minOccurs="1" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="Matrikkeladresse">
+    <xs:annotation>
+      <xs:documentation>GUID:{D04CEE31-CB00-4da1-BAC0-2A7297AA8D4B}</xs:documentation>
+    </xs:annotation>
+    <xs:complexContent>
+      <xs:extension base="informasjon:StedsadresseNorge">
+        <xs:sequence>
+          <xs:element name="bolignummer" type="xs:string" minOccurs="1" maxOccurs="1"/>
+          <xs:element name="eiendomsnavn" type="xs:string" minOccurs="1" maxOccurs="1"/>
+          <xs:element name="kommunenummer" type="xs:integer" minOccurs="1" maxOccurs="1"/>
+          <xs:element name="matrikkelnummer" type="xs:string" minOccurs="1" maxOccurs="1"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="Postboksadresse" abstract="true">
+    <xs:annotation>
+      <xs:documentation>GUID:{C5B62B38-C443-4367-B766-89767A2EB371}</xs:documentation>
+    </xs:annotation>
+    <xs:complexContent>
+      <xs:extension base="informasjon:GeografiskAdresse">
+        <xs:sequence>
+          <xs:element name="postboksnummer" type="xs:string" minOccurs="1" maxOccurs="1"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="PostboksadresseNorsk">
+    <xs:annotation>
+      <xs:documentation>GUID:{F800A2E0-DA22-4e41-B835-F1B03CA41296}</xs:documentation>
+    </xs:annotation>
+    <xs:complexContent>
+      <xs:extension base="informasjon:Postboksadresse">
+        <xs:sequence>
+          <xs:element name="postboksanlegg" type="xs:string" minOccurs="1" maxOccurs="1"/>
+          <xs:element name="poststed" type="informasjon:Poststed" minOccurs="1" maxOccurs="1"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="PostboksadresseUtland">
+    <xs:annotation>
+      <xs:documentation>GUID:{7098A24C-DCA5-48f5-8F51-57FA950F4FE7}</xs:documentation>
+    </xs:annotation>
+    <xs:complexContent>
+      <xs:extension base="informasjon:Postboksadresse">
+        <xs:sequence>
+          <xs:element name="distriktsnavn" type="xs:string" minOccurs="1" maxOccurs="1"/>
+          <xs:element name="landkode" type="informasjon:Landkoder" minOccurs="1" maxOccurs="1"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="Poststed">
+    <xs:annotation>
+      <xs:documentation>GUID:{A16CCF71-1C38-4bfc-9825-C4B9B8BF470C}</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="navn" type="xs:string" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="postnummer" type="xs:string" minOccurs="1" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="Stedsadresse" abstract="true">
+    <xs:annotation>
+      <xs:documentation>GUID:{552968CA-E530-4df6-9AE8-F7E8190EFD48}</xs:documentation>
+    </xs:annotation>
+    <xs:complexContent>
+      <xs:extension base="informasjon:GeografiskAdresse">
+        <xs:sequence>
+          <xs:element name="landkode" type="informasjon:Landkoder" minOccurs="0" maxOccurs="1"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="StedsadresseNorge">
+    <xs:annotation>
+      <xs:documentation>GUID:{AB8BE134-A8A7-43f8-98E2-E134D4A91BAA}</xs:documentation>
+    </xs:annotation>
+    <xs:complexContent>
+      <xs:extension base="informasjon:Stedsadresse">
+        <xs:sequence>
+          <xs:element name="poststed" type="informasjon:Poststed" minOccurs="1" maxOccurs="1"/>
+          <xs:element name="tilleggsadresse" type="xs:string" minOccurs="1" maxOccurs="1"/>
+          <xs:element name="tilleggsadresseType" type="informasjon:TilleggsadresseTyper" minOccurs="0" maxOccurs="1"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="StedsadresseUtland" abstract="true">
+    <xs:annotation>
+      <xs:documentation>GUID:{4850104C-673C-4bc5-A95B-A52389ED14A9}</xs:documentation>
+    </xs:annotation>
+    <xs:complexContent>
+      <xs:extension base="informasjon:GeografiskAdresse">
+        <xs:sequence/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="Bruker">
+    <xs:annotation>
+      <xs:documentation>GUID:{C13F8A22-726A-4766-A888-CC120CAB5E87}</xs:documentation>
+    </xs:annotation>
+    <xs:complexContent>
+      <xs:extension base="informasjon:Person">
+        <xs:sequence>
+          <xs:element name="diskresjonskode" type="informasjon:Diskresjonskoder" minOccurs="0" maxOccurs="1"/>
+          <xs:element name="harAnsvarligEnhet" type="informasjon:AnsvarligEnhet" minOccurs="1" maxOccurs="1"/>
+          <xs:element name="postadresseNorge" type="informasjon:PostadresseNorgeNAV" minOccurs="0" maxOccurs="1"/>
+          <xs:element name="postadresseUtland" type="informasjon:PostadresseUtland" minOccurs="0" maxOccurs="1"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="Part" abstract="true">
+    <xs:annotation>
+      <xs:documentation>GUID:{8587C62B-7190-452e-990F-48F3AD2A34B2}</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="partId" type="informasjon:Identifikator" minOccurs="0" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="Person">
+    <xs:annotation>
+      <xs:documentation>GUID:{9BE2DAC9-BE65-44fe-9CD9-0EDA1CBDE34F}</xs:documentation>
+    </xs:annotation>
+    <xs:complexContent>
+      <xs:extension base="informasjon:Part">
+        <xs:sequence>
+          <xs:element name="bankkontoNorge" type="informasjon:BankkontoNorge" minOccurs="0" maxOccurs="1"/>
+          <xs:element name="bostedsadresse" type="informasjon:Bostedsadresse" minOccurs="0" maxOccurs="1"/>
+          <xs:element name="kjoenn" type="informasjon:Kjoenn" minOccurs="0" maxOccurs="1"/>
+          <xs:element name="ident" type="informasjon:NorskIdent" minOccurs="0" maxOccurs="unbounded"/>
+          <xs:element name="gjeldendePersonnavn" type="informasjon:Personnavn" minOccurs="0" maxOccurs="1"/>
+          <xs:element name="personstatus" type="informasjon:Personstatus" minOccurs="0" maxOccurs="1"/>
+          <xs:element name="postadresse" type="informasjon:Postadresse" minOccurs="0" maxOccurs="1"/>
+          <xs:element name="statsborgerskap" type="informasjon:Statsborgerskap" minOccurs="0" maxOccurs="1"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:simpleType name="Identifikator">
+    <xs:restriction base="xs:string"/>
+  </xs:simpleType>
+  <xs:simpleType name="Navn">
+    <xs:restriction base="xs:string"/>
+  </xs:simpleType>
+  <xs:simpleType name="Diskresjonskoder">
+    <xs:annotation>
+      <xs:documentation>GUID:{71BC7495-92EE-4c66-AC0E-EAFDC918599F}</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string"/>
+  </xs:simpleType>
+  <xs:simpleType name="Kjoenntyper">
+    <xs:annotation>
+      <xs:documentation>GUID:{48323A37-1641-40ce-8EE8-0DB69FE04CD0}</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string"/>
+  </xs:simpleType>
+  <xs:simpleType name="Landkoder">
+    <xs:annotation>
+      <xs:documentation>GUID:{79FFA9AF-74E8-43f8-BEC1-DD4CF54BEFD7}</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string"/>
+  </xs:simpleType>
+  <xs:simpleType name="PersonIdenttype">
+    <xs:annotation>
+      <xs:documentation>GUID:{A44BC3C2-A657-42d2-A2D2-5A1885B683B7}</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="D-nummer"/>
+      <xs:enumeration value="Foedselsnummer"/>
+      <xs:enumeration value="NavId"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="Personstatuskoder">
+    <xs:annotation>
+      <xs:documentation>GUID:{45BFB106-0660-4161-AA68-4D9B7EEF8FD2}</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string"/>
+  </xs:simpleType>
+  <xs:simpleType name="TilleggsadresseTyper">
+    <xs:annotation>
+      <xs:documentation>GUID:{8C6F0535-4147-4e70-9CC6-646598051F45}</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string"/>
+  </xs:simpleType>
+  <xs:complexType name="Organisasjonsenhet">
+    <xs:annotation>
+      <xs:documentation>GUID:{2BF3072D-F153-4dd3-ADCD-3BE0BBAE562E}</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="bedriftsnummer" type="xs:string" minOccurs="1" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="Periode">
+    <xs:sequence>
+      <xs:element name="fom" type="xs:date" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="tom" type="xs:date" minOccurs="0" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>]]></con:content><con:type>http://www.w3.org/2001/XMLSchema</con:type></con:part></con:definitionCache><con:endpoints><con:endpoint>http://localhost:9080</con:endpoint><con:endpoint>http://A34DUVW22034:8088/mockPersonsokBinding</con:endpoint><con:endpoint>https://d26apvl173.test.local:9451/tpsws/Personsok</con:endpoint><con:endpoint>https://service-gw-t.test.local</con:endpoint></con:endpoints><con:operation isOneWay="false" action="" name="finnPerson" bindingOperationName="finnPerson" type="Request-Response" outputName="finnPersonResponse" inputName="finnPersonRequest" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call name="Request 1"><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>http://localhost:9080</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:v1="http://nav.no/tjeneste/virksomhet/personsok/v1/">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <v1:finnPerson>
+         <request>
+            <!--Optional:-->
+            <soekekriterie>
+               <!--Optional:-->
+               <navn>?</navn>
+               <!--Optional:-->
+               <navnFTE>?</navnFTE>
+               <fornavn>?</fornavn>
+               <!--Optional:-->
+               <fornavnFTE>?</fornavnFTE>
+               <!--Optional:-->
+               <etternavn>?</etternavn>
+               <!--Optional:-->
+               <etternavnFTE>?</etternavnFTE>
+               <!--Optional:-->
+               <gatenavn>?</gatenavn>
+               <!--Optional:-->
+               <bankkontoNorge>?</bankkontoNorge>
+            </soekekriterie>
+            <!--Optional:-->
+            <personFilter>
+               <!--Optional:-->
+               <alderFra>?</alderFra>
+               <!--Optional:-->
+               <alderTil>?</alderTil>
+               <!--Optional:-->
+               <enhetId>?</enhetId>
+               <!--Optional:-->
+               <foedselsdatoFra>?</foedselsdatoFra>
+               <!--Optional:-->
+               <foedselsdatoTil>?</foedselsdatoTil>
+               <!--Optional:-->
+               <kjoenn>?</kjoenn>
+            </personFilter>
+            <!--Optional:-->
+            <adresseFilter>
+               <!--Optional:-->
+               <gatenummer>?</gatenummer>
+               <!--Optional:-->
+               <husbokstav>?</husbokstav>
+               <!--Optional:-->
+               <postnummer>?</postnummer>
+            </adresseFilter>
+         </request>
+      </v1:finnPerson>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://nav.no/tjeneste/virksomhet/personsok/v1/PersonsokPortType/finnPersonRequest"/><con:wsrmConfig version="1.2"/></con:call></con:operation></con:interface><con:testSuite name="Personsok"><con:settings/><con:runType>SEQUENTIAL</con:runType><con:testCase failOnError="true" failTestCaseOnErrors="true" keepSession="false" maxResults="0" name="Personsok" searchProperties="true"><con:settings/><con:testStep type="request" name="finnPerson - Ingen forekomster funnet"><con:settings/><con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:interface>PersonsokBinding</con:interface><con:operation>finnPerson</con:operation><con:request name="finnPerson - Ingen forekomster funnet" outgoingWss="" incomingWss="" timeout="" wssPasswordType="PasswordText"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>https://service-gw-t.test.local</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:v1="http://nav.no/tjeneste/virksomhet/personsok/v1/">
+   <soapenv:Header xmlns:wsa="http://www.w3.org/2005/08/addressing">
+      <saml2:Assertion ID="_6999A1304B6879968413560058232036" IssueInstant="2012-12-20T12:17:03.203Z" Version="2.0" xsi:type="saml2:AssertionType" xmlns:saml2="urn:oasis:names:tc:SAML:2.0:assertion" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+         <saml2:Issuer>nova</saml2:Issuer>
+         <ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
+            <ds:SignedInfo>
+               <ds:CanonicalizationMethod Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
+               <ds:SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"/>
+               <ds:Reference URI="#_6999A1304B6879968413560058232036">
+                  <ds:Transforms>
+                     <ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/>
+                     <ds:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#">
+                        <ec:InclusiveNamespaces PrefixList="xs" xmlns:ec="http://www.w3.org/2001/10/xml-exc-c14n#"/>
+                     </ds:Transform>
+                  </ds:Transforms>
+                  <ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+                  <ds:DigestValue>IxcJsrU/3YEO+lRkis2g8TPNA20=</ds:DigestValue>
+               </ds:Reference>
+            </ds:SignedInfo>
+            <ds:SignatureValue>irIs5uD8XYRKbWQOOY0pLH85k1pFSJMot5EfMOA6oPqjUm+HTHmRhUjnebemKUVmJwbLu0F7oAE7C2ldclmC7+HDgd3fzhkpx8oQjIZ5xvTh5w7zYGNcFO4HmQusN5SucXwS95+bo7eew5X8sCUsKesPD8Ig1ebNWAUnHYAYnEs=</ds:SignatureValue>
+            <ds:KeyInfo>
+               <ds:KeyValue>
+                  <ds:RSAKeyValue>
+                     <ds:Modulus>uby/zhYfk9kqtbEFzp3tjXzfnfPJBosQLuwqOYlwHYlzsQMPG3nGvLVDvfXvi0FtbrRALzXYbPin
+pa/NoXpTcnHerv5pASa38k0tOOj43k1MEF/UsDUgHiZfXq7mEFu6k7z2n7Vma1yLzBafhskXduYa
+0poCdkOdS920ybz0M6s=</ds:Modulus>
+                     <ds:Exponent>AQAB</ds:Exponent>
+                  </ds:RSAKeyValue>
+               </ds:KeyValue>
+            </ds:KeyInfo>
+         </ds:Signature>
+         <saml2:Subject>
+            <saml2:NameID Format="urn:oasis:names:tc:SAML:1.1:nameid-format:unspecified" NameQualifier="www.nav.no">1234</saml2:NameID>
+            <saml2:SubjectConfirmation Method="urn:oasis:names:tc:SAML:2.0:cm:bearer"/>
+         </saml2:Subject>
+         <saml2:Conditions NotBefore="2012-12-20T12:17:03.203Z" NotOnOrAfter="2012-12-20T13:17:03.203Z"/>
+         <saml2:AttributeStatement>
+            <saml2:Attribute Name="authenticationLevel" NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri">
+               <saml2:AttributeValue xsi:type="xs:string">3</saml2:AttributeValue>
+            </saml2:Attribute>
+            <saml2:Attribute Name="identType" NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri">
+               <saml2:AttributeValue xsi:type="xs:string">external</saml2:AttributeValue>
+            </saml2:Attribute>
+            <saml2:Attribute Name="consumerId" NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri">
+               <saml2:AttributeValue xsi:type="xs:string">nova</saml2:AttributeValue>
+            </saml2:Attribute>
+         </saml2:AttributeStatement>
+      </saml2:Assertion>
+      <wsa:Action>http://nav.no/tjeneste/virksomhet/personsok/v1/PersonsokPortType/finnPersonRequest</wsa:Action>
+      <wsa:MessageID soapenv:mustUnderstand="1">uuid:d1481704-98b5-408a-9784-0ace1108e31a</wsa:MessageID>
+   </soapenv:Header>
+   <soapenv:Body>
+      <v1:finnPerson>
+         <request>
+            <!--Optional:-->
+            <soekekriterie>
+               <navn>Aremark Testfamilien</navn>
+               <navnFTE>FONETISK</navnFTE>
+               <fornavn>Aremark</fornavn>
+               <fornavnFTE>EKSAKT</fornavnFTE>
+               <etternavn>Testfamilien</etternavn>
+               <etternavnFTE>TRUNKERT</etternavnFTE>
+               <gatenavn>Rådhusgaten</gatenavn>
+               <bankkontoNorge>1234567890123</bankkontoNorge>
+            </soekekriterie>
+            <personFilter>
+               <alderFra>1</alderFra>
+               <alderTil>99</alderTil>
+               <enhetId>0122</enhetId>
+               <foedselsdatoFra>1985-02-01+01:00</foedselsdatoFra>
+               <foedselsdatoTil>1985-02-22+01:00</foedselsdatoTil>
+               <kjoenn>K</kjoenn>
+            </personFilter>
+            <adresseFilter>
+               <gatenummer>1</gatenummer>
+               <husbokstav>a</husbokstav>
+               <gatenummer>0001</gatenummer>
+            </adresseFilter>
+         </request>
+      </v1:finnPerson>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:assertion type="SOAP Response" name="SOAP Response"/><con:assertion type="Simple Contains" name="Contains"><con:configuration><token>INGEN FOREKOMSTER FUNNET</token><ignoreCase>false</ignoreCase><useRegEx>false</useRegEx></con:configuration></con:assertion><con:credentials><con:username>utvPensjon</con:username><con:password>Test1234</con:password></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://nav.no/tjeneste/virksomhet/personsok/v1/PersonsokPortType/finnPersonRequest"/><con:wsrmConfig version="1.2"/></con:request></con:config></con:testStep><con:testStep type="request" name="finnPerson - For mange forekomster"><con:settings/><con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:interface>PersonsokBinding</con:interface><con:operation>finnPerson</con:operation><con:request name="finnPerson - For mange forekomster" outgoingWss="" incomingWss="" timeout="" wssPasswordType="PasswordText"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>https://service-gw-t.test.local</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:v1="http://nav.no/tjeneste/virksomhet/personsok/v1/">
+   <soapenv:Header xmlns:wsa="http://www.w3.org/2005/08/addressing">
+      <saml2:Assertion ID="_6999A1304B6879968413560058232036" IssueInstant="2012-12-20T12:17:03.203Z" Version="2.0" xsi:type="saml2:AssertionType" xmlns:saml2="urn:oasis:names:tc:SAML:2.0:assertion" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+         <saml2:Issuer>nova</saml2:Issuer>
+         <ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
+            <ds:SignedInfo>
+               <ds:CanonicalizationMethod Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
+               <ds:SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"/>
+               <ds:Reference URI="#_6999A1304B6879968413560058232036">
+                  <ds:Transforms>
+                     <ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/>
+                     <ds:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#">
+                        <ec:InclusiveNamespaces PrefixList="xs" xmlns:ec="http://www.w3.org/2001/10/xml-exc-c14n#"/>
+                     </ds:Transform>
+                  </ds:Transforms>
+                  <ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+                  <ds:DigestValue>IxcJsrU/3YEO+lRkis2g8TPNA20=</ds:DigestValue>
+               </ds:Reference>
+            </ds:SignedInfo>
+            <ds:SignatureValue>irIs5uD8XYRKbWQOOY0pLH85k1pFSJMot5EfMOA6oPqjUm+HTHmRhUjnebemKUVmJwbLu0F7oAE7C2ldclmC7+HDgd3fzhkpx8oQjIZ5xvTh5w7zYGNcFO4HmQusN5SucXwS95+bo7eew5X8sCUsKesPD8Ig1ebNWAUnHYAYnEs=</ds:SignatureValue>
+            <ds:KeyInfo>
+               <ds:KeyValue>
+                  <ds:RSAKeyValue>
+                     <ds:Modulus>uby/zhYfk9kqtbEFzp3tjXzfnfPJBosQLuwqOYlwHYlzsQMPG3nGvLVDvfXvi0FtbrRALzXYbPin
+pa/NoXpTcnHerv5pASa38k0tOOj43k1MEF/UsDUgHiZfXq7mEFu6k7z2n7Vma1yLzBafhskXduYa
+0poCdkOdS920ybz0M6s=</ds:Modulus>
+                     <ds:Exponent>AQAB</ds:Exponent>
+                  </ds:RSAKeyValue>
+               </ds:KeyValue>
+            </ds:KeyInfo>
+         </ds:Signature>
+         <saml2:Subject>
+            <saml2:NameID Format="urn:oasis:names:tc:SAML:1.1:nameid-format:unspecified" NameQualifier="www.nav.no">1234</saml2:NameID>
+            <saml2:SubjectConfirmation Method="urn:oasis:names:tc:SAML:2.0:cm:bearer"/>
+         </saml2:Subject>
+         <saml2:Conditions NotBefore="2012-12-20T12:17:03.203Z" NotOnOrAfter="2012-12-20T13:17:03.203Z"/>
+         <saml2:AttributeStatement>
+            <saml2:Attribute Name="authenticationLevel" NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri">
+               <saml2:AttributeValue xsi:type="xs:string">3</saml2:AttributeValue>
+            </saml2:Attribute>
+            <saml2:Attribute Name="identType" NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri">
+               <saml2:AttributeValue xsi:type="xs:string">external</saml2:AttributeValue>
+            </saml2:Attribute>
+            <saml2:Attribute Name="consumerId" NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri">
+               <saml2:AttributeValue xsi:type="xs:string">nova</saml2:AttributeValue>
+            </saml2:Attribute>
+         </saml2:AttributeStatement>
+      </saml2:Assertion>
+      <wsa:Action>http://nav.no/tjeneste/virksomhet/personsok/v1/PersonsokPortType/finnPersonRequest</wsa:Action>
+      <wsa:MessageID soapenv:mustUnderstand="1">uuid:d1481704-98b5-408a-9784-0ace1108e31a</wsa:MessageID>
+   </soapenv:Header>
+   <soapenv:Body>
+      <v1:finnPerson>
+         <request>
+            <!--Optional:-->
+            <soekekriterie>
+               <fornavn>Hiep</fornavn>
+               <etternavn>Nguyen</etternavn>
+            </soekekriterie>
+         </request>
+      </v1:finnPerson>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:assertion type="SOAP Response" name="SOAP Response"/><con:assertion type="Simple Contains" name="Contains"><con:configuration><token>FOR MANGE FOREKOMSTER</token><ignoreCase>false</ignoreCase><useRegEx>false</useRegEx></con:configuration></con:assertion><con:credentials><con:username>utvPensjon</con:username><con:password>Test1234</con:password></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://nav.no/tjeneste/virksomhet/personsok/v1/PersonsokPortType/finnPersonRequest"/><con:wsrmConfig version="1.2"/></con:request></con:config></con:testStep><con:testStep type="request" name="finnPerson - gyldig svar"><con:settings/><con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:interface>PersonsokBinding</con:interface><con:operation>finnPerson</con:operation><con:request name="finnPerson - gyldig svar" outgoingWss="" incomingWss="" timeout="" wssPasswordType="PasswordText"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>https://service-gw-t.test.local</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:v1="http://nav.no/tjeneste/virksomhet/personsok/v1/">
+   <soapenv:Header xmlns:wsa="http://www.w3.org/2005/08/addressing">
+      <saml2:Assertion ID="_6999A1304B6879968413560058232036" IssueInstant="2012-12-20T12:17:03.203Z" Version="2.0" xsi:type="saml2:AssertionType" xmlns:saml2="urn:oasis:names:tc:SAML:2.0:assertion" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+         <saml2:Issuer>nova</saml2:Issuer>
+         <ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
+            <ds:SignedInfo>
+               <ds:CanonicalizationMethod Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
+               <ds:SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"/>
+               <ds:Reference URI="#_6999A1304B6879968413560058232036">
+                  <ds:Transforms>
+                     <ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/>
+                     <ds:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#">
+                        <ec:InclusiveNamespaces PrefixList="xs" xmlns:ec="http://www.w3.org/2001/10/xml-exc-c14n#"/>
+                     </ds:Transform>
+                  </ds:Transforms>
+                  <ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+                  <ds:DigestValue>IxcJsrU/3YEO+lRkis2g8TPNA20=</ds:DigestValue>
+               </ds:Reference>
+            </ds:SignedInfo>
+            <ds:SignatureValue>irIs5uD8XYRKbWQOOY0pLH85k1pFSJMot5EfMOA6oPqjUm+HTHmRhUjnebemKUVmJwbLu0F7oAE7C2ldclmC7+HDgd3fzhkpx8oQjIZ5xvTh5w7zYGNcFO4HmQusN5SucXwS95+bo7eew5X8sCUsKesPD8Ig1ebNWAUnHYAYnEs=</ds:SignatureValue>
+            <ds:KeyInfo>
+               <ds:KeyValue>
+                  <ds:RSAKeyValue>
+                     <ds:Modulus>uby/zhYfk9kqtbEFzp3tjXzfnfPJBosQLuwqOYlwHYlzsQMPG3nGvLVDvfXvi0FtbrRALzXYbPin
+pa/NoXpTcnHerv5pASa38k0tOOj43k1MEF/UsDUgHiZfXq7mEFu6k7z2n7Vma1yLzBafhskXduYa
+0poCdkOdS920ybz0M6s=</ds:Modulus>
+                     <ds:Exponent>AQAB</ds:Exponent>
+                  </ds:RSAKeyValue>
+               </ds:KeyValue>
+            </ds:KeyInfo>
+         </ds:Signature>
+         <saml2:Subject>
+            <saml2:NameID Format="urn:oasis:names:tc:SAML:1.1:nameid-format:unspecified" NameQualifier="www.nav.no">1234</saml2:NameID>
+            <saml2:SubjectConfirmation Method="urn:oasis:names:tc:SAML:2.0:cm:bearer"/>
+         </saml2:Subject>
+         <saml2:Conditions NotBefore="2012-12-20T12:17:03.203Z" NotOnOrAfter="2012-12-20T13:17:03.203Z"/>
+         <saml2:AttributeStatement>
+            <saml2:Attribute Name="authenticationLevel" NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri">
+               <saml2:AttributeValue xsi:type="xs:string">3</saml2:AttributeValue>
+            </saml2:Attribute>
+            <saml2:Attribute Name="identType" NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri">
+               <saml2:AttributeValue xsi:type="xs:string">external</saml2:AttributeValue>
+            </saml2:Attribute>
+            <saml2:Attribute Name="consumerId" NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri">
+               <saml2:AttributeValue xsi:type="xs:string">nova</saml2:AttributeValue>
+            </saml2:Attribute>
+         </saml2:AttributeStatement>
+      </saml2:Assertion>
+      <wsa:Action>http://nav.no/tjeneste/virksomhet/personsok/v1/PersonsokPortType/finnPersonRequest</wsa:Action>
+      <wsa:MessageID soapenv:mustUnderstand="1">uuid:d1481704-98b5-408a-9784-0ace1108e31a</wsa:MessageID>
+   </soapenv:Header>
+   <soapenv:Body>
+      <v1:finnPerson>
+         <request>
+            <!--Optional:-->
+            <soekekriterie>
+               <fornavn>Hans</fornavn>
+               <etternavn>hansen</etternavn>
+            </soekekriterie>
+            <personFilter>
+               <alderFra>40</alderFra>
+               <alderTil>50</alderTil>
+            </personFilter>
+         </request>
+      </v1:finnPerson>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:assertion type="SOAP Response" name="SOAP Response"/><con:credentials><con:username>utvPensjon</con:username><con:password>Test1234</con:password></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://nav.no/tjeneste/virksomhet/personsok/v1/PersonsokPortType/finnPersonRequest"/><con:wsrmConfig version="1.2"/></con:request></con:config></con:testStep><con:testStep type="request" name="Mer enn én adresse"><con:settings/><con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:interface>PersonsokBinding</con:interface><con:operation>finnPerson</con:operation><con:request name="Mer enn én adresse" outgoingWss="" incomingWss="" timeout="" wssPasswordType="PasswordText"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>https://service-gw-t.test.local</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:v1="http://nav.no/tjeneste/virksomhet/personsok/v1/">
+   <soapenv:Header xmlns:wsa="http://www.w3.org/2005/08/addressing">
+      <saml2:Assertion ID="_6999A1304B6879968413560058232036" IssueInstant="2012-12-20T12:17:03.203Z" Version="2.0" xsi:type="saml2:AssertionType" xmlns:saml2="urn:oasis:names:tc:SAML:2.0:assertion" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+         <saml2:Issuer>nova</saml2:Issuer>
+         <ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
+            <ds:SignedInfo>
+               <ds:CanonicalizationMethod Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
+               <ds:SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"/>
+               <ds:Reference URI="#_6999A1304B6879968413560058232036">
+                  <ds:Transforms>
+                     <ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/>
+                     <ds:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#">
+                        <ec:InclusiveNamespaces PrefixList="xs" xmlns:ec="http://www.w3.org/2001/10/xml-exc-c14n#"/>
+                     </ds:Transform>
+                  </ds:Transforms>
+                  <ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+                  <ds:DigestValue>IxcJsrU/3YEO+lRkis2g8TPNA20=</ds:DigestValue>
+               </ds:Reference>
+            </ds:SignedInfo>
+            <ds:SignatureValue>irIs5uD8XYRKbWQOOY0pLH85k1pFSJMot5EfMOA6oPqjUm+HTHmRhUjnebemKUVmJwbLu0F7oAE7C2ldclmC7+HDgd3fzhkpx8oQjIZ5xvTh5w7zYGNcFO4HmQusN5SucXwS95+bo7eew5X8sCUsKesPD8Ig1ebNWAUnHYAYnEs=</ds:SignatureValue>
+            <ds:KeyInfo>
+               <ds:KeyValue>
+                  <ds:RSAKeyValue>
+                     <ds:Modulus>uby/zhYfk9kqtbEFzp3tjXzfnfPJBosQLuwqOYlwHYlzsQMPG3nGvLVDvfXvi0FtbrRALzXYbPin
+pa/NoXpTcnHerv5pASa38k0tOOj43k1MEF/UsDUgHiZfXq7mEFu6k7z2n7Vma1yLzBafhskXduYa
+0poCdkOdS920ybz0M6s=</ds:Modulus>
+                     <ds:Exponent>AQAB</ds:Exponent>
+                  </ds:RSAKeyValue>
+               </ds:KeyValue>
+            </ds:KeyInfo>
+         </ds:Signature>
+         <saml2:Subject>
+            <saml2:NameID Format="urn:oasis:names:tc:SAML:1.1:nameid-format:unspecified" NameQualifier="www.nav.no">1234</saml2:NameID>
+            <saml2:SubjectConfirmation Method="urn:oasis:names:tc:SAML:2.0:cm:bearer"/>
+         </saml2:Subject>
+         <saml2:Conditions NotBefore="2012-12-20T12:17:03.203Z" NotOnOrAfter="2012-12-20T13:17:03.203Z"/>
+         <saml2:AttributeStatement>
+            <saml2:Attribute Name="authenticationLevel" NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri">
+               <saml2:AttributeValue xsi:type="xs:string">3</saml2:AttributeValue>
+            </saml2:Attribute>
+            <saml2:Attribute Name="identType" NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri">
+               <saml2:AttributeValue xsi:type="xs:string">external</saml2:AttributeValue>
+            </saml2:Attribute>
+            <saml2:Attribute Name="consumerId" NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri">
+               <saml2:AttributeValue xsi:type="xs:string">nova</saml2:AttributeValue>
+            </saml2:Attribute>
+         </saml2:AttributeStatement>
+      </saml2:Assertion>
+      <wsa:Action>http://nav.no/tjeneste/virksomhet/personsok/v1/PersonsokPortType/finnPersonRequest</wsa:Action>
+      <wsa:MessageID soapenv:mustUnderstand="1">uuid:d1481704-98b5-408a-9784-0ace1108e31a</wsa:MessageID>
+   </soapenv:Header>
+   <soapenv:Body>
+      <v1:finnPerson>
+         <request>
+            <!--Optional:-->
+            <soekekriterie>
+               <fornavn>Hans</fornavn>
+               <etternavn>hansen</etternavn>
+            </soekekriterie>
+            <personFilter>
+               <alderFra>40</alderFra>
+               <alderTil>50</alderTil>
+            </personFilter>
+         </request>
+      </v1:finnPerson>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:assertion type="SOAP Response" name="SOAP Response"/><con:credentials><con:username>utvPensjon</con:username><con:password>Test1234</con:password></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://nav.no/tjeneste/virksomhet/personsok/v1/PersonsokPortType/finnPersonRequest"/><con:wsrmConfig version="1.2"/></con:request></con:config></con:testStep><con:properties/></con:testCase><con:properties/></con:testSuite><con:properties/><con:wssContainer/></con:soapui-project>
