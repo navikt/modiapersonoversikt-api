@@ -30,4 +30,8 @@ public class DateUtils {
     public static String toString(DateTime dateTime) {
         return format("%s, klokken %s", toDateString(dateTime), toTimeString(dateTime));
     }
+
+    public static String date(DateTime dateTime) {
+        return DateTimeFormat.forPattern("d. MMMM yyyy").withLocale(Locale.getDefault()).print(dateTime);
+    }
 }

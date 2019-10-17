@@ -106,11 +106,10 @@
             <artifactId>modia-saksoversikt</artifactId>
             <version>${project.version}</version>
         </dependency>
-
-        <!--Personsok-->
         <dependency>
-            <groupId>no.nav</groupId>
+            <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>personsok-consumer</artifactId>
+            <version>${project.version}</version>
         </dependency>
 
         <!--Kontrakter-->

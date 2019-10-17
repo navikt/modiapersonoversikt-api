@@ -29,6 +29,7 @@
 
     <properties>
         <common.version>2019.03.27.09.40-legacy-modiabrukerdialog</common.version>
+        <modia-felleskomponenter.version>dev</modia-felleskomponenter.version>
         <oidc.security-authorization.version>696</oidc.security-authorization.version>
 
         <ehcache.version>2.6.5</ehcache.version>
@@ -60,10 +61,7 @@
         <aktorid-jaxws.version>1.3</aktorid-jaxws.version>
 
         <!-- Modia-komponenter-->
-        <personsok.version>1657</personsok.version>
-        <kjerneinfo.versjon>4623</kjerneinfo.versjon>
-<!--        <kjerneinfo.versjon>4622-1-gcd2fe62</kjerneinfo.versjon>-->
-        <modia-felleskomponenter.version>277</modia-felleskomponenter.version>
+        <kjerneinfo.versjon>dev</kjerneinfo.versjon>
 
         <!-- Tjenestespecs -->
         <soknader.liste.version>2.0.12</soknader.liste.version>
@@ -123,20 +121,6 @@
                 <version>${oidc.security-authorization.version}</version>
             </dependency>
 
-
-            <!-- Personsok -->
-            <dependency>
-                <groupId>no.nav</groupId>
-                <artifactId>personsok-consumer</artifactId>
-                <version>${personsok.version}</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>xml-apis</groupId>
-                        <artifactId>xml-apis</artifactId>
-                    </exclusion>
-                </exclusions>
-            </dependency>
-
             <!--Kontrakter-->
             <dependency>
                 <groupId>no.nav</groupId>
@@ -162,11 +146,6 @@
             </dependency>
 
             <!--Kjerneinfo-->
-            <dependency>
-                <groupId>no.nav</groupId>
-                <artifactId>kjerneinfo-hentperson</artifactId>
-                <version>${kjerneinfo.versjon}</version>
-            </dependency>
             <dependency>
                 <groupId>no.nav</groupId>
                 <artifactId>kjerneinfo-common</artifactId>

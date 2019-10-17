@@ -8,10 +8,9 @@
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
-    <groupId>no.nav</groupId>
     <artifactId>personsok</artifactId>
     <packaging>pom</packaging>
-    <version>4.0.9-SNAPSHOT</version>
+    <version>dev</version>
     <name>NAV :: personsok</name>
     <description>Mor-POM for personsok</description>
 
@@ -62,25 +61,6 @@
         <aspectj.version>1.7.2</aspectj.version>
 
     </properties>
-
-    <distributionManagement>
-        <repository>
-            <id>m2internal</id>
-            <name>NAV Maven2 Internal Repository</name>
-            <url>dav:http://maven.adeo.no/nexus/content/repositories/m2internal</url>
-        </repository>
-        <snapshotRepository>
-            <id>m2snapshot</id>
-            <name>NAV Maven2 Snapshot Repository</name>
-            <url>dav:http://maven.adeo.no/nexus/content/repositories/m2snapshot</url>
-            <uniqueVersion>false</uniqueVersion>
-        </snapshotRepository>
-    </distributionManagement>
-
-    <ciManagement>
-        <system>jenkins</system>
-        <url>http://a34apvl016.devillo.no:8090</url>
-    </ciManagement>
 
     <build>
         <pluginManagement>
@@ -222,38 +202,8 @@
                     <artifactId>maven-assembly-plugin</artifactId>
                     <version>2.2-beta-2</version>
                 </plugin>
-                <!--This plugin's configuration is used to store Eclipse m2e settings
-                only. It has no influence on the Maven build itself. -->
-
             </plugins>
         </pluginManagement>
-        <plugins>
-            <!--
-            <plugin>
-                <groupId>no.nav.maven.plugins</groupId>
-                <artifactId>modig-scm-plugin</artifactId>
-                <version>${modig.scm.plugin.version}</version>
-                <executions>
-                    <execution>
-                        <id>Check illegal or unwanted dependencies</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>failon-unwanted-dependencies</goal>
-                            <goal>report-unapproved-dependencies</goal>
-                        </goals>
-                        <configuration>
-                            <trail>true</trail>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-scm-plugin</artifactId>
-                <version>1.9.4</version>
-            </plugin>
-        </plugins>
         <extensions>
             <extension>
                 <groupId>org.apache.maven.wagon</groupId>
@@ -395,30 +345,6 @@
                 <version>${modig-lang.version}</version>
                 <scope>test</scope>
             </dependency>
-
-            <dependency>
-                <groupId>no.nav.modig</groupId>
-                <artifactId>modig-frontend-wicket</artifactId>
-                <version>${modig-frontend-wicket.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>no.nav.modig</groupId>
-                <artifactId>modig-wicket-test</artifactId>
-                <version>${modig-wicket-test.version}</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>no.nav.modig</groupId>
-                <artifactId>modig-wicket</artifactId>
-                <version>${modig.wicket.version}</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>commons-logging</groupId>
-                        <artifactId>commons-logging</artifactId>
-                    </exclusion>
-                </exclusions>
-            </dependency>
             <dependency>
                 <groupId>no.nav.dialogarena</groupId>
                 <artifactId>oidc-security</artifactId>
@@ -463,50 +389,6 @@
                 <groupId>xml-apis</groupId>
                 <artifactId>xml-apis</artifactId>
                 <version>1.4.01</version>
-            </dependency>
-
-            <!-- Wicket -->
-            <dependency>
-                <groupId>org.apache.wicket</groupId>
-                <artifactId>wicket-core</artifactId>
-                <version>${wicket.version}</version>
-                <scope>provided</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.wicket</groupId>
-                <artifactId>wicket-request</artifactId>
-                <version>${wicket.version}</version>
-                <scope>provided</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.wicket</groupId>
-                <artifactId>wicket-extensions</artifactId>
-                <version>${wicket.version}</version>
-                <scope>provided</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.wicket</groupId>
-                <artifactId>wicket-spring</artifactId>
-                <version>${wicket.version}</version>
-                <scope>provided</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.wicket</groupId>
-                <artifactId>wicket-devutils</artifactId>
-                <version>${wicket.version}</version>
-                <scope>provided</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.wicket</groupId>
-                <artifactId>wicket-datetime</artifactId>
-                <version>${wicket.version}</version>
-                <scope>provided</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.wicket</groupId>
-                <artifactId>wicket-util</artifactId>
-                <version>${wicket.version}</version>
-                <scope>provided</scope>
             </dependency>
 
             <!-- JBoss -->
@@ -630,11 +512,6 @@
             </activation>
         </profile>
     </profiles>
-    <scm>
-        <developerConnection>scm:git:http://stash.devillo.no/scm/fell/personsok.git</developerConnection>
-        <url>http://stash.devillo.no:7990/projects/fell/repos/personsok/</url>
-        <tag>personsok-3.0.0</tag>
-    </scm>
     <modules>
         <module>personsok-consumer</module>
         <module>personsok-domain</module>

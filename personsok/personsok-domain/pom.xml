@@ -4,9 +4,9 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>no.nav</groupId>
+        <groupId>no.nav.sbl.dialogarena</groupId>
         <artifactId>personsok</artifactId>
-        <version>4.0.9-SNAPSHOT</version>
+        <version>dev</version>
     </parent>
 
     <artifactId>personsok-domain</artifactId>
