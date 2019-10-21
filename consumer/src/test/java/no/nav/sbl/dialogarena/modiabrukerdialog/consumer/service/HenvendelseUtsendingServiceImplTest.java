@@ -1,6 +1,5 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service;
 
-import no.nav.brukerdialog.security.context.StaticSubjectHandler;
 import no.nav.brukerdialog.security.tilgangskontroll.policy.pep.EnforcementPoint;
 import no.nav.brukerdialog.security.tilgangskontroll.policy.request.PolicyRequest;
 import no.nav.brukerdialog.security.tilgangskontroll.policy.request.attributes.ActionId;
@@ -22,7 +21,6 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveBehandlingSer
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.gsak.SakerService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.ldap.LDAPService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.AnsattService;
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.cache.CacheTestUtil;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.http.SubjectHandlerUtil;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.behandlehenvendelse.BehandleHenvendelsePortType;
@@ -82,8 +80,6 @@ public class HenvendelseUtsendingServiceImplTest {
     @Mock
     private OppgaveBehandlingService oppgaveBehandlingService;
     @Mock
-    public SaksbehandlerInnstillingerService saksbehandlerInnstillingerService;
-    @Mock
     public AnsattService ansattWS;
     @Mock
     public ContentRetriever propertyResolver;
@@ -137,7 +133,7 @@ public class HenvendelseUtsendingServiceImplTest {
 
     @Test
     void henterSporsmal() {
-        System.setProperty(StaticSubjectHandler.SUBJECTHANDLER_KEY, StaticSubjectHandler.class.getName());
+//        System.setProperty(StaticSubjectHandler.SUBJECTHANDLER_KEY, StaticSubjectHandler.class.getName());
         when(henvendelsePortType.hentHenvendelseListe(any(WSHentHenvendelseListeRequest.class))).thenReturn(mockWSHentHenvendelseResponse());
 
         Melding sporsmal = henvendelseUtsendingService.hentTraad("fnr", TRAAD_ID, SAKSBEHANDLERS_VALGTE_ENHET).get(0);
@@ -395,7 +391,7 @@ public class HenvendelseUtsendingServiceImplTest {
     @Test
     void sjekkerTilgangPaaOkonomiskSosialhjelp() {
         String valgtEnhet = "1234";
-        when(saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet()).thenReturn(valgtEnhet);
+//        when(saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet()).thenReturn(valgtEnhet);
         when(henvendelsePortType.hentHenvendelseListe(any(WSHentHenvendelseListeRequest.class))).thenReturn(new WSHentHenvendelseListeResponse().withAny(
                 new XMLHenvendelse()
                         .withBehandlingsId(TRAAD_ID)

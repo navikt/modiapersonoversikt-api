@@ -1,7 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.sak.service;
 
 
-import no.nav.brukerdialog.security.context.ThreadLocalSubjectHandler;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.AnsattEnhet;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.AnsattService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.DokumentMetadata;
@@ -47,7 +46,7 @@ public class TilgangskontrollServiceTest {
 
     @Before
     public void setup() throws HentAktoerIdForIdentPersonIkkeFunnet {
-        System.setProperty("no.nav.brukerdialog.security.context.subjectHandlerImplementationClass", ThreadLocalSubjectHandler.class.getName());
+//        System.setProperty("no.nav.brukerdialog.security.context.subjectHandlerImplementationClass", ThreadLocalSubjectHandler.class.getName());
         mockRequest.setCookies(lagSaksbehandlerCookie(GODKJENT_ENHET));
         HentAktoerIdForIdentResponse hentAktoerIdForIdentResponse = new HentAktoerIdForIdentResponse();
         hentAktoerIdForIdentResponse.setAktoerId(BRUKERS_IDENT);

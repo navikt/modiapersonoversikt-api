@@ -15,7 +15,6 @@ import no.nav.modig.content.ContentRetriever;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.kodeverk.StandardKodeverk;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.ldap.LDAPService;
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.henvendelse.HenvendelseBehandlingServiceImpl;
 import no.nav.sbl.dialogarena.sporsmalogsvar.legacy.TraadVM;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.behandlehenvendelse.BehandleHenvendelsePortType;
@@ -83,14 +82,11 @@ public class HenvendelseBehandlingServiceImplTest {
     @Mock
     private LDAPService ldapService;
 
-    @Mock
-    private SaksbehandlerInnstillingerService saksbehandlerInnstillingerService;
-
     @InjectMocks
     private HenvendelseBehandlingServiceImpl henvendelseBehandlingService;
 
 
-    private final TraadVM VALGT_TRAAD = new TraadVM(createMeldingVMer(),pep, saksbehandlerInnstillingerService);
+    private final TraadVM VALGT_TRAAD = new TraadVM(createMeldingVMer(),pep);
 
     @BeforeEach
     public void setUp() {
@@ -115,7 +111,7 @@ public class HenvendelseBehandlingServiceImplTest {
         when(henvendelsePortType.hentHenvendelseListe(any(WSHentHenvendelseListeRequest.class))).thenReturn(
                 new WSHentHenvendelseListeResponse().withAny(xmlHenvendelseListe));
 
-        when(saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet()).thenReturn(VALGT_ENHET);
+//        when(saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet()).thenReturn(VALGT_ENHET);
         when(standardKodeverk.getArkivtemaNavn(anyString())).thenReturn(ARKIVTEMANAVN);
     }
 

@@ -14,6 +14,7 @@ import org.springframework.context.annotation.Configuration;
 import javax.xml.namespace.QName;
 
 import static no.nav.sbl.dialogarena.common.cxf.InstanceSwitcher.createMetricsProxyWithInstanceSwitcher;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.Utils.withProperty;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v1.norg.NorgEndpointFelles.NORG_KEY;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v1.norg.NorgEndpointFelles.getSecurityProps;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.GosysNavOrgEnhetPortTypeMock.createGosysNavOrgEnhetPortTypeMock;
@@ -32,20 +33,14 @@ public class NAVOrgEnhetEndpointConfig {
     }
 
     private static GOSYSNAVOrgEnhet createNavOrgEnhetPortType() {
-        GOSYSNAVOrgEnhet navOrgEnhet = new CXFClient<>(GOSYSNAVOrgEnhet.class)
+        return withProperty("disable.ssl.cn.check", "true", () -> new CXFClient<>(GOSYSNAVOrgEnhet.class)
                 .address(address)
                 .wsdl("classpath:nav-cons-sak-gosys-3.0.0_GOSYSNAVOrgEnhetWSEXP.wsdl")
                 .serviceName(new QName("http://nav-cons-sak-gosys-3.0.0/no/nav/inf/NAVOrgEnhet/Binding", "GOSYSNAVOrgEnhetWSEXP_GOSYSNAVOrgEnhetHttpService"))
                 .endpointName(new QName("http://nav-cons-sak-gosys-3.0.0/no/nav/inf/NAVOrgEnhet/Binding", "GOSYSNAVOrgEnhetWSEXP_GOSYSNAVOrgEnhetHttpPort"))
                 .withOutInterceptor(new WSS4JOutInterceptor(getSecurityProps()))
-                .build();
-
-        HTTPConduit httpConduit = (HTTPConduit) ClientProxy.getClient(navOrgEnhet).getConduit();
-        TLSClientParameters params = new TLSClientParameters();
-        params.setDisableCNCheck(true);
-        httpConduit.setTlsClientParameters(params);
-
-        return navOrgEnhet;
+                .build()
+        );
     }
 
     @Bean

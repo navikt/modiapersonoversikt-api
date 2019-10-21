@@ -1,6 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.sak.rest;
 
-import no.nav.brukerdialog.security.context.ThreadLocalSubjectHandler;
+//import no.nav.brukerdialog.security.context.ThreadLocalSubjectHandler;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.interfaces.SaksoversiktService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.interfaces.TilgangskontrollService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.domain.widget.ModiaSakstema;
@@ -42,7 +42,7 @@ public class SaksoversiktControllerTest {
 
     @Before
     public void before() {
-        setProperty("no.nav.brukerdialog.security.context.subjectHandlerImplementationClass", ThreadLocalSubjectHandler.class.getName());
+//        setProperty("no.nav.brukerdialog.security.context.subjectHandlerImplementationClass", ThreadLocalSubjectHandler.class.getName());
     }
 
     @Test

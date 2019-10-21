@@ -32,8 +32,8 @@
             <artifactId>commons-lang3</artifactId>
         </dependency>
         <dependency>
-            <groupId>no.nav.sbl.dialogarena</groupId>
-            <artifactId>common-cxf</artifactId>
+            <groupId>no.nav.common</groupId>
+            <artifactId>cxf</artifactId>
         </dependency>
         <!-- Personsok -->
         <dependency>

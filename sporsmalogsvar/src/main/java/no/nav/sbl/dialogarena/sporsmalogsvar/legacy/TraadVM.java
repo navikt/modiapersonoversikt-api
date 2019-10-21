@@ -8,7 +8,6 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Saksbehandler;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.Sak;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype;
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
 import org.joda.time.DateTime;
 
 import java.io.Serializable;
@@ -30,16 +29,13 @@ public class TraadVM implements Serializable {
 
     private List<MeldingVM> meldinger;
 
-    private SaksbehandlerInnstillingerService saksbehandlerInnstillingerService;
-
     public Sak journalfortSak;
 
     private EnforcementPoint pep;
 
-    public TraadVM(List<MeldingVM> meldinger, EnforcementPoint pep, SaksbehandlerInnstillingerService saksbehandlerInnstillingerService) {
+    public TraadVM(List<MeldingVM> meldinger, EnforcementPoint pep) {
         this.meldinger = meldinger;
         this.pep = pep;
-        this.saksbehandlerInnstillingerService = saksbehandlerInnstillingerService;
     }
 
     public List<MeldingVM> getMeldinger() {
@@ -98,16 +94,6 @@ public class TraadVM implements Serializable {
         return meldinger.stream().anyMatch(MeldingVM::erFeilsendt);
     }
 
-    public boolean traadKanBesvares() {
-        return getEldsteMelding().erSporsmal()
-                && !getEldsteMelding().melding.kassert
-                && (erEnkeltstaaendeSpsmFraBruker() || !getEldsteMelding().erKontorsperret())
-                && !getEldsteMelding().erFeilsendt()
-                && !(getEldsteMelding().melding.gjeldendeTemagruppe == Temagruppe.OKSOS && !traadOKSOSKanSes())
-                && !getEldsteMelding().melding.ingenTilgangJournalfort
-                && !erFerdigstiltUtenSvar();
-    }
-
     public boolean erMonolog() {
         return meldinger.stream()
                 .map(MeldingVM::erFraSaksbehandler)
@@ -123,20 +109,6 @@ public class TraadVM implements Serializable {
     public boolean erTemagruppeSosialeTjenester() {
         Temagruppe gjeldendeTemagruppe = getEldsteMelding().melding.gjeldendeTemagruppe;
         return asList(Temagruppe.OKSOS, Temagruppe.ANSOS).contains(gjeldendeTemagruppe);
-    }
-
-    private boolean traadOKSOSKanSes() {
-        String valgtEnhet = saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet();
-
-        List<PolicyAttribute> attributes = new ArrayList<>(Arrays.asList(
-                actionId("oksos"),
-                resourceId(""),
-                subjectAttribute("urn:nav:ikt:tilgangskontroll:xacml:subject:localenhet", defaultString(valgtEnhet)),
-                resourceAttribute("urn:nav:ikt:tilgangskontroll:xacml:resource:bruker-enhet", defaultString(getEldsteMelding().melding.brukersEnhet))
-        ));
-
-        PolicyRequest okonomiskSosialhjelpPolicyRequest = forRequest(attributes);
-        return pep.hasAccess(okonomiskSosialhjelpPolicyRequest);
     }
 
     public boolean erJournalfort() {

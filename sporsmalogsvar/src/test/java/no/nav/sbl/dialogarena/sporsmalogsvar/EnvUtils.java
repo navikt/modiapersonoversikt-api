@@ -1,6 +1,5 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar;
 
-import no.nav.brukerdialog.security.context.SubjectHandlerUtils;
 import no.nav.brukerdialog.security.domain.IdentType;
 import no.nav.brukerdialog.tools.SecurityConstants;
 
@@ -10,7 +9,7 @@ import java.util.Map;
 public class EnvUtils {
     public static void withSubject(String ident, Runnable fn) {
         System.setProperty(SecurityConstants.SYSTEMUSER_USERNAME, "srvModiabrukerdialog");
-        SubjectHandlerUtils.setSubject(new SubjectHandlerUtils.SubjectBuilder(ident, IdentType.InternBruker).getSubject());
+//        SubjectHandlerUtils.setSubject(new SubjectHandlerUtils.SubjectBuilder(ident, IdentType.InternBruker).getSubject());
 
         withEnv(new HashMap<String, String>() {{
             put(SecurityConstants.SYSTEMUSER_USERNAME, "srvModiabrukerdialog");

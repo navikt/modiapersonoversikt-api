@@ -1,16 +1,11 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.oppgavebehandling;
 
-import no.nav.brukerdialog.security.context.SubjectHandler;
-import no.nav.brukerdialog.security.context.SubjectHandlerUtils;
-import no.nav.brukerdialog.security.context.ThreadLocalSubjectHandler;
-import no.nav.brukerdialog.security.domain.IdentType;
 import no.nav.brukerdialog.tools.SecurityConstants;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.AnsattEnhet;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.LeggTilbakeOppgaveIGsakRequest;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.arbeidsfordeling.ArbeidsfordelingV1Service;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.AnsattService;
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.arbeidsfordeling.ArbeidsfordelingV1ServiceImpl;
 import no.nav.tjeneste.virksomhet.oppgave.v3.HentOppgaveOppgaveIkkeFunnet;
 import no.nav.tjeneste.virksomhet.oppgave.v3.OppgaveV3;
@@ -48,21 +43,20 @@ class LeggTilbakeOppgaveIGsakDelegateTest {
     private AnsattService ansattServiceMock;
     private OppgavebehandlingV3 oppgavebehandlingMock;
     private TildelOppgaveV1 tildelOppgaveMock;
-    private SaksbehandlerInnstillingerService saksbehandlerInnstillingerService;
     private ArbeidsfordelingV1Service arbeidsfordelingMock;
 
     private OppgaveBehandlingServiceImpl oppgaveBehandlingService;
 
     @BeforeAll
     static void beforeAll() {
-        System.setProperty(SubjectHandler.SUBJECTHANDLER_KEY, ThreadLocalSubjectHandler.class.getCanonicalName());
+//        System.setProperty(SubjectHandler.SUBJECTHANDLER_KEY, ThreadLocalSubjectHandler.class.getCanonicalName());
         System.setProperty(SecurityConstants.SYSTEMUSER_USERNAME, "srvModiabrukerdialog");
         setInnloggetSaksbehandler();
     }
 
     private static void setInnloggetSaksbehandler() {
-        SubjectHandlerUtils.setSubject(new SubjectHandlerUtils
-                .SubjectBuilder(OppgaveMockFactory.ANSVARLIG_SAKSBEHANDLER, IdentType.EksternBruker).withAuthLevel(4).getSubject());
+//        SubjectHandlerUtils.setSubject(new SubjectHandlerUtils
+//                .SubjectBuilder(OppgaveMockFactory.ANSVARLIG_SAKSBEHANDLER, IdentType.EksternBruker).withAuthLevel(4).getSubject());
     }
 
     @BeforeEach
@@ -76,7 +70,6 @@ class LeggTilbakeOppgaveIGsakDelegateTest {
         ansattServiceMock = mockAnsattService();
         oppgavebehandlingMock = mock(OppgavebehandlingV3.class);
         tildelOppgaveMock = mock(TildelOppgaveV1.class);
-        saksbehandlerInnstillingerService = mock(SaksbehandlerInnstillingerService.class);
         arbeidsfordelingMock = mock(ArbeidsfordelingV1ServiceImpl.class);
     }
 

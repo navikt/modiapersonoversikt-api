@@ -19,7 +19,7 @@ public class Main {
         loadVaultSecrets();
         loadPropertiesFile(getEnvVar("NAIS_NAMESPACE"));
 
-        ApiApp.startApp(ModiaApplicationContext.class, args);
+        ApiApp.runApp(ModiaApplicationContext.class, args);
     }
 
     private static void loadVaultSecrets() {

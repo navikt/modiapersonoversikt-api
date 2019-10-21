@@ -2,7 +2,6 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.sak.config;
 
 import no.nav.brukerdialog.security.tilgangskontroll.policy.pep.EnforcementPoint;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.AnsattService;
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
 import no.nav.sbl.dialogarena.common.kodeverk.KodeverkClient;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.GsakSakerService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.HenvendelseService;
@@ -96,10 +95,4 @@ public class ModiaStubConfig {
     public AnsattService ansattService() {
         return mock(AnsattService.class);
     }
-
-    @Bean
-    public SaksbehandlerInnstillingerService saksbehandlerInnstillingerService() {
-        return mock(SaksbehandlerInnstillingerService.class);
-    }
-
 }

@@ -58,7 +58,6 @@ import org.springframework.context.annotation.Import;
         OppfolgingController.class,
         SakerController.class,
         NaisController.class,
-        SafService.class,
         DialogController.class,
         PersonsokController.class,
         DialogMerkController.class,

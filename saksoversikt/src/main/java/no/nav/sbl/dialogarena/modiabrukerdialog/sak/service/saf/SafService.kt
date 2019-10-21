@@ -26,7 +26,6 @@ val SAF_HENTDOKUMENT_BASEURL = System.getProperty("saf.hentdokument.url")
 private val LOG = LoggerFactory.getLogger(SafService::class.java)
 
 class SafService {
-
     fun hentJournalposter(fnr: String): ResultatWrapper<List<DokumentMetadata>> {
         val jsonQuery = dokumentoversiktBrukerJsonQuery(fnr)
 

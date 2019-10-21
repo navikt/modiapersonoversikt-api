@@ -18,8 +18,8 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>no.nav.sbl.dialogarena</groupId>
-			<artifactId>common-cxf</artifactId>
+			<groupId>no.nav.common</groupId>
+			<artifactId>cxf</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>joda-time</groupId>
@@ -81,8 +81,8 @@
 		</dependency>
 
 		<dependency>
-			<groupId>no.nav.sbl.dialogarena</groupId>
-			<artifactId>common-time</artifactId>
+			<groupId>no.nav.common</groupId>
+			<artifactId>time</artifactId>
 		</dependency>
 
 		<dependency>
@@ -134,8 +134,8 @@
 		</dependency>
 
 		<dependency>
-			<groupId>no.nav.sbl.dialogarena</groupId>
-			<artifactId>common-test</artifactId>
+			<groupId>no.nav.common</groupId>
+			<artifactId>test</artifactId>
 			<scope>test</scope>
 		</dependency>
 

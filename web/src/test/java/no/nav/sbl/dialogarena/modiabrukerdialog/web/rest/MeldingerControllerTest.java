@@ -1,6 +1,5 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest;
 
-import no.nav.brukerdialog.security.context.ThreadLocalSubjectHandler;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.AnsattEnhet;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.AnsattService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.tilgangskontroll.TilgangskontrollMock;
@@ -15,8 +14,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.core.Response;
 import java.util.Collections;
 
-import static no.nav.brukerdialog.security.context.SubjectHandler.SUBJECTHANDLER_KEY;
-import static no.nav.brukerdialog.security.context.SubjectHandler.getSubjectHandler;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -27,13 +24,13 @@ import static org.springframework.test.util.ReflectionTestUtils.setField;
 public class MeldingerControllerTest {
 
     static {
-        System.setProperty(SUBJECTHANDLER_KEY, ThreadLocalSubjectHandler.class.getName());
+//        System.setProperty(SUBJECTHANDLER_KEY, ThreadLocalSubjectHandler.class.getName());
     }
 
     private HttpServletRequest httpServletRequestMock = mock(HttpServletRequest.class);
     private AnsattService ansattServiceMock = mock(AnsattService.class);
     private MeldingerController meldingerController = new MeldingerController();
-    private String cookieNavn = "saksbehandlerinnstillinger-" + getSubjectHandler().getUid();;
+    private String cookieNavn = "saksbehandlerinnstillinger-" + "Z999999"; // getSubjectHandler().getUid();
 
     @Before
     public void setup() {

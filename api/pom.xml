@@ -24,11 +24,11 @@
         </dependency>
 
         <dependency>
-            <groupId>no.nav.dialogarena</groupId>
+            <groupId>no.nav.common</groupId>
             <artifactId>oidc-security</artifactId>
         </dependency>
         <dependency>
-            <groupId>no.nav.dialogarena</groupId>
+            <groupId>no.nav.common</groupId>
             <artifactId>oidc-security</artifactId>
             <scope>test</scope>
             <type>test-jar</type>
@@ -84,8 +84,8 @@
             <artifactId>jackson-annotations</artifactId>
         </dependency>
         <dependency>
-            <groupId>no.nav.sbl.dialogarena</groupId>
-            <artifactId>common-cxf</artifactId>
+            <groupId>no.nav.common</groupId>
+            <artifactId>cxf</artifactId>
         </dependency>
 
         <!--TESTING-->

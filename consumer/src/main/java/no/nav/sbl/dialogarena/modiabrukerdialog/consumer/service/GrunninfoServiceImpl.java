@@ -1,18 +1,21 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service;
 
+import no.nav.common.auth.SubjectHandler;
 import no.nav.kjerneinfo.consumer.fim.person.PersonKjerneinfoServiceBi;
 import no.nav.kjerneinfo.consumer.fim.person.to.HentKjerneinformasjonRequest;
 import no.nav.kjerneinfo.domain.person.Personfakta;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.GrunnInfo;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Person;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Saksbehandler;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.AnsattEnhet;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.ldap.LDAPService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.AnsattService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.organisasjonsEnhetV2.OrganisasjonEnhetV2Service;
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.RestUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
 import java.util.Optional;
 
 import static no.nav.brukerdialog.security.context.SubjectHandler.getSubjectHandler;
@@ -23,8 +26,6 @@ public class GrunninfoServiceImpl implements GrunninfoService {
     private PersonKjerneinfoServiceBi personKjerneinfoServiceBi;
     @Inject
     private LDAPService ldapService;
-    @Inject
-    private SaksbehandlerInnstillingerService saksbehandlerInnstillingerService;
     @Inject
     private OrganisasjonEnhetV2Service organisasjonEnhetService;
     @Inject
@@ -55,15 +56,16 @@ public class GrunninfoServiceImpl implements GrunninfoService {
         );
     }
 
-    public GrunnInfo.Saksbehandler hentSaksbehandlerInfo() {
-        Person saksbehandler = ldapService.hentSaksbehandler(getSubjectHandler().getUid());
-        String valgtEnhet = saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet();
+    public GrunnInfo.Saksbehandler hentSaksbehandlerInfo(HttpServletRequest request) {
+        Optional<Saksbehandler> saksbehandler = SubjectHandler.getIdent()
+                .map(ldapService::hentSaksbehandler);
+        String valgtEnhet = RestUtils.hentValgtEnhet(request);
 
         final Optional<AnsattEnhet> ansattEnhet = organisasjonEnhetService.hentEnhetGittEnhetId(valgtEnhet, OrganisasjonEnhetV2Service.WSOppgavebehandlerfilter.UFILTRERT);
         return new GrunnInfo.Saksbehandler(
                 ansattEnhet.map(enhet -> enhet.enhetNavn).orElse(""),
-                saksbehandler.fornavn,
-                saksbehandler.etternavn
+                saksbehandler.map((s) -> s.fornavn).orElse(""),
+                saksbehandler.map((s) -> s.etternavn).orElse("")
         );
     }
 

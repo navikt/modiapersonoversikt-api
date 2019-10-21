@@ -2,7 +2,6 @@ package no.nav.sbl.dialogarena.sporsmalogsvar.consumer;
 
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.GsakKodeTema;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.AnsattService;
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.NyOppgave;
 import no.nav.tjeneste.virksomhet.oppgave.v3.HentOppgaveOppgaveIkkeFunnet;
 import no.nav.tjeneste.virksomhet.oppgave.v3.OppgaveV3;
@@ -39,8 +38,6 @@ public class GsakServiceImpl implements GsakService {
     @Inject
     private OppgavebehandlingV3 oppgavebehandlingWS;
     @Inject
-    private SaksbehandlerInnstillingerService saksbehandlerInnstillingerService;
-    @Inject
     private AnsattService ansattWS;
 
     @Override
@@ -67,12 +64,11 @@ public class GsakServiceImpl implements GsakService {
     }
 
     @Override
-    public void ferdigstillGsakOppgave(WSOppgave oppgave, String beskrivelse) throws LagreOppgaveOptimistiskLasing, OppgaveErFerdigstilt {
-        String valgtEnhetIdString = saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet();
-        int valgtEnhetId = Integer.parseInt(valgtEnhetIdString);
+    public void ferdigstillGsakOppgave(String enhetId, WSOppgave oppgave, String beskrivelse) throws LagreOppgaveOptimistiskLasing, OppgaveErFerdigstilt {
+        int valgtEnhetId = Integer.parseInt(enhetId);
         try {
             String nyBeskrivelse = "Oppgaven er ferdigstilt i Modia med beskrivelse:\n" + beskrivelse;
-            oppgave.withBeskrivelse(leggTilBeskrivelse(oppgave.getBeskrivelse(), nyBeskrivelse, valgtEnhetIdString));
+            oppgave.withBeskrivelse(leggTilBeskrivelse(oppgave.getBeskrivelse(), nyBeskrivelse, enhetId));
             lagreGsakOppgave(oppgave, valgtEnhetId);
         } catch (LagreOppgaveOptimistiskLasing e) {
             logger.error("LagreOppgaveOptimistiskLasing feil i oppdatering av beskrivelse for oppgave " + oppgave.getOppgaveId(), e);
@@ -85,13 +81,12 @@ public class GsakServiceImpl implements GsakService {
     }
 
     @Override
-    public void opprettGsakOppgave(NyOppgave nyOppgave) {
+    public void opprettGsakOppgave(String enhetId, NyOppgave nyOppgave) {
         int valgtEnhetId;
-        String valgtEnhetIdString = saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet();
         try {
-            valgtEnhetId = Integer.parseInt(valgtEnhetIdString);
+            valgtEnhetId = Integer.parseInt(enhetId);
         } catch (NumberFormatException e) {
-            logger.error(String.format("EnhetId %s kunne ikke gjøres om til Integer", valgtEnhetIdString));
+            logger.error(String.format("EnhetId %s kunne ikke gjøres om til Integer", enhetId));
             valgtEnhetId = DEFAULT_OPPRETTET_AV_ENHET_ID;
         }
 
@@ -111,7 +106,7 @@ public class GsakServiceImpl implements GsakService {
                                         .withAktivTil(arbeidsdagerFraDato(nyOppgave.type.dagerFrist, LocalDate.now()))
                                         .withAnsvarligEnhetId(nyOppgave.enhet.enhetId)
                                         .withAnsvarligId(nyOppgave.valgtAnsatt != null ? nyOppgave.valgtAnsatt.ident : null)
-                                        .withBeskrivelse(leggTilBeskrivelse(beskrivelse, valgtEnhetIdString))
+                                        .withBeskrivelse(leggTilBeskrivelse(beskrivelse, enhetId))
                                         .withFagomradeKode(nyOppgave.tema.kode)
                                         .withUnderkategoriKode(underkategori.kode)
                                         .withBrukerId(nyOppgave.brukerId)

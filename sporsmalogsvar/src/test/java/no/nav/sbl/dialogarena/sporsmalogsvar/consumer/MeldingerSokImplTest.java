@@ -1,8 +1,6 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.consumer;
 
-import no.nav.brukerdialog.security.context.SubjectHandlerUtils;
 import no.nav.brukerdialog.security.domain.IdentType;
-import no.nav.common.auth.SubjectHandler;
 import no.nav.brukerdialog.tools.SecurityConstants;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Saksbehandler;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Fritekst;
@@ -130,7 +128,7 @@ class MeldingerSokImplTest {
 
     private void innloggetBrukerEr(String ident) {
         setProperty(SecurityConstants.SYSTEMUSER_USERNAME, "srvModiabrukerdialog");
-        SubjectHandlerUtils.setSubject(new SubjectHandlerUtils.SubjectBuilder(ident, IdentType.EksternBruker).withAuthLevel(4).getSubject());
+//        SubjectHandlerUtils.setSubject(new SubjectHandlerUtils.SubjectBuilder(ident, IdentType.EksternBruker).withAuthLevel(4).getSubject());
     }
 
     private void assertSok(String frisok, String id) throws IkkeIndeksertException {

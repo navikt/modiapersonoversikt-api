@@ -16,7 +16,6 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.kodeverk.StandardKod
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.ldap.LDAPService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.AnsattService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.organisasjonsEnhetV2.OrganisasjonEnhetV2Service;
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.GsakService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.henvendelse.HenvendelseBehandlingService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.henvendelse.domain.Meldinger;
@@ -127,13 +126,6 @@ public class MockServiceTestContext {
     @Bean
     public PersonKjerneinfoServiceBi personKjerneinfoServiceBi() {
         return mock(PersonKjerneinfoServiceBi.class);
-    }
-
-    @Bean
-    public SaksbehandlerInnstillingerService saksbehandlerInnstillingerService() {
-        SaksbehandlerInnstillingerService mock = mock(SaksbehandlerInnstillingerService.class);
-        when(mock.getSaksbehandlerValgtEnhet()).thenReturn("0118");
-        return mock;
     }
 
     @Bean
