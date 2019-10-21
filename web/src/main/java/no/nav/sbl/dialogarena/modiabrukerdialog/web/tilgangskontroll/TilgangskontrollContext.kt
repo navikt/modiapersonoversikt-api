@@ -12,6 +12,15 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.ldap.LDAPService
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.GrunninfoService
 import org.slf4j.LoggerFactory
 
+fun hentSaksbehandlereMedTilgangTilHastekassering(): List<String> {
+    return System.getProperty("hastekassering.tilgang", "")
+            .let {
+                it.split(",")
+                        .map(String::trim)
+                        .map(String::toUpperCase)
+            }
+}
+
 class TilgangskontrollContext(
         private val ldap: LDAPService,
         private val grunninfo: GrunninfoService,
@@ -74,15 +83,6 @@ class TilgangskontrollContext(
                 .toSet()
     } catch (e: Exception) {
         emptySet()
-    }
-
-    fun hentSaksbehandlereMedTilgangTilHastekassering(): List<String> {
-        return System.getProperty("hastekassering.tilgang", "")
-                .let {
-                    it.split(",")
-                            .map(String::trim)
-                            .map(String::toUpperCase)
-                }
     }
 
     fun alleBehandlingsIderTilhorerBruker(fnr: String, behandlingsIder: List<String>): Boolean {
