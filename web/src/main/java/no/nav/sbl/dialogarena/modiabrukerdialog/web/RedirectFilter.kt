@@ -34,9 +34,10 @@ class RedirectFilter : Filter {
 
             val isFeatureEnabled = unleash?.isEnabled(Feature.NY_FRONTEND) ?: false
             val isRestRequest = requestURI.path.contains("/rest/")
+            val isInternalRequest = requestURI.path.contains("/internal/")
             val isFileRequest = requestURI.path.matches(fileRequestPattern)
 
-            if (!isFeatureEnabled || isRestRequest || isFileRequest) {
+            if (!isFeatureEnabled || isRestRequest || isInternalRequest || isFileRequest) {
                 chain.doFilter(request, response)
             } else {
                 val redirectedURI = requestURI
