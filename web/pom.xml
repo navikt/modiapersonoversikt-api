@@ -39,15 +39,6 @@
             <groupId>no.nav.common</groupId>
             <artifactId>test-config</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.picketbox</groupId>
-            <artifactId>picketbox</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.geronimo.components</groupId>
-            <artifactId>geronimo-jaspi</artifactId>
-            <version>2.0.0</version>
-        </dependency>
         <!--Interne-->
         <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>
@@ -57,11 +48,6 @@
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>modiabrukerdialog-pep</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>no.nav.sbl.dialogarena</groupId>
-            <artifactId>reactkomponenter</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
@@ -120,10 +106,6 @@
 
         <!--Dialogarena-->
         <dependency>
-            <groupId>no.nav.common</groupId>
-            <artifactId>time</artifactId>
-        </dependency>
-        <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>modia-utbetalinger</artifactId>
             <version>${project.version}</version>
@@ -137,14 +119,6 @@
             <groupId>no.nav.common</groupId>
             <artifactId>test</artifactId>
             <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>no.nav.common</groupId>
-            <artifactId>jetty</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.eclipse.jetty</groupId>
-            <artifactId>jetty-jaas</artifactId>
         </dependency>
         <dependency>
             <groupId>no.nav.modig</groupId>
@@ -166,11 +140,6 @@
             <artifactId>spring-jdbc</artifactId>
             <scope>runtime</scope>
         </dependency>
-<!--        <dependency>-->
-<!--            <groupId>org.springframework</groupId>-->
-<!--            <artifactId>spring-expression</artifactId>-->
-<!--            <scope>runtime</scope>-->
-<!--        </dependency>-->
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-aop</artifactId>
@@ -183,10 +152,6 @@
         </dependency>
 
         <!--Jersey-->
-        <dependency>
-            <groupId>org.glassfish.jersey.core</groupId>
-            <artifactId>jersey-server</artifactId>
-        </dependency>
         <dependency>
             <groupId>javax.ws.rs</groupId>
             <artifactId>javax.ws.rs-api</artifactId>
@@ -230,6 +195,7 @@
         <dependency>
             <groupId>com.spotify</groupId>
             <artifactId>logging</artifactId>
+            <scope>runtime</scope>
         </dependency>
 
         <!-- Denne må være her på grunn av classloading på JBoss -->
@@ -251,18 +217,8 @@
         </dependency>
 
         <dependency>
-            <groupId>net.sourceforge.collections</groupId>
-            <artifactId>collections-generic</artifactId>
-        </dependency>
-
-        <dependency>
             <groupId>javax.inject</groupId>
             <artifactId>javax.inject</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-lang3</artifactId>
         </dependency>
 
         <!--Testing-->
@@ -314,18 +270,6 @@
             <groupId>com.nhaarman</groupId>
             <artifactId>mockito-kotlin</artifactId>
             <scope>test</scope>
-        </dependency>
-
-        <!-- Unleash -->
-        <dependency>
-            <groupId>no.finn.unleash</groupId>
-            <artifactId>unleash-client-java</artifactId>
-            <version>${unleash.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>no.nav.tjenestespesifikasjoner</groupId>
-            <artifactId>nav-fim-personsok-v1-tjenestespesifikasjon</artifactId>
         </dependency>
 
         <dependency>

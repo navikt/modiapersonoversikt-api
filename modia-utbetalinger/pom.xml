@@ -25,10 +25,6 @@
 			<groupId>joda-time</groupId>
 			<artifactId>joda-time</artifactId>
 		</dependency>
-		<dependency>
-			<groupId>no.nav.modig</groupId>
-			<artifactId>modia-felleskomponenter</artifactId>
-		</dependency>
 
 		<dependency>
 			<groupId>org.springframework</groupId>
@@ -78,16 +74,6 @@
 		<dependency>
 			<groupId>no.nav.sbl.dialogarena</groupId>
 			<artifactId>utbetaling-tjenestespesifikasjon</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>no.nav.common</groupId>
-			<artifactId>time</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>net.sourceforge.collections</groupId>
-			<artifactId>collections-generic</artifactId>
 		</dependency>
 
 		<dependency>

@@ -18,15 +18,7 @@
             <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>henvendelse-informasjon-v2</artifactId>
         </dependency>
-        <dependency>
-            <groupId>no.nav.tjenester</groupId>
-            <artifactId>person-api-oppslag-v1</artifactId>
-        </dependency>
 
-        <dependency>
-            <groupId>no.nav.common</groupId>
-            <artifactId>oidc-security</artifactId>
-        </dependency>
         <dependency>
             <groupId>no.nav.common</groupId>
             <artifactId>oidc-security</artifactId>

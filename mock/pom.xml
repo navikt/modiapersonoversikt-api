@@ -15,10 +15,6 @@
 
     <dependencies>
         <dependency>
-            <groupId>no.nav.common</groupId>
-            <artifactId>oidc-security</artifactId>
-        </dependency>
-        <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
         </dependency>
@@ -46,19 +42,11 @@
             <groupId>no.nav</groupId>
             <artifactId>kjerneinfo-consumer</artifactId>
         </dependency>
-        <dependency>
-            <groupId>no.nav</groupId>
-            <artifactId>kjerneinfo-domain</artifactId>
-        </dependency>
 
         <!--Brukerprofil-->
         <dependency>
             <groupId>no.nav</groupId>
             <artifactId>behandlebrukerprofil-consumer</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>no.nav</groupId>
-            <artifactId>dkif-consumer</artifactId>
         </dependency>
 
         <!--Kodeverk-->
@@ -131,23 +119,9 @@
             <artifactId>joark-tjenestespesifikasjon</artifactId>
         </dependency>
         <dependency>
-            <groupId>no.nav.tjenester</groupId>
-            <artifactId>nav-innsynJournal-v2-tjenestespesifikasjon</artifactId>
-            <classifier>jaxws</classifier>
-        </dependency>
-        <dependency>
             <groupId>no.nav.sbl</groupId>
             <artifactId>pensjon-sak-v1-tjenestespesifikasjon</artifactId>
         </dependency>
-        <dependency>
-            <groupId>no.nav.sbl</groupId>
-            <artifactId>dkif-tjenestespesifikasjon</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>no.nav.tjenestespesifikasjoner</groupId>
-            <artifactId>nav-fim-personsok-v1-tjenestespesifikasjon</artifactId>
-        </dependency>
-
 
         <!--Dialogarena-->
         <dependency>
@@ -176,10 +150,6 @@
             <groupId>no.nav.modig</groupId>
             <artifactId>modig-core</artifactId>
         </dependency>
-        <dependency>
-            <groupId>no.nav.modig</groupId>
-            <artifactId>modig-content-no-enonic</artifactId>
-        </dependency>
         <!--Spring-->
         <dependency>
             <groupId>org.springframework</groupId>
@@ -191,11 +161,6 @@
         <dependency>
             <groupId>joda-time</groupId>
             <artifactId>joda-time</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>net.sourceforge.collections</groupId>
-            <artifactId>collections-generic</artifactId>
         </dependency>
 
         <dependency>

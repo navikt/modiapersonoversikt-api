@@ -11,7 +11,6 @@
     <artifactId>personsok-consumer</artifactId>
     <packaging>jar</packaging>
     <name>${project.artifactId}</name>
-    <url>http://maven.apache.org</url>
 
     <dependencies>
         <dependency>
@@ -51,10 +50,6 @@
         <!-- Security -->
         <dependency>
             <groupId>no.nav.modig</groupId>
-            <artifactId>modig-log-jaxws</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>no.nav.modig</groupId>
             <artifactId>modig-log-common</artifactId>
         </dependency>
 
@@ -62,6 +57,11 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-context</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>no.nav.modig</groupId>
+            <artifactId>modia-felleskomponenter</artifactId>
+            <version>dev</version>
         </dependency>
 
         <dependency>
@@ -128,7 +128,7 @@
                                 <artifactItem>
                                     <groupId>no.nav.tjenester.fim</groupId>
                                     <artifactId>nav-fim-personsok-v1-tjenestespesifikasjon</artifactId>
-                                    <version>${nav-fim-personsok-v1-tjenestespesifikasjon.version}</version>
+                                    <version>1.0.1</version>
                                     <type>zip</type>
                                     <outputDirectory>${project.build.directory}/classes/</outputDirectory>
                                 </artifactItem>

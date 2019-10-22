@@ -25,10 +25,6 @@
             <artifactId>henvendelse-informasjon-v2</artifactId>
         </dependency>
         <dependency>
-            <groupId>no.nav.sbl.dialogarena</groupId>
-            <artifactId>send-ut-henvendelse</artifactId>
-        </dependency>
-        <dependency>
             <groupId>no.nav.tjenestespesifikasjoner</groupId>
             <artifactId>behandle-henvendelse</artifactId>
         </dependency>
@@ -81,22 +77,14 @@
             <artifactId>dial-nav-tjeneste-sak</artifactId>
         </dependency>
         <dependency>
-            <groupId>no.nav.modig</groupId>
-            <artifactId>modia-felleskomponenter</artifactId>
-        </dependency>
-        <dependency>
             <groupId>no.nav.common</groupId>
             <artifactId>test</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>no.nav.common</groupId>
-            <artifactId>time</artifactId>
-        </dependency>
-        <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>common-pdf-generering</artifactId>
-            <version>1.2.3</version>
+            <version>1.2.4</version>
             <exclusions>
                 <exclusion>
                     <groupId>bouncycastle</groupId>
@@ -125,12 +113,6 @@
             <artifactId>modiabrukerdialog-api</artifactId>
             <version>${project.version}</version>
         </dependency>
-        <dependency>
-            <groupId>no.nav.sbl.dialogarena</groupId>
-            <artifactId>reactkomponenter</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-
 
         <!--Modig-->
         <dependency>
@@ -178,10 +160,6 @@
         </dependency>
         <dependency>
             <groupId>org.apache.lucene</groupId>
-            <artifactId>lucene-analyzers-common</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.lucene</groupId>
             <artifactId>lucene-queryparser</artifactId>
         </dependency>
         <dependency>
@@ -207,19 +185,9 @@
 
         <!--Diverse-->
         <dependency>
-            <groupId>no.nav.common</groupId>
-            <artifactId>metrics</artifactId>
-        </dependency>
-
-        <dependency>
             <groupId>com.github.jknack</groupId>
             <artifactId>handlebars</artifactId>
             <version>${handlebars.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>javax.servlet-api</artifactId>
         </dependency>
 
         <dependency>
