@@ -17,7 +17,7 @@ public class GsakOppgaveV3EndpointConfig {
 
     @Bean
     public OppgaveV3 gsakOppgavePortType() {
-        OppgaveV3 prod = createOppgavePortType().configureStsForOnBehalfOfWithJWT().build();
+        OppgaveV3 prod = createOppgavePortType().configureStsForSubject().build();
         OppgaveV3 mock = createOppgavePortTypeMock();
 
         return createMetricsProxyWithInstanceSwitcher("OppgaveV3", prod, mock, GSAK_V3_KEY, OppgaveV3.class);
@@ -25,7 +25,7 @@ public class GsakOppgaveV3EndpointConfig {
 
     @Bean
     public Pingable gsakOppgavePing() {
-        final OppgaveV3 ws = createOppgavePortType().configureStsForSystemUserInFSS().build();
+        final OppgaveV3 ws = createOppgavePortType().configureStsForSystemUser().build();
         return new PingableWebService("Gsak - oppgave", ws);
     }
 

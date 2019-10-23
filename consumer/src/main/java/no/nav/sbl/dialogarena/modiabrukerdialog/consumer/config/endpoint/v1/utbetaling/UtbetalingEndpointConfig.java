@@ -18,7 +18,7 @@ public class UtbetalingEndpointConfig {
 
     @Bean(name = "utbetalingV1")
     public UtbetalingV1 utbetalingV1() {
-        final UtbetalingV1 prod = createUtbetalingPortType().configureStsForOnBehalfOfWithJWT().build();
+        final UtbetalingV1 prod = createUtbetalingPortType().configureStsForSubject().build();
         final UtbetalingV1 mock = new UtbetalingPortTypeMock().utbetalingPortType();
 
         return createMetricsProxyWithInstanceSwitcher("UtbetalingV1", prod, mock, UTBETALING_KEY, UtbetalingV1.class);
@@ -27,7 +27,7 @@ public class UtbetalingEndpointConfig {
     @Bean
     public UtbetalingPing pingUtbetalingV1() {
         UtbetalingV1 pingPorttype = createUtbetalingPortType()
-                .configureStsForSystemUserInFSS()
+                .configureStsForSystemUser()
                 .build();
         return new UtbetalingPing("Utbetaling", pingPorttype);
     }

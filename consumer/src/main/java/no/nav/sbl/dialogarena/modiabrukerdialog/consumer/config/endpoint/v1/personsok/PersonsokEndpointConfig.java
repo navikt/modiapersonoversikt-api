@@ -19,7 +19,7 @@ public class PersonsokEndpointConfig {
 
     @Bean
     public PersonsokPortType personsokPortType() {
-        final PersonsokPortType prod = createPersonsokPortType().configureStsForOnBehalfOfWithJWT().build();
+        final PersonsokPortType prod = createPersonsokPortType().configureStsForSubject().build();
         final PersonsokPortType mock = PersonsokPortTypeMock.createPersonsokMock();
 
         return createMetricsProxyWithInstanceSwitcher("PersonsokV1", prod, mock, PERSONSOK_KEY, PersonsokPortType.class);
@@ -27,7 +27,7 @@ public class PersonsokEndpointConfig {
 
     @Bean
     public Pingable personsokPing() {
-        final PersonsokPortType ws = createPersonsokPortType().configureStsForSystemUserInFSS().build();
+        final PersonsokPortType ws = createPersonsokPortType().configureStsForSystemUser().build();
 
         return new PingableWebService("Personsok", ws);
     }

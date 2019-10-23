@@ -20,7 +20,7 @@ public class SendUtHenvendelseEndpointConfig {
 
     @Bean
     public SendUtHenvendelsePortType sendUtHenvendelsePortType() {
-        SendUtHenvendelsePortType prod = createSendUtHenvendelsePortType().configureStsForOnBehalfOfWithJWT().build();
+        SendUtHenvendelsePortType prod = createSendUtHenvendelsePortType().configureStsForSubject().build();
         SendUtHenvendelsePortType mock = createSendUtHenvendelsePortTypeMock();
 
         return createMetricsProxyWithInstanceSwitcher("SendUtHenvendelse", prod, mock, HENVENDELSE_KEY, SendUtHenvendelsePortType.class);
@@ -28,7 +28,7 @@ public class SendUtHenvendelseEndpointConfig {
 
     @Bean
     public Pingable sendUtHenvendelsePing() {
-        final SendUtHenvendelsePortType ws = createSendUtHenvendelsePortType().configureStsForSystemUserInFSS().build();
+        final SendUtHenvendelsePortType ws = createSendUtHenvendelsePortType().configureStsForSystemUser().build();
         return new PingableWebService("Send ut henvendelse", ws);
     }
 

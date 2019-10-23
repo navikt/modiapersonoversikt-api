@@ -31,7 +31,7 @@ public class ArbeidOgAktivitetEndpointConfig {
     private static ArbeidOgAktivitet createArbeidOgAktivitet() {
         return new CXFClient<>(ArbeidOgAktivitet.class)
                 .address(System.getProperty("arena.arbeidogaktivitet.v1.url"))
-                .configureStsForSystemUserInFSS()
+                .configureStsForSystemUser()
                 .build();
     }
 

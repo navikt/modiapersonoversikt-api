@@ -17,14 +17,14 @@ public class JoarkEndpointConfig {
 
     @Bean
     public JournalV2 journalV2() {
-        JournalV2 prod = createJournalV2PortType().configureStsForOnBehalfOfWithJWT().build();
+        JournalV2 prod = createJournalV2PortType().configureStsForSubject().build();
         JournalV2 mock = createJournalV2Mock();
         return createMetricsProxyWithInstanceSwitcher("Joark - JournalV2Service", prod, mock, JOARK_KEY, JournalV2.class);
     }
 
     @Bean
     public Pingable pingJournalV2() {
-        JournalV2 ws = createJournalV2PortType().configureStsForSystemUserInFSS().build();
+        JournalV2 ws = createJournalV2PortType().configureStsForSystemUser().build();
         return new PingableWebService("Joark", ws);
     }
 

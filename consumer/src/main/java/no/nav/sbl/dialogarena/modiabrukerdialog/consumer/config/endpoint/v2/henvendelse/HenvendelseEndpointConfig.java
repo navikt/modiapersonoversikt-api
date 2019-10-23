@@ -21,7 +21,7 @@ public class HenvendelseEndpointConfig {
 
     @Bean
     public HenvendelsePortType henvendelsePortType() {
-        HenvendelsePortType prod = createHenvendelsePortType().configureStsForOnBehalfOfWithJWT().build();
+        HenvendelsePortType prod = createHenvendelsePortType().configureStsForSubject().build();
         HenvendelsePortType mock = createHenvendelsePortTypeMock();
 
         return createMetricsProxyWithInstanceSwitcher("henvendelseV2", prod, mock, HENVENDELSE_KEY, HenvendelsePortType.class);
@@ -29,7 +29,7 @@ public class HenvendelseEndpointConfig {
 
     @Bean
     public Pingable henvendelsePing() {
-        final HenvendelsePortType ws = createHenvendelsePortType().configureStsForSystemUserInFSS().build();
+        final HenvendelsePortType ws = createHenvendelsePortType().configureStsForSystemUser().build();
         return new PingableWebService("Hent henvendelse", ws);
     }
 

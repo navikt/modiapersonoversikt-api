@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.cache;
 
+import no.nav.common.auth.SubjectHandler;
 import no.nav.sbl.dialogarena.common.cxf.InstanceSwitcher;
 import org.springframework.aop.framework.AopProxyUtils;
 import org.springframework.cache.interceptor.SimpleKeyGenerator;
@@ -7,8 +8,6 @@ import org.springframework.cache.interceptor.SimpleKeyGenerator;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
-
-import static no.nav.brukerdialog.security.context.SubjectHandler.getSubjectHandler;
 
 /**
  * Klasse for å lage cachekey som også tar høyde for
@@ -30,7 +29,7 @@ public class AutentisertBrukerKeyGenerator extends SimpleKeyGenerator {
     }
 
     private String getUser() {
-        return getSubjectHandler().getUid();
+        return SubjectHandler.getIdent().orElse("uauthentisert");
     }
 
     private String getTargetClassName(Object target) {

@@ -17,14 +17,14 @@ public class PensjonSakEndpointConfig {
 
     @Bean
     public PensjonSakV1 pensjonSakV1() {
-        PensjonSakV1 prod = createPensjonSakV1().configureStsForOnBehalfOfWithJWT().build();
+        PensjonSakV1 prod = createPensjonSakV1().configureStsForSubject().build();
         PensjonSakV1 mock = createPensjonSakV1Mock();
         return createMetricsProxyWithInstanceSwitcher("PensjonSakV1", prod, mock, PENSJONSAK_KEY, PensjonSakV1.class);
     }
 
     @Bean
     public Pingable pensjonSakV1Ping() {
-        final PensjonSakV1 ws = createPensjonSakV1().configureStsForSystemUserInFSS().build();
+        final PensjonSakV1 ws = createPensjonSakV1().configureStsForSystemUser().build();
         return new PingableWebService("Pesys - Pensjonsak", ws);
     }
 

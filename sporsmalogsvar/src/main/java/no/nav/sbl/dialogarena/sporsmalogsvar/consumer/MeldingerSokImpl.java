@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.consumer;
 
+import no.nav.common.auth.SubjectHandler;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Person;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Fritekst;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
@@ -38,7 +39,6 @@ import static java.lang.System.getProperty;
 import static java.util.Comparator.comparing;
 import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.*;
-import static no.nav.brukerdialog.security.context.SubjectHandler.getSubjectHandler;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.apache.lucene.document.Field.Store.YES;
 import static org.joda.time.DateTime.now;
@@ -99,7 +99,7 @@ public class MeldingerSokImpl implements MeldingerSok {
 
     @Override
     public void indekser(String fnr, List<Melding> meldinger) {
-        String navIdent = getSubjectHandler().getUid();
+        String navIdent = SubjectHandler.getIdent().orElseThrow(() -> new RuntimeException("Fant ikke ident"));
         String key = key(fnr, navIdent);
 
         List<Melding> transformerteMeldinger = meldinger.stream().map((melding) -> {
@@ -122,7 +122,7 @@ public class MeldingerSokImpl implements MeldingerSok {
     @Override
     public List<Traad> sok(final String fnr, String soketekst) throws IkkeIndeksertException {
         try {
-            final String navIdent = getSubjectHandler().getUid();
+            final String navIdent = SubjectHandler.getIdent().orElseThrow(() -> new RuntimeException("Fant ikke ident"));
             final String key = key(fnr, navIdent);
 
             if (!cache.containsKey(key)) {

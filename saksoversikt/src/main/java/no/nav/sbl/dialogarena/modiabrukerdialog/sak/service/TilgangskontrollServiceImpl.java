@@ -2,6 +2,7 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.sak.service;
 
 import no.nav.brukerdialog.security.tilgangskontroll.policy.pep.EnforcementPoint;
 import no.nav.brukerdialog.security.tilgangskontroll.policy.request.PolicyRequest;
+import no.nav.common.auth.SubjectHandler;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.AnsattService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.DokumentMetadata;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.Sakstema;
@@ -18,7 +19,6 @@ import java.util.Map;
 
 import static java.lang.Boolean.TRUE;
 import static java.util.stream.Collectors.toList;
-import static no.nav.brukerdialog.security.context.SubjectHandler.getSubjectHandler;
 import static no.nav.brukerdialog.security.tilgangskontroll.utils.AttributeUtils.*;
 import static no.nav.brukerdialog.security.tilgangskontroll.utils.RequestUtils.forRequest;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.RestUtils.hentValgtEnhet;
@@ -61,7 +61,8 @@ public class TilgangskontrollServiceImpl implements TilgangskontrollService {
         valgtEnhet = settEnhetDersomCookieIkkeErSatt(valgtEnhet, enhetsListe);
 
         if (!enhetsListe.contains(valgtEnhet)) {
-            logger.warn("{} har ikke tilgang til enhet {}.", getSubjectHandler().getUid(), valgtEnhet);
+            String ident = SubjectHandler.getIdent().orElseThrow(() -> new RuntimeException("Fant ikke ident"));
+            logger.warn("{} har ikke tilgang til enhet {}.", ident, valgtEnhet);
             return false;
         }
         return true;
@@ -82,8 +83,9 @@ public class TilgangskontrollServiceImpl implements TilgangskontrollService {
                 resourceAttribute("urn:nav:ikt:tilgangskontroll:xacml:resource:tema", defaultString(temakode))
         );
         if (isNotBlank(temakode) && !pep.hasAccess(temagruppePolicyRequest)) {
+            String ident = SubjectHandler.getIdent().orElseThrow(() -> new RuntimeException("Fant ikke ident"));
             logger.warn("Saksbehandler med ident '{}' og valgt enhet '{}' har ikke tilgang til tema '{}'",
-                    getSubjectHandler().getUid(),
+                    ident,
                     valgtEnhet,
                     temakode);
             return false;

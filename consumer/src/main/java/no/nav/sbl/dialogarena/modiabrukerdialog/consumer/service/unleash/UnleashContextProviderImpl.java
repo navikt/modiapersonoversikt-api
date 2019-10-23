@@ -2,7 +2,7 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash;
 
 import no.finn.unleash.UnleashContext;
 import no.finn.unleash.UnleashContextProvider;
-import no.nav.brukerdialog.security.context.SubjectHandler;
+import no.nav.common.auth.SubjectHandler;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.AnsattService;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -15,12 +15,10 @@ import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.
 
 public class UnleashContextProviderImpl implements UnleashContextProvider {
 
-    private SubjectHandler subjectHandler;
     private AnsattService annsattService;
 
     @Inject
-    public UnleashContextProviderImpl(SubjectHandler subjectHandler, AnsattService annsattService) {
-        this.subjectHandler = subjectHandler;
+    public UnleashContextProviderImpl(AnsattService annsattService) {
         this.annsattService = annsattService;
     }
 
@@ -30,7 +28,7 @@ public class UnleashContextProviderImpl implements UnleashContextProvider {
         String sessionId = attributes.getSessionId();
         String remoteAddress = attributes.getRequest().getRemoteAddr();
 
-        String ident = subjectHandler.getUid();
+        String ident = SubjectHandler.getIdent().orElseThrow(() -> new RuntimeException("Fant ikke ident"));
         String ansattEnheter = getEnheter();
 
         HashMap<String, String> properties = new HashMap<>();
@@ -41,8 +39,8 @@ public class UnleashContextProviderImpl implements UnleashContextProvider {
 
     private String getEnheter() {
         return annsattService.hentEnhetsliste()
-                    .stream()
-                    .map(enhet -> enhet.enhetId)
-                    .collect(joining(","));
+                .stream()
+                .map(enhet -> enhet.enhetId)
+                .collect(joining(","));
     }
 }

@@ -17,7 +17,7 @@ public class SakOgBehandlingEndpointConfig {
 
     @Bean
     public SakOgBehandling_v1PortType sakOgBehandlingPortType() {
-        final SakOgBehandling_v1PortType prod = createSakogbehandlingPortType().configureStsForOnBehalfOfWithJWT().build();
+        final SakOgBehandling_v1PortType prod = createSakogbehandlingPortType().configureStsForSubject().build();
         final SakOgBehandling_v1PortType mock = new SakOgBehandlingPortTypeMock().getSakOgBehandlingPortTypeMock();
 
         return createMetricsProxyWithInstanceSwitcher("SakOgBehandling", prod, mock, SAKOGBEHANDLING_KEY, SakOgBehandling_v1PortType.class);
@@ -25,7 +25,7 @@ public class SakOgBehandlingEndpointConfig {
 
     @Bean
     public Pingable pingSakOgBehandling() {
-        final SakOgBehandling_v1PortType ws = createSakogbehandlingPortType().configureStsForSystemUserInFSS().build();
+        final SakOgBehandling_v1PortType ws = createSakogbehandlingPortType().configureStsForSystemUser().build();
         return new PingableWebService("Sak og behandling", ws);
     }
 

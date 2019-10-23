@@ -18,7 +18,7 @@ import no.nav.tjeneste.virksomhet.sakogbehandling.v1.meldinger.FinnSakOgBehandli
 import org.springframework.context.annotation.Bean;
 
 import static no.nav.sbl.dialogarena.modiabrukerdialog.sak.mock.SakOgBehandlingMocks.createWSSak;
-import static org.mockito.Matchers.any;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 

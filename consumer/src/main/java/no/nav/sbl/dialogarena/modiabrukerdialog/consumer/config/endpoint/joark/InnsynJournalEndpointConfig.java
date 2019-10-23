@@ -23,7 +23,7 @@ public class InnsynJournalEndpointConfig {
 
     @Bean
     public InnsynJournalV2 innsynJournalV2() throws Exception {
-        InnsynJournalV2 prod = createInnsynJournalV2PortType().configureStsForOnBehalfOfWithJWT().build();
+        InnsynJournalV2 prod = createInnsynJournalV2PortType().configureStsForSubject().build();
         InnsynJournalV2 mock = createMock();
         return createMetricsProxyWithInstanceSwitcher("InnsynJournalV2Service", prod, mock, START_JOARK_WITHMOCK, InnsynJournalV2.class);
     }
@@ -32,7 +32,7 @@ public class InnsynJournalEndpointConfig {
     public Pingable innsynJornalV2Ping(){
         return new PingableWebService("Joark - InnsynJournal_v2",
                 createInnsynJournalV2PortType()
-                        .configureStsForSystemUserInFSS()
+                        .configureStsForSystemUser()
                         .build());
     }
 

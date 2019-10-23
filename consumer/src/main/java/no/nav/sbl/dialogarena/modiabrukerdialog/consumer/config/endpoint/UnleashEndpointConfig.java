@@ -7,15 +7,14 @@ import no.finn.unleash.repository.HttpToggleFetcher;
 import no.finn.unleash.repository.ToggleFetcher;
 import no.finn.unleash.strategy.Strategy;
 import no.finn.unleash.util.UnleashConfig;
-import no.nav.brukerdialog.security.context.SubjectHandler;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.AnsattService;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.strategier.ByEnhetStrategy;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.strategier.ByEnvironmentStrategy;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.strategier.IsNotProdStrategy;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.UnleashContextProviderImpl;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.UnleashService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.UnleashServiceImpl;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.UnleashServiceMock;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.strategier.ByEnhetStrategy;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.strategier.ByEnvironmentStrategy;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.strategier.IsNotProdStrategy;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -65,7 +64,7 @@ public class UnleashEndpointConfig {
 
     @Bean
     @Inject
-    public UnleashConfig unleashConfig (UnleashContextProvider unleashContextProvider){
+    public UnleashConfig unleashConfig(UnleashContextProvider unleashContextProvider) {
         return UnleashConfig.builder()
                 .appName("modiabrukerdialog")
                 .instanceId(System.getProperty("environment.name", "local"))
@@ -77,7 +76,7 @@ public class UnleashEndpointConfig {
     @Bean
     @Inject
     public UnleashContextProvider unleashContextProvider(AnsattService ansattService) {
-        return new UnleashContextProviderImpl(SubjectHandler.getSubjectHandler(), ansattService);
+        return new UnleashContextProviderImpl(ansattService);
     }
 
 }

@@ -23,7 +23,7 @@ public class PersonsokConsumerConfig {
     @Bean
     public PersonsokPortType personsokPortType() {
         return getHentPersonsokJaxWsPortProxyFactoryBean()
-                .configureStsForOnBehalfOfWithJWT()
+                .configureStsForSubject()
                 .build();
     }
 

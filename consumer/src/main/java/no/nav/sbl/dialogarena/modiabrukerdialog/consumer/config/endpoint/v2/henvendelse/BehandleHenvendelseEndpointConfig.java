@@ -17,7 +17,7 @@ public class BehandleHenvendelseEndpointConfig {
 
     @Bean
     public BehandleHenvendelsePortType behandleHenvendelsePortType() {
-        final BehandleHenvendelsePortType prod = createBehandleHenvendelsePortType().configureStsForOnBehalfOfWithJWT().build();
+        final BehandleHenvendelsePortType prod = createBehandleHenvendelsePortType().configureStsForSubject().build();
         final BehandleHenvendelsePortType mock = createBehandleHenvendelsePortTypeMock();
 
         return createMetricsProxyWithInstanceSwitcher("BehandleHenvendelse", prod, mock, HENVENDELSE_KEY, BehandleHenvendelsePortType.class);
@@ -25,7 +25,7 @@ public class BehandleHenvendelseEndpointConfig {
 
     @Bean
     public Pingable behandleHenvendelsePing() {
-        final BehandleHenvendelsePortType ws = createBehandleHenvendelsePortType().configureStsForSystemUserInFSS().build();
+        final BehandleHenvendelsePortType ws = createBehandleHenvendelsePortType().configureStsForSystemUser().build();
         return new PingableWebService("Behandle henvendelse", ws);
     }
 

@@ -39,6 +39,6 @@ public class MainTest {
         setProperty("ctjenestebuss.username", srvKjerneinfoTjenestebuss.getUsername(), PUBLIC);
         setProperty("ctjenestebuss.password", srvKjerneinfoTjenestebuss.getPassword(), SECRET);
 
-        ApiApp.startApp(ModiaApplicationContext.class, new String[]{"8083", "8084"});
+        ApiApp.runApp(ModiaApplicationContext.class, new String[]{"8083", "8084"});
     }
 }

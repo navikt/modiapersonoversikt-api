@@ -17,7 +17,7 @@ public class VarslingEndpointConfig {
 
     @Bean
     public BrukervarselV1 varslerPortType() {
-        final BrukervarselV1 prod = createVarslingPortType().configureStsForOnBehalfOfWithJWT().build();
+        final BrukervarselV1 prod = createVarslingPortType().configureStsForSubject().build();
         final BrukervarselV1 mock = new HentBrukerVarselMock();
 
         return createMetricsProxyWithInstanceSwitcher("Varsler", prod, mock, VARSLING_KEY, BrukervarselV1.class);
@@ -25,7 +25,7 @@ public class VarslingEndpointConfig {
 
     @Bean
     public Pingable varslerPing() {
-        final BrukervarselV1 ws = createVarslingPortType().configureStsForSystemUserInFSS().build();
+        final BrukervarselV1 ws = createVarslingPortType().configureStsForSystemUser().build();
         return new PingableWebService("Varsler", ws);
     }
 

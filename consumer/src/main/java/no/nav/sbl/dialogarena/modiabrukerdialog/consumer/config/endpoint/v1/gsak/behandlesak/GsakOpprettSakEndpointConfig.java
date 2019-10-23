@@ -29,7 +29,7 @@ public class GsakOpprettSakEndpointConfig {
     private static BehandleSakV1 createGsakOpprettSakPortType() {
         return new CXFClient<>(BehandleSakV1.class)
                 .address(System.getProperty("gsak.behandlesak.v1.url"))
-                .configureStsForSystemUserInFSS()
+                .configureStsForSystemUser()
                 .build();
     }
 }

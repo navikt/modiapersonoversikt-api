@@ -18,7 +18,7 @@ public class OrganisasjonEnhetKontaktinformasjonV1EndpointConfig {
     @Bean
     public OrganisasjonEnhetKontaktinformasjonV1 organisasjonEnhetKontaktinformasjonV1() {
         final OrganisasjonEnhetKontaktinformasjonV1 organisasjonEnhetKontaktinformasjonV1 = lagEndpoint()
-                .configureStsForOnBehalfOfWithJWT()
+                .configureStsForSubject()
                 .build();
         final OrganisasjonEnhetKontaktinformasjonV1 organisasjonEnhetKontaktinformasjonV1Mock = lagMockEnpoint();
 
@@ -30,7 +30,7 @@ public class OrganisasjonEnhetKontaktinformasjonV1EndpointConfig {
     public Pingable OrganisasjonEnhetKontaktinformasjonPing() {
         return new PingableWebService(
                 "NORG2 - OrganisasjonEnhetKontaktinformasjonV1",
-                lagEndpoint().configureStsForSystemUserInFSS().build()
+                lagEndpoint().configureStsForSystemUser().build()
         );
 
     }

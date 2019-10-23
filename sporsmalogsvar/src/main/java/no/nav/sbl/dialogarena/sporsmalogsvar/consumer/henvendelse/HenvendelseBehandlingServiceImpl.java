@@ -3,6 +3,7 @@ package no.nav.sbl.dialogarena.sporsmalogsvar.consumer.henvendelse;
 import no.nav.brukerdialog.security.tilgangskontroll.policy.pep.EnforcementPoint;
 import no.nav.brukerdialog.security.tilgangskontroll.policy.request.PolicyRequest;
 import no.nav.brukerdialog.security.tilgangskontroll.policy.request.attributes.PolicyAttribute;
+import no.nav.common.auth.SubjectHandler;
 import no.nav.kjerneinfo.consumer.fim.person.PersonKjerneinfoServiceBi;
 import no.nav.kjerneinfo.consumer.fim.person.to.HentKjerneinformasjonRequest;
 import no.nav.kjerneinfo.domain.person.Person;
@@ -35,7 +36,6 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 
 import static java.util.stream.Collectors.toList;
-import static no.nav.brukerdialog.security.context.SubjectHandler.getSubjectHandler;
 import static no.nav.brukerdialog.security.tilgangskontroll.utils.AttributeUtils.*;
 import static no.nav.brukerdialog.security.tilgangskontroll.utils.RequestUtils.forRequest;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.MeldingUtils.tilMelding;
@@ -158,6 +158,7 @@ public class HenvendelseBehandlingServiceImpl implements HenvendelseBehandlingSe
     }
 
     private Function<Melding, Melding> okonomiskSosialhjelpTilgang(final String valgtEnhet) {
+        String ident = SubjectHandler.getIdent().orElseThrow(() -> new RuntimeException("Fant ikke ident"));
         return melding -> {
             List<PolicyAttribute> attributes = new ArrayList<>(Arrays.asList(
                     actionId("oksos"),
@@ -171,7 +172,7 @@ public class HenvendelseBehandlingServiceImpl implements HenvendelseBehandlingSe
 
             if (melding.gjeldendeTemagruppe == Temagruppe.OKSOS && !pep.hasAccess(okonomiskSosialhjelpPolicyRequest)) {
                 logger.info("HenvendelseBehandlingServiceImpl::okonomiskSosialhjelpTilgang feilet. Ident: {} Enhet: {} Tema: {} SaksId: {} JournalpostId: {}",
-                        getSubjectHandler().getUid(),
+                        ident,
                         valgtEnhet,
                         melding.journalfortTema,
                         melding.journalfortSaksId,
@@ -185,6 +186,7 @@ public class HenvendelseBehandlingServiceImpl implements HenvendelseBehandlingSe
     }
 
     private Function<Melding, Melding> journalfortTemaTilgang(final String valgtEnhet) {
+        String ident = SubjectHandler.getIdent().orElseThrow(() -> new RuntimeException("Fant ikke ident"));
         return (melding) -> {
             PolicyRequest temagruppePolicyRequest = forRequest(
                     actionId("temagruppe"),
@@ -194,7 +196,7 @@ public class HenvendelseBehandlingServiceImpl implements HenvendelseBehandlingSe
 
             if (!isBlank(melding.journalfortTema) && !pep.hasAccess(temagruppePolicyRequest)) {
                 logger.info("HenvendelseBehandlingServiceImpl::journalfortTemaTilgang feilet. Ident: {} Enhet: {} Tema: {} SaksId: {} JournalpostId: {}",
-                        getSubjectHandler().getUid(),
+                        ident,
                         valgtEnhet,
                         melding.journalfortTema,
                         melding.journalfortSaksId,

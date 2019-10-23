@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.consumer;
 
+import no.nav.common.auth.SubjectHandler;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.GsakKodeTema;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.AnsattService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.NyOppgave;
@@ -17,7 +18,6 @@ import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 
-import static no.nav.brukerdialog.security.context.SubjectHandler.getSubjectHandler;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.DateUtils.arbeidsdagerFraDato;
 import static org.apache.commons.lang3.StringUtils.equalsIgnoreCase;
 import static org.apache.commons.lang3.StringUtils.isBlank;
@@ -122,7 +122,7 @@ public class GsakServiceImpl implements GsakService {
     }
 
     private String leggTilBeskrivelse(String gammelBeskrivelse, String leggTil, String valgtEnhetId) {
-        String ident = getSubjectHandler().getUid();
+        String ident = SubjectHandler.getIdent().orElseThrow(() -> new RuntimeException("Fant ikke ident"));
         String header = String.format("--- %s %s (%s, %s) ---\n",
                 forPattern("dd.MM.yyyy HH:mm").print(now()),
                 ansattWS.hentAnsattNavn(ident),

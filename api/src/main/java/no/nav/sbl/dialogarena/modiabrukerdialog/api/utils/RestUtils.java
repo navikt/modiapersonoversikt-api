@@ -1,18 +1,20 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.api.utils;
 
+import no.nav.common.auth.SubjectHandler;
+
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
-
-import static no.nav.brukerdialog.security.context.SubjectHandler.getSubjectHandler;
 
 public class RestUtils {
 
     public static String saksbehandlerInnstillingerCookieId() {
-        return "saksbehandlerinnstillinger-" + getSubjectHandler().getUid();
+        String ident = SubjectHandler.getIdent().orElseThrow(() -> new RuntimeException("Fant ikke ident"));
+        return "saksbehandlerinnstillinger-" + ident;
     }
 
-    public static  String saksbehandlerInnstillingerTimeoutCookieId() {
-        return "saksbehandlerinnstillinger-timeout-" + getSubjectHandler().getUid();
+    public static String saksbehandlerInnstillingerTimeoutCookieId() {
+        String ident = SubjectHandler.getIdent().orElseThrow(() -> new RuntimeException("Fant ikke ident"));
+        return "saksbehandlerinnstillinger-timeout-" + ident;
     }
 
     public static String hentValgtEnhet(HttpServletRequest request) {

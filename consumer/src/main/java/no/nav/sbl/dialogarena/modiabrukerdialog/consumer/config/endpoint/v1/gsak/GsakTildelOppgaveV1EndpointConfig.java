@@ -18,7 +18,7 @@ public class GsakTildelOppgaveV1EndpointConfig {
     @Bean
     public TildelOppgaveV1 gsakTildelOppgavePortType() {
         TildelOppgaveV1 prod = lagEndpoint()
-                .configureStsForOnBehalfOfWithJWT()
+                .configureStsForSubject()
                 .build();
         TildelOppgaveV1 mock = createTildelOppgavePortTypeMock();
 
@@ -28,7 +28,7 @@ public class GsakTildelOppgaveV1EndpointConfig {
     @Bean
     public Pingable gsakTildelOppgavePing() {
         return new PingableWebService("Gsak - Tildel oppgave", lagEndpoint()
-                .configureStsForSystemUserInFSS()
+                .configureStsForSystemUser()
                 .build());
     }
 

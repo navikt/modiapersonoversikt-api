@@ -17,7 +17,7 @@ public class HenvendelseSoknaderEndpointConfig {
 
     @Bean
     public HenvendelseSoknaderPortType henvendelseSoknaderPortType() {
-        final HenvendelseSoknaderPortType prod = createHenvendelsePortType().configureStsForOnBehalfOfWithJWT().build();
+        final HenvendelseSoknaderPortType prod = createHenvendelsePortType().configureStsForSubject().build();
         final HenvendelseSoknaderPortType mock = new HenvendelseSoknaderPortTypeMock().getHenvendelseSoknaderPortTypeMock();
 
         return createMetricsProxyWithInstanceSwitcher("Henvendelsesoknader_v1", prod, mock, HENVENDELSESOKNADER_KEY, HenvendelseSoknaderPortType.class);
@@ -25,7 +25,7 @@ public class HenvendelseSoknaderEndpointConfig {
 
     @Bean
     public Pingable pingHenvendelseSoknader() {
-        final HenvendelseSoknaderPortType ws = createHenvendelsePortType().configureStsForSystemUserInFSS().build();
+        final HenvendelseSoknaderPortType ws = createHenvendelsePortType().configureStsForSystemUser().build();
         return new PingableWebService("Henvendelse soknader", ws);
     }
 

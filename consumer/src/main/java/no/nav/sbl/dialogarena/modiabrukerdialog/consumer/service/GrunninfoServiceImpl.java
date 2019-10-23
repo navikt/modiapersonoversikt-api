@@ -18,8 +18,6 @@ import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Optional;
 
-import static no.nav.brukerdialog.security.context.SubjectHandler.getSubjectHandler;
-
 public class GrunninfoServiceImpl implements GrunninfoService {
 
     @Inject
@@ -49,7 +47,9 @@ public class GrunninfoServiceImpl implements GrunninfoService {
     }
 
     public GrunnInfo.SaksbehandlerNavn hentSaksbehandlerNavn() {
-        Person saksbehandler = ldapService.hentSaksbehandler(getSubjectHandler().getUid());
+        Person saksbehandler = SubjectHandler.getIdent()
+                .map(ldapService::hentSaksbehandler)
+                .orElseThrow(() -> new RuntimeException("Fant ikke ident til saksbehandler"));
         return new GrunnInfo.SaksbehandlerNavn(
                 saksbehandler.fornavn,
                 saksbehandler.etternavn

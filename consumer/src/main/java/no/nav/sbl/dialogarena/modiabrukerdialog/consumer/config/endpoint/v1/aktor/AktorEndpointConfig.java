@@ -26,7 +26,7 @@ public class AktorEndpointConfig {
                 .timeout(15000, 15000)
                 .address(aktoerUrl)
                 .wsdl("classpath:Aktoer.wsdl")
-                .configureStsForSystemUserInFSS()
+                .configureStsForSystemUser()
                 .withHandler(new MDCOutHandler())
                 .build();
     }
