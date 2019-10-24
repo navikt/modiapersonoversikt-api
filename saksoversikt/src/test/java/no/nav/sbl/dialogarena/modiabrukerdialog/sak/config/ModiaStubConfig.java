@@ -1,6 +1,5 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.sak.config;
 
-import no.nav.brukerdialog.security.tilgangskontroll.policy.pep.EnforcementPoint;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.AnsattService;
 import no.nav.sbl.dialogarena.common.kodeverk.KodeverkClient;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.GsakSakerService;
@@ -84,11 +83,6 @@ public class ModiaStubConfig {
     @Bean
     public PensjonSakV1 pensjonSakV1() {
         return mock(PensjonSakV1.class);
-    }
-
-    @Bean(name = "pep")
-    public EnforcementPoint pep() {
-        return mock(EnforcementPoint.class);
     }
 
     @Bean

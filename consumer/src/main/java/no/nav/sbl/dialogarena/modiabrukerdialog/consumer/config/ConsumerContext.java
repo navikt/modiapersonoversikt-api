@@ -4,8 +4,6 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.config.ApplicationContextPro
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.artifact.ArtifactsConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.EndpointsConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.service.ServiceConfig;
-import no.nav.sbl.modiabrukerdialog.pip.geografisk.config.GeografiskPipConfig;
-import no.nav.sbl.modiabrukerdialog.pip.journalforing.config.JournalfortTemaPipConfig;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
@@ -16,9 +14,7 @@ import static org.slf4j.bridge.SLF4JBridgeHandler.removeHandlersForRootLogger;
         ApplicationContextProviderConfig.class,
         ArtifactsConfig.class,
         EndpointsConfig.class,
-        ServiceConfig.class,
-        JournalfortTemaPipConfig.class,
-        GeografiskPipConfig.class
+        ServiceConfig.class
 })
 public class ConsumerContext {
 

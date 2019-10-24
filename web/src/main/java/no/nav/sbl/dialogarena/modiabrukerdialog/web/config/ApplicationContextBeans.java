@@ -8,11 +8,10 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.ldap.LDAPService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.ConsumerContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.GrunninfoService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.cache.CacheConfiguration;
+import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Tilgangskontroll;
+import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.TilgangskontrollContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.service.plukkoppgave.PlukkOppgaveService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.service.plukkoppgave.PlukkOppgaveServiceImpl;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.tilgangskontroll.TilgangskontrollContext;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.tilgangskontroll.Tilgangskontroll;
-import no.nav.sbl.modiabrukerdialog.pep.config.spring.PepConfig;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
@@ -21,8 +20,7 @@ import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 @Configuration
 @Import({
         ConsumerContext.class,
-        CacheConfiguration.class,
-        PepConfig.class
+        CacheConfiguration.class
 })
 public class ApplicationContextBeans {
 
@@ -49,7 +47,7 @@ public class ApplicationContextBeans {
             GOSYSNAVOrgEnhet enhetService,
             HenvendelseLesService henvendelseLesService
     ) {
-        TilgangskontrollContext context = new TilgangskontrollContext(
+        TilgangskontrollContext context = new TilgangskontrollContextImpl(
                 ldapService,
                 grunninfoService,
                 ansattService,

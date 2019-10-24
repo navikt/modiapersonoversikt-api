@@ -1,7 +1,7 @@
-package no.nav.sbl.dialogarena.modiabrukerdialog.web.rsbac
+package no.nav.sbl.dialogarena.rsbac
 
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.rsbac.DecisionEnums.DENY
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.rsbac.DecisionEnums.PERMIT
+import no.nav.sbl.dialogarena.rsbac.DecisionEnums.DENY
+import no.nav.sbl.dialogarena.rsbac.DecisionEnums.PERMIT
 import java.io.PrintWriter
 import java.io.StringWriter
 

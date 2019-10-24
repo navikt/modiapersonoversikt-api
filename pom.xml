@@ -25,12 +25,12 @@
         <module>modia-varsling</module>
         <module>modig-content</module>
         <module>personsok</module>
+        <module>tilgangskontroll</module>
     </modules>
 
     <properties>
         <common.version>1.2019.10.02-12.56-eb0766a86085</common.version>
         <modia-felleskomponenter.version>dev</modia-felleskomponenter.version>
-        <oidc.security-authorization.version>696</oidc.security-authorization.version>
 
         <ehcache.version>2.6.5</ehcache.version>
         <args4j.version>2.0.23</args4j.version>
@@ -127,11 +127,6 @@
                 <groupId>org.slf4j</groupId>
                 <artifactId>jul-to-slf4j</artifactId>
                 <version>${slf4j.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>no.nav.dialogarena</groupId>
-                <artifactId>oidc-security-authorization</artifactId>
-                <version>${oidc.security-authorization.version}</version>
             </dependency>
 
             <!--Kontrakter-->

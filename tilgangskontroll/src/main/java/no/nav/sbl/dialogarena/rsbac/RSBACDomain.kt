@@ -1,4 +1,4 @@
-package no.nav.sbl.dialogarena.modiabrukerdialog.web.rsbac
+package no.nav.sbl.dialogarena.rsbac
 
 typealias Supplier<T> = () -> T
 typealias Function<S, T> = (s: S) -> T
@@ -29,6 +29,12 @@ enum class DecisionEnums {
 
 data class Decision(val message: String, val decision: DecisionEnums) {
     fun withBias(bias: DecisionEnums) = Decision(this.message, this.decision.withBias(bias))
+    fun isPermit(): Boolean = this.decision == DecisionEnums.PERMIT
+    fun assertPermit() {
+        if (this.decision != DecisionEnums.PERMIT) {
+            throw RuntimeException(this.message)
+        }
+    }
 }
 
 interface Combinable<CONTEXT> : Function<CONTEXT, DecisionEnums> {

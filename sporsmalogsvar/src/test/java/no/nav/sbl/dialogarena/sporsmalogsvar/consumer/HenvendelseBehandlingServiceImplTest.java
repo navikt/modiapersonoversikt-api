@@ -1,7 +1,5 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.consumer;
 
-import no.nav.brukerdialog.security.tilgangskontroll.policy.pep.EnforcementPoint;
-import no.nav.brukerdialog.security.tilgangskontroll.policy.request.PolicyRequest;
 import no.nav.kjerneinfo.consumer.fim.person.PersonKjerneinfoServiceBi;
 import no.nav.kjerneinfo.consumer.fim.person.to.HentKjerneinformasjonRequest;
 import no.nav.kjerneinfo.consumer.fim.person.to.HentKjerneinformasjonResponse;
@@ -61,16 +59,10 @@ public class HenvendelseBehandlingServiceImplTest {
     @Captor
     private ArgumentCaptor<WSHentHenvendelseListeRequest> wsHentHenvendelseListeRequestArgumentCaptor;
 
-    @Captor
-    private ArgumentCaptor<PolicyRequest> pepArgument;
-
     @Mock
     private HenvendelsePortType henvendelsePortType;
     @Mock
     protected BehandleHenvendelsePortType behandleHenvendelsePortType;
-    @Mock
-    private EnforcementPoint pep;
-
     @Mock
     private PersonKjerneinfoServiceBi kjerneinfo;
     @Mock
@@ -86,7 +78,7 @@ public class HenvendelseBehandlingServiceImplTest {
     private HenvendelseBehandlingServiceImpl henvendelseBehandlingService;
 
 
-    private final TraadVM VALGT_TRAAD = new TraadVM(createMeldingVMer(),pep);
+    private final TraadVM VALGT_TRAAD = new TraadVM(createMeldingVMer());
 
     @BeforeEach
     public void setUp() {
@@ -102,8 +94,6 @@ public class HenvendelseBehandlingServiceImplTest {
         XMLMeldingFraBruker xmlMeldingFraBruker = new XMLMeldingFraBruker()
                 .withFritekst("fritekst")
                 .withTemagruppe(TEMAGRUPPE);
-
-        when(pep.hasAccess(any(PolicyRequest.class))).thenReturn(true);
 
         List<Object> xmlHenvendelseListe = new ArrayList<>();
         xmlHenvendelseListe.add(lagXMLHenvendelse(BEHANDLINGS_ID, BEHANDLINGS_ID, DateTime.now(), null, XMLHenvendelseType.SPORSMAL_SKRIFTLIG.name(), null, new XMLMetadataListe().withMetadata(xmlMeldingFraBruker)));
@@ -186,7 +176,7 @@ public class HenvendelseBehandlingServiceImplTest {
         xmlHenvendelsesListe.add(lagXMLHenvendelse("id4", "id4", DateTime.now().plusDays(1), null, XMLHenvendelseType.SPORSMAL_SKRIFTLIG.name(), null, new XMLMetadataListe().withMetadata(fritekst3))
                 .withMarkeringer(new XMLMarkeringer().withKontorsperre(new XMLKontorsperre().withEnhet("1111"))));
 
-        when(pep.hasAccess(any(PolicyRequest.class))).thenReturn(false);
+//        when(pep.hasAccess(any(PolicyRequest.class))).thenReturn(false);
         when(henvendelsePortType.hentHenvendelseListe(any(WSHentHenvendelseListeRequest.class))).thenReturn(new WSHentHenvendelseListeResponse().withAny(xmlHenvendelsesListe));
 
         List<Melding> meldinger = henvendelseBehandlingService.hentMeldinger(FNR, VALGT_ENHET).getTraader().stream()
@@ -207,7 +197,7 @@ public class HenvendelseBehandlingServiceImplTest {
         xmlHenvendelsesListe.add(lagXMLHenvendelse("id2", "id2", DateTime.now().plusDays(1), null, XMLHenvendelseType.SPORSMAL_SKRIFTLIG.name(), null, new XMLMetadataListe().withMetadata(new XMLMeldingFraBruker(TEMAGRUPPE, "fritekst")))
                 .withJournalfortInformasjon(new XMLJournalfortInformasjon().withJournalfortTema("tema")));
 
-        when(pep.hasAccess(any(PolicyRequest.class))).thenReturn(false);
+//        when(pep.hasAccess(any(PolicyRequest.class))).thenReturn(false);
         when(henvendelsePortType.hentHenvendelseListe(any(WSHentHenvendelseListeRequest.class))).thenReturn(new WSHentHenvendelseListeResponse().withAny(xmlHenvendelsesListe));
         List<Melding> meldinger = henvendelseBehandlingService.hentMeldinger(FNR, VALGT_ENHET).getTraader().stream()
                 .flatMap(traad -> traad.getMeldinger().stream())
@@ -263,7 +253,7 @@ public class HenvendelseBehandlingServiceImplTest {
                 .withGjeldendeTemagruppe(OKSOS.toString());
 
         when(henvendelsePortType.hentHenvendelseListe(any(WSHentHenvendelseListeRequest.class))).thenReturn(new WSHentHenvendelseListeResponse().withAny(okonomiskSosialhjelp));
-        when(pep.hasAccess(any(PolicyRequest.class))).thenReturn(false);
+//        when(pep.hasAccess(any(PolicyRequest.class))).thenReturn(false);
 
         List<Melding> meldinger = henvendelseBehandlingService.hentMeldinger(FNR, VALGT_ENHET).getTraader().stream()
                 .flatMap(traad -> traad.getMeldinger().stream())

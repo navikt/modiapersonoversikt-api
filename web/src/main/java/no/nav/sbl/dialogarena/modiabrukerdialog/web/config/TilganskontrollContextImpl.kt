@@ -1,4 +1,4 @@
-package no.nav.sbl.dialogarena.modiabrukerdialog.web.tilgangskontroll
+package no.nav.sbl.dialogarena.modiabrukerdialog.web.config
 
 import _0._0.nav_cons_sak_gosys_3.no.nav.asbo.navansatt.ASBOGOSYSHentNAVAnsattFagomradeListeRequest
 import _0._0.nav_cons_sak_gosys_3.no.nav.asbo.navansatt.ASBOGOSYSNAVAnsatt
@@ -6,29 +6,37 @@ import _0._0.nav_cons_sak_gosys_3.no.nav.asbo.navorgenhet.ASBOGOSYSHentNAVEnhetL
 import _0._0.nav_cons_sak_gosys_3.no.nav.asbo.navorgenhet.ASBOGOSYSNavEnhet
 import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navansatt.*
 import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navorgenhet.GOSYSNAVOrgEnhet
-import no.nav.brukerdialog.security.context.SubjectHandler
+import no.nav.common.auth.SubjectHandler
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.HenvendelseLesService
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.ldap.LDAPService
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.GrunninfoService
+import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.TilgangskontrollContext
 import org.slf4j.LoggerFactory
+import java.lang.RuntimeException
+import java.util.*
 
-class TilgangskontrollContext(
+class TilgangskontrollContextImpl(
         private val ldap: LDAPService,
         private val grunninfo: GrunninfoService,
         private val ansattService: GOSYSNAVansatt,
         private val enhetService: GOSYSNAVOrgEnhet,
         private val henvendelseLesService: HenvendelseLesService
-) {
+): TilgangskontrollContext {
     private val logger = LoggerFactory.getLogger(TilgangskontrollContext::class.java)
 
-    fun hentSaksbehandlerId(): String = SubjectHandler.getSubjectHandler().uid.toUpperCase()
-    fun hentSaksbehandlerRoller(): List<String> = ldap.hentRollerForVeileder(hentSaksbehandlerId()).map { it.toLowerCase() }
-    fun harSaksbehandlerRolle(rolle: String) = hentSaksbehandlerRoller().contains(rolle.toLowerCase())
-    fun hentDiskresjonkode(fnr: String): String? = grunninfo.hentBrukerInfo(fnr).diskresjonskode
-    fun hentBrukersEnhet(fnr: String): String? = grunninfo.hentBrukerInfo(fnr).navkontor
-    fun hentTemagrupperForSaksbehandler(valgtEnhet: String): Set<String> = try {
+    override fun hentSaksbehandlerId(): Optional<String> = SubjectHandler.getIdent().map(String::toUpperCase)
+    override fun hentSaksbehandlerRoller(): List<String> =
+            hentSaksbehandlerId()
+                    .map(ldap::hentRollerForVeileder)
+                    .orElse(emptyList())
+                    .map { it.toLowerCase() }
+
+    override fun harSaksbehandlerRolle(rolle: String) = hentSaksbehandlerRoller().contains(rolle.toLowerCase())
+    override fun hentDiskresjonkode(fnr: String): String? = grunninfo.hentBrukerInfo(fnr).diskresjonskode
+    override fun hentBrukersEnhet(fnr: String): String? = grunninfo.hentBrukerInfo(fnr).navkontor
+    override fun hentTemagrupperForSaksbehandler(valgtEnhet: String): Set<String> = try {
         val ansattFagomraderRequest = ASBOGOSYSHentNAVAnsattFagomradeListeRequest()
-        ansattFagomraderRequest.ansattId = hentSaksbehandlerId()
+        ansattFagomraderRequest.ansattId = hentSaksbehandlerId().orElseThrow { RuntimeException("Fant ikke saksbehandlerIdent") }
         ansattFagomraderRequest.enhetsId = valgtEnhet
 
         ansattService
@@ -49,11 +57,36 @@ class TilgangskontrollContext(
         emptySet()
     }
 
-    fun hentSaksbehandlerLokalEnheter(): Set<String> = hentSaksbehandlerLokalEnheterData().map { it.enhetsId }.toSet()
+    override fun hentSaksbehandlerLokalEnheter(): Set<String> = hentSaksbehandlerLokalEnheterData().map { it.enhetsId }.toSet()
+
+    override fun hentSaksbehandlersFylkesEnheter(): Set<String> = try {
+        hentSaksbehandlerLokalEnheterData()
+                .flatMap(::hentUnderenheterForLokalEnhet)
+                .toSet()
+    } catch (e: Exception) {
+        emptySet()
+    }
+
+    override fun hentSaksbehandlereMedTilgangTilHastekassering(): List<String> {
+        return System.getProperty("hastekassering.tilgang", "")
+                .let {
+                    it.split(",")
+                            .map(String::trim)
+                            .map(String::toUpperCase)
+                }
+    }
+
+    override fun alleBehandlingsIderTilhorerBruker(fnr: String, behandlingsIder: List<String>): Boolean {
+        return henvendelseLesService.alleBehandlingsIderTilhorerBruker(fnr, behandlingsIder)
+    }
+
+    override fun alleHenvendelseIderTilhorerBruker(fnr: String, behandlingsIder: List<String>): Boolean {
+        return henvendelseLesService.alleHenvendelseIderTilhorerBruker(fnr, behandlingsIder)
+    }
 
     private fun hentSaksbehandlerLokalEnheterData(): List<ASBOGOSYSNavEnhet> = try {
         val ansatt = ASBOGOSYSNAVAnsatt()
-        ansatt.ansattId = hentSaksbehandlerId()
+        ansatt.ansattId = hentSaksbehandlerId().orElseThrow { RuntimeException("Fant ikke saksbehandlerIdent") }
         ansattService.hentNAVAnsattEnhetListe(ansatt).navEnheter
     } catch (e: Exception) {
         when (e) {
@@ -66,31 +99,6 @@ class TilgangskontrollContext(
         }
 
         emptyList()
-    }
-
-    fun hentSaksbehandlersFylkesEnheter(): Set<String> = try {
-        hentSaksbehandlerLokalEnheterData()
-                .flatMap(::hentUnderenheterForLokalEnhet)
-                .toSet()
-    } catch (e: Exception) {
-        emptySet()
-    }
-
-    fun hentSaksbehandlereMedTilgangTilHastekassering(): List<String> {
-        return System.getProperty("hastekassering.tilgang", "")
-                .let {
-                    it.split(",")
-                            .map(String::trim)
-                            .map(String::toUpperCase)
-                }
-    }
-
-    fun alleBehandlingsIderTilhorerBruker(fnr: String, behandlingsIder: List<String>): Boolean {
-        return henvendelseLesService.alleBehandlingsIderTilhorerBruker(fnr, behandlingsIder)
-    }
-
-    fun alleHenvendelseIderTilhorerBruker(fnr: String, behandlingsIder: List<String>): Boolean {
-        return henvendelseLesService.alleHenvendelseIderTilhorerBruker(fnr, behandlingsIder)
     }
 
     private fun hentUnderenheterForLokalEnhet(enhet: ASBOGOSYSNavEnhet): Set<String> {

@@ -1,9 +1,10 @@
-package no.nav.sbl.dialogarena.modiabrukerdialog.web.tilgangskontroll
+package no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll
 
 import com.nhaarman.mockito_kotlin.*
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.rsbac.DecisionEnums
+import no.nav.sbl.dialogarena.rsbac.DecisionEnums
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
+import java.util.*
 import kotlin.test.assertEquals
 
 internal class TilgangskontrollTest {
@@ -317,7 +318,7 @@ private fun mockContext(
         fylkesEnheter: Set<String> = setOf()
 ): TilgangskontrollContext {
     val context: TilgangskontrollContext = mock()
-    whenever(context.hentSaksbehandlerId()).thenReturn(saksbehandlerIdent)
+    whenever(context.hentSaksbehandlerId()).thenReturn(Optional.of(saksbehandlerIdent))
     whenever(context.hentSaksbehandlerRoller()).thenReturn(roller)
     whenever(context.hentDiskresjonkode(any())).thenReturn(diskresjonsKode)
     whenever(context.harSaksbehandlerRolle(any())).thenAnswer {

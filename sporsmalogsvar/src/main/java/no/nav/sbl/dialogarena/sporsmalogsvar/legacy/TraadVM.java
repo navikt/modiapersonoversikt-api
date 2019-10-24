@@ -1,9 +1,6 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.legacy;
 
 
-import no.nav.brukerdialog.security.tilgangskontroll.policy.pep.EnforcementPoint;
-import no.nav.brukerdialog.security.tilgangskontroll.policy.request.PolicyRequest;
-import no.nav.brukerdialog.security.tilgangskontroll.policy.request.attributes.PolicyAttribute;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Saksbehandler;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.Sak;
@@ -12,16 +9,12 @@ import org.joda.time.DateTime;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
 import static java.util.Arrays.asList;
 import static java.util.Optional.ofNullable;
-import static no.nav.brukerdialog.security.tilgangskontroll.utils.AttributeUtils.*;
-import static no.nav.brukerdialog.security.tilgangskontroll.utils.RequestUtils.forRequest;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.VisningUtils.VARSEL;
-import static org.apache.commons.lang3.StringUtils.defaultString;
 
 
 public class TraadVM implements Serializable {
@@ -31,11 +24,8 @@ public class TraadVM implements Serializable {
 
     public Sak journalfortSak;
 
-    private EnforcementPoint pep;
-
-    public TraadVM(List<MeldingVM> meldinger, EnforcementPoint pep) {
+    public TraadVM(List<MeldingVM> meldinger) {
         this.meldinger = meldinger;
-        this.pep = pep;
     }
 
     public List<MeldingVM> getMeldinger() {

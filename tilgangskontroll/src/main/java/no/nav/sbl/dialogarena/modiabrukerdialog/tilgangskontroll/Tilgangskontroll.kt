@@ -1,6 +1,6 @@
-package no.nav.sbl.dialogarena.modiabrukerdialog.web.tilgangskontroll
+package no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll
 
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.rsbac.*
+import no.nav.sbl.dialogarena.rsbac.*
 import org.slf4j.LoggerFactory
 import javax.ws.rs.ForbiddenException
 
@@ -47,6 +47,23 @@ class Policies {
             }
         }
 
+        @JvmField
+        val tilgangTilDiskresjonskode = PolicyGenerator<TilgangskontrollContext, String>({ "Saksbehandler (${context.hentSaksbehandlerId()}) har ikke tilgang til $data" }) {
+            val diskresjonskode = data
+            if (arrayOf("6", "SPSF").contains(diskresjonskode)) {
+                if (context.harSaksbehandlerRolle("0000-GA-GOSYS_KODE6"))
+                    DecisionEnums.PERMIT
+                else
+                    DecisionEnums.DENY
+            } else if (arrayOf("7", "SPFO").contains(diskresjonskode)) {
+                if (context.harSaksbehandlerRolle("0000-GA-GOSYS_KODE7"))
+                    DecisionEnums.PERMIT
+                else
+                    DecisionEnums.DENY
+            } else {
+                DecisionEnums.NOT_APPLICABLE
+            }
+        }
         val brukerUtenEnhet = PolicyGenerator<TilgangskontrollContext, String>({ "Bruker har ingen enhet" }) {
             if (context.hentBrukersEnhet(data).isNullOrBlank()) {
                 DecisionEnums.PERMIT
@@ -55,9 +72,18 @@ class Policies {
             }
         }
 
-        val tilgangTilLokalKontor = PolicyGenerator<TilgangskontrollContext, String>({ "" }) {
+        val tilgangTilLokalKontorGittFnr = PolicyGenerator<TilgangskontrollContext, String>({ "" }) {
             val brukersEnhet = context.hentBrukersEnhet(data)
             if (context.hentSaksbehandlerLokalEnheter().contains(brukersEnhet)) {
+                DecisionEnums.PERMIT
+            } else {
+                DecisionEnums.NOT_APPLICABLE
+            }
+        }
+
+        @JvmField
+        val tilgangTilEnhetId = PolicyGenerator<TilgangskontrollContext, String>({ "" }) {
+            if (context.hentSaksbehandlerLokalEnheter().contains(data)) {
                 DecisionEnums.PERMIT
             } else {
                 DecisionEnums.NOT_APPLICABLE
@@ -86,7 +112,7 @@ class Policies {
         val denyAlt = Policy<TilgangskontrollContext>({ "Saksbehandler (${hentSaksbehandlerId()}) har ikke tilgang til bruker basert på geografisk tilgang" }) { DecisionEnums.DENY }
         val geografiskTilgang = PolicySetGenerator(
                 combining = CombiningAlgo.firstApplicable,
-                policies = listOf(brukerUtenEnhet, nasjonalTilgang, tilgangTilLokalKontor, regionalTilgang, denyAlt.asGenerator())
+                policies = listOf(brukerUtenEnhet, nasjonalTilgang, tilgangTilLokalKontorGittFnr, regionalTilgang, denyAlt.asGenerator())
         )
 
         @JvmField
@@ -94,6 +120,7 @@ class Policies {
                 policies = listOf(tilgangTilModia.asGenerator(), geografiskTilgang, tilgangTilKode6, tilgangTilKode7)
         )
 
+        @JvmField
         val tilgangTilTema = PolicyGenerator<TilgangskontrollContext, TilgangTilTemaData>({ "Saksbehandler (${context.hentSaksbehandlerId()}) har ikke tilgang til tema: ${data.tema} enhet: ${data.valgtEnhet}" }) {
             val temaer = context.hentTemagrupperForSaksbehandler(data.valgtEnhet)
             if (temaer.contains(data.tema)) {
@@ -119,18 +146,20 @@ class Policies {
             if (harSaksbehandlerRolle("0000-GA-BD06_EndreNavn")) DecisionEnums.PERMIT else DecisionEnums.DENY
         }
 
-        val tilgangTilKontorsperretMelding = PolicyGenerator<TilgangskontrollContext, String?>({ "Saksbehandler (${context.hentSaksbehandlerId()}) har ikke tilgang til kontorsperret melding" }) {
+        @JvmField
+        val tilgangTilKontorsperretMelding = PolicyGenerator<TilgangskontrollContext, TilgangTilKontorSperreData>({ "Saksbehandler (${context.hentSaksbehandlerId()}) har ikke tilgang til kontorsperret melding" }) {
             when {
-                data == null -> DecisionEnums.PERMIT
-                context.hentSaksbehandlerLokalEnheter().contains(data) -> DecisionEnums.PERMIT
+                data.ansvarligEnhet == null || data.ansvarligEnhet.isEmpty() -> DecisionEnums.PERMIT
+                data.valgtEnhet == data.ansvarligEnhet -> DecisionEnums.PERMIT
                 else -> DecisionEnums.DENY
             }
         }
 
-        val tilgangTilOksosMelding = PolicyGenerator<TilgangskontrollContext, String>({ "Saksbehandler (${context.hentSaksbehandlerId()}) har ikke tilgang til økonomisk sosialhjelp" }) {
+        @JvmField
+        val tilgangTilOksosMelding = PolicyGenerator<TilgangskontrollContext, TilgangTilOksosSperreData>({ "Saksbehandler (${context.hentSaksbehandlerId()}) har ikke tilgang til økonomisk sosialhjelp" }) {
             when {
                 context.harSaksbehandlerRolle("0000-GA-Okonomisk_Sosialhjelp") -> DecisionEnums.PERMIT
-                context.hentSaksbehandlerLokalEnheter().contains(context.hentBrukersEnhet(data)) -> DecisionEnums.PERMIT
+                data.valgtEnhet == data.brukersEnhet -> DecisionEnums.PERMIT
                 else -> DecisionEnums.DENY
             }
         }
@@ -159,16 +188,22 @@ class Policies {
         }
 
         val kanHastekassere = Policy<TilgangskontrollContext>({ "Saksbehandler (${hentSaksbehandlerId()}) har ikke tilgang til hastekassering" }) {
-            val identer = hentSaksbehandlereMedTilgangTilHastekassering()
-            if (identer.contains(hentSaksbehandlerId())) DecisionEnums.PERMIT else DecisionEnums.DENY
+            hentSaksbehandlerId()
+                    .map { ident ->
+                        val identer = hentSaksbehandlereMedTilgangTilHastekassering()
+                        if (identer.contains(ident)) DecisionEnums.PERMIT else DecisionEnums.DENY
+                    }.orElse(DecisionEnums.DENY)
         }
     }
 }
 
+data class TilgangTilKontorSperreData(val valgtEnhet: String, val ansvarligEnhet: String?)
+data class TilgangTilOksosSperreData(val valgtEnhet: String, val brukersEnhet: String)
 data class BehandlingsIdTilgangData(val fnr: String, val behandlingsIder: List<String>)
 data class TilgangTilTemaData(val valgtEnhet: String, val tema: String)
 
 val log = LoggerFactory.getLogger(Tilgangskontroll::class.java)
+
 class Tilgangskontroll(context: TilgangskontrollContext) : RSBACImpl<TilgangskontrollContext>(context, {
     log.error(it)
     ForbiddenException(it)

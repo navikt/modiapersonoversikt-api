@@ -1,10 +1,10 @@
-package no.nav.sbl.dialogarena.modiabrukerdialog.web.tilgangskontroll
+package no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll
 
 import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.whenever
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.rsbac.*
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.rsbac.Function
+import no.nav.sbl.dialogarena.rsbac.*
+import no.nav.sbl.dialogarena.rsbac.Function
 
 
 class RSBACMock : RSBACInstance<TilgangskontrollContext> {

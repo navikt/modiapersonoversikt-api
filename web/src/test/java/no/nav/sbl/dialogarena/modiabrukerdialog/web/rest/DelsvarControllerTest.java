@@ -18,7 +18,6 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.HenvendelseUtse
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.henvendelse.DelsvarServiceImpl;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.henvendelse.DelsvarController;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.henvendelse.DelsvarRestRequest;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.tilgangskontroll.TilgangskontrollMock;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.senduthenvendelse.SendUtHenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.senduthenvendelse.meldinger.WSFerdigstillHenvendelseRequest;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.henvendelse.HenvendelsePortType;
@@ -29,7 +28,6 @@ import org.junit.jupiter.api.*;
 import org.mockito.ArgumentCaptor;
 import org.springframework.mock.web.MockHttpServletRequest;
 
-import javax.inject.Inject;
 import javax.ws.rs.core.Response;
 import java.util.Collections;
 
@@ -145,6 +143,6 @@ class DelsvarControllerTest {
 
     @NotNull
     private DelsvarRestRequest lagDelsvarRequest() {
-        return new DelsvarRestRequest("", TRAAD_ID,HENVENDELSES_ID, Temagruppe.ARBD.name(), "");
+        return new DelsvarRestRequest("", TRAAD_ID, HENVENDELSES_ID, Temagruppe.ARBD.name(), "");
     }
 }

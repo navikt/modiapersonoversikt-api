@@ -1,7 +1,5 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service;
 
-import no.nav.brukerdialog.security.tilgangskontroll.policy.pep.EnforcementPoint;
-import no.nav.brukerdialog.security.tilgangskontroll.policy.request.PolicyRequest;
 import no.nav.kjerneinfo.consumer.fim.person.PersonKjerneinfoServiceBi;
 import no.nav.kjerneinfo.consumer.fim.person.to.HentKjerneinformasjonRequest;
 import no.nav.kjerneinfo.domain.person.Person;
@@ -22,6 +20,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.ldap.LDAPService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.cache.HenvendelsePortTypeCacheUtil;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.henvendelse.delsvar.DelsvarSammenslaaer;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.henvendelse.delsvar.DelsvarUtils;
+import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.*;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.behandlehenvendelse.BehandleHenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.senduthenvendelse.SendUtHenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.senduthenvendelse.WSBehandlingskjedeErAlleredeBesvart;
@@ -39,15 +38,12 @@ import java.util.function.Function;
 
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
-import static no.nav.brukerdialog.security.tilgangskontroll.utils.AttributeUtils.*;
-import static no.nav.brukerdialog.security.tilgangskontroll.utils.RequestUtils.forRequest;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe.ANSOS;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe.OKSOS;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding.ELDSTE_FORST;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.MeldingUtils.tilMelding;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.HenvendelseUtils.createXMLHenvendelseMedMeldingTilBruker;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.HenvendelseUtils.getXMLHenvendelseTypeBasertPaaMeldingstype;
-import static org.apache.commons.lang3.StringUtils.defaultString;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 public class HenvendelseUtsendingServiceImpl implements HenvendelseUtsendingService {
@@ -57,10 +53,10 @@ public class HenvendelseUtsendingServiceImpl implements HenvendelseUtsendingServ
     private final BehandleHenvendelsePortType behandleHenvendelsePortType;
     private final OppgaveBehandlingService oppgaveBehandlingService;
     private final SakerService sakerService;
-    private final EnforcementPoint pep;
     private final ContentRetriever propertyResolver;
     private final PersonKjerneinfoServiceBi kjerneinfo;
     private final LDAPService ldapService;
+    private final Tilgangskontroll tilgangskontroll;
 
     @Inject
     public HenvendelseUtsendingServiceImpl(HenvendelsePortType henvendelsePortType,
@@ -68,7 +64,7 @@ public class HenvendelseUtsendingServiceImpl implements HenvendelseUtsendingServ
                                            BehandleHenvendelsePortType behandleHenvendelsePortType,
                                            OppgaveBehandlingService oppgaveBehandlingService,
                                            SakerService sakerService,
-                                           @Named("pep") EnforcementPoint pep,
+                                           Tilgangskontroll tilgangskontroll,
                                            @Named("propertyResolver") ContentRetriever propertyResolver,
                                            PersonKjerneinfoServiceBi kjerneinfo,
                                            LDAPService ldapService) {
@@ -78,7 +74,7 @@ public class HenvendelseUtsendingServiceImpl implements HenvendelseUtsendingServ
         this.behandleHenvendelsePortType = behandleHenvendelsePortType;
         this.oppgaveBehandlingService = oppgaveBehandlingService;
         this.sakerService = sakerService;
-        this.pep = pep;
+        this.tilgangskontroll = tilgangskontroll;
         this.propertyResolver = propertyResolver;
         this.kjerneinfo = kjerneinfo;
         this.ldapService = ldapService;
@@ -187,30 +183,30 @@ public class HenvendelseUtsendingServiceImpl implements HenvendelseUtsendingServ
     private void gjorTilgangSjekk(String valgtEnhet, List<Melding> meldinger) {
         Melding sporsmal = meldinger.get(0);
         if (sporsmal.kontorsperretEnhet != null) {
-            pep.assertAccess(forRequest(
-                    actionId("kontorsperre"),
-                    resourceId(""),
-                    subjectAttribute("urn:nav:ikt:tilgangskontroll:xacml:subject:localenhet", valgtEnhet),
-                    resourceAttribute("urn:nav:ikt:tilgangskontroll:xacml:resource:ansvarlig-enhet", defaultString(sporsmal.kontorsperretEnhet))));
+            TilgangTilKontorSperreData data = new TilgangTilKontorSperreData(valgtEnhet, sporsmal.kontorsperretEnhet);
+            tilgangskontroll
+                    .check(Policies.tilgangTilKontorsperretMelding.with(data))
+                    .getDecision()
+                    .assertPermit();
         }
         if (sporsmal.gjeldendeTemagruppe == OKSOS) {
-            pep.assertAccess(forRequest(
-                    actionId("oksos"),
-                    resourceId(""),
-                    subjectAttribute("urn:nav:ikt:tilgangskontroll:xacml:subject:localenhet", valgtEnhet),
-                    resourceAttribute("urn:nav:ikt:tilgangskontroll:xacml:resource:bruker-enhet", defaultString(sporsmal.brukersEnhet))));
+            TilgangTilOksosSperreData data = new TilgangTilOksosSperreData(valgtEnhet, sporsmal.brukersEnhet);
+            tilgangskontroll
+                    .check(Policies.tilgangTilOksosMelding.with(data))
+                    .getDecision()
+                    .assertPermit();
         }
     }
 
     private Function<Melding, Melding> journalfortTemaTilgang(final String valgtEnhet) {
         return melding -> {
-            PolicyRequest temagruppePolicyRequest = forRequest(
-                    actionId("temagruppe"),
-                    resourceId(""),
-                    subjectAttribute("urn:nav:ikt:tilgangskontroll:xacml:subject:localenhet", defaultString(valgtEnhet)),
-                    resourceAttribute("urn:nav:ikt:tilgangskontroll:xacml:resource:tema", defaultString(melding.journalfortTema))
-            );
-            if (isNotBlank(melding.journalfortTema) && !pep.hasAccess(temagruppePolicyRequest)) {
+            TilgangTilTemaData data = new TilgangTilTemaData(valgtEnhet, melding.journalfortTema);
+            boolean tilgangPaTema = tilgangskontroll
+                    .check(Policies.tilgangTilTema.with(data))
+                    .getDecision()
+                    .isPermit();
+
+            if (isNotBlank(melding.journalfortTema) && !tilgangPaTema) {
                 melding.withFritekst(new Fritekst("", melding.skrevetAv, melding.ferdigstiltDato));
             }
 

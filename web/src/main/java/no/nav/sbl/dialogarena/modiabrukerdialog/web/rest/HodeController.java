@@ -6,8 +6,8 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.AnsattService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.organisasjonsEnhetV2.OrganisasjonEnhetV2Service;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.http.CookieUtil;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.GrunninfoService;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.tilgangskontroll.Policies;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.tilgangskontroll.Tilgangskontroll;
+import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Policies;
+import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Tilgangskontroll;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;

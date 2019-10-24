@@ -1,4 +1,4 @@
-package no.nav.sbl.dialogarena.modiabrukerdialog.web.rsbac
+package no.nav.sbl.dialogarena.rsbac
 
 abstract class CombiningAlgo {
     abstract fun <CONTEXT> combine(policies: List<Combinable<CONTEXT>>, context: CONTEXT): Decision

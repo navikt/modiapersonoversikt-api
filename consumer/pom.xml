@@ -23,6 +23,10 @@
         <dependency>
             <groupId>no.nav.common</groupId>
             <artifactId>oidc-security</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>no.nav.common</groupId>
+            <artifactId>oidc-security</artifactId>
             <scope>test</scope>
             <type>test-jar</type>
         </dependency>
@@ -33,13 +37,13 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>modiabrukerdialog-pip</artifactId>
+            <groupId>no.nav.sbl.dialogarena</groupId>
+            <artifactId>modiabrukerdialog-api</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>
-            <artifactId>modiabrukerdialog-api</artifactId>
+            <artifactId>tilgangskontroll</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
