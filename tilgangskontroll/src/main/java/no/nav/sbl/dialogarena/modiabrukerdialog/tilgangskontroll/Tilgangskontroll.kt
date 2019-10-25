@@ -48,7 +48,7 @@ class Policies {
         }
 
         @JvmField
-        val tilgangTilDiskresjonskode = PolicyGenerator<TilgangskontrollContext, String>({ "Saksbehandler (${context.hentSaksbehandlerId()}) har ikke tilgang til $data" }) {
+        val tilgangTilDiskresjonskode = PolicyGenerator<TilgangskontrollContextUtenTPS, String>({ "Saksbehandler (${context.hentSaksbehandlerId()}) har ikke tilgang til $data" }) {
             val diskresjonskode = data
             if (arrayOf("6", "SPSF").contains(diskresjonskode)) {
                 if (context.harSaksbehandlerRolle("0000-GA-GOSYS_KODE6"))
@@ -82,7 +82,7 @@ class Policies {
         }
 
         @JvmField
-        val tilgangTilEnhetId = PolicyGenerator<TilgangskontrollContext, String>({ "" }) {
+        val tilgangTilEnhetId = PolicyGenerator<TilgangskontrollContextUtenTPS, String>({ "" }) {
             if (context.hentSaksbehandlerLokalEnheter().contains(data)) {
                 DecisionEnums.PERMIT
             } else {
@@ -203,6 +203,11 @@ data class BehandlingsIdTilgangData(val fnr: String, val behandlingsIder: List<S
 data class TilgangTilTemaData(val valgtEnhet: String, val tema: String)
 
 val log = LoggerFactory.getLogger(Tilgangskontroll::class.java)
+
+class TilgangskontrollUtenTPS(context: TilgangskontrollContextUtenTPS) : RSBACImpl<TilgangskontrollContextUtenTPS>(context, {
+    log.error(it)
+    ForbiddenException(it)
+})
 
 class Tilgangskontroll(context: TilgangskontrollContext) : RSBACImpl<TilgangskontrollContext>(context, {
     log.error(it)

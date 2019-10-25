@@ -10,6 +10,8 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.GrunninfoServic
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.cache.CacheConfiguration;
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Tilgangskontroll;
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.TilgangskontrollContext;
+import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.TilgangskontrollContextUtenTPS;
+import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.TilgangskontrollUtenTPS;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.service.plukkoppgave.PlukkOppgaveService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.service.plukkoppgave.PlukkOppgaveServiceImpl;
 import org.springframework.context.annotation.Bean;
@@ -49,11 +51,27 @@ public class ApplicationContextBeans {
     ) {
         TilgangskontrollContext context = new TilgangskontrollContextImpl(
                 ldapService,
-                grunninfoService,
+                ansattService,
+                enhetService,
+                henvendelseLesService,
+                grunninfoService
+        );
+        return new Tilgangskontroll(context);
+    }
+
+    @Bean
+    public TilgangskontrollUtenTPS tilgangskontrollUtenTPS(
+            LDAPService ldapService,
+            GOSYSNAVansatt ansattService,
+            GOSYSNAVOrgEnhet enhetService,
+            HenvendelseLesService henvendelseLesService
+    ) {
+        TilgangskontrollContextUtenTPS context = new TilgangskontrollContextUtenTPSImpl(
+                ldapService,
                 ansattService,
                 enhetService,
                 henvendelseLesService
         );
-        return new Tilgangskontroll(context);
+        return new TilgangskontrollUtenTPS(context);
     }
 }

@@ -11,17 +11,17 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.HenvendelseLesServic
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.ldap.LDAPService
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.GrunninfoService
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.TilgangskontrollContext
+import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.TilgangskontrollContextUtenTPS
 import org.slf4j.LoggerFactory
 import java.lang.RuntimeException
 import java.util.*
 
-class TilgangskontrollContextImpl(
+open class TilgangskontrollContextUtenTPSImpl(
         private val ldap: LDAPService,
-        private val grunninfo: GrunninfoService,
         private val ansattService: GOSYSNAVansatt,
         private val enhetService: GOSYSNAVOrgEnhet,
         private val henvendelseLesService: HenvendelseLesService
-): TilgangskontrollContext {
+): TilgangskontrollContextUtenTPS {
     private val logger = LoggerFactory.getLogger(TilgangskontrollContext::class.java)
 
     override fun hentSaksbehandlerId(): Optional<String> = SubjectHandler.getIdent().map(String::toUpperCase)
@@ -32,8 +32,6 @@ class TilgangskontrollContextImpl(
                     .map { it.toLowerCase() }
 
     override fun harSaksbehandlerRolle(rolle: String) = hentSaksbehandlerRoller().contains(rolle.toLowerCase())
-    override fun hentDiskresjonkode(fnr: String): String? = grunninfo.hentBrukerInfo(fnr).diskresjonskode
-    override fun hentBrukersEnhet(fnr: String): String? = grunninfo.hentBrukerInfo(fnr).navkontor
     override fun hentTemagrupperForSaksbehandler(valgtEnhet: String): Set<String> = try {
         val ansattFagomraderRequest = ASBOGOSYSHentNAVAnsattFagomradeListeRequest()
         ansattFagomraderRequest.ansattId = hentSaksbehandlerId().orElseThrow { RuntimeException("Fant ikke saksbehandlerIdent") }
@@ -136,4 +134,15 @@ class TilgangskontrollContextImpl(
                 }
                 .toSet()
     }
+}
+
+class TilgangskontrollContextImpl(
+        ldap: LDAPService,
+        ansattService: GOSYSNAVansatt,
+        enhetService: GOSYSNAVOrgEnhet,
+        henvendelseLesService: HenvendelseLesService,
+        private val grunninfo: GrunninfoService
+) : TilgangskontrollContext, TilgangskontrollContextUtenTPSImpl(ldap, ansattService, enhetService, henvendelseLesService) {
+    override fun hentDiskresjonkode(fnr: String): String? = grunninfo.hentBrukerInfo(fnr).diskresjonskode
+    override fun hentBrukersEnhet(fnr: String): String? = grunninfo.hentBrukerInfo(fnr).navkontor
 }

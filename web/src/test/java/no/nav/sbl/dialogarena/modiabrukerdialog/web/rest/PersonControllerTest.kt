@@ -13,6 +13,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.person.PersonOppslag
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.UnleashService
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Tilgangskontroll
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.TilgangskontrollMock
+import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.TilgangskontrollUtenTPS
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.kodeverk.Kode
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.person.PersonController
 import no.nav.tjeneste.virksomhet.person.v3.HentPersonPersonIkkeFunnet
@@ -46,9 +47,10 @@ internal class PersonControllerTest {
     private val mapper = KjerneinfoMapper(kodeverk)
     private val oppslag: PersonOppslagService = mock()
     private val unleashService: UnleashService = mock()
+    private val tilgangskontrollUtenTPS: TilgangskontrollUtenTPS = TilgangskontrollMock.getUtenTPS()
     private val tilgangskontroll: Tilgangskontroll = TilgangskontrollMock.get()
 
-    private val service = DefaultPersonKjerneinfoService(personV3, mapper, tilgangskontroll, organisasjonenhetV2Service)
+    private val service = DefaultPersonKjerneinfoService(personV3, mapper, tilgangskontrollUtenTPS, organisasjonenhetV2Service)
     private val controller = PersonController(service, kodeverk, oppslag, unleashService, tilgangskontroll)
 
     @BeforeEach
