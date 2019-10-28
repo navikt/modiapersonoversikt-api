@@ -98,7 +98,7 @@
             <artifactId>modig-log-common</artifactId>
         </dependency>
         <dependency>
-            <groupId>no.nav.modig</groupId>
+            <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>modia-felleskomponenter</artifactId>
         </dependency>
 

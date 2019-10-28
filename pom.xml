@@ -27,11 +27,11 @@
         <module>personsok</module>
         <module>tilgangskontroll</module>
         <module>kjerneinfo</module>
+        <module>modia-felleskomponenter</module>
     </modules>
 
     <properties>
         <common.version>1.2019.10.02-12.56-eb0766a86085</common.version>
-        <modia-felleskomponenter.version>dev</modia-felleskomponenter.version>
 
         <ehcache.version>2.6.5</ehcache.version>
         <args4j.version>2.0.23</args4j.version>
@@ -371,9 +371,9 @@
                 <version>${brukervarsel.tjeneste.version}</version>
             </dependency>
             <dependency>
-                <groupId>no.nav.modig</groupId>
+                <groupId>no.nav.sbl.dialogarena</groupId>
                 <artifactId>modia-felleskomponenter</artifactId>
-                <version>${modia-felleskomponenter.version}</version>
+                <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>no.nav.sbl.dialogarena</groupId>

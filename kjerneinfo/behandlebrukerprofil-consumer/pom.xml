@@ -35,7 +35,7 @@
         </dependency>
         <!-- SECURITY -->
         <dependency>
-            <groupId>no.nav.modig</groupId>
+            <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>modia-felleskomponenter</artifactId>
         </dependency>
         <dependency>

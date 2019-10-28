@@ -59,9 +59,8 @@
             <artifactId>spring-context</artifactId>
         </dependency>
         <dependency>
-            <groupId>no.nav.modig</groupId>
+            <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>modia-felleskomponenter</artifactId>
-            <version>dev</version>
         </dependency>
 
         <dependency>
