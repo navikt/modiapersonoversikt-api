@@ -78,7 +78,7 @@ class VarselbestillingMockData {
                 .withKanal("SMS")
                 .withSendt(null)
                 .withDistribuert(new XMLGregorianCalendarImpl(time.minusMinutes(60).toGregorianCalendar()))
-                .withKontaktinfo("98765432")
+                .withKontaktinfo("95959595")
                 .withVarseltekst("Du har mottatt et varsel på sms");
     }
 

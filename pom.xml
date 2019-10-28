@@ -26,6 +26,7 @@
         <module>modig-content</module>
         <module>personsok</module>
         <module>tilgangskontroll</module>
+        <module>kjerneinfo</module>
     </modules>
 
     <properties>
@@ -93,6 +94,10 @@
         <arbeidsfordeling-v1.version>1.0.3</arbeidsfordeling-v1.version>
         <unleash.version>3.1.0</unleash.version>
         <nav-fim-personsok-v1-tjenestespesifikasjon.version>1.2019.06.11-13.36-786a4cec3151</nav-fim-personsok-v1-tjenestespesifikasjon.version>
+        <person-v3-tjenestespesifikasjon-version>3.0.4</person-v3-tjenestespesifikasjon-version>
+        <organisasjonv4-tjenestespesifikasjon.version>1.0.1</organisasjonv4-tjenestespesifikasjon.version>
+        <behandle.person.v1.version>1.0.0</behandle.person.v1.version>
+        <pleiepenger-v1-tjenestespesifikasjon-version>1.0.4</pleiepenger-v1-tjenestespesifikasjon-version>
 
         <sonar.skippedModules>modiabrukerdialog-mock</sonar.skippedModules>
         <apache.http.version>4.4</apache.http.version>
@@ -138,7 +143,7 @@
 
             <!--Kontrakter-->
             <dependency>
-                <groupId>no.nav</groupId>
+                <groupId>no.nav.sbl.dialogarena</groupId>
                 <artifactId>kontrakter-domain</artifactId>
                 <version>${kjerneinfo.versjon}</version>
                 <exclusions>
@@ -149,7 +154,7 @@
                 </exclusions>
             </dependency>
             <dependency>
-                <groupId>no.nav</groupId>
+                <groupId>no.nav.sbl.dialogarena</groupId>
                 <artifactId>kontrakter-consumer</artifactId>
                 <version>${kjerneinfo.versjon}</version>
                 <exclusions>
@@ -159,15 +164,20 @@
                     </exclusion>
                 </exclusions>
             </dependency>
+            <dependency>
+                <groupId>no.nav.sbl.dialogarena</groupId>
+                <artifactId>personsok-consumer</artifactId>
+                <version>${kjerneinfo.versjon}</version>
+            </dependency>
 
             <!--Kjerneinfo-->
             <dependency>
-                <groupId>no.nav</groupId>
+                <groupId>no.nav.sbl.dialogarena</groupId>
                 <artifactId>kjerneinfo-common</artifactId>
                 <version>${kjerneinfo.versjon}</version>
             </dependency>
             <dependency>
-                <groupId>no.nav</groupId>
+                <groupId>no.nav.sbl.dialogarena</groupId>
                 <artifactId>kjerneinfo-consumer</artifactId>
                 <version>${kjerneinfo.versjon}</version>
                 <exclusions>
@@ -182,7 +192,7 @@
                 </exclusions>
             </dependency>
             <dependency>
-                <groupId>no.nav</groupId>
+                <groupId>no.nav.sbl.dialogarena</groupId>
                 <artifactId>kjerneinfo-domain</artifactId>
                 <version>${kjerneinfo.versjon}</version>
                 <exclusions>
@@ -199,7 +209,7 @@
 
             <!--Sykmeldingsperioder-->
             <dependency>
-                <groupId>no.nav</groupId>
+                <groupId>no.nav.sbl.dialogarena</groupId>
                 <artifactId>sykmeldingsperioder-consumer</artifactId>
                 <version>${kjerneinfo.versjon}</version>
                 <exclusions>
@@ -212,7 +222,7 @@
 
             <!--Brukerprofil-->
             <dependency>
-                <groupId>no.nav</groupId>
+                <groupId>no.nav.sbl.dialogarena</groupId>
                 <artifactId>brukerprofil-domain</artifactId>
                 <version>${kjerneinfo.versjon}</version>
                 <exclusions>
@@ -223,7 +233,7 @@
                 </exclusions>
             </dependency>
             <dependency>
-                <groupId>no.nav</groupId>
+                <groupId>no.nav.sbl.dialogarena</groupId>
                 <artifactId>behandlebrukerprofil-consumer</artifactId>
                 <version>${kjerneinfo.versjon}</version>
                 <exclusions>
@@ -234,7 +244,7 @@
                 </exclusions>
             </dependency>
             <dependency>
-                <groupId>no.nav</groupId>
+                <groupId>no.nav.sbl.dialogarena</groupId>
                 <artifactId>dkif-consumer</artifactId>
                 <version>${kjerneinfo.versjon}</version>
                 <exclusions>
@@ -247,7 +257,7 @@
 
             <!--Kodeverk-->
             <dependency>
-                <groupId>no.nav</groupId>
+                <groupId>no.nav.sbl.dialogarena</groupId>
                 <artifactId>kodeverk-consumer</artifactId>
                 <version>${kjerneinfo.versjon}</version>
                 <exclusions>
@@ -394,6 +404,7 @@
                 <version>${arbeidsfordeling-v1.version}</version>
             </dependency>
 
+
             <!--Dialogarena-->
             <dependency>
                 <groupId>no.nav.tjenestespesifikasjoner</groupId>
@@ -438,6 +449,26 @@
                 <groupId>no.nav.sbl.dialogarena</groupId>
                 <artifactId>oppfoelging-v1-tjenestespesifikasjon</artifactId>
                 <version>${oppfoelging-v1-tjenestespesifikasjon-version}</version>
+            </dependency>
+            <dependency>
+                <groupId>no.nav.sbl.dialogarena</groupId>
+                <artifactId>person-v3-tjenestespesifikasjon</artifactId>
+                <version>${person-v3-tjenestespesifikasjon-version}</version>
+            </dependency>
+            <dependency>
+                <groupId>no.nav.sbl.dialogarena</groupId>
+                <artifactId>organisasjonv4-tjenestespesifikasjon</artifactId>
+                <version>${organisasjonv4-tjenestespesifikasjon.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>no.nav.sbl.dialogarena</groupId>
+                <artifactId>behandle-person-v1-tjenestespesifikasjon</artifactId>
+                <version>${behandle.person.v1.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>no.nav.sbl.dialogarena</groupId>
+                <artifactId>pleiepenger-v1-tjenestespesifikasjon</artifactId>
+                <version>${pleiepenger-v1-tjenestespesifikasjon-version}</version>
             </dependency>
 
             <!--Modig-->

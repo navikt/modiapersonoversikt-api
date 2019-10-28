@@ -82,27 +82,27 @@
 
         <!--Kontrakter-->
         <dependency>
-            <groupId>no.nav</groupId>
+            <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>kontrakter-consumer</artifactId>
         </dependency>
 
         <!--Kjerneinfo-->
         <dependency>
-            <groupId>no.nav</groupId>
+            <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>kjerneinfo-consumer</artifactId>
         </dependency>
         <dependency>
-            <groupId>no.nav</groupId>
+            <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>kjerneinfo-domain</artifactId>
         </dependency>
         <dependency>
-            <groupId>no.nav</groupId>
+            <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>dkif-consumer</artifactId>
         </dependency>
 
         <!--Sykmeldingsperioder-->
         <dependency>
-            <groupId>no.nav</groupId>
+            <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>sykmeldingsperioder-consumer</artifactId>
         </dependency>
 

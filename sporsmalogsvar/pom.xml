@@ -39,7 +39,7 @@
 
         <!-- Kjerneinfo -->
         <dependency>
-            <groupId>no.nav</groupId>
+            <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>kjerneinfo-consumer</artifactId>
             <exclusions>
                 <exclusion>
@@ -53,7 +53,7 @@
             </exclusions>
         </dependency>
         <dependency>
-            <groupId>no.nav</groupId>
+            <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>kjerneinfo-domain</artifactId>
             <exclusions>
                 <exclusion>
