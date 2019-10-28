@@ -8,7 +8,6 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.inject.Inject;
-import java.util.HashMap;
 
 import static java.util.stream.Collectors.joining;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.strategier.ByEnhetStrategy.ENHETER;
@@ -25,16 +24,20 @@ public class UnleashContextProviderImpl implements UnleashContextProvider {
     @Override
     public UnleashContext getContext() {
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
-        String sessionId = attributes.getSessionId();
-        String remoteAddress = attributes.getRequest().getRemoteAddr();
-
         String ident = SubjectHandler.getIdent().orElseThrow(() -> new RuntimeException("Fant ikke ident"));
-        String ansattEnheter = getEnheter();
+        String remoteAddr = null;
 
-        HashMap<String, String> properties = new HashMap<>();
-        properties.put(ENHETER, ansattEnheter);
+        try {
+            remoteAddr = attributes.getRequest().getRemoteAddr();
+        } catch (Exception ignored) {
 
-        return new UnleashContext(ident, sessionId, remoteAddress, properties);
+        }
+
+        return UnleashContext.builder()
+                .userId(ident)
+                .remoteAddress(remoteAddr)
+                .addProperty(ENHETER, getEnheter())
+                .build();
     }
 
     private String getEnheter() {
