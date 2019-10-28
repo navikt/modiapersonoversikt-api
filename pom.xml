@@ -60,9 +60,6 @@
         <common-kodeverk.version>1.1.2</common-kodeverk.version>
         <aktorid-jaxws.version>1.3</aktorid-jaxws.version>
 
-        <!-- Modia-komponenter-->
-        <kjerneinfo.versjon>dev</kjerneinfo.versjon>
-
         <!-- Tjenestespecs -->
         <soknader.liste.version>2.0.12</soknader.liste.version>
         <gsak.oppgave.tjenestespesifikasjon>1.0.5</gsak.oppgave.tjenestespesifikasjon>
@@ -145,7 +142,7 @@
             <dependency>
                 <groupId>no.nav.sbl.dialogarena</groupId>
                 <artifactId>kontrakter-domain</artifactId>
-                <version>${kjerneinfo.versjon}</version>
+                <version>${project.version}</version>
                 <exclusions>
                     <exclusion>
                         <groupId>xml-apis</groupId>
@@ -156,7 +153,7 @@
             <dependency>
                 <groupId>no.nav.sbl.dialogarena</groupId>
                 <artifactId>kontrakter-consumer</artifactId>
-                <version>${kjerneinfo.versjon}</version>
+                <version>${project.version}</version>
                 <exclusions>
                     <exclusion>
                         <groupId>xml-apis</groupId>
@@ -167,19 +164,19 @@
             <dependency>
                 <groupId>no.nav.sbl.dialogarena</groupId>
                 <artifactId>personsok-consumer</artifactId>
-                <version>${kjerneinfo.versjon}</version>
+                <version>${project.version}</version>
             </dependency>
 
             <!--Kjerneinfo-->
             <dependency>
                 <groupId>no.nav.sbl.dialogarena</groupId>
                 <artifactId>kjerneinfo-common</artifactId>
-                <version>${kjerneinfo.versjon}</version>
+                <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>no.nav.sbl.dialogarena</groupId>
                 <artifactId>kjerneinfo-consumer</artifactId>
-                <version>${kjerneinfo.versjon}</version>
+                <version>${project.version}</version>
                 <exclusions>
                     <exclusion>
                         <groupId>commons-logging</groupId>
@@ -194,7 +191,7 @@
             <dependency>
                 <groupId>no.nav.sbl.dialogarena</groupId>
                 <artifactId>kjerneinfo-domain</artifactId>
-                <version>${kjerneinfo.versjon}</version>
+                <version>${project.version}</version>
                 <exclusions>
                     <exclusion>
                         <groupId>commons-logging</groupId>
@@ -211,7 +208,7 @@
             <dependency>
                 <groupId>no.nav.sbl.dialogarena</groupId>
                 <artifactId>sykmeldingsperioder-consumer</artifactId>
-                <version>${kjerneinfo.versjon}</version>
+                <version>${project.version}</version>
                 <exclusions>
                     <exclusion>
                         <groupId>xml-apis</groupId>
@@ -224,7 +221,7 @@
             <dependency>
                 <groupId>no.nav.sbl.dialogarena</groupId>
                 <artifactId>brukerprofil-domain</artifactId>
-                <version>${kjerneinfo.versjon}</version>
+                <version>${project.version}</version>
                 <exclusions>
                     <exclusion>
                         <groupId>xml-apis</groupId>
@@ -235,7 +232,7 @@
             <dependency>
                 <groupId>no.nav.sbl.dialogarena</groupId>
                 <artifactId>behandlebrukerprofil-consumer</artifactId>
-                <version>${kjerneinfo.versjon}</version>
+                <version>${project.version}</version>
                 <exclusions>
                     <exclusion>
                         <groupId>xml-apis</groupId>
@@ -246,7 +243,7 @@
             <dependency>
                 <groupId>no.nav.sbl.dialogarena</groupId>
                 <artifactId>dkif-consumer</artifactId>
-                <version>${kjerneinfo.versjon}</version>
+                <version>${project.version}</version>
                 <exclusions>
                     <exclusion>
                         <groupId>xml-apis</groupId>
@@ -259,7 +256,7 @@
             <dependency>
                 <groupId>no.nav.sbl.dialogarena</groupId>
                 <artifactId>kodeverk-consumer</artifactId>
-                <version>${kjerneinfo.versjon}</version>
+                <version>${project.version}</version>
                 <exclusions>
                     <exclusion>
                         <groupId>xml-apis</groupId>
