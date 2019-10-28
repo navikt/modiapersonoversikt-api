@@ -14,9 +14,6 @@ import org.springframework.context.annotation.Configuration;
 
 import javax.inject.Inject;
 
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.artifact.kjerneinfo.component.mockable.MockableContext.KJERNEINFO_KEY;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.MockUtil.mockErTillattOgSlaattPaaForKey;
-
 @Configuration
 public class KontrakterConsumerConfigResolver {
 
@@ -37,9 +34,6 @@ public class KontrakterConsumerConfigResolver {
         return new YtelseskontraktServiceBi() {
             @Override
             public YtelseskontraktResponse hentYtelseskontrakter(YtelseskontraktRequest request) {
-                if (mockErTillattOgSlaattPaaForKey(KJERNEINFO_KEY)) {
-                    return ytelseskontraktMock.wrappedObject.hentYtelseskontrakter(request);
-                }
                 return ytelseskontraktService.wrappedObject.hentYtelseskontrakter(request);
             }
 
@@ -51,9 +45,6 @@ public class KontrakterConsumerConfigResolver {
         return new OppfolgingskontraktServiceBi() {
             @Override
             public OppfolgingskontraktResponse hentOppfolgingskontrakter(OppfolgingskontraktRequest request) {
-                if (mockErTillattOgSlaattPaaForKey(KJERNEINFO_KEY)) {
-                    return oppfolgingskontraktMock.wrappedObject.hentOppfolgingskontrakter(request);
-                }
                 return oppfolgingskontraktService.wrappedObject.hentOppfolgingskontrakter(request);
             }
         };

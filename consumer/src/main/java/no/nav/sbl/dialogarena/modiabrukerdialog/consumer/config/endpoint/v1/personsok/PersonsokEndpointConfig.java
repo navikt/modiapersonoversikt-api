@@ -3,26 +3,20 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v1.per
 import no.nav.modig.modia.ping.Pingable;
 import no.nav.modig.modia.ping.PingableWebService;
 import no.nav.sbl.dialogarena.common.cxf.CXFClient;
-import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.PersonsokPortTypeMock;
 import no.nav.tjeneste.virksomhet.personsoek.v1.PersonsokPortType;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import javax.xml.namespace.QName;
-
-import static no.nav.sbl.dialogarena.common.cxf.InstanceSwitcher.createMetricsProxyWithInstanceSwitcher;
+import static no.nav.metrics.MetricsFactory.createTimerProxyForWebService;
 
 @Configuration
 public class PersonsokEndpointConfig {
 
-    public static final String PERSONSOK_KEY = "start.personsok.withmock";
-
     @Bean
     public PersonsokPortType personsokPortType() {
         final PersonsokPortType prod = createPersonsokPortType().configureStsForSubject().build();
-        final PersonsokPortType mock = PersonsokPortTypeMock.createPersonsokMock();
 
-        return createMetricsProxyWithInstanceSwitcher("PersonsokV1", prod, mock, PERSONSOK_KEY, PersonsokPortType.class);
+        return createTimerProxyForWebService("PersonsokV1", prod, PersonsokPortType.class);
     }
 
     @Bean

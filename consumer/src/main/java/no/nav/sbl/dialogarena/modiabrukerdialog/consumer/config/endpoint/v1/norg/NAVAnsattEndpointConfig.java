@@ -17,9 +17,9 @@ import javax.xml.namespace.QName;
 import java.lang.reflect.Proxy;
 import java.util.function.Supplier;
 
+import static no.nav.metrics.MetricsFactory.createTimerProxyForWebService;
 import static no.nav.sbl.dialogarena.common.cxf.InstanceSwitcher.createMetricsProxyWithInstanceSwitcher;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.Utils.withProperty;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v1.norg.NorgEndpointFelles.NORG_KEY;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v1.norg.NorgEndpointFelles.getSecurityProps;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.GosysNavAnsattPortTypeMock.createGosysNavAnsattPortTypeMock;
 
@@ -31,9 +31,8 @@ public class NAVAnsattEndpointConfig {
     @Bean
     public GOSYSNAVansatt gosysNavAnsatt() {
         GOSYSNAVansatt prod = createGosysNavAnsattPortType();
-        GOSYSNAVansatt mock = createGosysNavAnsattPortTypeMock();
 
-        return createMetricsProxyWithInstanceSwitcher("NorgAnsatt", prod, mock, NORG_KEY, GOSYSNAVansatt.class);
+        return createTimerProxyForWebService("NorgAnsatt", prod, GOSYSNAVansatt.class);
     }
 
     private static GOSYSNAVansatt createGosysNavAnsattPortType() {

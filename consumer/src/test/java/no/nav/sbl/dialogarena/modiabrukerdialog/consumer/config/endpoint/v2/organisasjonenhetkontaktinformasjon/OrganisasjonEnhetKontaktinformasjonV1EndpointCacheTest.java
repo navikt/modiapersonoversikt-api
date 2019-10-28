@@ -6,7 +6,6 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.util.Ca
 import no.nav.tjeneste.virksomhet.organisasjonenhetkontaktinformasjon.v1.binding.HentKontaktinformasjonForEnhetBolkUgyldigInput;
 import no.nav.tjeneste.virksomhet.organisasjonenhetkontaktinformasjon.v1.binding.OrganisasjonEnhetKontaktinformasjonV1;
 import no.nav.tjeneste.virksomhet.organisasjonenhetkontaktinformasjon.v1.meldinger.HentKontaktinformasjonForEnhetBolkRequest;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.test.context.ContextConfiguration;
@@ -14,7 +13,6 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import javax.inject.Inject;
 
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.MockUtil.TILLATMOCKSETUP_PROPERTY;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNull.notNullValue;
@@ -36,17 +34,12 @@ public class OrganisasjonEnhetKontaktinformasjonV1EndpointCacheTest extends Cach
         super(CACHE_NAME);
     }
 
-    @BeforeAll
-    public static void beforeClass() {
-        System.setProperty(TILLATMOCKSETUP_PROPERTY, "true");
-    }
-
     @Test
     public void cacheEksisterer() {
         Cache organisasjonEnhetKontantinformasjonCache = getCache().getCacheManager().getCache(CACHE_NAME);
         assertThat(organisasjonEnhetKontantinformasjonCache, is(notNullValue()));
     }
-    
+
     @Test
     public void gjorIkkeSammeOppslagToGangerPaRad() throws HentKontaktinformasjonForEnhetBolkUgyldigInput {
         organisasjonEnhetKontaktinformasjonV1.hentKontaktinformasjonForEnhetBolk(lagRequest(ENHET_ID));

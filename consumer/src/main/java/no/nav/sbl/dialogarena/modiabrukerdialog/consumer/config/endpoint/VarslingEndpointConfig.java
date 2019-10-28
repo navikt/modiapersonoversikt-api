@@ -3,24 +3,19 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint;
 import no.nav.modig.modia.ping.Pingable;
 import no.nav.modig.modia.ping.PingableWebService;
 import no.nav.sbl.dialogarena.common.cxf.CXFClient;
-import no.nav.sbl.dialogarena.varsel.config.HentBrukerVarselMock;
 import no.nav.tjeneste.virksomhet.brukervarsel.v1.BrukervarselV1;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import static no.nav.sbl.dialogarena.common.cxf.InstanceSwitcher.createMetricsProxyWithInstanceSwitcher;
+import static no.nav.metrics.MetricsFactory.createTimerProxyForWebService;
 
 @Configuration
 public class VarslingEndpointConfig {
 
-    public static final String VARSLING_KEY = "start.varsling.withmock";
-
     @Bean
     public BrukervarselV1 varslerPortType() {
         final BrukervarselV1 prod = createVarslingPortType().configureStsForSubject().build();
-        final BrukervarselV1 mock = new HentBrukerVarselMock();
-
-        return createMetricsProxyWithInstanceSwitcher("Varsler", prod, mock, VARSLING_KEY, BrukervarselV1.class);
+        return createTimerProxyForWebService("Varsler", prod, BrukervarselV1.class);
     }
 
     @Bean

@@ -7,9 +7,6 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import static java.lang.System.getProperties;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.MockUtil.DEFAULT_MOCK_TILLATT;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.MockUtil.TILLATMOCKSETUP_PROPERTY;
 import static no.nav.sbl.dialogarena.test.SystemProperties.setFrom;
 import static no.nav.sbl.dialogarena.test.ssl.SSLTestUtils.setupKeyAndTrustStore;
 import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER_CLASS;
@@ -22,7 +19,6 @@ public class ApplicationContextTest {
     @BeforeClass
     public static void setupStatic() {
         setFrom("jetty-environment.properties");
-        getProperties().setProperty(TILLATMOCKSETUP_PROPERTY, DEFAULT_MOCK_TILLATT);
         setupKeyAndTrustStore();
     }
 

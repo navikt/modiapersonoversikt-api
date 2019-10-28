@@ -30,7 +30,4 @@ import org.springframework.context.annotation.Import;
         EgenAnsattWrapper.class
 })
 public class MockableContext {
-
-    public static final String KJERNEINFO_KEY = "start.kjerneinfo.withmock";
-
 }

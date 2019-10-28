@@ -11,7 +11,6 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.AnsattService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.UnleashContextProviderImpl;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.UnleashService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.UnleashServiceImpl;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.UnleashServiceMock;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.strategier.ByEnhetStrategy;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.strategier.ByEnvironmentStrategy;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.strategier.IsNotProdStrategy;
@@ -23,22 +22,17 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static no.nav.sbl.dialogarena.common.cxf.InstanceSwitcher.createMetricsProxyWithInstanceSwitcher;
+import static no.nav.metrics.MetricsFactory.createTimerProxyForWebService;
 
 @Configuration
 public class UnleashEndpointConfig {
-    private static final String MOCK_KEY = "unleash.withmock";
     String api = System.getProperty("unleash.url");
 
     @Bean
     @Inject
     public UnleashService unleashService(ToggleFetcher toggleFetcher, Unleash defaultUnleash) {
-        return createMetricsProxyWithInstanceSwitcher(
-                "unleash",
-                new UnleashServiceImpl(toggleFetcher, defaultUnleash, api),
-                new UnleashServiceMock(),
-                MOCK_KEY,
-                UnleashService.class);
+        UnleashServiceImpl unleashService = new UnleashServiceImpl(toggleFetcher, defaultUnleash, api);
+        return createTimerProxyForWebService("unleash", unleashService, UnleashService.class);
     }
 
     @Bean

@@ -8,20 +8,17 @@ import no.nav.tjeneste.virksomhet.arbeidsfordeling.v1.ArbeidsfordelingV1;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import static no.nav.metrics.MetricsFactory.createTimerProxyForWebService;
 import static no.nav.sbl.dialogarena.common.cxf.InstanceSwitcher.createMetricsProxyWithInstanceSwitcher;
 
 @Configuration
 public class ArbeidsfordelingV1EndpointConfig {
 
-    public static final String NORG2_ARBEIDSFORDELING_V1_KEY = "start.arbeidsfordeling.v1.withmock";
-
     @Bean
     public ArbeidsfordelingV1 arbeidsfordelingV1() {
         final ArbeidsfordelingV1 arbeidsfordelingV1 = lagEndpoint();
-        final ArbeidsfordelingV1 arbeidsfordelingV1Mock = lagMockEnpoint();
 
-        return createMetricsProxyWithInstanceSwitcher("arbeidsfordelingV1", arbeidsfordelingV1,
-                arbeidsfordelingV1Mock, NORG2_ARBEIDSFORDELING_V1_KEY, ArbeidsfordelingV1.class);
+        return createTimerProxyForWebService("arbeidsfordelingV1", arbeidsfordelingV1, ArbeidsfordelingV1.class);
     }
 
     @Bean

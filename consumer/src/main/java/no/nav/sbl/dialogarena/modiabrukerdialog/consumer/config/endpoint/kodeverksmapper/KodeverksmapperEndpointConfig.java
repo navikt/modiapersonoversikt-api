@@ -10,20 +10,16 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import static no.nav.metrics.MetricsFactory.createTimerProxyForWebService;
 import static no.nav.sbl.dialogarena.common.cxf.InstanceSwitcher.createMetricsProxyWithInstanceSwitcher;
 
 @Configuration
 public class KodeverksmapperEndpointConfig {
 
-    public static final String KODEVERKSMAPPER_KEY = "start.kodeverksmapper.withmock";
-
     @Bean
     public Kodeverksmapper kodeverksmapper() {
         final Kodeverksmapper kodeverksmapper = lagEndpoint();
-        final Kodeverksmapper kodeverksmapperMock = lagMockEnpoint();
-
-        return createMetricsProxyWithInstanceSwitcher("kodeverksmapper", kodeverksmapper,
-                kodeverksmapperMock, KODEVERKSMAPPER_KEY, Kodeverksmapper.class);
+        return createTimerProxyForWebService("kodeverksmapper", kodeverksmapper, Kodeverksmapper.class);
     }
 
     @Bean

@@ -8,7 +8,6 @@ import no.nav.tjeneste.virksomhet.oppfoelging.v1.meldinger.WSHentOppfoelgingskon
 import no.nav.tjeneste.virksomhet.oppfoelging.v1.meldinger.WSHentOppfoelgingskontraktListeResponse;
 import no.nav.tjeneste.virksomhet.oppfoelging.v1.meldinger.WSHentOppfoelgingsstatusRequest;
 import no.nav.tjeneste.virksomhet.oppfoelging.v1.meldinger.WSHentOppfoelgingsstatusResponse;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -17,9 +16,6 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import javax.inject.Inject;
 
-import static java.lang.System.setProperty;
-import static no.nav.kontrakter.consumer.fim.config.OppfolgingskontraktConsumerConfig.MOCK_KEY;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.MockUtil.TILLATMOCKSETUP_PROPERTY;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertThat;
@@ -42,12 +38,6 @@ public class OppfoelgingCacheTest extends CacheTest {
 
     @Inject
     private OppfoelgingPortType oppfolgingPortType;
-
-    @BeforeAll
-    public static void setUp() {
-        setProperty(MOCK_KEY, "true");
-        setProperty(TILLATMOCKSETUP_PROPERTY, "true");
-    }
 
     @BeforeEach
     public void setUpMock() throws Exception {

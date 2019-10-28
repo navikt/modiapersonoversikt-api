@@ -8,20 +8,16 @@ import no.nav.tjeneste.virksomhet.organisasjonenhet.v2.binding.OrganisasjonEnhet
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import static no.nav.sbl.dialogarena.common.cxf.InstanceSwitcher.createMetricsProxyWithInstanceSwitcher;
+import static no.nav.metrics.MetricsFactory.createTimerProxyForWebService;
 
 @Configuration
 public class OrganisasjonEnhetV2EndpointConfig {
 
-    public static final String NORG2_ORGANISASJON_ENHET_V2_KEY = "start.organisasjonenhet.v2.withmock";
-
     @Bean
     public OrganisasjonEnhetV2 organisasjonEnhetV2() {
         final OrganisasjonEnhetV2 organisasjonEnhetV2 = lagEndpoint().configureStsForSystemUser().build();
-        final OrganisasjonEnhetV2 organisasjonEnhetV2Mock = lagMockEnpoint();
 
-        return createMetricsProxyWithInstanceSwitcher("organisasjonEnhetV2", organisasjonEnhetV2,
-                organisasjonEnhetV2Mock, NORG2_ORGANISASJON_ENHET_V2_KEY, OrganisasjonEnhetV2.class);
+        return createTimerProxyForWebService("organisasjonEnhetV2", organisasjonEnhetV2, OrganisasjonEnhetV2.class);
     }
 
     @Bean

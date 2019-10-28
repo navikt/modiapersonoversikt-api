@@ -67,10 +67,6 @@ public class DokumentController {
     public Response hentDokument(@PathParam("fnr") String fnr, @PathParam("journalpostId") String journalpostId,
                                  @PathParam("dokumentreferanse") String dokumentreferanse,
                                  @Context HttpServletRequest request) throws IOException {
-        if (getProperty("dokumentressurs.withmock", "false").equalsIgnoreCase("true")) {
-            return mockDokumentResponse();
-        }
-
         if ("null".equals(journalpostId)) {
             return status(NOT_FOUND).build();
         }
@@ -92,10 +88,6 @@ public class DokumentController {
     @Path("/journalpostmetadata/{journalpostId}")
     public Response hentJournalpostMetadata(@PathParam("fnr") String fnr, @PathParam("journalpostId") String journalpostId,
                                             @QueryParam("temakode") String temakode, @Context HttpServletRequest request) {
-        if (getProperty("dokumentressurs.withmock", "false").equalsIgnoreCase("true")) {
-            return ok(mockJournalpost().withDokumentFeilmelding(blurretDokumentReferanseResponse(DOKUMENT_IKKE_FUNNET, "Dokument 1"))).build();
-        }
-
         if ("null".equals(journalpostId)) {
             return ok(new JournalpostResultat().withDokumentFeilmelding(blurretDokumentReferanseResponse(MANGLER_DOKUMENTMETADATA, ""))).build();
         }

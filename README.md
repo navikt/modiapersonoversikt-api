@@ -71,9 +71,6 @@ I IntelliJ gjøres dette i ved å klikke "Edit Configurations" i nedtrekksmenyen
 - Opprett en run configuration for klassen StartJetty
 - Endre working directory til $MODULE_DIR$
 
-### Konfigurering av mockdata
-http://localhost:8083/modiabrukerdialog/internal/mocksetup
-
 ### Testbrukere og IDA
 
 Lokalt trenger man ikke å logge inn med noen brukere, blankt brukernavn og passord holder. 

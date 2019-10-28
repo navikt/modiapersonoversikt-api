@@ -4,19 +4,16 @@ import no.nav.modig.jaxws.handlers.MDCOutHandler;
 import no.nav.modig.modia.ping.Pingable;
 import no.nav.modig.modia.ping.PingableWebService;
 import no.nav.sbl.dialogarena.common.cxf.CXFClient;
-import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.AktoerPortTypeMock;
 import no.nav.tjeneste.virksomhet.aktoer.v1.AktoerPortType;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import static no.nav.sbl.dialogarena.common.cxf.InstanceSwitcher.createMetricsProxyWithInstanceSwitcher;
+import static no.nav.metrics.MetricsFactory.createTimerProxyForWebService;
 
 
 @Configuration
 public class AktorEndpointConfig {
-
-    public static final String AKTOER_KEY = "start.aktoer.withmock";
 
     @Value("${aktorid.ws.url}")
     private String aktoerUrl;
@@ -33,10 +30,9 @@ public class AktorEndpointConfig {
 
     @Bean
     public AktoerPortType aktoerPortType() {
-        final AktoerPortType mock = new AktoerPortTypeMock().getAktoerPortTypeMock();
         final AktoerPortType prod = aktoerPort();
 
-        return createMetricsProxyWithInstanceSwitcher("Aktoer", prod, mock, AKTOER_KEY, AktoerPortType.class);
+        return createTimerProxyForWebService("Aktoer", prod, AktoerPortType.class);
     }
 
 

@@ -8,19 +8,17 @@ import no.nav.tjeneste.virksomhet.sakogbehandling.v1.SakOgBehandling_v1PortType;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import static no.nav.sbl.dialogarena.common.cxf.InstanceSwitcher.createMetricsProxyWithInstanceSwitcher;
+import static no.nav.metrics.MetricsFactory.createTimerProxyForWebService;
 
 @Configuration
 public class SakOgBehandlingEndpointConfig {
-
-    public static final String SAKOGBEHANDLING_KEY = "start.sakogbehandling.withmock";
 
     @Bean
     public SakOgBehandling_v1PortType sakOgBehandlingPortType() {
         final SakOgBehandling_v1PortType prod = createSakogbehandlingPortType().configureStsForSubject().build();
         final SakOgBehandling_v1PortType mock = new SakOgBehandlingPortTypeMock().getSakOgBehandlingPortTypeMock();
 
-        return createMetricsProxyWithInstanceSwitcher("SakOgBehandling", prod, mock, SAKOGBEHANDLING_KEY, SakOgBehandling_v1PortType.class);
+        return createTimerProxyForWebService("SakOgBehandling", prod, SakOgBehandling_v1PortType.class);
     }
 
     @Bean

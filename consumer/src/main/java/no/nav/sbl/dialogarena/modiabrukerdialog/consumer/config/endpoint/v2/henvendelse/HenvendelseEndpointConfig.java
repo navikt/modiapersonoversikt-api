@@ -11,20 +11,17 @@ import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.henvendelse.Henvendels
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import static no.nav.metrics.MetricsFactory.createTimerProxyForWebService;
 import static no.nav.sbl.dialogarena.common.cxf.InstanceSwitcher.createMetricsProxyWithInstanceSwitcher;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.HenvendelsePortTypeMock.createHenvendelsePortTypeMock;
 
 @Configuration
 public class HenvendelseEndpointConfig {
 
-    public static final String HENVENDELSE_KEY = "start.henvendelse.withmock";
-
     @Bean
     public HenvendelsePortType henvendelsePortType() {
         HenvendelsePortType prod = createHenvendelsePortType().configureStsForSubject().build();
-        HenvendelsePortType mock = createHenvendelsePortTypeMock();
-
-        return createMetricsProxyWithInstanceSwitcher("henvendelseV2", prod, mock, HENVENDELSE_KEY, HenvendelsePortType.class);
+        return createTimerProxyForWebService("henvendelseV2", prod, HenvendelsePortType.class);
     }
 
     @Bean

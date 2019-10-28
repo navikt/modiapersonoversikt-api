@@ -7,20 +7,16 @@ import no.nav.tjeneste.virksomhet.oppgave.v3.OppgaveV3;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import static no.nav.sbl.dialogarena.common.cxf.InstanceSwitcher.createMetricsProxyWithInstanceSwitcher;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.GsakOppgaveV3PortTypeMock.createOppgavePortTypeMock;
+import static no.nav.metrics.MetricsFactory.createTimerProxyForWebService;
 
 @Configuration
 public class GsakOppgaveV3EndpointConfig {
 
-    public static final String GSAK_V3_KEY = "start.gsak.oppgave.withmock";
-
     @Bean
     public OppgaveV3 gsakOppgavePortType() {
         OppgaveV3 prod = createOppgavePortType().configureStsForSubject().build();
-        OppgaveV3 mock = createOppgavePortTypeMock();
 
-        return createMetricsProxyWithInstanceSwitcher("OppgaveV3", prod, mock, GSAK_V3_KEY, OppgaveV3.class);
+        return createTimerProxyForWebService("OppgaveV3", prod, OppgaveV3.class);
     }
 
     @Bean

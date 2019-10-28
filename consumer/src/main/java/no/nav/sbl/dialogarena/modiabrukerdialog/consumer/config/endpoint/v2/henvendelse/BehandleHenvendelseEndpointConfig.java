@@ -8,9 +8,7 @@ import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.behandlehenvendelse.Be
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import static no.nav.sbl.dialogarena.common.cxf.InstanceSwitcher.createMetricsProxyWithInstanceSwitcher;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v2.henvendelse.HenvendelseEndpointConfig.HENVENDELSE_KEY;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.BehandleHenvendelsePortTypeMock.createBehandleHenvendelsePortTypeMock;
+import static no.nav.metrics.MetricsFactory.createTimerProxyForWebService;
 
 @Configuration
 public class BehandleHenvendelseEndpointConfig {
@@ -18,9 +16,8 @@ public class BehandleHenvendelseEndpointConfig {
     @Bean
     public BehandleHenvendelsePortType behandleHenvendelsePortType() {
         final BehandleHenvendelsePortType prod = createBehandleHenvendelsePortType().configureStsForSubject().build();
-        final BehandleHenvendelsePortType mock = createBehandleHenvendelsePortTypeMock();
 
-        return createMetricsProxyWithInstanceSwitcher("BehandleHenvendelse", prod, mock, HENVENDELSE_KEY, BehandleHenvendelsePortType.class);
+        return createTimerProxyForWebService("BehandleHenvendelse", prod, BehandleHenvendelsePortType.class);
     }
 
     @Bean
