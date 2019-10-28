@@ -198,9 +198,9 @@ class Policies {
 }
 
 data class TilgangTilKontorSperreData(val valgtEnhet: String, val ansvarligEnhet: String?)
-data class TilgangTilOksosSperreData(val valgtEnhet: String, val brukersEnhet: String)
+data class TilgangTilOksosSperreData(val valgtEnhet: String, val brukersEnhet: String?)
 data class BehandlingsIdTilgangData(val fnr: String, val behandlingsIder: List<String>)
-data class TilgangTilTemaData(val valgtEnhet: String, val tema: String)
+data class TilgangTilTemaData(val valgtEnhet: String, val tema: String?)
 
 val log = LoggerFactory.getLogger(Tilgangskontroll::class.java)
 
