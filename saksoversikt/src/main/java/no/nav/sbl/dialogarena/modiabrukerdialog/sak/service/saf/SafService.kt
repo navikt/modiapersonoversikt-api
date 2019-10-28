@@ -12,7 +12,6 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.resultatwrapp
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.resultatwrappere.TjenesteResultatWrapper
 import no.nav.sbl.rest.RestUtils
 import org.slf4j.LoggerFactory
-import java.lang.IllegalStateException
 import javax.ws.rs.client.Client
 import javax.ws.rs.client.Entity
 import javax.ws.rs.client.Invocation

@@ -4,6 +4,7 @@ import no.nav.tjeneste.virksomhet.journal.v2.*;
 import no.nav.tjeneste.virksomhet.journal.v2.informasjon.*;
 import no.nav.tjeneste.virksomhet.journal.v2.meldinger.*;
 import org.joda.time.DateTime;
+
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
 import java.util.*;

@@ -5,16 +5,7 @@ import no.nav.personsok.consumer.fim.personsok.mock.GateadresseMock;
 import no.nav.personsok.consumer.fim.personsok.mock.PersonMock;
 import no.nav.personsok.consumer.fim.personsok.mock.PersonMockFactory;
 import no.nav.personsok.consumer.fim.personsok.mock.UstrukturertadresseMock;
-import no.nav.tjeneste.virksomhet.personsoek.v1.informasjon.FimBostedsadresse;
-import no.nav.tjeneste.virksomhet.personsoek.v1.informasjon.FimBruker;
-import no.nav.tjeneste.virksomhet.personsoek.v1.informasjon.FimGateadresse;
-import no.nav.tjeneste.virksomhet.personsoek.v1.informasjon.FimMidlertidigPostadresse;
-import no.nav.tjeneste.virksomhet.personsoek.v1.informasjon.FimMidlertidigPostadresseUtland;
-import no.nav.tjeneste.virksomhet.personsoek.v1.informasjon.FimNorskIdent;
-import no.nav.tjeneste.virksomhet.personsoek.v1.informasjon.FimPerson;
-import no.nav.tjeneste.virksomhet.personsoek.v1.informasjon.FimPostadresse;
-import no.nav.tjeneste.virksomhet.personsoek.v1.informasjon.FimStrukturertAdresse;
-import no.nav.tjeneste.virksomhet.personsoek.v1.informasjon.FimUstrukturertAdresse;
+import no.nav.tjeneste.virksomhet.personsoek.v1.informasjon.*;
 import org.junit.Test;
 
 import java.math.BigInteger;

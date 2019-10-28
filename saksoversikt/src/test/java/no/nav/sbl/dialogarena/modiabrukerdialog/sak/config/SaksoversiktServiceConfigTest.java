@@ -1,9 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.sak.config;
 
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.mock.KodeverkMock;
-import no.nav.sbl.util.EnvironmentUtils;
-import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;

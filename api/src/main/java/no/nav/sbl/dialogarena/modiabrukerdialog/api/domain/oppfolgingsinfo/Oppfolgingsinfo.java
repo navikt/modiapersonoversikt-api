@@ -2,8 +2,6 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.oppfolgingsinfo;
 
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Saksbehandler;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.AnsattEnhet;
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Saksbehandler;
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.AnsattEnhet;
 
 import java.util.Optional;
 

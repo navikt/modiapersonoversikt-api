@@ -5,7 +5,6 @@ import java.util.List;
 
 import static java.util.Arrays.asList;
 import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.*;
-import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.DELVIS_SVAR_SKRIFTLIG;
 
 public class HenvendelseUtils {
     public static List<String> AKTUELLE_HENVENDELSE_TYPER = new ArrayList<>(asList(

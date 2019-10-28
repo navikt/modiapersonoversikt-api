@@ -1,6 +1,9 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.kodeverksmapper;
 
-import no.nav.modig.modia.ping.*;
+import no.nav.modig.modia.ping.FailedPingResult;
+import no.nav.modig.modia.ping.OkPingResult;
+import no.nav.modig.modia.ping.PingResult;
+import no.nav.modig.modia.ping.Pingable;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.kodeverksmapper.domain.Behandling;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.Timer;
 import org.springframework.context.annotation.Bean;
@@ -11,7 +14,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static no.nav.metrics.MetricsFactory.createTimerProxyForWebService;
-import static no.nav.sbl.dialogarena.common.cxf.InstanceSwitcher.createMetricsProxyWithInstanceSwitcher;
 
 @Configuration
 public class KodeverksmapperEndpointConfig {

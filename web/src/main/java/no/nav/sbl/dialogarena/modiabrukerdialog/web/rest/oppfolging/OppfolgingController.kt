@@ -12,10 +12,10 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Saksbehandler
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.AnsattEnhet
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.ldap.LDAPService
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.oppfolgingsinfo.OppfolgingsinfoApiService
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.DATOFORMAT
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.lagRiktigDato
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Policies
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Tilgangskontroll
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.DATOFORMAT
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.lagRiktigDato
 import org.slf4j.LoggerFactory
 import java.util.*
 import javax.inject.Inject

@@ -5,9 +5,7 @@ import no.nav.modig.core.exception.ApplicationException
 import org.joda.time.IllegalFieldValueException
 import org.joda.time.LocalDate
 import org.joda.time.format.DateTimeFormat
-import java.text.SimpleDateFormat
 import java.time.format.DateTimeFormatter
-import java.util.*
 import javax.xml.datatype.DatatypeFactory
 import javax.xml.datatype.XMLGregorianCalendar
 

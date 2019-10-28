@@ -2,8 +2,8 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.sak.service;
 
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.Behandling;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.Behandlingskjede;
-import no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.filter.Filter;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.FeilendeBaksystemException;
+import no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.filter.Filter;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.SakOgBehandling_v1PortType;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.WSBehandlingskjede;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.WSSak;

@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.stream.Collector;
 
 import static java.util.stream.Collectors.summingDouble;
-import static java.util.stream.Collectors.toList;
 
 public class Hovedutbetaling implements Serializable {
 

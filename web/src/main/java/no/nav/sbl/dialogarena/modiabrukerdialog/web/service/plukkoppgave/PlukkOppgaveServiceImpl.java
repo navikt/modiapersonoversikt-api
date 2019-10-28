@@ -1,11 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.service.plukkoppgave;
 
 import no.nav.kjerneinfo.consumer.fim.person.PersonKjerneinfoServiceBi;
-import no.nav.kjerneinfo.consumer.fim.person.to.HentKjerneinformasjonRequest;
-import no.nav.kjerneinfo.domain.person.Personfakta;
-import no.nav.kjerneinfo.domain.person.fakta.AnsvarligEnhet;
-import no.nav.kjerneinfo.domain.person.fakta.Organisasjonsenhet;
-import no.nav.modig.core.exception.AuthorizationException;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Oppgave;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveBehandlingService;

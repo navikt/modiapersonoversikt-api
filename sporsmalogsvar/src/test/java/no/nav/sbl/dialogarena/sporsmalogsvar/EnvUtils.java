@@ -1,6 +1,5 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar;
 
-import no.nav.brukerdialog.security.domain.IdentType;
 import no.nav.brukerdialog.tools.SecurityConstants;
 
 import java.util.HashMap;

@@ -1,7 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.api.service.arbeidsfordeling;
 
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.AnsattEnhet;
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.AnsattEnhet;
 
 import java.util.List;
 

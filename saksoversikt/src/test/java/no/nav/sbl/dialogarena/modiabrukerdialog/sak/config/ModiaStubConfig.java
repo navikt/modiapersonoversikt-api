@@ -1,7 +1,7 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.sak.config;
 
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.AnsattService;
 import no.nav.sbl.dialogarena.common.kodeverk.KodeverkClient;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.AnsattService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.GsakSakerService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.HenvendelseService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.SakOgBehandlingService;

@@ -5,7 +5,6 @@ import no.nav.common.auth.SsoToken
 import no.nav.common.auth.SubjectHandler
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.HenvendelseLesService
 import no.nav.sbl.rest.RestUtils
-import java.lang.RuntimeException
 
 class HenvendelseLesServiceImpl : HenvendelseLesService {
     private val baseUrl: String = System.getProperty("henvendelse-les.api.url")

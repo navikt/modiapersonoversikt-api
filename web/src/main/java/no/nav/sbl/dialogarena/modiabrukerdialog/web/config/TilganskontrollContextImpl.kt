@@ -13,7 +13,6 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.GrunninfoServic
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.TilgangskontrollContext
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.TilgangskontrollContextUtenTPS
 import org.slf4j.LoggerFactory
-import java.lang.RuntimeException
 import java.util.*
 
 open class TilgangskontrollContextUtenTPSImpl(

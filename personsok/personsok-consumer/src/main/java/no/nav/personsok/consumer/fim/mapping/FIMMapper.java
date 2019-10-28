@@ -7,7 +7,9 @@ import ma.glasnost.orika.metadata.Type;
 import no.nav.personsok.consumer.fim.kodeverk.KodeverkManager;
 import no.nav.personsok.consumer.fim.personsok.to.FinnPersonRequest;
 import no.nav.personsok.consumer.fim.personsok.to.FinnPersonResponse;
-import no.nav.personsok.domain.*;
+import no.nav.personsok.domain.Adresse;
+import no.nav.personsok.domain.Kjonn;
+import no.nav.personsok.domain.Person;
 import no.nav.personsok.domain.enums.AdresseType;
 import no.nav.personsok.domain.enums.Diskresjonskode;
 import no.nav.tjeneste.virksomhet.personsoek.v1.informasjon.*;
@@ -15,9 +17,13 @@ import no.nav.tjeneste.virksomhet.personsoek.v1.meldinger.FimFinnPersonRequest;
 import no.nav.tjeneste.virksomhet.personsoek.v1.meldinger.FimFinnPersonResponse;
 import org.joda.time.LocalDate;
 
-import javax.xml.datatype.*;
+import javax.xml.datatype.DatatypeConfigurationException;
+import javax.xml.datatype.DatatypeFactory;
+import javax.xml.datatype.XMLGregorianCalendar;
 import java.math.BigInteger;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 
 import static org.apache.commons.lang3.StringUtils.*;
 

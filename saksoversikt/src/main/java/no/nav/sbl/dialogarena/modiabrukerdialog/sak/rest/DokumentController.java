@@ -31,17 +31,13 @@ import java.util.function.BiFunction;
 import java.util.stream.Collectors;
 
 import static java.lang.String.format;
-import static java.lang.System.getProperty;
 import static java.util.Collections.emptyList;
 import static java.util.stream.Collectors.toList;
 import static javax.ws.rs.core.Response.Status.FORBIDDEN;
 import static javax.ws.rs.core.Response.Status.NOT_FOUND;
 import static javax.ws.rs.core.Response.ok;
 import static javax.ws.rs.core.Response.status;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.Feilmelding.DOKUMENT_IKKE_FUNNET;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.Feilmelding.MANGLER_DOKUMENTMETADATA;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.sak.rest.mock.DokumentControllerMock.mockDokumentResponse;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.sak.rest.mock.DokumentControllerMock.mockJournalpost;
 
 
 @Path("/saksoversikt/{fnr}")

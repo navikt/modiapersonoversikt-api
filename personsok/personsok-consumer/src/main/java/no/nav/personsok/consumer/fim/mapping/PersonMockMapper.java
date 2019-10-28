@@ -2,23 +2,7 @@ package no.nav.personsok.consumer.fim.mapping;
 
 import no.nav.personsok.consumer.fim.personsok.mock.GateadresseMock;
 import no.nav.personsok.consumer.fim.personsok.mock.PersonMock;
-import no.nav.tjeneste.virksomhet.personsoek.v1.informasjon.FimDiskresjonskoder;
-import no.nav.tjeneste.virksomhet.personsoek.v1.informasjon.FimKjoennstyper;
-import no.nav.tjeneste.virksomhet.personsoek.v1.informasjon.FimMidlertidigPostadresseUtland;
-import no.nav.tjeneste.virksomhet.personsoek.v1.informasjon.FimPerson;
-import no.nav.tjeneste.virksomhet.personsoek.v1.informasjon.FimAnsvarligEnhet;
-import no.nav.tjeneste.virksomhet.personsoek.v1.informasjon.FimBostedsadresse;
-import no.nav.tjeneste.virksomhet.personsoek.v1.informasjon.FimBruker;
-import no.nav.tjeneste.virksomhet.personsoek.v1.informasjon.FimGateadresse;
-import no.nav.tjeneste.virksomhet.personsoek.v1.informasjon.FimKjoenn;
-import no.nav.tjeneste.virksomhet.personsoek.v1.informasjon.FimNorskIdent;
-import no.nav.tjeneste.virksomhet.personsoek.v1.informasjon.FimOrganisasjonsenhet;
-import no.nav.tjeneste.virksomhet.personsoek.v1.informasjon.FimPersonidenter;
-import no.nav.tjeneste.virksomhet.personsoek.v1.informasjon.FimPersonnavn;
-import no.nav.tjeneste.virksomhet.personsoek.v1.informasjon.FimPersonstatus;
-import no.nav.tjeneste.virksomhet.personsoek.v1.informasjon.FimPersonstatuser;
-import no.nav.tjeneste.virksomhet.personsoek.v1.informasjon.FimPostadresse;
-import no.nav.tjeneste.virksomhet.personsoek.v1.informasjon.FimUstrukturertAdresse;
+import no.nav.tjeneste.virksomhet.personsoek.v1.informasjon.*;
 
 import java.math.BigInteger;
 

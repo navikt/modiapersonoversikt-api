@@ -1,10 +1,6 @@
 package no.nav.personsok.domain.personsok;
 
-import no.nav.personsok.domain.Adresse;
-import no.nav.personsok.domain.Kjonn;
-import no.nav.personsok.domain.Kodeverkstype;
-import no.nav.personsok.domain.Person;
-import no.nav.personsok.domain.UtvidetPersonsok;
+import no.nav.personsok.domain.*;
 import no.nav.personsok.domain.enums.AdresseType;
 import no.nav.personsok.domain.enums.Diskresjonskode;
 import no.nav.personsok.domain.enums.PersonstatusType;

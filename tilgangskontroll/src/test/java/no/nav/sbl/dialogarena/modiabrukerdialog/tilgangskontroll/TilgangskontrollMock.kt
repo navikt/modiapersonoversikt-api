@@ -4,7 +4,6 @@ import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.whenever
 import no.nav.sbl.dialogarena.rsbac.*
-import no.nav.sbl.dialogarena.rsbac.Function
 
 
 class RSBACMock<T> : RSBACInstance<T> {

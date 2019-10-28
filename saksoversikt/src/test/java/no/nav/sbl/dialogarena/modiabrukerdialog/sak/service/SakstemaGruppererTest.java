@@ -1,11 +1,11 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.sak.service;
 
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.Baksystem;
+import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.Behandlingskjede;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.DokumentMetadata;
+import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.Sak;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.utils.Konstanter;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.utils.TemagrupperHenter;
-import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.Behandlingskjede;
-import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.Sak;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
