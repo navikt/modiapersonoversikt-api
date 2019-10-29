@@ -69,10 +69,10 @@
         <webservice alias="virksomhet:EgenAnsatt_V1" mapToProperty="egenansatt.v1" />
         <webservice alias="virksomhet:Arbeidsfordeling_v1" mapToProperty="arbeidsfordeling.v1" />
         <webservice alias="Utbetaling_v1" mapToProperty="utbetalingendpoint"/>
-        <soap alias="domene.Brukerdialog:Henvendelse_v2" mapToProperty="henvendelse.v2"/>
-        <soap alias="domene.Brukerdialog:SendUtHenvendelse_v1" mapToProperty="send.ut.henvendelse"/>
-        <soap alias="domene.Brukerdialog:HenvendelseSoknaderService_v1" mapToProperty="henvendelser.ws"/>
-        <soap alias="domene.Brukerdialog:BehandleHenvendelse_v1" mapToProperty="behandle.henvendelse"/>
+        <soap alias="domene.Brukerdialog::Henvendelse_v2" mapToProperty="henvendelse.v2"/>
+        <soap alias="domene.Brukerdialog::SendUtHenvendelse_v1" mapToProperty="send.ut.henvendelse"/>
+        <soap alias="domene.Brukerdialog::HenvendelseSoknaderService_v1" mapToProperty="henvendelser.ws"/>
+        <soap alias="domene.Brukerdialog::BehandleHenvendelse_v1" mapToProperty="behandle.henvendelse"/>
         <webservice alias="BrukervarselV1" mapToProperty="varsler.ws"/>
         <webservice alias="SakOgBehandling" mapToProperty="sakogbehandling.ws"/>
         <webservice alias="pensjon:PensjonSak_v1" mapToProperty="pensjon.sak.v1"/>
