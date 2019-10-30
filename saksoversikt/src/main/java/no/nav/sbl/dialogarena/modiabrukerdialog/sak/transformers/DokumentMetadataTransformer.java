@@ -2,7 +2,6 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.sak.transformers;
 
 import no.nav.sbl.dialogarena.common.kodeverk.Kodeverk;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.*;
-import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.*;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.resultatwrappere.ResultatWrapper;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.BulletproofKodeverkService;
 
@@ -21,7 +20,7 @@ public class DokumentMetadataTransformer {
         this.bulletproofKodeverkService = bulletproofKodeverkService;
     }
 
-    public DokumentMetadata dokumentMetadataFraHenvendelse(Soknad soknad) {
+    public DokumentMetadata dokumentMetadataFraHenvendelseSoknader(Soknad soknad) {
         String temakode = getTemakode(soknad.getSkjemanummerRef());
         ResultatWrapper temanavn = getTemanavn(temakode);
 

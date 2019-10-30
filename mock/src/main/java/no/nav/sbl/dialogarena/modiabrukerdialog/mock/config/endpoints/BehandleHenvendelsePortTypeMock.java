@@ -1,20 +1,18 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints;
 
+import no.nav.common.auth.SubjectHandler;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelse;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLJournalfortInformasjon;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLOppgaveOpprettetInformasjon;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.behandlehenvendelse.BehandleHenvendelsePortType;
-import org.apache.commons.collections15.Predicate;
 import org.joda.time.DateTime;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import javax.xml.datatype.XMLGregorianCalendar;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
-import static no.nav.brukerdialog.security.context.SubjectHandler.getSubjectHandler;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.HenvendelsePortTypeMock.HENVENDELSER;
 
 @Configuration
@@ -40,10 +38,11 @@ public class BehandleHenvendelsePortTypeMock {
 
             @Override
             public void knyttBehandlingskjedeTilSak(String behandlingskjedeId, String saksId, String temakode, String journalforendeEnhet) {
+                String ident = SubjectHandler.getIdent().orElseThrow(() -> new RuntimeException("Ukjent saksbehandler"));
                 for (XMLHenvendelse xmlHenvendelse : hentBehandlingskjede(behandlingskjedeId)) {
                     xmlHenvendelse.setJournalfortInformasjon(new XMLJournalfortInformasjon()
                             .withJournalfortDato(DateTime.now())
-                            .withJournalforerNavIdent(getSubjectHandler().getUid())
+                            .withJournalforerNavIdent(ident)
                             .withJournalfortSaksId(saksId)
                             .withJournalfortTema(temakode));
                 }
@@ -60,9 +59,19 @@ public class BehandleHenvendelsePortTypeMock {
 
             @Override
             public void oppdaterTilKassering(List<String> behandlingsIdListe) {
+                String ident = SubjectHandler.getIdent().orElseThrow(() -> new RuntimeException("Ukjent saksbehandler"));
                 for (String id : behandlingsIdListe) {
                     XMLHenvendelse xmlHenvendelse = hentHenvendelse(id);
-                    xmlHenvendelse.setMarkertSomFeilsendtAv(getSubjectHandler().getUid());
+                    xmlHenvendelse.setMarkertSomFeilsendtAv(ident);
+                }
+            }
+
+            @Override
+            public void markerTraadForHasteKassering(List<String> behandlingsIdListe) {
+                String ident = SubjectHandler.getIdent().orElseThrow(() -> new RuntimeException("Ukjent saksbehandler"));
+                for (String id : behandlingsIdListe) {
+                    XMLHenvendelse xmlHenvendelse = hentHenvendelse(id);
+                    xmlHenvendelse.setMarkertSomFeilsendtAv(ident);
                 }
             }
 

@@ -3,7 +3,8 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.vergemal
 import no.nav.kjerneinfo.consumer.fim.person.vergemal.VergemalService
 import no.nav.kjerneinfo.consumer.fim.person.vergemal.domain.Verge
 import no.nav.kjerneinfo.domain.person.Personnavn
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.UnleashService
+import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Policies
+import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Tilgangskontroll
 import javax.inject.Inject
 import javax.ws.rs.GET
 import javax.ws.rs.Path
@@ -14,16 +15,20 @@ import javax.ws.rs.core.MediaType.APPLICATION_JSON
 
 @Path("/person/{fnr}/vergemal")
 @Produces(APPLICATION_JSON)
-class VergemalController @Inject constructor(private val vergemalService: VergemalService, private val unleashService: UnleashService) {
+class VergemalController @Inject constructor(private val vergemalService: VergemalService, private val tilgangskontroll: Tilgangskontroll) {
 
     @GET
     @Path("/")
-    fun hent(@PathParam("fnr") fødselsnummer: String): Map<String, Any?> {
-        val vergemal = vergemalService.hentVergemal(fødselsnummer)
+    fun hent(@PathParam("fnr") fodselsnummer: String): Map<String, Any?> {
+        return tilgangskontroll
+                .check(Policies.tilgangTilBruker.with(fodselsnummer))
+                .get {
+                    val vergemal = vergemalService.hentVergemal(fodselsnummer)
 
-        return mapOf(
-                "verger" to getVerger(vergemal)
-        )
+                    mapOf(
+                            "verger" to getVerger(vergemal)
+                    )
+                }
     }
 
     private fun getVerger(vergemal: List<Verge>): List<Map<String, Any?>> {

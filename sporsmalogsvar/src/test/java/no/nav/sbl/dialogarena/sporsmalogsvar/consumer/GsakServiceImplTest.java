@@ -2,10 +2,8 @@ package no.nav.sbl.dialogarena.sporsmalogsvar.consumer;
 
 import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navansatt.HentNAVAnsattFaultGOSYSGeneriskfMsg;
 import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navansatt.HentNAVAnsattFaultGOSYSNAVAnsattIkkeFunnetMsg;
-import no.nav.brukerdialog.security.context.StaticSubjectHandler;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.AnsattEnhet;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.AnsattService;
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.NyOppgave;
 import no.nav.tjeneste.virksomhet.oppgave.v3.HentOppgaveOppgaveIkkeFunnet;
 import no.nav.tjeneste.virksomhet.oppgave.v3.OppgaveV3;
@@ -26,7 +24,6 @@ import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
-import static java.lang.System.setProperty;
 import static java.util.Arrays.asList;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.GsakKodeTema.*;
 import static org.hamcrest.Matchers.containsString;
@@ -51,8 +48,6 @@ public class GsakServiceImplTest {
     @Mock
     private OppgavebehandlingV3 oppgavebehandling;
     @Mock
-    private SaksbehandlerInnstillingerService saksbehandlerInnstillingerService;
-    @Mock
     private AnsattService ansattWS;
     @Mock
     private OppgaveV3 oppgaveWS;
@@ -63,9 +58,7 @@ public class GsakServiceImplTest {
     @BeforeEach
     public void setUp() throws HentNAVAnsattFaultGOSYSGeneriskfMsg, HentNAVAnsattFaultGOSYSNAVAnsattIkkeFunnetMsg {
         initMocks(this);
-        when(saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet()).thenReturn(JOURNALFORENDE_ENHET);
-
-        setProperty(StaticSubjectHandler.SUBJECTHANDLER_KEY, StaticSubjectHandler.class.getName());
+//        when(saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet()).thenReturn(JOURNALFORENDE_ENHET);
     }
 
     @Test
@@ -138,7 +131,7 @@ public class GsakServiceImplTest {
         String testBeskrivelse = "Dette er en test beskrivelse";
         WSOppgave wsOppgave = opprettWSOppgave("XXX", "YYY");
         leggTilResterendeOppgaveProperties(wsOppgave);
-        gsakService.ferdigstillGsakOppgave(wsOppgave, testBeskrivelse);
+        gsakService.ferdigstillGsakOppgave(JOURNALFORENDE_ENHET, wsOppgave, testBeskrivelse);
 
         verify(oppgavebehandling).lagreOppgave(wsLagreOppgaveRequestArgumentCaptor.capture());
 
@@ -185,7 +178,7 @@ public class GsakServiceImplTest {
     public void senderKallOmOpprettelseAvOppgaveMedRiktigeFelter() {
         NyOppgave nyOppgave = createNyOppgave();
 
-        gsakService.opprettGsakOppgave(nyOppgave);
+        gsakService.opprettGsakOppgave(JOURNALFORENDE_ENHET, nyOppgave);
 
         verify(oppgavebehandling).opprettOppgave(wsOpprettOppgaveRequestArgumentCaptor.capture());
         WSOpprettOppgaveRequest request = wsOpprettOppgaveRequestArgumentCaptor.getValue();
@@ -207,7 +200,7 @@ public class GsakServiceImplTest {
         NyOppgave nyOppgave = createNyOppgave();
         nyOppgave.underkategori = null;
 
-        gsakService.opprettGsakOppgave(nyOppgave);
+        gsakService.opprettGsakOppgave(JOURNALFORENDE_ENHET, nyOppgave);
 
         verify(oppgavebehandling).opprettOppgave(wsOpprettOppgaveRequestArgumentCaptor.capture());
         WSOpprettOppgaveRequest request = wsOpprettOppgaveRequestArgumentCaptor.getValue();
@@ -241,9 +234,8 @@ public class GsakServiceImplTest {
     public void henterJournalforendeEnhetFraSaksbehandlerInnstillinger() {
         NyOppgave nyOppgave = createNyOppgave();
 
-        gsakService.opprettGsakOppgave(nyOppgave);
+        gsakService.opprettGsakOppgave(JOURNALFORENDE_ENHET, nyOppgave);
 
-        verify(saksbehandlerInnstillingerService).getSaksbehandlerValgtEnhet();
         verify(oppgavebehandling).opprettOppgave(wsOpprettOppgaveRequestArgumentCaptor.capture());
         WSOpprettOppgaveRequest request = wsOpprettOppgaveRequestArgumentCaptor.getValue();
 
@@ -252,10 +244,9 @@ public class GsakServiceImplTest {
 
     @Test
     public void setterDefaultJournalforendeEnhetDersomIntegerParsingFeilerForEnhetId() {
-        when(saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet()).thenReturn("er ikke mulig å parse denne til Integer");
         NyOppgave nyOppgave = createNyOppgave();
 
-        gsakService.opprettGsakOppgave(nyOppgave);
+        gsakService.opprettGsakOppgave("asdaasd", nyOppgave);
 
         verify(oppgavebehandling).opprettOppgave(wsOpprettOppgaveRequestArgumentCaptor.capture());
         WSOpprettOppgaveRequest request = wsOpprettOppgaveRequestArgumentCaptor.getValue();

@@ -1,7 +1,8 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.kontaktinformasjon
 
 import no.nav.dkif.consumer.DkifService
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.UnleashService
+import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Policies
+import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Tilgangskontroll
 import no.nav.tjeneste.virksomhet.digitalkontaktinformasjon.v1.meldinger.WSHentDigitalKontaktinformasjonResponse
 import javax.inject.Inject
 import javax.ws.rs.GET
@@ -12,19 +13,22 @@ import javax.ws.rs.core.MediaType
 
 @Path("/person/{fnr}/kontaktinformasjon")
 @Produces(MediaType.APPLICATION_JSON)
-class KontaktinformasjonController @Inject constructor(private val dkifService: DkifService, private val unleashService: UnleashService) {
+class KontaktinformasjonController @Inject constructor(private val dkifService: DkifService, private val tilgangskontroll: Tilgangskontroll) {
 
     @GET
     @Path("/")
-    fun hentKontaktinformasjon(@PathParam("fnr") fødselsnummer: String): Map<String, Any?> {
+    fun hentKontaktinformasjon(@PathParam("fnr") fnr: String): Map<String, Any?> {
+        return tilgangskontroll
+                .check(Policies.tilgangTilBruker.with(fnr))
+                .get {
+                    val response = dkifService.hentDigitalKontaktinformasjon(fnr)
 
-        val response = dkifService.hentDigitalKontaktinformasjon(fødselsnummer)
-
-        return mapOf(
-                "epost" to getEpost(response),
-                "mobiltelefon" to getMobiltelefon(response),
-                "reservasjon" to response.digitalKontaktinformasjon.reservasjon
-        )
+                    mapOf(
+                            "epost" to getEpost(response),
+                            "mobiltelefon" to getMobiltelefon(response),
+                            "reservasjon" to response.digitalKontaktinformasjon.reservasjon
+                    )
+                }
     }
 
     private fun getEpost(response: WSHentDigitalKontaktinformasjonResponse): Map<String, Any>? {

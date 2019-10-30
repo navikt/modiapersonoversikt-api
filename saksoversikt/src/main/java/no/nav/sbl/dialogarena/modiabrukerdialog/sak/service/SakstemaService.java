@@ -1,9 +1,8 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.sak.service;
 
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.*;
-import no.nav.sbl.dialogarena.modiabrukerdialog.sak.utils.Java8Utils;
-import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.*;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.resultatwrappere.ResultatWrapper;
+import no.nav.sbl.dialogarena.modiabrukerdialog.sak.utils.Java8Utils;
 
 import javax.inject.Inject;
 import java.util.*;
@@ -11,17 +10,17 @@ import java.util.function.Predicate;
 
 import static java.util.Collections.emptyList;
 import static java.util.Collections.emptyMap;
-import static java.util.stream.Collectors.*;
 import static java.util.stream.Collectors.toList;
-import static java.util.stream.Stream.*;
+import static java.util.stream.Collectors.toSet;
+import static java.util.stream.Stream.concat;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.Baksystem.HENVENDELSE;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.BulletproofKodeverkService.*;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.BulletproofKodeverkService.ARKIVTEMA;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.SakstemaGrupperer.OPPFOLGING;
 
 @SuppressWarnings("squid:S1166") // Either log or rethrow
 public class SakstemaService {
 
-    public static final String RESTERENDE_TEMA = "RESTERENDE_TEMA";
+    private static final String RESTERENDE_TEMA = "RESTERENDE_TEMA";
 
     @Inject
     private DokumentMetadataService dokumentMetadataService;
@@ -36,7 +35,7 @@ public class SakstemaService {
     private SakstemaGrupperer sakstemaGrupperer;
 
     private Map<String, Set<String>> grupperAlleSakstemaSomResterende(Map<String, Set<String>> grupperteSakstema) {
-        Set<String> sakstema = grupperteSakstema.entrySet().stream().map(Map.Entry::getValue)
+        Set<String> sakstema = grupperteSakstema.values().stream()
                 .flatMap(Set::stream).collect(toSet());
         Map<String, Set<String>> map = new HashMap<>();
         map.put(RESTERENDE_TEMA, sakstema);
@@ -44,7 +43,7 @@ public class SakstemaService {
     }
 
     public ResultatWrapper<List<Sakstema>> hentSakstema(List<Sak> saker, String fnr, boolean skalGruppere) {
-        ResultatWrapper<List<DokumentMetadata>> wrapper = dokumentMetadataService.hentDokumentMetadata(saker, fnr);
+        ResultatWrapper<List<DokumentMetadata>> wrapper = dokumentMetadataService.hentDokumentMetadata(fnr);
 
         try {
             Map<String, List<Behandlingskjede>> behandlingskjeder = sakOgBehandlingService.hentBehandlingskjederGruppertPaaTema(fnr);

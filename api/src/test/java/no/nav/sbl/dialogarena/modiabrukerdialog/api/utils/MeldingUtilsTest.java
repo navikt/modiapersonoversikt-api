@@ -1,7 +1,7 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.api.utils;
 
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.*;
-import no.nav.modig.content.PropertyResolver;
+import no.nav.modig.content.ContentRetriever;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Saksbehandler;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype;
@@ -19,9 +19,9 @@ import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHe
 import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.OPPGAVE_VARSEL;
 import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.*;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe.ARBD;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype.*;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype.SPORSMAL_SKRIFTLIG;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype.SVAR_SKRIFTLIG;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype.*;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Status.*;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.MeldingUtils.*;
 import static org.hamcrest.CoreMatchers.equalTo;
@@ -50,13 +50,13 @@ public class MeldingUtilsTest {
     public static final String JOURNALFORT_SAKSID = "journalfortSaksId1";
     private final String mockVerdiFraPropertyResolver = "value";
 
-    private PropertyResolver propertyResolver = mock(PropertyResolver.class);
+    private ContentRetriever propertyResolver = mock(ContentRetriever.class);
     private LDAPService ldapService = mock(LDAPService.class);
 
     @BeforeEach
     public void init() {
-        when(propertyResolver.getProperty(anyString(), anyString())).thenReturn(mockVerdiFraPropertyResolver);
-        when(propertyResolver.getProperty(anyString())).thenReturn(mockVerdiFraPropertyResolver);
+        when(propertyResolver.hentTekst(anyString(), anyString())).thenReturn(mockVerdiFraPropertyResolver);
+        when(propertyResolver.hentTekst(anyString())).thenReturn(mockVerdiFraPropertyResolver);
         when(ldapService.hentSaksbehandler(NAVIDENT)).thenReturn(new Saksbehandler("Jan", "Saksbehandler", "ident"));
     }
 
@@ -307,8 +307,8 @@ public class MeldingUtilsTest {
     @Test
     public void getTekstForMeldingStatusForDynamiskNokkelSkalReturnereKeyBruktSomParameterDersomKeyIkkeEksiserer() throws Exception {
         final String key = "melding.status.SVAR_SKRIFTLIG";
-        final PropertyResolver propertyResolver = mock(PropertyResolver.class);
-        when(propertyResolver.getProperty(anyString())).thenThrow(new NoSuchElementException());
+        final ContentRetriever propertyResolver = mock(ContentRetriever.class);
+        when(propertyResolver.hentTekst(anyString())).thenThrow(new NoSuchElementException());
 
         final String returVerdi = getTekstForMeldingStatus(propertyResolver, Meldingstype.SVAR_SKRIFTLIG);
 
@@ -320,9 +320,9 @@ public class MeldingUtilsTest {
         final String keySomFeiler = "key-som-feiler";
         final String defaultKey = "default-key";
         final String valueForDefaultKey = "value-for-default-key";
-        final PropertyResolver propertyResolver = mock(PropertyResolver.class);
-        when(propertyResolver.getProperty(keySomFeiler)).thenThrow(new NoSuchElementException());
-        when(propertyResolver.getProperty(defaultKey)).thenReturn(valueForDefaultKey);
+        final ContentRetriever propertyResolver = mock(ContentRetriever.class);
+        when(propertyResolver.hentTekst(keySomFeiler)).thenThrow(new NoSuchElementException());
+        when(propertyResolver.hentTekst(defaultKey)).thenReturn(valueForDefaultKey);
 
         final String returVerdi = hentEnonicTekstDynamic(propertyResolver, keySomFeiler, defaultKey);
 

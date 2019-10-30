@@ -1,32 +1,30 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.sak.service;
 
-import no.nav.sbl.dialogarena.common.kodeverk.Kodeverk;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.*;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.resultatwrappere.ResultatWrapper;
+import no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.interfaces.InnsynJournalV2Service;
+import no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.saf.SafService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.transformers.DokumentMetadataTransformer;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.utils.Konstanter;
-import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.*;
 import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
-import javax.xml.datatype.DatatypeConfigurationException;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 import static java.util.Arrays.asList;
-import static java.util.Collections.*;
+import static java.util.Collections.emptyList;
+import static java.util.Collections.singletonList;
 import static junit.framework.TestCase.assertFalse;
-import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.core.Is.is;
 import static org.joda.time.DateTime.now;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyString;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -43,28 +41,28 @@ public class DokumentMetadataServiceTest {
 
     private HenvendelseService henvendelseService = mock(HenvendelseService.class);
 
-    private Kodeverk kodeverk = mock(Kodeverk.class);
+    private SafService safService = mock(SafService.class);
 
-    private JoarkJournalService joarkJournalService = mock(JoarkJournalService.class);
+    private InnsynJournalV2Service innsynJournalV2Service = mock(InnsynJournalV2Service.class);
 
-    private DokumentMetadataService dokumentMetadataService = new DokumentMetadataService(joarkJournalService, henvendelseService, dokumentMetadataTransformer);
+    private DokumentMetadataService dokumentMetadataService = new DokumentMetadataService(innsynJournalV2Service, henvendelseService, dokumentMetadataTransformer, safService);
 
     @Before
     public void setup() {
         when(bulletproofKodeverkService.getKode(anyString(), any())).thenReturn("DAG");
-        when(joarkJournalService.identifiserJournalpost(BEHANDLINGS_ID))
+        when(innsynJournalV2Service.identifiserJournalpost(BEHANDLINGS_ID))
                 .thenReturn(new ResultatWrapper<>(new DokumentMetadata().withJournalpostId(JOURNALPOST_ID)));
     }
 
     @Test
-    public void hvisEndretTemaFarViToDokumentMetadataOgEnMedFeilmelding() throws DatatypeConfigurationException {
-        mockJoark(brukerMottattDokumentFraNavMedLogiskeOgVanligeVedlegg());
+    public void hvisEndretTemaFarViToDokumentMetadataOgEnMedFeilmelding() {
+        mockSaf(brukerMottattDokumentFraNavMedLogiskeOgVanligeVedlegg());
         when(bulletproofKodeverkService.getKode(anyString(), any())).thenReturn("FOR");
 
         when(bulletproofKodeverkService.getTemanavnForTemakode(anyString(), anyString())).thenReturn(new ResultatWrapper("Dagpenger"));
         when(henvendelseService.hentInnsendteSoknader(anyString())).thenReturn(singletonList(lagHenvendelse("2")));
 
-        ResultatWrapper<List<DokumentMetadata>> wrapper = dokumentMetadataService.hentDokumentMetadata(new ArrayList<>(), "");
+        ResultatWrapper<List<DokumentMetadata>> wrapper = dokumentMetadataService.hentDokumentMetadata("");
 
         assertThat(wrapper.resultat.size(), is(2));
         assertFalse(wrapper.resultat.get(0).getFeilWrapper().getInneholderFeil());
@@ -72,68 +70,68 @@ public class DokumentMetadataServiceTest {
     }
 
     @Test
-    public void hvisViFaarSammeJournalpostFraHenvendelseOgJoarkSkalViBrukeInformasjonenFraJoark() throws DatatypeConfigurationException {
+    public void hvisViFaarSammeJournalpostFraHenvendelseOgJoarkSkalViBrukeInformasjonenFraJoark() {
 
-        mockJoark(brukerMottattDokumentFraNavMedLogiskeOgVanligeVedlegg());
+        mockSaf(brukerMottattDokumentFraNavMedLogiskeOgVanligeVedlegg());
 
         when(bulletproofKodeverkService.getTemanavnForTemakode(Konstanter.DAGPENGER, BulletproofKodeverkService.ARKIVTEMA)).thenReturn(new ResultatWrapper("Dagpenger"));
 
         when(henvendelseService.hentInnsendteSoknader(anyString())).thenReturn(singletonList(lagHenvendelse("2")));
 
-        List<DokumentMetadata> dokumentMetadatas = dokumentMetadataService.hentDokumentMetadata(new ArrayList<>(), "").resultat;
+        List<DokumentMetadata> dokumentMetadatas = dokumentMetadataService.hentDokumentMetadata("").resultat;
 
         assertThat(dokumentMetadatas.size(), is(1));
     }
 
 
     @Test
-    public void hvisViFaarJournalpostFraHenvendelseSomIkkeFinnesIJoarkSkalDenneBrukesVidere() throws DatatypeConfigurationException {
-        mockJoark(brukerMottattDokumentFraNavMedLogiskeOgVanligeVedlegg());
+    public void hvisViFaarJournalpostFraHenvendelseSomIkkeFinnesIJoarkSkalDenneBrukesVidere() {
+        mockSaf(brukerMottattDokumentFraNavMedLogiskeOgVanligeVedlegg());
 
         when(bulletproofKodeverkService.getTemanavnForTemakode(Konstanter.DAGPENGER, BulletproofKodeverkService.ARKIVTEMA)).thenReturn(new ResultatWrapper("Dagpenger"));
 
         when(henvendelseService.hentInnsendteSoknader(anyString())).thenReturn(singletonList(lagHenvendelse("En annen journalpost")));
 
-        List<DokumentMetadata> dokumentMetadatas = dokumentMetadataService.hentDokumentMetadata(new ArrayList<>(), "").resultat;
+        List<DokumentMetadata> dokumentMetadatas = dokumentMetadataService.hentDokumentMetadata("").resultat;
 
         assertThat(dokumentMetadatas.size(), is(2));
     }
 
     @Test
-    public void hvisViFaarSammeJournalpostFraHenvendelseOgJoarkSkalViBrukeInformasjonenFraJoarkMenTaMedInformasjonOmEttersendelseFraHenvendelse() throws DatatypeConfigurationException {
-        mockJoark(brukerMottattDokumentFraNavMedLogiskeOgVanligeVedlegg());
+    public void hvisViFaarSammeJournalpostFraHenvendelseOgJoarkSkalViBrukeInformasjonenFraJoarkMenTaMedInformasjonOmEttersendelseFraHenvendelse() {
+        mockSaf(brukerMottattDokumentFraNavMedLogiskeOgVanligeVedlegg());
 
         when(bulletproofKodeverkService.getTemanavnForTemakode(Konstanter.DAGPENGER, BulletproofKodeverkService.ARKIVTEMA)).thenReturn(new ResultatWrapper("Dagpenger"));
 
         String SAMME_JOURNALPOST = "2";
         when(henvendelseService.hentInnsendteSoknader(anyString())).thenReturn(singletonList(lagHenvendelse(SAMME_JOURNALPOST)));
 
-        List<DokumentMetadata> dokumentMetadatas = dokumentMetadataService.hentDokumentMetadata(new ArrayList<>(), "").resultat;
+        List<DokumentMetadata> dokumentMetadatas = dokumentMetadataService.hentDokumentMetadata("").resultat;
 
         assertThat(dokumentMetadatas.size(), is(1));
         assertTrue(dokumentMetadatas.get(0).isEttersending());
     }
 
     @Test
-    public void hvisViBareFaarJournalpostFraJoarkSkalIkkeDokumentetSettesTilFiktivtDokument() throws DatatypeConfigurationException {
-        mockJoark(brukerMottattDokumentFraNavMedLogiskeOgVanligeVedlegg());
+    public void hvisViBareFaarJournalpostFraJoarkSkalIkkeDokumentetSettesTilFiktivtDokument() {
+        mockSaf(brukerMottattDokumentFraNavMedLogiskeOgVanligeVedlegg());
 
         when(henvendelseService.hentInnsendteSoknader(anyString())).thenReturn(emptyList());
 
-        ResultatWrapper<List<DokumentMetadata>> wrapper = dokumentMetadataService.hentDokumentMetadata(new ArrayList<>(), "");
+        ResultatWrapper<List<DokumentMetadata>> wrapper = dokumentMetadataService.hentDokumentMetadata("");
 
         assertFalse(wrapper.resultat.get(0).isEttersending());
     }
 
     @Test
     public void hvisJournalpostKommerFraBadeJoarkOgHenvendelseSkalBeggeSettesSomBaksystem() {
-        mockJoark(brukerMottattDokumentFraNavMedLogiskeOgVanligeVedlegg());
+        mockSaf(brukerMottattDokumentFraNavMedLogiskeOgVanligeVedlegg());
 
         when(bulletproofKodeverkService.getTemanavnForTemakode(Konstanter.DAGPENGER, BulletproofKodeverkService.ARKIVTEMA)).thenReturn(new ResultatWrapper("Dagpenger"));
 
         when(henvendelseService.hentInnsendteSoknader(anyString())).thenReturn(singletonList(lagHenvendelse("2")));
 
-        ResultatWrapper<List<DokumentMetadata>> wrapper = dokumentMetadataService.hentDokumentMetadata(new ArrayList<>(), "");
+        ResultatWrapper<List<DokumentMetadata>> wrapper = dokumentMetadataService.hentDokumentMetadata("");
 
         assertThat(wrapper.resultat.get(0).getBaksystem().size(), is(2));
         assertTrue(wrapper.resultat.get(0).getBaksystem().contains(Baksystem.JOARK));
@@ -142,9 +140,9 @@ public class DokumentMetadataServiceTest {
 
     @Test
     public void hvisJournalpostKunKommerFraJoarkSkalKunJoarkSettesSomBaksystem() {
-        mockJoark(brukerMottattDokumentFraNavMedLogiskeOgVanligeVedlegg());
+        mockSaf(brukerMottattDokumentFraNavMedLogiskeOgVanligeVedlegg());
 
-        ResultatWrapper<List<DokumentMetadata>> wrapper = dokumentMetadataService.hentDokumentMetadata(new ArrayList<>(), "");
+        ResultatWrapper<List<DokumentMetadata>> wrapper = dokumentMetadataService.hentDokumentMetadata("");
 
         assertThat(wrapper.resultat.get(0).getBaksystem().size(), is(1));
         assertTrue(wrapper.resultat.get(0).getBaksystem().contains(Baksystem.JOARK));
@@ -153,13 +151,13 @@ public class DokumentMetadataServiceTest {
 
     @Test
     public void hvisJournalpostKunKommerFraHenvendelseSkalKunHenvendelseSettesSomBaksystem() {
-        mockJoark();
+        mockSaf();
 
         when(bulletproofKodeverkService.getTemanavnForTemakode(Konstanter.DAGPENGER, BulletproofKodeverkService.ARKIVTEMA)).thenReturn(new ResultatWrapper("Dagpenger"));
 
         when(henvendelseService.hentInnsendteSoknader(anyString())).thenReturn(singletonList(lagHenvendelse("2")));
 
-        ResultatWrapper<List<DokumentMetadata>> wrapper = dokumentMetadataService.hentDokumentMetadata(new ArrayList<>(), "");
+        ResultatWrapper<List<DokumentMetadata>> wrapper = dokumentMetadataService.hentDokumentMetadata("");
 
         assertThat(wrapper.resultat.get(0).getBaksystem().size(), is(1));
         assertTrue(wrapper.resultat.get(0).getBaksystem().contains(Baksystem.HENVENDELSE));
@@ -169,11 +167,11 @@ public class DokumentMetadataServiceTest {
     @Test
     public void hvisDokmotSoknadIkkeHarJournalpostIdBrukesBehandlingsIdForAFinneJournalpostIdOgMatche() {
         when(bulletproofKodeverkService.getKode(anyString(), any())).thenReturn(DOKMOT_TEMA);
-        mockJoark(brukerMottattDokumentFraNavMedLogiskeOgVanligeVedlegg().withTemakode(DOKMOT_TEMA));
+        mockSaf(brukerMottattDokumentFraNavMedLogiskeOgVanligeVedlegg().withTemakode(DOKMOT_TEMA));
         when(bulletproofKodeverkService.getTemanavnForTemakode(DOKMOT_TEMA, BulletproofKodeverkService.ARKIVTEMA)).thenReturn(new ResultatWrapper("Bil"));
         when(henvendelseService.hentInnsendteSoknader(anyString())).thenReturn(singletonList(lagHenvendelse(null)));
 
-        List<DokumentMetadata> dokumenter = dokumentMetadataService.hentDokumentMetadata(new ArrayList<>(), "").resultat;
+        List<DokumentMetadata> dokumenter = dokumentMetadataService.hentDokumentMetadata("").resultat;
 
         assertThat(dokumenter.size(), is(1));
         assertThat(dokumenter.get(0).getBaksystem(), Matchers.hasItem(Baksystem.JOARK));
@@ -181,9 +179,9 @@ public class DokumentMetadataServiceTest {
         assertThat(dokumenter.get(0).getJournalpostId(), is(JOURNALPOST_ID));
     }
 
-    private void mockJoark(DokumentMetadata... joarkDokumentMetadata){
-        when(joarkJournalService.hentTilgjengeligeJournalposter(any(), anyString()))
-                .thenReturn(new ResultatWrapper<>(asList(joarkDokumentMetadata),emptySet()));
+    private void mockSaf(DokumentMetadata... safDokumentMetadata) {
+        when(safService.hentJournalposter(anyString()))
+                .thenReturn(new ResultatWrapper((asList(safDokumentMetadata))));
     }
 
     private DokumentMetadata brukerMottattDokumentFraNavMedLogiskeOgVanligeVedlegg() {

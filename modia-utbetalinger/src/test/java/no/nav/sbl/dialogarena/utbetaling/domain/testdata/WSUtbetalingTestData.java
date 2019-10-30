@@ -11,12 +11,11 @@ import java.util.function.Predicate;
 
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
-import static no.nav.sbl.dialogarena.utbetaling.widget.UtbetalingWidget.NUMBER_OF_DAYS_TO_SHOW;
 import static org.joda.time.DateTime.now;
 
 
 public class WSUtbetalingTestData {
-
+    public static final int NUMBER_OF_DAYS_TO_SHOW = 30;
     public static final String BILLAGSNUMMER = "5";
     public static final String KREDITOR = "2";
     public static final String OSLO_KOMMUNE_AKTOER_ID = "1";

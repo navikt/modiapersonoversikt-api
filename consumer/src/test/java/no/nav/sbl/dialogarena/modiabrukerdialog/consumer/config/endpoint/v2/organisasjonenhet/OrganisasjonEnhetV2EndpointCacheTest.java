@@ -16,7 +16,6 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import javax.inject.Inject;
 
 import static no.nav.modig.testcertificates.TestCertificates.setupKeyAndTrustStore;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.MockUtil.TILLATMOCKSETUP_PROPERTY;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 
@@ -35,8 +34,6 @@ public class OrganisasjonEnhetV2EndpointCacheTest extends CacheTest {
 
     @BeforeAll
     public static void setup() {
-        System.setProperty("start.organisasjonenhet.v2.withmock", "true");
-        System.setProperty(TILLATMOCKSETUP_PROPERTY, "true");
         setupKeyAndTrustStore();
         System.setProperty("no.nav.modig.security.sts.url", "");
         System.setProperty("no.nav.modig.security.systemuser.username", "");
@@ -62,7 +59,7 @@ public class OrganisasjonEnhetV2EndpointCacheTest extends CacheTest {
 
     @Test
     public void cacheManagerCacherKallTilFinnNAVKontor() throws FinnNAVKontorUgyldigInput {
-        final FinnNAVKontorRequest request_1 = lagFinnNAVKontorRequest("1234","1234");
+        final FinnNAVKontorRequest request_1 = lagFinnNAVKontorRequest("1234", "1234");
         final FinnNAVKontorRequest request_2 = lagFinnNAVKontorRequest("4231", "4231");
 
         organisasjonEnhetService.finnNAVKontor(request_1);

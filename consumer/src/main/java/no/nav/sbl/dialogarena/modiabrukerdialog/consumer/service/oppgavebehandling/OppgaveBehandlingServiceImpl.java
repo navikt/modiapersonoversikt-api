@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.oppgavebehandling;
 
+import no.nav.common.auth.SubjectHandler;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Oppgave;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.LeggTilbakeOppgaveIGsakRequest;
@@ -32,7 +33,6 @@ import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.toList;
-import static no.nav.brukerdialog.security.context.SubjectHandler.getSubjectHandler;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe.*;
 import static org.apache.commons.lang3.StringUtils.equalsIgnoreCase;
 import static org.apache.commons.lang3.StringUtils.isBlank;
@@ -43,6 +43,7 @@ public class OppgaveBehandlingServiceImpl implements OppgaveBehandlingService {
 
     private static final Logger logger = LoggerFactory.getLogger(OppgaveBehandlingServiceImpl.class);
     public static final Integer DEFAULT_ENHET = 4100;
+    public static final String STORD_ENHET = "4842";
     public static final String KODE_OPPGAVE_FERDIGSTILT = "F";
     public static final String SPORSMAL_OG_SVAR = "SPM_OG_SVR";
     public static final String KONTAKT_NAV = "KNA";
@@ -73,10 +74,11 @@ public class OppgaveBehandlingServiceImpl implements OppgaveBehandlingService {
 
     @Override
     public List<Oppgave> finnTildelteOppgaverIGsak() {
+        String ident = SubjectHandler.getIdent().orElseThrow(() -> new RuntimeException("Fant ikke ident"));
         return oppgaveWS
                 .finnOppgaveListe(new WSFinnOppgaveListeRequest()
                         .withSok(new WSFinnOppgaveListeSok()
-                                .withAnsvarligId(getSubjectHandler().getUid())
+                                .withAnsvarligId(ident)
                                 .withFagomradeKodeListe(KONTAKT_NAV))
                         .withFilter(new WSFinnOppgaveListeFilter()
                                 .withAktiv(true)
@@ -114,9 +116,15 @@ public class OppgaveBehandlingServiceImpl implements OppgaveBehandlingService {
             oppdaterBeskrivelseIGsak(temagruppe, saksbehandlersValgteEnhet, oppgaveId);
         }
 
-        oppgavebehandlingWS.ferdigstillOppgaveBolk(new WSFerdigstillOppgaveBolkRequest()
-                .withOppgaveIdListe(oppgaveIder)
-                .withFerdigstiltAvEnhetId(Integer.valueOf(enhetFor(temagruppe, saksbehandlersValgteEnhet))));
+        try {
+            oppgavebehandlingWS.ferdigstillOppgaveBolk(new WSFerdigstillOppgaveBolkRequest()
+                    .withOppgaveIdListe(oppgaveIder)
+                    .withFerdigstiltAvEnhetId(Integer.valueOf(enhetFor(temagruppe, saksbehandlersValgteEnhet))));
+        } catch (Exception e) {
+            String ider = String.join(", ", oppgaveIder);
+            logger.warn("Ferdigstilling av oppgavebolk med oppgaveider: " + ider + ", med enhet " + saksbehandlersValgteEnhet + " feilet.", e);
+            throw e;
+        }
     }
 
     private void oppdaterBeskrivelseIGsak(Optional<Temagruppe> temagruppe, String saksbehandlersValgteEnhet, String oppgaveId) {
@@ -126,13 +134,14 @@ public class OppgaveBehandlingServiceImpl implements OppgaveBehandlingService {
                     saksbehandlersValgteEnhet));
             lagreOppgaveIGsak(oppgave, temagruppe, saksbehandlersValgteEnhet);
         } catch (HentOppgaveOppgaveIkkeFunnet | LagreOppgaveOptimistiskLasing e) {
+            logger.info("Feil ved oppdatering av beskrivelse for oppgave " + oppgaveId, e);
             throw new RuntimeException(e);
         }
     }
 
     @Override
     public void leggTilbakeOppgaveIGsak(LeggTilbakeOppgaveIGsakRequest request) {
-        if (request.getOppgaveId() == null) {
+        if (request.getOppgaveId() == null || request.getBeskrivelse() == null) {
             return;
         }
 
@@ -156,7 +165,7 @@ public class OppgaveBehandlingServiceImpl implements OppgaveBehandlingService {
     }
 
     String leggTilBeskrivelse(String gammelBeskrivelse, String leggTil, String valgtEnhet) {
-        String ident = getSubjectHandler().getUid();
+        String ident = SubjectHandler.getIdent().orElseThrow(() -> new RuntimeException("Fant ikke ident"));
         String header = String.format("--- %s %s (%s, %s) ---\n",
                 forPattern("dd.MM.yyyy HH:mm").print(now()),
                 ansattWS.hentAnsattNavn(ident),
@@ -180,8 +189,9 @@ public class OppgaveBehandlingServiceImpl implements OppgaveBehandlingService {
     }
 
     private WSOppgave tilordneOppgaveIGsak(WSOppgave oppgave, Optional<Temagruppe> temagruppe, String saksbehandlersValgteEnhet) throws FikkIkkeTilordnet {
+        String ident = SubjectHandler.getIdent().orElseThrow(() -> new RuntimeException("Fant ikke ident"));
         try {
-            WSOppgave wsOppgave = oppgave.withAnsvarligId(getSubjectHandler().getUid());
+            WSOppgave wsOppgave = oppgave.withAnsvarligId(ident);
             lagreOppgaveIGsak(wsOppgave, temagruppe, saksbehandlersValgteEnhet);
             return wsOppgave;
         } catch (LagreOppgaveOptimistiskLasing lagreOppgaveOptimistiskLasing) {
@@ -200,21 +210,23 @@ public class OppgaveBehandlingServiceImpl implements OppgaveBehandlingService {
                             .withEndreOppgave(tilWSEndreOppgave(wsOppgave))
                             .withEndretAvEnhetId(Integer.valueOf(enhetFor(temagruppe, saksbehandlersValgteEnhet)))
             );
-        } catch (LagreOppgaveOppgaveIkkeFunnet lagreOppgaveOppgaveIkkeFunnet) {
-            throw new RuntimeException("Oppgaven ble ikke funnet ved tilordning til saksbehandler", lagreOppgaveOppgaveIkkeFunnet);
+        } catch (LagreOppgaveOppgaveIkkeFunnet e) {
+            logger.info("Oppgaven ble ikke funnet ved tilordning til saksbehandler. Oppgaveid: " + wsOppgave.getOppgaveId(), e);
+            throw new RuntimeException("Oppgaven ble ikke funnet ved tilordning til saksbehandler", e);
         }
     }
 
     private List<WSOppgave> tildelEldsteLedigeOppgaver(Temagruppe temagruppe, int enhetsId, String saksbehandlersValgteEnhet) {
+        String ident = SubjectHandler.getIdent().orElseThrow(() -> new RuntimeException("Fant ikke ident"));
         WSTildelFlereOppgaverResponse response = tildelOppgaveWS.tildelFlereOppgaver(
                 new WSTildelFlereOppgaverRequest()
                         .withUnderkategori(underkategoriKode(temagruppe))
                         .withOppgavetype(SPORSMAL_OG_SVAR)
                         .withFagomrade(KONTAKT_NAV)
                         .withAnsvarligEnhetId(enhetFor(temagruppe, saksbehandlersValgteEnhet))
-                        .withIkkeTidligereTildeltSaksbehandlerId(getSubjectHandler().getUid())
+                        .withIkkeTidligereTildeltSaksbehandlerId(ident)
                         .withTildeltAvEnhetId(enhetsId)
-                        .withTildelesSaksbehandlerId(getSubjectHandler().getUid()));
+                        .withTildelesSaksbehandlerId(ident));
 
         if (response == null) {
             return emptyList();
@@ -245,7 +257,10 @@ public class OppgaveBehandlingServiceImpl implements OppgaveBehandlingService {
             return DEFAULT_ENHET.toString();
         }
         Temagruppe temagruppe = optional.get();
-        if (asList(ARBD, FMLI, ORT_HJE, PENS, UFRT, PLEIEPENGERSY, UTLAND).contains(temagruppe)) {
+
+        if (temagruppe.equals(FMLI) && saksbehandlersValgteEnhet.equals(STORD_ENHET)) {
+            return STORD_ENHET;
+        } else if (asList(ARBD, FMLI, ORT_HJE, PENS, UFRT, PLEIEPENGERSY, UTLAND).contains(temagruppe)) {
             return DEFAULT_ENHET.toString();
         } else {
             return saksbehandlersValgteEnhet;

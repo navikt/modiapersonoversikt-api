@@ -1,16 +1,17 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.sak.service;
 
-import no.nav.brukerdialog.security.tilgangskontroll.policy.pep.EnforcementPoint;
-import no.nav.brukerdialog.security.tilgangskontroll.policy.request.PolicyRequest;
+import no.nav.common.auth.SubjectHandler;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.AnsattService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.DokumentMetadata;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.Sakstema;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.resultatwrappere.TjenesteResultatWrapper;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.interfaces.TilgangskontrollService;
+import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Policies;
+import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.TilgangTilTemaData;
+import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Tilgangskontroll;
 import org.slf4j.Logger;
 
 import javax.inject.Inject;
-import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.List;
@@ -18,40 +19,30 @@ import java.util.Map;
 
 import static java.lang.Boolean.TRUE;
 import static java.util.stream.Collectors.toList;
-import static no.nav.brukerdialog.security.context.SubjectHandler.getSubjectHandler;
-import static no.nav.brukerdialog.security.tilgangskontroll.utils.AttributeUtils.*;
-import static no.nav.brukerdialog.security.tilgangskontroll.utils.RequestUtils.forRequest;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.RestUtils.hentValgtEnhet;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.Feilmelding.*;
-import static org.apache.commons.lang3.StringUtils.defaultString;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class TilgangskontrollServiceImpl implements TilgangskontrollService {
 
     @Inject
-    @Named("pep")
-    private EnforcementPoint pep;
+    private Tilgangskontroll tilgangskontroll;
     @Inject
     private AnsattService ansattService;
 
     public final static String TEMAKODE_BIDRAG = "BID";
     private static final Logger logger = getLogger(TilgangskontrollService.class);
 
-    //Jeg mener denne er oversiktlig og kun gjor en ting.
-    @SuppressWarnings("squid:MethodCyclomaticComplexity")
     public TjenesteResultatWrapper harSaksbehandlerTilgangTilDokument(HttpServletRequest request, DokumentMetadata journalpostMetadata, String fnr, String urlTemakode) {
-        String valgtEnhet = hentValgtEnhet(request);
         String temakode = journalpostMetadata.getTemakode();
 
-        if (!harGodkjentEnhet(request) || !harEnhetTilgangTilTema(temakode, valgtEnhet)) {
-            return new TjenesteResultatWrapper(SAKSBEHANDLER_IKKE_TILGANG);
-        } else if (temakodeErBidrag(temakode)) {
+        if (temakodeErBidrag(temakode)) {
             return new TjenesteResultatWrapper(TEMAKODE_ER_BIDRAG);
         } else if (erJournalfortPaAnnetTema(urlTemakode, journalpostMetadata)) {
             return new TjenesteResultatWrapper(JOURNALFORT_ANNET_TEMA, journalfortAnnetTemaEktraFeilInfo(journalpostMetadata.getTemakodeVisning(), fnr));
         } else if (!journalpostMetadata.isErJournalfort()) {
-            return new TjenesteResultatWrapper(IKKE_JOURNALFORT_ELLER_ANNEN_BRUKER, ikkeJournalfortEkstraFeilInfo(fnr));
+            return new TjenesteResultatWrapper(IKKE_JOURNALFORT, ikkeJournalfortEkstraFeilInfo(fnr));
         } else if (journalpostMetadata.getFeilWrapper().getInneholderFeil()) {
             return new TjenesteResultatWrapper(journalpostMetadata.getFeilWrapper().getFeilmelding());
         }
@@ -66,42 +57,36 @@ public class TilgangskontrollServiceImpl implements TilgangskontrollService {
         valgtEnhet = settEnhetDersomCookieIkkeErSatt(valgtEnhet, enhetsListe);
 
         if (!enhetsListe.contains(valgtEnhet)) {
-            logger.warn("{} har ikke tilgang til enhet {}.", getSubjectHandler().getUid(), valgtEnhet);
+            String ident = SubjectHandler.getIdent().orElseThrow(() -> new RuntimeException("Fant ikke ident"));
+            logger.warn("{} har ikke tilgang til enhet {}.", ident, valgtEnhet);
             return false;
         }
         return true;
     }
 
     private String settEnhetDersomCookieIkkeErSatt(String valgtEnhet, List<String> enhetsListe) {
-        if("".equals(valgtEnhet)) {
+        if ("".equals(valgtEnhet)) {
             valgtEnhet = enhetsListe.get(0);
         }
         return valgtEnhet;
     }
 
     public boolean harEnhetTilgangTilTema(String temakode, String valgtEnhet) {
-        PolicyRequest temagruppePolicyRequest = forRequest(
-                actionId("temagruppe"),
-                resourceId(""),
-                subjectAttribute("urn:nav:ikt:tilgangskontroll:xacml:subject:localenhet", defaultString(valgtEnhet)),
-                resourceAttribute("urn:nav:ikt:tilgangskontroll:xacml:resource:tema", defaultString(temakode))
-        );
-        if (isNotBlank(temakode) && !pep.hasAccess(temagruppePolicyRequest)) {
-            logger.warn("Saksbehandler med ident '{}' og valgt enhet '{}' har ikke tilgang til tema '{}'",
-                    getSubjectHandler().getUid(),
-                    valgtEnhet,
-                    temakode);
-            return false;
+        if (isNotBlank(temakode)) {
+            return tilgangskontroll
+                    .check(Policies.tilgangTilTema.with(new TilgangTilTemaData(valgtEnhet, temakode)))
+                    .getDecision()
+                    .isPermit();
         }
         return true;
     }
 
     public void markerIkkeJournalforte(List<Sakstema> sakstemaList) {
-        sakstemaList.stream()
+        sakstemaList
                 .forEach(sakstema -> sakstema.dokumentMetadata
                         .stream()
                         .filter(dokumentMetadata -> !dokumentMetadata.isErJournalfort())
-                        .map(dokumentMetadata -> dokumentMetadata.withFeilWrapper(IKKE_JOURNALFORT_ELLER_ANNEN_BRUKER))
+                        .map(dokumentMetadata -> dokumentMetadata.withFeilWrapper(IKKE_JOURNALFORT))
                         .collect(toList()));
     }
 

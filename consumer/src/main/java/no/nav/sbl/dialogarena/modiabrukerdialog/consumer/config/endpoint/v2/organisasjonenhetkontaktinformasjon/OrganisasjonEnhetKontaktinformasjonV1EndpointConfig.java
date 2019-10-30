@@ -8,29 +8,25 @@ import no.nav.tjeneste.virksomhet.organisasjonenhetkontaktinformasjon.v1.binding
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import static no.nav.sbl.dialogarena.common.cxf.InstanceSwitcher.createMetricsProxyWithInstanceSwitcher;
+import static no.nav.metrics.MetricsFactory.createTimerProxyForWebService;
 
 @Configuration
 public class OrganisasjonEnhetKontaktinformasjonV1EndpointConfig {
 
-    public static final String NORG2_ORGANISASJON_ENHET_KONTAKTINFORMASJON_V1_KEY = "start.organisasjonenhetkontaktinformasjon.v1.withmock";
-
     @Bean
     public OrganisasjonEnhetKontaktinformasjonV1 organisasjonEnhetKontaktinformasjonV1() {
         final OrganisasjonEnhetKontaktinformasjonV1 organisasjonEnhetKontaktinformasjonV1 = lagEndpoint()
-                .configureStsForOnBehalfOfWithJWT()
+                .configureStsForSubject()
                 .build();
-        final OrganisasjonEnhetKontaktinformasjonV1 organisasjonEnhetKontaktinformasjonV1Mock = lagMockEnpoint();
 
-        return createMetricsProxyWithInstanceSwitcher("organisasjonEnhetKontaktinformasjonV1", organisasjonEnhetKontaktinformasjonV1,
-                organisasjonEnhetKontaktinformasjonV1Mock, NORG2_ORGANISASJON_ENHET_KONTAKTINFORMASJON_V1_KEY, OrganisasjonEnhetKontaktinformasjonV1.class);
+        return createTimerProxyForWebService("organisasjonEnhetKontaktinformasjonV1", organisasjonEnhetKontaktinformasjonV1, OrganisasjonEnhetKontaktinformasjonV1.class);
     }
 
     @Bean
     public Pingable OrganisasjonEnhetKontaktinformasjonPing() {
         return new PingableWebService(
                 "NORG2 - OrganisasjonEnhetKontaktinformasjonV1",
-                lagEndpoint().configureStsForSystemUserInFSS().build()
+                lagEndpoint().configureStsForSystemUser().build()
         );
 
     }

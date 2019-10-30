@@ -13,10 +13,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import javax.inject.Inject;
 
-import static java.lang.System.setProperty;
 import static no.nav.modig.testcertificates.TestCertificates.setupKeyAndTrustStore;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v1.aktor.AktorEndpointConfig.AKTOER_KEY;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.MockUtil.TILLATMOCKSETUP_PROPERTY;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.when;
@@ -26,9 +23,9 @@ import static org.mockito.Mockito.when;
 public class AktorCacheTest extends CacheTest {
 
     static {
-        System.setProperty("no.nav.modig.security.sts.url","https://sts-t4.test.local/SecurityTokenServiceProvider/");
-        System.setProperty("no.nav.modig.security.systemuser.username","");
-        System.setProperty("no.nav.modig.security.systemuser.password","");
+        System.setProperty("no.nav.modig.security.sts.url", "https://sts-t4.test.local/SecurityTokenServiceProvider/");
+        System.setProperty("no.nav.modig.security.systemuser.username", "");
+        System.setProperty("no.nav.modig.security.systemuser.password", "");
     }
 
     public static final String AKTOR_CACHE = "aktorIdCache";
@@ -42,8 +39,6 @@ public class AktorCacheTest extends CacheTest {
 
     @BeforeAll
     public static void setup() {
-        setProperty(AKTOER_KEY, "true");
-        setProperty(TILLATMOCKSETUP_PROPERTY, "true");
         setupKeyAndTrustStore();
     }
 

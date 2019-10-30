@@ -3,7 +3,7 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.kontaktinformasjon
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.whenever
 import no.nav.dkif.consumer.DkifService
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.UnleashService
+import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.TilgangskontrollMock
 import no.nav.tjeneste.virksomhet.digitalkontaktinformasjon.v1.informasjon.WSEpostadresse
 import no.nav.tjeneste.virksomhet.digitalkontaktinformasjon.v1.informasjon.WSKontaktinformasjon
 import no.nav.tjeneste.virksomhet.digitalkontaktinformasjon.v1.informasjon.WSMobiltelefonnummer
@@ -27,8 +27,7 @@ private const val RESERVASJON = "Reservert"
 class KontaktinformasjonControllerTest {
 
     private val dkifService: DkifService = mock()
-    private val unleashService: UnleashService = mock()
-    private val controller = KontaktinformasjonController(dkifService, unleashService)
+    private val controller = KontaktinformasjonController(dkifService, TilgangskontrollMock.get())
 
     @BeforeEach
     fun before() {

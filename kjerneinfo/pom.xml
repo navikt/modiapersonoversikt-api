@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <parent>
+        <groupId>no.nav.sbl.dialogarena</groupId>
+        <artifactId>modiabrukerdialog</artifactId>
+        <version>dev</version>
+    </parent>
+
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>kjerneinfo</artifactId>
+    <packaging>pom</packaging>
+    <version>dev</version>
+    <name>NAV :: kjerneinfo</name>
+    <description>Mor-POM for kjerneinfo</description>
+
+    <prerequisites>
+        <maven>3.0.4</maven>
+    </prerequisites>
+
+    <modules>
+        <module>kjerneinfo-common</module>
+        <module>kjerneinfo-consumer</module>
+        <module>kjerneinfo-domain</module>
+        <module>kontrakter-consumer</module>
+        <module>kontrakter-domain</module>
+        <module>sykmeldingsperioder-domain</module>
+        <module>sykmeldingsperioder-consumer</module>
+        <module>behandlebrukerprofil-consumer</module>
+        <module>brukerprofil-domain</module>
+        <module>kodeverk-consumer</module>
+        <module>dkif-consumer</module>
+    </modules>
+
+    <properties>
+        <!-- Versjoner av tjenester som konsumeres-->
+        <nav-behandleBrukerprofil-tjenestespesifikasjon-version>2.0.0</nav-behandleBrukerprofil-tjenestespesifikasjon-version>
+        <nav-fim-foreldrepenger-v2-tjenestespesifikasjon-version>2.0.2</nav-fim-foreldrepenger-v2-tjenestespesifikasjon-version>
+        <nav-fim-sykepenger-v2-tjenestespesifikasjon-version>2.0.1</nav-fim-sykepenger-v2-tjenestespesifikasjon-version>
+        <nav-fim-ytelseskontrakt-v3-tjenestespesifikasjon-version>3.0.1</nav-fim-ytelseskontrakt-v3-tjenestespesifikasjon-version>
+
+        <!-- Platform-->
+        <jee.version>6.0</jee.version>
+
+        <!-- Consumer -->
+        <org.apache.cxf.version>3.1.11</org.apache.cxf.version>
+        <org.apache.cxf-codegen.version>3.1.10</org.apache.cxf-codegen.version>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <!-- Javax -->
+            <dependency>
+                <groupId>javax</groupId>
+                <artifactId>javaee-api</artifactId>
+                <version>${jee.version}</version>
+                <scope>provided</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+</project>

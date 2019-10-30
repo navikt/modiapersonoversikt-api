@@ -14,9 +14,9 @@ import no.nav.kjerneinfo.consumer.fim.person.to.HentKjerneinformasjonResponse
 import no.nav.kjerneinfo.domain.person.Fodselsnummer
 import no.nav.kjerneinfo.domain.person.Person
 import no.nav.kjerneinfo.domain.person.Personfakta
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.ldap.LDAPService
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.http.SubjectHandlerUtil
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.UnleashService
+import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Tilgangskontroll
+import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.TilgangskontrollContext
 import no.nav.tjeneste.virksomhet.behandlebrukerprofil.v2.OppdaterKontaktinformasjonOgPreferanserPersonIdentErUtgaatt
 import no.nav.tjeneste.virksomhet.behandlebrukerprofil.v2.OppdaterKontaktinformasjonOgPreferanserPersonIkkeFunnet
 import no.nav.tjeneste.virksomhet.behandlebrukerprofil.v2.OppdaterKontaktinformasjonOgPreferanserSikkerhetsbegrensning
@@ -74,23 +74,20 @@ class BrukerprofilControllerTest {
     private val behandlePersonService: BehandlePersonServiceBi = mock()
     private val behandleBrukerProfilService: BehandleBrukerprofilServiceBi = mock()
     private val kjerneinfoService: PersonKjerneinfoServiceBi = mock()
-    private val ldapService: LDAPService = mock()
-    private val unleashService: UnleashService = mock()
+    private val tilgangskontrollContext: TilgangskontrollContext = mock()
+    private val tilgangskontroll: Tilgangskontroll = Tilgangskontroll(tilgangskontrollContext)
 
     private val controller = BrukerprofilController(
             behandlePersonService,
             behandleBrukerProfilService,
             kjerneinfoService,
-            ldapService,
-            unleashService
+            tilgangskontroll
     )
 
     @BeforeEach
     fun before() {
         SubjectHandlerUtil.setInnloggetSaksbehandler(INNLOGGET_SAKSBEHANDLER)
-        whenever(ldapService.saksbehandlerHarRolle(INNLOGGET_SAKSBEHANDLER, ENDRE_NAVN_ROLLE)).thenReturn(true)
-        whenever(ldapService.saksbehandlerHarRolle(INNLOGGET_SAKSBEHANDLER, ENDRE_ADRESSE_ROLLE)).thenReturn(true)
-        whenever(ldapService.saksbehandlerHarRolle(INNLOGGET_SAKSBEHANDLER, ENDRE_KONTONUMMER_ROLLE)).thenReturn(true)
+        whenever(tilgangskontrollContext.harSaksbehandlerRolle(any())).thenReturn(true)
         whenever(kjerneinfoService.hentBrukerprofil(any())).thenReturn(getBruker())
     }
 
@@ -134,11 +131,11 @@ class BrukerprofilControllerTest {
         @Test
         fun `Kaster feil om saksbehandler ikke har riktig rolle`() {
             whenever(kjerneinfoService.hentKjerneinformasjon(any())).thenReturn(mockKjerneinformasjonResponse(D_NUMMER))
-            whenever(ldapService.saksbehandlerHarRolle(INNLOGGET_SAKSBEHANDLER, ENDRE_NAVN_ROLLE)).thenReturn(false)
+            whenever(tilgangskontrollContext.harSaksbehandlerRolle(any())).thenReturn(false)
 
             val feilmelding = assertFailsWith<ForbiddenException> { controller.endreNavn(AREMARK_FNR, lagRequest(D_NUMMER)) }
 
-            assert(feilmelding.message!!.contains(ENDRE_NAVN_ROLLE), { "Feilmelding skal inneholde påkrevd rolle" })
+            assert(feilmelding.message!!.contains("har ikke tilgang til å endre navn"), { "Feilmelding skal inneholde påkrevd rolle" })
         }
 
         private fun lagRequest(ident: String) =
@@ -416,8 +413,7 @@ class BrukerprofilControllerTest {
 
         @Test
         fun `Kaster 403 hvis saksbehandler ikke har riktig rolle`() {
-            whenever(ldapService.saksbehandlerHarRolle(INNLOGGET_SAKSBEHANDLER, ENDRE_KONTONUMMER_ROLLE))
-                    .thenReturn(false)
+            whenever(tilgangskontrollContext.harSaksbehandlerRolle(any())).thenReturn(false)
 
             assertFailsWith<ForbiddenException> {
                 controller.endreKontonummer(AREMARK_FNR, EndreKontonummerRequest(KONTONUMMER))
@@ -441,7 +437,7 @@ class BrukerprofilControllerTest {
 
         @Test
         fun `Kaller tjenesten med tilrettelagt kommunikasjon`() {
-            controller.endreTilrettelagtKommunikasjon(AREMARK_FNR, listOf(TOLKEHJELP_KODE))
+            controller.endreTilrettelagtKommunikasjon(AREMARK_FNR, EndreTilrettelagtkommunikasjonRequest(tilrettelagtKommunikasjon = listOf(TOLKEHJELP_KODE)))
             verify(behandleBrukerProfilService).oppdaterKontaktinformasjonOgPreferanser(check {
                 assertEquals(TOLKEHJELP_KODE, it.bruker.tilrettelagtKommunikasjon[0].kodeRef)
             })
@@ -452,7 +448,7 @@ class BrukerprofilControllerTest {
             whenever(behandleBrukerProfilService.oppdaterKontaktinformasjonOgPreferanser(any()))
                     .thenThrow(OppdaterKontaktinformasjonOgPreferanserPersonIdentErUtgaatt())
 
-            val response = controller.endreTilrettelagtKommunikasjon(AREMARK_FNR, listOf(TOLKEHJELP_KODE))
+            val response = controller.endreTilrettelagtKommunikasjon(AREMARK_FNR, EndreTilrettelagtkommunikasjonRequest(tilrettelagtKommunikasjon = listOf(TOLKEHJELP_KODE)))
 
             assertEquals(Status.GONE.statusCode, response?.status)
         }

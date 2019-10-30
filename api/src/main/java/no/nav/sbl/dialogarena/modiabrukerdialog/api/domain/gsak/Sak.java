@@ -32,10 +32,11 @@ public class Sak implements Serializable, Comparable<Sak> {
     public static final String SAKSTYPE_MED_FAGSAK = "MFS";
     public static final String FAGSYSTEMKODE_ARENA = "AO01";
     public static final String FAGSYSTEMKODE_PSAK = "PP01";
+    public static final String FAGSYSTEM_FOR_OPPRETTELSE_AV_GENERELL_SAK = "FS22";
 
-    public static final String GODKJENT_FAGSYSTEM_FOR_GENERELLE = "FS22";
-    public static final List<String> GODKJENTE_TEMA_FOR_GENERELLE = unmodifiableList(asList("AAP", "AGR", "BAR", "BIL", "DAG", "ENF", "ERS", "FEI", "FOR", "FOS", "FUL", "GEN", "GRA", "GRU", "HEL", "HJE", "IND", "KON", "KTR", "MED", "MOB", "OMS", "REH", "RVE", "RPO", "SAK", "SAP", "SER", "STO", "SUP", "SYK", "SYM", "TRK", "TRY", "TSR", "TSO", "UFM", "VEN", "YRA", "YRK", TEMAKODE_OPPFOLGING));
-    public static final List<String> GODKJENTE_FAGSYSTEMER_FOR_FAGSAKER = unmodifiableList(asList(FAGSYSTEMKODE_ARENA, FAGSYSTEMKODE_PSAK, "IT01", "OEBS", "V2", "AO11", "FS36"));
+    public static final List<String> GYLDIGE_FAGSYSTEM_FOR_GENERELLE_SAKER = unmodifiableList(asList(FAGSYSTEM_FOR_OPPRETTELSE_AV_GENERELL_SAK,""));
+    public static final List<String> GODKJENTE_TEMA_FOR_GENERELL_SAK = unmodifiableList(asList("AAP", "AGR", "BAR", "BIL", "DAG", "ENF", "ERS", "FEI", "FOR", "FOS", "FUL", "GEN", "GRA", "GRU", "HEL", "HJE", "IND", "KON", "KTR", "MED", "MOB", "OMS", "REH", "RVE", "RPO", "SAK", "SAP", "SER", "STO", "SUP", "SYK", "SYM", "TRK", "TRY", "TSR", "TSO", "UFM", "VEN", "YRA", "YRK", TEMAKODE_OPPFOLGING));
+    public static final List<String> GODKJENTE_FAGSYSTEMER_FOR_FAGSAKER = unmodifiableList(asList(FAGSYSTEMKODE_ARENA, FAGSYSTEMKODE_PSAK, "IT01", "OEBS", "V2", "AO11", "FS36", "FS38"));
 
     public boolean isSakstypeForVisningGenerell() {
         return SAKSTYPE_GENERELL.equals(sakstype);
@@ -45,9 +46,9 @@ public class Sak implements Serializable, Comparable<Sak> {
 
     public static final Predicate<Sak> IS_GENERELL_SAK = Sak::isSakstypeForVisningGenerell;
 
-    public static final Predicate<Sak> IS_GODKJENT_FAGSYSTEM_FOR_GENERELLE = sak -> GODKJENT_FAGSYSTEM_FOR_GENERELLE.equals(sak.fagsystemKode);
+    public static final Predicate<Sak> IS_GODKJENT_FAGSYSTEM_FOR_GENERELLE = sak -> GYLDIGE_FAGSYSTEM_FOR_GENERELLE_SAKER.contains(sak.fagsystemKode);
 
-    public static final Predicate<Sak> IS_GODKJENT_TEMA_FOR_GENERELLE = sak -> GODKJENTE_TEMA_FOR_GENERELLE.contains(sak.temaKode);
+    public static final Predicate<Sak> IS_GODKJENT_TEMA_FOR_GENERELLE = sak -> GODKJENTE_TEMA_FOR_GENERELL_SAK.contains(sak.temaKode);
 
     public static final Predicate<Sak> IS_GODKJENT_FAGSYSTEM_FOR_FAGSAK = sak -> GODKJENTE_FAGSYSTEMER_FOR_FAGSAKER.contains(sak.fagsystemKode);
 

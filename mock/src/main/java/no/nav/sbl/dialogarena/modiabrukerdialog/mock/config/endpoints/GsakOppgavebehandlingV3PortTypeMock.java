@@ -1,12 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints;
 
-import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.FeilregistrerOppgaveOppgaveIkkeFunnet;
-import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.FeilregistrerOppgaveUlovligStatusOvergang;
-import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.LagreMappeMappeIkkeFunnet;
-import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.LagreOppgaveOppgaveIkkeFunnet;
-import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.OppgavebehandlingV3;
-import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.SlettMappeMappeIkkeFunnet;
-import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.SlettMappeMappeIkkeTom;
+import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.*;
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.meldinger.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

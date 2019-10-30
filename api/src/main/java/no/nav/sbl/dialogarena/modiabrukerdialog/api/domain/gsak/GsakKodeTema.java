@@ -1,6 +1,5 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak;
 
-import org.apache.commons.collections15.Transformer;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import java.io.Serializable;

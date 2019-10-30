@@ -12,7 +12,8 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Saksbehandler
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.AnsattEnhet
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.ldap.LDAPService
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.oppfolgingsinfo.OppfolgingsinfoApiService
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.UnleashService
+import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Policies
+import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Tilgangskontroll
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.DATOFORMAT
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.lagRiktigDato
 import org.slf4j.LoggerFactory
@@ -25,7 +26,7 @@ import javax.ws.rs.core.MediaType
 @Produces(MediaType.APPLICATION_JSON)
 class OppfolgingController @Inject constructor(private val service: OppfolgingsinfoApiService,
                                                private val ldapService: LDAPService,
-                                               private val unleashService: UnleashService,
+                                               private val tilgangskontroll: Tilgangskontroll,
                                                private val ytelseskontraktService: YtelseskontraktServiceBi,
                                                private val oppfolgingskontraktService: OppfolgingskontraktServiceBi) {
 
@@ -34,13 +35,17 @@ class OppfolgingController @Inject constructor(private val service: Oppfolgingsi
     @GET
     @Path("/")
     fun hent(@PathParam("fnr") fodselsnummer: String): Map<String, Any?> {
-        val oppfolging = service.hentOppfolgingsinfo(fodselsnummer, ldapService)
+        return tilgangskontroll
+                .check(Policies.tilgangTilBruker.with(fodselsnummer))
+                .get {
+                    val oppfolging = service.hentOppfolgingsinfo(fodselsnummer, ldapService)
 
-        return mapOf(
-                "erUnderOppfølging" to oppfolging.erUnderOppfolging,
-                "veileder" to hentVeileder(oppfolging.veileder),
-                "enhet" to hentEnhet(oppfolging.oppfolgingsenhet)
-        )
+                    mapOf(
+                            "erUnderOppfølging" to oppfolging.erUnderOppfolging,
+                            "veileder" to hentVeileder(oppfolging.veileder),
+                            "enhet" to hentEnhet(oppfolging.oppfolgingsenhet)
+                    )
+                }
     }
 
     @GET
@@ -48,20 +53,24 @@ class OppfolgingController @Inject constructor(private val service: Oppfolgingsi
     fun hentUtvidetOppf(@PathParam("fnr") fodselsnummer: String,
                         @QueryParam("startDato") start: String?,
                         @QueryParam("sluttDato") slutt: String?): Map<String, Any?> {
-        val kontraktResponse = oppfolgingskontraktService.hentOppfolgingskontrakter(lagOppfolgingskontraktRequest(fodselsnummer, start, slutt))
-        val ytelserResponse = ytelseskontraktService.hentYtelseskontrakter(lagYtelseRequest(fodselsnummer, start, slutt))
+        return tilgangskontroll
+                .check(Policies.tilgangTilBruker.with(fodselsnummer))
+                .get {
+                    val kontraktResponse = oppfolgingskontraktService.hentOppfolgingskontrakter(lagOppfolgingskontraktRequest(fodselsnummer, start, slutt))
+                    val ytelserResponse = ytelseskontraktService.hentYtelseskontrakter(lagYtelseRequest(fodselsnummer, start, slutt))
 
-        return mapOf(
-                "oppfølging" to hent(fodselsnummer),
-                "meldeplikt" to kontraktResponse.bruker?.meldeplikt,
-                "formidlingsgruppe" to kontraktResponse.bruker?.formidlingsgruppe,
-                "innsatsgruppe" to kontraktResponse.bruker?.innsatsgruppe,
-                "sykmeldtFra" to kontraktResponse.bruker?.sykmeldtFrom?.toString(DATOFORMAT),
-                "rettighetsgruppe" to ytelserResponse.rettighetsgruppe,
-                "vedtaksdato" to kontraktResponse.vedtaksdato?.toString(DATOFORMAT),
-                "sykefraværsoppfølging" to hentSyfoPunkt(kontraktResponse.syfoPunkter),
-                "ytelser" to hentYtelser(ytelserResponse.ytelser)
-        )
+                    mapOf(
+                            "oppfølging" to hent(fodselsnummer),
+                            "meldeplikt" to kontraktResponse.bruker?.meldeplikt,
+                            "formidlingsgruppe" to kontraktResponse.bruker?.formidlingsgruppe,
+                            "innsatsgruppe" to kontraktResponse.bruker?.innsatsgruppe,
+                            "sykmeldtFra" to kontraktResponse.bruker?.sykmeldtFrom?.toString(DATOFORMAT),
+                            "rettighetsgruppe" to ytelserResponse.rettighetsgruppe,
+                            "vedtaksdato" to kontraktResponse.vedtaksdato?.toString(DATOFORMAT),
+                            "sykefraværsoppfølging" to hentSyfoPunkt(kontraktResponse.syfoPunkter),
+                            "ytelser" to hentYtelser(ytelserResponse.ytelser)
+                    )
+                }
     }
 
     private fun hentYtelser(ytelser: List<Ytelse>?): List<Map<String, Any?>> {
@@ -69,29 +78,28 @@ class OppfolgingController @Inject constructor(private val service: Oppfolgingsi
 
         return ytelser.map {
             mapOf(
-                    "dagerIgjen" to hentDagerIgjen(it),
-                    "ukerIgjen" to hentUkerIgjen(it),
                     "datoKravMottatt" to it.datoKravMottat?.toString(DATOFORMAT),
                     "fom" to it.fom?.toString(DATOFORMAT),
                     "tom" to it.tom?.toString(DATOFORMAT),
                     "status" to it.status,
                     "type" to it.type,
-                    "vedtak" to hentVedtak(it.vedtak)
+                    "vedtak" to hentVedtak(it.vedtak),
+                    "dagerIgjenMedBortfall" to it.dagerIgjenMedBortfall,
+                    "ukerIgjenMedBortfall" to it.ukerIgjenMedBortfall,
+                    *hentDagPengerFelter(it)
             )
         }
     }
 
-    private fun hentDagerIgjen(it: Ytelse): Int? {
-        return when (it) {
-            is Dagpengeytelse -> it.antallDagerIgjen
-            else -> null
-        }
-    }
-
-    private fun hentUkerIgjen(it: Ytelse): Int? {
-        return when (it) {
-            is Dagpengeytelse -> it.antallUkerIgjen
-            else -> null
+    private fun hentDagPengerFelter(ytelse: Ytelse): Array<Pair<String, Any?>> {
+        return when (ytelse) {
+            is Dagpengeytelse -> arrayOf(
+                    "dagerIgjenPermittering" to ytelse.antallDagerIgjenPermittering,
+                    "ukerIgjenPermittering" to ytelse.antallUkerIgjenPermittering,
+                    "dagerIgjen" to ytelse.antallDagerIgjen,
+                    "ukerIgjen" to ytelse.antallUkerIgjen
+            )
+            else -> emptyArray()
         }
     }
 

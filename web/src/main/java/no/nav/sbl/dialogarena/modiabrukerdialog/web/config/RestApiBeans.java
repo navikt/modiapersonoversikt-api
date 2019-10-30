@@ -7,6 +7,9 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.sak.rest.SaksoversiktController;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.*;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.baseurls.BaseUrlsController;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.brukerprofil.BrukerprofilController;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.dialog.DialogController;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.dialog.DialogMerkController;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.dialog.DialogOppgaveController;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.egenansatt.EgenAnsattController;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.enhet.EnhetController;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.featuretoggle.FeatureToggleController;
@@ -17,7 +20,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.ldap.LdapController;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.oppfolging.OppfolgingController;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.oppgave.OppgaveController;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.person.PersonController;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.person.PersondokumentController;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.person.PersonsokController;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.saker.SakerController;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.utbetaling.UtbetalingController;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.vergemal.VergemalController;
@@ -53,7 +56,10 @@ import org.springframework.context.annotation.Import;
         YtelseController.class,
         OppfolgingController.class,
         SakerController.class,
-        PersondokumentController.class,
-        NaisController.class
+        NaisController.class,
+        DialogController.class,
+        PersonsokController.class,
+        DialogMerkController.class,
+        DialogOppgaveController.class
 })
 public class RestApiBeans { }

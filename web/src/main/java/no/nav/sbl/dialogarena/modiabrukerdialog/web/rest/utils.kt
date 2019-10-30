@@ -6,8 +6,11 @@ import org.joda.time.IllegalFieldValueException
 import org.joda.time.LocalDate
 import org.joda.time.format.DateTimeFormat
 import java.time.format.DateTimeFormatter
+import javax.xml.datatype.DatatypeFactory
+import javax.xml.datatype.XMLGregorianCalendar
 
 const val DATOFORMAT = "yyyy-MM-dd"
+const val DATO_TID_FORMAT = "yyyy-MM-dd HH:mm:ss"
 
 fun <K, V> mapOfNotNullOrEmpty(vararg pairs: Pair<K, V>) = pairs
         .filterNot { it.second == null }
@@ -31,3 +34,10 @@ fun lagRiktigDato(dato: String?): LocalDate? = dato?.let {
         }
     }
 
+fun lagXmlGregorianDato(dato: String?): XMLGregorianCalendar? {
+    if (dato == null) {
+        return null
+    }
+
+    return DatatypeFactory.newInstance().newXMLGregorianCalendar(dato)
+}

@@ -25,15 +25,14 @@ public class CookieUtil {
     }
 
     public static void setSaksbehandlersValgteEnhet(HttpServletResponse response, String enhetId) {
-        Cookie enhetCookie = new Cookie(RestUtils.saksbehandlerInnstillingerCookieId(), enhetId);
-        enhetCookie.setMaxAge(3600 * 24 * 365);
-        enhetCookie.setPath("/modiabrukerdialog/");
+        response.addCookie(createCookie(saksbehandlerInnstillingerCookieId(), enhetId, "/"));
+        response.addCookie(createCookie(saksbehandlerInnstillingerTimeoutCookieId(), "", "/"));
+    }
 
-        Cookie timeoutCookie = new Cookie(RestUtils.saksbehandlerInnstillingerTimeoutCookieId(), "");
-        timeoutCookie.setMaxAge(3600 * 12);
-        timeoutCookie.setPath("/modiabrukerdialog/");
-
-        response.addCookie(enhetCookie);
-        response.addCookie(timeoutCookie);
+    private static Cookie createCookie(String name, String value, String path) {
+        Cookie cookie = new Cookie(name, value);
+        cookie.setMaxAge(3600 * 24 * 365);
+        cookie.setPath(path);
+        return cookie;
     }
 }

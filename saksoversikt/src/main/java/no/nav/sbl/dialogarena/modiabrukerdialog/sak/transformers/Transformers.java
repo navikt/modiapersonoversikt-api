@@ -1,13 +1,9 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.sak.transformers;
 
 import no.nav.modig.core.exception.ApplicationException;
-import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.Behandling;
-import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.DokumentFraHenvendelse;
-import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.Soknad;
+import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.*;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.filter.FilterUtils;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.utils.Java8Utils;
-import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.BehandlingsStatus;
-import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.BehandlingsType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsesoknader.v1.informasjon.WSDokumentforventning;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsesoknader.v1.informasjon.WSHenvendelseType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsesoknader.v1.informasjon.WSSoknad;

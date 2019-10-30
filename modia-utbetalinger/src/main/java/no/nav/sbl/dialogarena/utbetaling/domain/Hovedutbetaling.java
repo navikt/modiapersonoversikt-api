@@ -1,6 +1,5 @@
 package no.nav.sbl.dialogarena.utbetaling.domain;
 
-import no.nav.sbl.dialogarena.utbetaling.lamell.filter.FilterParametere;
 import org.joda.time.DateTime;
 
 import java.io.Serializable;
@@ -8,7 +7,6 @@ import java.util.List;
 import java.util.stream.Collector;
 
 import static java.util.stream.Collectors.summingDouble;
-import static java.util.stream.Collectors.toList;
 
 public class Hovedutbetaling implements Serializable {
 
@@ -86,14 +84,6 @@ public class Hovedutbetaling implements Serializable {
     public Hovedutbetaling withIsUtbetalt(boolean erUtbetalt) {
         this.erUtbetalt = erUtbetalt;
         return this;
-    }
-
-    public List<Hovedytelse> finnSynligeHovedytelser(FilterParametere filterParametere) {
-        synligeHovedytelser = hovedytelser.stream()
-                .filter(hovedytelse -> filterParametere.test(hovedytelse))
-                .collect(toList());
-
-        return synligeHovedytelser;
     }
 
     public boolean skalViseHovedutbetaling() {

@@ -14,8 +14,6 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import javax.inject.Inject;
 
 import static java.lang.System.setProperty;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v2.kodeverk.KodeverkV2EndpointConfig.KODEVERK_KEY;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.MockUtil.TILLATMOCKSETUP_PROPERTY;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 
@@ -35,8 +33,6 @@ public class KodeverkCacheTest extends CacheTest {
     @BeforeAll
     public static void fixEnvironment() {
         setProperty("kodeverkendpoint.v2.url", "http://www.value.com");
-        setProperty(KODEVERK_KEY, "true");
-        setProperty(TILLATMOCKSETUP_PROPERTY, "true");
     }
 
     @Test

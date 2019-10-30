@@ -1,0 +1,2 @@
+no.nav.tjeneste.virksomhet.oppfoelging.v1.meldinger.WSHentOppfoelgingskontraktListeRequest,getPersonidentifikator,ident
+no.nav.tjeneste.virksomhet.ytelseskontrakt.v3.meldinger.FimHentYtelseskontraktListeRequest,getPersonidentifikator,ident

@@ -4,10 +4,6 @@ import no.nav.modig.core.exception.ApplicationException;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.*;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.filter.FilterUtils;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.transformers.Transformers;
-import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.Behandling;
-import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.BehandlingsStatus;
-import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.DokumentFraHenvendelse;
-import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.Soknad;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsesoknader.v1.informasjon.WSDokumentforventning;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsesoknader.v1.informasjon.WSSoknad;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.WSBehandlingskjede;
@@ -23,9 +19,7 @@ import java.util.stream.Collectors;
 
 import static java.util.Arrays.asList;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.HenvendelseType.DOKUMENTINNSENDING;
-import static org.hamcrest.Matchers.contains;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertThat;
 
 public class TransformersTest {

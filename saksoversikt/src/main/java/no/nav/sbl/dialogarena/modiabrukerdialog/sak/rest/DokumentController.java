@@ -6,12 +6,11 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.sak.domain.dokumentvisning.Journ
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.Dokument;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.DokumentMetadata;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.Feilmelding;
+import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.resultatwrappere.ResultatWrapper;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.resultatwrappere.TjenesteResultatWrapper;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.DokumentMetadataService;
-import no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.JournalV2ServiceImpl;
-import no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.SaksService;
-import no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.interfaces.JournalV2Service;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.interfaces.TilgangskontrollService;
+import no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.saf.SafService;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.pdfbox.pdmodel.PDDocument;
@@ -30,23 +29,18 @@ import java.util.*;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ForkJoinPool;
 import java.util.function.BiFunction;
+import java.util.stream.Collectors;
 
 import static java.lang.String.format;
-import static java.lang.System.getProperty;
 import static java.util.Collections.emptyList;
 import static java.util.stream.Collectors.toList;
 import static javax.ws.rs.core.Response.Status.FORBIDDEN;
 import static javax.ws.rs.core.Response.Status.NOT_FOUND;
 import static javax.ws.rs.core.Response.ok;
 import static javax.ws.rs.core.Response.status;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.Feilmelding.DOKUMENT_IKKE_FUNNET;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.Feilmelding.MANGLER_DOKUMENTMETADATA;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.sak.rest.mock.DokumentControllerMock.mockDokumentResponse;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.sak.rest.mock.DokumentControllerMock.mockJournalpost;
 
 
-//Single Responsibility Principle
-@SuppressWarnings("squid:S1200")
 @Path("/saksoversikt/{fnr}")
 @Produces("application/json")
 public class DokumentController {
@@ -54,10 +48,7 @@ public class DokumentController {
     public static final Logger logger = LoggerFactory.getLogger(DokumentController.class);
 
     @Inject
-    private JournalV2Service innsyn;
-
-    @Inject
-    private SaksService saksService;
+    private SafService safService;
 
     @Inject
     private DokumentMetadataService dokumentMetadataService;
@@ -73,10 +64,6 @@ public class DokumentController {
     public Response hentDokument(@PathParam("fnr") String fnr, @PathParam("journalpostId") String journalpostId,
                                  @PathParam("dokumentreferanse") String dokumentreferanse,
                                  @Context HttpServletRequest request) throws IOException {
-        if (getProperty("dokumentressurs.withmock", "false").equalsIgnoreCase("true")) {
-            return mockDokumentResponse();
-        }
-
         if ("null".equals(journalpostId)) {
             return status(NOT_FOUND).build();
         }
@@ -88,24 +75,16 @@ public class DokumentController {
             return status(FORBIDDEN).build();
         }
 
-        TjenesteResultatWrapper hentDokumentResultat = innsyn.hentDokument(journalpostId, dokumentreferanse);
+        TjenesteResultatWrapper hentDokumentResultat = safService.hentDokument(journalpostId, dokumentreferanse, Dokument.Variantformat.ARKIV);
         return hentDokumentResultat.result
                 .map(res -> ok(res).type("application/pdf").build())
                 .orElse(status(NOT_FOUND).build());
-    }
-
-    private boolean harIkkeTilgang(TjenesteResultatWrapper tilgangskontrollResult) {
-        return !tilgangskontrollResult.result.isPresent();
     }
 
     @GET
     @Path("/journalpostmetadata/{journalpostId}")
     public Response hentJournalpostMetadata(@PathParam("fnr") String fnr, @PathParam("journalpostId") String journalpostId,
                                             @QueryParam("temakode") String temakode, @Context HttpServletRequest request) {
-        if (getProperty("dokumentressurs.withmock", "false").equalsIgnoreCase("true")) {
-            return ok(mockJournalpost().withDokumentFeilmelding(blurretDokumentReferanseResponse(DOKUMENT_IKKE_FUNNET, "Dokument 1"))).build();
-        }
-
         if ("null".equals(journalpostId)) {
             return ok(new JournalpostResultat().withDokumentFeilmelding(blurretDokumentReferanseResponse(MANGLER_DOKUMENTMETADATA, ""))).build();
         }
@@ -120,61 +99,90 @@ public class DokumentController {
             return ok(feilside).build();
         }
 
+        List<DokumentFeilmelding> feilmeldinger = hentFeilmeldinger(journalpostMetadata, journalpostId);
+        List<DokumentResultat> pdfer = hentDokumentResultater(fnr, journalpostId, journalpostMetadata);
+
         JournalpostResultat resultat = new JournalpostResultat().withTittel(hovedtittel);
-        Set<String> dokumentreferanser = new TreeSet<>();
-        dokumentreferanser.add(journalpostMetadata.getHoveddokument().getDokumentreferanse());
-
-        journalpostMetadata.getVedlegg()
-                .stream()
-                .filter(dokument -> !dokument.isLogiskDokument())
-                .forEach(dokument -> dokumentreferanser.add(dokument.getDokumentreferanse()));
-
-        List<Pair<String, TjenesteResultatWrapper>> dokumenter = dokumentreferanser
-                .stream()
-                .map(dokumentreferanse -> new ImmutablePair<>(dokumentreferanse, innsyn.hentDokument(journalpostId, dokumentreferanse)))
-                .collect(toList());
-
-        List<DokumentFeilmelding> feilmeldinger = dokumenter
-                .stream()
-                .filter((Pair<String, TjenesteResultatWrapper> data) -> harFeil(data.getRight()))
-                .map((Pair<String, TjenesteResultatWrapper> data) -> TIL_FEIL.apply(journalpostMetadata, data.getRight().feilmelding))
-                .collect(toList());
-
-        List<DokumentResultat> pdfer = hentDokumentResultater(fnr, journalpostId, journalpostMetadata, dokumenter);
-
         resultat.withDokumentFeilmeldinger(feilmeldinger);
         resultat.withDokumenter(pdfer);
         return ok(resultat).build();
+    }
+
+
+    private boolean harIkkeTilgang(TjenesteResultatWrapper tjenesteResultat) {
+        return !tjenesteResultat.result.isPresent();
+    }
+
+    private DokumentMetadata hentDokumentMetadata(String journalpostId, String fnr) {
+        return dokumentMetadataService.hentDokumentMetadata(fnr)
+                .resultat
+                .stream()
+                .filter(dokumentMetadata -> journalpostId.equals(dokumentMetadata.getJournalpostId()))
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException(format("Fant ikke metadata om journalpostId %s. Dette bør ikke skje.", journalpostId)));
+    }
+
+    private List<DokumentFeilmelding> hentFeilmeldinger(DokumentMetadata journalpostMetadata, String journalpostId) {
+        List<Pair<String, TjenesteResultatWrapper>> refOgDokumenter = lagDokRefOgDokumenter(journalpostId, journalpostMetadata);
+        return refOgDokumenter
+                .stream()
+                .filter(refOgDok -> harFeil(refOgDok.getRight()))
+                .map(refOgDok -> TIL_FEIL.apply(journalpostMetadata, refOgDok.getRight().feilmelding))
+                .collect(toList());
+    }
+
+    private List<DokumentResultat> hentDokumentResultater(String fnr, String journalpostId, DokumentMetadata journalpostMetadata) {
+        try {
+            List<Pair<String, TjenesteResultatWrapper>> refOgDokument = lagDokRefOgDokumenter(journalpostId, journalpostMetadata);
+            ForkJoinPool forkJoinPool = new ForkJoinPool(4);
+            return forkJoinPool.submit(() ->
+                    refOgDokument.parallelStream()
+                            .filter((Pair<String, TjenesteResultatWrapper> data) -> !harFeil(data.getRight()))
+                            .map(dok -> lagDokumentResultat(fnr, journalpostId, journalpostMetadata, dok))
+                            .collect(toList())).get();
+        } catch (InterruptedException | ExecutionException e) {
+            logger.error("Kunne ikke håndtere alle pdfer", e);
+            return emptyList();
+        }
+    }
+
+    private List<Pair<String, TjenesteResultatWrapper>> lagDokRefOgDokumenter(String journalpostId, DokumentMetadata journalpostMetadata) {
+        Set<String> dokumentreferanser = getDokumentReferanser(journalpostMetadata);
+        return dokumentreferanser
+                .stream()
+                .map(dokumentreferanse -> new ImmutablePair<>(dokumentreferanse, hentDokument(journalpostId, dokumentreferanse)))
+                .collect(toList());
+    }
+
+    private TjenesteResultatWrapper hentDokument(String journalpostId, String dokumentreferanse) {
+        return safService.hentDokument(journalpostId, dokumentreferanse, Dokument.Variantformat.ARKIV);
+    }
+
+    private Set<String> getDokumentReferanser(DokumentMetadata journalpostMetadata) {
+        Set<String> dokumentreferanser = new TreeSet<>();
+        dokumentreferanser.add(journalpostMetadata.getHoveddokument().getDokumentreferanse());
+        dokumentreferanser.addAll(vedleggsreferanser(journalpostMetadata));
+        return dokumentreferanser;
     }
 
     private boolean harFeil(TjenesteResultatWrapper tjenesteResultat) {
         return tjenesteResultat.feilmelding != null || harIkkeTilgang(tjenesteResultat);
     }
 
-    private List<DokumentResultat> hentDokumentResultater(String fnr, String journalpostId, DokumentMetadata journalpostMetadata, List<Pair<String, TjenesteResultatWrapper>> dokumenter) {
-        try {
-            ForkJoinPool forkJoinPool = new ForkJoinPool(4);
-            return forkJoinPool.submit(() -> {
-                return dokumenter
-                        .parallelStream()
-                        .filter((Pair<String, TjenesteResultatWrapper> data) -> !harFeil(data.getRight()))
-                        .map((Pair<String, TjenesteResultatWrapper> data) -> {
-                            int antallSider = hentAntallSiderIDokument(data);
-                            boolean erHoveddokument = data.getLeft().equals(journalpostMetadata.getHoveddokument().getDokumentreferanse());
-                            String tittel = journalpostMetadata.getVedlegg()
-                                    .stream()
-                                    .filter((d) -> data.getLeft().equals(d.getDokumentreferanse()))
-                                    .findFirst()
-                                    .map(Dokument::getTittel)
-                                    .orElse(journalpostMetadata.getHoveddokument().getTittel());
+    private List<String> vedleggsreferanser(DokumentMetadata journalpostMetadata) {
+        return journalpostMetadata.getVedlegg()
+                .stream()
+                .filter(dokument -> !dokument.isLogiskDokument())
+                .map(Dokument::getDokumentreferanse)
+                .collect(Collectors.toList());
+    }
 
-                            return new DokumentResultat(tittel, antallSider, fnr, journalpostId, data.getLeft(), erHoveddokument);
-                        }).collect(toList());
-            }).get();
-        } catch (InterruptedException | ExecutionException e) {
-            logger.error("Kunne ikke håndtere alle pdfer", e);
-            return emptyList();
-        }
+    private DokumentResultat lagDokumentResultat(String fnr, String journalpostId, DokumentMetadata journalpostMetadata, Pair<String, TjenesteResultatWrapper> dokRefOgDok) {
+        int antallSider = hentAntallSiderIDokument(dokRefOgDok);
+        boolean erHoveddokument = dokRefOgDok.getLeft().equals(journalpostMetadata.getHoveddokument().getDokumentreferanse());
+        String tittel = getVedleggEllerHoveddokumentTittel(journalpostMetadata, dokRefOgDok);
+
+        return new DokumentResultat(tittel, antallSider, fnr, journalpostId, dokRefOgDok.getLeft(), erHoveddokument);
     }
 
     private int hentAntallSiderIDokument(Pair<String, TjenesteResultatWrapper> data) {
@@ -188,13 +196,13 @@ public class DokumentController {
         }
     }
 
-    private DokumentMetadata hentDokumentMetadata(String journalpostId, String fnr) {
-        return dokumentMetadataService.hentDokumentMetadata(saksService.hentAlleSaker(fnr).resultat, fnr)
-                .resultat
+    private String getVedleggEllerHoveddokumentTittel(DokumentMetadata journalpostMetadata, Pair<String, TjenesteResultatWrapper> refOgDok) {
+        return journalpostMetadata.getVedlegg()
                 .stream()
-                .filter(dokumentMetadata -> journalpostId.equals(dokumentMetadata.getJournalpostId()))
+                .filter((vedlegg) -> refOgDok.getLeft().equals(vedlegg.getDokumentreferanse()))
                 .findFirst()
-                .orElseThrow(() -> new RuntimeException(format("Fant ikke metadata om journalpostId %s. Dette bør ikke skje.", journalpostId)));
+                .map(Dokument::getTittel)
+                .orElse(journalpostMetadata.getHoveddokument().getTittel());
     }
 
     private boolean finnesDokumentReferansenIMetadata(DokumentMetadata dokumentMetadata, String dokumentreferanse) {
@@ -204,9 +212,7 @@ public class DokumentController {
 
         return dokumentMetadata.getVedlegg()
                 .stream()
-                .filter(dokument -> dokument.getDokumentreferanse().equals(dokumentreferanse))
-                .findAny()
-                .isPresent();
+                .anyMatch(dokument -> dokument.getDokumentreferanse().equals(dokumentreferanse));
     }
 
     private DokumentFeilmelding blurretDokumentReferanseResponse(Feilmelding feilmelding, String tittel) {

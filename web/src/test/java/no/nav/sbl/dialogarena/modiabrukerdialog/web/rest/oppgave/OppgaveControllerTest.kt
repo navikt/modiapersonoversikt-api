@@ -6,12 +6,14 @@ import _0._0.nav_cons_sak_gosys_3.no.nav.asbo.navorgenhet.ASBOGOSYSNavEnhet
 import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navansatt.GOSYSNAVansatt
 import com.nhaarman.mockito_kotlin.*
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Oppgave
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.ldap.LDAPService
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.http.HttpRequestUtil
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.http.SubjectHandlerUtil
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.oppgavebehandling.OppgaveBehandlingServiceImpl
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.AnsattServiceImpl
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.oppgavebehandling.OppgaveBehandlingServiceImpl
 import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.GsakOppgaveV3PortTypeMock.lagWSOppgave
+import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.TilgangskontrollMock
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.service.plukkoppgave.PlukkOppgaveService
 import no.nav.tjeneste.virksomhet.oppgave.v3.OppgaveV3
 import no.nav.tjeneste.virksomhet.oppgave.v3.informasjon.oppgave.*
@@ -26,8 +28,6 @@ import org.junit.jupiter.api.Assertions.assertAll
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.function.Executable
-import org.springframework.mock.web.MockHttpServletRequest
-import java.lang.IllegalArgumentException
 import javax.ws.rs.ForbiddenException
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
@@ -50,7 +50,8 @@ internal class OppgaveControllerTest {
                     mock()
             ),
             plukkOppgaveService,
-            ldapService
+            ldapService,
+            TilgangskontrollMock.get()
     )
 
     @BeforeEach
@@ -89,7 +90,7 @@ internal class OppgaveControllerTest {
     fun `Legger tilbake oppgave ved å kalle lagreOppgave mot GSAK`() {
         val httpRequest = HttpRequestUtil.mockHttpServletRequestMedCookie(SAKSBEHANDLERS_IDENT, VALGT_ENHET)
 
-        oppgaveController.leggTilbake(OPPGAVE_ID_1, httpRequest, lagRequest())
+        oppgaveController.leggTilbake(httpRequest, lagRequest())
 
         verify(oppgaveBehandlingMock).lagreOppgave(check {
             assertAll("Oppgave lagret i GSAK",
@@ -102,23 +103,12 @@ internal class OppgaveControllerTest {
     }
 
     @Test
-    fun `Legger tilbake oppgave med ugyldig temagruppe kaster feil`() {
-        val leggTilbakeRequest = LeggTilbakeRequest(temagruppe = "UGYLDIG_TEMAGRUPPE")
-
-        val assertion = assertFailsWith<IllegalArgumentException> {
-            oppgaveController.leggTilbake(OPPGAVE_ID_1, MockHttpServletRequest(), leggTilbakeRequest)
-        }
-
-        assertTrue(assertion.message!!.contains("Ugyldig temagruppe"))
-    }
-
-    @Test
     fun `Sjekker at ansvarlig for oppgaven er samme person som forsøker å legge den tilbake`() {
         SubjectHandlerUtil.setInnloggetSaksbehandler("annen-saksbehandler")
 
         assertFailsWith<ForbiddenException> {
             val httpRequest = HttpRequestUtil.mockHttpServletRequestMedCookie("annen-saksbehandler", VALGT_ENHET)
-            oppgaveController.leggTilbake(OPPGAVE_ID_1, httpRequest, lagRequest())
+            oppgaveController.leggTilbake(httpRequest, lagRequest())
         }
     }
 
@@ -133,8 +123,8 @@ internal class OppgaveControllerTest {
         val resultat = oppgaveController.finnTildelte()
 
         assertEquals(oppgaveliste.size, resultat.size)
-        assertEquals(oppgaveliste[0].oppgaveId, resultat[0]["oppgaveid"])
-        assertEquals(oppgaveliste[1].oppgaveId, resultat[1]["oppgaveid"])
+        assertEquals(oppgaveliste[0].oppgaveId, resultat[0]["oppgaveId"])
+        assertEquals(oppgaveliste[1].oppgaveId, resultat[1]["oppgaveId"])
     }
 
     @Test
@@ -155,20 +145,41 @@ internal class OppgaveControllerTest {
     fun `Returnerer oppgaver ved plukk`() {
         val httpRequest = HttpRequestUtil.mockHttpServletRequestMedCookie(SAKSBEHANDLERS_IDENT, VALGT_ENHET)
         val oppgaver = listOf(
-                Oppgave(OPPGAVE_ID_1, "fnr", "henvendelseid"),
-                Oppgave(OPPGAVE_ID_2, "fnr", "henvendelseid")
+                Oppgave(OPPGAVE_ID_1, "fnr", "traadId"),
+                Oppgave(OPPGAVE_ID_2, "fnr", "traadId")
         )
 
         whenever(tildelOppgaveMock.tildelFlereOppgaver(any()))
                 .thenReturn(WSTildelFlereOppgaverResponse().withOppgaveIder(1, 2))
         whenever(plukkOppgaveService.plukkOppgaver(any(), any()))
                 .thenReturn(oppgaver)
+        whenever(oppgaveWSMock.finnOppgaveListe(any()))
+                .thenReturn(WSFinnOppgaveListeResponse())
 
         val resultat = oppgaveController.plukkOppgaver(TEMAGRUPPE_ARBEID, httpRequest)
 
         assertEquals(oppgaver.size, resultat.size)
-        assertEquals(oppgaver[0].oppgaveId, resultat[0]["oppgaveid"])
-        assertEquals(oppgaver[1].oppgaveId, resultat[1]["oppgaveid"])
+        assertEquals(oppgaver[0].oppgaveId, resultat[0]["oppgaveId"])
+        assertEquals(oppgaver[1].oppgaveId, resultat[1]["oppgaveId"])
+    }
+
+    @Test
+    fun `Returnerer tildelt oppgave hvis saksbehandler allerede har en tildelt oppgave ved plukk`() {
+        val httpRequest = HttpRequestUtil.mockHttpServletRequestMedCookie(SAKSBEHANDLERS_IDENT, VALGT_ENHET)
+
+        val oppgaveliste = listOf(lagWSOppgave().withOppgaveId(OPPGAVE_ID_1), lagWSOppgave().withOppgaveId("2"))
+
+        whenever(oppgaveWSMock.finnOppgaveListe(any()))
+                .thenReturn(WSFinnOppgaveListeResponse()
+                        .withOppgaveListe(oppgaveliste))
+        whenever(plukkOppgaveService.plukkOppgaver(any(), any()))
+                .thenReturn(emptyList())
+
+        val resultat = oppgaveController.plukkOppgaver(TEMAGRUPPE_ARBEID, httpRequest)
+
+        verify(plukkOppgaveService, times(0)).plukkOppgaver(any(), any())
+        assertEquals(oppgaveliste.size, resultat.size)
+        assertEquals(oppgaveliste[0].oppgaveId, resultat[0]["oppgaveid"])
     }
 
     @Test
@@ -177,13 +188,15 @@ internal class OppgaveControllerTest {
 
         whenever(tildelOppgaveMock.tildelFlereOppgaver(any()))
                 .thenReturn(WSTildelFlereOppgaverResponse())
+        whenever(oppgaveWSMock.finnOppgaveListe(any()))
+                .thenReturn(WSFinnOppgaveListeResponse())
 
         val resultat = oppgaveController.plukkOppgaver(TEMAGRUPPE_ARBEID, httpRequest)
 
         assertEquals(0, resultat.size)
     }
 
-    private fun lagRequest() = LeggTilbakeRequest(temagruppe = TEMAGRUPPE_ARBEID)
+    private fun lagRequest() = LeggTilbakeRequest(oppgaveId = OPPGAVE_ID_1, type = LeggTilbakeAarsak.FeilTema, beskrivelse = null, temagruppe = Temagruppe.ARBD)
 
     companion object {
         const val OPPGAVE_ID_1 = "OPPGAVE_ID_1"

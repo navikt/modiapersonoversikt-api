@@ -1,5 +1,7 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.utbetaling
 
+import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Policies
+import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Tilgangskontroll
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.DATOFORMAT
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.lagRiktigDato
 import no.nav.sbl.dialogarena.utbetaling.service.UtbetalingService
@@ -11,33 +13,36 @@ import javax.ws.rs.core.Response
 
 @Path("/utbetaling/{fnr}")
 @Produces(APPLICATION_JSON)
-class UtbetalingController @Inject constructor(private val service: UtbetalingService) {
+class UtbetalingController @Inject constructor(private val service: UtbetalingService, private val tilgangskontroll: Tilgangskontroll) {
 
     @GET
     @Path("/")
-    fun hent(@PathParam("fnr") fødselsnummer: String,
+    fun hent(@PathParam("fnr") fodselsnummer: String,
              @QueryParam("startDato") start: String?,
              @QueryParam("sluttDato") slutt: String?): Response {
+        return tilgangskontroll
+                .check(Policies.tilgangTilBruker.with(fodselsnummer))
+                .get {
+                    val startDato = lagRiktigDato(start)
+                    val sluttDato = lagRiktigDato(slutt)
 
-        val startDato = lagRiktigDato(start)
-        val sluttDato = lagRiktigDato(slutt)
+                    if (startDato == null || sluttDato == null) {
+                        Response.status(Response.Status.BAD_REQUEST)
+                                .entity("queryparam ?startDato=yyyy-MM-dd&sluttDato=yyyy-MM-dd må være satt").build()
+                    } else {
+                        val utbetalinger = service.hentWSUtbetalinger(fodselsnummer,
+                                startDato,
+                                sluttDato)
 
-        if (startDato == null || sluttDato == null) {
-            return Response.status(Response.Status.BAD_REQUEST)
-                    .entity("queryparam ?startDato=yyyy-MM-dd&sluttDato=yyyy-MM-dd må være satt").build()
-        }
-
-        val utbetalinger = service.hentWSUtbetalinger(fødselsnummer,
-                startDato,
-                sluttDato)
-
-        return Response.ok(mapOf(
-                "utbetalinger" to hentUtbetalinger(utbetalinger),
-                "periode" to mapOf(
-                        "startDato" to startDato.toString(DATOFORMAT),
-                        "sluttDato" to sluttDato.toString(DATOFORMAT)
-                )
-        )).build()
+                        Response.ok(mapOf(
+                                "utbetalinger" to hentUtbetalinger(utbetalinger),
+                                "periode" to mapOf(
+                                        "startDato" to startDato.toString(DATOFORMAT),
+                                        "sluttDato" to sluttDato.toString(DATOFORMAT)
+                                )
+                        )).build()
+                    }
+                }
     }
 
     private fun hentUtbetalinger(utbetalinger: List<WSUtbetaling>): List<Map<String, Any?>> {

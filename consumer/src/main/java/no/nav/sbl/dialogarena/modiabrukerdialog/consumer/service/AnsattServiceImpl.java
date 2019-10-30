@@ -3,6 +3,7 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service;
 import _0._0.nav_cons_sak_gosys_3.no.nav.asbo.navansatt.ASBOGOSYSNAVAnsatt;
 import _0._0.nav_cons_sak_gosys_3.no.nav.asbo.navorgenhet.ASBOGOSYSNavEnhet;
 import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navansatt.*;
+import no.nav.common.auth.SubjectHandler;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.Ansatt;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.AnsattEnhet;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.AnsattService;
@@ -12,7 +13,6 @@ import java.util.List;
 import java.util.function.Function;
 
 import static java.util.stream.Collectors.toList;
-import static no.nav.brukerdialog.security.context.SubjectHandler.getSubjectHandler;
 
 public class AnsattServiceImpl implements AnsattService {
 
@@ -24,8 +24,14 @@ public class AnsattServiceImpl implements AnsattService {
     }
 
     public List<AnsattEnhet> hentEnhetsliste() {
-        ASBOGOSYSNAVAnsatt hentNAVAnsattEnhetListeRequest = new ASBOGOSYSNAVAnsatt();
-        hentNAVAnsattEnhetListeRequest.setAnsattId(getSubjectHandler().getUid());
+        ASBOGOSYSNAVAnsatt hentNAVAnsattEnhetListeRequest = SubjectHandler.getIdent()
+                .map((ident) -> {
+                    ASBOGOSYSNAVAnsatt request = new ASBOGOSYSNAVAnsatt();
+                    request.setAnsattId(ident);
+                    return request;
+                })
+                .orElseThrow(() -> new RuntimeException("Fant ikke ident til saksbehandler"));
+
         try {
             return ansattWS.hentNAVAnsattEnhetListe(hentNAVAnsattEnhetListeRequest)
                     .getNAVEnheter()

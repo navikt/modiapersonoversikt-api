@@ -11,12 +11,17 @@ import no.nav.kjerneinfo.domain.person.fakta.Sikkerhetstiltak
 import no.nav.kjerneinfo.domain.person.fakta.Telefon
 import no.nav.kodeverk.consumer.fim.kodeverk.KodeverkmanagerBi
 import no.nav.kodeverk.consumer.fim.kodeverk.to.feil.HentKodeverkKodeverkIkkeFunnet
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.person.PersonOppslagService
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.Feature
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.UnleashService
+import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Policies
+import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Tilgangskontroll
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.kodeverk.Kode
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.lagPeriode
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.mapOfNotNullOrEmpty
 import no.nav.tjeneste.virksomhet.person.v3.HentPersonPersonIkkeFunnet
 import no.nav.tjeneste.virksomhet.person.v3.HentPersonSikkerhetsbegrensning
+import org.slf4j.LoggerFactory
 import javax.inject.Inject
 import javax.ws.rs.*
 import javax.ws.rs.core.MediaType.APPLICATION_JSON
@@ -29,50 +34,74 @@ private const val TILRETTELAGT_KOMMUNIKASJON_KODEVERKSPRAK = "nb"
 @Path("/person/{fnr}")
 @Produces(APPLICATION_JSON)
 class PersonController @Inject constructor(private val kjerneinfoService: PersonKjerneinfoServiceBi,
-                                           private val kodeverk: KodeverkmanagerBi, private val unleashService: UnleashService) {
+                                           private val kodeverk: KodeverkmanagerBi,
+                                           private val persondokumentService: PersonOppslagService,
+                                           private val unleashService: UnleashService,
+                                           private val tilgangskontroll: Tilgangskontroll) {
+
+    private val logger = LoggerFactory.getLogger(PersonController::class.java)
 
     @GET
     @Path("/")
-    fun hent(@PathParam("fnr") fødselsnummer: String): Map<String, Any?> {
+    fun hent(@PathParam("fnr") fodselsnummer: String): Map<String, Any?> {
+        return tilgangskontroll
+                .check(Policies.tilgangTilBruker.with(fodselsnummer))
+                .get {
+                    try {
+                        val hentKjerneinformasjonRequest = HentKjerneinformasjonRequest(fodselsnummer)
+                        hentKjerneinformasjonRequest.isBegrunnet = true
+                        val person = kjerneinfoService.hentKjerneinformasjon(hentKjerneinformasjonRequest).person
 
-        val person = try {
-            val hentKjerneinformasjonRequest = HentKjerneinformasjonRequest(fødselsnummer)
-            hentKjerneinformasjonRequest.isBegrunnet = true
-            kjerneinfoService.hentKjerneinformasjon(hentKjerneinformasjonRequest).person
-        } catch (exception: AuthorizationWithSikkerhetstiltakException) {
-            return getBegrensetInnsyn(fødselsnummer, exception.message)
-        } catch (exception: RuntimeException) {
-            when (exception.cause) {
-                is HentPersonPersonIkkeFunnet -> throw NotFoundException()
-                is HentPersonSikkerhetsbegrensning -> return getBegrensetInnsyn(fødselsnummer, exception.message)
-                else -> throw InternalServerErrorException(exception)
-            }
-        }
+                        val response = if (unleashService.isEnabled(Feature.DOEDSBO)) {
+                            try {
+                                persondokumentService.hentPersonDokument(fodselsnummer)
+                            } catch (exception: NotFoundException) {
+                                logger.info("Persondokument ikke funnet for " + fodselsnummer)
+                                null
+                            } catch (exception: Exception) {
+                                logger.info("Feil i persondokumentoppslag", exception)
+                                null
+                            }
+                        } else {
+                            null
+                        }
+                        val kontaktinfoForDoedsbo = response?.kontaktinformasjonForDoedsbo
 
-        return mapOf(
-                "fødselsnummer" to person.fodselsnummer.nummer,
-                "alder" to person.fodselsnummer.alder,
-                "kjønn" to person.personfakta.kjonn?.kodeRef,
-                "geografiskTilknytning" to person.personfakta.geografiskTilknytning?.value,
-                "navn" to getNavn(person.personfakta.personnavn),
-                "diskresjonskode" to person.personfakta.diskresjonskode?.let { Kode(it) },
-                "bankkonto" to hentBankkonto(person),
-                "tilrettelagtKomunikasjonsListe" to hentTilrettelagtKommunikasjon(person.personfakta.tilrettelagtKommunikasjon),
-                "personstatus" to getPersonstatus(person),
-                "statsborgerskap" to mapStatsborgerskap(person.personfakta),
-                "sivilstand" to mapOf(
-                        "kodeRef" to person.personfakta.sivilstand?.kodeRef,
-                        "beskrivelse" to person.personfakta.sivilstand?.beskrivelse,
-                        "fraOgMed" to person.personfakta.sivilstandFom
-                ),
-                "familierelasjoner" to getFamilierelasjoner(person),
-                "fodselsdato" to person.fodselsnummer.fodselsdato,
-                "folkeregistrertAdresse" to person.personfakta.bostedsadresse?.let { hentAdresse(it) },
-                "alternativAdresse" to person.personfakta.alternativAdresse?.let { hentAdresse(it) },
-                "postadresse" to person.personfakta.postadresse?.let { hentAdresse(it) },
-                "sikkerhetstiltak" to person.personfakta.sikkerhetstiltak?.let { hentSikkerhetstiltak(it) },
-                "kontaktinformasjon" to getTelefoner(person.personfakta)
-        )
+                        mapOf(
+                                "fødselsnummer" to person.fodselsnummer.nummer,
+                                "alder" to person.fodselsnummer.alder,
+                                "kjønn" to person.personfakta.kjonn?.kodeRef,
+                                "geografiskTilknytning" to person.personfakta.geografiskTilknytning?.value,
+                                "navn" to getNavn(person.personfakta.personnavn),
+                                "diskresjonskode" to person.personfakta.diskresjonskode?.let { Kode(it) },
+                                "bankkonto" to hentBankkonto(person),
+                                "tilrettelagtKomunikasjonsListe" to hentTilrettelagtKommunikasjon(person.personfakta.tilrettelagtKommunikasjon),
+                                "personstatus" to getPersonstatus(person),
+                                "statsborgerskap" to mapStatsborgerskap(person.personfakta),
+                                "sivilstand" to mapOf(
+                                        "kodeRef" to person.personfakta.sivilstand?.kodeRef,
+                                        "beskrivelse" to person.personfakta.sivilstand?.beskrivelse,
+                                        "fraOgMed" to person.personfakta.sivilstandFom
+                                ),
+                                "familierelasjoner" to getFamilierelasjoner(person),
+                                "fodselsdato" to person.fodselsnummer.fodselsdato,
+                                "folkeregistrertAdresse" to person.personfakta.bostedsadresse?.let { hentAdresse(it) },
+                                "alternativAdresse" to person.personfakta.alternativAdresse?.let { hentAdresse(it) },
+                                "postadresse" to person.personfakta.postadresse?.let { hentAdresse(it) },
+                                "sikkerhetstiltak" to person.personfakta.sikkerhetstiltak?.let { hentSikkerhetstiltak(it) },
+                                "kontaktinformasjon" to getTelefoner(person.personfakta),
+                                "kontaktinformasjonForDoedsbo" to kontaktinfoForDoedsbo?.let { DoedsboMapping(kjerneinfoService, it).mapKontaktinfoForDoedsbo() }
+                        )
+                    } catch (exception: AuthorizationWithSikkerhetstiltakException) {
+                        getBegrensetInnsyn(fodselsnummer, exception.message)
+                    } catch (exception: RuntimeException) {
+                        when (exception.cause) {
+                            is HentPersonPersonIkkeFunnet -> throw NotFoundException()
+                            is HentPersonSikkerhetsbegrensning -> getBegrensetInnsyn(fodselsnummer, exception.message)
+                            else -> throw InternalServerErrorException(exception)
+                        }
+                    }
+                }
     }
 
     private fun mapStatsborgerskap(personfakta: Personfakta) =
@@ -233,5 +262,4 @@ class PersonController @Inject constructor(private val kjerneinfoService: Person
     } catch (exception: HentKodeverkKodeverkIkkeFunnet) {
         emptyList<Kodeverdi>()
     }
-
 }
