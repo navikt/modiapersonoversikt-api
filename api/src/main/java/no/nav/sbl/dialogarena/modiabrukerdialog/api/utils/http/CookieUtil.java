@@ -25,11 +25,8 @@ public class CookieUtil {
     }
 
     public static void setSaksbehandlersValgteEnhet(HttpServletResponse response, String enhetId) {
-        response.addCookie(createCookie(saksbehandlerInnstillingerCookieId(), enhetId, "/modiabrukerdialog/"));
-        // response.addCookie(createCookie(saksbehandlerInnstillingerCookieId(), enhetId, "/modiapersonoversikt/"));
-
-        response.addCookie(createCookie(saksbehandlerInnstillingerTimeoutCookieId(), "", "/modiabrukerdialog/"));
-        // response.addCookie(createCookie(saksbehandlerInnstillingerTimeoutCookieId(), "", "/modiapersonoversikt/"));
+        response.addCookie(createCookie(saksbehandlerInnstillingerCookieId(), enhetId, "/"));
+        response.addCookie(createCookie(saksbehandlerInnstillingerTimeoutCookieId(), "", "/"));
     }
 
     private static Cookie createCookie(String name, String value, String path) {

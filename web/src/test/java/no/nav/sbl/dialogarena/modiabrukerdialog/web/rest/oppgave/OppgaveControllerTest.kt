@@ -123,8 +123,8 @@ internal class OppgaveControllerTest {
         val resultat = oppgaveController.finnTildelte()
 
         assertEquals(oppgaveliste.size, resultat.size)
-        assertEquals(oppgaveliste[0].oppgaveId, resultat[0]["oppgaveid"])
-        assertEquals(oppgaveliste[1].oppgaveId, resultat[1]["oppgaveid"])
+        assertEquals(oppgaveliste[0].oppgaveId, resultat[0]["oppgaveId"])
+        assertEquals(oppgaveliste[1].oppgaveId, resultat[1]["oppgaveId"])
     }
 
     @Test
@@ -145,8 +145,8 @@ internal class OppgaveControllerTest {
     fun `Returnerer oppgaver ved plukk`() {
         val httpRequest = HttpRequestUtil.mockHttpServletRequestMedCookie(SAKSBEHANDLERS_IDENT, VALGT_ENHET)
         val oppgaver = listOf(
-                Oppgave(OPPGAVE_ID_1, "fnr", "henvendelseid"),
-                Oppgave(OPPGAVE_ID_2, "fnr", "henvendelseid")
+                Oppgave(OPPGAVE_ID_1, "fnr", "traadId"),
+                Oppgave(OPPGAVE_ID_2, "fnr", "traadId")
         )
 
         whenever(tildelOppgaveMock.tildelFlereOppgaver(any()))
@@ -159,8 +159,8 @@ internal class OppgaveControllerTest {
         val resultat = oppgaveController.plukkOppgaver(TEMAGRUPPE_ARBEID, httpRequest)
 
         assertEquals(oppgaver.size, resultat.size)
-        assertEquals(oppgaver[0].oppgaveId, resultat[0]["oppgaveid"])
-        assertEquals(oppgaver[1].oppgaveId, resultat[1]["oppgaveid"])
+        assertEquals(oppgaver[0].oppgaveId, resultat[0]["oppgaveId"])
+        assertEquals(oppgaver[1].oppgaveId, resultat[1]["oppgaveId"])
     }
 
     @Test

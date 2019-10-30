@@ -32,7 +32,7 @@ public class SendUtHenvendelseEndpointConfig {
     private static CXFClient<SendUtHenvendelsePortType> createSendUtHenvendelsePortType() {
         return new CXFClient<>(SendUtHenvendelsePortType.class)
                 .wsdl("classpath:SendUtHenvendelse.wsdl")
-                .address(System.getProperty("send.ut.henvendelse.url"))
+                .address(System.getProperty("send.ut.henvendelse.endpointUrl"))
                 .withProperty("jaxb.additionalContextClasses", new Class[]{
                         XMLHenvendelse.class,
                         XMLMetadataListe.class,

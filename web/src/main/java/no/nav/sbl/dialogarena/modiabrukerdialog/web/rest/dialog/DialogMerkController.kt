@@ -1,12 +1,15 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.dialog
 
+import no.nav.brukerdialog.security.context.SubjectHandler
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveBehandlingService
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.BehandlingsIdTilgangData
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Policies
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Tilgangskontroll
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.tilgangskontroll.hentSaksbehandlereMedTilgangTilHastekassering
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.behandlehenvendelse.BehandleHenvendelsePortType
 import java.util.*
 import javax.inject.Inject
+import javax.ws.rs.GET
 import javax.ws.rs.POST
 import javax.ws.rs.Path
 import javax.ws.rs.core.Response
@@ -77,6 +80,13 @@ class DialogMerkController @Inject constructor(private val behandleHenvendelsePo
                         behandleHenvendelsePortType.markerTraadForHasteKassering(request.behandlingsidListe);
                         Response.ok().build()
                 }
+    }
+
+    @GET
+    @Path("/slett")
+    fun kanSlette(): Response {
+        val saksbehandlerId = SubjectHandler.getSubjectHandler().uid.toUpperCase()
+        return Response.ok(hentSaksbehandlereMedTilgangTilHastekassering().contains(saksbehandlerId)).build()
     }
 
 }

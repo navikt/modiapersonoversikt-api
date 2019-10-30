@@ -400,6 +400,11 @@
                 <artifactId>arbeidsfordeling-v1-tjenestespesifikasjon</artifactId>
                 <version>${arbeidsfordeling-v1.version}</version>
             </dependency>
+            <dependency>
+                <groupId>no.nav.tjenestespesifikasjoner</groupId>
+                <artifactId>nav-fim-personsok-v1-tjenestespesifikasjon</artifactId>
+                <version>${nav-fim-personsok-v1-tjenestespesifikasjon.version}</version>
+            </dependency>
 
 
             <!--Dialogarena-->
@@ -567,6 +572,11 @@
                 <artifactId>mockk</artifactId>
                 <version>${mockk-version}</version>
                 <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.natpryce</groupId>
+                <artifactId>hamkrest</artifactId>
+                <version>${hamkrest.version}</version>
             </dependency>
 
             <!-- Ny logback config -->

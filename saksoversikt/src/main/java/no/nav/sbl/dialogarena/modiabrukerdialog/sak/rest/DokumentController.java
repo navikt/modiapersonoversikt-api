@@ -6,6 +6,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.sak.domain.dokumentvisning.Journ
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.Dokument;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.DokumentMetadata;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.Feilmelding;
+import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.resultatwrappere.ResultatWrapper;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.resultatwrappere.TjenesteResultatWrapper;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.DokumentMetadataService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.interfaces.TilgangskontrollService;
