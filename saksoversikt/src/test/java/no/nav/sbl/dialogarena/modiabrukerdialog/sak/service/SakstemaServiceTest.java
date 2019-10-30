@@ -5,7 +5,6 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.*;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.resultatwrappere.ResultatWrapper;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.filter.FilterUtils;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.utils.Konstanter;
-import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.*;
 import no.nav.tjeneste.virksomhet.pensjonsak.v1.HentSakSammendragListePersonIkkeFunnet;
 import no.nav.tjeneste.virksomhet.pensjonsak.v1.HentSakSammendragListeSakManglerEierenhet;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.WSBehandlingskjede;
@@ -14,13 +13,11 @@ import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.sakogbehandling
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.sakogbehandling.WSBehandlingsstatuser;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.sakogbehandling.WSBehandlingstyper;
 import org.joda.time.DateTime;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
-import org.springframework.mock.web.MockHttpSession;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
@@ -34,8 +31,8 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.joda.time.DateTime.now;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyString;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -117,7 +114,7 @@ public class SakstemaServiceTest {
                 .withAvsluttet(null);
 
         Map.Entry entry = new AbstractMap.SimpleEntry<String, Set<String>>("Arbeid", new HashSet<>(Arrays.asList(Konstanter.DAGPENGER, SakstemaGrupperer.OPPFOLGING)));
-        ResultatWrapper<List<Sakstema>> wrapper = sakstemaService.opprettSakstemaForEnTemagruppe(entry, Arrays.asList(sak, oppfolinging), new ArrayList<>(), emptyMap(),true);
+        ResultatWrapper<List<Sakstema>> wrapper = sakstemaService.opprettSakstemaForEnTemagruppe(entry, Arrays.asList(sak, oppfolinging), new ArrayList<>(), emptyMap(), true);
 
         assertThat(wrapper.resultat.get(0).temanavn, equalTo("Dagpenger og oppfølging"));
     }
@@ -141,7 +138,7 @@ public class SakstemaServiceTest {
                         .withDato(LocalDateTime.now())
                         .withHoveddokument(
                                 new Dokument()
-                                        .withTittel("TEST"))), emptyMap(),true);
+                                        .withTittel("TEST"))), emptyMap(), true);
 
         assertThat(wrapper.resultat.get(0).temanavn, equalTo("Oppfølging"));
         assertThat(wrapper.resultat.size(), is(1));
@@ -172,7 +169,7 @@ public class SakstemaServiceTest {
                         .withBaksystem(Baksystem.JOARK)
                         .withHoveddokument(
                                 new Dokument()
-                                        .withTittel("TEST"))), emptyMap(),true);
+                                        .withTittel("TEST"))), emptyMap(), true);
 
         assertThat(wrapper.resultat.get(0).temanavn, equalTo("Dagpenger og oppfølging"));
         assertThat(wrapper.resultat.size(), is(1));
@@ -204,7 +201,7 @@ public class SakstemaServiceTest {
                         .withTemakode("OPP")
                         .withHoveddokument(
                                 new Dokument()
-                                        .withTittel("Tilhorende Oppfolging"))), emptyMap(),true);
+                                        .withTittel("Tilhorende Oppfolging"))), emptyMap(), true);
 
         assertThat(wrapper.resultat.size(), is(2));
     }
@@ -214,11 +211,11 @@ public class SakstemaServiceTest {
         when(kodeverk.getTemanavnForTemakode(Konstanter.DAGPENGER, BulletproofKodeverkService.ARKIVTEMA)).thenReturn(new ResultatWrapper("Dagpenger"));
         when(dokumentMetadataService.hentDokumentMetadata(anyString())).thenReturn(new ResultatWrapper<>(emptyList()));
 
-        Map<String, Set<String>> gruppertTema = new HashMap<String, Set<String>>(){{
+        Map<String, Set<String>> gruppertTema = new HashMap<String, Set<String>>() {{
             put("RESTERENDE_TEMA", new HashSet(asList("DAG")));
         }};
 
-        when(sakstemaGrupperer.grupperSakstema(any(), any(),any())).thenReturn(gruppertTema);
+        when(sakstemaGrupperer.grupperSakstema(any(), any(), any())).thenReturn(gruppertTema);
 
         Map sakOgBehandlingResults = new HashMap<>();
         sakOgBehandlingResults.put("DAG", asList(sakFraSakOgBehandling()));
@@ -257,11 +254,11 @@ public class SakstemaServiceTest {
         when(kodeverk.getTemanavnForTemakode("FOR", BulletproofKodeverkService.ARKIVTEMA)).thenReturn(new ResultatWrapper("Foreldrepenger"));
         when(dokumentMetadataService.hentDokumentMetadata(anyString())).thenReturn(new ResultatWrapper<>(asList(new DokumentMetadata().withTemakode("FOR").withBaksystem(Baksystem.HENVENDELSE))));
 
-        Map<String, Set<String>> gruppertTema = new HashMap<String, Set<String>>(){{
+        Map<String, Set<String>> gruppertTema = new HashMap<String, Set<String>>() {{
             put("RESTERENDE_TEMA", new HashSet(asList("FOR", "DAG")));
         }};
 
-        when(sakstemaGrupperer.grupperSakstema(any(), any(),any())).thenReturn(gruppertTema);
+        when(sakstemaGrupperer.grupperSakstema(any(), any(), any())).thenReturn(gruppertTema);
         Map sakOgBehandlingResults = new HashMap<>();
         sakOgBehandlingResults.put("DAG", asList(sakFraSakOgBehandling()));
         when(sakOgBehandlingService.hentBehandlingskjederGruppertPaaTema(anyString())).thenReturn(sakOgBehandlingResults);
@@ -313,7 +310,7 @@ public class SakstemaServiceTest {
                         .withBaksystem(Baksystem.JOARK)
                         .withHoveddokument(
                                 new Dokument()
-                                        .withTittel("TEST"))), emptyMap(),true);
+                                        .withTittel("TEST"))), emptyMap(), true);
 
         assertThat(wrapper.resultat.get(0).temanavn, equalTo("Arbeidsavklaringspenger og oppfølging"));
         assertThat(wrapper.resultat.get(1).temanavn, equalTo("Dagpenger og oppfølging"));
@@ -339,11 +336,11 @@ public class SakstemaServiceTest {
                                                 .withBaksystem(Baksystem.JOARK))
                         ));
 
-        Map<String, Set<String>> gruppertTema = new HashMap<String, Set<String>>(){{
+        Map<String, Set<String>> gruppertTema = new HashMap<String, Set<String>>() {{
             put("Arbeid", new HashSet(asList("AAP", "DAG", "OPP")));
         }};
 
-        when(sakstemaGrupperer.grupperSakstema(any(), any(),any())).thenReturn(gruppertTema);
+        when(sakstemaGrupperer.grupperSakstema(any(), any(), any())).thenReturn(gruppertTema);
 
         List<Sak> saker = asList(new Sak().withSaksId("123").withTemakode("AAP"), new Sak().withSaksId("456").withTemakode("OPP"));
 
@@ -360,7 +357,7 @@ public class SakstemaServiceTest {
     }
 
     @Test
-    public void slaarSammenSykepengerOgSykemeldingMedOppfolging (){
+    public void slaarSammenSykepengerOgSykemeldingMedOppfolging() {
         when(kodeverk.getTemanavnForTemakode("SYK", BulletproofKodeverkService.ARKIVTEMA)).thenReturn(new ResultatWrapper("Sykepenger"));
         when(kodeverk.getTemanavnForTemakode("SYM", BulletproofKodeverkService.ARKIVTEMA)).thenReturn(new ResultatWrapper("Sykemeldinger"));
 
@@ -382,11 +379,11 @@ public class SakstemaServiceTest {
                                                 .withBaksystem(Baksystem.JOARK))
                         ));
 
-        Map<String, Set<String>> gruppertTema = new HashMap<String, Set<String>>(){{
+        Map<String, Set<String>> gruppertTema = new HashMap<String, Set<String>>() {{
             put("Arbeid", new HashSet(asList("SYK", "SYM", "OPP")));
         }};
 
-        when(sakstemaGrupperer.grupperSakstema(any(), any(),any())).thenReturn(gruppertTema);
+        when(sakstemaGrupperer.grupperSakstema(any(), any(), any())).thenReturn(gruppertTema);
 
         List<Sak> saker = asList(
                 new Sak()
@@ -412,7 +409,7 @@ public class SakstemaServiceTest {
     }
 
     @Test
-    public void slaarSammenSykepengerOgSykemeldingUtenOppfolging (){
+    public void slaarSammenSykepengerOgSykemeldingUtenOppfolging() {
         when(kodeverk.getTemanavnForTemakode("SYK", BulletproofKodeverkService.ARKIVTEMA)).thenReturn(new ResultatWrapper("Sykepenger"));
         when(kodeverk.getTemanavnForTemakode("SYM", BulletproofKodeverkService.ARKIVTEMA)).thenReturn(new ResultatWrapper("Sykemeldinger"));
 
@@ -430,11 +427,11 @@ public class SakstemaServiceTest {
                                                 .withBaksystem(Baksystem.JOARK))
                         ));
 
-        Map<String, Set<String>> gruppertTema = new HashMap<String, Set<String>>(){{
+        Map<String, Set<String>> gruppertTema = new HashMap<String, Set<String>>() {{
             put(SakstemaGrupperer.TEMAGRUPPE_RESTERENDE_TEMA, new HashSet(asList("SYK", "SYM")));
         }};
 
-        when(sakstemaGrupperer.grupperSakstema(any(), any(),any())).thenReturn(gruppertTema);
+        when(sakstemaGrupperer.grupperSakstema(any(), any(), any())).thenReturn(gruppertTema);
 
         List<Sak> saker = asList(
                 new Sak()
@@ -461,7 +458,7 @@ public class SakstemaServiceTest {
     }
 
     @Test
-    public void slaarIkkeSammenSykepengerOgSykemeldingHvisEnErTomtTema (){
+    public void slaarIkkeSammenSykepengerOgSykemeldingHvisEnErTomtTema() {
         when(kodeverk.getTemanavnForTemakode("SYM", BulletproofKodeverkService.ARKIVTEMA)).thenReturn(new ResultatWrapper("Sykemeldinger"));
 
         when(dokumentMetadataService.hentDokumentMetadata(anyString()))
@@ -474,11 +471,11 @@ public class SakstemaServiceTest {
                                                 .withBaksystem(Baksystem.JOARK))
                         ));
 
-        Map<String, Set<String>> gruppertTema = new HashMap<String, Set<String>>(){{
+        Map<String, Set<String>> gruppertTema = new HashMap<String, Set<String>>() {{
             put(SakstemaGrupperer.TEMAGRUPPE_RESTERENDE_TEMA, new HashSet(asList("SYM")));
         }};
 
-        when(sakstemaGrupperer.grupperSakstema(any(), any(),any())).thenReturn(gruppertTema);
+        when(sakstemaGrupperer.grupperSakstema(any(), any(), any())).thenReturn(gruppertTema);
 
         List<Sak> saker = asList(
                 new Sak()
@@ -504,7 +501,7 @@ public class SakstemaServiceTest {
     }
 
     @Test
-    public void slaarIkkeSammenSykepengerOgSykemeldingForModia (){
+    public void slaarIkkeSammenSykepengerOgSykemeldingForModia() {
         when(kodeverk.getTemanavnForTemakode("SYK", BulletproofKodeverkService.ARKIVTEMA)).thenReturn(new ResultatWrapper("Sykepenger"));
         when(kodeverk.getTemanavnForTemakode("SYM", BulletproofKodeverkService.ARKIVTEMA)).thenReturn(new ResultatWrapper("Sykemeldinger"));
         when(kodeverk.getTemanavnForTemakode(SakstemaGrupperer.OPPFOLGING, BulletproofKodeverkService.ARKIVTEMA)).thenReturn(new ResultatWrapper("Oppfølging"));
@@ -527,11 +524,11 @@ public class SakstemaServiceTest {
                                                 .withBaksystem(Baksystem.JOARK))
                         ));
 
-        Map<String, Set<String>> gruppertTema = new HashMap<String, Set<String>>(){{
+        Map<String, Set<String>> gruppertTema = new HashMap<String, Set<String>>() {{
             put(Konstanter.TEMAGRUPPE_ARBEID, new HashSet(asList("SYK", "SYM", "OPP")));
         }};
 
-        when(sakstemaGrupperer.grupperSakstema(any(), any(),any())).thenReturn(gruppertTema);
+        when(sakstemaGrupperer.grupperSakstema(any(), any(), any())).thenReturn(gruppertTema);
 
         List<Sak> saker = asList(
                 new Sak()

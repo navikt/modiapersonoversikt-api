@@ -15,8 +15,6 @@ import javax.inject.Inject;
 
 import static java.lang.System.setProperty;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.joark.InnsynJournalEndpointConfig.INNSYN_JOURNAL_V2_URL;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.joark.InnsynJournalEndpointConfig.START_JOARK_WITHMOCK;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.MockUtil.TILLATMOCKSETUP_PROPERTY;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
@@ -35,7 +33,6 @@ public class InnsynJournalCacheTest extends CacheTest {
     public static final String BEHANDLINGS_ID_2 = "2222";
 
 
-
     public InnsynJournalCacheTest() {
         super(INNSYN_CACHE);
     }
@@ -45,8 +42,6 @@ public class InnsynJournalCacheTest extends CacheTest {
 
     @BeforeAll
     public static void setUp() {
-        setProperty(START_JOARK_WITHMOCK, "true");
-        setProperty(TILLATMOCKSETUP_PROPERTY, "true");
         setProperty(INNSYN_JOURNAL_V2_URL, "url");
     }
 
@@ -63,7 +58,7 @@ public class InnsynJournalCacheTest extends CacheTest {
 
 
     @Test
-    void toKallTilIdentifiserJournalPostMedSammeDataGirBareEttKall() throws Exception{
+    void toKallTilIdentifiserJournalPostMedSammeDataGirBareEttKall() throws Exception {
         IdentifiserJournalpostRequest identifiserJournalpostRequest = new IdentifiserJournalpostRequest().withKanalReferanseId(BEHANDLINGS_ID_1);
 
         IdentifiserJournalpostResponse response1 = innsynJournalV2.identifiserJournalpost(identifiserJournalpostRequest);
@@ -77,7 +72,7 @@ public class InnsynJournalCacheTest extends CacheTest {
     }
 
     @Test
-    void toKallTilIdentifiserJournalPostMedForskjelligDataGirToKall() throws Exception{
+    void toKallTilIdentifiserJournalPostMedForskjelligDataGirToKall() throws Exception {
         IdentifiserJournalpostRequest identifiserJournalpostRequest1 = new IdentifiserJournalpostRequest().withKanalReferanseId(BEHANDLINGS_ID_1);
         IdentifiserJournalpostRequest identifiserJournalpostRequest2 = new IdentifiserJournalpostRequest().withKanalReferanseId(BEHANDLINGS_ID_2);
 

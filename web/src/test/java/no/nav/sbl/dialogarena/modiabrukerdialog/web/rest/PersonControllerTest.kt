@@ -3,7 +3,6 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest
 import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.whenever
-import no.nav.brukerdialog.security.tilgangskontroll.policy.pep.EnforcementPoint
 import no.nav.kjerneinfo.common.domain.Kodeverdi
 import no.nav.kjerneinfo.consumer.fim.person.support.DefaultPersonKjerneinfoService
 import no.nav.kjerneinfo.consumer.fim.person.support.KjerneinfoMapper
@@ -12,10 +11,11 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.personoppslag.PersonO
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.organisasjonsEnhetV2.OrganisasjonEnhetV2Service
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.person.PersonOppslagService
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.UnleashService
+import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Tilgangskontroll
+import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.TilgangskontrollMock
+import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.TilgangskontrollUtenTPS
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.kodeverk.Kode
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.person.PersonController
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.tilgangskontroll.Tilgangskontroll
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.tilgangskontroll.TilgangskontrollMock
 import no.nav.tjeneste.virksomhet.person.v3.HentPersonPersonIkkeFunnet
 import no.nav.tjeneste.virksomhet.person.v3.HentPersonSikkerhetsbegrensning
 import no.nav.tjeneste.virksomhet.person.v3.PersonV3
@@ -42,15 +42,15 @@ private const val LANDKODE = "IOT"
 internal class PersonControllerTest {
 
     private val personV3: PersonV3 = mock()
-    private val pep: EnforcementPoint = mock()
     private val organisasjonenhetV2Service: OrganisasjonEnhetV2Service = mock()
     private val kodeverk: KodeverkmanagerBi = mock()
     private val mapper = KjerneinfoMapper(kodeverk)
     private val oppslag: PersonOppslagService = mock()
     private val unleashService: UnleashService = mock()
+    private val tilgangskontrollUtenTPS: TilgangskontrollUtenTPS = TilgangskontrollMock.getUtenTPS()
     private val tilgangskontroll: Tilgangskontroll = TilgangskontrollMock.get()
 
-    private val service = DefaultPersonKjerneinfoService(personV3, mapper, pep, organisasjonenhetV2Service)
+    private val service = DefaultPersonKjerneinfoService(personV3, mapper, tilgangskontrollUtenTPS, organisasjonenhetV2Service)
     private val controller = PersonController(service, kodeverk, oppslag, unleashService, tilgangskontroll)
 
     @BeforeEach

@@ -1,16 +1,17 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.sak.service;
 
-import no.nav.brukerdialog.security.tilgangskontroll.policy.pep.EnforcementPoint;
-import no.nav.brukerdialog.security.tilgangskontroll.policy.request.PolicyRequest;
+import no.nav.common.auth.SubjectHandler;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.AnsattService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.DokumentMetadata;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.Sakstema;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.resultatwrappere.TjenesteResultatWrapper;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.interfaces.TilgangskontrollService;
+import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Policies;
+import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.TilgangTilTemaData;
+import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Tilgangskontroll;
 import org.slf4j.Logger;
 
 import javax.inject.Inject;
-import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.List;
@@ -18,20 +19,15 @@ import java.util.Map;
 
 import static java.lang.Boolean.TRUE;
 import static java.util.stream.Collectors.toList;
-import static no.nav.brukerdialog.security.context.SubjectHandler.getSubjectHandler;
-import static no.nav.brukerdialog.security.tilgangskontroll.utils.AttributeUtils.*;
-import static no.nav.brukerdialog.security.tilgangskontroll.utils.RequestUtils.forRequest;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.RestUtils.hentValgtEnhet;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.Feilmelding.*;
-import static org.apache.commons.lang3.StringUtils.defaultString;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class TilgangskontrollServiceImpl implements TilgangskontrollService {
 
     @Inject
-    @Named("pep")
-    private EnforcementPoint pep;
+    private Tilgangskontroll tilgangskontroll;
     @Inject
     private AnsattService ansattService;
 
@@ -61,7 +57,8 @@ public class TilgangskontrollServiceImpl implements TilgangskontrollService {
         valgtEnhet = settEnhetDersomCookieIkkeErSatt(valgtEnhet, enhetsListe);
 
         if (!enhetsListe.contains(valgtEnhet)) {
-            logger.warn("{} har ikke tilgang til enhet {}.", getSubjectHandler().getUid(), valgtEnhet);
+            String ident = SubjectHandler.getIdent().orElseThrow(() -> new RuntimeException("Fant ikke ident"));
+            logger.warn("{} har ikke tilgang til enhet {}.", ident, valgtEnhet);
             return false;
         }
         return true;
@@ -75,18 +72,11 @@ public class TilgangskontrollServiceImpl implements TilgangskontrollService {
     }
 
     public boolean harEnhetTilgangTilTema(String temakode, String valgtEnhet) {
-        PolicyRequest temagruppePolicyRequest = forRequest(
-                actionId("temagruppe"),
-                resourceId(""),
-                subjectAttribute("urn:nav:ikt:tilgangskontroll:xacml:subject:localenhet", defaultString(valgtEnhet)),
-                resourceAttribute("urn:nav:ikt:tilgangskontroll:xacml:resource:tema", defaultString(temakode))
-        );
-        if (isNotBlank(temakode) && !pep.hasAccess(temagruppePolicyRequest)) {
-            logger.warn("Saksbehandler med ident '{}' og valgt enhet '{}' har ikke tilgang til tema '{}'",
-                    getSubjectHandler().getUid(),
-                    valgtEnhet,
-                    temakode);
-            return false;
+        if (isNotBlank(temakode)) {
+            return tilgangskontroll
+                    .check(Policies.tilgangTilTema.with(new TilgangTilTemaData(valgtEnhet, temakode)))
+                    .getDecision()
+                    .isPermit();
         }
         return true;
     }

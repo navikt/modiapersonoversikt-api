@@ -12,7 +12,6 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingst
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.henvendelse.delsvar.DelsvarSammenslaaer;
 import no.nav.sbl.dialogarena.pdf.HandleBarHtmlGenerator;
 import no.nav.sbl.dialogarena.pdf.PDFFabrikk;
-import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.MeldingVM;
 import org.joda.time.DateTime;
 
 import java.io.IOException;
@@ -66,15 +65,6 @@ public class PdfUtils {
         } catch (IOException e) {
             throw new ApplicationException("Kunne ikke lage markup av melding for print", e);
         }
-    }
-
-    public static byte[] genererPdfForPrintVM(List<MeldingVM> meldinger) {
-        List<Melding> meldingList = meldinger
-                .stream()
-                .map((melding) -> melding.melding)
-                .collect(Collectors.toList());
-
-        return genererPdfForPrint(meldingList);
     }
 
     private static Map<String, Helper<?>> generateHelpers() {

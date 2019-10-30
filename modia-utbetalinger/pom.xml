@@ -18,16 +18,12 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>no.nav.sbl.dialogarena</groupId>
-			<artifactId>common-cxf</artifactId>
+			<groupId>no.nav.common</groupId>
+			<artifactId>cxf</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>joda-time</groupId>
 			<artifactId>joda-time</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>no.nav.modig</groupId>
-			<artifactId>modia-felleskomponenter</artifactId>
 		</dependency>
 
 		<dependency>
@@ -76,80 +72,13 @@
 		</dependency>
 
 		<dependency>
-			<groupId>no.nav.modig</groupId>
-			<artifactId>modig-wicket</artifactId>
-			<exclusions>
-				<exclusion>
-					<groupId>commons-logging</groupId>
-					<artifactId>commons-logging</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>no.nav.modig</groupId>
-					<artifactId>modig-content</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-
-        <dependency>
-            <groupId>org.apache.wicket</groupId>
-            <artifactId>wicket-util</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.wicket</groupId>
-            <artifactId>wicket-request</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>no.nav.modig</groupId>
-            <artifactId>modig-wicket-test</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>commons-logging</groupId>
-                    <artifactId>commons-logging</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-
-		<dependency>
-			<groupId>no.nav.modig</groupId>
-			<artifactId>modig-frontend-wicket</artifactId>
-			<exclusions>
-				<exclusion>
-					<groupId>commons-logging</groupId>
-					<artifactId>commons-logging</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-
-		<dependency>
 			<groupId>no.nav.sbl.dialogarena</groupId>
 			<artifactId>utbetaling-tjenestespesifikasjon</artifactId>
 		</dependency>
 
 		<dependency>
-			<groupId>no.nav.sbl.dialogarena</groupId>
-			<artifactId>common-time</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>net.sourceforge.collections</groupId>
-			<artifactId>collections-generic</artifactId>
-		</dependency>
-
-		<dependency>
 			<groupId>no.nav.modig</groupId>
 			<artifactId>modig-core</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>org.apache.wicket</groupId>
-			<artifactId>wicket-core</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>org.apache.wicket</groupId>
-			<artifactId>wicket-spring</artifactId>
 		</dependency>
 
 		<dependency>
@@ -191,8 +120,8 @@
 		</dependency>
 
 		<dependency>
-			<groupId>no.nav.sbl.dialogarena</groupId>
-			<artifactId>common-test</artifactId>
+			<groupId>no.nav.common</groupId>
+			<artifactId>test</artifactId>
 			<scope>test</scope>
 		</dependency>
 

@@ -8,12 +8,12 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.ldap.LDAPService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.ConsumerContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.GrunninfoService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.cache.CacheConfiguration;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.utils.WicketInjectablePropertyResolver;
+import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Tilgangskontroll;
+import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.TilgangskontrollContext;
+import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.TilgangskontrollContextUtenTPS;
+import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.TilgangskontrollUtenTPS;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.service.plukkoppgave.PlukkOppgaveService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.service.plukkoppgave.PlukkOppgaveServiceImpl;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.tilgangskontroll.TilgangskontrollContext;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.tilgangskontroll.Tilgangskontroll;
-import no.nav.sbl.modiabrukerdialog.pep.config.spring.PepConfig;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
@@ -22,8 +22,7 @@ import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 @Configuration
 @Import({
         ConsumerContext.class,
-        CacheConfiguration.class,
-        PepConfig.class
+        CacheConfiguration.class
 })
 public class ApplicationContextBeans {
 
@@ -43,11 +42,6 @@ public class ApplicationContextBeans {
     }
 
     @Bean
-    public WicketInjectablePropertyResolver wicketInjectablePropertyResolver() {
-        return new WicketInjectablePropertyResolver();
-    }
-
-    @Bean
     public Tilgangskontroll tilgangskontroll(
             LDAPService ldapService,
             GrunninfoService grunninfoService,
@@ -55,13 +49,29 @@ public class ApplicationContextBeans {
             GOSYSNAVOrgEnhet enhetService,
             HenvendelseLesService henvendelseLesService
     ) {
-        TilgangskontrollContext context = new TilgangskontrollContext(
+        TilgangskontrollContext context = new TilgangskontrollContextImpl(
                 ldapService,
-                grunninfoService,
+                ansattService,
+                enhetService,
+                henvendelseLesService,
+                grunninfoService
+        );
+        return new Tilgangskontroll(context);
+    }
+
+    @Bean
+    public TilgangskontrollUtenTPS tilgangskontrollUtenTPS(
+            LDAPService ldapService,
+            GOSYSNAVansatt ansattService,
+            GOSYSNAVOrgEnhet enhetService,
+            HenvendelseLesService henvendelseLesService
+    ) {
+        TilgangskontrollContextUtenTPS context = new TilgangskontrollContextUtenTPSImpl(
+                ldapService,
                 ansattService,
                 enhetService,
                 henvendelseLesService
         );
-        return new Tilgangskontroll(context);
+        return new TilgangskontrollUtenTPS(context);
     }
 }

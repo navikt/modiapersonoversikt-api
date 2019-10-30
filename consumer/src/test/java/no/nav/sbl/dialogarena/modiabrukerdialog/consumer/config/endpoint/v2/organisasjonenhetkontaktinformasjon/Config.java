@@ -8,7 +8,6 @@ import no.nav.tjeneste.virksomhet.organisasjonenhetkontaktinformasjon.v1.melding
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import static no.nav.sbl.dialogarena.common.cxf.InstanceSwitcher.createMetricsProxyWithInstanceSwitcher;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v2.organisasjonenhetkontaktinformasjon.OrganisasjonEnhetKontaktinformasjonV1EndpointCacheTest.ENHETSNAVN;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v2.organisasjonenhetkontaktinformasjon.OrganisasjonEnhetKontaktinformasjonV1EndpointCacheTest.ENHETSNAVN_OPPSLAG_2;
 import static org.mockito.ArgumentMatchers.any;
@@ -27,7 +26,7 @@ public class Config {
                 .thenReturn(mockRespons(ENHETSNAVN))
                 .thenReturn(mockRespons(ENHETSNAVN_OPPSLAG_2));
 
-        return createMetricsProxyWithInstanceSwitcher("", null, mock, key, OrganisasjonEnhetKontaktinformasjonV1.class);
+        return mock;
     }
 
     private HentKontaktinformasjonForEnhetBolkResponse mockRespons(String enhetsnavn) {

@@ -2,7 +2,6 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.sak.transformers;
 
 import no.nav.sbl.dialogarena.common.kodeverk.Kodeverk;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.*;
-import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.*;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.resultatwrappere.ResultatWrapper;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.BulletproofKodeverkService;
 

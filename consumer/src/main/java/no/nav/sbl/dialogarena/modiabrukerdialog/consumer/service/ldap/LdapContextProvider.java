@@ -6,8 +6,6 @@ import javax.naming.ldap.InitialLdapContext;
 import javax.naming.ldap.LdapContext;
 import java.util.Hashtable;
 
-import static no.nav.sbl.util.EnvironmentUtils.getRequiredProperty;
-
 public class LdapContextProvider {
 
     @SuppressWarnings("PMD")

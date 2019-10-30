@@ -12,26 +12,21 @@ import org.joda.time.LocalDate;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import static no.nav.sbl.dialogarena.common.cxf.InstanceSwitcher.createMetricsProxyWithInstanceSwitcher;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.ArbeidOgAktivitetEndpointMock.createArbeidOgAktivitetMock;
+import static no.nav.metrics.MetricsFactory.createTimerProxyForWebService;
 
 @Configuration
 public class ArbeidOgAktivitetEndpointConfig {
 
-    public static final String ARENA_ARBEIDOGATKIVITET_KEY = "start.arena.arbeidogaktivitet.withmock";
-
     @Bean
     public ArbeidOgAktivitet arbeidOgAktivitet() {
         ArbeidOgAktivitet prod = createArbeidOgAktivitet();
-        ArbeidOgAktivitet mock = createArbeidOgAktivitetMock();
-
-        return createMetricsProxyWithInstanceSwitcher("ArbeidOgAktivitet", prod, mock, ARENA_ARBEIDOGATKIVITET_KEY, ArbeidOgAktivitet.class);
+        return createTimerProxyForWebService("ArbeidOgAktivitet", prod, ArbeidOgAktivitet.class);
     }
 
     private static ArbeidOgAktivitet createArbeidOgAktivitet() {
         return new CXFClient<>(ArbeidOgAktivitet.class)
                 .address(System.getProperty("arena.arbeidogaktivitet.v1.url"))
-                .configureStsForSystemUserInFSS()
+                .configureStsForSystemUser()
                 .build();
     }
 

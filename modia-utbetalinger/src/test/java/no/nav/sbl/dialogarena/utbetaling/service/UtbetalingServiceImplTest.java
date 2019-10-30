@@ -15,7 +15,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +24,6 @@ import static no.nav.sbl.dialogarena.utbetaling.domain.testdata.WSUtbetalingTest
 import static no.nav.sbl.dialogarena.utbetaling.domain.testdata.WSUtbetalingTestData.createUtbetalingMedValgtUtbetalingsdatoForfallsdatoOgPosteringsdato;
 import static no.nav.sbl.dialogarena.utbetaling.domain.util.DateUtils.EKSTRA_SOKEPERIODE;
 import static no.nav.sbl.dialogarena.utbetaling.domain.util.YtelseUtils.getHovedytelseListe;
-import static no.nav.sbl.dialogarena.utbetaling.widget.UtbetalingWidget.NUMBER_OF_DAYS_TO_SHOW;
 import static org.hamcrest.Matchers.is;
 import static org.joda.time.LocalDate.now;
 import static org.junit.Assert.assertThat;
@@ -32,6 +31,7 @@ import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class UtbetalingServiceImplTest {
+    public static final int NUMBER_OF_DAYS_TO_SHOW = 30;
 
     public static final String FNR = "12345";
     @Mock

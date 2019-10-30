@@ -13,9 +13,6 @@ import org.springframework.context.annotation.Configuration;
 
 import javax.inject.Inject;
 
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.artifact.kjerneinfo.component.mockable.MockableContext.KJERNEINFO_KEY;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.MockUtil.mockErTillattOgSlaattPaaForKey;
-
 @Configuration
 public class BehandleBrukerprofilConsumerConfigResolver {
 
@@ -32,11 +29,7 @@ public class BehandleBrukerprofilConsumerConfigResolver {
             @Override
             public void oppdaterKontaktinformasjonOgPreferanser(BehandleBrukerprofilRequest request)
                     throws OppdaterKontaktinformasjonOgPreferanserSikkerhetsbegrensning, OppdaterKontaktinformasjonOgPreferanserPersonIkkeFunnet, OppdaterKontaktinformasjonOgPreferanserUgyldigInput, OppdaterKontaktinformasjonOgPreferanserPersonIdentErUtgaatt {
-                if (mockErTillattOgSlaattPaaForKey(KJERNEINFO_KEY)) {
-                    mockService.wrappedObject.oppdaterKontaktinformasjonOgPreferanser(request);
-                } else {
-                    defaultService.wrappedObject.oppdaterKontaktinformasjonOgPreferanser(request);
-                }
+                defaultService.wrappedObject.oppdaterKontaktinformasjonOgPreferanser(request);
             }
 
         };

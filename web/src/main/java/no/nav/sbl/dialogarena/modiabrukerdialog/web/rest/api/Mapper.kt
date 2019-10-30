@@ -8,7 +8,6 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.dialog.MeldingDTO
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.dialog.TraadDTO
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.henvendelse.domain.Traad
 import org.joda.time.format.DateTimeFormat
-import java.lang.IllegalStateException
 
 
 typealias Function<S, T> = (s: S) -> T

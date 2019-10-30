@@ -1,6 +1,9 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints;
 
-import no.nav.tjeneste.virksomhet.sak.v1.*;
+import no.nav.tjeneste.virksomhet.sak.v1.FinnSakForMangeForekomster;
+import no.nav.tjeneste.virksomhet.sak.v1.FinnSakUgyldigInput;
+import no.nav.tjeneste.virksomhet.sak.v1.HentSakSakIkkeFunnet;
+import no.nav.tjeneste.virksomhet.sak.v1.SakV1;
 import no.nav.tjeneste.virksomhet.sak.v1.informasjon.*;
 import no.nav.tjeneste.virksomhet.sak.v1.meldinger.WSFinnSakRequest;
 import no.nav.tjeneste.virksomhet.sak.v1.meldinger.WSFinnSakResponse;
@@ -12,7 +15,9 @@ import org.mockito.stubbing.Answer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
 
 import static no.nav.sbl.dialogarena.common.collections.Collections.asList;
 import static no.nav.sbl.dialogarena.common.collections.Collections.asMap;

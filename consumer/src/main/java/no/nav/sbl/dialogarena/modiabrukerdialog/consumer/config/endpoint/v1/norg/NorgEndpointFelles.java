@@ -9,9 +9,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class NorgEndpointFelles {
-
-    public static final String NORG_KEY = "start.norg.withmock";
-
     public static Map<String, Object> getSecurityProps() {
         String user = System.getProperty("ctjenestebuss.username");
 

@@ -11,24 +11,21 @@ import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.senduthenvendelse.Send
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import static no.nav.sbl.dialogarena.common.cxf.InstanceSwitcher.createMetricsProxyWithInstanceSwitcher;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v2.henvendelse.HenvendelseEndpointConfig.HENVENDELSE_KEY;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.SendUtHenvendelsePortTypeMock.createSendUtHenvendelsePortTypeMock;
+import static no.nav.metrics.MetricsFactory.createTimerProxyForWebService;
 
 @Configuration
 public class SendUtHenvendelseEndpointConfig {
 
     @Bean
     public SendUtHenvendelsePortType sendUtHenvendelsePortType() {
-        SendUtHenvendelsePortType prod = createSendUtHenvendelsePortType().configureStsForOnBehalfOfWithJWT().build();
-        SendUtHenvendelsePortType mock = createSendUtHenvendelsePortTypeMock();
+        SendUtHenvendelsePortType prod = createSendUtHenvendelsePortType().configureStsForSubject().build();
 
-        return createMetricsProxyWithInstanceSwitcher("SendUtHenvendelse", prod, mock, HENVENDELSE_KEY, SendUtHenvendelsePortType.class);
+        return createTimerProxyForWebService("SendUtHenvendelse", prod, SendUtHenvendelsePortType.class);
     }
 
     @Bean
     public Pingable sendUtHenvendelsePing() {
-        final SendUtHenvendelsePortType ws = createSendUtHenvendelsePortType().configureStsForSystemUserInFSS().build();
+        final SendUtHenvendelsePortType ws = createSendUtHenvendelsePortType().configureStsForSystemUser().build();
         return new PingableWebService("Send ut henvendelse", ws);
     }
 

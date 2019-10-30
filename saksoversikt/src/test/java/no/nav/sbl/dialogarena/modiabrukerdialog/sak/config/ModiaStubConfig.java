@@ -1,9 +1,7 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.sak.config;
 
-import no.nav.brukerdialog.security.tilgangskontroll.policy.pep.EnforcementPoint;
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.AnsattService;
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
 import no.nav.sbl.dialogarena.common.kodeverk.KodeverkClient;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.AnsattService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.GsakSakerService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.HenvendelseService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.SakOgBehandlingService;
@@ -19,7 +17,7 @@ import no.nav.tjeneste.virksomhet.sakogbehandling.v1.meldinger.FinnSakOgBehandli
 import org.springframework.context.annotation.Bean;
 
 import static no.nav.sbl.dialogarena.modiabrukerdialog.sak.mock.SakOgBehandlingMocks.createWSSak;
-import static org.mockito.Matchers.any;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -87,19 +85,8 @@ public class ModiaStubConfig {
         return mock(PensjonSakV1.class);
     }
 
-    @Bean(name = "pep")
-    public EnforcementPoint pep() {
-        return mock(EnforcementPoint.class);
-    }
-
     @Bean
     public AnsattService ansattService() {
         return mock(AnsattService.class);
     }
-
-    @Bean
-    public SaksbehandlerInnstillingerService saksbehandlerInnstillingerService() {
-        return mock(SaksbehandlerInnstillingerService.class);
-    }
-
 }

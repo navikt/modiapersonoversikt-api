@@ -10,10 +10,6 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import javax.inject.Inject;
 
-import static java.lang.System.setProperty;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.artifact.kjerneinfo.component.mockable.MockableContext.KJERNEINFO_KEY;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.MockUtil.ALLOW_MOCK;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.MockUtil.TILLATMOCKSETUP_PROPERTY;
 import static org.mockito.Mockito.verifyZeroInteractions;
 
 @ExtendWith(SpringExtension.class)
@@ -32,8 +28,6 @@ public class KjerneinfoMapperConfigResolverTest {
 
     @Test
     public void medMockSlaattPaaSkalIkkeProdkodeEksekveres() {
-        setProperty(TILLATMOCKSETUP_PROPERTY, "true");
-        setProperty(KJERNEINFO_KEY, ALLOW_MOCK);
         resolver.kjerneinfoMapperBean().map(new Object(), new Object());
         verifyZeroInteractions(kodeverkManagerService.wrappedObject);
     }

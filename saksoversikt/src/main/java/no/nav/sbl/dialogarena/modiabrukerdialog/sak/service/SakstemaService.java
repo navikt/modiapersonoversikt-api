@@ -1,9 +1,8 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.sak.service;
 
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.*;
-import no.nav.sbl.dialogarena.modiabrukerdialog.sak.utils.Java8Utils;
-import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.*;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.resultatwrappere.ResultatWrapper;
+import no.nav.sbl.dialogarena.modiabrukerdialog.sak.utils.Java8Utils;
 
 import javax.inject.Inject;
 import java.util.*;
@@ -11,11 +10,11 @@ import java.util.function.Predicate;
 
 import static java.util.Collections.emptyList;
 import static java.util.Collections.emptyMap;
-import static java.util.stream.Collectors.*;
 import static java.util.stream.Collectors.toList;
-import static java.util.stream.Stream.*;
+import static java.util.stream.Collectors.toSet;
+import static java.util.stream.Stream.concat;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.Baksystem.HENVENDELSE;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.BulletproofKodeverkService.*;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.BulletproofKodeverkService.ARKIVTEMA;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.SakstemaGrupperer.OPPFOLGING;
 
 @SuppressWarnings("squid:S1166") // Either log or rethrow

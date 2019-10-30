@@ -20,7 +20,6 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.ldap.LdapController;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.oppfolging.OppfolgingController;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.oppgave.OppgaveController;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.person.PersonController;
-import no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.saf.SafService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.person.PersonsokController;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.saker.SakerController;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.utbetaling.UtbetalingController;
@@ -58,7 +57,6 @@ import org.springframework.context.annotation.Import;
         OppfolgingController.class,
         SakerController.class,
         NaisController.class,
-        SafService.class,
         DialogController.class,
         PersonsokController.class,
         DialogMerkController.class,

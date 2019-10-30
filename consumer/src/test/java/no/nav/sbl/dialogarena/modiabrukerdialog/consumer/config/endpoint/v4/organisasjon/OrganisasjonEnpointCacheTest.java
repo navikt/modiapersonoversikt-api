@@ -15,7 +15,6 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import javax.inject.Inject;
 
 import static no.nav.modig.testcertificates.TestCertificates.setupKeyAndTrustStore;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.MockUtil.TILLATMOCKSETUP_PROPERTY;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -36,7 +35,6 @@ public class OrganisasjonEnpointCacheTest extends CacheTest {
 
     @BeforeAll
     public static void setup() {
-        System.setProperty(TILLATMOCKSETUP_PROPERTY, "true");
         setupKeyAndTrustStore();
     }
 

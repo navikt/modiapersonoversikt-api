@@ -2,9 +2,12 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.saf
 
 import io.mockk.every
 import io.mockk.mockkStatic
-import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.*
-import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.Dokument.Variantformat.*
+import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.Baksystem
+import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.Dokument.Variantformat.ARKIV
+import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.Dokument.Variantformat.SLADDET
+import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.DokumentMetadata
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.Entitet.*
+import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.Kommunikasjonsretning
 import org.junit.Assert.assertEquals
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Test

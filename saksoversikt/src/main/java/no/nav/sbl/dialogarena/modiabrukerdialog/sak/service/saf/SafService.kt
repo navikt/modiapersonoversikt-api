@@ -3,7 +3,8 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.saf
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
-import no.nav.brukerdialog.security.context.SubjectHandler
+import no.nav.common.auth.SsoToken
+import no.nav.common.auth.SubjectHandler
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.Baksystem
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.Dokument
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.DokumentMetadata
@@ -26,7 +27,6 @@ val SAF_HENTDOKUMENT_BASEURL = System.getProperty("saf.hentdokument.url")
 private val LOG = LoggerFactory.getLogger(SafService::class.java)
 
 class SafService {
-
     fun hentJournalposter(fnr: String): ResultatWrapper<List<DokumentMetadata>> {
         val jsonQuery = dokumentoversiktBrukerJsonQuery(fnr)
 
@@ -91,7 +91,8 @@ private fun veilederAutorisertClient(client: Client, url: String): Invocation.Bu
     val AUTH_METHOD_BEARER = "Bearer"
     val AUTH_SEPERATOR = " "
 
-    val veilederOidcToken = SubjectHandler.getSubjectHandler().internSsoToken
+    val veilederOidcToken = SubjectHandler.getSsoToken(SsoToken.Type.OIDC)
+            .orElseThrow { IllegalStateException("Fant ikke OIDC-token") }
     return client
             .target(url)
             .request()

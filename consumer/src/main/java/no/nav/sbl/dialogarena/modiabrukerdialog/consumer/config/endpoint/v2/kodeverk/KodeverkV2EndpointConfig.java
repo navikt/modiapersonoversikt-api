@@ -6,33 +6,28 @@ import no.nav.sbl.dialogarena.common.cxf.CXFClient;
 import no.nav.sbl.dialogarena.common.kodeverk.CachingKodeverkClient;
 import no.nav.sbl.dialogarena.common.kodeverk.DefaultKodeverkClient;
 import no.nav.sbl.dialogarena.common.kodeverk.KodeverkClient;
-import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.KodeverkV2PortTypeMock;
 import no.nav.tjeneste.virksomhet.kodeverk.v2.KodeverkPortType;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import static java.util.Optional.empty;
-import static no.nav.sbl.dialogarena.common.cxf.InstanceSwitcher.createMetricsProxyWithInstanceSwitcher;
+import static no.nav.metrics.MetricsFactory.createTimerProxyForWebService;
 import static org.apache.cxf.ws.security.SecurityConstants.MUST_UNDERSTAND;
 
 @Configuration
 public class KodeverkV2EndpointConfig {
 
-    public static final String KODEVERK_KEY = "start.kodeverk.withmock";
-
     @Bean(name = "kodeverkPortTypeV2")
     public KodeverkPortType kodeverkPortType() {
         KodeverkPortType prod = lagKodeverkPortType();
-        KodeverkPortType mock = KodeverkV2PortTypeMock.kodeverkPortType();
 
-        return createMetricsProxyWithInstanceSwitcher("KodeverkPortTypeV2", prod, mock, KODEVERK_KEY, KodeverkPortType.class);
+        return createTimerProxyForWebService("KodeverkPortTypeV2", prod, KodeverkPortType.class);
     }
 
     @Bean
     public KodeverkClient kodeverkClient() {
         KodeverkClient prod = lagKodeverkClient();
-        KodeverkClient mock = KodeverkV2PortTypeMock.kodeverkClient();
-        return createMetricsProxyWithInstanceSwitcher("KodeverkClient", prod, mock, KODEVERK_KEY, KodeverkClient.class);
+        return createTimerProxyForWebService("KodeverkClient", prod, KodeverkClient.class);
     }
 
     @Bean

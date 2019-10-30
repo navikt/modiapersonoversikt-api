@@ -9,9 +9,9 @@ public interface GsakService {
 
     WSOppgave hentOppgave(String oppgaveId);
 
-    void ferdigstillGsakOppgave(WSOppgave oppgave, String beskrivelse) throws LagreOppgaveOptimistiskLasing, OppgaveErFerdigstilt;
+    void ferdigstillGsakOppgave(String enhetId, WSOppgave oppgave, String beskrivelse) throws LagreOppgaveOptimistiskLasing, OppgaveErFerdigstilt;
 
-    void opprettGsakOppgave(NyOppgave nyOppgave);
+    void opprettGsakOppgave(String enhetId, NyOppgave nyOppgave);
 
     class OppgaveErFerdigstilt extends Exception {
         public OppgaveErFerdigstilt(Throwable cause) {

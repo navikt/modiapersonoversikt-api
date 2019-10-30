@@ -1,6 +1,9 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.kodeverksmapper;
 
-import no.nav.modig.modia.ping.*;
+import no.nav.modig.modia.ping.FailedPingResult;
+import no.nav.modig.modia.ping.OkPingResult;
+import no.nav.modig.modia.ping.PingResult;
+import no.nav.modig.modia.ping.Pingable;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.kodeverksmapper.domain.Behandling;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.Timer;
 import org.springframework.context.annotation.Bean;
@@ -10,20 +13,15 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import static no.nav.sbl.dialogarena.common.cxf.InstanceSwitcher.createMetricsProxyWithInstanceSwitcher;
+import static no.nav.metrics.MetricsFactory.createTimerProxyForWebService;
 
 @Configuration
 public class KodeverksmapperEndpointConfig {
 
-    public static final String KODEVERKSMAPPER_KEY = "start.kodeverksmapper.withmock";
-
     @Bean
     public Kodeverksmapper kodeverksmapper() {
         final Kodeverksmapper kodeverksmapper = lagEndpoint();
-        final Kodeverksmapper kodeverksmapperMock = lagMockEnpoint();
-
-        return createMetricsProxyWithInstanceSwitcher("kodeverksmapper", kodeverksmapper,
-                kodeverksmapperMock, KODEVERKSMAPPER_KEY, Kodeverksmapper.class);
+        return createTimerProxyForWebService("kodeverksmapper", kodeverksmapper, Kodeverksmapper.class);
     }
 
     @Bean

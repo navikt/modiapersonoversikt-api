@@ -1,11 +1,11 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.sak.service;
 
-import no.nav.sbl.dialogarena.modiabrukerdialog.sak.utils.Java8Utils;
-import no.nav.sbl.dialogarena.modiabrukerdialog.sak.utils.TemagrupperHenter;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.Baksystem;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.Behandlingskjede;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.DokumentMetadata;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.Sak;
+import no.nav.sbl.dialogarena.modiabrukerdialog.sak.utils.Java8Utils;
+import no.nav.sbl.dialogarena.modiabrukerdialog.sak.utils.TemagrupperHenter;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 

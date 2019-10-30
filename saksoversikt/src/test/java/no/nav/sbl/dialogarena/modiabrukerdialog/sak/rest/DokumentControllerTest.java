@@ -1,6 +1,5 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.sak.rest;
 
-import no.nav.brukerdialog.security.context.ThreadLocalSubjectHandler;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.domain.dokumentvisning.JournalpostResultat;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.Dokument;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.DokumentMetadata;
@@ -14,7 +13,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.mock.web.MockHttpServletRequest;
 
 import javax.servlet.http.Cookie;
@@ -30,8 +29,8 @@ import static no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.Feilme
 import static no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.TilgangskontrollServiceImpl.TEMAKODE_BIDRAG;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyString;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -60,7 +59,7 @@ public class DokumentControllerTest {
 
     @Before
     public void setup() {
-        System.setProperty("no.nav.brukerdialog.security.context.subjectHandlerImplementationClass", ThreadLocalSubjectHandler.class.getName());
+//        System.setProperty("no.nav.brukerdialog.security.context.subjectHandlerImplementationClass", ThreadLocalSubjectHandler.class.getName());
         httpServletRequest.setCookies(lagSaksbehandlerCookie(VALGT_ENHET));
         when(dokumentMetadataService.hentDokumentMetadata(anyString())).thenReturn(lagDokumentMetadataListe("DAG"));
         when(tilgangskontrollService.harSaksbehandlerTilgangTilDokument(any(HttpServletRequest.class), any(DokumentMetadata.class), anyString(), anyString())).thenReturn(new TjenesteResultatWrapper("result"));

@@ -1,7 +1,5 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.sak.utils;
 
-import static no.nav.sbl.util.EnvironmentUtils.getRequiredProperty;
-
 public final class StatiskeLenker {
 
     public static final String TJENESTER_BASE = System.getProperty("tjenester.url");

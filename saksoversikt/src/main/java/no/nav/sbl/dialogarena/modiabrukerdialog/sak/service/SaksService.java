@@ -1,10 +1,10 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.sak.service;
 
-import no.nav.sbl.dialogarena.modiabrukerdialog.sak.utils.Java8Utils;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.Baksystem;
+import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.FeilendeBaksystemException;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.Sak;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.resultatwrappere.ResultatWrapper;
-import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.FeilendeBaksystemException;
+import no.nav.sbl.dialogarena.modiabrukerdialog.sak.utils.Java8Utils;
 
 import javax.inject.Inject;
 import java.util.HashSet;

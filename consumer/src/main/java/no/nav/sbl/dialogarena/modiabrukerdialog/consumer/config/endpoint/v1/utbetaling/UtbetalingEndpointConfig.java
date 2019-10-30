@@ -2,32 +2,28 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v1.utb
 
 import no.nav.modig.modia.ping.PingableWebService;
 import no.nav.sbl.dialogarena.common.cxf.CXFClient;
-import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.UtbetalingPortTypeMock;
 import no.nav.tjeneste.virksomhet.utbetaling.v1.UtbetalingV1;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import javax.xml.namespace.QName;
 
-import static no.nav.sbl.dialogarena.common.cxf.InstanceSwitcher.createMetricsProxyWithInstanceSwitcher;
+import static no.nav.metrics.MetricsFactory.createTimerProxyForWebService;
 
 @Configuration
 public class UtbetalingEndpointConfig {
 
-    public static final String UTBETALING_KEY = "start.utbetaling.withmock";
-
     @Bean(name = "utbetalingV1")
     public UtbetalingV1 utbetalingV1() {
-        final UtbetalingV1 prod = createUtbetalingPortType().configureStsForOnBehalfOfWithJWT().build();
-        final UtbetalingV1 mock = new UtbetalingPortTypeMock().utbetalingPortType();
+        final UtbetalingV1 prod = createUtbetalingPortType().configureStsForSubject().build();
 
-        return createMetricsProxyWithInstanceSwitcher("UtbetalingV1", prod, mock, UTBETALING_KEY, UtbetalingV1.class);
+        return createTimerProxyForWebService("UtbetalingV1", prod, UtbetalingV1.class);
     }
 
     @Bean
     public UtbetalingPing pingUtbetalingV1() {
         UtbetalingV1 pingPorttype = createUtbetalingPortType()
-                .configureStsForSystemUserInFSS()
+                .configureStsForSystemUser()
                 .build();
         return new UtbetalingPing("Utbetaling", pingPorttype);
     }

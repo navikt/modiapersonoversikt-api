@@ -1,6 +1,7 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.oppfolgingsinfo;
 
-import no.nav.brukerdialog.security.context.SubjectHandler;
+import no.nav.common.auth.SsoToken;
+import no.nav.common.auth.SubjectHandler;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Saksbehandler;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.AnsattEnhet;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.oppfolgingsinfo.Oppfolgingsinfo;
@@ -87,10 +88,11 @@ public class OppfolgingsinfoApiServiceImpl implements OppfolgingsinfoApiService 
     }
 
     private <T> T gjorSporring(String url, Class<T> targetClass) {
+        String ssoToken = SubjectHandler.getSsoToken(SsoToken.Type.OIDC).orElseThrow(() -> new RuntimeException("Fant ikke OIDC-token"));
         return RestUtils.withClient(client -> client
                 .target(url)
                 .request()
-                .header(AUTHORIZATION, "Bearer " + SubjectHandler.getSubjectHandler().getInternSsoToken())
+                .header(AUTHORIZATION, "Bearer " + ssoToken)
                 .get(targetClass)
         );
     }
