@@ -177,7 +177,6 @@ class HenvendelseBehandlingServiceImplTest {
         xmlHenvendelsesListe.add(lagXMLHenvendelse("id4", "id4", DateTime.now().plusDays(1), null, XMLHenvendelseType.SPORSMAL_SKRIFTLIG.name(), null, new XMLMetadataListe().withMetadata(fritekst3))
                 .withMarkeringer(new XMLMarkeringer().withKontorsperre(new XMLKontorsperre().withEnhet("1111"))));
 
-//        when(pep.hasAccess(any(PolicyRequest.class))).thenReturn(false);
         when(henvendelsePortType.hentHenvendelseListe(any(WSHentHenvendelseListeRequest.class))).thenReturn(new WSHentHenvendelseListeResponse().withAny(xmlHenvendelsesListe));
 
         List<Melding> meldinger = SubjectHandler.withSubject(TEST_SUBJECT, () -> henvendelseBehandlingService.hentMeldinger(FNR, VALGT_ENHET).getTraader().stream()
@@ -199,7 +198,6 @@ class HenvendelseBehandlingServiceImplTest {
         xmlHenvendelsesListe.add(lagXMLHenvendelse("id2", "id2", DateTime.now().plusDays(1), null, XMLHenvendelseType.SPORSMAL_SKRIFTLIG.name(), null, new XMLMetadataListe().withMetadata(new XMLMeldingFraBruker(TEMAGRUPPE, "fritekst")))
                 .withJournalfortInformasjon(new XMLJournalfortInformasjon().withJournalfortTema("tema")));
 
-//        when(pep.hasAccess(any(PolicyRequest.class))).thenReturn(false);
         when(henvendelsePortType.hentHenvendelseListe(any(WSHentHenvendelseListeRequest.class))).thenReturn(new WSHentHenvendelseListeResponse().withAny(xmlHenvendelsesListe));
         List<Melding> meldinger = SubjectHandler.withSubject(TEST_SUBJECT, () -> henvendelseBehandlingService.hentMeldinger(FNR, VALGT_ENHET).getTraader().stream()
                 .flatMap(traad -> traad.getMeldinger().stream())
@@ -258,7 +256,6 @@ class HenvendelseBehandlingServiceImplTest {
                 .withGjeldendeTemagruppe(OKSOS.toString());
 
         when(henvendelsePortType.hentHenvendelseListe(any(WSHentHenvendelseListeRequest.class))).thenReturn(new WSHentHenvendelseListeResponse().withAny(okonomiskSosialhjelp));
-//        when(pep.hasAccess(any(PolicyRequest.class))).thenReturn(false);
 
         List<Melding> meldinger = SubjectHandler.withSubject(TEST_SUBJECT, () -> henvendelseBehandlingService.hentMeldinger(FNR, VALGT_ENHET).getTraader().stream()
                 .flatMap(traad -> traad.getMeldinger().stream())

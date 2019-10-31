@@ -123,16 +123,10 @@ public class PlukkOppgaveServiceImplTest {
         when(personKjerneinfoServiceBi.hentKjerneinformasjon(any())).thenReturn(mockPersonUtenAnsvarligEnhet());
         when(oppgaveBehandlingService.plukkOppgaverFraGsak(Temagruppe.ARBD, SAKSBEHANDLERS_VALGTE_ENHET)).thenReturn(singletonList(new Oppgave("1", "fnr", "1")));
         when(tilgangskontrollContext.harSaksbehandlerRolle("0000-ga-bd06_modiagenerelltilgang")).thenReturn(true);
-//        when(tilgangskontroll.hasAccess(any(PolicyRequest.class))).thenReturn(true);
-//        ArgumentCaptor<PolicyRequest> argumentCaptor = ArgumentCaptor.forClass(PolicyRequest.class);
 
         List<Oppgave> oppgave = plukkOppgaveService.plukkOppgaver(Temagruppe.ARBD, SAKSBEHANDLERS_VALGTE_ENHET);
-//        verify(tilgangskontroll, times(2)).hasAccess(argumentCaptor.capture());
-//        PolicyRequest policyRequestAnsvarligEnhet = argumentCaptor.getAllValues().get(1);
-//        String attributeValue = getAttributeValue(policyRequestAnsvarligEnhet);
 
         assertThat(oppgave.isEmpty(), is(false));
-//        assertThat(attributeValue, is(""));
     }
 
     private HentKjerneinformasjonResponse mockPersonUtenAnsvarligEnhet() {
@@ -143,12 +137,5 @@ public class PlukkOppgaveServiceImplTest {
         hentKjerneinformasjonResponse.setPerson(person);
         return hentKjerneinformasjonResponse;
     }
-
-//    private String getAttributeValue(PolicyRequest policyRequestAnsvarligEnhet) {
-//        return policyRequestAnsvarligEnhet.getAttributes().stream()
-//                .filter(attribute -> attribute.getAttributeId().getURN().equals(ATTRIBUTT_ID_ANSVARLIG_ENHET))
-//                .findFirst().orElseThrow(IllegalStateException::new)
-//                .getAttributeValue().getValue().toString();
-//    }
 
 }

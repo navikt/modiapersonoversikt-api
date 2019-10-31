@@ -133,7 +133,6 @@ class HenvendelseUtsendingServiceImplTest {
 
     @Test
     void henterSporsmal() {
-//        System.setProperty(StaticSubjectHandler.SUBJECTHANDLER_KEY, StaticSubjectHandler.class.getName());
         when(henvendelsePortType.hentHenvendelseListe(any(WSHentHenvendelseListeRequest.class))).thenReturn(mockWSHentHenvendelseResponse());
 
         Melding sporsmal = henvendelseUtsendingService.hentTraad("fnr", TRAAD_ID, SAKSBEHANDLERS_VALGTE_ENHET).get(0);
@@ -311,9 +310,6 @@ class HenvendelseUtsendingServiceImplTest {
 
         when(henvendelsePortType.hentHenvendelseListe(any(WSHentHenvendelseListeRequest.class))).thenReturn(resp);
         when(tilgangskontrollContext.hentTemagrupperForSaksbehandler(anyString())).thenReturn(new TreeSet<>(asList(JOURNALFORT_TEMA)));
-
-
-//        when(tilgangskontroll.hasAccess(any(PolicyRequest.class))).thenReturn(false).thenReturn(false).thenReturn(true);
 
         List<Melding> traad = henvendelseUtsendingService.hentTraad(FNR, TRAAD_ID, SAKSBEHANDLERS_VALGTE_ENHET);
 

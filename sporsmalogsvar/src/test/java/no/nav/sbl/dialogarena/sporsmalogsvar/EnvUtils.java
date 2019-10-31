@@ -8,7 +8,6 @@ import java.util.Map;
 public class EnvUtils {
     public static void withSubject(String ident, Runnable fn) {
         System.setProperty(SecurityConstants.SYSTEMUSER_USERNAME, "srvModiabrukerdialog");
-//        SubjectHandlerUtils.setSubject(new SubjectHandlerUtils.SubjectBuilder(ident, IdentType.InternBruker).getSubject());
 
         withEnv(new HashMap<String, String>() {{
             put(SecurityConstants.SYSTEMUSER_USERNAME, "srvModiabrukerdialog");

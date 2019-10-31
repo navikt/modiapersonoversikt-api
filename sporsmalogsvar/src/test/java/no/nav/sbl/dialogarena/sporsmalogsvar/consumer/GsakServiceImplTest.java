@@ -64,9 +64,8 @@ public class GsakServiceImplTest {
     private GsakServiceImpl gsakService;
 
     @BeforeEach
-    public void setUp() throws HentNAVAnsattFaultGOSYSGeneriskfMsg, HentNAVAnsattFaultGOSYSNAVAnsattIkkeFunnetMsg {
+    public void setUp() {
         initMocks(this);
-//        when(saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet()).thenReturn(JOURNALFORENDE_ENHET);
     }
 
     @Test
