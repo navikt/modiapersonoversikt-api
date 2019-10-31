@@ -6,6 +6,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Oppgave;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveBehandlingService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.AnsattService;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.http.SubjectHandlerUtil;
 import no.nav.tjeneste.virksomhet.oppgave.v3.HentOppgaveOppgaveIkkeFunnet;
 import no.nav.tjeneste.virksomhet.oppgave.v3.OppgaveV3;
 import no.nav.tjeneste.virksomhet.oppgave.v3.informasjon.oppgave.WSOppgave;
@@ -75,14 +76,15 @@ public class OppgaveBehandlingServiceImplTest {
     @BeforeEach
     public void init() {
         initMocks(this);
-//        System.setProperty(StaticSubjectHandler.SUBJECTHANDLER_KEY, StaticSubjectHandler.class.getName());
     }
 
     @Test
     public void skalHenteSporsmaalOgTilordneIGsak() throws HentOppgaveOppgaveIkkeFunnet, LagreOppgaveOppgaveIkkeFunnet, LagreOppgaveOptimistiskLasing, OppgaveBehandlingService.FikkIkkeTilordnet {
         when(oppgaveWS.hentOppgave(any(WSHentOppgaveRequest.class))).thenReturn(mockHentOppgaveResponse());
 
-        oppgaveBehandlingService.tilordneOppgaveIGsak("oppgaveid", Temagruppe.ARBD, SAKSBEHANDLERS_VALGTE_ENHET);
+        SubjectHandlerUtil.withIdent("Z999999", () ->
+            oppgaveBehandlingService.tilordneOppgaveIGsak("oppgaveid", Temagruppe.ARBD, SAKSBEHANDLERS_VALGTE_ENHET)
+        );
 
         verify(oppgavebehandlingWS).lagreOppgave(lagreOppgaveRequestCaptor.capture());
         WSLagreOppgaveRequest request = lagreOppgaveRequestCaptor.getValue();
@@ -105,10 +107,10 @@ public class OppgaveBehandlingServiceImplTest {
                 .thenReturn(tildelFlereOppgaverResponse);
         when(oppgaveWS.hentOppgave(any(WSHentOppgaveRequest.class)))
                 .thenReturn(hentOppgaveResponse1, hentOppgaveResponse2);
-//        when(saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet())
-//                .thenReturn(SAKSBEHANDLERS_VALGTE_ENHET);
 
-        oppgaveBehandlingService.plukkOppgaverFraGsak(Temagruppe.ARBD, SAKSBEHANDLERS_VALGTE_ENHET);
+        SubjectHandlerUtil.withIdent("Z999999", () ->
+            oppgaveBehandlingService.plukkOppgaverFraGsak(Temagruppe.ARBD, SAKSBEHANDLERS_VALGTE_ENHET)
+        );
 
         verify(tildelOppgaveWS).tildelFlereOppgaver(tildelFlereOppgaverRequestCaptor.capture());
         verify(oppgaveWS, times(2)).hentOppgave(hentOppgaveRequestCaptor.capture());
@@ -126,7 +128,9 @@ public class OppgaveBehandlingServiceImplTest {
         when(oppgaveWS.hentOppgave(any(WSHentOppgaveRequest.class))).thenReturn(mockHentOppgaveResponse());
         when(ansattWS.hentAnsattNavn(anyString())).thenReturn("");
 
-        oppgaveBehandlingService.ferdigstillOppgaveIGsak("1", Temagruppe.ARBD, SAKSBEHANDLERS_VALGTE_ENHET);
+        SubjectHandlerUtil.withIdent("Z999999", () ->
+            oppgaveBehandlingService.ferdigstillOppgaveIGsak("1", Temagruppe.ARBD, SAKSBEHANDLERS_VALGTE_ENHET)
+        );
         verify(oppgavebehandlingWS).ferdigstillOppgaveBolk(ferdigstillOppgaveBolkRequestCaptor.capture());
         assertThat(ferdigstillOppgaveBolkRequestCaptor.getValue().getOppgaveIdListe().get(0), is("1"));
     }
@@ -184,7 +188,7 @@ public class OppgaveBehandlingServiceImplTest {
                         .withOppgaveListe(oppgaveliste)
                         .withTotaltAntallTreff(oppgaveliste.size()));
 
-        List<Oppgave> resultat = oppgaveBehandlingService.finnTildelteOppgaverIGsak();
+        List<Oppgave> resultat = SubjectHandlerUtil.withIdent("Z999999", () -> oppgaveBehandlingService.finnTildelteOppgaverIGsak());
 
         assertThat(resultat.size(), is(oppgaveliste.size()));
         assertThat(resultat.get(0).oppgaveId, is(oppgaveliste.get(0).getOppgaveId()));

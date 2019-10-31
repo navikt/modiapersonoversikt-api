@@ -8,9 +8,6 @@ import no.nav.tjeneste.virksomhet.organisasjon.v4.meldinger.WSHentNoekkelinfoOrg
 import no.nav.tjeneste.virksomhet.organisasjon.v4.meldinger.WSHentNoekkelinfoOrganisasjonResponse;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import javax.inject.Inject;
 
@@ -20,26 +17,24 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
-@ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = {OrganisasjonEndpointCacheTestConfig.class})
-public class OrganisasjonEnpointCacheTest extends CacheTest {
+class OrganisasjonEnpointCacheTest extends CacheTest {
 
-    public static final String CACHE_NAME = "endpointCache";
+    private static final String CACHE_NAME = "endpointCache";
 
     @Inject
     private OrganisasjonV4 organisasjon;
 
-    public OrganisasjonEnpointCacheTest() {
+    OrganisasjonEnpointCacheTest() {
         super(CACHE_NAME);
     }
 
     @BeforeAll
-    public static void setup() {
+    static void setup() {
         setupKeyAndTrustStore();
     }
 
     @Test
-    public void cacheManager_harEntryForEndpointCache_etterKallTilHentNoekkelinfo() throws HentNoekkelinfoOrganisasjonOrganisasjonIkkeFunnet, HentNoekkelinfoOrganisasjonUgyldigInput {
+    void cacheManager_harEntryForEndpointCache_etterKallTilHentNoekkelinfo() throws HentNoekkelinfoOrganisasjonOrganisasjonIkkeFunnet, HentNoekkelinfoOrganisasjonUgyldigInput {
         WSHentNoekkelinfoOrganisasjonRequest req1 = new WSHentNoekkelinfoOrganisasjonRequest()
                 .withOrgnummer("123456789");
         WSHentNoekkelinfoOrganisasjonRequest req2 = new WSHentNoekkelinfoOrganisasjonRequest()

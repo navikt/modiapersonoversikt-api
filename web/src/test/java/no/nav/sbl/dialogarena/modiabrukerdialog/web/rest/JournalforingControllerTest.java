@@ -26,18 +26,14 @@ class JournalforingControllerTest {
 
     private static final String SAKSBEHANDLERS_IDENT = "z999643";
 
-    @BeforeAll
-    static void beforeAll() {
-        SubjectHandlerUtil.setInnloggetSaksbehandler(SAKSBEHANDLERS_IDENT);
-    }
-
     @Test
     @DisplayName("Knytter til sak og returnerer 200 OK")
     void journalforingKnytterTilSak() throws JournalforingFeilet {
         JournalforingController journalforingController = new JournalforingController(mock(SakerService.class), TilgangskontrollMock.get());
 
-        Response response = journalforingController.knyttTilSak("10108000398", "traad-id", new Sak(),
-                mockHttpRequest());
+        Response response = SubjectHandlerUtil.withIdent(SAKSBEHANDLERS_IDENT, () ->
+                journalforingController.knyttTilSak("10108000398", "traad-id", new Sak(), mockHttpRequest())
+        );
 
         assertEquals(Response.Status.OK, response.getStatusInfo());
     }
@@ -49,8 +45,9 @@ class JournalforingControllerTest {
         doThrow(RuntimeException.class).when(mock).knyttBehandlingskjedeTilSak(any(), any(), any(), any());
         JournalforingController journalforingController = new JournalforingController(mock, TilgangskontrollMock.get());
 
-        Response response = journalforingController.knyttTilSak("10108000398", "traad-id", new Sak(),
-                mockHttpRequest());
+        Response response = SubjectHandlerUtil.withIdent(SAKSBEHANDLERS_IDENT, () ->
+                journalforingController.knyttTilSak("10108000398", "traad-id", new Sak(), mockHttpRequest())
+        );
 
         assertEquals(Response.Status.INTERNAL_SERVER_ERROR, response.getStatusInfo());
     }
@@ -62,8 +59,9 @@ class JournalforingControllerTest {
         doThrow(EnhetIkkeSatt.class).when(mock).knyttBehandlingskjedeTilSak(any(), any(), any(), any());
         JournalforingController journalforingController = new JournalforingController(mock, TilgangskontrollMock.get());
 
-        Response response = journalforingController.knyttTilSak("10108000398", "traad-id", new Sak(),
-                mockHttpRequest());
+        Response response = SubjectHandlerUtil.withIdent(SAKSBEHANDLERS_IDENT, () ->
+                journalforingController.knyttTilSak("10108000398", "traad-id", new Sak(), mockHttpRequest())
+        );
 
         assertEquals(Response.Status.INTERNAL_SERVER_ERROR, response.getStatusInfo());
         assertEquals(FEILMELDING_UTEN_ENHET, ((Feilmelding) response.getEntity()).getMessage());

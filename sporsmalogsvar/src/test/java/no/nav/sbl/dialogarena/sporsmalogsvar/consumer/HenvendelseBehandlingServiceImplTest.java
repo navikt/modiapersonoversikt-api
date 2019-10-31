@@ -1,5 +1,9 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.consumer;
 
+import no.nav.brukerdialog.security.domain.IdentType;
+import no.nav.common.auth.SsoToken;
+import no.nav.common.auth.Subject;
+import no.nav.common.auth.SubjectHandler;
 import no.nav.kjerneinfo.consumer.fim.person.PersonKjerneinfoServiceBi;
 import no.nav.kjerneinfo.consumer.fim.person.to.HentKjerneinformasjonRequest;
 import no.nav.kjerneinfo.consumer.fim.person.to.HentKjerneinformasjonResponse;
@@ -13,6 +17,8 @@ import no.nav.modig.content.ContentRetriever;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.kodeverk.StandardKodeverk;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.ldap.LDAPService;
+import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Tilgangskontroll;
+import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.TilgangskontrollContext;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.henvendelse.HenvendelseBehandlingServiceImpl;
 import no.nav.sbl.dialogarena.sporsmalogsvar.legacy.TraadVM;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.behandlehenvendelse.BehandleHenvendelsePortType;
@@ -25,8 +31,6 @@ import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
 import java.util.ArrayList;
@@ -35,19 +39,19 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static java.util.Arrays.asList;
+import static java.util.Collections.emptyMap;
 import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.*;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe.OKSOS;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.legacy.TestUtils.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
 import static org.springframework.test.util.ReflectionTestUtils.setField;
 
-public class HenvendelseBehandlingServiceImplTest {
-
+class HenvendelseBehandlingServiceImplTest {
+    private static final Subject TEST_SUBJECT = new Subject("Z999999", IdentType.InternBruker, SsoToken.oidcToken("token", emptyMap()));
     private static final String FNR = "11111111";
     private static final String TEMAGRUPPE = "temagruppe";
     private static final String BEHANDLINGS_ID = "id1";
@@ -59,37 +63,34 @@ public class HenvendelseBehandlingServiceImplTest {
     @Captor
     private ArgumentCaptor<WSHentHenvendelseListeRequest> wsHentHenvendelseListeRequestArgumentCaptor;
 
-    @Mock
-    private HenvendelsePortType henvendelsePortType;
-    @Mock
-    protected BehandleHenvendelsePortType behandleHenvendelsePortType;
-    @Mock
-    private PersonKjerneinfoServiceBi kjerneinfo;
-    @Mock
-    private StandardKodeverk standardKodeverk;
-    @Mock
-    private ContentRetriever propertyResolver;
-    @Mock
-    private SporingsLogger sporingsLogger;
-    @Mock
-    private LDAPService ldapService;
+    private HenvendelsePortType henvendelsePortType = mock(HenvendelsePortType.class);
+    private BehandleHenvendelsePortType behandleHenvendelsePortType = mock(BehandleHenvendelsePortType.class);
+    private PersonKjerneinfoServiceBi kjerneinfo = mock(PersonKjerneinfoServiceBi.class);
+    private StandardKodeverk standardKodeverk = mock(StandardKodeverk.class);
+    private ContentRetriever propertyResolver = mock(ContentRetriever.class);
+    private SporingsLogger sporingsLogger = mock(SporingsLogger.class);
+    private LDAPService ldapService = mock(LDAPService.class);
+    private TilgangskontrollContext tilgangskontrollContext = mock(TilgangskontrollContext.class);
 
     @InjectMocks
-    private HenvendelseBehandlingServiceImpl henvendelseBehandlingService;
+    private HenvendelseBehandlingServiceImpl henvendelseBehandlingService = new HenvendelseBehandlingServiceImpl(
+            henvendelsePortType,
+            behandleHenvendelsePortType,
+            kjerneinfo,
+            new Tilgangskontroll(tilgangskontrollContext),
+            standardKodeverk,
+            propertyResolver,
+            sporingsLogger,
+            ldapService
+    );
 
 
     private final TraadVM VALGT_TRAAD = new TraadVM(createMeldingVMer());
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         initMocks(this);
-        when(propertyResolver.hentTekst(anyString())).thenAnswer(new Answer<String>() {
-
-            @Override
-            public String answer(InvocationOnMock invocation) throws Throwable {
-                return ((String) invocation.getArguments()[0]);
-            }
-        });
+        when(propertyResolver.hentTekst(anyString())).thenAnswer((Answer<String>) invocation -> ((String) invocation.getArguments()[0]));
         setField(henvendelseBehandlingService, "propertyResolver", propertyResolver);
         XMLMeldingFraBruker xmlMeldingFraBruker = new XMLMeldingFraBruker()
                 .withFritekst("fritekst")
@@ -101,13 +102,12 @@ public class HenvendelseBehandlingServiceImplTest {
         when(henvendelsePortType.hentHenvendelseListe(any(WSHentHenvendelseListeRequest.class))).thenReturn(
                 new WSHentHenvendelseListeResponse().withAny(xmlHenvendelseListe));
 
-//        when(saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet()).thenReturn(VALGT_ENHET);
         when(standardKodeverk.getArkivtemaNavn(anyString())).thenReturn(ARKIVTEMANAVN);
     }
 
     @Test
-    public void skalHenteMeldingerMedRiktigType() {
-        henvendelseBehandlingService.hentMeldinger(FNR, VALGT_ENHET);
+    void skalHenteMeldingerMedRiktigType() {
+        SubjectHandler.withSubject(TEST_SUBJECT, () -> henvendelseBehandlingService.hentMeldinger(FNR, VALGT_ENHET));
 
         verify(henvendelsePortType).hentHenvendelseListe(wsHentHenvendelseListeRequestArgumentCaptor.capture());
         WSHentHenvendelseListeRequest request = wsHentHenvendelseListeRequestArgumentCaptor.getValue();
@@ -123,18 +123,19 @@ public class HenvendelseBehandlingServiceImplTest {
     }
 
     @Test
-    public void skalTransformereResponsenTilMeldingsliste() {
-        List<Melding> meldinger = henvendelseBehandlingService.hentMeldinger(FNR, VALGT_ENHET).getTraader()
+    void skalTransformereResponsenTilMeldingsliste() {
+        List<Melding> meldinger = SubjectHandler.withSubject(TEST_SUBJECT, () -> henvendelseBehandlingService.hentMeldinger(FNR, VALGT_ENHET).getTraader()
                 .stream()
                 .flatMap(traader -> traader.getMeldinger().stream())
-                .collect(Collectors.toList());
+                .collect(Collectors.toList())
+        );
 
         assertThat(meldinger).hasSize(1);
         assertThat(meldinger.get(0).id).isEqualTo(BEHANDLINGS_ID);
     }
 
     @Test
-    public void skalMerkeSomKontorsperret() {
+    void skalMerkeSomKontorsperret() {
         HentKjerneinformasjonResponse hentKjerneinformasjonResponse = new HentKjerneinformasjonResponse();
         Personfakta personfakta = new Personfakta();
         personfakta.setAnsvarligEnhet(new AnsvarligEnhet.With()
@@ -151,21 +152,21 @@ public class HenvendelseBehandlingServiceImplTest {
     }
 
     @Test
-    public void skalMerkeSomFeilsendt() {
+    void skalMerkeSomFeilsendt() {
         henvendelseBehandlingService.merkSomFeilsendt(VALGT_TRAAD);
 
         verify(behandleHenvendelsePortType).oppdaterTilKassering(IDER_I_VALGT_TRAAD);
     }
 
     @Test
-    public void skalMerkeForHastekassering() {
+    void skalMerkeForHastekassering() {
         henvendelseBehandlingService.merkForHastekassering(VALGT_TRAAD);
 
         verify(behandleHenvendelsePortType).markerTraadForHasteKassering(IDER_I_VALGT_TRAAD);
     }
 
     @Test
-    public void skalAlltidHenteMeldingerSomIkkeErKontorsperret() {
+    void skalAlltidHenteMeldingerSomIkkeErKontorsperret() {
         List<Object> xmlHenvendelsesListe = new ArrayList<>();
         xmlHenvendelsesListe.add(lagXMLHenvendelse("id1", "id1", DateTime.now().minusDays(1), null, XMLHenvendelseType.SPORSMAL_SKRIFTLIG.name(), null, new XMLMetadataListe().withMetadata(new XMLMeldingFraBruker(TEMAGRUPPE, "fritekst")))
                 .withJournalfortInformasjon(null));
@@ -179,10 +180,11 @@ public class HenvendelseBehandlingServiceImplTest {
 //        when(pep.hasAccess(any(PolicyRequest.class))).thenReturn(false);
         when(henvendelsePortType.hentHenvendelseListe(any(WSHentHenvendelseListeRequest.class))).thenReturn(new WSHentHenvendelseListeResponse().withAny(xmlHenvendelsesListe));
 
-        List<Melding> meldinger = henvendelseBehandlingService.hentMeldinger(FNR, VALGT_ENHET).getTraader().stream()
+        List<Melding> meldinger = SubjectHandler.withSubject(TEST_SUBJECT, () -> henvendelseBehandlingService.hentMeldinger(FNR, VALGT_ENHET).getTraader().stream()
                 .flatMap(traad -> traad.getMeldinger().stream())
                 .sorted(Comparator.comparing(melding -> melding.opprettetDato))
-                .collect(Collectors.toList());
+                .collect(Collectors.toList())
+        );
 
         assertThat(meldinger).hasSize(2);
         assertThat(meldinger.get(0).id).isEqualTo("id1");
@@ -190,7 +192,7 @@ public class HenvendelseBehandlingServiceImplTest {
     }
 
     @Test
-    public void skalFjerneFritekstFraJournalfortMeldingManIkkeHarTilgangTil() {
+    void skalFjerneFritekstFraJournalfortMeldingManIkkeHarTilgangTil() {
         List<Object> xmlHenvendelsesListe = new ArrayList<>();
         xmlHenvendelsesListe.add(lagXMLHenvendelse("id1", "id1", DateTime.now(), null, XMLHenvendelseType.SPORSMAL_SKRIFTLIG.name(), null, new XMLMetadataListe().withMetadata(new XMLMeldingFraBruker(TEMAGRUPPE, "fritekst")))
                 .withJournalfortInformasjon(null));
@@ -199,10 +201,11 @@ public class HenvendelseBehandlingServiceImplTest {
 
 //        when(pep.hasAccess(any(PolicyRequest.class))).thenReturn(false);
         when(henvendelsePortType.hentHenvendelseListe(any(WSHentHenvendelseListeRequest.class))).thenReturn(new WSHentHenvendelseListeResponse().withAny(xmlHenvendelsesListe));
-        List<Melding> meldinger = henvendelseBehandlingService.hentMeldinger(FNR, VALGT_ENHET).getTraader().stream()
+        List<Melding> meldinger = SubjectHandler.withSubject(TEST_SUBJECT, () -> henvendelseBehandlingService.hentMeldinger(FNR, VALGT_ENHET).getTraader().stream()
                 .flatMap(traad -> traad.getMeldinger().stream())
                 .sorted(Comparator.comparing(melding -> melding.opprettetDato))
-                .collect(Collectors.toList());
+                .collect(Collectors.toList())
+        );
 
         assertThat(meldinger).hasSize(2);
         assertThat(meldinger.get(0).getFritekst()).isEqualTo("fritekst");
@@ -210,7 +213,7 @@ public class HenvendelseBehandlingServiceImplTest {
     }
 
     @Test
-    public void oversetterFraJournalfortTemaTilTemanavn() {
+    void oversetterFraJournalfortTemaTilTemanavn() {
         List<Object> xmlHenvendelsesListe = new ArrayList<>();
         xmlHenvendelsesListe.add(lagXMLHenvendelse("id1", "id1", DateTime.now().minusDays(1), null, XMLHenvendelseType.SPORSMAL_SKRIFTLIG.name(), null, new XMLMetadataListe().withMetadata(new XMLMeldingFraBruker(TEMAGRUPPE, "fritekst")))
                 .withJournalfortInformasjon(new XMLJournalfortInformasjon()
@@ -221,30 +224,32 @@ public class HenvendelseBehandlingServiceImplTest {
 
         when(henvendelsePortType.hentHenvendelseListe(any(WSHentHenvendelseListeRequest.class))).thenReturn(new WSHentHenvendelseListeResponse().withAny(xmlHenvendelsesListe));
 
-        List<Melding> meldinger = henvendelseBehandlingService.hentMeldinger(FNR, VALGT_ENHET).getTraader().stream()
+        List<Melding> meldinger = SubjectHandler.withSubject(TEST_SUBJECT, () -> henvendelseBehandlingService.hentMeldinger(FNR, VALGT_ENHET).getTraader().stream()
                 .flatMap(traad -> traad.getMeldinger().stream())
-                .collect(Collectors.toList());
+                .collect(Collectors.toList())
+        );
 
         assertThat(meldinger.get(0).journalfortTemanavn).isEqualTo(ARKIVTEMANAVN);
     }
 
     @Test
-    public void oversetterIkkeFraJournalfortTemaTilTemanavnDersomJournalfortTemaErNull() {
+    void oversetterIkkeFraJournalfortTemaTilTemanavnDersomJournalfortTemaErNull() {
         List<Object> xmlHenvendelsesListe = new ArrayList<>();
         xmlHenvendelsesListe.add(lagXMLHenvendelse("id1", BEHANDLINGS_ID, DateTime.now().minusDays(1), null, XMLHenvendelseType.SPORSMAL_SKRIFTLIG.name(), null, new XMLMetadataListe().withMetadata(new XMLMeldingFraBruker(TEMAGRUPPE, "fritekst")))
                 .withJournalfortInformasjon(null));
 
         when(henvendelsePortType.hentHenvendelseListe(any(WSHentHenvendelseListeRequest.class))).thenReturn(new WSHentHenvendelseListeResponse().withAny(xmlHenvendelsesListe));
 
-        List<Melding> meldinger = henvendelseBehandlingService.hentMeldinger(FNR, VALGT_ENHET).getTraader().stream()
+        List<Melding> meldinger = SubjectHandler.withSubject(TEST_SUBJECT, () -> henvendelseBehandlingService.hentMeldinger(FNR, VALGT_ENHET).getTraader().stream()
                 .flatMap(traad -> traad.getMeldinger().stream())
-                .collect(Collectors.toList());
+                .collect(Collectors.toList())
+        );
 
         assertThat(meldinger.get(0).journalfortTemanavn).isNull();
     }
 
     @Test
-    public void skalFjerneFritekstForOkonomiskSosialhjelpDersomManIkkeHarTilgang() {
+    void skalFjerneFritekstForOkonomiskSosialhjelpDersomManIkkeHarTilgang() {
         String fritekst = "fritekst";
 
         XMLHenvendelse okonomiskSosialhjelp = lagXMLHenvendelse("1234", "1234", DateTime.now(), DateTime.now(), SPORSMAL_SKRIFTLIG.toString(), null,
@@ -255,9 +260,10 @@ public class HenvendelseBehandlingServiceImplTest {
         when(henvendelsePortType.hentHenvendelseListe(any(WSHentHenvendelseListeRequest.class))).thenReturn(new WSHentHenvendelseListeResponse().withAny(okonomiskSosialhjelp));
 //        when(pep.hasAccess(any(PolicyRequest.class))).thenReturn(false);
 
-        List<Melding> meldinger = henvendelseBehandlingService.hentMeldinger(FNR, VALGT_ENHET).getTraader().stream()
+        List<Melding> meldinger = SubjectHandler.withSubject(TEST_SUBJECT, () -> henvendelseBehandlingService.hentMeldinger(FNR, VALGT_ENHET).getTraader().stream()
                 .flatMap(traad -> traad.getMeldinger().stream())
-                .collect(Collectors.toList());
+                .collect(Collectors.toList())
+        );
 
         assertThat(meldinger.get(0).getFritekst()).isNotEqualTo(fritekst);
     }

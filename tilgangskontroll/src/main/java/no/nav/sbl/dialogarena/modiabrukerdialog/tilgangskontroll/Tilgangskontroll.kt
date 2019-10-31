@@ -204,12 +204,12 @@ data class TilgangTilTemaData(val valgtEnhet: String, val tema: String?)
 
 val log = LoggerFactory.getLogger(Tilgangskontroll::class.java)
 
-class TilgangskontrollUtenTPS(context: TilgangskontrollContextUtenTPS) : RSBACImpl<TilgangskontrollContextUtenTPS>(context, {
+open class TilgangskontrollUtenTPS(context: TilgangskontrollContextUtenTPS) : RSBACImpl<TilgangskontrollContextUtenTPS>(context, {
     log.error(it)
     ForbiddenException(it)
 })
 
-class Tilgangskontroll(context: TilgangskontrollContext) : RSBACImpl<TilgangskontrollContext>(context, {
+open class Tilgangskontroll(context: TilgangskontrollContext) : RSBACImpl<TilgangskontrollContext>(context, {
     log.error(it)
     ForbiddenException(it)
 })

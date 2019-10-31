@@ -13,14 +13,15 @@ import java.util.List;
 
 public class PlukkOppgaveServiceImpl implements PlukkOppgaveService {
 
-    public static final String ATTRIBUTT_ID_ANSVARLIG_ENHET = "urn:nav:ikt:tilgangskontroll:xacml:resource:ansvarlig-enhet";
-    public static final String ATTRIBUTT_ID_DISKRESJONSKODE = "urn:nav:ikt:tilgangskontroll:xacml:resource:discretion-code";
-    @Inject
-    private OppgaveBehandlingService oppgaveBehandlingService;
-    @Inject
-    private PersonKjerneinfoServiceBi personKjerneinfoServiceBi;
-    @Inject
-    private Tilgangskontroll tilgangskontroll;
+    private final OppgaveBehandlingService oppgaveBehandlingService;
+    private final PersonKjerneinfoServiceBi personKjerneinfoServiceBi;
+    private final Tilgangskontroll tilgangskontroll;
+
+    public PlukkOppgaveServiceImpl(OppgaveBehandlingService oppgaveBehandlingService, PersonKjerneinfoServiceBi personKjerneinfoServiceBi, Tilgangskontroll tilgangskontroll) {
+        this.oppgaveBehandlingService = oppgaveBehandlingService;
+        this.personKjerneinfoServiceBi = personKjerneinfoServiceBi;
+        this.tilgangskontroll = tilgangskontroll;
+    }
 
     @Override
     public List<Oppgave> plukkOppgaver(Temagruppe temagruppe, String saksbehandlersValgteEnhet) {

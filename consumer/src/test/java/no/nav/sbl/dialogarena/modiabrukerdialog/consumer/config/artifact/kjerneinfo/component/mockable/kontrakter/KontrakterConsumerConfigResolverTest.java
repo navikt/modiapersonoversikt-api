@@ -33,14 +33,6 @@ public class KontrakterConsumerConfigResolverTest {
     private KontrakterConsumerConfigResolver resolver;
 
     @Test
-    public void medMockSlaattPaaSkalIkkeProdkodeEksekveres() {
-        resolver.oppfolgingskontraktServiceBi().hentOppfolgingskontrakter(new OppfolgingskontraktRequest());
-        resolver.ytelseskontraktServiceBi().hentYtelseskontrakter(new YtelseskontraktRequest());
-        verifyZeroInteractions(oppfolgingskontraktService.wrappedObject);
-        verifyZeroInteractions(ytelseskontraktService.wrappedObject);
-    }
-
-    @Test
     public void perDefaultSkalProdkodeEksekveres() {
         resolver.ytelseskontraktServiceBi().hentYtelseskontrakter(new YtelseskontraktRequest());
         resolver.oppfolgingskontraktServiceBi().hentOppfolgingskontrakter(new OppfolgingskontraktRequest());

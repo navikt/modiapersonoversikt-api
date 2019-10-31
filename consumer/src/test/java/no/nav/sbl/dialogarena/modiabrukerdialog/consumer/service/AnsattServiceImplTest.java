@@ -7,10 +7,8 @@ import _0._0.nav_cons_sak_gosys_3.no.nav.asbo.navorgenhet.ASBOGOSYSNavEnhet;
 import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navansatt.*;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.Ansatt;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.AnsattEnhet;
-import org.junit.jupiter.api.BeforeEach;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.http.SubjectHandlerUtil;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -18,25 +16,15 @@ import java.util.List;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-import static org.mockito.MockitoAnnotations.initMocks;
+import static org.mockito.Mockito.*;
 
-public class AnsattServiceImplTest {
+class AnsattServiceImplTest {
 
-    @Mock
-    private GOSYSNAVansatt ansattWS;
-    @InjectMocks
-    private AnsattServiceImpl ansattServiceImpl;
-
-    @BeforeEach
-    public void setup() {
-        initMocks(this);
-//        System.setProperty("no.nav.brukerdialog.security.context.subjectHandlerImplementationClass", ThreadLocalSubjectHandler.class.getName());
-    }
+    private GOSYSNAVansatt ansattWS = mock(GOSYSNAVansatt.class);
+    private AnsattServiceImpl ansattServiceImpl = new AnsattServiceImpl(ansattWS);
 
     @Test
-    public void skalHenteAlleAnsattaForEnEnhet() throws FinnArenaNAVAnsattListeFaultGOSYSGeneriskMsg, FinnArenaNAVAnsattListeFaultGOSYSNAVEnhetIkkeFunnetMsg, HentNAVAnsattEnhetListeFaultGOSYSGeneriskMsg, HentNAVAnsattEnhetListeFaultGOSYSNAVAnsattIkkeFunnetMsg {
+    void skalHenteAlleAnsattaForEnEnhet() throws Exception {
         ASBOGOSYSNAVEnhetListe asbogosysnavEnhetListe = new ASBOGOSYSNAVEnhetListe();
         List<ASBOGOSYSNavEnhet> enhetsliste = asbogosysnavEnhetListe.getNAVEnheter();
         enhetsliste.add(lagNavEnhet("111", "testEnhet"));
@@ -45,7 +33,7 @@ public class AnsattServiceImplTest {
 
         when(ansattWS.hentNAVAnsattEnhetListe(any(ASBOGOSYSNAVAnsatt.class))).thenReturn(asbogosysnavEnhetListe);
 
-        List<AnsattEnhet> enheter = ansattServiceImpl.hentEnhetsliste();
+        List<AnsattEnhet> enheter = SubjectHandlerUtil.withIdent("Z999999", () -> ansattServiceImpl.hentEnhetsliste());
         List<AnsattEnhet> refEnheter = asbogogsysEnhetListeTilAnsattEnhetListe(asbogosysnavEnhetListe);
 
         verify(ansattWS).hentNAVAnsattEnhetListe(any(ASBOGOSYSNAVAnsatt.class));
@@ -56,7 +44,7 @@ public class AnsattServiceImplTest {
     }
 
     @Test
-    public void skalKunneHenteNavnAnsatt() throws HentNAVAnsattFaultGOSYSGeneriskfMsg, HentNAVAnsattFaultGOSYSNAVAnsattIkkeFunnetMsg {
+    void skalKunneHenteNavnAnsatt() throws HentNAVAnsattFaultGOSYSGeneriskfMsg, HentNAVAnsattFaultGOSYSNAVAnsattIkkeFunnetMsg {
 
         when(ansattWS.hentNAVAnsatt(any(ASBOGOSYSNAVAnsatt.class))).thenReturn(lagNavAnsatt("Kalle", "Karlsson", "111"));
 
@@ -66,7 +54,7 @@ public class AnsattServiceImplTest {
     }
 
     @Test
-    public void skalKunneHenteAnsatteForEnhet() throws HentNAVAnsattListeFaultGOSYSGeneriskMsg, HentNAVAnsattListeFaultGOSYSNAVEnhetIkkeFunnetMsg {
+    void skalKunneHenteAnsatteForEnhet() throws HentNAVAnsattListeFaultGOSYSGeneriskMsg, HentNAVAnsattListeFaultGOSYSNAVEnhetIkkeFunnetMsg {
         ASBOGOSYSNAVAnsattListe asbogosysnavAnsattListe = new ASBOGOSYSNAVAnsattListe();
         List<ASBOGOSYSNAVAnsatt> ansattListe = asbogosysnavAnsattListe.getNAVAnsatte();
         ansattListe.add(lagNavAnsatt("Kalle", "Karlsson", "111"));

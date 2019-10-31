@@ -17,7 +17,8 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import javax.inject.Inject;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = {
@@ -30,12 +31,6 @@ public class BehandleBrukerprofilConsumerConfigResolverTest {
 
     @Inject
     private BehandleBrukerprofilConsumerConfigResolver resolver;
-
-    @Test
-    public void medMockSlaattPaaSkalIkkeProdkodeEksekveres() throws OppdaterKontaktinformasjonOgPreferanserUgyldigInput, OppdaterKontaktinformasjonOgPreferanserSikkerhetsbegrensning, OppdaterKontaktinformasjonOgPreferanserPersonIkkeFunnet, OppdaterKontaktinformasjonOgPreferanserPersonIdentErUtgaatt {
-        resolver.behandleBrukerprofilServiceBi().oppdaterKontaktinformasjonOgPreferanser(new BehandleBrukerprofilRequest(new Bruker()));
-        verifyZeroInteractions(defaultService.wrappedObject);
-    }
 
     @Test
     public void perDefaultSkalProdkodeEksekveres() throws OppdaterKontaktinformasjonOgPreferanserUgyldigInput, OppdaterKontaktinformasjonOgPreferanserSikkerhetsbegrensning, OppdaterKontaktinformasjonOgPreferanserPersonIkkeFunnet, OppdaterKontaktinformasjonOgPreferanserPersonIdentErUtgaatt {

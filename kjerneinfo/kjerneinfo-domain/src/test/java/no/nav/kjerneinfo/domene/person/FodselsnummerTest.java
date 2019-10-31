@@ -45,9 +45,9 @@ public class FodselsnummerTest {
 	public void sjekkFodselsDato() {
 
 		fnr.setNummer(fnrStringKvinne);
-		assertEquals(18, fnr.getFodselsdato().getDayOfMonth());
-		assertEquals(7, fnr.getFodselsdato().getMonthOfYear());
-		assertEquals(1975, fnr.getFodselsdato().getYear());
+		assertEquals(1, fnr.getFodselsdato().getDayOfMonth());
+		assertEquals(1, fnr.getFodselsdato().getMonthOfYear());
+		assertEquals(1990, fnr.getFodselsdato().getYear());
 
 		fnr.setNummer(dnrStringKvinne);
 		assertEquals(4, fnr.getFodselsdato().getDayOfMonth());
