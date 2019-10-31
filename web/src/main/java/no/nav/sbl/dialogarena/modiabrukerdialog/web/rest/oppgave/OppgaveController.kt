@@ -1,6 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.oppgave
 
-import no.nav.brukerdialog.security.context.SubjectHandler.getSubjectHandler
+import no.nav.common.auth.SubjectHandler
 import no.nav.metrics.MetricsFactory.createEvent
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Oppgave
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe
@@ -106,7 +106,7 @@ class OppgaveController @Inject constructor(
                     }
 
     private fun verifiserTilgang(rolle: String) {
-        val consumerId = getSubjectHandler().uid
+        val consumerId = SubjectHandler.getIdent().get()
         if (!ldapService.saksbehandlerHarRolle(consumerId, rolle)) {
             throw ForbiddenException("Saksbehandler $consumerId har ikke rollen $rolle")
         }

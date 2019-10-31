@@ -6,11 +6,12 @@ import _0._0.nav_cons_sak_gosys_3.no.nav.asbo.navorgenhet.ASBOGOSYSHentNAVEnhetL
 import _0._0.nav_cons_sak_gosys_3.no.nav.asbo.navorgenhet.ASBOGOSYSNavEnhet
 import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navansatt.*
 import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navorgenhet.GOSYSNAVOrgEnhet
-import no.nav.brukerdialog.security.context.SubjectHandler
+import no.nav.common.auth.SubjectHandler
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.HenvendelseLesService
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.ldap.LDAPService
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.GrunninfoService
 import org.slf4j.LoggerFactory
+import java.util.*
 
 fun hentSaksbehandlereMedTilgangTilHastekassering(): List<String> {
     return System.getProperty("hastekassering.tilgang", "")
@@ -30,7 +31,7 @@ class TilgangskontrollContext(
 ) {
     private val logger = LoggerFactory.getLogger(TilgangskontrollContext::class.java)
 
-    fun hentSaksbehandlerId(): String = SubjectHandler.getSubjectHandler().uid.toUpperCase()
+    fun hentSaksbehandlerId(): String = SubjectHandler.getIdent().map(String::toUpperCase).get()
     fun hentSaksbehandlerRoller(): List<String> = ldap.hentRollerForVeileder(hentSaksbehandlerId()).map { it.toLowerCase() }
     fun harSaksbehandlerRolle(rolle: String) = hentSaksbehandlerRoller().contains(rolle.toLowerCase())
     fun hentDiskresjonkode(fnr: String): String? = grunninfo.hentBrukerInfo(fnr).diskresjonskode

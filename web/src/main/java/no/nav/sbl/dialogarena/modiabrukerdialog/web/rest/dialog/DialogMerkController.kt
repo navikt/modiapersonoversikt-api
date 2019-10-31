@@ -1,6 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.dialog
 
-import no.nav.brukerdialog.security.context.SubjectHandler
+import no.nav.common.auth.SubjectHandler
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveBehandlingService
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.BehandlingsIdTilgangData
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Policies
@@ -85,7 +85,7 @@ class DialogMerkController @Inject constructor(private val behandleHenvendelsePo
     @GET
     @Path("/slett")
     fun kanSlette(): Response {
-        val saksbehandlerId = SubjectHandler.getSubjectHandler().uid.toUpperCase()
+        val saksbehandlerId = SubjectHandler.getIdent().map(String::toUpperCase).get()
         return Response.ok(hentSaksbehandlereMedTilgangTilHastekassering().contains(saksbehandlerId)).build()
     }
 
