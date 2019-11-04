@@ -1,6 +1,5 @@
 import React from 'react';
 import PT from 'prop-types';
-import HurtigReferatStandalone from 'modiapersonoversikt/build/dist/components/standalone/Hurtigreferat/HurtigreferatStandalone';
 import sendToWicket from '../react-wicket-mixin/wicket-sender';
 
 class HurtigReferat extends React.Component {
@@ -15,9 +14,7 @@ class HurtigReferat extends React.Component {
 
     render() {
         return (
-            <div className="ny-frontend">
-                <HurtigReferatStandalone fødselsnummer={this.props.fødselsnummer} meldingBleSendtCallback={this.suksessCallBack}/>
-            </div>
+            <div className="hurtigreferat_ikke_lenger_i_bruk"></div>
         );
     }
 }

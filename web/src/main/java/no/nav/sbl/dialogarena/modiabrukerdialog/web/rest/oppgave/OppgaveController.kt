@@ -115,8 +115,8 @@ class OppgaveController @Inject constructor(
 }
 
 private fun mapOppgave(oppgave: Oppgave) = mapOfNotNullOrEmpty(
-        "oppgaveid" to oppgave.oppgaveId,
-        "henvendelseid" to oppgave.henvendelseId,
+        "oppgaveId" to oppgave.oppgaveId,
+        "traadId" to oppgave.henvendelseId,
         "fødselsnummer" to oppgave.fnr
 )
 
