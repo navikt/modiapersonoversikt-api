@@ -114,7 +114,7 @@ data class OpperettOppgaveRequest(
         val ansvarligIdent: String?,
         val beskrivelse: String,
         val temaKode: String,
-        val underkategoriKode: String,
+        val underkategoriKode: String?,
         val brukerid: String,
         val oppgaveTypeKode: String,
         val prioritetKode: String
