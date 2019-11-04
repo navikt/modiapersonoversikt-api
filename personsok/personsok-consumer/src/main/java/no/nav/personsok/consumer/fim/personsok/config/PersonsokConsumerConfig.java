@@ -1,6 +1,8 @@
 package no.nav.personsok.consumer.fim.personsok.config;
 
 import no.nav.modig.jaxws.handlers.MDCOutHandler;
+import no.nav.modig.modia.ping.Pingable;
+import no.nav.modig.modia.ping.PingableWebService;
 import no.nav.sbl.dialogarena.common.cxf.CXFClient;
 import no.nav.tjeneste.virksomhet.personsoek.v1.PersonsokPortType;
 import org.springframework.beans.factory.annotation.Value;
@@ -10,9 +12,6 @@ import org.springframework.context.annotation.Configuration;
 import javax.xml.namespace.QName;
 
 import static org.apache.commons.lang3.StringUtils.defaultIfBlank;
-
-//import no.nav.modig.modia.ping.Pingable;
-//import no.nav.modig.modia.ping.PingableWebService;
 
 @Configuration
 public class PersonsokConsumerConfig {
@@ -28,11 +27,11 @@ public class PersonsokConsumerConfig {
                 .build();
     }
 
-//    @Bean
-//    public Pingable personsokPing() {
-//        PersonsokPortType pingPorttype = getHentPersonsokJaxWsPortProxyFactoryBean().configureStsForSystemUserInFSS().build();
-//        return new PingableWebService("Personsok", pingPorttype);
-//    }
+    @Bean
+    public Pingable personsokPing() {
+        PersonsokPortType pingPorttype = getHentPersonsokJaxWsPortProxyFactoryBean().configureStsForSystemUser().build();
+        return new PingableWebService("Personsok", pingPorttype);
+    }
 
     private CXFClient<PersonsokPortType> getHentPersonsokJaxWsPortProxyFactoryBean() {
         return new CXFClient<>(PersonsokPortType.class)

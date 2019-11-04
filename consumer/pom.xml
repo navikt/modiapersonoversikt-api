@@ -48,6 +48,13 @@
         </dependency>
         <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>
+            <artifactId>tilgangskontroll</artifactId>
+            <version>${project.version}</version>
+            <type>test-jar</type>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>modiabrukerdialog-api</artifactId>
             <version>${project.version}</version>
             <type>test-jar</type>
@@ -420,6 +427,11 @@
         <dependency>
             <groupId>com.fasterxml.jackson.module</groupId>
             <artifactId>jackson-module-kotlin</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.nhaarman</groupId>
+            <artifactId>mockito-kotlin</artifactId>
+            <scope>test</scope>
         </dependency>
 
         <!-- Unleash -->

@@ -12,6 +12,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.organisasjonsEnhetV2
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.person.PersonOppslagService
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.UnleashService
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Tilgangskontroll
+import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.TilgangskontrollContextUtenTPS
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.TilgangskontrollMock
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.TilgangskontrollUtenTPS
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.kodeverk.Kode
@@ -47,7 +48,8 @@ internal class PersonControllerTest {
     private val mapper = KjerneinfoMapper(kodeverk)
     private val oppslag: PersonOppslagService = mock()
     private val unleashService: UnleashService = mock()
-    private val tilgangskontrollUtenTPS: TilgangskontrollUtenTPS = TilgangskontrollMock.getUtenTPS()
+    private val tilgangskontrollUtenTPSContext: TilgangskontrollContextUtenTPS = mock()
+    private val tilgangskontrollUtenTPS = TilgangskontrollUtenTPS(tilgangskontrollUtenTPSContext)
     private val tilgangskontroll: Tilgangskontroll = TilgangskontrollMock.get()
 
     private val service = DefaultPersonKjerneinfoService(personV3, mapper, tilgangskontrollUtenTPS, organisasjonenhetV2Service)

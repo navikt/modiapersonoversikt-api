@@ -43,13 +43,7 @@ public class SykmeldingsperioderPanelConfigResolverTest {
     @Inject
     private SykmeldingsperioderPanelConfigResolver resolver;
 
-    @Disabled
-    @Test
-    public void medMockSlaattPaaSkalIkkeProdkodeEksekveres() {
-        verifyZeroInteractions(sykepengerServiceDefault.wrappedObject);
-    }
-
-    //    @Ignore //trenger endring på SykepengerWidgetServiceImpl som må fjerne @Inject
+//    @Ignore //trenger endring på SykepengerWidgetServiceImpl som må fjerne @Inject
 //    @Test
     public void perDefaultSkalProdkodeEksekveres() {
         verify(sykepengerServiceDefault.wrappedObject, times(1)).hentSykmeldingsperioder(any(SykepengerRequest.class));

@@ -7,13 +7,9 @@ import no.nav.tjeneste.virksomhet.innsynjournal.v2.meldinger.IdentifiserJournalp
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import javax.inject.Inject;
 
-import static java.lang.System.setProperty;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.joark.InnsynJournalEndpointConfig.INNSYN_JOURNAL_V2_URL;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -22,8 +18,6 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 
-@ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = {InnsynJournalEndpointConfig.class})
 public class InnsynJournalCacheTest extends CacheTest {
 
     private static final String INNSYN_CACHE = "innsynJournalCache";
@@ -42,7 +36,7 @@ public class InnsynJournalCacheTest extends CacheTest {
 
     @BeforeAll
     public static void setUp() {
-        setProperty(INNSYN_JOURNAL_V2_URL, "url");
+        System.setProperty(INNSYN_JOURNAL_V2_URL, "url");
     }
 
     @BeforeEach

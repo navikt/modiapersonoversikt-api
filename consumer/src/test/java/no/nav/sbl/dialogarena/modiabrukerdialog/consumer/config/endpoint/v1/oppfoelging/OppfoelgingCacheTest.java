@@ -1,6 +1,5 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v1.oppfoelging;
 
-import no.nav.kontrakter.consumer.fim.config.OppfolgingskontraktConsumerConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.util.CacheTest;
 import no.nav.tjeneste.virksomhet.oppfoelging.v1.OppfoelgingPortType;
 import no.nav.tjeneste.virksomhet.oppfoelging.v1.informasjon.WSOppfoelgingskontrakt;
@@ -10,9 +9,6 @@ import no.nav.tjeneste.virksomhet.oppfoelging.v1.meldinger.WSHentOppfoelgingssta
 import no.nav.tjeneste.virksomhet.oppfoelging.v1.meldinger.WSHentOppfoelgingsstatusResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import javax.inject.Inject;
 
@@ -22,17 +18,15 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
-@ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = {OppfolgingskontraktConsumerConfig.class})
-public class OppfoelgingCacheTest extends CacheTest {
+class OppfoelgingCacheTest extends CacheTest {
 
     private static final String OPPFOELGING_CACHE = "oppfolgingCache";
     private static final String FODSELSNUMMER_AREMARK = "10108000398";
     private static final String FODSELSNUMMER_TROGSTAD = "06128074978";
-    public static final String OPPFOELGINGSENHET_1 = "0118";
-    public static final String OPPFOELGINGSENHET_2 = "0119";
+    private static final String OPPFOELGINGSENHET_1 = "0118";
+    private static final String OPPFOELGINGSENHET_2 = "0119";
 
-    public OppfoelgingCacheTest() {
+    OppfoelgingCacheTest() {
         super(OPPFOELGING_CACHE);
     }
 
@@ -40,7 +34,7 @@ public class OppfoelgingCacheTest extends CacheTest {
     private OppfoelgingPortType oppfolgingPortType;
 
     @BeforeEach
-    public void setUpMock() throws Exception {
+    void setUpMock() throws Exception {
         OppfoelgingPortType unwrapped = (OppfoelgingPortType) unwrapProxy(oppfolgingPortType);
         reset(unwrapped);
 
@@ -63,7 +57,7 @@ public class OppfoelgingCacheTest extends CacheTest {
     }
 
     @Test
-    public void toKallTilHentOppfoelgingsstatusMedSammeIdentGirBareEttTjenestekall() throws Exception {
+    void toKallTilHentOppfoelgingsstatusMedSammeIdentGirBareEttTjenestekall() throws Exception {
         WSHentOppfoelgingsstatusRequest request1 = new WSHentOppfoelgingsstatusRequest();
         request1.setPersonidentifikator(FODSELSNUMMER_AREMARK);
 
@@ -77,7 +71,7 @@ public class OppfoelgingCacheTest extends CacheTest {
     }
 
     @Test
-    public void toKallTilHentOppfoelgingsstatusMedForskjelligeIdenterGirToTjenestekall() throws Exception {
+    void toKallTilHentOppfoelgingsstatusMedForskjelligeIdenterGirToTjenestekall() throws Exception {
         WSHentOppfoelgingsstatusRequest request1 = new WSHentOppfoelgingsstatusRequest();
         request1.setPersonidentifikator(FODSELSNUMMER_AREMARK);
         WSHentOppfoelgingsstatusRequest request2 = new WSHentOppfoelgingsstatusRequest();
@@ -93,7 +87,7 @@ public class OppfoelgingCacheTest extends CacheTest {
     }
 
     @Test
-    public void toKallTilHentOppfoelgingskontraktListeMedSammeIdentGirBareEttTjenestekall() throws Exception {
+    void toKallTilHentOppfoelgingskontraktListeMedSammeIdentGirBareEttTjenestekall() throws Exception {
         WSHentOppfoelgingskontraktListeRequest request1 = new WSHentOppfoelgingskontraktListeRequest();
         request1.setPersonidentifikator(FODSELSNUMMER_AREMARK);
 
@@ -107,7 +101,7 @@ public class OppfoelgingCacheTest extends CacheTest {
     }
 
     @Test
-    public void toKallTilHentOppfoelgingskontraktListeMedForskjelligeIdenterGirToTjenestekall() throws Exception {
+    void toKallTilHentOppfoelgingskontraktListeMedForskjelligeIdenterGirToTjenestekall() throws Exception {
         WSHentOppfoelgingskontraktListeRequest request1 = new WSHentOppfoelgingskontraktListeRequest();
         request1.setPersonidentifikator(FODSELSNUMMER_AREMARK);
         WSHentOppfoelgingskontraktListeRequest request2 = new WSHentOppfoelgingskontraktListeRequest();

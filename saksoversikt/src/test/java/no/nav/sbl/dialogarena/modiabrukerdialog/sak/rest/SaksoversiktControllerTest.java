@@ -1,7 +1,5 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.sak.rest;
 
-//import no.nav.brukerdialog.security.context.ThreadLocalSubjectHandler;
-
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.domain.widget.ModiaSakstema;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.Sakstema;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.SaksService;
@@ -39,11 +37,6 @@ public class SaksoversiktControllerTest {
 
     @InjectMocks
     private SaksoversiktController saksoversiktController;
-
-    @Before
-    public void before() {
-//        setProperty("no.nav.brukerdialog.security.context.subjectHandlerImplementationClass", ThreadLocalSubjectHandler.class.getName());
-    }
 
     @Test
     public void harTilgangTilAlleTema() {

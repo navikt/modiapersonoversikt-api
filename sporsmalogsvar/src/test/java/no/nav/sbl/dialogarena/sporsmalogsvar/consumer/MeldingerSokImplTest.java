@@ -1,6 +1,10 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.consumer;
 
+import no.nav.brukerdialog.security.domain.IdentType;
 import no.nav.brukerdialog.tools.SecurityConstants;
+import no.nav.common.auth.SsoToken;
+import no.nav.common.auth.Subject;
+import no.nav.common.auth.SubjectHandler;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Saksbehandler;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Fritekst;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
@@ -14,6 +18,7 @@ import java.util.List;
 
 import static java.lang.System.setProperty;
 import static java.util.Arrays.asList;
+import static java.util.Collections.emptyMap;
 import static java.util.stream.Collectors.toList;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype.SAMTALEREFERAT_OPPMOTE;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.consumer.MeldingerSokImpl.*;
@@ -23,20 +28,21 @@ import static org.hamcrest.Matchers.is;
 import static org.joda.time.DateTimeUtils.setCurrentMillisOffset;
 
 class MeldingerSokImplTest {
-
-    private static final String NAV_IDENT = "Z000001";
+    private static final Subject TEST_SUBJECT = new Subject("Z000001", IdentType.InternBruker, SsoToken.oidcToken("token", emptyMap()));
     private static final String FNR = "11111111111";
     private MeldingerSokImpl meldingerSok = new MeldingerSokImpl();
 
     @BeforeEach
     void setup() {
-        innloggetBrukerEr(NAV_IDENT);
-        meldingerSok.indekser(FNR, lagMeldinger());
+        setProperty(SecurityConstants.SYSTEMUSER_USERNAME, "srvModiabrukerdialog");
+        SubjectHandler.withSubject(TEST_SUBJECT, () ->
+                meldingerSok.indekser(FNR, lagMeldinger())
+        );
     }
 
     @Test
-    void returnererAlleMeldingerVedTomtSok() throws IkkeIndeksertException {
-        List<Melding> meldinger = alleMeldinger(meldingerSok.sok(FNR, ""));
+    void returnererAlleMeldingerVedTomtSok() {
+        List<Melding> meldinger = SubjectHandler.withSubject(TEST_SUBJECT, () -> alleMeldinger(meldingerSok.sok(FNR, "")));
         assertThat(meldinger, hasSize(lagMeldinger().size()));
     }
 
@@ -51,24 +57,29 @@ class MeldingerSokImplTest {
     }
 
     @Test
-    void fritekstTemagruppeKanalStatusTekstOgArkivtemaErSokbart() throws IkkeIndeksertException {
-        assertSok("rbei", "1235");
-        assertSok("dagp", "1235");
-        assertSok("svar", "1234");
-        assertSok("skriftlig", "1235");
+    void fritekstTemagruppeKanalStatusTekstOgArkivtemaErSokbart() {
+        SubjectHandler.withSubject(TEST_SUBJECT, () -> {
+            assertSok("rbei", "1235");
+            assertSok("dagp", "1235");
+            assertSok("svar", "1234");
+            assertSok("skriftlig", "1235");
+        });
     }
 
     @Test
-    void returnererMeldingerSortertEtterDato() throws IkkeIndeksertException {
+    void returnererMeldingerSortertEtterDato() {
         String fnr = "987654321";
         List<Melding> meldinger = asList(
                 lagMelding("1", "1", "", "", "", DateTime.now().minusDays(2), "", ""),
                 lagMelding("2", "2", "", "", "", DateTime.now().minusDays(1), "", ""),
                 lagMelding("3", "3", "", "", "", DateTime.now(), "", ""),
                 lagMelding("4", "4", "", "", "", DateTime.now().minusDays(3), "", ""));
-        meldingerSok.indekser(fnr, meldinger);
 
-        List<Traad> traader = meldingerSok.sok(fnr, "");
+        List<Traad> traader = SubjectHandler.withSubject(TEST_SUBJECT, () -> {
+            meldingerSok.indekser(fnr, meldinger);
+            return meldingerSok.sok(fnr, "");
+        });
+
         assertThat(traader.get(0).meldinger.get(0).id, is("3"));
         assertThat(traader.get(1).meldinger.get(0).id, is("2"));
         assertThat(traader.get(2).meldinger.get(0).id, is("1"));
@@ -76,7 +87,7 @@ class MeldingerSokImplTest {
     }
 
     @Test
-    void gruppererMeldingerISammeTraad() throws IkkeIndeksertException {
+    void gruppererMeldingerISammeTraad() {
         String fnr = "4561234789";
         DateTime now = DateTime.now();
         List<Melding> meldinger = asList(
@@ -84,9 +95,9 @@ class MeldingerSokImplTest {
                 lagMelding("2", "1", "", "", "", now.minusDays(1), "", ""),
                 lagMelding("3", "2", "", "", "", now, "", ""),
                 lagMelding("4", "4", "", "", "", now.minusDays(3), "", ""));
-        meldingerSok.indekser(fnr, meldinger);
+        SubjectHandler.withSubject(TEST_SUBJECT, () -> meldingerSok.indekser(fnr, meldinger));
 
-        List<Traad> traader = meldingerSok.sok(fnr, "");
+        List<Traad> traader = SubjectHandler.withSubject(TEST_SUBJECT, () -> meldingerSok.sok(fnr, ""));
         assertThat(traader, hasSize(3));
         assertThat(traader.get(0).dato, is(now));
         assertThat(traader.get(1).dato, is(now.minusDays(1)));
@@ -94,24 +105,27 @@ class MeldingerSokImplTest {
     }
 
     @Test
-    void forskjelligeSaksbehandlereFaarIkkeSammeResultat() throws IkkeIndeksertException {
-        innloggetBrukerEr("Z132456");
-        meldingerSok.indekser(FNR, Collections.emptyList());
+    void forskjelligeSaksbehandlereFaarIkkeSammeResultat() {
+        List<Traad> resultat = SubjectHandler.withSubject(
+                new Subject("Z132456", IdentType.InternBruker, SsoToken.oidcToken("token", emptyMap())),
+                () -> {
+                    meldingerSok.indekser(FNR, Collections.emptyList());
+                    return meldingerSok.sok(FNR, "");
+                }
+        );
 
-        assertThat(meldingerSok.sok(FNR, ""), hasSize(0));
+        assertThat(resultat, hasSize(0));
         assertThat(meldingerSok.cache.entrySet(), hasSize(2));
-
-        assertThat(meldingerSok.sok(FNR, ""), hasSize(0));
     }
 
     @Test
-    void returnererTraaderMedAntallMeldingerIOpprinneligTraad() throws IkkeIndeksertException {
-        List<Traad> pernsjonsTraader = meldingerSok.sok(FNR, "Hjelpemidler");
+    void returnererTraaderMedAntallMeldingerIOpprinneligTraad() {
+        List<Traad> pernsjonsTraader = SubjectHandler.withSubject(TEST_SUBJECT, () -> meldingerSok.sok(FNR, "Hjelpemidler"));
 
         assertThat(pernsjonsTraader.size(), is(1));
         assertThat(pernsjonsTraader.get(0).antallMeldingerIOpprinneligTraad, is(2));
 
-        List<Traad> familieTraader = meldingerSok.sok(FNR, "Familie");
+        List<Traad> familieTraader = SubjectHandler.withSubject(TEST_SUBJECT, () -> meldingerSok.sok(FNR, "Familie"));
 
         assertThat(familieTraader.size(), is(1));
         assertThat(familieTraader.get(0).antallMeldingerIOpprinneligTraad, is(1));
@@ -123,11 +137,6 @@ class MeldingerSokImplTest {
         String vasketSoketekst = LUCENE_PATTERN.matcher(soketekst).replaceAll(REPLACEMENT_STRING);
 
         assertThat(vasketSoketekst, is(""));
-    }
-
-    private void innloggetBrukerEr(String ident) {
-        setProperty(SecurityConstants.SYSTEMUSER_USERNAME, "srvModiabrukerdialog");
-//        SubjectHandlerUtils.setSubject(new SubjectHandlerUtils.SubjectBuilder(ident, IdentType.EksternBruker).withAuthLevel(4).getSubject());
     }
 
     private void assertSok(String frisok, String id) throws IkkeIndeksertException {

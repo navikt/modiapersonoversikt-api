@@ -7,40 +7,28 @@ import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehand
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.meldinger.FinnSakOgBehandlingskjedeListeRequest;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.meldinger.FinnSakOgBehandlingskjedeListeResponse;
 import org.joda.time.DateTime;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import javax.inject.Inject;
 
-import static no.nav.modig.testcertificates.TestCertificates.setupKeyAndTrustStore;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
-@ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = {SakOgBehandlingEndpointConfig.class})
-public class SakOgBehandlingCacheTest extends CacheTest {
+class SakOgBehandlingCacheTest extends CacheTest {
 
-    public static final String ENDPOINT_CACHE = "endpointCache";
+    private static final String ENDPOINT_CACHE = "endpointCache";
 
     @Inject
     private SakOgBehandling_v1PortType sakOgBehandling;
 
-    public SakOgBehandlingCacheTest() {
+    SakOgBehandlingCacheTest() {
         super(ENDPOINT_CACHE);
     }
 
-    @BeforeAll
-    public static void setup() {
-        setupKeyAndTrustStore();
-    }
-
     @Test
-    public void cacheManager_harEntryForEndpointCache_etterKallTilHenvendelse() {
+    void cacheManager_harEntryForEndpointCache_etterKallTilHenvendelse() {
         FinnSakOgBehandlingskjedeListeRequest request1 = new FinnSakOgBehandlingskjedeListeRequest().withAktoerREF("aktoer");
         FinnSakOgBehandlingskjedeListeRequest request2 = new FinnSakOgBehandlingskjedeListeRequest().withAktoerREF("aktoer");
         WSSak sak1 = new WSSak().withOpprettet(DateTime.now());

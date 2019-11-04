@@ -1,6 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.dialog
 
-import no.nav.brukerdialog.security.context.SubjectHandler
+import no.nav.common.auth.SubjectHandler
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.Sak
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Fritekst
@@ -362,10 +362,9 @@ data class FortsettDialogRequest(
 )
 
 fun lagSendHenvendelseContext(fnr: String, request: HttpServletRequest): RequestContext {
-    val ident = SubjectHandler.getSubjectHandler().uid
+    val ident = SubjectHandler.getIdent().get()
     val enhet = RestUtils.hentValgtEnhet(request)
 
-    require(ident != null)
     require(enhet != null)
     return RequestContext(fnr, ident, enhet)
 }

@@ -1,23 +1,34 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.util;
 
 import net.sf.ehcache.Ehcache;
+import no.nav.metrics.proxy.MetricProxy;
+import no.nav.metrics.proxy.TimerProxy;
+import no.nav.sbl.dialogarena.common.cxf.InstanceSwitcher;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.cache.CacheConfiguration;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.aop.framework.Advised;
 import org.springframework.aop.framework.AopProxyUtils;
+import org.springframework.aop.support.AopUtils;
 import org.springframework.cache.ehcache.EhCacheCache;
 import org.springframework.cache.ehcache.EhCacheCacheManager;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import javax.inject.Inject;
+import java.lang.reflect.Field;
+import java.lang.reflect.Proxy;
 
-
-@ContextConfiguration(classes = {CacheConfiguration.class})
+@ExtendWith(SpringExtension.class)
+@ContextConfiguration(classes = {CacheConfiguration.class, CacheTestConfig.class})
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 public abstract class CacheTest {
-    protected static EhCacheCacheManager cm;
+    private static EhCacheCacheManager cm;
 
-    protected final String cachename;
+    private final String cachename;
 
     public CacheTest(String cachename) {
         this.cachename = cachename;
@@ -33,14 +44,6 @@ public abstract class CacheTest {
         cm.getCacheManager().shutdown();
     }
 
-    @BeforeAll
-    public static void before() {
-//        System.setProperty(SUBJECTHANDLER_KEY, ThreadLocalSubjectHandler.class.getName());
-        System.setProperty("no.nav.modig.security.sts.url", "");
-        System.setProperty("no.nav.modig.security.systemuser.username", "");
-        System.setProperty("no.nav.modig.security.systemuser.password", "");
-    }
-
     @BeforeEach
     public void teardown() {
         getCache().removeAll();
@@ -53,5 +56,4 @@ public abstract class CacheTest {
     protected static Object unwrapProxy(Object proxy) throws Exception {
         return AopProxyUtils.getSingletonTarget(proxy);
     }
-
 }

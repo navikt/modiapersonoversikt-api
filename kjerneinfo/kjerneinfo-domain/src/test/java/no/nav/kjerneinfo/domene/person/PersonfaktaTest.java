@@ -236,7 +236,7 @@ public class PersonfaktaTest {
         r1.setTilPerson(new Person.With().fodselsnummer("01011050081").done());
         Familierelasjon r2 = new Familierelasjon();
         r2.setTilRolle(Familierelasjonstype.BARN.name());
-        r2.setTilPerson(new Person.With().fodselsnummer("01011050243").done());
+        r2.setTilPerson(new Person.With().fodselsnummer("01011150264").done());
         barn.add(r1);
         barn.add(r2);
         emptyPersonfakta.setHarFraRolleIList(barn);

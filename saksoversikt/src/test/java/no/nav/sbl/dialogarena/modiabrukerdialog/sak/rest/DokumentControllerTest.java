@@ -59,7 +59,6 @@ public class DokumentControllerTest {
 
     @Before
     public void setup() {
-//        System.setProperty("no.nav.brukerdialog.security.context.subjectHandlerImplementationClass", ThreadLocalSubjectHandler.class.getName());
         httpServletRequest.setCookies(lagSaksbehandlerCookie(VALGT_ENHET));
         when(dokumentMetadataService.hentDokumentMetadata(anyString())).thenReturn(lagDokumentMetadataListe("DAG"));
         when(tilgangskontrollService.harSaksbehandlerTilgangTilDokument(any(HttpServletRequest.class), any(DokumentMetadata.class), anyString(), anyString())).thenReturn(new TjenesteResultatWrapper("result"));

@@ -38,23 +38,36 @@ import static org.apache.commons.lang3.StringUtils.isBlank;
 public class HenvendelseBehandlingServiceImpl implements HenvendelseBehandlingService {
     private static Logger logger = LoggerFactory.getLogger(HenvendelseBehandlingService.class);
 
+    private final HenvendelsePortType henvendelsePortType;
+    private final BehandleHenvendelsePortType behandleHenvendelsePortType;
+    private final PersonKjerneinfoServiceBi kjerneinfo;
+    private final Tilgangskontroll tilgangskontroll;
+    private final StandardKodeverk standardKodeverk;
+    private final ContentRetriever propertyResolver;
+    private final SporingsLogger sporingsLogger;
+    private final LDAPService ldapService;
+
     @Inject
-    private HenvendelsePortType henvendelsePortType;
-    @Inject
-    private BehandleHenvendelsePortType behandleHenvendelsePortType;
-    @Inject
-    private PersonKjerneinfoServiceBi kjerneinfo;
-    @Inject
-    private Tilgangskontroll tilgangskontroll;
-    @Inject
-    private StandardKodeverk standardKodeverk;
-    @Inject
-    @Named("propertyResolver")
-    private ContentRetriever propertyResolver;
-    @Inject
-    private SporingsLogger sporingsLogger;
-    @Inject
-    private LDAPService ldapService;
+    public HenvendelseBehandlingServiceImpl(
+            HenvendelsePortType henvendelsePortType,
+            BehandleHenvendelsePortType behandleHenvendelsePortType,
+            PersonKjerneinfoServiceBi kjerneinfo,
+            Tilgangskontroll tilgangskontroll,
+            StandardKodeverk standardKodeverk,
+            @Named("propertyResolver") ContentRetriever propertyResolver,
+            SporingsLogger sporingsLogger,
+            LDAPService ldapService
+    ) {
+        this.henvendelsePortType = henvendelsePortType;
+        this.behandleHenvendelsePortType = behandleHenvendelsePortType;
+        this.kjerneinfo = kjerneinfo;
+        this.tilgangskontroll = tilgangskontroll;
+        this.standardKodeverk = standardKodeverk;
+        this.propertyResolver = propertyResolver;
+        this.sporingsLogger = sporingsLogger;
+        this.ldapService = ldapService;
+    }
+
 
     @Override
     public Meldinger hentMeldinger(String fnr, String valgtEnhet) {
@@ -75,7 +88,7 @@ public class HenvendelseBehandlingServiceImpl implements HenvendelseBehandlingSe
         return wsMeldinger.stream()
                 .map(melding -> (XMLHenvendelse) melding)
                 .map(tilMelding(propertyResolver, ldapService))
-                .map(journalfortTemaTilTemanavn)
+                .map(this::journalfortTemaTilTemanavn)
                 .filter(kontorsperreTilgang(valgtEnhet))
                 .map(okonomiskSosialhjelpTilgang(valgtEnhet))
                 .map(journalfortTemaTilgang(valgtEnhet))
@@ -195,12 +208,12 @@ public class HenvendelseBehandlingServiceImpl implements HenvendelseBehandlingSe
         };
     }
 
-    private final Function<Melding, Melding> journalfortTemaTilTemanavn = (melding) -> {
+    private Melding journalfortTemaTilTemanavn(Melding melding) {
         if (melding.journalfortTema != null) {
             String temaNavn = standardKodeverk.getArkivtemaNavn(melding.journalfortTema);
             melding.journalfortTemanavn = temaNavn != null ? temaNavn : melding.journalfortTema;
         }
         return melding;
-    };
+    }
 
 }

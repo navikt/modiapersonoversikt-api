@@ -7,9 +7,6 @@ import no.nav.tjeneste.virksomhet.organisasjonenhetkontaktinformasjon.v1.binding
 import no.nav.tjeneste.virksomhet.organisasjonenhetkontaktinformasjon.v1.binding.OrganisasjonEnhetKontaktinformasjonV1;
 import no.nav.tjeneste.virksomhet.organisasjonenhetkontaktinformasjon.v1.meldinger.HentKontaktinformasjonForEnhetBolkRequest;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import javax.inject.Inject;
 
@@ -17,31 +14,27 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNull.notNullValue;
 
-@ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = {Config.class})
-public class OrganisasjonEnhetKontaktinformasjonV1EndpointCacheTest extends CacheTest {
+class OrganisasjonEnhetKontaktinformasjonV1EndpointCacheTest extends CacheTest {
 
-    public static final String CACHE_NAME = "organisasjonEnhetKontaktinformasjonCache";
-    public static final String ENHET_ID = "1337";
-    public static final String ENHET_ID_OPPSLAG_2 = "1500";
-    public static final String ENHETSNAVN = "NAV Molde";
-    public static final String ENHETSNAVN_OPPSLAG_2 = "NAV Trondheim";
+    private static final String CACHE_NAME = "organisasjonEnhetKontaktinformasjonCache";
+    private static final String ENHET_ID = "1337";
+    private static final String ENHET_ID_OPPSLAG_2 = "1500";
 
     @Inject
     private OrganisasjonEnhetKontaktinformasjonV1 organisasjonEnhetKontaktinformasjonV1;
 
-    public OrganisasjonEnhetKontaktinformasjonV1EndpointCacheTest() {
+    OrganisasjonEnhetKontaktinformasjonV1EndpointCacheTest() {
         super(CACHE_NAME);
     }
 
     @Test
-    public void cacheEksisterer() {
+    void cacheEksisterer() {
         Cache organisasjonEnhetKontantinformasjonCache = getCache().getCacheManager().getCache(CACHE_NAME);
         assertThat(organisasjonEnhetKontantinformasjonCache, is(notNullValue()));
     }
 
     @Test
-    public void gjorIkkeSammeOppslagToGangerPaRad() throws HentKontaktinformasjonForEnhetBolkUgyldigInput {
+    void gjorIkkeSammeOppslagToGangerPaRad() throws HentKontaktinformasjonForEnhetBolkUgyldigInput {
         organisasjonEnhetKontaktinformasjonV1.hentKontaktinformasjonForEnhetBolk(lagRequest(ENHET_ID));
         organisasjonEnhetKontaktinformasjonV1.hentKontaktinformasjonForEnhetBolk(lagRequest(ENHET_ID));
 
@@ -50,7 +43,7 @@ public class OrganisasjonEnhetKontaktinformasjonV1EndpointCacheTest extends Cach
     }
 
     @Test
-    public void gjorNyttOppslagHvisAnnenEnhetId() throws HentKontaktinformasjonForEnhetBolkUgyldigInput {
+    void gjorNyttOppslagHvisAnnenEnhetId() throws HentKontaktinformasjonForEnhetBolkUgyldigInput {
         organisasjonEnhetKontaktinformasjonV1.hentKontaktinformasjonForEnhetBolk(lagRequest(ENHET_ID));
         organisasjonEnhetKontaktinformasjonV1.hentKontaktinformasjonForEnhetBolk(lagRequest(ENHET_ID_OPPSLAG_2));
 
