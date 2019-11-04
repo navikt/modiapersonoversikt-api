@@ -1,6 +1,6 @@
 # ref https://raw.githubusercontent.com/nais/naisd/master/nais_example.yaml
-image: repo.adeo.no:5443/oppfolging/modiabrukerdialog
-team: oppfolgingperson
+image: repo.adeo.no:5443/oppfolging/modiapersonoversikt-api
+team: personoversikt
 replicas:
   min: 2
   max: 4
@@ -27,10 +27,10 @@ redis:
   hardAntiAffinity: true
   enabled: true
   limits:
-    cpu: 1
-    memory: 2048Mi
+    cpu: 1500m
+    memory: 4096Mi
   requests:
-    cpu: 1
+    cpu: 1000m
     memory: 1024Mi
 fasitResources:
   used:
