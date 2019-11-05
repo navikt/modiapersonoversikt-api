@@ -61,7 +61,7 @@ constructor(private val organisasjonEnhetKontaktinformasjonService: Organisasjon
     }
 
     @GET
-    @Path("/dialog/oppgave/alle")
+    @Path("/oppgavebehandlere/alle")
     @Produces(APPLICATION_JSON)
     fun hentAlleEnheterForOppgave(): List<Map<String, Any?>> {
         return tilgangskontroll
@@ -77,7 +77,7 @@ constructor(private val organisasjonEnhetKontaktinformasjonService: Organisasjon
     }
 
     @GET
-    @Path("/dialog/oppgave/behandle")
+    @Path("/oppgavebehandlere/foreslatte")
     @Produces(APPLICATION_JSON)
     fun hentBehandlendeEnhet(@QueryParam("fnr") fnr: String,
                              @QueryParam("temakode") temakode: String,
