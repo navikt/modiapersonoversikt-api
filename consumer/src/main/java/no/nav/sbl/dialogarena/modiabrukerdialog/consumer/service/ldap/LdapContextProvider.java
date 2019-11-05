@@ -1,5 +1,7 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.ldap;
 
+import no.nav.sbl.util.EnvironmentUtils;
+
 import javax.naming.Context;
 import javax.naming.NamingException;
 import javax.naming.ldap.InitialLdapContext;
@@ -13,10 +15,10 @@ public class LdapContextProvider {
 
     static {
         env.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory");
-        env.put(Context.PROVIDER_URL, System.getProperty("ldap.url"));
+        env.put(Context.PROVIDER_URL, EnvironmentUtils.getRequiredProperty("ldap.url", "LDAP_URL"));
         env.put(Context.SECURITY_AUTHENTICATION, "simple");
-        env.put(Context.SECURITY_PRINCIPAL, System.getProperty("ldap.username"));
-        env.put(Context.SECURITY_CREDENTIALS, System.getProperty("ldap.password"));
+        env.put(Context.SECURITY_PRINCIPAL, EnvironmentUtils.getRequiredProperty("ldap.username", "LDAP_USERNAME"));
+        env.put(Context.SECURITY_CREDENTIALS, EnvironmentUtils.getRequiredProperty("ldap.password", "LDAP_PASSWORD"));
     }
 
     public LdapContext getInitialLdapContext() {
