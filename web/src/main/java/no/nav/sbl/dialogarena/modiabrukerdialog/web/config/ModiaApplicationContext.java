@@ -16,6 +16,7 @@ public class ModiaApplicationContext implements ApiApplication {
     @Override
     public void configure(ApiAppConfigurator apiAppConfigurator) {
         apiAppConfigurator
+                .customizeJettyBuilder(jetty -> jetty.at("modiapersonoversikt-api"))
                 .sts()
                 .issoLogin();
     }

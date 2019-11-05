@@ -8,14 +8,14 @@ replicas:
 port: 8080
 healthcheck:
   liveness:
-    path: /modiabrukerdialog/internal/isAlive
+    path: /modiapersonoversikt-api/internal/isAlive
     initialDelay: 50
   readiness:
-    path: /modiabrukerdialog/internal/isReady
+    path: /modiapersonoversikt-api/internal/isReady
     initialDelay: 50
 prometheus:
   enabled: true
-  path: /modiabrukerdialog/internal/metrics
+  path: /modiapersonoversikt-api/internal/metrics
 resources:
   requests:
     cpu: 2
@@ -96,11 +96,8 @@ fasitResources:
   - alias: bigip
     resourceType: loadbalancer
 
-  - alias: loadbalancer:modiabrukerdialog
+  - alias: loadbalancer:modiapersonoversikt-api
     resourceType: loadbalancerconfig
-
-  - alias: modiabrukerdialog-memparams
-    resourceType: memoryparameters
 
   - alias: unleash-api
     resourceType: restservice
