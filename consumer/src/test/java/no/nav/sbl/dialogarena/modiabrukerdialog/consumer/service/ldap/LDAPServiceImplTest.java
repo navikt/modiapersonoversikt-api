@@ -32,9 +32,9 @@ class LDAPServiceImplTest {
 
     @BeforeAll
     static void beforeAll() {
-        System.setProperty("ldap.url", "");
-        System.setProperty("ldap.username", "");
-        System.setProperty("ldap.password", "");
+        System.setProperty("ldap.url", "url");
+        System.setProperty("ldap.username", "username");
+        System.setProperty("ldap.password", "password");
     }
 
     private LdapContextProvider mockLdapContextProvider(List<String> roller) {
