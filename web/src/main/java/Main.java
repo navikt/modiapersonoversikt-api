@@ -17,6 +17,7 @@ public class Main {
 
     public static void main(String... args) {
 //        loadVaultSecrets();
+        System.setProperty("NAIS_APP_NAME", "modiabrukerdialog");
         loadPropertiesFile(getEnvVar("NAIS_NAMESPACE"));
 
         ApiApp.runApp(ModiaApplicationContext.class, args);
