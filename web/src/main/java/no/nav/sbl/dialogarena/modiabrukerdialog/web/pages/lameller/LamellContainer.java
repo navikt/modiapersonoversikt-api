@@ -151,22 +151,11 @@ public class LamellContainer extends TokenLamellPanel implements Serializable {
     private LamellFactory createFactory(String type, String itemId) {
         final Panel panel;
         if (SYKEPENGER_TYPE.equalsIgnoreCase(type)) {
-            boolean nySykepengerToggle = unleashService.isEnabled(Feature.NY_SYKEPENGER);
-            if (nySykepengerToggle){
                 panel = new NyttSykmeldingsperiodePanel(PANEL, Model.of(fnrFromRequest), Model.of(itemId));
-            } else {
-                panel = new SykmeldingsperiodePanel(PANEL, Model.of(fnrFromRequest), Model.of(itemId));
-            }
         } else if (FORELDREPENGER_TYPE.equalsIgnoreCase(type)) {
-            boolean nyForeldrepenger = unleashService.isEnabled(Feature.NY_FORELDREPENGER);
-            if (nyForeldrepenger) {
-                panel = new NyttForeldrepengerPanel(PANEL, Model.of(fnrFromRequest), Model.of(itemId));
-            } else {
-                panel = new ForeldrepengerPanel(PANEL, Model.of(fnrFromRequest), Model.of(itemId));
-            }
+            panel = new NyttForeldrepengerPanel(PANEL, Model.of(fnrFromRequest), Model.of(itemId));
         } else if (PLEIEPENGER_TYPE.equalsIgnoreCase(type)) {
-            boolean nyttPleiepengerPanelToggle = unleashService.isEnabled(Feature.NY_PLEIEPENGER);
-            panel = new PleiepengerPanel(PANEL, Model.of(fnrFromRequest), itemId, nyttPleiepengerPanelToggle);
+            panel = new PleiepengerPanel(PANEL, Model.of(fnrFromRequest), itemId, true);
             return new DefaultLamellFactory(type, itemId, "", true, (LerretFactory) (id, name) -> new GenericLerret(id, panel)) {
                 @Override
                 public IModel<String> getHeading() {
