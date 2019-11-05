@@ -16,7 +16,7 @@ public class Main {
     private static final Logger log = LoggerFactory.getLogger(Main.class);
 
     public static void main(String... args) {
-        loadVaultSecrets();
+//        loadVaultSecrets();
         loadPropertiesFile(getEnvVar("NAIS_NAMESPACE"));
 
         ApiApp.runApp(ModiaApplicationContext.class, args);
