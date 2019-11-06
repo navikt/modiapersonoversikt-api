@@ -141,11 +141,11 @@ public class PersonPage extends BasePage {
         redirectPopup = new ReactSjekkForlatModal("redirectModal");
         konfigurerRedirectPopup();
 
-        boolean nySaksoversikt = unleashService.isEnabled(Feature.NY_SAKSOVERSIKT);
-        boolean nyPleiepenger = unleashService.isEnabled(Feature.NY_PLEIEPENGER);
-        boolean nySykepenger = unleashService.isEnabled(Feature.NY_SYKEPENGER);
-        boolean nyOppfolgingEnabled = unleashService.isEnabled(Feature.NY_OPPFOLGING);
-        boolean nyForeldrepengerEnabled = unleashService.isEnabled(Feature.NY_FORELDREPENGER);
+        boolean nySaksoversikt = true;
+        boolean nyPleiepenger = true;
+        boolean nySykepenger = true;
+        boolean nyOppfolgingEnabled = true;
+        boolean nyForeldrepengerEnabled = true;
         boolean naisGosysLenke = unleashService.isEnabled(Feature.NAIS_GOSYS_LENKE);
         boolean nyVarselEnabled = unleashService.isEnabled(Feature.NY_VARSEL);
         lamellContainer = new LamellContainer("lameller", getSession(), grunnInfo, nySaksoversikt, nyOppfolgingEnabled, nyVarselEnabled);
