@@ -28,7 +28,7 @@ public class JoarkEndpointConfig {
     private static CXFClient<JournalV2> createJournalV2PortType() {
         return new CXFClient<>(JournalV2.class)
                 .timeout(30000, 30000)
-                .address(System.getProperty("journal.v2.url"))
+                .address(System.getProperty("JOURNAL_V2_ENDPOINTURL"))
                 .enableMtom();
     }
 }

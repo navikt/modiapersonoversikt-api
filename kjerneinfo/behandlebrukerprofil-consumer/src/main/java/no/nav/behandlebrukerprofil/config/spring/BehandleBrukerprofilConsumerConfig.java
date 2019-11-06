@@ -17,7 +17,7 @@ import static org.apache.commons.lang3.StringUtils.defaultIfBlank;
 @Configuration
 public class BehandleBrukerprofilConsumerConfig {
 
-    @Value("${behandlebrukerprofilendpoint.url:}")
+    @Value("${VIRKSOMHET_BEHANDLEBRUKERPROFIL_V2_ENDPOINTURL:}")
     private String behandleBrukerprofilEndpointUrl;
     @Value("${servicegateway.url:}")
     private String servicegatewayUrl;

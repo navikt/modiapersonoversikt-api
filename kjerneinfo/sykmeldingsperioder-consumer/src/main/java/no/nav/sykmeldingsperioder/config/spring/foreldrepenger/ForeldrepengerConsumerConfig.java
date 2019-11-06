@@ -17,7 +17,7 @@ import static org.apache.commons.lang3.StringUtils.defaultIfBlank;
 @Configuration
 public class ForeldrepengerConsumerConfig {
 
-    @Value("${foreldrepengerendpoint.url:}")
+    @Value("${VIRKSOMHET_FORELDREPENGER_V2_ENDPOINTURL:}")
     private String foreldrepengerEndpointUrl;
     @Value("${servicegateway.url:}")
     private String servicegatewayUrl;

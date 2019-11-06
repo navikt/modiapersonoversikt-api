@@ -27,7 +27,7 @@ public class SaksoversiktServiceTest {
 
     @Before
     public void setup() {
-        System.setProperty("saksoversikt.prodsettningsdato", PROD_SETTNINGS_DATO);
+        System.setProperty("SAKSOVERSIKT_PRODSETTNINGSDATO", PROD_SETTNINGS_DATO);
     }
 
     @Test

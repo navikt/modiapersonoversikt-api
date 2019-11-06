@@ -28,7 +28,7 @@ public class BehandlePersonEndpointConfig {
 
     private CXFClient<BehandlePersonV1> lagEndpoint() {
         return new CXFClient<>(BehandlePersonV1.class)
-                .address(System.getProperty("tps.behandleperson.v1.url"));
+                .address(System.getProperty("VIRKSOMHET_BEHANDLEPERSON_V1_ENDPOINTURL"));
     }
 
 }

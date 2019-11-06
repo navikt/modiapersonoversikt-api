@@ -12,6 +12,6 @@ public class IsNotProdStrategy implements Strategy {
 
     @Override
     public boolean isEnabled(Map<String, String> map) {
-        return !"p".equals(System.getProperty("environment.name", "local"));
+        return !"p".equals(System.getProperty("APP_ENVIRONMENT", "local"));
     }
 }

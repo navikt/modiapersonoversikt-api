@@ -14,7 +14,7 @@ import org.slf4j.LoggerFactory
 import java.util.*
 
 fun hentSaksbehandlereMedTilgangTilHastekassering(): List<String> {
-    return System.getProperty("hastekassering.tilgang", "")
+    return System.getProperty("HASTEKASSERING_TILGANG", "")
             .let {
                 it.split(",")
                         .map(String::trim)

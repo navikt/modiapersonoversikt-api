@@ -13,7 +13,7 @@ import static no.nav.metrics.MetricsFactory.createTimerProxyForWebService;
 @Configuration
 public class PleiepengerConsumerConfig {
 
-    public static final String PLEIEPENGER_V1_ENDPOINT_KEY = "pleiepengerendpoint.url";
+    public static final String PLEIEPENGER_V1_ENDPOINT_KEY = "VIRKSOMHET_PLEIEPENGER_V1_ENDPOINTURL";
 
     @Bean
     public PleiepengerV1 pleiepengerPortType() {

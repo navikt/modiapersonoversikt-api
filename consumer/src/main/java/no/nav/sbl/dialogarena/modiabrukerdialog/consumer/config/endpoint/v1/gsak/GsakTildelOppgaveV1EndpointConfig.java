@@ -30,7 +30,7 @@ public class GsakTildelOppgaveV1EndpointConfig {
 
     private static CXFClient<TildelOppgaveV1> lagEndpoint() {
         return new CXFClient<>(TildelOppgaveV1.class)
-                .address(System.getProperty("gsak.oppgavebehandling.v3.url"));
+                .address(System.getProperty("VIRKSOMHET_OPPGAVEBEHANDLING_V3_ENDPOINTURL"));
     }
 
 }

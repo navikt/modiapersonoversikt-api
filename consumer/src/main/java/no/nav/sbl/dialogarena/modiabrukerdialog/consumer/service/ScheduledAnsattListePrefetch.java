@@ -15,7 +15,7 @@ import java.util.List;
 
 public class ScheduledAnsattListePrefetch {
 
-    public static final String SCHEDULE_KEY= "prefetch.norg.ansattliste.schedule";
+    public static final String SCHEDULE_KEY= "PREFETCH_NORG_ANSATTLISTE_SCHEDULE";
     public static final String CACHE_NAME = "asbogosysAnsattListe";
 
     Logger logger = LoggerFactory.getLogger(ScheduledAnsattListePrefetch.class);

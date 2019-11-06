@@ -16,7 +16,7 @@ import static org.apache.commons.lang3.StringUtils.defaultIfBlank;
 @Configuration
 public class YtelseskontraktConsumerConfig {
 
-    @Value("${ytelseskontraktendpoint.url:}")
+    @Value("${VIRKSOMHET_YTELSESKONTRAKT_V3_ENDPOINTURL:}")
     private String ytelseskontraktEndpointUrl;
     @Value("${servicegateway.url:}")
     private String servicegatewayUrl;

@@ -29,7 +29,7 @@ public class BehandleHenvendelseEndpointConfig {
     private static CXFClient<BehandleHenvendelsePortType> createBehandleHenvendelsePortType() {
         return new CXFClient<>(BehandleHenvendelsePortType.class)
                 .wsdl("classpath:wsdl/BehandleHenvendelse.wsdl")
-                .address(System.getProperty("behandle.henvendelse.endpointUrl"))
+                .address(System.getProperty("DOMENE_BRUKERDIALOG_BEHANDLEHENVENDELSE_V1_ENDPOINTURL"))
                 .withProperty("jaxb.additionalContextClasses", new Class[]{XMLJournalfortInformasjon.class});
     }
 

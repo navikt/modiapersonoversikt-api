@@ -21,14 +21,14 @@ constructor(private val unleashService: UnleashService) {
 
     private fun getBaseUrls(): List<BaseUrl> {
         val baseUrls = ArrayList<BaseUrl>()
-        baseUrls.add(BaseUrl(key="norg2-frontend", url = System.getProperty("server.norg2-frontend.url")))
-        baseUrls.add(BaseUrl(key="gosys", url = System.getProperty("server.gosys.url")))
-        baseUrls.add(BaseUrl(key="arena", url = System.getProperty("server.arena.url")))
-        baseUrls.add(BaseUrl(key="drek", url = System.getProperty("server.drek.url")))
-        baseUrls.add(BaseUrl(key="aktivitetsplan", url = System.getProperty("server.aktivitetsplan.url")))
-        baseUrls.add(BaseUrl(key="pesys", url = System.getProperty("server.pesys.url")))
-        baseUrls.add(BaseUrl(key="aareg", url = System.getProperty("server.aareg.url")))
-        baseUrls.add(BaseUrl(key="veilarbportefoljeflatefs", url = System.getProperty("server.veilarbportefoljeflatefs.url")))
+        baseUrls.add(BaseUrl(key="norg2-frontend", url = System.getProperty("SERVER_NORG2_FRONTEND_URL")))
+        baseUrls.add(BaseUrl(key="gosys", url = System.getProperty("SERVER_GOSYS_URL")))
+        baseUrls.add(BaseUrl(key="arena", url = System.getProperty("SERVER_ARENA_URL")))
+        baseUrls.add(BaseUrl(key="drek", url = System.getProperty("SERVER_DREK_URL")))
+        baseUrls.add(BaseUrl(key="aktivitetsplan", url = System.getProperty("SERVER_AKTIVITETSPLAN_URL")))
+        baseUrls.add(BaseUrl(key="pesys", url = System.getProperty("SERVER_PESYS_URL")))
+        baseUrls.add(BaseUrl(key="aareg", url = System.getProperty("SERVER_AAREG_URL")))
+        baseUrls.add(BaseUrl(key="veilarbportefoljeflatefs", url = System.getProperty("SERVER_VEILARBPORTEFOLJEFLATEFS_URL")))
 
         return baseUrls
     }

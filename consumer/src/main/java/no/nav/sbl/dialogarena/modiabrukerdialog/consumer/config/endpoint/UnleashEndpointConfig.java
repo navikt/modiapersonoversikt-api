@@ -26,7 +26,7 @@ import static no.nav.metrics.MetricsFactory.createTimerProxyForWebService;
 
 @Configuration
 public class UnleashEndpointConfig {
-    String api = System.getProperty("unleash.url");
+    String api = System.getProperty("UNLEASH_API_URL");
 
     @Bean
     @Inject
@@ -61,7 +61,7 @@ public class UnleashEndpointConfig {
     public UnleashConfig unleashConfig(UnleashContextProvider unleashContextProvider) {
         return UnleashConfig.builder()
                 .appName("modiabrukerdialog")
-                .instanceId(System.getProperty("environment.name", "local"))
+                .instanceId(System.getProperty("APP_ENVIRONMENT", "local"))
                 .unleashAPI(api)
                 .unleashContextProvider(unleashContextProvider)
                 .build();

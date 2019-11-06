@@ -1,5 +1,6 @@
 
 import no.nav.apiapp.ApiApp;
+import no.nav.sbl.dialogarena.common.cxf.StsSecurityConstants;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.ModiaApplicationContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

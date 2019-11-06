@@ -26,7 +26,7 @@ public class PersonV3EndpointConfig {
 
     private CXFClient<PersonV3> lagEndpoint() {
         return new CXFClient<>(PersonV3.class)
-                .address(System.getProperty("tps.person.v3.url"));
+                .address(System.getProperty("VIRKSOMHET_PERSON_V3_ENDPOINTURL"));
     }
 
 }

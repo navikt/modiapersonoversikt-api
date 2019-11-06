@@ -21,8 +21,8 @@ import javax.ws.rs.core.MediaType.APPLICATION_JSON
 import javax.ws.rs.core.Response
 import javax.ws.rs.core.Response.Status.fromStatusCode
 
-val SAF_GRAPHQL_BASEURL = System.getProperty("saf.graphql.url")
-val SAF_HENTDOKUMENT_BASEURL = System.getProperty("saf.hentdokument.url")
+val SAF_GRAPHQL_BASEURL = System.getProperty("SAF_GRAPHQL_URL")
+val SAF_HENTDOKUMENT_BASEURL = System.getProperty("SAF_HENTDOKUMENT_URL")
 
 private val LOG = LoggerFactory.getLogger(SafService::class.java)
 
