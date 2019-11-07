@@ -1,6 +1,8 @@
-package no.nav.sbl.dialogarena.varsel.rest;
+package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest;
 
 import no.nav.modig.content.ContentRetriever;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.tilgangskontroll.Policies;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.tilgangskontroll.Tilgangskontroll;
 import no.nav.sbl.dialogarena.varsel.domain.Varsel;
 import no.nav.sbl.dialogarena.varsel.service.VarslerService;
 
@@ -15,7 +17,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-
 @Path("/varsler/{fnr}")
 @Produces("application/json")
 public class VarslerController {
@@ -27,14 +28,21 @@ public class VarslerController {
     @Named("varsling-cms-integrasjon")
     private ContentRetriever contentRetriever;
 
+    @Inject
+    Tilgangskontroll tilgangskontroll;
+
     @GET
     @Path("/")
     public List<Varsel> hentAlleVarsler(@PathParam("fnr") String fnr) {
-        Optional<List<Varsel>> varsler = varslerService.hentAlleVarsler(fnr);
-        if (varsler.isPresent()) {
-            return varsler.get();
-        }
-        return Collections.emptyList();
+        return tilgangskontroll
+                .check(Policies.tilgangTilBruker.with(fnr))
+                .get(() -> {
+                    Optional<List<Varsel>> varsler = varslerService.hentAlleVarsler(fnr);
+                    if (varsler.isPresent()) {
+                        return varsler.get();
+                    }
+                    return Collections.emptyList();
+                });
     }
 
     @GET
