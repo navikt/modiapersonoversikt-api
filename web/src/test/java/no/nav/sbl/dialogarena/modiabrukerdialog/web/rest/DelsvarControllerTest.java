@@ -18,6 +18,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.HenvendelseUtse
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.henvendelse.DelsvarServiceImpl;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.henvendelse.DelsvarController;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.henvendelse.DelsvarRestRequest;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.tilgangskontroll.Tilgangskontroll;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.tilgangskontroll.TilgangskontrollMock;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.senduthenvendelse.SendUtHenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.senduthenvendelse.meldinger.WSFerdigstillHenvendelseRequest;
@@ -29,7 +30,6 @@ import org.junit.jupiter.api.*;
 import org.mockito.ArgumentCaptor;
 import org.springframework.mock.web.MockHttpServletRequest;
 
-import javax.inject.Inject;
 import javax.ws.rs.core.Response;
 import java.util.Collections;
 
@@ -51,6 +51,7 @@ class DelsvarControllerTest {
     private MockHttpServletRequest httpMockRequest;
     private DelsvarController delsvarController;
     private SendUtHenvendelsePortType sendUtHenvendelsePortTypeMock;
+    private Tilgangskontroll tilgangskontrollMock = TilgangskontrollMock.get();
 
     @BeforeAll
     static void beforeAll() {
@@ -66,7 +67,7 @@ class DelsvarControllerTest {
     @BeforeEach
     void before() {
         httpMockRequest = HttpRequestUtil.mockHttpServletRequestMedCookie(SAKSBEHANDLERS_IDENT, VALGT_ENHET);
-        delsvarController = new DelsvarController(new DelsvarServiceImpl(setupHenvendelseUtsendingService(), oppgaveBehandlingServiceMock));
+        delsvarController = new DelsvarController(tilgangskontrollMock, new DelsvarServiceImpl(setupHenvendelseUtsendingService(), oppgaveBehandlingServiceMock));
     }
 
     private HenvendelseUtsendingServiceImpl setupHenvendelseUtsendingService() {
