@@ -27,7 +27,7 @@ public class GsakSakV1EndpointConfig {
     private static SakV1 createEndpoint() {
         return new CXFClient<>(SakV1.class)
                 .timeout(15000, 15000)
-                .address(System.getProperty("gsak.sak.v1.url"))
+                .address(System.getProperty("VIRKSOMHET_SAK_V1_ENDPOINTURL"))
                 .configureStsForSystemUser()
                 .build();
     }

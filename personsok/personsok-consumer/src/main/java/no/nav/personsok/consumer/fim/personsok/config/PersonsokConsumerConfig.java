@@ -15,7 +15,7 @@ import static org.apache.commons.lang3.StringUtils.defaultIfBlank;
 
 @Configuration
 public class PersonsokConsumerConfig {
-    @Value("${personsokendpoint.url:}")
+    @Value("${VIRKSOMHET_PERSONSOK_V1_ENDPOINTURL:}")
     private String personsokEndpointUrl;
     @Value("${servicegateway.url:}")
     private String servicegateway;

@@ -30,14 +30,14 @@ public class MainTest {
 
         logger.info("Env= " + FasitUtils.getDefaultEnvironment());
         LdapConfig ldapConfig = FasitUtils.getLdapConfig("q");
-        setProperty("ldap.password", ldapConfig.getPassword(), SECRET);
+        setProperty("LDAP_PASSWORD", ldapConfig.getPassword(), SECRET);
 
         ServiceUser issoUser = FasitUtils.getServiceUser("isso-rp-user", APPLICATION_NAME);
-        setProperty("isso-rp-user.password", issoUser.getPassword(), SECRET);
+        setProperty("ISSO_RP_USER_PASSWORD", issoUser.getPassword(), SECRET);
 
         ServiceUser srvKjerneinfoTjenestebuss = FasitUtils.getServiceUser("srv_kjerneinfo_tjenestebuss", APPLICATION_NAME);
-        setProperty("ctjenestebuss.username", srvKjerneinfoTjenestebuss.getUsername(), PUBLIC);
-        setProperty("ctjenestebuss.password", srvKjerneinfoTjenestebuss.getPassword(), SECRET);
+        setProperty("SRV_KJERNEINFO_TJENESTEBUSS_USERNAME", srvKjerneinfoTjenestebuss.getUsername(), PUBLIC);
+        setProperty("SRV_KJERNEINFO_TJENESTEBUSS_PASSWORD", srvKjerneinfoTjenestebuss.getPassword(), SECRET);
 
         ApiApp.runApp(ModiaApplicationContext.class, new String[]{"8083", "8084"});
     }

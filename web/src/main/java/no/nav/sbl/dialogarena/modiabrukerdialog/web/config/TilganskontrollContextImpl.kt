@@ -65,7 +65,7 @@ open class TilgangskontrollContextUtenTPSImpl(
     }
 
     override fun hentSaksbehandlereMedTilgangTilHastekassering(): List<String> {
-        return System.getProperty("hastekassering.tilgang", "")
+        return System.getProperty("HASTEKASSERING_TILGANG", "")
                 .let {
                     it.split(",")
                             .map(String::trim)

@@ -17,7 +17,7 @@ import static no.nav.metrics.MetricsFactory.createTimerProxyForWebService;
 
 @Configuration
 public class OppfolgingsinfoApiEndpointConfig {
-    private String api = System.getProperty("veilarboppfolging.api.url");
+    private String api = System.getProperty("VEILARBOPPFOLGINGAPI_URL");
 
     @Bean
     public OppfolgingsinfoApiService lagOppfolgingsApi() {
@@ -55,7 +55,7 @@ public class OppfolgingsinfoApiEndpointConfig {
 
             @Override
             public String endpoint() {
-                return getProperty("veilarboppfolging.api.url");
+                return getProperty("VEILARBOPPFOLGINGAPI_URL");
             }
         };
     }

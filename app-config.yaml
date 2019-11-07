@@ -23,15 +23,6 @@ resources:
   limits:
     cpu: 3
     memory: 8192Mi
-redis:
-  hardAntiAffinity: true
-  enabled: true
-  limits:
-    cpu: 1500m
-    memory: 4096Mi
-  requests:
-    cpu: 1000m
-    memory: 1024Mi
 fasitResources:
   used:
   - alias: appdynamics
@@ -112,6 +103,10 @@ fasitResources:
   - alias: security-token-service-token
     resourceType: restservice
   - alias: person-oppslag-v1
+    resourceType: restservice
+  - alias: saf.graphql
+    resourceType: restservice
+  - alias: saf.hentdokument
     resourceType: restservice
 
   - alias: virksomhet:Kodeverk_v2

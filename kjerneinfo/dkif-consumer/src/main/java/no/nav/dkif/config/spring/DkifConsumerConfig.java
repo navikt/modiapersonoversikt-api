@@ -18,7 +18,7 @@ import static org.apache.commons.lang3.StringUtils.defaultIfBlank;
 @Configuration
 public class DkifConsumerConfig {
 
-    @Value("${dkifendpoint.url:}")
+    @Value("${VIRKSOMHET_DIGITALKONTAKINFORMASJON_V1_ENDPOINTURL:}")
     private String dkifEndpointUrl;
     @Value("${servicegateway.url:}")
     private String servicegatewayUrl;

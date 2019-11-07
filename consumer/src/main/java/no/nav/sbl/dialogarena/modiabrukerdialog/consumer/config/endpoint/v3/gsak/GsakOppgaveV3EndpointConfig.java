@@ -27,7 +27,7 @@ public class GsakOppgaveV3EndpointConfig {
 
     private static CXFClient<OppgaveV3> createOppgavePortType() {
         return new CXFClient<>(OppgaveV3.class)
-                .address(System.getProperty("gsak.oppgave.v3.url"));
+                .address(System.getProperty("VIRKSOMHET_OPPGAVE_V3_ENDPOINTURL"));
     }
 
 }

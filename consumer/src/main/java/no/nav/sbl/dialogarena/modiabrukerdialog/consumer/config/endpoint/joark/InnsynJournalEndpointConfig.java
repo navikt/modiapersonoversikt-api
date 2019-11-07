@@ -12,7 +12,7 @@ import static no.nav.metrics.MetricsFactory.createTimerProxyForWebService;
 @Configuration
 public class InnsynJournalEndpointConfig {
 
-    public static final String INNSYN_JOURNAL_V2_URL = "innsyn.journal.v2.url";
+    public static final String INNSYN_JOURNAL_V2_URL = "INNSYNJOURNAL_V2_ENDPOINTURL";
 
     @Bean
     public InnsynJournalV2 innsynJournalV2() throws Exception {

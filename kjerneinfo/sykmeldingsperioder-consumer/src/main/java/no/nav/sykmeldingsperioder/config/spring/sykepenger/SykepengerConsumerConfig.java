@@ -17,7 +17,7 @@ import static org.apache.commons.lang3.StringUtils.defaultIfBlank;
 @Configuration
 public class SykepengerConsumerConfig {
 
-    @Value("${sykepengerendpoint.url:}")
+    @Value("${VIRKSOMHET_SYKEPENGER_V2_ENDPOINTURL:}")
     private String sykepengerEndpointUrl;
     @Value("${servicegateway.url:}")
     private String servicegatewayUrl;

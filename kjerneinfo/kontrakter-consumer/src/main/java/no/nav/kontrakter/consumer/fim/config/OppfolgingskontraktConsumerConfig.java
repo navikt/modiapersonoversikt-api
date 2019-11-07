@@ -15,7 +15,7 @@ import static org.apache.commons.lang3.StringUtils.defaultIfBlank;
 @Configuration
 public class OppfolgingskontraktConsumerConfig {
 
-    @Value("${oppfolgingendpoint.url:}")
+    @Value("${VIRKSOMHET_OPPFOLGING_V1_ENDPOINTURL:}")
     private String oppfolgingskontraktEndpointUrl;
     @Value("${servicegateway.url:}")
     private String servicegatewayUrl;

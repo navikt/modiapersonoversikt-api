@@ -25,7 +25,7 @@ public class ArbeidOgAktivitetEndpointConfig {
 
     private static ArbeidOgAktivitet createArbeidOgAktivitet() {
         return new CXFClient<>(ArbeidOgAktivitet.class)
-                .address(System.getProperty("arena.arbeidogaktivitet.v1.url"))
+                .address(System.getProperty("VIRKSOMHET_ARBEIDOGAKTIVITET_V1_ENDPOINTURL"))
                 .configureStsForSystemUser()
                 .build();
     }
@@ -59,7 +59,7 @@ public class ArbeidOgAktivitetEndpointConfig {
 
             @Override
             public String endpoint() {
-                return System.getProperty("arena.arbeidogaktivitet.v1.url");
+                return System.getProperty("VIRKSOMHET_ARBEIDOGAKTIVITET_V1_ENDPOINTURL");
             }
         };
     }

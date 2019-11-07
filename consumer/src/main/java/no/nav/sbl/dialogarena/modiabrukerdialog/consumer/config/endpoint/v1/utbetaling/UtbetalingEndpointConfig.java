@@ -33,7 +33,7 @@ public class UtbetalingEndpointConfig {
                 .wsdl("classpath:utbetaling/no/nav/tjeneste/virksomhet/utbetaling/v1/Binding.wsdl")
                 .serviceName(new QName("http://nav.no/tjeneste/virksomhet/utbetaling/v1/Binding", "Utbetaling_v1"))
                 .endpointName(new QName("http://nav.no/tjeneste/virksomhet/utbetaling/v1/Binding", "Utbetaling_v1Port"))
-                .address(System.getProperty("utbetalingendpoint.url"));
+                .address(System.getProperty("UTBETALING_V1_ENDPOINTURL"));
     }
 
     public class UtbetalingPing extends PingableWebService {

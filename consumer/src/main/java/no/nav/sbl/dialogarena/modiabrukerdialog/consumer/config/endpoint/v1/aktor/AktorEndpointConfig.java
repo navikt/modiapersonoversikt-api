@@ -15,7 +15,7 @@ import static no.nav.metrics.MetricsFactory.createTimerProxyForWebService;
 @Configuration
 public class AktorEndpointConfig {
 
-    @Value("${aktorid.ws.url}")
+    @Value("${AKTOER_V1_ENDPOINTURL}")
     private String aktoerUrl;
 
     private AktoerPortType aktoerPort() {

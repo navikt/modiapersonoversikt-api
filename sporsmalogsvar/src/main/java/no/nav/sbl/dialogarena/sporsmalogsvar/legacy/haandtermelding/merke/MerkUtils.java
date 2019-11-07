@@ -19,6 +19,6 @@ public class MerkUtils {
     }
 
     private static String personerMedTilgangTilHastekassering() {
-        return System.getProperty("hastekassering.tilgang");
+        return System.getProperty("HASTEKASSERING_TILGANG");
     }
 }

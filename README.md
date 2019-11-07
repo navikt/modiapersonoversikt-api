@@ -25,13 +25,13 @@ Cacheimplementasjonen til Ehcache er ikke blocking, dvs at dersom to tråder sp�
 
 Denne jobben henter alle enheter og deretter henter alle ansatte i de respektive enhetene. Dette gjøres med kall mot NORG.
 Bakgrunnen for at denne har blitt til en fast jobb var et ønske om å få ned svartidene for henting av ansatte for alle brukere.
-Tidspunktet for kjøring av jobben bestemmes av en property `prefetch.norg.ansattliste.schedule` under fasitressursen `modiabrukerdialog.properties`. Formatet er Springs `@Scheduled`
+Tidspunktet for kjøring av jobben bestemmes av en property `PREFETCH_NORG_ANSATTLISTE_SCHEDULE` under fasitressursen `modiabrukerdialog.properties`. Formatet er Springs `@Scheduled`
 cron-format. Jobben bør kjøre utenfor saksbehandlernes arbeidstider, som også er tider når NORG har kapasitet til å svare raskere.
 
 Dersom propertyen ikke finnes eller inneholder feil vil applikasjonen feile under oppstart med tilsvarende
 
     // Propertyen finnes ikke
-    java.lang.IllegalStateException: Encountered invalid @Scheduled method 'prefetchAnsattListe': Could not resolve placeholder 'prefetch.norg.ansattliste.schedule' in string value "${prefetch.norg.ansattliste.schedule}"
+    java.lang.IllegalStateException: Encountered invalid @Scheduled method 'prefetchAnsattListe': Could not resolve placeholder 'PREFETCH_NORG_ANSATTLISTE_SCHEDULE' in string value "${PREFETCH_NORG_ANSATTLISTE_SCHEDULE}"
 
     // En del av cron-uttrykket er feil
     java.lang.IllegalStateException: Encountered invalid @Scheduled method 'prefetchAnsattListe': For input string: "7x19"

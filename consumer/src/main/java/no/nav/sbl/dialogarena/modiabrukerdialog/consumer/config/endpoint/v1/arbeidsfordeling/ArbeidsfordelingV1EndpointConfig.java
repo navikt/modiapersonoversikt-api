@@ -31,7 +31,7 @@ public class ArbeidsfordelingV1EndpointConfig {
 
     private ArbeidsfordelingV1 lagEndpoint() {
         return new CXFClient<>(ArbeidsfordelingV1.class)
-                .address(System.getProperty("arbeidsfordeling.v1.url"))
+                .address(System.getProperty("VIRKSOMHET_ARBEIDSFORDELING_V1_ENDPOINTURL"))
                 .configureStsForSystemUser()
                 .build();
     }

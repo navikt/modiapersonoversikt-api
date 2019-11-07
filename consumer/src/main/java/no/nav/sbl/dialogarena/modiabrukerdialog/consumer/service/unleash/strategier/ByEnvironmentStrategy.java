@@ -9,7 +9,7 @@ import static java.util.Optional.ofNullable;
 
 public class ByEnvironmentStrategy implements Strategy {
 
-    public static final String ENVIRONMENT_PROPERTY = "environment.name";
+    public static final String ENVIRONMENT_PROPERTY = "APP_ENVIRONMENT";
 
     @Override
     public String getName() {
