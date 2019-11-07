@@ -30,9 +30,7 @@ export const TraadMock = {
         journalfortAvNavIdent: 'Aremark',
         visningsDatoTekst: 'Visningsdatotekst',
         erDokumentMelding: false,
-        skrevetAv: {
-            navn: 'Daniel Winsvold'
-        },
+        skrevetAv: 'Daniel Winsvold (Z999999)',
         journalfortAv: {
             navn: 'Daniel Journalførersen'
         }

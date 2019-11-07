@@ -44,14 +44,11 @@ export function hentForfatterIdent(melding) {
 }
 
 export function finnMeldingsForfattere(melding) {
-    if (melding.skrevetAvFlere !== undefined) {
-        return `Skrevet av: ${melding.skrevetAvFlere}`;
-    }
     return melding.erDokumentMelding
     || melding.meldingstype === MeldingsTyper.SPORSMAL_SKRIFTLIG
     || melding.meldingstype === MeldingsTyper.SPORSMAL_SKRIFTLIG_DIREKTE
         ? ''
-        : `Skrevet av: ${toNameCase(melding.skrevetAv.navn)} (${hentForfatterIdent(melding)})`;
+        : `Skrevet av: ${toNameCase(melding.skrevetAv)}`;
 }
 
 export function eldsteMeldingForst(melding1, melding2) {
