@@ -2,6 +2,8 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.kodeverk
 
 import no.nav.kjerneinfo.common.domain.Kodeverdi
 import no.nav.kodeverk.consumer.fim.kodeverk.KodeverkmanagerBi
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.tilgangskontroll.Policies
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.tilgangskontroll.Tilgangskontroll
 import javax.inject.Inject
 import javax.ws.rs.GET
 import javax.ws.rs.Path
@@ -11,15 +13,23 @@ import javax.ws.rs.core.MediaType.APPLICATION_JSON
 
 @Path("/kodeverk/{kodeverkRef}")
 @Produces(APPLICATION_JSON)
-class KodeverkController @Inject constructor(private val kodeverkManager: KodeverkmanagerBi) {
+class KodeverkController @Inject constructor(
+        private val tilgangskontroll: Tilgangskontroll,
+        private val kodeverkManager: KodeverkmanagerBi
+) {
 
     @GET
     @Path("/")
-    fun hentKodeverk(@PathParam("kodeverkRef") kodeverkRef: String) = mapOf(
-            "kodeverk" to kodeverkManager
-                    .getKodeverkList(kodeverkRef, "nb")
-                    .map(::Kode)
-    )
+    fun hentKodeverk(@PathParam("kodeverkRef") kodeverkRef: String) =
+            tilgangskontroll
+                    .check(Policies.tilgangTilModia)
+                    .get {
+                        mapOf(
+                                "kodeverk" to kodeverkManager
+                                        .getKodeverkList(kodeverkRef, "nb")
+                                        .map(::Kode)
+                        )
+                    }
 
 }
 
