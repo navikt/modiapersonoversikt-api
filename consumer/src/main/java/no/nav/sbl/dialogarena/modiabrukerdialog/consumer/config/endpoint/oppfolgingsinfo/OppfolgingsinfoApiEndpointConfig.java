@@ -7,17 +7,17 @@ import no.nav.modig.modia.ping.Pingable;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.oppfolgingsinfo.OppfolgingsinfoApiService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.oppfolgingsinfo.OppfolgingsinfoApiServiceImpl;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.Timer;
+import no.nav.sbl.util.EnvironmentUtils;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import java.io.IOException;
 
-import static java.lang.System.getProperty;
 import static no.nav.metrics.MetricsFactory.createTimerProxyForWebService;
 
 @Configuration
 public class OppfolgingsinfoApiEndpointConfig {
-    private String api = System.getProperty("VEILARBOPPFOLGINGAPI_URL");
+    private String api = EnvironmentUtils.getRequiredProperty("VEILARBOPPFOLGINGAPI_URL");
 
     @Bean
     public OppfolgingsinfoApiService lagOppfolgingsApi() {
@@ -55,7 +55,7 @@ public class OppfolgingsinfoApiEndpointConfig {
 
             @Override
             public String endpoint() {
-                return getProperty("VEILARBOPPFOLGINGAPI_URL");
+                return EnvironmentUtils.getRequiredProperty("VEILARBOPPFOLGINGAPI_URL");
             }
         };
     }

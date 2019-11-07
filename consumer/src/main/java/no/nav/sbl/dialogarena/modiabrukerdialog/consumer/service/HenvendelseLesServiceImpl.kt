@@ -5,9 +5,10 @@ import no.nav.common.auth.SsoToken
 import no.nav.common.auth.SubjectHandler
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.HenvendelseLesService
 import no.nav.sbl.rest.RestUtils
+import no.nav.sbl.util.EnvironmentUtils
 
 class HenvendelseLesServiceImpl : HenvendelseLesService {
-    private val baseUrl: String = System.getProperty("henvendelse-les.api.url")
+    private val baseUrl: String = EnvironmentUtils.getRequiredProperty("henvendelse-les.api.url")
     private val systemTokenProvider = SystemUserTokenProvider()
 
     override fun alleBehandlingsIderTilhorerBruker(fnr: String, behandlingsIder: List<String>): Boolean {

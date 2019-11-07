@@ -3,6 +3,7 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint;
 import no.nav.modig.modia.ping.Pingable;
 import no.nav.modig.modia.ping.PingableWebService;
 import no.nav.sbl.dialogarena.common.cxf.CXFClient;
+import no.nav.sbl.util.EnvironmentUtils;
 import no.nav.tjeneste.virksomhet.brukervarsel.v1.BrukervarselV1;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -26,6 +27,6 @@ public class VarslingEndpointConfig {
 
     private static CXFClient<BrukervarselV1> createVarslingPortType() {
         return new CXFClient<>(BrukervarselV1.class)
-                .address(System.getProperty("BRUKERVARSELV1_ENDPOINTURL"));
+                .address(EnvironmentUtils.getRequiredProperty("BRUKERVARSELV1_ENDPOINTURL"));
     }
 }

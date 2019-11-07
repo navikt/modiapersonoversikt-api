@@ -5,6 +5,7 @@ import no.nav.modig.modia.ping.OkPingResult;
 import no.nav.modig.modia.ping.PingResult;
 import no.nav.modig.modia.ping.Pingable;
 import no.nav.sbl.dialogarena.common.cxf.CXFClient;
+import no.nav.sbl.util.EnvironmentUtils;
 import no.nav.virksomhet.tjenester.sak.arbeidogaktivitet.v1.ArbeidOgAktivitet;
 import no.nav.virksomhet.tjenester.sak.meldinger.v1.WSBruker;
 import no.nav.virksomhet.tjenester.sak.meldinger.v1.WSHentSakListeRequest;
@@ -25,7 +26,7 @@ public class ArbeidOgAktivitetEndpointConfig {
 
     private static ArbeidOgAktivitet createArbeidOgAktivitet() {
         return new CXFClient<>(ArbeidOgAktivitet.class)
-                .address(System.getProperty("VIRKSOMHET_ARBEIDOGAKTIVITET_V1_ENDPOINTURL"))
+                .address(EnvironmentUtils.getRequiredProperty("VIRKSOMHET_ARBEIDOGAKTIVITET_V1_ENDPOINTURL"))
                 .configureStsForSystemUser()
                 .build();
     }
@@ -59,7 +60,7 @@ public class ArbeidOgAktivitetEndpointConfig {
 
             @Override
             public String endpoint() {
-                return System.getProperty("VIRKSOMHET_ARBEIDOGAKTIVITET_V1_ENDPOINTURL");
+                return EnvironmentUtils.getRequiredProperty("VIRKSOMHET_ARBEIDOGAKTIVITET_V1_ENDPOINTURL");
             }
         };
     }

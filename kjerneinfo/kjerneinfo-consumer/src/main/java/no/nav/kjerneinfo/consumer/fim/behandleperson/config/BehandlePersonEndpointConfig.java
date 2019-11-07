@@ -3,6 +3,7 @@ package no.nav.kjerneinfo.consumer.fim.behandleperson.config;
 import no.nav.modig.modia.ping.Pingable;
 import no.nav.modig.modia.ping.UnpingableWebService;
 import no.nav.sbl.dialogarena.common.cxf.CXFClient;
+import no.nav.sbl.util.EnvironmentUtils;
 import no.nav.tjeneste.virksomhet.behandleperson.v1.BehandlePersonV1;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -28,7 +29,7 @@ public class BehandlePersonEndpointConfig {
 
     private CXFClient<BehandlePersonV1> lagEndpoint() {
         return new CXFClient<>(BehandlePersonV1.class)
-                .address(System.getProperty("VIRKSOMHET_BEHANDLEPERSON_V1_ENDPOINTURL"));
+                .address(EnvironmentUtils.getRequiredProperty("VIRKSOMHET_BEHANDLEPERSON_V1_ENDPOINTURL"));
     }
 
 }

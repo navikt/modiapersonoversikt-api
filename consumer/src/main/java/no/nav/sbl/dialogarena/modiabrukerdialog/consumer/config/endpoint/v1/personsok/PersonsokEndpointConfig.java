@@ -3,6 +3,7 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v1.per
 import no.nav.modig.modia.ping.Pingable;
 import no.nav.modig.modia.ping.PingableWebService;
 import no.nav.sbl.dialogarena.common.cxf.CXFClient;
+import no.nav.sbl.util.EnvironmentUtils;
 import no.nav.tjeneste.virksomhet.personsoek.v1.PersonsokPortType;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -30,7 +31,7 @@ public class PersonsokEndpointConfig {
         return new CXFClient<>(PersonsokPortType.class)
 //                .wsdl("classpath:no/nav/tjeneste/virksomhet/personsoek/v1/Personsoek.wsdl")
 //                .serviceName(new QName("http://nav.no/tjeneste/virksomhet/personsoek/v1/", "Personsok_v1"))
-                .address(System.getProperty("VIRKSOMHET_PERSONSOK_V1_ENDPOINTURL"));
+                .address(EnvironmentUtils.getRequiredProperty("VIRKSOMHET_PERSONSOK_V1_ENDPOINTURL"));
     }
 
 }

@@ -10,11 +10,11 @@ import no.nav.common.auth.SubjectHandler
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.HenvendelseLesService
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.ldap.LDAPService
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.GrunninfoService
+import no.nav.sbl.util.EnvironmentUtils
 import org.slf4j.LoggerFactory
-import java.util.*
 
 fun hentSaksbehandlereMedTilgangTilHastekassering(): List<String> {
-    return System.getProperty("HASTEKASSERING_TILGANG", "")
+    return EnvironmentUtils.getRequiredProperty("HASTEKASSERING_TILGANG", "")
             .let {
                 it.split(",")
                         .map(String::trim)

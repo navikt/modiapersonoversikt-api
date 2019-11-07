@@ -1,6 +1,7 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.baseurls
 
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.UnleashService
+import no.nav.sbl.util.EnvironmentUtils
 import javax.inject.Inject
 import javax.ws.rs.GET
 import javax.ws.rs.Path
@@ -21,14 +22,14 @@ constructor(private val unleashService: UnleashService) {
 
     private fun getBaseUrls(): List<BaseUrl> {
         val baseUrls = ArrayList<BaseUrl>()
-        baseUrls.add(BaseUrl(key="norg2-frontend", url = System.getProperty("SERVER_NORG2_FRONTEND_URL")))
-        baseUrls.add(BaseUrl(key="gosys", url = System.getProperty("SERVER_GOSYS_URL")))
-        baseUrls.add(BaseUrl(key="arena", url = System.getProperty("SERVER_ARENA_URL")))
-        baseUrls.add(BaseUrl(key="drek", url = System.getProperty("SERVER_DREK_URL")))
-        baseUrls.add(BaseUrl(key="aktivitetsplan", url = System.getProperty("SERVER_AKTIVITETSPLAN_URL")))
-        baseUrls.add(BaseUrl(key="pesys", url = System.getProperty("SERVER_PESYS_URL")))
-        baseUrls.add(BaseUrl(key="aareg", url = System.getProperty("SERVER_AAREG_URL")))
-        baseUrls.add(BaseUrl(key="veilarbportefoljeflatefs", url = System.getProperty("SERVER_VEILARBPORTEFOLJEFLATEFS_URL")))
+        baseUrls.add(BaseUrl(key = "norg2-frontend", url = EnvironmentUtils.getRequiredProperty("SERVER_NORG2_FRONTEND_URL")))
+        baseUrls.add(BaseUrl(key = "gosys", url = EnvironmentUtils.getRequiredProperty("SERVER_GOSYS_URL")))
+        baseUrls.add(BaseUrl(key = "arena", url = EnvironmentUtils.getRequiredProperty("SERVER_ARENA_URL")))
+        baseUrls.add(BaseUrl(key = "drek", url = EnvironmentUtils.getRequiredProperty("SERVER_DREK_URL")))
+        baseUrls.add(BaseUrl(key = "aktivitetsplan", url = EnvironmentUtils.getRequiredProperty("SERVER_AKTIVITETSPLAN_URL")))
+        baseUrls.add(BaseUrl(key = "pesys", url = EnvironmentUtils.getRequiredProperty("SERVER_PESYS_URL")))
+        baseUrls.add(BaseUrl(key = "aareg", url = EnvironmentUtils.getRequiredProperty("SERVER_AAREG_URL")))
+        baseUrls.add(BaseUrl(key = "veilarbportefoljeflatefs", url = EnvironmentUtils.getRequiredProperty("SERVER_VEILARBPORTEFOLJEFLATEFS_URL")))
 
         return baseUrls
     }

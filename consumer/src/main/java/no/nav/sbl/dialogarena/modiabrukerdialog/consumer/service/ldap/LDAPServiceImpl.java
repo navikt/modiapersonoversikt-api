@@ -2,6 +2,7 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.ldap;
 
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Saksbehandler;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.ldap.LDAPService;
+import no.nav.sbl.util.EnvironmentUtils;
 
 import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
@@ -54,7 +55,7 @@ public class LDAPServiceImpl implements LDAPService {
     }
 
     private NamingEnumeration<SearchResult> sokLDAP(String ident) {
-        String searchbase = "OU=Users,OU=NAV,OU=BusinessUnits," + System.getProperty("LDAP_BASEDN");
+        String searchbase = "OU=Users,OU=NAV,OU=BusinessUnits," + EnvironmentUtils.getRequiredProperty("LDAP_BASEDN");
         SearchControls searchCtrl = new SearchControls();
         searchCtrl.setSearchScope(SearchControls.SUBTREE_SCOPE);
 
@@ -89,7 +90,7 @@ public class LDAPServiceImpl implements LDAPService {
         while (attributes.hasMore()) {
             rawRolleStrenger.add((String) attributes.next());
         }
-        return  ADRolleParserKt.parseADRolle(rawRolleStrenger);
+        return ADRolleParserKt.parseADRolle(rawRolleStrenger);
     }
 
 }

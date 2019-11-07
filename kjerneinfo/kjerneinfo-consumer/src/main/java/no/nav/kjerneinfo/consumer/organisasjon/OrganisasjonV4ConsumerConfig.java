@@ -3,6 +3,7 @@ package no.nav.kjerneinfo.consumer.organisasjon;
 import no.nav.modig.modia.ping.Pingable;
 import no.nav.modig.modia.ping.PingableWebService;
 import no.nav.sbl.dialogarena.common.cxf.CXFClient;
+import no.nav.sbl.util.EnvironmentUtils;
 import no.nav.tjeneste.virksomhet.organisasjon.v4.OrganisasjonV4;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -22,7 +23,7 @@ public class OrganisasjonV4ConsumerConfig {
 
     private CXFClient<OrganisasjonV4> lagEndpoint() {
         return new CXFClient<>(OrganisasjonV4.class)
-                .address(System.getProperty(ORGANISASJON_V4_ENDPOINT_KEY));
+                .address(EnvironmentUtils.getRequiredProperty(ORGANISASJON_V4_ENDPOINT_KEY));
     }
 
     @Bean

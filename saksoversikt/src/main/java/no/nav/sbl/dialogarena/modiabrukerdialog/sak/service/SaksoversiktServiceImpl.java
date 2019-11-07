@@ -4,6 +4,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.Baksystem;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.DokumentMetadata;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.Sakstema;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.interfaces.SaksoversiktService;
+import no.nav.sbl.util.EnvironmentUtils;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -27,7 +28,7 @@ public class SaksoversiktServiceImpl implements SaksoversiktService {
     private List<String> getJournalpostIdAaFjerne(List<Sakstema> resultat) {
         Map<String, DokumentMetadata> muligeJournalpostIdAaFjerne = new HashMap<>();
 
-        final LocalDateTime PROD_SETTNING_DATO = formatDate(System.getProperty("SAKSOVERSIKT_PRODSETTNINGSDATO"));
+        final LocalDateTime PROD_SETTNING_DATO = formatDate(EnvironmentUtils.getRequiredProperty("SAKSOVERSIKT_PRODSETTNINGSDATO"));
         getMuligeJournalpostIdAaFjerne(resultat, muligeJournalpostIdAaFjerne);
 
         return muligeJournalpostIdAaFjerne
