@@ -48,6 +48,10 @@ public class VarslerController {
     @GET
     @Path("/resources")
     public Map<String, String> hentAlleResources() {
-        return contentRetriever.hentAlleTekster();
+        return tilgangskontroll
+                .check(Policies.tilgangTilModia)
+                .get(() -> {
+                    return contentRetriever.hentAlleTekster();
+                });
     }
 }
