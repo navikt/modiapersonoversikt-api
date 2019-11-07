@@ -12,6 +12,8 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.SakstemaService
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.interfaces.SaksoversiktService
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.interfaces.TilgangskontrollService
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.saf.SafService
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.tilgangskontroll.Policies
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.tilgangskontroll.Tilgangskontroll
 import org.joda.time.DateTime
 import java.time.LocalDateTime
 import java.util.*
@@ -28,24 +30,28 @@ class SakerController @Inject constructor(private val saksoversiktService: Sakso
                                           private val saksService: SaksService,
                                           private val tilgangskontrollService: TilgangskontrollService,
                                           private val dokumentMetadataService: DokumentMetadataService,
-                                          private val safService: SafService) {
+                                          private val safService: SafService,
+                                          val tilgangskontroll: Tilgangskontroll
+) {
     @GET
     @Path("/sakstema")
     @Produces(MediaType.APPLICATION_JSON)
     fun hentSakstema(@Context request: HttpServletRequest, @PathParam("fnr") fødselsnummer: String): Map<String, Any?> {
-        // TODO erstatt tilgangsstyring
-        if (!tilgangskontrollService.harGodkjentEnhet(request)) throw NotAuthorizedException("Ikke tilgang.")
+        return tilgangskontroll
+            .check(Policies.tilgangTilBruker.with(fødselsnummer))
+            .get {
+                val sakerWrapper = saksService.hentAlleSaker(fødselsnummer)
+                val sakstemaWrapper = sakstemaService.hentSakstema(sakerWrapper.resultat, fødselsnummer, false)
 
-        val sakerWrapper = saksService.hentAlleSaker(fødselsnummer)
-        val sakstemaWrapper = sakstemaService.hentSakstema(sakerWrapper.resultat, fødselsnummer, false)
+                // TODO skal denne metoden ligge i tilgangskontrollService?
+                tilgangskontrollService.markerIkkeJournalforte(sakstemaWrapper.resultat)
+                saksoversiktService.fjernGamleDokumenter(sakstemaWrapper.resultat)
 
-        tilgangskontrollService.markerIkkeJournalforte(sakstemaWrapper.resultat)
-        saksoversiktService.fjernGamleDokumenter(sakstemaWrapper.resultat)
+                val resultat = ResultatWrapper(mapTilModiaSakstema(sakstemaWrapper.resultat, RestUtils.hentValgtEnhet(request)),
+                        collectFeilendeSystemer(sakerWrapper, sakstemaWrapper))
 
-        val resultat = ResultatWrapper(mapTilModiaSakstema(sakstemaWrapper.resultat, RestUtils.hentValgtEnhet(request)),
-                collectFeilendeSystemer(sakerWrapper, sakstemaWrapper))
-
-        return byggSakstemaResultat(resultat)
+                byggSakstemaResultat(resultat)
+            }
     }
 
     @GET
@@ -54,23 +60,27 @@ class SakerController @Inject constructor(private val saksoversiktService: Sakso
     fun hentDokument(@Context request: HttpServletRequest, @PathParam("fnr") fødselsnummer: String,
                      @PathParam("journalpostId") journalpostId: String,
                      @PathParam("dokumentreferanse") dokumentreferanse: String): Response {
-        // TODO erstatt tilgangsstyring
-        val journalpostMetadata = hentDokumentMetadata(journalpostId, fødselsnummer)
-        val tilgangskontrollResult = tilgangskontrollService.harSaksbehandlerTilgangTilDokument(request,
-                journalpostMetadata, fødselsnummer, journalpostMetadata.temakode)
+        return tilgangskontroll
+                .check(Policies.tilgangTilBruker.with(fødselsnummer))
+                .get {
+                    val journalpostMetadata = hentDokumentMetadata(journalpostId, fødselsnummer)
+                    val tilgangskontrollResult = tilgangskontrollService.harSaksbehandlerTilgangTilDokument(request,
+                            journalpostMetadata, fødselsnummer, journalpostMetadata.temakode)
 
-        if (!tilgangskontrollResult.result.isPresent || !finnesDokumentReferansenIMetadata(journalpostMetadata, dokumentreferanse)) {
-            return Response.status(Response.Status.FORBIDDEN).build()
-        }
+                    // TODO erstatt tilgangsstyring
+                    if (!tilgangskontrollResult.result.isPresent || !finnesDokumentReferansenIMetadata(journalpostMetadata, dokumentreferanse)) {
+                        Response.status(Response.Status.FORBIDDEN).build()
+                    } else {
+                        val variantformat = finnVariantformat(journalpostMetadata, dokumentreferanse)
 
-        val variantformat = finnVariantformat(journalpostMetadata, dokumentreferanse)
+                        safService.hentDokument(journalpostId, dokumentreferanse, variantformat).let { wrapper ->
+                            wrapper.result
+                                    .map { Response.ok(it).build() }
+                                    .orElseGet { Response.status(wrapper.statuskode).build() }
+                        }
+                    }
 
-        return safService.hentDokument(journalpostId, dokumentreferanse, variantformat).let { wrapper ->
-            wrapper.result
-                    .map { Response.ok(it).build() }
-                    .orElseGet { Response.status(wrapper.statuskode).build() }
-        }
-
+                }
     }
 
     private fun finnVariantformat(journalpostMetadata: DokumentMetadata, dokumentreferanse: String): Variantformat =
