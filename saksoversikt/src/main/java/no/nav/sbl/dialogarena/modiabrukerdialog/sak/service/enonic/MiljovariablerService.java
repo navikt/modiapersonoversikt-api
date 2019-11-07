@@ -7,8 +7,8 @@ public class MiljovariablerService {
 
     public Map<String, String> hentMiljovariabler() {
         HashMap<String, String> miljovariabler = new HashMap<>();
-        miljovariabler.put("TEMASIDER_VIKTIGAVITELENKE", System.getProperty("TEMASIDER_VIKTIGAVITELENKE"));
-        miljovariabler.put("BEHANDLINGSSTATUS_SYNLIG_ANTALLDAGER", System.getProperty("BEHANDLINGSSTATUS_SYNLIG_ANTALLDAGER"));
+        miljovariabler.put("temasider.viktigavitelenke", System.getProperty("TEMASIDER_VIKTIGAVITELENKE"));
+        miljovariabler.put("behandlingsstatus.synlig.antallDager", System.getProperty("BEHANDLINGSSTATUS_SYNLIG_ANTALLDAGER"));
         return miljovariabler;
     }
 }
