@@ -29,11 +29,7 @@ export const meldingITraadVisning = PT.shape({
     id: PT.string,
     statusTekst: PT.string,
     navIdent: PT.string,
-    skrevetAv: PT.shape({
-        etternavn: PT.string,
-        fornavn: PT.string,
-        navn: PT.string
-    }),
+    skrevetAv: PT.string,
     fnrBruker: PT.string,
     meldingstype: PT.string,
     opprettetDato: PT.string

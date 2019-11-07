@@ -61,9 +61,7 @@ Melding.propTypes = {
         journalfortAvNavIdent: PT.string,
         visningsDatoTekst: PT.string,
         erDokumentMelding: PT.bool,
-        skrevetAv: PT.shape({
-            navn: PT.string
-        }),
+        skrevetAv: PT.string,
         journalfortAv: PT.shape({
             navn: PT.string
         }),
