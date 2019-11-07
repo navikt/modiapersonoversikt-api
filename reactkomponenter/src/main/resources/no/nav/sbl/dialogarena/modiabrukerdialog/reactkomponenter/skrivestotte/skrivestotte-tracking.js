@@ -30,10 +30,10 @@ const createTekstValgtEvent = ({ tags }) => {
         }
     }
 };
-const createTagForKeywords = (tags, keywords) => tags
-    .filter(tag => keywords.includes(tag.toLowerCase()))
+const createTagForKeywords = (tags, keywords) => (tags && keywords) ?
+    tags.filter(tag => keywords.includes(tag.toLowerCase()))
     .sort() 
-    .join(',');
+    .join(',') : '';
 
 const createFieldsForEveryTag = (tags) =>
     tags.reduce((acc, tag) => ({...acc, [tag]: 1}), {});
