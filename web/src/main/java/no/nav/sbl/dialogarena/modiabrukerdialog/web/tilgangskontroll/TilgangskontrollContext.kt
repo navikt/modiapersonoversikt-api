@@ -34,7 +34,7 @@ class TilgangskontrollContext(
     fun hentSaksbehandlerRoller(): List<String> = ldap.hentRollerForVeileder(hentSaksbehandlerId()).map { it.toLowerCase() }
     fun harSaksbehandlerRolle(rolle: String) = hentSaksbehandlerRoller().contains(rolle.toLowerCase())
     fun hentDiskresjonkode(fnr: String): String? = grunninfo.hentBrukerInfo(fnr).diskresjonskode
-    fun hentBrukersEnhet(fnr: String): String? = grunninfo.hentBrukerInfo(fnr).navkontor
+    fun hentBrukersEnhet(fnr: String): String? = grunninfo.hentBrukerInfo(fnr).geografiskTilknytning
     fun hentTemagrupperForSaksbehandler(valgtEnhet: String): Set<String> = try {
         val ansattFagomraderRequest = ASBOGOSYSHentNAVAnsattFagomradeListeRequest()
         ansattFagomraderRequest.ansattId = hentSaksbehandlerId()
