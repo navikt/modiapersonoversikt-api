@@ -32,6 +32,7 @@ class LDAPServiceImplTest {
 
     @BeforeAll
     static void beforeAll() {
+        System.setProperty("LDAP_BASEDN", "basedn");
         System.setProperty("LDAP_URL", "url");
         System.setProperty("LDAP_USERNAME", "username");
         System.setProperty("LDAP_PASSWORD", "password");
