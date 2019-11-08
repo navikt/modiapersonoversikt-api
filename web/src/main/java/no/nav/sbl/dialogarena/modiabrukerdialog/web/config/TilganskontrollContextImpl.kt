@@ -12,6 +12,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.ldap.LDAPService
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.GrunninfoService
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.TilgangskontrollContext
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.TilgangskontrollContextUtenTPS
+import no.nav.sbl.util.EnvironmentUtils
 import org.slf4j.LoggerFactory
 import java.util.*
 
@@ -20,7 +21,7 @@ open class TilgangskontrollContextUtenTPSImpl(
         private val ansattService: GOSYSNAVansatt,
         private val enhetService: GOSYSNAVOrgEnhet,
         private val henvendelseLesService: HenvendelseLesService
-): TilgangskontrollContextUtenTPS {
+) : TilgangskontrollContextUtenTPS {
     private val logger = LoggerFactory.getLogger(TilgangskontrollContext::class.java)
 
     override fun hentSaksbehandlerId(): Optional<String> = SubjectHandler.getIdent().map(String::toUpperCase)
@@ -65,7 +66,7 @@ open class TilgangskontrollContextUtenTPSImpl(
     }
 
     override fun hentSaksbehandlereMedTilgangTilHastekassering(): List<String> {
-        return System.getProperty("HASTEKASSERING_TILGANG", "")
+        return EnvironmentUtils.getRequiredProperty("HASTEKASSERING_TILGANG", "")
                 .let {
                     it.split(",")
                             .map(String::trim)

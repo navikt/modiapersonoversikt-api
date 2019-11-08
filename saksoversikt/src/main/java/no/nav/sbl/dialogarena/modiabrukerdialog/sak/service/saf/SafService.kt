@@ -11,6 +11,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.DokumentMetad
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.resultatwrappere.ResultatWrapper
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.resultatwrappere.TjenesteResultatWrapper
 import no.nav.sbl.rest.RestUtils
+import no.nav.sbl.util.EnvironmentUtils
 import org.slf4j.LoggerFactory
 import javax.ws.rs.client.Client
 import javax.ws.rs.client.Entity
@@ -21,8 +22,8 @@ import javax.ws.rs.core.MediaType.APPLICATION_JSON
 import javax.ws.rs.core.Response
 import javax.ws.rs.core.Response.Status.fromStatusCode
 
-val SAF_GRAPHQL_BASEURL = System.getProperty("SAF_GRAPHQL_URL")
-val SAF_HENTDOKUMENT_BASEURL = System.getProperty("SAF_HENTDOKUMENT_URL")
+val SAF_GRAPHQL_BASEURL = EnvironmentUtils.getRequiredProperty("SAF_GRAPHQL_URL")
+val SAF_HENTDOKUMENT_BASEURL = EnvironmentUtils.getRequiredProperty("SAF_HENTDOKUMENT_URL")
 
 private val LOG = LoggerFactory.getLogger(SafService::class.java)
 

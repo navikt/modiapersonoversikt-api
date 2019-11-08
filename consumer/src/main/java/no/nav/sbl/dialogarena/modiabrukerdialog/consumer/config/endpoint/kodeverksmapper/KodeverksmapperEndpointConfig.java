@@ -6,6 +6,7 @@ import no.nav.modig.modia.ping.PingResult;
 import no.nav.modig.modia.ping.Pingable;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.kodeverksmapper.domain.Behandling;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.Timer;
+import no.nav.sbl.util.EnvironmentUtils;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -51,15 +52,15 @@ public class KodeverksmapperEndpointConfig {
 
             @Override
             public String endpoint() {
-                return System.getProperty("KODEVERKSMAPPER_PING_URL");
+                return EnvironmentUtils.getRequiredProperty("KODEVERKSMAPPER_PING_URL");
             }
         };
     }
 
     private Kodeverksmapper lagEndpoint() {
-        return new KodeverksmapperEndpoint(System.getProperty("KODEVERKSMAPPER_OPPGAVETYPE_URL"),
-                System.getProperty("KODEVERKSMAPPER_UNDERKATEGORI_URL"),
-                System.getProperty("KODEVERKSMAPPER_PING_URL")
+        return new KodeverksmapperEndpoint(EnvironmentUtils.getRequiredProperty("KODEVERKSMAPPER_OPPGAVETYPE_URL"),
+                EnvironmentUtils.getRequiredProperty("KODEVERKSMAPPER_UNDERKATEGORI_URL"),
+                EnvironmentUtils.getRequiredProperty("KODEVERKSMAPPER_PING_URL")
         );
     }
 

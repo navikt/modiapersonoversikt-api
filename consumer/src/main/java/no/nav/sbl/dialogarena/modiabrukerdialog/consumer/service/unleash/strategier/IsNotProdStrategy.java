@@ -1,6 +1,7 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.strategier;
 
 import no.finn.unleash.strategy.Strategy;
+import no.nav.sbl.util.EnvironmentUtils;
 
 import java.util.Map;
 
@@ -12,6 +13,6 @@ public class IsNotProdStrategy implements Strategy {
 
     @Override
     public boolean isEnabled(Map<String, String> map) {
-        return !"p".equals(System.getProperty("APP_ENVIRONMENT", "local"));
+        return !"p".equals(EnvironmentUtils.getRequiredProperty("APP_ENVIRONMENT", "local"));
     }
 }

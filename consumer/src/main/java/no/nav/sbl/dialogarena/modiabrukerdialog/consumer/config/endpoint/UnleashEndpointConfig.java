@@ -14,6 +14,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.Unleash
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.strategier.ByEnhetStrategy;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.strategier.ByEnvironmentStrategy;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.strategier.IsNotProdStrategy;
+import no.nav.sbl.util.EnvironmentUtils;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -26,7 +27,7 @@ import static no.nav.metrics.MetricsFactory.createTimerProxyForWebService;
 
 @Configuration
 public class UnleashEndpointConfig {
-    String api = System.getProperty("UNLEASH_API_URL");
+    String api = EnvironmentUtils.getRequiredProperty("UNLEASH_API_URL");
 
     @Bean
     @Inject

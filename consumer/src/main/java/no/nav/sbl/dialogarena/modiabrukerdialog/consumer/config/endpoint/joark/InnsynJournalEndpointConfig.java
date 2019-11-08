@@ -3,6 +3,7 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.joark;
 import no.nav.modig.modia.ping.Pingable;
 import no.nav.modig.modia.ping.PingableWebService;
 import no.nav.sbl.dialogarena.common.cxf.CXFClient;
+import no.nav.sbl.util.EnvironmentUtils;
 import no.nav.tjeneste.virksomhet.innsynjournal.v2.binding.InnsynJournalV2;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -31,7 +32,7 @@ public class InnsynJournalEndpointConfig {
     private CXFClient<InnsynJournalV2> createInnsynJournalV2PortType() {
         return new CXFClient<>(InnsynJournalV2.class)
                 .timeout(30000, 30000)
-                .address(System.getProperty(INNSYN_JOURNAL_V2_URL))
+                .address(EnvironmentUtils.getRequiredProperty(INNSYN_JOURNAL_V2_URL))
                 .enableMtom();
     }
 }
