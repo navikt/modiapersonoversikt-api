@@ -29,7 +29,7 @@ public class ByEnvironmentStrategy implements Strategy {
     }
 
     private boolean isCurrentEnvironment(String env) {
-        return EnvironmentUtils.getRequiredProperty(ENVIRONMENT_PROPERTY, "local").equals(env);
+        return EnvironmentUtils.getOptionalProperty(ENVIRONMENT_PROPERTY ).orElse("local").equals(env);
     }
 
 }
