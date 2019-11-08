@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.function.Function;
 
 import static java.util.stream.Collectors.toList;
+import static java.util.Collections.emptyList;
 import static no.nav.brukerdialog.security.context.SubjectHandler.getSubjectHandler;
 
 public class AnsattServiceImpl implements AnsattService {
@@ -24,8 +25,13 @@ public class AnsattServiceImpl implements AnsattService {
     }
 
     public List<AnsattEnhet> hentEnhetsliste() {
+        String ident = getSubjectHandler().getUid();
+        if (ident == null || ident.isEmpty()) {
+            return emptyList();
+        }
+        
         ASBOGOSYSNAVAnsatt hentNAVAnsattEnhetListeRequest = new ASBOGOSYSNAVAnsatt();
-        hentNAVAnsattEnhetListeRequest.setAnsattId(getSubjectHandler().getUid());
+        hentNAVAnsattEnhetListeRequest.setAnsattId(ident);
         try {
             return ansattWS.hentNAVAnsattEnhetListe(hentNAVAnsattEnhetListeRequest)
                     .getNAVEnheter()
