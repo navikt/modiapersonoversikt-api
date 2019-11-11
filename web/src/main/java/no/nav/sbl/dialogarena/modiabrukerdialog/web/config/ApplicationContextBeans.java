@@ -54,16 +54,14 @@ public class ApplicationContextBeans {
             GrunninfoService grunninfoService,
             GOSYSNAVansatt ansattService,
             GOSYSNAVOrgEnhet enhetService,
-            HenvendelseLesService henvendelseLesService,
-            OrganisasjonEnhetV2Service organisasjonEnhetV2Service
+            HenvendelseLesService henvendelseLesService
     ) {
         TilgangskontrollContext context = new TilgangskontrollContext(
                 ldapService,
                 grunninfoService,
                 ansattService,
                 enhetService,
-                henvendelseLesService,
-                organisasjonEnhetV2Service
+                henvendelseLesService
         );
         return new Tilgangskontroll(context);
     }

@@ -27,8 +27,7 @@ class TilgangskontrollContext(
         private val grunninfo: GrunninfoService,
         private val ansattService: GOSYSNAVansatt,
         private val enhetService: GOSYSNAVOrgEnhet,
-        private val henvendelseLesService: HenvendelseLesService,
-        private val organisasjonEnhet: OrganisasjonEnhetV2Service
+        private val henvendelseLesService: HenvendelseLesService
 ) {
     private val logger = LoggerFactory.getLogger(TilgangskontrollContext::class.java)
 
