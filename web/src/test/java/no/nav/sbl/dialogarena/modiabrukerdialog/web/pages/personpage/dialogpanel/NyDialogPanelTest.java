@@ -73,7 +73,7 @@ public class NyDialogPanelTest extends WicketPageTest {
     @Before
     public void setUp() {
         System.setProperty("no.nav.brukerdialog.security.context.subjectHandlerImplementationClass", ThreadLocalSubjectHandler.class.getName());
-        grunnInfo = new GrunnInfo(new GrunnInfo.Bruker(FNR, FORNAVN, "", "", "", "", ""), new GrunnInfo.Saksbehandler("", "", ""));
+        grunnInfo = new GrunnInfo(new GrunnInfo.Bruker(FNR, FORNAVN, "", "", "", "", "", ""), new GrunnInfo.Saksbehandler("", "", ""));
         testNyDialogPanel = new NyDialogPanel("id", grunnInfo);
 
         when(saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet()).thenReturn(VALGT_ENHET);
