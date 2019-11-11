@@ -41,7 +41,7 @@ public class LeggTilbakePanelTest extends WicketPageTest {
     private static final String MELDING_ID = "123";
     private static final String BEHANDLINGS_ID = "behandlingsid";
 
-    private static final GrunnInfo grunnInfo = new GrunnInfo(new GrunnInfo.Bruker("").withEnhet("1234"), null);
+    private static final GrunnInfo grunnInfo = new GrunnInfo(new GrunnInfo.Bruker("").withEnhet("0219",  "NAV Bærum"), null);
 
     @Inject
     private HenvendelseUtsendingService henvendelseUtsendingService;

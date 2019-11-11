@@ -9,6 +9,7 @@ import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navorgenhet.GOSYSNAVOrgEnhet
 import no.nav.brukerdialog.security.context.SubjectHandler
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.HenvendelseLesService
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.ldap.LDAPService
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.organisasjonsEnhetV2.OrganisasjonEnhetV2Service
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.GrunninfoService
 import org.slf4j.LoggerFactory
 
@@ -26,7 +27,8 @@ class TilgangskontrollContext(
         private val grunninfo: GrunninfoService,
         private val ansattService: GOSYSNAVansatt,
         private val enhetService: GOSYSNAVOrgEnhet,
-        private val henvendelseLesService: HenvendelseLesService
+        private val henvendelseLesService: HenvendelseLesService,
+        private val organisasjonEnhet: OrganisasjonEnhetV2Service
 ) {
     private val logger = LoggerFactory.getLogger(TilgangskontrollContext::class.java)
 
@@ -34,7 +36,7 @@ class TilgangskontrollContext(
     fun hentSaksbehandlerRoller(): List<String> = ldap.hentRollerForVeileder(hentSaksbehandlerId()).map { it.toLowerCase() }
     fun harSaksbehandlerRolle(rolle: String) = hentSaksbehandlerRoller().contains(rolle.toLowerCase())
     fun hentDiskresjonkode(fnr: String): String? = grunninfo.hentBrukerInfo(fnr).diskresjonskode
-    fun hentBrukersEnhet(fnr: String): String? = grunninfo.hentBrukerInfo(fnr).geografiskTilknytning
+    fun hentBrukersEnhet(fnr: String): String? = grunninfo.hentBrukerInfo(fnr).navkontorId
     fun hentTemagrupperForSaksbehandler(valgtEnhet: String): Set<String> = try {
         val ansattFagomraderRequest = ASBOGOSYSHentNAVAnsattFagomradeListeRequest()
         ansattFagomraderRequest.ansattId = hentSaksbehandlerId()

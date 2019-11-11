@@ -5,6 +5,7 @@ import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navorgenhet.GOSYSNAVOrgEnhet;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.HenvendelseLesService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.ldap.LDAPService;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.organisasjonsEnhetV2.OrganisasjonEnhetV2Service;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.ConsumerContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.GrunninfoService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.cache.CacheConfiguration;
@@ -53,14 +54,16 @@ public class ApplicationContextBeans {
             GrunninfoService grunninfoService,
             GOSYSNAVansatt ansattService,
             GOSYSNAVOrgEnhet enhetService,
-            HenvendelseLesService henvendelseLesService
+            HenvendelseLesService henvendelseLesService,
+            OrganisasjonEnhetV2Service organisasjonEnhetV2Service
     ) {
         TilgangskontrollContext context = new TilgangskontrollContext(
                 ldapService,
                 grunninfoService,
                 ansattService,
                 enhetService,
-                henvendelseLesService
+                henvendelseLesService,
+                organisasjonEnhetV2Service
         );
         return new Tilgangskontroll(context);
     }
