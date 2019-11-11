@@ -8,6 +8,7 @@ import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navansatt.*;
 import no.nav.brukerdialog.security.context.ThreadLocalSubjectHandler;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.Ansatt;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.AnsattEnhet;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.http.SubjectHandlerUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -46,6 +47,7 @@ public class AnsattServiceImplTest {
 
         when(ansattWS.hentNAVAnsattEnhetListe(any(ASBOGOSYSNAVAnsatt.class))).thenReturn(asbogosysnavEnhetListe);
 
+        SubjectHandlerUtil.setInnloggetSaksbehandler("Z991234");
         List<AnsattEnhet> enheter = ansattServiceImpl.hentEnhetsliste();
         List<AnsattEnhet> refEnheter = asbogogsysEnhetListeTilAnsattEnhetListe(asbogosysnavEnhetListe);
 

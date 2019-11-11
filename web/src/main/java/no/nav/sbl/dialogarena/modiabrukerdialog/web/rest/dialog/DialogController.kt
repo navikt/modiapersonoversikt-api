@@ -303,8 +303,16 @@ private fun lagSporsmal(sporsmalRequest: SendSporsmalRequest, sakstema: String, 
             .withTemagruppe(hentTemagruppeForTema(sakstema))
 }
 
+private fun erTraadTilknyttetAnsatt(traad: Traad): Boolean =
+    if (traad.meldinger.any { it.meldingstype == Meldingstype.SPORSMAL_MODIA_UTGAAENDE }) {
+        traad.meldinger.sortedBy { it.visningsDato }.last().erTilknyttetAnsatt
+    } else {
+        true
+    }
+
 private fun lagFortsettDialog(request: FortsettDialogRequest, requestContext: RequestContext, traad: Traad): Melding {
     val eldsteMelding = traad.meldinger[0]
+    val erOppgaveTilknyttetAnsatt = if (request.meldingstype == Meldingstype.SPORSMAL_MODIA_UTGAAENDE) request.erOppgaveTilknyttetAnsatt else erTraadTilknyttetAnsatt(traad)
     return Melding()
             .withFnr(requestContext.fnr)
             .withNavIdent(requestContext.ident)
@@ -313,7 +321,7 @@ private fun lagFortsettDialog(request: FortsettDialogRequest, requestContext: Re
             .withType(request.meldingstype)
             .withFritekst(Fritekst(request.fritekst))
             .withTilknyttetEnhet(requestContext.enhet)
-            .withErTilknyttetAnsatt(request.erOppgaveTilknyttetAnsatt)
+            .withErTilknyttetAnsatt(erOppgaveTilknyttetAnsatt)
             .withTraadId(request.traadId)
             .withKontorsperretEnhet(eldsteMelding.kontorsperretEnhet)
             .withTemagruppe(eldsteMelding.temagruppe)
