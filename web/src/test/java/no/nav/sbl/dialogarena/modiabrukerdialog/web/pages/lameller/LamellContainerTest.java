@@ -34,7 +34,7 @@ public class LamellContainerTest extends WicketPageTest {
     private LamellContainer lamellContainer;
 
     private GrunnInfo getMockGrunnInfo() {
-        GrunnInfo.Bruker bruker = new GrunnInfo.Bruker("10108000398", "test", "testesen", "navKontorX", "1234", "", "kjonn");
+        GrunnInfo.Bruker bruker = new GrunnInfo.Bruker("10108000398", "test", "testesen", "1234", "navKontorX", "1234", "", "kjonn");
         GrunnInfo.Saksbehandler saksbehandler = new GrunnInfo.Saksbehandler("enhetX", "fornavn", "etternavn");
         return new GrunnInfo(bruker, saksbehandler);
     }

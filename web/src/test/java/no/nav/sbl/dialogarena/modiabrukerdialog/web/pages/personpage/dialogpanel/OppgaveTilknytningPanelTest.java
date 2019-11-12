@@ -12,7 +12,7 @@ import static no.nav.modig.wicket.test.matcher.ComponentMatchers.*;
 @ExtendWith(SpringExtension.class)
 public class OppgaveTilknytningPanelTest extends WicketPageTest {
 
-    private final GrunnInfo grunnInfo = new GrunnInfo(new GrunnInfo.Bruker("", "", "", "", "", "", ""), new GrunnInfo.Saksbehandler("", "", ""));
+    private final GrunnInfo grunnInfo = new GrunnInfo(new GrunnInfo.Bruker("", "", "", "", "", "", "", ""), new GrunnInfo.Saksbehandler("", "", ""));
 
     @Test
     public void viserOppgaveTilknytningPopup() throws Exception {

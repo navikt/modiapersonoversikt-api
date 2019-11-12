@@ -38,12 +38,12 @@ public class GrunninfoServiceImpl implements GrunninfoService {
 
             return new GrunnInfo.Bruker(fnr)
                     .withPersonnavn(personfakta.getPersonnavn().getFornavn(), personfakta.getPersonnavn().getEtternavn())
-                    .withEnhet(hentEnhet(personfakta))
+                    .withEnhet(hentEnhetId(personfakta), hentEnhet(personfakta))
                     .withGeografiskTilknytning(personfakta.getGeografiskTilknytning() != null ? personfakta.getGeografiskTilknytning().getValue() : "")
                     .withDiskresjonskode(personfakta.getDiskresjonskode() != null ? personfakta.getDiskresjonskode().getKodeRef() : "")
                     .withKjonn(personfakta.getKjonn() != null ? personfakta.getKjonn().getKodeRef() : "");
         } catch (Exception e) {
-            return new GrunnInfo.Bruker(fnr, "", "", "", "", "", "");
+            return new GrunnInfo.Bruker(fnr, "", "", "", "", "", "", "");
         }
     }
 
@@ -65,6 +65,16 @@ public class GrunninfoServiceImpl implements GrunninfoService {
                 saksbehandler.fornavn,
                 saksbehandler.etternavn
         );
+    }
+
+    private String hentEnhetId(Personfakta personfakta) {
+        if (personfakta != null && personfakta.getAnsvarligEnhet() != null
+                && personfakta.getAnsvarligEnhet().getOrganisasjonsenhet() != null
+                && StringUtils.isNotEmpty(personfakta.getAnsvarligEnhet().getOrganisasjonsenhet().getOrganisasjonselementId())) {
+            return personfakta.getAnsvarligEnhet().getOrganisasjonsenhet().getOrganisasjonselementId();
+        } else {
+            return "";
+        }
     }
 
     private String hentEnhet(Personfakta personfakta) {

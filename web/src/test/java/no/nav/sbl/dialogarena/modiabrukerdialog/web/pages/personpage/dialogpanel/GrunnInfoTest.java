@@ -11,7 +11,7 @@ public class GrunnInfoTest {
     @Test
     public void brukersNavnFaarKorrekteVersaler() {
         GrunnInfo.Bruker bruker = new GrunnInfo.Bruker(
-                "123", "test-test", "o'testeson", "kontoret", "0314", "", "M"
+                "123", "test-test", "o'testeson", "0313", "kontoret", "031304", "", "M"
         );
 
         assertThat(bruker.navn, is(equalTo("Test-Test O'Testeson")));
@@ -20,7 +20,7 @@ public class GrunnInfoTest {
     @Test
     public void bareVersalerBlirMinusklerOgVersaler() {
         GrunnInfo.Bruker saksbehandler = new GrunnInfo.Bruker(
-                "10108000398", "BARE STORE", "BOKSTAVER", "NAV Aremark", "0118", "", "K"
+                "10108000398", "BARE STORE", "BOKSTAVER", "0118", "NAV Aremark", "0118", "", "K"
         );
 
         assertThat(saksbehandler.navn, is(equalTo("Bare Store Bokstaver")));
