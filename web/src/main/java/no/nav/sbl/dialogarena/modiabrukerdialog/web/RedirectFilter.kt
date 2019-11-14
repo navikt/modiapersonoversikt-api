@@ -3,14 +3,13 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.config.ApplicationContextProvider
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.Feature
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.UnleashService
-import no.nav.sbl.util.StringUtils
 import org.slf4j.LoggerFactory
 import java.net.URI
 import javax.servlet.*
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
-private val fnrRegex = Regex("\\d{11}")
+private val searchFnrRegex = Regex("\\d+")
 private val fileRequestPattern = Regex("^(.+\\.\\w{1,4})$")
 
 class RedirectFilter : Filter {
@@ -43,8 +42,8 @@ class RedirectFilter : Filter {
                 val redirectedURI = requestURI
                         .copy(
                                 host = requestURI.host?.replace("modapp", "app"),
-                                path = guessPath(requestURI),
-                                query = rewriteQuery(requestURI.query)
+                                path = "/modiapersonoversikt",
+                                query = createQuery(requestURI)
                         )
                 response.sendRedirect(redirectedURI.toString())
             }
@@ -62,40 +61,39 @@ private fun getUrl(request: HttpServletRequest): String {
     return request.requestURL.toString() + params
 }
 
-private fun rewriteQuery(query: String?): String? {
-    val cleanedQuery = cleanQuery(query) ?: return null
+typealias Query = Pair<String, String?>
 
-    return cleanedQuery
-            .split("&")
-            .map{
-                val data = it.split("=")
-                val key = if (data[0].equals("henvendelseid")) "behandlingsid" else data[0]
-                listOf(key, data[1]).joinToString("=")
-            }
+private fun createQuery(uri: URI): String? {
+    return parseQuery(uri)
+            .plus(searchFnrQueryParam(uri))
+            .map(::rewriteQueryParams)
+            .map { "${it.first}=${it.second}" }
             .joinToString("&")
+            .let { if (it.isBlank()) null else it }
 }
 
-private fun cleanQuery(query: String?): String? {
-    return query
-            ?.split("&")
-            ?.map {
+private fun searchFnrQueryParam(uri: URI): List<Query> {
+    return searchFnrRegex.find(uri.path)?.value
+            ?.let { listOf(Query("sokFnr", it)) }
+            ?: emptyList()
+}
+
+private fun rewriteQueryParams(query: Query): Query =
+        query.copy(
+                first = if (query.first == "henvendelseid") "behandlingsid" else query.first
+        )
+
+private fun parseQuery(uri: URI): List<Query> {
+    return (uri.query ?: "")
+            .split("&")
+            .map {
                 if (it.contains("=")) it else null
             }
-            ?.filter { it != null }
-            ?.joinToString("&")
-            .let { if (it == "") null else it }
-}
-
-private fun guessPath(uri: URI): String {
-    val fnr = fnrRegex.find(uri.path)?.value
-    val hasQueryParams = StringUtils.notNullOrEmpty(cleanQuery(uri.query))
-    val lamell = if (hasQueryParams) "meldinger" else ""
-
-    return if (fnr == null) {
-        "/modiapersonoversikt"
-    } else {
-        "/modiapersonoversikt/person/$fnr/$lamell"
-    }
+            .filterNotNull()
+            .map {
+                val data = it.split("=")
+                Pair(data[0], data[1])
+            }
 }
 
 private fun URI.copy(

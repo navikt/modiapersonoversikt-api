@@ -54,25 +54,35 @@ internal class RedirectFilterTest {
     @Test
     fun `redirect av person-url`() {
         callsTo("https://modapp-q1.adeo.no/modiabrukerdialog/person/$fnr")
-                .isRedirectedTo("https://app-q1.adeo.no/modiapersonoversikt/person/$fnr/")
+                .isRedirectedTo("https://app-q1.adeo.no/modiapersonoversikt?sokFnr=$fnr")
         callsTo("https://modapp-q1.adeo.no/modiabrukerdialog/person/$fnr/")
-                .isRedirectedTo("https://app-q1.adeo.no/modiapersonoversikt/person/$fnr/")
+                .isRedirectedTo("https://app-q1.adeo.no/modiapersonoversikt?sokFnr=$fnr")
         callsTo("https://modapp-q1.adeo.no/modiabrukerdialog/person/$fnr?")
-                .isRedirectedTo("https://app-q1.adeo.no/modiapersonoversikt/person/$fnr/")
+                .isRedirectedTo("https://app-q1.adeo.no/modiapersonoversikt?sokFnr=$fnr")
         callsTo("https://modapp-q1.adeo.no/modiabrukerdialog/person/$fnr?4")
-                .isRedirectedTo("https://app-q1.adeo.no/modiapersonoversikt/person/$fnr/")
+                .isRedirectedTo("https://app-q1.adeo.no/modiapersonoversikt?sokFnr=$fnr")
         callsTo("https://modapp-q1.adeo.no/modiabrukerdialog/person/$fnr/?4")
-                .isRedirectedTo("https://app-q1.adeo.no/modiapersonoversikt/person/$fnr/")
+                .isRedirectedTo("https://app-q1.adeo.no/modiapersonoversikt?sokFnr=$fnr")
+    }
+
+    @Test
+    fun `puzzle spesialtilfeller`() {
+        callsTo("https://modapp.adeo.no/modiabrukerdialog/hentPerson/0")
+                .isRedirectedTo("https://app.adeo.no/modiapersonoversikt?sokFnr=0")
+        callsTo("https://modapp.adeo.no/modiabrukerdialog/hentPerson/1234")
+                .isRedirectedTo("https://app.adeo.no/modiapersonoversikt?sokFnr=1234")
+        callsTo("https://modapp.adeo.no/modiabrukerdialog/hentPerson/10108010398")
+                .isRedirectedTo("https://app.adeo.no/modiapersonoversikt?sokFnr=10108010398")
     }
 
     @Test
     fun `redirect av oppgave-url`() {
-        callsTo("https://modapp-q1.adeo.no/modiabrukerdialog/person/$fnr/?oppgaveid=$oppgaveid&behandlingsid=$behandlingsid")
-                .isRedirectedTo("https://app-q1.adeo.no/modiapersonoversikt/person/$fnr/meldinger?oppgaveid=$oppgaveid&behandlingsid=$behandlingsid")
+        callsTo("https://modapp-q1.adeo.no/modiabrukerdialog/person/$fnr/?oppgaveid=$oppgaveid&henvendelseid=$behandlingsid")
+                .isRedirectedTo("https://app-q1.adeo.no/modiapersonoversikt?oppgaveid=$oppgaveid&behandlingsid=$behandlingsid&sokFnr=$fnr")
         callsTo("https://modapp-q1.adeo.no/modiabrukerdialog/person/$fnr/?behandlingsid=$behandlingsid")
-                .isRedirectedTo("https://app-q1.adeo.no/modiapersonoversikt/person/$fnr/meldinger?behandlingsid=$behandlingsid")
+                .isRedirectedTo("https://app-q1.adeo.no/modiapersonoversikt?behandlingsid=$behandlingsid&sokFnr=$fnr")
         callsTo("https://modapp-q1.adeo.no/modiabrukerdialog/person/$fnr/?4&behandlingsid=$behandlingsid")
-                .isRedirectedTo("https://app-q1.adeo.no/modiapersonoversikt/person/$fnr/meldinger?behandlingsid=$behandlingsid")
+                .isRedirectedTo("https://app-q1.adeo.no/modiapersonoversikt?behandlingsid=$behandlingsid&sokFnr=$fnr")
     }
 
     @Test
