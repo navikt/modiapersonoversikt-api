@@ -68,7 +68,7 @@ public class SaksbehandlerInnstillingerServiceImplTest {
         saksbehandlerInnstillingerService.setSaksbehandlerValgtEnhetCookie("1111");
 
         assertThat(tester.getResponse().getCookies().get(0).getName(), is(equalTo("saksbehandlerinnstillinger-" + getSubjectHandler().getUid())));
-        assertThat(tester.getResponse().getCookies().get(0).getMaxAge(), is(equalTo(3600 * 24 * 365)));
+        assertThat(tester.getResponse().getCookies().get(0).getMaxAge(), is(equalTo(3600 * 12)));
     }
 
     @Test

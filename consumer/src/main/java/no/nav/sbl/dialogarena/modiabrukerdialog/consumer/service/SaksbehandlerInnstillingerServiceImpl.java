@@ -2,6 +2,7 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service;
 
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.AnsattService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.PathlessCookieUtils;
 import org.apache.wicket.util.cookies.CookieUtils;
 
 import javax.inject.Inject;
@@ -39,22 +40,20 @@ public class SaksbehandlerInnstillingerServiceImpl implements SaksbehandlerInnst
     }
 
     private String hentEnhetFraCookie(List<String> ansattEnhetsIdListe, String enhetId) {
-
-        String cookieEnhetId = new CookieUtils().load(saksbehandlerInnstillingerCookieId());
+        String cookieEnhetId = new PathlessCookieUtils().load(saksbehandlerInnstillingerCookieId());
         boolean saksbehanderHarTilgangTilEnhet = ansattEnhetsIdListe.contains(cookieEnhetId);
         return saksbehanderHarTilgangTilEnhet ? cookieEnhetId : enhetId;
     }
 
     public void setSaksbehandlerValgtEnhetCookie(String valgtEnhet) {
-        CookieUtils cookieUtils = new CookieUtils();
-        cookieUtils.getSettings().setMaxAge(3600 * 24 * 365);
+        CookieUtils cookieUtils = new PathlessCookieUtils();
+        cookieUtils.getSettings().setMaxAge(3600 * 12);
         cookieUtils.save(saksbehandlerInnstillingerCookieId(), valgtEnhet);
-
         setSaksbehandlerInnstillingerTimeoutCookie();
     }
 
     public boolean saksbehandlerInnstillingerErUtdatert() {
-        return new CookieUtils().load(saksbehandlerInnstillingerTimeoutCookieId()) == null;
+        return new PathlessCookieUtils().load(saksbehandlerInnstillingerTimeoutCookieId()) == null;
     }
 
     public boolean valgtEnhetErKontaktsenter() {
@@ -62,11 +61,11 @@ public class SaksbehandlerInnstillingerServiceImpl implements SaksbehandlerInnst
     }
 
     private boolean valgtEnhetCookieEksisterer() {
-        return new CookieUtils().load(saksbehandlerInnstillingerCookieId()) != null;
+        return new PathlessCookieUtils().load(saksbehandlerInnstillingerCookieId()) != null;
     }
 
     private void setSaksbehandlerInnstillingerTimeoutCookie() {
-        CookieUtils cookieUtils = new CookieUtils();
+        CookieUtils cookieUtils = new PathlessCookieUtils();
         cookieUtils.getSettings().setMaxAge(3600 * 12);
         cookieUtils.save(saksbehandlerInnstillingerTimeoutCookieId(), "");
     }
