@@ -83,8 +83,12 @@ class DialogMerkController @Inject constructor(private val behandleHenvendelsePo
     @GET
     @Path("/slett")
     fun kanSlette(): Response {
-        val saksbehandlerId = SubjectHandler.getSubjectHandler().uid.toUpperCase()
-        return Response.ok(hentSaksbehandlereMedTilgangTilHastekassering().contains(saksbehandlerId)).build()
+        return tilgangskontroll
+                .check(Policies.tilgangTilModia)
+                .get {
+                    val saksbehandlerId = SubjectHandler.getSubjectHandler().uid.toUpperCase()
+                    Response.ok(hentSaksbehandlereMedTilgangTilHastekassering().contains(saksbehandlerId)).build()
+                }
     }
 
 }

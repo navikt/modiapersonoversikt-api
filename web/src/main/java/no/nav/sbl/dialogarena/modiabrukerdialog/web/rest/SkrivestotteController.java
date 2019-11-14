@@ -2,6 +2,8 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest;
 
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.cms.SkrivestotteSok;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.cms.SkrivestotteTekst;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.tilgangskontroll.Policies;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.tilgangskontroll.Tilgangskontroll;
 
 import javax.inject.Inject;
 import javax.ws.rs.GET;
@@ -20,18 +22,28 @@ public class SkrivestotteController {
 
     @Inject
     private SkrivestotteSok skrivestotteSok;
+    @Inject
+    private Tilgangskontroll tilgangskontroll;
 
     @GET
     @Path("/sok")
     public List<SkrivestotteTekst> hentSkrivestotteTekster(@QueryParam("fritekst") String fritekst, @QueryParam("tags") List<String> tags) {
-        return skrivestotteSok.sok(fritekst, tags);
+        return tilgangskontroll
+                .check(Policies.tilgangTilModia)
+                .get(() -> {
+                    return skrivestotteSok.sok(fritekst, tags);
+                });
     }
 
     @GET
     @Path("alletags")
     public Set<String> hentAlleTags() {
-        return skrivestotteSok.sok("").stream()
-                .flatMap(skrivestotteTekst -> skrivestotteTekst.tags.stream())
-                .collect(toSet());
+        return tilgangskontroll
+                .check(Policies.tilgangTilModia)
+                .get(() -> {
+                    return skrivestotteSok.sok("").stream()
+                            .flatMap(skrivestotteTekst -> skrivestotteTekst.tags.stream())
+                            .collect(toSet());
+                });
     }
 }

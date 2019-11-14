@@ -14,10 +14,13 @@ import javax.ws.rs.core.MediaType.APPLICATION_JSON
 import no.nav.brukerdialog.security.context.SubjectHandler.getSubjectHandler
 import no.nav.metrics.MetricsFactory.createEvent
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.RestUtils
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.tilgangskontroll.Policies
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.tilgangskontroll.Tilgangskontroll
 
 @Path("/dialog/{fnr}")
 @Produces(APPLICATION_JSON)
 class DelsvarController @Inject constructor(
+        private val tilgangskontroll: Tilgangskontroll,
         private val delsvarService: DelsvarService
 ) {
     @POST
@@ -28,28 +31,32 @@ class DelsvarController @Inject constructor(
             @Context httpRequest: HttpServletRequest,
             request: DelsvarRestRequest): Response
     {
-        val saksbehandlersValgteEnhet = RestUtils.hentValgtEnhet(httpRequest)
+        return tilgangskontroll
+                .check(Policies.tilgangTilBruker.with(fnr))
+                .get {
+                    val saksbehandlersValgteEnhet = RestUtils.hentValgtEnhet(httpRequest)
 
-        val delsvarRequest = DelsvarRequestBuilder()
-                .withFodselsnummer(fnr)
-                .withTraadId(request.traadId)
-                .withBehandlingsId(request.behandlingsId)
-                .withSvar(request.fritekst)
-                .withNavIdent(getSubjectHandler().uid)
-                .withValgtEnhet(saksbehandlersValgteEnhet)
-                .withTemagruppe(request.temagruppe)
-                .withOppgaveId(request.oppgaveId)
-                .build()
+                    val delsvarRequest = DelsvarRequestBuilder()
+                            .withFodselsnummer(fnr)
+                            .withTraadId(request.traadId)
+                            .withBehandlingsId(request.behandlingsId)
+                            .withSvar(request.fritekst)
+                            .withNavIdent(getSubjectHandler().uid)
+                            .withValgtEnhet(saksbehandlersValgteEnhet)
+                            .withTemagruppe(request.temagruppe)
+                            .withOppgaveId(request.oppgaveId)
+                            .build()
 
-        try {
-            delsvarService.svarDelvis(delsvarRequest)
-        } catch (exception: RuntimeException) {
-            throw handterRuntimeFeil(exception)
-        }
+                    try {
+                        delsvarService.svarDelvis(delsvarRequest)
+                    } catch (exception: RuntimeException) {
+                        throw handterRuntimeFeil(exception)
+                    }
 
-        createEvent("hendelse.svardelviscontroller.svardelvis.fullfort").report()
+                    createEvent("hendelse.svardelviscontroller.svardelvis.fullfort").report()
 
-        return Response.ok("{\"message\": \"Success\"}").build()
+                    Response.ok("{\"message\": \"Success\"}").build()
+                }
     }
 
     private fun handterRuntimeFeil(exception: RuntimeException): RuntimeException {
