@@ -2,12 +2,7 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service;
 
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.AnsattService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.http.CookieUtil;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.PathlessCookieUtils;
-import org.apache.wicket.protocol.http.servlet.ServletWebRequest;
-import org.apache.wicket.request.cycle.RequestCycle;
-import org.apache.wicket.request.http.WebRequest;
-import org.apache.wicket.util.cookies.CookieDefaults;
 import org.apache.wicket.util.cookies.CookieUtils;
 
 import javax.inject.Inject;
@@ -51,13 +46,9 @@ public class SaksbehandlerInnstillingerServiceImpl implements SaksbehandlerInnst
     }
 
     public void setSaksbehandlerValgtEnhetCookie(String valgtEnhet) {
-        ServletWebRequest rq = (ServletWebRequest) RequestCycle.get().getRequest();
-        String prefix = rq.getFilterPrefix();
         CookieUtils cookieUtils = new PathlessCookieUtils();
-        cookieUtils.getSettings().setMaxAge(3600 * 24 * 365);
-        
+        cookieUtils.getSettings().setMaxAge(3600 * 12);
         cookieUtils.save(saksbehandlerInnstillingerCookieId(), valgtEnhet);
-
         setSaksbehandlerInnstillingerTimeoutCookie();
     }
 
