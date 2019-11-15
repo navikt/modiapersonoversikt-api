@@ -18,7 +18,7 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.anyObject;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -32,9 +32,10 @@ class LDAPServiceImplTest {
 
     @BeforeAll
     static void beforeAll() {
-        System.setProperty("ldap.url", "");
-        System.setProperty("ldap.username", "");
-        System.setProperty("ldap.password", "");
+        System.setProperty("LDAP_BASEDN", "basedn");
+        System.setProperty("LDAP_URL", "url");
+        System.setProperty("LDAP_USERNAME", "username");
+        System.setProperty("LDAP_PASSWORD", "password");
     }
 
     private LdapContextProvider mockLdapContextProvider(List<String> roller) {
@@ -48,7 +49,7 @@ class LDAPServiceImplTest {
         LdapContext ldapContext = mock(LdapContext.class);
         try {
             NamingEnumeration<SearchResult> result = mockResult(roller);
-            when(ldapContext.search(anyString(), anyString(), anyObject())).thenReturn(result);
+            when(ldapContext.search(anyString(), anyString(), any())).thenReturn(result);
         } catch (NamingException e) {
             throw new RuntimeException(e);
         }

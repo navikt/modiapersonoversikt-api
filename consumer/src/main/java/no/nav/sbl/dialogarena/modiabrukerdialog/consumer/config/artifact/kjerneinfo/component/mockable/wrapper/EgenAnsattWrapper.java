@@ -1,7 +1,7 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.artifact.kjerneinfo.component.mockable.wrapper;
 
-import no.nav.kjerneinfo.consumer.egenansatt.EgenAnsattServiceImpl;
 import no.nav.kjerneinfo.consumer.egenansatt.EgenAnsattService;
+import no.nav.kjerneinfo.consumer.egenansatt.EgenAnsattServiceImpl;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v1.egenansatt.EgenAnsattV1EndpointConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.Wrapper;
 import no.nav.tjeneste.pip.egen.ansatt.v1.EgenAnsattV1;

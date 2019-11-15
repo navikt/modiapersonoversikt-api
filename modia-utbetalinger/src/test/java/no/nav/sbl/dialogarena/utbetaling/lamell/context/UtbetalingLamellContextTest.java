@@ -33,12 +33,14 @@ public class UtbetalingLamellContextTest {
 
     @BeforeClass
     public static void setUp() {
-        System.setProperty("server.arena.url", "http://dummy.url/foo");
+        System.setProperty("SERVER_ARENA_URL", "http://dummy.url/foo");
+        System.setProperty("UTBETALING_V1_ENDPOINTURL", "http://dummy.url/foo");
     }
 
     @AfterClass
     public static void tearDown() {
-        System.clearProperty("server.arena.url");
+        System.clearProperty("SERVER_ARENA_URL");
+        System.clearProperty("UTBETALING_V1_ENDPOINTURL");
     }
 
     @Test

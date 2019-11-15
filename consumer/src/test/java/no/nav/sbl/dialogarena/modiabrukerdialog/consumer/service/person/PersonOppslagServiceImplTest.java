@@ -6,8 +6,6 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.personoppslag.Kontakt
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.personoppslag.PersonOppslagResponse;
 import org.junit.Test;
 
-import java.util.UUID;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class PersonOppslagServiceImplTest {

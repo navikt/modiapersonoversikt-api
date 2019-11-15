@@ -6,7 +6,6 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.exceptions.JournalforingFeil
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.gsak.GsakKodeverk;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.kodeverk.StandardKodeverk;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.psak.PsakService;
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.saker.SakerServiceImpl;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.behandlehenvendelse.BehandleHenvendelsePortType;
 import no.nav.tjeneste.virksomhet.behandlesak.v1.BehandleSakV1;
@@ -79,8 +78,6 @@ public class SakerServiceImplTest {
     private ArbeidOgAktivitet arbeidOgAktivitet;
     @Mock
     private BehandleHenvendelsePortType behandleHenvendelsePortType;
-    @Mock
-    private SaksbehandlerInnstillingerService saksbehandlerInnstillingerService;
     @Mock
     private PsakService psakService;
 
@@ -256,9 +253,8 @@ public class SakerServiceImplTest {
         opprettSakResponse.setSakId(SAKS_ID);
 
         when(behandleSak.opprettSak(any(WSOpprettSakRequest.class))).thenReturn(opprettSakResponse);
-        when(saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet()).thenReturn(valgtNavEnhet);
 
-        sakerService.knyttBehandlingskjedeTilSak(FNR, BEHANDLINGSKJEDEID, sak);
+        sakerService.knyttBehandlingskjedeTilSak(FNR, BEHANDLINGSKJEDEID, sak, valgtNavEnhet);
 
         verify(behandleHenvendelsePortType, times(1)).knyttBehandlingskjedeTilSak(BEHANDLINGSKJEDEID, SAKS_ID, sak.temaKode, valgtNavEnhet);
     }
@@ -272,9 +268,8 @@ public class SakerServiceImplTest {
         opprettSakResponse.setSakId(SAKS_ID);
 
         when(behandleSak.opprettSak(any(WSOpprettSakRequest.class))).thenReturn(opprettSakResponse);
-        when(saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet()).thenReturn(valgtNavEnhet);
 
-        sakerService.knyttBehandlingskjedeTilSak(FNR, BEHANDLINGSKJEDEID, sak);
+        sakerService.knyttBehandlingskjedeTilSak(FNR, BEHANDLINGSKJEDEID, sak, valgtNavEnhet);
 
         verify(behandleHenvendelsePortType, times(1)).knyttBehandlingskjedeTilSak(BEHANDLINGSKJEDEID, SAKS_ID, sak.temaKode, valgtNavEnhet);
     }

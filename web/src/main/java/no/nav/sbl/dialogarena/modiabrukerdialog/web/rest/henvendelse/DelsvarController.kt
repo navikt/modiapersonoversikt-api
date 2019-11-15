@@ -1,21 +1,19 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.henvendelse
 
+import no.nav.common.auth.SubjectHandler
+import no.nav.metrics.MetricsFactory.createEvent
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.RestUtils
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.henvendelse.DelsvarRequest.DelsvarRequestBuilder
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.henvendelse.DelsvarService
 import org.slf4j.LoggerFactory
-
 import javax.inject.Inject
 import javax.servlet.http.HttpServletRequest
 import javax.ws.rs.*
 import javax.ws.rs.core.Context
-import javax.ws.rs.core.Response
-
 import javax.ws.rs.core.MediaType.APPLICATION_JSON
-import no.nav.brukerdialog.security.context.SubjectHandler.getSubjectHandler
-import no.nav.metrics.MetricsFactory.createEvent
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.RestUtils
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.tilgangskontroll.Policies
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.tilgangskontroll.Tilgangskontroll
+import javax.ws.rs.core.Response
+import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Policies
+import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Tilgangskontroll
 
 @Path("/dialog/{fnr}")
 @Produces(APPLICATION_JSON)
@@ -41,7 +39,7 @@ class DelsvarController @Inject constructor(
                             .withTraadId(request.traadId)
                             .withBehandlingsId(request.behandlingsId)
                             .withSvar(request.fritekst)
-                            .withNavIdent(getSubjectHandler().uid)
+                            .withNavIdent(SubjectHandler.getIdent().get())
                             .withValgtEnhet(saksbehandlersValgteEnhet)
                             .withTemagruppe(request.temagruppe)
                             .withOppgaveId(request.oppgaveId)

@@ -1,8 +1,12 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.kodeverksmapper;
 
-import no.nav.modig.modia.ping.*;
+import no.nav.modig.modia.ping.FailedPingResult;
+import no.nav.modig.modia.ping.OkPingResult;
+import no.nav.modig.modia.ping.PingResult;
+import no.nav.modig.modia.ping.Pingable;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.kodeverksmapper.domain.Behandling;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.Timer;
+import no.nav.sbl.util.EnvironmentUtils;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -10,21 +14,15 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import static java.lang.System.getProperty;
-import static no.nav.sbl.dialogarena.common.cxf.InstanceSwitcher.createMetricsProxyWithInstanceSwitcher;
+import static no.nav.metrics.MetricsFactory.createTimerProxyForWebService;
 
 @Configuration
 public class KodeverksmapperEndpointConfig {
 
-    public static final String KODEVERKSMAPPER_KEY = "start.kodeverksmapper.withmock";
-
     @Bean
     public Kodeverksmapper kodeverksmapper() {
         final Kodeverksmapper kodeverksmapper = lagEndpoint();
-        final Kodeverksmapper kodeverksmapperMock = lagMockEnpoint();
-
-        return createMetricsProxyWithInstanceSwitcher("kodeverksmapper", kodeverksmapper,
-                kodeverksmapperMock, KODEVERKSMAPPER_KEY, Kodeverksmapper.class);
+        return createTimerProxyForWebService("kodeverksmapper", kodeverksmapper, Kodeverksmapper.class);
     }
 
     @Bean
@@ -54,15 +52,16 @@ public class KodeverksmapperEndpointConfig {
 
             @Override
             public String endpoint() {
-                return getProperty("kodeverksmapper.ping.url");
+                return EnvironmentUtils.getRequiredProperty("KODEVERKSMAPPER_PING_URL");
             }
         };
     }
 
     private Kodeverksmapper lagEndpoint() {
-        return new KodeverksmapperEndpoint(getProperty("kodeverksmapper.oppgavetype.url"),
-                getProperty("kodeverksmapper.underkategori.url"),
-                getProperty("kodeverksmapper.ping.url"));
+        return new KodeverksmapperEndpoint(EnvironmentUtils.getRequiredProperty("KODEVERKSMAPPER_OPPGAVETYPE_URL"),
+                EnvironmentUtils.getRequiredProperty("KODEVERKSMAPPER_UNDERKATEGORI_URL"),
+                EnvironmentUtils.getRequiredProperty("KODEVERKSMAPPER_PING_URL")
+        );
     }
 
     private Kodeverksmapper lagMockEnpoint() {

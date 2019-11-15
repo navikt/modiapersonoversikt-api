@@ -1,6 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.oppgave
 
-import no.nav.brukerdialog.security.context.SubjectHandler.getSubjectHandler
+import no.nav.common.auth.SubjectHandler
 import no.nav.metrics.MetricsFactory.createEvent
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Oppgave
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe
@@ -9,10 +9,10 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveBehandlingSer
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.ldap.LDAPService
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.RestUtils
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.http.CookieUtil
+import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Policies
+import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Tilgangskontroll
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.mapOfNotNullOrEmpty
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.service.plukkoppgave.PlukkOppgaveService
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.tilgangskontroll.Policies
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.tilgangskontroll.Tilgangskontroll
 import org.slf4j.LoggerFactory
 import javax.inject.Inject
 import javax.servlet.http.HttpServletRequest
@@ -107,7 +107,7 @@ class OppgaveController @Inject constructor(
                     }
 
     private fun verifiserTilgang(rolle: String) {
-        val consumerId = getSubjectHandler().uid
+        val consumerId = SubjectHandler.getIdent().get()
         if (!ldapService.saksbehandlerHarRolle(consumerId, rolle)) {
             throw ForbiddenException("Saksbehandler $consumerId har ikke rollen $rolle")
         }

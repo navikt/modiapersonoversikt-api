@@ -1,9 +1,9 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.ldap
 
-import no.nav.brukerdialog.security.context.SubjectHandler.getSubjectHandler
+import no.nav.common.auth.SubjectHandler
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.ldap.LDAPService
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.tilgangskontroll.Policies
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.tilgangskontroll.Tilgangskontroll
+import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Policies
+import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Tilgangskontroll
 import javax.inject.Inject
 import javax.ws.rs.GET
 import javax.ws.rs.Path
@@ -21,7 +21,7 @@ constructor(private val ldapService: LDAPService, private val tilgangskontroll: 
         return tilgangskontroll
                 .check(Policies.tilgangTilModia)
                 .get {
-                    val ident = getSubjectHandler().uid
+                    val ident = SubjectHandler.getIdent().get()
                     mapOf("roller" to ldapService.hentRollerForVeileder(ident))
                 }
     }

@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class UtbetalingLamellContext {
 
-    @Value("${server.arena.url}")
+    @Value("${SERVER_ARENA_URL}")
     private String arenaServerUrl;
 
     private static final String ARENA_MELDINGER_UTBETALINGER = "?oppstart_skj=UB_22_MELDEHISTORIKK&fodselsnr=";

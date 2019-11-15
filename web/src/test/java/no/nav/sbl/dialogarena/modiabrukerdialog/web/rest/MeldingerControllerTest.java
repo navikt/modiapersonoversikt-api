@@ -1,9 +1,9 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest;
 
-import no.nav.brukerdialog.security.context.ThreadLocalSubjectHandler;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.AnsattEnhet;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.AnsattService;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.tilgangskontroll.TilgangskontrollMock;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.http.SubjectHandlerUtil;
+import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.TilgangskontrollMock;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.MeldingerSok;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.henvendelse.HenvendelseBehandlingService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.henvendelse.domain.Meldinger;
@@ -15,8 +15,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.core.Response;
 import java.util.Collections;
 
-import static no.nav.brukerdialog.security.context.SubjectHandler.SUBJECTHANDLER_KEY;
-import static no.nav.brukerdialog.security.context.SubjectHandler.getSubjectHandler;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -25,15 +23,11 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.util.ReflectionTestUtils.setField;
 
 public class MeldingerControllerTest {
-
-    static {
-        System.setProperty(SUBJECTHANDLER_KEY, ThreadLocalSubjectHandler.class.getName());
-    }
-
     private HttpServletRequest httpServletRequestMock = mock(HttpServletRequest.class);
     private AnsattService ansattServiceMock = mock(AnsattService.class);
     private MeldingerController meldingerController = new MeldingerController();
-    private String cookieNavn = "saksbehandlerinnstillinger-" + getSubjectHandler().getUid();;
+    private String saksbehandler = "Z999999";
+    private String cookieNavn = "saksbehandlerinnstillinger-" + saksbehandler;
 
     @Before
     public void setup() {
@@ -51,14 +45,14 @@ public class MeldingerControllerTest {
     @Test
     public void indekseringSkalReturnere200DersomIdentHarTilgangTilEnhet() throws Exception {
         when(httpServletRequestMock.getCookies()).thenReturn(new Cookie[]{new Cookie(cookieNavn, "0")});
-        final Response response = meldingerController.indekser("10108000398", httpServletRequestMock);
+        final Response response = SubjectHandlerUtil.withIdent(saksbehandler, () -> meldingerController.indekser("10108000398", httpServletRequestMock));
         assertThat(response.getStatus(), is(Response.Status.OK.getStatusCode()));
     }
 
     @Test
     public void indekseringSkalReturnere401DersomIdentIkkeHarTilgangTilEnhet() throws Exception {
         when(httpServletRequestMock.getCookies()).thenReturn(new Cookie[]{new Cookie(cookieNavn, "1")});
-        final Response response = meldingerController.indekser("10108000398", httpServletRequestMock);
+        final Response response = SubjectHandlerUtil.withIdent(saksbehandler, () -> meldingerController.indekser("10108000398", httpServletRequestMock));
         assertThat(response.getStatus(), is(Response.Status.UNAUTHORIZED.getStatusCode()));
     }
 }

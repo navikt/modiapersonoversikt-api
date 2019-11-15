@@ -13,10 +13,6 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import javax.inject.Inject;
 
-import static java.lang.System.setProperty;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.artifact.kjerneinfo.component.mockable.MockableContext.KJERNEINFO_KEY;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.MockUtil.ALLOW_MOCK;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.MockUtil.TILLATMOCKSETUP_PROPERTY;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -37,18 +33,7 @@ public class KontrakterConsumerConfigResolverTest {
     private KontrakterConsumerConfigResolver resolver;
 
     @Test
-    public void medMockSlaattPaaSkalIkkeProdkodeEksekveres() {
-        setProperty(TILLATMOCKSETUP_PROPERTY, "true");
-        setProperty(KJERNEINFO_KEY, ALLOW_MOCK);
-        resolver.oppfolgingskontraktServiceBi().hentOppfolgingskontrakter(new OppfolgingskontraktRequest());
-        resolver.ytelseskontraktServiceBi().hentYtelseskontrakter(new YtelseskontraktRequest());
-        verifyZeroInteractions(oppfolgingskontraktService.wrappedObject);
-        verifyZeroInteractions(ytelseskontraktService.wrappedObject);
-    }
-
-    @Test
     public void perDefaultSkalProdkodeEksekveres() {
-        setProperty(TILLATMOCKSETUP_PROPERTY, "false");
         resolver.ytelseskontraktServiceBi().hentYtelseskontrakter(new YtelseskontraktRequest());
         resolver.oppfolgingskontraktServiceBi().hentOppfolgingskontrakter(new OppfolgingskontraktRequest());
         verify(ytelseskontraktService.wrappedObject, times(1)).hentYtelseskontrakter(any(YtelseskontraktRequest.class));

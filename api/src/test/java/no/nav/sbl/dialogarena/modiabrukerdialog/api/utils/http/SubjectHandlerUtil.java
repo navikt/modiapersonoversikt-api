@@ -1,17 +1,25 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.http;
 
-import no.nav.brukerdialog.security.context.SubjectHandler;
-import no.nav.brukerdialog.security.context.SubjectHandlerUtils;
-import no.nav.brukerdialog.security.context.ThreadLocalSubjectHandler;
+
 import no.nav.brukerdialog.security.domain.IdentType;
-import no.nav.brukerdialog.tools.SecurityConstants;
+import no.nav.common.auth.SsoToken;
+import no.nav.common.auth.Subject;
+import no.nav.common.auth.SubjectHandler;
+import no.nav.sbl.util.fn.UnsafeRunnable;
+import no.nav.sbl.util.fn.UnsafeSupplier;
+
+import static java.util.Collections.emptyMap;
 
 public class SubjectHandlerUtil {
 
-    public static void setInnloggetSaksbehandler(String ident) {
-        System.setProperty(SubjectHandler.SUBJECTHANDLER_KEY, ThreadLocalSubjectHandler.class.getCanonicalName());
-        System.setProperty(SecurityConstants.SYSTEMUSER_USERNAME, "srvModiabrukerdialog");
-        SubjectHandlerUtils.setSubject(new SubjectHandlerUtils.SubjectBuilder(ident, IdentType.InternBruker).getSubject());
+    public static <T> T withIdent(String ident, UnsafeSupplier<T> runnable) {
+        Subject subject = new Subject(ident, IdentType.InternBruker, SsoToken.oidcToken("token", emptyMap()));
+        return SubjectHandler.withSubject(subject, runnable);
+    }
+
+    public static void withIdent(String ident, UnsafeRunnable runnable) {
+        Subject subject = new Subject(ident, IdentType.InternBruker, SsoToken.oidcToken("token", emptyMap()));
+        SubjectHandler.withSubject(subject, runnable);
     }
 
 }

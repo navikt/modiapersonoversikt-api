@@ -5,7 +5,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.Sakstema;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import java.time.LocalDateTime;
 import java.time.Month;
@@ -27,7 +27,7 @@ public class SaksoversiktServiceTest {
 
     @Before
     public void setup() {
-        System.setProperty("saksoversikt.prodsettningsdato", PROD_SETTNINGS_DATO);
+        System.setProperty("SAKSOVERSIKT_PRODSETTNINGSDATO", PROD_SETTNINGS_DATO);
     }
 
     @Test

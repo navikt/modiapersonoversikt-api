@@ -3,13 +3,15 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.saf
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
-import no.nav.brukerdialog.security.context.SubjectHandler
+import no.nav.common.auth.SsoToken
+import no.nav.common.auth.SubjectHandler
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.Baksystem
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.Dokument
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.DokumentMetadata
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.resultatwrappere.ResultatWrapper
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.resultatwrappere.TjenesteResultatWrapper
 import no.nav.sbl.rest.RestUtils
+import no.nav.sbl.util.EnvironmentUtils
 import org.slf4j.LoggerFactory
 import javax.ws.rs.client.Client
 import javax.ws.rs.client.Entity
@@ -20,13 +22,12 @@ import javax.ws.rs.core.MediaType.APPLICATION_JSON
 import javax.ws.rs.core.Response
 import javax.ws.rs.core.Response.Status.fromStatusCode
 
-val SAF_GRAPHQL_BASEURL = System.getProperty("saf.graphql.url")
-val SAF_HENTDOKUMENT_BASEURL = System.getProperty("saf.hentdokument.url")
+val SAF_GRAPHQL_BASEURL = EnvironmentUtils.getRequiredProperty("SAF_GRAPHQL_URL")
+val SAF_HENTDOKUMENT_BASEURL = EnvironmentUtils.getRequiredProperty("SAF_HENTDOKUMENT_URL")
 
 private val LOG = LoggerFactory.getLogger(SafService::class.java)
 
 class SafService {
-
     fun hentJournalposter(fnr: String): ResultatWrapper<List<DokumentMetadata>> {
         val jsonQuery = dokumentoversiktBrukerJsonQuery(fnr)
 
@@ -91,7 +92,8 @@ private fun veilederAutorisertClient(client: Client, url: String): Invocation.Bu
     val AUTH_METHOD_BEARER = "Bearer"
     val AUTH_SEPERATOR = " "
 
-    val veilederOidcToken = SubjectHandler.getSubjectHandler().internSsoToken
+    val veilederOidcToken = SubjectHandler.getSsoToken(SsoToken.Type.OIDC)
+            .orElseThrow { IllegalStateException("Fant ikke OIDC-token") }
     return client
             .target(url)
             .request()

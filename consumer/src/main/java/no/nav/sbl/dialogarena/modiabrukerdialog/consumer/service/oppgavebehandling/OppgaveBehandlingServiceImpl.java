@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.oppgavebehandling;
 
+import no.nav.common.auth.SubjectHandler;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Oppgave;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.LeggTilbakeOppgaveIGsakRequest;
@@ -32,7 +33,6 @@ import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.toList;
-import static no.nav.brukerdialog.security.context.SubjectHandler.getSubjectHandler;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe.*;
 import static org.apache.commons.lang3.StringUtils.equalsIgnoreCase;
 import static org.apache.commons.lang3.StringUtils.isBlank;
@@ -74,10 +74,11 @@ public class OppgaveBehandlingServiceImpl implements OppgaveBehandlingService {
 
     @Override
     public List<Oppgave> finnTildelteOppgaverIGsak() {
+        String ident = SubjectHandler.getIdent().orElseThrow(() -> new RuntimeException("Fant ikke ident"));
         return oppgaveWS
                 .finnOppgaveListe(new WSFinnOppgaveListeRequest()
                         .withSok(new WSFinnOppgaveListeSok()
-                                .withAnsvarligId(getSubjectHandler().getUid())
+                                .withAnsvarligId(ident)
                                 .withFagomradeKodeListe(KONTAKT_NAV))
                         .withFilter(new WSFinnOppgaveListeFilter()
                                 .withAktiv(true)
@@ -164,7 +165,7 @@ public class OppgaveBehandlingServiceImpl implements OppgaveBehandlingService {
     }
 
     String leggTilBeskrivelse(String gammelBeskrivelse, String leggTil, String valgtEnhet) {
-        String ident = getSubjectHandler().getUid();
+        String ident = SubjectHandler.getIdent().orElseThrow(() -> new RuntimeException("Fant ikke ident"));
         String header = String.format("--- %s %s (%s, %s) ---\n",
                 forPattern("dd.MM.yyyy HH:mm").print(now()),
                 ansattWS.hentAnsattNavn(ident),
@@ -188,8 +189,9 @@ public class OppgaveBehandlingServiceImpl implements OppgaveBehandlingService {
     }
 
     private WSOppgave tilordneOppgaveIGsak(WSOppgave oppgave, Optional<Temagruppe> temagruppe, String saksbehandlersValgteEnhet) throws FikkIkkeTilordnet {
+        String ident = SubjectHandler.getIdent().orElseThrow(() -> new RuntimeException("Fant ikke ident"));
         try {
-            WSOppgave wsOppgave = oppgave.withAnsvarligId(getSubjectHandler().getUid());
+            WSOppgave wsOppgave = oppgave.withAnsvarligId(ident);
             lagreOppgaveIGsak(wsOppgave, temagruppe, saksbehandlersValgteEnhet);
             return wsOppgave;
         } catch (LagreOppgaveOptimistiskLasing lagreOppgaveOptimistiskLasing) {
@@ -215,15 +217,16 @@ public class OppgaveBehandlingServiceImpl implements OppgaveBehandlingService {
     }
 
     private List<WSOppgave> tildelEldsteLedigeOppgaver(Temagruppe temagruppe, int enhetsId, String saksbehandlersValgteEnhet) {
+        String ident = SubjectHandler.getIdent().orElseThrow(() -> new RuntimeException("Fant ikke ident"));
         WSTildelFlereOppgaverResponse response = tildelOppgaveWS.tildelFlereOppgaver(
                 new WSTildelFlereOppgaverRequest()
                         .withUnderkategori(underkategoriKode(temagruppe))
                         .withOppgavetype(SPORSMAL_OG_SVAR)
                         .withFagomrade(KONTAKT_NAV)
                         .withAnsvarligEnhetId(enhetFor(temagruppe, saksbehandlersValgteEnhet))
-                        .withIkkeTidligereTildeltSaksbehandlerId(getSubjectHandler().getUid())
+                        .withIkkeTidligereTildeltSaksbehandlerId(ident)
                         .withTildeltAvEnhetId(enhetsId)
-                        .withTildelesSaksbehandlerId(getSubjectHandler().getUid()));
+                        .withTildelesSaksbehandlerId(ident));
 
         if (response == null) {
             return emptyList();

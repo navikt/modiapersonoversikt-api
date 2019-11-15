@@ -1,7 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.api.service;
 
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
 
 public class LeggTilbakeOppgaveIGsakRequest {
 

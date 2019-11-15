@@ -12,8 +12,8 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.SakstemaService
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.interfaces.SaksoversiktService
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.interfaces.TilgangskontrollService
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.saf.SafService
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.tilgangskontroll.Policies
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.tilgangskontroll.Tilgangskontroll
+import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Policies
+import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Tilgangskontroll
 import org.joda.time.DateTime
 import java.time.LocalDateTime
 import java.util.*

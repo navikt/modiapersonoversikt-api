@@ -8,8 +8,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
 
-//Importer alt av modul config her...
-
 @Configuration
 @Import({
         UtbetalingLamellContext.class,

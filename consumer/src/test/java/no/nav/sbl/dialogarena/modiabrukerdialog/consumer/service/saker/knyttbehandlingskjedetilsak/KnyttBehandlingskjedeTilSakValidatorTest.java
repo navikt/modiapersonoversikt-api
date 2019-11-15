@@ -2,10 +2,10 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.saker.knyttbeh
 
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.Sak;
 import org.junit.jupiter.api.Test;
-import static org.hamcrest.core.Is.is;
-import static org.hamcrest.MatcherAssert.assertThat;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.core.Is.is;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class KnyttBehandlingskjedeTilSakValidatorTest {
 

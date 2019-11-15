@@ -1,0 +1,3 @@
+no.nav.tjeneste.virksomhet.sykepenger.v2.informasjon.FimsykBruker,getIdent,ident
+no.nav.tjeneste.virksomhet.foreldrepenger.v2.informasjon.FimPerson,getIdent,ident
+no.nav.tjeneste.virksomhet.pleiepenger.v1.informasjon.WSPerson,getIdent,ident

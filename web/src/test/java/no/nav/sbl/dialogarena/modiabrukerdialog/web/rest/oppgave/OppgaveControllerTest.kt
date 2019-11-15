@@ -10,11 +10,12 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.ldap.LDAPService
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.http.HttpRequestUtil
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.http.SubjectHandlerUtil
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.oppgavebehandling.OppgaveBehandlingServiceImpl
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.AnsattServiceImpl
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.oppgavebehandling.OppgaveBehandlingServiceImpl
 import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.GsakOppgaveV3PortTypeMock.lagWSOppgave
+import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.TilgangskontrollMock
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.service.plukkoppgave.PlukkOppgaveService
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.tilgangskontroll.TilgangskontrollMock
+import no.nav.sbl.util.fn.UnsafeSupplier
 import no.nav.tjeneste.virksomhet.oppgave.v3.OppgaveV3
 import no.nav.tjeneste.virksomhet.oppgave.v3.informasjon.oppgave.*
 import no.nav.tjeneste.virksomhet.oppgave.v3.meldinger.WSFinnOppgaveListeResponse
@@ -34,7 +35,6 @@ import kotlin.test.assertFailsWith
 import kotlin.test.assertTrue
 
 internal class OppgaveControllerTest {
-
     private val oppgaveBehandlingMock: OppgavebehandlingV3 = mock()
     private val tildelOppgaveMock: TildelOppgaveV1 = mock()
     private val oppgaveWSMock: OppgaveV3 = mockOppgaveWs()
@@ -56,7 +56,6 @@ internal class OppgaveControllerTest {
 
     @BeforeEach
     fun before() {
-        SubjectHandlerUtil.setInnloggetSaksbehandler(SAKSBEHANDLERS_IDENT)
         whenever(ldapService.saksbehandlerHarRolle(any(), any())).thenReturn(true)
     }
 
@@ -90,7 +89,9 @@ internal class OppgaveControllerTest {
     fun `Legger tilbake oppgave ved å kalle lagreOppgave mot GSAK`() {
         val httpRequest = HttpRequestUtil.mockHttpServletRequestMedCookie(SAKSBEHANDLERS_IDENT, VALGT_ENHET)
 
-        oppgaveController.leggTilbake(httpRequest, lagRequest())
+        SubjectHandlerUtil.withIdent(SAKSBEHANDLERS_IDENT) {
+            oppgaveController.leggTilbake(httpRequest, lagRequest())
+        }
 
         verify(oppgaveBehandlingMock).lagreOppgave(check {
             assertAll("Oppgave lagret i GSAK",
@@ -104,11 +105,11 @@ internal class OppgaveControllerTest {
 
     @Test
     fun `Sjekker at ansvarlig for oppgaven er samme person som forsøker å legge den tilbake`() {
-        SubjectHandlerUtil.setInnloggetSaksbehandler("annen-saksbehandler")
-
         assertFailsWith<ForbiddenException> {
             val httpRequest = HttpRequestUtil.mockHttpServletRequestMedCookie("annen-saksbehandler", VALGT_ENHET)
-            oppgaveController.leggTilbake(httpRequest, lagRequest())
+            SubjectHandlerUtil.withIdent("annen-saksbehandler") {
+                oppgaveController.leggTilbake(httpRequest, lagRequest())
+            }
         }
     }
 
@@ -120,7 +121,7 @@ internal class OppgaveControllerTest {
                 .thenReturn(WSFinnOppgaveListeResponse()
                         .withOppgaveListe(oppgaveliste))
 
-        val resultat = oppgaveController.finnTildelte()
+        val resultat = SubjectHandlerUtil.withIdent(SAKSBEHANDLERS_IDENT, UnsafeSupplier { oppgaveController.finnTildelte() })
 
         assertEquals(oppgaveliste.size, resultat.size)
         assertEquals(oppgaveliste[0].oppgaveId, resultat[0]["oppgaveId"])
@@ -130,7 +131,7 @@ internal class OppgaveControllerTest {
     @Test
     fun `Kaller finnOppgaveListe med riktig request`() {
         whenever(oppgaveWSMock.finnOppgaveListe(any())).thenReturn(WSFinnOppgaveListeResponse())
-        oppgaveController.finnTildelte()
+        SubjectHandlerUtil.withIdent(SAKSBEHANDLERS_IDENT) { oppgaveController.finnTildelte() }
         verify(oppgaveWSMock).finnOppgaveListe(check {
             assertEquals(SAKSBEHANDLERS_IDENT, it.sok.ansvarligId)
             assertEquals(1, it.sok.fagomradeKodeListe.size)
@@ -156,7 +157,7 @@ internal class OppgaveControllerTest {
         whenever(oppgaveWSMock.finnOppgaveListe(any()))
                 .thenReturn(WSFinnOppgaveListeResponse())
 
-        val resultat = oppgaveController.plukkOppgaver(TEMAGRUPPE_ARBEID, httpRequest)
+        val resultat = SubjectHandlerUtil.withIdent(SAKSBEHANDLERS_IDENT, UnsafeSupplier { oppgaveController.plukkOppgaver(TEMAGRUPPE_ARBEID, httpRequest) })
 
         assertEquals(oppgaver.size, resultat.size)
         assertEquals(oppgaver[0].oppgaveId, resultat[0]["oppgaveId"])
@@ -175,7 +176,7 @@ internal class OppgaveControllerTest {
         whenever(plukkOppgaveService.plukkOppgaver(any(), any()))
                 .thenReturn(emptyList())
 
-        val resultat = oppgaveController.plukkOppgaver(TEMAGRUPPE_ARBEID, httpRequest)
+        val resultat = SubjectHandlerUtil.withIdent(SAKSBEHANDLERS_IDENT, UnsafeSupplier { oppgaveController.plukkOppgaver(TEMAGRUPPE_ARBEID, httpRequest) })
 
         verify(plukkOppgaveService, times(0)).plukkOppgaver(any(), any())
         assertEquals(oppgaveliste.size, resultat.size)
@@ -191,7 +192,7 @@ internal class OppgaveControllerTest {
         whenever(oppgaveWSMock.finnOppgaveListe(any()))
                 .thenReturn(WSFinnOppgaveListeResponse())
 
-        val resultat = oppgaveController.plukkOppgaver(TEMAGRUPPE_ARBEID, httpRequest)
+        val resultat = SubjectHandlerUtil.withIdent(SAKSBEHANDLERS_IDENT, UnsafeSupplier { oppgaveController.plukkOppgaver(TEMAGRUPPE_ARBEID, httpRequest) })
 
         assertEquals(0, resultat.size)
     }

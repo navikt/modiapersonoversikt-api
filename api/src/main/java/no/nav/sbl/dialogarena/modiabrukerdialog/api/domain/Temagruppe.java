@@ -2,7 +2,6 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.api.domain;
 
 import java.util.List;
 
-import static java.lang.System.getProperty;
 import static java.util.Arrays.asList;
 
 public enum Temagruppe {

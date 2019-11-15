@@ -3,7 +3,6 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.ytelse
 import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.whenever
-import no.nav.kjerneinfo.consumer.organisasjon.OrganisasjonService
 import no.nav.kjerneinfo.consumer.organisasjon.OrganisasjonV4ServiceImpl
 import no.nav.modig.core.exception.AuthorizationException
 import no.nav.sykmeldingsperioder.consumer.pleiepenger.PleiepengerServiceImpl

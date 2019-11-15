@@ -6,7 +6,6 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.gsak.GsakKodeverk;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.gsak.SakerService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.kodeverk.StandardKodeverk;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.psak.PsakService;
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.saker.knyttbehandlingskjedetilsak.KnyttBehandlingskjedeTilSakValidator;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.behandlehenvendelse.BehandleHenvendelsePortType;
 import no.nav.tjeneste.virksomhet.behandlesak.v1.BehandleSakV1;
@@ -50,8 +49,6 @@ public class SakerServiceImpl implements SakerService {
     @Inject
     private BehandleHenvendelsePortType behandleHenvendelsePortType;
     @Inject
-    private SaksbehandlerInnstillingerService saksbehandlerInnstillingerService;
-    @Inject
     private ArbeidOgAktivitet arbeidOgAktivitet;
     @Inject
     private PsakService psakService;
@@ -73,12 +70,6 @@ public class SakerServiceImpl implements SakerService {
         List<Sak> saker = psakService.hentSakerFor(fnr);
         leggTilFagsystemnavnOgTemanavn(saker, gsakKodeverk.hentFagsystemMapping(), standardKodeverk);
         return saker;
-    }
-
-    @Override
-    public void knyttBehandlingskjedeTilSak(String fnr, String behandlingskjede, Sak sak) throws JournalforingFeilet {
-        String enhet = saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet();
-        knyttBehandlingskjedeTilSak(fnr, behandlingskjede, sak, enhet);
     }
 
     @Override

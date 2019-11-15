@@ -7,7 +7,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.equalTo;
@@ -42,7 +42,7 @@ public class HenvendelseServiceTest {
 
     @Test
     public void gamlePaabegynteSoknaderFjernes() {
-        System.setProperty("fjern.soknader.for.dato", "2015-01-05");
+        System.setProperty("FJERN_SOKNADER_FOR_DATO", "2015-01-05");
         when(henvendelseSoknaderPortType.hentSoknadListe("11111111111")).thenReturn(asList(
                 new WSSoknad()
                         .withHenvendelseStatus("UNDER_ARBEID")
@@ -61,7 +61,7 @@ public class HenvendelseServiceTest {
     @Test
     public void sokanderPaaGrenseverdiFjernes() {
         final String grense = "2015-01-01";
-        System.setProperty("fjern.soknader.for.dato", grense);
+        System.setProperty("FJERN_SOKNADER_FOR_DATO", grense);
         when(henvendelseSoknaderPortType.hentSoknadListe("123")).thenReturn(asList(
                 new WSSoknad()
                         .withHenvendelseStatus("UNDER_ARBEID")
@@ -79,7 +79,7 @@ public class HenvendelseServiceTest {
 
     @Test
     public void gamleInnsendteSoknaderFjernes() {
-        System.setProperty("fjern.soknader.for.dato", "2015-01-05");
+        System.setProperty("FJERN_SOKNADER_FOR_DATO", "2015-01-05");
         when(henvendelseSoknaderPortType.hentSoknadListe("11111111111")).thenReturn(asList(
                 new WSSoknad()
                         .withHenvendelseStatus("FERDIG")

@@ -1,16 +1,11 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.oppgavebehandling;
 
-import no.nav.brukerdialog.security.context.SubjectHandler;
-import no.nav.brukerdialog.security.context.SubjectHandlerUtils;
-import no.nav.brukerdialog.security.context.ThreadLocalSubjectHandler;
-import no.nav.brukerdialog.security.domain.IdentType;
-import no.nav.brukerdialog.tools.SecurityConstants;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.AnsattEnhet;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.LeggTilbakeOppgaveIGsakRequest;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.arbeidsfordeling.ArbeidsfordelingV1Service;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.AnsattService;
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.http.SubjectHandlerUtil;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.arbeidsfordeling.ArbeidsfordelingV1ServiceImpl;
 import no.nav.tjeneste.virksomhet.oppgave.v3.HentOppgaveOppgaveIkkeFunnet;
 import no.nav.tjeneste.virksomhet.oppgave.v3.OppgaveV3;
@@ -22,7 +17,6 @@ import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.OppgavebehandlingV3;
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.meldinger.WSEndreOppgave;
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.meldinger.WSLagreOppgaveRequest;
 import no.nav.tjeneste.virksomhet.tildeloppgave.v1.TildelOppgaveV1;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -48,22 +42,9 @@ class LeggTilbakeOppgaveIGsakDelegateTest {
     private AnsattService ansattServiceMock;
     private OppgavebehandlingV3 oppgavebehandlingMock;
     private TildelOppgaveV1 tildelOppgaveMock;
-    private SaksbehandlerInnstillingerService saksbehandlerInnstillingerService;
     private ArbeidsfordelingV1Service arbeidsfordelingMock;
 
     private OppgaveBehandlingServiceImpl oppgaveBehandlingService;
-
-    @BeforeAll
-    static void beforeAll() {
-        System.setProperty(SubjectHandler.SUBJECTHANDLER_KEY, ThreadLocalSubjectHandler.class.getCanonicalName());
-        System.setProperty(SecurityConstants.SYSTEMUSER_USERNAME, "srvModiabrukerdialog");
-        setInnloggetSaksbehandler();
-    }
-
-    private static void setInnloggetSaksbehandler() {
-        SubjectHandlerUtils.setSubject(new SubjectHandlerUtils
-                .SubjectBuilder(OppgaveMockFactory.ANSVARLIG_SAKSBEHANDLER, IdentType.EksternBruker).withAuthLevel(4).getSubject());
-    }
 
     @BeforeEach
     void before() {
@@ -76,7 +57,6 @@ class LeggTilbakeOppgaveIGsakDelegateTest {
         ansattServiceMock = mockAnsattService();
         oppgavebehandlingMock = mock(OppgavebehandlingV3.class);
         tildelOppgaveMock = mock(TildelOppgaveV1.class);
-        saksbehandlerInnstillingerService = mock(SaksbehandlerInnstillingerService.class);
         arbeidsfordelingMock = mock(ArbeidsfordelingV1ServiceImpl.class);
     }
 
@@ -94,7 +74,8 @@ class LeggTilbakeOppgaveIGsakDelegateTest {
         String opprinneligBeskrivelse = hentOppgaveResponse.getOppgave().getBeskrivelse();
 
         ArgumentCaptor<WSLagreOppgaveRequest> lagreOppgaveRequestCaptor = ArgumentCaptor.forClass(WSLagreOppgaveRequest.class);
-        oppgaveBehandlingService.leggTilbakeOppgaveIGsak(lagRequest());
+
+        SubjectHandlerUtil.withIdent(ANSVARLIG_SAKSBEHANDLER, () -> oppgaveBehandlingService.leggTilbakeOppgaveIGsak(lagRequest()));
 
         verify(oppgavebehandlingMock).lagreOppgave(lagreOppgaveRequestCaptor.capture());
         WSEndreOppgave endreOppgave = lagreOppgaveRequestCaptor.getValue().getEndreOppgave();
@@ -118,7 +99,7 @@ class LeggTilbakeOppgaveIGsakDelegateTest {
         String opprinneligBeskrivelse = mockHentOppgaveResponseMedTilordning().getOppgave().getBeskrivelse();
 
         ArgumentCaptor<WSLagreOppgaveRequest> lagreOppgaveRequestCaptor = ArgumentCaptor.forClass(WSLagreOppgaveRequest.class);
-        oppgaveBehandlingService.leggTilbakeOppgaveIGsak(lagRequest());
+        SubjectHandlerUtil.withIdent(ANSVARLIG_SAKSBEHANDLER, () -> oppgaveBehandlingService.leggTilbakeOppgaveIGsak(lagRequest()));
 
         verify(oppgavebehandlingMock).lagreOppgave(lagreOppgaveRequestCaptor.capture());
         WSEndreOppgave endreOppgave = lagreOppgaveRequestCaptor.getValue().getEndreOppgave();
@@ -134,9 +115,12 @@ class LeggTilbakeOppgaveIGsakDelegateTest {
         when(oppgaveServiceMock.hentOppgave(any()))
                 .thenReturn(new WSHentOppgaveResponse().withOppgave(lagWSOppgave().withAnsvarligId("ANNEN_SAKSBEHANDLER")));
 
-        assertThrows(ForbiddenException.class, () -> {
-            oppgaveBehandlingService.leggTilbakeOppgaveIGsak(lagRequest());
-        });
+        assertThrows(ForbiddenException.class, () ->
+                SubjectHandlerUtil.withIdent(ANSVARLIG_SAKSBEHANDLER, () ->
+                        oppgaveBehandlingService.leggTilbakeOppgaveIGsak(lagRequest()
+                        )
+                )
+        );
     }
 
     private LeggTilbakeOppgaveIGsakRequest lagRequest() {

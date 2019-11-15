@@ -1,9 +1,10 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.dialog
 
-import no.nav.brukerdialog.security.context.SubjectHandler
+import no.nav.common.auth.SubjectHandler
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveBehandlingService
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.tilgangskontroll.*
-import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.merke.MerkUtils
+import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.BehandlingsIdTilgangData
+import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Policies
+import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Tilgangskontroll
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.behandlehenvendelse.BehandleHenvendelsePortType
 import java.util.*
 import javax.inject.Inject
@@ -86,8 +87,9 @@ class DialogMerkController @Inject constructor(private val behandleHenvendelsePo
         return tilgangskontroll
                 .check(Policies.tilgangTilModia)
                 .get {
-                    val saksbehandlerId = SubjectHandler.getSubjectHandler().uid.toUpperCase()
-                    Response.ok(hentSaksbehandlereMedTilgangTilHastekassering().contains(saksbehandlerId)).build()
+                    val godkjenteSaksbehandlere = tilgangskontroll.context().hentSaksbehandlereMedTilgangTilHastekassering()
+                    val saksbehandlerId = SubjectHandler.getIdent().map(String::toUpperCase).get()
+                    Response.ok(godkjenteSaksbehandlere.contains(saksbehandlerId)).build()
                 }
     }
 

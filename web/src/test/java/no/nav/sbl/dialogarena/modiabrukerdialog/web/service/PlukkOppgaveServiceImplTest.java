@@ -1,7 +1,5 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.service;
 
-import no.nav.brukerdialog.security.tilgangskontroll.policy.pep.EnforcementPoint;
-import no.nav.brukerdialog.security.tilgangskontroll.policy.request.PolicyRequest;
 import no.nav.kjerneinfo.common.domain.Kodeverdi;
 import no.nav.kjerneinfo.consumer.fim.person.PersonKjerneinfoServiceBi;
 import no.nav.kjerneinfo.consumer.fim.person.to.HentKjerneinformasjonRequest;
@@ -14,10 +12,12 @@ import no.nav.modig.core.exception.AuthorizationException;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Oppgave;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveBehandlingService;
+import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Tilgangskontroll;
+import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.TilgangskontrollContext;
+import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.TilgangskontrollMock;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.service.plukkoppgave.PlukkOppgaveServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
@@ -25,7 +25,6 @@ import java.util.List;
 
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.web.service.plukkoppgave.PlukkOppgaveServiceImpl.ATTRIBUTT_ID_ANSVARLIG_ENHET;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
@@ -38,15 +37,16 @@ public class PlukkOppgaveServiceImplTest {
 
     private static final String SAKSBEHANDLERS_VALGTE_ENHET = "4200";
 
-    @Mock
-    private OppgaveBehandlingService oppgaveBehandlingService;
-    @Mock
-    private PersonKjerneinfoServiceBi personKjerneinfoServiceBi;
-    @Mock
-    private EnforcementPoint pep;
+    private OppgaveBehandlingService oppgaveBehandlingService = mock(OppgaveBehandlingService.class);
+    private PersonKjerneinfoServiceBi personKjerneinfoServiceBi = mock(PersonKjerneinfoServiceBi.class);
+    private TilgangskontrollContext tilgangskontrollContext = mock(TilgangskontrollContext.class);
+    private Tilgangskontroll tilgangskontroll = new Tilgangskontroll(tilgangskontrollContext);
 
-    @InjectMocks
-    private PlukkOppgaveServiceImpl plukkOppgaveService;
+    private PlukkOppgaveServiceImpl plukkOppgaveService = new PlukkOppgaveServiceImpl(
+            oppgaveBehandlingService,
+            personKjerneinfoServiceBi,
+            tilgangskontroll
+    );
 
     private static HentKjerneinformasjonResponse personResponse = new HentKjerneinformasjonResponse();
 
@@ -57,10 +57,6 @@ public class PlukkOppgaveServiceImplTest {
         personfakta.setDiskresjonskode(new Kodeverdi("SPFO", null));
         personResponse.setPerson(new Person.With()
                 .personfakta(personfakta).done());
-    }
-
-    PlukkOppgaveServiceImplTest() {
-        initMocks(this);
     }
 
     @BeforeEach
@@ -80,18 +76,21 @@ public class PlukkOppgaveServiceImplTest {
         List<Oppgave> oppgaver = singletonList(new Oppgave("oppgaveId", "fnr", "behandlingskjedeId"));
 
         when(oppgaveBehandlingService.plukkOppgaverFraGsak(Temagruppe.FMLI, SAKSBEHANDLERS_VALGTE_ENHET)).thenReturn(oppgaver);
-        when(pep.hasAccess(any(PolicyRequest.class))).thenReturn(true);
+        when(tilgangskontrollContext.harSaksbehandlerRolle("0000-ga-bd06_modiagenerelltilgang")).thenReturn(true);
+//        when(tilgangskontroll.hasAccess(any(PolicyRequest.class))).thenReturn(true);
 
         assertThat(plukkOppgaveService.plukkOppgaver(Temagruppe.FMLI, SAKSBEHANDLERS_VALGTE_ENHET), is(equalTo(oppgaver)));
     }
 
     @Test
     public void leggerTilbakeOppgaveOgPlukkerNyHvisSaksbehandlerIkkeHarTilgang() {
-        List<Oppgave> oppgave1 = singletonList(new Oppgave("1", "fnr", "1"));
-        List<Oppgave> oppgave2 = singletonList(new Oppgave("2", "fnr", "2"));
+        List<Oppgave> oppgave1 = singletonList(new Oppgave("1", "fnr1", "1"));
+        List<Oppgave> oppgave2 = singletonList(new Oppgave("2", "fnr2", "2"));
 
         when(oppgaveBehandlingService.plukkOppgaverFraGsak(Temagruppe.FMLI, SAKSBEHANDLERS_VALGTE_ENHET )).thenReturn(oppgave1, oppgave2);
-        when(pep.hasAccess(any(PolicyRequest.class))).thenReturn(false, false, false, true);
+        when(tilgangskontrollContext.harSaksbehandlerRolle("0000-ga-bd06_modiagenerelltilgang")).thenReturn(true);
+        when(tilgangskontrollContext.hentDiskresjonkode("fnr1")).thenReturn("6");
+        when(tilgangskontrollContext.hentDiskresjonkode("fnr2")).thenReturn(null);
 
         assertThat(plukkOppgaveService.plukkOppgaver(Temagruppe.FMLI, SAKSBEHANDLERS_VALGTE_ENHET), is(equalTo(oppgave2)));
         verify(oppgaveBehandlingService).systemLeggTilbakeOppgaveIGsak(eq(oppgave1.get(0).oppgaveId), eq(Temagruppe.FMLI), eq(SAKSBEHANDLERS_VALGTE_ENHET));
@@ -102,7 +101,7 @@ public class PlukkOppgaveServiceImplTest {
         List<Oppgave> oppgave1 = singletonList(new Oppgave("1", "fnr", "behandlingskjedeId"));
 
         when(oppgaveBehandlingService.plukkOppgaverFraGsak(Temagruppe.FMLI, SAKSBEHANDLERS_VALGTE_ENHET)).thenReturn(oppgave1, emptyList());
-        when(pep.hasAccess(any(PolicyRequest.class))).thenReturn(true, false);
+//        when(tilgangskontroll.hasAccess(any(PolicyRequest.class))).thenReturn(true, false);
 
         assertThat(plukkOppgaveService.plukkOppgaver(Temagruppe.FMLI, SAKSBEHANDLERS_VALGTE_ENHET), is(equalTo(emptyList())));
         verify(oppgaveBehandlingService).systemLeggTilbakeOppgaveIGsak(eq(oppgave1.get(0).oppgaveId), eq(Temagruppe.FMLI), eq(SAKSBEHANDLERS_VALGTE_ENHET));
@@ -123,16 +122,11 @@ public class PlukkOppgaveServiceImplTest {
     public void brukerUtenAnsvarligEnhetTilgangssjekkesPaaTomStreng() {
         when(personKjerneinfoServiceBi.hentKjerneinformasjon(any())).thenReturn(mockPersonUtenAnsvarligEnhet());
         when(oppgaveBehandlingService.plukkOppgaverFraGsak(Temagruppe.ARBD, SAKSBEHANDLERS_VALGTE_ENHET)).thenReturn(singletonList(new Oppgave("1", "fnr", "1")));
-        when(pep.hasAccess(any(PolicyRequest.class))).thenReturn(true);
-        ArgumentCaptor<PolicyRequest> argumentCaptor = ArgumentCaptor.forClass(PolicyRequest.class);
+        when(tilgangskontrollContext.harSaksbehandlerRolle("0000-ga-bd06_modiagenerelltilgang")).thenReturn(true);
 
         List<Oppgave> oppgave = plukkOppgaveService.plukkOppgaver(Temagruppe.ARBD, SAKSBEHANDLERS_VALGTE_ENHET);
-        verify(pep, times(2)).hasAccess(argumentCaptor.capture());
-        PolicyRequest policyRequestAnsvarligEnhet = argumentCaptor.getAllValues().get(1);
-        String attributeValue = getAttributeValue(policyRequestAnsvarligEnhet);
 
         assertThat(oppgave.isEmpty(), is(false));
-        assertThat(attributeValue, is(""));
     }
 
     private HentKjerneinformasjonResponse mockPersonUtenAnsvarligEnhet() {
@@ -142,13 +136,6 @@ public class PlukkOppgaveServiceImplTest {
         person.setPersonfakta(personfakta);
         hentKjerneinformasjonResponse.setPerson(person);
         return hentKjerneinformasjonResponse;
-    }
-
-    private String getAttributeValue(PolicyRequest policyRequestAnsvarligEnhet) {
-        return policyRequestAnsvarligEnhet.getAttributes().stream()
-                .filter(attribute -> attribute.getAttributeId().getURN().equals(ATTRIBUTT_ID_ANSVARLIG_ENHET))
-                .findFirst().orElseThrow(IllegalStateException::new)
-                .getAttributeValue().getValue().toString();
     }
 
 }

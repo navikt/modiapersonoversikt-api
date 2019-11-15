@@ -7,16 +7,10 @@ import no.nav.tjeneste.virksomhet.innsynjournal.v2.meldinger.IdentifiserJournalp
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import javax.inject.Inject;
 
-import static java.lang.System.setProperty;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.joark.InnsynJournalEndpointConfig.INNSYN_JOURNAL_V2_URL;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.joark.InnsynJournalEndpointConfig.START_JOARK_WITHMOCK;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.MockUtil.TILLATMOCKSETUP_PROPERTY;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
@@ -24,8 +18,6 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 
-@ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = {InnsynJournalEndpointConfig.class})
 public class InnsynJournalCacheTest extends CacheTest {
 
     private static final String INNSYN_CACHE = "innsynJournalCache";
@@ -33,7 +25,6 @@ public class InnsynJournalCacheTest extends CacheTest {
     public static final String JOURNALPOST_ID_2 = "4444";
     public static final String BEHANDLINGS_ID_1 = "1111";
     public static final String BEHANDLINGS_ID_2 = "2222";
-
 
 
     public InnsynJournalCacheTest() {
@@ -45,9 +36,7 @@ public class InnsynJournalCacheTest extends CacheTest {
 
     @BeforeAll
     public static void setUp() {
-        setProperty(START_JOARK_WITHMOCK, "true");
-        setProperty(TILLATMOCKSETUP_PROPERTY, "true");
-        setProperty(INNSYN_JOURNAL_V2_URL, "url");
+        System.setProperty(INNSYN_JOURNAL_V2_URL, "url");
     }
 
     @BeforeEach
@@ -63,7 +52,7 @@ public class InnsynJournalCacheTest extends CacheTest {
 
 
     @Test
-    void toKallTilIdentifiserJournalPostMedSammeDataGirBareEttKall() throws Exception{
+    void toKallTilIdentifiserJournalPostMedSammeDataGirBareEttKall() throws Exception {
         IdentifiserJournalpostRequest identifiserJournalpostRequest = new IdentifiserJournalpostRequest().withKanalReferanseId(BEHANDLINGS_ID_1);
 
         IdentifiserJournalpostResponse response1 = innsynJournalV2.identifiserJournalpost(identifiserJournalpostRequest);
@@ -77,7 +66,7 @@ public class InnsynJournalCacheTest extends CacheTest {
     }
 
     @Test
-    void toKallTilIdentifiserJournalPostMedForskjelligDataGirToKall() throws Exception{
+    void toKallTilIdentifiserJournalPostMedForskjelligDataGirToKall() throws Exception {
         IdentifiserJournalpostRequest identifiserJournalpostRequest1 = new IdentifiserJournalpostRequest().withKanalReferanseId(BEHANDLINGS_ID_1);
         IdentifiserJournalpostRequest identifiserJournalpostRequest2 = new IdentifiserJournalpostRequest().withKanalReferanseId(BEHANDLINGS_ID_2);
 

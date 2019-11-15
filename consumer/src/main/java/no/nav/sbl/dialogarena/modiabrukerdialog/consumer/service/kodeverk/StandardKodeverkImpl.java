@@ -3,6 +3,7 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.kodeverk;
 import no.nav.modig.common.MDCOperations;
 import no.nav.modig.core.exception.SystemException;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.kodeverk.StandardKodeverk;
+import no.nav.sbl.util.EnvironmentUtils;
 import no.nav.tjeneste.virksomhet.kodeverk.v2.HentKodeverkHentKodeverkKodeverkIkkeFunnet;
 import no.nav.tjeneste.virksomhet.kodeverk.v2.KodeverkPortType;
 import no.nav.tjeneste.virksomhet.kodeverk.v2.informasjon.*;
@@ -65,7 +66,7 @@ public class StandardKodeverkImpl implements StandardKodeverk {
     @PostConstruct
     public void initKodeverk() {
         if (brukerprofilDataDirectory == null || brukerprofilDataDirectory.getName().startsWith("${")) {
-            brukerprofilDataDirectory = new File(System.getProperty("java.io.tmpdir"));
+            brukerprofilDataDirectory = new File(EnvironmentUtils.getRequiredProperty("java.io.tmpdir"));
             logger.warn("Definer property 'modiabrukerdialog.datadir' for å aktivere fallback for kodeverk dersom tjenesten går ned");
         }
         if (brukerprofilDataDirectory != null) {

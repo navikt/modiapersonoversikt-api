@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.oppgavebehandling;
 
+import no.nav.common.auth.SubjectHandler;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.AnsattEnhet;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.LeggTilbakeOppgaveIGsakRequest;
@@ -11,7 +12,7 @@ import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.LagreOppgaveOptimistiskLa
 import javax.ws.rs.ForbiddenException;
 import java.util.List;
 
-import static java.util.stream.Collectors.toList;import static no.nav.brukerdialog.security.context.SubjectHandler.getSubjectHandler;
+import static java.util.stream.Collectors.toList;
 
 class LeggTilbakeOppgaveIGsakDelegate {
 
@@ -36,7 +37,7 @@ class LeggTilbakeOppgaveIGsakDelegate {
     }
 
     private void validerTilgang(WSOppgave oppgaveFraGsak) {
-        String innloggetSaksbehandler = getSubjectHandler().getUid();
+        String innloggetSaksbehandler = SubjectHandler.getIdent().orElseThrow(() -> new RuntimeException("Fant ikke ident"));
         if (!innloggetSaksbehandler.equals(oppgaveFraGsak.getAnsvarligId())) {
             String feilmelding = "Innlogget saksbehandler " + innloggetSaksbehandler
                     + " har ikke tilgang til oppgave " + oppgaveFraGsak.getOppgaveId()

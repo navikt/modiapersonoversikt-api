@@ -6,21 +6,15 @@ import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.meldinger.WSHentHenven
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.meldinger.WSHentHenvendelseResponse;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import javax.inject.Inject;
 
 import static no.nav.modig.testcertificates.TestCertificates.setupKeyAndTrustStore;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.MockUtil.TILLATMOCKSETUP_PROPERTY;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
-@ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = {HenvendelseEndpointCacheTestConfig.class})
 public class HenvendelseEndpointCacheTest extends CacheTest {
 
     public static final String CACHE_NAME = "endpointCache";
@@ -34,7 +28,6 @@ public class HenvendelseEndpointCacheTest extends CacheTest {
 
     @BeforeAll
     public static void setup() {
-        System.setProperty(TILLATMOCKSETUP_PROPERTY, "true");
         setupKeyAndTrustStore();
     }
 

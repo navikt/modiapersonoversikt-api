@@ -15,8 +15,10 @@ import java.util.Collections;
 import static junit.framework.TestCase.fail;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.Baksystem.JOARK;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
-import static org.mockito.Matchers.any;
+import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.core.IsNull.nullValue;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 

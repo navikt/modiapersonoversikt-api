@@ -20,45 +20,29 @@
     </properties>
 
     <dependencies>
+
         <dependency>
-            <groupId>no.nav.dialogarena</groupId>
+            <groupId>no.nav.common</groupId>
+            <artifactId>api-app</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>no.nav.common</groupId>
             <artifactId>oidc-security</artifactId>
         </dependency>
         <dependency>
-            <groupId>no.nav.dialogarena</groupId>
+            <groupId>no.nav.common</groupId>
             <artifactId>oidc-security</artifactId>
             <scope>test</scope>
             <type>test-jar</type>
         </dependency>
         <dependency>
-            <groupId>no.nav.sbl.dialogarena</groupId>
+            <groupId>no.nav.common</groupId>
             <artifactId>test-config</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.picketbox</groupId>
-            <artifactId>picketbox</artifactId>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.geronimo.components</groupId>
-            <artifactId>geronimo-jaspi</artifactId>
-            <version>2.0.0</version>
-            <scope>test</scope>
         </dependency>
         <!--Interne-->
         <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>modiabrukerdialog-consumer</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>modiabrukerdialog-pep</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>no.nav.sbl.dialogarena</groupId>
-            <artifactId>reactkomponenter</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
@@ -83,78 +67,46 @@
             <artifactId>modia-saksoversikt</artifactId>
             <version>${project.version}</version>
         </dependency>
-
-        <!--Personsok-->
         <dependency>
-            <groupId>no.nav</groupId>
-            <artifactId>personsok-panel</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>no.nav</groupId>
-            <artifactId>personsok-search</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>no.nav</groupId>
-            <artifactId>personsok-result</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>no.nav</groupId>
+            <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>personsok-consumer</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>no.nav.sbl.dialogarena</groupId>
+            <artifactId>tilgangskontroll</artifactId>
+            <version>${project.version}</version>
+            <scope>test</scope>
+            <type>test-jar</type>
         </dependency>
 
         <!--Kontrakter-->
         <dependency>
-            <groupId>no.nav</groupId>
-            <artifactId>kontrakter-panel</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>no.nav</groupId>
+            <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>kontrakter-consumer</artifactId>
         </dependency>
 
         <!--Kjerneinfo-->
         <dependency>
-            <groupId>no.nav</groupId>
-            <artifactId>kjerneinfo-panel</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>no.nav</groupId>
+            <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>kjerneinfo-consumer</artifactId>
         </dependency>
         <dependency>
-            <groupId>no.nav</groupId>
+            <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>kjerneinfo-domain</artifactId>
         </dependency>
         <dependency>
-            <groupId>no.nav</groupId>
-            <artifactId>fellessystemer-components</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>no.nav</groupId>
+            <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>dkif-consumer</artifactId>
         </dependency>
 
         <!--Sykmeldingsperioder-->
         <dependency>
-            <groupId>no.nav</groupId>
-            <artifactId>sykmeldingsperioder-panel</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>no.nav</groupId>
+            <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>sykmeldingsperioder-consumer</artifactId>
         </dependency>
 
-        <!--Brukerprofil-->
-        <dependency>
-            <groupId>no.nav</groupId>
-            <artifactId>brukerprofil-panel</artifactId>
-        </dependency>
-
         <!--Dialogarena-->
-        <dependency>
-            <groupId>no.nav.sbl.dialogarena</groupId>
-            <artifactId>common-time</artifactId>
-        </dependency>
         <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>modia-utbetalinger</artifactId>
@@ -166,60 +118,8 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>no.nav.sbl.dialogarena</groupId>
-            <artifactId>common-test</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>no.nav.sbl.dialogarena</groupId>
-            <artifactId>common-jetty</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.eclipse.jetty</groupId>
-            <artifactId>jetty-jaas</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>no.nav.modig</groupId>
-            <artifactId>modia-felleskomponenter</artifactId>
-        </dependency>
-        <!--Modig-->
-        <dependency>
-            <groupId>no.nav.modig</groupId>
-            <artifactId>modig-core</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>no.nav.modig</groupId>
-            <artifactId>modig-wicket</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>no.nav.modig</groupId>
-                    <artifactId>modig-content</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>no.nav.modig</groupId>
-            <artifactId>modig-frontend-wicket</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>no.nav.modig</groupId>
-            <artifactId>modig-log-filter</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>no.nav.modig</groupId>
-            <artifactId>modig-testcertificates</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>no.nav.modig</groupId>
-            <artifactId>modig-core-test</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>no.nav.modig</groupId>
-            <artifactId>modig-wicket-test</artifactId>
+            <groupId>no.nav.common</groupId>
+            <artifactId>test</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -227,33 +127,7 @@
             <artifactId>modig-content-no-enonic</artifactId>
         </dependency>
 
-        <!--Wicket-->
-        <dependency>
-            <groupId>org.apache.wicket</groupId>
-            <artifactId>wicket-core</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.wicket</groupId>
-            <artifactId>wicket-request</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.wicket</groupId>
-            <artifactId>wicket-util</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.wicket</groupId>
-            <artifactId>wicket-spring</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.wicket</groupId>
-            <artifactId>wicket-extensions</artifactId>
-        </dependency>
-
         <!-- Spring -->
-        <dependency>
-            <groupId>cglib</groupId>
-            <artifactId>cglib</artifactId>
-        </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-context</artifactId>
@@ -270,11 +144,6 @@
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
-            <artifactId>spring-expression</artifactId>
-            <scope>runtime</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
             <artifactId>spring-aop</artifactId>
             <scope>runtime</scope>
         </dependency>
@@ -285,14 +154,6 @@
         </dependency>
 
         <!--Jersey-->
-        <dependency>
-            <groupId>org.glassfish.jersey.ext</groupId>
-            <artifactId>jersey-spring3</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.glassfish.jersey.core</groupId>
-            <artifactId>jersey-server</artifactId>
-        </dependency>
         <dependency>
             <groupId>javax.ws.rs</groupId>
             <artifactId>javax.ws.rs-api</artifactId>
@@ -336,6 +197,7 @@
         <dependency>
             <groupId>com.spotify</groupId>
             <artifactId>logging</artifactId>
+            <scope>runtime</scope>
         </dependency>
 
         <!-- Denne må være her på grunn av classloading på JBoss -->
@@ -349,7 +211,6 @@
         <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>javax.servlet-api</artifactId>
-            <scope>provided</scope>
         </dependency>
 
         <dependency>
@@ -358,19 +219,8 @@
         </dependency>
 
         <dependency>
-            <groupId>net.sourceforge.collections</groupId>
-            <artifactId>collections-generic</artifactId>
-        </dependency>
-
-        <dependency>
             <groupId>javax.inject</groupId>
             <artifactId>javax.inject</artifactId>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-lang3</artifactId>
         </dependency>
 
         <!--Testing-->
@@ -391,7 +241,7 @@
         </dependency>
         <dependency>
             <groupId>org.junit.platform</groupId>
-            <artifactId>junit-platform-engine</artifactId>
+            <artifactId>junit-platform-launcher</artifactId>
             <scope>test</scope>
         </dependency>
 
@@ -403,16 +253,19 @@
             <groupId>org.hamcrest</groupId>
             <artifactId>hamcrest-library</artifactId>
         </dependency>
-        <dependency>
-            <!-- Må være compile scope grunnet avhengighet til mock-modul -->
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-core</artifactId>
-        </dependency>
 
         <!-- Kotlin -->
         <dependency>
             <groupId>org.jetbrains.kotlin</groupId>
+            <artifactId>kotlin-stdlib</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.jetbrains.kotlin</groupId>
             <artifactId>kotlin-stdlib-jdk8</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.jetbrains.kotlin</groupId>
+            <artifactId>kotlin-reflect</artifactId>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.module</groupId>
@@ -429,11 +282,10 @@
             <scope>test</scope>
         </dependency>
 
-        <!-- Unleash -->
         <dependency>
-            <groupId>no.finn.unleash</groupId>
-            <artifactId>unleash-client-java</artifactId>
-            <version>${unleash.version}</version>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <scope>compile</scope>
         </dependency>
 
         <dependency>

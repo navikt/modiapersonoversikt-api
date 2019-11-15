@@ -3,7 +3,6 @@ package no.nav.sbl.dialogarena.sporsmalogsvar.config;
 import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navansatt.GOSYSNAVansatt;
 import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navorgenhet.GOSYSNAVOrgEnhet;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import no.nav.brukerdialog.security.tilgangskontroll.policy.pep.EnforcementPoint;
 import no.nav.kjerneinfo.consumer.fim.person.PersonKjerneinfoServiceBi;
 import no.nav.modig.common.SporingsLogger;
 import no.nav.modig.content.ContentRetriever;
@@ -16,7 +15,8 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.kodeverk.StandardKod
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.ldap.LDAPService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.AnsattService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.organisasjonsEnhetV2.OrganisasjonEnhetV2Service;
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
+import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Tilgangskontroll;
+import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.TilgangskontrollMock;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.GsakService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.henvendelse.HenvendelseBehandlingService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.henvendelse.domain.Meldinger;
@@ -32,7 +32,7 @@ import org.springframework.context.annotation.Configuration;
 import javax.inject.Named;
 
 import static java.util.Arrays.asList;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.TestUtils.opprettMeldingEksempel;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.legacy.TestUtils.opprettMeldingEksempel;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -130,22 +130,14 @@ public class MockServiceTestContext {
     }
 
     @Bean
-    public SaksbehandlerInnstillingerService saksbehandlerInnstillingerService() {
-        SaksbehandlerInnstillingerService mock = mock(SaksbehandlerInnstillingerService.class);
-        when(mock.getSaksbehandlerValgtEnhet()).thenReturn("0118");
-        return mock;
-    }
-
-    @Bean
     public OrganisasjonEnhetV2Service organisasjonEnhetV2Service() {
         OrganisasjonEnhetV2Service organisasjonEnhetService = mock(OrganisasjonEnhetV2Service.class);
         when(organisasjonEnhetService.hentAlleEnheter(OrganisasjonEnhetV2Service.WSOppgavebehandlerfilter.KUN_OPPGAVEBEHANDLERE)).thenReturn(asList(new AnsattEnhet("1231", "Sinsen", "AKTIV")));
         return organisasjonEnhetService;
     }
 
-    @Bean(name = "pep")
-    public EnforcementPoint enforcementPoint() {
-        return mock(EnforcementPoint.class);
+    public Tilgangskontroll tilgangskontroll() {
+        return TilgangskontrollMock.get();
     }
 
     @Bean

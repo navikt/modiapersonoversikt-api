@@ -7,34 +7,27 @@ import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navansatt.HentNAVAnsattFaultGOSYSNA
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.util.CacheTest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.test.context.support.AnnotationConfigContextLoader;
 
 import javax.inject.Inject;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
-import static org.mockito.Mockito.mock;
 
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(loader = AnnotationConfigContextLoader.class)
-public class NAVAnsattEndpointCacheTest extends CacheTest {
+class NAVAnsattEndpointCacheTest extends CacheTest {
 
-    public static final String CACHE_NAME = "asbogosysAnsatt";
+    private static final String CACHE_NAME = "asbogosysAnsatt";
 
     @Inject
     private GOSYSNAVansatt ansattWS;
 
-    public NAVAnsattEndpointCacheTest() {
+    NAVAnsattEndpointCacheTest() {
         super(CACHE_NAME);
     }
-
-
+    
     @Test
-    public void cacheManagerHarEntryForEndpointCacheEtterKallTilAnsattWS() throws HentNAVAnsattFaultGOSYSGeneriskfMsg, HentNAVAnsattFaultGOSYSNAVAnsattIkkeFunnetMsg {
+    void cacheManagerHarEntryForEndpointCacheEtterKallTilAnsattWS() throws HentNAVAnsattFaultGOSYSGeneriskfMsg, HentNAVAnsattFaultGOSYSNAVAnsattIkkeFunnetMsg {
         ASBOGOSYSNAVAnsatt req1 = new ASBOGOSYSNAVAnsatt();
         req1.setAnsattId("1");
         ASBOGOSYSNAVAnsatt req2 = new ASBOGOSYSNAVAnsatt();
@@ -48,16 +41,4 @@ public class NAVAnsattEndpointCacheTest extends CacheTest {
         assertThat(getCache().getName(), is("asbogosysAnsatt"));
         assertThat(getCache().getKeys().size(), is(2));
     }
-
-    @Configuration
-    static class ContextConfiguration {
-
-        @Bean
-        public GOSYSNAVansatt gosysNavAnsatt() {
-            return mock(GOSYSNAVansatt.class);
-        }
-
-
-    }
-
 }

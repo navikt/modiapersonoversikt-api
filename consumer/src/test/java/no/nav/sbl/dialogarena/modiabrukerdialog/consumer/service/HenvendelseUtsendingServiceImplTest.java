@@ -1,9 +1,5 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service;
 
-import no.nav.brukerdialog.security.context.StaticSubjectHandler;
-import no.nav.brukerdialog.security.tilgangskontroll.policy.pep.EnforcementPoint;
-import no.nav.brukerdialog.security.tilgangskontroll.policy.request.PolicyRequest;
-import no.nav.brukerdialog.security.tilgangskontroll.policy.request.attributes.ActionId;
 import no.nav.kjerneinfo.consumer.fim.person.PersonKjerneinfoServiceBi;
 import no.nav.kjerneinfo.consumer.fim.person.to.HentKjerneinformasjonRequest;
 import no.nav.kjerneinfo.consumer.fim.person.to.HentKjerneinformasjonResponse;
@@ -22,19 +18,31 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveBehandlingSer
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.gsak.SakerService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.ldap.LDAPService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.AnsattService;
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.cache.CacheTestUtil;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.http.SubjectHandlerUtil;
+import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Tilgangskontroll;
+import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.TilgangskontrollContext;
+import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.TilgangskontrollMock;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.behandlehenvendelse.BehandleHenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.senduthenvendelse.SendUtHenvendelsePortType;
-import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.senduthenvendelse.meldinger.*;
+import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.senduthenvendelse.meldinger.WSFerdigstillHenvendelseRequest;
+import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.senduthenvendelse.meldinger.WSSendUtHenvendelseRequest;
+import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.senduthenvendelse.meldinger.WSSendUtHenvendelseResponse;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.henvendelse.HenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.meldinger.WSHentHenvendelseListeRequest;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.meldinger.WSHentHenvendelseListeResponse;
 import org.hamcrest.Matchers;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.joda.time.DateTime;
-import org.junit.jupiter.api.*;
-import org.mockito.*;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 
 import java.util.*;
 
@@ -45,12 +53,11 @@ import static org.hamcrest.Matchers.*;
 import static org.joda.time.DateTime.now;
 import static org.junit.Assert.assertThat;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyList;
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
 
-public class HenvendelseUtsendingServiceImplTest {
+class HenvendelseUtsendingServiceImplTest {
 
     private static final String BEHANDLINGS_ID = "ID_1";
     private static final String FNR = "fnr";
@@ -66,42 +73,34 @@ public class HenvendelseUtsendingServiceImplTest {
     private static final String SAKSBEHANDLERS_VALGTE_ENHET = "4300";
     private static final String SAKSBEHANDLERS_IDENT = "z123456";
 
-    @Captor
-    private ArgumentCaptor<WSSendUtHenvendelseRequest> wsSendHenvendelseRequestCaptor;
-    @Captor
-    private ArgumentCaptor<WSHentHenvendelseListeRequest> hentHenvendelseListeRequestCaptor;
-    @Captor
-    private ArgumentCaptor<WSFerdigstillHenvendelseRequest> wsFerdigstillHenvendelseRequestCaptor;
-    @Captor
-    private ArgumentCaptor<Sak> sakArgumentCaptor;
-    @Captor
-    private ArgumentCaptor<String> stringArgumentCaptor;
+    private ArgumentCaptor<WSSendUtHenvendelseRequest> wsSendHenvendelseRequestCaptor = ArgumentCaptor.forClass(WSSendUtHenvendelseRequest.class);
+    private ArgumentCaptor<WSHentHenvendelseListeRequest> hentHenvendelseListeRequestCaptor = ArgumentCaptor.forClass(WSHentHenvendelseListeRequest.class);
+    private ArgumentCaptor<WSFerdigstillHenvendelseRequest> wsFerdigstillHenvendelseRequestCaptor = ArgumentCaptor.forClass(WSFerdigstillHenvendelseRequest.class);
+    private ArgumentCaptor<Sak> sakArgumentCaptor = ArgumentCaptor.forClass(Sak.class);
+    private ArgumentCaptor<String> stringArgumentCaptor = ArgumentCaptor.forClass(String.class);
 
-    @Mock
-    private SakerService sakerService;
-    @Mock
-    private OppgaveBehandlingService oppgaveBehandlingService;
-    @Mock
-    public SaksbehandlerInnstillingerService saksbehandlerInnstillingerService;
-    @Mock
-    public AnsattService ansattWS;
-    @Mock
-    public ContentRetriever propertyResolver;
-    @Mock
-    private EnforcementPoint pep;
-    @Mock
-    private HenvendelsePortType henvendelsePortType;
-    @Mock
-    private SendUtHenvendelsePortType sendUtHenvendelsePortType;
-    @Mock
-    private BehandleHenvendelsePortType behandleHenvendelsePortType;
-    @Mock
-    private PersonKjerneinfoServiceBi kjerneinfo;
-    @Mock
-    private LDAPService ldapService;
+    private SakerService sakerService = mock(SakerService.class);
+    private OppgaveBehandlingService oppgaveBehandlingService = mock(OppgaveBehandlingService.class);
+    private ContentRetriever propertyResolver = mock(ContentRetriever.class);
+    private TilgangskontrollContext tilgangskontrollContext = mock(TilgangskontrollContext.class);
+    private Tilgangskontroll tilgangskontroll = new Tilgangskontroll(tilgangskontrollContext);
+    private HenvendelsePortType henvendelsePortType = mock(HenvendelsePortType.class);
+    private SendUtHenvendelsePortType sendUtHenvendelsePortType = mock(SendUtHenvendelsePortType.class);
+    private BehandleHenvendelsePortType behandleHenvendelsePortType = mock(BehandleHenvendelsePortType.class);
+    private PersonKjerneinfoServiceBi kjerneinfo = mock(PersonKjerneinfoServiceBi.class);
+    private LDAPService ldapService = mock(LDAPService.class);
 
-    @InjectMocks
-    private HenvendelseUtsendingServiceImpl henvendelseUtsendingService;
+    private HenvendelseUtsendingServiceImpl henvendelseUtsendingService = new HenvendelseUtsendingServiceImpl(
+            henvendelsePortType,
+            sendUtHenvendelsePortType,
+            behandleHenvendelsePortType,
+            oppgaveBehandlingService,
+            sakerService,
+            tilgangskontroll,
+            propertyResolver,
+            kjerneinfo,
+            ldapService
+    );
 
     @BeforeAll
     static void beforeClass() {
@@ -115,9 +114,6 @@ public class HenvendelseUtsendingServiceImplTest {
 
     @BeforeEach
     void init() {
-        initMocks(this);
-        SubjectHandlerUtil.setInnloggetSaksbehandler(SAKSBEHANDLERS_IDENT);
-
         when(sendUtHenvendelsePortType.sendUtHenvendelse(any(WSSendUtHenvendelseRequest.class))).thenReturn(
                 new WSSendUtHenvendelseResponse().withBehandlingsId(BEHANDLINGS_ID)
         );
@@ -137,7 +133,6 @@ public class HenvendelseUtsendingServiceImplTest {
 
     @Test
     void henterSporsmal() {
-        System.setProperty(StaticSubjectHandler.SUBJECTHANDLER_KEY, StaticSubjectHandler.class.getName());
         when(henvendelsePortType.hentHenvendelseListe(any(WSHentHenvendelseListeRequest.class))).thenReturn(mockWSHentHenvendelseResponse());
 
         Melding sporsmal = henvendelseUtsendingService.hentTraad("fnr", TRAAD_ID, SAKSBEHANDLERS_VALGTE_ENHET).get(0);
@@ -311,9 +306,10 @@ public class HenvendelseUtsendingServiceImplTest {
     void skalHenteTraadMedBlankFritekstOmManIkkeHarTilgang() {
         WSHentHenvendelseListeResponse resp =
                 new WSHentHenvendelseListeResponse().withAny(createTraadMedJournalfortTemaGruppe(TRAAD_ID, JOURNALFORT_TEMA).toArray());
+        ((XMLHenvendelse)resp.getAny().get(1)).getJournalfortInformasjon().setJournalfortTema("Noe annet");
 
         when(henvendelsePortType.hentHenvendelseListe(any(WSHentHenvendelseListeRequest.class))).thenReturn(resp);
-        when(pep.hasAccess(any(PolicyRequest.class))).thenReturn(false).thenReturn(false).thenReturn(true);
+        when(tilgangskontrollContext.hentTemagrupperForSaksbehandler(anyString())).thenReturn(new TreeSet<>(asList(JOURNALFORT_TEMA)));
 
         List<Melding> traad = henvendelseUtsendingService.hentTraad(FNR, TRAAD_ID, SAKSBEHANDLERS_VALGTE_ENHET);
 
@@ -394,8 +390,6 @@ public class HenvendelseUtsendingServiceImplTest {
 
     @Test
     void sjekkerTilgangPaaOkonomiskSosialhjelp() {
-        String valgtEnhet = "1234";
-        when(saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet()).thenReturn(valgtEnhet);
         when(henvendelsePortType.hentHenvendelseListe(any(WSHentHenvendelseListeRequest.class))).thenReturn(new WSHentHenvendelseListeResponse().withAny(
                 new XMLHenvendelse()
                         .withBehandlingsId(TRAAD_ID)
@@ -407,19 +401,9 @@ public class HenvendelseUtsendingServiceImplTest {
                         .withMetadataListe(new XMLMetadataListe().withMetadata(
                                 new XMLMeldingFraBruker().withFritekst(FRITEKST).withTemagruppe(TEMAGRUPPE)))
         ));
+        when(tilgangskontrollContext.harSaksbehandlerRolle(anyString())).thenReturn(true);
 
         henvendelseUtsendingService.hentTraad(FNR, TRAAD_ID, SAKSBEHANDLERS_VALGTE_ENHET);
-        ArgumentCaptor<PolicyRequest> captor = ArgumentCaptor.forClass(PolicyRequest.class);
-        verify(pep).assertAccess(captor.capture());
-
-        PolicyRequest policyRequest = captor.getValue();
-        ActionId actionId = policyRequest.getAttributes().stream()
-                .filter(ActionId.class::isInstance)
-                .map(o -> (ActionId) o)
-                .findFirst()
-                .get();
-
-        assertThat(actionId.getAttributeValue().getValue(), is("oksos"));
     }
 
     private Fritekst mockFritekst() {

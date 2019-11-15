@@ -17,10 +17,6 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import javax.inject.Inject;
 
-import static java.lang.System.setProperty;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.artifact.kjerneinfo.component.mockable.MockableContext.KJERNEINFO_KEY;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.MockUtil.ALLOW_MOCK;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.MockUtil.TILLATMOCKSETUP_PROPERTY;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -47,20 +43,9 @@ public class SykmeldingsperioderPanelConfigResolverTest {
     @Inject
     private SykmeldingsperioderPanelConfigResolver resolver;
 
-    @Disabled
-    @Test
-    public void medMockSlaattPaaSkalIkkeProdkodeEksekveres() {
-        setProperty(TILLATMOCKSETUP_PROPERTY, "true");
-        setProperty(KJERNEINFO_KEY, ALLOW_MOCK);
-        resolver.sykepengerWidgetService().getWidgetContent("");
-        verifyZeroInteractions(sykepengerServiceDefault.wrappedObject);
-    }
-
 //    @Ignore //trenger endring på SykepengerWidgetServiceImpl som må fjerne @Inject
 //    @Test
     public void perDefaultSkalProdkodeEksekveres() {
-        setProperty(TILLATMOCKSETUP_PROPERTY, "false");
-        resolver.sykepengerWidgetService().getWidgetContent("");
         verify(sykepengerServiceDefault.wrappedObject, times(1)).hentSykmeldingsperioder(any(SykepengerRequest.class));
     }
 

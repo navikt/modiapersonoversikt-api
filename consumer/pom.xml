@@ -17,12 +17,15 @@
         in the parent pom and in each module pom. Then JaCoCo will add up information in the
         same report, so that, it will give the cross-module code coverage. -->
         <sonar.jacoco.reportPath>${project.basedir}/../target/jacoco-ut.exec</sonar.jacoco.reportPath>
-        <jackson.version>2.9.7</jackson.version>
     </properties>
 
     <dependencies>
         <dependency>
-            <groupId>no.nav.dialogarena</groupId>
+            <groupId>no.nav.common</groupId>
+            <artifactId>oidc-security</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>no.nav.common</groupId>
             <artifactId>oidc-security</artifactId>
             <scope>test</scope>
             <type>test-jar</type>
@@ -34,14 +37,21 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>modiabrukerdialog-pip</artifactId>
+            <groupId>no.nav.sbl.dialogarena</groupId>
+            <artifactId>modiabrukerdialog-api</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>
-            <artifactId>modiabrukerdialog-api</artifactId>
+            <artifactId>tilgangskontroll</artifactId>
             <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>no.nav.sbl.dialogarena</groupId>
+            <artifactId>tilgangskontroll</artifactId>
+            <version>${project.version}</version>
+            <type>test-jar</type>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>
@@ -50,76 +60,57 @@
             <type>test-jar</type>
             <scope>test</scope>
         </dependency>
-
         <dependency>
-            <groupId>org.glassfish.jersey.core</groupId>
-            <artifactId>jersey-common</artifactId>
-            <scope>runtime</scope>
-        </dependency>
-
-        <!--Personsok-->
-        <dependency>
-            <groupId>no.nav</groupId>
+            <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>personsok-consumer</artifactId>
+            <version>${project.version}</version>
         </dependency>
 
         <!--Kontrakter-->
         <dependency>
-            <groupId>no.nav</groupId>
+            <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>kontrakter-consumer</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>no.nav</groupId>
-            <artifactId>kontrakter-panel</artifactId>
         </dependency>
 
         <!--Kjerneinfo-->
         <dependency>
-            <groupId>no.nav</groupId>
+            <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>kjerneinfo-consumer</artifactId>
         </dependency>
         <dependency>
-            <groupId>no.nav</groupId>
+            <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>kjerneinfo-common</artifactId>
         </dependency>
         <dependency>
-            <groupId>no.nav</groupId>
+            <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>kjerneinfo-domain</artifactId>
         </dependency>
 
         <!--Sykmeldingsperioder-->
         <dependency>
-            <groupId>no.nav</groupId>
-            <artifactId>sykmeldingsperioder-panel</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>no.nav</groupId>
+            <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>sykmeldingsperioder-consumer</artifactId>
         </dependency>
 
         <dependency>
-            <groupId>no.nav</groupId>
+            <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>behandlebrukerprofil-consumer</artifactId>
         </dependency>
         <dependency>
-            <groupId>no.nav</groupId>
-            <artifactId>brukerprofil-panel</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>no.nav</groupId>
+            <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>brukerprofil-domain</artifactId>
         </dependency>
 
         <!-- Dkif -->
         <dependency>
-            <groupId>no.nav</groupId>
+            <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>dkif-consumer</artifactId>
         </dependency>
 
 
         <!--Kodeverk-->
         <dependency>
-            <groupId>no.nav</groupId>
+            <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>kodeverk-consumer</artifactId>
         </dependency>
 
@@ -181,10 +172,6 @@
             <classifier>jaxws</classifier>
         </dependency>
         <dependency>
-            <groupId>no.nav.tjenester</groupId>
-            <artifactId>person-api-oppslag-v1</artifactId>
-        </dependency>
-        <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>send-ut-henvendelse</artifactId>
         </dependency>
@@ -197,12 +184,12 @@
             <artifactId>arena-arbeid-og-aktivitet</artifactId>
         </dependency>
         <dependency>
-            <groupId>no.nav.modig</groupId>
+            <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>modia-felleskomponenter</artifactId>
         </dependency>
         <dependency>
-            <groupId>no.nav.sbl.dialogarena</groupId>
-            <artifactId>common-test</artifactId>
+            <groupId>no.nav.common</groupId>
+            <artifactId>test</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -212,10 +199,6 @@
         <dependency>
             <groupId>no.nav.sbl</groupId>
             <artifactId>dkif-tjenestespesifikasjon</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>no.nav.sbl.dialogarena</groupId>
-            <artifactId>varsler</artifactId>
         </dependency>
         <dependency>
             <groupId>no.nav.sbl</groupId>
@@ -249,8 +232,8 @@
             <artifactId>dialogarena-behandlingsinformasjon</artifactId>
         </dependency>
         <dependency>
-            <groupId>no.nav.sbl.dialogarena</groupId>
-            <artifactId>common-cxf</artifactId>
+            <groupId>no.nav.common</groupId>
+            <artifactId>cxf</artifactId>
         </dependency>
 
         <!--Virksomhetstjenester-->
@@ -269,16 +252,6 @@
         <dependency>
             <groupId>no.nav.modig</groupId>
             <artifactId>modig-core</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>no.nav.modig</groupId>
-            <artifactId>modig-wicket</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>no.nav.modig</groupId>
-                    <artifactId>modig-content</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
         <dependency>
             <groupId>no.nav.modig</groupId>
@@ -318,23 +291,15 @@
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
+            <artifactId>spring-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
             <artifactId>spring-test</artifactId>
             <scope>test</scope>
         </dependency>
 
         <!--CXF-->
-        <dependency>
-            <groupId>org.apache.cxf</groupId>
-            <artifactId>cxf-rt-frontend-jaxws</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.cxf</groupId>
-            <artifactId>cxf-rt-transports-http</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.cxf</groupId>
-            <artifactId>cxf-rt-frontend-simple</artifactId>
-        </dependency>
         <dependency>
             <groupId>org.apache.cxf</groupId>
             <artifactId>cxf-rt-ws-security</artifactId>
@@ -344,10 +309,6 @@
         <dependency>
             <groupId>org.apache.lucene</groupId>
             <artifactId>lucene-core</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.lucene</groupId>
-            <artifactId>lucene-analyzers-common</artifactId>
         </dependency>
         <dependency>
             <groupId>org.apache.lucene</groupId>
@@ -363,41 +324,24 @@
             <groupId>org.slf4j</groupId>
             <artifactId>jul-to-slf4j</artifactId>
         </dependency>
-        <dependency>
-            <groupId>no.nav.modig</groupId>
-            <artifactId>modig-log-jaxws</artifactId>
-        </dependency>
 
         <!--Diverse-->
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-annotations</artifactId>
-            <version>${jackson.version}</version>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-core</artifactId>
-            <version>${jackson.version}</version>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
-            <version>${jackson.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.wicket</groupId>
-            <artifactId>wicket-core</artifactId>
         </dependency>
 
         <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>javax.servlet-api</artifactId>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>net.sf.ehcache</groupId>
-            <artifactId>ehcache-core</artifactId>
         </dependency>
 
         <dependency>
@@ -408,16 +352,6 @@
         <dependency>
             <groupId>net.sourceforge.collections</groupId>
             <artifactId>collections-generic</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.wss4j</groupId>
-            <artifactId>wss4j-ws-security-dom</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>javax.inject</groupId>
-            <artifactId>javax.inject</artifactId>
         </dependency>
 
         <dependency>
@@ -473,6 +407,7 @@
             <!-- Må være compile scope grunnet avhengighet til mock-modul -->
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>org.hamcrest</groupId>
@@ -493,12 +428,16 @@
             <groupId>com.fasterxml.jackson.module</groupId>
             <artifactId>jackson-module-kotlin</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.nhaarman</groupId>
+            <artifactId>mockito-kotlin</artifactId>
+            <scope>test</scope>
+        </dependency>
 
         <!-- Unleash -->
         <dependency>
             <groupId>no.finn.unleash</groupId>
             <artifactId>unleash-client-java</artifactId>
-            <version>${unleash.version}</version>
         </dependency>
 
     </dependencies>

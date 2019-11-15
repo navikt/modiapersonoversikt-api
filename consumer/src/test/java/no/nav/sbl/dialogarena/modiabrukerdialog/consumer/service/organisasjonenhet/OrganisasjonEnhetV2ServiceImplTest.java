@@ -69,7 +69,6 @@ public class OrganisasjonEnhetV2ServiceImplTest {
     @Test
     public void hentEnhetGittEnhetIdSkalReturnereTomOptionalDersomEnhetIdReturnererTomRespons() throws Exception {
         HentEnhetBolkResponse hentEnhetBolkResponse = new HentEnhetBolkResponse();
-//        hentEnhetBolkResponse.getEnhetListe().add(lagOrganisasjonsenhet("1234"));
         when(enhet.hentEnhetBolk(any(HentEnhetBolkRequest.class))).thenReturn(hentEnhetBolkResponse);
         final Optional<AnsattEnhet> enhetFraTjenesten = organisasjonEnhetServiceImpl.hentEnhetGittEnhetId("0100", OrganisasjonEnhetV2Service.WSOppgavebehandlerfilter.KUN_OPPGAVEBEHANDLERE);
         assertFalse(enhetFraTjenesten.isPresent());

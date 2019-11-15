@@ -350,7 +350,6 @@ public class TransformersTest {
         assertThat(ytelse.getMottakertype(), is(Mottakertype.BRUKER));
         assertThat(ytelse.getHovedytelsedato(), is(new DateTime(2015, 1, 2, 3, 4)));
 
-//        Aktoer utbetaltTilSomAktoer = new Aktoer().withAktoerId("123123123").withNavn("Ola Normann").withDiskresjonskode("5").withAktoerType(AktoerType.PERSON))
         assertThat(ytelse.getUtbetaltTil(), instanceOf(Aktoer.class));
         assertThat(ytelse.getUtbetaltTil().getAktoerId(), is(AKTOER_ID));
         assertThat(ytelse.getUtbetaltTil().getNavn(), is("Ola Normann"));

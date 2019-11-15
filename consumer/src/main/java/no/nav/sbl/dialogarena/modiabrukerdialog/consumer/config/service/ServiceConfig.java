@@ -1,7 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.service;
 
 import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navansatt.GOSYSNAVansatt;
-import no.nav.brukerdialog.security.tilgangskontroll.policy.pep.EnforcementPoint;
 import no.nav.dkif.consumer.support.DkifServiceImpl;
 import no.nav.kjerneinfo.consumer.fim.behandleperson.BehandlePersonServiceBi;
 import no.nav.kjerneinfo.consumer.fim.behandleperson.DefaultBehandlePersonService;
@@ -11,7 +10,6 @@ import no.nav.kjerneinfo.consumer.fim.person.support.KjerneinfoMapper;
 import no.nav.kjerneinfo.consumer.fim.person.vergemal.VergemalService;
 import no.nav.kodeverk.consumer.fim.kodeverk.KodeverkmanagerBi;
 import no.nav.modig.content.ContentRetriever;
-import no.nav.modig.wicket.services.HealthCheckService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.HenvendelseLesService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.HenvendelseUtsendingService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveBehandlingService;
@@ -20,12 +18,11 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.gsak.GsakKodeverk;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.gsak.SakerService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.kodeverk.StandardKodeverk;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.ldap.LDAPService;
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.person.PersonOppslagService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.AnsattService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.oppfolgingsinfo.OppfolgingsenhetService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.organisasjonsEnhetV2.OrganisasjonEnhetV2Service;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.person.PersonOppslagService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.psak.PsakService;
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.saksbehandler.SaksbehandlerInnstillingerService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.kodeverksmapper.Kodeverksmapper;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.*;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.arbeidsfordeling.ArbeidsfordelingV1ServiceImpl;
@@ -36,14 +33,16 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.kodeverk.Standa
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.kodeverksmapper.KodeverksmapperService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.ldap.LDAPServiceImpl;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.ldap.LdapContextProvider;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.person.PersonOppslagServiceImpl;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.oppfolgingsinfo.OppfolgingsenhetServiceImpl;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.oppgavebehandling.OppgaveBehandlingServiceImpl;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.organisasjonenhet.OrganisasjonEnhetV2ServiceImpl;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.organisasjonenhet.kontaktinformasjon.service.OrganisasjonEnhetKontaktinformasjonService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.organisasjonenhet.kontaktinformasjon.service.OrganisasjonEnhetKontaktinformasjonServiceImpl;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.person.PersonOppslagServiceImpl;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.saker.SakerServiceImpl;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.sts.StsServiceImpl;
+import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Tilgangskontroll;
+import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.TilgangskontrollUtenTPS;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.behandlehenvendelse.BehandleHenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.senduthenvendelse.SendUtHenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.henvendelse.HenvendelsePortType;
@@ -81,13 +80,13 @@ public class ServiceConfig {
                                                                    BehandleHenvendelsePortType behandleHenvendelsePortType,
                                                                    OppgaveBehandlingService oppgaveBehandlingService,
                                                                    SakerService sakerService,
-                                                                   @Named("pep") EnforcementPoint pep,
+                                                                   Tilgangskontroll tilgangskontroll,
                                                                    @Named("propertyResolver") ContentRetriever propertyResolver,
                                                                    PersonKjerneinfoServiceBi personKjerneinfoServiceBi,
                                                                    LDAPService ldapService) {
 
         return new HenvendelseUtsendingServiceImpl(henvendelsePortType, sendUtHenvendelsePortType,
-                behandleHenvendelsePortType, oppgaveBehandlingService, sakerService, pep,
+                behandleHenvendelsePortType, oppgaveBehandlingService, sakerService, tilgangskontroll,
                 propertyResolver, personKjerneinfoServiceBi, ldapService);
     }
 
@@ -132,16 +131,6 @@ public class ServiceConfig {
     }
 
     @Bean
-    public SaksbehandlerInnstillingerService saksbehandlerInnstillingerService(AnsattService ansattService) {
-        return new SaksbehandlerInnstillingerServiceImpl(ansattService);
-    }
-
-    @Bean
-    public HealthCheckService healthCheckService() {
-        return new HealthCheckService();
-    }
-
-    @Bean
     public StandardKodeverk standardKodeverk() {
         return new StandardKodeverkImpl();
     }
@@ -178,14 +167,14 @@ public class ServiceConfig {
 
     @Bean
     public OppfolgingsenhetService oppfolgingsenhetService(OppfoelgingPortType oppfoelgingPortType,
-                                                          OrganisasjonEnhetV2Service organisasjonEnhetV2Service) {
+                                                           OrganisasjonEnhetV2Service organisasjonEnhetV2Service) {
         return new OppfolgingsenhetServiceImpl(oppfoelgingPortType, organisasjonEnhetV2Service);
     }
 
     @Bean
     public PersonKjerneinfoServiceBi personKjerneinfoServiceBi(PersonV3 personPortType, KjerneinfoMapper kjerneinfoMapper,
-                                                               @Named("pep") EnforcementPoint kjerneinfoPep, OrganisasjonEnhetV2Service organisasjonEnhetV2Service) {
-        return new DefaultPersonKjerneinfoService(personPortType, kjerneinfoMapper, kjerneinfoPep, organisasjonEnhetV2Service);
+                                                               TilgangskontrollUtenTPS tilgangskontroll, OrganisasjonEnhetV2Service organisasjonEnhetV2Service) {
+        return new DefaultPersonKjerneinfoService(personPortType, kjerneinfoMapper, tilgangskontroll, organisasjonEnhetV2Service);
     }
 
     @Bean
@@ -204,8 +193,12 @@ public class ServiceConfig {
     }
 
     @Bean
-    StsServiceImpl stsService() { return new StsServiceImpl();}
+    StsServiceImpl stsService() {
+        return new StsServiceImpl();
+    }
 
     @Bean
-    PersonOppslagService personOppslagService() { return new PersonOppslagServiceImpl();}
+    PersonOppslagService personOppslagService() {
+        return new PersonOppslagServiceImpl();
+    }
 }

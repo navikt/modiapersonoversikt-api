@@ -1,7 +1,10 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.sak.service;
 
 
-import no.nav.brukerdialog.security.context.ThreadLocalSubjectHandler;
+import no.nav.brukerdialog.security.domain.IdentType;
+import no.nav.common.auth.SsoToken;
+import no.nav.common.auth.Subject;
+import no.nav.common.auth.SubjectHandler;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.AnsattEnhet;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.AnsattService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.DokumentMetadata;
@@ -15,7 +18,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.mock.web.MockHttpServletRequest;
 
 import javax.servlet.http.Cookie;
@@ -24,6 +27,7 @@ import java.util.List;
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 import static java.util.Arrays.asList;
+import static java.util.Collections.emptyMap;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.Feilmelding.*;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -31,6 +35,7 @@ import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class TilgangskontrollServiceTest {
+    private static final Subject TEST_SUBJECT = new Subject("null", IdentType.InternBruker, SsoToken.oidcToken("token", emptyMap()));
 
     @Mock
     private AnsattService ansattService;
@@ -46,8 +51,7 @@ public class TilgangskontrollServiceTest {
     private final static String TEMAKODE = "DAG";
 
     @Before
-    public void setup() throws HentAktoerIdForIdentPersonIkkeFunnet {
-        System.setProperty("no.nav.brukerdialog.security.context.subjectHandlerImplementationClass", ThreadLocalSubjectHandler.class.getName());
+    public void setup() {
         mockRequest.setCookies(lagSaksbehandlerCookie(GODKJENT_ENHET));
         HentAktoerIdForIdentResponse hentAktoerIdForIdentResponse = new HentAktoerIdForIdentResponse();
         hentAktoerIdForIdentResponse.setAktoerId(BRUKERS_IDENT);
@@ -78,7 +82,7 @@ public class TilgangskontrollServiceTest {
     public void returnererFeilmeldingSaksbehandlerHarValgtGodkjentEnhet() {
         when(ansattService.hentEnhetsliste()).thenReturn(mockEnhetsListe());
 
-        boolean harGodkjentEnhet = tilgangskontrollService.harGodkjentEnhet(mockRequest);
+        boolean harGodkjentEnhet = SubjectHandler.withSubject(TEST_SUBJECT, () -> tilgangskontrollService.harGodkjentEnhet(mockRequest));
 
         assertThat(harGodkjentEnhet, is(true));
     }
@@ -88,7 +92,7 @@ public class TilgangskontrollServiceTest {
         when(ansattService.hentEnhetsliste()).thenReturn(mockEnhetsListe());
         mockRequest.setCookies(lagSaksbehandlerCookie(ANNEN_ENHET));
 
-        boolean harGodkjentEnhet = tilgangskontrollService.harGodkjentEnhet(mockRequest);
+        boolean harGodkjentEnhet = SubjectHandler.withSubject(TEST_SUBJECT, () -> tilgangskontrollService.harGodkjentEnhet(mockRequest));
 
         assertThat(harGodkjentEnhet, is(false));
     }

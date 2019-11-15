@@ -1,6 +1,8 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v1.egenansatt;
 
-import no.nav.tjeneste.pip.egen.ansatt.v1.*;
+import no.nav.tjeneste.pip.egen.ansatt.v1.EgenAnsattV1;
+import no.nav.tjeneste.pip.egen.ansatt.v1.WSHentErEgenAnsattEllerIFamilieMedEgenAnsattRequest;
+import no.nav.tjeneste.pip.egen.ansatt.v1.WSHentErEgenAnsattEllerIFamilieMedEgenAnsattResponse;
 
 public class EgenAnsattV1Mock {
 

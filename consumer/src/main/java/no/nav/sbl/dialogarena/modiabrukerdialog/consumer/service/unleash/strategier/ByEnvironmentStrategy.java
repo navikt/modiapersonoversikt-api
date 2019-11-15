@@ -1,6 +1,7 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.strategier;
 
 import no.finn.unleash.strategy.Strategy;
+import no.nav.sbl.util.EnvironmentUtils;
 
 import java.util.Arrays;
 import java.util.Map;
@@ -9,7 +10,7 @@ import static java.util.Optional.ofNullable;
 
 public class ByEnvironmentStrategy implements Strategy {
 
-    public static final String ENVIRONMENT_PROPERTY = "environment.name";
+    public static final String ENVIRONMENT_PROPERTY = "APP_ENVIRONMENT";
 
     @Override
     public String getName() {
@@ -27,8 +28,8 @@ public class ByEnvironmentStrategy implements Strategy {
                 .orElse(false);
     }
 
-    private boolean isCurrentEnvironment(String env){
-        return System.getProperty(ENVIRONMENT_PROPERTY, "local").equals(env);
+    private boolean isCurrentEnvironment(String env) {
+        return EnvironmentUtils.getOptionalProperty(ENVIRONMENT_PROPERTY ).orElse("local").equals(env);
     }
 
 }

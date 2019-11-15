@@ -24,7 +24,7 @@ import static java.util.stream.Collectors.toMap;
 
 public class CmsSkrivestotteEnonic implements CmsSkrivestotte {
     private static final Logger log = LoggerFactory.getLogger(CmsSkrivestotteEnonic.class);
-    private static final String currentDomain = optionalProperty("skrivestotte.domain", "loadbalancer.url")
+    private static final String currentDomain = optionalProperty("skrivestotte.domain", "LOADBALANCER_MODIAPERSONOVERSIKT_API_URL")
             .orElseGet(() -> {
                 log.error("Fant ikke en verdi for `customDomain`");
                 return "";
@@ -88,4 +88,5 @@ public class CmsSkrivestotteEnonic implements CmsSkrivestotte {
                 .filter(Objects::nonNull)
                 .findFirst();
     }
+
 }

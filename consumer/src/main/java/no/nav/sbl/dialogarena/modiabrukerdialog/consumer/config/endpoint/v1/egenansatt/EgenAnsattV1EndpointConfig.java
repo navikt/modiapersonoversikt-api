@@ -3,23 +3,22 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v1.ege
 import no.nav.modig.modia.ping.Pingable;
 import no.nav.modig.modia.ping.PingableWebService;
 import no.nav.sbl.dialogarena.common.cxf.CXFClient;
+import no.nav.sbl.util.EnvironmentUtils;
 import no.nav.tjeneste.pip.egen.ansatt.v1.EgenAnsattV1;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import static no.nav.sbl.dialogarena.common.cxf.InstanceSwitcher.createMetricsProxyWithInstanceSwitcher;
+import static no.nav.metrics.MetricsFactory.createTimerProxyForWebService;
 
 @Configuration
 public class EgenAnsattV1EndpointConfig {
-
-    private static final String PERSON_MOCK_KEY = "start.kjerneinfo.withmock";
 
     @Bean
     public EgenAnsattV1 egenAnsattV1() {
         final EgenAnsattV1 egenAnsattV1 = lagEndpoint();
         final EgenAnsattV1 egenAnsattV1Mock = lagMockEndpoint();
 
-        return createMetricsProxyWithInstanceSwitcher("egenAnsattV1", egenAnsattV1, egenAnsattV1Mock, PERSON_MOCK_KEY, EgenAnsattV1.class);
+        return createTimerProxyForWebService("egenAnsattV1", egenAnsattV1, EgenAnsattV1.class);
     }
 
     private EgenAnsattV1 lagMockEndpoint() {
@@ -35,8 +34,8 @@ public class EgenAnsattV1EndpointConfig {
 
     private EgenAnsattV1 lagEndpoint() {
         return new CXFClient<>(EgenAnsattV1.class)
-                .address(System.getProperty("egenansatt.v1.url"))
-                .configureStsForSystemUserInFSS()
+                .address(EnvironmentUtils.getRequiredProperty("VIRKSOMHET_EGENANSATT_V1_ENDPOINTURL"))
+                .configureStsForSystemUser()
                 .build();
     }
 

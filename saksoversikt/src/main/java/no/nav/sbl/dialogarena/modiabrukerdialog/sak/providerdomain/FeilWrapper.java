@@ -1,6 +1,7 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain;
 
-import static java.lang.Boolean.*;
+import static java.lang.Boolean.FALSE;
+import static java.lang.Boolean.TRUE;
 
 public class FeilWrapper {
     private Boolean inneholderFeil = FALSE;

@@ -32,17 +32,13 @@ import java.util.function.BiFunction;
 import java.util.stream.Collectors;
 
 import static java.lang.String.format;
-import static java.lang.System.getProperty;
 import static java.util.Collections.emptyList;
-import static java.util.Objects.isNull;
 import static java.util.stream.Collectors.toList;
 import static javax.ws.rs.core.Response.Status.FORBIDDEN;
 import static javax.ws.rs.core.Response.Status.NOT_FOUND;
 import static javax.ws.rs.core.Response.ok;
 import static javax.ws.rs.core.Response.status;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.Feilmelding.*;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.sak.rest.mock.DokumentControllerMock.mockDokumentResponse;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.sak.rest.mock.DokumentControllerMock.mockJournalpost;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.Feilmelding.MANGLER_DOKUMENTMETADATA;
 
 
 @Path("/saksoversikt/{fnr}")
@@ -68,10 +64,6 @@ public class DokumentController {
     public Response hentDokument(@PathParam("fnr") String fnr, @PathParam("journalpostId") String journalpostId,
                                  @PathParam("dokumentreferanse") String dokumentreferanse,
                                  @Context HttpServletRequest request) throws IOException {
-        if (getProperty("dokumentressurs.withmock", "false").equalsIgnoreCase("true")) {
-            return mockDokumentResponse();
-        }
-
         if ("null".equals(journalpostId)) {
             return status(NOT_FOUND).build();
         }
@@ -93,10 +85,6 @@ public class DokumentController {
     @Path("/journalpostmetadata/{journalpostId}")
     public Response hentJournalpostMetadata(@PathParam("fnr") String fnr, @PathParam("journalpostId") String journalpostId,
                                             @QueryParam("temakode") String temakode, @Context HttpServletRequest request) {
-        if (getProperty("dokumentressurs.withmock", "false").equalsIgnoreCase("true")) {
-            return ok(mockJournalpost().withDokumentFeilmelding(blurretDokumentReferanseResponse(DOKUMENT_IKKE_FUNNET, "Dokument 1"))).build();
-        }
-
         if ("null".equals(journalpostId)) {
             return ok(new JournalpostResultat().withDokumentFeilmelding(blurretDokumentReferanseResponse(MANGLER_DOKUMENTMETADATA, ""))).build();
         }
