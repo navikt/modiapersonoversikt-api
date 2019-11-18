@@ -1,6 +1,8 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.featuretoggle
 
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.UnleashService
+import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Policies
+import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Tilgangskontroll
 import javax.inject.Inject
 import javax.ws.rs.GET
 import javax.ws.rs.Path
@@ -11,13 +13,18 @@ import javax.ws.rs.core.MediaType.APPLICATION_JSON
 private const val APPLICATION_PREFIX = "modiabrukerdialog."
 
 @Path("/featuretoggle")
-class FeatureToggleController @Inject constructor(private val unleashService: UnleashService) {
+class FeatureToggleController @Inject constructor(
+        private val unleashService: UnleashService,
+        private val tilgangskontroll: Tilgangskontroll
+) {
 
     @GET
     @Path("/{id}")
     @Produces(APPLICATION_JSON)
     fun hentMedId(@PathParam("id") toggleId: String): Boolean =
-            unleashService.isEnabled(sjekkPrefix(toggleId))
+            tilgangskontroll.check(Policies.tilgangTilModia).get {
+                 unleashService.isEnabled(sjekkPrefix(toggleId))
+            }
 
 
     fun sjekkPrefix(propertyKey: String): String {

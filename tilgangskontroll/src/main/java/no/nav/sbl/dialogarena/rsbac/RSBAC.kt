@@ -14,6 +14,7 @@ interface RSBAC<CONTEXT> {
     fun combining(combiningAlgo: CombiningAlgo): RSBACInstance<CONTEXT>
     fun bias(bias: DecisionEnums): RSBACInstance<CONTEXT>
     fun exception(exception: Function<String, RuntimeException>): RSBACInstance<CONTEXT>
+    fun context(): CONTEXT
 }
 
 interface RSBACInstance<CONTEXT> : RSBAC<CONTEXT> {
@@ -30,6 +31,7 @@ open class RSBACImpl<CONTEXT>(private val context: CONTEXT, private val exceptio
     override fun combining(combiningAlgo: CombiningAlgo) : RSBACInstance<CONTEXT> = RSBACInstanceImpl<CONTEXT, Void>(context, exception).combining(combiningAlgo)
     override fun bias(bias: DecisionEnums) : RSBACInstance<CONTEXT> = RSBACInstanceImpl<CONTEXT, Void>(context, exception).bias(bias)
     override fun exception(exception: Function<String, RuntimeException>) : RSBACInstance<CONTEXT> = RSBACInstanceImpl<CONTEXT, Void>(context, exception).exception(exception)
+    override fun context(): CONTEXT = context
 }
 
 class RSBACInstanceImpl<CONTEXT, OUTPUT>(val context: CONTEXT, var exception:  Function<String, RuntimeException>) : RSBACInstance<CONTEXT> {
@@ -62,6 +64,8 @@ class RSBACInstanceImpl<CONTEXT, OUTPUT>(val context: CONTEXT, var exception:  F
         this.policies = this.policies.plusElement(combinable)
         return this
     }
+
+    override fun context(): CONTEXT = context
 
     override fun <S> get(result: Supplier<S>): S {
         val decision = getDecision()

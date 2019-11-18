@@ -87,19 +87,27 @@ public class HodeController {
     @GET
     @Path("/enheter")
     public Enheter hentEnheter() {
-        String ident = SubjectHandler.getIdent().orElseThrow(() -> new RuntimeException("Fant ikke ident"));
-        List<Enhet> enheter = ansattService.hentEnhetsliste()
-                .stream()
-                .map((ansattEnhet) -> new Enhet(ansattEnhet.enhetId, ansattEnhet.enhetNavn))
-                .collect(Collectors.toList());
+        return tilgangskontroll
+                .check(Policies.tilgangTilModia)
+                .get (() -> {
+                    String ident = SubjectHandler.getIdent().orElseThrow(() -> new RuntimeException("Fant ikke ident"));
+                    List<Enhet> enheter = ansattService.hentEnhetsliste()
+                            .stream()
+                            .map((ansattEnhet) -> new Enhet(ansattEnhet.enhetId, ansattEnhet.enhetNavn))
+                            .collect(Collectors.toList());
 
-        return new Enheter(ident, enheter);
+                    return new Enheter(ident, enheter);
+                });
     }
 
     @POST
     @Path("/velgenhet")
     public String settValgtEnhet(@Context HttpServletResponse response, String enhetId) {
-        CookieUtil.setSaksbehandlersValgteEnhet(response, enhetId);
-        return enhetId;
+        return tilgangskontroll
+                .check(Policies.tilgangTilModia)
+                .get (() -> {
+                    CookieUtil.setSaksbehandlersValgteEnhet(response, enhetId);
+                    return enhetId;
+                });
     }
 }

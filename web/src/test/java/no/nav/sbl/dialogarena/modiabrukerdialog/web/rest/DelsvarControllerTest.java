@@ -19,6 +19,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.henvendelse.Del
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.TilgangskontrollMock;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.henvendelse.DelsvarController;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.henvendelse.DelsvarRestRequest;
+import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Tilgangskontroll;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.senduthenvendelse.SendUtHenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.senduthenvendelse.meldinger.WSFerdigstillHenvendelseRequest;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.henvendelse.HenvendelsePortType;
@@ -50,6 +51,7 @@ class DelsvarControllerTest {
     private MockHttpServletRequest httpMockRequest;
     private DelsvarController delsvarController;
     private SendUtHenvendelsePortType sendUtHenvendelsePortTypeMock;
+    private Tilgangskontroll tilgangskontrollMock = TilgangskontrollMock.get();
 
     @BeforeAll
     static void beforeAll() {
@@ -64,7 +66,7 @@ class DelsvarControllerTest {
     @BeforeEach
     void before() {
         httpMockRequest = HttpRequestUtil.mockHttpServletRequestMedCookie(SAKSBEHANDLERS_IDENT, VALGT_ENHET);
-        delsvarController = new DelsvarController(new DelsvarServiceImpl(setupHenvendelseUtsendingService(), oppgaveBehandlingServiceMock));
+        delsvarController = new DelsvarController(tilgangskontrollMock, new DelsvarServiceImpl(setupHenvendelseUtsendingService(), oppgaveBehandlingServiceMock));
     }
 
     private HenvendelseUtsendingServiceImpl setupHenvendelseUtsendingService() {

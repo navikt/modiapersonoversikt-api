@@ -17,6 +17,7 @@ class RSBACMock<T> : RSBACInstance<T> {
     override fun check(combinable: Combinable<T>): RSBACInstance<T> = this
     override fun combining(combiningAlgo: CombiningAlgo): RSBACInstance<T> = this
     override fun bias(bias: DecisionEnums): RSBACInstance<T> = this
+    override fun context(): T = throw NotImplementedError("context not implemented")
 }
 
 class TilgangskontrollMock {

@@ -2,6 +2,8 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.baseurls
 
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.UnleashService
 import no.nav.sbl.util.EnvironmentUtils
+import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Policies
+import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Tilgangskontroll
 import javax.inject.Inject
 import javax.ws.rs.GET
 import javax.ws.rs.Path
@@ -12,12 +14,17 @@ import javax.ws.rs.core.MediaType.APPLICATION_JSON
 @Path("/baseurls")
 @Produces(APPLICATION_JSON)
 class BaseUrlsController @Inject
-constructor(private val unleashService: UnleashService) {
+constructor(
+        private val tilgangskontroll: Tilgangskontroll,
+        private val unleashService: UnleashService
+) {
 
     @GET
     @Path("/")
     fun hent(): Map<String, Any?> {
-        return mapOf("baseUrls" to getBaseUrls())
+        return tilgangskontroll.check(Policies.tilgangTilModia).get {
+            mapOf("baseUrls" to getBaseUrls())
+        }
     }
 
     private fun getBaseUrls(): List<BaseUrl> {

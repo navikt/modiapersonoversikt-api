@@ -68,6 +68,7 @@ private fun meldingMapping(melding: Melding): MeldingDTO =
                         "fritekst" to melding.fritekst,
                         "lestDato" to melding.lestDato?.toString(DateTimeFormat.forPattern(DATO_TID_FORMAT)),
                         "status" to melding.status?.name,
+                        "statusTekst" to melding.statusTekst,
                         "opprettetDato" to melding.opprettetDato?.toString(DateTimeFormat.forPattern(DATO_TID_FORMAT)),
                         "ferdigstiltDato" to melding.ferdigstiltDato?.toString(DateTimeFormat.forPattern(DATO_TID_FORMAT)),
                         "erFerdigstiltUtenSvar" to melding.erFerdigstiltUtenSvar,

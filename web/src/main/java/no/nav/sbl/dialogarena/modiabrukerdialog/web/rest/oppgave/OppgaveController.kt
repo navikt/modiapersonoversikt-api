@@ -39,7 +39,7 @@ class OppgaveController @Inject constructor(
     fun leggTilbake(@Context httpRequest: HttpServletRequest, request: LeggTilbakeRequest): Response {
         return tilgangkontroll
                 .check(Policies.tilgangTilModia)
-                // TODO tilgangsstyring, burde også sjekke tilgang til oppgave
+                .check(Policies.kanPlukkeOppgave)
                 .get {
                     val valgtEnhet = RestUtils.hentValgtEnhet(httpRequest)
                     val leggTilbakeOppgaveIGsakRequest = lagLeggTilbakeRequest(request, valgtEnhet)
@@ -82,6 +82,7 @@ class OppgaveController @Inject constructor(
     fun plukkOppgaver(@PathParam("temagruppe") temagruppe: String, @Context httpRequest: HttpServletRequest): List<Map<String, String>> {
         return tilgangkontroll
                 .check(Policies.tilgangTilModia)
+                .check(Policies.kanPlukkeOppgave)
                 .get {
                     val tildelteOppgaver = oppgaveBehandlingService.finnTildelteOppgaverIGsak()
                     if (tildelteOppgaver.isNotEmpty()) {

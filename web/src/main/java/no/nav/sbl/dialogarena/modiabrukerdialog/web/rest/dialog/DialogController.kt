@@ -86,13 +86,8 @@ class DialogController @Inject constructor(
                     val context = lagSendHenvendelseContext(fnr, request)
                     val gsakSaker = sakerService.hentSammensatteSaker(fnr)
                     val psakSaker = sakerService.hentPensjonSaker(fnr)
-                    val saker = gsakSaker.union(psakSaker)
 
-                    val valgtSak = saker
-                            .find { it.saksId == sporsmalsRequest.saksID }
-                            ?: throw WebApplicationException("Fant ingen sak med id: ${sporsmalsRequest.saksID}", 400)
-
-                    henvendelseUtsendingService.sendHenvendelse(lagSporsmal(sporsmalsRequest, valgtSak.temaKode, context), Optional.empty(), Optional.of(valgtSak), context.enhet)
+                    henvendelseUtsendingService.sendHenvendelse(lagSporsmal(sporsmalsRequest, sporsmalsRequest.sak.temaKode, context), Optional.empty(), Optional.of(sporsmalsRequest.sak), context.enhet)
                     Response.ok().build()
                 }
     }
@@ -154,19 +149,10 @@ class DialogController @Inject constructor(
                             .find { it.traadId == fortsettDialogRequest.traadId }
                             ?: throw WebApplicationException("Fant ingen tråd med id: ${fortsettDialogRequest.traadId}", 400)
 
-                    val valgtSak = fortsettDialogRequest.saksId
-                            ?.let {
-                                val saker = hentSaker(fnr)
-
-                                saker
-                                        .find { it.saksId == fortsettDialogRequest.saksId }
-                                        ?: throw WebApplicationException("Fant ingen sak med id: ${fortsettDialogRequest.saksId}", 400)
-                            }
-
                     henvendelseUtsendingService.ferdigstillHenvendelse(
                             lagFortsettDialog(fortsettDialogRequest, context, traad),
                             Optional.ofNullable(fortsettDialogRequest.oppgaveId),
-                            Optional.ofNullable(valgtSak),
+                            Optional.ofNullable(fortsettDialogRequest.sak),
                             fortsettDialogRequest.behandlingsId,
                             context.enhet
                     )
@@ -303,8 +289,16 @@ private fun lagSporsmal(sporsmalRequest: SendSporsmalRequest, sakstema: String, 
             .withTemagruppe(hentTemagruppeForTema(sakstema))
 }
 
+private fun erTraadTilknyttetAnsatt(traad: Traad): Boolean =
+    if (traad.meldinger.any { it.meldingstype == Meldingstype.SPORSMAL_MODIA_UTGAAENDE }) {
+        traad.meldinger.sortedBy { it.visningsDato }.last().erTilknyttetAnsatt
+    } else {
+        true
+    }
+
 private fun lagFortsettDialog(request: FortsettDialogRequest, requestContext: RequestContext, traad: Traad): Melding {
     val eldsteMelding = traad.meldinger[0]
+    val erOppgaveTilknyttetAnsatt = if (request.meldingstype == Meldingstype.SPORSMAL_MODIA_UTGAAENDE) request.erOppgaveTilknyttetAnsatt else erTraadTilknyttetAnsatt(traad)
     return Melding()
             .withFnr(requestContext.fnr)
             .withNavIdent(requestContext.ident)
@@ -313,7 +307,7 @@ private fun lagFortsettDialog(request: FortsettDialogRequest, requestContext: Re
             .withType(request.meldingstype)
             .withFritekst(Fritekst(request.fritekst))
             .withTilknyttetEnhet(requestContext.enhet)
-            .withErTilknyttetAnsatt(request.erOppgaveTilknyttetAnsatt)
+            .withErTilknyttetAnsatt(erOppgaveTilknyttetAnsatt)
             .withTraadId(request.traadId)
             .withKontorsperretEnhet(eldsteMelding.kontorsperretEnhet)
             .withTemagruppe(eldsteMelding.temagruppe)
@@ -347,7 +341,7 @@ data class SendReferatRequest(
 
 data class SendSporsmalRequest(
         val fritekst: String,
-        val saksID: String,
+        val sak: Sak,
         val erOppgaveTilknyttetAnsatt: Boolean
 )
 
@@ -355,7 +349,7 @@ data class FortsettDialogRequest(
         val traadId: String,
         val behandlingsId: String,
         val fritekst: String,
-        val saksId: String?,
+        val sak: Sak?,
         val erOppgaveTilknyttetAnsatt: Boolean,
         val meldingstype: Meldingstype,
         val oppgaveId: String?

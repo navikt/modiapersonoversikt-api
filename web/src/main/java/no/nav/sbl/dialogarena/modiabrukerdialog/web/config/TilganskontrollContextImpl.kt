@@ -144,5 +144,5 @@ class TilgangskontrollContextImpl(
         private val grunninfo: GrunninfoService
 ) : TilgangskontrollContext, TilgangskontrollContextUtenTPSImpl(ldap, ansattService, enhetService, henvendelseLesService) {
     override fun hentDiskresjonkode(fnr: String): String? = grunninfo.hentBrukerInfo(fnr).diskresjonskode
-    override fun hentBrukersEnhet(fnr: String): String? = grunninfo.hentBrukerInfo(fnr).navkontor
+    override fun hentBrukersEnhet(fnr: String): String? = grunninfo.hentBrukerInfo(fnr).navkontorId
 }

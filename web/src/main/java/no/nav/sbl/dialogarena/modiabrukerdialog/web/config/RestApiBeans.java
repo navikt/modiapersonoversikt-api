@@ -25,7 +25,6 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.saker.SakerController;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.utbetaling.UtbetalingController;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.vergemal.VergemalController;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.ytelse.YtelseController;
-import no.nav.sbl.dialogarena.varsel.rest.VarslerController;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
