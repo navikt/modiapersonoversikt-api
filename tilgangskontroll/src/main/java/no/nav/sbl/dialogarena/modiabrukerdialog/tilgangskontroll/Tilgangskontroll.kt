@@ -90,7 +90,7 @@ class Policies {
             }
         }
 
-        val nasjonalTilgang = PolicyGenerator<TilgangskontrollContext, String>({ "Saksbehandler (${context.hentSaksbehandlerId()}) har nasjonal tilgang" }) {
+        val nasjonalTilgang = PolicyGenerator<TilgangskontrollContextUtenTPS, String>({ "Saksbehandler (${context.hentSaksbehandlerId()}) har nasjonal tilgang" }) {
             if (context.harSaksbehandlerRolle("0000-GA-GOSYS_NASJONAL") || context.harSaksbehandlerRolle("0000-GA-GOSYS_UTVIDBAR_TIL_NASJONAL")) {
                 DecisionEnums.PERMIT
             } else {
@@ -98,8 +98,8 @@ class Policies {
             }
         }
 
-        val regionalTilgang = PolicyGenerator<TilgangskontrollContext, String>({ "Saksbehandler (${context.hentSaksbehandlerId()}) har regional tilgang" }) {
-            val brukersEnhet = context.hentBrukersEnhet(data)
+        val regionalTilgangGittBrukersEnhet = PolicyGenerator<TilgangskontrollContextUtenTPS, String>({ "Saksbehandler (${context.hentSaksbehandlerId()}) har regional tilgang" }) {
+            val brukersEnhet = data
             val harRegionalRolle = context.harSaksbehandlerRolle("0000-GA-GOSYS_REGIONAL") || context.harSaksbehandlerRolle("0000-GA-GOSYS_UTVIDBAR_TIL_REGIONAL")
 
             if (harRegionalRolle && context.hentSaksbehandlersFylkesEnheter().contains(brukersEnhet)) {
@@ -109,8 +109,26 @@ class Policies {
             }
         }
 
+        val regionalTilgang = PolicyGenerator<TilgangskontrollContext, String>({ "Saksbehandler (${context.hentSaksbehandlerId()}) har regional tilgang" }) {
+            context.hentBrukersEnhet(data)
+                    ?.let {
+                        it -> regionalTilgangGittBrukersEnhet.with(it).invoke(context)
+                    }
+                    ?: DecisionEnums.DENY
+
+        }
+
+        @JvmField
+        val tilgangTilEnhetIdUtvidbar = PolicySetGenerator(
+                combining = CombiningAlgo.firstApplicable,
+                policies = listOf(
+                        nasjonalTilgang,
+                        regionalTilgangGittBrukersEnhet
+                )
+        )
+
         val denyAlt = Policy<TilgangskontrollContext>({ "Saksbehandler (${hentSaksbehandlerId()}) har ikke tilgang til bruker basert på geografisk tilgang" }) { DecisionEnums.DENY }
-        val geografiskTilgang = PolicySetGenerator(
+        val geografiskTilgang = PolicySetGenerator<TilgangskontrollContext, String>(
                 combining = CombiningAlgo.firstApplicable,
                 policies = listOf(brukerUtenEnhet, nasjonalTilgang, tilgangTilLokalKontorGittFnr, regionalTilgang, denyAlt.asGenerator())
         )

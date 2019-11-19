@@ -18,6 +18,7 @@ public class ModiaApplicationContext implements ApiApplication {
         apiAppConfigurator
                 .customizeJettyBuilder(jetty -> jetty.at("modiapersonoversikt-api"))
                 .sts()
+                .objectMapper(JacksonConfig.mapper)
                 .issoLogin();
     }
 

@@ -37,13 +37,13 @@ data class Decision(val message: String, val decision: DecisionEnums) {
     }
 }
 
-interface Combinable<CONTEXT> : Function<CONTEXT, DecisionEnums> {
+interface Combinable<in CONTEXT> : Function<CONTEXT, DecisionEnums> {
     fun getMessage(context: CONTEXT): String
     override fun invoke(context: CONTEXT): DecisionEnums
     fun <DATA> asGenerator(): Generator<CONTEXT, DATA> = PolicyGenerator({ getMessage(context) }) { invoke(context) }
 }
 
-interface Generator<CONTEXT, DATA> {
+interface Generator<in CONTEXT, DATA> {
     fun with(data: DATA): Combinable<CONTEXT>
 }
 
@@ -102,7 +102,7 @@ class PolicyGenerator<CONTEXT, DATA>(
 
     constructor(message: String, rule: Rule<RuleData<CONTEXT, DATA>>) : this({ message }, rule)
 }
-class PolicySetGenerator<CONTEXT, DATA>(
+class PolicySetGenerator<in CONTEXT, DATA>(
         private val combining: CombiningAlgo = CombiningAlgo.denyOverride,
         private val policies: List<Generator<CONTEXT, DATA>>
 ) : Generator<CONTEXT, DATA> {

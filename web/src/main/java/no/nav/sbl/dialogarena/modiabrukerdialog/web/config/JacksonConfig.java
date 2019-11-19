@@ -16,10 +16,9 @@ import java.time.LocalDate;
 
 @Provider
 public class JacksonConfig implements ContextResolver<ObjectMapper> {
-    private ObjectMapper mapper;
+    public static final ObjectMapper mapper = new ObjectMapper();
 
-    public JacksonConfig() {
-        mapper = new ObjectMapper();
+    static {
         mapper.registerModule(new JodaModule());
         mapper.registerModule(new KotlinModule().addDeserializer(LocalDate.class, new JsonDeserializer<LocalDate>() {
             @Override

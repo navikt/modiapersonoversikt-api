@@ -236,7 +236,13 @@ public class HentPersonService {
     }
 
     private boolean harSaksbehandlerHarTilgangMedUtvidbarRolle(String ansvarligEnhet, String diskresjonskode) {
-        return saksbehandlerHarTilgang(ansvarligEnhet, diskresjonskode);
+        return tilgangskontroll.check(new PolicySet<>(CombiningAlgo.denyOverride, asList(
+                Policies.tilgangTilEnhetIdUtvidbar.with(ansvarligEnhet),
+                Policies.tilgangTilDiskresjonskode.with(diskresjonskode)
+        )))
+                .getDecision()
+                .getDecision()
+                .equals(DecisionEnums.PERMIT);
     }
 
     private boolean saksbehandlerHarTilgang(String ansvarligEnhet, String diskresjonskode) {
