@@ -1,5 +1,7 @@
 package no.nav.modig.modia.ping;
 
+import no.nav.sbl.dialogarena.types.Pingable;
+
 public class UnpingableWebService implements Pingable {
 
     private final String name;
@@ -12,22 +14,12 @@ public class UnpingableWebService implements Pingable {
     }
 
     @Override
-    public PingResult ping() {
-        return new PingResult(PingResult.ServiceResult.UNPINGABLE, 0);
-    }
-
-    @Override
-    public String name() {
-        return name;
-    }
-
-    @Override
-    public String method() {
-        return "-";
-    }
-
-    @Override
-    public String endpoint() {
-        return address;
+    public Ping ping() {
+        return Ping.avskrudd(new Ping.PingMetadata(
+                name,
+                address,
+                "",
+                false
+        ));
     }
 }

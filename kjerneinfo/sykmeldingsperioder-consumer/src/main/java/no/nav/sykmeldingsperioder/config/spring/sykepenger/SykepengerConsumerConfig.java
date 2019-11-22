@@ -2,9 +2,9 @@ package no.nav.sykmeldingsperioder.config.spring.sykepenger;
 
 import no.nav.metrics.MetricsFactory;
 import no.nav.modig.jaxws.handlers.MDCOutHandler;
-import no.nav.modig.modia.ping.Pingable;
 import no.nav.modig.modia.ping.PingableWebService;
 import no.nav.sbl.dialogarena.common.cxf.CXFClient;
+import no.nav.sbl.dialogarena.types.Pingable;
 import no.nav.tjeneste.virksomhet.sykepenger.v2.SykepengerV2;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -24,11 +24,11 @@ public class SykepengerConsumerConfig {
 
     @Bean
     public SykepengerV2 sykepengerPortType() {
-        return MetricsFactory.createTimerProxyForWebService("Sykepenger_v2",getSykepengerPortType(false), SykepengerV2.class);
-	}
+        return MetricsFactory.createTimerProxyForWebService("Sykepenger_v2", getSykepengerPortType(false), SykepengerV2.class);
+    }
 
     @Bean
-    public Pingable sykepengerPingable(){
+    public Pingable sykepengerPingable() {
         return new PingableWebService("Sykepenger", getSykepengerPortType(true));
     }
 

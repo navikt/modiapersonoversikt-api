@@ -1,8 +1,8 @@
 package no.nav.kjerneinfo.consumer.fim.behandleperson.config;
 
-import no.nav.modig.modia.ping.Pingable;
 import no.nav.modig.modia.ping.UnpingableWebService;
 import no.nav.sbl.dialogarena.common.cxf.CXFClient;
+import no.nav.sbl.dialogarena.types.Pingable;
 import no.nav.sbl.util.EnvironmentUtils;
 import no.nav.tjeneste.virksomhet.behandleperson.v1.BehandlePersonV1;
 import org.springframework.context.annotation.Bean;

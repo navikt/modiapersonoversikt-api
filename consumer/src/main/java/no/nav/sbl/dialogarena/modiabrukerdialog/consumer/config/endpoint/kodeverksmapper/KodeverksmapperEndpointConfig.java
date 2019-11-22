@@ -1,11 +1,8 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.kodeverksmapper;
 
-import no.nav.modig.modia.ping.FailedPingResult;
-import no.nav.modig.modia.ping.OkPingResult;
-import no.nav.modig.modia.ping.PingResult;
-import no.nav.modig.modia.ping.Pingable;
+import no.nav.modig.modia.ping.PingableWebService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.kodeverksmapper.domain.Behandling;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.Timer;
+import no.nav.sbl.dialogarena.types.Pingable;
 import no.nav.sbl.util.EnvironmentUtils;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -27,34 +24,7 @@ public class KodeverksmapperEndpointConfig {
 
     @Bean
     public Pingable kodeverksmapperPing() {
-        return new Pingable() {
-            @Override
-            public PingResult ping() {
-                Kodeverksmapper kodeverksmapper = lagEndpoint();
-                Timer timer = Timer.lagOgStartTimer();
-                try {
-                    kodeverksmapper.ping();
-                    return new OkPingResult(timer.stoppOgHentTid());
-                } catch (IOException e) {
-                    return new FailedPingResult(e, timer.stoppOgHentTid());
-                }
-            }
-
-            @Override
-            public String name() {
-                return "Kodeverksmapper";
-            }
-
-            @Override
-            public String method() {
-                return "ping";
-            }
-
-            @Override
-            public String endpoint() {
-                return EnvironmentUtils.getRequiredProperty("KODEVERKSMAPPER_PING_URL");
-            }
-        };
+        return new PingableWebService("kodeverksmapper", lagEndpoint());
     }
 
     private Kodeverksmapper lagEndpoint() {
