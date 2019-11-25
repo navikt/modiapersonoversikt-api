@@ -3,6 +3,7 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.featuretoggle
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.UnleashService
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Policies
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Tilgangskontroll
+import no.nav.sbl.dialogarena.naudit.Audit
 import javax.inject.Inject
 import javax.ws.rs.GET
 import javax.ws.rs.Path
@@ -22,9 +23,11 @@ class FeatureToggleController @Inject constructor(
     @Path("/{id}")
     @Produces(APPLICATION_JSON)
     fun hentMedId(@PathParam("id") toggleId: String): Boolean =
-            tilgangskontroll.check(Policies.tilgangTilModia).get {
-                 unleashService.isEnabled(sjekkPrefix(toggleId))
-            }
+            tilgangskontroll
+                    .check(Policies.tilgangTilModia)
+                    .get(Audit.skipAuditLog()) {
+                        unleashService.isEnabled(sjekkPrefix(toggleId))
+                    }
 
 
     fun sjekkPrefix(propertyKey: String): String {

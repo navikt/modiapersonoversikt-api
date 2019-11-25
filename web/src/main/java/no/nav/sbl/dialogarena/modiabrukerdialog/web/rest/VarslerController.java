@@ -1,8 +1,11 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest;
 
+import kotlin.Pair;
 import no.nav.modig.content.ContentRetriever;
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Policies;
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Tilgangskontroll;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.AuditResources.Person;
+import no.nav.sbl.dialogarena.naudit.Audit;
 import no.nav.sbl.dialogarena.varsel.domain.Varsel;
 import no.nav.sbl.dialogarena.varsel.service.VarslerService;
 
@@ -12,10 +15,10 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
+
+import static java.util.Collections.emptyList;
 
 @Path("/varsler/{fnr}")
 @Produces("application/json")
@@ -36,13 +39,10 @@ public class VarslerController {
     public List<Varsel> hentAlleVarsler(@PathParam("fnr") String fnr) {
         return tilgangskontroll
                 .check(Policies.tilgangTilBruker.with(fnr))
-                .get(() -> {
-                    Optional<List<Varsel>> varsler = varslerService.hentAlleVarsler(fnr);
-                    if (varsler.isPresent()) {
-                        return varsler.get();
-                    }
-                    return Collections.emptyList();
-                });
+                .get(Audit.describe(Audit.Action.READ, Person.Varsler, new Pair<>("fnr", fnr)), () -> varslerService
+                        .hentAlleVarsler(fnr)
+                        .orElse(emptyList())
+                );
     }
 
     @GET
@@ -50,8 +50,6 @@ public class VarslerController {
     public Map<String, String> hentAlleResources() {
         return tilgangskontroll
                 .check(Policies.tilgangTilModia)
-                .get(() -> {
-                    return contentRetriever.hentAlleTekster();
-                });
+                .get(Audit.skipAuditLog(), () -> contentRetriever.hentAlleTekster());
     }
 }

@@ -4,6 +4,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.cms.Skrivestott
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.cms.SkrivestotteTekst;
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Policies;
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Tilgangskontroll;
+import no.nav.sbl.dialogarena.naudit.Audit;
 
 import javax.inject.Inject;
 import javax.ws.rs.GET;
@@ -30,7 +31,7 @@ public class SkrivestotteController {
     public List<SkrivestotteTekst> hentSkrivestotteTekster(@QueryParam("fritekst") String fritekst, @QueryParam("tags") List<String> tags) {
         return tilgangskontroll
                 .check(Policies.tilgangTilModia)
-                .get(() -> {
+                .get(Audit.skipAuditLog(), () -> {
                     return skrivestotteSok.sok(fritekst, tags);
                 });
     }
@@ -40,7 +41,7 @@ public class SkrivestotteController {
     public Set<String> hentAlleTags() {
         return tilgangskontroll
                 .check(Policies.tilgangTilModia)
-                .get(() -> {
+                .get(Audit.skipAuditLog(), () -> {
                     return skrivestotteSok.sok("").stream()
                             .flatMap(skrivestotteTekst -> skrivestotteTekst.tags.stream())
                             .collect(toSet());

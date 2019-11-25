@@ -4,6 +4,8 @@ import no.nav.kjerneinfo.consumer.organisasjon.OrganisasjonService
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.Wrapper
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Policies
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Tilgangskontroll
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.AuditResources
+import no.nav.sbl.dialogarena.naudit.Audit
 import no.nav.sykmeldingsperioder.consumer.foreldrepenger.ForeldrepengerServiceBi
 import no.nav.sykmeldingsperioder.consumer.pleiepenger.PleiepengerService
 import no.nav.sykmeldingsperioder.consumer.sykepenger.SykepengerServiceBi
@@ -25,26 +27,32 @@ class YtelseController @Inject constructor(private val sykepengerService: Sykepe
 
     @GET
     @Path("sykepenger/{fnr}")
-    fun hentSykepenger(@PathParam("fnr") fodselsnummer: String): Map<String, Any?> {
+    fun hentSykepenger(@PathParam("fnr") fnr: String): Map<String, Any?> {
         return tilgangskontroll
-                .check(Policies.tilgangTilBruker.with(fodselsnummer))
-                .get { SykepengerUttrekk(sykepengerService).hent(fodselsnummer) }
+                .check(Policies.tilgangTilBruker.with(fnr))
+                .get(Audit.describe(Audit.Action.READ, AuditResources.Person.Sykepenger, "fnr" to fnr)) {
+                    SykepengerUttrekk(sykepengerService).hent(fnr)
+                }
     }
 
     @GET
     @Path("foreldrepenger/{fnr}")
-    fun hentForeldrepenger(@PathParam("fnr") fodselsnummer: String): Map<String, Any?> {
+    fun hentForeldrepenger(@PathParam("fnr") fnr: String): Map<String, Any?> {
         return tilgangskontroll
-                .check(Policies.tilgangTilBruker.with(fodselsnummer))
-                .get { ForeldrepengerUttrekk(getForeldrepengerService()).hent(fodselsnummer) }
+                .check(Policies.tilgangTilBruker.with(fnr))
+                .get(Audit.describe(Audit.Action.READ, AuditResources.Person.Foreldrepenger, "fnr" to fnr)) {
+                    ForeldrepengerUttrekk(getForeldrepengerService()).hent(fnr)
+                }
     }
 
     @GET
     @Path("pleiepenger/{fnr}")
-    fun hentPleiepenger(@PathParam("fnr") fodselsnummer: String): Map<String, Any?> {
+    fun hentPleiepenger(@PathParam("fnr") fnr: String): Map<String, Any?> {
         return tilgangskontroll
-                .check(Policies.tilgangTilBruker.with(fodselsnummer))
-                .get { PleiepengerUttrekk(pleiepengerService, organisasjonService).hent(fodselsnummer) }
+                .check(Policies.tilgangTilBruker.with(fnr))
+                .get(Audit.describe(Audit.Action.READ, AuditResources.Person.Pleiepenger, "fnr" to fnr)) {
+                    PleiepengerUttrekk(pleiepengerService, organisasjonService).hent(fnr)
+                }
     }
 
     private fun getForeldrepengerService(): ForeldrepengerServiceBi {

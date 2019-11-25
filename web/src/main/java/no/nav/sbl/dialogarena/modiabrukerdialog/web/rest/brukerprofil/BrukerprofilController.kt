@@ -17,6 +17,9 @@ import no.nav.kjerneinfo.consumer.fim.person.PersonKjerneinfoServiceBi
 import no.nav.kjerneinfo.consumer.fim.person.to.HentKjerneinformasjonRequest
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Policies
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Tilgangskontroll
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.AuditResources.Person.Brukerprofil
+import no.nav.sbl.dialogarena.naudit.Audit
+import no.nav.sbl.dialogarena.naudit.Audit.Action.UPDATE
 import no.nav.tjeneste.virksomhet.behandlebrukerprofil.v2.OppdaterKontaktinformasjonOgPreferanserPersonIdentErUtgaatt
 import no.nav.tjeneste.virksomhet.behandlebrukerprofil.v2.OppdaterKontaktinformasjonOgPreferanserPersonIkkeFunnet
 import no.nav.tjeneste.virksomhet.behandlebrukerprofil.v2.OppdaterKontaktinformasjonOgPreferanserSikkerhetsbegrensning
@@ -47,7 +50,7 @@ class BrukerprofilController @Inject constructor(private val behandlePersonServi
     fun endreNavn(@PathParam("fnr") fnr: String, endreNavnRequest: EndreNavnRequest): Response {
         return tilgangskontroll
                 .check(Policies.kanEndreNavn)
-                .get {
+                .get(Audit.describe(UPDATE, Brukerprofil.Navn, "fnr" to fnr)) {
                     val kjerneinformasjon = kjerneinfoService.hentKjerneinformasjon(HentKjerneinformasjonRequest(fnr))
 
                     if (!kjerneinformasjon.person.kanEndreNavn()) {
@@ -70,7 +73,7 @@ class BrukerprofilController @Inject constructor(private val behandlePersonServi
     fun endreAdresse(@PathParam("fnr") fnr: String, request: EndreAdresseRequest): Response {
         return tilgangskontroll
                 .check(Policies.kanEndreAdresse)
-                .get {
+                .get(Audit.describe(UPDATE, Brukerprofil.Adresse, "fnr" to fnr)) {
                     val bruker = kjerneinfoService.hentBrukerprofil(fnr)
 
                     val adresse = request.norskAdresse ?: request.utenlandskAdresse ?: request.folkeregistrertAdresse
@@ -95,11 +98,11 @@ class BrukerprofilController @Inject constructor(private val behandlePersonServi
                                        request: EndreTilrettelagtkommunikasjonRequest) =
             tilgangskontroll
                     .check(Policies.tilgangTilBruker.with(fnr))
-                    .get {
+                    .get(Audit.describe(UPDATE, Brukerprofil.TilrettelagtKommunikasjon, "fnr" to fnr)) {
                         fnr
                                 .let(kjerneinfoService::hentBrukerprofil)
                                 .apply { tilrettelagtKommunikasjon = request.tilrettelagtKommunikasjon.map { Kodeverdi(it, "") } }
-                                ?.run(::skrivBrukerOgLagResponse)
+                                .run(::skrivBrukerOgLagResponse)
                     }
 
     @POST
@@ -108,7 +111,7 @@ class BrukerprofilController @Inject constructor(private val behandlePersonServi
     fun endreTelefonnummer(@PathParam("fnr") fnr: String, request: EndreTelefonnummerRequest) =
             tilgangskontroll
                     .check(Policies.tilgangTilBruker.with(fnr))
-                    .get {
+                    .get(Audit.describe(UPDATE, Brukerprofil.Telefonnummer, "fnr" to fnr)) {
                         fnr
                                 .let(kjerneinfoService::hentBrukerprofil)
                                 .apply {
@@ -116,7 +119,7 @@ class BrukerprofilController @Inject constructor(private val behandlePersonServi
                                     hjemTlf = request.hjem?.let { mapTelefon(it, "HJET") }
                                     jobbTlf = request.jobb?.let { mapTelefon(it, "ARBT") }
                                 }
-                                ?.run(::skrivBrukerOgLagResponse)
+                                .run(::skrivBrukerOgLagResponse)
                     }
 
     @POST
@@ -125,7 +128,7 @@ class BrukerprofilController @Inject constructor(private val behandlePersonServi
     fun endreKontonummer(@PathParam("fnr") fnr: String, request: EndreKontonummerRequest) =
             tilgangskontroll
                     .check(Policies.kanEndreKontonummer)
-                    .get {
+                    .get(Audit.describe(UPDATE, Brukerprofil.Kontonummer, "fnr" to fnr)) {
                         fnr
                                 .let(kjerneinfoService::hentBrukerprofil)
                                 .apply {
@@ -134,7 +137,7 @@ class BrukerprofilController @Inject constructor(private val behandlePersonServi
                                         else -> BankkontoUtland().apply { populer(request) }
                                     }.apply { kontonummer = request.kontonummer }
                                 }
-                                ?.run(::skrivBrukerOgLagResponse)
+                                .run(::skrivBrukerOgLagResponse)
                     }
 
     private fun BankkontoUtland.populer(request: EndreKontonummerRequest) {

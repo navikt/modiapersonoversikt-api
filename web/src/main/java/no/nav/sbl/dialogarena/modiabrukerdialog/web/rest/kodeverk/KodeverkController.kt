@@ -4,6 +4,7 @@ import no.nav.kjerneinfo.common.domain.Kodeverdi
 import no.nav.kodeverk.consumer.fim.kodeverk.KodeverkmanagerBi
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Policies
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Tilgangskontroll
+import no.nav.sbl.dialogarena.naudit.Audit
 import javax.inject.Inject
 import javax.ws.rs.GET
 import javax.ws.rs.Path
@@ -23,7 +24,7 @@ class KodeverkController @Inject constructor(
     fun hentKodeverk(@PathParam("kodeverkRef") kodeverkRef: String) =
             tilgangskontroll
                     .check(Policies.tilgangTilModia)
-                    .get {
+                    .get(Audit.skipAuditLog()) {
                         mapOf(
                                 "kodeverk" to kodeverkManager
                                         .getKodeverkList(kodeverkRef, "nb")
