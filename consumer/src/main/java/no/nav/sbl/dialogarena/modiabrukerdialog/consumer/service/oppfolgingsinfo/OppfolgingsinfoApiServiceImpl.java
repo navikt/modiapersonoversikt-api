@@ -14,6 +14,7 @@ import no.nav.sbl.rest.RestUtils;
 import org.jetbrains.annotations.NotNull;
 
 import javax.inject.Inject;
+import javax.ws.rs.client.Invocation;
 
 import static javax.ws.rs.core.HttpHeaders.AUTHORIZATION;
 
@@ -57,7 +58,11 @@ public class OppfolgingsinfoApiServiceImpl implements OppfolgingsinfoApiService 
     }
 
     public void ping() {
-        gjorSporring(hentPingURL(), String.class);
+        RestUtils.withClient(client -> client
+                .target(hentPingURL())
+                .request()
+                .get(String.class)
+        );
     }
 
     private Saksbehandler hentSaksbehandler(String veilederIdent, LDAPService ldapService) {
