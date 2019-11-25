@@ -1,8 +1,8 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.joark;
 
-import no.nav.modig.modia.ping.Pingable;
 import no.nav.modig.modia.ping.PingableWebService;
 import no.nav.sbl.dialogarena.common.cxf.CXFClient;
+import no.nav.sbl.dialogarena.types.Pingable;
 import no.nav.sbl.util.EnvironmentUtils;
 import no.nav.tjeneste.virksomhet.journal.v2.JournalV2;
 import org.springframework.context.annotation.Bean;

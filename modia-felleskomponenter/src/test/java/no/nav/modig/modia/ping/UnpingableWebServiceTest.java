@@ -1,5 +1,6 @@
 package no.nav.modig.modia.ping;
 
+import no.nav.sbl.dialogarena.types.Pingable;
 import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -12,11 +13,11 @@ public class UnpingableWebServiceTest {
         String navn = "gammeltRakkel";
         String adresse = "http://gammeltRakkel.com";
         UnpingableWebService ubrukeligTjenesteUtenPing = new UnpingableWebService(navn, adresse);
-        PingResult ping = ubrukeligTjenesteUtenPing.ping();
-        assertThat(ping.getServiceStatus(), is(PingResult.ServiceResult.UNPINGABLE));
+        Pingable.Ping ping = ubrukeligTjenesteUtenPing.ping();
 
-        assertThat(ubrukeligTjenesteUtenPing.name(), is(navn));
-        assertThat(ubrukeligTjenesteUtenPing.endpoint(), is(adresse));
-        assertThat(ubrukeligTjenesteUtenPing.method(), is("-"));
+        assertThat(ping.erAvskrudd(), is(true));
+
+        assertThat(ping.getMetadata().getId(), is(navn));
+        assertThat(ping.getMetadata().getEndepunkt(), is(adresse));
     }
 }

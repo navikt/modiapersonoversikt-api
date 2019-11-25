@@ -1,6 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash;
 
-import no.nav.modig.modia.ping.Pingable;
+import no.nav.sbl.dialogarena.types.Pingable;
 
 public interface UnleashService extends Pingable {
 

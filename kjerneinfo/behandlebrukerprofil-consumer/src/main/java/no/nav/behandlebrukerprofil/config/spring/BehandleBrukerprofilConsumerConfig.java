@@ -1,9 +1,9 @@
 package no.nav.behandlebrukerprofil.config.spring;
 
 import no.nav.modig.jaxws.handlers.MDCOutHandler;
-import no.nav.modig.modia.ping.Pingable;
 import no.nav.modig.modia.ping.PingableWebService;
 import no.nav.sbl.dialogarena.common.cxf.CXFClient;
+import no.nav.sbl.dialogarena.types.Pingable;
 import no.nav.tjeneste.virksomhet.behandlebrukerprofil.v2.BehandleBrukerprofilV2;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;

@@ -3,19 +3,14 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash;
 import no.finn.unleash.Unleash;
 import no.finn.unleash.repository.FeatureToggleResponse;
 import no.finn.unleash.repository.ToggleFetcher;
-import no.nav.modig.modia.ping.FailedPingResult;
-import no.nav.modig.modia.ping.OkPingResult;
-import no.nav.modig.modia.ping.PingResult;
+import no.nav.sbl.dialogarena.types.Pingable;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 
 import static no.finn.unleash.repository.FeatureToggleResponse.Status.NOT_CHANGED;
 import static no.finn.unleash.repository.FeatureToggleResponse.Status.UNAVAILABLE;
-import static no.nav.modig.modia.ping.PingResult.ServiceResult.SERVICE_FAIL;
-import static no.nav.modig.modia.ping.PingResult.ServiceResult.SERVICE_OK;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.core.Is.is;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -59,25 +54,23 @@ class UnleashServiceImplTest {
     }
 
     @Test
-    void pingHappyCase(){
+    void pingHappyCase() {
         when(toggleFetcher.fetchToggles()).thenReturn(new FeatureToggleResponse(NOT_CHANGED, 200));
 
-        PingResult pingResult = unleashService.ping();
+        Pingable.Ping pingResult = unleashService.ping();
 
         verify(toggleFetcher, times(1)).fetchToggles();
-        assertThat(pingResult.getServiceStatus(), is(SERVICE_OK));
-        assertThat(pingResult, instanceOf(OkPingResult.class));
+        assertThat(pingResult.erVellykket(), is(true));
     }
 
     @Test
-    void pingUnavailable(){
+    void pingUnavailable() {
         when(toggleFetcher.fetchToggles()).thenReturn(new FeatureToggleResponse(UNAVAILABLE, 200));
 
-        PingResult pingResult = unleashService.ping();
+        Pingable.Ping pingResult = unleashService.ping();
 
         verify(toggleFetcher, times(1)).fetchToggles();
-        assertThat(pingResult.getServiceStatus(), is(SERVICE_FAIL));
-        assertThat(pingResult, instanceOf(FailedPingResult.class));
+        assertThat(pingResult.erVellykket(), is(false));
     }
 
 }

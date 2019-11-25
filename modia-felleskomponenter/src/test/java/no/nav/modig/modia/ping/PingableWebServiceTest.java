@@ -1,5 +1,6 @@
 package no.nav.modig.modia.ping;
 
+import no.nav.sbl.dialogarena.types.Pingable;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -37,17 +38,16 @@ public class PingableWebServiceTest {
 
     @Test
     public void skalReturnereOkResultatNårTjenestenErOk() throws Exception {
-        PingResult pingResult = pingable.ping();
-        assertThat(pingResult.getServiceStatus(), is(PingResult.ServiceResult.SERVICE_OK));
-        assertThat(pingable.name(), is("WS"));
-        assertThat(pingable.method(), is("ping"));
+        Pingable.Ping pingResult = pingable.ping();
+        assertThat(pingResult.erVellykket(), is(true));
+        assertThat(pingResult.getMetadata().getBeskrivelse(), is("WS"));
     }
 
     @Test
     public void skalReturnereFeilNarTjenestenFeiler() throws Exception {
         when(ws.ping()).thenThrow(new RuntimeException());
-        PingResult pingResult = pingable.ping();
-        assertThat(pingResult.getServiceStatus(), is(PingResult.ServiceResult.SERVICE_FAIL));
+        Pingable.Ping pingResult = pingable.ping();
+        assertThat(pingResult.erVellykket(), is(false));
     }
 
     private class UnpingableWS {

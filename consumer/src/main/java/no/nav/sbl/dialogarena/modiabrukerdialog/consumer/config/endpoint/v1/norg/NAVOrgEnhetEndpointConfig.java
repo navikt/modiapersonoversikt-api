@@ -1,9 +1,9 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v1.norg;
 
 import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navorgenhet.GOSYSNAVOrgEnhet;
-import no.nav.modig.modia.ping.Pingable;
 import no.nav.modig.modia.ping.UnpingableWebService;
 import no.nav.sbl.dialogarena.common.cxf.CXFClient;
+import no.nav.sbl.dialogarena.types.Pingable;
 import no.nav.sbl.util.EnvironmentUtils;
 import org.apache.cxf.ws.security.wss4j.WSS4JOutInterceptor;
 import org.springframework.context.annotation.Bean;
