@@ -14,6 +14,9 @@ import javax.ws.rs.core.MediaType.APPLICATION_JSON
 import javax.ws.rs.core.Response
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Policies
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Tilgangskontroll
+import no.nav.sbl.dialogarena.naudit.Audit
+import no.nav.sbl.dialogarena.naudit.Audit.Action.*
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.AuditResources.Person.Henvendelse
 
 @Path("/dialog/{fnr}")
 @Produces(APPLICATION_JSON)
@@ -31,7 +34,7 @@ class DelsvarController @Inject constructor(
     {
         return tilgangskontroll
                 .check(Policies.tilgangTilBruker.with(fnr))
-                .get {
+                .get(Audit.describe(CREATE, Henvendelse.Delsvar, "fnr" to fnr, "behandlingsId" to request.behandlingsId)) {
                     val saksbehandlersValgteEnhet = RestUtils.hentValgtEnhet(httpRequest)
 
                     val delsvarRequest = DelsvarRequestBuilder()

@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.rsbac
 
+import no.nav.sbl.dialogarena.naudit.Audit
 import no.nav.sbl.dialogarena.rsbac.DecisionEnums.DENY
 import no.nav.sbl.dialogarena.rsbac.DecisionEnums.PERMIT
 import java.io.PrintWriter
@@ -18,7 +19,7 @@ interface RSBAC<CONTEXT> {
 }
 
 interface RSBACInstance<CONTEXT> : RSBAC<CONTEXT> {
-    fun <S> get(result: Supplier<S>): S
+    fun <S> get(auditDescriptor: Audit.AuditDescriptor<in S>, supplier: Supplier<S>): S
     fun getDecision(): Decision
 }
 
@@ -67,11 +68,13 @@ class RSBACInstanceImpl<CONTEXT, OUTPUT>(val context: CONTEXT, var exception:  F
 
     override fun context(): CONTEXT = context
 
-    override fun <S> get(result: Supplier<S>): S {
+    override fun <S> get(auditDescriptor: Audit.AuditDescriptor<in S>, supplier: Supplier<S>): S {
         val decision = getDecision()
 
         if (decision.decision == PERMIT) {
-            return result.invoke()
+            val result : S = supplier.invoke()
+            auditDescriptor.log(result)
+            return result
         }
 
         throw this.exception(decision.message)
@@ -85,5 +88,7 @@ class RSBACInstanceImpl<CONTEXT, OUTPUT>(val context: CONTEXT, var exception:  F
         val sw = StringWriter()
         exception.printStackTrace(PrintWriter(sw))
         Decision(sw.toString(), this.bias)
+    } finally {
+
     }
 }

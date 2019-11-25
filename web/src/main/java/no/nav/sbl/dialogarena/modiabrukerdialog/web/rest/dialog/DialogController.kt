@@ -16,9 +16,12 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Policies
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Tilgangskontroll
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.api.DTO
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.api.toDTO
+import no.nav.sbl.dialogarena.naudit.Audit
+import no.nav.sbl.dialogarena.naudit.Audit.Action.*
 import no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.PdfUtils
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.henvendelse.HenvendelseBehandlingService
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.henvendelse.domain.Traad
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.AuditResources.Person
 import java.io.ByteArrayInputStream
 import java.util.*
 import javax.inject.Inject
@@ -48,7 +51,7 @@ class DialogController @Inject constructor(
     ): List<TraadDTO> {
         return tilgangskontroll
                 .check(Policies.tilgangTilBruker.with(fnr))
-                .get {
+                .get(Audit.describe(READ, Person.Henvendelse.Les, "fnr" to fnr)) {
                     val valgtEnhet = RestUtils.hentValgtEnhet(request)
                     henvendelseService
                             .hentMeldinger(fnr, valgtEnhet)
@@ -66,7 +69,7 @@ class DialogController @Inject constructor(
     ): Response {
         return tilgangskontroll
                 .check(Policies.tilgangTilBruker.with(fnr))
-                .get {
+                .get(Audit.describe(CREATE, Person.Henvendelse.Les, "fnr" to fnr)) {
                     val context = lagSendHenvendelseContext(fnr, request)
                     henvendelseUtsendingService.sendHenvendelse(lagReferat(referatRequest, context), Optional.empty(), Optional.empty(), context.enhet)
                     Response.ok().build()
@@ -82,10 +85,8 @@ class DialogController @Inject constructor(
     ): Response {
         return tilgangskontroll
                 .check(Policies.tilgangTilBruker.with(fnr))
-                .get {
+                .get(Audit.describe(CREATE, Person.Henvendelse.Les, "fnr" to fnr)) {
                     val context = lagSendHenvendelseContext(fnr, request)
-                    val gsakSaker = sakerService.hentSammensatteSaker(fnr)
-                    val psakSaker = sakerService.hentPensjonSaker(fnr)
 
                     henvendelseUtsendingService.sendHenvendelse(lagSporsmal(sporsmalsRequest, sporsmalsRequest.sak.temaKode, context), Optional.empty(), Optional.of(sporsmalsRequest.sak), context.enhet)
                     Response.ok().build()
@@ -101,7 +102,7 @@ class DialogController @Inject constructor(
     ): FortsettDialogDTO {
         return tilgangskontroll
                 .check(Policies.tilgangTilBruker.with(fnr))
-                .get {
+                .get(Audit.describe(CREATE, Person.Henvendelse.Opprettet, "fnr" to fnr)) {
                     val traadId = opprettHenvendelseRequest.traadId
                     val context = lagSendHenvendelseContext(fnr, request)
                     val traad = henvendelseService
@@ -141,7 +142,7 @@ class DialogController @Inject constructor(
     ): Response {
         return tilgangskontroll
                 .check(Policies.tilgangTilBruker.with(fnr))
-                .get {
+                .get(Audit.describe(UPDATE, Person.Henvendelse.Ferdigstill, "fnr" to fnr)) {
                     val context = lagSendHenvendelseContext(fnr, request)
                     val traad = henvendelseService
                             .hentMeldinger(fnr, context.enhet)
@@ -169,7 +170,7 @@ class DialogController @Inject constructor(
             slaaSammenRequest: SlaaSammenRequest
     ): Map<String, Any?> = tilgangskontroll
             .check(Policies.tilgangTilBruker.with(fnr))
-            .get {
+            .get(Audit.describe(UPDATE, Person.Henvendelse.SlaSammen, "fnr" to fnr)) {
                 if (slaaSammenRequest.traader.groupingBy { it -> it.traadId }.eachCount().size < 2) {
                     throw BadRequestException("Du kan ikke slå sammen mindre enn 2 trådeer")
                 }
@@ -196,7 +197,7 @@ class DialogController @Inject constructor(
                         "nyTraadId" to nyTraadId
                 )
             }
-    
+
     private fun ferdigstillAlleUnntattEnOppgave(request: SlaaSammenRequest, nyTraadId: String, enhet: String) {
         request.traader.filter { it.traadId != nyTraadId }.forEach {
             oppgaveBehandlingService.ferdigstillOppgaveIGsak(it.oppgaveId, request.temagruppe, enhet)
@@ -220,7 +221,7 @@ class DialogController @Inject constructor(
             @Context request: HttpServletRequest
     ): Response = tilgangskontroll
             .check(Policies.tilgangTilBruker.with(fnr))
-            .get {
+            .get(Audit.describe(READ, Person.Henvendelse.Print, "fnr" to fnr, "traadId" to traadId)) {
                 val valgtEnhet = RestUtils.hentValgtEnhet(request)
                 henvendelseService
                         .hentMeldinger(fnr, valgtEnhet)
@@ -238,22 +239,6 @@ class DialogController @Inject constructor(
                             Response.status(404).build()
                         }
             }
-
-    private fun hentSaker(fnr: String): Set<Sak> {
-        val gsakSaker = try {
-            sakerService.hentSammensatteSaker(fnr)
-        } catch (e: Exception) {
-            emptyList<Sak>()
-        }
-
-        val psakSaker = try {
-            sakerService.hentPensjonSaker(fnr)
-        } catch (e: Exception) {
-            emptyList<Sak>()
-        }
-
-        return gsakSaker.union(psakSaker)
-    }
 }
 
 private fun erUbesvartSporsmalFraBruker(traad: Traad): Boolean {
@@ -290,11 +275,11 @@ private fun lagSporsmal(sporsmalRequest: SendSporsmalRequest, sakstema: String, 
 }
 
 private fun erTraadTilknyttetAnsatt(traad: Traad): Boolean =
-    if (traad.meldinger.any { it.meldingstype == Meldingstype.SPORSMAL_MODIA_UTGAAENDE }) {
-        traad.meldinger.sortedBy { it.visningsDato }.last().erTilknyttetAnsatt
-    } else {
-        true
-    }
+        if (traad.meldinger.any { it.meldingstype == Meldingstype.SPORSMAL_MODIA_UTGAAENDE }) {
+            traad.meldinger.sortedBy { it.visningsDato }.last().erTilknyttetAnsatt
+        } else {
+            true
+        }
 
 private fun lagFortsettDialog(request: FortsettDialogRequest, requestContext: RequestContext, traad: Traad): Melding {
     val eldsteMelding = traad.meldinger[0]

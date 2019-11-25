@@ -4,6 +4,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.Unleash
 import no.nav.sbl.util.EnvironmentUtils
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Policies
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Tilgangskontroll
+import no.nav.sbl.dialogarena.naudit.Audit.Companion.skipAuditLog
 import javax.inject.Inject
 import javax.ws.rs.GET
 import javax.ws.rs.Path
@@ -22,7 +23,7 @@ constructor(
     @GET
     @Path("/")
     fun hent(): Map<String, Any?> {
-        return tilgangskontroll.check(Policies.tilgangTilModia).get {
+        return tilgangskontroll.check(Policies.tilgangTilModia).get(skipAuditLog()) {
             mapOf("baseUrls" to getBaseUrls())
         }
     }

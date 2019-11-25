@@ -1,12 +1,17 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest;
 
+import kotlin.Pair;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.Sak;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.exceptions.JournalforingFeilet;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.gsak.SakerService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.saker.knyttbehandlingskjedetilsak.EnhetIkkeSatt;
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.BehandlingsIdTilgangData;
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Tilgangskontroll;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.AuditResources;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.AuditResources.Person;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.api.Feilmelding;
+import no.nav.sbl.dialogarena.naudit.Audit;
+import no.nav.sbl.dialogarena.naudit.Audit.Action;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
@@ -20,6 +25,7 @@ import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.RestUtils.hentValgtEnhet;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Policies.behandlingsIderTilhorerBruker;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Policies.tilgangTilBruker;
+import static no.nav.sbl.dialogarena.naudit.Audit.Action.*;
 
 @Path("/journalforing/{fnr}")
 @Produces(APPLICATION_JSON)
@@ -41,7 +47,7 @@ public class JournalforingController {
     public List<Sak> hentSammensatteSaker(@PathParam("fnr") String fnr) {
         return tilgangskontroll
                 .check(tilgangTilBruker.with(fnr))
-                .get(() -> sakerService.hentSammensatteSaker(fnr));
+                .get(Audit.describe(READ, Person.GsakSaker, new Pair<>("fnr", fnr)), () -> sakerService.hentSammensatteSaker(fnr));
     }
 
     @GET
@@ -49,7 +55,7 @@ public class JournalforingController {
     public List<Sak> hentPensjonSaker(@PathParam("fnr") String fnr) {
         return tilgangskontroll
                 .check(tilgangTilBruker.with(fnr))
-                .get(() -> sakerService.hentPensjonSaker(fnr));
+                .get(Audit.describe(READ, Person.PesysSaker, new Pair<>("fnr", fnr)), () -> sakerService.hentPensjonSaker(fnr));
     }
 
     @POST
@@ -59,7 +65,7 @@ public class JournalforingController {
         return tilgangskontroll
                 .check(tilgangTilBruker.with(fnr))
                 .check(behandlingsIderTilhorerBruker.with(new BehandlingsIdTilgangData(fnr, asList(traadId))))
-                .get(() -> {
+                .get(Audit.describe(UPDATE, Person.Henvendelse.Journalfor, new Pair<>("fnr", fnr), new Pair<>("traadId", traadId), new Pair<>("saksId", sak.saksId)), () -> {
                     String enhet = hentValgtEnhet(request);
                     try {
                         sakerService.knyttBehandlingskjedeTilSak(fnr, traadId, sak, enhet);

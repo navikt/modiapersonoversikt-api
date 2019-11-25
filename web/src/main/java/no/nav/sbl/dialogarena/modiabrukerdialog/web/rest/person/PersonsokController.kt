@@ -2,7 +2,9 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.person
 
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Policies
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Tilgangskontroll
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.AuditResources
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.lagXmlGregorianDato
+import no.nav.sbl.dialogarena.naudit.Audit
 import no.nav.tjeneste.virksomhet.personsoek.v1.PersonsokPortType
 import no.nav.tjeneste.virksomhet.personsoek.v1.informasjon.*
 import no.nav.tjeneste.virksomhet.personsoek.v1.meldinger.FimAdresseFilter
@@ -11,11 +13,11 @@ import no.nav.tjeneste.virksomhet.personsoek.v1.meldinger.FimPersonFilter
 import no.nav.tjeneste.virksomhet.personsoek.v1.meldinger.FimSoekekriterie
 import org.slf4j.LoggerFactory
 import javax.inject.Inject
+import javax.ws.rs.InternalServerErrorException
 import javax.ws.rs.POST
 import javax.ws.rs.Path
 import javax.ws.rs.Produces
 import javax.ws.rs.core.MediaType
-import javax.ws.rs.core.Response
 
 private enum class OppslagFeil {
     FOR_MANGE, UKJENT
@@ -26,24 +28,29 @@ private enum class OppslagFeil {
 class PersonsokController @Inject constructor(private val personsokPortType: PersonsokPortType, val tilgangskontroll: Tilgangskontroll) {
 
     private val logger = LoggerFactory.getLogger(PersonsokController::class.java)
+    private val auditDescriptor = Audit.describe<List<Map<String, Any?>>>(Audit.Action.READ, AuditResources.Personsok.Resultat) { resultat ->
+        val fnr = resultat.map { it["ident"] }.joinToString(", ")
+        arrayOf(
+                "fnr" to fnr
+        )
+    }
 
     @POST
-    fun sok(personsokRequest: PersonsokRequest): Response {
+    fun sok(personsokRequest: PersonsokRequest): List<Map<String, Any?>> {
         return tilgangskontroll
                 .check(Policies.tilgangTilModia)
-                .get {
+                .get(auditDescriptor) {
                     try {
                         val response = personsokPortType.finnPerson(lagPersonsokRequest(personsokRequest))
                         if (response.personListe == null) {
-                            Response.ok(emptyList<Map<String, Any?>>()).build()
+                            emptyList()
                         } else {
-                            val liste = response.personListe.map { lagPersonResponse(it) }
-                            Response.ok(liste).build()
+                            response.personListe.map { lagPersonResponse(it) }
                         }
                     } catch (ex: Exception) {
                         when (haandterOppslagFeil(ex)) {
-                            OppslagFeil.FOR_MANGE -> Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Søket gav mer enn 200 treff. Forsøk å begrense søket.").build()
-                            else -> Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Feil fra søketjeneste: " + ex.message).build()
+                            OppslagFeil.FOR_MANGE -> throw InternalServerErrorException("Søket gav mer enn 200 treff. Forsøk å begrense søket.")
+                            else -> throw InternalServerErrorException("Feil fra søketjeneste: " + ex.message)
                         }
                     }
                 }

@@ -3,13 +3,14 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll
 import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.whenever
+import no.nav.sbl.dialogarena.naudit.Audit
 import no.nav.sbl.dialogarena.rsbac.*
 import no.nav.sbl.dialogarena.rsbac.Function
 
 class RSBACMock<T> : RSBACInstance<T> {
     override fun permit(message: String, rule: Function<T, Boolean>): RSBACInstance<T> = this
     override fun deny(message: String, rule: Function<T, Boolean>): RSBACInstance<T> = this
-    override fun <S> get(result: Supplier<S>): S = result()
+    override fun <S> get(auditDescriptor: Audit.AuditDescriptor<in S>, supplier: Supplier<S>): S = supplier()
     override fun getDecision(): Decision = Decision("", DecisionEnums.PERMIT)
     override fun exception(exception: Function<String, RuntimeException>): RSBACInstance<T> = this
     override fun check(policy: Policy<T>): RSBACInstance<T> = this

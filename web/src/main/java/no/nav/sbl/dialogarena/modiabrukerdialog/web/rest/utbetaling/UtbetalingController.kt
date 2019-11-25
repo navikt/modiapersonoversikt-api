@@ -2,8 +2,10 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.utbetaling
 
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Policies
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Tilgangskontroll
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.AuditResources
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.DATOFORMAT
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.lagRiktigDato
+import no.nav.sbl.dialogarena.naudit.Audit
 import no.nav.sbl.dialogarena.utbetaling.service.UtbetalingService
 import no.nav.tjeneste.virksomhet.utbetaling.v1.informasjon.*
 import javax.inject.Inject
@@ -17,12 +19,12 @@ class UtbetalingController @Inject constructor(private val service: UtbetalingSe
 
     @GET
     @Path("/")
-    fun hent(@PathParam("fnr") fodselsnummer: String,
+    fun hent(@PathParam("fnr") fnr: String,
              @QueryParam("startDato") start: String?,
              @QueryParam("sluttDato") slutt: String?): Response {
         return tilgangskontroll
-                .check(Policies.tilgangTilBruker.with(fodselsnummer))
-                .get {
+                .check(Policies.tilgangTilBruker.with(fnr))
+                .get(Audit.describe(Audit.Action.READ, AuditResources.Person.Utbetalinger, "fnr" to fnr)) {
                     val startDato = lagRiktigDato(start)
                     val sluttDato = lagRiktigDato(slutt)
 
@@ -30,7 +32,7 @@ class UtbetalingController @Inject constructor(private val service: UtbetalingSe
                         Response.status(Response.Status.BAD_REQUEST)
                                 .entity("queryparam ?startDato=yyyy-MM-dd&sluttDato=yyyy-MM-dd må være satt").build()
                     } else {
-                        val utbetalinger = service.hentWSUtbetalinger(fodselsnummer,
+                        val utbetalinger = service.hentWSUtbetalinger(fnr,
                                 startDato,
                                 sluttDato)
 

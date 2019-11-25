@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.rsbac
 
+import no.nav.sbl.dialogarena.naudit.Audit
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -12,13 +13,13 @@ internal class RSBACTest {
         assertThrows<RSBACException> {
             rsbac
                     .deny("") { true }
-                    .get { "OK" }
+                    .get(Audit.skipAuditLog) { "OK" }
         }
 
         assertThrows<RSBACException> {
             rsbac
                     .deny("") { true }
-                    .get { "OK" }
+                    .get(Audit.skipAuditLog) { "OK" }
         }
     }
 
@@ -29,13 +30,13 @@ internal class RSBACTest {
         assertThrows<RSBACException> {
             rsbac
                     .permit("") { false }
-                    .get { "OK" }
+                    .get(Audit.skipAuditLog) { "OK" }
         }
 
         assertThrows<RSBACException> {
             rsbac
                     .permit("") { false }
-                    .get { "OK" }
+                    .get(Audit.skipAuditLog) { "OK" }
         }
     }
 
@@ -47,7 +48,7 @@ internal class RSBACTest {
             rsbac
                     .permit("Error 1") { false }
                     .permit("Error 2") { false }
-                    .get { "OK" }
+                    .get(Audit.skipAuditLog) { "OK" }
         }
         assertThrowsMessage<RSBACException>("Error 1", failOnFirst)
 
@@ -55,7 +56,7 @@ internal class RSBACTest {
             rsbac
                     .permit("Error 1") { true }
                     .permit("Error 2") { false }
-                    .get { "OK" }
+                    .get(Audit.skipAuditLog) { "OK" }
         }
 
         assertThrowsMessage<RSBACException>("Error 2", failOnLast)
@@ -70,7 +71,7 @@ internal class RSBACTest {
                 .deny("Error 2") { false }
                 .permit("Error 3") { true }
                 .deny("Error 4") { false }
-                .get { "OK" }
+                .get(Audit.skipAuditLog) { "OK" }
 
         assertEquals("OK", result)
     }
@@ -83,7 +84,7 @@ internal class RSBACTest {
                 .permit("Error 1") { context: String -> context == "Value" }
                 .permit("Error 2") { context: String -> context == "Value" }
                 .deny("Error 3") { context: String -> context != "Value" }
-                .get { "OK" }
+                .get(Audit.skipAuditLog) { "OK" }
 
         assertEquals("OK", result)
     }
@@ -95,7 +96,7 @@ internal class RSBACTest {
         val biased: () -> Unit = {
             rsbac
                     .check(Policy("I have no Idea") { DecisionEnums.NOT_APPLICABLE })
-                    .get { "OK" }
+                    .get(Audit.skipAuditLog) { "OK" }
         }
 
         assertThrowsMessage<RSBACException>("No matching rule found", biased)
@@ -108,7 +109,7 @@ internal class RSBACTest {
         val biased = rsbac
                 .bias(DecisionEnums.PERMIT)
                 .check(Policy("I have no Idea") { DecisionEnums.NOT_APPLICABLE })
-                .get { "OK" }
+                .get(Audit.skipAuditLog) { "OK" }
 
         assertEquals("OK", biased)
     }

@@ -5,6 +5,9 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.gsak.GsakKodeverk
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.BehandlingsIdTilgangData
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Policies
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Tilgangskontroll
+import no.nav.sbl.dialogarena.naudit.Audit
+import no.nav.sbl.dialogarena.naudit.Audit.Action.*
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.AuditResources.Person.Henvendelse
 import no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.DateUtils.arbeidsdagerFraDato
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.OppgavebehandlingV3
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.meldinger.WSOpprettOppgave
@@ -33,7 +36,7 @@ class DialogOppgaveController @Inject constructor(
         return tilgangskontroll
                 .check(Policies.tilgangTilBruker.with(request.fnr))
                 .check(Policies.behandlingsIderTilhorerBruker.with(BehandlingsIdTilgangData(request.fnr, listOf(request.behandlingskjedeId))))
-                .get {
+                .get(Audit.describe(CREATE, Henvendelse.Oppgave.Opprett, "fnr" to request.fnr, "behandlingsIder" to request.behandlingskjedeId)) {
                     oppgavebehandling.opprettOppgave(
                             WSOpprettOppgaveRequest()
                                     .withOpprettetAvEnhetId(request.valgtEnhetId)
@@ -64,7 +67,7 @@ class DialogOppgaveController @Inject constructor(
     fun hentAlleTema(): List<Map<String, Any?>> {
         return tilgangskontroll
                 .check(Policies.tilgangTilModia)
-                .get {
+                .get(Audit.skipAuditLog()) {
                     val gsakTemaListe = gsakKodeverk.hentTemaListe()
                     gsakTemaListe.filter { it.oppgaveTyper.isNotEmpty() }.map {
                         mapOf(

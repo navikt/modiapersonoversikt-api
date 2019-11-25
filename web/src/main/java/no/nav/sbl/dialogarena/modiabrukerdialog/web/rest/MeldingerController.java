@@ -1,9 +1,12 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest;
 
+import kotlin.Pair;
 import no.nav.common.auth.SubjectHandler;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.AnsattService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Tilgangskontroll;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.AuditResources;
+import no.nav.sbl.dialogarena.naudit.Audit;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.IkkeIndeksertException;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.MeldingerSok;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.henvendelse.HenvendelseBehandlingService;
@@ -26,6 +29,7 @@ import static javax.ws.rs.core.Response.Status.FORBIDDEN;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.AnsattEnhet.TIL_ENHET_ID;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.RestUtils.hentValgtEnhet;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Policies.tilgangTilBruker;
+import static no.nav.sbl.dialogarena.naudit.Audit.Action.READ;
 import static org.slf4j.LoggerFactory.getLogger;
 
 @Path("/meldinger/{fnr}")
@@ -48,7 +52,7 @@ public class MeldingerController {
     public Response hentTraader(@PathParam("fnr") String fnr, @Context HttpServletRequest request) {
         return tilgangskontroll
                 .check(tilgangTilBruker.with(fnr))
-                .get(() -> {
+                .get(Audit.describe(READ, AuditResources.Person.Henvendelse.Les, new Pair<>("fnr", fnr)), () -> {
                     indekser(fnr, request);
                     try {
                         return Response.ok(searcher.sok(fnr, "")).build();
@@ -63,7 +67,7 @@ public class MeldingerController {
     public Response sok(@PathParam("fnr") String fnr, @PathParam("fritekst") String fritekst) {
         return tilgangskontroll
                 .check(tilgangTilBruker.with(fnr))
-                .get(() -> {
+                .get(Audit.describe(READ, AuditResources.Person.Henvendelse.Sok, new Pair<>("fnr", fnr), new Pair<>("query", fritekst)), () -> {
                     try {
                         return Response.ok(searcher.sok(fnr, fritekst)).build();
                     } catch (IkkeIndeksertException e) {
@@ -77,7 +81,7 @@ public class MeldingerController {
     public Response indekser(@PathParam("fnr") String fnr, @Context HttpServletRequest request) {
         return tilgangskontroll
                 .check(tilgangTilBruker.with(fnr))
-                .get(() -> {
+                .get(Audit.skipAuditLog(), () -> {
                     String valgtEnhet = hentValgtEnhet(request);
                     if (ansattService.hentEnhetsliste().stream().map(TIL_ENHET_ID).collect(toList()).contains(valgtEnhet)) {
                         List<Melding> meldinger = hentAlleMeldinger(fnr, valgtEnhet);

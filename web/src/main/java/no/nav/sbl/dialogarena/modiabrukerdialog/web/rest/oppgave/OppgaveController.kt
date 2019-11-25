@@ -11,8 +11,11 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.RestUtils
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.http.CookieUtil
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Policies
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Tilgangskontroll
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.AuditResources.Person.Henvendelse
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.mapOfNotNullOrEmpty
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.service.plukkoppgave.PlukkOppgaveService
+import no.nav.sbl.dialogarena.naudit.Audit
+import no.nav.sbl.dialogarena.naudit.Audit.Action.*
 import org.slf4j.LoggerFactory
 import javax.inject.Inject
 import javax.servlet.http.HttpServletRequest
@@ -40,7 +43,7 @@ class OppgaveController @Inject constructor(
         return tilgangkontroll
                 .check(Policies.tilgangTilModia)
                 .check(Policies.kanPlukkeOppgave)
-                .get {
+                .get(Audit.describe(UPDATE, Henvendelse.Oppgave.LeggTilbake, "oppgaveId" to request.oppgaveId)) {
                     val valgtEnhet = RestUtils.hentValgtEnhet(httpRequest)
                     val leggTilbakeOppgaveIGsakRequest = lagLeggTilbakeRequest(request, valgtEnhet)
 
@@ -83,7 +86,7 @@ class OppgaveController @Inject constructor(
         return tilgangkontroll
                 .check(Policies.tilgangTilModia)
                 .check(Policies.kanPlukkeOppgave)
-                .get {
+                .get(Audit.describe(READ, Henvendelse.Oppgave.Plukk, "temagruppe" to temagruppe)) {
                     val tildelteOppgaver = oppgaveBehandlingService.finnTildelteOppgaverIGsak()
                     if (tildelteOppgaver.isNotEmpty()) {
                         tildelteOppgaver
@@ -101,7 +104,7 @@ class OppgaveController @Inject constructor(
     fun finnTildelte() =
             tilgangkontroll
                     .check(Policies.tilgangTilModia)
-                    .get {
+                    .get(Audit.describe(READ, Henvendelse.Oppgave.Tildelte)) {
                         oppgaveBehandlingService.finnTildelteOppgaverIGsak()
                                 .map { mapOppgave(it) }
                     }

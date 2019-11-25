@@ -9,7 +9,10 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.organisasjonenh
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.organisasjonenhet.kontaktinformasjon.service.OrganisasjonEnhetKontaktinformasjonService
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Policies
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Tilgangskontroll
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.AuditResources.Enhet
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.enhet.model.EnhetKontaktinformasjon
+import no.nav.sbl.dialogarena.naudit.Audit
+import no.nav.sbl.dialogarena.naudit.Audit.Action.*
 import javax.inject.Inject
 import javax.ws.rs.*
 import javax.ws.rs.core.MediaType.APPLICATION_JSON
@@ -28,7 +31,7 @@ constructor(private val organisasjonEnhetKontaktinformasjonService: Organisasjon
     fun hentMedId(@PathParam("id") organisasjonsid: String): OrganisasjonEnhetKontaktinformasjon {
         return tilgangskontroll
                 .check(Policies.tilgangTilModia)
-                .get {
+                .get(Audit.describe(READ, Enhet.Kontaktinformasjon, "organisasjonsid" to organisasjonsid)) {
                     organisasjonEnhetKontaktinformasjonService.hentKontaktinformasjon(organisasjonsid)
                 }
     }
@@ -38,7 +41,7 @@ constructor(private val organisasjonEnhetKontaktinformasjonService: Organisasjon
     fun finnEnhet(@QueryParam("gt") geografiskId: String?, @QueryParam("dkode") diskresjonskode: String?): EnhetKontaktinformasjon {
         return tilgangskontroll
                 .check(Policies.tilgangTilModia)
-                .get {
+                .get(Audit.describe(READ, Enhet.Kontaktinformasjon, "geografiskId" to geografiskId, "diskresjonskode" to diskresjonskode)) {
                     if (geografiskId.isNullOrEmpty() && diskresjonskode.isNullOrEmpty()) throw NotFoundException();
 
                     val enhetid = organisasjonEnhetV2Service.finnNAVKontor(geografiskId, diskresjonskode ?: "")
@@ -55,7 +58,7 @@ constructor(private val organisasjonEnhetKontaktinformasjonService: Organisasjon
     fun hentAnsattePaaEnhet(@PathParam("enhetId") enhetId: String): List<Ansatt> {
         return tilgangskontroll
                 .check(Policies.tilgangTilModia)
-                .get {
+                .get(Audit.describe(READ, Enhet.Ansatte, "enhetId" to enhetId)) {
                     ansattService.ansatteForEnhet(AnsattEnhet(enhetId, ""))
                 }
     }
@@ -66,7 +69,7 @@ constructor(private val organisasjonEnhetKontaktinformasjonService: Organisasjon
     fun hentAlleEnheterForOppgave(): List<Map<String, Any?>> {
         return tilgangskontroll
                 .check(Policies.tilgangTilModia)
-                .get {
+                .get(Audit.describe(READ, Enhet.OppgaveBehandlere)) {
                     val enheter = organisasjonEnhetV2Service.hentAlleEnheter(OrganisasjonEnhetV2Service.WSOppgavebehandlerfilter.KUN_OPPGAVEBEHANDLERE)
                     enheter.filter { erGyldigEnhet(it) }.map {
                         mapOf(
@@ -85,7 +88,7 @@ constructor(private val organisasjonEnhetKontaktinformasjonService: Organisasjon
                              @QueryParam("underkategorikode") underkategorikode: String?): List<Map<String, Any?>> {
         return tilgangskontroll
                 .check(Policies.tilgangTilBruker.with(fnr))
-                .get {
+                .get(Audit.describe(READ, Enhet.Foreslatte)) {
                     val enheter = arbeidsfordeling.finnBehandlendeEnhetListe(fnr, temakode, typekode, underkategorikode)
                     enheter.map {
                         mapOf(

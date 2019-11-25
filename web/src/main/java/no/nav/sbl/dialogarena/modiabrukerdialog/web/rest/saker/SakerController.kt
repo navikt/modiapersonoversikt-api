@@ -14,6 +14,9 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.interfaces.Tilgangsk
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.saf.SafService
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Policies
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Tilgangskontroll
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.AuditResources
+import no.nav.sbl.dialogarena.naudit.Audit
+import no.nav.sbl.dialogarena.naudit.Audit.Action.*
 import org.joda.time.DateTime
 import java.time.LocalDateTime
 import java.util.*
@@ -36,12 +39,12 @@ class SakerController @Inject constructor(private val saksoversiktService: Sakso
     @GET
     @Path("/sakstema")
     @Produces(MediaType.APPLICATION_JSON)
-    fun hentSakstema(@Context request: HttpServletRequest, @PathParam("fnr") fødselsnummer: String): Map<String, Any?> {
+    fun hentSakstema(@Context request: HttpServletRequest, @PathParam("fnr") fnr: String): Map<String, Any?> {
         return tilgangskontroll
-            .check(Policies.tilgangTilBruker.with(fødselsnummer))
-            .get {
-                val sakerWrapper = saksService.hentAlleSaker(fødselsnummer)
-                val sakstemaWrapper = sakstemaService.hentSakstema(sakerWrapper.resultat, fødselsnummer, false)
+            .check(Policies.tilgangTilBruker.with(fnr))
+            .get(Audit.describe(READ, AuditResources.Person.Saker, "fnr" to fnr)) {
+                val sakerWrapper = saksService.hentAlleSaker(fnr)
+                val sakstemaWrapper = sakstemaService.hentSakstema(sakerWrapper.resultat, fnr, false)
 
                 // TODO skal denne metoden ligge i tilgangskontrollService?
                 tilgangskontrollService.markerIkkeJournalforte(sakstemaWrapper.resultat)
@@ -57,15 +60,15 @@ class SakerController @Inject constructor(private val saksoversiktService: Sakso
     @GET
     @Path("/dokument/{journalpostId}/{dokumentreferanse}")
     @Produces("application/pdf")
-    fun hentDokument(@Context request: HttpServletRequest, @PathParam("fnr") fødselsnummer: String,
+    fun hentDokument(@Context request: HttpServletRequest, @PathParam("fnr") fnr: String,
                      @PathParam("journalpostId") journalpostId: String,
                      @PathParam("dokumentreferanse") dokumentreferanse: String): Response {
         return tilgangskontroll
-                .check(Policies.tilgangTilBruker.with(fødselsnummer))
-                .get {
-                    val journalpostMetadata = hentDokumentMetadata(journalpostId, fødselsnummer)
+                .check(Policies.tilgangTilBruker.with(fnr))
+                .get(Audit.describe(READ, AuditResources.Person.Dokumenter, "fnr" to fnr, "journalpostId" to journalpostId, "dokumentreferanse" to dokumentreferanse)) {
+                    val journalpostMetadata = hentDokumentMetadata(journalpostId, fnr)
                     val tilgangskontrollResult = tilgangskontrollService.harSaksbehandlerTilgangTilDokument(request,
-                            journalpostMetadata, fødselsnummer, journalpostMetadata.temakode)
+                            journalpostMetadata, fnr, journalpostMetadata.temakode)
 
                     // TODO erstatt tilgangsstyring
                     if (!tilgangskontrollResult.result.isPresent || !finnesDokumentReferansenIMetadata(journalpostMetadata, dokumentreferanse)) {
