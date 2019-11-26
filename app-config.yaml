@@ -176,8 +176,5 @@ fasitResources:
   - alias: virksomhet:BehandleBrukerprofil_v2
     resourceType: webserviceendpoint
 
-  - alias: servicegateway
-    resourceType: webservicegateway
-
 alertProfiles:
   - common-java-modules
