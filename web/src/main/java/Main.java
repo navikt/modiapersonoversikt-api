@@ -45,8 +45,10 @@ public class Main {
         switch(naisNamespace) {
             case "q6":
                 loadFromResource("configurations/q6.properties");
+            case "q0":
+                loadFromResource("configurations/q0.properties");
             default:
-                loadFromResource("configurations/q6.properties");
+                loadFromResource("configurations/q0.properties");
         }
     }
 
