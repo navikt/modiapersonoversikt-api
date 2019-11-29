@@ -27,7 +27,7 @@ class OrganisasjonenhetKontaktinformasjonKeyGeneratorTest {
     @DisplayName("Null som argument til generate skal kaste feil")
     void nullParamkasterFeil() {
         assertThrows(IllegalArgumentException.class, () -> {
-            generator.generate(mock(OrganisasjonEnhetKontaktinformasjonV1.class), method, null);
+            generator.generate(mock(OrganisasjonEnhetKontaktinformasjonV1.class), method);
         });
     }
 

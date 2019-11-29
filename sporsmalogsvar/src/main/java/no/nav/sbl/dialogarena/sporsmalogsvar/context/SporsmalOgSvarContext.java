@@ -1,8 +1,6 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.context;
 
 import no.nav.kjerneinfo.consumer.fim.person.PersonKjerneinfoServiceBi;
-import no.nav.modig.common.SporingsLogger;
-import no.nav.modig.common.SporingsLoggerFactory;
 import no.nav.modig.content.ContentRetriever;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.kodeverk.StandardKodeverk;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.ldap.LDAPService;
@@ -40,7 +38,6 @@ public class SporsmalOgSvarContext {
             Tilgangskontroll tilgangskontroll,
             StandardKodeverk standardKodeverk,
             @Named("propertyResolver") ContentRetriever propertyResolver,
-            SporingsLogger sporingsLogger,
             LDAPService ldapService
     ) {
         return new HenvendelseBehandlingServiceImpl(
@@ -50,7 +47,6 @@ public class SporsmalOgSvarContext {
                 tilgangskontroll,
                 standardKodeverk,
                 propertyResolver,
-                sporingsLogger,
                 ldapService
         );
     }
@@ -58,11 +54,5 @@ public class SporsmalOgSvarContext {
     @Bean
     public MeldingerSok meldingIndekserer() {
         return new MeldingerSokImpl();
-    }
-
-    @Bean
-    public SporingsLogger sporingsLogger() throws Exception {
-        BufferedReader br = new BufferedReader(new InputStreamReader(SporsmalOgSvarContext.class.getResourceAsStream("sporingslogconfig.txt"), UTF_8));
-        return SporingsLoggerFactory.sporingsLogger(br);
     }
 }

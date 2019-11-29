@@ -1,6 +1,6 @@
 package no.nav.kjerneinfo.consumer.fim.person.support;
 
-import no.nav.kjerneinfo.common.log.SporingUtils;
+import kotlin.Pair;
 import no.nav.kjerneinfo.consumer.fim.person.exception.AuthorizationWithSikkerhetstiltakException;
 import no.nav.kjerneinfo.consumer.fim.person.to.HentKjerneinformasjonRequest;
 import no.nav.kjerneinfo.consumer.fim.person.to.HentKjerneinformasjonResponse;
@@ -13,15 +13,14 @@ import no.nav.kjerneinfo.domain.person.Personfakta;
 import no.nav.kjerneinfo.domain.person.fakta.AnsvarligEnhet;
 import no.nav.kjerneinfo.domain.person.fakta.Familierelasjon;
 import no.nav.kjerneinfo.domain.person.fakta.Organisasjonsenhet;
-import no.nav.modig.common.SporingsAksjon;
-import no.nav.modig.common.SporingsLogger;
-import no.nav.modig.common.SporingsLoggerFactory;
 import no.nav.modig.core.exception.ApplicationException;
 import no.nav.modig.core.exception.AuthorizationException;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.AnsattEnhet;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.organisasjonsEnhetV2.OrganisasjonEnhetV2Service;
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Policies;
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.TilgangskontrollUtenTPS;
+import no.nav.sbl.dialogarena.naudit.Audit;
+import no.nav.sbl.dialogarena.naudit.AuditResources;
 import no.nav.sbl.dialogarena.rsbac.CombiningAlgo;
 import no.nav.sbl.dialogarena.rsbac.DecisionEnums;
 import no.nav.sbl.dialogarena.rsbac.PolicySet;
@@ -40,12 +39,16 @@ import java.util.Iterator;
 import java.util.Optional;
 
 import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
 public class HentPersonService {
     private static final Logger logger = LoggerFactory.getLogger(HentPersonService.class);
-    private static final String ANSVARLIG_ENHET_ATTRIBUTE_ID = "urn:nav:ikt:tilgangskontroll:xacml:resource:ansvarlig-enhet";
-    private static final String DISCRETION_CODE_ATTRIBUTE_ID = "urn:nav:ikt:tilgangskontroll:xacml:resource:discretion-code";
+    private static Audit.AuditDescriptor<Person> auditLogger = Audit.describe(
+            Audit.Action.READ,
+            AuditResources.Person.Personalia,
+            (person) -> singletonList(new Pair<>("fnr", person.getFodselsnummer().getNummer()))
+    );
     private static final String FNR_REGEX = "\\d{11}";
 
     private final PersonV3 service;
@@ -67,7 +70,7 @@ public class HentPersonService {
         MDCUtils.putMDCInfo("hentPerson()", "Personidentifikator:" + requestIdent);
         logger.info("Henter ut kjerneinformasjon om bruker med personidentifikator {}", requestIdent);
 
-        if(!erFnrGodkjent(requestIdent)) {
+        if (!erFnrGodkjent(requestIdent)) {
             logger.warn("{} er et ugyldig fødselsnummer, kan ikke hentes ut.", requestIdent);
             throw new ApplicationException("UgyldigFnr", new HentPersonPersonIkkeFunnet("Ugyldig fnr"), "hentkjerneinformasjonpersonikkefunnet.feilmelding");
         }
@@ -95,7 +98,7 @@ public class HentPersonService {
             throw new AuthorizationException(faultDescriptionKey, hentPersonSikkerhetsbegrensning);
         }
         HentKjerneinformasjonResponse response = mapper.map(wsResponse, HentKjerneinformasjonResponse.class);
-        logSporingsInformasjon(response.getPerson());
+        auditLogger.log(response.getPerson());
 
         final GeografiskTilknytning geografiskTilknytning = response.getPerson().getPersonfakta().getGeografiskTilknytning();
         if (skalHenteEnhetFraNORG(geografiskTilknytning)) {
@@ -193,16 +196,6 @@ public class HentPersonService {
                 : person.getPersonfakta().getDiskresjonskode().getKodeRef();
     }
 
-    private void logSporingsInformasjon(Person person) {
-        try {
-            SporingsLogger sporingsLogger = SporingsLoggerFactory.sporingsLogger(SporingUtils.configFileAsBufferedReader(getConfigAsInputStream(),
-                    "kjerneinfo-sporing-config.txt"));
-            sporingsLogger.logg(person, SporingsAksjon.Les);
-        } catch (Exception e) {
-            logger.error("hentPerson:SporingsLogger ble ikke opprettet.");
-        }
-    }
-
     private HentKjerneinformasjonResponse verifyAuthorization(HentKjerneinformasjonResponse response, HentKjerneinformasjonRequest request) {
         if (response == null
                 || erOrganisasjonsenhetIkkeTom(response)
@@ -211,11 +204,11 @@ public class HentPersonService {
         }
 
         Personfakta personfakta = response.getPerson().getPersonfakta();
-        String resourceId = personfakta.getAnsvarligEnhet().getOrganisasjonsenhet().getOrganisasjonselementId() == null?
-                "":
+        String resourceId = personfakta.getAnsvarligEnhet().getOrganisasjonsenhet().getOrganisasjonselementId() == null ?
+                "" :
                 personfakta.getAnsvarligEnhet().getOrganisasjonsenhet().getOrganisasjonselementId();
-        String diskresjonskode = response.getPerson().getPersonfakta().getDiskresjonskode() == null?
-                "0":
+        String diskresjonskode = response.getPerson().getPersonfakta().getDiskresjonskode() == null ?
+                "0" :
                 response.getPerson().getPersonfakta().getDiskresjonskode().getKodeRef();
 
         if (saksbehandlerHarTilgang(resourceId, diskresjonskode)) {
@@ -271,8 +264,8 @@ public class HentPersonService {
         }
 
         Iterator it = response.getPerson().getPersonfakta().getHarFraRolleIList().iterator();
-        while (it.hasNext()){
-            Familierelasjon familierelasjon = (Familierelasjon)it.next();
+        while (it.hasNext()) {
+            Familierelasjon familierelasjon = (Familierelasjon) it.next();
             if (familierelasjon.getTilPerson() != null && familierelasjon.getTilPerson().getPersonfakta() == null) {
                 it.remove();
                 continue;
@@ -300,7 +293,7 @@ public class HentPersonService {
     }
 
     private boolean erFnrGodkjent(String fnr) {
-        if(fnr == null) {
+        if (fnr == null) {
             return false;
         }
         return fnr.matches(FNR_REGEX);

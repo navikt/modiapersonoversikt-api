@@ -13,11 +13,6 @@
 
     <dependencies>
         <dependency>
-            <groupId>no.nav.modig</groupId>
-            <artifactId>modig-log-common</artifactId>
-            <version>${modig.log.version}</version>
-        </dependency>
-        <dependency>
             <groupId>no.nav.common</groupId>
             <artifactId>types</artifactId>
         </dependency>

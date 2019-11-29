@@ -170,7 +170,8 @@ public class HentPersonServiceTest {
     @Test
     public void harTilgangFamilierelasjonFilteringFjernerIngen() throws Exception {
         response.setPerson(new WSBruker()
-                .withHarFraRolleI(new WSFamilierelasjon(), new WSFamilierelasjon(), new WSFamilierelasjon()));
+                .withHarFraRolleI(new WSFamilierelasjon(), new WSFamilierelasjon(), new WSFamilierelasjon())
+        .withAktoer(new WSPersonIdent().withIdent(new WSNorskIdent().withIdent("12345678910"))));
 
         HentKjerneinformasjonResponse response = service.hentPerson(request);
 
@@ -181,7 +182,8 @@ public class HentPersonServiceTest {
     @Test
     public void harTilgangFamilierelasjonFilteringFjernerSiste() throws Exception {
         WSPerson person = new WSBruker()
-                .withHarFraRolleI(new WSFamilierelasjon(), new WSFamilierelasjon(), new WSFamilierelasjon(), mockTomFamilieRelasjon(FNR_BRUKER));
+                .withHarFraRolleI(new WSFamilierelasjon(), new WSFamilierelasjon(), new WSFamilierelasjon(), mockTomFamilieRelasjon(FNR_BRUKER))
+                .withAktoer(new WSPersonIdent().withIdent(new WSNorskIdent().withIdent("12345678910")));
         response.setPerson(person);
 
         HentKjerneinformasjonResponse response = service.hentPerson(request);
@@ -193,7 +195,8 @@ public class HentPersonServiceTest {
     @Test
     public void harTilgangFamilierelasjonFilteringFjernerToSiste() throws Exception {
         WSPerson person = new WSBruker().withHarFraRolleI(new WSFamilierelasjon(), new WSFamilierelasjon(),
-                new WSFamilierelasjon(), mockTomFamilieRelasjon(FNR_SAMBOER), mockTomFamilieRelasjon(FNR_SAMBOER));
+                new WSFamilierelasjon(), mockTomFamilieRelasjon(FNR_SAMBOER), mockTomFamilieRelasjon(FNR_SAMBOER))
+                .withAktoer(new WSPersonIdent().withIdent(new WSNorskIdent().withIdent("12345678910")));
         response.setPerson(person);
 
         HentKjerneinformasjonResponse response = service.hentPerson(request);
@@ -206,7 +209,8 @@ public class HentPersonServiceTest {
     public void harTilgangFamilierelasjonFilteringFjernerDenIMidten() throws Exception {
         WSPerson person = new WSBruker().withHarFraRolleI(new WSFamilierelasjon(), new WSFamilierelasjon(),
                 new WSFamilierelasjon(), mockTomFamilieRelasjon(FNR_SAMBOER),
-                mockFactory.getMockFamilieRelasjon("samboer", FNR_SAMBOER));
+                mockFactory.getMockFamilieRelasjon("samboer", FNR_SAMBOER))
+                .withAktoer(new WSPersonIdent().withIdent(new WSNorskIdent().withIdent("12345678910")));
         response.withPerson(person);
 
         HentKjerneinformasjonResponse response = service.hentPerson(request);
@@ -233,7 +237,8 @@ public class HentPersonServiceTest {
 
     @Test
     public void skalIkkeHenteInformasjonFraNORGDersomGeografiskTilknytningErEtLand() throws Exception {
-        WSBruker bruker = new WSBruker().withGeografiskTilknytning(new WSLand().withGeografiskTilknytning("FIN"));
+        WSBruker bruker = new WSBruker().withGeografiskTilknytning(new WSLand().withGeografiskTilknytning("FIN"))
+                .withAktoer(new WSPersonIdent().withIdent(new WSNorskIdent().withIdent("12345678910")));
         when(portType.hentPerson(any())).thenReturn(new WSHentPersonResponse().withPerson(bruker));
 
         service.hentPerson(new HentKjerneinformasjonRequest(FNR_BRUKER));
@@ -248,7 +253,9 @@ public class HentPersonServiceTest {
                         .withPerson(new WSBruker()
                                 .withDiskresjonskode(new WSDiskresjonskoder()
                                         .withValue(STRENGT_FORTROLIG_ADRESSE))
-                                .withGeografiskTilknytning(null)));
+                                .withGeografiskTilknytning(null)
+                                .withAktoer(new WSPersonIdent().withIdent(new WSNorskIdent().withIdent("12345678910")))
+                        ));
 
         service.hentPerson(new HentKjerneinformasjonRequest(FNR_BRUKER));
 

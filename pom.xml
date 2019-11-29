@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
@@ -28,6 +29,7 @@
         <module>tilgangskontroll</module>
         <module>kjerneinfo</module>
         <module>modia-felleskomponenter</module>
+        <module>modig-embedded</module>
     </modules>
 
     <properties>
@@ -49,11 +51,7 @@
         <!-- egenlagde biblioteker -->
         <picketbox.version>4.9.6.Final</picketbox.version>
         <modig.frontend.version>1.1.122</modig.frontend.version>
-        <modig.log.version>1.1.2</modig.log.version>
         <modig.fitnesse.version>1.0.1</modig.fitnesse.version>
-        <modig.core.version>1.0.1</modig.core.version>
-        <modig.log.version>1.1.2</modig.log.version>
-        <modig-core-test.version>1.0.0</modig-core-test.version>
         <common-integrasjonsutils.version>0.0.7</common-integrasjonsutils.version>
         <common-kodeverk.version>1.1.2</common-kodeverk.version>
         <aktorid-jaxws.version>1.3</aktorid-jaxws.version>
@@ -69,7 +67,8 @@
         <behandle.henvendelse.version>1.2019.04.04-09.14-c6cea90b8e95</behandle.henvendelse.version>
         <behandle.person.v1.version>1.0.0</behandle.person.v1.version>
         <varsling.tjeneste.version>0.0.5</varsling.tjeneste.version>
-        <behandlingsinformasjon.tjenestespec.version>1.2019.05.23-08.28-c9a2c8477f7d</behandlingsinformasjon.tjenestespec.version>
+        <behandlingsinformasjon.tjenestespec.version>1.2019.05.23-08.28-c9a2c8477f7d
+        </behandlingsinformasjon.tjenestespec.version>
         <sakogbehandling-tjenestespesifikasjon.version>1.0.15</sakogbehandling-tjenestespesifikasjon.version>
         <dial-nav-tjeneste-behandlesak.version>1.1</dial-nav-tjeneste-behandlesak.version>
         <arena-arbeid-og-aktivitet.version>1.0.6-alpha002</arena-arbeid-og-aktivitet.version>
@@ -88,7 +87,8 @@
         <oppfolgingsinfo-v1-tjenestespesifikasjon.version>1.0.5</oppfolgingsinfo-v1-tjenestespesifikasjon.version>
         <arbeidsfordeling-v1.version>1.0.3</arbeidsfordeling-v1.version>
         <unleash.version>3.1.0</unleash.version>
-        <nav-fim-personsok-v1-tjenestespesifikasjon.version>1.2019.06.11-13.36-786a4cec3151</nav-fim-personsok-v1-tjenestespesifikasjon.version>
+        <nav-fim-personsok-v1-tjenestespesifikasjon.version>1.2019.06.11-13.36-786a4cec3151
+        </nav-fim-personsok-v1-tjenestespesifikasjon.version>
         <person-v3-tjenestespesifikasjon-version>3.0.4</person-v3-tjenestespesifikasjon-version>
         <organisasjonv4-tjenestespesifikasjon.version>1.0.1</organisasjonv4-tjenestespesifikasjon.version>
         <behandle.person.v1.version>1.0.0</behandle.person.v1.version>
@@ -370,6 +370,11 @@
             </dependency>
             <dependency>
                 <groupId>no.nav.sbl.dialogarena</groupId>
+                <artifactId>tilgangskontroll</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>no.nav.sbl.dialogarena</groupId>
                 <artifactId>arena-arbeid-og-aktivitet</artifactId>
                 <version>${arena-arbeid-og-aktivitet.version}</version>
             </dependency>
@@ -468,33 +473,21 @@
 
             <!--Modig-->
             <dependency>
-                <groupId>no.nav.modig</groupId>
-                <artifactId>modig-core</artifactId>
-                <version>${modig.core.version}</version>
+                <groupId>no.nav.sbl.dialogarena</groupId>
+                <artifactId>modig-embedded</artifactId>
+                <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>no.nav.modig</groupId>
                 <artifactId>modig-content-no-enonic</artifactId>
                 <version>${project.version}</version>
             </dependency>
-
-            <dependency>
-                <groupId>no.nav.modig</groupId>
-                <artifactId>modig-log-common</artifactId>
-                <version>${modig.log.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>no.nav.modig</groupId>
-                <artifactId>modig-core-test</artifactId>
-                <version>${modig-core-test.version}</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>no.nav.modig</groupId>
-                <artifactId>modig-testcertificates</artifactId>
-                <version>1.2.5</version>
-                <scope>test</scope>
-            </dependency>
+<!--            <dependency>-->
+<!--                <groupId>no.nav.modig</groupId>-->
+<!--                <artifactId>modig-testcertificates</artifactId>-->
+<!--                <version>1.2.5</version>-->
+<!--                <scope>test</scope>-->
+<!--            </dependency>-->
 
             <!--Lucene-->
             <dependency>

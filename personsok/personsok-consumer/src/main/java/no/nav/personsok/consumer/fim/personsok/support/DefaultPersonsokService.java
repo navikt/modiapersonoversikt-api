@@ -1,12 +1,12 @@
 package no.nav.personsok.consumer.fim.personsok.support;
 
-import no.nav.modig.common.SporingsAksjon;
-import no.nav.modig.common.SporingsLogger;
-import no.nav.modig.common.SporingsLoggerFactory;
+import kotlin.Pair;
 import no.nav.personsok.consumer.fim.mapping.FIMMapper;
 import no.nav.personsok.consumer.fim.personsok.PersonsokServiceBi;
 import no.nav.personsok.consumer.fim.personsok.to.FinnPersonRequest;
 import no.nav.personsok.consumer.fim.personsok.to.FinnPersonResponse;
+import no.nav.sbl.dialogarena.naudit.Audit;
+import no.nav.sbl.dialogarena.naudit.AuditResources;
 import no.nav.tjeneste.virksomhet.personsoek.v1.FinnPersonForMangeForekomster;
 import no.nav.tjeneste.virksomhet.personsoek.v1.FinnPersonUgyldigInput;
 import no.nav.tjeneste.virksomhet.personsoek.v1.PersonsokPortType;
@@ -21,10 +21,17 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
+import static java.util.Collections.singletonList;
+
 /**
  * Vår standardimplementasjonen av den eksterne tjenesten.
  */
 public class DefaultPersonsokService implements PersonsokServiceBi {
+    private static Audit.AuditDescriptor<FimPerson> auditLogger = Audit.describe(
+            Audit.Action.READ,
+            AuditResources.Person.Personalia,
+            (person) -> singletonList(new Pair<>("fnr", person.getIdent().getIdent()))
+    );
 
     private PersonsokPortType personsokService;
 
@@ -37,8 +44,9 @@ public class DefaultPersonsokService implements PersonsokServiceBi {
         FimFinnPersonRequest rawRequest = mapper.map(finnPersonRequest, FimFinnPersonRequest.class);
 
         FimFinnPersonResponse rawResponse = personsokService.finnPerson(rawRequest);
+
         for (FimPerson fimPerson : rawResponse.getPersonListe()) {
-            logSporingsInformasjon(fimPerson);
+            auditLogger.log(fimPerson);
         }
         logger.info("finnPersonReturnerte " + rawResponse.getPersonListe().size() + " treff.");
 
@@ -52,27 +60,5 @@ public class DefaultPersonsokService implements PersonsokServiceBi {
 
     public void setMapper(FIMMapper mapper) {
         this.mapper = mapper;
-    }
-
-    private void logSporingsInformasjon(FimPerson fimPerson) {
-        SporingsLogger sporingsLogger;
-        try {
-            sporingsLogger = SporingsLoggerFactory.sporingsLogger(configFileAsBufferedReader("personsok-sporing-config.txt"));
-            sporingsLogger.logg(fimPerson, SporingsAksjon.Les);
-        } catch (Exception e) {
-            logger.error("hentSykmeldingsperioder:SporingsLogger ble ikke opprettet.", e);
-        }
-    }
-
-    private BufferedReader configFileAsBufferedReader(String filepath) {
-        BufferedReader br = null;
-        try {
-            InputStream is = getClass().getClassLoader().getResource(filepath).openStream();
-            InputStreamReader isr = new InputStreamReader(is, "UTF-8");
-            br = new BufferedReader(isr);
-        } catch (IOException e) {
-            logger.warn("Feil i oppsett av sporingslogg" + filepath, e);
-        }
-        return br;
     }
 }

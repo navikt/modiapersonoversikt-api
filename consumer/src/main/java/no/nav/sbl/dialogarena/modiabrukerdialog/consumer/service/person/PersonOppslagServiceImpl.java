@@ -2,7 +2,7 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.person;
 
 import no.nav.common.auth.SsoToken;
 import no.nav.common.auth.SubjectHandler;
-import no.nav.modig.common.MDCOperations;
+import no.nav.common.utils.IdUtils;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.personoppslag.PersonOppslagResponse;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.person.PersonOppslagService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.sts.StsServiceImpl;
@@ -31,7 +31,7 @@ public class PersonOppslagServiceImpl implements PersonOppslagService {
                 .target(url)
                 .request()
                 .header(NAV_PERSONIDENT_HEADER, fnr)
-                .header(NAV_CALL_ID_HEADER, MDCOperations.generateCallId())
+                .header(NAV_CALL_ID_HEADER, IdUtils.generateId())
                 .header(AUTHORIZATION, AUTH_METHOD_BEARER + AUTH_SEPERATOR + veilederOidcToken)
                 .header(NAV_CONSUMER_TOKEN_HEADER, AUTH_METHOD_BEARER + AUTH_SEPERATOR + consumerOidcToken)
                 .header(TEMA_HEADER, ALLE_TEMA_HEADERVERDI)

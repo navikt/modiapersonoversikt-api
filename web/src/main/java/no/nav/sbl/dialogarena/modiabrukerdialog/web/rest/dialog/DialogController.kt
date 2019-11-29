@@ -21,7 +21,7 @@ import no.nav.sbl.dialogarena.naudit.Audit.Action.*
 import no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.PdfUtils
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.henvendelse.HenvendelseBehandlingService
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.henvendelse.domain.Traad
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.AuditResources.Person
+import no.nav.sbl.dialogarena.naudit.AuditResources.Person
 import java.io.ByteArrayInputStream
 import java.util.*
 import javax.inject.Inject

@@ -18,10 +18,10 @@ class Audit {
     internal class WithDataDescriptor<T>(
             private val action: Action,
             private val resourceType: AuditResource,
-            private val extractIdentifiers: (T) -> Array<Pair<String, String?>>
+            private val extractIdentifiers: (T) -> List<Pair<String, String?>>
     ) : AuditDescriptor<T> {
         override fun log(resource: T) {
-            val identifiers = extractIdentifiers(resource)
+            val identifiers = extractIdentifiers(resource).toTypedArray()
             logInternal(action, resourceType, identifiers)
         }
     }
@@ -51,7 +51,7 @@ class Audit {
         }
 
         @JvmStatic
-        fun <T> describe(action: Action, resourceType: AuditResource, extractIdentifiers: (T) -> Array<Pair<String, String?>>): AuditDescriptor<T> {
+        fun <T> describe(action: Action, resourceType: AuditResource, extractIdentifiers: (T) -> List<Pair<String, String?>>): AuditDescriptor<T> {
             return WithDataDescriptor(action, resourceType, extractIdentifiers)
         }
 

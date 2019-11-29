@@ -1,4 +1,4 @@
-package no.nav.sbl.dialogarena.modiabrukerdialog.web.config
+package no.nav.sbl.dialogarena.naudit
 
 import no.nav.sbl.dialogarena.naudit.Audit.AuditResource
 
@@ -74,7 +74,12 @@ class AuditResources {
         companion object {
             val Kontaktinformasjon = AuditResource("person.kontaktinformasjon")
             val Oppfolging = AuditResource("person.oppfolging")
+            @JvmField
+            val Ytelser = AuditResource("person.ytelser")
+            @JvmField
+            val Kontrakter = AuditResource("person.kontrakter")
             val YtelserOgKontrakter = AuditResource("person.ytelserogkontrakter")
+            @JvmField
             val Personalia = AuditResource("person.personalia")
             val Saker = AuditResource("person.saker")
             @JvmField
@@ -84,8 +89,11 @@ class AuditResources {
             val Dokumenter = AuditResource("person.dokumenter")
             val Utbetalinger = AuditResource("person.utbetalinger")
             val Vergemal = AuditResource("person.vergemal")
+            @JvmField
             val Sykepenger = AuditResource("person.sykepenger")
+            @JvmField
             val Foreldrepenger = AuditResource("person.foreldrepenger")
+            @JvmField
             val Pleiepenger = AuditResource("person.pleiepenger")
             @JvmField
             val Varsler = AuditResource("person.varsler")

@@ -57,6 +57,12 @@
         <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>common-kodeverk</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>no.nav.modig</groupId>
+                    <artifactId>modig-core</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <dependency>
@@ -152,8 +158,8 @@
 
         <!--Modig-->
         <dependency>
-            <groupId>no.nav.modig</groupId>
-            <artifactId>modig-core</artifactId>
+            <groupId>no.nav.sbl.dialogarena</groupId>
+            <artifactId>modig-embedded</artifactId>
         </dependency>
         <!--Spring-->
         <dependency>

@@ -7,11 +7,9 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.gsak.SakerService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.saker.knyttbehandlingskjedetilsak.EnhetIkkeSatt;
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.BehandlingsIdTilgangData;
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Tilgangskontroll;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.AuditResources;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.AuditResources.Person;
+import no.nav.sbl.dialogarena.naudit.AuditResources.Person;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.api.Feilmelding;
 import no.nav.sbl.dialogarena.naudit.Audit;
-import no.nav.sbl.dialogarena.naudit.Audit.Action;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
