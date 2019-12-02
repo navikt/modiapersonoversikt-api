@@ -1,12 +1,11 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.sak.service;
 
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.Behandling;
-import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.Behandlingskjede;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.FeilendeBaksystemException;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.filter.Filter;
-import no.nav.tjeneste.virksomhet.sakogbehandling.v1.SakOgBehandling_v1PortType;
-import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.WSBehandlingskjede;
-import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.WSSak;
+import no.nav.tjeneste.virksomhet.sakogbehandling.v1.binding.SakOgBehandlingV1;
+import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.Behandlingskjede;
+import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.Sak;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.meldinger.FinnSakOgBehandlingskjedeListeRequest;
 import org.slf4j.Logger;
 
@@ -27,7 +26,7 @@ public class SakOgBehandlingService {
     private static final Logger logger = getLogger(SakOgBehandlingService.class);
 
     @Inject
-    private SakOgBehandling_v1PortType sakOgBehandlingPortType;
+    private SakOgBehandlingV1 sakOgBehandlingPortType;
 
     @Inject
     private Filter filter;
@@ -35,16 +34,18 @@ public class SakOgBehandlingService {
     @Inject
     private FodselnummerAktorService fnrAktor;
 
-    private static List<Behandling> hentBehandlingerFraBehandlingskjeder(List<WSBehandlingskjede> behandlingskjedeListe) {
+    private static List<Behandling> hentBehandlingerFraBehandlingskjeder(List<Behandlingskjede> behandlingskjedeListe) {
         return behandlingskjedeListe.stream()
                 .map(TIL_BEHANDLING)
                 .collect(toList());
     }
 
-    protected List<WSSak> hentAlleSaker(String fnr) {
+    protected List<Sak> hentAlleSaker(String fnr) {
         try {
             String aktorId = fnrAktor.hentAktorIdForFnr(fnr);
-            List<WSSak> sobSaker = sakOgBehandlingPortType.finnSakOgBehandlingskjedeListe(new FinnSakOgBehandlingskjedeListeRequest().withAktoerREF(aktorId)).getSak();
+            FinnSakOgBehandlingskjedeListeRequest request = new FinnSakOgBehandlingskjedeListeRequest();
+            request.setAktoerREF(aktorId);
+            List<Sak> sobSaker = sakOgBehandlingPortType.finnSakOgBehandlingskjedeListe(request).getSak();
             return filter.filtrerSaker(sobSaker);
         } catch (RuntimeException ex) {
             logger.error("Det skjedde en uventet feil mot Sak og Behandling", ex);
@@ -52,23 +53,23 @@ public class SakOgBehandlingService {
         }
     }
 
-    public Map<String, List<Behandlingskjede>> hentBehandlingskjederGruppertPaaTema(String fnr) {
+    public Map<String, List<no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.Behandlingskjede>> hentBehandlingskjederGruppertPaaTema(String fnr) {
         return hentAlleSaker(fnr)
                 .stream()
                 .collect(toMap(SAKSTEMA, (wsSak) -> tilBehandligskjeder(wsSak)));
     }
 
-    private List<Behandling> filtrerteBehandlinger(WSSak sak) {
+    private List<Behandling> filtrerteBehandlinger(Sak sak) {
         return filter.filtrerBehandlinger(hentBehandlingerFraBehandlingskjeder(sak.getBehandlingskjede()));
     }
 
-    private static final Function<WSSak, String> SAKSTEMA = wsSak -> wsSak.getSakstema().getValue();
+    private static final Function<Sak, String> SAKSTEMA = wsSak -> wsSak.getSakstema().getValue();
 
-    private static final Function<Behandling, Behandlingskjede> TIL_BEHANDLINGSKJEDE = behandling -> new Behandlingskjede()
+    private static final Function<Behandling, no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.Behandlingskjede> TIL_BEHANDLINGSKJEDE = behandling -> new no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.Behandlingskjede()
             .withStatus(behandling.getBehandlingsStatus())
             .withSistOppdatert(LocalDateTime.from(behandling.getBehandlingDato().toGregorianCalendar().toZonedDateTime()));
 
-    private List<Behandlingskjede> tilBehandligskjeder(WSSak wsSak) {
+    private List<no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.Behandlingskjede> tilBehandligskjeder(Sak wsSak) {
         return filtrerteBehandlinger(wsSak)
                 .stream()
                 .map(TIL_BEHANDLINGSKJEDE)

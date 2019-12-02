@@ -13,7 +13,7 @@ import no.nav.tjeneste.virksomhet.innsynjournal.v2.binding.InnsynJournalV2;
 import no.nav.tjeneste.virksomhet.journal.v2.JournalV2;
 import no.nav.tjeneste.virksomhet.pensjonsak.v1.PensjonSakV1;
 import no.nav.tjeneste.virksomhet.sak.v1.SakV1;
-import no.nav.tjeneste.virksomhet.sakogbehandling.v1.SakOgBehandling_v1PortType;
+import no.nav.tjeneste.virksomhet.sakogbehandling.v1.binding.SakOgBehandlingV1;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.meldinger.FinnSakOgBehandlingskjedeListeRequest;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.meldinger.FinnSakOgBehandlingskjedeListeResponse;
 import org.springframework.context.annotation.Bean;
@@ -35,10 +35,11 @@ public class ModiaStubConfig {
     }
 
     @Bean
-    public SakOgBehandling_v1PortType sakOgBehandlingPortType() {
-        SakOgBehandling_v1PortType mock = mock(SakOgBehandling_v1PortType.class);
-        when(mock.finnSakOgBehandlingskjedeListe(any(FinnSakOgBehandlingskjedeListeRequest.class)))
-                .thenReturn(new FinnSakOgBehandlingskjedeListeResponse().withSak(createWSSak()));
+    public SakOgBehandlingV1 sakOgBehandlingPortType() throws Exception {
+        SakOgBehandlingV1 mock = mock(SakOgBehandlingV1.class);
+        FinnSakOgBehandlingskjedeListeResponse response = new FinnSakOgBehandlingskjedeListeResponse();
+        response.getSak().add(createWSSak());
+        when(mock.finnSakOgBehandlingskjedeListe(any(FinnSakOgBehandlingskjedeListeRequest.class))).thenReturn(response);
         return mock;
     }
 

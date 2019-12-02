@@ -10,11 +10,11 @@ import no.nav.kjerneinfo.domain.person.Personfakta;
 import no.nav.kjerneinfo.domain.person.Personnavn;
 import no.nav.kodeverk.consumer.fim.kodeverk.KodeverkmanagerBi;
 import no.nav.kodeverk.consumer.fim.kodeverk.to.feil.HentKodeverkKodeverkIkkeFunnet;
-import no.nav.tjeneste.virksomhet.person.v3.HentVergePersonIkkeFunnet;
-import no.nav.tjeneste.virksomhet.person.v3.HentVergeSikkerhetsbegrensning;
-import no.nav.tjeneste.virksomhet.person.v3.PersonV3;
+import no.nav.tjeneste.virksomhet.person.v3.binding.HentVergePersonIkkeFunnet;
+import no.nav.tjeneste.virksomhet.person.v3.binding.HentVergeSikkerhetsbegrensning;
+import no.nav.tjeneste.virksomhet.person.v3.binding.PersonV3;
 import no.nav.tjeneste.virksomhet.person.v3.informasjon.*;
-import no.nav.tjeneste.virksomhet.person.v3.meldinger.WSHentVergeResponse;
+import no.nav.tjeneste.virksomhet.person.v3.meldinger.HentVergeResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -78,7 +78,7 @@ class VergemalServiceTest {
     @Test
     @DisplayName("For personer uten vergemål")
     void utenVergemal() throws HentVergeSikkerhetsbegrensning, HentVergePersonIkkeFunnet {
-        when(personV3Mock.hentVerge(any())).thenReturn(new WSHentVergeResponse());
+        when(personV3Mock.hentVerge(any())).thenReturn(new HentVergeResponse());
 
         List<Verge> vergemal = vergemalService.hentVergemal("123");
 
@@ -138,8 +138,8 @@ class VergemalServiceTest {
         }
 
 
-        private WSHentVergeResponse mockResponsMedVerger() {
-            return new WSHentVergeResponse()
+        private HentVergeResponse mockResponsMedVerger() {
+            return new HentVergeResponse()
                     .withVergeListe(getVergeMock(VERGES_IDENT));
         }
 
@@ -167,7 +167,7 @@ class VergemalServiceTest {
 
         @BeforeEach
         void beforeEach() throws HentVergeSikkerhetsbegrensning, HentVergePersonIkkeFunnet {
-            when(personV3Mock.hentVerge(any())).thenReturn(new WSHentVergeResponse()
+            when(personV3Mock.hentVerge(any())).thenReturn(new HentVergeResponse()
                     .withVergeListe(getVergeMock(TPS_VERGES_FNR_MANGLENDE_DATA)));
             when(personServiceMock.hentKjerneinformasjon(any()))
                     .thenThrow(new RuntimeException("TPS Ble kalt med ugyldig fødselsnummer"));
@@ -185,15 +185,15 @@ class VergemalServiceTest {
 
     }
 
-    private WSVerge getVergeMock(String ident) {
-        return new WSVerge()
-                .withEmbete(new WSFylkesmannsembete().withValue(EMBETE_KODEREF))
-                .withMandattype(new WSMandattyper().withValue(MANDATTYPE_KODEREF))
-                .withVergesakstype(new WSVergesakstyper().withValue(SAKSTYPE_KODEREF))
-                .withVirkningsperiode(new WSPeriode())
-                .withVergetype(new WSVergetyper().withValue(VERGETYPE_KODEREF))
-                .withVerge(new WSPersonIdent()
-                        .withIdent(new WSNorskIdent().withIdent(ident)));
+    private no.nav.tjeneste.virksomhet.person.v3.informasjon.Verge getVergeMock(String ident) {
+        return new no.nav.tjeneste.virksomhet.person.v3.informasjon.Verge()
+                .withEmbete(new Fylkesmannsembete().withValue(EMBETE_KODEREF))
+                .withMandattype(new Mandattyper().withValue(MANDATTYPE_KODEREF))
+                .withVergesakstype(new Vergesakstyper().withValue(SAKSTYPE_KODEREF))
+                .withVirkningsperiode(new Periode())
+                .withVergetype(new Vergetyper().withValue(VERGETYPE_KODEREF))
+                .withVerge(new PersonIdent()
+                        .withIdent(new NorskIdent().withIdent(ident)));
     }
 
 }

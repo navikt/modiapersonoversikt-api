@@ -13,13 +13,14 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.organisasjonsEnhetV2
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.TilgangskontrollMock;
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.TilgangskontrollUtenTPS;
 import no.nav.tjeneste.virksomhet.kodeverk.v2.KodeverkPortType;
-import no.nav.tjeneste.virksomhet.person.v3.HentPersonPersonIkkeFunnet;
-import no.nav.tjeneste.virksomhet.person.v3.HentPersonSikkerhetsbegrensning;
-import no.nav.tjeneste.virksomhet.person.v3.PersonV3;
-import no.nav.tjeneste.virksomhet.person.v3.feil.WSSikkerhetsbegrensning;
+import no.nav.tjeneste.virksomhet.person.v3.binding.HentPersonPersonIkkeFunnet;
+import no.nav.tjeneste.virksomhet.person.v3.binding.HentPersonSikkerhetsbegrensning;
+import no.nav.tjeneste.virksomhet.person.v3.binding.PersonV3;
+import no.nav.tjeneste.virksomhet.person.v3.feil.PersonIkkeFunnet;
+import no.nav.tjeneste.virksomhet.person.v3.feil.Sikkerhetsbegrensning;
 import no.nav.tjeneste.virksomhet.person.v3.informasjon.*;
-import no.nav.tjeneste.virksomhet.person.v3.meldinger.WSHentPersonRequest;
-import no.nav.tjeneste.virksomhet.person.v3.meldinger.WSHentPersonResponse;
+import no.nav.tjeneste.virksomhet.person.v3.meldinger.HentPersonRequest;
+import no.nav.tjeneste.virksomhet.person.v3.meldinger.HentPersonResponse;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
@@ -50,7 +51,7 @@ public class HentPersonServiceTest {
     private static KjerneinfoMapper mapper;
 
     private final HentKjerneinformasjonRequest request = new HentKjerneinformasjonRequest(IDENT);
-    private final WSHentPersonResponse response = new WSHentPersonResponse()
+    private final HentPersonResponse response = new HentPersonResponse()
             .withPerson(mockFactory.getBruker(IDENT, true));
 
     private HentPersonService service;
@@ -75,19 +76,19 @@ public class HentPersonServiceTest {
         mockFactory = new PersonKjerneinfoMockFactory();
         service = new HentPersonService(portType, mapper, organisasjonEnhetV2Service, tilgangskontroll);
         when(organisasjonEnhetV2Service.finnNAVKontor(anyString(), anyString())).thenReturn(of(new AnsattEnhet("1234", "NAV Mockenhet")));
-        when(portType.hentPerson(any(WSHentPersonRequest.class))).thenReturn(response);
+        when(portType.hentPerson(any(HentPersonRequest.class))).thenReturn(response);
     }
 
 
     @Test(expected = ApplicationException.class)
     public void personFinnesIkke() throws Exception {
-        when(portType.hentPerson(any(WSHentPersonRequest.class))).thenThrow(new HentPersonPersonIkkeFunnet(IDENT));
+        when(portType.hentPerson(any(HentPersonRequest.class))).thenThrow(new HentPersonPersonIkkeFunnet(IDENT, new PersonIkkeFunnet()));
         service.hentPerson(request);
     }
 
     @Test(expected = AuthorizationException.class)
     public void sikkerhetsbegrensning() throws Exception {
-        when(portType.hentPerson(any(WSHentPersonRequest.class))).thenThrow(new HentPersonSikkerhetsbegrensning(IDENT));
+        when(portType.hentPerson(any(HentPersonRequest.class))).thenThrow(new HentPersonSikkerhetsbegrensning(IDENT, new Sikkerhetsbegrensning()));
         service.hentPerson(request);
     }
 
@@ -102,21 +103,21 @@ public class HentPersonServiceTest {
     public void berOmAllInformasjon() throws Exception {
         service.hentPerson(request);
 
-        ArgumentCaptor<WSHentPersonRequest> argumentCaptor = ArgumentCaptor.forClass(WSHentPersonRequest.class);
+        ArgumentCaptor<HentPersonRequest> argumentCaptor = ArgumentCaptor.forClass(HentPersonRequest.class);
         verify(portType).hentPerson(argumentCaptor.capture());
-        List<WSInformasjonsbehov> informasjonsBehov = argumentCaptor.getValue().getInformasjonsbehov();
-        assertThat(informasjonsBehov.contains(WSInformasjonsbehov.ADRESSE), is(true));
-        assertThat(informasjonsBehov.contains(WSInformasjonsbehov.BANKKONTO), is(true));
-        assertThat(informasjonsBehov.contains(WSInformasjonsbehov.FAMILIERELASJONER), is(true));
-        assertThat(informasjonsBehov.contains(WSInformasjonsbehov.KOMMUNIKASJON), is(true));
-        assertThat(informasjonsBehov.contains(WSInformasjonsbehov.SPORINGSINFORMASJON), is(true));
+        List<Informasjonsbehov> informasjonsBehov = argumentCaptor.getValue().getInformasjonsbehov();
+        assertThat(informasjonsBehov.contains(Informasjonsbehov.ADRESSE), is(true));
+        assertThat(informasjonsBehov.contains(Informasjonsbehov.BANKKONTO), is(true));
+        assertThat(informasjonsBehov.contains(Informasjonsbehov.FAMILIERELASJONER), is(true));
+        assertThat(informasjonsBehov.contains(Informasjonsbehov.KOMMUNIKASJON), is(true));
+        assertThat(informasjonsBehov.contains(Informasjonsbehov.SPORINGSINFORMASJON), is(true));
     }
 
     @Test(expected = AuthorizationException.class)
     public void harIkkeTilgangKode6() throws Exception {
-        WSSikkerhetsbegrensning begrensning = new WSSikkerhetsbegrensning().withFeilaarsak(FeilAarsaker.FP1_SFA.name());
+        Sikkerhetsbegrensning begrensning = new Sikkerhetsbegrensning().withFeilaarsak(FeilAarsaker.FP1_SFA.name());
         HentPersonSikkerhetsbegrensning exception = new HentPersonSikkerhetsbegrensning("Ingen tilgang", begrensning);
-        when(portType.hentPerson(any(WSHentPersonRequest.class))).thenThrow(exception);
+        when(portType.hentPerson(any(HentPersonRequest.class))).thenThrow(exception);
 
         try {
             service.hentPerson(request);
@@ -128,9 +129,9 @@ public class HentPersonServiceTest {
 
     @Test(expected = AuthorizationException.class)
     public void harIkkeTilgangKode7() throws Exception {
-        WSSikkerhetsbegrensning begrensning = new WSSikkerhetsbegrensning().withFeilaarsak(FeilAarsaker.FP2_FA.name());
+        Sikkerhetsbegrensning begrensning = new Sikkerhetsbegrensning().withFeilaarsak(FeilAarsaker.FP2_FA.name());
         HentPersonSikkerhetsbegrensning exception = new HentPersonSikkerhetsbegrensning("Ingen tilgang", begrensning);
-        when(portType.hentPerson(any(WSHentPersonRequest.class))).thenThrow(exception);
+        when(portType.hentPerson(any(HentPersonRequest.class))).thenThrow(exception);
         try {
             service.hentPerson(request);
         } catch (AuthorizationException ae) {
@@ -141,7 +142,7 @@ public class HentPersonServiceTest {
 
     @Test(expected = AuthorizationException.class)
     public void harIkkeTilgangGeografisk() throws Exception {
-        when(portType.hentPerson(any(WSHentPersonRequest.class))).thenThrow(new HentPersonSikkerhetsbegrensning());
+        when(portType.hentPerson(any(HentPersonRequest.class))).thenThrow(new HentPersonSikkerhetsbegrensning("", new Sikkerhetsbegrensning()));
 
         try {
             service.hentPerson(request);
@@ -169,9 +170,9 @@ public class HentPersonServiceTest {
 
     @Test
     public void harTilgangFamilierelasjonFilteringFjernerIngen() throws Exception {
-        response.setPerson(new WSBruker()
-                .withHarFraRolleI(new WSFamilierelasjon(), new WSFamilierelasjon(), new WSFamilierelasjon())
-        .withAktoer(new WSPersonIdent().withIdent(new WSNorskIdent().withIdent("12345678910"))));
+        response.setPerson(new Bruker()
+                .withHarFraRolleI(new Familierelasjon(), new Familierelasjon(), new Familierelasjon())
+        .withAktoer(new PersonIdent().withIdent(new NorskIdent().withIdent("12345678910"))));
 
         HentKjerneinformasjonResponse response = service.hentPerson(request);
 
@@ -181,9 +182,9 @@ public class HentPersonServiceTest {
 
     @Test
     public void harTilgangFamilierelasjonFilteringFjernerSiste() throws Exception {
-        WSPerson person = new WSBruker()
-                .withHarFraRolleI(new WSFamilierelasjon(), new WSFamilierelasjon(), new WSFamilierelasjon(), mockTomFamilieRelasjon(FNR_BRUKER))
-                .withAktoer(new WSPersonIdent().withIdent(new WSNorskIdent().withIdent("12345678910")));
+        Person person = new Bruker()
+                .withHarFraRolleI(new Familierelasjon(), new Familierelasjon(), new Familierelasjon(), mockTomFamilieRelasjon(FNR_BRUKER))
+                .withAktoer(new PersonIdent().withIdent(new NorskIdent().withIdent("12345678910")));
         response.setPerson(person);
 
         HentKjerneinformasjonResponse response = service.hentPerson(request);
@@ -194,9 +195,9 @@ public class HentPersonServiceTest {
 
     @Test
     public void harTilgangFamilierelasjonFilteringFjernerToSiste() throws Exception {
-        WSPerson person = new WSBruker().withHarFraRolleI(new WSFamilierelasjon(), new WSFamilierelasjon(),
-                new WSFamilierelasjon(), mockTomFamilieRelasjon(FNR_SAMBOER), mockTomFamilieRelasjon(FNR_SAMBOER))
-                .withAktoer(new WSPersonIdent().withIdent(new WSNorskIdent().withIdent("12345678910")));
+        Person person = new Bruker().withHarFraRolleI(new Familierelasjon(), new Familierelasjon(),
+                new Familierelasjon(), mockTomFamilieRelasjon(FNR_SAMBOER), mockTomFamilieRelasjon(FNR_SAMBOER))
+                .withAktoer(new PersonIdent().withIdent(new NorskIdent().withIdent("12345678910")));
         response.setPerson(person);
 
         HentKjerneinformasjonResponse response = service.hentPerson(request);
@@ -207,10 +208,10 @@ public class HentPersonServiceTest {
 
     @Test
     public void harTilgangFamilierelasjonFilteringFjernerDenIMidten() throws Exception {
-        WSPerson person = new WSBruker().withHarFraRolleI(new WSFamilierelasjon(), new WSFamilierelasjon(),
-                new WSFamilierelasjon(), mockTomFamilieRelasjon(FNR_SAMBOER),
+        Person person = new Bruker().withHarFraRolleI(new Familierelasjon(), new Familierelasjon(),
+                new Familierelasjon(), mockTomFamilieRelasjon(FNR_SAMBOER),
                 mockFactory.getMockFamilieRelasjon("samboer", FNR_SAMBOER))
-                .withAktoer(new WSPersonIdent().withIdent(new WSNorskIdent().withIdent("12345678910")));
+                .withAktoer(new PersonIdent().withIdent(new NorskIdent().withIdent("12345678910")));
         response.withPerson(person);
 
         HentKjerneinformasjonResponse response = service.hentPerson(request);
@@ -237,9 +238,9 @@ public class HentPersonServiceTest {
 
     @Test
     public void skalIkkeHenteInformasjonFraNORGDersomGeografiskTilknytningErEtLand() throws Exception {
-        WSBruker bruker = new WSBruker().withGeografiskTilknytning(new WSLand().withGeografiskTilknytning("FIN"))
-                .withAktoer(new WSPersonIdent().withIdent(new WSNorskIdent().withIdent("12345678910")));
-        when(portType.hentPerson(any())).thenReturn(new WSHentPersonResponse().withPerson(bruker));
+        Bruker bruker = new Bruker().withGeografiskTilknytning(new Land().withGeografiskTilknytning("FIN"))
+                .withAktoer(new PersonIdent().withIdent(new NorskIdent().withIdent("12345678910")));
+        when(portType.hentPerson(any())).thenReturn(new HentPersonResponse().withPerson(bruker));
 
         service.hentPerson(new HentKjerneinformasjonRequest(FNR_BRUKER));
 
@@ -248,13 +249,13 @@ public class HentPersonServiceTest {
 
     @Test
     public void skalHenteInformasjonFraNORGDersomKodeStrengtFortroligAdresse() throws HentPersonPersonIkkeFunnet, HentPersonSikkerhetsbegrensning {
-        when(portType.hentPerson(any(WSHentPersonRequest.class)))
-                .thenReturn(new WSHentPersonResponse()
-                        .withPerson(new WSBruker()
-                                .withDiskresjonskode(new WSDiskresjonskoder()
+        when(portType.hentPerson(any(HentPersonRequest.class)))
+                .thenReturn(new HentPersonResponse()
+                        .withPerson(new Bruker()
+                                .withDiskresjonskode(new Diskresjonskoder()
                                         .withValue(STRENGT_FORTROLIG_ADRESSE))
                                 .withGeografiskTilknytning(null)
-                                .withAktoer(new WSPersonIdent().withIdent(new WSNorskIdent().withIdent("12345678910")))
+                                .withAktoer(new PersonIdent().withIdent(new NorskIdent().withIdent("12345678910")))
                         ));
 
         service.hentPerson(new HentKjerneinformasjonRequest(FNR_BRUKER));
@@ -273,10 +274,10 @@ public class HentPersonServiceTest {
         }
     }
 
-    private WSFamilierelasjon mockTomFamilieRelasjon(String fodselnummer) {
-        WSFamilierelasjon familierelasjon = new WSFamilierelasjon();
-        WSPerson person = new WSPerson();
-        person.setAktoer(new WSPersonIdent().withIdent(new WSNorskIdent().withIdent(fodselnummer)));
+    private Familierelasjon mockTomFamilieRelasjon(String fodselnummer) {
+        Familierelasjon familierelasjon = new Familierelasjon();
+        Person person = new Person();
+        person.setAktoer(new PersonIdent().withIdent(new NorskIdent().withIdent(fodselnummer)));
         familierelasjon.setTilPerson(person);
         return familierelasjon;
     }

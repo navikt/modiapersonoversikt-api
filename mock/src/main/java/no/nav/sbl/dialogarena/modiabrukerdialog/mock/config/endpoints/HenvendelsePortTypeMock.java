@@ -2,10 +2,7 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints;
 
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.*;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.henvendelse.HenvendelsePortType;
-import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.meldinger.WSHentHenvendelseListeRequest;
-import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.meldinger.WSHentHenvendelseListeResponse;
-import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.meldinger.WSHentHenvendelseRequest;
-import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.meldinger.WSHentHenvendelseResponse;
+import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.meldinger.*;
 import org.joda.time.DateTime;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -231,6 +228,11 @@ public class HenvendelsePortTypeMock {
             @Override
             public WSHentHenvendelseResponse hentHenvendelse(WSHentHenvendelseRequest req) {
                 return new WSHentHenvendelseResponse().withAny(hentHenvendelseMedBehandlingsId(req));
+            }
+
+            @Override
+            public WSHentBehandlingskjedeResponse hentBehandlingskjede(WSHentBehandlingskjedeRequest wsHentBehandlingskjedeRequest) {
+                return new WSHentBehandlingskjedeResponse().withAny(HENVENDELSER.get(0));
             }
 
             @Override

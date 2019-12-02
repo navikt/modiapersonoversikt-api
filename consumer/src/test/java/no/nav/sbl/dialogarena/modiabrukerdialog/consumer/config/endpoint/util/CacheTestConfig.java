@@ -11,7 +11,7 @@ import no.nav.tjeneste.virksomhet.oppfoelging.v1.OppfoelgingPortType;
 import no.nav.tjeneste.virksomhet.organisasjon.v4.OrganisasjonV4;
 import no.nav.tjeneste.virksomhet.organisasjonenhet.v2.binding.OrganisasjonEnhetV2;
 import no.nav.tjeneste.virksomhet.organisasjonenhetkontaktinformasjon.v1.binding.OrganisasjonEnhetKontaktinformasjonV1;
-import no.nav.tjeneste.virksomhet.sakogbehandling.v1.SakOgBehandling_v1PortType;
+import no.nav.tjeneste.virksomhet.sakogbehandling.v1.binding.SakOgBehandlingV1;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -50,8 +50,8 @@ public class CacheTestConfig {
     }
 
     @Bean
-    public SakOgBehandling_v1PortType sakOgBehandlingPortType() {
-        return mock(SakOgBehandling_v1PortType.class);
+    public SakOgBehandlingV1 sakOgBehandlingPortType() {
+        return mock(SakOgBehandlingV1.class);
     }
 
     @Bean

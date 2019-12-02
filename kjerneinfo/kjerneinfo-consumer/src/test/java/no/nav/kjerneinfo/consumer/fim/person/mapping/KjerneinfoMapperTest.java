@@ -7,14 +7,17 @@ import no.nav.kjerneinfo.consumer.fim.person.to.HentKjerneinformasjonResponse;
 import no.nav.kjerneinfo.domain.info.Bankkonto;
 import no.nav.kjerneinfo.domain.info.BankkontoUtland;
 import no.nav.kjerneinfo.domain.person.*;
+import no.nav.kjerneinfo.domain.person.Person;
+import no.nav.kjerneinfo.domain.person.Personnavn;
+import no.nav.kjerneinfo.domain.person.UstrukturertAdresse;
 import no.nav.kjerneinfo.domain.person.fakta.Familierelasjon;
 import no.nav.kjerneinfo.domain.person.fakta.Sikkerhetstiltak;
 import no.nav.kjerneinfo.domain.person.fakta.Telefon;
 import no.nav.kodeverk.consumer.fim.kodeverk.support.DefaultKodeverkmanager;
 import no.nav.tjeneste.virksomhet.kodeverk.v2.KodeverkPortType;
 import no.nav.tjeneste.virksomhet.person.v3.informasjon.*;
-import no.nav.tjeneste.virksomhet.person.v3.meldinger.WSHentPersonResponse;
-import no.nav.tjeneste.virksomhet.person.v3.meldinger.WSHentSikkerhetstiltakResponse;
+import no.nav.tjeneste.virksomhet.person.v3.meldinger.HentPersonResponse;
+import no.nav.tjeneste.virksomhet.person.v3.meldinger.HentSikkerhetstiltakResponse;
 import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
 import org.junit.Before;
@@ -55,34 +58,34 @@ public class KjerneinfoMapperTest {
 
     @Test
     public void responseMapping() {
-        WSBruker wsBruker = mockFactory.getBruker("98765498765", true);
-        WSHentPersonResponse wsResponse = new WSHentPersonResponse()
+        Bruker wsBruker = mockFactory.getBruker("98765498765", true);
+        HentPersonResponse wsResponse = new HentPersonResponse()
                 .withPerson(wsBruker);
 
         HentKjerneinformasjonResponse response = mapper.map(wsResponse, HentKjerneinformasjonResponse.class);
 
         Person person = response.getPerson();
-        assertEquals(((WSPersonIdent) wsBruker.getAktoer()).getIdent().getIdent(), person.getFodselsnummer().getNummer());
+        assertEquals(((PersonIdent) wsBruker.getAktoer()).getIdent().getIdent(), person.getFodselsnummer().getNummer());
 
-        WSPersonnavn fromPersonnavn = wsBruker.getPersonnavn();
+        no.nav.tjeneste.virksomhet.person.v3.informasjon.Personnavn fromPersonnavn = wsBruker.getPersonnavn();
         Personnavn toPersonnavn = person.getPersonfakta().getPersonnavn();
 
         assertEqualsPersonnavn(fromPersonnavn, toPersonnavn);
-        assertEqualsBankkontoUtland(((WSBankkontoUtland) wsBruker.getBankkonto()).getBankkontoUtland(), ((BankkontoUtland) person.getPersonfakta().getBankkonto()));
+        assertEqualsBankkontoUtland(((no.nav.tjeneste.virksomhet.person.v3.informasjon.BankkontoUtland) wsBruker.getBankkonto()).getBankkontoUtland(), ((BankkontoUtland) person.getPersonfakta().getBankkonto()));
         assertAdresseEquals(wsBruker, person);
         assertSikkerhetstiltakEquals(wsBruker, person);
         assertEqualsFamilierelasjoner(wsBruker.getHarFraRolleI(), person.getPersonfakta().getHarFraRolleIList());
     }
 
-    private void assertSikkerhetstiltakEquals(WSBruker wsPerson, Person person) {
+    private void assertSikkerhetstiltakEquals(Bruker wsPerson, Person person) {
         assertEquals(LocalDate.fromDateFields(wsPerson.getSikkerhetstiltak().getPeriode().getFom().toGregorianCalendar().getTime()), person.getPersonfakta().getSikkerhetstiltak().getPeriode().getFrom());
         assertEquals(LocalDate.fromDateFields(wsPerson.getSikkerhetstiltak().getPeriode().getTom().toGregorianCalendar().getTime()), person.getPersonfakta().getSikkerhetstiltak().getPeriode().getTo());
         assertEquals(wsPerson.getSikkerhetstiltak().getSikkerhetstiltaksbeskrivelse(), person.getPersonfakta().getSikkerhetstiltak().getSikkerhetstiltaksbeskrivelse());
         assertEquals(wsPerson.getSikkerhetstiltak().getSikkerhetstiltakskode(), person.getPersonfakta().getSikkerhetstiltak().getSikkerhetstiltakskode());
     }
 
-    private void assertAdresseEquals(WSBruker wsPerson, Person person) {
-        assertEqualsGateadresse((WSGateadresse) wsPerson.getBostedsadresse().getStrukturertAdresse(), (Adresse) person.getPersonfakta().getBostedsadresse());
+    private void assertAdresseEquals(Bruker wsPerson, Person person) {
+        assertEqualsGateadresse((Gateadresse) wsPerson.getBostedsadresse().getStrukturertAdresse(), (Adresse) person.getPersonfakta().getBostedsadresse());
         assertEquals(wsPerson.getPostadresse().getUstrukturertAdresse().getAdresselinje1(), ((UstrukturertAdresse) person.getPersonfakta().getPostadresse()).getAdresselinje1());
         assertEquals(wsPerson.getKjoenn().getKjoenn().getValue(), person.getPersonfakta().getKjonn().toString());
         assertEquals(wsPerson.getSivilstand().getSivilstand().getValue(), person.getPersonfakta().getSivilstand().getKodeRef());
@@ -94,23 +97,23 @@ public class KjerneinfoMapperTest {
 
     @Test
     public void brukerMapping() {
-        WSBruker wsBruker = mockFactory.getBruker("12345612345", true);
+        Bruker wsBruker = mockFactory.getBruker("12345612345", true);
 
         Person person = mapper.map(wsBruker, Person.class);
 
-        assertEquals(((WSPersonIdent) wsBruker.getAktoer()).getIdent().getIdent(), person.getFodselsnummer().getNummer());
+        assertEquals(((PersonIdent) wsBruker.getAktoer()).getIdent().getIdent(), person.getFodselsnummer().getNummer());
         assertEquals(wsBruker.getFoedested(), person.getPersonfakta().getFodested());
     }
 
     @Test
     public void personMapping() {
-        WSPerson wsPerson = mockFactory.getBruker("12345612345", true);
+        no.nav.tjeneste.virksomhet.person.v3.informasjon.Person wsPerson = mockFactory.getBruker("12345612345", true);
 
         Person person = mapper.map(wsPerson, Person.class);
 
-        assert (wsPerson.getBostedsadresse().getStrukturertAdresse() instanceof WSGateadresse);
+        assert (wsPerson.getBostedsadresse().getStrukturertAdresse() instanceof Gateadresse);
         assert (person.getPersonfakta().getBostedsadresse() instanceof Adresse);
-        assertEquals(((WSGateadresse) wsPerson.getBostedsadresse().getStrukturertAdresse()).getGatenavn(), ((Adresse) person.getPersonfakta().getBostedsadresse()).getGatenavn());
+        assertEquals(((Gateadresse) wsPerson.getBostedsadresse().getStrukturertAdresse()).getGatenavn(), ((Adresse) person.getPersonfakta().getBostedsadresse()).getGatenavn());
         assertEquals(wsPerson.getBostedsadresse().getEndretAv(), person.getPersonfakta().getBostedsadresse().getEndringsinformasjon().getEndretAv());
     }
 
@@ -121,16 +124,16 @@ public class KjerneinfoMapperTest {
         from.setPersonId(12345);
         from.setPersonfakta(getPersonfakta());
 
-        WSPerson to = mapper.map(from, WSPerson.class);
+        no.nav.tjeneste.virksomhet.person.v3.informasjon.Person to = mapper.map(from, no.nav.tjeneste.virksomhet.person.v3.informasjon.Person.class);
 
-        assertEquals(from.getFodselsnummer().getNummer(), ((WSPersonIdent) to.getAktoer()).getIdent().getIdent());
+        assertEquals(from.getFodselsnummer().getNummer(), ((PersonIdent) to.getAktoer()).getIdent().getIdent());
         assert (from.getPersonfakta().getBostedsadresse() instanceof Adresse);
         assert (from.getPersonfakta().getPostadresse() instanceof Adresse);
     }
 
     @Test
     public void dodPerson() {
-        WSPerson wsPerson = new WSBruker().withDoedsdato(new WSDoedsdato().withDoedsdato(getMockDato("2015-02-02")));
+        no.nav.tjeneste.virksomhet.person.v3.informasjon.Person wsPerson = new Bruker().withDoedsdato(new Doedsdato().withDoedsdato(getMockDato("2015-02-02")));
 
         Person person = mapper.map(wsPerson, Person.class);
 
@@ -140,8 +143,8 @@ public class KjerneinfoMapperTest {
     @Test
     public void wSSikkerhetstiltakToSikkerhetstiltak() {
         String bekrivelse = "Farlig Person.";
-        WSSikkerhetstiltak fimSikkerhetsTiltak = new WSSikkerhetstiltak().withSikkerhetstiltaksbeskrivelse(bekrivelse);
-        WSHentSikkerhetstiltakResponse sikkerhetstiltakResponse = new WSHentSikkerhetstiltakResponse();
+        no.nav.tjeneste.virksomhet.person.v3.informasjon.Sikkerhetstiltak fimSikkerhetsTiltak = new no.nav.tjeneste.virksomhet.person.v3.informasjon.Sikkerhetstiltak().withSikkerhetstiltaksbeskrivelse(bekrivelse);
+        HentSikkerhetstiltakResponse sikkerhetstiltakResponse = new HentSikkerhetstiltakResponse();
         sikkerhetstiltakResponse.setSikkerhetstiltak(fimSikkerhetsTiltak);
 
         Sikkerhetstiltak sikkerhetsTiltak = mapper.map(sikkerhetstiltakResponse.getSikkerhetstiltak(), Sikkerhetstiltak.class);
@@ -151,7 +154,7 @@ public class KjerneinfoMapperTest {
 
     @Test
     public void telefonnummerMapping() {
-        WSBruker from = mockFactory.getBruker("12345612345", true);
+        Bruker from = mockFactory.getBruker("12345612345", true);
 
         Person to = mapper.map(from, Person.class);
         Telefon telefon = to.getPersonfakta().getMobil().get();
@@ -163,9 +166,9 @@ public class KjerneinfoMapperTest {
 
     @Test
     public void tilrettelagtKommunikasjonMapping() {
-        WSTilrettelagtKommunikasjonbehov wsTilrettelagtKommunikasjon = new WSTilrettelagtKommunikasjonbehov()
+        TilrettelagtKommunikasjonbehov wsTilrettelagtKommunikasjon = new TilrettelagtKommunikasjonbehov()
                 .withBehov("Ledsager")
-                .withTilrettelagtKommunikasjon(new WSTilrettelagtKommunikasjon().withValue("LESA"));
+                .withTilrettelagtKommunikasjon(new TilrettelagtKommunikasjon().withValue("LESA"));
 
         Kodeverdi to = mapper.map(wsTilrettelagtKommunikasjon, Kodeverdi.class);
 
@@ -175,7 +178,7 @@ public class KjerneinfoMapperTest {
 
     @Test
     public void brukerMedTilrettelagtKommunikasjonMapping() {
-        WSBruker from = mockFactory.getBruker("12345612345", true);
+        Bruker from = mockFactory.getBruker("12345612345", true);
 
         Person to = mapper.map(from, Person.class);
         List<Kodeverdi> tilrettelagtKommunikasjon = to.getPersonfakta().getTilrettelagtKommunikasjon();
@@ -186,9 +189,9 @@ public class KjerneinfoMapperTest {
 
     @Test
     public void bankkontoMapping() {
-        WSBruker from = mockFactory.getBruker("123456789123", false);
-        from.setBankkonto(new WSBankkontoNorge()
-                .withBankkonto(new WSBankkontonummer()
+        Bruker from = mockFactory.getBruker("123456789123", false);
+        from.setBankkonto(new BankkontoNorge()
+                .withBankkonto(new Bankkontonummer()
                         .withBankkontonummer(KONTONUMMER)
                         .withBanknavn(BANKNAVN))
                 .withEndretAv(ENDRET_AV)
@@ -205,16 +208,16 @@ public class KjerneinfoMapperTest {
 
     @Test
     public void bankkontoUtlandMapping() {
-        WSBruker from = mockFactory.getBruker("123456789123", false);
-        from.setBankkonto(new WSBankkontoUtland()
-                .withBankkontoUtland(new WSBankkontonummerUtland()
-                        .withBankadresse(new WSUstrukturertAdresse().withAdresselinje1("Adresse 1"))
+        Bruker from = mockFactory.getBruker("123456789123", false);
+        from.setBankkonto(new no.nav.tjeneste.virksomhet.person.v3.informasjon.BankkontoUtland()
+                .withBankkontoUtland(new BankkontonummerUtland()
+                        .withBankadresse(new no.nav.tjeneste.virksomhet.person.v3.informasjon.UstrukturertAdresse().withAdresselinje1("Adresse 1"))
                         .withBankkode(BANKKODE)
                         .withBankkontonummer(KONTONUMMER)
                         .withBanknavn(BANKNAVN)
-                        .withLandkode(new WSLandkoder().withValue(LANDKODE))
+                        .withLandkode(new Landkoder().withValue(LANDKODE))
                         .withSwift(SWIFT)
-                        .withValuta(new WSValutaer().withValue(VALUTA)))
+                        .withValuta(new Valutaer().withValue(VALUTA)))
                 .withEndretAv(ENDRET_AV)
                 .withEndringstidspunkt(getMockDato(ENDRINGSTIDSPUNKT)));
 
@@ -234,8 +237,8 @@ public class KjerneinfoMapperTest {
 
     @Test
     public void geografiskTilknytningBydelMapping() {
-        WSBruker from = mockFactory.getBruker("123456789123", false);
-        from.setGeografiskTilknytning(new WSBydel().withGeografiskTilknytning("133337"));
+        Bruker from = mockFactory.getBruker("123456789123", false);
+        from.setGeografiskTilknytning(new Bydel().withGeografiskTilknytning("133337"));
 
         Person to = mapper.map(from, Person.class);
 
@@ -245,8 +248,8 @@ public class KjerneinfoMapperTest {
 
     @Test
     public void geografiskTilknytningLandMapping() {
-        WSBruker from = mockFactory.getBruker("123456789123", false);
-        from.setGeografiskTilknytning(new WSLand().withGeografiskTilknytning("FIN"));
+        Bruker from = mockFactory.getBruker("123456789123", false);
+        from.setGeografiskTilknytning(new Land().withGeografiskTilknytning("FIN"));
 
         Person to = mapper.map(from, Person.class);
 
@@ -256,8 +259,8 @@ public class KjerneinfoMapperTest {
 
     @Test
     public void geografiskTilknytningKommuneMapping() {
-        WSBruker from = mockFactory.getBruker("123456789123", false);
-        from.setGeografiskTilknytning(new WSKommune().withGeografiskTilknytning("2080"));
+        Bruker from = mockFactory.getBruker("123456789123", false);
+        from.setGeografiskTilknytning(new Kommune().withGeografiskTilknytning("2080"));
 
         Person to = mapper.map(from, Person.class);
 
@@ -267,7 +270,7 @@ public class KjerneinfoMapperTest {
 
     @Test
     public void utenGeografiskTilknytningMapping() {
-        WSBruker from = mockFactory.getBruker("123456789123", false);
+        Bruker from = mockFactory.getBruker("123456789123", false);
         from.setGeografiskTilknytning(null);
 
         Person to = mapper.map(from, Person.class);
@@ -277,8 +280,8 @@ public class KjerneinfoMapperTest {
 
     @Test
     public void diskresjonskodeFortroligMapping() {
-        WSBruker from = mockFactory.getBruker("123456789123", false);
-        from.setDiskresjonskode(new WSDiskresjonskoder().withValue("SPFO"));
+        Bruker from = mockFactory.getBruker("123456789123", false);
+        from.setDiskresjonskode(new no.nav.tjeneste.virksomhet.person.v3.informasjon.Diskresjonskoder().withValue("SPFO"));
 
         Person to = mapper.map(from, Person.class);
 
@@ -287,7 +290,7 @@ public class KjerneinfoMapperTest {
 
     @Test
     public void utenDiskresjonskodeFortroligMapping() {
-        WSBruker from = mockFactory.getBruker("123456789123", false);
+        Bruker from = mockFactory.getBruker("123456789123", false);
 
         Person to = mapper.map(from, Person.class);
 
@@ -316,30 +319,30 @@ public class KjerneinfoMapperTest {
         return adresse;
     }
 
-    private void assertEqualsPersonnavn(WSPersonnavn fromPersonnavn, Personnavn toPersonnavn) {
+    private void assertEqualsPersonnavn(no.nav.tjeneste.virksomhet.person.v3.informasjon.Personnavn fromPersonnavn, Personnavn toPersonnavn) {
         assertEquals(fromPersonnavn.getFornavn(), toPersonnavn.getFornavn());
         assertEquals(fromPersonnavn.getMellomnavn(), toPersonnavn.getMellomnavn());
         assertEquals(fromPersonnavn.getEtternavn(), toPersonnavn.getEtternavn());
     }
 
-    private void assertEqualsFamilierelasjoner(List<no.nav.tjeneste.virksomhet.person.v3.informasjon.WSFamilierelasjon> fromRoller, List<Familierelasjon> toRoller) {
+    private void assertEqualsFamilierelasjoner(List<no.nav.tjeneste.virksomhet.person.v3.informasjon.Familierelasjon> fromRoller, List<Familierelasjon> toRoller) {
         assert (!fromRoller.isEmpty());
         assertEquals(fromRoller.size(), toRoller.size());
-        no.nav.tjeneste.virksomhet.person.v3.informasjon.WSFamilierelasjon fromFamilierelasjon = fromRoller.get(0);
+        no.nav.tjeneste.virksomhet.person.v3.informasjon.Familierelasjon fromFamilierelasjon = fromRoller.get(0);
         Familierelasjon toFamilierelasjon = toRoller.get(0);
         assertEquals(fromFamilierelasjon.getTilRolle().getKodeRef(), toFamilierelasjon.getTilRolle());
-        assertEquals(((WSPersonIdent) fromFamilierelasjon.getTilPerson().getAktoer()).getIdent().getIdent(), toFamilierelasjon.getTilPerson().getFodselsnummer().getNummer());
+        assertEquals(((PersonIdent) fromFamilierelasjon.getTilPerson().getAktoer()).getIdent().getIdent(), toFamilierelasjon.getTilPerson().getFodselsnummer().getNummer());
         assertTrue(toFamilierelasjon.getHarSammeBosted());
         assertEqualsPersonnavn(fromFamilierelasjon.getTilPerson().getPersonnavn(), toFamilierelasjon.getTilPerson().getPersonfakta().getPersonnavn());
     }
 
-    private void assertEqualsBankkontoUtland(WSBankkontonummerUtland from, BankkontoUtland to) {
+    private void assertEqualsBankkontoUtland(BankkontonummerUtland from, BankkontoUtland to) {
         assertEquals(from.getBankkontonummer(), to.getKontonummer());
         assertEquals(from.getBankkode(), to.getBankkode());
         assertEquals(from.getSwift(), to.getSwift());
     }
 
-    private void assertEqualsGateadresse(WSGateadresse from, Adresse to) {
+    private void assertEqualsGateadresse(Gateadresse from, Adresse to) {
         assertEquals(from.getBolignummer(), to.getBolignummer());
         assertEquals(from.getGatenavn(), to.getGatenavn());
         assertEquals(from.getHusnummer().toString(), to.getGatenummer());

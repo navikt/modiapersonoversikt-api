@@ -24,12 +24,16 @@ import no.nav.sbl.dialogarena.naudit.AuditResources;
 import no.nav.sbl.dialogarena.rsbac.CombiningAlgo;
 import no.nav.sbl.dialogarena.rsbac.DecisionEnums;
 import no.nav.sbl.dialogarena.rsbac.PolicySet;
-import no.nav.tjeneste.virksomhet.person.v3.*;
-import no.nav.tjeneste.virksomhet.person.v3.informasjon.*;
-import no.nav.tjeneste.virksomhet.person.v3.meldinger.WSHentGeografiskTilknytningRequest;
-import no.nav.tjeneste.virksomhet.person.v3.meldinger.WSHentGeografiskTilknytningResponse;
-import no.nav.tjeneste.virksomhet.person.v3.meldinger.WSHentPersonRequest;
-import no.nav.tjeneste.virksomhet.person.v3.meldinger.WSHentPersonResponse;
+import no.nav.tjeneste.virksomhet.person.v3.binding.*;
+import no.nav.tjeneste.virksomhet.person.v3.feil.PersonIkkeFunnet;
+import no.nav.tjeneste.virksomhet.person.v3.informasjon.Informasjonsbehov;
+import no.nav.tjeneste.virksomhet.person.v3.informasjon.Kodeverdi;
+import no.nav.tjeneste.virksomhet.person.v3.informasjon.NorskIdent;
+import no.nav.tjeneste.virksomhet.person.v3.informasjon.PersonIdent;
+import no.nav.tjeneste.virksomhet.person.v3.meldinger.HentGeografiskTilknytningRequest;
+import no.nav.tjeneste.virksomhet.person.v3.meldinger.HentGeografiskTilknytningResponse;
+import no.nav.tjeneste.virksomhet.person.v3.meldinger.HentPersonRequest;
+import no.nav.tjeneste.virksomhet.person.v3.meldinger.HentPersonResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -72,12 +76,12 @@ public class HentPersonService {
 
         if (!erFnrGodkjent(requestIdent)) {
             logger.warn("{} er et ugyldig fødselsnummer, kan ikke hentes ut.", requestIdent);
-            throw new ApplicationException("UgyldigFnr", new HentPersonPersonIkkeFunnet("Ugyldig fnr"), "hentkjerneinformasjonpersonikkefunnet.feilmelding");
+            throw new ApplicationException("UgyldigFnr", new HentPersonPersonIkkeFunnet("Ugyldig fnr", new PersonIkkeFunnet().withFeilmelding("Ugyldig fnr")), "hentkjerneinformasjonpersonikkefunnet.feilmelding");
         }
 
-        WSHentPersonRequest wsRequest = lagWSHentPersonRequest(requestIdent);
+        HentPersonRequest wsRequest = lagHentPersonRequest(requestIdent);
 
-        WSHentPersonResponse wsResponse;
+        HentPersonResponse wsResponse;
         try {
             wsResponse = service.hentPerson(wsRequest);
         } catch (HentPersonPersonIkkeFunnet hentPersonPersonIkkeFunnet) {
@@ -109,16 +113,16 @@ public class HentPersonService {
     }
 
     protected GeografiskTilknytning hentGeografiskTilknytning(String requestIdent) {
-        Optional<WSHentGeografiskTilknytningResponse> response = hentGeografiskTilknytningFraService(requestIdent);
+        Optional<HentGeografiskTilknytningResponse> response = hentGeografiskTilknytningFraService(requestIdent);
         return response
                 .map(this::tilDomeneobjekt)
                 .orElse(new GeografiskTilknytning());
     }
 
-    private Optional<WSHentGeografiskTilknytningResponse> hentGeografiskTilknytningFraService(String requestIdent) {
-        WSHentGeografiskTilknytningRequest request = new WSHentGeografiskTilknytningRequest().withAktoer(lagAktoer(requestIdent));
+    private Optional<HentGeografiskTilknytningResponse> hentGeografiskTilknytningFraService(String requestIdent) {
+        HentGeografiskTilknytningRequest request = new HentGeografiskTilknytningRequest().withAktoer(lagAktoer(requestIdent));
 
-        WSHentGeografiskTilknytningResponse response;
+        HentGeografiskTilknytningResponse response;
         try {
             response = service.hentGeografiskTilknytning(request);
         } catch (HentGeografiskTilknytningSikkerhetsbegrensing hentGeografiskTilknytningSikkerhetsbegrensing) {
@@ -132,21 +136,21 @@ public class HentPersonService {
         return Optional.of(response);
     }
 
-    private GeografiskTilknytning tilDomeneobjekt(WSHentGeografiskTilknytningResponse response) {
+    private GeografiskTilknytning tilDomeneobjekt(HentGeografiskTilknytningResponse response) {
         String geografiskTilknytning = getGeografiskTilknytning(response);
         String diskresjonskode = getDiskresjonskode(response);
         return new GeografiskTilknytning().withValue(geografiskTilknytning).withDiskresjonskode(diskresjonskode);
     }
 
-    private String getDiskresjonskode(WSHentGeografiskTilknytningResponse response) {
+    private String getDiskresjonskode(HentGeografiskTilknytningResponse response) {
         return Optional.ofNullable(response.getDiskresjonskode())
-                .map(WSKodeverdi::getValue)
+                .map(Kodeverdi::getValue)
                 .orElse(null);
     }
 
-    private String getGeografiskTilknytning(WSHentGeografiskTilknytningResponse response) {
+    private String getGeografiskTilknytning(HentGeografiskTilknytningResponse response) {
         return Optional.ofNullable(response.getGeografiskTilknytning())
-                .map(WSGeografiskTilknytning::getGeografiskTilknytning)
+                .map(no.nav.tjeneste.virksomhet.person.v3.informasjon.GeografiskTilknytning::getGeografiskTilknytning)
                 .orElse(null);
     }
 
@@ -155,20 +159,20 @@ public class HentPersonService {
         return geografiskTilknytning == null || geografiskTilknytning.getType() != GeografiskTilknytningstyper.LAND;
     }
 
-    private WSHentPersonRequest lagWSHentPersonRequest(String requestIdent) {
-        WSHentPersonRequest wsRequest = new WSHentPersonRequest()
+    private HentPersonRequest lagHentPersonRequest(String requestIdent) {
+        HentPersonRequest wsRequest = new HentPersonRequest()
                 .withAktoer(lagAktoer(requestIdent))
                 .withInformasjonsbehov(
-                        WSInformasjonsbehov.ADRESSE,
-                        WSInformasjonsbehov.BANKKONTO,
-                        WSInformasjonsbehov.FAMILIERELASJONER,
-                        WSInformasjonsbehov.KOMMUNIKASJON,
-                        WSInformasjonsbehov.SPORINGSINFORMASJON);
+                        Informasjonsbehov.ADRESSE,
+                        Informasjonsbehov.BANKKONTO,
+                        Informasjonsbehov.FAMILIERELASJONER,
+                        Informasjonsbehov.KOMMUNIKASJON,
+                        Informasjonsbehov.SPORINGSINFORMASJON);
         return wsRequest;
     }
 
-    private WSPersonIdent lagAktoer(String ident) {
-        return new WSPersonIdent().withIdent(new WSNorskIdent().withIdent(ident));
+    private PersonIdent lagAktoer(String ident) {
+        return new PersonIdent().withIdent(new NorskIdent().withIdent(ident));
     }
 
     private void oppdaterAnsvarligEnhetMedDataFraNORG(HentKjerneinformasjonResponse response, GeografiskTilknytning geografiskTilknytning) {

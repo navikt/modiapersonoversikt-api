@@ -2,8 +2,8 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.sak.service;
 
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.mock.MockCreationUtil;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.filter.Filter;
-import no.nav.tjeneste.virksomhet.sakogbehandling.v1.SakOgBehandling_v1PortType;
-import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.WSSak;
+import no.nav.tjeneste.virksomhet.sakogbehandling.v1.binding.SakOgBehandlingV1;
+import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.Sak;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.meldinger.FinnSakOgBehandlingskjedeListeRequest;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.meldinger.FinnSakOgBehandlingskjedeListeResponse;
 import org.junit.Test;
@@ -24,7 +24,7 @@ import static org.mockito.Mockito.when;
 public class SakOgBehandlingServiceTest {
 
     @Mock
-    private SakOgBehandling_v1PortType sakOgBehandling_v1PortType;
+    private SakOgBehandlingV1 sakOgBehandling_v1PortType;
 
     @Mock
     private FodselnummerAktorService fodselnummerAktorService;
@@ -37,15 +37,16 @@ public class SakOgBehandlingServiceTest {
 
 
     @Test
-    public void treWSsaker_skalGi_listeMedTreElementer() {
-        List<WSSak> saker = Arrays.<WSSak>asList(
+    public void treWSsaker_skalGi_listeMedTreElementer() throws Exception {
+        List<Sak> saker = Arrays.asList(
                 MockCreationUtil.createWSSak(),
                 MockCreationUtil.createWSSak(),
                 MockCreationUtil.createWSSak()
         );
 
-        when(sakOgBehandling_v1PortType.finnSakOgBehandlingskjedeListe(any(FinnSakOgBehandlingskjedeListeRequest.class)))
-                .thenReturn(new FinnSakOgBehandlingskjedeListeResponse().withSak(saker));
+        FinnSakOgBehandlingskjedeListeResponse response = new FinnSakOgBehandlingskjedeListeResponse();
+        response.getSak().addAll(saker);
+        when(sakOgBehandling_v1PortType.finnSakOgBehandlingskjedeListe(any(FinnSakOgBehandlingskjedeListeRequest.class))).thenReturn(response);
         when(filter.filtrerSaker(any())).thenReturn(saker);
 
         assertThat(sakOgBehandlingService.hentAlleSaker("11111111111").size(), equalTo(3));

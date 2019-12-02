@@ -22,8 +22,8 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.lagPeriode
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.mapOfNotNullOrEmpty
 import no.nav.sbl.dialogarena.naudit.Audit
 import no.nav.sbl.dialogarena.naudit.Audit.Action.*
-import no.nav.tjeneste.virksomhet.person.v3.HentPersonPersonIkkeFunnet
-import no.nav.tjeneste.virksomhet.person.v3.HentPersonSikkerhetsbegrensning
+import no.nav.tjeneste.virksomhet.person.v3.binding.HentPersonPersonIkkeFunnet
+import no.nav.tjeneste.virksomhet.person.v3.binding.HentPersonSikkerhetsbegrensning
 import org.slf4j.LoggerFactory
 import javax.inject.Inject
 import javax.ws.rs.*

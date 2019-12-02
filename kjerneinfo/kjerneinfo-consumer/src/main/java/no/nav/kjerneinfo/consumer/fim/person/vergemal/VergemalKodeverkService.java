@@ -3,10 +3,10 @@ package no.nav.kjerneinfo.consumer.fim.person.vergemal;
 import no.nav.kjerneinfo.common.domain.Kodeverdi;
 import no.nav.kodeverk.consumer.fim.kodeverk.KodeverkmanagerBi;
 import no.nav.kodeverk.consumer.fim.kodeverk.to.feil.HentKodeverkKodeverkIkkeFunnet;
-import no.nav.tjeneste.virksomhet.person.v3.informasjon.WSFylkesmannsembete;
-import no.nav.tjeneste.virksomhet.person.v3.informasjon.WSMandattyper;
-import no.nav.tjeneste.virksomhet.person.v3.informasjon.WSVergesakstyper;
-import no.nav.tjeneste.virksomhet.person.v3.informasjon.WSVergetyper;
+import no.nav.tjeneste.virksomhet.person.v3.informasjon.Fylkesmannsembete;
+import no.nav.tjeneste.virksomhet.person.v3.informasjon.Mandattyper;
+import no.nav.tjeneste.virksomhet.person.v3.informasjon.Vergesakstyper;
+import no.nav.tjeneste.virksomhet.person.v3.informasjon.Vergetyper;
 
 import static no.nav.kodeverk.consumer.fim.kodeverk.support.DefaultKodeverkmanager.*;
 
@@ -18,19 +18,19 @@ public class VergemalKodeverkService {
         this.kodeverkManager = kodeverkManager;
     }
 
-    public Kodeverdi getEmbete(WSFylkesmannsembete embete) {
+    public Kodeverdi getEmbete(Fylkesmannsembete embete) {
         return new Kodeverdi(embete.getValue(), getBeskrivelseForKode(embete.getValue(), KODEVERKSREF_VERGEMAL_FYLKESMANSSEMBETER));
     }
 
-    public Kodeverdi getMandattype(WSMandattyper wsMandattyper) {
+    public Kodeverdi getMandattype(Mandattyper wsMandattyper) {
         return new Kodeverdi(wsMandattyper.getValue(), getBeskrivelseForKode(wsMandattyper.getValue(), KODEVERKSREF_VERGEMAL_MANDATTYPE));
     }
 
-    public Kodeverdi getVergesakstype(WSVergesakstyper wsVergesakstyper) {
+    public Kodeverdi getVergesakstype(Vergesakstyper wsVergesakstyper) {
         return new Kodeverdi(wsVergesakstyper.getValue(), getBeskrivelseForKode(wsVergesakstyper.getValue(), KODEVERKSREF_VERGEMAL_SAKSTYPE));
     }
 
-    public Kodeverdi getVergetype(WSVergetyper wsVergetyper) {
+    public Kodeverdi getVergetype(Vergetyper wsVergetyper) {
         return new Kodeverdi(wsVergetyper.getValue(), getBeskrivelseForKode(wsVergetyper.getValue(), KODEVERKSREF_VERGEMAL_VERGETYPE));
     }
 
