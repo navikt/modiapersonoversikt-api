@@ -57,7 +57,7 @@
         <aktorid-jaxws.version>1.3</aktorid-jaxws.version>
 
         <!-- Tjenestespecs -->
-        <tjenestespesifikasjoner.version>1.2019.11.15-14.51-ee264fbf814c</tjenestespesifikasjoner.version>
+        <tjenestespesifikasjoner.version>1.2019.04.03-23.09-56488320520a</tjenestespesifikasjoner.version>
         <soknader.liste.version>2.0.12</soknader.liste.version>
         <gsak.oppgave.tjenestespesifikasjon>1.0.5</gsak.oppgave.tjenestespesifikasjon>
         <tildeloppgave-v1-tjenestespesifikasjon.version>1.1.0</tildeloppgave-v1-tjenestespesifikasjon.version>
