@@ -63,7 +63,7 @@ public class FilterTest {
 
         Behandlingskjede behandlingskjede = MockCreationUtil.createWSBehandlingskjede();
         Behandlingsstatuser behandlingstatus = new Behandlingsstatuser();
-        behandlingstatus.setKodeverksRef(FilterUtils.AVSLUTTET);
+        behandlingstatus.setValue(FilterUtils.AVSLUTTET);
         behandlingskjede.setSisteBehandlingsstatus(behandlingstatus);
         behandlingskjede.setSisteBehandlingREF("lovlig");
         Behandlingstyper behandlingstype = new Behandlingstyper();

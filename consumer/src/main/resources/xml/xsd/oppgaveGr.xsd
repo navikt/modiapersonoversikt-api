@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <xs:import namespace="http://www.w3.org/XML/1998/namespace" schemaLocation="xml.xsd"/>
+
+    <!-- Schema vi referer til -->
+    <xs:include schemaLocation="fellesTyper.xsd"/>
+
+    <!-- Hovedkodeliste med relasjoner -->
+    <xs:element name="oppgaveGrListe" type="oppgaveGrListeType">
+        <xs:unique name="UnikeOppgaveGrKode">
+            <xs:selector xpath="./oppgaveGr"/>
+            <xs:field xpath="@kode"/>
+        </xs:unique>
+    </xs:element>
+    <xs:complexType name="oppgaveGrListeType">
+        <xs:sequence>
+            <xs:element name="oppgaveGr" type="oppgaveGrType" maxOccurs="unbounded"/>
+        </xs:sequence>
+        <xs:attribute ref="xml:base"/>
+    </xs:complexType>
+
+    <!-- Hoved kodetype -->
+    <xs:complexType name="oppgaveGrType">
+        <xs:complexContent>
+            <xs:extension base="felleskodeType">
+                <xs:attribute name="gruppeKode" type="string_20" use="optional"/>
+                <xs:attribute name="dekode" type="string_200" use="required"/>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+</xs:schema>

@@ -31,7 +31,6 @@ public class UtbetalingEndpointConfig {
 
     private CXFClient<UtbetalingV1> createUtbetalingPortType() {
         return new CXFClient<>(UtbetalingV1.class)
-                .wsdl("classpath:utbetaling/no/nav/tjeneste/virksomhet/utbetaling/v1/Binding.wsdl")
                 .serviceName(new QName("http://nav.no/tjeneste/virksomhet/utbetaling/v1/Binding", "Utbetaling_v1"))
                 .endpointName(new QName("http://nav.no/tjeneste/virksomhet/utbetaling/v1/Binding", "Utbetaling_v1Port"))
                 .address(EnvironmentUtils.getRequiredProperty("UTBETALING_V1_ENDPOINTURL"));

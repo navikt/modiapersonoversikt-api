@@ -8,9 +8,10 @@ import javax.xml.datatype.DatatypeFactory
 import javax.xml.datatype.XMLGregorianCalendar
 
 class SakBuilder {
-    private lateinit var behandlingskjede: Array<out Behandlingskjede>
-    private lateinit var saksId: String
-    private lateinit var sakstema: Sakstemaer
+    private var saksId: String? = null
+    private var behandlingskjede: Array<out Behandlingskjede>? = null
+    private var sakstema: Sakstemaer? = null
+    private var opprettet: DateTime? = null
 
     fun withSaksId(saksId: String): SakBuilder {
         this.saksId = saksId
@@ -23,6 +24,7 @@ class SakBuilder {
     }
 
     fun withOpprettet(date: DateTime): SakBuilder {
+        this.opprettet = date
         return this
     }
 
@@ -36,7 +38,8 @@ class SakBuilder {
         return Sak().apply {
             saksId = builder.saksId
             sakstema = builder.sakstema
-            behandlingskjede.addAll(builder.behandlingskjede)
+            opprettet = toXMLCalendar(builder.opprettet)
+            builder.behandlingskjede?.also { behandlingskjede.addAll(it) }
         }
     }
 
@@ -47,17 +50,17 @@ class SakBuilder {
 }
 
 class BehandlingskjedeBuilder {
-    private lateinit var behandlingskjedeId: String
-    private lateinit var behandlingskjedetype: Behandlingskjedetyper
-    private lateinit var behandlingstema: Behandlingstemaer
-    private lateinit var start: DateTime
-    private lateinit var slutt: DateTime
-    private lateinit var sisteBehandlingREF: String
-    private lateinit var sisteBehandlingstype: Behandlingstyper
-    private lateinit var behandlingsListeRef: String
-    private lateinit var sisteBehandlingsoppdatering: DateTime
-    private lateinit var sisteBehandlingsstatus: Behandlingsstatuser
-    private lateinit var sisteBehandlingAvslutningsstatus: Avslutningsstatuser
+    private var behandlingskjedeId: String? = null
+    private var behandlingskjedetype: Behandlingskjedetyper? = null
+    private var behandlingstema: Behandlingstemaer? = null
+    private var start: DateTime? = null
+    private var slutt: DateTime? = null
+    private var sisteBehandlingREF: String? = null
+    private var sisteBehandlingstype: Behandlingstyper? = null
+    private var behandlingsListeRef: String? = null
+    private var sisteBehandlingsoppdatering: DateTime? = null
+    private var sisteBehandlingsstatus: Behandlingsstatuser? = null
+    private var sisteBehandlingAvslutningsstatus: Avslutningsstatuser? = null
 
 
     fun withBehandlingskjedeId(behandlingskjedeId: String): BehandlingskjedeBuilder {
@@ -80,7 +83,7 @@ class BehandlingskjedeBuilder {
         return this
     }
 
-    fun withSlutt(date: DateTime): BehandlingskjedeBuilder {
+    fun withSlutt(date: DateTime?): BehandlingskjedeBuilder {
         this.slutt = date
         return this
     }
@@ -140,6 +143,9 @@ class BehandlingskjedeBuilder {
     }
 }
 
-private fun toXMLCalendar(date: DateTime):XMLGregorianCalendar {
-    return DatatypeFactory.newInstance().newXMLGregorianCalendar(date.toString())
+private fun toXMLCalendar(date: DateTime?):XMLGregorianCalendar? {
+    return date
+            ?.let {
+                DatatypeFactory.newInstance().newXMLGregorianCalendar(it.toString())
+            }
 }

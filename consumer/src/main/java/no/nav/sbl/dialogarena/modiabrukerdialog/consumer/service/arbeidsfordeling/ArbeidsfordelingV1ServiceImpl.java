@@ -46,7 +46,7 @@ public class ArbeidsfordelingV1ServiceImpl implements ArbeidsfordelingV1Service 
             behandling.ifPresent((value) -> behandlingstema.setValue(value.getBehandlingstema()));
 
             Behandlingstyper behandlingstype = new Behandlingstyper();
-            behandling.ifPresent((value) -> behandlingstema.setValue(value.getBehandlingstype()));
+            behandling.ifPresent((value) -> behandlingstype.setValue(value.getBehandlingstype()));
 
             Diskresjonskoder diskresjonskoder = new Diskresjonskoder();
             diskresjonskoder.setValue(geografiskTilknytning.getDiskresjonskode());

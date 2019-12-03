@@ -64,6 +64,7 @@ class Policies {
                 DecisionEnums.NOT_APPLICABLE
             }
         }
+
         val brukerUtenEnhet = PolicyGenerator<TilgangskontrollContext, String>({ "Bruker har ingen enhet" }) {
             if (context.hentBrukersEnhet(data).isNullOrBlank()) {
                 DecisionEnums.PERMIT

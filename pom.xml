@@ -258,33 +258,6 @@
                 </exclusions>
             </dependency>
 
-            <!-- Gsak kodeverk -->
-            <dependency>
-                <groupId>no.nav.fellessystemer</groupId>
-                <!-- TODO må flyttes public -->
-                <artifactId>nav-fellessystemer-environment</artifactId>
-                <version>${nav-fellessystemer-environment.version}</version>
-                <scope>runtime</scope>
-                <exclusions>
-                    <exclusion>
-                        <groupId>org.jamon</groupId>
-                        <artifactId>jamon-runtime</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>commons-lang</groupId>
-                        <artifactId>commons-lang</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>xerces</groupId>
-                        <artifactId>xercesImpl</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>org.apache.poi</groupId>
-                        <artifactId>poi</artifactId>
-                    </exclusion>
-                </exclusions>
-            </dependency>
-
             <!--Dialogarena tjenestespesifikasjon-->
             <dependency>
                 <groupId>no.nav.tjenestespesifikasjoner</groupId>

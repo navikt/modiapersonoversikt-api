@@ -115,12 +115,6 @@
             <artifactId>kodeverk-consumer</artifactId>
         </dependency>
 
-        <!-- Gsak kodeverk -->
-        <dependency>
-            <groupId>no.nav.fellessystemer</groupId>
-            <artifactId>nav-fellessystemer-environment</artifactId>
-        </dependency>
-
         <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>modia-varsling</artifactId>
