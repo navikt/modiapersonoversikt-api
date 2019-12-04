@@ -26,6 +26,9 @@
 
     <modules>
         <module>ytelseskontrakt-v3-tjenestespesifikasjon</module>
+        <module>nav-sykepenger-v2-tjenestespesifikasjon</module>
+        <module>nav-foreldrepenger-v2-tjenestespesifikasjon</module>
+        <module>nav-behandleBrukerprofil-v2-tjenestespesifikasjon</module>
     </modules>
 
     <dependencyManagement>
