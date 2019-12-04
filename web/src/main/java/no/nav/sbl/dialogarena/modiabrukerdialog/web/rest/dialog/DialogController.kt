@@ -18,11 +18,9 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.api.DTO
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.api.toDTO
 import no.nav.sbl.dialogarena.naudit.Audit
 import no.nav.sbl.dialogarena.naudit.Audit.Action.*
-import no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.PdfUtils
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.henvendelse.HenvendelseBehandlingService
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.henvendelse.domain.Traad
 import no.nav.sbl.dialogarena.naudit.AuditResources.Person
-import java.io.ByteArrayInputStream
 import java.util.*
 import javax.inject.Inject
 import javax.servlet.http.HttpServletRequest
@@ -212,33 +210,6 @@ class DialogController @Inject constructor(
         }
         return false
     }
-
-    @GET
-    @Path("/{traadId}/print")
-    fun print(
-            @PathParam("fnr") fnr: String,
-            @PathParam("traadId") traadId: String,
-            @Context request: HttpServletRequest
-    ): Response = tilgangskontroll
-            .check(Policies.tilgangTilBruker.with(fnr))
-            .get(Audit.describe(READ, Person.Henvendelse.Print, "fnr" to fnr, "traadId" to traadId)) {
-                val valgtEnhet = RestUtils.hentValgtEnhet(request)
-                henvendelseService
-                        .hentMeldinger(fnr, valgtEnhet)
-                        .getTraad(traadId)
-                        .map { it.meldinger }
-                        .map(PdfUtils::genererPdfForPrint)
-                        .map { ByteArrayInputStream(it) }
-                        .map {
-                            Response.ok(it)
-                                    .header("Content-Disposition", "attachment;filename=meldinger.pdf")
-                                    .header("cache-control", "no-store")
-                                    .build()
-                        }
-                        .orElseGet {
-                            Response.status(404).build()
-                        }
-            }
 }
 
 private fun erUbesvartSporsmalFraBruker(traad: Traad): Boolean {
