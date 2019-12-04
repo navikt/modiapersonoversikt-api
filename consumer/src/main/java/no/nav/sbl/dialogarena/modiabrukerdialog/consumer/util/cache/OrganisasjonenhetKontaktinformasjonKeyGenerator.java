@@ -1,6 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.cache;
 
-import no.nav.tjeneste.virksomhet.organisasjonenhetkontaktinformasjon.v1.meldinger.HentKontaktinformasjonForEnhetBolkRequest;
+import no.nav.tjeneste.virksomhet.organisasjonenhetkontaktinformasjon.v1.meldinger.WSHentKontaktinformasjonForEnhetBolkRequest;
 import org.springframework.cache.interceptor.SimpleKeyGenerator;
 
 import java.lang.reflect.Method;
@@ -12,16 +12,16 @@ public class OrganisasjonenhetKontaktinformasjonKeyGenerator extends SimpleKeyGe
 
     @Override
     public Object generate(Object target, Method method, Object... params) {
-        if (params == null || params.length == 0 || ! (params[0] instanceof HentKontaktinformasjonForEnhetBolkRequest)) {
+        if (params == null || params.length == 0 || ! (params[0] instanceof WSHentKontaktinformasjonForEnhetBolkRequest)) {
             throw new IllegalArgumentException();
         }
 
-        HentKontaktinformasjonForEnhetBolkRequest request = (HentKontaktinformasjonForEnhetBolkRequest) params[0];
+        WSHentKontaktinformasjonForEnhetBolkRequest request = (WSHentKontaktinformasjonForEnhetBolkRequest) params[0];
 
         return super.generate(target, method, lagKey(request));
     }
 
-    private String lagKey(HentKontaktinformasjonForEnhetBolkRequest request) {
+    private String lagKey(WSHentKontaktinformasjonForEnhetBolkRequest request) {
         return request.getEnhetIdListe().stream()
                 .sorted(Comparator.comparingInt(Integer::parseInt))
                 .collect(Collectors.joining(","));

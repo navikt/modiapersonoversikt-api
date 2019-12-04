@@ -57,7 +57,7 @@
         <aktorid-jaxws.version>1.3</aktorid-jaxws.version>
 
         <!-- Tjenestespecs -->
-        <tjenestespesifikasjoner.version>1.2019.04.03-23.09-56488320520a</tjenestespesifikasjoner.version>
+        <tjenestespesifikasjoner.version>1.2019.11.15-14.51-ee264fbf814c</tjenestespesifikasjoner.version>
         <soknader.liste.version>2.0.12</soknader.liste.version>
         <gsak.oppgave.tjenestespesifikasjon>1.0.5</gsak.oppgave.tjenestespesifikasjon>
         <tildeloppgave-v1-tjenestespesifikasjon.version>1.1.0</tildeloppgave-v1-tjenestespesifikasjon.version>
@@ -68,8 +68,7 @@
         <behandle.henvendelse.version>1.2019.04.04-09.14-c6cea90b8e95</behandle.henvendelse.version>
         <behandle.person.v1.version>1.0.0</behandle.person.v1.version>
         <varsling.tjeneste.version>0.0.5</varsling.tjeneste.version>
-        <behandlingsinformasjon.tjenestespec.version>1.2019.05.23-08.28-c9a2c8477f7d
-        </behandlingsinformasjon.tjenestespec.version>
+        <behandlingsinformasjon.tjenestespec.version>1.2019.05.23-08.28-c9a2c8477f7d</behandlingsinformasjon.tjenestespec.version>
         <sakogbehandling-tjenestespesifikasjon.version>1.0.15</sakogbehandling-tjenestespesifikasjon.version>
         <dial-nav-tjeneste-behandlesak.version>1.1</dial-nav-tjeneste-behandlesak.version>
         <arena-arbeid-og-aktivitet.version>1.0.6-alpha002</arena-arbeid-og-aktivitet.version>
@@ -87,8 +86,7 @@
         <oppfolgingsinfo-v1-tjenestespesifikasjon.version>1.0.5</oppfolgingsinfo-v1-tjenestespesifikasjon.version>
         <arbeidsfordeling-v1.version>1.0.3</arbeidsfordeling-v1.version>
         <unleash.version>3.1.0</unleash.version>
-        <nav-fim-personsok-v1-tjenestespesifikasjon.version>1.2019.06.11-13.36-786a4cec3151
-        </nav-fim-personsok-v1-tjenestespesifikasjon.version>
+        <nav-fim-personsok-v1-tjenestespesifikasjon.version>1.2019.06.11-13.36-786a4cec3151</nav-fim-personsok-v1-tjenestespesifikasjon.version>
         <person-v3-tjenestespesifikasjon-version>3.0.4</person-v3-tjenestespesifikasjon-version>
         <organisasjonv4-tjenestespesifikasjon.version>1.0.1</organisasjonv4-tjenestespesifikasjon.version>
         <behandle.person.v1.version>1.0.0</behandle.person.v1.version>
@@ -403,18 +401,14 @@
 
             <!--Virksomhetstjenester-->
             <dependency>
-                <groupId>no.nav.tjenester</groupId>
-                <!-- TODO MÅ flyttes til public tjenestespec -->
-                <artifactId>nav-organisasjonEnhet-v2-tjenestespesifikasjon</artifactId>
-                <version>${organisasjonenhet-v2.tjenestespesifikasjon.versjon}</version>
-                <classifier>jaxws</classifier>
+                <groupId>no.nav.tjenestespesifikasjoner</groupId>
+                <artifactId>organisasjonenhet-v2-tjenestespesifikasjon</artifactId>
+                <version>${tjenestespesifikasjoner.version}</version>
             </dependency>
             <dependency>
-                <groupId>no.nav.tjenester</groupId>
-                <!-- TODO MÅ flyttes til public tjenestespec -->
-                <artifactId>nav-organisasjonEnhetKontaktinformasjon-v1-tjenestespesifikasjon</artifactId>
-                <version>${organisasjon-enhet-kontaktinformasjon}</version>
-                <classifier>jaxws</classifier>
+                <groupId>no.nav.tjenestespesifikasjoner</groupId>
+                <artifactId>organisasjonenhetkontaktinformasjon-v1-tjenestespesifikasjon</artifactId>
+                <version>${tjenestespesifikasjoner.version}</version>
             </dependency>
             <dependency>
                 <groupId>no.nav.tjenestespesifikasjoner</groupId>

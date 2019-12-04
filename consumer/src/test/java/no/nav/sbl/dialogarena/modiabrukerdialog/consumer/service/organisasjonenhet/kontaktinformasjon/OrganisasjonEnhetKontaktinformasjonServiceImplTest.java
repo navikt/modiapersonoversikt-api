@@ -3,11 +3,11 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.organisasjonen
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.organisasjonenhet.kontaktinformasjon.domain.OrganisasjonEnhetKontaktinformasjon;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.organisasjonenhet.kontaktinformasjon.domain.Ukedag;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.organisasjonenhet.kontaktinformasjon.service.OrganisasjonEnhetKontaktinformasjonServiceImpl;
-import no.nav.tjeneste.virksomhet.organisasjonenhetkontaktinformasjon.v1.binding.HentKontaktinformasjonForEnhetBolkUgyldigInput;
-import no.nav.tjeneste.virksomhet.organisasjonenhetkontaktinformasjon.v1.binding.OrganisasjonEnhetKontaktinformasjonV1;
+import no.nav.tjeneste.virksomhet.organisasjonenhetkontaktinformasjon.v1.HentKontaktinformasjonForEnhetBolkUgyldigInput;
+import no.nav.tjeneste.virksomhet.organisasjonenhetkontaktinformasjon.v1.OrganisasjonEnhetKontaktinformasjonV1;
 import no.nav.tjeneste.virksomhet.organisasjonenhetkontaktinformasjon.v1.informasjon.*;
-import no.nav.tjeneste.virksomhet.organisasjonenhetkontaktinformasjon.v1.meldinger.HentKontaktinformasjonForEnhetBolkRequest;
-import no.nav.tjeneste.virksomhet.organisasjonenhetkontaktinformasjon.v1.meldinger.HentKontaktinformasjonForEnhetBolkResponse;
+import no.nav.tjeneste.virksomhet.organisasjonenhetkontaktinformasjon.v1.meldinger.WSHentKontaktinformasjonForEnhetBolkRequest;
+import no.nav.tjeneste.virksomhet.organisasjonenhetkontaktinformasjon.v1.meldinger.WSHentKontaktinformasjonForEnhetBolkResponse;
 import org.junit.jupiter.api.*;
 import org.mockito.ArgumentCaptor;
 
@@ -36,7 +36,7 @@ class OrganisasjonEnhetKontaktinformasjonServiceImplTest {
     void setterOppRequestObjekt() throws HentKontaktinformasjonForEnhetBolkUgyldigInput {
         service.hentKontaktinformasjon(ENHET_ID);
 
-        ArgumentCaptor<HentKontaktinformasjonForEnhetBolkRequest> argumentCaptor = ArgumentCaptor.forClass(HentKontaktinformasjonForEnhetBolkRequest.class);
+        ArgumentCaptor<WSHentKontaktinformasjonForEnhetBolkRequest> argumentCaptor = ArgumentCaptor.forClass(WSHentKontaktinformasjonForEnhetBolkRequest.class);
         verify(serviceMock).hentKontaktinformasjonForEnhetBolk(argumentCaptor.capture());
         assertEquals(ENHET_ID, argumentCaptor.getValue().getEnhetIdListe().get(0));
     }
@@ -78,7 +78,7 @@ class OrganisasjonEnhetKontaktinformasjonServiceImplTest {
         @Test
         @DisplayName("Ingen elementer i listen av enheter som returneres")
         void ingenElementer() throws HentKontaktinformasjonForEnhetBolkUgyldigInput {
-            when(serviceMock.hentKontaktinformasjonForEnhetBolk(any())).thenReturn(new HentKontaktinformasjonForEnhetBolkResponse());
+            when(serviceMock.hentKontaktinformasjonForEnhetBolk(any())).thenReturn(new WSHentKontaktinformasjonForEnhetBolkResponse());
             assertThrows(RuntimeException.class, () -> service.hentKontaktinformasjon(ENHET_ID));
         }
 
@@ -92,8 +92,8 @@ class OrganisasjonEnhetKontaktinformasjonServiceImplTest {
             assertTrue(enhet.getKontaktinformasjon().getPublikumsmottak().isEmpty());
         }
 
-        private HentKontaktinformasjonForEnhetBolkResponse mockResponseUtenPublikumsmottak() {
-            HentKontaktinformasjonForEnhetBolkResponse response = mockResponse();
+        private WSHentKontaktinformasjonForEnhetBolkResponse mockResponseUtenPublikumsmottak() {
+            WSHentKontaktinformasjonForEnhetBolkResponse response = mockResponse();
             response.getEnhetListe().get(0).getKontaktinformasjon().getPublikumsmottakListe().clear();
             return response;
         }
@@ -108,8 +108,8 @@ class OrganisasjonEnhetKontaktinformasjonServiceImplTest {
             assertEquals(null, enhet.getKontaktinformasjon().getPublikumsmottak().get(0).getBesoeksadresse());
         }
 
-        private HentKontaktinformasjonForEnhetBolkResponse mockResponseMedPublikumsmottakUtenBesoksadresse() {
-            HentKontaktinformasjonForEnhetBolkResponse response = mockResponse();
+        private WSHentKontaktinformasjonForEnhetBolkResponse mockResponseMedPublikumsmottakUtenBesoksadresse() {
+            WSHentKontaktinformasjonForEnhetBolkResponse response = mockResponse();
             response.getEnhetListe().get(0).getKontaktinformasjon().getPublikumsmottakListe().get(0).setBesoeksadresse(null);
             return response;
         }
@@ -124,8 +124,8 @@ class OrganisasjonEnhetKontaktinformasjonServiceImplTest {
             assertFalse(enhet.getKontaktinformasjon().getPublikumsmottak().get(0).getApningstider().getApningstid(Ukedag.MANDAG).isPresent());
         }
 
-        private HentKontaktinformasjonForEnhetBolkResponse mockResponseMedPublikumsmottakUtenApningstidMandag() {
-            HentKontaktinformasjonForEnhetBolkResponse response = mockResponse();
+        private WSHentKontaktinformasjonForEnhetBolkResponse mockResponseMedPublikumsmottakUtenApningstidMandag() {
+            WSHentKontaktinformasjonForEnhetBolkResponse response = mockResponse();
             response.getEnhetListe().get(0).getKontaktinformasjon().getPublikumsmottakListe().get(0)
                     .getAapningstider().setMandag(null);
             return response;
@@ -133,38 +133,38 @@ class OrganisasjonEnhetKontaktinformasjonServiceImplTest {
 
     }
 
-    private HentKontaktinformasjonForEnhetBolkResponse mockResponse() {
-        HentKontaktinformasjonForEnhetBolkResponse response = new HentKontaktinformasjonForEnhetBolkResponse();
-        Organisasjonsenhet organisasjonsenhet = new Organisasjonsenhet();
+    private WSHentKontaktinformasjonForEnhetBolkResponse mockResponse() {
+        WSHentKontaktinformasjonForEnhetBolkResponse response = new WSHentKontaktinformasjonForEnhetBolkResponse();
+        WSOrganisasjonsenhet organisasjonsenhet = new WSOrganisasjonsenhet();
         organisasjonsenhet.setEnhetId(ENHET_ID);
         organisasjonsenhet.setKontaktinformasjon(mockKontaktinformasjon());
         response.getEnhetListe().add(organisasjonsenhet);
         return response;
     }
 
-    private KontaktinformasjonForOrganisasjonsenhet mockKontaktinformasjon() {
-        KontaktinformasjonForOrganisasjonsenhet kontaktinformasjonForOrganisasjonsenhet = new KontaktinformasjonForOrganisasjonsenhet();
+    private WSKontaktinformasjonForOrganisasjonsenhet mockKontaktinformasjon() {
+        WSKontaktinformasjonForOrganisasjonsenhet kontaktinformasjonForOrganisasjonsenhet = new WSKontaktinformasjonForOrganisasjonsenhet();
         kontaktinformasjonForOrganisasjonsenhet.getPublikumsmottakListe().add(mockPublikumsmottak());
         return kontaktinformasjonForOrganisasjonsenhet;
     }
 
-    private Publikumsmottak mockPublikumsmottak() {
-        Publikumsmottak publikumsmottak = new Publikumsmottak();
+    private WSPublikumsmottak mockPublikumsmottak() {
+        WSPublikumsmottak publikumsmottak = new WSPublikumsmottak();
         publikumsmottak.setBesoeksadresse(mockGateadresse());
-        publikumsmottak.setAapningstider(new Aapningstider());
+        publikumsmottak.setAapningstider(new WSAapningstider());
         return publikumsmottak;
     }
 
-    private Gateadresse mockGateadresse() {
-        Gateadresse gateadresse = new Gateadresse();
+    private WSGateadresse mockGateadresse() {
+        WSGateadresse gateadresse = new WSGateadresse();
         gateadresse.setGatenavn(GATEADRESSE);
-        gateadresse.setPoststed(new Postnummer());
+        gateadresse.setPoststed(new WSPostnummer());
         return gateadresse;
     }
 
-    private HentKontaktinformasjonForEnhetBolkResponse mockResponsMedFeiletEnhet() {
-        HentKontaktinformasjonForEnhetBolkResponse response = new HentKontaktinformasjonForEnhetBolkResponse();
-        FeiletEnhet feiletEnhet = new FeiletEnhet();
+    private WSHentKontaktinformasjonForEnhetBolkResponse mockResponsMedFeiletEnhet() {
+        WSHentKontaktinformasjonForEnhetBolkResponse response = new WSHentKontaktinformasjonForEnhetBolkResponse();
+        WSFeiletEnhet feiletEnhet = new WSFeiletEnhet();
         feiletEnhet.setFeilmelding(FEILMELDING_FEILET_ENHET);
         response.getFeiletEnhetListe().add(feiletEnhet);
         return response;

@@ -43,7 +43,7 @@ class OrganisasjonEnhetKontaktinformasjonMapperTest {
     @Test
     @DisplayName("Mapping av organisasjonsenhet")
     void mapperTest() {
-        Organisasjonsenhet organisasjonsenhetWS = mockOrganisasjonsenhet();
+        WSOrganisasjonsenhet organisasjonsenhetWS = mockOrganisasjonsenhet();
 
         OrganisasjonEnhetKontaktinformasjon organisasjonEnhetKontaktinformasjon = OrganisasjonEnhetKontaktinformasjonMapper.map(organisasjonsenhetWS);
 
@@ -56,7 +56,7 @@ class OrganisasjonEnhetKontaktinformasjonMapperTest {
     @Test
     @DisplayName("Mapping av kontaktinformasjon")
     void kontaktinformasjonsMapping() {
-        Organisasjonsenhet organisasjonsenhetWS = mockOrganisasjonsenhet();
+        WSOrganisasjonsenhet organisasjonsenhetWS = mockOrganisasjonsenhet();
 
         OrganisasjonEnhetKontaktinformasjon organisasjonEnhetKontaktinformasjon = OrganisasjonEnhetKontaktinformasjonMapper.map(organisasjonsenhetWS);
 
@@ -73,7 +73,7 @@ class OrganisasjonEnhetKontaktinformasjonMapperTest {
         @Test
         @DisplayName("Mapping av adresse for publikumsmottak")
         void adresseMapping() {
-            Organisasjonsenhet organisasjonsenhetWS = mockOrganisasjonsenhet();
+            WSOrganisasjonsenhet organisasjonsenhetWS = mockOrganisasjonsenhet();
 
             OrganisasjonEnhetKontaktinformasjon organisasjonEnhetKontaktinformasjon = OrganisasjonEnhetKontaktinformasjonMapper.map(organisasjonsenhetWS);
 
@@ -91,7 +91,7 @@ class OrganisasjonEnhetKontaktinformasjonMapperTest {
         @Test
         @DisplayName("Mapping av adresse når adresse er null")
         void narAdresseErNull() {
-            Organisasjonsenhet organisasjonsenhetWS = mockOrganisasjonsenhet();
+            WSOrganisasjonsenhet organisasjonsenhetWS = mockOrganisasjonsenhet();
             organisasjonsenhetWS.getKontaktinformasjon().getPublikumsmottakListe().get(0).setBesoeksadresse(null);
 
             OrganisasjonEnhetKontaktinformasjon organisasjonEnhetKontaktinformasjon = OrganisasjonEnhetKontaktinformasjonMapper.map(organisasjonsenhetWS);
@@ -104,7 +104,7 @@ class OrganisasjonEnhetKontaktinformasjonMapperTest {
         @Test
         @DisplayName("Mapping av adresse når kodeverk for postnummer er null")
         void postnummerErNull() {
-            Organisasjonsenhet organisasjonsenhetWS = mockOrganisasjonsenhet();
+            WSOrganisasjonsenhet organisasjonsenhetWS = mockOrganisasjonsenhet();
             organisasjonsenhetWS.getKontaktinformasjon().getPublikumsmottakListe().get(0).getBesoeksadresse().getPoststed().setTermnavn(null);
             organisasjonsenhetWS.getKontaktinformasjon().getPublikumsmottakListe().get(0).getBesoeksadresse().getPoststed().setValue(null);
 
@@ -121,7 +121,7 @@ class OrganisasjonEnhetKontaktinformasjonMapperTest {
     @Test
     @DisplayName("Mapping av åpningstider for publikumsmottak")
     void apningstiderMapping() {
-        Organisasjonsenhet organisasjonsenhetWS = mockOrganisasjonsenhet();
+        WSOrganisasjonsenhet organisasjonsenhetWS = mockOrganisasjonsenhet();
 
         OrganisasjonEnhetKontaktinformasjon organisasjonEnhetKontaktinformasjon = OrganisasjonEnhetKontaktinformasjonMapper.map(organisasjonsenhetWS);
 
@@ -148,30 +148,30 @@ class OrganisasjonEnhetKontaktinformasjonMapperTest {
                 .orElseThrow(NoSuchElementException::new);
     }
 
-    private Organisasjonsenhet mockOrganisasjonsenhet() {
-        Organisasjonsenhet organisasjonsenhetWS = new Organisasjonsenhet();
+    private WSOrganisasjonsenhet mockOrganisasjonsenhet() {
+        WSOrganisasjonsenhet organisasjonsenhetWS = new WSOrganisasjonsenhet();
         organisasjonsenhetWS.setEnhetId(ENHET_ID);
         organisasjonsenhetWS.setEnhetNavn(ENHET_NAVN);
         organisasjonsenhetWS.setKontaktinformasjon(mockKontaktinformasjon());
         return organisasjonsenhetWS;
     }
 
-    private KontaktinformasjonForOrganisasjonsenhet mockKontaktinformasjon() {
-        KontaktinformasjonForOrganisasjonsenhet kontaktinformasjonForOrganisasjonsenhetWS = new KontaktinformasjonForOrganisasjonsenhet();
+    private WSKontaktinformasjonForOrganisasjonsenhet mockKontaktinformasjon() {
+        WSKontaktinformasjonForOrganisasjonsenhet kontaktinformasjonForOrganisasjonsenhetWS = new WSKontaktinformasjonForOrganisasjonsenhet();
         kontaktinformasjonForOrganisasjonsenhetWS.getPublikumsmottakListe()
                 .addAll(Arrays.asList(mockPublikumsmottak(), mockPublikumsmottak()));
         return kontaktinformasjonForOrganisasjonsenhetWS;
     }
 
-    private Publikumsmottak mockPublikumsmottak() {
-        Publikumsmottak publikumsmottak = new Publikumsmottak();
+    private WSPublikumsmottak mockPublikumsmottak() {
+        WSPublikumsmottak publikumsmottak = new WSPublikumsmottak();
         publikumsmottak.setAapningstider(mockApningstider());
         publikumsmottak.setBesoeksadresse(mockGateadresse());
         return publikumsmottak;
     }
 
-    private Gateadresse mockGateadresse() {
-        Gateadresse gateadresse = new Gateadresse();
+    private WSGateadresse mockGateadresse() {
+        WSGateadresse gateadresse = new WSGateadresse();
         gateadresse.setGatenavn(GATENAVN);
         gateadresse.setHusnummer(HUSNUMMER);
         gateadresse.setHusbokstav(HUSBOKSTAV);
@@ -179,16 +179,16 @@ class OrganisasjonEnhetKontaktinformasjonMapperTest {
         return gateadresse;
     }
 
-    private Postnummer mockPostnummer() {
-        Postnummer postnummer = new Postnummer();
+    private WSPostnummer mockPostnummer() {
+        WSPostnummer postnummer = new WSPostnummer();
         postnummer.setTermnavn(POSTSTED);
         postnummer.setValue(POSTNUMMER);
         return postnummer;
     }
 
-    private Aapningstider mockApningstider() {
-        Aapningstider aapningstider = new Aapningstider();
-        Aapningstid aapningstidTirsdag = new Aapningstid();
+    private WSAapningstider mockApningstider() {
+        WSAapningstider aapningstider = new WSAapningstider();
+        WSAapningstid aapningstidTirsdag = new WSAapningstid();
         aapningstidTirsdag.setAapentFra(lagTidPaDagen(String.valueOf(APNER_TIRSDAG_TIME), String.valueOf(APNER_TIRSDAG_MINUTT), String.valueOf(APNER_TIRSDAG_SEKUND)));
         aapningstidTirsdag.setAapentTil(lagTidPaDagen(String.valueOf(STENGER_TIRSDAG_TIME), String.valueOf(STENGER_TIRSDAG_MINUTT), String.valueOf(STENGER_TIRSDAG_SEKUND)));
         aapningstider.setTirsdag(aapningstidTirsdag);
