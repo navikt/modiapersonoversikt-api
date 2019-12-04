@@ -214,16 +214,6 @@
 
         <!--Dialogarena-->
         <dependency>
-            <groupId>no.nav.sbl.dialogarena</groupId>
-            <artifactId>common-kodeverk</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>no.nav.modig</groupId>
-                    <artifactId>modig-core</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
             <groupId>no.nav.tjenestespesifikasjoner</groupId>
             <artifactId>henvendelse-informasjon-v2</artifactId>
         </dependency>

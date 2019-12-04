@@ -383,12 +383,6 @@
                 <version>${behandlingsinformasjon.tjenestespec.version}</version>
             </dependency>
             <dependency>
-                <groupId>no.nav.sbl.dialogarena</groupId>
-                <!-- TODO må flyttes public -->
-                <artifactId>common-kodeverk</artifactId>
-                <version>${common-kodeverk.version}</version>
-            </dependency>
-            <dependency>
                 <groupId>no.nav.tjenestespesifikasjoner</groupId>
                 <artifactId>aktorid-jaxws</artifactId>
                 <version>${tjenestespesifikasjoner.version}</version>
