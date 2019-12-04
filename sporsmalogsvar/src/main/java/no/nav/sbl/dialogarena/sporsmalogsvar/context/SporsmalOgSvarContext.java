@@ -17,10 +17,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import javax.inject.Named;
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-
-import static com.google.common.base.Charsets.UTF_8;
 
 @Configuration
 public class SporsmalOgSvarContext {

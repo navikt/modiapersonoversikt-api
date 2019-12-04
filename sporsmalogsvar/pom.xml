@@ -212,10 +212,6 @@
         </dependency>
         <dependency>
             <groupId>com.google.guava</groupId>
-            <artifactId>guava-base</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
             <scope>test</scope>
         </dependency>

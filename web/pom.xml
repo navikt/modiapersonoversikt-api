@@ -14,9 +14,7 @@
     <packaging>war</packaging>
 
     <properties>
-        <!-- Lagrer IT-info til enhetstestfil -->
         <sonar.jacoco.reportPath>${project.basedir}/../target/jacoco-ut.exec</sonar.jacoco.reportPath>
-        <fitnesse.port>9977</fitnesse.port>
     </properties>
 
     <dependencies>
