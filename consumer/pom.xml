@@ -255,11 +255,6 @@
             <groupId>no.nav.modig</groupId>
             <artifactId>modig-content-no-enonic</artifactId>
         </dependency>
-<!--        <dependency>-->
-<!--            <groupId>no.nav.modig</groupId>-->
-<!--            <artifactId>modig-testcertificates</artifactId>-->
-<!--            <scope>test</scope>-->
-<!--        </dependency>-->
 
         <!--Spring-->
         <dependency>
