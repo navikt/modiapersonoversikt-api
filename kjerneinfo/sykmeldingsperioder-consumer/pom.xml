@@ -162,6 +162,7 @@
                             <includes>**/*.wsdl,**/*.xsd</includes>
                             <artifactItems>
                                 <artifactItem>
+                                    <!-- TODO bør flyttes til github -->
                                     <groupId>no.nav.tjenester</groupId>
                                     <artifactId>nav-sykepenger-v2-tjenestespesifikasjon</artifactId>
                                     <version>${nav-fim-sykepenger-v2-tjenestespesifikasjon-version}</version>
@@ -169,6 +170,7 @@
                                     <outputDirectory>${project.build.outputDirectory}</outputDirectory>
                                 </artifactItem>
                                 <artifactItem>
+                                    <!-- TODO bør flyttes til github -->
                                     <groupId>no.nav.tjenester</groupId>
                                     <artifactId>nav-foreldrepenger-v2-tjenestespesifikasjon</artifactId>
                                     <version>${nav-fim-foreldrepenger-v2-tjenestespesifikasjon-version}</version>

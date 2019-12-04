@@ -127,6 +127,7 @@
                             <includes>**/*.wsdl,**/*.xsd</includes>
                             <artifactItems>
                                 <artifactItem>
+                                    <!-- TODO bør flyttes til github -->
                                     <groupId>no.nav.tjenester</groupId>
                                     <artifactId>nav-behandleBrukerprofil-v2-tjenestespesifikasjon</artifactId>
                                     <version>${nav-behandleBrukerprofil-tjenestespesifikasjon-version}</version>

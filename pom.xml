@@ -30,6 +30,7 @@
         <module>kjerneinfo</module>
         <module>modia-felleskomponenter</module>
         <module>modig-embedded</module>
+        <module>tjenestespesifikasjoner</module>
     </modules>
 
     <properties>

@@ -30,6 +30,11 @@
             <groupId>no.nav.common</groupId>
             <artifactId>cxf</artifactId>
         </dependency>
+        <dependency>
+            <groupId>no.nav.sbl.dialogarena.tjenestespesifikasjoner</groupId>
+            <artifactId>ytelseskontrakt-v3-tjenestespesifikasjon</artifactId>
+            <version>${project.version}</version>
+        </dependency>
 
         <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>
@@ -65,11 +70,6 @@
             <groupId>org.springframework</groupId>
             <artifactId>spring-core</artifactId>
         </dependency>
-
-        <!--        <dependency>-->
-        <!--            <groupId>xml-apis</groupId>-->
-        <!--            <artifactId>xml-apis</artifactId>-->
-        <!--        </dependency>-->
 
         <!-- DIVERSE DEPENDENCIES -->
         <dependency>
@@ -120,110 +120,4 @@
             <scope>compile</scope>
         </dependency>
     </dependencies>
-
-    <build>
-        <plugins>
-            <plugin>
-                <artifactId>maven-compiler-plugin</artifactId>
-            </plugin>
-            <plugin>
-                <artifactId>maven-dependency-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>unpack</id>
-                        <phase>generate-sources</phase>
-                        <goals>
-                            <goal>unpack</goal>
-                        </goals>
-                        <configuration>
-                            <includes>**/*.wsdl,**/*.xsd</includes>
-                            <artifactItems>
-                                <artifactItem>
-                                    <groupId>no.nav.tjenester.fim</groupId>
-                                    <artifactId>nav-fim-ytelseskontrakt-v3-tjenestespesifikasjon</artifactId>
-                                    <version>${nav-fim-ytelseskontrakt-v3-tjenestespesifikasjon-version}</version>
-                                    <type>zip</type>
-                                    <outputDirectory>${project.build.outputDirectory}/ytelser/</outputDirectory>
-                                </artifactItem>
-                            </artifactItems>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <artifactId>maven-resources-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>copy-bindings</id>
-                        <phase>generate-sources</phase>
-                        <goals>
-                            <goal>copy-resources</goal>
-                        </goals>
-                        <configuration>
-                            <outputDirectory>${project.build.outputDirectory}</outputDirectory>
-                            <resources>
-                                <resource>
-                                    <directory>src/main/jaxb</directory>
-                                </resource>
-                                <resource>
-                                    <directory>src/main/resources</directory>
-                                    <includes>
-                                        <include>**</include>
-                                    </includes>
-                                </resource>
-                            </resources>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.cxf</groupId>
-                <artifactId>cxf-codegen-plugin</artifactId>
-                <version>${org.apache.cxf.version}</version>
-                <executions>
-                    <execution>
-                        <id>wsdl-to-java</id>
-                        <phase>generate-sources</phase>
-                        <goals>
-                            <goal>wsdl2java</goal>
-                        </goals>
-                        <configuration>
-                            <encoding>${project.build.sourceEncoding}</encoding>
-                            <defaultOptions>
-                                <extraargs>
-                                    <extraarg>-xjc-Xfluent-api</extraarg>
-                                    <extraarg>-xjc-XhashCode</extraarg>
-                                    <extraarg>-xjc-Xequals</extraarg>
-                                    <extraarg>-xjc-XtoString</extraarg>
-                                </extraargs>
-                            </defaultOptions>
-                            <wsdlOptions>
-                                <wsdlOption>
-                                    <wsdl>
-                                        ${project.build.outputDirectory}/ytelser/no/nav/tjeneste/virksomhet/ytelseskontrakt/v3/Binding.wsdl
-                                    </wsdl>
-                                    <bindingFiles>
-                                        <bindingFile>${project.build.outputDirectory}/ytelseskontraktBindings.xjb
-                                        </bindingFile>
-                                    </bindingFiles>
-                                </wsdlOption>
-                            </wsdlOptions>
-                        </configuration>
-                    </execution>
-                </executions>
-                <dependencies>
-                    <dependency>
-                        <groupId>net.java.dev.jaxb2-commons</groupId>
-                        <artifactId>jaxb-fluent-api</artifactId>
-                        <version>2.1.8</version>
-                    </dependency>
-                    <dependency>
-                        <groupId>org.jvnet.jaxb2_commons</groupId>
-                        <artifactId>jaxb2-basics</artifactId>
-                        <version>0.6.4</version>
-                    </dependency>
-                </dependencies>
-            </plugin>
-        </plugins>
-    </build>
 </project>
