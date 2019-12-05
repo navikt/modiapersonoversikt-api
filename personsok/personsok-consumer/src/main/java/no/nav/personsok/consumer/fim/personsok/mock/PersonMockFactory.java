@@ -1,7 +1,7 @@
 package no.nav.personsok.consumer.fim.personsok.mock;
 
 import no.nav.personsok.domain.enums.PersonstatusType;
-import no.nav.tjeneste.virksomhet.personsoek.v1.informasjon.FimLandkoder;
+import no.nav.tjeneste.virksomhet.personsoek.v1.informasjon.Landkoder;
 
 import java.util.Arrays;
 import java.util.List;
@@ -19,8 +19,8 @@ public final class PersonMockFactory {
 	private static final String HUSBOKSTAV = "Husbokstav";
 	private static final Integer HUSNUMMER = 45;
 	private static final String ENHET = "Enhet";
-	private static final FimLandkoder FIM_LANDKODER = new FimLandkoder();
-	private static final FimLandkoder FIM_LANDKODER_2 = new FimLandkoder();
+	private static final Landkoder FIM_LANDKODER = new Landkoder();
+	private static final Landkoder FIM_LANDKODER_2 = new Landkoder();
 	private static final String KJONN = "Mann";
 	private static final String ADRESSELINJE1 = "Adresselinje 1";
 	private static final String ADRESSELINJE2 = "Adresselinje 2";

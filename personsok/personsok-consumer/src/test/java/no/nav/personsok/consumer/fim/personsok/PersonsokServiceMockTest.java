@@ -9,9 +9,9 @@ import no.nav.personsok.consumer.fim.personsok.mock.PersonsokServiceMock;
 import no.nav.personsok.consumer.fim.personsok.to.FinnPersonRequest;
 import no.nav.personsok.consumer.fim.personsok.to.FinnPersonResponse;
 import no.nav.personsok.domain.UtvidetPersonsok;
-import no.nav.tjeneste.virksomhet.personsoek.v1.FinnPersonForMangeForekomster;
-import no.nav.tjeneste.virksomhet.personsoek.v1.FinnPersonUgyldigInput;
-import no.nav.tjeneste.virksomhet.personsoek.v1.informasjon.FimPerson;
+import no.nav.tjeneste.virksomhet.personsoek.v1.FinnPersonFault;
+import no.nav.tjeneste.virksomhet.personsoek.v1.FinnPersonFault1;
+import no.nav.tjeneste.virksomhet.personsoek.v1.informasjon.Person;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -38,10 +38,10 @@ public class PersonsokServiceMockTest {
     public ExpectedException thrown = ExpectedException.none();
 
     @Test
-    public void testServiceMock() throws FinnPersonForMangeForekomster, FinnPersonUgyldigInput {
+    public void testServiceMock() throws FinnPersonFault1, FinnPersonFault {
 
         PersonMock fromPerson = PersonMockFactory.createPersonMock();
-        FimPerson toPerson = PersonMockMapper.map(fromPerson);
+        Person toPerson = PersonMockMapper.map(fromPerson);
 
         serviceMock.addPerson(toPerson);
 
@@ -57,9 +57,9 @@ public class PersonsokServiceMockTest {
     }
 
     @Test
-    public void testTooManyResults() throws FinnPersonForMangeForekomster, FinnPersonUgyldigInput {
+    public void testTooManyResults() throws FinnPersonFault1, FinnPersonFault {
         PersonMock fromPerson = PersonMockFactory.createPersonMock();
-        FimPerson toPerson = PersonMockMapper.map(fromPerson);
+        Person toPerson = PersonMockMapper.map(fromPerson);
 
         serviceMock.addPerson(toPerson);
 
@@ -69,7 +69,7 @@ public class PersonsokServiceMockTest {
         FinnPersonRequest finnPersonRequest = new FinnPersonRequest();
         finnPersonRequest.setUtvidetPersonsok(utvidetPersonsok);
 
-        thrown.expect(FinnPersonForMangeForekomster.class);
+        thrown.expect(FinnPersonFault.class);
         FinnPersonResponse response = serviceMock.finnPerson(finnPersonRequest);
         thrown = ExpectedException.none();
     }

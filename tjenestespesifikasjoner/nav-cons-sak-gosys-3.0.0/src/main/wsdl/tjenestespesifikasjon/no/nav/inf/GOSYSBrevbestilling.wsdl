@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:bons0="http://nav-cons-sak-gosys-3.0.0/no/nav/inf" xmlns:bons3="http://nav-cons-sak-gosys-3.0.0/no/nav/fault/brevbestilling" xmlns:tns="http://nav-cons-sak-gosys-3.0.0/no/nav/inf/Brevbestilling" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="GOSYSBrevbestilling" targetNamespace="http://nav-cons-sak-gosys-3.0.0/no/nav/inf/Brevbestilling">
+    <wsdl:types>
+    <xsd:schema xmlns:bons0="http://nav-cons-sak-gosys-3.0.0/no/nav/asbo/brevbestilling" xmlns:bons1="http://nav-cons-sak-gosys-3.0.0/no/nav/fault" xmlns:bons4="http://nav-cons-sak-gosys-3.0.0/no/nav/inf/Brevbestilling" xmlns:tns="http://nav-cons-sak-gosys-3.0.0/no/nav/inf" targetNamespace="http://nav-cons-sak-gosys-3.0.0/no/nav/inf/Brevbestilling" xmlns:bons3="http://nav-cons-sak-gosys-3.0.0/no/nav/fault/brevbestilling" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+            <xsd:import namespace="http://nav-cons-sak-gosys-3.0.0/no/nav/fault/brevbestilling" schemaLocation="../fault/brevbestilling/FaultGOSYSAdresseIkkeRegistrert.xsd"/>
+            <xsd:import namespace="http://nav-cons-sak-gosys-3.0.0/no/nav/fault/brevbestilling" schemaLocation="../fault/brevbestilling/FaultGOSYSManglerObligatoriskInput.xsd"/>
+            <xsd:import namespace="http://nav-cons-sak-gosys-3.0.0/no/nav/fault/brevbestilling" schemaLocation="../fault/brevbestilling/FaultGOSYSHenteBrevdataFeilet.xsd"/>
+            <xsd:import namespace="http://nav-cons-sak-gosys-3.0.0/no/nav/fault/brevbestilling" schemaLocation="../fault/brevbestilling/FaultGOSYSOpprettelseJournalpostFeilet.xsd"/>
+            <xsd:import namespace="http://nav-cons-sak-gosys-3.0.0/no/nav/fault" schemaLocation="../fault/FaultGOSYSGenerisk.xsd"/>
+            <xsd:import namespace="http://nav-cons-sak-gosys-3.0.0/no/nav/asbo/brevbestilling" schemaLocation="../asbo/brevbestilling/ASBOGOSYSBrevbestillingRequest.xsd"/>
+            <xsd:element name="bestillBrev">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="bestillBrevRequest" nillable="true" type="bons0:ASBOGOSYSBrevbestillingRequest"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="bestillBrevResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="bestillBrevResponse" nillable="true" type="xsd:string"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+            <xsd:element name="FaultGOSYSManglerObligatoriskInput_element" nillable="true" type="bons3:FaultGOSYSManglerObligatoriskInput"/>
+            <xsd:element name="FaultGOSYSHenteBrevdataFeilet_element" nillable="true" type="bons3:FaultGOSYSHenteBrevdataFeilet"/>
+            <xsd:element name="FaultGOSYSOpprettelseJournalpostFeilet_element" nillable="true" type="bons3:FaultGOSYSOpprettelseJournalpostFeilet"/>
+            <xsd:element name="FaultGOSYSGenerisk_element" nillable="true" type="bons1:FaultGOSYSGenerisk"/>
+            <xsd:element name="FaultGOSYSAdresseIkkeRegistrert_element" nillable="true" type="bons3:FaultGOSYSAdresseIkkeRegistrert"/>
+        </xsd:schema>
+  </wsdl:types>
+    <wsdl:message name="bestillBrevRequestMsg">
+    <wsdl:part element="tns:bestillBrev" name="bestillBrevParameters"/>
+  </wsdl:message>
+    <wsdl:message name="bestillBrevResponseMsg">
+    <wsdl:part element="tns:bestillBrevResponse" name="bestillBrevResult"/>
+  </wsdl:message>
+    <wsdl:message name="bestillBrev_faultManglerObligatoriskeInputMsg">
+    <wsdl:part element="tns:FaultGOSYSManglerObligatoriskInput_element" name="faultManglerObligatoriskeInput"/>
+  </wsdl:message>
+    <wsdl:message name="bestillBrev_faultHenteBrevdataFeiletMsg">
+    <wsdl:part element="tns:FaultGOSYSHenteBrevdataFeilet_element" name="faultHenteBrevdataFeilet"/>
+  </wsdl:message>
+    <wsdl:message name="bestillBrev_faultOpprettelseJournalpostFeiletMsg">
+    <wsdl:part element="tns:FaultGOSYSOpprettelseJournalpostFeilet_element" name="faultOpprettelseJournalpostFeilet"/>
+  </wsdl:message>
+    <wsdl:message name="bestillBrev_faultGOSYSGeneriskMsg">
+    <wsdl:part element="tns:FaultGOSYSGenerisk_element" name="faultGOSYSGenerisk"/>
+  </wsdl:message>
+    <wsdl:message name="bestillBrev_faultGOSYSAdresseIkkeRegistrertMsg">
+    <wsdl:part element="tns:FaultGOSYSAdresseIkkeRegistrert_element" name="faultGOSYSAdresseIkkeRegistrert"/>
+  </wsdl:message>
+    <wsdl:portType name="GOSYSBrevbestilling">
+    <wsdl:operation name="bestillBrev">
+      <wsdl:input message="tns:bestillBrevRequestMsg" name="bestillBrevRequest"/>
+      <wsdl:output message="tns:bestillBrevResponseMsg" name="bestillBrevResponse"/>
+            <wsdl:fault message="tns:bestillBrev_faultManglerObligatoriskeInputMsg" name="faultManglerObligatoriskeInput"/>
+            <wsdl:fault message="tns:bestillBrev_faultHenteBrevdataFeiletMsg" name="faultHenteBrevdataFeilet"/>
+            <wsdl:fault message="tns:bestillBrev_faultOpprettelseJournalpostFeiletMsg" name="faultOpprettelseJournalpostFeilet"/>
+            <wsdl:fault message="tns:bestillBrev_faultGOSYSGeneriskMsg" name="faultGOSYSGenerisk"/>
+            <wsdl:fault message="tns:bestillBrev_faultGOSYSAdresseIkkeRegistrertMsg" name="faultGOSYSAdresseIkkeRegistrert"/>
+        </wsdl:operation>
+  </wsdl:portType>
+</wsdl:definitions>

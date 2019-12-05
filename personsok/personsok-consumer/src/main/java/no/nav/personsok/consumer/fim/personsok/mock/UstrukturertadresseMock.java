@@ -1,10 +1,10 @@
 package no.nav.personsok.consumer.fim.personsok.mock;
 
-import no.nav.tjeneste.virksomhet.personsoek.v1.informasjon.FimLandkoder;
+import no.nav.tjeneste.virksomhet.personsoek.v1.informasjon.Landkoder;
 
 public class UstrukturertadresseMock {
 
-	private FimLandkoder landkode;
+	private Landkoder landkode;
 	private String adresselinje1;
 	private String adresselinje2;
 	private String adresselinje3;
@@ -12,7 +12,7 @@ public class UstrukturertadresseMock {
 	public UstrukturertadresseMock() {
 	}
 
-	public UstrukturertadresseMock(FimLandkoder landkode, String adresselinje1, String adresselinje2, String adresselinje3) {
+	public UstrukturertadresseMock(Landkoder landkode, String adresselinje1, String adresselinje2, String adresselinje3) {
 		this.landkode = landkode;
 		this.adresselinje1 = adresselinje1;
 		this.adresselinje2 = adresselinje2;
@@ -43,11 +43,11 @@ public class UstrukturertadresseMock {
 		this.adresselinje3 = adresselinje3;
 	}
 
-	public FimLandkoder getLandkode() {
+	public Landkoder getLandkode() {
 		return landkode;
 	}
 
-	public void setLandkode(FimLandkoder landkode) {
+	public void setLandkode(Landkoder landkode) {
 		this.landkode = landkode;
 	}
 }

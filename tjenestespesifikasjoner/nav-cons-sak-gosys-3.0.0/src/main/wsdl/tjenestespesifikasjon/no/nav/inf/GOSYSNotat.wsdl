@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://nav-cons-sak-gosys-3.0.0/no/nav/inf/Notat" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="GOSYSNotat" targetNamespace="http://nav-cons-sak-gosys-3.0.0/no/nav/inf/Notat">
+    <wsdl:types>
+    <xsd:schema xmlns:bons1="http://nav-cons-sak-gosys-3.0.0/no/nav/inf/Notat" xmlns:bons2="http://nav-cons-sak-gosys-3.0.0/no/nav/fault" xmlns:bons3="http://nav-cons-sak-gosys-3.0.0/no/nav/asbo/notat" xmlns:tns="http://nav-cons-sak-gosys-3.0.0/no/nav/inf/GOSYSNotat" targetNamespace="http://nav-cons-sak-gosys-3.0.0/no/nav/inf/Notat" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+            <xsd:import namespace="http://nav-cons-sak-gosys-3.0.0/no/nav/fault" schemaLocation="../fault/FaultGOSYSGenerisk.xsd"/>
+            <xsd:import namespace="http://nav-cons-sak-gosys-3.0.0/no/nav/asbo/notat" schemaLocation="../asbo/notat/ASBOGOSYSNotatListe.xsd"/>
+            <xsd:import namespace="http://nav-cons-sak-gosys-3.0.0/no/nav/asbo/notat" schemaLocation="../asbo/notat/ASBOGOSYSFinnNotatListeReq.xsd"/>
+            <xsd:element name="finnNotatListe">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="finnNotatListeRequest" nillable="true" type="bons3:ASBOGOSYSFinnNotatListeReq"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="finnNotatListeResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="finnNotatListeResponse" nillable="true" type="bons3:ASBOGOSYSNotatListe"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+            <xsd:element name="FaultGOSYSGenerisk_element" nillable="true" type="bons2:FaultGOSYSGenerisk"/>
+        </xsd:schema>
+  </wsdl:types>
+    <wsdl:message name="finnNotatListeRequestMsg">
+    <wsdl:part element="tns:finnNotatListe" name="finnNotatListeParameters"/>
+  </wsdl:message>
+    <wsdl:message name="finnNotatListeResponseMsg">
+    <wsdl:part element="tns:finnNotatListeResponse" name="finnNotatListeResult"/>
+  </wsdl:message>
+    <wsdl:message name="finnNotatListe_faultGOSYSGeneriskMsg">
+    <wsdl:part element="tns:FaultGOSYSGenerisk_element" name="faultGOSYSGenerisk"/>
+  </wsdl:message>
+    <wsdl:portType name="GOSYSNotat">
+    <wsdl:operation name="finnNotatListe">
+      <wsdl:input message="tns:finnNotatListeRequestMsg" name="finnNotatListeRequest"/>
+      <wsdl:output message="tns:finnNotatListeResponseMsg" name="finnNotatListeResponse"/>
+            <wsdl:fault message="tns:finnNotatListe_faultGOSYSGeneriskMsg" name="faultGOSYSGenerisk"/>
+        </wsdl:operation>
+  </wsdl:portType>
+</wsdl:definitions>
