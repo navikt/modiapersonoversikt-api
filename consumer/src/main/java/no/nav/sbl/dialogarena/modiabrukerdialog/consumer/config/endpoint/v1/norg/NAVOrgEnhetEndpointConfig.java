@@ -30,7 +30,7 @@ public class NAVOrgEnhetEndpointConfig {
     private static GOSYSNAVOrgEnhet createNavOrgEnhetPortType() {
         return withProperty("disable.ssl.cn.check", "true", () -> new CXFClient<>(GOSYSNAVOrgEnhet.class)
                 .address(address)
-                .wsdl("classpath:nav-cons-sak-gosys-3.0.0_GOSYSNAVOrgEnhetWSEXP.wsdl")
+                .wsdl("classpath:wsdl/tjenestespesifikasjon/nav-cons-sak-gosys-3.0.0_GOSYSNAVOrgEnhetWSEXP.wsdl")
                 .serviceName(new QName("http://nav-cons-sak-gosys-3.0.0/no/nav/inf/NAVOrgEnhet/Binding", "GOSYSNAVOrgEnhetWSEXP_GOSYSNAVOrgEnhetHttpService"))
                 .endpointName(new QName("http://nav-cons-sak-gosys-3.0.0/no/nav/inf/NAVOrgEnhet/Binding", "GOSYSNAVOrgEnhetWSEXP_GOSYSNAVOrgEnhetHttpPort"))
                 .withOutInterceptor(new WSS4JOutInterceptor(getSecurityProps()))

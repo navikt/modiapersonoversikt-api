@@ -37,7 +37,7 @@ public class YtelseskontraktConsumerConfig {
 
     private CXFClient<YtelseskontraktV3> getYtelseskontraktV3() {
         return new CXFClient<>(YtelseskontraktV3.class)
-                .wsdl("classpath:ytelser/no/nav/tjeneste/virksomhet/ytelseskontrakt/v3/Binding.wsdl")
+                .wsdl("classpath:wsdl/tjenestespesifikasjon/no/nav/tjeneste/virksomhet/ytelseskontrakt/v3/Binding.wsdl")
                 .serviceName(new QName("http://nav.no/tjeneste/virksomhet/ytelseskontrakt/v3/Binding", "Ytelseskontrakt_v3"))
                 .endpointName(new QName("http://nav.no/tjeneste/virksomhet/ytelseskontrakt/v3/Binding", "Ytelseskontrakt_v3Port"))
                 .withHandler(new MDCOutHandler())
