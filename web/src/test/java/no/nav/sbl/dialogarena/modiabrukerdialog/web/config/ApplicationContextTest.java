@@ -18,7 +18,7 @@ public class ApplicationContextTest {
 
     @BeforeClass
     public static void setupStatic() {
-        setFrom("jetty-environment.properties");
+        setFrom("configurations/q0.properties");
         setupKeyAndTrustStore();
     }
 
