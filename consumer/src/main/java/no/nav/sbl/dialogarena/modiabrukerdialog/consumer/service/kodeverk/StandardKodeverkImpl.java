@@ -61,7 +61,7 @@ public class StandardKodeverkImpl implements StandardKodeverk {
     @Qualifier("kodeverkPortTypeV2")
     private KodeverkPortType kodeverkPortType;
 
-    @Value("${modiabrukerdialog.datadir}")
+    @Value("${modiabrukerdialog.datadir:/tmp}")
     private File brukerprofilDataDirectory;
 
     @Override

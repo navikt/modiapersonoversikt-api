@@ -3,7 +3,7 @@ package no.nav.modig.modia.ping;
 import no.nav.sbl.dialogarena.types.Pingable;
 import no.nav.sbl.util.fn.UnsafeRunnable;
 
-public class ConsumerPingable<T> implements Pingable {
+public class ConsumerPingable implements Pingable {
     private final UnsafeRunnable ping;
     private final Ping.PingMetadata metadata;
 

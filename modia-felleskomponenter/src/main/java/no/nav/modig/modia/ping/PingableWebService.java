@@ -12,7 +12,7 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 public class PingableWebService implements Pingable {
-    private final ConsumerPingable<Object> delegate;
+    private final ConsumerPingable delegate;
 
     public PingableWebService(String name, Object webservice) {
         this(name, false, webservice);
@@ -35,7 +35,7 @@ public class PingableWebService implements Pingable {
                 kritisk
         );
 
-        delegate = new ConsumerPingable<>(
+        delegate = new ConsumerPingable(
                 metadata,
                 () -> method.invoke(webservice)
         );

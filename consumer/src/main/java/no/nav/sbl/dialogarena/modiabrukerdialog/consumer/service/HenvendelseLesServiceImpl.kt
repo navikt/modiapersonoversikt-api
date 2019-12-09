@@ -8,7 +8,7 @@ import no.nav.sbl.rest.RestUtils
 import no.nav.sbl.util.EnvironmentUtils
 
 class HenvendelseLesServiceImpl : HenvendelseLesService {
-    private val baseUrl: String = EnvironmentUtils.getRequiredProperty("henvendelse-les.api.url")
+    private val baseUrl: String = EnvironmentUtils.getRequiredProperty("HENVENDELSE_LES_API_URL")
     private val systemTokenProvider = SystemUserTokenProvider()
 
     override fun alleBehandlingsIderTilhorerBruker(fnr: String, behandlingsIder: List<String>): Boolean {

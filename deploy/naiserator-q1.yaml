@@ -1,0 +1,41 @@
+apiVersion: "nais.io/v1alpha1"
+kind: "Application"
+metadata:
+  name: modiapersonoversikt-api
+  namespace: q1
+  labels:
+    team: personoversikt
+spec:
+  image: repo.adeo.no:5443/oppfolging/modiapersonoversikt-api:{{version}}
+  port: 8080
+  team: personoversikt
+  liveness:
+    path: /modiapersonoversikt-api/internal/isAlive
+    initialDelay: 50
+    timeout: 1
+    periodSeconds: 5
+    failureThreshold: 10
+  readiness:
+    path: /modiapersonoversikt-api/internal/isReady
+    initialDelay: 50
+    timeout: 1
+  prometheus:
+    enabled: true
+    path: /modiapersonoversikt-api/internal/metrics
+  resources:
+    requests:
+      cpu: 1000m
+      memory: 4096Mi
+    limits:
+      cpu: 2000m
+      memory: 8192Mi
+  ingresses:
+    - https://modiapersonoversikt-api-q1.nais.preprod.local
+    - https://app-q1.adeo.no/modiapersonoversikt-api
+    - https://modapp-q1.adeo.no/modiapersonoversikt-api
+  replicas:
+    min: 1
+    max: 2
+    cpuThresholdPercentage: 60
+  vault:
+    enabled: true
