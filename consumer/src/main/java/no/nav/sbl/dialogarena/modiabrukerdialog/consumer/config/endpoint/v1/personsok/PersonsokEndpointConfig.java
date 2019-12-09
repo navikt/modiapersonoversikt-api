@@ -8,6 +8,8 @@ import no.nav.tjeneste.virksomhet.personsoek.v1.PersonsokPortType;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import javax.xml.namespace.QName;
+
 import static no.nav.metrics.MetricsFactory.createTimerProxyForWebService;
 
 @Configuration
@@ -29,8 +31,9 @@ public class PersonsokEndpointConfig {
 
     private CXFClient<PersonsokPortType> createPersonsokPortType() {
         return new CXFClient<>(PersonsokPortType.class)
-//                .wsdl("classpath:no/nav/tjeneste/virksomhet/personsoek/v1/Personsoek.wsdl")
-//                .serviceName(new QName("http://nav.no/tjeneste/virksomhet/personsoek/v1/", "Personsok_v1"))
+                .wsdl("classpath:wsdl/no/nav/tjeneste/virksomhet/personsoek/v1/Personsoek.wsdl")
+                .serviceName(new QName("http://nav.no/tjeneste/virksomhet/personsoek/v1/", "Personsok_v1"))
+                .endpointName(new QName("http://nav.no/tjeneste/virksomhet/personsoek/v1/", "Personsok_v1"))
                 .address(EnvironmentUtils.getRequiredProperty("VIRKSOMHET_PERSONSOK_V1_ENDPOINTURL"));
     }
 

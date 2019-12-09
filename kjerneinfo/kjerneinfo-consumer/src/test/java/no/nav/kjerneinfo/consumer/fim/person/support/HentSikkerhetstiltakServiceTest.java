@@ -1,12 +1,12 @@
 package no.nav.kjerneinfo.consumer.fim.person.support;
 
 import no.nav.kjerneinfo.domain.person.fakta.Sikkerhetstiltak;
-import no.nav.tjeneste.virksomhet.person.v3.HentSikkerhetstiltakPersonIkkeFunnet;
-import no.nav.tjeneste.virksomhet.person.v3.PersonV3;
-import no.nav.tjeneste.virksomhet.person.v3.informasjon.WSPeriode;
-import no.nav.tjeneste.virksomhet.person.v3.informasjon.WSSikkerhetstiltak;
-import no.nav.tjeneste.virksomhet.person.v3.meldinger.WSHentSikkerhetstiltakRequest;
-import no.nav.tjeneste.virksomhet.person.v3.meldinger.WSHentSikkerhetstiltakResponse;
+import no.nav.tjeneste.virksomhet.person.v3.binding.HentSikkerhetstiltakPersonIkkeFunnet;
+import no.nav.tjeneste.virksomhet.person.v3.binding.PersonV3;
+import no.nav.tjeneste.virksomhet.person.v3.feil.PersonIkkeFunnet;
+import no.nav.tjeneste.virksomhet.person.v3.informasjon.Periode;
+import no.nav.tjeneste.virksomhet.person.v3.meldinger.HentSikkerhetstiltakRequest;
+import no.nav.tjeneste.virksomhet.person.v3.meldinger.HentSikkerhetstiltakResponse;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -41,10 +41,10 @@ public class HentSikkerhetstiltakServiceTest {
     @Test
     public void hentSikkerhetstiltak() throws Exception {
         String sikkerhetsBeskrivelse = "Farlig person.";
-        WSHentSikkerhetstiltakResponse response = new WSHentSikkerhetstiltakResponse()
-                .withSikkerhetstiltak(new WSSikkerhetstiltak()
+        HentSikkerhetstiltakResponse response = new HentSikkerhetstiltakResponse()
+                .withSikkerhetstiltak(new no.nav.tjeneste.virksomhet.person.v3.informasjon.Sikkerhetstiltak()
                         .withSikkerhetstiltaksbeskrivelse(sikkerhetsBeskrivelse));
-        when(portType.hentSikkerhetstiltak(any(WSHentSikkerhetstiltakRequest.class))).thenReturn(response);
+        when(portType.hentSikkerhetstiltak(any(HentSikkerhetstiltakRequest.class))).thenReturn(response);
 
         Sikkerhetstiltak sikkerhetstiltak = service.hentSikkerhetstiltak(IDENT);
 
@@ -54,11 +54,11 @@ public class HentSikkerhetstiltakServiceTest {
     @Test
     public void hentSikkerhetstiltakSjekkPeriode() throws Exception {
         String sikkerhetsBeskrivelse = "Farlig person.";
-        WSHentSikkerhetstiltakResponse response = new WSHentSikkerhetstiltakResponse()
-                .withSikkerhetstiltak(new WSSikkerhetstiltak()
-                        .withSikkerhetstiltaksbeskrivelse(sikkerhetsBeskrivelse).withPeriode(new WSPeriode()
+        HentSikkerhetstiltakResponse response = new HentSikkerhetstiltakResponse()
+                .withSikkerhetstiltak(new no.nav.tjeneste.virksomhet.person.v3.informasjon.Sikkerhetstiltak()
+                        .withSikkerhetstiltaksbeskrivelse(sikkerhetsBeskrivelse).withPeriode(new Periode()
                                 .withTom(lagDato()).withFom(lagDato())));
-        when(portType.hentSikkerhetstiltak(any(WSHentSikkerhetstiltakRequest.class))).thenReturn(response);
+        when(portType.hentSikkerhetstiltak(any(HentSikkerhetstiltakRequest.class))).thenReturn(response);
 
         Sikkerhetstiltak sikkerhetstiltak = service.hentSikkerhetstiltak(IDENT);
 
@@ -67,8 +67,8 @@ public class HentSikkerhetstiltakServiceTest {
 
     @Test
     public void hentSikkerhetstiltakThatDontExist() throws Exception {
-        when(portType.hentSikkerhetstiltak(any(WSHentSikkerhetstiltakRequest.class)))
-                .thenThrow(new HentSikkerhetstiltakPersonIkkeFunnet());
+        when(portType.hentSikkerhetstiltak(any(HentSikkerhetstiltakRequest.class)))
+                .thenThrow(new HentSikkerhetstiltakPersonIkkeFunnet("", new PersonIkkeFunnet()));
 
         Sikkerhetstiltak sikkerhetstiltak = service.hentSikkerhetstiltak(IDENT);
 

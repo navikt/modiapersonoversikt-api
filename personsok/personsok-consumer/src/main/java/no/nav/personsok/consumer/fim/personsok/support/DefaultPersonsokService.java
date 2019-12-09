@@ -1,30 +1,30 @@
 package no.nav.personsok.consumer.fim.personsok.support;
 
-import no.nav.modig.common.SporingsAksjon;
-import no.nav.modig.common.SporingsLogger;
-import no.nav.modig.common.SporingsLoggerFactory;
+import kotlin.Pair;
 import no.nav.personsok.consumer.fim.mapping.FIMMapper;
 import no.nav.personsok.consumer.fim.personsok.PersonsokServiceBi;
 import no.nav.personsok.consumer.fim.personsok.to.FinnPersonRequest;
 import no.nav.personsok.consumer.fim.personsok.to.FinnPersonResponse;
-import no.nav.tjeneste.virksomhet.personsoek.v1.FinnPersonForMangeForekomster;
-import no.nav.tjeneste.virksomhet.personsoek.v1.FinnPersonUgyldigInput;
+import no.nav.sbl.dialogarena.naudit.Audit;
+import no.nav.sbl.dialogarena.naudit.AuditResources;
+import no.nav.tjeneste.virksomhet.personsoek.v1.FinnPersonFault;
+import no.nav.tjeneste.virksomhet.personsoek.v1.FinnPersonFault1;
 import no.nav.tjeneste.virksomhet.personsoek.v1.PersonsokPortType;
-import no.nav.tjeneste.virksomhet.personsoek.v1.informasjon.FimPerson;
-import no.nav.tjeneste.virksomhet.personsoek.v1.meldinger.FimFinnPersonRequest;
-import no.nav.tjeneste.virksomhet.personsoek.v1.meldinger.FimFinnPersonResponse;
+import no.nav.tjeneste.virksomhet.personsoek.v1.informasjon.Person;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import static java.util.Collections.singletonList;
 
 /**
  * Vår standardimplementasjonen av den eksterne tjenesten.
  */
 public class DefaultPersonsokService implements PersonsokServiceBi {
+    private static Audit.AuditDescriptor<Person> auditLogger = Audit.describe(
+            Audit.Action.READ,
+            AuditResources.Person.Personalia,
+            (person) -> singletonList(new Pair<>("fnr", person.getIdent().getIdent()))
+    );
 
     private PersonsokPortType personsokService;
 
@@ -32,13 +32,14 @@ public class DefaultPersonsokService implements PersonsokServiceBi {
     private Logger logger = LoggerFactory.getLogger(getClass());
 
     @Override
-    public FinnPersonResponse finnPerson(FinnPersonRequest finnPersonRequest) throws FinnPersonForMangeForekomster, FinnPersonUgyldigInput {
+    public FinnPersonResponse finnPerson(FinnPersonRequest finnPersonRequest) throws FinnPersonFault, FinnPersonFault1 {
 
-        FimFinnPersonRequest rawRequest = mapper.map(finnPersonRequest, FimFinnPersonRequest.class);
+        no.nav.tjeneste.virksomhet.personsoek.v1.meldinger.FinnPersonRequest rawRequest = mapper.map(finnPersonRequest, no.nav.tjeneste.virksomhet.personsoek.v1.meldinger.FinnPersonRequest.class);
 
-        FimFinnPersonResponse rawResponse = personsokService.finnPerson(rawRequest);
-        for (FimPerson fimPerson : rawResponse.getPersonListe()) {
-            logSporingsInformasjon(fimPerson);
+        no.nav.tjeneste.virksomhet.personsoek.v1.meldinger.FinnPersonResponse rawResponse = personsokService.finnPerson(rawRequest);
+
+        for (Person fimPerson : rawResponse.getPersonListe()) {
+            auditLogger.log(fimPerson);
         }
         logger.info("finnPersonReturnerte " + rawResponse.getPersonListe().size() + " treff.");
 
@@ -52,27 +53,5 @@ public class DefaultPersonsokService implements PersonsokServiceBi {
 
     public void setMapper(FIMMapper mapper) {
         this.mapper = mapper;
-    }
-
-    private void logSporingsInformasjon(FimPerson fimPerson) {
-        SporingsLogger sporingsLogger;
-        try {
-            sporingsLogger = SporingsLoggerFactory.sporingsLogger(configFileAsBufferedReader("personsok-sporing-config.txt"));
-            sporingsLogger.logg(fimPerson, SporingsAksjon.Les);
-        } catch (Exception e) {
-            logger.error("hentSykmeldingsperioder:SporingsLogger ble ikke opprettet.", e);
-        }
-    }
-
-    private BufferedReader configFileAsBufferedReader(String filepath) {
-        BufferedReader br = null;
-        try {
-            InputStream is = getClass().getClassLoader().getResource(filepath).openStream();
-            InputStreamReader isr = new InputStreamReader(is, "UTF-8");
-            br = new BufferedReader(isr);
-        } catch (IOException e) {
-            logger.warn("Feil i oppsett av sporingslogg" + filepath, e);
-        }
-        return br;
     }
 }

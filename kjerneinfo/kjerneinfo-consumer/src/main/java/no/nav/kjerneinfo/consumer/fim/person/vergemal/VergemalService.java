@@ -2,18 +2,24 @@ package no.nav.kjerneinfo.consumer.fim.person.vergemal;
 
 import no.nav.kjerneinfo.common.domain.Kodeverdi;
 import no.nav.kjerneinfo.consumer.fim.person.PersonKjerneinfoServiceBi;
+//import no.nav.kjerneinfo.consumer.fim.person.to.HentKjerneinformasjonRequest;
+//import no.nav.kjerneinfo.consumer.fim.person.to.HentKjerneinformasjonResponse;
+//import no.nav.kjerneinfo.consumer.fim.person.vergemal.domain.Periode;
+//import no.nav.kjerneinfo.consumer.fim.person.vergemal.domain.Verge;
 import no.nav.kjerneinfo.consumer.fim.person.to.HentKjerneinformasjonRequest;
 import no.nav.kjerneinfo.consumer.fim.person.to.HentKjerneinformasjonResponse;
 import no.nav.kjerneinfo.consumer.fim.person.vergemal.domain.Periode;
-import no.nav.kjerneinfo.consumer.fim.person.vergemal.domain.Verge;
 import no.nav.kjerneinfo.domain.person.Personnavn;
 import no.nav.kodeverk.consumer.fim.kodeverk.KodeverkmanagerBi;
-import no.nav.tjeneste.virksomhet.person.v3.HentVergePersonIkkeFunnet;
-import no.nav.tjeneste.virksomhet.person.v3.HentVergeSikkerhetsbegrensning;
-import no.nav.tjeneste.virksomhet.person.v3.PersonV3;
-import no.nav.tjeneste.virksomhet.person.v3.informasjon.*;
-import no.nav.tjeneste.virksomhet.person.v3.meldinger.WSHentVergeRequest;
-import no.nav.tjeneste.virksomhet.person.v3.meldinger.WSHentVergeResponse;
+import no.nav.tjeneste.virksomhet.person.v3.binding.HentVergePersonIkkeFunnet;
+import no.nav.tjeneste.virksomhet.person.v3.binding.HentVergeSikkerhetsbegrensning;
+import no.nav.tjeneste.virksomhet.person.v3.binding.PersonV3;
+import no.nav.tjeneste.virksomhet.person.v3.informasjon.Aktoer;
+import no.nav.tjeneste.virksomhet.person.v3.informasjon.NorskIdent;
+import no.nav.tjeneste.virksomhet.person.v3.informasjon.PersonIdent;
+import no.nav.tjeneste.virksomhet.person.v3.informasjon.Verge;
+import no.nav.tjeneste.virksomhet.person.v3.meldinger.HentVergeRequest;
+import no.nav.tjeneste.virksomhet.person.v3.meldinger.HentVergeResponse;
 
 import java.util.List;
 import java.util.Optional;
@@ -33,17 +39,17 @@ public class VergemalService {
         this.vergemalKodeverkService = new VergemalKodeverkService(kodeverkManager);
     }
 
-    public List<Verge> hentVergemal(String fodselsnummer) {
-        WSHentVergeResponse wsHentVergeResponse = hentVergemalFraTPS(fodselsnummer);
+    public List<no.nav.kjerneinfo.consumer.fim.person.vergemal.domain.Verge> hentVergemal(String fodselsnummer) {
+        HentVergeResponse wsHentVergeResponse = hentVergemalFraTPS(fodselsnummer);
         return wsHentVergeResponse.getVergeListe().stream()
                 .map(verge -> lagVergeDomeneObjekt(verge))
                 .collect(Collectors.toList());
     }
 
-    private Verge lagVergeDomeneObjekt(WSVerge verge) {
+    private no.nav.kjerneinfo.consumer.fim.person.vergemal.domain.Verge lagVergeDomeneObjekt(Verge verge) {
         String ident = getIdentFromVerge(verge);
         Personnavn navn = hentPersonnNavn(ident);
-        return new Verge()
+        return new no.nav.kjerneinfo.consumer.fim.person.vergemal.domain.Verge()
                 .withSakstype(getVergesakstype(verge).orElse(null))
                 .withMandattype(getMandatype(verge).orElse(null))
                 .withMandattekst(verge.getMandatTekst())
@@ -54,8 +60,8 @@ public class VergemalService {
                 .withIdent(ident);
     }
 
-    private WSHentVergeResponse hentVergemalFraTPS(String fodselsnummer) {
-        WSHentVergeRequest request = lagRequest(fodselsnummer);
+    private HentVergeResponse hentVergemalFraTPS(String fodselsnummer) {
+        HentVergeRequest request = lagRequest(fodselsnummer);
         try {
             return personV3.hentVerge(request);
         } catch (HentVergeSikkerhetsbegrensning | HentVergePersonIkkeFunnet e) {
@@ -63,8 +69,8 @@ public class VergemalService {
         }
     }
 
-    private WSHentVergeRequest lagRequest(String fodselsnummer) {
-        return new WSHentVergeRequest().withAktoer(new WSPersonIdent().withIdent(new WSNorskIdent().withIdent(fodselsnummer)));
+    private HentVergeRequest lagRequest(String fodselsnummer) {
+        return new HentVergeRequest().withAktoer(new PersonIdent().withIdent(new NorskIdent().withIdent(fodselsnummer)));
     }
 
     private HentKjerneinformasjonRequest kjerneInfoRequestMedBegrunnet(String ident) {
@@ -73,10 +79,10 @@ public class VergemalService {
         return request;
     }
 
-    private String getIdentFromVerge(WSVerge verge) {
-        WSAktoer vergeAktoer = verge.getVerge();
-        if (vergeAktoer instanceof WSPersonIdent) {
-            String ident =  ((WSPersonIdent) vergeAktoer).getIdent().getIdent();
+    private String getIdentFromVerge(Verge verge) {
+        Aktoer vergeAktoer = verge.getVerge();
+        if (vergeAktoer instanceof PersonIdent) {
+            String ident =  ((PersonIdent) vergeAktoer).getIdent().getIdent();
             return ident.equals(TPS_VERGES_FNR_MANGLENDE_DATA) ? null : ident;
         } else {
             throw new RuntimeException("Ident for vegemal er av ukjent type");
@@ -95,23 +101,23 @@ public class VergemalService {
         }
     }
 
-    private Optional<Kodeverdi> getVergetype(WSVerge verge) {
+    private Optional<Kodeverdi> getVergetype(Verge verge) {
         return Optional.ofNullable(verge.getVergetype()).map(vergemalKodeverkService::getVergetype);
     }
 
-    private Optional<Kodeverdi> getEmbete(WSVerge verge) {
+    private Optional<Kodeverdi> getEmbete(Verge verge) {
         return Optional.ofNullable(verge.getEmbete()).map(vergemalKodeverkService::getEmbete);
     }
 
-    private Periode map(WSPeriode virkningsperiode) {
+    private Periode map(no.nav.tjeneste.virksomhet.person.v3.informasjon.Periode virkningsperiode) {
         return new Periode(virkningsperiode.getFom(), virkningsperiode.getTom());
     }
 
-    private Optional<Kodeverdi> getMandatype(WSVerge verge) {
+    private Optional<Kodeverdi> getMandatype(Verge verge) {
         return Optional.ofNullable(verge.getMandattype()).map(vergemalKodeverkService::getMandattype);
     }
 
-    private Optional<Kodeverdi> getVergesakstype(WSVerge verge) {
+    private Optional<Kodeverdi> getVergesakstype(Verge verge) {
         return Optional.ofNullable(verge.getVergesakstype()).map(vergemalKodeverkService::getVergesakstype);
     }
 }

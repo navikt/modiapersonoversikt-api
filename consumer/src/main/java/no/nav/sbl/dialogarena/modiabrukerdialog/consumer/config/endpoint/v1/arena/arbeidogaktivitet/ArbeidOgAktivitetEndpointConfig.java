@@ -37,7 +37,7 @@ public class ArbeidOgAktivitetEndpointConfig {
                 "hentSakListe",
                 false
         );
-        return new ConsumerPingable<>(metadata, () ->
+        return new ConsumerPingable(metadata, () ->
                 ws.hentSakListe(new WSHentSakListeRequest()
                         .withBruker(new WSBruker().withBrukertypeKode("PERSON").withBruker("10108000398"))
                         .withFom(LocalDate.now())

@@ -10,7 +10,7 @@ import no.nav.kjerneinfo.domain.person.GeografiskTilknytning;
 import no.nav.kjerneinfo.domain.person.fakta.Sikkerhetstiltak;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.organisasjonsEnhetV2.OrganisasjonEnhetV2Service;
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.TilgangskontrollUtenTPS;
-import no.nav.tjeneste.virksomhet.person.v3.PersonV3;
+import no.nav.tjeneste.virksomhet.person.v3.binding.PersonV3;
 
 public class DefaultPersonKjerneinfoService implements PersonKjerneinfoServiceBi {
 

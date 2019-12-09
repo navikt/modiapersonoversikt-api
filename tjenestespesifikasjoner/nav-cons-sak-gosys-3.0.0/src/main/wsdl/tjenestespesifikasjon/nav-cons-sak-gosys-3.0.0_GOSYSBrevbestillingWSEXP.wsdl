@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="GOSYSBrevbestillingWSEXP_GOSYSBrevbestillingHttp_Service" targetNamespace="http://nav-cons-sak-gosys-3.0.0/no/nav/inf/Brevbestilling/Binding" xmlns:Port_0="http://nav-cons-sak-gosys-3.0.0/no/nav/inf/Brevbestilling" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:this="http://nav-cons-sak-gosys-3.0.0/no/nav/inf/Brevbestilling/Binding">
+  <wsdl:import namespace="http://nav-cons-sak-gosys-3.0.0/no/nav/inf/Brevbestilling" location="no/nav/inf/GOSYSBrevbestilling.wsdl">
+    </wsdl:import>
+  <wsdl:binding name="GOSYSBrevbestillingWSEXP_GOSYSBrevbestillingHttpBinding" type="Port_0:GOSYSBrevbestilling">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="bestillBrev">
+      <soap:operation soapAction=""/>
+      <wsdl:input name="bestillBrevRequest">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="bestillBrevResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="faultGOSYSGenerisk">
+        <soap:fault name="faultGOSYSGenerisk" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="faultManglerObligatoriskeInput">
+        <soap:fault name="faultManglerObligatoriskeInput" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="faultGOSYSAdresseIkkeRegistrert">
+        <soap:fault name="faultGOSYSAdresseIkkeRegistrert" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="faultOpprettelseJournalpostFeilet">
+        <soap:fault name="faultOpprettelseJournalpostFeilet" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="faultHenteBrevdataFeilet">
+        <soap:fault name="faultHenteBrevdataFeilet" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="GOSYSBrevbestillingWSEXP_GOSYSBrevbestillingHttpService">
+    <wsdl:port name="GOSYSBrevbestillingWSEXP_GOSYSBrevbestillingHttpPort" binding="this:GOSYSBrevbestillingWSEXP_GOSYSBrevbestillingHttpBinding">
+      <soap:address location="http://localhost:9080/nav-cons-sak-gosys-3.0.0Web/sca/GOSYSBrevbestillingWSEXP"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

@@ -5,7 +5,7 @@ import no.nav.common.auth.SubjectHandler;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.AnsattService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Tilgangskontroll;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.AuditResources;
+import no.nav.sbl.dialogarena.naudit.AuditResources;
 import no.nav.sbl.dialogarena.naudit.Audit;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.IkkeIndeksertException;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.MeldingerSok;

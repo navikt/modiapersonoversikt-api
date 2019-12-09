@@ -1,6 +1,7 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.kodeverk;
 
-import no.nav.modig.common.MDCOperations;
+import no.nav.common.utils.IdUtils;
+import no.nav.log.MDCConstants;
 import no.nav.modig.core.exception.SystemException;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.kodeverk.StandardKodeverk;
 import no.nav.sbl.util.EnvironmentUtils;
@@ -12,6 +13,7 @@ import org.joda.time.DateMidnight;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -59,7 +61,7 @@ public class StandardKodeverkImpl implements StandardKodeverk {
     @Qualifier("kodeverkPortTypeV2")
     private KodeverkPortType kodeverkPortType;
 
-    @Value("${modiabrukerdialog.datadir}")
+    @Value("${modiabrukerdialog.datadir:/tmp}")
     private File brukerprofilDataDirectory;
 
     @Override
@@ -97,7 +99,7 @@ public class StandardKodeverkImpl implements StandardKodeverk {
     @Override
     @Scheduled(cron = "0 0 0 * * *") // Midnatt hver dag
     public void lastInnNyeKodeverk() {
-        MDCOperations.putToMDC(MDCOperations.MDC_CALL_ID, MDCOperations.generateCallId());
+        MDC.put(MDCConstants.MDC_CALL_ID, IdUtils.generateId());
         Map<String, XMLEnkeltKodeverk> oppdatertKodeverk = new HashMap<>();
         XMLEnkeltKodeverk enkeltkodeverk = initKodeverkMedNavn(ARKIVTEMA_KODEVERKNAVN);
         oppdatertKodeverk.put(ARKIVTEMA_KODEVERKNAVN, enkeltkodeverk);

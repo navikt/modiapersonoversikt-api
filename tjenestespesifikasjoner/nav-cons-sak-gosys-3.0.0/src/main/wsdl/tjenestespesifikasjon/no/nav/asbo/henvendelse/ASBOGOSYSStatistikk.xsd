@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:bons0="http://nav-cons-sak-gosys-3.0.0/no/nav/asbo/henvendelse" targetNamespace="http://nav-cons-sak-gosys-3.0.0/no/nav/asbo/henvendelse">
+    <xsd:include schemaLocation="ASBOGOSYSStatistikkElement.xsd"/>
+    <xsd:complexType name="ASBOGOSYSStatistikk">
+    <xsd:sequence>
+      <xsd:element minOccurs="0" name="overskrift" type="bons0:ASBOGOSYSStatistikkElement"/>
+      <xsd:element maxOccurs="unbounded" minOccurs="0" name="innhold" type="bons0:ASBOGOSYSStatistikkElement"/>
+      <xsd:element maxOccurs="1" minOccurs="0" name="data" type="bons0:ASBOGOSYSStatistikkElement"/>
+    </xsd:sequence>
+  </xsd:complexType>
+</xsd:schema>

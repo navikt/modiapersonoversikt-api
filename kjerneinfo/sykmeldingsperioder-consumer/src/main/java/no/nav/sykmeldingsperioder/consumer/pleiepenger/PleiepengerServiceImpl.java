@@ -1,11 +1,10 @@
 package no.nav.sykmeldingsperioder.consumer.pleiepenger;
 
-import no.nav.kjerneinfo.common.log.SporingUtils;
-import no.nav.modig.common.SporingsAksjon;
-import no.nav.modig.common.SporingsLogger;
-import no.nav.modig.common.SporingsLoggerFactory;
+import kotlin.Pair;
 import no.nav.modig.core.exception.ApplicationException;
 import no.nav.modig.core.exception.AuthorizationException;
+import no.nav.sbl.dialogarena.naudit.Audit;
+import no.nav.sbl.dialogarena.naudit.AuditResources;
 import no.nav.sykmeldingsperioder.consumer.pleiepenger.mapping.PleiepengerMapper;
 import no.nav.sykmeldingsperioder.consumer.pleiepenger.mapping.to.PleiepengerListeRequest;
 import no.nav.sykmeldingsperioder.consumer.pleiepenger.mapping.to.PleiepengerListeResponse;
@@ -19,15 +18,18 @@ import no.nav.tjeneste.virksomhet.pleiepenger.v1.meldinger.WSHentPleiepengeretti
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.List;
 import java.util.Optional;
 
+import static java.util.Collections.singletonList;
 import static java.util.Optional.ofNullable;
 
 public class PleiepengerServiceImpl implements PleiepengerService {
-
+    private static Audit.AuditDescriptor<WSPerson> auditLogger = Audit.describe(
+            Audit.Action.READ,
+            AuditResources.Person.Pleiepenger,
+            (person) -> singletonList(new Pair<>("fnr", person.getIdent()))
+    );
     private static final Logger logger = LoggerFactory.getLogger(PleiepengerServiceImpl.class);
 
     private final PleiepengerV1 pleiepengerV1;
@@ -59,7 +61,7 @@ public class PleiepengerServiceImpl implements PleiepengerService {
     }
 
     private void loggSporingsinformasjon(List<WSPleiepengerettighet> pleiepengerrettighet) {
-        getOmsorgsperson(pleiepengerrettighet).ifPresent(this::loggSporingsInformasjon);
+        getOmsorgsperson(pleiepengerrettighet).ifPresent(auditLogger::log);
     }
 
     private Optional<WSPerson> getOmsorgsperson(List<WSPleiepengerettighet> pleiepengerrettighet) {
@@ -67,19 +69,6 @@ public class PleiepengerServiceImpl implements PleiepengerService {
                 .flatMap(rettighet -> rettighet.stream()
                         .findFirst()
                         .map(WSPleiepengerettighet::getOmsorgsperson));
-    }
-
-    private void loggSporingsInformasjon(WSPerson bruker) {
-        try {
-            SporingsLogger sporingsLogger = SporingsLoggerFactory.sporingsLogger(SporingUtils.configFileAsBufferedReader(getConfigAsInputStream(), "sykmeldingsperioder-sporing-config.txt"));
-            sporingsLogger.logg(bruker, SporingsAksjon.Les);
-        } catch (Exception e) {
-            logger.error("hentPleiepengerListe:SporingsLogger ble ikke opprettet.", e);
-        }
-    }
-
-    private InputStream getConfigAsInputStream() throws IOException {
-        return getClass().getClassLoader().getResource("sykmeldingsperioder-sporing-config.txt").openStream();
     }
 
     private PleiepengerListeResponse handterSikkerhetsbegresning(HentPleiepengerettighetSikkerhetsbegrensning e) {

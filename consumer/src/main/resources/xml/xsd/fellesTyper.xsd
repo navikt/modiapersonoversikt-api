@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+    <xs:element name="felleskode" type="felleskodeType"/>
+
+    <xs:complexType name="felleskodeType">
+        <xs:attribute name="kode" type="string_20" use="required"/>
+        <xs:attribute name="datoFom" type="xs:date" use="required"/>
+        <xs:attribute name="datoTom" type="xs:date" use="optional"/>
+        <xs:attribute name="erGyldig" type="xs:boolean" use="required"/>
+        <xs:attribute name="datoOpprettet" type="xs:dateTime" use="required"/>
+        <xs:attribute name="opprettetAv" type="string_20" use="required"/>
+        <xs:attribute name="gosys" type="xs:boolean" use="optional" default="false"/>
+        <xs:attribute name="gsak" type="xs:boolean" use="optional" default="false"/>
+        <xs:attribute name="ruting" type="xs:boolean" use="optional" default="false"/>
+        <xs:attribute name="leveranse" type="string_50" use="optional"/>
+        <xs:attribute name="jiraissue" type="string_20" use="optional"/>
+        <xs:attribute name="endretAv" type="string_20" use="required"/>
+    </xs:complexType>
+
+    <xs:simpleType name="string_1">
+        <xs:restriction base="xs:string">
+            <xs:maxLength value="1"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="string_2">
+        <xs:restriction base="xs:string">
+            <xs:maxLength value="2"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="string_3">
+        <xs:restriction base="xs:string">
+            <xs:maxLength value="3"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="string_4">
+        <xs:restriction base="xs:string">
+            <xs:maxLength value="4"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="string_eksakt_4">
+        <xs:restriction base="xs:string">
+            <xs:length value="4"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="string_5">
+        <xs:restriction base="xs:string">
+            <xs:maxLength value="5"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="string_20">
+        <xs:restriction base="xs:string">
+            <xs:maxLength value="20"/>
+            <xs:whiteSpace value="preserve"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="string_30">
+        <xs:restriction base="xs:string">
+            <xs:maxLength value="30"/>
+            <xs:whiteSpace value="preserve"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="string_40">
+        <xs:restriction base="xs:string">
+            <xs:maxLength value="40"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="string_50">
+        <xs:restriction base="xs:string">
+            <xs:maxLength value="50"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="string_80">
+        <xs:restriction base="xs:string">
+            <xs:maxLength value="80"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="string_200">
+        <xs:restriction base="xs:string">
+            <xs:maxLength value="200"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="string_100">
+        <xs:restriction base="xs:string">
+            <xs:maxLength value="100"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="string_250">
+        <xs:restriction base="xs:string">
+            <xs:maxLength value="250"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="string_400">
+        <xs:restriction base="xs:string">
+            <xs:maxLength value="400"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="string_500">
+        <xs:restriction base="xs:string">
+            <xs:maxLength value="500"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+</xs:schema>

@@ -5,7 +5,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Policies
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Tilgangskontroll
 import no.nav.sbl.dialogarena.naudit.Audit
 import no.nav.sbl.dialogarena.naudit.Audit.Action.*
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.AuditResources.Saksbehandler
+import no.nav.sbl.dialogarena.naudit.AuditResources.Saksbehandler
 import javax.inject.Inject
 import javax.ws.rs.GET
 import javax.ws.rs.Path

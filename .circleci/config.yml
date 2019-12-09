@@ -1,0 +1,26 @@
+version: 2.1
+orbs:
+  pus: navikt/pus-orb@0.0.41
+workflows:
+  version: 2
+  commit:
+    jobs:
+      - pus/test-backend:
+          context: pus
+          filters:
+            branches:
+              ignore:
+                - master
+                - dev
+      - pus/bygg-og-deploy-backend:
+          context: pus
+          filepath: ./deploy/naiserator-q0.yaml
+          filters:
+            branches:
+              only: dev
+      - pus/bygg-og-deploy-backend:
+          context: pus
+          filepath: ./deploy/naiserator.yaml
+          filters:
+            branches:
+              only: master

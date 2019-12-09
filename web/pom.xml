@@ -14,9 +14,7 @@
     <packaging>war</packaging>
 
     <properties>
-        <!-- Lagrer IT-info til enhetstestfil -->
         <sonar.jacoco.reportPath>${project.basedir}/../target/jacoco-ut.exec</sonar.jacoco.reportPath>
-        <fitnesse.port>9977</fitnesse.port>
     </properties>
 
     <dependencies>
@@ -65,11 +63,6 @@
         <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>modia-saksoversikt</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>no.nav.sbl.dialogarena</groupId>
-            <artifactId>personsok-consumer</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>

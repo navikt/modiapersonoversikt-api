@@ -1,0 +1,311 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="kodeverkView.xsl"?>
+<fagomradeListe xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xi="http://www.w3.org/2001/XInclude"
+                xsi:noNamespaceSchemaLocation="xsd/fagomrade.xsd">
+    <xi:include href="omrade.xml"/>
+    <fagomrade kode="AAP" datoFom="2010-02-13" datoOpprettet="2010-02-13T03:18:01" dekode="Arbeidsavklaringspenger" endretAv="KAA2812" erGyldig="true" opprettetAv="KAA2812" gosys="true" gsak="true" ruting="true">
+        <gosys bedrift="false" datoOpprettet="2010-10-28T19:35:54" endretAv="KAA2812" fagomrade="AAP" fagomradeNr="41" juridisk="false" omrade="AR" opprettArena="false" opprettetAv="KAA2812" orgLedd="false" person="true" relevantSak="true" samhandler="false"/>
+        <gsak datoOpprettet="2010-02-13T03:18:01" endretAv="KAA2812" kode="AAP" opprettetAv="KAA2812" tidsregisAktivert="0"/>
+        <ruting datoOpprettet="2010-10-02T05:00:03" endretAv="TBA2812" fagomrade="AAP" opprettetAv="TBA2812" gyldigForBatch="true"/>
+    </fagomrade>
+    <fagomrade kode="AAR" datoFom="2010-10-02" datoOpprettet="2010-10-02T04:21:03" dekode="Aa-registeret" endretAv="u109747" erGyldig="true" opprettetAv="KAA2812" gosys="true" gsak="true" ruting="true" leveranse="HL2_2013" jiraissue="FELLPK-1045">
+        <gosys bedrift="true" datoFom="2010-10-28" datoOpprettet="2010-10-28T19:35:54" endretAv="OEB2990" fagomrade="AAR" fagomradeNr="56" juridisk="true" omrade="IT" opprettArena="false" opprettetAv="KAA2812" orgLedd="true" person="false" relevantSak="true" samhandler="false"/>
+        <gsak datoFom="2010-10-02" datoOpprettet="2010-10-02T04:21:03" endretAv="KAA2812" kode="AAR" opprettetAv="KAA2812" tidsregisAktivert="0"/>
+        <ruting datoFom="2010-12-07" datoOpprettet="2010-12-07T21:39:39" endretAv="TBA2813" fagomrade="AAR" opprettetAv="TBA2813" gyldigForBatch="true"/>
+    </fagomrade>
+    <fagomrade kode="AGR" datoFom="2010-10-02" datoOpprettet="2010-10-02T04:21:03" dekode="Ajourhold - Grunnopplysninger" endretAv="GO-700" erGyldig="true" opprettetAv="KAA2812" gosys="true" gsak="true" ruting="true" leveranse="2018-U15" jiraissue="GO-700">
+        <gosys bedrift="true" datoOpprettet="2010-10-28T19:35:54" endretAv="GO-700" fagomrade="AGR" fagomradeNr="52" juridisk="true" omrade="GE" opprettArena="false" opprettetAv="KAA2812" orgLedd="true" person="true" relevantSak="true" samhandler="false"/>
+        <gsak datoOpprettet="2010-10-02T04:21:03" endretAv="KAA2812" kode="AGR" opprettetAv="KAA2812" tidsregisAktivert="0"/>
+        <ruting datoOpprettet="2010-10-02T05:00:03" endretAv="TBA2812" fagomrade="AGR" opprettetAv="TBA2812" gyldigForBatch="true"/>
+    </fagomrade>
+    <fagomrade kode="ARE" datoFom="2009-11-28" datoOpprettet="2009-11-28T05:13:13" dekode="Arena" endretAv="NAV9999" erGyldig="true" opprettetAv="NAV9999" gsak="true">
+        <gsak kode="ARE" tidsregisAktivert="0"/>
+    </fagomrade>
+    <fagomrade kode="BAR" datoFom="2008-09-16" datoOpprettet="2008-09-16T01:03:58" dekode="Barnetrygd" endretAv="NAV9999" erGyldig="true" opprettetAv="NAV9999" gosys="true" gsak="true" ruting="true">
+        <gosys bedrift="true" datoOpprettet="2010-10-28T19:35:54" endretAv="KAA2812" fagomrade="BAR" fagomradeNr="18" juridisk="true" omrade="IT" opprettArena="false" opprettetAv="KAA2812" orgLedd="true" person="true" relevantSak="true" samhandler="false"/>
+        <gsak datoOpprettet="2008-09-16T01:03:58" endretAv="NAV9999" kode="BAR" opprettetAv="NAV9999" tidsregisAktivert="0"/>
+        <ruting datoOpprettet="2010-10-02T05:00:03" endretAv="TBA2812" fagomrade="BAR" opprettetAv="TBA2812" gyldigForBatch="true"/>
+    </fagomrade>
+    <fagomrade kode="BID" datoFom="2007-11-16" datoOpprettet="2007-11-16T13:50:38" dekode="1 - Bidrag" endretAv="ukjent" erGyldig="true" opprettetAv="ukjent" gosys="true" gsak="true" ruting="true">
+        <gosys bedrift="false" datoOpprettet="2010-10-28T19:35:54" dekode="Bidrag" endretAv="KAA2812" fagomrade="BID" fagomradeNr="10" juridisk="false" omrade="PE" opprettArena="false" opprettetAv="KAA2812" orgLedd="false" person="true" relevantSak="false" samhandler="false"/>
+        <gsak datoOpprettet="2007-11-16T13:50:38" dekode="1 - Bidrag" endretAv="ukjent" kode="BID" opprettetAv="ukjent" tidsregisAktivert="0"/>
+        <ruting datoOpprettet="2010-10-02T05:00:03" dekode="Bidrag" endretAv="TBA2812" fagomrade="BID" opprettetAv="TBA2812" gyldigForBatch="false"/>
+    </fagomrade>
+    <fagomrade kode="BII" datoFom="2007-11-16" datoOpprettet="2007-11-16T13:50:38" dekode="2 - Bidrag innkreving" endretAv="FGSAK" erGyldig="true" opprettetAv="FGSAK" gosys="true" gsak="true" ruting="true">
+        <gosys bedrift="false" datoOpprettet="2010-10-28T19:35:54" dekode="Bidrag Innkreving - NAVI" endretAv="KAA2812" erGyldig="false" fagomrade="BII" fagomradeNr="14" juridisk="false" omrade="PE" opprettArena="false" opprettetAv="KAA2812" orgLedd="false" person="true" relevantSak="false" samhandler="false"/>
+        <gsak datoOpprettet="2007-11-16T13:50:38" dekode="2 - Bidrag innkreving" endretAv="FGSAK" erGyldig="true" kode="BII" opprettetAv="FGSAK" tidsregisAktivert="0"/>
+        <ruting datoOpprettet="2010-10-02T05:00:03" dekode="Bidrag Innkreving - NAVI" endretAv="TBA2812" erGyldig="true" fagomrade="BII" opprettetAv="TBA2812" gyldigForBatch="false"/>
+    </fagomrade>
+    <fagomrade kode="BIL" datoFom="2008-09-16" datoOpprettet="2008-09-16T01:03:57" dekode="Bil" endretAv="NAV9999" erGyldig="true" opprettetAv="NAV9999" gosys="true" gsak="true" ruting="true">
+        <gosys bedrift="true" datoOpprettet="2010-10-28T19:35:54" endretAv="KAA2812" fagomrade="BIL" fagomradeNr="16" juridisk="true" omrade="IT" opprettArena="false" opprettetAv="KAA2812" orgLedd="true" person="true" relevantSak="true" samhandler="false"/>
+        <gsak datoOpprettet="2008-09-16T01:03:57" endretAv="NAV9999" kode="BIL" opprettetAv="NAV9999" tidsregisAktivert="0"/>
+        <ruting datoOpprettet="2010-10-02T05:00:03" endretAv="TBA2812" fagomrade="BIL" opprettetAv="TBA2812" gyldigForBatch="true"/>
+    </fagomrade>
+    <fagomrade kode="DAG" datoFom="2009-04-25" datoOpprettet="2009-04-25T04:43:17" dekode="Dagpenger" endretAv="NAV9999" erGyldig="true" opprettetAv="NAV9999" gosys="true" gsak="true" ruting="true">
+        <gosys bedrift="false" datoFom="2010-10-28" datoOpprettet="2010-10-28T19:35:54" endretAv="KAA2812" fagomrade="DAG" fagomradeNr="28" juridisk="false" omrade="AR" opprettArena="false" opprettetAv="KAA2812" orgLedd="false" person="true" relevantSak="true" samhandler="false"/>
+        <gsak datoFom="2009-04-25" datoOpprettet="2009-04-25T04:43:17" endretAv="NAV9999" kode="DAG" opprettetAv="NAV9999" tidsregisAktivert="0"/>
+        <ruting datoFom="2010-10-02" datoOpprettet="2010-10-02T05:00:03" endretAv="TBA2812" fagomrade="DAG" opprettetAv="TBA2812" gyldigForBatch="true"/>
+    </fagomrade>
+    <fagomrade kode="ENF" datoFom="2008-09-16" datoOpprettet="2008-09-16T01:03:58" dekode="Enslig forsørger" endretAv="KAA2812" erGyldig="true" opprettetAv="KAA2812" gosys="true" gsak="true" ruting="true">
+        <gosys bedrift="true" datoOpprettet="2010-10-28T19:35:54" endretAv="KAA2812" fagomrade="ENF" fagomradeNr="26" juridisk="true" omrade="IT" opprettArena="false" opprettetAv="KAA2812" orgLedd="true" person="true" relevantSak="true" samhandler="false"/>
+        <gsak datoOpprettet="2008-09-16T01:03:58" endretAv="KAA2812" kode="ENF" opprettetAv="KAA2812" tidsregisAktivert="0"/>
+        <ruting datoOpprettet="2010-10-02T05:00:03" endretAv="TBA2812" fagomrade="ENF" opprettetAv="TBA2812" gyldigForBatch="true"/>
+    </fagomrade>
+    <fagomrade kode="ERS" datoFom="2009-04-25" datoOpprettet="2009-04-25T04:43:17" dekode="Erstatning" endretAv="NAV9999" erGyldig="true" opprettetAv="NAV9999" gosys="true" gsak="true" ruting="true">
+        <gosys bedrift="true" datoFom="2010-10-28" datoOpprettet="2010-10-28T19:35:54" endretAv="EBD2990" fagomrade="ERS" fagomradeNr="44" juridisk="true" omrade="IT" opprettArena="false" opprettetAv="KAA2812" orgLedd="true" person="true" relevantSak="true" samhandler="false"/>
+        <gsak datoFom="2009-04-25" datoOpprettet="2009-04-25T04:43:17" endretAv="NAV9999" kode="ERS" opprettetAv="NAV9999" tidsregisAktivert="0"/>
+        <ruting datoFom="2010-10-02" datoOpprettet="2010-10-02T05:00:03" endretAv="TBA2812" fagomrade="ERS" opprettetAv="TBA2812" gyldigForBatch="true"/>
+    </fagomrade>
+    <fagomrade kode="FEI" datoFom="2010-02-13" datoOpprettet="2010-02-13T03:18:01" dekode="Feilutbetaling" endretAv="KAA2812" erGyldig="true" opprettetAv="KAA2812" gosys="true" gsak="true" ruting="true">
+        <gosys bedrift="false" datoOpprettet="2010-10-28T19:35:54" dekode="Feilutbetaling (Arenaytelser)" endretAv="KAA2812" fagomrade="FEI" fagomradeNr="38" juridisk="false" omrade="AR" opprettArena="false" opprettetAv="KAA2812" orgLedd="false" person="true" relevantSak="true" samhandler="false"/>
+        <gsak datoOpprettet="2010-02-13T03:18:01" dekode="Feilutbetaling" endretAv="KAA2812" kode="FEI" opprettetAv="KAA2812" tidsregisAktivert="0"/>
+        <ruting datoOpprettet="2010-10-02T05:00:03" dekode="Feilutbetaling (Arenaytelser)" endretAv="TBA2812" fagomrade="FEI" opprettetAv="TBA2812" gyldigForBatch="true"/>
+    </fagomrade>
+    <fagomrade kode="FOR" datoFom="2008-09-16" datoOpprettet="2008-09-16T01:03:58" dekode="Foreldre- og svangerskapspenger" endretAv="NAV9999" erGyldig="true" opprettetAv="NAV9999" gosys="true" gsak="true" ruting="true" leveranse="HL2_2013" jiraissue="FELLPK-1045">
+        <gosys bedrift="true" datoOpprettet="2010-10-28T19:35:54" dekode="Foreldre- og svangerskapspenger" endretAv="u109747" fagomrade="FOR" fagomradeNr="19" juridisk="true" omrade="IT" opprettArena="false" opprettetAv="KAA2812" orgLedd="true" person="true" relevantSak="true" samhandler="false"/>
+        <gsak datoOpprettet="2008-09-16T01:03:58" dekode="Foreldre- og svangerskapspenger" endretAv="NAV9999" kode="FOR" opprettetAv="NAV9999" tidsregisAktivert="0"/>
+        <ruting datoOpprettet="2010-10-02T05:00:03" dekode="Foreldre- og svangerskapspenger" endretAv="TBA2812" fagomrade="FOR" opprettetAv="TBA2812" gyldigForBatch="true"/>
+    </fagomrade>
+    <fagomrade kode="FOS" datoFom="2009-02-05" datoOpprettet="2009-02-05T21:37:00" dekode="Forsikring" endretAv="NAV9999" erGyldig="true" opprettetAv="NAV9999" gosys="true" gsak="true" ruting="true">
+        <gosys bedrift="true" datoFom="2010-10-28" datoOpprettet="2010-10-28T19:35:54" endretAv="KAA2812" fagomrade="FOS" fagomradeNr="27" juridisk="true" omrade="IT" opprettArena="false" opprettetAv="KAA2812" orgLedd="true" person="true" relevantSak="true" samhandler="false"/>
+        <gsak datoFom="2009-02-05" datoOpprettet="2009-02-05T21:37:00" endretAv="NAV9999" kode="FOS" opprettetAv="NAV9999" tidsregisAktivert="0"/>
+        <ruting datoFom="2010-10-02" datoOpprettet="2010-10-02T05:00:03" endretAv="TBA2812" fagomrade="FOS" opprettetAv="TBA2812" gyldigForBatch="true"/>
+    </fagomrade>
+    <fagomrade kode="FUL" datoFom="2010-02-13" datoOpprettet="2010-02-13T03:18:01" dekode="Fullmakt" endretAv="KAA2812" erGyldig="true" opprettetAv="KAA2812" gosys="true" gsak="true" ruting="true">
+        <gosys bedrift="false" datoOpprettet="2010-10-28T19:35:54" endretAv="KAA2812" fagomrade="FUL" fagomradeNr="42" juridisk="false" omrade="GE" opprettArena="false" opprettetAv="KAA2812" orgLedd="false" person="true" relevantSak="true" samhandler="false"/>
+        <gsak datoOpprettet="2010-02-13T03:18:01" endretAv="KAA2812" kode="FUL" opprettetAv="KAA2812" tidsregisAktivert="0"/>
+        <ruting datoOpprettet="2010-10-02T05:00:03" endretAv="TBA2812" fagomrade="FUL" opprettetAv="TBA2812" gyldigForBatch="true"/>
+    </fagomrade>
+    <fagomrade kode="GEN" datoFom="2010-02-13" datoOpprettet="2010-02-13T03:11:53" dekode="Generell" endretAv="KAA2812" erGyldig="true" opprettetAv="KAA2812" gosys="true" gsak="true" ruting="true">
+        <gosys bedrift="true" datoOpprettet="2010-10-28T19:35:54" endretAv="KAA2812" fagomrade="GEN" fagomradeNr="40" juridisk="true" omrade="GE" opprettArena="false" opprettetAv="KAA2812" orgLedd="true" person="true" relevantSak="true" samhandler="true"/>
+        <gsak datoOpprettet="2010-02-13T03:11:53" endretAv="KAA2812" kode="GEN" opprettetAv="KAA2812" tidsregisAktivert="0"/>
+        <ruting datoOpprettet="2010-10-02T05:00:03" endretAv="TBA2812" fagomrade="GEN" opprettetAv="TBA2812" gyldigForBatch="true"/>
+    </fagomrade>
+    <fagomrade kode="GRA" datoFom="2008-09-16" datoOpprettet="2008-09-16T01:03:58" dekode="Gravferdsstønad" endretAv="NAV9999" erGyldig="true" opprettetAv="NAV9999" gosys="true" gsak="true" ruting="true">
+        <gosys bedrift="true" datoOpprettet="2010-10-28T19:35:54" dekode="Gravferdstønad" endretAv="KAA2812" fagomrade="GRA" fagomradeNr="20" juridisk="true" omrade="IT" opprettArena="false" opprettetAv="KAA2812" orgLedd="true" person="true" relevantSak="true" samhandler="false"/>
+        <gsak datoOpprettet="2008-09-16T01:03:58" dekode="Gravferdsstønad" endretAv="NAV9999" kode="GRA" opprettetAv="NAV9999" tidsregisAktivert="0"/>
+        <ruting datoOpprettet="2010-10-02T05:00:03" dekode="Gravferdsstønad" endretAv="TBA2812" fagomrade="GRA" opprettetAv="TBA2812" gyldigForBatch="true"/>
+    </fagomrade>
+    <fagomrade kode="GRU" datoFom="2008-09-16" datoOpprettet="2008-09-16T01:03:58" dekode="Grunn- og hjelpestønad" endretAv="NAV9999" erGyldig="true" opprettetAv="NAV9999" gosys="true" gsak="true" ruting="true">
+        <gosys bedrift="true" datoOpprettet="2010-10-28T19:35:54" endretAv="KAA2812" fagomrade="GRU" fagomradeNr="21" juridisk="true" omrade="IT" opprettArena="false" opprettetAv="KAA2812" orgLedd="true" person="true" relevantSak="true" samhandler="false"/>
+        <gsak datoOpprettet="2008-09-16T01:03:58" endretAv="NAV9999" kode="GRU" opprettetAv="NAV9999" tidsregisAktivert="0"/>
+        <ruting datoOpprettet="2010-10-02T05:00:03" endretAv="TBA2812" fagomrade="GRU" opprettetAv="TBA2812" gyldigForBatch="true"/>
+    </fagomrade>
+    <fagomrade kode="HEL" datoFom="2010-02-13" datoOpprettet="2010-02-13T03:18:01" dekode="Helsetjenester og ort. Hjelpemidler" endretAv="GO-700" erGyldig="true" opprettetAv="KAA2812" gosys="true" gsak="true" ruting="true" leveranse="2018-U15" jiraissue="GO-700">
+        <gosys bedrift="true" datoOpprettet="2010-10-28T19:35:54" dekode="Helsetjenester og ort. hjelpemidler" endretAv="GO-700" fagomrade="HEL" fagomradeNr="43" juridisk="true" omrade="IT" opprettArena="false" opprettetAv="KAA2812" orgLedd="true" person="true" relevantSak="true" samhandler="false"/>
+        <gsak datoOpprettet="2010-02-13T03:18:01" dekode="Helsetjenester og ort. Hjelpemidler" endretAv="KAA2812" kode="HEL" opprettetAv="KAA2812" tidsregisAktivert="0"/>
+        <ruting datoOpprettet="2010-10-02T05:00:03" dekode="Helsetjenester og ort.hjelpemidler" endretAv="TBA2812" fagomrade="HEL" opprettetAv="TBA2812" gyldigForBatch="true"/>
+    </fagomrade>
+    <fagomrade kode="HJE" datoFom="2008-09-16" datoOpprettet="2008-09-16T01:03:58" dekode="Hjelpemidker" endretAv="NAV9999" erGyldig="true" opprettetAv="NAV9999" gosys="true" gsak="true" ruting="true">
+        <gosys bedrift="true" datoOpprettet="2010-10-28T19:35:54" dekode="Hjelpemidler" endretAv="KAA2812" fagomrade="HJE" fagomradeNr="17" juridisk="true" omrade="IT" opprettArena="false" opprettetAv="KAA2812" orgLedd="true" person="true" relevantSak="true" samhandler="false"/>
+        <gsak datoOpprettet="2008-09-16T01:03:58" dekode="Hjelpemidker" endretAv="NAV9999" kode="HJE" opprettetAv="NAV9999" tidsregisAktivert="0"/>
+        <ruting datoOpprettet="2010-10-02T05:00:03" dekode="Hjelpemidler" endretAv="TBA2812" fagomrade="HJE" opprettetAv="TBA2812" gyldigForBatch="true"/>
+    </fagomrade>
+    <fagomrade kode="IAR" datoFom="2010-10-02" datoOpprettet="2010-10-02T04:21:03" dekode="Inkluderende Arbeidsliv" endretAv="KAA2812" erGyldig="true" opprettetAv="KAA2812" gosys="true" gsak="true" ruting="true">
+        <gosys bedrift="true" datoOpprettet="2010-10-28T19:35:54" endretAv="KAA2812" fagomrade="IAR" fagomradeNr="51" juridisk="true" omrade="GE" opprettArena="false" opprettetAv="KAA2812" orgLedd="true" person="false" relevantSak="true" samhandler="false"/>
+        <gsak datoOpprettet="2010-10-02T04:21:03" endretAv="KAA2812" kode="IAR" opprettetAv="KAA2812" tidsregisAktivert="0"/>
+        <ruting datoOpprettet="2010-12-07T20:11:09" endretAv="TBA2812" fagomrade="IAR" opprettetAv="TBA2812" gyldigForBatch="true"/>
+    </fagomrade>
+    <fagomrade kode="IND" datoFom="2009-04-25" datoOpprettet="2009-04-25T04:43:17" dekode="Individstønad" endretAv="NAV9999" erGyldig="true" opprettetAv="NAV9999" gosys="true" gsak="true" ruting="true">
+        <gosys bedrift="false" datoFom="2010-10-28" datoOpprettet="2010-10-28T19:35:54" endretAv="KAA2812" fagomrade="IND" fagomradeNr="29" juridisk="false" omrade="AR" opprettArena="false" opprettetAv="KAA2812" orgLedd="false" person="true" relevantSak="true" samhandler="false"/>
+        <gsak datoFom="2009-04-25" datoOpprettet="2009-04-25T04:43:17" endretAv="NAV9999" kode="IND" opprettetAv="NAV9999" tidsregisAktivert="0"/>
+        <ruting datoFom="2010-10-02" datoOpprettet="2010-10-02T05:00:03" endretAv="TBA2812" fagomrade="IND" opprettetAv="TBA2812" gyldigForBatch="true"/>
+    </fagomrade>
+    <fagomrade kode="KLA" datoFom="2010-02-13" datoOpprettet="2010-02-13T03:18:01" dekode="Klage/Anke" endretAv="KAA2812" erGyldig="true" opprettetAv="KAA2812" gosys="true" gsak="true">
+        <gosys bedrift="false" datoOpprettet="2010-10-28T19:35:54" erGyldig="false" fagomrade="KLA" fagomradeNr="39" juridisk="false" omrade="AR" opprettArena="false" orgLedd="false" person="true" relevantSak="false" samhandler="false"/>
+        <gsak datoOpprettet="2010-02-13T03:18:01" erGyldig="true" kode="KLA" tidsregisAktivert="0"/>
+    </fagomrade>
+    <fagomrade kode="KOM" datoFom="2010-10-02" datoOpprettet="2010-10-02T04:24:21" dekode="Kommunale tjenester" endretAv="JLA2812" erGyldig="true" opprettetAv="JLA2812" gosys="true" gsak="true" ruting="true">
+        <gosys bedrift="false" datoOpprettet="2010-10-28T19:35:54" endretAv="KHG2990" fagomrade="KOM" fagomradeNr="58" juridisk="false" omrade="GE" opprettArena="false" opprettetAv="KAA2812" orgLedd="false" person="true" relevantSak="false" samhandler="false"/>
+        <gsak datoOpprettet="2010-10-02T04:24:21" endretAv="JLA2812" kode="KOM" opprettetAv="JLA2812" tidsregisAktivert="0"/>
+        <ruting datoOpprettet="2010-10-02T05:00:03" endretAv="TBA2812" fagomrade="KOM" opprettetAv="TBA2812" gyldigForBatch="false"/>
+    </fagomrade>
+    <fagomrade kode="KON" datoFom="2008-09-16" datoOpprettet="2008-09-16T01:03:58" dekode="Kontantstøtte" endretAv="NAV9999" erGyldig="true" opprettetAv="NAV9999" gosys="true" gsak="true" ruting="true">
+        <gosys bedrift="true" datoOpprettet="2010-10-28T19:35:54" endretAv="KAA2812" fagomrade="KON" fagomradeNr="22" juridisk="true" omrade="IT" opprettArena="false" opprettetAv="KAA2812" orgLedd="true" person="true" relevantSak="true" samhandler="false"/>
+        <gsak datoOpprettet="2008-09-16T01:03:58" endretAv="NAV9999" kode="KON" opprettetAv="NAV9999" tidsregisAktivert="0"/>
+        <ruting datoOpprettet="2010-10-02T05:00:03" endretAv="TBA2812" fagomrade="KON" opprettetAv="TBA2812" gyldigForBatch="true"/>
+    </fagomrade>
+    <fagomrade kode="KTR" datoFom="2010-10-02" datoOpprettet="2010-10-02T04:21:03" dekode="Kontroll" endretAv="LSD2990" erGyldig="true" opprettetAv="KAA2812" gosys="true" gsak="true" ruting="true" leveranse="HL6_2012" jiraissue="FELLPK-908">
+        <gosys bedrift="true" datoOpprettet="2010-10-28T19:35:54" endretAv="LSD2990" fagomrade="KTR" fagomradeNr="54" juridisk="true" omrade="GE" opprettArena="false" opprettetAv="KAA2812" orgLedd="true" person="true" relevantSak="true" samhandler="false"/>
+        <gsak datoOpprettet="2010-10-02T04:21:03" endretAv="LSD2990" kode="KTR" opprettetAv="KAA2812" tidsregisAktivert="0"/>
+        <ruting datoOpprettet="2010-10-02T05:00:03" endretAv="LSD2990" fagomrade="KTR" opprettetAv="TBA2812" gyldigForBatch="true"/>
+    </fagomrade>
+    <fagomrade kode="MED" datoFom="2010-02-13" datoOpprettet="2010-02-13T03:18:01" dekode="Medlemskap" endretAv="KAA2812" erGyldig="true" opprettetAv="KAA2812" gosys="true" gsak="true" ruting="true">
+        <gosys bedrift="true" datoOpprettet="2010-10-28T19:35:54" endretAv="EBD2990" fagomrade="MED" fagomradeNr="47" juridisk="true" omrade="IT" opprettArena="false" opprettetAv="KAA2812" orgLedd="true" person="true" relevantSak="true" samhandler="false"/>
+        <gsak datoOpprettet="2010-02-13T03:18:01" endretAv="KAA2812" kode="MED" opprettetAv="KAA2812" tidsregisAktivert="0"/>
+        <ruting datoOpprettet="2010-10-02T05:00:03" endretAv="TBA2812" fagomrade="MED" opprettetAv="TBA2812" gyldigForBatch="true"/>
+    </fagomrade>
+    <fagomrade kode="MOB" datoFom="2009-04-25" datoOpprettet="2009-04-25T04:43:17" dekode="Mob.stønad" endretAv="NAV9999" erGyldig="true" opprettetAv="NAV9999" gosys="true" gsak="true" ruting="true">
+        <gosys bedrift="false" datoFom="2010-10-28" datoOpprettet="2010-10-28T19:35:54" dekode="Mobilitetsfremmende stønad" endretAv="KAA2812" fagomrade="MOB" fagomradeNr="30" juridisk="false" omrade="AR" opprettArena="false" opprettetAv="KAA2812" orgLedd="false" person="true" relevantSak="true" samhandler="false"/>
+        <gsak datoFom="2009-04-25" datoOpprettet="2009-04-25T04:43:17" dekode="Mob.stønad" endretAv="NAV9999" kode="MOB" opprettetAv="NAV9999" tidsregisAktivert="0"/>
+        <ruting datoFom="2010-10-02" datoOpprettet="2010-10-02T05:00:03" dekode="Mobilitetsfremmende stønad" endretAv="TBA2812" fagomrade="MOB" opprettetAv="TBA2812" gyldigForBatch="true"/>
+    </fagomrade>
+    <fagomrade kode="MOT" datoFom="2007-11-16" datoOpprettet="2007-11-16T13:50:38" dekode="3 - Skanning" endretAv="CTB2990" erGyldig="true" opprettetAv="FGSAK" gosys="true" gsak="true" ruting="true">
+        <gosys bedrift="false" datoOpprettet="2010-10-28T19:35:54" dekode="Bidrag skanning" endretAv="KAA2812" erGyldig="false" fagomrade="MOT" fagomradeNr="13" juridisk="false" omrade="PE" opprettArena="false" opprettetAv="KAA2812" orgLedd="false" person="true" relevantSak="false" samhandler="false"/>
+        <gsak datoOpprettet="2007-11-16T13:50:38" dekode="3 - Skanning" endretAv="CTB2990" erGyldig="true" kode="MOT" opprettetAv="FGSAK" tidsregisAktivert="0"/>
+        <ruting datoOpprettet="2010-10-02T05:00:03" dekode="Bidrag Skanning" endretAv="TBA2812" erGyldig="true" fagomrade="MOT" opprettetAv="TBA2812" gyldigForBatch="false"/>
+    </fagomrade>
+    <fagomrade kode="OKO" datoFom="2007-11-16" datoOpprettet="2007-11-16T13:50:38" dekode="Økonomi" endretAv="GO-700" erGyldig="true" opprettetAv="ukjent" gosys="true" gsak="true" ruting="true" leveranse="2018-U15" jiraissue="GO-700">
+        <gosys bedrift="false" datoOpprettet="2010-10-28T19:35:54" dekode="Økonomi" endretAv="GO-700" fagomrade="OKO" fagomradeNr="15" juridisk="false" omrade="PE" opprettArena="false" opprettetAv="KAA2812" orgLedd="false" person="true" relevantSak="false" samhandler="true"/>
+        <gsak datoOpprettet="2007-11-16T13:50:38" dekode="Økonomi" endretAv="ukjent" kode="OKO" opprettetAv="ukjent" tidsregisAktivert="0"/>
+        <ruting datoOpprettet="2010-10-02T05:00:03" dekode="Pensjon økonomi - Harstad" endretAv="TBA2812" fagomrade="OKO" opprettetAv="TBA2812" gyldigForBatch="false"/>
+    </fagomrade>
+    <fagomrade kode="OMS" datoFom="2008-09-16" datoOpprettet="2008-09-16T01:03:58" dekode="Omsorgspenger, Pleiepenger og opplæringspenger" endretAv="NAV9999" erGyldig="true" opprettetAv="NAV9999" gosys="true" gsak="true" ruting="true" leveranse="HL2_2013" jiraissue="FELLPK-1045">
+        <gosys bedrift="true" datoOpprettet="2010-10-28T19:35:54" dekode="Omsorgs-, pleie- og opplæringspenger" endretAv="u109747" fagomrade="OMS" fagomradeNr="23" juridisk="true" omrade="IT" opprettArena="false" opprettetAv="KAA2812" orgLedd="true" person="true" relevantSak="true" samhandler="false"/>
+        <gsak datoOpprettet="2008-09-16T01:03:58" dekode="Omsorgspenger, Pleiepenger og opplæringspenger" endretAv="NAV9999" kode="OMS" opprettetAv="NAV9999" tidsregisAktivert="0"/>
+        <ruting datoOpprettet="2010-10-02T05:00:03" dekode="Omsorgs-, pleie- og opplæringspenger" endretAv="u109747" fagomrade="OMS" opprettetAv="TBA2812" gyldigForBatch="true"/>
+    </fagomrade>
+    <fagomrade kode="OPA" datoFom="2011-06-21" datoOpprettet="2011-06-21T20:08:46" dekode="Oppfølging - Arbeidsgiver" endretAv="KHG2991" erGyldig="true" opprettetAv="KHG2991" gosys="true" gsak="true" ruting="true">
+        <gosys bedrift="true" datoFom="2011-06-21" datoOpprettet="2011-06-21T20:40:17" endretAv="KHG2990" fagomrade="OPA" fagomradeNr="61" juridisk="true" omrade="AR" opprettArena="false" opprettetAv="KHG2990" orgLedd="true" person="false" relevantSak="true" samhandler="false"/>
+        <gsak datoFom="2011-06-21" datoOpprettet="2011-06-21T20:08:46" endretAv="KHG2991" kode="OPA" opprettetAv="KHG2991" tidsregisAktivert="0"/>
+        <ruting datoFom="2011-06-22" datoOpprettet="2011-06-22T09:11:37" endretAv="KHG2990" fagomrade="OPA" opprettetAv="KHG2990" gyldigForBatch="true"/>
+    </fagomrade>
+    <fagomrade kode="OPP" datoFom="2009-04-25" datoOpprettet="2009-04-25T04:43:17" dekode="Oppfølging" endretAv="NAV9999" erGyldig="true" opprettetAv="NAV9999" gosys="true" gsak="true" ruting="true">
+        <gosys bedrift="false" datoFom="2010-10-28" datoOpprettet="2010-10-28T19:35:54" endretAv="KAA2812" fagomrade="OPP" fagomradeNr="31" juridisk="false" omrade="AR" opprettArena="false" opprettetAv="KAA2812" orgLedd="false" person="true" relevantSak="true" samhandler="false"/>
+        <gsak datoFom="2009-04-25" datoOpprettet="2009-04-25T04:43:17" endretAv="NAV9999" kode="OPP" opprettetAv="NAV9999" tidsregisAktivert="0"/>
+        <ruting datoFom="2010-10-02" datoOpprettet="2010-10-02T05:00:03" endretAv="TBA2812" fagomrade="OPP" opprettetAv="TBA2812" gyldigForBatch="true"/>
+    </fagomrade>
+    <fagomrade kode="OVR" datoFom="2007-11-16" datoOpprettet="2007-11-16T13:50:38" dekode="4 - Øvrig" endretAv="CTB2990" erGyldig="true" opprettetAv="ukjent" gosys="true" gsak="true" ruting="true">
+        <gosys bedrift="false" datoOpprettet="2010-10-28T19:35:54" dekode="Bidrag Øvrige kundesenter" endretAv="KAA2812" erGyldig="false" fagomrade="OVR" fagomradeNr="12" juridisk="false" omrade="PE" opprettArena="false" opprettetAv="KAA2812" orgLedd="false" person="true" relevantSak="false" samhandler="false"/>
+        <gsak datoOpprettet="2007-11-16T13:50:38" dekode="4 - Øvrig" endretAv="CTB2990" erGyldig="true" kode="OVR" opprettetAv="ukjent" tidsregisAktivert="0"/>
+        <ruting datoOpprettet="2010-10-02T05:00:03" dekode="Bidrag Øvrige kundesenter" endretAv="TBA2812" erGyldig="true" fagomrade="OVR" opprettetAv="TBA2812" gyldigForBatch="false"/>
+    </fagomrade>
+    <fagomrade kode="PEN" datoFom="2007-11-16" datoOpprettet="2007-11-16T13:50:38" dekode="Pensjon" endretAv="ukjent" erGyldig="true" opprettetAv="ukjent" gosys="true" gsak="true" ruting="true">
+        <gosys bedrift="false" datoOpprettet="2010-10-28T19:35:54" endretAv="A134798" fagomrade="PEN" fagomradeNr="11" juridisk="false" omrade="PE" opprettArena="false" opprettetAv="KAA2812" orgLedd="false" person="true" relevantSak="true" samhandler="false"/>
+        <gsak datoOpprettet="2007-11-16T13:50:38" endretAv="ukjent" kode="PEN" opprettetAv="ukjent" tidsregisAktivert="0"/>
+        <ruting datoOpprettet="2010-10-02T05:00:03" endretAv="TBA2812" fagomrade="PEN" opprettetAv="TBA2812" gyldigForBatch="false"/>
+    </fagomrade>
+    <fagomrade kode="PER" datoFom="2010-10-02" datoOpprettet="2010-10-02T04:21:03" dekode="Permittering og masseoppsigelser" endretAv="KAA2812" erGyldig="true" opprettetAv="KAA2812" gosys="true" gsak="true" ruting="true">
+        <gosys bedrift="true" datoOpprettet="2010-10-28T19:35:54" endretAv="KAA2812" fagomrade="PER" fagomradeNr="55" juridisk="false" omrade="GE" opprettArena="false" opprettetAv="KAA2812" orgLedd="false" person="false" relevantSak="true" samhandler="false"/>
+        <gsak datoOpprettet="2010-10-02T04:21:03" endretAv="KAA2812" kode="PER" opprettetAv="KAA2812" tidsregisAktivert="0"/>
+        <ruting datoOpprettet="2010-12-07T20:11:09" endretAv="TBA2812" fagomrade="PER" opprettetAv="TBA2812" gyldigForBatch="true"/>
+    </fagomrade>
+    <fagomrade kode="REH" datoFom="2009-04-25" datoOpprettet="2009-04-25T04:43:17" dekode="Rehabilitering" endretAv="NAV9999" erGyldig="true" opprettetAv="NAV9999" gosys="true" gsak="true" ruting="true">
+        <gosys bedrift="true" datoFom="2010-10-28" datoOpprettet="2010-10-28T19:35:54" dekode="Rehabiliteringspenger" endretAv="KAA2812" fagomrade="REH" fagomradeNr="34" juridisk="true" omrade="IT" opprettArena="false" opprettetAv="KAA2812" orgLedd="true" person="true" relevantSak="true" samhandler="false"/>
+        <gsak datoFom="2009-04-25" datoOpprettet="2009-04-25T04:43:17" dekode="Rehabilitering" endretAv="NAV9999" kode="REH" opprettetAv="NAV9999" tidsregisAktivert="0"/>
+        <ruting datoFom="2010-10-02" datoOpprettet="2010-10-02T05:00:03" dekode="Rehabiliteringgspenger" endretAv="TBA2812" fagomrade="REH" opprettetAv="TBA2812" gyldigForBatch="true"/>
+    </fagomrade>
+    <fagomrade kode="REK" datoFom="2010-10-02" datoOpprettet="2010-10-02T04:21:03" dekode="Rekruttering og Stilling" endretAv="KAA2812" erGyldig="true" opprettetAv="KAA2812" gosys="true" gsak="true" ruting="true">
+        <gosys bedrift="true" datoOpprettet="2010-10-28T19:35:54" endretAv="KAA2812" fagomrade="REK" fagomradeNr="50" juridisk="false" omrade="GE" opprettArena="false" opprettetAv="KAA2812" orgLedd="false" person="false" relevantSak="true" samhandler="false"/>
+        <gsak datoOpprettet="2010-10-02T04:21:03" endretAv="KAA2812" kode="REK" opprettetAv="KAA2812" tidsregisAktivert="0"/>
+        <ruting datoOpprettet="2010-12-07T20:11:09" endretAv="TBA2812" fagomrade="REK" opprettetAv="TBA2812" gyldigForBatch="true"/>
+    </fagomrade>
+    <fagomrade kode="SAA" datoFom="2011-06-21" datoOpprettet="2011-06-21T20:08:46" dekode="Sanksjon - Arbeidsgiver" endretAv="KHG2991" erGyldig="true" opprettetAv="KHG2991" gosys="true" gsak="true" ruting="true" leveranse="2014-HL4" jiraissue="PK-15710">
+        <gosys bedrift="true" datoFom="2011-06-21" datoTom="2014-12-07" datoOpprettet="2011-06-21T20:40:16" endretAv="PK-15710" fagomrade="SAA" fagomradeNr="59" juridisk="true" omrade="AR" opprettArena="false" opprettetAv="KHG2990" orgLedd="true" person="false" relevantSak="true" samhandler="false"/>
+        <gsak datoFom="2011-06-21" datoTom="2014-12-07" datoOpprettet="2011-06-21T20:08:46" endretAv="KHG2991" kode="SAA" opprettetAv="KHG2991" tidsregisAktivert="0"/>
+        <ruting datoFom="2011-06-22" datoTom="2014-12-07" datoOpprettet="2011-06-22T09:11:37" endretAv="PK-15711" fagomrade="SAA" opprettetAv="KHG2990" gyldigForBatch="true"/>
+    </fagomrade>
+    <fagomrade kode="SAK" datoFom="2009-04-25" datoOpprettet="2009-04-25T04:43:17" dekode="Saksomkostning" endretAv="NAV9999" erGyldig="true" opprettetAv="NAV9999" gosys="true" gsak="true" ruting="true">
+        <gosys bedrift="true" datoFom="2010-10-28" datoOpprettet="2010-10-28T19:35:54" dekode="Saksomkostninger" endretAv="EBD2990" fagomrade="SAK" fagomradeNr="45" juridisk="true" omrade="IT" opprettArena="false" opprettetAv="KAA2812" orgLedd="true" person="true" relevantSak="true" samhandler="false"/>
+        <gsak datoFom="2009-04-25" datoOpprettet="2009-04-25T04:43:17" dekode="Saksomkostning" endretAv="NAV9999" kode="SAK" opprettetAv="NAV9999" tidsregisAktivert="0"/>
+        <ruting datoFom="2010-10-02" datoOpprettet="2010-10-02T05:00:03" dekode="Saksomkostninger" endretAv="TBA2812" fagomrade="SAK" opprettetAv="TBA2812" gyldigForBatch="true"/>
+    </fagomrade>
+    <fagomrade kode="SAP" datoFom="2011-06-21" datoOpprettet="2011-06-21T20:08:46" dekode="Sanksjon - Person" endretAv="KHG2991" erGyldig="true" opprettetAv="KHG2991" gosys="true" gsak="true" ruting="true">
+        <gosys bedrift="false" datoFom="2011-06-21" datoOpprettet="2011-06-21T20:40:17" endretAv="KHG2990" fagomrade="SAP" fagomradeNr="60" juridisk="false" omrade="AR" opprettArena="false" opprettetAv="KHG2990" orgLedd="false" person="true" relevantSak="true" samhandler="false"/>
+        <gsak datoFom="2011-06-21" datoOpprettet="2011-06-21T20:08:46" endretAv="KHG2991" kode="SAP" opprettetAv="KHG2991" tidsregisAktivert="0"/>
+        <ruting datoFom="2011-06-22" datoOpprettet="2011-06-22T09:11:37" endretAv="KHG2990" fagomrade="SAP" opprettetAv="KHG2990" gyldigForBatch="true"/>
+    </fagomrade>
+    <fagomrade kode="SER" datoFom="2011-12-10" datoOpprettet="2011-12-10T04:48:39" dekode="Serviceklager" endretAv="EBE2990" erGyldig="true" opprettetAv="EBE2990" gosys="true" gsak="true" ruting="true">
+        <gosys bedrift="true" datoFom="2011-12-10" datoOpprettet="2011-12-10T04:17:16" fagomrade="SER" fagomradeNr="62" juridisk="true" omrade="GE" opprettArena="false" orgLedd="true" person="true" relevantSak="true" samhandler="false"/>
+        <gsak datoFom="2011-12-10" datoOpprettet="2011-12-10T04:48:39" kode="SER" tidsregisAktivert="0"/>
+        <ruting datoFom="2011-12-10" datoOpprettet="2011-12-10T04:58:54" fagomrade="SER" gyldigForBatch="true"/>
+    </fagomrade>
+    <fagomrade kode="STO" datoFom="2009-02-05" datoOpprettet="2009-02-05T21:36:59" dekode="Regnskap/utbetaling" endretAv="GO-700" erGyldig="true" opprettetAv="NAV9999" gosys="true" gsak="true" ruting="true" leveranse="2018-U15" jiraissue="GO-700">
+        <gosys bedrift="true" datoFom="2010-10-28" datoOpprettet="2010-10-28T19:35:54" dekode="Regnskap/utbetaling" endretAv="GO-700" fagomrade="STO" fagomradeNr="37" juridisk="true" omrade="PE" opprettArena="false" opprettetAv="KAA2812" orgLedd="true" person="true" relevantSak="true" samhandler="true"/>
+        <gsak datoFom="2009-02-05" datoOpprettet="2009-02-05T21:36:59" dekode="Regnskap/utbetaling" endretAv="NAV9999" kode="STO" opprettetAv="NAV9999" tidsregisAktivert="0"/>
+        <ruting datoFom="2010-10-02" datoOpprettet="2010-10-02T05:00:03" dekode="Stønadsregnskap - NSS" endretAv="TBA2812" fagomrade="STO" opprettetAv="TBA2812" gyldigForBatch="true"/>
+    </fagomrade>
+    <fagomrade kode="SUP" datoFom="2008-09-16" datoOpprettet="2008-09-16T01:03:58" dekode="Supplerende stønad" endretAv="NAV9999" erGyldig="true" opprettetAv="NAV9999" gosys="true" gsak="true" ruting="true">
+        <gosys bedrift="true" datoOpprettet="2010-10-28T19:35:54" endretAv="KAA2812" fagomrade="SUP" fagomradeNr="24" juridisk="true" omrade="IT" opprettArena="false" opprettetAv="KAA2812" orgLedd="true" person="true" relevantSak="true" samhandler="false"/>
+        <gsak datoOpprettet="2008-09-16T01:03:58" endretAv="NAV9999" kode="SUP" opprettetAv="NAV9999" tidsregisAktivert="0"/>
+        <ruting datoOpprettet="2010-10-02T05:00:03" endretAv="TBA2812" fagomrade="SUP" opprettetAv="TBA2812" gyldigForBatch="true"/>
+    </fagomrade>
+    <fagomrade kode="SYK" datoFom="2009-04-25" datoOpprettet="2009-04-25T04:43:17" dekode="Sykepenger" endretAv="NAV9999" erGyldig="true" opprettetAv="NAV9999" gosys="true" gsak="true" ruting="true">
+        <gosys bedrift="true" datoFom="2010-10-28" datoOpprettet="2010-10-28T19:35:54" endretAv="KAA2812" fagomrade="SYK" fagomradeNr="36" juridisk="true" omrade="IT" opprettArena="false" opprettetAv="KAA2812" orgLedd="true" person="true" relevantSak="true" samhandler="false"/>
+        <gsak datoFom="2009-04-25" datoOpprettet="2009-04-25T04:43:17" endretAv="NAV9999" kode="SYK" opprettetAv="NAV9999" tidsregisAktivert="0"/>
+        <ruting datoFom="2010-10-02" datoOpprettet="2010-10-02T05:00:03" endretAv="TBA2812" fagomrade="SYK" opprettetAv="TBA2812" gyldigForBatch="true"/>
+    </fagomrade>
+    <fagomrade kode="SYM" datoFom="2010-10-02" datoOpprettet="2010-10-02T04:21:03" dekode="Sykemeldinger" endretAv="KAA2812" erGyldig="true" opprettetAv="KAA2812" gosys="true" gsak="true" ruting="true">
+        <gosys bedrift="false" datoOpprettet="2010-10-28T19:35:54" dekode="Sykmeldinger" endretAv="KAA2812" fagomrade="SYM" fagomradeNr="48" juridisk="false" omrade="GE" opprettArena="false" opprettetAv="KAA2812" orgLedd="false" person="true" relevantSak="true" samhandler="false"/>
+        <gsak datoOpprettet="2010-10-02T04:21:03" dekode="Sykemeldinger" endretAv="KAA2812" kode="SYM" opprettetAv="KAA2812" tidsregisAktivert="0"/>
+        <ruting datoOpprettet="2010-10-02T05:00:03" dekode="Sykmelding" endretAv="TBA2812" fagomrade="SYM" opprettetAv="TBA2812" gyldigForBatch="true"/>
+    </fagomrade>
+    <fagomrade kode="TIL" datoFom="2010-10-02" datoOpprettet="2010-10-02T04:21:03" dekode="Tiltak" endretAv="KAA2812" erGyldig="true" opprettetAv="KAA2812" gosys="true" gsak="true" ruting="true">
+        <gosys bedrift="true" datoOpprettet="2010-10-28T19:35:54" endretAv="KAA2812" fagomrade="TIL" fagomradeNr="49" juridisk="false" omrade="GE" opprettArena="false" opprettetAv="KAA2812" orgLedd="false" person="false" relevantSak="true" samhandler="false"/>
+        <gsak datoOpprettet="2010-10-02T04:21:03" endretAv="KAA2812" kode="TIL" opprettetAv="KAA2812" tidsregisAktivert="0"/>
+        <ruting datoOpprettet="2010-12-07T20:11:09" endretAv="TBA2812" fagomrade="TIL" opprettetAv="TBA2812" gyldigForBatch="true"/>
+    </fagomrade>
+    <fagomrade kode="TRK" datoFom="2010-10-02" datoOpprettet="2010-10-02T04:21:03" dekode="Trekkhåndtering" endretAv="GO-700" erGyldig="true" opprettetAv="KAA2812" gosys="true" gsak="true" ruting="true" leveranse="2018-U15" jiraissue="GO-700">
+        <gosys bedrift="false" datoOpprettet="2010-10-28T19:35:54" endretAv="GO-700" fagomrade="TRK" fagomradeNr="53" juridisk="false" omrade="GE" opprettArena="false" opprettetAv="KAA2812" orgLedd="false" person="true" relevantSak="true" samhandler="false"/>
+        <gsak datoOpprettet="2010-10-02T04:21:03" endretAv="A134798" kode="TRK" opprettetAv="KAA2812" tidsregisAktivert="0"/>
+        <ruting datoOpprettet="2010-10-02T05:00:03" endretAv="KHG2990" fagomrade="TRK" opprettetAv="TBA2812" gyldigForBatch="true"/>
+    </fagomrade>
+    <fagomrade kode="TRY" datoFom="2011-03-24" datoOpprettet="2011-03-24T20:33:38" dekode="Trygdeavgift" endretAv="KHG2990" erGyldig="true" opprettetAv="KHG2990" gosys="true" gsak="true" ruting="true">
+        <gosys bedrift="true" datoFom="2011-03-24" datoOpprettet="2011-03-24T20:48:35" fagomrade="TRY" fagomradeNr="57" juridisk="true" omrade="GE" opprettArena="false" orgLedd="true" person="true" relevantSak="true" samhandler="false"/>
+        <gsak datoFom="2011-03-24" datoOpprettet="2011-03-24T20:33:38" kode="TRY" tidsregisAktivert="0"/>
+        <ruting datoFom="2011-03-24" datoOpprettet="2011-03-24T20:43:36" fagomrade="TRY" gyldigForBatch="true"/>
+    </fagomrade>
+    <fagomrade kode="UFO" datoFom="2009-04-25" datoOpprettet="2009-04-25T04:43:17" dekode="Uføretrygd" endretAv="PK-8283" erGyldig="true" opprettetAv="NAV9999" gosys="true" gsak="true" ruting="true" leveranse="2014-HL3" jiraissue="PK-8283">
+        <gosys bedrift="true" datoFom="2010-10-28" datoOpprettet="2010-10-28T19:35:54" fagomrade="UFO" fagomradeNr="35" juridisk="true" omrade="GE" opprettArena="false" opprettetAv="KAA2812" orgLedd="true" person="true" relevantSak="true" samhandler="false"/>
+        <gsak datoFom="2009-04-25" datoOpprettet="2009-04-25T04:43:17" kode="UFO" opprettetAv="NAV9999" tidsregisAktivert="0"/>
+        <ruting datoFom="2010-10-02" datoOpprettet="2010-10-02T05:00:03" fagomrade="UFO" opprettetAv="TBA2812" gyldigForBatch="true"/>
+    </fagomrade>
+    <fagomrade kode="UKJ" datoFom="2011-06-07" datoOpprettet="2011-06-07T10:18:02" dekode="Ukjent" endretAv="NAA2990" erGyldig="true" opprettetAv="NAA2990" gsak="true" ruting="true">
+        <gsak datoOpprettet="2011-06-07T10:18:02" endretAv="NAA2990" kode="UKJ" opprettetAv="NAA2990" tidsregisAktivert="0"/>
+        <ruting datoOpprettet="2010-10-02T05:00:03" endretAv="TBA2812" fagomrade="UKJ" opprettetAv="TBA2812" gyldigForBatch="true"/>
+    </fagomrade>
+    <fagomrade kode="VEN" datoFom="2009-04-25" datoOpprettet="2009-04-25T04:43:17" dekode="Ventelønn" endretAv="NAV9999" erGyldig="true" opprettetAv="NAV9999" gosys="true" gsak="true" ruting="true">
+        <gosys bedrift="false" datoFom="2010-10-28" datoOpprettet="2010-10-28T19:35:54" endretAv="KAA2812" fagomrade="VEN" fagomradeNr="32" juridisk="false" omrade="AR" opprettArena="false" opprettetAv="KAA2812" orgLedd="false" person="true" relevantSak="true" samhandler="false"/>
+        <gsak datoFom="2009-04-25" datoOpprettet="2009-04-25T04:43:17" endretAv="NAV9999" kode="VEN" opprettetAv="NAV9999" tidsregisAktivert="0"/>
+        <ruting datoFom="2010-10-02" datoOpprettet="2010-10-02T05:00:03" endretAv="TBA2812" fagomrade="VEN" opprettetAv="TBA2812" gyldigForBatch="true"/>
+    </fagomrade>
+    <fagomrade kode="YRA" datoFom="2009-04-25" datoOpprettet="2009-04-25T04:43:17" dekode="Yrkesrettet attføring" endretAv="NAV9999" erGyldig="true" opprettetAv="NAV9999" gosys="true" gsak="true" ruting="true">
+        <gosys bedrift="false" datoFom="2010-10-28" datoOpprettet="2010-10-28T19:35:54" endretAv="KAA2812" fagomrade="YRA" fagomradeNr="33" juridisk="false" omrade="AR" opprettArena="false" opprettetAv="KAA2812" orgLedd="false" person="true" relevantSak="true" samhandler="false"/>
+        <gsak datoFom="2009-04-25" datoOpprettet="2009-04-25T04:43:17" endretAv="NAV9999" kode="YRA" opprettetAv="NAV9999" tidsregisAktivert="0"/>
+        <ruting datoFom="2010-10-02" datoOpprettet="2010-10-02T05:00:03" endretAv="TBA2812" fagomrade="YRA" opprettetAv="TBA2812" gyldigForBatch="true"/>
+    </fagomrade>
+    <fagomrade kode="YRK" datoFom="2008-09-16" datoOpprettet="2008-09-16T01:03:58" dekode="Yrkesskade / Menerstatning" endretAv="NAV9999" erGyldig="true" opprettetAv="NAV9999" gosys="true" gsak="true" ruting="true">
+        <gosys bedrift="true" datoOpprettet="2010-10-28T19:35:54" dekode="Yrkesskade" endretAv="KAA2812" fagomrade="YRK" fagomradeNr="25" juridisk="true" omrade="IT" opprettArena="false" opprettetAv="KAA2812" orgLedd="true" person="true" relevantSak="true" samhandler="false"/>
+        <gsak datoOpprettet="2008-09-16T01:03:58" dekode="Yrkesskade / Menerstatning" endretAv="NAV9999" kode="YRK" opprettetAv="NAV9999" tidsregisAktivert="0"/>
+        <ruting datoOpprettet="2010-10-02T05:00:03" dekode="Yrkesskade" endretAv="TBA2812" fagomrade="YRK" opprettetAv="TBA2812" gyldigForBatch="true"/>
+    </fagomrade>
+    <fagomrade kode="SIK" datoFom="2014-02-01" datoOpprettet="2014-02-18T01:03:58" dekode="Sikkerhetstiltak" endretAv="PK-21026" erGyldig="true" opprettetAv="PK-7009" gosys="true" gsak="true" ruting="true" leveranse="2015-HL2" jiraissue="PK-21026">
+        <gosys datoOpprettet="2014-02-18T01:03:58" opprettetAv="PK-7009" endretAv="PK-21026" fagomrade="SIK" fagomradeNr="0" dekode="Sikkerhetstiltak" omrade="GE" opprettArena="false" bedrift="false" juridisk="false" orgLedd="false" samhandler="false" person="true" relevantSak="false"/>
+        <gsak datoOpprettet="2014-02-18T01:03:58" opprettetAv="PK-7009" endretAv="PK-7009" kode="SIK" dekode="Sikkerhetstiltak" tidsregisAktivert="0"/>
+        <ruting datoOpprettet="2014-02-18T01:03:58" dekode="Sikkerhetstiltak" endretAv="PK-12391" fagomrade="SIK" opprettetAv="PK-12391" gyldigForBatch="false"/>
+    </fagomrade>
+    <fagomrade kode="KNA" datoFom="2014-07-01" datoOpprettet="2014-07-01T01:03:58" dekode="Kontakt NAV" endretAv="PK-12886" erGyldig="true" opprettetAv="PK-12065" gosys="true" gsak="true" ruting="true" leveranse="2015-HL2" jiraissue="PKRYPE-612">
+        <gosys datoOpprettet="2014-07-01T01:03:58" opprettetAv="PK-12065" endretAv="PK-12065" fagomrade="KNA" fagomradeNr="0" dekode="Kontakt NAV" omrade="GE" opprettArena="false" bedrift="true" juridisk="false" orgLedd="false" samhandler="false" person="true" relevantSak="true"/>
+        <gsak datoOpprettet="2014-07-01T01:03:58" opprettetAv="PK-12065" endretAv="PK-12065" kode="KNA" dekode="Kontakt NAV" tidsregisAktivert="0"/>
+        <ruting datoOpprettet="2015-01-01T01:03:58" dekode="Kontakt NAV" endretAv="PK-19054" fagomrade="KNA" opprettetAv="PK-19054" gyldigForBatch="false"/>
+    </fagomrade>
+    <fagomrade kode="UFM" datoFom="2010-01-01" datoOpprettet="2015-02-01T01:03:58" dekode="Unntak fra medlemskap" endretAv="PK-12886" erGyldig="true" opprettetAv="PK-12886" gosys="true" gsak="true" ruting="true" leveranse="2015-HL2" jiraissue="PKRYPE-699">
+        <gosys datoOpprettet="2015-02-01T01:03:58" opprettetAv="PK-12886" endretAv="PK-12886" fagomrade="UFM" fagomradeNr="63" dekode="Unntak fra medlemskap" omrade="GE" opprettArena="false" bedrift="false" juridisk="false" orgLedd="false" samhandler="false" person="true" relevantSak="true"/>
+        <gsak datoOpprettet="2015-02-01T01:03:58" opprettetAv="PK-12886" endretAv="PK-12886" kode="UFM" dekode="Unntak fra medlemskap" tidsregisAktivert="0"/>
+        <ruting datoOpprettet="2015-02-01T01:03:58" dekode="Unntak fra medlemskap" endretAv="PK-12886" fagomrade="UFM" opprettetAv="PK-12886" gyldigForBatch="true"/>
+    </fagomrade>
+    <fagomrade kode="TSR" datoFom="2015-06-01" datoOpprettet="2015-06-01T00:00:00" dekode="Tilleggsstønad arbeidssøkere" endretAv="PK-20722" erGyldig="true" opprettetAv="PK-20722" gosys="true" gsak="true" ruting="true" leveranse="2015-HL4" jiraissue="PKRYPE-890">
+        <gosys datoOpprettet="2015-06-01T00:00:00" opprettetAv="PK-20722" endretAv="PK-20722" fagomrade="TSR" fagomradeNr="64" dekode="Tilleggsstønad arbeidssøkere" omrade="AR" opprettArena="true" bedrift="false" juridisk="false" orgLedd="false" samhandler="false" person="true" relevantSak="true"/>
+        <gsak datoOpprettet="2015-06-01T00:00:00" opprettetAv="PK-20722" endretAv="PK-20722" kode="TSR" dekode="Tilleggsstønad arbeidssøkere" tidsregisAktivert="0"/>
+        <ruting datoOpprettet="2015-06-01T00:00:00" dekode="Tilleggsstønad arbeidssøkere" endretAv="PK-20722" fagomrade="TSR" opprettetAv="PK-20722" gyldigForBatch="true"/>
+    </fagomrade>
+    <fagomrade kode="TSO" datoFom="2015-06-01" datoOpprettet="2015-06-01T00:00:00" dekode="Tilleggsstønad" endretAv="PK-20722" erGyldig="true" opprettetAv="PK-20722" gosys="true" gsak="true" ruting="true" leveranse="2015-HL4" jiraissue="PKRYPE-890">
+        <gosys datoOpprettet="2015-06-01T00:00:00" opprettetAv="PK-20722" endretAv="PK-20722" fagomrade="TSO" fagomradeNr="65" dekode="Tilleggsstønad" omrade="AR" opprettArena="true" bedrift="false" juridisk="false" orgLedd="false" samhandler="false" person="true" relevantSak="true"/>
+        <gsak datoOpprettet="2015-06-01T00:00:00" opprettetAv="PK-20722" endretAv="PK-20722" kode="TSO" dekode="Tilleggsstønad" tidsregisAktivert="0"/>
+        <ruting datoOpprettet="2015-06-01T00:00:00" dekode="Tilleggsstønad" endretAv="PK-20722" fagomrade="TSO" opprettetAv="PK-20722" gyldigForBatch="true"/>
+    </fagomrade>
+    <fagomrade kode="RVE" datoFom="2017-08-01" datoOpprettet="2010-01-01T00:00:00" dekode="Rettferdsvederlag" endretAv="PK-39554" erGyldig="true" opprettetAv="PK-39554" gosys="true" gsak="true" ruting="true" leveranse="2017-HL3" jiraissue="PK-39554">
+        <gosys datoOpprettet="2017-08-01T00:00:00" opprettetAv="PK-39554" endretAv="PK-39554" fagomrade="RVE" fagomradeNr="66" dekode="Rettferdsvederlag" omrade="GE" opprettArena="false" bedrift="false" juridisk="false" orgLedd="false" samhandler="false" person="true" relevantSak="true"/>
+        <gsak datoOpprettet="2017-08-01T00:00:00" opprettetAv="PK-39554" endretAv="PK-39554" kode="RVE" dekode="Rettferdsvederlag" tidsregisAktivert="0"/>
+        <ruting datoOpprettet="2017-08-01T00:00:00" dekode="Rettferdsvederlag" endretAv="PK-39554" fagomrade="RVE" opprettetAv="PK-39554" gyldigForBatch="true"/>
+    </fagomrade>
+    <fagomrade kode="RPO" datoFom="2017-08-01" datoOpprettet="2010-01-01T00:00:00" dekode="Retting av personopplysninger" endretAv="PK-39554" erGyldig="true" opprettetAv="PK-39554" gosys="true" gsak="true" ruting="true" leveranse="2017-HL3" jiraissue="PK-39554">
+        <gosys datoOpprettet="2017-08-01T00:00:00" opprettetAv="PK-39554" endretAv="PK-39554" fagomrade="RPO" fagomradeNr="67" dekode="Retting av personopplysninger" omrade="GE" opprettArena="false" bedrift="false" juridisk="false" orgLedd="false" samhandler="false" person="true" relevantSak="true"/>
+        <gsak datoOpprettet="2017-08-01T00:00:00" opprettetAv="PK-39554" endretAv="PK-39554" kode="RPO" dekode="Retting av personopplysninger" tidsregisAktivert="0"/>
+        <ruting datoOpprettet="2017-08-01T00:00:00" dekode="Retting av personopplysninger" endretAv="PK-39554" fagomrade="RPO" opprettetAv="PK-39554" gyldigForBatch="true"/>
+    </fagomrade>
+    <fagomrade kode="LGA" datoFom="2010-01-01" datoOpprettet="2018-06-18T00:00:00" dekode="Lønnsgaranti" endretAv="GO-1124" erGyldig="true" opprettetAv="GO-1124" gosys="true" gsak="true" ruting="false" leveranse="2018-Ux" jiraissue="GO-1124">
+        <gosys fagomrade="LGA" fagomradeNr="0" omrade="GE" opprettArena="false" bedrift="false" juridisk="false" orgLedd="false" samhandler="false" person="true" relevantSak="false"/>
+        <gsak  tidsregisAktivert="0"/>
+    </fagomrade>
+</fagomradeListe>

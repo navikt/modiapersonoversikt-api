@@ -1,1 +1,0 @@
-no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelse,getFnr,fnr

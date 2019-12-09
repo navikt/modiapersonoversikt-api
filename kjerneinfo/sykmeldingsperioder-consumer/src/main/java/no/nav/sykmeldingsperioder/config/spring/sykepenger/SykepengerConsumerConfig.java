@@ -34,7 +34,7 @@ public class SykepengerConsumerConfig {
 
     private SykepengerV2 getSykepengerPortType(boolean isPingPorttype) {
         CXFClient<SykepengerV2> cxfClient = new CXFClient<>(SykepengerV2.class)
-                .wsdl("classpath:no/nav/tjeneste/virksomhet/sykepenger/v2/Binding.wsdl")
+                .wsdl("classpath:wsdl/tjenestespesifikasjon/no/nav/tjeneste/virksomhet/sykepenger/v2/Binding.wsdl")
                 .serviceName(new QName("http://nav.no/tjeneste/virksomhet/sykepenger/v2/Binding", "Sykepenger_v2"))
                 .endpointName(new QName("http://nav.no/tjeneste/virksomhet/sykepenger/v2/Binding", "Sykepenger_v2Port"))
                 .withHandler(new MDCOutHandler())

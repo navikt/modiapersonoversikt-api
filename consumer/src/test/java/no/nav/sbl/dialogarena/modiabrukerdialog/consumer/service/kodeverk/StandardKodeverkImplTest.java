@@ -18,7 +18,6 @@ import org.springframework.test.util.ReflectionTestUtils;
 
 import java.io.File;
 
-import static no.nav.modig.core.test.FilesAndDirs.BUILD_OUTPUT;
 import static org.apache.commons.lang3.RandomStringUtils.randomNumeric;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
@@ -29,7 +28,7 @@ import static org.mockito.MockitoAnnotations.initMocks;
 
 public class StandardKodeverkImplTest {
 
-    private final File dumpDir = new File(BUILD_OUTPUT, "kodeverkdump/" + randomNumeric(10));
+    private final File dumpDir = new File("target", "kodeverkdump/" + randomNumeric(10));
     public static final String ARKIVTEMA_KODEVERKNAVN = "Arkivtemaer";
 
     @Mock

@@ -12,7 +12,6 @@ import no.nav.kjerneinfo.domain.person.Personfakta;
 import no.nav.kjerneinfo.domain.person.fakta.AnsvarligEnhet;
 import no.nav.kjerneinfo.domain.person.fakta.Organisasjonsenhet;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.*;
-import no.nav.modig.common.SporingsLogger;
 import no.nav.modig.content.ContentRetriever;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.kodeverk.StandardKodeverk;
@@ -68,7 +67,6 @@ class HenvendelseBehandlingServiceImplTest {
     private PersonKjerneinfoServiceBi kjerneinfo = mock(PersonKjerneinfoServiceBi.class);
     private StandardKodeverk standardKodeverk = mock(StandardKodeverk.class);
     private ContentRetriever propertyResolver = mock(ContentRetriever.class);
-    private SporingsLogger sporingsLogger = mock(SporingsLogger.class);
     private LDAPService ldapService = mock(LDAPService.class);
     private TilgangskontrollContext tilgangskontrollContext = mock(TilgangskontrollContext.class);
 
@@ -80,7 +78,6 @@ class HenvendelseBehandlingServiceImplTest {
             new Tilgangskontroll(tilgangskontrollContext),
             standardKodeverk,
             propertyResolver,
-            sporingsLogger,
             ldapService
     );
 

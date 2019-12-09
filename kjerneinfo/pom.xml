@@ -34,17 +34,10 @@
     </modules>
 
     <properties>
-        <!-- Versjoner av tjenester som konsumeres-->
-        <nav-behandleBrukerprofil-tjenestespesifikasjon-version>2.0.0</nav-behandleBrukerprofil-tjenestespesifikasjon-version>
-        <nav-fim-foreldrepenger-v2-tjenestespesifikasjon-version>2.0.2</nav-fim-foreldrepenger-v2-tjenestespesifikasjon-version>
-        <nav-fim-sykepenger-v2-tjenestespesifikasjon-version>2.0.1</nav-fim-sykepenger-v2-tjenestespesifikasjon-version>
-        <nav-fim-ytelseskontrakt-v3-tjenestespesifikasjon-version>3.0.1</nav-fim-ytelseskontrakt-v3-tjenestespesifikasjon-version>
-
         <!-- Platform-->
         <jee.version>6.0</jee.version>
 
         <!-- Consumer -->
-        <org.apache.cxf.version>3.1.11</org.apache.cxf.version>
         <org.apache.cxf-codegen.version>3.1.10</org.apache.cxf-codegen.version>
     </properties>
 

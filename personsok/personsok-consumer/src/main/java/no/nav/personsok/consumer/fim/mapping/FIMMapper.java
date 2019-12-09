@@ -13,8 +13,6 @@ import no.nav.personsok.domain.Person;
 import no.nav.personsok.domain.enums.AdresseType;
 import no.nav.personsok.domain.enums.Diskresjonskode;
 import no.nav.tjeneste.virksomhet.personsoek.v1.informasjon.*;
-import no.nav.tjeneste.virksomhet.personsoek.v1.meldinger.FimFinnPersonRequest;
-import no.nav.tjeneste.virksomhet.personsoek.v1.meldinger.FimFinnPersonResponse;
 import org.joda.time.LocalDate;
 
 import javax.xml.datatype.DatatypeConfigurationException;
@@ -50,12 +48,12 @@ public final class FIMMapper extends ConfigurableMapper {
         configureResponseClassMaps(mapperFactory);
     }
 
-    private String addressBuilder(String gatenavn, BigInteger gatenummer, String husbokstav, FimPostnummer postnummer) {
+    private String addressBuilder(String gatenavn, BigInteger gatenummer, String husbokstav, Postnummer postnummer) {
         String gatenummerString = gatenummer == null ? "" : String.valueOf(gatenummer);
         return addressBuilder(gatenavn, gatenummerString, husbokstav, postnummer);
     }
 
-    private String addressBuilder(String gatenavn, String gatenummer, String husbokstav, FimPostnummer postnummer) {
+    private String addressBuilder(String gatenavn, String gatenummer, String husbokstav, Postnummer postnummer) {
         String blank = (isBlank(gatenummer) && isBlank(husbokstav)) ? "" : SEPARATOR;
         if ((isBlank(gatenavn) && isBlank(gatenummer) && isBlank(husbokstav))
                 || isBlank(getPoststed(postnummer))) {
@@ -64,7 +62,7 @@ public final class FIMMapper extends ConfigurableMapper {
         return join(gatenavn, blank, gatenummer, husbokstav, ", ", getPoststed(postnummer));
     }
 
-    private String getPoststed(FimPostnummer postnummer) {
+    private String getPoststed(Postnummer postnummer) {
         if (postnummer != null) {
             String poststed = kodeverkManager.getBeskrivelseForKode(postnummer.getValue(), "Postnummer", "nb");
 
@@ -77,7 +75,7 @@ public final class FIMMapper extends ConfigurableMapper {
         return EMPTY;
     }
 
-    private String getNavnPaLand(FimLandkoder landkode) {
+    private String getNavnPaLand(Landkoder landkode) {
         if (landkode != null) {
             return kodeverkManager.getBeskrivelseForKode(landkode.getValue(), "Landkoder", "nb");
         } else {
@@ -95,20 +93,20 @@ public final class FIMMapper extends ConfigurableMapper {
     }
 
     private void registerFimFinnPersonResponse(MapperFactory mapperFactory) {
-        mapperFactory.registerClassMap(mapperFactory.classMap(FimFinnPersonResponse.class, FinnPersonResponse.class)
+        mapperFactory.registerClassMap(mapperFactory.classMap(no.nav.tjeneste.virksomhet.personsoek.v1.meldinger.FinnPersonResponse.class, FinnPersonResponse.class)
                 .byDefault().toClassMap());
     }
 
     private void registrerMidlertidigAdresse(MapperFactory mapperFactory) {
-        mapperFactory.registerClassMap(mapperFactory.classMap(FimMidlertidigPostadresse.class, Adresse.class).customize(new CustomMapper<FimMidlertidigPostadresse, Adresse>() {
+        mapperFactory.registerClassMap(mapperFactory.classMap(no.nav.tjeneste.virksomhet.personsoek.v1.informasjon.MidlertidigPostadresse.class, Adresse.class).customize(new CustomMapper<no.nav.tjeneste.virksomhet.personsoek.v1.informasjon.MidlertidigPostadresse, Adresse>() {
             @Override
-            public void mapAtoB(FimMidlertidigPostadresse from, Adresse to, MappingContext context) {
-                if (from instanceof FimMidlertidigPostadresseUtland && ((FimMidlertidigPostadresseUtland) from).getUstrukturertAdresse() != null) {
+            public void mapAtoB(no.nav.tjeneste.virksomhet.personsoek.v1.informasjon.MidlertidigPostadresse from, Adresse to, MappingContext context) {
+                if (from instanceof no.nav.tjeneste.virksomhet.personsoek.v1.informasjon.MidlertidigPostadresseUtland && ((no.nav.tjeneste.virksomhet.personsoek.v1.informasjon.MidlertidigPostadresseUtland) from).getUstrukturertAdresse() != null) {
                     to.setAdresseType(AdresseType.MIDLERTIDIG_POSTADRESSE_UTLAND);
-                    FimUstrukturertAdresse ustrukturertAdresse = ((FimMidlertidigPostadresseUtland) from).getUstrukturertAdresse();
+                    no.nav.tjeneste.virksomhet.personsoek.v1.informasjon.UstrukturertAdresse ustrukturertAdresse = ((no.nav.tjeneste.virksomhet.personsoek.v1.informasjon.MidlertidigPostadresseUtland) from).getUstrukturertAdresse();
                     to.setAdresseString(joinAdresseLinjer(ustrukturertAdresse));
-                } else if (from instanceof FimMidlertidigPostadresseNorge) {
-                    FimUstrukturertAdresse ustrukturertAdresse = ((FimMidlertidigPostadresseNorge) from).getUstrukturertAdresse();
+                } else if (from instanceof no.nav.tjeneste.virksomhet.personsoek.v1.informasjon.MidlertidigPostadresseNorge) {
+                    no.nav.tjeneste.virksomhet.personsoek.v1.informasjon.UstrukturertAdresse ustrukturertAdresse = ((no.nav.tjeneste.virksomhet.personsoek.v1.informasjon.MidlertidigPostadresseNorge) from).getUstrukturertAdresse();
                     if (ustrukturertAdresse != null) {
                         to.setAdresseType(AdresseType.MIDLERTIDIG_POSTADRESSE_NORGE);
                         to.setAdresseString(joinAdresseLinjer(ustrukturertAdresse));
@@ -118,40 +116,40 @@ public final class FIMMapper extends ConfigurableMapper {
         }).byDefault().toClassMap());
     }
 
-    private String joinAdresseLinjer(FimUstrukturertAdresse adresse) {
-        FimLandkoder landkode = adresse.getLandkode();
+    private String joinAdresseLinjer(no.nav.tjeneste.virksomhet.personsoek.v1.informasjon.UstrukturertAdresse adresse) {
+        Landkoder landkode = adresse.getLandkode();
         return join(new String[] { adresse.getAdresselinje1(), adresse.getAdresselinje2(), adresse.getAdresselinje3(), adresse.getAdresselinje4(), "," , getNavnPaLand(landkode) }, SEPARATOR).trim();
     }
 
     private void registerFimPostadresse(MapperFactory mapperFactory) {
-        mapperFactory.registerClassMap(mapperFactory.classMap(FimPostadresse.class, Adresse.class).customize(new CustomMapper<FimPostadresse, Adresse>() {
+        mapperFactory.registerClassMap(mapperFactory.classMap(Postadresse.class, Adresse.class).customize(new CustomMapper<Postadresse, Adresse>() {
             @Override
-            public void mapAtoB(FimPostadresse from, Adresse to, MappingContext context) {
+            public void mapAtoB(Postadresse from, Adresse to, MappingContext context) {
                 to.setAdresseType(AdresseType.POSTADRESSE);
-                FimUstrukturertAdresse ustrukturertAdresse = from.getUstrukturertAdresse();
+                UstrukturertAdresse ustrukturertAdresse = from.getUstrukturertAdresse();
                 to.setAdresseString(joinAdresseLinjer(ustrukturertAdresse));
             }
         }).byDefault().toClassMap());
     }
 
     private void registerFimBostedsadresse(MapperFactory mapperFactory) {
-        mapperFactory.registerClassMap(mapperFactory.classMap(FimBostedsadresse.class, Adresse.class).customize(new CustomMapper<FimBostedsadresse, Adresse>() {
+        mapperFactory.registerClassMap(mapperFactory.classMap(Bostedsadresse.class, Adresse.class).customize(new CustomMapper<Bostedsadresse, Adresse>() {
             @Override
-            public void mapAtoB(FimBostedsadresse from, Adresse to, MappingContext context) {
+            public void mapAtoB(Bostedsadresse from, Adresse to, MappingContext context) {
                 to.setAdresseType(AdresseType.BOLIGADRESSE);
 
-                if (from.getStrukturertAdresse().getClass().equals(FimStedsadresseNorge.class)) {
-                    FimStedsadresseNorge strukturertAdresse = (FimStedsadresseNorge) from.getStrukturertAdresse();
+                if (from.getStrukturertAdresse().getClass().equals(StedsadresseNorge.class)) {
+                    StedsadresseNorge strukturertAdresse = (StedsadresseNorge) from.getStrukturertAdresse();
                     to.setAdresseString(addressBuilder(strukturertAdresse.getTilleggsadresse(),
                             strukturertAdresse.getBolignummer(), null,
                             strukturertAdresse.getPoststed()));
-                } else if (from.getStrukturertAdresse().getClass().equals(FimGateadresse.class)) {
-                    FimGateadresse strukturertAdresse = (FimGateadresse) from.getStrukturertAdresse();
+                } else if (from.getStrukturertAdresse().getClass().equals(Gateadresse.class)) {
+                    Gateadresse strukturertAdresse = (Gateadresse) from.getStrukturertAdresse();
                     to.setAdresseString(addressBuilder(strukturertAdresse.getGatenavn(),
                             strukturertAdresse.getHusnummer(),
                             strukturertAdresse.getHusbokstav(), strukturertAdresse.getPoststed()));
-                } else if (from.getStrukturertAdresse().getClass().equals(FimMatrikkeladresse.class)) {
-                    FimMatrikkeladresse strukturertAdresse = (FimMatrikkeladresse) from.getStrukturertAdresse();
+                } else if (from.getStrukturertAdresse().getClass().equals(Matrikkeladresse.class)) {
+                    Matrikkeladresse strukturertAdresse = (Matrikkeladresse) from.getStrukturertAdresse();
                     List<String> adresseElementer = new LinkedList<String>() {
                         @Override
                         public boolean add(String s) {
@@ -169,8 +167,8 @@ public final class FIMMapper extends ConfigurableMapper {
                     adresseElementer.add(addressBuilder(null, "", null, strukturertAdresse.getPoststed()));
 
                     to.setAdresseString(join(adresseElementer.toArray(), SEPARATOR).trim());
-                } else if (from.getStrukturertAdresse().getClass().equals(FimPostboksadresseNorsk.class)) {
-                    FimPostboksadresseNorsk strukturertAdresse = (FimPostboksadresseNorsk) from.getStrukturertAdresse();
+                } else if (from.getStrukturertAdresse().getClass().equals(PostboksadresseNorsk.class)) {
+                    PostboksadresseNorsk strukturertAdresse = (PostboksadresseNorsk) from.getStrukturertAdresse();
                     to.setAdresseString(join(new String[] { addressBuilder(null, strukturertAdresse.getPostboksanlegg(), null, strukturertAdresse.getPoststed()) }, SEPARATOR).trim());
                 }
             }
@@ -178,7 +176,7 @@ public final class FIMMapper extends ConfigurableMapper {
     }
 
     private void registerFimBruker(MapperFactory mapperFactory) {
-        mapperFactory.registerClassMap(mapperFactory.classMap(FimBruker.class, Person.class)
+        mapperFactory.registerClassMap(mapperFactory.classMap(Bruker.class, Person.class)
                 .field("personnavn.fornavn", "fornavn")
                 .field("personnavn.mellomnavn", "mellomnavn")
                 .field("personnavn.etternavn", "etternavn")
@@ -187,12 +185,12 @@ public final class FIMMapper extends ConfigurableMapper {
                 .fieldAToB("ident.ident", "fodselsnummer")
                 .field("harAnsvarligEnhet.enhet.organisasjonselementID", "kommunenr")
                 .customize(
-                        new CustomMapper<FimBruker, Person>() {
+                        new CustomMapper<Bruker, Person>() {
                             /*
                              * Gjeldende adressetype skal være første element i listen
                              */
                             @Override
-                            public void mapAtoB(FimBruker from, Person to, MappingContext context) {
+                            public void mapAtoB(Bruker from, Person to, MappingContext context) {
                                 to.setAdresser(new ArrayList<Adresse>());
                                 if (from.getBostedsadresse() != null) {
                                     if (from.getGjeldendePostadresseType() != null && AdresseType.BOLIGADRESSE.name().equals(from.getGjeldendePostadresseType().getValue())) {
@@ -215,7 +213,7 @@ public final class FIMMapper extends ConfigurableMapper {
                         }).byDefault().toClassMap());
     }
 
-    private static void mapMidlertidigPostadresse(FimBruker from, Person to, MapperFacade mapperFacade) {
+    private static void mapMidlertidigPostadresse(Bruker from, Person to, MapperFacade mapperFacade) {
         if (from.getGjeldendePostadresseType() != null && AdresseType.MIDLERTIDIG_POSTADRESSE_NORGE.name().equals(from.getGjeldendePostadresseType().getValue())) {
             to.getAdresser().add(0, mapperFacade.map(from.getMidlertidigPostadresse(), Adresse.class));
         } else if (from.getGjeldendePostadresseType() != null && AdresseType.MIDLERTIDIG_POSTADRESSE_UTLAND.name().equals(from.getGjeldendePostadresseType().getValue())) {
@@ -226,16 +224,16 @@ public final class FIMMapper extends ConfigurableMapper {
     }
 
     private static void registerFimPerson(MapperFactory mapperFactory) {
-        mapperFactory.registerClassMap(mapperFactory.classMap(FimPerson.class, Person.class)
+        mapperFactory.registerClassMap(mapperFactory.classMap(no.nav.tjeneste.virksomhet.personsoek.v1.informasjon.Person.class, Person.class)
                 .field("personnavn.fornavn", "fornavn")
                 .field("personnavn.mellomnavn", "mellomnavn")
                 .field("personnavn.etternavn", "etternavn")
                 .field("personstatus.personstatus.value", "personstatus.kode")
                 .field("diskresjonskode.value", "diskresjonskodePerson")
                 .fieldAToB("ident.ident", "fodselsnummer")
-                .customize(new CustomMapper<FimPerson, Person>() {
+                .customize(new CustomMapper<no.nav.tjeneste.virksomhet.personsoek.v1.informasjon.Person, Person>() {
                     @Override
-                    public void mapAtoB(FimPerson from, Person to, MappingContext context) {
+                    public void mapAtoB(no.nav.tjeneste.virksomhet.personsoek.v1.informasjon.Person from, Person to, MappingContext context) {
                         to.setAdresser(new ArrayList<Adresse>());
                         if (from.getBostedsadresse() != null) {
                             to.getAdresser().add(mapperFacade.map(from.getBostedsadresse(), Adresse.class));
@@ -256,29 +254,29 @@ public final class FIMMapper extends ConfigurableMapper {
         converterFactory.registerConverter(lagUstrukturertAdresseConverter());
     }
 
-    private CustomConverter<FimUstrukturertAdresse, String> lagUstrukturertAdresseConverter() {
-        return new CustomConverter<FimUstrukturertAdresse, String>() {
+    private CustomConverter<UstrukturertAdresse, String> lagUstrukturertAdresseConverter() {
+        return new CustomConverter<UstrukturertAdresse, String>() {
             @Override
-            public String convert(FimUstrukturertAdresse source, Type<? extends String> destinationType, MappingContext mappingContext) {
+            public String convert(UstrukturertAdresse source, Type<? extends String> destinationType, MappingContext mappingContext) {
                 return source.getAdresselinje1();
             }
         };
     }
 
-    private CustomConverter<FimGateadresse, String> lagGateadresseConverter() {
-        return new CustomConverter<FimGateadresse, String>() {
+    private CustomConverter<Gateadresse, String> lagGateadresseConverter() {
+        return new CustomConverter<Gateadresse, String>() {
             @Override
-            public String convert(FimGateadresse source, Type<? extends String> destinationType, MappingContext mappingContext) {
+            public String convert(Gateadresse source, Type<? extends String> destinationType, MappingContext mappingContext) {
                 return addressBuilder(source.getGatenavn(), source.getHusnummer(), source.getHusbokstav(), source.getPoststed());
             }
         };
     }
 
-    private CustomConverter<FimGeografiskAdresse, String> lagGeografiskAdresseConverter() {
-        return new CustomConverter<FimGeografiskAdresse, String>() {
+    private CustomConverter<GeografiskAdresse, String> lagGeografiskAdresseConverter() {
+        return new CustomConverter<GeografiskAdresse, String>() {
             @Override
-            public String convert(FimGeografiskAdresse source, Type<? extends String> destinationType, MappingContext mappingContext) {
-                if (source instanceof FimGateadresse) {
+            public String convert(GeografiskAdresse source, Type<? extends String> destinationType, MappingContext mappingContext) {
+                if (source instanceof Gateadresse) {
                     return mapperFacade.map(source, String.class);
                 }
                 return null;
@@ -302,11 +300,11 @@ public final class FIMMapper extends ConfigurableMapper {
         };
     }
 
-    private CustomConverter<List<FimNorskIdent>, String> lagIdentitetConverter() {
-        return new CustomConverter<List<FimNorskIdent>, String>() {
+    private CustomConverter<List<NorskIdent>, String> lagIdentitetConverter() {
+        return new CustomConverter<List<NorskIdent>, String>() {
             @Override
-            public String convert(List<FimNorskIdent> source, Type<? extends String> destinationType, MappingContext mappingContext) {
-                for (FimNorskIdent norskIdent : source) {
+            public String convert(List<NorskIdent> source, Type<? extends String> destinationType, MappingContext mappingContext) {
+                for (NorskIdent norskIdent : source) {
                     if ("F".equals(norskIdent.getType().getValue())) {
                         return norskIdent.getIdent();
                     }
@@ -332,7 +330,7 @@ public final class FIMMapper extends ConfigurableMapper {
     }
 
     private void configureRequestClassMaps(MapperFactory mapperFactory) {
-        mapperFactory.registerClassMap(mapperFactory.classMap(FinnPersonRequest.class, FimFinnPersonRequest.class)
+        mapperFactory.registerClassMap(mapperFactory.classMap(FinnPersonRequest.class, no.nav.tjeneste.virksomhet.personsoek.v1.meldinger.FinnPersonRequest.class)
                 .field("utvidetPersonsok.fornavn", "soekekriterie.fornavn")
                 .field("utvidetPersonsok.etternavn", "soekekriterie.etternavn")
                 .field("utvidetPersonsok.gatenavn", "soekekriterie.gatenavn")

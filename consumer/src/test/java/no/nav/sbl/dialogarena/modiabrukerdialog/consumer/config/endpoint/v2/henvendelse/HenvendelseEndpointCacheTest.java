@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 
 import javax.inject.Inject;
 
-import static no.nav.modig.testcertificates.TestCertificates.setupKeyAndTrustStore;
+import static no.nav.sbl.dialogarena.test.ssl.SSLTestUtils.setupKeyAndTrustStore;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.ArgumentMatchers.any;

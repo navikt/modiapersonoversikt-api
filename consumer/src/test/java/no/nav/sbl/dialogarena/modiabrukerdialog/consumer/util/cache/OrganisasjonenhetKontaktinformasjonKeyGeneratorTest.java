@@ -1,7 +1,7 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.cache;
 
-import no.nav.tjeneste.virksomhet.organisasjonenhetkontaktinformasjon.v1.binding.OrganisasjonEnhetKontaktinformasjonV1;
-import no.nav.tjeneste.virksomhet.organisasjonenhetkontaktinformasjon.v1.meldinger.HentKontaktinformasjonForEnhetBolkRequest;
+import no.nav.tjeneste.virksomhet.organisasjonenhetkontaktinformasjon.v1.OrganisasjonEnhetKontaktinformasjonV1;
+import no.nav.tjeneste.virksomhet.organisasjonenhetkontaktinformasjon.v1.meldinger.WSHentKontaktinformasjonForEnhetBolkRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -20,14 +20,14 @@ class OrganisasjonenhetKontaktinformasjonKeyGeneratorTest {
     @BeforeEach
     void beforeEach() throws NoSuchMethodException {
         generator = new OrganisasjonenhetKontaktinformasjonKeyGenerator();
-        method = OrganisasjonEnhetKontaktinformasjonV1.class.getMethod("hentKontaktinformasjonForEnhetBolk", HentKontaktinformasjonForEnhetBolkRequest.class);
+        method = OrganisasjonEnhetKontaktinformasjonV1.class.getMethod("hentKontaktinformasjonForEnhetBolk", WSHentKontaktinformasjonForEnhetBolkRequest.class);
     }
 
     @Test
     @DisplayName("Null som argument til generate skal kaste feil")
     void nullParamkasterFeil() {
         assertThrows(IllegalArgumentException.class, () -> {
-            generator.generate(mock(OrganisasjonEnhetKontaktinformasjonV1.class), method, null);
+            generator.generate(mock(OrganisasjonEnhetKontaktinformasjonV1.class), method);
         });
     }
 
@@ -42,7 +42,7 @@ class OrganisasjonenhetKontaktinformasjonKeyGeneratorTest {
     @Test
     @DisplayName("Hvis ingen enhet er spesifisert, returneres en tom key")
     void ingenEnhetKasterFeil() {
-        String key = (String) generator.generate(mock(OrganisasjonEnhetKontaktinformasjonV1.class), method, new HentKontaktinformasjonForEnhetBolkRequest());
+        String key = (String) generator.generate(mock(OrganisasjonEnhetKontaktinformasjonV1.class), method, new WSHentKontaktinformasjonForEnhetBolkRequest());
 
         assertEquals("", key);
     }
@@ -71,8 +71,8 @@ class OrganisasjonenhetKontaktinformasjonKeyGeneratorTest {
         assertEquals("2000,3001,15337", key);
     }
 
-    private HentKontaktinformasjonForEnhetBolkRequest lagRequest(String... enhetIder) {
-        HentKontaktinformasjonForEnhetBolkRequest request = new HentKontaktinformasjonForEnhetBolkRequest();
+    private WSHentKontaktinformasjonForEnhetBolkRequest lagRequest(String... enhetIder) {
+        WSHentKontaktinformasjonForEnhetBolkRequest request = new WSHentKontaktinformasjonForEnhetBolkRequest();
         for (String enhetId: enhetIder) {
             request.getEnhetIdListe().add(enhetId);
         }

@@ -14,7 +14,6 @@
     <properties>
         <jaxb-impl.version>2.2.6</jaxb-impl.version>
         <pdfbox.version>1.8.16</pdfbox.version>
-        <common-lokalt-kodeverk.version>1.12.49</common-lokalt-kodeverk.version>
     </properties>
 
     <dependencies>
@@ -25,13 +24,12 @@
             <type>test-jar</type>
         </dependency>
         <dependency>
-            <groupId>no.nav.sbl.dialogarena</groupId>
+            <groupId>no.nav.tjenestespesifikasjoner</groupId>
             <artifactId>joark-tjenestespesifikasjon</artifactId>
         </dependency>
         <dependency>
-            <groupId>no.nav.tjenester</groupId>
+            <groupId>no.nav.tjenestespesifikasjoner</groupId>
             <artifactId>nav-innsynJournal-v2-tjenestespesifikasjon</artifactId>
-            <classifier>jaxws</classifier>
         </dependency>
 
         <dependency>
@@ -46,18 +44,7 @@
         </dependency>
         <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>
-            <artifactId>common-lokalt-kodeverk</artifactId>
-            <version>${common-lokalt-kodeverk.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>cglib</groupId>
-                    <artifactId>cglib</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>no.nav.sbl.dialogarena</groupId>
-            <artifactId>common-kodeverk</artifactId>
+            <artifactId>modig-embedded</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
@@ -82,11 +69,11 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>no.nav.sbl.dialogarena</groupId>
+            <groupId>no.nav.tjenestespesifikasjoner</groupId>
             <artifactId>sakogbehandling-tjenestespesifikasjon</artifactId>
         </dependency>
         <dependency>
-            <groupId>no.nav.sbl.dialogarena</groupId>
+            <groupId>no.nav.tjenestespesifikasjoner</groupId>
             <artifactId>dial-nav-tjeneste-sak</artifactId>
         </dependency>
         <dependency>
@@ -99,11 +86,11 @@
             <version>${jaxb-impl.version}</version>
         </dependency>
         <dependency>
-            <groupId>no.nav.sbl.dialogarena</groupId>
+            <groupId>no.nav.tjenestespesifikasjoner</groupId>
             <artifactId>aktorid-jaxws</artifactId>
         </dependency>
         <dependency>
-            <groupId>no.nav.sbl.dialogarena</groupId>
+            <groupId>no.nav.tjenestespesifikasjoner</groupId>
             <artifactId>henvendelse-soknader-tjenestespesifikasjon</artifactId>
         </dependency>
         <dependency>
@@ -199,7 +186,7 @@
             <artifactId>jackson-datatype-jsr310</artifactId>
         </dependency>
         <dependency>
-            <groupId>no.nav.sbl</groupId>
+            <groupId>no.nav.tjenestespesifikasjoner</groupId>
             <artifactId>pensjon-sak-v1-tjenestespesifikasjon</artifactId>
         </dependency>
         <dependency>

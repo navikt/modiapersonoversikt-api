@@ -13,13 +13,19 @@ import no.nav.kjerneinfo.consumer.fim.person.to.HentKjerneinformasjonResponse;
 import no.nav.kjerneinfo.domain.info.Bankkonto;
 import no.nav.kjerneinfo.domain.info.BankkontoUtland;
 import no.nav.kjerneinfo.domain.person.*;
+import no.nav.kjerneinfo.domain.person.GeografiskTilknytning;
+import no.nav.kjerneinfo.domain.person.Matrikkeladresse;
+import no.nav.kjerneinfo.domain.person.Person;
+import no.nav.kjerneinfo.domain.person.Postboksadresse;
+import no.nav.kjerneinfo.domain.person.Stedsadresse;
+import no.nav.kjerneinfo.domain.person.UstrukturertAdresse;
 import no.nav.kjerneinfo.domain.person.fakta.Familierelasjon;
 import no.nav.kjerneinfo.domain.person.fakta.Telefon;
 import no.nav.kjerneinfo.domain.person.predicate.AdresseUtils;
 import no.nav.kodeverk.consumer.fim.kodeverk.KodeverkmanagerBi;
 import no.nav.kodeverk.consumer.fim.kodeverk.to.feil.HentKodeverkKodeverkIkkeFunnet;
 import no.nav.tjeneste.virksomhet.person.v3.informasjon.*;
-import no.nav.tjeneste.virksomhet.person.v3.meldinger.WSHentPersonResponse;
+import no.nav.tjeneste.virksomhet.person.v3.meldinger.HentPersonResponse;
 import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
 import org.slf4j.Logger;
@@ -129,9 +135,9 @@ public class KjerneinfoMapper extends ConfigurableMapper {
             }
         });
 
-        converterFactory.registerConverter(new CustomConverter<WSGyldighetsperiode, Periode>() {
+        converterFactory.registerConverter(new CustomConverter<Gyldighetsperiode, Periode>() {
             @Override
-            public Periode convert(WSGyldighetsperiode source, Type<? extends Periode> destinationType, MappingContext mappingContext) {
+            public Periode convert(Gyldighetsperiode source, Type<? extends Periode> destinationType, MappingContext mappingContext) {
                 Periode periode = new Periode();
                 periode.setFrom(mapperFacade.map(source.getFom(), LocalDate.class));
                 periode.setTo(mapperFacade.map(source.getTom(), LocalDate.class));
@@ -142,16 +148,16 @@ public class KjerneinfoMapper extends ConfigurableMapper {
     }
 
     private void registerAdresseConverters(ConverterFactory converterFactory) {
-        converterFactory.registerConverter(new CustomConverter<Adresse, WSGeografiskAdresse>() {
+        converterFactory.registerConverter(new CustomConverter<Adresse, GeografiskAdresse>() {
             @Override
-            public WSGeografiskAdresse convert(Adresse adresse, Type<? extends WSGeografiskAdresse> type, MappingContext mappingContext) {
-                return mapperFacade.map(adresse, WSGateadresse.class);
+            public GeografiskAdresse convert(Adresse adresse, Type<? extends GeografiskAdresse> type, MappingContext mappingContext) {
+                return mapperFacade.map(adresse, Gateadresse.class);
             }
         });
 
-        converterFactory.registerConverter(new CustomConverter<WSBostedsadresse, Adresselinje>() {
+        converterFactory.registerConverter(new CustomConverter<Bostedsadresse, Adresselinje>() {
             @Override
-            public Adresselinje convert(WSBostedsadresse source, Type<? extends Adresselinje> destinationType, MappingContext mappingContext) {
+            public Adresselinje convert(Bostedsadresse source, Type<? extends Adresselinje> destinationType, MappingContext mappingContext) {
                 Adresselinje adresselinje = mapperFacade.map(source.getStrukturertAdresse(), Adresselinje.class);
                 LocalDateTime sistOppdatert = mapperFacade.map(source.getEndringstidspunkt(), LocalDateTime.class);
                 Endringsinformasjon endringsinformasjon = new Endringsinformasjon();
@@ -163,22 +169,22 @@ public class KjerneinfoMapper extends ConfigurableMapper {
             }
         });
 
-        converterFactory.registerConverter(new CustomConverter<Adresse, WSBostedsadresse>() {
+        converterFactory.registerConverter(new CustomConverter<Adresse, Bostedsadresse>() {
             @Override
-            public WSBostedsadresse convert(Adresse source, Type<? extends WSBostedsadresse> destinationType, MappingContext mappingContext) {
-                WSBostedsadresse bostedsadresse = new WSBostedsadresse();
+            public Bostedsadresse convert(Adresse source, Type<? extends Bostedsadresse> destinationType, MappingContext mappingContext) {
+                Bostedsadresse bostedsadresse = new Bostedsadresse();
                 bostedsadresse.setEndretAv(source.getEndringsinformasjon().getEndretAv());
                 XMLGregorianCalendar xmlGregorianCalendar = mapperFacade.map(source.getEndringsinformasjon().getSistOppdatert(), XMLGregorianCalendar.class);
                 bostedsadresse.setEndringstidspunkt(xmlGregorianCalendar);
-                WSGateadresse gateadresse = mapperFacade.map(source, WSGateadresse.class);
+                Gateadresse gateadresse = mapperFacade.map(source, Gateadresse.class);
                 bostedsadresse.setStrukturertAdresse(gateadresse);
                 return bostedsadresse;
             }
         });
 
-        converterFactory.registerConverter(new CustomConverter<WSPostadresse, Adresselinje>() {
+        converterFactory.registerConverter(new CustomConverter<Postadresse, Adresselinje>() {
             @Override
-            public Adresselinje convert(WSPostadresse source, Type<? extends Adresselinje> destinationType, MappingContext mappingContext) {
+            public Adresselinje convert(Postadresse source, Type<? extends Adresselinje> destinationType, MappingContext mappingContext) {
                 Adresselinje adresselinje = mapperFacade.map(source.getUstrukturertAdresse(), Adresselinje.class);
                 LocalDateTime sistOppdatert = mapperFacade.map(source.getEndringstidspunkt(), LocalDateTime.class);
                 Endringsinformasjon endringsinformasjon = new Endringsinformasjon();
@@ -190,16 +196,16 @@ public class KjerneinfoMapper extends ConfigurableMapper {
             }
         });
 
-        converterFactory.registerConverter(new CustomConverter<WSStrukturertAdresse, Adresselinje>() {
+        converterFactory.registerConverter(new CustomConverter<StrukturertAdresse, Adresselinje>() {
             @Override
-            public Adresselinje convert(WSStrukturertAdresse source, Type<? extends Adresselinje> destinationType, MappingContext mappingContext) {
-                if (source instanceof WSGateadresse) {
+            public Adresselinje convert(StrukturertAdresse source, Type<? extends Adresselinje> destinationType, MappingContext mappingContext) {
+                if (source instanceof Gateadresse) {
                     return mapperFacade.map(source, Adresse.class);
-                } else if (source instanceof WSMatrikkeladresse) {
+                } else if (source instanceof no.nav.tjeneste.virksomhet.person.v3.informasjon.Matrikkeladresse) {
                     return mapperFacade.map(source, Matrikkeladresse.class);
-                } else if (source instanceof WSStedsadresseNorge) {
+                } else if (source instanceof StedsadresseNorge) {
                     return mapperFacade.map(source, Stedsadresse.class);
-                } else if (source instanceof WSPostboksadresseNorsk) {
+                } else if (source instanceof PostboksadresseNorsk) {
                     return mapperFacade.map(source, Postboksadresse.class);
                 } else {
                     return null;
@@ -207,9 +213,9 @@ public class KjerneinfoMapper extends ConfigurableMapper {
             }
         });
 
-        converterFactory.registerConverter(new CustomConverter<WSUstrukturertAdresse, Adresselinje>() {
+        converterFactory.registerConverter(new CustomConverter<UstrukturertAdresse, Adresselinje>() {
             @Override
-            public Adresselinje convert(WSUstrukturertAdresse source, Type<? extends Adresselinje> destinationType, MappingContext mappingContext) {
+            public Adresselinje convert(UstrukturertAdresse source, Type<? extends Adresselinje> destinationType, MappingContext mappingContext) {
                 return mapperFacade.map(source, UstrukturertAdresse.class);
             }
         });
@@ -217,10 +223,10 @@ public class KjerneinfoMapper extends ConfigurableMapper {
 
     private void registerStrukturertadresseTyperConverter(ConverterFactory converterFactory) {
 
-        converterFactory.registerConverter(new CustomConverter<WSGateadresse, Adresselinje>() {
+        converterFactory.registerConverter(new CustomConverter<Gateadresse, Adresselinje>() {
             @Override
-            public Adresselinje convert(final WSGateadresse source, Type<? extends Adresselinje> destinationType, MappingContext mappingContext) {
-                WSPostnummer postnummer = source.getPoststed();
+            public Adresselinje convert(final Gateadresse source, Type<? extends Adresselinje> destinationType, MappingContext mappingContext) {
+                Postnummer postnummer = source.getPoststed();
                 Adresse adresse = new Adresse();
                 String gatenummerString = source.getHusnummer() == null ? "" : String.valueOf(source.getHusnummer());
                 adresse.setTilleggsadresse(source.getTilleggsadresse());
@@ -234,10 +240,10 @@ public class KjerneinfoMapper extends ConfigurableMapper {
                 return adresse;
             }
         });
-        converterFactory.registerConverter(new CustomConverter<WSMatrikkeladresse, Adresselinje>() {
+        converterFactory.registerConverter(new CustomConverter<no.nav.tjeneste.virksomhet.person.v3.informasjon.Matrikkeladresse, Adresselinje>() {
             @Override
-            public Adresselinje convert(final WSMatrikkeladresse source, Type<? extends Adresselinje> destinationType, MappingContext mappingContext) {
-                WSPostnummer postnummer = source.getPoststed();
+            public Adresselinje convert(final no.nav.tjeneste.virksomhet.person.v3.informasjon.Matrikkeladresse source, Type<? extends Adresselinje> destinationType, MappingContext mappingContext) {
+                Postnummer postnummer = source.getPoststed();
                 String postnummerValue = postnummer == null ? "" : postnummer.getValue();
 
                 return new Matrikkeladresse()
@@ -249,10 +255,10 @@ public class KjerneinfoMapper extends ConfigurableMapper {
             }
         });
 
-        converterFactory.registerConverter(new CustomConverter<WSStedsadresseNorge, Stedsadresse>() {
+        converterFactory.registerConverter(new CustomConverter<StedsadresseNorge, Stedsadresse>() {
             @Override
-            public Stedsadresse convert(final WSStedsadresseNorge source, Type<? extends Stedsadresse> destinationType, MappingContext mappingContext) {
-                WSPostnummer postnummer = source.getPoststed();
+            public Stedsadresse convert(final StedsadresseNorge source, Type<? extends Stedsadresse> destinationType, MappingContext mappingContext) {
+                Postnummer postnummer = source.getPoststed();
                 String postnummerValue = postnummer == null ? "" : postnummer.getValue();
                 Stedsadresse stedsadresse = new Stedsadresse();
                 stedsadresse.setAdressestring(AdresseUtils.spaceAppend(postnummerValue, getPoststedFromPostnummer(postnummer)));
@@ -260,10 +266,10 @@ public class KjerneinfoMapper extends ConfigurableMapper {
             }
         });
 
-        converterFactory.registerConverter(new CustomConverter<WSPostboksadresseNorsk, Postboksadresse>() {
+        converterFactory.registerConverter(new CustomConverter<PostboksadresseNorsk, Postboksadresse>() {
             @Override
-            public Postboksadresse convert(final WSPostboksadresseNorsk source, Type<? extends Postboksadresse> destinationType, MappingContext mappingContext) {
-                WSPostnummer postnummer = source.getPoststed();
+            public Postboksadresse convert(final PostboksadresseNorsk source, Type<? extends Postboksadresse> destinationType, MappingContext mappingContext) {
+                Postnummer postnummer = source.getPoststed();
                 String postnummerValue = postnummer == null ? "" : postnummer.getValue();
                 Postboksadresse postboksadresse = new Postboksadresse();
                 postboksadresse.setPostboksanlegg(source.getPostboksanlegg());
@@ -278,37 +284,37 @@ public class KjerneinfoMapper extends ConfigurableMapper {
     }
 
     private void registerMidlertidigAdresseConverters(ConverterFactory converterFactory) {
-        converterFactory.registerConverter(new CustomConverter<WSMidlertidigPostadresseNorge, Adresselinje>() {
+        converterFactory.registerConverter(new CustomConverter<MidlertidigPostadresseNorge, Adresselinje>() {
             @Override
-            public Adresselinje convert(WSMidlertidigPostadresseNorge source, Type<? extends Adresselinje> destinationType, MappingContext mappingContext) {
+            public Adresselinje convert(MidlertidigPostadresseNorge source, Type<? extends Adresselinje> destinationType, MappingContext mappingContext) {
                 return mapperFacade.map(source.getStrukturertAdresse(), Adresselinje.class);
             }
         });
     }
 
     private void regiserBankkontoConverters(ConverterFactory converterFactory) {
-        converterFactory.registerConverter(new CustomConverter<BankkontoUtland, WSBankkonto>() {
+        converterFactory.registerConverter(new CustomConverter<BankkontoUtland, Bankkonto>() {
             @Override
-            public WSBankkonto convert(BankkontoUtland source, Type<? extends WSBankkonto> destinationType, MappingContext mappingContext) {
-                return mapperFacade.map(source, WSBankkontoUtland.class);
+            public Bankkonto convert(BankkontoUtland source, Type<? extends Bankkonto> destinationType, MappingContext mappingContext) {
+                return mapperFacade.map(source, BankkontoUtland.class);
             }
         });
 
-        converterFactory.registerConverter(new CustomConverter<WSBankkonto, Bankkonto>() {
+        converterFactory.registerConverter(new CustomConverter<no.nav.tjeneste.virksomhet.person.v3.informasjon.Bankkonto, Bankkonto>() {
             @Override
-            public Bankkonto convert(WSBankkonto source, Type<? extends Bankkonto> destinationType, MappingContext mappingContext) {
+            public Bankkonto convert(no.nav.tjeneste.virksomhet.person.v3.informasjon.Bankkonto source, Type<? extends Bankkonto> destinationType, MappingContext mappingContext) {
                 Endringsinformasjon endringsinformasjon = new Endringsinformasjon();
                 endringsinformasjon.setEndretAv(source.getEndretAv());
                 endringsinformasjon.setSistOppdatert(mapperFacade.map(source.getEndringstidspunkt(), LocalDateTime.class));
 
-                if (source instanceof WSBankkontoUtland) {
-                    BankkontoUtland bankkontoUtland = mapperFacade.map(((WSBankkontoUtland) source).getBankkontoUtland(), BankkontoUtland.class);
-                    bankkontoUtland.setKontonummer(((WSBankkontoUtland) source).getBankkontoUtland().getBankkontonummer());
+                if (source instanceof no.nav.tjeneste.virksomhet.person.v3.informasjon.BankkontoUtland) {
+                    BankkontoUtland bankkontoUtland = mapperFacade.map(((no.nav.tjeneste.virksomhet.person.v3.informasjon.BankkontoUtland) source).getBankkontoUtland(), BankkontoUtland.class);
+                    bankkontoUtland.setKontonummer(((no.nav.tjeneste.virksomhet.person.v3.informasjon.BankkontoUtland) source).getBankkontoUtland().getBankkontonummer());
                     bankkontoUtland.setEndringsinformasjon(endringsinformasjon);
                     return bankkontoUtland;
                 } else {
-                    Bankkonto bankkonto = mapperFacade.map(((WSBankkontoNorge) source).getBankkonto(), Bankkonto.class);
-                    bankkonto.setKontonummer(((WSBankkontoNorge) source).getBankkonto().getBankkontonummer());
+                    Bankkonto bankkonto = mapperFacade.map(((BankkontoNorge) source).getBankkonto(), Bankkonto.class);
+                    bankkonto.setKontonummer(((BankkontoNorge) source).getBankkonto().getBankkontonummer());
                     bankkonto.setEndringsinformasjon(endringsinformasjon);
                     return bankkonto;
                 }
@@ -316,7 +322,7 @@ public class KjerneinfoMapper extends ConfigurableMapper {
         });
     }
 
-    private String getPoststedFromPostnummer(WSPostnummer postnummer) {
+    private String getPoststedFromPostnummer(Postnummer postnummer) {
         String kodeRef = postnummer == null ? "" : postnummer.getValue();
         String postnummerRef = postnummer == null ? "" : postnummer.getKodeverksRef().replace("http://nav.no/kodeverk/Kodeverk/", "");
         return poststedFromPostnummer(kodeRef, postnummerRef);
@@ -336,9 +342,9 @@ public class KjerneinfoMapper extends ConfigurableMapper {
     }
 
     private void registerKodeverdiConverter(ConverterFactory converterFactory) {
-        converterFactory.registerConverter(new CustomConverter<WSKodeverdi, Kodeverdi>() {
+        converterFactory.registerConverter(new CustomConverter<no.nav.tjeneste.virksomhet.person.v3.informasjon.Kodeverdi, Kodeverdi>() {
             @Override
-            public Kodeverdi convert(WSKodeverdi source, Type<? extends Kodeverdi> destinationType, MappingContext mappingContext) {
+            public Kodeverdi convert(no.nav.tjeneste.virksomhet.person.v3.informasjon.Kodeverdi source, Type<? extends Kodeverdi> destinationType, MappingContext mappingContext) {
                 Kodeverdi result = new Kodeverdi();
                 result.setKodeRef(source.getValue());
                 String beskrivelse;
@@ -363,17 +369,17 @@ public class KjerneinfoMapper extends ConfigurableMapper {
         });
     }
 
-    private static String kodeverksrefIfHasKodeverksref(WSKodeverdi kodeverdi) {
-        if (kodeverdi instanceof WSPersonstatuser) {
-            return ((WSPersonstatuser) kodeverdi).getKodeverksRef().replace("http://nav.no/kodeverk/Kodeverk/", "");
-        } else if (kodeverdi instanceof WSSivilstander) {
-            return ((WSSivilstander) kodeverdi).getKodeverksRef().replace("http://nav.no/kodeverk/Kodeverk/", "");
-        } else if (kodeverdi instanceof WSKjoennstyper) {
-            return ((WSKjoennstyper) kodeverdi).getKodeverksRef().replace("http://nav.no/kodeverk/Kodeverk/", "");
-        } else if (kodeverdi instanceof WSLandkoder) {
-            return ((WSLandkoder) kodeverdi).getKodeverksRef().replace("http://nav.no/kodeverk/Kodeverk/", "");
-        } else if (kodeverdi instanceof WSDiskresjonskoder) {
-            return ((WSDiskresjonskoder) kodeverdi).getKodeverksRef().replace("http://nav.no/kodeverk/Kodeverk/", "");
+    private static String kodeverksrefIfHasKodeverksref(no.nav.tjeneste.virksomhet.person.v3.informasjon.Kodeverdi kodeverdi) {
+        if (kodeverdi instanceof Personstatuser) {
+            return ((Personstatuser) kodeverdi).getKodeverksRef().replace("http://nav.no/kodeverk/Kodeverk/", "");
+        } else if (kodeverdi instanceof Sivilstander) {
+            return ((Sivilstander) kodeverdi).getKodeverksRef().replace("http://nav.no/kodeverk/Kodeverk/", "");
+        } else if (kodeverdi instanceof Kjoennstyper) {
+            return ((Kjoennstyper) kodeverdi).getKodeverksRef().replace("http://nav.no/kodeverk/Kodeverk/", "");
+        } else if (kodeverdi instanceof Landkoder) {
+            return ((Landkoder) kodeverdi).getKodeverksRef().replace("http://nav.no/kodeverk/Kodeverk/", "");
+        } else if (kodeverdi instanceof no.nav.tjeneste.virksomhet.person.v3.informasjon.Diskresjonskoder) {
+            return ((no.nav.tjeneste.virksomhet.person.v3.informasjon.Diskresjonskoder) kodeverdi).getKodeverksRef().replace("http://nav.no/kodeverk/Kodeverk/", "");
         } else {
             return null;
         }
@@ -381,7 +387,7 @@ public class KjerneinfoMapper extends ConfigurableMapper {
     }
 
     private static void mapBankkontoUtland(MapperFactory mapperFactory) {
-        mapperFactory.registerClassMap(mapperFactory.classMap(WSBankkontoUtland.class, BankkontoUtland.class)
+        mapperFactory.registerClassMap(mapperFactory.classMap(no.nav.tjeneste.virksomhet.person.v3.informasjon.BankkontoUtland.class, BankkontoUtland.class)
                 .field("bankkontoUtland.bankkontonummer", "kontonummer")
                 .field("bankkontoUtland.banknavn", "banknavn")
                 .field("bankkontoUtland.swift", "swift")
@@ -393,25 +399,25 @@ public class KjerneinfoMapper extends ConfigurableMapper {
     }
 
     private static void mapBankkonto(MapperFactory mapperFactory) {
-        mapperFactory.registerClassMap(mapperFactory.classMap(WSBankkontoNorge.class, Bankkonto.class)
+        mapperFactory.registerClassMap(mapperFactory.classMap(BankkontoNorge.class, Bankkonto.class)
                 .field("bankkonto.bankkontonummer", "kontonummer")
                 .field("bankkonto.banknavn", "banknavn")
                 .byDefault().toClassMap());
     }
 
     private static void mapResponse(MapperFactory mapperFactory) {
-        mapperFactory.registerClassMap(mapperFactory.classMap(WSHentPersonResponse.class, HentKjerneinformasjonResponse.class)
+        mapperFactory.registerClassMap(mapperFactory.classMap(HentPersonResponse.class, HentKjerneinformasjonResponse.class)
                 .byDefault().toClassMap());
     }
 
     private static void mapFamilierelasjon(MapperFactory mapperFactory) {
-        mapperFactory.registerClassMap(mapperFactory.classMap(WSFamilierelasjon.class, Familierelasjon.class)
+        mapperFactory.registerClassMap(mapperFactory.classMap(no.nav.tjeneste.virksomhet.person.v3.informasjon.Familierelasjon.class, Familierelasjon.class)
                 .field("tilRolle.value", "tilRolle")
                 .byDefault().toClassMap());
     }
 
     private static void mapBruker(MapperFactory mapperFactory) {
-        mapperFactory.registerClassMap(mapperFactory.classMap(WSBruker.class, Person.class)
+        mapperFactory.registerClassMap(mapperFactory.classMap(Bruker.class, Person.class)
                 .field("diskresjonskode", "personfakta.diskresjonskode")
                 .field("harFraRolleI", "personfakta.harFraRolleIList")
                 .field("foedested", "personfakta.fodested")
@@ -429,34 +435,34 @@ public class KjerneinfoMapper extends ConfigurableMapper {
     }
 
     private static void mapAktoer(MapperFactory mapperFactory) {
-        mapperFactory.getConverterFactory().registerConverter(new CustomConverter<WSAktoer, Fodselsnummer>() {
+        mapperFactory.getConverterFactory().registerConverter(new CustomConverter<Aktoer, Fodselsnummer>() {
             @Override
-            public Fodselsnummer convert(WSAktoer aktoer, Type<? extends Fodselsnummer> type, MappingContext mappingContext) {
-                return new Fodselsnummer(((WSPersonIdent) aktoer).getIdent().getIdent());
+            public Fodselsnummer convert(Aktoer aktoer, Type<? extends Fodselsnummer> type, MappingContext mappingContext) {
+                return new Fodselsnummer(((PersonIdent) aktoer).getIdent().getIdent());
             }
         });
 
-        mapperFactory.getConverterFactory().registerConverter(new CustomConverter<Fodselsnummer, WSAktoer>() {
+        mapperFactory.getConverterFactory().registerConverter(new CustomConverter<Fodselsnummer, Aktoer>() {
             @Override
-            public WSAktoer convert(Fodselsnummer fodselsnummer, Type<? extends WSAktoer> type,MappingContext mappingContext) {
-                return new WSPersonIdent().withIdent(new WSNorskIdent().withIdent(fodselsnummer.getNummer()));
+            public Aktoer convert(Fodselsnummer fodselsnummer, Type<? extends Aktoer> type,MappingContext mappingContext) {
+                return new PersonIdent().withIdent(new NorskIdent().withIdent(fodselsnummer.getNummer()));
             }
         });
     }
 
     private static void mapTelefonummere(MapperFactory mapperFactory) {
-        mapperFactory.registerClassMap(mapperFactory.classMap(WSTelefonnummer.class, Telefon.class)
+        mapperFactory.registerClassMap(mapperFactory.classMap(Telefonnummer.class, Telefon.class)
                 .byDefault().toClassMap());
     }
 
     private static void mapTilrettelagtKommunikasjon(MapperFactory mapperFactory) {
-        mapperFactory.registerClassMap(mapperFactory.classMap(WSTilrettelagtKommunikasjonbehov.class, Kodeverdi.class)
+        mapperFactory.registerClassMap(mapperFactory.classMap(TilrettelagtKommunikasjonbehov.class, Kodeverdi.class)
                 .field("behov", "beskrivelse")
                 .field("tilrettelagtKommunikasjon.value", "kodeRef"));
     }
 
     private static void mapPerson(MapperFactory mapperFactory) {
-        mapperFactory.registerClassMap(mapperFactory.classMap(WSPerson.class, Person.class)
+        mapperFactory.registerClassMap(mapperFactory.classMap(no.nav.tjeneste.virksomhet.person.v3.informasjon.Person.class, Person.class)
                 .field("diskresjonskode", "personfakta.diskresjonskode")
                 .field("aktoer", "fodselsnummer")
                 .field("personnavn", "personfakta.personnavn")
@@ -472,15 +478,15 @@ public class KjerneinfoMapper extends ConfigurableMapper {
     }
 
     private static void mapGeografiskTilknytning(MapperFactory mapperFactory) {
-        mapperFactory.getConverterFactory().registerConverter(new CustomConverter<WSGeografiskTilknytning, GeografiskTilknytning>() {
+        mapperFactory.getConverterFactory().registerConverter(new CustomConverter<no.nav.tjeneste.virksomhet.person.v3.informasjon.GeografiskTilknytning, GeografiskTilknytning>() {
             @Override
-            public GeografiskTilknytning convert(WSGeografiskTilknytning source, Type<? extends GeografiskTilknytning> destinationType, MappingContext mappingContext) {
+            public GeografiskTilknytning convert(no.nav.tjeneste.virksomhet.person.v3.informasjon.GeografiskTilknytning source, Type<? extends GeografiskTilknytning> destinationType, MappingContext mappingContext) {
                 GeografiskTilknytning geografiskTilknytning = new GeografiskTilknytning().withValue(source.getGeografiskTilknytning());
-                if (source instanceof WSBydel) {
+                if (source instanceof Bydel) {
                     geografiskTilknytning.withType(GeografiskTilknytningstyper.BYDEL);
-                } else if (source instanceof WSLand) {
+                } else if (source instanceof Land) {
                     geografiskTilknytning.withType(GeografiskTilknytningstyper.LAND);
-                } else if (source instanceof WSKommune) {
+                } else if (source instanceof Kommune) {
                     geografiskTilknytning.withType(GeografiskTilknytningstyper.KOMMUNE);
                 } else {
                     throw new IllegalArgumentException("Unrecognized type WSGeografiskTilknytning");
@@ -491,35 +497,35 @@ public class KjerneinfoMapper extends ConfigurableMapper {
     }
 
     private static void mapUstrukturertAdresse(MapperFactory mapperFactory) {
-        mapperFactory.registerClassMap(mapperFactory.classMap(WSUstrukturertAdresse.class, UstrukturertAdresse.class)
+        mapperFactory.registerClassMap(mapperFactory.classMap(no.nav.tjeneste.virksomhet.person.v3.informasjon.UstrukturertAdresse.class, UstrukturertAdresse.class)
                 .byDefault().toClassMap());
     }
 
     private static void mapMidlertidigPostadresse(MapperFactory mapperFactory) {
-        mapperFactory.getConverterFactory().registerConverter(new CustomConverter<WSMidlertidigPostadresse, Adresselinje>() {
+        mapperFactory.getConverterFactory().registerConverter(new CustomConverter<MidlertidigPostadresse, Adresselinje>() {
             @Override
-            public Adresselinje convert(WSMidlertidigPostadresse source, Type<? extends Adresselinje> destinationType, MappingContext mappingContext) {
-                if (source instanceof WSMidlertidigPostadresseNorge) {
-                    if (((WSMidlertidigPostadresseNorge) source).getStrukturertAdresse() instanceof WSPostboksadresseNorsk) {
-                        Postboksadresse postboksadresse = mapperFacade.map(((WSMidlertidigPostadresseNorge) source).getStrukturertAdresse(), Postboksadresse.class);
+            public Adresselinje convert(MidlertidigPostadresse source, Type<? extends Adresselinje> destinationType, MappingContext mappingContext) {
+                if (source instanceof MidlertidigPostadresseNorge) {
+                    if (((MidlertidigPostadresseNorge) source).getStrukturertAdresse() instanceof PostboksadresseNorsk) {
+                        Postboksadresse postboksadresse = mapperFacade.map(((MidlertidigPostadresseNorge) source).getStrukturertAdresse(), Postboksadresse.class);
                         postboksadresse.setEndringsinformasjon(getEndringsinformasjon(mapperFacade, source));
                         postboksadresse.setPostleveringsPeriode(mapperFacade.map(source.getPostleveringsPeriode(), Periode.class));
                         return postboksadresse;
-                    } else if (((WSMidlertidigPostadresseNorge) source).getStrukturertAdresse() instanceof WSMatrikkeladresse) {
-                        Adresselinje matrikkeladresse = mapperFacade.map(((WSMidlertidigPostadresseNorge) source).getStrukturertAdresse(), Adresselinje.class);
+                    } else if (((MidlertidigPostadresseNorge) source).getStrukturertAdresse() instanceof no.nav.tjeneste.virksomhet.person.v3.informasjon.Matrikkeladresse) {
+                        Adresselinje matrikkeladresse = mapperFacade.map(((MidlertidigPostadresseNorge) source).getStrukturertAdresse(), Adresselinje.class);
                         matrikkeladresse.setEndringsinformasjon(getEndringsinformasjon(mapperFacade, source));
                         ((Matrikkeladresse) matrikkeladresse).setPostleveringsPeriode(mapperFacade.map(source.getPostleveringsPeriode(), Periode.class));
                         return matrikkeladresse;
                     }
-                    Adresselinje adresse = mapperFacade.map((WSMidlertidigPostadresseNorge) source, Adresselinje.class);
+                    Adresselinje adresse = mapperFacade.map((MidlertidigPostadresseNorge) source, Adresselinje.class);
                     ((Adresse) adresse).setPostleveringsPeriode(mapperFacade.map(source.getPostleveringsPeriode(), Periode.class));
                     adresse.setEndringsinformasjon(getEndringsinformasjon(mapperFacade, source));
                     return adresse;
                 } else {
-                    AlternativAdresseUtland alternativAdresseUtland = mapperFacade.map(((WSMidlertidigPostadresseUtland) source).getUstrukturertAdresse(), AlternativAdresseUtland.class);
+                    AlternativAdresseUtland alternativAdresseUtland = mapperFacade.map(((MidlertidigPostadresseUtland) source).getUstrukturertAdresse(), AlternativAdresseUtland.class);
                     alternativAdresseUtland.setPostleveringsPeriode(mapperFacade.map(source.getPostleveringsPeriode(), Periode.class));
                     alternativAdresseUtland.setEndringsinformasjon(getEndringsinformasjon(mapperFacade, source));
-                    WSKodeverdi kodeverdi = ((WSMidlertidigPostadresseUtland) source).getUstrukturertAdresse().getLandkode();
+                    no.nav.tjeneste.virksomhet.person.v3.informasjon.Kodeverdi kodeverdi = ((MidlertidigPostadresseUtland) source).getUstrukturertAdresse().getLandkode();
                     alternativAdresseUtland.setLandkode(mapperFacade.map(kodeverdi, Kodeverdi.class));
                     return alternativAdresseUtland;
                 }
@@ -527,7 +533,7 @@ public class KjerneinfoMapper extends ConfigurableMapper {
         });
     }
 
-    private static Endringsinformasjon getEndringsinformasjon(MapperFacade mapperFacade, WSMidlertidigPostadresse source) {
+    private static Endringsinformasjon getEndringsinformasjon(MapperFacade mapperFacade, MidlertidigPostadresse source) {
         Endringsinformasjon endringsinformasjon = new Endringsinformasjon();
         endringsinformasjon.setEndretAv(source.getEndretAv());
         endringsinformasjon.setSistOppdatert(mapperFacade.map(source.getEndringstidspunkt(), LocalDateTime.class));

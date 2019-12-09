@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <xs:import namespace="http://www.w3.org/XML/1998/namespace" schemaLocation="xml.xsd"/>
+
+    <!-- Schema vi referer til -->
+    <xs:include schemaLocation="fellesTyper.xsd"/>
+
+    <!-- Hovedkodeliste med relasjoner -->
+    <xs:element name="omradeListe" type="omradeListeType">
+        <xs:unique name="UnikeOmradeKode">
+            <xs:selector xpath="./omrade"/>
+            <xs:field xpath="@kode"/>
+        </xs:unique>
+    </xs:element>
+    <xs:complexType name="omradeListeType">
+        <xs:sequence>
+            <xs:element name="omrade" type="omradeType" maxOccurs="unbounded"/>
+        </xs:sequence>
+        <xs:attribute ref="xml:base"/>
+    </xs:complexType>
+
+    <!-- Hoved kodetype -->
+    <xs:complexType name="omradeType">
+        <xs:complexContent>
+            <xs:extension base="felleskodeType">
+                <xs:attribute name="omrade" type="string_20" use="optional"/>
+                <xs:attribute name="dekode" type="string_200" use="required"/>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+</xs:schema>

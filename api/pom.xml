@@ -15,7 +15,7 @@
 
         <!-- Tjenestespesifikasjoner -->
         <dependency>
-            <groupId>no.nav.sbl.dialogarena</groupId>
+            <groupId>no.nav.tjenestespesifikasjoner</groupId>
             <artifactId>henvendelse-informasjon-v2</artifactId>
         </dependency>
 

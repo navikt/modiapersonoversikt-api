@@ -2,15 +2,15 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.person
 
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Policies
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Tilgangskontroll
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.AuditResources
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.lagXmlGregorianDato
 import no.nav.sbl.dialogarena.naudit.Audit
+import no.nav.sbl.dialogarena.naudit.AuditResources
 import no.nav.tjeneste.virksomhet.personsoek.v1.PersonsokPortType
 import no.nav.tjeneste.virksomhet.personsoek.v1.informasjon.*
-import no.nav.tjeneste.virksomhet.personsoek.v1.meldinger.FimAdresseFilter
-import no.nav.tjeneste.virksomhet.personsoek.v1.meldinger.FimFinnPersonRequest
-import no.nav.tjeneste.virksomhet.personsoek.v1.meldinger.FimPersonFilter
-import no.nav.tjeneste.virksomhet.personsoek.v1.meldinger.FimSoekekriterie
+import no.nav.tjeneste.virksomhet.personsoek.v1.meldinger.AdresseFilter
+import no.nav.tjeneste.virksomhet.personsoek.v1.meldinger.FinnPersonRequest
+import no.nav.tjeneste.virksomhet.personsoek.v1.meldinger.PersonFilter
+import no.nav.tjeneste.virksomhet.personsoek.v1.meldinger.Soekekriterie
 import org.slf4j.LoggerFactory
 import javax.inject.Inject
 import javax.ws.rs.InternalServerErrorException
@@ -30,7 +30,7 @@ class PersonsokController @Inject constructor(private val personsokPortType: Per
     private val logger = LoggerFactory.getLogger(PersonsokController::class.java)
     private val auditDescriptor = Audit.describe<List<Map<String, Any?>>>(Audit.Action.READ, AuditResources.Personsok.Resultat) { resultat ->
         val fnr = resultat.map { it["ident"] }.joinToString(", ")
-        arrayOf(
+        listOf(
                 "fnr" to fnr
         )
     }
@@ -63,7 +63,7 @@ private fun haandterOppslagFeil(ex: Exception): OppslagFeil =
             else -> OppslagFeil.UKJENT
         }
 
-private fun lagPersonResponse(fimPerson: FimPerson): Map<String, Any?> =
+private fun lagPersonResponse(fimPerson: Person): Map<String, Any?> =
         mapOf(
                 "diskresjonskode" to fimPerson.diskresjonskode?.let { lagKodeverdi(it) },
                 "postadresse" to fimPerson.postadresse?.ustrukturertAdresse?.let { lagPostadresse(it) },
@@ -75,21 +75,21 @@ private fun lagPersonResponse(fimPerson: FimPerson): Map<String, Any?> =
                 "brukerinfo" to lagBrukerinfo(fimPerson)
         )
 
-private fun lagPostadresse(adr: FimUstrukturertAdresse): String =
+private fun lagPostadresse(adr: UstrukturertAdresse): String =
         arrayOf(adr.adresselinje1, adr.adresselinje2, adr.adresselinje3, adr.adresselinje4, adr.landkode?.value).filterNotNull().joinToString(" ")
 
 
-private fun lagBostedsadresse(adr: FimStrukturertAdresse): String? =
+private fun lagBostedsadresse(adr: StrukturertAdresse): String? =
         when (adr) {
-            is FimGateadresse -> arrayOf(adr.gatenavn, adr.husnummer, adr.husbokstav, adr.poststed?.value).filterNotNull().joinToString(" ")
-            is FimMatrikkeladresse -> arrayOf(adr.matrikkelnummer.bruksnummer, adr.matrikkelnummer.festenummer, adr.matrikkelnummer.gaardsnummer,
+            is Gateadresse -> arrayOf(adr.gatenavn, adr.husnummer, adr.husbokstav, adr.poststed?.value).filterNotNull().joinToString(" ")
+            is Matrikkeladresse -> arrayOf(adr.matrikkelnummer.bruksnummer, adr.matrikkelnummer.festenummer, adr.matrikkelnummer.gaardsnummer,
                     adr.matrikkelnummer.seksjonsnummer, adr.matrikkelnummer.undernummer, adr.poststed?.value).filterNotNull().joinToString(" ")
-            is FimStedsadresseNorge -> arrayOf(adr.tilleggsadresse, adr.bolignummer, adr.poststed?.value).filterNotNull().joinToString(" ")
-            is FimPostboksadresseNorsk -> arrayOf(adr.postboksanlegg, adr.poststed?.value).filterNotNull().joinToString(" ")
+            is StedsadresseNorge -> arrayOf(adr.tilleggsadresse, adr.bolignummer, adr.poststed?.value).filterNotNull().joinToString(" ")
+            is PostboksadresseNorsk -> arrayOf(adr.postboksanlegg, adr.poststed?.value).filterNotNull().joinToString(" ")
             else -> null
         }
 
-private fun lagNavn(fimPersonnavn: FimPersonnavn): Map<String, Any?> =
+private fun lagNavn(fimPersonnavn: Personnavn): Map<String, Any?> =
         mapOf(
                 "fornavn" to fimPersonnavn.fornavn,
                 "etternavn" to fimPersonnavn.etternavn,
@@ -97,14 +97,14 @@ private fun lagNavn(fimPersonnavn: FimPersonnavn): Map<String, Any?> =
                 "sammensatt" to fimPersonnavn.sammensattNavn
         )
 
-private fun lagNorskIdent(fimNorskIdent: FimNorskIdent): Map<String, Any?> =
+private fun lagNorskIdent(fimNorskIdent: NorskIdent): Map<String, Any?> =
         mapOf(
                 "ident" to fimNorskIdent.ident,
                 "type" to fimNorskIdent.type?.let { lagKodeverdi(it) }
         )
 
-private fun lagBrukerinfo(fimPerson: FimPerson): Map<String, Any?>? =
-        if (fimPerson is FimBruker) {
+private fun lagBrukerinfo(fimPerson: Person): Map<String, Any?>? =
+        if (fimPerson is Bruker) {
             mapOf(
                     "gjeldendePostadresseType" to fimPerson.gjeldendePostadresseType?.let { lagKodeverdi(it) },
                     "midlertidigPostadresse" to fimPerson.midlertidigPostadresse?.let { lagMidlertidigAdresse(it) },
@@ -115,37 +115,46 @@ private fun lagBrukerinfo(fimPerson: FimPerson): Map<String, Any?>? =
         }
 
 
-private fun lagMidlertidigAdresse(fimMidlertidigPostadresse: FimMidlertidigPostadresse): String? =
+private fun lagMidlertidigAdresse(fimMidlertidigPostadresse: MidlertidigPostadresse): String? =
         when (fimMidlertidigPostadresse) {
-            is FimMidlertidigPostadresseNorge -> lagPostadresse(fimMidlertidigPostadresse.ustrukturertAdresse)
-            is FimMidlertidigPostadresseUtland -> lagPostadresse(fimMidlertidigPostadresse.ustrukturertAdresse)
+            is MidlertidigPostadresseNorge -> lagPostadresse(fimMidlertidigPostadresse.ustrukturertAdresse)
+            is MidlertidigPostadresseUtland -> lagPostadresse(fimMidlertidigPostadresse.ustrukturertAdresse)
             else -> null
         }
 
-private fun lagKodeverdi(fimKodeverdi: FimKodeverdi): Map<String, Any?> =
+private fun lagKodeverdi(fimKodeverdi: Kodeverdi): Map<String, Any?> =
         mapOf(
                 "kodeRef" to fimKodeverdi.kodeRef,
                 "beskrivelse" to fimKodeverdi.value
         )
 
-private fun lagPersonsokRequest(request: PersonsokRequest): FimFinnPersonRequest =
-        FimFinnPersonRequest()
-                .withSoekekriterie(FimSoekekriterie()
-                        .withFornavn(request.fornavn)
-                        .withEtternavn(request.etternavn)
-                        .withGatenavn(request.gatenavn)
-                        .withBankkontoNorge(request.kontonummer))
-                .withPersonFilter(FimPersonFilter()
-                        .withAlderFra(request.alderFra)
-                        .withAlderTil(request.alderTil)
-                        .withEnhetId(request.kommunenummer)
-                        .withFoedselsdatoFra(lagXmlGregorianDato(request.fodselsdatoFra))
-                        .withFoedselsdatoTil(lagXmlGregorianDato(request.fodselsdatoTil))
-                        .withKjoenn(request.kjonn))
-                .withAdresseFilter(FimAdresseFilter()
-                        .withGatenummer(request.husnummer)
-                        .withHusbokstav(request.husbokstav)
-                        .withPostnummer(request.postnummer))
+private fun lagPersonsokRequest(request: PersonsokRequest): FinnPersonRequest =
+        FinnPersonRequest()
+                .apply {
+                    soekekriterie = Soekekriterie()
+                            .apply {
+                                fornavn = request.fornavn
+                                etternavn = request.etternavn
+                                gatenavn = request.gatenavn
+                                bankkontoNorge = request.kontonummer
+                            }
+                    personFilter = PersonFilter()
+                            .apply {
+                                alderFra = request.alderFra
+                                alderTil = request.alderTil
+                                enhetId = request.kommunenummer
+                                foedselsdatoFra = lagXmlGregorianDato(request.fodselsdatoFra)
+                                foedselsdatoTil = lagXmlGregorianDato(request.fodselsdatoTil)
+                                kjoenn = request.kjonn
+                            }
+                    adresseFilter = AdresseFilter()
+                            .apply {
+                                gatenummer = request.husnummer
+                                husbokstav = request.husbokstav
+                                postnummer = request.postnummer
+                            }
+                }
+
 
 data class PersonsokRequest(
         val fornavn: String?,

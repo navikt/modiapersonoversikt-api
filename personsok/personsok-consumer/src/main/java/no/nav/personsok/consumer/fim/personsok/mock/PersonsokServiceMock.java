@@ -7,10 +7,10 @@ import no.nav.personsok.consumer.fim.personsok.to.FinnPersonRequest;
 import no.nav.personsok.consumer.fim.personsok.to.FinnPersonResponse;
 import no.nav.personsok.consumer.mdc.MDCUtils;
 import no.nav.personsok.domain.UtvidetPersonsok;
-import no.nav.tjeneste.virksomhet.personsoek.v1.FinnPersonForMangeForekomster;
-import no.nav.tjeneste.virksomhet.personsoek.v1.FinnPersonUgyldigInput;
-import no.nav.tjeneste.virksomhet.personsoek.v1.informasjon.FimPerson;
-import no.nav.tjeneste.virksomhet.personsoek.v1.meldinger.FimFinnPersonResponse;
+import no.nav.tjeneste.virksomhet.personsoek.v1.FinnPersonFault;
+import no.nav.tjeneste.virksomhet.personsoek.v1.FinnPersonFault1;
+import no.nav.tjeneste.virksomhet.personsoek.v1.feil.ForMangeForekomster;
+import no.nav.tjeneste.virksomhet.personsoek.v1.informasjon.Person;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +21,7 @@ public class PersonsokServiceMock implements PersonsokServiceBi {
 
     public static final String MAX = "MAX";
     private FIMMapper mapper;
-    private List<FimPerson> personer;
+    private List<Person> personer;
     private FinnPersonRequest currentFinnPersonRequest;
 
     public PersonsokServiceMock() {
@@ -33,19 +33,20 @@ public class PersonsokServiceMock implements PersonsokServiceBi {
     }
 
     @Override
-    public FinnPersonResponse finnPerson(FinnPersonRequest finnPersonRequest) throws FinnPersonForMangeForekomster, FinnPersonUgyldigInput {
+    public FinnPersonResponse finnPerson(FinnPersonRequest finnPersonRequest) throws FinnPersonFault, FinnPersonFault1 {
         MDCUtils.putMDCInfo("finnPersonMock()", "Etternavn: " + finnPersonRequest.getUtvidetPersonsok().getEtternavn()
                 + " Fornavn: " + finnPersonRequest.getUtvidetPersonsok().getEtternavn());
 
         currentFinnPersonRequest = finnPersonRequest;
-        FimFinnPersonResponse rawResponse = new FimFinnPersonResponse();
+
+        no.nav.tjeneste.virksomhet.personsoek.v1.meldinger.FinnPersonResponse rawResponse = new no.nav.tjeneste.virksomhet.personsoek.v1.meldinger.FinnPersonResponse();
 
         populatePersonListe(finnPersonRequest.getUtvidetPersonsok(), rawResponse);
 
         FinnPersonResponse mappedfinnPersonResponse = mapper.map(rawResponse, FinnPersonResponse.class);
 
         if (MAX.equalsIgnoreCase(finnPersonRequest.getUtvidetPersonsok().getEtternavn())) {
-            throw new FinnPersonForMangeForekomster();
+            throw new FinnPersonFault("", new ForMangeForekomster());
         }
         MDCUtils.clearMDCInfo();
         return mappedfinnPersonResponse;
@@ -64,7 +65,7 @@ public class PersonsokServiceMock implements PersonsokServiceBi {
      *
      * @param person
      */
-    public void addPerson(FimPerson person) {
+    public void addPerson(Person person) {
         personer.add(person);
     }
 
@@ -75,11 +76,11 @@ public class PersonsokServiceMock implements PersonsokServiceBi {
     /**
      * If no search criteria is set, all objects are returned.
      */
-    private void populatePersonListe(UtvidetPersonsok utvidetPersonsok, FimFinnPersonResponse rawResponse) {
+    private void populatePersonListe(UtvidetPersonsok utvidetPersonsok, no.nav.tjeneste.virksomhet.personsoek.v1.meldinger.FinnPersonResponse rawResponse) {
 
-        List<FimPerson> personList = rawResponse.getPersonListe();
+        List<Person> personList = rawResponse.getPersonListe();
 
-        for (FimPerson person : personer) {
+        for (Person person : personer) {
             if (compareNavn(utvidetPersonsok, person)) {
                 personList.add(person);
             }
@@ -88,7 +89,7 @@ public class PersonsokServiceMock implements PersonsokServiceBi {
         rawResponse.setTotaltAntallTreff(personList.size());
     }
 
-    private boolean compareNavn(UtvidetPersonsok utvidetPersonsok, FimPerson person) {
+    private boolean compareNavn(UtvidetPersonsok utvidetPersonsok, Person person) {
         return (isNotBlank(utvidetPersonsok.getFornavn())
                 && utvidetPersonsok.getFornavn().equalsIgnoreCase(person.getPersonnavn().getFornavn()));
     }

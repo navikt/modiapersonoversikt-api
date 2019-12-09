@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	targetNamespace="http://nav-cons-sak-gosys-3.0.0/no/nav/fault/brevbestilling"
+	xmlns:bons0="http://nav-cons-sak-gosys-3.0.0/no/nav/fault">
+	<xsd:import schemaLocation="../FaultGOSYSGenerisk.xsd"
+		namespace="http://nav-cons-sak-gosys-3.0.0/no/nav/fault">
+	</xsd:import>
+	<xsd:complexType name="FaultGOSYSAdresseIkkeRegistrert">
+		<xsd:complexContent>
+			<xsd:extension base="bons0:FaultGOSYSGenerisk">
+				<xsd:sequence />
+
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+</xsd:schema>

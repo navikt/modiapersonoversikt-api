@@ -17,9 +17,9 @@ public final class PersonMockMapper {
     private PersonMockMapper() {
     }
 
-    public static FimPerson map(PersonMock from) {
+    public static Person map(PersonMock from) {
 
-        FimPerson to = createFimPerson(from);
+        Person to = createFimPerson(from);
 
         mapNorskIdent(from, to);
         mapPersonNavn(from, to);
@@ -27,50 +27,50 @@ public final class PersonMockMapper {
         mapKjonn(from, to);
         mapPersonstatus(from, to);
 
-        if (to instanceof FimBruker) {
+        if (to instanceof Bruker) {
             if (from.getMidlertidigadresse() != null) {
-                mapAdresserUtland(from, (FimBruker) to);
+                mapAdresserUtland(from, (Bruker) to);
             }
-            FimDiskresjonskoder fimDiskresjonskoder = new FimDiskresjonskoder();
+            Diskresjonskoder fimDiskresjonskoder = new Diskresjonskoder();
             fimDiskresjonskoder.setValue(from.getDiskresjonskode());
             to.setDiskresjonskode(fimDiskresjonskoder);
 
-            mapAnsvarligEnhet(from, (FimBruker) to);
+            mapAnsvarligEnhet(from, (Bruker) to);
         }
 
         return to;
     }
 
-    private static void mapPersonstatus(PersonMock from, FimPerson to) {
-        FimPersonstatus toStatus = new FimPersonstatus();
-        FimPersonstatuser fimPersonstatuser = new FimPersonstatuser();
+    private static void mapPersonstatus(PersonMock from, Person to) {
+        Personstatus toStatus = new Personstatus();
+        Personstatuser fimPersonstatuser = new Personstatuser();
         fimPersonstatuser.setValue(from.getPersonstatus());
         toStatus.setPersonstatus(fimPersonstatuser);
         to.setPersonstatus(toStatus);
     }
 
-    private static FimPerson createFimPerson(PersonMock from) {
-        FimPerson to;
+    private static Person createFimPerson(PersonMock from) {
+        Person to;
         if (from.getMidlertidigadresse() != null || from.getDiskresjonskode() != null || isNotBlank(from.getEnhet())) {
-            to = new FimBruker();
+            to = new Bruker();
         } else {
-            to = new FimPerson();
+            to = new Person();
         }
         return to;
     }
 
-    private static void mapAnsvarligEnhet(PersonMock from, FimBruker to) {
-        FimAnsvarligEnhet fimAnsvarligEnhet = new FimAnsvarligEnhet();
-        FimOrganisasjonsenhet fimOrganisasjonsenhet = new FimOrganisasjonsenhet();
+    private static void mapAnsvarligEnhet(PersonMock from, Bruker to) {
+        AnsvarligEnhet fimAnsvarligEnhet = new AnsvarligEnhet();
+        Organisasjonsenhet fimOrganisasjonsenhet = new Organisasjonsenhet();
         fimOrganisasjonsenhet.setOrganisasjonselementID(from.getEnhet());
         fimAnsvarligEnhet.setEnhet(fimOrganisasjonsenhet);
 
         to.setHarAnsvarligEnhet(fimAnsvarligEnhet);
     }
 
-    private static void mapAdresserUtland(PersonMock from, FimBruker to) {
-        FimMidlertidigPostadresseUtland postadresseUtland = new FimMidlertidigPostadresseUtland();
-        FimUstrukturertAdresse generellAdresseUtland = new FimUstrukturertAdresse();
+    private static void mapAdresserUtland(PersonMock from, Bruker to) {
+        MidlertidigPostadresseUtland postadresseUtland = new MidlertidigPostadresseUtland();
+        UstrukturertAdresse generellAdresseUtland = new UstrukturertAdresse();
         generellAdresseUtland.setAdresselinje1(from.getMidlertidigadresse().getAdresseLinje1());
         generellAdresseUtland.setAdresselinje2(from.getMidlertidigadresse().getAdresseLinje2());
         generellAdresseUtland.setAdresselinje3(from.getMidlertidigadresse().getAdresseLinje3());
@@ -78,27 +78,27 @@ public final class PersonMockMapper {
         to.setMidlertidigPostadresse(postadresseUtland);
     }
 
-    private static void mapNorskIdent(PersonMock from, FimPerson to) {
-        FimPersonidenter fimPersonidenter = new FimPersonidenter();
+    private static void mapNorskIdent(PersonMock from, Person to) {
+        Personidenter fimPersonidenter = new Personidenter();
         fimPersonidenter.setValue(from.getIdenttype());
-        FimNorskIdent norskIdent = new FimNorskIdent();
+        NorskIdent norskIdent = new NorskIdent();
         norskIdent.setIdent(from.getIdnummer());
         norskIdent.setType(fimPersonidenter);
         to.setIdent(norskIdent);
     }
 
-    private static void mapKjonn(PersonMock from, FimPerson to) {
-        FimKjoennstyper fimKjoennstyper = new FimKjoennstyper();
+    private static void mapKjonn(PersonMock from, Person to) {
+        Kjoennstyper fimKjoennstyper = new Kjoennstyper();
         fimKjoennstyper.setValue(from.getKjonn());
-        FimKjoenn kjonn = new FimKjoenn();
+        Kjoenn kjonn = new Kjoenn();
         kjonn.setKjoenn(fimKjoennstyper);
         to.setKjoenn(kjonn);
     }
 
-    private static void mapAdresse(PersonMock from, FimPerson to) {
+    private static void mapAdresse(PersonMock from, Person to) {
         if (from.getBostedsadresse() != null) {
-            FimBostedsadresse fimBostedsadresse = new FimBostedsadresse();
-            FimGateadresse gateadresse = new FimGateadresse();
+            Bostedsadresse fimBostedsadresse = new Bostedsadresse();
+            Gateadresse gateadresse = new Gateadresse();
             gateadresse.setGatenavn(((GateadresseMock) from.getBostedsadresse()).getGatenavn());
             if (from.getBostedsadresse().getGatenummer() != null) {
                 gateadresse.setGatenummer(BigInteger.valueOf(Long.valueOf(((GateadresseMock) from.getBostedsadresse()).getGatenummer())));
@@ -112,8 +112,8 @@ public final class PersonMockMapper {
         }
 
         if (from.getPostadresse() != null) {
-            FimPostadresse postadresse = new FimPostadresse();
-            FimUstrukturertAdresse fimUstrukturertAdresse = new FimUstrukturertAdresse();
+            Postadresse postadresse = new Postadresse();
+            UstrukturertAdresse fimUstrukturertAdresse = new UstrukturertAdresse();
             fimUstrukturertAdresse.setLandkode(from.getPostadresse().getLandkode());
             fimUstrukturertAdresse.setAdresselinje1(from.getPostadresse().getAdresseLinje1());
             fimUstrukturertAdresse.setAdresselinje2(from.getPostadresse().getAdresseLinje2());
@@ -124,8 +124,8 @@ public final class PersonMockMapper {
 
     }
 
-    private static void mapPersonNavn(PersonMock from, FimPerson to) {
-        to.setPersonnavn(new FimPersonnavn());
+    private static void mapPersonNavn(PersonMock from, Person to) {
+        to.setPersonnavn(new Personnavn());
         to.getPersonnavn().setSammensattNavn(from.getSammensattNavn());
         to.getPersonnavn().setFornavn(from.getFornavn());
         to.getPersonnavn().setMellomnavn(from.getMellomnavn());

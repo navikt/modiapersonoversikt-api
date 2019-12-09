@@ -35,75 +35,75 @@ public class PersonKjerneinfoMockFactory {
     private static final String PERSONSTATUSER = "Personstatuser";
     private static final String PERSONSTATUS_BOSATT = "BOSA";
 
-    public WSPerson getPerson() {
-        return getPerson(new WSPerson());
+    public Person getPerson() {
+        return getPerson(new Person());
     }
 
-    public WSPerson getPerson(WSPerson person) {
+    public Person getPerson(Person person) {
         person.setAktoer(lagAktoer("10108000398"));
 
-        WSPersonnavn fromPersonnavn = getMockPersonnavn("Donald", "Fauntleroy", "Duck");
+        Personnavn fromPersonnavn = getMockPersonnavn("Donald", "Fauntleroy", "Duck");
         person.setPersonnavn(fromPersonnavn);
 
         person.setBostedsadresse(getMockBostedsadresse());
         person.setPostadresse(lagPostadresse());
-        person.setKjoenn(new WSKjoenn().withKjoenn(new WSKjoennstyper().withValue("K")));
-        person.setSivilstand(new WSSivilstand().withSivilstand(new WSSivilstander()
+        person.setKjoenn(new Kjoenn().withKjoenn(new Kjoennstyper().withValue("K")));
+        person.setSivilstand(new Sivilstand().withSivilstand(new Sivilstander()
                 .withValue("UGIF"))
                 .withFomGyldighetsperiode(getCurrentXmlGregorianCalendar()));
         person.setStatsborgerskap(getMockStatsborgerskap("Andeby"));
-        person.setPersonstatus(new WSPersonstatus().withPersonstatus(new WSPersonstatuser().withKodeRef(PERSONSTATUS_BOSATT).withKodeverksRef(PERSONSTATUSER)));
+        person.setPersonstatus(new Personstatus().withPersonstatus(new Personstatuser().withKodeRef(PERSONSTATUS_BOSATT).withKodeverksRef(PERSONSTATUSER)));
 
         return person;
     }
 
-    private WSPostadresse lagPostadresse() {
-        return new WSPostadresse()
+    private Postadresse lagPostadresse() {
+        return new Postadresse()
                 .withUstrukturertAdresse(getUstrukturertAdresse(ADR_GATEADRESSE, ADR_GATEADRESSE + "2", ADR_GATEADRESSE + "3", "", ""))
                 .withEndringstidspunkt(getMockDato("2015-02-02"))
                 .withEndretAv(ENDRET_AV);
     }
 
-    private WSPersonIdent lagAktoer(String fodselsnummer) {
-        return new WSPersonIdent().withIdent(getNorskIdent(fodselsnummer));
+    private PersonIdent lagAktoer(String fodselsnummer) {
+        return new PersonIdent().withIdent(getNorskIdent(fodselsnummer));
     }
 
-    private WSUstrukturertAdresse getUstrukturertAdresse(String adresselinje1, String adresselinje2,
-                                                         String adresselinje3, String adresselinje4, String landkode) {
-        return new WSUstrukturertAdresse()
+    private UstrukturertAdresse getUstrukturertAdresse(String adresselinje1, String adresselinje2,
+                                                       String adresselinje3, String adresselinje4, String landkode) {
+        return new UstrukturertAdresse()
                 .withAdresselinje1(adresselinje1)
                 .withAdresselinje2(adresselinje2)
                 .withAdresselinje3(adresselinje3)
                 .withAdresselinje4(adresselinje4)
-                .withLandkode(new WSLandkoder().withValue(landkode));
+                .withLandkode(new Landkoder().withValue(landkode));
     }
 
-    private WSGateadresse getStrukturertAdresse(WSGateadresse gateadresse, String gatenavn) {
+    private Gateadresse getStrukturertAdresse(Gateadresse gateadresse, String gatenavn) {
         setStedsadresseinfo(gateadresse);
         gateadresse.setGatenavn(gatenavn);
         gateadresse.setGatenummer(1234567);
         gateadresse.setHusbokstav("A");
         gateadresse.setHusnummer(1);
-        gateadresse.setPoststed(new WSPostnummer().withValue(POSTNUMMER));
+        gateadresse.setPoststed(new Postnummer().withValue(POSTNUMMER));
         return gateadresse;
     }
 
-    private void setStedsadresseinfo(WSStedsadresseNorge adresse) {
+    private void setStedsadresseinfo(StedsadresseNorge adresse) {
         adresse.setBolignummer("H001");
         adresse.setKommunenummer("1234");
-        adresse.setPoststed(new WSPostnummer().withKodeRef("0002"));
+        adresse.setPoststed(new Postnummer().withKodeRef("0002"));
         adresse.setTilleggsadresse(TILLEGGSADRESSE);
         adresse.setTilleggsadresseType(TILLEGGSADRESSE_TYPE);
-        adresse.setLandkode(new WSLandkoder().withKodeRef("NO"));
+        adresse.setLandkode(new Landkoder().withKodeRef("NO"));
     }
 
-    private WSNorskIdent getNorskIdent(String foedselnummer) {
-        return new WSNorskIdent().withIdent(foedselnummer);
+    private NorskIdent getNorskIdent(String foedselnummer) {
+        return new NorskIdent().withIdent(foedselnummer);
     }
 
-    public WSBruker getBruker(String fodselsnummer, boolean genererKomplettBruker) {
-        WSBruker bruker = new WSBruker();
-        bruker = ((WSBruker) getPerson(bruker))
+    public Bruker getBruker(String fodselsnummer, boolean genererKomplettBruker) {
+        Bruker bruker = new Bruker();
+        bruker = ((Bruker) getPerson(bruker))
                 .withFoedested("Andeby")
                 .withAktoer(lagAktoer(fodselsnummer));
 
@@ -120,7 +120,7 @@ public class PersonKjerneinfoMockFactory {
         }
 
         if (genererKomplettBruker) {
-            bruker.setGeografiskTilknytning(new WSBydel().withGeografiskTilknytning("123456"));
+            bruker.setGeografiskTilknytning(new Bydel().withGeografiskTilknytning("123456"));
             bruker.setBankkonto(getMockBankkontoUtland());
 
             bruker.getHarFraRolleI().add(getMockFamilieRelasjon("Samboer", FNR_SAMBOER));
@@ -128,8 +128,8 @@ public class PersonKjerneinfoMockFactory {
 
             leggTilBarn(bruker);
 
-            WSSikkerhetstiltak sikkerhetstiltak = new WSSikkerhetstiltak();
-            WSPeriode periode = new WSPeriode();
+            Sikkerhetstiltak sikkerhetstiltak = new Sikkerhetstiltak();
+            Periode periode = new Periode();
             periode.setFom(getCurrentXmlGregorianCalendar());
             periode.setTom(getCurrentXmlGregorianCalendar());
             sikkerhetstiltak.setPeriode(periode);
@@ -138,7 +138,7 @@ public class PersonKjerneinfoMockFactory {
             bruker.setSikkerhetstiltak(sikkerhetstiltak);
 
             bruker.setMidlertidigPostadresse(lagMidlertidigPostadresseNorge());
-            bruker.setGjeldendePostadressetype(new WSPostadressetyper().withValue(MIDLERTIDIG_POSTADRESSE_NORGE).withKodeRef("TEST"));
+            bruker.setGjeldendePostadressetype(new Postadressetyper().withValue(MIDLERTIDIG_POSTADRESSE_NORGE).withKodeRef("TEST"));
 
             lagMockTelefon(bruker);
             lagMockTilrettelagtKommunikasjon(bruker);
@@ -148,87 +148,87 @@ public class PersonKjerneinfoMockFactory {
         return bruker;
     }
 
-    private void leggTilBarn(WSBruker bruker) {
+    private void leggTilBarn(Bruker bruker) {
         bruker.getHarFraRolleI().add(lagFamilieRelasjonBarn().withTilPerson(lagBarn(BARN)));
         bruker.getHarFraRolleI().add(lagFamilieRelasjonBarn().withTilPerson(lagBarn(BARN)));
         bruker.getHarFraRolleI().add(lagFamilieRelasjonBarn().withTilPerson(lagBarn(BARN)));
         bruker.getHarFraRolleI().add(lagFamilieRelasjonBarn()
                 .withHarSammeBosted(false)
                 .withTilPerson(lagBarn("12345678910")
-                        .withDiskresjonskode(new WSDiskresjonskoder()
+                        .withDiskresjonskode(new Diskresjonskoder()
                                 .withValue("SPFO")
                                 .withKodeRef("SPFO"))
                         .withPersonnavn(getMockPersonnavn("Hemmelig", "X", "Hemligsen"))));
     }
 
-    private WSFamilierelasjon lagFamilieRelasjonBarn() {
-        WSFamilierelasjon relasjon = getFamilieReleasjon("BARN");
+    private Familierelasjon lagFamilieRelasjonBarn() {
+        Familierelasjon relasjon = getFamilieReleasjon("BARN");
         relasjon.setHarSammeBosted(true);
         return relasjon;
     }
 
-    private WSBruker lagBarn(String fodselsnummer) {
-        return new WSBruker()
+    private Bruker lagBarn(String fodselsnummer) {
+        return new Bruker()
                 .withPersonnavn(getMockPersonnavn("Jokke", "Olsen", "Nilsen"))
-                .withAktoer(new WSPersonIdent().withIdent(new WSNorskIdent().withIdent(fodselsnummer)));
+                .withAktoer(new PersonIdent().withIdent(new NorskIdent().withIdent(fodselsnummer)));
     }
 
-    private WSMidlertidigPostadresse lagMidlertidigPostadresseNorge() {
-        return new WSMidlertidigPostadresseNorge()
-                .withStrukturertAdresse(getStrukturertAdresse(new WSGateadresse(), ADR_GATEADRESSE))
+    private MidlertidigPostadresse lagMidlertidigPostadresseNorge() {
+        return new MidlertidigPostadresseNorge()
+                .withStrukturertAdresse(getStrukturertAdresse(new Gateadresse(), ADR_GATEADRESSE))
                 .withEndretAv(ENDRET_AV)
                 .withEndringstidspunkt(getMockDato(ENDRINGSTIDSPUNKT))
-                .withPostleveringsPeriode(new WSGyldighetsperiode()
+                .withPostleveringsPeriode(new Gyldighetsperiode()
                         .withFom(getMockDato("2015-02-02"))
                         .withTom(getMockDato(POSTLEVERINGSPERIODE_TOM)));
     }
 
-    private void lagMockTilrettelagtKommunikasjon(WSBruker bruker) {
+    private void lagMockTilrettelagtKommunikasjon(Bruker bruker) {
         bruker.withTilrettelagtKommunikasjon(
-                new WSTilrettelagtKommunikasjonbehov()
+                new TilrettelagtKommunikasjonbehov()
                         .withBehov("Tolkehjelp")
                         .withTilrettelagtKommunikasjon(
-                                new WSTilrettelagtKommunikasjon().withValue("TOHJ")),
-                new WSTilrettelagtKommunikasjonbehov()
+                                new TilrettelagtKommunikasjon().withValue("TOHJ")),
+                new TilrettelagtKommunikasjonbehov()
                         .withBehov("Ledsager")
                         .withTilrettelagtKommunikasjon(
-                                new WSTilrettelagtKommunikasjon().withValue("LESA")));
+                                new TilrettelagtKommunikasjon().withValue("LESA")));
     }
 
-    private void lagMockTelefon(WSBruker bruker) {
-        bruker.withKontaktinformasjon(new WSTelefonnummer()
+    private void lagMockTelefon(Bruker bruker) {
+        bruker.withKontaktinformasjon(new Telefonnummer()
                 .withIdentifikator(MOBIL_TELEFON)
-                .withType(new WSTelefontyper()
+                .withType(new Telefontyper()
                         .withValue(KODE_REF_MOBIL)
                         .withKodeRef(KODE_REF_MOBIL))
-                .withRetningsnummer(new WSRetningsnumre().withValue(RETNINGSNUMMER)));
+                .withRetningsnummer(new Retningsnumre().withValue(RETNINGSNUMMER)));
     }
 
-    private WSFamilierelasjon getFamilieReleasjon(String familierelasjonstype) {
-        WSFamilierelasjon familierelasjon = new WSFamilierelasjon();
-        familierelasjon.setTilRolle(new WSFamilierelasjoner()
+    private Familierelasjon getFamilieReleasjon(String familierelasjonstype) {
+        Familierelasjon familierelasjon = new Familierelasjon();
+        familierelasjon.setTilRolle(new Familierelasjoner()
                 .withKodeRef(familierelasjonstype)
                 .withValue(familierelasjonstype));
         return familierelasjon;
     }
 
-    public WSFamilierelasjon getMockFamilieRelasjon(String familierelasjonstype, String fnr) {
-        WSFamilierelasjon familierelasjon = new WSFamilierelasjon();
+    public Familierelasjon getMockFamilieRelasjon(String familierelasjonstype, String fnr) {
+        Familierelasjon familierelasjon = new Familierelasjon();
         familierelasjon.setHarSammeBosted(Boolean.TRUE);
-        familierelasjon.setTilRolle(new WSFamilierelasjoner().withKodeRef(familierelasjonstype).withValue(familierelasjonstype));
+        familierelasjon.setTilRolle(new Familierelasjoner().withKodeRef(familierelasjonstype).withValue(familierelasjonstype));
         familierelasjon.setTilPerson(getBruker(fnr, false));
         return familierelasjon;
     }
 
-    private WSBankkontoUtland getMockBankkontoUtland() {
-        WSBankkontoUtland bankkontoUtland = new WSBankkontoUtland();
-        WSBankkontonummerUtland bankkontonummerUtland = new WSBankkontonummerUtland();
+    private BankkontoUtland getMockBankkontoUtland() {
+        BankkontoUtland bankkontoUtland = new BankkontoUtland();
+        BankkontonummerUtland bankkontonummerUtland = new BankkontonummerUtland();
         bankkontonummerUtland.setSwift("SPTRNO22");
         bankkontonummerUtland.setBankkontonummer("9876.98.98765");
-        bankkontonummerUtland.setValuta(new WSValutaer().withValue("USD").withKodeRef("USD"));
-        bankkontonummerUtland.setLandkode(new WSLandkoder().withValue("USA").withKodeRef("USA"));
+        bankkontonummerUtland.setValuta(new Valutaer().withValue("USD").withKodeRef("USD"));
+        bankkontonummerUtland.setLandkode(new Landkoder().withValue("USA").withKodeRef("USA"));
         bankkontonummerUtland.setBanknavn("Chase");
-        bankkontonummerUtland.setBankadresse(new WSUstrukturertAdresse()
+        bankkontonummerUtland.setBankadresse(new UstrukturertAdresse()
                 .withAdresselinje1("Fifth avenue")
                 .withAdresselinje2("New York")
                 .withAdresselinje3("New York")
@@ -240,9 +240,9 @@ public class PersonKjerneinfoMockFactory {
         return bankkontoUtland;
     }
 
-    private WSBostedsadresse getMockBostedsadresse() {
-        WSBostedsadresse bostedsadresse = new WSBostedsadresse();
-        bostedsadresse.setStrukturertAdresse(getStrukturertAdresse(new WSGateadresse(), "Apalveien"));
+    private Bostedsadresse getMockBostedsadresse() {
+        Bostedsadresse bostedsadresse = new Bostedsadresse();
+        bostedsadresse.setStrukturertAdresse(getStrukturertAdresse(new Gateadresse(), "Apalveien"));
         bostedsadresse.setEndretAv("Adresseendrer");
         bostedsadresse.setEndringstidspunkt(getMockDato("2015-02-02"));
         return bostedsadresse;
@@ -270,9 +270,9 @@ public class PersonKjerneinfoMockFactory {
         }
     }
 
-    private WSStatsborgerskap getMockStatsborgerskap(String land) {
-        WSStatsborgerskap statsborgerskap = new WSStatsborgerskap();
-        statsborgerskap.setLand(new WSLandkoder().withKodeRef(land).withValue(land));
+    private Statsborgerskap getMockStatsborgerskap(String land) {
+        Statsborgerskap statsborgerskap = new Statsborgerskap();
+        statsborgerskap.setLand(new Landkoder().withKodeRef(land).withValue(land));
 
         statsborgerskap.setEndretAv("Petter Smart");
         statsborgerskap.setEndringstidspunkt(getCurrentXmlGregorianCalendar());
@@ -280,8 +280,8 @@ public class PersonKjerneinfoMockFactory {
         return statsborgerskap;
     }
 
-    private WSPersonnavn getMockPersonnavn(String fornavn, String mellomnavn, String etternavn) {
-        WSPersonnavn personnavn = new WSPersonnavn();
+    private Personnavn getMockPersonnavn(String fornavn, String mellomnavn, String etternavn) {
+        Personnavn personnavn = new Personnavn();
         personnavn.setFornavn(fornavn);
         personnavn.setMellomnavn(mellomnavn);
         personnavn.setEtternavn(etternavn);

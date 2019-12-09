@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.oppfolgingsinfo;
 
+import no.nav.modig.modia.ping.ConsumerPingable;
 import no.nav.modig.modia.ping.PingableWebService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.oppfolgingsinfo.OppfolgingsinfoApiService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.oppfolgingsinfo.OppfolgingsinfoApiServiceImpl;
@@ -19,6 +20,10 @@ public class OppfolgingsinfoApiEndpointConfig {
 
     @Bean
     public Pingable oppfolgingsApiPing() {
-        return new PingableWebService("OppfolgingsInfoApi", oppfolgingsApi());
+        OppfolgingsinfoApiService endepunkt = oppfolgingsApi();
+        return new ConsumerPingable(
+                "OppfolgingsInfoApi",
+                endepunkt::ping
+        );
     }
 }

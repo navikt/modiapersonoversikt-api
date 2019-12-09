@@ -34,7 +34,7 @@ public class ForeldrepengerConsumerConfig {
 
     private ForeldrepengerV2 getForeldrepengerPortType(boolean isPingPorttype) {
         CXFClient<ForeldrepengerV2> cxfClient = new CXFClient<>(ForeldrepengerV2.class)
-                .wsdl("classpath:no/nav/tjeneste/virksomhet/foreldrepenger/v2/Binding.wsdl")
+                .wsdl("classpath:wsdl/tjenestespesifikasjon/no/nav/tjeneste/virksomhet/foreldrepenger/v2/Binding.wsdl")
                 .serviceName(new QName("http://nav.no/tjeneste/virksomhet/foreldrepenger/v2/Binding", "Foreldrepenger_v2"))
                 .endpointName(new QName("http://nav.no/tjeneste/virksomhet/foreldrepenger/v2/Binding", "Foreldrepenger_v2Port"))
                 .withHandler(new MDCOutHandler())
