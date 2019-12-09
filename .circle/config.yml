@@ -11,43 +11,15 @@ workflows:
             branches:
               ignore:
                 - master
-      - pus/bygg-og-deploy-backend:
-          context: pus
-          filepath: ./deploy/naiserator-q6.yaml
-          filters:
-            branches:
-              only: master
-      - syncqa:
-          type: approval
-          requires:
-            - pus/bygg-og-deploy-backend
-          filters:
-            branches:
-              only: master
+                - dev
       - pus/bygg-og-deploy-backend:
           context: pus
           filepath: ./deploy/naiserator-q0.yaml
           filters:
             branches:
-              only: master
+              only: dev
       - pus/bygg-og-deploy-backend:
           context: pus
-          filepath: ./deploy/naiserator-q1.yaml
-          filters:
-            branches:
-              only: master
-      - prodsett:
-          type: approval
-          requires:
-            - syncqa
-            - pus/bygg-og-deploy-backend
-          filters:
-            branches:
-              only: master
-      - pus/deploy-latest:
-          context: pus
-          requires:
-            - prodsett
           filepath: ./deploy/naiserator.yaml
           filters:
             branches:
