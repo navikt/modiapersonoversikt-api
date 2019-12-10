@@ -3,7 +3,6 @@ orbs:
   pus: navikt/pus-orb@0.0.41
 jobs:
   dependency-plugin-hack:
-    executor: pus-pipeline
     steps:
       - checkout
       - restore_cache:
