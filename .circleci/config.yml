@@ -1,10 +1,25 @@
 version: 2.1
 orbs:
   pus: navikt/pus-orb@0.0.41
+jobs:
+  dependency-plugin-hack:
+    executor: pus-pipeline
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ .Branch }}-{{ checksum "pom.xml" }}
+      - run: mvn -B -P circleci install -DskipTests
+      - save_cache:
+          paths:
+            - ~/.m2
+          key: v1-dependencies-{{ .Branch }}-{{ checksum "pom.xml" }}
 workflows:
   version: 2
   commit:
     jobs:
+      - dependency-plugin-hack:
+          context: pus
       - pus/test-backend:
           context: pus
           filters:
