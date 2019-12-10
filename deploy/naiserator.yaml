@@ -3,6 +3,7 @@ kind: "Application"
 metadata:
   name: modiapersonoversikt-api
   namespace: default
+  cluster: prod-fss
   labels:
     team: personoversikt
 spec:
