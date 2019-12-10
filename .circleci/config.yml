@@ -23,6 +23,8 @@ workflows:
           context: pus
       - pus/test-backend:
           context: pus
+          requires:
+            - dependency-plugin-hack
           filters:
             branches:
               ignore:
@@ -30,12 +32,16 @@ workflows:
                 - dev
       - pus/bygg-og-deploy-backend:
           context: pus
+          requires:
+            - dependency-plugin-hack
           filepath: ./deploy/naiserator-q0.yaml
           filters:
             branches:
               only: dev
       - pus/bygg-og-deploy-backend:
           context: pus
+          requires:
+            - dependency-plugin-hack
           filepath: ./deploy/naiserator.yaml
           filters:
             branches:
