@@ -1,6 +1,9 @@
 
 import no.nav.apiapp.ApiApp;
-import no.nav.sbl.dialogarena.common.cxf.StsSecurityConstants;
+import no.nav.brukerdialog.tools.SecurityConstants;
+import no.nav.common.utils.NaisUtils;
+import no.nav.sbl.dialogarena.common.abac.pep.CredentialConstants;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.ldap.LdapContextProvider;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.ModiaApplicationContext;
 import no.nav.sbl.util.EnvironmentUtils;
 import org.slf4j.Logger;
@@ -13,7 +16,10 @@ import java.io.InputStream;
 import java.util.HashSet;
 import java.util.Properties;
 
-import static java.util.stream.Collectors.toSet;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v1.norg.NorgEndpointFelles.KJERNEINFO_TJENESTEBUSS_PASSWORD;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v1.norg.NorgEndpointFelles.KJERNEINFO_TJENESTEBUSS_USERNAME;
+import static no.nav.sbl.util.EnvironmentUtils.Type.PUBLIC;
+import static no.nav.sbl.util.EnvironmentUtils.Type.SECRET;
 import static no.nav.sbl.util.EnvironmentUtils.getRequiredProperty;
 
 public class Main {
@@ -28,12 +34,26 @@ public class Main {
         );
 
         // Overstyrer appnavn slik at vi er sikre på at vi later som vi er modiabrukerdialog. ;)
-        System.setProperty("NAIS_APP_NAME", "modiabrukerdialog");
+        EnvironmentUtils.setProperty("NAIS_APP_NAME", "modiabrukerdialog", PUBLIC);
 
         ApiApp.runApp(ModiaApplicationContext.class, args);
     }
 
     private static void loadVaultSecrets() throws FileNotFoundException {
+        NaisUtils.Credentials serviceUser = NaisUtils.getCredentials("service_user");
+        EnvironmentUtils.setProperty(CredentialConstants.SYSTEMUSER_USERNAME, serviceUser.username, PUBLIC);
+        EnvironmentUtils.setProperty(CredentialConstants.SYSTEMUSER_PASSWORD, serviceUser.password, SECRET);
+        EnvironmentUtils.setProperty(SecurityConstants.SYSTEMUSER_USERNAME, serviceUser.username, PUBLIC);
+        EnvironmentUtils.setProperty(SecurityConstants.SYSTEMUSER_PASSWORD, serviceUser.password, SECRET);
+
+        NaisUtils.Credentials ldapUser = NaisUtils.getCredentials("ldap_user");
+        EnvironmentUtils.setProperty(LdapContextProvider.LDAP_USERNAME, ldapUser.username, PUBLIC);
+        EnvironmentUtils.setProperty(LdapContextProvider.LDAP_PASSWORD, ldapUser.password, SECRET);
+
+        NaisUtils.Credentials gosysUser = NaisUtils.getCredentials("gosys_user");
+        EnvironmentUtils.setProperty(KJERNEINFO_TJENESTEBUSS_USERNAME, gosysUser.username, PUBLIC);
+        EnvironmentUtils.setProperty(KJERNEINFO_TJENESTEBUSS_PASSWORD, gosysUser.password, SECRET);
+
         loadFromInputStream(new FileInputStream(VAULT_APPLICATION_PROPERTIES_PATH), true);
     }
 
