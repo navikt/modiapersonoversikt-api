@@ -39,3 +39,12 @@ spec:
     enabled: false
   vault:
     enabled: true
+    paths:
+      - kvPath: /kv/prod/fss/modiapersonoversikt-api/default
+        mountPath: /var/run/secrets/nais.io/vault
+      - kvPath: /serviceuser/data/prod/srvmodiabrukerdialog
+        mountPath: /var/run/secrets/nais.io/service_user
+      - kvPath: /serviceuser/data/prod/srvssolinux
+        mountPath: /var/run/secrets/nais.io/ldap_user
+      - kvPath: /serviceuser/data/prod/srvgosys
+        mountPath: /var/run/secrets/nais.io/gosys_user
