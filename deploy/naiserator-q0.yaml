@@ -343,7 +343,7 @@ spec:
     - name: PREFETCH_NORG_ANSATTLISTE_SCHEDULE
       value: 0 0 7,19 * * *
     - name: UTBETALINGTILGANG
-      value: []
+      value: "[]"
     - name: TEMASIDER_VIKTIGAVITELENKE
       value: DAG,AAP,IND
     - name: BEHANDLINGSSTATUS_SYNLIG_ANTALLDAGER
