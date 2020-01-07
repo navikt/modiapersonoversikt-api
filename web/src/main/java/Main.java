@@ -61,7 +61,8 @@ public class Main {
         if ("prod-fss".equalsIgnoreCase(cluster)) {
             loadFromResource("configurations/p.properties");
         } else if ("q0".equalsIgnoreCase(namespace)) {
-            loadFromResource("configurations/q0.properties");
+            // Laster q0 data fra naiserator fil
+            // loadFromResource("configurations/q0.properties");
         } else if ("q1".equalsIgnoreCase(namespace)) {
             loadFromResource("configurations/q1.properties");
         } else if ("q6".equalsIgnoreCase(namespace)) {
