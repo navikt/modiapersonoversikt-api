@@ -52,7 +52,7 @@ jobs:
 
   deploy-qa:
     name: Deploy to prod
-    needs: push
+    needs: build-and-push
     if: github.ref == 'refs/heads/dev'
     runs-on: ubuntu-latest
     steps:
@@ -67,7 +67,7 @@ jobs:
 
   deploy-prod:
     name: Deploy to prod
-    needs: push
+    needs: build-and-push
     if: github.ref == 'refs/heads/master'
     runs-on: ubuntu-latest
     steps:
