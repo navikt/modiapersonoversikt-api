@@ -7,8 +7,9 @@ env:
 
 jobs:
   build:
-    name: Build
+    name: Build and test
     runs-on: ubuntu-latest
+    if: github.ref != 'refs/heads/dev' && github.ref != 'refs/heads/master'
     env:
       TZ: Europe/Oslo
     steps:
@@ -23,19 +24,28 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          mvn -P ci -B package
+          mvn -P ci -B test
 
-  push:
-    name: Push Docker container
+  build-and-push:
+    name: Build and push Docker container
     needs: build
     if: github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/master'
+    env:
+      TZ: Europe/Oslo
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
+      - uses: actions/cache@v1
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-maven-cache-${{ hashFiles('pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-cache-
       - name: Publish Docker image
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
+          mvn -P ci -B package
           docker build --tag ${IMAGE} .
           docker login docker.pkg.github.com -u ${GITHUB_REPOSITORY} -p ${GITHUB_TOKEN}
           docker push ${IMAGE}
