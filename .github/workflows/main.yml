@@ -1,12 +1,11 @@
 name: Build, push, and deploy
-  ​
+
 on: [push]
-  ​
+
 env:
   IMAGE: docker.pkg.github.com/${{ github.repository }}/modiapersonoversikt-api:${{ github.sha }}
-  ​
-jobs:
 
+jobs:
 build:
   name: Build
   runs-on: ubuntu-latest
@@ -17,7 +16,7 @@ build:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
         mvn -P ci -B package
-  ​
+
 push:
   name: Push Docker container
   needs: build
@@ -45,7 +44,7 @@ deploy-qa:
         APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
         CLUSTER: dev-fss
         RESOURCE: deploy/naiserator-q0.yaml
-          ​
+
 deploy-prod:
   name: Deploy to prod
   needs: push
