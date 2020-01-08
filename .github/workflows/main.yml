@@ -50,7 +50,7 @@ jobs:
           docker push ${IMAGE}
 
   deploy-qa:
-    name: Deploy to prod
+    name: Deploy to preprod
     needs: build-and-push
     if: github.ref == 'refs/heads/dev'
     runs-on: ubuntu-latest
@@ -59,7 +59,6 @@ jobs:
       - uses: nais/deploy/actions/deploy@v1
         env:
           APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
-          DRY_RUN: true
           PRINT_PAYLOAD: true
           CLUSTER: dev-fss
           RESOURCE: deploy/naiserator-q0.yaml
