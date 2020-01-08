@@ -117,7 +117,7 @@
     "VIRKSOMHET_OPPGAVEBEHANDLING_V3_ENDPOINTURL": "https://service-gw-q6.preprod.local/",
     "VIRKSOMHET_OPPGAVEBEHANDLING_V3_SECURITYTOKEN": "LTPA",
     "VIRKSOMHET_OPPGAVEBEHANDLING_V3_WSDLURL": "http://maven.adeo.no/nexus/content/groups/public/no/nav/tjenester/fim/nav-fim-oppgavebehandling-v3-tjenestespesifikasjon/3.1.1/nav-fim-oppgavebehandling-v3-tjenestespesifikasjon-3.1.1.zip",
-    "VIRKSOMHET_ORGANISASJON_V4_ENDPOINTURL": "https://modapp-q6.adeo.no/ereg/ws/OrganisasjonService/v4",
+    "VIRKSOMHET_ORGANISASJON_V4_ENDPOINTURL": "https://service-gw-q6.preprod.local/",
     "VIRKSOMHET_ORGANISASJON_V4_SECURITYTOKEN": "SAML",
     "VIRKSOMHET_ORGANISASJON_V4_WSDLURL": "http://maven.adeo.no/nexus/content/groups/public/no/nav/tjenester/fim/nav-fim-organisasjon-v4-tjenestespesifikasjon/1.0.4/nav-fim-organisasjon-v4-tjenestespesifikasjon-1.0.4.zip",
     "VIRKSOMHET_ORGANISASJONENHET_V2_ENDPOINTURL": "https://app-q6.adeo.no/norg2/ws/OrganisasjonEnhet/v2",
