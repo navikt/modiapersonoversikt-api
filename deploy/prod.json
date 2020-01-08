@@ -1,5 +1,7 @@
 {
   "namespace": "default",
+  "replicaMin": 2,
+  "replicaMax": 4,
   "ingresses": [
     "https://modiapersonoversikt-api.nais.adeo.no",
     "https://app.adeo.no/modiapersonoversikt-api",

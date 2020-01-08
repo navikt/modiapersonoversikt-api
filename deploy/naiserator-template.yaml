@@ -14,15 +14,18 @@ spec:
   port: 8080
   team: personoversikt
   liveness:
-    path: /modiabrukerdialog/internal/isAlive
+    path: /modiapersonoversikt-api/internal/isAlive
     initialDelay: 50
     timeout: 1
     periodSeconds: 5
     failureThreshold: 10
   readiness:
-    path: /modiabrukerdialog/internal/isReady
+    path: /modiapersonoversikt-api/internal/isReady
     initialDelay: 50
     timeout: 1
+  prometheus:
+    enabled: true
+    path: /modiapersonoversikt-api/internal/metrics
   resources:
     requests:
       cpu: 1000m
@@ -35,11 +38,17 @@ spec:
     - {{this}}
   {{/each}}
   replicas:
-    min: 2
-    max: 4
+    {{#if replicaMin}}
+    min: {{replicaMin}}
+    {{else}}
+    min: 1
+    {{/if}}
+    {{#if replicaMax}}
+    max: {{replicaMax}}
+    {{else}}
+    max: 2
+    {{/if}}
     cpuThresholdPercentage: 60
-  prometheus:
-    enabled: false
   vault:
     enabled: true
     {{#if vaultPaths}}
