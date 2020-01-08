@@ -18,10 +18,13 @@
     </properties>
 
     <dependencies>
-
         <dependency>
             <groupId>no.nav.common</groupId>
             <artifactId>api-app</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>no.nav.common</groupId>
+            <artifactId>nais</artifactId>
         </dependency>
         <dependency>
             <groupId>no.nav.common</groupId>

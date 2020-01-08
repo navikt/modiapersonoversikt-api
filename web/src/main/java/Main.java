@@ -20,7 +20,6 @@ import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v1.norg.NorgEndpointFelles.KJERNEINFO_TJENESTEBUSS_USERNAME;
 import static no.nav.sbl.util.EnvironmentUtils.Type.PUBLIC;
 import static no.nav.sbl.util.EnvironmentUtils.Type.SECRET;
-import static no.nav.sbl.util.EnvironmentUtils.getRequiredProperty;
 
 public class Main {
     private static final String VAULT_APPLICATION_PROPERTIES_PATH = "/var/run/secrets/nais.io/vault/application.properties";
@@ -28,11 +27,6 @@ public class Main {
 
     public static void main(String... args) throws FileNotFoundException {
         loadVaultSecrets();
-        loadPropertiesFile(
-                getRequiredProperty("NAIS_NAMESPACE"),
-                getRequiredProperty("NAIS_CLUSTER_NAME")
-        );
-
         // Overstyrer appnavn slik at vi er sikre på at vi later som vi er modiabrukerdialog. ;)
         EnvironmentUtils.setProperty("NAIS_APP_NAME", "modiabrukerdialog", PUBLIC);
 
@@ -54,34 +48,10 @@ public class Main {
         EnvironmentUtils.setProperty(KJERNEINFO_TJENESTEBUSS_USERNAME, gosysUser.username, PUBLIC);
         EnvironmentUtils.setProperty(KJERNEINFO_TJENESTEBUSS_PASSWORD, gosysUser.password, SECRET);
 
-        loadFromInputStream(new FileInputStream(VAULT_APPLICATION_PROPERTIES_PATH), true);
+        loadFromInputStream(new FileInputStream(VAULT_APPLICATION_PROPERTIES_PATH));
     }
 
-    private static void loadPropertiesFile(String namespace, String cluster) {
-        if ("prod-fss".equalsIgnoreCase(cluster)) {
-            loadFromResource("configurations/p.properties");
-        } else if ("q0".equalsIgnoreCase(namespace)) {
-            // Laster q0 data fra naiserator fil
-            // loadFromResource("configurations/q0.properties");
-        } else if ("q1".equalsIgnoreCase(namespace)) {
-            loadFromResource("configurations/q1.properties");
-        } else if ("q6".equalsIgnoreCase(namespace)) {
-            loadFromResource("configurations/q6.properties");
-        } else {
-            loadFromResource("configurations/q0.properties");
-        }
-    }
-
-    private static void loadFromResource(String resource) {
-        log.info("Laster properties fra: " + resource);
-        InputStream propsResource = Main.class.getClassLoader().getResourceAsStream(resource);
-        if (propsResource == null) {
-            throw new RuntimeException(resource);
-        }
-        loadFromInputStream(propsResource, false);
-    }
-
-    private static void loadFromInputStream(InputStream is, boolean secrets) {
+    private static void loadFromInputStream(InputStream is) {
         Properties props = new Properties();
         try {
             props.load(is);
@@ -93,12 +63,11 @@ public class Main {
 
         for (String name : new HashSet<>(props.stringPropertyNames())) {
             String value = props.getProperty(name);
-            String safeValue = secrets ? "*********" : value;
             if (target.containsKey(name)) {
                 log.warn("Old value '{}' is replaced with", target.getProperty(name));
-                log.warn("{} = {}", name, safeValue);
+                log.warn("{} = {}", name, "**********");
             } else {
-                log.info("Setting {} = {}", name, safeValue);
+                log.info("Setting {} = {}", name, "**********");
             }
 
             target.setProperty(name, value);
