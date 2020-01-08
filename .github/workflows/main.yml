@@ -53,8 +53,7 @@ jobs:
           DRY_RUN: true
           PRINT_PAYLOAD: true
           CLUSTER: dev-fss
-          RESOURCE: deploy/naiserator-template.yaml
-          VARS: deploy/q0.json
+          RESOURCE: deploy/naiserator-q0.yaml
 
   deploy-prod:
     name: Deploy to prod
@@ -69,5 +68,4 @@ jobs:
           DRY_RUN: true
           PRINT_PAYLOAD: true
           CLUSTER: prod-fss
-          RESOURCE: deploy/naiserator-template.yaml
-          VARS: deploy/prod.json
+          RESOURCE: deploy/naiserator.yaml
