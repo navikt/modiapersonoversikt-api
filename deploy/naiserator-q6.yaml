@@ -7,7 +7,7 @@ metadata:
   labels:
     team: personoversikt
 spec:
-  image: docker.pkg.github.com/navikt/modiapersonoversikt-api/modiapersonoversikt-api:{{version}}
+  image: {{image}}
   port: 8080
   team: personoversikt
   liveness:
