@@ -1,0 +1,14 @@
+{
+  "namespace": "default",
+  "ingresses": [
+    "https://modiapersonoversikt-api.nais.adeo.no",
+    "https://app.adeo.no/modiapersonoversikt-api",
+    "https://modapp.adeo.no/modiapersonoversikt-api"
+  ],
+  "vaultPaths": {
+    "/kv/prod/fss/modiapersonoversikt-api/default": "/var/run/secrets/nais.io/vault",
+    "/serviceuser/data/prod/srvmodiabrukerdialog": "/var/run/secrets/nais.io/service_user",
+    "/serviceuser/data/prod/srvssolinux": "/var/run/secrets/nais.io/ldap_user",
+    "/serviceuser/data/prod/srvgosys": "/var/run/secrets/nais.io/gosys_user"
+  }
+}
