@@ -28,7 +28,6 @@ jobs:
 
   build-and-push:
     name: Build and push Docker container
-    needs: build
     if: github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/master'
     env:
       TZ: Europe/Oslo
