@@ -13,7 +13,7 @@ import static no.nav.metrics.MetricsFactory.createTimerProxyForWebService;
 @Configuration
 public class OrganisasjonV4ConsumerConfig {
 
-    public static final String ORGANISASJON_V4_ENDPOINT_KEY = "VIRKSOMHET_ORGANISASJON_V4_WSDLURL";
+    public static final String ORGANISASJON_V4_ENDPOINT_KEY = "VIRKSOMHET_ORGANISASJON_V4_ENDPOINTURL";
 
     @Bean
     public OrganisasjonV4 organisasjonV4PortType() {
