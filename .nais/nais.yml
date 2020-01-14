@@ -2,8 +2,8 @@ apiVersion: "nais.io/v1alpha1"
 kind: "Application"
 metadata:
   name: modiapersonoversikt-api
-  namespace: q0
-  cluster: dev-fss
+  namespace: default
+  cluster: prod-fss
   labels:
     team: personoversikt
 spec:
@@ -20,9 +20,6 @@ spec:
     path: /modiapersonoversikt-api/internal/isReady
     initialDelay: 50
     timeout: 1
-  prometheus:
-    enabled: true
-    path: /modiapersonoversikt-api/internal/metrics
   resources:
     requests:
       cpu: 1000m
@@ -31,81 +28,83 @@ spec:
       cpu: 2000m
       memory: 8192Mi
   ingresses:
-    - https://modiapersonoversikt-api-q0.nais.preprod.local
-    - https://app-q0.adeo.no/modiapersonoversikt-api
-    - https://modapp-q0.adeo.no/modiapersonoversikt-api
+    - https://modiapersonoversikt-api.nais.adeo.no
+    - https://app.adeo.no/modiapersonoversikt-api
+    - https://modapp.adeo.no/modiapersonoversikt-api
   replicas:
     min: 2
     max: 4
     cpuThresholdPercentage: 60
+  prometheus:
+    enabled: false
   vault:
     enabled: true
     paths:
-      - kvPath: /kv/preprod/fss/modiapersonoversikt-api/q0
-        mountPath: /var/run/secrets/nais.io/vault
-      - kvPath: /serviceuser/data/dev/srvmodiabrukerdialog
+      - kvPath: /serviceuser/data/prod/srvmodiabrukerdialog
         mountPath: /var/run/secrets/nais.io/service_user
-      - kvPath: /serviceuser/data/dev/srvssolinux
-        mountPath: /var/run/secrets/nais.io/ldap_user
-      - kvPath: /serviceuser/data/dev/srvgosys
+      - kvPath: /serviceuser/data/prod/srvssolinux
+        mountPath: /var/run/secrets/nais.io/srvssolinux
+      - kvPath: /serviceuser/data/prod/srvgosys
         mountPath: /var/run/secrets/nais.io/gosys_user
+      - kvPath: /credential/data/prod/isso-rp-user-q0
+        mountPath: /var/run/secrets/nais.io/isso-rp-user
   env:
     - name: ISSO_HOST_URL
-      value: "https://isso-q.adeo.no/isso/oauth2"
+      value: "https://isso.adeo.no/isso/oauth2"
     - name: ISSO_ISALIVE_URL
-      value: "https://isso-q.adeo.no/isso/isAlive.jsp"
+      value: "https://isso.adeo.no/isso/isAlive.jsp"
     - name: ISSO_ISSUER_URL
-      value: "https://isso-q.adeo.no:443/isso/oauth2"
+      value: "https://isso.adeo.no:443/isso/oauth2"
     - name: ISSO_JWKS_URL
-      value: "https://isso-q.adeo.no/isso/oauth2/connect/jwk_uri"
+      value: "https://isso.adeo.no/isso/oauth2/connect/jwk_uri"
     - name: OPENIDCONNECT_URL
-      value: "https://isso-q.adeo.no:443/isso"
+      value: "https://isso.adeo.no:443/isso"
     - name: OIDC_REDIRECT_URL
-      value: "https://app-q0.adeo.no/veilarblogin/api/login"
+      value: "https://app.adeo.no/veilarblogin/api/login"
     - name: AKTOER_V1_ENDPOINTURL
-      value: "https://app-q0.adeo.no/aktoerregister/ws/Aktoer/v1"
+      value: "https://app.adeo.no/aktoerregister/ws/Aktoer/v1"
     - name: AKTOER_V1_SECURITYTOKEN
       value: "SAML"
     - name: AKTOER_V1_WSDLURL
       value: "http://maven.adeo.no/nexus/content/groups/public/no/nav/tjenester/fim/nav-fim-aktoer-v1-tjenestespesifikasjon/1.0.0/nav-fim-aktoer-v1-tjenestespesifikasjon-1.0.0.zip"
     - name: BRUKERVARSELV1_ENDPOINTURL
-      value: "https://app-q0.adeo.no/varsel/ws/Brukervarsel/v1"
+      value: "https://app.adeo.no/varsel/ws/Brukervarsel/v1"
     - name: BRUKERVARSELV1_SECURITYTOKEN
       value: "SAML"
     - name: BRUKERVARSELV1_WSDLURL
       value: "http://maven.adeo.no/nexus/content/groups/public/no/nav/tjenester/nav-brukervarsel-v1-tjenestespesifikasjon/1.0.4/nav-brukervarsel-v1-tjenestespesifikasjon-1.0.4.zip"
     - name: DOMENE_BRUKERDIALOG_BEHANDLEHENVENDELSE_V1_ENDPOINTURL
-      value: "https://modapp-q0.adeo.no/henvendelse/services/domene.Brukerdialog/BehandleHenvendelse_v1"
+      value: "https://modapp.adeo.no/henvendelse/services/domene.Brukerdialog/BehandleHenvendelse_v1"
     - name: DOMENE_BRUKERDIALOG_BEHANDLEHENVENDELSE_V1_SECURITYTOKEN
       value: "SAML"
     - name: DOMENE_BRUKERDIALOG_BEHANDLEHENVENDELSE_V1_WSDLURL
       value: "http://maven.adeo.no/nexus/content/groups/public/no/nav/tjenestespesifikasjoner/behandle-henvendelse/1.2019.04.04-09.14-c6cea90b8e95/behandle-henvendelse-1.2019.04.04-09.14-c6cea90b8e95.zip"
     - name: DOMENE_BRUKERDIALOG_HENVENDELSE_V2_ENDPOINTURL
-      value: "https://modapp-q0.adeo.no/henvendelse/services/domene.Brukerdialog/Henvendelse_v2"
+      value: "https://modapp.adeo.no/henvendelse/services/domene.Brukerdialog/Henvendelse_v2"
     - name: DOMENE_BRUKERDIALOG_HENVENDELSE_V2_SECURITYTOKEN
       value: "SAML"
     - name: DOMENE_BRUKERDIALOG_HENVENDELSE_V2_WSDLURL
       value: "http://maven.adeo.no/nexus/content/groups/public/no/nav/sbl/dialogarena/henvendelse-informasjon-v2/0.6/henvendelse-informasjon-v2-0.6.zip"
     - name: DOMENE_BRUKERDIALOG_HENVENDELSESOKNADERSERVICE_V1_ENDPOINTURL
-      value: "https://modapp-q0.adeo.no/henvendelse/services/domene.Brukerdialog/HenvendelseSoknaderService_v1"
+      value: "https://modapp.adeo.no/henvendelse/services/domene.Brukerdialog/HenvendelseSoknaderService_v1"
     - name: DOMENE_BRUKERDIALOG_HENVENDELSESOKNADERSERVICE_V1_SECURITYTOKEN
       value: "SAML"
     - name: DOMENE_BRUKERDIALOG_HENVENDELSESOKNADERSERVICE_V1_WSDLURL
       value: "http://maven.adeo.no/nexus/content/groups/public/no/nav/sbl/dialogarena/henvendelse-soknader-tjenestespesifikasjon/0.0.26/henvendelse-soknader-tjenestespesifikasjon-0.0.26.zip"
     - name: DOMENE_BRUKERDIALOG_SENDUTHENVENDELSE_V1_ENDPOINTURL
-      value: "https://modapp-q0.adeo.no/henvendelse/services/domene.Brukerdialog/SendUtHenvendelse_v1"
+      value: "https://modapp.adeo.no/henvendelse/services/domene.Brukerdialog/SendUtHenvendelse_v1"
     - name: DOMENE_BRUKERDIALOG_SENDUTHENVENDELSE_V1_SECURITYTOKEN
       value: "SAML"
     - name: DOMENE_BRUKERDIALOG_SENDUTHENVENDELSE_V1_WSDLURL
       value: "http://maven.adeo.no/nexus/content/groups/public/no/nav/sbl/dialogarena/send-ut-henvendelse/0.7/send-ut-henvendelse-0.7.zip"
     - name: INNSYNJOURNAL_V2_ENDPOINTURL
-      value: "https://wasapp-q0.adeo.no/joark/InnsynJournal/v2"
+      value: "https://wasapp.adeo.no/joark/InnsynJournal/v2"
     - name: INNSYNJOURNAL_V2_SECURITYTOKEN
       value: "SAML"
     - name: INNSYNJOURNAL_V2_WSDLURL
       value: "http://maven.adeo.no/nexus/content/groups/public/no/nav/tjenester/nav-innsynJournal-v2-tjenestespesifikasjon/2.0.2/nav-innsynJournal-v2-tjenestespesifikasjon-2.0.2.zip"
     - name: JOURNAL_V2_ENDPOINTURL
-      value: "https://wasapp-q0.adeo.no/joark/Journal/v2"
+      value: "https://wasapp.adeo.no/joark/Journal/v2"
     - name: JOURNAL_V2_SECURITYTOKEN
       value: "SAML"
     - name: JOURNAL_V2_WSDLURL
@@ -113,15 +112,15 @@ spec:
     - name: KODEVERKSMAPPER_OPPGAVETYPE_DESCRIPTION
       value: "Mapper fra oppgavetyper i fellessystemers kodeverk til oppgavetyper felles kodeverk"
     - name: KODEVERKSMAPPER_OPPGAVETYPE_URL
-      value: "https://kodeverksmapper.nais.preprod.local/kodeverksmapper/mapOppgavetype"
+      value: "https://kodeverksmapper.nais.adeo.no/kodeverksmapper/mapOppgavetype"
     - name: KODEVERKSMAPPER_PING_DESCRIPTION
       value: "Ping-tjeneste som kan kalles fra konsumenters selftest"
     - name: KODEVERKSMAPPER_PING_URL
-      value: "https://kodeverksmapper.nais.preprod.local/kodeverksmapper/ping"
+      value: "https://kodeverksmapper.nais.adeo.no/kodeverksmapper/ping"
     - name: KODEVERKSMAPPER_UNDERKATEGORI_DESCRIPTION
       value: "Mapper fra underkategorier i fellessystemers kodeverk til behandlingstema og behandlingstype i felles kodeverk"
     - name: KODEVERKSMAPPER_UNDERKATEGORI_URL
-      value: "https://kodeverksmapper.nais.preprod.local/kodeverksmapper/mapUnderkategori"
+      value: "https://kodeverksmapper.nais.adeo.no/kodeverksmapper/mapUnderkategori"
     - name: LDAP_BASEDN
       value: "dc=preprod,dc=local"
     - name: LDAP_DOMAIN
@@ -129,213 +128,205 @@ spec:
     - name: LDAP_SERVICEUSER_BASEDN
       value: "ou=ServiceAccounts,dc=preprod,dc=local"
     - name: LDAP_URL
-      value: "ldaps://ldapgw.preprod.local"
+      value: "ldaps://ldapgw.adeo.no"
     - name: LDAP_USER_BASEDN
       value: "ou=NAV,ou=BusinessUnits,dc=preprod,dc=local"
     - name: MODIABRUKERDIALOG_STANDARDTEKSTER_TILBAKEMELDING_URL
       value: "https://navet.adeo.no/411275.cms"
     - name: PENSJON_PENSJONSAK_V1_ENDPOINTURL
-      value: "https://wasapp-q0.adeo.no/pensjon-ws/PensjonSak_v1"
+      value: "https://wasapp.adeo.no/pensjon-ws/PensjonSak_v1"
     - name: PENSJON_PENSJONSAK_V1_SECURITYTOKEN
       value: "SAML"
     - name: PENSJON_PENSJONSAK_V1_WSDLURL
       value: "http://maven.adeo.no/nexus/content/groups/public/no/nav/tjenester/fim/nav-pensjonSak-v1-tjenestespesifikasjon/1.0.0/nav-pensjonSak-v1-tjenestespesifikasjon-1.0.0.zip"
     - name: PERSON_OPPSLAG_V1_URL
-      value: "https://person-oppslag.nais.preprod.local/api/v1/oppslag"
+      value: "https://person-oppslag.nais.adeo.no/api/v1/oppslag"
     - name: SAF_GRAPHQL_URL
-      value: "https://saf-q0.nais.preprod.local/graphql"
+      value: "https://saf.nais.adeo.no/graphql"
     - name: SAF_HENTDOKUMENT_URL
-      value: "https://saf-q0.nais.preprod.local/rest/hentdokument"
+      value: "https://saf.nais.adeo.no/rest/hentdokument"
     - name: SAKOGBEHANDLING_ENDPOINTURL
-      value: "https://modapp-q0.adeo.no/sakogbehandling/ws/SakOgBehandling_v1"
+      value: "https://modapp.adeo.no/sakogbehandling/ws/SakOgBehandling_v1"
     - name: SAKOGBEHANDLING_SECURITYTOKEN
       value: "SAML"
     - name: SAKOGBEHANDLING_WSDLURL
       value: "http://maven.adeo.no/nexus/content/groups/public/no/nav/tjenester/fim/nav-fim-sakOgBehandling-v1-tjenestespesifikasjon/1.0.0-alpha011/nav-fim-sakOgBehandling-v1-tjenestespesifikasjon-1.0.0-alpha011.zip"
     - name: SECURITY_TOKEN_SERVICE_TOKEN_URL
-      value: "https://security-token-service.nais.preprod.local/rest/v1/sts/token"
+      value: "https://security-token-service.nais.adeo.no/rest/v1/sts/token"
     - name: SECURITYTOKENSERVICE_URL
-      value: "https://sts-q0.preprod.local/SecurityTokenServiceProvider/"
+      value: "https://sts.adeo.no/SecurityTokenServiceProvider/"
     - name: SERVER_AKTIVITETSPLAN_URL
-      value: "https://app-q0.adeo.no"
+      value: "https://app.adeo.no"
     - name: SERVER_ARENA_URL
-      value: "http://arena-q0.adeo.no/forms/arenaMod_q0.html"
+      value: "http://arena.adeo.no/forms/arenaMod.html"
     - name: SERVER_DREK_URL
-      value: "https://drek.nais.preprod.local/"
+      value: "https://drek.nais.adeo.no/"
     - name: SERVER_GOSYS_URL
-      value: "https://wasapp-q0.adeo.no"
+      value: "https://wasapp.adeo.no"
     - name: SERVER_NORG2_FRONTEND_URL
-      value: "https://norg2-frontend.nais.preprod.local"
+      value: "https://norg2-frontend.nais.adeo.no"
     - name: SERVER_PESYS_URL
-      value: "https://wasapp-q0.adeo.no"
+      value: "https://wasapp.adeo.no"
     - name: SERVER_VEILARBPORTEFOLJEFLATEFS_URL
-      value: "https://app-q0.adeo.no/veilarbportefoljeflatefs"
+      value: "https://app.adeo.no/veilarbportefoljeflatefs"
     - name: SERVER_AAREG_URL
-      value: "https://modapp-q0.adeo.no/aareg-web"
+      value: "https://modapp.adeo.no/aareg-web"
     - name: TJENESTEBUSS_URL
-      value: "https://tjenestebuss-q0.adeo.no/"
+      value: "https://tjenestebuss.adeo.no/"
     - name: TJENESTER_URL
-      value: "https://tjenester-q0.nav.no"
+      value: "https://tjenester.nav.no"
     - name: UNLEASH_API_URL
       value: "https://unleash.nais.adeo.no/api/"
     - name: UTBETALING_V1_DESCRIPTION
       value: "Utbetalingsoversikt"
-#    - name: UTBETALING_V1_ENDPOINTURL
-#      value: "https\://wasapp-q0.adeo.no/nav-utbetaldata-ws/virksomhet/Utbetaling_v1"
     - name: UTBETALING_V1_ENDPOINTURL
-      value: "https://service-gw-q0.preprod.local/"
+      value: "https://service-gw.adeo.no/"
     - name: UTBETALING_V1_SECURITYTOKEN
       value: "SAML"
     - name: UTBETALING_V1_WSDLURL
       value: "http://maven.adeo.no/nexus/content/groups/public/no/nav/tjenester/fim/nav-fim-utbetaling-v1-tjenestespesifikasjon/1.1.3/nav-fim-utbetaling-v1-tjenestespesifikasjon-1.1.3.zip"
     - name: VEILARBOPPFOLGINGAPI_URL
-      value: "https://veilarboppfolging-q0.nais.preprod.local/veilarboppfolging/api"
-#    - name: VIRKSOMHET_ARBEIDOGAKTIVITET_V1_ENDPOINTURL
-#      value: "https\://tjenestebuss-q0.adeo.no/nav-tjeneste-arbeidOgAktivitet_v1Web/sca/ArbeidOgAktivitetWSEXP"
+      value: "https://veilarboppfolging.nais.adeo.no/veilarboppfolging/api"
     - name: VIRKSOMHET_ARBEIDOGAKTIVITET_V1_ENDPOINTURL
-      value: "https://service-gw-q0.preprod.local/"
+      value: "https://service-gw.adeo.no/"
     - name: VIRKSOMHET_ARBEIDOGAKTIVITET_V1_SECURITYTOKEN
       value: "LTPA"
     - name: VIRKSOMHET_ARBEIDOGAKTIVITET_V1_WSDLURL
       value: "http://maven.adeo.no/nexus/service/local/artifact/maven/redirect?r=m2internal&g=no.nav.esb.nav&a=nav-tjeneste-arbeidOgAktivitet&v=1.0.6&e=zip&c=wsdlif"
     - name: VIRKSOMHET_ARBEIDSFORDELING_V1_ENDPOINTURL
-      value: "https://app-q0.adeo.no/norg2/ws/Arbeidsfordeling/v1"
+      value: "https://app.adeo.no/norg2/ws/Arbeidsfordeling/v1"
     - name: VIRKSOMHET_ARBEIDSFORDELING_V1_SECURITYTOKEN
       value: "SAML"
     - name: VIRKSOMHET_ARBEIDSFORDELING_V1_WSDLURL
       value: "http://maven.adeo.no/nexus/content/groups/public/no/nav/tjenester/nav-arbeidsfordeling-v1-tjenestespesifikasjon/1.1.0/nav-arbeidsfordeling-v1-tjenestespesifikasjon-1.1.0.zip"
     - name: VIRKSOMHET_BEHANDLEBRUKERPROFIL_V2_ENDPOINTURL
-      value: "https://wasapp-q0.adeo.no/tpsws/BehandleBrukerprofil_v2"
+      value: "https://wasapp.adeo.no/tpsws/BehandleBrukerprofil_v2"
     - name: VIRKSOMHET_BEHANDLEBRUKERPROFIL_V2_SECURITYTOKEN
       value: "SAML"
     - name: VIRKSOMHET_BEHANDLEBRUKERPROFIL_V2_WSDLURL
       value: "http://maven.adeo.no/nexus/content/groups/public/no/nav/tjenester/nav-behandleBrukerprofil-v2-tjenestespesifikasjon/2.0.0/nav-behandleBrukerprofil-v2-tjenestespesifikasjon-2.0.0.zip"
     - name: VIRKSOMHET_BEHANDLEPERSON_V1_ENDPOINTURL
-      value: "https://wasapp-q0.adeo.no/tpsws/ws/BehandlePerson/v1"
+      value: "https://wasapp.adeo.no/tpsws/ws/BehandlePerson/v1"
     - name: VIRKSOMHET_BEHANDLEPERSON_V1_SECURITYTOKEN
       value: "SAML"
     - name: VIRKSOMHET_BEHANDLEPERSON_V1_WSDLURL
       value: "http://maven.adeo.no/nexus/content/groups/public/no/nav/tjenester/nav-behandle-person-v1-tjenestespesifikasjon/1.8.2/nav-behandle-person-v1-tjenestespesifikasjon-1.8.2.zip"
     - name: VIRKSOMHET_BEHANDLESAK_V1_ENDPOINTURL
-      value: "https://wasapp-q0.adeo.no/nav-gsak-ws/BehandleSakV1"
+      value: "https://wasapp.adeo.no/nav-gsak-ws/BehandleSakV1"
     - name: VIRKSOMHET_BEHANDLESAK_V1_SECURITYTOKEN
       value: "SAML"
     - name: VIRKSOMHET_BEHANDLESAK_V1_WSDLURL
       value: "http://maven.adeo.no/nexus/content/groups/public/no/nav/tjenester/fim/nav-fim-behandleSak-v1-tjenestespesifikasjon/1.0.0/nav-fim-behandleSak-v1-tjenestespesifikasjon-1.0.0.zip"
     - name: VIRKSOMHET_DIGITALKONTAKINFORMASJON_V1_ENDPOINTURL
-      value: "https://dkif.nais.preprod.local/ws/DigitalKontaktinformasjon/v1"
+      value: "https://dkif.nais.adeo.no/ws/DigitalKontaktinformasjon/v1"
     - name: VIRKSOMHET_DIGITALKONTAKINFORMASJON_V1_SECURITYTOKEN
       value: "SAML"
     - name: VIRKSOMHET_DIGITALKONTAKINFORMASJON_V1_WSDLURL
       value: "http://maven.adeo.no/nexus/service/local/artifact/maven/redirect?a=nav-digitalKontaktinformasjon-v1-tjenestespesifikasjon&e=zip&g=no.nav.tjenester.fim&r=m2internal&v=2.0.0"
     - name: VIRKSOMHET_EGENANSATT_V1_ENDPOINTURL
-      value: "https://wasapp-q0.adeo.no/tpsws/EgenAnsatt_v1"
+      value: "https://wasapp.adeo.no/tpsws/EgenAnsatt_v1"
     - name: VIRKSOMHET_EGENANSATT_V1_SECURITYTOKEN
       value: "SAML"
     - name: VIRKSOMHET_EGENANSATT_V1_WSDLURL
       value: "http://maven.adeo.no/nexus/content/groups/public/no/nav/tjenester/pip/nav-pip-egenAnsatt-v1-tjenestespesifikasjon/1.0.1/nav-pip-egenAnsatt-v1-tjenestespesifikasjon-1.0.1.zip"
     - name: VIRKSOMHET_FORELDREPENGER_V2_ENDPOINTURL
-      value: "https://modapp-q0.adeo.no/infotrygd-ws/ForeldrepengerService/v2"
+      value: "https://modapp.adeo.no/infotrygd-ws/ForeldrepengerService/v2"
     - name: VIRKSOMHET_FORELDREPENGER_V2_SECURITYTOKEN
       value: "SAML"
     - name: VIRKSOMHET_FORELDREPENGER_V2_WSDLURL
       value: "http://maven.adeo.no/nexus/content/groups/public/no/nav/tjenester/nav-foreldrepenger-v2-tjenestespesifikasjon/2.0.2/nav-foreldrepenger-v2-tjenestespesifikasjon-2.0.2.zip"
     - name: VIRKSOMHET_KODEVERK_V2_ENDPOINTURL
-      value: "https://kodeverk.nais.preprod.local/ws/kodeverk/v2"
+      value: "https://kodeverk.nais.adeo.no/ws/kodeverk/v2"
     - name: VIRKSOMHET_KODEVERK_V2_SECURITYTOKEN
       value: "NONE"
     - name: VIRKSOMHET_KODEVERK_V2_WSDLURL
       value: "http://maven.adeo.no/nexus/content/groups/public/no/nav/tjenester/fim/nav-fim-kodeverk-v2-tjenestespesifikasjon/2.0.0/nav-fim-kodeverk-v2-tjenestespesifikasjon-2.0.0.zip"
     - name: VIRKSOMHET_OPPFOLGING_V1_ENDPOINTURL
-      value: "https://arena-q0.adeo.no/ail_ws/Oppfoelging_v1"
+      value: "https://arena.adeo.no/ail_ws/Oppfoelging_v1"
     - name: VIRKSOMHET_OPPFOLGING_V1_SECURITYTOKEN
       value: "SAML"
     - name: VIRKSOMHET_OPPFOLGING_V1_WSDLURL
       value: "http://maven.adeo.no/nexus/content/repositories/public/no/nav/tjenester/fim/nav-fim-oppfoelging-v1-tjenestespesifikasjon/1.2.0/nav-fim-oppfoelging-v1-tjenestespesifikasjon-1.2.0.zip"
-#    - name: VIRKSOMHET_OPPGAVE_V3_ENDPOINTURL
-#      value: "https\://wasapp-q0.adeo.no/nav-gsak-ws/OppgaveV3"
     - name: VIRKSOMHET_OPPGAVE_V3_ENDPOINTURL
-      value: "https://service-gw-q0.preprod.local/"
+      value: "https://service-gw.adeo.no/"
     - name: VIRKSOMHET_OPPGAVE_V3_SECURITYTOKEN
       value: "LTPA"
     - name: VIRKSOMHET_OPPGAVE_V3_WSDLURL
       value: "http://maven.adeo.no/nexus/content/groups/public/no/nav/sbl/dialogarena/oppgave-v3-tjenestespesifikasjon/3.1.2/oppgave-v3-tjenestespesifikasjon-3.1.2.zip"
-#    - name: VIRKSOMHET_OPPGAVEBEHANDLING_V3_ENDPOINTURL
-#      value: "https\://wasapp-q0.adeo.no/nav-gsak-ws/OppgavebehandlingV3"
     - name: VIRKSOMHET_OPPGAVEBEHANDLING_V3_ENDPOINTURL
-      value: "https://service-gw-q0.preprod.local/"
+      value: "https://service-gw.adeo.no/"
     - name: VIRKSOMHET_OPPGAVEBEHANDLING_V3_SECURITYTOKEN
       value: "LTPA"
     - name: VIRKSOMHET_OPPGAVEBEHANDLING_V3_WSDLURL
       value: "http://maven.adeo.no/nexus/content/groups/public/no/nav/tjenester/fim/nav-fim-oppgavebehandling-v3-tjenestespesifikasjon/3.1.1/nav-fim-oppgavebehandling-v3-tjenestespesifikasjon-3.1.1.zip"
     - name: VIRKSOMHET_ORGANISASJON_V4_ENDPOINTURL
-      value: "https://service-gw-q0.preprod.local/"
+      value: "https://service-gw.adeo.no/"
     - name: VIRKSOMHET_ORGANISASJON_V4_SECURITYTOKEN
       value: "SAML"
     - name: VIRKSOMHET_ORGANISASJON_V4_WSDLURL
       value: "http://maven.adeo.no/nexus/content/groups/public/no/nav/tjenester/fim/nav-fim-organisasjon-v4-tjenestespesifikasjon/1.0.4/nav-fim-organisasjon-v4-tjenestespesifikasjon-1.0.4.zip"
     - name: VIRKSOMHET_ORGANISASJONENHET_V2_ENDPOINTURL
-      value: "https://app-q0.adeo.no/norg2/ws/OrganisasjonEnhet/v2"
+      value: "https://app.adeo.no/norg2/ws/OrganisasjonEnhet/v2"
     - name: VIRKSOMHET_ORGANISASJONENHET_V2_SECURITYTOKEN
       value: "SAML"
     - name: VIRKSOMHET_ORGANISASJONENHET_V2_WSDLURL
       value: "http://maven.adeo.no/nexus/content/groups/public/no/nav/tjenester/nav-organisasjonEnhet-v2-tjenestespesifikasjon/2.1.0/nav-organisasjonEnhet-v2-tjenestespesifikasjon-2.1.0.zip"
     - name: VIRKSOMHET_ORGANISASJONENHETKONTAKTINFORMASJON_V1_ENDPOINTURL
-      value: "https://app-q0.adeo.no/norg2/ws/OrganisasjonEnhetKontaktinformasjon/v1"
+      value: "https://app.adeo.no/norg2/ws/OrganisasjonEnhetKontaktinformasjon/v1"
     - name: VIRKSOMHET_ORGANISASJONENHETKONTAKTINFORMASJON_V1_SECURITYTOKEN
       value: "SAML"
     - name: VIRKSOMHET_ORGANISASJONENHETKONTAKTINFORMASJON_V1_WSDLURL
       value: "http://maven.adeo.no/nexus/content/groups/public/no/nav/tjenester/nav-organisasjonEnhetKontaktinformasjon-v1-tjenestespesifikasjon/1.1.0/nav-organisasjonEnhetKontaktinformasjon-v1-tjenestespesifikasjon-1.1.0.zip"
     - name: VIRKSOMHET_PERSON_V3_ENDPOINTURL
-      value: "https://wasapp-q0.adeo.no/tpsws/ws/Person/v3"
+      value: "https://wasapp.adeo.no/tpsws/ws/Person/v3"
     - name: VIRKSOMHET_PERSON_V3_SECURITYTOKEN
       value: "SAML"
     - name: VIRKSOMHET_PERSON_V3_WSDLURL
       value: "http://maven.adeo.no/nexus/content/groups/public/no/nav/tjenester/nav-person-v3-tjenestespesifikasjon/3.6.1/nav-person-v3-tjenestespesifikasjon-3.6.1.zip"
     - name: VIRKSOMHET_PERSONSOK_V1_ENDPOINTURL
-      value: "https://wasapp-q0.adeo.no/tpsws/Personsok_v1"
+      value: "https://wasapp.adeo.no/tpsws/Personsok_v1"
     - name: VIRKSOMHET_PERSONSOK_V1_SECURITYTOKEN
       value: "SAML"
     - name: VIRKSOMHET_PERSONSOK_V1_WSDLURL
       value: "http://maven.adeo.no/nexus/content/groups/public/no/nav/tjenester/fim/nav-fim-personsok-v1-tjenestespesifikasjon/1.0.1/nav-fim-personsok-v1-tjenestespesifikasjon-1.0.1.zip"
     - name: VIRKSOMHET_PLEIEPENGER_V1_ENDPOINTURL
-      value: "https://modapp-q0.adeo.no/infotrygd-ws/Pleiepenger/v1"
+      value: "https://modapp.adeo.no/infotrygd-ws/Pleiepenger/v1"
     - name: VIRKSOMHET_PLEIEPENGER_V1_SECURITYTOKEN
       value: "SAML"
     - name: VIRKSOMHET_PLEIEPENGER_V1_WSDLURL
       value: "http://maven.adeo.no/nexus/content/groups/public/no/nav/tjenester/nav-pleiepenger-v1-tjenestespesifikasjon/1.0.4/nav-pleiepenger-v1-tjenestespesifikasjon-1.0.4.zip"
     - name: VIRKSOMHET_SAK_V1_ENDPOINTURL
-      value: "https://wasapp-q0.adeo.no/nav-gsak-ws/SakV1"
+      value: "https://wasapp.adeo.no/nav-gsak-ws/SakV1"
     - name: VIRKSOMHET_SAK_V1_SECURITYTOKEN
       value: "SAML"
     - name: VIRKSOMHET_SAK_V1_WSDLURL
       value: "http://maven.adeo.no/nexus/content/groups/public/no/nav/tjenester/fim/nav-fim-sak-v1-tjenestespesifikasjon/1.0.0/nav-fim-sak-v1-tjenestespesifikasjon-1.0.0.zip"
     - name: VIRKSOMHET_SYKEPENGER_V2_ENDPOINTURL
-      value: "https://modapp-q0.adeo.no/infotrygd-ws/SykepengerService/v2"
+      value: "https://modapp.adeo.no/infotrygd-ws/SykepengerService/v2"
     - name: VIRKSOMHET_SYKEPENGER_V2_SECURITYTOKEN
       value: "SAML"
     - name: VIRKSOMHET_SYKEPENGER_V2_WSDLURL
       value: "http://maven.adeo.no/nexus/content/groups/public/no/nav/tjenester/nav-sykepenger-v2-tjenestespesifikasjon/2.0.1/nav-sykepenger-v2-tjenestespesifikasjon-2.0.1.zip"
     - name: VIRKSOMHET_TILDELOPPGAVE_V1_ENDPOINTURL
-      value: "https://wasapp-q0.adeo.no/nav-gsak-ws/TildelOppgaveV1"
+      value: "https://wasapp.adeo.no/nav-gsak-ws/TildelOppgaveV1"
     - name: VIRKSOMHET_TILDELOPPGAVE_V1_SECURITYTOKEN
       value: "SAML"
     - name: VIRKSOMHET_TILDELOPPGAVE_V1_WSDLURL
       value: "http://maven.adeo.no/nexus/content/groups/public/no/nav/sbl/dialogarena/tildeloppgave-v1-tjenestespesifikasjon/1.1.0/tildeloppgave-v1-tjenestespesifikasjon-1.1.0.zip"
     - name: VIRKSOMHET_YTELSESKONTRAKT_V3_ENDPOINTURL
-      value: "https://arena-q0.adeo.no/ail_ws/Ytelseskontrakt_v3"
+      value: "https://arena.adeo.no/ail_ws/Ytelseskontrakt_v3"
     - name: VIRKSOMHET_YTELSESKONTRAKT_V3_SECURITYTOKEN
       value: "SAML"
     - name: VIRKSOMHET_YTELSESKONTRAKT_V3_WSDLURL
       value: "http://maven.adeo.no/nexus/content/groups/public/no/nav/tjenester/fim/nav-fim-ytelseskontrakt-v3-tjenestespesifikasjon/3.0.1/nav-fim-ytelseskontrakt-v3-tjenestespesifikasjon-3.0.1.zip"
     - name: HENVENDELSE_LES_API_URL
-      value: "https://modapp-q0.adeo.no/henvendelse-les/api"
+      value: "https://modapp.adeo.no/henvendelse-les/api"
     - name: PDL_API_URL
-      value: "https://pdl-api.nais.preprod.local/graphql"
+      value: "https://pdl-api.nais.adeo.no/graphql"
     - name: PERSONFORVALTER_URL
-      value: "https://person-forvalter.nais.preprod.local/endreperson"
+      value: "https://person-forvalter.nais.adeo.no/endreperson"
     - name: TILLATMOCK
-      value: "true"
+      value: "false"
     - name: VISUTBETALINGER
       value: "true"
     - name: DEAKTIVERAAREGLENKE
@@ -373,4 +364,5 @@ spec:
     - name: FEATURE_NYTTVISITTKORT
       value: "true"
     - name: HASTEKASSERING_TILGANG
-      value: "Z992323,Z990366,Z990083"
+      value: "G110867,S111498,W152868,N127626,B152650,U109747"
+

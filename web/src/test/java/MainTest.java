@@ -8,8 +8,8 @@ import static no.nav.testconfig.ApiAppTest.setupTestContext;
 
 public class MainTest {
     public static void main(String[] args) {
-        SystemProperties.setFrom("vault.properties");
-        NaisYamlUtils.loadFromYaml("deploy/naiserator-q0.yaml");
+        SystemProperties.setFrom(".vault.properties");
+        NaisYamlUtils.loadFromYaml(".nais/nais-q0.yml");
 
         setupTestContext(ApiAppTest.Config.builder().applicationName("modiabrukerdialog").build());
 

@@ -61,7 +61,19 @@ jobs:
           APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
           PRINT_PAYLOAD: true
           CLUSTER: dev-fss
-          RESOURCE: deploy/naiserator-q0.yaml
+          RESOURCE: .nais/nais-q0.yml
+      - uses: nais/deploy/actions/deploy@v1
+        env:
+          APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
+          PRINT_PAYLOAD: true
+          CLUSTER: dev-fss
+          RESOURCE: .nais/nais-q1.yml
+      - uses: nais/deploy/actions/deploy@v1
+        env:
+          APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
+          PRINT_PAYLOAD: true
+          CLUSTER: dev-fss
+          RESOURCE: .nais/nais-q6.yml
 
   deploy-prod:
     name: Deploy to prod
@@ -76,4 +88,4 @@ jobs:
           DRY_RUN: true
           PRINT_PAYLOAD: true
           CLUSTER: prod-fss
-          RESOURCE: deploy/naiserator.yaml
+          RESOURCE: .nais/nais.yml

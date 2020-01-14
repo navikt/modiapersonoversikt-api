@@ -12,3 +12,4 @@
 target
 /credentials.properties
 node_modules/
+.vault.properties
