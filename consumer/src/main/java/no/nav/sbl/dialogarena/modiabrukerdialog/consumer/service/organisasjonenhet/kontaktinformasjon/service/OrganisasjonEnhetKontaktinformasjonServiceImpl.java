@@ -1,11 +1,11 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.organisasjonenhet.kontaktinformasjon.service;
 
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.organisasjonenhet.kontaktinformasjon.domain.OrganisasjonEnhetKontaktinformasjon;
-import no.nav.tjeneste.virksomhet.organisasjonenhetkontaktinformasjon.v1.binding.HentKontaktinformasjonForEnhetBolkUgyldigInput;
-import no.nav.tjeneste.virksomhet.organisasjonenhetkontaktinformasjon.v1.binding.OrganisasjonEnhetKontaktinformasjonV1;
-import no.nav.tjeneste.virksomhet.organisasjonenhetkontaktinformasjon.v1.informasjon.FeiletEnhet;
-import no.nav.tjeneste.virksomhet.organisasjonenhetkontaktinformasjon.v1.meldinger.HentKontaktinformasjonForEnhetBolkRequest;
-import no.nav.tjeneste.virksomhet.organisasjonenhetkontaktinformasjon.v1.meldinger.HentKontaktinformasjonForEnhetBolkResponse;
+import no.nav.tjeneste.virksomhet.organisasjonenhetkontaktinformasjon.v1.HentKontaktinformasjonForEnhetBolkUgyldigInput;
+import no.nav.tjeneste.virksomhet.organisasjonenhetkontaktinformasjon.v1.OrganisasjonEnhetKontaktinformasjonV1;
+import no.nav.tjeneste.virksomhet.organisasjonenhetkontaktinformasjon.v1.informasjon.*;
+import no.nav.tjeneste.virksomhet.organisasjonenhetkontaktinformasjon.v1.meldinger.WSHentKontaktinformasjonForEnhetBolkRequest;
+import no.nav.tjeneste.virksomhet.organisasjonenhetkontaktinformasjon.v1.meldinger.WSHentKontaktinformasjonForEnhetBolkResponse;
 
 public class OrganisasjonEnhetKontaktinformasjonServiceImpl implements OrganisasjonEnhetKontaktinformasjonService {
 
@@ -17,23 +17,23 @@ public class OrganisasjonEnhetKontaktinformasjonServiceImpl implements Organisas
 
     @Override
     public OrganisasjonEnhetKontaktinformasjon hentKontaktinformasjon(String enhetId) {
-        HentKontaktinformasjonForEnhetBolkResponse response = hentResponse(lagRequest(enhetId));
+        WSHentKontaktinformasjonForEnhetBolkResponse response = hentResponse(lagRequest(enhetId));
         return response.getEnhetListe().stream()
                 .map(OrganisasjonEnhetKontaktinformasjonMapper::map)
                 .findFirst()
                 .orElseThrow(() -> new RuntimeException(response.getFeiletEnhetListe().stream()
                         .findFirst()
-                        .map(FeiletEnhet::getFeilmelding)
+                        .map(WSFeiletEnhet::getFeilmelding)
                         .orElse("")));
     }
 
-    private HentKontaktinformasjonForEnhetBolkRequest lagRequest(String enhetId) {
-        HentKontaktinformasjonForEnhetBolkRequest request = new HentKontaktinformasjonForEnhetBolkRequest();
+    private WSHentKontaktinformasjonForEnhetBolkRequest lagRequest(String enhetId) {
+        WSHentKontaktinformasjonForEnhetBolkRequest request = new WSHentKontaktinformasjonForEnhetBolkRequest();
         request.getEnhetIdListe().add(enhetId);
         return request;
     }
 
-    private HentKontaktinformasjonForEnhetBolkResponse hentResponse(HentKontaktinformasjonForEnhetBolkRequest request) {
+    private WSHentKontaktinformasjonForEnhetBolkResponse hentResponse(WSHentKontaktinformasjonForEnhetBolkRequest request) {
         try {
             return service.hentKontaktinformasjonForEnhetBolk(request);
         } catch (HentKontaktinformasjonForEnhetBolkUgyldigInput e) {

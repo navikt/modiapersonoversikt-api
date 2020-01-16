@@ -10,9 +10,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class NorgEndpointFelles {
+    public static final String KJERNEINFO_TJENESTEBUSS_USERNAME = "SRV_KJERNEINFO_TJENESTEBUSS_USERNAME";
+    public static final String KJERNEINFO_TJENESTEBUSS_PASSWORD = "SRV_KJERNEINFO_TJENESTEBUSS_PASSWORD";
+
     public static Map<String, Object> getSecurityProps() {
-        final String user = EnvironmentUtils.getRequiredProperty("ctjenestebuss.username", "SRV_KJERNEINFO_TJENESTEBUSS_USERNAME");
-        final String password = EnvironmentUtils.getRequiredProperty("ctjenestebuss.password", "SRV_KJERNEINFO_TJENESTEBUSS_PASSWORD");
+        final String user = EnvironmentUtils.getRequiredProperty("ctjenestebuss.username", KJERNEINFO_TJENESTEBUSS_USERNAME);
+        final String password = EnvironmentUtils.getRequiredProperty("ctjenestebuss.password", KJERNEINFO_TJENESTEBUSS_PASSWORD);
 
         Map<String, Object> props = new HashMap<>();
         props.put(WSHandlerConstants.ACTION, WSHandlerConstants.USERNAME_TOKEN);

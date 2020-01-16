@@ -9,8 +9,6 @@ import no.nav.personsok.domain.Adresse;
 import no.nav.personsok.domain.Person;
 import no.nav.personsok.domain.enums.AdresseType;
 import no.nav.tjeneste.virksomhet.personsoek.v1.informasjon.*;
-import no.nav.tjeneste.virksomhet.personsoek.v1.meldinger.FimFinnPersonRequest;
-import no.nav.tjeneste.virksomhet.personsoek.v1.meldinger.FimFinnPersonResponse;
 import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
@@ -41,15 +39,15 @@ public class PersonsokMapperTest {
         FinnPersonRequest finnPersonRequest = new FinnPersonRequest();
         finnPersonRequest.setUtvidetPersonsok(PersonsokMockFactory.getUtvidetPersonsok());
 
-        FimFinnPersonRequest rawRequest = mapper.map(finnPersonRequest, FimFinnPersonRequest.class);
+        no.nav.tjeneste.virksomhet.personsoek.v1.meldinger.FinnPersonRequest rawRequest = mapper.map(finnPersonRequest, no.nav.tjeneste.virksomhet.personsoek.v1.meldinger.FinnPersonRequest.class);
 
         checkRequestMapping(finnPersonRequest, rawRequest);
     }
 
     @Test
     public void finnPersonResponseMapperPersonTest() {
-        FimFinnPersonResponse rawResponse =
-                new FimFinnPersonResponse();
+        no.nav.tjeneste.virksomhet.personsoek.v1.meldinger.FinnPersonResponse rawResponse =
+                new no.nav.tjeneste.virksomhet.personsoek.v1.meldinger.FinnPersonResponse();
 
         rawResponse.setTotaltAntallTreff(TOTALT_ANTALL_TREFF);
         rawResponse.getPersonListe().add(PersonsokMockFactory.getPerson());
@@ -66,8 +64,8 @@ public class PersonsokMapperTest {
 
     @Test
     public void finnPersonResponseMapperBrukerTest() {
-        FimFinnPersonResponse rawResponse =
-                new FimFinnPersonResponse();
+        no.nav.tjeneste.virksomhet.personsoek.v1.meldinger.FinnPersonResponse rawResponse =
+                new no.nav.tjeneste.virksomhet.personsoek.v1.meldinger.FinnPersonResponse();
 
         rawResponse.setTotaltAntallTreff(TOTALT_ANTALL_TREFF);
         rawResponse.getPersonListe().add(PersonsokMockFactory.getBruker());
@@ -88,8 +86,8 @@ public class PersonsokMapperTest {
 
     @Test
     public void finnPersonResponseMapperBrukerBranchesTest() {
-        FimFinnPersonResponse rawResponse =
-                new FimFinnPersonResponse();
+        no.nav.tjeneste.virksomhet.personsoek.v1.meldinger.FinnPersonResponse rawResponse =
+                new no.nav.tjeneste.virksomhet.personsoek.v1.meldinger.FinnPersonResponse();
 
         rawResponse.getPersonListe().add(PersonsokMockFactory.getBrukerForBranchTest());
 
@@ -132,7 +130,7 @@ public class PersonsokMapperTest {
             throw new RuntimeException(e);
         }
     }
-    private void checkRequestMapping(FinnPersonRequest finnPersonRequest, FimFinnPersonRequest rawRequest) {
+    private void checkRequestMapping(FinnPersonRequest finnPersonRequest, no.nav.tjeneste.virksomhet.personsoek.v1.meldinger.FinnPersonRequest rawRequest) {
         assertEquals(finnPersonRequest.getUtvidetPersonsok().getAlderFra(), rawRequest.getPersonFilter().getAlderFra());
         assertEquals(finnPersonRequest.getUtvidetPersonsok().getAlderTil(), rawRequest.getPersonFilter().getAlderTil());
         assertEquals(finnPersonRequest.getUtvidetPersonsok().getKommunenr(), rawRequest.getPersonFilter().getEnhetId());
@@ -150,12 +148,12 @@ public class PersonsokMapperTest {
         assertEquals(finnPersonRequest.getUtvidetPersonsok().getKontonummer(), rawRequest.getSoekekriterie().getBankkontoNorge());
     }
 
-    private void checkResponseMapperFellesFelt(FimFinnPersonResponse rawResponse, FinnPersonResponse finnPersonResponse) {
+    private void checkResponseMapperFellesFelt(no.nav.tjeneste.virksomhet.personsoek.v1.meldinger.FinnPersonResponse rawResponse, FinnPersonResponse finnPersonResponse) {
         assertEquals(rawResponse.getTotaltAntallTreff(), finnPersonResponse.getTotaltAntallTreff());
         assertEquals(rawResponse.getPersonListe().size(), finnPersonResponse.getPersonListe().size());
     }
 
-    private void checkResponseMapperPersonFelt(FimPerson rawResponsePerson, Person finnPersonResponsePerson) {
+    private void checkResponseMapperPersonFelt(no.nav.tjeneste.virksomhet.personsoek.v1.informasjon.Person rawResponsePerson, Person finnPersonResponsePerson) {
         assertEquals(rawResponsePerson.getPersonstatus().getPersonstatus().getValue(),
                 finnPersonResponsePerson.getPersonstatus().getKode());
         assertEquals(rawResponsePerson.getPersonnavn().getFornavn(),
@@ -169,17 +167,17 @@ public class PersonsokMapperTest {
         checkPersonAdresser(rawResponsePerson, finnPersonResponsePerson);
     }
 
-    private void checkResponseMapperBrukerFelt(FimPerson rawResponsePerson, Person finnPersonResponsePerson) {
+    private void checkResponseMapperBrukerFelt(no.nav.tjeneste.virksomhet.personsoek.v1.informasjon.Person rawResponsePerson, Person finnPersonResponsePerson) {
         assertEquals(rawResponsePerson.getDiskresjonskode().getValue(),
                 finnPersonResponsePerson.getDiskresjonskodePerson().getKode());
-        assertEquals(((FimBruker) rawResponsePerson).getHarAnsvarligEnhet().getEnhet().getOrganisasjonselementID(),
+        assertEquals(((Bruker) rawResponsePerson).getHarAnsvarligEnhet().getEnhet().getOrganisasjonselementID(),
                 finnPersonResponsePerson.getKommunenr());
 
         checkBrukerAdresser(rawResponsePerson, finnPersonResponsePerson);
     }
 
-    private void checkNorskIdent(FimPerson rawResponsePerson, Person finnPersonResponsePerson) {
-        FimNorskIdent norskIdent = rawResponsePerson.getIdent();
+    private void checkNorskIdent(no.nav.tjeneste.virksomhet.personsoek.v1.informasjon.Person rawResponsePerson, Person finnPersonResponsePerson) {
+        NorskIdent norskIdent = rawResponsePerson.getIdent();
         if (norskIdent.getType().getValue().equals("F")) {
             assertEquals(norskIdent.getIdent(),
                     finnPersonResponsePerson.getFodselsnummer());
@@ -187,9 +185,9 @@ public class PersonsokMapperTest {
 
     }
 
-    private void checkPersonAdresser(FimPerson rawResponsePerson, Person finnPersonResponsePerson) {
-        FimUstrukturertAdresse postadresse = rawResponsePerson.getPostadresse().getUstrukturertAdresse();
-        FimStrukturertAdresse bostedsadresse = rawResponsePerson.getBostedsadresse().getStrukturertAdresse();
+    private void checkPersonAdresser(no.nav.tjeneste.virksomhet.personsoek.v1.informasjon.Person rawResponsePerson, Person finnPersonResponsePerson) {
+        UstrukturertAdresse postadresse = rawResponsePerson.getPostadresse().getUstrukturertAdresse();
+        StrukturertAdresse bostedsadresse = rawResponsePerson.getBostedsadresse().getStrukturertAdresse();
 
         for (Adresse adresse : finnPersonResponsePerson.getAdresser()) {
             if (postadresse != null && adresse.getAdresseType() == AdresseType.POSTADRESSE) {
@@ -200,17 +198,17 @@ public class PersonsokMapperTest {
         }
     }
 
-    private void checkBrukerAdresser(FimPerson rawResponsePerson, Person finnPersonResponsePerson) {
-        FimUstrukturertAdresse midlertidigPostadresseUtland = null;
-        FimUstrukturertAdresse midlertidigPostadresseNorge = null;
-        FimBruker rawResponseBruker = (FimBruker) rawResponsePerson;
-        FimStrukturertAdresse bostedsadresse = rawResponseBruker.getBostedsadresse().getStrukturertAdresse();
-        FimUstrukturertAdresse poststedsadresse = rawResponseBruker.getPostadresse().getUstrukturertAdresse();
+    private void checkBrukerAdresser(no.nav.tjeneste.virksomhet.personsoek.v1.informasjon.Person rawResponsePerson, Person finnPersonResponsePerson) {
+        UstrukturertAdresse midlertidigPostadresseUtland = null;
+        UstrukturertAdresse midlertidigPostadresseNorge = null;
+        Bruker rawResponseBruker = (Bruker) rawResponsePerson;
+        StrukturertAdresse bostedsadresse = rawResponseBruker.getBostedsadresse().getStrukturertAdresse();
+        UstrukturertAdresse poststedsadresse = rawResponseBruker.getPostadresse().getUstrukturertAdresse();
 
-        if (rawResponseBruker.getMidlertidigPostadresse() instanceof FimMidlertidigPostadresseUtland) {
-            midlertidigPostadresseUtland = (((FimMidlertidigPostadresseUtland) rawResponseBruker.getMidlertidigPostadresse()).getUstrukturertAdresse());
-        } else if (rawResponseBruker.getMidlertidigPostadresse() instanceof FimMidlertidigPostadresseNorge) {
-            midlertidigPostadresseNorge = (((FimMidlertidigPostadresseNorge) rawResponseBruker.getMidlertidigPostadresse()).getUstrukturertAdresse());
+        if (rawResponseBruker.getMidlertidigPostadresse() instanceof MidlertidigPostadresseUtland) {
+            midlertidigPostadresseUtland = (((MidlertidigPostadresseUtland) rawResponseBruker.getMidlertidigPostadresse()).getUstrukturertAdresse());
+        } else if (rawResponseBruker.getMidlertidigPostadresse() instanceof MidlertidigPostadresseNorge) {
+            midlertidigPostadresseNorge = (((MidlertidigPostadresseNorge) rawResponseBruker.getMidlertidigPostadresse()).getUstrukturertAdresse());
         }
 
         assertEquals(rawResponseBruker.getGjeldendePostadresseType().getValue(), finnPersonResponsePerson.getAdresser().get(0).getAdresseType().name());
@@ -228,7 +226,7 @@ public class PersonsokMapperTest {
         }
     }
 
-    private void checkUstrukturertAdresse(FimUstrukturertAdresse rawPostadresseUtland, Adresse adresse) {
+    private void checkUstrukturertAdresse(UstrukturertAdresse rawPostadresseUtland, Adresse adresse) {
         assertEquals((blankIfNull(rawPostadresseUtland.getAdresselinje1()) + " "
                 + blankIfNull(rawPostadresseUtland.getAdresselinje2()) + " "
                 + blankIfNull(rawPostadresseUtland.getAdresselinje3()) + "  ,").trim(), adresse.getAdresseString());
@@ -238,25 +236,25 @@ public class PersonsokMapperTest {
         return text == null ? "" : text;
     }
 
-    private void checkStrukturertAdresse(FimStrukturertAdresse rawGateAdresse, Adresse adresse) {
-        if (rawGateAdresse.getClass().equals(FimStedsadresseNorge.class)) {
-            FimStedsadresseNorge adresseNorge = (FimStedsadresseNorge) rawGateAdresse;
-            FimPostnummer poststed = adresseNorge.getPoststed();
+    private void checkStrukturertAdresse(StrukturertAdresse rawGateAdresse, Adresse adresse) {
+        if (rawGateAdresse.getClass().equals(StedsadresseNorge.class)) {
+            StedsadresseNorge adresseNorge = (StedsadresseNorge) rawGateAdresse;
+            Postnummer poststed = adresseNorge.getPoststed();
             String poststedValue = poststed == null ? "" : ", " + poststed.getValue();
             assertEquals(adresseNorge.getTilleggsadresse() + " " + adresseNorge.getBolignummer()
                     + poststedValue, adresse.getAdresseString());
-        } else if (rawGateAdresse.getClass().equals(FimGateadresse.class)) {
-            FimGateadresse gateadresse = (FimGateadresse) rawGateAdresse;
-            FimPostnummer poststed = gateadresse.getPoststed();
+        } else if (rawGateAdresse.getClass().equals(Gateadresse.class)) {
+            Gateadresse gateadresse = (Gateadresse) rawGateAdresse;
+            Postnummer poststed = gateadresse.getPoststed();
             String poststedValue = poststed == null ? "" : ", " + poststed.getValue();
             assertEquals(gateadresse.getGatenavn() + " " + gateadresse.getHusnummer()
                     + gateadresse.getHusbokstav() + poststedValue, adresse.getAdresseString());
-        } else if (rawGateAdresse.getClass().equals(FimMatrikkeladresse.class)) {
-            assertEquals(((FimMatrikkeladresse) rawGateAdresse).getEiendomsnavn() + " " + ((FimMatrikkeladresse) rawGateAdresse).getMatrikkelnummer().getBruksnummer(), adresse.getAdresseString());
-        } else if (rawGateAdresse.getClass().equals(FimPostboksadresseNorsk.class)) {
-            FimPostnummer poststed = ((FimPostboksadresseNorsk) rawGateAdresse).getPoststed();
+        } else if (rawGateAdresse.getClass().equals(Matrikkeladresse.class)) {
+            assertEquals(((Matrikkeladresse) rawGateAdresse).getEiendomsnavn() + " " + ((Matrikkeladresse) rawGateAdresse).getMatrikkelnummer().getBruksnummer(), adresse.getAdresseString());
+        } else if (rawGateAdresse.getClass().equals(PostboksadresseNorsk.class)) {
+            Postnummer poststed = ((PostboksadresseNorsk) rawGateAdresse).getPoststed();
             String poststedValue = poststed == null ? "" : ", " + poststed.getValue();
-            assertEquals(((FimPostboksadresseNorsk) rawGateAdresse).getPostboksanlegg() + poststedValue, adresse.getAdresseString());
+            assertEquals(((PostboksadresseNorsk) rawGateAdresse).getPostboksanlegg() + poststedValue, adresse.getAdresseString());
         }
     }
 }

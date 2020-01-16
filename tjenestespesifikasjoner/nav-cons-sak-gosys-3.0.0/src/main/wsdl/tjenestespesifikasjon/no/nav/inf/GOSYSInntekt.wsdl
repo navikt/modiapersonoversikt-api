@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:bons1="http://nav-cons-sak-gosys-3.0.0/no/nav/inf/Inntekt" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="Inntekt" targetNamespace="http://nav-cons-sak-gosys-3.0.0/no/nav/inf/Inntekt">
+  <wsdl:types>
+    <xsd:schema xmlns:bons3="http://nav-cons-sak-gosys-3.0.0/no/nav/fault" xmlns:bons4="http://nav-cons-sak-gosys-3.0.0/no/nav/fault/inntekt" xmlns:bons5="http://nav-cons-sak-gosys-3.0.0/no/nav/asbo/inntekt" targetNamespace="http://nav-cons-sak-gosys-3.0.0/no/nav/inf/Inntekt" xmlns:bons1="http://nav-cons-sak-gosys-3.0.0/no/nav/inf/Inntekt" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+            <xsd:import namespace="http://nav-cons-sak-gosys-3.0.0/no/nav/fault/inntekt" schemaLocation="../fault/inntekt/FaultGOSYSInntektIkkeFunnet.xsd"/>
+            <xsd:import namespace="http://nav-cons-sak-gosys-3.0.0/no/nav/fault" schemaLocation="../fault/FaultGOSYSGenerisk.xsd"/>
+            <xsd:import namespace="http://nav-cons-sak-gosys-3.0.0/no/nav/asbo/inntekt" schemaLocation="../asbo/inntekt/ASBOGOSYSInntekt.xsd"/>
+            <xsd:import namespace="http://nav-cons-sak-gosys-3.0.0/no/nav/asbo/inntekt" schemaLocation="../asbo/inntekt/ASBOGOSYSHentInntektListeRequest.xsd"/>
+            <xsd:import namespace="http://nav-cons-sak-gosys-3.0.0/no/nav/asbo/inntekt" schemaLocation="../asbo/inntekt/ASBOGOSYSInntektListe.xsd"/>
+             <xsd:element name="hentInntektListe">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="hentInntektListeRequest" nillable="true" type="bons5:ASBOGOSYSHentInntektListeRequest"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="hentInntektListeResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="hentInntektListeResponse" nillable="true" type="bons5:ASBOGOSYSInntektListe"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+            <xsd:element name="hentDetaljertInntekt">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="hentDetaljertInntektRequest" nillable="true" type="bons5:ASBOGOSYSInntekt"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+            <xsd:element name="hentDetaljertInntektResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="hentDetaljertInntektResponse" nillable="true" type="bons5:ASBOGOSYSInntekt"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+ 
+            <xsd:element name="FaultGOSYSInntektIkkeFunnet_element" nillable="true" type="bons4:FaultGOSYSInntektIkkeFunnet"/>
+            <xsd:element name="FaultGOSYSGenerisk_element" nillable="true" type="bons3:FaultGOSYSGenerisk"/>
+            <xsd:element name="FaultGOSYSGenerisk_element2" nillable="true" type="bons3:FaultGOSYSGenerisk"/>
+        </xsd:schema>
+  </wsdl:types>
+    <wsdl:message name="hentInntektListeRequestMsg">
+    <wsdl:part element="bons1:hentInntektListe" name="hentInntektListeParameters"/>
+  </wsdl:message>
+    <wsdl:message name="hentInntektListeResponseMsg">
+    <wsdl:part element="bons1:hentInntektListeResponse" name="hentInntektListeResult"/>
+  </wsdl:message>
+    <wsdl:message name="hentDetaljertInntektRequestMsg">
+    <wsdl:part element="bons1:hentDetaljertInntekt" name="hentDetaljertInntektParameters"/>
+  </wsdl:message>
+    <wsdl:message name="hentDetaljertInntektResponseMsg">
+    <wsdl:part element="bons1:hentDetaljertInntektResponse" name="hentDetaljertInntektResult"/>
+  </wsdl:message>
+    <wsdl:message name="hentDetaljertInntekt_faultInntektIkkeFunnetMsg">
+    <wsdl:part element="bons1:FaultGOSYSInntektIkkeFunnet_element" name="faultInntektIkkeFunnet"/>
+  </wsdl:message>
+    <wsdl:message name="hentInntektListe_faultGOSYSGeneriskMsg">
+    <wsdl:part element="bons1:FaultGOSYSGenerisk_element" name="faultGOSYSGenerisk"/>
+  </wsdl:message>
+    <wsdl:message name="hentDetaljertInntekt_faultGOSYSGeneriskMsg">
+    <wsdl:part element="bons1:FaultGOSYSGenerisk_element2" name="faultGOSYSGenerisk"/>
+  </wsdl:message>
+    <wsdl:portType name="GOSYSInntekt">
+    <wsdl:operation name="hentInntektListe">
+      <wsdl:input message="bons1:hentInntektListeRequestMsg" name="hentInntektListeRequest"/>
+      <wsdl:output message="bons1:hentInntektListeResponseMsg" name="hentInntektListeResponse"/>
+            <wsdl:fault message="bons1:hentInntektListe_faultGOSYSGeneriskMsg" name="faultGOSYSGenerisk"/>
+        </wsdl:operation>
+        <wsdl:operation name="hentDetaljertInntekt">
+      <wsdl:input message="bons1:hentDetaljertInntektRequestMsg" name="hentDetaljertInntektRequest"/>
+      <wsdl:output message="bons1:hentDetaljertInntektResponseMsg" name="hentDetaljertInntektResponse"/>
+      <wsdl:fault message="bons1:hentDetaljertInntekt_faultInntektIkkeFunnetMsg" name="faultInntektIkkeFunnet"/>
+            <wsdl:fault message="bons1:hentDetaljertInntekt_faultGOSYSGeneriskMsg" name="faultGOSYSGenerisk"/>
+        </wsdl:operation>
+    </wsdl:portType>
+</wsdl:definitions>

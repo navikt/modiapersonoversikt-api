@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="GOSYSInntektWSEXP_GOSYSInntektHttp_Service" targetNamespace="http://nav-cons-sak-gosys-3.0.0/no/nav/inf/Inntekt/Binding" xmlns:Port_0="http://nav-cons-sak-gosys-3.0.0/no/nav/inf/Inntekt" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:this="http://nav-cons-sak-gosys-3.0.0/no/nav/inf/Inntekt/Binding">
+  <wsdl:import namespace="http://nav-cons-sak-gosys-3.0.0/no/nav/inf/Inntekt" location="no/nav/inf/GOSYSInntekt.wsdl">
+    </wsdl:import>
+  <wsdl:binding name="GOSYSInntektWSEXP_GOSYSInntektHttpBinding" type="Port_0:GOSYSInntekt">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="hentInntektListe">
+      <soap:operation soapAction=""/>
+      <wsdl:input name="hentInntektListeRequest">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="hentInntektListeResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="faultGOSYSGenerisk">
+        <soap:fault name="faultGOSYSGenerisk" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="hentDetaljertInntekt">
+      <soap:operation soapAction=""/>
+      <wsdl:input name="hentDetaljertInntektRequest">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="hentDetaljertInntektResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="faultGOSYSGenerisk">
+        <soap:fault name="faultGOSYSGenerisk" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="faultInntektIkkeFunnet">
+        <soap:fault name="faultInntektIkkeFunnet" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="GOSYSInntektWSEXP_GOSYSInntektHttpService">
+    <wsdl:port name="GOSYSInntektWSEXP_GOSYSInntektHttpPort" binding="this:GOSYSInntektWSEXP_GOSYSInntektHttpBinding">
+      <soap:address location="http://localhost:9080/nav-cons-sak-gosys-3.0.0Web/sca/GOSYSInntektWSEXP"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

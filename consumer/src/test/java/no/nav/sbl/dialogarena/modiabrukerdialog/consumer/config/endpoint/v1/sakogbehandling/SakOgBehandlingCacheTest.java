@@ -2,8 +2,9 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v1.sak
 
 
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.util.CacheTest;
-import no.nav.tjeneste.virksomhet.sakogbehandling.v1.SakOgBehandling_v1PortType;
-import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.WSSak;
+import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.SakBuilder;
+import no.nav.tjeneste.virksomhet.sakogbehandling.v1.binding.SakOgBehandlingV1;
+import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.Sak;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.meldinger.FinnSakOgBehandlingskjedeListeRequest;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.meldinger.FinnSakOgBehandlingskjedeListeResponse;
 import org.joda.time.DateTime;
@@ -21,7 +22,7 @@ class SakOgBehandlingCacheTest extends CacheTest {
     private static final String ENDPOINT_CACHE = "endpointCache";
 
     @Inject
-    private SakOgBehandling_v1PortType sakOgBehandling;
+    private SakOgBehandlingV1 sakOgBehandling;
 
     SakOgBehandlingCacheTest() {
         super(ENDPOINT_CACHE);
@@ -29,13 +30,25 @@ class SakOgBehandlingCacheTest extends CacheTest {
 
     @Test
     void cacheManager_harEntryForEndpointCache_etterKallTilHenvendelse() {
-        FinnSakOgBehandlingskjedeListeRequest request1 = new FinnSakOgBehandlingskjedeListeRequest().withAktoerREF("aktoer");
-        FinnSakOgBehandlingskjedeListeRequest request2 = new FinnSakOgBehandlingskjedeListeRequest().withAktoerREF("aktoer");
-        WSSak sak1 = new WSSak().withOpprettet(DateTime.now());
-        WSSak sak2 = new WSSak().withOpprettet(DateTime.now().plusDays(1));
+        FinnSakOgBehandlingskjedeListeRequest request1 = new FinnSakOgBehandlingskjedeListeRequest();
+        request1.setAktoerREF("aktoer");
+
+        FinnSakOgBehandlingskjedeListeRequest request2 = new FinnSakOgBehandlingskjedeListeRequest();
+        request2.setAktoerREF("aktoer");
+
+        Sak sak1 = SakBuilder.create().withOpprettet(DateTime.now()).build();
+        Sak sak2 = SakBuilder.create().withOpprettet(DateTime.now().plusDays(1)).build();
+
+        FinnSakOgBehandlingskjedeListeResponse response1 = new FinnSakOgBehandlingskjedeListeResponse();
+        response1.getSak().add(sak1);
+
+        FinnSakOgBehandlingskjedeListeResponse response2 = new FinnSakOgBehandlingskjedeListeResponse();
+        response2.getSak().add(sak2);
+
+
         when(sakOgBehandling.finnSakOgBehandlingskjedeListe(any(FinnSakOgBehandlingskjedeListeRequest.class))).thenReturn(
-                new FinnSakOgBehandlingskjedeListeResponse().withSak(sak1),
-                new FinnSakOgBehandlingskjedeListeResponse().withSak(sak2)
+                response1,
+                response2
         );
 
         FinnSakOgBehandlingskjedeListeResponse resp1 = sakOgBehandling.finnSakOgBehandlingskjedeListe(request1);

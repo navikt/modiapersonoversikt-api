@@ -30,7 +30,7 @@ public class NAVAnsattEndpointConfig {
     private static GOSYSNAVansatt createGosysNavAnsattPortType() {
         return withProperty("disable.ssl.cn.check", "true", () -> new CXFClient<>(GOSYSNAVansatt.class)
                 .address(address)
-                .wsdl("classpath:nav-cons-sak-gosys-3.0.0_GOSYSNAVAnsattWSEXP.wsdl")
+                .wsdl("classpath:wsdl/tjenestespesifikasjon/nav-cons-sak-gosys-3.0.0_GOSYSNAVAnsattWSEXP.wsdl")
                 .serviceName(new QName("http://nav-cons-sak-gosys-3.0.0/no/nav/inf/NAVansatt/Binding", "GOSYSNAVAnsattWSEXP_GOSYSNAVansattHttpService"))
                 .endpointName(new QName("http://nav-cons-sak-gosys-3.0.0/no/nav/inf/NAVansatt/Binding", "GOSYSNAVAnsattWSEXP_GOSYSNAVansattHttpPort"))
                 .timeout(10000, 30000)

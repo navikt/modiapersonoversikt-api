@@ -1,83 +1,43 @@
-
 import no.nav.apiapp.ApiApp;
-import no.nav.sbl.dialogarena.common.cxf.StsSecurityConstants;
+import no.nav.brukerdialog.security.Constants;
+import no.nav.brukerdialog.tools.SecurityConstants;
+import no.nav.common.utils.NaisUtils;
+import no.nav.sbl.dialogarena.common.abac.pep.CredentialConstants;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.ldap.LdapContextProvider;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.ModiaApplicationContext;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import no.nav.sbl.util.EnvironmentUtils;
 
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Properties;
-
-import static java.util.stream.Collectors.toSet;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v1.norg.NorgEndpointFelles.KJERNEINFO_TJENESTEBUSS_PASSWORD;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v1.norg.NorgEndpointFelles.KJERNEINFO_TJENESTEBUSS_USERNAME;
+import static no.nav.sbl.util.EnvironmentUtils.Type.PUBLIC;
+import static no.nav.sbl.util.EnvironmentUtils.Type.SECRET;
 
 public class Main {
-    private static final String VAULT_APPLICATION_PROPERTIES_PATH = "/var/run/secrets/nais.io/vault/application.properties";
-    private static final Logger log = LoggerFactory.getLogger(Main.class);
-
     public static void main(String... args) {
-//        loadVaultSecrets();
-        System.setProperty("NAIS_APP_NAME", "modiabrukerdialog");
-        loadPropertiesFile(getEnvVar("NAIS_NAMESPACE"));
+        loadVaultSecrets();
+        // Overstyrer appnavn slik at vi er sikre på at vi later som vi er modiabrukerdialog. ;)
+        EnvironmentUtils.setProperty("NAIS_APP_NAME", "modiabrukerdialog", PUBLIC);
 
         ApiApp.runApp(ModiaApplicationContext.class, args);
     }
 
     private static void loadVaultSecrets() {
-        Properties props = new Properties();
-        try {
-            InputStream stream = new FileInputStream(VAULT_APPLICATION_PROPERTIES_PATH);
-            props.load(stream);
-        } catch(Exception e) {
-            throw new RuntimeException(e);
-        }
-        Properties target = System.getProperties();
+        NaisUtils.Credentials serviceUser = NaisUtils.getCredentials("service_user");
+        EnvironmentUtils.setProperty(CredentialConstants.SYSTEMUSER_USERNAME, serviceUser.username, PUBLIC);
+        EnvironmentUtils.setProperty(CredentialConstants.SYSTEMUSER_PASSWORD, serviceUser.password, SECRET);
+        EnvironmentUtils.setProperty(SecurityConstants.SYSTEMUSER_USERNAME, serviceUser.username, PUBLIC);
+        EnvironmentUtils.setProperty(SecurityConstants.SYSTEMUSER_PASSWORD, serviceUser.password, SECRET);
 
-        for (String name : props.stringPropertyNames().stream().collect(toSet())) {
-            log.info("Laster vault secret " + name);
-            String value = props.getProperty(name);
-            target.setProperty(name, value);
-        }
-    }
+        NaisUtils.Credentials ldapUser = NaisUtils.getCredentials("srvssolinux");
+        EnvironmentUtils.setProperty(LdapContextProvider.LDAP_USERNAME, ldapUser.username, PUBLIC);
+        EnvironmentUtils.setProperty(LdapContextProvider.LDAP_PASSWORD, ldapUser.password, SECRET);
 
-    private static void loadPropertiesFile(String naisNamespace) {
-        switch(naisNamespace) {
-            case "q6":
-                loadFromResource("configurations/q6.properties");
-            case "q0":
-                loadFromResource("configurations/q0.properties");
-            default:
-                loadFromResource("configurations/q0.properties");
-        }
-    }
+        NaisUtils.Credentials issoRPUser = NaisUtils.getCredentials("isso-rp-user");
+        EnvironmentUtils.setProperty(Constants.ISSO_RP_USER_USERNAME_PROPERTY_NAME, issoRPUser.username, PUBLIC);
+        EnvironmentUtils.setProperty(Constants.ISSO_RP_USER_PASSWORD_PROPERTY_NAME, issoRPUser.password, SECRET);
 
-    private static void loadFromResource(String resource) {
-        InputStream propsResource = Main.class.getClassLoader().getResourceAsStream(resource);
-        if (propsResource == null) {
-            throw new RuntimeException(resource);
-        }
-        Properties props = new Properties();
-
-        try {
-            props.load(propsResource);
-        } catch (IOException e) {
-            throw new RuntimeException("Kunne ikke lese properties", e);
-        }
-
-        Properties target = System.getProperties();
-
-        for (String name : props.stringPropertyNames().stream().collect(toSet())) {
-            String value = props.getProperty(name);
-            target.setProperty(name, value);
-        }
-    }
-
-    private static String getEnvVar(String s) {
-        String var = System.getenv(s);
-        if (var == null) {
-            return System.getProperty(s);
-        }
-        return var;
+        NaisUtils.Credentials gosysUser = NaisUtils.getCredentials("gosys_user");
+        EnvironmentUtils.setProperty(KJERNEINFO_TJENESTEBUSS_USERNAME, gosysUser.username, PUBLIC);
+        EnvironmentUtils.setProperty(KJERNEINFO_TJENESTEBUSS_PASSWORD, gosysUser.password, SECRET);
     }
 }

@@ -1,10 +1,11 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints;
 
-import no.nav.tjeneste.virksomhet.organisasjonenhetkontaktinformasjon.v1.binding.HentKontaktinformasjonForEnhetBolkUgyldigInput;
-import no.nav.tjeneste.virksomhet.organisasjonenhetkontaktinformasjon.v1.binding.OrganisasjonEnhetKontaktinformasjonV1;
+
+import no.nav.tjeneste.virksomhet.organisasjonenhetkontaktinformasjon.v1.HentKontaktinformasjonForEnhetBolkUgyldigInput;
+import no.nav.tjeneste.virksomhet.organisasjonenhetkontaktinformasjon.v1.OrganisasjonEnhetKontaktinformasjonV1;
 import no.nav.tjeneste.virksomhet.organisasjonenhetkontaktinformasjon.v1.informasjon.*;
-import no.nav.tjeneste.virksomhet.organisasjonenhetkontaktinformasjon.v1.meldinger.HentKontaktinformasjonForEnhetBolkRequest;
-import no.nav.tjeneste.virksomhet.organisasjonenhetkontaktinformasjon.v1.meldinger.HentKontaktinformasjonForEnhetBolkResponse;
+import no.nav.tjeneste.virksomhet.organisasjonenhetkontaktinformasjon.v1.meldinger.WSHentKontaktinformasjonForEnhetBolkRequest;
+import no.nav.tjeneste.virksomhet.organisasjonenhetkontaktinformasjon.v1.meldinger.WSHentKontaktinformasjonForEnhetBolkResponse;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -22,33 +23,33 @@ public class OrganisasjonEnhetKontaktinformasjonV1Mock {
             }
 
             @Override
-            public HentKontaktinformasjonForEnhetBolkResponse hentKontaktinformasjonForEnhetBolk(HentKontaktinformasjonForEnhetBolkRequest hentKontaktinformasjonForEnhetBolkRequest) throws HentKontaktinformasjonForEnhetBolkUgyldigInput {
-                HentKontaktinformasjonForEnhetBolkResponse hentKontaktinformasjonForEnhetBolkResponse = new HentKontaktinformasjonForEnhetBolkResponse();
-                List<Organisasjonsenhet> enhetListe = hentKontaktinformasjonForEnhetBolkResponse.getEnhetListe();
+            public WSHentKontaktinformasjonForEnhetBolkResponse hentKontaktinformasjonForEnhetBolk(WSHentKontaktinformasjonForEnhetBolkRequest hentKontaktinformasjonForEnhetBolkRequest) throws HentKontaktinformasjonForEnhetBolkUgyldigInput {
+                WSHentKontaktinformasjonForEnhetBolkResponse hentKontaktinformasjonForEnhetBolkResponse = new WSHentKontaktinformasjonForEnhetBolkResponse();
+                List<WSOrganisasjonsenhet> enhetListe = hentKontaktinformasjonForEnhetBolkResponse.getEnhetListe();
 
-                Organisasjonsenhet enhet = lagMockEnhet();
+                WSOrganisasjonsenhet enhet = lagMockEnhet();
                 enhetListe.add(enhet);
 
                 return hentKontaktinformasjonForEnhetBolkResponse;
             }
 
-            private Organisasjonsenhet lagMockEnhet() {
-                Enhetstyper enhetstyper = new Enhetstyper();
+            private WSOrganisasjonsenhet lagMockEnhet() {
+                WSEnhetstyper enhetstyper = new WSEnhetstyper();
                 enhetstyper.setValue("enhetstypeverdi");
                 enhetstyper.setKodeRef("enhetstypekode");
 
-                Organisasjonsenhet enhet = new Organisasjonsenhet();
+                WSOrganisasjonsenhet enhet = new WSOrganisasjonsenhet();
                 enhet.setEnhetId("7080");
                 enhet.setEnhetNavn("Nav Sør-Varanger");
                 enhet.setKontaktinformasjon(getMockEnhetKontaktInformasjon());
                 enhet.setOrganisasjonsnummer("123465");
-                enhet.setStatus(Enhetsstatus.AKTIV);
+                enhet.setStatus(WSEnhetsstatus.AKTIV);
                 enhet.setType(enhetstyper);
                 return enhet;
             }
 
-            private KontaktinformasjonForOrganisasjonsenhet getMockEnhetKontaktInformasjon() {
-                KontaktinformasjonForOrganisasjonsenhet kontaktinformasjonForOrganisasjonsenhet = new KontaktinformasjonForOrganisasjonsenhet();
+            private WSKontaktinformasjonForOrganisasjonsenhet getMockEnhetKontaktInformasjon() {
+                WSKontaktinformasjonForOrganisasjonsenhet kontaktinformasjonForOrganisasjonsenhet = new WSKontaktinformasjonForOrganisasjonsenhet();
                 kontaktinformasjonForOrganisasjonsenhet.setTelefonnummer("12345678");
                 kontaktinformasjonForOrganisasjonsenhet.setFaksnummer("87654321");
                 kontaktinformasjonForOrganisasjonsenhet.setSpesielleOpplysninger("Mocket spesialopplysning");
@@ -59,23 +60,23 @@ public class OrganisasjonEnhetKontaktinformasjonV1Mock {
                 return kontaktinformasjonForOrganisasjonsenhet;
             }
 
-            private Publikumsmottak mockPublikumsmottak() {
-                Publikumsmottak publikumsmottak = new Publikumsmottak();
+            private WSPublikumsmottak mockPublikumsmottak() {
+                WSPublikumsmottak publikumsmottak = new WSPublikumsmottak();
                 publikumsmottak.setBesoeksadresse(createMockGateAdresse());
                 publikumsmottak.setAapningstider(mockApningstider());
                 return publikumsmottak;
             }
 
-            private StrukturertAdresse createMockStrukturertAdresse() {
+            private WSStrukturertAdresse createMockStrukturertAdresse() {
                 return createMockGateAdresse();
             }
 
-            private Gateadresse createMockGateAdresse() {
-                Postnummer postnummer = new Postnummer();
+            private WSGateadresse createMockGateAdresse() {
+                WSPostnummer postnummer = new WSPostnummer();
                 postnummer.setTermnavn("Andeby");
                 postnummer.setValue("9999");
 
-                Gateadresse gateadresse = new Gateadresse();
+                WSGateadresse gateadresse = new WSGateadresse();
                 gateadresse.setGatenavn("Andegata");
                 gateadresse.setHusbokstav("A");
                 gateadresse.setHusnummer("4");
@@ -84,8 +85,8 @@ public class OrganisasjonEnhetKontaktinformasjonV1Mock {
                 return gateadresse;
             }
 
-            private Aapningstider mockApningstider() {
-                return new Aapningstider();
+            private WSAapningstider mockApningstider() {
+                return new WSAapningstider();
             }
         };
     }

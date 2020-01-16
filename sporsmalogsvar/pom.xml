@@ -21,7 +21,7 @@
 
         <!--Dialogarena tjenestespesifikasjon-->
         <dependency>
-            <groupId>no.nav.sbl.dialogarena</groupId>
+            <groupId>no.nav.tjenestespesifikasjoner</groupId>
             <artifactId>henvendelse-informasjon-v2</artifactId>
         </dependency>
         <dependency>
@@ -29,11 +29,11 @@
             <artifactId>behandle-henvendelse</artifactId>
         </dependency>
         <dependency>
-            <groupId>no.nav.sbl.dialogarena</groupId>
+            <groupId>no.nav.tjenestespesifikasjoner</groupId>
             <artifactId>gsak-oppgave-tjenestespesifikasjon</artifactId>
         </dependency>
         <dependency>
-            <groupId>no.nav.sbl.dialogarena</groupId>
+            <groupId>no.nav.tjenestespesifikasjoner</groupId>
             <artifactId>kodeverk-tjenestespesifikasjon</artifactId>
         </dependency>
 
@@ -73,40 +73,13 @@
             <artifactId>dialogarena-behandlingsinformasjon</artifactId>
         </dependency>
         <dependency>
-            <groupId>no.nav.sbl.dialogarena</groupId>
+            <groupId>no.nav.tjenestespesifikasjoner</groupId>
             <artifactId>dial-nav-tjeneste-sak</artifactId>
         </dependency>
         <dependency>
             <groupId>no.nav.common</groupId>
             <artifactId>test</artifactId>
             <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>no.nav.sbl.dialogarena</groupId>
-            <artifactId>common-pdf-generering</artifactId>
-            <version>1.2.4</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>bouncycastle</groupId>
-                    <artifactId>bcmail-jdk14</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>bouncycastle</groupId>
-                    <artifactId>bcprov-jdk14</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.bouncycastle</groupId>
-                    <artifactId>bctsp-jdk14</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>javax.xml.stream</groupId>
-                    <artifactId>stax-api</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.codehaus.woodstox</groupId>
-                    <artifactId>stax2-api</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
         <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>
@@ -236,10 +209,6 @@
         <dependency>
             <groupId>no.bekk.bekkopen</groupId>
             <artifactId>nocommons</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava-base</artifactId>
         </dependency>
         <dependency>
             <groupId>com.google.guava</groupId>

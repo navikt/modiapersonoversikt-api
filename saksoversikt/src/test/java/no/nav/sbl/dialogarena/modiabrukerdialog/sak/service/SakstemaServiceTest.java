@@ -1,17 +1,14 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.sak.service;
 
 import no.nav.sbl.dialogarena.common.kodeverk.KodeverkClient;
+import no.nav.sbl.dialogarena.modiabrukerdialog.sak.BehandlingskjedeBuilder;
+import no.nav.sbl.dialogarena.modiabrukerdialog.sak.SakBuilder;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.*;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.resultatwrappere.ResultatWrapper;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.filter.FilterUtils;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.utils.Konstanter;
 import no.nav.tjeneste.virksomhet.pensjonsak.v1.HentSakSammendragListePersonIkkeFunnet;
 import no.nav.tjeneste.virksomhet.pensjonsak.v1.HentSakSammendragListeSakManglerEierenhet;
-import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.WSBehandlingskjede;
-import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.WSSak;
-import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.sakogbehandling.WSAvslutningsstatuser;
-import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.sakogbehandling.WSBehandlingsstatuser;
-import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.sakogbehandling.WSBehandlingstyper;
 import org.joda.time.DateTime;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -268,15 +265,18 @@ public class SakstemaServiceTest {
         assertThat(listResultatWrapper.resultat.size(), is(2));
     }
 
-    private WSSak sakFraSakOgBehandling() {
-        return new WSSak().withBehandlingskjede(new WSBehandlingskjede()
-                .withSisteBehandlingAvslutningsstatus(new WSAvslutningsstatuser().withValue(FilterUtils.OPPRETTET))
-                .withSisteBehandlingstype(new WSBehandlingstyper().withValue(FilterUtils.SEND_SOKNAD_KVITTERINGSTYPE))
-                .withSisteBehandlingsstatus(new WSBehandlingsstatuser().withValue(FilterUtils.OPPRETTET))
-                .withBehandlingsListeRef("henvendelsesId")
-                .withSisteBehandlingREF("henvendelsesId")
-                .withStart(new DateTime().minusDays(1))
-                .withSlutt(null));
+    private no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.Sak sakFraSakOgBehandling() {
+        return SakBuilder.create()
+                .withBehandlingskjede(BehandlingskjedeBuilder.create()
+                        .withSisteBehandlingAvslutningsstatus(FilterUtils.OPPRETTET)
+                        .withSisteBehandlingstype(FilterUtils.SEND_SOKNAD_KVITTERINGSTYPE)
+                        .withSisteBehandlingsstatus(FilterUtils.OPPRETTET)
+                        .withBehandlingsListeRef("henvendelsesId")
+                        .withSisteBehandlingREF("henvendelsesId")
+                        .withStart(new DateTime().minusDays(1))
+                        .withSlutt(null)
+                        .build())
+                .build();
     }
 
     @Test

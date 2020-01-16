@@ -3,9 +3,9 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v2.org
 
 import net.sf.ehcache.Cache;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.util.CacheTest;
-import no.nav.tjeneste.virksomhet.organisasjonenhetkontaktinformasjon.v1.binding.HentKontaktinformasjonForEnhetBolkUgyldigInput;
-import no.nav.tjeneste.virksomhet.organisasjonenhetkontaktinformasjon.v1.binding.OrganisasjonEnhetKontaktinformasjonV1;
-import no.nav.tjeneste.virksomhet.organisasjonenhetkontaktinformasjon.v1.meldinger.HentKontaktinformasjonForEnhetBolkRequest;
+import no.nav.tjeneste.virksomhet.organisasjonenhetkontaktinformasjon.v1.HentKontaktinformasjonForEnhetBolkUgyldigInput;
+import no.nav.tjeneste.virksomhet.organisasjonenhetkontaktinformasjon.v1.OrganisasjonEnhetKontaktinformasjonV1;
+import no.nav.tjeneste.virksomhet.organisasjonenhetkontaktinformasjon.v1.meldinger.WSHentKontaktinformasjonForEnhetBolkRequest;
 import org.junit.jupiter.api.Test;
 
 import javax.inject.Inject;
@@ -51,8 +51,8 @@ class OrganisasjonEnhetKontaktinformasjonV1EndpointCacheTest extends CacheTest {
         assertThat(cache.getSize(), is(2));
     }
 
-    private HentKontaktinformasjonForEnhetBolkRequest lagRequest(String enhetId) {
-        HentKontaktinformasjonForEnhetBolkRequest request = new HentKontaktinformasjonForEnhetBolkRequest();
+    private WSHentKontaktinformasjonForEnhetBolkRequest lagRequest(String enhetId) {
+        WSHentKontaktinformasjonForEnhetBolkRequest request = new WSHentKontaktinformasjonForEnhetBolkRequest();
         request.getEnhetIdListe().add(enhetId);
         return request;
     }

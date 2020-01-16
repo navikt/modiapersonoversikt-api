@@ -12,8 +12,8 @@ public class DefaultBehandlePersonService implements BehandlePersonServiceBi{
     }
 
     @Override
-    public WSEndreNavnResponse endreNavn(WSEndreNavnRequest endreNavnRequest) throws Sikkerhetsbegrensning, PersonIkkeFunnet, UgyldigInput, PersonIkkeUtvandret {
+    public EndreNavnResponse endreNavn(WSEndreNavnRequest endreNavnRequest) throws Sikkerhetsbegrensning, PersonIkkeFunnet, UgyldigInput, PersonIkkeUtvandret {
         behandlePersonV1.endreNavn(endreNavnRequest);
-        return new WSEndreNavnResponse();
+        return new EndreNavnResponse();
     }
 }

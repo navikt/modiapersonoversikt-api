@@ -3,8 +3,12 @@ package no.nav.kjerneinfo.consumer.fim.person.mapping;
 import no.nav.kjerneinfo.common.domain.Kodeverdi;
 import no.nav.kjerneinfo.consumer.fim.person.support.KjerneinfoMapper;
 import no.nav.kjerneinfo.domain.person.*;
+import no.nav.kjerneinfo.domain.person.Matrikkeladresse;
+import no.nav.kjerneinfo.domain.person.Person;
+import no.nav.kjerneinfo.domain.person.Postboksadresse;
 import no.nav.kodeverk.consumer.fim.kodeverk.support.DefaultKodeverkmanager;
 import no.nav.tjeneste.virksomhet.person.v3.informasjon.*;
+import no.nav.tjeneste.virksomhet.person.v3.informasjon.UstrukturertAdresse;
 import org.joda.time.LocalDateTime;
 import org.junit.Before;
 import org.junit.Test;
@@ -56,8 +60,8 @@ public class AdresseMapperTest {
 
     @Test
     public void bostedsadresseToAdresse() {
-        WSGateadresse wsGateadresse = getGateadresse();
-        WSBostedsadresse wsBostedsadresse = new WSBostedsadresse().withStrukturertAdresse(wsGateadresse);
+        Gateadresse wsGateadresse = getGateadresse();
+        Bostedsadresse wsBostedsadresse = new Bostedsadresse().withStrukturertAdresse(wsGateadresse);
 
         Adresselinje adresselinje = mapper.map(wsBostedsadresse, Adresselinje.class);
         Adresse adresse = (Adresse) adresselinje;
@@ -67,8 +71,8 @@ public class AdresseMapperTest {
 
     @Test
     public void matrikkeladresseTilAdresse() {
-        WSMatrikkeladresse wsMatrikkeladresse = getMatrikkelAdresse();
-        WSBostedsadresse wsBostedsadresse = new WSBostedsadresse().withStrukturertAdresse(wsMatrikkeladresse);
+        no.nav.tjeneste.virksomhet.person.v3.informasjon.Matrikkeladresse wsMatrikkeladresse = getMatrikkelAdresse();
+        Bostedsadresse wsBostedsadresse = new Bostedsadresse().withStrukturertAdresse(wsMatrikkeladresse);
 
         Adresselinje adresse = mapper.map(wsBostedsadresse, Adresselinje.class);
         Matrikkeladresse matrikkeladresse = (Matrikkeladresse) adresse;
@@ -81,9 +85,9 @@ public class AdresseMapperTest {
 
     @Test
     public void matrikkeladresseIgnorererMatrikkeladresseSomTilleggsadressetype(){
-        WSMatrikkeladresse wsMatrikkeladresse = getMatrikkelAdresse();
+        no.nav.tjeneste.virksomhet.person.v3.informasjon.Matrikkeladresse wsMatrikkeladresse = getMatrikkelAdresse();
         wsMatrikkeladresse.withTilleggsadresseType(TILLEGGSADRESSE_TYPE_MATRIKKELADRESSE);
-        WSBostedsadresse wsBostedsadresse = new WSBostedsadresse().withStrukturertAdresse(wsMatrikkeladresse);
+        Bostedsadresse wsBostedsadresse = new Bostedsadresse().withStrukturertAdresse(wsMatrikkeladresse);
 
         Adresselinje adresse = mapper.map(wsBostedsadresse, Adresselinje.class);
         Matrikkeladresse matrikkeladresse = (Matrikkeladresse) adresse;
@@ -93,10 +97,10 @@ public class AdresseMapperTest {
 
     @Test
     public void postadresseTilAdresseLinje() {
-        WSPostadresse wsPostadresse = new WSPostadresse()
+        Postadresse wsPostadresse = new Postadresse()
                 .withEndretAv("AdresseEndrer")
                 .withEndringstidspunkt(getCurrentXmlGregorianCalendar())
-                .withUstrukturertAdresse(new WSUstrukturertAdresse().withAdresselinje1(ADR1));
+                .withUstrukturertAdresse(new UstrukturertAdresse().withAdresselinje1(ADR1));
 
         Adresselinje adresselinje = mapper.map(wsPostadresse, Adresselinje.class);
 
@@ -106,17 +110,17 @@ public class AdresseMapperTest {
     @Test
     public void brukerMedUtenlandskAdresse() {
         when(kodeverk.getBeskrivelseForKode(any(), any(), any())).thenReturn(LANDKODE_BESKRIVELSE);
-        WSBruker wsBruker = new WSBruker().withMidlertidigPostadresse(utenlandskAdresse());
+        Bruker wsBruker = new Bruker().withMidlertidigPostadresse(utenlandskAdresse());
 
         Person person = mapper.map(wsBruker, Person.class);
 
-        assertMidlertidigAdresse((WSMidlertidigPostadresseUtland) wsBruker.getMidlertidigPostadresse(), person);
+        assertMidlertidigAdresse((MidlertidigPostadresseUtland) wsBruker.getMidlertidigPostadresse(), person);
     }
 
     @Test
     public void brukerMedUtenlandskAdresseSomHarLandkodeNull() {
-        WSUstrukturertAdresse wsUstrukturertAdresse = getUstrukturertAdresse().withLandkode(null);
-        WSBruker wsBruker = new WSBruker()
+        no.nav.tjeneste.virksomhet.person.v3.informasjon.UstrukturertAdresse wsUstrukturertAdresse = getUstrukturertAdresse().withLandkode(null);
+        Bruker wsBruker = new Bruker()
                 .withMidlertidigPostadresse(utenlandskAdresse().withUstrukturertAdresse(wsUstrukturertAdresse));
 
         Person person = mapper.map(wsBruker, Person.class);
@@ -128,10 +132,10 @@ public class AdresseMapperTest {
 
     @Test
     public void wSPostboksadresseNorskMapping() {
-        WSPostboksadresseNorsk wsPostboksadresseNorsk = new WSPostboksadresseNorsk()
+        PostboksadresseNorsk wsPostboksadresseNorsk = new PostboksadresseNorsk()
                 .withPostboksanlegg("Daudbilbakken")
                 .withPostboksnummer("1")
-                .withPoststed(new WSPostnummer()
+                .withPoststed(new Postnummer()
                         .withKodeRef("9999"))
                 .withTilleggsadresse(TILLEGGSADRESSE)
                 .withTilleggsadresseType(TILLEGGSADRESSE_TYPE);
@@ -145,7 +149,7 @@ public class AdresseMapperTest {
 
     @Test
     public void gjeldendePostadressetypeMapping() {
-        WSBruker from = new WSBruker().withGjeldendePostadressetype(new WSPostadressetyper().withValue(MIDLERTIDIG_POSTADRESSE_NORGE));
+        Bruker from = new Bruker().withGjeldendePostadressetype(new Postadressetyper().withValue(MIDLERTIDIG_POSTADRESSE_NORGE));
 
         Person to = mapper.map(from, Person.class);
         Kodeverdi gjeldendePostadressetype = to.getPersonfakta().getGjeldendePostadressetype();
@@ -155,7 +159,7 @@ public class AdresseMapperTest {
 
     @Test
     public void midlertidigPostadresseNorgeMapping() {
-        WSBruker from = new WSBruker().withMidlertidigPostadresse(getMidlertidigPostadresseNorge());
+        Bruker from = new Bruker().withMidlertidigPostadresse(getMidlertidigPostadresseNorge());
 
         Person to = mapper.map(from, Person.class);
         Adresselinje alternativAdresse = to.getPersonfakta().getAlternativAdresse();
@@ -172,15 +176,15 @@ public class AdresseMapperTest {
 
     @Test
     public void midlertidigMatrikkelPostadresse() {
-        WSBruker from = new WSBruker();
-        from.setMidlertidigPostadresse(new WSMidlertidigPostadresseNorge()
+        Bruker from = new Bruker();
+        from.setMidlertidigPostadresse(new MidlertidigPostadresseNorge()
                 .withEndretAv(ENDRET_AV)
                 .withEndringstidspunkt(getMockDato(ENDRINGSTIDSPUNKT))
-                .withPostleveringsPeriode(new WSGyldighetsperiode()
+                .withPostleveringsPeriode(new Gyldighetsperiode()
                         .withFom(getMockDato("2015-02-02"))
                         .withTom(getMockDato(POSTLEVERINGSPERIODE_TOM)))
-                .withStrukturertAdresse(new WSMatrikkeladresse()
-                        .withEiendomsnavn(EIENDOMSNAVN).withPoststed(new WSPostnummer().withValue(POSTNUMMER))));
+                .withStrukturertAdresse(new no.nav.tjeneste.virksomhet.person.v3.informasjon.Matrikkeladresse()
+                        .withEiendomsnavn(EIENDOMSNAVN).withPoststed(new Postnummer().withValue(POSTNUMMER))));
 
 
         Person to = mapper.map(from, Person.class);
@@ -197,13 +201,13 @@ public class AdresseMapperTest {
 
     @Test
     public void midlertidigPostadresseUtlandMapping() {
-        WSBruker from = new WSBruker();
-        from.setMidlertidigPostadresse(new WSMidlertidigPostadresseUtland()
-                .withUstrukturertAdresse(new WSUstrukturertAdresse()
+        Bruker from = new Bruker();
+        from.setMidlertidigPostadresse(new MidlertidigPostadresseUtland()
+                .withUstrukturertAdresse(new UstrukturertAdresse()
                         .withAdresselinje1("Test")
-                        .withLandkode(new WSLandkoder()
+                        .withLandkode(new Landkoder()
                                 .withValue(LANDKODE)))
-                .withPostleveringsPeriode(new WSGyldighetsperiode()
+                .withPostleveringsPeriode(new Gyldighetsperiode()
                         .withTom(getMockDato(POSTLEVERINGSPERIODE_TOM)))
                 .withEndretAv(ENDRET_AV)
                 .withEndringstidspunkt(getMockDato(POSTLEVERINGSPERIODE_TOM)));
@@ -222,15 +226,15 @@ public class AdresseMapperTest {
 
     @Test
     public void postboksadresseMapping() {
-        WSBruker from = new WSBruker();
-        WSMidlertidigPostadresseNorge postboksadresse = new WSMidlertidigPostadresseNorge()
+        Bruker from = new Bruker();
+        MidlertidigPostadresseNorge postboksadresse = new MidlertidigPostadresseNorge()
                 .withEndretAv(ENDRET_AV)
                 .withEndringstidspunkt(getMockDato(ENDRINGSTIDSPUNKT));
-        postboksadresse.setStrukturertAdresse(new WSPostboksadresseNorsk()
-                .withLandkode(new WSLandkoder().withValue(LANDKODE))
+        postboksadresse.setStrukturertAdresse(new PostboksadresseNorsk()
+                .withLandkode(new Landkoder().withValue(LANDKODE))
                 .withPostboksanlegg(POSTBOKSANLEGG)
                 .withPostboksnummer(POSTBOKSNUMMER)
-                .withPoststed(new WSPostnummer().withValue(POSTNUMMER).withKodeRef(POSTNUMMER))
+                .withPoststed(new Postnummer().withValue(POSTNUMMER).withKodeRef(POSTNUMMER))
                 .withTilleggsadresse(TILLEGGSADRESSE));
         from.setMidlertidigPostadresse(postboksadresse);
 
@@ -249,14 +253,14 @@ public class AdresseMapperTest {
     public void adresseToWSGateadresse() {
         Adresse from = getAdresse();
 
-        WSGateadresse to = mapper.map(from, WSGateadresse.class);
+        Gateadresse to = mapper.map(from, Gateadresse.class);
 
         assertEquals(from.getBolignummer(), to.getBolignummer());
     }
 
 
-    private WSGateadresse getGateadresse() {
-        WSGateadresse wsGateadresse = new WSGateadresse()
+    private Gateadresse getGateadresse() {
+        Gateadresse wsGateadresse = new Gateadresse()
                 .withHusbokstav("B")
                 .withHusnummer(2)
                 .withGatenavn(GATENAVN)
@@ -265,34 +269,34 @@ public class AdresseMapperTest {
         return wsGateadresse;
     }
 
-    private WSMatrikkeladresse getMatrikkelAdresse() {
-        WSMatrikkeladresse matrikkeladresse = new WSMatrikkeladresse()
+    private no.nav.tjeneste.virksomhet.person.v3.informasjon.Matrikkeladresse getMatrikkelAdresse() {
+        no.nav.tjeneste.virksomhet.person.v3.informasjon.Matrikkeladresse matrikkeladresse = new no.nav.tjeneste.virksomhet.person.v3.informasjon.Matrikkeladresse()
                 .withEiendomsnavn("Pengebingen")
                 .withMatrikkelnummer(getMockMatrikkelnummer());
         setStedsadresseinfo(matrikkeladresse);
         return matrikkeladresse;
     }
 
-    private WSMidlertidigPostadresseNorge getMidlertidigPostadresseNorge() {
-        return new WSMidlertidigPostadresseNorge()
+    private MidlertidigPostadresseNorge getMidlertidigPostadresseNorge() {
+        return new MidlertidigPostadresseNorge()
                 .withStrukturertAdresse(getGateadresse())
                 .withEndretAv(ENDRET_AV)
                 .withEndringstidspunkt(getMockDato(ENDRINGSTIDSPUNKT))
-                .withPostleveringsPeriode(new WSGyldighetsperiode().withTom(getMockDato(POSTLEVERINGSPERIODE_TOM)));
+                .withPostleveringsPeriode(new Gyldighetsperiode().withTom(getMockDato(POSTLEVERINGSPERIODE_TOM)));
     }
 
-    private WSStedsadresseNorge setStedsadresseinfo(WSStedsadresseNorge adresse) {
+    private StedsadresseNorge setStedsadresseinfo(StedsadresseNorge adresse) {
         adresse.setBolignummer("H001");
         adresse.setKommunenummer("1234");
-        adresse.setPoststed(new WSPostnummer().withValue(POSTNUMMER));
+        adresse.setPoststed(new Postnummer().withValue(POSTNUMMER));
         adresse.setTilleggsadresse(TILLEGGSADRESSE);
         adresse.setTilleggsadresseType(TILLEGGSADRESSE_TYPE);
-        adresse.setLandkode(new WSLandkoder().withKodeRef("NO"));
+        adresse.setLandkode(new Landkoder().withKodeRef("NO"));
         return adresse;
     }
 
-    private WSMatrikkelnummer getMockMatrikkelnummer() {
-        return new WSMatrikkelnummer()
+    private Matrikkelnummer getMockMatrikkelnummer() {
+        return new Matrikkelnummer()
                 .withBruksnummer("Brnr. 1")
                 .withFestenummer("Festenr. 1")
                 .withGaardsnummer("Gaardsnr. 1")
@@ -300,22 +304,22 @@ public class AdresseMapperTest {
                 .withUndernummer("Undernr. 1");
     }
 
-    private WSMidlertidigPostadresseUtland utenlandskAdresse() {
-        return new WSMidlertidigPostadresseUtland()
+    private MidlertidigPostadresseUtland utenlandskAdresse() {
+        return new MidlertidigPostadresseUtland()
                 .withUstrukturertAdresse(getUstrukturertAdresse());
     }
 
-    private WSUstrukturertAdresse getUstrukturertAdresse() {
-        return new WSUstrukturertAdresse()
+    private UstrukturertAdresse getUstrukturertAdresse() {
+        return new UstrukturertAdresse()
                 .withAdresselinje1(ADR1)
                 .withAdresselinje2(ADR2)
                 .withAdresselinje3(ADR3)
                 .withAdresselinje4(ADR4)
-                .withLandkode(new WSLandkoder().withValue(LANDKODE));
+                .withLandkode(new Landkoder().withValue(LANDKODE));
     }
 
-    private void assertMidlertidigAdresse(WSMidlertidigPostadresseUtland from, Person person) {
-        WSUstrukturertAdresse fromAdresse = from.getUstrukturertAdresse();
+    private void assertMidlertidigAdresse(MidlertidigPostadresseUtland from, Person person) {
+        UstrukturertAdresse fromAdresse = from.getUstrukturertAdresse();
         String expected = fromAdresse.getAdresselinje1() + " " + fromAdresse.getAdresselinje2() + " " +
                 fromAdresse.getAdresselinje3() + " " + fromAdresse.getAdresselinje4() + " " + LANDKODE_BESKRIVELSE;
 

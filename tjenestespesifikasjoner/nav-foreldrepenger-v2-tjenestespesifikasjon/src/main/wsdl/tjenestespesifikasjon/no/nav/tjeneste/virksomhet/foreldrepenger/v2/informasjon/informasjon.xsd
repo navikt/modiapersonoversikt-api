@@ -1,0 +1,537 @@
+<?xml version="1.0" encoding="UTF-8"?><xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetNamespace="http://nav.no/tjeneste/virksomhet/foreldrepenger/v2/informasjon" xmlns:informasjon="http://nav.no/tjeneste/virksomhet/foreldrepenger/v2/informasjon">
+  <xsd:complexType name="Person">
+    <xsd:annotation>
+      <xsd:documentation>Personen som har rettighet til å få utbetalt foreldrepenger.</xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element name="ident" type="informasjon:Identifikator"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="Adopsjon">
+    <xsd:annotation>
+      <xsd:documentation>Foreldrepengerettighet gjelder adopsjon.</xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexContent>
+      <xsd:extension base="informasjon:Foreldrepengerettighet">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" name="omsorgsovertakelse" type="xsd:dateTime">
+            <xsd:annotation>
+              <xsd:documentation>Dato for når omsorgen er overtatt er identifikator for rettigheten.</xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+        </xsd:sequence>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="Arbeidsforhold">
+    <xsd:annotation>
+      <xsd:documentation>Arbeidsgiver i brukers arbeidsforhold knyttet til foreldrepengerettigheten. Kan ha krav på refusjon i en periode.</xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element minOccurs="0" name="arbeidsgiverNavn" type="xsd:string">
+        <xsd:annotation>
+          <xsd:documentation>Navn på arbeidsgiver.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element minOccurs="0" name="arbeidsgiverKontonr" type="xsd:string">
+        <xsd:annotation>
+          <xsd:documentation>Kontonummer som brukes for utbetaling til arbeidsgiver.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element minOccurs="0" name="arbeidsgiverOrgnr" type="xsd:string">
+        <xsd:annotation>
+          <xsd:documentation>Organisasjonsnummeret til arbeidsgiver.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element minOccurs="0" name="refusjonTom" type="xsd:dateTime">
+        <xsd:annotation>
+          <xsd:documentation>Siste dato i perioden arbeidsgiver har krav på refusjon.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="refusjonstype" type="informasjon:Refusjonstype">
+        <xsd:annotation>
+          <xsd:documentation>Kode for refusjon.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="inntektsperiode" type="informasjon:Inntektsperiode">
+        <xsd:annotation>
+          <xsd:documentation>Inntekten er gjeldene i denne perioden.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element minOccurs="0" name="inntektForPerioden" type="xsd:decimal">
+        <xsd:annotation>
+          <xsd:documentation>Inntekt i perioden.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="ForeldreAvSammeKjoenn">
+    <xsd:annotation>
+      <xsd:documentation>http://confluence.adeo.no/display/INFOTRYGD/IT20_FA+MOD+-+Informasjonsmodell</xsd:documentation>
+    </xsd:annotation>
+    <xsd:simpleContent>
+      <xsd:extension base="informasjon:Kodeverdi">
+        <xsd:attribute default="http://confluence.adeo.no/display/INFOTRYGD/IT20_FA+MOD+-+Informasjonsmodell" name="kodeverksRef" type="xsd:anyURI"/>
+      </xsd:extension>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="Periodetype">
+    <xsd:annotation>
+      <xsd:documentation>http://confluence.adeo.no/display/INFOTRYGD/IT20_FA+MOD+-+Informasjonsmodell</xsd:documentation>
+    </xsd:annotation>
+    <xsd:simpleContent>
+      <xsd:extension base="informasjon:Kodeverdi">
+        <xsd:attribute default="http://confluence.adeo.no/display/INFOTRYGD/IT20_FA+MOD+-+Informasjonsmodell" name="kodeverksRef" type="xsd:anyURI"/>
+      </xsd:extension>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="HistoriskVedtak">
+    <xsd:annotation>
+      <xsd:documentation>Utbetalinger som er utbetalt til bruker fra tidligere vedtak.</xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexContent>
+      <xsd:extension base="informasjon:Vedtak">
+        <xsd:sequence>
+          <xsd:element name="utbetalt" type="xsd:date">
+            <xsd:annotation>
+              <xsd:documentation>Dato for utbetaling til mottaker.</xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element name="bruttobeloep" type="xsd:decimal">
+            <xsd:annotation>
+              <xsd:documentation>Brutto beløp til utbetaling.</xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element minOccurs="0" name="arbeidsgiverNavn" type="xsd:string">
+            <xsd:annotation>
+              <xsd:documentation>Arbeidsgiver knyttet til dette vedtaket.</xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element minOccurs="0" name="arbeidsgiverKontonr" type="xsd:string">
+            <xsd:annotation>
+              <xsd:documentation>Kontonummer for arbeidsgiver knyttet til dette vedtaket.</xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element minOccurs="0" name="arbeidsgiverOrgnr" type="xsd:string">
+            <xsd:annotation>
+              <xsd:documentation>Organisasjonsnummer til arbeidsgiver knyttet til dette vedtaket.</xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element name="dagsats" type="xsd:decimal">
+            <xsd:annotation>
+              <xsd:documentation>Beløp pr. dag.</xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element name="saksbehandler" type="xsd:string">
+            <xsd:annotation>
+              <xsd:documentation>Saksbehandler knyttet til vedtaket.</xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element name="periodetype" type="informasjon:Periodetype">
+            <xsd:annotation>
+              <xsd:documentation>Kode for type periode.</xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+        </xsd:sequence>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="Foreldrepengeperiode">
+    <xsd:annotation>
+      <xsd:documentation>En rettighet til foreldrepenger kan inndeles i flere foreldrepengeperioder.</xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element name="foreldrepengerFom" type="xsd:date">
+        <xsd:annotation>
+          <xsd:documentation>Dato som identifiserer foreldrepengeperioden.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="rettTilMoedrekvote" type="informasjon:RettTilMoedrekvote">
+        <xsd:annotation>
+          <xsd:documentation>Kode for rettighet til mødrekvote.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element minOccurs="0" name="erMoedrekvote" type="xsd:boolean">
+        <xsd:annotation>
+          <xsd:documentation>Flagg for å indikere om dette er av mødrekvoten.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="rettTilFedrekvote" type="informasjon:RettTilFedrekvote">
+        <xsd:annotation>
+          <xsd:documentation>Kode for rettighet til fedrekvote.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element minOccurs="0" name="erFedrekvote" type="xsd:boolean">
+        <xsd:annotation>
+          <xsd:documentation>Flagg for å indikere om dette er av fedrekvoten.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element minOccurs="0" name="morSituasjon" type="informasjon:MorSituasjon">
+        <xsd:annotation>
+          <xsd:documentation>Kode for å avklare mors situasjon.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element minOccurs="0" name="harAleneomsorgMor" type="xsd:boolean">
+        <xsd:annotation>
+          <xsd:documentation>Flagg for å indikere at mor har omsorgen alene.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element minOccurs="0" name="harAleneomsorgFar" type="xsd:boolean">
+        <xsd:annotation>
+          <xsd:documentation>Flagg for å indikere at far har omsorgen alene.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element minOccurs="0" name="arbeidsprosentMor" type="xsd:decimal">
+        <xsd:annotation>
+          <xsd:documentation>% for å indikere hvor mye mor arbeider.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element minOccurs="0" name="forskyvet1" type="informasjon:Periode">
+        <xsd:annotation>
+          <xsd:documentation>Foreldrepenger er forskjøvet en periode.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element minOccurs="0" name="forskyvet2" type="informasjon:Periode">
+        <xsd:annotation>
+          <xsd:documentation>Foreldrepenger er forskjøvet enda en periode.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element minOccurs="0" name="forskyvelsesaarsak1" type="informasjon:Forskyvelsesaarsak">
+        <xsd:annotation>
+          <xsd:documentation>Kode som indikerer årsaken til at foreldrepengene er forskjøvet en periode.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element minOccurs="0" name="forskyvelsesaarsak2" type="informasjon:Forskyvelsesaarsak"/>
+      <xsd:element minOccurs="0" name="stansaarsak" type="informasjon:Stansaarsak">
+        <xsd:annotation>
+          <xsd:documentation>Kode som indikerer årsaken til at forldrepengene er stanset.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element minOccurs="0" name="midlertidigStanset" type="xsd:dateTime">
+        <xsd:annotation>
+          <xsd:documentation>Foreldrepengeperioden midlertidig stanset på denne dato.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element minOccurs="0" name="avslagsaarsak" type="informasjon:Avslagsaarsak">
+        <xsd:annotation>
+          <xsd:documentation>Kode som indikerer årsaken til avslag.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element minOccurs="0" name="avslaatt" type="xsd:dateTime">
+        <xsd:annotation>
+          <xsd:documentation>Avslag på søknad om foreldrepengeperiode på denne dato.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element minOccurs="0" name="opphoerFom" type="xsd:dateTime">
+        <xsd:annotation>
+          <xsd:documentation>Avslutningsdato for Foreldrepengeperioden. Benyttes til å forkorte en tidligere registrert periode.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element minOccurs="0" name="disponibelGradering" type="xsd:decimal">
+        <xsd:annotation>
+          <xsd:documentation>Gradering som er disponibel.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="totaltAntallUtbetalinger" type="xsd:integer">
+        <xsd:annotation>
+          <xsd:documentation>totalt antall utbetalinger</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element maxOccurs="50" minOccurs="0" name="vedtakListe" type="informasjon:Vedtak">
+        <xsd:annotation>
+          <xsd:documentation>Liste over vedtak tatt i denne foreldrepengeperioden.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:simpleType name="Identifikator">
+    <xsd:restriction base="xsd:string"/>
+  </xsd:simpleType>
+  <xsd:complexType name="Foedsel">
+    <xsd:annotation>
+      <xsd:documentation>Foreldrepengerettighet gjelder fødsel og termindato er identifikator.</xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexContent>
+      <xsd:extension base="informasjon:Foreldrepengerettighet">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" name="termin" type="xsd:dateTime">
+            <xsd:annotation>
+              <xsd:documentation>Termin for fødsel.</xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+        </xsd:sequence>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="RettTilFedrekvote">
+    <xsd:annotation>
+      <xsd:documentation>http://confluence.adeo.no/display/INFOTRYGD/IT20_FA+MOD+-+Informasjonsmodell</xsd:documentation>
+    </xsd:annotation>
+    <xsd:simpleContent>
+      <xsd:extension base="informasjon:Kodeverdi">
+        <xsd:attribute default="http://confluence.adeo.no/display/INFOTRYGD/IT20_FA+MOD+-+Informasjonsmodell" name="kodeverksRef" type="xsd:anyURI"/>
+      </xsd:extension>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="Oppgjoerstype">
+    <xsd:annotation>
+      <xsd:documentation>http://confluence.adeo.no/display/INFOTRYGD/IT20_FA+MOD+-+Informasjonsmodell</xsd:documentation>
+    </xsd:annotation>
+    <xsd:simpleContent>
+      <xsd:extension base="informasjon:Kodeverdi">
+        <xsd:attribute default="http://confluence.adeo.no/display/INFOTRYGD/IT20_FA+MOD+-+Informasjonsmodell" name="kodeverksRef" type="xsd:anyURI"/>
+      </xsd:extension>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="Avslagsaarsak">
+    <xsd:annotation>
+      <xsd:documentation>http://confluence.adeo.no/display/INFOTRYGD/IT20_FA+MOD+-+Informasjonsmodell</xsd:documentation>
+    </xsd:annotation>
+    <xsd:simpleContent>
+      <xsd:extension base="informasjon:Kodeverdi">
+        <xsd:attribute default="http://confluence.adeo.no/display/INFOTRYGD/IT20_FA+MOD+-+Informasjonsmodell" name="kodeverksRef" type="xsd:anyURI"/>
+      </xsd:extension>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="Kodeverdi">
+    <xsd:annotation>
+      <xsd:documentation>Representasjon av kodeverk.</xsd:documentation>
+    </xsd:annotation>
+    <xsd:simpleContent>
+      <xsd:extension base="xsd:string">
+        <xsd:attribute name="kode" type="xsd:anyURI">
+          <xsd:annotation>
+            <xsd:documentation>Representasjon av kode.</xsd:documentation>
+          </xsd:annotation>
+        </xsd:attribute>
+        <xsd:attribute name="termnavn" type="xsd:string">
+          <xsd:annotation>
+            <xsd:documentation>Representasjon av term som forklarer kode.</xsd:documentation>
+          </xsd:annotation>
+        </xsd:attribute>
+      </xsd:extension>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="MorSituasjon">
+    <xsd:annotation>
+      <xsd:documentation>http://confluence.adeo.no/display/INFOTRYGD/IT20_FA+MOD+-+Informasjonsmodell</xsd:documentation>
+    </xsd:annotation>
+    <xsd:simpleContent>
+      <xsd:extension base="informasjon:Kodeverdi">
+        <xsd:attribute default="http://confluence.adeo.no/display/INFOTRYGD/IT20_FA+MOD+-+Informasjonsmodell" name="kodeverksRef" type="xsd:anyURI"/>
+      </xsd:extension>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="Forskyvelsesaarsak">
+    <xsd:annotation>
+      <xsd:documentation>http://confluence.adeo.no/display/INFOTRYGD/IT20_FA+MOD+-+Informasjonsmodell</xsd:documentation>
+    </xsd:annotation>
+    <xsd:simpleContent>
+      <xsd:extension base="informasjon:Kodeverdi">
+        <xsd:attribute default="http://confluence.adeo.no/display/INFOTRYGD/IT20_FA+MOD+-+Informasjonsmodell" name="kodeverksRef" type="xsd:anyURI"/>
+      </xsd:extension>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="RettTilMoedrekvote">
+    <xsd:annotation>
+      <xsd:documentation>http://confluence.adeo.no/display/INFOTRYGD/IT20_FA+MOD+-+Informasjonsmodell</xsd:documentation>
+    </xsd:annotation>
+    <xsd:simpleContent>
+      <xsd:extension base="informasjon:Kodeverdi">
+        <xsd:attribute default="http://confluence.adeo.no/display/INFOTRYGD/IT20_FA+MOD+-+Informasjonsmodell" name="kodeverksRef" type="xsd:anyURI"/>
+      </xsd:extension>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="Refusjonstype">
+    <xsd:annotation>
+      <xsd:documentation>http://confluence.adeo.no/display/INFOTRYGD/IT20_FA+MOD+-+Informasjonsmodell</xsd:documentation>
+    </xsd:annotation>
+    <xsd:simpleContent>
+      <xsd:extension base="informasjon:Kodeverdi">
+        <xsd:attribute default="http://confluence.adeo.no/display/INFOTRYGD/IT20_FA+MOD+-+Informasjonsmodell" name="kodeverksRef" type="xsd:anyURI"/>
+      </xsd:extension>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="Arbeidskategori">
+    <xsd:annotation>
+      <xsd:documentation>http://confluence.adeo.no/display/INFOTRYGD/IT20_FA+MOD+-+Informasjonsmodell</xsd:documentation>
+    </xsd:annotation>
+    <xsd:simpleContent>
+      <xsd:extension base="informasjon:Kodeverdi">
+        <xsd:attribute default="http://confluence.adeo.no/display/INFOTRYGD/IT20_FA+MOD+-+Informasjonsmodell" name="kodeverksRef" type="xsd:anyURI"/>
+      </xsd:extension>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="KommendeVedtak">
+    <xsd:annotation>
+      <xsd:documentation>Utbetalinger som er registrert i Infortrygd og lagt i kø for utbetaling.</xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexContent>
+      <xsd:extension base="informasjon:Vedtak">
+        <xsd:sequence>
+          <xsd:element name="oppgjoerstype" type="informasjon:Oppgjoerstype">
+            <xsd:annotation>
+              <xsd:documentation>Kode som indikerer hva slags oppgjør som er knyttet til vedtaket.</xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+        </xsd:sequence>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="Inntektsperiode">
+    <xsd:annotation>
+      <xsd:documentation>http://confluence.adeo.no/display/INFOTRYGD/IT20_FA+MOD+-+Informasjonsmodell</xsd:documentation>
+    </xsd:annotation>
+    <xsd:simpleContent>
+      <xsd:extension base="informasjon:Kodeverdi">
+        <xsd:attribute default="http://confluence.adeo.no/display/INFOTRYGD/IT20_FA+MOD+-+Informasjonsmodell" name="kodeverksRef" type="xsd:anyURI"/>
+      </xsd:extension>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="Stansaarsak">
+    <xsd:annotation>
+      <xsd:documentation>http://confluence.adeo.no/display/INFOTRYGD/IT20_FA+MOD+-+Informasjonsmodell</xsd:documentation>
+    </xsd:annotation>
+    <xsd:simpleContent>
+      <xsd:extension base="informasjon:Kodeverdi">
+        <xsd:attribute default="http://confluence.adeo.no/display/INFOTRYGD/IT20_FA+MOD+-+Informasjonsmodell" name="kodeverksRef" type="xsd:anyURI"/>
+      </xsd:extension>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType abstract="true" name="Vedtak">
+    <xsd:annotation>
+      <xsd:documentation>Vedtak knyttet til utbetaling av foreldrepenger.</xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element name="vedtak" type="informasjon:Periode">
+        <xsd:annotation>
+          <xsd:documentation>Den perioden som gjelder for vedtaket.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="utbetalingsgrad" type="xsd:decimal">
+        <xsd:annotation>
+          <xsd:documentation>Prosent av total utbetaling.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="Foreldrepengetype">
+    <xsd:annotation>
+      <xsd:documentation>http://confluence.adeo.no/display/INFOTRYGD/IT20_FA+MOD+-+Informasjonsmodell</xsd:documentation>
+    </xsd:annotation>
+    <xsd:simpleContent>
+      <xsd:extension base="informasjon:Kodeverdi">
+        <xsd:attribute default="http://confluence.adeo.no/display/INFOTRYGD/IT20_FA+MOD+-+Informasjonsmodell" name="kodeverksRef" type="xsd:anyURI"/>
+      </xsd:extension>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType abstract="true" name="Foreldrepengerettighet">
+    <xsd:annotation>
+      <xsd:documentation>Rett til foreldrepenger får man dersom man føder eller adopterer ett eller flere barn.</xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element name="foreldrepengetype" type="informasjon:Foreldrepengetype">
+        <xsd:annotation>
+          <xsd:documentation>Kode for typen foreldrepenger.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element minOccurs="0" name="barnetFoedt" type="xsd:dateTime">
+        <xsd:annotation>
+          <xsd:documentation>Dato for når fødsel fant sted.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element minOccurs="0" name="andreForelder" type="informasjon:Person">
+        <xsd:annotation>
+          <xsd:documentation>Referanse til den andre foreldren til dette/disse barna.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="dekningsgrad" type="xsd:decimal">
+        <xsd:annotation>
+          <xsd:documentation>80% eller 100% permisjon. Gjelde for alle periodene.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element minOccurs="0" name="graderingsdager" type="xsd:integer">
+        <xsd:annotation>
+          <xsd:documentation>Antall dager med gradering.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element minOccurs="0" name="slutt" type="xsd:dateTime">
+        <xsd:annotation>
+          <xsd:documentation>Rettigheten er maksimalt gyldig til denne dato.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="restDager" type="xsd:integer">
+        <xsd:annotation>
+          <xsd:documentation>Antall dager igjen av denne rettigheten.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element minOccurs="0" name="moedrekvoteTom" type="xsd:dateTime">
+        <xsd:annotation>
+          <xsd:documentation>Mødrekvote til og med denne dato.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element minOccurs="0" name="fedrekvoteTom" type="xsd:dateTime">
+        <xsd:annotation>
+          <xsd:documentation>Fedrekvote til og med denne dato.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="arbeidskategori" type="informasjon:Arbeidskategori">
+        <xsd:annotation>
+          <xsd:documentation>Kode for hvilken arbeidskategori bruker tilhører.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="antallBarn" type="xsd:integer">
+        <xsd:annotation>
+          <xsd:documentation>Antall barn som er født eller adoptert.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element minOccurs="0" name="foreldreAvSammeKjoenn" type="informasjon:ForeldreAvSammeKjoenn">
+        <xsd:annotation>
+          <xsd:documentation>Kode som skal ivareta funksjonalitet i de tilfellene der foreldrene er to kvinner eller to menn. Dersom foreldrene er kvinne og mann vil feltet ikke være fylt ut.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element minOccurs="0" name="totaltAntallForeldrepengeperioder" type="xsd:integer">
+        <xsd:annotation>
+          <xsd:documentation>Totalt antall foreldrepengeperioder.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element minOccurs="0" name="totaltAntallArbeidsforhold" type="xsd:integer">
+        <xsd:annotation>
+          <xsd:documentation>Totalt antall arbeidsforhold.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element maxOccurs="6" minOccurs="0" name="arbeidsforholdListe" type="informasjon:Arbeidsforhold">
+        <xsd:annotation>
+          <xsd:documentation>Arbeidsgiver i brukers arbeidsforhold knyttet til foreldrepengerettigheten. Kan ha krav på refusjon i en periode.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="forelder" type="informasjon:Person">
+        <xsd:annotation>
+          <xsd:documentation>Personen som har rettighet til å få utbetalt foreldrepenger</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element maxOccurs="50" minOccurs="0" name="foreldrepengeperiodeListe" type="informasjon:Foreldrepengeperiode">
+        <xsd:annotation>
+          <xsd:documentation>Liste med foreldrepengeperioder.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="Periode">
+    <xsd:annotation>
+      <xsd:documentation>Angir periode.</xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element minOccurs="0" name="fom" type="xsd:date">
+        <xsd:annotation>
+          <xsd:documentation>Fra og med dato.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element minOccurs="0" name="tom" type="xsd:date">
+        <xsd:annotation>
+          <xsd:documentation>Til og med dato.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+</xsd:schema>

@@ -56,7 +56,7 @@ public class GsakKodeverkTema implements Serializable {
                     InputStream isFagomrade = GsakKodeTema.class.getResourceAsStream("/xml/fagomrade.xml");
                     InputStream isOppgavetype = GsakKodeTema.class.getResourceAsStream("/xml/oppgaveT.xml");
                     InputStream isPrioritet = GsakKodeTema.class.getResourceAsStream("/xml/prioritetT.xml");
-                    InputStream isUnderkategori = GsakKodeTema.class.getResourceAsStream("/xml/underkategori.xml");
+                    InputStream isUnderkategori = GsakKodeTema.class.getResourceAsStream("/xml/underkategori.xml")
             ) {
                 Document gsakKoder = parseDocument(isFagomrade);
                 List<Node> temaNodes = compileAndEvaluate(gsakKoder, "//fagomradeListe/fagomrade/gosys[@person='true' and not(@erGyldig = 'false')]");

@@ -22,7 +22,7 @@ public class PersonMockMapperTest {
 
 		PersonMock personMock = PersonMockFactory.createPersonMock();
 
-		FimPerson person = PersonMockMapper.map(personMock);
+		Person person = PersonMockMapper.map(personMock);
 
 		comparePerson(personMock, person);
 	}
@@ -31,7 +31,7 @@ public class PersonMockMapperTest {
 	public void testBrukerMock() {
 		PersonMock personMock = PersonMockFactory.createBrukerMock();
 
-		FimPerson person = PersonMockMapper.map(personMock);
+		Person person = PersonMockMapper.map(personMock);
 
 		comparePerson(personMock, person);
 	}
@@ -41,7 +41,7 @@ public class PersonMockMapperTest {
 		PersonMock personMock = PersonMockFactory.createBrukerMock();
 		personMock.setMidlertidigadresse(null);
 
-		FimPerson person = PersonMockMapper.map(personMock);
+		Person person = PersonMockMapper.map(personMock);
 
 		comparePerson(personMock, person);
 	}
@@ -50,13 +50,13 @@ public class PersonMockMapperTest {
 	public void testBrukerMedUtenlandsadresseMock() {
 		PersonMock personMock = PersonMockFactory.createDollyDuck();
 
-		FimPerson person = PersonMockMapper.map(personMock);
+		Person person = PersonMockMapper.map(personMock);
 
 		comparePerson(personMock, person);
 	}
 
 
-	private void comparePerson(PersonMock personMock, FimPerson person) {
+	private void comparePerson(PersonMock personMock, Person person) {
 		compareFodselsnummer(personMock.getIdnummer(), person.getIdent());
 		assertEquals(personMock.getIdenttype(), person.getIdent().getType().getValue());
 		assertEquals(personMock.getSammensattNavn(), person.getPersonnavn().getSammensattNavn());
@@ -67,29 +67,29 @@ public class PersonMockMapperTest {
 		comparePostboksadresse(personMock.getPostadresse(), person.getPostadresse());
 		assertEquals(personMock.getKjonn(), person.getKjoenn().getKjoenn().getValue());
 
-		if (person instanceof FimBruker) {
-			if (((FimBruker) person).getMidlertidigPostadresse() != null) {
-				compareMidlertidigadresse(personMock.getMidlertidigadresse(), ((FimBruker) person).getMidlertidigPostadresse());
+		if (person instanceof Bruker) {
+			if (((Bruker) person).getMidlertidigPostadresse() != null) {
+				compareMidlertidigadresse(personMock.getMidlertidigadresse(), ((Bruker) person).getMidlertidigPostadresse());
 			}
-			if (((FimBruker) person).getHarAnsvarligEnhet() != null) {
-				assertEquals(personMock.getEnhet(), ((FimBruker) person).getHarAnsvarligEnhet().getEnhet().getOrganisasjonselementID());
+			if (((Bruker) person).getHarAnsvarligEnhet() != null) {
+				assertEquals(personMock.getEnhet(), ((Bruker) person).getHarAnsvarligEnhet().getEnhet().getOrganisasjonselementID());
 			}
 			assertEquals(personMock.getDiskresjonskode(), person.getDiskresjonskode().getValue());
 		}
 	}
 
-	private void compareMidlertidigadresse(UstrukturertadresseMock expected, FimMidlertidigPostadresse actual) {
-		if(actual instanceof FimMidlertidigPostadresseUtland) {
-			assertEquals(expected.getAdresseLinje1(), ((FimMidlertidigPostadresseUtland) actual).getUstrukturertAdresse().getAdresselinje1());
-			assertEquals(expected.getAdresseLinje2(), ((FimMidlertidigPostadresseUtland) actual).getUstrukturertAdresse().getAdresselinje2());
-			assertEquals(expected.getAdresseLinje3(), ((FimMidlertidigPostadresseUtland) actual).getUstrukturertAdresse().getAdresselinje3());
+	private void compareMidlertidigadresse(UstrukturertadresseMock expected, MidlertidigPostadresse actual) {
+		if(actual instanceof MidlertidigPostadresseUtland) {
+			assertEquals(expected.getAdresseLinje1(), ((MidlertidigPostadresseUtland) actual).getUstrukturertAdresse().getAdresselinje1());
+			assertEquals(expected.getAdresseLinje2(), ((MidlertidigPostadresseUtland) actual).getUstrukturertAdresse().getAdresselinje2());
+			assertEquals(expected.getAdresseLinje3(), ((MidlertidigPostadresseUtland) actual).getUstrukturertAdresse().getAdresselinje3());
 		}
 	}
 
-	private void comparePostboksadresse(UstrukturertadresseMock personExpected, FimPostadresse postadresse) {
+	private void comparePostboksadresse(UstrukturertadresseMock personExpected, Postadresse postadresse) {
 
 		if (postadresse != null) {
-			FimUstrukturertAdresse postboksadresseNorsk = postadresse.getUstrukturertAdresse();
+			UstrukturertAdresse postboksadresseNorsk = postadresse.getUstrukturertAdresse();
 
 			assertEquals(personExpected.getAdresseLinje1(), postboksadresseNorsk.getAdresselinje1());
 			assertEquals(personExpected.getAdresseLinje2(), postboksadresseNorsk.getAdresselinje2());
@@ -97,18 +97,18 @@ public class PersonMockMapperTest {
 		}
 	}
 
-	private void compareStrukturertadresse(GateadresseMock bostedsadresseExpected, FimBostedsadresse bostedsadresse1) {
-		FimStrukturertAdresse strukturertAdresse;
+	private void compareStrukturertadresse(GateadresseMock bostedsadresseExpected, Bostedsadresse bostedsadresse1) {
+		StrukturertAdresse strukturertAdresse;
 		if (bostedsadresse1 != null) {
 			strukturertAdresse = bostedsadresse1.getStrukturertAdresse();
-			assertEquals(bostedsadresseExpected.getGatenavn(), ((FimGateadresse) strukturertAdresse).getGatenavn());
-			assertEquals(BigInteger.valueOf(bostedsadresseExpected.getGatenummer()), ((FimGateadresse) strukturertAdresse).getGatenummer());
-			assertEquals(BigInteger.valueOf(bostedsadresseExpected.getHusnummer()), ((FimGateadresse) strukturertAdresse).getHusnummer());
-			assertEquals(bostedsadresseExpected.getHusbokstav(), ((FimGateadresse) strukturertAdresse).getHusbokstav());
+			assertEquals(bostedsadresseExpected.getGatenavn(), ((Gateadresse) strukturertAdresse).getGatenavn());
+			assertEquals(BigInteger.valueOf(bostedsadresseExpected.getGatenummer()), ((Gateadresse) strukturertAdresse).getGatenummer());
+			assertEquals(BigInteger.valueOf(bostedsadresseExpected.getHusnummer()), ((Gateadresse) strukturertAdresse).getHusnummer());
+			assertEquals(bostedsadresseExpected.getHusbokstav(), ((Gateadresse) strukturertAdresse).getHusbokstav());
 		}
 	}
 
-	private void compareFodselsnummer(String fodselsnummer, FimNorskIdent ident) {
+	private void compareFodselsnummer(String fodselsnummer, NorskIdent ident) {
 		assertNotNull(fodselsnummer);
 		assertNotNull(ident);
 

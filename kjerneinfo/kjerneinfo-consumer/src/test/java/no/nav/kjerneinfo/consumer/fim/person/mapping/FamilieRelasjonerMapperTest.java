@@ -7,8 +7,10 @@ import no.nav.kjerneinfo.domain.person.Person;
 import no.nav.kjerneinfo.domain.person.fakta.Familierelasjon;
 import no.nav.kodeverk.consumer.fim.kodeverk.support.DefaultKodeverkmanager;
 import no.nav.tjeneste.virksomhet.kodeverk.v2.KodeverkPortType;
-import no.nav.tjeneste.virksomhet.person.v3.informasjon.*;
-import no.nav.tjeneste.virksomhet.person.v3.meldinger.WSHentPersonResponse;
+import no.nav.tjeneste.virksomhet.person.v3.informasjon.Bruker;
+import no.nav.tjeneste.virksomhet.person.v3.informasjon.NorskIdent;
+import no.nav.tjeneste.virksomhet.person.v3.informasjon.PersonIdent;
+import no.nav.tjeneste.virksomhet.person.v3.meldinger.HentPersonResponse;
 import no.nav.tjeneste.virksomhet.person.v3.metadata.Endringstyper;
 import org.junit.Before;
 import org.junit.Test;
@@ -31,9 +33,9 @@ public class FamilieRelasjonerMapperTest {
 
     @Test
     public void barnMedSammeBosted() {
-        WSFamilierelasjon wsFamilierelasjon = new WSFamilierelasjon()
+        no.nav.tjeneste.virksomhet.person.v3.informasjon.Familierelasjon wsFamilierelasjon = new no.nav.tjeneste.virksomhet.person.v3.informasjon.Familierelasjon()
                 .withHarSammeBosted(true)
-                .withTilPerson(new WSBruker());
+                .withTilPerson(new Bruker());
 
         Familierelasjon response = mapper.map(wsFamilierelasjon, Familierelasjon.class);
 
@@ -42,9 +44,9 @@ public class FamilieRelasjonerMapperTest {
 
     @Test
     public void barnMedAnnetBosted() {
-        WSFamilierelasjon wsFamilierelasjon = new WSFamilierelasjon()
+        no.nav.tjeneste.virksomhet.person.v3.informasjon.Familierelasjon wsFamilierelasjon = new no.nav.tjeneste.virksomhet.person.v3.informasjon.Familierelasjon()
                 .withHarSammeBosted(false)
-                .withTilPerson(new WSBruker());
+                .withTilPerson(new Bruker());
 
         Familierelasjon response = mapper.map(wsFamilierelasjon, Familierelasjon.class);
 
@@ -53,9 +55,9 @@ public class FamilieRelasjonerMapperTest {
 
     @Test
     public void barnMedSammeBostedSomNullVerdiDefaulterTilFalse() {
-        WSFamilierelasjon wsFamilierelasjon = new WSFamilierelasjon()
+        no.nav.tjeneste.virksomhet.person.v3.informasjon.Familierelasjon wsFamilierelasjon = new no.nav.tjeneste.virksomhet.person.v3.informasjon.Familierelasjon()
                 .withHarSammeBosted(null)
-                .withTilPerson(new WSBruker());
+                .withTilPerson(new Bruker());
 
         Familierelasjon response = mapper.map(wsFamilierelasjon, Familierelasjon.class);
 
@@ -64,12 +66,12 @@ public class FamilieRelasjonerMapperTest {
 
     @Test
     public void barnMedDiskresjonskode() {
-        WSFamilierelasjon wsFamilierelasjon = new WSFamilierelasjon()
+        no.nav.tjeneste.virksomhet.person.v3.informasjon.Familierelasjon wsFamilierelasjon = new no.nav.tjeneste.virksomhet.person.v3.informasjon.Familierelasjon()
                 .withHarSammeBosted(null)
-                .withTilRolle(new WSFamilierelasjoner().withValue("BARN"))
+                .withTilRolle(new no.nav.tjeneste.virksomhet.person.v3.informasjon.Familierelasjoner().withValue("BARN"))
                 .withEndringstype(Endringstyper.ENDRET)
                 .withTilPerson(mockPersonMedDiskresjonskode());
-        WSHentPersonResponse wsResponse = new WSHentPersonResponse().withPerson(new WSBruker().withHarFraRolleI(wsFamilierelasjon));
+        HentPersonResponse wsResponse = new HentPersonResponse().withPerson(new Bruker().withHarFraRolleI(wsFamilierelasjon));
 
         HentKjerneinformasjonResponse response = mapper.map(wsResponse, HentKjerneinformasjonResponse.class);
 
@@ -78,14 +80,14 @@ public class FamilieRelasjonerMapperTest {
         assertThat(barn.getFodselsnummer().getNummer(), is(FODSELSNUMMER));
     }
 
-    private WSPerson mockPersonMedDiskresjonskode() {
-        return new WSPerson()
+    private no.nav.tjeneste.virksomhet.person.v3.informasjon.Person mockPersonMedDiskresjonskode() {
+        return new no.nav.tjeneste.virksomhet.person.v3.informasjon.Person()
                 .withAktoer(getNorskIdent(FODSELSNUMMER))
-                .withDiskresjonskode(new WSDiskresjonskoder().withValue(Diskresjonskoder.FORTROLIG_ADRESSE.getValue()));
+                .withDiskresjonskode(new no.nav.tjeneste.virksomhet.person.v3.informasjon.Diskresjonskoder().withValue(Diskresjonskoder.FORTROLIG_ADRESSE.getValue()));
     }
 
-    private WSPersonIdent getNorskIdent(String fodselsnummer) {
-        return new WSPersonIdent().withIdent(new WSNorskIdent().withIdent(fodselsnummer));
+    private PersonIdent getNorskIdent(String fodselsnummer) {
+        return new PersonIdent().withIdent(new NorskIdent().withIdent(fodselsnummer));
     }
 
 }

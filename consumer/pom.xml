@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
 
@@ -114,12 +115,6 @@
             <artifactId>kodeverk-consumer</artifactId>
         </dependency>
 
-        <!-- Gsak kodeverk -->
-        <dependency>
-            <groupId>no.nav.fellessystemer</groupId>
-            <artifactId>nav-fellessystemer-environment</artifactId>
-        </dependency>
-
         <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>modia-varsling</artifactId>
@@ -127,52 +122,51 @@
         </dependency>
         <!--Dialogarena tjenestespesifikasjon-->
         <dependency>
-            <groupId>no.nav.sbl.dialogarena</groupId>
+            <groupId>no.nav.tjenestespesifikasjoner</groupId>
             <artifactId>aktorid-jaxws</artifactId>
         </dependency>
         <dependency>
-            <groupId>no.nav.sbl.dialogarena</groupId>
+            <groupId>no.nav.tjenestespesifikasjoner</groupId>
             <artifactId>kodeverk-tjenestespesifikasjon</artifactId>
         </dependency>
         <dependency>
-            <groupId>no.nav.sbl.dialogarena</groupId>
+            <groupId>no.nav.tjenestespesifikasjoner</groupId>
             <artifactId>gsak-oppgave-tjenestespesifikasjon</artifactId>
         </dependency>
         <dependency>
-            <groupId>no.nav.sbl.dialogarena</groupId>
+            <groupId>no.nav.tjenestespesifikasjoner</groupId>
             <artifactId>tildeloppgave-v1-tjenestespesifikasjon</artifactId>
         </dependency>
         <dependency>
-            <groupId>no.nav.sbl.dialogarena</groupId>
+            <groupId>no.nav.tjenestespesifikasjoner</groupId>
             <artifactId>utbetaling-tjenestespesifikasjon</artifactId>
         </dependency>
         <dependency>
-            <groupId>no.nav.sbl.dialogarena</groupId>
+            <groupId>no.nav.tjenestespesifikasjoner</groupId>
             <artifactId>dial-nav-tjeneste-sak</artifactId>
         </dependency>
         <dependency>
-            <groupId>no.nav.sbl.dialogarena</groupId>
+            <groupId>no.nav.tjenestespesifikasjoner</groupId>
             <artifactId>dial-nav-tjeneste-behandlesak</artifactId>
         </dependency>
         <dependency>
-            <groupId>no.nav.sbl.dialogarena</groupId>
+            <groupId>no.nav.tjenestespesifikasjoner</groupId>
             <artifactId>sakogbehandling-tjenestespesifikasjon</artifactId>
         </dependency>
         <dependency>
-            <groupId>no.nav.sbl.dialogarena</groupId>
+            <groupId>no.nav.tjenestespesifikasjoner</groupId>
             <artifactId>henvendelse-soknader-tjenestespesifikasjon</artifactId>
         </dependency>
         <dependency>
-            <groupId>no.nav.sbl.dialogarena</groupId>
+            <groupId>no.nav.tjenestespesifikasjoner</groupId>
             <artifactId>joark-tjenestespesifikasjon</artifactId>
         </dependency>
         <dependency>
-            <groupId>no.nav.tjenester</groupId>
+            <groupId>no.nav.tjenestespesifikasjoner</groupId>
             <artifactId>nav-innsynJournal-v2-tjenestespesifikasjon</artifactId>
-            <classifier>jaxws</classifier>
         </dependency>
         <dependency>
-            <groupId>no.nav.sbl.dialogarena</groupId>
+            <groupId>no.nav.tjenestespesifikasjoner</groupId>
             <artifactId>send-ut-henvendelse</artifactId>
         </dependency>
         <dependency>
@@ -180,7 +174,7 @@
             <artifactId>behandle-henvendelse</artifactId>
         </dependency>
         <dependency>
-            <groupId>no.nav.sbl.dialogarena</groupId>
+            <groupId>no.nav.tjenestespesifikasjoner</groupId>
             <artifactId>arena-arbeid-og-aktivitet</artifactId>
         </dependency>
         <dependency>
@@ -193,24 +187,24 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>no.nav.sbl</groupId>
+            <groupId>no.nav.tjenestespesifikasjoner</groupId>
             <artifactId>pensjon-sak-v1-tjenestespesifikasjon</artifactId>
         </dependency>
         <dependency>
-            <groupId>no.nav.sbl</groupId>
+            <groupId>no.nav.tjenestespesifikasjoner</groupId>
             <artifactId>dkif-tjenestespesifikasjon</artifactId>
         </dependency>
         <dependency>
-            <groupId>no.nav.sbl</groupId>
+            <groupId>no.nav.tjenestespesifikasjoner</groupId>
             <artifactId>brukervarsel-v1-tjenestespesifikasjon</artifactId>
         </dependency>
         <dependency>
-            <groupId>no.nav.sbl.dialogarena</groupId>
+            <groupId>no.nav.tjenestespesifikasjoner</groupId>
             <artifactId>arbeidsfordeling-v1-tjenestespesifikasjon</artifactId>
         </dependency>
 
         <dependency>
-            <groupId>no.nav.sbl.dialogarena</groupId>
+            <groupId>no.nav.tjenestespesifikasjoner</groupId>
             <artifactId>oppfolgingsinfo-v1-tjenestespesifikasjon</artifactId>
         </dependency>
         <dependency>
@@ -220,11 +214,7 @@
 
         <!--Dialogarena-->
         <dependency>
-            <groupId>no.nav.sbl.dialogarena</groupId>
-            <artifactId>common-kodeverk</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>no.nav.sbl.dialogarena</groupId>
+            <groupId>no.nav.tjenestespesifikasjoner</groupId>
             <artifactId>henvendelse-informasjon-v2</artifactId>
         </dependency>
         <dependency>
@@ -238,38 +228,22 @@
 
         <!--Virksomhetstjenester-->
         <dependency>
-            <groupId>no.nav.tjenester</groupId>
-            <artifactId>nav-organisasjonEnhet-v2-tjenestespesifikasjon</artifactId>
-            <classifier>jaxws</classifier>
+            <groupId>no.nav.tjenestespesifikasjoner</groupId>
+            <artifactId>organisasjonenhet-v2-tjenestespesifikasjon</artifactId>
         </dependency>
         <dependency>
-            <groupId>no.nav.tjenester</groupId>
-            <artifactId>nav-organisasjonEnhetKontaktinformasjon-v1-tjenestespesifikasjon</artifactId>
-            <classifier>jaxws</classifier>
+            <groupId>no.nav.tjenestespesifikasjoner</groupId>
+            <artifactId>organisasjonenhetkontaktinformasjon-v1-tjenestespesifikasjon</artifactId>
         </dependency>
 
         <!--Modig-->
         <dependency>
-            <groupId>no.nav.modig</groupId>
-            <artifactId>modig-core</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>no.nav.modig</groupId>
-            <artifactId>modig-log-common</artifactId>
+            <groupId>no.nav.sbl.dialogarena</groupId>
+            <artifactId>modig-embedded</artifactId>
         </dependency>
         <dependency>
             <groupId>no.nav.modig</groupId>
             <artifactId>modig-content-no-enonic</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>no.nav.modig</groupId>
-            <artifactId>modig-testcertificates</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>no.nav.modig</groupId>
-            <artifactId>modig-core-test</artifactId>
-            <scope>test</scope>
         </dependency>
 
         <!--Spring-->
@@ -420,7 +394,7 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>no.nav.sbl.dialogarena</groupId>
+            <groupId>no.nav.tjenestespesifikasjoner</groupId>
             <artifactId>egenansatt-v1-tjenestespesifikasjon</artifactId>
         </dependency>
 

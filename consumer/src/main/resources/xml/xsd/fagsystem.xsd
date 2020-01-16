@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <xs:import namespace="http://www.w3.org/XML/1998/namespace" schemaLocation="xml.xsd"/>
+
+    <!-- Schema vi referer til -->
+    <xs:include schemaLocation="fellesTyper.xsd"/>
+
+    <!-- Hovedkodeliste med relasjoner -->
+    <xs:element name="fagsystemListe" type="fagsystemListeType">
+        <xs:unique name="UnikeFagsystemKode">
+            <xs:selector xpath="./fagsystem"/>
+            <xs:field xpath="@kode"/>
+        </xs:unique>
+    </xs:element>
+    <xs:complexType name="fagsystemListeType">
+        <xs:sequence>
+            <xs:element name="fagsystem" type="fagsystemType" maxOccurs="unbounded"/>
+        </xs:sequence>
+        <xs:attribute ref="xml:base"/>
+    </xs:complexType>
+
+    <!-- Hoved kodetype -->
+    <xs:complexType name="fagsystemType">
+        <xs:complexContent>
+            <xs:extension base="felleskodeType">
+                <xs:sequence>
+                    <xs:element name="gosys" type="gosysfagsystemType" minOccurs="0"/>
+                    <xs:element name="gsak" type="gsakfagsystemType" minOccurs="0"/>
+                    <xs:element name="ruting" type="rutingfagsystemType" minOccurs="0"/>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <!-- Systemspesifke typer -->
+    <xs:complexType name="gosysfagsystemType">
+        <xs:attribute name="datoFom" type="xs:date" use="optional"/>
+        <xs:attribute name="datoTom" type="xs:date" use="optional"/>
+        <xs:attribute name="erGyldig" type="xs:boolean" use="optional"/>
+        <xs:attribute name="datoOpprettet" type="xs:dateTime" use="optional"/>
+        <xs:attribute name="opprettetAv" type="string_20" use="optional"/>
+        <xs:attribute name="endretAv" type="string_20" use="optional"/>
+        <xs:attribute name="fagsystem" type="string_20" use="optional"/>
+        <xs:attribute name="decode" type="string_200" use="required"/>
+    </xs:complexType>
+
+    <xs:complexType name="gsakfagsystemType">
+        <xs:attribute name="datoFom" type="xs:date" use="optional"/>
+        <xs:attribute name="datoTom" type="xs:date" use="optional"/>
+        <xs:attribute name="erGyldig" type="xs:boolean" use="optional"/>
+        <xs:attribute name="datoOpprettet" type="xs:dateTime" use="optional"/>
+        <xs:attribute name="opprettetAv" type="string_20" use="optional"/>
+        <xs:attribute name="endretAv" type="string_20" use="optional"/>
+        <xs:attribute name="kode" type="string_40" use="optional"/>
+        <xs:attribute name="dekode" type="string_400" use="optional"/>
+    </xs:complexType>
+
+    <xs:complexType name="rutingfagsystemType">
+        <xs:attribute name="datoFom" type="xs:date" use="optional"/>
+        <xs:attribute name="datoTom" type="xs:date" use="optional"/>
+        <xs:attribute name="erGyldig" type="xs:boolean" use="optional"/>
+        <xs:attribute name="datoOpprettet" type="xs:dateTime" use="optional"/>
+        <xs:attribute name="opprettetAv" type="string_20" use="optional"/>
+        <xs:attribute name="endretAv" type="string_20" use="optional"/>
+        <xs:attribute name="fagsystem" type="string_20" use="optional"/>
+        <xs:attribute name="dekode" type="string_200" use="required"/>
+    </xs:complexType>
+
+</xs:schema>

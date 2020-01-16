@@ -4,7 +4,6 @@ import no.nav.brukerprofil.domain.Bruker;
 import no.nav.kjerneinfo.consumer.fim.person.PersonKjerneinfoServiceBi;
 import no.nav.kjerneinfo.consumer.fim.person.mock.PersonKjerneinfoMockFactory;
 import no.nav.kjerneinfo.consumer.fim.person.to.HentKjerneinformasjonRequest;
-import no.nav.kjerneinfo.consumer.fim.person.to.HentSikkerhetstiltakRequest;
 import no.nav.kjerneinfo.domain.person.GeografiskTilknytning;
 import no.nav.kodeverk.consumer.fim.kodeverk.support.DefaultKodeverkmanager;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.AnsattEnhet;
@@ -12,10 +11,10 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.organisasjonsEnhetV2
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.TilgangskontrollMock;
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.TilgangskontrollUtenTPS;
 import no.nav.tjeneste.virksomhet.kodeverk.v2.KodeverkPortType;
-import no.nav.tjeneste.virksomhet.person.v3.*;
-import no.nav.tjeneste.virksomhet.person.v3.informasjon.WSDiskresjonskoder;
-import no.nav.tjeneste.virksomhet.person.v3.informasjon.WSKommune;
-import no.nav.tjeneste.virksomhet.person.v3.informasjon.WSSikkerhetstiltak;
+import no.nav.tjeneste.virksomhet.person.v3.binding.*;
+import no.nav.tjeneste.virksomhet.person.v3.informasjon.Diskresjonskoder;
+import no.nav.tjeneste.virksomhet.person.v3.informasjon.Kommune;
+import no.nav.tjeneste.virksomhet.person.v3.informasjon.Sikkerhetstiltak;
 import no.nav.tjeneste.virksomhet.person.v3.meldinger.*;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -63,51 +62,51 @@ public class DefaultPersonKjerneinfoServiceTest {
 
     @Test
     public void hentKjerneinformasjon() throws HentPersonPersonIkkeFunnet, HentPersonSikkerhetsbegrensning {
-        when(portType.hentPerson(any(WSHentPersonRequest.class))).thenReturn(new WSHentPersonResponse()
+        when(portType.hentPerson(any(HentPersonRequest.class))).thenReturn(new HentPersonResponse()
                 .withPerson(mockFactory.getBruker(FODSELSNUMMER, true)));
 
         service.hentKjerneinformasjon(new HentKjerneinformasjonRequest(FODSELSNUMMER));
 
-        verify(portType, times(1)).hentPerson(any(WSHentPersonRequest.class));
+        verify(portType, times(1)).hentPerson(any(HentPersonRequest.class));
     }
 
     @Test
     public void hentGeografiskTilknytning() throws HentGeografiskTilknytningSikkerhetsbegrensing, HentGeografiskTilknytningPersonIkkeFunnet {
-        when(portType.hentGeografiskTilknytning(any(WSHentGeografiskTilknytningRequest.class))).thenReturn(lagResponse());
+        when(portType.hentGeografiskTilknytning(any(HentGeografiskTilknytningRequest.class))).thenReturn(lagResponse());
 
         GeografiskTilknytning response = service.hentGeografiskTilknytning(FODSELSNUMMER);
 
-        verify(portType, times(1)).hentGeografiskTilknytning(any(WSHentGeografiskTilknytningRequest.class));
+        verify(portType, times(1)).hentGeografiskTilknytning(any(HentGeografiskTilknytningRequest.class));
         assertThat(response.getValue(), is(GEOGRAFISK_TILKNYTNING));
         assertThat(response.getDiskresjonskode(), is(STRENGT_FORTROLIG_ADRESSE));
     }
 
     @Test
     public void hentSikkerhetstiltak() throws Exception {
-        WSHentSikkerhetstiltakResponse response = new WSHentSikkerhetstiltakResponse()
-                .withSikkerhetstiltak(new WSSikkerhetstiltak()
+        HentSikkerhetstiltakResponse response = new HentSikkerhetstiltakResponse()
+                .withSikkerhetstiltak(new Sikkerhetstiltak()
                         .withSikkerhetstiltaksbeskrivelse("Farlig person."));
-        when(portType.hentSikkerhetstiltak(any(WSHentSikkerhetstiltakRequest.class))).thenReturn(response);
+        when(portType.hentSikkerhetstiltak(any(no.nav.tjeneste.virksomhet.person.v3.meldinger.HentSikkerhetstiltakRequest.class))).thenReturn(response);
 
-        service.hentSikkerhetstiltak(new HentSikkerhetstiltakRequest(FODSELSNUMMER));
+        service.hentSikkerhetstiltak(new no.nav.kjerneinfo.consumer.fim.person.to.HentSikkerhetstiltakRequest(FODSELSNUMMER));
 
-        verify(portType, times(1)).hentSikkerhetstiltak(any(WSHentSikkerhetstiltakRequest.class));
+        verify(portType, times(1)).hentSikkerhetstiltak(any(HentSikkerhetstiltakRequest.class));
     }
 
     @Test
     public void hentBrukerprofil() throws HentPersonPersonIkkeFunnet, HentPersonSikkerhetsbegrensning {
-        when(portType.hentPerson(any(WSHentPersonRequest.class))).thenReturn(new WSHentPersonResponse()
+        when(portType.hentPerson(any(HentPersonRequest.class))).thenReturn(new HentPersonResponse()
                 .withPerson(mockFactory.getBruker(FODSELSNUMMER, true)));
 
         Bruker bruker = service.hentBrukerprofil(FODSELSNUMMER);
 
-        verify(portType, times(1)).hentPerson(any(WSHentPersonRequest.class));
+        verify(portType, times(1)).hentPerson(any(HentPersonRequest.class));
         assertThat(bruker.getIdent(), is(FODSELSNUMMER));
     }
 
-    private WSHentGeografiskTilknytningResponse lagResponse() {
-        return new WSHentGeografiskTilknytningResponse()
-                .withDiskresjonskode(new WSDiskresjonskoder().withValue(STRENGT_FORTROLIG_ADRESSE))
-                .withGeografiskTilknytning(new WSKommune().withGeografiskTilknytning(GEOGRAFISK_TILKNYTNING));
+    private HentGeografiskTilknytningResponse lagResponse() {
+        return new HentGeografiskTilknytningResponse()
+                .withDiskresjonskode(new Diskresjonskoder().withValue(STRENGT_FORTROLIG_ADRESSE))
+                .withGeografiskTilknytning(new Kommune().withGeografiskTilknytning(GEOGRAFISK_TILKNYTNING));
     }
 }

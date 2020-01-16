@@ -1,14 +1,13 @@
 package no.nav.kontrakter.consumer.fim.oppfolgingskontrakt.support;
 
-import no.nav.kjerneinfo.common.log.SporingUtils;
+import kotlin.Pair;
 import no.nav.kontrakter.consumer.fim.oppfolgingskontrakt.OppfolgingskontraktServiceBi;
 import no.nav.kontrakter.consumer.fim.oppfolgingskontrakt.to.OppfolgingskontraktRequest;
 import no.nav.kontrakter.consumer.fim.oppfolgingskontrakt.to.OppfolgingskontraktResponse;
 import no.nav.kontrakter.consumer.utils.OppfolgingskontraktMapper;
-import no.nav.modig.common.SporingsAksjon;
-import no.nav.modig.common.SporingsLogger;
-import no.nav.modig.common.SporingsLoggerFactory;
 import no.nav.modig.core.exception.AuthorizationException;
+import no.nav.sbl.dialogarena.naudit.Audit;
+import no.nav.sbl.dialogarena.naudit.AuditResources;
 import no.nav.tjeneste.virksomhet.oppfoelging.v1.HentOppfoelgingskontraktListeSikkerhetsbegrensning;
 import no.nav.tjeneste.virksomhet.oppfoelging.v1.OppfoelgingPortType;
 import no.nav.tjeneste.virksomhet.oppfoelging.v1.meldinger.WSHentOppfoelgingskontraktListeRequest;
@@ -17,13 +16,17 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.CollectionUtils;
 
-import java.io.IOException;
-import java.io.InputStream;
+import static java.util.Collections.singletonList;
 
 /**
  * Vår standardimplementasjonen av den eksterne tjenesten for oppfolgingskontraker.
  */
 public class DefaultOppfolgingskontraktService implements OppfolgingskontraktServiceBi {
+    private static Audit.AuditDescriptor<WSHentOppfoelgingskontraktListeRequest> auditLogger = Audit.describe(
+            Audit.Action.READ,
+            AuditResources.Person.Kontrakter,
+            (person) -> singletonList(new Pair<>("fnr", person.getPersonidentifikator()))
+    );
 
     private OppfoelgingPortType oppfolgingskontraktService = null;
     private OppfolgingskontraktMapper mapper = null;
@@ -36,7 +39,7 @@ public class DefaultOppfolgingskontraktService implements OppfolgingskontraktSer
         try {
             rawResponse = oppfolgingskontraktService.hentOppfoelgingskontraktListe(rawRequest);
             if (!CollectionUtils.isEmpty(rawResponse.getOppfoelgingskontraktListe())) {
-                logSporingsInformasjon(rawRequest);
+                auditLogger.log(rawRequest);
             }
         } catch (HentOppfoelgingskontraktListeSikkerhetsbegrensning hentOppfoelgingskontraktBegrensning) {
             logger.warn("HentOppfoelgingskontraktListeSikkerhetsbegrensning ved kall på hentOppfoelgingskontraktListe", hentOppfoelgingskontraktBegrensning.getMessage());
@@ -44,19 +47,6 @@ public class DefaultOppfolgingskontraktService implements OppfolgingskontraktSer
         }
 
         return mapper.map(rawResponse, OppfolgingskontraktResponse.class);
-    }
-
-    private void logSporingsInformasjon(WSHentOppfoelgingskontraktListeRequest bruker) {
-        try {
-            SporingsLogger sporingsLogger = SporingsLoggerFactory.sporingsLogger(SporingUtils.configFileAsBufferedReader(getConfigAsInputStream(), "kontrakter-sporing-config.txt"));
-            sporingsLogger.logg(bruker, SporingsAksjon.Les);
-        } catch (Exception e) {
-            logger.error("hentOppfolgingskontrakter:SporingsLogger ble ikke opprettet.", e);
-        }
-    }
-
-    private InputStream getConfigAsInputStream() throws IOException {
-        return getClass().getClassLoader().getResource("kontrakter-sporing-config.txt").openStream();
     }
 
     public void setOppfolgingskontraktService(OppfoelgingPortType oppfolgingskontraktService) {

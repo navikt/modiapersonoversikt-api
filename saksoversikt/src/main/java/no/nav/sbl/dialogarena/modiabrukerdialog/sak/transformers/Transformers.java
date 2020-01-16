@@ -7,9 +7,10 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.sak.utils.Java8Utils;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsesoknader.v1.informasjon.WSDokumentforventning;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsesoknader.v1.informasjon.WSHenvendelseType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsesoknader.v1.informasjon.WSSoknad;
-import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.WSBehandlingskjede;
-import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.sakogbehandling.WSBehandlingstemaer;
-import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.sakogbehandling.WSBehandlingstyper;
+import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.Behandlingskjede;
+import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.sakogbehandling.Behandlingstemaer;
+import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.sakogbehandling.Behandlingstyper;
+import org.joda.time.DateTime;
 
 import java.util.List;
 import java.util.function.Function;
@@ -43,27 +44,27 @@ public class Transformers {
         return dokumentFraHenvendelse -> !DokumentFraHenvendelse.INNSENDT.test(dokumentFraHenvendelse) && !dokumentFraHenvendelse.erHovedskjema();
     }
 
-    public static final Function<WSBehandlingskjede, Behandling> TIL_BEHANDLING = (WSBehandlingskjede wsBehandlingskjede) -> {
+    public static final Function<Behandlingskjede, Behandling> TIL_BEHANDLING = (Behandlingskjede wsBehandlingskjede) -> {
         Behandling behandling = new Behandling()
                 .withBehandlingsType(wsBehandlingskjede.getSisteBehandlingstype().getValue())
                 .withBehandlingsDato(FilterUtils.behandlingsDato(wsBehandlingskjede))
-                .withOpprettetDato(wsBehandlingskjede.getStart())
+                .withOpprettetDato(new DateTime(wsBehandlingskjede.getStart().toGregorianCalendar().getTime()))
                 .withPrefix(wsBehandlingskjede.getSisteBehandlingREF().substring(0, 2))
                 .withBehandlingsId(wsBehandlingskjede.getSisteBehandlingREF())
                 .withBehandlingStatus(behandlingsStatus(wsBehandlingskjede))
                 .withBehandlingKvittering(kvitteringstype(wsBehandlingskjede.getSisteBehandlingstype()));
-        WSBehandlingstemaer behandlingstema = wsBehandlingskjede.getBehandlingstema();
+        Behandlingstemaer behandlingstema = wsBehandlingskjede.getBehandlingstema();
         if (behandlingstema != null) {
             behandling = behandling.withBehandlingsTema(behandlingstema.getValue());
         }
         return behandling;
     };
 
-    private static BehandlingsType kvitteringstype(WSBehandlingstyper sisteBehandlingstype) {
+    private static BehandlingsType kvitteringstype(Behandlingstyper sisteBehandlingstype) {
         return FilterUtils.erKvitteringstype(sisteBehandlingstype.getValue()) ? KVITTERING : BEHANDLING;
     }
 
-    private static BehandlingsStatus behandlingsStatus(WSBehandlingskjede wsBehandlingskjede) {
+    private static BehandlingsStatus behandlingsStatus(Behandlingskjede wsBehandlingskjede) {
         if (wsBehandlingskjede.getSisteBehandlingsstatus() != null) {
             if (wsBehandlingskjede.getSisteBehandlingsstatus().getValue().equals(FilterUtils.AVSLUTTET)) {
                 return FERDIG_BEHANDLET;

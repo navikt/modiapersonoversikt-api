@@ -1,14 +1,15 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.sak.utils;
 
 import no.nav.modig.core.exception.ApplicationException;
+import no.nav.sbl.dialogarena.modiabrukerdialog.sak.BehandlingskjedeBuilder;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.*;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.filter.FilterUtils;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.transformers.Transformers;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsesoknader.v1.informasjon.WSDokumentforventning;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsesoknader.v1.informasjon.WSSoknad;
-import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.WSBehandlingskjede;
-import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.sakogbehandling.WSBehandlingsstatuser;
-import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.sakogbehandling.WSBehandlingstyper;
+import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.Behandlingskjede;
+import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.sakogbehandling.Behandlingsstatuser;
+import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.sakogbehandling.Behandlingstyper;
 import org.hamcrest.Matchers;
 import org.joda.time.DateMidnight;
 import org.joda.time.DateTime;
@@ -146,12 +147,14 @@ public class TransformersTest {
     @Test
     public void mapperBehandlingskjedeTilBehandling() {
         List<Behandling> collect = asList(
-                new WSBehandlingskjede()
-                        .withSisteBehandlingstype(new WSBehandlingstyper().withValue("type"))
-                        .withSisteBehandlingsstatus(new WSBehandlingsstatuser().withValue(FilterUtils.AVSLUTTET))
+                BehandlingskjedeBuilder.create()
+                        .withSisteBehandlingstype("type")
+                        .withSisteBehandlingsstatus(FilterUtils.AVSLUTTET)
                         .withSlutt(new DateTime())
                         .withStart(new DateTime().minusDays(1))
-                        .withSisteBehandlingREF("hovedskjemakodeverkref"))
+                        .withSisteBehandlingREF("hovedskjemakodeverkref")
+                .build()
+        )
                 .stream()
                 .map(Transformers.TIL_BEHANDLING)
                 .collect(Collectors.toList());
@@ -164,12 +167,13 @@ public class TransformersTest {
     @Test
     public void mapperAvbruttBehandlingskjedeTilBehandling() {
         List<Behandling> collect = asList(
-                new WSBehandlingskjede()
-                        .withSisteBehandlingstype(new WSBehandlingstyper().withValue("type"))
-                        .withSisteBehandlingsstatus(new WSBehandlingsstatuser().withValue(FilterUtils.AVBRUTT))
+                BehandlingskjedeBuilder.create()
+                        .withSisteBehandlingstype("type")
+                        .withSisteBehandlingsstatus(FilterUtils.AVBRUTT)
                         .withSlutt(new DateTime())
                         .withStart(new DateTime().minusDays(1))
-                        .withSisteBehandlingREF("hovedskjemakodeverkref"))
+                        .withSisteBehandlingREF("hovedskjemakodeverkref")
+                        .build())
                 .stream()
                 .map(Transformers.TIL_BEHANDLING)
                 .collect(Collectors.toList());
@@ -181,12 +185,13 @@ public class TransformersTest {
     @Test
     public void mapperOpprettetBehandlingskjedeTilBehandling() {
         List<Behandling> collect = asList(
-                new WSBehandlingskjede()
-                        .withSisteBehandlingstype(new WSBehandlingstyper().withValue("type"))
-                        .withSisteBehandlingsstatus(new WSBehandlingsstatuser().withValue(FilterUtils.OPPRETTET))
+                BehandlingskjedeBuilder.create()
+                        .withSisteBehandlingstype("type")
+                        .withSisteBehandlingsstatus(FilterUtils.OPPRETTET)
                         .withSlutt(new DateTime())
                         .withStart(new DateTime().minusDays(1))
-                        .withSisteBehandlingREF("hovedskjemakodeverkref"))
+                        .withSisteBehandlingREF("hovedskjemakodeverkref")
+                        .build())
                 .stream()
                 .map(Transformers.TIL_BEHANDLING)
                 .collect(Collectors.toList());
@@ -199,12 +204,13 @@ public class TransformersTest {
     @Test(expected = ApplicationException.class)
     public void ugyldigBehandlingsstatusKasterException() {
             asList(
-                new WSBehandlingskjede()
-                        .withSisteBehandlingstype(new WSBehandlingstyper().withValue("type"))
-                        .withSisteBehandlingsstatus(new WSBehandlingsstatuser().withValue("IKKE_EN_STATUS"))
+                    BehandlingskjedeBuilder.create()
+                        .withSisteBehandlingstype("type")
+                        .withSisteBehandlingsstatus("IKKE_EN_STATUS")
                         .withSlutt(new DateTime())
                         .withStart(new DateTime().minusDays(1))
-                        .withSisteBehandlingREF("hovedskjemakodeverkref"))
+                        .withSisteBehandlingREF("hovedskjemakodeverkref")
+                .build())
                 .stream()
                 .map(Transformers.TIL_BEHANDLING)
                 .collect(Collectors.toList());

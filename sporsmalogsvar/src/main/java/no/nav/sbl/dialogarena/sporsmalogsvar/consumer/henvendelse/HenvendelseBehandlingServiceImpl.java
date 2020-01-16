@@ -1,12 +1,11 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.consumer.henvendelse;
 
+import kotlin.Pair;
 import no.nav.common.auth.SubjectHandler;
 import no.nav.kjerneinfo.consumer.fim.person.PersonKjerneinfoServiceBi;
 import no.nav.kjerneinfo.consumer.fim.person.to.HentKjerneinformasjonRequest;
 import no.nav.kjerneinfo.domain.person.Person;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelse;
-import no.nav.modig.common.SporingsAksjon;
-import no.nav.modig.common.SporingsLogger;
 import no.nav.modig.content.ContentRetriever;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Fritekst;
@@ -15,6 +14,8 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.kodeverk.StandardKodeverk;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.ldap.LDAPService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.*;
+import no.nav.sbl.dialogarena.naudit.Audit;
+import no.nav.sbl.dialogarena.naudit.AuditResources;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.henvendelse.domain.Meldinger;
 import no.nav.sbl.dialogarena.sporsmalogsvar.legacy.MeldingVM;
 import no.nav.sbl.dialogarena.sporsmalogsvar.legacy.TraadVM;
@@ -31,11 +32,18 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
+import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.MeldingUtils.tilMelding;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
 public class HenvendelseBehandlingServiceImpl implements HenvendelseBehandlingService {
+    private static Audit.AuditDescriptor<XMLHenvendelse> auditLogger = Audit.describe(
+            Audit.Action.READ,
+            AuditResources.Person.Henvendelse.Les,
+            (henvendelse) -> singletonList(new Pair<>("fnr", henvendelse.getFnr()))
+    );
+
     private static Logger logger = LoggerFactory.getLogger(HenvendelseBehandlingService.class);
 
     private final HenvendelsePortType henvendelsePortType;
@@ -44,7 +52,6 @@ public class HenvendelseBehandlingServiceImpl implements HenvendelseBehandlingSe
     private final Tilgangskontroll tilgangskontroll;
     private final StandardKodeverk standardKodeverk;
     private final ContentRetriever propertyResolver;
-    private final SporingsLogger sporingsLogger;
     private final LDAPService ldapService;
 
     @Inject
@@ -55,7 +62,6 @@ public class HenvendelseBehandlingServiceImpl implements HenvendelseBehandlingSe
             Tilgangskontroll tilgangskontroll,
             StandardKodeverk standardKodeverk,
             @Named("propertyResolver") ContentRetriever propertyResolver,
-            SporingsLogger sporingsLogger,
             LDAPService ldapService
     ) {
         this.henvendelsePortType = henvendelsePortType;
@@ -64,7 +70,6 @@ public class HenvendelseBehandlingServiceImpl implements HenvendelseBehandlingSe
         this.tilgangskontroll = tilgangskontroll;
         this.standardKodeverk = standardKodeverk;
         this.propertyResolver = propertyResolver;
-        this.sporingsLogger = sporingsLogger;
         this.ldapService = ldapService;
     }
 
@@ -82,7 +87,7 @@ public class HenvendelseBehandlingServiceImpl implements HenvendelseBehandlingSe
         List<Object> wsMeldinger = wsHentHenvendelseListeResponse.getAny();
 
         if (!wsMeldinger.isEmpty()) {
-            sporingsLogger.logg(wsMeldinger.get(0), SporingsAksjon.Les);
+            auditLogger.log((XMLHenvendelse) wsMeldinger.get(0));
         }
 
         return wsMeldinger.stream()

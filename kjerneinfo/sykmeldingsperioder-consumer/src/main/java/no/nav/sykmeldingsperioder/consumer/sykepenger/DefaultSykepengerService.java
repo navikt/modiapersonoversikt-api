@@ -1,10 +1,9 @@
 package no.nav.sykmeldingsperioder.consumer.sykepenger;
 
-import no.nav.kjerneinfo.common.log.SporingUtils;
-import no.nav.modig.common.SporingsAksjon;
-import no.nav.modig.common.SporingsLogger;
-import no.nav.modig.common.SporingsLoggerFactory;
+import kotlin.Pair;
 import no.nav.modig.core.exception.AuthorizationException;
+import no.nav.sbl.dialogarena.naudit.Audit;
+import no.nav.sbl.dialogarena.naudit.AuditResources;
 import no.nav.sykmeldingsperioder.consumer.sykepenger.mapping.SykepengerMapper;
 import no.nav.sykmeldingsperioder.consumer.sykepenger.mapping.to.SykepengerRequest;
 import no.nav.sykmeldingsperioder.consumer.sykepenger.mapping.to.SykepengerResponse;
@@ -17,14 +16,17 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.CollectionUtils;
 
-import java.io.IOException;
-import java.io.InputStream;
+import static java.util.Collections.singletonList;
 
 /**
  * Vår standardimplementasjonen av den eksterne tjenesten for sykmeldingsperioder.
  */
 public class DefaultSykepengerService implements SykepengerServiceBi {
-
+    private static Audit.AuditDescriptor<FimsykBruker> auditLogger = Audit.describe(
+            Audit.Action.READ,
+            AuditResources.Person.Sykepenger,
+            (person) -> singletonList(new Pair<>("fnr", person.getIdent()))
+    );
     private static final Logger logger = LoggerFactory.getLogger(DefaultSykepengerService.class);
     private SykepengerV2 sykepengerService;
     private SykepengerMapper mapper;
@@ -36,26 +38,13 @@ public class DefaultSykepengerService implements SykepengerServiceBi {
         try {
             rawResponse = sykepengerService.hentSykepengerListe(rawRequest);
             if (rawResponse != null && !CollectionUtils.isEmpty(rawResponse.getSykmeldingsperiodeListe())) {
-                logSporingsInformasjon(rawResponse.getSykmeldingsperiodeListe().get(0).getSykmeldt());
+                auditLogger.log(rawResponse.getSykmeldingsperiodeListe().get(0).getSykmeldt());
             }
         } catch (HentSykepengerListeSikkerhetsbegrensning ex) {
             logger.warn("HentSykepengerListeSikkerhetsbegrensning ved kall på hentSykepengerListe", ex.getMessage());
             throw new AuthorizationException(ex.getMessage(), ex);
         }
         return mapper.map(rawResponse, SykepengerResponse.class);
-    }
-
-    private void logSporingsInformasjon(FimsykBruker bruker) {
-        try {
-            SporingsLogger sporingsLogger = SporingsLoggerFactory.sporingsLogger(SporingUtils.configFileAsBufferedReader(getConfigAsInputStream(), "sykmeldingsperioder-sporing-config.txt"));
-            sporingsLogger.logg(bruker, SporingsAksjon.Les);
-        } catch (Exception e) {
-            logger.error("hentSykmeldingsperioder:SporingsLogger ble ikke opprettet.", e);
-        }
-    }
-
-    private InputStream getConfigAsInputStream() throws IOException {
-        return getClass().getClassLoader().getResource("sykmeldingsperioder-sporing-config.txt").openStream();
     }
 
     public void setMapper(SykepengerMapper mapper) {
@@ -65,8 +54,6 @@ public class DefaultSykepengerService implements SykepengerServiceBi {
     public void setSykepengerService(SykepengerV2 sykepengerService) {
         this.sykepengerService = sykepengerService;
     }
-
-
 
 
 }

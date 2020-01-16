@@ -1,8 +1,9 @@
 package no.nav.modig.jaxws.handlers;
 
-import no.nav.modig.common.MDCOperations;
+import no.nav.log.MDCConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 
 import javax.xml.namespace.QName;
 import javax.xml.soap.SOAPElement;
@@ -24,7 +25,7 @@ public class MDCOutHandler implements SOAPHandler<SOAPMessageContext> {
     protected static final Logger log = LoggerFactory.getLogger(MDCOutHandler.class.getName());
 
     // QName for the callId header
-    private static final QName CALLID_QNAME = new QName("uri:no.nav.applikasjonsrammeverk", MDCOperations.MDC_CALL_ID);
+    private static final QName CALLID_QNAME = new QName("uri:no.nav.applikasjonsrammeverk", MDCConstants.MDC_CALL_ID);
 
     @Override
     public boolean handleMessage(SOAPMessageContext context) {
@@ -32,7 +33,7 @@ public class MDCOutHandler implements SOAPHandler<SOAPMessageContext> {
 
         // OUTBOUND processing
         if (outbound) {
-            String callId = MDCOperations.getFromMDC(MDCOperations.MDC_CALL_ID);
+            String callId =  MDC.get(MDCConstants.MDC_CALL_ID);
             if (callId == null) {
                 throw new RuntimeException("CallId skal være tilgjengelig i MDC på dette tidspunkt. Om du er en webapp, må du legge til et MDCFilter i web.xml " +
                         "(oppskrift på dette: http://confluence.adeo.no/display/Modernisering/MDCFilter). " +

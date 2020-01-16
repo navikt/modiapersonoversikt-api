@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <xs:import namespace="http://www.w3.org/XML/1998/namespace" schemaLocation="xml.xsd"/>
+
+    <!-- Schema vi referer til -->
+    <xs:include schemaLocation="fellesTyper.xsd"/>
+    <xs:include schemaLocation="omrade.xsd"/>
+
+    <!-- Hovedkodeliste med relasjoner -->
+    <xs:element name="fagomradeListe" type="fagomradeListeType">
+        <xs:unique name="UnikeFagomradeKode">
+            <xs:selector xpath="./fagomrade"/>
+            <xs:field xpath="@kode"/>
+        </xs:unique>
+        <xs:key name="fagomradeOmradeKode">
+            <xs:selector xpath="./omradeListe/omrade"/>
+            <xs:field xpath="@kode"/>
+        </xs:key>
+        <xs:keyref refer="fagomradeOmradeKode" name="fagomradeOmradeKodeRef">
+            <xs:selector xpath="./fagomrade/gosys"/>
+            <xs:field xpath="@omrade"/>
+        </xs:keyref>
+    </xs:element>
+    <xs:complexType name="fagomradeListeType">
+        <xs:sequence>
+            <xs:element name="omradeListe" type="omradeListeType"/>
+            <xs:element name="fagomrade" type="fagomradeType" maxOccurs="unbounded"/>
+        </xs:sequence>
+        <xs:attribute ref="xml:base"/>
+    </xs:complexType>
+
+    <!-- Hoved kodetype -->
+    <xs:complexType name="fagomradeType">
+        <xs:complexContent>
+            <xs:extension base="felleskodeType">
+                <xs:sequence>
+                    <xs:element name="gosys" type="gosysfagomradeType" minOccurs="0"/>
+                    <xs:element name="gsak" type="gsakfagomradeType" minOccurs="0"/>
+                    <xs:element name="ruting" type="rutingfagomradeType" minOccurs="0"/>
+                </xs:sequence>
+                <xs:attribute name="dekode" type="string_200" use="required"/>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <!-- Systemspesifke typer -->
+    <xs:complexType name="gosysfagomradeType">
+        <xs:attribute name="dekode" type="string_200" use="optional"/>
+        <xs:attribute name="datoFom" type="xs:date" use="optional"/>
+        <xs:attribute name="datoTom" type="xs:date" use="optional"/>
+        <xs:attribute name="erGyldig" type="xs:boolean" use="optional"/>
+        <xs:attribute name="datoOpprettet" type="xs:dateTime" use="optional"/>
+        <xs:attribute name="opprettetAv" type="string_20" use="optional"/>
+        <xs:attribute name="endretAv" type="string_20" use="optional"/>
+        <xs:attribute name="fagomrade" type="string_20" use="optional"/>
+        <xs:attribute name="fagomradeNr" type="string_2" use="required"/>
+        <xs:attribute name="omrade" type="string_20" use="required"/>
+        <xs:attribute name="opprettArena" type="xs:boolean" use="optional" default="false"/>
+        <xs:attribute name="relevantSak" type="xs:boolean" use="required"/>
+        <xs:attribute name="person" type="xs:boolean" use="optional" default="true"/>
+        <xs:attribute name="samhandler" type="xs:boolean" use="optional" default="false"/>
+        <xs:attribute name="juridisk" type="xs:boolean" use="optional" default="false"/>
+        <xs:attribute name="orgLedd" type="xs:boolean" use="optional" default="false"/>
+        <xs:attribute name="bedrift" type="xs:boolean" use="optional" default="false"/>
+    </xs:complexType>
+
+    <xs:complexType name="gsakfagomradeType">
+        <xs:attribute name="dekode" type="string_200" use="optional"/>
+        <xs:attribute name="datoFom" type="xs:date" use="optional"/>
+        <xs:attribute name="datoTom" type="xs:date" use="optional"/>
+        <xs:attribute name="erGyldig" type="xs:boolean" use="optional"/>
+        <xs:attribute name="datoOpprettet" type="xs:dateTime" use="optional"/>
+        <xs:attribute name="opprettetAv" type="string_20" use="optional"/>
+        <xs:attribute name="endretAv" type="string_20" use="optional"/>
+        <xs:attribute name="kode" type="string_40" use="optional"/>
+        <xs:attribute name="tidsregisAktivert" type="xs:integer" use="required"/>
+    </xs:complexType>
+
+    <xs:complexType name="rutingfagomradeType">
+        <xs:attribute name="dekode" type="string_200" use="optional"/>
+        <xs:attribute name="datoFom" type="xs:date" use="optional"/>
+        <xs:attribute name="datoTom" type="xs:date" use="optional"/>
+        <xs:attribute name="erGyldig" type="xs:boolean" use="optional"/>
+        <xs:attribute name="datoOpprettet" type="xs:dateTime" use="optional"/>
+        <xs:attribute name="opprettetAv" type="string_20" use="optional"/>
+        <xs:attribute name="endretAv" type="string_20" use="optional"/>
+        <xs:attribute name="fagomrade" type="string_20" use="optional"/>
+        <xs:attribute name="gyldigForBatch" type="xs:boolean" use="optional" default="false"/>
+    </xs:complexType>
+
+</xs:schema>

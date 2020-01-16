@@ -7,11 +7,12 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.arbeidsfordeling.Arb
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.arbeidsfordeling.FinnBehandlendeEnhetException;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.kodeverksmapper.KodeverksmapperService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.kodeverksmapper.domain.Behandling;
-import no.nav.tjeneste.virksomhet.arbeidsfordeling.v1.ArbeidsfordelingV1;
-import no.nav.tjeneste.virksomhet.arbeidsfordeling.v1.FinnBehandlendeEnhetListeUgyldigInput;
-import no.nav.tjeneste.virksomhet.arbeidsfordeling.v1.informasjon.WSOrganisasjonsenhet;
-import no.nav.tjeneste.virksomhet.arbeidsfordeling.v1.meldinger.WSFinnBehandlendeEnhetListeRequest;
-import no.nav.tjeneste.virksomhet.arbeidsfordeling.v1.meldinger.WSFinnBehandlendeEnhetListeResponse;
+import no.nav.tjeneste.virksomhet.arbeidsfordeling.v1.binding.ArbeidsfordelingV1;
+import no.nav.tjeneste.virksomhet.arbeidsfordeling.v1.binding.FinnBehandlendeEnhetListeUgyldigInput;
+import no.nav.tjeneste.virksomhet.arbeidsfordeling.v1.feil.UgyldigInput;
+import no.nav.tjeneste.virksomhet.arbeidsfordeling.v1.informasjon.Organisasjonsenhet;
+import no.nav.tjeneste.virksomhet.arbeidsfordeling.v1.meldinger.FinnBehandlendeEnhetListeRequest;
+import no.nav.tjeneste.virksomhet.arbeidsfordeling.v1.meldinger.FinnBehandlendeEnhetListeResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -20,6 +21,7 @@ import org.mockito.ArgumentCaptor;
 import java.io.IOException;
 import java.util.Optional;
 
+import static java.util.Arrays.asList;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -68,18 +70,23 @@ class ArbeidsfordelingV1ServiceTest {
 
     private ArbeidsfordelingV1 lagArbeidsfordelingMock() throws FinnBehandlendeEnhetListeUgyldigInput {
         ArbeidsfordelingV1 arbeidsfordeling = mock(ArbeidsfordelingV1.class);
-        when(arbeidsfordeling.finnBehandlendeEnhetListe(any(WSFinnBehandlendeEnhetListeRequest.class))).thenReturn(lagArbeidsfordelingResponse());
+        when(arbeidsfordeling.finnBehandlendeEnhetListe(any(FinnBehandlendeEnhetListeRequest.class))).thenReturn(lagArbeidsfordelingResponse());
         return arbeidsfordeling;
     }
 
-    private WSFinnBehandlendeEnhetListeResponse lagArbeidsfordelingResponse() {
-        return new WSFinnBehandlendeEnhetListeResponse()
-                .withBehandlendeEnhetListe(new WSOrganisasjonsenhet()
-                                .withEnhetId(ENHETSNUMMER)
-                                .withEnhetNavn(ENHETSNAVN),
-                        new WSOrganisasjonsenhet()
-                                .withEnhetId(GEOGRAFISK_TILKNYTNING)
-                                .withEnhetNavn("NAV Bærum"));
+    private FinnBehandlendeEnhetListeResponse lagArbeidsfordelingResponse() {
+        Organisasjonsenhet enhet = new Organisasjonsenhet();
+        enhet.setEnhetId(ENHETSNUMMER);
+        enhet.setEnhetNavn(ENHETSNAVN);
+
+        Organisasjonsenhet enhet2 = new Organisasjonsenhet();
+        enhet.setEnhetId(GEOGRAFISK_TILKNYTNING);
+        enhet.setEnhetNavn("NAV Bærum");
+
+        FinnBehandlendeEnhetListeResponse response = new FinnBehandlendeEnhetListeResponse();
+        response.getBehandlendeEnhetListe().addAll(asList(enhet, enhet2));
+
+        return response;
     }
 
     @Test
@@ -102,7 +109,7 @@ class ArbeidsfordelingV1ServiceTest {
     @Test
     @DisplayName("Kaster exception hvis kall mot Arbeidsfordeling feiler")
     void kasterExceptionHvisKallMotArbeidsfordelingFeiler() throws FinnBehandlendeEnhetListeUgyldigInput {
-        when(arbeidsfordeling.finnBehandlendeEnhetListe(any(WSFinnBehandlendeEnhetListeRequest.class))).thenThrow(new FinnBehandlendeEnhetListeUgyldigInput());
+        when(arbeidsfordeling.finnBehandlendeEnhetListe(any(FinnBehandlendeEnhetListeRequest.class))).thenThrow(new FinnBehandlendeEnhetListeUgyldigInput("", new UgyldigInput()));
 
         assertThrows(FinnBehandlendeEnhetException.class, () -> arbeidsfordelingService.finnBehandlendeEnhetListe(PERSON, FAGOMRADE, OPPGAVETYPE, UNDERKATEGORI));
     }
@@ -112,10 +119,10 @@ class ArbeidsfordelingV1ServiceTest {
     void kallerArbeidsfordelingMedRiktigeArgumenter() throws FinnBehandlendeEnhetListeUgyldigInput {
         arbeidsfordelingService.finnBehandlendeEnhetListe(PERSON, FAGOMRADE, OPPGAVETYPE, UNDERKATEGORI);
 
-        ArgumentCaptor<WSFinnBehandlendeEnhetListeRequest> captor = ArgumentCaptor.forClass(WSFinnBehandlendeEnhetListeRequest.class);
+        ArgumentCaptor<FinnBehandlendeEnhetListeRequest> captor = ArgumentCaptor.forClass(FinnBehandlendeEnhetListeRequest.class);
         verify(arbeidsfordeling).finnBehandlendeEnhetListe(captor.capture());
 
-        WSFinnBehandlendeEnhetListeRequest request = captor.getValue();
+        FinnBehandlendeEnhetListeRequest request = captor.getValue();
         assertAll("request",
                 () -> assertEquals(BEHANDLINGSTEMA, request.getArbeidsfordelingKriterier().getBehandlingstema().getValue()),
                 () -> assertEquals(BEHANDLINGSTYPE, request.getArbeidsfordelingKriterier().getBehandlingstype().getValue()),
@@ -135,10 +142,10 @@ class ArbeidsfordelingV1ServiceTest {
 
         arbeidsfordelingService.finnBehandlendeEnhetListe(PERSON, FAGOMRADE, OPPGAVETYPE, UNDERKATEGORI);
 
-        ArgumentCaptor<WSFinnBehandlendeEnhetListeRequest> captor = ArgumentCaptor.forClass(WSFinnBehandlendeEnhetListeRequest.class);
+        ArgumentCaptor<FinnBehandlendeEnhetListeRequest> captor = ArgumentCaptor.forClass(FinnBehandlendeEnhetListeRequest.class);
         verify(arbeidsfordeling).finnBehandlendeEnhetListe(captor.capture());
 
-        WSFinnBehandlendeEnhetListeRequest request = captor.getValue();
+        FinnBehandlendeEnhetListeRequest request = captor.getValue();
         assertAll("request",
                 () -> assertEquals(BEHANDLINGSTEMA, request.getArbeidsfordelingKriterier().getBehandlingstema().getValue()),
                 () -> assertEquals(BEHANDLINGSTYPE, request.getArbeidsfordelingKriterier().getBehandlingstype().getValue()),

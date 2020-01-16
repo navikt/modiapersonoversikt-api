@@ -17,12 +17,15 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Tilgangskontrol
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.TilgangskontrollUtenTPS
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.kodeverk.Kode
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.person.PersonController
-import no.nav.tjeneste.virksomhet.person.v3.HentPersonPersonIkkeFunnet
-import no.nav.tjeneste.virksomhet.person.v3.HentPersonSikkerhetsbegrensning
-import no.nav.tjeneste.virksomhet.person.v3.PersonV3
+import no.nav.tjeneste.virksomhet.organisasjon.v4.informasjon.WSLandkoder
+import no.nav.tjeneste.virksomhet.person.v3.binding.HentPersonPersonIkkeFunnet
+import no.nav.tjeneste.virksomhet.person.v3.binding.HentPersonSikkerhetsbegrensning
+import no.nav.tjeneste.virksomhet.person.v3.binding.PersonV3
+import no.nav.tjeneste.virksomhet.person.v3.feil.PersonIkkeFunnet
+import no.nav.tjeneste.virksomhet.person.v3.feil.Sikkerhetsbegrensning
 import no.nav.tjeneste.virksomhet.person.v3.informasjon.*
-import no.nav.tjeneste.virksomhet.person.v3.meldinger.WSHentPersonResponse
-import no.nav.tjeneste.virksomhet.person.v3.meldinger.WSHentSikkerhetstiltakResponse
+import no.nav.tjeneste.virksomhet.person.v3.meldinger.HentPersonResponse
+import no.nav.tjeneste.virksomhet.person.v3.meldinger.HentSikkerhetstiltakResponse
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
@@ -63,16 +66,16 @@ internal class PersonControllerTest {
 
     @Test
     fun `Kaster 404 hvis personen ikke ble funnet`() {
-        whenever(personV3.hentPerson(any())).thenThrow(HentPersonPersonIkkeFunnet())
+        whenever(personV3.hentPerson(any())).thenThrow(HentPersonPersonIkkeFunnet("", PersonIkkeFunnet()))
         assertFailsWith<NotFoundException> { controller.hent(FNR) }
     }
 
     @Test
     fun `Returnerer begrenset innsyn object ved ikke tilgang`() {
-        whenever(personV3.hentPerson(any())).thenThrow(HentPersonSikkerhetsbegrensning())
+        whenever(personV3.hentPerson(any())).thenThrow(HentPersonSikkerhetsbegrensning("", Sikkerhetsbegrensning()))
         whenever(personV3.hentSikkerhetstiltak(any()))
-                .thenReturn(WSHentSikkerhetstiltakResponse()
-                        .withSikkerhetstiltak(WSSikkerhetstiltak()
+                .thenReturn(HentSikkerhetstiltakResponse()
+                        .withSikkerhetstiltak(Sikkerhetstiltak()
                                 .withSikkerhetstiltaksbeskrivelse("")))
         val o = controller.hent(FNR)
         assertTrue { o.containsKey("begrunnelse") }
@@ -81,7 +84,7 @@ internal class PersonControllerTest {
     @Test
     fun `Mapper om ukjente statsborgerskap til null`() {
         val mockPersonResponse = mockPersonResponse().apply {
-            person.withStatsborgerskap(WSStatsborgerskap().withLand(WSLandkoder().withValue("???")))
+            person.withStatsborgerskap(Statsborgerskap().withLand(Landkoder().withValue("???")))
         }
         whenever(personV3.hentPerson(any())).thenReturn(mockPersonResponse)
 
@@ -94,7 +97,7 @@ internal class PersonControllerTest {
     @Test
     fun `Med statsborgerskap`() {
         val mockPersonResponse = mockPersonResponse().apply {
-            person.withStatsborgerskap(WSStatsborgerskap().withLand(WSLandkoder()
+            person.withStatsborgerskap(Statsborgerskap().withLand(Landkoder()
                     .withValue("NOR")
                     .withKodeverksRef("Land")))
         }
@@ -111,10 +114,10 @@ internal class PersonControllerTest {
     @Test
     fun `Familierelasjoner`() {
         val mockPersonResponse = mockPersonResponse().apply {
-            person.withHarFraRolleI(WSFamilierelasjon()
-                    .withTilPerson(WSPerson()
-                            .withPersonnavn(WSPersonnavn().withFornavn("Aremark"))
-                            .withAktoer(WSPersonIdent().withIdent(WSNorskIdent().withIdent("10108000398")))
+            person.withHarFraRolleI(Familierelasjon()
+                    .withTilPerson(Person()
+                            .withPersonnavn(Personnavn().withFornavn("Aremark"))
+                            .withAktoer(PersonIdent().withIdent(NorskIdent().withIdent("10108000398")))
                     ))
         }
 
@@ -132,11 +135,11 @@ internal class PersonControllerTest {
         assertEquals("Aremark", fornavn)
     }
 
-    private fun mockPersonResponse() = WSHentPersonResponse()
-            .withPerson(WSBruker()
-                    .withPersonnavn(WSPersonnavn())
-                    .withKjoenn(WSKjoenn().withKjoenn(WSKjoennstyper().withValue("K")))
-                    .withAktoer(WSPersonIdent().withIdent(WSNorskIdent().withIdent(FNR))))
+    private fun mockPersonResponse() = HentPersonResponse()
+            .withPerson(Bruker()
+                    .withPersonnavn(Personnavn())
+                    .withKjoenn(Kjoenn().withKjoenn(Kjoennstyper().withValue("K")))
+                    .withAktoer(PersonIdent().withIdent(NorskIdent().withIdent(FNR))))
 
     @Nested
     inner class Diskresjonskode {
@@ -144,7 +147,7 @@ internal class PersonControllerTest {
         @Test
         fun `Med diskresjonskode`() {
             val mockPersonResponse = mockPersonResponse().apply {
-                person.withDiskresjonskode(WSDiskresjonskoder().withValue("SPFO"))
+                person.withDiskresjonskode(Diskresjonskoder().withValue("SPFO"))
             }
             whenever(personV3.hentPerson(any())).thenReturn(mockPersonResponse)
 
@@ -167,10 +170,10 @@ internal class PersonControllerTest {
         @Test
         fun `Familiemedlem med diskresjonskode`() {
             val mockPersonResponse = mockPersonResponse().apply {
-                person.withHarFraRolleI(WSFamilierelasjon()
-                        .withTilPerson(WSPerson()
-                                .withDiskresjonskode(WSDiskresjonskoder().withValue("SPFO"))
-                                .withAktoer(WSPersonIdent().withIdent(WSNorskIdent().withIdent("10108000398")))
+                person.withHarFraRolleI(Familierelasjon()
+                        .withTilPerson(Person()
+                                .withDiskresjonskode(Diskresjonskoder().withValue("SPFO"))
+                                .withAktoer(PersonIdent().withIdent(NorskIdent().withIdent("10108000398")))
                         ))
             }
 
@@ -217,11 +220,11 @@ internal class PersonControllerTest {
         }
 
         private fun responseMedMobil() = mockPersonResponse().apply {
-            (person as WSBruker)
-                    .withKontaktinformasjon(WSTelefonnummer()
+            (person as Bruker)
+                    .withKontaktinformasjon(Telefonnummer()
                             .withIdentifikator(TELEFONNUMMER)
-                            .withRetningsnummer(WSRetningsnumre().withValue(RETNINGSNUMMER))
-                            .withType(WSTelefontyper().withValue("MOBI")))
+                            .withRetningsnummer(Retningsnumre().withValue(RETNINGSNUMMER))
+                            .withType(Telefontyper().withValue("MOBI")))
         }
 
         @Test
@@ -244,11 +247,11 @@ internal class PersonControllerTest {
         fun `Mapping`() {
             whenever(kodeverk.getKodeverkList(any(), any())).thenReturn(listOf(Kodeverdi(TOLKEHJELP_KODE, TOLKEHJELP_BESKRIVELSE)))
             whenever(personV3.hentPerson(any())).thenReturn(mockPersonResponse().apply {
-                (person as WSBruker)
+                (person as Bruker)
                         .withTilrettelagtKommunikasjon(
-                                WSTilrettelagtKommunikasjonbehov()
+                                TilrettelagtKommunikasjonbehov()
                                         .withBehov(TOLKEHJELP_BESKRIVELSE)
-                                        .withTilrettelagtKommunikasjon(WSTilrettelagtKommunikasjon()
+                                        .withTilrettelagtKommunikasjon(TilrettelagtKommunikasjon()
                                                 .withValue(TOLKEHJELP_KODE))
                         )
             })
@@ -267,9 +270,9 @@ internal class PersonControllerTest {
         @Test
         fun `Norsk konto`() {
             whenever(personV3.hentPerson(any())).thenReturn(mockPersonResponse().apply {
-                (person as WSBruker)
-                        .withBankkonto(WSBankkontoNorge()
-                                .withBankkonto(WSBankkontonummer()
+                (person as Bruker)
+                        .withBankkonto(BankkontoNorge()
+                                .withBankkonto(Bankkontonummer()
                                         .withBankkontonummer(KONTONUMMER)
                                         .withBanknavn(BANKNAVN)))
             })
@@ -283,13 +286,13 @@ internal class PersonControllerTest {
         @Test
         fun `Utenlandsk konto`() {
             whenever(personV3.hentPerson(any())).thenReturn(mockPersonResponse().apply {
-                (person as WSBruker)
-                        .withBankkonto(WSBankkontoUtland()
-                                .withBankkontoUtland(WSBankkontonummerUtland()
+                (person as Bruker)
+                        .withBankkonto(BankkontoUtland()
+                                .withBankkontoUtland(BankkontonummerUtland()
                                         .withBankkontonummer(KONTONUMMER)
                                         .withBanknavn(BANKNAVN)
                                         .withSwift(SWIFT)
-                                        .withLandkode(WSLandkoder().withValue(LANDKODE))))
+                                        .withLandkode(Landkoder().withValue(LANDKODE))))
             })
 
             val response = controller.hent(FNR)["bankkonto"] as Map<*, *>

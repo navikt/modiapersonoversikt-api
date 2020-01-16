@@ -1,9 +1,9 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints;
 
-import no.nav.tjeneste.virksomhet.sakogbehandling.v1.SakOgBehandling_v1PortType;
-import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.WSBehandlingskjede;
-import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.WSSak;
-import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.sakogbehandling.*;
+import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.BehandlingskjedeBuilder;
+import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.SakBuilder;
+import no.nav.tjeneste.virksomhet.sakogbehandling.v1.binding.SakOgBehandlingV1;
+import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.Sak;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.meldinger.FinnSakOgBehandlingskjedeListeRequest;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.meldinger.FinnSakOgBehandlingskjedeListeResponse;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.meldinger.HentBehandlingRequest;
@@ -44,8 +44,8 @@ public class SakOgBehandlingPortTypeMock {
 
 
     @Bean
-    public SakOgBehandling_v1PortType getSakOgBehandlingPortTypeMock() {
-        SakOgBehandling_v1PortType mock = mock(SakOgBehandling_v1PortType.class);
+    public SakOgBehandlingV1 getSakOgBehandlingPortTypeMock() {
+        SakOgBehandlingV1 mock = mock(SakOgBehandlingV1.class);
 
         // Bruker thenAnswer slik at antall saker (ANTALLSAKER_PROPERTY) kan justeres under kjøring fra mocksetup
         when(mock.finnSakOgBehandlingskjedeListe(any(FinnSakOgBehandlingskjedeListeRequest.class))).thenAnswer(new Answer<Object>() {
@@ -69,7 +69,7 @@ public class SakOgBehandlingPortTypeMock {
     public static FinnSakOgBehandlingskjedeListeResponse finnSakOgBehandlingskjedeListe() {
         Integer antallSaker = Integer.valueOf(getProperty(ANTALLSAKER_PROPERTY, "100000"));
 
-        List<WSSak> liste = asList(
+        List<Sak> liste = asList(
                 dagpengerSak(),
                 aapSak(),
                 foreldrepengerSak(),
@@ -81,140 +81,143 @@ public class SakOgBehandlingPortTypeMock {
                 sykSak(),
                 klaSak()
         );
-        
-        return new FinnSakOgBehandlingskjedeListeResponse().withSak(liste.subList(0, min(liste.size(), antallSaker)));
+
+        FinnSakOgBehandlingskjedeListeResponse response = new FinnSakOgBehandlingskjedeListeResponse();
+        response.getSak().addAll(liste.subList(0, min(liste.size(), antallSaker)));
+        return response;
     }
 
-    public static WSSak dagpengerSak() {
-        return new WSSak()
+    public static Sak dagpengerSak() {
+        return SakBuilder.create()
                 .withSaksId("1")
-                .withSakstema(new WSSakstemaer().withValue(DAGPENGEARKIVTEMA))
+                .withSakstema(DAGPENGEARKIVTEMA)
                 .withBehandlingskjede(
-                        createOpprettetSoknadKjede(GENERISK_BEHANDLINGSID, DAGPENGER_BEHANDLINGSTEMA).withSlutt(now().minusMinutes(2)),
-                        createBehandlingKobletTilKvittering(KVITTERING2, DAGPENGER_BEHANDLINGSTEMA).withSlutt(now().minusMinutes(6)),
-                        createBehandlingKobletTilKvittering(KVITTERINGETTERSENDELSE2, DAGPENGER_BEHANDLINGSTEMA).withSlutt(now().minusMinutes(22))
-                );
+                        createOpprettetSoknadKjede(GENERISK_BEHANDLINGSID, DAGPENGER_BEHANDLINGSTEMA).withSlutt(now().minusMinutes(2)).build(),
+                        createBehandlingKobletTilKvittering(KVITTERING2, DAGPENGER_BEHANDLINGSTEMA).withSlutt(now().minusMinutes(6)).build(),
+                        createBehandlingKobletTilKvittering(KVITTERINGETTERSENDELSE2, DAGPENGER_BEHANDLINGSTEMA).withSlutt(now().minusMinutes(22)).build()
+                )
+                .build();
     }
 
-    public static WSSak aapSak() {
-        return new WSSak()
+    public static Sak aapSak() {
+        return SakBuilder.create()
                 .withSaksId("2")
-                .withSakstema(new WSSakstemaer().withValue(AAPARKIVTEMA))
+                .withSakstema(AAPARKIVTEMA)
                 .withBehandlingskjede(
-                        createBehandlingKobletTilKvittering(KVITTERING1, AAP_BEHANDLINGSTEMA).withSlutt(now().minusMinutes(10)),
-                        createBehandlingKobletTilKvittering(KVITTERINGETTERSENDELSE1, AAP_BEHANDLINGSTEMA).withSlutt(now().minusMinutes(15)),
-                        createAvsluttetSoknadKjede(GENERISK_BEHANDLINGSID, AAP_BEHANDLINGSTEMA).withSlutt(now().minusYears(1)),
-                        createOpprettetSoknadKjede(GENERISK_BEHANDLINGSID, AAP_BEHANDLINGSTEMA).withSisteBehandlingstype(new WSBehandlingstyper().withValue("ae00XX")) // Skal filtreres bort
-                );
+                        createBehandlingKobletTilKvittering(KVITTERING1, AAP_BEHANDLINGSTEMA).withSlutt(now().minusMinutes(10)).build(),
+                        createBehandlingKobletTilKvittering(KVITTERINGETTERSENDELSE1, AAP_BEHANDLINGSTEMA).withSlutt(now().minusMinutes(15)).build(),
+                        createAvsluttetSoknadKjede(GENERISK_BEHANDLINGSID, AAP_BEHANDLINGSTEMA).withSlutt(now().minusYears(1)).build(),
+                        createOpprettetSoknadKjede(GENERISK_BEHANDLINGSID, AAP_BEHANDLINGSTEMA).withSisteBehandlingstype("ae00XX").build() // Skal filtreres bort
+                ).build();
     }
 
-    public static WSSak foreldrepengerSak() {
-        return new WSSak()
+    public static Sak foreldrepengerSak() {
+        return SakBuilder.create()
                 .withSaksId("3")
-                .withSakstema(new WSSakstemaer().withValue(FORELDREPENGER_ARKIV_TEMA))
+                .withSakstema(FORELDREPENGER_ARKIV_TEMA)
                 .withBehandlingskjede(
-                        createOpprettetSoknadKjede(GENERISK_BEHANDLINGSID, FOR_BEHANDLINGSTEMA).withSlutt(now().minusMinutes(2)),
-                        createBehandlingKobletTilKvittering(KVITTERING3, FOR_BEHANDLINGSTEMA).withSlutt(now().minusMinutes(6))
-                );
+                        createOpprettetSoknadKjede(GENERISK_BEHANDLINGSID, FOR_BEHANDLINGSTEMA).withSlutt(now().minusMinutes(2)).build(),
+                        createBehandlingKobletTilKvittering(KVITTERING3, FOR_BEHANDLINGSTEMA).withSlutt(now().minusMinutes(6)).build()
+                ).build();
     }
 
-    public static WSSak feilutbetalingSak() {
-        return new WSSak()
+    public static Sak feilutbetalingSak() {
+        return SakBuilder.create()
                 .withSaksId("2")
-                .withSakstema(new WSSakstemaer().withValue("FEI"))
+                .withSakstema("FEI")
                 .withBehandlingskjede(
-                        createOpprettetSoknadKjede(GENERISK_BEHANDLINGSID, AAP_BEHANDLINGSTEMA)
-                );
+                        createOpprettetSoknadKjede(GENERISK_BEHANDLINGSID, AAP_BEHANDLINGSTEMA).build()
+                ).build();
     }
 
-    public static WSSak omsSak() {
-        return new WSSak()
+    public static Sak omsSak() {
+        return SakBuilder.create()
                 .withSaksId("2")
-                .withSakstema(new WSSakstemaer().withValue("OMS"))
+                .withSakstema("OMS")
                 .withBehandlingskjede(
-                        createOpprettetSoknadKjede(GENERISK_BEHANDLINGSID, OMS_BEHANDLINGSTEMA)
-                );
+                        createOpprettetSoknadKjede(GENERISK_BEHANDLINGSID, OMS_BEHANDLINGSTEMA).build()
+                ).build();
     }
 
-    public static WSSak klaSak() {
-        return new WSSak()
+    public static Sak klaSak() {
+        return SakBuilder.create()
                 .withSaksId("2")
-                .withSakstema(new WSSakstemaer().withValue("KLA"))
+                .withSakstema("KLA")
                 .withBehandlingskjede(
-                        createOpprettetSoknadKjede(GENERISK_BEHANDLINGSID, AAP_BEHANDLINGSTEMA).withStart(now().minusYears(1))
-                );
+                        createOpprettetSoknadKjede(GENERISK_BEHANDLINGSID, AAP_BEHANDLINGSTEMA).withStart(now().minusYears(1)).build()
+                ).build();
     }
 
-    public static WSSak hjeSak() {
-        return new WSSak()
+    public static Sak hjeSak() {
+        return SakBuilder.create()
                 .withSaksId("2")
-                .withSakstema(new WSSakstemaer().withValue("HJE"))
+                .withSakstema("HJE")
                 .withBehandlingskjede(
-                        createOpprettetSoknadKjede(GENERISK_BEHANDLINGSID, HJE_BEHANDLINGSTEMA).withStart(now().minusYears(1))
-                );
+                        createOpprettetSoknadKjede(GENERISK_BEHANDLINGSID, HJE_BEHANDLINGSTEMA).withStart(now().minusYears(1)).build()
+                ).build();
     }
 
-    public static WSSak gruSak() {
-        return new WSSak()
+    public static Sak gruSak() {
+        return SakBuilder.create()
                 .withSaksId("2")
-                .withSakstema(new WSSakstemaer().withValue("GRU"))
+                .withSakstema("GRU")
                 .withBehandlingskjede(
-                        createOpprettetSoknadKjede(GENERISK_BEHANDLINGSID, GRU_BEHANDLINGSTEMA)
-                );
+                        createOpprettetSoknadKjede(GENERISK_BEHANDLINGSID, GRU_BEHANDLINGSTEMA).build()
+                ).build();
     }
 
-    public static WSSak konSak() {
-        return new WSSak()
+    public static Sak konSak() {
+        return SakBuilder.create()
                 .withSaksId("2")
-                .withSakstema(new WSSakstemaer().withValue("KON"))
+                .withSakstema("KON")
                 .withBehandlingskjede(
-                        createOpprettetSoknadKjede(GENERISK_BEHANDLINGSID, KON_BEHANDLINGSTEMA)
-                );
+                        createOpprettetSoknadKjede(GENERISK_BEHANDLINGSID, KON_BEHANDLINGSTEMA).build()
+                ).build();
     }
 
-    public static WSSak sykSak() {
-        return new WSSak()
+    public static Sak sykSak() {
+        return SakBuilder.create()
                 .withSaksId("2")
-                .withSakstema(new WSSakstemaer().withValue("SYK"))
+                .withSakstema("SYK")
                 .withBehandlingskjede(
-                        createOpprettetSoknadKjede(GENERISK_BEHANDLINGSID, SYK_BEHANDLINGSTEMA)
-                );
+                        createOpprettetSoknadKjede(GENERISK_BEHANDLINGSID, SYK_BEHANDLINGSTEMA).build()
+                ).build();
     }
 
-    private static WSBehandlingskjede createOpprettetSoknadKjede(String sisteBehandlingsREF, String behandlingstema) {
-        return new WSBehandlingskjede()
+    private static BehandlingskjedeBuilder createOpprettetSoknadKjede(String sisteBehandlingsREF, String behandlingstema) {
+        return BehandlingskjedeBuilder.create()
                 .withBehandlingskjedeId("motta" + now())
                 .withSisteBehandlingREF(sisteBehandlingsREF)
-                .withBehandlingskjedetype(new WSBehandlingskjedetyper().withValue(behandlingstema))
-                .withBehandlingstema(new WSBehandlingstemaer().withValue(behandlingstema))
-                .withSisteBehandlingstype(new WSBehandlingstyper().withValue("ae0014"))
-                .withSisteBehandlingsstatus(new WSBehandlingsstatuser().withValue("opprettet"))
+                .withBehandlingskjedetype(behandlingstema)
+                .withBehandlingstema(behandlingstema)
+                .withSisteBehandlingstype("ae0014")
+                .withSisteBehandlingsstatus("opprettet")
                 .withStart(now().minusDays(5));
 
     }
 
-    private static WSBehandlingskjede createAvsluttetSoknadKjede(String sisteBehandlingREF, String behandlingstema) {
-        return new WSBehandlingskjede()
+    private static BehandlingskjedeBuilder createAvsluttetSoknadKjede(String sisteBehandlingREF, String behandlingstema) {
+        return BehandlingskjedeBuilder.create()
                 .withBehandlingskjedeId("behandlingskjedeid" + now())
                 .withSisteBehandlingREF(sisteBehandlingREF)
-                .withBehandlingskjedetype(new WSBehandlingskjedetyper().withValue(behandlingstema))
-                .withBehandlingstema(new WSBehandlingstemaer().withValue(behandlingstema))
-                .withSisteBehandlingstype(new WSBehandlingstyper().withValue("ae0014"))
-                .withSisteBehandlingsstatus(new WSBehandlingsstatuser().withValue("avsluttet"))
+                .withBehandlingskjedetype(behandlingstema)
+                .withBehandlingstema(behandlingstema)
+                .withSisteBehandlingstype("ae0014")
+                .withSisteBehandlingsstatus("avsluttet")
                 .withStart(now().minusDays(3).minusHours(5))
                 .withSlutt(now());
     }
 
-    private static WSBehandlingskjede createBehandlingKobletTilKvittering(String behandlingsListeRef, String behandlingstema) {
-        return new WSBehandlingskjede()
+    private static BehandlingskjedeBuilder createBehandlingKobletTilKvittering(String behandlingsListeRef, String behandlingstema) {
+        return BehandlingskjedeBuilder.create()
                 .withBehandlingsListeRef(behandlingsListeRef) // Kobler behandling i henvendelse til behandlingskjeden
                 .withSisteBehandlingREF(behandlingsListeRef)
-                .withBehandlingskjedetype(new WSBehandlingskjedetyper().withValue(behandlingstema))
-                .withSisteBehandlingstype(new WSBehandlingstyper().withValue("ae0014"))
-                .withSisteBehandlingsstatus(new WSBehandlingsstatuser().withValue("avsluttet"))
-                .withBehandlingstema(new WSBehandlingstemaer().withValue(behandlingstema))
+                .withBehandlingskjedetype(behandlingstema)
+                .withSisteBehandlingstype("ae0014")
+                .withSisteBehandlingsstatus("avsluttet")
+                .withBehandlingstema(behandlingstema)
                 .withBehandlingskjedeId("behandle" + now())
-                .withSisteBehandlingsstatus(new WSBehandlingsstatuser().withValue("avsluttet"))
+                .withSisteBehandlingsstatus("avsluttet")
                 .withStart(now().minusDays(3).minusHours(2))
                 .withSlutt(now().minusDays(3).minusHours(1));
     }

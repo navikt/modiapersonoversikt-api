@@ -42,7 +42,7 @@ public class DkifConsumerConfig {
 
     private CXFClient<DigitalKontaktinformasjonV1> getDigitalKontaktinformasjonV1() {
         return new CXFClient<>(DigitalKontaktinformasjonV1.class)
-                .wsdl("classpath:dkif/no/nav/tjeneste/virksomhet/digitalKontaktinformasjon/v1/Binding.wsdl")
+                .wsdl("classpath:wsdl/no/nav/tjeneste/virksomhet/digitalKontaktinformasjon/v1/Binding.wsdl")
                 .serviceName(new QName("http://nav.no/tjeneste/virksomhet/digitalKontaktinformasjon/v1/Binding", "DigitalKontaktinformasjon_v1"))
                 .endpointName(new QName("http://nav.no/tjeneste/virksomhet/digitalKontaktinformasjon/v1/Binding", "DigitalKontaktinformasjon_v1Port"))
                 .address(getAdress())

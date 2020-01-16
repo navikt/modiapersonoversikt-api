@@ -4,7 +4,7 @@ import kotlin.Pair;
 import no.nav.modig.content.ContentRetriever;
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Policies;
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Tilgangskontroll;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.AuditResources.Person;
+import no.nav.sbl.dialogarena.naudit.AuditResources.Person;
 import no.nav.sbl.dialogarena.naudit.Audit;
 import no.nav.sbl.dialogarena.varsel.domain.Varsel;
 import no.nav.sbl.dialogarena.varsel.service.VarslerService;

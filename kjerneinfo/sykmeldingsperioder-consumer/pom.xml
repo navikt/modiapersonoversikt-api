@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
@@ -36,17 +37,26 @@
         </dependency>
 
         <dependency>
-            <groupId>no.nav.sbl.dialogarena</groupId>
+            <groupId>no.nav.tjenestespesifikasjoner</groupId>
             <artifactId>utbetaling-tjenestespesifikasjon</artifactId>
-            <version>${utbetaling.tjenestespesifikasjon.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>no.nav.sbl.dialogarena.tjenestespesifikasjon</groupId>
+            <artifactId>nav-foreldrepenger-v2-tjenestespesifikasjon</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>no.nav.sbl.dialogarena.tjenestespesifikasjon</groupId>
+            <artifactId>nav-sykepenger-v2-tjenestespesifikasjon</artifactId>
+            <version>${project.version}</version>
         </dependency>
 
         <dependency>
-            <groupId>no.nav.sbl.dialogarena</groupId>
+            <groupId>no.nav.tjenestespesifikasjoner</groupId>
             <artifactId>pleiepenger-v1-tjenestespesifikasjon</artifactId>
         </dependency>
         <dependency>
-            <groupId>no.nav.sbl.dialogarena</groupId>
+            <groupId>no.nav.tjenestespesifikasjoner</groupId>
             <artifactId>organisasjonv4-tjenestespesifikasjon</artifactId>
         </dependency>
 
@@ -56,16 +66,16 @@
             <artifactId>cxf</artifactId>
         </dependency>
         <dependency>
-            <groupId>no.nav.modig</groupId>
-            <artifactId>modig-core</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>no.nav.modig</groupId>
-            <artifactId>modig-log-common</artifactId>
+            <groupId>no.nav.sbl.dialogarena</groupId>
+            <artifactId>modig-embedded</artifactId>
         </dependency>
         <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>modia-felleskomponenter</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>no.nav.sbl.dialogarena</groupId>
+            <artifactId>tilgangskontroll</artifactId>
         </dependency>
 
 
@@ -82,12 +92,6 @@
             <groupId>org.springframework</groupId>
             <artifactId>spring-core</artifactId>
         </dependency>
-
-        <!-- CXF/WS DEPENDENCIES -->
-<!--        <dependency>-->
-<!--            <groupId>xml-apis</groupId>-->
-<!--            <artifactId>xml-apis</artifactId>-->
-<!--        </dependency>-->
 
         <!-- DIVERSE DEPENDENCIES -->
         <dependency>
@@ -145,123 +149,8 @@
 
     <build>
         <plugins>
-
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
-            </plugin>
-            <plugin>
-                <artifactId>maven-dependency-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>unpack</id>
-                        <phase>generate-sources</phase>
-                        <goals>
-                            <goal>unpack</goal>
-                        </goals>
-                        <configuration>
-                            <includes>**/*.wsdl,**/*.xsd</includes>
-                            <artifactItems>
-                                <artifactItem>
-                                    <groupId>no.nav.tjenester</groupId>
-                                    <artifactId>nav-sykepenger-v2-tjenestespesifikasjon</artifactId>
-                                    <version>${nav-fim-sykepenger-v2-tjenestespesifikasjon-version}</version>
-                                    <type>zip</type>
-                                    <outputDirectory>${project.build.outputDirectory}</outputDirectory>
-                                </artifactItem>
-                                <artifactItem>
-                                    <groupId>no.nav.tjenester</groupId>
-                                    <artifactId>nav-foreldrepenger-v2-tjenestespesifikasjon</artifactId>
-                                    <version>${nav-fim-foreldrepenger-v2-tjenestespesifikasjon-version}</version>
-                                    <type>zip</type>
-                                    <outputDirectory>${project.build.outputDirectory}</outputDirectory>
-                                </artifactItem>
-                            </artifactItems>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <artifactId>maven-resources-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>copy-bindings</id>
-                        <phase>generate-sources</phase>
-                        <goals>
-                            <goal>copy-resources</goal>
-                        </goals>
-                        <configuration>
-                            <outputDirectory>${project.build.outputDirectory}</outputDirectory>
-                            <resources>
-                                <resource>
-                                    <directory>src/main/jaxb</directory>
-                                </resource>
-                                <resource>
-                                    <directory>src/main/resources</directory>
-                                    <includes>
-                                        <include>**</include>
-                                    </includes>
-                                </resource>
-                            </resources>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.cxf</groupId>
-                <artifactId>cxf-codegen-plugin</artifactId>
-                <version>${org.apache.cxf-codegen.version}</version>
-                <executions>
-                    <execution>
-                        <id>wsdl-to-java</id>
-                        <phase>generate-sources</phase>
-                        <goals>
-                            <goal>wsdl2java</goal>
-                        </goals>
-                        <configuration>
-                            <encoding>${project.build.sourceEncoding}</encoding>
-                            <defaultOptions>
-                                <extraargs>
-                                    <extraarg>-xjc-Xfluent-api</extraarg>
-                                    <extraarg>-xjc-XhashCode</extraarg>
-                                    <extraarg>-xjc-Xequals</extraarg>
-                                    <extraarg>-xjc-XtoString</extraarg>
-                                </extraargs>
-                            </defaultOptions>
-                            <wsdlOptions>
-                                <wsdlOption>
-                                    <wsdl>
-                                        ${project.build.outputDirectory}/no/nav/tjeneste/virksomhet/sykepenger/v2/sykepenger.wsdl
-                                    </wsdl>
-                                    <bindingFiles>
-                                        <bindingFile>${project.build.outputDirectory}/sykepengerBindings.xjb
-                                        </bindingFile>
-                                    </bindingFiles>
-                                </wsdlOption>
-                                <wsdlOption>
-                                    <wsdl>
-                                        ${project.build.outputDirectory}/no/nav/tjeneste/virksomhet/foreldrepenger/v2/foreldrepenger.wsdl
-                                    </wsdl>
-                                    <bindingFiles>
-                                        <bindingFile>${project.build.outputDirectory}/foreldrepengerBindings.xjb
-                                        </bindingFile>
-                                    </bindingFiles>
-                                </wsdlOption>
-                            </wsdlOptions>
-                        </configuration>
-                    </execution>
-                </executions>
-                <dependencies>
-                    <dependency>
-                        <groupId>net.java.dev.jaxb2-commons</groupId>
-                        <artifactId>jaxb-fluent-api</artifactId>
-                        <version>2.1.8</version>
-                    </dependency>
-                    <dependency>
-                        <groupId>org.jvnet.jaxb2_commons</groupId>
-                        <artifactId>jaxb2-basics</artifactId>
-                        <version>0.6.4</version>
-                    </dependency>
-                </dependencies>
             </plugin>
         </plugins>
     </build>

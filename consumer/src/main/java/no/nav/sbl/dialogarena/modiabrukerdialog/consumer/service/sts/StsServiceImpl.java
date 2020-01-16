@@ -3,7 +3,7 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.sts;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import no.nav.modig.common.MDCOperations;
+import no.nav.common.utils.IdUtils;
 import no.nav.sbl.rest.RestUtils;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
@@ -84,7 +84,7 @@ public class StsServiceImpl {
                 .target(SECURITY_TOKEN_SERVICE_BASEURL + STS_USERNAME_PW_QUERY_PARAMETERS)
                 .request()
                 .header(CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED)
-                .header(NAV_CALL_ID_HEADER, MDCOperations.generateCallId())
+                .header(NAV_CALL_ID_HEADER, IdUtils.generateId())
                 .header(AUTHORIZATION, encodedAuth)
                 .get(String.class)
         );
