@@ -3,7 +3,6 @@ kind: "Application"
 metadata:
   name: modiapersonoversikt-api
   namespace: default
-  cluster: prod-fss
   labels:
     team: personoversikt
 spec:
@@ -20,6 +19,9 @@ spec:
     path: /modiapersonoversikt-api/internal/isReady
     initialDelay: 50
     timeout: 1
+  prometheus:
+    enabled: true
+    path: /modiapersonoversikt-api/internal/metrics
   resources:
     requests:
       cpu: 1000m
@@ -35,8 +37,6 @@ spec:
     min: 2
     max: 4
     cpuThresholdPercentage: 60
-  prometheus:
-    enabled: false
   vault:
     enabled: true
     paths:
@@ -46,7 +46,7 @@ spec:
         mountPath: /var/run/secrets/nais.io/srvssolinux
       - kvPath: /serviceuser/data/prod/srvgosys
         mountPath: /var/run/secrets/nais.io/gosys_user
-      - kvPath: /credential/data/prod/isso-rp-user-q0
+      - kvPath: /credential/data/prod/isso-rp-user
         mountPath: /var/run/secrets/nais.io/isso-rp-user
   env:
     - name: ISSO_HOST_URL

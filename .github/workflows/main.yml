@@ -85,7 +85,6 @@ jobs:
       - uses: nais/deploy/actions/deploy@v1
         env:
           APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
-          DRY_RUN: true
           PRINT_PAYLOAD: true
           CLUSTER: prod-fss
           RESOURCE: .nais/nais.yml

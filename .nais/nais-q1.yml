@@ -3,7 +3,6 @@ kind: "Application"
 metadata:
   name: modiapersonoversikt-api
   namespace: q1
-  cluster: dev-fss
   labels:
     team: personoversikt
 spec:
