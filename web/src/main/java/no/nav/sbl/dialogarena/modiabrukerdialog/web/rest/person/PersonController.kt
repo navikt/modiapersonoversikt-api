@@ -11,7 +11,11 @@ import no.nav.kjerneinfo.domain.person.fakta.Sikkerhetstiltak
 import no.nav.kjerneinfo.domain.person.fakta.Telefon
 import no.nav.kodeverk.consumer.fim.kodeverk.KodeverkmanagerBi
 import no.nav.kodeverk.consumer.fim.kodeverk.to.feil.HentKodeverkKodeverkIkkeFunnet
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.person.PersonOppslagService
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.pdl.PdlFullmakt
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.pdl.PdlPersonResponse
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.pdl.PdlDoedsbo
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.pdl.PdlTilrettelagtKommunikasjon
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.pdl.PdlOppslagService
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.Feature
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.UnleashService
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Policies
@@ -38,9 +42,9 @@ private const val TILRETTELAGT_KOMMUNIKASJON_KODEVERKSPRAK = "nb"
 @Produces(APPLICATION_JSON)
 class PersonController @Inject constructor(private val kjerneinfoService: PersonKjerneinfoServiceBi,
                                            private val kodeverk: KodeverkmanagerBi,
-                                           private val persondokumentService: PersonOppslagService,
                                            private val unleashService: UnleashService,
-                                           private val tilgangskontroll: Tilgangskontroll) {
+                                           private val tilgangskontroll: Tilgangskontroll,
+                                           private val pdlOppslagService: PdlOppslagService) {
 
     private val logger = LoggerFactory.getLogger(PersonController::class.java)
 
@@ -53,47 +57,46 @@ class PersonController @Inject constructor(private val kjerneinfoService: Person
                     try {
                         val hentKjerneinformasjonRequest = HentKjerneinformasjonRequest(fodselsnummer)
                         hentKjerneinformasjonRequest.isBegrunnet = true
-                        val person = kjerneinfoService.hentKjerneinformasjon(hentKjerneinformasjonRequest).person
-
-                        val response = if (unleashService.isEnabled(Feature.DOEDSBO)) {
-                            try {
-                                persondokumentService.hentPersonDokument(fodselsnummer)
-                            } catch (exception: NotFoundException) {
-                                logger.info("Persondokument ikke funnet for " + fodselsnummer)
-                                null
-                            } catch (exception: Exception) {
-                                logger.info("Feil i persondokumentoppslag", exception)
-                                null
-                            }
-                        } else {
+                        val person : Person? = kjerneinfoService.hentKjerneinformasjon(hentKjerneinformasjonRequest).person
+                        val pdlPerson : PdlPersonResponse? = try {
+                            pdlOppslagService.hentPerson(fodselsnummer)
+                        } catch (e: Exception) {
+                            logger.warn("Feil i oppslag mot PDL", e)
                             null
                         }
-                        val kontaktinfoForDoedsbo = response?.kontaktinformasjonForDoedsbo
+
+                        val kontaktinfoForDoedsbo = tryOf("Feil i oppslag mot PDL-dodsbo") {
+                            pdlPerson?.data?.hentPerson?.kontaktinformasjonForDoedsbo
+                        }
+                        val fullmakt = tryOf("Feil i oppslag mot PDL-fullmakt") {
+                            pdlPerson?.data?.hentPerson?.fullmakt ?: listOf()
+                        }
 
                         mapOf(
-                                "fødselsnummer" to person.fodselsnummer.nummer,
-                                "alder" to person.fodselsnummer.alder,
-                                "kjønn" to person.personfakta.kjonn?.kodeRef,
-                                "geografiskTilknytning" to person.personfakta.geografiskTilknytning?.value,
-                                "navn" to getNavn(person.personfakta.personnavn),
-                                "diskresjonskode" to person.personfakta.diskresjonskode?.let { Kode(it) },
+                                "fødselsnummer" to person?.fodselsnummer?.nummer,
+                                "alder" to person?.fodselsnummer?.alder,
+                                "kjønn" to person?.personfakta?.kjonn?.kodeRef,
+                                "geografiskTilknytning" to person?.personfakta?.geografiskTilknytning?.value,
+                                "navn" to getNavn(person?.personfakta?.personnavn),
+                                "diskresjonskode" to person?.personfakta?.diskresjonskode?.let { Kode(it) },
                                 "bankkonto" to hentBankkonto(person),
-                                "tilrettelagtKomunikasjonsListe" to hentTilrettelagtKommunikasjon(person.personfakta.tilrettelagtKommunikasjon),
+                                "tilrettelagtKomunikasjonsListe" to hentTilrettelagtKommunikasjon(person?.personfakta?.tilrettelagtKommunikasjon, pdlPerson),
                                 "personstatus" to getPersonstatus(person),
-                                "statsborgerskap" to mapStatsborgerskap(person.personfakta),
+                                "statsborgerskap" to mapStatsborgerskap(person?.personfakta),
                                 "sivilstand" to mapOf(
-                                        "kodeRef" to person.personfakta.sivilstand?.kodeRef,
-                                        "beskrivelse" to person.personfakta.sivilstand?.beskrivelse,
-                                        "fraOgMed" to person.personfakta.sivilstandFom
+                                        "kodeRef" to person?.personfakta?.sivilstand?.kodeRef,
+                                        "beskrivelse" to person?.personfakta?.sivilstand?.beskrivelse,
+                                        "fraOgMed" to person?.personfakta?.sivilstandFom
                                 ),
                                 "familierelasjoner" to getFamilierelasjoner(person),
-                                "fodselsdato" to person.fodselsnummer.fodselsdato,
-                                "folkeregistrertAdresse" to person.personfakta.bostedsadresse?.let { hentAdresse(it) },
-                                "alternativAdresse" to person.personfakta.alternativAdresse?.let { hentAdresse(it) },
-                                "postadresse" to person.personfakta.postadresse?.let { hentAdresse(it) },
-                                "sikkerhetstiltak" to person.personfakta.sikkerhetstiltak?.let { hentSikkerhetstiltak(it) },
-                                "kontaktinformasjon" to getTelefoner(person.personfakta),
-                                "kontaktinformasjonForDoedsbo" to kontaktinfoForDoedsbo?.let { DoedsboMapping(kjerneinfoService, it).mapKontaktinfoForDoedsbo() }
+                                "fodselsdato" to person?.fodselsnummer?.fodselsdato,
+                                "folkeregistrertAdresse" to person?.personfakta?.bostedsadresse?.let { hentAdresse(it) },
+                                "alternativAdresse" to person?.personfakta?.alternativAdresse?.let { hentAdresse(it) },
+                                "postadresse" to person?.personfakta?.postadresse?.let { hentAdresse(it) },
+                                "sikkerhetstiltak" to person?.personfakta?.sikkerhetstiltak?.let { hentSikkerhetstiltak(it) },
+                                "kontaktinformasjon" to getTelefoner(person?.personfakta),
+                                "kontaktinformasjonForDoedsbo" to kontaktinfoForDoedsbo?.let { DoedsboMapping(it).mapKontaktinfoForDoedsbo() },
+                                "fullmakt" to fullmakt?.let { hentFullmakter(it) }
                         )
                     } catch (exception: AuthorizationWithSikkerhetstiltakException) {
                         getBegrensetInnsyn(fodselsnummer, exception.message)
@@ -101,34 +104,68 @@ class PersonController @Inject constructor(private val kjerneinfoService: Person
                         when (exception.cause) {
                             is HentPersonPersonIkkeFunnet -> throw NotFoundException()
                             is HentPersonSikkerhetsbegrensning -> getBegrensetInnsyn(fodselsnummer, exception.message)
-                            else -> throw InternalServerErrorException(exception)
+                            else -> {
+                                logger.error("mapping error personobjekt", exception)
+                                throw InternalServerErrorException(exception)}
                         }
                     }
                 }
     }
 
-    private fun mapStatsborgerskap(personfakta: Personfakta) =
-            personfakta.statsborgerskap?.let { if (it.kodeRef == TPS_UKJENT_VERDI) null else Kode(it) }
+    private fun hentFullmakter(fullmakter: List<PdlFullmakt>?): List<Map<String, Any>>? =
+            fullmakter?.map {
+                mapOf(
+                        "motpartsRolle" to it.motpartsRolle,
+                        "motpartsPersonident" to it.motpartsPersonident,
+                        "omraade" to it.omraader,
+                        "gyldigFraOgMed" to formatDate(it.gyldigFraOgMed),
+                        "gyldigTilOgMed" to formatDate(it.gyldigTilOgMed)
+                )
+            }
 
-    private fun getPersonstatus(person: Person) = mapOf(
-            "dødsdato" to person.personfakta.doedsdato,
-            "bostatus" to person.personfakta.bostatus?.let(::Kode)
+    private fun mapStatsborgerskap(personfakta: Personfakta?) =
+            personfakta?.statsborgerskap?.let { if (it.kodeRef == TPS_UKJENT_VERDI) null else Kode(it) }
+
+    private fun getPersonstatus(person: Person?) = mapOf(
+            "dødsdato" to person?.personfakta?.doedsdato,
+            "bostatus" to person?.personfakta?.bostatus?.let(::Kode)
     )
 
-    private fun hentTilrettelagtKommunikasjon(tilrettelagtKommunikasjon: List<Kodeverdi>) =
-            hentSortertKodeverkslisteForTilrettelagtKommunikasjon()
-                    .filter { tilrettelagtKommunikasjon.any { tk -> tk.kodeRef == it.kodeRef } }
-                    .map(::Kode)
+    private fun hentTilrettelagtKommunikasjon(tilrettelagtKommunikasjon: List<Kodeverdi>?, pdlPerson: PdlPersonResponse?): List<Kode> {
 
-    private fun getNavn(personnavn: Personnavn) = mapOf(
-            "endringsinfo" to personnavn.sistEndret?.let { hentEndringsinformasjon(it) },
-            "sammensatt" to personnavn.sammensattNavn,
-            "fornavn" to personnavn.fornavn,
-            "mellomnavn" to (personnavn.mellomnavn ?: ""),
-            "etternavn" to personnavn.etternavn
+        if (unleashService.isEnabled(Feature.PDL_BRUKERPROFIL)) {
+            val pdlTilrettelagtKommunikasjon = pdlPerson?.data?.hentPerson?.tilrettelagtKommunikasjon
+            logger.info("Tilrettelagt: " + pdlTilrettelagtKommunikasjon.toString())
+            val kodeliste: MutableSet<Kode> = mutableSetOf()
+            if (pdlTilrettelagtKommunikasjon == null) {
+                return emptyList();
+            }
+            for (tk in pdlTilrettelagtKommunikasjon) {
+                if (tk.talespraaktolk != null || tk.tegnspraaktolk != null) {
+                    kodeliste.add(Kode("TOHJ", "Tolkehjelp"))
+                }
+            }
+            return kodeliste.toList()
+        } else {
+            if (tilrettelagtKommunikasjon != null) {
+                return hentSortertKodeverkslisteForTilrettelagtKommunikasjon()
+                        .filter { tilrettelagtKommunikasjon?.any { tk -> tk.kodeRef == it.kodeRef } }
+                        .map(::Kode)
+            }
+            return emptyList()
+        }
+
+    }
+
+    private fun getNavn(personnavn: Personnavn?) = mapOf(
+            "endringsinfo" to personnavn?.sistEndret?.let { hentEndringsinformasjon(it) },
+            "sammensatt" to personnavn?.sammensattNavn,
+            "fornavn" to (personnavn?.fornavn ?: ""),
+            "mellomnavn" to (personnavn?.mellomnavn ?: ""),
+            "etternavn" to (personnavn?.etternavn?: "")
     )
 
-    private fun getFamilierelasjoner(person: Person) = person.personfakta.harFraRolleIList.map {
+    private fun getFamilierelasjoner(person: Person?) = person?.personfakta?.harFraRolleIList?.map {
         mapOf(
                 "harSammeBosted" to if (it.tilPerson.isHideFodselsnummerOgNavn) null else it.harSammeBosted,
                 "tilPerson" to mapOf(
@@ -143,8 +180,8 @@ class PersonController @Inject constructor(private val kjerneinfoService: Person
         )
     }
 
-    private fun hentBankkonto(person: Person) = person.personfakta.let {
-        it.bankkonto?.run {
+    private fun hentBankkonto(person: Person?) = person?.personfakta.let {
+        it?.bankkonto?.run {
             mapOfNotNullOrEmpty(
                     "kontonummer" to kontonummer,
                     "banknavn" to banknavn,
@@ -238,11 +275,11 @@ class PersonController @Inject constructor(private val kjerneinfoService: Person
             "periode" to sikkerhetstiltak.periode?.let { lagPeriode(it) }
     )
 
-    private fun getTelefoner(personfakta: Personfakta) = personfakta.run {
+    private fun getTelefoner(personfakta: Personfakta?) = personfakta?.run {
         mapOf(
-                "mobil" to personfakta.mobil.map(::getTelefon).orElse(null),
-                "jobbTelefon" to personfakta.jobbTlf.map(::getTelefon).orElse(null),
-                "hjemTelefon" to personfakta.hjemTlf.map(::getTelefon).orElse(null)
+                "mobil" to personfakta?.mobil?.map(::getTelefon)?.orElse(null),
+                "jobbTelefon" to personfakta?.jobbTlf?.map(::getTelefon)?.orElse(null),
+                "hjemTelefon" to personfakta?.hjemTlf?.map(::getTelefon)?.orElse(null)
         )
     }
 
@@ -253,7 +290,7 @@ class PersonController @Inject constructor(private val kjerneinfoService: Person
             "sistEndret" to telefon.endringstidspunkt?.toString(DATO_TID_FORMAT)
     )
 
-    private fun getBegrensetInnsyn(fødselsnummer: String, melding: String?) = mapOf(
+    private fun getBegrensetInnsyn(fødselsnummer: String?, melding: String?) = mapOf(
             "begrunnelse" to melding,
             "sikkerhetstiltak" to kjerneinfoService
                     .hentSikkerhetstiltak(HentSikkerhetstiltakRequest(fødselsnummer))

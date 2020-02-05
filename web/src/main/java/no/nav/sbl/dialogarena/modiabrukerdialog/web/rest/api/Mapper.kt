@@ -72,6 +72,7 @@ private fun meldingMapping(melding: Melding): MeldingDTO =
                         "opprettetDato" to melding.opprettetDato?.toString(DateTimeFormat.forPattern(DATO_TID_FORMAT)),
                         "ferdigstiltDato" to melding.ferdigstiltDato?.toString(DateTimeFormat.forPattern(DATO_TID_FORMAT)),
                         "erFerdigstiltUtenSvar" to melding.erFerdigstiltUtenSvar,
+                        "ferdigstiltUtenSvarDato" to melding.ferdigstiltUtenSvarDato?.toString(DateTimeFormat.forPattern(DATO_TID_FORMAT)),
                         "ferdigstiltUtenSvarAv" to melding.ferdigstiltUtenSvarAv?.let(::hentSaksbehandler),
                         "kontorsperretEnhet" to melding.kontorsperretEnhet,
                         "kontorsperretAv" to melding.kontorsperretAv?.let(::hentSaksbehandler),

@@ -7,7 +7,6 @@ import no.nav.kjerneinfo.common.domain.Kodeverdi
 import no.nav.kjerneinfo.consumer.fim.person.support.DefaultPersonKjerneinfoService
 import no.nav.kjerneinfo.consumer.fim.person.support.KjerneinfoMapper
 import no.nav.kodeverk.consumer.fim.kodeverk.KodeverkmanagerBi
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.personoppslag.PersonOppslagResponse
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.organisasjonsEnhetV2.OrganisasjonEnhetV2Service
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.person.PersonOppslagService
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.UnleashService
@@ -49,19 +48,17 @@ internal class PersonControllerTest {
     private val organisasjonenhetV2Service: OrganisasjonEnhetV2Service = mock()
     private val kodeverk: KodeverkmanagerBi = mock()
     private val mapper = KjerneinfoMapper(kodeverk)
-    private val oppslag: PersonOppslagService = mock()
     private val unleashService: UnleashService = mock()
     private val tilgangskontrollUtenTPSContext: TilgangskontrollContextUtenTPS = mock()
     private val tilgangskontrollUtenTPS = TilgangskontrollUtenTPS(tilgangskontrollUtenTPSContext)
     private val tilgangskontroll: Tilgangskontroll = TilgangskontrollMock.get()
 
     private val service = DefaultPersonKjerneinfoService(personV3, mapper, tilgangskontrollUtenTPS, organisasjonenhetV2Service)
-    private val controller = PersonController(service, kodeverk, oppslag, unleashService, tilgangskontroll)
+    private val controller = PersonController(service, kodeverk, unleashService, tilgangskontroll, mock())
 
     @BeforeEach
     fun before() {
         whenever(organisasjonenhetV2Service.finnNAVKontor(any(), any())).thenReturn(Optional.empty())
-        whenever(oppslag.hentPersonDokument(any())).thenReturn(PersonOppslagResponse())
     }
 
     @Test

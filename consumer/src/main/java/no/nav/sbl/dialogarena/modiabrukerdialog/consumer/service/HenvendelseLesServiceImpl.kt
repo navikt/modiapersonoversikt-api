@@ -27,7 +27,7 @@ class HenvendelseLesServiceImpl : HenvendelseLesService {
         return fetch("$baseUrl/henvendelseider?$queryparams")
     }
 
-    private inline fun <reified T> fetch(url: String): T {
+    private inline fun <reified T : Any> fetch(url: String): T {
         val token = SubjectHandler.getSsoToken(SsoToken.Type.OIDC).orElseThrow { RuntimeException("Fant ikke OIDC-token") }
         return RestUtils.withClient {
             it
