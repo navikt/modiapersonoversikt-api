@@ -72,6 +72,17 @@ class DialogMerkController @Inject constructor(private val behandleHenvendelsePo
     }
 
     @POST
+    @Path("/avsluttgosysoppgave")
+    fun avsluttGosysOppgave(request: FerdigstillOppgaveRequest): Response {
+        return tilgangskontroll
+                .check(Policies.tilgangTilBruker.with(request.fnr))
+                .get(Audit.describe(UPDATE, Henvendelse.Oppgave.Avslutt, "fnr" to request.fnr, "oppgaveid" to request.oppgaveid)) {
+                    oppgaveBehandlingService.ferdigstillGsakOppgave(request.oppgaveid, Optional.empty(), request.saksbehandlerValgtEnhet, request.beskrivelse);
+                    Response.ok().build()
+                }
+    }
+
+    @POST
     @Path("/slett")
     fun slettBehandlingskjede(request: FeilmerkRequest): Response {
         return tilgangskontroll
@@ -109,4 +120,11 @@ data class AvsluttUtenSvarRequest(
         val saksbehandlerValgtEnhet: String,
         val eldsteMeldingTraadId: String,
         val eldsteMeldingOppgaveId: String
+)
+
+data class FerdigstillOppgaveRequest(
+        val fnr: String,
+        val oppgaveid: String,
+        val beskrivelse: String,
+        val saksbehandlerValgtEnhet: String
 )

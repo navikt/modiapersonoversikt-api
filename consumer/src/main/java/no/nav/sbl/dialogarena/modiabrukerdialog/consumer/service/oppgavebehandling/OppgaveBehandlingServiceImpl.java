@@ -31,6 +31,7 @@ import java.util.Optional;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
+import static java.util.Optional.empty;
 import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.toList;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe.*;
@@ -127,16 +128,35 @@ public class OppgaveBehandlingServiceImpl implements OppgaveBehandlingService {
         }
     }
 
-    private void oppdaterBeskrivelseIGsak(Optional<Temagruppe> temagruppe, String saksbehandlersValgteEnhet, String oppgaveId) {
+    public void ferdigstillGsakOppgave(String oppgaveId, Optional<Temagruppe> temagruppe, String saksbehandlersValgteEnhet, String beskrivelse) {
+        oppdaterBeskrivelseIGsak(temagruppe, saksbehandlersValgteEnhet, oppgaveId, beskrivelse);
+        try {
+            oppgavebehandlingWS.ferdigstillOppgaveBolk(new WSFerdigstillOppgaveBolkRequest()
+            .withOppgaveIdListe(singletonList(oppgaveId))
+            .withFerdigstiltAvEnhetId(Integer.valueOf(enhetFor(temagruppe, saksbehandlersValgteEnhet)))
+            );
+
+        } catch (Exception e) {
+            logger.error("Kunne ikke ferdigstille Gsak oppgave i Modia med oppgaveId " + oppgaveId, e);
+            throw e;
+
+        }
+    }
+
+    private void oppdaterBeskrivelseIGsak(Optional<Temagruppe> temagruppe, String saksbehandlersValgteEnhet, String oppgaveId, String beskrivelse) {
         try {
             WSOppgave oppgave = oppgaveWS.hentOppgave(new WSHentOppgaveRequest().withOppgaveId(oppgaveId)).getOppgave();
-            oppgave.withBeskrivelse(leggTilBeskrivelse(oppgave.getBeskrivelse(), "Oppgaven er ferdigstilt i Modia",
+            oppgave.withBeskrivelse(leggTilBeskrivelse(oppgave.getBeskrivelse(), "Oppgaven er ferdigstilt i Modia. " + beskrivelse,
                     saksbehandlersValgteEnhet));
             lagreOppgaveIGsak(oppgave, temagruppe, saksbehandlersValgteEnhet);
         } catch (HentOppgaveOppgaveIkkeFunnet | LagreOppgaveOptimistiskLasing e) {
             logger.info("Feil ved oppdatering av beskrivelse for oppgave " + oppgaveId, e);
             throw new RuntimeException(e);
         }
+    }
+
+    private void oppdaterBeskrivelseIGsak(Optional<Temagruppe> temagruppe, String saksbehandlersValgteEnhet, String oppgaveId) {
+        oppdaterBeskrivelseIGsak(temagruppe, saksbehandlersValgteEnhet, oppgaveId, "");
     }
 
     @Override

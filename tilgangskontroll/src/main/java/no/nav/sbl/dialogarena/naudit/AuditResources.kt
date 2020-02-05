@@ -67,6 +67,7 @@ class AuditResources {
                     val LeggTilbake = AuditResource("person.henvendelse.oppgave.leggTilbake")
                     val Plukk = AuditResource("person.henvendelse.oppgave.plukk")
                     val Tildelte = AuditResource("person.henvendelse.oppgave.tildel")
+                    val Avslutt = AuditResource("person.henvendelse.oppgave.avslutt")
                 }
             }
         }

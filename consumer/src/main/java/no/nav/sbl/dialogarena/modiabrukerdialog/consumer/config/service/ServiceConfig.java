@@ -2,6 +2,7 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.service;
 
 import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navansatt.GOSYSNAVansatt;
 import no.nav.dkif.consumer.support.DkifServiceImpl;
+import no.nav.kjerneinfo.consumer.egenansatt.EgenAnsattService;
 import no.nav.kjerneinfo.consumer.fim.behandleperson.BehandlePersonServiceBi;
 import no.nav.kjerneinfo.consumer.fim.behandleperson.DefaultBehandlePersonService;
 import no.nav.kjerneinfo.consumer.fim.person.PersonKjerneinfoServiceBi;
@@ -18,13 +19,15 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.gsak.GsakKodeverk;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.gsak.SakerService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.kodeverk.StandardKodeverk;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.ldap.LDAPService;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.pdl.PdlOppslagService;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.person.PersonOppslagService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.AnsattService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.oppfolgingsinfo.OppfolgingsenhetService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.organisasjonsEnhetV2.OrganisasjonEnhetV2Service;
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.person.PersonOppslagService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.psak.PsakService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.kodeverksmapper.Kodeverksmapper;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.*;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.arbeidsfordeling.ArbeidsfordelingClient;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.arbeidsfordeling.ArbeidsfordelingV1ServiceImpl;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.henvendelse.DelsvarService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.henvendelse.DelsvarServiceImpl;
@@ -33,14 +36,16 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.kodeverk.Standa
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.kodeverksmapper.KodeverksmapperService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.ldap.LDAPServiceImpl;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.ldap.LdapContextProvider;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.pdl.PdlOppslagServiceImpl;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.person.PersonOppslagServiceImpl;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.oppfolgingsinfo.OppfolgingsenhetServiceImpl;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.oppgavebehandling.OppgaveBehandlingServiceImpl;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.organisasjonenhet.OrganisasjonEnhetV2ServiceImpl;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.organisasjonenhet.kontaktinformasjon.service.OrganisasjonEnhetKontaktinformasjonService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.organisasjonenhet.kontaktinformasjon.service.OrganisasjonEnhetKontaktinformasjonServiceImpl;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.person.PersonOppslagServiceImpl;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.saker.SakerServiceImpl;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.sts.StsServiceImpl;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.UnleashService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Tilgangskontroll;
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.TilgangskontrollUtenTPS;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.behandlehenvendelse.BehandleHenvendelsePortType;
@@ -106,9 +111,13 @@ public class ServiceConfig {
     }
 
     @Bean
-    public ArbeidsfordelingV1Service arbeidsfordelingV1Service(ArbeidsfordelingV1 arbeidsfordeling, PersonKjerneinfoServiceBi personService,
-                                                               KodeverksmapperService kodeverksmapper) {
-        return new ArbeidsfordelingV1ServiceImpl(arbeidsfordeling, personService, kodeverksmapper);
+    public ArbeidsfordelingClient arbeidsfordelingClient(){
+        return new ArbeidsfordelingClient();
+    }
+
+    @Bean
+    public ArbeidsfordelingV1Service arbeidsfordelingV1Service(ArbeidsfordelingV1 arbeidsfordeling, ArbeidsfordelingClient arbeidsfordelingClient, EgenAnsattService egenAnsattService, PersonKjerneinfoServiceBi personService, KodeverksmapperService kodeverksmapper, UnleashService unleashService) {
+        return new ArbeidsfordelingV1ServiceImpl(arbeidsfordeling, arbeidsfordelingClient, egenAnsattService, personService, kodeverksmapper, unleashService);
     }
 
     @Bean
@@ -201,4 +210,7 @@ public class ServiceConfig {
     PersonOppslagService personOppslagService() {
         return new PersonOppslagServiceImpl();
     }
+
+    @Bean
+    PdlOppslagService pdlOppslagService() { return new PdlOppslagServiceImpl(); }
 }
