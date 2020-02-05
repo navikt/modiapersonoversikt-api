@@ -13,6 +13,6 @@ public class IsNotProdStrategy implements Strategy {
 
     @Override
     public boolean isEnabled(Map<String, String> map) {
-        return !"p".equals(EnvironmentUtils.getOptionalProperty("APP_ENVIRONMENT").orElse("local"));
+        return !"p".equals(EnvironmentUtils.getOptionalProperty("APP_ENVIRONMENT_NAME").orElse("local"));
     }
 }
