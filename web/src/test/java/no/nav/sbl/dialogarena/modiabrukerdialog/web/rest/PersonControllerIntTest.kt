@@ -10,11 +10,9 @@ import no.nav.kjerneinfo.domain.person.Person
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.pdl.*
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.pdl.PdlOppslagService
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.person.PersonController
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.tilgangskontroll.TilgangskontrollMock
+import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.TilgangskontrollMock
 import org.junit.jupiter.api.Test
 import java.util.*
-import kotlin.collections.ArrayList
-import kotlin.collections.LinkedHashMap
 import kotlin.test.assertEquals
 
 internal class PersonControllerIntTest {
