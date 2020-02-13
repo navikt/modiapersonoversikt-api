@@ -76,7 +76,7 @@ class OppfolgingController @Inject constructor(private val service: Oppfolgingsi
                 }
     }
 
-    private fun hentYtelser(ytelser: List<Ytelse>?): List<Map<String, Any?>> {
+    internal fun hentYtelser(ytelser: List<Ytelse>?): List<Map<String, Any?>> {
         if (ytelser == null) return emptyList()
 
         return ytelser.map {
@@ -94,7 +94,7 @@ class OppfolgingController @Inject constructor(private val service: Oppfolgingsi
         }
     }
 
-    private fun hentDagPengerFelter(ytelse: Ytelse): Array<Pair<String, Any?>> {
+    internal fun hentDagPengerFelter(ytelse: Ytelse): Array<Pair<String, Any?>> {
         return when (ytelse) {
             is Dagpengeytelse -> arrayOf(
                     "dagerIgjenPermittering" to ytelse.antallDagerIgjenPermittering,
@@ -106,7 +106,7 @@ class OppfolgingController @Inject constructor(private val service: Oppfolgingsi
         }
     }
 
-    private fun hentVedtak(vedtak: List<Vedtak>?): List<Map<String, Any?>> {
+    internal fun hentVedtak(vedtak: List<Vedtak>?): List<Map<String, Any?>> {
         if (vedtak == null) return emptyList()
 
         return vedtak.map {
@@ -120,7 +120,7 @@ class OppfolgingController @Inject constructor(private val service: Oppfolgingsi
         }
     }
 
-    private fun hentSyfoPunkt(syfoPunkter: List<SYFOPunkt>?): List<Map<String, Any?>> {
+    internal fun hentSyfoPunkt(syfoPunkter: List<SYFOPunkt>?): List<Map<String, Any?>> {
         if (syfoPunkter == null) return emptyList()
 
         return syfoPunkter.map {
@@ -133,7 +133,7 @@ class OppfolgingController @Inject constructor(private val service: Oppfolgingsi
         }
     }
 
-    private fun hentVeileder(veileder: Optional<Saksbehandler>): Map<String, Any?>? {
+    internal fun hentVeileder(veileder: Optional<Saksbehandler>): Map<String, Any?>? {
         return if (veileder.isPresent) {
             mapOf(
                     "ident" to veileder.get().ident,
@@ -144,7 +144,7 @@ class OppfolgingController @Inject constructor(private val service: Oppfolgingsi
         }
     }
 
-    private fun hentEnhet(enhet: Optional<AnsattEnhet>): Map<String, Any?>? {
+    internal fun hentEnhet(enhet: Optional<AnsattEnhet>): Map<String, Any?>? {
         return if (enhet.isPresent) {
             mapOf(
                     "id" to enhet.get().enhetId,
@@ -156,7 +156,7 @@ class OppfolgingController @Inject constructor(private val service: Oppfolgingsi
         }
     }
 
-    private fun lagYtelseRequest(fodselsnummer: String, start: String?, slutt: String?): YtelseskontraktRequest {
+    internal fun lagYtelseRequest(fodselsnummer: String, start: String?, slutt: String?): YtelseskontraktRequest {
         val request = YtelseskontraktRequest()
         request.fodselsnummer = fodselsnummer
         request.from = lagRiktigDato(start)
@@ -164,7 +164,7 @@ class OppfolgingController @Inject constructor(private val service: Oppfolgingsi
         return request
     }
 
-    private fun lagOppfolgingskontraktRequest(fodselsnummer: String, start: String?, slutt: String?): OppfolgingskontraktRequest {
+    internal fun lagOppfolgingskontraktRequest(fodselsnummer: String, start: String?, slutt: String?): OppfolgingskontraktRequest {
         val request = OppfolgingskontraktRequest()
         request.fodselsnummer = fodselsnummer
         request.from = lagRiktigDato(start)
