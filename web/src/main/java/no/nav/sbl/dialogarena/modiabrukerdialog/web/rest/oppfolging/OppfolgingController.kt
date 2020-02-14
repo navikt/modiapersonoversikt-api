@@ -75,6 +75,7 @@ class OppfolgingController @Inject constructor(private val service: Oppfolgingsi
                     )
                 }
     }
+}
 
     private fun hentYtelser(ytelser: List<Ytelse>?): List<Map<String, Any?>> {
         if (ytelser == null) return emptyList()
@@ -172,4 +173,3 @@ class OppfolgingController @Inject constructor(private val service: Oppfolgingsi
         return request
     }
 
-}
