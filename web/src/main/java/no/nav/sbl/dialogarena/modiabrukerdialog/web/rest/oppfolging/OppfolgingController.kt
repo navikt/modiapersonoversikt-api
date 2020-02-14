@@ -75,8 +75,9 @@ class OppfolgingController @Inject constructor(private val service: Oppfolgingsi
                     )
                 }
     }
+}
 
-    fun hentYtelser(ytelser: List<Ytelse>?): List<Map<String, Any?>> {
+    private fun hentYtelser(ytelser: List<Ytelse>?): List<Map<String, Any?>> {
         if (ytelser == null) return emptyList()
 
         return ytelser.map {
@@ -93,7 +94,7 @@ class OppfolgingController @Inject constructor(private val service: Oppfolgingsi
             )
         }
     }
-}
+
     private fun hentDagPengerFelter(ytelse: Ytelse): Array<Pair<String, Any?>> {
         return when (ytelse) {
             is Dagpengeytelse -> arrayOf(
