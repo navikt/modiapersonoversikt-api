@@ -82,6 +82,7 @@ public class DefaultKodeverkmanager implements KodeverkmanagerBi, Serializable, 
             oppdaterKodeverk("Landkoder");
 			oppdaterKodeverk("Diskresjonskoder");
             oppdaterKodeverk("TilrettelagtKommunikasjon");
+            oppdaterKodeverk("Språk");
             oppdaterKodeverk(KODEVERKSREF_VERGEMAL_FYLKESMANSSEMBETER);
             oppdaterKodeverk(KODEVERKSREF_VERGEMAL_MANDATTYPE);
             oppdaterKodeverk(KODEVERKSREF_VERGEMAL_SAKSTYPE);
