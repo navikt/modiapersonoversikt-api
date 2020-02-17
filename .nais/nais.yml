@@ -49,6 +49,8 @@ spec:
       - kvPath: /credential/data/prod/isso-rp-user
         mountPath: /var/run/secrets/nais.io/isso-rp-user
   env:
+    - name: APP_ENVIRONMENT_NAME
+      value: "p"
     - name: ISSO_HOST_URL
       value: "https://isso.adeo.no/isso/oauth2"
     - name: ISSO_ISALIVE_URL
@@ -364,5 +366,5 @@ spec:
     - name: FEATURE_NYTTVISITTKORT
       value: "true"
     - name: HASTEKASSERING_TILGANG
-      value: "G110867,S111498,W152868,N127626,B152650,U109747"
+      value: "G110867,S111498,W152868,N127626,B152650,B152650,B114736,H110866,J121487,O122413,T110884,V114843,E110861"
 

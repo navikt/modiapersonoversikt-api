@@ -62,7 +62,7 @@ public class UnleashEndpointConfig {
     public UnleashConfig unleashConfig(UnleashContextProvider unleashContextProvider) {
         return UnleashConfig.builder()
                 .appName("modiabrukerdialog")
-                .instanceId(System.getProperty("APP_ENVIRONMENT", "local"))
+                .instanceId(System.getProperty("APP_ENVIRONMENT_NAME", "local"))
                 .unleashAPI(api)
                 .unleashContextProvider(unleashContextProvider)
                 .build();

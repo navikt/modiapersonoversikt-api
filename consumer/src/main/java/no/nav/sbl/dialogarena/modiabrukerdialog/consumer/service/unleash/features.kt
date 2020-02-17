@@ -5,6 +5,7 @@ enum class Feature private constructor(val propertyKey: String, val defaultValue
     SVAKSYNT_MODUS("modiabrukerdialog.svaksyntmodus", false),
     NAIS_GOSYS_LENKE("modiabrukerdialog.gosys-nais-lenke", false),
     NY_VARSEL("modiabrukerdialog.ny-varsel", false),
-    DOEDSBO("modiabrukerdialog.doedsbo", false),
     NY_FRONTEND("modiabrukerdialog.ny-frontend", false),
+    PDL_BRUKERPROFIL("modiabrukerdialog.pdl-ny-brukerprofil", true),
+    ARBEIDSFORDELING_REST("modiabrukerdialog.arbeidsfordeling-rest", false)
 }

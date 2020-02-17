@@ -6,7 +6,7 @@ metadata:
   labels:
     team: personoversikt
 spec:
-  image: {{image}}
+  image: "{{image}}"
   port: 8080
   team: personoversikt
   liveness:
@@ -49,6 +49,8 @@ spec:
       - kvPath: /credential/data/dev/isso-rp-user-q0
         mountPath: /var/run/secrets/nais.io/isso-rp-user
   env:
+    - name: APP_ENVIRONMENT_NAME
+      value: "q0"
     - name: ISSO_HOST_URL
       value: "https://isso-q.adeo.no/isso/oauth2"
     - name: ISSO_ISALIVE_URL

@@ -12,7 +12,7 @@ class ByEnvironmentStrategyTest {
 
 
     private ByEnvironmentStrategy strategy = new ByEnvironmentStrategy();
-    private final String ENVIRONMENT_PROPERTY = "APP_ENVIRONMENT";
+    private final String ENVIRONMENT_PROPERTY = "APP_ENVIRONMENT_NAME";
 
     @Test
     void environmentTest() {

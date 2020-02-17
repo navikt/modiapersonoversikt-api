@@ -11,7 +11,7 @@ import static org.hamcrest.Matchers.is;
 class IsNotProdStrategyTest {
 
     IsNotProdStrategy strategy = new IsNotProdStrategy();
-    private final String ENVIRONMENT_PROPERTY = "APP_ENVIRONMENT";
+    private final String ENVIRONMENT_PROPERTY = "APP_ENVIRONMENT_NAME";
 
     @Test
     void setIsNotProdStrategyTest(){

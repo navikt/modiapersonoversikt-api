@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.arbeidsfordeling;
 
+import no.nav.kjerneinfo.consumer.egenansatt.EgenAnsattService;
 import no.nav.kjerneinfo.consumer.fim.person.PersonKjerneinfoServiceBi;
 import no.nav.kjerneinfo.domain.person.GeografiskTilknytning;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.AnsattEnhet;
@@ -7,6 +8,8 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.arbeidsfordeling.Arb
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.arbeidsfordeling.FinnBehandlendeEnhetException;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.kodeverksmapper.KodeverksmapperService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.kodeverksmapper.domain.Behandling;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.Feature;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.UnleashService;
 import no.nav.tjeneste.virksomhet.arbeidsfordeling.v1.binding.ArbeidsfordelingV1;
 import no.nav.tjeneste.virksomhet.arbeidsfordeling.v1.binding.FinnBehandlendeEnhetListeUgyldigInput;
 import no.nav.tjeneste.virksomhet.arbeidsfordeling.v1.informasjon.*;
@@ -20,20 +23,29 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
+
 import static java.util.stream.Collectors.toList;
 
 public class ArbeidsfordelingV1ServiceImpl implements ArbeidsfordelingV1Service {
 
     private static final Logger LOG = LoggerFactory.getLogger(ArbeidsfordelingV1ServiceImpl.class);
     private final ArbeidsfordelingV1 arbeidsfordeling;
+    private final ArbeidsfordelingClient arbeidsfordelingClient;
     private final PersonKjerneinfoServiceBi personService;
     private final KodeverksmapperService kodeverksmapper;
+    private final UnleashService unleashService;
+    private final EgenAnsattService egenAnsattService;
+
+
 
     @Inject
-    public ArbeidsfordelingV1ServiceImpl(ArbeidsfordelingV1 arbeidsfordeling, PersonKjerneinfoServiceBi personService, KodeverksmapperService kodeverksmapper) {
+    public ArbeidsfordelingV1ServiceImpl(ArbeidsfordelingV1 arbeidsfordeling, ArbeidsfordelingClient arbeidsfordelingClient, EgenAnsattService egenAnsattService, PersonKjerneinfoServiceBi personService, KodeverksmapperService kodeverksmapper, UnleashService unleashService) {
         this.arbeidsfordeling = arbeidsfordeling;
+        this.arbeidsfordelingClient = arbeidsfordelingClient;
         this.personService = personService;
         this.kodeverksmapper = kodeverksmapper;
+        this.unleashService = unleashService;
+        this.egenAnsattService = egenAnsattService;
     }
 
     @Override
@@ -41,44 +53,54 @@ public class ArbeidsfordelingV1ServiceImpl implements ArbeidsfordelingV1Service 
         try {
             Optional<Behandling> behandling = kodeverksmapper.mapUnderkategori(underkategori);
             GeografiskTilknytning geografiskTilknytning = personService.hentGeografiskTilknytning(brukerIdent);
+            boolean erEgenAnsatt = egenAnsattService.erEgenAnsatt(brukerIdent);
+            String oppgaveTypeMapped = kodeverksmapper.mapOppgavetype(oppgavetype);
 
-            Behandlingstema behandlingstema = new Behandlingstema();
-            behandling.ifPresent((value) -> behandlingstema.setValue(value.getBehandlingstema()));
+            if (unleashService.isEnabled(Feature.ARBEIDSFORDELING_REST)) {
+                return arbeidsfordelingClient.hentArbeidsfordeling(behandling, geografiskTilknytning,oppgaveTypeMapped , fagomrade, erEgenAnsatt);
+            }
+            return hentAnsattEnhetViaSOAP(behandling, geografiskTilknytning, oppgavetype, fagomrade);
 
-            Behandlingstyper behandlingstype = new Behandlingstyper();
-            behandling.ifPresent((value) -> behandlingstype.setValue(value.getBehandlingstype()));
-
-            Diskresjonskoder diskresjonskoder = new Diskresjonskoder();
-            diskresjonskoder.setValue(geografiskTilknytning.getDiskresjonskode());
-
-            Oppgavetyper oppgavetyper = new Oppgavetyper();
-            oppgavetyper.setValue(kodeverksmapper.mapOppgavetype(oppgavetype));
-
-            Geografi geografi = new Geografi();
-            geografi.setValue(geografiskTilknytning.getValue());
-
-            Tema tema = new Tema();
-            tema.setValue(fagomrade);
-
-            ArbeidsfordelingKriterier fordelingsKriterier = new ArbeidsfordelingKriterier();
-            fordelingsKriterier.setBehandlingstema(behandlingstema);
-            fordelingsKriterier.setBehandlingstype(behandlingstype);
-            fordelingsKriterier.setDiskresjonskode(diskresjonskoder);
-            fordelingsKriterier.setOppgavetype(oppgavetyper);
-            fordelingsKriterier.setTema(tema);
-            fordelingsKriterier.setGeografiskTilknytning(geografi);
-
-            FinnBehandlendeEnhetListeRequest request = new FinnBehandlendeEnhetListeRequest();
-            request.setArbeidsfordelingKriterier(fordelingsKriterier);
-
-            FinnBehandlendeEnhetListeResponse response = arbeidsfordeling.finnBehandlendeEnhetListe(request);
-            return response.getBehandlendeEnhetListe().stream()
-                    .map(wsEnhet -> new AnsattEnhet(wsEnhet.getEnhetId(), wsEnhet.getEnhetNavn()))
-                    .collect(toList());
         } catch (FinnBehandlendeEnhetListeUgyldigInput | IOException | RuntimeException e) {
             LOG.error(e.getMessage(), e);
             throw new FinnBehandlendeEnhetException(e.getMessage(), e);
         }
+    }
+
+    public List<AnsattEnhet> hentAnsattEnhetViaSOAP(Optional<Behandling> behandling, GeografiskTilknytning geografiskTilknytning, String oppgavetype, String fagomrade) throws IOException, FinnBehandlendeEnhetListeUgyldigInput {
+        Behandlingstema behandlingstema = new Behandlingstema();
+        behandling.ifPresent((value) -> behandlingstema.setValue(value.getBehandlingstema()));
+
+        Behandlingstyper behandlingstype = new Behandlingstyper();
+        behandling.ifPresent((value) -> behandlingstype.setValue(value.getBehandlingstype()));
+
+        Diskresjonskoder diskresjonskoder = new Diskresjonskoder();
+        diskresjonskoder.setValue(geografiskTilknytning.getDiskresjonskode());
+
+        Oppgavetyper oppgavetyper = new Oppgavetyper();
+        oppgavetyper.setValue(kodeverksmapper.mapOppgavetype(oppgavetype));
+
+        Geografi geografi = new Geografi();
+        geografi.setValue(geografiskTilknytning.getValue());
+
+        Tema tema = new Tema();
+        tema.setValue(fagomrade);
+
+        ArbeidsfordelingKriterier fordelingsKriterier = new ArbeidsfordelingKriterier();
+        fordelingsKriterier.setBehandlingstema(behandlingstema);
+        fordelingsKriterier.setBehandlingstype(behandlingstype);
+        fordelingsKriterier.setDiskresjonskode(diskresjonskoder);
+        fordelingsKriterier.setOppgavetype(oppgavetyper);
+        fordelingsKriterier.setTema(tema);
+        fordelingsKriterier.setGeografiskTilknytning(geografi);
+
+        FinnBehandlendeEnhetListeRequest request = new FinnBehandlendeEnhetListeRequest();
+        request.setArbeidsfordelingKriterier(fordelingsKriterier);
+
+        FinnBehandlendeEnhetListeResponse response = arbeidsfordeling.finnBehandlendeEnhetListe(request);
+        return response.getBehandlendeEnhetListe().stream()
+                .map(wsEnhet -> new AnsattEnhet(wsEnhet.getEnhetId(), wsEnhet.getEnhetNavn()))
+                .collect(toList());
     }
 
 }

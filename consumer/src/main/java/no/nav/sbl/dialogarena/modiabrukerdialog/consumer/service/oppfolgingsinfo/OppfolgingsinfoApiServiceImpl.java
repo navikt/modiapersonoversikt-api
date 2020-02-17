@@ -11,7 +11,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.oppfolgingsinfo.rest.
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.ldap.LDAPService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.oppfolgingsinfo.OppfolgingsinfoApiService;
 import no.nav.sbl.rest.RestUtils;
-import org.jetbrains.annotations.NotNull;
+//import org.jetbrains.annotations.NotNull;
 
 import javax.inject.Inject;
 import javax.ws.rs.client.Invocation;
@@ -45,7 +45,7 @@ public class OppfolgingsinfoApiServiceImpl implements OppfolgingsinfoApiService 
                 .withOppfolgingsenhet(new AnsattEnhet(enhetOgVeileder.getOppfolgingsenhet().getEnhetId(), enhetOgVeileder.getOppfolgingsenhet().getNavn()));
     }
 
-    @NotNull
+    //@NotNull
     private OppfolgingsEnhetOgVeileder setTomEnhet() {
         OppfolgingsEnhetOgVeileder enhetOgVeileder;
         enhetOgVeileder = new OppfolgingsEnhetOgVeileder();

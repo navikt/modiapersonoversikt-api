@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.config;
 
+import no.nav.common.utils.NaisYamlUtils;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -18,7 +19,7 @@ public class ApplicationContextTest {
 
     @BeforeClass
     public static void setupStatic() {
-        setFrom("configurations/q0.properties");
+        NaisYamlUtils.loadFromYaml("../.nais/nais-q0.yml");
         setupKeyAndTrustStore();
     }
 

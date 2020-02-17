@@ -1,105 +1,72 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.person
 
-import no.nav.kjerneinfo.consumer.fim.person.PersonKjerneinfoServiceBi
-import no.nav.kjerneinfo.consumer.fim.person.to.HentKjerneinformasjonRequest
-import no.nav.kjerneinfo.domain.person.Personnavn
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.personoppslag.*
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.pdl.*
+import java.text.SimpleDateFormat
+import java.util.*
 
-class DoedsboMapping constructor(private val kjerneinfoService: PersonKjerneinfoServiceBi,
-                                 private val doedsbo: List<KontaktiformasjonForDoedsbo>) {
+class DoedsboMapping constructor(private val doedsbo: List<PdlDoedsbo>) {
 
 
     fun mapKontaktinfoForDoedsbo(): List<Map<String, Any?>> =
             doedsbo.map {
                 mapOf(
-                        "adressat" to hentAdressat(it.adressat),
-                        "adresselinje1" to it.adresselinje1,
-                        "adresselinje2" to it.adresselinje2,
-                        "postnummer" to it.postnummer,
-                        "poststed" to it.poststedsnavn,
-                        "landkode" to it.landkode,
-                        "master" to it.master,
-                        "registrert" to it.registrertINAV
+                        "adressat" to hentAdressat(it),
+                        "adresselinje1" to it.adresse.adresselinje1,
+                        "adresselinje2" to it.adresse.adresselinje2,
+                        "postnummer" to it.adresse.postnummer,
+                        "poststed" to it.adresse.poststedsnavn,
+                        "landkode" to it.adresse.landkode,
+                        "registrert" to formatDate(it.attestutstedelsesdato),
+                        "skifteform" to it.skifteform
                 )
             }
 
-    private fun hentAdressat(adressat: Adressat): Map<String, Any?> =
+    private fun hentAdressat(doedsbo: PdlDoedsbo): Map<String, Any?> =
             mapOf(
-                    "advokatSomAdressat" to adressat.advokatSomAdressat?.let { hentAdvokatSomAdressat(it) },
-                    "kontaktpersonMedIdNummerSomAdressat" to adressat.kontaktpersonMedIdNummerSomAdressat?.let { hentKontaktpersonMedId(it) },
-                    "kontaktpersonUtenIdNummerSomAdressat" to adressat.kontaktpersonUtenIdNummerSomAdressat?.let { hentKontaktpersonUtenId(it) },
-                    "organisasjonSomAdressat" to adressat.organisasjonSomAdressat?.let { hentOrganisasjonSomAdressat(it) }
+                    "advokatSomAdressat" to doedsbo.advokatSomKontakt?.let { hentAdvokatSomAdressat(it) },
+                    "organisasjonSomAdressat" to doedsbo.organisasjonSomKontakt?.let { hentOrganisasjonSomAdressat(it) },
+                    *kontaktperson(doedsbo.personSomKontakt)
             )
 
-
-    private fun hentKontaktpersonMedId(adressat: KontaktpersonMedIdNummerSomAdressat): Map<String, Any?> {
-        val personnavnV3 = hentPersonnavnFraKjerneinfo(adressat.idNummer.toString())
-        val personNavn = personnavnV3?.let { personoppslagAsPersonNavn(it) }
-
-        return mapOf(
-                "idNummer" to adressat.idNummer.tilFnr(),
-                "navn" to personNavn?.let { personNavn(it) }
-        )
+    private fun kontaktperson(person: PdlDoedsboPersonSomKontakt?): Array<Pair<String, Map<String, Any?>>> {
+        if (person == null) {
+            return arrayOf()
+        }
+        return if (person.identifikasjonsnummer == null) {
+            arrayOf(Pair("kontaktpersonUtenIdNummerSomAdressat", mapOf(
+                    "foedselsdato" to person.foedselsdato?.let { formatDate(it) },
+                    "navn" to personNavn(person?.personnavn)
+            )))
+        } else {
+            arrayOf(Pair("kontaktpersonMedIdNummerSomAdressat", mapOf(
+                    "idNummer" to person.identifikasjonsnummer,
+                    "navn" to personNavn(person?.personnavn) // TODO person.personnavn vil aldri eksistere her sånn PDL er satt opp idag.
+            )))
+        }
     }
 
-    private fun hentPersonnavnFraKjerneinfo(idNummer: String): Personnavn? =
-            try {
-                val kjerneinfo = kjerneinfoService.hentKjerneinformasjon(kjerneinfoRequestMedBegrunnet(idNummer))
-                kjerneinfo.person.personfakta.personnavn
-            } catch(e: Exception) {
-                null
-            }
 
-    private fun kjerneinfoRequestMedBegrunnet(ident: String): HentKjerneinformasjonRequest {
-        val request = HentKjerneinformasjonRequest(ident)
-        request.isBegrunnet = true
-        return request
-    }
-
-    private fun personoppslagAsPersonNavn(personnavnV3: Personnavn): PersonNavn =
-            PersonNavn(personnavnV3.fornavn, personnavnV3.mellomnavn, personnavnV3.etternavn)
-
-
-    private fun hentAdvokatSomAdressat(adressat: AdvokatSomAdressat): Map<String, Any?> =
+    private fun hentAdvokatSomAdressat(adressat: PdlDoedsboAdvokatSomKontakt): Map<String, Any?> =
             mapOf(
-                    "kontaktperson" to personNavn(adressat.kontaktperson),
-                    "organisasjonsnavn" to adressat.organisasjonsnavn,
-                    "organisasjonsnummer" to adressat.organisasjonsnummer
+                    "kontaktperson" to personNavn(adressat.personnavn),
+                    "organisasjonsnavn" to adressat?.organisasjonsnavn,
+                    "organisasjonsnummer" to adressat?.organisasjonsnummer
             )
 
-    private fun hentOrganisasjonSomAdressat(adressat: OrganisasjonSomAdressat): Map<String, Any?> =
+    private fun hentOrganisasjonSomAdressat(adressat: PdlDoedsboOrganisasjonSomKontakt): Map<String, Any?> =
             mapOf(
                     "kontaktperson" to adressat.kontaktperson?.let { personNavn(it) },
                     "organisasjonsnavn" to adressat.organisasjonsnavn,
                     "organisasjonsnummer" to adressat.organisasjonsnummer
             )
 
-    private fun hentKontaktpersonUtenId(adressat: KontaktpersonUtenIdNummerSomAdressat): Map<String, Any?> =
-            mapOf(
-                    "foedselsdato" to adressat.foedselsdato,
-                    "navn" to personNavn(adressat.navn)
-            )
-
-    private fun personNavn(personNavn: PersonNavn): Map<String, Any?> {
-        val sammensatNavn = "${personNavn.fornavn} ${personNavn.mellomnavn.textOrEmpty()} ${personNavn.etternavn}"
-        return mapOf("fornavn" to personNavn.fornavn,
-                "etternavn" to personNavn.etternavn,
-                "mellomnavn" to personNavn.mellomnavn,
+    private fun personNavn(personNavn: PdlPersonNavn): Map<String, Any?> {
+        val sammensatNavn = "${personNavn?.fornavn.textOrEmpty()} ${personNavn?.mellomnavn.textOrEmpty()} ${personNavn?.etternavn.textOrEmpty()}"
+        return mapOf("fornavn" to personNavn?.fornavn,
+                "etternavn" to personNavn?.etternavn,
+                "mellomnavn" to personNavn?.mellomnavn,
                 "sammensatt" to sammensatNavn)
     }
 
     private fun String?.textOrEmpty(): String = this ?: ""
-
-    /*
-        Her må vi konvertere Long til String, fordi MFN sender fnr som tall. Da vil f.eks 01234567891 bli 1234567891.
-        Derfor må vi sikre oss at vi får med ledende 0 her.
-     */
-    private fun Long.tilFnr(): String {
-        val idNummer = this.toString()
-        if (idNummer.length == 10) {
-            return "0$idNummer"
-        }
-        return idNummer
-    }
-
 }

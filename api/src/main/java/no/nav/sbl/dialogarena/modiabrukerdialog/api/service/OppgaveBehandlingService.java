@@ -20,6 +20,8 @@ public interface OppgaveBehandlingService {
 
     void ferdigstillOppgaverIGsak(List<String> oppgaveId, Optional<Temagruppe> temagruppe, String saksbehandlersValgteEnhet);
 
+    void ferdigstillGsakOppgave(String oppgaveId, Optional<Temagruppe> temagruppe, String saksbehandlersValgteEnhet, String beskrivelse);
+
     void leggTilbakeOppgaveIGsak(LeggTilbakeOppgaveIGsakRequest request);
 
     void systemLeggTilbakeOppgaveIGsak(String oppgaveId, Temagruppe temagruppe, String saksbehandlersValgteEnhet);
