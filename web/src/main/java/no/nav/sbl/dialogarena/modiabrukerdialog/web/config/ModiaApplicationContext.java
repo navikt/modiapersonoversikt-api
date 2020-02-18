@@ -5,9 +5,6 @@ import no.nav.apiapp.config.ApiAppConfigurator;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.RedirectFilter;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
-import javax.servlet.ServletContext;
-
-import static no.nav.apiapp.ServletUtil.filterBuilder;
 
 @Configuration
 @Import({
@@ -16,16 +13,16 @@ import static no.nav.apiapp.ServletUtil.filterBuilder;
         RestApiBeans.class
 })
 public class ModiaApplicationContext implements ApiApplication {
-
-    @Override
-    public void startup(ServletContext servletContext) {
-        filterBuilder(RedirectFilter.class).register(servletContext);
-    }
-
     @Override
     public void configure(ApiAppConfigurator apiAppConfigurator) {
         apiAppConfigurator
-                .customizeJettyBuilder(jetty -> jetty.at("modiapersonoversikt-api"))
+                .customizeJettyBuilder(jetty -> {
+                    // Filteret må ligge slik at det havner etter LoginFilter.
+                    // Alternativet er å legge det i `startup`-metoden (override) men da havner det etter LoginFilter
+                    // Og da har man ikke mulighet til å hente ut Subject som er nødvendig for at unleash skal fungere.
+                    jetty.addFilter(new RedirectFilter());
+                    jetty.at("modiapersonoversikt-api");
+                })
                 .sts()
                 .objectMapper(JacksonConfig.mapper)
                 .issoLogin();
