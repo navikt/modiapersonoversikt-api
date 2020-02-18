@@ -7,11 +7,13 @@ import no.nav.common.auth.SubjectHandler;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.Ansatt;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.AnsattEnhet;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.AnsattService;
+import no.nav.sbl.util.fn.UnsafeFunction;
 
 import javax.inject.Inject;
 import java.util.List;
 import java.util.function.Function;
 
+import static java.util.Collections.emptyList;
 import static java.util.stream.Collectors.toList;
 
 public class AnsattServiceImpl implements AnsattService {
@@ -24,24 +26,22 @@ public class AnsattServiceImpl implements AnsattService {
     }
 
     public List<AnsattEnhet> hentEnhetsliste() {
-        ASBOGOSYSNAVAnsatt hentNAVAnsattEnhetListeRequest = SubjectHandler.getIdent()
+        return SubjectHandler.getIdent()
                 .map((ident) -> {
-                    ASBOGOSYSNAVAnsatt request = new ASBOGOSYSNAVAnsatt();
-                    request.setAnsattId(ident);
-                    return request;
+                    try {
+                        ASBOGOSYSNAVAnsatt request = new ASBOGOSYSNAVAnsatt();
+                        request.setAnsattId(ident);
+                        return ansattWS.hentNAVAnsattEnhetListe(request)
+                                .getNAVEnheter()
+                                .stream()
+                                .map(TIL_ANSATTENHET)
+                                .collect(toList());
+                    } catch (HentNAVAnsattEnhetListeFaultGOSYSNAVAnsattIkkeFunnetMsg | HentNAVAnsattEnhetListeFaultGOSYSGeneriskMsg e) {
+                        throw new RuntimeException(e);
+                    }
                 })
-                .orElseThrow(() -> new RuntimeException("Fant ikke ident til saksbehandler"));
+                .orElse(emptyList());
 
-        try {
-            return ansattWS.hentNAVAnsattEnhetListe(hentNAVAnsattEnhetListeRequest)
-                    .getNAVEnheter()
-                    .stream()
-                    .map(TIL_ANSATTENHET)
-                    .collect(toList());
-
-        } catch (HentNAVAnsattEnhetListeFaultGOSYSNAVAnsattIkkeFunnetMsg | HentNAVAnsattEnhetListeFaultGOSYSGeneriskMsg e) {
-            throw new RuntimeException(e);
-        }
     }
 
     public String hentAnsattNavn(String ident) {
