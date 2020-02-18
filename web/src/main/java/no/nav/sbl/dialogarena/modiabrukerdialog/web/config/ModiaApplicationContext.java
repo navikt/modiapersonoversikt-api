@@ -28,7 +28,6 @@ public class ModiaApplicationContext implements ApiApplication {
                 .customizeJettyBuilder(jetty -> jetty.at("modiapersonoversikt-api"))
                 .sts()
                 .objectMapper(JacksonConfig.mapper)
-                .enableCXFSecureLogs()
                 .issoLogin();
     }
 
