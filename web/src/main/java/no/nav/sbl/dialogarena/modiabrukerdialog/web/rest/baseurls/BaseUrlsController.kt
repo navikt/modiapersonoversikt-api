@@ -38,7 +38,7 @@ constructor(
         baseUrls.add(BaseUrl(key = "pesys", url = EnvironmentUtils.getRequiredProperty("SERVER_PESYS_URL")))
         baseUrls.add(BaseUrl(key = "aareg", url = EnvironmentUtils.getRequiredProperty("SERVER_AAREG_URL")))
         baseUrls.add(BaseUrl(key = "veilarbportefoljeflatefs", url = EnvironmentUtils.getRequiredProperty("SERVER_VEILARBPORTEFOLJEFLATEFS_URL")))
-        baseUrls.add(BaseUrl(key = "personforvalter", url = System.getProperty("PERSONFORVALTER_URL")))
+        baseUrls.add(BaseUrl(key = "personforvalter", url = EnvironmentUtils.getRequiredProperty("PERSONFORVALTER_URL")))
 
         return baseUrls
     }
