@@ -24,7 +24,7 @@ public class UnleashContextProviderImpl implements UnleashContextProvider {
     @Override
     public UnleashContext getContext() {
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
-        String ident = SubjectHandler.getIdent().orElseThrow(() -> new RuntimeException("Fant ikke ident"));
+        String ident = SubjectHandler.getIdent().orElse(null);
         String remoteAddr = null;
 
         try {
