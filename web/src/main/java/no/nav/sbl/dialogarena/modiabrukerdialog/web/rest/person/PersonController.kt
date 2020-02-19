@@ -53,7 +53,7 @@ class PersonController @Inject constructor(private val kjerneinfoService: Person
     fun hent(@PathParam("fnr") fodselsnummer: String): Map<String, Any?> {
         return tilgangskontroll
                 .check(Policies.tilgangTilBruker.with(fodselsnummer))
-                .get(Audit.describe(READ, AuditResources.Person.Personalia)) {
+                .get(Audit.describe(READ, AuditResources.Person.Personalia, "fnr" to fodselsnummer)) {
                     try {
                         val hentKjerneinformasjonRequest = HentKjerneinformasjonRequest(fodselsnummer)
                         hentKjerneinformasjonRequest.isBegrunnet = true
