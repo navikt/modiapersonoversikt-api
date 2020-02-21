@@ -2,7 +2,7 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.arbeidsfordeli
 
 import com.fasterxml.jackson.module.kotlin.KotlinModule
 import com.google.gson.GsonBuilder
-import no.nav.brukerdialog.security.context.SubjectHandler
+import no.nav.common.auth.SubjectHandler
 import no.nav.kjerneinfo.domain.person.GeografiskTilknytning
 import no.nav.log.MDCConstants
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.AnsattEnhet
@@ -50,8 +50,8 @@ open class ArbeidsfordelingClient {
 
 
     open fun hentArbeidsfordeling(behandling: Optional<Behandling>, geografiskTilknytning: GeografiskTilknytning, oppgavetype: String, fagomrade: String, erEgenAnsatt: Boolean): List<AnsattEnhet> {
+        val veilederOidcToken = SubjectHandler.getSsoToken().orElseThrow { IllegalStateException("Kunne ikke hente ut veileders ssoTOken") }
         val consumerOidcToken = stsService.hentConsumerOidcToken()
-        val veilederOidcToken = SubjectHandler.getSubjectHandler().internSsoToken
         val arbeidskritereieFordelingSkjermet: ArbeidskritereieFordelingSkjermet = ArbeidskritereieFordelingSkjermet(
                 behandlingstema = behandling?.map(Behandling::getBehandlingstema).orElse(null),
                 behandlingstype = behandling?.map(Behandling::getBehandlingstype).orElse(null),

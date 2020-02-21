@@ -6,7 +6,7 @@ metadata:
   labels:
     team: personoversikt
 spec:
-  image: {{image}}
+  image: "{{image}}"
   port: 8080
   team: personoversikt
   liveness:
@@ -22,6 +22,8 @@ spec:
   prometheus:
     enabled: true
     path: /modiapersonoversikt-api/internal/metrics
+  secureLogs:
+    enabled: true
   resources:
     requests:
       cpu: 1000m
@@ -51,6 +53,14 @@ spec:
   env:
     - name: APP_ENVIRONMENT_NAME
       value: "p"
+    - name: ISSO_CLIENT_ID
+      value: "veilarblogin"
+    - name: ISSO_DISCOVERY_URL
+      value: "https://isso.adeo.no/isso/oauth2/.well-known/openid-configuration"
+    - name: ISSO_REFRESH_URL
+      value: "https://app.adeo.no/veilarblogin/api/openam-refresh"
+      # Disse kan slettes i fremtiden når vi går over til å bruke STS'n i felles-biblioteket for hentiner av SystemUserToken
+      # ISSO_HOST_URL, ISSO_ISALIVE_URL, ISSO_ISSUES_URL, ISSO_JWKS_URL, OPENIDCONNECT_URL og OIDC_REDIRECT_URL
     - name: ISSO_HOST_URL
       value: "https://isso.adeo.no/isso/oauth2"
     - name: ISSO_ISALIVE_URL

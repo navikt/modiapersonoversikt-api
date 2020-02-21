@@ -58,12 +58,12 @@ class Audit {
         private fun logInternal(action: Action, resourceType: AuditResource, identifiers: Array<out Pair<String, String?>>) {
             SubjectHandler.getIdentType().orElse(null)
             val logline = listOf(
-                    "action='$action' ",
+                    "action='$action'",
                     SubjectHandler
                             .getIdent()
-                            .map { "subject='$it' " }
+                            .map { "subject='$it'" }
                             .orElse(null),
-                    "resource='${resourceType.resource}' ",
+                    "resource='${resourceType.resource}'",
                     *identifiers
                             .map { "${it.first}='${it.second ?: "-"}'" }
                             .toTypedArray()

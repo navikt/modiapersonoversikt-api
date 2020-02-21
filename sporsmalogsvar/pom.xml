@@ -13,10 +13,6 @@
     <description>Prosjekt med felleskomponenter for løsningsområdet Spørsmål og svar - innside og utside.</description>
     <artifactId>sporsmal-og-svar</artifactId>
 
-    <properties>
-        <handlebars.version>1.1.2</handlebars.version>
-    </properties>
-
     <dependencies>
 
         <!--Dialogarena tjenestespesifikasjon-->
@@ -162,13 +158,6 @@
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
             <scope>test</scope>
-        </dependency>
-
-        <!--Diverse-->
-        <dependency>
-            <groupId>com.github.jknack</groupId>
-            <artifactId>handlebars</artifactId>
-            <version>${handlebars.version}</version>
         </dependency>
 
         <dependency>
