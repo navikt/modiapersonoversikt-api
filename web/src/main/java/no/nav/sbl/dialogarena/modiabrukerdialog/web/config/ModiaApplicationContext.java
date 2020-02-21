@@ -8,6 +8,7 @@ import no.nav.common.oidc.auth.OidcAuthenticatorConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.RedirectFilter;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import no.nav.sbl.util.EnvironmentUtils;
 
 @Configuration
 @Import({
@@ -16,14 +17,18 @@ import org.springframework.context.annotation.Import;
         RestApiBeans.class
 })
 public class ModiaApplicationContext implements ApiApplication {
+    private static final String issoClientId = EnvironmentUtils.getRequiredProperty("ISSO_CLIENT_ID");
+    private static final String issoDiscoveryUrl = EnvironmentUtils.getRequiredProperty("ISSO_DISCOVERY_URL");
+    private static final String issoRefreshUrl = EnvironmentUtils.getRequiredProperty("ISSO_REFRESH_URL");
+
     @Override
     public void configure(ApiAppConfigurator apiAppConfigurator) {
         OidcAuthenticatorConfig isso = new OidcAuthenticatorConfig()
-                .withClientId("veilarblogin-q6")
-                .withDiscoveryUrl("https://isso-q.adeo.no/isso/oauth2/.well-known/openid-configuration")
+                .withClientId(issoClientId)
+                .withDiscoveryUrl(issoDiscoveryUrl)
                 .withIdTokenCookieName(Constants.ID_TOKEN_COOKIE_NAME)
                 .withIdentType(IdentType.InternBruker)
-                .withRefreshUrl("https://app-q6.adeo.no/veilarblogin/api/openam-refresh")
+                .withRefreshUrl(issoRefreshUrl)
                 .withRefreshTokenCookieName(Constants.REFRESH_TOKEN_COOKIE_NAME);
 
         apiAppConfigurator
