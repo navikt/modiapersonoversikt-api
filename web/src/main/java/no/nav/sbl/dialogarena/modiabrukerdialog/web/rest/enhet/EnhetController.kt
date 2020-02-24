@@ -42,7 +42,7 @@ constructor(private val organisasjonEnhetKontaktinformasjonService: Organisasjon
         return tilgangskontroll
                 .check(Policies.tilgangTilModia)
                 .get(Audit.describe(READ, Enhet.Kontaktinformasjon, "geografiskId" to geografiskId, "diskresjonskode" to diskresjonskode)) {
-                    if (geografiskId.isNullOrEmpty() && diskresjonskode.isNullOrEmpty()) throw NotFoundException();
+                    if (geografiskId.isNullOrEmpty() && diskresjonskode.isNullOrEmpty()) throw NotFoundException()
 
                     val enhetid = organisasjonEnhetV2Service.finnNAVKontor(geografiskId, diskresjonskode ?: "")
                             .map { it.enhetId }
@@ -64,7 +64,7 @@ constructor(private val organisasjonEnhetKontaktinformasjonService: Organisasjon
     }
 
     @GET
-    @Path("/dialog/oppgave/alle")
+    @Path("/oppgavebehandlere/alle")
     @Produces(APPLICATION_JSON)
     fun hentAlleEnheterForOppgave(): List<Map<String, Any?>> {
         return tilgangskontroll
