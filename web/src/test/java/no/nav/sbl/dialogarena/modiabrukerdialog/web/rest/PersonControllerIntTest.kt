@@ -29,7 +29,7 @@ internal class PersonControllerIntTest {
                 .apply {
                     this.person = Person()
                             .apply {
-                                this.fodselsnummer = Fodselsnummer("10108000398")
+                                this.fodselsnummer = Fodselsnummer("10108000398".trimIndent())
                             }
                 }
         )
