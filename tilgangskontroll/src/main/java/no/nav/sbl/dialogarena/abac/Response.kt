@@ -32,6 +32,11 @@ data class Status(
 )
 
 data class StatusCode(
+        @JsonProperty("Value") val value: String,
+        @JsonProperty("StatusCode") val statusCode: StatusCodeValue?
+)
+
+data class StatusCodeValue(
         @JsonProperty("Value") val value: String
 )
 
