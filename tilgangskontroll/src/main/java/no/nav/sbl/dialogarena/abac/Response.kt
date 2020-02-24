@@ -1,6 +1,6 @@
 package no.nav.sbl.dialogarena.abac
 
-import com.fasterxml.jackson.annotation.JsonProperty
+import com.google.gson.annotations.SerializedName
 
 enum class Decision {
     Permit,
@@ -10,7 +10,7 @@ enum class Decision {
 }
 private val applicativeDecisions = listOf(Decision.Permit, Decision.Deny)
 
-data class AbacResponse(@JsonProperty("Response") val response: Result) {
+data class AbacResponse(@SerializedName("Response") val response: Result) {
     fun getDecision(): Decision = response.decision
     fun getBiasedDecision(bias: Decision): Decision = if (applicativeDecisions.contains(response.decision)) response.decision else bias
     fun getStatus(): Status? = response.status
@@ -20,45 +20,45 @@ data class AbacResponse(@JsonProperty("Response") val response: Result) {
 }
 
 data class Result(
-        @JsonProperty("Decision") val decision: Decision,
-        @JsonProperty("Status") val status: Status?,
-        @JsonProperty("Obligations") val obligations: ObligationOrAdvice?,
-        @JsonProperty("AssociatedAdvice") val associatedAdvice: ObligationOrAdvice?,
-        @JsonProperty("PolicyIdentifierList") val policyIdentifierList: PolicyIdentifier?
+        @SerializedName("Decision") val decision: Decision,
+        @SerializedName("Status") val status: Status?,
+        @SerializedName("Obligations") val obligations: ObligationOrAdvice?,
+        @SerializedName("AssociatedAdvice") val associatedAdvice: ObligationOrAdvice?,
+        @SerializedName("PolicyIdentifierList") val policyIdentifierList: PolicyIdentifier?
 )
 
 data class Status(
-        @JsonProperty("StatusCode") val statusCode: StatusCode?
+        @SerializedName("StatusCode") val statusCode: StatusCode?
 )
 
 data class StatusCode(
-        @JsonProperty("Value") val value: String,
-        @JsonProperty("StatusCode") val statusCode: StatusCodeValue?
+        @SerializedName("Value") val value: String,
+        @SerializedName("StatusCode") val statusCode: StatusCodeValue?
 )
 
 data class StatusCodeValue(
-        @JsonProperty("Value") val value: String
+        @SerializedName("Value") val value: String
 )
 
 data class ObligationOrAdvice(
-        @JsonProperty("Id") val id: String,
-        @JsonProperty("AttributeAssignment") val attributeAssignment: List<AttributeAssignment>?
+        @SerializedName("Id") val id: String,
+        @SerializedName("AttributeAssignment") val attributeAssignment: List<AttributeAssignment>?
 )
 
 data class AttributeAssignment(
-        @JsonProperty("AttributeId") val attributeId: String,
-        @JsonProperty("Value") val value: String,
-        @JsonProperty("Issuer") val issuer: String?,
-        @JsonProperty("DataType") val dataType: String?,
-        @JsonProperty("Category") val category: String?
+        @SerializedName("AttributeId") val attributeId: String,
+        @SerializedName("Value") val value: String,
+        @SerializedName("Issuer") val issuer: String?,
+        @SerializedName("DataType") val dataType: String?,
+        @SerializedName("Category") val category: String?
 )
 
 data class PolicyIdentifier(
-        @JsonProperty("PolicyIdReference") val policyIdReference: List<IdReference>?,
-        @JsonProperty("PolicySetIdReference") val policySetIdReference: List<IdReference>?
+        @SerializedName("PolicyIdReference") val policyIdReference: List<IdReference>?,
+        @SerializedName("PolicySetIdReference") val policySetIdReference: List<IdReference>?
 )
 
 data class IdReference(
-        @JsonProperty("Id") val id: String,
-        @JsonProperty("Version") val version: String?
+        @SerializedName("Id") val id: String,
+        @SerializedName("Version") val version: String?
 )
