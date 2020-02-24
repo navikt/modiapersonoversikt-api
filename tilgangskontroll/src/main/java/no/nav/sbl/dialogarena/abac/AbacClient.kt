@@ -1,15 +1,14 @@
 package no.nav.sbl.dialogarena.abac
 
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.module.kotlin.KotlinModule
 import no.nav.sbl.rest.RestUtils
 import org.glassfish.jersey.client.authentication.HttpAuthenticationFeature.basic
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import java.lang.RuntimeException
 import javax.ws.rs.ClientErrorException
 import javax.ws.rs.client.Entity.entity
 
-class AbacException(message: String) : Throwable()
+class AbacException(message: String) : RuntimeException(message)
 data class AbacClientConfig(
         val username: String,
         val password: String,
@@ -21,10 +20,9 @@ private val log: Logger = LoggerFactory.getLogger(AbacClient::class.java)
 
 class AbacClient(val config: AbacClientConfig) {
     private val client = RestUtils.createClient().register(basic(config.username, config.password))
-    private val mapper: ObjectMapper = ObjectMapper().registerModule(KotlinModule())
 
     fun evaluate(request: AbacRequest): AbacResponse {
-        val requestJson = mapper.writeValueAsString(request)
+        val requestJson = JsonMapper.serialize(request)
         val response = client.target(config.endpointUrl)
                 .request()
                 .post(entity(requestJson, "application/xacml+json"))
@@ -38,6 +36,20 @@ class AbacClient(val config: AbacClientConfig) {
         }
 
         val responseJson = response.readEntity(String::class.java)
-        return mapper.readValue(responseJson, AbacResponse::class.java)
+        return JsonMapper.deserialize(responseJson, AbacResponse::class.java)
     }
+}
+
+fun main() {
+    val config = AbacClientConfig(
+            "",
+            "",
+            ""
+    )
+    val client = AbacClient(config)
+    val request = abacRequest {
+
+    }
+    val response = client.evaluate(request)
+    println(response)
 }
