@@ -30,7 +30,6 @@ import org.springframework.context.annotation.Import;
 @Configuration
 @Import({
         InformasjonController.class,
-        SkrivestotteController.class,
         MeldingerController.class,
         JournalforingController.class,
         HodeController.class,
