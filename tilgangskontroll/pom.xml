@@ -17,6 +17,15 @@
             <groupId>no.nav.common</groupId>
             <artifactId>auth</artifactId>
         </dependency>
+        <dependency>
+            <groupId>no.nav.common</groupId>
+            <artifactId>rest</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.module</groupId>
+            <artifactId>jackson-module-kotlin</artifactId>
+            <version>2.10.0</version>
+        </dependency>
         <!-- Tredjeparts avhengigheter -->
         <dependency>
             <groupId>org.jetbrains.kotlin</groupId>
