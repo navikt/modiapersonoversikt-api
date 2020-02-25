@@ -12,4 +12,4 @@
 target
 /credentials.properties
 node_modules/
-.vault.properties
+web/src/test/resources/.vault.properties
