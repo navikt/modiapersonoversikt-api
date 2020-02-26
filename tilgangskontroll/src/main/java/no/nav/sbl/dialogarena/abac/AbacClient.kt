@@ -4,7 +4,6 @@ import no.nav.sbl.rest.RestUtils
 import org.glassfish.jersey.client.authentication.HttpAuthenticationFeature.basic
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
-import java.lang.RuntimeException
 import javax.ws.rs.ClientErrorException
 import javax.ws.rs.client.Entity.entity
 
@@ -38,18 +37,4 @@ class AbacClient(val config: AbacClientConfig) {
         val responseJson = response.readEntity(String::class.java)
         return JsonMapper.deserialize(responseJson, AbacResponse::class.java)
     }
-}
-
-fun main() {
-    val config = AbacClientConfig(
-            "",
-            "",
-            ""
-    )
-    val client = AbacClient(config)
-    val request = abacRequest {
-
-    }
-    val response = client.evaluate(request)
-    println(response)
 }

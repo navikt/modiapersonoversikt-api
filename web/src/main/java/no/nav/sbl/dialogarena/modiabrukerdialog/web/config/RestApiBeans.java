@@ -5,7 +5,6 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.sak.rest.InformasjonController;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.rest.SaksoversiktController;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.*;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.baseurls.BaseUrlsController;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.brukerprofil.BrukerprofilController;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.dialog.DialogController;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.dialog.DialogMerkController;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.dialog.DialogOppgaveController;
@@ -42,7 +41,6 @@ import org.springframework.context.annotation.Import;
         PersonController.class,
         VergemalController.class,
         KontaktinformasjonController.class,
-        BrukerprofilController.class,
         EgenAnsattController.class,
         KodeverkController.class,
         LdapController.class,

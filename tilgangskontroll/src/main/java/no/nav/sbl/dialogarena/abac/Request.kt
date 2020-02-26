@@ -1,9 +1,6 @@
 package no.nav.sbl.dialogarena.abac
 
-import com.google.gson.annotations.SerializedName
-
-
-data class Attribute(@SerializedName("AttributeId") val attributeId: String, @SerializedName("Value") val value: String)
+data class Attribute(val attributeId: String, val value: String)
 
 enum class Category {
     AccessSubject,
@@ -12,9 +9,9 @@ enum class Category {
     Resource
 }
 
-data class CategoryAttribute(@SerializedName("Attribute") val attribute: MutableList<Attribute> = ArrayList()) {
-    fun attribute(attributeId: String, value: String) {
-        this.attribute.add(Attribute(attributeId, value))
+data class CategoryAttribute(val attribute: MutableList<Attribute> = ArrayList()) {
+    fun attribute(attributeId: AbacAttributeId, value: String) {
+        this.attribute.add(Attribute(attributeId.getId(), value))
     }
 }
 
@@ -42,28 +39,10 @@ class Request {
     }
 }
 
-typealias AbacRequest = Map<String, Map<Category, CategoryAttribute>>
+class AbacRequest(
+        val request: Map<Category, CategoryAttribute>
+)
+
 fun abacRequest(block: Request.() -> Unit): AbacRequest {
-    return mapOf("Request" to Request().apply(block).requestAttributes)
-}
-
-fun main() {
-    val request = abacRequest {
-        subject {
-            attribute("urn:oasis:names:tc:xacml:1.0:subject:subject-id", "A111111")
-            attribute("no.nav.abac.attributter.subject.felles.subjectType", "InternBruker")
-        }
-        environment {
-            attribute("no.nav.abac.attributter.environment.felles.pep_id", "srvEksempelPep")
-        }
-        action {
-            attribute("urn:oasis:names:tc:xacml:1.0:action:action-id", "read")
-        }
-        resource {
-            attribute("no.nav.abac.attributter.resource.felles.domene", "veilarb")
-            attribute("no.nav.abac.attributter.resource.felles.resource_type", "no.nav.abac.attributter.subject.felles.har_tilgang_egen_ansatt")
-        }
-    }
-
-    println(request)
+    return AbacRequest(Request().apply(block).requestAttributes)
 }

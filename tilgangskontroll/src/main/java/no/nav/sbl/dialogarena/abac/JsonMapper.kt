@@ -1,29 +1,26 @@
 package no.nav.sbl.dialogarena.abac
 
-import com.google.gson.*
-import com.google.gson.reflect.TypeToken
-import java.lang.RuntimeException
-import java.lang.reflect.Type
-
-private val responseType: Type = object : TypeToken<List<AbacResponse>>() {}.type
-private val associatedAdviceType: Type = object : TypeToken<List<ObligationOrAdvice>>() {}.type
-private val attributeAssignmentType: Type = object : TypeToken<List<AttributeAssignment>>() {}.type
+import com.google.gson.FieldNamingPolicy
+import com.google.gson.Gson
+import com.google.gson.GsonBuilder
+import com.google.gson.JsonDeserializer
+import no.nav.sbl.dialogarena.abac.mapper.JsonMapperTypes.*
 
 private val serializer: Gson = GsonBuilder()
         .setFieldNamingPolicy(FieldNamingPolicy.UPPER_CAMEL_CASE)
         .setPrettyPrinting()
-        .registerTypeAdapter(responseType, forcedListAdapter(AbacResponse::class.java))
-        .registerTypeAdapter(associatedAdviceType, forcedListAdapter(ObligationOrAdvice::class.java))
-        .registerTypeAdapter(attributeAssignmentType, forcedListAdapter(AttributeAssignment::class.java))
         .create()
 
 private val deserializer: Gson = GsonBuilder()
         .setFieldNamingPolicy(FieldNamingPolicy.UPPER_CAMEL_CASE)
         .setPrettyPrinting()
+        .registerTypeAdapter(responseType, forcedListAdapter<Response>())
+        .registerTypeAdapter(associatedAdviceType, forcedListAdapter<Advice>())
+        .registerTypeAdapter(attributeAssignmentType, forcedListAdapter<AttributeAssignment>())
         .create()
 
-internal inline fun <reified T> forcedListAdapter(cls: Class<T>): JsonDeserializer<List<T>> {
-    return JsonDeserializer<List<T>> { json, typeOfT, context ->
+internal inline fun <reified T> forcedListAdapter(): JsonDeserializer<List<T>> {
+    return JsonDeserializer { json, _, context ->
         val list = ArrayList<T>()
         when {
             json.isJsonArray -> {
@@ -42,8 +39,10 @@ internal inline fun <reified T> forcedListAdapter(cls: Class<T>): JsonDeserializ
     }
 }
 
-object JsonMapper {
-    fun serialize(obj: Any): String = serializer.toJson(obj)
+internal object JsonMapper {
+    fun serialize(obj: Any): String {
+        return serializer.toJson(obj)
+    }
 
     fun <T> deserialize(json: String, cls: Class<T>): T = deserializer.fromJson(json, cls)
 }

@@ -7,14 +7,10 @@ import no.nav.kjerneinfo.consumer.fim.person.PersonKjerneinfoServiceBi;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.HenvendelseLesService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveBehandlingService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.ldap.LDAPService;
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.organisasjonsEnhetV2.OrganisasjonEnhetV2Service;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.ConsumerContext;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.GrunninfoService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.cache.CacheConfiguration;
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Tilgangskontroll;
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.TilgangskontrollContext;
-import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.TilgangskontrollContextUtenTPS;
-import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.TilgangskontrollUtenTPS;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.service.plukkoppgave.PlukkOppgaveService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.service.plukkoppgave.PlukkOppgaveServiceImpl;
 import org.springframework.context.annotation.Bean;
@@ -51,34 +47,15 @@ public class ApplicationContextBeans {
     @Bean
     public Tilgangskontroll tilgangskontroll(
             LDAPService ldapService,
-            GrunninfoService grunninfoService,
-            GOSYSNAVansatt ansattService,
-            GOSYSNAVOrgEnhet enhetService,
+            GOSYSNAVansatt ansattService, // TODO undersøk om denne kan erstattes med axsys
             HenvendelseLesService henvendelseLesService
     ) {
         TilgangskontrollContext context = new TilgangskontrollContextImpl(
+                null, // TODO send inn AbacClient her
                 ldapService,
                 ansattService,
-                enhetService,
-                henvendelseLesService,
-                grunninfoService
-        );
-        return new Tilgangskontroll(context);
-    }
-
-    @Bean
-    public TilgangskontrollUtenTPS tilgangskontrollUtenTPS(
-            LDAPService ldapService,
-            GOSYSNAVansatt ansattService,
-            GOSYSNAVOrgEnhet enhetService,
-            HenvendelseLesService henvendelseLesService
-    ) {
-        TilgangskontrollContextUtenTPS context = new TilgangskontrollContextUtenTPSImpl(
-                ldapService,
-                ansattService,
-                enhetService,
                 henvendelseLesService
         );
-        return new TilgangskontrollUtenTPS(context);
+        return new Tilgangskontroll(context);
     }
 }
