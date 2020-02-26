@@ -33,16 +33,5 @@ class TilgangskontrollMock {
 
             return tilgangskontroll
         }
-
-        @JvmStatic
-        fun getUtenTPS(): TilgangskontrollUtenTPS {
-            val tilgangskontroll : TilgangskontrollUtenTPS = mock()
-            val rsbacInstance: RSBACInstance<TilgangskontrollContextUtenTPS> = RSBACMock()
-            whenever(tilgangskontroll.check(any<Combinable<TilgangskontrollContextUtenTPS>>())).thenReturn(rsbacInstance)
-            whenever(tilgangskontroll.check(any<Policy<TilgangskontrollContextUtenTPS>>())).thenReturn(rsbacInstance)
-            whenever(tilgangskontroll.check(any<PolicySet<TilgangskontrollContextUtenTPS>>())).thenReturn(rsbacInstance)
-
-            return tilgangskontroll
-        }
     }
 }

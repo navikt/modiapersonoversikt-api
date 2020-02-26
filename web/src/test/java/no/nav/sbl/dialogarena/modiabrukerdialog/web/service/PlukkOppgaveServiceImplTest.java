@@ -89,8 +89,6 @@ public class PlukkOppgaveServiceImplTest {
 
         when(oppgaveBehandlingService.plukkOppgaverFraGsak(Temagruppe.FMLI, SAKSBEHANDLERS_VALGTE_ENHET )).thenReturn(oppgave1, oppgave2);
         when(tilgangskontrollContext.harSaksbehandlerRolle("0000-ga-bd06_modiagenerelltilgang")).thenReturn(true);
-        when(tilgangskontrollContext.hentDiskresjonkode("fnr1")).thenReturn("6");
-        when(tilgangskontrollContext.hentDiskresjonkode("fnr2")).thenReturn(null);
 
         assertThat(plukkOppgaveService.plukkOppgaver(Temagruppe.FMLI, SAKSBEHANDLERS_VALGTE_ENHET), is(equalTo(oppgave2)));
         verify(oppgaveBehandlingService).systemLeggTilbakeOppgaveIGsak(eq(oppgave1.get(0).oppgaveId), eq(Temagruppe.FMLI), eq(SAKSBEHANDLERS_VALGTE_ENHET));
@@ -101,7 +99,6 @@ public class PlukkOppgaveServiceImplTest {
         List<Oppgave> oppgave1 = singletonList(new Oppgave("1", "fnr", "behandlingskjedeId"));
 
         when(oppgaveBehandlingService.plukkOppgaverFraGsak(Temagruppe.FMLI, SAKSBEHANDLERS_VALGTE_ENHET)).thenReturn(oppgave1, emptyList());
-//        when(tilgangskontroll.hasAccess(any(PolicyRequest.class))).thenReturn(true, false);
 
         assertThat(plukkOppgaveService.plukkOppgaver(Temagruppe.FMLI, SAKSBEHANDLERS_VALGTE_ENHET), is(equalTo(emptyList())));
         verify(oppgaveBehandlingService).systemLeggTilbakeOppgaveIGsak(eq(oppgave1.get(0).oppgaveId), eq(Temagruppe.FMLI), eq(SAKSBEHANDLERS_VALGTE_ENHET));

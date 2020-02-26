@@ -10,8 +10,8 @@ import no.nav.modig.core.exception.ApplicationException;
 import no.nav.modig.core.exception.AuthorizationException;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.AnsattEnhet;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.organisasjonsEnhetV2.OrganisasjonEnhetV2Service;
+import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Tilgangskontroll;
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.TilgangskontrollMock;
-import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.TilgangskontrollUtenTPS;
 import no.nav.tjeneste.virksomhet.kodeverk.v2.KodeverkPortType;
 import no.nav.tjeneste.virksomhet.person.v3.binding.HentPersonPersonIkkeFunnet;
 import no.nav.tjeneste.virksomhet.person.v3.binding.HentPersonSikkerhetsbegrensning;
@@ -61,7 +61,7 @@ public class HentPersonServiceTest {
 
     @Mock
     private OrganisasjonEnhetV2Service organisasjonEnhetV2Service;
-    private TilgangskontrollUtenTPS tilgangskontroll = TilgangskontrollMock.getUtenTPS();
+    private Tilgangskontroll tilgangskontroll = TilgangskontrollMock.get();
 
     @BeforeClass
     public static void setUpOnce() {
@@ -148,7 +148,7 @@ public class HentPersonServiceTest {
             service.hentPerson(request);
         } catch (AuthorizationWithSikkerhetstiltakException ae) {
             assertThat(ae.getMessage(), equalTo("sikkerhetsbegrensning.geografisk"));
-            throw  ae;
+            throw ae;
         }
     }
 
@@ -172,7 +172,7 @@ public class HentPersonServiceTest {
     public void harTilgangFamilierelasjonFilteringFjernerIngen() throws Exception {
         response.setPerson(new Bruker()
                 .withHarFraRolleI(new Familierelasjon(), new Familierelasjon(), new Familierelasjon())
-        .withAktoer(new PersonIdent().withIdent(new NorskIdent().withIdent("12345678910"))));
+                .withAktoer(new PersonIdent().withIdent(new NorskIdent().withIdent("12345678910"))));
 
         HentKjerneinformasjonResponse response = service.hentPerson(request);
 
@@ -268,7 +268,7 @@ public class HentPersonServiceTest {
         HentPersonService hps = new HentPersonService(null, null, null, null);
         try {
             hps.hentPerson(new HentKjerneinformasjonRequest("falsk ident"));
-        } catch(ApplicationException ae) {
+        } catch (ApplicationException ae) {
             assertEquals(HentPersonPersonIkkeFunnet.class, ae.getCause().getClass());
             assertEquals("UgyldigFnr", ae.getMessage());
         }
