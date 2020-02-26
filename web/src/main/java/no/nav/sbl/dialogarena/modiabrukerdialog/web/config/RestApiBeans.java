@@ -1,10 +1,8 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.config;
 
-import no.nav.brukerdialog.isso.RelyingPartyCallback;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.rest.DokumentController;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.rest.InformasjonController;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.rest.SaksoversiktController;
-import no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.saf.SafService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.*;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.baseurls.BaseUrlsController;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.brukerprofil.BrukerprofilController;
@@ -32,7 +30,6 @@ import org.springframework.context.annotation.Import;
 @Configuration
 @Import({
         InformasjonController.class,
-        SkrivestotteController.class,
         MeldingerController.class,
         JournalforingController.class,
         HodeController.class,
@@ -40,7 +37,6 @@ import org.springframework.context.annotation.Import;
         DokumentController.class,
         SaksoversiktController.class,
         DelsvarController.class,
-        RelyingPartyCallback.class,
         OppgaveController.class,
         EnhetController.class,
         PersonController.class,
@@ -62,4 +58,5 @@ import org.springframework.context.annotation.Import;
         DialogMerkController.class,
         DialogOppgaveController.class
 })
-public class RestApiBeans { }
+public class RestApiBeans {
+}

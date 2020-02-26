@@ -1,7 +1,7 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.pdl
 
 import com.google.gson.GsonBuilder
-import no.nav.brukerdialog.security.context.SubjectHandler
+import no.nav.common.auth.SubjectHandler
 import no.nav.log.MDCConstants
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.pdl.PdlPersonResponse
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.pdl.PdlRequest
@@ -20,7 +20,7 @@ import javax.ws.rs.core.HttpHeaders.AUTHORIZATION
 
 
 class PdlOppslagServiceImpl : PdlOppslagService {
-    private val tjenestekallLogg = LoggerFactory.getLogger("tjenestekall-logg")
+    private val tjenestekallLogg = LoggerFactory.getLogger("SecureLog")
     private val OPPSLAG_URL = getEnvironmentUrl();
     private val gson = GsonBuilder().setDateFormat("yyyy-MM-dd").create()
 
@@ -33,13 +33,12 @@ class PdlOppslagServiceImpl : PdlOppslagService {
     }
 
     private fun graphqlRequest(request: PdlRequest): PdlPersonResponse? {
+        val veilederOidcToken = SubjectHandler.getSsoToken().orElseThrow { IllegalStateException("Kunne ikke hente ut veileders ssoTOken") }
         val consumerOidcToken = stsService.hentConsumerOidcToken()
-        val veilederOidcToken = SubjectHandler.getSubjectHandler().internSsoToken
 
         val uuid = UUID.randomUUID()
 
         tjenestekallLogg.info("""
-            ------------------------------------------------------------------------------------
             PDL-request: $uuid
             ------------------------------------------------------------------------------------
                 ident: ${request.variables.ident}
@@ -60,7 +59,6 @@ class PdlOppslagServiceImpl : PdlOppslagService {
 
             val body = response.readEntity(String::class.java)
             tjenestekallLogg.info("""
-            ------------------------------------------------------------------------------------
             PDL-response: $uuid
             ------------------------------------------------------------------------------------
                 status: ${response.status} ${response.statusInfo}

@@ -53,7 +53,7 @@ class PersonController @Inject constructor(private val kjerneinfoService: Person
     fun hent(@PathParam("fnr") fodselsnummer: String): Map<String, Any?> {
         return tilgangskontroll
                 .check(Policies.tilgangTilBruker.with(fodselsnummer))
-                .get(Audit.describe(READ, AuditResources.Person.Personalia)) {
+                .get(Audit.describe(READ, AuditResources.Person.Personalia, "fnr" to fodselsnummer)) {
                     try {
                         val hentKjerneinformasjonRequest = HentKjerneinformasjonRequest(fodselsnummer)
                         hentKjerneinformasjonRequest.isBegrunnet = true
@@ -81,6 +81,7 @@ class PersonController @Inject constructor(private val kjerneinfoService: Person
                                 "diskresjonskode" to person?.personfakta?.diskresjonskode?.let { Kode(it) },
                                 "bankkonto" to hentBankkonto(person),
                                 "tilrettelagtKomunikasjonsListe" to hentTilrettelagtKommunikasjon(person?.personfakta?.tilrettelagtKommunikasjon, pdlPerson),
+                                "tilrettelagtKomunikasjonsListeV2" to hentTilrettelagtKommunikasjonV2(person?.personfakta?.tilrettelagtKommunikasjon, pdlPerson),
                                 "personstatus" to getPersonstatus(person),
                                 "statsborgerskap" to mapStatsborgerskap(person?.personfakta),
                                 "sivilstand" to mapOf(
@@ -130,6 +131,41 @@ class PersonController @Inject constructor(private val kjerneinfoService: Person
             "dødsdato" to person?.personfakta?.doedsdato,
             "bostatus" to person?.personfakta?.bostatus?.let(::Kode)
     )
+
+    private fun hentTilrettelagtKommunikasjonV2(tilrettelagtKommunikasjon: List<Kodeverdi>?, pdlPerson: PdlPersonResponse?): List<TilrettelagtKommunikasjonsbehov> {
+        if (unleashService.isEnabled(Feature.PDL_BRUKERPROFIL)) {
+            val pdlTilrettelagtKommunikasjon : List<PdlTilrettelagtKommunikasjon> = pdlPerson?.data?.hentPerson?.tilrettelagtKommunikasjon ?: emptyList()
+            logger.info("Tilrettelagt: " + pdlTilrettelagtKommunikasjon.toString())
+
+            val out : MutableSet<TilrettelagtKommunikasjonsbehov> = mutableSetOf()
+            for (behov in pdlTilrettelagtKommunikasjon) {
+                behov
+                        .tegnspraaktolk
+                        ?.spraak
+                        ?.also {
+                            sprakRef -> out.add(TilrettelagtKommunikasjonsbehov(TilrettelagtKommunikasjonsbehovType.TEGNSPRAK, sprakRef, hentSprak(sprakRef)))
+                        }
+
+                behov
+                        .talespraaktolk
+                        ?.spraak
+                        ?.also {
+                            sprakRef -> out.add(TilrettelagtKommunikasjonsbehov(TilrettelagtKommunikasjonsbehovType.TALESPRAK, sprakRef, hentSprak(sprakRef)))
+                        }
+            }
+
+            return out.toList()
+        } else {
+            if (tilrettelagtKommunikasjon != null) {
+                return hentSortertKodeverkslisteForTilrettelagtKommunikasjon()
+                        .filter { tilrettelagtKommunikasjon.any { tk -> tk.kodeRef == it.kodeRef } }
+                        .map {
+                            TilrettelagtKommunikasjonsbehov(TilrettelagtKommunikasjonsbehovType.UKJENT, "", "")
+                        }
+            }
+            return emptyList()
+        }
+    }
 
     private fun hentTilrettelagtKommunikasjon(tilrettelagtKommunikasjon: List<Kodeverdi>?, pdlPerson: PdlPersonResponse?): List<Kode> {
 
@@ -297,9 +333,26 @@ class PersonController @Inject constructor(private val kjerneinfoService: Person
                     ?.let { hentSikkerhetstiltak(it) }
     )
 
+    private fun hentSprak(sprakRef: String): String {
+        val sprakKodeverk : List<Kodeverdi> = kodeverk.getKodeverkList("Språk", "nb")
+        return sprakKodeverk
+                .find {
+                    kodeverdi -> kodeverdi.kodeRef == sprakRef
+                }
+                ?.let(Kodeverdi::getBeskrivelse)
+                ?: "Ukjent kodeverdi: $sprakRef"
+    }
+
     private fun hentSortertKodeverkslisteForTilrettelagtKommunikasjon() = try {
         kodeverk.getKodeverkList(TILRETTELAGT_KOMMUNIKASJON_KODEVERKREF, TILRETTELAGT_KOMMUNIKASJON_KODEVERKSPRAK)
     } catch (exception: HentKodeverkKodeverkIkkeFunnet) {
         emptyList<Kodeverdi>()
     }
 }
+
+private enum class TilrettelagtKommunikasjonsbehovType { TEGNSPRAK, TALESPRAK, UKJENT }
+private data class TilrettelagtKommunikasjonsbehov(
+        val type: TilrettelagtKommunikasjonsbehovType,
+        val kodeRef: String,
+        val beskrivelse: String
+)
