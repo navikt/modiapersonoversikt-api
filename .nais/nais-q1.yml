@@ -73,6 +73,8 @@ spec:
       value: "https://isso-q.adeo.no:443/isso"
     - name: OIDC_REDIRECT_URL
       value: "https://app-q1.adeo.no/veilarblogin/api/login"
+    - name: ABAC_PDP_ENDPOINT_URL
+      value: "https://wasapp-q1.adeo.no/asm-pdp/authorize"
     - name: AKTOER_V1_ENDPOINTURL
       value: "https://app-q1.adeo.no/aktoerregister/ws/Aktoer/v1"
     - name: AKTOER_V1_SECURITYTOKEN
