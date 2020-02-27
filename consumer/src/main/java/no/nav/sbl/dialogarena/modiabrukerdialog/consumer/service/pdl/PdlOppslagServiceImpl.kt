@@ -1,6 +1,7 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.pdl
 
 import com.google.gson.GsonBuilder
+import no.nav.common.auth.SsoToken
 import no.nav.common.auth.SubjectHandler
 import no.nav.log.MDCConstants
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.pdl.PdlPersonResponse
@@ -33,8 +34,8 @@ class PdlOppslagServiceImpl : PdlOppslagService {
     }
 
     private fun graphqlRequest(request: PdlRequest): PdlPersonResponse? {
-        val veilederOidcToken = SubjectHandler.getSsoToken().orElseThrow { IllegalStateException("Kunne ikke hente ut veileders ssoTOken") }
-        val consumerOidcToken = stsService.hentConsumerOidcToken()
+        val veilederOidcToken : String = SubjectHandler.getSsoToken(SsoToken.Type.OIDC).orElseThrow { IllegalStateException("Kunne ikke hente ut veileders ssoTOken") }
+        val consumerOidcToken : String = stsService.hentConsumerOidcToken()
 
         val uuid = UUID.randomUUID()
 
