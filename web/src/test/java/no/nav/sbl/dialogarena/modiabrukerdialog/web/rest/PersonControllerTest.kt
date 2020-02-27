@@ -8,15 +8,12 @@ import no.nav.kjerneinfo.consumer.fim.person.support.DefaultPersonKjerneinfoServ
 import no.nav.kjerneinfo.consumer.fim.person.support.KjerneinfoMapper
 import no.nav.kodeverk.consumer.fim.kodeverk.KodeverkmanagerBi
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.organisasjonsEnhetV2.OrganisasjonEnhetV2Service
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.person.PersonOppslagService
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.UnleashService
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Tilgangskontroll
-import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.TilgangskontrollContextUtenTPS
+import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.TilgangskontrollContext
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.TilgangskontrollMock
-import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.TilgangskontrollUtenTPS
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.kodeverk.Kode
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.person.PersonController
-import no.nav.tjeneste.virksomhet.organisasjon.v4.informasjon.WSLandkoder
 import no.nav.tjeneste.virksomhet.person.v3.binding.HentPersonPersonIkkeFunnet
 import no.nav.tjeneste.virksomhet.person.v3.binding.HentPersonSikkerhetsbegrensning
 import no.nav.tjeneste.virksomhet.person.v3.binding.PersonV3
@@ -49,8 +46,8 @@ internal class PersonControllerTest {
     private val kodeverk: KodeverkmanagerBi = mock()
     private val mapper = KjerneinfoMapper(kodeverk)
     private val unleashService: UnleashService = mock()
-    private val tilgangskontrollUtenTPSContext: TilgangskontrollContextUtenTPS = mock()
-    private val tilgangskontrollUtenTPS = TilgangskontrollUtenTPS(tilgangskontrollUtenTPSContext)
+    private val tilgangskontrollUtenTPSContext: TilgangskontrollContext = mock()
+    private val tilgangskontrollUtenTPS = Tilgangskontroll(tilgangskontrollUtenTPSContext)
     private val tilgangskontroll: Tilgangskontroll = TilgangskontrollMock.get()
 
     private val service = DefaultPersonKjerneinfoService(personV3, mapper, tilgangskontrollUtenTPS, organisasjonenhetV2Service)

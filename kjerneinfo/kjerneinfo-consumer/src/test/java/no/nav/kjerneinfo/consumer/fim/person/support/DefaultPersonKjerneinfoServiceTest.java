@@ -8,8 +8,8 @@ import no.nav.kjerneinfo.domain.person.GeografiskTilknytning;
 import no.nav.kodeverk.consumer.fim.kodeverk.support.DefaultKodeverkmanager;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.AnsattEnhet;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.organisasjonsEnhetV2.OrganisasjonEnhetV2Service;
+import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Tilgangskontroll;
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.TilgangskontrollMock;
-import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.TilgangskontrollUtenTPS;
 import no.nav.tjeneste.virksomhet.kodeverk.v2.KodeverkPortType;
 import no.nav.tjeneste.virksomhet.person.v3.binding.*;
 import no.nav.tjeneste.virksomhet.person.v3.informasjon.Diskresjonskoder;
@@ -30,7 +30,7 @@ import static org.mockito.Mockito.*;
 public class DefaultPersonKjerneinfoServiceTest {
 
     private static final String FODSELSNUMMER = "10108000398";
-    private static final String STRENGT_FORTROLIG_ADRESSE ="SPSF";
+    private static final String STRENGT_FORTROLIG_ADRESSE = "SPSF";
     private static final String GEOGRAFISK_TILKNYTNING = "0219";
 
     private static PersonKjerneinfoMockFactory mockFactory;
@@ -40,7 +40,7 @@ public class DefaultPersonKjerneinfoServiceTest {
 
     @Mock
     private PersonV3 portType;
-    private TilgangskontrollUtenTPS tilgangskontroll = TilgangskontrollMock.getUtenTPS();
+    private Tilgangskontroll tilgangskontroll = TilgangskontrollMock.get();
 
     @Mock
     private OrganisasjonEnhetV2Service organisasjonEnhetV2Service;
