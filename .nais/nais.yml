@@ -54,7 +54,7 @@ spec:
     - name: APP_ENVIRONMENT_NAME
       value: "p"
     - name: ISSO_CLIENT_ID
-      value: "veilarblogin"
+      value: "veilarblogin-p"
     - name: ISSO_DISCOVERY_URL
       value: "https://isso.adeo.no/isso/oauth2/.well-known/openid-configuration"
     - name: ISSO_REFRESH_URL
@@ -134,15 +134,15 @@ spec:
     - name: KODEVERKSMAPPER_UNDERKATEGORI_URL
       value: "https://kodeverksmapper.nais.adeo.no/kodeverksmapper/mapUnderkategori"
     - name: LDAP_BASEDN
-      value: "dc=preprod,dc=local"
+      value: "dc=adeo,dc=no"
     - name: LDAP_DOMAIN
-      value: "PREPROD.LOCAL"
+      value: "ADEO.NO"
     - name: LDAP_SERVICEUSER_BASEDN
-      value: "ou=ServiceAccounts,dc=preprod,dc=local"
+      value: "ou=ServiceAccounts,dc=adeo,dc=no"
     - name: LDAP_URL
       value: "ldaps://ldapgw.adeo.no"
     - name: LDAP_USER_BASEDN
-      value: "ou=NAV,ou=BusinessUnits,dc=preprod,dc=local"
+      value: "ou=NAV,ou=BusinessUnits,dc=adeo,dc=no"
     - name: MODIABRUKERDIALOG_STANDARDTEKSTER_TILBAKEMELDING_URL
       value: "https://navet.adeo.no/411275.cms"
     - name: PENSJON_PENSJONSAK_V1_ENDPOINTURL
