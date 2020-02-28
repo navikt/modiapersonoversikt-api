@@ -45,7 +45,6 @@ public class DefaultBehandleBrukerprofilServiceTest {
                 () -> service.oppdaterKontaktinformasjonOgPreferanser(request)
         );
 
-        verify(cache, times(1)).evict(SUBJECT_ID + BRUKER_IDENT);
         verify(cache, times(1)).evict(SUBJECT_ID + BRUKER_IDENT + "true");
         verify(cache, times(1)).evict(SUBJECT_ID + BRUKER_IDENT + "false");
     }
