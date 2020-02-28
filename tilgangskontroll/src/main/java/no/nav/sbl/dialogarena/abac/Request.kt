@@ -9,7 +9,7 @@ enum class Category {
     Resource
 }
 
-data class CategoryAttribute(val attribute: MutableList<Attribute> = ArrayList()) {
+data class CategoryAttribute(private val attribute: MutableList<Attribute> = ArrayList()) {
     fun attribute(attributeId: AbacAttributeId, value: String) {
         this.attribute.add(Attribute(attributeId.getId(), value))
     }
@@ -39,7 +39,7 @@ class Request {
     }
 }
 
-class AbacRequest(
+data class AbacRequest(
         val request: Map<Category, CategoryAttribute>
 )
 

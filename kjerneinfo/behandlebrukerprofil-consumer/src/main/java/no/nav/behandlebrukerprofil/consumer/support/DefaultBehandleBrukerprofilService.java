@@ -41,7 +41,6 @@ public class DefaultBehandleBrukerprofilService implements BehandleBrukerprofilS
         no.nav.common.auth.SubjectHandler.getIdent()
                 .map((ident) -> ident + request.getBruker().getIdent())
                 .ifPresent((keyRoot) -> {
-                    cacheManager.getCache("kontaktinformasjonOgPreferanserCache").evict(keyRoot);
                     cacheManager.getCache("kjerneinformasjonCache").evict(keyRoot + true);
                     cacheManager.getCache("kjerneinformasjonCache").evict(keyRoot + false);
                 });
