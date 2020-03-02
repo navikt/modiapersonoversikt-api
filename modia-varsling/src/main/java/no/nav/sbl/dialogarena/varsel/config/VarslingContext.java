@@ -1,6 +1,5 @@
 package no.nav.sbl.dialogarena.varsel.config;
 
-import no.nav.modig.content.ContentRetriever;
 import no.nav.sbl.dialogarena.varsel.service.VarslerService;
 import no.nav.sbl.dialogarena.varsel.service.VarslerServiceImpl;
 import org.springframework.context.annotation.Bean;
