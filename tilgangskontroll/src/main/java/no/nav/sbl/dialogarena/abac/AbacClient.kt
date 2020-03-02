@@ -4,7 +4,9 @@ import no.nav.sbl.rest.RestUtils
 import org.glassfish.jersey.client.authentication.HttpAuthenticationFeature.basic
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import org.springframework.cache.annotation.Cacheable
 import javax.ws.rs.ClientErrorException
+import javax.ws.rs.client.Client
 import javax.ws.rs.client.Entity.entity
 
 class AbacException(message: String) : RuntimeException(message)
@@ -18,9 +20,10 @@ private infix fun Int.inRange(range: Pair<Int, Int>): Boolean = this >= range.fi
 private val log: Logger = LoggerFactory.getLogger(AbacClient::class.java)
 
 open class AbacClient(val config: AbacClientConfig) {
-    private val client = RestUtils.createClient().register(basic(config.username, config.password))
+    private val client : Client = RestUtils.createClient().register(basic(config.username, config.password))
 
-    fun evaluate(request: AbacRequest): AbacResponse {
+    @Cacheable("abacClientCache")
+    open fun evaluate(request: AbacRequest): AbacResponse {
         val requestJson = JsonMapper.serialize(request)
         val response = client.target(config.endpointUrl)
                 .request()

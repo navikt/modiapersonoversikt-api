@@ -29,11 +29,6 @@
         <property name="locateExistingServerIfPossible" value="true"/>
     </bean>
 
-    <cache:advice id="abacClientAdvice" key-generator="defaultkeygenerator">
-        <cache:caching cache="abacClientCache">
-            <cache:cacheable method="evaluate"/>
-        </cache:caching>
-    </cache:advice>
     <cache:advice id="shortlivedAdvice" key-generator="userkeygenerator">
         <cache:caching cache="endpointCache">
             <cache:cacheable method="hent*"/>
@@ -132,7 +127,6 @@
     </cache:advice>
 
     <aop:config>
-        <aop:advisor advice-ref="abacClientAdvice" pointcut="bean(abacClient)"/>
         <aop:advisor advice-ref="aktorAdvice" pointcut="bean(aktoerPortType)"/>
         <aop:advisor advice-ref="shortlivedAdvice" pointcut="bean(henvendelseSoknaderPortType)"/>
         <aop:advisor advice-ref="shortlivedAdvice" pointcut="bean(sakOgBehandlingPortType)"/>
