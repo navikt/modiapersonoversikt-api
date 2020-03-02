@@ -81,7 +81,6 @@ class PersonController @Inject constructor(private val kjerneinfoService: Person
                                 "diskresjonskode" to person?.personfakta?.diskresjonskode?.let { Kode(it) },
                                 "bankkonto" to hentBankkonto(person),
                                 "tilrettelagtKomunikasjonsListe" to hentTilrettelagtKommunikasjon(person?.personfakta?.tilrettelagtKommunikasjon, pdlPerson),
-                                "tilrettelagtKomunikasjonsListeV2" to hentTilrettelagtKommunikasjonV2(person?.personfakta?.tilrettelagtKommunikasjon, pdlPerson),
                                 "personstatus" to getPersonstatus(person),
                                 "statsborgerskap" to mapStatsborgerskap(person?.personfakta),
                                 "sivilstand" to mapOf(
@@ -132,7 +131,7 @@ class PersonController @Inject constructor(private val kjerneinfoService: Person
             "bostatus" to person?.personfakta?.bostatus?.let(::Kode)
     )
 
-    private fun hentTilrettelagtKommunikasjonV2(tilrettelagtKommunikasjon: List<Kodeverdi>?, pdlPerson: PdlPersonResponse?): List<TilrettelagtKommunikasjonsbehov> {
+    private fun hentTilrettelagtKommunikasjon(tilrettelagtKommunikasjon: List<Kodeverdi>?, pdlPerson: PdlPersonResponse?): List<TilrettelagtKommunikasjonsbehov> {
         if (unleashService.isEnabled(Feature.PDL_BRUKERPROFIL)) {
             val pdlTilrettelagtKommunikasjon : List<PdlTilrettelagtKommunikasjon> = pdlPerson?.data?.hentPerson?.tilrettelagtKommunikasjon ?: emptyList()
             logger.info("Tilrettelagt: " + pdlTilrettelagtKommunikasjon.toString())
@@ -167,31 +166,6 @@ class PersonController @Inject constructor(private val kjerneinfoService: Person
         }
     }
 
-    private fun hentTilrettelagtKommunikasjon(tilrettelagtKommunikasjon: List<Kodeverdi>?, pdlPerson: PdlPersonResponse?): List<Kode> {
-
-        if (unleashService.isEnabled(Feature.PDL_BRUKERPROFIL)) {
-            val pdlTilrettelagtKommunikasjon = pdlPerson?.data?.hentPerson?.tilrettelagtKommunikasjon
-            logger.info("Tilrettelagt: " + pdlTilrettelagtKommunikasjon.toString())
-            val kodeliste: MutableSet<Kode> = mutableSetOf()
-            if (pdlTilrettelagtKommunikasjon == null) {
-                return emptyList();
-            }
-            for (tk in pdlTilrettelagtKommunikasjon) {
-                if (tk.talespraaktolk != null || tk.tegnspraaktolk != null) {
-                    kodeliste.add(Kode("TOHJ", "Tolkehjelp"))
-                }
-            }
-            return kodeliste.toList()
-        } else {
-            if (tilrettelagtKommunikasjon != null) {
-                return hentSortertKodeverkslisteForTilrettelagtKommunikasjon()
-                        .filter { tilrettelagtKommunikasjon?.any { tk -> tk.kodeRef == it.kodeRef } }
-                        .map(::Kode)
-            }
-            return emptyList()
-        }
-
-    }
 
     private fun getNavn(personnavn: Personnavn?) = mapOf(
             "endringsinfo" to personnavn?.sistEndret?.let { hentEndringsinformasjon(it) },
