@@ -29,7 +29,14 @@ class PdlOppslagServiceImpl : PdlOppslagService {
 
     override fun hentPerson(fnr: String): PdlPersonResponse? {
         val query = this::class.java.getResource("/pdl/hentPerson.graphql").readText().replace("[\n\r]", "")
-        return graphqlRequest(PdlRequest(query, Variables(fnr)))
+        val pdlFnr = PdlSyntetiskFnrMapper.mapTilPdl(fnr)
+        return graphqlRequest(PdlRequest(query, Variables(pdlFnr)))
+    }
+
+    override fun hentNavn(fnr: String): PdlPersonResponse? {
+        val query = this::class.java.getResource("/pdl/hentNavn.graphql").readText().replace("[\n\r]", "")
+        val pdlFnr = PdlSyntetiskFnrMapper.mapTilPdl(fnr)
+        return graphqlRequest(PdlRequest(query, Variables(pdlFnr)))
     }
 
     private fun graphqlRequest(request: PdlRequest): PdlPersonResponse? {
