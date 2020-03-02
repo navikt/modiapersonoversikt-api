@@ -32,16 +32,17 @@ public class ModiaApplicationContext implements ApiApplication {
                 .withRefreshTokenCookieName(Constants.REFRESH_TOKEN_COOKIE_NAME);
 
         apiAppConfigurator
+                .enableCXFSecureLogs()
+                .sts()
+                .objectMapper(JacksonConfig.mapper)
+                .addOidcAuthenticator(isso)
                 .customizeJettyBuilder(jetty -> {
                     // Filteret må ligge slik at det havner etter LoginFilter.
                     // Alternativet er å legge det i `startup`-metoden (override) men da havner det etter LoginFilter
                     // Og da har man ikke mulighet til å hente ut Subject som er nødvendig for at unleash skal fungere.
                     jetty.addFilter(new RedirectFilter());
                     jetty.at("modiapersonoversikt-api");
-                })
-                .sts()
-                .objectMapper(JacksonConfig.mapper)
-                .addOidcAuthenticator(isso);
+                });
     }
 
     @Override
