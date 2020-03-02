@@ -132,38 +132,27 @@ class PersonController @Inject constructor(private val kjerneinfoService: Person
     )
 
     private fun hentTilrettelagtKommunikasjon(tilrettelagtKommunikasjon: List<Kodeverdi>?, pdlPerson: PdlPersonResponse?): List<TilrettelagtKommunikasjonsbehov> {
-        if (unleashService.isEnabled(Feature.PDL_BRUKERPROFIL)) {
-            val pdlTilrettelagtKommunikasjon : List<PdlTilrettelagtKommunikasjon> = pdlPerson?.data?.hentPerson?.tilrettelagtKommunikasjon ?: emptyList()
-            logger.info("Tilrettelagt: " + pdlTilrettelagtKommunikasjon.toString())
+        val pdlTilrettelagtKommunikasjon : List<PdlTilrettelagtKommunikasjon> = pdlPerson?.data?.hentPerson?.tilrettelagtKommunikasjon ?: emptyList()
+        logger.info("Tilrettelagt: " + pdlTilrettelagtKommunikasjon.toString())
 
-            val out : MutableSet<TilrettelagtKommunikasjonsbehov> = mutableSetOf()
-            for (behov in pdlTilrettelagtKommunikasjon) {
-                behov
-                        .tegnspraaktolk
-                        ?.spraak
-                        ?.also {
-                            sprakRef -> out.add(TilrettelagtKommunikasjonsbehov(TilrettelagtKommunikasjonsbehovType.TEGNSPRAK, sprakRef, hentSprak(sprakRef)))
-                        }
+        val out : MutableSet<TilrettelagtKommunikasjonsbehov> = mutableSetOf()
+        for (behov in pdlTilrettelagtKommunikasjon) {
+            behov
+                    .tegnspraaktolk
+                    ?.spraak
+                    ?.also {
+                        sprakRef -> out.add(TilrettelagtKommunikasjonsbehov(TilrettelagtKommunikasjonsbehovType.TEGNSPRAK, sprakRef, hentSprak(sprakRef)))
+                    }
 
-                behov
-                        .talespraaktolk
-                        ?.spraak
-                        ?.also {
-                            sprakRef -> out.add(TilrettelagtKommunikasjonsbehov(TilrettelagtKommunikasjonsbehovType.TALESPRAK, sprakRef, hentSprak(sprakRef)))
-                        }
-            }
-
-            return out.toList()
-        } else {
-            if (tilrettelagtKommunikasjon != null) {
-                return hentSortertKodeverkslisteForTilrettelagtKommunikasjon()
-                        .filter { tilrettelagtKommunikasjon.any { tk -> tk.kodeRef == it.kodeRef } }
-                        .map {
-                            TilrettelagtKommunikasjonsbehov(TilrettelagtKommunikasjonsbehovType.UKJENT, "", "")
-                        }
-            }
-            return emptyList()
+            behov
+                    .talespraaktolk
+                    ?.spraak
+                    ?.also {
+                        sprakRef -> out.add(TilrettelagtKommunikasjonsbehov(TilrettelagtKommunikasjonsbehovType.TALESPRAK, sprakRef, hentSprak(sprakRef)))
+                    }
         }
+
+        return out.toList()
     }
 
 
@@ -324,8 +313,8 @@ class PersonController @Inject constructor(private val kjerneinfoService: Person
     }
 }
 
-private enum class TilrettelagtKommunikasjonsbehovType { TEGNSPRAK, TALESPRAK, UKJENT }
-private data class TilrettelagtKommunikasjonsbehov(
+    enum class TilrettelagtKommunikasjonsbehovType { TEGNSPRAK, TALESPRAK, UKJENT }
+    data class TilrettelagtKommunikasjonsbehov(
         val type: TilrettelagtKommunikasjonsbehovType,
         val kodeRef: String,
         val beskrivelse: String
