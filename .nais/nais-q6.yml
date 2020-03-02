@@ -50,6 +50,8 @@ spec:
         mountPath: /var/run/secrets/nais.io/gosys_user
       - kvPath: /credential/data/dev/isso-rp-user-q6
         mountPath: /var/run/secrets/nais.io/isso-rp-user
+      - kvPath: /apikey/appdynamics/dev
+        mountPath: /var/run/secrets/nais.io/vault
   env:
     - name: APP_ENVIRONMENT_NAME
       value: "q6"
