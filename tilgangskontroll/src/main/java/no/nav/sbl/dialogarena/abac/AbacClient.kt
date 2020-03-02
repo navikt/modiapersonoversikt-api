@@ -17,7 +17,7 @@ data class AbacClientConfig(
 private infix fun Int.inRange(range: Pair<Int, Int>): Boolean = this >= range.first && this < range.second
 private val log: Logger = LoggerFactory.getLogger(AbacClient::class.java)
 
-class AbacClient(val config: AbacClientConfig) {
+open class AbacClient(val config: AbacClientConfig) {
     private val client = RestUtils.createClient().register(basic(config.username, config.password))
 
     fun evaluate(request: AbacRequest): AbacResponse {
