@@ -13,8 +13,4 @@ public class VarslingContext {
         return new VarslerServiceImpl();
     }
 
-    @Bean(name = "varsling-cms-integrasjon")
-    public ContentRetriever varslingCmsContentRetriver() {
-        return new ContentRetriever().load("content.modia-varsling");
-    }
 }
