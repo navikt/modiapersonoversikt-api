@@ -70,7 +70,7 @@
             <cache:cacheable method="hent*"/>
         </cache:caching>
     </cache:advice>
-    <cache:advice id="pesysService" key-generator="userkeygenerator">
+    <cache:advice id="pesysServiceAdvice" key-generator="userkeygenerator">
         <cache:caching cache="pesysCache">
             <cache:cacheable method="hent*"/>
         </cache:caching>
@@ -145,7 +145,7 @@
         <aop:advisor advice-ref="ldapServiceAdvice" pointcut="bean(ldapService)"/>
         <aop:advisor advice-ref="utbetalingService" pointcut="bean(utbetalingV1)"/>
         <aop:advisor advice-ref="varslingAdvice" pointcut="bean(varslerPortType)"/>
-        <aop:advisor advice-ref="pesysService" pointcut="bean(pesysService)"/>
+        <aop:advisor advice-ref="pesysServiceAdvice" pointcut="bean(pesysService)"/>
         <aop:advisor advice-ref="organisasjonAdvice" pointcut="bean(organisasjonV4PortType)"/>
         <aop:advisor advice-ref="kodeverksmapperAdvice" pointcut="bean(kodeverksmapper)"/>
         <aop:advisor advice-ref="organisasjonEnhetKontantinformasjonAdvice" pointcut="bean(organisasjonEnhetKontaktinformasjonV1)"/>
