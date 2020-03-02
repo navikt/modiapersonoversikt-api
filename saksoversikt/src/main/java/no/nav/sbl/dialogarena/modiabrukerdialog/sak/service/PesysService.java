@@ -29,7 +29,7 @@ public class PesysService {
             WSHentSakSammendragListeResponse wsHentSakSammendragListeResponse = pensjonSakV1.hentSakSammendragListe(
                     new WSHentSakSammendragListeRequest()
                             .withPersonident(uId));
-            return Optional.ofNullable(wsHentSakSammendragListeResponse.getSakSammendragListe()
+            return Optional.of(wsHentSakSammendragListeResponse.getSakSammendragListe()
                     .stream()
                     .map(sakssammendrag -> new Sak()
                                 .withSaksId(sakssammendrag.getSakId())
