@@ -114,9 +114,17 @@ class PersonController @Inject constructor(private val kjerneinfoService: Person
 
     private fun hentFullmakter(fullmakter: List<PdlFullmakt>?): List<Map<String, Any>>? =
             fullmakter?.map {
+                val navnObject = pdlOppslagService.hentNavn(it.motpartsPersonident)?.data?.hentPerson?.navn?.get(0)
+                val navn : String = navnObject
+                        ?.run {
+                            listOf(fornavn, mellomnavn, etternavn).joinToString(" ")
+                        }
+                        ?: "Fant ikke navn"
+
                 mapOf(
                         "motpartsRolle" to it.motpartsRolle,
                         "motpartsPersonident" to it.motpartsPersonident,
+                        "motpartsPersonNavn" to navn,
                         "omraade" to it.omraader,
                         "gyldigFraOgMed" to formatDate(it.gyldigFraOgMed),
                         "gyldigTilOgMed" to formatDate(it.gyldigTilOgMed)
