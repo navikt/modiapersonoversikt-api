@@ -7,10 +7,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.resultatwrapp
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.utils.Java8Utils;
 
 import javax.inject.Inject;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.toList;
@@ -28,7 +25,7 @@ public class SaksService {
         Set<Baksystem> feilendeBaksystemer = new HashSet<>();
 
         Optional<Stream<Sak>> maybeFraGSak;
-        Optional<Stream<Sak>> maybeFraPesys;
+        Optional<List<Sak>> maybeFraPesys;
 
         try {
             maybeFraGSak = gsakSakerService.hentSaker(fnr);
@@ -45,9 +42,10 @@ public class SaksService {
         }
 
         Stream<Sak> fraGSak = maybeFraGSak.orElse(Stream.empty());
-        Stream<Sak> fraPesys = maybeFraPesys.orElse(Stream.empty());
+        Stream<Sak> fraPesys = maybeFraPesys.map(Collection::stream).orElse(Stream.empty());
 
-        return new ResultatWrapper<>(Java8Utils.concat(fraGSak, fraPesys).collect(toList()), feilendeBaksystemer);
+        return new ResultatWrapper<>(Java8Utils.concat(fraGSak, fraPesys)
+                .collect(toList()), feilendeBaksystemer);
     }
 
 }

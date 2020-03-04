@@ -10,9 +10,10 @@ import no.nav.tjeneste.virksomhet.pensjonsak.v1.meldinger.WSHentSakSammendragLis
 import org.slf4j.Logger;
 
 import javax.inject.Inject;
+import java.util.List;
 import java.util.Optional;
-import java.util.stream.Stream;
 
+import static java.util.stream.Collectors.toList;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.Baksystem.PESYS;
 import static org.slf4j.LoggerFactory.getLogger;
 
@@ -24,7 +25,7 @@ public class PesysService {
     @Inject
     private PensjonSakV1 pensjonSakV1;
 
-    public Optional<Stream<Sak>> hentSakstemaFraPesys(String uId) {
+    public Optional<List<Sak>> hentSakstemaFraPesys(String uId) {
         try {
             WSHentSakSammendragListeResponse wsHentSakSammendragListeResponse = pensjonSakV1.hentSakSammendragListe(
                     new WSHentSakSammendragListeRequest()
@@ -35,8 +36,9 @@ public class PesysService {
                                 .withSaksId(sakssammendrag.getSakId())
                                 .withTemakode(sakssammendrag.getArkivtema().getValue())
                                 .withBaksystem(PESYS)
-                                .withFagsystem(PESYS_FAGSYSTEM_ID)))
-                    ;
+                                .withFagsystem(PESYS_FAGSYSTEM_ID))
+                    .collect(toList())
+            );
         } catch (HentSakSammendragListeSakManglerEierenhet | HentSakSammendragListePersonIkkeFunnet e) {
             LOGGER.error("Det skjedde en ventet exception ved henting av Sakstema fra Pesys", e);
             return Optional.empty();
