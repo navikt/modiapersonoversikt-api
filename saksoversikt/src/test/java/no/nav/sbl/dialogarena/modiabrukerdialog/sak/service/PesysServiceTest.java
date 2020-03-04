@@ -42,7 +42,7 @@ public class PesysServiceTest {
     public void hentSakstemaGirTomtResultatVedHentSakSammendragListePersonIkkeFunnet() throws HentSakSammendragListeSakManglerEierenhet, HentSakSammendragListePersonIkkeFunnet {
         when(pensjonSakV1.hentSakSammendragListe(any(WSHentSakSammendragListeRequest.class))).thenThrow(new HentSakSammendragListePersonIkkeFunnet());
 
-        Optional<Stream<Sak>> sakstemaFraPesys = pesysService.hentSakstemaFraPesys("11111111111");
+        Optional<List<Sak>> sakstemaFraPesys = pesysService.hentSakstemaFraPesys("11111111111");
 
         assertFalse(sakstemaFraPesys.isPresent());
     }
@@ -51,7 +51,7 @@ public class PesysServiceTest {
     public void hentSakstemaGirTomtResultatVedHentSakSammendragListeSakManglerEierenhet() throws HentSakSammendragListeSakManglerEierenhet, HentSakSammendragListePersonIkkeFunnet {
         when(pensjonSakV1.hentSakSammendragListe(any(WSHentSakSammendragListeRequest.class))).thenThrow(new HentSakSammendragListeSakManglerEierenhet());
 
-        Optional<Stream<Sak>> sakstemaFraPesys = pesysService.hentSakstemaFraPesys("11111111111");
+        Optional<List<Sak>> sakstemaFraPesys = pesysService.hentSakstemaFraPesys("11111111111");
 
         assertFalse(sakstemaFraPesys.isPresent());
     }
@@ -74,7 +74,7 @@ public class PesysServiceTest {
     public void mapperTilGenerellSak() throws HentSakSammendragListeSakManglerEierenhet, HentSakSammendragListePersonIkkeFunnet {
         when(pensjonSakV1.hentSakSammendragListe(any(WSHentSakSammendragListeRequest.class))).thenReturn(lagSakSammendrag());
 
-        List<Sak> sakstemaFraPesys = pesysService.hentSakstemaFraPesys("11111111111").get().collect(toList());
+        List<Sak> sakstemaFraPesys = pesysService.hentSakstemaFraPesys("11111111111").get();
 
         assertThat(sakstemaFraPesys.size(), is(2));
 
