@@ -64,11 +64,6 @@
             </dependency>
             <dependency>
                 <groupId>no.nav.common</groupId>
-                <artifactId>time</artifactId>
-                <version>${common.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>no.nav.common</groupId>
                 <artifactId>nais</artifactId>
                 <version>${common.version}</version>
             </dependency>
