@@ -53,7 +53,7 @@ class DialogMerkController @Inject constructor(private val behandleHenvendelsePo
                 .check(Policies.tilgangTilBruker.with(request.fnr))
                 .check(Policies.behandlingsIderTilhorerBruker.with(BehandlingsIdTilgangData(request.fnr, request.meldingsidListe)))
                 .get(Audit.describe(UPDATE, Henvendelse.Merk.Kontorsperre, "fnr" to request.fnr, "behandlingsIder" to request.meldingsidListe.joinToString(", "))) {
-                    behandleHenvendelsePortType.oppdaterKontorsperre(request.fnr, request.meldingsidListe)
+                    behandleHenvendelsePortType.oppdaterKontorsperre(request.enhetsId, request.meldingsidListe)
                     Response.ok().build()
                 }
     }
@@ -113,7 +113,7 @@ data class FeilmerkRequest(val fnr: String, val behandlingsidListe: List<String>
 
 data class BidragRequest(val fnr: String, val eldsteMeldingTraadId: String)
 
-data class KontorsperretRequest(val fnr: String, val meldingsidListe: List<String>)
+data class KontorsperretRequest(val fnr: String, val enhetsId: String, val meldingsidListe: List<String>)
 
 data class AvsluttUtenSvarRequest(
         val fnr: String,
