@@ -60,6 +60,30 @@ class DialogOppgaveController @Inject constructor(
                     Response.ok().build()
                 }
     }
+    @POST
+    @Path("/opprettskjermetoppgave")
+    fun opprettSkjermetOppgave(request: OpperettSkjermetOppgaveRequest): Response {
+        return tilgangskontroll
+                .check(Policies.tilgangTilModia)
+                .get { oppgavebehandling.opprettOppgave(
+                        WSOpprettOppgaveRequest()
+                                .withOpprettetAvEnhetId(request.valgtEnhetId)
+                                .withOpprettOppgave(
+                                        WSOpprettOppgave()
+                                                .withAktivFra(LocalDate.now())
+                                                .withAktivTil(arbeidsdagerFraDato(request.dagerFrist, LocalDate.now()))
+                                                .withBeskrivelse(request.beskrivelse)
+                                                .withFagomradeKode(request.temaKode)
+                                                .withUnderkategoriKode(request.underkategoriKode)
+                                                .withBrukerId(request.brukerid)
+                                                .withOppgavetypeKode(request.oppgaveTypeKode)
+                                                .withPrioritetKode(request.prioritetKode)
+                                                .withLest(false)
+                                )
+                )
+                    Response.ok().build()
+                }
+    }
 
     @GET
     @Path("/tema")
@@ -115,6 +139,17 @@ data class OpperettOppgaveRequest(
         val dagerFrist: Int,
         val ansvarligEnhetId: String,
         val ansvarligIdent: String?,
+        val beskrivelse: String,
+        val temaKode: String,
+        val underkategoriKode: String?,
+        val brukerid: String,
+        val oppgaveTypeKode: String,
+        val prioritetKode: String
+)
+data class OpperettSkjermetOppgaveRequest(
+        val fnr: String,
+        val valgtEnhetId: Int,
+        val dagerFrist: Int,
         val beskrivelse: String,
         val temaKode: String,
         val underkategoriKode: String?,
