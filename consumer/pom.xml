@@ -97,10 +97,6 @@
             <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>behandlebrukerprofil-consumer</artifactId>
         </dependency>
-        <dependency>
-            <groupId>no.nav.sbl.dialogarena</groupId>
-            <artifactId>brukerprofil-domain</artifactId>
-        </dependency>
 
         <!-- Dkif -->
         <dependency>
