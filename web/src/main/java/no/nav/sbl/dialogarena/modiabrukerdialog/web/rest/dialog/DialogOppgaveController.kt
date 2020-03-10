@@ -12,6 +12,7 @@ import no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.DateUtils.arbeidsdager
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.OppgavebehandlingV3
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.meldinger.WSOpprettOppgave
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.meldinger.WSOpprettOppgaveRequest
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.oppgave.Opp
 import org.joda.time.LocalDate
 import javax.inject.Inject
 import javax.ws.rs.GET
@@ -27,6 +28,7 @@ private const val HENVENDELSESTYPE_KODE: String = "DIALOG"
 class DialogOppgaveController @Inject constructor(
         private val gsakKodeverk: GsakKodeverk,
         private val oppgavebehandling: OppgavebehandlingV3,
+        private val oppgavebehandlingRest: OpprettOppgaveRest,
         private val tilgangskontroll: Tilgangskontroll
 ) {
 
@@ -65,6 +67,7 @@ class DialogOppgaveController @Inject constructor(
     fun opprettSkjermetOppgave(request: OpperettSkjermetOppgaveRequest): Response {
         return tilgangskontroll
                 .check(Policies.tilgangTilModia)
+                //TODO skal erstattes med REST-endepunkt
                 .get { oppgavebehandling.opprettOppgave(
                         WSOpprettOppgaveRequest()
                                 .withOpprettetAvEnhetId(request.valgtEnhetId)
