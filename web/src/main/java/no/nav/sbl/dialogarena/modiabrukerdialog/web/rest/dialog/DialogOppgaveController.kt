@@ -12,7 +12,7 @@ import no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.DateUtils.arbeidsdager
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.OppgavebehandlingV3
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.meldinger.WSOpprettOppgave
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.meldinger.WSOpprettOppgaveRequest
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.oppgave.Opp
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.OpprettOppgaveRest
 import org.joda.time.LocalDate
 import javax.inject.Inject
 import javax.ws.rs.GET
@@ -68,22 +68,8 @@ class DialogOppgaveController @Inject constructor(
         return tilgangskontroll
                 .check(Policies.tilgangTilModia)
                 //TODO skal erstattes med REST-endepunkt
-                .get { oppgavebehandling.opprettOppgave(
-                        WSOpprettOppgaveRequest()
-                                .withOpprettetAvEnhetId(request.valgtEnhetId)
-                                .withOpprettOppgave(
-                                        WSOpprettOppgave()
-                                                .withAktivFra(LocalDate.now())
-                                                .withAktivTil(arbeidsdagerFraDato(request.dagerFrist, LocalDate.now()))
-                                                .withBeskrivelse(request.beskrivelse)
-                                                .withFagomradeKode(request.temaKode)
-                                                .withUnderkategoriKode(request.underkategoriKode)
-                                                .withBrukerId(request.brukerid)
-                                                .withOppgavetypeKode(request.oppgaveTypeKode)
-                                                .withPrioritetKode(request.prioritetKode)
-                                                .withLest(false)
-                                )
-                )
+                .get(Audit.describe(CREATE, Henvendelse.Oppgave.Opprett, "fnr" to request.fnr)) {
+                oppgavebehandlingRest.opprettOppgave(request)
                     Response.ok().build()
                 }
     }
