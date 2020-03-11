@@ -64,11 +64,13 @@ class DialogOppgaveController @Inject constructor(
     }
     @POST
     @Path("/opprettskjermetoppgave")
-    fun opprettSkjermetOppgave(request: OpperettSkjermetOppgaveRequest): Response {
+    fun opprettSkjermetOppgave(request: OpperettSkjermetOppgaveDTO): SkjermetOppgaveRespons {
         return tilgangskontroll
                 .check(Policies.tilgangTilModia)
                 .get(Audit.describe(CREATE, Henvendelse.Oppgave.Opprett, "fnr" to request.fnr)) {
-                oppgavebehandlingRest.opprettOppgave(request)
+                oppgavebehandlingRest.opprettOppgave(SkjermetOppgave(
+                        //fra DTO til SkjermettOppgave
+                ))
                     Response.ok().build()
                 }
     }
@@ -134,7 +136,7 @@ data class OpperettOppgaveRequest(
         val oppgaveTypeKode: String,
         val prioritetKode: String
 )
-data class OpperettSkjermetOppgaveRequest(
+data class OpperettSkjermetOppgaveDTO(
         val fnr: String,
         val valgtEnhetId: Int,
         val dagerFrist: Int,
@@ -144,4 +146,8 @@ data class OpperettSkjermetOppgaveRequest(
         val brukerid: String,
         val oppgaveTypeKode: String,
         val prioritetKode: String
+)
+data class SkjermetOppgaveRespons(
+        val oppgaveid: String,
+        val status: Int
 )
