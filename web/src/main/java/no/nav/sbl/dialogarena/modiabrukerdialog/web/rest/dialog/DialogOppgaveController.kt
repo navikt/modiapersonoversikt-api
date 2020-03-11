@@ -67,7 +67,6 @@ class DialogOppgaveController @Inject constructor(
     fun opprettSkjermetOppgave(request: OpperettSkjermetOppgaveRequest): Response {
         return tilgangskontroll
                 .check(Policies.tilgangTilModia)
-                //TODO skal erstattes med REST-endepunkt
                 .get(Audit.describe(CREATE, Henvendelse.Oppgave.Opprett, "fnr" to request.fnr)) {
                 oppgavebehandlingRest.opprettOppgave(request)
                     Response.ok().build()
