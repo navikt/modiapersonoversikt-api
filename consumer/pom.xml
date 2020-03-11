@@ -93,11 +93,6 @@
             <artifactId>sykmeldingsperioder-consumer</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>no.nav.sbl.dialogarena</groupId>
-            <artifactId>behandlebrukerprofil-consumer</artifactId>
-        </dependency>
-
         <!-- Dkif -->
         <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>

@@ -219,12 +219,6 @@ spec:
       value: "SAML"
     - name: VIRKSOMHET_ARBEIDSFORDELING_V1_WSDLURL
       value: "http://maven.adeo.no/nexus/content/groups/public/no/nav/tjenester/nav-arbeidsfordeling-v1-tjenestespesifikasjon/1.1.0/nav-arbeidsfordeling-v1-tjenestespesifikasjon-1.1.0.zip"
-    - name: VIRKSOMHET_BEHANDLEBRUKERPROFIL_V2_ENDPOINTURL
-      value: "https://wasapp-q6.adeo.no/tpsws/BehandleBrukerprofil_v2"
-    - name: VIRKSOMHET_BEHANDLEBRUKERPROFIL_V2_SECURITYTOKEN
-      value: "SAML"
-    - name: VIRKSOMHET_BEHANDLEBRUKERPROFIL_V2_WSDLURL
-      value: "http://maven.adeo.no/nexus/content/groups/public/no/nav/tjenester/nav-behandleBrukerprofil-v2-tjenestespesifikasjon/2.0.0/nav-behandleBrukerprofil-v2-tjenestespesifikasjon-2.0.0.zip"
     - name: VIRKSOMHET_BEHANDLEPERSON_V1_ENDPOINTURL
       value: "https://wasapp-q6.adeo.no/tpsws/ws/BehandlePerson/v1"
     - name: VIRKSOMHET_BEHANDLEPERSON_V1_SECURITYTOKEN
