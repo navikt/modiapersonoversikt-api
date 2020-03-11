@@ -17,23 +17,31 @@ public inline fun <reified TO> Any.toDTO(): TO where TO : DTO {
     return Mapper.map(this, TO::class.java)
 }
 
+public inline fun <reified TO : Any> DTO.fromDTO(): TO {
+    return Mapper.map(this, TO::class.java)
+}
+
 public inline fun <reified TO> Iterable<Any>.toDTO(): List<TO> where TO : DTO {
+    return Mapper.mapList(this, TO::class.java)
+}
+
+public inline fun <reified TO : Any> Iterable<DTO>.fromDTO(): List<TO> {
     return Mapper.mapList(this, TO::class.java)
 }
 
 class Mapper {
     companion object {
         val mapping: MutableMap<Class<*>, MutableMap<Class<*>, Function<*, *>>> = HashMap()
-        public inline fun <reified FROM, reified TO> registerMapping(noinline fn: (FROM) -> TO) where TO : DTO {
+        public inline fun <reified FROM, reified TO> registerMapping(noinline fn: (FROM) -> TO) {
             val fromMap = mapping.computeIfAbsent(FROM::class.java as Class<*>) { HashMap() }
             fromMap[TO::class.java] = fn as Function<*, *>
         }
 
-        public fun <FROM : Iterable<Any>, TO> mapList(from: FROM, toCls: Class<TO>): List<TO> where TO : DTO {
+        public fun <FROM : Iterable<Any>, TO> mapList(from: FROM, toCls: Class<TO>): List<TO> {
             return from.map { map(it, toCls) }
         }
 
-        public fun <FROM : Any, TO> map(from: FROM, toCls: Class<TO>): TO where TO : DTO {
+        public fun <FROM : Any, TO> map(from: FROM, toCls: Class<TO>): TO {
             val fromCls = from.javaClass
             return mapping
                     .get(fromCls)
