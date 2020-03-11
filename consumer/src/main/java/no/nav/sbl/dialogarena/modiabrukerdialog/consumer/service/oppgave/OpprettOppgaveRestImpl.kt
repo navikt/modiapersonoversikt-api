@@ -8,8 +8,8 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.OpprettOppgaveRest
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.sts.StsServiceImpl
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.RestConstants
 import no.nav.sbl.rest.RestUtils
-import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.meldinger.WSOpprettOppgave
 import org.slf4j.MDC
+import java.time.LocalDate
 import javax.inject.Inject
 import javax.ws.rs.client.Client
 import javax.ws.rs.core.HttpHeaders.AUTHORIZATION
@@ -21,11 +21,26 @@ open class OppgaveOpprettelseClient : OpprettOppgaveRest {
     @Inject
     private lateinit var stsService: StsServiceImpl
 
-    open fun opprettOppgave(oppgave: WSOpprettOppgave): String  {
-        val url =getEnviroment()
-        val oppgaveskjermetRequest = OppgaveSkjermetRequest
+    open fun opprettOppgave(oppgave: OpperettSkjermetOppgaveRequest): String  {
+        val url = getEnviroment();
+        val oppgaveskjermetRequest : OppgaveSkjermetRequest = OppgaveSkjermetRequest(
+         opprettetAvEnhetsnr = "",
+         aktoerId = getAktørId(oppgave.fnr),
+        behandlesAvApplikasjon = "FS22",
+        beskrivelse = "string",
+        temagruppe = "ANSOS",
+        tema = "TIL",
+        behandlingstema = "ab0335",
+        oppgavetype = "SOKNAD_FOR_TIL",
+        behandlingstype = "ae0034",
+        aktivDato = LocalDate.now(),
+        fristFerdigstillelse = LocalDate.now(),
+        prioritet = "HOY"
 
-          return gjorSporring(url, oppgaveskjermetRequest, response)
+
+        )
+
+          return gjorSporring(url, oppgaveskjermetRequest, OppgaveResponse)
 
 
 
@@ -54,20 +69,32 @@ private fun getAktørId(fnr : String): String {
     // TODO implemente hente aktørId
     return "hei"
 }
-    private fun getEnviroment() {
-
+    private fun getEnviroment() : String {
+        return "";
     }
 }
 
 
-data class OppgaveResponse {
+data class OppgaveResponse (
      val status : String,
-    val error? : String
+     val error : String?
+)
 
 }
-data class  OppgaveSkjermetRequest {
-    // bygge requesteobjektet
-}
+data class  OppgaveSkjermetRequest(
+    val opprettetAvEnhetsnr: String,
+    val aktoerId: String,
+    val behandlesAvApplikasjon: String,
+    val beskrivelse: String ,
+    val temagruppe: String ,
+    val tema: String ,
+    val behandlingstema: String ,
+    val oppgavetype : String ,
+    val behandlingstype : String ,
+    val aktivDato : LocalDate ,
+    val fristFerdigstillelse : LocalDate ,
+    val prioritet : String
+);
 
 /**
 TODO viser opprettelsen av gammel oppgave
