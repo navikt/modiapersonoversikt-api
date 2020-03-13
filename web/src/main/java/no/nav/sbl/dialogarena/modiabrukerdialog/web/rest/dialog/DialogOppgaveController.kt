@@ -1,6 +1,8 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.dialog
 
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.GsakKodeTema
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveRequest
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveRestClient
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.gsak.GsakKodeverk
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.BehandlingsIdTilgangData
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Policies
@@ -13,7 +15,9 @@ import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.OppgavebehandlingV3
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.meldinger.WSOpprettOppgave
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.meldinger.WSOpprettOppgaveRequest
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.OpprettOppgaveRest
-import org.joda.time.LocalDate
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.oppgave.OppgaveRequest
+import no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.DateUtils.arbeidsdagerFraDatoJava
+import java.time.LocalDate
 import javax.inject.Inject
 import javax.ws.rs.GET
 import javax.ws.rs.POST
@@ -28,7 +32,7 @@ private const val HENVENDELSESTYPE_KODE: String = "DIALOG"
 class DialogOppgaveController @Inject constructor(
         private val gsakKodeverk: GsakKodeverk,
         private val oppgavebehandling: OppgavebehandlingV3,
-        private val oppgavebehandlingRest: OpprettOppgaveRest,
+        private val oppgavebehandlingRest: OppgaveRestClient,
         private val tilgangskontroll: Tilgangskontroll
 ) {
 
@@ -62,16 +66,33 @@ class DialogOppgaveController @Inject constructor(
                     Response.ok().build()
                 }
     }
+
     @POST
     @Path("/opprettskjermetoppgave")
-    fun opprettSkjermetOppgave(request: OpperettSkjermetOppgaveDTO): SkjermetOppgaveRespons {
+    fun opprettSkjermetOppgave(request: OpperettSkjermetOppgaveDTO
+    ): SkjermetOppgaveRespons {
         return tilgangskontroll
                 .check(Policies.tilgangTilModia)
                 .get(Audit.describe(CREATE, Henvendelse.Oppgave.Opprett, "fnr" to request.fnr)) {
-                oppgavebehandlingRest.opprettOppgave(SkjermetOppgave(
-                        //fra DTO til SkjermettOppgave
-                ))
-                    Response.ok().build()
+                    val respons = oppgavebehandlingRest
+                            .opprettOppgave(OppgaveRequest(
+                                    opprettetAvEnhetsnr = request.valgtEnhetId,
+                                    fnr = request.fnr,
+                                    behandlesAvApplikasjon = "FS22",
+                                    beskrivelse = request.beskrivelse,
+                                    temagruppe = request.temaKode,
+                                    tema = request.temaKode,
+                                    underkategoriKode = request.underkategoriKode,
+                                    oppgavetype = request.oppgaveTypeKode,
+                                    behandlingstype = HENVENDELSESTYPE_KODE,
+                                    aktivDato = LocalDate.now(),
+                                    fristFerdigstillelse = arbeidsdagerFraDatoJava(request.dagerFrist, LocalDate.now()),
+                                    prioritet = request.prioritetKode
+                            )
+                            )
+                    SkjermetOppgaveRespons(
+                            oppgaveid = respons.oppgaveid
+                    )
                 }
     }
 
@@ -136,9 +157,10 @@ data class OpperettOppgaveRequest(
         val oppgaveTypeKode: String,
         val prioritetKode: String
 )
+
 data class OpperettSkjermetOppgaveDTO(
         val fnr: String,
-        val valgtEnhetId: Int,
+        val valgtEnhetId: String,
         val dagerFrist: Int,
         val beskrivelse: String,
         val temaKode: String,
@@ -147,7 +169,7 @@ data class OpperettSkjermetOppgaveDTO(
         val oppgaveTypeKode: String,
         val prioritetKode: String
 )
+
 data class SkjermetOppgaveRespons(
-        val oppgaveid: String,
-        val status: Int
+        val oppgaveid: String
 )
