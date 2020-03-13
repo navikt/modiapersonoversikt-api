@@ -1,6 +1,15 @@
 package no.nav.kjerneinfo.consumer.fim.person.support;
 
-import no.nav.brukerprofil.domain.Bruker;
+import static java.util.Optional.of;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.anyString;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import no.nav.kjerneinfo.consumer.fim.person.PersonKjerneinfoServiceBi;
 import no.nav.kjerneinfo.consumer.fim.person.mock.PersonKjerneinfoMockFactory;
 import no.nav.kjerneinfo.consumer.fim.person.to.HentKjerneinformasjonRequest;
@@ -11,21 +20,25 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.organisasjonsEnhetV2
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Tilgangskontroll;
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.TilgangskontrollMock;
 import no.nav.tjeneste.virksomhet.kodeverk.v2.KodeverkPortType;
-import no.nav.tjeneste.virksomhet.person.v3.binding.*;
+import no.nav.tjeneste.virksomhet.person.v3.binding.HentGeografiskTilknytningPersonIkkeFunnet;
+import no.nav.tjeneste.virksomhet.person.v3.binding.HentGeografiskTilknytningSikkerhetsbegrensing;
+import no.nav.tjeneste.virksomhet.person.v3.binding.HentPersonPersonIkkeFunnet;
+import no.nav.tjeneste.virksomhet.person.v3.binding.HentPersonSikkerhetsbegrensning;
+import no.nav.tjeneste.virksomhet.person.v3.binding.PersonV3;
 import no.nav.tjeneste.virksomhet.person.v3.informasjon.Diskresjonskoder;
 import no.nav.tjeneste.virksomhet.person.v3.informasjon.Kommune;
 import no.nav.tjeneste.virksomhet.person.v3.informasjon.Sikkerhetstiltak;
-import no.nav.tjeneste.virksomhet.person.v3.meldinger.*;
+import no.nav.tjeneste.virksomhet.person.v3.meldinger.HentGeografiskTilknytningRequest;
+import no.nav.tjeneste.virksomhet.person.v3.meldinger.HentGeografiskTilknytningResponse;
+import no.nav.tjeneste.virksomhet.person.v3.meldinger.HentPersonRequest;
+import no.nav.tjeneste.virksomhet.person.v3.meldinger.HentPersonResponse;
+import no.nav.tjeneste.virksomhet.person.v3.meldinger.HentSikkerhetstiltakRequest;
+import no.nav.tjeneste.virksomhet.person.v3.meldinger.HentSikkerhetstiltakResponse;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-
-import static java.util.Optional.of;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.mockito.Mockito.*;
 
 public class DefaultPersonKjerneinfoServiceTest {
 
@@ -91,17 +104,6 @@ public class DefaultPersonKjerneinfoServiceTest {
         service.hentSikkerhetstiltak(new no.nav.kjerneinfo.consumer.fim.person.to.HentSikkerhetstiltakRequest(FODSELSNUMMER));
 
         verify(portType, times(1)).hentSikkerhetstiltak(any(HentSikkerhetstiltakRequest.class));
-    }
-
-    @Test
-    public void hentBrukerprofil() throws HentPersonPersonIkkeFunnet, HentPersonSikkerhetsbegrensning {
-        when(portType.hentPerson(any(HentPersonRequest.class))).thenReturn(new HentPersonResponse()
-                .withPerson(mockFactory.getBruker(FODSELSNUMMER, true)));
-
-        Bruker bruker = service.hentBrukerprofil(FODSELSNUMMER);
-
-        verify(portType, times(1)).hentPerson(any(HentPersonRequest.class));
-        assertThat(bruker.getIdent(), is(FODSELSNUMMER));
     }
 
     private HentGeografiskTilknytningResponse lagResponse() {

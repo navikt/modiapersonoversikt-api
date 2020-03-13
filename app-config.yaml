@@ -173,8 +173,6 @@ fasitResources:
     resourceType: webserviceendpoint
   - alias: pensjon:PensjonSak_v1
     resourceType: webserviceendpoint
-  - alias: virksomhet:BehandleBrukerprofil_v2
-    resourceType: webserviceendpoint
 
 alertProfiles:
   - common-java-modules
