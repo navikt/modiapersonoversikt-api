@@ -11,7 +11,6 @@ public class HenvendelsePortTypeCacheUtil {
 
     public static final String HENVENDELSE_PORT_TYPE_CACHE_NAME = "endpointCache";
     public static final String HENT_HENVENDELSE_LISTE_METODE_NAVN = "hentHenvendelseListe";
-    public static final String DEFAULT_CACHE_MANAGER_NAME = "__DEFAULT__";
 
     public static void invaliderHentHenvendelseListeCacheElement(HenvendelsePortType henvendelsePortType, String fodselsnummer, List<String> typer) {
         WSHentHenvendelseListeRequest parameter = new WSHentHenvendelseListeRequest()
@@ -19,7 +18,7 @@ public class HenvendelsePortTypeCacheUtil {
                 .withTyper(typer);
 
         Object cacheKey =  new AutentisertBrukerKeyGenerator().generate(henvendelsePortType, getHentHenvendelseMetode(), parameter);
-        CacheManager.getCacheManager(DEFAULT_CACHE_MANAGER_NAME).getCache(HENVENDELSE_PORT_TYPE_CACHE_NAME).remove(cacheKey);
+        CacheManager.getCacheManager(CacheUtil.CACHEMANAGER).getCache(HENVENDELSE_PORT_TYPE_CACHE_NAME).remove(cacheKey);
     }
 
     private static Method getHentHenvendelseMetode() {
