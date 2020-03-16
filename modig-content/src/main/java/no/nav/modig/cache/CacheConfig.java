@@ -18,6 +18,7 @@ public class CacheConfig {
     @Bean
     public net.sf.ehcache.CacheManager ehcacheCacheManager() {
         net.sf.ehcache.config.Configuration config = new net.sf.ehcache.config.Configuration();
+        config.setName("cachemanager");
 
         config.addCache(cache("abacClientCache", 3600).maxEntriesLocalHeap(10_000));
         config.addCache(cache("endpointCache", 3).maxEntriesLocalHeap(10_000));
