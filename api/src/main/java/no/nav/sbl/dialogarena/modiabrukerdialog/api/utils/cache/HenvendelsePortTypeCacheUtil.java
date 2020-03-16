@@ -18,7 +18,8 @@ public class HenvendelsePortTypeCacheUtil {
                 .withTyper(typer);
 
         Object cacheKey =  new AutentisertBrukerKeyGenerator().generate(henvendelsePortType, getHentHenvendelseMetode(), parameter);
-        CacheManager.getCacheManager(CacheUtil.CACHEMANAGER).getCache(HENVENDELSE_PORT_TYPE_CACHE_NAME).remove(cacheKey);
+
+        CacheManager.getCacheManager(CacheUtil.CACHE_MANAGER_NAME).getCache(HENVENDELSE_PORT_TYPE_CACHE_NAME).remove(cacheKey);
     }
 
     private static Method getHentHenvendelseMetode() {
