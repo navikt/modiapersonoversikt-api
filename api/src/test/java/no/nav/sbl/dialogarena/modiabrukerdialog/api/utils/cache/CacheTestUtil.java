@@ -8,7 +8,7 @@ import java.util.List;
 
 public class CacheTestUtil {
 
-    public static final String CACHEMANAGER = "cachemanager";
+    public static final String CACHEMANAGER = "__DEFAULT__";
 
     public static void setupCache(List<String> cacheNames ) {
         Configuration cacheManagerConfiguration = new Configuration().name(CACHEMANAGER);
