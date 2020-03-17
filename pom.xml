@@ -64,11 +64,6 @@
             </dependency>
             <dependency>
                 <groupId>no.nav.common</groupId>
-                <artifactId>time</artifactId>
-                <version>${common.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>no.nav.common</groupId>
                 <artifactId>nais</artifactId>
                 <version>${common.version}</version>
             </dependency>
@@ -165,30 +160,6 @@
             <dependency>
                 <groupId>no.nav.sbl.dialogarena</groupId>
                 <artifactId>sykmeldingsperioder-consumer</artifactId>
-                <version>${project.version}</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>xml-apis</groupId>
-                        <artifactId>xml-apis</artifactId>
-                    </exclusion>
-                </exclusions>
-            </dependency>
-
-            <!--Brukerprofil-->
-            <dependency>
-                <groupId>no.nav.sbl.dialogarena</groupId>
-                <artifactId>brukerprofil-domain</artifactId>
-                <version>${project.version}</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>xml-apis</groupId>
-                        <artifactId>xml-apis</artifactId>
-                    </exclusion>
-                </exclusions>
-            </dependency>
-            <dependency>
-                <groupId>no.nav.sbl.dialogarena</groupId>
-                <artifactId>behandlebrukerprofil-consumer</artifactId>
                 <version>${project.version}</version>
                 <exclusions>
                     <exclusion>

@@ -50,6 +50,8 @@ spec:
         mountPath: /var/run/secrets/nais.io/gosys_user
       - kvPath: /credential/data/dev/isso-rp-user-q0
         mountPath: /var/run/secrets/nais.io/isso-rp-user
+      - kvPath: /apikey/appdynamics/dev
+        mountPath: /var/run/secrets/nais.io/vault
   env:
     - name: APP_ENVIRONMENT_NAME
       value: "q0"
@@ -73,6 +75,8 @@ spec:
       value: "https://isso-q.adeo.no:443/isso"
     - name: OIDC_REDIRECT_URL
       value: "https://app-q0.adeo.no/veilarblogin/api/login"
+    - name: ABAC_PDP_ENDPOINT_URL
+      value: "https://wasapp-q0.adeo.no/asm-pdp/authorize"
     - name: AKTOER_V1_ENDPOINTURL
       value: "https://app-q0.adeo.no/aktoerregister/ws/Aktoer/v1"
     - name: AKTOER_V1_SECURITYTOKEN
@@ -215,12 +219,6 @@ spec:
       value: "SAML"
     - name: VIRKSOMHET_ARBEIDSFORDELING_V1_WSDLURL
       value: "http://maven.adeo.no/nexus/content/groups/public/no/nav/tjenester/nav-arbeidsfordeling-v1-tjenestespesifikasjon/1.1.0/nav-arbeidsfordeling-v1-tjenestespesifikasjon-1.1.0.zip"
-    - name: VIRKSOMHET_BEHANDLEBRUKERPROFIL_V2_ENDPOINTURL
-      value: "https://wasapp-q0.adeo.no/tpsws/BehandleBrukerprofil_v2"
-    - name: VIRKSOMHET_BEHANDLEBRUKERPROFIL_V2_SECURITYTOKEN
-      value: "SAML"
-    - name: VIRKSOMHET_BEHANDLEBRUKERPROFIL_V2_WSDLURL
-      value: "http://maven.adeo.no/nexus/content/groups/public/no/nav/tjenester/nav-behandleBrukerprofil-v2-tjenestespesifikasjon/2.0.0/nav-behandleBrukerprofil-v2-tjenestespesifikasjon-2.0.0.zip"
     - name: VIRKSOMHET_BEHANDLEPERSON_V1_ENDPOINTURL
       value: "https://wasapp-q0.adeo.no/tpsws/ws/BehandlePerson/v1"
     - name: VIRKSOMHET_BEHANDLEPERSON_V1_SECURITYTOKEN

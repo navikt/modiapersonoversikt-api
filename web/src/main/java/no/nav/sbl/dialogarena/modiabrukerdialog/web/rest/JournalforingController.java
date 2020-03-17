@@ -10,6 +10,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Tilgangskontrol
 import no.nav.sbl.dialogarena.naudit.AuditResources.Person;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.api.Feilmelding;
 import no.nav.sbl.dialogarena.naudit.Audit;
+import org.springframework.cache.annotation.Cacheable;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;

@@ -50,11 +50,13 @@ spec:
         mountPath: /var/run/secrets/nais.io/gosys_user
       - kvPath: /credential/data/prod/isso-rp-user
         mountPath: /var/run/secrets/nais.io/isso-rp-user
+      - kvPath: /apikey/appdynamics/prod
+        mountPath: /var/run/secrets/nais.io/vault
   env:
     - name: APP_ENVIRONMENT_NAME
       value: "p"
     - name: ISSO_CLIENT_ID
-      value: "veilarblogin"
+      value: "veilarblogin-p"
     - name: ISSO_DISCOVERY_URL
       value: "https://isso.adeo.no/isso/oauth2/.well-known/openid-configuration"
     - name: ISSO_REFRESH_URL
@@ -73,6 +75,8 @@ spec:
       value: "https://isso.adeo.no:443/isso"
     - name: OIDC_REDIRECT_URL
       value: "https://app.adeo.no/veilarblogin/api/login"
+    - name: ABAC_PDP_ENDPOINT_URL
+      value: "https://wasapp.adeo.no/asm-pdp/authorize"
     - name: AKTOER_V1_ENDPOINTURL
       value: "https://app.adeo.no/aktoerregister/ws/Aktoer/v1"
     - name: AKTOER_V1_SECURITYTOKEN
@@ -134,15 +138,15 @@ spec:
     - name: KODEVERKSMAPPER_UNDERKATEGORI_URL
       value: "https://kodeverksmapper.nais.adeo.no/kodeverksmapper/mapUnderkategori"
     - name: LDAP_BASEDN
-      value: "dc=preprod,dc=local"
+      value: "dc=adeo,dc=no"
     - name: LDAP_DOMAIN
-      value: "PREPROD.LOCAL"
+      value: "ADEO.NO"
     - name: LDAP_SERVICEUSER_BASEDN
-      value: "ou=ServiceAccounts,dc=preprod,dc=local"
+      value: "ou=ServiceAccounts,dc=adeo,dc=no"
     - name: LDAP_URL
       value: "ldaps://ldapgw.adeo.no"
     - name: LDAP_USER_BASEDN
-      value: "ou=NAV,ou=BusinessUnits,dc=preprod,dc=local"
+      value: "ou=NAV,ou=BusinessUnits,dc=adeo,dc=no"
     - name: MODIABRUKERDIALOG_STANDARDTEKSTER_TILBAKEMELDING_URL
       value: "https://navet.adeo.no/411275.cms"
     - name: PENSJON_PENSJONSAK_V1_ENDPOINTURL
@@ -211,12 +215,6 @@ spec:
       value: "SAML"
     - name: VIRKSOMHET_ARBEIDSFORDELING_V1_WSDLURL
       value: "http://maven.adeo.no/nexus/content/groups/public/no/nav/tjenester/nav-arbeidsfordeling-v1-tjenestespesifikasjon/1.1.0/nav-arbeidsfordeling-v1-tjenestespesifikasjon-1.1.0.zip"
-    - name: VIRKSOMHET_BEHANDLEBRUKERPROFIL_V2_ENDPOINTURL
-      value: "https://wasapp.adeo.no/tpsws/BehandleBrukerprofil_v2"
-    - name: VIRKSOMHET_BEHANDLEBRUKERPROFIL_V2_SECURITYTOKEN
-      value: "SAML"
-    - name: VIRKSOMHET_BEHANDLEBRUKERPROFIL_V2_WSDLURL
-      value: "http://maven.adeo.no/nexus/content/groups/public/no/nav/tjenester/nav-behandleBrukerprofil-v2-tjenestespesifikasjon/2.0.0/nav-behandleBrukerprofil-v2-tjenestespesifikasjon-2.0.0.zip"
     - name: VIRKSOMHET_BEHANDLEPERSON_V1_ENDPOINTURL
       value: "https://wasapp.adeo.no/tpsws/ws/BehandlePerson/v1"
     - name: VIRKSOMHET_BEHANDLEPERSON_V1_SECURITYTOKEN

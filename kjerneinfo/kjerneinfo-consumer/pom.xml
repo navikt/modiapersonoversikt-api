@@ -60,11 +60,6 @@
             <artifactId>kodeverk-consumer</artifactId>
             <version>${project.version}</version>
         </dependency>
-        <dependency>
-            <groupId>no.nav.sbl.dialogarena</groupId>
-            <artifactId>brukerprofil-domain</artifactId>
-            <version>${project.version}</version>
-        </dependency>
 
         <!-- Tjenester -->
         <dependency>

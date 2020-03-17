@@ -13,7 +13,7 @@
 
     <properties>
         <jaxb-impl.version>2.2.6</jaxb-impl.version>
-        <pdfbox.version>1.8.16</pdfbox.version>
+        <pdfbox.version>2.0.19</pdfbox.version>
     </properties>
 
     <dependencies>

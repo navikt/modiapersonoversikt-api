@@ -1,6 +1,7 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.pdl
 
 import com.google.gson.GsonBuilder
+import no.nav.common.auth.SsoToken
 import no.nav.common.auth.SubjectHandler
 import no.nav.log.MDCConstants
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.pdl.PdlPersonResponse
@@ -29,12 +30,19 @@ class PdlOppslagServiceImpl : PdlOppslagService {
 
     override fun hentPerson(fnr: String): PdlPersonResponse? {
         val query = this::class.java.getResource("/pdl/hentPerson.graphql").readText().replace("[\n\r]", "")
-        return graphqlRequest(PdlRequest(query, Variables(fnr)))
+        val pdlFnr = PdlSyntetiskFnrMapper.mapTilPdl(fnr)
+        return graphqlRequest(PdlRequest(query, Variables(pdlFnr)))
+    }
+
+    override fun hentNavn(fnr: String): PdlPersonResponse? {
+        val query = this::class.java.getResource("/pdl/hentNavn.graphql").readText().replace("[\n\r]", "")
+        val pdlFnr = PdlSyntetiskFnrMapper.mapTilPdl(fnr)
+        return graphqlRequest(PdlRequest(query, Variables(pdlFnr)))
     }
 
     private fun graphqlRequest(request: PdlRequest): PdlPersonResponse? {
-        val veilederOidcToken = SubjectHandler.getSsoToken().orElseThrow { IllegalStateException("Kunne ikke hente ut veileders ssoTOken") }
-        val consumerOidcToken = stsService.hentConsumerOidcToken()
+        val veilederOidcToken : String = SubjectHandler.getSsoToken(SsoToken.Type.OIDC).orElseThrow { IllegalStateException("Kunne ikke hente ut veileders ssoTOken") }
+        val consumerOidcToken : String = stsService.hentConsumerOidcToken()
 
         val uuid = UUID.randomUUID()
 
