@@ -3,10 +3,11 @@ package no.nav.sbl.dialogarena.naudit
 import no.nav.common.auth.SubjectHandler
 import org.slf4j.LoggerFactory
 
-private val log = LoggerFactory.getLogger("AuditLogger")
+private val auditLogg = LoggerFactory.getLogger("AuditLogger")
+private val tjenestekallLogg = LoggerFactory.getLogger("SecureLog")
 
 class Audit {
-    open class AuditResource(val resource: String)
+    open class AuditResource(val resource: String, val sendToArcsight: Boolean = false)
     enum class Action {
         CREATE, READ, UPDATE, DELETE
     }
@@ -71,7 +72,11 @@ class Audit {
                     .filterNotNull()
                     .joinToString(" ")
 
-            log.info(logline)
+            tjenestekallLogg.info(logline)
+
+            if (resourceType.sendToArcsight || action != Action.READ) {
+                auditLogg.info(logline)
+            }
         }
     }
 }
