@@ -1,8 +1,8 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll
 
-import com.nhaarman.mockito_kotlin.any
-import com.nhaarman.mockito_kotlin.mock
-import com.nhaarman.mockito_kotlin.whenever
+import com.nhaarman.mockitokotlin2.any
+import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.whenever
 import no.nav.sbl.dialogarena.naudit.Audit
 import no.nav.sbl.dialogarena.rsbac.*
 import no.nav.sbl.dialogarena.rsbac.Function

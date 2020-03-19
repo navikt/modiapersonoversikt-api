@@ -43,12 +43,12 @@ public class DokumentMetadataService {
     public synchronized ResultatWrapper<List<DokumentMetadata>> hentDokumentMetadata(String fnr) {
         DokumentMetadataResultat resultat = new DokumentMetadataResultat();
 
-        hentJournalposter(fnr, resultat);
-        hentSoknader(fnr, resultat);
+        hentJournalposter(fnr, resultat);   // Populerer journalposter med data fra SAF
+        hentSoknader(fnr, resultat);        // Populerer soknader med data fra henvendelse
 
-        populerDokmotSoknaderMedJournalpostIdFraJoark(resultat);
+        populerDokmotSoknaderMedJournalpostIdFraJoark(resultat); // Augmenterer soknader med data fra joark
 
-        leggTilHenvendelseSomBaksystemIJournalposterOmSoknadEksisterer(resultat);
+        leggTilHenvendelseSomBaksystemIJournalposterOmSoknadEksisterer(resultat); // Augmenterer journalposter med data fra henvendelse
 
         Stream<DokumentMetadata> innsendteSoknaderSomHarEndretTema = finnSoknaderSomHarForskjelligTemaISoknadOgJournalpost(resultat);
 
