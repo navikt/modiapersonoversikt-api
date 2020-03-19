@@ -21,8 +21,9 @@ import javax.ws.rs.core.HttpHeaders.AUTHORIZATION
 
 
 class PdlOppslagServiceImpl : PdlOppslagService {
+    private val log = LoggerFactory.getLogger(PdlOppslagServiceImpl::class.java)
     private val tjenestekallLogg = LoggerFactory.getLogger("SecureLog")
-    private val OPPSLAG_URL = getEnvironmentUrl();
+    private val OPPSLAG_URL = getEnvironmentUrl()
     private val gson = GsonBuilder().setDateFormat("yyyy-MM-dd").create()
 
     @Inject
@@ -41,43 +42,54 @@ class PdlOppslagServiceImpl : PdlOppslagService {
     }
 
     private fun graphqlRequest(request: PdlRequest): PdlPersonResponse? {
-        val veilederOidcToken : String = SubjectHandler.getSsoToken(SsoToken.Type.OIDC).orElseThrow { IllegalStateException("Kunne ikke hente ut veileders ssoTOken") }
-        val consumerOidcToken : String = stsService.hentConsumerOidcToken()
-
         val uuid = UUID.randomUUID()
+        try {
+            val consumerOidcToken : String = stsService.hentConsumerOidcToken()
+            val veilederOidcToken : String = SubjectHandler.getSsoToken(SsoToken.Type.OIDC).orElseThrow { IllegalStateException("Kunne ikke hente ut veileders ssoTOken") }
 
-        tjenestekallLogg.info("""
-            PDL-request: $uuid
-            ------------------------------------------------------------------------------------
-                ident: ${request.variables.ident}
-                callId: ${MDC.get(MDCConstants.MDC_CALL_ID)}
-            ------------------------------------------------------------------------------------
-        """.trimIndent())
-
-        val content: String = RestUtils.withClient { client ->
-            val response = client.target(OPPSLAG_URL)
-                    .request()
-                    .header(NAV_PERSONIDENT_HEADER, request.variables.ident)
-                    .header(NAV_CALL_ID_HEADER, MDC.get(MDCConstants.MDC_CALL_ID))
-                    .header(AUTHORIZATION, AUTH_METHOD_BEARER + AUTH_SEPERATOR + veilederOidcToken)
-                    .header(NAV_CONSUMER_TOKEN_HEADER, AUTH_METHOD_BEARER + AUTH_SEPERATOR + consumerOidcToken)
-                    .header(TEMA_HEADER, ALLE_TEMA_HEADERVERDI)
-                    .header(OPPLYSNINGSTYPER_HEADER, OPPLYSNINGSTYPER_HEADERVERDI)
-                    .post(Entity.json(request))
-
-            val body = response.readEntity(String::class.java)
             tjenestekallLogg.info("""
-            PDL-response: $uuid
-            ------------------------------------------------------------------------------------
-                status: ${response.status} ${response.statusInfo}
-                body: $body
-            ------------------------------------------------------------------------------------
-        """.trimIndent())
+                PDL-request: $uuid
+                ------------------------------------------------------------------------------------
+                    ident: ${request.variables.ident}
+                    callId: ${MDC.get(MDCConstants.MDC_CALL_ID)}
+                ------------------------------------------------------------------------------------
+            """.trimIndent())
 
-            body
+            val content: String = RestUtils.withClient { client ->
+                val response = client.target(OPPSLAG_URL)
+                        .request()
+                        .header(NAV_PERSONIDENT_HEADER, request.variables.ident)
+                        .header(NAV_CALL_ID_HEADER, MDC.get(MDCConstants.MDC_CALL_ID))
+                        .header(AUTHORIZATION, AUTH_METHOD_BEARER + AUTH_SEPERATOR + veilederOidcToken)
+                        .header(NAV_CONSUMER_TOKEN_HEADER, AUTH_METHOD_BEARER + AUTH_SEPERATOR + consumerOidcToken)
+                        .header(TEMA_HEADER, ALLE_TEMA_HEADERVERDI)
+                        .header(OPPLYSNINGSTYPER_HEADER, OPPLYSNINGSTYPER_HEADERVERDI)
+                        .post(Entity.json(request))
+
+                val body = response.readEntity(String::class.java)
+                tjenestekallLogg.info("""
+                PDL-response: $uuid
+                ------------------------------------------------------------------------------------
+                    status: ${response.status} ${response.statusInfo}
+                    body: $body
+                ------------------------------------------------------------------------------------
+            """.trimIndent())
+
+                body
+            }
+
+            return gson.fromJson(content, PdlPersonResponse::class.java)
+        } catch (exception: Exception) {
+            log.error("Feilet ved oppslag mot PDL (ID: $uuid)", exception)
+            tjenestekallLogg.error("""
+                PDL-response:                 $uuid
+                ------------------------------------------------------------------------------------
+                    exception:
+                    $exception
+                ------------------------------------------------------------------------------------
+            """.trimIndent())
+            return null
         }
-
-        return gson.fromJson(content, PdlPersonResponse::class.java)
     }
 }
 
