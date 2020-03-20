@@ -114,7 +114,7 @@ spec:
     - name: DOMENE_BRUKERDIALOG_SENDUTHENVENDELSE_V1_WSDLURL
       value: "http://maven.adeo.no/nexus/content/groups/public/no/nav/sbl/dialogarena/send-ut-henvendelse/0.7/send-ut-henvendelse-0.7.zip"
     - name: INNSYNJOURNAL_V2_ENDPOINTURL
-      value: "https://wasapp.adeo.no/joark/InnsynJournal/v2"
+      value: "https://dokarkiv.nais.adeo.no/services/innsynjournal/v2"
     - name: INNSYNJOURNAL_V2_SECURITYTOKEN
       value: "SAML"
     - name: INNSYNJOURNAL_V2_WSDLURL
