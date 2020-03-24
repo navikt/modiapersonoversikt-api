@@ -42,7 +42,6 @@ class OppgaveController @Inject constructor(
     fun leggTilbake(@Context httpRequest: HttpServletRequest, request: LeggTilbakeRequest): Response {
         return tilgangkontroll
                 .check(Policies.tilgangTilModia)
-                .check(Policies.kanPlukkeOppgave)
                 .get(Audit.describe(UPDATE, Henvendelse.Oppgave.LeggTilbake, "oppgaveId" to request.oppgaveId)) {
                     val valgtEnhet = RestUtils.hentValgtEnhet(httpRequest)
                     val leggTilbakeOppgaveIGsakRequest = lagLeggTilbakeRequest(request, valgtEnhet)

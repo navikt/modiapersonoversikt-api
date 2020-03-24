@@ -1,6 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll
 
-import com.nhaarman.mockito_kotlin.*
+import com.nhaarman.mockitokotlin2.*
 import no.nav.sbl.dialogarena.rsbac.DecisionEnums
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
