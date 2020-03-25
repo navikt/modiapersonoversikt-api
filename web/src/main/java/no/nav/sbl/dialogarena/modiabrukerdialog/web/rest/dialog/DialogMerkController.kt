@@ -72,12 +72,25 @@ class DialogMerkController @Inject constructor(private val behandleHenvendelsePo
     }
 
     @POST
+    @Path("/tvungenferdigstill")
+    fun tvungenFerdigstill(request: TvungenFerdigstillRequest): Response {
+        return tilgangskontroll
+                .check(Policies.tilgangTilBruker.with(request.fnr))
+                .check(Policies.behandlingsIderTilhorerBruker.with(BehandlingsIdTilgangData(request.fnr, listOf(request.eldsteMeldingTraadId))))
+                .get(Audit.describe(UPDATE, Henvendelse.Merk.Avslutt, "fnr" to request.fnr, "behandlingsIder" to request.eldsteMeldingTraadId)) {
+                    behandleHenvendelsePortType.ferdigstillUtenSvar(request.eldsteMeldingTraadId, request.saksbehandlerValgtEnhet)
+                    oppgaveBehandlingService.ferdigstillOppgaveIGsak(request.eldsteMeldingOppgaveId, Optional.empty(), request.saksbehandlerValgtEnhet, request.beskrivelse)
+                    Response.ok().build()
+                }
+    }
+
+    @POST
     @Path("/avsluttgosysoppgave")
     fun avsluttGosysOppgave(request: FerdigstillOppgaveRequest): Response {
         return tilgangskontroll
                 .check(Policies.tilgangTilBruker.with(request.fnr))
                 .get(Audit.describe(UPDATE, Henvendelse.Oppgave.Avslutt, "fnr" to request.fnr, "oppgaveid" to request.oppgaveid)) {
-                    oppgaveBehandlingService.ferdigstillGsakOppgave(request.oppgaveid, Optional.empty(), request.saksbehandlerValgtEnhet, request.beskrivelse);
+                    oppgaveBehandlingService.ferdigstillOppgaveIGsak(request.oppgaveid, Optional.empty(), request.saksbehandlerValgtEnhet, request.beskrivelse);
                     Response.ok().build()
                 }
     }
@@ -125,6 +138,14 @@ data class AvsluttUtenSvarRequest(
         val eldsteMeldingTraadId: String,
         val eldsteMeldingOppgaveId: String
 )
+
+data class TvungenFerdigstillRequest(
+        val fnr: String,
+        val saksbehandlerValgtEnhet: String,
+        val eldsteMeldingTraadId: String,
+        val eldsteMeldingOppgaveId: String,
+        val beskrivelse: String
+        )
 
 data class FerdigstillOppgaveRequest(
         val fnr: String,
