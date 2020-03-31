@@ -42,7 +42,6 @@ private const val TILRETTELAGT_KOMMUNIKASJON_KODEVERKSPRAK = "nb"
 @Produces(APPLICATION_JSON)
 class PersonController @Inject constructor(private val kjerneinfoService: PersonKjerneinfoServiceBi,
                                            private val kodeverk: KodeverkmanagerBi,
-                                           private val unleashService: UnleashService,
                                            private val tilgangskontroll: Tilgangskontroll,
                                            private val pdlOppslagService: PdlOppslagService) {
 
@@ -80,7 +79,7 @@ class PersonController @Inject constructor(private val kjerneinfoService: Person
                                 "navn" to getNavn(person?.personfakta?.personnavn),
                                 "diskresjonskode" to person?.personfakta?.diskresjonskode?.let { Kode(it) },
                                 "bankkonto" to hentBankkonto(person),
-                                "tilrettelagtKomunikasjonsListe" to hentTilrettelagtKommunikasjon(person?.personfakta?.tilrettelagtKommunikasjon, pdlPerson),
+                                "tilrettelagtKomunikasjonsListe" to hentTilrettelagtKommunikasjon(pdlPerson),
                                 "personstatus" to getPersonstatus(person),
                                 "statsborgerskap" to mapStatsborgerskap(person?.personfakta),
                                 "sivilstand" to mapOf(
@@ -139,7 +138,7 @@ class PersonController @Inject constructor(private val kjerneinfoService: Person
             "bostatus" to person?.personfakta?.bostatus?.let(::Kode)
     )
 
-    private fun hentTilrettelagtKommunikasjon(tilrettelagtKommunikasjon: List<Kodeverdi>?, pdlPerson: PdlPersonResponse?): List<TilrettelagtKommunikasjonsbehov> {
+    private fun hentTilrettelagtKommunikasjon(pdlPerson: PdlPersonResponse?): List<TilrettelagtKommunikasjonsbehov> {
         val pdlTilrettelagtKommunikasjon : List<PdlTilrettelagtKommunikasjon> = pdlPerson?.data?.hentPerson?.tilrettelagtKommunikasjon ?: emptyList()
         logger.info("Tilrettelagt: " + pdlTilrettelagtKommunikasjon.toString())
 

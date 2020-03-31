@@ -46,7 +46,6 @@ internal class PersonControllerIntTest {
         val personController = PersonController(
                 kjerneinfoMock,
                 mock(),
-                mock(),
                 TilgangskontrollMock.get(),
                 pdlMock
         )

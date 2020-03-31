@@ -2,6 +2,7 @@ package no.nav.sbl.dialogarena.sporsmalogsvar.context;
 
 import no.nav.kjerneinfo.consumer.fim.person.PersonKjerneinfoServiceBi;
 import no.nav.modig.content.ContentRetriever;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.arbeidsfordeling.ArbeidsfordelingV1Service;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.kodeverk.StandardKodeverk;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.ldap.LDAPService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Tilgangskontroll;
@@ -34,7 +35,8 @@ public class SporsmalOgSvarContext {
             Tilgangskontroll tilgangskontroll,
             StandardKodeverk standardKodeverk,
             @Named("propertyResolver") ContentRetriever propertyResolver,
-            LDAPService ldapService
+            LDAPService ldapService,
+            ArbeidsfordelingV1Service arbeidsfordelingService
     ) {
         return new HenvendelseBehandlingServiceImpl(
                 henvendelsePortType,
@@ -43,7 +45,8 @@ public class SporsmalOgSvarContext {
                 tilgangskontroll,
                 standardKodeverk,
                 propertyResolver,
-                ldapService
+                ldapService,
+                arbeidsfordelingService
         );
     }
 
