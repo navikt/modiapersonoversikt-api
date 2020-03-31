@@ -4,6 +4,7 @@ import no.nav.common.auth.SubjectHandler
 import no.nav.metrics.MetricsFactory.createEvent
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Oppgave
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.HenvendelseUtsendingService
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.LeggTilbakeOppgaveIGsakRequest
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveBehandlingService
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.ldap.LDAPService
@@ -34,6 +35,7 @@ class OppgaveController @Inject constructor(
         private val oppgaveBehandlingService: OppgaveBehandlingService,
         private val plukkOppgaveService: PlukkOppgaveService,
         private val ldapService: LDAPService,
+        private val henvendelseUtsendingService: HenvendelseUtsendingService,
         private val tilgangkontroll: Tilgangskontroll
 ) {
 
@@ -48,6 +50,9 @@ class OppgaveController @Inject constructor(
 
                     try {
                         oppgaveBehandlingService.leggTilbakeOppgaveIGsak(leggTilbakeOppgaveIGsakRequest)
+                        if (request.type == LeggTilbakeAarsak.FeilTema) {
+                            henvendelseUtsendingService.oppdaterTemagruppe(request.traadId, request.temagruppe.toString())
+                        }
                     } catch (exception: RuntimeException) {
                         throw handterRuntimeFeil(exception)
                     }
@@ -139,5 +144,6 @@ data class LeggTilbakeRequest(
         val type: LeggTilbakeAarsak,
         val oppgaveId: String,
         val temagruppe: Temagruppe?,
-        val beskrivelse: String?
+        val beskrivelse: String?,
+        val traadId: String?
 )

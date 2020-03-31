@@ -84,7 +84,7 @@ class LeggTilbakeOppgaveIGsakDelegate {
             return arbeidsfordelingService.finnBehandlendeEnhetListe(oppgaveFraGsak.getGjelder().getBrukerId(),
                     oppgaveFraGsak.getFagomrade().getKode(),
                     oppgaveFraGsak.getOppgavetype().getKode(),
-                    underkategoriKode(temagruppe));
+                    underkategoriKode_arbeidsfordelingOverstyrt(temagruppe));
         } catch (Exception e) {
             log.error("Henting av behandlende enhet feilet", e);
             return Collections.emptyList();
@@ -97,6 +97,13 @@ class LeggTilbakeOppgaveIGsakDelegate {
         } catch (LagreOppgaveOptimistiskLasing lagreOppgaveOptimistiskLasing) {
             throw new RuntimeException("Oppgaven kunne ikke lagres, den er for øyeblikket låst av en annen bruker.", lagreOppgaveOptimistiskLasing);
         }
+    }
+
+    private static String underkategoriKode_arbeidsfordelingOverstyrt(Temagruppe temagruppe) {
+        if (temagruppe.equals(Temagruppe.OKSOS)) {
+            return underkategoriKode(Temagruppe.ANSOS);
+        }
+        return underkategoriKode(temagruppe);
     }
 
     private static String underkategoriKode(Temagruppe temagruppe) {

@@ -11,6 +11,8 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Fritekst;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.HenvendelseUtils;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.EnhetsGeografiskeTilknytning;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.arbeidsfordeling.ArbeidsfordelingV1Service;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.kodeverk.StandardKodeverk;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.ldap.LDAPService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.*;
@@ -28,6 +30,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import javax.inject.Named;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -53,6 +56,7 @@ public class HenvendelseBehandlingServiceImpl implements HenvendelseBehandlingSe
     private final StandardKodeverk standardKodeverk;
     private final ContentRetriever propertyResolver;
     private final LDAPService ldapService;
+    private final ArbeidsfordelingV1Service arbeidsfordelingService;
 
     @Inject
     public HenvendelseBehandlingServiceImpl(
@@ -62,7 +66,8 @@ public class HenvendelseBehandlingServiceImpl implements HenvendelseBehandlingSe
             Tilgangskontroll tilgangskontroll,
             StandardKodeverk standardKodeverk,
             @Named("propertyResolver") ContentRetriever propertyResolver,
-            LDAPService ldapService
+            LDAPService ldapService,
+            ArbeidsfordelingV1Service arbeidsfordelingService
     ) {
         this.henvendelsePortType = henvendelsePortType;
         this.behandleHenvendelsePortType = behandleHenvendelsePortType;
@@ -71,6 +76,7 @@ public class HenvendelseBehandlingServiceImpl implements HenvendelseBehandlingSe
         this.standardKodeverk = standardKodeverk;
         this.propertyResolver = propertyResolver;
         this.ldapService = ldapService;
+        this.arbeidsfordelingService = arbeidsfordelingService;
     }
 
 
@@ -81,6 +87,12 @@ public class HenvendelseBehandlingServiceImpl implements HenvendelseBehandlingSe
     }
 
     private List<Melding> hentMeldingerFraHenvendelse(String fnr, String valgtEnhet) {
+        List<EnhetsGeografiskeTilknytning> valgtEnhetSGTenheter = arbeidsfordelingService.hentGTnummerForEnhet(valgtEnhet);
+        List<String> enhetslistGTogEnhet = new ArrayList<>();
+        enhetslistGTogEnhet.add(valgtEnhet);
+        for (int i = 0; valgtEnhetSGTenheter.size() > i; i++) {
+            enhetslistGTogEnhet.add(valgtEnhetSGTenheter.get(i).geografiskOmraade);
+        }
         WSHentHenvendelseListeResponse wsHentHenvendelseListeResponse = henvendelsePortType
                 .hentHenvendelseListe(new WSHentHenvendelseListeRequest().withFodselsnummer(fnr).withTyper(HenvendelseUtils.AKTUELLE_HENVENDELSE_TYPER));
 
@@ -94,8 +106,8 @@ public class HenvendelseBehandlingServiceImpl implements HenvendelseBehandlingSe
                 .map(melding -> (XMLHenvendelse) melding)
                 .map(tilMelding(propertyResolver, ldapService))
                 .map(this::journalfortTemaTilTemanavn)
-                .filter(kontorsperreTilgang(valgtEnhet))
-                .map(okonomiskSosialhjelpTilgang(valgtEnhet))
+                .filter(kontorsperreTilgangMedGT(enhetslistGTogEnhet))
+                .map(okonomiskSosialhjelpTilgangMedGT(enhetslistGTogEnhet, valgtEnhet))
                 .map(journalfortTemaTilgang(valgtEnhet))
                 .collect(toList());
     }
@@ -152,6 +164,25 @@ public class HenvendelseBehandlingServiceImpl implements HenvendelseBehandlingSe
             return null;
         }
 
+    }
+
+    private Predicate<Melding> kontorsperreTilgangMedGT(final List<String> valgEnhetsGT) {
+        return melding -> {
+            return isBlank(melding.kontorsperretEnhet) || (valgEnhetsGT
+                    .stream()
+                    .anyMatch(enhet -> enhet.equals(melding.kontorsperretEnhet))
+            );
+        };
+    }
+
+    private Function<Melding, Melding> okonomiskSosialhjelpTilgangMedGT(final List<String> valgtEnhetsGT, final String valgtEnhet) {
+        return melding -> {
+            if (valgtEnhetsGT.stream().anyMatch(enhet -> enhet.equals(melding.brukersEnhet))) {
+                return melding;
+            } else {
+                return okonomiskSosialhjelpTilgang(valgtEnhet).apply(melding);
+            }
+        };
     }
 
     private Predicate<Melding> kontorsperreTilgang(final String valgtEnhet) {
