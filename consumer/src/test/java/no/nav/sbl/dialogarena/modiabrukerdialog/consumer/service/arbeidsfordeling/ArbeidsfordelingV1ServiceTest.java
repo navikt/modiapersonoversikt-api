@@ -26,6 +26,7 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.Optional;
 
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.strategier.ByEnvironmentStrategy.ENVIRONMENT_PROPERTY;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.TestUtils.sneaky;
 import static java.util.Arrays.asList;
 import static org.junit.jupiter.api.Assertions.*;
@@ -34,7 +35,9 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
 class ArbeidsfordelingV1ServiceTest {
-
+    static {
+        System.setProperty(ENVIRONMENT_PROPERTY, "n/a");
+    }
     private static final String FAGOMRADE = "BAR";
     private static final String OPPGAVETYPE = "SPM_OG_SVAR";
     private static final String UNDERKATEGORI = "KNA_BAR";
