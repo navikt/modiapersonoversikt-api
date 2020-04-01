@@ -12,6 +12,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.sts.StsServiceI
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.strategier.ByEnvironmentStrategy.ENVIRONMENT_PROPERTY
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.RestConstants.*
 import no.nav.sbl.rest.RestUtils
+import no.nav.sbl.util.EnvironmentUtils
 import org.slf4j.LoggerFactory
 import org.slf4j.MDC
 import java.util.*
@@ -30,7 +31,7 @@ private val EnhetsGeografiskTilknytningResponse = object : GenericType<List<Enhe
 
 open class ArbeidsfordelingClient {
     companion object {
-        private val NORG2_URL = if ("p".equals(System.getProperty(ENVIRONMENT_PROPERTY))) {
+        private val NORG2_URL = if ("p".equals(EnvironmentUtils.getRequiredProperty(ENVIRONMENT_PROPERTY))) {
             "https://app.adeo.no/norg2"
         } else {
             "https://app-q0.adeo.no/norg2"
