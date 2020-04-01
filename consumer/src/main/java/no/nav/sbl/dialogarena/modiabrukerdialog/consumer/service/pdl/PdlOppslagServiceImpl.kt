@@ -12,6 +12,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.sts.StsServiceI
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.strategier.ByEnvironmentStrategy.ENVIRONMENT_PROPERTY
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.RestConstants.*
 import no.nav.sbl.rest.RestUtils
+import no.nav.sbl.util.EnvironmentUtils
 import org.slf4j.LoggerFactory
 import org.slf4j.MDC
 import java.util.*
@@ -94,7 +95,7 @@ class PdlOppslagServiceImpl : PdlOppslagService {
 }
 
 private fun getEnvironmentUrl(): String {
-    if ("p".equals(System.getProperty(ENVIRONMENT_PROPERTY))) {
+    if ("p".equals(EnvironmentUtils.getRequiredProperty(ENVIRONMENT_PROPERTY))) {
         return "https://pdl-api.nais.adeo.no/graphql"
     } else {
         return "https://pdl-api.nais.preprod.local/graphql"
