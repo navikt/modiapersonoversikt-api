@@ -4,6 +4,7 @@ import no.nav.kjerneinfo.consumer.egenansatt.EgenAnsattService;
 import no.nav.kjerneinfo.consumer.fim.person.PersonKjerneinfoServiceBi;
 import no.nav.kjerneinfo.domain.person.GeografiskTilknytning;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.AnsattEnhet;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.EnhetsGeografiskeTilknytning;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.arbeidsfordeling.ArbeidsfordelingV1Service;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.arbeidsfordeling.FinnBehandlendeEnhetException;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.kodeverksmapper.KodeverksmapperService;
@@ -20,9 +21,9 @@ import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-
 
 import static java.util.stream.Collectors.toList;
 
@@ -35,7 +36,6 @@ public class ArbeidsfordelingV1ServiceImpl implements ArbeidsfordelingV1Service 
     private final KodeverksmapperService kodeverksmapper;
     private final UnleashService unleashService;
     private final EgenAnsattService egenAnsattService;
-
 
 
     @Inject
@@ -54,10 +54,13 @@ public class ArbeidsfordelingV1ServiceImpl implements ArbeidsfordelingV1Service 
             Optional<Behandling> behandling = kodeverksmapper.mapUnderkategori(underkategori);
             GeografiskTilknytning geografiskTilknytning = personService.hentGeografiskTilknytning(brukerIdent);
             boolean erEgenAnsatt = egenAnsattService.erEgenAnsatt(brukerIdent);
+            if("ANSOS_KNA".equals(underkategori)) {
+                erEgenAnsatt = false;
+            }
             String oppgaveTypeMapped = kodeverksmapper.mapOppgavetype(oppgavetype);
 
             if (unleashService.isEnabled(Feature.ARBEIDSFORDELING_REST)) {
-                return arbeidsfordelingClient.hentArbeidsfordeling(behandling, geografiskTilknytning,oppgaveTypeMapped , fagomrade, erEgenAnsatt);
+                return arbeidsfordelingClient.hentArbeidsfordeling(behandling, geografiskTilknytning, oppgaveTypeMapped, fagomrade, erEgenAnsatt);
             }
             return hentAnsattEnhetViaSOAP(behandling, geografiskTilknytning, oppgavetype, fagomrade);
 
@@ -65,6 +68,16 @@ public class ArbeidsfordelingV1ServiceImpl implements ArbeidsfordelingV1Service 
             LOG.error(e.getMessage(), e);
             throw new FinnBehandlendeEnhetException(e.getMessage(), e);
         }
+    }
+
+    @Override
+    public List<EnhetsGeografiskeTilknytning> hentGTnummerForEnhet(String valgtEnhet) {
+        try {
+            return arbeidsfordelingClient.hentGTForEnhet(valgtEnhet);
+        } catch (Exception e) {
+            LOG.error(e.getMessage(), e);
+        }
+        return Collections.emptyList();
     }
 
     public List<AnsattEnhet> hentAnsattEnhetViaSOAP(Optional<Behandling> behandling, GeografiskTilknytning geografiskTilknytning, String oppgavetype, String fagomrade) throws IOException, FinnBehandlendeEnhetListeUgyldigInput {

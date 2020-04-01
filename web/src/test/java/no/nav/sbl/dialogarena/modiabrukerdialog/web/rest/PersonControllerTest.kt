@@ -48,13 +48,12 @@ internal class PersonControllerTest {
     private val organisasjonenhetV2Service: OrganisasjonEnhetV2Service = mock()
     private val kodeverk: KodeverkmanagerBi = mock()
     private val mapper = KjerneinfoMapper(kodeverk)
-    private val unleashService: UnleashService = mock()
     private val tilgangskontrollUtenTPSContext: TilgangskontrollContext = mock()
     private val tilgangskontrollUtenTPS = Tilgangskontroll(tilgangskontrollUtenTPSContext)
     private val tilgangskontroll: Tilgangskontroll = TilgangskontrollMock.get()
 
     private val service = DefaultPersonKjerneinfoService(personV3, mapper, tilgangskontrollUtenTPS, organisasjonenhetV2Service)
-    private val controller = PersonController(service, kodeverk, unleashService, tilgangskontroll, pdlOppslagService)
+    private val controller = PersonController(service, kodeverk, tilgangskontroll, pdlOppslagService)
 
     @BeforeEach
     fun before() {
