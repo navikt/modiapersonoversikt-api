@@ -36,9 +36,9 @@ spec:
     - https://app-q1.adeo.no/modiapersonoversikt-api
     - https://modapp-q1.adeo.no/modiapersonoversikt-api
   replicas:
-    min: 1
-    max: 2
-    cpuThresholdPercentage: 60
+    min: 4
+    max: 8
+    cpuThresholdPercentage: 50
   vault:
     enabled: true
     paths:
