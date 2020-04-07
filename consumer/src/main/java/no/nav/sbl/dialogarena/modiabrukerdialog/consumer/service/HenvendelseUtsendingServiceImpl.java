@@ -107,8 +107,9 @@ public class HenvendelseUtsendingServiceImpl implements HenvendelseUtsendingServ
     @Override
     public void ferdigstillHenvendelse(Melding melding, Optional<String> oppgaveId, Optional<Sak> sak, String behandlingsId, String saksbehandlersValgteEnhet) throws Exception {
         if (oppgaveId.isPresent() && oppgaveBehandlingService.oppgaveErFerdigstilt(oppgaveId.get())) {
-            logger.info("Oppgaven er ferdigstilt med id: {}", oppgaveId);
-            return;        }
+            logger.error("Oppgaven er ferdigstilt med id: {}", oppgaveId);
+            return;
+        }
 
         XMLHenvendelse xmlHenvendelse = lagXMLHenvendelseOgSettEnhet(melding);
 
