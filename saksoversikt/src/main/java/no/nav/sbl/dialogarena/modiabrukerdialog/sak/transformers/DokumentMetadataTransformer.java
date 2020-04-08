@@ -86,7 +86,7 @@ public class DokumentMetadataTransformer {
 
     private Dokument freHenvendelseDokumentTilDokument(DokumentFraHenvendelse dokument, boolean kanVises) {
         return new Dokument()
-                .withTittel(dokument.getTilleggstittel())
+                .withTittel(bulletproofKodeverkService.getSkjematittelForSkjemanummer(dokument.getKodeverkRef()))
                 .withKanVises(kanVises)
                 .withLogiskDokument(false)
                 .withDokumentreferanse(dokument.getArkivreferanse());
