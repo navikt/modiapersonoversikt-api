@@ -27,7 +27,6 @@ public class BulletproofKodeverkService {
 
     @Inject
     private KodeverkClient kodeverkClient;
-
     public String getSkjematittelForSkjemanummer(String vedleggsIdOrSkjemaId) {
         return getSkjematittelForSkjemanummer(vedleggsIdOrSkjemaId, "");
     }
