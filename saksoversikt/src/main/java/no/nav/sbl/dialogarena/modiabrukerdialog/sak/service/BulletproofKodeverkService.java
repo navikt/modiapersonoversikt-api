@@ -27,7 +27,32 @@ public class BulletproofKodeverkService {
 
     @Inject
     private KodeverkClient kodeverkClient;
+    public String getSkjematittelForSkjemanummer(String vedleggsIdOrSkjemaId) {
+        return getSkjematittelForSkjemanummer(vedleggsIdOrSkjemaId, "");
+    }
 
+    public String getSkjematittelForSkjemanummer(String vedleggsIdOrSkjemaId, String sprak) {
+        try {
+            String tittel;
+            String engelskTittel = lokaltKodeverk.getKode(vedleggsIdOrSkjemaId, Kodeverk.Nokkel.TITTEL_EN);
+            boolean sprakErEngelsk = !StringUtils.isEmpty(sprak) && "en".equals(sprak);
+
+            if (sprakErEngelsk && !isEmpty(engelskTittel)) {
+                tittel = engelskTittel;
+            } else {
+                tittel = lokaltKodeverk.getKode(vedleggsIdOrSkjemaId, Kodeverk.Nokkel.TITTEL);
+            }
+
+            if (tittel == null) {
+                throw new ApplicationException("Tittel er null!");
+            }
+
+            return tittel;
+        } catch (Exception e) {
+            LOG.warn("Fant ikke kodeverkid '" + vedleggsIdOrSkjemaId + "'. Bruker generisk tittel.", e);
+            return vedleggsIdOrSkjemaId;
+        }
+    }
 
     public ResultatWrapper<String> getTemanavnForTemakode(String temakode, String kodeverknavn) {
         try {
