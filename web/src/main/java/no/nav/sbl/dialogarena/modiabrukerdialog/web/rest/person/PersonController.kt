@@ -13,19 +13,17 @@ import no.nav.kodeverk.consumer.fim.kodeverk.KodeverkmanagerBi
 import no.nav.kodeverk.consumer.fim.kodeverk.to.feil.HentKodeverkKodeverkIkkeFunnet
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.pdl.PdlFullmakt
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.pdl.PdlPersonResponse
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.pdl.PdlDoedsbo
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.pdl.PdlTelefonnummer
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.pdl.PdlTilrettelagtKommunikasjon
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.pdl.PdlOppslagService
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.Feature
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.UnleashService
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Policies
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Tilgangskontroll
-import no.nav.sbl.dialogarena.naudit.AuditResources
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.kodeverk.Kode
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.lagPeriode
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.mapOfNotNullOrEmpty
 import no.nav.sbl.dialogarena.naudit.Audit
-import no.nav.sbl.dialogarena.naudit.Audit.Action.*
+import no.nav.sbl.dialogarena.naudit.Audit.Action.READ
+import no.nav.sbl.dialogarena.naudit.AuditResources
 import no.nav.tjeneste.virksomhet.person.v3.binding.HentPersonPersonIkkeFunnet
 import no.nav.tjeneste.virksomhet.person.v3.binding.HentPersonSikkerhetsbegrensning
 import org.slf4j.LoggerFactory
@@ -71,7 +69,7 @@ class PersonController @Inject constructor(private val kjerneinfoService: Person
                             pdlPerson?.data?.hentPerson?.fullmakt ?: listOf()
                         }
                         val pdlTelefonnummer = tryOf("Feil i oppslag mot PDL-telefonnummer") {
-                            pdlPerson?.data?.hentPerson?.telefonnummer
+                            pdlPerson?.data?.hentPerson?.telefonnummer?.map(::getPdlTelefon)
                         }
 
                         mapOf(
@@ -293,11 +291,18 @@ class PersonController @Inject constructor(private val kjerneinfoService: Person
         )
     }
 
-    private fun getTelefon(telefon: Telefon) = mapOf(
-            "retningsnummer" to telefon.retningsnummer?.let(::Kode),
-            "identifikator" to telefon.identifikator,
-            "sistEndretAv" to telefon.endretAv,
-            "sistEndret" to telefon.endringstidspunkt?.toString(DATO_TID_FORMAT)
+    private fun getTelefon(telefon: Telefon) = Telefonnummer(
+            retningsnummer = telefon.retningsnummer?.let(::Kode),
+            identifikator = telefon.identifikator,
+            sistEndretAv = telefon.endretAv,
+            sistEndret = telefon.endringstidspunkt?.toString(DATO_TID_FORMAT)
+    )
+
+    private fun getPdlTelefon(telefon: PdlTelefonnummer) = Telefonnummer(
+            retningsnummer = Kode(telefon.landskode, "Landskode"),
+            identifikator = telefon.nummer,
+            sistEndret = formatDate(telefon.metadata.endringer.first().registrert),
+            sistEndretAv = telefon.metadata.endringer.first().registrertAv
     )
 
     private fun getBegrensetInnsyn(fødselsnummer: String?, melding: String?) = mapOf(
@@ -329,4 +334,11 @@ class PersonController @Inject constructor(private val kjerneinfoService: Person
         val type: TilrettelagtKommunikasjonsbehovType,
         val kodeRef: String,
         val beskrivelse: String
+)
+
+data class Telefonnummer(
+        val retningsnummer: Kode?,
+        val identifikator: String?,
+        val sistEndretAv: String?,
+        val sistEndret: String?
 )

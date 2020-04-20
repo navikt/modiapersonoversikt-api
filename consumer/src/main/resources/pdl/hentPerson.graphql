@@ -66,6 +66,12 @@ query($ident: ID!, $navnHistorikk: Boolean!){
         landskode
         nummer
         prioritet
+        metadata {
+            endringer {
+                registrert
+                registrertAv
+            }
+        }
     }
   }
 }

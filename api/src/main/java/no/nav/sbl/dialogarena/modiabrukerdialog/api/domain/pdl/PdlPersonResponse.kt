@@ -97,5 +97,15 @@ data class PdlFullmakt(
 data class PdlTelefonnummer(
         val landskode: String,
         val nummer: String,
-        val prioritet: Int
+        val prioritet: Int,
+        val metadata: PdlMetadata
+)
+
+data class PdlMetadata(
+        val endringer: List<PdlEndringer>
+)
+
+data class PdlEndringer(
+        val registrert: Date,
+        val registrertAv: String
 )
