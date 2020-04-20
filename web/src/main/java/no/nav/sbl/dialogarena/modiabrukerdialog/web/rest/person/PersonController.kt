@@ -69,7 +69,9 @@ class PersonController @Inject constructor(private val kjerneinfoService: Person
                             pdlPerson?.data?.hentPerson?.fullmakt ?: listOf()
                         }
                         val pdlTelefonnummer = tryOf("Feil i oppslag mot PDL-telefonnummer") {
-                            pdlPerson?.data?.hentPerson?.telefonnummer?.map(::getPdlTelefon)
+                            pdlPerson?.data?.hentPerson?.telefonnummer
+                                    ?.sortedBy { it.prioritet }
+                                    ?.map(::getPdlTelefon)
                         }
 
                         mapOf(
