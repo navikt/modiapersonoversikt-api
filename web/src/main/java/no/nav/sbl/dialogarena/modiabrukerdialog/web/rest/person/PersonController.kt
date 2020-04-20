@@ -295,8 +295,8 @@ class PersonController @Inject constructor(private val kjerneinfoService: Person
 
     private fun getTelefon(telefon: Telefon) = Telefonnummer(
             retningsnummer = telefon.retningsnummer?.let(::Kode),
-            identifikator = telefon.identifikator,
-            sistEndretAv = telefon.endretAv,
+            identifikator = telefon.identifikator ?: "Ukjent",
+            sistEndretAv = telefon.endretAv ?: "Ukjent",
             sistEndret = telefon.endringstidspunkt?.toString(DATO_TID_FORMAT)
     )
 
@@ -341,8 +341,8 @@ class PersonController @Inject constructor(private val kjerneinfoService: Person
 
 data class Telefonnummer(
         val retningsnummer: Kode?,
-        val identifikator: String?,
-        val sistEndretAv: String?,
+        val identifikator: String,
+        val sistEndretAv: String,
         val sistEndret: String?,
         val prioritet: Int = -1
 )

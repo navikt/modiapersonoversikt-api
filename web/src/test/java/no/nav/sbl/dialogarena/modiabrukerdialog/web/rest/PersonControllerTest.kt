@@ -219,6 +219,7 @@ internal class PersonControllerTest {
                     .withKontaktinformasjon(Telefonnummer()
                             .withIdentifikator(TELEFONNUMMER)
                             .withRetningsnummer(Retningsnumre().withValue(RETNINGSNUMMER))
+                            .withEndretAv("BRUKER")
                             .withType(Telefontyper().withValue("MOBI")))
         }
 
