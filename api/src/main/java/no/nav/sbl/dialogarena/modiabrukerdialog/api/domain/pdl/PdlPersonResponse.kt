@@ -32,7 +32,8 @@ data class PdlPerson(
         val navn: List<PdlPersonNavn>,
         val kontaktinformasjonForDoedsbo: List<PdlDoedsbo>?,
         val tilrettelagtKommunikasjon: List<PdlTilrettelagtKommunikasjon>?,
-        val fullmakt: List<PdlFullmakt>?
+        val fullmakt: List<PdlFullmakt>?,
+        val telefonnummer: List<PdlTelefonnummer>?
 )
 
 data class PdlDoedsbo(
@@ -91,4 +92,10 @@ data class PdlFullmakt(
         val omraader: List<String>,
         val gyldigFraOgMed: Date,
         val gyldigTilOgMed: Date
+)
+
+data class PdlTelefonnummer(
+        val landskode: String,
+        val nummer: String,
+        val prioritet: Int
 )

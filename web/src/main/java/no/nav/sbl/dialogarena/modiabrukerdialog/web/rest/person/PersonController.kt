@@ -70,6 +70,9 @@ class PersonController @Inject constructor(private val kjerneinfoService: Person
                         val fullmakt = tryOf("Feil i oppslag mot PDL-fullmakt") {
                             pdlPerson?.data?.hentPerson?.fullmakt ?: listOf()
                         }
+                        val pdlTelefonnummer = tryOf("Feil i oppslag mot PDL-telefonnummer") {
+                            pdlPerson?.data?.hentPerson?.telefonnummer
+                        }
 
                         mapOf(
                                 "fødselsnummer" to person?.fodselsnummer?.nummer,
@@ -94,6 +97,7 @@ class PersonController @Inject constructor(private val kjerneinfoService: Person
                                 "postadresse" to person?.personfakta?.postadresse?.let { hentAdresse(it) },
                                 "sikkerhetstiltak" to person?.personfakta?.sikkerhetstiltak?.let { hentSikkerhetstiltak(it) },
                                 "kontaktinformasjon" to getTelefoner(person?.personfakta),
+                                "telefonnummer" to pdlTelefonnummer,
                                 "kontaktinformasjonForDoedsbo" to kontaktinfoForDoedsbo?.let { DoedsboMapping(it).mapKontaktinfoForDoedsbo() },
                                 "fullmakt" to fullmakt?.let { hentFullmakter(it) }
                         )
