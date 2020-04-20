@@ -42,11 +42,11 @@ constructor(private val organisasjonEnhetKontaktinformasjonService: Organisasjon
         return tilgangskontroll
                 .check(Policies.tilgangTilModia)
                 .get(Audit.describe(READ, Enhet.Kontaktinformasjon, "geografiskId" to geografiskId, "diskresjonskode" to diskresjonskode)) {
-                    if (geografiskId.isNullOrEmpty() && diskresjonskode.isNullOrEmpty()) throw NotFoundException()
+                    if (geografiskId.isNullOrEmpty() && diskresjonskode.isNullOrEmpty()) throw BadRequestException("'gt' eller 'dkode' må være spesifisert")
 
                     val enhetid = organisasjonEnhetV2Service.finnNAVKontor(geografiskId, diskresjonskode ?: "")
                             .map { it.enhetId }
-                            .orElseThrow { NotFoundException() }
+                            .orElseThrow { NotFoundException("Fant ikke enhetsid for gt: $geografiskId dkode: $diskresjonskode") }
 
                     EnhetKontaktinformasjon(hentMedId(enhetid))
                 }
