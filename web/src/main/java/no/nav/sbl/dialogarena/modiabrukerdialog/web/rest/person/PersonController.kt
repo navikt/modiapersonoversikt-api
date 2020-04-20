@@ -304,7 +304,8 @@ class PersonController @Inject constructor(private val kjerneinfoService: Person
             retningsnummer = Kode(telefon.landskode, "Landskode"),
             identifikator = telefon.nummer,
             sistEndret = formatDate(telefon.metadata.endringer.first().registrert),
-            sistEndretAv = telefon.metadata.endringer.first().registrertAv
+            sistEndretAv = telefon.metadata.endringer.first().registrertAv,
+            prioritet = telefon.prioritet
     )
 
     private fun getBegrensetInnsyn(fødselsnummer: String?, melding: String?) = mapOf(
@@ -342,5 +343,6 @@ data class Telefonnummer(
         val retningsnummer: Kode?,
         val identifikator: String?,
         val sistEndretAv: String?,
-        val sistEndret: String?
+        val sistEndret: String?,
+        val prioritet: Int = -1
 )
