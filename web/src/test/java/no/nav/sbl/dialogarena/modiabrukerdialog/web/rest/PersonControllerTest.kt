@@ -10,7 +10,6 @@ import no.nav.kodeverk.consumer.fim.kodeverk.KodeverkmanagerBi
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.pdl.*
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.organisasjonsEnhetV2.OrganisasjonEnhetV2Service
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.pdl.PdlOppslagService
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.UnleashService
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Tilgangskontroll
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.TilgangskontrollContext
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.TilgangskontrollMock
@@ -207,12 +206,12 @@ internal class PersonControllerTest {
 
             val response = controller.hent(FNR)
             val kontaktinformasjon = response["kontaktinformasjon"] as Map<*, *>
-            val mobil = kontaktinformasjon["mobil"] as Map<*, *>
-            val retningsnummer = mobil["retningsnummer"] as Kode
-            val nummer = mobil["identifikator"]
+            val mobil = kontaktinformasjon["mobil"] as no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.person.Telefonnummer
+            val retningsnummer = mobil.retningsnummer
+            val nummer = mobil.identifikator
 
             assertEquals(TELEFONNUMMER, nummer)
-            assertEquals(RETNINGSNUMMER, retningsnummer.kodeRef)
+            assertEquals(RETNINGSNUMMER, retningsnummer?.kodeRef)
         }
 
         private fun responseMedMobil() = mockPersonResponse().apply {
@@ -220,6 +219,7 @@ internal class PersonControllerTest {
                     .withKontaktinformasjon(Telefonnummer()
                             .withIdentifikator(TELEFONNUMMER)
                             .withRetningsnummer(Retningsnumre().withValue(RETNINGSNUMMER))
+                            .withEndretAv("BRUKER")
                             .withType(Telefontyper().withValue("MOBI")))
         }
 
@@ -269,7 +269,8 @@ internal class PersonControllerTest {
                         navn = emptyList(),
                         tilrettelagtKommunikasjon = null,
                         fullmakt = null,
-                        kontaktinformasjonForDoedsbo = null
+                        kontaktinformasjonForDoedsbo = null,
+                        telefonnummer = null
                 )
         ))
     }
