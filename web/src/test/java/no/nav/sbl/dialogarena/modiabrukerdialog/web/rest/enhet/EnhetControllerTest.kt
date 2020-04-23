@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito
 import java.util.*
-import javax.ws.rs.NotFoundException
+import javax.ws.rs.BadRequestException
 
 class EnhetControllerTest {
     private val organisasjonEnhetV2Service: OrganisasjonEnhetV2Service = mock()
@@ -23,7 +23,9 @@ class EnhetControllerTest {
     @Test
     fun `Kaster 404 hvis enhet ikke ble funnet`() {
         whenever(organisasjonEnhetV2Service.finnNAVKontor(Mockito.any(), Mockito.any())).thenReturn(Optional.empty())
-        Assertions.assertThrows(NotFoundException::class.java, { controller.finnEnhet("", "") })
+        Assertions.assertThrows(BadRequestException::class.java) {
+            controller.finnEnhet("", "")
+        }
     }
 
 }

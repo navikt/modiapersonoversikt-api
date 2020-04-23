@@ -62,5 +62,16 @@ query($ident: ID!, $navnHistorikk: Boolean!){
         gyldigFraOgMed
         gyldigTilOgMed
     }
+    telefonnummer {
+        landskode
+        nummer
+        prioritet
+        metadata {
+            endringer {
+                registrert
+                registrertAv
+            }
+        }
+    }
   }
 }
