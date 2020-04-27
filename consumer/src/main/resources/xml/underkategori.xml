@@ -3124,5 +3124,9 @@
         <gosys underkategori="POL_GEN"/>
         <gsak kode="POL_GEN"/>
     </underkategori>
+    <underkategori kode="KLAGE_FRI" datoFom="2017-05-23" datoOpprettet="2017-05-23T12:00:00" dekode="Klage" endretAv="PK-43233" erGyldig="true" fagomrade="SYK" opprettetAv="PK-43233" gosys="true" gsak="true" leveranse="2017-HL3" jiraissue="PK-43233">
+        <gosys datoOpprettet="2017-05-23T12:00:00" endretAv="PK-43233" underkategori="KLAGE_FRI"/>
+        <gsak datoOpprettet="2017-05-23T12:00:00" endretAv="PK-43233" kode="KLAGE_FRI"/>
+    </underkategori>
 
 </underkategoriListe>
