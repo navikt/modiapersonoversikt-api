@@ -822,4 +822,18 @@
     <prioritetT kode="HOY_LGA" datoFom="2010-01-01" datoOpprettet="2018-06-22T01:00:00" dekode="Høy" endretAv="GO-1124" erGyldig="true" fagomrade="LGA" opprettetAv="GO-1124" gosys="true" gsak="true" ruting="false" leveranse="2018-Ux" jiraissue="GO-1124"/>
     <prioritetT kode="LAV_LGA" datoFom="2010-01-01" datoOpprettet="2018-06-22T01:00:00" dekode="Lav" endretAv="GO-1124" erGyldig="true" fagomrade="LGA" opprettetAv="GO-1124" gosys="true" gsak="true" ruting="false" leveranse="2018-Ux" jiraissue="GO-1124"/>
     <prioritetT kode="NORM_LGA" datoFom="2010-01-01" datoOpprettet="2018-06-22T01:00:00" dekode="Normal" endretAv="GO-1124" erGyldig="true" fagomrade="LGA" opprettetAv="GO-1124" gosys="true" gsak="true" ruting="false" leveranse="2018-Ux" jiraissue="GO-1124"/>
+    <prioritetT kode="NORM_FRI" datoFom="2014-07-01" datoOpprettet="2014-07-01T01:03:58" dekode="Normal" endretAv="PK-43232" erGyldig="true" fagomrade="FRI" opprettetAv="PK-12065" gosys="true" gsak="true" ruting="true" leveranse="2017-HL3" jiraissue="PK-43232">
+        <gosys datoOpprettet="2014-07-01T01:03:58" endretAv="PK-12065" kode="NORM_FRI" opprettetAv="PK-12065"/>
+        <gsak datoOpprettet="2014-07-01T01:03:58" endretAv="PK-12065" kode="NORM_FRI" opprettetAv="PK-12065"/>
+        <ruting datoOpprettet="2017-08-01T01:00:00" prioritetT="NORM_FRI" opprettetAv="PK-43232"/>
+    </prioritetT>
+    <prioritetT kode="LAV_FRI" datoFom="2014-07-01" datoOpprettet="2014-07-01T01:03:58" dekode="Lav" endretAv="PK-12065" erGyldig="true" fagomrade="FRI" opprettetAv="PK-12065" gosys="true" gsak="true" leveranse="2014-HL4" jiraissue="PK-12065">
+        <gosys datoOpprettet="2014-07-01T01:03:58" endretAv="PK-12065" kode="LAV_FRI" opprettetAv="PK-12065"/>
+        <gsak datoOpprettet="2014-07-01T01:03:58" endretAv="PK-12065" kode="LAV_FRI" opprettetAv="PK-12065"/>
+    </prioritetT>
+    <prioritetT kode="HOY_FRI" datoFom="2014-07-01" datoOpprettet="2014-07-01T01:03:58" dekode="Høy" endretAv="PK-12065" erGyldig="true" fagomrade="FRI" opprettetAv="PK-12065" gosys="true" gsak="true" leveranse="2014-HL4" jiraissue="PK-12065">
+        <gosys datoOpprettet="2014-07-01T01:03:58" endretAv="PK-12065" kode="HOY_FRI" opprettetAv="PK-12065"/>
+        <gsak datoOpprettet="2014-07-01T01:03:58" endretAv="PK-12065" kode="HOY_FRI" opprettetAv="PK-12065"/>
+    </prioritetT>
+
 </prioritetTListe>
