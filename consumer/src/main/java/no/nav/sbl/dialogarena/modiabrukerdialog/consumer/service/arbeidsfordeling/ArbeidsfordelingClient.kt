@@ -33,6 +33,8 @@ open class ArbeidsfordelingClient {
     companion object {
         private val NORG2_URL = if ("p".equals(EnvironmentUtils.getRequiredProperty(ENVIRONMENT_PROPERTY))) {
             "https://app.adeo.no/norg2"
+        } else if("q1".equals(EnvironmentUtils.getRequiredProperty(ENVIRONMENT_PROPERTY))) {
+            "https://app-q1.adeo.no/norg2"
         } else {
             "https://app-q0.adeo.no/norg2"
         }
