@@ -7,7 +7,8 @@ import no.nav.common.auth.SubjectHandler;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.Ansatt;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.AnsattEnhet;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.AnsattService;
-import no.nav.sbl.util.fn.UnsafeFunction;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import java.util.List;
@@ -18,6 +19,7 @@ import static java.util.stream.Collectors.toList;
 
 public class AnsattServiceImpl implements AnsattService {
 
+    private static final Logger LOG = LoggerFactory.getLogger(AnsattServiceImpl.class);
     private final GOSYSNAVansatt ansattWS;
 
     @Inject
@@ -66,7 +68,8 @@ public class AnsattServiceImpl implements AnsattService {
                     .map(ansatt -> new Ansatt(ansatt.getFornavn(), ansatt.getEtternavn(), ansatt.getAnsattId()))
                     .collect(toList());
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            LOG.error(e.getMessage(), e);
+            return emptyList();
         }
     }
 
