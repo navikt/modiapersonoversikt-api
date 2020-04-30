@@ -3124,5 +3124,24 @@
         <gosys underkategori="POL_GEN"/>
         <gsak kode="POL_GEN"/>
     </underkategori>
-
+    <underkategori kode="KLAGE_FRI" datoFom="2017-05-23" datoOpprettet="2017-05-23T12:00:00" dekode="Klage" endretAv="PK-43233" erGyldig="true" fagomrade="FRI" opprettetAv="PK-43233" gosys="true" gsak="true" leveranse="2017-HL3" jiraissue="PK-43233">
+        <gosys datoOpprettet="2017-05-23T12:00:00" endretAv="PK-43233" underkategori="KLAGE_FRI"/>
+        <gsak datoOpprettet="2017-05-23T12:00:00" endretAv="PK-43233" kode="KLAGE_FRI"/>
+    </underkategori>
+    <underkategori kode="KLAGE_AVS_FRI" datoFom="2017-05-23" datoOpprettet="2017-05-23T12:00:00" dekode="Klage avslag" endretAv="PK-43233" erGyldig="true" fagomrade="FRI" opprettetAv="PK-43233" gosys="true" gsak="true" leveranse="2017-HL3" jiraissue="PK-43233">
+        <gosys datoOpprettet="2017-05-23T12:00:00" endretAv="PK-43233" underkategori="KLAGE_AVS_FRI"/>
+        <gsak datoOpprettet="2017-05-23T12:00:00" endretAv="PK-43233" kode="KLAGE_AVS_FRI"/>
+    </underkategori>
+    <underkategori kode="ANKE_FRI" datoFom="2017-05-23" datoOpprettet="2017-05-23T12:00:00" dekode="Anke" endretAv="PK-43233" erGyldig="true" fagomrade="FRI" opprettetAv="PK-43233" gosys="true" gsak="true" leveranse="2017-HL3" jiraissue="PK-43233">
+        <gosys datoOpprettet="2017-05-23T12:00:00" endretAv="PK-43233" underkategori="ANKE_FRI"/>
+        <gsak datoOpprettet="2017-05-23T12:00:00" endretAv="PK-43233" kode="ANKE_FRI"/>
+    </underkategori>
+    <underkategori kode="FEILUTB_FRI" datoFom="2017-05-23" datoOpprettet="2017-05-23T12:00:00" dekode="Feilutbetaling" endretAv="PK-43233" erGyldig="true" fagomrade="FRI" opprettetAv="PK-43233" gosys="true" gsak="true" leveranse="2017-HL3" jiraissue="PK-43233">
+        <gosys datoOpprettet="2017-05-23T12:00:00" endretAv="PK-43233" underkategori="FEILUTB_FRI"/>
+        <gsak datoOpprettet="2017-05-23T12:00:00" endretAv="PK-43233" kode="FEILUTB_FRI"/>
+    </underkategori>
+    <underkategori kode="INNSYN_FRI" datoFom="2017-05-23" datoOpprettet="2017-05-23T12:00:00" dekode="Innsyn" endretAv="PK-43233" erGyldig="true" fagomrade="FRI" opprettetAv="PK-43233" gosys="true" gsak="true" leveranse="2017-HL3" jiraissue="PK-43233">
+        <gosys datoOpprettet="2017-05-23T12:00:00" endretAv="PK-43233" underkategori="INNSYN_FRI"/>
+        <gsak datoOpprettet="2017-05-23T12:00:00" endretAv="PK-43233" kode="INNSYN_FRI"/>
+    </underkategori>
 </underkategoriListe>
