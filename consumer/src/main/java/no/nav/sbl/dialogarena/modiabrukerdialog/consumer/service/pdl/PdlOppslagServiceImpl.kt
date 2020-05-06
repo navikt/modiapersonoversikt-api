@@ -3,12 +3,12 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.pdl
 import com.google.gson.GsonBuilder
 import no.nav.common.auth.SsoToken
 import no.nav.common.auth.SubjectHandler
+import no.nav.common.oidc.SystemUserTokenProvider
 import no.nav.log.MDCConstants
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.pdl.PdlPersonResponse
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.pdl.PdlRequest
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.pdl.Variables
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.pdl.PdlOppslagService
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.sts.StsServiceImpl
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.strategier.ByEnvironmentStrategy.ENVIRONMENT_PROPERTY
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.RestConstants.*
 import no.nav.sbl.rest.RestUtils
@@ -28,7 +28,7 @@ class PdlOppslagServiceImpl : PdlOppslagService {
     private val gson = GsonBuilder().setDateFormat("yyyy-MM-dd").create()
 
     @Inject
-    private lateinit var stsService: StsServiceImpl
+    private lateinit var stsService: SystemUserTokenProvider
 
     override fun hentPerson(fnr: String): PdlPersonResponse? {
         val query = this::class.java.getResource("/pdl/hentPerson.graphql").readText().replace("[\n\r]", "")
@@ -45,7 +45,7 @@ class PdlOppslagServiceImpl : PdlOppslagService {
     private fun graphqlRequest(request: PdlRequest): PdlPersonResponse? {
         val uuid = UUID.randomUUID()
         try {
-            val consumerOidcToken : String = stsService.hentConsumerOidcToken()
+            val consumerOidcToken : String = stsService.systemUserAccessToken
             val veilederOidcToken : String = SubjectHandler.getSsoToken(SsoToken.Type.OIDC).orElseThrow { IllegalStateException("Kunne ikke hente ut veileders ssoTOken") }
 
             tjenestekallLogg.info("""

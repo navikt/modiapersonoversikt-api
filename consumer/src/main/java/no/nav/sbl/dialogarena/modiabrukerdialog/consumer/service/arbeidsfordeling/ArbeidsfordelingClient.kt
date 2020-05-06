@@ -2,13 +2,13 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.arbeidsfordeli
 
 import no.nav.common.auth.SsoToken
 import no.nav.common.auth.SubjectHandler
+import no.nav.common.oidc.SystemUserTokenProvider
 import no.nav.kjerneinfo.domain.person.GeografiskTilknytning
 import no.nav.log.MDCConstants
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.AnsattEnhet
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.EnhetsGeografiskeTilknytning
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.arbeidsfordeling.ArbeidsfordelingEnhet
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.kodeverksmapper.domain.Behandling
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.sts.StsServiceImpl
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.strategier.ByEnvironmentStrategy.ENVIRONMENT_PROPERTY
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.RestConstants.*
 import no.nav.sbl.rest.RestUtils
@@ -41,7 +41,7 @@ open class ArbeidsfordelingClient {
     }
 
     @Inject
-    private lateinit var stsService: StsServiceImpl
+    private lateinit var stsService: SystemUserTokenProvider
 
     open fun hentGTForEnhet(enhet: String): List<EnhetsGeografiskeTilknytning> {
         return norgClient
@@ -53,7 +53,7 @@ open class ArbeidsfordelingClient {
 
     open fun hentArbeidsfordeling(behandling: Optional<Behandling>, geografiskTilknytning: GeografiskTilknytning, oppgavetype: String, fagomrade: String, erEgenAnsatt: Boolean): List<AnsattEnhet> {
         val veilederOidcToken: String = SubjectHandler.getSsoToken(SsoToken.Type.OIDC).orElseThrow { IllegalStateException("Kunne ikke hente ut veileders ssoTOken") }
-        val consumerOidcToken: String = stsService.hentConsumerOidcToken()
+        val consumerOidcToken: String = stsService.systemUserAccessToken
         val arbeidskritereieFordelingSkjermet: ArbeidskritereieFordelingSkjermet = ArbeidskritereieFordelingSkjermet(
                 behandlingstema = behandling?.map(Behandling::getBehandlingstema).orElse(null),
                 behandlingstype = behandling?.map(Behandling::getBehandlingstype).orElse(null),

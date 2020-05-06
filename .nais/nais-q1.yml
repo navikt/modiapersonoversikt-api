@@ -59,20 +59,8 @@ spec:
       value: "https://isso-q.adeo.no/isso/oauth2/.well-known/openid-configuration"
     - name: ISSO_REFRESH_URL
       value: "https://app-q1.adeo.no/veilarblogin/api/openam-refresh"
-      # Disse kan slettes i fremtiden når vi går over til å bruke STS'n i felles-biblioteket for hentiner av SystemUserToken
-      # ISSO_HOST_URL, ISSO_ISALIVE_URL, ISSO_ISSUES_URL, ISSO_JWKS_URL, OPENIDCONNECT_URL og OIDC_REDIRECT_URL
-#    - name: ISSO_HOST_URL
-#      value: "https://isso-q.adeo.no/isso/oauth2"
-#    - name: ISSO_ISALIVE_URL
-#      value: "https://isso-q.adeo.no/isso/isAlive.jsp"
-#    - name: ISSO_ISSUER_URL
-#      value: "https://isso-q.adeo.no:443/isso/oauth2"
-#    - name: ISSO_JWKS_URL
-#      value: "https://isso-q.adeo.no/isso/oauth2/connect/jwk_uri"
-#    - name: OPENIDCONNECT_URL
-#      value: "https://isso-q.adeo.no:443/isso"
-#    - name: OIDC_REDIRECT_URL
-#      value: "https://app-q1.adeo.no/veilarblogin/api/login"
+    - name: SECURITY_TOKEN_SERVICE_DISCOVERY_URL
+      value: "https://security-token-service.nais.preprod.local/rest/v1/sts/.well-known/openid-configuration"
     - name: ABAC_PDP_ENDPOINT_URL
       value: "https://wasapp-q1.adeo.no/asm-pdp/authorize"
     - name: AKTOER_V1_ENDPOINTURL
@@ -165,11 +153,6 @@ spec:
       value: "SAML"
     - name: SAKOGBEHANDLING_WSDLURL
       value: "http://maven.adeo.no/nexus/content/groups/public/no/nav/tjenester/fim/nav-fim-sakOgBehandling-v1-tjenestespesifikasjon/1.0.0-alpha011/nav-fim-sakOgBehandling-v1-tjenestespesifikasjon-1.0.0-alpha011.zip"
-    # BUrde bli erstattet med disoveryURL;
-    - name: SECURITY_TOKEN_SERVICE_TOKEN_URL
-      value: "https://security-token-service.nais.preprod.local/rest/v1/sts/token"
-#    - name: SECURITYTOKENSERVICE_URL
-#      value: "https://sts-q1.preprod.local/SecurityTokenServiceProvider/"
     - name: SERVER_AKTIVITETSPLAN_URL
       value: "https://app-q1.adeo.no"
     - name: SERVER_ARENA_URL
