@@ -2,8 +2,8 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.config;
 
 import no.nav.apiapp.ApiApplication;
 import no.nav.apiapp.config.ApiAppConfigurator;
-import no.nav.brukerdialog.security.Constants;
 import no.nav.brukerdialog.security.domain.IdentType;
+import no.nav.common.oidc.Constants;
 import no.nav.common.oidc.auth.OidcAuthenticatorConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.RedirectFilter;
 import org.springframework.context.annotation.Configuration;
@@ -26,7 +26,7 @@ public class ModiaApplicationContext implements ApiApplication {
         OidcAuthenticatorConfig isso = new OidcAuthenticatorConfig()
                 .withClientId(issoClientId)
                 .withDiscoveryUrl(issoDiscoveryUrl)
-                .withIdTokenCookieName(Constants.ID_TOKEN_COOKIE_NAME)
+                .withIdTokenCookieName(Constants.OPEN_AM_ID_TOKEN_COOKIE_NAME)
                 .withIdentType(IdentType.InternBruker)
                 .withRefreshUrl(issoRefreshUrl)
                 .withRefreshTokenCookieName(Constants.REFRESH_TOKEN_COOKIE_NAME);

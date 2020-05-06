@@ -1,15 +1,24 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service
 
-import no.nav.brukerdialog.security.oidc.SystemUserTokenProvider
 import no.nav.common.auth.SsoToken
 import no.nav.common.auth.SubjectHandler
+import no.nav.common.oidc.SystemUserTokenProvider
+import no.nav.sbl.dialogarena.common.cxf.StsSecurityConstants.SYSTEMUSER_PASSWORD
+import no.nav.sbl.dialogarena.common.cxf.StsSecurityConstants.SYSTEMUSER_USERNAME
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.HenvendelseLesService
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.RestConstants.SECURITY_TOKEN_SERVICE_BASEURL
 import no.nav.sbl.rest.RestUtils
-import no.nav.sbl.util.EnvironmentUtils
+import no.nav.sbl.util.EnvironmentUtils.getRequiredProperty
+import no.nav.sbl.util.EnvironmentUtils.resolveSrvUserPropertyName
 
 class HenvendelseLesServiceImpl : HenvendelseLesService {
-    private val baseUrl: String = EnvironmentUtils.getRequiredProperty("HENVENDELSE_LES_API_URL")
-    private val systemTokenProvider = SystemUserTokenProvider()
+    private val baseUrl: String = getRequiredProperty("HENVENDELSE_LES_API_URL")
+    private val systemTokenProvider = SystemUserTokenProvider(
+            SECURITY_TOKEN_SERVICE_BASEURL,
+            getRequiredProperty(SYSTEMUSER_USERNAME, resolveSrvUserPropertyName()),
+            getRequiredProperty(SYSTEMUSER_PASSWORD, resolveSrvUserPropertyName()),
+            RestUtils.createClient()
+    )
 
     override fun alleBehandlingsIderTilhorerBruker(fnr: String, behandlingsIder: List<String>): Boolean {
         val queryparams = byggQueryparams(
@@ -34,7 +43,7 @@ class HenvendelseLesServiceImpl : HenvendelseLesService {
                     .target(url)
                     .request()
                     .header("Authorization", "Bearer $token")
-                    .header("SystemAuthorization", "Bearer ${systemTokenProvider.token}")
+                    .header("SystemAuthorization", "Bearer ${systemTokenProvider.systemUserAccessToken}")
                     .get(T::class.java)
         }
     }
