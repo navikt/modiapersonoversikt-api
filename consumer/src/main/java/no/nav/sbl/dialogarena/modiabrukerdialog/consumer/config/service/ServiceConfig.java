@@ -2,6 +2,8 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.service;
 
 import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navansatt.GOSYSNAVansatt;
 import javax.inject.Named;
+
+import no.nav.common.oidc.SystemUserTokenProvider;
 import no.nav.dkif.consumer.support.DkifServiceImpl;
 import no.nav.kjerneinfo.consumer.egenansatt.EgenAnsattService;
 import no.nav.kjerneinfo.consumer.fim.person.PersonKjerneinfoServiceBi;
@@ -47,7 +49,6 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.organisasjonenh
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.pdl.PdlOppslagServiceImpl;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.person.PersonOppslagServiceImpl;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.saker.SakerServiceImpl;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.sts.StsServiceImpl;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.UnleashService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Tilgangskontroll;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.behandlehenvendelse.BehandleHenvendelsePortType;
@@ -65,6 +66,11 @@ import no.nav.tjeneste.virksomhet.tildeloppgave.v1.TildelOppgaveV1;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
+
+import static no.nav.sbl.dialogarena.common.cxf.StsSecurityConstants.SYSTEMUSER_PASSWORD;
+import static no.nav.sbl.dialogarena.common.cxf.StsSecurityConstants.SYSTEMUSER_USERNAME;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.RestConstants.SECURITY_TOKEN_SERVICE_DISCOVERYURL;
+import static no.nav.sbl.util.EnvironmentUtils.*;
 
 /**
  * MODIA ønsker å selv wire inn sine komponenters kontekster for å ha full kontroll over springoppsettet.
@@ -95,8 +101,8 @@ public class ServiceConfig {
     }
 
     @Bean
-    public HenvendelseLesService henvendelseLesService() {
-        return new HenvendelseLesServiceImpl();
+    public HenvendelseLesService henvendelseLesService(SystemUserTokenProvider systemUserTokenProvider) {
+        return new HenvendelseLesServiceImpl(systemUserTokenProvider);
     }
 
     @Bean
@@ -191,8 +197,12 @@ public class ServiceConfig {
     }
 
     @Bean
-    StsServiceImpl stsService() {
-        return new StsServiceImpl();
+    SystemUserTokenProvider systemUserTokenProvider() {
+        return new SystemUserTokenProvider(
+                SECURITY_TOKEN_SERVICE_DISCOVERYURL,
+                getRequiredProperty(SYSTEMUSER_USERNAME, resolveSrvUserPropertyName()),
+                getRequiredProperty(SYSTEMUSER_PASSWORD, resolverSrvPasswordPropertyName())
+        );
     }
 
     @Bean
