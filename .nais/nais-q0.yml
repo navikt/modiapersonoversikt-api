@@ -61,6 +61,8 @@ spec:
       value: "https://app-q0.adeo.no/veilarblogin/api/openam-refresh"
     - name: SECURITY_TOKEN_SERVICE_DISCOVERY_URL
       value: "https://security-token-service.nais.preprod.local/rest/v1/sts/.well-known/openid-configuration"
+    - name: SECURITYTOKENSERVICE_URL
+      value: "https://sts-q0.preprod.local/SecurityTokenServiceProvider/"
     - name: ABAC_PDP_ENDPOINT_URL
       value: "https://wasapp-q0.adeo.no/asm-pdp/authorize"
     - name: AKTOER_V1_ENDPOINTURL
