@@ -98,13 +98,7 @@
         <!--Modig-->
         <dependency>
             <groupId>no.nav.common</groupId>
-            <artifactId>oidc-security</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>no.nav.common</groupId>
-            <artifactId>oidc-security</artifactId>
-            <type>test-jar</type>
-            <scope>test</scope>
+            <artifactId>oidc</artifactId>
         </dependency>
 
         <dependency>
