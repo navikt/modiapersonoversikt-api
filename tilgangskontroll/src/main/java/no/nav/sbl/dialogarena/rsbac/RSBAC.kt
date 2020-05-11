@@ -75,6 +75,8 @@ class RSBACInstanceImpl<CONTEXT, OUTPUT>(val context: CONTEXT, var exception:  F
             val result : S = supplier.invoke()
             auditDescriptor.log(result)
             return result
+        } else if (decision.decision == DENY) {
+            auditDescriptor.denied(decision.message)
         }
 
         throw this.exception(decision.message)

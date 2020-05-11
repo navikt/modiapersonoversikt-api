@@ -1,13 +1,14 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll
 
+import no.nav.sbl.dialogarena.abac.AbacResponse
 import no.nav.sbl.dialogarena.abac.Decision
 import no.nav.sbl.dialogarena.rsbac.*
 import org.slf4j.LoggerFactory
 import javax.ws.rs.ForbiddenException
 
-fun Decision.toDecisionEnum(): DecisionEnums = when {
-    this == Decision.Deny -> DecisionEnums.DENY
-    this == Decision.Permit -> DecisionEnums.PERMIT
+fun AbacResponse.toDecisionEnum(): DecisionEnums = when(this.getDecision()) {
+    Decision.Deny -> DecisionEnums.DENY
+    Decision.Permit -> DecisionEnums.PERMIT
     else -> DecisionEnums.NOT_APPLICABLE
 }
 
@@ -16,7 +17,6 @@ class Policies {
         @JvmField
         val tilgangTilModia = Policy<TilgangskontrollContext>({ "Saksbehandler (${hentSaksbehandlerId()}) har ikke tilgang til modia" }) {
             checkAbac(AbacPolicies.tilgangTilModia())
-                    .getDecision()
                     .toDecisionEnum()
         }
 
@@ -41,14 +41,12 @@ class Policies {
         @JvmField
         val tilgangTilBruker = PolicyGenerator<TilgangskontrollContext, String>({ "Saksbehandler (${context.hentSaksbehandlerId()}) har ikke tilgang til ${data}"}) {
             context.checkAbac(AbacPolicies.tilgangTilBruker(data))
-                    .getDecision()
                     .toDecisionEnum()
         }
 
         @JvmField
         val kanPlukkeOppgave = Policy<TilgangskontrollContext>({ "Saksbehandler (${hentSaksbehandlerId()}) har ikke tilgang til plukk oppgave" }) {
             checkAbac(AbacPolicies.kanPlukkeOppgave())
-                    .getDecision()
                     .toDecisionEnum()
         }
 

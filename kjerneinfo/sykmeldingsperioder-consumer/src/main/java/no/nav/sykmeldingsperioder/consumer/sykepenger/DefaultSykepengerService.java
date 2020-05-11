@@ -42,6 +42,7 @@ public class DefaultSykepengerService implements SykepengerServiceBi {
             }
         } catch (HentSykepengerListeSikkerhetsbegrensning ex) {
             logger.warn("HentSykepengerListeSikkerhetsbegrensning ved kall på hentSykepengerListe", ex.getMessage());
+            auditLogger.denied(ex.getMessage());
             throw new AuthorizationException(ex.getMessage(), ex);
         }
         return mapper.map(rawResponse, SykepengerResponse.class);

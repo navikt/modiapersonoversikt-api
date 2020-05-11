@@ -93,6 +93,8 @@ public class HentPersonService {
                     faultDescriptionKey = "sikkerhetsbegrensning.diskresjonEgenAnsatt";
                 }
             }
+
+            auditLogger.denied(faultDescriptionKey);
             throw new AuthorizationException(faultDescriptionKey, hentPersonSikkerhetsbegrensning);
         }
         HentKjerneinformasjonResponse response = mapper.map(wsResponse, HentKjerneinformasjonResponse.class);
