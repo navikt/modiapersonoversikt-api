@@ -30,7 +30,7 @@ internal class TilgangskontrollTest {
                     .check(Policies.tilgangTilModia)
                     .getDecision()
 
-            assertEquals("Saksbehandler (Optional[Z999999]) har ikke tilgang til modia. Årsak: fp3_behandle_egen_ansatt", message)
+            assertEquals("Saksbehandler (Optional[Z999999]) har ikke tilgang til modia. Årsak: FP3", message)
             assertEquals(DecisionEnums.DENY, decision)
         }
 

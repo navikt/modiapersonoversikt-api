@@ -20,26 +20,39 @@ data class AbacResponse(private val response: List<Response>) {
                 response[0]
             }.invoke()
 
-    fun getCause(): String {
+    fun getCause(): DenyCause {
         val associatedAdvice = result.associatedAdvice ?: emptyList();
-        val attributes = associatedAdvice
+        val denyReasonAttributes = associatedAdvice
                 .find { advice -> advice.id == "deny_reason" }
                 ?.attributeAssignment
                 ?: emptyList()
-        val cause = attributes.find { it.attributeId == "cause" }
-        val policy = attributes.find { it.attributeId == "actual_policy" }
 
-        return if (cause != null && cause.value == "cause-0001-manglerrolle" && policy != null) {
-            policy.value
-        } else if (cause != null){
-            cause.value
-        } else {
-            "Unknown deny-reason"
+        val denyReasonPolicy = denyReasonAttributes
+                .find { it.attributeId == "actual_policy" }
+                ?.value
+
+        val denyCause = DenyCause
+                .values()
+                .find { it.policy == denyReasonPolicy }
+
+        if (denyCause == null) {
+            abacLogger.warn("Couldn't determind denyCause", associatedAdvice)
         }
+
+        return denyCause ?: DenyCause.UNKNOWN
     }
 
     fun getDecision(): Decision = result.decision
     fun getBiasedDecision(bias: Decision): Decision = if (applicativeDecisions.contains(result.decision)) result.decision else bias
+}
+
+enum class DenyCause(val policy: String) {
+    FP1("fp1_behandle_kode6"),
+    FP2("fp2_behandle_kode7"),
+    FP3("fp3_behandle_egen_ansatt"),
+    FP4("fp4_geografi"),
+    AD_ROLLE("modia_ad_tilganger"),
+    UNKNOWN("*");
 }
 
 data class Response(
