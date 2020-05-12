@@ -222,7 +222,7 @@ public class HentPersonService {
     private boolean saksbehandlerHarTilgangTilDiskresjonskode(String diskresjonskode) {
         return tilgangskontroll.check(Policies.tilgangTilDiskresjonskode.with(diskresjonskode))
                 .getDecision()
-                .getDecision()
+                .getValue()
                 .equals(DecisionEnums.PERMIT);
     }
 

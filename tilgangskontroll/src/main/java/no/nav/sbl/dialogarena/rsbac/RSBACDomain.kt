@@ -27,20 +27,20 @@ enum class DecisionEnums {
     fun isApplicable() = this == PERMIT || this == DENY
 }
 
-data class Decision(val message: String, val decision: DecisionEnums) {
-    fun withBias(bias: DecisionEnums) = Decision(this.message, this.decision.withBias(bias))
-    fun isPermit(): Boolean = this.decision == DecisionEnums.PERMIT
+data class Decision(val message: String, val value: DecisionEnums) {
+    fun withBias(bias: DecisionEnums) = Decision(this.message, this.value.withBias(bias))
+    fun isPermit(): Boolean = this.value == DecisionEnums.PERMIT
     fun assertPermit() {
-        if (this.decision != DecisionEnums.PERMIT) {
+        if (this.value != DecisionEnums.PERMIT) {
             throw RuntimeException(this.message)
         }
     }
 }
 
-interface Combinable<in CONTEXT> : Function<CONTEXT, DecisionEnums> {
+interface Combinable<in CONTEXT> : Function<CONTEXT, Decision> {
     fun getMessage(context: CONTEXT): String
-    override fun invoke(context: CONTEXT): DecisionEnums
-    fun <DATA> asGenerator(): Generator<CONTEXT, DATA> = PolicyGenerator({ getMessage(context) }) { invoke(context) }
+    override fun invoke(context: CONTEXT): Decision
+    fun <DATA> asGenerator(): Generator<CONTEXT, DATA> = PolicyGenerator({ getMessage(context) }) { invoke(context).value }
 }
 
 interface Generator<in CONTEXT, DATA> {
@@ -57,9 +57,8 @@ class PolicySet<CONTEXT>(
         return result!!.message
     }
 
-    override fun invoke(context: CONTEXT): DecisionEnums {
-        result = this.combining.combine(this.policies, context)
-        return result!!.decision
+    override fun invoke(context: CONTEXT): Decision {
+        return this.combining.combine(this.policies, context)
     }
 }
 
@@ -86,8 +85,8 @@ class Policy<CONTEXT> : Combinable<CONTEXT> {
         return this.message(context)
     }
 
-    override fun invoke(context: CONTEXT): DecisionEnums {
-        return this.rule.invoke(context)
+    override fun invoke(context: CONTEXT): Decision {
+        return Decision(getMessage(context), this.rule.invoke(context))
     }
 }
 

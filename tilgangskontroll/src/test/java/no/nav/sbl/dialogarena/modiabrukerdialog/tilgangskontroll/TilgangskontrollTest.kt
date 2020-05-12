@@ -52,25 +52,25 @@ internal class TilgangskontrollTest {
     inner class `modiaRolle policy` {
         @Test
         fun `deny om saksbehandler mangler modia-roller`() {
-            val decision = Policies.tilgangTilModia.invoke(mockContext())
+            val decision = Policies.tilgangTilModia.invoke(mockContext()).value
             assertEquals(DecisionEnums.DENY, decision)
         }
 
         @Test
         fun `permit om saksbehandler har modiagenerell-rollen`() {
-            val decision = Policies.tilgangTilModia.invoke(mockContext(roller = listOf("0000-ga-bd06_modiagenerelltilgang")))
+            val decision = Policies.tilgangTilModia.invoke(mockContext(roller = listOf("0000-ga-bd06_modiagenerelltilgang"))).value
             assertEquals(DecisionEnums.PERMIT, decision)
         }
 
         @Test
         fun `permit om saksbehandler har modiaoppfolging-rollen`() {
-            val decision = Policies.tilgangTilModia.invoke(mockContext(roller = listOf("0000-ga-modia-oppfolging")))
+            val decision = Policies.tilgangTilModia.invoke(mockContext(roller = listOf("0000-ga-modia-oppfolging"))).value
             assertEquals(DecisionEnums.PERMIT, decision)
         }
 
         @Test
         fun `permit om saksbehandler har modiasyfo-rollen`() {
-            val decision = Policies.tilgangTilModia.invoke(mockContext(roller = listOf("0000-ga-syfo-sensitiv")))
+            val decision = Policies.tilgangTilModia.invoke(mockContext(roller = listOf("0000-ga-syfo-sensitiv"))).value
             assertEquals(DecisionEnums.PERMIT, decision)
         }
     }
@@ -80,7 +80,7 @@ internal class TilgangskontrollTest {
         @Test
         fun `permit om bruker tilgang pa tema`() {
             val context = mockContext(tematilganger = setOf("OPP", "FMLI"))
-            val decision = Policies.tilgangTilTema.with(TilgangTilTemaData("1234", "FMLI")).invoke(context)
+            val decision = Policies.tilgangTilTema.with(TilgangTilTemaData("1234", "FMLI")).invoke(context).value
 
             assertEquals(DecisionEnums.PERMIT, decision)
         }
@@ -88,7 +88,7 @@ internal class TilgangskontrollTest {
         @Test
         fun `deny om bruker ikke har tilgang pa tema`() {
             val context = mockContext(tematilganger = setOf("OPP", "ARBD"))
-            val decision = Policies.tilgangTilTema.with(TilgangTilTemaData("1234", "FMLI")).invoke(context)
+            val decision = Policies.tilgangTilTema.with(TilgangTilTemaData("1234", "FMLI")).invoke(context).value
 
             assertEquals(DecisionEnums.DENY, decision)
         }
