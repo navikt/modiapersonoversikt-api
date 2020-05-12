@@ -20,6 +20,24 @@ data class AbacResponse(private val response: List<Response>) {
                 response[0]
             }.invoke()
 
+    fun getCause(): String {
+        val associatedAdvice = result.associatedAdvice ?: emptyList();
+        val attributes = associatedAdvice
+                .find { advice -> advice.id == "deny_reason" }
+                ?.attributeAssignment
+                ?: emptyList()
+        val cause = attributes.find { it.attributeId == "cause" }
+        val policy = attributes.find { it.attributeId == "actual_policy" }
+
+        return if (cause != null && cause.value == "cause-0001-manglerrolle" && policy != null) {
+            policy.value
+        } else if (cause != null){
+            cause.value
+        } else {
+            "Unknown deny-reason"
+        }
+    }
+
     fun getDecision(): Decision = result.decision
     fun getBiasedDecision(bias: Decision): Decision = if (applicativeDecisions.contains(result.decision)) result.decision else bias
 }

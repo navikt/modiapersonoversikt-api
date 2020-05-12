@@ -5,9 +5,7 @@ import no.nav.brukerdialog.security.context.SubjectExtension
 import no.nav.brukerdialog.security.domain.IdentType
 import no.nav.common.auth.SsoToken
 import no.nav.common.auth.Subject
-import no.nav.sbl.dialogarena.abac.AbacResponse
-import no.nav.sbl.dialogarena.abac.Decision
-import no.nav.sbl.dialogarena.abac.Response
+import no.nav.sbl.dialogarena.abac.*
 import no.nav.sbl.dialogarena.rsbac.DecisionEnums
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
@@ -32,7 +30,7 @@ internal class TilgangskontrollTest {
                     .check(Policies.tilgangTilModia)
                     .getDecision()
 
-            assertEquals("Saksbehandler (Optional[Z999999]) har ikke tilgang til modia", message)
+            assertEquals("Saksbehandler (Optional[Z999999]) har ikke tilgang til modia. Årsak: fp3_behandle_egen_ansatt", message)
             assertEquals(DecisionEnums.DENY, decision)
         }
 
@@ -75,7 +73,12 @@ private fun mockContext(
     whenever(context.hentSaksbehandlerId()).thenReturn(Optional.of(saksbehandlerIdent))
     whenever(context.hentTemagrupperForSaksbehandler(any())).thenReturn(tematilganger)
     whenever(context.checkAbac(any())).thenReturn(AbacResponse(listOf(
-            Response(abacTilgang, null)
+            Response(abacTilgang, listOf(
+                    Advice("deny_reason", listOf(
+                            AttributeAssignment("cause", "cause-0001-manglerrolle"),
+                            AttributeAssignment("actual_policy", "fp3_behandle_egen_ansatt")
+                    ))
+            ))
     )))
     return context
 }
