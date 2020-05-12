@@ -44,7 +44,7 @@ public class DefaultYtelseskontraktService implements YtelseskontraktServiceBi {
             }
         } catch (HentYtelseskontraktListeSikkerhetsbegrensning hentYtelseskontraktBegrensning) {
             logger.warn("HentYtelseskontraktListeSikkerhetsbegrensning ved kall på hentYtelseskontraktListe", hentYtelseskontraktBegrensning.getMessage());
-            auditLogger.denied(hentYtelseskontraktBegrensning.getMessage());
+            auditLogger.denied("Årsak: " + hentYtelseskontraktBegrensning.getMessage());
             throw new AuthorizationException(hentYtelseskontraktBegrensning.getMessage(), hentYtelseskontraktBegrensning);
         }
 
