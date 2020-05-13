@@ -47,10 +47,10 @@ data class AbacResponse(private val response: List<Response>) {
 }
 
 enum class DenyCause(val policy: String) {
-    FP1("fp1_behandle_kode6"),
-    FP2("fp2_behandle_kode7"),
-    FP3("fp3_behandle_egen_ansatt"),
-    FP4("fp4_geografi"),
+    FP1_KODE6("fp1_behandle_kode6"),
+    FP2_KODE7("fp2_behandle_kode7"),
+    FP3_EGEN_ANSATT("fp3_behandle_egen_ansatt"),
+    FP4_GEOGRAFISK("fp4_geografi"),
     AD_ROLLE("modia_ad_tilganger"),
     UNKNOWN("*");
 }
