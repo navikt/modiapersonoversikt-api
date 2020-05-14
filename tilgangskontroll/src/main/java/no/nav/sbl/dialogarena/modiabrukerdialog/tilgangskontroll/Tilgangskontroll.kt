@@ -1,23 +1,30 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll
 
-import no.nav.sbl.dialogarena.abac.Decision
+import no.nav.sbl.dialogarena.abac.AbacResponse
+import no.nav.sbl.dialogarena.abac.Decision as AbacDecision
 import no.nav.sbl.dialogarena.rsbac.*
 import org.slf4j.LoggerFactory
 import javax.ws.rs.ForbiddenException
 
-fun Decision.toDecisionEnum(): DecisionEnums = when {
-    this == Decision.Deny -> DecisionEnums.DENY
-    this == Decision.Permit -> DecisionEnums.PERMIT
+fun AbacResponse.toDecisionEnum(): DecisionEnums = when(this.getDecision()) {
+    AbacDecision.Deny -> DecisionEnums.DENY
+    AbacDecision.Permit -> DecisionEnums.PERMIT
     else -> DecisionEnums.NOT_APPLICABLE
+}
+fun AbacResponse.toDecision(denyReason: AbacResponse.() -> String): Decision = when(this.getDecision()) {
+    AbacDecision.Deny -> Decision(denyReason(this), DecisionEnums.DENY)
+    AbacDecision.Permit -> Decision("", DecisionEnums.PERMIT)
+    else -> Decision("", DecisionEnums.NOT_APPLICABLE)
 }
 
 class Policies {
     companion object {
         @JvmField
-        val tilgangTilModia = Policy<TilgangskontrollContext>({ "Saksbehandler (${hentSaksbehandlerId()}) har ikke tilgang til modia" }) {
+        val tilgangTilModia = RulePolicy<TilgangskontrollContext>() {
             checkAbac(AbacPolicies.tilgangTilModia())
-                    .getDecision()
-                    .toDecisionEnum()
+                    .toDecision {
+                        "Saksbehandler (${hentSaksbehandlerId()}) har ikke tilgang til modia. Årsak: ${getCause()}"
+                    }
         }
 
         @JvmField
@@ -39,16 +46,16 @@ class Policies {
         }
 
         @JvmField
-        val tilgangTilBruker = PolicyGenerator<TilgangskontrollContext, String>({ "Saksbehandler (${context.hentSaksbehandlerId()}) har ikke tilgang til ${data}"}) {
+        val tilgangTilBruker = RulePolicyGenerator<TilgangskontrollContext, String> {
             context.checkAbac(AbacPolicies.tilgangTilBruker(data))
-                    .getDecision()
-                    .toDecisionEnum()
+                    .toDecision {
+                        "Saksbehandler (${context.hentSaksbehandlerId()}) har ikke tilgang til ${data}. Årsak: ${getCause()}"
+                    }
         }
 
         @JvmField
         val kanPlukkeOppgave = Policy<TilgangskontrollContext>({ "Saksbehandler (${hentSaksbehandlerId()}) har ikke tilgang til plukk oppgave" }) {
             checkAbac(AbacPolicies.kanPlukkeOppgave())
-                    .getDecision()
                     .toDecisionEnum()
         }
 

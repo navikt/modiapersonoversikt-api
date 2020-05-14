@@ -93,6 +93,8 @@ public class HentPersonService {
                     faultDescriptionKey = "sikkerhetsbegrensning.diskresjonEgenAnsatt";
                 }
             }
+
+            auditLogger.denied(faultDescriptionKey);
             throw new AuthorizationException(faultDescriptionKey, hentPersonSikkerhetsbegrensning);
         }
         HentKjerneinformasjonResponse response = mapper.map(wsResponse, HentKjerneinformasjonResponse.class);
@@ -220,7 +222,7 @@ public class HentPersonService {
     private boolean saksbehandlerHarTilgangTilDiskresjonskode(String diskresjonskode) {
         return tilgangskontroll.check(Policies.tilgangTilDiskresjonskode.with(diskresjonskode))
                 .getDecision()
-                .getDecision()
+                .getValue()
                 .equals(DecisionEnums.PERMIT);
     }
 

@@ -27,20 +27,20 @@ enum class DecisionEnums {
     fun isApplicable() = this == PERMIT || this == DENY
 }
 
-data class Decision(val message: String, val decision: DecisionEnums) {
-    fun withBias(bias: DecisionEnums) = Decision(this.message, this.decision.withBias(bias))
-    fun isPermit(): Boolean = this.decision == DecisionEnums.PERMIT
+data class Decision(val message: String, val value: DecisionEnums) {
+    fun withBias(bias: DecisionEnums) = Decision(this.message, this.value.withBias(bias))
+    fun isPermit(): Boolean = this.value == DecisionEnums.PERMIT
     fun assertPermit() {
-        if (this.decision != DecisionEnums.PERMIT) {
+        if (this.value != DecisionEnums.PERMIT) {
             throw RuntimeException(this.message)
         }
     }
 }
 
-interface Combinable<in CONTEXT> : Function<CONTEXT, DecisionEnums> {
+interface Combinable<in CONTEXT> : Function<CONTEXT, Decision> {
     fun getMessage(context: CONTEXT): String
-    override fun invoke(context: CONTEXT): DecisionEnums
-    fun <DATA> asGenerator(): Generator<CONTEXT, DATA> = PolicyGenerator({ getMessage(context) }) { invoke(context) }
+    override fun invoke(context: CONTEXT): Decision
+    fun <DATA> asGenerator(): Generator<CONTEXT, DATA> = PolicyGenerator({ getMessage(context) }) { invoke(context).value }
 }
 
 interface Generator<in CONTEXT, DATA> {
@@ -57,10 +57,20 @@ class PolicySet<CONTEXT>(
         return result!!.message
     }
 
-    override fun invoke(context: CONTEXT): DecisionEnums {
-        result = this.combining.combine(this.policies, context)
-        return result!!.decision
+    override fun invoke(context: CONTEXT): Decision {
+        return this.combining.combine(this.policies, context)
     }
+}
+
+class RulePolicy<CONTEXT>(private val rule: CONTEXT.() -> Decision) : Combinable<CONTEXT> {
+    private var message: String? = null
+
+    override fun getMessage(context: CONTEXT): String {
+        return this.message ?: "Not executed yet."
+    }
+
+    override fun invoke(context: CONTEXT): Decision = rule(context)
+
 }
 
 class Policy<CONTEXT> : Combinable<CONTEXT> {
@@ -86,22 +96,30 @@ class Policy<CONTEXT> : Combinable<CONTEXT> {
         return this.message(context)
     }
 
-    override fun invoke(context: CONTEXT): DecisionEnums {
-        return this.rule.invoke(context)
+    override fun invoke(context: CONTEXT): Decision {
+        return Decision(getMessage(context), this.rule.invoke(context))
     }
 }
 
 class RuleData<CONTEXT, DATA>(val context: CONTEXT, val data: DATA)
+class RulePolicyGenerator<CONTEXT, DATA>(
+        private val rule: RuleData<CONTEXT, DATA>.() -> Decision
+) : Generator<CONTEXT, DATA> {
+    override fun with(data: DATA): Combinable<CONTEXT> = RulePolicy {
+        rule.invoke(RuleData(this, data))
+    }
+}
 class PolicyGenerator<CONTEXT, DATA>(
         private val message: RuleData<CONTEXT, DATA>.() -> String,
         private val rule: Rule<RuleData<CONTEXT, DATA>>
 ) : Generator<CONTEXT, DATA> {
-    override fun with(data: DATA): Policy<CONTEXT> = Policy({ message(RuleData(this, data))}) {
+    override fun with(data: DATA): Policy<CONTEXT> = Policy({ message(RuleData(this, data)) }) {
         rule.invoke(RuleData(this, data))
     }
 
     constructor(message: String, rule: Rule<RuleData<CONTEXT, DATA>>) : this({ message }, rule)
 }
+
 class PolicySetGenerator<in CONTEXT, DATA>(
         private val combining: CombiningAlgo = CombiningAlgo.denyOverride,
         private val policies: List<Generator<CONTEXT, DATA>>

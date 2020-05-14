@@ -43,6 +43,7 @@ public class DefaultOppfolgingskontraktService implements OppfolgingskontraktSer
             }
         } catch (HentOppfoelgingskontraktListeSikkerhetsbegrensning hentOppfoelgingskontraktBegrensning) {
             logger.warn("HentOppfoelgingskontraktListeSikkerhetsbegrensning ved kall på hentOppfoelgingskontraktListe", hentOppfoelgingskontraktBegrensning.getMessage());
+            auditLogger.denied("Årsak: " + hentOppfoelgingskontraktBegrensning.getMessage());
             throw new AuthorizationException(hentOppfoelgingskontraktBegrensning.getMessage(), hentOppfoelgingskontraktBegrensning);
         }
 

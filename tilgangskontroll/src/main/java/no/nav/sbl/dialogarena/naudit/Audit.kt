@@ -14,6 +14,7 @@ class Audit {
 
     interface AuditDescriptor<T> {
         fun log(resource: T)
+        fun denied(reason: String)
     }
 
     internal class WithDataDescriptor<T>(
@@ -25,10 +26,15 @@ class Audit {
             val identifiers = extractIdentifiers(resource).toTypedArray()
             logInternal(action, resourceType, identifiers)
         }
+
+        override fun denied(reason: String) {
+            logInternal(action, resourceType, arrayOf("deniedReason" to reason))
+        }
     }
 
     internal class NoopDescriptor<T> : AuditDescriptor<T> {
         override fun log(resource: T) {}
+        override fun denied(reason: String) {}
     }
 
     internal class NothingDescriptor(
@@ -37,6 +43,10 @@ class Audit {
             private val identifiers: Array<out Pair<String, String?>>) : AuditDescriptor<Any> {
         override fun log(resource: Any) {
             logInternal(action, resourceType, identifiers)
+        }
+
+        override fun denied(reason: String) {
+            logInternal(action, resourceType, arrayOf("deniedReason" to reason))
         }
     }
 
