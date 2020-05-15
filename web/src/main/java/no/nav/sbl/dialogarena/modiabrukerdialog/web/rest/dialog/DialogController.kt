@@ -18,6 +18,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.api.DTO
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.api.toDTO
 import no.nav.sbl.dialogarena.naudit.Audit
 import no.nav.sbl.dialogarena.naudit.Audit.Action.*
+import no.nav.sbl.dialogarena.naudit.AuditIdentifier
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.henvendelse.HenvendelseBehandlingService
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.henvendelse.domain.Traad
 import no.nav.sbl.dialogarena.naudit.AuditResources.Person
@@ -49,7 +50,7 @@ class DialogController @Inject constructor(
     ): List<TraadDTO> {
         return tilgangskontroll
                 .check(Policies.tilgangTilBruker.with(fnr))
-                .get(Audit.describe(READ, Person.Henvendelse.Les, "fnr" to fnr)) {
+                .get(Audit.describe(READ, Person.Henvendelse.Les, AuditIdentifier.FNR to fnr)) {
                     val valgtEnhet = RestUtils.hentValgtEnhet(request)
                     henvendelseService
                             .hentMeldinger(fnr, valgtEnhet)
@@ -67,7 +68,7 @@ class DialogController @Inject constructor(
     ): Response {
         return tilgangskontroll
                 .check(Policies.tilgangTilBruker.with(fnr))
-                .get(Audit.describe(CREATE, Person.Henvendelse.Les, "fnr" to fnr)) {
+                .get(Audit.describe(CREATE, Person.Henvendelse.Les, AuditIdentifier.FNR to fnr)) {
                     val context = lagSendHenvendelseContext(fnr, request)
                     henvendelseUtsendingService.sendHenvendelse(lagReferat(referatRequest, context), Optional.empty(), Optional.empty(), context.enhet)
                     Response.ok().build()
@@ -83,7 +84,7 @@ class DialogController @Inject constructor(
     ): Response {
         return tilgangskontroll
                 .check(Policies.tilgangTilBruker.with(fnr))
-                .get(Audit.describe(CREATE, Person.Henvendelse.Les, "fnr" to fnr)) {
+                .get(Audit.describe(CREATE, Person.Henvendelse.Les, AuditIdentifier.FNR to fnr)) {
                     val context = lagSendHenvendelseContext(fnr, request)
 
                     henvendelseUtsendingService.sendHenvendelse(lagSporsmal(sporsmalsRequest, sporsmalsRequest.sak.temaKode, context), Optional.empty(), Optional.of(sporsmalsRequest.sak), context.enhet)
@@ -100,7 +101,7 @@ class DialogController @Inject constructor(
     ): FortsettDialogDTO {
         return tilgangskontroll
                 .check(Policies.tilgangTilBruker.with(fnr))
-                .get(Audit.describe(CREATE, Person.Henvendelse.Opprettet, "fnr" to fnr)) {
+                .get(Audit.describe(CREATE, Person.Henvendelse.Opprettet, AuditIdentifier.FNR to fnr)) {
                     val traadId = opprettHenvendelseRequest.traadId
                     val context = lagSendHenvendelseContext(fnr, request)
                     val traad = henvendelseService
@@ -140,7 +141,7 @@ class DialogController @Inject constructor(
     ): Response {
         return tilgangskontroll
                 .check(Policies.tilgangTilBruker.with(fnr))
-                .get(Audit.describe(UPDATE, Person.Henvendelse.Ferdigstill, "fnr" to fnr)) {
+                .get(Audit.describe(UPDATE, Person.Henvendelse.Ferdigstill, AuditIdentifier.FNR to fnr)) {
                     val context = lagSendHenvendelseContext(fnr, request)
                     val traad = henvendelseService
                             .hentMeldinger(fnr, context.enhet)
@@ -168,7 +169,7 @@ class DialogController @Inject constructor(
             slaaSammenRequest: SlaaSammenRequest
     ): Map<String, Any?> = tilgangskontroll
             .check(Policies.tilgangTilBruker.with(fnr))
-            .get(Audit.describe(UPDATE, Person.Henvendelse.SlaSammen, "fnr" to fnr)) {
+            .get(Audit.describe(UPDATE, Person.Henvendelse.SlaSammen, AuditIdentifier.FNR to fnr)) {
                 if (slaaSammenRequest.traader.groupingBy { it -> it.traadId }.eachCount().size < 2) {
                     throw BadRequestException("Du kan ikke slå sammen mindre enn 2 trådeer")
                 }

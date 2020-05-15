@@ -6,6 +6,7 @@ import no.nav.sbl.dialogarena.naudit.AuditResources
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.DATOFORMAT
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.lagRiktigDato
 import no.nav.sbl.dialogarena.naudit.Audit
+import no.nav.sbl.dialogarena.naudit.AuditIdentifier
 import no.nav.sbl.dialogarena.utbetaling.service.UtbetalingService
 import no.nav.tjeneste.virksomhet.utbetaling.v1.informasjon.*
 import javax.inject.Inject
@@ -24,7 +25,7 @@ class UtbetalingController @Inject constructor(private val service: UtbetalingSe
              @QueryParam("sluttDato") slutt: String?): Response {
         return tilgangskontroll
                 .check(Policies.tilgangTilBruker.with(fnr))
-                .get(Audit.describe(Audit.Action.READ, AuditResources.Person.Utbetalinger, "fnr" to fnr)) {
+                .get(Audit.describe(Audit.Action.READ, AuditResources.Person.Utbetalinger, AuditIdentifier.FNR to fnr)) {
                     val startDato = lagRiktigDato(start)
                     val sluttDato = lagRiktigDato(slutt)
 

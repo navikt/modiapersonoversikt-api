@@ -3,6 +3,7 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest;
 import kotlin.Pair;
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Policies;
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Tilgangskontroll;
+import no.nav.sbl.dialogarena.naudit.AuditIdentifier;
 import no.nav.sbl.dialogarena.naudit.AuditResources.Person;
 import no.nav.sbl.dialogarena.naudit.Audit;
 import no.nav.sbl.dialogarena.varsel.domain.Varsel;
@@ -33,7 +34,7 @@ public class VarslerController {
     public List<Varsel> hentAlleVarsler(@PathParam("fnr") String fnr) {
         return tilgangskontroll
                 .check(Policies.tilgangTilBruker.with(fnr))
-                .get(Audit.describe(Audit.Action.READ, Person.Varsler, new Pair<>("fnr", fnr)), () -> varslerService
+                .get(Audit.describe(Audit.Action.READ, Person.Varsler, new Pair<>(AuditIdentifier.FNR, fnr)), () -> varslerService
                         .hentAlleVarsler(fnr)
                         .orElse(emptyList())
                 );

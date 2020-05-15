@@ -7,6 +7,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.gsak.SakerService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.saker.knyttbehandlingskjedetilsak.EnhetIkkeSatt;
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.BehandlingsIdTilgangData;
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Tilgangskontroll;
+import no.nav.sbl.dialogarena.naudit.AuditIdentifier;
 import no.nav.sbl.dialogarena.naudit.AuditResources.Person;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.api.Feilmelding;
 import no.nav.sbl.dialogarena.naudit.Audit;
@@ -46,7 +47,7 @@ public class JournalforingController {
     public List<Sak> hentSammensatteSaker(@PathParam("fnr") String fnr) {
         return tilgangskontroll
                 .check(tilgangTilBruker.with(fnr))
-                .get(Audit.describe(READ, Person.GsakSaker, new Pair<>("fnr", fnr)), () -> sakerService.hentSammensatteSaker(fnr));
+                .get(Audit.describe(READ, Person.GsakSaker, new Pair<>(AuditIdentifier.FNR, fnr)), () -> sakerService.hentSammensatteSaker(fnr));
     }
 
     @GET
@@ -54,7 +55,7 @@ public class JournalforingController {
     public List<Sak> hentPensjonSaker(@PathParam("fnr") String fnr) {
         return tilgangskontroll
                 .check(tilgangTilBruker.with(fnr))
-                .get(Audit.describe(READ, Person.PesysSaker, new Pair<>("fnr", fnr)), () -> sakerService.hentPensjonSaker(fnr));
+                .get(Audit.describe(READ, Person.PesysSaker, new Pair<>(AuditIdentifier.FNR, fnr)), () -> sakerService.hentPensjonSaker(fnr));
     }
 
     @POST
@@ -64,7 +65,7 @@ public class JournalforingController {
         return tilgangskontroll
                 .check(tilgangTilBruker.with(fnr))
                 .check(behandlingsIderTilhorerBruker.with(new BehandlingsIdTilgangData(fnr, asList(traadId))))
-                .get(Audit.describe(UPDATE, Person.Henvendelse.Journalfor, new Pair<>("fnr", fnr), new Pair<>("traadId", traadId), new Pair<>("saksId", sak.saksId)), () -> {
+                .get(Audit.describe(UPDATE, Person.Henvendelse.Journalfor, new Pair<>(AuditIdentifier.FNR, fnr), new Pair<>(AuditIdentifier.TRAAD_ID, traadId), new Pair<>(AuditIdentifier.SAK_ID, sak.saksId)), () -> {
                     String enhet = hentValgtEnhet(request);
                     try {
                         sakerService.knyttBehandlingskjedeTilSak(fnr, traadId, sak, enhet);

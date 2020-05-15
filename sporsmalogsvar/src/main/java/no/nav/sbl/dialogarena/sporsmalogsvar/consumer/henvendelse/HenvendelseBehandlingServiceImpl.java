@@ -17,6 +17,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.kodeverk.StandardKod
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.ldap.LDAPService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.*;
 import no.nav.sbl.dialogarena.naudit.Audit;
+import no.nav.sbl.dialogarena.naudit.AuditIdentifier;
 import no.nav.sbl.dialogarena.naudit.AuditResources;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.henvendelse.domain.Meldinger;
 import no.nav.sbl.dialogarena.sporsmalogsvar.legacy.MeldingVM;
@@ -44,7 +45,7 @@ public class HenvendelseBehandlingServiceImpl implements HenvendelseBehandlingSe
     private static Audit.AuditDescriptor<XMLHenvendelse> auditLogger = Audit.describe(
             Audit.Action.READ,
             AuditResources.Person.Henvendelse.Les,
-            (henvendelse) -> singletonList(new Pair<>("fnr", henvendelse.getFnr()))
+            (henvendelse) -> singletonList(new Pair<>(AuditIdentifier.FNR, henvendelse.getFnr()))
     );
 
     private static Logger logger = LoggerFactory.getLogger(HenvendelseBehandlingService.class);

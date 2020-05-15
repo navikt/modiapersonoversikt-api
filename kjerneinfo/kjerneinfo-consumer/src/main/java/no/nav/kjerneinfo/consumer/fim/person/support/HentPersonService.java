@@ -21,6 +21,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.organisasjonsEnhetV2
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Policies;
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Tilgangskontroll;
 import no.nav.sbl.dialogarena.naudit.Audit;
+import no.nav.sbl.dialogarena.naudit.AuditIdentifier;
 import no.nav.sbl.dialogarena.naudit.AuditResources;
 import no.nav.sbl.dialogarena.rsbac.DecisionEnums;
 import no.nav.tjeneste.virksomhet.person.v3.binding.HentGeografiskTilknytningPersonIkkeFunnet;
@@ -45,7 +46,7 @@ public class HentPersonService {
     private static Audit.AuditDescriptor<Person> auditLogger = Audit.describe(
             Audit.Action.READ,
             AuditResources.Person.Personalia,
-            (person) -> singletonList(new Pair<>("fnr", person.getFodselsnummer().getNummer()))
+            (person) -> singletonList(new Pair<>(AuditIdentifier.FNR, person.getFodselsnummer().getNummer()))
     );
     private static final String FNR_REGEX = "\\d{11}";
 
