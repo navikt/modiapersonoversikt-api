@@ -75,8 +75,9 @@ private fun mockContext(
     whenever(context.checkAbac(any())).thenReturn(AbacResponse(listOf(
             Response(abacTilgang, listOf(
                     Advice(NavAttributes.ADVICE_DENY_REASON.attributeId, listOf(
-                            AttributeAssignment("cause", "cause-0001-manglerrolle"),
-                            AttributeAssignment("actual_policy", "fp3_behandle_egen_ansatt")
+                            AttributeAssignment(NavAttributes.ADVICEOROBLIGATION_CAUSE.attributeId, "cause-0001-manglerrolle"),
+                            AttributeAssignment(NavAttributes.ADVICEOROBLIGATION_DENY_POLICY.attributeId, "fp3_behandle_egen_ansatt"),
+                            AttributeAssignment(NavAttributes.ADVICEOROBLIGATION_DENY_RULE.attributeId, "intern_behandle_kode6_mangler_gruppetilgang")
                     ))
             ))
     )))

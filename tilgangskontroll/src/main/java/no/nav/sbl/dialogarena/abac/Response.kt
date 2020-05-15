@@ -28,7 +28,7 @@ data class AbacResponse(private val response: List<Response>) {
                 ?: emptyList()
 
         val denyReasonPolicy = denyReasonAttributes
-                .find { it.attributeId == "actual_policy" }
+                .find { it.attributeId == NavAttributes.ADVICEOROBLIGATION_DENY_POLICY.attributeId }
                 ?.value
 
         val denyCause = DenyCause
