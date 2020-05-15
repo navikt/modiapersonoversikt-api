@@ -6,6 +6,7 @@ import no.nav.personsok.consumer.fim.personsok.PersonsokServiceBi;
 import no.nav.personsok.consumer.fim.personsok.to.FinnPersonRequest;
 import no.nav.personsok.consumer.fim.personsok.to.FinnPersonResponse;
 import no.nav.sbl.dialogarena.naudit.Audit;
+import no.nav.sbl.dialogarena.naudit.AuditIdentifier;
 import no.nav.sbl.dialogarena.naudit.AuditResources;
 import no.nav.tjeneste.virksomhet.personsoek.v1.FinnPersonFault;
 import no.nav.tjeneste.virksomhet.personsoek.v1.FinnPersonFault1;
@@ -23,7 +24,7 @@ public class DefaultPersonsokService implements PersonsokServiceBi {
     private static Audit.AuditDescriptor<Person> auditLogger = Audit.describe(
             Audit.Action.READ,
             AuditResources.Person.Personalia,
-            (person) -> singletonList(new Pair<>("fnr", person.getIdent().getIdent()))
+            (person) -> singletonList(new Pair<>(AuditIdentifier.FNR, person.getIdent().getIdent()))
     );
 
     private PersonsokPortType personsokService;

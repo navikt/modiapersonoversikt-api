@@ -4,6 +4,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Policies
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Tilgangskontroll
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.lagXmlGregorianDato
 import no.nav.sbl.dialogarena.naudit.Audit
+import no.nav.sbl.dialogarena.naudit.AuditIdentifier
 import no.nav.sbl.dialogarena.naudit.AuditResources
 import no.nav.tjeneste.virksomhet.personsoek.v1.PersonsokPortType
 import no.nav.tjeneste.virksomhet.personsoek.v1.informasjon.*
@@ -28,7 +29,7 @@ class PersonsokController @Inject constructor(private val personsokPortType: Per
     private val auditDescriptor = Audit.describe<List<Map<String, Any?>>>(Audit.Action.READ, AuditResources.Personsok.Resultat) { resultat ->
         val fnr = resultat.map { it["ident"] }.joinToString(", ")
         listOf(
-                "fnr" to fnr
+                AuditIdentifier.FNR to fnr
         )
     }
 

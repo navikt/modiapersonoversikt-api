@@ -3,6 +3,7 @@ package no.nav.sykmeldingsperioder.consumer.sykepenger;
 import kotlin.Pair;
 import no.nav.modig.core.exception.AuthorizationException;
 import no.nav.sbl.dialogarena.naudit.Audit;
+import no.nav.sbl.dialogarena.naudit.AuditIdentifier;
 import no.nav.sbl.dialogarena.naudit.AuditResources;
 import no.nav.sykmeldingsperioder.consumer.sykepenger.mapping.SykepengerMapper;
 import no.nav.sykmeldingsperioder.consumer.sykepenger.mapping.to.SykepengerRequest;
@@ -25,7 +26,7 @@ public class DefaultSykepengerService implements SykepengerServiceBi {
     private static Audit.AuditDescriptor<FimsykBruker> auditLogger = Audit.describe(
             Audit.Action.READ,
             AuditResources.Person.Sykepenger,
-            (person) -> singletonList(new Pair<>("fnr", person.getIdent()))
+            (person) -> singletonList(new Pair<>(AuditIdentifier.FNR, person.getIdent()))
     );
     private static final Logger logger = LoggerFactory.getLogger(DefaultSykepengerService.class);
     private SykepengerV2 sykepengerService;

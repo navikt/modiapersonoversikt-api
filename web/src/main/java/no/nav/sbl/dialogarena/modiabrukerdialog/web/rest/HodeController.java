@@ -9,6 +9,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.organisasjonsEnhetV2
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.http.CookieUtil;
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Policies;
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Tilgangskontroll;
+import no.nav.sbl.dialogarena.naudit.AuditIdentifier;
 import no.nav.sbl.dialogarena.naudit.AuditResources.Saksbehandler;
 import no.nav.sbl.dialogarena.naudit.Audit;
 
@@ -109,7 +110,7 @@ public class HodeController {
     public String settValgtEnhet(@Context HttpServletResponse response, String enhetId) {
         return tilgangskontroll
                 .check(Policies.tilgangTilModia)
-                .get(Audit.describe(UPDATE, Saksbehandler.ValgtEnhet, new Pair<>("enhetId", enhetId)), () -> {
+                .get(Audit.describe(UPDATE, Saksbehandler.ValgtEnhet, new Pair<>(AuditIdentifier.ENHET_ID, enhetId)), () -> {
                     CookieUtil.setSaksbehandlersValgteEnhet(response, enhetId);
                     return enhetId;
                 });
