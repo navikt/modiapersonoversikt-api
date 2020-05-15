@@ -20,8 +20,39 @@ data class AbacResponse(private val response: List<Response>) {
                 response[0]
             }.invoke()
 
+    fun getCause(): DenyCause {
+        val associatedAdvice = result.associatedAdvice ?: emptyList();
+        val denyReasonAttributes = associatedAdvice
+                .find { advice -> advice.id == NavAttributes.ADVICE_DENY_REASON.attributeId }
+                ?.attributeAssignment
+                ?: emptyList()
+
+        val denyReasonPolicy = denyReasonAttributes
+                .find { it.attributeId == NavAttributes.ADVICEOROBLIGATION_DENY_POLICY.attributeId }
+                ?.value
+
+        val denyCause = DenyCause
+                .values()
+                .find { it.policy == denyReasonPolicy }
+
+        if (denyCause == null) {
+            abacLogger.warn("Couldn't determind denyCause", associatedAdvice)
+        }
+
+        return denyCause ?: DenyCause.UNKNOWN
+    }
+
     fun getDecision(): Decision = result.decision
     fun getBiasedDecision(bias: Decision): Decision = if (applicativeDecisions.contains(result.decision)) result.decision else bias
+}
+
+enum class DenyCause(val policy: String) {
+    FP1_KODE6("fp1_behandle_kode6"),
+    FP2_KODE7("fp2_behandle_kode7"),
+    FP3_EGEN_ANSATT("fp3_behandle_egen_ansatt"),
+    FP4_GEOGRAFISK("fp4_geografi"),
+    AD_ROLLE("modia_ad_tilganger"),
+    UNKNOWN("*");
 }
 
 data class Response(

@@ -42,6 +42,7 @@ public class DefaultForeldrepengerService implements ForeldrepengerServiceBi {
             }
         } catch (HentForeldrepengerettighetSikkerhetsbegrensning ex) {
             logger.warn("HentForeldrepengerListeSikkerhetsbegrensning ved kall på hentForeldrepengerListe", ex.getMessage());
+            auditLogger.denied("Årsak: " + ex.getMessage());
             throw new AuthorizationException(ex.getMessage(), ex);
         }
         return mapper.map(rawResponse, ForeldrepengerListeResponse.class);
