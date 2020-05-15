@@ -74,7 +74,7 @@ private fun mockContext(
     whenever(context.hentTemagrupperForSaksbehandler(any())).thenReturn(tematilganger)
     whenever(context.checkAbac(any())).thenReturn(AbacResponse(listOf(
             Response(abacTilgang, listOf(
-                    Advice("deny_reason", listOf(
+                    Advice(NavAttributes.ADVICE_DENY_REASON.attributeId, listOf(
                             AttributeAssignment("cause", "cause-0001-manglerrolle"),
                             AttributeAssignment("actual_policy", "fp3_behandle_egen_ansatt")
                     ))

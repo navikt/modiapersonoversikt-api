@@ -23,7 +23,7 @@ data class AbacResponse(private val response: List<Response>) {
     fun getCause(): DenyCause {
         val associatedAdvice = result.associatedAdvice ?: emptyList();
         val denyReasonAttributes = associatedAdvice
-                .find { advice -> advice.id == "deny_reason" }
+                .find { advice -> advice.id == NavAttributes.ADVICE_DENY_REASON.attributeId }
                 ?.attributeAssignment
                 ?: emptyList()
 

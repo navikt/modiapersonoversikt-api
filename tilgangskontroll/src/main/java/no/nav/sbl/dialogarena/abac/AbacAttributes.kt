@@ -9,6 +9,7 @@ enum class NavAttributes(val attributeId: String) : AbacAttributeId {
     ADVICEOROBLIGATION_DENY_POLICY("no.nav.abac.attributter.adviceorobligation.deny_policy"),
     ADVICEOROBLIGATION_DENY_RULE("no.nav.abac.attributter.adviceorobligation.deny_rule"),
     ADVICEOROBLIGATION_FRITEKST("no.nav.abac.attributter.adviceorobligation.fritekst"),
+    ADVICE_DENY_REASON("no.nav.abac.advices.reason.deny_reason"),
     ENVIRONMENT_FELLES_MILJOE("no.nav.abac.attributter.environment.felles.miljoe"),
     ENVIRONMENT_FELLES_OIDC_TOKEN_BODY("no.nav.abac.attributter.environment.felles.oidc_token_body"),
     ENVIRONMENT_FELLES_PEP_ID("no.nav.abac.attributter.environment.felles.pep_id"),
