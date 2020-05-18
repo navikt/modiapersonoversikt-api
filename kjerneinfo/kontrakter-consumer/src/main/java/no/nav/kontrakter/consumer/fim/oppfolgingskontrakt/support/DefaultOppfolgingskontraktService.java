@@ -7,6 +7,7 @@ import no.nav.kontrakter.consumer.fim.oppfolgingskontrakt.to.Oppfolgingskontrakt
 import no.nav.kontrakter.consumer.utils.OppfolgingskontraktMapper;
 import no.nav.modig.core.exception.AuthorizationException;
 import no.nav.sbl.dialogarena.naudit.Audit;
+import no.nav.sbl.dialogarena.naudit.AuditIdentifier;
 import no.nav.sbl.dialogarena.naudit.AuditResources;
 import no.nav.tjeneste.virksomhet.oppfoelging.v1.HentOppfoelgingskontraktListeSikkerhetsbegrensning;
 import no.nav.tjeneste.virksomhet.oppfoelging.v1.OppfoelgingPortType;
@@ -25,7 +26,7 @@ public class DefaultOppfolgingskontraktService implements OppfolgingskontraktSer
     private static Audit.AuditDescriptor<WSHentOppfoelgingskontraktListeRequest> auditLogger = Audit.describe(
             Audit.Action.READ,
             AuditResources.Person.Kontrakter,
-            (person) -> singletonList(new Pair<>("fnr", person.getPersonidentifikator()))
+            (person) -> singletonList(new Pair<>(AuditIdentifier.FNR, person.getPersonidentifikator()))
     );
 
     private OppfoelgingPortType oppfolgingskontraktService = null;

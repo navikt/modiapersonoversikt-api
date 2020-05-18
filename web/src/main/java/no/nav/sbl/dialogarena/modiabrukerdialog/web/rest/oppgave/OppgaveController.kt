@@ -17,6 +17,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.mapOfNotNullOrEmpty
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.service.plukkoppgave.PlukkOppgaveService
 import no.nav.sbl.dialogarena.naudit.Audit
 import no.nav.sbl.dialogarena.naudit.Audit.Action.*
+import no.nav.sbl.dialogarena.naudit.AuditIdentifier
 import org.slf4j.LoggerFactory
 import javax.inject.Inject
 import javax.servlet.http.HttpServletRequest
@@ -44,7 +45,7 @@ class OppgaveController @Inject constructor(
     fun leggTilbake(@Context httpRequest: HttpServletRequest, request: LeggTilbakeRequest): Response {
         return tilgangkontroll
                 .check(Policies.tilgangTilModia)
-                .get(Audit.describe(UPDATE, Henvendelse.Oppgave.LeggTilbake, "oppgaveId" to request.oppgaveId)) {
+                .get(Audit.describe(UPDATE, Henvendelse.Oppgave.LeggTilbake, AuditIdentifier.OPPGAVE_ID to request.oppgaveId)) {
                     val valgtEnhet = RestUtils.hentValgtEnhet(httpRequest)
                     val leggTilbakeOppgaveIGsakRequest = lagLeggTilbakeRequest(request, valgtEnhet)
 
@@ -90,7 +91,7 @@ class OppgaveController @Inject constructor(
         return tilgangkontroll
                 .check(Policies.tilgangTilModia)
                 .check(Policies.kanPlukkeOppgave)
-                .get(Audit.describe(READ, Henvendelse.Oppgave.Plukk, "temagruppe" to temagruppe)) {
+                .get(Audit.describe(READ, Henvendelse.Oppgave.Plukk, AuditIdentifier.TEMAGRUPPE to temagruppe)) {
                     val tildelteOppgaver = oppgaveBehandlingService.finnTildelteOppgaverIGsak()
                     if (tildelteOppgaver.isNotEmpty()) {
                         tildelteOppgaver

@@ -23,6 +23,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.lagPeriode
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.mapOfNotNullOrEmpty
 import no.nav.sbl.dialogarena.naudit.Audit
 import no.nav.sbl.dialogarena.naudit.Audit.Action.READ
+import no.nav.sbl.dialogarena.naudit.AuditIdentifier
 import no.nav.sbl.dialogarena.naudit.AuditResources
 import no.nav.tjeneste.virksomhet.person.v3.binding.HentPersonPersonIkkeFunnet
 import no.nav.tjeneste.virksomhet.person.v3.binding.HentPersonSikkerhetsbegrensning
@@ -50,7 +51,7 @@ class PersonController @Inject constructor(private val kjerneinfoService: Person
     fun hent(@PathParam("fnr") fodselsnummer: String): Map<String, Any?> {
         return tilgangskontroll
                 .check(Policies.tilgangTilBruker.with(fodselsnummer))
-                .get(Audit.describe(READ, AuditResources.Person.Personalia, "fnr" to fodselsnummer)) {
+                .get(Audit.describe(READ, AuditResources.Person.Personalia, AuditIdentifier.FNR to fodselsnummer)) {
                     try {
                         val hentKjerneinformasjonRequest = HentKjerneinformasjonRequest(fodselsnummer)
                         hentKjerneinformasjonRequest.isBegrunnet = true

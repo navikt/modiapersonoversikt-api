@@ -7,6 +7,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Policies
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Tilgangskontroll
 import no.nav.sbl.dialogarena.naudit.Audit
 import no.nav.sbl.dialogarena.naudit.Audit.Action.*
+import no.nav.sbl.dialogarena.naudit.AuditIdentifier
 import no.nav.sbl.dialogarena.naudit.AuditResources.Person.Henvendelse
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.behandlehenvendelse.BehandleHenvendelsePortType
 import java.util.*
@@ -28,7 +29,7 @@ class DialogMerkController @Inject constructor(private val behandleHenvendelsePo
         return tilgangskontroll
                 .check(Policies.tilgangTilBruker.with(request.fnr))
                 .check(Policies.behandlingsIderTilhorerBruker.with(BehandlingsIdTilgangData(request.fnr, request.behandlingsidListe)))
-                .get(Audit.describe(UPDATE, Henvendelse.Merk.Feilsendt, "fnr" to request.fnr, "behandlingsIder" to request.behandlingsidListe.joinToString(", "))) {
+                .get(Audit.describe(UPDATE, Henvendelse.Merk.Feilsendt, AuditIdentifier.FNR to request.fnr, AuditIdentifier.BEHANDLING_ID to request.behandlingsidListe.joinToString(", "))) {
                     behandleHenvendelsePortType.oppdaterTilKassering(request.behandlingsidListe)
                     Response.ok().build()
                 }
@@ -40,7 +41,7 @@ class DialogMerkController @Inject constructor(private val behandleHenvendelsePo
         return tilgangskontroll
                 .check(Policies.tilgangTilBruker.with(request.fnr))
                 .check(Policies.behandlingsIderTilhorerBruker.with(BehandlingsIdTilgangData(request.fnr, listOf(request.eldsteMeldingTraadId))))
-                .get(Audit.describe(UPDATE, Henvendelse.Merk.Bidrag, "fnr" to request.fnr, "behandlingsIder" to request.eldsteMeldingTraadId)) {
+                .get(Audit.describe(UPDATE, Henvendelse.Merk.Bidrag, AuditIdentifier.FNR to request.fnr, AuditIdentifier.BEHANDLING_ID to request.eldsteMeldingTraadId)) {
                     behandleHenvendelsePortType.knyttBehandlingskjedeTilTema(request.eldsteMeldingTraadId, "BID")
                     Response.ok().build()
                 }
@@ -52,7 +53,7 @@ class DialogMerkController @Inject constructor(private val behandleHenvendelsePo
         return tilgangskontroll
                 .check(Policies.tilgangTilBruker.with(request.fnr))
                 .check(Policies.behandlingsIderTilhorerBruker.with(BehandlingsIdTilgangData(request.fnr, request.meldingsidListe)))
-                .get(Audit.describe(UPDATE, Henvendelse.Merk.Kontorsperre, "fnr" to request.fnr, "behandlingsIder" to request.meldingsidListe.joinToString(", "))) {
+                .get(Audit.describe(UPDATE, Henvendelse.Merk.Kontorsperre, AuditIdentifier.FNR to request.fnr, AuditIdentifier.BEHANDLING_ID to request.meldingsidListe.joinToString(", "))) {
                     behandleHenvendelsePortType.oppdaterKontorsperre(request.enhet, request.meldingsidListe)
                     Response.ok().build()
                 }
@@ -64,7 +65,7 @@ class DialogMerkController @Inject constructor(private val behandleHenvendelsePo
         return tilgangskontroll
                 .check(Policies.tilgangTilBruker.with(request.fnr))
                 .check(Policies.behandlingsIderTilhorerBruker.with(BehandlingsIdTilgangData(request.fnr, listOf(request.eldsteMeldingTraadId))))
-                .get(Audit.describe(UPDATE, Henvendelse.Merk.Avslutt, "fnr" to request.fnr, "behandlingsIder" to request.eldsteMeldingTraadId)) {
+                .get(Audit.describe(UPDATE, Henvendelse.Merk.Avslutt, AuditIdentifier.FNR to request.fnr, AuditIdentifier.BEHANDLING_ID to request.eldsteMeldingTraadId)) {
                     behandleHenvendelsePortType.ferdigstillUtenSvar(request.eldsteMeldingTraadId, request.saksbehandlerValgtEnhet)
                     oppgaveBehandlingService.ferdigstillOppgaveIGsak(request.eldsteMeldingOppgaveId, Optional.empty(), request.saksbehandlerValgtEnhet)
                     Response.ok().build()
@@ -77,7 +78,7 @@ class DialogMerkController @Inject constructor(private val behandleHenvendelsePo
         return tilgangskontroll
                 .check(Policies.tilgangTilBruker.with(request.fnr))
                 .check(Policies.behandlingsIderTilhorerBruker.with(BehandlingsIdTilgangData(request.fnr, listOf(request.eldsteMeldingTraadId))))
-                .get(Audit.describe(UPDATE, Henvendelse.Merk.Avslutt, "fnr" to request.fnr, "behandlingsIder" to request.eldsteMeldingTraadId)) {
+                .get(Audit.describe(UPDATE, Henvendelse.Merk.Avslutt, AuditIdentifier.FNR to request.fnr, AuditIdentifier.BEHANDLING_ID to request.eldsteMeldingTraadId)) {
                     behandleHenvendelsePortType.ferdigstillUtenSvar(request.eldsteMeldingTraadId, request.saksbehandlerValgtEnhet)
                     oppgaveBehandlingService.ferdigstillOppgaveIGsak(request.eldsteMeldingOppgaveId, Optional.empty(), request.saksbehandlerValgtEnhet, request.beskrivelse)
                     Response.ok().build()
@@ -89,7 +90,7 @@ class DialogMerkController @Inject constructor(private val behandleHenvendelsePo
     fun avsluttGosysOppgave(request: FerdigstillOppgaveRequest): Response {
         return tilgangskontroll
                 .check(Policies.tilgangTilBruker.with(request.fnr))
-                .get(Audit.describe(UPDATE, Henvendelse.Oppgave.Avslutt, "fnr" to request.fnr, "oppgaveid" to request.oppgaveid)) {
+                .get(Audit.describe(UPDATE, Henvendelse.Oppgave.Avslutt, AuditIdentifier.FNR to request.fnr, AuditIdentifier.OPPGAVE_ID to request.oppgaveid)) {
                     oppgaveBehandlingService.ferdigstillOppgaveIGsak(request.oppgaveid, Optional.empty(), request.saksbehandlerValgtEnhet, request.beskrivelse);
                     Response.ok().build()
                 }
@@ -102,7 +103,7 @@ class DialogMerkController @Inject constructor(private val behandleHenvendelsePo
                 .check(Policies.kanHastekassere)
                 .check(Policies.tilgangTilBruker.with(request.fnr))
                 .check(Policies.behandlingsIderTilhorerBruker.with(BehandlingsIdTilgangData(request.fnr, request.behandlingsidListe)))
-                .get(Audit.describe(DELETE, Henvendelse.Merk.Slett, "fnr" to request.fnr, "behandlingsIder" to request.behandlingsidListe.joinToString(", "))) {
+                .get(Audit.describe(DELETE, Henvendelse.Merk.Slett, AuditIdentifier.FNR to request.fnr, AuditIdentifier.BEHANDLING_ID to request.behandlingsidListe.joinToString(", "))) {
                         behandleHenvendelsePortType.markerTraadForHasteKassering(request.behandlingsidListe);
                         Response.ok().build()
                 }
