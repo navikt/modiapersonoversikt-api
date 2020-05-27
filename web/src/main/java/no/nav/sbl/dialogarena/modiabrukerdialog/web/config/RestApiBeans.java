@@ -49,6 +49,7 @@ import org.springframework.context.annotation.Import;
         NaisController.class,
         DialogController.class,
         PersonsokController.class,
+        TilgangController.class,
         DialogMerkController.class,
         DialogOppgaveController.class
 })
