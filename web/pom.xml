@@ -38,6 +38,10 @@
             <groupId>no.nav.common</groupId>
             <artifactId>test-config</artifactId>
         </dependency>
+        <dependency>
+            <groupId>io.prometheus.jmx</groupId>
+            <artifactId>collector</artifactId>
+        </dependency>
         <!--Interne-->
         <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>
