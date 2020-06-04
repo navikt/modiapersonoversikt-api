@@ -63,6 +63,11 @@
                 <scope>import</scope>
             </dependency>
             <dependency>
+                <groupId>io.prometheus.jmx</groupId>
+                <artifactId>collector</artifactId>
+                <version>0.4</version>
+            </dependency>
+            <dependency>
                 <groupId>no.nav.common</groupId>
                 <artifactId>nais</artifactId>
                 <version>${common.version}</version>
