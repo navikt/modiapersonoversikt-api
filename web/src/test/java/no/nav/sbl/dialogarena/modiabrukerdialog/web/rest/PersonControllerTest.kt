@@ -1,8 +1,8 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest
 
-import com.nhaarman.mockito_kotlin.any
-import com.nhaarman.mockito_kotlin.mock
-import com.nhaarman.mockito_kotlin.whenever
+import com.nhaarman.mockitokotlin2.any
+import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.whenever
 import no.nav.kjerneinfo.common.domain.Kodeverdi
 import no.nav.kjerneinfo.consumer.fim.person.support.DefaultPersonKjerneinfoService
 import no.nav.kjerneinfo.consumer.fim.person.support.KjerneinfoMapper
@@ -10,7 +10,6 @@ import no.nav.kodeverk.consumer.fim.kodeverk.KodeverkmanagerBi
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.pdl.*
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.organisasjonsEnhetV2.OrganisasjonEnhetV2Service
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.pdl.PdlOppslagService
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.UnleashService
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Tilgangskontroll
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.TilgangskontrollContext
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.TilgangskontrollMock
@@ -48,13 +47,12 @@ internal class PersonControllerTest {
     private val organisasjonenhetV2Service: OrganisasjonEnhetV2Service = mock()
     private val kodeverk: KodeverkmanagerBi = mock()
     private val mapper = KjerneinfoMapper(kodeverk)
-    private val unleashService: UnleashService = mock()
     private val tilgangskontrollUtenTPSContext: TilgangskontrollContext = mock()
     private val tilgangskontrollUtenTPS = Tilgangskontroll(tilgangskontrollUtenTPSContext)
     private val tilgangskontroll: Tilgangskontroll = TilgangskontrollMock.get()
 
     private val service = DefaultPersonKjerneinfoService(personV3, mapper, tilgangskontrollUtenTPS, organisasjonenhetV2Service)
-    private val controller = PersonController(service, kodeverk, unleashService, tilgangskontroll, pdlOppslagService)
+    private val controller = PersonController(service, kodeverk, tilgangskontroll, pdlOppslagService)
 
     @BeforeEach
     fun before() {
@@ -208,12 +206,12 @@ internal class PersonControllerTest {
 
             val response = controller.hent(FNR)
             val kontaktinformasjon = response["kontaktinformasjon"] as Map<*, *>
-            val mobil = kontaktinformasjon["mobil"] as Map<*, *>
-            val retningsnummer = mobil["retningsnummer"] as Kode
-            val nummer = mobil["identifikator"]
+            val mobil = kontaktinformasjon["mobil"] as no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.person.Telefonnummer
+            val retningsnummer = mobil.retningsnummer
+            val nummer = mobil.identifikator
 
             assertEquals(TELEFONNUMMER, nummer)
-            assertEquals(RETNINGSNUMMER, retningsnummer.kodeRef)
+            assertEquals(RETNINGSNUMMER, retningsnummer?.kodeRef)
         }
 
         private fun responseMedMobil() = mockPersonResponse().apply {
@@ -221,6 +219,7 @@ internal class PersonControllerTest {
                     .withKontaktinformasjon(Telefonnummer()
                             .withIdentifikator(TELEFONNUMMER)
                             .withRetningsnummer(Retningsnumre().withValue(RETNINGSNUMMER))
+                            .withEndretAv("BRUKER")
                             .withType(Telefontyper().withValue("MOBI")))
         }
 
@@ -270,11 +269,12 @@ internal class PersonControllerTest {
                         navn = emptyList(),
                         tilrettelagtKommunikasjon = null,
                         fullmakt = null,
-                        kontaktinformasjonForDoedsbo = null
+                        kontaktinformasjonForDoedsbo = null,
+                        telefonnummer = null
                 )
         ))
     }
-    
+
     fun PdlPersonResponse.update(block: PdlPerson.() -> PdlPerson): PdlPersonResponse {
         return mockPdlPerson()
                 .copy(

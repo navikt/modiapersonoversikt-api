@@ -9,6 +9,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Policies
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Tilgangskontroll
 import no.nav.sbl.dialogarena.naudit.Audit
 import no.nav.sbl.dialogarena.naudit.Audit.Action.*
+import no.nav.sbl.dialogarena.naudit.AuditIdentifier
 import no.nav.sbl.dialogarena.naudit.AuditResources.Person.Henvendelse
 import no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.DateUtils.arbeidsdagerFraDato
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.OppgavebehandlingV3
@@ -40,7 +41,7 @@ class DialogOppgaveController @Inject constructor(
         return tilgangskontroll
                 .check(Policies.tilgangTilBruker.with(request.fnr))
                 .check(Policies.behandlingsIderTilhorerBruker.with(BehandlingsIdTilgangData(request.fnr, listOf(request.behandlingskjedeId))))
-                .get(Audit.describe(CREATE, Henvendelse.Oppgave.Opprett, "fnr" to request.fnr, "behandlingsIder" to request.behandlingskjedeId)) {
+                .get(Audit.describe(CREATE, Henvendelse.Oppgave.Opprett, AuditIdentifier.FNR to request.fnr, AuditIdentifier.BEHANDLING_ID to request.behandlingskjedeId)) {
                     oppgavebehandling.opprettOppgave(
                             WSOpprettOppgaveRequest()
                                     .withOpprettetAvEnhetId(request.valgtEnhetId)
@@ -71,7 +72,7 @@ class DialogOppgaveController @Inject constructor(
     ): SkjermetOppgaveRespons {
         return tilgangskontroll
                 .check(Policies.tilgangTilModia)
-                .get(Audit.describe(CREATE, Henvendelse.Oppgave.Opprett, "fnr" to request.fnr)) {
+                .get(Audit.describe(CREATE, Henvendelse.Oppgave.Opprett, AuditIdentifier.FNR to request.fnr)) {
                     val respons = oppgavebehandlingRest
                             .opprettOppgave(OppgaveRequest(
                                     opprettetAvEnhetsnr = request.valgtEnhetId,

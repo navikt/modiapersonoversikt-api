@@ -1,7 +1,5 @@
 package no.nav.kjerneinfo.consumer.fim.person.support;
 
-import no.nav.brukerprofil.domain.Bruker;
-import no.nav.brukerprofil.domain.support.BrukerprofilMapper;
 import no.nav.kjerneinfo.consumer.fim.person.PersonKjerneinfoServiceBi;
 import no.nav.kjerneinfo.consumer.fim.person.to.HentKjerneinformasjonRequest;
 import no.nav.kjerneinfo.consumer.fim.person.to.HentKjerneinformasjonResponse;
@@ -37,12 +35,4 @@ public class DefaultPersonKjerneinfoService implements PersonKjerneinfoServiceBi
     public GeografiskTilknytning hentGeografiskTilknytning(String fodselsnummer) {
         return hentPersonService.hentGeografiskTilknytning(fodselsnummer);
     }
-
-    @Override
-    public Bruker hentBrukerprofil(String fodselsnummer) {
-        BrukerprofilMapper brukerprofilMapper = BrukerprofilMapper.getInstance();
-        HentKjerneinformasjonResponse response = hentKjerneinformasjon(new HentKjerneinformasjonRequest(fodselsnummer));
-        return brukerprofilMapper.map(response.getPerson(), Bruker.class);
-    }
-
 }

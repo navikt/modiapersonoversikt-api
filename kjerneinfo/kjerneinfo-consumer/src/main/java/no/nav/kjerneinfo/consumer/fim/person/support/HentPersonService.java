@@ -1,10 +1,13 @@
 package no.nav.kjerneinfo.consumer.fim.person.support;
 
+import static java.util.Collections.singletonList;
+
+import java.util.Iterator;
+import java.util.Optional;
+
 import kotlin.Pair;
-import no.nav.kjerneinfo.consumer.fim.person.exception.AuthorizationWithSikkerhetstiltakException;
 import no.nav.kjerneinfo.consumer.fim.person.to.HentKjerneinformasjonRequest;
 import no.nav.kjerneinfo.consumer.fim.person.to.HentKjerneinformasjonResponse;
-import no.nav.kjerneinfo.consumer.fim.person.to.RecoverableAuthorizationException;
 import no.nav.kjerneinfo.consumer.mdc.MDCUtils;
 import no.nav.kjerneinfo.domain.person.GeografiskTilknytning;
 import no.nav.kjerneinfo.domain.person.GeografiskTilknytningstyper;
@@ -19,9 +22,14 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.organisasjonsEnhetV2
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Policies;
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Tilgangskontroll;
 import no.nav.sbl.dialogarena.naudit.Audit;
+import no.nav.sbl.dialogarena.naudit.AuditIdentifier;
 import no.nav.sbl.dialogarena.naudit.AuditResources;
 import no.nav.sbl.dialogarena.rsbac.DecisionEnums;
-import no.nav.tjeneste.virksomhet.person.v3.binding.*;
+import no.nav.tjeneste.virksomhet.person.v3.binding.HentGeografiskTilknytningPersonIkkeFunnet;
+import no.nav.tjeneste.virksomhet.person.v3.binding.HentGeografiskTilknytningSikkerhetsbegrensing;
+import no.nav.tjeneste.virksomhet.person.v3.binding.HentPersonPersonIkkeFunnet;
+import no.nav.tjeneste.virksomhet.person.v3.binding.HentPersonSikkerhetsbegrensning;
+import no.nav.tjeneste.virksomhet.person.v3.binding.PersonV3;
 import no.nav.tjeneste.virksomhet.person.v3.feil.PersonIkkeFunnet;
 import no.nav.tjeneste.virksomhet.person.v3.informasjon.Informasjonsbehov;
 import no.nav.tjeneste.virksomhet.person.v3.informasjon.Kodeverdi;
@@ -34,17 +42,12 @@ import no.nav.tjeneste.virksomhet.person.v3.meldinger.HentPersonResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Iterator;
-import java.util.Optional;
-
-import static java.util.Collections.singletonList;
-
 public class HentPersonService {
     private static final Logger logger = LoggerFactory.getLogger(HentPersonService.class);
     private static Audit.AuditDescriptor<Person> auditLogger = Audit.describe(
             Audit.Action.READ,
             AuditResources.Person.Personalia,
-            (person) -> singletonList(new Pair<>("fnr", person.getFodselsnummer().getNummer()))
+            (person) -> singletonList(new Pair<>(AuditIdentifier.FNR, person.getFodselsnummer().getNummer()))
     );
     private static final String FNR_REGEX = "\\d{11}";
 
@@ -92,6 +95,8 @@ public class HentPersonService {
                     faultDescriptionKey = "sikkerhetsbegrensning.diskresjonEgenAnsatt";
                 }
             }
+
+            auditLogger.denied(faultDescriptionKey);
             throw new AuthorizationException(faultDescriptionKey, hentPersonSikkerhetsbegrensning);
         }
         HentKjerneinformasjonResponse response = mapper.map(wsResponse, HentKjerneinformasjonResponse.class);
@@ -219,7 +224,7 @@ public class HentPersonService {
     private boolean saksbehandlerHarTilgangTilDiskresjonskode(String diskresjonskode) {
         return tilgangskontroll.check(Policies.tilgangTilDiskresjonskode.with(diskresjonskode))
                 .getDecision()
-                .getDecision()
+                .getValue()
                 .equals(DecisionEnums.PERMIT);
     }
 

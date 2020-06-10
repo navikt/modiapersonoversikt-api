@@ -13,6 +13,7 @@ import no.nav.sbl.dialogarena.naudit.AuditResources.Enhet
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.enhet.model.EnhetKontaktinformasjon
 import no.nav.sbl.dialogarena.naudit.Audit
 import no.nav.sbl.dialogarena.naudit.Audit.Action.*
+import no.nav.sbl.dialogarena.naudit.AuditIdentifier
 import javax.inject.Inject
 import javax.ws.rs.*
 import javax.ws.rs.core.MediaType.APPLICATION_JSON
@@ -31,7 +32,7 @@ constructor(private val organisasjonEnhetKontaktinformasjonService: Organisasjon
     fun hentMedId(@PathParam("id") organisasjonsid: String): OrganisasjonEnhetKontaktinformasjon {
         return tilgangskontroll
                 .check(Policies.tilgangTilModia)
-                .get(Audit.describe(READ, Enhet.Kontaktinformasjon, "organisasjonsid" to organisasjonsid)) {
+                .get(Audit.describe(READ, Enhet.Kontaktinformasjon, AuditIdentifier.ORGANISASJON_ID to organisasjonsid)) {
                     organisasjonEnhetKontaktinformasjonService.hentKontaktinformasjon(organisasjonsid)
                 }
     }
@@ -41,12 +42,12 @@ constructor(private val organisasjonEnhetKontaktinformasjonService: Organisasjon
     fun finnEnhet(@QueryParam("gt") geografiskId: String?, @QueryParam("dkode") diskresjonskode: String?): EnhetKontaktinformasjon {
         return tilgangskontroll
                 .check(Policies.tilgangTilModia)
-                .get(Audit.describe(READ, Enhet.Kontaktinformasjon, "geografiskId" to geografiskId, "diskresjonskode" to diskresjonskode)) {
-                    if (geografiskId.isNullOrEmpty() && diskresjonskode.isNullOrEmpty()) throw NotFoundException()
+                .get(Audit.describe(READ, Enhet.Kontaktinformasjon, AuditIdentifier.GEOGRAFISK_ID to geografiskId, AuditIdentifier.DISKRESJONSKODE to diskresjonskode)) {
+                    if (geografiskId.isNullOrEmpty() && diskresjonskode.isNullOrEmpty()) throw BadRequestException("'gt' eller 'dkode' må være spesifisert")
 
                     val enhetid = organisasjonEnhetV2Service.finnNAVKontor(geografiskId, diskresjonskode ?: "")
                             .map { it.enhetId }
-                            .orElseThrow { NotFoundException() }
+                            .orElseThrow { NotFoundException("Fant ikke enhetsid for gt: $geografiskId dkode: $diskresjonskode") }
 
                     EnhetKontaktinformasjon(hentMedId(enhetid))
                 }
@@ -58,7 +59,7 @@ constructor(private val organisasjonEnhetKontaktinformasjonService: Organisasjon
     fun hentAnsattePaaEnhet(@PathParam("enhetId") enhetId: String): List<Ansatt> {
         return tilgangskontroll
                 .check(Policies.tilgangTilModia)
-                .get(Audit.describe(READ, Enhet.Ansatte, "enhetId" to enhetId)) {
+                .get(Audit.describe(READ, Enhet.Ansatte, AuditIdentifier.ENHET_ID to enhetId)) {
                     ansattService.ansatteForEnhet(AnsattEnhet(enhetId, ""))
                 }
     }

@@ -1,10 +1,13 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.pdl
 
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.strategier.ByEnvironmentStrategy
+import no.nav.sbl.util.EnvironmentUtils
 import org.slf4j.LoggerFactory
 
 internal data class TpsFnr(val tpsIdent: String)
 internal data class PdlFnr(val pdlIdent: String)
-internal val enableMapper = "p" != System.getProperty("environment.name")
+
+internal val enableMapper = "p" != EnvironmentUtils.getRequiredProperty(ByEnvironmentStrategy.ENVIRONMENT_PROPERTY)
 internal val log = LoggerFactory.getLogger(PdlSyntetiskFnrMapper::class.java)
 
 object PdlSyntetiskFnrMapper {

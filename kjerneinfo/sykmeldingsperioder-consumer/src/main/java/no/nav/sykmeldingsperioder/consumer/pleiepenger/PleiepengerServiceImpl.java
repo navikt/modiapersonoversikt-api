@@ -4,6 +4,7 @@ import kotlin.Pair;
 import no.nav.modig.core.exception.ApplicationException;
 import no.nav.modig.core.exception.AuthorizationException;
 import no.nav.sbl.dialogarena.naudit.Audit;
+import no.nav.sbl.dialogarena.naudit.AuditIdentifier;
 import no.nav.sbl.dialogarena.naudit.AuditResources;
 import no.nav.sykmeldingsperioder.consumer.pleiepenger.mapping.PleiepengerMapper;
 import no.nav.sykmeldingsperioder.consumer.pleiepenger.mapping.to.PleiepengerListeRequest;
@@ -28,7 +29,7 @@ public class PleiepengerServiceImpl implements PleiepengerService {
     private static Audit.AuditDescriptor<WSPerson> auditLogger = Audit.describe(
             Audit.Action.READ,
             AuditResources.Person.Pleiepenger,
-            (person) -> singletonList(new Pair<>("fnr", person.getIdent()))
+            (person) -> singletonList(new Pair<>(AuditIdentifier.FNR, person.getIdent()))
     );
     private static final Logger logger = LoggerFactory.getLogger(PleiepengerServiceImpl.class);
 

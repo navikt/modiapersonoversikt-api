@@ -28,7 +28,6 @@
         <module>ytelseskontrakt-v3-tjenestespesifikasjon</module>
         <module>nav-sykepenger-v2-tjenestespesifikasjon</module>
         <module>nav-foreldrepenger-v2-tjenestespesifikasjon</module>
-        <module>nav-behandleBrukerprofil-v2-tjenestespesifikasjon</module>
         <module>nav-cons-sak-gosys-3.0.0</module>
     </modules>
 
@@ -108,11 +107,6 @@
                         <arguments>-Xvalue-constructor -Xfluent-api</arguments>
                     </configuration>
                     <dependencies>
-                        <dependency>
-                            <groupId>org.jvnet.jaxb2_commons</groupId>
-                            <artifactId>jaxb2-value-constructor</artifactId>
-                            <version>${jaxb2-value-constructor.version}</version>
-                        </dependency>
                         <dependency>
                             <groupId>net.java.dev.jaxb2-commons</groupId>
                             <artifactId>jaxb-fluent-api</artifactId>

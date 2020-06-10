@@ -17,6 +17,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Tilgangskontrol
 import no.nav.sbl.dialogarena.naudit.AuditResources
 import no.nav.sbl.dialogarena.naudit.Audit
 import no.nav.sbl.dialogarena.naudit.Audit.Action.*
+import no.nav.sbl.dialogarena.naudit.AuditIdentifier
 import org.joda.time.DateTime
 import java.time.LocalDateTime
 import java.util.*
@@ -41,17 +42,17 @@ class SakerController @Inject constructor(private val saksoversiktService: Sakso
     @Produces(MediaType.APPLICATION_JSON)
     fun hentSakstema(@Context request: HttpServletRequest, @PathParam("fnr") fnr: String): Map<String, Any?> {
         return tilgangskontroll
-            .check(Policies.tilgangTilBruker.with(fnr))
-            .get(Audit.describe(READ, AuditResources.Person.Saker, "fnr" to fnr)) {
-                val sakerWrapper = saksService.hentAlleSaker(fnr)
-                val sakstemaWrapper = sakstemaService.hentSakstema(sakerWrapper.resultat, fnr, false)
+                .check(Policies.tilgangTilBruker.with(fnr))
+                .get(Audit.describe(READ, AuditResources.Person.Saker, AuditIdentifier.FNR to fnr)) {
+                    val sakerWrapper = saksService.hentAlleSaker(fnr)
+                    val sakstemaWrapper = sakstemaService.hentSakstema(sakerWrapper.resultat, fnr, false)
 
-                // TODO skal denne metoden ligge i tilgangskontrollService?
-                tilgangskontrollService.markerIkkeJournalforte(sakstemaWrapper.resultat)
-                saksoversiktService.fjernGamleDokumenter(sakstemaWrapper.resultat)
+                    // TODO skal denne metoden ligge i tilgangskontrollService?
+                    tilgangskontrollService.markerIkkeJournalforte(sakstemaWrapper.resultat)
+                    saksoversiktService.fjernGamleDokumenter(sakstemaWrapper.resultat)
 
-                val resultat = ResultatWrapper(mapTilModiaSakstema(sakstemaWrapper.resultat, RestUtils.hentValgtEnhet(request)),
-                        collectFeilendeSystemer(sakerWrapper, sakstemaWrapper))
+                    val resultat = ResultatWrapper(mapTilModiaSakstema(sakstemaWrapper.resultat, RestUtils.hentValgtEnhet(request)),
+                            collectFeilendeSystemer(sakerWrapper, sakstemaWrapper))
 
                 byggSakstemaResultat(resultat)
             }
@@ -65,7 +66,7 @@ class SakerController @Inject constructor(private val saksoversiktService: Sakso
                      @PathParam("dokumentreferanse") dokumentreferanse: String): Response {
         return tilgangskontroll
                 .check(Policies.tilgangTilBruker.with(fnr))
-                .get(Audit.describe(READ, AuditResources.Person.Dokumenter, "fnr" to fnr, "journalpostId" to journalpostId, "dokumentreferanse" to dokumentreferanse)) {
+                .get(Audit.describe(READ, AuditResources.Person.Dokumenter, AuditIdentifier.FNR to fnr, AuditIdentifier.JOURNALPOST_ID to journalpostId, AuditIdentifier.DOKUMENT_REFERERANSE to dokumentreferanse)) {
                     val journalpostMetadata = hentDokumentMetadata(journalpostId, fnr)
                     val tilgangskontrollResult = tilgangskontrollService.harSaksbehandlerTilgangTilDokument(request,
                             journalpostMetadata, fnr, journalpostMetadata.temakode)

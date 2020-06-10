@@ -29,6 +29,8 @@ import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.senduthenvendelse.meld
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.senduthenvendelse.meldinger.WSSendUtHenvendelseResponse;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.henvendelse.HenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.meldinger.WSHentHenvendelseListeRequest;
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -57,6 +59,7 @@ public class HenvendelseUtsendingServiceImpl implements HenvendelseUtsendingServ
     private final PersonKjerneinfoServiceBi kjerneinfo;
     private final LDAPService ldapService;
     private final Tilgangskontroll tilgangskontroll;
+    private static final Logger logger = LoggerFactory.getLogger(HenvendelseUtsendingServiceImpl.class);
 
     @Inject
     public HenvendelseUtsendingServiceImpl(HenvendelsePortType henvendelsePortType,
@@ -104,7 +107,8 @@ public class HenvendelseUtsendingServiceImpl implements HenvendelseUtsendingServ
     @Override
     public void ferdigstillHenvendelse(Melding melding, Optional<String> oppgaveId, Optional<Sak> sak, String behandlingsId, String saksbehandlersValgteEnhet) throws Exception {
         if (oppgaveId.isPresent() && oppgaveBehandlingService.oppgaveErFerdigstilt(oppgaveId.get())) {
-            throw new OppgaveErFerdigstilt();
+            logger.error("Oppgaven er ferdigstilt med id: {}", oppgaveId);
+            return;
         }
 
         XMLHenvendelse xmlHenvendelse = lagXMLHenvendelseOgSettEnhet(melding);

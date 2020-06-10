@@ -26,9 +26,8 @@ public class KodeverkV2EndpointConfig {
     }
 
     @Bean
-    public KodeverkClient kodeverkClient() {
-        KodeverkClient prod = lagKodeverkClient();
-        return createTimerProxyForWebService("KodeverkClient", prod, KodeverkClient.class);
+    public KodeverkClient kodeverkClient(KodeverkPortType kodeverkPortType) {
+        return new CachingKodeverkClient(new DefaultKodeverkClient(kodeverkPortType), empty());
     }
 
     @Bean
@@ -44,9 +43,4 @@ public class KodeverkV2EndpointConfig {
                 .withProperty(MUST_UNDERSTAND, false)
                 .build();
     }
-
-    private KodeverkClient lagKodeverkClient() {
-        return new CachingKodeverkClient(new DefaultKodeverkClient(kodeverkPortType()), empty());
-    }
-
 }

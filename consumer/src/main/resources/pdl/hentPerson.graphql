@@ -55,12 +55,23 @@ query($ident: ID!, $navnHistorikk: Boolean!){
             spraak
         }
     }
-    fullmakt {
-        motpartsPersonident
-        motpartsRolle
-        omraader
-        gyldigFraOgMed
-        gyldigTilOgMed
-    }
+      fullmakt {
+          motpartsPersonident
+          motpartsRolle
+          omraader
+          gyldigFraOgMed
+          gyldigTilOgMed
+      }
+      telefonnummer {
+          landskode
+          nummer
+          prioritet
+          metadata {
+              endringer {
+                  registrert
+                  registrertAv
+              }
+          }
+      }
   }
 }

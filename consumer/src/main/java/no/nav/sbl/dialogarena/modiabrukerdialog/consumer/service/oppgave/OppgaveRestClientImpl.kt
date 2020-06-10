@@ -7,7 +7,6 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveRequest
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveResponse
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveRestClient
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.pdl.PdlOppslagService
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.sts.StsServiceImpl
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.RestConstants
 import no.nav.sbl.rest.RestUtils.withClient
 import no.nav.sbl.util.EnvironmentUtils
@@ -27,7 +26,6 @@ open class OppgaveOpprettelseClient(private val pdlOppslagService: PdlOppslagSer
     val url = OPPGAVE_BASEURL + "api/v1/oppgaver"
 
     @Inject
-    private lateinit var stsService: StsServiceImpl
 
     override fun opprettOppgave(oppgave: OppgaveRequest): OppgaveResponse {
         val oppgaveskjermetObject: OppgaveSkjermetRequestDTO = OppgaveSkjermetRequestDTO(

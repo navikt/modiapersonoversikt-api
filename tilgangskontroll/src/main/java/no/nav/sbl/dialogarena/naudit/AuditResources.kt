@@ -26,16 +26,6 @@ class AuditResources {
     }
 
     class Person {
-        class Brukerprofil {
-            companion object {
-                val Navn = AuditResource("brukerprofil.navn")
-                val Adresse = AuditResource("brukerprofil.adresse")
-                val TilrettelagtKommunikasjon = AuditResource("brukerprofil.tilrettelagtkommunikasjon")
-                val Telefonnummer = AuditResource("brukerprofil.telefonnummer")
-                val Kontonummer = AuditResource("brukerprofil.kontonummer")
-            }
-        }
-
         class Henvendelse {
             companion object {
                 @JvmField
