@@ -7,6 +7,11 @@ data class PdlPersonResponse(
         val data: PdlHentPerson?
 )
 
+data class PdlIdentResponse(
+        val errors: List<PdlError>?,
+        val data: List<PdlIdenter>?
+)
+
 data class PdlError(
         val message: String,
         val locations: List<PdlErrorLocation>,
@@ -92,3 +97,11 @@ data class PdlFullmakt(
         val gyldigFraOgMed: Date,
         val gyldigTilOgMed: Date
 )
+
+data class PdlIdenter(
+        val ident: String,
+        val gruppe: String,
+        val historisk: Boolean
+)
+
+

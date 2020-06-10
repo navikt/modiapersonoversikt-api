@@ -14,10 +14,8 @@ import no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.DateUtils.arbeidsdager
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.OppgavebehandlingV3
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.meldinger.WSOpprettOppgave
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.meldinger.WSOpprettOppgaveRequest
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.OpprettOppgaveRest
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.oppgave.OppgaveRequest
 import no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.DateUtils.arbeidsdagerFraDatoJava
-import java.time.LocalDate
+import java.time.LocalDate.*
 import javax.inject.Inject
 import javax.ws.rs.GET
 import javax.ws.rs.POST
@@ -50,8 +48,8 @@ class DialogOppgaveController @Inject constructor(
                                     .withOpprettOppgave(
                                             WSOpprettOppgave()
                                                     .withHenvendelseId(request.behandlingskjedeId)
-                                                    .withAktivFra(LocalDate.now())
-                                                    .withAktivTil(arbeidsdagerFraDato(request.dagerFrist, LocalDate.now()))
+                                                    .withAktivFra(org.joda.time.LocalDate.now())
+                                                    .withAktivTil(arbeidsdagerFraDato(request.dagerFrist, org.joda.time.LocalDate.now()))
                                                     .withAnsvarligEnhetId(request.ansvarligEnhetId)
                                                     .withAnsvarligId(request.ansvarligIdent)
                                                     .withBeskrivelse(request.beskrivelse)
@@ -85,8 +83,8 @@ class DialogOppgaveController @Inject constructor(
                                     underkategoriKode = request.underkategoriKode,
                                     oppgavetype = request.oppgaveTypeKode,
                                     behandlingstype = HENVENDELSESTYPE_KODE,
-                                    aktivDato = LocalDate.now(),
-                                    fristFerdigstillelse = arbeidsdagerFraDatoJava(request.dagerFrist, LocalDate.now()),
+                                    aktivDato = now(),
+                                    fristFerdigstillelse = arbeidsdagerFraDatoJava(request.dagerFrist, now()),
                                     prioritet = request.prioritetKode
                             )
                             )

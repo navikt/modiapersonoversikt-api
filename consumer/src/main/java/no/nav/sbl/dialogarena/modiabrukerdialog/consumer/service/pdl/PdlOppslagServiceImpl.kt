@@ -4,9 +4,7 @@ import com.google.gson.GsonBuilder
 import no.nav.common.auth.SsoToken
 import no.nav.common.auth.SubjectHandler
 import no.nav.log.MDCConstants
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.pdl.PdlPersonResponse
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.pdl.PdlRequest
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.pdl.Variables
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.pdl.*
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.pdl.PdlOppslagService
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.sts.StsServiceImpl
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.strategier.ByEnvironmentStrategy.ENVIRONMENT_PROPERTY
@@ -40,9 +38,56 @@ class PdlOppslagServiceImpl : PdlOppslagService {
         return graphqlRequest(PdlRequest(query, Variables(pdlFnr)))
     }
 
+    override fun hentIdent(fnr: String, identtype: String): PdlIdentResponse? {
+        val query = this::class.java.getResource("/pdl/hentAktør.graphql").readText().replace("[\n\r]", "")
+        val pdlFnr = PdlSyntetiskFnrMapper.mapTilPdl(fnr)
+        return graphqlIdentRequest(PdlIdentRequest(query, IdentVariables(pdlFnr, identtype)))
+    }
+
+    private fun graphqlIdentRequest(identRequest: PdlIdentRequest): PdlIdentResponse? {
+        val veilederOidcToken: String = SubjectHandler.getSsoToken(SsoToken.Type.OIDC).orElseThrow { IllegalStateException("Kunne ikke hente ut veileders ssoTOken") }
+        val consumerOidcToken: String = stsService.hentConsumerOidcToken()
+
+        val uuid = UUID.randomUUID()
+
+        tjenestekallLogg.info("""
+            PDL-request: $uuid
+            ------------------------------------------------------------------------------------
+                ident: ${identRequest.variables.ident}
+                callId: ${MDC.get(MDCConstants.MDC_CALL_ID)}
+            ------------------------------------------------------------------------------------
+        """.trimIndent())
+
+        val content: String = RestUtils.withClient { client ->
+            val response = client.target(OPPSLAG_URL)
+                    .request()
+                    .header(NAV_PERSONIDENT_HEADER, identRequest.variables.ident)
+                    .header(NAV_CALL_ID_HEADER, MDC.get(MDCConstants.MDC_CALL_ID))
+                    .header(AUTHORIZATION, AUTH_METHOD_BEARER + AUTH_SEPERATOR + veilederOidcToken)
+                    .header(NAV_CONSUMER_TOKEN_HEADER, AUTH_METHOD_BEARER + AUTH_SEPERATOR + consumerOidcToken)
+                    .header(TEMA_HEADER, ALLE_TEMA_HEADERVERDI)
+                    .header(OPPLYSNINGSTYPER_HEADER, OPPLYSNINGSTYPER_HEADERVERDI)
+                    .post(Entity.json(identRequest))
+
+            val body = response.readEntity(String::class.java)
+            tjenestekallLogg.info("""
+            PDL-response: $uuid
+            ------------------------------------------------------------------------------------
+                status: ${response.status} ${response.statusInfo}
+                body: $body
+            ------------------------------------------------------------------------------------
+        """.trimIndent())
+
+            body
+        }
+
+        return gson.fromJson(content, PdlIdentResponse::class.java)
+    }
+
+
     private fun graphqlRequest(request: PdlRequest): PdlPersonResponse? {
-        val veilederOidcToken : String = SubjectHandler.getSsoToken(SsoToken.Type.OIDC).orElseThrow { IllegalStateException("Kunne ikke hente ut veileders ssoTOken") }
-        val consumerOidcToken : String = stsService.hentConsumerOidcToken()
+        val veilederOidcToken: String = SubjectHandler.getSsoToken(SsoToken.Type.OIDC).orElseThrow { IllegalStateException("Kunne ikke hente ut veileders ssoTOken") }
+        val consumerOidcToken: String = stsService.hentConsumerOidcToken()
 
         val uuid = UUID.randomUUID()
 
