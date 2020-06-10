@@ -349,6 +349,8 @@ spec:
       value: "https://pdl-api.nais.preprod.local/graphql"
     - name: PERSONFORVALTER_URL
       value: "https://person-forvalter.nais.preprod.local/endreperson"
+    - name: OPPGAVE_URL
+      value: "https://oppgave-q0.nais.preprod.local/api/v1/oppgaver/"
     - name: TILLATMOCK
       value: "true"
     - name: VISUTBETALINGER
