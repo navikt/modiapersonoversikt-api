@@ -177,18 +177,30 @@ class PersonController @Inject constructor(private val kjerneinfoService: Person
     )
 
     private fun getFamilierelasjoner(person: Person?) = person?.personfakta?.harFraRolleIList?.map {
+        val (alder, alderIManeder) = hentFamilieRelasjonsAlder(it.tilPerson)
         mapOf(
                 "harSammeBosted" to if (it.tilPerson.isHideFodselsnummerOgNavn) null else it.harSammeBosted,
                 "tilPerson" to mapOf(
                         "navn" to it.tilPerson.personfakta.personnavn?.let { getNavn(it) },
-                        "alder" to if (it.tilPerson.isHideFodselsnummerOgNavn) null else it.tilPerson.fodselsnummer.alder,
-                        "alderMåneder" to if (it.tilPerson.isHideFodselsnummerOgNavn) null else it.tilPerson.fodselsnummer.alderIManeder,
+                        "alder" to alder,
+                        "alderMåneder" to alderIManeder,
                         "fødselsnummer" to if (it.tilPerson.isHideFodselsnummerOgNavn) null else it.tilPerson.fodselsnummer.nummer,
                         "personstatus" to getPersonstatus(it.tilPerson),
                         "diskresjonskode" to it.tilPerson.personfakta.diskresjonskode?.let { Kode(it) }
                 ),
                 "rolle" to it.tilRolle
         )
+    }
+
+    private fun hentFamilieRelasjonsAlder(person: Person): Pair<Int?, Int?> {
+        if (person.isHideFodselsnummerOgNavn) {
+            return Pair(null, null)
+        } else if (!person.fodselsnummer.isDnummer && Integer.parseInt(person.fodselsnummer.nummer.substring(6)) < 10) {
+//          Samme logikken som man kan finne i kjerneinfo's Fodselsnummer.java som forårsaker feil i ved visse fnr
+            return Pair(null, null)
+        } else {
+            return Pair(person.fodselsnummer.alder, person.fodselsnummer.alderIManeder)
+        }
     }
 
     private fun hentBankkonto(person: Person?) = person?.personfakta.let {
