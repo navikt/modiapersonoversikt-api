@@ -106,8 +106,7 @@ public class HenvendelseUtsendingServiceImpl implements HenvendelseUtsendingServ
             fullbyrdeSendtInnHenvendelse(melding, oppgaveId, sak,
                 wsSendUtHenvendelseResponse.getBehandlingsId(), saksbehandlersValgteEnhet);
         } catch (Exception e) {
-            logger.error(e.getMessage());
-            throw new JournalforingFeiletException();
+            throw new JournalforingFeiletException(e);
         }
     }
 

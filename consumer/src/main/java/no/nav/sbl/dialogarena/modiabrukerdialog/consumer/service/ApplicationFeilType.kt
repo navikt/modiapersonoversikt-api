@@ -16,4 +16,4 @@ enum class ApplikasjonsFeilType(private val status: Response.Status) : Feil.Type
 
 }
 
-internal class JournalforingFeiletException : Feil(ApplikasjonsFeilType.JOURNALFORING_FEILET)
+internal class JournalforingFeiletException(t: Throwable) : Feil(ApplikasjonsFeilType.JOURNALFORING_FEILET, t)
