@@ -15,7 +15,6 @@ import java.util.Optional;
 import java.util.function.Function;
 import javax.inject.Inject;
 import javax.inject.Named;
-import javax.ws.rs.InternalServerErrorException;
 import no.nav.kjerneinfo.consumer.fim.person.PersonKjerneinfoServiceBi;
 import no.nav.kjerneinfo.consumer.fim.person.to.HentKjerneinformasjonRequest;
 import no.nav.kjerneinfo.domain.person.Person;
@@ -108,8 +107,7 @@ public class HenvendelseUtsendingServiceImpl implements HenvendelseUtsendingServ
                 wsSendUtHenvendelseResponse.getBehandlingsId(), saksbehandlersValgteEnhet);
         } catch (Exception e) {
             logger.error(e.getMessage());
-            throw new InternalServerErrorException(
-                "Spørsmålet ditt er lagt men journalføring feilet. Prøv manuelt journalføring etter noen minutter.");
+            throw new JournalforingFeiletException();
         }
     }
 
@@ -168,7 +166,6 @@ public class HenvendelseUtsendingServiceImpl implements HenvendelseUtsendingServ
         if (temagruppe == ANSOS) {
             merkSomKontorsperret(melding.fnrBruker, singletonList(melding.id));
         }
-
     }
 
     @Override
