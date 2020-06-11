@@ -105,7 +105,7 @@ type Kontaktadresse {
 
     coAdressenavn: String
     postboksadresse: Postboksadresse
-    vegadresseForPost: Vegadresse
+    vegadresse: Vegadresse
     postadresseIFrittFormat: PostadresseIFrittFormat
     utenlandskAdresse: UtenlandskAdresse
     utenlandskAdresseIFrittFormat: UtenlandskAdresseIFrittFormat
@@ -145,13 +145,13 @@ type UkjentBosted {
 }
 
 type UtenlandskAdresse {
-    adressenavnNummer: String
-    bygningEtasjeLeilighet: String
-    postboksNummerNavn: String
-    postkode: String
-    bySted: String
-    regionDistriktOmraade: String
-    landkode: String!
+     adressenavnNummer: String
+     bygningEtasjeLeilighet: String
+     postboksNummerNavn: String
+     postkode: String
+     bySted: String
+     regionDistriktOmraade: String
+     landkode: String!
 }
 
 type UtenlandskAdresseIFrittFormat {
@@ -254,11 +254,12 @@ type UtenlandskIdentifikasjonsnummer {
 
 type Adressebeskyttelse {
     gradering: AdressebeskyttelseGradering!
-    folkeregistermetadata: Folkeregistermetadata!
+    folkeregistermetadata: Folkeregistermetadata
     metadata: Metadata!
 }
 
 enum AdressebeskyttelseGradering {
+    STRENGT_FORTROLIG_UTLAND,
     STRENGT_FORTROLIG,
     FORTROLIG,
     UGRADERT
@@ -522,6 +523,11 @@ type Metadata {
     # Vær obs på at denne kan endre seg og man burde takle at det finnes flere korrigeringer i listen, så dersom man ønsker å kun vise den siste, så må man selv filtrere ut dette.
     # Det kan også ved svært få tilfeller skje at opprett blir fjernet. F.eks ved splitt tilfeller av identer. Dette skal skje i svært få tilfeller. Dersom man ønsker å presentere opprettet tidspunktet, så blir det tidspunktet på den første endringen.
     endringer: [Endring!]!
+
+    # Feltet betegner hvorvidt dette er en funksjonelt historisk opplysning, for eksempel en tidligere fraflyttet adresse eller et foreldreansvar som er utløpt fordi barnet har fylt 18 år.
+    # I de fleste tilfeller kan dette utledes ved å se på de andre feltene i opplysningen. Dette er imidlertid ikke alltid tilfellet, blant annet for foreldreansvar.
+    # Feltet bør brukes av konsumenter som henter informasjon fra GraphQL med historikk, men som også trenger å utlede gjeldende informasjon.
+    historisk: Boolean!
 }
 
 # Endring som har blitt utført på opplysningen. F.eks: Opprett -> Korriger -> Korriger

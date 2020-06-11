@@ -8,7 +8,7 @@ import no.nav.kjerneinfo.consumer.fim.person.to.HentKjerneinformasjonResponse
 import no.nav.kjerneinfo.domain.person.Fodselsnummer
 import no.nav.kjerneinfo.domain.person.Person
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.pdl.*
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.pdl.PdlOppslagService
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.pdl.PdlOppslagService
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.TilgangskontrollMock
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.person.PersonController
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.person.Telefonnummer

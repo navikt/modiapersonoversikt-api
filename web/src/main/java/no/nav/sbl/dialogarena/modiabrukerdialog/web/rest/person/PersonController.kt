@@ -15,7 +15,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.pdl.PdlFullmakt
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.pdl.PdlPersonResponse
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.pdl.PdlTelefonnummer
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.pdl.PdlTilrettelagtKommunikasjon
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.pdl.PdlOppslagService
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.pdl.PdlOppslagService
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Policies
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Tilgangskontroll
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.kodeverk.Kode
