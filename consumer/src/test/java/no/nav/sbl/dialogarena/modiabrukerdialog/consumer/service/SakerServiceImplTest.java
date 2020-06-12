@@ -108,6 +108,8 @@ public class SakerServiceImplTest {
         List<Sak> saksliste = sakerService.hentSammensatteSaker(FNR);
         assertThat(saksliste.get(0).saksId, is(SakId_1));
         assertThat(saksliste.get(3).fagsystemKode, is(""));
+        assertThat(saksliste.get(saksliste.size() - 1).sakstype, is(SAKSTYPE_MED_FAGSAK));
+        assertThat(saksliste.get(saksliste.size() - 1).temaKode, is(BIDRAG_MARKOR));
     }
 
     @Test

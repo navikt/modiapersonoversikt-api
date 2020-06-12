@@ -146,7 +146,7 @@ public class SakerServiceImpl implements SakerService {
         bidragSak.temaNavn = "Bidrag";
         bidragSak.fagsystemKode = BIDRAG_MARKOR;
         bidragSak.fagsystemNavn = "Kopiert inn i Bisys";
-        bidragSak.sakstype = SAKSTYPE_GENERELL;
+        bidragSak.sakstype = SAKSTYPE_MED_FAGSAK;
         bidragSak.opprettetDato = null;
         bidragSak.finnesIGsak = false;
         bidragSak.finnesIPsak = false;
