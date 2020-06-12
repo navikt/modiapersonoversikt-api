@@ -7,6 +7,8 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.gsak.SakerService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.kodeverk.StandardKodeverk;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.psak.PsakService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.saker.knyttbehandlingskjedetilsak.KnyttBehandlingskjedeTilSakValidator;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.Feature;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.UnleashService;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.behandlehenvendelse.BehandleHenvendelsePortType;
 import no.nav.tjeneste.virksomhet.behandlesak.v1.BehandleSakV1;
 import no.nav.tjeneste.virksomhet.behandlesak.v1.OpprettSakSakEksistererAllerede;
@@ -52,6 +54,8 @@ public class SakerServiceImpl implements SakerService {
     private ArbeidOgAktivitet arbeidOgAktivitet;
     @Inject
     private PsakService psakService;
+    @Inject
+    private UnleashService unleashService;
 
     @Override
     public List<Sak> hentSammensatteSaker(String fnr) {
@@ -60,6 +64,11 @@ public class SakerServiceImpl implements SakerService {
         leggTilManglendeGenerelleSaker(saker);
         behandleOppfolgingsSaker(saker);
         leggTilFagsystemnavnOgTemanavn(saker, gsakKodeverk.hentFagsystemMapping(), standardKodeverk);
+
+        if (unleashService.isEnabled(Feature.BIDRAG_SAK_HACK)) {
+            // Bør erstattes av reelle saker når bisys kan levere det
+            leggTilBidragHack(saker);
+        }
         return saker.stream()
                 .filter(GODKJENT_FAGSAK.or(GODKJENT_GENERELL))
                 .collect(toList());
@@ -76,6 +85,10 @@ public class SakerServiceImpl implements SakerService {
     public void knyttBehandlingskjedeTilSak(String fnr, String behandlingskjede, Sak sak, String enhet) throws JournalforingFeilet {
         KnyttBehandlingskjedeTilSakValidator.validate(fnr, behandlingskjede, sak, enhet);
 
+        if (sak.syntetisk && BIDRAG_MARKOR.equals(sak.fagsystemKode)) {
+            behandleHenvendelsePortType.knyttBehandlingskjedeTilTema(behandlingskjede, "BID");
+            return;
+        }
         if (!sak.finnesIPsak && !sak.finnesIGsak) {
             sak.saksId = opprettSak(fnr, sak);
         }
@@ -123,6 +136,23 @@ public class SakerServiceImpl implements SakerService {
             Optional<Sak> oppfolging = hentOppfolgingssakFraArena(fnr);
             oppfolging.ifPresent(saker::add);
         }
+    }
+
+    private void leggTilBidragHack(List<Sak> saker) {
+        Sak bidragSak = new Sak();
+        bidragSak.saksId = "-";
+        bidragSak.fagsystemSaksId = "-";
+        bidragSak.temaKode = BIDRAG_MARKOR;
+        bidragSak.temaNavn = "Bidrag";
+        bidragSak.fagsystemKode = BIDRAG_MARKOR;
+        bidragSak.fagsystemNavn = "Kopiert inn i Bisys";
+        bidragSak.sakstype = SAKSTYPE_GENERELL;
+        bidragSak.opprettetDato = null;
+        bidragSak.finnesIGsak = false;
+        bidragSak.finnesIPsak = false;
+        bidragSak.syntetisk = true;
+
+        saker.add(bidragSak);
     }
 
 
