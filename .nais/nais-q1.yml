@@ -55,6 +55,8 @@ spec:
       value: "q1"
     - name: ISSO_CLIENT_ID
       value: "veilarblogin-q1"
+    - name: FPSAK_CLIENT_ID
+      value: "fpsak-frontend-q1"
     - name: ISSO_DISCOVERY_URL
       value: "https://isso-q.adeo.no/isso/oauth2/.well-known/openid-configuration"
     - name: ISSO_REFRESH_URL

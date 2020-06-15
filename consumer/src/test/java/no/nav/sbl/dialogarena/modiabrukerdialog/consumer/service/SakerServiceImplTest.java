@@ -7,6 +7,8 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.gsak.GsakKodeverk;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.kodeverk.StandardKodeverk;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.psak.PsakService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.saker.SakerServiceImpl;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.Feature;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.UnleashService;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.behandlehenvendelse.BehandleHenvendelsePortType;
 import no.nav.tjeneste.virksomhet.behandlesak.v1.BehandleSakV1;
 import no.nav.tjeneste.virksomhet.behandlesak.v1.OpprettSakSakEksistererAllerede;
@@ -80,6 +82,8 @@ public class SakerServiceImplTest {
     private BehandleHenvendelsePortType behandleHenvendelsePortType;
     @Mock
     private PsakService psakService;
+    @Mock
+    private UnleashService unleashService;
 
     @InjectMocks
     private SakerServiceImpl sakerService;
@@ -95,6 +99,8 @@ public class SakerServiceImplTest {
         when(sakV1.finnSak(any(WSFinnSakRequest.class))).thenReturn(new WSFinnSakResponse().withSakListe(sakerListe));
 
         when(arbeidOgAktivitet.hentSakListe(any(WSHentSakListeRequest.class))).thenReturn(new WSHentSakListeResponse());
+        when(unleashService.isEnabled(anyString())).thenReturn(true);
+        when(unleashService.isEnabled(any(Feature.class))).thenReturn(true);
     }
 
     @Test
@@ -102,6 +108,8 @@ public class SakerServiceImplTest {
         List<Sak> saksliste = sakerService.hentSammensatteSaker(FNR);
         assertThat(saksliste.get(0).saksId, is(SakId_1));
         assertThat(saksliste.get(3).fagsystemKode, is(""));
+        assertThat(saksliste.get(saksliste.size() - 1).sakstype, is(SAKSTYPE_MED_FAGSAK));
+        assertThat(saksliste.get(saksliste.size() - 1).temaKode, is(BIDRAG_MARKOR));
     }
 
     @Test
@@ -272,6 +280,20 @@ public class SakerServiceImplTest {
         sakerService.knyttBehandlingskjedeTilSak(FNR, BEHANDLINGSKJEDEID, sak, valgtNavEnhet);
 
         verify(behandleHenvendelsePortType, times(1)).knyttBehandlingskjedeTilSak(BEHANDLINGSKJEDEID, SAKS_ID, sak.temaKode, valgtNavEnhet);
+    }
+
+    @Test
+    void knyttBehandlingskjedeTilSakKallerAlternativMetodeOmBidragsHackSakenErValgt() throws Exception {
+        String valgtNavEnhet = "0219";
+        Sak sak = new Sak();
+        sak.syntetisk = true;
+        sak.fagsystemKode = BIDRAG_MARKOR;
+
+        sakerService.knyttBehandlingskjedeTilSak(FNR, BEHANDLINGSKJEDEID, sak, valgtNavEnhet);
+
+        verify(behandleSak, never()).opprettSak(any(WSOpprettSakRequest.class));
+        verify(behandleHenvendelsePortType, never()).knyttBehandlingskjedeTilSak(anyString(), anyString(), anyString(), anyString());
+        verify(behandleHenvendelsePortType, times(1)).knyttBehandlingskjedeTilTema(BEHANDLINGSKJEDEID, "BID");
     }
 
     @Test
