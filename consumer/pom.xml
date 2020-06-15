@@ -25,6 +25,10 @@
             <groupId>no.nav.common</groupId>
             <artifactId>oidc</artifactId>
         </dependency>
+        <dependency>
+            <groupId>no.nav.common</groupId>
+            <artifactId>api-app</artifactId>
+        </dependency>
         <!--Interne-->
         <dependency>
             <groupId>${project.groupId}</groupId>
