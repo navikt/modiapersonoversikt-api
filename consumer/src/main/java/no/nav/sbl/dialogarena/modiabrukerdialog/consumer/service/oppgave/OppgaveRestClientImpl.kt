@@ -1,5 +1,5 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.oppgave
-import com.google.gson.GsonBuilder
+
 import no.nav.common.auth.SsoToken
 import no.nav.common.auth.SubjectHandler
 import no.nav.log.MDCConstants
@@ -7,46 +7,51 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveRequest
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveResponse
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveRestClient
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.pdl.PdlOppslagService
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.kodeverksmapper.KodeverksmapperService
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.kodeverksmapper.domain.Behandling
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.RestConstants
 import no.nav.sbl.rest.RestUtils.withClient
 import no.nav.sbl.util.EnvironmentUtils
 import org.slf4j.MDC
 import java.time.LocalDate
 import java.time.LocalDateTime
+import java.util.*
 import javax.inject.Inject
 import javax.ws.rs.client.Client
 import javax.ws.rs.client.Entity
 import javax.ws.rs.core.HttpHeaders.AUTHORIZATION
 
 
-open class OppgaveOpprettelseClient(private val pdlOppslagService: PdlOppslagService) : OppgaveRestClient {
-    private val gson = GsonBuilder().setDateFormat("yyyy-MM-dd").create()
+open class OppgaveOpprettelseClient @Inject constructor(
+        val kodeverksmapperService: KodeverksmapperService,
+        private val pdlOppslagService: PdlOppslagService
+) : OppgaveRestClient {
     val OPPGAVE_BASEURL = EnvironmentUtils.getRequiredProperty("OPPGAVE_BASEURL")
-
     val url = OPPGAVE_BASEURL + "api/v1/oppgaver"
 
     @Inject
 
     override fun opprettOppgave(oppgave: OppgaveRequest): OppgaveResponse {
-        val oppgaveskjermetObject: OppgaveSkjermetRequestDTO = OppgaveSkjermetRequestDTO(
-                opprettetAvEnhetsnr = oppgave.opprettetAvEnhetsnr,
+//Mapping fra gammel kodeverk som frontend bruker til nytt kodeverk som Oppgave bruker
+        val behandling: Optional<Behandling> = kodeverksmapperService.mapUnderkategori(oppgave.underkategoriKode)
+        val oppgaveTypeMapped: String = kodeverksmapperService.mapOppgavetype(oppgave.oppgavetype)
+
+
+        val oppgaveskjermetObject = OppgaveSkjermetRequestDTO(
+                opprettetAvEnhetsnr = oppgave.opprettetavenhetsnummer,
                 aktoerId = getAktørId(oppgave.fnr),
                 behandlesAvApplikasjon = "FS22",
                 beskrivelse = oppgave.beskrivelse,
                 temagruppe = oppgave.temagruppe,
                 tema = oppgave.tema,
-                behandlingstema = "ab0335",
-                oppgavetype = oppgave.oppgavetype,
-                behandlingstype = "ae0034",
+                behandlingstema = behandling?.map(Behandling::getBehandlingstema).orElse(null),
+                oppgavetype = oppgaveTypeMapped,
+                behandlingstype = behandling?.map(Behandling::getBehandlingstype).orElse(null),
                 aktivDato = LocalDate.now(),
-                fristFerdigstillelse = LocalDate.now(),
+                fristFerdigstillelse = oppgave.oppgaveFrist,
                 prioritet = oppgave.prioritet
         )
-
-
         return gjorSporring(url, oppgaveskjermetObject, OppgaveResponse::class.java)
-
-
     }
 
     private fun gjorSporring(url: String, request: OppgaveSkjermetRequestDTO, targetClass: Class<OppgaveResponse>): OppgaveResponse {

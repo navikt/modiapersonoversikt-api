@@ -7,18 +7,17 @@ interface OppgaveRestClient {
 }
 
 data class  OppgaveRequest(
-        val opprettetAvEnhetsnr: String,
         val fnr: String,
         val behandlesAvApplikasjon: String,
-        val beskrivelse: String ,
-        val temagruppe: String ,
-        val tema: String ,
-        val oppgavetype : String ,
-        val behandlingstype : String ,
-        val aktivDato : LocalDate ,
-        val fristFerdigstillelse : LocalDate ,
-        val prioritet : String,
-        val underkategoriKode: String?
+        val beskrivelse: String,
+        val temagruppe: String,
+        val tema: String,
+        val oppgavetype: String,
+        val behandlingstype: String,
+        val prioritet: String,
+        val underkategoriKode: String?,
+        val opprettetavenhetsnummer: String,
+        val oppgaveFrist: LocalDate
 )
 data class OppgaveResponse (
         val oppgaveid: String

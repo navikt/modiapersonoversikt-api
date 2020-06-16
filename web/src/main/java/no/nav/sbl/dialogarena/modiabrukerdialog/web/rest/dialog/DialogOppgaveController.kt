@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.dialog
 
+import no.bekk.bekkopen.date.NorwegianDateUtil
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.GsakKodeTema
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveRequest
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveRestClient
@@ -8,15 +9,14 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.BehandlingsIdTi
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Policies
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Tilgangskontroll
 import no.nav.sbl.dialogarena.naudit.Audit
-import no.nav.sbl.dialogarena.naudit.Audit.Action.*
+import no.nav.sbl.dialogarena.naudit.Audit.Action.CREATE
 import no.nav.sbl.dialogarena.naudit.AuditIdentifier
 import no.nav.sbl.dialogarena.naudit.AuditResources.Person.Henvendelse
 import no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.DateUtils.arbeidsdagerFraDato
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.OppgavebehandlingV3
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.meldinger.WSOpprettOppgave
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.meldinger.WSOpprettOppgaveRequest
-import no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.DateUtils.arbeidsdagerFraDatoJava
-import java.time.LocalDate.*
+import java.time.LocalDate
 import javax.inject.Inject
 import javax.ws.rs.GET
 import javax.ws.rs.POST
@@ -75,7 +75,7 @@ class DialogOppgaveController @Inject constructor(
                 .get(Audit.describe(CREATE, Henvendelse.Oppgave.Opprett, AuditIdentifier.FNR to request.fnr)) {
                     val respons = oppgavebehandlingRest
                             .opprettOppgave(OppgaveRequest(
-                                    opprettetAvEnhetsnr = request.valgtEnhetId,
+
                                     fnr = request.fnr,
                                     behandlesAvApplikasjon = "FS22",
                                     beskrivelse = request.beskrivelse,
@@ -84,9 +84,9 @@ class DialogOppgaveController @Inject constructor(
                                     underkategoriKode = request.underkategoriKode,
                                     oppgavetype = request.oppgaveTypeKode,
                                     behandlingstype = HENVENDELSESTYPE_KODE,
-                                    aktivDato = now(),
-                                    fristFerdigstillelse = arbeidsdagerFraDatoJava(request.dagerFrist, now()),
-                                    prioritet = request.prioritetKode
+                                    prioritet = request.prioritetKode,
+                                    opprettetavenhetsnummer = request.opprettetavenhetsnummer,
+                                    oppgaveFrist = kalkulerFrist(request.temaKode, request.oppgaveTypeKode)
                             )
                             )
                     SkjermetOppgaveRespons(
@@ -112,6 +112,18 @@ class DialogOppgaveController @Inject constructor(
                         )
                     }
                 }
+    }
+
+    private fun kalkulerFrist(temaKode: String, oppgaveTypeKode: String): java.time.LocalDate {
+        val dagerFrist = gsakKodeverk.hentTemaListe()
+                .find { it.kode == temaKode }
+                ?.oppgaveTyper
+                ?.find { it.kode == oppgaveTypeKode }
+                ?.dagerFrist
+                ?: 2
+
+        return LocalDate.parse(org.joda.time.LocalDate.fromDateFields(NorwegianDateUtil.addWorkingDaysToDate(org.joda.time.LocalDate.now().toDate(), dagerFrist)).toString())
+
     }
 
     private fun hentOppgavetyper(oppgavetyper: List<GsakKodeTema.OppgaveType>): List<Map<String, Any?>> =
@@ -144,6 +156,7 @@ class DialogOppgaveController @Inject constructor(
 
 data class OpperettOppgaveRequest(
         val fnr: String,
+        val opprettetavenhetsnummer: String,
         val valgtEnhetId: Int,
         val behandlingskjedeId: String,
         val dagerFrist: Int,
@@ -158,9 +171,8 @@ data class OpperettOppgaveRequest(
 )
 
 data class OpperettSkjermetOppgaveDTO(
+        val opprettetavenhetsnummer: String,
         val fnr: String,
-        val valgtEnhetId: String,
-        val dagerFrist: Int,
         val beskrivelse: String,
         val temaKode: String,
         val underkategoriKode: String?,
