@@ -70,7 +70,6 @@ open class OppgaveOpprettelseClient @Inject constructor(
     }
 
     private fun getAktørId(fnr: String): String? {
-        //TODO :try mangler her
         val aktorIdObject = pdlOppslagService.hentIdent(fnr, "aktorid")
 
         return aktorIdObject?.data?.get(0)?.ident;
