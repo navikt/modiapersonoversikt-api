@@ -9,7 +9,7 @@ jobs:
   build:
     name: Build and test
     runs-on: ubuntu-latest
-    if: github.ref != 'refs/heads/dev' && github.ref != 'refs/heads/master' &&  github.ref != 'refs/heads/OPP-1070-oppgaveskjermet'
+    if: github.ref != 'refs/heads/dev' && github.ref != 'refs/heads/master' && github.ref != 'refs/heads/OPP-1070-oppgaveskjermet'
     env:
       TZ: Europe/Oslo
     steps:
@@ -28,7 +28,7 @@ jobs:
 
   build-and-push:
     name: Build and push Docker container
-    if: github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/master'  ||  github.ref == 'refs/heads/OPP-1070-oppgaveskjermet'
+    if: github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/master' || github.ref == 'refs/heads/OPP-1070-oppgaveskjermet'
     env:
       TZ: Europe/Oslo
     runs-on: ubuntu-latest
