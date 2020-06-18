@@ -1,6 +1,5 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.dialog
 
-import no.bekk.bekkopen.date.NorwegianDateUtil
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.GsakKodeTema
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveRequest
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveRestClient
@@ -122,8 +121,13 @@ class DialogOppgaveController @Inject constructor(
                 ?.dagerFrist
                 ?: 2
 
-        return LocalDate.parse(org.joda.time.LocalDate.fromDateFields(NorwegianDateUtil.addWorkingDaysToDate(org.joda.time.LocalDate.now().toDate(), dagerFrist)).toString())
+        val fristJodaTime = arbeidsdagerFraDato(dagerFrist, org.joda.time.LocalDate.now())
 
+        return LocalDate.of(
+                fristJodaTime.year,
+                fristJodaTime.monthOfYear,
+                fristJodaTime.dayOfMonth
+        )
     }
 
     private fun hentOppgavetyper(oppgavetyper: List<GsakKodeTema.OppgaveType>): List<Map<String, Any?>> =
