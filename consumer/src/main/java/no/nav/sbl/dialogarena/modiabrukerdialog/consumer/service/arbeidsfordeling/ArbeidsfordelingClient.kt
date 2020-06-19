@@ -57,9 +57,9 @@ open class ArbeidsfordelingClient {
         val arbeidskritereieFordelingSkjermet: ArbeidskritereieFordelingSkjermet = ArbeidskritereieFordelingSkjermet(
                 behandlingstema = behandling?.map(Behandling::getBehandlingstema).orElse(null),
                 behandlingstype = behandling?.map(Behandling::getBehandlingstype).orElse(null),
-                geografiskOmraade = geografiskTilknytning.value.toString(),
+                geografiskOmraade = geografiskTilknytning.value?.let { it }.toString(),
                 oppgavetype = oppgavetype,
-                diskresjonskode = geografiskTilknytning?.diskresjonskode ?: null,
+                diskresjonskode = geografiskTilknytning?.diskresjonskode?: null,
                 tema = fagomrade,
                 enhetsnummer = null,
                 temagruppe = null,
