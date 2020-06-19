@@ -22,7 +22,7 @@ import javax.ws.rs.client.Entity
 import javax.ws.rs.core.HttpHeaders.AUTHORIZATION
 
 
-open class OppgaveOpprettelseClient @Inject constructor(
+open class OppgaveOpprettelseClient constructor(
         val kodeverksmapperService: KodeverksmapperService,
         private val pdlOppslagService: PdlOppslagService
 ) : OppgaveRestClient {
