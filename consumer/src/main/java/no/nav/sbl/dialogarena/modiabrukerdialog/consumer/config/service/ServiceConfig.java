@@ -16,6 +16,7 @@ import no.nav.modig.content.ContentRetriever;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.HenvendelseLesService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.HenvendelseUtsendingService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveBehandlingService;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveRestClient;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.arbeidsfordeling.ArbeidsfordelingV1Service;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.gsak.GsakKodeverk;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.gsak.SakerService;
@@ -113,7 +114,7 @@ public class ServiceConfig {
     }
 
     @Bean
-    public OppgaveOpprettelseClient oppgaveOpprettelseClient(KodeverksmapperService kodeverksmapperService, PdlOppslagService pdlOppslagService) {
+    public OppgaveRestClient oppgaveOpprettelseClient(KodeverksmapperService kodeverksmapperService, PdlOppslagService pdlOppslagService) {
         return new OppgaveOpprettelseClient(kodeverksmapperService, pdlOppslagService);
     }
 
