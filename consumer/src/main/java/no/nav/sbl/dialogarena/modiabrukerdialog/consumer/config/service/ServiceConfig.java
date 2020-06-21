@@ -43,6 +43,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.kodeverksmapper
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.ldap.LDAPServiceImpl;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.ldap.LdapContextProvider;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.oppfolgingsinfo.OppfolgingsenhetServiceImpl;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.oppgave.OppgaveOpprettelseClient;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.oppgavebehandling.OppgaveBehandlingServiceImpl;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.organisasjonenhet.OrganisasjonEnhetV2ServiceImpl;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.organisasjonenhet.kontaktinformasjon.service.OrganisasjonEnhetKontaktinformasjonService;
@@ -112,12 +113,17 @@ public class ServiceConfig {
     }
 
     @Bean
+    public OppgaveOpprettelseClient oppgaveOpprettelseClient(KodeverksmapperService kodeverksmapperService, PdlOppslagService pdlOppslagService) {
+        return new OppgaveOpprettelseClient(kodeverksmapperService, pdlOppslagService);
+    }
+
+    @Bean
     public KodeverksmapperService kodeverksmapperService(Kodeverksmapper kodeverksmapper) {
         return new KodeverksmapperService(kodeverksmapper);
     }
 
     @Bean
-    public ArbeidsfordelingClient arbeidsfordelingClient(){
+    public ArbeidsfordelingClient arbeidsfordelingClient() {
         return new ArbeidsfordelingClient();
     }
 

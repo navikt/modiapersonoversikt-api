@@ -22,12 +22,14 @@ import javax.ws.rs.client.Entity
 import javax.ws.rs.core.HttpHeaders.AUTHORIZATION
 
 
-open class OppgaveOpprettelseClient constructor(
+open class OppgaveOpprettelseClient @Inject constructor(
         val kodeverksmapperService: KodeverksmapperService,
-        private val pdlOppslagService: PdlOppslagService
+        val pdlOppslagService: PdlOppslagService
+
 ) : OppgaveRestClient {
     val OPPGAVE_BASEURL = EnvironmentUtils.getRequiredProperty("OPPGAVE_BASEURL")
     val url = OPPGAVE_BASEURL + "api/v1/oppgaver"
+
 
     @Inject
 
