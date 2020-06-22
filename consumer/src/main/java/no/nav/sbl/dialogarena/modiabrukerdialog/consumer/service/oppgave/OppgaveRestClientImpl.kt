@@ -53,12 +53,14 @@ open class OppgaveOpprettelseClient @Inject constructor(
                 fristFerdigstillelse = oppgave.oppgaveFrist,
                 prioritet = oppgave.prioritet
         )
-        return gjorSporring(url, oppgaveskjermetObject, OppgaveResponse::class.java)
+        val returoject = gjorSporring(url, oppgaveskjermetObject, OppgaveResponse::class.java)
+        println(returoject.toString())
+        return returoject
     }
 
     private fun gjorSporring(url: String, request: OppgaveSkjermetRequestDTO, targetClass: Class<OppgaveResponse>): OppgaveResponse {
-        println("URL" + url)
-        println("entity" + Entity.json(request))
+        println("URL " + url)
+        println("entity " + Entity.json(request))
         val ssoToken = SubjectHandler.getSsoToken(SsoToken.Type.OIDC).orElseThrow { RuntimeException("Fant ikke OIDC-token") }
         return withClient { client: Client ->
             client
