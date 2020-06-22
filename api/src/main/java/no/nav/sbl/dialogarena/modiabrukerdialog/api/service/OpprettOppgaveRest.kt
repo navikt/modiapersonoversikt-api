@@ -1,6 +1,7 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.api.service
 
 import java.time.LocalDate
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.oppgave.OppgaveResponse
 
 interface OppgaveRestClient {
     fun opprettOppgave(request: OppgaveRequest) : OppgaveResponse
@@ -18,7 +19,4 @@ data class  OppgaveRequest(
         val underkategoriKode: String?,
         val opprettetavenhetsnummer: String,
         val oppgaveFrist: LocalDate
-)
-data class OppgaveResponse (
-        val id: String
 )

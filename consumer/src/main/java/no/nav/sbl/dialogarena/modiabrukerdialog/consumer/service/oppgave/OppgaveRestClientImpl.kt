@@ -4,8 +4,8 @@ import no.nav.common.auth.SsoToken
 import no.nav.common.auth.SubjectHandler
 import no.nav.log.MDCConstants
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveRequest
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveResponse
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveRestClient
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.oppgave.OppgaveResponse
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.pdl.PdlOppslagService
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.kodeverksmapper.KodeverksmapperService
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.kodeverksmapper.domain.Behandling
@@ -35,6 +35,8 @@ open class OppgaveOpprettelseClient @Inject constructor(
 //Mapping fra gammel kodeverk som frontend bruker til nytt kodeverk som Oppgave bruker
         val behandling: Optional<Behandling> = kodeverksmapperService.mapUnderkategori(oppgave.underkategoriKode)
         val oppgaveTypeMapped: String = kodeverksmapperService.mapOppgavetype(oppgave.oppgavetype)
+        println("fnr til aktor" + oppgave.fnr + getAktørId(oppgave.fnr))
+        println("oppgaveobject" + oppgave.toString())
 
 
         val oppgaveskjermetObject = OppgaveSkjermetRequestDTO(
@@ -55,8 +57,8 @@ open class OppgaveOpprettelseClient @Inject constructor(
     }
 
     private fun gjorSporring(url: String, request: OppgaveSkjermetRequestDTO, targetClass: Class<OppgaveResponse>): OppgaveResponse {
-        println(url + ",")
-        println(Entity.json(request))
+        println("URL" + url)
+        println("entity" + Entity.json(request))
         val ssoToken = SubjectHandler.getSsoToken(SsoToken.Type.OIDC).orElseThrow { RuntimeException("Fant ikke OIDC-token") }
         return withClient { client: Client ->
             client
