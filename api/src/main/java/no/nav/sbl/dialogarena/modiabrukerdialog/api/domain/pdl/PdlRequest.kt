@@ -6,4 +6,4 @@ data class PdlIdentRequest(val query: String, val variables: IdentVariables)
 
 data class Variables(val ident: String, val navnHistorikk: Boolean = false)
 
-data class IdentVariables(val ident: String, val gruppe: String, val identhistorikk: Boolean = false)
+data class IdentVariables(val ident: String, val gruppe: String, val navnHistorikk: Boolean = false)
