@@ -20,5 +20,5 @@ data class  OppgaveRequest(
         val oppgaveFrist: LocalDate
 )
 data class OppgaveResponse (
-        val oppgaveid: String
+        val id: String
 )

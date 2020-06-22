@@ -74,7 +74,6 @@ open class OppgaveOpprettelseClient @Inject constructor(
 
     private fun getAktørId(fnr: String): String? {
         val aktorIdObject = pdlOppslagService.hentIdent(fnr, "AKTORID")
-
         return aktorIdObject?.data?.get(0)?.ident;
     }
 
