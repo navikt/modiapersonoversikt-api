@@ -29,9 +29,7 @@ open class OppgaveOpprettelseClient @Inject constructor(
 ) : OppgaveRestClient {
     val OPPGAVE_BASEURL = EnvironmentUtils.getRequiredProperty("OPPGAVE_BASEURL")
     val url = OPPGAVE_BASEURL + "api/v1/oppgaver"
-
-
-    @Inject
+    
 
     override fun opprettOppgave(oppgave: OppgaveRequest): OppgaveResponse {
 //Mapping fra gammel kodeverk som frontend bruker til nytt kodeverk som Oppgave bruker
