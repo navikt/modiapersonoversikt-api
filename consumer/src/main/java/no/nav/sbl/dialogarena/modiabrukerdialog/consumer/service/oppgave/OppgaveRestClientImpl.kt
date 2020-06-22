@@ -39,7 +39,7 @@ open class OppgaveOpprettelseClient @Inject constructor(
 
         val oppgaveskjermetObject = OppgaveSkjermetRequestDTO(
                 opprettetAvEnhetsnr = oppgave.opprettetavenhetsnummer,
-                aktoerId = getAktørId(oppgave.fnr),
+                aktoerId = "1000096233942",//getAktørId(oppgave.fnr),
                 behandlesAvApplikasjon = "FS22",
                 beskrivelse = oppgave.beskrivelse,
                 temagruppe = oppgave.temagruppe,
@@ -55,8 +55,8 @@ open class OppgaveOpprettelseClient @Inject constructor(
     }
 
     private fun gjorSporring(url: String, request: OppgaveSkjermetRequestDTO, targetClass: Class<OppgaveResponse>): OppgaveResponse {
-        print(url)
-        print(request)
+        println(url + ",")
+        println(Entity.json(request))
         val ssoToken = SubjectHandler.getSsoToken(SsoToken.Type.OIDC).orElseThrow { RuntimeException("Fant ikke OIDC-token") }
         return withClient { client: Client ->
             client
