@@ -35,6 +35,8 @@ open class OppgaveOpprettelseClient @Inject constructor(
     private val log = LoggerFactory.getLogger(OppgaveOpprettelseClient::class.java)
     private val tjenestekallLogg = LoggerFactory.getLogger("SecureLog")
     private val gson = GsonBuilder().setDateFormat("yyyy-MM-dd").create()
+
+    @Inject
     private lateinit var stsService: SystemUserTokenProvider
 
 
@@ -102,7 +104,7 @@ open class OppgaveOpprettelseClient @Inject constructor(
 
             return gson.fromJson(content, OppgaveResponse::class.java)
         } catch (exception: Exception) {
-            log.error("Feilet ved oppslag mot Oppgave (ID: $uuid)", exception)
+            log.error("Feilet ved post mot Oppgave (ID: $uuid)", exception)
             tjenestekallLogg.error("""
                 Oppgave-response:                 $uuid
                 ------------------------------------------------------------------------------------
