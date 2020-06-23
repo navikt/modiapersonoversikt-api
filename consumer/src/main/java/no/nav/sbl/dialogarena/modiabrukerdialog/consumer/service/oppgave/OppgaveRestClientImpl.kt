@@ -13,7 +13,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.RestConstants
 import no.nav.sbl.rest.RestUtils.withClient
 import no.nav.sbl.util.EnvironmentUtils
 import org.slf4j.MDC
-import java.time.LocalDate
+import org.joda.time.LocalDate
 import java.time.LocalDateTime
 import java.util.*
 import javax.inject.Inject
@@ -54,7 +54,7 @@ open class OppgaveOpprettelseClient @Inject constructor(
                 prioritet = oppgave.prioritet
         )
         val returobject = gjorSporring(url, oppgaveskjermetObject)
-        println(returobject)
+        println("returobject " + returobject)
         return OppgaveResponse()
     }
 
