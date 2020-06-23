@@ -58,13 +58,17 @@ open class OppgaveOpprettelseClient @Inject constructor(
                 behandlingstema = behandling?.map(Behandling::getBehandlingstema).orElse(null),
                 oppgavetype = oppgaveTypeMapped,
                 behandlingstype = behandling?.map(Behandling::getBehandlingstype).orElse(null),
-                aktivDato = LocalDate.now().toString(),
-                fristFerdigstillelse = oppgave.oppgaveFrist.toString(),
-                prioritet = oppgave.prioritet
+                aktivDato = LocalDate.now(),
+                fristFerdigstillelse = oppgave.oppgaveFrist,
+                prioritet = stripTemakode(oppgave.prioritet)
         )
         val returobject = gjorSporring(url, oppgaveskjermetObject)
         println("returobject " + returobject)
         return OppgaveResponse()
+    }
+
+    private fun stripTemakode(prioritet: String): String {
+        return prioritet.substringBefore("_", "")
     }
 
     private fun gjorSporring(url: String, request: OppgaveSkjermetRequestDTO): OppgaveResponse? {
@@ -141,8 +145,8 @@ data class OppgaveSkjermetRequestDTO(
         val behandlingstema: String?,
         val oppgavetype: String,
         val behandlingstype: String?,
-        val aktivDato: String,
-        val fristFerdigstillelse: String,
+        val aktivDato: LocalDate,
+        val fristFerdigstillelse: LocalDate,
         val prioritet: String
 
 )
@@ -163,3 +167,8 @@ data class OppaveSkjermetResponsDTO(
         val opprettetTidspunkt: LocalDateTime,
         val prioritet: String
 )
+
+enum class Prioritet {
+    NORM, LAV, HOY
+}
+
