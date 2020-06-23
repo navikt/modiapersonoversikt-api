@@ -113,7 +113,7 @@ class DialogOppgaveController @Inject constructor(
                 }
     }
 
-    private fun kalkulerFrist(temaKode: String, oppgaveTypeKode: String): java.time.LocalDate {
+    private fun kalkulerFrist(temaKode: String, oppgaveTypeKode: String): org.joda.time.LocalDate {
         val dagerFrist = gsakKodeverk.hentTemaListe()
                 .find { it.kode == temaKode }
                 ?.oppgaveTyper
@@ -122,12 +122,12 @@ class DialogOppgaveController @Inject constructor(
                 ?: 2
 
         val fristJodaTime = arbeidsdagerFraDato(dagerFrist, org.joda.time.LocalDate.now())
-
-        return LocalDate.of(
-                fristJodaTime.year,
-                fristJodaTime.monthOfYear,
-                fristJodaTime.dayOfMonth
-        )
+        return fristJodaTime
+        // return LocalDate.of(
+        //         fristJodaTime.year,
+        //         fristJodaTime.monthOfYear,
+        //        fristJodaTime.dayOfMonth
+        //)
     }
 
     private fun hentOppgavetyper(oppgavetyper: List<GsakKodeTema.OppgaveType>): List<Map<String, Any?>> =
