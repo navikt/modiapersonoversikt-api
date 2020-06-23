@@ -20,7 +20,7 @@ import org.slf4j.LoggerFactory
 import java.time.LocalDateTime
 import java.util.*
 import javax.inject.Inject
-import javax.ws.rs.client.Entity
+import javax.ws.rs.client.Entity.json
 import javax.ws.rs.core.HttpHeaders.AUTHORIZATION
 
 
@@ -53,13 +53,13 @@ open class OppgaveOpprettelseClient @Inject constructor(
                 aktoerId = "1000096233942",//getAktørId(oppgave.fnr),
                 behandlesAvApplikasjon = "FS22",
                 beskrivelse = oppgave.beskrivelse,
-                temagruppe = oppgave.temagruppe,
+                temagruppe = "",
                 tema = oppgave.tema,
                 behandlingstema = behandling?.map(Behandling::getBehandlingstema).orElse(null),
                 oppgavetype = oppgaveTypeMapped,
                 behandlingstype = behandling?.map(Behandling::getBehandlingstype).orElse(null),
-                aktivDato = LocalDate.now(),
-                fristFerdigstillelse = oppgave.oppgaveFrist,
+                aktivDato = LocalDate.now().toString(),
+                fristFerdigstillelse = oppgave.oppgaveFrist.toString(),
                 prioritet = oppgave.prioritet
         )
         val returobject = gjorSporring(url, oppgaveskjermetObject)
@@ -71,7 +71,8 @@ open class OppgaveOpprettelseClient @Inject constructor(
         val uuid = UUID.randomUUID()
         try {
             println("URL " + url)
-            println("entity " + Entity.json(request))
+            println("entity " + json(request))
+            println("request-dato: " + request.aktivDato)
             val ssoToken = SubjectHandler.getSsoToken(SsoToken.Type.OIDC).orElseThrow { RuntimeException("Fant ikke OIDC-token") }
             val consumerOidcToken: String = stsService.systemUserAccessToken
             tjenestekallLogg.info("""
@@ -86,9 +87,10 @@ open class OppgaveOpprettelseClient @Inject constructor(
                 val response = client.target(url)
                         .request()
                         .header(RestConstants.NAV_CALL_ID_HEADER, MDC.get(MDCConstants.MDC_CALL_ID))
+                        .header("X-Correlation-ID ", MDC.get(MDCConstants.MDC_CALL_ID))
                         .header(AUTHORIZATION, RestConstants.AUTH_METHOD_BEARER + RestConstants.AUTH_SEPERATOR + ssoToken)
                         .header(RestConstants.NAV_CONSUMER_TOKEN_HEADER, RestConstants.AUTH_METHOD_BEARER + RestConstants.AUTH_SEPERATOR + consumerOidcToken)
-                        .post(Entity.json(request))
+                        .post(json(request))
 
                 val body = response.readEntity(String::class.java)
                 println("response" + response)
@@ -139,8 +141,8 @@ data class OppgaveSkjermetRequestDTO(
         val behandlingstema: String?,
         val oppgavetype: String,
         val behandlingstype: String?,
-        val aktivDato: LocalDate,
-        val fristFerdigstillelse: LocalDate?,
+        val aktivDato: String,
+        val fristFerdigstillelse: String,
         val prioritet: String
 
 )

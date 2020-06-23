@@ -78,7 +78,7 @@ class DialogOppgaveController @Inject constructor(
                                     fnr = request.fnr,
                                     behandlesAvApplikasjon = "FS22",
                                     beskrivelse = request.beskrivelse,
-                                    temagruppe = request.temaKode,
+                                    temagruppe = "", //not in use
                                     tema = request.temaKode,
                                     underkategoriKode = request.underkategoriKode,
                                     oppgavetype = request.oppgaveTypeKode,
