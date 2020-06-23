@@ -91,7 +91,7 @@ open class OppgaveOpprettelseClient @Inject constructor(
                         .post(Entity.json(request))
 
                 val body = response.readEntity(String::class.java)
-                println(body)
+                println("body " + body)
                 tjenestekallLogg.info("""
                 Oppgave-response: $uuid
                 ------------------------------------------------------------------------------------
@@ -102,7 +102,7 @@ open class OppgaveOpprettelseClient @Inject constructor(
 
                 body
             }
-
+            println("content " + content)
             return gson.fromJson(content, OppgaveResponse::class.java)
         } catch (exception: Exception) {
             log.error("Feilet ved post mot Oppgave (ID: $uuid)", exception)
