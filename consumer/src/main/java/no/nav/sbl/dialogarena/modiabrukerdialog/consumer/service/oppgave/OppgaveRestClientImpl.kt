@@ -91,6 +91,7 @@ open class OppgaveOpprettelseClient @Inject constructor(
                         .post(Entity.json(request))
 
                 val body = response.readEntity(String::class.java)
+                println(body)
                 tjenestekallLogg.info("""
                 Oppgave-response: $uuid
                 ------------------------------------------------------------------------------------
