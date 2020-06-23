@@ -1,6 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.api.service
 
-import java.time.LocalDate
+import org.joda.time.LocalDate
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.oppgave.OppgaveResponse
 
 interface OppgaveRestClient {
