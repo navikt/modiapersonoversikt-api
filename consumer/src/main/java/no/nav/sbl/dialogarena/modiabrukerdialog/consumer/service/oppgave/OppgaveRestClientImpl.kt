@@ -54,11 +54,11 @@ open class OppgaveOpprettelseClient @Inject constructor(
                 prioritet = oppgave.prioritet
         )
         val returobject = gjorSporring(url, oppgaveskjermetObject)
-        println(returobject.toString())
-        return returobject
+        println(returobject)
+        return OppgaveResponse()
     }
 
-    private fun gjorSporring(url: String, request: OppgaveSkjermetRequestDTO): OppgaveResponse {
+    private fun gjorSporring(url: String, request: OppgaveSkjermetRequestDTO): String {
         println("URL " + url)
         println("entity " + Entity.json(request))
         val ssoToken = SubjectHandler.getSsoToken(SsoToken.Type.OIDC).orElseThrow { RuntimeException("Fant ikke OIDC-token") }
@@ -69,7 +69,7 @@ open class OppgaveOpprettelseClient @Inject constructor(
                     .header(RestConstants.NAV_CALL_ID_HEADER, MDC.get(MDCConstants.MDC_CALL_ID))
                     .header(AUTHORIZATION, "Bearer $ssoToken")
                     .post(Entity.json(request))
-                    .readEntity(OppgaveResponse::class.java)
+                    .readEntity(String::class.java)
         }
 
 
