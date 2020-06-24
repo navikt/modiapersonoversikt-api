@@ -1,6 +1,6 @@
-query($ident: ID!, $navnHistorikk: Boolean!){
-    hentIdenter(ident: $ident) {
-        identer(historikk: $navnHistorikk) {
+query($ident: ID!,$identHistorikk: Boolean!,){
+    hentIdenter(ident: $ident, historikk: $identHistorikk ) {
+        identer {
             ident
             historisk
             gruppe
