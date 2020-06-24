@@ -52,7 +52,7 @@ class PdlOppslagServiceImpl : PdlOppslagService {
             val consumerOidcToken: String = stsService.systemUserAccessToken
             val veilederOidcToken: String = SubjectHandler.getSsoToken(SsoToken.Type.OIDC).orElseThrow { IllegalStateException("Kunne ikke hente ut veileders ssoTOken") }
             tjenestekallLogg.info("""
-            PDL-request: $uuid
+            PDLIdent-request: $uuid
             ------------------------------------------------------------------------------------
                 ident: ${identRequest.variables.ident}
                 callId: ${MDC.get(MDCConstants.MDC_CALL_ID)}
@@ -70,16 +70,17 @@ class PdlOppslagServiceImpl : PdlOppslagService {
 
                 val body = response.readEntity(String::class.java)
                 tjenestekallLogg.info("""
-            PDL-response: $uuid
+            PDLIdent-response: $uuid
             ------------------------------------------------------------------------------------
                 status: ${response.status} ${response.statusInfo}
                 body: $body
+                
             ------------------------------------------------------------------------------------
         """.trimIndent())
 
                 body
             }
-
+            println("content: " + content)
             return gson.fromJson(content, PdlIdentResponse::class.java)
         } catch (exception: Exception) {
             log.error("Feilet ved oppslag mot PDL (ID: $uuid)", exception)
