@@ -43,7 +43,7 @@ class PdlOppslagServiceImpl : PdlOppslagService {
     override fun hentIdent(fnr: String, identtype: String): PdlIdentResponse? {
         val query = this::class.java.getResource("/pdl/hentIdent.graphql").readText().replace("[\n\r]", "")
         val pdlFnr = PdlSyntetiskFnrMapper.mapTilPdl(fnr)
-        return graphqlIdentRequest(PdlIdentRequest(query, IdentVariables(pdlFnr, identtype)))
+        return graphqlIdentRequest(PdlIdentRequest(query, IdentVariables(pdlFnr)))
     }
 
     private fun graphqlIdentRequest(identRequest: PdlIdentRequest): PdlIdentResponse? {
