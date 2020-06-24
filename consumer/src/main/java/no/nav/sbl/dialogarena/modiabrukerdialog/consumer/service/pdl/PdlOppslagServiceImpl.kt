@@ -66,8 +66,6 @@ class PdlOppslagServiceImpl : PdlOppslagService {
                         .header(NAV_CALL_ID_HEADER, MDC.get(MDCConstants.MDC_CALL_ID))
                         .header(AUTHORIZATION, AUTH_METHOD_BEARER + AUTH_SEPERATOR + veilederOidcToken)
                         .header(NAV_CONSUMER_TOKEN_HEADER, AUTH_METHOD_BEARER + AUTH_SEPERATOR + consumerOidcToken)
-                        .header(TEMA_HEADER, ALLE_TEMA_HEADERVERDI)
-                        .header(OPPLYSNINGSTYPER_HEADER, OPPLYSNINGSTYPER_HEADERVERDI)
                         .post(Entity.json(identRequest))
 
                 val body = response.readEntity(String::class.java)

@@ -12,6 +12,7 @@ import no.nav.sbl.dialogarena.naudit.Audit.Action.CREATE
 import no.nav.sbl.dialogarena.naudit.AuditIdentifier
 import no.nav.sbl.dialogarena.naudit.AuditResources.Person.Henvendelse
 import no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.DateUtils.arbeidsdagerFraDato
+import no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.DateUtils.arbeidsdagerFraDatoJava
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.OppgavebehandlingV3
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.meldinger.WSOpprettOppgave
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.meldinger.WSOpprettOppgaveRequest
@@ -113,7 +114,7 @@ class DialogOppgaveController @Inject constructor(
                 }
     }
 
-    private fun kalkulerFrist(temaKode: String, oppgaveTypeKode: String): org.joda.time.LocalDate {
+    private fun kalkulerFrist(temaKode: String, oppgaveTypeKode: String): LocalDate {
         val dagerFrist = gsakKodeverk.hentTemaListe()
                 .find { it.kode == temaKode }
                 ?.oppgaveTyper
@@ -121,13 +122,7 @@ class DialogOppgaveController @Inject constructor(
                 ?.dagerFrist
                 ?: 2
 
-        val fristJodaTime = arbeidsdagerFraDato(dagerFrist, org.joda.time.LocalDate.now())
-        return fristJodaTime
-        // return LocalDate.of(
-        //         fristJodaTime.year,
-        //         fristJodaTime.monthOfYear,
-        //        fristJodaTime.dayOfMonth
-        //)
+        return arbeidsdagerFraDatoJava(dagerFrist, LocalDate.now())
     }
 
     private fun hentOppgavetyper(oppgavetyper: List<GsakKodeTema.OppgaveType>): List<Map<String, Any?>> =

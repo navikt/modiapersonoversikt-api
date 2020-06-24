@@ -43,9 +43,6 @@ open class OppgaveOpprettelseClient @Inject constructor(
 //Mapping fra gammel kodeverk som frontend bruker til nytt kodeverk som Oppgave bruker
         val behandling: Optional<Behandling> = kodeverksmapperService.mapUnderkategori(oppgave.underkategoriKode)
         val oppgaveTypeMapped: String = kodeverksmapperService.mapOppgavetype(oppgave.oppgavetype)
-        println("fnr til aktor" + oppgave.fnr + getAktørId(oppgave.fnr))
-        println("oppgaveobject" + oppgave.toString())
-
 
         val oppgaveskjermetObject = OppgaveSkjermetRequestDTO(
                 opprettetAvEnhetsnr = oppgave.opprettetavenhetsnummer,
@@ -61,21 +58,17 @@ open class OppgaveOpprettelseClient @Inject constructor(
                 fristFerdigstillelse = oppgave.oppgaveFrist.toString(),
                 prioritet = stripTemakode(oppgave.prioritet)
         )
-        val returobject = gjorSporring(url, oppgaveskjermetObject)
-        println("returobject " + returobject)
-        return OppgaveResponse()
+        return gjorSporring(url, oppgaveskjermetObject)
+
     }
 
     private fun stripTemakode(prioritet: String): String {
         return prioritet.substringBefore("_", "")
     }
 
-    private fun gjorSporring(url: String, request: OppgaveSkjermetRequestDTO): OppgaveResponse? {
+    private fun gjorSporring(url: String, request: OppgaveSkjermetRequestDTO): OppgaveResponse {
         val uuid = UUID.randomUUID()
         try {
-            println("URL " + url)
-            println("entity " + json(request))
-            println("request-dato: " + request.aktivDato)
             val ssoToken = SubjectHandler.getSsoToken(SsoToken.Type.OIDC).orElseThrow { RuntimeException("Fant ikke OIDC-token") }
             val consumerOidcToken: String = stsService.systemUserAccessToken
             tjenestekallLogg.info("""
@@ -96,8 +89,6 @@ open class OppgaveOpprettelseClient @Inject constructor(
                         .post(json(request))
 
                 val body = response.readEntity(String::class.java)
-                println("response" + response)
-                println("body " + body)
                 tjenestekallLogg.info("""
                 Oppgave-response: $uuid
                 ------------------------------------------------------------------------------------
@@ -108,7 +99,6 @@ open class OppgaveOpprettelseClient @Inject constructor(
 
                 body
             }
-            println("content " + content)
             return gson.fromJson(content, OppgaveResponse::class.java)
         } catch (exception: Exception) {
             log.error("Feilet ved post mot Oppgave (ID: $uuid)", exception)
@@ -119,7 +109,7 @@ open class OppgaveOpprettelseClient @Inject constructor(
                     $exception
                 ------------------------------------------------------------------------------------
             """.trimIndent())
-            return null
+            return OppgaveResponse()
         }
 
 

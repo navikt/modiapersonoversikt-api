@@ -1,7 +1,7 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.api.service
 
-import org.joda.time.LocalDate
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.oppgave.OppgaveResponse
+import java.time.LocalDate
 
 interface OppgaveRestClient {
     fun opprettOppgave(request: OppgaveRequest) : OppgaveResponse
