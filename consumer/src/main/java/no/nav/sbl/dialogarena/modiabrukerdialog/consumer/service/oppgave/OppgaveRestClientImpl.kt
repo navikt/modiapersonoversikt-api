@@ -46,7 +46,7 @@ open class OppgaveOpprettelseClient @Inject constructor(
 
         val oppgaveskjermetObject = OppgaveSkjermetRequestDTO(
                 opprettetAvEnhetsnr = oppgave.opprettetavenhetsnummer,
-                aktoerId = "1000096233942",//getAktørId(oppgave.fnr),
+                aktoerId = getAktørId(oppgave.fnr),
                 behandlesAvApplikasjon = "FS22",
                 beskrivelse = oppgave.beskrivelse,
                 temagruppe = "",
@@ -118,6 +118,7 @@ open class OppgaveOpprettelseClient @Inject constructor(
 
     private fun getAktørId(fnr: String): String? {
         val aktorIdObject = pdlOppslagService.hentIdent(fnr, "AKTORID")
+        println("aktor" + aktorIdObject?.data?.toString())
         return aktorIdObject?.data?.get(0)?.ident;
     }
 
