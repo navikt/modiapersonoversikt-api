@@ -63,9 +63,7 @@ open class OppgaveOpprettelseClient @Inject constructor(
 
     }
 
-    private fun stripTemakode(prioritet: String): String {
-        return prioritet.substringBefore("_", "")
-    }
+
 
     private fun gjorSporring(url: String, request: OppgaveSkjermetRequestDTO): OppgaveResponse {
         val uuid = UUID.randomUUID()
@@ -118,8 +116,13 @@ open class OppgaveOpprettelseClient @Inject constructor(
 
 
     private fun getAktørId(fnr: String): String? {
-        val aktor : PdlIdenter? = pdlOppslagService.hentIdent(fnr)?.data?.find{ ident -> ident.gruppe == "AKTORID"}
+        val aktor: PdlIdenter? = pdlOppslagService.hentIdent(fnr)?.data?.find { ident -> ident.gruppe == "AKTORID" }
+        println(aktor.toString());
         return aktor?.ident;
+    }
+
+    private fun stripTemakode(prioritet: String): String {
+        return prioritet.substringBefore("_", "")
     }
 
 }
