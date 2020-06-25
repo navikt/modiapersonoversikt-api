@@ -6,5 +6,5 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.pdl.PdlIdentResponse
 interface PdlOppslagService {
     fun hentPerson(fnr: String): PdlPersonResponse?
     fun hentNavn(fnr: String): PdlPersonResponse?
-    fun hentIdent(fnr: String, identtype: String): PdlIdentResponse?
+    fun hentIdent(fnr: String): PdlIdentResponse?
 }

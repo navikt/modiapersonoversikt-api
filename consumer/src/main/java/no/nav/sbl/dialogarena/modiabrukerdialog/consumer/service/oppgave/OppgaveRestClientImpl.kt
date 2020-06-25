@@ -5,6 +5,7 @@ import no.nav.common.auth.SsoToken
 import no.nav.common.auth.SubjectHandler
 import no.nav.common.oidc.SystemUserTokenProvider
 import no.nav.log.MDCConstants
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.pdl.PdlIdenter
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveRequest
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveRestClient
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.oppgave.OppgaveResponse
@@ -117,13 +118,11 @@ open class OppgaveOpprettelseClient @Inject constructor(
 
 
     private fun getAktørId(fnr: String): String? {
-        val aktorIdObject = pdlOppslagService.hentIdent(fnr, "AKTORID")
-        println("aktor" + aktorIdObject?.data?.toString())
-        return aktorIdObject?.data?.get(0)?.ident;
+        val aktor : PdlIdenter? = pdlOppslagService.hentIdent(fnr)?.data?.find{ ident -> ident.gruppe == "AKTORID"}
+        return aktor?.ident;
     }
 
 }
-
 
 data class OppgaveSkjermetRequestDTO(
         val opprettetAvEnhetsnr: String?,
