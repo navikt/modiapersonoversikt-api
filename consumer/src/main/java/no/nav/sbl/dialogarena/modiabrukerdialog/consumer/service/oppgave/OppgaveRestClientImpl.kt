@@ -124,8 +124,14 @@ open class OppgaveOpprettelseClient @Inject constructor(
         try {
             val aktor = pdlOppslagService.hentIdent(fnr)?.data?.hentIdenter?.identer?.find { identer -> identer.gruppe == "AKTORID" }
             // syntmapping for Q2 --> Q1
-            if ("p" != EnvironmentUtils.getRequiredProperty(ByEnvironmentStrategy.ENVIRONMENT_PROPERTY) && "2004819988162" == (aktor?.ident)) {
-                return "1989093374365"
+            if ("p" != EnvironmentUtils.getRequiredProperty(ByEnvironmentStrategy.ENVIRONMENT_PROPERTY)) {
+                if ("2004819988162" == (aktor?.ident)) {
+                    return "1989093374365"
+                } else {
+                    return "1000096233942"
+                }
+
+
             }
             return aktor?.ident;
         } catch (exception: Exception) {
@@ -138,7 +144,7 @@ open class OppgaveOpprettelseClient @Inject constructor(
     private fun stripTemakode(prioritet: String): String {
         return prioritet.substringBefore("_", "")
     }
-    
+
 
 }
 
