@@ -72,7 +72,7 @@ open class OppgaveOpprettelseClient @Inject constructor(
     private fun gjorSporring(url: String, request: OppgaveSkjermetRequestDTO): OppgaveResponse {
         val uuid = UUID.randomUUID()
         try {
-            val ssoToken = SubjectHandler.getSsoToken(SsoToken.Type.OIDC).orElseThrow { RuntimeException("Fant ikke OIDC-token") }
+
             val consumerOidcToken: String = stsService.systemUserAccessToken
             tjenestekallLogg.info("""
             Oppgaver-request: $uuid
@@ -87,7 +87,6 @@ open class OppgaveOpprettelseClient @Inject constructor(
                         .request()
                         .header(RestConstants.NAV_CALL_ID_HEADER, MDC.get(MDCConstants.MDC_CALL_ID))
                         .header("X-Correlation-ID ", MDC.get(MDCConstants.MDC_CALL_ID))
-                        .header(AUTHORIZATION, RestConstants.AUTH_METHOD_BEARER + RestConstants.AUTH_SEPERATOR + ssoToken)
                         .header(RestConstants.NAV_CONSUMER_TOKEN_HEADER, RestConstants.AUTH_METHOD_BEARER + RestConstants.AUTH_SEPERATOR + consumerOidcToken)
                         .post(json(request))
 
