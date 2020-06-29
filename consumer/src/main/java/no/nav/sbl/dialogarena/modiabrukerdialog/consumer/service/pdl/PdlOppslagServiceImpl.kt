@@ -42,13 +42,13 @@ class PdlOppslagServiceImpl : PdlOppslagService {
         return graphqlRequest(PdlRequest(query, Variables(pdlFnr)))
     }
 
-    override fun hentIdent(fnr: String): GenericType<List<PdlIdentResponse>>? {
+    override fun hentIdent(fnr: String): PdlIdentResponse? {
         val query = this::class.java.getResource("/pdl/hentIdent.graphql").readText().replace("[\n\r]", "")
         val pdlFnr = PdlSyntetiskFnrMapper.mapTilPdl(fnr)
         return graphqlIdentRequest(PdlIdentRequest(query, IdentVariables(pdlFnr)))
     }
 
-    private fun graphqlIdentRequest(identRequest: PdlIdentRequest): GenericType<List<PdlIdentResponse>>? {
+    private fun graphqlIdentRequest(identRequest: PdlIdentRequest): PdlIdentResponse? {
         val uuid = UUID.randomUUID()
         try {
             val consumerOidcToken: String = stsService.systemUserAccessToken
@@ -84,9 +84,9 @@ class PdlOppslagServiceImpl : PdlOppslagService {
             }
             println("content: " + content)
 
-            class PdlIdentList : GenericType<List<PdlIdentResponse>>()
 
-            return gson.fromJson(content, PdlIdentList::class.java)
+
+            return gson.fromJson(content, PdlIdentResponse::class.java)
         } catch (exception: Exception) {
             log.error("Feilet ved oppslag mot PDL (ID: $uuid)", exception)
             tjenestekallLogg.error("""
@@ -139,7 +139,6 @@ class PdlOppslagServiceImpl : PdlOppslagService {
 
                 body
             }
-
             return gson.fromJson(content, PdlPersonResponse::class.java)
         } catch (exception: Exception) {
             log.error("Feilet ved oppslag mot PDL (ID: $uuid)", exception)

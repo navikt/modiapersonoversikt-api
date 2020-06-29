@@ -121,10 +121,13 @@ open class OppgaveOpprettelseClient @Inject constructor(
 
 
     private fun getAktørId(fnr: String): String? {
-        val aktor = pdlOppslagService.hentIdent(fnr);
+        try {
+            val aktor: PdlIdenter? = pdlOppslagService.hentIdent(fnr)?.data?.hentIdenter?.find { ident -> ident.gruppe == "AKTORID" }
+            return aktor?.ident;
+        } catch (exception: Exception) {
 
-        println(aktor.toString());
-        return "";
+            return null
+        }
     }
 
     private fun stripTemakode(prioritet: String): String {

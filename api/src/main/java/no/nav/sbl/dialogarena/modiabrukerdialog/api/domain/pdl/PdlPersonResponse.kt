@@ -9,7 +9,17 @@ data class PdlPersonResponse(
 
 data class PdlIdentResponse(
         val errors: List<PdlError>?,
-        val data: List<PdlIdenter>?
+        val data: PdlHentIdenter?
+)
+
+data class PdlHentIdenter(
+        val hentIdenter: List<PdlIdenter>?
+)
+
+data class PdlIdenter(
+        val ident: String,
+        val gruppe: String,
+        val historisk: Boolean?
 )
 
 data class PdlError(
@@ -116,10 +126,6 @@ data class PdlEndringer(
 )
 
 
-data class PdlIdenter(
-        val ident: String,
-        val gruppe: String,
-        val historisk: Boolean
-)
+
 
 

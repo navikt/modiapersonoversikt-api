@@ -7,5 +7,5 @@ import javax.ws.rs.core.GenericType
 interface PdlOppslagService {
     fun hentPerson(fnr: String): PdlPersonResponse?
     fun hentNavn(fnr: String): PdlPersonResponse?
-    fun hentIdent(fnr: String): GenericType<List<PdlIdentResponse>>?
+    fun hentIdent(fnr: String): PdlIdentResponse?
 }
