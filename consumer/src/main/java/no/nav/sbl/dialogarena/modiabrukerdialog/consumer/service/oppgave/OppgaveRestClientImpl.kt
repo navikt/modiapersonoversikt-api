@@ -122,7 +122,7 @@ open class OppgaveOpprettelseClient @Inject constructor(
 
     private fun getAktørId(fnr: String): String? {
         try {
-            val aktor: PdlIdenter? = pdlOppslagService.hentIdent(fnr)?.data?.hentIdenter?.find { ident -> ident.gruppe == "AKTORID" }
+            val aktor = pdlOppslagService.hentIdent(fnr)?.data?.hentIdenter?.identer?.find { identer -> identer.gruppe == "AKTORID" }
             return aktor?.ident;
         } catch (exception: Exception) {
 

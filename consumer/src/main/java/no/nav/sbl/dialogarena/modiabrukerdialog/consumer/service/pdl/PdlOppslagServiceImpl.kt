@@ -6,7 +6,6 @@ import no.nav.common.auth.SubjectHandler
 import no.nav.common.oidc.SystemUserTokenProvider
 import no.nav.log.MDCConstants
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.pdl.*
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.arbeidsfordeling.ArbeidsfordelingEnhet
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.pdl.PdlOppslagService
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.strategier.ByEnvironmentStrategy.ENVIRONMENT_PROPERTY
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.RestConstants.*
@@ -17,7 +16,6 @@ import org.slf4j.MDC
 import java.util.*
 import javax.inject.Inject
 import javax.ws.rs.client.Entity
-import javax.ws.rs.core.GenericType
 import javax.ws.rs.core.HttpHeaders.AUTHORIZATION
 
 
@@ -82,9 +80,6 @@ class PdlOppslagServiceImpl : PdlOppslagService {
 
                 body
             }
-            println("content: " + content)
-
-
 
             return gson.fromJson(content, PdlIdentResponse::class.java)
         } catch (exception: Exception) {

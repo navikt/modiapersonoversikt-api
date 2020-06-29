@@ -13,10 +13,14 @@ data class PdlIdentResponse(
 )
 
 data class PdlHentIdenter(
-        val hentIdenter: List<PdlIdenter>?
+        val hentIdenter: PdlIdenter?
 )
 
 data class PdlIdenter(
+        val identer: List<PdlIdent>
+)
+
+data class PdlIdent(
         val ident: String,
         val gruppe: String,
         val historisk: Boolean?
