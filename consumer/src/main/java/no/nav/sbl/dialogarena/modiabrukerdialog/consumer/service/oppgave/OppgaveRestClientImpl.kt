@@ -138,13 +138,7 @@ open class OppgaveOpprettelseClient @Inject constructor(
     private fun stripTemakode(prioritet: String): String {
         return prioritet.substringBefore("_", "")
     }
-
-    private fun enviromentPDLsynt(): Boolean {
-
-
-        return false
-
-    }
+    
 
 }
 
