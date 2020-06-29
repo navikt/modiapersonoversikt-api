@@ -13,6 +13,8 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.kodeverksmapper
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.kodeverksmapper.domain.Behandling
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.strategier.ByEnvironmentStrategy
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.RestConstants
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.RestConstants.AUTH_METHOD_BEARER
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.RestConstants.AUTH_SEPERATOR
 import no.nav.sbl.rest.RestUtils
 import no.nav.sbl.util.EnvironmentUtils
 import org.slf4j.MDC
@@ -87,6 +89,7 @@ open class OppgaveOpprettelseClient @Inject constructor(
                         .request()
                         .header(RestConstants.NAV_CALL_ID_HEADER, MDC.get(MDCConstants.MDC_CALL_ID))
                         .header("X-Correlation-ID ", MDC.get(MDCConstants.MDC_CALL_ID))
+                        .header(AUTHORIZATION, AUTH_METHOD_BEARER + AUTH_SEPERATOR + consumerOidcToken)
                         .header(RestConstants.NAV_CONSUMER_TOKEN_HEADER, RestConstants.AUTH_METHOD_BEARER + RestConstants.AUTH_SEPERATOR + consumerOidcToken)
                         .post(json(request))
 
