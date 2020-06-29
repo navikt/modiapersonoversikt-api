@@ -6,6 +6,7 @@ import no.nav.common.auth.SubjectHandler
 import no.nav.common.oidc.SystemUserTokenProvider
 import no.nav.log.MDCConstants
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.pdl.*
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.arbeidsfordeling.ArbeidsfordelingEnhet
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.pdl.PdlOppslagService
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.strategier.ByEnvironmentStrategy.ENVIRONMENT_PROPERTY
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.RestConstants.*
@@ -16,6 +17,7 @@ import org.slf4j.MDC
 import java.util.*
 import javax.inject.Inject
 import javax.ws.rs.client.Entity
+import javax.ws.rs.core.GenericType
 import javax.ws.rs.core.HttpHeaders.AUTHORIZATION
 
 
@@ -40,13 +42,13 @@ class PdlOppslagServiceImpl : PdlOppslagService {
         return graphqlRequest(PdlRequest(query, Variables(pdlFnr)))
     }
 
-    override fun hentIdent(fnr: String): PdlIdentResponse? {
+    override fun hentIdent(fnr: String): GenericType<List<PdlIdentResponse>>? {
         val query = this::class.java.getResource("/pdl/hentIdent.graphql").readText().replace("[\n\r]", "")
         val pdlFnr = PdlSyntetiskFnrMapper.mapTilPdl(fnr)
         return graphqlIdentRequest(PdlIdentRequest(query, IdentVariables(pdlFnr)))
     }
 
-    private fun graphqlIdentRequest(identRequest: PdlIdentRequest): PdlIdentResponse? {
+    private fun graphqlIdentRequest(identRequest: PdlIdentRequest): GenericType<List<PdlIdentResponse>>? {
         val uuid = UUID.randomUUID()
         try {
             val consumerOidcToken: String = stsService.systemUserAccessToken
@@ -81,7 +83,10 @@ class PdlOppslagServiceImpl : PdlOppslagService {
                 body
             }
             println("content: " + content)
-            return gson.fromJson(content, PdlIdentResponse::class.java)
+
+            class PdlIdentList : GenericType<List<PdlIdentResponse>>()
+
+            return gson.fromJson(content, PdlIdentList::class.java)
         } catch (exception: Exception) {
             log.error("Feilet ved oppslag mot PDL (ID: $uuid)", exception)
             tjenestekallLogg.error("""
@@ -89,6 +94,8 @@ class PdlOppslagServiceImpl : PdlOppslagService {
                 ------------------------------------------------------------------------------------
                     exception:
                     $exception
+                    content:
+
                 ------------------------------------------------------------------------------------
             """.trimIndent())
             return null

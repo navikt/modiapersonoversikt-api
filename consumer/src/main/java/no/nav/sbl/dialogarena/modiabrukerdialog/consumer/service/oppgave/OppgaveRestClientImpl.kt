@@ -41,13 +41,18 @@ open class OppgaveOpprettelseClient @Inject constructor(
 
 
     override fun opprettOppgave(oppgave: OppgaveRequest): OppgaveResponse {
-//Mapping fra gammel kodeverk som frontend bruker til nytt kodeverk som Oppgave bruker
+        //Mapping fra gammel kodeverk som frontend bruker til nytt kodeverk som Oppgave bruker
         val behandling: Optional<Behandling> = kodeverksmapperService.mapUnderkategori(oppgave.underkategoriKode)
         val oppgaveTypeMapped: String = kodeverksmapperService.mapOppgavetype(oppgave.oppgavetype)
+        val aktorId = getAktørId(oppgave.fnr)
+        if (aktorId == null || aktorId.isEmpty()) {
+            throw Exception("AktørId-mangler på person")
+
+        }
 
         val oppgaveskjermetObject = OppgaveSkjermetRequestDTO(
                 opprettetAvEnhetsnr = oppgave.opprettetavenhetsnummer,
-                aktoerId = getAktørId(oppgave.fnr),
+                aktoerId = aktorId,
                 behandlesAvApplikasjon = "FS22",
                 beskrivelse = oppgave.beskrivelse,
                 temagruppe = "",
@@ -116,9 +121,10 @@ open class OppgaveOpprettelseClient @Inject constructor(
 
 
     private fun getAktørId(fnr: String): String? {
-        val aktor: PdlIdenter? = pdlOppslagService.hentIdent(fnr)?.data?.find { ident -> ident.gruppe == "AKTORID" }
+        val aktor = pdlOppslagService.hentIdent(fnr);
+
         println(aktor.toString());
-        return aktor?.ident;
+        return "";
     }
 
     private fun stripTemakode(prioritet: String): String {

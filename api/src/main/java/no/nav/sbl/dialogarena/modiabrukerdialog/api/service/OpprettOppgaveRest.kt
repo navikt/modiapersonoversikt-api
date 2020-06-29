@@ -4,7 +4,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.oppgave.OppgaveRespo
 import java.time.LocalDate
 
 interface OppgaveRestClient {
-    fun opprettOppgave(request: OppgaveRequest) : OppgaveResponse
+    fun opprettOppgave(request: OppgaveRequest): OppgaveResponse?
 }
 
 data class  OppgaveRequest(

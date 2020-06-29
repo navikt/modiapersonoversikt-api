@@ -90,7 +90,7 @@ class DialogOppgaveController @Inject constructor(
                             )
                             )
                     SkjermetOppgaveRespons(
-                            oppgaveid = respons.getId()
+                            oppgaveid = respons!!.getId()
                     )
                 }
     }
