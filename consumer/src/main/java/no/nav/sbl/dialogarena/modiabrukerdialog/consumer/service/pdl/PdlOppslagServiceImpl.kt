@@ -85,7 +85,7 @@ class PdlOppslagServiceImpl : PdlOppslagService {
         } catch (exception: Exception) {
             log.error("Feilet ved oppslag mot PDL (ID: $uuid)", exception)
             tjenestekallLogg.error("""
-                PDL-response:                 $uuid
+                PDL-error:                 $uuid
                 ------------------------------------------------------------------------------------
                     exception:
                     $exception

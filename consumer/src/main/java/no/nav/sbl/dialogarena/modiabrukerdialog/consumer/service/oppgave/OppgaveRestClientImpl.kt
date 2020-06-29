@@ -5,13 +5,13 @@ import no.nav.common.auth.SsoToken
 import no.nav.common.auth.SubjectHandler
 import no.nav.common.oidc.SystemUserTokenProvider
 import no.nav.log.MDCConstants
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.pdl.PdlIdenter
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveRequest
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveRestClient
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.oppgave.OppgaveResponse
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.pdl.PdlOppslagService
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.kodeverksmapper.KodeverksmapperService
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.kodeverksmapper.domain.Behandling
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.strategier.ByEnvironmentStrategy
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.RestConstants
 import no.nav.sbl.rest.RestUtils
 import no.nav.sbl.util.EnvironmentUtils
@@ -69,7 +69,6 @@ open class OppgaveOpprettelseClient @Inject constructor(
     }
 
 
-
     private fun gjorSporring(url: String, request: OppgaveSkjermetRequestDTO): OppgaveResponse {
         val uuid = UUID.randomUUID()
         try {
@@ -121,17 +120,30 @@ open class OppgaveOpprettelseClient @Inject constructor(
 
 
     private fun getAktørId(fnr: String): String? {
+
         try {
             val aktor = pdlOppslagService.hentIdent(fnr)?.data?.hentIdenter?.identer?.find { identer -> identer.gruppe == "AKTORID" }
+            // syntmapping for Q2 --> Q1
+            if ("p" != EnvironmentUtils.getRequiredProperty(ByEnvironmentStrategy.ENVIRONMENT_PROPERTY) && "2004819988162" == (aktor?.ident)) {
+                return "1989093374365"
+            }
             return aktor?.ident;
         } catch (exception: Exception) {
 
             return null
         }
+
     }
 
     private fun stripTemakode(prioritet: String): String {
         return prioritet.substringBefore("_", "")
+    }
+
+    private fun enviromentPDLsynt(): Boolean {
+
+
+        return false
+
     }
 
 }
