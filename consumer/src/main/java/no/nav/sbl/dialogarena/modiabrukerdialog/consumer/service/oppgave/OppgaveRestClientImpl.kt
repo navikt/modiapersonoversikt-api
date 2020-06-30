@@ -108,7 +108,7 @@ open class OppgaveOpprettelseClient @Inject constructor(
         } catch (exception: Exception) {
             log.error("Feilet ved post mot Oppgave (ID: $uuid)", exception)
             tjenestekallLogg.error("""
-                Oppgave-response:                 $uuid
+                Oppgave-error:                 $uuid
                 ------------------------------------------------------------------------------------
                     exception:
                     $exception
@@ -167,8 +167,6 @@ data class OppgaveSkjermetRequestDTO(
 )
 
 data class OppaveSkjermetResponsDTO(
-//TODO Respons på opprettet oppgave er oppgaveId, trengs egent objekt for skjermetrespons
-
         val aktoerId: String?,
         val beskrivelse: String?,
         val temagruppe: String?,
