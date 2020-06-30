@@ -3957,15 +3957,50 @@
     </oppgaveT>
     <oppgaveT kode="REGNSKAP_INT_STO" datoFom="2010-01-01"  datoOpprettet="2018-08-01T00:00:00" dekode="Regnskap internt" endretAv="OH-40" erGyldig="true" fagomrade="STO" opprettetAv="OH-40" gosys="true" gsak="true" leveranse="2018-U35" jiraissue="OH-40">
         <gosys antallFristDager="1" bedrift="true" beskrivelse="0" datoFom="2010-01-01" endretAv="OH-40" endringTillatt="true" juridisk="true" oppgaveT="REGNSKAP_INT_STO" opprettGsak="true" opprettOppgaveArena="false" opprettSakInfotrygd="false" opprettetAv="OH-40" orgLedd="true" person="true" samhandler="true"/>
-        <gsak antDagerFrist="1" datoFom="2010-01-01"  datoOpprettet="2018-08-01T00:00:00" endretAv="OH-40" kode="REGNSKAP_INT_STO" opprettetAv="OH-40"/>
+        <gsak antDagerFrist="1" datoFom="2010-01-01" datoOpprettet="2018-08-01T00:00:00" endretAv="OH-40"
+              kode="REGNSKAP_INT_STO" opprettetAv="OH-40"/>
     </oppgaveT>
-    <oppgaveT kode="STOPP_INTREKK_STO" datoFom="2010-01-01"  datoOpprettet="2018-08-01T00:00:00" dekode="Stopp inntrekk" endretAv="OH-40" erGyldig="true" fagomrade="STO" opprettetAv="OH-40" gosys="true" gsak="true" leveranse="2018-U35" jiraissue="OH-40">
-        <gosys antallFristDager="1" bedrift="true" beskrivelse="0" datoFom="2010-01-01" endretAv="OH-40" endringTillatt="true" juridisk="true" oppgaveT="STOPP_INTREKK_STO" opprettGsak="true" opprettOppgaveArena="false" opprettSakInfotrygd="false" opprettetAv="OH-40" orgLedd="true" person="true" samhandler="true"/>
-        <gsak antDagerFrist="1" datoFom="2010-01-01"  datoOpprettet="2018-08-01T00:00:00" endretAv="OH-40" kode="STOPP_INTREKK_STO" opprettetAv="OH-40"/>
+    <oppgaveT kode="STOPP_INTREKK_STO" datoFom="2010-01-01" datoOpprettet="2018-08-01T00:00:00" dekode="Stopp inntrekk"
+              endretAv="OH-40" erGyldig="true" fagomrade="STO" opprettetAv="OH-40" gosys="true" gsak="true"
+              leveranse="2018-U35" jiraissue="OH-40">
+        <gosys antallFristDager="1" bedrift="true" beskrivelse="0" datoFom="2010-01-01" endretAv="OH-40"
+               endringTillatt="true" juridisk="true" oppgaveT="STOPP_INTREKK_STO" opprettGsak="true"
+               opprettOppgaveArena="false" opprettSakInfotrygd="false" opprettetAv="OH-40" orgLedd="true" person="true"
+               samhandler="true"/>
+        <gsak antDagerFrist="1" datoFom="2010-01-01" datoOpprettet="2018-08-01T00:00:00" endretAv="OH-40"
+              kode="STOPP_INTREKK_STO" opprettetAv="OH-40"/>
     </oppgaveT>
-    <oppgaveT kode="NOEK_FOS" datoFom="2010-01-01" datoOpprettet="2018-09-13T00:00:00" dekode="Nøkkelkontroll" endretAv="ISA-163" erGyldig="true" fagomrade="FOS" opprettetAv="ISA-163" gsak="true" gosys="true" jiraissue="ISA-163" leveranse="2018-U41">
-        <gosys antallFristDager="1" beskrivelse="0" datoFom="2010-01-01" endringTillatt="false" oppgaveT="NOEK_FOS" ferdigstillFraGosys="true" feilregistrerFraGosys="true" opprettGsak="false" opprettOppgaveArena="false" opprettSakInfotrygd="false"/>
+    <oppgaveT kode="NOEK_FOS" datoFom="2010-01-01" datoOpprettet="2018-09-13T00:00:00" dekode="Nøkkelkontroll"
+              endretAv="ISA-163" erGyldig="true" fagomrade="FOS" opprettetAv="ISA-163" gsak="true" gosys="true"
+              jiraissue="ISA-163" leveranse="2018-U41">
+        <gosys antallFristDager="1" beskrivelse="0" datoFom="2010-01-01" endringTillatt="false" oppgaveT="NOEK_FOS"
+               ferdigstillFraGosys="true" feilregistrerFraGosys="true" opprettGsak="false" opprettOppgaveArena="false"
+               opprettSakInfotrygd="false"/>
         <gsak antDagerFrist="1" kode="NOEK_FOS" datoFom="2010-01-01"/>
     </oppgaveT>
-
+    <oppgaveT kode="KONT_BRUK_FRI" datoFom="2010-05-01" datoOpprettet="2020-04-26T00:00:00" dekode="Kontakt bruker"
+              endretAv="OPP-1148" erGyldig="true" fagomrade="FRI" opprettetAv="OPP-1148" gosys="true" gsak="true"
+              ruting="false" leveranse="2020-Korona-nytt-tema" jiraissue="OPP-1148">
+        <gosys antallFristDager="2" oppgaveT="KONT_BRUK_FRI" bedrift="false" beskrivelse="0" endringTillatt="true"
+               gruppeKode="KONT_BRUK_GR" juridisk="false" opprettGsak="true" opprettOppgaveArena="false"
+               opprettSakInfotrygd="false" orgLedd="false" person="true" samhandler="false"/>
+        <gsak antDagerFrist="1"/>
+    </oppgaveT>
+    <oppgaveT kode="VURD_HENV_FRI" datoFom="2020-05-01" datoOpprettet="2018-06-01T00:00:00" dekode="Vurder henvendelse"
+              endretAv="OPP-1148" erGyldig="true" fagomrade="FRI" opprettetAv="OPP-1148" gosys="true" gsak="true"
+              ruting="false" leveranse="2020-Korona-nytt-tema" jiraissue="OPP-1148">
+        <gosys antallFristDager="2" oppgaveT="VURD_HENV_FRI" bedrift="false" beskrivelse="0" endringTillatt="true"
+               gruppeKode="VUR_HENV_GR" juridisk="false" opprettGsak="true" opprettOppgaveArena="false"
+               opprettSakInfotrygd="false" orgLedd="false" person="true" samhandler="false"/>
+        <gsak antDagerFrist="1"/>
+    </oppgaveT>
+    <oppgaveT kode="VUR_KONS_YTE_FRI" datoFom="2020-05-01" datoOpprettet="2020-04-26T00:00:00"
+              dekode="Vurder konsekvens for ytelse" endretAv="OPP-1148" erGyldig="true" fagomrade="FRI"
+              opprettetAv="OPP-1148" gosys="true" gsak="true" ruting="false" leveranse="2020-Korona-nytt-tema"
+              jiraissue="OPP-1148">
+        <gosys antallFristDager="2" oppgaveT="VUR_KONS_YTE_FRI" bedrift="false" beskrivelse="0" endringTillatt="true"
+               juridisk="false" opprettGsak="true" opprettOppgaveArena="false" opprettSakInfotrygd="false"
+               orgLedd="false" person="true" samhandler="false"/>
+        <gsak antDagerFrist="1"/>
+    </oppgaveT>
 </oppgaveTListe>

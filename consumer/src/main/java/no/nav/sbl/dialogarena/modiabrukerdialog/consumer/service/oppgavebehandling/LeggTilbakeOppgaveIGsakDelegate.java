@@ -8,14 +8,17 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.arbeidsfordeling.Arb
 import no.nav.tjeneste.virksomhet.oppgave.v3.informasjon.oppgave.WSOppgave;
 import no.nav.tjeneste.virksomhet.oppgave.v3.informasjon.oppgave.WSUnderkategori;
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.LagreOppgaveOptimistiskLasing;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.ForbiddenException;
+import java.util.Collections;
 import java.util.List;
 
 import static java.util.stream.Collectors.toList;
 
 class LeggTilbakeOppgaveIGsakDelegate {
-
+    private final Logger log = LoggerFactory.getLogger(LeggTilbakeOppgaveIGsakDelegate.class);
     private final OppgaveBehandlingServiceImpl oppgaveBehandlingService;
     private final ArbeidsfordelingV1Service arbeidsfordelingService;
 
@@ -77,10 +80,15 @@ class LeggTilbakeOppgaveIGsakDelegate {
     }
 
     private List<AnsattEnhet> finnBehandlendeEnhetListe(WSOppgave oppgaveFraGsak, Temagruppe temagruppe) {
-        return arbeidsfordelingService.finnBehandlendeEnhetListe(oppgaveFraGsak.getGjelder().getBrukerId(),
-                oppgaveFraGsak.getFagomrade().getKode(),
-                oppgaveFraGsak.getOppgavetype().getKode(),
-                underkategoriKode(temagruppe));
+        try {
+            return arbeidsfordelingService.finnBehandlendeEnhetListe(oppgaveFraGsak.getGjelder().getBrukerId(),
+                    oppgaveFraGsak.getFagomrade().getKode(),
+                    oppgaveFraGsak.getOppgavetype().getKode(),
+                    underkategoriKode_arbeidsfordelingOverstyrt(temagruppe));
+        } catch (Exception e) {
+            log.error("Henting av behandlende enhet feilet", e);
+            return Collections.emptyList();
+        }
     }
 
     private void lagreOppgaveIGsak(WSOppgave oppgaveFraGsak, LeggTilbakeOppgaveIGsakRequest request) {
@@ -89,6 +97,13 @@ class LeggTilbakeOppgaveIGsakDelegate {
         } catch (LagreOppgaveOptimistiskLasing lagreOppgaveOptimistiskLasing) {
             throw new RuntimeException("Oppgaven kunne ikke lagres, den er for øyeblikket låst av en annen bruker.", lagreOppgaveOptimistiskLasing);
         }
+    }
+
+    private static String underkategoriKode_arbeidsfordelingOverstyrt(Temagruppe temagruppe) {
+        if (temagruppe.equals(Temagruppe.OKSOS)) {
+            return underkategoriKode(Temagruppe.ANSOS);
+        }
+        return underkategoriKode(temagruppe);
     }
 
     private static String underkategoriKode(Temagruppe temagruppe) {

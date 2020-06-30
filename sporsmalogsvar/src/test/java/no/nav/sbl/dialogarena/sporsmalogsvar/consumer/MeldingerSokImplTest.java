@@ -1,7 +1,6 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.consumer;
 
 import no.nav.brukerdialog.security.domain.IdentType;
-import no.nav.brukerdialog.tools.SecurityConstants;
 import no.nav.common.auth.SsoToken;
 import no.nav.common.auth.Subject;
 import no.nav.common.auth.SubjectHandler;
@@ -20,6 +19,7 @@ import static java.lang.System.setProperty;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyMap;
 import static java.util.stream.Collectors.toList;
+import static no.nav.sbl.dialogarena.common.cxf.StsSecurityConstants.SYSTEMUSER_USERNAME;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype.SAMTALEREFERAT_OPPMOTE;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.consumer.MeldingerSokImpl.*;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -34,7 +34,7 @@ class MeldingerSokImplTest {
 
     @BeforeEach
     void setup() {
-        setProperty(SecurityConstants.SYSTEMUSER_USERNAME, "srvModiabrukerdialog");
+        setProperty(SYSTEMUSER_USERNAME, "srvModiabrukerdialog");
         SubjectHandler.withSubject(TEST_SUBJECT, () ->
                 meldingerSok.indekser(FNR, lagMeldinger())
         );

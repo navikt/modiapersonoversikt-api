@@ -4,6 +4,7 @@ import no.nav.common.auth.SubjectHandler
 import no.nav.metrics.MetricsFactory.createEvent
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Oppgave
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.HenvendelseUtsendingService
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.LeggTilbakeOppgaveIGsakRequest
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveBehandlingService
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.ldap.LDAPService
@@ -16,6 +17,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.mapOfNotNullOrEmpty
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.service.plukkoppgave.PlukkOppgaveService
 import no.nav.sbl.dialogarena.naudit.Audit
 import no.nav.sbl.dialogarena.naudit.Audit.Action.*
+import no.nav.sbl.dialogarena.naudit.AuditIdentifier
 import org.slf4j.LoggerFactory
 import javax.inject.Inject
 import javax.servlet.http.HttpServletRequest
@@ -34,6 +36,7 @@ class OppgaveController @Inject constructor(
         private val oppgaveBehandlingService: OppgaveBehandlingService,
         private val plukkOppgaveService: PlukkOppgaveService,
         private val ldapService: LDAPService,
+        private val henvendelseUtsendingService: HenvendelseUtsendingService,
         private val tilgangkontroll: Tilgangskontroll
 ) {
 
@@ -42,13 +45,15 @@ class OppgaveController @Inject constructor(
     fun leggTilbake(@Context httpRequest: HttpServletRequest, request: LeggTilbakeRequest): Response {
         return tilgangkontroll
                 .check(Policies.tilgangTilModia)
-                .check(Policies.kanPlukkeOppgave)
-                .get(Audit.describe(UPDATE, Henvendelse.Oppgave.LeggTilbake, "oppgaveId" to request.oppgaveId)) {
+                .get(Audit.describe(UPDATE, Henvendelse.Oppgave.LeggTilbake, AuditIdentifier.OPPGAVE_ID to request.oppgaveId)) {
                     val valgtEnhet = RestUtils.hentValgtEnhet(httpRequest)
                     val leggTilbakeOppgaveIGsakRequest = lagLeggTilbakeRequest(request, valgtEnhet)
 
                     try {
                         oppgaveBehandlingService.leggTilbakeOppgaveIGsak(leggTilbakeOppgaveIGsakRequest)
+                        if (request.type == LeggTilbakeAarsak.FeilTema) {
+                            henvendelseUtsendingService.oppdaterTemagruppe(request.traadId, request.temagruppe.toString())
+                        }
                     } catch (exception: RuntimeException) {
                         throw handterRuntimeFeil(exception)
                     }
@@ -86,7 +91,7 @@ class OppgaveController @Inject constructor(
         return tilgangkontroll
                 .check(Policies.tilgangTilModia)
                 .check(Policies.kanPlukkeOppgave)
-                .get(Audit.describe(READ, Henvendelse.Oppgave.Plukk, "temagruppe" to temagruppe)) {
+                .get(Audit.describe(READ, Henvendelse.Oppgave.Plukk, AuditIdentifier.TEMAGRUPPE to temagruppe)) {
                     val tildelteOppgaver = oppgaveBehandlingService.finnTildelteOppgaverIGsak()
                     if (tildelteOppgaver.isNotEmpty()) {
                         tildelteOppgaver
@@ -140,5 +145,6 @@ data class LeggTilbakeRequest(
         val type: LeggTilbakeAarsak,
         val oppgaveId: String,
         val temagruppe: Temagruppe?,
-        val beskrivelse: String?
+        val beskrivelse: String?,
+        val traadId: String?
 )

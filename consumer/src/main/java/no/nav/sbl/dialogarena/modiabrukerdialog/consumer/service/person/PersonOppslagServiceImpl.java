@@ -2,10 +2,10 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.person;
 
 import no.nav.common.auth.SsoToken;
 import no.nav.common.auth.SubjectHandler;
+import no.nav.common.oidc.SystemUserTokenProvider;
 import no.nav.common.utils.IdUtils;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.personoppslag.PersonOppslagResponse;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.person.PersonOppslagService;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.sts.StsServiceImpl;
 import no.nav.sbl.rest.RestUtils;
 
 import javax.inject.Inject;
@@ -17,10 +17,10 @@ public class PersonOppslagServiceImpl implements PersonOppslagService {
 
 
     @Inject
-    StsServiceImpl stsService;
+    SystemUserTokenProvider stsService;
 
     public PersonOppslagResponse hentPersonDokument(String fnr) {
-        String consumerOidcToken = stsService.hentConsumerOidcToken();
+        String consumerOidcToken = stsService.getSystemUserAccessToken();
         String veilederOidcToken = SubjectHandler.getSsoToken(SsoToken.Type.OIDC).orElseThrow(() -> new RuntimeException("Fant ikke ident"));
 
         return gjorSporring(PERSONDOKUMENTER_BASEURL, consumerOidcToken, veilederOidcToken, fnr);

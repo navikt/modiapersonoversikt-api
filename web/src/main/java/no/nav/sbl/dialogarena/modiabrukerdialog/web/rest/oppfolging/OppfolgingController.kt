@@ -19,6 +19,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.DATOFORMAT
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.lagRiktigDato
 import no.nav.sbl.dialogarena.naudit.Audit
 import no.nav.sbl.dialogarena.naudit.Audit.Action.*
+import no.nav.sbl.dialogarena.naudit.AuditIdentifier
 import org.slf4j.LoggerFactory
 import java.util.*
 import javax.inject.Inject
@@ -40,7 +41,7 @@ class OppfolgingController @Inject constructor(private val service: Oppfolgingsi
     fun hent(@PathParam("fnr") fodselsnummer: String): Map<String, Any?> {
         return tilgangskontroll
                 .check(Policies.tilgangTilBruker.with(fodselsnummer))
-                .get(Audit.describe(READ, Person.Oppfolging, "fnr" to fodselsnummer)) {
+                .get(Audit.describe(READ, Person.Oppfolging, AuditIdentifier.FNR to fodselsnummer)) {
                     val oppfolging = service.hentOppfolgingsinfo(fodselsnummer, ldapService)
 
                     mapOf(
@@ -58,7 +59,7 @@ class OppfolgingController @Inject constructor(private val service: Oppfolgingsi
                         @QueryParam("sluttDato") slutt: String?): Map<String, Any?> {
         return tilgangskontroll
                 .check(Policies.tilgangTilBruker.with(fodselsnummer))
-                .get(Audit.describe(READ, Person.YtelserOgKontrakter, "fnr" to fodselsnummer)) {
+                .get(Audit.describe(READ, Person.YtelserOgKontrakter, AuditIdentifier.FNR to fodselsnummer)) {
                     val kontraktResponse = oppfolgingskontraktService.hentOppfolgingskontrakter(lagOppfolgingskontraktRequest(fodselsnummer, start, slutt))
                     val ytelserResponse = ytelseskontraktService.hentYtelseskontrakter(lagYtelseRequest(fodselsnummer, start, slutt))
 

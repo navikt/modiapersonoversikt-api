@@ -48,8 +48,8 @@ spec:
         mountPath: /var/run/secrets/nais.io/srvssolinux
       - kvPath: /serviceuser/data/dev/srvgosys
         mountPath: /var/run/secrets/nais.io/gosys_user
-      - kvPath: /credential/data/dev/isso-rp-user-q0
-        mountPath: /var/run/secrets/nais.io/isso-rp-user
+      - kvPath: /apikey/appdynamics/dev
+        mountPath: /var/run/secrets/nais.io/vault
   env:
     - name: APP_ENVIRONMENT_NAME
       value: "q0"
@@ -59,20 +59,12 @@ spec:
       value: "https://isso-q.adeo.no/isso/oauth2/.well-known/openid-configuration"
     - name: ISSO_REFRESH_URL
       value: "https://app-q0.adeo.no/veilarblogin/api/openam-refresh"
-      # Disse kan slettes i fremtiden når vi går over til å bruke STS'n i felles-biblioteket for hentiner av SystemUserToken
-      # ISSO_HOST_URL, ISSO_ISALIVE_URL, ISSO_ISSUES_URL, ISSO_JWKS_URL, OPENIDCONNECT_URL og OIDC_REDIRECT_URL
-    - name: ISSO_HOST_URL
-      value: "https://isso-q.adeo.no/isso/oauth2"
-    - name: ISSO_ISALIVE_URL
-      value: "https://isso-q.adeo.no/isso/isAlive.jsp"
-    - name: ISSO_ISSUER_URL
-      value: "https://isso-q.adeo.no:443/isso/oauth2"
-    - name: ISSO_JWKS_URL
-      value: "https://isso-q.adeo.no/isso/oauth2/connect/jwk_uri"
-    - name: OPENIDCONNECT_URL
-      value: "https://isso-q.adeo.no:443/isso"
-    - name: OIDC_REDIRECT_URL
-      value: "https://app-q0.adeo.no/veilarblogin/api/login"
+    - name: SECURITY_TOKEN_SERVICE_DISCOVERY_URL
+      value: "https://security-token-service.nais.preprod.local/rest/v1/sts/.well-known/openid-configuration"
+    - name: SECURITYTOKENSERVICE_URL
+      value: "https://sts-q0.preprod.local/SecurityTokenServiceProvider/"
+    - name: ABAC_PDP_ENDPOINT_URL
+      value: "https://wasapp-q0.adeo.no/asm-pdp/authorize"
     - name: AKTOER_V1_ENDPOINTURL
       value: "https://app-q0.adeo.no/aktoerregister/ws/Aktoer/v1"
     - name: AKTOER_V1_SECURITYTOKEN
@@ -110,7 +102,7 @@ spec:
     - name: DOMENE_BRUKERDIALOG_SENDUTHENVENDELSE_V1_WSDLURL
       value: "http://maven.adeo.no/nexus/content/groups/public/no/nav/sbl/dialogarena/send-ut-henvendelse/0.7/send-ut-henvendelse-0.7.zip"
     - name: INNSYNJOURNAL_V2_ENDPOINTURL
-      value: "https://wasapp-q0.adeo.no/joark/InnsynJournal/v2"
+      value: "https://dokarkiv-q0.nais.preprod.local/services/innsynjournal/v2"
     - name: INNSYNJOURNAL_V2_SECURITYTOKEN
       value: "SAML"
     - name: INNSYNJOURNAL_V2_WSDLURL
@@ -163,10 +155,6 @@ spec:
       value: "SAML"
     - name: SAKOGBEHANDLING_WSDLURL
       value: "http://maven.adeo.no/nexus/content/groups/public/no/nav/tjenester/fim/nav-fim-sakOgBehandling-v1-tjenestespesifikasjon/1.0.0-alpha011/nav-fim-sakOgBehandling-v1-tjenestespesifikasjon-1.0.0-alpha011.zip"
-    - name: SECURITY_TOKEN_SERVICE_TOKEN_URL
-      value: "https://security-token-service.nais.preprod.local/rest/v1/sts/token"
-    - name: SECURITYTOKENSERVICE_URL
-      value: "https://sts-q0.preprod.local/SecurityTokenServiceProvider/"
     - name: SERVER_AKTIVITETSPLAN_URL
       value: "https://app-q0.adeo.no"
     - name: SERVER_ARENA_URL
@@ -215,12 +203,6 @@ spec:
       value: "SAML"
     - name: VIRKSOMHET_ARBEIDSFORDELING_V1_WSDLURL
       value: "http://maven.adeo.no/nexus/content/groups/public/no/nav/tjenester/nav-arbeidsfordeling-v1-tjenestespesifikasjon/1.1.0/nav-arbeidsfordeling-v1-tjenestespesifikasjon-1.1.0.zip"
-    - name: VIRKSOMHET_BEHANDLEBRUKERPROFIL_V2_ENDPOINTURL
-      value: "https://wasapp-q0.adeo.no/tpsws/BehandleBrukerprofil_v2"
-    - name: VIRKSOMHET_BEHANDLEBRUKERPROFIL_V2_SECURITYTOKEN
-      value: "SAML"
-    - name: VIRKSOMHET_BEHANDLEBRUKERPROFIL_V2_WSDLURL
-      value: "http://maven.adeo.no/nexus/content/groups/public/no/nav/tjenester/nav-behandleBrukerprofil-v2-tjenestespesifikasjon/2.0.0/nav-behandleBrukerprofil-v2-tjenestespesifikasjon-2.0.0.zip"
     - name: VIRKSOMHET_BEHANDLEPERSON_V1_ENDPOINTURL
       value: "https://wasapp-q0.adeo.no/tpsws/ws/BehandlePerson/v1"
     - name: VIRKSOMHET_BEHANDLEPERSON_V1_SECURITYTOKEN
@@ -345,6 +327,8 @@ spec:
       value: "https://pdl-api.nais.preprod.local/graphql"
     - name: PERSONFORVALTER_URL
       value: "https://person-forvalter.nais.preprod.local/endreperson"
+    - name: OPPGAVE_BASEURL
+      value: "https://oppgave-q0.nais.preprod.local/"
     - name: TILLATMOCK
       value: "true"
     - name: VISUTBETALINGER

@@ -5,6 +5,7 @@ import no.nav.common.auth.SubjectHandler;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.AnsattService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Tilgangskontroll;
+import no.nav.sbl.dialogarena.naudit.AuditIdentifier;
 import no.nav.sbl.dialogarena.naudit.AuditResources;
 import no.nav.sbl.dialogarena.naudit.Audit;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.IkkeIndeksertException;
@@ -52,7 +53,7 @@ public class MeldingerController {
     public Response hentTraader(@PathParam("fnr") String fnr, @Context HttpServletRequest request) {
         return tilgangskontroll
                 .check(tilgangTilBruker.with(fnr))
-                .get(Audit.describe(READ, AuditResources.Person.Henvendelse.Les, new Pair<>("fnr", fnr)), () -> {
+                .get(Audit.describe(READ, AuditResources.Person.Henvendelse.Les, new Pair<>(AuditIdentifier.FNR, fnr)), () -> {
                     indekser(fnr, request);
                     try {
                         return Response.ok(searcher.sok(fnr, "")).build();
@@ -67,7 +68,7 @@ public class MeldingerController {
     public Response sok(@PathParam("fnr") String fnr, @PathParam("fritekst") String fritekst) {
         return tilgangskontroll
                 .check(tilgangTilBruker.with(fnr))
-                .get(Audit.describe(READ, AuditResources.Person.Henvendelse.Sok, new Pair<>("fnr", fnr), new Pair<>("query", fritekst)), () -> {
+                .get(Audit.describe(READ, AuditResources.Person.Henvendelse.Sok, new Pair<>(AuditIdentifier.FNR, fnr)), () -> {
                     try {
                         return Response.ok(searcher.sok(fnr, fritekst)).build();
                     } catch (IkkeIndeksertException e) {

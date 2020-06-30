@@ -1,15 +1,17 @@
 package no.nav.kjerneinfo.consumer.fim.person.support;
 
+import static java.util.Collections.singletonList;
+
+import java.util.Iterator;
+import java.util.Optional;
+
 import kotlin.Pair;
-import no.nav.kjerneinfo.consumer.fim.person.exception.AuthorizationWithSikkerhetstiltakException;
 import no.nav.kjerneinfo.consumer.fim.person.to.HentKjerneinformasjonRequest;
 import no.nav.kjerneinfo.consumer.fim.person.to.HentKjerneinformasjonResponse;
-import no.nav.kjerneinfo.consumer.fim.person.to.RecoverableAuthorizationException;
 import no.nav.kjerneinfo.consumer.mdc.MDCUtils;
 import no.nav.kjerneinfo.domain.person.GeografiskTilknytning;
 import no.nav.kjerneinfo.domain.person.GeografiskTilknytningstyper;
 import no.nav.kjerneinfo.domain.person.Person;
-import no.nav.kjerneinfo.domain.person.Personfakta;
 import no.nav.kjerneinfo.domain.person.fakta.AnsvarligEnhet;
 import no.nav.kjerneinfo.domain.person.fakta.Familierelasjon;
 import no.nav.kjerneinfo.domain.person.fakta.Organisasjonsenhet;
@@ -18,13 +20,16 @@ import no.nav.modig.core.exception.AuthorizationException;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.AnsattEnhet;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.organisasjonsEnhetV2.OrganisasjonEnhetV2Service;
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Policies;
-import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.TilgangskontrollUtenTPS;
+import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Tilgangskontroll;
 import no.nav.sbl.dialogarena.naudit.Audit;
+import no.nav.sbl.dialogarena.naudit.AuditIdentifier;
 import no.nav.sbl.dialogarena.naudit.AuditResources;
-import no.nav.sbl.dialogarena.rsbac.CombiningAlgo;
 import no.nav.sbl.dialogarena.rsbac.DecisionEnums;
-import no.nav.sbl.dialogarena.rsbac.PolicySet;
-import no.nav.tjeneste.virksomhet.person.v3.binding.*;
+import no.nav.tjeneste.virksomhet.person.v3.binding.HentGeografiskTilknytningPersonIkkeFunnet;
+import no.nav.tjeneste.virksomhet.person.v3.binding.HentGeografiskTilknytningSikkerhetsbegrensing;
+import no.nav.tjeneste.virksomhet.person.v3.binding.HentPersonPersonIkkeFunnet;
+import no.nav.tjeneste.virksomhet.person.v3.binding.HentPersonSikkerhetsbegrensning;
+import no.nav.tjeneste.virksomhet.person.v3.binding.PersonV3;
 import no.nav.tjeneste.virksomhet.person.v3.feil.PersonIkkeFunnet;
 import no.nav.tjeneste.virksomhet.person.v3.informasjon.Informasjonsbehov;
 import no.nav.tjeneste.virksomhet.person.v3.informasjon.Kodeverdi;
@@ -37,31 +42,22 @@ import no.nav.tjeneste.virksomhet.person.v3.meldinger.HentPersonResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Iterator;
-import java.util.Optional;
-
-import static java.util.Arrays.asList;
-import static java.util.Collections.singletonList;
-import static org.apache.commons.lang3.StringUtils.isBlank;
-
 public class HentPersonService {
     private static final Logger logger = LoggerFactory.getLogger(HentPersonService.class);
     private static Audit.AuditDescriptor<Person> auditLogger = Audit.describe(
             Audit.Action.READ,
             AuditResources.Person.Personalia,
-            (person) -> singletonList(new Pair<>("fnr", person.getFodselsnummer().getNummer()))
+            (person) -> singletonList(new Pair<>(AuditIdentifier.FNR, person.getFodselsnummer().getNummer()))
     );
     private static final String FNR_REGEX = "\\d{11}";
 
     private final PersonV3 service;
     private final KjerneinfoMapper mapper;
     private final OrganisasjonEnhetV2Service organisasjonEnhetV2Service;
-    private final TilgangskontrollUtenTPS tilgangskontroll;
+    private final Tilgangskontroll tilgangskontroll;
 
     HentPersonService(PersonV3 service, KjerneinfoMapper mapper, OrganisasjonEnhetV2Service organisasjonEnhetV2Service,
-                      TilgangskontrollUtenTPS tilgangskontroll
+                      Tilgangskontroll tilgangskontroll
     ) {
         this.service = service;
         this.mapper = mapper;
@@ -99,6 +95,8 @@ public class HentPersonService {
                     faultDescriptionKey = "sikkerhetsbegrensning.diskresjonEgenAnsatt";
                 }
             }
+
+            auditLogger.denied(faultDescriptionKey);
             throw new AuthorizationException(faultDescriptionKey, hentPersonSikkerhetsbegrensning);
         }
         HentKjerneinformasjonResponse response = mapper.map(wsResponse, HentKjerneinformasjonResponse.class);
@@ -109,7 +107,7 @@ public class HentPersonService {
             oppdaterAnsvarligEnhetMedDataFraNORG(response, geografiskTilknytning);
         }
 
-        return filtrerFamilierelasjonerSjekkForSenstiveData(verifyAuthorization(response, hentKjerneinformasjonRequest));
+        return filtrerFamilierelasjonerSjekkForSenstiveData(response);
     }
 
     protected GeografiskTilknytning hentGeografiskTilknytning(String requestIdent) {
@@ -200,67 +198,6 @@ public class HentPersonService {
                 : person.getPersonfakta().getDiskresjonskode().getKodeRef();
     }
 
-    private HentKjerneinformasjonResponse verifyAuthorization(HentKjerneinformasjonResponse response, HentKjerneinformasjonRequest request) {
-        if (response == null
-                || erOrganisasjonsenhetIkkeTom(response)
-                || isBlank(getOrganisasjonsElementId(response))) {
-            return response;
-        }
-
-        Personfakta personfakta = response.getPerson().getPersonfakta();
-        String resourceId = personfakta.getAnsvarligEnhet().getOrganisasjonsenhet().getOrganisasjonselementId() == null ?
-                "" :
-                personfakta.getAnsvarligEnhet().getOrganisasjonsenhet().getOrganisasjonselementId();
-        String diskresjonskode = response.getPerson().getPersonfakta().getDiskresjonskode() == null ?
-                "0" :
-                response.getPerson().getPersonfakta().getDiskresjonskode().getKodeRef();
-
-        if (saksbehandlerHarTilgang(resourceId, diskresjonskode)) {
-            return response;
-        }
-
-        boolean saksbehandlerHarTilgangMedUtvidbarRolle = harSaksbehandlerHarTilgangMedUtvidbarRolle(resourceId, diskresjonskode);
-        if (saksbehandlerHarTilgangMedUtvidbarRolle && request.isBegrunnet()) {
-            return response;
-        } else if (saksbehandlerHarTilgangMedUtvidbarRolle) {
-            throw new RecoverableAuthorizationException("Saksbehandler kan få tilgang til bruker ved begrunnelse.");
-        }
-
-        AuthorizationWithSikkerhetstiltakException exception = new AuthorizationWithSikkerhetstiltakException("sikkerhetsbegrensning.geografisk");
-        exception.setSikkerhetstiltak(response.getPerson().getPersonfakta().getSikkerhetstiltak());
-
-        throw exception;
-    }
-
-    private boolean harSaksbehandlerHarTilgangMedUtvidbarRolle(String ansvarligEnhet, String diskresjonskode) {
-        return tilgangskontroll.check(new PolicySet<>(CombiningAlgo.denyOverride, asList(
-                Policies.tilgangTilEnhetIdUtvidbar.with(ansvarligEnhet),
-                Policies.tilgangTilDiskresjonskode.with(diskresjonskode)
-        )))
-                .getDecision()
-                .getDecision()
-                .equals(DecisionEnums.PERMIT);
-    }
-
-    private boolean saksbehandlerHarTilgang(String ansvarligEnhet, String diskresjonskode) {
-        return tilgangskontroll.check(new PolicySet<>(CombiningAlgo.denyOverride, asList(
-                Policies.tilgangTilEnhetId.with(ansvarligEnhet),
-                Policies.tilgangTilDiskresjonskode.with(diskresjonskode)
-        )))
-                .getDecision()
-                .getDecision()
-                .equals(DecisionEnums.PERMIT);
-    }
-
-    private boolean erOrganisasjonsenhetIkkeTom(HentKjerneinformasjonResponse response) {
-        return response.getPerson().getPersonfakta().getAnsvarligEnhet() == null
-                || response.getPerson().getPersonfakta().getAnsvarligEnhet().getOrganisasjonsenhet() == null;
-    }
-
-    private String getOrganisasjonsElementId(HentKjerneinformasjonResponse response) {
-        return response.getPerson().getPersonfakta().getAnsvarligEnhet().getOrganisasjonsenhet().getOrganisasjonselementId();
-    }
-
     private HentKjerneinformasjonResponse filtrerFamilierelasjonerSjekkForSenstiveData(HentKjerneinformasjonResponse response) {
         if (response == null || response.getPerson() == null || response.getPerson().getPersonfakta() == null
                 || response.getPerson().getPersonfakta().getHarFraRolleIList() == null) {
@@ -284,15 +221,10 @@ public class HentPersonService {
         return response;
     }
 
-    private InputStream getConfigAsInputStream() throws IOException {
-        return getClass().getClassLoader().getResource("kjerneinfo-sporing-config.txt").openStream();
-    }
-
-
     private boolean saksbehandlerHarTilgangTilDiskresjonskode(String diskresjonskode) {
         return tilgangskontroll.check(Policies.tilgangTilDiskresjonskode.with(diskresjonskode))
                 .getDecision()
-                .getDecision()
+                .getValue()
                 .equals(DecisionEnums.PERMIT);
     }
 

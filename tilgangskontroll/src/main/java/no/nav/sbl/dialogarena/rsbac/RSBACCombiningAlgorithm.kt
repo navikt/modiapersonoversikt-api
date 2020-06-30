@@ -18,12 +18,12 @@ private open class DecisionOverride(val overrideValue : DecisionEnums) : Combini
     override fun <CONTEXT> combine(policies: List<Combinable<CONTEXT>>, context: CONTEXT): Decision {
         var combinedDecision = Decision("No matching rule found", DecisionEnums.NOT_APPLICABLE)
         for (policy: Combinable<CONTEXT> in policies) {
-            val ruleDecision = policy.invoke(context)
+            val ruleDecision: Decision = policy.invoke(context)
 
-            combinedDecision = when (ruleDecision) {
-                overrideValue -> return Decision(policy.getMessage(context), ruleDecision)
+            combinedDecision = when (ruleDecision.value) {
+                overrideValue -> return ruleDecision
                 DecisionEnums.NOT_APPLICABLE -> combinedDecision
-                else -> Decision(policy.getMessage(context), ruleDecision)
+                else -> ruleDecision
             }
         }
         return combinedDecision
@@ -40,13 +40,13 @@ private class FirstApplicable : CombiningAlgo() {
         for (policy: Combinable<CONTEXT> in policies) {
             val ruleDecision = policy.invoke(context)
 
-            if (ruleDecision.isApplicable()) {
-                return Decision(policy.getMessage(context), ruleDecision)
+            if (ruleDecision.value.isApplicable()) {
+                return ruleDecision
             }
 
-            combinedDecision = when (combinedDecision.decision) {
+            combinedDecision = when (combinedDecision.value) {
                 DecisionEnums.DENY, DecisionEnums.PERMIT -> combinedDecision
-                DecisionEnums.NOT_APPLICABLE -> Decision(policy.getMessage(context), ruleDecision)
+                DecisionEnums.NOT_APPLICABLE -> ruleDecision
             }
         }
         return combinedDecision

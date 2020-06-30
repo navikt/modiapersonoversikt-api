@@ -43,12 +43,6 @@
             <artifactId>kjerneinfo-consumer</artifactId>
         </dependency>
 
-        <!--Brukerprofil-->
-        <dependency>
-            <groupId>no.nav.sbl.dialogarena</groupId>
-            <artifactId>behandlebrukerprofil-consumer</artifactId>
-        </dependency>
-
         <!--Kodeverk-->
         <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>

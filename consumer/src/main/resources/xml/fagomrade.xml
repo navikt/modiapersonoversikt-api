@@ -299,13 +299,32 @@
         <gsak datoOpprettet="2017-08-01T00:00:00" opprettetAv="PK-39554" endretAv="PK-39554" kode="RVE" dekode="Rettferdsvederlag" tidsregisAktivert="0"/>
         <ruting datoOpprettet="2017-08-01T00:00:00" dekode="Rettferdsvederlag" endretAv="PK-39554" fagomrade="RVE" opprettetAv="PK-39554" gyldigForBatch="true"/>
     </fagomrade>
-    <fagomrade kode="RPO" datoFom="2017-08-01" datoOpprettet="2010-01-01T00:00:00" dekode="Retting av personopplysninger" endretAv="PK-39554" erGyldig="true" opprettetAv="PK-39554" gosys="true" gsak="true" ruting="true" leveranse="2017-HL3" jiraissue="PK-39554">
-        <gosys datoOpprettet="2017-08-01T00:00:00" opprettetAv="PK-39554" endretAv="PK-39554" fagomrade="RPO" fagomradeNr="67" dekode="Retting av personopplysninger" omrade="GE" opprettArena="false" bedrift="false" juridisk="false" orgLedd="false" samhandler="false" person="true" relevantSak="true"/>
-        <gsak datoOpprettet="2017-08-01T00:00:00" opprettetAv="PK-39554" endretAv="PK-39554" kode="RPO" dekode="Retting av personopplysninger" tidsregisAktivert="0"/>
-        <ruting datoOpprettet="2017-08-01T00:00:00" dekode="Retting av personopplysninger" endretAv="PK-39554" fagomrade="RPO" opprettetAv="PK-39554" gyldigForBatch="true"/>
+    <fagomrade kode="RPO" datoFom="2017-08-01" datoOpprettet="2010-01-01T00:00:00"
+               dekode="Retting av personopplysninger" endretAv="PK-39554" erGyldig="true" opprettetAv="PK-39554"
+               gosys="true" gsak="true" ruting="true" leveranse="2017-HL3" jiraissue="PK-39554">
+        <gosys datoOpprettet="2017-08-01T00:00:00" opprettetAv="PK-39554" endretAv="PK-39554" fagomrade="RPO"
+               fagomradeNr="67" dekode="Retting av personopplysninger" omrade="GE" opprettArena="false" bedrift="false"
+               juridisk="false" orgLedd="false" samhandler="false" person="true" relevantSak="true"/>
+        <gsak datoOpprettet="2017-08-01T00:00:00" opprettetAv="PK-39554" endretAv="PK-39554" kode="RPO"
+              dekode="Retting av personopplysninger" tidsregisAktivert="0"/>
+        <ruting datoOpprettet="2017-08-01T00:00:00" dekode="Retting av personopplysninger" endretAv="PK-39554"
+                fagomrade="RPO" opprettetAv="PK-39554" gyldigForBatch="true"/>
     </fagomrade>
-    <fagomrade kode="LGA" datoFom="2010-01-01" datoOpprettet="2018-06-18T00:00:00" dekode="Lønnsgaranti" endretAv="GO-1124" erGyldig="true" opprettetAv="GO-1124" gosys="true" gsak="true" ruting="false" leveranse="2018-Ux" jiraissue="GO-1124">
-        <gosys fagomrade="LGA" fagomradeNr="0" omrade="GE" opprettArena="false" bedrift="false" juridisk="false" orgLedd="false" samhandler="false" person="true" relevantSak="false"/>
-        <gsak  tidsregisAktivert="0"/>
+    <fagomrade kode="LGA" datoFom="2010-01-01" datoOpprettet="2018-06-18T00:00:00" dekode="Lønnsgaranti"
+               endretAv="GO-1124" erGyldig="true" opprettetAv="GO-1124" gosys="true" gsak="true" ruting="false"
+               leveranse="2018-Ux" jiraissue="GO-1124">
+        <gosys fagomrade="LGA" fagomradeNr="0" omrade="GE" opprettArena="false" bedrift="false" juridisk="false"
+               orgLedd="false" samhandler="false" person="true" relevantSak="false"/>
+        <gsak tidsregisAktivert="0"/>
     </fagomrade>
+    <fagomrade kode="FRI" datoFom="2020-05-01" datoOpprettet="2020-04-26T00:00:00"
+               dekode="Kompensasjon selvstendig næringsdrivende/frilansere" endretAv="OPP-1148" erGyldig="true"
+               opprettetAv="OPP-1148" gosys="true" gsak="true" ruting="false" leveranse="2020-Korona-nytt-tema"
+               jiraissue="OPP-1148">
+        <gosys fagomrade="FRI" fagomradeNr="0" omrade="GE" opprettArena="false" bedrift="false" juridisk="false"
+               orgLedd="false" samhandler="false" person="true" relevantSak="false"/>
+        <gsak datoOpprettet="2020-06-26T00:00:00" opprettetAv="OPP-1148" endretAv="OPP-1148" kode="FRI"
+              dekode="Kompensasjon selvstendig næringsdrivende/frilansere" tidsregisAktivert="0"/>
+    </fagomrade>
+
 </fagomradeListe>

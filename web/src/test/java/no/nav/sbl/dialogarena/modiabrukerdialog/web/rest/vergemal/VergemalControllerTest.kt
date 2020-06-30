@@ -1,8 +1,8 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.vergemal
 
-import com.nhaarman.mockito_kotlin.any
-import com.nhaarman.mockito_kotlin.mock
-import com.nhaarman.mockito_kotlin.whenever
+import com.nhaarman.mockitokotlin2.any
+import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.whenever
 import no.nav.kjerneinfo.consumer.fim.person.vergemal.VergemalService
 import no.nav.kjerneinfo.consumer.fim.person.vergemal.domain.Periode
 import no.nav.kjerneinfo.consumer.fim.person.vergemal.domain.Verge
