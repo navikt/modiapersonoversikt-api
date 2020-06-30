@@ -1,6 +1,7 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.service;
 
 import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navansatt.GOSYSNAVansatt;
+
 import javax.inject.Named;
 
 import no.nav.common.oidc.SystemUserTokenProvider;
@@ -15,6 +16,7 @@ import no.nav.modig.content.ContentRetriever;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.HenvendelseLesService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.HenvendelseUtsendingService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveBehandlingService;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveRestClient;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.arbeidsfordeling.ArbeidsfordelingV1Service;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.gsak.GsakKodeverk;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.gsak.SakerService;
@@ -42,6 +44,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.kodeverksmapper
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.ldap.LDAPServiceImpl;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.ldap.LdapContextProvider;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.oppfolgingsinfo.OppfolgingsenhetServiceImpl;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.oppgave.OppgaveOpprettelseClient;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.oppgavebehandling.OppgaveBehandlingServiceImpl;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.organisasjonenhet.OrganisasjonEnhetV2ServiceImpl;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.organisasjonenhet.kontaktinformasjon.service.OrganisasjonEnhetKontaktinformasjonService;
@@ -111,12 +114,17 @@ public class ServiceConfig {
     }
 
     @Bean
+    public OppgaveRestClient oppgaveOpprettelseClient(KodeverksmapperService kodeverksmapperService, PdlOppslagService pdlOppslagService) {
+        return new OppgaveOpprettelseClient(kodeverksmapperService, pdlOppslagService);
+    }
+
+    @Bean
     public KodeverksmapperService kodeverksmapperService(Kodeverksmapper kodeverksmapper) {
         return new KodeverksmapperService(kodeverksmapper);
     }
 
     @Bean
-    public ArbeidsfordelingClient arbeidsfordelingClient(){
+    public ArbeidsfordelingClient arbeidsfordelingClient() {
         return new ArbeidsfordelingClient();
     }
 
@@ -191,7 +199,7 @@ public class ServiceConfig {
         return new VergemalService(personPortType, personKjerneinfoServiceBi, kodeverkmanagerBi);
     }
 
-       @Bean
+    @Bean
     DkifServiceImpl defaultDkifService(DigitalKontaktinformasjonV1 dkifV1) {
         return new DkifServiceImpl(dkifV1);
     }

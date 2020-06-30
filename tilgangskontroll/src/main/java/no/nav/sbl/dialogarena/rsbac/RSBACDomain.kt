@@ -109,6 +109,7 @@ class RulePolicyGenerator<CONTEXT, DATA>(
         rule.invoke(RuleData(this, data))
     }
 }
+
 class PolicyGenerator<CONTEXT, DATA>(
         private val message: RuleData<CONTEXT, DATA>.() -> String,
         private val rule: Rule<RuleData<CONTEXT, DATA>>

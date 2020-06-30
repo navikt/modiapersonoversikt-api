@@ -5,6 +5,9 @@ import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.joda.time.format.DateTimeFormat;
 
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.util.Date;
 import java.util.Locale;
 
 import static java.lang.String.format;
@@ -17,6 +20,16 @@ public class DateUtils {
 
     public static LocalDate arbeidsdagerFraDato(int ukedager, LocalDate startDato) {
         return LocalDate.fromDateFields(addWorkingDaysToDate(startDato.toDate(), ukedager));
+    }
+
+
+    public static java.time.LocalDate arbeidsdagerFraDatoJava(int ukedager, java.time.LocalDate startDato) {
+        ZoneId zone = ZoneId.systemDefault();
+        ZonedDateTime now = startDato.atStartOfDay(zone);
+        Date future = addWorkingDaysToDate(Date.from(now.toInstant()), ukedager);
+        return future.toInstant()
+                .atZone(zone)
+                .toLocalDate();
     }
 
     public static String toDateString(DateTime dateTime) {

@@ -57,7 +57,7 @@ public class BulletproofKodeverkServiceTest {
         ResultatWrapper temanavnForTemakode = kodeverkWrapper.getTemanavnForTemakode(TEMAKODE_UFORE, BulletproofKodeverkService.BEHANDLINGSTEMA);
         assertTrue(temanavnForTemakode.feilendeSystemer.contains(Baksystem.KODEVERK));
     }
-    
+
     @Test
     public void getTittel_shouldReturn_tittel() {
         String tittel = kodeverkWrapper.getSkjematittelForSkjemanummer(SOK_TITTEL);

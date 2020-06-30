@@ -42,17 +42,17 @@ class SakerController @Inject constructor(private val saksoversiktService: Sakso
     @Produces(MediaType.APPLICATION_JSON)
     fun hentSakstema(@Context request: HttpServletRequest, @PathParam("fnr") fnr: String): Map<String, Any?> {
         return tilgangskontroll
-            .check(Policies.tilgangTilBruker.with(fnr))
-            .get(Audit.describe(READ, AuditResources.Person.Saker, AuditIdentifier.FNR to fnr)) {
-                val sakerWrapper = saksService.hentAlleSaker(fnr)
-                val sakstemaWrapper = sakstemaService.hentSakstema(sakerWrapper.resultat, fnr, false)
+                .check(Policies.tilgangTilBruker.with(fnr))
+                .get(Audit.describe(READ, AuditResources.Person.Saker, AuditIdentifier.FNR to fnr)) {
+                    val sakerWrapper = saksService.hentAlleSaker(fnr)
+                    val sakstemaWrapper = sakstemaService.hentSakstema(sakerWrapper.resultat, fnr, false)
 
-                // TODO skal denne metoden ligge i tilgangskontrollService?
-                tilgangskontrollService.markerIkkeJournalforte(sakstemaWrapper.resultat)
-                saksoversiktService.fjernGamleDokumenter(sakstemaWrapper.resultat)
+                    // TODO skal denne metoden ligge i tilgangskontrollService?
+                    tilgangskontrollService.markerIkkeJournalforte(sakstemaWrapper.resultat)
+                    saksoversiktService.fjernGamleDokumenter(sakstemaWrapper.resultat)
 
-                val resultat = ResultatWrapper(mapTilModiaSakstema(sakstemaWrapper.resultat, RestUtils.hentValgtEnhet(request)),
-                        collectFeilendeSystemer(sakerWrapper, sakstemaWrapper))
+                    val resultat = ResultatWrapper(mapTilModiaSakstema(sakstemaWrapper.resultat, RestUtils.hentValgtEnhet(request)),
+                            collectFeilendeSystemer(sakerWrapper, sakstemaWrapper))
 
                 byggSakstemaResultat(resultat)
             }

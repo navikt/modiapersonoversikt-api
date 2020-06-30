@@ -104,8 +104,8 @@ class DialogMerkController @Inject constructor(private val behandleHenvendelsePo
                 .check(Policies.tilgangTilBruker.with(request.fnr))
                 .check(Policies.behandlingsIderTilhorerBruker.with(BehandlingsIdTilgangData(request.fnr, request.behandlingsidListe)))
                 .get(Audit.describe(DELETE, Henvendelse.Merk.Slett, AuditIdentifier.FNR to request.fnr, AuditIdentifier.BEHANDLING_ID to request.behandlingsidListe.joinToString(", "))) {
-                        behandleHenvendelsePortType.markerTraadForHasteKassering(request.behandlingsidListe);
-                        Response.ok().build()
+                    behandleHenvendelsePortType.markerTraadForHasteKassering(request.behandlingsidListe);
+                    Response.ok().build()
                 }
     }
 
@@ -146,7 +146,7 @@ data class TvungenFerdigstillRequest(
         val eldsteMeldingTraadId: String,
         val eldsteMeldingOppgaveId: String,
         val beskrivelse: String
-        )
+)
 
 data class FerdigstillOppgaveRequest(
         val fnr: String,

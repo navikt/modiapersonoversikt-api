@@ -1,19 +1,22 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.dialog
 
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.GsakKodeTema
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveRequest
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveRestClient
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.gsak.GsakKodeverk
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.BehandlingsIdTilgangData
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Policies
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Tilgangskontroll
 import no.nav.sbl.dialogarena.naudit.Audit
-import no.nav.sbl.dialogarena.naudit.Audit.Action.*
+import no.nav.sbl.dialogarena.naudit.Audit.Action.CREATE
 import no.nav.sbl.dialogarena.naudit.AuditIdentifier
 import no.nav.sbl.dialogarena.naudit.AuditResources.Person.Henvendelse
 import no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.DateUtils.arbeidsdagerFraDato
+import no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.DateUtils.arbeidsdagerFraDatoJava
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.OppgavebehandlingV3
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.meldinger.WSOpprettOppgave
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.meldinger.WSOpprettOppgaveRequest
-import org.joda.time.LocalDate
+import java.time.LocalDate
 import javax.inject.Inject
 import javax.ws.rs.GET
 import javax.ws.rs.POST
@@ -28,6 +31,7 @@ private const val HENVENDELSESTYPE_KODE: String = "DIALOG"
 class DialogOppgaveController @Inject constructor(
         private val gsakKodeverk: GsakKodeverk,
         private val oppgavebehandling: OppgavebehandlingV3,
+        private val oppgavebehandlingRest: OppgaveRestClient,
         private val tilgangskontroll: Tilgangskontroll
 ) {
 
@@ -45,8 +49,8 @@ class DialogOppgaveController @Inject constructor(
                                     .withOpprettOppgave(
                                             WSOpprettOppgave()
                                                     .withHenvendelseId(request.behandlingskjedeId)
-                                                    .withAktivFra(LocalDate.now())
-                                                    .withAktivTil(arbeidsdagerFraDato(request.dagerFrist, LocalDate.now()))
+                                                    .withAktivFra(org.joda.time.LocalDate.now())
+                                                    .withAktivTil(arbeidsdagerFraDato(request.dagerFrist, org.joda.time.LocalDate.now()))
                                                     .withAnsvarligEnhetId(request.ansvarligEnhetId)
                                                     .withAnsvarligId(request.ansvarligIdent)
                                                     .withBeskrivelse(request.beskrivelse)
@@ -59,6 +63,35 @@ class DialogOppgaveController @Inject constructor(
                                     )
                     )
                     Response.ok().build()
+                }
+    }
+
+    @POST
+    @Path("/opprettskjermetoppgave")
+    fun opprettSkjermetOppgave(request: OpperettSkjermetOppgaveDTO
+    ): SkjermetOppgaveRespons {
+        return tilgangskontroll
+                .check(Policies.tilgangTilModia)
+                .get(Audit.describe(CREATE, Henvendelse.Oppgave.Opprett, AuditIdentifier.FNR to request.fnr)) {
+                    val respons = oppgavebehandlingRest
+                            .opprettOppgave(OppgaveRequest(
+
+                                    fnr = request.fnr,
+                                    behandlesAvApplikasjon = "FS22",
+                                    beskrivelse = request.beskrivelse,
+                                    temagruppe = "", //not in use
+                                    tema = request.temaKode,
+                                    underkategoriKode = request.underkategoriKode,
+                                    oppgavetype = request.oppgaveTypeKode,
+                                    behandlingstype = HENVENDELSESTYPE_KODE,
+                                    prioritet = request.prioritetKode,
+                                    opprettetavenhetsnummer = request.opprettetavenhetsnummer,
+                                    oppgaveFrist = kalkulerFrist(request.temaKode, request.oppgaveTypeKode)
+                            )
+                            )
+                    SkjermetOppgaveRespons(
+                            oppgaveid = respons!!.getId()
+                    )
                 }
     }
 
@@ -79,6 +112,17 @@ class DialogOppgaveController @Inject constructor(
                         )
                     }
                 }
+    }
+
+    private fun kalkulerFrist(temaKode: String, oppgaveTypeKode: String): LocalDate {
+        val dagerFrist = gsakKodeverk.hentTemaListe()
+                .find { it.kode == temaKode }
+                ?.oppgaveTyper
+                ?.find { it.kode == oppgaveTypeKode }
+                ?.dagerFrist
+                ?: 2
+
+        return arbeidsdagerFraDatoJava(dagerFrist, LocalDate.now())
     }
 
     private fun hentOppgavetyper(oppgavetyper: List<GsakKodeTema.OppgaveType>): List<Map<String, Any?>> =
@@ -111,6 +155,7 @@ class DialogOppgaveController @Inject constructor(
 
 data class OpperettOppgaveRequest(
         val fnr: String,
+        val opprettetavenhetsnummer: String,
         val valgtEnhetId: Int,
         val behandlingskjedeId: String,
         val dagerFrist: Int,
@@ -122,4 +167,19 @@ data class OpperettOppgaveRequest(
         val brukerid: String,
         val oppgaveTypeKode: String,
         val prioritetKode: String
+)
+
+data class OpperettSkjermetOppgaveDTO(
+        val opprettetavenhetsnummer: String,
+        val fnr: String,
+        val beskrivelse: String,
+        val temaKode: String,
+        val underkategoriKode: String?,
+        val brukerid: String,
+        val oppgaveTypeKode: String,
+        val prioritetKode: String
+)
+
+data class SkjermetOppgaveRespons(
+        val oppgaveid: String
 )
