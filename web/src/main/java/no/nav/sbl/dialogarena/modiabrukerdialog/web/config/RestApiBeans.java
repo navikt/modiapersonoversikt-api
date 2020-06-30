@@ -1,8 +1,11 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.config;
 
+import no.nav.sbl.dialogarena.modiabrukerdialog.sak.rest.DokumentController;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.rest.InformasjonController;
+import no.nav.sbl.dialogarena.modiabrukerdialog.sak.rest.SaksoversiktController;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.*;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.baseurls.BaseUrlsController;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.brukerprofil.BrukerprofilController;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.dialog.DialogController;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.dialog.DialogMerkController;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.dialog.DialogOppgaveController;
@@ -31,12 +34,15 @@ import org.springframework.context.annotation.Import;
         JournalforingController.class,
         HodeController.class,
         VarslerController.class,
+        DokumentController.class,
+        SaksoversiktController.class,
         DelsvarController.class,
         OppgaveController.class,
         EnhetController.class,
         PersonController.class,
         VergemalController.class,
         KontaktinformasjonController.class,
+        BrukerprofilController.class,
         EgenAnsattController.class,
         KodeverkController.class,
         LdapController.class,
@@ -49,7 +55,6 @@ import org.springframework.context.annotation.Import;
         NaisController.class,
         DialogController.class,
         PersonsokController.class,
-        TilgangController.class,
         DialogMerkController.class,
         DialogOppgaveController.class
 })

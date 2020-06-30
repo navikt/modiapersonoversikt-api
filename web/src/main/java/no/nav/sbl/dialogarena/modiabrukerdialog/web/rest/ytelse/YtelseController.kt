@@ -6,7 +6,6 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Policies
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Tilgangskontroll
 import no.nav.sbl.dialogarena.naudit.AuditResources
 import no.nav.sbl.dialogarena.naudit.Audit
-import no.nav.sbl.dialogarena.naudit.AuditIdentifier
 import no.nav.sykmeldingsperioder.consumer.foreldrepenger.ForeldrepengerServiceBi
 import no.nav.sykmeldingsperioder.consumer.pleiepenger.PleiepengerService
 import no.nav.sykmeldingsperioder.consumer.sykepenger.SykepengerServiceBi
@@ -31,7 +30,7 @@ class YtelseController @Inject constructor(private val sykepengerService: Sykepe
     fun hentSykepenger(@PathParam("fnr") fnr: String): Map<String, Any?> {
         return tilgangskontroll
                 .check(Policies.tilgangTilBruker.with(fnr))
-                .get(Audit.describe(Audit.Action.READ, AuditResources.Person.Sykepenger, AuditIdentifier.FNR to fnr)) {
+                .get(Audit.describe(Audit.Action.READ, AuditResources.Person.Sykepenger, "fnr" to fnr)) {
                     SykepengerUttrekk(sykepengerService).hent(fnr)
                 }
     }
@@ -41,7 +40,7 @@ class YtelseController @Inject constructor(private val sykepengerService: Sykepe
     fun hentForeldrepenger(@PathParam("fnr") fnr: String): Map<String, Any?> {
         return tilgangskontroll
                 .check(Policies.tilgangTilBruker.with(fnr))
-                .get(Audit.describe(Audit.Action.READ, AuditResources.Person.Foreldrepenger, AuditIdentifier.FNR to fnr)) {
+                .get(Audit.describe(Audit.Action.READ, AuditResources.Person.Foreldrepenger, "fnr" to fnr)) {
                     ForeldrepengerUttrekk(getForeldrepengerService()).hent(fnr)
                 }
     }
@@ -51,7 +50,7 @@ class YtelseController @Inject constructor(private val sykepengerService: Sykepe
     fun hentPleiepenger(@PathParam("fnr") fnr: String): Map<String, Any?> {
         return tilgangskontroll
                 .check(Policies.tilgangTilBruker.with(fnr))
-                .get(Audit.describe(Audit.Action.READ, AuditResources.Person.Pleiepenger, AuditIdentifier.FNR to fnr)) {
+                .get(Audit.describe(Audit.Action.READ, AuditResources.Person.Pleiepenger, "fnr" to fnr)) {
                     PleiepengerUttrekk(pleiepengerService, organisasjonService).hent(fnr)
                 }
     }

@@ -4,7 +4,6 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Policies
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Tilgangskontroll
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.lagXmlGregorianDato
 import no.nav.sbl.dialogarena.naudit.Audit
-import no.nav.sbl.dialogarena.naudit.AuditIdentifier
 import no.nav.sbl.dialogarena.naudit.AuditResources
 import no.nav.tjeneste.virksomhet.personsoek.v1.PersonsokPortType
 import no.nav.tjeneste.virksomhet.personsoek.v1.informasjon.*
@@ -14,7 +13,10 @@ import no.nav.tjeneste.virksomhet.personsoek.v1.meldinger.PersonFilter
 import no.nav.tjeneste.virksomhet.personsoek.v1.meldinger.Soekekriterie
 import org.slf4j.LoggerFactory
 import javax.inject.Inject
-import javax.ws.rs.*
+import javax.ws.rs.InternalServerErrorException
+import javax.ws.rs.POST
+import javax.ws.rs.Path
+import javax.ws.rs.Produces
 import javax.ws.rs.core.MediaType
 
 private enum class OppslagFeil {
@@ -29,7 +31,7 @@ class PersonsokController @Inject constructor(private val personsokPortType: Per
     private val auditDescriptor = Audit.describe<List<Map<String, Any?>>>(Audit.Action.READ, AuditResources.Personsok.Resultat) { resultat ->
         val fnr = resultat.map { it["ident"] }.joinToString(", ")
         listOf(
-                AuditIdentifier.FNR to fnr
+                "fnr" to fnr
         )
     }
 
@@ -47,7 +49,7 @@ class PersonsokController @Inject constructor(private val personsokPortType: Per
                         }
                     } catch (ex: Exception) {
                         when (haandterOppslagFeil(ex)) {
-                            OppslagFeil.FOR_MANGE -> throw BadRequestException("Søket gav mer enn 200 treff. Forsøk å begrense søket.")
+                            OppslagFeil.FOR_MANGE -> throw InternalServerErrorException("Søket gav mer enn 200 treff. Forsøk å begrense søket.")
                             else -> throw InternalServerErrorException("Feil fra søketjeneste: " + ex.message)
                         }
                     }

@@ -13,10 +13,16 @@
 
     <properties>
         <jaxb-impl.version>2.2.6</jaxb-impl.version>
-        <pdfbox.version>2.0.19</pdfbox.version>
+        <pdfbox.version>1.8.16</pdfbox.version>
     </properties>
 
     <dependencies>
+        <dependency>
+            <groupId>no.nav.common</groupId>
+            <artifactId>oidc-security</artifactId>
+            <scope>test</scope>
+            <type>test-jar</type>
+        </dependency>
         <dependency>
             <groupId>no.nav.tjenestespesifikasjoner</groupId>
             <artifactId>joark-tjenestespesifikasjon</artifactId>
@@ -137,7 +143,7 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>com.nhaarman.mockitokotlin2</groupId>
+            <groupId>com.nhaarman</groupId>
             <artifactId>mockito-kotlin</artifactId>
             <scope>test</scope>
         </dependency>

@@ -126,8 +126,8 @@ internal class RSBACTest {
                 .check(Policy("I have no Idea") { throw RuntimeException("An error", IllegalStateException("Not allowed...")) })
                 .getDecision()
 
-        assertEquals(DecisionEnums.DENY, denyBiased.value)
-        assertEquals(DecisionEnums.PERMIT, permitBiased.value)
+        assertEquals(DecisionEnums.DENY, denyBiased.decision)
+        assertEquals(DecisionEnums.PERMIT, permitBiased.decision)
     }
 
     @Test
@@ -139,7 +139,7 @@ internal class RSBACTest {
                 })
                 .getDecision()
 
-        assertEquals(DecisionEnums.DENY, result.value)
+        assertEquals(DecisionEnums.DENY, result.decision)
     }
 
     inline fun <reified T : Throwable> assertThrowsMessage(expected: String, noinline executable: () -> Unit) =

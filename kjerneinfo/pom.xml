@@ -27,6 +27,8 @@
         <module>kontrakter-domain</module>
         <module>sykmeldingsperioder-domain</module>
         <module>sykmeldingsperioder-consumer</module>
+        <module>behandlebrukerprofil-consumer</module>
+        <module>brukerprofil-domain</module>
         <module>kodeverk-consumer</module>
         <module>dkif-consumer</module>
     </modules>

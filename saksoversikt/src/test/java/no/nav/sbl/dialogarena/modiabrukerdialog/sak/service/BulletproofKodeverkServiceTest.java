@@ -47,6 +47,17 @@ public class BulletproofKodeverkServiceTest {
     }
 
     @Test
+    public void getTittel_shouldReturn_tittel() {
+        String tittel = kodeverkWrapper.getSkjematittelForSkjemanummer(SOK_TITTEL);
+        assertThat(tittel, is(TITTEL));
+    }
+
+    @Test
+    public void getTittel_shouldNot_throwExceptionWhenErrorOccurs() {
+        kodeverkWrapper.getSkjematittelForSkjemanummer(EXCEPTION_TITTEL);
+    }
+
+    @Test
     public void getTemaForTemakode_shouldReturn_tema() {
         ResultatWrapper tema = kodeverkWrapper.getTemanavnForTemakode(TEMAKODE_DAGPENGER, BulletproofKodeverkService.BEHANDLINGSTEMA);
         assertThat(tema.resultat, is(TEMANAVN_DAGPENGER));
@@ -57,16 +68,6 @@ public class BulletproofKodeverkServiceTest {
         ResultatWrapper temanavnForTemakode = kodeverkWrapper.getTemanavnForTemakode(TEMAKODE_UFORE, BulletproofKodeverkService.BEHANDLINGSTEMA);
         assertTrue(temanavnForTemakode.feilendeSystemer.contains(Baksystem.KODEVERK));
     }
-    
-    @Test
-    public void getTittel_shouldReturn_tittel() {
-        String tittel = kodeverkWrapper.getSkjematittelForSkjemanummer(SOK_TITTEL);
-        assertThat(tittel, is(TITTEL));
-    }
 
-    @Test
-    public void getTittel_shouldNot_throwExceptionWhenErrorOccurs() {
-        kodeverkWrapper.getSkjematittelForSkjemanummer(EXCEPTION_TITTEL);
-    }
 
 }

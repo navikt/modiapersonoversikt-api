@@ -14,7 +14,6 @@ import no.nav.kjerneinfo.domain.person.fakta.Organisasjonsenhet;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.*;
 import no.nav.modig.content.ContentRetriever;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.arbeidsfordeling.ArbeidsfordelingV1Service;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.kodeverk.StandardKodeverk;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.ldap.LDAPService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Tilgangskontroll;
@@ -34,7 +33,6 @@ import org.mockito.InjectMocks;
 import org.mockito.stubbing.Answer;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -70,7 +68,6 @@ class HenvendelseBehandlingServiceImplTest {
     private StandardKodeverk standardKodeverk = mock(StandardKodeverk.class);
     private ContentRetriever propertyResolver = mock(ContentRetriever.class);
     private LDAPService ldapService = mock(LDAPService.class);
-    private ArbeidsfordelingV1Service arbeidsfordelingService = mock(ArbeidsfordelingV1Service.class);
     private TilgangskontrollContext tilgangskontrollContext = mock(TilgangskontrollContext.class);
 
     @InjectMocks
@@ -81,8 +78,7 @@ class HenvendelseBehandlingServiceImplTest {
             new Tilgangskontroll(tilgangskontrollContext),
             standardKodeverk,
             propertyResolver,
-            ldapService,
-            arbeidsfordelingService
+            ldapService
     );
 
 
@@ -92,8 +88,6 @@ class HenvendelseBehandlingServiceImplTest {
     void setUp() {
         initMocks(this);
         when(propertyResolver.hentTekst(anyString())).thenAnswer((Answer<String>) invocation -> ((String) invocation.getArguments()[0]));
-        when(arbeidsfordelingService.hentGTnummerForEnhet(anyString())).thenReturn(Collections.emptyList());
-
         setField(henvendelseBehandlingService, "propertyResolver", propertyResolver);
         XMLMeldingFraBruker xmlMeldingFraBruker = new XMLMeldingFraBruker()
                 .withFritekst("fritekst")

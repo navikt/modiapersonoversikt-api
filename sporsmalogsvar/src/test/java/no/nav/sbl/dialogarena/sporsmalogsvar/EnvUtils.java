@@ -1,16 +1,16 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar;
 
+import no.nav.brukerdialog.tools.SecurityConstants;
+
 import java.util.HashMap;
 import java.util.Map;
 
-import static no.nav.sbl.dialogarena.common.cxf.StsSecurityConstants.SYSTEMUSER_USERNAME;
-
 public class EnvUtils {
     public static void withSubject(String ident, Runnable fn) {
-        System.setProperty(SYSTEMUSER_USERNAME, "srvModiabrukerdialog");
+        System.setProperty(SecurityConstants.SYSTEMUSER_USERNAME, "srvModiabrukerdialog");
 
         withEnv(new HashMap<String, String>() {{
-            put(SYSTEMUSER_USERNAME, "srvModiabrukerdialog");
+            put(SecurityConstants.SYSTEMUSER_USERNAME, "srvModiabrukerdialog");
         }}, fn);
     }
 

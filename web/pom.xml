@@ -28,19 +28,17 @@
         </dependency>
         <dependency>
             <groupId>no.nav.common</groupId>
-            <artifactId>oidc</artifactId>
+            <artifactId>oidc-security</artifactId>
         </dependency>
         <dependency>
             <groupId>no.nav.common</groupId>
-            <artifactId>auth</artifactId>
+            <artifactId>oidc-security</artifactId>
+            <scope>test</scope>
+            <type>test-jar</type>
         </dependency>
         <dependency>
             <groupId>no.nav.common</groupId>
             <artifactId>test-config</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.prometheus.jmx</groupId>
-            <artifactId>collector</artifactId>
         </dependency>
         <!--Interne-->
         <dependency>
@@ -275,7 +273,7 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>com.nhaarman.mockitokotlin2</groupId>
+            <groupId>com.nhaarman</groupId>
             <artifactId>mockito-kotlin</artifactId>
             <scope>test</scope>
         </dependency>

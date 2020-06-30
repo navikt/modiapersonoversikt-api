@@ -1,12 +1,12 @@
 import no.nav.apiapp.ApiApp;
+import no.nav.brukerdialog.security.Constants;
+import no.nav.brukerdialog.tools.SecurityConstants;
 import no.nav.common.utils.NaisUtils;
 import no.nav.sbl.dialogarena.common.abac.pep.CredentialConstants;
-import no.nav.sbl.dialogarena.common.cxf.StsSecurityConstants;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.ldap.LdapContextProvider;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.ModiaApplicationContext;
 import no.nav.sbl.util.EnvironmentUtils;
 
-import static no.nav.sbl.dialogarena.common.cxf.StsSecurityConstants.SYSTEMUSER_PASSWORD;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v1.norg.NorgEndpointFelles.KJERNEINFO_TJENESTEBUSS_PASSWORD;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v1.norg.NorgEndpointFelles.KJERNEINFO_TJENESTEBUSS_USERNAME;
 import static no.nav.sbl.util.EnvironmentUtils.Type.PUBLIC;
@@ -25,12 +25,16 @@ public class Main {
         NaisUtils.Credentials serviceUser = NaisUtils.getCredentials("service_user");
         EnvironmentUtils.setProperty(CredentialConstants.SYSTEMUSER_USERNAME, serviceUser.username, PUBLIC);
         EnvironmentUtils.setProperty(CredentialConstants.SYSTEMUSER_PASSWORD, serviceUser.password, SECRET);
-        EnvironmentUtils.setProperty(StsSecurityConstants.SYSTEMUSER_USERNAME, serviceUser.username, PUBLIC);
-        EnvironmentUtils.setProperty(SYSTEMUSER_PASSWORD, serviceUser.password, SECRET);
+        EnvironmentUtils.setProperty(SecurityConstants.SYSTEMUSER_USERNAME, serviceUser.username, PUBLIC);
+        EnvironmentUtils.setProperty(SecurityConstants.SYSTEMUSER_PASSWORD, serviceUser.password, SECRET);
 
         NaisUtils.Credentials ldapUser = NaisUtils.getCredentials("srvssolinux");
         EnvironmentUtils.setProperty(LdapContextProvider.LDAP_USERNAME, ldapUser.username, PUBLIC);
         EnvironmentUtils.setProperty(LdapContextProvider.LDAP_PASSWORD, ldapUser.password, SECRET);
+
+        NaisUtils.Credentials issoRPUser = NaisUtils.getCredentials("isso-rp-user");
+        EnvironmentUtils.setProperty(Constants.ISSO_RP_USER_USERNAME_PROPERTY_NAME, issoRPUser.username, PUBLIC);
+        EnvironmentUtils.setProperty(Constants.ISSO_RP_USER_PASSWORD_PROPERTY_NAME, issoRPUser.password, SECRET);
 
         NaisUtils.Credentials gosysUser = NaisUtils.getCredentials("gosys_user");
         EnvironmentUtils.setProperty(KJERNEINFO_TJENESTEBUSS_USERNAME, gosysUser.username, PUBLIC);

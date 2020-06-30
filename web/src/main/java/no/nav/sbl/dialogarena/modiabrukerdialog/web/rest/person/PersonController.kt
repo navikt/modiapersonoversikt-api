@@ -13,18 +13,19 @@ import no.nav.kodeverk.consumer.fim.kodeverk.KodeverkmanagerBi
 import no.nav.kodeverk.consumer.fim.kodeverk.to.feil.HentKodeverkKodeverkIkkeFunnet
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.pdl.PdlFullmakt
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.pdl.PdlPersonResponse
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.pdl.PdlTelefonnummer
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.pdl.PdlDoedsbo
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.pdl.PdlTilrettelagtKommunikasjon
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.pdl.PdlOppslagService
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.Feature
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.UnleashService
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Policies
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Tilgangskontroll
+import no.nav.sbl.dialogarena.naudit.AuditResources
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.kodeverk.Kode
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.lagPeriode
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.mapOfNotNullOrEmpty
 import no.nav.sbl.dialogarena.naudit.Audit
-import no.nav.sbl.dialogarena.naudit.Audit.Action.READ
-import no.nav.sbl.dialogarena.naudit.AuditIdentifier
-import no.nav.sbl.dialogarena.naudit.AuditResources
+import no.nav.sbl.dialogarena.naudit.Audit.Action.*
 import no.nav.tjeneste.virksomhet.person.v3.binding.HentPersonPersonIkkeFunnet
 import no.nav.tjeneste.virksomhet.person.v3.binding.HentPersonSikkerhetsbegrensning
 import org.slf4j.LoggerFactory
@@ -41,6 +42,7 @@ private const val TILRETTELAGT_KOMMUNIKASJON_KODEVERKSPRAK = "nb"
 @Produces(APPLICATION_JSON)
 class PersonController @Inject constructor(private val kjerneinfoService: PersonKjerneinfoServiceBi,
                                            private val kodeverk: KodeverkmanagerBi,
+                                           private val unleashService: UnleashService,
                                            private val tilgangskontroll: Tilgangskontroll,
                                            private val pdlOppslagService: PdlOppslagService) {
 
@@ -51,7 +53,7 @@ class PersonController @Inject constructor(private val kjerneinfoService: Person
     fun hent(@PathParam("fnr") fodselsnummer: String): Map<String, Any?> {
         return tilgangskontroll
                 .check(Policies.tilgangTilBruker.with(fodselsnummer))
-                .get(Audit.describe(READ, AuditResources.Person.Personalia, AuditIdentifier.FNR to fodselsnummer)) {
+                .get(Audit.describe(READ, AuditResources.Person.Personalia, "fnr" to fodselsnummer)) {
                     try {
                         val hentKjerneinformasjonRequest = HentKjerneinformasjonRequest(fodselsnummer)
                         hentKjerneinformasjonRequest.isBegrunnet = true
@@ -69,11 +71,6 @@ class PersonController @Inject constructor(private val kjerneinfoService: Person
                         val fullmakt = tryOf("Feil i oppslag mot PDL-fullmakt") {
                             pdlPerson?.data?.hentPerson?.fullmakt ?: listOf()
                         }
-                        val pdlTelefonnummer = tryOf("Feil i oppslag mot PDL-telefonnummer") {
-                            pdlPerson?.data?.hentPerson?.telefonnummer
-                                    ?.sortedBy { it.prioritet }
-                                    ?.map(::getPdlTelefon)
-                        }
 
                         mapOf(
                                 "fødselsnummer" to person?.fodselsnummer?.nummer,
@@ -83,7 +80,8 @@ class PersonController @Inject constructor(private val kjerneinfoService: Person
                                 "navn" to getNavn(person?.personfakta?.personnavn),
                                 "diskresjonskode" to person?.personfakta?.diskresjonskode?.let { Kode(it) },
                                 "bankkonto" to hentBankkonto(person),
-                                "tilrettelagtKomunikasjonsListe" to hentTilrettelagtKommunikasjon(pdlPerson),
+                                "tilrettelagtKomunikasjonsListe" to hentTilrettelagtKommunikasjon(person?.personfakta?.tilrettelagtKommunikasjon, pdlPerson),
+                                "tilrettelagtKomunikasjonsListeV2" to hentTilrettelagtKommunikasjonV2(person?.personfakta?.tilrettelagtKommunikasjon, pdlPerson),
                                 "personstatus" to getPersonstatus(person),
                                 "statsborgerskap" to mapStatsborgerskap(person?.personfakta),
                                 "sivilstand" to mapOf(
@@ -98,7 +96,6 @@ class PersonController @Inject constructor(private val kjerneinfoService: Person
                                 "postadresse" to person?.personfakta?.postadresse?.let { hentAdresse(it) },
                                 "sikkerhetstiltak" to person?.personfakta?.sikkerhetstiltak?.let { hentSikkerhetstiltak(it) },
                                 "kontaktinformasjon" to getTelefoner(person?.personfakta),
-                                "telefonnummer" to pdlTelefonnummer,
                                 "kontaktinformasjonForDoedsbo" to kontaktinfoForDoedsbo?.let { DoedsboMapping(it).mapKontaktinfoForDoedsbo() },
                                 "fullmakt" to fullmakt?.let { hentFullmakter(it) }
                         )
@@ -118,17 +115,9 @@ class PersonController @Inject constructor(private val kjerneinfoService: Person
 
     private fun hentFullmakter(fullmakter: List<PdlFullmakt>?): List<Map<String, Any>>? =
             fullmakter?.map {
-                val navnObject = pdlOppslagService.hentNavn(it.motpartsPersonident)?.data?.hentPerson?.navn?.get(0)
-                val navn : String = navnObject
-                        ?.run {
-                            listOf(fornavn, mellomnavn, etternavn).joinToString(" ")
-                        }
-                        ?: "Fant ikke navn"
-
                 mapOf(
                         "motpartsRolle" to it.motpartsRolle,
                         "motpartsPersonident" to it.motpartsPersonident,
-                        "motpartsPersonNavn" to navn,
                         "omraade" to it.omraader,
                         "gyldigFraOgMed" to formatDate(it.gyldigFraOgMed),
                         "gyldigTilOgMed" to formatDate(it.gyldigTilOgMed)
@@ -143,30 +132,66 @@ class PersonController @Inject constructor(private val kjerneinfoService: Person
             "bostatus" to person?.personfakta?.bostatus?.let(::Kode)
     )
 
-    private fun hentTilrettelagtKommunikasjon(pdlPerson: PdlPersonResponse?): List<TilrettelagtKommunikasjonsbehov> {
-        val pdlTilrettelagtKommunikasjon : List<PdlTilrettelagtKommunikasjon> = pdlPerson?.data?.hentPerson?.tilrettelagtKommunikasjon ?: emptyList()
-        logger.info("Tilrettelagt: " + pdlTilrettelagtKommunikasjon.toString())
+    private fun hentTilrettelagtKommunikasjonV2(tilrettelagtKommunikasjon: List<Kodeverdi>?, pdlPerson: PdlPersonResponse?): List<TilrettelagtKommunikasjonsbehov> {
+        if (unleashService.isEnabled(Feature.PDL_BRUKERPROFIL)) {
+            val pdlTilrettelagtKommunikasjon : List<PdlTilrettelagtKommunikasjon> = pdlPerson?.data?.hentPerson?.tilrettelagtKommunikasjon ?: emptyList()
+            logger.info("Tilrettelagt: " + pdlTilrettelagtKommunikasjon.toString())
 
-        val out : MutableSet<TilrettelagtKommunikasjonsbehov> = mutableSetOf()
-        for (behov in pdlTilrettelagtKommunikasjon) {
-            behov
-                    .tegnspraaktolk
-                    ?.spraak
-                    ?.also {
-                        sprakRef -> out.add(TilrettelagtKommunikasjonsbehov(TilrettelagtKommunikasjonsbehovType.TEGNSPRAK, sprakRef, hentSprak(sprakRef)))
-                    }
+            val out : MutableSet<TilrettelagtKommunikasjonsbehov> = mutableSetOf()
+            for (behov in pdlTilrettelagtKommunikasjon) {
+                behov
+                        .tegnspraaktolk
+                        ?.spraak
+                        ?.also {
+                            sprakRef -> out.add(TilrettelagtKommunikasjonsbehov(TilrettelagtKommunikasjonsbehovType.TEGNSPRAK, sprakRef, hentSprak(sprakRef)))
+                        }
 
-            behov
-                    .talespraaktolk
-                    ?.spraak
-                    ?.also {
-                        sprakRef -> out.add(TilrettelagtKommunikasjonsbehov(TilrettelagtKommunikasjonsbehovType.TALESPRAK, sprakRef, hentSprak(sprakRef)))
-                    }
+                behov
+                        .talespraaktolk
+                        ?.spraak
+                        ?.also {
+                            sprakRef -> out.add(TilrettelagtKommunikasjonsbehov(TilrettelagtKommunikasjonsbehovType.TALESPRAK, sprakRef, hentSprak(sprakRef)))
+                        }
+            }
+
+            return out.toList()
+        } else {
+            if (tilrettelagtKommunikasjon != null) {
+                return hentSortertKodeverkslisteForTilrettelagtKommunikasjon()
+                        .filter { tilrettelagtKommunikasjon.any { tk -> tk.kodeRef == it.kodeRef } }
+                        .map {
+                            TilrettelagtKommunikasjonsbehov(TilrettelagtKommunikasjonsbehovType.UKJENT, "", "")
+                        }
+            }
+            return emptyList()
         }
-
-        return out.toList()
     }
 
+    private fun hentTilrettelagtKommunikasjon(tilrettelagtKommunikasjon: List<Kodeverdi>?, pdlPerson: PdlPersonResponse?): List<Kode> {
+
+        if (unleashService.isEnabled(Feature.PDL_BRUKERPROFIL)) {
+            val pdlTilrettelagtKommunikasjon = pdlPerson?.data?.hentPerson?.tilrettelagtKommunikasjon
+            logger.info("Tilrettelagt: " + pdlTilrettelagtKommunikasjon.toString())
+            val kodeliste: MutableSet<Kode> = mutableSetOf()
+            if (pdlTilrettelagtKommunikasjon == null) {
+                return emptyList();
+            }
+            for (tk in pdlTilrettelagtKommunikasjon) {
+                if (tk.talespraaktolk != null || tk.tegnspraaktolk != null) {
+                    kodeliste.add(Kode("TOHJ", "Tolkehjelp"))
+                }
+            }
+            return kodeliste.toList()
+        } else {
+            if (tilrettelagtKommunikasjon != null) {
+                return hentSortertKodeverkslisteForTilrettelagtKommunikasjon()
+                        .filter { tilrettelagtKommunikasjon?.any { tk -> tk.kodeRef == it.kodeRef } }
+                        .map(::Kode)
+            }
+            return emptyList()
+        }
+
+    }
 
     private fun getNavn(personnavn: Personnavn?) = mapOf(
             "endringsinfo" to personnavn?.sistEndret?.let { hentEndringsinformasjon(it) },
@@ -177,30 +202,18 @@ class PersonController @Inject constructor(private val kjerneinfoService: Person
     )
 
     private fun getFamilierelasjoner(person: Person?) = person?.personfakta?.harFraRolleIList?.map {
-        val (alder, alderIManeder) = hentFamilieRelasjonsAlder(it.tilPerson)
         mapOf(
                 "harSammeBosted" to if (it.tilPerson.isHideFodselsnummerOgNavn) null else it.harSammeBosted,
                 "tilPerson" to mapOf(
                         "navn" to it.tilPerson.personfakta.personnavn?.let { getNavn(it) },
-                        "alder" to alder,
-                        "alderMåneder" to alderIManeder,
+                        "alder" to if (it.tilPerson.isHideFodselsnummerOgNavn) null else it.tilPerson.fodselsnummer.alder,
+                        "alderMåneder" to if (it.tilPerson.isHideFodselsnummerOgNavn) null else it.tilPerson.fodselsnummer.alderIManeder,
                         "fødselsnummer" to if (it.tilPerson.isHideFodselsnummerOgNavn) null else it.tilPerson.fodselsnummer.nummer,
                         "personstatus" to getPersonstatus(it.tilPerson),
                         "diskresjonskode" to it.tilPerson.personfakta.diskresjonskode?.let { Kode(it) }
                 ),
                 "rolle" to it.tilRolle
         )
-    }
-
-    private fun hentFamilieRelasjonsAlder(person: Person): Pair<Int?, Int?> {
-        if (person.isHideFodselsnummerOgNavn) {
-            return Pair(null, null)
-        } else if (!person.fodselsnummer.isDnummer && Integer.parseInt(person.fodselsnummer.nummer.substring(6)) < 10) {
-//          Samme logikken som man kan finne i kjerneinfo's Fodselsnummer.java som forårsaker feil i ved visse fnr
-            return Pair(null, null)
-        } else {
-            return Pair(person.fodselsnummer.alder, person.fodselsnummer.alderIManeder)
-        }
     }
 
     private fun hentBankkonto(person: Person?) = person?.personfakta.let {
@@ -306,19 +319,11 @@ class PersonController @Inject constructor(private val kjerneinfoService: Person
         )
     }
 
-    private fun getTelefon(telefon: Telefon) = Telefonnummer(
-            retningsnummer = telefon.retningsnummer?.let(::Kode),
-            identifikator = telefon.identifikator ?: "Ukjent",
-            sistEndretAv = telefon.endretAv ?: "Ukjent",
-            sistEndret = telefon.endringstidspunkt?.toString(DATO_TID_FORMAT)
-    )
-
-    private fun getPdlTelefon(telefon: PdlTelefonnummer) = Telefonnummer(
-            retningsnummer = Kode(telefon.landskode, "Landskode"),
-            identifikator = telefon.nummer,
-            sistEndret = formatDate(telefon.metadata.endringer.first().registrert),
-            sistEndretAv = telefon.metadata.endringer.first().registrertAv,
-            prioritet = telefon.prioritet
+    private fun getTelefon(telefon: Telefon) = mapOf(
+            "retningsnummer" to telefon.retningsnummer?.let(::Kode),
+            "identifikator" to telefon.identifikator,
+            "sistEndretAv" to telefon.endretAv,
+            "sistEndret" to telefon.endringstidspunkt?.toString(DATO_TID_FORMAT)
     )
 
     private fun getBegrensetInnsyn(fødselsnummer: String?, melding: String?) = mapOf(
@@ -345,17 +350,9 @@ class PersonController @Inject constructor(private val kjerneinfoService: Person
     }
 }
 
-    enum class TilrettelagtKommunikasjonsbehovType { TEGNSPRAK, TALESPRAK, UKJENT }
-    data class TilrettelagtKommunikasjonsbehov(
+private enum class TilrettelagtKommunikasjonsbehovType { TEGNSPRAK, TALESPRAK, UKJENT }
+private data class TilrettelagtKommunikasjonsbehov(
         val type: TilrettelagtKommunikasjonsbehovType,
         val kodeRef: String,
         val beskrivelse: String
-)
-
-data class Telefonnummer(
-        val retningsnummer: Kode?,
-        val identifikator: String,
-        val sistEndretAv: String,
-        val sistEndret: String?,
-        val prioritet: Int = -1
 )

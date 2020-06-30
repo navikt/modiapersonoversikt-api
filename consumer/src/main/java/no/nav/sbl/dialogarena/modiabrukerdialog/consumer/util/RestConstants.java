@@ -14,10 +14,14 @@ public class RestConstants {
     public static final String ALLE_TEMA_HEADERVERDI = "GEN";
     public static final String OPPLYSNINGSTYPER_HEADERVERDI = MFN_OPPLYSNINGSTYPE_DOEDSBO;
 
+    public static final String BASIC_AUTH_SEPERATOR = ":";
     public static final String AUTH_SEPERATOR = " ";
     public static final String AUTH_METHOD_BEARER = "Bearer";
+    public static final String AUTH_METHOD_BASIC = "Basic";
 
-    public static final String SECURITY_TOKEN_SERVICE_DISCOVERYURL = EnvironmentUtils.getRequiredProperty("SECURITY_TOKEN_SERVICE_DISCOVERY_URL");
+    public static final String SECURITY_TOKEN_SERVICE_BASEURL = EnvironmentUtils.getRequiredProperty("SECURITY_TOKEN_SERVICE_TOKEN_URL");
+    public static final String STS_USERNAME_PW_QUERY_PARAMETERS = "?grant_type=client_credentials&scope=openid";
+    public static final String OIDC_EXPIRARY_URI = "exp";
 
     public static final String MODIABRUKERDIALOG_SYSTEM_USER = "srvModiabrukerdialog";
     public static final String MODIABRUKERDIALOG_SYSTEM_USER_PASSWORD = EnvironmentUtils.getRequiredProperty("no.nav.modig.security.systemuser.password", "SRVMODIABRUKERDIALOG_PASSWORD");

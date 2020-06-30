@@ -71,12 +71,10 @@ class RSBACInstanceImpl<CONTEXT, OUTPUT>(val context: CONTEXT, var exception:  F
     override fun <S> get(auditDescriptor: Audit.AuditDescriptor<in S>, supplier: Supplier<S>): S {
         val decision = getDecision()
 
-        if (decision.value == PERMIT) {
+        if (decision.decision == PERMIT) {
             val result : S = supplier.invoke()
             auditDescriptor.log(result)
             return result
-        } else if (decision.value == DENY) {
-            auditDescriptor.denied(decision.message)
         }
 
         throw this.exception(decision.message)

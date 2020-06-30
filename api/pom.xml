@@ -19,6 +19,13 @@
             <artifactId>henvendelse-informasjon-v2</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>no.nav.common</groupId>
+            <artifactId>oidc-security</artifactId>
+            <scope>test</scope>
+            <type>test-jar</type>
+        </dependency>
+
         <!-- Spring -->
         <dependency>
             <groupId>org.springframework</groupId>

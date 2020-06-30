@@ -2,14 +2,13 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest;
 
 import kotlin.Pair;
 import no.nav.common.auth.SubjectHandler;
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Person;
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.ldap.LDAPService;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.GrunnInfo;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.AnsattService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.organisasjonsEnhetV2.OrganisasjonEnhetV2Service;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.http.CookieUtil;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.GrunninfoService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Policies;
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Tilgangskontroll;
-import no.nav.sbl.dialogarena.naudit.AuditIdentifier;
 import no.nav.sbl.dialogarena.naudit.AuditResources.Saksbehandler;
 import no.nav.sbl.dialogarena.naudit.Audit;
 
@@ -30,7 +29,7 @@ import static no.nav.sbl.dialogarena.naudit.Audit.Action.*;
 public class HodeController {
 
     @Inject
-    private LDAPService ldapService;
+    private GrunninfoService grunninfoService;
 
     @Inject
     private AnsattService ansattService;
@@ -80,12 +79,12 @@ public class HodeController {
                 .check(Policies.tilgangTilModia)
                 .get(Audit.describe(READ, Saksbehandler.NavnOgEnheter), () -> {
                     String ident = SubjectHandler.getIdent().orElseThrow(() -> new RuntimeException("Fant ikke ident"));
-                    Pair<String, String> saksbehandler = hentSaksbehandlerNavn();
+                    GrunnInfo.SaksbehandlerNavn saksbehandler = grunninfoService.hentSaksbehandlerNavn();
                     String enhetId = hentValgtEnhet(request);
                     String enhetNavn = organisasjonEnhetService.hentEnhetGittEnhetId(enhetId, OrganisasjonEnhetV2Service.WSOppgavebehandlerfilter.UFILTRERT)
                             .map((enhet) -> enhet.enhetNavn)
                             .orElse("[Ukjent enhetId: " + enhetId + "]");
-                    return new Me(ident, saksbehandler.getFirst(), saksbehandler.getSecond(), enhetId, enhetNavn);
+                    return new Me(ident, saksbehandler.fornavn, saksbehandler.etternavn, enhetId, enhetNavn);
                 });
     }
 
@@ -110,16 +109,9 @@ public class HodeController {
     public String settValgtEnhet(@Context HttpServletResponse response, String enhetId) {
         return tilgangskontroll
                 .check(Policies.tilgangTilModia)
-                .get(Audit.describe(UPDATE, Saksbehandler.ValgtEnhet, new Pair<>(AuditIdentifier.ENHET_ID, enhetId)), () -> {
+                .get(Audit.describe(UPDATE, Saksbehandler.ValgtEnhet, new Pair<>("enhetId", enhetId)), () -> {
                     CookieUtil.setSaksbehandlersValgteEnhet(response, enhetId);
                     return enhetId;
                 });
-    }
-
-    private Pair<String, String> hentSaksbehandlerNavn() {
-        Person saksbehandler = SubjectHandler.getIdent()
-                .map(ldapService::hentSaksbehandler)
-                .orElseThrow(() -> new RuntimeException("Fant ikke ident til saksbehandler"));
-        return new Pair<>(saksbehandler.fornavn, saksbehandler.etternavn);
     }
 }

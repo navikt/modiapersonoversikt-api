@@ -7,7 +7,6 @@ import no.nav.kontrakter.consumer.fim.ytelseskontrakt.to.YtelseskontraktRequest;
 import no.nav.kontrakter.consumer.fim.ytelseskontrakt.to.YtelseskontraktResponse;
 import no.nav.modig.core.exception.AuthorizationException;
 import no.nav.sbl.dialogarena.naudit.Audit;
-import no.nav.sbl.dialogarena.naudit.AuditIdentifier;
 import no.nav.sbl.dialogarena.naudit.AuditResources;
 import no.nav.tjeneste.virksomhet.ytelseskontrakt.v3.HentYtelseskontraktListeSikkerhetsbegrensning;
 import no.nav.tjeneste.virksomhet.ytelseskontrakt.v3.YtelseskontraktV3;
@@ -26,7 +25,7 @@ public class DefaultYtelseskontraktService implements YtelseskontraktServiceBi {
     private static Audit.AuditDescriptor<FimHentYtelseskontraktListeRequest> auditLogger = Audit.describe(
             Audit.Action.READ,
             AuditResources.Person.Ytelser,
-            (ytelse) -> singletonList(new Pair<>(AuditIdentifier.FNR, ytelse.getPersonidentifikator()))
+            (ytelse) -> singletonList(new Pair<>("fnr", ytelse.getPersonidentifikator()))
     );
 
     private YtelseskontraktV3 ytelseskontraktService = null;
@@ -45,7 +44,6 @@ public class DefaultYtelseskontraktService implements YtelseskontraktServiceBi {
             }
         } catch (HentYtelseskontraktListeSikkerhetsbegrensning hentYtelseskontraktBegrensning) {
             logger.warn("HentYtelseskontraktListeSikkerhetsbegrensning ved kall på hentYtelseskontraktListe", hentYtelseskontraktBegrensning.getMessage());
-            auditLogger.denied("Årsak: " + hentYtelseskontraktBegrensning.getMessage());
             throw new AuthorizationException(hentYtelseskontraktBegrensning.getMessage(), hentYtelseskontraktBegrensning);
         }
 

@@ -10,9 +10,9 @@ public class MainTest {
     public static void main(String[] args) {
         System.setProperty("NAIS_APP_NAME", "modiapersonoversikt-api");
         SystemProperties.setFrom(".vault.properties");
-        NaisYamlUtils.loadFromYaml(".nais/nais-q0.yml");
+        NaisYamlUtils.loadFromYaml(".nais/nais-q6.yml");
 
-        setupTestContext(ApiAppTest.Config.builder().environment("q0").applicationName("modiabrukerdialog").build());
+        setupTestContext(ApiAppTest.Config.builder().applicationName("modiabrukerdialog").build());
 
         ApiApp.runApp(ModiaApplicationContext.class, new String[]{"8085", "8086"});
     }

@@ -32,8 +32,7 @@ data class PdlPerson(
         val navn: List<PdlPersonNavn>,
         val kontaktinformasjonForDoedsbo: List<PdlDoedsbo>?,
         val tilrettelagtKommunikasjon: List<PdlTilrettelagtKommunikasjon>?,
-        val fullmakt: List<PdlFullmakt>?,
-        val telefonnummer: List<PdlTelefonnummer>?
+        val fullmakt: List<PdlFullmakt>?
 )
 
 data class PdlDoedsbo(
@@ -92,20 +91,4 @@ data class PdlFullmakt(
         val omraader: List<String>,
         val gyldigFraOgMed: Date,
         val gyldigTilOgMed: Date
-)
-
-data class PdlTelefonnummer(
-        val landskode: String,
-        val nummer: String,
-        val prioritet: Int,
-        val metadata: PdlMetadata
-)
-
-data class PdlMetadata(
-        val endringer: List<PdlEndringer>
-)
-
-data class PdlEndringer(
-        val registrert: Date,
-        val registrertAv: String
 )

@@ -18,7 +18,7 @@
     <bean id="managementService" class="net.sf.ehcache.management.ManagementService"
           init-method="init"
           destroy-method="dispose">
-        <constructor-arg ref="ehcacheCacheManager"/>
+        <constructor-arg ref="ehCacheManagerFactoryBean"/><!-- Definert i CacheConfig i modig-content -->
         <constructor-arg ref="mbeanServer"/>
         <constructor-arg index="2" value="false"/> <!-- register cachemanager -->
         <constructor-arg index="3" value="false"/> <!-- register caches -->
@@ -30,12 +30,14 @@
     </bean>
 
     <cache:advice id="shortlivedAdvice" key-generator="userkeygenerator">
+        <!--Cachen må være en in-memory cache, e.g overflowToDisk og diskPersistent == false -->
         <cache:caching cache="endpointCache">
             <cache:cacheable method="hent*"/>
             <cache:cacheable method="finn*"/>
         </cache:caching>
     </cache:advice>
     <cache:advice id="asbogosysEnhetAdvice" key-generator="asbogosyskeygenerator">
+        <!--Cachen må være en in-memory cache, e.g overflowToDisk og diskPersistent == false -->
         <cache:caching cache="asbogosysEnhet">
             <cache:cacheable method="hent*"/>
             <cache:cacheable method="finn*"/>
@@ -55,6 +57,7 @@
         </cache:caching>
     </cache:advice>
     <cache:advice id="organisasjonEnhetV2Advice" key-generator="defaultkeygenerator">
+        <!--Cachen må være en in-memory cache, e.g overflowToDisk og diskPersistent == false -->
         <cache:caching cache="organisasjonEnhetV2">
             <cache:cacheable method="hent*"/>
             <cache:cacheable method="finn*"/>
@@ -65,7 +68,7 @@
             <cache:cacheable method="hent*"/>
         </cache:caching>
     </cache:advice>
-    <cache:advice id="pesysServiceAdvice" key-generator="userkeygenerator">
+    <cache:advice id="pesysService" key-generator="userkeygenerator">
         <cache:caching cache="pesysCache">
             <cache:cacheable method="hent*"/>
         </cache:caching>
@@ -139,11 +142,11 @@
         <aop:advisor advice-ref="ldapServiceAdvice" pointcut="bean(ldapService)"/>
         <aop:advisor advice-ref="utbetalingService" pointcut="bean(utbetalingV1)"/>
         <aop:advisor advice-ref="varslingAdvice" pointcut="bean(varslerPortType)"/>
-        <aop:advisor advice-ref="pesysServiceAdvice" pointcut="bean(pesysService)"/>
+        <aop:advisor advice-ref="pesysService" pointcut="bean(pesysService)"/>
         <aop:advisor advice-ref="organisasjonAdvice" pointcut="bean(organisasjonV4PortType)"/>
         <aop:advisor advice-ref="kodeverksmapperAdvice" pointcut="bean(kodeverksmapper)"/>
         <aop:advisor advice-ref="organisasjonEnhetKontantinformasjonAdvice" pointcut="bean(organisasjonEnhetKontaktinformasjonV1)"/>
-        <aop:advisor advice-ref="oppfolgingsinfoAdvice" pointcut="bean(oppfolgingsApi)"/>
+        <aop:advisor advice-ref="oppfolgingsinfoAdvice" pointcut="bean(oppfolgingsinfo)"/>
         <aop:advisor advice-ref="oppfolgingsAdvice" pointcut="bean(oppfolgingPortType)"/>
         <aop:advisor advice-ref="innsynJournalAdvice" pointcut="bean(innsynJournalV2)"/>
     </aop:config>

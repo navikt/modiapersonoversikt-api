@@ -1,6 +1,5 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.service;
 
-import no.nav.common.auth.SubjectHandler;
 import no.nav.kjerneinfo.common.domain.Kodeverdi;
 import no.nav.kjerneinfo.consumer.fim.person.PersonKjerneinfoServiceBi;
 import no.nav.kjerneinfo.consumer.fim.person.to.HentKjerneinformasjonRequest;
@@ -10,19 +9,13 @@ import no.nav.kjerneinfo.domain.person.Personfakta;
 import no.nav.kjerneinfo.domain.person.fakta.AnsvarligEnhet;
 import no.nav.kjerneinfo.domain.person.fakta.Organisasjonsenhet;
 import no.nav.modig.core.exception.AuthorizationException;
-import no.nav.sbl.dialogarena.abac.AbacRequest;
-import no.nav.sbl.dialogarena.abac.AbacResponse;
-import no.nav.sbl.dialogarena.abac.Decision;
-import no.nav.sbl.dialogarena.abac.Response;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Oppgave;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveBehandlingService;
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.http.SubjectHandlerUtil;
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Tilgangskontroll;
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.TilgangskontrollContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.TilgangskontrollMock;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.service.plukkoppgave.PlukkOppgaveServiceImpl;
-import no.nav.sbl.dialogarena.sporsmalogsvar.legacy.TestUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -84,12 +77,9 @@ public class PlukkOppgaveServiceImplTest {
 
         when(oppgaveBehandlingService.plukkOppgaverFraGsak(Temagruppe.FMLI, SAKSBEHANDLERS_VALGTE_ENHET)).thenReturn(oppgaver);
         when(tilgangskontrollContext.harSaksbehandlerRolle("0000-ga-bd06_modiagenerelltilgang")).thenReturn(true);
-        when(tilgangskontrollContext.checkAbac(any(AbacRequest.class))).thenReturn(
-                new AbacResponse(singletonList(new Response(Decision.Permit, emptyList())))
-        );
-        List<Oppgave> oppgaverResponse = SubjectHandlerUtil.withIdent("Z9990322", () -> plukkOppgaveService.plukkOppgaver(Temagruppe.FMLI, SAKSBEHANDLERS_VALGTE_ENHET));
+//        when(tilgangskontroll.hasAccess(any(PolicyRequest.class))).thenReturn(true);
 
-        assertThat(oppgaverResponse, is(equalTo(oppgaver)));
+        assertThat(plukkOppgaveService.plukkOppgaver(Temagruppe.FMLI, SAKSBEHANDLERS_VALGTE_ENHET), is(equalTo(oppgaver)));
     }
 
     @Test
@@ -98,12 +88,11 @@ public class PlukkOppgaveServiceImplTest {
         List<Oppgave> oppgave2 = singletonList(new Oppgave("2", "fnr2", "2"));
 
         when(oppgaveBehandlingService.plukkOppgaverFraGsak(Temagruppe.FMLI, SAKSBEHANDLERS_VALGTE_ENHET )).thenReturn(oppgave1, oppgave2);
-        when(tilgangskontrollContext.checkAbac(any(AbacRequest.class))).thenReturn(
-                new AbacResponse(singletonList(new Response(Decision.Deny, emptyList()))),
-                new AbacResponse(singletonList(new Response(Decision.Permit, emptyList())))
-        );
-        List<Oppgave> oppgaver = SubjectHandlerUtil.withIdent("Z9990322", () -> plukkOppgaveService.plukkOppgaver(Temagruppe.FMLI, SAKSBEHANDLERS_VALGTE_ENHET));
-        assertThat(oppgaver, is(equalTo(oppgave2)));
+        when(tilgangskontrollContext.harSaksbehandlerRolle("0000-ga-bd06_modiagenerelltilgang")).thenReturn(true);
+        when(tilgangskontrollContext.hentDiskresjonkode("fnr1")).thenReturn("6");
+        when(tilgangskontrollContext.hentDiskresjonkode("fnr2")).thenReturn(null);
+
+        assertThat(plukkOppgaveService.plukkOppgaver(Temagruppe.FMLI, SAKSBEHANDLERS_VALGTE_ENHET), is(equalTo(oppgave2)));
         verify(oppgaveBehandlingService).systemLeggTilbakeOppgaveIGsak(eq(oppgave1.get(0).oppgaveId), eq(Temagruppe.FMLI), eq(SAKSBEHANDLERS_VALGTE_ENHET));
     }
 
@@ -112,6 +101,7 @@ public class PlukkOppgaveServiceImplTest {
         List<Oppgave> oppgave1 = singletonList(new Oppgave("1", "fnr", "behandlingskjedeId"));
 
         when(oppgaveBehandlingService.plukkOppgaverFraGsak(Temagruppe.FMLI, SAKSBEHANDLERS_VALGTE_ENHET)).thenReturn(oppgave1, emptyList());
+//        when(tilgangskontroll.hasAccess(any(PolicyRequest.class))).thenReturn(true, false);
 
         assertThat(plukkOppgaveService.plukkOppgaver(Temagruppe.FMLI, SAKSBEHANDLERS_VALGTE_ENHET), is(equalTo(emptyList())));
         verify(oppgaveBehandlingService).systemLeggTilbakeOppgaveIGsak(eq(oppgave1.get(0).oppgaveId), eq(Temagruppe.FMLI), eq(SAKSBEHANDLERS_VALGTE_ENHET));
@@ -133,11 +123,8 @@ public class PlukkOppgaveServiceImplTest {
         when(personKjerneinfoServiceBi.hentKjerneinformasjon(any())).thenReturn(mockPersonUtenAnsvarligEnhet());
         when(oppgaveBehandlingService.plukkOppgaverFraGsak(Temagruppe.ARBD, SAKSBEHANDLERS_VALGTE_ENHET)).thenReturn(singletonList(new Oppgave("1", "fnr", "1")));
         when(tilgangskontrollContext.harSaksbehandlerRolle("0000-ga-bd06_modiagenerelltilgang")).thenReturn(true);
-        when(tilgangskontrollContext.checkAbac(any(AbacRequest.class))).thenReturn(
-                new AbacResponse(singletonList(new Response(Decision.Permit, emptyList())))
-        );
 
-        List<Oppgave> oppgave = SubjectHandlerUtil.withIdent("Z9990322", () -> plukkOppgaveService.plukkOppgaver(Temagruppe.ARBD, SAKSBEHANDLERS_VALGTE_ENHET));
+        List<Oppgave> oppgave = plukkOppgaveService.plukkOppgaver(Temagruppe.ARBD, SAKSBEHANDLERS_VALGTE_ENHET);
 
         assertThat(oppgave.isEmpty(), is(false));
     }

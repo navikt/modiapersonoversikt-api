@@ -7,7 +7,6 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Policies
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Tilgangskontroll
 import no.nav.sbl.dialogarena.naudit.AuditResources
 import no.nav.sbl.dialogarena.naudit.Audit
-import no.nav.sbl.dialogarena.naudit.AuditIdentifier
 import javax.inject.Inject
 import javax.ws.rs.GET
 import javax.ws.rs.Path
@@ -25,7 +24,7 @@ class VergemalController @Inject constructor(private val vergemalService: Vergem
     fun hent(@PathParam("fnr") fnr: String): Map<String, Any?> {
         return tilgangskontroll
                 .check(Policies.tilgangTilBruker.with(fnr))
-                .get(Audit.describe(Audit.Action.READ, AuditResources.Person.Vergemal, AuditIdentifier.FNR to fnr)) {
+                .get(Audit.describe(Audit.Action.READ, AuditResources.Person.Vergemal, "fnr" to fnr)) {
                     val vergemal = vergemalService.hentVergemal(fnr)
 
                     mapOf(

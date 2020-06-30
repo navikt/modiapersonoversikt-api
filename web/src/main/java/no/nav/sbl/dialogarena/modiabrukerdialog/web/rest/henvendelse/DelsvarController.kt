@@ -16,7 +16,6 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Policies
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Tilgangskontroll
 import no.nav.sbl.dialogarena.naudit.Audit
 import no.nav.sbl.dialogarena.naudit.Audit.Action.*
-import no.nav.sbl.dialogarena.naudit.AuditIdentifier
 import no.nav.sbl.dialogarena.naudit.AuditResources.Person.Henvendelse
 
 @Path("/dialog/{fnr}")
@@ -35,7 +34,7 @@ class DelsvarController @Inject constructor(
     {
         return tilgangskontroll
                 .check(Policies.tilgangTilBruker.with(fnr))
-                .get(Audit.describe(CREATE, Henvendelse.Delsvar, AuditIdentifier.FNR to fnr, AuditIdentifier.BEHANDLING_ID to request.behandlingsId)) {
+                .get(Audit.describe(CREATE, Henvendelse.Delsvar, "fnr" to fnr, "behandlingsId" to request.behandlingsId)) {
                     val saksbehandlersValgteEnhet = RestUtils.hentValgtEnhet(httpRequest)
 
                     val delsvarRequest = DelsvarRequestBuilder()

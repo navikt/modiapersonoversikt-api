@@ -44,6 +44,7 @@
             <xsd:element minOccurs="0" name="personUtland" type="bons0:ASBOGOSYSPersonUtland"/>
             <xsd:element maxOccurs="1" minOccurs="0" name="relasjoner" type="bons0:ASBOGOSYSRelasjonListe"/>
             <xsd:element minOccurs="0" name="historikk" type="bons0:ASBOGOSYSHistorikk"/>
+            <xsd:element minOccurs="0" name="brukerprofil" type="bons0:ASBOGOSYSBrukerprofil"/>
             <xsd:element minOccurs="0" name="samboer" type="bons0:ASBOGOSYSSamboer"/>
         </xsd:sequence>
   </xsd:complexType>

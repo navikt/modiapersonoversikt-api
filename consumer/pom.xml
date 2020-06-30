@@ -23,7 +23,13 @@
     <dependencies>
         <dependency>
             <groupId>no.nav.common</groupId>
-            <artifactId>oidc</artifactId>
+            <artifactId>oidc-security</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>no.nav.common</groupId>
+            <artifactId>oidc-security</artifactId>
+            <scope>test</scope>
+            <type>test-jar</type>
         </dependency>
         <!--Interne-->
         <dependency>
@@ -85,6 +91,15 @@
         <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>sykmeldingsperioder-consumer</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>no.nav.sbl.dialogarena</groupId>
+            <artifactId>behandlebrukerprofil-consumer</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>no.nav.sbl.dialogarena</groupId>
+            <artifactId>brukerprofil-domain</artifactId>
         </dependency>
 
         <!-- Dkif -->
@@ -356,7 +371,6 @@
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-engine</artifactId>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
@@ -364,7 +378,7 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>com.nhaarman.mockitokotlin2</groupId>
+            <groupId>com.nhaarman</groupId>
             <artifactId>mockito-kotlin</artifactId>
             <scope>test</scope>
         </dependency>
@@ -392,6 +406,11 @@
         <dependency>
             <groupId>com.fasterxml.jackson.module</groupId>
             <artifactId>jackson-module-kotlin</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.nhaarman</groupId>
+            <artifactId>mockito-kotlin</artifactId>
+            <scope>test</scope>
         </dependency>
 
         <!-- Unleash -->

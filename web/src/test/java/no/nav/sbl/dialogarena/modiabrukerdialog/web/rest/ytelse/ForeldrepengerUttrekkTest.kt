@@ -1,8 +1,8 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.ytelse
 
-import com.nhaarman.mockitokotlin2.any
-import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.whenever
+import com.nhaarman.mockito_kotlin.any
+import com.nhaarman.mockito_kotlin.mock
+import com.nhaarman.mockito_kotlin.whenever
 import no.nav.modig.core.exception.AuthorizationException
 import no.nav.sykmeldingsperioder.consumer.foreldrepenger.DefaultForeldrepengerService
 import no.nav.sykmeldingsperioder.consumer.foreldrepenger.mapping.ForeldrepengerMapper

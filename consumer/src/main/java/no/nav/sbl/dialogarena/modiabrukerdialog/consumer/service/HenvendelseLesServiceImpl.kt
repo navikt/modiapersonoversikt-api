@@ -1,14 +1,15 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service
 
+import no.nav.brukerdialog.security.oidc.SystemUserTokenProvider
 import no.nav.common.auth.SsoToken
 import no.nav.common.auth.SubjectHandler
-import no.nav.common.oidc.SystemUserTokenProvider
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.HenvendelseLesService
 import no.nav.sbl.rest.RestUtils
-import no.nav.sbl.util.EnvironmentUtils.getRequiredProperty
+import no.nav.sbl.util.EnvironmentUtils
 
-class HenvendelseLesServiceImpl(private val systemTokenProvider: SystemUserTokenProvider) : HenvendelseLesService {
-    private val baseUrl: String = getRequiredProperty("HENVENDELSE_LES_API_URL")
+class HenvendelseLesServiceImpl : HenvendelseLesService {
+    private val baseUrl: String = EnvironmentUtils.getRequiredProperty("HENVENDELSE_LES_API_URL")
+    private val systemTokenProvider = SystemUserTokenProvider()
 
     override fun alleBehandlingsIderTilhorerBruker(fnr: String, behandlingsIder: List<String>): Boolean {
         val queryparams = byggQueryparams(
@@ -33,7 +34,7 @@ class HenvendelseLesServiceImpl(private val systemTokenProvider: SystemUserToken
                     .target(url)
                     .request()
                     .header("Authorization", "Bearer $token")
-                    .header("SystemAuthorization", "Bearer ${systemTokenProvider.systemUserAccessToken}")
+                    .header("SystemAuthorization", "Bearer ${systemTokenProvider.token}")
                     .get(T::class.java)
         }
     }

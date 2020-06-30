@@ -111,21 +111,6 @@ public class OppgaveBehandlingServiceImpl implements OppgaveBehandlingService {
         ferdigstillOppgaverIGsak(singletonList(oppgaveId), temagruppe, saksbehandlersValgteEnhet);
     }
 
-    public void ferdigstillOppgaveIGsak(String oppgaveId, Optional<Temagruppe> temagruppe, String saksbehandlersValgteEnhet, String beskrivelse) {
-        oppdaterBeskrivelseIGsak(temagruppe, saksbehandlersValgteEnhet, oppgaveId, beskrivelse);
-        try {
-            oppgavebehandlingWS.ferdigstillOppgaveBolk(new WSFerdigstillOppgaveBolkRequest()
-                    .withOppgaveIdListe(singletonList(oppgaveId))
-                    .withFerdigstiltAvEnhetId(Integer.valueOf(enhetFor(temagruppe, saksbehandlersValgteEnhet)))
-            );
-
-        } catch (Exception e) {
-            logger.error("Kunne ikke ferdigstille Gsak oppgave i Modia med oppgaveId " + oppgaveId, e);
-            throw e;
-
-        }
-    }
-
     @Override
     public void ferdigstillOppgaverIGsak(List<String> oppgaveIder, Optional<Temagruppe> temagruppe, String saksbehandlersValgteEnhet) {
         for (String oppgaveId : oppgaveIder) {
@@ -140,6 +125,21 @@ public class OppgaveBehandlingServiceImpl implements OppgaveBehandlingService {
             String ider = String.join(", ", oppgaveIder);
             logger.warn("Ferdigstilling av oppgavebolk med oppgaveider: " + ider + ", med enhet " + saksbehandlersValgteEnhet + " feilet.", e);
             throw e;
+        }
+    }
+
+    public void ferdigstillGsakOppgave(String oppgaveId, Optional<Temagruppe> temagruppe, String saksbehandlersValgteEnhet, String beskrivelse) {
+        oppdaterBeskrivelseIGsak(temagruppe, saksbehandlersValgteEnhet, oppgaveId, beskrivelse);
+        try {
+            oppgavebehandlingWS.ferdigstillOppgaveBolk(new WSFerdigstillOppgaveBolkRequest()
+            .withOppgaveIdListe(singletonList(oppgaveId))
+            .withFerdigstiltAvEnhetId(Integer.valueOf(enhetFor(temagruppe, saksbehandlersValgteEnhet)))
+            );
+
+        } catch (Exception e) {
+            logger.error("Kunne ikke ferdigstille Gsak oppgave i Modia med oppgaveId " + oppgaveId, e);
+            throw e;
+
         }
     }
 

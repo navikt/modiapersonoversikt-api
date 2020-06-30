@@ -1,0 +1,257 @@
+<ehcache>
+    <diskStore path="java.io.tmpdir"/>
+
+    <defaultCache eternal="true" maxElementsInMemory="100" overflowToDisk="false"/>
+
+    <!--timeToIdleSeconds er tiden cachen lever etter at den har blitt brukt
+        timeToLiveSeconds er tiden cachen lever uavhengig av hvis den blir brukt
+
+        I vårt tilfelle ønsker vi at cachen lever en viss tid uavhengig av om den blir brukt
+        derfor må timeToIdleSeconds være minst like stor som timeToLiveSeconds
+    -->
+
+    <cache name="endpointCache" maxElementsInMemory="10000"
+           eternal="false"
+           timeToIdleSeconds="3"
+           timeToLiveSeconds="3"
+           overflowToDisk="false"
+           diskPersistent="false"
+           memoryStoreEvictionPolicy="LRU"/>
+
+    <cache name="kontaktinformasjonOgPreferanserCache" maxElementsInMemory="100"
+           eternal="false"
+           timeToIdleSeconds="60"
+           timeToLiveSeconds="60"
+           overflowToDisk="true"
+           maxElementsOnDisk="1000"
+           diskPersistent="false"
+           diskExpiryThreadIntervalSeconds="120"
+           memoryStoreEvictionPolicy="LRU"/>
+
+    <cache name="kjerneinformasjonCache" maxElementsInMemory="100"
+           eternal="false"
+           timeToIdleSeconds="60"
+           timeToLiveSeconds="60"
+           overflowToDisk="true"
+           maxElementsOnDisk="1000"
+           diskPersistent="false"
+           diskExpiryThreadIntervalSeconds="120"
+           memoryStoreEvictionPolicy="LRU"/>
+
+    <cache name="kodeverk_consumer.kodeverkCache" maxElementsInMemory="100"
+           eternal="false"
+           timeToIdleSeconds="3600"
+           timeToLiveSeconds="3600"
+           overflowToDisk="true"
+           maxElementsOnDisk="10000000"
+           diskPersistent="false"
+           diskExpiryThreadIntervalSeconds="120"
+           memoryStoreEvictionPolicy="LRU"/>
+
+    <cache name="ytelseskontrakter" maxElementsInMemory="100"
+           eternal="false"
+           timeToIdleSeconds="600"
+           timeToLiveSeconds="600"
+           overflowToDisk="true"
+           maxElementsOnDisk="10000000"
+           diskPersistent="false"
+           diskExpiryThreadIntervalSeconds="120"
+           memoryStoreEvictionPolicy="LRU"/>
+
+    <cache name="pleiePengerCache" maxElementsInMemory="100"
+           eternal="false"
+           timeToIdleSeconds="300"
+           timeToLiveSeconds="300"
+           overflowToDisk="true"
+           maxElementsOnDisk="1000"
+           diskPersistent="false"
+           diskExpiryThreadIntervalSeconds="120"
+           memoryStoreEvictionPolicy="LRU"/>
+
+	<cache name="organisasjonCache" maxElementsInMemory="100"
+		   eternal="false"
+		   timeToIdleSeconds="300"
+		   timeToLiveSeconds="300"
+		   overflowToDisk="true"
+		   maxElementsOnDisk="1000"
+		   diskPersistent="false"
+		   diskExpiryThreadIntervalSeconds="120"
+		   memoryStoreEvictionPolicy="LRU"/>
+
+	<cache name="organisasjonEnhetKontaktinformasjonCache" maxElementsInMemory="1000"
+		   eternal="false"
+		   timeToIdleSeconds="300"
+		   timeToLiveSeconds="300"
+		   overflowToDisk="false"
+		   maxElementsOnDisk="1000"
+		   diskPersistent="false"
+		   diskExpiryThreadIntervalSeconds="120"
+		   memoryStoreEvictionPolicy="LRU"/>
+
+	<cache name="oppfolgingsinfoCache" maxElementsInMemory="100"
+		   eternal="false"
+		   timeToIdleSeconds="300"
+		   timeToLiveSeconds="300"
+		   overflowToDisk="true"
+		   maxElementsOnDisk="1000"
+		   diskPersistent="false"
+		   diskExpiryThreadIntervalSeconds="120"
+		   memoryStoreEvictionPolicy="LRU"/>
+
+	<cache name="oppfolgingCache" maxElementsInMemory="100"
+		   eternal="false"
+		   timeToIdleSeconds="600"
+		   timeToLiveSeconds="600"
+		   overflowToDisk="true"
+		   maxElementsOnDisk="10000000"
+		   diskPersistent="false"
+		   diskExpiryThreadIntervalSeconds="120"
+		   memoryStoreEvictionPolicy="LRU"/>
+
+	<cache name="foreldrePengerCache" maxElementsInMemory="100"
+		   eternal="false"
+		   timeToIdleSeconds="300"
+		   timeToLiveSeconds="300"
+		   overflowToDisk="true"
+		   maxElementsOnDisk="1000"
+		   diskPersistent="false"
+		   diskExpiryThreadIntervalSeconds="120"
+		   memoryStoreEvictionPolicy="LRU"/>
+
+    <cache name="hentSykmeldingsperioderCache" maxElementsInMemory="100"
+           eternal="false"
+           timeToIdleSeconds="300"
+           timeToLiveSeconds="300"
+           overflowToDisk="true"
+           maxElementsOnDisk="1000"
+           diskPersistent="false"
+           diskExpiryThreadIntervalSeconds="120"
+           memoryStoreEvictionPolicy="LRU"/>
+
+    <cache name="pip.role" maxElementsInMemory="25000"
+		   overflowToDisk="false"
+		   diskPersistent="false"
+		   eternal="false"
+		   timeToIdleSeconds="3600"
+		   timeToLiveSeconds="86400"
+		   memoryStoreEvictionPolicy="FIFO"/>
+
+    <cache name="pip.localenhet" maxElementsInMemory="25000"
+		   overflowToDisk="false"
+		   diskPersistent="false"
+		   eternal="false"
+		   timeToIdleSeconds="3600"
+		   timeToLiveSeconds="86400"
+		   memoryStoreEvictionPolicy="FIFO"/>
+
+    <cache name="pip.fylkesenhet" maxElementsInMemory="25000"
+		   overflowToDisk="false"
+		   diskPersistent="false"
+		   eternal="false"
+		   timeToIdleSeconds="3600"
+		   timeToLiveSeconds="86400"
+		   memoryStoreEvictionPolicy="FIFO"/>
+
+    <cache name="pdp.decision" maxElementsInMemory="25000"
+		   overflowToDisk="false"
+		   diskPersistent="false"
+		   eternal="false"
+		   timeToIdleSeconds="3600"
+		   timeToLiveSeconds="86400"
+		   memoryStoreEvictionPolicy="FIFO"/>
+
+    <cache name="kodeverkCache" maxElementsInMemory="100"
+           eternal="false"
+           timeToIdleSeconds="3600"
+           timeToLiveSeconds="3600"
+           overflowToDisk="true"
+           maxElementsOnDisk="10000000"
+           diskPersistent="false"
+           diskExpiryThreadIntervalSeconds="120"
+           memoryStoreEvictionPolicy="LRU"/>
+
+    <cache name="utbetalingCache" maxElementsInMemory="10000"
+           eternal="false"
+           timeToIdleSeconds="1800"
+           timeToLiveSeconds="1800"
+           overflowToDisk="false"
+           diskPersistent="false"
+           memoryStoreEvictionPolicy="LRU"/>
+
+    <cache name="cms.content"
+           maxElementsInMemory="10"
+           overflowToDisk="false"
+           timeToLiveSeconds="1800"
+           timeToIdleSeconds="1800"/>
+
+    <cache name="aktorIdCache" maxElementsInMemory="100000"
+           eternal="false"
+           diskPersistent="false"
+           overflowToDisk="false"/>
+
+    <cache name="asbogosysEnhet" maxElementsInMemory="10000"
+           eternal="false"
+           timeToIdleSeconds="86400"
+           timeToLiveSeconds="86400"
+           overflowToDisk="false"
+           diskPersistent="false"
+           memoryStoreEvictionPolicy="LRU"/>
+
+    <cache name="asbogosysAnsatt" maxElementsInMemory="10000"
+           eternal="false"
+           timeToIdleSeconds="14400"
+           timeToLiveSeconds="14400"
+           overflowToDisk="false"
+           diskPersistent="false"
+           memoryStoreEvictionPolicy="LRU"/>
+
+	<cache name="asbogosysAnsattListe" maxElementsInMemory="10000"
+		   eternal="false"
+		   timeToIdleSeconds="43200"
+		   timeToLiveSeconds="43200"
+		   overflowToDisk="false"
+		   diskPersistent="false"
+		   memoryStoreEvictionPolicy="LRU"/>
+
+	<cache name="organisasjonEnhetV2" maxElementsInMemory="10000"
+		   eternal="false"
+		   timeToIdleSeconds="86400"
+		   timeToLiveSeconds="86400"
+		   overflowToDisk="false"
+		   diskPersistent="false"
+		   memoryStoreEvictionPolicy="LRU"/>
+
+
+	<cache name="ldap" maxElementsInMemory="20000"
+           eternal="false"
+           timeToIdleSeconds="3600"
+           timeToLiveSeconds="3600"
+           overflowToDisk="false"
+           diskPersistent="false"
+           memoryStoreEvictionPolicy="LRU"/>
+
+    <cache name="varslingCache" maxElementsInMemory="10000"
+           eternal="false"
+           timeToIdleSeconds="180"
+           timeToLiveSeconds="180"
+           overflowToDisk="false"
+           diskPersistent="false"
+           memoryStoreEvictionPolicy="LRU"/>
+
+	<cache name="kodeverksmapperCache"
+		   maxElementsInMemory="10"
+		   eternal="false"
+		   overflowToDisk="false"
+		   timeToLiveSeconds="86400"
+		   memoryStoreEvictionPolicy="LRU"
+		   timeToIdleSeconds="86400"/>
+
+	<cache name="innsynJournalCache" maxElementsInMemory="10000"
+		   eternal="false"
+		   timeToIdleSeconds="1800"
+		   timeToLiveSeconds="1800"
+		   overflowToDisk="false"
+		   diskPersistent="false"
+		   memoryStoreEvictionPolicy="LRU"/>
+
+</ehcache>
