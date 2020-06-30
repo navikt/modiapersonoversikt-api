@@ -72,7 +72,7 @@ class RSBACInstanceImpl<CONTEXT, OUTPUT>(val context: CONTEXT, var exception:  F
         val decision = getDecision()
 
         if (decision.value == PERMIT) {
-            val result : S = supplier.invoke()
+            val result: S = supplier.invoke()
             auditDescriptor.log(result)
             return result
         } else if (decision.value == DENY) {

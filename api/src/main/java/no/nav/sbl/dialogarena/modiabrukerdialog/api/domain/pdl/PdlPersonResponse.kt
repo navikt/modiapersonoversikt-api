@@ -7,6 +7,25 @@ data class PdlPersonResponse(
         val data: PdlHentPerson?
 )
 
+data class PdlIdentResponse(
+        val errors: List<PdlError>?,
+        val data: PdlHentIdenter?
+)
+
+data class PdlHentIdenter(
+        val hentIdenter: PdlIdenter?
+)
+
+data class PdlIdenter(
+        val identer: List<PdlIdent>
+)
+
+data class PdlIdent(
+        val ident: String,
+        val gruppe: String,
+        val historisk: Boolean?
+)
+
 data class PdlError(
         val message: String,
         val locations: List<PdlErrorLocation>,
@@ -109,3 +128,8 @@ data class PdlEndringer(
         val registrert: Date,
         val registrertAv: String
 )
+
+
+
+
+

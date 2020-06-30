@@ -43,6 +43,7 @@ internal class TilgangskontrollTest {
             assertEquals(DecisionEnums.PERMIT, decision)
         }
     }
+
     @Nested
     inner class `tematilganger policy` {
         @Test

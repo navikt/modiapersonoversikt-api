@@ -34,6 +34,7 @@ class TilgangController @Inject constructor(private val abacClient: AbacClient) 
 }
 
 class TilgangDTO(val harTilgang: Boolean, val ikkeTilgangArsak: DenyCause?)
+
 internal fun AbacResponse.makeResponse(): TilgangDTO {
     if (this.getBiasedDecision(Decision.Deny) == Decision.Permit) {
         return TilgangDTO(true, null)

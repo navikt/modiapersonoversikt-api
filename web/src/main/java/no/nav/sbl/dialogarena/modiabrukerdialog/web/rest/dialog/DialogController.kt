@@ -15,6 +15,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.TemagruppeTemaMapping.
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Policies
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Tilgangskontroll
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.api.DTO
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.api.fromDTO
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.api.toDTO
 import no.nav.sbl.dialogarena.naudit.Audit
 import no.nav.sbl.dialogarena.naudit.Audit.Action.*
@@ -56,6 +57,7 @@ class DialogController @Inject constructor(
                             .hentMeldinger(fnr, valgtEnhet)
                             .traader
                             .toDTO()
+
                 }
     }
 

@@ -15,6 +15,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.List;
+
 import no.nav.kjerneinfo.consumer.fim.person.exception.AuthorizationWithSikkerhetstiltakException;
 import no.nav.kjerneinfo.consumer.fim.person.mock.PersonKjerneinfoMockFactory;
 import no.nav.kjerneinfo.consumer.fim.person.to.HentKjerneinformasjonRequest;
