@@ -6,7 +6,8 @@ import org.slf4j.LoggerFactory
 
 private val tjenestekallLogg = LoggerFactory.getLogger("SecureLog")
 val cefLogger = ArchSightCEFLogger(CEFLoggerConfig(
-        applicationName = "modiapersonoversikt-api",
+        applicationName = "modia",
+        logName = "personoversikt",
         filter = { (action: Audit.Action, resource: Audit.AuditResource) ->
             action != Audit.Action.READ || resource == AuditResources.Person.Personalia
         }

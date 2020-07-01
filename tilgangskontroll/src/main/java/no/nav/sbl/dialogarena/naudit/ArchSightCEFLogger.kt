@@ -32,20 +32,21 @@ data class CEFEvent(
         val resource: Audit.AuditResource,
         val subject: String,
         val identifiers: Array<out Pair<AuditIdentifier, String?>>,
-        val severity: CEFSeverity = CEFSeverity.INFO
+        val severity: CEFSeverity = CEFSeverity.INFO,
+        val time: Long = Instant.now().toEpochMilli()
 )
 
 enum class CEFAttribute(val attribute: String) {
     TIME("end"),
     ACTION("act"),
     SUBJECT("suid"),
-    RESOURCE("name"),
+    RESOURCE("sproc"),
     RESOURCE_OWNER("duid")
 }
 
 class ArchSightCEFLogger(private val config: CEFLoggerConfig) {
     private val descriptor: String = String.format(
-            "CEF:%s|%s|%s|%s|%s|%s|{}|",
+            "CEF:%s|%s|%s|%s|%s|%s",
             escapeHeader(config.cefVersion),
             escapeHeader(config.applicationName),
             escapeHeader(config.logName),
@@ -54,22 +55,27 @@ class ArchSightCEFLogger(private val config: CEFLoggerConfig) {
             escapeHeader(config.description)
     )
 
-    fun log(event: CEFEvent) {
-        if (config.filter(event)) {
-            val extension = arrayOf(
-                    CEFAttribute.TIME to Instant.now().toEpochMilli().toString(),
-                    CEFAttribute.ACTION to event.action.name,
-                    CEFAttribute.SUBJECT to event.subject,
-                    CEFAttribute.RESOURCE to event.resource.resource,
-                    *event.identifiers
-                            .find { it.first == AuditIdentifier.FNR }
-                            ?.let { arrayOf(CEFAttribute.RESOURCE_OWNER to (it.second ?: "-")) }
-                            ?: emptyArray()
-            )
-                    .map { "${it.first.attribute}=${escapeAttribute(it.second)}" }
-                    .joinToString(" ")
-
-            auditLogg.info(descriptor + extension, event.severity)
+    internal fun create(event: CEFEvent): String? {
+        if (!config.filter(event)) {
+            return null
         }
+        val extension = arrayOf(
+                CEFAttribute.TIME to event.time.toString(),
+                CEFAttribute.ACTION to event.action.name,
+                CEFAttribute.SUBJECT to event.subject,
+                CEFAttribute.RESOURCE to event.resource.resource,
+                *event.identifiers
+                        .find { it.first == AuditIdentifier.FNR }
+                        ?.let { arrayOf(CEFAttribute.RESOURCE_OWNER to (it.second ?: "-")) }
+                        ?: emptyArray()
+        )
+                .map { "${it.first.attribute}=${escapeAttribute(it.second)}" }
+                .joinToString(" ")
+
+        return "$descriptor|${event.severity}|$extension"
+    }
+
+    fun log(event: CEFEvent) {
+        create(event)?.also{ auditLogg.info(it) }
     }
 }
