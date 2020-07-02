@@ -36,12 +36,63 @@ data class CEFEvent(
         val time: Long = Instant.now().toEpochMilli()
 )
 
-enum class CEFAttribute(val attribute: String) {
+enum class CEFAttributeName(val attribute: String) {
     TIME("end"),
     ACTION("act"),
     SUBJECT("suid"),
     RESOURCE("sproc"),
-    RESOURCE_OWNER("duid")
+    RESOURCE_OWNER("duid"),
+    STR1("flexString1"),
+    STR1_LABEL("flexString1Label"),
+    STR2("flexString2"),
+    STR2_LABEL("flexString2Label"),
+    STR3("cs3"),
+    STR3_LABEL("cs3Label"),
+    STR4("cs4"),
+    STR4_LABEL("cs4Label"),
+    STR5("cs5"),
+    STR5_LABEL("cs5Label"),
+    STR6("cs6"),
+    STR6_LABEL("cs6Label");
+
+    companion object {
+        fun getStringKey(id: Int): CEFAttributeName = valueOf("STR$id")
+        fun getStringLabelKey(id: Int): CEFAttributeName = valueOf("STR${id}_LABEL")
+    }
+}
+
+sealed class CEFAttributesType {
+    data class EnumDescriptor(val attribute: CEFAttributeName, val value: String) : CEFAttributesType()
+    data class StringDescriptor(val attribute: String, val value: String) : CEFAttributesType()
+}
+
+class CEFAttributes {
+    private val attributes: MutableList<CEFAttributesType> = mutableListOf()
+
+    fun add(attribute: CEFAttributeName, value: String): CEFAttributes {
+        this.attributes.add(CEFAttributesType.EnumDescriptor(attribute, value))
+        return this
+    }
+
+    fun addStringValue(attribute: AuditIdentifier, value: String): CEFAttributes {
+        when (attribute) {
+            AuditIdentifier.FNR -> this.add(CEFAttributeName.RESOURCE_OWNER, value)
+            else -> this.attributes.add(CEFAttributesType.StringDescriptor(attribute.name, value))
+        }
+        return this
+    }
+
+    fun createCEFAttributes(): List<Pair<CEFAttributeName, String>> {
+        var counter = 1
+        return attributes
+                .flatMap { when(it) {
+                    is CEFAttributesType.EnumDescriptor -> listOf(it.attribute to it.value)
+                    is CEFAttributesType.StringDescriptor -> listOf(
+                            CEFAttributeName.getStringKey(counter) to it.value,
+                            CEFAttributeName.getStringLabelKey(counter++) to it.attribute
+                    )
+                } }
+    }
 }
 
 class ArchSightCEFLogger(private val config: CEFLoggerConfig) {
@@ -59,16 +110,14 @@ class ArchSightCEFLogger(private val config: CEFLoggerConfig) {
         if (!config.filter(event)) {
             return null
         }
-        val extension = arrayOf(
-                CEFAttribute.TIME to event.time.toString(),
-                CEFAttribute.ACTION to event.action.name,
-                CEFAttribute.SUBJECT to event.subject,
-                CEFAttribute.RESOURCE to event.resource.resource,
-                *event.identifiers
-                        .find { it.first == AuditIdentifier.FNR }
-                        ?.let { arrayOf(CEFAttribute.RESOURCE_OWNER to (it.second ?: "-")) }
-                        ?: emptyArray()
-        )
+        val attributes = CEFAttributes()
+        attributes.add(CEFAttributeName.TIME, event.time.toString())
+        attributes.add(CEFAttributeName.ACTION, event.action.name)
+        attributes.add(CEFAttributeName.SUBJECT, event.subject)
+        attributes.add(CEFAttributeName.RESOURCE, event.resource.resource)
+        event.identifiers.forEach { attributes.addStringValue(it.first, it.second ?: "-") }
+
+        val extension = attributes.createCEFAttributes()
                 .map { "${it.first.attribute}=${escapeAttribute(it.second)}" }
                 .joinToString(" ")
 
