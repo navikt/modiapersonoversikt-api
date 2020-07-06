@@ -525,4 +525,10 @@
         </plugins>
         <finalName>modiabrukerdialog</finalName>
     </build>
+    <repositories>
+        <repository>
+            <id>external-mirror-github-navikt</id>
+            <url>https://github-package-registry-mirror.gc.nav.no/cached/maven-release</url>
+        </repository>
+    </repositories>
 </project>
