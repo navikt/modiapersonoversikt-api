@@ -45,7 +45,7 @@
 
         <!-- Tjenestespecs -->
         <tjenestespesifikasjoner.version>1.2020.06.16-14.51-3b45df54f90a</tjenestespesifikasjoner.version>
-        <org.jvnet.jaxb2_commons.version>0.11.1</org.jvnet.jaxb2_commons.version>
+        <org.jvnet.jaxb2_commons.version>0.12.0</org.jvnet.jaxb2_commons.version>
 
         <hamkrest.version>1.7.0.0</hamkrest.version>
         <slf4j.version>1.7.21</slf4j.version>
@@ -531,4 +531,10 @@
             <url>https://github-package-registry-mirror.gc.nav.no/cached/maven-release</url>
         </repository>
     </repositories>
+    <pluginRepositories>
+        <pluginRepository>
+            <id>external-mirror-github-navikt-plugins</id>
+            <url>https://github-package-registry-mirror.gc.nav.no/cached/maven-release</url>
+        </pluginRepository>
+    </pluginRepositories>
 </project>
