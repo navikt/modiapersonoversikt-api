@@ -33,7 +33,7 @@ open class ArbeidsfordelingClient {
     companion object {
         private val NORG2_URL = if ("p".equals(EnvironmentUtils.getRequiredProperty(ENVIRONMENT_PROPERTY))) {
             "https://app.adeo.no/norg2"
-        } else if("q1".equals(EnvironmentUtils.getRequiredProperty(ENVIRONMENT_PROPERTY))) {
+        } else if ("q1".equals(EnvironmentUtils.getRequiredProperty(ENVIRONMENT_PROPERTY))) {
             "https://app-q1.adeo.no/norg2"
         } else {
             "https://app-q0.adeo.no/norg2"
@@ -57,9 +57,9 @@ open class ArbeidsfordelingClient {
         val arbeidskritereieFordelingSkjermet: ArbeidskritereieFordelingSkjermet = ArbeidskritereieFordelingSkjermet(
                 behandlingstema = behandling?.map(Behandling::getBehandlingstema).orElse(null),
                 behandlingstype = behandling?.map(Behandling::getBehandlingstype).orElse(null),
-                geografiskOmraade = geografiskTilknytning.value.toString(),
+                geografiskOmraade = geografiskTilknytning.value?.let { it }.toString(),
                 oppgavetype = oppgavetype,
-                diskresjonskode = geografiskTilknytning?.diskresjonskode ?: null,
+                diskresjonskode = geografiskTilknytning?.diskresjonskode?: null,
                 tema = fagomrade,
                 enhetsnummer = null,
                 temagruppe = null,

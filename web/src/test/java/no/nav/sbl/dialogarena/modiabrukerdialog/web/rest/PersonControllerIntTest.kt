@@ -23,7 +23,7 @@ internal class PersonControllerIntTest {
     @Test
     fun test() {
         val clock = Clock.fixed(Instant.parse("2020-04-20T12:00:00.00Z"), ZoneId.systemDefault())
-        val kjerneinfoMock : PersonKjerneinfoServiceBi = mock()
+        val kjerneinfoMock: PersonKjerneinfoServiceBi = mock()
         val pdlMock : PdlOppslagService = mock()
         val advokatSomKontakt = PdlDoedsboAdvokatSomKontakt(PdlPersonNavn(fornavn = "Ola",mellomnavn =  null, etternavn =  "Nordmann"), organisasjonsnavn = null, organisasjonsnummer = null)
         val adresse= PdlDoedsboAdresse(adresselinje1 = "testadresse 21", adresselinje2 = null, poststedsnavn = "Fossviken", postnummer = "1234", landkode = null)

@@ -54,7 +54,7 @@ public class ArbeidsfordelingV1ServiceImpl implements ArbeidsfordelingV1Service 
             Optional<Behandling> behandling = kodeverksmapper.mapUnderkategori(underkategori);
             GeografiskTilknytning geografiskTilknytning = personService.hentGeografiskTilknytning(brukerIdent);
             boolean erEgenAnsatt = egenAnsattService.erEgenAnsatt(brukerIdent);
-            if("ANSOS_KNA".equals(underkategori)) {
+            if ("ANSOS_KNA".equals(underkategori)) {
                 erEgenAnsatt = false;
             }
             String oppgaveTypeMapped = kodeverksmapper.mapOppgavetype(oppgavetype);

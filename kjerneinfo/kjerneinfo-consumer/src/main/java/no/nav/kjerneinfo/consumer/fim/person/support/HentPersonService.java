@@ -4,6 +4,7 @@ import static java.util.Collections.singletonList;
 
 import java.util.Iterator;
 import java.util.Optional;
+
 import kotlin.Pair;
 import no.nav.kjerneinfo.consumer.fim.person.to.HentKjerneinformasjonRequest;
 import no.nav.kjerneinfo.consumer.fim.person.to.HentKjerneinformasjonResponse;

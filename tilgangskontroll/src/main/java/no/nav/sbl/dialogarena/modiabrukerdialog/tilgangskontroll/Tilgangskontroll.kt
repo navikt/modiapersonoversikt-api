@@ -6,12 +6,13 @@ import no.nav.sbl.dialogarena.rsbac.*
 import org.slf4j.LoggerFactory
 import javax.ws.rs.ForbiddenException
 
-fun AbacResponse.toDecisionEnum(): DecisionEnums = when(this.getDecision()) {
+fun AbacResponse.toDecisionEnum(): DecisionEnums = when (this.getDecision()) {
     AbacDecision.Deny -> DecisionEnums.DENY
     AbacDecision.Permit -> DecisionEnums.PERMIT
     else -> DecisionEnums.NOT_APPLICABLE
 }
-fun AbacResponse.toDecision(denyReason: AbacResponse.() -> String): Decision = when(this.getDecision()) {
+
+fun AbacResponse.toDecision(denyReason: AbacResponse.() -> String): Decision = when (this.getDecision()) {
     AbacDecision.Deny -> Decision(denyReason(this), DecisionEnums.DENY)
     AbacDecision.Permit -> Decision("", DecisionEnums.PERMIT)
     else -> Decision("", DecisionEnums.NOT_APPLICABLE)

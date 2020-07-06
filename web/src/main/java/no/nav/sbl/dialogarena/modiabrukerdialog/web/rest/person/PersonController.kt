@@ -55,8 +55,8 @@ class PersonController @Inject constructor(private val kjerneinfoService: Person
                     try {
                         val hentKjerneinformasjonRequest = HentKjerneinformasjonRequest(fodselsnummer)
                         hentKjerneinformasjonRequest.isBegrunnet = true
-                        val person : Person? = kjerneinfoService.hentKjerneinformasjon(hentKjerneinformasjonRequest).person
-                        val pdlPerson : PdlPersonResponse? = try {
+                        val person: Person? = kjerneinfoService.hentKjerneinformasjon(hentKjerneinformasjonRequest).person
+                        val pdlPerson: PdlPersonResponse? = try {
                             pdlOppslagService.hentPerson(fodselsnummer)
                         } catch (e: Exception) {
                             logger.warn("Feil i oppslag mot PDL", e)
@@ -144,16 +144,17 @@ class PersonController @Inject constructor(private val kjerneinfoService: Person
     )
 
     private fun hentTilrettelagtKommunikasjon(pdlPerson: PdlPersonResponse?): List<TilrettelagtKommunikasjonsbehov> {
-        val pdlTilrettelagtKommunikasjon : List<PdlTilrettelagtKommunikasjon> = pdlPerson?.data?.hentPerson?.tilrettelagtKommunikasjon ?: emptyList()
+        val pdlTilrettelagtKommunikasjon: List<PdlTilrettelagtKommunikasjon> = pdlPerson?.data?.hentPerson?.tilrettelagtKommunikasjon
+                ?: emptyList()
         logger.info("Tilrettelagt: " + pdlTilrettelagtKommunikasjon.toString())
 
-        val out : MutableSet<TilrettelagtKommunikasjonsbehov> = mutableSetOf()
+        val out: MutableSet<TilrettelagtKommunikasjonsbehov> = mutableSetOf()
         for (behov in pdlTilrettelagtKommunikasjon) {
             behov
                     .tegnspraaktolk
                     ?.spraak
-                    ?.also {
-                        sprakRef -> out.add(TilrettelagtKommunikasjonsbehov(TilrettelagtKommunikasjonsbehovType.TEGNSPRAK, sprakRef, hentSprak(sprakRef)))
+                    ?.also { sprakRef ->
+                        out.add(TilrettelagtKommunikasjonsbehov(TilrettelagtKommunikasjonsbehovType.TEGNSPRAK, sprakRef, hentSprak(sprakRef)))
                     }
 
             behov
@@ -345,8 +346,8 @@ class PersonController @Inject constructor(private val kjerneinfoService: Person
     }
 }
 
-    enum class TilrettelagtKommunikasjonsbehovType { TEGNSPRAK, TALESPRAK, UKJENT }
-    data class TilrettelagtKommunikasjonsbehov(
+enum class TilrettelagtKommunikasjonsbehovType { TEGNSPRAK, TALESPRAK, UKJENT }
+data class TilrettelagtKommunikasjonsbehov(
         val type: TilrettelagtKommunikasjonsbehovType,
         val kodeRef: String,
         val beskrivelse: String
