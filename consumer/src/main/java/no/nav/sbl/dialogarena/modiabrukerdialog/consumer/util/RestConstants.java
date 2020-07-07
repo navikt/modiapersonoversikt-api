@@ -5,7 +5,6 @@ import no.nav.sbl.util.EnvironmentUtils;
 public class RestConstants {
     private static final String MFN_OPPLYSNINGSTYPE_DOEDSBO = "KontaktinformasjonForDoedsbo";
 
-    public static final String PERSONDOKUMENTER_BASEURL = EnvironmentUtils.getRequiredProperty("PERSON_OPPSLAG_V1_URL");
     public static final String NAV_CONSUMER_TOKEN_HEADER = "Nav-Consumer-Token";
     public static final String NAV_PERSONIDENT_HEADER = "Nav-Personident";
     public static final String NAV_CALL_ID_HEADER = "Nav-Call-Id";
