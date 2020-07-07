@@ -18,9 +18,15 @@
         in the parent pom and in each module pom. Then JaCoCo will add up information in the
         same report, so that, it will give the cross-module code coverage. -->
         <sonar.jacoco.reportPath>${project.basedir}/../target/jacoco-ut.exec</sonar.jacoco.reportPath>
+        <graphql-kotlin.version>3.3.0</graphql-kotlin.version>
     </properties>
 
     <dependencies>
+        <dependency>
+            <groupId>com.expediagroup</groupId>
+            <artifactId>graphql-kotlin-client</artifactId>
+            <version>${graphql-kotlin.version}</version>
+        </dependency>
         <dependency>
             <groupId>no.nav.common</groupId>
             <artifactId>oidc</artifactId>
@@ -408,6 +414,48 @@
 
     <build>
         <plugins>
+            <plugin>
+                <groupId>com.expediagroup</groupId>
+                <artifactId>graphql-kotlin-maven-plugin</artifactId>
+                <version>${graphql-kotlin.version}</version>
+                <executions>
+                    <execution>
+                        <id>download schema from github</id>
+                        <goals>
+                            <goal>download-sdl</goal>
+                        </goals>
+                        <configuration>
+                            <endpoint>https://navikt.github.io/pdl/pdl-api-sdl.graphqls</endpoint>
+                            <outputDirectory>src/main/resources/pdl</outputDirectory>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>generate kotlin classes from schema + queries</id>
+                        <goals>
+                            <goal>generate-client</goal>
+                        </goals>
+                        <configuration>
+                            <schemaFile>src/main/resources/pdl/schema.graphql</schemaFile>
+                            <packageName>no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.pdl.generated</packageName>
+                            <queryFileDirectory>src/main/resources/pdl/queries</queryFileDirectory>
+                            <converters>
+                                <Long>
+                                    <type>kotlin.Long</type>
+                                    <converter>no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.graphqlscalars.LongScalarConverter</converter>
+                                </Long>
+                                <Date>
+                                    <type>java.time.LocalDate</type>
+                                    <converter>no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.graphqlscalars.DateScalarConverter</converter>
+                                </Date>
+                                <DateTime>
+                                    <type>java.time.LocalDateTime</type>
+                                    <converter>no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.graphqlscalars.DateTimeScalarConverter</converter>
+                                </DateTime>
+                            </converters>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>

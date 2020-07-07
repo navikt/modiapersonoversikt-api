@@ -9,7 +9,8 @@ import no.nav.kjerneinfo.consumer.fim.person.support.KjerneinfoMapper
 import no.nav.kodeverk.consumer.fim.kodeverk.KodeverkmanagerBi
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.pdl.*
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.organisasjonsEnhetV2.OrganisasjonEnhetV2Service
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.pdl.PdlOppslagService
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.pdl.PdlOppslagService
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.pdl.generated.HentPerson
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Tilgangskontroll
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.TilgangskontrollContext
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.TilgangskontrollMock
@@ -243,16 +244,15 @@ internal class PersonControllerTest {
         fun `Mapping`() {
             whenever(kodeverk.getKodeverkList(any(), any())).thenReturn(listOf(Kodeverdi("SV", "Svensk")))
             whenever(personV3.hentPerson(any())).thenReturn(mockPersonResponse())
-            whenever(pdlOppslagService.hentPerson(any())).thenReturn(mockPdlPerson().update {
-                copy(
+            whenever(pdlOppslagService.hentPerson(any())).thenReturn(mockPdlPerson().copy(
                         tilrettelagtKommunikasjon = listOf(
-                                PdlTilrettelagtKommunikasjon(
-                                        talespraaktolk = PdlTolk("SV"),
+                                HentPerson.TilrettelagtKommunikasjon(
+                                        talespraaktolk = HentPerson.Tolk("SV"),
                                         tegnspraaktolk = null
                                 )
                         )
                 )
-            })
+            )
 
             val response = controller.hent(FNR)["tilrettelagtKomunikasjonsListe"] as List<TilrettelagtKommunikasjonsbehov>
             val tilrettelagtKommunikasjon = response[0]
@@ -263,23 +263,14 @@ internal class PersonControllerTest {
         }
     }
 
-    fun mockPdlPerson(): PdlPersonResponse {
-        return PdlPersonResponse(null, PdlHentPerson(
-                PdlPerson(
-                        navn = emptyList(),
-                        tilrettelagtKommunikasjon = null,
-                        fullmakt = null,
-                        kontaktinformasjonForDoedsbo = null,
-                        telefonnummer = null
-                )
-        ))
-    }
-
-    fun PdlPersonResponse.update(block: PdlPerson.() -> PdlPerson): PdlPersonResponse {
-        return mockPdlPerson()
-                .copy(
-                    data = PdlHentPerson(block(this.data!!.hentPerson!!))
-                )
+    fun mockPdlPerson(): HentPerson.Person {
+        return HentPerson.Person(
+                navn = emptyList(),
+                tilrettelagtKommunikasjon = emptyList(),
+                fullmakt = emptyList(),
+                kontaktinformasjonForDoedsbo = emptyList(),
+                telefonnummer = emptyList()
+        )
     }
 
     @Nested

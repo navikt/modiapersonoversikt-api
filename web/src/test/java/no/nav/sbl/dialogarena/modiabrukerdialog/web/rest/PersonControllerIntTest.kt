@@ -7,16 +7,13 @@ import no.nav.kjerneinfo.consumer.fim.person.PersonKjerneinfoServiceBi
 import no.nav.kjerneinfo.consumer.fim.person.to.HentKjerneinformasjonResponse
 import no.nav.kjerneinfo.domain.person.Fodselsnummer
 import no.nav.kjerneinfo.domain.person.Person
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.pdl.*
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.pdl.PdlOppslagService
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.pdl.PdlOppslagService
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.pdl.generated.HentPerson
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.TilgangskontrollMock
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.person.PersonController
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.person.Telefonnummer
 import org.junit.jupiter.api.Test
-import java.time.Clock
-import java.time.Instant
-import java.time.ZoneId
-import java.util.*
+import java.time.*
 import kotlin.test.assertEquals
 
 internal class PersonControllerIntTest {
@@ -25,10 +22,10 @@ internal class PersonControllerIntTest {
         val clock = Clock.fixed(Instant.parse("2020-04-20T12:00:00.00Z"), ZoneId.systemDefault())
         val kjerneinfoMock: PersonKjerneinfoServiceBi = mock()
         val pdlMock : PdlOppslagService = mock()
-        val advokatSomKontakt = PdlDoedsboAdvokatSomKontakt(PdlPersonNavn(fornavn = "Ola",mellomnavn =  null, etternavn =  "Nordmann"), organisasjonsnavn = null, organisasjonsnummer = null)
-        val adresse= PdlDoedsboAdresse(adresselinje1 = "testadresse 21", adresselinje2 = null, poststedsnavn = "Fossviken", postnummer = "1234", landkode = null)
-        val pdldodsbo =  PdlDoedsbo(adresse = adresse, attestutstedelsesdato = Date(2019-12-12), organisasjonSomKontakt = null, skifteform = "annet", personSomKontakt = null, advokatSomKontakt = advokatSomKontakt   )
-        val kontaktiformasjonForDoedsbo: List<PdlDoedsbo> = listOf(pdldodsbo)
+        val advokatSomKontakt = HentPerson.KontaktinformasjonForDoedsboAdvokatSomKontakt(HentPerson.Personnavn2(fornavn = "Ola",mellomnavn =  null, etternavn =  "Nordmann"), organisasjonsnavn = null, organisasjonsnummer = null)
+        val adresse= HentPerson.KontaktinformasjonForDoedsboAdresse(adresselinje1 = "testadresse 21", adresselinje2 = null, poststedsnavn = "Fossviken", postnummer = "1234", landkode = null)
+        val pdldodsbo =  HentPerson.KontaktinformasjonForDoedsbo(adresse = adresse, attestutstedelsesdato = HentPerson.Date.create("2019-12-12"), organisasjonSomKontakt = null, skifteform = HentPerson.KontaktinformasjonForDoedsboSkifteform.ANNET, personSomKontakt = null, advokatSomKontakt = advokatSomKontakt   )
+        val kontaktiformasjonForDoedsbo: List<HentPerson.KontaktinformasjonForDoedsbo> = listOf(pdldodsbo)
 
         whenever(kjerneinfoMock.hentKjerneinformasjon(any())).thenReturn(HentKjerneinformasjonResponse()
                 .apply {
@@ -38,24 +35,21 @@ internal class PersonControllerIntTest {
                             }
                 }
         )
-        whenever(pdlMock.hentPerson(any())).thenReturn(PdlPersonResponse(null, PdlHentPerson(
-                PdlPerson(
+        whenever(pdlMock.hentPerson(any())).thenReturn(HentPerson.Person(
                         navn = emptyList(),
                         kontaktinformasjonForDoedsbo = kontaktiformasjonForDoedsbo,
                         tilrettelagtKommunikasjon = emptyList(),
                         fullmakt = emptyList(),
-                        telefonnummer = listOf(PdlTelefonnummer(
+                        telefonnummer = listOf(HentPerson.Telefonnummer(
                                 "+47",
                                 "10101010",
                                 1,
-                                PdlMetadata(listOf(PdlEndringer(
-                                        Date.from(clock.instant()),
+                                HentPerson.Metadata(listOf(HentPerson.Endring(
+                                        HentPerson.DateTime(LocalDateTime.now(clock)),
                                         "BRUKER"
                                 )))
                         ))
-                )
-        )))
-
+        ))
 
         val personController = PersonController(
                 kjerneinfoMock,
