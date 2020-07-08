@@ -8,12 +8,8 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.arbeidsfordeling.Arb
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.arbeidsfordeling.FinnBehandlendeEnhetException;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.kodeverksmapper.KodeverksmapperService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.kodeverksmapper.domain.Behandling;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.Feature;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.UnleashService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.PropertyRule;
-import no.nav.tjeneste.virksomhet.arbeidsfordeling.v1.binding.ArbeidsfordelingV1;
 import no.nav.tjeneste.virksomhet.arbeidsfordeling.v1.binding.FinnBehandlendeEnhetListeUgyldigInput;
-import no.nav.tjeneste.virksomhet.arbeidsfordeling.v1.feil.UgyldigInput;
 import no.nav.tjeneste.virksomhet.arbeidsfordeling.v1.informasjon.Organisasjonsenhet;
 import no.nav.tjeneste.virksomhet.arbeidsfordeling.v1.meldinger.FinnBehandlendeEnhetListeRequest;
 import no.nav.tjeneste.virksomhet.arbeidsfordeling.v1.meldinger.FinnBehandlendeEnhetListeResponse;
@@ -52,25 +48,21 @@ class ArbeidsfordelingV1ServiceTest {
     private static final String PERSON = "11111111111";
     private static final String STRENGT_FORTROLIG_ADRESSE = "SPSF";
 
-    private ArbeidsfordelingV1 arbeidsfordeling = mock(ArbeidsfordelingV1.class);
     private PersonKjerneinfoServiceBi personService = mock(PersonKjerneinfoServiceBi.class);
     private KodeverksmapperService kodeverksmapper = mock(KodeverksmapperService.class);
     private ArbeidsfordelingClient arbeidsfordelingClient = ArbeidsfordelingClientMock.get(Collections.emptyList());
-    private UnleashService unleashService = mock(UnleashService.class);
     private EgenAnsattService egenAnsattService = mock(EgenAnsattService.class);
     private ArbeidsfordelingV1Service arbeidsfordelingService;
 
     @BeforeEach
     void setupMocks() {
         Mockito.reset(
-                arbeidsfordeling,
                 personService,
                 kodeverksmapper,
                 arbeidsfordelingClient,
-                egenAnsattService,
-                unleashService
+                egenAnsattService
         );
-        arbeidsfordelingService = new ArbeidsfordelingV1ServiceImpl(arbeidsfordeling, arbeidsfordelingClient, egenAnsattService, personService, kodeverksmapper, unleashService);
+        arbeidsfordelingService = new ArbeidsfordelingV1ServiceImpl(arbeidsfordelingClient, egenAnsattService, personService, kodeverksmapper);
     }
 
     @Test
@@ -101,30 +93,10 @@ class ArbeidsfordelingV1ServiceTest {
     }
 
     @Test
-    @DisplayName("Arbeidsfordeling kalles med riktige argumenter")
-    void kallerArbeidsfordelingMedRiktigeArgumenter() throws FinnBehandlendeEnhetListeUgyldigInput {
-        gitt_at_alt_fungerer();
-
-        arbeidsfordelingService.finnBehandlendeEnhetListe(PERSON, FAGOMRADE, OPPGAVETYPE, UNDERKATEGORI);
-
-        ArgumentCaptor<FinnBehandlendeEnhetListeRequest> captor = ArgumentCaptor.forClass(FinnBehandlendeEnhetListeRequest.class);
-        verify(arbeidsfordeling).finnBehandlendeEnhetListe(captor.capture());
-
-        FinnBehandlendeEnhetListeRequest request = captor.getValue();
-        assertAll("request",
-                () -> assertEquals(BEHANDLINGSTEMA, request.getArbeidsfordelingKriterier().getBehandlingstema().getValue()),
-                () -> assertEquals(BEHANDLINGSTYPE, request.getArbeidsfordelingKriterier().getBehandlingstype().getValue()),
-                () -> assertEquals(GEOGRAFISK_TILKNYTNING, request.getArbeidsfordelingKriterier().getGeografiskTilknytning().getValue()),
-                () -> assertEquals(MAPPET_OPPGAVETYPE, request.getArbeidsfordelingKriterier().getOppgavetype().getValue()),
-                () -> assertEquals(FAGOMRADE, request.getArbeidsfordelingKriterier().getTema().getValue()));
-    }
-
-    @Test
     @DisplayName("Arbeidsfordeling kalles med riktige argumenter og bruker REST")
     void kallerArbeidsfordelingMedRiktigeArgumenterMotNyTjeneste() throws FinnBehandlendeEnhetListeUgyldigInput {
         gitt_at_alt_fungerer();
         gitt_er_egen_ansatt();
-        gitt_feature_toggle_enabled();
 
         arbeidsfordelingService.finnBehandlendeEnhetListe(PERSON, FAGOMRADE, OPPGAVETYPE, UNDERKATEGORI);
 
@@ -134,39 +106,12 @@ class ArbeidsfordelingV1ServiceTest {
         assertTrue(erEgenAnsattCaptor.getValue());
     }
 
-
-    @Test
-    @DisplayName("Arbeidsfordeling benytter diskresjonskode dersom denne finnes")
-    void kallerArbeidsfordelingMedDiskresjonskodeDersomDenneFinnes() throws FinnBehandlendeEnhetListeUgyldigInput {
-        gitt_at_alt_fungerer();
-        gitt_bruker_med_kode_6();
-
-        arbeidsfordelingService.finnBehandlendeEnhetListe(PERSON, FAGOMRADE, OPPGAVETYPE, UNDERKATEGORI);
-
-        ArgumentCaptor<FinnBehandlendeEnhetListeRequest> captor = ArgumentCaptor.forClass(FinnBehandlendeEnhetListeRequest.class);
-        verify(arbeidsfordeling).finnBehandlendeEnhetListe(captor.capture());
-
-        FinnBehandlendeEnhetListeRequest request = captor.getValue();
-        assertAll("request",
-                () -> assertEquals(BEHANDLINGSTEMA, request.getArbeidsfordelingKriterier().getBehandlingstema().getValue()),
-                () -> assertEquals(BEHANDLINGSTYPE, request.getArbeidsfordelingKriterier().getBehandlingstype().getValue()),
-                () -> assertEquals(STRENGT_FORTROLIG_ADRESSE, request.getArbeidsfordelingKriterier().getDiskresjonskode().getValue()),
-                () -> assertEquals(GEOGRAFISK_TILKNYTNING, request.getArbeidsfordelingKriterier().getGeografiskTilknytning().getValue()),
-                () -> assertEquals(MAPPET_OPPGAVETYPE, request.getArbeidsfordelingKriterier().getOppgavetype().getValue()),
-                () -> assertEquals(FAGOMRADE, request.getArbeidsfordelingKriterier().getTema().getValue()));
-    }
-
-
     private void gitt_at_alt_fungerer() {
         sneaky(() -> {
-            when(unleashService.isEnabled(Feature.ARBEIDSFORDELING_REST)).thenReturn(false);
-
             when(personService.hentGeografiskTilknytning(anyString())).thenReturn(new GeografiskTilknytning().withType(GeografiskTilknytningstyper.KOMMUNE).withValue(GEOGRAFISK_TILKNYTNING));
 
             when(kodeverksmapper.mapOppgavetype(anyString())).thenReturn(MAPPET_OPPGAVETYPE);
             when(kodeverksmapper.mapUnderkategori(anyString())).thenReturn(Optional.of(new Behandling().withBehandlingstema(BEHANDLINGSTEMA).withBehandlingstype(BEHANDLINGSTYPE)));
-
-            when(arbeidsfordeling.finnBehandlendeEnhetListe(any(FinnBehandlendeEnhetListeRequest.class))).thenReturn(lagArbeidsfordelingResponse());
 
             when(egenAnsattService.erEgenAnsatt(anyString())).thenReturn(false);
         });
@@ -174,10 +119,6 @@ class ArbeidsfordelingV1ServiceTest {
 
     private void gitt_er_egen_ansatt() {
         when(egenAnsattService.erEgenAnsatt(anyString())).thenReturn(true);
-    }
-
-    private void gitt_feature_toggle_enabled() {
-        when(unleashService.isEnabled(Feature.ARBEIDSFORDELING_REST)).thenReturn(true);
     }
 
     private void gitt_feil_ved_henting_av_kodeverk() {
@@ -193,31 +134,7 @@ class ArbeidsfordelingV1ServiceTest {
 
     private void gitt_feil_ved_henting_av_enheter() {
         sneaky(() -> {
-            when(arbeidsfordeling.finnBehandlendeEnhetListe(any(FinnBehandlendeEnhetListeRequest.class))).thenThrow(new FinnBehandlendeEnhetListeUgyldigInput("", new UgyldigInput()));
             when(arbeidsfordelingClient.hentArbeidsfordeling(any(), any(), any(), any(), anyBoolean())).thenThrow(new IllegalStateException());
         });
-    }
-
-    private void gitt_bruker_med_kode_6() {
-        when(personService.hentGeografiskTilknytning(anyString())).thenReturn(
-                new GeografiskTilknytning()
-                        .withValue(GEOGRAFISK_TILKNYTNING)
-                        .withType(GeografiskTilknytningstyper.KOMMUNE)
-                        .withDiskresjonskode(STRENGT_FORTROLIG_ADRESSE));
-    }
-
-    private FinnBehandlendeEnhetListeResponse lagArbeidsfordelingResponse() {
-        Organisasjonsenhet enhet1 = new Organisasjonsenhet();
-        enhet1.setEnhetId(ENHETSNUMMER);
-        enhet1.setEnhetNavn(ENHETSNAVN);
-
-        Organisasjonsenhet enhet2 = new Organisasjonsenhet();
-        enhet1.setEnhetId(GEOGRAFISK_TILKNYTNING);
-        enhet1.setEnhetNavn("NAV Bærum");
-
-        FinnBehandlendeEnhetListeResponse response = new FinnBehandlendeEnhetListeResponse();
-        response.getBehandlendeEnhetListe().addAll(asList(enhet1, enhet2));
-
-        return response;
     }
 }
