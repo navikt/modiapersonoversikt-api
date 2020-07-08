@@ -46,8 +46,9 @@ class PdlOppslagServiceImpl : PdlOppslagService {
 
     override fun hentNavnBolk(fnrs: List<String>): Map<String, HentNavnBolk.Navn?>? {
         val response = doRequest(fnrs) { pdlFnrs, httpHeaders ->
-            HentNavnBolk(graphQLClient).execute(HentNavnBolk.Variables(pdlFnrs), httpHeaders)
+            HentNavnBolk(graphQLClient).execute(HentNavnBolk.Variables(pdlFnrs), httpHeaders.useSystemuserToken())
         }
+
         return response?.data?.hentPersonBolk
                 ?.fold(mutableMapOf()) { acc, bolkResult ->
                     acc[bolkResult.ident] = bolkResult.person?.navn?.get(0)
@@ -71,13 +72,13 @@ class PdlOppslagServiceImpl : PdlOppslagService {
                     "ident" to pdlFnr,
                     "callId" to MDC.get(MDCConstants.MDC_CALL_ID)
             ))
-            val consumerOidcToken: String = stsService.systemUserAccessToken
-            val veilederOidcToken: String = SubjectHandler.getSsoToken(SsoToken.Type.OIDC).orElseThrow { IllegalStateException("Kunne ikke hente ut veileders ssoTOken") }
+            val systemuserToken: String = stsService.systemUserAccessToken
+            val userToken: String = SubjectHandler.getSsoToken(SsoToken.Type.OIDC).orElseThrow { IllegalStateException("Kunne ikke hente ut veileders ssoTOken") }
             return runBlocking {
                 val response: GraphQLResponse<T> = request(pdlFnr) {
                     header(NAV_CALL_ID_HEADER, uuid.toString())
-                    header(AUTHORIZATION, AUTH_METHOD_BEARER + AUTH_SEPERATOR + veilederOidcToken)
-                    header(NAV_CONSUMER_TOKEN_HEADER, AUTH_METHOD_BEARER + AUTH_SEPERATOR + consumerOidcToken)
+                    header(NAV_CONSUMER_TOKEN_HEADER, AUTH_METHOD_BEARER + AUTH_SEPERATOR + systemuserToken)
+                    header(AUTHORIZATION, AUTH_METHOD_BEARER + AUTH_SEPERATOR + userToken)
                     header(TEMA_HEADER, ALLE_TEMA_HEADERVERDI)
                 }
                 val tjenestekallFelt = mapOf(
@@ -101,6 +102,11 @@ class PdlOppslagServiceImpl : PdlOppslagService {
             ))
             return null
         }
+    }
+
+    private fun (HttpRequestBuilder.() -> Unit).useSystemuserToken(): HttpRequestBuilder.() -> Unit = {
+        this@useSystemuserToken.invoke(this)
+        headers[AUTHORIZATION] = (headers[NAV_CONSUMER_TOKEN_HEADER] ?: throw IllegalStateException("SystemuserToken not set for request"))
     }
 }
 
