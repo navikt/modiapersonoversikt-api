@@ -5,7 +5,6 @@ import no.nav.apiapp.config.ApiAppConfigurator;
 import no.nav.brukerdialog.security.domain.IdentType;
 import no.nav.common.oidc.Constants;
 import no.nav.common.oidc.auth.OidcAuthenticatorConfig;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.RedirectFilter;
 import no.nav.sbl.util.EnvironmentUtils;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
@@ -54,13 +53,7 @@ public class ModiaApplicationContext implements ApiApplication {
                 .objectMapper(JacksonConfig.mapper)
                 .addOidcAuthenticator(isso)
                 .addOidcAuthenticator(fpsak)
-                .customizeJettyBuilder(jetty -> {
-                    // Filteret må ligge slik at det havner etter LoginFilter.
-                    // Alternativet er å legge det i `startup`-metoden (override) men da havner det etter LoginFilter
-                    // Og da har man ikke mulighet til å hente ut Subject som er nødvendig for at unleash skal fungere.
-                    jetty.addFilter(new RedirectFilter());
-                    jetty.at("modiapersonoversikt-api");
-                });
+                .customizeJettyBuilder(jetty -> jetty.at("modiapersonoversikt-api"));
     }
 
     @Override
