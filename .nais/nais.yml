@@ -145,8 +145,6 @@ spec:
       value: "SAML"
     - name: PENSJON_PENSJONSAK_V1_WSDLURL
       value: "http://maven.adeo.no/nexus/content/groups/public/no/nav/tjenester/fim/nav-pensjonSak-v1-tjenestespesifikasjon/1.0.0/nav-pensjonSak-v1-tjenestespesifikasjon-1.0.0.zip"
-    - name: PERSON_OPPSLAG_V1_URL
-      value: "https://person-oppslag.nais.adeo.no/api/v1/oppslag"
     - name: SAF_GRAPHQL_URL
       value: "https://saf.nais.adeo.no/graphql"
     - name: SAF_HENTDOKUMENT_URL
