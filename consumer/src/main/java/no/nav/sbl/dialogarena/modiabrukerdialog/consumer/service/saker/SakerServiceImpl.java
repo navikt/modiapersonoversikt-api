@@ -65,10 +65,9 @@ public class SakerServiceImpl implements SakerService {
         behandleOppfolgingsSaker(saker);
         leggTilFagsystemnavnOgTemanavn(saker, gsakKodeverk.hentFagsystemMapping(), standardKodeverk);
 
-        if (unleashService.isEnabled(Feature.BIDRAG_SAK_HACK)) {
-            // Bør erstattes av reelle saker når bisys kan levere det
-            leggTilBidragHack(saker);
-        }
+        // Bør erstattes av reelle saker når bisys kan levere det
+        leggTilBidragHack(saker);
+
         return saker.stream()
                 .filter(GODKJENT_FAGSAK.or(GODKJENT_GENERELL))
                 .collect(toList());
