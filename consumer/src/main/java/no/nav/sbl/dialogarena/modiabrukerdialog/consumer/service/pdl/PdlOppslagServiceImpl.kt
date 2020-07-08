@@ -1,7 +1,7 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.pdl
 
 import com.expediagroup.graphql.client.GraphQLClient
-import com.google.gson.GsonBuilder
+import com.expediagroup.graphql.types.GraphQLResponse
 import io.ktor.client.request.HttpRequestBuilder
 import io.ktor.client.request.header
 import kotlinx.coroutines.runBlocking
@@ -12,9 +12,11 @@ import no.nav.log.MDCConstants
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.pdl.PdlOppslagService
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.pdl.generated.HentIdent
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.pdl.generated.HentNavn
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.pdl.generated.HentNavnBolk
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.pdl.generated.HentPerson
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.strategier.ByEnvironmentStrategy.ENVIRONMENT_PROPERTY
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.RestConstants.*
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.TjenestekallLogger
 import no.nav.sbl.util.EnvironmentUtils
 import org.slf4j.LoggerFactory
 import org.slf4j.MDC
@@ -26,9 +28,7 @@ import javax.ws.rs.core.HttpHeaders.AUTHORIZATION
 
 class PdlOppslagServiceImpl : PdlOppslagService {
     private val log = LoggerFactory.getLogger(PdlOppslagServiceImpl::class.java)
-    private val tjenestekallLogg = LoggerFactory.getLogger("SecureLog")
     private val OPPSLAG_URL = getEnvironmentUrl()
-    private val gson = GsonBuilder().setDateFormat("yyyy-MM-dd").create()
     private val graphQLClient = GraphQLClient(
             url = URL(OPPSLAG_URL)
     )
@@ -37,47 +37,68 @@ class PdlOppslagServiceImpl : PdlOppslagService {
     private lateinit var stsService: SystemUserTokenProvider
 
     override fun hentPerson(fnr: String): HentPerson.Person? = doRequest(fnr) { pdlFnr, httpHeaders ->
-        HentPerson(graphQLClient).execute(HentPerson.Variables(pdlFnr, false), httpHeaders).data?.hentPerson
-    }
+        HentPerson(graphQLClient).execute(HentPerson.Variables(pdlFnr), httpHeaders)
+    }?.data?.hentPerson
 
     override fun hentNavn(fnr: String): HentNavn.Person? = doRequest(fnr) { pdlFnr, httpHeaders ->
-        HentNavn(graphQLClient).execute(HentNavn.Variables(pdlFnr, false), httpHeaders).data?.hentPerson
+        HentNavn(graphQLClient).execute(HentNavn.Variables(pdlFnr), httpHeaders)
+    }?.data?.hentPerson
+
+    override fun hentNavnBolk(fnrs: List<String>): Map<String, HentNavnBolk.Navn?>? {
+        val response = doRequest(fnrs) { pdlFnrs, httpHeaders ->
+            HentNavnBolk(graphQLClient).execute(HentNavnBolk.Variables(pdlFnrs), httpHeaders)
+        }
+        return response?.data?.hentPersonBolk
+                ?.fold(mutableMapOf()) { acc, bolkResult ->
+                    acc[bolkResult.ident] = bolkResult.person?.navn?.get(0)
+                    acc
+                }
     }
 
     override fun hentIdent(fnr: String): HentIdent.Identliste? = doRequest(fnr) { pdlFnr, httpHeaders ->
-        HentIdent(graphQLClient).execute(HentIdent.Variables(pdlFnr, false), httpHeaders).data?.hentIdenter
+        HentIdent(graphQLClient).execute(HentIdent.Variables(pdlFnr), httpHeaders)
+    }?.data?.hentIdenter
+
+    private fun <T> doRequest(fnr: String, request: suspend (String, HttpRequestBuilder.() -> Unit) -> GraphQLResponse<T>): GraphQLResponse<T>? {
+        return doRequest(listOf(fnr)) { pdlFnrs, httpHeaders -> request(pdlFnrs[0], httpHeaders) }
     }
 
-    private fun <T> doRequest(fnr: String, request: suspend (String, HttpRequestBuilder.() -> Unit) -> T): T? {
+    private fun <T> doRequest(fnrs: List<String>, request: suspend (List<String>, HttpRequestBuilder.() -> Unit) -> GraphQLResponse<T>): GraphQLResponse<T>? {
         val uuid = UUID.randomUUID()
         try {
-            val pdlFnr = PdlSyntetiskMapper.mapFnrTilPdl(fnr)
-            tjenestekallLogg.info("""
-                PDL-request: $uuid
-                ------------------------------------------------------------------------------------
-                    ident: $pdlFnr
-                    callId: ${MDC.get(MDCConstants.MDC_CALL_ID)}
-                ------------------------------------------------------------------------------------
-            """.trimIndent())
+            val pdlFnr = fnrs.map(PdlSyntetiskMapper::mapFnrTilPdl)
+            TjenestekallLogger.info("PDL-request: $uuid", mapOf(
+                    "ident" to pdlFnr,
+                    "callId" to MDC.get(MDCConstants.MDC_CALL_ID)
+            ))
             val consumerOidcToken: String = stsService.systemUserAccessToken
             val veilederOidcToken: String = SubjectHandler.getSsoToken(SsoToken.Type.OIDC).orElseThrow { IllegalStateException("Kunne ikke hente ut veileders ssoTOken") }
             return runBlocking {
-                request(pdlFnr) {
+                val response: GraphQLResponse<T> = request(pdlFnr) {
                     header(NAV_CALL_ID_HEADER, uuid.toString())
                     header(AUTHORIZATION, AUTH_METHOD_BEARER + AUTH_SEPERATOR + veilederOidcToken)
                     header(NAV_CONSUMER_TOKEN_HEADER, AUTH_METHOD_BEARER + AUTH_SEPERATOR + consumerOidcToken)
                     header(TEMA_HEADER, ALLE_TEMA_HEADERVERDI)
                 }
+                val tjenestekallFelt = mapOf(
+                        "data" to response.data,
+                        "errors" to response.errors,
+                        "extensions" to response.extensions
+                )
+
+                if (response.errors.isNullOrEmpty()) {
+                    TjenestekallLogger.info("PDL-response: $uuid", tjenestekallFelt)
+                    return@runBlocking response
+                } else {
+                    TjenestekallLogger.error("PDL-response: $uuid", tjenestekallFelt)
+                    return@runBlocking null
+                }
             }
         } catch (exception: Exception) {
             log.error("Feilet ved oppslag mot PDL (ID: $uuid)", exception)
-            tjenestekallLogg.error("""
-                PDL-response: $uuid
-                ------------------------------------------------------------------------------------
-                    exception:
-                    $exception
-                ------------------------------------------------------------------------------------
-            """.trimIndent())
+            TjenestekallLogger.error("PDL-response: $uuid", mapOf(
+                    "exception" to exception
+            ))
             return null
         }
     }

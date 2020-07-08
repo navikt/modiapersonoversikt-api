@@ -14,6 +14,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.pdl.PdlSyntetis
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.RestConstants
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.RestConstants.AUTH_METHOD_BEARER
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.RestConstants.AUTH_SEPERATOR
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.TjenestekallLogger
 import no.nav.sbl.rest.RestUtils
 import no.nav.sbl.util.EnvironmentUtils
 import org.slf4j.MDC
@@ -34,7 +35,6 @@ open class OppgaveOpprettelseClient @Inject constructor(
     val OPPGAVE_BASEURL = EnvironmentUtils.getRequiredProperty("OPPGAVE_BASEURL")
     val url = OPPGAVE_BASEURL + "api/v1/oppgaver"
     private val log = LoggerFactory.getLogger(OppgaveOpprettelseClient::class.java)
-    private val tjenestekallLogg = LoggerFactory.getLogger("SecureLog")
     private val gson = GsonBuilder().setDateFormat("yyyy-MM-dd").create()
 
     @Inject
@@ -75,13 +75,10 @@ open class OppgaveOpprettelseClient @Inject constructor(
         try {
 
             val consumerOidcToken: String = stsService.systemUserAccessToken
-            tjenestekallLogg.info("""
-            Oppgaver-request: $uuid
-            ------------------------------------------------------------------------------------
-                ident: ${request.aktoerId}
-                callId: ${MDC.get(MDCConstants.MDC_CALL_ID)}
-            ------------------------------------------------------------------------------------
-        """.trimIndent())
+            TjenestekallLogger.info("Oppgaver-request: $uuid", mapOf(
+                    "ident" to request.aktoerId,
+                    "callId" to MDC.get(MDCConstants.MDC_CALL_ID)
+            ))
 
             val content: String = RestUtils.withClient { client ->
                 val response = client.target(url)
@@ -93,26 +90,18 @@ open class OppgaveOpprettelseClient @Inject constructor(
                         .post(json(request))
 
                 val body = response.readEntity(String::class.java)
-                tjenestekallLogg.info("""
-                Oppgave-response: $uuid
-                ------------------------------------------------------------------------------------
-                    status: ${response.status} ${response.statusInfo}
-                    body: $body
-                ------------------------------------------------------------------------------------
-            """.trimIndent())
-
+                TjenestekallLogger.info("Oppgave-response: $uuid", mapOf(
+                        "status" to "${response.status} ${response.statusInfo}",
+                        "body" to body
+                ))
                 body
             }
             return gson.fromJson(content, OppgaveResponse::class.java)
         } catch (exception: Exception) {
             log.error("Feilet ved post mot Oppgave (ID: $uuid)", exception)
-            tjenestekallLogg.error("""
-                Oppgave-error:                 $uuid
-                ------------------------------------------------------------------------------------
-                    exception:
-                    $exception
-                ------------------------------------------------------------------------------------
-            """.trimIndent())
+            TjenestekallLogger.error("Oppgave-error: $uuid", mapOf(
+                    "exception" to exception
+            ))
             return OppgaveResponse()
         }
 

@@ -2,22 +2,21 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.person
 
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.pdl.generated.HentPerson
 
-class DoedsboMapping constructor(private val doedsbo: List<HentPerson.KontaktinformasjonForDoedsbo>) {
-
-
-    fun mapKontaktinfoForDoedsbo(): List<Map<String, Any?>> =
-            doedsbo.map {
-                mapOf(
-                        "adressat" to hentAdressat(it),
-                        "adresselinje1" to it.adresse.adresselinje1,
-                        "adresselinje2" to it.adresse.adresselinje2,
-                        "postnummer" to it.adresse.postnummer,
-                        "poststed" to it.adresse.poststedsnavn,
-                        "landkode" to it.adresse.landkode,
-                        "registrert" to formatDate(it.attestutstedelsesdato.value),
-                        "skifteform" to it.skifteform
-                )
-            }
+object DoedsboMapping {
+    fun mapKontaktinfoForDoedsbo(doedsbo: List<HentPerson.KontaktinformasjonForDoedsbo>): List<Map<String, Any?>> {
+        return doedsbo.map {
+            mapOf(
+                    "adressat" to hentAdressat(it),
+                    "adresselinje1" to it.adresse.adresselinje1,
+                    "adresselinje2" to it.adresse.adresselinje2,
+                    "postnummer" to it.adresse.postnummer,
+                    "poststed" to it.adresse.poststedsnavn,
+                    "landkode" to it.adresse.landkode,
+                    "registrert" to formatDate(it.attestutstedelsesdato.value),
+                    "skifteform" to it.skifteform
+            )
+        }
+    }
 
     private fun hentAdressat(doedsbo: HentPerson.KontaktinformasjonForDoedsbo): Map<String, Any?> =
             mapOf(

@@ -1,6 +1,6 @@
-query($ident: ID!, $navnHistorikk: Boolean!){
+query($ident: ID!){
     hentPerson(ident: $ident) {
-        navn(historikk: $navnHistorikk) {
+        navn {
             fornavn
             mellomnavn
             etternavn
