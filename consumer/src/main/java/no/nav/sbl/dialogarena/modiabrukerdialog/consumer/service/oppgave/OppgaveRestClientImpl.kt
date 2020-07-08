@@ -1,17 +1,16 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.oppgave
 
 import com.google.gson.GsonBuilder
-import no.nav.common.auth.SsoToken
-import no.nav.common.auth.SubjectHandler
 import no.nav.common.oidc.SystemUserTokenProvider
 import no.nav.log.MDCConstants
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveRequest
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveRestClient
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.oppgave.OppgaveResponse
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.pdl.PdlOppslagService
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.pdl.generated.HentIdent.IdentGruppe
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.kodeverksmapper.KodeverksmapperService
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.kodeverksmapper.domain.Behandling
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.strategier.ByEnvironmentStrategy
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.pdl.PdlSyntetiskMapper
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.RestConstants
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.RestConstants.AUTH_METHOD_BEARER
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.RestConstants.AUTH_SEPERATOR
@@ -46,7 +45,7 @@ open class OppgaveOpprettelseClient @Inject constructor(
         //Mapping fra gammel kodeverk som frontend bruker til nytt kodeverk som Oppgave bruker
         val behandling: Optional<Behandling> = kodeverksmapperService.mapUnderkategori(oppgave.underkategoriKode)
         val oppgaveTypeMapped: String = kodeverksmapperService.mapOppgavetype(oppgave.oppgavetype)
-        val aktorId = getAktørId(oppgave.fnr)
+        val aktorId = getAktorId(oppgave.fnr)
         if (aktorId == null || aktorId.isEmpty()) {
             throw Exception("AktørId-mangler på person")
 
@@ -121,26 +120,18 @@ open class OppgaveOpprettelseClient @Inject constructor(
     }
 
 
-    private fun getAktørId(fnr: String): String? {
-
-        try {
-            val aktor = pdlOppslagService.hentIdent(fnr)?.data?.hentIdenter?.identer?.find { identer -> identer.gruppe == "AKTORID" }
-            // syntmapping for Q2 --> Q1
-            if ("p" != EnvironmentUtils.getRequiredProperty(ByEnvironmentStrategy.ENVIRONMENT_PROPERTY)) {
-                if ("2004819988162" == (aktor?.ident)) {
-                    return "1989093374365"
-                } else {
-                    return "1000096233942"
-                }
-
-
-            }
-            return aktor?.ident;
+    private fun getAktorId(fnr: String): String? {
+        return try {
+            pdlOppslagService
+                    .hentIdent(fnr)
+                    ?.identer
+                    ?.find { ident -> ident.gruppe == IdentGruppe.AKTORID }
+                    ?.ident
+                    // syntmapping for Q2 --> Q1
+                    ?.let(PdlSyntetiskMapper::mapAktorIdFraPdl)
         } catch (exception: Exception) {
-
-            return null
+            null
         }
-
     }
 
     private fun stripTemakode(prioritet: String): String {

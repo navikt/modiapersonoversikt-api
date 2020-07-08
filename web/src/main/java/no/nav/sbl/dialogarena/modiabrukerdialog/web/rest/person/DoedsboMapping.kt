@@ -1,10 +1,8 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.person
 
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.pdl.*
-import java.text.SimpleDateFormat
-import java.util.*
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.pdl.generated.HentPerson
 
-class DoedsboMapping constructor(private val doedsbo: List<PdlDoedsbo>) {
+class DoedsboMapping constructor(private val doedsbo: List<HentPerson.KontaktinformasjonForDoedsbo>) {
 
 
     fun mapKontaktinfoForDoedsbo(): List<Map<String, Any?>> =
@@ -16,25 +14,25 @@ class DoedsboMapping constructor(private val doedsbo: List<PdlDoedsbo>) {
                         "postnummer" to it.adresse.postnummer,
                         "poststed" to it.adresse.poststedsnavn,
                         "landkode" to it.adresse.landkode,
-                        "registrert" to formatDate(it.attestutstedelsesdato),
+                        "registrert" to formatDate(it.attestutstedelsesdato.value),
                         "skifteform" to it.skifteform
                 )
             }
 
-    private fun hentAdressat(doedsbo: PdlDoedsbo): Map<String, Any?> =
+    private fun hentAdressat(doedsbo: HentPerson.KontaktinformasjonForDoedsbo): Map<String, Any?> =
             mapOf(
                     "advokatSomAdressat" to doedsbo.advokatSomKontakt?.let { hentAdvokatSomAdressat(it) },
                     "organisasjonSomAdressat" to doedsbo.organisasjonSomKontakt?.let { hentOrganisasjonSomAdressat(it) },
                     *kontaktperson(doedsbo.personSomKontakt)
             )
 
-    private fun kontaktperson(person: PdlDoedsboPersonSomKontakt?): Array<Pair<String, Map<String, Any?>>> {
+    private fun kontaktperson(person: HentPerson.KontaktinformasjonForDoedsboPersonSomKontakt?): Array<Pair<String, Map<String, Any?>>> {
         if (person == null) {
             return arrayOf()
         }
         return if (person.identifikasjonsnummer == null) {
             arrayOf(Pair("kontaktpersonUtenIdNummerSomAdressat", mapOf(
-                    "foedselsdato" to person.foedselsdato?.let { formatDate(it) },
+                    "foedselsdato" to person.foedselsdato?.let { formatDate(it.value) },
                     "navn" to personNavn(person?.personnavn)
             )))
         } else {
@@ -46,21 +44,29 @@ class DoedsboMapping constructor(private val doedsbo: List<PdlDoedsbo>) {
     }
 
 
-    private fun hentAdvokatSomAdressat(adressat: PdlDoedsboAdvokatSomKontakt): Map<String, Any?> =
+    private fun hentAdvokatSomAdressat(adressat: HentPerson.KontaktinformasjonForDoedsboAdvokatSomKontakt): Map<String, Any?> =
             mapOf(
                     "kontaktperson" to personNavn(adressat.personnavn),
                     "organisasjonsnavn" to adressat?.organisasjonsnavn,
                     "organisasjonsnummer" to adressat?.organisasjonsnummer
             )
 
-    private fun hentOrganisasjonSomAdressat(adressat: PdlDoedsboOrganisasjonSomKontakt): Map<String, Any?> =
+    private fun hentOrganisasjonSomAdressat(adressat: HentPerson.KontaktinformasjonForDoedsboOrganisasjonSomKontakt): Map<String, Any?> =
             mapOf(
                     "kontaktperson" to adressat.kontaktperson?.let { personNavn(it) },
                     "organisasjonsnavn" to adressat.organisasjonsnavn,
                     "organisasjonsnummer" to adressat.organisasjonsnummer
             )
 
-    private fun personNavn(personNavn: PdlPersonNavn): Map<String, Any?> {
+    private fun personNavn(personNavn: HentPerson.Personnavn2?): Map<String, Any?> {
+        return personNavn(HentPerson.Personnavn(
+                fornavn = personNavn?.fornavn ?: "",
+                mellomnavn = personNavn?.mellomnavn,
+                etternavn = personNavn?.etternavn ?: ""
+        ))
+    }
+
+    private fun personNavn(personNavn: HentPerson.Personnavn?): Map<String, Any?> {
         val sammensatNavn = "${personNavn?.fornavn.textOrEmpty()} ${personNavn?.mellomnavn.textOrEmpty()} ${personNavn?.etternavn.textOrEmpty()}"
         return mapOf("fornavn" to personNavn?.fornavn,
                 "etternavn" to personNavn?.etternavn,
