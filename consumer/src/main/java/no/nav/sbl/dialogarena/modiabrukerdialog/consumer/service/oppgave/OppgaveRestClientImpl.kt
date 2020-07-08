@@ -7,7 +7,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveRequest
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveRestClient
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.oppgave.OppgaveResponse
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.pdl.PdlOppslagService
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.pdl.generated.HentIdent.IdentGruppe
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.pdl.generated.HentIdent.IdentGruppe
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.kodeverksmapper.KodeverksmapperService
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.kodeverksmapper.domain.Behandling
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.pdl.PdlSyntetiskMapper

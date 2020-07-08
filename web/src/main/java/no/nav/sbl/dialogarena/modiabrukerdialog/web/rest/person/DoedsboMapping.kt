@@ -1,6 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.person
 
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.pdl.generated.HentPerson
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.pdl.generated.HentPerson
 
 class DoedsboMapping constructor(private val doedsbo: List<HentPerson.KontaktinformasjonForDoedsbo>) {
 

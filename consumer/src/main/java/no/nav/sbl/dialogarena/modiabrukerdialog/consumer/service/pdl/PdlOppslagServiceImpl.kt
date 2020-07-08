@@ -10,9 +10,9 @@ import no.nav.common.auth.SubjectHandler
 import no.nav.common.oidc.SystemUserTokenProvider
 import no.nav.log.MDCConstants
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.pdl.PdlOppslagService
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.pdl.generated.HentIdent
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.pdl.generated.HentNavn
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.pdl.generated.HentPerson
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.pdl.generated.HentIdent
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.pdl.generated.HentNavn
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.pdl.generated.HentPerson
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.strategier.ByEnvironmentStrategy.ENVIRONMENT_PROPERTY
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.RestConstants.*
 import no.nav.sbl.util.EnvironmentUtils

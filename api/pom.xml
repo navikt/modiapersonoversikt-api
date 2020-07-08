@@ -158,7 +158,7 @@
                         </goals>
                         <configuration>
                             <schemaFile>src/main/resources/pdl/schema.graphql</schemaFile>
-                            <packageName>no.nav.sbl.dialogarena.modiabrukerdialog.api.service.pdl.generated</packageName>
+                            <packageName>no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.pdl.generated</packageName>
                             <queryFileDirectory>src/main/resources/pdl/queries</queryFileDirectory>
                             <converters>
                                 <Long>
