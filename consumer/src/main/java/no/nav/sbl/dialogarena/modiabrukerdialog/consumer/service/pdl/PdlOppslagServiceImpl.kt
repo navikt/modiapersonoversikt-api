@@ -12,6 +12,7 @@ import no.nav.log.MDCConstants
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.pdl.PdlOppslagService
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.pdl.generated.HentIdent
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.pdl.generated.HentNavn
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.pdl.generated.HentNavnBolk
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.pdl.generated.HentPerson
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.strategier.ByEnvironmentStrategy.ENVIRONMENT_PROPERTY
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.RestConstants.*
@@ -36,21 +37,36 @@ class PdlOppslagServiceImpl : PdlOppslagService {
     private lateinit var stsService: SystemUserTokenProvider
 
     override fun hentPerson(fnr: String): HentPerson.Person? = doRequest(fnr) { pdlFnr, httpHeaders ->
-        HentPerson(graphQLClient).execute(HentPerson.Variables(pdlFnr, false), httpHeaders)
+        HentPerson(graphQLClient).execute(HentPerson.Variables(pdlFnr), httpHeaders)
     }?.data?.hentPerson
 
     override fun hentNavn(fnr: String): HentNavn.Person? = doRequest(fnr) { pdlFnr, httpHeaders ->
-        HentNavn(graphQLClient).execute(HentNavn.Variables(pdlFnr, false), httpHeaders)
+        HentNavn(graphQLClient).execute(HentNavn.Variables(pdlFnr), httpHeaders)
     }?.data?.hentPerson
 
+    override fun hentNavnBolk(fnrs: List<String>): Map<String, HentNavnBolk.Navn?>? {
+        val response = doRequest(fnrs) { pdlFnrs, httpHeaders ->
+            HentNavnBolk(graphQLClient).execute(HentNavnBolk.Variables(pdlFnrs), httpHeaders)
+        }
+        return response?.data?.hentPersonBolk
+                ?.fold(mutableMapOf()) { acc, bolkResult ->
+                    acc[bolkResult.ident] = bolkResult.person?.navn?.get(0)
+                    acc
+                }
+    }
+
     override fun hentIdent(fnr: String): HentIdent.Identliste? = doRequest(fnr) { pdlFnr, httpHeaders ->
-        HentIdent(graphQLClient).execute(HentIdent.Variables(pdlFnr, false), httpHeaders)
+        HentIdent(graphQLClient).execute(HentIdent.Variables(pdlFnr), httpHeaders)
     }?.data?.hentIdenter
 
     private fun <T> doRequest(fnr: String, request: suspend (String, HttpRequestBuilder.() -> Unit) -> GraphQLResponse<T>): GraphQLResponse<T>? {
+        return doRequest(listOf(fnr)) { pdlFnrs, httpHeaders -> request(pdlFnrs[0], httpHeaders) }
+    }
+
+    private fun <T> doRequest(fnrs: List<String>, request: suspend (List<String>, HttpRequestBuilder.() -> Unit) -> GraphQLResponse<T>): GraphQLResponse<T>? {
         val uuid = UUID.randomUUID()
         try {
-            val pdlFnr = PdlSyntetiskMapper.mapFnrTilPdl(fnr)
+            val pdlFnr = fnrs.map(PdlSyntetiskMapper::mapFnrTilPdl)
             TjenestekallLogger.info("PDL-request: $uuid", mapOf(
                     "ident" to pdlFnr,
                     "callId" to MDC.get(MDCConstants.MDC_CALL_ID)
