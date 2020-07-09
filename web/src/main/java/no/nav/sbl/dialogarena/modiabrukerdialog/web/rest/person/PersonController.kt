@@ -113,7 +113,7 @@ class PersonController @Inject constructor(private val kjerneinfoService: Person
                     val navnObject = allenavn[it.motpartsPersonident]
                     val navn : String = navnObject
                             ?.run {
-                                listOf(fornavn, mellomnavn, etternavn).joinToString(" ")
+                                listOfNotNull(fornavn, mellomnavn, etternavn).joinToString(" ")
                             }
                             ?: "Fant ikke navn"
 
