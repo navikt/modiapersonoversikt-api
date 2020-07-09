@@ -40,6 +40,10 @@ class PdlOppslagServiceImpl : PdlOppslagService {
     }?.data?.hentPerson
 
     override fun hentNavnBolk(fnrs: List<String>): Map<String, HentNavnBolk.Navn?>? {
+        if (fnrs.isEmpty()) {
+            return emptyMap()
+        }
+
         val response = doRequest(fnrs) { pdlFnrs, httpHeaders ->
             HentNavnBolk(graphQLClient).execute(HentNavnBolk.Variables(pdlFnrs), httpHeaders.useSystemuserToken())
         }
