@@ -11,12 +11,12 @@ object TjenestekallLogger {
 
     private fun format(header: String, fields: Map<String, Any?>): String {
         val sb = StringBuilder()
-        sb.append(header)
-        sb.append("------------------------------------------------------------------------------------")
+        sb.appendln(header)
+        sb.appendln("------------------------------------------------------------------------------------")
         fields.forEach { (key, value) ->
-            sb.append("    ${key}: $value")
+            sb.appendln("    ${key}: $value")
         }
-        sb.append("------------------------------------------------------------------------------------")
+        sb.appendln("------------------------------------------------------------------------------------")
         return sb.toString()
     }
 }
