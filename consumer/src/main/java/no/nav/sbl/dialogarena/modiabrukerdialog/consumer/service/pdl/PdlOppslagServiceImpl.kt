@@ -11,7 +11,6 @@ import no.nav.common.oidc.SystemUserTokenProvider
 import no.nav.log.MDCConstants
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.pdl.PdlOppslagService
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.pdl.generated.HentIdent
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.pdl.generated.HentNavn
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.pdl.generated.HentNavnBolk
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.pdl.generated.HentPerson
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.strategier.ByEnvironmentStrategy.ENVIRONMENT_PROPERTY
@@ -38,10 +37,6 @@ class PdlOppslagServiceImpl : PdlOppslagService {
 
     override fun hentPerson(fnr: String): HentPerson.Person? = doRequest(fnr) { pdlFnr, httpHeaders ->
         HentPerson(graphQLClient).execute(HentPerson.Variables(pdlFnr), httpHeaders)
-    }?.data?.hentPerson
-
-    override fun hentNavn(fnr: String): HentNavn.Person? = doRequest(fnr) { pdlFnr, httpHeaders ->
-        HentNavn(graphQLClient).execute(HentNavn.Variables(pdlFnr), httpHeaders)
     }?.data?.hentPerson
 
     override fun hentNavnBolk(fnrs: List<String>): Map<String, HentNavnBolk.Navn?>? {
