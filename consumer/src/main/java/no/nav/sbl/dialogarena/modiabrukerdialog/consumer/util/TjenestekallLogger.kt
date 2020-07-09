@@ -14,7 +14,7 @@ object TjenestekallLogger {
         sb.appendln(header)
         sb.appendln("------------------------------------------------------------------------------------")
         fields.forEach { (key, value) ->
-            sb.appendln("    ${key}: $value")
+            sb.appendln("${key}: $value")
         }
         sb.appendln("------------------------------------------------------------------------------------")
         return sb.toString()
