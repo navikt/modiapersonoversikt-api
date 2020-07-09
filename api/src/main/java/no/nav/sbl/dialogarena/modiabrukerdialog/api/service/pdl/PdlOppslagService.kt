@@ -1,11 +1,11 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.api.service.pdl
 
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.pdl.PdlPersonResponse
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.pdl.PdlIdentResponse
-import javax.ws.rs.core.GenericType
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.pdl.generated.HentIdent
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.pdl.generated.HentNavnBolk
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.pdl.generated.HentPerson
 
 interface PdlOppslagService {
-    fun hentPerson(fnr: String): PdlPersonResponse?
-    fun hentNavn(fnr: String): PdlPersonResponse?
-    fun hentIdent(fnr: String): PdlIdentResponse?
+    fun hentPerson(fnr: String): HentPerson.Person?
+    fun hentIdent(fnr: String): HentIdent.Identliste?
+    fun hentNavnBolk(fnrs: List<String>): Map<String, HentNavnBolk.Navn?>?
 }

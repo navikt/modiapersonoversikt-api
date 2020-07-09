@@ -11,11 +11,8 @@ import no.nav.kjerneinfo.domain.person.fakta.Sikkerhetstiltak
 import no.nav.kjerneinfo.domain.person.fakta.Telefon
 import no.nav.kodeverk.consumer.fim.kodeverk.KodeverkmanagerBi
 import no.nav.kodeverk.consumer.fim.kodeverk.to.feil.HentKodeverkKodeverkIkkeFunnet
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.pdl.PdlFullmakt
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.pdl.PdlPersonResponse
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.pdl.PdlTelefonnummer
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.pdl.PdlTilrettelagtKommunikasjon
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.pdl.PdlOppslagService
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.pdl.generated.HentPerson
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Policies
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Tilgangskontroll
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.kodeverk.Kode
@@ -56,24 +53,13 @@ class PersonController @Inject constructor(private val kjerneinfoService: Person
                         val hentKjerneinformasjonRequest = HentKjerneinformasjonRequest(fodselsnummer)
                         hentKjerneinformasjonRequest.isBegrunnet = true
                         val person: Person? = kjerneinfoService.hentKjerneinformasjon(hentKjerneinformasjonRequest).person
-                        val pdlPerson: PdlPersonResponse? = try {
-                            pdlOppslagService.hentPerson(fodselsnummer)
-                        } catch (e: Exception) {
-                            logger.warn("Feil i oppslag mot PDL", e)
-                            null
-                        }
 
-                        val kontaktinfoForDoedsbo = tryOf("Feil i oppslag mot PDL-dodsbo") {
-                            pdlPerson?.data?.hentPerson?.kontaktinformasjonForDoedsbo
-                        }
-                        val fullmakt = tryOf("Feil i oppslag mot PDL-fullmakt") {
-                            pdlPerson?.data?.hentPerson?.fullmakt ?: listOf()
-                        }
-                        val pdlTelefonnummer = tryOf("Feil i oppslag mot PDL-telefonnummer") {
-                            pdlPerson?.data?.hentPerson?.telefonnummer
-                                    ?.sortedBy { it.prioritet }
-                                    ?.map(::getPdlTelefon)
-                        }
+                        val pdlPerson: HentPerson.Person? = pdlOppslagService.hentPerson(fodselsnummer)
+                        val kontaktinfoForDoedsbo = pdlPerson?.kontaktinformasjonForDoedsbo ?: emptyList()
+                        val fullmakt = pdlPerson?.fullmakt ?: emptyList()
+                        val pdlTelefonnummer = (pdlPerson?.telefonnummer ?: emptyList())
+                                .sortedBy { it.prioritet }
+                                .map(::getPdlTelefon)
 
                         mapOf(
                                 "fødselsnummer" to person?.fodselsnummer?.nummer,
@@ -99,8 +85,8 @@ class PersonController @Inject constructor(private val kjerneinfoService: Person
                                 "sikkerhetstiltak" to person?.personfakta?.sikkerhetstiltak?.let { hentSikkerhetstiltak(it) },
                                 "kontaktinformasjon" to getTelefoner(person?.personfakta),
                                 "telefonnummer" to pdlTelefonnummer,
-                                "kontaktinformasjonForDoedsbo" to kontaktinfoForDoedsbo?.let { DoedsboMapping(it).mapKontaktinfoForDoedsbo() },
-                                "fullmakt" to fullmakt?.let { hentFullmakter(it) }
+                                "kontaktinformasjonForDoedsbo" to DoedsboMapping.mapKontaktinfoForDoedsbo(kontaktinfoForDoedsbo),
+                                "fullmakt" to hentFullmakter(fullmakt)
                         )
                     } catch (exception: AuthorizationWithSikkerhetstiltakException) {
                         getBegrensetInnsyn(fodselsnummer, exception.message)
@@ -116,24 +102,32 @@ class PersonController @Inject constructor(private val kjerneinfoService: Person
                 }
     }
 
-    private fun hentFullmakter(fullmakter: List<PdlFullmakt>?): List<Map<String, Any>>? =
-            fullmakter?.map {
-                val navnObject = pdlOppslagService.hentNavn(it.motpartsPersonident)?.data?.hentPerson?.navn?.get(0)
-                val navn : String = navnObject
-                        ?.run {
-                            listOf(fornavn, mellomnavn, etternavn).joinToString(" ")
-                        }
-                        ?: "Fant ikke navn"
+    private fun hentFullmakter(fullmakter: List<HentPerson.Fullmakt>?): List<Map<String, Any>>? {
+        val allenavn = fullmakter
+                ?.map { it.motpartsPersonident }
+                ?.let { pdlOppslagService.hentNavnBolk(it) }
+                ?: emptyMap()
 
-                mapOf(
-                        "motpartsRolle" to it.motpartsRolle,
-                        "motpartsPersonident" to it.motpartsPersonident,
-                        "motpartsPersonNavn" to navn,
-                        "omraade" to it.omraader,
-                        "gyldigFraOgMed" to formatDate(it.gyldigFraOgMed),
-                        "gyldigTilOgMed" to formatDate(it.gyldigTilOgMed)
-                )
-            }
+        return fullmakter
+                ?.map {
+                    val navnObject = allenavn[it.motpartsPersonident]
+                    val navn : String = navnObject
+                            ?.run {
+                                listOf(fornavn, mellomnavn, etternavn).joinToString(" ")
+                            }
+                            ?: "Fant ikke navn"
+
+                    mapOf(
+                            "motpartsRolle" to it.motpartsRolle,
+                            "motpartsPersonident" to it.motpartsPersonident,
+                            "motpartsPersonNavn" to navn,
+                            "omraade" to it.omraader,
+                            "gyldigFraOgMed" to formatDate(it.gyldigFraOgMed.value),
+                            "gyldigTilOgMed" to formatDate(it.gyldigTilOgMed.value)
+                    )
+
+                }
+    }
 
     private fun mapStatsborgerskap(personfakta: Personfakta?) =
             personfakta?.statsborgerskap?.let { if (it.kodeRef == TPS_UKJENT_VERDI) null else Kode(it) }
@@ -143,8 +137,9 @@ class PersonController @Inject constructor(private val kjerneinfoService: Person
             "bostatus" to person?.personfakta?.bostatus?.let(::Kode)
     )
 
-    private fun hentTilrettelagtKommunikasjon(pdlPerson: PdlPersonResponse?): List<TilrettelagtKommunikasjonsbehov> {
-        val pdlTilrettelagtKommunikasjon: List<PdlTilrettelagtKommunikasjon> = pdlPerson?.data?.hentPerson?.tilrettelagtKommunikasjon
+    private fun hentTilrettelagtKommunikasjon(pdlPerson: HentPerson.Person?): List<TilrettelagtKommunikasjonsbehov> {
+        val pdlTilrettelagtKommunikasjon: List<HentPerson.TilrettelagtKommunikasjon> = pdlPerson
+                ?.tilrettelagtKommunikasjon
                 ?: emptyList()
         logger.info("Tilrettelagt: " + pdlTilrettelagtKommunikasjon.toString())
 
@@ -314,10 +309,10 @@ class PersonController @Inject constructor(private val kjerneinfoService: Person
             sistEndret = telefon.endringstidspunkt?.toString(DATO_TID_FORMAT)
     )
 
-    private fun getPdlTelefon(telefon: PdlTelefonnummer) = Telefonnummer(
+    private fun getPdlTelefon(telefon: HentPerson.Telefonnummer) = Telefonnummer(
             retningsnummer = Kode(telefon.landskode, "Landskode"),
             identifikator = telefon.nummer,
-            sistEndret = formatDate(telefon.metadata.endringer.first().registrert),
+            sistEndret = formatDate(telefon.metadata.endringer.first().registrert.value),
             sistEndretAv = telefon.metadata.endringer.first().registrertAv,
             prioritet = telefon.prioritet
     )

@@ -4,27 +4,47 @@ scalar Date
 # ISO-8601 representasjon for en kalenderdato med tid, trunkert til nærmeste sekund. YYYY-MM-DD'T'hh:mm:ss. Eksempel: 2018-01-01T12:00:00.
 scalar DateTime
 
+# Schema parser kjenner ikke til Typen long  men den er støttet av graphql-java, så definerer den her for at schema skal validere.
+scalar Long
+
 schema {
     query: Query
 }
 
 type Query {
     hentPerson(ident: ID!): Person
+    hentPersonBolk(identer: [ID!]!): [HentPersonBolkResult!]!
     hentIdenter(ident: ID!, grupper: [IdentGruppe!], historikk: Boolean = false): Identliste
+    hentIdenterBolk(identer: [ID!]!, grupper: [IdentGruppe!], historikk: Boolean = false): [HentIdenterBolkResult!]!
+    sokPerson(criteria:[Criterion], paging:Paging): SearchResult
 }
 
 type Identliste {
     identer: [IdentInformasjon!]!
 }
+
+type HentIdenterBolkResult {
+    ident: String!
+    identer: [IdentInformasjon!]
+    code: String!
+}
+
 type IdentInformasjon {
     ident: String!
     gruppe: IdentGruppe!
     historisk: Boolean!
 }
+
 enum IdentGruppe {
     AKTORID,
     FOLKEREGISTERIDENT,
     NPID
+}
+
+type HentPersonBolkResult {
+    ident: String!
+    person: Person
+    code: String!
 }
 
 type Person {
@@ -105,7 +125,7 @@ type Kontaktadresse {
 
     coAdressenavn: String
     postboksadresse: Postboksadresse
-    vegadresseForPost: Vegadresse
+    vegadresse: Vegadresse
     postadresseIFrittFormat: PostadresseIFrittFormat
     utenlandskAdresse: UtenlandskAdresse
     utenlandskAdresseIFrittFormat: UtenlandskAdresseIFrittFormat
@@ -120,7 +140,7 @@ enum KontaktadresseType {
 }
 
 type Vegadresse {
-    matrikkelId: Int
+    matrikkelId: Long
     husnummer: String
     husbokstav: String
     bruksenhetsnummer: String
@@ -132,7 +152,7 @@ type Vegadresse {
 }
 
 type Matrikkeladresse {
-    matrikkelId: Int
+    matrikkelId: Long
     bruksenhetsnummer: String
     tilleggsnavn: String
     postnummer: String
@@ -254,11 +274,12 @@ type UtenlandskIdentifikasjonsnummer {
 
 type Adressebeskyttelse {
     gradering: AdressebeskyttelseGradering!
-    folkeregistermetadata: Folkeregistermetadata!
+    folkeregistermetadata: Folkeregistermetadata
     metadata: Metadata!
 }
 
 enum AdressebeskyttelseGradering {
+    STRENGT_FORTROLIG_UTLAND,
     STRENGT_FORTROLIG,
     FORTROLIG,
     UGRADERT
@@ -522,6 +543,11 @@ type Metadata {
     # Vær obs på at denne kan endre seg og man burde takle at det finnes flere korrigeringer i listen, så dersom man ønsker å kun vise den siste, så må man selv filtrere ut dette.
     # Det kan også ved svært få tilfeller skje at opprett blir fjernet. F.eks ved splitt tilfeller av identer. Dette skal skje i svært få tilfeller. Dersom man ønsker å presentere opprettet tidspunktet, så blir det tidspunktet på den første endringen.
     endringer: [Endring!]!
+
+    # Feltet betegner hvorvidt dette er en funksjonelt historisk opplysning, for eksempel en tidligere fraflyttet adresse eller et foreldreansvar som er utløpt fordi barnet har fylt 18 år.
+    # I de fleste tilfeller kan dette utledes ved å se på de andre feltene i opplysningen. Dette er imidlertid ikke alltid tilfellet, blant annet for foreldreansvar.
+    # Feltet bør brukes av konsumenter som henter informasjon fra GraphQL med historikk, men som også trenger å utlede gjeldende informasjon.
+    historisk: Boolean!
 }
 
 # Endring som har blitt utført på opplysningen. F.eks: Opprett -> Korriger -> Korriger
@@ -545,3 +571,44 @@ enum Endringstype {
     OPPHOER
 }
 
+input Criterion {
+    fieldName:String!
+    searchRule:SearchRule!
+    includeHistorical:Boolean
+}
+
+input SearchRule {
+    exists :String,
+    notEquals :String,
+    equals :String,
+    contains :String,
+    fuzzy :String,
+    wildcard :String,
+    matches :String,
+    after:String,
+    before:String,
+    lessThan :String,
+    greaterThan:String,
+    from:String,
+    to:String
+    fromExcluding:String,
+    toExcluding:String
+}
+
+input Paging {
+    pageNumber:Int = 1,
+    resultsPerPage:Int = 10
+}
+
+type SearchResult {
+    hits : [searchHit!]!,
+    pageNumber:Int,
+    totalPages:Int
+    totalHits:Int
+
+}
+type searchHit {
+    person :Person,
+    identer: [IdentInformasjon!]!
+    score :Float
+}

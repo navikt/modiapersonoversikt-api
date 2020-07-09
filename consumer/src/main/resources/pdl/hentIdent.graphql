@@ -1,8 +1,0 @@
-query($ident: ID!,$identHistorikk: Boolean!,){
-    hentIdenter(ident: $ident, historikk: $identHistorikk ) {
-        identer {
-            ident
-            gruppe
-        }
-    }
-}

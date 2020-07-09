@@ -8,9 +8,9 @@ internal data class TpsFnr(val tpsIdent: String)
 internal data class PdlFnr(val pdlIdent: String)
 
 internal val enableMapper = "p" != EnvironmentUtils.getRequiredProperty(ByEnvironmentStrategy.ENVIRONMENT_PROPERTY)
-internal val log = LoggerFactory.getLogger(PdlSyntetiskFnrMapper::class.java)
+internal val log = LoggerFactory.getLogger(PdlSyntetiskMapper::class.java)
 
-object PdlSyntetiskFnrMapper {
+object PdlSyntetiskMapper {
     // TODO TpsFnr skal kunne være for fiktive personer (e.g. Testfamilien).
     // TODO PdlFnr er genererte syntetiske fnr/personer.
     private val fnrmap : Map<TpsFnr, List<PdlFnr>> = mapOf(
@@ -20,14 +20,26 @@ object PdlSyntetiskFnrMapper {
     )
 
     init {
-        log.info("Starting PdlFnrMapper, enabled: $enableMapper")
+        log.info("Starting PdlSyntetiskMapper, enabled: $enableMapper")
     }
 
-    fun mapTilPdl(fnr: String) : String =
+    fun mapFnrTilPdl(fnr: String) : String =
             if (enableMapper) {
-                log.error("Brukte PdlSyntetiskFnrMapper, denne skal aldri vises i produksjon")
+                log.error("Brukte PdlSyntetiskMapper, denne skal aldri vises i produksjon")
                 fnrmap[TpsFnr(fnr)]?.get(0)?.pdlIdent ?: fnr
             } else {
                 fnr
+            }
+
+    fun mapAktorIdFraPdl(aktorId: String): String =
+            if (enableMapper) {
+                log.error("Brukte PdlSyntetiskMapper, denne skal aldri vises i produksjon")
+                if (aktorId == "2004819988162") {
+                    "1989093374365"
+                } else {
+                    "1000096233942"
+                }
+            } else {
+                aktorId
             }
 }

@@ -1,20 +1,20 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.oppgave
 
 import com.google.gson.GsonBuilder
-import no.nav.common.auth.SsoToken
-import no.nav.common.auth.SubjectHandler
 import no.nav.common.oidc.SystemUserTokenProvider
 import no.nav.log.MDCConstants
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveRequest
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveRestClient
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.oppgave.OppgaveResponse
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.pdl.PdlOppslagService
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.pdl.generated.HentIdent.IdentGruppe
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.kodeverksmapper.KodeverksmapperService
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.kodeverksmapper.domain.Behandling
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.strategier.ByEnvironmentStrategy
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.pdl.PdlSyntetiskMapper
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.RestConstants
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.RestConstants.AUTH_METHOD_BEARER
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.RestConstants.AUTH_SEPERATOR
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.TjenestekallLogger
 import no.nav.sbl.rest.RestUtils
 import no.nav.sbl.util.EnvironmentUtils
 import org.slf4j.MDC
@@ -35,7 +35,6 @@ open class OppgaveOpprettelseClient @Inject constructor(
     val OPPGAVE_BASEURL = EnvironmentUtils.getRequiredProperty("OPPGAVE_BASEURL")
     val url = OPPGAVE_BASEURL + "api/v1/oppgaver"
     private val log = LoggerFactory.getLogger(OppgaveOpprettelseClient::class.java)
-    private val tjenestekallLogg = LoggerFactory.getLogger("SecureLog")
     private val gson = GsonBuilder().setDateFormat("yyyy-MM-dd").create()
 
     @Inject
@@ -46,7 +45,7 @@ open class OppgaveOpprettelseClient @Inject constructor(
         //Mapping fra gammel kodeverk som frontend bruker til nytt kodeverk som Oppgave bruker
         val behandling: Optional<Behandling> = kodeverksmapperService.mapUnderkategori(oppgave.underkategoriKode)
         val oppgaveTypeMapped: String = kodeverksmapperService.mapOppgavetype(oppgave.oppgavetype)
-        val aktorId = getAktørId(oppgave.fnr)
+        val aktorId = getAktorId(oppgave.fnr)
         if (aktorId == null || aktorId.isEmpty()) {
             throw Exception("AktørId-mangler på person")
 
@@ -76,13 +75,10 @@ open class OppgaveOpprettelseClient @Inject constructor(
         try {
 
             val consumerOidcToken: String = stsService.systemUserAccessToken
-            tjenestekallLogg.info("""
-            Oppgaver-request: $uuid
-            ------------------------------------------------------------------------------------
-                ident: ${request.aktoerId}
-                callId: ${MDC.get(MDCConstants.MDC_CALL_ID)}
-            ------------------------------------------------------------------------------------
-        """.trimIndent())
+            TjenestekallLogger.info("Oppgaver-request: $uuid", mapOf(
+                    "ident" to request.aktoerId,
+                    "callId" to MDC.get(MDCConstants.MDC_CALL_ID)
+            ))
 
             val content: String = RestUtils.withClient { client ->
                 val response = client.target(url)
@@ -94,26 +90,18 @@ open class OppgaveOpprettelseClient @Inject constructor(
                         .post(json(request))
 
                 val body = response.readEntity(String::class.java)
-                tjenestekallLogg.info("""
-                Oppgave-response: $uuid
-                ------------------------------------------------------------------------------------
-                    status: ${response.status} ${response.statusInfo}
-                    body: $body
-                ------------------------------------------------------------------------------------
-            """.trimIndent())
-
+                TjenestekallLogger.info("Oppgave-response: $uuid", mapOf(
+                        "status" to "${response.status} ${response.statusInfo}",
+                        "body" to body
+                ))
                 body
             }
             return gson.fromJson(content, OppgaveResponse::class.java)
         } catch (exception: Exception) {
             log.error("Feilet ved post mot Oppgave (ID: $uuid)", exception)
-            tjenestekallLogg.error("""
-                Oppgave-error:                 $uuid
-                ------------------------------------------------------------------------------------
-                    exception:
-                    $exception
-                ------------------------------------------------------------------------------------
-            """.trimIndent())
+            TjenestekallLogger.error("Oppgave-error: $uuid", mapOf(
+                    "exception" to exception
+            ))
             return OppgaveResponse()
         }
 
@@ -121,26 +109,18 @@ open class OppgaveOpprettelseClient @Inject constructor(
     }
 
 
-    private fun getAktørId(fnr: String): String? {
-
-        try {
-            val aktor = pdlOppslagService.hentIdent(fnr)?.data?.hentIdenter?.identer?.find { identer -> identer.gruppe == "AKTORID" }
-            // syntmapping for Q2 --> Q1
-            if ("p" != EnvironmentUtils.getRequiredProperty(ByEnvironmentStrategy.ENVIRONMENT_PROPERTY)) {
-                if ("2004819988162" == (aktor?.ident)) {
-                    return "1989093374365"
-                } else {
-                    return "1000096233942"
-                }
-
-
-            }
-            return aktor?.ident;
+    private fun getAktorId(fnr: String): String? {
+        return try {
+            pdlOppslagService
+                    .hentIdent(fnr)
+                    ?.identer
+                    ?.find { ident -> ident.gruppe == IdentGruppe.AKTORID }
+                    ?.ident
+                    // syntmapping for Q2 --> Q1
+                    ?.let(PdlSyntetiskMapper::mapAktorIdFraPdl)
         } catch (exception: Exception) {
-
-            return null
+            null
         }
-
     }
 
     private fun stripTemakode(prioritet: String): String {
