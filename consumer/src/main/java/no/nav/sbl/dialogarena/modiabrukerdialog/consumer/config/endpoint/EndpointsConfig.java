@@ -6,7 +6,6 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.joark.J
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.kodeverksmapper.KodeverksmapperEndpointConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.oppfolgingsinfo.OppfolgingsinfoApiEndpointConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v1.aktor.AktorEndpointConfig;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v1.arbeidsfordeling.ArbeidsfordelingV1EndpointConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v1.arena.arbeidogaktivitet.ArbeidOgAktivitetEndpointConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v1.egenansatt.EgenAnsattV1EndpointConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v1.gsak.GsakTildelOppgaveV1EndpointConfig;
@@ -59,7 +58,6 @@ import org.springframework.context.annotation.Import;
         OrganisasjonEnhetV2EndpointConfig.class,
         OrganisasjonEnhetKontaktinformasjonV1EndpointConfig.class,
         EgenAnsattV1EndpointConfig.class,
-        ArbeidsfordelingV1EndpointConfig.class,
         KodeverksmapperEndpointConfig.class,
         UnleashEndpointConfig.class,
         InnsynJournalEndpointConfig.class,
