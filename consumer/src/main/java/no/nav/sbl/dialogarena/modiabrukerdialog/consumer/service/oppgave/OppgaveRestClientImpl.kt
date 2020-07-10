@@ -132,7 +132,7 @@ open class OppgaveOpprettelseClient @Inject constructor(
     }
 
     private fun stripTemakode(prioritet: String): String {
-        return prioritet.substringBefore("_", "")
+        return prioritet.substringBefore("_")
     }
 }
 
