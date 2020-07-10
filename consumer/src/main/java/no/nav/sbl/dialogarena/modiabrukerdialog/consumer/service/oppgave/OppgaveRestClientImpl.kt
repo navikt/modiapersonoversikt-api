@@ -48,7 +48,6 @@ open class OppgaveOpprettelseClient @Inject constructor(
         val aktorId = getAktorId(oppgave.fnr)
         if (aktorId == null || aktorId.isEmpty()) {
             throw Exception("AktørId-mangler på person")
-
         }
 
         val oppgaveskjermetObject = OppgaveSkjermetRequestDTO(
@@ -90,17 +89,26 @@ open class OppgaveOpprettelseClient @Inject constructor(
                         .post(json(request))
 
                 val body = response.readEntity(String::class.java)
-                TjenestekallLogger.info("Oppgave-response: $uuid", mapOf(
-                        "status" to "${response.status} ${response.statusInfo}",
-                        "body" to body
-                ))
+                if (response.status == 200) {
+                    TjenestekallLogger.info("Oppgave-response: $uuid", mapOf(
+                            "status" to "${response.status} ${response.statusInfo}",
+                            "body" to body
+                    ))
+                } else {
+                    TjenestekallLogger.error("Oppgave-response-error: $uuid", mapOf(
+                            "status" to "${response.status} ${response.statusInfo}",
+                            "request" to request,
+                            "body" to body
+                    ))
+                }
                 body
             }
             return gson.fromJson(content, OppgaveResponse::class.java)
         } catch (exception: Exception) {
             log.error("Feilet ved post mot Oppgave (ID: $uuid)", exception)
             TjenestekallLogger.error("Oppgave-error: $uuid", mapOf(
-                    "exception" to exception
+                    "exception" to exception,
+                    "request" to request
             ))
             return OppgaveResponse()
         }
@@ -124,10 +132,8 @@ open class OppgaveOpprettelseClient @Inject constructor(
     }
 
     private fun stripTemakode(prioritet: String): String {
-        return prioritet.substringBefore("_", "")
+        return prioritet.substringBefore("_")
     }
-
-
 }
 
 data class OppgaveSkjermetRequestDTO(
