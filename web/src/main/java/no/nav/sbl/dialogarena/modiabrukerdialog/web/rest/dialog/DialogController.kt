@@ -72,8 +72,8 @@ class DialogController @Inject constructor(
                 .check(Policies.tilgangTilBruker.with(fnr))
                 .get(Audit.describe(CREATE, Person.Henvendelse.Les, AuditIdentifier.FNR to fnr)) {
                     val context = lagSendHenvendelseContext(fnr, request)
-                    henvendelseUtsendingService.sendHenvendelse(lagReferat(referatRequest, context), Optional.empty(), Optional.empty(), context.enhet)
-                    Response.ok().build()
+                    val behandlingsId = henvendelseUtsendingService.sendHenvendelse(lagReferat(referatRequest, context), Optional.empty(), Optional.empty(), context.enhet)
+                    Response.ok(behandlingsId).build()
                 }
     }
 
