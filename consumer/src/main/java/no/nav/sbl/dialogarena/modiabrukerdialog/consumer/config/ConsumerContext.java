@@ -1,6 +1,5 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config;
 
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.config.ApplicationContextProviderConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.artifact.ArtifactsConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.EndpointsConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.service.ServiceConfig;
@@ -11,7 +10,6 @@ import static org.slf4j.bridge.SLF4JBridgeHandler.install;
 import static org.slf4j.bridge.SLF4JBridgeHandler.removeHandlersForRootLogger;
 @Configuration
 @Import({
-        ApplicationContextProviderConfig.class,
         ArtifactsConfig.class,
         EndpointsConfig.class,
         ServiceConfig.class
