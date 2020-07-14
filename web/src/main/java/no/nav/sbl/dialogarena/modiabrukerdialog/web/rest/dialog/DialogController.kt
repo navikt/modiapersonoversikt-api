@@ -73,7 +73,7 @@ class DialogController @Inject constructor(
                 .get(Audit.describe(CREATE, Person.Henvendelse.Les, AuditIdentifier.FNR to fnr)) {
                     val context = lagSendHenvendelseContext(fnr, request)
                     val behandlingsId = henvendelseUtsendingService.sendHenvendelse(lagReferat(referatRequest, context), Optional.empty(), Optional.empty(), context.enhet)
-                    Response.ok(behandlingsId).build()
+                    Response.ok().entity(behandlingsId).build()
                 }
     }
 
