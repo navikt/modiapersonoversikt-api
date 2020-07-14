@@ -30,6 +30,7 @@ import javax.ws.rs.*
 import javax.ws.rs.core.Context
 import javax.ws.rs.core.Response
 
+data class BehandlingsId(val behandlingsId: String)
 data class TraadDTO(val traadId: String, val meldinger: List<MeldingDTO>) : DTO
 class MeldingDTO(val map: Map<String, Any?>) : HashMap<String, Any?>(map), DTO
 class FortsettDialogDTO(val behandlingsId: String, val oppgaveId: String?) : DTO
@@ -72,8 +73,8 @@ class DialogController @Inject constructor(
                 .check(Policies.tilgangTilBruker.with(fnr))
                 .get(Audit.describe(CREATE, Person.Henvendelse.Les, AuditIdentifier.FNR to fnr)) {
                     val context = lagSendHenvendelseContext(fnr, request)
-                    henvendelseUtsendingService.sendHenvendelse(lagReferat(referatRequest, context), Optional.empty(), Optional.empty(), context.enhet)
-                    Response.ok().build()
+                    val behandlingsId = henvendelseUtsendingService.sendHenvendelse(lagReferat(referatRequest, context), Optional.empty(), Optional.empty(), context.enhet)
+                    Response.ok(BehandlingsId(behandlingsId)).build()
                 }
     }
 

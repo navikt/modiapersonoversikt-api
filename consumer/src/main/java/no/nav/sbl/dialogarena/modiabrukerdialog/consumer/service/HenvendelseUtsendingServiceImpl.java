@@ -87,7 +87,7 @@ public class HenvendelseUtsendingServiceImpl implements HenvendelseUtsendingServ
     }
 
     @Override
-    public void sendHenvendelse(Melding melding, Optional<String> oppgaveId,
+    public String sendHenvendelse(Melding melding, Optional<String> oppgaveId,
         Optional<Sak> sak, String saksbehandlersValgteEnhet) throws Exception {
         if (oppgaveId.isPresent() && oppgaveBehandlingService
             .oppgaveErFerdigstilt(oppgaveId.get())) {
@@ -105,6 +105,7 @@ public class HenvendelseUtsendingServiceImpl implements HenvendelseUtsendingServ
         try {
             fullbyrdeSendtInnHenvendelse(melding, oppgaveId, sak,
                 wsSendUtHenvendelseResponse.getBehandlingsId(), saksbehandlersValgteEnhet);
+            return wsSendUtHenvendelseResponse.getBehandlingsId();
         } catch (Exception e) {
             throw new JournalforingFeiletException(e);
         }

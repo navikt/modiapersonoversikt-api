@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface HenvendelseUtsendingService {
-    void sendHenvendelse(Melding melding, Optional<String> oppgaveId, Optional<Sak> sak, String saksbehandlersValgteEnhet) throws Exception;
+    String sendHenvendelse(Melding melding, Optional<String> oppgaveId, Optional<Sak> sak, String saksbehandlersValgteEnhet) throws Exception;
 
     String opprettHenvendelse(String type, String fnr, String behandlingskjedeId);
 

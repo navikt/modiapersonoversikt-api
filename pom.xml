@@ -6,7 +6,7 @@
     <parent>
         <groupId>no.nav.common</groupId>
         <artifactId>mor-pom</artifactId>
-        <version>1.2020.06.15_15.55-ecdbeb12b893</version>
+        <version>1.2020.07.14_09.10-c90ff81f6194</version>
     </parent>
 
     <name>Dialogarena - modiabrukerdialog</name>
@@ -34,7 +34,7 @@
     </modules>
 
     <properties>
-        <common.version>1.2020.06.15_15.55-ecdbeb12b893</common.version>
+        <common.version>1.2020.07.14_09.10-c90ff81f6194</common.version>
         <lucene.version>7.1.0</lucene.version>
         <fluent-hc.version>4.2.4</fluent-hc.version>
         <kotlin.version>1.3.72</kotlin.version>
