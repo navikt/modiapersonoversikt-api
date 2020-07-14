@@ -6,8 +6,6 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.service.ServiceC
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
-import static org.slf4j.bridge.SLF4JBridgeHandler.install;
-import static org.slf4j.bridge.SLF4JBridgeHandler.removeHandlersForRootLogger;
 @Configuration
 @Import({
         ArtifactsConfig.class,
@@ -15,11 +13,4 @@ import static org.slf4j.bridge.SLF4JBridgeHandler.removeHandlersForRootLogger;
         ServiceConfig.class
 })
 public class ConsumerContext {
-
-    static {
-        // Sikkerhetsrammeverkene logger til java.util.logging
-        removeHandlersForRootLogger();
-        install();
-    }
-
 }
