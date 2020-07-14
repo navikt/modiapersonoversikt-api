@@ -124,20 +124,6 @@
             <scope>test</scope>
         </dependency>
 
-        <!--Lucene-->
-        <dependency>
-            <groupId>org.apache.lucene</groupId>
-            <artifactId>lucene-core</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.lucene</groupId>
-            <artifactId>lucene-queryparser</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.lucene</groupId>
-            <artifactId>lucene-highlighter</artifactId>
-        </dependency>
-
         <!--Logging-->
         <dependency>
             <groupId>org.slf4j</groupId>

@@ -27,7 +27,6 @@ import org.springframework.context.annotation.Import;
 @Configuration
 @Import({
         InformasjonController.class,
-        MeldingerController.class,
         JournalforingController.class,
         HodeController.class,
         VarslerController.class,
