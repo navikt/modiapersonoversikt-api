@@ -210,5 +210,7 @@ public class ServiceConfig {
     }
 
     @Bean
-    PdlOppslagService pdlOppslagService() { return new PdlOppslagServiceImpl(); }
+    PdlOppslagService pdlOppslagService(SystemUserTokenProvider sts) {
+        return new PdlOppslagServiceImpl(sts);
+    }
 }
