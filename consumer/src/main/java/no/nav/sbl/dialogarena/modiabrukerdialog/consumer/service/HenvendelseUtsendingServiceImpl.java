@@ -15,6 +15,8 @@ import java.util.Optional;
 import java.util.function.Function;
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.ws.rs.BadRequestException;
+
 import no.nav.kjerneinfo.consumer.fim.person.PersonKjerneinfoServiceBi;
 import no.nav.kjerneinfo.consumer.fim.person.to.HentKjerneinformasjonRequest;
 import no.nav.kjerneinfo.domain.person.Person;
@@ -120,7 +122,7 @@ public class HenvendelseUtsendingServiceImpl implements HenvendelseUtsendingServ
     public void ferdigstillHenvendelse(Melding melding, Optional<String> oppgaveId, Optional<Sak> sak, String behandlingsId, String saksbehandlersValgteEnhet) throws Exception {
         if (oppgaveId.isPresent() && oppgaveBehandlingService.oppgaveErFerdigstilt(oppgaveId.get())) {
             logger.error("Oppgaven er ferdigstilt med id: {}", oppgaveId);
-            return;
+            throw new BadRequestException("Oppgaven er ferdigstilt med id: " + oppgaveId);
         }
 
         XMLHenvendelse xmlHenvendelse = lagXMLHenvendelseOgSettEnhet(melding);
