@@ -32,7 +32,7 @@ class PdlOppslagServiceImpl(
 ) : PdlOppslagService {
     private val log = LoggerFactory.getLogger(PdlOppslagServiceImpl::class.java)
 
-    constructor(stsService: SystemUserTokenProvider) : this(stsService, createMockGraphQlClient())
+    constructor(stsService: SystemUserTokenProvider) : this(stsService, createGraphQlClient())
 
     override fun hentPerson(fnr: String): HentPerson.Person? = prepareRequest(fnr)
             .executeRequest { HentPerson(graphQLClient).execute(HentPerson.Variables(it.fnr), it.headers) }
@@ -122,7 +122,7 @@ class PdlOppslagServiceImpl(
 
 }
 
-private fun createMockGraphQlClient(): GraphQLClient<*> {
+private fun createGraphQlClient(): GraphQLClient<*> {
     val url = if ("p" == EnvironmentUtils.getRequiredProperty(ENVIRONMENT_PROPERTY)) {
         "https://pdl-api.nais.adeo.no/graphql"
     } else {
