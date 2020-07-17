@@ -22,7 +22,4 @@ public interface HenvendelseUtsendingService {
     void oppdaterTemagruppe(String behandlingsId, String temagruppe);
 
     String slaaSammenTraader(List<String> traadIder);
-
-    class OppgaveErFerdigstilt extends Exception {
-    }
 }

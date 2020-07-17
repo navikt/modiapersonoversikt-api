@@ -6,7 +6,6 @@ import no.nav.kjerneinfo.domain.person.Person;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelse;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType;
 import no.nav.modig.content.ContentRetriever;
-import no.nav.modig.core.exception.ApplicationException;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.Sak;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Fritekst;
@@ -85,10 +84,10 @@ public class HenvendelseUtsendingServiceImpl implements HenvendelseUtsendingServ
 
     @Override
     public String sendHenvendelse(Melding melding, Optional<String> oppgaveId,
-                                  Optional<Sak> sak, String saksbehandlersValgteEnhet) throws Exception {
+                                  Optional<Sak> sak, String saksbehandlersValgteEnhet) {
         if (oppgaveId.isPresent() && oppgaveBehandlingService
                 .oppgaveErFerdigstilt(oppgaveId.get())) {
-            throw new OppgaveErFerdigstilt();
+            throw new OppgaveErFerdigstiltException();
         }
 
         XMLHenvendelse xmlHenvendelse = lagXMLHenvendelseOgSettEnhet(melding);
@@ -117,7 +116,7 @@ public class HenvendelseUtsendingServiceImpl implements HenvendelseUtsendingServ
     public void ferdigstillHenvendelse(Melding melding, Optional<String> oppgaveId, Optional<Sak> sak, String behandlingsId, String saksbehandlersValgteEnhet) throws Exception {
         if (oppgaveId.isPresent() && oppgaveBehandlingService.oppgaveErFerdigstilt(oppgaveId.get())) {
             logger.error("Oppgaven er ferdigstilt med id: {}", oppgaveId);
-            throw new OppgaveErFerdigstilt();
+            throw new OppgaveErFerdigstiltException();
         }
 
         XMLHenvendelse xmlHenvendelse = lagXMLHenvendelseOgSettEnhet(melding);
@@ -180,7 +179,7 @@ public class HenvendelseUtsendingServiceImpl implements HenvendelseUtsendingServ
                         .collect(toList());
 
         if (meldinger.isEmpty()) {
-            throw new ApplicationException(String.format("Fant ingen meldinger for fnr: %s med traadId: %s", fnr, traadId));
+            throw new IngenMeldingerException(fnr, traadId);
         }
 
         gjorTilgangSjekk(valgtEnhet, meldinger);
