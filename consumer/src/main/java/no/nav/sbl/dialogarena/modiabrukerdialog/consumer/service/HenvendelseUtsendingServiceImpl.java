@@ -1,22 +1,5 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service;
 
-import static java.util.Collections.singletonList;
-import static java.util.stream.Collectors.toList;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe.ANSOS;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe.OKSOS;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding.ELDSTE_FORST;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.MeldingUtils.tilMelding;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.HenvendelseUtils.createXMLHenvendelseMedMeldingTilBruker;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.HenvendelseUtils.getXMLHenvendelseTypeBasertPaaMeldingstype;
-import static org.apache.commons.lang3.StringUtils.isNotBlank;
-
-import java.util.List;
-import java.util.Optional;
-import java.util.function.Function;
-import javax.inject.Inject;
-import javax.inject.Named;
-import javax.ws.rs.BadRequestException;
-
 import no.nav.kjerneinfo.consumer.fim.person.PersonKjerneinfoServiceBi;
 import no.nav.kjerneinfo.consumer.fim.person.to.HentKjerneinformasjonRequest;
 import no.nav.kjerneinfo.domain.person.Person;
@@ -37,11 +20,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.ldap.LDAPService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.cache.HenvendelsePortTypeCacheUtil;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.henvendelse.delsvar.DelsvarSammenslaaer;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.henvendelse.delsvar.DelsvarUtils;
-import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Policies;
-import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.TilgangTilKontorSperreData;
-import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.TilgangTilOksosSperreData;
-import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.TilgangTilTemaData;
-import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Tilgangskontroll;
+import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.*;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.behandlehenvendelse.BehandleHenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.senduthenvendelse.SendUtHenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.senduthenvendelse.WSBehandlingskjedeErAlleredeBesvart;
@@ -52,6 +31,22 @@ import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.henvendelse.Henvendels
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.meldinger.WSHentHenvendelseListeRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.inject.Inject;
+import javax.inject.Named;
+import java.util.List;
+import java.util.Optional;
+import java.util.function.Function;
+
+import static java.util.Collections.singletonList;
+import static java.util.stream.Collectors.toList;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe.ANSOS;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe.OKSOS;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding.ELDSTE_FORST;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.MeldingUtils.tilMelding;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.HenvendelseUtils.createXMLHenvendelseMedMeldingTilBruker;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.HenvendelseUtils.getXMLHenvendelseTypeBasertPaaMeldingstype;
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 public class HenvendelseUtsendingServiceImpl implements HenvendelseUtsendingService {
 
@@ -90,23 +85,23 @@ public class HenvendelseUtsendingServiceImpl implements HenvendelseUtsendingServ
 
     @Override
     public String sendHenvendelse(Melding melding, Optional<String> oppgaveId,
-        Optional<Sak> sak, String saksbehandlersValgteEnhet) throws Exception {
+                                  Optional<Sak> sak, String saksbehandlersValgteEnhet) throws Exception {
         if (oppgaveId.isPresent() && oppgaveBehandlingService
-            .oppgaveErFerdigstilt(oppgaveId.get())) {
+                .oppgaveErFerdigstilt(oppgaveId.get())) {
             throw new OppgaveErFerdigstilt();
         }
 
         XMLHenvendelse xmlHenvendelse = lagXMLHenvendelseOgSettEnhet(melding);
 
         WSSendUtHenvendelseResponse wsSendUtHenvendelseResponse = sendUtHenvendelsePortType
-            .sendUtHenvendelse(new WSSendUtHenvendelseRequest()
-                .withType(xmlHenvendelse.getHenvendelseType())
-                .withFodselsnummer(melding.fnrBruker)
-                .withAny(xmlHenvendelse));
+                .sendUtHenvendelse(new WSSendUtHenvendelseRequest()
+                        .withType(xmlHenvendelse.getHenvendelseType())
+                        .withFodselsnummer(melding.fnrBruker)
+                        .withAny(xmlHenvendelse));
 
         try {
             fullbyrdeSendtInnHenvendelse(melding, oppgaveId, sak,
-                wsSendUtHenvendelseResponse.getBehandlingsId(), saksbehandlersValgteEnhet);
+                    wsSendUtHenvendelseResponse.getBehandlingsId(), saksbehandlersValgteEnhet);
             return wsSendUtHenvendelseResponse.getBehandlingsId();
         } catch (Exception e) {
             throw new JournalforingFeiletException(e);
@@ -140,7 +135,7 @@ public class HenvendelseUtsendingServiceImpl implements HenvendelseUtsendingServ
     }
 
     @Override
-    public void avbrytHenvendelse(String behandlingsId){
+    public void avbrytHenvendelse(String behandlingsId) {
         sendUtHenvendelsePortType.avbrytHenvendelse(behandlingsId);
     }
 
@@ -164,7 +159,7 @@ public class HenvendelseUtsendingServiceImpl implements HenvendelseUtsendingServ
             sakerService.knyttBehandlingskjedeTilSak(melding.fnrBruker, melding.traadId, sak.get(), saksbehandlersValgteEnhet);
         }
         oppgaveId.ifPresent(s -> oppgaveBehandlingService
-            .ferdigstillOppgaveIGsak(s, temagruppe, saksbehandlersValgteEnhet));
+                .ferdigstillOppgaveIGsak(s, temagruppe, saksbehandlersValgteEnhet));
         if (temagruppe == ANSOS) {
             merkSomKontorsperret(melding.fnrBruker, singletonList(melding.id));
         }
