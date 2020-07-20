@@ -111,7 +111,7 @@ public class SakerServiceImpl implements SakerService {
             return behandleSakWS.opprettSak(request).getSakId();
         } catch (OpprettSakSakEksistererAllerede opprettSakException) {
             return finnSakIdFraGsak(fnr, sak)
-                    .orElseThrow(() -> new RuntimeException("Kunne ikke finne eksisterende sak selvom den eksisterer", opprettSakException));
+                    .orElseThrow(() -> new RuntimeException("Fant ikke sak", opprettSakException));
         } catch (OpprettSakUgyldigInput opprettSakException) {
             throw new RuntimeException(opprettSakException);
         }
