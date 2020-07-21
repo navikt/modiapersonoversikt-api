@@ -84,7 +84,7 @@ public class SakerServiceImpl implements SakerService {
             behandleHenvendelsePortType.knyttBehandlingskjedeTilTema(behandlingskjede, "BID");
             return;
         }
-        if (!sak.finnesIPsak && !sak.finnesIGsak) {
+        if (!(sak.finnesIPsak || sak.finnesIGsak)) {
             sak.saksId = opprettSak(fnr, sak);
         }
         try {
