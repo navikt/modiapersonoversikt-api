@@ -1,27 +1,11 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service;
 
-import static java.util.Collections.singletonList;
-import static java.util.stream.Collectors.toList;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe.ANSOS;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe.OKSOS;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding.ELDSTE_FORST;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.MeldingUtils.tilMelding;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.HenvendelseUtils.createXMLHenvendelseMedMeldingTilBruker;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.HenvendelseUtils.getXMLHenvendelseTypeBasertPaaMeldingstype;
-import static org.apache.commons.lang3.StringUtils.isNotBlank;
-
-import java.util.List;
-import java.util.Optional;
-import java.util.function.Function;
-import javax.inject.Inject;
-import javax.inject.Named;
 import no.nav.kjerneinfo.consumer.fim.person.PersonKjerneinfoServiceBi;
 import no.nav.kjerneinfo.consumer.fim.person.to.HentKjerneinformasjonRequest;
 import no.nav.kjerneinfo.domain.person.Person;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelse;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType;
 import no.nav.modig.content.ContentRetriever;
-import no.nav.modig.core.exception.ApplicationException;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.Sak;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Fritekst;
@@ -35,11 +19,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.ldap.LDAPService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.cache.HenvendelsePortTypeCacheUtil;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.henvendelse.delsvar.DelsvarSammenslaaer;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.henvendelse.delsvar.DelsvarUtils;
-import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Policies;
-import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.TilgangTilKontorSperreData;
-import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.TilgangTilOksosSperreData;
-import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.TilgangTilTemaData;
-import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Tilgangskontroll;
+import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.*;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.behandlehenvendelse.BehandleHenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.senduthenvendelse.SendUtHenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.senduthenvendelse.WSBehandlingskjedeErAlleredeBesvart;
@@ -50,6 +30,22 @@ import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.henvendelse.Henvendels
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.meldinger.WSHentHenvendelseListeRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.inject.Inject;
+import javax.inject.Named;
+import java.util.List;
+import java.util.Optional;
+import java.util.function.Function;
+
+import static java.util.Collections.singletonList;
+import static java.util.stream.Collectors.toList;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe.ANSOS;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe.OKSOS;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding.ELDSTE_FORST;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.MeldingUtils.tilMelding;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.HenvendelseUtils.createXMLHenvendelseMedMeldingTilBruker;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.HenvendelseUtils.getXMLHenvendelseTypeBasertPaaMeldingstype;
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 public class HenvendelseUtsendingServiceImpl implements HenvendelseUtsendingService {
 
@@ -87,24 +83,32 @@ public class HenvendelseUtsendingServiceImpl implements HenvendelseUtsendingServ
     }
 
     @Override
-    public String sendHenvendelse(Melding melding, Optional<String> oppgaveId,
-        Optional<Sak> sak, String saksbehandlersValgteEnhet) throws Exception {
-        if (oppgaveId.isPresent() && oppgaveBehandlingService
-            .oppgaveErFerdigstilt(oppgaveId.get())) {
-            throw new OppgaveErFerdigstilt();
+    public String sendHenvendelse(
+            Melding melding,
+            Optional<String> oppgaveId,
+            Optional<Sak> sak,
+            String saksbehandlersValgteEnhet
+    ) {
+        if (oppgaveId.isPresent() && oppgaveBehandlingService.oppgaveErFerdigstilt(oppgaveId.get())) {
+            throw new OppgaveErFerdigstiltException();
         }
 
         XMLHenvendelse xmlHenvendelse = lagXMLHenvendelseOgSettEnhet(melding);
 
         WSSendUtHenvendelseResponse wsSendUtHenvendelseResponse = sendUtHenvendelsePortType
-            .sendUtHenvendelse(new WSSendUtHenvendelseRequest()
-                .withType(xmlHenvendelse.getHenvendelseType())
-                .withFodselsnummer(melding.fnrBruker)
-                .withAny(xmlHenvendelse));
+                .sendUtHenvendelse(new WSSendUtHenvendelseRequest()
+                        .withType(xmlHenvendelse.getHenvendelseType())
+                        .withFodselsnummer(melding.fnrBruker)
+                        .withAny(xmlHenvendelse));
 
         try {
-            fullbyrdeSendtInnHenvendelse(melding, oppgaveId, sak,
-                wsSendUtHenvendelseResponse.getBehandlingsId(), saksbehandlersValgteEnhet);
+            fullbyrdeSendtInnHenvendelse(
+                    melding,
+                    oppgaveId,
+                    sak,
+                    wsSendUtHenvendelseResponse.getBehandlingsId(),
+                    saksbehandlersValgteEnhet
+            );
             return wsSendUtHenvendelseResponse.getBehandlingsId();
         } catch (Exception e) {
             throw new JournalforingFeiletException(e);
@@ -120,7 +124,7 @@ public class HenvendelseUtsendingServiceImpl implements HenvendelseUtsendingServ
     public void ferdigstillHenvendelse(Melding melding, Optional<String> oppgaveId, Optional<Sak> sak, String behandlingsId, String saksbehandlersValgteEnhet) throws Exception {
         if (oppgaveId.isPresent() && oppgaveBehandlingService.oppgaveErFerdigstilt(oppgaveId.get())) {
             logger.error("Oppgaven er ferdigstilt med id: {}", oppgaveId);
-            return;
+            throw new OppgaveErFerdigstiltException();
         }
 
         XMLHenvendelse xmlHenvendelse = lagXMLHenvendelseOgSettEnhet(melding);
@@ -138,7 +142,7 @@ public class HenvendelseUtsendingServiceImpl implements HenvendelseUtsendingServ
     }
 
     @Override
-    public void avbrytHenvendelse(String behandlingsId){
+    public void avbrytHenvendelse(String behandlingsId) {
         sendUtHenvendelsePortType.avbrytHenvendelse(behandlingsId);
     }
 
@@ -161,8 +165,9 @@ public class HenvendelseUtsendingServiceImpl implements HenvendelseUtsendingServ
         if (sak.isPresent()) {
             sakerService.knyttBehandlingskjedeTilSak(melding.fnrBruker, melding.traadId, sak.get(), saksbehandlersValgteEnhet);
         }
-        oppgaveId.ifPresent(s -> oppgaveBehandlingService
-            .ferdigstillOppgaveIGsak(s, temagruppe, saksbehandlersValgteEnhet));
+        oppgaveId.ifPresent(s ->
+                oppgaveBehandlingService.ferdigstillOppgaveIGsak(s, temagruppe, saksbehandlersValgteEnhet)
+        );
         if (temagruppe == ANSOS) {
             merkSomKontorsperret(melding.fnrBruker, singletonList(melding.id));
         }
@@ -183,7 +188,7 @@ public class HenvendelseUtsendingServiceImpl implements HenvendelseUtsendingServ
                         .collect(toList());
 
         if (meldinger.isEmpty()) {
-            throw new ApplicationException(String.format("Fant ingen meldinger for fnr: %s med traadId: %s", fnr, traadId));
+            throw new IngenMeldingerException(fnr, traadId);
         }
 
         gjorTilgangSjekk(valgtEnhet, meldinger);
