@@ -83,10 +83,13 @@ public class HenvendelseUtsendingServiceImpl implements HenvendelseUtsendingServ
     }
 
     @Override
-    public String sendHenvendelse(Melding melding, Optional<String> oppgaveId,
-                                  Optional<Sak> sak, String saksbehandlersValgteEnhet) {
-        if (oppgaveId.isPresent() && oppgaveBehandlingService
-                .oppgaveErFerdigstilt(oppgaveId.get())) {
+    public String sendHenvendelse(
+            Melding melding,
+            Optional<String> oppgaveId,
+            Optional<Sak> sak,
+            String saksbehandlersValgteEnhet
+    ) {
+        if (oppgaveId.isPresent() && oppgaveBehandlingService.oppgaveErFerdigstilt(oppgaveId.get())) {
             throw new OppgaveErFerdigstiltException();
         }
 
@@ -99,8 +102,13 @@ public class HenvendelseUtsendingServiceImpl implements HenvendelseUtsendingServ
                         .withAny(xmlHenvendelse));
 
         try {
-            fullbyrdeSendtInnHenvendelse(melding, oppgaveId, sak,
-                    wsSendUtHenvendelseResponse.getBehandlingsId(), saksbehandlersValgteEnhet);
+            fullbyrdeSendtInnHenvendelse(
+                    melding,
+                    oppgaveId,
+                    sak,
+                    wsSendUtHenvendelseResponse.getBehandlingsId(),
+                    saksbehandlersValgteEnhet
+            );
             return wsSendUtHenvendelseResponse.getBehandlingsId();
         } catch (Exception e) {
             throw new JournalforingFeiletException(e);
@@ -157,8 +165,9 @@ public class HenvendelseUtsendingServiceImpl implements HenvendelseUtsendingServ
         if (sak.isPresent()) {
             sakerService.knyttBehandlingskjedeTilSak(melding.fnrBruker, melding.traadId, sak.get(), saksbehandlersValgteEnhet);
         }
-        oppgaveId.ifPresent(s -> oppgaveBehandlingService
-                .ferdigstillOppgaveIGsak(s, temagruppe, saksbehandlersValgteEnhet));
+        oppgaveId.ifPresent(s ->
+                oppgaveBehandlingService.ferdigstillOppgaveIGsak(s, temagruppe, saksbehandlersValgteEnhet)
+        );
         if (temagruppe == ANSOS) {
             merkSomKontorsperret(melding.fnrBruker, singletonList(melding.id));
         }
