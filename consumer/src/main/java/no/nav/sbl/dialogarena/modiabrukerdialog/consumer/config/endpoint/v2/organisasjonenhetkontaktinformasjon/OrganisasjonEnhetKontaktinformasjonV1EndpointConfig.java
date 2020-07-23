@@ -2,7 +2,6 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v2.org
 
 import no.nav.modig.modia.ping.PingableWebService;
 import no.nav.sbl.dialogarena.common.cxf.CXFClient;
-import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.OrganisasjonEnhetKontaktinformasjonV1Mock;
 import no.nav.sbl.dialogarena.types.Pingable;
 import no.nav.sbl.util.EnvironmentUtils;
 import no.nav.tjeneste.virksomhet.organisasjonenhetkontaktinformasjon.v1.OrganisasjonEnhetKontaktinformasjonV1;
@@ -30,10 +29,6 @@ public class OrganisasjonEnhetKontaktinformasjonV1EndpointConfig {
                 lagEndpoint().configureStsForSystemUser().build()
         );
 
-    }
-
-    private OrganisasjonEnhetKontaktinformasjonV1 lagMockEnpoint() {
-        return OrganisasjonEnhetKontaktinformasjonV1Mock.organisasjonEnhetKontaktinformasjonV1();
     }
 
     private CXFClient<OrganisasjonEnhetKontaktinformasjonV1> lagEndpoint() {

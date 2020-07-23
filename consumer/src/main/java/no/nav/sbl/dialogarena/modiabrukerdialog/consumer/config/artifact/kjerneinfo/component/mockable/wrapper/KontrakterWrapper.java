@@ -2,9 +2,7 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.artifact.kjerne
 
 import no.nav.kontrakter.consumer.fim.config.OppfolgingskontraktConsumerConfig;
 import no.nav.kontrakter.consumer.fim.config.YtelseskontraktConsumerConfig;
-import no.nav.kontrakter.consumer.fim.oppfolgingskontrakt.OppfolgingskontraktServiceBi;
 import no.nav.kontrakter.consumer.fim.oppfolgingskontrakt.support.DefaultOppfolgingskontraktService;
-import no.nav.kontrakter.consumer.fim.ytelseskontrakt.YtelseskontraktServiceBi;
 import no.nav.kontrakter.consumer.fim.ytelseskontrakt.support.DefaultYtelseskontraktService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.Wrapper;
 import no.nav.tjeneste.virksomhet.oppfoelging.v1.OppfoelgingPortType;
@@ -17,8 +15,6 @@ import javax.inject.Inject;
 
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.artifact.kjerneinfo.component.mockable.mockableimpl.KontrakterConsumerConfigImpl.createOppfolgingskontraktService;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.artifact.kjerneinfo.component.mockable.mockableimpl.KontrakterConsumerConfigImpl.createYtelseskontraktService;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.artifacts.kjerneinfo.OppfolgingskontraktServiceBiMock.getOppfolgingskontraktServiceBiMock;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.artifacts.kjerneinfo.YtelseskontraktServiceBiMock.getYtelseskontraktServiceBiMock;
 
 @Configuration
 @Import({
@@ -39,18 +35,7 @@ public class KontrakterWrapper {
     }
 
     @Bean
-    public Wrapper<YtelseskontraktServiceBi> ytelseskontraktMock() {
-        return new Wrapper<>(getYtelseskontraktServiceBiMock());
-    }
-
-    @Bean
     public Wrapper<DefaultOppfolgingskontraktService> oppfolgingskontraktService() {
         return new Wrapper<>(createOppfolgingskontraktService(oppfoelgingPortType));
     }
-
-    @Bean
-    public Wrapper<OppfolgingskontraktServiceBi> oppfolgingskontraktMock() {
-        return new Wrapper<>(getOppfolgingskontraktServiceBiMock());
-    }
-
 }

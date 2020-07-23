@@ -41,11 +41,11 @@
             <artifactId>api-app</artifactId>
         </dependency>
         <!--Interne-->
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>modiabrukerdialog-mock</artifactId>
-            <version>${project.version}</version>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>${project.groupId}</groupId>-->
+<!--            <artifactId>modiabrukerdialog-mock</artifactId>-->
+<!--            <version>${project.version}</version>-->
+<!--        </dependency>-->
         <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>modiabrukerdialog-api</artifactId>

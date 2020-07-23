@@ -18,7 +18,6 @@
     <modules>
         <module>api</module>
         <module>web</module>
-        <module>mock</module>
         <module>consumer</module>
         <module>sporsmalogsvar</module>
         <module>saksoversikt</module>

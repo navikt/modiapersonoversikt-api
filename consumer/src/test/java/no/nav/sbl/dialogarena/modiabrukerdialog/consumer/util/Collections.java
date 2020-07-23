@@ -1,4 +1,4 @@
-package no.nav.sbl.dialogarena.common.collections;
+package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util;
 
 import java.util.*;
 

@@ -2,7 +2,6 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v1.sak
 
 import no.nav.modig.modia.ping.PingableWebService;
 import no.nav.sbl.dialogarena.common.cxf.CXFClient;
-import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.SakOgBehandlingPortTypeMock;
 import no.nav.sbl.dialogarena.types.Pingable;
 import no.nav.sbl.util.EnvironmentUtils;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.binding.SakOgBehandlingV1;
@@ -19,7 +18,6 @@ public class SakOgBehandlingEndpointConfig {
     @Bean
     public SakOgBehandlingV1 sakOgBehandlingPortType() {
         final SakOgBehandlingV1 prod = createSakogbehandlingPortType().configureStsForSubject().build();
-        final SakOgBehandlingV1 mock = new SakOgBehandlingPortTypeMock().getSakOgBehandlingPortTypeMock();
 
         return createTimerProxyForWebService("SakOgBehandling", prod, SakOgBehandlingV1.class);
     }
