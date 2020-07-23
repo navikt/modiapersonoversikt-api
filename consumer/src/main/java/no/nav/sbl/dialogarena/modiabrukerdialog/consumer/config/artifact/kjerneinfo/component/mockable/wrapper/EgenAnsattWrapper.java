@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.artifact.kjerneinfo.component.mockable.wrapper;
 
+import no.nav.kjerneinfo.consumer.egenansatt.EgenAnsattService;
 import no.nav.kjerneinfo.consumer.egenansatt.EgenAnsattServiceImpl;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v1.egenansatt.EgenAnsattV1EndpointConfig;
 import no.nav.tjeneste.pip.egen.ansatt.v1.EgenAnsattV1;
@@ -15,7 +16,7 @@ public class EgenAnsattWrapper {
     private EgenAnsattV1 egenAnsattV1;
 
     @Bean
-    public EgenAnsattServiceImpl egenAnsattService() {
+    public EgenAnsattService egenAnsattService() {
         return new EgenAnsattServiceImpl(egenAnsattV1);
     }
 }

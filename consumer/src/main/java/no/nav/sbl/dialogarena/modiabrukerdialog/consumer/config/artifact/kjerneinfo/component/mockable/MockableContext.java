@@ -11,20 +11,11 @@ import org.springframework.context.annotation.Import;
 
 @Configuration
 @Import({
-        KontrakterConsumerConfigResolver.class,
         KontrakterWrapper.class,
         DkifConsumerConfig.class,
-
-        KjerneinfoMapperConfigResolver.class,
         KjerneinfoMapperWrapper.class,
-
         PersonV3EndpointConfig.class,
-        KjerneinfoMapperConfigResolver.class,
-
-        SykmeldingsperioderPanelConfigResolver.class,
         SykmeldingsperioderWrapper.class,
-
-        EgenAnsattConsumerConfigResolver.class,
         EgenAnsattWrapper.class
 })
 public class MockableContext {
