@@ -3,13 +3,10 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.artifact.kjerne
 
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.artifact.kjerneinfo.component.mockable.SykmeldingsperioderPanelConfigResolver;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.artifact.kjerneinfo.component.mockable.utbtalinger.UtbetalingerServiceTestConfig;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.Wrapper;
 import no.nav.sykmeldingsperioder.consumer.foreldrepenger.ForeldrepengerServiceBi;
 import no.nav.sykmeldingsperioder.consumer.pleiepenger.PleiepengerService;
 import no.nav.sykmeldingsperioder.consumer.sykepenger.SykepengerServiceBi;
 import no.nav.sykmeldingsperioder.consumer.sykepenger.mapping.to.SykepengerRequest;
-import org.junit.jupiter.api.Disabled;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.test.context.ContextConfiguration;
@@ -29,16 +26,13 @@ import static org.mockito.Mockito.*;
 public class SykmeldingsperioderPanelConfigResolverTest {
 
     @Inject
-    @Qualifier("sykepengerServiceDefault")
-    private Wrapper<SykepengerServiceBi> sykepengerServiceDefault;
+    private SykepengerServiceBi sykepengerServiceDefault;
 
     @Inject
-    @Qualifier("foreldrepengerServiceDefault")
-    private Wrapper<ForeldrepengerServiceBi> foreldrepengerServiceDefault;
+    private ForeldrepengerServiceBi foreldrepengerServiceDefault;
 
     @Inject
-    @Qualifier("pleiepengerServiceImpl")
-    private Wrapper<PleiepengerService> pleiepengerServiceImpl;
+    private PleiepengerService pleiepengerServiceImpl;
 
     @Inject
     private SykmeldingsperioderPanelConfigResolver resolver;
@@ -46,7 +40,7 @@ public class SykmeldingsperioderPanelConfigResolverTest {
 //    @Ignore //trenger endring på SykepengerWidgetServiceImpl som må fjerne @Inject
 //    @Test
     public void perDefaultSkalProdkodeEksekveres() {
-        verify(sykepengerServiceDefault.wrappedObject, times(1)).hentSykmeldingsperioder(any(SykepengerRequest.class));
+        verify(sykepengerServiceDefault, times(1)).hentSykmeldingsperioder(any(SykepengerRequest.class));
     }
 
 }

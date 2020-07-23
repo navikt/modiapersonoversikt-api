@@ -4,7 +4,6 @@ import no.nav.kontrakter.consumer.fim.config.OppfolgingskontraktConsumerConfig;
 import no.nav.kontrakter.consumer.fim.config.YtelseskontraktConsumerConfig;
 import no.nav.kontrakter.consumer.fim.oppfolgingskontrakt.support.DefaultOppfolgingskontraktService;
 import no.nav.kontrakter.consumer.fim.ytelseskontrakt.support.DefaultYtelseskontraktService;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.Wrapper;
 import no.nav.tjeneste.virksomhet.oppfoelging.v1.OppfoelgingPortType;
 import no.nav.tjeneste.virksomhet.ytelseskontrakt.v3.YtelseskontraktV3;
 import org.springframework.context.annotation.Bean;
@@ -30,12 +29,12 @@ public class KontrakterWrapper {
     private OppfoelgingPortType oppfoelgingPortType;
 
     @Bean
-    public Wrapper<DefaultYtelseskontraktService> ytelseskontraktService() {
-        return new Wrapper<>(createYtelseskontraktService(ytelseskontraktPortType));
+    public DefaultYtelseskontraktService ytelseskontraktService() {
+        return createYtelseskontraktService(ytelseskontraktPortType);
     }
 
     @Bean
-    public Wrapper<DefaultOppfolgingskontraktService> oppfolgingskontraktService() {
-        return new Wrapper<>(createOppfolgingskontraktService(oppfoelgingPortType));
+    public DefaultOppfolgingskontraktService oppfolgingskontraktService() {
+        return createOppfolgingskontraktService(oppfoelgingPortType);
     }
 }

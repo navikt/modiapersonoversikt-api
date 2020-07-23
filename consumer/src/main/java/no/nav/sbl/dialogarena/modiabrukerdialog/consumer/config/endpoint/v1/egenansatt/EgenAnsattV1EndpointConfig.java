@@ -16,15 +16,9 @@ public class EgenAnsattV1EndpointConfig {
     @Bean
     public EgenAnsattV1 egenAnsattV1() {
         final EgenAnsattV1 egenAnsattV1 = lagEndpoint();
-        final EgenAnsattV1 egenAnsattV1Mock = lagMockEndpoint();
 
         return createTimerProxyForWebService("egenAnsattV1", egenAnsattV1, EgenAnsattV1.class);
     }
-
-    private EgenAnsattV1 lagMockEndpoint() {
-        return EgenAnsattV1Mock.egenAnsattV1();
-    }
-
 
     @Bean
     public Pingable egenAnsattPing() {

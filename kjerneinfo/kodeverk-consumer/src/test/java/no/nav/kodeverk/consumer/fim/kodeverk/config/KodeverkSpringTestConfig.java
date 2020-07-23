@@ -11,7 +11,7 @@ import static org.mockito.Mockito.mock;
 @Configuration
 public class KodeverkSpringTestConfig {
 
-	@Bean(name="kodeverkmanagerBean")
+	@Bean
 	public KodeverkmanagerBi kodeverkmanagerBean() {
 		return new DefaultKodeverkmanager(mock(KodeverkPortType.class));
 	}

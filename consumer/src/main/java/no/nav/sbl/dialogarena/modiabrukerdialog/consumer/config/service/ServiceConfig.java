@@ -90,7 +90,7 @@ public class ServiceConfig {
                                                                    OppgaveBehandlingService oppgaveBehandlingService,
                                                                    SakerService sakerService,
                                                                    Tilgangskontroll tilgangskontroll,
-                                                                   @Named("propertyResolver") ContentRetriever propertyResolver,
+                                                                   ContentRetriever propertyResolver,
                                                                    PersonKjerneinfoServiceBi personKjerneinfoServiceBi,
                                                                    LDAPService ldapService) {
 

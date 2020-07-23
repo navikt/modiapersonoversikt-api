@@ -19,10 +19,11 @@ public class CmsEndpointConfig {
                 .load("content.saksoversikt", "content.modiabrukerdialog");
     }
 
-    @Bean(name = "propertyResolver")
+    @Bean
     public ContentRetriever propertyResolver() {
         InputStreamReader content = new InputStreamReader(Melding.class.getResourceAsStream("Melding.properties"), StandardCharsets.UTF_8);
         return new ContentRetriever()
+                .load("content.saksoversikt")
                 .load("content.modiabrukerdialog")
                 .load(content);
     }

@@ -59,7 +59,7 @@ public class CacheTestConfig {
         return mock(HenvendelsePortType.class);
     }
 
-    @Bean(name = "kodeverkPortTypeV2")
+    @Bean
     public KodeverkPortType kodeverkPortType() {
         return mock(KodeverkPortType.class);
     }

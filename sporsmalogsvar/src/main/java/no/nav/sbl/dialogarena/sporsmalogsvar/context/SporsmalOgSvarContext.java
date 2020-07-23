@@ -25,7 +25,7 @@ public class SporsmalOgSvarContext {
             PersonKjerneinfoServiceBi kjerneinfo,
             Tilgangskontroll tilgangskontroll,
             StandardKodeverk standardKodeverk,
-            @Named("propertyResolver") ContentRetriever propertyResolver,
+            ContentRetriever propertyResolver,
             LDAPService ldapService,
             ArbeidsfordelingV1Service arbeidsfordelingService
     ) {

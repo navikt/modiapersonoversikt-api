@@ -14,7 +14,7 @@ import static no.nav.metrics.MetricsFactory.createTimerProxyForWebService;
 @Configuration
 public class UtbetalingEndpointConfig {
 
-    @Bean(name = "utbetalingV1")
+    @Bean
     public UtbetalingV1 utbetalingV1() {
         final UtbetalingV1 prod = createUtbetalingPortType().configureStsForSubject().build();
 

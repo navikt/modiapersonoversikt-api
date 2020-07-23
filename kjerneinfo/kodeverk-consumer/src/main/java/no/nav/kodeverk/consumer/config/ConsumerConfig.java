@@ -18,7 +18,7 @@ public class ConsumerConfig {
     @Inject
     private KodeverkPortType kodeverkPortType;
 
-    @Bean(name = "kodeverkmanagerBean")
+    @Bean
     public KodeverkmanagerBi kodeverkmanagerBean() {
         return new DefaultKodeverkmanager(kodeverkPortType);
     }

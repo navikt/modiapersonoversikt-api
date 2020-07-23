@@ -16,5 +16,4 @@ public class ForeldrepengerMockService implements ForeldrepengerServiceBi {
     public ForeldrepengerListeResponse hentForeldrepengerListe(ForeldrepengerListeRequest request) {
         return mapper.map(ForeldrepengerMockFactory.createFimHentForeldrepengerListeResponse(), ForeldrepengerListeResponse.class);
     }
-
 }
