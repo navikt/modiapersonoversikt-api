@@ -9,7 +9,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import static no.nav.metrics.MetricsFactory.createTimerProxyForWebService;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.PensjonSakEndpointMock.createPensjonSakV1Mock;
 
 @Configuration
 public class PensjonSakEndpointConfig {
@@ -17,7 +16,6 @@ public class PensjonSakEndpointConfig {
     @Bean
     public PensjonSakV1 pensjonSakV1() {
         PensjonSakV1 prod = createPensjonSakV1().configureStsForSubject().build();
-        PensjonSakV1 mock = createPensjonSakV1Mock();
         return createTimerProxyForWebService("PensjonSakV1", prod, PensjonSakV1.class);
     }
 

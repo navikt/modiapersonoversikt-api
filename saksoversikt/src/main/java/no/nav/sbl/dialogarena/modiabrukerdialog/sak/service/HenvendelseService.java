@@ -29,7 +29,6 @@ public class HenvendelseService {
     private static final Logger LOGGER = getLogger(HenvendelseService.class);
 
     @Inject
-    @Named("henvendelseSoknaderPortType")
     private HenvendelseSoknaderPortType henvendelse;
 
     private Predicate<Soknad> fjernSoknaderInnsendtForHL4I2014 = soknad ->

@@ -6,10 +6,6 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.arbeidsfordeling.Arb
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.kodeverk.StandardKodeverk;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.ldap.LDAPService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Tilgangskontroll;
-import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.GsakService;
-import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.GsakServiceImpl;
-import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.MeldingerSok;
-import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.MeldingerSokImpl;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.henvendelse.HenvendelseBehandlingService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.henvendelse.HenvendelseBehandlingServiceImpl;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.behandlehenvendelse.BehandleHenvendelsePortType;
@@ -23,18 +19,13 @@ import javax.inject.Named;
 public class SporsmalOgSvarContext {
 
     @Bean
-    public GsakService gsakService() {
-        return new GsakServiceImpl();
-    }
-
-    @Bean
     public HenvendelseBehandlingService henvendelseBehandlingService(
             HenvendelsePortType henvendelsePortType,
             BehandleHenvendelsePortType behandleHenvendelsePortType,
             PersonKjerneinfoServiceBi kjerneinfo,
             Tilgangskontroll tilgangskontroll,
             StandardKodeverk standardKodeverk,
-            @Named("propertyResolver") ContentRetriever propertyResolver,
+            ContentRetriever propertyResolver,
             LDAPService ldapService,
             ArbeidsfordelingV1Service arbeidsfordelingService
     ) {
@@ -48,10 +39,5 @@ public class SporsmalOgSvarContext {
                 ldapService,
                 arbeidsfordelingService
         );
-    }
-
-    @Bean
-    public MeldingerSok meldingIndekserer() {
-        return new MeldingerSokImpl();
     }
 }

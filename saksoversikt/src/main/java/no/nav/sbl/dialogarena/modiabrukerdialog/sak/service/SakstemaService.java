@@ -96,7 +96,7 @@ public class SakstemaService {
 
                     return new Sakstema()
                             .withTemakode(temakode)
-                            .withBehandlingskjeder(Java8Utils.optional(behandlingskjeder.get(temakode)).orElse(emptyList()))
+                            .withBehandlingskjeder(Optional.ofNullable(behandlingskjeder.get(temakode)).orElse(emptyList()))
                             .withTilhorendeSaker(tilhorendeSaker)
                             .withTemanavn(temanavn.resultat)
                             .withDokumentMetadata(tilhorendeDokumentMetadata)

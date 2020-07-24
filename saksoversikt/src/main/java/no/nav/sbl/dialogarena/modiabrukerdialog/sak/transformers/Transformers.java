@@ -13,6 +13,7 @@ import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.sakogbehandling
 import org.joda.time.DateTime;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
@@ -96,7 +97,7 @@ public class Transformers {
                 .withSkjemanummerRef(wsSoknad.getHovedskjemaKodeverkId())
                 .withEttersending(wsSoknad.isEttersending())
                 .withHenvendelseType(valueOf(WSHenvendelseType.valueOf(wsSoknad.getHenvendelseType()).name()))
-                .withDokumenter(Java8Utils.optional(wsSoknad.getDokumentforventninger())
+                .withDokumenter(Optional.ofNullable(wsSoknad.getDokumentforventninger())
                         .orElse(new Dokumentforventninger())
                         .getDokumentforventning()
                         .stream()

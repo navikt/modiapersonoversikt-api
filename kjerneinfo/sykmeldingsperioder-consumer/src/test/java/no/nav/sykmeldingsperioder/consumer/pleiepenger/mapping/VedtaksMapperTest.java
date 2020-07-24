@@ -1,6 +1,6 @@
 package no.nav.sykmeldingsperioder.consumer.pleiepenger.mapping;
 
-import no.nav.kjerneinfo.common.mockutils.DateUtils;
+import no.nav.kjerneinfo.common.utils.DateUtils;
 import no.nav.sykmeldingsperioder.domain.pleiepenger.Periode;
 import no.nav.sykmeldingsperioder.domain.pleiepenger.Vedtak;
 import no.nav.tjeneste.virksomhet.pleiepenger.v1.informasjon.WSPeriode;

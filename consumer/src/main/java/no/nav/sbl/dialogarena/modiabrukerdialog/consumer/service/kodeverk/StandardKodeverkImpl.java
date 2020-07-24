@@ -58,7 +58,6 @@ public class StandardKodeverkImpl implements StandardKodeverk {
     private boolean dumpActive;
 
     @Inject
-    @Qualifier("kodeverkPortTypeV2")
     private KodeverkPortType kodeverkPortType;
 
     @Value("${modiabrukerdialog.datadir:/tmp}")

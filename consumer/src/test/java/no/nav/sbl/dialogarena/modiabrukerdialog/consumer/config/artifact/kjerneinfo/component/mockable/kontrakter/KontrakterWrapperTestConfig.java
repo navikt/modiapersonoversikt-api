@@ -4,7 +4,6 @@ import no.nav.kontrakter.consumer.fim.oppfolgingskontrakt.OppfolgingskontraktSer
 import no.nav.kontrakter.consumer.fim.oppfolgingskontrakt.support.DefaultOppfolgingskontraktService;
 import no.nav.kontrakter.consumer.fim.ytelseskontrakt.YtelseskontraktServiceBi;
 import no.nav.kontrakter.consumer.fim.ytelseskontrakt.support.DefaultYtelseskontraktService;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.Wrapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -14,23 +13,23 @@ import static org.mockito.Mockito.mock;
 public class KontrakterWrapperTestConfig {
 
     @Bean
-    public Wrapper<DefaultYtelseskontraktService> ytelseskontraktService() {
-        return new Wrapper<>(mock(DefaultYtelseskontraktService.class));
+    public DefaultYtelseskontraktService ytelseskontraktService() {
+        return mock(DefaultYtelseskontraktService.class);
     }
 
     @Bean
-    public Wrapper<YtelseskontraktServiceBi> ytelseskontraktMock() {
-        return new Wrapper<>(mock(YtelseskontraktServiceBi.class));
+    public YtelseskontraktServiceBi ytelseskontraktMock() {
+        return mock(YtelseskontraktServiceBi.class);
     }
 
     @Bean
-    public Wrapper<DefaultOppfolgingskontraktService> oppfolgingskontraktService() {
-        return new Wrapper<>(mock(DefaultOppfolgingskontraktService.class));
+    public DefaultOppfolgingskontraktService oppfolgingskontraktService() {
+        return mock(DefaultOppfolgingskontraktService.class);
     }
 
     @Bean
-    public Wrapper<OppfolgingskontraktServiceBi> oppfolgingskontraktMock() {
-        return new Wrapper<>(mock(OppfolgingskontraktServiceBi.class));
+    public OppfolgingskontraktServiceBi oppfolgingskontraktMock() {
+        return mock(OppfolgingskontraktServiceBi.class);
     }
 
 }

@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class EnonicConfig {
 
-    @Bean(name = "saksoversikt-cms-integrasjon")
+    @Bean
     public ContentRetriever contentRetriever() {
         return new ContentRetriever().load("content.saksoversikt");
     }
