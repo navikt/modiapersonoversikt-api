@@ -11,14 +11,6 @@ import java.nio.charset.StandardCharsets;
 
 @Configuration
 public class CmsEndpointConfig {
-
-    @Bean
-    @Primary
-    public ContentRetriever cmsContentRetriever() {
-        return new ContentRetriever()
-                .load("content.saksoversikt", "content.modiabrukerdialog");
-    }
-
     @Bean
     public ContentRetriever propertyResolver() {
         InputStreamReader content = new InputStreamReader(Melding.class.getResourceAsStream("Melding.properties"), StandardCharsets.UTF_8);
