@@ -48,7 +48,7 @@ public class MockServiceTestContext {
         return mock(StandardKodeverk.class);
     }
 
-    @Bean(name = "kodeverkPortTypeV2")
+    @Bean
     public KodeverkPortType kodeverkPortType() {
         return mock(KodeverkPortType.class);
     }
@@ -59,7 +59,6 @@ public class MockServiceTestContext {
     }
 
     @Bean
-    @Named("henvendelseBehandlingServiceMock")
     public HenvendelseBehandlingService henvendelseBehandlingService() {
         HenvendelseBehandlingService henvendelseBehandlingService = mock(HenvendelseBehandlingService.class);
         when(henvendelseBehandlingService.getEnhet(anyString())).thenReturn("1234");

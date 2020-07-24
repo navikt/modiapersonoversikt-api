@@ -1,6 +1,6 @@
 package no.nav.sykmeldingsperioder.consumer.pleiepenger.mapping;
 
-import no.nav.kjerneinfo.common.mockutils.DateUtils;
+import no.nav.kjerneinfo.common.utils.DateUtils;
 import no.nav.sykmeldingsperioder.consumer.pleiepenger.mapping.to.PleiepengerListeRequest;
 import no.nav.sykmeldingsperioder.consumer.pleiepenger.mapping.to.PleiepengerListeResponse;
 import no.nav.sykmeldingsperioder.domain.pleiepenger.Arbeidsforhold;

@@ -1,7 +1,7 @@
 package no.nav.sykmeldingsperioder.consumer.sykepenger.mapping;
 
 import no.nav.kjerneinfo.common.domain.Periode;
-import no.nav.kjerneinfo.common.mockutils.DateUtils;
+import no.nav.kjerneinfo.common.utils.DateUtils;
 import no.nav.sykmeldingsperioder.consumer.sykepenger.SykepengerMockFactory;
 import no.nav.sykmeldingsperioder.consumer.sykepenger.mapping.to.SykepengerRequest;
 import no.nav.sykmeldingsperioder.consumer.sykepenger.mapping.to.SykepengerResponse;

@@ -2,7 +2,6 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v2.org
 
 import no.nav.modig.modia.ping.PingableWebService;
 import no.nav.sbl.dialogarena.common.cxf.CXFClient;
-import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.OrganisasjonEnhetV2Mock;
 import no.nav.sbl.dialogarena.types.Pingable;
 import no.nav.sbl.util.EnvironmentUtils;
 import no.nav.tjeneste.virksomhet.organisasjonenhet.v2.OrganisasjonEnhetV2;
@@ -25,10 +24,6 @@ public class OrganisasjonEnhetV2EndpointConfig {
     public Pingable gsakOrganisasjonEnhetPing() {
         return new PingableWebService("NORG2 - OrganisasjonEnhetV2",
                 lagEndpoint().configureStsForSystemUser().build());
-    }
-
-    private OrganisasjonEnhetV2 lagMockEnpoint() {
-        return OrganisasjonEnhetV2Mock.organisasjonEnhetV2();
     }
 
     private CXFClient<OrganisasjonEnhetV2> lagEndpoint() {

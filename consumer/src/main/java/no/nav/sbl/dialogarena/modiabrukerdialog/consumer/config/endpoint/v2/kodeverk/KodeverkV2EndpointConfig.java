@@ -18,7 +18,7 @@ import static org.apache.cxf.ws.security.SecurityConstants.MUST_UNDERSTAND;
 @Configuration
 public class KodeverkV2EndpointConfig {
 
-    @Bean(name = "kodeverkPortTypeV2")
+    @Bean
     public KodeverkPortType kodeverkPortType() {
         KodeverkPortType prod = lagKodeverkPortType();
 
