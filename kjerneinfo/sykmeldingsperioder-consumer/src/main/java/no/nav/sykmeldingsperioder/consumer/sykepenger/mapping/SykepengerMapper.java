@@ -5,7 +5,7 @@ import ma.glasnost.orika.converter.ConverterFactory;
 import ma.glasnost.orika.impl.ConfigurableMapper;
 import ma.glasnost.orika.metadata.Type;
 import no.nav.kjerneinfo.common.domain.Periode;
-import no.nav.kjerneinfo.common.mockutils.DateUtils;
+import no.nav.kjerneinfo.common.utils.DateUtils;
 import no.nav.modig.core.exception.ApplicationException;
 import no.nav.sykmeldingsperioder.consumer.sykepenger.mapping.to.SykepengerRequest;
 import no.nav.sykmeldingsperioder.consumer.sykepenger.mapping.to.SykepengerResponse;

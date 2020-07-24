@@ -1,7 +1,7 @@
 package no.nav.sykmeldingsperioder.consumer.foreldrepenger.mapping;
 
 import no.nav.kjerneinfo.common.domain.Periode;
-import no.nav.kjerneinfo.common.mockutils.DateUtils;
+import no.nav.kjerneinfo.common.utils.DateUtils;
 import no.nav.sykmeldingsperioder.consumer.foreldrepenger.ForeldrepengerMockFactory;
 import no.nav.sykmeldingsperioder.consumer.foreldrepenger.mapping.to.ForeldrepengerListeRequest;
 import no.nav.sykmeldingsperioder.consumer.foreldrepenger.mapping.to.ForeldrepengerListeResponse;
