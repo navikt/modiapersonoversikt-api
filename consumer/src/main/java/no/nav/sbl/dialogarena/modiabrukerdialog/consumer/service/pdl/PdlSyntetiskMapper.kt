@@ -26,7 +26,7 @@ object PdlSyntetiskMapper {
     fun mapFnrTilPdl(fnr: String) : String =
             if (enableMapper) {
                 log.error("Brukte PdlSyntetiskMapper, denne skal aldri vises i produksjon")
-                fnrmap[TpsFnr(fnr)]?.get(0)?.pdlIdent ?: fnr
+                fnrmap[TpsFnr(fnr)]?.firstOrNull()?.pdlIdent ?: fnr
             } else {
                 fnr
             }
