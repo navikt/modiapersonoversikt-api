@@ -96,6 +96,23 @@ class DialogController @Inject constructor(
     }
 
     @POST
+    @Path("/sendinfomelding")
+    fun sendInfomelding(
+            @Context request: HttpServletRequest,
+            @PathParam("fnr") fnr: String,
+            infomeldingRequest: InfomeldingRequest
+    ): Response {
+        return tilgangskontroll
+                .check(Policies.tilgangTilBruker.with(fnr))
+                .get(Audit.describe(CREATE, Person.Henvendelse.Les, AuditIdentifier.FNR to fnr)) {
+                    val context = lagSendHenvendelseContext(fnr, request)
+
+                    henvendelseUtsendingService.sendHenvendelse(lagInfomelding(infomeldingRequest, infomeldingRequest.sak.temaKode, context), Optional.empty(), Optional.of(infomeldingRequest.sak), context.enhet)
+                    Response.ok().build()
+                }
+    }
+
+    @POST
     @Path("/fortsett/opprett")
     fun startFortsettDialog(
             @Context request: HttpServletRequest,
@@ -249,6 +266,19 @@ private fun lagSporsmal(sporsmalRequest: SendSporsmalRequest, sakstema: String, 
             .withTemagruppe(hentTemagruppeForTema(sakstema))
 }
 
+private fun lagInfomelding(infomeldingRequest: InfomeldingRequest, sakstema: String, requestContext: RequestContext) : Melding {
+    val type = Meldingstype.INFOMELDING_MODIA_UTGAAENDE
+    return Melding().withFnr(requestContext.fnr)
+            .withNavIdent(requestContext.ident)
+            .withEksternAktor(requestContext.ident)
+            .withKanal(getKanal(type))
+            .withType(type)
+            .withFritekst(Fritekst(infomeldingRequest.fritekst))
+            .withTilknyttetEnhet(requestContext.enhet)
+            .withErTilknyttetAnsatt(infomeldingRequest.erOppgaveTilknyttetAnsatt)
+            .withTemagruppe(hentTemagruppeForTema(sakstema))
+}
+
 private fun erTraadTilknyttetAnsatt(traad: Traad): Boolean =
         if (traad.meldinger.any { it.meldingstype == Meldingstype.SPORSMAL_MODIA_UTGAAENDE }) {
             traad.meldinger.sortedBy { it.visningsDato }.last().erTilknyttetAnsatt
@@ -300,6 +330,12 @@ data class SendReferatRequest(
 )
 
 data class SendSporsmalRequest(
+        val fritekst: String,
+        val sak: Sak,
+        val erOppgaveTilknyttetAnsatt: Boolean
+)
+
+data class InfomeldingRequest(
         val fritekst: String,
         val sak: Sak,
         val erOppgaveTilknyttetAnsatt: Boolean

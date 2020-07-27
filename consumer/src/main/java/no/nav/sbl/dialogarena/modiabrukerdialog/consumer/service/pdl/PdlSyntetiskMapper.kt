@@ -7,7 +7,7 @@ import org.slf4j.LoggerFactory
 internal data class TpsFnr(val tpsIdent: String)
 internal data class PdlFnr(val pdlIdent: String)
 
-internal val enableMapper = "p" != EnvironmentUtils.getRequiredProperty(ByEnvironmentStrategy.ENVIRONMENT_PROPERTY)
+internal val enableMapper = "p" != EnvironmentUtils.getOptionalProperty(ByEnvironmentStrategy.ENVIRONMENT_PROPERTY).orElse("p")
 internal val log = LoggerFactory.getLogger(PdlSyntetiskMapper::class.java)
 
 object PdlSyntetiskMapper {
@@ -26,7 +26,7 @@ object PdlSyntetiskMapper {
     fun mapFnrTilPdl(fnr: String) : String =
             if (enableMapper) {
                 log.error("Brukte PdlSyntetiskMapper, denne skal aldri vises i produksjon")
-                fnrmap[TpsFnr(fnr)]?.get(0)?.pdlIdent ?: fnr
+                fnrmap[TpsFnr(fnr)]?.firstOrNull()?.pdlIdent ?: fnr
             } else {
                 fnr
             }

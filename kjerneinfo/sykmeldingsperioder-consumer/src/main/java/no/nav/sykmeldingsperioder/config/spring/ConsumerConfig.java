@@ -53,7 +53,7 @@ public class ConsumerConfig {
     }
 
     @Bean
-    public ForeldrepengerServiceBi foreldrepengerServiceBi() throws MalformedURLException {
+    public ForeldrepengerServiceBi foreldrepengerServiceBi() {
         DefaultForeldrepengerService foreldrepengerService = new DefaultForeldrepengerService();
         foreldrepengerService.setForeldrepengerService(foreldrepengerPortType);
         foreldrepengerService.setMapper(ForeldrepengerMapper.getInstance());

@@ -2,7 +2,6 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.config;
 
 import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navansatt.GOSYSNAVansatt;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import no.nav.kjerneinfo.consumer.fim.person.PersonKjerneinfoServiceBi;
 import no.nav.sbl.dialogarena.abac.AbacClient;
 import no.nav.sbl.dialogarena.abac.AbacClientConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.HenvendelseLesService;
@@ -38,10 +37,9 @@ public class ApplicationContextBeans {
     }
 
     @Bean
-    public PlukkOppgaveService plukkOppgaveService(OppgaveBehandlingService oppgaveBehandlingService, PersonKjerneinfoServiceBi personKjerneinfoServiceBi, Tilgangskontroll tilgangskontroll) {
+    public PlukkOppgaveService plukkOppgaveService(OppgaveBehandlingService oppgaveBehandlingService, Tilgangskontroll tilgangskontroll) {
         return new PlukkOppgaveServiceImpl(
                 oppgaveBehandlingService,
-                personKjerneinfoServiceBi,
                 tilgangskontroll
         );
     }

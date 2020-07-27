@@ -1,17 +1,15 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.ytelse
 
 import no.nav.kjerneinfo.consumer.organisasjon.OrganisasjonService
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.Wrapper
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Policies
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Tilgangskontroll
-import no.nav.sbl.dialogarena.naudit.AuditResources
 import no.nav.sbl.dialogarena.naudit.Audit
 import no.nav.sbl.dialogarena.naudit.AuditIdentifier
+import no.nav.sbl.dialogarena.naudit.AuditResources
 import no.nav.sykmeldingsperioder.consumer.foreldrepenger.ForeldrepengerServiceBi
 import no.nav.sykmeldingsperioder.consumer.pleiepenger.PleiepengerService
 import no.nav.sykmeldingsperioder.consumer.sykepenger.SykepengerServiceBi
 import javax.inject.Inject
-import javax.inject.Named
 import javax.ws.rs.GET
 import javax.ws.rs.Path
 import javax.ws.rs.PathParam
@@ -21,7 +19,7 @@ import javax.ws.rs.core.MediaType
 @Path("/ytelse")
 @Produces(MediaType.APPLICATION_JSON)
 class YtelseController @Inject constructor(private val sykepengerService: SykepengerServiceBi,
-                                           @Named("foreldrepengerServiceDefault") private val foreldrepengerServiceDefault: Wrapper<ForeldrepengerServiceBi>,
+                                           private val foreldrepengerServiceDefault: ForeldrepengerServiceBi,
                                            private val pleiepengerService: PleiepengerService,
                                            private val tilgangskontroll: Tilgangskontroll,
                                            private val organisasjonService: OrganisasjonService) {
@@ -58,7 +56,7 @@ class YtelseController @Inject constructor(private val sykepengerService: Sykepe
 
     private fun getForeldrepengerService(): ForeldrepengerServiceBi {
         return ForeldrepengerServiceBi { request ->
-            foreldrepengerServiceDefault.wrappedObject.hentForeldrepengerListe(request)
+            foreldrepengerServiceDefault.hentForeldrepengerListe(request)
         }
     }
 }

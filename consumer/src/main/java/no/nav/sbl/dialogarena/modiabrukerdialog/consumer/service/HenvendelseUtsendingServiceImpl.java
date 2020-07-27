@@ -67,7 +67,7 @@ public class HenvendelseUtsendingServiceImpl implements HenvendelseUtsendingServ
                                            OppgaveBehandlingService oppgaveBehandlingService,
                                            SakerService sakerService,
                                            Tilgangskontroll tilgangskontroll,
-                                           @Named("propertyResolver") ContentRetriever propertyResolver,
+                                           ContentRetriever propertyResolver,
                                            PersonKjerneinfoServiceBi kjerneinfo,
                                            LDAPService ldapService) {
 

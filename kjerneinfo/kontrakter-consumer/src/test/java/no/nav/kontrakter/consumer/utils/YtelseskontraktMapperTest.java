@@ -1,6 +1,6 @@
 package no.nav.kontrakter.consumer.utils;
 
-import no.nav.kjerneinfo.common.mockutils.DateUtils;
+import no.nav.kjerneinfo.common.utils.DateUtils;
 import no.nav.kontrakter.consumer.fim.mapping.YtelseskontraktMapper;
 import no.nav.kontrakter.consumer.fim.ytelseskontrakt.mock.YtelseskontraktMockFactory;
 import no.nav.kontrakter.consumer.fim.ytelseskontrakt.to.YtelseskontraktRequest;

@@ -15,7 +15,4 @@ public class RestConstants {
 
     public static final String MODIABRUKERDIALOG_SYSTEM_USER = "srvModiabrukerdialog";
     public static final String MODIABRUKERDIALOG_SYSTEM_USER_PASSWORD = EnvironmentUtils.getRequiredProperty("no.nav.modig.security.systemuser.password", "SRVMODIABRUKERDIALOG_PASSWORD");
-
-    public static final String SAF_GRAPHQL_BASEURL = EnvironmentUtils.getRequiredProperty("SAF_GRAPHQL_URL");
-    public static final String SAF_HENTDOKUMENT_BASEURL = EnvironmentUtils.getRequiredProperty("SAF_HENTDOKUMENT_URL");
 }

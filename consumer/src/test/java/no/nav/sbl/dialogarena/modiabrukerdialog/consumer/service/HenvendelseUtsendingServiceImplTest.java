@@ -262,7 +262,12 @@ class HenvendelseUtsendingServiceImplTest {
 
     @Test
     void skalHenteSvarlisteMedRiktigTypeSpesifisert() {
-        WSHentHenvendelseListeResponse wsHentHenvendelseListeResponse = new WSHentHenvendelseListeResponse().withAny(createXMLMeldingTilBruker(TRAAD_ID));
+        WSHentHenvendelseListeResponse wsHentHenvendelseListeResponse = new WSHentHenvendelseListeResponse()
+                .withAny(
+                        createXMLMeldingTilBruker(TRAAD_ID),
+                        createXMLMeldingTilBruker("id2").withHenvendelseType(XMLHenvendelseType.INFOMELDING_MODIA_UTGAAENDE.name())
+                );
+
         when(henvendelsePortType.hentHenvendelseListe(any(WSHentHenvendelseListeRequest.class))).thenReturn(wsHentHenvendelseListeResponse);
 
 
@@ -280,6 +285,7 @@ class HenvendelseUtsendingServiceImplTest {
                 XMLHenvendelseType.REFERAT_OPPMOTE.name(),
                 XMLHenvendelseType.REFERAT_TELEFON.name(),
                 XMLHenvendelseType.SPORSMAL_MODIA_UTGAAENDE.name(),
+                XMLHenvendelseType.INFOMELDING_MODIA_UTGAAENDE.name(),
                 XMLHenvendelseType.SVAR_SBL_INNGAAENDE.name(),
                 XMLHenvendelseType.DOKUMENT_VARSEL.name(),
                 XMLHenvendelseType.OPPGAVE_VARSEL.name()

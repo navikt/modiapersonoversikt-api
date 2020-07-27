@@ -13,7 +13,6 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.http.HttpRequestUtil
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.http.SubjectHandlerUtil
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.AnsattServiceImpl
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.oppgavebehandling.OppgaveBehandlingServiceImpl
-import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.GsakOppgaveV3PortTypeMock.lagWSOppgave
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.TilgangskontrollMock
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.service.plukkoppgave.PlukkOppgaveService
 import no.nav.sbl.util.fn.UnsafeSupplier
@@ -26,10 +25,12 @@ import no.nav.tjeneste.virksomhet.tildeloppgave.v1.TildelOppgaveV1
 import no.nav.tjeneste.virksomhet.tildeloppgave.v1.WSTildelFlereOppgaverResponse
 import org.hamcrest.CoreMatchers.containsString
 import org.hamcrest.MatcherAssert.assertThat
+import org.joda.time.DateTime
 import org.junit.jupiter.api.Assertions.assertAll
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.function.Executable
+import java.util.*
 import javax.ws.rs.ForbiddenException
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
@@ -210,6 +211,25 @@ internal class OppgaveControllerTest {
         const val UNDERKATEGORI_KODE_FOR_TEMAGRUPPE_ARBEID = "ARBD_KNA"
         const val TEMAGRUPPE_ARBEID = "ARBD"
         const val VALGT_ENHET = "4300"
+    }
+
+    fun lagWSOppgave(): WSOppgave {
+        return lagWSOppgave("1")
+    }
+
+    fun lagWSOppgave(oppgaveId: String): WSOppgave {
+        return WSOppgave()
+                .withOppgaveId(oppgaveId)
+                .withHenvendelseId(UUID.randomUUID().toString())
+                .withOppgavetype(WSOppgavetype().withKode("wsOppgavetype"))
+                .withGjelder(WSBruker().withBrukerId("10108000398"))
+                .withStatus(WSStatus().withKode("statuskode"))
+                .withFagomrade(WSFagomrade().withKode("HJE"))
+                .withAktivFra(DateTime.now().toLocalDate())
+                .withPrioritet(WSPrioritet().withKode("NORM_GEN"))
+                .withUnderkategori(WSUnderkategori().withKode("ARBEID_HJE"))
+                .withLest(false)
+                .withVersjon(1)
     }
 
 }

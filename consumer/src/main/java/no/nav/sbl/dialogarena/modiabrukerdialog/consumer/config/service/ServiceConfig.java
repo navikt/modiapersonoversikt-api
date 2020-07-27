@@ -90,7 +90,7 @@ public class ServiceConfig {
                                                                    OppgaveBehandlingService oppgaveBehandlingService,
                                                                    SakerService sakerService,
                                                                    Tilgangskontroll tilgangskontroll,
-                                                                   @Named("propertyResolver") ContentRetriever propertyResolver,
+                                                                   ContentRetriever propertyResolver,
                                                                    PersonKjerneinfoServiceBi personKjerneinfoServiceBi,
                                                                    LDAPService ldapService) {
 
@@ -210,5 +210,7 @@ public class ServiceConfig {
     }
 
     @Bean
-    PdlOppslagService pdlOppslagService() { return new PdlOppslagServiceImpl(); }
+    PdlOppslagService pdlOppslagService(SystemUserTokenProvider sts) {
+        return new PdlOppslagServiceImpl(sts);
+    }
 }

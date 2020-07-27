@@ -1,13 +1,11 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.artifact.kjerneinfo.component.mockable.sykmeldingsperioder;
 
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.Wrapper;
 import no.nav.sykmeldingsperioder.consumer.foreldrepenger.ForeldrepengerServiceBi;
 import no.nav.sykmeldingsperioder.consumer.pleiepenger.PleiepengerService;
 import no.nav.sykmeldingsperioder.consumer.pleiepenger.mapping.to.PleiepengerListeRequest;
 import no.nav.sykmeldingsperioder.consumer.pleiepenger.mapping.to.PleiepengerListeResponse;
 import no.nav.sykmeldingsperioder.consumer.sykepenger.DefaultSykepengerService;
 import no.nav.sykmeldingsperioder.consumer.sykepenger.SykepengerServiceBi;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -43,39 +41,33 @@ public class SykmeldingsperioderWrapperTestConfig {
     }
 
     @Bean
-    @Qualifier("sykepengerServiceDefault")
-    public Wrapper<SykepengerServiceBi> sykepengerServiceDefault() {
-        return new Wrapper<>(reellDummy);
+    public SykepengerServiceBi sykepengerServiceDefault() {
+        return reellDummy;
     }
 
     @Bean
-    @Qualifier("sykepengerServiceMock")
-    public Wrapper<SykepengerServiceBi> sykepengerServiceMock() {
-        return new Wrapper<>(mockDummy);
+    public SykepengerServiceBi sykepengerServiceMock() {
+        return mockDummy;
     }
 
     @Bean
-    @Qualifier("foreldrepengerServiceDefault")
-    public Wrapper<ForeldrepengerServiceBi> foreldrepengerServiceDefault() {
-        return new Wrapper<>(foreldrepengerService());
+    public ForeldrepengerServiceBi foreldrepengerServiceDefault() {
+        return foreldrepengerService();
     }
 
     @Bean
-    @Qualifier("foreldrepengerServiceMock")
-    public Wrapper<ForeldrepengerServiceBi> foreldrepengerServiceMock() {
-        return new Wrapper<>(mock(ForeldrepengerServiceBi.class));
+    public ForeldrepengerServiceBi foreldrepengerServiceMock() {
+        return mock(ForeldrepengerServiceBi.class);
     }
 
     @Bean
-    @Qualifier("pleiepengerServiceImpl")
-    public Wrapper<PleiepengerService> pleiepengerServiceImpl() {
-        return new Wrapper<>(pleiepengerService());
+    public PleiepengerService pleiepengerServiceImpl() {
+        return pleiepengerService();
     }
 
     @Bean
-    @Qualifier("pleiepengerServiceMock")
-    public Wrapper<PleiepengerService> pleiepengerServiceMock() {
-        return new Wrapper<>(mock(PleiepengerService.class));
+    public PleiepengerService pleiepengerServiceMock() {
+        return mock(PleiepengerService.class);
     }
 
 }

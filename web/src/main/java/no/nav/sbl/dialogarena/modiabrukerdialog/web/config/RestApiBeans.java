@@ -1,6 +1,5 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.config;
 
-import no.nav.sbl.dialogarena.modiabrukerdialog.sak.rest.InformasjonController;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.*;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.baseurls.BaseUrlsController;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.dialog.DialogController;
@@ -26,8 +25,6 @@ import org.springframework.context.annotation.Import;
 
 @Configuration
 @Import({
-        InformasjonController.class,
-        MeldingerController.class,
         JournalforingController.class,
         HodeController.class,
         VarslerController.class,

@@ -286,6 +286,7 @@ public class MeldingUtils {
             put(XMLHenvendelseType.REFERAT_OPPMOTE, SAMTALEREFERAT_OPPMOTE);
             put(XMLHenvendelseType.REFERAT_TELEFON, SAMTALEREFERAT_TELEFON);
             put(XMLHenvendelseType.SPORSMAL_MODIA_UTGAAENDE, SPORSMAL_MODIA_UTGAAENDE);
+            put(XMLHenvendelseType.INFOMELDING_MODIA_UTGAAENDE, INFOMELDING_MODIA_UTGAAENDE);
             put(XMLHenvendelseType.SVAR_SBL_INNGAAENDE, SVAR_SBL_INNGAAENDE);
             put(XMLHenvendelseType.DOKUMENT_VARSEL, DOKUMENT_VARSEL);
             put(XMLHenvendelseType.OPPGAVE_VARSEL, OPPGAVE_VARSEL);
