@@ -16,6 +16,7 @@ public class HenvendelseUtils {
             REFERAT_OPPMOTE.name(),
             REFERAT_TELEFON.name(),
             SPORSMAL_MODIA_UTGAAENDE.name(),
+            INFOMELDING_MODIA_UTGAAENDE.name(),
             SVAR_SBL_INNGAAENDE.name(),
             DOKUMENT_VARSEL.name(),
             OPPGAVE_VARSEL.name(),
