@@ -12,10 +12,11 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveBehandlingSer
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.gsak.SakerService
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.RestUtils
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.TemagruppeTemaMapping.hentTemagruppeForTema
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.Feature
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.UnleashService
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Policies
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Tilgangskontroll
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.api.DTO
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.api.fromDTO
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.api.toDTO
 import no.nav.sbl.dialogarena.naudit.Audit
 import no.nav.sbl.dialogarena.naudit.Audit.Action.*
@@ -23,6 +24,8 @@ import no.nav.sbl.dialogarena.naudit.AuditIdentifier
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.henvendelse.HenvendelseBehandlingService
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.henvendelse.domain.Traad
 import no.nav.sbl.dialogarena.naudit.AuditResources.Person
+import no.nav.sbl.dialogarena.rsbac.DecisionEnums
+import no.nav.sbl.dialogarena.rsbac.Policy
 import java.util.*
 import javax.inject.Inject
 import javax.servlet.http.HttpServletRequest
@@ -42,7 +45,8 @@ class DialogController @Inject constructor(
         private val henvendelseService: HenvendelseBehandlingService,
         private val henvendelseUtsendingService: HenvendelseUtsendingService,
         private val sakerService: SakerService,
-        private val oppgaveBehandlingService: OppgaveBehandlingService
+        private val oppgaveBehandlingService: OppgaveBehandlingService,
+        private val unleashService: UnleashService
 ) {
     @GET
     @Path("/meldinger")
@@ -103,6 +107,7 @@ class DialogController @Inject constructor(
             infomeldingRequest: InfomeldingRequest
     ): Response {
         return tilgangskontroll
+                .check(Policies.featureToggleEnabled.with(Feature.INFOMELDING.propertyKey))
                 .check(Policies.tilgangTilBruker.with(fnr))
                 .get(Audit.describe(CREATE, Person.Henvendelse.Les, AuditIdentifier.FNR to fnr)) {
                     val context = lagSendHenvendelseContext(fnr, request)

@@ -8,6 +8,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.HenvendelseLesServic
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveBehandlingService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.ldap.LDAPService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.ConsumerContext;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.UnleashService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.cache.CacheConfiguration;
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Tilgangskontroll;
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.TilgangskontrollContext;
@@ -60,13 +61,15 @@ public class ApplicationContextBeans {
             AbacClient abacClient,
             LDAPService ldapService,
             GOSYSNAVansatt ansattService, // TODO undersøk om denne kan erstattes med axsys
-            HenvendelseLesService henvendelseLesService
+            HenvendelseLesService henvendelseLesService,
+            UnleashService unleashService
     ) {
         TilgangskontrollContext context = new TilgangskontrollContextImpl(
                 abacClient,
                 ldapService,
                 ansattService,
-                henvendelseLesService
+                henvendelseLesService,
+                unleashService
         );
         return new Tilgangskontroll(context);
     }

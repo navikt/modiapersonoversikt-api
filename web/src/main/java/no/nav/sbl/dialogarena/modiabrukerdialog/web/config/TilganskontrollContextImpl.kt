@@ -12,6 +12,8 @@ import no.nav.sbl.dialogarena.abac.AbacRequest
 import no.nav.sbl.dialogarena.abac.AbacResponse
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.HenvendelseLesService
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.ldap.LDAPService
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.Feature
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.UnleashService
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.TilgangskontrollContext
 import no.nav.sbl.util.EnvironmentUtils
 import org.slf4j.LoggerFactory
@@ -21,7 +23,8 @@ open class TilgangskontrollContextImpl(
         private val abacClient: AbacClient,
         private val ldap: LDAPService,
         private val ansattService: GOSYSNAVansatt,
-        private val henvendelseLesService: HenvendelseLesService
+        private val henvendelseLesService: HenvendelseLesService,
+        private val unleashService: UnleashService
 ) : TilgangskontrollContext {
     private val logger = LoggerFactory.getLogger(TilgangskontrollContext::class.java)
 
@@ -63,6 +66,8 @@ open class TilgangskontrollContextImpl(
     override fun alleBehandlingsIderTilhorerBruker(fnr: String, behandlingsIder: List<String>): Boolean {
         return henvendelseLesService.alleBehandlingsIderTilhorerBruker(fnr, behandlingsIder)
     }
+
+    override fun featureToggleEnabled(featureToggle: String): Boolean = unleashService.isEnabled(featureToggle)
 
     private fun hentSaksbehandlerRoller(): List<String> =
             hentSaksbehandlerId()
