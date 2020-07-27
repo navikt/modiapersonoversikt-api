@@ -47,6 +47,15 @@ class Policies {
         }
 
         @JvmField
+        val featureToggleEnabled = PolicyGenerator<TilgangskontrollContext, String>({ "Featuretoggle ${data} is not enabled" }){
+            if (context.featureToggleEnabled(data)) {
+                DecisionEnums.PERMIT
+            } else {
+                DecisionEnums.DENY
+            }
+        }
+
+        @JvmField
         val tilgangTilBruker = RulePolicyGenerator<TilgangskontrollContext, String> {
             context.checkAbac(AbacPolicies.tilgangTilBruker(data))
                     .toDecision {
