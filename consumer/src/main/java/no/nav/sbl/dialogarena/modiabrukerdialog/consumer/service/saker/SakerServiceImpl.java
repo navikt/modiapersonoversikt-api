@@ -38,6 +38,7 @@ public class SakerServiceImpl implements SakerService {
 
     public static final String VEDTAKSLOSNINGEN = "FS36";
 
+
     @Inject
     private SakV1 sakV1;
     @Inject
@@ -84,9 +85,11 @@ public class SakerServiceImpl implements SakerService {
             behandleHenvendelsePortType.knyttBehandlingskjedeTilTema(behandlingskjede, "BID");
             return;
         }
-        if (!(sak.finnesIPsak || sak.finnesIGsak)) {
+
+        if (sakFinnesIkkeIPsakOgGsak(sak)) {
             sak.saksId = opprettSak(fnr, sak);
         }
+
         try {
             behandleHenvendelsePortType.knyttBehandlingskjedeTilSak(
                     behandlingskjede,
@@ -96,6 +99,10 @@ public class SakerServiceImpl implements SakerService {
         } catch (Exception e) {
             throw new JournalforingFeilet(e);
         }
+    }
+
+    private boolean sakFinnesIkkeIPsakOgGsak(Sak sak) {
+        return !(sak.finnesIPsak || sak.finnesIGsak);
     }
 
     private String opprettSak(String fnr, Sak sak) {
