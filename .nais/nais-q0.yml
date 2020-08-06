@@ -53,6 +53,8 @@ spec:
   env:
     - name: APP_ENVIRONMENT_NAME
       value: "q0"
+    - name: APP_VERSION
+      value: "{{ version }}"
     - name: ISSO_CLIENT_ID
       value: "veilarblogin-q0"
     - name: FPSAK_CLIENT_ID
