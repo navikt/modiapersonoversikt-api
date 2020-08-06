@@ -18,7 +18,7 @@ import java.net.URL
 import java.util.*
 
 typealias HeadersBuilder = HttpRequestBuilder.() -> Unit
-typealias VariablesTransform = ((Any?) -> Pair<List<String>, Any?>)
+typealias VariablesTransform = (Any?) -> Any?
 
 @KtorExperimentalAPI
 class PdlClient(

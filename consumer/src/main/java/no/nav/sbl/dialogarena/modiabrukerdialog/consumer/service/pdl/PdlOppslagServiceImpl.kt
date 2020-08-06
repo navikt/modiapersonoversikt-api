@@ -78,15 +78,15 @@ class PdlOppslagServiceImpl constructor(
                 null -> emptyList<String>() to variables
                 is HentPerson.Variables -> {
                     val ident = variables.ident.let(PdlSyntetiskMapper::mapFnrTilPdl)
-                    listOf(ident) to HentPerson.Variables(ident)
+                    HentPerson.Variables(ident)
                 }
                 is HentNavnBolk.Variables -> {
                     val identer = variables.identer.map(PdlSyntetiskMapper::mapFnrTilPdl)
-                    identer to HentNavnBolk.Variables(identer)
+                    HentNavnBolk.Variables(identer)
                 }
                 is HentIdent.Variables -> {
                     val ident = variables.ident.let(PdlSyntetiskMapper::mapFnrTilPdl)
-                    listOf(ident) to HentIdent.Variables(ident)
+                    HentIdent.Variables(ident)
                 }
                 else -> throw IllegalStateException("Unrecognized graphql variables type: ${variables.javaClass.simpleName}")
             }
