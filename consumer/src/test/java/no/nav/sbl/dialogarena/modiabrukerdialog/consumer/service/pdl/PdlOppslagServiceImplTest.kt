@@ -16,6 +16,8 @@ import no.nav.common.auth.Subject
 import no.nav.common.oidc.SystemUserTokenProvider
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.RestConstants
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.RestConstants.ALLE_TEMA_HEADERVERDI
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.TestUtils
+import no.nav.sbl.util.EnvironmentUtils
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -35,7 +37,6 @@ internal class PdlOppslagServiceImplTest {
         subjectStore.setSubject(Subject("Z999999", IdentType.InternBruker, SsoToken.oidcToken(userToken, emptyMap<String, Any>())))
     }
 
-
     @Test
     fun `riktige user-headere skal settes på requesten`() {
         val client = createMockGraphQLClient { request ->
@@ -43,7 +44,9 @@ internal class PdlOppslagServiceImplTest {
             respond("{}", HttpStatusCode.OK)
         }
 
-        PdlOppslagServiceImpl(stsMock, client).hentIdent("fnr")
+        TestUtils.withEnv("PDL_API_URL", "http://dummy.no") {
+            PdlOppslagServiceImpl(stsMock, client).hentIdent("fnr")
+        }
     }
 
     @Test
@@ -53,7 +56,9 @@ internal class PdlOppslagServiceImplTest {
             respond("{}", HttpStatusCode.OK)
         }
 
-        PdlOppslagServiceImpl(stsMock, client).hentNavnBolk(listOf("fnr"))
+        TestUtils.withEnv("PDL_API_URL", "http://dummy.no") {
+            PdlOppslagServiceImpl(stsMock, client).hentNavnBolk(listOf("fnr"))
+        }
     }
 
     fun verifyUserTokenHeaders(request: HttpRequestData) {
