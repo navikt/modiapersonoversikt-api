@@ -10,4 +10,11 @@ public class TestUtils {
             fn.call();
         } catch (Throwable ignored) {}
     }
+
+    public static void withEnv(String name, String value, UnsafeRunneable fn) {
+        String original = System.getProperty(name, value);
+        System.setProperty(name, value);
+        sneaky(fn);
+        System.setProperty(name, original);
+    }
 }
