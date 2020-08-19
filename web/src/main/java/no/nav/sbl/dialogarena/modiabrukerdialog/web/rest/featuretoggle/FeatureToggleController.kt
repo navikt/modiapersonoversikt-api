@@ -5,24 +5,21 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Policies
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Tilgangskontroll
 import no.nav.sbl.dialogarena.naudit.Audit
 import org.springframework.beans.factory.annotation.Autowired
-import javax.ws.rs.GET
-import javax.ws.rs.Path
-import javax.ws.rs.PathParam
-import javax.ws.rs.Produces
-import javax.ws.rs.core.MediaType.APPLICATION_JSON
+import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RestController
 
 private const val APPLICATION_PREFIX = "modiabrukerdialog."
 
-@Path("/featuretoggle")
+@RestController
+@RequestMapping("/featuretoggle")
 class FeatureToggleController @Autowired constructor(
         private val unleashService: UnleashService,
         private val tilgangskontroll: Tilgangskontroll
 ) {
-
-    @GET
-    @Path("/{id}")
-    @Produces(APPLICATION_JSON)
-    fun hentMedId(@PathParam("id") toggleId: String): Boolean =
+    @GetMapping("/{id}")
+    fun hentMedId(@PathVariable("id") toggleId: String): Boolean =
             tilgangskontroll
                     .check(Policies.tilgangTilModia)
                     .get(Audit.skipAuditLog()) {
