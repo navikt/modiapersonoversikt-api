@@ -18,16 +18,17 @@ import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.meldinger.WSOpprettOppgav
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.meldinger.WSOpprettOppgaveRequest
 import java.time.LocalDate
 import org.springframework.beans.factory.annotation.Autowired
-import javax.ws.rs.GET
-import javax.ws.rs.POST
-import javax.ws.rs.Path
-import javax.ws.rs.Produces
-import javax.ws.rs.core.MediaType.APPLICATION_JSON
-import javax.ws.rs.core.Response
+import org.springframework.http.HttpStatus
+import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RestController
 
 private const val HENVENDELSESTYPE_KODE: String = "DIALOG"
 
-@Path("/dialogoppgave")
+@RestController
+@RequestMapping("/dialogoppgave")
 class DialogOppgaveController @Autowired constructor(
         private val gsakKodeverk: GsakKodeverk,
         private val oppgavebehandling: OppgavebehandlingV3,
@@ -35,9 +36,8 @@ class DialogOppgaveController @Autowired constructor(
         private val tilgangskontroll: Tilgangskontroll
 ) {
 
-    @POST
-    @Path("/opprett")
-    fun opprettOppgave(request: OpperettOppgaveRequest): Response {
+    @PostMapping("/opprett")
+    fun opprettOppgave(request: OpperettOppgaveRequest): ResponseEntity<Void> {
         return tilgangskontroll
                 .check(Policies.tilgangTilBruker.with(request.fnr))
                 .check(Policies.behandlingsIderTilhorerBruker.with(BehandlingsIdTilgangData(request.fnr, listOf(request.behandlingskjedeId))))
@@ -62,12 +62,11 @@ class DialogOppgaveController @Autowired constructor(
                                                     .withLest(false)
                                     )
                     )
-                    Response.ok().build()
+                    ResponseEntity(HttpStatus.OK)
                 }
     }
 
-    @POST
-    @Path("/opprettskjermetoppgave")
+    @PostMapping("/opprettskjermetoppgave")
     fun opprettSkjermetOppgave(request: OpperettSkjermetOppgaveDTO
     ): SkjermetOppgaveRespons {
         return tilgangskontroll
@@ -95,9 +94,7 @@ class DialogOppgaveController @Autowired constructor(
                 }
     }
 
-    @GET
-    @Path("/tema")
-    @Produces(APPLICATION_JSON)
+    @GetMapping("/tema")
     fun hentAlleTema(): List<Map<String, Any?>> {
         return tilgangskontroll
                 .check(Policies.tilgangTilModia)
