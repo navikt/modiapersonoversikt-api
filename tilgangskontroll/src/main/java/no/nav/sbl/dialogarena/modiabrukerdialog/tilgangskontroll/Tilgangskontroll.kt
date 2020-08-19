@@ -4,7 +4,8 @@ import no.nav.sbl.dialogarena.abac.AbacResponse
 import no.nav.sbl.dialogarena.abac.Decision as AbacDecision
 import no.nav.sbl.dialogarena.rsbac.*
 import org.slf4j.LoggerFactory
-import javax.ws.rs.ForbiddenException
+import org.springframework.http.HttpStatus
+import org.springframework.web.server.ResponseStatusException
 
 fun AbacResponse.toDecisionEnum(): DecisionEnums = when (this.getDecision()) {
     AbacDecision.Deny -> DecisionEnums.DENY
@@ -125,5 +126,5 @@ val log = LoggerFactory.getLogger(Tilgangskontroll::class.java)
 
 open class Tilgangskontroll(context: TilgangskontrollContext) : RSBACImpl<TilgangskontrollContext>(context, {
     log.error(it)
-    ForbiddenException(it)
+    ResponseStatusException(HttpStatus.FORBIDDEN, it)
 })

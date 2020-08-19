@@ -26,8 +26,6 @@ import org.slf4j.LoggerFactory
 import java.time.LocalDate
 import java.util.*
 import org.springframework.beans.factory.annotation.Autowired
-import javax.ws.rs.client.Entity.json
-import javax.ws.rs.core.HttpHeaders.AUTHORIZATION
 
 
 open class OppgaveOpprettelseClient @Autowired constructor(
@@ -88,7 +86,7 @@ open class OppgaveOpprettelseClient @Autowired constructor(
                                     .url(url)
                                     .header(RestConstants.NAV_CALL_ID_HEADER, MDC.get(MDCConstants.MDC_CALL_ID))
                                     .header("X-Correlation-ID ", MDC.get(MDCConstants.MDC_CALL_ID))
-                                    .header(AUTHORIZATION, AUTH_METHOD_BEARER + AUTH_SEPERATOR + consumerOidcToken)
+                                    .header(RestConstants.AUTHORIZATION, AUTH_METHOD_BEARER + AUTH_SEPERATOR + consumerOidcToken)
                                     .header(RestConstants.NAV_CONSUMER_TOKEN_HEADER, RestConstants.AUTH_METHOD_BEARER + RestConstants.AUTH_SEPERATOR + consumerOidcToken)
                                     .post(RequestBody.create(
                                             MediaType.parse("application/json"),

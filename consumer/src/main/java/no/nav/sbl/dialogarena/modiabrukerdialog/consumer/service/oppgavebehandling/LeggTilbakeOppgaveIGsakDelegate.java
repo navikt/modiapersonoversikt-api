@@ -12,7 +12,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.access.AccessDeniedException;
 
-import javax.ws.rs.ForbiddenException;
 import java.util.Collections;
 import java.util.List;
 

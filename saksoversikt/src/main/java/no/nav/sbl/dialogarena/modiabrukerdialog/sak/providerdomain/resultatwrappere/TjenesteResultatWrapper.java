@@ -2,7 +2,6 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.resultatwrap
 
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.Feilmelding;
 
-import javax.ws.rs.core.Response.Status;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;

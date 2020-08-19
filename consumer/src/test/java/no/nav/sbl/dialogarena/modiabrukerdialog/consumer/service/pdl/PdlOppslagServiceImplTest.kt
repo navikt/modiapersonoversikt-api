@@ -23,7 +23,6 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import java.net.URL
-import javax.ws.rs.core.HttpHeaders
 
 internal class PdlOppslagServiceImplTest {
     @Rule
@@ -64,14 +63,14 @@ internal class PdlOppslagServiceImplTest {
     fun verifyUserTokenHeaders(request: HttpRequestData) {
         assertNotNull(request.headers[RestConstants.NAV_CALL_ID_HEADER], "NAV_CALL_ID_HEADER missing")
         assertEquals("Bearer $systemuserToken", request.headers[RestConstants.NAV_CONSUMER_TOKEN_HEADER])
-        assertEquals("Bearer $userToken", request.headers[HttpHeaders.AUTHORIZATION])
+        assertEquals("Bearer $userToken", request.headers[RestConstants.AUTHORIZATION])
         assertEquals(ALLE_TEMA_HEADERVERDI, request.headers[RestConstants.TEMA_HEADER])
     }
 
     fun verifySystemuserTokenHeaders(request: HttpRequestData) {
         assertNotNull(request.headers[RestConstants.NAV_CALL_ID_HEADER], "NAV_CALL_ID_HEADER missing")
         assertEquals("Bearer $systemuserToken", request.headers[RestConstants.NAV_CONSUMER_TOKEN_HEADER])
-        assertEquals("Bearer $systemuserToken", request.headers[HttpHeaders.AUTHORIZATION])
+        assertEquals("Bearer $systemuserToken", request.headers[RestConstants.AUTHORIZATION])
         assertEquals(ALLE_TEMA_HEADERVERDI, request.headers[RestConstants.TEMA_HEADER])
     }
 

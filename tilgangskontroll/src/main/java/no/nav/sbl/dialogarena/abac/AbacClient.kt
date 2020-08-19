@@ -8,7 +8,6 @@ import okhttp3.RequestBody
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.cache.annotation.Cacheable
-import javax.ws.rs.ClientErrorException
 
 class AbacException(message: String) : RuntimeException(message)
 data class AbacClientConfig(
@@ -46,7 +45,7 @@ open class AbacClient(val config: AbacClientConfig) {
             throw AbacException("An error has occured calling ABAC: ${response.message()}")
         } else if (response.code() inRange Pair(400, 500)) {
             abacLogger.warn("ABAC returned: ${response.code()} ${response.message()}")
-            throw ClientErrorException("An error has occured calling ABAC:", response.code())
+            throw AbacException("An error has occured calling ABAC: ${response.code()}")
         }
 
         val responseJson = response.body()?.string()!!

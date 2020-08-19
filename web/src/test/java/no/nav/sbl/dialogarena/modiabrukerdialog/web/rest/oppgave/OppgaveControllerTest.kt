@@ -32,7 +32,6 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.function.Executable
 import org.springframework.security.access.AccessDeniedException
 import java.util.*
-import javax.ws.rs.ForbiddenException
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 import kotlin.test.assertTrue

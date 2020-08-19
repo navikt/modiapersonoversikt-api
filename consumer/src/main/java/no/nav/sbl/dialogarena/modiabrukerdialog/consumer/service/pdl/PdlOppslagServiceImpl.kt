@@ -14,7 +14,6 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.pdl.generated.HentPer
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.pdl.PdlOppslagService
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.RestConstants.*
 import java.net.URL
-import javax.ws.rs.core.HttpHeaders.AUTHORIZATION
 
 @KtorExperimentalAPI
 class PdlOppslagServiceImpl constructor(
