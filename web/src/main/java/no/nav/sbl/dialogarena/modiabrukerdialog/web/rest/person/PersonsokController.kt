@@ -14,15 +14,18 @@ import no.nav.tjeneste.virksomhet.personsoek.v1.meldinger.PersonFilter
 import no.nav.tjeneste.virksomhet.personsoek.v1.meldinger.Soekekriterie
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
-import javax.ws.rs.*
-import javax.ws.rs.core.MediaType
+import org.springframework.http.HttpStatus
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.server.ResponseStatusException
 
 private enum class OppslagFeil {
     FOR_MANGE, UKJENT
 }
 
-@Path("/personsok")
-@Produces(MediaType.APPLICATION_JSON)
+@RestController
+@RequestMapping("/personsok")
 class PersonsokController @Autowired constructor(private val personsokPortType: PersonsokPortType, val tilgangskontroll: Tilgangskontroll) {
 
     private val logger = LoggerFactory.getLogger(PersonsokController::class.java)
@@ -33,7 +36,7 @@ class PersonsokController @Autowired constructor(private val personsokPortType: 
         )
     }
 
-    @POST
+    @PostMapping
     fun sok(personsokRequest: PersonsokRequest): List<Map<String, Any?>> {
         return tilgangskontroll
                 .check(Policies.tilgangTilModia)
@@ -47,8 +50,8 @@ class PersonsokController @Autowired constructor(private val personsokPortType: 
                         }
                     } catch (ex: Exception) {
                         when (haandterOppslagFeil(ex)) {
-                            OppslagFeil.FOR_MANGE -> throw BadRequestException("Søket gav mer enn 200 treff. Forsøk å begrense søket.")
-                            else -> throw InternalServerErrorException("Feil fra søketjeneste: " + ex.message)
+                            OppslagFeil.FOR_MANGE -> throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Søket gav mer enn 200 treff. Forsøk å begrense søket.")
+                            else -> throw ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Feil fra søketjeneste: ",ex)
                         }
                     }
                 }
