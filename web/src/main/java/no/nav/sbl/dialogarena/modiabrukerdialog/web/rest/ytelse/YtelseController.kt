@@ -9,24 +9,23 @@ import no.nav.sbl.dialogarena.naudit.AuditResources
 import no.nav.sykmeldingsperioder.consumer.foreldrepenger.ForeldrepengerServiceBi
 import no.nav.sykmeldingsperioder.consumer.pleiepenger.PleiepengerService
 import no.nav.sykmeldingsperioder.consumer.sykepenger.SykepengerServiceBi
+import org.springframework.beans.factory.annotation.Autowire
 import org.springframework.beans.factory.annotation.Autowired
-import javax.ws.rs.GET
-import javax.ws.rs.Path
-import javax.ws.rs.PathParam
-import javax.ws.rs.Produces
-import javax.ws.rs.core.MediaType
+import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RestController
 
-@Path("/ytelse")
-@Produces(MediaType.APPLICATION_JSON)
+@RestController
+@RequestMapping("/ytelse")
 class YtelseController @Autowired constructor(private val sykepengerService: SykepengerServiceBi,
-                                           private val foreldrepengerServiceDefault: ForeldrepengerServiceBi,
-                                           private val pleiepengerService: PleiepengerService,
-                                           private val tilgangskontroll: Tilgangskontroll,
-                                           private val organisasjonService: OrganisasjonService) {
+                                              private val foreldrepengerServiceDefault: ForeldrepengerServiceBi,
+                                              private val pleiepengerService: PleiepengerService,
+                                              private val tilgangskontroll: Tilgangskontroll,
+                                              private val organisasjonService: OrganisasjonService) {
 
-    @GET
-    @Path("sykepenger/{fnr}")
-    fun hentSykepenger(@PathParam("fnr") fnr: String): Map<String, Any?> {
+    @GetMapping("sykepewnger/{fnr}")
+    fun hentSykepenger(@PathVariable("fnr") fnr: String): Map<String, Any?> {
         return tilgangskontroll
                 .check(Policies.tilgangTilBruker.with(fnr))
                 .get(Audit.describe(Audit.Action.READ, AuditResources.Person.Sykepenger, AuditIdentifier.FNR to fnr)) {
@@ -34,9 +33,8 @@ class YtelseController @Autowired constructor(private val sykepengerService: Syk
                 }
     }
 
-    @GET
-    @Path("foreldrepenger/{fnr}")
-    fun hentForeldrepenger(@PathParam("fnr") fnr: String): Map<String, Any?> {
+    @GetMapping("foreldrepenger/{fnr}")
+    fun hentForeldrepenger(@PathVariable("fnr") fnr: String): Map<String, Any?> {
         return tilgangskontroll
                 .check(Policies.tilgangTilBruker.with(fnr))
                 .get(Audit.describe(Audit.Action.READ, AuditResources.Person.Foreldrepenger, AuditIdentifier.FNR to fnr)) {
@@ -44,9 +42,8 @@ class YtelseController @Autowired constructor(private val sykepengerService: Syk
                 }
     }
 
-    @GET
-    @Path("pleiepenger/{fnr}")
-    fun hentPleiepenger(@PathParam("fnr") fnr: String): Map<String, Any?> {
+    @GetMapping("pleiepenger/{fnr}")
+    fun hentPleiepenger(@PathVariable("fnr") fnr: String): Map<String, Any?> {
         return tilgangskontroll
                 .check(Policies.tilgangTilBruker.with(fnr))
                 .get(Audit.describe(Audit.Action.READ, AuditResources.Person.Pleiepenger, AuditIdentifier.FNR to fnr)) {
