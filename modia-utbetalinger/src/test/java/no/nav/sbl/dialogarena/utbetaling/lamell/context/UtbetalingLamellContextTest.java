@@ -7,11 +7,11 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import javax.inject.Named;
 
 import static junit.framework.TestCase.assertNotNull;
 import static org.hamcrest.Matchers.is;
@@ -25,7 +25,7 @@ import static org.junit.Assert.assertThat;
 public class UtbetalingLamellContextTest {
 
     @Autowired
-    @Named("arenaUtbetalingUrl")
+    @Qualifier("arenaUtbetalingUrl")
     private String arenaUtbetalingUrl;
 
     @Autowired

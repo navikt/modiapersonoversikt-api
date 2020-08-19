@@ -7,9 +7,9 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.io.File;
+import java.util.UUID;
 
 import static java.util.Optional.of;
-import static org.apache.commons.lang3.RandomStringUtils.randomNumeric;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
@@ -21,7 +21,7 @@ public class CachingKodeverkClientTest {
     private CachingKodeverkClient cachingClient;
     private KodeverkClient kodeverkClient;
 
-    private final File dumpDir = new File("target", "kodeverkdump/" + randomNumeric(10));
+    private final File dumpDir = new File("target", "kodeverkdump/" + UUID.randomUUID().toString());
 
     @Before
     public void setUp() {

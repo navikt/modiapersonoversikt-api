@@ -3,7 +3,6 @@ package no.nav.sbl.dialogarena.utbetaling.domain.transform;
 import no.nav.sbl.dialogarena.utbetaling.domain.*;
 import no.nav.sbl.dialogarena.utbetaling.domain.Aktoer.AktoerType;
 import no.nav.tjeneste.virksomhet.utbetaling.v1.informasjon.*;
-import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 import org.joda.time.Interval;
 import org.slf4j.Logger;
@@ -156,7 +155,7 @@ public class Transformers {
     static String determineKontoUtbetaltTil(WSUtbetaling wsUtbetaling) {
         WSBankkonto wsKonto = wsUtbetaling.getUtbetaltTilKonto();
 
-        if (wsKonto == null || StringUtils.isEmpty(wsKonto.getKontonummer())) {
+        if (wsKonto == null || wsKonto.getKontonummer() == null || "".equals(wsKonto.getKontonummer())) {
             return wsUtbetaling.getUtbetalingsmetode();
         }
         return wsKonto.getKontonummer();

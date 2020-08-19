@@ -26,6 +26,7 @@ import java.net.URL
 
 internal class PdlOppslagServiceImplTest {
     @Rule
+    @JvmField
     val subject = SubjectRule(Subject("Z999999", IdentType.InternBruker, SsoToken.oidcToken("token", emptyMap<String, Any>())))
     val userToken = "RND-USER-TOKEN"
     val systemuserToken = "RND-STS-TOKEN"
