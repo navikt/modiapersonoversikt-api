@@ -47,7 +47,7 @@ public class ApplicationContextBeans {
 
     @Bean
     public ObjectMapper objectMapper() {
-        return new JacksonConfig().getContext(null);
+        return JacksonConfig.mapper;
     }
 
     @Bean

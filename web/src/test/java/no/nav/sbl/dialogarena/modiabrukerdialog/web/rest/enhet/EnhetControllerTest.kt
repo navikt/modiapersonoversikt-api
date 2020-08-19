@@ -6,9 +6,13 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.organisasjonsEnhetV2
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.TilgangskontrollMock
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 import org.mockito.Mockito
+import org.springframework.http.HttpStatus
+import org.springframework.web.server.ResponseStatusException
 import java.util.*
 import javax.ws.rs.BadRequestException
+import kotlin.test.assertEquals
 
 class EnhetControllerTest {
     private val organisasjonEnhetV2Service: OrganisasjonEnhetV2Service = mock()
@@ -23,9 +27,11 @@ class EnhetControllerTest {
     @Test
     fun `Kaster 404 hvis enhet ikke ble funnet`() {
         whenever(organisasjonEnhetV2Service.finnNAVKontor(Mockito.any(), Mockito.any())).thenReturn(Optional.empty())
-        Assertions.assertThrows(BadRequestException::class.java) {
+        val exception = assertThrows<ResponseStatusException> {
             controller.finnEnhet("", "")
         }
+
+        assertEquals(HttpStatus.BAD_REQUEST, exception.status)
     }
 
 }

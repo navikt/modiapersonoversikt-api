@@ -6,13 +6,10 @@ import com.fasterxml.jackson.databind.*;
 import com.fasterxml.jackson.datatype.joda.JodaModule;
 import com.fasterxml.jackson.module.kotlin.KotlinModule;
 
-import javax.ws.rs.ext.ContextResolver;
-import javax.ws.rs.ext.Provider;
 import java.io.IOException;
 import java.time.LocalDate;
 
-@Provider
-public class JacksonConfig implements ContextResolver<ObjectMapper> {
+public class JacksonConfig {
     public static final ObjectMapper mapper = new ObjectMapper();
 
     static {
@@ -25,10 +22,5 @@ public class JacksonConfig implements ContextResolver<ObjectMapper> {
         }));
         mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-    }
-
-    @Override
-    public ObjectMapper getContext(Class<?> type) {
-        return mapper;
     }
 }

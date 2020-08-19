@@ -28,6 +28,8 @@ import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.meldinger.WSHentHenven
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.*;
 import org.mockito.ArgumentCaptor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockHttpServletRequest;
 
 import javax.ws.rs.core.Response;
@@ -139,9 +141,8 @@ class DelsvarControllerTest {
     @Test
     @DisplayName("Delvis svar returnerer 200 OK")
     void ferdigstillHenvendelseReturer200OK() {
-        Response response = SubjectHandlerUtil.withIdent(SAKSBEHANDLERS_IDENT, () -> delsvarController.svarDelvis(BRUKERS_FNR, httpMockRequest, lagDelsvarRequest()));
-
-        assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
+        ResponseEntity response = SubjectHandlerUtil.withIdent(SAKSBEHANDLERS_IDENT, () -> delsvarController.svarDelvis(BRUKERS_FNR, httpMockRequest, lagDelsvarRequest()));
+        assertEquals(HttpStatus.OK, response.getStatusCode());
     }
 
     @NotNull

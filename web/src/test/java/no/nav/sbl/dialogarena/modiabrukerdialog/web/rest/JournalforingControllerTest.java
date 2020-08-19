@@ -10,13 +10,16 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Tilgangskontrol
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.api.Feilmelding;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.web.server.ResponseStatusException;
 
 import javax.servlet.http.Cookie;
-import javax.ws.rs.core.Response;
 
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.JournalforingController.FEILMELDING_UTEN_ENHET;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
@@ -30,11 +33,11 @@ class JournalforingControllerTest {
     void journalforingKnytterTilSak() throws JournalforingFeilet {
         JournalforingController journalforingController = new JournalforingController(mock(SakerService.class), TilgangskontrollMock.get());
 
-        Response response = SubjectHandlerUtil.withIdent(SAKSBEHANDLERS_IDENT, () ->
+        ResponseEntity response = SubjectHandlerUtil.withIdent(SAKSBEHANDLERS_IDENT, () ->
                 journalforingController.knyttTilSak("10108000398", "traad-id", new Sak(), mockHttpRequest())
         );
 
-        assertEquals(Response.Status.OK, response.getStatusInfo());
+        assertEquals(HttpStatus.OK, response.getStatusCode());
     }
 
     @Test
@@ -44,11 +47,13 @@ class JournalforingControllerTest {
         doThrow(RuntimeException.class).when(mock).knyttBehandlingskjedeTilSak(any(), any(), any(), any());
         JournalforingController journalforingController = new JournalforingController(mock, TilgangskontrollMock.get());
 
-        Response response = SubjectHandlerUtil.withIdent(SAKSBEHANDLERS_IDENT, () ->
-                journalforingController.knyttTilSak("10108000398", "traad-id", new Sak(), mockHttpRequest())
+        ResponseStatusException exception = assertThrows(ResponseStatusException.class, () ->
+                SubjectHandlerUtil.withIdent(SAKSBEHANDLERS_IDENT, () ->
+                        journalforingController.knyttTilSak("10108000398", "traad-id", new Sak(), mockHttpRequest())
+                )
         );
 
-        assertEquals(Response.Status.INTERNAL_SERVER_ERROR, response.getStatusInfo());
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, exception.getStatus());
     }
 
     @Test
@@ -58,12 +63,14 @@ class JournalforingControllerTest {
         doThrow(EnhetIkkeSatt.class).when(mock).knyttBehandlingskjedeTilSak(any(), any(), any(), any());
         JournalforingController journalforingController = new JournalforingController(mock, TilgangskontrollMock.get());
 
-        Response response = SubjectHandlerUtil.withIdent(SAKSBEHANDLERS_IDENT, () ->
-                journalforingController.knyttTilSak("10108000398", "traad-id", new Sak(), mockHttpRequest())
+        ResponseStatusException exception = assertThrows(ResponseStatusException.class, () ->
+                SubjectHandlerUtil.withIdent(SAKSBEHANDLERS_IDENT, () ->
+                        journalforingController.knyttTilSak("10108000398", "traad-id", new Sak(), mockHttpRequest())
+                )
         );
 
-        assertEquals(Response.Status.INTERNAL_SERVER_ERROR, response.getStatusInfo());
-        assertEquals(FEILMELDING_UTEN_ENHET, ((Feilmelding) response.getEntity()).getMessage());
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, exception.getStatus());
+        assertEquals(FEILMELDING_UTEN_ENHET, exception.getReason());
     }
 
     private MockHttpServletRequest mockHttpRequest() {
