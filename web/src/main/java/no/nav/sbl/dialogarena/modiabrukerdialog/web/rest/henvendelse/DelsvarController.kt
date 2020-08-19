@@ -7,30 +7,30 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.henvendelse.Del
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import javax.servlet.http.HttpServletRequest
-import javax.ws.rs.*
-import javax.ws.rs.core.Context
-import javax.ws.rs.core.MediaType.APPLICATION_JSON
-import javax.ws.rs.core.Response
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Policies
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Tilgangskontroll
 import no.nav.sbl.dialogarena.naudit.Audit
 import no.nav.sbl.dialogarena.naudit.Audit.Action.*
 import no.nav.sbl.dialogarena.naudit.AuditIdentifier
 import no.nav.sbl.dialogarena.naudit.AuditResources.Person.Henvendelse
+import org.springframework.http.HttpStatus
+import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RestController
 
-@Path("/dialog/{fnr}")
-@Produces(APPLICATION_JSON)
+@RestController
+@RequestMapping("/dialog/{fnr}")
 class DelsvarController @Autowired constructor(
         private val tilgangskontroll: Tilgangskontroll,
         private val delsvarService: DelsvarService
 ) {
-    @POST
-    @Path("/delvis-svar")
-    @Consumes(APPLICATION_JSON)
+    @PostMapping("/delvis-svar")
     fun svarDelvis(
-            @PathParam("fnr") fnr: String,
-            @Context httpRequest: HttpServletRequest,
-            request: DelsvarRestRequest): Response
+            @PathVariable("fnr") fnr: String,
+            httpRequest: HttpServletRequest,
+            request: DelsvarRestRequest): ResponseEntity<Void>
     {
         return tilgangskontroll
                 .check(Policies.tilgangTilBruker.with(fnr))
@@ -54,7 +54,7 @@ class DelsvarController @Autowired constructor(
                         throw handterRuntimeFeil(exception)
                     }
 
-                    Response.ok("{\"message\": \"Success\"}").build()
+                    ResponseEntity(HttpStatus.OK)
                 }
     }
 
