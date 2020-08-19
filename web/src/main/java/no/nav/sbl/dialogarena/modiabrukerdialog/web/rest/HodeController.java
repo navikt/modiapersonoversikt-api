@@ -14,10 +14,13 @@ import no.nav.sbl.dialogarena.naudit.AuditResources.Saksbehandler;
 import no.nav.sbl.dialogarena.naudit.Audit;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.ws.rs.*;
-import javax.ws.rs.core.Context;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -25,8 +28,8 @@ import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.RestUtils.hentValgtEnhet;
 import static no.nav.sbl.dialogarena.naudit.Audit.Action.*;
 
-@Path("/hode")
-@Produces(APPLICATION_JSON)
+@RestController
+@RequestMapping("/hode")
 public class HodeController {
 
     @Autowired
@@ -73,9 +76,8 @@ public class HodeController {
         }
     }
 
-    @GET
-    @Path("/me")
-    public Me hentSaksbehandler(@Context HttpServletRequest request) {
+    @GetMapping("/me")
+    public Me hentSaksbehandler(HttpServletRequest request) {
         return tilgangskontroll
                 .check(Policies.tilgangTilModia)
                 .get(Audit.describe(READ, Saksbehandler.NavnOgEnheter), () -> {
@@ -89,8 +91,7 @@ public class HodeController {
                 });
     }
 
-    @GET
-    @Path("/enheter")
+    @GetMapping("/enheter")
     public Enheter hentEnheter() {
         return tilgangskontroll
                 .check(Policies.tilgangTilModia)
@@ -105,9 +106,8 @@ public class HodeController {
                 });
     }
 
-    @POST
-    @Path("/velgenhet")
-    public String settValgtEnhet(@Context HttpServletResponse response, String enhetId) {
+    @PostMapping("/velgenhet")
+    public String settValgtEnhet(HttpServletResponse response, String enhetId) {
         return tilgangskontroll
                 .check(Policies.tilgangTilModia)
                 .get(Audit.describe(UPDATE, Saksbehandler.ValgtEnhet, new Pair<>(AuditIdentifier.ENHET_ID, enhetId)), () -> {
