@@ -4,7 +4,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.Unleash
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Policies
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Tilgangskontroll
 import no.nav.sbl.dialogarena.naudit.Audit
-import javax.inject.Inject
+import org.springframework.beans.factory.annotation.Autowired
 import javax.ws.rs.GET
 import javax.ws.rs.Path
 import javax.ws.rs.PathParam
@@ -14,7 +14,7 @@ import javax.ws.rs.core.MediaType.APPLICATION_JSON
 private const val APPLICATION_PREFIX = "modiabrukerdialog."
 
 @Path("/featuretoggle")
-class FeatureToggleController @Inject constructor(
+class FeatureToggleController @Autowired constructor(
         private val unleashService: UnleashService,
         private val tilgangskontroll: Tilgangskontroll
 ) {

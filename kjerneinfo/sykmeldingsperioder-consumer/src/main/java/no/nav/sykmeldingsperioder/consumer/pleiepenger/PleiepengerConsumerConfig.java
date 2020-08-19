@@ -9,7 +9,7 @@ import no.nav.tjeneste.virksomhet.pleiepenger.v1.PleiepengerV1;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import static no.nav.metrics.MetricsFactory.createTimerProxyForWebService;
 
@@ -19,7 +19,7 @@ public class PleiepengerConsumerConfig {
 
     public static final String PLEIEPENGER_V1_ENDPOINT_KEY = "VIRKSOMHET_PLEIEPENGER_V1_ENDPOINTURL";
 
-    @Inject
+    @Autowired
     private StsConfig stsConfig;
 
     @Bean

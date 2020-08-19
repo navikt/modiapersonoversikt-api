@@ -18,7 +18,7 @@ import no.nav.sbl.dialogarena.naudit.Audit
 import no.nav.sbl.dialogarena.naudit.Audit.Action.*
 import no.nav.sbl.dialogarena.naudit.AuditIdentifier
 import org.slf4j.LoggerFactory
-import javax.inject.Inject
+import org.springframework.beans.factory.annotation.Autowired
 import javax.servlet.http.HttpServletRequest
 import javax.ws.rs.*
 import javax.ws.rs.core.Context
@@ -31,7 +31,7 @@ private const val AARSAK_PREFIX = "Oppgave lagt tilbake. Årsak: "
 
 @Path("/oppgaver")
 @Produces(APPLICATION_JSON)
-class OppgaveController @Inject constructor(
+class OppgaveController @Autowired constructor(
         private val oppgaveBehandlingService: OppgaveBehandlingService,
         private val plukkOppgaveService: PlukkOppgaveService,
         private val ldapService: LDAPService,

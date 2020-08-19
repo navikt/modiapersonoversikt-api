@@ -9,14 +9,14 @@ import no.nav.tjeneste.virksomhet.person.v3.binding.PersonV3;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import static no.nav.metrics.MetricsFactory.createTimerProxyForWebService;
 
 @Configuration
 public class PersonV3EndpointConfig {
 
-    @Inject
+    @Autowired
     private StsConfig stsConfig;
 
     @Bean

@@ -22,7 +22,7 @@ import no.nav.virksomhet.tjenester.sak.arbeidogaktivitet.v1.ArbeidOgAktivitet;
 import no.nav.virksomhet.tjenester.sak.meldinger.v1.WSBruker;
 import no.nav.virksomhet.tjenester.sak.meldinger.v1.WSHentSakListeRequest;
 
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
@@ -39,19 +39,19 @@ public class SakerServiceImpl implements SakerService {
     public static final String VEDTAKSLOSNINGEN = "FS36";
 
 
-    @Inject
+    @Autowired
     private SakV1 sakV1;
-    @Inject
+    @Autowired
     private BehandleSakV1 behandleSakWS;
-    @Inject
+    @Autowired
     private GsakKodeverk gsakKodeverk;
-    @Inject
+    @Autowired
     private StandardKodeverk standardKodeverk;
-    @Inject
+    @Autowired
     private BehandleHenvendelsePortType behandleHenvendelsePortType;
-    @Inject
+    @Autowired
     private ArbeidOgAktivitet arbeidOgAktivitet;
-    @Inject
+    @Autowired
     private PsakService psakService;
 
     @Override

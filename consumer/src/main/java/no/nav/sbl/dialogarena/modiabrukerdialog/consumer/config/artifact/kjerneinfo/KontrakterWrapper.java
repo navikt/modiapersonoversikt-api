@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.artifact.kjerneinfo.KontrakterConsumerConfigImpl.createOppfolgingskontraktService;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.artifact.kjerneinfo.KontrakterConsumerConfigImpl.createYtelseskontraktService;
@@ -21,11 +21,11 @@ import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.artifact.
         YtelseskontraktConsumerConfig.class})
 public class KontrakterWrapper {
 
-    @Inject
+    @Autowired
     private YtelseskontraktV3 ytelseskontraktPortType;
 
 
-    @Inject
+    @Autowired
     private OppfoelgingPortType oppfoelgingPortType;
 
     @Bean

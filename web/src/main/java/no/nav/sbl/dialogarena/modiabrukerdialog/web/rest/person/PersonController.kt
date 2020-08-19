@@ -25,7 +25,7 @@ import no.nav.sbl.dialogarena.naudit.AuditResources
 import no.nav.tjeneste.virksomhet.person.v3.binding.HentPersonPersonIkkeFunnet
 import no.nav.tjeneste.virksomhet.person.v3.binding.HentPersonSikkerhetsbegrensning
 import org.slf4j.LoggerFactory
-import javax.inject.Inject
+import org.springframework.beans.factory.annotation.Autowired
 import javax.ws.rs.*
 import javax.ws.rs.core.MediaType.APPLICATION_JSON
 
@@ -36,7 +36,7 @@ private const val TILRETTELAGT_KOMMUNIKASJON_KODEVERKSPRAK = "nb"
 
 @Path("/person/{fnr}")
 @Produces(APPLICATION_JSON)
-class PersonController @Inject constructor(private val kjerneinfoService: PersonKjerneinfoServiceBi,
+class PersonController @Autowired constructor(private val kjerneinfoService: PersonKjerneinfoServiceBi,
                                            private val kodeverk: KodeverkmanagerBi,
                                            private val tilgangskontroll: Tilgangskontroll,
                                            private val pdlOppslagService: PdlOppslagService) {

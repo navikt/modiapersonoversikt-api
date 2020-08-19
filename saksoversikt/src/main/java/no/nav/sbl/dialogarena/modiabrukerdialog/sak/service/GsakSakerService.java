@@ -11,7 +11,7 @@ import no.nav.tjeneste.virksomhet.sak.v1.meldinger.WSFinnSakResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -23,7 +23,7 @@ public class GsakSakerService {
 
     public static final String GSAK_FAGSYSTEM_ID = "FS22";
 
-    @Inject
+    @Autowired
     private SakV1 gsakSakV1;
 
     public Optional<Stream<Sak>> hentSaker(String fnr) {

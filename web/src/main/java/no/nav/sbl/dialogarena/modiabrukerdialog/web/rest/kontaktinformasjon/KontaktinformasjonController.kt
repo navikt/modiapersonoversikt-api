@@ -8,7 +8,7 @@ import no.nav.sbl.dialogarena.naudit.Audit.Action.*
 import no.nav.sbl.dialogarena.naudit.AuditIdentifier
 import no.nav.sbl.dialogarena.naudit.AuditResources.Person
 import no.nav.tjeneste.virksomhet.digitalkontaktinformasjon.v1.meldinger.WSHentDigitalKontaktinformasjonResponse
-import javax.inject.Inject
+import org.springframework.beans.factory.annotation.Autowired
 import javax.ws.rs.GET
 import javax.ws.rs.Path
 import javax.ws.rs.PathParam
@@ -17,7 +17,7 @@ import javax.ws.rs.core.MediaType
 
 @Path("/person/{fnr}/kontaktinformasjon")
 @Produces(MediaType.APPLICATION_JSON)
-class KontaktinformasjonController @Inject constructor(private val dkifService: DkifService, private val tilgangskontroll: Tilgangskontroll) {
+class KontaktinformasjonController @Autowired constructor(private val dkifService: DkifService, private val tilgangskontroll: Tilgangskontroll) {
 
     @GET
     @Path("/")

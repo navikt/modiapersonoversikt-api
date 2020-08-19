@@ -9,7 +9,7 @@ import no.nav.tjeneste.virksomhet.organisasjon.v4.OrganisasjonV4;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import static no.nav.metrics.MetricsFactory.createTimerProxyForWebService;
 
@@ -18,7 +18,7 @@ public class OrganisasjonV4ConsumerConfig {
 
     public static final String ORGANISASJON_V4_ENDPOINT_KEY = "VIRKSOMHET_ORGANISASJON_V4_ENDPOINTURL";
 
-    @Inject
+    @Autowired
     private StsConfig stsConfig;
 
     @Bean

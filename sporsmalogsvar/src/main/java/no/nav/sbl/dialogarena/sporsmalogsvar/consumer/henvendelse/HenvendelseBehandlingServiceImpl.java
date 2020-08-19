@@ -29,7 +29,7 @@ import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.meldinger.WSHentHenven
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 import javax.inject.Named;
 import java.util.ArrayList;
 import java.util.List;
@@ -59,7 +59,7 @@ public class HenvendelseBehandlingServiceImpl implements HenvendelseBehandlingSe
     private final LDAPService ldapService;
     private final ArbeidsfordelingV1Service arbeidsfordelingService;
 
-    @Inject
+    @Autowired
     public HenvendelseBehandlingServiceImpl(
             HenvendelsePortType henvendelsePortType,
             BehandleHenvendelsePortType behandleHenvendelsePortType,

@@ -5,7 +5,7 @@ import no.nav.kodeverk.consumer.fim.kodeverk.KodeverkmanagerBi
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Policies
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Tilgangskontroll
 import no.nav.sbl.dialogarena.naudit.Audit
-import javax.inject.Inject
+import org.springframework.beans.factory.annotation.Autowired
 import javax.ws.rs.GET
 import javax.ws.rs.Path
 import javax.ws.rs.PathParam
@@ -14,7 +14,7 @@ import javax.ws.rs.core.MediaType.APPLICATION_JSON
 
 @Path("/kodeverk/{kodeverkRef}")
 @Produces(APPLICATION_JSON)
-class KodeverkController @Inject constructor(
+class KodeverkController @Autowired constructor(
         private val tilgangskontroll: Tilgangskontroll,
         private val kodeverkManager: KodeverkmanagerBi
 ) {

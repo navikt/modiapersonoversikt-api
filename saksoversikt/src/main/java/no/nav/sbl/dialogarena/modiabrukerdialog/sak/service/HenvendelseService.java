@@ -9,7 +9,7 @@ import no.nav.tjeneste.domene.brukerdialog.henvendelsesoknader.v1.informasjon.WS
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
 
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
 import java.util.function.Predicate;
 
@@ -27,7 +27,7 @@ public class HenvendelseService {
 
     private static final Logger LOGGER = getLogger(HenvendelseService.class);
 
-    @Inject
+    @Autowired
     private HenvendelseSoknaderPortType henvendelse;
 
     private Predicate<Soknad> fjernSoknaderInnsendtForHL4I2014 = soknad ->

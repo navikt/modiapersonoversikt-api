@@ -23,7 +23,7 @@ import no.nav.tjeneste.virksomhet.tildeloppgave.v1.WSTildelFlereOppgaverResponse
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -55,7 +55,7 @@ public class OppgaveBehandlingServiceImpl implements OppgaveBehandlingService {
     private final AnsattService ansattWS;
     private LeggTilbakeOppgaveIGsakDelegate leggTilbakeOppgaveIGsakDelegate;
 
-    @Inject
+    @Autowired
     public OppgaveBehandlingServiceImpl(OppgavebehandlingV3 oppgavebehandlingWS,
                                         TildelOppgaveV1 tildelOppgaveWS,
                                         OppgaveV3 oppgaveWS,

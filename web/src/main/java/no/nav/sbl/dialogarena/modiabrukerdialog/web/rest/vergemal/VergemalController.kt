@@ -8,7 +8,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Tilgangskontrol
 import no.nav.sbl.dialogarena.naudit.AuditResources
 import no.nav.sbl.dialogarena.naudit.Audit
 import no.nav.sbl.dialogarena.naudit.AuditIdentifier
-import javax.inject.Inject
+import org.springframework.beans.factory.annotation.Autowired
 import javax.ws.rs.GET
 import javax.ws.rs.Path
 import javax.ws.rs.PathParam
@@ -18,7 +18,7 @@ import javax.ws.rs.core.MediaType.APPLICATION_JSON
 
 @Path("/person/{fnr}/vergemal")
 @Produces(APPLICATION_JSON)
-class VergemalController @Inject constructor(private val vergemalService: VergemalService, private val tilgangskontroll: Tilgangskontroll) {
+class VergemalController @Autowired constructor(private val vergemalService: VergemalService, private val tilgangskontroll: Tilgangskontroll) {
 
     @GET
     @Path("/")

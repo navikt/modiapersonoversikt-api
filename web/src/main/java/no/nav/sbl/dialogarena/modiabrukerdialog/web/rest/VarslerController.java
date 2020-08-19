@@ -11,7 +11,7 @@ import no.nav.sbl.dialogarena.naudit.Audit;
 import no.nav.sbl.dialogarena.varsel.domain.Varsel;
 import no.nav.sbl.dialogarena.varsel.service.VarslerService;
 
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -27,10 +27,10 @@ import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 @Produces(APPLICATION_JSON + ";charset=utf-8")
 public class VarslerController {
 
-    @Inject
+    @Autowired
     VarslerService varslerService;
 
-    @Inject
+    @Autowired
     Tilgangskontroll tilgangskontroll;
 
     @GET

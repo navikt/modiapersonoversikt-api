@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 import javax.xml.namespace.QName;
 
 import static no.nav.metrics.MetricsFactory.createTimerProxyForWebService;
@@ -24,7 +24,7 @@ public class DkifConsumerConfig {
     private String dkifEndpointUrl;
     @Value("${servicegateway.url:}")
     private String servicegatewayUrl;
-    @Inject
+    @Autowired
     private StsConfig stsConfig;
 
 

@@ -13,7 +13,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.api.Feilmelding;
 import no.nav.sbl.dialogarena.naudit.Audit;
 import org.springframework.cache.annotation.Cacheable;
 
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
@@ -36,7 +36,7 @@ public class JournalforingController {
     private final SakerService sakerService;
     private final Tilgangskontroll tilgangskontroll;
 
-    @Inject
+    @Autowired
     public JournalforingController(SakerService sakerService, Tilgangskontroll tilgangskontroll) {
         this.sakerService = sakerService;
         this.tilgangskontroll = tilgangskontroll;

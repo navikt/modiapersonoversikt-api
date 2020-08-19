@@ -27,7 +27,7 @@ import no.nav.sbl.dialogarena.naudit.AuditResources.Person
 import no.nav.sbl.dialogarena.rsbac.DecisionEnums
 import no.nav.sbl.dialogarena.rsbac.Policy
 import java.util.*
-import javax.inject.Inject
+import org.springframework.beans.factory.annotation.Autowired
 import javax.servlet.http.HttpServletRequest
 import javax.ws.rs.*
 import javax.ws.rs.core.Context
@@ -40,7 +40,7 @@ class FortsettDialogDTO(val behandlingsId: String, val oppgaveId: String?) : DTO
 
 @Path("/dialog/{fnr}")
 @Produces("application/json")
-class DialogController @Inject constructor(
+class DialogController @Autowired constructor(
         private val tilgangskontroll: Tilgangskontroll,
         private val henvendelseService: HenvendelseBehandlingService,
         private val henvendelseUtsendingService: HenvendelseUtsendingService,

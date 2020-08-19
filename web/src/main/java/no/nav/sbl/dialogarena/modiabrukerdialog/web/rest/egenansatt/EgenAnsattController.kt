@@ -7,7 +7,7 @@ import no.nav.sbl.dialogarena.naudit.Audit
 import no.nav.sbl.dialogarena.naudit.Audit.Action.*
 import no.nav.sbl.dialogarena.naudit.AuditIdentifier
 import no.nav.sbl.dialogarena.naudit.AuditResources.Saksbehandler
-import javax.inject.Inject
+import org.springframework.beans.factory.annotation.Autowired
 import javax.ws.rs.GET
 import javax.ws.rs.Path
 import javax.ws.rs.PathParam
@@ -15,7 +15,7 @@ import javax.ws.rs.Produces
 import javax.ws.rs.core.MediaType
 
 @Path("/egenansatt/{fnr}")
-class EgenAnsattController @Inject constructor(
+class EgenAnsattController @Autowired constructor(
         private val egenAnsattService: EgenAnsattService,
         private val tilgangskontroll: Tilgangskontroll
 ) {

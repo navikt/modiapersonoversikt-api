@@ -9,13 +9,13 @@ import no.nav.tjeneste.virksomhet.tildeloppgave.v1.TildelOppgaveV1;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import static no.nav.metrics.MetricsFactory.createTimerProxyForWebService;
 
 @Configuration
 public class GsakTildelOppgaveV1EndpointConfig {
-    @Inject
+    @Autowired
     private StsConfig stsConfig;
 
     @Bean

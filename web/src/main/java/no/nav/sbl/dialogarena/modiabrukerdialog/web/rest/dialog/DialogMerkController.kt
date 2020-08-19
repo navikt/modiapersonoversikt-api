@@ -11,14 +11,14 @@ import no.nav.sbl.dialogarena.naudit.AuditIdentifier
 import no.nav.sbl.dialogarena.naudit.AuditResources.Person.Henvendelse
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.behandlehenvendelse.BehandleHenvendelsePortType
 import java.util.*
-import javax.inject.Inject
+import org.springframework.beans.factory.annotation.Autowired
 import javax.ws.rs.GET
 import javax.ws.rs.POST
 import javax.ws.rs.Path
 import javax.ws.rs.core.Response
 
 @Path("/dialogmerking")
-class DialogMerkController @Inject constructor(private val behandleHenvendelsePortType: BehandleHenvendelsePortType,
+class DialogMerkController @Autowired constructor(private val behandleHenvendelsePortType: BehandleHenvendelsePortType,
                                                private val oppgaveBehandlingService: OppgaveBehandlingService,
                                                private val tilgangskontroll: Tilgangskontroll
 ) {

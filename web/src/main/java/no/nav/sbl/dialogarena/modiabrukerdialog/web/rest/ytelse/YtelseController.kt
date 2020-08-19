@@ -9,7 +9,7 @@ import no.nav.sbl.dialogarena.naudit.AuditResources
 import no.nav.sykmeldingsperioder.consumer.foreldrepenger.ForeldrepengerServiceBi
 import no.nav.sykmeldingsperioder.consumer.pleiepenger.PleiepengerService
 import no.nav.sykmeldingsperioder.consumer.sykepenger.SykepengerServiceBi
-import javax.inject.Inject
+import org.springframework.beans.factory.annotation.Autowired
 import javax.ws.rs.GET
 import javax.ws.rs.Path
 import javax.ws.rs.PathParam
@@ -18,7 +18,7 @@ import javax.ws.rs.core.MediaType
 
 @Path("/ytelse")
 @Produces(MediaType.APPLICATION_JSON)
-class YtelseController @Inject constructor(private val sykepengerService: SykepengerServiceBi,
+class YtelseController @Autowired constructor(private val sykepengerService: SykepengerServiceBi,
                                            private val foreldrepengerServiceDefault: ForeldrepengerServiceBi,
                                            private val pleiepengerService: PleiepengerService,
                                            private val tilgangskontroll: Tilgangskontroll,

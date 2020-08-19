@@ -9,14 +9,14 @@ import no.nav.tjeneste.virksomhet.sakogbehandling.v1.binding.SakOgBehandlingV1;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 import javax.xml.namespace.QName;
 
 import static no.nav.metrics.MetricsFactory.createTimerProxyForWebService;
 
 @Configuration
 public class SakOgBehandlingEndpointConfig {
-    @Inject
+    @Autowired
     private StsConfig stsConfig;
 
     @Bean

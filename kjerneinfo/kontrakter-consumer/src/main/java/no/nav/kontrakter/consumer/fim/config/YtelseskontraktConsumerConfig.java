@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 import javax.xml.namespace.QName;
 
 import static org.apache.commons.lang3.StringUtils.defaultIfBlank;
@@ -22,7 +22,7 @@ public class YtelseskontraktConsumerConfig {
     private String ytelseskontraktEndpointUrl;
     @Value("${servicegateway.url:}")
     private String servicegatewayUrl;
-    @Inject
+    @Autowired
     private StsConfig stsConfig;
 
     @Bean

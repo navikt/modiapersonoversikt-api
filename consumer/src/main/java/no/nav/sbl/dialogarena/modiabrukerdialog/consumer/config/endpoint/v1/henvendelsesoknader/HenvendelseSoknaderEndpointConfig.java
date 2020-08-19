@@ -9,13 +9,13 @@ import no.nav.tjeneste.domene.brukerdialog.henvendelsesoknader.v1.HenvendelseSok
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import static no.nav.metrics.MetricsFactory.createTimerProxyForWebService;
 
 @Configuration
 public class HenvendelseSoknaderEndpointConfig {
-    @Inject
+    @Autowired
     private StsConfig stsConfig;
 
     @Bean

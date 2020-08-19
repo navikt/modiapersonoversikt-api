@@ -9,7 +9,7 @@ import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehand
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.meldinger.FinnSakOgBehandlingskjedeListeRequest;
 import org.slf4j.Logger;
 
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
@@ -25,13 +25,13 @@ public class SakOgBehandlingService {
 
     private static final Logger logger = getLogger(SakOgBehandlingService.class);
 
-    @Inject
+    @Autowired
     private SakOgBehandlingV1 sakOgBehandlingPortType;
 
-    @Inject
+    @Autowired
     private Filter filter;
 
-    @Inject
+    @Autowired
     private FodselnummerAktorService fnrAktor;
 
     private static List<Behandling> hentBehandlingerFraBehandlingskjeder(List<Behandlingskjede> behandlingskjedeListe) {

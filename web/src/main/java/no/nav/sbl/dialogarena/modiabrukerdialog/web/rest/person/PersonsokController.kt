@@ -13,7 +13,7 @@ import no.nav.tjeneste.virksomhet.personsoek.v1.meldinger.FinnPersonRequest
 import no.nav.tjeneste.virksomhet.personsoek.v1.meldinger.PersonFilter
 import no.nav.tjeneste.virksomhet.personsoek.v1.meldinger.Soekekriterie
 import org.slf4j.LoggerFactory
-import javax.inject.Inject
+import org.springframework.beans.factory.annotation.Autowired
 import javax.ws.rs.*
 import javax.ws.rs.core.MediaType
 
@@ -23,7 +23,7 @@ private enum class OppslagFeil {
 
 @Path("/personsok")
 @Produces(MediaType.APPLICATION_JSON)
-class PersonsokController @Inject constructor(private val personsokPortType: PersonsokPortType, val tilgangskontroll: Tilgangskontroll) {
+class PersonsokController @Autowired constructor(private val personsokPortType: PersonsokPortType, val tilgangskontroll: Tilgangskontroll) {
 
     private val logger = LoggerFactory.getLogger(PersonsokController::class.java)
     private val auditDescriptor = Audit.describe<List<Map<String, Any?>>>(Audit.Action.READ, AuditResources.Personsok.Resultat) { resultat ->

@@ -13,7 +13,7 @@ import no.nav.sbl.dialogarena.naudit.AuditIdentifier;
 import no.nav.sbl.dialogarena.naudit.AuditResources.Saksbehandler;
 import no.nav.sbl.dialogarena.naudit.Audit;
 
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.*;
@@ -29,16 +29,16 @@ import static no.nav.sbl.dialogarena.naudit.Audit.Action.*;
 @Produces(APPLICATION_JSON)
 public class HodeController {
 
-    @Inject
+    @Autowired
     private LDAPService ldapService;
 
-    @Inject
+    @Autowired
     private AnsattService ansattService;
 
-    @Inject
+    @Autowired
     private OrganisasjonEnhetV2Service organisasjonEnhetService;
 
-    @Inject
+    @Autowired
     Tilgangskontroll tilgangskontroll;
 
     class Me {

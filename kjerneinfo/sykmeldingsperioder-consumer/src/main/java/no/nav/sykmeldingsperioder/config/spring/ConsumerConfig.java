@@ -24,7 +24,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.net.MalformedURLException;
 
 @Configuration
@@ -32,16 +32,16 @@ import java.net.MalformedURLException;
         PleiepengerConsumerConfig.class, OrganisasjonV4ConsumerConfig.class})
 public class ConsumerConfig {
 
-    @Inject
+    @Autowired
     private ForeldrepengerV2 foreldrepengerPortType;
 
-    @Inject
+    @Autowired
     private SykepengerV2 sykepengerPortType;
 
-    @Inject
+    @Autowired
     private PleiepengerV1 pleiepengerPortType;
 
-    @Inject
+    @Autowired
     private OrganisasjonV4 organisasjonV4PortType;
 
     @Bean

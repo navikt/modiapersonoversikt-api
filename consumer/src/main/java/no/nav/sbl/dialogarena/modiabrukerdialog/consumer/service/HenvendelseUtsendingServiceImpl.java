@@ -31,7 +31,7 @@ import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.meldinger.WSHentHenven
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 import javax.inject.Named;
 import java.util.List;
 import java.util.Optional;
@@ -60,7 +60,7 @@ public class HenvendelseUtsendingServiceImpl implements HenvendelseUtsendingServ
     private final Tilgangskontroll tilgangskontroll;
     private static final Logger logger = LoggerFactory.getLogger(HenvendelseUtsendingServiceImpl.class);
 
-    @Inject
+    @Autowired
     public HenvendelseUtsendingServiceImpl(HenvendelsePortType henvendelsePortType,
                                            SendUtHenvendelsePortType sendUtHenvendelsePortType,
                                            BehandleHenvendelsePortType behandleHenvendelsePortType,

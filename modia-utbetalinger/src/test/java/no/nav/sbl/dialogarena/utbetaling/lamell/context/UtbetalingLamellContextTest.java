@@ -10,7 +10,7 @@ import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 import javax.inject.Named;
 
 import static junit.framework.TestCase.assertNotNull;
@@ -24,11 +24,11 @@ import static org.junit.Assert.assertThat;
         UtbetalingPortTypeTestConfig.class})
 public class UtbetalingLamellContextTest {
 
-    @Inject
+    @Autowired
     @Named("arenaUtbetalingUrl")
     private String arenaUtbetalingUrl;
 
-    @Inject
+    @Autowired
     private UtbetalingService utbetalingService;
 
     @BeforeClass

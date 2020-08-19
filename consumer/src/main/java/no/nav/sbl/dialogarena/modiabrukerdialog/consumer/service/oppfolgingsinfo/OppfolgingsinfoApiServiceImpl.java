@@ -16,7 +16,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.oppfolgingsinfo.Oppf
 import okhttp3.Request;
 import okhttp3.Response;
 
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.IOException;
 
@@ -26,7 +26,7 @@ public class OppfolgingsinfoApiServiceImpl implements OppfolgingsinfoApiService 
     private ObjectMapper objectMapper = JsonMapper.defaultObjectMapper();
     private String apiUrl;
 
-    @Inject
+    @Autowired
     public OppfolgingsinfoApiServiceImpl(String apiUrl) {
         this.apiUrl = sluttMedSlash(apiUrl);
     }

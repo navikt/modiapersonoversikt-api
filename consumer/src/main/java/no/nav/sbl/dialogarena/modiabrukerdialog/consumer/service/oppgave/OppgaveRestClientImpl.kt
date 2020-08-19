@@ -25,12 +25,12 @@ import org.slf4j.MDC
 import org.slf4j.LoggerFactory
 import java.time.LocalDate
 import java.util.*
-import javax.inject.Inject
+import org.springframework.beans.factory.annotation.Autowired
 import javax.ws.rs.client.Entity.json
 import javax.ws.rs.core.HttpHeaders.AUTHORIZATION
 
 
-open class OppgaveOpprettelseClient @Inject constructor(
+open class OppgaveOpprettelseClient @Autowired constructor(
         val kodeverksmapperService: KodeverksmapperService,
         val pdlOppslagService: PdlOppslagService
 
@@ -41,7 +41,7 @@ open class OppgaveOpprettelseClient @Inject constructor(
     private val log = LoggerFactory.getLogger(OppgaveOpprettelseClient::class.java)
     private val gson = GsonBuilder().setDateFormat("yyyy-MM-dd").create()
 
-    @Inject
+    @Autowired
     private lateinit var stsService: SystemUserTokenProvider
 
 

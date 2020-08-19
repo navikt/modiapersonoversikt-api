@@ -12,7 +12,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -28,7 +28,7 @@ public class OrganisasjonEnhetV2ServiceImpl implements OrganisasjonEnhetV2Servic
 
     private static final Logger logger = LoggerFactory.getLogger(OrganisasjonEnhetV2ServiceImpl.class);
 
-    @Inject
+    @Autowired
     private OrganisasjonEnhetV2 organisasjonEnhetService;
 
     @Override

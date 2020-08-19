@@ -12,7 +12,7 @@ import no.nav.tjeneste.virksomhet.utbetaling.v1.meldinger.WSHentUtbetalingsinfor
 import org.joda.time.LocalDate;
 import org.slf4j.Logger;
 
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
@@ -27,7 +27,7 @@ import static org.slf4j.LoggerFactory.getLogger;
 public class UtbetalingerServiceImpl implements UtbetalingerService {
     private static final Logger logger = getLogger(UtbetalingerServiceImpl.class);
 
-    @Inject
+    @Autowired
     private UtbetalingV1 utbetalingV1;
 
     @Override

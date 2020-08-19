@@ -8,7 +8,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.resultatwrapp
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -22,10 +22,10 @@ public class BulletproofKodeverkService {
     public static final String BEHANDLINGSTEMA = "Behandlingstema";
     public static final String ARKIVTEMA = "Arkivtemaer";
 
-    @Inject
+    @Autowired
     private Kodeverk lokaltKodeverk;
 
-    @Inject
+    @Autowired
     private KodeverkClient kodeverkClient;
     public String getSkjematittelForSkjemanummer(String vedleggsIdOrSkjemaId) {
         return getSkjematittelForSkjemanummer(vedleggsIdOrSkjemaId, "");

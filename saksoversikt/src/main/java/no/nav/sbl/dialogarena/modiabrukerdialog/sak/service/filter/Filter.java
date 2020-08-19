@@ -6,7 +6,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.BehandlingsSt
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.Behandlingskjede;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.Sak;
 
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.Predicate;
@@ -17,7 +17,7 @@ import static java.util.stream.Collectors.toList;
 public class Filter {
     public final static String ULOVLIG_PREFIX = "17";
 
-    @Inject
+    @Autowired
     private ContentRetriever cms;
 
     private static List<String> ulovligeSakstema;

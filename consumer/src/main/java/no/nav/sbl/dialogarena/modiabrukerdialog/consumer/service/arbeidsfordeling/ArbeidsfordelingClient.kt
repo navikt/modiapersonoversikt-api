@@ -21,7 +21,7 @@ import okhttp3.RequestBody
 import org.slf4j.LoggerFactory
 import org.slf4j.MDC
 import java.util.*
-import javax.inject.Inject
+import org.springframework.beans.factory.annotation.Autowired
 import javax.ws.rs.core.HttpHeaders.AUTHORIZATION
 
 
@@ -43,7 +43,7 @@ open class ArbeidsfordelingClient {
         }
     }
 
-    @Inject
+    @Autowired
     private lateinit var stsService: SystemUserTokenProvider
 
     open fun hentGTForEnhet(enhet: String): List<EnhetsGeografiskeTilknytning> {

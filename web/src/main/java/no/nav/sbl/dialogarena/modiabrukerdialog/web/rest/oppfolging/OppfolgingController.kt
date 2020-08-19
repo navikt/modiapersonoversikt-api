@@ -22,13 +22,13 @@ import no.nav.sbl.dialogarena.naudit.Audit.Action.*
 import no.nav.sbl.dialogarena.naudit.AuditIdentifier
 import org.slf4j.LoggerFactory
 import java.util.*
-import javax.inject.Inject
+import org.springframework.beans.factory.annotation.Autowired
 import javax.ws.rs.*
 import javax.ws.rs.core.MediaType
 
 @Path("/oppfolging/{fnr}")
 @Produces(MediaType.APPLICATION_JSON)
-class OppfolgingController @Inject constructor(private val service: OppfolgingsinfoApiService,
+class OppfolgingController @Autowired constructor(private val service: OppfolgingsinfoApiService,
                                                private val ldapService: LDAPService,
                                                private val tilgangskontroll: Tilgangskontroll,
                                                private val ytelseskontraktService: YtelseskontraktServiceBi,

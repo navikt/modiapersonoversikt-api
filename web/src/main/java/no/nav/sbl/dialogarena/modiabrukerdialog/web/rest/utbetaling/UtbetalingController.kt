@@ -9,14 +9,14 @@ import no.nav.sbl.dialogarena.naudit.Audit
 import no.nav.sbl.dialogarena.naudit.AuditIdentifier
 import no.nav.sbl.dialogarena.utbetaling.service.UtbetalingService
 import no.nav.tjeneste.virksomhet.utbetaling.v1.informasjon.*
-import javax.inject.Inject
+import org.springframework.beans.factory.annotation.Autowired
 import javax.ws.rs.*
 import javax.ws.rs.core.MediaType.APPLICATION_JSON
 import javax.ws.rs.core.Response
 
 @Path("/utbetaling/{fnr}")
 @Produces(APPLICATION_JSON)
-class UtbetalingController @Inject constructor(private val service: UtbetalingService, private val tilgangskontroll: Tilgangskontroll) {
+class UtbetalingController @Autowired constructor(private val service: UtbetalingService, private val tilgangskontroll: Tilgangskontroll) {
 
     @GET
     @Path("/")

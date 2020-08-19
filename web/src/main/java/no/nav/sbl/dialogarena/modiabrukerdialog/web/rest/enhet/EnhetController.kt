@@ -14,12 +14,12 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.enhet.model.EnhetKontak
 import no.nav.sbl.dialogarena.naudit.Audit
 import no.nav.sbl.dialogarena.naudit.Audit.Action.*
 import no.nav.sbl.dialogarena.naudit.AuditIdentifier
-import javax.inject.Inject
+import org.springframework.beans.factory.annotation.Autowired
 import javax.ws.rs.*
 import javax.ws.rs.core.MediaType.APPLICATION_JSON
 
 @Path("/enheter")
-class EnhetController @Inject
+class EnhetController @Autowired
 constructor(private val organisasjonEnhetKontaktinformasjonService: OrganisasjonEnhetKontaktinformasjonService,
             private val organisasjonEnhetV2Service: OrganisasjonEnhetV2Service,
             private val arbeidsfordeling: ArbeidsfordelingV1Service,

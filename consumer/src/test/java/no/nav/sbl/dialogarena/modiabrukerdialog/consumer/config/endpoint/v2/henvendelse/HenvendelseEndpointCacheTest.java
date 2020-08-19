@@ -7,7 +7,7 @@ import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.meldinger.WSHentHenven
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import static no.nav.common.utils.SslUtils.setupTruststore;
 import static org.hamcrest.Matchers.is;
@@ -19,7 +19,7 @@ public class HenvendelseEndpointCacheTest extends CacheTest {
 
     public static final String CACHE_NAME = "endpointCache";
 
-    @Inject
+    @Autowired
     private HenvendelsePortType henvendelse;
 
     public HenvendelseEndpointCacheTest() {

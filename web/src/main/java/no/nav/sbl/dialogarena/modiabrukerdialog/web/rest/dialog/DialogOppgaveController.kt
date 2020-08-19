@@ -17,7 +17,7 @@ import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.OppgavebehandlingV3
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.meldinger.WSOpprettOppgave
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.meldinger.WSOpprettOppgaveRequest
 import java.time.LocalDate
-import javax.inject.Inject
+import org.springframework.beans.factory.annotation.Autowired
 import javax.ws.rs.GET
 import javax.ws.rs.POST
 import javax.ws.rs.Path
@@ -28,7 +28,7 @@ import javax.ws.rs.core.Response
 private const val HENVENDELSESTYPE_KODE: String = "DIALOG"
 
 @Path("/dialogoppgave")
-class DialogOppgaveController @Inject constructor(
+class DialogOppgaveController @Autowired constructor(
         private val gsakKodeverk: GsakKodeverk,
         private val oppgavebehandling: OppgavebehandlingV3,
         private val oppgavebehandlingRest: OppgaveRestClient,

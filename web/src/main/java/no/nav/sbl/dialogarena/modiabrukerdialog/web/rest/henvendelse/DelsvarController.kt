@@ -5,7 +5,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.RestUtils
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.henvendelse.DelsvarRequest.DelsvarRequestBuilder
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.henvendelse.DelsvarService
 import org.slf4j.LoggerFactory
-import javax.inject.Inject
+import org.springframework.beans.factory.annotation.Autowired
 import javax.servlet.http.HttpServletRequest
 import javax.ws.rs.*
 import javax.ws.rs.core.Context
@@ -20,7 +20,7 @@ import no.nav.sbl.dialogarena.naudit.AuditResources.Person.Henvendelse
 
 @Path("/dialog/{fnr}")
 @Produces(APPLICATION_JSON)
-class DelsvarController @Inject constructor(
+class DelsvarController @Autowired constructor(
         private val tilgangskontroll: Tilgangskontroll,
         private val delsvarService: DelsvarService
 ) {

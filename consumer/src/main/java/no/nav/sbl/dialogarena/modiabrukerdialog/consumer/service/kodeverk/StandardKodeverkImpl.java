@@ -19,7 +19,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 
 import javax.annotation.PostConstruct;
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
@@ -57,7 +57,7 @@ public class StandardKodeverkImpl implements StandardKodeverk {
     private File dumpDirectory;
     private boolean dumpActive;
 
-    @Inject
+    @Autowired
     private KodeverkPortType kodeverkPortType;
 
     @Value("${modiabrukerdialog.datadir:/tmp}")

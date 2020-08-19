@@ -12,7 +12,7 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = {CacheConfiguration.class, CacheTestConfig.class})
@@ -26,7 +26,7 @@ public abstract class CacheTest {
         this.cachename = cachename;
     }
 
-    @Inject
+    @Autowired
     public void setEhCacheCacheManager(EhCacheCacheManager eccm) {
         cm = eccm;
     }

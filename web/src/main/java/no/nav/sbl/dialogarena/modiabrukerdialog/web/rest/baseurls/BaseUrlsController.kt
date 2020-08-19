@@ -5,7 +5,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.Unleash
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Policies
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Tilgangskontroll
 import no.nav.sbl.dialogarena.naudit.Audit.Companion.skipAuditLog
-import javax.inject.Inject
+import org.springframework.beans.factory.annotation.Autowired
 import javax.ws.rs.GET
 import javax.ws.rs.Path
 import javax.ws.rs.Produces
@@ -14,7 +14,7 @@ import javax.ws.rs.core.MediaType.APPLICATION_JSON
 
 @Path("/baseurls")
 @Produces(APPLICATION_JSON)
-class BaseUrlsController @Inject
+class BaseUrlsController @Autowired
 constructor(
         private val tilgangskontroll: Tilgangskontroll,
         private val unleashService: UnleashService

@@ -21,7 +21,7 @@ import no.nav.sbl.dialogarena.naudit.AuditIdentifier
 import org.joda.time.DateTime
 import java.time.LocalDateTime
 import java.util.*
-import javax.inject.Inject
+import org.springframework.beans.factory.annotation.Autowired
 import javax.servlet.http.HttpServletRequest
 import javax.ws.rs.*
 import javax.ws.rs.core.Context
@@ -29,7 +29,7 @@ import javax.ws.rs.core.MediaType
 import javax.ws.rs.core.Response
 
 @Path("/saker/{fnr}")
-class SakerController @Inject constructor(private val saksoversiktService: SaksoversiktService,
+class SakerController @Autowired constructor(private val saksoversiktService: SaksoversiktService,
                                           private val sakstemaService: SakstemaService,
                                           private val saksService: SaksService,
                                           private val tilgangskontrollService: TilgangskontrollService,

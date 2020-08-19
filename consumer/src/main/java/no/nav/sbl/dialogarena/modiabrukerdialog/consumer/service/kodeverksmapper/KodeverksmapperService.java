@@ -3,7 +3,7 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.kodeverksmappe
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.kodeverksmapper.Kodeverksmapper;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.kodeverksmapper.domain.Behandling;
 
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.io.IOException;
 import java.util.Optional;
 
@@ -11,7 +11,7 @@ public class KodeverksmapperService {
 
     private Kodeverksmapper kodeverksmapper;
 
-    @Inject
+    @Autowired
     public KodeverksmapperService(Kodeverksmapper kodeverksmapper) {
         this.kodeverksmapper = kodeverksmapper;
     }

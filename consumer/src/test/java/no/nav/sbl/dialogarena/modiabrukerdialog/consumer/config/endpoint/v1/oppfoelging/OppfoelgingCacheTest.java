@@ -10,7 +10,7 @@ import no.nav.tjeneste.virksomhet.oppfoelging.v1.meldinger.WSHentOppfoelgingssta
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
@@ -30,7 +30,7 @@ class OppfoelgingCacheTest extends CacheTest {
         super(OPPFOELGING_CACHE);
     }
 
-    @Inject
+    @Autowired
     private OppfoelgingPortType oppfolgingPortType;
 
     @BeforeEach
