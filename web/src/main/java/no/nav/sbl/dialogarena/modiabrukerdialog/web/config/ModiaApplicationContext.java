@@ -1,11 +1,9 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.config;
 
-import no.nav.apiapp.ApiApplication;
-import no.nav.apiapp.config.ApiAppConfigurator;
-import no.nav.brukerdialog.security.domain.IdentType;
-import no.nav.common.oidc.Constants;
-import no.nav.common.oidc.auth.OidcAuthenticatorConfig;
-import no.nav.sbl.util.EnvironmentUtils;
+import no.nav.common.auth.Constants;
+import no.nav.common.auth.oidc.filter.OidcAuthenticatorConfig;
+import no.nav.common.auth.subject.IdentType;
+import no.nav.common.utils.EnvironmentUtils;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
@@ -18,19 +16,17 @@ import javax.servlet.ServletContext;
         RestApiBeans.class
 })
 
-public class ModiaApplicationContext implements ApiApplication {
+public class ModiaApplicationContext {
     private static final String issoClientId = EnvironmentUtils.getRequiredProperty("ISSO_CLIENT_ID");
     private static final String issoDiscoveryUrl = EnvironmentUtils.getRequiredProperty("ISSO_DISCOVERY_URL");
     private static final String issoRefreshUrl = EnvironmentUtils.getRequiredProperty("ISSO_REFRESH_URL");
     private static final String fpsakClientId = EnvironmentUtils.getRequiredProperty("FPSAK_CLIENT_ID");
 
-    @Override
     public void startup(ServletContext servletContext) {
         JmxExporterConfig.setup();
     }
 
-    @Override
-    public void configure(ApiAppConfigurator apiAppConfigurator) {
+    public void configure() {
         OidcAuthenticatorConfig isso = new OidcAuthenticatorConfig()
                 .withClientId(issoClientId)
                 .withDiscoveryUrl(issoDiscoveryUrl)
@@ -47,16 +43,15 @@ public class ModiaApplicationContext implements ApiApplication {
                 .withRefreshUrl(issoRefreshUrl)
                 .withRefreshTokenCookieName(Constants.REFRESH_TOKEN_COOKIE_NAME);
 
-        apiAppConfigurator
-                .enableCXFSecureLogs()
-                .sts()
-                .objectMapper(JacksonConfig.mapper)
-                .addOidcAuthenticator(isso)
-                .addOidcAuthenticator(fpsak)
-                .customizeJettyBuilder(jetty -> jetty.at("modiapersonoversikt-api"));
+//        apiAppConfigurator
+//                .enableCXFSecureLogs()
+//                .sts()
+//                .objectMapper(JacksonConfig.mapper)
+//                .addOidcAuthenticator(isso)
+//                .addOidcAuthenticator(fpsak)
+//                .customizeJettyBuilder(jetty -> jetty.at("modiapersonoversikt-api"));
     }
 
-    @Override
     public String getApiBasePath() {
         return "/rest/";
     }

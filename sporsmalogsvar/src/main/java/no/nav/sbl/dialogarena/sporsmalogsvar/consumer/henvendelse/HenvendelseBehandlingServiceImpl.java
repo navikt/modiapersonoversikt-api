@@ -1,7 +1,7 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.consumer.henvendelse;
 
 import kotlin.Pair;
-import no.nav.common.auth.SubjectHandler;
+import no.nav.common.auth.subject.SubjectHandler;
 import no.nav.kjerneinfo.consumer.fim.person.PersonKjerneinfoServiceBi;
 import no.nav.kjerneinfo.consumer.fim.person.to.HentKjerneinformasjonRequest;
 import no.nav.kjerneinfo.domain.person.Person;

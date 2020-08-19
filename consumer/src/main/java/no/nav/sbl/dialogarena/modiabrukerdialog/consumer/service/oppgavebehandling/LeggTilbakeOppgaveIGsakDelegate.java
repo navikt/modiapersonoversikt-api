@@ -1,6 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.oppgavebehandling;
 
-import no.nav.common.auth.SubjectHandler;
+import no.nav.common.auth.subject.SubjectHandler;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.AnsattEnhet;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.LeggTilbakeOppgaveIGsakRequest;
@@ -10,6 +10,7 @@ import no.nav.tjeneste.virksomhet.oppgave.v3.informasjon.oppgave.WSUnderkategori
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.LagreOppgaveOptimistiskLasing;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.access.AccessDeniedException;
 
 import javax.ws.rs.ForbiddenException;
 import java.util.Collections;
@@ -45,7 +46,7 @@ class LeggTilbakeOppgaveIGsakDelegate {
             String feilmelding = "Innlogget saksbehandler " + innloggetSaksbehandler
                     + " har ikke tilgang til oppgave " + oppgaveFraGsak.getOppgaveId()
                     + ". Oppgavens ansvarlige id er satt til : " + oppgaveFraGsak.getAnsvarligId() + ".";
-            throw new ForbiddenException(feilmelding);
+            throw new AccessDeniedException(feilmelding);
         }
     }
 

@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 
 import javax.inject.Inject;
 
-import static no.nav.sbl.dialogarena.test.ssl.SSLTestUtils.setupKeyAndTrustStore;
+import static no.nav.common.utils.SslUtils.setupTruststore;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -28,7 +28,7 @@ public class HenvendelseEndpointCacheTest extends CacheTest {
 
     @BeforeAll
     public static void setup() {
-        setupKeyAndTrustStore();
+        setupTruststore();
     }
 
     @Test

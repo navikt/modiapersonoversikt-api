@@ -21,6 +21,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
+import org.springframework.security.access.AccessDeniedException;
 
 import javax.ws.rs.ForbiddenException;
 import java.util.Collections;
@@ -115,7 +116,7 @@ class LeggTilbakeOppgaveIGsakDelegateTest {
         when(oppgaveServiceMock.hentOppgave(any()))
                 .thenReturn(new WSHentOppgaveResponse().withOppgave(lagWSOppgave().withAnsvarligId("ANNEN_SAKSBEHANDLER")));
 
-        assertThrows(ForbiddenException.class, () ->
+        assertThrows(AccessDeniedException.class, () ->
                 SubjectHandlerUtil.withIdent(ANSVARLIG_SAKSBEHANDLER, () ->
                         oppgaveBehandlingService.leggTilbakeOppgaveIGsak(lagRequest()
                         )

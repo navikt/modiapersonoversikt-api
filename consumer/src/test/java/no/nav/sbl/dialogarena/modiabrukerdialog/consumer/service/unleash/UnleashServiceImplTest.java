@@ -3,6 +3,7 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash;
 import no.finn.unleash.Unleash;
 import no.finn.unleash.repository.FeatureToggleResponse;
 import no.finn.unleash.repository.ToggleFetcher;
+import no.nav.common.health.selftest.SelfTestCheck;
 import no.nav.sbl.dialogarena.types.Pingable;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -57,20 +58,22 @@ class UnleashServiceImplTest {
     void pingHappyCase() {
         when(toggleFetcher.fetchToggles()).thenReturn(new FeatureToggleResponse(NOT_CHANGED, 200));
 
-        Pingable.Ping pingResult = unleashService.ping();
+        unleashService.ping().getCheck().checkHealth();
+        SelfTestCheck pingResult = unleashService.ping();
 
         verify(toggleFetcher, times(1)).fetchToggles();
-        assertThat(pingResult.erVellykket(), is(true));
+        assertThat(pingResult.getCheck().checkHealth().isHealthy(), is(true));
     }
 
     @Test
     void pingUnavailable() {
         when(toggleFetcher.fetchToggles()).thenReturn(new FeatureToggleResponse(UNAVAILABLE, 200));
 
-        Pingable.Ping pingResult = unleashService.ping();
+        unleashService.ping().getCheck().checkHealth();
+        SelfTestCheck pingResult = unleashService.ping();
 
         verify(toggleFetcher, times(1)).fetchToggles();
-        assertThat(pingResult.erVellykket(), is(false));
+        assertThat(pingResult.getCheck().checkHealth().isHealthy(), is(false));
     }
 
 }

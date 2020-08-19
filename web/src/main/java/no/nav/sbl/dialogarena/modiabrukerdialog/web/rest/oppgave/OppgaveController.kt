@@ -1,7 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.oppgave
 
-import no.nav.common.auth.SubjectHandler
-import no.nav.metrics.MetricsFactory.createEvent
+import no.nav.common.auth.subject.SubjectHandler
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Oppgave
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.HenvendelseUtsendingService
@@ -58,7 +57,6 @@ class OppgaveController @Inject constructor(
                         throw handterRuntimeFeil(exception)
                     }
 
-                    createEvent("hendelse.oppgavecontroller.leggtilbake.fullfort").report()
                     Response.ok("{\"message\": \"Success\"}").build()
                 }
     }
@@ -131,7 +129,6 @@ private fun mapOppgave(oppgave: Oppgave) = mapOfNotNullOrEmpty(
 
 private fun handterRuntimeFeil(exception: RuntimeException): RuntimeException {
     logger.error("Feil ved legging av oppgave tilbake til GSAK", exception)
-    createEvent("hendelse.oppgavecontroller.leggtilbake.runtime-exception").report()
     return exception
 }
 

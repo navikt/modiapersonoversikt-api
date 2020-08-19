@@ -1,7 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.henvendelse
 
-import no.nav.common.auth.SubjectHandler
-import no.nav.metrics.MetricsFactory.createEvent
+import no.nav.common.auth.subject.SubjectHandler
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.RestUtils
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.henvendelse.DelsvarRequest.DelsvarRequestBuilder
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.henvendelse.DelsvarService
@@ -55,15 +54,12 @@ class DelsvarController @Inject constructor(
                         throw handterRuntimeFeil(exception)
                     }
 
-                    createEvent("hendelse.svardelviscontroller.svardelvis.fullfort").report()
-
                     Response.ok("{\"message\": \"Success\"}").build()
                 }
     }
 
     private fun handterRuntimeFeil(exception: RuntimeException): RuntimeException {
         logger.error("Feil ved opprettelse av delvis svar", exception)
-        createEvent("hendelse.svardelviscontroller.svardelvis.runtime-exception").report()
         return exception
     }
 

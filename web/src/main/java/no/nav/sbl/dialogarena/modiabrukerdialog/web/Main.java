@@ -1,38 +1,42 @@
-import no.nav.apiapp.ApiApp;
-import no.nav.common.utils.NaisUtils;
-import no.nav.sbl.dialogarena.common.abac.pep.CredentialConstants;
-import no.nav.sbl.dialogarena.common.cxf.StsSecurityConstants;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.ldap.LdapContextProvider;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.ModiaApplicationContext;
-import no.nav.sbl.util.EnvironmentUtils;
+package no.nav.sbl.dialogarena.modiabrukerdialog.web;
 
-import static no.nav.sbl.dialogarena.common.cxf.StsSecurityConstants.SYSTEMUSER_PASSWORD;
+import no.nav.common.utils.Credentials;
+import no.nav.common.utils.EnvironmentUtils;
+import no.nav.common.utils.NaisUtils;
+
+import no.nav.common.utils.SslUtils;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.ldap.LdapContextProvider;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+import static no.nav.common.utils.EnvironmentUtils.Type.PUBLIC;
+import static no.nav.common.utils.EnvironmentUtils.Type.SECRET;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v1.norg.NorgEndpointFelles.KJERNEINFO_TJENESTEBUSS_PASSWORD;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v1.norg.NorgEndpointFelles.KJERNEINFO_TJENESTEBUSS_USERNAME;
-import static no.nav.sbl.util.EnvironmentUtils.Type.PUBLIC;
-import static no.nav.sbl.util.EnvironmentUtils.Type.SECRET;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.service.ServiceConfig.SYSTEMUSER_PASSWORD;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.service.ServiceConfig.SYSTEMUSER_USERNAME;
 
+@SpringBootApplication
 public class Main {
     public static void main(String... args) {
         loadVaultSecrets();
+        SslUtils.setupTruststore();
         // Overstyrer appnavn slik at vi er sikre på at vi later som vi er modiabrukerdialog. ;)
         EnvironmentUtils.setProperty("NAIS_APP_NAME", "modiabrukerdialog", PUBLIC);
 
-        ApiApp.runApp(ModiaApplicationContext.class, args);
+        SpringApplication.run(Main.class, args);
     }
 
     private static void loadVaultSecrets() {
-        NaisUtils.Credentials serviceUser = NaisUtils.getCredentials("service_user");
-        EnvironmentUtils.setProperty(CredentialConstants.SYSTEMUSER_USERNAME, serviceUser.username, PUBLIC);
-        EnvironmentUtils.setProperty(CredentialConstants.SYSTEMUSER_PASSWORD, serviceUser.password, SECRET);
-        EnvironmentUtils.setProperty(StsSecurityConstants.SYSTEMUSER_USERNAME, serviceUser.username, PUBLIC);
+        Credentials serviceUser = NaisUtils.getCredentials("service_user");
+        EnvironmentUtils.setProperty(SYSTEMUSER_USERNAME, serviceUser.username, PUBLIC);
         EnvironmentUtils.setProperty(SYSTEMUSER_PASSWORD, serviceUser.password, SECRET);
 
-        NaisUtils.Credentials ldapUser = NaisUtils.getCredentials("srvssolinux");
+        Credentials ldapUser = NaisUtils.getCredentials("srvssolinux");
         EnvironmentUtils.setProperty(LdapContextProvider.LDAP_USERNAME, ldapUser.username, PUBLIC);
         EnvironmentUtils.setProperty(LdapContextProvider.LDAP_PASSWORD, ldapUser.password, SECRET);
 
-        NaisUtils.Credentials gosysUser = NaisUtils.getCredentials("gosys_user");
+        Credentials gosysUser = NaisUtils.getCredentials("gosys_user");
         EnvironmentUtils.setProperty(KJERNEINFO_TJENESTEBUSS_USERNAME, gosysUser.username, PUBLIC);
         EnvironmentUtils.setProperty(KJERNEINFO_TJENESTEBUSS_PASSWORD, gosysUser.password, SECRET);
     }

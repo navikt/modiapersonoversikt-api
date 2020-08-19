@@ -1,7 +1,10 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.oppfolgingsinfo;
 
-import no.nav.common.auth.SsoToken;
-import no.nav.common.auth.SubjectHandler;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import no.nav.common.auth.subject.SsoToken;
+import no.nav.common.auth.subject.SubjectHandler;
+import no.nav.common.json.JsonMapper;
+import no.nav.common.rest.client.RestClient;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Saksbehandler;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.AnsattEnhet;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.oppfolgingsinfo.Oppfolgingsinfo;
@@ -10,16 +13,17 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.oppfolgingsinfo.rest.
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.oppfolgingsinfo.rest.Oppfolgingsenhet;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.ldap.LDAPService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.oppfolgingsinfo.OppfolgingsinfoApiService;
-import no.nav.sbl.rest.RestUtils;
-//import org.jetbrains.annotations.NotNull;
+import okhttp3.Request;
+import okhttp3.Response;
 
 import javax.inject.Inject;
-import javax.ws.rs.client.Invocation;
+
+import java.io.IOException;
 
 import static javax.ws.rs.core.HttpHeaders.AUTHORIZATION;
 
 public class OppfolgingsinfoApiServiceImpl implements OppfolgingsinfoApiService {
-
+    private ObjectMapper objectMapper = JsonMapper.defaultObjectMapper();
     private String apiUrl;
 
     @Inject
@@ -57,12 +61,17 @@ public class OppfolgingsinfoApiServiceImpl implements OppfolgingsinfoApiService 
         return enhetOgVeileder;
     }
 
-    public void ping() {
-        RestUtils.withClient(client -> client
-                .target(hentPingURL())
-                .request()
-                .get(String.class)
-        );
+    public void ping() throws IOException {
+        RestClient
+                .baseClient()
+                .newCall(
+                        new Request.Builder()
+                                .url(hentPingURL())
+                                .build()
+                )
+                .execute()
+                .body()
+                .string();
     }
 
     private Saksbehandler hentSaksbehandler(String veilederIdent, LDAPService ldapService) {
@@ -93,12 +102,20 @@ public class OppfolgingsinfoApiServiceImpl implements OppfolgingsinfoApiService 
     }
 
     private <T> T gjorSporring(String url, Class<T> targetClass) {
-        String ssoToken = SubjectHandler.getSsoToken(SsoToken.Type.OIDC).orElseThrow(() -> new RuntimeException("Fant ikke OIDC-token"));
-        return RestUtils.withClient(client -> client
-                .target(url)
-                .request()
-                .header(AUTHORIZATION, "Bearer " + ssoToken)
-                .get(targetClass)
-        );
+        try {
+            String ssoToken = SubjectHandler.getSsoToken(SsoToken.Type.OIDC).orElseThrow(() -> new RuntimeException("Fant ikke OIDC-token"));
+            Response response = RestClient
+                    .baseClient()
+                    .newCall(
+                            new Request.Builder()
+                                    .url(url)
+                                    .header(AUTHORIZATION, "Bearer " + ssoToken)
+                            .build()
+                    )
+                    .execute();
+            return objectMapper.readValue(response.body().string(), targetClass);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

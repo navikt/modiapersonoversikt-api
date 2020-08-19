@@ -1,22 +1,27 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v1.gsak;
 
+import no.nav.common.cxf.CXFClient;
+import no.nav.common.cxf.StsConfig;
+import no.nav.common.utils.EnvironmentUtils;
 import no.nav.modig.modia.ping.PingableWebService;
-import no.nav.sbl.dialogarena.common.cxf.CXFClient;
 import no.nav.sbl.dialogarena.types.Pingable;
-import no.nav.sbl.util.EnvironmentUtils;
 import no.nav.tjeneste.virksomhet.tildeloppgave.v1.TildelOppgaveV1;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import javax.inject.Inject;
 
 import static no.nav.metrics.MetricsFactory.createTimerProxyForWebService;
 
 @Configuration
 public class GsakTildelOppgaveV1EndpointConfig {
+    @Inject
+    private StsConfig stsConfig;
 
     @Bean
     public TildelOppgaveV1 gsakTildelOppgavePortType() {
         TildelOppgaveV1 prod = lagEndpoint()
-                .configureStsForSubject()
+                .configureStsForSubject(stsConfig)
                 .build();
 
         return createTimerProxyForWebService("TildelOppgaveV1", prod, TildelOppgaveV1.class);
@@ -25,7 +30,7 @@ public class GsakTildelOppgaveV1EndpointConfig {
     @Bean
     public Pingable gsakTildelOppgavePing() {
         return new PingableWebService("Gsak - Tildel oppgave", lagEndpoint()
-                .configureStsForSystemUser()
+                .configureStsForSystemUser(stsConfig)
                 .build());
     }
 

@@ -1,12 +1,11 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.http;
 
-
-import no.nav.brukerdialog.security.domain.IdentType;
-import no.nav.common.auth.SsoToken;
-import no.nav.common.auth.Subject;
-import no.nav.common.auth.SubjectHandler;
-import no.nav.sbl.util.fn.UnsafeRunnable;
-import no.nav.sbl.util.fn.UnsafeSupplier;
+import no.nav.common.auth.subject.IdentType;
+import no.nav.common.auth.subject.SsoToken;
+import no.nav.common.auth.subject.Subject;
+import no.nav.common.auth.subject.SubjectHandler;
+import no.nav.common.utils.fn.UnsafeRunnable;
+import no.nav.common.utils.fn.UnsafeSupplier;
 
 import static java.util.Collections.emptyMap;
 

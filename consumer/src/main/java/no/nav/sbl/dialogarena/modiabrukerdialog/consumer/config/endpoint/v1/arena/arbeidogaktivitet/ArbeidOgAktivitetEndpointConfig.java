@@ -1,16 +1,28 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v1.arena.arbeidogaktivitet;
 
-import no.nav.sbl.dialogarena.common.cxf.CXFClient;
+import no.nav.common.cxf.CXFClient;
+import no.nav.common.cxf.StsConfig;
+import no.nav.common.health.HealthCheckResult;
+import no.nav.common.health.selftest.SelfTestCheck;
+import no.nav.common.utils.EnvironmentUtils;
 import no.nav.sbl.dialogarena.types.Pingable;
-import no.nav.sbl.util.EnvironmentUtils;
 import no.nav.virksomhet.tjenester.sak.arbeidogaktivitet.v1.ArbeidOgAktivitet;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import javax.inject.Inject;
 
 import static no.nav.metrics.MetricsFactory.createTimerProxyForWebService;
 
 @Configuration
 public class ArbeidOgAktivitetEndpointConfig {
+    @Inject
+    private StsConfig stsConfig;
+    private static SelfTestCheck selftest = new SelfTestCheck(
+            String.format("ArbeidOgAktivitet via %s", EnvironmentUtils.getRequiredProperty("VIRKSOMHET_ARBEIDOGAKTIVITET_V1_ENDPOINTURL")),
+            false,
+            HealthCheckResult::healthy
+    );
 
     @Bean
     public ArbeidOgAktivitet arbeidOgAktivitet() {
@@ -18,22 +30,15 @@ public class ArbeidOgAktivitetEndpointConfig {
         return createTimerProxyForWebService("ArbeidOgAktivitet", prod, ArbeidOgAktivitet.class);
     }
 
-    private static ArbeidOgAktivitet createArbeidOgAktivitet() {
+    private ArbeidOgAktivitet createArbeidOgAktivitet() {
         return new CXFClient<>(ArbeidOgAktivitet.class)
                 .address(EnvironmentUtils.getRequiredProperty("VIRKSOMHET_ARBEIDOGAKTIVITET_V1_ENDPOINTURL"))
-                .configureStsForSystemUser()
+                .configureStsForSystemUser(stsConfig)
                 .build();
     }
 
     @Bean
     public Pingable arbeidOgAktivitetPing(final ArbeidOgAktivitet ws) {
-        Pingable.Ping.PingMetadata metadata = new Pingable.Ping.PingMetadata(
-                "ArbeidOgAktivitet",
-                EnvironmentUtils.getRequiredProperty("VIRKSOMHET_ARBEIDOGAKTIVITET_V1_ENDPOINTURL"),
-                "hentSakListe",
-                false
-        );
-
-        return () -> Pingable.Ping.avskrudd(metadata);
+        return () -> selftest;
     }
 }

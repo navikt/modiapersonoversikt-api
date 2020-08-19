@@ -1,13 +1,16 @@
 package no.nav.kontrakter.consumer.fim.config;
 
+import no.nav.common.cxf.CXFClient;
+import no.nav.common.cxf.StsConfig;
 import no.nav.modig.jaxws.handlers.MDCOutHandler;
 import no.nav.modig.modia.ping.PingableWebService;
-import no.nav.sbl.dialogarena.common.cxf.CXFClient;
 import no.nav.sbl.dialogarena.types.Pingable;
 import no.nav.tjeneste.virksomhet.oppfoelging.v1.OppfoelgingPortType;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import javax.inject.Inject;
 
 import static no.nav.metrics.MetricsFactory.createTimerProxyForWebService;
 import static org.apache.commons.lang3.StringUtils.defaultIfBlank;
@@ -20,11 +23,14 @@ public class OppfolgingskontraktConsumerConfig {
     @Value("${servicegateway.url:}")
     private String servicegatewayUrl;
 
+    @Inject
+    StsConfig stsConfig;
+
     @Bean
     public OppfoelgingPortType oppfolgingPortType() {
         return createTimerProxyForWebService(
                 "OppfoelgingV1",
-                getOppfolgingPortType().configureStsForSubject().build(),
+                getOppfolgingPortType().configureStsForSubject(stsConfig).build(),
                 OppfoelgingPortType.class
         );
     }
@@ -32,7 +38,7 @@ public class OppfolgingskontraktConsumerConfig {
     @Bean
     public Pingable oppfoelgingPingable() {
         OppfoelgingPortType pingPorttype = getOppfolgingPortType()
-                .configureStsForSystemUser()
+                .configureStsForSystemUser(stsConfig)
                 .build();
         return new PingableWebService("Oppfoelging", pingPorttype);
     }

@@ -14,7 +14,7 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <cxf.version>3.1.6</cxf.version>
+        <cxf.version>3.3.0</cxf.version>
         <cxf-xjc-boolean.version>3.1.0</cxf-xjc-boolean.version>
         <org.jvnet.jaxb2.version>0.11.1</org.jvnet.jaxb2.version>
         <jackson-annotations.version>2.9.0</jackson-annotations.version>
@@ -22,6 +22,7 @@
         <jaxb2-maven-plugin.version>1.5</jaxb2-maven-plugin.version>
         <jaxb2-value-constructor.version>3.0</jaxb2-value-constructor.version>
         <jaxb-fluent-api.version>2.1.8</jaxb-fluent-api.version>
+        <jaxb.version>2.3.0</jaxb.version>
     </properties>
 
     <modules>
@@ -52,6 +53,12 @@
                 <groupId>com.fasterxml.jackson.core</groupId>
                 <artifactId>jackson-annotations</artifactId>
                 <version>${jackson-annotations.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.sun.xml.ws</groupId>
+                <artifactId>jaxws-ri</artifactId>
+                <version>2.3.2</version>
+                <type>pom</type>
             </dependency>
         </dependencies>
     </dependencyManagement>

@@ -11,33 +11,33 @@
 
     <artifactId>modiabrukerdialog-web</artifactId>
     <name>${project.artifactId}</name>
-    <packaging>war</packaging>
+    <packaging>jar</packaging>
 
     <properties>
         <sonar.jacoco.reportPath>${project.basedir}/../target/jacoco-ut.exec</sonar.jacoco.reportPath>
     </properties>
 
     <dependencies>
-        <dependency>
-            <groupId>no.nav.common</groupId>
-            <artifactId>api-app</artifactId>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>no.nav.common</groupId>-->
+<!--            <artifactId>api-app</artifactId>-->
+<!--        </dependency>-->
         <dependency>
             <groupId>no.nav.common</groupId>
             <artifactId>nais</artifactId>
         </dependency>
-        <dependency>
-            <groupId>no.nav.common</groupId>
-            <artifactId>oidc</artifactId>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>no.nav.common</groupId>-->
+<!--            <artifactId>oidc</artifactId>-->
+<!--        </dependency>-->
         <dependency>
             <groupId>no.nav.common</groupId>
             <artifactId>auth</artifactId>
         </dependency>
-        <dependency>
-            <groupId>no.nav.common</groupId>
-            <artifactId>test-config</artifactId>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>no.nav.common</groupId>-->
+<!--            <artifactId>test-config</artifactId>-->
+<!--        </dependency>-->
         <dependency>
             <groupId>io.prometheus.jmx</groupId>
             <artifactId>collector</artifactId>
@@ -127,27 +127,16 @@
 
         <!-- Spring -->
         <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-context</artifactId>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-tx</artifactId>
-            <scope>runtime</scope>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-jdbc</artifactId>
-            <scope>runtime</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-aop</artifactId>
-            <scope>runtime</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-test</artifactId>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
 
@@ -192,11 +181,11 @@
             <artifactId>jcl-over-slf4j</artifactId>
             <scope>runtime</scope>
         </dependency>
-        <dependency>
-            <groupId>com.spotify</groupId>
-            <artifactId>logging</artifactId>
-            <scope>runtime</scope>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>com.spotify</groupId>-->
+<!--            <artifactId>logging</artifactId>-->
+<!--            <scope>runtime</scope>-->
+<!--        </dependency>-->
 
         <!-- Denne må være her på grunn av classloading på JBoss -->
         <dependency>
@@ -325,6 +314,12 @@
                 </excludes>
             </testResource>
         </testResources>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
     </build>
 
 </project>

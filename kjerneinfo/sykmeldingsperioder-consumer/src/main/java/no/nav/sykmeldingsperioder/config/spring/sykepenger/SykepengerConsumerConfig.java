@@ -1,15 +1,17 @@
 package no.nav.sykmeldingsperioder.config.spring.sykepenger;
 
+import no.nav.common.cxf.CXFClient;
+import no.nav.common.cxf.StsConfig;
 import no.nav.metrics.MetricsFactory;
 import no.nav.modig.jaxws.handlers.MDCOutHandler;
 import no.nav.modig.modia.ping.PingableWebService;
-import no.nav.sbl.dialogarena.common.cxf.CXFClient;
 import no.nav.sbl.dialogarena.types.Pingable;
 import no.nav.tjeneste.virksomhet.sykepenger.v2.SykepengerV2;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import javax.inject.Inject;
 import javax.xml.namespace.QName;
 
 import static org.apache.commons.lang3.StringUtils.defaultIfBlank;
@@ -21,6 +23,9 @@ public class SykepengerConsumerConfig {
     private String sykepengerEndpointUrl;
     @Value("${servicegateway.url:}")
     private String servicegatewayUrl;
+
+    @Inject
+    private StsConfig stsConfig;
 
     @Bean
     public SykepengerV2 sykepengerPortType() {
@@ -41,9 +46,9 @@ public class SykepengerConsumerConfig {
                 .address(getAdress());
 
         if (isPingPorttype) {
-            cxfClient.configureStsForSystemUser();
+            cxfClient.configureStsForSystemUser(stsConfig);
         } else {
-            cxfClient.configureStsForSubject();
+            cxfClient.configureStsForSubject(stsConfig);
         }
 
         return cxfClient.build();

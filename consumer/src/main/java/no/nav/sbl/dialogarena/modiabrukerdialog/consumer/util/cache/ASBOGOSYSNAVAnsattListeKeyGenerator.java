@@ -1,12 +1,12 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.cache;
 
 import _0._0.nav_cons_sak_gosys_3.no.nav.asbo.navorgenhet.ASBOGOSYSNavEnhet;
-import org.apache.commons.collections15.Transformer;
 import org.springframework.cache.interceptor.SimpleKeyGenerator;
 
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Function;
 
 /**
  * Klasse for å lage cachekey som IKKE tar høyde for
@@ -24,17 +24,17 @@ public class ASBOGOSYSNAVAnsattListeKeyGenerator extends SimpleKeyGenerator {
 
     private Object getCacheKey(Object... params) {
         Object param0 = params[0];
-        Transformer transformer = asbogosysCachekeyMapper.get(param0.getClass());
+        Function transformer = asbogosysCachekeyMapper.get(param0.getClass());
         if (transformer != null) {
-            return transformer.transform(param0);
+            return transformer.apply(param0);
         }
         return params;
     }
 
-    private static Map<Class, Transformer> asbogosysCachekeyMapper = new HashMap<Class, Transformer>() {{
-        put(ASBOGOSYSNavEnhet.class, new Transformer<ASBOGOSYSNavEnhet, Object>() {
+    private static Map<Class, Function> asbogosysCachekeyMapper = new HashMap<Class, Function>() {{
+        put(ASBOGOSYSNavEnhet.class, new Function<ASBOGOSYSNavEnhet, Object>() {
             @Override
-            public Object transform(ASBOGOSYSNavEnhet enhet) {
+            public Object apply(ASBOGOSYSNavEnhet enhet) {
                 return enhet.getEnhetsId();
             }
         });

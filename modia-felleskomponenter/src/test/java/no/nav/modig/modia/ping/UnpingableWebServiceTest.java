@@ -1,10 +1,10 @@
 package no.nav.modig.modia.ping;
 
-import no.nav.sbl.dialogarena.types.Pingable;
+import no.nav.common.health.selftest.SelfTestCheck;
 import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 public class UnpingableWebServiceTest {
 
@@ -13,11 +13,10 @@ public class UnpingableWebServiceTest {
         String navn = "gammeltRakkel";
         String adresse = "http://gammeltRakkel.com";
         UnpingableWebService ubrukeligTjenesteUtenPing = new UnpingableWebService(navn, adresse);
-        Pingable.Ping ping = ubrukeligTjenesteUtenPing.ping();
+        SelfTestCheck ping = ubrukeligTjenesteUtenPing.ping();
 
-        assertThat(ping.erAvskrudd(), is(true));
-
-        assertThat(ping.getMetadata().getId(), is(navn));
-        assertThat(ping.getMetadata().getEndepunkt(), is(adresse));
+        assertThat(ping.isCritical(), is(false));
+        assertThat(ping.getDescription(), is("gammeltRakkel via http://gammeltRakkel.com"));
+        assertThat(ping.getCheck().checkHealth().isHealthy(), is(true));
     }
 }

@@ -1,33 +1,38 @@
 package no.nav.modig.modia.ping;
 
+import no.nav.common.health.HealthCheckResult;
+import no.nav.common.health.selftest.SelfTestCheck;
+import no.nav.common.utils.fn.UnsafeRunnable;
 import no.nav.sbl.dialogarena.types.Pingable;
-import no.nav.sbl.util.fn.UnsafeRunnable;
 
 public class ConsumerPingable implements Pingable {
     private final UnsafeRunnable ping;
-    private final Ping.PingMetadata metadata;
+    private final SelfTestCheck instance;
 
     public ConsumerPingable(String name, UnsafeRunnable ping) {
         this(name, false,  ping);
     }
 
     public ConsumerPingable(String name, boolean kritisk, UnsafeRunnable ping) {
-        this(new Ping.PingMetadata(name, "", "", kritisk), ping);
-    }
-
-    public ConsumerPingable(Ping.PingMetadata metadata, UnsafeRunnable ping) {
         this.ping = ping;
-        this.metadata = metadata;
+        this.instance = new SelfTestCheck(
+                name,
+                kritisk,
+                this::check
+        );
     }
-
 
     @Override
-    public Ping ping() {
+    public SelfTestCheck ping() {
+        return instance;
+    }
+
+    private HealthCheckResult check() {
         try {
             ping.runUnsafe();
-            return Ping.lyktes(metadata);
+            return HealthCheckResult.healthy();
         } catch (Throwable e) {
-            return Ping.feilet(metadata, e);
+            return HealthCheckResult.unhealthy(e);
         }
     }
 

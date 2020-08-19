@@ -340,6 +340,7 @@ type Navn {
     etternavn: String!
     forkortetNavn: String
     originaltNavn: OriginaltNavn
+    gyldigFraOgMed: Date
 
     folkeregistermetadata: Folkeregistermetadata
     metadata: Metadata!
@@ -574,25 +575,34 @@ enum Endringstype {
 input Criterion {
     fieldName:String!
     searchRule:SearchRule!
+    searchHistorical:Boolean
+
+    @deprecated(reason: "erstattet av searchHistorical som lar en velge mellom, å søke  med historikk, utenhistorikk eller begge")
     includeHistorical:Boolean
 }
 
 input SearchRule {
-    exists :String,
-    notEquals :String,
-    equals :String,
-    contains :String,
-    fuzzy :String,
-    wildcard :String,
-    matches :String,
+    exists:String,
+    notEquals:String,
+    equals:String,
+    contains:String,
+    fuzzy:String,
+    wildcard:String,
+    startsWith:String,
+    regex:String,
     after:String,
     before:String,
-    lessThan :String,
+    lessThan:String,
     greaterThan:String,
     from:String,
-    to:String
+    to:String,
     fromExcluding:String,
-    toExcluding:String
+    toExcluding:String,
+
+    #extra query parameters (can not be used as queries by them self)
+    caseSensitive:Boolean,
+    disablePhonetic:Boolean,
+    boost:Float
 }
 
 input Paging {

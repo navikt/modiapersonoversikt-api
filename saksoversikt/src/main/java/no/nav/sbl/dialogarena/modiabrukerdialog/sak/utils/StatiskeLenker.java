@@ -1,6 +1,7 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.sak.utils;
 
-import no.nav.sbl.util.EnvironmentUtils;
+
+import no.nav.common.utils.EnvironmentUtils;
 
 public final class StatiskeLenker {
 

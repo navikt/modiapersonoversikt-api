@@ -7,6 +7,7 @@ import no.finn.unleash.repository.HttpToggleFetcher;
 import no.finn.unleash.repository.ToggleFetcher;
 import no.finn.unleash.strategy.Strategy;
 import no.finn.unleash.util.UnleashConfig;
+import no.nav.common.utils.EnvironmentUtils;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.AnsattService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.UnleashContextProviderImpl;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.UnleashService;
@@ -14,7 +15,6 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.Unleash
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.strategier.ByEnhetStrategy;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.strategier.ByEnvironmentStrategy;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.strategier.IsNotProdStrategy;
-import no.nav.sbl.util.EnvironmentUtils;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 

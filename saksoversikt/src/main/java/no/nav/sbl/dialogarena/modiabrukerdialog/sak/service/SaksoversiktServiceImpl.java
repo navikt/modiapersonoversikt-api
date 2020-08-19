@@ -1,10 +1,10 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.sak.service;
 
+import no.nav.common.utils.EnvironmentUtils;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.Baksystem;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.DokumentMetadata;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.Sakstema;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.interfaces.SaksoversiktService;
-import no.nav.sbl.util.EnvironmentUtils;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;

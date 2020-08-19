@@ -4,9 +4,9 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>no.nav.common</groupId>
-        <artifactId>mor-pom</artifactId>
-        <version>1.2020.07.14_09.10-c90ff81f6194</version>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.3.0.RELEASE</version>
     </parent>
 
     <name>Dialogarena - modiabrukerdialog</name>
@@ -33,7 +33,9 @@
     </modules>
 
     <properties>
-        <common.version>1.2020.07.14_09.10-c90ff81f6194</common.version>
+        <java.version>11</java.version>
+        <jaxb.version>2.3.0</jaxb.version>
+        <common.version>2.2020.08.03_12.26-bf51ea003411</common.version>
         <fluent-hc.version>4.2.4</fluent-hc.version>
         <kotlin.version>1.3.72</kotlin.version>
         <mockito.version>2.25.0</mockito.version>
@@ -61,16 +63,6 @@
                 <scope>import</scope>
             </dependency>
             <dependency>
-                <groupId>io.prometheus.jmx</groupId>
-                <artifactId>collector</artifactId>
-                <version>0.4</version>
-            </dependency>
-            <dependency>
-                <groupId>no.nav.common</groupId>
-                <artifactId>nais</artifactId>
-                <version>${common.version}</version>
-            </dependency>
-            <dependency>
                 <groupId>org.jetbrains.kotlin</groupId>
                 <artifactId>kotlin-bom</artifactId>
                 <version>${kotlin.version}</version>
@@ -78,10 +70,50 @@
                 <scope>import</scope>
             </dependency>
             <dependency>
-                <groupId>org.slf4j</groupId>
-                <artifactId>jul-to-slf4j</artifactId>
-                <version>${slf4j.version}</version>
+                <groupId>joda-time</groupId>
+                <artifactId>joda-time</artifactId>
+                <version>2.2</version>
             </dependency>
+            <dependency>
+                <groupId>no.bekk.bekkopen</groupId>
+                <artifactId>nocommons</artifactId>
+                <version>0.6</version>
+            </dependency>
+            <dependency>
+                <groupId>javax.xml.bind</groupId>
+                <artifactId>jaxb-api</artifactId>
+                <version>${jaxb.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.sun.xml.bind</groupId>
+                <artifactId>jaxb-core</artifactId>
+                <version>${jaxb.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.sun.xml.bind</groupId>
+                <artifactId>jaxb-impl</artifactId>
+                <version>${jaxb.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.glassfish.jaxb</groupId>
+                <artifactId>jaxb-runtime</artifactId>
+                <version>${jaxb.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.prometheus.jmx</groupId>
+                <artifactId>collector</artifactId>
+                <version>0.4</version>
+            </dependency>
+<!--            <dependency>-->
+<!--                <groupId>no.nav.common</groupId>-->
+<!--                <artifactId>nais</artifactId>-->
+<!--                <version>${common.version}</version>-->
+<!--            </dependency>-->
+<!--            <dependency>-->
+<!--                <groupId>org.slf4j</groupId>-->
+<!--                <artifactId>jul-to-slf4j</artifactId>-->
+<!--                <version>${slf4j.version}</version>-->
+<!--            </dependency>-->
             <dependency>
                 <groupId>no.nav.sbl.dialogarena</groupId>
                 <artifactId>modia-felleskomponenter</artifactId>
@@ -372,11 +404,11 @@
             </dependency>
 
             <!--Logging-->
-            <dependency>
-                <groupId>org.apache.httpcomponents</groupId>
-                <artifactId>fluent-hc</artifactId>
-                <version>${fluent-hc.version}</version>
-            </dependency>
+<!--            <dependency>-->
+<!--                <groupId>org.apache.httpcomponents</groupId>-->
+<!--                <artifactId>fluent-hc</artifactId>-->
+<!--                <version>${fluent-hc.version}</version>-->
+<!--            </dependency>-->
 
             <!-- Kotlin -->
             <dependency>
@@ -425,17 +457,17 @@
             </dependency>
 
             <!-- Ny logback config -->
-            <dependency>
-                <groupId>com.spotify</groupId>
-                <artifactId>logging</artifactId>
-                <version>${spotify.logging.version}</version>
-            </dependency>
+<!--            <dependency>-->
+<!--                <groupId>com.spotify</groupId>-->
+<!--                <artifactId>logging</artifactId>-->
+<!--                <version>${spotify.logging.version}</version>-->
+<!--            </dependency>-->
 
-            <dependency>
-                <groupId>org.codehaus.groovy</groupId>
-                <artifactId>groovy-all</artifactId>
-                <version>2.1.5</version>
-            </dependency>
+<!--            <dependency>-->
+<!--                <groupId>org.codehaus.groovy</groupId>-->
+<!--                <artifactId>groovy-all</artifactId>-->
+<!--                <version>2.1.5</version>-->
+<!--            </dependency>-->
             <!-- kjerneinfo/personsok -->
             <dependency>
                 <groupId>org.jvnet.jaxb2_commons</groupId>
@@ -451,6 +483,7 @@
     </dependencyManagement>
 
     <build>
+        <finalName>modiabrukerdialog</finalName>
         <plugins>
             <plugin>
                 <groupId>org.jetbrains.kotlin</groupId>
@@ -473,32 +506,10 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <jvmTarget>1.8</jvmTarget>
+                    <jvmTarget>11</jvmTarget>
                 </configuration>
             </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-dependency-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>analyze</id>
-                        <goals>
-                            <goal>analyze-only</goal>
-                        </goals>
-                        <configuration>
-                            <failOnWarning>false</failOnWarning>
-                            <ignoreNonCompile>true</ignoreNonCompile>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-scm-plugin</artifactId>
-                <version>1.9.4</version>
-            </plugin>
         </plugins>
-        <finalName>modiabrukerdialog</finalName>
     </build>
     <repositories>
         <repository>

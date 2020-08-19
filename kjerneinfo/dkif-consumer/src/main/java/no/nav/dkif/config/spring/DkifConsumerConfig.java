@@ -1,14 +1,16 @@
 package no.nav.dkif.config.spring;
 
+import no.nav.common.cxf.CXFClient;
+import no.nav.common.cxf.StsConfig;
 import no.nav.modig.jaxws.handlers.MDCOutHandler;
 import no.nav.modig.modia.ping.PingableWebService;
-import no.nav.sbl.dialogarena.common.cxf.CXFClient;
 import no.nav.sbl.dialogarena.types.Pingable;
 import no.nav.tjeneste.virksomhet.digitalkontaktinformasjon.v1.DigitalKontaktinformasjonV1;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import javax.inject.Inject;
 import javax.xml.namespace.QName;
 
 import static no.nav.metrics.MetricsFactory.createTimerProxyForWebService;
@@ -22,12 +24,14 @@ public class DkifConsumerConfig {
     private String dkifEndpointUrl;
     @Value("${servicegateway.url:}")
     private String servicegatewayUrl;
+    @Inject
+    private StsConfig stsConfig;
 
 
     @Bean
     public DigitalKontaktinformasjonV1 dkifV1() {
         DigitalKontaktinformasjonV1 dkif = getDigitalKontaktinformasjonV1()
-                .configureStsForSystemUser()
+                .configureStsForSystemUser(stsConfig)
                 .build();
         return createTimerProxyForWebService("DKIF", dkif, DigitalKontaktinformasjonV1.class);
     }
@@ -35,7 +39,7 @@ public class DkifConsumerConfig {
     @Bean
     public Pingable digitalKontaktinformasjonPingable() {
         DigitalKontaktinformasjonV1 pingPorttype = getDigitalKontaktinformasjonV1()
-                .configureStsForSystemUser()
+                .configureStsForSystemUser(stsConfig)
                 .build();
         return new PingableWebService("DigitalKontaktinformasjon DKIF", pingPorttype);
     }

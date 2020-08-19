@@ -1,6 +1,6 @@
 package no.nav.modig.jaxws.handlers;
 
-import no.nav.log.MDCConstants;
+import no.nav.common.log.MDCConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;

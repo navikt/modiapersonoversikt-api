@@ -13,14 +13,14 @@ import static java.util.Optional.ofNullable;
 public class TjenesteResultatWrapper {
     public Optional<Object> result;
     public Feilmelding feilmelding;
-    public Status statuskode;
+    public Integer statuskode;
     public Map ekstraFeilInfo;
 
     public TjenesteResultatWrapper(Object pdfSomBytes) {
         this.result = ofNullable(pdfSomBytes);
     }
 
-    public TjenesteResultatWrapper(Object pdfSomBytes, Status statuskode) {
+    public TjenesteResultatWrapper(Object pdfSomBytes, Integer statuskode) {
         this.result = ofNullable(pdfSomBytes);
         this.statuskode = statuskode;
     }
@@ -29,7 +29,7 @@ public class TjenesteResultatWrapper {
         this(feilmelding, null, new HashMap<>());
     }
 
-    public TjenesteResultatWrapper(Feilmelding feilmelding, Status statuskode) {
+    public TjenesteResultatWrapper(Feilmelding feilmelding, Integer statuskode) {
         this(feilmelding, statuskode, new HashMap<>());
     }
 
@@ -37,7 +37,7 @@ public class TjenesteResultatWrapper {
         this(feilmelding, null, ekstraFeilInfo);
     }
 
-    public TjenesteResultatWrapper(Feilmelding feilmelding, Status statuskode, Map ekstraFeilInfo) {
+    public TjenesteResultatWrapper(Feilmelding feilmelding, Integer statuskode, Map ekstraFeilInfo) {
         this.feilmelding = feilmelding;
         this.ekstraFeilInfo = ekstraFeilInfo;
         this.statuskode = statuskode;

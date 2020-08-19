@@ -1,6 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util;
 
-import no.nav.sbl.util.EnvironmentUtils;
+import no.nav.common.utils.EnvironmentUtils;
 
 public class RestConstants {
     public static final String NAV_CONSUMER_TOKEN_HEADER = "Nav-Consumer-Token";

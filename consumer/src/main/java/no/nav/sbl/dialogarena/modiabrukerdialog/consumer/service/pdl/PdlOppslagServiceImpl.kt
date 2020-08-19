@@ -4,15 +4,15 @@ import com.expediagroup.graphql.client.GraphQLClient
 import io.ktor.client.request.header
 import io.ktor.util.KtorExperimentalAPI
 import kotlinx.coroutines.runBlocking
-import no.nav.common.auth.SsoToken
-import no.nav.common.auth.SubjectHandler
-import no.nav.common.oidc.SystemUserTokenProvider
+import no.nav.common.auth.subject.SsoToken
+import no.nav.common.auth.subject.SubjectHandler
+import no.nav.common.sts.SystemUserTokenProvider
+import no.nav.common.utils.EnvironmentUtils
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.pdl.generated.HentIdent
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.pdl.generated.HentNavnBolk
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.pdl.generated.HentPerson
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.pdl.PdlOppslagService
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.RestConstants.*
-import no.nav.sbl.util.EnvironmentUtils
 import java.net.URL
 import javax.ws.rs.core.HttpHeaders.AUTHORIZATION
 
@@ -54,7 +54,7 @@ class PdlOppslagServiceImpl constructor(
     }
 
     private val userTokenAuthorizationHeaders: HeadersBuilder = {
-        val systemuserToken: String = stsService.systemUserAccessToken
+        val systemuserToken: String = stsService.systemUserToken
         val userToken: String = SubjectHandler.getSsoToken(SsoToken.Type.OIDC).orElseThrow { IllegalStateException("Kunne ikke hente ut veileders ssoTOken") }
 
         header(NAV_CONSUMER_TOKEN_HEADER, AUTH_METHOD_BEARER + AUTH_SEPERATOR + systemuserToken)
@@ -63,7 +63,7 @@ class PdlOppslagServiceImpl constructor(
     }
 
     private val systemTokenAuthorizationHeaders: HeadersBuilder = {
-        val systemuserToken: String = stsService.systemUserAccessToken
+        val systemuserToken: String = stsService.systemUserToken
 
         header(NAV_CONSUMER_TOKEN_HEADER, AUTH_METHOD_BEARER + AUTH_SEPERATOR + systemuserToken)
         header(AUTHORIZATION, AUTH_METHOD_BEARER + AUTH_SEPERATOR + systemuserToken)

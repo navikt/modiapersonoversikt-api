@@ -14,7 +14,11 @@
     <dependencies>
         <dependency>
             <groupId>no.nav.common</groupId>
-            <artifactId>types</artifactId>
+            <artifactId>health</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>no.nav.common</groupId>
+            <artifactId>metrics</artifactId>
         </dependency>
         <dependency>
             <groupId>no.nav.common</groupId>

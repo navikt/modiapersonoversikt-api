@@ -1,7 +1,7 @@
 package no.nav.sbl.dialogarena.utbetaling.config;
 
-import no.nav.sbl.dialogarena.common.cxf.CXFClient;
-import no.nav.sbl.util.EnvironmentUtils;
+import no.nav.common.cxf.CXFClient;
+import no.nav.common.utils.EnvironmentUtils;
 import no.nav.tjeneste.virksomhet.utbetaling.v1.UtbetalingV1;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

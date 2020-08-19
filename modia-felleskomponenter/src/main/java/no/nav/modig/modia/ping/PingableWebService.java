@@ -1,5 +1,6 @@
 package no.nav.modig.modia.ping;
 
+import no.nav.common.health.selftest.SelfTestCheck;
 import no.nav.sbl.dialogarena.types.Pingable;
 import org.apache.cxf.jaxws.JaxWsClientProxy;
 import org.apache.cxf.service.model.EndpointInfo;
@@ -28,21 +29,15 @@ public class PingableWebService implements Pingable {
         Method method = optionalMethod.orElseThrow(() ->
                 new UnsupportedOperationException("Webservicen har ikke en ping-metode. Implementer en selv via interface."));
 
-        Ping.PingMetadata metadata = new Ping.PingMetadata(
-                webservice.getClass().getName(),
-                endepunkt(webservice),
-                name,
-                kritisk
-        );
-
         delegate = new ConsumerPingable(
-                metadata,
+                String.format("(%s) %s via %s", name, webservice.getClass().getName(), endepunkt(webservice)),
+                kritisk,
                 () -> method.invoke(webservice)
         );
     }
 
     @Override
-    public Ping ping() {
+    public SelfTestCheck ping() {
         return delegate.ping();
     }
 
@@ -65,7 +60,7 @@ public class PingableWebService implements Pingable {
     private JaxWsClientProxy getProxy(Object object) throws Exception {
         InvocationHandler invocationHandler = Proxy.getInvocationHandler(object);
         if (invocationHandler instanceof JaxWsClientProxy) {
-            return (JaxWsClientProxy)invocationHandler;
+            return (JaxWsClientProxy) invocationHandler;
         }
 
         // package-protected klasse så derfor en liten hack her
@@ -80,7 +75,7 @@ public class PingableWebService implements Pingable {
             Object value = Proxy.getInvocationHandler(clientProxy);
 
             if (value instanceof JaxWsClientProxy) {
-                return (JaxWsClientProxy)value;
+                return (JaxWsClientProxy) value;
             }
         }
 
