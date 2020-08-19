@@ -1,27 +1,21 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.baseurls
 
 import no.nav.common.utils.EnvironmentUtils
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.UnleashService
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Policies
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Tilgangskontroll
 import no.nav.sbl.dialogarena.naudit.Audit.Companion.skipAuditLog
 import org.springframework.beans.factory.annotation.Autowired
-import javax.ws.rs.GET
-import javax.ws.rs.Path
-import javax.ws.rs.Produces
-import javax.ws.rs.core.MediaType.APPLICATION_JSON
+import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RestController
 
 
-@Path("/baseurls")
-@Produces(APPLICATION_JSON)
+@RestController
+@RequestMapping("/baseurls")
 class BaseUrlsController @Autowired
-constructor(
-        private val tilgangskontroll: Tilgangskontroll,
-        private val unleashService: UnleashService
-) {
+constructor(private val tilgangskontroll: Tilgangskontroll) {
 
-    @GET
-    @Path("/")
+    @GetMapping("/")
     fun hent(): Map<String, Any?> {
         return tilgangskontroll.check(Policies.tilgangTilModia).get(skipAuditLog()) {
             mapOf("baseUrls" to getBaseUrls())
