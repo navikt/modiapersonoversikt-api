@@ -12,112 +12,107 @@ import no.nav.sbl.dialogarena.naudit.AuditResources.Person.Henvendelse
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.behandlehenvendelse.BehandleHenvendelsePortType
 import java.util.*
 import org.springframework.beans.factory.annotation.Autowired
-import javax.ws.rs.GET
-import javax.ws.rs.POST
-import javax.ws.rs.Path
-import javax.ws.rs.core.Response
+import org.springframework.http.HttpStatus
+import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RestController
 
-@Path("/dialogmerking")
+@RestController
+@RequestMapping("/dialogmerking")
 class DialogMerkController @Autowired constructor(private val behandleHenvendelsePortType: BehandleHenvendelsePortType,
                                                private val oppgaveBehandlingService: OppgaveBehandlingService,
                                                private val tilgangskontroll: Tilgangskontroll
 ) {
 
-    @POST
-    @Path("/feilsendt")
-    fun merkSomFeilsendt(request: FeilmerkRequest): Response {
+    @PostMapping("/feilsendt")
+    fun merkSomFeilsendt(request: FeilmerkRequest): ResponseEntity<Void> {
         return tilgangskontroll
                 .check(Policies.tilgangTilBruker.with(request.fnr))
                 .check(Policies.behandlingsIderTilhorerBruker.with(BehandlingsIdTilgangData(request.fnr, request.behandlingsidListe)))
                 .get(Audit.describe(UPDATE, Henvendelse.Merk.Feilsendt, AuditIdentifier.FNR to request.fnr, AuditIdentifier.BEHANDLING_ID to request.behandlingsidListe.joinToString(", "))) {
                     behandleHenvendelsePortType.oppdaterTilKassering(request.behandlingsidListe)
-                    Response.ok().build()
+                    ResponseEntity(HttpStatus.OK)
                 }
     }
 
-    @POST
-    @Path("/bidrag")
-    fun merkSomBidrag(request: BidragRequest): Response {
+    @PostMapping("/bidrag")
+    fun merkSomBidrag(request: BidragRequest): ResponseEntity<Void> {
         return tilgangskontroll
                 .check(Policies.tilgangTilBruker.with(request.fnr))
                 .check(Policies.behandlingsIderTilhorerBruker.with(BehandlingsIdTilgangData(request.fnr, listOf(request.eldsteMeldingTraadId))))
                 .get(Audit.describe(UPDATE, Henvendelse.Merk.Bidrag, AuditIdentifier.FNR to request.fnr, AuditIdentifier.BEHANDLING_ID to request.eldsteMeldingTraadId)) {
                     behandleHenvendelsePortType.knyttBehandlingskjedeTilTema(request.eldsteMeldingTraadId, "BID")
-                    Response.ok().build()
+                    ResponseEntity(HttpStatus.OK)
                 }
     }
 
-    @POST
-    @Path("/kontorsperret")
-    fun merkSomKontorsperret(request: KontorsperretRequest): Response {
+    @PostMapping("/kontorsperret")
+    fun merkSomKontorsperret(request: KontorsperretRequest): ResponseEntity<Void> {
         return tilgangskontroll
                 .check(Policies.tilgangTilBruker.with(request.fnr))
                 .check(Policies.behandlingsIderTilhorerBruker.with(BehandlingsIdTilgangData(request.fnr, request.meldingsidListe)))
                 .get(Audit.describe(UPDATE, Henvendelse.Merk.Kontorsperre, AuditIdentifier.FNR to request.fnr, AuditIdentifier.BEHANDLING_ID to request.meldingsidListe.joinToString(", "))) {
                     behandleHenvendelsePortType.oppdaterKontorsperre(request.enhet, request.meldingsidListe)
-                    Response.ok().build()
+                    ResponseEntity(HttpStatus.OK)
                 }
     }
 
-    @POST
-    @Path("/avslutt")
-    fun avsluttUtenSvar(request: AvsluttUtenSvarRequest): Response {
+    @PostMapping("/avslutt")
+    fun avsluttUtenSvar(request: AvsluttUtenSvarRequest): ResponseEntity<Void> {
         return tilgangskontroll
                 .check(Policies.tilgangTilBruker.with(request.fnr))
                 .check(Policies.behandlingsIderTilhorerBruker.with(BehandlingsIdTilgangData(request.fnr, listOf(request.eldsteMeldingTraadId))))
                 .get(Audit.describe(UPDATE, Henvendelse.Merk.Avslutt, AuditIdentifier.FNR to request.fnr, AuditIdentifier.BEHANDLING_ID to request.eldsteMeldingTraadId)) {
                     behandleHenvendelsePortType.ferdigstillUtenSvar(request.eldsteMeldingTraadId, request.saksbehandlerValgtEnhet)
                     oppgaveBehandlingService.ferdigstillOppgaveIGsak(request.eldsteMeldingOppgaveId, Optional.empty(), request.saksbehandlerValgtEnhet)
-                    Response.ok().build()
+                    ResponseEntity(HttpStatus.OK)
                 }
     }
 
-    @POST
-    @Path("/tvungenferdigstill")
-    fun tvungenFerdigstill(request: TvungenFerdigstillRequest): Response {
+    @PostMapping("/tvungenferdigstill")
+    fun tvungenFerdigstill(request: TvungenFerdigstillRequest): ResponseEntity<Void> {
         return tilgangskontroll
                 .check(Policies.tilgangTilBruker.with(request.fnr))
                 .check(Policies.behandlingsIderTilhorerBruker.with(BehandlingsIdTilgangData(request.fnr, listOf(request.eldsteMeldingTraadId))))
                 .get(Audit.describe(UPDATE, Henvendelse.Merk.Avslutt, AuditIdentifier.FNR to request.fnr, AuditIdentifier.BEHANDLING_ID to request.eldsteMeldingTraadId)) {
                     behandleHenvendelsePortType.ferdigstillUtenSvar(request.eldsteMeldingTraadId, request.saksbehandlerValgtEnhet)
                     oppgaveBehandlingService.ferdigstillOppgaveIGsak(request.eldsteMeldingOppgaveId, Optional.empty(), request.saksbehandlerValgtEnhet, request.beskrivelse)
-                    Response.ok().build()
+                    ResponseEntity(HttpStatus.OK)
                 }
     }
 
-    @POST
-    @Path("/avsluttgosysoppgave")
-    fun avsluttGosysOppgave(request: FerdigstillOppgaveRequest): Response {
+    @PostMapping("/avsluttgosysoppgave")
+    fun avsluttGosysOppgave(request: FerdigstillOppgaveRequest): ResponseEntity<Void> {
         return tilgangskontroll
                 .check(Policies.tilgangTilBruker.with(request.fnr))
                 .get(Audit.describe(UPDATE, Henvendelse.Oppgave.Avslutt, AuditIdentifier.FNR to request.fnr, AuditIdentifier.OPPGAVE_ID to request.oppgaveid)) {
                     oppgaveBehandlingService.ferdigstillOppgaveIGsak(request.oppgaveid, Optional.empty(), request.saksbehandlerValgtEnhet, request.beskrivelse);
-                    Response.ok().build()
+                    ResponseEntity(HttpStatus.OK)
                 }
     }
 
-    @POST
-    @Path("/slett")
-    fun slettBehandlingskjede(request: FeilmerkRequest): Response {
+    @PostMapping("/slett")
+    fun slettBehandlingskjede(request: FeilmerkRequest): ResponseEntity<Void> {
         return tilgangskontroll
                 .check(Policies.kanHastekassere)
                 .check(Policies.tilgangTilBruker.with(request.fnr))
                 .check(Policies.behandlingsIderTilhorerBruker.with(BehandlingsIdTilgangData(request.fnr, request.behandlingsidListe)))
                 .get(Audit.describe(DELETE, Henvendelse.Merk.Slett, AuditIdentifier.FNR to request.fnr, AuditIdentifier.BEHANDLING_ID to request.behandlingsidListe.joinToString(", "))) {
                     behandleHenvendelsePortType.markerTraadForHasteKassering(request.behandlingsidListe);
-                    Response.ok().build()
+                    ResponseEntity(HttpStatus.OK)
                 }
     }
 
-    @GET
-    @Path("/slett")
-    fun kanSlette(): Response {
+    @GetMapping("/slett")
+    fun kanSlette(): ResponseEntity<Boolean> {
         return tilgangskontroll
                 .check(Policies.tilgangTilModia)
                 .get(Audit.skipAuditLog()) {
                     val godkjenteSaksbehandlere = tilgangskontroll.context().hentSaksbehandlereMedTilgangTilHastekassering()
                     val saksbehandlerId = SubjectHandler.getIdent().map(String::toUpperCase).get()
-                    Response.ok(godkjenteSaksbehandlere.contains(saksbehandlerId)).build()
+                    ResponseEntity(godkjenteSaksbehandlere.contains(saksbehandlerId), HttpStatus.OK)
                 }
     }
 
