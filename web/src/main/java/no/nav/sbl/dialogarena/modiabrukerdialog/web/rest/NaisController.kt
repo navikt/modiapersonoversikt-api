@@ -1,15 +1,18 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest
 
-import javax.ws.rs.Path
-import javax.ws.rs.core.Response
+import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RestController
 
-@Path("/internal")
+@RestController
+@RequestMapping("/internal")
 class NaisController {
 
-    @Path("/isReady")
-    fun isReady(): Response = Response.ok().build()
+    @GetMapping("/isReady")
+    fun isReady(): ResponseEntity<Void> = ResponseEntity.status(200).build()
 
-    @Path("/isAlive")
-    fun isAlive(): Response = Response.ok().build()
+    @GetMapping("/isAlive")
+    fun isAlive(): ResponseEntity<Void> = ResponseEntity.status(200).build()
 
 }
