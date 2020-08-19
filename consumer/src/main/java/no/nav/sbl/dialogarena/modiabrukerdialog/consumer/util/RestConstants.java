@@ -3,6 +3,7 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util;
 import no.nav.common.utils.EnvironmentUtils;
 
 public class RestConstants {
+    public static final String AUTHORIZATION = "Authorization";
     public static final String NAV_CONSUMER_TOKEN_HEADER = "Nav-Consumer-Token";
     public static final String NAV_CALL_ID_HEADER = "Nav-Call-Id";
     public static final String TEMA_HEADER = "Tema";

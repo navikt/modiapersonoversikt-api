@@ -18,30 +18,6 @@
     </properties>
 
     <dependencies>
-<!--        <dependency>-->
-<!--            <groupId>no.nav.common</groupId>-->
-<!--            <artifactId>api-app</artifactId>-->
-<!--        </dependency>-->
-        <dependency>
-            <groupId>no.nav.common</groupId>
-            <artifactId>nais</artifactId>
-        </dependency>
-<!--        <dependency>-->
-<!--            <groupId>no.nav.common</groupId>-->
-<!--            <artifactId>oidc</artifactId>-->
-<!--        </dependency>-->
-        <dependency>
-            <groupId>no.nav.common</groupId>
-            <artifactId>auth</artifactId>
-        </dependency>
-<!--        <dependency>-->
-<!--            <groupId>no.nav.common</groupId>-->
-<!--            <artifactId>test-config</artifactId>-->
-<!--        </dependency>-->
-        <dependency>
-            <groupId>io.prometheus.jmx</groupId>
-            <artifactId>collector</artifactId>
-        </dependency>
         <!--Interne-->
         <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>
@@ -77,14 +53,10 @@
             <scope>test</scope>
             <type>test-jar</type>
         </dependency>
-
-        <!--Kontrakter-->
         <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>kontrakter-consumer</artifactId>
         </dependency>
-
-        <!--Kjerneinfo-->
         <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>kjerneinfo-consumer</artifactId>
@@ -97,14 +69,10 @@
             <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>dkif-consumer</artifactId>
         </dependency>
-
-        <!--Sykmeldingsperioder-->
         <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>sykmeldingsperioder-consumer</artifactId>
         </dependency>
-
-        <!--Dialogarena-->
         <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>modia-utbetalinger</artifactId>
@@ -116,13 +84,27 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
+            <groupId>no.nav.modig</groupId>
+            <artifactId>modig-content-no-enonic</artifactId>
+        </dependency>
+
+        <!-- NAV Common -->
+        <dependency>
+            <groupId>no.nav.common</groupId>
+            <artifactId>nais</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>no.nav.common</groupId>
+            <artifactId>auth</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.prometheus.jmx</groupId>
+            <artifactId>collector</artifactId>
+        </dependency>
+        <dependency>
             <groupId>no.nav.common</groupId>
             <artifactId>test</artifactId>
             <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>no.nav.modig</groupId>
-            <artifactId>modig-content-no-enonic</artifactId>
         </dependency>
 
         <!-- Spring -->
@@ -140,32 +122,6 @@
             <scope>test</scope>
         </dependency>
 
-        <!--Jersey-->
-        <dependency>
-            <groupId>javax.ws.rs</groupId>
-            <artifactId>javax.ws.rs-api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.glassfish.jersey.media</groupId>
-            <artifactId>jersey-media-json-jackson</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.fasterxml.jackson.datatype</groupId>
-            <artifactId>jackson-datatype-joda</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-databind</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>javax.annotation</groupId>
-            <artifactId>javax.annotation-api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.glassfish.hk2.external</groupId>
-            <artifactId>javax.inject</artifactId>
-        </dependency>
-
         <!-- Logging -->
         <dependency>
             <groupId>ch.qos.logback</groupId>
@@ -176,38 +132,10 @@
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>jcl-over-slf4j</artifactId>
-            <scope>runtime</scope>
-        </dependency>
-<!--        <dependency>-->
-<!--            <groupId>com.spotify</groupId>-->
-<!--            <artifactId>logging</artifactId>-->
-<!--            <scope>runtime</scope>-->
-<!--        </dependency>-->
-
-        <!-- Denne må være her på grunn av classloading på JBoss -->
-        <dependency>
-            <groupId>com.sun.xml.bind</groupId>
-            <artifactId>jaxb-impl</artifactId>
-            <version>2.2.7</version>
-            <scope>runtime</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>javax.servlet-api</artifactId>
-        </dependency>
 
         <dependency>
             <groupId>joda-time</groupId>
             <artifactId>joda-time</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>javax.inject</groupId>
-            <artifactId>javax.inject</artifactId>
         </dependency>
 
         <!--Testing-->

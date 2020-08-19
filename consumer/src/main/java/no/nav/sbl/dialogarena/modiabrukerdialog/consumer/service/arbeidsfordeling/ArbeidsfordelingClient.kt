@@ -22,8 +22,6 @@ import org.slf4j.LoggerFactory
 import org.slf4j.MDC
 import java.util.*
 import org.springframework.beans.factory.annotation.Autowired
-import javax.ws.rs.core.HttpHeaders.AUTHORIZATION
-
 
 val log = LoggerFactory.getLogger(ArbeidsfordelingClient::class.java)
 private val norgClient = RestClient.baseClient()
@@ -62,7 +60,7 @@ open class ArbeidsfordelingClient {
     open fun hentArbeidsfordeling(behandling: Optional<Behandling>, geografiskTilknytning: GeografiskTilknytning, oppgavetype: String, fagomrade: String, erEgenAnsatt: Boolean): List<AnsattEnhet> {
         val veilederOidcToken: String = SubjectHandler.getSsoToken(SsoToken.Type.OIDC).orElseThrow { IllegalStateException("Kunne ikke hente ut veileders ssoTOken") }
         val consumerOidcToken: String = stsService.systemUserToken
-        val arbeidskritereieFordelingSkjermet: ArbeidskritereieFordelingSkjermet = ArbeidskritereieFordelingSkjermet(
+        val arbeidskritereieFordelingSkjermet = ArbeidskritereieFordelingSkjermet(
                 behandlingstema = behandling?.map(Behandling::getBehandlingstema).orElse(null),
                 behandlingstype = behandling?.map(Behandling::getBehandlingstype).orElse(null),
                 geografiskOmraade = geografiskTilknytning.value?.let { it }.toString(),
