@@ -21,7 +21,7 @@ val abacLogger: Logger = LoggerFactory.getLogger(AbacClient::class.java)
 
 open class AbacClient(val config: AbacClientConfig) {
     private val basicCredential = Credentials.basic(config.username, config.password)
-    private val client : OkHttpClient = RestClient.baseClientBuilder()
+    private val client : OkHttpClient = RestClient.baseClient().newBuilder()
             .authenticator { _, response ->
                 response
                         .request()
