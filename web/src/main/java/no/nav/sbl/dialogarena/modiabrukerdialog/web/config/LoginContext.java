@@ -23,6 +23,7 @@ public class LoginContext {
     private static final String issoRefreshUrl = EnvironmentUtils.getRequiredProperty("ISSO_REFRESH_URL");
     private static final String fpsakClientId = EnvironmentUtils.getRequiredProperty("FPSAK_CLIENT_ID");
 
+    @Bean
     public OidcAuthenticator openAmAuthConfig() {
         OidcAuthenticatorConfig config = new OidcAuthenticatorConfig()
                 .withClientId(issoClientId)
@@ -35,6 +36,7 @@ public class LoginContext {
         return OidcAuthenticator.fromConfig(config);
     }
 
+    @Bean
     public OidcAuthenticator fpsakAuthConfig() {
         OidcAuthenticatorConfig config = new OidcAuthenticatorConfig()
                 .withClientId(fpsakClientId)
@@ -52,7 +54,7 @@ public class LoginContext {
         FilterRegistrationBean<OidcAuthenticationFilter> registration = new FilterRegistrationBean<>();
         registration.setFilter(new OidcAuthenticationFilter(authenticators));
         registration.setOrder(1);
-        registration.addUrlPatterns("/api/*");
+        registration.addUrlPatterns("/rest/*");
         return registration;
     }
 
