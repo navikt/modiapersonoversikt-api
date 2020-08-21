@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController
 
 
 @RestController
-@RequestMapping("/baseurls")
+@RequestMapping("/rest/baseurls")
 class BaseUrlsController @Autowired
 constructor(private val tilgangskontroll: Tilgangskontroll) {
 

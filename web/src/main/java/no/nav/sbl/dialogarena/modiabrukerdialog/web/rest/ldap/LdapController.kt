@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-@RequestMapping("/veileder")
+@RequestMapping("/rest/veileder")
 class LdapController @Autowired
 constructor(private val ldapService: LDAPService, private val tilgangskontroll: Tilgangskontroll) {
     @GetMapping("/roller")

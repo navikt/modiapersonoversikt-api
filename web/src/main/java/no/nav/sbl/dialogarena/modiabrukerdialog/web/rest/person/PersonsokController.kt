@@ -25,7 +25,7 @@ private enum class OppslagFeil {
 }
 
 @RestController
-@RequestMapping("/personsok")
+@RequestMapping("/rest/personsok")
 class PersonsokController @Autowired constructor(private val personsokPortType: PersonsokPortType, val tilgangskontroll: Tilgangskontroll) {
 
     private val logger = LoggerFactory.getLogger(PersonsokController::class.java)

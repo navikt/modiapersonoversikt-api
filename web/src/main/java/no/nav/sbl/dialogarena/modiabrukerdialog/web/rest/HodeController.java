@@ -29,7 +29,7 @@ import static no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.RestUtils.hentV
 import static no.nav.sbl.dialogarena.naudit.Audit.Action.*;
 
 @RestController
-@RequestMapping("/hode")
+@RequestMapping("/rest/hode")
 public class HodeController {
 
     @Autowired

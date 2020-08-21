@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-@RequestMapping("/kodeverk/{kodeverkRef}")
+@RequestMapping("/rest/kodeverk/{kodeverkRef}")
 class KodeverkController @Autowired constructor(
         private val tilgangskontroll: Tilgangskontroll,
         private val kodeverkManager: KodeverkmanagerBi

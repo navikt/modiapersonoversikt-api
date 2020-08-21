@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-@RequestMapping("/ytelse")
+@RequestMapping("/rest/ytelse")
 class YtelseController @Autowired constructor(private val sykepengerService: SykepengerServiceBi,
                                               private val foreldrepengerServiceDefault: ForeldrepengerServiceBi,
                                               private val pleiepengerService: PleiepengerService,

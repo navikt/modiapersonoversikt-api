@@ -30,7 +30,7 @@ private const val HENT_OPPGAVE_ROLLE = "0000-GA-BD06_HentOppgave"
 private const val AARSAK_PREFIX = "Oppgave lagt tilbake. Årsak: "
 
 @RestController
-@RequestMapping("/oppgaver")
+@RequestMapping("/rest/oppgaver")
 class OppgaveController @Autowired constructor(
         private val oppgaveBehandlingService: OppgaveBehandlingService,
         private val plukkOppgaveService: PlukkOppgaveService,

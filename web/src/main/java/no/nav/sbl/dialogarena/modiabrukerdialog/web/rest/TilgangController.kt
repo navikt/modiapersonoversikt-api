@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-@RequestMapping("/tilgang")
+@RequestMapping("/rest/tilgang")
 class TilgangController @Autowired constructor(private val abacClient: AbacClient) {
 
     @GetMapping("/{fnr}")

@@ -26,7 +26,7 @@ import org.springframework.web.bind.annotation.*
 import java.util.*
 
 @RestController
-@RequestMapping("/oppfolging/{fnr}")
+@RequestMapping("/rest/oppfolging/{fnr}")
 class OppfolgingController @Autowired constructor(private val service: OppfolgingsinfoApiService,
                                                   private val ldapService: LDAPService,
                                                   private val tilgangskontroll: Tilgangskontroll,

@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-@RequestMapping("/dialog/{fnr}")
+@RequestMapping("/rest/dialog/{fnr}")
 class DelsvarController @Autowired constructor(
         private val tilgangskontroll: Tilgangskontroll,
         private val delsvarService: DelsvarService

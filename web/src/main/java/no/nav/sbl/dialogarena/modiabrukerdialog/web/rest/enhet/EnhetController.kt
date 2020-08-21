@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.*
 import org.springframework.web.server.ResponseStatusException
 
 @RestController
-@RequestMapping("/enheter")
+@RequestMapping("/rest/enheter")
 class EnhetController @Autowired
 constructor(private val organisasjonEnhetKontaktinformasjonService: OrganisasjonEnhetKontaktinformasjonService,
             private val organisasjonEnhetV2Service: OrganisasjonEnhetV2Service,

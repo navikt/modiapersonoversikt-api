@@ -39,7 +39,7 @@ private const val TILRETTELAGT_KOMMUNIKASJON_KODEVERKREF = "TilrettelagtKommunik
 private const val TILRETTELAGT_KOMMUNIKASJON_KODEVERKSPRAK = "nb"
 
 @RestController
-@RequestMapping("/person/{fnr}")
+@RequestMapping("/rest/person/{fnr}")
 class PersonController @Autowired constructor(private val kjerneinfoService: PersonKjerneinfoServiceBi,
                                            private val kodeverk: KodeverkmanagerBi,
                                            private val tilgangskontroll: Tilgangskontroll,

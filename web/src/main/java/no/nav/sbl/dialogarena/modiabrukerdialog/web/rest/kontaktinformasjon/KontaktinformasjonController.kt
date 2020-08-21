@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-@RequestMapping("/person/{fnr}/kontaktinformasjon")
+@RequestMapping("/rest/person/{fnr}/kontaktinformasjon")
 class KontaktinformasjonController @Autowired constructor(private val dkifService: DkifService, private val tilgangskontroll: Tilgangskontroll) {
 
     @GetMapping

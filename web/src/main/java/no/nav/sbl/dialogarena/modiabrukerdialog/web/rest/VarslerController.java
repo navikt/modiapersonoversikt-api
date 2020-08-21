@@ -20,7 +20,7 @@ import java.util.List;
 import static java.util.Collections.emptyList;
 
 @RestController
-@RequestMapping("/varsler/{fnr}")
+@RequestMapping("/rest/varsler/{fnr}")
 public class VarslerController {
 
     @Autowired

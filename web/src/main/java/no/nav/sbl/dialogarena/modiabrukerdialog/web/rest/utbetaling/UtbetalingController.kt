@@ -15,7 +15,7 @@ import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
 @RestController
-@RequestMapping("/utbetaling/{fnr}")
+@RequestMapping("/rest/utbetaling/{fnr}")
 class UtbetalingController @Autowired constructor(private val service: UtbetalingService, private val tilgangskontroll: Tilgangskontroll) {
 
     @GetMapping

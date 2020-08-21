@@ -38,7 +38,7 @@ class MeldingDTO(val map: Map<String, Any?>) : HashMap<String, Any?>(map), DTO
 class FortsettDialogDTO(val behandlingsId: String, val oppgaveId: String?) : DTO
 
 @RestController
-@RequestMapping("/dialog/{fnr}")
+@RequestMapping("/rest/dialog/{fnr}")
 class DialogController @Autowired constructor(
         private val tilgangskontroll: Tilgangskontroll,
         private val henvendelseService: HenvendelseBehandlingService,

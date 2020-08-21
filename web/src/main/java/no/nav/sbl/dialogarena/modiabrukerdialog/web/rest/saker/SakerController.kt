@@ -32,7 +32,7 @@ import java.util.*
 import javax.servlet.http.HttpServletRequest
 
 @RestController
-@RequestMapping("/saker/{fnr}")
+@RequestMapping("/rest/saker/{fnr}")
 class SakerController @Autowired constructor(private val saksoversiktService: SaksoversiktService,
                                              private val sakstemaService: SakstemaService,
                                              private val saksService: SaksService,

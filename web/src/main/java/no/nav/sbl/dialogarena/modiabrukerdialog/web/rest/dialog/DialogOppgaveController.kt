@@ -28,7 +28,7 @@ import org.springframework.web.bind.annotation.RestController
 private const val HENVENDELSESTYPE_KODE: String = "DIALOG"
 
 @RestController
-@RequestMapping("/dialogoppgave")
+@RequestMapping("/rest/dialogoppgave")
 class DialogOppgaveController @Autowired constructor(
         private val gsakKodeverk: GsakKodeverk,
         private val oppgavebehandling: OppgavebehandlingV3,

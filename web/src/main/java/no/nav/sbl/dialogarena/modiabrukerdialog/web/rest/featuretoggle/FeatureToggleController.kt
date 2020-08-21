@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController
 private const val APPLICATION_PREFIX = "modiabrukerdialog."
 
 @RestController
-@RequestMapping("/featuretoggle")
+@RequestMapping("/rest/featuretoggle")
 class FeatureToggleController @Autowired constructor(
         private val unleashService: UnleashService,
         private val tilgangskontroll: Tilgangskontroll

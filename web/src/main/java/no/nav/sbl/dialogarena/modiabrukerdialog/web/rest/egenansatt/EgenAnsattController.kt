@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-@RequestMapping("/egenansatt/{fnr}")
+@RequestMapping("/rest/egenansatt/{fnr}")
 class EgenAnsattController @Autowired constructor(
         private val egenAnsattService: EgenAnsattService,
         private val tilgangskontroll: Tilgangskontroll

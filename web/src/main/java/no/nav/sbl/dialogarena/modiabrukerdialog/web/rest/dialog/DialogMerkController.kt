@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-@RequestMapping("/dialogmerking")
+@RequestMapping("/rest/dialogmerking")
 class DialogMerkController @Autowired constructor(private val behandleHenvendelsePortType: BehandleHenvendelsePortType,
                                                private val oppgaveBehandlingService: OppgaveBehandlingService,
                                                private val tilgangskontroll: Tilgangskontroll
