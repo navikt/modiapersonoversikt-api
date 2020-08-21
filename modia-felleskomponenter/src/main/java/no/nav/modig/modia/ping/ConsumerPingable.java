@@ -9,14 +9,14 @@ public class ConsumerPingable implements Pingable {
     private final UnsafeRunnable ping;
     private final SelfTestCheck instance;
 
-    public ConsumerPingable(String name, UnsafeRunnable ping) {
-        this(name, false,  ping);
+    public ConsumerPingable(String description, UnsafeRunnable ping) {
+        this(description, false,  ping);
     }
 
-    public ConsumerPingable(String name, boolean kritisk, UnsafeRunnable ping) {
+    public ConsumerPingable(String description, boolean kritisk, UnsafeRunnable ping) {
         this.ping = ping;
         this.instance = new SelfTestCheck(
-                name,
+                description,
                 kritisk,
                 this::check
         );

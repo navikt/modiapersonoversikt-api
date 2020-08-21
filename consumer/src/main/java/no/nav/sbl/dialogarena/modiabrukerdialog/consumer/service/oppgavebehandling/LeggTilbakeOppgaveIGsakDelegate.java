@@ -10,7 +10,8 @@ import no.nav.tjeneste.virksomhet.oppgave.v3.informasjon.oppgave.WSUnderkategori
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.LagreOppgaveOptimistiskLasing;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.security.access.AccessDeniedException;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Collections;
 import java.util.List;
@@ -45,7 +46,7 @@ class LeggTilbakeOppgaveIGsakDelegate {
             String feilmelding = "Innlogget saksbehandler " + innloggetSaksbehandler
                     + " har ikke tilgang til oppgave " + oppgaveFraGsak.getOppgaveId()
                     + ". Oppgavens ansvarlige id er satt til : " + oppgaveFraGsak.getAnsvarligId() + ".";
-            throw new AccessDeniedException(feilmelding);
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, feilmelding);
         }
     }
 

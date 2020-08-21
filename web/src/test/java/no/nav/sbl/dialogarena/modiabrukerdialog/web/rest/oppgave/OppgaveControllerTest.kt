@@ -23,14 +23,15 @@ import no.nav.tjeneste.virksomhet.oppgave.v3.meldinger.WSHentOppgaveResponse
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.OppgavebehandlingV3
 import no.nav.tjeneste.virksomhet.tildeloppgave.v1.TildelOppgaveV1
 import no.nav.tjeneste.virksomhet.tildeloppgave.v1.WSTildelFlereOppgaverResponse
-import org.hamcrest.CoreMatchers.containsString
 import org.hamcrest.MatcherAssert.assertThat
+import org.hamcrest.core.StringContains.containsString
 import org.joda.time.DateTime
 import org.junit.jupiter.api.Assertions.assertAll
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.function.Executable
-import org.springframework.security.access.AccessDeniedException
+import org.springframework.http.HttpStatus
+import org.springframework.web.server.ResponseStatusException
 import java.util.*
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
@@ -109,12 +110,13 @@ internal class OppgaveControllerTest {
 
     @Test
     fun `Sjekker at ansvarlig for oppgaven er samme person som forsøker å legge den tilbake`() {
-        assertFailsWith<AccessDeniedException> {
+        val exception = assertFailsWith<ResponseStatusException> {
             val httpRequest = HttpRequestUtil.mockHttpServletRequestMedCookie("annen-saksbehandler", VALGT_ENHET)
             SubjectHandlerUtil.withIdent("annen-saksbehandler") {
                 oppgaveController.leggTilbake(httpRequest, lagRequest())
             }
         }
+        assertEquals(exception.status, HttpStatus.FORBIDDEN)
     }
 
     @Test

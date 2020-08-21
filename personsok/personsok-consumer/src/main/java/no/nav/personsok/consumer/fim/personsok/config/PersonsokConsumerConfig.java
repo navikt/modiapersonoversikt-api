@@ -22,17 +22,17 @@ public class PersonsokConsumerConfig {
     @Value("${servicegateway.url:}")
     private String servicegateway;
 
-    @Autowired
+    //@Autowired
     StsConfig stsConfig;
 
-    @Bean
+    //@Bean
     public PersonsokPortType personsokPortType() {
         return getHentPersonsokJaxWsPortProxyFactoryBean()
                 .configureStsForSubject(stsConfig)
                 .build();
     }
 
-    @Bean
+    //@Bean
     public Pingable personsokPing() {
         PersonsokPortType pingPorttype = getHentPersonsokJaxWsPortProxyFactoryBean()
                 .configureStsForSystemUser(stsConfig)

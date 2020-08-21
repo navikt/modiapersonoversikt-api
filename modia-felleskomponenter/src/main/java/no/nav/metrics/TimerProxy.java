@@ -14,22 +14,25 @@ public class TimerProxy implements InvocationHandler {
     private static final Timing timing = new Timing() {};
     private static final List<String> DO_NOT_MEASURE_METHOD_NAMES = new ArrayList<>(Arrays.asList("hashCode", "equals", "toString"));
     private final String name;
+    private final Object originalObject;
 
-    public TimerProxy(String name) {
+
+    public TimerProxy(String name, Object originalObject) {
         this.name = name;
+        this.originalObject = originalObject;
     }
 
     @Override
-    public Object invoke(Object o, Method method, Object[] objects) throws Throwable {
+    public Object invoke(Object proxy, Method method, Object[] objects) throws Throwable {
         if (DO_NOT_MEASURE_METHOD_NAMES.contains(method.getName())) {
-            return method.invoke(o, objects);
+            return method.invoke(originalObject, objects);
         }
 
         String timerName = name + "." + method.getName();
         Timer timer = new Timer(client, timerName, timing);
         timer.start();
         try {
-            return method.invoke(o, objects);
+            return method.invoke(originalObject, objects);
         } catch (RuntimeException | Error unchecked) {
             timer.setFailed();
             timer.addFieldToReport("checkedException", false);

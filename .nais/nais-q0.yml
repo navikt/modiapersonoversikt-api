@@ -55,6 +55,10 @@ spec:
       value: "q0"
     - name: APP_VERSION
       value: "{{ version }}"
+    - name: NAIS_CLUSTER_NAME
+      value: "dev-fss"
+    - name: NAIS_NAMESPACE
+      value: "q0"
     - name: ISSO_CLIENT_ID
       value: "veilarblogin-q0"
     - name: FPSAK_CLIENT_ID

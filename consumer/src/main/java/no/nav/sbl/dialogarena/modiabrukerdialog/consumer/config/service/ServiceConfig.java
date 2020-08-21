@@ -2,6 +2,7 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.service;
 
 import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navansatt.GOSYSNAVansatt;
 
+import no.nav.common.cxf.StsConfig;
 import no.nav.common.sts.NaisSystemUserTokenProvider;
 import no.nav.common.sts.SystemUserTokenProvider;
 import no.nav.common.utils.EnvironmentUtils;
@@ -207,6 +208,15 @@ public class ServiceConfig {
                 EnvironmentUtils.getRequiredProperty(SYSTEMUSER_USERNAME),
                 EnvironmentUtils.getRequiredProperty(SYSTEMUSER_PASSWORD)
         );
+    }
+
+    @Bean
+    StsConfig stsConfig() {
+        return StsConfig.builder()
+                .url(EnvironmentUtils.getRequiredProperty("SECURITYTOKENSERVICE_URL"))
+                .username(EnvironmentUtils.getRequiredProperty(SYSTEMUSER_USERNAME))
+                .password(EnvironmentUtils.getRequiredProperty(SYSTEMUSER_PASSWORD))
+                .build();
     }
 
     @Bean

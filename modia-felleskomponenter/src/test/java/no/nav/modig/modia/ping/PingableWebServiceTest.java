@@ -2,11 +2,11 @@ package no.nav.modig.modia.ping;
 
 import no.nav.common.health.selftest.SelfTestCheck;
 import no.nav.sbl.dialogarena.types.Pingable;
+import org.hamcrest.CoreMatchers;
 import org.junit.Before;
 import org.junit.Test;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.core.Is.is;
 import static org.mockito.Mockito.*;
 
@@ -42,7 +42,7 @@ public class PingableWebServiceTest {
     public void skalReturnereOkResultatNårTjenestenErOk() throws Exception {
         SelfTestCheck pingResult = pingable.ping();
         assertThat(pingResult.getCheck().checkHealth().isHealthy(), is(true));
-        assertThat(pingResult.getDescription(), containsString("WS"));
+        assertThat(pingResult.getDescription(), CoreMatchers.containsString("WS"));
     }
 
     @Test

@@ -30,7 +30,7 @@ public class PingableWebService implements Pingable {
                 new UnsupportedOperationException("Webservicen har ikke en ping-metode. Implementer en selv via interface."));
 
         delegate = new ConsumerPingable(
-                String.format("(%s) %s via %s", name, webservice.getClass().getName(), endepunkt(webservice)),
+                endepunktBeskrivelse(name, webservice),
                 kritisk,
                 () -> method.invoke(webservice)
         );
@@ -41,19 +41,20 @@ public class PingableWebService implements Pingable {
         return delegate.ping();
     }
 
-    private String endepunkt(Object webservice) {
+    private String endepunktBeskrivelse(String name, Object webservice) {
         try {
             EndpointInfo endpointInfo = getProxy(webservice).getClient().getEndpoint().getEndpointInfo();
             return new StringBuilder()
-                    .append(endpointInfo.getName().getNamespaceURI())
-                    .append("/")
+                    .append("(")
+                    .append(name)
+                    .append(") ")
                     .append(endpointInfo.getName().getLocalPart())
                     .append(" via ")
                     .append(endpointInfo.getAddress())
                     .toString();
 
         } catch (Exception e) {
-            return "Not recognized proxy: " + webservice.getClass().getSimpleName();
+            return "Not recognized proxy: (" + name + ") " + webservice.getClass().getSimpleName();
         }
     }
 
@@ -64,7 +65,7 @@ public class PingableWebService implements Pingable {
         }
 
         // package-protected klasse så derfor en liten hack her
-        if ("no.nav.sbl.dialogarena.common.cxf.CXFClientInvocationHandler".equals(invocationHandler.getClass().getName())) {
+        if ("no.nav.common.cxf.CXFClientInvocationHandler".equals(invocationHandler.getClass().getName())) {
             Field invokationHandler = invocationHandler.getClass().getDeclaredField("invocationHandler");
             invokationHandler.setAccessible(true);
             Object lambda = invokationHandler.get(invocationHandler);

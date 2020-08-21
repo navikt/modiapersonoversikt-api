@@ -39,10 +39,7 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Captor;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
+import org.mockito.*;
 
 import java.util.*;
 
@@ -214,7 +211,7 @@ class HenvendelseUtsendingServiceImplTest {
                 .withTemagruppe(TEMAGRUPPE);
         henvendelseUtsendingService.sendHenvendelse(melding, Optional.empty(), Optional.of(sak), SAKSBEHANDLERS_VALGTE_ENHET);
 
-        verify(sakerService).knyttBehandlingskjedeTilSak(anyString(), anyString(), sakArgumentCaptor.capture(), anyString());
+        verify(sakerService).knyttBehandlingskjedeTilSak(ArgumentMatchers.anyString(), ArgumentMatchers.anyString(), sakArgumentCaptor.capture(), ArgumentMatchers.anyString());
 
         Sak sendtSak = sakArgumentCaptor.getValue();
         assertThat(sendtSak, is(sak));
@@ -315,7 +312,7 @@ class HenvendelseUtsendingServiceImplTest {
         ((XMLHenvendelse)resp.getAny().get(1)).getJournalfortInformasjon().setJournalfortTema("Noe annet");
 
         when(henvendelsePortType.hentHenvendelseListe(any(WSHentHenvendelseListeRequest.class))).thenReturn(resp);
-        when(tilgangskontrollContext.hentTemagrupperForSaksbehandler(anyString())).thenReturn(new TreeSet<>(asList(JOURNALFORT_TEMA)));
+        when(tilgangskontrollContext.hentTemagrupperForSaksbehandler(ArgumentMatchers.anyString())).thenReturn(new TreeSet<>(asList(JOURNALFORT_TEMA)));
 
         List<Melding> traad = henvendelseUtsendingService.hentTraad(FNR, TRAAD_ID, SAKSBEHANDLERS_VALGTE_ENHET);
 
@@ -337,7 +334,7 @@ class HenvendelseUtsendingServiceImplTest {
         Melding melding = new Melding().withFnr(FNR).withFritekst(mockFritekst()).withType(SAMTALEREFERAT_OPPMOTE).withTemagruppe(Temagruppe.OKSOS.toString());
         henvendelseUtsendingService.sendHenvendelse(melding, Optional.empty(), Optional.empty(), SAKSBEHANDLERS_VALGTE_ENHET);
 
-        verify(behandleHenvendelsePortType, never()).oppdaterKontorsperre(anyString(), anyList());
+        verify(behandleHenvendelsePortType, never()).oppdaterKontorsperre(ArgumentMatchers.anyString(), ArgumentMatchers.anyList());
     }
 
     @Test
@@ -407,7 +404,7 @@ class HenvendelseUtsendingServiceImplTest {
                         .withMetadataListe(new XMLMetadataListe().withMetadata(
                                 new XMLMeldingFraBruker().withFritekst(FRITEKST).withTemagruppe(TEMAGRUPPE)))
         ));
-        when(tilgangskontrollContext.harSaksbehandlerRolle(anyString())).thenReturn(true);
+        when(tilgangskontrollContext.harSaksbehandlerRolle(ArgumentMatchers.anyString())).thenReturn(true);
 
         henvendelseUtsendingService.hentTraad(FNR, TRAAD_ID, SAKSBEHANDLERS_VALGTE_ENHET);
     }
