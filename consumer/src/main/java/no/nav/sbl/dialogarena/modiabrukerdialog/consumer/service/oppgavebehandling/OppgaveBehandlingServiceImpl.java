@@ -280,7 +280,7 @@ public class OppgaveBehandlingServiceImpl implements OppgaveBehandlingService {
 
         if (temagruppe.equals(FMLI) && saksbehandlersValgteEnhet.equals(STORD_ENHET)) {
             return STORD_ENHET;
-        } else if (asList(ARBD, FMLI, ORT_HJE, PENS, UFRT, PLEIEPENGERSY, UTLAND).contains(temagruppe)) {
+        } else if (asList(ARBD, FMLI, FDAG, ORT_HJE, PENS, UFRT, PLEIEPENGERSY, UTLAND).contains(temagruppe)) {
             return DEFAULT_ENHET.toString();
         } else {
             return saksbehandlersValgteEnhet;
