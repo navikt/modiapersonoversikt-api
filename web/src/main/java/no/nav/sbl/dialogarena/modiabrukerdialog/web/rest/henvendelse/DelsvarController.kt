@@ -15,10 +15,7 @@ import no.nav.sbl.dialogarena.naudit.AuditIdentifier
 import no.nav.sbl.dialogarena.naudit.AuditResources.Person.Henvendelse
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/rest/dialog/{fnr}")
@@ -28,9 +25,9 @@ class DelsvarController @Autowired constructor(
 ) {
     @PostMapping("/delvis-svar")
     fun svarDelvis(
-            @PathVariable("fnr") fnr: String,
             httpRequest: HttpServletRequest,
-            request: DelsvarRestRequest): ResponseEntity<Void>
+            @PathVariable("fnr") fnr: String,
+            @RequestBody request: DelsvarRestRequest): ResponseEntity<Void>
     {
         return tilgangskontroll
                 .check(Policies.tilgangTilBruker.with(fnr))
