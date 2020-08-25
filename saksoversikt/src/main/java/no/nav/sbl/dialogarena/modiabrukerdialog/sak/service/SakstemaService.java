@@ -2,7 +2,6 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.sak.service;
 
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.*;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.resultatwrappere.ResultatWrapper;
-import no.nav.sbl.dialogarena.modiabrukerdialog.sak.utils.Java8Utils;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import java.util.*;

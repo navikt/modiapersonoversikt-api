@@ -25,7 +25,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import java.net.MalformedURLException;
 
 @Configuration
 @Import({SykepengerConsumerConfig.class, ForeldrepengerConsumerConfig.class,

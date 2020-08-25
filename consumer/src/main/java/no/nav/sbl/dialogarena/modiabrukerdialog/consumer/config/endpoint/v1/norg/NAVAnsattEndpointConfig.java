@@ -2,15 +2,12 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v1.nor
 
 import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navansatt.GOSYSNAVansatt;
 import no.nav.common.cxf.CXFClient;
-import no.nav.common.cxf.StsConfig;
 import no.nav.common.utils.EnvironmentUtils;
 import no.nav.modig.modia.ping.UnpingableWebService;
 import no.nav.sbl.dialogarena.types.Pingable;
 import org.apache.cxf.ws.security.wss4j.WSS4JOutInterceptor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
-import org.springframework.beans.factory.annotation.Autowired;
 import javax.xml.namespace.QName;
 
 import static no.nav.metrics.MetricsFactory.createTimerProxyForWebService;

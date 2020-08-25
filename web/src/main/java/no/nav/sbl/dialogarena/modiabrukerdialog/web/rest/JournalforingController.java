@@ -9,7 +9,6 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.BehandlingsIdTi
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Tilgangskontroll;
 import no.nav.sbl.dialogarena.naudit.AuditIdentifier;
 import no.nav.sbl.dialogarena.naudit.AuditResources.Person;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.api.Feilmelding;
 import no.nav.sbl.dialogarena.naudit.Audit;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +21,6 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 import static java.util.Arrays.asList;
-import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.RestUtils.hentValgtEnhet;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Policies.behandlingsIderTilhorerBruker;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Policies.tilgangTilBruker;

@@ -4,7 +4,6 @@ import no.finn.unleash.Unleash;
 import no.finn.unleash.repository.FeatureToggleResponse;
 import no.finn.unleash.repository.ToggleFetcher;
 import no.nav.common.health.selftest.SelfTestCheck;
-import no.nav.sbl.dialogarena.types.Pingable;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;

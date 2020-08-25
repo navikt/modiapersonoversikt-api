@@ -36,8 +36,6 @@ import java.util.Collections;
 
 import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.SPORSMAL_SKRIFTLIG;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
 class DelsvarControllerTest {
@@ -119,7 +117,7 @@ class DelsvarControllerTest {
     void ferdigstillerHenvendelse() {
         ArgumentCaptor<WSFerdigstillHenvendelseRequest> argumentCaptor = ArgumentCaptor.forClass(WSFerdigstillHenvendelseRequest.class);
 
-        SubjectHandlerUtil.withIdent(SAKSBEHANDLERS_IDENT, () -> delsvarController.svarDelvis(BRUKERS_FNR, httpMockRequest, lagDelsvarRequest()));
+        SubjectHandlerUtil.withIdent(SAKSBEHANDLERS_IDENT, () -> delsvarController.svarDelvis(httpMockRequest, BRUKERS_FNR, lagDelsvarRequest()));
 
         verify(sendUtHenvendelsePortTypeMock).ferdigstillHenvendelse(argumentCaptor.capture());
         assertEquals(HENVENDELSES_ID, argumentCaptor.getValue().getBehandlingsId().get(0));
@@ -130,7 +128,7 @@ class DelsvarControllerTest {
     void leserValgtEnhetFraCookie() {
         ArgumentCaptor<WSFerdigstillHenvendelseRequest> argumentCaptor = ArgumentCaptor.forClass(WSFerdigstillHenvendelseRequest.class);
 
-        SubjectHandlerUtil.withIdent(SAKSBEHANDLERS_IDENT, () -> delsvarController.svarDelvis(BRUKERS_FNR, httpMockRequest, lagDelsvarRequest()));
+        SubjectHandlerUtil.withIdent(SAKSBEHANDLERS_IDENT, () -> delsvarController.svarDelvis(httpMockRequest, BRUKERS_FNR, lagDelsvarRequest()));
 
         verify(sendUtHenvendelsePortTypeMock).ferdigstillHenvendelse(argumentCaptor.capture());
         XMLHenvendelse xmlHenvendelse = (XMLHenvendelse) argumentCaptor.getValue().getAny();
@@ -140,7 +138,7 @@ class DelsvarControllerTest {
     @Test
     @DisplayName("Delvis svar returnerer 200 OK")
     void ferdigstillHenvendelseReturer200OK() {
-        ResponseEntity response = SubjectHandlerUtil.withIdent(SAKSBEHANDLERS_IDENT, () -> delsvarController.svarDelvis(BRUKERS_FNR, httpMockRequest, lagDelsvarRequest()));
+        ResponseEntity response = SubjectHandlerUtil.withIdent(SAKSBEHANDLERS_IDENT, () -> delsvarController.svarDelvis(httpMockRequest, BRUKERS_FNR, lagDelsvarRequest()));
         assertEquals(HttpStatus.OK, response.getStatusCode());
     }
 
