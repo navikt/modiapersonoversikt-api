@@ -14,10 +14,7 @@ import no.nav.sbl.dialogarena.naudit.AuditResources.Saksbehandler;
 import no.nav.sbl.dialogarena.naudit.Audit;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -107,7 +104,7 @@ public class HodeController {
     }
 
     @PostMapping("/velgenhet")
-    public String settValgtEnhet(HttpServletResponse response, String enhetId) {
+    public String settValgtEnhet(HttpServletResponse response, @RequestBody String enhetId) {
         return tilgangskontroll
                 .check(Policies.tilgangTilModia)
                 .get(Audit.describe(UPDATE, Saksbehandler.ValgtEnhet, new Pair<>(AuditIdentifier.ENHET_ID, enhetId)), () -> {
