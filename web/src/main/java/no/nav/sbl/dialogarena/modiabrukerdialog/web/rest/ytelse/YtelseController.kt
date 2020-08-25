@@ -9,7 +9,6 @@ import no.nav.sbl.dialogarena.naudit.AuditResources
 import no.nav.sykmeldingsperioder.consumer.foreldrepenger.ForeldrepengerServiceBi
 import no.nav.sykmeldingsperioder.consumer.pleiepenger.PleiepengerService
 import no.nav.sykmeldingsperioder.consumer.sykepenger.SykepengerServiceBi
-import org.springframework.beans.factory.annotation.Autowire
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -24,7 +23,7 @@ class YtelseController @Autowired constructor(private val sykepengerService: Syk
                                               private val tilgangskontroll: Tilgangskontroll,
                                               private val organisasjonService: OrganisasjonService) {
 
-    @GetMapping("sykepewnger/{fnr}")
+    @GetMapping("sykepenger/{fnr}")
     fun hentSykepenger(@PathVariable("fnr") fnr: String): Map<String, Any?> {
         return tilgangskontroll
                 .check(Policies.tilgangTilBruker.with(fnr))
