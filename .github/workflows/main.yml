@@ -38,21 +38,21 @@ jobs:
 
   deploy-q1:
     name: Deploy to Q1
-      needs: build
-      if: github.ref == 'refs/heads/common-v2'
-      runs-on: ubuntu-latest
-      strategy:
-        matrix:
-          namespace: [q1]
-      steps:
-        - uses: actions/checkout@v1
-        - uses: nais/deploy/actions/deploy@v1
-          env:
-            APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
-            PRINT_PAYLOAD: true
-            CLUSTER: dev-fss
-            RESOURCE: .nais/nais-${{ matrix.namespace }}.yml
-            VAR: version=${{ github.sha }}
+    needs: build
+    if: github.ref == 'refs/heads/common-v2'
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        namespace: [q1]
+    steps:
+      - uses: actions/checkout@v1
+      - uses: nais/deploy/actions/deploy@v1
+        env:
+          APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
+          PRINT_PAYLOAD: true
+          CLUSTER: dev-fss
+          RESOURCE: .nais/nais-${{ matrix.namespace }}.yml
+          VAR: version=${{ github.sha }}
 
   deploy-qa:
     name: Deploy to preprod
