@@ -14,10 +14,7 @@ import java.util.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/rest/dialogmerking")
@@ -27,7 +24,7 @@ class DialogMerkController @Autowired constructor(private val behandleHenvendels
 ) {
 
     @PostMapping("/feilsendt")
-    fun merkSomFeilsendt(request: FeilmerkRequest): ResponseEntity<Void> {
+    fun merkSomFeilsendt(@RequestBody request: FeilmerkRequest): ResponseEntity<Void> {
         return tilgangskontroll
                 .check(Policies.tilgangTilBruker.with(request.fnr))
                 .check(Policies.behandlingsIderTilhorerBruker.with(BehandlingsIdTilgangData(request.fnr, request.behandlingsidListe)))
@@ -38,7 +35,7 @@ class DialogMerkController @Autowired constructor(private val behandleHenvendels
     }
 
     @PostMapping("/bidrag")
-    fun merkSomBidrag(request: BidragRequest): ResponseEntity<Void> {
+    fun merkSomBidrag(@RequestBody request: BidragRequest): ResponseEntity<Void> {
         return tilgangskontroll
                 .check(Policies.tilgangTilBruker.with(request.fnr))
                 .check(Policies.behandlingsIderTilhorerBruker.with(BehandlingsIdTilgangData(request.fnr, listOf(request.eldsteMeldingTraadId))))
@@ -49,7 +46,7 @@ class DialogMerkController @Autowired constructor(private val behandleHenvendels
     }
 
     @PostMapping("/kontorsperret")
-    fun merkSomKontorsperret(request: KontorsperretRequest): ResponseEntity<Void> {
+    fun merkSomKontorsperret(@RequestBody request: KontorsperretRequest): ResponseEntity<Void> {
         return tilgangskontroll
                 .check(Policies.tilgangTilBruker.with(request.fnr))
                 .check(Policies.behandlingsIderTilhorerBruker.with(BehandlingsIdTilgangData(request.fnr, request.meldingsidListe)))
@@ -60,7 +57,7 @@ class DialogMerkController @Autowired constructor(private val behandleHenvendels
     }
 
     @PostMapping("/avslutt")
-    fun avsluttUtenSvar(request: AvsluttUtenSvarRequest): ResponseEntity<Void> {
+    fun avsluttUtenSvar(@RequestBody request: AvsluttUtenSvarRequest): ResponseEntity<Void> {
         return tilgangskontroll
                 .check(Policies.tilgangTilBruker.with(request.fnr))
                 .check(Policies.behandlingsIderTilhorerBruker.with(BehandlingsIdTilgangData(request.fnr, listOf(request.eldsteMeldingTraadId))))
@@ -72,7 +69,7 @@ class DialogMerkController @Autowired constructor(private val behandleHenvendels
     }
 
     @PostMapping("/tvungenferdigstill")
-    fun tvungenFerdigstill(request: TvungenFerdigstillRequest): ResponseEntity<Void> {
+    fun tvungenFerdigstill(@RequestBody request: TvungenFerdigstillRequest): ResponseEntity<Void> {
         return tilgangskontroll
                 .check(Policies.tilgangTilBruker.with(request.fnr))
                 .check(Policies.behandlingsIderTilhorerBruker.with(BehandlingsIdTilgangData(request.fnr, listOf(request.eldsteMeldingTraadId))))
@@ -84,7 +81,7 @@ class DialogMerkController @Autowired constructor(private val behandleHenvendels
     }
 
     @PostMapping("/avsluttgosysoppgave")
-    fun avsluttGosysOppgave(request: FerdigstillOppgaveRequest): ResponseEntity<Void> {
+    fun avsluttGosysOppgave(@RequestBody request: FerdigstillOppgaveRequest): ResponseEntity<Void> {
         return tilgangskontroll
                 .check(Policies.tilgangTilBruker.with(request.fnr))
                 .get(Audit.describe(UPDATE, Henvendelse.Oppgave.Avslutt, AuditIdentifier.FNR to request.fnr, AuditIdentifier.OPPGAVE_ID to request.oppgaveid)) {
@@ -94,7 +91,7 @@ class DialogMerkController @Autowired constructor(private val behandleHenvendels
     }
 
     @PostMapping("/slett")
-    fun slettBehandlingskjede(request: FeilmerkRequest): ResponseEntity<Void> {
+    fun slettBehandlingskjede(@RequestBody request: FeilmerkRequest): ResponseEntity<Void> {
         return tilgangskontroll
                 .check(Policies.kanHastekassere)
                 .check(Policies.tilgangTilBruker.with(request.fnr))

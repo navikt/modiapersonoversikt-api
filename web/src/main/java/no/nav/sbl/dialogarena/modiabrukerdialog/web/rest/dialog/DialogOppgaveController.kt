@@ -20,10 +20,7 @@ import java.time.LocalDate
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 
 private const val HENVENDELSESTYPE_KODE: String = "DIALOG"
 
@@ -37,7 +34,7 @@ class DialogOppgaveController @Autowired constructor(
 ) {
 
     @PostMapping("/opprett")
-    fun opprettOppgave(request: OpperettOppgaveRequest): ResponseEntity<Void> {
+    fun opprettOppgave(@RequestBody request: OpperettOppgaveRequest): ResponseEntity<Void> {
         return tilgangskontroll
                 .check(Policies.tilgangTilBruker.with(request.fnr))
                 .check(Policies.behandlingsIderTilhorerBruker.with(BehandlingsIdTilgangData(request.fnr, listOf(request.behandlingskjedeId))))
@@ -67,7 +64,7 @@ class DialogOppgaveController @Autowired constructor(
     }
 
     @PostMapping("/opprettskjermetoppgave")
-    fun opprettSkjermetOppgave(request: OpperettSkjermetOppgaveDTO
+    fun opprettSkjermetOppgave(@RequestBody request: OpperettSkjermetOppgaveDTO
     ): SkjermetOppgaveRespons {
         return tilgangskontroll
                 .check(Policies.tilgangTilModia)

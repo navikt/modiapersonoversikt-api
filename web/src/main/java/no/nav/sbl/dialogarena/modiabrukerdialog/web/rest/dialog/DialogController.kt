@@ -68,7 +68,7 @@ class DialogController @Autowired constructor(
     fun sendMelding(
             request: HttpServletRequest,
             @PathVariable("fnr") fnr: String,
-            referatRequest: SendReferatRequest
+            @RequestBody referatRequest: SendReferatRequest
     ): ResponseEntity<BehandlingsId> {
         return tilgangskontroll
                 .check(Policies.tilgangTilBruker.with(fnr))
@@ -83,7 +83,7 @@ class DialogController @Autowired constructor(
     fun sendSporsmal(
             request: HttpServletRequest,
             @PathVariable("fnr") fnr: String,
-            sporsmalsRequest: SendSporsmalRequest
+            @RequestBody sporsmalsRequest: SendSporsmalRequest
     ): ResponseEntity<Void> {
         return tilgangskontroll
                 .check(Policies.tilgangTilBruker.with(fnr))
@@ -99,7 +99,7 @@ class DialogController @Autowired constructor(
     fun sendInfomelding(
             request: HttpServletRequest,
             @PathVariable("fnr") fnr: String,
-            infomeldingRequest: InfomeldingRequest
+            @RequestBody infomeldingRequest: InfomeldingRequest
     ): ResponseEntity<Void> {
         return tilgangskontroll
                 .check(Policies.featureToggleEnabled.with(Feature.INFOMELDING.propertyKey))
@@ -116,7 +116,7 @@ class DialogController @Autowired constructor(
     fun startFortsettDialog(
             request: HttpServletRequest,
             @PathVariable("fnr") fnr: String,
-            opprettHenvendelseRequest: OpprettHenvendelseRequest
+            @RequestBody opprettHenvendelseRequest: OpprettHenvendelseRequest
     ): FortsettDialogDTO {
         return tilgangskontroll
                 .check(Policies.tilgangTilBruker.with(fnr))
@@ -156,7 +156,7 @@ class DialogController @Autowired constructor(
     fun sendFortsettDialog(
             request: HttpServletRequest,
             @PathVariable("fnr") fnr: String,
-            fortsettDialogRequest: FortsettDialogRequest
+            @RequestBody fortsettDialogRequest: FortsettDialogRequest
     ): ResponseEntity<Void> {
         return tilgangskontroll
                 .check(Policies.tilgangTilBruker.with(fnr))
@@ -184,7 +184,7 @@ class DialogController @Autowired constructor(
     fun slaaSammenTraader(
             request: HttpServletRequest,
             @PathVariable("fnr") fnr: String,
-            slaaSammenRequest: SlaaSammenRequest
+            @RequestBody slaaSammenRequest: SlaaSammenRequest
     ): Map<String, Any?> = tilgangskontroll
             .check(Policies.tilgangTilBruker.with(fnr))
             .get(Audit.describe(UPDATE, Person.Henvendelse.SlaSammen, AuditIdentifier.FNR to fnr)) {
