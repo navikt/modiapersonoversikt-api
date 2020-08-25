@@ -49,8 +49,9 @@
 
         <hamkrest.version>1.7.0.0</hamkrest.version>
         <slf4j.version>1.7.21</slf4j.version>
-
         <orika.version>1.5.1</orika.version>
+        <!-- må være med for å tvinge spring-boot til riktig versjon av byte-buddy som brukes av mockito -->
+        <byte-buddy.version>1.9.7</byte-buddy.version>
     </properties>
 
     <dependencyManagement>
