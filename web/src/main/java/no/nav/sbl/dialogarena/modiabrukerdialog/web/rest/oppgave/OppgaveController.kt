@@ -40,7 +40,7 @@ class OppgaveController @Autowired constructor(
 ) {
 
     @PostMapping("/legg-tilbake")
-    fun leggTilbake(httpRequest: HttpServletRequest, request: LeggTilbakeRequest): ResponseEntity<Void> {
+    fun leggTilbake(httpRequest: HttpServletRequest, @RequestBody request: LeggTilbakeRequest): ResponseEntity<Void> {
         return tilgangkontroll
                 .check(Policies.tilgangTilModia)
                 .get(Audit.describe(UPDATE, Henvendelse.Oppgave.LeggTilbake, AuditIdentifier.OPPGAVE_ID to request.oppgaveId)) {
