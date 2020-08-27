@@ -32,7 +32,7 @@ class PdlOppslagServiceImpl constructor(
 
     override fun hentNavnBolk(fnrs: List<String>): Map<String, HentNavnBolk.Navn?>? {
         if (fnrs.isEmpty()) {
-            emptyMap<String, HentNavnBolk.Navn?>()
+            return emptyMap()
         }
 
         return runBlocking {
