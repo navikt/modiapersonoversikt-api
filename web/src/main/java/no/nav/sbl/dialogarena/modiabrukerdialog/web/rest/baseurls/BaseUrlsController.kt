@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController
 class BaseUrlsController @Autowired
 constructor(private val tilgangskontroll: Tilgangskontroll) {
 
-    @GetMapping("/")
+    @GetMapping
     fun hent(): Map<String, Any?> {
         return tilgangskontroll.check(Policies.tilgangTilModia).get(skipAuditLog()) {
             mapOf("baseUrls" to getBaseUrls())
