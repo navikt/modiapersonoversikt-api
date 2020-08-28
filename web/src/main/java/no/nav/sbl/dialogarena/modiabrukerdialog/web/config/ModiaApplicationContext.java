@@ -3,7 +3,7 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.config;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
-import javax.servlet.ServletContext;
+import javax.annotation.PostConstruct;
 
 @Configuration
 @Import({
@@ -14,11 +14,8 @@ import javax.servlet.ServletContext;
 })
 
 public class ModiaApplicationContext {
-    public void startup(ServletContext servletContext) {
+    @PostConstruct
+    public void setup() {
         JmxExporterConfig.setup();
-    }
-
-    public String getApiBasePath() {
-        return "/rest/";
     }
 }
