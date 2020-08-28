@@ -83,7 +83,7 @@
             <dependency>
                 <groupId>io.prometheus.jmx</groupId>
                 <artifactId>collector</artifactId>
-                <version>0.4</version>
+                <version>0.13.0</version>
             </dependency>
             <dependency>
                 <groupId>no.nav.sbl.dialogarena</groupId>
