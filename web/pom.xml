@@ -98,10 +98,6 @@
             <artifactId>auth</artifactId>
         </dependency>
         <dependency>
-            <groupId>io.prometheus.jmx</groupId>
-            <artifactId>collector</artifactId>
-        </dependency>
-        <dependency>
             <groupId>no.nav.common</groupId>
             <artifactId>test</artifactId>
             <scope>test</scope>

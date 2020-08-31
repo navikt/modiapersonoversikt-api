@@ -81,11 +81,6 @@
                 <version>0.6</version>
             </dependency>
             <dependency>
-                <groupId>io.prometheus.jmx</groupId>
-                <artifactId>collector</artifactId>
-                <version>0.13.0</version>
-            </dependency>
-            <dependency>
                 <groupId>no.nav.sbl.dialogarena</groupId>
                 <artifactId>modia-felleskomponenter</artifactId>
                 <version>${project.version}</version>

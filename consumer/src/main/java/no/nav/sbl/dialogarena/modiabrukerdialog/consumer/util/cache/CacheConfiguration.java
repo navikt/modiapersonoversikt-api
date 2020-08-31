@@ -11,4 +11,5 @@ import org.springframework.context.annotation.ImportResource;
 @EnableAspectJAutoProxy
 @ImportResource("classpath*:*cacheconfig.xml")
 public class CacheConfiguration extends CacheConfig {
+
 }
