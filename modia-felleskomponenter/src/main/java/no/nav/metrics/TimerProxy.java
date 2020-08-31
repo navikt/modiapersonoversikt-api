@@ -28,7 +28,7 @@ public class TimerProxy implements InvocationHandler {
             return method.invoke(originalObject, objects);
         }
 
-        String timerName = name + "." + method.getName();
+        String timerName = name + "." + method.getName() + ".timer";
         Timer timer = new Timer(client, timerName, timing);
         timer.start();
         try {
