@@ -1,12 +1,12 @@
 package no.nav.kjerneinfo.consumer.fim.person.vergemal.domain;
 
 import no.nav.kjerneinfo.common.domain.Kodeverdi;
-import no.nav.kjerneinfo.domain.person.Personnavn;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.pdl.generated.HentNavnBolk;
 
 public class Verge {
 
     private String ident;
-    private Personnavn personnavn;
+    private HentNavnBolk.Navn personnavn;
     private Kodeverdi vergesakstype;
     private Kodeverdi mandattype;
     private String mandattekst;
@@ -23,12 +23,12 @@ public class Verge {
         return ident;
     }
 
-    public Verge withPersonnavn(Personnavn personnavn) {
+    public Verge withPersonnavn(HentNavnBolk.Navn personnavn) {
         this.personnavn = personnavn;
         return this;
     }
 
-    public Personnavn getPersonnavn() {
+    public HentNavnBolk.Navn getPersonnavn() {
         return personnavn;
     }
 

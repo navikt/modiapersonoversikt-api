@@ -1,15 +1,10 @@
 package no.nav.kjerneinfo.consumer.fim.person.vergemal;
 
-import no.nav.kjerneinfo.consumer.fim.person.support.DefaultPersonKjerneinfoService;
-import no.nav.kjerneinfo.consumer.fim.person.to.HentKjerneinformasjonRequest;
-import no.nav.kjerneinfo.consumer.fim.person.to.HentKjerneinformasjonResponse;
 import no.nav.kjerneinfo.consumer.fim.person.vergemal.domain.Verge;
-import no.nav.kjerneinfo.domain.person.Fodselsnummer;
-import no.nav.kjerneinfo.domain.person.Person;
-import no.nav.kjerneinfo.domain.person.Personfakta;
-import no.nav.kjerneinfo.domain.person.Personnavn;
 import no.nav.kodeverk.consumer.fim.kodeverk.KodeverkmanagerBi;
 import no.nav.kodeverk.consumer.fim.kodeverk.to.feil.HentKodeverkKodeverkIkkeFunnet;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.pdl.generated.HentNavnBolk;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.pdl.PdlOppslagService;
 import no.nav.tjeneste.virksomhet.person.v3.binding.HentVergePersonIkkeFunnet;
 import no.nav.tjeneste.virksomhet.person.v3.binding.HentVergeSikkerhetsbegrensning;
 import no.nav.tjeneste.virksomhet.person.v3.binding.PersonV3;
@@ -19,10 +14,11 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentCaptor;
 
+import java.util.HashMap;
 import java.util.List;
 
+import static java.util.Collections.emptyMap;
 import static no.nav.kjerneinfo.consumer.fim.person.vergemal.VergemalService.TPS_VERGES_FNR_MANGLENDE_DATA;
 import static no.nav.kodeverk.consumer.fim.kodeverk.support.DefaultKodeverkmanager.*;
 import static org.junit.jupiter.api.Assertions.*;
@@ -46,16 +42,16 @@ class VergemalServiceTest {
 
     private VergemalService vergemalService;
     private PersonV3 personV3Mock;
+    private PdlOppslagService pdl;
     private KodeverkmanagerBi kodeverkManger;
-    private DefaultPersonKjerneinfoService personServiceMock;
 
     @BeforeEach
     void beforeEach() {
         personV3Mock = mock(PersonV3.class);
-        personServiceMock = mock(DefaultPersonKjerneinfoService.class);
+        pdl = mock(PdlOppslagService.class);
         kodeverkManger = mockKodeverk();
 
-        vergemalService = new VergemalService(personV3Mock, personServiceMock, kodeverkManger);
+        vergemalService = new VergemalService(personV3Mock, pdl, kodeverkManger);
     }
 
     private KodeverkmanagerBi mockKodeverk() {
@@ -95,7 +91,7 @@ class VergemalServiceTest {
         @BeforeEach
         void beforeEach() throws HentVergeSikkerhetsbegrensning, HentVergePersonIkkeFunnet {
             when(personV3Mock.hentVerge(any())).thenReturn(mockResponsMedVerger());
-            when(personServiceMock.hentKjerneinformasjon(any())).thenReturn(mockPersoninformasjonForVerge());
+            when(pdl.hentNavnBolk(any())).thenReturn(mockPersonnavnForVerge());
         }
 
         @Test
@@ -105,7 +101,7 @@ class VergemalServiceTest {
             Verge verge = vergemal.get(0);
 
             assertEquals(VERGES_IDENT, verge.getIdent());
-            assertEquals(VERGES_NAVN, verge.getPersonnavn().getSammensattNavn());
+            assertEquals(VERGES_NAVN, verge.getPersonnavn().getFornavn());
         }
 
         @Test
@@ -125,39 +121,15 @@ class VergemalServiceTest {
                     () -> assertEquals(MANDATTYPE_DECODE, verge.getMandattype().getBeskrivelse()));
         }
 
-        @Test
-        @DisplayName("Vergemål har med begrunnelse i kall mot kjerneinfo by default.")
-        void medBegrunnelse() {
-            ArgumentCaptor<HentKjerneinformasjonRequest> argumentCaptor = ArgumentCaptor.forClass(HentKjerneinformasjonRequest.class);
-            when(personServiceMock.hentKjerneinformasjon(argumentCaptor.capture())).thenReturn(mockPersoninformasjonForVerge());
-
-            vergemalService.hentVergemal(VERGES_IDENT);
-            HentKjerneinformasjonRequest captured = argumentCaptor.getValue();
-
-            assertTrue(captured.isBegrunnet());
-        }
-
-
         private HentVergeResponse mockResponsMedVerger() {
             return new HentVergeResponse()
                     .withVergeListe(getVergeMock(VERGES_IDENT));
         }
 
-        private HentKjerneinformasjonResponse mockPersoninformasjonForVerge() {
-            Person person = new Person();
-            person.setPersonfakta(mockVergesPersonfakta());
-            person.setFodselsnummer(new Fodselsnummer(VERGES_IDENT));
-            HentKjerneinformasjonResponse hentKjerneinformasjonResponse = new HentKjerneinformasjonResponse();
-            hentKjerneinformasjonResponse.setPerson(person);
-            return hentKjerneinformasjonResponse;
-        }
-
-        private Personfakta mockVergesPersonfakta() {
-            Personfakta personfakta = new Personfakta();
-            Personnavn personnavn = new Personnavn();
-            personnavn.setSammensattNavn(VERGES_NAVN);
-            personfakta.setPersonnavn(personnavn);
-            return personfakta;
+        private HashMap<String, HentNavnBolk.Navn> mockPersonnavnForVerge() {
+            return new HashMap<String, HentNavnBolk.Navn>() {{
+                put(VERGES_IDENT, new HentNavnBolk.Navn(VERGES_NAVN, null, ""));
+            }};
         }
     }
 
@@ -169,8 +141,7 @@ class VergemalServiceTest {
         void beforeEach() throws HentVergeSikkerhetsbegrensning, HentVergePersonIkkeFunnet {
             when(personV3Mock.hentVerge(any())).thenReturn(new HentVergeResponse()
                     .withVergeListe(getVergeMock(TPS_VERGES_FNR_MANGLENDE_DATA)));
-            when(personServiceMock.hentKjerneinformasjon(any()))
-                    .thenThrow(new RuntimeException("TPS Ble kalt med ugyldig fødselsnummer"));
+            when(pdl.hentNavnBolk(any())).thenReturn(emptyMap());
 
         }
 

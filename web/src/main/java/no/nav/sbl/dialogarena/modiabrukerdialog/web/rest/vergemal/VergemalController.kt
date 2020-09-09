@@ -2,12 +2,12 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.vergemal
 
 import no.nav.kjerneinfo.consumer.fim.person.vergemal.VergemalService
 import no.nav.kjerneinfo.consumer.fim.person.vergemal.domain.Verge
-import no.nav.kjerneinfo.domain.person.Personnavn
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.pdl.generated.HentNavnBolk
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Policies
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Tilgangskontroll
-import no.nav.sbl.dialogarena.naudit.AuditResources
 import no.nav.sbl.dialogarena.naudit.Audit
 import no.nav.sbl.dialogarena.naudit.AuditIdentifier
+import no.nav.sbl.dialogarena.naudit.AuditResources
 import javax.inject.Inject
 import javax.ws.rs.GET
 import javax.ws.rs.Path
@@ -52,10 +52,11 @@ class VergemalController @Inject constructor(private val vergemalService: Vergem
         }
     }
 
-    private fun getNavn(personnavn: Personnavn): Map<String, String> {
+    private fun getNavn(personnavn: HentNavnBolk.Navn): Map<String, String> {
         return mapOf(
-                "sammensatt" to personnavn.sammensattNavn
+                "sammensatt" to with(personnavn) {
+                    listOfNotNull(fornavn, mellomnavn, etternavn).joinToString(" ")
+                }
         )
     }
-
 }
