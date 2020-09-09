@@ -150,8 +150,8 @@ internal class OppgaveControllerTest {
     fun `Returnerer oppgaver ved plukk`() {
         val httpRequest = HttpRequestUtil.mockHttpServletRequestMedCookie(SAKSBEHANDLERS_IDENT, VALGT_ENHET)
         val oppgaver = listOf(
-                Oppgave(OPPGAVE_ID_1, "fnr", "traadId"),
-                Oppgave(OPPGAVE_ID_2, "fnr", "traadId")
+                Oppgave(OPPGAVE_ID_1, "fnr", "traadId", true),
+                Oppgave(OPPGAVE_ID_2, "fnr", "traadId", true)
         )
 
         whenever(tildelOppgaveMock.tildelFlereOppgaver(any()))

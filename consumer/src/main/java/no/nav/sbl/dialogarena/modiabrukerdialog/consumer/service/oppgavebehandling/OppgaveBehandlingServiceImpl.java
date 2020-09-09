@@ -98,7 +98,12 @@ public class OppgaveBehandlingServiceImpl implements OppgaveBehandlingService {
     }
 
     private static Oppgave wsOppgaveToOppgave(WSOppgave wsOppgave) {
-        return new Oppgave(wsOppgave.getOppgaveId(), wsOppgave.getGjelder().getBrukerId(), wsOppgave.getHenvendelseId());
+        return new Oppgave(
+                wsOppgave.getOppgaveId(),
+                wsOppgave.getGjelder().getBrukerId(),
+                wsOppgave.getHenvendelseId(),
+                wsOppgave.getUnderkategori().getKode().endsWith("_KNA")
+        );
     }
 
     @Override
