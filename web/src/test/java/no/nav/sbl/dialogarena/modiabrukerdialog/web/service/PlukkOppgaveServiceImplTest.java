@@ -45,7 +45,7 @@ public class PlukkOppgaveServiceImplTest {
 
     @Test
     public void girOppgaveHvisSaksbehandlerHarTilgang() {
-        List<Oppgave> oppgaver = singletonList(new Oppgave("oppgaveId", "fnr", "behandlingskjedeId"));
+        List<Oppgave> oppgaver = singletonList(new Oppgave("oppgaveId", "fnr", "behandlingskjedeId", true));
 
         when(oppgaveBehandlingService.plukkOppgaverFraGsak(Temagruppe.FMLI, SAKSBEHANDLERS_VALGTE_ENHET)).thenReturn(oppgaver);
         when(tilgangskontrollContext.checkAbac(any(AbacRequest.class))).thenReturn(
@@ -58,8 +58,8 @@ public class PlukkOppgaveServiceImplTest {
 
     @Test
     public void leggerTilbakeOppgaveOgPlukkerNyHvisSaksbehandlerIkkeHarTilgang() {
-        List<Oppgave> oppgave1 = singletonList(new Oppgave("1", "fnr1", "1"));
-        List<Oppgave> oppgave2 = singletonList(new Oppgave("2", "fnr2", "2"));
+        List<Oppgave> oppgave1 = singletonList(new Oppgave("1", "fnr1", "1", true));
+        List<Oppgave> oppgave2 = singletonList(new Oppgave("2", "fnr2", "2", true));
 
         when(oppgaveBehandlingService.plukkOppgaverFraGsak(Temagruppe.FMLI, SAKSBEHANDLERS_VALGTE_ENHET)).thenReturn(oppgave1, oppgave2);
         when(tilgangskontrollContext.checkAbac(any(AbacRequest.class))).thenReturn(
