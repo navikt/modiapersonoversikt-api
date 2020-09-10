@@ -191,8 +191,12 @@ public class ServiceConfig {
     }
 
     @Bean
-    public VergemalService vergemalService(PersonV3 personPortType, PersonKjerneinfoServiceBi personKjerneinfoServiceBi, KodeverkmanagerBi kodeverkmanagerBi) {
-        return new VergemalService(personPortType, personKjerneinfoServiceBi, kodeverkmanagerBi);
+    public VergemalService vergemalService(
+            PersonV3 personPortType,
+            PdlOppslagService pdl,
+            KodeverkmanagerBi kodeverkmanagerBi
+    ) {
+        return new VergemalService(personPortType, pdl, kodeverkmanagerBi);
     }
 
     @Bean
