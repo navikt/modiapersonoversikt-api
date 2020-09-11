@@ -6,7 +6,7 @@ import com.nhaarman.mockitokotlin2.whenever
 import no.nav.kjerneinfo.consumer.fim.person.vergemal.VergemalService
 import no.nav.kjerneinfo.consumer.fim.person.vergemal.domain.Periode
 import no.nav.kjerneinfo.consumer.fim.person.vergemal.domain.Verge
-import no.nav.kjerneinfo.domain.person.Personnavn
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.pdl.generated.HentNavnBolk
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.TilgangskontrollMock
 import org.junit.jupiter.api.Test
 import java.util.*
@@ -29,7 +29,7 @@ class VergemalControllerTest {
         whenever(vergemalService.hentVergemal(any())).thenReturn(Arrays.asList(Verge()
                 .withIdent(VERGES_IDENT)
                 .withVirkningsperiode(Periode(null, null))
-                .withPersonnavn(Personnavn())))
+                .withPersonnavn(HentNavnBolk.Navn("", null, ""))))
 
         val response = controller.hent(FNR)
 
