@@ -34,10 +34,8 @@ import no.nav.tjeneste.virksomhet.tildeloppgave.v1.WSTildelFlereOppgaverRequest;
 import no.nav.tjeneste.virksomhet.tildeloppgave.v1.WSTildelFlereOppgaverResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Captor;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
+import org.mockito.*;
+
 import java.util.Arrays;
 import java.util.List;
 
@@ -77,6 +75,11 @@ public class OppgaveBehandlingServiceImplTest {
     @Mock
     private TildelOppgaveV1 tildelOppgaveWS;
 
+    // Kan ikke bruke `@Mock` siden vi er avhengig av at verdien er definert ved opprettelsen av `Tilgangskontroll`
+    private TilgangskontrollContext tilgangskontrollContext = mock(TilgangskontrollContext.class);
+    @Spy
+    private Tilgangskontroll tilgangskontroll = new Tilgangskontroll(tilgangskontrollContext);
+
 
 
     @InjectMocks
@@ -84,8 +87,6 @@ public class OppgaveBehandlingServiceImplTest {
 
     private static final String OPPGAVE_ID_1 = "123";
     private static final String OPPGAVE_ID_2 = "456";
-    private TilgangskontrollContext tilgangskontrollContext = mock(TilgangskontrollContext.class);
-    private Tilgangskontroll tilgangskontroll = new Tilgangskontroll(tilgangskontrollContext);
 
     @BeforeEach
     public void init() {
@@ -204,7 +205,7 @@ public class OppgaveBehandlingServiceImplTest {
         when(oppgaveWS.hentOppgave(any(WSHentOppgaveRequest.class))).thenReturn(mockHentOppgaveResponseMedTilordning());
 
         List<Oppgave> resultat = SubjectHandlerUtil.withIdent("Z999999", () -> oppgaveBehandlingService.finnTildelteOppgaverIGsak());
-        
+
 
         when(tilgangskontrollContext.checkAbac(any(AbacRequest.class))).thenReturn(
                 new AbacResponse(singletonList(new Response(Decision.Permit,emptyList())))
