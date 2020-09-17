@@ -8,11 +8,13 @@ import com.nhaarman.mockitokotlin2.*
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Oppgave
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.HenvendelseUtsendingService
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.arbeidsfordeling.ArbeidsfordelingV1Service
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.ldap.LDAPService
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.http.HttpRequestUtil
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.http.SubjectHandlerUtil
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.AnsattServiceImpl
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.oppgavebehandling.OppgaveBehandlingServiceImpl
+import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.TilgangskontrollMock
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.service.plukkoppgave.PlukkOppgaveService
 import no.nav.sbl.util.fn.UnsafeSupplier
 import no.nav.tjeneste.virksomhet.oppgave.v3.OppgaveV3
@@ -40,6 +42,7 @@ internal class OppgaveControllerTest {
     private val tildelOppgaveMock: TildelOppgaveV1 = mock()
     private val oppgaveWSMock: OppgaveV3 = mockOppgaveWs()
     private val ansattWSMock: AnsattServiceImpl = AnsattServiceImpl(mockGosysNavAnsatt())
+    private val arbeidsfordelingV1Service: ArbeidsfordelingV1Service = mock()
     private val plukkOppgaveService: PlukkOppgaveService = mock()
     private val ldapService: LDAPService = mock()
     private val henvendelseUtsendingService: HenvendelseUtsendingService = mock()
@@ -49,12 +52,13 @@ internal class OppgaveControllerTest {
                     tildelOppgaveMock,
                     oppgaveWSMock,
                     ansattWSMock,
-                    mock()
+                    arbeidsfordelingV1Service,
+                    TilgangskontrollMock.get()
             ),
             plukkOppgaveService,
             ldapService,
             henvendelseUtsendingService,
-
+            TilgangskontrollMock.get()
     )
 
     @BeforeEach
