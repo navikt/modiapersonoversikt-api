@@ -2,14 +2,22 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.oppgavebehandl
 
 import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navansatt.HentNAVAnsattFaultGOSYSGeneriskfMsg;
 import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navansatt.HentNAVAnsattFaultGOSYSNAVAnsattIkkeFunnetMsg;
+import no.nav.sbl.dialogarena.abac.AbacRequest;
+import no.nav.sbl.dialogarena.abac.AbacResponse;
+import no.nav.sbl.dialogarena.abac.Decision;
+import no.nav.sbl.dialogarena.abac.Response;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Oppgave;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveBehandlingService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.AnsattService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.http.SubjectHandlerUtil;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.Collections;
+import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Policies;
+import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Tilgangskontroll;
+import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.TilgangskontrollContext;
+import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.TilgangskontrollMock;
 import no.nav.tjeneste.virksomhet.oppgave.v3.HentOppgaveOppgaveIkkeFunnet;
 import no.nav.tjeneste.virksomhet.oppgave.v3.OppgaveV3;
+import no.nav.tjeneste.virksomhet.oppgave.v3.informasjon.oppgave.WSBruker;
 import no.nav.tjeneste.virksomhet.oppgave.v3.informasjon.oppgave.WSOppgave;
 import no.nav.tjeneste.virksomhet.oppgave.v3.meldinger.WSFinnOppgaveListeRequest;
 import no.nav.tjeneste.virksomhet.oppgave.v3.meldinger.WSFinnOppgaveListeResponse;
@@ -30,10 +38,11 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-
 import java.util.Arrays;
 import java.util.List;
 
+import static java.util.Collections.emptyList;
+import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toSet;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.oppgavebehandling.OppgaveBehandlingServiceImpl.DEFAULT_ENHET;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.oppgavebehandling.OppgaveMockFactory.lagWSOppgave;
@@ -68,11 +77,15 @@ public class OppgaveBehandlingServiceImplTest {
     @Mock
     private TildelOppgaveV1 tildelOppgaveWS;
 
+
+
     @InjectMocks
     private OppgaveBehandlingServiceImpl oppgaveBehandlingService;
 
     private static final String OPPGAVE_ID_1 = "123";
     private static final String OPPGAVE_ID_2 = "456";
+    private TilgangskontrollContext tilgangskontrollContext = mock(TilgangskontrollContext.class);
+    private Tilgangskontroll tilgangskontroll = new Tilgangskontroll(tilgangskontrollContext);
 
     @BeforeEach
     public void init() {
@@ -179,19 +192,44 @@ public class OppgaveBehandlingServiceImplTest {
     }
 
     @Test
-    void skalFinneTilordnaOppgaver() {
+    void skalFinneTilordnaOppgaver() throws HentOppgaveOppgaveIkkeFunnet {
         List<WSOppgave> oppgaveliste = Arrays.asList(
-                lagWSOppgave().withOppgaveId("1"),
-                lagWSOppgave().withOppgaveId("2")
+                lagWSOppgave().withOppgaveId("1").withGjelder( new WSBruker().withBrukerId("10108000398")),
+                lagWSOppgave().withOppgaveId("2").withGjelder( new WSBruker().withBrukerId("10108000398"))
         );
         when(oppgaveWS.finnOppgaveListe(any(WSFinnOppgaveListeRequest.class)))
                 .thenReturn(new WSFinnOppgaveListeResponse()
                         .withOppgaveListe(oppgaveliste)
                         .withTotaltAntallTreff(oppgaveliste.size()));
+        when(oppgaveWS.hentOppgave(any(WSHentOppgaveRequest.class))).thenReturn(mockHentOppgaveResponseMedTilordning());
 
         List<Oppgave> resultat = SubjectHandlerUtil.withIdent("Z999999", () -> oppgaveBehandlingService.finnTildelteOppgaverIGsak());
+        
 
+        when(tilgangskontrollContext.checkAbac(any(AbacRequest.class))).thenReturn(
+                new AbacResponse(singletonList(new Response(Decision.Permit,emptyList())))
+        );
         assertThat(resultat.size(), is(oppgaveliste.size()));
+        assertThat(resultat.get(0).oppgaveId, is(oppgaveliste.get(0).getOppgaveId()));
+        assertThat(resultat.get(1).oppgaveId, is(oppgaveliste.get(1).getOppgaveId()));
+    }
+    @Test
+    void skalLeggeTilbakeTilordnetOppgaveUtenTilgang() throws HentOppgaveOppgaveIkkeFunnet {
+        List<WSOppgave> oppgaveliste = Arrays.asList(
+                lagWSOppgave().withOppgaveId("1").withGjelder( new WSBruker().withBrukerId("10108000398")),
+                lagWSOppgave().withOppgaveId("2").withGjelder( new WSBruker().withBrukerId("10108000398"))
+        );
+        when(oppgaveWS.finnOppgaveListe(any(WSFinnOppgaveListeRequest.class)))
+                .thenReturn(new WSFinnOppgaveListeResponse()
+                        .withOppgaveListe(oppgaveliste)
+                        .withTotaltAntallTreff(oppgaveliste.size()));
+        when(oppgaveWS.hentOppgave(any(WSHentOppgaveRequest.class))).thenReturn(mockHentOppgaveResponseMedTilordning());
+
+        List<Oppgave> resultat = SubjectHandlerUtil.withIdent("Z999999", () -> oppgaveBehandlingService.finnTildelteOppgaverIGsak());
+        when(tilgangskontrollContext.checkAbac(any(AbacRequest.class))).thenReturn(
+                new AbacResponse(singletonList(new Response(Decision.Deny,emptyList())))
+        );
+                assertThat(resultat.size(), is(oppgaveliste.size()));
         assertThat(resultat.get(0).oppgaveId, is(oppgaveliste.get(0).getOppgaveId()));
         assertThat(resultat.get(1).oppgaveId, is(oppgaveliste.get(1).getOppgaveId()));
     }

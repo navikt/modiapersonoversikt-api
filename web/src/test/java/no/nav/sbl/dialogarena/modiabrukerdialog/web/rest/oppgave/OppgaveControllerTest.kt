@@ -13,7 +13,6 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.http.HttpRequestUtil
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.http.SubjectHandlerUtil
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.AnsattServiceImpl
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.oppgavebehandling.OppgaveBehandlingServiceImpl
-import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.TilgangskontrollMock
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.service.plukkoppgave.PlukkOppgaveService
 import no.nav.sbl.util.fn.UnsafeSupplier
 import no.nav.tjeneste.virksomhet.oppgave.v3.OppgaveV3
@@ -55,7 +54,7 @@ internal class OppgaveControllerTest {
             plukkOppgaveService,
             ldapService,
             henvendelseUtsendingService,
-            TilgangskontrollMock.get()
+
     )
 
     @BeforeEach
@@ -172,7 +171,7 @@ internal class OppgaveControllerTest {
     fun `Returnerer tildelt oppgave hvis saksbehandler allerede har en tildelt oppgave ved plukk`() {
         val httpRequest = HttpRequestUtil.mockHttpServletRequestMedCookie(SAKSBEHANDLERS_IDENT, VALGT_ENHET)
 
-        val oppgaveliste = listOf(lagWSOppgave().withOppgaveId(OPPGAVE_ID_1), lagWSOppgave().withOppgaveId("2"))
+        val oppgaveliste = listOf(lagWSOppgave().withOppgaveId(OPPGAVE_ID_1), lagWSOppgave().withOppgaveId("2").withGjelder(WSBruker().withBrukerId("1234")))
 
         whenever(oppgaveWSMock.finnOppgaveListe(any()))
                 .thenReturn(WSFinnOppgaveListeResponse()
@@ -230,6 +229,7 @@ internal class OppgaveControllerTest {
                 .withUnderkategori(WSUnderkategori().withKode("ARBEID_HJE"))
                 .withLest(false)
                 .withVersjon(1)
+
     }
 
 }
