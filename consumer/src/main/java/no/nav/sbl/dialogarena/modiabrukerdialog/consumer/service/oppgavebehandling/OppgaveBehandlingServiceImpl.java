@@ -187,7 +187,7 @@ public class OppgaveBehandlingServiceImpl implements OppgaveBehandlingService {
     public void systemLeggTilbakeOppgaveIGsak(String oppgaveId, Temagruppe temagruppe, String saksbehandlersValgteEnhet) {
         try {
             WSOppgave wsOppgave = hentOppgaveFraGsak(oppgaveId).withAnsvarligId("");
-            lagreOppgaveIGsak(wsOppgave, temagruppe, saksbehandlersValgteEnhet);
+            lagreOppgaveIGsak(wsOppgave, ofNullable(temagruppe), saksbehandlersValgteEnhet);
         } catch (LagreOppgaveOptimistiskLasing lagreOppgaveOptimistiskLasing) {
             throw new RuntimeException("Oppgaven kunne ikke lagres, den er for øyeblikket låst av en annen bruker.", lagreOppgaveOptimistiskLasing);
         }
