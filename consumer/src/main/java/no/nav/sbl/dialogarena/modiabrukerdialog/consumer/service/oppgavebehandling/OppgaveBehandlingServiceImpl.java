@@ -24,6 +24,7 @@ import no.nav.tjeneste.virksomhet.tildeloppgave.v1.WSTildelFlereOppgaverRequest;
 import no.nav.tjeneste.virksomhet.tildeloppgave.v1.WSTildelFlereOppgaverResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import javax.inject.Inject;
 import java.util.List;
 import java.util.Objects;
@@ -91,19 +92,19 @@ public class OppgaveBehandlingServiceImpl implements OppgaveBehandlingService {
                 .map(OppgaveBehandlingServiceImpl::wsOppgaveToOppgave)
                 .collect(toList()));
     }
+
     private List<Oppgave> validerTilgangTilbruker(List<Oppgave> oppgaveList) {
-        if(oppgaveList.isEmpty()) {
+        if (oppgaveList.isEmpty()) {
             return emptyList();
-        }
-        else if(tilgangskontroll
-                        .check(Policies.tilgangTilBruker.with(oppgaveList.get(0).fnr))
-                        .getDecision()
-                        .isPermit()) {
+        } else if (tilgangskontroll
+                .check(Policies.tilgangTilBruker.with(oppgaveList.get(0).fnr))
+                .getDecision()
+                .isPermit()) {
             return oppgaveList;
-    }
+        }
         oppgaveList.forEach((enkeltoppgave) -> systemLeggTilbakeOppgaveIGsak(enkeltoppgave.oppgaveId, null, "4100"));
         return emptyList();
-        } 
+    }
 
     @Override
     public List<Oppgave> plukkOppgaverFraGsak(Temagruppe temagruppe, String saksbehandlersValgteEnhet) {
