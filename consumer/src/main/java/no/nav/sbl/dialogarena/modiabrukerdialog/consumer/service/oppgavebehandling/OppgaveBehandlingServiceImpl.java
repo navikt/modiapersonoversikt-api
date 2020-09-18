@@ -24,7 +24,6 @@ import no.nav.tjeneste.virksomhet.tildeloppgave.v1.WSTildelFlereOppgaverRequest;
 import no.nav.tjeneste.virksomhet.tildeloppgave.v1.WSTildelFlereOppgaverResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import javax.inject.Inject;
 import java.util.List;
 import java.util.Objects;
@@ -33,7 +32,6 @@ import java.util.Optional;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
-import static java.util.Optional.empty;
 import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.toList;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe.*;
@@ -140,7 +138,6 @@ public class OppgaveBehandlingServiceImpl implements OppgaveBehandlingService {
         } catch (Exception e) {
             logger.error("Kunne ikke ferdigstille Gsak oppgave i Modia med oppgaveId " + oppgaveId, e);
             throw e;
-
         }
     }
 
@@ -182,7 +179,6 @@ public class OppgaveBehandlingServiceImpl implements OppgaveBehandlingService {
         if (request.getOppgaveId() == null || request.getBeskrivelse() == null) {
             return;
         }
-
         WSOppgave oppgaveFraGsak = hentOppgaveFraGsak(request.getOppgaveId());
         leggTilbakeOppgaveIGsakDelegate.leggTilbake(oppgaveFraGsak, request);
     }

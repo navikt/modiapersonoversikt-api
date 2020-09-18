@@ -32,7 +32,6 @@ import no.nav.tjeneste.virksomhet.tildeloppgave.v1.WSTildelFlereOppgaverResponse
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.*;
-
 import java.util.Arrays;
 import java.util.List;
 
@@ -76,8 +75,6 @@ public class OppgaveBehandlingServiceImplTest {
     private final TilgangskontrollContext tilgangskontrollContext = mock(TilgangskontrollContext.class);
     @Spy
     private final Tilgangskontroll tilgangskontroll = new Tilgangskontroll(tilgangskontrollContext);
-
-
 
     @InjectMocks
     private OppgaveBehandlingServiceImpl oppgaveBehandlingService;
@@ -207,7 +204,6 @@ public class OppgaveBehandlingServiceImplTest {
 
         List<Oppgave> resultat = SubjectHandlerUtil.withIdent("Z999999", () -> oppgaveBehandlingService.finnTildelteOppgaverIGsak());
 
-
         assertThat(resultat.size(), is(oppgaveliste.size()));
         assertThat(resultat.get(0).oppgaveId, is(oppgaveliste.get(0).getOppgaveId()));
         assertThat(resultat.get(1).oppgaveId, is(oppgaveliste.get(1).getOppgaveId()));
@@ -229,10 +225,7 @@ public class OppgaveBehandlingServiceImplTest {
 
         List<Oppgave> resultat = SubjectHandlerUtil.withIdent("Z999999", () -> oppgaveBehandlingService.finnTildelteOppgaverIGsak());
 
-
                 assertThat(resultat.size(), is(0));
-        //assertThat(resultat.get(0).oppgaveId, is(oppgaveliste.get(0).getOppgaveId()));
-        //assertThat(resultat.get(1).oppgaveId, is(oppgaveliste.get(1).getOppgaveId()));
     }
 
 }
