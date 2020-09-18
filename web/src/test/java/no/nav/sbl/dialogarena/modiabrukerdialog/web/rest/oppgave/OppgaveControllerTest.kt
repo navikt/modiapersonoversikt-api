@@ -8,6 +8,7 @@ import com.nhaarman.mockitokotlin2.*
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Oppgave
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.HenvendelseUtsendingService
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.arbeidsfordeling.ArbeidsfordelingV1Service
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.ldap.LDAPService
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.http.HttpRequestUtil
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.http.SubjectHandlerUtil
@@ -41,6 +42,7 @@ internal class OppgaveControllerTest {
     private val tildelOppgaveMock: TildelOppgaveV1 = mock()
     private val oppgaveWSMock: OppgaveV3 = mockOppgaveWs()
     private val ansattWSMock: AnsattServiceImpl = AnsattServiceImpl(mockGosysNavAnsatt())
+    private val arbeidsfordelingV1Service: ArbeidsfordelingV1Service = mock()
     private val plukkOppgaveService: PlukkOppgaveService = mock()
     private val ldapService: LDAPService = mock()
     private val henvendelseUtsendingService: HenvendelseUtsendingService = mock()
@@ -50,7 +52,8 @@ internal class OppgaveControllerTest {
                     tildelOppgaveMock,
                     oppgaveWSMock,
                     ansattWSMock,
-                    mock()
+                    arbeidsfordelingV1Service,
+                    TilgangskontrollMock.get()
             ),
             plukkOppgaveService,
             ldapService,
@@ -172,7 +175,7 @@ internal class OppgaveControllerTest {
     fun `Returnerer tildelt oppgave hvis saksbehandler allerede har en tildelt oppgave ved plukk`() {
         val httpRequest = HttpRequestUtil.mockHttpServletRequestMedCookie(SAKSBEHANDLERS_IDENT, VALGT_ENHET)
 
-        val oppgaveliste = listOf(lagWSOppgave().withOppgaveId(OPPGAVE_ID_1), lagWSOppgave().withOppgaveId("2"))
+        val oppgaveliste = listOf(lagWSOppgave().withOppgaveId(OPPGAVE_ID_1), lagWSOppgave().withOppgaveId("2").withGjelder(WSBruker().withBrukerId("1234")))
 
         whenever(oppgaveWSMock.finnOppgaveListe(any()))
                 .thenReturn(WSFinnOppgaveListeResponse()
@@ -230,6 +233,7 @@ internal class OppgaveControllerTest {
                 .withUnderkategori(WSUnderkategori().withKode("ARBEID_HJE"))
                 .withLest(false)
                 .withVersjon(1)
+
     }
 
 }
