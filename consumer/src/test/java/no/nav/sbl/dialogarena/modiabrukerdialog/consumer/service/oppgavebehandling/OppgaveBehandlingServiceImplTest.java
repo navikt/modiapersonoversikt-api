@@ -201,13 +201,13 @@ public class OppgaveBehandlingServiceImplTest {
                         .withTotaltAntallTreff(oppgaveliste.size()));
 
         when(oppgaveWS.hentOppgave(any(WSHentOppgaveRequest.class))).thenReturn(mockHentOppgaveResponseMedTilordning());
+        when(tilgangskontrollContext.checkAbac(any(AbacRequest.class))).thenReturn(
+                new AbacResponse(singletonList(new Response(Decision.Permit,emptyList())))
+        );
 
         List<Oppgave> resultat = SubjectHandlerUtil.withIdent("Z999999", () -> oppgaveBehandlingService.finnTildelteOppgaverIGsak());
 
 
-        when(tilgangskontrollContext.checkAbac(any(AbacRequest.class))).thenReturn(
-                new AbacResponse(singletonList(new Response(Decision.Permit,emptyList())))
-        );
         assertThat(resultat.size(), is(oppgaveliste.size()));
         assertThat(resultat.get(0).oppgaveId, is(oppgaveliste.get(0).getOppgaveId()));
         assertThat(resultat.get(1).oppgaveId, is(oppgaveliste.get(1).getOppgaveId()));
