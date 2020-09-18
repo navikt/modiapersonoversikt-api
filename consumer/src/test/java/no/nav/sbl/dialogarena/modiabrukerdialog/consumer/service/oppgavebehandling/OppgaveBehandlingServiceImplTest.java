@@ -8,13 +8,10 @@ import no.nav.sbl.dialogarena.abac.Decision;
 import no.nav.sbl.dialogarena.abac.Response;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Oppgave;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveBehandlingService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.AnsattService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.http.SubjectHandlerUtil;
-import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Policies;
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Tilgangskontroll;
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.TilgangskontrollContext;
-import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.TilgangskontrollMock;
 import no.nav.tjeneste.virksomhet.oppgave.v3.HentOppgaveOppgaveIkkeFunnet;
 import no.nav.tjeneste.virksomhet.oppgave.v3.OppgaveV3;
 import no.nav.tjeneste.virksomhet.oppgave.v3.informasjon.oppgave.WSBruker;
@@ -76,9 +73,9 @@ public class OppgaveBehandlingServiceImplTest {
     private TildelOppgaveV1 tildelOppgaveWS;
 
     // Kan ikke bruke `@Mock` siden vi er avhengig av at verdien er definert ved opprettelsen av `Tilgangskontroll`
-    private TilgangskontrollContext tilgangskontrollContext = mock(TilgangskontrollContext.class);
+    private final TilgangskontrollContext tilgangskontrollContext = mock(TilgangskontrollContext.class);
     @Spy
-    private Tilgangskontroll tilgangskontroll = new Tilgangskontroll(tilgangskontrollContext);
+    private final Tilgangskontroll tilgangskontroll = new Tilgangskontroll(tilgangskontrollContext);
 
 
 
@@ -94,7 +91,7 @@ public class OppgaveBehandlingServiceImplTest {
     }
 
     @Test
-    public void skalHenteSporsmaalOgTilordneIGsak() throws HentOppgaveOppgaveIkkeFunnet, LagreOppgaveOppgaveIkkeFunnet, LagreOppgaveOptimistiskLasing, OppgaveBehandlingService.FikkIkkeTilordnet {
+    public void skalHenteSporsmaalOgTilordneIGsak() throws HentOppgaveOppgaveIkkeFunnet, LagreOppgaveOppgaveIkkeFunnet, LagreOppgaveOptimistiskLasing{
         when(oppgaveWS.hentOppgave(any(WSHentOppgaveRequest.class))).thenReturn(mockHentOppgaveResponse());
 
         SubjectHandlerUtil.withIdent("Z999999", () ->
@@ -202,6 +199,7 @@ public class OppgaveBehandlingServiceImplTest {
                 .thenReturn(new WSFinnOppgaveListeResponse()
                         .withOppgaveListe(oppgaveliste)
                         .withTotaltAntallTreff(oppgaveliste.size()));
+
         when(oppgaveWS.hentOppgave(any(WSHentOppgaveRequest.class))).thenReturn(mockHentOppgaveResponseMedTilordning());
 
         List<Oppgave> resultat = SubjectHandlerUtil.withIdent("Z999999", () -> oppgaveBehandlingService.finnTildelteOppgaverIGsak());
@@ -220,6 +218,9 @@ public class OppgaveBehandlingServiceImplTest {
                 lagWSOppgave().withOppgaveId("1").withGjelder( new WSBruker().withBrukerId("10108000398")),
                 lagWSOppgave().withOppgaveId("2").withGjelder( new WSBruker().withBrukerId("10108000398"))
         );
+        when(tilgangskontrollContext.checkAbac(any(AbacRequest.class))).thenReturn(
+                new AbacResponse(singletonList(new Response(Decision.Deny,emptyList())))
+        );
         when(oppgaveWS.finnOppgaveListe(any(WSFinnOppgaveListeRequest.class)))
                 .thenReturn(new WSFinnOppgaveListeResponse()
                         .withOppgaveListe(oppgaveliste)
@@ -227,12 +228,11 @@ public class OppgaveBehandlingServiceImplTest {
         when(oppgaveWS.hentOppgave(any(WSHentOppgaveRequest.class))).thenReturn(mockHentOppgaveResponseMedTilordning());
 
         List<Oppgave> resultat = SubjectHandlerUtil.withIdent("Z999999", () -> oppgaveBehandlingService.finnTildelteOppgaverIGsak());
-        when(tilgangskontrollContext.checkAbac(any(AbacRequest.class))).thenReturn(
-                new AbacResponse(singletonList(new Response(Decision.Deny,emptyList())))
-        );
-                assertThat(resultat.size(), is(oppgaveliste.size()));
-        assertThat(resultat.get(0).oppgaveId, is(oppgaveliste.get(0).getOppgaveId()));
-        assertThat(resultat.get(1).oppgaveId, is(oppgaveliste.get(1).getOppgaveId()));
+
+
+                assertThat(resultat.size(), is(0));
+        //assertThat(resultat.get(0).oppgaveId, is(oppgaveliste.get(0).getOppgaveId()));
+        //assertThat(resultat.get(1).oppgaveId, is(oppgaveliste.get(1).getOppgaveId()));
     }
 
 }

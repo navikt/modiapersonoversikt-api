@@ -104,7 +104,7 @@ public class OppgaveBehandlingServiceImpl implements OppgaveBehandlingService {
             return oppgaveList;
     }
         oppgaveList.forEach((enkeltoppgave) -> systemLeggTilbakeOppgaveIGsak(enkeltoppgave.oppgaveId, null, "4100"));
-        return oppgaveList;
+        return emptyList();
         } 
 
     @Override

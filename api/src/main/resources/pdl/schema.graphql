@@ -76,6 +76,7 @@ type Person {
     innflyttingTilNorge: [InnflyttingTilNorge!]!
     utflyttingFraNorge: [UtflyttingFraNorge!]!
     vergemaalEllerFremtidsfullmakt(historikk: Boolean = false): [VergemaalEllerFremtidsfullmakt!]!
+    geografiskTilknytning: GeografiskTilknytning
 }
 
 type DeltBosted {
@@ -111,7 +112,8 @@ type Bostedsadresse {
 
 type Oppholdsadresse {
     gyldigFraOgMed: DateTime
-    oppholdsadressedato: Date
+    gyldigTilOgMed: DateTime
+    oppholdsadressedato: Date @deprecated(reason: "Mappes til gyldigFraOgMed. Dette feltet er nå overflødig vil bli fjernet")
 
     coAdressenavn: String
     utenlandskAdresse: UtenlandskAdresse
@@ -151,6 +153,7 @@ type Vegadresse {
     bruksenhetsnummer: String
     adressenavn: String
     kommunenummer: String
+    bydelsnummer: String
     tilleggsnavn: String
     postnummer: String
     koordinater: Koordinater
@@ -337,6 +340,21 @@ type Folkeregisterpersonstatus {
     forenkletStatus: String!
     folkeregistermetadata: Folkeregistermetadata!
     metadata: Metadata!
+}
+
+type GeografiskTilknytning {
+    gtType: GtType!
+    gtKommune: String
+    gtBydel: String
+    gtLand: String
+    metadata: Metadata!
+}
+
+enum GtType {
+    KOMMUNE,
+    BYDEL,
+    UTLAND,
+    UDEFINERT
 }
 
 type Navn {
