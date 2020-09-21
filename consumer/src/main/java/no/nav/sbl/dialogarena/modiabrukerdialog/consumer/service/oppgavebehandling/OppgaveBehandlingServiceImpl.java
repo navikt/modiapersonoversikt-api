@@ -7,6 +7,8 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.LeggTilbakeOppgaveIG
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveBehandlingService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.arbeidsfordeling.ArbeidsfordelingV1Service;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.AnsattService;
+import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Policies;
+import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Tilgangskontroll;
 import no.nav.tjeneste.virksomhet.oppgave.v3.HentOppgaveOppgaveIkkeFunnet;
 import no.nav.tjeneste.virksomhet.oppgave.v3.OppgaveV3;
 import no.nav.tjeneste.virksomhet.oppgave.v3.informasjon.oppgave.WSOppgave;
@@ -53,17 +55,20 @@ public class OppgaveBehandlingServiceImpl implements OppgaveBehandlingService {
     private final OppgaveV3 oppgaveWS;
     private final AnsattService ansattWS;
     private LeggTilbakeOppgaveIGsakDelegate leggTilbakeOppgaveIGsakDelegate;
+    private final Tilgangskontroll tilgangskontroll;
 
     @Autowired
     public OppgaveBehandlingServiceImpl(OppgavebehandlingV3 oppgavebehandlingWS,
                                         TildelOppgaveV1 tildelOppgaveWS,
                                         OppgaveV3 oppgaveWS,
                                         AnsattService ansattWS,
-                                        ArbeidsfordelingV1Service arbeidsfordelingService) {
+                                        ArbeidsfordelingV1Service arbeidsfordelingService,
+                                        Tilgangskontroll tilgangskontroll) {
         this.oppgavebehandlingWS = oppgavebehandlingWS;
         this.tildelOppgaveWS = tildelOppgaveWS;
         this.oppgaveWS = oppgaveWS;
         this.ansattWS = ansattWS;
+        this.tilgangskontroll = tilgangskontroll;
         this.leggTilbakeOppgaveIGsakDelegate = new LeggTilbakeOppgaveIGsakDelegate(this, arbeidsfordelingService);
     }
 
@@ -75,7 +80,7 @@ public class OppgaveBehandlingServiceImpl implements OppgaveBehandlingService {
     @Override
     public List<Oppgave> finnTildelteOppgaverIGsak() {
         String ident = SubjectHandler.getIdent().orElseThrow(() -> new RuntimeException("Fant ikke ident"));
-        return oppgaveWS
+        return validerTilgangTilbruker(oppgaveWS
                 .finnOppgaveListe(new WSFinnOppgaveListeRequest()
                         .withSok(new WSFinnOppgaveListeSok()
                                 .withAnsvarligId(ident)
@@ -85,7 +90,20 @@ public class OppgaveBehandlingServiceImpl implements OppgaveBehandlingService {
                                 .withOppgavetypeKodeListe(SPORSMAL_OG_SVAR)))
                 .getOppgaveListe().stream()
                 .map(OppgaveBehandlingServiceImpl::wsOppgaveToOppgave)
-                .collect(toList());
+                .collect(toList()));
+    }
+
+    private List<Oppgave> validerTilgangTilbruker(List<Oppgave> oppgaveList) {
+        if (oppgaveList.isEmpty()) {
+            return emptyList();
+        } else if (tilgangskontroll
+                .check(Policies.tilgangTilBruker.with(oppgaveList.get(0).fnr))
+                .getDecision()
+                .isPermit()) {
+            return oppgaveList;
+        }
+        oppgaveList.forEach((enkeltoppgave) -> systemLeggTilbakeOppgaveIGsak(enkeltoppgave.oppgaveId, null, "4100"));
+        return emptyList();
     }
 
     @Override
@@ -97,7 +115,12 @@ public class OppgaveBehandlingServiceImpl implements OppgaveBehandlingService {
     }
 
     private static Oppgave wsOppgaveToOppgave(WSOppgave wsOppgave) {
-        return new Oppgave(wsOppgave.getOppgaveId(), wsOppgave.getGjelder().getBrukerId(), wsOppgave.getHenvendelseId());
+        return new Oppgave(
+                wsOppgave.getOppgaveId(),
+                wsOppgave.getGjelder().getBrukerId(),
+                wsOppgave.getHenvendelseId(),
+                wsOppgave.getUnderkategori().getKode().endsWith("_KNA")
+        );
     }
 
     @Override
@@ -121,7 +144,6 @@ public class OppgaveBehandlingServiceImpl implements OppgaveBehandlingService {
         } catch (Exception e) {
             logger.error("Kunne ikke ferdigstille Gsak oppgave i Modia med oppgaveId " + oppgaveId, e);
             throw e;
-
         }
     }
 
@@ -163,7 +185,6 @@ public class OppgaveBehandlingServiceImpl implements OppgaveBehandlingService {
         if (request.getOppgaveId() == null || request.getBeskrivelse() == null) {
             return;
         }
-
         WSOppgave oppgaveFraGsak = hentOppgaveFraGsak(request.getOppgaveId());
         leggTilbakeOppgaveIGsakDelegate.leggTilbake(oppgaveFraGsak, request);
     }

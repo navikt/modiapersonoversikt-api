@@ -135,8 +135,9 @@ public class ServiceConfig {
                                                              TildelOppgaveV1 tildelOppgaveV1,
                                                              OppgaveV3 oppgaveV3,
                                                              AnsattService ansattService,
-                                                             ArbeidsfordelingV1Service arbeidsfordelingV1Service) {
-        return new OppgaveBehandlingServiceImpl(oppgavebehandlingV3, tildelOppgaveV1, oppgaveV3, ansattService, arbeidsfordelingV1Service);
+                                                             ArbeidsfordelingV1Service arbeidsfordelingV1Service,
+                                                             Tilgangskontroll tilgangskontroll) {
+        return new OppgaveBehandlingServiceImpl(oppgavebehandlingV3, tildelOppgaveV1, oppgaveV3, ansattService, arbeidsfordelingV1Service, tilgangskontroll);
     }
 
     @Bean
@@ -192,8 +193,12 @@ public class ServiceConfig {
     }
 
     @Bean
-    public VergemalService vergemalService(PersonV3 personPortType, PersonKjerneinfoServiceBi personKjerneinfoServiceBi, KodeverkmanagerBi kodeverkmanagerBi) {
-        return new VergemalService(personPortType, personKjerneinfoServiceBi, kodeverkmanagerBi);
+    public VergemalService vergemalService(
+            PersonV3 personPortType,
+            PdlOppslagService pdl,
+            KodeverkmanagerBi kodeverkmanagerBi
+    ) {
+        return new VergemalService(personPortType, pdl, kodeverkmanagerBi);
     }
 
     @Bean

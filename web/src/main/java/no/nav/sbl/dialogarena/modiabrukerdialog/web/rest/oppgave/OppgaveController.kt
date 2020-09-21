@@ -11,12 +11,13 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.RestUtils
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.http.CookieUtil
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Policies
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Tilgangskontroll
-import no.nav.sbl.dialogarena.naudit.AuditResources.Person.Henvendelse
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.mapOfNotNullOrEmpty
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.service.plukkoppgave.PlukkOppgaveService
 import no.nav.sbl.dialogarena.naudit.Audit
-import no.nav.sbl.dialogarena.naudit.Audit.Action.*
+import no.nav.sbl.dialogarena.naudit.Audit.Action.READ
+import no.nav.sbl.dialogarena.naudit.Audit.Action.UPDATE
 import no.nav.sbl.dialogarena.naudit.AuditIdentifier
+import no.nav.sbl.dialogarena.naudit.AuditResources.Person.Henvendelse
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
@@ -115,7 +116,6 @@ class OppgaveController @Autowired constructor(
             throw ResponseStatusException(HttpStatus.FORBIDDEN, "Saksbehandler $consumerId har ikke rollen $rolle")
         }
     }
-
 }
 
 private fun mapOppgave(oppgave: Oppgave) = mapOfNotNullOrEmpty(
