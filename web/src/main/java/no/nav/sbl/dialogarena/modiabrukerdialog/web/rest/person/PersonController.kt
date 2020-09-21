@@ -25,27 +25,30 @@ import no.nav.sbl.dialogarena.naudit.AuditResources
 import no.nav.tjeneste.virksomhet.person.v3.binding.HentPersonPersonIkkeFunnet
 import no.nav.tjeneste.virksomhet.person.v3.binding.HentPersonSikkerhetsbegrensning
 import org.slf4j.LoggerFactory
-import javax.inject.Inject
-import javax.ws.rs.*
-import javax.ws.rs.core.MediaType.APPLICATION_JSON
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.http.HttpStatus
+import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.server.ResponseStatusException
 
 private const val TPS_UKJENT_VERDI = "???"
 private const val DATO_TID_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS"
 private const val TILRETTELAGT_KOMMUNIKASJON_KODEVERKREF = "TilrettelagtKommunikasjon"
 private const val TILRETTELAGT_KOMMUNIKASJON_KODEVERKSPRAK = "nb"
 
-@Path("/person/{fnr}")
-@Produces(APPLICATION_JSON)
-class PersonController @Inject constructor(private val kjerneinfoService: PersonKjerneinfoServiceBi,
+@RestController
+@RequestMapping("/rest/person/{fnr}")
+class PersonController @Autowired constructor(private val kjerneinfoService: PersonKjerneinfoServiceBi,
                                            private val kodeverk: KodeverkmanagerBi,
                                            private val tilgangskontroll: Tilgangskontroll,
                                            private val pdlOppslagService: PdlOppslagService) {
 
     private val logger = LoggerFactory.getLogger(PersonController::class.java)
 
-    @GET
-    @Path("/")
-    fun hent(@PathParam("fnr") fodselsnummer: String): Map<String, Any?> {
+    @GetMapping
+    fun hent(@PathVariable("fnr") fodselsnummer: String): Map<String, Any?> {
         return tilgangskontroll
                 .check(Policies.tilgangTilBruker.with(fodselsnummer))
                 .get(Audit.describe(READ, AuditResources.Person.Personalia, AuditIdentifier.FNR to fodselsnummer)) {
@@ -92,11 +95,12 @@ class PersonController @Inject constructor(private val kjerneinfoService: Person
                         getBegrensetInnsyn(fodselsnummer, exception.message)
                     } catch (exception: RuntimeException) {
                         when (exception.cause) {
-                            is HentPersonPersonIkkeFunnet -> throw NotFoundException()
+                            is HentPersonPersonIkkeFunnet -> throw ResponseStatusException(HttpStatus.NOT_FOUND)
                             is HentPersonSikkerhetsbegrensning -> getBegrensetInnsyn(fodselsnummer, exception.message)
                             else -> {
                                 logger.error("mapping error personobjekt", exception)
-                                throw InternalServerErrorException(exception)}
+                                throw ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "mapping in personobject", exception)
+                            }
                         }
                     }
                 }

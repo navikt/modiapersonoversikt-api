@@ -1,6 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.api.utils;
 
-import no.nav.common.auth.SubjectHandler;
+import no.nav.common.auth.subject.SubjectHandler;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;

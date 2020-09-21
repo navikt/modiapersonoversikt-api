@@ -9,7 +9,7 @@ import io.ktor.client.engine.cio.CIOEngineConfig
 import io.ktor.client.request.HttpRequestBuilder
 import io.ktor.client.request.header
 import io.ktor.util.KtorExperimentalAPI
-import no.nav.log.MDCConstants
+import no.nav.common.log.MDCConstants
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.RestConstants
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.TjenestekallLogger
 import org.slf4j.LoggerFactory

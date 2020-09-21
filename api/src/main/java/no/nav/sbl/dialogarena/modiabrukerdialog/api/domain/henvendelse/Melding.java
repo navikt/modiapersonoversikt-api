@@ -4,7 +4,6 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Person;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Saksbehandler;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.VisningUtils;
-import org.apache.commons.collections15.Transformer;
 import org.joda.time.DateTime;
 
 import java.io.Serializable;
@@ -12,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static java.util.Arrays.asList;
@@ -203,11 +203,11 @@ public class Melding implements Serializable {
 
     public static final Comparator<Melding> NYESTE_FORST = (o1, o2) -> o2.getVisningsDato().compareTo(o1.getVisningsDato());
 
-    public static final Transformer<Melding, String> ID = melding -> melding.id;
+    public static final Function<Melding, String> ID = melding -> melding.id;
 
-    public static final Transformer<Melding, String> TRAAD_ID = melding -> melding.traadId;
+    public static final Function<Melding, String> TRAAD_ID = melding -> melding.traadId;
 
-    public static final Transformer<Melding, Meldingstype> TYPE = melding -> melding.meldingstype;
+    public static final Function<Melding, Meldingstype> TYPE = melding -> melding.meldingstype;
 
     public static Optional<Melding> siste(List<Melding> traad) {
         return traad.stream()

@@ -2,9 +2,10 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.service;
 
 import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navansatt.GOSYSNAVansatt;
 
-import javax.inject.Named;
-
-import no.nav.common.oidc.SystemUserTokenProvider;
+import no.nav.common.cxf.StsConfig;
+import no.nav.common.sts.NaisSystemUserTokenProvider;
+import no.nav.common.sts.SystemUserTokenProvider;
+import no.nav.common.utils.EnvironmentUtils;
 import no.nav.dkif.consumer.support.DkifServiceImpl;
 import no.nav.kjerneinfo.consumer.egenansatt.EgenAnsattService;
 import no.nav.kjerneinfo.consumer.fim.person.PersonKjerneinfoServiceBi;
@@ -66,10 +67,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
-import static no.nav.sbl.dialogarena.common.cxf.StsSecurityConstants.SYSTEMUSER_PASSWORD;
-import static no.nav.sbl.dialogarena.common.cxf.StsSecurityConstants.SYSTEMUSER_USERNAME;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.RestConstants.SECURITY_TOKEN_SERVICE_DISCOVERYURL;
-import static no.nav.sbl.util.EnvironmentUtils.*;
 
 /**
  * MODIA ønsker å selv wire inn sine komponenters kontekster for å ha full kontroll over springoppsettet.
@@ -77,6 +75,9 @@ import static no.nav.sbl.util.EnvironmentUtils.*;
 @Configuration
 @EnableScheduling
 public class ServiceConfig {
+    public static final String STS_URL_KEY = "no.nav.modig.security.sts.url";
+    public static final String SYSTEMUSER_USERNAME = "no.nav.modig.security.systemuser.username";
+    public static final String SYSTEMUSER_PASSWORD = "no.nav.modig.security.systemuser.password";
 
     @Bean
     public LDAPService ldapService() {
@@ -207,11 +208,20 @@ public class ServiceConfig {
 
     @Bean
     SystemUserTokenProvider systemUserTokenProvider() {
-        return new SystemUserTokenProvider(
+        return new NaisSystemUserTokenProvider(
                 SECURITY_TOKEN_SERVICE_DISCOVERYURL,
-                getRequiredProperty(SYSTEMUSER_USERNAME, resolveSrvUserPropertyName()),
-                getRequiredProperty(SYSTEMUSER_PASSWORD, resolverSrvPasswordPropertyName())
+                EnvironmentUtils.getRequiredProperty(SYSTEMUSER_USERNAME),
+                EnvironmentUtils.getRequiredProperty(SYSTEMUSER_PASSWORD)
         );
+    }
+
+    @Bean
+    StsConfig stsConfig() {
+        return StsConfig.builder()
+                .url(EnvironmentUtils.getRequiredProperty("SECURITYTOKENSERVICE_URL"))
+                .username(EnvironmentUtils.getRequiredProperty(SYSTEMUSER_USERNAME))
+                .password(EnvironmentUtils.getRequiredProperty(SYSTEMUSER_PASSWORD))
+                .build();
     }
 
     @Bean

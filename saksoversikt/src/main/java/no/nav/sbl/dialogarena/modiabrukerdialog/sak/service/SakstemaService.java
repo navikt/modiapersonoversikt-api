@@ -2,9 +2,8 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.sak.service;
 
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.*;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.resultatwrappere.ResultatWrapper;
-import no.nav.sbl.dialogarena.modiabrukerdialog.sak.utils.Java8Utils;
 
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.util.*;
 import java.util.function.Predicate;
 
@@ -22,16 +21,16 @@ public class SakstemaService {
 
     private static final String RESTERENDE_TEMA = "RESTERENDE_TEMA";
 
-    @Inject
+    @Autowired
     private DokumentMetadataService dokumentMetadataService;
 
-    @Inject
+    @Autowired
     private SakOgBehandlingService sakOgBehandlingService;
 
-    @Inject
+    @Autowired
     private BulletproofKodeverkService bulletproofKodeverkService;
 
-    @Inject
+    @Autowired
     private SakstemaGrupperer sakstemaGrupperer;
 
     private Map<String, Set<String>> grupperAlleSakstemaSomResterende(Map<String, Set<String>> grupperteSakstema) {

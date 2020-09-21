@@ -4,7 +4,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.util.Ca
 import no.nav.tjeneste.domene.brukerdialog.henvendelsesoknader.v1.HenvendelseSoknaderPortType;
 import org.junit.jupiter.api.Test;
 
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
@@ -13,7 +13,7 @@ public class HenvendelseSoknaderCacheTest extends CacheTest {
 
     public static final String CACHE_NAME = "endpointCache";
 
-    @Inject
+    @Autowired
     private HenvendelseSoknaderPortType henvendelse;
 
     public HenvendelseSoknaderCacheTest() {

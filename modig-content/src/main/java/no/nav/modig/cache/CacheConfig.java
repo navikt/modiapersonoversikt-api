@@ -27,7 +27,7 @@ public class CacheConfig {
         config.addCache(cache("ytelseskontrakter", 600));
         config.addCache(cache("pleiePengerCache", 300));
         config.addCache(cache("organisasjonCache", 300));
-        config.addCache(cache("organisasjonEnhetKontaktinformasjonCache", 300).maxEntriesLocalHeap(1000));
+        config.addCache(cache("organisasjonEnhetKontaktinformasjonCache", 300));
         config.addCache(cache("oppfolgingsinfoCache", 300));
         config.addCache(cache("oppfolgingCache", 600));
         config.addCache(cache("foreldrePengerCache", 300));
@@ -43,7 +43,7 @@ public class CacheConfig {
         config.addCache(cache("varslingCache", 180).maxEntriesLocalHeap(10_000));
         config.addCache(cache("kodeverksmapperCache", 86400));
         config.addCache(cache("innsynJournalCache", 1800).maxEntriesLocalHeap(10_000));
-        config.addCache(cache("pesysCache", 600).maxEntriesLocalHeap(1000));
+        config.addCache(cache("pesysCache", 600));
 
         return net.sf.ehcache.CacheManager.newInstance(config);
     }
@@ -62,6 +62,7 @@ public class CacheConfig {
                 .memoryStoreEvictionPolicy(MemoryStoreEvictionPolicy.LRU)
                 .timeToIdleSeconds(tti)
                 .timeToLiveSeconds(ttl)
-                .persistence(persistence);
+                .persistence(persistence)
+                .maxEntriesLocalHeap(1000);
     }
 }

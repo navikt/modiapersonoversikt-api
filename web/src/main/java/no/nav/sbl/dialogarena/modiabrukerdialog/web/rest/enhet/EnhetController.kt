@@ -14,22 +14,22 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.enhet.model.EnhetKontak
 import no.nav.sbl.dialogarena.naudit.Audit
 import no.nav.sbl.dialogarena.naudit.Audit.Action.*
 import no.nav.sbl.dialogarena.naudit.AuditIdentifier
-import javax.inject.Inject
-import javax.ws.rs.*
-import javax.ws.rs.core.MediaType.APPLICATION_JSON
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.http.HttpStatus
+import org.springframework.web.bind.annotation.*
+import org.springframework.web.server.ResponseStatusException
 
-@Path("/enheter")
-class EnhetController @Inject
+@RestController
+@RequestMapping("/rest/enheter")
+class EnhetController @Autowired
 constructor(private val organisasjonEnhetKontaktinformasjonService: OrganisasjonEnhetKontaktinformasjonService,
             private val organisasjonEnhetV2Service: OrganisasjonEnhetV2Service,
             private val arbeidsfordeling: ArbeidsfordelingV1Service,
             private val ansattService: AnsattService,
             private val tilgangskontroll: Tilgangskontroll) {
 
-    @GET
-    @Path("/{id}")
-    @Produces(APPLICATION_JSON)
-    fun hentMedId(@PathParam("id") organisasjonsid: String): OrganisasjonEnhetKontaktinformasjon {
+    @GetMapping("/{id}")
+    fun hentMedId(@PathVariable("id") organisasjonsid: String): OrganisasjonEnhetKontaktinformasjon {
         return tilgangskontroll
                 .check(Policies.tilgangTilModia)
                 .get(Audit.describe(READ, Enhet.Kontaktinformasjon, AuditIdentifier.ORGANISASJON_ID to organisasjonsid)) {
@@ -37,26 +37,25 @@ constructor(private val organisasjonEnhetKontaktinformasjonService: Organisasjon
                 }
     }
 
-    @GET
-    @Produces(APPLICATION_JSON)
-    fun finnEnhet(@QueryParam("gt") geografiskId: String?, @QueryParam("dkode") diskresjonskode: String?): EnhetKontaktinformasjon {
+    @GetMapping
+    fun finnEnhet(@RequestParam("gt") geografiskId: String?, @RequestParam("dkode") diskresjonskode: String?): EnhetKontaktinformasjon {
         return tilgangskontroll
                 .check(Policies.tilgangTilModia)
                 .get(Audit.describe(READ, Enhet.Kontaktinformasjon, AuditIdentifier.GEOGRAFISK_ID to geografiskId, AuditIdentifier.DISKRESJONSKODE to diskresjonskode)) {
-                    if (geografiskId.isNullOrEmpty() && diskresjonskode.isNullOrEmpty()) throw BadRequestException("'gt' eller 'dkode' må være spesifisert")
+                    if (geografiskId.isNullOrEmpty() && diskresjonskode.isNullOrEmpty()) {
+                        throw ResponseStatusException(HttpStatus.BAD_REQUEST, "'gt' eller 'dkode' må være spesifisert")
+                    }
 
                     val enhetid = organisasjonEnhetV2Service.finnNAVKontor(geografiskId, diskresjonskode ?: "")
                             .map { it.enhetId }
-                            .orElseThrow { NotFoundException("Fant ikke enhetsid for gt: $geografiskId dkode: $diskresjonskode") }
+                            .orElseThrow { ResponseStatusException(HttpStatus.NOT_FOUND, "Fant ikke enhetsid for gt: $geografiskId dkode: $diskresjonskode") }
 
                     EnhetKontaktinformasjon(hentMedId(enhetid))
                 }
     }
 
-    @GET
-    @Path("/{enhetId}/ansatte")
-    @Produces(APPLICATION_JSON)
-    fun hentAnsattePaaEnhet(@PathParam("enhetId") enhetId: String): List<Ansatt> {
+    @GetMapping("/{enhetId}/ansatte")
+    fun hentAnsattePaaEnhet(@PathVariable("enhetId") enhetId: String): List<Ansatt> {
         return tilgangskontroll
                 .check(Policies.tilgangTilModia)
                 .get(Audit.describe(READ, Enhet.Ansatte, AuditIdentifier.ENHET_ID to enhetId)) {
@@ -64,9 +63,7 @@ constructor(private val organisasjonEnhetKontaktinformasjonService: Organisasjon
                 }
     }
 
-    @GET
-    @Path("/oppgavebehandlere/alle")
-    @Produces(APPLICATION_JSON)
+    @GetMapping("/oppgavebehandlere/alle")
     fun hentAlleEnheterForOppgave(): List<Map<String, Any?>> {
         return tilgangskontroll
                 .check(Policies.tilgangTilModia)
@@ -80,13 +77,11 @@ constructor(private val organisasjonEnhetKontaktinformasjonService: Organisasjon
                 }
     }
 
-    @GET
-    @Path("/oppgavebehandlere/foreslatte")
-    @Produces(APPLICATION_JSON)
-    fun hentBehandlendeEnhet(@QueryParam("fnr") fnr: String,
-                             @QueryParam("temakode") temakode: String,
-                             @QueryParam("typekode") typekode: String,
-                             @QueryParam("underkategorikode") underkategorikode: String?): List<Map<String, Any?>> {
+    @GetMapping("/oppgavebehandlere/foreslatte")
+    fun hentBehandlendeEnhet(@RequestParam("fnr") fnr: String,
+                             @RequestParam("temakode") temakode: String,
+                             @RequestParam("typekode") typekode: String,
+                             @RequestParam("underkategorikode") underkategorikode: String?): List<Map<String, Any?>> {
         return tilgangskontroll
                 .check(Policies.tilgangTilBruker.with(fnr))
                 .get(Audit.describe(READ, Enhet.Foreslatte)) {

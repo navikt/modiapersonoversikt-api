@@ -9,7 +9,7 @@ import no.nav.tjeneste.virksomhet.organisasjonenhet.v2.meldinger.WSFinnNAVKontor
 import no.nav.tjeneste.virksomhet.organisasjonenhet.v2.meldinger.WSHentEnhetBolkRequest;
 import org.junit.jupiter.api.Test;
 
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
@@ -18,7 +18,7 @@ class OrganisasjonEnhetV2EndpointCacheTest extends CacheTest {
 
     private static final String CACHE_NAME = "organisasjonEnhetV2";
 
-    @Inject
+    @Autowired
     private OrganisasjonEnhetV2 organisasjonEnhetService;
 
     OrganisasjonEnhetV2EndpointCacheTest() {

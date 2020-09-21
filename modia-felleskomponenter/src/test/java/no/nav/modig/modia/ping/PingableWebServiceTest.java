@@ -1,6 +1,8 @@
 package no.nav.modig.modia.ping;
 
+import no.nav.common.health.selftest.SelfTestCheck;
 import no.nav.sbl.dialogarena.types.Pingable;
+import org.hamcrest.CoreMatchers;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -32,22 +34,22 @@ public class PingableWebServiceTest {
 
     @Test
     public void skalKallePingNårKlassenErPingable() throws Exception {
-        pingable.ping();
+        pingable.ping().getCheck().checkHealth();
         verify(ws, times(1)).ping();
     }
 
     @Test
     public void skalReturnereOkResultatNårTjenestenErOk() throws Exception {
-        Pingable.Ping pingResult = pingable.ping();
-        assertThat(pingResult.erVellykket(), is(true));
-        assertThat(pingResult.getMetadata().getBeskrivelse(), is("WS"));
+        SelfTestCheck pingResult = pingable.ping();
+        assertThat(pingResult.getCheck().checkHealth().isHealthy(), is(true));
+        assertThat(pingResult.getDescription(), CoreMatchers.containsString("WS"));
     }
 
     @Test
     public void skalReturnereFeilNarTjenestenFeiler() throws Exception {
         when(ws.ping()).thenThrow(new RuntimeException());
-        Pingable.Ping pingResult = pingable.ping();
-        assertThat(pingResult.erVellykket(), is(false));
+        SelfTestCheck pingResult = pingable.ping();
+        assertThat(pingResult.getCheck().checkHealth().isHealthy(), is(false));
     }
 
     private class UnpingableWS {

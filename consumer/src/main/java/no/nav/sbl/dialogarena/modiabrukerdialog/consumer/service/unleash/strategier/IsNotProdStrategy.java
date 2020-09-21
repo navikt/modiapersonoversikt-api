@@ -1,7 +1,7 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.strategier;
 
 import no.finn.unleash.strategy.Strategy;
-import no.nav.sbl.util.EnvironmentUtils;
+import no.nav.common.utils.EnvironmentUtils;
 
 import java.util.Map;
 

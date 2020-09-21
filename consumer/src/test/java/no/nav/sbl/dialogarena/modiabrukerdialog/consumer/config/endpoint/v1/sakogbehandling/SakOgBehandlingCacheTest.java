@@ -10,7 +10,7 @@ import no.nav.tjeneste.virksomhet.sakogbehandling.v1.meldinger.FinnSakOgBehandli
 import org.joda.time.DateTime;
 import org.junit.jupiter.api.Test;
 
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
@@ -21,7 +21,7 @@ class SakOgBehandlingCacheTest extends CacheTest {
 
     private static final String ENDPOINT_CACHE = "endpointCache";
 
-    @Inject
+    @Autowired
     private SakOgBehandlingV1 sakOgBehandling;
 
     SakOgBehandlingCacheTest() {

@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
@@ -17,7 +17,7 @@ class NAVOrgEnhetEndpointCacheTest extends CacheTest {
 
     private static final String CACHE_NAME = "asbogosysEnhet";
 
-    @Inject
+    @Autowired
     private GOSYSNAVOrgEnhet enhetWS;
 
     NAVOrgEnhetEndpointCacheTest() {

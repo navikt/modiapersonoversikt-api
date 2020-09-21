@@ -3,24 +3,20 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.saf
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
-import no.nav.common.auth.SsoToken
-import no.nav.common.auth.SubjectHandler
+import no.nav.common.auth.subject.SsoToken
+import no.nav.common.auth.subject.SubjectHandler
+import no.nav.common.rest.client.RestClient
+import no.nav.common.utils.EnvironmentUtils
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.Baksystem
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.Dokument
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.DokumentMetadata
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.resultatwrappere.ResultatWrapper
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.resultatwrappere.TjenesteResultatWrapper
-import no.nav.sbl.rest.RestUtils
-import no.nav.sbl.util.EnvironmentUtils
+import okhttp3.MediaType
+import okhttp3.Request
+import okhttp3.RequestBody
+import okhttp3.Response
 import org.slf4j.LoggerFactory
-import javax.ws.rs.client.Client
-import javax.ws.rs.client.Entity
-import javax.ws.rs.client.Invocation
-import javax.ws.rs.core.HttpHeaders.AUTHORIZATION
-import javax.ws.rs.core.HttpHeaders.CONTENT_TYPE
-import javax.ws.rs.core.MediaType.APPLICATION_JSON
-import javax.ws.rs.core.Response
-import javax.ws.rs.core.Response.Status.fromStatusCode
 
 val SAF_GRAPHQL_BASEURL = EnvironmentUtils.getRequiredProperty("SAF_GRAPHQL_URL")
 val SAF_HENTDOKUMENT_BASEURL = EnvironmentUtils.getRequiredProperty("SAF_HENTDOKUMENT_URL")
@@ -28,35 +24,37 @@ val SAF_HENTDOKUMENT_BASEURL = EnvironmentUtils.getRequiredProperty("SAF_HENTDOK
 private val LOG = LoggerFactory.getLogger(SafService::class.java)
 
 class SafService {
+    val JSON = MediaType.parse("application/json; charset=utf-8")
+    val client = RestClient.baseClient()
     fun hentJournalposter(fnr: String): ResultatWrapper<List<DokumentMetadata>> {
         val jsonQuery = dokumentoversiktBrukerJsonQuery(fnr)
+        val response = client.newCall(
+                veilederAutorisertClient(SAF_GRAPHQL_BASEURL)
+                        .post(RequestBody.create(JSON, jsonQuery))
+                        .build()
+        ).execute()
 
-        return RestUtils.withClient { client ->
-            val response = veilederAutorisertClient(client, SAF_GRAPHQL_BASEURL)
-                    .post(Entity.entity(jsonQuery, APPLICATION_JSON))
-
-            håndterStatus(response)
-        }
+        return håndterStatus(response)
     }
 
     fun hentDokument(journalpostId: String, dokumentInfoId: String, variantFormat: Dokument.Variantformat): TjenesteResultatWrapper {
         val url = lagHentDokumentURL(journalpostId, dokumentInfoId, variantFormat)
 
-        return RestUtils.withClient { client ->
-            val response = veilederAutorisertClient(client, url).get()
-            when (response.status) {
-                200 -> TjenesteResultatWrapper(response.readEntity(ByteArray::class.java))
-                else -> håndterDokumentFeilKoder(response.status)
-            }
+        val response = client.newCall(
+                veilederAutorisertClient(url).build()
+        ).execute()
+        return when (response.code()) {
+            200 -> TjenesteResultatWrapper(response.body()?.bytes())
+            else -> handterDokumentFeilKoder(response.code())
         }
     }
 }
 
 private fun håndterStatus(response: Response): ResultatWrapper<List<DokumentMetadata>> =
-        when (response.status) {
+        when (response.code()) {
             200 -> håndterResponse(response)
             else -> {
-                håndterJournalpostFeilKoder(response.status)
+                håndterJournalpostFeilKoder(response.code())
                 ResultatWrapper(emptyList(), setOf(Baksystem.SAF))
             }
         }
@@ -72,12 +70,12 @@ private fun håndterResponse(response: Response): ResultatWrapper<List<DokumentM
     )
 }
 
+val mapper = jacksonObjectMapper().registerModule(JavaTimeModule())
 private fun safDokumentResponsFraResponse(response: Response): SafDokumentResponse {
-    val rawJson = response.readEntity(String::class.java)
-    val mapper = jacksonObjectMapper().registerModule(JavaTimeModule())
+    val rawJson = response.body()?.string()!!
 
     return try {
-        (mapper.readValue(rawJson))
+        mapper.readValue(rawJson)
     } catch (e: Exception) {
         throw RuntimeException("Feil i mapping for SAF query hentJournalposter, sjekk om query og objekt er like", e)
     }
@@ -88,17 +86,14 @@ private fun getDokumentMetadata(safDokumentResponse: SafDokumentResponse): List<
                 .orEmpty()
                 .map { journalpost -> DokumentMetadata().fraSafJournalpost(journalpost) }
 
-private fun veilederAutorisertClient(client: Client, url: String): Invocation.Builder {
-    val AUTH_METHOD_BEARER = "Bearer"
-    val AUTH_SEPERATOR = " "
-
+private fun veilederAutorisertClient(url: String): Request.Builder {
     val veilederOidcToken = SubjectHandler.getSsoToken(SsoToken.Type.OIDC)
             .orElseThrow { IllegalStateException("Fant ikke OIDC-token") }
-    return client
-            .target(url)
-            .request()
-            .header(AUTHORIZATION, AUTH_METHOD_BEARER + AUTH_SEPERATOR + veilederOidcToken)
-            .header(CONTENT_TYPE, APPLICATION_JSON)
+
+    return Request.Builder()
+                    .url(url)
+                    .header("Authorization", "Bearer $veilederOidcToken")
+                    .header("Content-Type", "application/json")
 }
 
 private fun lagHentDokumentURL(journalpostId: String, dokumentInfoId: String, variantFormat: Dokument.Variantformat) =
@@ -125,11 +120,11 @@ private fun håndterJournalpostFeilKoder(statuskode: Int) {
     }
 }
 
-private fun håndterDokumentFeilKoder(statuskode: Int): TjenesteResultatWrapper {
+private fun handterDokumentFeilKoder(statuskode: Int): TjenesteResultatWrapper {
     when (statuskode) {
         400 -> LOG.warn("Feil i SAF hentDokument. Ugyldig input. JournalpostId og dokumentInfoId må være tall og variantFormat må være en gyldig kodeverk-verdi")
         401 -> LOG.warn("Feil i SAF hentDokument. Bruker mangler tilgang for å vise dokumentet. Ugyldig OIDC token.")
         404 -> LOG.warn("Feil i SAF hentDokument. Dokument eller journalpost ble ikke funnet.")
     }
-    return TjenesteResultatWrapper(null, fromStatusCode(statuskode))
+    return TjenesteResultatWrapper(null, statuskode)
 }

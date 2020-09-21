@@ -1,22 +1,26 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v1.utbetaling;
 
+import no.nav.common.cxf.CXFClient;
+import no.nav.common.cxf.StsConfig;
+import no.nav.common.utils.EnvironmentUtils;
 import no.nav.modig.modia.ping.PingableWebService;
-import no.nav.sbl.dialogarena.common.cxf.CXFClient;
-import no.nav.sbl.util.EnvironmentUtils;
 import no.nav.tjeneste.virksomhet.utbetaling.v1.UtbetalingV1;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import javax.xml.namespace.QName;
 
 import static no.nav.metrics.MetricsFactory.createTimerProxyForWebService;
 
 @Configuration
 public class UtbetalingEndpointConfig {
+    @Autowired
+    private StsConfig stsConfig;
 
     @Bean
     public UtbetalingV1 utbetalingV1() {
-        final UtbetalingV1 prod = createUtbetalingPortType().configureStsForSubject().build();
+        final UtbetalingV1 prod = createUtbetalingPortType().configureStsForSubject(stsConfig).build();
 
         return createTimerProxyForWebService("UtbetalingV1", prod, UtbetalingV1.class);
     }
@@ -24,7 +28,7 @@ public class UtbetalingEndpointConfig {
     @Bean
     public UtbetalingPing pingUtbetalingV1() {
         UtbetalingV1 pingPorttype = createUtbetalingPortType()
-                .configureStsForSystemUser()
+                .configureStsForSystemUser(stsConfig)
                 .build();
         return new UtbetalingPing("Utbetaling", pingPorttype);
     }

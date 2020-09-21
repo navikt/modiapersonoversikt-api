@@ -28,11 +28,12 @@ import no.nav.tjeneste.virksomhet.person.v3.meldinger.HentSikkerhetstiltakRespon
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertTrue
+import org.springframework.http.HttpStatus
+import org.springframework.web.server.ResponseStatusException
 import java.util.*
-import javax.ws.rs.NotFoundException
-import kotlin.test.assertEquals
-import kotlin.test.assertFailsWith
-import kotlin.test.assertTrue
 
 private const val FNR = "10108000398"
 private const val KONTONUMMER = "11111111111"
@@ -62,7 +63,8 @@ internal class PersonControllerTest {
     @Test
     fun `Kaster 404 hvis personen ikke ble funnet`() {
         whenever(personV3.hentPerson(any())).thenThrow(HentPersonPersonIkkeFunnet("", PersonIkkeFunnet()))
-        assertFailsWith<NotFoundException> { controller.hent(FNR) }
+        val exception = assertThrows<ResponseStatusException> { controller.hent(FNR) }
+        assertEquals(HttpStatus.NOT_FOUND, exception.status)
     }
 
     @Test

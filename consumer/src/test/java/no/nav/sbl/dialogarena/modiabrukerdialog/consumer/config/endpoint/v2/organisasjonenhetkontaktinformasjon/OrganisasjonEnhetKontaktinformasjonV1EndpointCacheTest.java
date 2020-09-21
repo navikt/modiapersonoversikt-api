@@ -8,7 +8,7 @@ import no.nav.tjeneste.virksomhet.organisasjonenhetkontaktinformasjon.v1.Organis
 import no.nav.tjeneste.virksomhet.organisasjonenhetkontaktinformasjon.v1.meldinger.WSHentKontaktinformasjonForEnhetBolkRequest;
 import org.junit.jupiter.api.Test;
 
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
@@ -20,7 +20,7 @@ class OrganisasjonEnhetKontaktinformasjonV1EndpointCacheTest extends CacheTest {
     private static final String ENHET_ID = "1337";
     private static final String ENHET_ID_OPPSLAG_2 = "1500";
 
-    @Inject
+    @Autowired
     private OrganisasjonEnhetKontaktinformasjonV1 organisasjonEnhetKontaktinformasjonV1;
 
     OrganisasjonEnhetKontaktinformasjonV1EndpointCacheTest() {

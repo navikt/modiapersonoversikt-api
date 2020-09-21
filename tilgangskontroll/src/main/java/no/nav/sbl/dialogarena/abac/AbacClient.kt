@@ -1,13 +1,13 @@
 package no.nav.sbl.dialogarena.abac
 
-import no.nav.sbl.rest.RestUtils
-import org.glassfish.jersey.client.authentication.HttpAuthenticationFeature.basic
+import no.nav.common.rest.client.RestClient
+import okhttp3.Credentials
+import okhttp3.MediaType
+import okhttp3.OkHttpClient
+import okhttp3.RequestBody
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.cache.annotation.Cacheable
-import javax.ws.rs.ClientErrorException
-import javax.ws.rs.client.Client
-import javax.ws.rs.client.Entity.entity
 
 class AbacException(message: String) : RuntimeException(message)
 data class AbacClientConfig(
@@ -20,24 +20,35 @@ private infix fun Int.inRange(range: Pair<Int, Int>): Boolean = this >= range.fi
 val abacLogger: Logger = LoggerFactory.getLogger(AbacClient::class.java)
 
 open class AbacClient(val config: AbacClientConfig) {
-    private val client : Client = RestUtils.createClient().register(basic(config.username, config.password))
+    private val basicCredential = Credentials.basic(config.username, config.password)
+    private val client : OkHttpClient = RestClient.baseClient().newBuilder()
+            .authenticator { _, response ->
+                response
+                        .request()
+                        .newBuilder()
+                        .addHeader("Authorization", basicCredential)
+                        .build()
+            }
+            .build()
 
     @Cacheable("abacClientCache")
     open fun evaluate(request: AbacRequest): AbacResponse {
         val requestJson = JsonMapper.serialize(request)
-        val response = client.target(config.endpointUrl)
-                .request()
-                .post(entity(requestJson, "application/xacml+json"))
+        val httpRequest = okhttp3.Request.Builder()
+                .url(config.endpointUrl)
+                .post(RequestBody.create(MediaType.parse("application/xacml+json"), requestJson))
+                .build()
+        val response = client.newCall(httpRequest).execute()
 
-        if (response.status inRange Pair(500, 600)) {
-            abacLogger.warn("ABAC returned: ${response.status} ${response.statusInfo.reasonPhrase}")
-            throw AbacException("An error has occured calling ABAC: ${response.statusInfo.reasonPhrase}")
-        } else if (response.status inRange Pair(400, 500)) {
-            abacLogger.warn("ABAC returned: ${response.status} ${response.statusInfo.reasonPhrase}")
-            throw ClientErrorException("An error has occured calling ABAC:", response.status)
+        if (response.code() inRange Pair(500, 600)) {
+            abacLogger.warn("ABAC returned: ${response.code()} ${response.message()}")
+            throw AbacException("An error has occured calling ABAC: ${response.message()}")
+        } else if (response.code() inRange Pair(400, 500)) {
+            abacLogger.warn("ABAC returned: ${response.code()} ${response.message()}")
+            throw AbacException("An error has occured calling ABAC: ${response.code()}")
         }
 
-        val responseJson = response.readEntity(String::class.java)
+        val responseJson = response.body()?.string()!!
         return JsonMapper.deserialize(responseJson, AbacResponse::class.java)
     }
 }

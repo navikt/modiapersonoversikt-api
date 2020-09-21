@@ -1,7 +1,7 @@
 package no.nav.kjerneinfo.consumer.fim.person.to;
 
 
-import no.nav.common.auth.SubjectHandler;
+import no.nav.common.auth.subject.SubjectHandler;
 
 public class HentSikkerhetstiltakRequest {
 	private String ident;

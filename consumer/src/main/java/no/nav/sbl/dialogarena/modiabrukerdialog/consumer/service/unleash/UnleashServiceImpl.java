@@ -3,6 +3,7 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash;
 import no.finn.unleash.Unleash;
 import no.finn.unleash.repository.FeatureToggleResponse;
 import no.finn.unleash.repository.ToggleFetcher;
+import no.nav.common.health.selftest.SelfTestCheck;
 import no.nav.modig.modia.ping.ConsumerPingable;
 import org.slf4j.Logger;
 
@@ -26,8 +27,7 @@ public class UnleashServiceImpl implements UnleashService {
         this.defaultUnleash = defaultUnleash;
         this.api = api;
 
-        Ping.PingMetadata metadata = new Ping.PingMetadata("Unleash", api, "fetchToggles", false);
-        this.pingDelegate = new ConsumerPingable(metadata, () -> {
+        this.pingDelegate = new ConsumerPingable("Unleash", false, () -> {
             FeatureToggleResponse featureToggleResponse = this.toggleFetcher.fetchToggles();
             FeatureToggleResponse.Status status = featureToggleResponse.getStatus();
             if (status.equals(UNAVAILABLE)) {
@@ -47,7 +47,7 @@ public class UnleashServiceImpl implements UnleashService {
     }
 
     @Override
-    public Ping ping() {
+    public SelfTestCheck ping() {
         return pingDelegate.ping();
     }
 }

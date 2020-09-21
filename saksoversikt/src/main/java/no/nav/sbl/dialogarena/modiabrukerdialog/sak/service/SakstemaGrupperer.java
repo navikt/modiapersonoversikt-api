@@ -9,7 +9,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.sak.utils.TemagrupperHenter;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,7 +23,7 @@ public class SakstemaGrupperer {
     public static final String TEMAGRUPPE_RESTERENDE_TEMA = "RESTERENDE_TEMA";
     public static final String OPPFOLGING = "OPP";
 
-    @Inject
+    @Autowired
     private TemagrupperHenter temagrupperHenter;
 
     private Predicate<Map.Entry<String, Set<String>>> harMinstEtTema = entrySet -> entrySet.getValue().size() > 1;

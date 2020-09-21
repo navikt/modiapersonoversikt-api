@@ -1,21 +1,16 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.config
 
 import _0._0.nav_cons_sak_gosys_3.no.nav.asbo.navansatt.ASBOGOSYSHentNAVAnsattFagomradeListeRequest
-import _0._0.nav_cons_sak_gosys_3.no.nav.asbo.navansatt.ASBOGOSYSNAVAnsatt
-import _0._0.nav_cons_sak_gosys_3.no.nav.asbo.navorgenhet.ASBOGOSYSHentNAVEnhetListeRequest
-import _0._0.nav_cons_sak_gosys_3.no.nav.asbo.navorgenhet.ASBOGOSYSNavEnhet
 import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navansatt.*
-import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navorgenhet.GOSYSNAVOrgEnhet
-import no.nav.common.auth.SubjectHandler
+import no.nav.common.auth.subject.SubjectHandler
+import no.nav.common.utils.EnvironmentUtils
 import no.nav.sbl.dialogarena.abac.AbacClient
 import no.nav.sbl.dialogarena.abac.AbacRequest
 import no.nav.sbl.dialogarena.abac.AbacResponse
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.HenvendelseLesService
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.ldap.LDAPService
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.Feature
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.UnleashService
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.TilgangskontrollContext
-import no.nav.sbl.util.EnvironmentUtils
 import org.slf4j.LoggerFactory
 import java.util.*
 

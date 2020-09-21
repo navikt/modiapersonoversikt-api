@@ -7,6 +7,7 @@ import no.finn.unleash.repository.HttpToggleFetcher;
 import no.finn.unleash.repository.ToggleFetcher;
 import no.finn.unleash.strategy.Strategy;
 import no.finn.unleash.util.UnleashConfig;
+import no.nav.common.utils.EnvironmentUtils;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.AnsattService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.UnleashContextProviderImpl;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.UnleashService;
@@ -14,11 +15,10 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.Unleash
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.strategier.ByEnhetStrategy;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.strategier.ByEnvironmentStrategy;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.strategier.IsNotProdStrategy;
-import no.nav.sbl.util.EnvironmentUtils;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -30,20 +30,20 @@ public class UnleashEndpointConfig {
     String api = EnvironmentUtils.getRequiredProperty("UNLEASH_API_URL");
 
     @Bean
-    @Inject
+    @Autowired
     public UnleashService unleashService(ToggleFetcher toggleFetcher, Unleash defaultUnleash) {
         UnleashServiceImpl unleashService = new UnleashServiceImpl(toggleFetcher, defaultUnleash, api);
         return createTimerProxyForWebService("unleash", unleashService, UnleashService.class);
     }
 
     @Bean
-    @Inject
+    @Autowired
     public ToggleFetcher unleashHttpToggleFetcher(UnleashConfig unleashConfig) {
         return new HttpToggleFetcher(unleashConfig);
     }
 
     @Bean
-    @Inject
+    @Autowired
     public Unleash defaultUnleash(UnleashConfig unleashConfig) {
         return new DefaultUnleash(unleashConfig, addStrategies());
     }
@@ -58,7 +58,7 @@ public class UnleashEndpointConfig {
     }
 
     @Bean
-    @Inject
+    @Autowired
     public UnleashConfig unleashConfig(UnleashContextProvider unleashContextProvider) {
         return UnleashConfig.builder()
                 .appName("modiabrukerdialog")
@@ -69,7 +69,7 @@ public class UnleashEndpointConfig {
     }
 
     @Bean
-    @Inject
+    @Autowired
     public UnleashContextProvider unleashContextProvider(AnsattService ansattService) {
         return new UnleashContextProviderImpl(ansattService);
     }

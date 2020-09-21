@@ -1,7 +1,7 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest
 
-import no.nav.common.auth.SsoToken
-import no.nav.common.auth.SubjectHandler
+import no.nav.common.auth.subject.SsoToken
+import no.nav.common.auth.subject.SubjectHandler
 import no.nav.sbl.dialogarena.abac.AbacClient
 import no.nav.sbl.dialogarena.abac.AbacResponse
 import no.nav.sbl.dialogarena.abac.Decision
@@ -9,34 +9,31 @@ import no.nav.sbl.dialogarena.abac.DenyCause
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.AbacPolicies
 import java.text.ParseException
 import java.util.*
-import javax.inject.Inject
-import javax.ws.rs.GET
-import javax.ws.rs.Path
-import javax.ws.rs.PathParam
-import javax.ws.rs.Produces
-import javax.ws.rs.core.MediaType.APPLICATION_JSON
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RestController
 
-@Path("/tilgang")
-@Produces(APPLICATION_JSON)
-class TilgangController @Inject constructor(private val abacClient: AbacClient) {
+@RestController
+@RequestMapping("/rest/tilgang")
+class TilgangController @Autowired constructor(private val abacClient: AbacClient) {
 
-    @GET
-    @Path("/{fnr}")
-    fun harTilgang(@PathParam("fnr") fnr: String): TilgangDTO {
+    @GetMapping("/{fnr}")
+    fun harTilgang(@PathVariable("fnr") fnr: String): TilgangDTO {
         return abacClient
                 .evaluate(AbacPolicies.tilgangTilBruker(fnr))
                 .makeResponse()
     }
 
-    @GET
+    @GetMapping
     fun harTilgang(): TilgangDTO {
         return abacClient
                 .evaluate(AbacPolicies.tilgangTilModia())
                 .makeResponse()
     }
 
-    @GET
-    @Path("/auth")
+    @GetMapping("/auth")
     fun authIntropection(): AuthIntropectionDTO {
         return SubjectHandler.getSsoToken()
                 .map(SsoToken::getExpirationDate)

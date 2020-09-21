@@ -1,6 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.cache;
 
-import no.nav.common.auth.SubjectHandler;
+import no.nav.common.auth.subject.SubjectHandler;
 import org.springframework.aop.framework.AopProxyUtils;
 import org.springframework.cache.interceptor.SimpleKeyGenerator;
 

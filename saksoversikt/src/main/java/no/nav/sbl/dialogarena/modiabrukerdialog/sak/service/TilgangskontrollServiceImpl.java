@@ -1,6 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.sak.service;
 
-import no.nav.common.auth.SubjectHandler;
+import no.nav.common.auth.subject.SubjectHandler;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.AnsattService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.DokumentMetadata;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.Sakstema;
@@ -11,7 +11,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.TilgangTilTemaD
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Tilgangskontroll;
 import org.slf4j.Logger;
 
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.List;
@@ -26,9 +26,9 @@ import static org.slf4j.LoggerFactory.getLogger;
 
 public class TilgangskontrollServiceImpl implements TilgangskontrollService {
 
-    @Inject
+    @Autowired
     private Tilgangskontroll tilgangskontroll;
-    @Inject
+    @Autowired
     private AnsattService ansattService;
 
     public final static String TEMAKODE_BIDRAG = "BID";

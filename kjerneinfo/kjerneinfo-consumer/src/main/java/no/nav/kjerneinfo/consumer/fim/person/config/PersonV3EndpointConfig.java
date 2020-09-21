@@ -1,28 +1,34 @@
 package no.nav.kjerneinfo.consumer.fim.person.config;
 
+import no.nav.common.cxf.CXFClient;
+import no.nav.common.cxf.StsConfig;
+import no.nav.common.utils.EnvironmentUtils;
 import no.nav.modig.modia.ping.PingableWebService;
-import no.nav.sbl.dialogarena.common.cxf.CXFClient;
 import no.nav.sbl.dialogarena.types.Pingable;
-import no.nav.sbl.util.EnvironmentUtils;
 import no.nav.tjeneste.virksomhet.person.v3.binding.PersonV3;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import org.springframework.beans.factory.annotation.Autowired;
 
 import static no.nav.metrics.MetricsFactory.createTimerProxyForWebService;
 
 @Configuration
 public class PersonV3EndpointConfig {
 
+    @Autowired
+    private StsConfig stsConfig;
+
     @Bean
     public PersonV3 personV3() {
-        final PersonV3 personV3 = lagEndpoint().configureStsForSubject().build();
+        final PersonV3 personV3 = lagEndpoint().configureStsForSubject(stsConfig).build();
 
         return createTimerProxyForWebService("personV3", personV3, PersonV3.class);
     }
 
     @Bean
     public Pingable personPing() {
-        return new PingableWebService("TPS - PersonV3", lagEndpoint().configureStsForSystemUser().build());
+        return new PingableWebService("TPS - PersonV3", lagEndpoint().configureStsForSystemUser(stsConfig).build());
     }
 
     private CXFClient<PersonV3> lagEndpoint() {

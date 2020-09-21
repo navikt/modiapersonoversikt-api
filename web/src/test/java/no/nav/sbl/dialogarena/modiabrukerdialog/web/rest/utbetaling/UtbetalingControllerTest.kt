@@ -34,6 +34,6 @@ internal class UtbetalingControllerTest {
 
     @Test
     fun `Kaster feil ved mangel på dato`() {
-        assertEquals(400, controller.hent(FNR, null, null).status)
+        assertEquals(400, controller.hent(FNR, null, null).statusCode.value())
     }
 }

@@ -7,7 +7,7 @@ import no.nav.tjeneste.virksomhet.aktoer.v1.meldinger.HentAktoerIdForIdentReques
 import no.nav.tjeneste.virksomhet.aktoer.v1.meldinger.HentAktoerIdForIdentResponse;
 import org.junit.jupiter.api.Test;
 
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
@@ -17,7 +17,7 @@ import static org.mockito.Mockito.when;
 class AktorCacheTest extends CacheTest {
     private static final String AKTOR_CACHE = "aktorIdCache";
 
-    @Inject
+    @Autowired
     private AktoerPortType aktoer;
 
     AktorCacheTest() {

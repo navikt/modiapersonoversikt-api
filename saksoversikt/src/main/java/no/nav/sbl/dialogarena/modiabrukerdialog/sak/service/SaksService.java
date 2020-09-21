@@ -6,7 +6,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.Sak;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.resultatwrappere.ResultatWrapper;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.utils.Java8Utils;
 
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.util.*;
 import java.util.stream.Stream;
 
@@ -15,10 +15,10 @@ import static java.util.stream.Collectors.toList;
 @SuppressWarnings("squid:S1166") // Either log or rethrow
 public class SaksService {
 
-    @Inject
+    @Autowired
     private GsakSakerService gsakSakerService;
 
-    @Inject
+    @Autowired
     private PesysService pesysService;
 
     public ResultatWrapper<List<Sak>> hentAlleSaker(String fnr) {
