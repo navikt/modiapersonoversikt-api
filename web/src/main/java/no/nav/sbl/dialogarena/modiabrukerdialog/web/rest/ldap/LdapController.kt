@@ -1,25 +1,22 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.ldap
 
-import no.nav.common.auth.SubjectHandler
+import no.nav.common.auth.subject.SubjectHandler
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.ldap.LDAPService
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Policies
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Tilgangskontroll
 import no.nav.sbl.dialogarena.naudit.Audit
 import no.nav.sbl.dialogarena.naudit.Audit.Action.READ
-import javax.inject.Inject
-import javax.ws.rs.GET
-import javax.ws.rs.Path
-import javax.ws.rs.Produces
-import javax.ws.rs.core.MediaType
 import no.nav.sbl.dialogarena.naudit.AuditResources.Saksbehandler
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RestController
 
-@Path("/veileder")
-class LdapController @Inject
+@RestController
+@RequestMapping("/rest/veileder")
+class LdapController @Autowired
 constructor(private val ldapService: LDAPService, private val tilgangskontroll: Tilgangskontroll) {
-
-    @GET
-    @Path("/roller")
-    @Produces(MediaType.APPLICATION_JSON)
+    @GetMapping("/roller")
     fun hentRollerForInnloggetVeileder(): Map<String, MutableList<String>> {
         return tilgangskontroll
                 .check(Policies.tilgangTilModia)

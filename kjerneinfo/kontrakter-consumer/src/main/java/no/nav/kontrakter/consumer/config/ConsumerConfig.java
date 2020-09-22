@@ -14,16 +14,16 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 
 @Configuration
 @Import({OppfolgingskontraktConsumerConfig.class, YtelseskontraktConsumerConfig.class})
 public class ConsumerConfig {
 
-	@Inject
+	@Autowired
 	private YtelseskontraktV3 ytelseskontraktPortType;
 
-	@Inject
+	@Autowired
 	private OppfoelgingPortType oppfoelgingPortType;
 
 	@Bean

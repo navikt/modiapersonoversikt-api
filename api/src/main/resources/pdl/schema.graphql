@@ -76,6 +76,7 @@ type Person {
     innflyttingTilNorge: [InnflyttingTilNorge!]!
     utflyttingFraNorge: [UtflyttingFraNorge!]!
     vergemaalEllerFremtidsfullmakt(historikk: Boolean = false): [VergemaalEllerFremtidsfullmakt!]!
+    geografiskTilknytning: GeografiskTilknytning
 }
 
 type DeltBosted {
@@ -339,6 +340,21 @@ type Folkeregisterpersonstatus {
     forenkletStatus: String!
     folkeregistermetadata: Folkeregistermetadata!
     metadata: Metadata!
+}
+
+type GeografiskTilknytning {
+    gtType: GtType!
+    gtKommune: String
+    gtBydel: String
+    gtLand: String
+    metadata: Metadata!
+}
+
+enum GtType {
+    KOMMUNE,
+    BYDEL,
+    UTLAND,
+    UDEFINERT
 }
 
 type Navn {

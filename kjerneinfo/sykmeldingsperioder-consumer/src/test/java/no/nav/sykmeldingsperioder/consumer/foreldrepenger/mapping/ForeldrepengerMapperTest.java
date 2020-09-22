@@ -102,7 +102,7 @@ public class ForeldrepengerMapperTest {
         assertThat(resforeldrepengerettighetA.getArbeidskategori().getTermnavn(), equalTo(foreldrepengerettighetA.getArbeidskategori().getTermnavn()));
 
         compareDates(resperiode.getForeldrepengerFom(), periode.getForeldrepengerFom());
-        assertThat(resperiode.isErFedrekvote(), equalTo(periode.isErFedrekvote()));
+        assertThat(resperiode.isErFedrekvote(), equalTo(periode.getErFedrekvote()));
     }
 
     @Test
@@ -142,7 +142,7 @@ public class ForeldrepengerMapperTest {
         assertThat(resforeldrepengerettighetF.getArbeidskategori().getTermnavn(), equalTo(foreldrepengerettighetF.getArbeidskategori().getTermnavn()));
 
         compareDates(resperiode.getForeldrepengerFom(), periode.getForeldrepengerFom());
-        assertThat(resperiode.isErFedrekvote(), equalTo(periode.isErFedrekvote()));
+        assertThat(resperiode.isErFedrekvote(), equalTo(periode.getErFedrekvote()));
 
         compareDates(resperiode.getKommendeUtbetalinger().get(0).getVedtak().getFrom(), periode.getVedtakListe().get(0).getVedtak().getFom());
     }
@@ -199,7 +199,7 @@ public class ForeldrepengerMapperTest {
     @Test
     public void dateMapping() {
         LocalDate to = mapper.map(fomXMLDate, LocalDate.class);
-        
+
         compareDates(to, fomXMLDate);
     }
 

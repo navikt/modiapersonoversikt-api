@@ -8,20 +8,18 @@ import no.nav.sbl.dialogarena.naudit.Audit.Action.*
 import no.nav.sbl.dialogarena.naudit.AuditIdentifier
 import no.nav.sbl.dialogarena.naudit.AuditResources.Person
 import no.nav.tjeneste.virksomhet.digitalkontaktinformasjon.v1.meldinger.WSHentDigitalKontaktinformasjonResponse
-import javax.inject.Inject
-import javax.ws.rs.GET
-import javax.ws.rs.Path
-import javax.ws.rs.PathParam
-import javax.ws.rs.Produces
-import javax.ws.rs.core.MediaType
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RestController
 
-@Path("/person/{fnr}/kontaktinformasjon")
-@Produces(MediaType.APPLICATION_JSON)
-class KontaktinformasjonController @Inject constructor(private val dkifService: DkifService, private val tilgangskontroll: Tilgangskontroll) {
+@RestController
+@RequestMapping("/rest/person/{fnr}/kontaktinformasjon")
+class KontaktinformasjonController @Autowired constructor(private val dkifService: DkifService, private val tilgangskontroll: Tilgangskontroll) {
 
-    @GET
-    @Path("/")
-    fun hentKontaktinformasjon(@PathParam("fnr") fnr: String): Map<String, Any?> {
+    @GetMapping
+    fun hentKontaktinformasjon(@PathVariable("fnr") fnr: String): Map<String, Any?> {
         return tilgangskontroll
                 .check(Policies.tilgangTilBruker.with(fnr))
                 .get(Audit.describe(READ, Person.Kontaktinformasjon, AuditIdentifier.FNR to fnr)) {

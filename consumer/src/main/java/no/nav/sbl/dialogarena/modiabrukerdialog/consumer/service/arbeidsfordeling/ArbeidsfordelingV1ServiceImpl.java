@@ -12,7 +12,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.kodeverksmapper
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -26,7 +26,7 @@ public class ArbeidsfordelingV1ServiceImpl implements ArbeidsfordelingV1Service 
     private final EgenAnsattService egenAnsattService;
 
 
-    @Inject
+    @Autowired
     public ArbeidsfordelingV1ServiceImpl(ArbeidsfordelingClient arbeidsfordelingClient, EgenAnsattService egenAnsattService, PersonKjerneinfoServiceBi personService, KodeverksmapperService kodeverksmapper) {
         this.arbeidsfordelingClient = arbeidsfordelingClient;
         this.personService = personService;

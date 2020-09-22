@@ -1,15 +1,17 @@
 package no.nav.sykmeldingsperioder.config.spring.foreldrepenger;
 
+import no.nav.common.cxf.CXFClient;
+import no.nav.common.cxf.StsConfig;
 import no.nav.metrics.MetricsFactory;
 import no.nav.modig.jaxws.handlers.MDCOutHandler;
 import no.nav.modig.modia.ping.PingableWebService;
-import no.nav.sbl.dialogarena.common.cxf.CXFClient;
 import no.nav.sbl.dialogarena.types.Pingable;
 import no.nav.tjeneste.virksomhet.foreldrepenger.v2.ForeldrepengerV2;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import javax.xml.namespace.QName;
 
 import static org.apache.commons.lang3.StringUtils.defaultIfBlank;
@@ -21,6 +23,8 @@ public class ForeldrepengerConsumerConfig {
     private String foreldrepengerEndpointUrl;
     @Value("${servicegateway.url:}")
     private String servicegatewayUrl;
+    @Autowired
+    private StsConfig stsConfig;
 
     @Bean
     public ForeldrepengerV2 foreldrepengerPortType() {
@@ -41,9 +45,9 @@ public class ForeldrepengerConsumerConfig {
                 .address(getAdress());
 
         if (isPingPorttype) {
-            cxfClient.configureStsForSystemUser();
+            cxfClient.configureStsForSystemUser(stsConfig);
         } else {
-            cxfClient.configureStsForSubject();
+            cxfClient.configureStsForSubject(stsConfig);
         }
 
         return cxfClient.build();

@@ -1,12 +1,15 @@
 package no.nav.kjerneinfo.consumer.organisasjon;
 
+import no.nav.common.cxf.CXFClient;
+import no.nav.common.cxf.StsConfig;
+import no.nav.common.utils.EnvironmentUtils;
 import no.nav.modig.modia.ping.PingableWebService;
-import no.nav.sbl.dialogarena.common.cxf.CXFClient;
 import no.nav.sbl.dialogarena.types.Pingable;
-import no.nav.sbl.util.EnvironmentUtils;
 import no.nav.tjeneste.virksomhet.organisasjon.v4.OrganisasjonV4;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import org.springframework.beans.factory.annotation.Autowired;
 
 import static no.nav.metrics.MetricsFactory.createTimerProxyForWebService;
 
@@ -15,9 +18,12 @@ public class OrganisasjonV4ConsumerConfig {
 
     public static final String ORGANISASJON_V4_ENDPOINT_KEY = "VIRKSOMHET_ORGANISASJON_V4_ENDPOINTURL";
 
+    @Autowired
+    private StsConfig stsConfig;
+
     @Bean
     public OrganisasjonV4 organisasjonV4PortType() {
-        OrganisasjonV4 portType = lagEndpoint().configureStsForSubject().build();
+        OrganisasjonV4 portType = lagEndpoint().configureStsForSubject(stsConfig).build();
         return createTimerProxyForWebService("Organisasjon_v4", portType, OrganisasjonV4.class);
     }
 
@@ -28,7 +34,7 @@ public class OrganisasjonV4ConsumerConfig {
 
     @Bean
     public Pingable organisasjonPingable() {
-        return new PingableWebService("Organisasjon", lagEndpoint().configureStsForSystemUser().build());
+        return new PingableWebService("Organisasjon", lagEndpoint().configureStsForSystemUser(stsConfig).build());
     }
 
 }

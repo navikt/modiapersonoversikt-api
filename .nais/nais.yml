@@ -21,7 +21,7 @@ spec:
     timeout: 1
   prometheus:
     enabled: true
-    path: /modiapersonoversikt-api/internal/metrics
+    path: /modiapersonoversikt-api/internal/prometheus
   secureLogs:
     enabled: true
   resources:

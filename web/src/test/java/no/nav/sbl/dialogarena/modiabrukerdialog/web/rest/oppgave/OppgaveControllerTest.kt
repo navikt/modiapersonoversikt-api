@@ -5,9 +5,11 @@ import _0._0.nav_cons_sak_gosys_3.no.nav.asbo.navorgenhet.ASBOGOSYSNAVEnhetListe
 import _0._0.nav_cons_sak_gosys_3.no.nav.asbo.navorgenhet.ASBOGOSYSNavEnhet
 import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navansatt.GOSYSNAVansatt
 import com.nhaarman.mockitokotlin2.*
+import no.nav.common.utils.fn.UnsafeSupplier
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Oppgave
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.HenvendelseUtsendingService
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.arbeidsfordeling.ArbeidsfordelingV1Service
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.ldap.LDAPService
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.http.HttpRequestUtil
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.http.SubjectHandlerUtil
@@ -15,7 +17,6 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.AnsattServiceIm
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.oppgavebehandling.OppgaveBehandlingServiceImpl
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.TilgangskontrollMock
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.service.plukkoppgave.PlukkOppgaveService
-import no.nav.sbl.util.fn.UnsafeSupplier
 import no.nav.tjeneste.virksomhet.oppgave.v3.OppgaveV3
 import no.nav.tjeneste.virksomhet.oppgave.v3.informasjon.oppgave.*
 import no.nav.tjeneste.virksomhet.oppgave.v3.meldinger.WSFinnOppgaveListeResponse
@@ -23,15 +24,16 @@ import no.nav.tjeneste.virksomhet.oppgave.v3.meldinger.WSHentOppgaveResponse
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.OppgavebehandlingV3
 import no.nav.tjeneste.virksomhet.tildeloppgave.v1.TildelOppgaveV1
 import no.nav.tjeneste.virksomhet.tildeloppgave.v1.WSTildelFlereOppgaverResponse
-import org.hamcrest.CoreMatchers.containsString
 import org.hamcrest.MatcherAssert.assertThat
+import org.hamcrest.core.StringContains.containsString
 import org.joda.time.DateTime
 import org.junit.jupiter.api.Assertions.assertAll
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.function.Executable
+import org.springframework.http.HttpStatus
+import org.springframework.web.server.ResponseStatusException
 import java.util.*
-import javax.ws.rs.ForbiddenException
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 import kotlin.test.assertTrue
@@ -41,6 +43,7 @@ internal class OppgaveControllerTest {
     private val tildelOppgaveMock: TildelOppgaveV1 = mock()
     private val oppgaveWSMock: OppgaveV3 = mockOppgaveWs()
     private val ansattWSMock: AnsattServiceImpl = AnsattServiceImpl(mockGosysNavAnsatt())
+    private val arbeidsfordelingV1Service: ArbeidsfordelingV1Service = mock()
     private val plukkOppgaveService: PlukkOppgaveService = mock()
     private val ldapService: LDAPService = mock()
     private val henvendelseUtsendingService: HenvendelseUtsendingService = mock()
@@ -50,7 +53,8 @@ internal class OppgaveControllerTest {
                     tildelOppgaveMock,
                     oppgaveWSMock,
                     ansattWSMock,
-                    mock()
+                    arbeidsfordelingV1Service,
+                    TilgangskontrollMock.get()
             ),
             plukkOppgaveService,
             ldapService,
@@ -109,12 +113,13 @@ internal class OppgaveControllerTest {
 
     @Test
     fun `Sjekker at ansvarlig for oppgaven er samme person som forsøker å legge den tilbake`() {
-        assertFailsWith<ForbiddenException> {
+        val exception = assertFailsWith<ResponseStatusException> {
             val httpRequest = HttpRequestUtil.mockHttpServletRequestMedCookie("annen-saksbehandler", VALGT_ENHET)
             SubjectHandlerUtil.withIdent("annen-saksbehandler") {
                 oppgaveController.leggTilbake(httpRequest, lagRequest())
             }
         }
+        assertEquals(exception.status, HttpStatus.FORBIDDEN)
     }
 
     @Test
@@ -172,7 +177,7 @@ internal class OppgaveControllerTest {
     fun `Returnerer tildelt oppgave hvis saksbehandler allerede har en tildelt oppgave ved plukk`() {
         val httpRequest = HttpRequestUtil.mockHttpServletRequestMedCookie(SAKSBEHANDLERS_IDENT, VALGT_ENHET)
 
-        val oppgaveliste = listOf(lagWSOppgave().withOppgaveId(OPPGAVE_ID_1), lagWSOppgave().withOppgaveId("2"))
+        val oppgaveliste = listOf(lagWSOppgave().withOppgaveId(OPPGAVE_ID_1), lagWSOppgave().withOppgaveId("2").withGjelder(WSBruker().withBrukerId("1234")))
 
         whenever(oppgaveWSMock.finnOppgaveListe(any()))
                 .thenReturn(WSFinnOppgaveListeResponse()
@@ -230,6 +235,7 @@ internal class OppgaveControllerTest {
                 .withUnderkategori(WSUnderkategori().withKode("ARBEID_HJE"))
                 .withLest(false)
                 .withVersjon(1)
+
     }
 
 }

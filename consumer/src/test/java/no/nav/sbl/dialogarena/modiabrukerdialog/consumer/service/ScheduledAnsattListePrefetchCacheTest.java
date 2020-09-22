@@ -16,7 +16,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.support.AnnotationConfigContextLoader;
 
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.util.Arrays;
 import java.util.List;
 
@@ -31,10 +31,10 @@ import static org.mockito.Mockito.when;
 @ContextConfiguration(loader = AnnotationConfigContextLoader.class)
 public class ScheduledAnsattListePrefetchCacheTest extends CacheTest {
 
-    @Inject
+    @Autowired
     OrganisasjonEnhetV2Service organisasjonEnhetService;
 
-    @Inject
+    @Autowired
     ScheduledAnsattListePrefetch prefetch;
 
 

@@ -13,8 +13,6 @@ import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.henvendelse.Henvendels
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import javax.inject.Named;
-
 @Configuration
 public class SporsmalOgSvarContext {
 

@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
@@ -19,13 +19,13 @@ class NAVAnsattEndpointCacheTest extends CacheTest {
 
     private static final String CACHE_NAME = "asbogosysAnsatt";
 
-    @Inject
+    @Autowired
     private GOSYSNAVansatt ansattWS;
 
     NAVAnsattEndpointCacheTest() {
         super(CACHE_NAME);
     }
-    
+
     @Test
     void cacheManagerHarEntryForEndpointCacheEtterKallTilAnsattWS() throws HentNAVAnsattFaultGOSYSGeneriskfMsg, HentNAVAnsattFaultGOSYSNAVAnsattIkkeFunnetMsg {
         ASBOGOSYSNAVAnsatt req1 = new ASBOGOSYSNAVAnsatt();

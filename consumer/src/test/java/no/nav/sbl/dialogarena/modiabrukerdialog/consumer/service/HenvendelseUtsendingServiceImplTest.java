@@ -17,12 +17,9 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveBehandlingService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.gsak.SakerService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.ldap.LDAPService;
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.AnsattService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.cache.CacheTestUtil;
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.http.SubjectHandlerUtil;
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Tilgangskontroll;
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.TilgangskontrollContext;
-import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.TilgangskontrollMock;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.behandlehenvendelse.BehandleHenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.senduthenvendelse.SendUtHenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.senduthenvendelse.meldinger.WSFerdigstillHenvendelseRequest;
@@ -32,17 +29,12 @@ import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.henvendelse.Henvendels
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.meldinger.WSHentHenvendelseListeRequest;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.meldinger.WSHentHenvendelseListeResponse;
 import org.hamcrest.Matchers;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.joda.time.DateTime;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Captor;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
+import org.mockito.*;
 
 import java.util.*;
 
@@ -53,9 +45,7 @@ import static org.hamcrest.Matchers.*;
 import static org.joda.time.DateTime.now;
 import static org.junit.Assert.assertThat;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
-import static org.mockito.MockitoAnnotations.initMocks;
 
 class HenvendelseUtsendingServiceImplTest {
 
@@ -214,7 +204,7 @@ class HenvendelseUtsendingServiceImplTest {
                 .withTemagruppe(TEMAGRUPPE);
         henvendelseUtsendingService.sendHenvendelse(melding, Optional.empty(), Optional.of(sak), SAKSBEHANDLERS_VALGTE_ENHET);
 
-        verify(sakerService).knyttBehandlingskjedeTilSak(anyString(), anyString(), sakArgumentCaptor.capture(), anyString());
+        verify(sakerService).knyttBehandlingskjedeTilSak(ArgumentMatchers.anyString(), ArgumentMatchers.anyString(), sakArgumentCaptor.capture(), ArgumentMatchers.anyString());
 
         Sak sendtSak = sakArgumentCaptor.getValue();
         assertThat(sendtSak, is(sak));
@@ -315,7 +305,7 @@ class HenvendelseUtsendingServiceImplTest {
         ((XMLHenvendelse)resp.getAny().get(1)).getJournalfortInformasjon().setJournalfortTema("Noe annet");
 
         when(henvendelsePortType.hentHenvendelseListe(any(WSHentHenvendelseListeRequest.class))).thenReturn(resp);
-        when(tilgangskontrollContext.hentTemagrupperForSaksbehandler(anyString())).thenReturn(new TreeSet<>(asList(JOURNALFORT_TEMA)));
+        when(tilgangskontrollContext.hentTemagrupperForSaksbehandler(ArgumentMatchers.anyString())).thenReturn(new TreeSet<>(asList(JOURNALFORT_TEMA)));
 
         List<Melding> traad = henvendelseUtsendingService.hentTraad(FNR, TRAAD_ID, SAKSBEHANDLERS_VALGTE_ENHET);
 
@@ -337,7 +327,7 @@ class HenvendelseUtsendingServiceImplTest {
         Melding melding = new Melding().withFnr(FNR).withFritekst(mockFritekst()).withType(SAMTALEREFERAT_OPPMOTE).withTemagruppe(Temagruppe.OKSOS.toString());
         henvendelseUtsendingService.sendHenvendelse(melding, Optional.empty(), Optional.empty(), SAKSBEHANDLERS_VALGTE_ENHET);
 
-        verify(behandleHenvendelsePortType, never()).oppdaterKontorsperre(anyString(), anyList());
+        verify(behandleHenvendelsePortType, never()).oppdaterKontorsperre(ArgumentMatchers.anyString(), ArgumentMatchers.anyList());
     }
 
     @Test
@@ -407,7 +397,7 @@ class HenvendelseUtsendingServiceImplTest {
                         .withMetadataListe(new XMLMetadataListe().withMetadata(
                                 new XMLMeldingFraBruker().withFritekst(FRITEKST).withTemagruppe(TEMAGRUPPE)))
         ));
-        when(tilgangskontrollContext.harSaksbehandlerRolle(anyString())).thenReturn(true);
+        when(tilgangskontrollContext.harSaksbehandlerRolle(ArgumentMatchers.anyString())).thenReturn(true);
 
         henvendelseUtsendingService.hentTraad(FNR, TRAAD_ID, SAKSBEHANDLERS_VALGTE_ENHET);
     }

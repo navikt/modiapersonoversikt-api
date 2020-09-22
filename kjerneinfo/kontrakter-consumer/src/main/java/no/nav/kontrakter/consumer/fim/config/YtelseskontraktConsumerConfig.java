@@ -1,14 +1,16 @@
 package no.nav.kontrakter.consumer.fim.config;
 
+import no.nav.common.cxf.CXFClient;
+import no.nav.common.cxf.StsConfig;
 import no.nav.modig.jaxws.handlers.MDCOutHandler;
 import no.nav.modig.modia.ping.PingableWebService;
-import no.nav.sbl.dialogarena.common.cxf.CXFClient;
 import no.nav.sbl.dialogarena.types.Pingable;
 import no.nav.tjeneste.virksomhet.ytelseskontrakt.v3.YtelseskontraktV3;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import javax.xml.namespace.QName;
 
 import static org.apache.commons.lang3.StringUtils.defaultIfBlank;
@@ -20,18 +22,20 @@ public class YtelseskontraktConsumerConfig {
     private String ytelseskontraktEndpointUrl;
     @Value("${servicegateway.url:}")
     private String servicegatewayUrl;
+    @Autowired
+    private StsConfig stsConfig;
 
     @Bean
     public YtelseskontraktV3 ytelseskontraktV3() {
         return getYtelseskontraktV3()
-                .configureStsForSubject()
+                .configureStsForSubject(stsConfig)
                 .build();
     }
 
 
     @Bean
     public Pingable ytelseskontraktV3Pingable() {
-        YtelseskontraktV3 pingPorttype = getYtelseskontraktV3().configureStsForSystemUser().build();
+        YtelseskontraktV3 pingPorttype = getYtelseskontraktV3().configureStsForSystemUser(stsConfig).build();
         return new PingableWebService("Ytelseskontrakt", pingPorttype);
     }
 

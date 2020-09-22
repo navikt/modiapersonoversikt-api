@@ -7,11 +7,11 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import javax.inject.Inject;
-import javax.inject.Named;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import static junit.framework.TestCase.assertNotNull;
 import static org.hamcrest.Matchers.is;
@@ -24,11 +24,11 @@ import static org.junit.Assert.assertThat;
         UtbetalingPortTypeTestConfig.class})
 public class UtbetalingLamellContextTest {
 
-    @Inject
-    @Named("arenaUtbetalingUrl")
+    @Autowired
+    @Qualifier("arenaUtbetalingUrl")
     private String arenaUtbetalingUrl;
 
-    @Inject
+    @Autowired
     private UtbetalingService utbetalingService;
 
     @BeforeClass

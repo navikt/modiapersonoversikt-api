@@ -7,6 +7,8 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.arbeidsfordeling.Arb
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.AnsattService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.http.SubjectHandlerUtil;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.arbeidsfordeling.ArbeidsfordelingV1ServiceImpl;
+import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Tilgangskontroll;
+import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.TilgangskontrollMock;
 import no.nav.tjeneste.virksomhet.oppgave.v3.HentOppgaveOppgaveIkkeFunnet;
 import no.nav.tjeneste.virksomhet.oppgave.v3.OppgaveV3;
 import no.nav.tjeneste.virksomhet.oppgave.v3.meldinger.WSHentOppgaveRequest;
@@ -21,8 +23,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
 
-import javax.ws.rs.ForbiddenException;
 import java.util.Collections;
 
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.oppgavebehandling.OppgaveMockFactory.*;
@@ -30,8 +33,6 @@ import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
 class LeggTilbakeOppgaveIGsakDelegateTest {
@@ -43,13 +44,14 @@ class LeggTilbakeOppgaveIGsakDelegateTest {
     private OppgavebehandlingV3 oppgavebehandlingMock;
     private TildelOppgaveV1 tildelOppgaveMock;
     private ArbeidsfordelingV1Service arbeidsfordelingMock;
+    private Tilgangskontroll tilgangskontroll;
 
     private OppgaveBehandlingServiceImpl oppgaveBehandlingService;
 
     @BeforeEach
     void before() {
         mockTjenester();
-        oppgaveBehandlingService = new OppgaveBehandlingServiceImpl(oppgavebehandlingMock, tildelOppgaveMock, oppgaveServiceMock, ansattServiceMock, arbeidsfordelingMock);
+        oppgaveBehandlingService = new OppgaveBehandlingServiceImpl(oppgavebehandlingMock, tildelOppgaveMock, oppgaveServiceMock, ansattServiceMock, arbeidsfordelingMock, tilgangskontroll);
     }
 
     private void mockTjenester() {
@@ -58,6 +60,7 @@ class LeggTilbakeOppgaveIGsakDelegateTest {
         oppgavebehandlingMock = mock(OppgavebehandlingV3.class);
         tildelOppgaveMock = mock(TildelOppgaveV1.class);
         arbeidsfordelingMock = mock(ArbeidsfordelingV1ServiceImpl.class);
+        tilgangskontroll = TilgangskontrollMock.get();
     }
 
     private AnsattService mockAnsattService() {
@@ -115,12 +118,13 @@ class LeggTilbakeOppgaveIGsakDelegateTest {
         when(oppgaveServiceMock.hentOppgave(any()))
                 .thenReturn(new WSHentOppgaveResponse().withOppgave(lagWSOppgave().withAnsvarligId("ANNEN_SAKSBEHANDLER")));
 
-        assertThrows(ForbiddenException.class, () ->
+        ResponseStatusException exception = assertThrows(ResponseStatusException.class, () ->
                 SubjectHandlerUtil.withIdent(ANSVARLIG_SAKSBEHANDLER, () ->
                         oppgaveBehandlingService.leggTilbakeOppgaveIGsak(lagRequest()
                         )
                 )
         );
+        assertThat(exception.getStatus(), is(HttpStatus.FORBIDDEN));
     }
 
     private LeggTilbakeOppgaveIGsakRequest lagRequest() {

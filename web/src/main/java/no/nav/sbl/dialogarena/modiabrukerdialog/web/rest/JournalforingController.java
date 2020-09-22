@@ -9,26 +9,25 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.BehandlingsIdTi
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Tilgangskontroll;
 import no.nav.sbl.dialogarena.naudit.AuditIdentifier;
 import no.nav.sbl.dialogarena.naudit.AuditResources.Person;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.api.Feilmelding;
 import no.nav.sbl.dialogarena.naudit.Audit;
-import org.springframework.cache.annotation.Cacheable;
 
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
+
 import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.*;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.Response;
 import java.util.List;
 
 import static java.util.Arrays.asList;
-import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.RestUtils.hentValgtEnhet;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Policies.behandlingsIderTilhorerBruker;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Policies.tilgangTilBruker;
 import static no.nav.sbl.dialogarena.naudit.Audit.Action.*;
 
-@Path("/journalforing/{fnr}")
-@Produces(APPLICATION_JSON)
+@RestController
+@RequestMapping("/rest/journalforing/{fnr}")
 public class JournalforingController {
 
     public static final String FEILMELDING_UTEN_ENHET = "Det er dessverre ikke mulig å journalføre henvendelsen. Du må velge enhet du jobber på vegne av på nytt. Bekreft enhet med å trykke på \"Velg\"-knappen.";
@@ -36,32 +35,28 @@ public class JournalforingController {
     private final SakerService sakerService;
     private final Tilgangskontroll tilgangskontroll;
 
-    @Inject
+    @Autowired
     public JournalforingController(SakerService sakerService, Tilgangskontroll tilgangskontroll) {
         this.sakerService = sakerService;
         this.tilgangskontroll = tilgangskontroll;
     }
 
-    @GET
-    @Path("/saker/sammensatte")
-    public List<Sak> hentSammensatteSaker(@PathParam("fnr") String fnr) {
+    @GetMapping("/saker/sammensatte")
+    public List<Sak> hentSammensatteSaker(@PathVariable("fnr") String fnr) {
         return tilgangskontroll
                 .check(tilgangTilBruker.with(fnr))
                 .get(Audit.describe(READ, Person.GsakSaker, new Pair<>(AuditIdentifier.FNR, fnr)), () -> sakerService.hentSammensatteSaker(fnr));
     }
 
-    @GET
-    @Path("/saker/pensjon")
-    public List<Sak> hentPensjonSaker(@PathParam("fnr") String fnr) {
+    @GetMapping("/saker/pensjon")
+    public List<Sak> hentPensjonSaker(@PathVariable("fnr") String fnr) {
         return tilgangskontroll
                 .check(tilgangTilBruker.with(fnr))
                 .get(Audit.describe(READ, Person.PesysSaker, new Pair<>(AuditIdentifier.FNR, fnr)), () -> sakerService.hentPensjonSaker(fnr));
     }
 
-    @POST
-    @Path("/{traadId}")
-    @Consumes(APPLICATION_JSON)
-    public Response knyttTilSak(@PathParam("fnr") String fnr, @PathParam("traadId") String traadId, Sak sak, @Context HttpServletRequest request) throws JournalforingFeilet {
+    @PostMapping("/{traadId}")
+    public ResponseEntity<Void> knyttTilSak(@PathVariable("fnr") String fnr, @PathVariable("traadId") String traadId, @RequestBody Sak sak, HttpServletRequest request) throws JournalforingFeilet {
         return tilgangskontroll
                 .check(tilgangTilBruker.with(fnr))
                 .check(behandlingsIderTilhorerBruker.with(new BehandlingsIdTilgangData(fnr, asList(traadId))))
@@ -70,12 +65,12 @@ public class JournalforingController {
                     try {
                         sakerService.knyttBehandlingskjedeTilSak(fnr, traadId, sak, enhet);
                     } catch (EnhetIkkeSatt exception) {
-                        return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-                                .entity(new Feilmelding().withMessage(FEILMELDING_UTEN_ENHET)).build();
+                        throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, FEILMELDING_UTEN_ENHET, exception);
                     } catch (Exception exception) {
-                        return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+                        throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Ukjent feil", exception);
                     }
-                    return Response.ok().build();
+
+                    return new ResponseEntity<>(HttpStatus.OK);
                 });
     }
 }

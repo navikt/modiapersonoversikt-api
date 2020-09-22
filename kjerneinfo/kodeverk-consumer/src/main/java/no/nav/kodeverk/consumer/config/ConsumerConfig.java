@@ -8,14 +8,14 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 
 @Configuration
 @Import(EnvironmentPropertiesConfig.class)
 @EnableCaching
 public class ConsumerConfig {
 
-    @Inject
+    @Autowired
     private KodeverkPortType kodeverkPortType;
 
     @Bean

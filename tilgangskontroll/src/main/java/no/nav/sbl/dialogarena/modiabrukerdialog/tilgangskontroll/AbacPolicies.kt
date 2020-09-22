@@ -1,7 +1,7 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll
 
-import no.nav.common.auth.SsoToken
-import no.nav.common.auth.SubjectHandler
+import no.nav.common.auth.subject.SsoToken
+import no.nav.common.auth.subject.SubjectHandler
 import no.nav.sbl.dialogarena.abac.*
 import no.nav.sbl.dialogarena.abac.NavAttributes.ENVIRONMENT_FELLES_OIDC_TOKEN_BODY
 import no.nav.sbl.dialogarena.abac.NavAttributes.ENVIRONMENT_FELLES_PEP_ID

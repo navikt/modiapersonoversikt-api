@@ -1,6 +1,6 @@
 package no.nav.sbl.dialogarena.naudit
 
-import no.nav.common.auth.SubjectHandler
+import no.nav.common.auth.subject.SubjectHandler
 import no.nav.sbl.dialogarena.naudit.AuditIdentifier.DENY_REASON
 import org.slf4j.LoggerFactory
 

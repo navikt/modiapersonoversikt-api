@@ -1,27 +1,32 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v1.pensjonsak;
 
+import no.nav.common.cxf.CXFClient;
+import no.nav.common.cxf.StsConfig;
+import no.nav.common.utils.EnvironmentUtils;
 import no.nav.modig.modia.ping.PingableWebService;
-import no.nav.sbl.dialogarena.common.cxf.CXFClient;
 import no.nav.sbl.dialogarena.types.Pingable;
-import no.nav.sbl.util.EnvironmentUtils;
 import no.nav.tjeneste.virksomhet.pensjonsak.v1.PensjonSakV1;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import org.springframework.beans.factory.annotation.Autowired;
 
 import static no.nav.metrics.MetricsFactory.createTimerProxyForWebService;
 
 @Configuration
 public class PensjonSakEndpointConfig {
+    @Autowired
+    private StsConfig stsConfig;
 
     @Bean
     public PensjonSakV1 pensjonSakV1() {
-        PensjonSakV1 prod = createPensjonSakV1().configureStsForSubject().build();
+        PensjonSakV1 prod = createPensjonSakV1().configureStsForSubject(stsConfig).build();
         return createTimerProxyForWebService("PensjonSakV1", prod, PensjonSakV1.class);
     }
 
     @Bean
     public Pingable pensjonSakV1Ping() {
-        final PensjonSakV1 ws = createPensjonSakV1().configureStsForSystemUser().build();
+        final PensjonSakV1 ws = createPensjonSakV1().configureStsForSystemUser(stsConfig).build();
         return new PingableWebService("Pesys - Pensjonsak", ws);
     }
 

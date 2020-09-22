@@ -3,14 +3,14 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service;
 import _0._0.nav_cons_sak_gosys_3.no.nav.asbo.navansatt.ASBOGOSYSNAVAnsatt;
 import _0._0.nav_cons_sak_gosys_3.no.nav.asbo.navorgenhet.ASBOGOSYSNavEnhet;
 import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navansatt.*;
-import no.nav.common.auth.SubjectHandler;
+import no.nav.common.auth.subject.SubjectHandler;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.Ansatt;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.AnsattEnhet;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.AnsattService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
 import java.util.function.Function;
 
@@ -22,7 +22,7 @@ public class AnsattServiceImpl implements AnsattService {
     private static final Logger LOG = LoggerFactory.getLogger(AnsattServiceImpl.class);
     private final GOSYSNAVansatt ansattWS;
 
-    @Inject
+    @Autowired
     public AnsattServiceImpl(GOSYSNAVansatt ansattWS) {
         this.ansattWS = ansattWS;
     }

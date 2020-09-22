@@ -1,6 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service
 
-import no.nav.apiapp.feil.Feil
+import no.nav.common.types.feil.Feil
 import javax.ws.rs.core.Response
 
 enum class ApplikasjonsFeilType(private val status: Response.Status) : Feil.Type {
