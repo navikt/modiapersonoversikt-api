@@ -7,6 +7,7 @@ import no.nav.common.utils.NaisUtils;
 import no.nav.common.utils.SslUtils;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.ldap.LdapContextProvider;
 import org.springframework.boot.SpringApplication;
+import org.springframework.boot.actuate.autoconfigure.metrics.cache.CacheMetricsAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import static no.nav.common.utils.EnvironmentUtils.Type.PUBLIC;
@@ -16,7 +17,7 @@ import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.service.ServiceConfig.SYSTEMUSER_PASSWORD;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.service.ServiceConfig.SYSTEMUSER_USERNAME;
 
-@SpringBootApplication
+@SpringBootApplication(exclude = {CacheMetricsAutoConfiguration.class})
 public class Main {
     public static void main(String... args) {
         loadVaultSecrets();
