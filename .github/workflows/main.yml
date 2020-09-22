@@ -27,7 +27,7 @@ jobs:
         run: |
           mvn -P ci -B verify --settings .github/maven-settings.xml
       - name: Publish Docker image
-        if: github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/master' || github.ref == 'refs/heads/common-v2'
+        if: github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/master'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
@@ -36,24 +36,6 @@ jobs:
           docker build --tag ${IMAGE} .
           docker push ${IMAGE}
 
-  deploy-q1:
-    name: Deploy to preprod
-    needs: build
-    if: github.ref == 'refs/heads/common-v2'
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        namespace: [q1]
-    steps:
-      - uses: actions/checkout@v1
-      - uses: nais/deploy/actions/deploy@v1
-        env:
-          APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
-          PRINT_PAYLOAD: true
-          CLUSTER: dev-fss
-          RESOURCE: .nais/nais-${{ matrix.namespace }}.yml
-          VAR: version=${{ github.sha }}
-
   deploy-qa:
     name: Deploy to preprod
     needs: build
@@ -61,7 +43,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        namespace: [q0, q6]
+        namespace: [q0, q1, q6]
     steps:
       - uses: actions/checkout@v1
       - uses: nais/deploy/actions/deploy@v1
