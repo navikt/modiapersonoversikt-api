@@ -27,7 +27,7 @@ public class TimerProxy implements InvocationHandler {
         if (DO_NOT_MEASURE_METHOD_NAMES.contains(method.getName())) {
             return method.invoke(originalObject, args);
         }
-        ProxyMetodeKall proxy = new ProxyMetodeKall(object, method, args);
+        ProxyMetodeKall proxy = new ProxyMetodeKall(originalObject, method, args);
         String timerName = name + "." + method.getName() + ".timer";
         Timer timer = new Timer(client, timerName, timing);
         timer.start();
