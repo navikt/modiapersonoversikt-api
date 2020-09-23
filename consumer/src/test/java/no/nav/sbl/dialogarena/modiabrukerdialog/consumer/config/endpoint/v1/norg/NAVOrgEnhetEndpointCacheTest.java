@@ -37,6 +37,6 @@ class NAVOrgEnhetEndpointCacheTest extends CacheTest {
         enhetWS.hentNAVEnhet(enhet2);
 
         assertThat(getCache().getName(), is("asbogosysEnhet"));
-        assertThat(getCache().getKeys().size(), is(2));
+        assertThat(getNativeCache().estimatedSize(), is(2L));
     }
 }

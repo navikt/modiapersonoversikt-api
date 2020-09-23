@@ -63,6 +63,7 @@ import no.nav.tjeneste.virksomhet.organisasjonenhetkontaktinformasjon.v1.Organis
 import no.nav.tjeneste.virksomhet.pensjonsak.v1.PensjonSakV1;
 import no.nav.tjeneste.virksomhet.person.v3.binding.PersonV3;
 import no.nav.tjeneste.virksomhet.tildeloppgave.v1.TildelOppgaveV1;
+import org.springframework.cache.CacheManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -93,11 +94,12 @@ public class ServiceConfig {
                                                                    Tilgangskontroll tilgangskontroll,
                                                                    ContentRetriever propertyResolver,
                                                                    PersonKjerneinfoServiceBi personKjerneinfoServiceBi,
-                                                                   LDAPService ldapService) {
+                                                                   LDAPService ldapService,
+                                                                   CacheManager cacheManager) {
 
         return new HenvendelseUtsendingServiceImpl(henvendelsePortType, sendUtHenvendelsePortType,
                 behandleHenvendelsePortType, oppgaveBehandlingService, sakerService, tilgangskontroll,
-                propertyResolver, personKjerneinfoServiceBi, ldapService);
+                propertyResolver, personKjerneinfoServiceBi, ldapService, cacheManager);
     }
 
     @Bean

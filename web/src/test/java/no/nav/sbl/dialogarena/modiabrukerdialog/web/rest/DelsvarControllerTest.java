@@ -28,6 +28,8 @@ import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.meldinger.WSHentHenven
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.*;
 import org.mockito.ArgumentCaptor;
+import org.springframework.cache.Cache;
+import org.springframework.cache.CacheManager;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockHttpServletRequest;
@@ -72,9 +74,22 @@ class DelsvarControllerTest {
         HenvendelsePortType henvendelsePortTypeMock = getHenvendelsePortTypeMock();
         ContentRetriever propertyResolver = mockPropertyResolver();
         PersonKjerneinfoServiceBi kjerneinfoMock = mockPersonKjerneinfoService();
+        CacheManager cacheManager = mock(CacheManager.class);
+        when(cacheManager.getCache(anyString())).thenReturn(mock(Cache.class));
         sendUtHenvendelsePortTypeMock = mock(SendUtHenvendelsePortType.class);
 
-        return new HenvendelseUtsendingServiceImpl(henvendelsePortTypeMock, sendUtHenvendelsePortTypeMock, null, null, null, TilgangskontrollMock.get(), propertyResolver, kjerneinfoMock, null);
+        return new HenvendelseUtsendingServiceImpl(
+                henvendelsePortTypeMock,
+                sendUtHenvendelsePortTypeMock,
+                null,
+                null,
+                null,
+                TilgangskontrollMock.get(),
+                propertyResolver,
+                kjerneinfoMock,
+                null,
+                cacheManager
+        );
     }
 
     private ContentRetriever mockPropertyResolver() {

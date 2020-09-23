@@ -35,6 +35,8 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.*;
+import org.springframework.cache.Cache;
+import org.springframework.cache.CacheManager;
 
 import java.util.*;
 
@@ -79,6 +81,7 @@ class HenvendelseUtsendingServiceImplTest {
     private BehandleHenvendelsePortType behandleHenvendelsePortType = mock(BehandleHenvendelsePortType.class);
     private PersonKjerneinfoServiceBi kjerneinfo = mock(PersonKjerneinfoServiceBi.class);
     private LDAPService ldapService = mock(LDAPService.class);
+    private CacheManager cacheManager = mock(CacheManager.class);
 
     private HenvendelseUtsendingServiceImpl henvendelseUtsendingService = new HenvendelseUtsendingServiceImpl(
             henvendelsePortType,
@@ -89,7 +92,8 @@ class HenvendelseUtsendingServiceImplTest {
             tilgangskontroll,
             propertyResolver,
             kjerneinfo,
-            ldapService
+            ldapService,
+            cacheManager
     );
 
     @BeforeAll
@@ -119,6 +123,7 @@ class HenvendelseUtsendingServiceImplTest {
         person.getPersonfakta().getAnsvarligEnhet().getOrganisasjonsenhet().getOrganisasjonselementId();
         kjerneinformasjonResponse.setPerson(person);
         when(kjerneinfo.hentKjerneinformasjon(any(HentKjerneinformasjonRequest.class))).thenReturn(kjerneinformasjonResponse);
+        when(cacheManager.getCache(anyString())).thenReturn(mock(Cache.class));
     }
 
     @Test

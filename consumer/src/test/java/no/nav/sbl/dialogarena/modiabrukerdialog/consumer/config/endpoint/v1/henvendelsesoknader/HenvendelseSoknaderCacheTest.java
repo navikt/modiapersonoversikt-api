@@ -30,9 +30,7 @@ public class HenvendelseSoknaderCacheTest extends CacheTest {
         henvendelse.hentSoknadListe(request2);
         henvendelse.hentSoknadListe(request2);
 
-        int antallCacheinstanser = getCache().getSize();
-
-        assertThat(antallCacheinstanser, is(2));
+        assertThat(getNativeCache().estimatedSize(), is(2L));
     }
 
 }
