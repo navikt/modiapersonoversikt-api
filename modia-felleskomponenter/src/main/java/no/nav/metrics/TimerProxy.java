@@ -23,16 +23,16 @@ public class TimerProxy implements InvocationHandler {
     }
 
     @Override
-    public Object invoke(Object proxy, Method method, Object[] objects) throws Throwable {
+    public Object invoke(Object object, Method method, Object[] args) throws Throwable {
         if (DO_NOT_MEASURE_METHOD_NAMES.contains(method.getName())) {
-            return method.invoke(originalObject, objects);
+            return method.invoke(originalObject, args);
         }
-
+        ProxyMetodeKall proxy = new ProxyMetodeKall(originalObject, method, args);
         String timerName = name + "." + method.getName() + ".timer";
         Timer timer = new Timer(client, timerName, timing);
         timer.start();
         try {
-            return method.invoke(originalObject, objects);
+            return proxy.kallMetode();
         } catch (RuntimeException | Error unchecked) {
             timer.setFailed();
             timer.addFieldToReport("checkedException", false);
