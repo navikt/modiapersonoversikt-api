@@ -96,16 +96,6 @@ class HenvendelseUtsendingServiceImplTest {
             cacheManager
     );
 
-    @BeforeAll
-    static void beforeClass() {
-        CacheTestUtil.setupCache(Collections.singletonList("endpointCache"));
-    }
-
-    @AfterAll
-    static void afterClass() {
-        CacheTestUtil.tearDown();
-    }
-
     @BeforeEach
     void init() {
         when(sendUtHenvendelsePortType.sendUtHenvendelse(any(WSSendUtHenvendelseRequest.class))).thenReturn(

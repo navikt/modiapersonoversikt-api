@@ -54,16 +54,6 @@ class DelsvarControllerTest {
     private SendUtHenvendelsePortType sendUtHenvendelsePortTypeMock;
     private Tilgangskontroll tilgangskontrollMock = TilgangskontrollMock.get();
 
-    @BeforeAll
-    static void beforeAll() {
-        CacheTestUtil.setupCache(Collections.singletonList("endpointCache"));
-    }
-
-    @AfterAll
-    static void afterAll() {
-        CacheTestUtil.tearDown();
-    }
-
     @BeforeEach
     void before() {
         httpMockRequest = HttpRequestUtil.mockHttpServletRequestMedCookie(SAKSBEHANDLERS_IDENT, VALGT_ENHET);
