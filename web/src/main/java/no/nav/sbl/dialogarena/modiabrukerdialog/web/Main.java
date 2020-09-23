@@ -17,7 +17,7 @@ import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.service.ServiceConfig.SYSTEMUSER_PASSWORD;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.service.ServiceConfig.SYSTEMUSER_USERNAME;
 
-@SpringBootApplication(exclude = {CacheMetricsAutoConfiguration.class})
+@SpringBootApplication
 public class Main {
     public static void main(String... args) {
         loadVaultSecrets();
