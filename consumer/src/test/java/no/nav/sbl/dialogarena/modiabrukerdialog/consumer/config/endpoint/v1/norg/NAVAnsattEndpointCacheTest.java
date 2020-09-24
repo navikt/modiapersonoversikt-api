@@ -39,6 +39,6 @@ class NAVAnsattEndpointCacheTest extends CacheTest {
         ansattWS.hentNAVAnsatt(req2);
 
         assertThat(getCache().getName(), is("asbogosysAnsatt"));
-        assertThat(getCache().getKeys().size(), is(2));
+        assertThat(getNativeCache().estimatedSize(), is(2L));
     }
 }

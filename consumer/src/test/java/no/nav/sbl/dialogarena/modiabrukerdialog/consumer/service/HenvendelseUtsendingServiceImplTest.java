@@ -17,7 +17,6 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveBehandlingService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.gsak.SakerService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.ldap.LDAPService;
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.cache.CacheTestUtil;
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Tilgangskontroll;
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.TilgangskontrollContext;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.behandlehenvendelse.BehandleHenvendelsePortType;
@@ -30,11 +29,11 @@ import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.meldinger.WSHentHenven
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.meldinger.WSHentHenvendelseListeResponse;
 import org.hamcrest.Matchers;
 import org.joda.time.DateTime;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.*;
+import org.springframework.cache.Cache;
+import org.springframework.cache.CacheManager;
 
 import java.util.*;
 
@@ -79,6 +78,7 @@ class HenvendelseUtsendingServiceImplTest {
     private BehandleHenvendelsePortType behandleHenvendelsePortType = mock(BehandleHenvendelsePortType.class);
     private PersonKjerneinfoServiceBi kjerneinfo = mock(PersonKjerneinfoServiceBi.class);
     private LDAPService ldapService = mock(LDAPService.class);
+    private CacheManager cacheManager = mock(CacheManager.class);
 
     private HenvendelseUtsendingServiceImpl henvendelseUtsendingService = new HenvendelseUtsendingServiceImpl(
             henvendelsePortType,
@@ -89,18 +89,9 @@ class HenvendelseUtsendingServiceImplTest {
             tilgangskontroll,
             propertyResolver,
             kjerneinfo,
-            ldapService
+            ldapService,
+            cacheManager
     );
-
-    @BeforeAll
-    static void beforeClass() {
-        CacheTestUtil.setupCache(Collections.singletonList("endpointCache"));
-    }
-
-    @AfterAll
-    static void afterClass() {
-        CacheTestUtil.tearDown();
-    }
 
     @BeforeEach
     void init() {
@@ -119,6 +110,7 @@ class HenvendelseUtsendingServiceImplTest {
         person.getPersonfakta().getAnsvarligEnhet().getOrganisasjonsenhet().getOrganisasjonselementId();
         kjerneinformasjonResponse.setPerson(person);
         when(kjerneinfo.hentKjerneinformasjon(any(HentKjerneinformasjonRequest.class))).thenReturn(kjerneinformasjonResponse);
+        when(cacheManager.getCache(anyString())).thenReturn(mock(Cache.class));
     }
 
     @Test
