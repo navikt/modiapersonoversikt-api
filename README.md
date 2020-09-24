@@ -114,3 +114,6 @@ $ mvn versions:commit
 - Oppdater versjonen på kjerneinfo eller modia-felleskomponenter
 - Sjekk at det bygger
 - Push til master for å release
+
+
+
