@@ -32,6 +32,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.CacheManager;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
@@ -56,6 +58,7 @@ public class HenvendelseUtsendingServiceImpl implements HenvendelseUtsendingServ
     private final ContentRetriever propertyResolver;
     private final PersonKjerneinfoServiceBi kjerneinfo;
     private final LDAPService ldapService;
+    private final CacheManager cacheManager;
     private final Tilgangskontroll tilgangskontroll;
     private static final Logger logger = LoggerFactory.getLogger(HenvendelseUtsendingServiceImpl.class);
 
@@ -68,7 +71,8 @@ public class HenvendelseUtsendingServiceImpl implements HenvendelseUtsendingServ
                                            Tilgangskontroll tilgangskontroll,
                                            ContentRetriever propertyResolver,
                                            PersonKjerneinfoServiceBi kjerneinfo,
-                                           LDAPService ldapService) {
+                                           LDAPService ldapService,
+                                           CacheManager cacheManager) {
 
         this.henvendelsePortType = henvendelsePortType;
         this.sendUtHenvendelsePortType = sendUtHenvendelsePortType;
@@ -79,6 +83,7 @@ public class HenvendelseUtsendingServiceImpl implements HenvendelseUtsendingServ
         this.propertyResolver = propertyResolver;
         this.kjerneinfo = kjerneinfo;
         this.ldapService = ldapService;
+        this.cacheManager = cacheManager;
     }
 
     @Override
@@ -137,7 +142,12 @@ public class HenvendelseUtsendingServiceImpl implements HenvendelseUtsendingServ
     }
 
     private void invaliderCacheForHentHenvendelseListe(Melding melding) {
-        HenvendelsePortTypeCacheUtil.invaliderHentHenvendelseListeCacheElement(henvendelsePortType, melding.fnrBruker, HenvendelseUtils.AKTUELLE_HENVENDELSE_TYPER);
+        HenvendelsePortTypeCacheUtil.invaliderHentHenvendelseListeCacheElement(
+                cacheManager,
+                henvendelsePortType,
+                melding.fnrBruker,
+                HenvendelseUtils.AKTUELLE_HENVENDELSE_TYPER
+        );
     }
 
     @Override

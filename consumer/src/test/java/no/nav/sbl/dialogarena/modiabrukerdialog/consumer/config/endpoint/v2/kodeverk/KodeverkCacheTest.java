@@ -33,8 +33,6 @@ class KodeverkCacheTest extends CacheTest {
         kodeverk.hentKodeverk(request2);
         kodeverk.hentKodeverk(request2);
 
-        int antallCacheinstanser = getCache().getSize();
-
-        assertThat(antallCacheinstanser, is(2));
+        assertThat(getNativeCache().estimatedSize(), is(2L));
     }
 }

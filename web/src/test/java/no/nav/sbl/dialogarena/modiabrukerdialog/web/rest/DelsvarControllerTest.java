@@ -11,7 +11,6 @@ import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLMetadataL
 import no.nav.modig.content.ContentRetriever;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveBehandlingService;
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.cache.CacheTestUtil;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.http.HttpRequestUtil;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.http.SubjectHandlerUtil;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.HenvendelseUtsendingServiceImpl;
@@ -28,6 +27,8 @@ import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.meldinger.WSHentHenven
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.*;
 import org.mockito.ArgumentCaptor;
+import org.springframework.cache.Cache;
+import org.springframework.cache.CacheManager;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockHttpServletRequest;
@@ -52,16 +53,6 @@ class DelsvarControllerTest {
     private SendUtHenvendelsePortType sendUtHenvendelsePortTypeMock;
     private Tilgangskontroll tilgangskontrollMock = TilgangskontrollMock.get();
 
-    @BeforeAll
-    static void beforeAll() {
-        CacheTestUtil.setupCache(Collections.singletonList("endpointCache"));
-    }
-
-    @AfterAll
-    static void afterAll() {
-        CacheTestUtil.tearDown();
-    }
-
     @BeforeEach
     void before() {
         httpMockRequest = HttpRequestUtil.mockHttpServletRequestMedCookie(SAKSBEHANDLERS_IDENT, VALGT_ENHET);
@@ -72,9 +63,22 @@ class DelsvarControllerTest {
         HenvendelsePortType henvendelsePortTypeMock = getHenvendelsePortTypeMock();
         ContentRetriever propertyResolver = mockPropertyResolver();
         PersonKjerneinfoServiceBi kjerneinfoMock = mockPersonKjerneinfoService();
+        CacheManager cacheManager = mock(CacheManager.class);
+        when(cacheManager.getCache(anyString())).thenReturn(mock(Cache.class));
         sendUtHenvendelsePortTypeMock = mock(SendUtHenvendelsePortType.class);
 
-        return new HenvendelseUtsendingServiceImpl(henvendelsePortTypeMock, sendUtHenvendelsePortTypeMock, null, null, null, TilgangskontrollMock.get(), propertyResolver, kjerneinfoMock, null);
+        return new HenvendelseUtsendingServiceImpl(
+                henvendelsePortTypeMock,
+                sendUtHenvendelsePortTypeMock,
+                null,
+                null,
+                null,
+                TilgangskontrollMock.get(),
+                propertyResolver,
+                kjerneinfoMock,
+                null,
+                cacheManager
+        );
     }
 
     private ContentRetriever mockPropertyResolver() {

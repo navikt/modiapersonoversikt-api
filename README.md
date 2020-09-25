@@ -8,7 +8,7 @@ Noen nyttige lenker og tips ligger på følgende lenke: https://confluence.adeo.
 
 ### Caching
 
-Cacheoppsett er hovedsakelig beskrevet i `cacheconfig.xml` og benytter seg av Springs cache abstraction og en underliggende Ehcache-implementasjon.
+Cacheoppsett er hovedsakelig beskrevet i `cacheconfig.xml` og benytter seg av Springs cache abstraction og en underliggende caffeina-cache-implementasjon.
 
 Tjenestekall mot NORG caches i to forskjellige cacher. Se `cacheconfig.xml` for eksakt hvilke kall som bruker hvilken cache.
 Det er hovedsakelig en forskjell på time-to-live og key-generering. Den ene cachen har caching som tar hensyn til innlogget saksbehandler, og har en kort time-to-live.
@@ -17,7 +17,7 @@ cache-populeringsjobb. Se *Faste jobber* for mer informasjon om denne.
 
 Tjenestekall mot andre tjenester har egne cacher.
 
-Cacheimplementasjonen til Ehcache er ikke blocking, dvs at dersom to tråder spør med like keys vil cachen slippe gjennom to kall til den underliggende tjenesten.
+Cacheoppsettet er ikke blocking, dvs at dersom to tråder spør med like keys vil cachen slippe gjennom to kall til den underliggende tjenesten.
 
 ### Faste jobber
 

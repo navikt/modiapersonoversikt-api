@@ -1,13 +1,11 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.util;
 
-import net.sf.ehcache.Ehcache;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.cache.CacheConfiguration;
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.aop.framework.AopProxyUtils;
-import org.springframework.cache.ehcache.EhCacheCache;
-import org.springframework.cache.ehcache.EhCacheCacheManager;
+import org.springframework.cache.Cache;
+import org.springframework.cache.CacheManager;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -18,7 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 @ContextConfiguration(classes = {CacheConfiguration.class, CacheTestConfig.class})
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 public abstract class CacheTest {
-    private static EhCacheCacheManager cm;
+    private static CacheManager cm;
 
     private final String cachename;
 
@@ -27,22 +25,21 @@ public abstract class CacheTest {
     }
 
     @Autowired
-    public void setEhCacheCacheManager(EhCacheCacheManager eccm) {
-        cm = eccm;
-    }
-
-    @AfterAll
-    public static void after() {
-        cm.getCacheManager().shutdown();
+    public void setCacheCacheManager(CacheManager cm) {
+        CacheTest.cm = cm;
     }
 
     @BeforeEach
     public void teardown() {
-        getCache().removeAll();
+        getCache().clear();
     }
 
-    protected Ehcache getCache() {
-        return ((EhCacheCache) cm.getCache(cachename)).getNativeCache();
+    protected Cache getCache() {
+        return cm.getCache(cachename);
+    }
+
+    protected com.github.benmanes.caffeine.cache.Cache<Object, Object> getNativeCache() {
+        return (com.github.benmanes.caffeine.cache.Cache<Object, Object>) cm.getCache(cachename).getNativeCache();
     }
 
     protected static Object unwrapProxy(Object proxy) throws Exception {

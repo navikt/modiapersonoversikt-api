@@ -1,68 +1,65 @@
 package no.nav.modig.cache;
 
-import net.sf.ehcache.config.CacheConfiguration;
-import net.sf.ehcache.config.PersistenceConfiguration;
-import net.sf.ehcache.store.MemoryStoreEvictionPolicy;
+import com.github.benmanes.caffeine.cache.Cache;
+import com.github.benmanes.caffeine.cache.Caffeine;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
-import org.springframework.cache.ehcache.EhCacheCacheManager;
+import org.springframework.cache.caffeine.CaffeineCache;
+import org.springframework.cache.support.SimpleCacheManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import java.time.Duration;
+import java.util.Arrays;
 
 @Configuration
 @EnableCaching
 public class CacheConfig {
-    private static final PersistenceConfiguration persistence = new PersistenceConfiguration()
-            .strategy(PersistenceConfiguration.Strategy.NONE);
 
     @Bean
-    public net.sf.ehcache.CacheManager ehcacheCacheManager() {
-        net.sf.ehcache.config.Configuration config = new net.sf.ehcache.config.Configuration();
-        config.setName("cachemanager");
+    public CacheManager cacheManager() {
+        SimpleCacheManager cacheManager = new SimpleCacheManager();
+        cacheManager.setCaches(Arrays.asList(
+                cache("abacClientCache", 3600, 10_000),
+                cache("endpointCache", 3, 10_000),
+                cache("kjerneinformasjonCache", 60),
+                cache("kodeverk_consumer.kodeverkCache", 3600),
+                cache("ytelseskontrakter", 600),
+                cache("pleiePengerCache", 300),
+                cache("organisasjonCache", 300),
+                cache("organisasjonEnhetKontaktinformasjonCache", 300),
+                cache("oppfolgingsinfoCache", 300),
+                cache("oppfolgingCache", 600),
+                cache("foreldrePengerCache", 300),
+                cache("hentSykmeldingsperioderCache", 300),
+                cache("kodeverkCache", 3600),
+                cache("utbetalingCache", 1800, 10_000),
+                cache("aktorIdCache", Integer.MAX_VALUE, 100_000),
+                cache("asbogosysEnhet", 86400, 10_000),
+                cache("asbogosysAnsatt", 14400, 10_000),
+                cache("asbogosysAnsattListe", 43200, 10_000),
+                cache("organisasjonEnhetV2", 86400, 10_000),
+                cache("ldap", 3600, 20_000),
+                cache("varslingCache", 180, 10_000),
+                cache("kodeverksmapperCache", 86400),
+                cache("innsynJournalCache", 1800, 10_000),
+                cache("pesysCache", 600)
+        ));
 
-        config.addCache(cache("abacClientCache", 3600).maxEntriesLocalHeap(10_000));
-        config.addCache(cache("endpointCache", 3).maxEntriesLocalHeap(10_000));
-        config.addCache(cache("kjerneinformasjonCache", 60));
-        config.addCache(cache("kodeverk_consumer.kodeverkCache", 3600));
-        config.addCache(cache("ytelseskontrakter", 600));
-        config.addCache(cache("pleiePengerCache", 300));
-        config.addCache(cache("organisasjonCache", 300));
-        config.addCache(cache("organisasjonEnhetKontaktinformasjonCache", 300));
-        config.addCache(cache("oppfolgingsinfoCache", 300));
-        config.addCache(cache("oppfolgingCache", 600));
-        config.addCache(cache("foreldrePengerCache", 300));
-        config.addCache(cache("hentSykmeldingsperioderCache", 300));
-        config.addCache(cache("kodeverkCache", 3600));
-        config.addCache(cache("utbetalingCache", 1800).maxEntriesLocalHeap(10_000));
-        config.addCache(cache("aktorIdCache", Integer.MAX_VALUE).maxEntriesLocalHeap(100_000));
-        config.addCache(cache("asbogosysEnhet", 86400).maxEntriesLocalHeap(10_000));
-        config.addCache(cache("asbogosysAnsatt", 14400).maxEntriesLocalHeap(10_000));
-        config.addCache(cache("asbogosysAnsattListe", 43200).maxEntriesLocalHeap(10_000));
-        config.addCache(cache("organisasjonEnhetV2", 86400).maxEntriesLocalHeap(10_000));
-        config.addCache(cache("ldap", 3600).maxEntriesLocalHeap(20_000));
-        config.addCache(cache("varslingCache", 180).maxEntriesLocalHeap(10_000));
-        config.addCache(cache("kodeverksmapperCache", 86400));
-        config.addCache(cache("innsynJournalCache", 1800).maxEntriesLocalHeap(10_000));
-        config.addCache(cache("pesysCache", 600));
-
-        return net.sf.ehcache.CacheManager.newInstance(config);
+        return cacheManager;
     }
 
-    @Bean
-    public CacheManager cacheManager(net.sf.ehcache.CacheManager ehcacheCacheManager) {
-        return new EhCacheCacheManager(ehcacheCacheManager);
+    private static CaffeineCache cache(String name, int time) {
+        return cache(name, time, 1000);
     }
 
-    private static CacheConfiguration cache(String name, int time) {
-        return cache(name, time, time);
-    }
-
-    private static CacheConfiguration cache(String name, int tti, int ttl) {
-        return new CacheConfiguration(name, 100)
-                .memoryStoreEvictionPolicy(MemoryStoreEvictionPolicy.LRU)
-                .timeToIdleSeconds(tti)
-                .timeToLiveSeconds(ttl)
-                .persistence(persistence)
-                .maxEntriesLocalHeap(1000);
+    private static CaffeineCache cache(String name, int time, int maximumSize) {
+        Cache<Object, Object> cache = Caffeine.newBuilder()
+                .expireAfterAccess(Duration.ofSeconds(time))
+                .expireAfterWrite(Duration.ofSeconds(time))
+                .maximumSize(maximumSize)
+                .build();
+        
+        return new CaffeineCache(name, cache);
     }
 }

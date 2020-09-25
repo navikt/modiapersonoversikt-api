@@ -16,11 +16,11 @@ import no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.DateUtils.arbeidsdager
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.OppgavebehandlingV3
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.meldinger.WSOpprettOppgave
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.meldinger.WSOpprettOppgaveRequest
-import java.time.LocalDate
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
+import java.time.LocalDate
 
 private const val HENVENDELSESTYPE_KODE: String = "DIALOG"
 
@@ -71,7 +71,6 @@ class DialogOppgaveController @Autowired constructor(
                 .get(Audit.describe(CREATE, Henvendelse.Oppgave.Opprett, AuditIdentifier.FNR to request.fnr)) {
                     val respons = oppgavebehandlingRest
                             .opprettOppgave(OppgaveRequest(
-
                                     fnr = request.fnr,
                                     behandlesAvApplikasjon = "FS22",
                                     beskrivelse = request.beskrivelse,
@@ -84,10 +83,9 @@ class DialogOppgaveController @Autowired constructor(
                                     opprettetavenhetsnummer = request.opprettetavenhetsnummer,
                                     oppgaveFrist = kalkulerFrist(request.temaKode, request.oppgaveTypeKode)
                             )
-                            )
-                    SkjermetOppgaveRespons(
-                            oppgaveid = respons!!.getId()
                     )
+
+                    SkjermetOppgaveRespons(oppgaveid = respons.id)
                 }
     }
 

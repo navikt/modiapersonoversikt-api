@@ -39,7 +39,7 @@ class OrganisasjonEnhetV2EndpointCacheTest extends CacheTest {
         organisasjonEnhetService.hentEnhetBolk(request_2);
 
         assertThat(getCache().getName(), is(CACHE_NAME));
-        assertThat(getCache().getKeys().size(), is(2));
+        assertThat(getNativeCache().estimatedSize(), is(2L));
     }
 
     @Test
@@ -53,7 +53,7 @@ class OrganisasjonEnhetV2EndpointCacheTest extends CacheTest {
         organisasjonEnhetService.finnNAVKontor(request_2);
 
         assertThat(getCache().getName(), is(CACHE_NAME));
-        assertThat(getCache().getKeys().size(), is(2));
+        assertThat(getNativeCache().estimatedSize(), is(2L));
     }
 
     private WSFinnNAVKontorRequest lagFinnNAVKontorRequest(String geografiskTilhorighet, String diskresjonskode) {
