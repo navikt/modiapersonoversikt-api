@@ -118,6 +118,7 @@ public class OppgaveBehandlingServiceImpl implements OppgaveBehandlingService {
                     .withOppgaveIdListe(singletonList(oppgaveId))
                     .withFerdigstiltAvEnhetId(Integer.valueOf(enhetFor(temagruppe, saksbehandlersValgteEnhet)))
             );
+            logger.info("Forsøker å ferdigstille oppgave med oppgaveId" + oppgaveId + "for enhet" + saksbehandlersValgteEnhet);
 
         } catch (Exception e) {
             logger.error("Kunne ikke ferdigstille Gsak oppgave i Modia med oppgaveId " + oppgaveId, e);
@@ -136,6 +137,7 @@ public class OppgaveBehandlingServiceImpl implements OppgaveBehandlingService {
             oppgavebehandlingWS.ferdigstillOppgaveBolk(new WSFerdigstillOppgaveBolkRequest()
                     .withOppgaveIdListe(oppgaveIder)
                     .withFerdigstiltAvEnhetId(Integer.valueOf(enhetFor(temagruppe, saksbehandlersValgteEnhet))));
+            logger.info("Forsøker å ferdigstille oppgave med oppgaveIder" + oppgaveIder + "for enhet" + saksbehandlersValgteEnhet);
         } catch (Exception e) {
             String ider = String.join(", ", oppgaveIder);
             logger.warn("Ferdigstilling av oppgavebolk med oppgaveider: " + ider + ", med enhet " + saksbehandlersValgteEnhet + " feilet.", e);
