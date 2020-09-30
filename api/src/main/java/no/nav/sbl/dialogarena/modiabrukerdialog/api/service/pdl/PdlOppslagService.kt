@@ -6,6 +6,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.pdl.generated.HentPer
 
 interface PdlOppslagService {
     fun hentPerson(fnr: String): HentPerson.Person?
+    fun hentPersonBasertPaUtenlandskId(utenlandskId: String): HentPersonUtenlandskId.Person?
     fun hentIdent(fnr: String): HentIdent.Identliste?
     fun hentNavnBolk(fnrs: List<String>): Map<String, HentNavnBolk.Navn?>?
 }

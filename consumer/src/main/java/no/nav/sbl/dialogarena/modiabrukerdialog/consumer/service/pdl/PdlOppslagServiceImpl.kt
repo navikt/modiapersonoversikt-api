@@ -29,6 +29,13 @@ class PdlOppslagServiceImpl constructor(
                 ?.hentPerson
     }
 
+    override fun hentPersonBasertPaUtenlandskId(utenlandskId: String): HentPersonBasertPaUtenlandskId.Person? = runBlocking {
+        HentPersonBasertPaUtenlandskId(pdlClient)
+                .execute(HentPersonBasertPaUtenlandskId.Variables(fnr), userTokenAuthorizationHeaders)
+                .data
+                ?.hentPersonBasertPaUtenlandskId
+    }
+
     override fun hentNavnBolk(fnrs: List<String>): Map<String, HentNavnBolk.Navn?>? {
         if (fnrs.isEmpty()) {
             return emptyMap()
@@ -78,6 +85,10 @@ class PdlOppslagServiceImpl constructor(
                 is HentPerson.Variables -> {
                     val ident = variables.ident.let(PdlSyntetiskMapper::mapFnrTilPdl)
                     HentPerson.Variables(ident)
+                }
+                is HentPersonBasertPaUtenlandskId.Variables -> {
+                    val ident = variables.ident.let(PdlSyntetiskMapper::mapFnrTilPdl)
+                    HentPersonBasertPaUtenlandskId.Variables(ident)
                 }
                 is HentNavnBolk.Variables -> {
                     val identer = variables.identer.map(PdlSyntetiskMapper::mapFnrTilPdl)

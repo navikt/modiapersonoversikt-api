@@ -13,6 +13,7 @@ schema {
 
 type Query {
     hentPerson(ident: ID!): Person
+    hentPersonBasertPaUtenlandskId(utenlandskIdent: ID!): Person
     hentPersonBolk(identer: [ID!]!): [HentPersonBolkResult!]!
     hentIdenter(ident: ID!, grupper: [IdentGruppe!], historikk: Boolean = false): Identliste
     hentIdenterBolk(identer: [ID!]!, grupper: [IdentGruppe!], historikk: Boolean = false): [HentIdenterBolkResult!]!
@@ -47,7 +48,7 @@ type HentPersonBolkResult {
     code: String!
 }
 
-type Person {
+type  Person {
     adressebeskyttelse(historikk: Boolean = false): [Adressebeskyttelse!]!
     bostedsadresse(historikk: Boolean = false): [Bostedsadresse!]!
     deltBosted(historikk: Boolean = false): [DeltBosted!]!
@@ -633,7 +634,7 @@ input Paging {
     resultsPerPage:Int = 10
 }
 
-type SearchResult {
+type  SearchResult {
     hits : [searchHit!]!,
     pageNumber:Int,
     totalPages:Int
