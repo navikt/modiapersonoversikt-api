@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.person
 
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.pdl.PdlOppslagService
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Policies
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Tilgangskontroll
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.lagXmlGregorianDato
@@ -27,7 +28,7 @@ private enum class OppslagFeil {
 
 @RestController
 @RequestMapping("/rest/personsok")
-class PersonsokController @Autowired constructor(private val personsokPortType: PersonsokPortType, val tilgangskontroll: Tilgangskontroll) {
+class PersonsokController @Autowired constructor(private val personsokPortType: PersonsokPortType, val tilgangskontroll: Tilgangskontroll, val pdlOppslagService: PdlOppslagService) {
 
     private val logger = LoggerFactory.getLogger(PersonsokController::class.java)
     private val auditDescriptor = Audit.describe<List<Map<String, Any?>>>(Audit.Action.READ, AuditResources.Personsok.Resultat) { resultat ->
@@ -43,6 +44,14 @@ class PersonsokController @Autowired constructor(private val personsokPortType: 
                 .check(Policies.tilgangTilModia)
                 .get(auditDescriptor) {
                     try {
+                        if(personsokRequest.utenlandskID?.length != null){
+                            val pdlUtenlandskPerson = pdlOppslagService.hentPersonBasertPaUtenlandskId(personsokRequest.utenlandskID)
+                            if (pdlUtenlandskPerson.personListe == null) {
+                                emptyList()
+                            } else {
+                                pdlUtenlandskPerson.personListe.map { lagPersonResponse(it) }
+                            }
+                        }
                         val response = personsokPortType.finnPerson(lagPersonsokRequest(personsokRequest))
                         if (response.personListe == null) {
                             emptyList()
@@ -171,5 +180,6 @@ data class PersonsokRequest(
         val kjonn: String?,
         val husnummer: Int?,
         val husbokstav: String?,
-        val postnummer: String?
+        val postnummer: String?,
+        val utenlandskID: String?
 )
