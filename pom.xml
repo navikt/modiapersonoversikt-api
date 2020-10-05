@@ -56,6 +56,14 @@
 
     <dependencyManagement>
         <dependencies>
+            <!-- overskriver no.nav.common.bom for å sikre at vi har riktige versjoner i henhold til spring-boot -->
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-framework-bom</artifactId>
+                <version>5.2.9.RELEASE</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
             <dependency>
                 <groupId>no.nav.common</groupId>
                 <artifactId>bom</artifactId>
@@ -64,17 +72,6 @@
                 <scope>import</scope>
             </dependency>
 
-            <!-- overskriver micrometer fra no.nav.common.bom -->
-            <dependency>
-                <groupId>io.micrometer</groupId>
-                <artifactId>micrometer-core</artifactId>
-                <version>1.5.5</version>
-            </dependency>
-            <dependency>
-                <groupId>io.micrometer</groupId>
-                <artifactId>micrometer-registry-prometheus</artifactId>
-                <version>1.5.5</version>
-            </dependency>
 
             <dependency>
                 <groupId>org.jetbrains.kotlin</groupId>
