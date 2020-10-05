@@ -57,7 +57,7 @@ jobs:
   deploy-q1:
     name: Deploy to preprod
     needs: build
-    if: github.ref == 'refs/heads/fix/opp-1247-modulesystem
+    if: github.ref == 'refs/heads/fix/opp-1247-modulesystem'
     runs-on: ubuntu-latest
     strategy:
       matrix:
