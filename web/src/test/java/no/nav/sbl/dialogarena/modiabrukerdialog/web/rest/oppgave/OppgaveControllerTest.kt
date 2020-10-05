@@ -133,8 +133,8 @@ internal class OppgaveControllerTest {
         val resultat = SubjectHandlerUtil.withIdent(SAKSBEHANDLERS_IDENT, UnsafeSupplier { oppgaveController.finnTildelte() })
 
         assertEquals(oppgaveliste.size, resultat.size)
-        assertEquals(oppgaveliste[0].oppgaveId, resultat[0]["oppgaveId"])
-        assertEquals(oppgaveliste[1].oppgaveId, resultat[1]["oppgaveId"])
+        assertEquals(oppgaveliste[0].oppgaveId, resultat[0].oppgaveId)
+        assertEquals(oppgaveliste[1].oppgaveId, resultat[1].oppgaveId)
     }
 
     @Test
@@ -169,8 +169,8 @@ internal class OppgaveControllerTest {
         val resultat = SubjectHandlerUtil.withIdent(SAKSBEHANDLERS_IDENT, UnsafeSupplier { oppgaveController.plukkOppgaver(TEMAGRUPPE_ARBEID, httpRequest) })
 
         assertEquals(oppgaver.size, resultat.size)
-        assertEquals(oppgaver[0].oppgaveId, resultat[0]["oppgaveId"])
-        assertEquals(oppgaver[1].oppgaveId, resultat[1]["oppgaveId"])
+        assertEquals(oppgaver[0].oppgaveId, resultat[0].oppgaveId)
+        assertEquals(oppgaver[1].oppgaveId, resultat[1].oppgaveId)
     }
 
     @Test
@@ -189,7 +189,7 @@ internal class OppgaveControllerTest {
 
         verify(plukkOppgaveService, times(0)).plukkOppgaver(any(), any())
         assertEquals(oppgaveliste.size, resultat.size)
-        assertEquals(oppgaveliste[0].oppgaveId, resultat[0]["oppgaveId"])
+        assertEquals(oppgaveliste[0].oppgaveId, resultat[0].oppgaveId)
     }
 
     @Test
