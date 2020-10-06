@@ -14,12 +14,11 @@ import org.springframework.web.bind.annotation.*
 @RequestMapping("/internal/aaputsending")
 class AAPUtsendingController @Autowired constructor(
         private val tilgangskontroll: Tilgangskontroll,
-        stsService: SystemUserTokenProvider,
         sakerService: SakerService,
         henvendelseService: HenvendelseUtsendingService
 ) {
     val leaderElectionClient = LeaderElectionHttpClient()
-    val service = AAPUtsendingService(sakerService, henvendelseService, leaderElectionClient, stsService)
+    val service = AAPUtsendingService(sakerService, henvendelseService, leaderElectionClient)
 
     @GetMapping("/status")
     fun hentStatus() = service.status()

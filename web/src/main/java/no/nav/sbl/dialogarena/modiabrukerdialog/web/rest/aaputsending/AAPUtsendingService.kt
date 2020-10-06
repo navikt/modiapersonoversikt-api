@@ -1,20 +1,14 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.aaputsending
 
-import com.nimbusds.jwt.JWTParser
-import no.nav.common.auth.subject.IdentType
-import no.nav.common.auth.subject.SsoToken
 import no.nav.common.auth.subject.Subject
 import no.nav.common.auth.subject.SubjectHandler
 import no.nav.common.leaderelection.LeaderElectionClient
-import no.nav.common.sts.SystemUserTokenProvider
-import no.nav.common.utils.EnvironmentUtils
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.Sak
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Fritekst
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.HenvendelseUtsendingService
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.gsak.SakerService
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.service.ServiceConfig
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.dialog.RequestContext
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.dialog.getKanal
 import java.net.InetAddress
@@ -23,9 +17,7 @@ import java.util.concurrent.Executors
 import java.util.concurrent.Future
 import java.util.concurrent.atomic.AtomicReference
 
-private val RPA_IDENT = EnvironmentUtils.getRequiredProperty(ServiceConfig.SYSTEMUSER_USERNAME)
 private const val RPA_ENHET = "2830" //4151
-
 private const val MELDING_FRITEKST = """
 Det har dessverre skjedd en teknisk feil som medfører at utbetalingen din bli forsinket.
 Vi beklager dette, og vi jobber nå med å rette opp feilen.
@@ -82,8 +74,7 @@ class Prosessor<S>(
 class AAPUtsendingService(
         private val sakerService: SakerService,
         private val henvendelseService: HenvendelseUtsendingService,
-        private val leaderElection: LeaderElectionClient,
-        private val stsService: SystemUserTokenProvider
+        private val leaderElection: LeaderElectionClient
 ) {
     private val processorReference: AtomicReference<Prosessor<String>?> = AtomicReference(null)
 
@@ -135,14 +126,12 @@ class AAPUtsendingService(
             if (processorReference.get() != null) {
                 return status()
             }
-            val systemToken = stsService.systemUserToken
-            val parsedToken = JWTParser.parse(systemToken)
-            val ssoToken = SsoToken.oidcToken(systemToken, parsedToken.jwtClaimsSet.claims)
-            val subject = Subject(RPA_IDENT, IdentType.Systemressurs, ssoToken)
+            val subject = SubjectHandler.getSubject().orElseThrow { IllegalStateException("Fant ikke subject") }
+            val ident = subject.uid
 
             processorReference.set(
                     Prosessor(subject, fnrs) { fnr ->
-                        sendHenvendelse(fnr)
+                        sendHenvendelse(ident, fnr)
                         Thread.sleep(500)
                     }
             )
@@ -151,14 +140,14 @@ class AAPUtsendingService(
         return status()
     }
 
-    private fun sendHenvendelse(fnr: String) {
+    private fun sendHenvendelse(ident: String, fnr: String) {
         val saker: List<Sak> = sakerService.hentSammensatteSaker(fnr)
         val sak: Sak = saker.find { it.temaKode == MELDING_TEMAKODE }
                 ?: throw IllegalStateException("Fant ikke $MELDING_TEMAKODE sak for $fnr")
 
         val requestContext = RequestContext(
                 fnr = fnr,
-                ident = RPA_IDENT,
+                ident = ident,
                 enhet = RPA_ENHET
         )
 
