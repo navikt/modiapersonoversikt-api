@@ -114,6 +114,14 @@ class Policies {
                         if (identer.contains(ident)) DecisionEnums.PERMIT else DecisionEnums.DENY
                     }.orElse(DecisionEnums.DENY)
         }
+
+        val kanStarteHasteUtsending = Policy<TilgangskontrollContext>({ "Saksbehandler (${hentSaksbehandlerId()}) har ikke tilgang til hasteutsending av AAP-greier" }) {
+            val godkjenteIdenter = listOf("Z990351", "U143410", "N139039")
+            hentSaksbehandlerId()
+                    .map {ident ->
+                        if (godkjenteIdenter.contains(ident)) DecisionEnums.PERMIT else DecisionEnums.DENY
+                    }.orElse(DecisionEnums.DENY)
+        }
     }
 }
 
