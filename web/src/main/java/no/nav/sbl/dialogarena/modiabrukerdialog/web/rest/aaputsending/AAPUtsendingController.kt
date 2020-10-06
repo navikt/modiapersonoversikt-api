@@ -22,6 +22,9 @@ class AAPUtsendingController @Autowired constructor(
     @GetMapping("/status")
     fun hentStatus() = service.status()
 
+    @GetMapping
+    fun hentStatus2() = service.status()
+
     @PostMapping("/start")
     fun startUtsending(@RequestBody fnrs: List<String>): AAPUtsendingService.Status {
         return tilgangskontroll
@@ -31,5 +34,10 @@ class AAPUtsendingController @Autowired constructor(
                     val unikeFnr = fnrs.toSet().toList()
                     return@get service.utsendingAAP(unikeFnr)
                 }
+    }
+
+    @PostMapping("/reset")
+    fun reset(): AAPUtsendingService.Status {
+        return service.reset()
     }
 }

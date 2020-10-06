@@ -13,8 +13,7 @@ import java.net.InetAddress
 import java.util.*
 import java.util.concurrent.Executors
 import java.util.concurrent.Future
-import java.util.concurrent.atomic.AtomicBoolean
-import java.util.concurrent.atomic.AtomicInteger
+import java.util.concurrent.atomic.AtomicReference
 
 const val RPA_IDENT = "Z999999"
 const val RPA_ENHET = "2830" //4151
@@ -28,58 +27,112 @@ const val MELDING_TILKNYTTETANSATT = false
 const val MELDING_TEMAKODE = "AAP"
 const val MELDING_TEMAGRUPPE = "ARBD"
 
+class Prosessor<S>(private val list: Collection<S>, private val block: (s: S) -> Unit) {
+    private val executor = Executors.newSingleThreadExecutor()
+    private var job: Future<*>? = null
+    private val errors: MutableList<Pair<S, Throwable>> = mutableListOf()
+    private val success: MutableList<S> = mutableListOf()
+
+    data class Status<S>(
+            val isRunning: Boolean,
+            val isDone: Boolean,
+            val processed: Int,
+            val total: Int,
+            val success: List<S>,
+            val errors: List<Pair<S, Throwable>>
+    )
+
+    init {
+        job = executor.submit {
+            list.forEach { element ->
+                try {
+                    block(element)
+                    success.plus(element)
+                } catch (throwable: Throwable) {
+                    errors.plus(element to throwable)
+                }
+            }
+        }
+    }
+
+    fun getStatus() = Status(
+            isRunning = job != null,
+            isDone = job?.isDone ?: false,
+            processed = success.size + errors.size,
+            total = list.size,
+            success = success,
+            errors = errors
+    )
+}
+
 class AAPUtsendingService(
         private val sakerService: SakerService,
         private val henvendelseService: HenvendelseUtsendingService,
         private val leaderElection: LeaderElectionClient
 ) {
-    private val hasStarted = AtomicBoolean(false)
-    private val total = AtomicInteger(0)
-    private val prosessCount = AtomicInteger(0)
-    private val executor = Executors.newSingleThreadExecutor()
-    private var job: Future<*>? = null
+    private val processorReference: AtomicReference<Prosessor<String>?> = AtomicReference(null)
 
     data class Status(
-            val hasStarted: Boolean,
-            val total: Int,
-            val processed: Int,
-            val isDone: Boolean,
-            val isCancelled: Boolean,
             val isLeader: Boolean,
-            val hostname: String
+            val hostname: String,
+            val prosessorStatus: Prosessor.Status<String>
     )
 
-    fun status() = Status(
-            hasStarted = hasStarted.get(),
-            total = total.get(),
-            processed = prosessCount.get(),
-            isDone = job?.isDone ?: false,
-            isCancelled = job?.isCancelled ?: false,
-            isLeader = leaderElection.isLeader,
-            hostname = InetAddress.getLocalHost().hostName
-    )
+    fun status(): Status {
+        val processor = processorReference.get()
+        if (processor != null) {
+            return Status(
+                    isLeader = leaderElection.isLeader,
+                    hostname = InetAddress.getLocalHost().hostName,
+                    prosessorStatus = processor.getStatus()
+            )
+        }
+
+        return Status(
+                isLeader = leaderElection.isLeader,
+                hostname = InetAddress.getLocalHost().hostName,
+                prosessorStatus = Prosessor.Status(
+                        isRunning = false,
+                        isDone = false,
+                        processed = -1,
+                        total = -1,
+                        success = emptyList(),
+                        errors = emptyList()
+                )
+        )
+    }
+
+    fun reset(): Status {
+        synchronized(processorReference) {
+            if (processorReference.get()?.getStatus()?.isDone == true) {
+                processorReference.set(null)
+            }
+        }
+        return status()
+    }
 
     fun utsendingAAP(fnrs: List<String>): Status {
         if (!leaderElection.isLeader) {
             return status()
         }
-        if (hasStarted.getAndSet(true)) {
-            return status()
-        }
 
-        total.set(fnrs.size)
-        job = executor.submit {
-            fnrs.forEach { fnr ->
-                sendSingle(fnr)
-                prosessCount.incrementAndGet()
-                Thread.sleep(500)
+        synchronized(processorReference) {
+            if (processorReference.get() != null) {
+                return status()
             }
+
+            processorReference.set(
+                    Prosessor(fnrs) { fnr ->
+                        sendHenvendelse(fnr)
+                        Thread.sleep(500)
+                    }
+            )
         }
 
         return status()
     }
 
-    private fun sendSingle(fnr: String) {
+    private fun sendHenvendelse(fnr: String) {
         val saker: List<Sak> = sakerService.hentSammensatteSaker(fnr)
         val sak: Sak = saker.find { it.temaKode == MELDING_TEMAKODE }
                 ?: throw IllegalStateException("Fant ikke $MELDING_TEMAKODE sak for $fnr")
