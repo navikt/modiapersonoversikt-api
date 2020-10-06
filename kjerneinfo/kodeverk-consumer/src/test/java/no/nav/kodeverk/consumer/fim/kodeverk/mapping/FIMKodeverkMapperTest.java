@@ -37,7 +37,7 @@ public class FIMKodeverkMapperTest {
         from.getKodeverkListe().add(mockFactory.getMockFinnKodeverk("navn1", "eier1", "1", 1));
         from.getKodeverkListe().add(mockFactory.getMockFinnKodeverk("navn2", "eier2", "2", 2));
 
-        no.nav.kodeverk.consumer.fim.kodeverk.to.meldinger.FinnKodeverkListeResponse to = mapper.map(from, no.nav.kodeverk.consumer.fim.kodeverk.to.meldinger.FinnKodeverkListeResponse.class);
+        no.nav.kodeverk.consumer.fim.kodeverk.to.meldinger.FinnKodeverkListeResponse to = mapper.map(from);
 
         assertEquals(from.getKodeverkListe().size(), to.getKodeverkListe().size());
     }
@@ -49,7 +49,7 @@ public class FIMKodeverkMapperTest {
         from.setSpraak("NO_nb");
         from.setVersjonsnummer("56");
 
-        XMLHentKodeverkRequest to = mapper.map(from, XMLHentKodeverkRequest.class);
+        XMLHentKodeverkRequest to = mapper.map(from);
 
         assertEquals(from.getNavn(), to.getNavn());
         assertEquals(from.getSpraak(), to.getSpraak());
@@ -65,7 +65,7 @@ public class FIMKodeverkMapperTest {
         from.getKodeverk().setVersjonsnummer("23");
         from.getKodeverk().setNavn("navn1");
 
-        no.nav.kodeverk.consumer.fim.kodeverk.to.meldinger.HentKodeverkResponse to = mapper.map(from, no.nav.kodeverk.consumer.fim.kodeverk.to.meldinger.HentKodeverkResponse.class);
+        no.nav.kodeverk.consumer.fim.kodeverk.to.meldinger.HentKodeverkResponse to = mapper.map(from);
 
         assertEquals(from.getKodeverk().getNavn(), to.getKodeverk().getNavn());
         assertEquals(from.getKodeverk().getEier(), to.getKodeverk().getEier());
@@ -76,7 +76,7 @@ public class FIMKodeverkMapperTest {
     public void kode() {
         XMLKode from = mockFactory.getMockKode("#MockKode");
 
-        no.nav.kodeverk.consumer.fim.kodeverk.to.informasjon.Kode to = mapper.map(from, no.nav.kodeverk.consumer.fim.kodeverk.to.informasjon.Kode.class);
+        no.nav.kodeverk.consumer.fim.kodeverk.to.informasjon.Kode to = mapper.map(from);
 
         assertEquals(from.getTerm().size(), to.getTerm().size());
         assertEquals(from.getGyldighetsperiode().size(), to.getGyldighetsperiode().size());
@@ -89,7 +89,7 @@ public class FIMKodeverkMapperTest {
     public void finnKodeverk() {
         Kodeverk from = mockFactory.getMockFinnKodeverk("Testkodeverk", "Eier", "1", 3);
 
-        no.nav.kodeverk.consumer.fim.kodeverk.to.informasjon.Kodeverk to = mapper.map(from, no.nav.kodeverk.consumer.fim.kodeverk.to.informasjon.Kodeverk.class);
+        no.nav.kodeverk.consumer.fim.kodeverk.to.informasjon.Kodeverk to = mapper.map(from);
 
         assertEquals(from.getNavn(), to.getNavn());
         assertEquals(from.getEier(), to.getEier());
@@ -99,7 +99,7 @@ public class FIMKodeverkMapperTest {
     @Test
     public void testPeriodeMapping() {
         XMLPeriode periodeDto = mockFactory.getMockPeriode();
-        Periode domainPeriode = mapper.map(periodeDto, Periode.class);
+        Periode domainPeriode = mapper.map(periodeDto);
 
         compareDateFields(periodeDto.getFom().toGregorianCalendar(), domainPeriode.getFrom());
         compareDateFields(periodeDto.getTom().toGregorianCalendar(), domainPeriode.getTo());
@@ -112,7 +112,7 @@ public class FIMKodeverkMapperTest {
     public void hentkodeverk() {
         XMLKodeverk from = mockFactory.getMockHentKodeverk("Testkodeverk", "Eier", "1", 3);
 
-        no.nav.kodeverk.consumer.fim.kodeverk.to.informasjon.Kodeverk to = mapper.map(from, no.nav.kodeverk.consumer.fim.kodeverk.to.informasjon.Kodeverk.class);
+        no.nav.kodeverk.consumer.fim.kodeverk.to.informasjon.Kodeverk to = mapper.map(from);
 
         assertEquals(from.getNavn(), to.getNavn());
         assertEquals(from.getEier(), to.getEier());
@@ -126,7 +126,7 @@ public class FIMKodeverkMapperTest {
         from.getKode().add(mockFactory.getMockKode("#1"));
         from.getKode().add(mockFactory.getMockKode("#2"));
 
-        no.nav.kodeverk.consumer.fim.kodeverk.to.informasjon.EnkeltKodeverk to = mapper.map(from, no.nav.kodeverk.consumer.fim.kodeverk.to.informasjon.EnkeltKodeverk.class);
+        no.nav.kodeverk.consumer.fim.kodeverk.to.informasjon.EnkeltKodeverk to = mapper.map(from);
 
         assertEquals(from.getEier(), to.getEier());
         assertEquals(from.getKode().size(), to.getKode().size());
