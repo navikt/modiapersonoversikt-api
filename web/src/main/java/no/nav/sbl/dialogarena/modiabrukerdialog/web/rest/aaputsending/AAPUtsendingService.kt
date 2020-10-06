@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.aaputsending
 
+import no.nav.common.auth.subject.SubjectHandler
 import no.nav.common.leaderelection.LeaderElectionClient
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.Sak
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Fritekst
@@ -43,13 +44,19 @@ class Prosessor<S>(private val list: Collection<S>, private val block: (s: S) ->
     )
 
     init {
+        val subject = SubjectHandler.getSubject().orElseThrow {
+            IllegalStateException("Fant ikke saksbehandler-ident")
+        }
+
         job = executor.submit {
-            list.forEach { element ->
-                try {
-                    block(element)
-                    success.plus(element)
-                } catch (throwable: Throwable) {
-                    errors.plus(element to throwable)
+            SubjectHandler.withSubject(subject) {
+                list.forEach { element ->
+                    try {
+                        block(element)
+                        success.add(element)
+                    } catch (throwable: Throwable) {
+                        errors.add(element to throwable)
+                    }
                 }
             }
         }
