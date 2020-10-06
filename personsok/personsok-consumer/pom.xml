@@ -75,11 +75,6 @@
             <artifactId>kodeverk-tjenestespesifikasjon</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>ma.glasnost.orika</groupId>
-            <artifactId>orika-core</artifactId>
-        </dependency>
-
         <!-- Test dependencies -->
         <dependency>
             <groupId>org.springframework.boot</groupId>

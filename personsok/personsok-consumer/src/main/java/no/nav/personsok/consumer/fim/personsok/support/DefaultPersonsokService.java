@@ -35,7 +35,7 @@ public class DefaultPersonsokService implements PersonsokServiceBi {
     @Override
     public FinnPersonResponse finnPerson(FinnPersonRequest finnPersonRequest) throws FinnPersonFault, FinnPersonFault1 {
 
-        no.nav.tjeneste.virksomhet.personsoek.v1.meldinger.FinnPersonRequest rawRequest = mapper.map(finnPersonRequest, no.nav.tjeneste.virksomhet.personsoek.v1.meldinger.FinnPersonRequest.class);
+        no.nav.tjeneste.virksomhet.personsoek.v1.meldinger.FinnPersonRequest rawRequest = mapper.map(finnPersonRequest);
 
         no.nav.tjeneste.virksomhet.personsoek.v1.meldinger.FinnPersonResponse rawResponse = personsokService.finnPerson(rawRequest);
 
@@ -44,7 +44,7 @@ public class DefaultPersonsokService implements PersonsokServiceBi {
         }
         logger.info("finnPersonReturnerte " + rawResponse.getPersonListe().size() + " treff.");
 
-        FinnPersonResponse response = mapper.map(rawResponse, FinnPersonResponse.class);
+        FinnPersonResponse response = mapper.map(rawResponse);
         return response;
     }
 
