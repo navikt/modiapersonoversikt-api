@@ -1,13 +1,20 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.aaputsending
 
+import com.nimbusds.jwt.JWTParser
+import no.nav.common.auth.subject.IdentType
+import no.nav.common.auth.subject.SsoToken
+import no.nav.common.auth.subject.Subject
 import no.nav.common.auth.subject.SubjectHandler
 import no.nav.common.leaderelection.LeaderElectionClient
+import no.nav.common.sts.SystemUserTokenProvider
+import no.nav.common.utils.EnvironmentUtils
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.Sak
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Fritekst
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.HenvendelseUtsendingService
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.gsak.SakerService
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.service.ServiceConfig
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.dialog.RequestContext
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.dialog.getKanal
 import java.net.InetAddress
@@ -16,19 +23,23 @@ import java.util.concurrent.Executors
 import java.util.concurrent.Future
 import java.util.concurrent.atomic.AtomicReference
 
-const val RPA_IDENT = "Z999999"
-const val RPA_ENHET = "2830" //4151
+private val RPA_IDENT = EnvironmentUtils.getRequiredProperty(ServiceConfig.SYSTEMUSER_USERNAME)
+private const val RPA_ENHET = "2830" //4151
 
-const val MELDING_FRITEKST = """
+private const val MELDING_FRITEKST = """
 Det har dessverre skjedd en teknisk feil som medfører at utbetalingen din bli forsinket.
 Vi beklager dette, og vi jobber nå med å rette opp feilen.
 Pengene vil være inne på din konto i løpet av denne uken.
 """
-const val MELDING_TILKNYTTETANSATT = false
-const val MELDING_TEMAKODE = "AAP"
-const val MELDING_TEMAGRUPPE = "ARBD"
+private const val MELDING_TILKNYTTETANSATT = false
+private const val MELDING_TEMAKODE = "AAP"
+private const val MELDING_TEMAGRUPPE = "ARBD"
 
-class Prosessor<S>(private val list: Collection<S>, private val block: (s: S) -> Unit) {
+class Prosessor<S>(
+        private val subject: Subject,
+        private val list: Collection<S>,
+        private val block: (s: S) -> Unit
+) {
     private val executor = Executors.newSingleThreadExecutor()
     private var job: Future<*>? = null
     private val errors: MutableList<Pair<S, Throwable>> = mutableListOf()
@@ -44,11 +55,7 @@ class Prosessor<S>(private val list: Collection<S>, private val block: (s: S) ->
     )
 
     init {
-        val subject = SubjectHandler.getSubject().orElseThrow {
-            IllegalStateException("Fant ikke saksbehandler-ident")
-        }
-
-        job = executor.submit {
+       job = executor.submit {
             SubjectHandler.withSubject(subject) {
                 list.forEach { element ->
                     try {
@@ -75,7 +82,8 @@ class Prosessor<S>(private val list: Collection<S>, private val block: (s: S) ->
 class AAPUtsendingService(
         private val sakerService: SakerService,
         private val henvendelseService: HenvendelseUtsendingService,
-        private val leaderElection: LeaderElectionClient
+        private val leaderElection: LeaderElectionClient,
+        private val stsService: SystemUserTokenProvider
 ) {
     private val processorReference: AtomicReference<Prosessor<String>?> = AtomicReference(null)
 
@@ -127,9 +135,13 @@ class AAPUtsendingService(
             if (processorReference.get() != null) {
                 return status()
             }
+            val systemToken = stsService.systemUserToken
+            val parsedToken = JWTParser.parse(systemToken)
+            val ssoToken = SsoToken.oidcToken(systemToken, parsedToken.jwtClaimsSet.claims)
+            val subject = Subject(RPA_IDENT, IdentType.Systemressurs, ssoToken)
 
             processorReference.set(
-                    Prosessor(fnrs) { fnr ->
+                    Prosessor(subject, fnrs) { fnr ->
                         sendHenvendelse(fnr)
                         Thread.sleep(500)
                     }

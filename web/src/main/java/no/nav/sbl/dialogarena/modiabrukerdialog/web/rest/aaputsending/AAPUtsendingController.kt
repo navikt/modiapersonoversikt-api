@@ -1,6 +1,7 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.aaputsending
 
 import no.nav.common.leaderelection.LeaderElectionHttpClient
+import no.nav.common.sts.SystemUserTokenProvider
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.HenvendelseUtsendingService
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.gsak.SakerService
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Policies
@@ -13,11 +14,12 @@ import org.springframework.web.bind.annotation.*
 @RequestMapping("/internal/aaputsending")
 class AAPUtsendingController @Autowired constructor(
         private val tilgangskontroll: Tilgangskontroll,
+        stsService: SystemUserTokenProvider,
         sakerService: SakerService,
         henvendelseService: HenvendelseUtsendingService
 ) {
     val leaderElectionClient = LeaderElectionHttpClient()
-    val service = AAPUtsendingService(sakerService, henvendelseService, leaderElectionClient)
+    val service = AAPUtsendingService(sakerService, henvendelseService, leaderElectionClient, stsService)
 
     @GetMapping("/status")
     fun hentStatus() = service.status()
