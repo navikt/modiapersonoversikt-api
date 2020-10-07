@@ -11,7 +11,6 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.RestUtils
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.http.CookieUtil
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Policies
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Tilgangskontroll
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.mapOfNotNullOrEmpty
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.service.plukkoppgave.PlukkOppgaveService
 import no.nav.sbl.dialogarena.naudit.Audit
 import no.nav.sbl.dialogarena.naudit.Audit.Action.READ
@@ -84,7 +83,7 @@ class OppgaveController @Autowired constructor(
     }
 
     @PostMapping("/plukk/{temagruppe}")
-    fun plukkOppgaver(@PathVariable("temagruppe") temagruppe: String, httpRequest: HttpServletRequest): List<Map<String, String>> {
+    fun plukkOppgaver(@PathVariable("temagruppe") temagruppe: String, httpRequest: HttpServletRequest): List<OppgaveDTO> {
         return tilgangkontroll
                 .check(Policies.tilgangTilModia)
                 .check(Policies.kanPlukkeOppgave)
@@ -118,10 +117,17 @@ class OppgaveController @Autowired constructor(
     }
 }
 
-private fun mapOppgave(oppgave: Oppgave) = mapOfNotNullOrEmpty(
-        "oppgaveId" to oppgave.oppgaveId,
-        "traadId" to oppgave.henvendelseId,
-        "fødselsnummer" to oppgave.fnr
+data class OppgaveDTO(
+        val oppgaveId: String,
+        val traadId: String?,
+        val fødselsnummer: String?,
+        val erSTOOppgave: Boolean
+)
+private fun mapOppgave(oppgave: Oppgave) = OppgaveDTO(
+        oppgave.oppgaveId,
+        oppgave.henvendelseId,
+        oppgave.fnr,
+        oppgave.erSTOOppgave
 )
 
 private fun handterRuntimeFeil(exception: RuntimeException): RuntimeException {

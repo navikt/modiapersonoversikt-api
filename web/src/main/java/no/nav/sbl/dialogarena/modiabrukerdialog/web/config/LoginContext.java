@@ -55,6 +55,7 @@ public class LoginContext {
         registration.setFilter(new OidcAuthenticationFilter(authenticators));
         registration.setOrder(1);
         registration.addUrlPatterns("/rest/*");
+        registration.addUrlPatterns("/internal/aaputsending/*");
         return registration;
     }
 

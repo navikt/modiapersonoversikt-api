@@ -642,6 +642,6 @@ type SearchResult {
 }
 type searchHit {
     person :Person,
-    identer: [IdentInformasjon!]!
+    identer(historikk: Boolean = false): [IdentInformasjon!]!,
     score :Float
 }
