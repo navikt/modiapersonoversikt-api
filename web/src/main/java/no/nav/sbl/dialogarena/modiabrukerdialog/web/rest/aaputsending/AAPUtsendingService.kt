@@ -22,7 +22,7 @@ private const val MELDING_FRITEKST = """
 Forsinket utbetaling
 
 Det har dessverre skjedd en teknisk feil som medfører at utbetalingen din kan ha blitt forsinket.
-Vi beklager dette, og vi jobber nå med å rette opp feilen. Pengene vil blir utbetalt i løpet av denne uken.
+Vi beklager dette, og vi jobber nå med å rette opp feilen. Pengene vil bli utbetalt i løpet av denne uken.
 Hvis du allerede har mottatt utbetalingen din kan du se bort fra denne meldingen.
 
 Med vennlig hilsen
