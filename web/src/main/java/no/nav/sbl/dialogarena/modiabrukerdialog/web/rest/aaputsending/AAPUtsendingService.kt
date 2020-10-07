@@ -24,6 +24,9 @@ Forsinket utbetaling
 Det har dessverre skjedd en teknisk feil som medfører at utbetalingen din kan ha blitt forsinket.
 Vi beklager dette, og vi jobber nå med å rette opp feilen. Pengene vil blir utbetalt i løpet av denne uken.
 Hvis du allerede har mottatt utbetalingen din kan du se bort fra denne meldingen.
+
+Med vennlig hilsen
+NAV
 """
 private const val MELDING_TILKNYTTETANSATT = false
 private const val MELDING_TEMAKODE = "AAP"
