@@ -19,9 +19,11 @@ import java.util.concurrent.atomic.AtomicReference
 
 private const val RPA_ENHET = "2830" //4151
 private const val MELDING_FRITEKST = """
-Det har dessverre skjedd en teknisk feil som medfører at utbetalingen din bli forsinket.
-Vi beklager dette, og vi jobber nå med å rette opp feilen.
-Pengene vil være inne på din konto i løpet av denne uken.
+Forsinket utbetaling
+
+Det har dessverre skjedd en teknisk feil som medfører at utbetalingen din kan ha blitt forsinket.
+Vi beklager dette, og vi jobber nå med å rette opp feilen. Pengene vil blir utbetalt i løpet av denne uken.
+Hvis du allerede har mottatt utbetalingen din kan du se bort fra denne meldingen.
 """
 private const val MELDING_TILKNYTTETANSATT = false
 private const val MELDING_TEMAKODE = "AAP"
