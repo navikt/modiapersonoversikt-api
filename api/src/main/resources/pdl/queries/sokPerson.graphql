@@ -1,0 +1,92 @@
+query($paging: Paging, $criteria: [Criterion]) {
+    sokPerson(paging: $paging, criteria: $criteria) {
+        hits {
+            score
+            person {
+                navn {
+                    fornavn
+                    mellomnavn
+                    etternavn
+                    forkortetNavn
+                    originaltNavn {
+                        fornavn
+                        mellomnavn
+                        etternavn
+                    }
+                }
+                utenlandskIdentifikasjonsnummer {
+                    identifikasjonsnummer,
+                    utstederland,
+                    opphoert
+                }
+                kontaktinformasjonForDoedsbo {
+                    skifteform
+                    attestutstedelsesdato
+                    personSomKontakt {
+                        foedselsdato
+                        personnavn {
+                            fornavn
+                            mellomnavn
+                            etternavn
+                        }
+                        identifikasjonsnummer
+                    }
+                    advokatSomKontakt {
+                        personnavn {
+                            fornavn
+                            mellomnavn
+                            etternavn
+                        }
+                        organisasjonsnavn
+                        organisasjonsnummer
+                    }
+                    organisasjonSomKontakt {
+                        organisasjonsnavn
+                        organisasjonsnummer
+                        kontaktperson {
+                            fornavn
+                            mellomnavn
+                            etternavn
+                        }
+                    }
+                    adresse {
+                        adresselinje1
+                        adresselinje2
+                        poststedsnavn
+                        postnummer
+                        landkode
+                    }
+                }
+                tilrettelagtKommunikasjon {
+                    talespraaktolk {
+                        spraak
+                    }
+                    tegnspraaktolk {
+                        spraak
+                    }
+                }
+                fullmakt {
+                    motpartsPersonident
+                    motpartsRolle
+                    omraader
+                    gyldigFraOgMed
+                    gyldigTilOgMed
+                }
+                telefonnummer {
+                    landskode
+                    nummer
+                    prioritet
+                    metadata {
+                        endringer {
+                            registrert
+                            registrertAv
+                        }
+                    }
+                }
+            }
+        }
+        pageNumber,
+        totalHits,
+        totalPages
+    }
+}

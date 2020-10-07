@@ -52,6 +52,13 @@ class PdlOppslagServiceImpl constructor(
                 ?.hentIdenter
     }
 
+    override fun sokPerson(utenlandskId: String): SokPerson.SearchResult.Person.utenlandskidentifikasjonsnummer.identifikasjonsnummer? = runBlocking {
+        SokPerson(pdlClient)
+                .execute(SokPerson.Variables(utenlandskId), userTokenAuthorizationHeaders)
+                .data
+                ?.hentPerson
+    }
+
     private val userTokenAuthorizationHeaders: HeadersBuilder = {
         val systemuserToken: String = stsService.systemUserToken
         val userToken: String = SubjectHandler.getSsoToken(SsoToken.Type.OIDC).orElseThrow { IllegalStateException("Kunne ikke hente ut veileders ssoTOken") }
