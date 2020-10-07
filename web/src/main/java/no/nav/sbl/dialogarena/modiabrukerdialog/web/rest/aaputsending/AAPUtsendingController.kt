@@ -1,7 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.aaputsending
 
 import no.nav.common.leaderelection.LeaderElectionHttpClient
-import no.nav.common.sts.SystemUserTokenProvider
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.HenvendelseUtsendingService
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.gsak.SakerService
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Policies
@@ -21,10 +20,14 @@ class AAPUtsendingController @Autowired constructor(
     val service = AAPUtsendingService(sakerService, henvendelseService, leaderElectionClient)
 
     @GetMapping("/status")
-    fun hentStatus() = service.status()
-
-    @GetMapping
-    fun hentStatus2() = service.status()
+    fun hentStatus(): AAPUtsendingService.Status {
+        return tilgangskontroll
+                .check(Policies.tilgangTilModia)
+                .check(Policies.kanStarteHasteUtsending)
+                .get(skipAuditLog) {
+                    return@get service.status()
+                }
+    }
 
     @PostMapping("/start")
     fun startUtsending(@RequestBody fnrs: List<String>): AAPUtsendingService.Status {
@@ -39,6 +42,11 @@ class AAPUtsendingController @Autowired constructor(
 
     @PostMapping("/reset")
     fun reset(): AAPUtsendingService.Status {
-        return service.reset()
+        return tilgangskontroll
+                .check(Policies.tilgangTilModia)
+                .check(Policies.kanStarteHasteUtsending)
+                .get(skipAuditLog) {
+                    return@get service.reset()
+                }
     }
 }
