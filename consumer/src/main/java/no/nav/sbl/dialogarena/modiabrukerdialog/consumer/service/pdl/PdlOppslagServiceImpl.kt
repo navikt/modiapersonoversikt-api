@@ -11,6 +11,7 @@ import no.nav.common.utils.EnvironmentUtils
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.pdl.generated.HentIdent
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.pdl.generated.HentNavnBolk
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.pdl.generated.HentPerson
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.pdl.generated.SokPersonUtenlandskId
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.pdl.PdlOppslagService
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.RestConstants.*
 import java.net.URL
@@ -52,11 +53,19 @@ class PdlOppslagServiceImpl constructor(
                 ?.hentIdenter
     }
 
-    override fun sokPerson(utenlandskId: String): SokPerson.SearchResult.Person.utenlandskidentifikasjonsnummer.identifikasjonsnummer? = runBlocking {
-        SokPerson(pdlClient)
-                .execute(SokPerson.Variables(utenlandskId), userTokenAuthorizationHeaders)
+    override fun sokPersonUtenlandskId(utenlandskId: String): List<SokPersonUtenlandskId.searchHit> = runBlocking {
+        val utenlandskIdKriterie = SokPersonUtenlandskId.Criterion(
+                fieldName = "person.utenlandskIdentifikasjonsnummer.identifikasjonsnummer",
+                searchRule = SokPersonUtenlandskId.SearchRule(
+                        equals = utenlandskId
+                )
+        )
+        SokPersonUtenlandskId(pdlClient)
+                .execute(SokPersonUtenlandskId.Variables(criteria = listOf(utenlandskIdKriterie)), userTokenAuthorizationHeaders)
                 .data
-                ?.hentPerson
+                ?.sokPerson
+                ?.hits
+                ?: emptyList()
     }
 
     private val userTokenAuthorizationHeaders: HeadersBuilder = {
