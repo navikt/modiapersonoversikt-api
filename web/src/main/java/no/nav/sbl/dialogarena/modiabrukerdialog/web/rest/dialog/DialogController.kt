@@ -273,7 +273,7 @@ private fun lagInfomelding(infomeldingRequest: InfomeldingRequest, sakstema: Str
             .withType(type)
             .withFritekst(Fritekst(infomeldingRequest.fritekst))
             .withTilknyttetEnhet(requestContext.enhet)
-            .withErTilknyttetAnsatt(infomeldingRequest.erOppgaveTilknyttetAnsatt)
+            .withErTilknyttetAnsatt(true)
             .withTemagruppe(hentTemagruppeForTema(sakstema))
 }
 
@@ -335,8 +335,7 @@ data class SendSporsmalRequest(
 
 data class InfomeldingRequest(
         val fritekst: String,
-        val sak: Sak,
-        val erOppgaveTilknyttetAnsatt: Boolean
+        val sak: Sak
 )
 
 data class FortsettDialogRequest(
