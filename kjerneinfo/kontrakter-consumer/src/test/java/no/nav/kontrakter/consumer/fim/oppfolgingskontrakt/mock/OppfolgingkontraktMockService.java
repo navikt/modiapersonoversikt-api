@@ -30,7 +30,7 @@ public class OppfolgingkontraktMockService implements OppfolgingskontraktService
             rawResponse.getOppfoelgingskontraktListe().addAll(OppfolgingkontraktMockFactory.createOppfoelgingskontrakter(fnr, fra, til));
         }
 
-        return mapper.map(rawResponse, OppfolgingskontraktResponse.class);
+        return mapper.map(rawResponse);
     }
 
     public void setMapper(OppfolgingskontraktMapper mapper) {

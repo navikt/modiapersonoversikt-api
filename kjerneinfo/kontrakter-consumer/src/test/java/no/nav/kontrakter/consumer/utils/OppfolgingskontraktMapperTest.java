@@ -31,8 +31,7 @@ public class OppfolgingskontraktMapperTest {
         oppfolgingskontraktRequest.setFodselsnummer("11223344455");
         oppfolgingskontraktRequest.setFrom(new LocalDate());
         oppfolgingskontraktRequest.setTo(new LocalDate(System.currentTimeMillis() - 3600 * 1000));
-        WSHentOppfoelgingskontraktListeRequest fimHentOppfolgingskontraktListeRequest = new WSHentOppfoelgingskontraktListeRequest();
-        mapper.map(oppfolgingskontraktRequest, fimHentOppfolgingskontraktListeRequest);
+        WSHentOppfoelgingskontraktListeRequest fimHentOppfolgingskontraktListeRequest = mapper.map(oppfolgingskontraktRequest);
 
         assertEquals(oppfolgingskontraktRequest.getFodselsnummer(), fimHentOppfolgingskontraktListeRequest.getPersonidentifikator());
 
@@ -74,8 +73,7 @@ public class OppfolgingskontraktMapperTest {
 
         fimResponse.getOppfoelgingskontraktListe().addAll(kontraktliste);
 
-        OppfolgingskontraktResponse oppfolgingskontraktResponse = new OppfolgingskontraktResponse();
-        mapper.map(fimResponse, oppfolgingskontraktResponse);
+        OppfolgingskontraktResponse oppfolgingskontraktResponse = mapper.map(fimResponse);
 
         for (WSSYFOkontrakt syfokontrakt : kontraktliste) {
             checkBruker(syfokontrakt, bruker, oppfolgingskontraktResponse);
@@ -92,8 +90,7 @@ public class OppfolgingskontraktMapperTest {
         WSOppfoelgingskontrakt kontrakt = OppfolgingkontraktMockFactory.createOppfoelgingskontrakt();
         WSHentOppfoelgingskontraktListeResponse fimResponse = new WSHentOppfoelgingskontraktListeResponse();
         fimResponse.getOppfoelgingskontraktListe().add(kontrakt);
-        OppfolgingskontraktResponse response = new OppfolgingskontraktResponse();
-        mapper.map(fimResponse, response);
+        OppfolgingskontraktResponse response = mapper.map(fimResponse);
     }
 
     @Test
@@ -126,7 +123,7 @@ public class OppfolgingskontraktMapperTest {
         WSHentOppfoelgingskontraktListeResponse from = new WSHentOppfoelgingskontraktListeResponse();
         from.getOppfoelgingskontraktListe().addAll(fimOppOppfoelgingskontraktList);
 
-        OppfolgingskontraktResponse to = mapper.map(from, OppfolgingskontraktResponse.class);
+        OppfolgingskontraktResponse to = mapper.map(from);
 
         Bruker bruker = to.getBruker();
         assertEquals(formidlingsgruppe, bruker.getFormidlingsgruppe());

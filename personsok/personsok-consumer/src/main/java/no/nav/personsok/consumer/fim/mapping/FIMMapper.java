@@ -279,7 +279,10 @@ public final class FIMMapper {
         }
     }
 
-    private XMLGregorianCalendar map(LocalDate source) {
+    private static XMLGregorianCalendar map(LocalDate source) {
+        if (source == null) {
+            return null;
+        }
         try {
             return DatatypeFactory
                     .newInstance()

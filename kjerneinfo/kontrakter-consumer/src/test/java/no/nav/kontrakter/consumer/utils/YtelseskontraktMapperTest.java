@@ -38,8 +38,7 @@ public class YtelseskontraktMapperTest {
         ytelseskontraktRequest.setFrom(new LocalDate());
         ytelseskontraktRequest.setTo(new LocalDate(System.currentTimeMillis() - 3600 * 1000));
 
-        FimHentYtelseskontraktListeRequest fimHentYtelseskontraktListeRequest = new FimHentYtelseskontraktListeRequest();
-        mapper.map(ytelseskontraktRequest, fimHentYtelseskontraktListeRequest);
+        FimHentYtelseskontraktListeRequest fimHentYtelseskontraktListeRequest = mapper.map(ytelseskontraktRequest);
 
         assertEquals(ytelseskontraktRequest.getFodselsnummer(), fimHentYtelseskontraktListeRequest.getPersonidentifikator());
 
@@ -91,8 +90,7 @@ public class YtelseskontraktMapperTest {
         kontrakt.setBortfallsprosentUkerIgjen(bortfallsprosentUkerIgjen);
         fimHentYtelseskontraktListeResponse.getYtelseskontraktListe().add(kontrakt);
 
-        YtelseskontraktResponse ytelseskontraktResponse = new YtelseskontraktResponse();
-        mapper.map(fimHentYtelseskontraktListeResponse, ytelseskontraktResponse);
+        YtelseskontraktResponse ytelseskontraktResponse = mapper.map(fimHentYtelseskontraktListeResponse);
 
         assertEquals(fimHentYtelseskontraktListeResponse.getBruker().getRettighetsgruppe().getRettighetsGruppe(), ytelseskontraktResponse.getRettighetsgruppe());
         Dagpengeytelse dagpengeytelse = (Dagpengeytelse) ytelseskontraktResponse.getYtelser().get(0);
@@ -121,8 +119,7 @@ public class YtelseskontraktMapperTest {
         FimYtelseskontrakt ytelsesKontrakt = YtelseskontraktMockFactory.createYtelsesKontrakt();
         FimHentYtelseskontraktListeResponse fimResponse = new FimHentYtelseskontraktListeResponse();
         fimResponse.getYtelseskontraktListe().add(ytelsesKontrakt);
-        YtelseskontraktResponse response = new YtelseskontraktResponse();
-        mapper.map(ytelsesKontrakt, response);
+        mapper.mapYtelse(ytelsesKontrakt);
     }
 
     private List<FimVedtak> createVedtak() {
