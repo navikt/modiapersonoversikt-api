@@ -11,7 +11,7 @@ import no.nav.common.utils.EnvironmentUtils
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.pdl.generated.HentIdent
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.pdl.generated.HentNavnBolk
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.pdl.generated.HentPerson
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.pdl.generated.SokPersonUtenlandskId
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.pdl.generated.SokPersonUtenlandskID
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.pdl.PdlOppslagService
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.RestConstants.*
 import java.net.URL
@@ -53,15 +53,15 @@ class PdlOppslagServiceImpl constructor(
                 ?.hentIdenter
     }
 
-    override fun sokPersonUtenlandskId(utenlandskId: String): List<SokPersonUtenlandskId.searchHit> = runBlocking {
-        val utenlandskIdKriterie = SokPersonUtenlandskId.Criterion(
+    override fun sokPersonUtenlandskID(utenlandskID: String): List<SokPersonUtenlandskID.searchHit> = runBlocking {
+        val utenlandskIDKriterie = SokPersonUtenlandskID.Criterion(
                 fieldName = "person.utenlandskIdentifikasjonsnummer.identifikasjonsnummer",
-                searchRule = SokPersonUtenlandskId.SearchRule(
-                        equals = utenlandskId
+                searchRule = SokPersonUtenlandskID.SearchRule(
+                        equals = utenlandskID
                 )
         )
-        SokPersonUtenlandskId(pdlClient)
-                .execute(SokPersonUtenlandskId.Variables(criteria = listOf(utenlandskIdKriterie)), userTokenAuthorizationHeaders)
+        SokPersonUtenlandskID(pdlClient)
+                .execute(SokPersonUtenlandskID.Variables(criteria = listOf(utenlandskIDKriterie)), userTokenAuthorizationHeaders)
                 .data
                 ?.sokPerson
                 ?.hits

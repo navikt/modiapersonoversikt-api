@@ -163,6 +163,7 @@ data class PersonsokRequest(
         val etternavn: String?,
         val gatenavn: String?,
         val kontonummer: String?,
+        val utenlandskID: String?,
         val alderFra: Int?,
         val alderTil: Int?,
         val kommunenummer: String?,
