@@ -49,7 +49,6 @@ class PersonsokController @Autowired constructor(
                 .check(Policies.tilgangTilModia)
                 .get(auditDescriptor) {
                     try {
-                        println(personsokRequest.utenlandskID == "asda")
                         if (!personsokRequest.utenlandskID.isNullOrBlank()) {
                             pdlOppslagService.sokPersonUtenlandskID(personsokRequest.utenlandskID)
                                     .map(::lagPersonResponse)
