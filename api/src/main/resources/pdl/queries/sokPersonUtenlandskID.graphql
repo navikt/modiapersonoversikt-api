@@ -14,6 +14,9 @@ query($paging: Paging, $criteria: [Criterion]) {
                         etternavn
                     }
                 }
+                kjoenn {
+                    kjoenn
+                }
                 utenlandskIdentifikasjonsnummer {
                     identifikasjonsnummer,
                     utstederland,
@@ -23,6 +26,76 @@ query($paging: Paging, $criteria: [Criterion]) {
                     identifikasjonsnummer,
                     status,
                     type
+                }
+                kontaktadresse {
+                    postboksadresse {
+                        postbokseier
+                        postboks
+                        postnummer
+                    }
+                    vegadresse {
+                        husnummer
+                        husbokstav
+                        bruksenhetsnummer
+                        adressenavn
+                        kommunenummer
+                        bydelsnummer
+                        tilleggsnavn
+                        postnummer
+                    }
+                    postadresseIFrittFormat {
+                        adresselinje1
+                        adresselinje2
+                        adresselinje3
+                        postnummer
+                    }
+                    utenlandskAdresse {
+                        adressenavnNummer
+                        bygningEtasjeLeilighet
+                        postboksNummerNavn
+                        postkode
+                        bySted
+                        regionDistriktOmraade
+                        landkode
+                    }
+                    utenlandskAdresseIFrittFormat {
+                        adresselinje1
+                        adresselinje2
+                        adresselinje3
+                        postkode
+                        byEllerStedsnavn
+                        landkode
+                    }
+                }
+                bostedsadresse {
+                    vegadresse {
+                        husnummer
+                        husbokstav
+                        bruksenhetsnummer
+                        adressenavn
+                        kommunenummer
+                        bydelsnummer
+                        tilleggsnavn
+                        postnummer
+                    }
+                    matrikkeladresse {
+                        bruksenhetsnummer
+                        tilleggsnavn
+                        postnummer
+                        kommunenummer
+                    }
+                    utenlandskAdresse {
+                        adressenavnNummer
+                        bygningEtasjeLeilighet
+                        postboksNummerNavn
+                        postkode
+                        bySted
+                        regionDistriktOmraade
+                        landkode
+                    }
+                    ukjentBosted {
+                        bostedskommune
+                    }
                 }
             }
         }
