@@ -45,7 +45,7 @@ public class SykepengerMapperTest {
         request.setTo(to);
         request.setIdent(ident);
 
-        FimHentSykepengerListeRequest fimRequest = mapper.map(request, FimHentSykepengerListeRequest.class);
+        FimHentSykepengerListeRequest fimRequest = mapper.map(request);
         assertThat(fimRequest.getIdent(), equalTo(ident));
 
         compareDates(from, fimRequest.getSykmelding().getFom());
@@ -82,7 +82,7 @@ public class SykepengerMapperTest {
 
         fimResponse.getSykmeldingsperiodeListe().add(sykmeldingsperiode);
 
-        SykepengerResponse response = mapper.map(fimResponse, SykepengerResponse.class);
+        SykepengerResponse response = mapper.map(fimResponse);
 
         Sykmeldingsperiode resSykmeldingsperiode = response.getSykmeldingsperioder().get(0);
         Sykmelding resSykmedling = resSykmeldingsperiode.getSykmeldinger().get(0);
@@ -96,7 +96,7 @@ public class SykepengerMapperTest {
     public void testMockFactoryResponse() {
         FimHentSykepengerListeResponse fimResponse = SykepengerMockFactory.createFimHentSykepengerResponse();
         SykepengerMapper mapper = SykepengerMapper.getInstance();
-        SykepengerResponse resResponse = mapper.map(fimResponse, SykepengerResponse.class);
+        SykepengerResponse resResponse = mapper.map(fimResponse);
 
         Sykmeldingsperiode sykmeldingsperiode = resResponse.getSykmeldingsperioder().get(0);
 
@@ -205,7 +205,7 @@ public class SykepengerMapperTest {
     public void dateMapping() {
         XMLGregorianCalendar xmlDate = DateUtils.convertDateToXmlGregorianCalendar(SykepengerMockFactory.SANKSJON_FOM);
 
-        LocalDate to = mapper.map(xmlDate, LocalDate.class);
+        LocalDate to = mapper.map(xmlDate);
 
         compareDates(to, xmlDate);
     }

@@ -62,7 +62,7 @@ public class ForeldrepengerMapperTest {
         request.setForeldrepengerettighetPeriode(periode);
         request.setIdent(brukerId);
 
-        FimHentForeldrepengerettighetRequest fimRequest = mapper.map(request, FimHentForeldrepengerettighetRequest.class);
+        FimHentForeldrepengerettighetRequest fimRequest = mapper.map(request);
         assertThat(fimRequest.getIdent(), equalTo(brukerId));
     }
 
@@ -79,7 +79,7 @@ public class ForeldrepengerMapperTest {
         foreldrepengerettighetA.getForeldrepengeperiodeListe().add(periode);
         fimResponse.setForeldrepengerettighet(foreldrepengerettighetA);
 
-        ForeldrepengerListeResponse response = mapper.map(fimResponse, ForeldrepengerListeResponse.class);
+        ForeldrepengerListeResponse response = mapper.map(fimResponse);
 
         Foreldrepengerettighet resforeldrepengerettighetA = response.getForeldrepengerettighet();
         Foreldrepengeperiode resperiode = resforeldrepengerettighetA.getPeriode().get(0);
@@ -119,7 +119,7 @@ public class ForeldrepengerMapperTest {
         foreldrepengerettighetF.getForeldrepengeperiodeListe().add(periode);
         fimResponse.setForeldrepengerettighet(foreldrepengerettighetF);
 
-        ForeldrepengerListeResponse response = mapper.map(fimResponse, ForeldrepengerListeResponse.class);
+        ForeldrepengerListeResponse response = mapper.map(fimResponse);
 
         Foreldrepengerettighet resforeldrepengerettighetF = response.getForeldrepengerettighet();
         Foreldrepengeperiode resperiode = resforeldrepengerettighetF.getPeriode().get(0);
@@ -151,7 +151,7 @@ public class ForeldrepengerMapperTest {
     public void mockFactoryResponse() {
         FimHentForeldrepengerettighetResponse fimResponse = ForeldrepengerMockFactory.createFimHentForeldrepengerListeResponse();
         ForeldrepengerMapper mapper = ForeldrepengerMapper.getInstance();
-        ForeldrepengerListeResponse resResponse = mapper.map(fimResponse, ForeldrepengerListeResponse.class);
+        ForeldrepengerListeResponse resResponse = mapper.map(fimResponse);
 
         Foreldrepengerettighet pengerettighet = resResponse.getForeldrepengerettighet();
         assertThat(pengerettighet.getAndreForeldersFnr(), equalTo(ForeldrepengerMockFactory.ANDREFORELDRESFNR));
@@ -198,7 +198,7 @@ public class ForeldrepengerMapperTest {
 
     @Test
     public void dateMapping() {
-        LocalDate to = mapper.map(fomXMLDate, LocalDate.class);
+        LocalDate to = mapper.map(fomXMLDate);
 
         compareDates(to, fomXMLDate);
     }
