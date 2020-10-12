@@ -1,7 +1,6 @@
 package no.nav.sykmeldingsperioder.consumer.foreldrepenger.mapping;
 
 import no.nav.kjerneinfo.common.domain.Periode;
-import no.nav.modig.core.exception.ApplicationException;
 import no.nav.sykmeldingsperioder.consumer.foreldrepenger.mapping.to.ForeldrepengerListeRequest;
 import no.nav.sykmeldingsperioder.consumer.foreldrepenger.mapping.to.ForeldrepengerListeResponse;
 import no.nav.sykmeldingsperioder.domain.*;
@@ -21,6 +20,8 @@ import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * Mapperklasse
@@ -41,183 +42,217 @@ public class ForeldrepengerMapper {
     }
 
     public FimHentForeldrepengerettighetRequest map(ForeldrepengerListeRequest request) {
+        FimHentForeldrepengerettighetRequest wsRequest = new FimHentForeldrepengerettighetRequest();
+        wsRequest.setIdent(request.getIdent());
+        wsRequest.setForeldrepengerettighet(map(request.getForeldrepengerettighetPeriode()));
+        return wsRequest;
+    }
+
+    private FimPeriode map(Periode source) {
+        FimPeriode wsPeriode = new FimPeriode();
+        wsPeriode.setFom(map(source.getFrom()));
+        wsPeriode.setTom(map(source.getTo()));
+        return wsPeriode;
+    }
+
+    public ForeldrepengerListeResponse map(FimHentForeldrepengerettighetResponse wsResponse) {
+        ForeldrepengerListeResponse response = new ForeldrepengerListeResponse();
+        response.setForeldrepengerettighet(map(wsResponse.getForeldrepengerettighet()));
+        return response;
+    }
+
+    private Foreldrepengerettighet map(FimForeldrepengerettighet source) {
+        if (source instanceof FimAdopsjon) {
+            return map((FimAdopsjon) source);
+        } else if (source instanceof FimFoedsel) {
+            return map((FimFoedsel) source);
+        }
         return null;
     }
 
-    public ForeldrepengerListeResponse map(FimHentForeldrepengerettighetResponse rawResponse) {
-        return null;
+    private Adopsjon map(FimAdopsjon source) {
+        Adopsjon rettighet = mapForeldrepengeRettighet(new Adopsjon(), source);
+        rettighet.setOmsorgsovertakelse(map(source.getOmsorgsovertakelse()));
+        rettighet.setRettighetFom(map(source.getOmsorgsovertakelse()));
+        return rettighet;
     }
 
-    public LocalDate map(XMLGregorianCalendar fomXMLDate) {
-        return null;
+    private Foedsel map(FimFoedsel source) {
+        Foedsel rettighet = mapForeldrepengeRettighet(new Foedsel(), source);
+        rettighet.setTermin(map(source.getTermin()));
+        rettighet.setRettighetFom(map(source.getTermin()));
+        return rettighet;
     }
-//
-//    private static void registerFimHentForeldrepengerListeResponse(MapperFactory mapperFactory) {
-//        mapperFactory.registerClassMap(mapperFactory.classMap(FimHentForeldrepengerettighetResponse.class,
-//                ForeldrepengerListeResponse.class)
-//                .customize(new CustomMapper<FimHentForeldrepengerettighetResponse, ForeldrepengerListeResponse>() {
-//                    @Override
-//                    public void mapAtoB(FimHentForeldrepengerettighetResponse from, ForeldrepengerListeResponse to, MappingContext context) {
-//                        FimForeldrepengerettighet foreldrepengerettighet = from.getForeldrepengerettighet();
-//                        if (foreldrepengerettighet instanceof FimAdopsjon) {
-//                            to.setForeldrepengerettighet(mapperFacade.map(foreldrepengerettighet, Adopsjon.class));
-//                        } else if (foreldrepengerettighet instanceof FimFoedsel) {
-//                            to.setForeldrepengerettighet(mapperFacade.map(foreldrepengerettighet, Foedsel.class));
-//                        }
-//                    }
-//                })
-//                .byDefault()
-//                .toClassMap());
-//    }
-//
-//    private static void registerFimAdopsjon(MapperFactory mapperFactory) {
-//        mapperFactory.registerClassMap(mapperFactory.classMap(FimAdopsjon.class, Adopsjon.class)
-//                .customize(new CustomMapper<FimAdopsjon, Adopsjon>() {
-//                    @Override
-//                    public void mapAtoB(FimAdopsjon from, Adopsjon to, MappingContext context) {
-//                        to.setAndreForeldersFnr(from.getAndreForelder().getIdent());
-//                    }
-//                })
-//                .byDefault()
-//                .field("omsorgsovertakelse", "rettighetFom")
-//                .toClassMap()
-//        );
-//    }
-//
-//    private static void registerFimFoedsel(MapperFactory mapperFactory) {
-//        mapperFactory.registerClassMap(mapperFactory.classMap(FimFoedsel.class, Foedsel.class)
-//                .customize(new CustomMapper<FimFoedsel, Foedsel>() {
-//                    @Override
-//                    public void mapAtoB(FimFoedsel from, Foedsel to, MappingContext context) {
-//                        if (from.getAndreForelder() != null) {
-//                            to.setAndreForeldersFnr(from.getAndreForelder().getIdent());
-//                        }
-//                    }
-//                })
-//                .byDefault()
-//                .field("termin", "rettighetFom")
-//                .toClassMap()
-//        );
-//    }
-//
-//    private static void registerFimForeldrepengeperiode(MapperFactory mapperFactory) {
-//        mapperFactory.registerClassMap(mapperFactory.classMap(FimForeldrepengeperiode.class, Foreldrepengeperiode.class)
-//                .customize(new CustomMapper<FimForeldrepengeperiode, Foreldrepengeperiode>() {
-//                    @Override
-//                    public void mapAtoB(FimForeldrepengeperiode from, Foreldrepengeperiode to, MappingContext context) {
-//                        List<HistoriskUtbetaling> historiskUtbetalinger = new ArrayList<>();
-//                        List<KommendeUtbetaling> kommendeUtbetalinger = new ArrayList<>();
-//                        for (FimVedtak utbetaling : from.getVedtakListe()) {
-//                            if (utbetaling instanceof FimHistoriskVedtak) {
-//                                kommendeUtbetalinger.add(mapperFacade.map(utbetaling, KommendeUtbetaling.class));
-//                            }
-//                        }
-//                        to.setKommendeUtbetalinger(kommendeUtbetalinger);
-//                    }
-//                })
-//                .field("rettTilMoedrekvote", "rettTilModrekvote")
-//                .field("forskyvet1", "forskyvelsesperiode")
-//                .field("forskyvet2", "forskyvelsesperiode2")
-//                .byDefault()
-//                .toClassMap()
-//        );
-//    }
-//
-//    private static void registrerFimForeldrepengerettighet(MapperFactory mapperFactory) {
-//        mapperFactory.registerClassMap(mapperFactory.classMap(FimForeldrepengerettighet.class, Foreldrepengerettighet.class)
-//                .field("foreldrepengeperiodeListe", "periode")
-//                .field("barnetFoedt", "barnetsFoedselsdato")
-//                .byDefault()
-//                .toClassMap()
-//        );
-//    }
-//
-//    private static void registerFimHistoriskUtbetaling(MapperFactory mapperFactory) {
-//        mapperFactory.registerClassMap(mapperFactory.classMap(FimHistoriskVedtak.class, KommendeUtbetaling.class)
-//                .field("utbetalt", "utbetalingsdato")
-//                .byDefault()
-//                .toClassMap()
-//        );
-//    }
-//
-//    private static void registerFimKommendeUtbetaling(MapperFactory mapperFactory) {
-//        mapperFactory.registerClassMap(mapperFactory.classMap(FimHistoriskVedtak.class, KommendeUtbetaling.class)
-//                .field("utbetalt", "utbetalingsdato")
-//                .customize(new CustomMapper<FimHistoriskVedtak, KommendeUtbetaling>() {
-//                    @Override
-//                    public void mapAtoB(FimHistoriskVedtak from, KommendeUtbetaling to, MappingContext context) {
-//                        if (from.getPeriodetype() != null) {
-//                            to.setType(new Kodeverkstype(from.getPeriodetype().getKode(), from.getPeriodetype().getTermnavn()));
-//                        }
-//                    }
-//                })
-//                .byDefault()
-//                .toClassMap()
-//        );
-//    }
-//
-//    private static void registerFimPeriode(MapperFactory mapperFactory) {
-//        mapperFactory.registerClassMap(mapperFactory.classMap(FimPeriode.class, Periode.class)
-//                .field("fom", "from")
-//                .field("tom", "to")
-//                .toClassMap()
-//        );
-//    }
-//
-//    private static void registerFimArbeidsforhold(MapperFactory mapperFactory) {
-//        mapperFactory.registerClassMap(mapperFactory.classMap(FimArbeidsforhold.class, Arbeidsforhold.class)
-//                .byDefault()
-//                .toClassMap()
-//        );
-//    }
-//
-//    private static void registerFimBruker(MapperFactory mapperFactory) {
-//        mapperFactory.registerClassMap(mapperFactory.classMap(FimPerson.class, Bruker.class)
-//                .byDefault()
-//                .toClassMap()
-//        );
-//    }
-//
-//
-//    private static void registerFimKodeliste(MapperFactory mapperFactory) {
-//        mapperFactory.registerClassMap(mapperFactory.classMap(FimKodeverdi.class, Kodeverkstype.class)
-//                .byDefault()
-//                .toClassMap()
-//        );
-//    }
-//
-//    private static void configureResponseConverters(ConverterFactory converterFactory) {
-//
-//        converterFactory.registerConverter(new CustomConverter<XMLGregorianCalendar, LocalDate>() {
-//            @Override
-//            public LocalDate convert(XMLGregorianCalendar source, Type<? extends LocalDate> destinationType, MappingContext mappingContext) {
-//                return new LocalDate(source.getYear(), source.getMonth(), source.getDay());
-//            }
-//
-//            @Override
-//            public boolean canConvert(Type<?> sourceType, Type<?> destinationType) {
-//                return this.sourceType.isAssignableFrom(sourceType) && this.destinationType.equals(destinationType);
-//            }
-//        });
-//    }
-//
-//    private static void configureRequestConverters(ConverterFactory converterFactory) {
-//        converterFactory.registerConverter(new CustomConverter<LocalDate, XMLGregorianCalendar>() {
-//            @Override
-//            public XMLGregorianCalendar convert(LocalDate source, Type<? extends XMLGregorianCalendar> destinationType, MappingContext mappingContext) {
-//                try {
-//                    return DatatypeFactory.newInstance().newXMLGregorianCalendarDate(source.getYear(), source.getMonthOfYear(), source.getDayOfMonth(), 0);
-//                } catch (DatatypeConfigurationException e) {
-//                    logger.warn("DatatypeConfigurationException", e.getMessage());
-//                    throw new ApplicationException("DatatypeConfigurationException", e, "Klarer ikke å lage dato");
-//                }
-//            }
-//        });
-//    }
-//
-//    private static void configureRequestClassMaps(MapperFactory mapperFactory) {
-//        mapperFactory.registerClassMap(mapperFactory.classMap(ForeldrepengerListeRequest.class, FimHentForeldrepengerettighetRequest.class)
-//                .byDefault()
-//                .toClassMap());
-//    }
+
+    private <T extends Foreldrepengerettighet> T mapForeldrepengeRettighet(T to, FimForeldrepengerettighet source) {
+        if (source.getAndreForelder() != null) {
+            to.setAndreForeldersFnr(source.getAndreForelder().getIdent());
+        }
+        if (source.getAntallBarn() != null) {
+            to.setAntallBarn(source.getAntallBarn().intValue());
+        }
+        to.setBarnetsFoedselsdato(map(source.getBarnetFoedt()));
+        to.setForelder(map(source.getForelder()));
+        if (source.getDekningsgrad() != null) {
+            to.setDekningsgrad(source.getDekningsgrad().doubleValue());
+        }
+        to.setFedrekvoteTom(map(source.getFedrekvoteTom()));
+        to.setMoedrekvoteTom(map(source.getMoedrekvoteTom()));
+        to.setForeldrepengetype(map(source.getForeldrepengetype()));
+        if (source.getGraderingsdager() != null) {
+            to.setGraderingsdager(source.getGraderingsdager().intValue());
+        }
+        if (source.getRestDager() != null) {
+            to.setRestDager(source.getRestDager().intValue());
+        }
+        to.setEldsteIdDato(null);
+        to.setPeriode(forEach(source.getForeldrepengeperiodeListe(), this::map));
+        to.setForeldreAvSammeKjoenn(map(source.getForeldreAvSammeKjoenn()));
+
+        to.setSlutt(map(source.getSlutt()));
+        to.setArbeidsforholdListe(forEach(source.getArbeidsforholdListe(), this::map));
+        to.setArbeidskategori(map(source.getArbeidskategori()));
+
+        return to;
+    }
+
+    private Arbeidsforhold map(FimArbeidsforhold source) {
+        Arbeidsforhold arbeidsforhold = new Arbeidsforhold();
+        arbeidsforhold.setArbeidsgiverNavn(source.getArbeidsgiverNavn());
+        arbeidsforhold.setArbeidsgiverKontonr(source.getArbeidsgiverKontonr());
+        arbeidsforhold.setInntektsperiode(map(source.getInntektsperiode()));
+        if (source.getInntektForPerioden() != null) {
+            arbeidsforhold.setInntektForPerioden(source.getInntektForPerioden().doubleValue());
+        }
+        arbeidsforhold.setSykepengerFom(null);
+        arbeidsforhold.setRefusjonTom(map(source.getRefusjonTom()));
+        arbeidsforhold.setRefusjonstype(map(source.getRefusjonstype()));
+        return arbeidsforhold;
+    }
+
+    private Bruker map(FimPerson source) {
+        Bruker bruker = new Bruker();
+        bruker.setIdent(source.getIdent());
+        return bruker;
+    }
+
+    private Foreldrepengeperiode map(FimForeldrepengeperiode source) {
+        Foreldrepengeperiode periode = new Foreldrepengeperiode();
+
+        periode.setFodselsnummer(null);
+        periode.setHarAleneomsorgFar(source.getHarAleneomsorgFar());
+        periode.setHarAleneomsorgMor(source.getHarAleneomsorgMor());
+        if (source.getArbeidsprosentMor() != null) {
+            periode.setArbeidsprosentMor(source.getArbeidsprosentMor().doubleValue());
+        }
+        periode.setAvslagsaarsak(map(source.getAvslagsaarsak()));
+        periode.setAvslaatt(map(source.getAvslaatt()));
+        if (source.getDisponibelGradering() != null) {
+            periode.setDisponibelGradering(source.getDisponibelGradering().doubleValue());
+        }
+        if (source.getErFedrekvote() != null) {
+            periode.setErFedrekvote(source.getErFedrekvote());
+        }
+        periode.setForskyvelsesaarsak1(map(source.getForskyvelsesaarsak1()));
+        periode.setForskyvelsesaarsak2(map(source.getForskyvelsesaarsak2()));
+        periode.setForskyvelsesperiode(map(source.getForskyvet1()));
+        periode.setForskyvelsesperiode2(map(source.getForskyvet2()));
+        periode.setForeldrepengerFom(map(source.getForeldrepengerFom()));
+        periode.setMidlertidigStansDato(map(source.getMidlertidigStanset()));
+        if (source.getErMoedrekvote() != null) {
+            periode.setErModrekvote(source.getErMoedrekvote());
+        }
+        periode.setMorSituasjon(map(source.getMorSituasjon()));
+        periode.setRettTilFedrekvote(map(source.getRettTilFedrekvote()));
+        periode.setRettTilModrekvote(map(source.getRettTilMoedrekvote()));
+        periode.setStansaarsak(map(source.getStansaarsak()));
+
+        List<HistoriskUtbetaling> historiskeUtbetalinger = new ArrayList<>();
+        List<KommendeUtbetaling> kommendeUtbetalinger = new ArrayList<>();
+        for (FimVedtak utbetaling : source.getVedtakListe()) {
+            // Her er det noe rart som vi "kopierer" fra orika-mapperen.
+            // Hvorfor historisk blir dyttet inn i kommende er ukjent
+            if (utbetaling instanceof  FimHistoriskVedtak) {
+                kommendeUtbetalinger.add(map((FimHistoriskVedtak)utbetaling));
+            }
+        }
+
+        periode.setHistoriskeUtbetalinger(historiskeUtbetalinger);
+        periode.setKommendeUtbetalinger(kommendeUtbetalinger);
+
+        return periode;
+    }
+
+    private Periode map(FimPeriode source) {
+        if (source == null) {
+            return null;
+        }
+        Periode periode = new Periode();
+        periode.setFrom(map(source.getFom()));
+        periode.setTo(map(source.getTom()));
+        return periode;
+    }
+
+    private Kodeverkstype map(FimKodeverdi source) {
+        if (source == null) {
+            return null;
+        }
+
+        Kodeverkstype to = new Kodeverkstype();
+        to.setKode(source.getKode());
+        to.setTermnavn(source.getTermnavn());
+        return to;
+    }
+
+    private KommendeUtbetaling map(FimHistoriskVedtak source) {
+        KommendeUtbetaling utbetaling = new KommendeUtbetaling();
+        utbetaling.setUtbetalingsdato(map(source.getUtbetalt()));
+        if (source.getBruttobeloep() != null) {
+            utbetaling.setBruttobeloep(source.getBruttobeloep().doubleValue());
+        }
+        utbetaling.setArbeidsgiverNavn(source.getArbeidsgiverNavn());
+        utbetaling.setArbeidsgiverKontonr(source.getArbeidsgiverKontonr());
+        utbetaling.setArbeidsgiverOrgnr(source.getArbeidsgiverOrgnr());
+        if (source.getDagsats() != null) {
+            utbetaling.setDagsats(source.getDagsats().doubleValue());
+        }
+        utbetaling.setSaksbehandler(source.getSaksbehandler());
+        if (source.getPeriodetype() != null) {
+            Kodeverkstype type = new Kodeverkstype(source.getPeriodetype().getKode(), source.getPeriodetype().getTermnavn());
+            utbetaling.setType(type);
+        }
+
+        utbetaling.setVedtak(map(source.getVedtak()));
+        if (source.getUtbetalingsgrad() != null) {
+            utbetaling.setUtbetalingsgrad(source.getUtbetalingsgrad().doubleValue());
+        }
+
+        return utbetaling;
+    }
+
+    private XMLGregorianCalendar map(LocalDate source) {
+        if (source == null) {
+            return null;
+        }
+        try {
+            return DatatypeFactory
+                    .newInstance()
+                    .newXMLGregorianCalendarDate(source.getYear(), source.getMonthOfYear(), source.getDayOfMonth(), 0);
+        } catch (DatatypeConfigurationException e) {
+            logger.warn("DatatypeConfigurationException", e.getMessage());
+            throw new RuntimeException("Could not map to XMLGregorianCalendar", e);
+        }
+    }
+
+    public LocalDate map(XMLGregorianCalendar source) {
+        if (source == null) {
+            return null;
+        }
+        return new LocalDate(source.getYear(), source.getMonth(), source.getDay());
+    }
+
+
+    private <S, T> List<T> forEach(List<S> list, Function<S, T> fn) {
+        return list.stream().map(fn).collect(Collectors.toList());
+    }
 }
