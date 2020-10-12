@@ -42,6 +42,9 @@ public class ForeldrepengerMapper {
     }
 
     public FimHentForeldrepengerettighetRequest map(ForeldrepengerListeRequest request) {
+        if (request == null) {
+            return null;
+        }
         FimHentForeldrepengerettighetRequest wsRequest = new FimHentForeldrepengerettighetRequest();
         wsRequest.setIdent(request.getIdent());
         wsRequest.setForeldrepengerettighet(map(request.getForeldrepengerettighetPeriode()));
@@ -49,6 +52,9 @@ public class ForeldrepengerMapper {
     }
 
     private FimPeriode map(Periode source) {
+        if (source == null) {
+            return null;
+        }
         FimPeriode wsPeriode = new FimPeriode();
         wsPeriode.setFom(map(source.getFrom()));
         wsPeriode.setTom(map(source.getTo()));
@@ -56,12 +62,18 @@ public class ForeldrepengerMapper {
     }
 
     public ForeldrepengerListeResponse map(FimHentForeldrepengerettighetResponse wsResponse) {
+        if (wsResponse == null) {
+            return null;
+        }
         ForeldrepengerListeResponse response = new ForeldrepengerListeResponse();
         response.setForeldrepengerettighet(map(wsResponse.getForeldrepengerettighet()));
         return response;
     }
 
     private Foreldrepengerettighet map(FimForeldrepengerettighet source) {
+        if (source == null) {
+            return null;
+        }
         if (source instanceof FimAdopsjon) {
             return map((FimAdopsjon) source);
         } else if (source instanceof FimFoedsel) {
@@ -71,6 +83,9 @@ public class ForeldrepengerMapper {
     }
 
     private Adopsjon map(FimAdopsjon source) {
+        if (source == null) {
+            return null;
+        }
         Adopsjon rettighet = mapForeldrepengeRettighet(new Adopsjon(), source);
         rettighet.setOmsorgsovertakelse(map(source.getOmsorgsovertakelse()));
         rettighet.setRettighetFom(map(source.getOmsorgsovertakelse()));
@@ -78,6 +93,9 @@ public class ForeldrepengerMapper {
     }
 
     private Foedsel map(FimFoedsel source) {
+        if (source == null) {
+            return null;
+        }
         Foedsel rettighet = mapForeldrepengeRettighet(new Foedsel(), source);
         rettighet.setTermin(map(source.getTermin()));
         rettighet.setRettighetFom(map(source.getTermin()));
@@ -85,6 +103,9 @@ public class ForeldrepengerMapper {
     }
 
     private <T extends Foreldrepengerettighet> T mapForeldrepengeRettighet(T to, FimForeldrepengerettighet source) {
+        if (to == null || source == null) {
+            return null;
+        }
         if (source.getAndreForelder() != null) {
             to.setAndreForeldersFnr(source.getAndreForelder().getIdent());
         }
@@ -117,6 +138,9 @@ public class ForeldrepengerMapper {
     }
 
     private Arbeidsforhold map(FimArbeidsforhold source) {
+        if (source == null) {
+            return null;
+        }
         Arbeidsforhold arbeidsforhold = new Arbeidsforhold();
         arbeidsforhold.setArbeidsgiverNavn(source.getArbeidsgiverNavn());
         arbeidsforhold.setArbeidsgiverKontonr(source.getArbeidsgiverKontonr());
@@ -131,12 +155,18 @@ public class ForeldrepengerMapper {
     }
 
     private Bruker map(FimPerson source) {
+        if (source == null) {
+            return null;
+        }
         Bruker bruker = new Bruker();
         bruker.setIdent(source.getIdent());
         return bruker;
     }
 
     private Foreldrepengeperiode map(FimForeldrepengeperiode source) {
+        if (source == null) {
+            return null;
+        }
         Foreldrepengeperiode periode = new Foreldrepengeperiode();
 
         periode.setFodselsnummer(null);
@@ -205,6 +235,9 @@ public class ForeldrepengerMapper {
     }
 
     private KommendeUtbetaling map(FimHistoriskVedtak source) {
+        if (source == null) {
+            return null;
+        }
         KommendeUtbetaling utbetaling = new KommendeUtbetaling();
         utbetaling.setUtbetalingsdato(map(source.getUtbetalt()));
         if (source.getBruttobeloep() != null) {
@@ -253,6 +286,9 @@ public class ForeldrepengerMapper {
 
 
     private <S, T> List<T> forEach(List<S> list, Function<S, T> fn) {
+        if (list == null) {
+            return null;
+        }
         return list.stream().map(fn).collect(Collectors.toList());
     }
 }
