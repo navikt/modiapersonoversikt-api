@@ -81,7 +81,7 @@ constructor(private val organisasjonEnhetKontaktinformasjonService: Organisasjon
     fun hentBehandlendeEnhet(@RequestParam("fnr") fnr: String,
                              @RequestParam("temakode") temakode: String,
                              @RequestParam("typekode") typekode: String,
-                             @RequestParam("underkategorikode") underkategorikode: String?): List<Map<String, Any?>> {
+                             @RequestParam("underkategori") underkategorikode: String?): List<Map<String, Any?>> {
         return tilgangskontroll
                 .check(Policies.tilgangTilBruker.with(fnr))
                 .get(Audit.describe(READ, Enhet.Foreslatte)) {
