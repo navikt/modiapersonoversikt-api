@@ -11,6 +11,7 @@ import no.nav.common.utils.EnvironmentUtils
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.pdl.generated.HentIdent
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.pdl.generated.HentNavnBolk
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.pdl.generated.HentPerson
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.pdl.generated.SokPersonUtenlandskID
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.pdl.PdlOppslagService
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.RestConstants.*
 import java.net.URL
@@ -52,6 +53,22 @@ class PdlOppslagServiceImpl constructor(
                 ?.hentIdenter
     }
 
+    override fun sokPersonUtenlandskID(utenlandskID: String): List<SokPersonUtenlandskID.searchHit> = runBlocking {
+        val utenlandskIDKriterie = SokPersonUtenlandskID.Criterion(
+                fieldName = "person.utenlandskIdentifikasjonsnummer.identifikasjonsnummer",
+                searchRule = SokPersonUtenlandskID.SearchRule(
+                        equals = utenlandskID
+                )
+        )
+        SokPersonUtenlandskID(pdlClient)
+                .execute(SokPersonUtenlandskID.Variables(criteria = listOf(utenlandskIDKriterie)), userTokenAuthorizationHeaders)
+                .assertNoErrors()
+                .data
+                ?.sokPerson
+                ?.hits
+                ?: emptyList()
+    }
+
     private val userTokenAuthorizationHeaders: HeadersBuilder = {
         val systemuserToken: String = stsService.systemUserToken
         val userToken: String = SubjectHandler.getSsoToken(SsoToken.Type.OIDC).orElseThrow { IllegalStateException("Kunne ikke hente ut veileders ssoTOken") }
@@ -87,6 +104,7 @@ class PdlOppslagServiceImpl constructor(
                     val ident = variables.ident.let(PdlSyntetiskMapper::mapFnrTilPdl)
                     HentIdent.Variables(ident)
                 }
+//                is SokPersonUtenlandskID.Variables -> variables
                 else -> throw IllegalStateException("Unrecognized graphql variables type: ${variables.javaClass.simpleName}")
             }
         }

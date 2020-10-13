@@ -599,9 +599,6 @@ input Criterion {
     fieldName:String!
     searchRule:SearchRule!
     searchHistorical:Boolean
-
-    @deprecated(reason: "erstattet av searchHistorical som lar en velge mellom, å søke  med historikk, utenhistorikk eller begge")
-    includeHistorical:Boolean
 }
 
 input SearchRule {
@@ -630,9 +627,18 @@ input SearchRule {
 
 input Paging {
     pageNumber:Int = 1,
-    resultsPerPage:Int = 10
+    resultsPerPage:Int = 10,
+    sortBy:[SearchSorting]
 }
 
+input SearchSorting {
+    fieldName:String!
+    direction:Direction!
+}
+enum Direction {
+    ASC,
+    DESC
+}
 type SearchResult {
     hits : [searchHit!]!,
     pageNumber:Int,
@@ -642,6 +648,6 @@ type SearchResult {
 }
 type searchHit {
     person :Person,
-    identer: [IdentInformasjon!]!
+    identer(historikk: Boolean = false): [IdentInformasjon!]!,
     score :Float
 }

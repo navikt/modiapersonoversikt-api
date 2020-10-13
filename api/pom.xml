@@ -102,16 +102,16 @@
                 <artifactId>graphql-kotlin-maven-plugin</artifactId>
                 <version>${graphql-kotlin.version}</version>
                 <executions>
-<!--                    <execution>-->
-<!--                        <id>download schema from github</id>-->
-<!--                        <goals>-->
-<!--                            <goal>download-sdl</goal>-->
-<!--                        </goals>-->
-<!--                        <configuration>-->
-<!--                            <endpoint>https://navikt.github.io/pdl/pdl-api-sdl.graphqls</endpoint>-->
-<!--                            <outputDirectory>src/main/resources/pdl</outputDirectory>-->
-<!--                        </configuration>-->
-<!--                    </execution>-->
+                    <execution>
+                        <id>download schema from github</id>
+                        <goals>
+                            <goal>download-sdl</goal>
+                        </goals>
+                        <configuration>
+                            <endpoint>https://navikt.github.io/pdl/pdl-api-sdl.graphqls</endpoint>
+                            <outputDirectory>src/main/resources/pdl</outputDirectory>
+                        </configuration>
+                    </execution>
                     <execution>
                         <id>generate kotlin classes from schema + queries</id>
                         <goals>

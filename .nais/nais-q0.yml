@@ -50,6 +50,7 @@ spec:
         mountPath: /var/run/secrets/nais.io/gosys_user
       - kvPath: /apikey/appdynamics/dev
         mountPath: /var/run/secrets/nais.io/vault
+  leaderElection: true
   env:
     - name: APP_ENVIRONMENT_NAME
       value: "q0"

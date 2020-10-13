@@ -1,0 +1,106 @@
+query($paging: Paging, $criteria: [Criterion]) {
+    sokPerson(paging: $paging, criteria: $criteria) {
+        hits {
+            score
+            person {
+                navn {
+                    fornavn
+                    mellomnavn
+                    etternavn
+                    forkortetNavn
+                    originaltNavn {
+                        fornavn
+                        mellomnavn
+                        etternavn
+                    }
+                }
+                kjoenn {
+                    kjoenn
+                }
+                utenlandskIdentifikasjonsnummer {
+                    identifikasjonsnummer,
+                    utstederland,
+                    opphoert
+                }
+                folkeregisteridentifikator {
+                    identifikasjonsnummer,
+                    status,
+                    type
+                }
+                kontaktadresse {
+                    postboksadresse {
+                        postbokseier
+                        postboks
+                        postnummer
+                    }
+                    vegadresse {
+                        husnummer
+                        husbokstav
+                        bruksenhetsnummer
+                        adressenavn
+                        kommunenummer
+                        bydelsnummer
+                        tilleggsnavn
+                        postnummer
+                    }
+                    postadresseIFrittFormat {
+                        adresselinje1
+                        adresselinje2
+                        adresselinje3
+                        postnummer
+                    }
+                    utenlandskAdresse {
+                        adressenavnNummer
+                        bygningEtasjeLeilighet
+                        postboksNummerNavn
+                        postkode
+                        bySted
+                        regionDistriktOmraade
+                        landkode
+                    }
+                    utenlandskAdresseIFrittFormat {
+                        adresselinje1
+                        adresselinje2
+                        adresselinje3
+                        postkode
+                        byEllerStedsnavn
+                        landkode
+                    }
+                }
+                bostedsadresse {
+                    vegadresse {
+                        husnummer
+                        husbokstav
+                        bruksenhetsnummer
+                        adressenavn
+                        kommunenummer
+                        bydelsnummer
+                        tilleggsnavn
+                        postnummer
+                    }
+                    matrikkeladresse {
+                        bruksenhetsnummer
+                        tilleggsnavn
+                        postnummer
+                        kommunenummer
+                    }
+                    utenlandskAdresse {
+                        adressenavnNummer
+                        bygningEtasjeLeilighet
+                        postboksNummerNavn
+                        postkode
+                        bySted
+                        regionDistriktOmraade
+                        landkode
+                    }
+                    ukjentBosted {
+                        bostedskommune
+                    }
+                }
+            }
+        }
+        pageNumber,
+        totalHits,
+        totalPages
+    }
+}

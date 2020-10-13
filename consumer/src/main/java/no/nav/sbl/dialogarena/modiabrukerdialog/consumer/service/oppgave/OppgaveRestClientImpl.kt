@@ -7,9 +7,9 @@ import no.nav.common.sts.SystemUserTokenProvider
 import no.nav.common.utils.EnvironmentUtils
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveRequest
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveRestClient
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.oppgave.OppgaveResponse
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.pdl.PdlOppslagService
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.pdl.generated.HentIdent.IdentGruppe
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveResponse
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.kodeverksmapper.KodeverksmapperService
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.kodeverksmapper.domain.Behandling
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.pdl.PdlSyntetiskMapper
@@ -85,7 +85,7 @@ open class OppgaveOpprettelseClient @Autowired constructor(
                             Request.Builder()
                                     .url(url)
                                     .header(RestConstants.NAV_CALL_ID_HEADER, MDC.get(MDCConstants.MDC_CALL_ID))
-                                    .header("X-Correlation-ID ", MDC.get(MDCConstants.MDC_CALL_ID))
+                                    .header("X-Correlation-ID", MDC.get(MDCConstants.MDC_CALL_ID))
                                     .header(RestConstants.AUTHORIZATION, AUTH_METHOD_BEARER + AUTH_SEPERATOR + consumerOidcToken)
                                     .header(RestConstants.NAV_CONSUMER_TOKEN_HEADER, RestConstants.AUTH_METHOD_BEARER + RestConstants.AUTH_SEPERATOR + consumerOidcToken)
                                     .post(RequestBody.create(
@@ -115,10 +115,8 @@ open class OppgaveOpprettelseClient @Autowired constructor(
                     "exception" to exception,
                     "request" to request
             ))
-            return OppgaveResponse()
+            throw exception
         }
-
-
     }
 
 
