@@ -41,6 +41,9 @@ public final class FIMMapper {
     }
 
     public no.nav.tjeneste.virksomhet.personsoek.v1.meldinger.FinnPersonRequest map(FinnPersonRequest request) {
+        if (request == null) {
+            return null;
+        }
         no.nav.tjeneste.virksomhet.personsoek.v1.meldinger.FinnPersonRequest xmlRequest = new no.nav.tjeneste.virksomhet.personsoek.v1.meldinger.FinnPersonRequest();
         xmlRequest.setAdresseFilter(toAdresseFilter(request.getUtvidetPersonsok()));
         xmlRequest.setPersonFilter(toPersonFilter(request.getUtvidetPersonsok()));
@@ -49,14 +52,22 @@ public final class FIMMapper {
     }
 
     private AdresseFilter toAdresseFilter(UtvidetPersonsok utvidetPersonsok) {
+        if (utvidetPersonsok == null) {
+            return null;
+        }
         AdresseFilter adresseFilter = new AdresseFilter();
-        adresseFilter.setGatenummer(Integer.parseInt(utvidetPersonsok.getHusnummer()));
+        if (utvidetPersonsok.getHusnummer() != null) {
+            adresseFilter.setGatenummer(Integer.parseInt(utvidetPersonsok.getHusnummer()));
+        }
         adresseFilter.setHusbokstav(utvidetPersonsok.getHusbokstav());
         adresseFilter.setPostnummer(utvidetPersonsok.getPostnummer());
         return adresseFilter;
     }
 
     private PersonFilter toPersonFilter(UtvidetPersonsok utvidetPersonsok) {
+        if (utvidetPersonsok == null) {
+            return null;
+        }
         PersonFilter personFilter = new PersonFilter();
         personFilter.setAlderFra(utvidetPersonsok.getAlderFra());
         personFilter.setAlderTil(utvidetPersonsok.getAlderTil());
@@ -68,6 +79,9 @@ public final class FIMMapper {
     }
 
     private Soekekriterie toSokekriterie(UtvidetPersonsok utvidetPersonsok) {
+        if (utvidetPersonsok == null) {
+            return null;
+        }
         Soekekriterie kriterier = new Soekekriterie();
         kriterier.setFornavn(utvidetPersonsok.getFornavn());
         kriterier.setEtternavn(utvidetPersonsok.getEtternavn());
@@ -77,6 +91,9 @@ public final class FIMMapper {
     }
 
     public FinnPersonResponse map(no.nav.tjeneste.virksomhet.personsoek.v1.meldinger.FinnPersonResponse xmlResponse) {
+        if (xmlResponse == null) {
+            return null;
+        }
         FinnPersonResponse response = new FinnPersonResponse();
         response.setPersonListe(forEach(xmlResponse.getPersonListe(), this::map));
         response.setTotaltAntallTreff(xmlResponse.getTotaltAntallTreff());
@@ -84,6 +101,9 @@ public final class FIMMapper {
     }
 
     private Person map(no.nav.tjeneste.virksomhet.personsoek.v1.informasjon.Person xmlPerson) {
+        if (xmlPerson == null) {
+            return null;
+        }
         Person person = new Person();
         Personnavn xmlPersonnavn = xmlPerson.getPersonnavn();
         if (xmlPersonnavn != null) {
@@ -170,6 +190,9 @@ public final class FIMMapper {
     }
 
     private Adresse map(Bostedsadresse from) {
+        if (from == null) {
+            return null;
+        }
         Adresse to = new Adresse();
         to.setAdresseType(AdresseType.BOLIGADRESSE);
 
@@ -210,6 +233,9 @@ public final class FIMMapper {
     }
 
     private Adresse map(Postadresse from) {
+        if (from == null) {
+            return null;
+        }
         Adresse to = new Adresse();
         to.setAdresseType(AdresseType.POSTADRESSE);
         UstrukturertAdresse ustrukturertAdresse = from.getUstrukturertAdresse();
@@ -218,6 +244,9 @@ public final class FIMMapper {
     }
 
     private Adresse map(MidlertidigPostadresse from) {
+        if (from == null) {
+            return null;
+        }
         Adresse to = new Adresse();
 
         if (from instanceof no.nav.tjeneste.virksomhet.personsoek.v1.informasjon.MidlertidigPostadresseUtland && ((no.nav.tjeneste.virksomhet.personsoek.v1.informasjon.MidlertidigPostadresseUtland) from).getUstrukturertAdresse() != null) {
@@ -240,6 +269,9 @@ public final class FIMMapper {
     }
 
     private String joinAdresseLinjer(no.nav.tjeneste.virksomhet.personsoek.v1.informasjon.UstrukturertAdresse adresse) {
+        if (adresse == null) {
+            return null;
+        }
         Landkoder landkode = adresse.getLandkode();
         return join(new String[]{adresse.getAdresselinje1(), adresse.getAdresselinje2(), adresse.getAdresselinje3(), adresse.getAdresselinje4(), ",", getNavnPaLand(landkode)}, SEPARATOR).trim();
     }
