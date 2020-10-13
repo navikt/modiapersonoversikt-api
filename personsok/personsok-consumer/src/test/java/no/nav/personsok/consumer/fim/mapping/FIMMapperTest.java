@@ -35,7 +35,8 @@ public class FIMMapperTest {
     enum BostedsType { POSTBOKS, GATEADRESSE, MATRIKKELADRESSE }
     enum MidlertidigadresseType { UTLAND, NORGE }
 
-    private static final ObjectMapper json = new ObjectMapper().activateDefaultTyping(new DefaultBaseTypeLimitingValidator());
+    private static final ObjectMapper json = new ObjectMapper()
+            .activateDefaultTyping(new DefaultBaseTypeLimitingValidator());
     private KodeverkManager kodeverkManager = mock(KodeverkManager.class);
     private FIMMapper mapper = new FIMMapper(kodeverkManager);
     private static final LocalDate FIXED_DATE = LocalDate.parse("2020-10-12");
@@ -153,7 +154,7 @@ public class FIMMapperTest {
 
     private static void writeSnapshot(File file, Object object) {
         try {
-            json.writer().writeValue(file, object);
+            json.writerWithDefaultPrettyPrinter().writeValue(file, object);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -161,7 +162,7 @@ public class FIMMapperTest {
 
     private static String createSnapshot(Object object) {
         try {
-            return json.writeValueAsString(object);
+            return json.writerWithDefaultPrettyPrinter().writeValueAsString(object);
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
