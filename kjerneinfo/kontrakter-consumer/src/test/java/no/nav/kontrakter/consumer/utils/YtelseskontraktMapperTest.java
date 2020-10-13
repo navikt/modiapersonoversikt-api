@@ -1,6 +1,7 @@
 package no.nav.kontrakter.consumer.utils;
 
 import no.nav.kjerneinfo.common.utils.DateUtils;
+import no.nav.kjerneinfo.common.utils.SnapshotRule;
 import no.nav.kontrakter.consumer.fim.mapping.YtelseskontraktMapper;
 import no.nav.kontrakter.consumer.fim.ytelseskontrakt.mock.YtelseskontraktMockFactory;
 import no.nav.kontrakter.consumer.fim.ytelseskontrakt.to.YtelseskontraktRequest;
@@ -12,6 +13,7 @@ import no.nav.tjeneste.virksomhet.ytelseskontrakt.v3.informasjon.ytelseskontrakt
 import no.nav.tjeneste.virksomhet.ytelseskontrakt.v3.meldinger.FimHentYtelseskontraktListeRequest;
 import no.nav.tjeneste.virksomhet.ytelseskontrakt.v3.meldinger.FimHentYtelseskontraktListeResponse;
 import org.joda.time.LocalDate;
+import org.junit.Rule;
 import org.junit.Test;
 
 import javax.xml.datatype.DatatypeConfigurationException;
@@ -25,6 +27,8 @@ import static org.junit.Assert.assertEquals;
 
 
 public class YtelseskontraktMapperTest {
+    @Rule
+    public SnapshotRule snapshot = new SnapshotRule();
 
     public static final String STATUS = "nr 2";
     public static final String AKTIVITET_FASE = "Aktivitetsfase";
@@ -110,6 +114,7 @@ public class YtelseskontraktMapperTest {
         assertEquals(AKTIVITET_FASE, (ytelse.getVedtak().get(0).getAktivitetsfase()));
         assertEquals(Integer.valueOf(bortfallsprosentDagerIgjen), (ytelse.getDagerIgjenMedBortfall()));
         assertEquals(Integer.valueOf(bortfallsprosentUkerIgjen), (ytelse.getUkerIgjenMedBortfall()));
+        snapshot.assertMatches(fimHentYtelseskontraktListeRequest);
     }
 
     /**
@@ -123,6 +128,7 @@ public class YtelseskontraktMapperTest {
         fimResponse.getYtelseskontraktListe().add(ytelsesKontrakt);
         YtelseskontraktResponse response = new YtelseskontraktResponse();
         mapper.map(ytelsesKontrakt, response);
+        snapshot.assertMatches(response);
     }
 
     private List<FimVedtak> createVedtak() {

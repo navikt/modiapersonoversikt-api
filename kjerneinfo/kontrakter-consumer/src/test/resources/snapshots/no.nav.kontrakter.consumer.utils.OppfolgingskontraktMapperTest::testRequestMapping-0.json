@@ -1,0 +1,7 @@
+{
+  "periode" : {
+    "fom" : [ "java.util.GregorianCalendar", 1602547200000 ],
+    "tom" : [ "java.util.GregorianCalendar", 1602547200000 ]
+  },
+  "personidentifikator" : "11223344455"
+}
