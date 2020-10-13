@@ -58,8 +58,8 @@ public class FIMMapperTest {
         UtvidetPersonsok utvidetPersonsok = new UtvidetPersonsok();
         request2.setUtvidetPersonsok(utvidetPersonsok);
 
-        no.nav.tjeneste.virksomhet.personsoek.v1.meldinger.FinnPersonRequest wsRequest1 = mapper.map(request1, no.nav.tjeneste.virksomhet.personsoek.v1.meldinger.FinnPersonRequest.class);
-        no.nav.tjeneste.virksomhet.personsoek.v1.meldinger.FinnPersonRequest wsRequest2 = mapper.map(request2, no.nav.tjeneste.virksomhet.personsoek.v1.meldinger.FinnPersonRequest.class);
+        no.nav.tjeneste.virksomhet.personsoek.v1.meldinger.FinnPersonRequest wsRequest1 = mapper.map(request1);
+        no.nav.tjeneste.virksomhet.personsoek.v1.meldinger.FinnPersonRequest wsRequest2 = mapper.map(request2);
 
         assertNotNull(wsRequest1);
         assertNotNull(wsRequest2);
@@ -88,7 +88,7 @@ public class FIMMapperTest {
 
 
         request.setUtvidetPersonsok(utvidetPersonsok);
-        no.nav.tjeneste.virksomhet.personsoek.v1.meldinger.FinnPersonRequest wsRequest = mapper.map(request, no.nav.tjeneste.virksomhet.personsoek.v1.meldinger.FinnPersonRequest.class);
+        no.nav.tjeneste.virksomhet.personsoek.v1.meldinger.FinnPersonRequest wsRequest = mapper.map(request);
 
         AdresseFilter adresseFilter = wsRequest.getAdresseFilter();
         assertNotNull(adresseFilter);
