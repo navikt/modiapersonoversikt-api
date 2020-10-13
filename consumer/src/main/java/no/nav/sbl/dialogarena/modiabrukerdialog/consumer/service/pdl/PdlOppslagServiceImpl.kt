@@ -62,6 +62,7 @@ class PdlOppslagServiceImpl constructor(
         )
         SokPersonUtenlandskID(pdlClient)
                 .execute(SokPersonUtenlandskID.Variables(criteria = listOf(utenlandskIDKriterie)), userTokenAuthorizationHeaders)
+                .assertNoErrors()
                 .data
                 ?.sokPerson
                 ?.hits
@@ -103,6 +104,7 @@ class PdlOppslagServiceImpl constructor(
                     val ident = variables.ident.let(PdlSyntetiskMapper::mapFnrTilPdl)
                     HentIdent.Variables(ident)
                 }
+//                is SokPersonUtenlandskID.Variables -> variables
                 else -> throw IllegalStateException("Unrecognized graphql variables type: ${variables.javaClass.simpleName}")
             }
         }

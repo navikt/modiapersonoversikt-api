@@ -2,6 +2,7 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.person
 
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.pdl.generated.SokPersonUtenlandskID
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.pdl.PdlOppslagService
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.pdl.GraphQLException
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Policies
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Tilgangskontroll
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.lagXmlGregorianDato
@@ -14,7 +15,6 @@ import no.nav.tjeneste.virksomhet.personsoek.v1.meldinger.AdresseFilter
 import no.nav.tjeneste.virksomhet.personsoek.v1.meldinger.FinnPersonRequest
 import no.nav.tjeneste.virksomhet.personsoek.v1.meldinger.PersonFilter
 import no.nav.tjeneste.virksomhet.personsoek.v1.meldinger.Soekekriterie
-import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.PostMapping
@@ -23,10 +23,6 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.server.ResponseStatusException
 
-private enum class OppslagFeil {
-    FOR_MANGE, UKJENT
-}
-
 @RestController
 @RequestMapping("/rest/personsok")
 class PersonsokController @Autowired constructor(
@@ -34,8 +30,6 @@ class PersonsokController @Autowired constructor(
         private val pdlOppslagService: PdlOppslagService,
         val tilgangskontroll: Tilgangskontroll
 ) {
-
-    private val logger = LoggerFactory.getLogger(PersonsokController::class.java)
     private val auditDescriptor = Audit.describe<List<PersonSokResponsDTO>>(Audit.Action.READ, AuditResources.Personsok.Resultat) { resultat ->
         val fnr = resultat.map { it.ident }.joinToString(", ")
         listOf(
@@ -48,24 +42,40 @@ class PersonsokController @Autowired constructor(
         return tilgangskontroll
                 .check(Policies.tilgangTilModia)
                 .get(auditDescriptor) {
-                    try {
+                    handterFeil {
                         if (!personsokRequest.utenlandskID.isNullOrBlank()) {
-                            pdlOppslagService.sokPersonUtenlandskID(personsokRequest.utenlandskID)
-                                    .map(::lagPersonResponse)
-                        }
-                        val response = personsokPortType.finnPerson(lagPersonsokRequest(personsokRequest))
-                        if (response.personListe == null) {
-                            emptyList()
+                            sokEtterUtenlandskIdMotPDL(personsokRequest.utenlandskID)
                         } else {
-                            response.personListe.map { lagPersonResponse(it) }
-                        }
-                    } catch (ex: Exception) {
-                        when (haandterOppslagFeil(ex)) {
-                            OppslagFeil.FOR_MANGE -> throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Søket gav mer enn 200 treff. Forsøk å begrense søket.")
-                            else -> throw ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Feil fra søketjeneste: ", ex)
+                            legacySokMotTPS(personsokRequest)
                         }
                     }
                 }
+    }
+
+    private fun sokEtterUtenlandskIdMotPDL(utenlandskID: String): List<PersonSokResponsDTO>  {
+            return pdlOppslagService.sokPersonUtenlandskID(utenlandskID)
+                    .map(::lagPersonResponse)
+    }
+
+    private fun legacySokMotTPS(personsokRequest: PersonsokRequest): List<PersonSokResponsDTO> {
+        return personsokPortType
+                .finnPerson(lagPersonsokRequest(personsokRequest))
+                .personListe
+                ?.map { lagPersonResponse(it) }
+                ?: emptyList()
+    }
+
+    private fun <T> handterFeil(block: () -> T): T = try {
+        block()
+    } catch (ex: Exception) {
+        when {
+            ex.message == "For mange forekomster funnet" ->
+                throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Søket gav mer enn 200 treff. Forsøk å begrense søket.")
+            ex is GraphQLException ->
+                throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Søket gav feil ved kall til PDL: ", ex)
+            else ->
+                throw ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Feil fra søketjeneste: ", ex)
+        }
     }
 }
 
@@ -89,7 +99,7 @@ fun lagPersonResponse(searchHit: SokPersonUtenlandskID.searchHit): PersonSokResp
 
 private fun lagBostedsadresse(adr: List<SokPersonUtenlandskID.Bostedsadresse>?): String? {
     if (adr.isNullOrEmpty()) {
-        return null;
+        return null
     }
     val adresse = adr.first()
     if (adresse.ukjentBosted != null) {
@@ -130,7 +140,7 @@ private fun lagBostedsadresse(adr: List<SokPersonUtenlandskID.Bostedsadresse>?):
 
 fun lagPostadresse(adr: List<SokPersonUtenlandskID.Kontaktadresse>?): String? {
     if (adr.isNullOrEmpty()) {
-        return null;
+        return null
     }
     val adresse = adr.first()
     if (adresse.postadresseIFrittFormat != null) {
@@ -195,13 +205,6 @@ fun hentNavn(person: SokPersonUtenlandskID.Person?): PersonnavnDTO? {
                 )
             }
 }
-
-
-private fun haandterOppslagFeil(ex: Exception): OppslagFeil =
-        when (ex.message) {
-            "For mange forekomster funnet" -> OppslagFeil.FOR_MANGE
-            else -> OppslagFeil.UKJENT
-        }
 
 data class PersonSokResponsDTO(
         val diskresjonskode: KodeverdiDTO?,
@@ -314,7 +317,6 @@ private fun lagPersonsokRequest(request: PersonsokRequest): FinnPersonRequest =
                                 postnummer = request.postnummer
                             }
                 }
-
 
 data class PersonsokRequest(
         val fornavn: String?,
