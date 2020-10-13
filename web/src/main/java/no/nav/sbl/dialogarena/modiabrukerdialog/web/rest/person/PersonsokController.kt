@@ -72,9 +72,9 @@ class PersonsokController @Autowired constructor(
             ex.message == "For mange forekomster funnet" ->
                 throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Søket gav mer enn 200 treff. Forsøk å begrense søket.")
             ex is GraphQLException ->
-                throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Søket gav feil ved kall til PDL: ", ex)
+                throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Søket gav feil ved kall til PDL: ${ex.message}", ex)
             else ->
-                throw ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Feil fra søketjeneste: ", ex)
+                throw ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Feil fra søketjeneste: ${ex.message}", ex)
         }
     }
 }
