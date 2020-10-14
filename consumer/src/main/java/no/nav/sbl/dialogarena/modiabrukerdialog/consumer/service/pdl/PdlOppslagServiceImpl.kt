@@ -104,7 +104,7 @@ class PdlOppslagServiceImpl constructor(
                     val ident = variables.ident.let(PdlSyntetiskMapper::mapFnrTilPdl)
                     HentIdent.Variables(ident)
                 }
-//                is SokPersonUtenlandskID.Variables -> variables
+                is SokPersonUtenlandskID.Variables -> variables
                 else -> throw IllegalStateException("Unrecognized graphql variables type: ${variables.javaClass.simpleName}")
             }
         }
