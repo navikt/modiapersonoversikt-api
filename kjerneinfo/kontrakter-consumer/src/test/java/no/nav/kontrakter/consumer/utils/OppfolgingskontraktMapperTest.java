@@ -26,6 +26,7 @@ import static org.junit.Assert.assertEquals;
 public class OppfolgingskontraktMapperTest {
     @Rule
     public SnapshotRule snapshot = new SnapshotRule();
+    private static final LocalDate FIXED_DATE = LocalDate.parse("2020-10-13");
 
     @Test
     public void testRequestMapping() throws DatatypeConfigurationException {
@@ -33,8 +34,8 @@ public class OppfolgingskontraktMapperTest {
 
         OppfolgingskontraktRequest oppfolgingskontraktRequest = new OppfolgingskontraktRequest();
         oppfolgingskontraktRequest.setFodselsnummer("11223344455");
-        oppfolgingskontraktRequest.setFrom(new LocalDate());
-        oppfolgingskontraktRequest.setTo(new LocalDate(System.currentTimeMillis() - 3600 * 1000));
+        oppfolgingskontraktRequest.setFrom(FIXED_DATE);
+        oppfolgingskontraktRequest.setTo(FIXED_DATE);
         WSHentOppfoelgingskontraktListeRequest fimHentOppfolgingskontraktListeRequest = new WSHentOppfoelgingskontraktListeRequest();
         mapper.map(oppfolgingskontraktRequest, fimHentOppfolgingskontraktListeRequest);
 
