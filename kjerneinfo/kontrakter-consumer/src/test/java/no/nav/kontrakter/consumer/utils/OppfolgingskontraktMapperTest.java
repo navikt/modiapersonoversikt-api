@@ -1,5 +1,6 @@
 package no.nav.kontrakter.consumer.utils;
 
+import no.nav.kjerneinfo.common.utils.SnapshotRule;
 import no.nav.kontrakter.consumer.fim.oppfolgingskontrakt.mock.OppfolgingkontraktMockFactory;
 import no.nav.kontrakter.consumer.fim.oppfolgingskontrakt.to.OppfolgingskontraktRequest;
 import no.nav.kontrakter.consumer.fim.oppfolgingskontrakt.to.OppfolgingskontraktResponse;
@@ -9,6 +10,7 @@ import no.nav.tjeneste.virksomhet.oppfoelging.v1.informasjon.*;
 import no.nav.tjeneste.virksomhet.oppfoelging.v1.meldinger.WSHentOppfoelgingskontraktListeRequest;
 import no.nav.tjeneste.virksomhet.oppfoelging.v1.meldinger.WSHentOppfoelgingskontraktListeResponse;
 import org.joda.time.LocalDate;
+import org.junit.Rule;
 import org.junit.Test;
 
 import javax.xml.datatype.DatatypeConfigurationException;
@@ -22,6 +24,8 @@ import static org.junit.Assert.assertEquals;
 
 
 public class OppfolgingskontraktMapperTest {
+    @Rule
+    public SnapshotRule snapshot = new SnapshotRule();
 
     @Test
     public void testRequestMapping() throws DatatypeConfigurationException {
@@ -50,7 +54,7 @@ public class OppfolgingskontraktMapperTest {
         assertEquals(expectedTo.getDay(), actualTo.getDay());
         assertEquals(expectedTo.getMonth(), actualTo.getMonth());
         assertEquals(expectedTo.getYear(), actualTo.getYear());
-
+        snapshot.assertMatches(fimHentOppfolgingskontraktListeRequest);
     }
 
     @Test
@@ -79,6 +83,7 @@ public class OppfolgingskontraktMapperTest {
             checkBruker(syfokontrakt, bruker, oppfolgingskontraktResponse);
         }
         checkSyfoPunkter(syfoPunkter, oppfolgingskontraktResponse);
+        snapshot.assertMatches(oppfolgingskontraktResponse);
     }
 
     /**
@@ -91,6 +96,8 @@ public class OppfolgingskontraktMapperTest {
         WSHentOppfoelgingskontraktListeResponse fimResponse = new WSHentOppfoelgingskontraktListeResponse();
         fimResponse.getOppfoelgingskontraktListe().add(kontrakt);
         OppfolgingskontraktResponse response = mapper.map(fimResponse);
+
+        snapshot.assertMatches(response);
     }
 
     @Test
@@ -129,6 +136,7 @@ public class OppfolgingskontraktMapperTest {
         assertEquals(formidlingsgruppe, bruker.getFormidlingsgruppe());
         assertEquals(servicegruppeVerdi, bruker.getInnsatsgruppe());
         assertEquals(meldepliktVerdi, bruker.getMeldeplikt().booleanValue());
+        snapshot.assertMatches(to);
     }
 
     private void checkBruker(WSSYFOkontrakt kontrakt, WSBruker bruker, OppfolgingskontraktResponse oppfolgingskontraktResponse) {
