@@ -54,6 +54,10 @@ class PdlOppslagServiceImpl constructor(
     }
 
     override fun sokPersonUtenlandskID(utenlandskID: String): List<SokPersonUtenlandskID.searchHit> = runBlocking {
+        val utenlandskIDPaging = SokPersonUtenlandskID.Paging(
+                pageNumber = 1,
+                resultsPerPage = 30
+        )
         val utenlandskIDKriterie = SokPersonUtenlandskID.Criterion(
                 fieldName = "person.utenlandskIdentifikasjonsnummer.identifikasjonsnummer",
                 searchRule = SokPersonUtenlandskID.SearchRule(
@@ -61,7 +65,7 @@ class PdlOppslagServiceImpl constructor(
                 )
         )
         SokPersonUtenlandskID(pdlClient)
-                .execute(SokPersonUtenlandskID.Variables(criteria = listOf(utenlandskIDKriterie)), userTokenAuthorizationHeaders)
+                .execute(SokPersonUtenlandskID.Variables(paging=utenlandskIDPaging, criteria = listOf(utenlandskIDKriterie)), userTokenAuthorizationHeaders)
                 .assertNoErrors()
                 .data
                 ?.sokPerson
