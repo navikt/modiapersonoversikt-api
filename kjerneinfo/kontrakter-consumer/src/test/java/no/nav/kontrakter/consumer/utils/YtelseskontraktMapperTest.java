@@ -126,9 +126,11 @@ public class YtelseskontraktMapperTest {
         FimYtelseskontrakt ytelsesKontrakt = YtelseskontraktMockFactory.createYtelsesKontrakt();
         FimHentYtelseskontraktListeResponse fimResponse = new FimHentYtelseskontraktListeResponse();
         fimResponse.getYtelseskontraktListe().add(ytelsesKontrakt);
-        YtelseskontraktResponse response = new YtelseskontraktResponse();
-        mapper.map(ytelsesKontrakt, response);
+        YtelseskontraktResponse response = mapper.map(ytelsesKontrakt, YtelseskontraktResponse.class);
+        Ytelse ytelse = mapper.map(ytelsesKontrakt, Ytelse.class);
+
         snapshot.assertMatches(response);
+        snapshot.assertMatches(ytelse);
     }
 
     private List<FimVedtak> createVedtak() {
