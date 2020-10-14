@@ -1,8 +1,6 @@
 package no.nav.personsok.consumer.fim.mapping;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.jsontype.DefaultBaseTypeLimitingValidator;
+import no.nav.kjerneinfo.common.utils.SnapshotRule;
 import no.nav.personsok.consumer.fim.kodeverk.KodeverkManager;
 import no.nav.personsok.consumer.fim.personsok.to.FinnPersonRequest;
 import no.nav.personsok.domain.Kjonn;
@@ -12,31 +10,26 @@ import no.nav.tjeneste.virksomhet.personsoek.v1.meldinger.AdresseFilter;
 import no.nav.tjeneste.virksomhet.personsoek.v1.meldinger.PersonFilter;
 import no.nav.tjeneste.virksomhet.personsoek.v1.meldinger.Soekekriterie;
 import org.joda.time.LocalDate;
-import org.junit.Ignore;
+import org.junit.Rule;
 import org.junit.Test;
 
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
 
-import java.io.File;
-import java.io.IOException;
 import java.math.BigInteger;
-import java.nio.file.Files;
 
 import static java.util.Arrays.asList;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
 
 public class FIMMapperTest {
-
-    public static final File snapshot = new File("src/test/resources/FIMMapperTest-snapshot.json");
+    @Rule
+    public SnapshotRule snapshotRule = new SnapshotRule();
 
     enum BostedsType { POSTBOKS, GATEADRESSE, MATRIKKELADRESSE }
     enum MidlertidigadresseType { UTLAND, NORGE }
 
-    private static final ObjectMapper json = new ObjectMapper()
-            .activateDefaultTyping(new DefaultBaseTypeLimitingValidator());
     private KodeverkManager kodeverkManager = mock(KodeverkManager.class);
     private FIMMapper mapper = new FIMMapper(kodeverkManager);
     private static final LocalDate FIXED_DATE = LocalDate.parse("2020-10-12");
@@ -66,6 +59,9 @@ public class FIMMapperTest {
         assertNull(wsRequest1.getAdresseFilter());
         assertNull(wsRequest1.getPersonFilter());
         assertNull(wsRequest1.getSoekekriterie());
+
+        snapshotRule.assertMatches(wsRequest1);
+        snapshotRule.assertMatches(wsRequest2);
     }
 
     @Test
@@ -89,6 +85,7 @@ public class FIMMapperTest {
 
         request.setUtvidetPersonsok(utvidetPersonsok);
         no.nav.tjeneste.virksomhet.personsoek.v1.meldinger.FinnPersonRequest wsRequest = mapper.map(request, no.nav.tjeneste.virksomhet.personsoek.v1.meldinger.FinnPersonRequest.class);
+        snapshotRule.assertMatches(wsRequest);
 
         AdresseFilter adresseFilter = wsRequest.getAdresseFilter();
         assertNotNull(adresseFilter);
@@ -118,7 +115,7 @@ public class FIMMapperTest {
     }
 
     @Test
-    public void map_response_should_map_all_field() throws IOException {
+    public void map_response_should_map_all_field() {
         no.nav.tjeneste.virksomhet.personsoek.v1.meldinger.FinnPersonResponse wsResponse = new no.nav.tjeneste.virksomhet.personsoek.v1.meldinger.FinnPersonResponse();
         wsResponse.setTotaltAntallTreff(1);
         wsResponse.getPersonListe().addAll(asList(
@@ -127,45 +124,7 @@ public class FIMMapperTest {
                 lagPerson(MidlertidigadresseType.NORGE, BostedsType.MATRIKKELADRESSE)
         ));
 
-        assertEquals(readSnapshot(snapshot), createSnapshot(wsResponse));
-    }
-
-    @Test
-    @Ignore
-    public  void writeSnapshots() {
-        no.nav.tjeneste.virksomhet.personsoek.v1.meldinger.FinnPersonResponse wsResponse = new no.nav.tjeneste.virksomhet.personsoek.v1.meldinger.FinnPersonResponse();
-        wsResponse.setTotaltAntallTreff(1);
-        wsResponse.getPersonListe().addAll(asList(
-                lagPerson(MidlertidigadresseType.UTLAND, BostedsType.POSTBOKS),
-                lagPerson(MidlertidigadresseType.NORGE, BostedsType.GATEADRESSE),
-                lagPerson(MidlertidigadresseType.NORGE, BostedsType.MATRIKKELADRESSE)
-        ));
-
-        writeSnapshot(snapshot, wsResponse);
-    }
-
-    private static String readSnapshot(File file) {
-        try {
-            return new String(Files.readAllBytes(snapshot.toPath()));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    private static void writeSnapshot(File file, Object object) {
-        try {
-            json.writerWithDefaultPrettyPrinter().writeValue(file, object);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    private static String createSnapshot(Object object) {
-        try {
-            return json.writerWithDefaultPrettyPrinter().writeValueAsString(object);
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
+        snapshotRule.assertMatches(wsResponse);
     }
 
     private static Bruker lagPerson(MidlertidigadresseType midlertidigAdresseUtland, BostedsType bostedPostboks) {

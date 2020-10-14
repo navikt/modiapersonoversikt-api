@@ -2,6 +2,7 @@ package no.nav.sykmeldingsperioder.consumer.sykepenger.mapping;
 
 import no.nav.kjerneinfo.common.domain.Periode;
 import no.nav.kjerneinfo.common.utils.DateUtils;
+import no.nav.kjerneinfo.common.utils.SnapshotRule;
 import no.nav.sykmeldingsperioder.consumer.sykepenger.SykepengerMockFactory;
 import no.nav.sykmeldingsperioder.consumer.sykepenger.mapping.to.SykepengerRequest;
 import no.nav.sykmeldingsperioder.consumer.sykepenger.mapping.to.SykepengerResponse;
@@ -15,6 +16,7 @@ import no.nav.tjeneste.virksomhet.sykepenger.v2.meldinger.FimHentSykepengerListe
 import no.nav.tjeneste.virksomhet.sykepenger.v2.meldinger.FimHentSykepengerListeResponse;
 import org.joda.time.LocalDate;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 
 import javax.xml.datatype.XMLGregorianCalendar;
@@ -25,6 +27,8 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertThat;
 
 public class SykepengerMapperTest {
+    @Rule
+    public SnapshotRule snapshot = new SnapshotRule();
 
     private SykepengerMapper mapper;
 
@@ -50,6 +54,7 @@ public class SykepengerMapperTest {
 
         compareDates(from, fimRequest.getSykmelding().getFom());
         compareDates(to, fimRequest.getSykmelding().getTom());
+        snapshot.assertMatches(fimRequest);
     }
 
     @Test
@@ -89,6 +94,7 @@ public class SykepengerMapperTest {
 
         assertThat(resSykmedling.getSykmelder(), equalTo(sykmelding.getSykmelder()));
         assertThat(resSykmedling.getSykmelder(), equalTo(sykmelding.getSykmelder()));
+        snapshot.assertMatches(response);
 
     }
 
@@ -198,7 +204,7 @@ public class SykepengerMapperTest {
         Sykmeldingsperiode sykmeldingsperiode2 = resResponse.getSykmeldingsperioder().get(2);
         assertThat(sykmeldingsperiode2.getStansarsak().getKode(), equalTo(SykepengerMockFactory.STANSAARSAK_NOE_ANNET_KODE));
         assertThat(sykmeldingsperiode2.getStansarsak().getTermnavn(), equalTo(SykepengerMockFactory.STANSARRSAK_NOE_ANNET_TERM));
-
+        snapshot.assertMatches(resResponse);
     }
 
     @Test
@@ -208,6 +214,7 @@ public class SykepengerMapperTest {
         LocalDate to = mapper.map(xmlDate, LocalDate.class);
 
         compareDates(to, xmlDate);
+        snapshot.assertMatches(to);
     }
 
     private void compareDates(LocalDate from, XMLGregorianCalendar sykmeldtFraFom) {
