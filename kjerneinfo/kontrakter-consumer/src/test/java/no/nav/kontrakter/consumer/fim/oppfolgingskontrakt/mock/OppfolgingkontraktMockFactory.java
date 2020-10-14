@@ -4,6 +4,10 @@ import no.nav.kjerneinfo.common.utils.DateUtils;
 import no.nav.kontrakter.consumer.fim.ytelseskontrakt.mock.YtelseskontraktMockFactory;
 import no.nav.tjeneste.virksomhet.oppfoelging.v1.informasjon.*;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -13,16 +17,15 @@ import java.util.List;
  * Genererer Oppfoelgingskontrakt-objekter for testformål.
  */
 public final class OppfolgingkontraktMockFactory {
-
     public static final String FAGSAKSTATUS_AKTIV = "Aktiv";
     public static final String FAGSAKSTATUS_INAKTIV = "Inaktiv";
     private static final String BRUKER_FORMIDLINGS_GRUPPE = "50000";
-    public static final Date FOM = new Date();
-    public static final Date TOM = new Date();
-    private static final Date DATO_KRAV_MOTTATT = new Date();
+    public static final Date FOM = DateUtils.getDate(2020, 10, 13);
+    public static final Date TOM = DateUtils.getDate(2020, 10, 13);
+    private static final Date DATO_KRAV_MOTTATT = DateUtils.getDate(2020, 10, 13);
     private static final String YTELSESKONTRAKT_STATUS = "YtelseskontraktStatus";
     private static final String YTELSESTYPE = "Ytelsestype";
-    private static final Date SYKMELDT_FRA = new Date();
+    private static final Date SYKMELDT_FRA = DateUtils.getDate(2020, 10, 13);
     private static final String SYFO_PUNKT_STATUS = "SYFOPunktStatus";
     private static final String SYFO_HENDELSE = "SYFOHendelse";
     private static final String SERVICE_GRUPPE = "Servicegruppe";

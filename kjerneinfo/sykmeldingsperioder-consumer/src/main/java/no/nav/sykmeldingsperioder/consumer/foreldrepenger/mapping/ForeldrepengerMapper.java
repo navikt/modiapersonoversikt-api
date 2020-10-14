@@ -47,7 +47,8 @@ public class ForeldrepengerMapper {
         }
         FimHentForeldrepengerettighetRequest wsRequest = new FimHentForeldrepengerettighetRequest();
         wsRequest.setIdent(request.getIdent());
-        wsRequest.setForeldrepengerettighet(map(request.getForeldrepengerettighetPeriode()));
+//      Var ikke del av orika-mapping
+//      wsRequest.setForeldrepengerettighet(map(request.getForeldrepengerettighetPeriode()));
         return wsRequest;
     }
 
@@ -188,7 +189,8 @@ public class ForeldrepengerMapper {
         periode.setForskyvelsesperiode(map(source.getForskyvet1()));
         periode.setForskyvelsesperiode2(map(source.getForskyvet2()));
         periode.setForeldrepengerFom(map(source.getForeldrepengerFom()));
-        periode.setMidlertidigStansDato(map(source.getMidlertidigStanset()));
+//      Var ikke del av orika-mapping
+//      periode.setMidlertidigStansDato(map(source.getMidlertidigStanset()));
         if (source.getErMoedrekvote() != null) {
             periode.setErModrekvote(source.getErMoedrekvote());
         }

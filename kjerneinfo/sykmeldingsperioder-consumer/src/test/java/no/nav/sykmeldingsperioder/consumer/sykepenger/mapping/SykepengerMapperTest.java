@@ -39,8 +39,8 @@ public class SykepengerMapperTest {
 
     @Test
     public void testRequest() {
-        LocalDate from = LocalDate.now().minusMonths(12);
-        LocalDate to = LocalDate.now();
+        LocalDate from = LocalDate.parse("2020-10-13").minusMonths(12);
+        LocalDate to = LocalDate.parse("2020-10-13");
         String ident = "12345612345";
 
         SykepengerMapper mapper = SykepengerMapper.getInstance();

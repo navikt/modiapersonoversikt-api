@@ -32,6 +32,7 @@ public class YtelseskontraktMapperTest {
 
     public static final String STATUS = "nr 2";
     public static final String AKTIVITET_FASE = "Aktivitetsfase";
+    private static final LocalDate FIXED_DATE = LocalDate.parse("2020-10-13");
 
     @Test
     public void testMappper() throws DatatypeConfigurationException {
@@ -39,8 +40,8 @@ public class YtelseskontraktMapperTest {
 
         YtelseskontraktRequest ytelseskontraktRequest = new YtelseskontraktRequest();
         ytelseskontraktRequest.setFodselsnummer("123451234");
-        ytelseskontraktRequest.setFrom(new LocalDate());
-        ytelseskontraktRequest.setTo(new LocalDate(System.currentTimeMillis() - 3600 * 1000));
+        ytelseskontraktRequest.setFrom(FIXED_DATE);
+        ytelseskontraktRequest.setTo(FIXED_DATE);
 
         FimHentYtelseskontraktListeRequest fimHentYtelseskontraktListeRequest = mapper.map(ytelseskontraktRequest);
 
@@ -124,8 +125,11 @@ public class YtelseskontraktMapperTest {
         FimYtelseskontrakt ytelsesKontrakt = YtelseskontraktMockFactory.createYtelsesKontrakt();
         FimHentYtelseskontraktListeResponse fimResponse = new FimHentYtelseskontraktListeResponse();
         fimResponse.getYtelseskontraktListe().add(ytelsesKontrakt);
-        YtelseskontraktResponse response = mapper.mapYtelse(ytelsesKontrakt);
+        YtelseskontraktResponse response = new YtelseskontraktResponse();
+        Ytelse ytelse = mapper.mapYtelse(ytelsesKontrakt);
+
         snapshot.assertMatches(response);
+        snapshot.assertMatches(ytelse);
     }
 
     private List<FimVedtak> createVedtak() {

@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import static java.util.Arrays.asList;
 import static org.apache.commons.lang3.StringUtils.*;
 
 /**
@@ -54,6 +55,12 @@ public final class FIMMapper {
     private AdresseFilter toAdresseFilter(UtvidetPersonsok utvidetPersonsok) {
         if (utvidetPersonsok == null) {
             return null;
+        } else if (
+            utvidetPersonsok.getHusnummer() == null &&
+            utvidetPersonsok.getHusbokstav() == null &&
+            utvidetPersonsok.getPostnummer() == null
+        ) {
+            return null;
         }
         AdresseFilter adresseFilter = new AdresseFilter();
         if (utvidetPersonsok.getHusnummer() != null) {
@@ -80,6 +87,13 @@ public final class FIMMapper {
 
     private Soekekriterie toSokekriterie(UtvidetPersonsok utvidetPersonsok) {
         if (utvidetPersonsok == null) {
+            return null;
+        } else if (
+                utvidetPersonsok.getFornavn() == null &&
+                utvidetPersonsok.getEtternavn() == null &&
+                utvidetPersonsok.getGatenavn() == null &&
+                utvidetPersonsok.getKontonummer() == null
+        ) {
             return null;
         }
         Soekekriterie kriterier = new Soekekriterie();

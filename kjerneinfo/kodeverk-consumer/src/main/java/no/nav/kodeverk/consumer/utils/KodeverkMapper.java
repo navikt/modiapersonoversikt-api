@@ -91,10 +91,10 @@ public class KodeverkMapper {
 	}
 
 	private Map<String, Kode> mapKoder(List<XMLKode> xmlKoder) {
+//		if (xmlKoder == null || xmlKoder.size() == 0) {
+//			return null;
+//		}
 		Map<String, Kode> result = new HashMap<>();
-		if (xmlKoder == null) {
-			return result;
-		}
 
 		for (XMLKode xmlKode : xmlKoder) {
 			result.put(xmlKode.getNavn(), map(xmlKode));
@@ -141,7 +141,13 @@ public class KodeverkMapper {
 	}
 
 	private Tekstobjekt map(XMLTekstobjekt beskrivelse) {
-		return null;
+		if (beskrivelse == null) {
+			return null;
+		}
+		Tekstobjekt tekstobjekt = new Tekstobjekt();
+		tekstobjekt.setUri(beskrivelse.getUri());
+		tekstobjekt.setNavn(beskrivelse.getNavn());
+		return tekstobjekt;
 	}
 
 	public Periode map(XMLPeriode xmlPeriode) {
