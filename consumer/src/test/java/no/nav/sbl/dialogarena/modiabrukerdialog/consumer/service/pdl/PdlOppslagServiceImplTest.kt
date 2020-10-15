@@ -9,8 +9,6 @@ import io.ktor.client.engine.mock.respond
 import io.ktor.client.request.HttpRequestData
 import io.ktor.client.request.HttpResponseData
 import io.ktor.http.*
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertNotNull
 import no.nav.common.auth.subject.IdentType
 import no.nav.common.auth.subject.SsoToken
 import no.nav.common.auth.subject.Subject
@@ -19,16 +17,17 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.RestConstants
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.RestConstants.ALLE_TEMA_HEADERVERDI
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.SubjectRule
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.TestUtils
+import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import java.net.URL
 
 internal class PdlOppslagServiceImplTest {
+    val userToken = "RND-USER-TOKEN"
     @Rule
     @JvmField
-    val subject = SubjectRule(Subject("Z999999", IdentType.InternBruker, SsoToken.oidcToken("token", emptyMap<String, Any>())))
-    val userToken = "RND-USER-TOKEN"
+    val subject = SubjectRule(Subject("Z999999", IdentType.InternBruker, SsoToken.oidcToken(userToken, emptyMap<String, Any>())))
     val systemuserToken = "RND-STS-TOKEN"
     val stsMock: SystemUserTokenProvider = mock()
 

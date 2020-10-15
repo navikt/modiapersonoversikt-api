@@ -8,7 +8,10 @@ public class TestUtils {
     public static void sneaky(UnsafeRunneable fn) {
         try {
             fn.call();
-        } catch (Throwable ignored) {}
+        } catch (AssertionError assertion) {
+            throw assertion;
+        } catch (Throwable ignored) {
+        }
     }
 
     public static void withEnv(String name, String value, UnsafeRunneable fn) {
