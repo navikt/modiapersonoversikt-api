@@ -9,7 +9,7 @@ export JAVA_OPTS="${JAVA_OPTS} --add-opens=java.base/java.io=ALL-UNNAMED"
 export JAVA_OPTS="${JAVA_OPTS} --add-opens=java.rmi/sun.rmi.transport=ALL-UNNAMED"
 
 if [ "$NAIS_CLUSTER_NAME" = "dev-fss" ] || [ "$NAIS_CLUSTER_NAME" = "dev-sbs" ]; then
-  export JAVA_OPTS="${JAVA_OPTS} --illegal-access=debug"
+  export JAVA_OPTS="${JAVA_OPTS} --illegal-access=deny"
 else
   export JAVA_OPTS="${JAVA_OPTS} --illegal-access=warn"
 fi
