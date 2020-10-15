@@ -2,6 +2,7 @@ package no.nav.sykmeldingsperioder.consumer.foreldrepenger.mapping;
 
 import no.nav.kjerneinfo.common.domain.Periode;
 import no.nav.kjerneinfo.common.utils.DateUtils;
+import no.nav.kjerneinfo.common.utils.SnapshotRule;
 import no.nav.sykmeldingsperioder.consumer.foreldrepenger.ForeldrepengerMockFactory;
 import no.nav.sykmeldingsperioder.consumer.foreldrepenger.mapping.to.ForeldrepengerListeRequest;
 import no.nav.sykmeldingsperioder.consumer.foreldrepenger.mapping.to.ForeldrepengerListeResponse;
@@ -17,6 +18,7 @@ import no.nav.tjeneste.virksomhet.foreldrepenger.v2.meldinger.FimHentForeldrepen
 import no.nav.tjeneste.virksomhet.foreldrepenger.v2.meldinger.FimHentForeldrepengerettighetResponse;
 import org.joda.time.LocalDate;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 
 import javax.xml.datatype.XMLGregorianCalendar;
@@ -29,6 +31,8 @@ import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
 public class ForeldrepengerMapperTest {
+    @Rule
+    public SnapshotRule snapshot = new SnapshotRule();
 
     public static final LocalDate TERMINDATO = new LocalDate(2013, 2, 15);
     public static final LocalDate OMSORGSOVERTAKELSESDATO = new LocalDate(2013, 2, 14);
@@ -64,6 +68,7 @@ public class ForeldrepengerMapperTest {
 
         FimHentForeldrepengerettighetRequest fimRequest = mapper.map(request, FimHentForeldrepengerettighetRequest.class);
         assertThat(fimRequest.getIdent(), equalTo(brukerId));
+        snapshot.assertMatches(fimRequest);
     }
 
     @Test
@@ -103,6 +108,7 @@ public class ForeldrepengerMapperTest {
 
         compareDates(resperiode.getForeldrepengerFom(), periode.getForeldrepengerFom());
         assertThat(resperiode.isErFedrekvote(), equalTo(periode.getErFedrekvote()));
+        snapshot.assertMatches(response);
     }
 
     @Test
@@ -145,6 +151,7 @@ public class ForeldrepengerMapperTest {
         assertThat(resperiode.isErFedrekvote(), equalTo(periode.getErFedrekvote()));
 
         compareDates(resperiode.getKommendeUtbetalinger().get(0).getVedtak().getFrom(), periode.getVedtakListe().get(0).getVedtak().getFom());
+        snapshot.assertMatches(response);
     }
 
     @Test
@@ -194,13 +201,14 @@ public class ForeldrepengerMapperTest {
         assertThat(kommendeUtbetaling.getUtbetalingsgrad(), equalTo(ForeldrepengerMockFactory.KOMMENDE_UTBETALING1_UTBETALINGSGRAD));
         assertThat(kommendeUtbetaling.getSaksbehandler(), equalTo(ForeldrepengerMockFactory.SAKSBEHANDLER_IDENT));
         assertThat(kommendeUtbetaling.getArbeidsgiverOrgnr(), equalTo(ForeldrepengerMockFactory.ARBEIDSGIVER_ORGNR));
+        snapshot.assertMatches(resResponse);
     }
 
     @Test
     public void dateMapping() {
         LocalDate to = mapper.map(fomXMLDate, LocalDate.class);
-
         compareDates(to, fomXMLDate);
+        snapshot.assertMatches(to);
     }
 
     private FimForeldrepengeperiode createFimforeldrepengeperiode() {

@@ -3,6 +3,7 @@ package no.nav.kodeverk.consumer.fim.kodeverk.mock;
 import no.nav.tjeneste.virksomhet.kodeverk.v2.informasjon.*;
 import no.nav.tjeneste.virksomhet.kodeverk.v2.informasjon.finnkodeverkliste.Kodeverk;
 import org.joda.time.DateMidnight;
+import org.joda.time.LocalDate;
 
 
 public class KodeverkMockFactory {
@@ -12,7 +13,7 @@ public class KodeverkMockFactory {
         kodeverk.setNavn(navn);
         kodeverk.setEier(eier);
         kodeverk.setVersjonsnummer(versjonsnummer);
-        kodeverk.setVersjoneringsdato(new DateMidnight().plusDays(offsetDager));
+        kodeverk.setVersjoneringsdato(LocalDate.parse("2020-10-13").toDateMidnight().plusDays(offsetDager));
         return kodeverk;
     }
 
@@ -21,7 +22,7 @@ public class KodeverkMockFactory {
         kodeverk.setNavn(navn);
         kodeverk.setEier(eier);
         kodeverk.setVersjonsnummer(versjonsnummer);
-        kodeverk.setVersjoneringsdato(new DateMidnight().plusDays(offsetDager));
+        kodeverk.setVersjoneringsdato(LocalDate.parse("2020-10-13").toDateMidnight().plusDays(offsetDager));
         return kodeverk;
     }
 
@@ -56,14 +57,14 @@ public class KodeverkMockFactory {
         XMLTekst t = new XMLTekst();
         t.setSpraak(spraak);
         t.setTekst(tekst + spraak);
-        
+
         return t;
     }
-    
+
     public XMLPeriode getMockPeriode() {
         XMLPeriode p = new XMLPeriode();
-        p.setFom(new DateMidnight().minusMonths(1));
-        p.setTom(new DateMidnight().plusMonths(5));
+        p.setFom(LocalDate.parse("2020-10-13").toDateMidnight().minusMonths(1));
+        p.setTom(LocalDate.parse("2020-10-13").toDateMidnight().plusMonths(5));
         return p;
     }
 

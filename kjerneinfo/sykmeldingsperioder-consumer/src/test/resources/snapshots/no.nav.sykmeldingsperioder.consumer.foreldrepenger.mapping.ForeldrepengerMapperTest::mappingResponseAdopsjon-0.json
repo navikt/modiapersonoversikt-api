@@ -1,0 +1,1913 @@
+{
+  "foreldrepengerettighet" : {
+    "andreForeldersFnr" : "10108000398",
+    "antallBarn" : null,
+    "arbeidsforholdListe" : [ "java.util.ArrayList", [ {
+      "arbeidsgiverKontonr" : "25148755001",
+      "arbeidsgiverNavn" : "Arbeidsgiver",
+      "inntektForPerioden" : null,
+      "inntektsperiode" : null,
+      "refusjonTom" : {
+        "centuryOfEra" : 20,
+        "chronology" : [ "org.joda.time.chrono.ISOChronology", {
+          "zone" : [ "org.joda.time.tz.FixedDateTimeZone", {
+            "fixed" : true,
+            "id" : "UTC"
+          } ]
+        } ],
+        "dayOfMonth" : 13,
+        "dayOfWeek" : 3,
+        "dayOfYear" : 44,
+        "era" : 1,
+        "fieldTypes" : [ [ "org.joda.time.DateTimeFieldType$StandardDateTimeFieldType", {
+          "durationType" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+            "name" : "years"
+          } ],
+          "name" : "year",
+          "rangeDurationType" : null
+        } ], [ "org.joda.time.DateTimeFieldType$StandardDateTimeFieldType", {
+          "durationType" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+            "name" : "months"
+          } ],
+          "name" : "monthOfYear",
+          "rangeDurationType" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+            "name" : "years"
+          } ]
+        } ], [ "org.joda.time.DateTimeFieldType$StandardDateTimeFieldType", {
+          "durationType" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+            "name" : "days"
+          } ],
+          "name" : "dayOfMonth",
+          "rangeDurationType" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+            "name" : "months"
+          } ]
+        } ] ],
+        "fields" : [ [ "org.joda.time.chrono.BasicYearDateTimeField", {
+          "durationField" : [ "org.joda.time.DurationField", {
+            "name" : "years",
+            "precise" : false,
+            "supported" : true,
+            "type" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+              "name" : "years"
+            } ],
+            "unitMillis" : 31556952000
+          } ],
+          "leapDurationField" : [ "org.joda.time.field.PreciseDurationField", {
+            "name" : "days",
+            "precise" : true,
+            "supported" : true,
+            "type" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+              "name" : "days"
+            } ],
+            "unitMillis" : 86400000
+          } ],
+          "lenient" : false,
+          "maximumValue" : 292278993,
+          "minimumValue" : -292275054,
+          "name" : "year",
+          "rangeDurationField" : null,
+          "supported" : true,
+          "type" : [ "org.joda.time.DateTimeFieldType$StandardDateTimeFieldType", {
+            "durationType" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+              "name" : "years"
+            } ],
+            "name" : "year",
+            "rangeDurationType" : null
+          } ]
+        } ], [ "org.joda.time.chrono.GJMonthOfYearDateTimeField", {
+          "durationField" : [ "org.joda.time.DurationField", {
+            "name" : "months",
+            "precise" : false,
+            "supported" : true,
+            "type" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+              "name" : "months"
+            } ],
+            "unitMillis" : 2629746000
+          } ],
+          "leapDurationField" : [ "org.joda.time.field.PreciseDurationField", {
+            "name" : "days",
+            "precise" : true,
+            "supported" : true,
+            "type" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+              "name" : "days"
+            } ],
+            "unitMillis" : 86400000
+          } ],
+          "lenient" : false,
+          "maximumValue" : 12,
+          "minimumValue" : 1,
+          "name" : "monthOfYear",
+          "rangeDurationField" : [ "org.joda.time.DurationField", {
+            "name" : "years",
+            "precise" : false,
+            "supported" : true,
+            "type" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+              "name" : "years"
+            } ],
+            "unitMillis" : 31556952000
+          } ],
+          "supported" : true,
+          "type" : [ "org.joda.time.DateTimeFieldType$StandardDateTimeFieldType", {
+            "durationType" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+              "name" : "months"
+            } ],
+            "name" : "monthOfYear",
+            "rangeDurationType" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+              "name" : "years"
+            } ]
+          } ]
+        } ], [ "org.joda.time.chrono.BasicDayOfMonthDateTimeField", {
+          "durationField" : [ "org.joda.time.field.PreciseDurationField", {
+            "name" : "days",
+            "precise" : true,
+            "supported" : true,
+            "type" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+              "name" : "days"
+            } ],
+            "unitMillis" : 86400000
+          } ],
+          "leapDurationField" : null,
+          "lenient" : false,
+          "maximumValue" : 31,
+          "minimumValue" : 1,
+          "name" : "dayOfMonth",
+          "rangeDurationField" : [ "org.joda.time.DurationField", {
+            "name" : "months",
+            "precise" : false,
+            "supported" : true,
+            "type" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+              "name" : "months"
+            } ],
+            "unitMillis" : 2629746000
+          } ],
+          "supported" : true,
+          "type" : [ "org.joda.time.DateTimeFieldType$StandardDateTimeFieldType", {
+            "durationType" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+              "name" : "days"
+            } ],
+            "name" : "dayOfMonth",
+            "rangeDurationType" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+              "name" : "months"
+            } ]
+          } ],
+          "unitMillis" : 86400000
+        } ] ],
+        "monthOfYear" : 2,
+        "values" : [ 2013, 2, 13 ],
+        "weekOfWeekyear" : 7,
+        "weekyear" : 2013,
+        "year" : 2013,
+        "yearOfCentury" : 13,
+        "yearOfEra" : 2013
+      },
+      "refusjonstype" : null,
+      "sykepengerFom" : null
+    } ] ],
+    "arbeidskategori" : {
+      "kode" : "Arbeidskategori",
+      "termnavn" : "Arbeidskategori"
+    },
+    "barnetsFoedselsdato" : {
+      "centuryOfEra" : 20,
+      "chronology" : [ "org.joda.time.chrono.ISOChronology", {
+        "zone" : [ "org.joda.time.tz.FixedDateTimeZone", {
+          "fixed" : true,
+          "id" : "UTC"
+        } ]
+      } ],
+      "dayOfMonth" : 13,
+      "dayOfWeek" : 3,
+      "dayOfYear" : 44,
+      "era" : 1,
+      "fieldTypes" : [ [ "org.joda.time.DateTimeFieldType$StandardDateTimeFieldType", {
+        "durationType" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+          "name" : "years"
+        } ],
+        "name" : "year",
+        "rangeDurationType" : null
+      } ], [ "org.joda.time.DateTimeFieldType$StandardDateTimeFieldType", {
+        "durationType" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+          "name" : "months"
+        } ],
+        "name" : "monthOfYear",
+        "rangeDurationType" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+          "name" : "years"
+        } ]
+      } ], [ "org.joda.time.DateTimeFieldType$StandardDateTimeFieldType", {
+        "durationType" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+          "name" : "days"
+        } ],
+        "name" : "dayOfMonth",
+        "rangeDurationType" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+          "name" : "months"
+        } ]
+      } ] ],
+      "fields" : [ [ "org.joda.time.chrono.BasicYearDateTimeField", {
+        "durationField" : [ "org.joda.time.DurationField", {
+          "name" : "years",
+          "precise" : false,
+          "supported" : true,
+          "type" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+            "name" : "years"
+          } ],
+          "unitMillis" : 31556952000
+        } ],
+        "leapDurationField" : [ "org.joda.time.field.PreciseDurationField", {
+          "name" : "days",
+          "precise" : true,
+          "supported" : true,
+          "type" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+            "name" : "days"
+          } ],
+          "unitMillis" : 86400000
+        } ],
+        "lenient" : false,
+        "maximumValue" : 292278993,
+        "minimumValue" : -292275054,
+        "name" : "year",
+        "rangeDurationField" : null,
+        "supported" : true,
+        "type" : [ "org.joda.time.DateTimeFieldType$StandardDateTimeFieldType", {
+          "durationType" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+            "name" : "years"
+          } ],
+          "name" : "year",
+          "rangeDurationType" : null
+        } ]
+      } ], [ "org.joda.time.chrono.GJMonthOfYearDateTimeField", {
+        "durationField" : [ "org.joda.time.DurationField", {
+          "name" : "months",
+          "precise" : false,
+          "supported" : true,
+          "type" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+            "name" : "months"
+          } ],
+          "unitMillis" : 2629746000
+        } ],
+        "leapDurationField" : [ "org.joda.time.field.PreciseDurationField", {
+          "name" : "days",
+          "precise" : true,
+          "supported" : true,
+          "type" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+            "name" : "days"
+          } ],
+          "unitMillis" : 86400000
+        } ],
+        "lenient" : false,
+        "maximumValue" : 12,
+        "minimumValue" : 1,
+        "name" : "monthOfYear",
+        "rangeDurationField" : [ "org.joda.time.DurationField", {
+          "name" : "years",
+          "precise" : false,
+          "supported" : true,
+          "type" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+            "name" : "years"
+          } ],
+          "unitMillis" : 31556952000
+        } ],
+        "supported" : true,
+        "type" : [ "org.joda.time.DateTimeFieldType$StandardDateTimeFieldType", {
+          "durationType" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+            "name" : "months"
+          } ],
+          "name" : "monthOfYear",
+          "rangeDurationType" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+            "name" : "years"
+          } ]
+        } ]
+      } ], [ "org.joda.time.chrono.BasicDayOfMonthDateTimeField", {
+        "durationField" : [ "org.joda.time.field.PreciseDurationField", {
+          "name" : "days",
+          "precise" : true,
+          "supported" : true,
+          "type" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+            "name" : "days"
+          } ],
+          "unitMillis" : 86400000
+        } ],
+        "leapDurationField" : null,
+        "lenient" : false,
+        "maximumValue" : 31,
+        "minimumValue" : 1,
+        "name" : "dayOfMonth",
+        "rangeDurationField" : [ "org.joda.time.DurationField", {
+          "name" : "months",
+          "precise" : false,
+          "supported" : true,
+          "type" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+            "name" : "months"
+          } ],
+          "unitMillis" : 2629746000
+        } ],
+        "supported" : true,
+        "type" : [ "org.joda.time.DateTimeFieldType$StandardDateTimeFieldType", {
+          "durationType" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+            "name" : "days"
+          } ],
+          "name" : "dayOfMonth",
+          "rangeDurationType" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+            "name" : "months"
+          } ]
+        } ],
+        "unitMillis" : 86400000
+      } ] ],
+      "monthOfYear" : 2,
+      "values" : [ 2013, 2, 13 ],
+      "weekOfWeekyear" : 7,
+      "weekyear" : 2013,
+      "year" : 2013,
+      "yearOfCentury" : 13,
+      "yearOfEra" : 2013
+    },
+    "dekningsgrad" : 8.0E-49,
+    "eldsteIdDato" : null,
+    "erArbeidsgiverperiode" : false,
+    "fedrekvoteTom" : {
+      "centuryOfEra" : 20,
+      "chronology" : [ "org.joda.time.chrono.ISOChronology", {
+        "zone" : [ "org.joda.time.tz.FixedDateTimeZone", {
+          "fixed" : true,
+          "id" : "UTC"
+        } ]
+      } ],
+      "dayOfMonth" : 13,
+      "dayOfWeek" : 3,
+      "dayOfYear" : 44,
+      "era" : 1,
+      "fieldTypes" : [ [ "org.joda.time.DateTimeFieldType$StandardDateTimeFieldType", {
+        "durationType" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+          "name" : "years"
+        } ],
+        "name" : "year",
+        "rangeDurationType" : null
+      } ], [ "org.joda.time.DateTimeFieldType$StandardDateTimeFieldType", {
+        "durationType" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+          "name" : "months"
+        } ],
+        "name" : "monthOfYear",
+        "rangeDurationType" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+          "name" : "years"
+        } ]
+      } ], [ "org.joda.time.DateTimeFieldType$StandardDateTimeFieldType", {
+        "durationType" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+          "name" : "days"
+        } ],
+        "name" : "dayOfMonth",
+        "rangeDurationType" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+          "name" : "months"
+        } ]
+      } ] ],
+      "fields" : [ [ "org.joda.time.chrono.BasicYearDateTimeField", {
+        "durationField" : [ "org.joda.time.DurationField", {
+          "name" : "years",
+          "precise" : false,
+          "supported" : true,
+          "type" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+            "name" : "years"
+          } ],
+          "unitMillis" : 31556952000
+        } ],
+        "leapDurationField" : [ "org.joda.time.field.PreciseDurationField", {
+          "name" : "days",
+          "precise" : true,
+          "supported" : true,
+          "type" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+            "name" : "days"
+          } ],
+          "unitMillis" : 86400000
+        } ],
+        "lenient" : false,
+        "maximumValue" : 292278993,
+        "minimumValue" : -292275054,
+        "name" : "year",
+        "rangeDurationField" : null,
+        "supported" : true,
+        "type" : [ "org.joda.time.DateTimeFieldType$StandardDateTimeFieldType", {
+          "durationType" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+            "name" : "years"
+          } ],
+          "name" : "year",
+          "rangeDurationType" : null
+        } ]
+      } ], [ "org.joda.time.chrono.GJMonthOfYearDateTimeField", {
+        "durationField" : [ "org.joda.time.DurationField", {
+          "name" : "months",
+          "precise" : false,
+          "supported" : true,
+          "type" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+            "name" : "months"
+          } ],
+          "unitMillis" : 2629746000
+        } ],
+        "leapDurationField" : [ "org.joda.time.field.PreciseDurationField", {
+          "name" : "days",
+          "precise" : true,
+          "supported" : true,
+          "type" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+            "name" : "days"
+          } ],
+          "unitMillis" : 86400000
+        } ],
+        "lenient" : false,
+        "maximumValue" : 12,
+        "minimumValue" : 1,
+        "name" : "monthOfYear",
+        "rangeDurationField" : [ "org.joda.time.DurationField", {
+          "name" : "years",
+          "precise" : false,
+          "supported" : true,
+          "type" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+            "name" : "years"
+          } ],
+          "unitMillis" : 31556952000
+        } ],
+        "supported" : true,
+        "type" : [ "org.joda.time.DateTimeFieldType$StandardDateTimeFieldType", {
+          "durationType" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+            "name" : "months"
+          } ],
+          "name" : "monthOfYear",
+          "rangeDurationType" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+            "name" : "years"
+          } ]
+        } ]
+      } ], [ "org.joda.time.chrono.BasicDayOfMonthDateTimeField", {
+        "durationField" : [ "org.joda.time.field.PreciseDurationField", {
+          "name" : "days",
+          "precise" : true,
+          "supported" : true,
+          "type" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+            "name" : "days"
+          } ],
+          "unitMillis" : 86400000
+        } ],
+        "leapDurationField" : null,
+        "lenient" : false,
+        "maximumValue" : 31,
+        "minimumValue" : 1,
+        "name" : "dayOfMonth",
+        "rangeDurationField" : [ "org.joda.time.DurationField", {
+          "name" : "months",
+          "precise" : false,
+          "supported" : true,
+          "type" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+            "name" : "months"
+          } ],
+          "unitMillis" : 2629746000
+        } ],
+        "supported" : true,
+        "type" : [ "org.joda.time.DateTimeFieldType$StandardDateTimeFieldType", {
+          "durationType" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+            "name" : "days"
+          } ],
+          "name" : "dayOfMonth",
+          "rangeDurationType" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+            "name" : "months"
+          } ]
+        } ],
+        "unitMillis" : 86400000
+      } ] ],
+      "monthOfYear" : 2,
+      "values" : [ 2013, 2, 13 ],
+      "weekOfWeekyear" : 7,
+      "weekyear" : 2013,
+      "year" : 2013,
+      "yearOfCentury" : 13,
+      "yearOfEra" : 2013
+    },
+    "forelder" : {
+      "ident" : "Bruker id"
+    },
+    "foreldreAvSammeKjoenn" : null,
+    "foreldrepengetype" : {
+      "kode" : "Foreldrepengetype",
+      "termnavn" : "Adopsjon"
+    },
+    "graderingsdager" : 1254,
+    "moedrekvoteTom" : null,
+    "omsorgsovertakelse" : {
+      "centuryOfEra" : 20,
+      "chronology" : [ "org.joda.time.chrono.ISOChronology", {
+        "zone" : [ "org.joda.time.tz.FixedDateTimeZone", {
+          "fixed" : true,
+          "id" : "UTC"
+        } ]
+      } ],
+      "dayOfMonth" : 14,
+      "dayOfWeek" : 4,
+      "dayOfYear" : 45,
+      "era" : 1,
+      "fieldTypes" : [ [ "org.joda.time.DateTimeFieldType$StandardDateTimeFieldType", {
+        "durationType" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+          "name" : "years"
+        } ],
+        "name" : "year",
+        "rangeDurationType" : null
+      } ], [ "org.joda.time.DateTimeFieldType$StandardDateTimeFieldType", {
+        "durationType" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+          "name" : "months"
+        } ],
+        "name" : "monthOfYear",
+        "rangeDurationType" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+          "name" : "years"
+        } ]
+      } ], [ "org.joda.time.DateTimeFieldType$StandardDateTimeFieldType", {
+        "durationType" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+          "name" : "days"
+        } ],
+        "name" : "dayOfMonth",
+        "rangeDurationType" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+          "name" : "months"
+        } ]
+      } ] ],
+      "fields" : [ [ "org.joda.time.chrono.BasicYearDateTimeField", {
+        "durationField" : [ "org.joda.time.DurationField", {
+          "name" : "years",
+          "precise" : false,
+          "supported" : true,
+          "type" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+            "name" : "years"
+          } ],
+          "unitMillis" : 31556952000
+        } ],
+        "leapDurationField" : [ "org.joda.time.field.PreciseDurationField", {
+          "name" : "days",
+          "precise" : true,
+          "supported" : true,
+          "type" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+            "name" : "days"
+          } ],
+          "unitMillis" : 86400000
+        } ],
+        "lenient" : false,
+        "maximumValue" : 292278993,
+        "minimumValue" : -292275054,
+        "name" : "year",
+        "rangeDurationField" : null,
+        "supported" : true,
+        "type" : [ "org.joda.time.DateTimeFieldType$StandardDateTimeFieldType", {
+          "durationType" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+            "name" : "years"
+          } ],
+          "name" : "year",
+          "rangeDurationType" : null
+        } ]
+      } ], [ "org.joda.time.chrono.GJMonthOfYearDateTimeField", {
+        "durationField" : [ "org.joda.time.DurationField", {
+          "name" : "months",
+          "precise" : false,
+          "supported" : true,
+          "type" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+            "name" : "months"
+          } ],
+          "unitMillis" : 2629746000
+        } ],
+        "leapDurationField" : [ "org.joda.time.field.PreciseDurationField", {
+          "name" : "days",
+          "precise" : true,
+          "supported" : true,
+          "type" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+            "name" : "days"
+          } ],
+          "unitMillis" : 86400000
+        } ],
+        "lenient" : false,
+        "maximumValue" : 12,
+        "minimumValue" : 1,
+        "name" : "monthOfYear",
+        "rangeDurationField" : [ "org.joda.time.DurationField", {
+          "name" : "years",
+          "precise" : false,
+          "supported" : true,
+          "type" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+            "name" : "years"
+          } ],
+          "unitMillis" : 31556952000
+        } ],
+        "supported" : true,
+        "type" : [ "org.joda.time.DateTimeFieldType$StandardDateTimeFieldType", {
+          "durationType" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+            "name" : "months"
+          } ],
+          "name" : "monthOfYear",
+          "rangeDurationType" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+            "name" : "years"
+          } ]
+        } ]
+      } ], [ "org.joda.time.chrono.BasicDayOfMonthDateTimeField", {
+        "durationField" : [ "org.joda.time.field.PreciseDurationField", {
+          "name" : "days",
+          "precise" : true,
+          "supported" : true,
+          "type" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+            "name" : "days"
+          } ],
+          "unitMillis" : 86400000
+        } ],
+        "leapDurationField" : null,
+        "lenient" : false,
+        "maximumValue" : 31,
+        "minimumValue" : 1,
+        "name" : "dayOfMonth",
+        "rangeDurationField" : [ "org.joda.time.DurationField", {
+          "name" : "months",
+          "precise" : false,
+          "supported" : true,
+          "type" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+            "name" : "months"
+          } ],
+          "unitMillis" : 2629746000
+        } ],
+        "supported" : true,
+        "type" : [ "org.joda.time.DateTimeFieldType$StandardDateTimeFieldType", {
+          "durationType" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+            "name" : "days"
+          } ],
+          "name" : "dayOfMonth",
+          "rangeDurationType" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+            "name" : "months"
+          } ]
+        } ],
+        "unitMillis" : 86400000
+      } ] ],
+      "monthOfYear" : 2,
+      "values" : [ 2013, 2, 14 ],
+      "weekOfWeekyear" : 7,
+      "weekyear" : 2013,
+      "year" : 2013,
+      "yearOfCentury" : 13,
+      "yearOfEra" : 2013
+    },
+    "periode" : [ "java.util.ArrayList", [ {
+      "arbeidsprosentMor" : 4.9E-58,
+      "avslaatt" : {
+        "centuryOfEra" : 20,
+        "chronology" : [ "org.joda.time.chrono.ISOChronology", {
+          "zone" : [ "org.joda.time.tz.FixedDateTimeZone", {
+            "fixed" : true,
+            "id" : "UTC"
+          } ]
+        } ],
+        "dayOfMonth" : 13,
+        "dayOfWeek" : 3,
+        "dayOfYear" : 44,
+        "era" : 1,
+        "fieldTypes" : [ [ "org.joda.time.DateTimeFieldType$StandardDateTimeFieldType", {
+          "durationType" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+            "name" : "years"
+          } ],
+          "name" : "year",
+          "rangeDurationType" : null
+        } ], [ "org.joda.time.DateTimeFieldType$StandardDateTimeFieldType", {
+          "durationType" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+            "name" : "months"
+          } ],
+          "name" : "monthOfYear",
+          "rangeDurationType" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+            "name" : "years"
+          } ]
+        } ], [ "org.joda.time.DateTimeFieldType$StandardDateTimeFieldType", {
+          "durationType" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+            "name" : "days"
+          } ],
+          "name" : "dayOfMonth",
+          "rangeDurationType" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+            "name" : "months"
+          } ]
+        } ] ],
+        "fields" : [ [ "org.joda.time.chrono.BasicYearDateTimeField", {
+          "durationField" : [ "org.joda.time.DurationField", {
+            "name" : "years",
+            "precise" : false,
+            "supported" : true,
+            "type" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+              "name" : "years"
+            } ],
+            "unitMillis" : 31556952000
+          } ],
+          "leapDurationField" : [ "org.joda.time.field.PreciseDurationField", {
+            "name" : "days",
+            "precise" : true,
+            "supported" : true,
+            "type" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+              "name" : "days"
+            } ],
+            "unitMillis" : 86400000
+          } ],
+          "lenient" : false,
+          "maximumValue" : 292278993,
+          "minimumValue" : -292275054,
+          "name" : "year",
+          "rangeDurationField" : null,
+          "supported" : true,
+          "type" : [ "org.joda.time.DateTimeFieldType$StandardDateTimeFieldType", {
+            "durationType" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+              "name" : "years"
+            } ],
+            "name" : "year",
+            "rangeDurationType" : null
+          } ]
+        } ], [ "org.joda.time.chrono.GJMonthOfYearDateTimeField", {
+          "durationField" : [ "org.joda.time.DurationField", {
+            "name" : "months",
+            "precise" : false,
+            "supported" : true,
+            "type" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+              "name" : "months"
+            } ],
+            "unitMillis" : 2629746000
+          } ],
+          "leapDurationField" : [ "org.joda.time.field.PreciseDurationField", {
+            "name" : "days",
+            "precise" : true,
+            "supported" : true,
+            "type" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+              "name" : "days"
+            } ],
+            "unitMillis" : 86400000
+          } ],
+          "lenient" : false,
+          "maximumValue" : 12,
+          "minimumValue" : 1,
+          "name" : "monthOfYear",
+          "rangeDurationField" : [ "org.joda.time.DurationField", {
+            "name" : "years",
+            "precise" : false,
+            "supported" : true,
+            "type" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+              "name" : "years"
+            } ],
+            "unitMillis" : 31556952000
+          } ],
+          "supported" : true,
+          "type" : [ "org.joda.time.DateTimeFieldType$StandardDateTimeFieldType", {
+            "durationType" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+              "name" : "months"
+            } ],
+            "name" : "monthOfYear",
+            "rangeDurationType" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+              "name" : "years"
+            } ]
+          } ]
+        } ], [ "org.joda.time.chrono.BasicDayOfMonthDateTimeField", {
+          "durationField" : [ "org.joda.time.field.PreciseDurationField", {
+            "name" : "days",
+            "precise" : true,
+            "supported" : true,
+            "type" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+              "name" : "days"
+            } ],
+            "unitMillis" : 86400000
+          } ],
+          "leapDurationField" : null,
+          "lenient" : false,
+          "maximumValue" : 31,
+          "minimumValue" : 1,
+          "name" : "dayOfMonth",
+          "rangeDurationField" : [ "org.joda.time.DurationField", {
+            "name" : "months",
+            "precise" : false,
+            "supported" : true,
+            "type" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+              "name" : "months"
+            } ],
+            "unitMillis" : 2629746000
+          } ],
+          "supported" : true,
+          "type" : [ "org.joda.time.DateTimeFieldType$StandardDateTimeFieldType", {
+            "durationType" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+              "name" : "days"
+            } ],
+            "name" : "dayOfMonth",
+            "rangeDurationType" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+              "name" : "months"
+            } ]
+          } ],
+          "unitMillis" : 86400000
+        } ] ],
+        "monthOfYear" : 2,
+        "values" : [ 2013, 2, 13 ],
+        "weekOfWeekyear" : 7,
+        "weekyear" : 2013,
+        "year" : 2013,
+        "yearOfCentury" : 13,
+        "yearOfEra" : 2013
+      },
+      "avslagsaarsak" : null,
+      "disponibelGradering" : 0.0,
+      "erFedrekvote" : true,
+      "erModrekvote" : false,
+      "fodselsnummer" : null,
+      "foreldrepengerFom" : {
+        "centuryOfEra" : 20,
+        "chronology" : [ "org.joda.time.chrono.ISOChronology", {
+          "zone" : [ "org.joda.time.tz.FixedDateTimeZone", {
+            "fixed" : true,
+            "id" : "UTC"
+          } ]
+        } ],
+        "dayOfMonth" : 13,
+        "dayOfWeek" : 5,
+        "dayOfYear" : 44,
+        "era" : 1,
+        "fieldTypes" : [ [ "org.joda.time.DateTimeFieldType$StandardDateTimeFieldType", {
+          "durationType" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+            "name" : "years"
+          } ],
+          "name" : "year",
+          "rangeDurationType" : null
+        } ], [ "org.joda.time.DateTimeFieldType$StandardDateTimeFieldType", {
+          "durationType" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+            "name" : "months"
+          } ],
+          "name" : "monthOfYear",
+          "rangeDurationType" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+            "name" : "years"
+          } ]
+        } ], [ "org.joda.time.DateTimeFieldType$StandardDateTimeFieldType", {
+          "durationType" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+            "name" : "days"
+          } ],
+          "name" : "dayOfMonth",
+          "rangeDurationType" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+            "name" : "months"
+          } ]
+        } ] ],
+        "fields" : [ [ "org.joda.time.chrono.BasicYearDateTimeField", {
+          "durationField" : [ "org.joda.time.DurationField", {
+            "name" : "years",
+            "precise" : false,
+            "supported" : true,
+            "type" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+              "name" : "years"
+            } ],
+            "unitMillis" : 31556952000
+          } ],
+          "leapDurationField" : [ "org.joda.time.field.PreciseDurationField", {
+            "name" : "days",
+            "precise" : true,
+            "supported" : true,
+            "type" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+              "name" : "days"
+            } ],
+            "unitMillis" : 86400000
+          } ],
+          "lenient" : false,
+          "maximumValue" : 292278993,
+          "minimumValue" : -292275054,
+          "name" : "year",
+          "rangeDurationField" : null,
+          "supported" : true,
+          "type" : [ "org.joda.time.DateTimeFieldType$StandardDateTimeFieldType", {
+            "durationType" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+              "name" : "years"
+            } ],
+            "name" : "year",
+            "rangeDurationType" : null
+          } ]
+        } ], [ "org.joda.time.chrono.GJMonthOfYearDateTimeField", {
+          "durationField" : [ "org.joda.time.DurationField", {
+            "name" : "months",
+            "precise" : false,
+            "supported" : true,
+            "type" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+              "name" : "months"
+            } ],
+            "unitMillis" : 2629746000
+          } ],
+          "leapDurationField" : [ "org.joda.time.field.PreciseDurationField", {
+            "name" : "days",
+            "precise" : true,
+            "supported" : true,
+            "type" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+              "name" : "days"
+            } ],
+            "unitMillis" : 86400000
+          } ],
+          "lenient" : false,
+          "maximumValue" : 12,
+          "minimumValue" : 1,
+          "name" : "monthOfYear",
+          "rangeDurationField" : [ "org.joda.time.DurationField", {
+            "name" : "years",
+            "precise" : false,
+            "supported" : true,
+            "type" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+              "name" : "years"
+            } ],
+            "unitMillis" : 31556952000
+          } ],
+          "supported" : true,
+          "type" : [ "org.joda.time.DateTimeFieldType$StandardDateTimeFieldType", {
+            "durationType" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+              "name" : "months"
+            } ],
+            "name" : "monthOfYear",
+            "rangeDurationType" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+              "name" : "years"
+            } ]
+          } ]
+        } ], [ "org.joda.time.chrono.BasicDayOfMonthDateTimeField", {
+          "durationField" : [ "org.joda.time.field.PreciseDurationField", {
+            "name" : "days",
+            "precise" : true,
+            "supported" : true,
+            "type" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+              "name" : "days"
+            } ],
+            "unitMillis" : 86400000
+          } ],
+          "leapDurationField" : null,
+          "lenient" : false,
+          "maximumValue" : 31,
+          "minimumValue" : 1,
+          "name" : "dayOfMonth",
+          "rangeDurationField" : [ "org.joda.time.DurationField", {
+            "name" : "months",
+            "precise" : false,
+            "supported" : true,
+            "type" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+              "name" : "months"
+            } ],
+            "unitMillis" : 2629746000
+          } ],
+          "supported" : true,
+          "type" : [ "org.joda.time.DateTimeFieldType$StandardDateTimeFieldType", {
+            "durationType" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+              "name" : "days"
+            } ],
+            "name" : "dayOfMonth",
+            "rangeDurationType" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+              "name" : "months"
+            } ]
+          } ],
+          "unitMillis" : 86400000
+        } ] ],
+        "monthOfYear" : 2,
+        "values" : [ 2015, 2, 13 ],
+        "weekOfWeekyear" : 7,
+        "weekyear" : 2015,
+        "year" : 2015,
+        "yearOfCentury" : 15,
+        "yearOfEra" : 2015
+      },
+      "forskyvelsesaarsak1" : {
+        "kode" : "Forskyvelsesaarsak",
+        "termnavn" : "Generell aarsak"
+      },
+      "forskyvelsesaarsak2" : null,
+      "forskyvelsesperiode" : {
+        "from" : {
+          "centuryOfEra" : 20,
+          "chronology" : [ "org.joda.time.chrono.ISOChronology", {
+            "zone" : [ "org.joda.time.tz.FixedDateTimeZone", {
+              "fixed" : true,
+              "id" : "UTC"
+            } ]
+          } ],
+          "dayOfMonth" : 13,
+          "dayOfWeek" : 3,
+          "dayOfYear" : 44,
+          "era" : 1,
+          "fieldTypes" : [ [ "org.joda.time.DateTimeFieldType$StandardDateTimeFieldType", {
+            "durationType" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+              "name" : "years"
+            } ],
+            "name" : "year",
+            "rangeDurationType" : null
+          } ], [ "org.joda.time.DateTimeFieldType$StandardDateTimeFieldType", {
+            "durationType" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+              "name" : "months"
+            } ],
+            "name" : "monthOfYear",
+            "rangeDurationType" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+              "name" : "years"
+            } ]
+          } ], [ "org.joda.time.DateTimeFieldType$StandardDateTimeFieldType", {
+            "durationType" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+              "name" : "days"
+            } ],
+            "name" : "dayOfMonth",
+            "rangeDurationType" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+              "name" : "months"
+            } ]
+          } ] ],
+          "fields" : [ [ "org.joda.time.chrono.BasicYearDateTimeField", {
+            "durationField" : [ "org.joda.time.DurationField", {
+              "name" : "years",
+              "precise" : false,
+              "supported" : true,
+              "type" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+                "name" : "years"
+              } ],
+              "unitMillis" : 31556952000
+            } ],
+            "leapDurationField" : [ "org.joda.time.field.PreciseDurationField", {
+              "name" : "days",
+              "precise" : true,
+              "supported" : true,
+              "type" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+                "name" : "days"
+              } ],
+              "unitMillis" : 86400000
+            } ],
+            "lenient" : false,
+            "maximumValue" : 292278993,
+            "minimumValue" : -292275054,
+            "name" : "year",
+            "rangeDurationField" : null,
+            "supported" : true,
+            "type" : [ "org.joda.time.DateTimeFieldType$StandardDateTimeFieldType", {
+              "durationType" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+                "name" : "years"
+              } ],
+              "name" : "year",
+              "rangeDurationType" : null
+            } ]
+          } ], [ "org.joda.time.chrono.GJMonthOfYearDateTimeField", {
+            "durationField" : [ "org.joda.time.DurationField", {
+              "name" : "months",
+              "precise" : false,
+              "supported" : true,
+              "type" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+                "name" : "months"
+              } ],
+              "unitMillis" : 2629746000
+            } ],
+            "leapDurationField" : [ "org.joda.time.field.PreciseDurationField", {
+              "name" : "days",
+              "precise" : true,
+              "supported" : true,
+              "type" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+                "name" : "days"
+              } ],
+              "unitMillis" : 86400000
+            } ],
+            "lenient" : false,
+            "maximumValue" : 12,
+            "minimumValue" : 1,
+            "name" : "monthOfYear",
+            "rangeDurationField" : [ "org.joda.time.DurationField", {
+              "name" : "years",
+              "precise" : false,
+              "supported" : true,
+              "type" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+                "name" : "years"
+              } ],
+              "unitMillis" : 31556952000
+            } ],
+            "supported" : true,
+            "type" : [ "org.joda.time.DateTimeFieldType$StandardDateTimeFieldType", {
+              "durationType" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+                "name" : "months"
+              } ],
+              "name" : "monthOfYear",
+              "rangeDurationType" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+                "name" : "years"
+              } ]
+            } ]
+          } ], [ "org.joda.time.chrono.BasicDayOfMonthDateTimeField", {
+            "durationField" : [ "org.joda.time.field.PreciseDurationField", {
+              "name" : "days",
+              "precise" : true,
+              "supported" : true,
+              "type" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+                "name" : "days"
+              } ],
+              "unitMillis" : 86400000
+            } ],
+            "leapDurationField" : null,
+            "lenient" : false,
+            "maximumValue" : 31,
+            "minimumValue" : 1,
+            "name" : "dayOfMonth",
+            "rangeDurationField" : [ "org.joda.time.DurationField", {
+              "name" : "months",
+              "precise" : false,
+              "supported" : true,
+              "type" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+                "name" : "months"
+              } ],
+              "unitMillis" : 2629746000
+            } ],
+            "supported" : true,
+            "type" : [ "org.joda.time.DateTimeFieldType$StandardDateTimeFieldType", {
+              "durationType" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+                "name" : "days"
+              } ],
+              "name" : "dayOfMonth",
+              "rangeDurationType" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+                "name" : "months"
+              } ]
+            } ],
+            "unitMillis" : 86400000
+          } ] ],
+          "monthOfYear" : 2,
+          "values" : [ 2013, 2, 13 ],
+          "weekOfWeekyear" : 7,
+          "weekyear" : 2013,
+          "year" : 2013,
+          "yearOfCentury" : 13,
+          "yearOfEra" : 2013
+        },
+        "to" : {
+          "centuryOfEra" : 20,
+          "chronology" : [ "org.joda.time.chrono.ISOChronology", {
+            "zone" : [ "org.joda.time.tz.FixedDateTimeZone", {
+              "fixed" : true,
+              "id" : "UTC"
+            } ]
+          } ],
+          "dayOfMonth" : 13,
+          "dayOfWeek" : 4,
+          "dayOfYear" : 44,
+          "era" : 1,
+          "fieldTypes" : [ [ "org.joda.time.DateTimeFieldType$StandardDateTimeFieldType", {
+            "durationType" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+              "name" : "years"
+            } ],
+            "name" : "year",
+            "rangeDurationType" : null
+          } ], [ "org.joda.time.DateTimeFieldType$StandardDateTimeFieldType", {
+            "durationType" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+              "name" : "months"
+            } ],
+            "name" : "monthOfYear",
+            "rangeDurationType" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+              "name" : "years"
+            } ]
+          } ], [ "org.joda.time.DateTimeFieldType$StandardDateTimeFieldType", {
+            "durationType" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+              "name" : "days"
+            } ],
+            "name" : "dayOfMonth",
+            "rangeDurationType" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+              "name" : "months"
+            } ]
+          } ] ],
+          "fields" : [ [ "org.joda.time.chrono.BasicYearDateTimeField", {
+            "durationField" : [ "org.joda.time.DurationField", {
+              "name" : "years",
+              "precise" : false,
+              "supported" : true,
+              "type" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+                "name" : "years"
+              } ],
+              "unitMillis" : 31556952000
+            } ],
+            "leapDurationField" : [ "org.joda.time.field.PreciseDurationField", {
+              "name" : "days",
+              "precise" : true,
+              "supported" : true,
+              "type" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+                "name" : "days"
+              } ],
+              "unitMillis" : 86400000
+            } ],
+            "lenient" : false,
+            "maximumValue" : 292278993,
+            "minimumValue" : -292275054,
+            "name" : "year",
+            "rangeDurationField" : null,
+            "supported" : true,
+            "type" : [ "org.joda.time.DateTimeFieldType$StandardDateTimeFieldType", {
+              "durationType" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+                "name" : "years"
+              } ],
+              "name" : "year",
+              "rangeDurationType" : null
+            } ]
+          } ], [ "org.joda.time.chrono.GJMonthOfYearDateTimeField", {
+            "durationField" : [ "org.joda.time.DurationField", {
+              "name" : "months",
+              "precise" : false,
+              "supported" : true,
+              "type" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+                "name" : "months"
+              } ],
+              "unitMillis" : 2629746000
+            } ],
+            "leapDurationField" : [ "org.joda.time.field.PreciseDurationField", {
+              "name" : "days",
+              "precise" : true,
+              "supported" : true,
+              "type" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+                "name" : "days"
+              } ],
+              "unitMillis" : 86400000
+            } ],
+            "lenient" : false,
+            "maximumValue" : 12,
+            "minimumValue" : 1,
+            "name" : "monthOfYear",
+            "rangeDurationField" : [ "org.joda.time.DurationField", {
+              "name" : "years",
+              "precise" : false,
+              "supported" : true,
+              "type" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+                "name" : "years"
+              } ],
+              "unitMillis" : 31556952000
+            } ],
+            "supported" : true,
+            "type" : [ "org.joda.time.DateTimeFieldType$StandardDateTimeFieldType", {
+              "durationType" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+                "name" : "months"
+              } ],
+              "name" : "monthOfYear",
+              "rangeDurationType" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+                "name" : "years"
+              } ]
+            } ]
+          } ], [ "org.joda.time.chrono.BasicDayOfMonthDateTimeField", {
+            "durationField" : [ "org.joda.time.field.PreciseDurationField", {
+              "name" : "days",
+              "precise" : true,
+              "supported" : true,
+              "type" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+                "name" : "days"
+              } ],
+              "unitMillis" : 86400000
+            } ],
+            "leapDurationField" : null,
+            "lenient" : false,
+            "maximumValue" : 31,
+            "minimumValue" : 1,
+            "name" : "dayOfMonth",
+            "rangeDurationField" : [ "org.joda.time.DurationField", {
+              "name" : "months",
+              "precise" : false,
+              "supported" : true,
+              "type" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+                "name" : "months"
+              } ],
+              "unitMillis" : 2629746000
+            } ],
+            "supported" : true,
+            "type" : [ "org.joda.time.DateTimeFieldType$StandardDateTimeFieldType", {
+              "durationType" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+                "name" : "days"
+              } ],
+              "name" : "dayOfMonth",
+              "rangeDurationType" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+                "name" : "months"
+              } ]
+            } ],
+            "unitMillis" : 86400000
+          } ] ],
+          "monthOfYear" : 2,
+          "values" : [ 2014, 2, 13 ],
+          "weekOfWeekyear" : 7,
+          "weekyear" : 2014,
+          "year" : 2014,
+          "yearOfCentury" : 14,
+          "yearOfEra" : 2014
+        }
+      },
+      "forskyvelsesperiode2" : null,
+      "harAleneomsorgFar" : true,
+      "harAleneomsorgMor" : false,
+      "historiskeUtbetalinger" : [ "java.util.ArrayList", [ ] ],
+      "kommendeUtbetalinger" : [ "java.util.ArrayList", [ {
+        "arbeidsgiverKontonr" : null,
+        "arbeidsgiverNavn" : null,
+        "arbeidsgiverOrgnr" : "123456789",
+        "bruttobeloep" : 0.0,
+        "dagsats" : 0.0,
+        "saksbehandler" : "SAKB001",
+        "type" : null,
+        "utbetalingsdato" : null,
+        "utbetalingsgrad" : null,
+        "vedtak" : {
+          "from" : {
+            "centuryOfEra" : 20,
+            "chronology" : [ "org.joda.time.chrono.ISOChronology", {
+              "zone" : [ "org.joda.time.tz.FixedDateTimeZone", {
+                "fixed" : true,
+                "id" : "UTC"
+              } ]
+            } ],
+            "dayOfMonth" : 13,
+            "dayOfWeek" : 6,
+            "dayOfYear" : 44,
+            "era" : 1,
+            "fieldTypes" : [ [ "org.joda.time.DateTimeFieldType$StandardDateTimeFieldType", {
+              "durationType" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+                "name" : "years"
+              } ],
+              "name" : "year",
+              "rangeDurationType" : null
+            } ], [ "org.joda.time.DateTimeFieldType$StandardDateTimeFieldType", {
+              "durationType" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+                "name" : "months"
+              } ],
+              "name" : "monthOfYear",
+              "rangeDurationType" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+                "name" : "years"
+              } ]
+            } ], [ "org.joda.time.DateTimeFieldType$StandardDateTimeFieldType", {
+              "durationType" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+                "name" : "days"
+              } ],
+              "name" : "dayOfMonth",
+              "rangeDurationType" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+                "name" : "months"
+              } ]
+            } ] ],
+            "fields" : [ [ "org.joda.time.chrono.BasicYearDateTimeField", {
+              "durationField" : [ "org.joda.time.DurationField", {
+                "name" : "years",
+                "precise" : false,
+                "supported" : true,
+                "type" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+                  "name" : "years"
+                } ],
+                "unitMillis" : 31556952000
+              } ],
+              "leapDurationField" : [ "org.joda.time.field.PreciseDurationField", {
+                "name" : "days",
+                "precise" : true,
+                "supported" : true,
+                "type" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+                  "name" : "days"
+                } ],
+                "unitMillis" : 86400000
+              } ],
+              "lenient" : false,
+              "maximumValue" : 292278993,
+              "minimumValue" : -292275054,
+              "name" : "year",
+              "rangeDurationField" : null,
+              "supported" : true,
+              "type" : [ "org.joda.time.DateTimeFieldType$StandardDateTimeFieldType", {
+                "durationType" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+                  "name" : "years"
+                } ],
+                "name" : "year",
+                "rangeDurationType" : null
+              } ]
+            } ], [ "org.joda.time.chrono.GJMonthOfYearDateTimeField", {
+              "durationField" : [ "org.joda.time.DurationField", {
+                "name" : "months",
+                "precise" : false,
+                "supported" : true,
+                "type" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+                  "name" : "months"
+                } ],
+                "unitMillis" : 2629746000
+              } ],
+              "leapDurationField" : [ "org.joda.time.field.PreciseDurationField", {
+                "name" : "days",
+                "precise" : true,
+                "supported" : true,
+                "type" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+                  "name" : "days"
+                } ],
+                "unitMillis" : 86400000
+              } ],
+              "lenient" : false,
+              "maximumValue" : 12,
+              "minimumValue" : 1,
+              "name" : "monthOfYear",
+              "rangeDurationField" : [ "org.joda.time.DurationField", {
+                "name" : "years",
+                "precise" : false,
+                "supported" : true,
+                "type" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+                  "name" : "years"
+                } ],
+                "unitMillis" : 31556952000
+              } ],
+              "supported" : true,
+              "type" : [ "org.joda.time.DateTimeFieldType$StandardDateTimeFieldType", {
+                "durationType" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+                  "name" : "months"
+                } ],
+                "name" : "monthOfYear",
+                "rangeDurationType" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+                  "name" : "years"
+                } ]
+              } ]
+            } ], [ "org.joda.time.chrono.BasicDayOfMonthDateTimeField", {
+              "durationField" : [ "org.joda.time.field.PreciseDurationField", {
+                "name" : "days",
+                "precise" : true,
+                "supported" : true,
+                "type" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+                  "name" : "days"
+                } ],
+                "unitMillis" : 86400000
+              } ],
+              "leapDurationField" : null,
+              "lenient" : false,
+              "maximumValue" : 31,
+              "minimumValue" : 1,
+              "name" : "dayOfMonth",
+              "rangeDurationField" : [ "org.joda.time.DurationField", {
+                "name" : "months",
+                "precise" : false,
+                "supported" : true,
+                "type" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+                  "name" : "months"
+                } ],
+                "unitMillis" : 2629746000
+              } ],
+              "supported" : true,
+              "type" : [ "org.joda.time.DateTimeFieldType$StandardDateTimeFieldType", {
+                "durationType" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+                  "name" : "days"
+                } ],
+                "name" : "dayOfMonth",
+                "rangeDurationType" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+                  "name" : "months"
+                } ]
+              } ],
+              "unitMillis" : 86400000
+            } ] ],
+            "monthOfYear" : 2,
+            "values" : [ 2016, 2, 13 ],
+            "weekOfWeekyear" : 6,
+            "weekyear" : 2016,
+            "year" : 2016,
+            "yearOfCentury" : 16,
+            "yearOfEra" : 2016
+          },
+          "to" : {
+            "centuryOfEra" : 20,
+            "chronology" : [ "org.joda.time.chrono.ISOChronology", {
+              "zone" : [ "org.joda.time.tz.FixedDateTimeZone", {
+                "fixed" : true,
+                "id" : "UTC"
+              } ]
+            } ],
+            "dayOfMonth" : 13,
+            "dayOfWeek" : 3,
+            "dayOfYear" : 195,
+            "era" : 1,
+            "fieldTypes" : [ [ "org.joda.time.DateTimeFieldType$StandardDateTimeFieldType", {
+              "durationType" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+                "name" : "years"
+              } ],
+              "name" : "year",
+              "rangeDurationType" : null
+            } ], [ "org.joda.time.DateTimeFieldType$StandardDateTimeFieldType", {
+              "durationType" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+                "name" : "months"
+              } ],
+              "name" : "monthOfYear",
+              "rangeDurationType" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+                "name" : "years"
+              } ]
+            } ], [ "org.joda.time.DateTimeFieldType$StandardDateTimeFieldType", {
+              "durationType" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+                "name" : "days"
+              } ],
+              "name" : "dayOfMonth",
+              "rangeDurationType" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+                "name" : "months"
+              } ]
+            } ] ],
+            "fields" : [ [ "org.joda.time.chrono.BasicYearDateTimeField", {
+              "durationField" : [ "org.joda.time.DurationField", {
+                "name" : "years",
+                "precise" : false,
+                "supported" : true,
+                "type" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+                  "name" : "years"
+                } ],
+                "unitMillis" : 31556952000
+              } ],
+              "leapDurationField" : [ "org.joda.time.field.PreciseDurationField", {
+                "name" : "days",
+                "precise" : true,
+                "supported" : true,
+                "type" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+                  "name" : "days"
+                } ],
+                "unitMillis" : 86400000
+              } ],
+              "lenient" : false,
+              "maximumValue" : 292278993,
+              "minimumValue" : -292275054,
+              "name" : "year",
+              "rangeDurationField" : null,
+              "supported" : true,
+              "type" : [ "org.joda.time.DateTimeFieldType$StandardDateTimeFieldType", {
+                "durationType" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+                  "name" : "years"
+                } ],
+                "name" : "year",
+                "rangeDurationType" : null
+              } ]
+            } ], [ "org.joda.time.chrono.GJMonthOfYearDateTimeField", {
+              "durationField" : [ "org.joda.time.DurationField", {
+                "name" : "months",
+                "precise" : false,
+                "supported" : true,
+                "type" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+                  "name" : "months"
+                } ],
+                "unitMillis" : 2629746000
+              } ],
+              "leapDurationField" : [ "org.joda.time.field.PreciseDurationField", {
+                "name" : "days",
+                "precise" : true,
+                "supported" : true,
+                "type" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+                  "name" : "days"
+                } ],
+                "unitMillis" : 86400000
+              } ],
+              "lenient" : false,
+              "maximumValue" : 12,
+              "minimumValue" : 1,
+              "name" : "monthOfYear",
+              "rangeDurationField" : [ "org.joda.time.DurationField", {
+                "name" : "years",
+                "precise" : false,
+                "supported" : true,
+                "type" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+                  "name" : "years"
+                } ],
+                "unitMillis" : 31556952000
+              } ],
+              "supported" : true,
+              "type" : [ "org.joda.time.DateTimeFieldType$StandardDateTimeFieldType", {
+                "durationType" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+                  "name" : "months"
+                } ],
+                "name" : "monthOfYear",
+                "rangeDurationType" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+                  "name" : "years"
+                } ]
+              } ]
+            } ], [ "org.joda.time.chrono.BasicDayOfMonthDateTimeField", {
+              "durationField" : [ "org.joda.time.field.PreciseDurationField", {
+                "name" : "days",
+                "precise" : true,
+                "supported" : true,
+                "type" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+                  "name" : "days"
+                } ],
+                "unitMillis" : 86400000
+              } ],
+              "leapDurationField" : null,
+              "lenient" : false,
+              "maximumValue" : 31,
+              "minimumValue" : 1,
+              "name" : "dayOfMonth",
+              "rangeDurationField" : [ "org.joda.time.DurationField", {
+                "name" : "months",
+                "precise" : false,
+                "supported" : true,
+                "type" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+                  "name" : "months"
+                } ],
+                "unitMillis" : 2629746000
+              } ],
+              "supported" : true,
+              "type" : [ "org.joda.time.DateTimeFieldType$StandardDateTimeFieldType", {
+                "durationType" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+                  "name" : "days"
+                } ],
+                "name" : "dayOfMonth",
+                "rangeDurationType" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+                  "name" : "months"
+                } ]
+              } ],
+              "unitMillis" : 86400000
+            } ] ],
+            "monthOfYear" : 7,
+            "values" : [ 2016, 7, 13 ],
+            "weekOfWeekyear" : 28,
+            "weekyear" : 2016,
+            "year" : 2016,
+            "yearOfCentury" : 16,
+            "yearOfEra" : 2016
+          }
+        }
+      } ] ],
+      "midlertidigStansDato" : null,
+      "morSituasjon" : {
+        "kode" : "Mors situasjon",
+        "termnavn" : "Ok"
+      },
+      "rettTilFedrekvote" : {
+        "kode" : "fkvote",
+        "termnavn" : "fedrekvote ja"
+      },
+      "stansaarsak" : {
+        "kode" : "Stansaarsak",
+        "termnavn" : "Genrell aarsak"
+      }
+    } ] ],
+    "restDager" : 54,
+    "rettighetFom" : {
+      "centuryOfEra" : 20,
+      "chronology" : [ "org.joda.time.chrono.ISOChronology", {
+        "zone" : [ "org.joda.time.tz.FixedDateTimeZone", {
+          "fixed" : true,
+          "id" : "UTC"
+        } ]
+      } ],
+      "dayOfMonth" : 14,
+      "dayOfWeek" : 4,
+      "dayOfYear" : 45,
+      "era" : 1,
+      "fieldTypes" : [ [ "org.joda.time.DateTimeFieldType$StandardDateTimeFieldType", {
+        "durationType" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+          "name" : "years"
+        } ],
+        "name" : "year",
+        "rangeDurationType" : null
+      } ], [ "org.joda.time.DateTimeFieldType$StandardDateTimeFieldType", {
+        "durationType" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+          "name" : "months"
+        } ],
+        "name" : "monthOfYear",
+        "rangeDurationType" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+          "name" : "years"
+        } ]
+      } ], [ "org.joda.time.DateTimeFieldType$StandardDateTimeFieldType", {
+        "durationType" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+          "name" : "days"
+        } ],
+        "name" : "dayOfMonth",
+        "rangeDurationType" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+          "name" : "months"
+        } ]
+      } ] ],
+      "fields" : [ [ "org.joda.time.chrono.BasicYearDateTimeField", {
+        "durationField" : [ "org.joda.time.DurationField", {
+          "name" : "years",
+          "precise" : false,
+          "supported" : true,
+          "type" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+            "name" : "years"
+          } ],
+          "unitMillis" : 31556952000
+        } ],
+        "leapDurationField" : [ "org.joda.time.field.PreciseDurationField", {
+          "name" : "days",
+          "precise" : true,
+          "supported" : true,
+          "type" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+            "name" : "days"
+          } ],
+          "unitMillis" : 86400000
+        } ],
+        "lenient" : false,
+        "maximumValue" : 292278993,
+        "minimumValue" : -292275054,
+        "name" : "year",
+        "rangeDurationField" : null,
+        "supported" : true,
+        "type" : [ "org.joda.time.DateTimeFieldType$StandardDateTimeFieldType", {
+          "durationType" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+            "name" : "years"
+          } ],
+          "name" : "year",
+          "rangeDurationType" : null
+        } ]
+      } ], [ "org.joda.time.chrono.GJMonthOfYearDateTimeField", {
+        "durationField" : [ "org.joda.time.DurationField", {
+          "name" : "months",
+          "precise" : false,
+          "supported" : true,
+          "type" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+            "name" : "months"
+          } ],
+          "unitMillis" : 2629746000
+        } ],
+        "leapDurationField" : [ "org.joda.time.field.PreciseDurationField", {
+          "name" : "days",
+          "precise" : true,
+          "supported" : true,
+          "type" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+            "name" : "days"
+          } ],
+          "unitMillis" : 86400000
+        } ],
+        "lenient" : false,
+        "maximumValue" : 12,
+        "minimumValue" : 1,
+        "name" : "monthOfYear",
+        "rangeDurationField" : [ "org.joda.time.DurationField", {
+          "name" : "years",
+          "precise" : false,
+          "supported" : true,
+          "type" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+            "name" : "years"
+          } ],
+          "unitMillis" : 31556952000
+        } ],
+        "supported" : true,
+        "type" : [ "org.joda.time.DateTimeFieldType$StandardDateTimeFieldType", {
+          "durationType" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+            "name" : "months"
+          } ],
+          "name" : "monthOfYear",
+          "rangeDurationType" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+            "name" : "years"
+          } ]
+        } ]
+      } ], [ "org.joda.time.chrono.BasicDayOfMonthDateTimeField", {
+        "durationField" : [ "org.joda.time.field.PreciseDurationField", {
+          "name" : "days",
+          "precise" : true,
+          "supported" : true,
+          "type" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+            "name" : "days"
+          } ],
+          "unitMillis" : 86400000
+        } ],
+        "leapDurationField" : null,
+        "lenient" : false,
+        "maximumValue" : 31,
+        "minimumValue" : 1,
+        "name" : "dayOfMonth",
+        "rangeDurationField" : [ "org.joda.time.DurationField", {
+          "name" : "months",
+          "precise" : false,
+          "supported" : true,
+          "type" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+            "name" : "months"
+          } ],
+          "unitMillis" : 2629746000
+        } ],
+        "supported" : true,
+        "type" : [ "org.joda.time.DateTimeFieldType$StandardDateTimeFieldType", {
+          "durationType" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+            "name" : "days"
+          } ],
+          "name" : "dayOfMonth",
+          "rangeDurationType" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+            "name" : "months"
+          } ]
+        } ],
+        "unitMillis" : 86400000
+      } ] ],
+      "monthOfYear" : 2,
+      "values" : [ 2013, 2, 14 ],
+      "weekOfWeekyear" : 7,
+      "weekyear" : 2013,
+      "year" : 2013,
+      "yearOfCentury" : 13,
+      "yearOfEra" : 2013
+    },
+    "slutt" : {
+      "centuryOfEra" : 20,
+      "chronology" : [ "org.joda.time.chrono.ISOChronology", {
+        "zone" : [ "org.joda.time.tz.FixedDateTimeZone", {
+          "fixed" : true,
+          "id" : "UTC"
+        } ]
+      } ],
+      "dayOfMonth" : 13,
+      "dayOfWeek" : 3,
+      "dayOfYear" : 44,
+      "era" : 1,
+      "fieldTypes" : [ [ "org.joda.time.DateTimeFieldType$StandardDateTimeFieldType", {
+        "durationType" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+          "name" : "years"
+        } ],
+        "name" : "year",
+        "rangeDurationType" : null
+      } ], [ "org.joda.time.DateTimeFieldType$StandardDateTimeFieldType", {
+        "durationType" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+          "name" : "months"
+        } ],
+        "name" : "monthOfYear",
+        "rangeDurationType" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+          "name" : "years"
+        } ]
+      } ], [ "org.joda.time.DateTimeFieldType$StandardDateTimeFieldType", {
+        "durationType" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+          "name" : "days"
+        } ],
+        "name" : "dayOfMonth",
+        "rangeDurationType" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+          "name" : "months"
+        } ]
+      } ] ],
+      "fields" : [ [ "org.joda.time.chrono.BasicYearDateTimeField", {
+        "durationField" : [ "org.joda.time.DurationField", {
+          "name" : "years",
+          "precise" : false,
+          "supported" : true,
+          "type" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+            "name" : "years"
+          } ],
+          "unitMillis" : 31556952000
+        } ],
+        "leapDurationField" : [ "org.joda.time.field.PreciseDurationField", {
+          "name" : "days",
+          "precise" : true,
+          "supported" : true,
+          "type" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+            "name" : "days"
+          } ],
+          "unitMillis" : 86400000
+        } ],
+        "lenient" : false,
+        "maximumValue" : 292278993,
+        "minimumValue" : -292275054,
+        "name" : "year",
+        "rangeDurationField" : null,
+        "supported" : true,
+        "type" : [ "org.joda.time.DateTimeFieldType$StandardDateTimeFieldType", {
+          "durationType" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+            "name" : "years"
+          } ],
+          "name" : "year",
+          "rangeDurationType" : null
+        } ]
+      } ], [ "org.joda.time.chrono.GJMonthOfYearDateTimeField", {
+        "durationField" : [ "org.joda.time.DurationField", {
+          "name" : "months",
+          "precise" : false,
+          "supported" : true,
+          "type" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+            "name" : "months"
+          } ],
+          "unitMillis" : 2629746000
+        } ],
+        "leapDurationField" : [ "org.joda.time.field.PreciseDurationField", {
+          "name" : "days",
+          "precise" : true,
+          "supported" : true,
+          "type" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+            "name" : "days"
+          } ],
+          "unitMillis" : 86400000
+        } ],
+        "lenient" : false,
+        "maximumValue" : 12,
+        "minimumValue" : 1,
+        "name" : "monthOfYear",
+        "rangeDurationField" : [ "org.joda.time.DurationField", {
+          "name" : "years",
+          "precise" : false,
+          "supported" : true,
+          "type" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+            "name" : "years"
+          } ],
+          "unitMillis" : 31556952000
+        } ],
+        "supported" : true,
+        "type" : [ "org.joda.time.DateTimeFieldType$StandardDateTimeFieldType", {
+          "durationType" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+            "name" : "months"
+          } ],
+          "name" : "monthOfYear",
+          "rangeDurationType" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+            "name" : "years"
+          } ]
+        } ]
+      } ], [ "org.joda.time.chrono.BasicDayOfMonthDateTimeField", {
+        "durationField" : [ "org.joda.time.field.PreciseDurationField", {
+          "name" : "days",
+          "precise" : true,
+          "supported" : true,
+          "type" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+            "name" : "days"
+          } ],
+          "unitMillis" : 86400000
+        } ],
+        "leapDurationField" : null,
+        "lenient" : false,
+        "maximumValue" : 31,
+        "minimumValue" : 1,
+        "name" : "dayOfMonth",
+        "rangeDurationField" : [ "org.joda.time.DurationField", {
+          "name" : "months",
+          "precise" : false,
+          "supported" : true,
+          "type" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+            "name" : "months"
+          } ],
+          "unitMillis" : 2629746000
+        } ],
+        "supported" : true,
+        "type" : [ "org.joda.time.DateTimeFieldType$StandardDateTimeFieldType", {
+          "durationType" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+            "name" : "days"
+          } ],
+          "name" : "dayOfMonth",
+          "rangeDurationType" : [ "org.joda.time.DurationFieldType$StandardDurationFieldType", {
+            "name" : "months"
+          } ]
+        } ],
+        "unitMillis" : 86400000
+      } ] ],
+      "monthOfYear" : 2,
+      "values" : [ 2013, 2, 13 ],
+      "weekOfWeekyear" : 7,
+      "weekyear" : 2013,
+      "year" : 2013,
+      "yearOfCentury" : 13,
+      "yearOfEra" : 2013
+    }
+  }
+}

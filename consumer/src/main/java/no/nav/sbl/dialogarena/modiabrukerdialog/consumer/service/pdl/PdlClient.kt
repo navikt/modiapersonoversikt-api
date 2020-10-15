@@ -20,6 +20,17 @@ import java.util.*
 typealias HeadersBuilder = HttpRequestBuilder.() -> Unit
 typealias VariablesTransform = (Any?) -> Any?
 
+class GraphQLException(override val message: String, val errors: List<GraphQLError>) : RuntimeException(message)
+fun <T> GraphQLResponse<T>.assertNoErrors(): GraphQLResponse<T> {
+    if (this.errors.isNullOrEmpty()) {
+        return this
+    } else {
+        val errors = this.errors!!
+        val message = if (errors.size == 1) errors[0].message else "Flere ukjente feil"
+        throw GraphQLException(message, errors)
+    }
+}
+
 @KtorExperimentalAPI
 class PdlClient(
         url: URL,
