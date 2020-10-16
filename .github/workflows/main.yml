@@ -25,13 +25,13 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          mvn -P ci -B verify --settings .github/maven-settings.xml
+          mvn -P ci -B test --settings .github/maven-settings.xml
       - name: Publish Docker image
         if: github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/master'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          mvn -P ci -B verify --settings .github/maven-settings.xml
+          mvn -P ci -B package --settings .github/maven-settings.xml -DskipTests
           docker login docker.pkg.github.com -u ${GITHUB_REPOSITORY} -p ${GITHUB_TOKEN}
           docker build --tag ${IMAGE} .
           docker push ${IMAGE}
