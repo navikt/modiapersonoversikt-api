@@ -1,7 +1,7 @@
 {
   "ident" : "12345612345",
   "sykmelding" : {
-    "fom" : [ "java.util.GregorianCalendar", 1570924800000 ],
-    "tom" : [ "java.util.GregorianCalendar", 1602547200000 ]
+    "fom" : [ "java.util.GregorianCalendar", 1570917600000 ],
+    "tom" : [ "java.util.GregorianCalendar", 1602540000000 ]
   }
 }
