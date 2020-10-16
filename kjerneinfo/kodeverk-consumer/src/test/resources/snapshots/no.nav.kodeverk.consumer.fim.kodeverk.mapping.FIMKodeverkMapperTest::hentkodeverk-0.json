@@ -2,6 +2,7 @@
   "eier" : "Eier",
   "gyldighetsperiode" : [ "java.util.ArrayList", [ ] ],
   "kilde" : null,
+  "kode" : [ "java.util.HashMap", { } ],
   "navn" : "Testkodeverk",
   "uri" : null,
   "versjoneringsdato" : {

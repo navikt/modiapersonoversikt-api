@@ -35,7 +35,7 @@ public class DefaultOppfolgingskontraktService implements OppfolgingskontraktSer
 
     @Override
     public OppfolgingskontraktResponse hentOppfolgingskontrakter(OppfolgingskontraktRequest request) {
-        WSHentOppfoelgingskontraktListeRequest rawRequest = mapper.map(request, WSHentOppfoelgingskontraktListeRequest.class);
+        WSHentOppfoelgingskontraktListeRequest rawRequest = mapper.map(request);
         WSHentOppfoelgingskontraktListeResponse rawResponse = null;
         try {
             rawResponse = oppfolgingskontraktService.hentOppfoelgingskontraktListe(rawRequest);
@@ -48,7 +48,7 @@ public class DefaultOppfolgingskontraktService implements OppfolgingskontraktSer
             throw new AuthorizationException(hentOppfoelgingskontraktBegrensning.getMessage(), hentOppfoelgingskontraktBegrensning);
         }
 
-        return mapper.map(rawResponse, OppfolgingskontraktResponse.class);
+        return mapper.map(rawResponse);
     }
 
     public void setOppfolgingskontraktService(OppfoelgingPortType oppfolgingskontraktService) {

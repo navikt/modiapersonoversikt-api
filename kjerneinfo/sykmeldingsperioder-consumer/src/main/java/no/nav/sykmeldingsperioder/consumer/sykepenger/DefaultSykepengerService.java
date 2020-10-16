@@ -34,7 +34,7 @@ public class DefaultSykepengerService implements SykepengerServiceBi {
 
     @Override
     public SykepengerResponse hentSykmeldingsperioder(SykepengerRequest request) {
-        FimHentSykepengerListeRequest rawRequest = mapper.map(request, FimHentSykepengerListeRequest.class);
+        FimHentSykepengerListeRequest rawRequest = mapper.map(request);
         FimHentSykepengerListeResponse rawResponse = null;
         try {
             rawResponse = sykepengerService.hentSykepengerListe(rawRequest);
@@ -46,7 +46,7 @@ public class DefaultSykepengerService implements SykepengerServiceBi {
             auditLogger.denied("Årsak: " + ex.getMessage());
             throw new AuthorizationException(ex.getMessage(), ex);
         }
-        return mapper.map(rawResponse, SykepengerResponse.class);
+        return mapper.map(rawResponse);
     }
 
     public void setMapper(SykepengerMapper mapper) {
