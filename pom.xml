@@ -64,10 +64,16 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
+            <!-- overskriver micrometer fra no.nav.common.bom -->
+            <dependency>
+                <groupId>io.micrometer</groupId>
+                <artifactId>micrometer-core</artifactId>
+                <version>1.5.5</version>
+            </dependency>
             <dependency>
                 <groupId>io.micrometer</groupId>
                 <artifactId>micrometer-registry-prometheus</artifactId>
-                <version>1.1.1</version>
+                <version>1.5.5</version>
             </dependency>
             <dependency>
                 <groupId>no.nav.common</groupId>
