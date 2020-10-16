@@ -81,6 +81,14 @@ class OppgaveController @Autowired constructor(
                                 .map { mapOppgave(it) }
                     }
 
+    @GetMapping("/oppgavedata/{oppgaveId}")
+    fun getOppgaveData(@PathVariable("oppgaveId") oppgaveId: String): OppgaveDTO =
+            tilgangkontroll
+                    .check(Policies.tilgangTilModia)
+                    .get(Audit.describe(READ, Henvendelse.Oppgave.Metadata, AuditIdentifier.OPPGAVE_ID to oppgaveId)) {
+                        mapOppgave(oppgaveBehandlingService.hentOppgave(oppgaveId))
+                    }
+
     private fun lagLeggTilbakeRequest(request: LeggTilbakeRequest, valgtEnhet: String): LeggTilbakeOppgaveIGsakRequest? {
         require(request.oppgaveId != null)
         val baseRequest = LeggTilbakeOppgaveIGsakRequest()
