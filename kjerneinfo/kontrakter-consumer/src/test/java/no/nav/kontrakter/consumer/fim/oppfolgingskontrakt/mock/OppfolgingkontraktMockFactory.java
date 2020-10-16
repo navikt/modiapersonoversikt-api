@@ -4,6 +4,10 @@ import no.nav.kjerneinfo.common.utils.DateUtils;
 import no.nav.kontrakter.consumer.fim.ytelseskontrakt.mock.YtelseskontraktMockFactory;
 import no.nav.tjeneste.virksomhet.oppfoelging.v1.informasjon.*;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -13,7 +17,6 @@ import java.util.List;
  * Genererer Oppfoelgingskontrakt-objekter for testformål.
  */
 public final class OppfolgingkontraktMockFactory {
-
     public static final String FAGSAKSTATUS_AKTIV = "Aktiv";
     public static final String FAGSAKSTATUS_INAKTIV = "Inaktiv";
     private static final String BRUKER_FORMIDLINGS_GRUPPE = "50000";

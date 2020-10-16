@@ -14,7 +14,7 @@ public class SykepengerMockService implements SykepengerServiceBi {
 
     @Override
     public SykepengerResponse hentSykmeldingsperioder(SykepengerRequest request) {
-        return mapper.map(SykepengerMockFactory.createFimHentSykepengerResponse(), SykepengerResponse.class);
+        return mapper.map(SykepengerMockFactory.createFimHentSykepengerResponse());
     }
 
 }

@@ -31,7 +31,7 @@ public class YtelseskontraktMockService implements YtelseskontraktServiceBi, Ser
             rawResponse.withYtelseskontraktListe(YtelseskontraktMockFactory.createYtelsesKontrakter(request.getFodselsnummer(), null, null));
         }
 
-        return mapper.map(rawResponse, YtelseskontraktResponse.class);
+        return mapper.map(rawResponse);
     }
 
     public void setMapper(YtelseskontraktMapper mapper) {

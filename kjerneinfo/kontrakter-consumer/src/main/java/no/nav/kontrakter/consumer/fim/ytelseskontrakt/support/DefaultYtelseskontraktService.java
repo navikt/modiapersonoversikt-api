@@ -36,7 +36,7 @@ public class DefaultYtelseskontraktService implements YtelseskontraktServiceBi {
     @Override
     public YtelseskontraktResponse hentYtelseskontrakter(YtelseskontraktRequest request) {
 
-        FimHentYtelseskontraktListeRequest rawRequest = mapper.map(request, FimHentYtelseskontraktListeRequest.class);
+        FimHentYtelseskontraktListeRequest rawRequest = mapper.map(request);
         FimHentYtelseskontraktListeResponse rawResponse = null;
         try {
             rawResponse = ytelseskontraktService.hentYtelseskontraktListe(rawRequest);
@@ -49,7 +49,7 @@ public class DefaultYtelseskontraktService implements YtelseskontraktServiceBi {
             throw new AuthorizationException(hentYtelseskontraktBegrensning.getMessage(), hentYtelseskontraktBegrensning);
         }
 
-        return mapper.map(rawResponse, YtelseskontraktResponse.class);
+        return mapper.map(rawResponse);
     }
 
     public void setYtelseskontraktService(YtelseskontraktV3 ytelseskontraktService) {

@@ -50,9 +50,24 @@ public class SnapshotRule extends TestWatcher {
         }
     }
 
+    public void updateSnapshot(Object object) {
+        try {
+            File file = this.getFile(counter++);
+            if (readSnapshot(file).equals(createSnapshot(object))) {
+                throw new RuntimeException("Can not update snapshot if they are already equal.");
+            } else {
+                save(file, object);
+                throw new RuntimeException("Snapshot updated, replace call with call to `assertMatches`");
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public void assertMatches(Object object) {
         assertMatches(this.getFile(counter++), object);
     }
+
 
     private void assertMatches(File file, Object object) {
         try {

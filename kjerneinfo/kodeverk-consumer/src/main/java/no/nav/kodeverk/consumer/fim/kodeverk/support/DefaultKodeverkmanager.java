@@ -97,7 +97,7 @@ public class DefaultKodeverkmanager implements KodeverkmanagerBi, Serializable, 
 		request.setNavn(kodeverksref);
 		try {
 			XMLHentKodeverkResponse kodeverk = kodeverkPortType.hentKodeverk(request);
-			HentKodeverkResponse response =  mapper.map(kodeverk, HentKodeverkResponse.class);
+			HentKodeverkResponse response =  mapper.map(kodeverk);
 			kodeverkMap.put(kodeverksref, response.getKodeverk());
 			logger.info("Lagt til " + kodeverksref + " i kodeverkMap");
 		} catch (TjenesteFeilException e) {

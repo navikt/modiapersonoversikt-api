@@ -13,10 +13,6 @@
     <name>${project.artifactId}</name>
     <artifactId>modia-utbetalinger</artifactId>
 
-    <properties>
-        <junit.version>4.12</junit.version>
-    </properties>
-
     <dependencies>
         <dependency>
             <groupId>no.nav.common</groupId>
@@ -66,7 +62,6 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>${junit.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>

@@ -1,12 +1,6 @@
 package no.nav.sykmeldingsperioder.consumer.sykepenger.mapping;
 
-import ma.glasnost.orika.*;
-import ma.glasnost.orika.converter.ConverterFactory;
-import ma.glasnost.orika.impl.ConfigurableMapper;
-import ma.glasnost.orika.metadata.Type;
 import no.nav.kjerneinfo.common.domain.Periode;
-import no.nav.kjerneinfo.common.utils.DateUtils;
-import no.nav.modig.core.exception.ApplicationException;
 import no.nav.sykmeldingsperioder.consumer.sykepenger.mapping.to.SykepengerRequest;
 import no.nav.sykmeldingsperioder.consumer.sykepenger.mapping.to.SykepengerResponse;
 import no.nav.sykmeldingsperioder.domain.*;
@@ -24,6 +18,8 @@ import javax.xml.datatype.XMLGregorianCalendar;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import static java.util.Optional.empty;
 import static java.util.Optional.ofNullable;
@@ -31,7 +27,7 @@ import static java.util.Optional.ofNullable;
 /**
  * Mapperklasse som benytter SykepengerFIMMapper for custom mapping.
  */
-public class SykepengerMapper extends ConfigurableMapper {
+public class SykepengerMapper {
     private static Logger logger = LoggerFactory.getLogger(SykepengerMapper.class);
     private static SykepengerMapper instance = null;
 
@@ -46,174 +42,238 @@ public class SykepengerMapper extends ConfigurableMapper {
         return instance;
     }
 
-    @Override
-    public void configure(MapperFactory mapperFactory) {
-        ConverterFactory converterFactory = mapperFactory.getConverterFactory();
-        configure(mapperFactory, converterFactory);
+    public FimHentSykepengerListeRequest map(SykepengerRequest source) {
+        if (source == null) {
+            return null;
+        }
+        FimHentSykepengerListeRequest request = new FimHentSykepengerListeRequest();
+        request.setIdent(source.getIdent());
+        FimsykPeriode periode = new FimsykPeriode();
+        periode.setFom(map(source.getFrom()));
+        periode.setTom(map(source.getTo()));
+        request.setSykmelding(periode);
+        return request;
     }
 
-    private void configure(MapperFactory mapperFactory, ConverterFactory converterFactory) {
-        configureRequestClassMaps(mapperFactory);
-        configureResponseConverters(converterFactory);
-        configureRequestConverters(converterFactory);
-        configureResponseClassMaps(mapperFactory);
+    public SykepengerResponse map(FimHentSykepengerListeResponse source) {
+        if (source == null) {
+            return null;
+        }
+        SykepengerResponse response = new SykepengerResponse();
+        response.setSykmeldingsperioder(forEach(source.getSykmeldingsperiodeListe(), this::map));
+        return response;
     }
 
-    private static void configureResponseClassMaps(MapperFactory mapperFactory) {
-        registerFimHentSykepengerResponse(mapperFactory);
+    private Sykmeldingsperiode map(FimsykSykmeldingsperiode source) {
+        if (source == null) {
+            return null;
+        }
+        Sykmeldingsperiode periode = new Sykmeldingsperiode();
+        periode.setFodselsnummer(null);
+        periode.setSykmeldtFom(map(source.getSykmeldtFom()));
+        if (source.getForbrukteDager() != null) {
+            periode.setForbrukteDager(source.getForbrukteDager().intValue());
+        }
+        periode.setFerie1(map(source.getFerie1()));
+        periode.setFerie2(map(source.getFerie2()));
+        periode.setSanksjon(map(source.getSanksjon()));
+        periode.setStansarsak(map(source.getStansaarsak()));
+        periode.setUnntakAktivitet(map(source.getUnntakAktivitet()));
+        periode.setGjeldendeForsikring(map(source.getGjeldendeForsikring()));
+        periode.setSykmeldinger(forEach(source.getSykmeldingListe(), this::map));
+        periode.setBruker(map(source.getSykmeldt()));
+        periode.setMidlertidigStanset(map(source.getMidlertidigStanset()));
+        periode.setHistoriskeUtbetalinger(null);
+        periode.setKommendeUtbetalinger(null);
+        periode.setUtbetalingerPaVent(null);
 
-        registerFimArbeidsforhold(mapperFactory);
-        registerFimBruker(mapperFactory);
-        registerFimForsikring(mapperFactory);
-        registerFimGradering(mapperFactory);
-        registerFimKommendeVedtak(mapperFactory);
-        registerFimKommendeUtbetaling(mapperFactory);
-        registerFimKodeliste(mapperFactory);
-        registerFimsykPeriodetype(mapperFactory);
-        registerFimPeriode(mapperFactory);
-        registerFimSykmelding(mapperFactory);
-        registerFimSykmeldingsperiode(mapperFactory);
-        registerFimYrkesskade(mapperFactory);
+        List<HistoriskUtbetaling> historiskeUtbetalinger = new ArrayList<>();
+        List<UtbetalingPaVent> utbetalingerPaaVent = new ArrayList<>();
+        List<KommendeUtbetaling> kommendeUtbetalinger = new ArrayList<>();
+        for (FimsykVedtak utbetaling : source.getVedtakListe()) {
+            if (utbetaling instanceof FimsykHistoriskVedtak) {
+                kommendeUtbetalinger.add(map((FimsykHistoriskVedtak)utbetaling));
+            } else if (utbetaling instanceof FimsykKommendeVedtak) {
+                utbetalingerPaaVent.add(createUtbetalingPaVentObjekt(source, (FimsykKommendeVedtak)utbetaling));
+            }
+        }
+        periode.setUtbetalingerPaVent(utbetalingerPaaVent);
+        periode.setKommendeUtbetalinger(kommendeUtbetalinger);
+        periode.setHistoriskeUtbetalinger(historiskeUtbetalinger);
+
+        periode.setSlutt(map(source.getSlutt()));
+        periode.setArbeidsforholdListe(forEach(source.getArbeidsforholdListe(), this::map));
+        periode.setErArbeidsgiverperiode(source.isErArbeidsgiverperiode());
+        periode.setArbeidskategori(map(source.getArbeidskategori()));
+
+        return periode;
     }
 
-    private static void registerFimHentSykepengerResponse(MapperFactory mapperFactory) {
-        mapperFactory.registerClassMap(mapperFactory.classMap(FimHentSykepengerListeResponse.class,
-                SykepengerResponse.class)
-                .field("sykmeldingsperiodeListe", "sykmeldingsperioder")
-                .byDefault()
-                .toClassMap());
+    private Arbeidsforhold map(FimsykArbeidsforhold source) {
+        if (source == null) {
+            return null;
+        }
+        Arbeidsforhold arbeidsforhold = new Arbeidsforhold();
+        arbeidsforhold.setArbeidsgiverNavn(source.getArbeidsgiverNavn());
+        arbeidsforhold.setArbeidsgiverKontonr(source.getArbeidsgiverKontonr());
+        arbeidsforhold.setInntektsperiode(map(source.getInntektsperiode()));
+        if (source.getInntektForPerioden() != null) {
+            arbeidsforhold.setInntektForPerioden(source.getInntektForPerioden().doubleValue());
+        }
+        arbeidsforhold.setSykepengerFom(map(source.getSykepengerFom()));
+        arbeidsforhold.setRefusjonTom(map(source.getRefusjonTom()));
+        arbeidsforhold.setRefusjonstype(map(source.getRefusjonstype()));
+
+        return arbeidsforhold;
     }
 
-    private static void registerFimGradering(MapperFactory mapperFactory) {
-        mapperFactory.registerClassMap(mapperFactory.classMap(FimsykGradering.class, Gradering.class)
-                .byDefault()
-                .toClassMap());
+    private KommendeUtbetaling map(FimsykHistoriskVedtak source) {
+        if (source == null) {
+            return null;
+        }
+        KommendeUtbetaling utbetaling = new KommendeUtbetaling();
+        utbetaling.setUtbetalingsdato(map(source.getUtbetalt()));
+        if (source.getBruttobeloep() != null) {
+            utbetaling.setBruttobeloep(source.getBruttobeloep().doubleValue());
+        }
+        utbetaling.setArbeidsgiverNavn(source.getArbeidsgiverNavn());
+        utbetaling.setArbeidsgiverKontonr(source.getArbeidsgiverKontonr());
+        utbetaling.setArbeidsgiverOrgnr(source.getArbeidsgiverOrgnr());
+        if (source.getDagsats() != null) {
+            utbetaling.setDagsats(source.getDagsats().doubleValue());
+        }
+        utbetaling.setSaksbehandler(source.getSaksbehandler());
+        if (source.getPeriodetype() != null) {
+            utbetaling.setType(new Kodeverkstype(source.getPeriodetype().getKode(), source.getPeriodetype().getTermnavn()));
+        }
+
+        utbetaling.setVedtak(map(source.getVedtak()));
+        if (source.getUtbetalingsgrad() != null) {
+            utbetaling.setUtbetalingsgrad(source.getUtbetalingsgrad().doubleValue());
+        }
+
+        return utbetaling;
     }
 
-    private static void registerFimKommendeUtbetaling(MapperFactory mapperFactory) {
-        mapperFactory.registerClassMap(mapperFactory.classMap(FimsykHistoriskVedtak.class, KommendeUtbetaling.class)
-                .field("utbetalt", "utbetalingsdato")
-                .customize(new CustomMapper<FimsykHistoriskVedtak, KommendeUtbetaling>() {
-                    @Override
-                    public void mapAtoB(FimsykHistoriskVedtak from, KommendeUtbetaling to, MappingContext context) {
-                        if (from.getPeriodetype() != null) {
-                            to.setType(new Kodeverkstype(from.getPeriodetype().getKode(), from.getPeriodetype().getTermnavn()));
-                        }
-                    }
-                })
-                .byDefault()
-                .toClassMap());
+    private UtbetalingPaVent map(FimsykKommendeVedtak source) {
+        if (source == null) {
+            return null;
+        }
+        UtbetalingPaVent utbetaling = new UtbetalingPaVent();
+        utbetaling.setOppgjoerstype(map(source.getOppgjoerstype()));
+        utbetaling.setVedtak(map(source.getVedtak()));
+        if (source.getUtbetalingsgrad() != null) {
+            utbetaling.setUtbetalingsgrad(source.getUtbetalingsgrad().doubleValue());
+        }
+        return utbetaling;
     }
 
-    private static void registerFimKommendeVedtak(MapperFactory mapperFactory) {
-        mapperFactory.registerClassMap(mapperFactory.classMap(FimsykKommendeVedtak.class, UtbetalingPaVent.class)
-                .byDefault()
-                .toClassMap());
+    private Bruker map(FimsykBruker source) {
+        if (source == null) {
+            return null;
+        }
+        Bruker bruker = new Bruker();
+        bruker.setIdent(source.getIdent());
+        return bruker;
     }
 
-    private static void registerFimPeriode(MapperFactory mapperFactory) {
-        mapperFactory.registerClassMap(mapperFactory.classMap(FimsykPeriode.class, Periode.class)
-                .field("fom", "from")
-                .field("tom", "to")
-                .toClassMap());
+    private Sykmelding map(FimsykSykmelding source) {
+        if (source == null) {
+            return null;
+        }
+        Sykmelding sykmelding = new Sykmelding();
+        sykmelding.setSykmelder(source.getSykmelder());
+        sykmelding.setBehandlet(map(source.getBehandlet()));
+        sykmelding.setSykmeldt(map(source.getSykmeldt()));
+        sykmelding.setGradAvSykmeldingListe(forEach(source.getGradAvSykmeldingListe(), this::map));
+        sykmelding.setGjelderYrkesskade(map(source.getGjelderYrkesskade()));
+
+        List<FimsykGradering> graderinger = source.getGradAvSykmeldingListe();
+        XMLGregorianCalendar lastTom = null;
+        FimsykGradering lastGradering = null;
+        for (FimsykGradering gradering : graderinger) {
+            if (lastTom == null || lastTom.compare(gradering.getGradert().getTom()) < 0) {
+                lastTom = gradering.getGradert().getTom();
+                lastGradering = gradering;
+            }
+        }
+
+        if (lastGradering != null) {
+            sykmelding.setSykmeldingsgrad(lastGradering.getSykmeldingsgrad().doubleValue());
+        }
+
+        return sykmelding;
     }
 
-    private static void registerFimSykmelding(MapperFactory mapperFactory) {
-        mapperFactory.registerClassMap(mapperFactory.classMap(FimsykSykmelding.class, Sykmelding.class)
-                .byDefault()
-                .customize(new CustomMapper<FimsykSykmelding, Sykmelding>() {
-                    @Override
-                    public void mapAtoB(FimsykSykmelding from, Sykmelding to, MappingContext context) {
-
-                        List<FimsykGradering> graderinger = from.getGradAvSykmeldingListe();
-                        XMLGregorianCalendar lastTom = null;
-                        FimsykGradering lastGradering = null;
-                        for (FimsykGradering gradering : graderinger) {
-                            if (lastTom == null || lastTom.compare(gradering.getGradert().getTom()) < 0) {
-                                lastTom = gradering.getGradert().getTom();
-                                lastGradering = gradering;
-                            }
-                        }
-                        if (lastGradering != null) {
-                            to.setSykmeldingsgrad(mapperFacade.map(lastGradering.getSykmeldingsgrad(), Double.class));
-                        }
-                    }
-                })
-                .toClassMap());
+    private Gradering map(FimsykGradering source) {
+        if (source == null) {
+            return null;
+        }
+        Gradering gradering = new Gradering();
+        gradering.setGradert(map(source.getGradert()));
+        if (source.getSykmeldingsgrad() != null) {
+            gradering.setSykmeldingsgrad(source.getSykmeldingsgrad().doubleValue());
+        }
+        return gradering;
     }
 
-    private static void registerFimArbeidsforhold(MapperFactory mapperFactory) {
-        mapperFactory.registerClassMap(mapperFactory.classMap(FimsykArbeidsforhold.class, Arbeidsforhold.class)
-                .byDefault()
-                .toClassMap());
+    private Yrkesskade map(FimsykYrkesskade source) {
+        if (source == null) {
+            return null;
+        }
+        Yrkesskade skade = new Yrkesskade();
+        skade.setYrkesskadeart(map(source.getYrkesskadeart()));
+        skade.setSkadet(map(source.getSkadet()));
+        skade.setVedtatt(map(source.getVedtatt()));
+        return skade;
     }
 
-    private static void registerFimBruker(MapperFactory mapperFactory) {
-        mapperFactory.registerClassMap(mapperFactory.classMap(FimsykBruker.class, Bruker.class)
-                .byDefault()
-                .toClassMap());
+    private Forsikring map(FimsykForsikring source) {
+        if (source == null) {
+            return null;
+        }
+        Forsikring forsikring = new Forsikring();
+        forsikring.setForsikringsordning(source.getForsikringsordning());
+        if (source.getPremiegrunnlag() != null) {
+            forsikring.setPremiegrunnlag(source.getPremiegrunnlag().doubleValue());
+        }
+        forsikring.setErGyldig(source.isErGyldig());
+        forsikring.setForsikret(map(source.getForsikret()));
+        return forsikring;
     }
 
-    private static void registerFimYrkesskade(MapperFactory mapperFactory) {
-        mapperFactory.registerClassMap(mapperFactory.classMap(FimsykYrkesskade.class, Yrkesskade.class)
-                .byDefault()
-                .toClassMap());
+    private Periode map(FimsykPeriode source) {
+        if (source == null) {
+            return null;
+        }
+        Periode periode = new Periode();
+        periode.setFrom(map(source.getFom()));
+        periode.setTo(map(source.getTom()));
+        return periode;
     }
 
-    private static void registerFimForsikring(MapperFactory mapperFactory) {
-        mapperFactory.registerClassMap(mapperFactory.classMap(FimsykForsikring.class, Forsikring.class)
-                .byDefault()
-                .toClassMap());
+    private Kodeverkstype map(FimsykKodeverdi source) {
+        if (source == null) {
+            return null;
+        }
+        Kodeverkstype type = new Kodeverkstype();
+        type.setKode(source.getKode());
+        type.setTermnavn(source.getTermnavn());
+        return type;
     }
 
-    private static void registerFimKodeliste(MapperFactory mapperFactory) {
-        mapperFactory.registerClassMap(mapperFactory.classMap(FimsykKodeverdi.class, Kodeverkstype.class)
-                .byDefault()
-                .toClassMap());
-    }
-
-    private static void registerFimsykPeriodetype(MapperFactory mapperFactory) {
-        mapperFactory.registerClassMap(mapperFactory.classMap(FimsykPeriodetype.class, Kodeverkstype.class)
-                .byDefault()
-                .toClassMap());
-    }
-
-    private static void registerFimSykmeldingsperiode(MapperFactory mapperFactory) {
-        mapperFactory.registerClassMap(mapperFactory.classMap(FimsykSykmeldingsperiode.class, Sykmeldingsperiode.class)
-                .field("stansaarsak", "stansarsak")
-                .field("sykmeldt", "bruker")
-                .field("sykmeldingListe", "sykmeldinger")
-                .customize(new CustomMapper<FimsykSykmeldingsperiode, Sykmeldingsperiode>() {
-                    @Override
-                    public void mapAtoB(FimsykSykmeldingsperiode from, Sykmeldingsperiode to, MappingContext context) {
-                        List<HistoriskUtbetaling> historiskeUtbetalinger = new ArrayList<>();
-                        List<UtbetalingPaVent> utbetalingerPaaVent = new ArrayList<>();
-                        List<KommendeUtbetaling> kommendeUtbetalinger = new ArrayList<>();
-                        for (FimsykVedtak utbetaling : from.getVedtakListe()) {
-                            if (utbetaling instanceof FimsykHistoriskVedtak) {
-                                kommendeUtbetalinger.add(mapperFacade.map(utbetaling, KommendeUtbetaling.class));
-                            } else if (utbetaling instanceof FimsykKommendeVedtak) {
-                                UtbetalingPaVent utbetalingPaaVent = createUtbetalingPaVentObjekt(mapperFacade, from, utbetaling);
-                                utbetalingerPaaVent.add(utbetalingPaaVent);
-                            }
-                        }
-                        to.setUtbetalingerPaVent(utbetalingerPaaVent);
-                        to.setKommendeUtbetalinger(kommendeUtbetalinger);
-                        to.setHistoriskeUtbetalinger(historiskeUtbetalinger);
-                    }
-                })
-                .byDefault()
-                .toClassMap());
-    }
-
-    private static UtbetalingPaVent createUtbetalingPaVentObjekt(MapperFacade mapperFacade, FimsykSykmeldingsperiode from, FimsykVedtak utbetaling) {
-        UtbetalingPaVent utbetalingPaaVent = mapperFacade.map(utbetaling, UtbetalingPaVent.class);
+    private UtbetalingPaVent createUtbetalingPaVentObjekt(FimsykSykmeldingsperiode from, FimsykKommendeVedtak utbetaling) {
+        if (from == null || utbetaling == null) {
+            return null;
+        }
+        UtbetalingPaVent utbetalingPaaVent = map(utbetaling);
         FimsykArbeidskategori arbeidskategori = from.getArbeidskategori();
         FimsykStansaarsak stansaarsak = from.getStansaarsak();
         FimsykPeriode ferie1 = from.getFerie1();
         FimsykPeriode ferie2 = from.getFerie2();
         FimsykPeriode sanksjon = from.getSanksjon();
         Optional<FimsykPeriode> sykmeldt = getSykmeldt(from);
+
         if (arbeidskategori != null) {
             utbetalingPaaVent.setArbeidskategori(new Kodeverkstype(arbeidskategori.getKode(), arbeidskategori.getTermnavn()));
         }
@@ -221,96 +281,53 @@ public class SykepengerMapper extends ConfigurableMapper {
             utbetalingPaaVent.setStansaarsak(new Kodeverkstype(stansaarsak.getKode(), stansaarsak.getTermnavn()));
         }
         if (ferie1 != null) {
-            LocalDate fra = getFraDato(ferie1);
-            LocalDate til = getTilDato(ferie1);
-            utbetalingPaaVent.setFerie1(new Periode(fra, til));
+            utbetalingPaaVent.setFerie1(map(ferie1));
         }
         if (ferie2 != null) {
-            LocalDate fra = getFraDato(ferie2);
-            LocalDate til = getTilDato(ferie2);
-            utbetalingPaaVent.setFerie2(new Periode(fra, til));
+            utbetalingPaaVent.setFerie2(map(ferie2));
         }
         if (sanksjon != null) {
-            LocalDate fra = getFraDato(sanksjon);
-            LocalDate til = getTilDato(sanksjon);
-            utbetalingPaaVent.setSanksjon(new Periode(fra, til));
+            utbetalingPaaVent.setSanksjon(map(sanksjon));
         }
         if (sykmeldt.isPresent()) {
-            LocalDate fra = getFraDato(sykmeldt.get());
-            LocalDate til = getTilDato(sykmeldt.get());
-            utbetalingPaaVent.setSykmeldt(new Periode(fra, til));
+            utbetalingPaaVent.setSykmeldt(map(sykmeldt.get()));
         }
 
         return utbetalingPaaVent;
     }
 
     private static Optional<FimsykPeriode> getSykmeldt(FimsykSykmeldingsperiode from) {
-        if (from.getSykmeldingListe().isEmpty()) {
+        if (from == null || from.getSykmeldingListe().isEmpty()) {
             return empty();
         }
         return ofNullable(from.getSykmeldingListe().get(0).getSykmeldt());
     }
 
-    private static LocalDate getFraDato(FimsykPeriode periode) {
-        LocalDate dato = null;
-        XMLGregorianCalendar fom = periode.getFom();
-        if (fom != null) {
-            dato = new LocalDate(fom.getYear(), fom.getMonth(), fom.getDay());
+    private XMLGregorianCalendar map(LocalDate source) {
+        if (source == null) {
+            return null;
         }
-        return dato;
-    }
-
-    private static LocalDate getTilDato(FimsykPeriode periode) {
-        LocalDate dato = null;
-        XMLGregorianCalendar fom = periode.getTom();
-        if (fom != null) {
-            dato = new LocalDate(fom.getYear(), fom.getMonth(), fom.getDay());
+        try {
+            return DatatypeFactory
+                    .newInstance()
+                    .newXMLGregorianCalendarDate(source.getYear(), source.getMonthOfYear(), source.getDayOfMonth(), 0);
+        } catch (DatatypeConfigurationException e) {
+            logger.warn("DatatypeConfigurationException", e.getMessage());
+            throw new RuntimeException("Could not map to XMLGregorianCalendar", e);
         }
-        return dato;
     }
 
-    private static void configureResponseConverters(ConverterFactory converterFactory) {
-
-        converterFactory.registerConverter(new CustomConverter<XMLGregorianCalendar, LocalDate>() {
-            @Override
-            public LocalDate convert(XMLGregorianCalendar source, Type<? extends LocalDate> destinationType, MappingContext mappingContext) {
-                return new LocalDate(source.getYear(), source.getMonth(), source.getDay());
-            }
-
-            @Override
-            public boolean canConvert(Type<?> sourceType, Type<?> destinationType) {
-                return this.sourceType.isAssignableFrom(sourceType) && this.destinationType.equals(destinationType);
-            }
-
-        });
+    public LocalDate map(XMLGregorianCalendar source) {
+        if (source == null) {
+            return null;
+        }
+        return new LocalDate(source.getYear(), source.getMonth(), source.getDay());
     }
 
-    private static void configureRequestConverters(ConverterFactory converterFactory) {
-        converterFactory.registerConverter(new CustomConverter<LocalDate, XMLGregorianCalendar>() {
-            @Override
-            public XMLGregorianCalendar convert(LocalDate source, Type<? extends XMLGregorianCalendar> destinationType, MappingContext mappingContext) {
-                try {
-                    return DatatypeFactory.newInstance().newXMLGregorianCalendarDate(source.getYear(), source.getMonthOfYear(), source.getDayOfMonth(), 0);
-                } catch (DatatypeConfigurationException e) {
-                    logger.warn("DatatypeConfigurationException", e.getMessage());
-                    throw new ApplicationException("DatatypeConfigurationException", e, "Klarer ikke å lage dato");
-                }
-            }
-        });
-    }
-
-    private static void configureRequestClassMaps(MapperFactory mapperFactory) {
-        mapperFactory.registerClassMap(mapperFactory.classMap(SykepengerRequest.class, FimHentSykepengerListeRequest.class)
-                .field("ident", "ident")
-                .customize(new CustomMapper<SykepengerRequest, FimHentSykepengerListeRequest>() {
-                    @Override
-                    public void mapAtoB(SykepengerRequest from, FimHentSykepengerListeRequest to, MappingContext context) {
-                        FimsykPeriode fimPeriode = new FimsykPeriode();
-                        fimPeriode.setFom(DateUtils.convertDateToXmlGregorianCalendar(from.getFrom().toDate()));
-                        fimPeriode.setTom(DateUtils.convertDateToXmlGregorianCalendar(from.getTo().toDate()));
-                        to.setSykmelding(fimPeriode);
-                    }
-                })
-                .toClassMap());
+    private <S, T> List<T> forEach(List<S> list, Function<S, T> fn) {
+        if (list == null) {
+            return null;
+        }
+        return list.stream().map(fn).collect(Collectors.toList());
     }
 }
