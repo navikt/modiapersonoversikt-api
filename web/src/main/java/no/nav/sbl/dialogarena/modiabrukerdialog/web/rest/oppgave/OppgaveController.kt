@@ -1,12 +1,10 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.oppgave
 
-import no.nav.common.auth.subject.SubjectHandler
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Oppgave
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.HenvendelseUtsendingService
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.LeggTilbakeOppgaveIGsakRequest
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveBehandlingService
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.ldap.LDAPService
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.RestUtils
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.http.CookieUtil
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Policies
@@ -22,11 +20,9 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
-import org.springframework.web.server.ResponseStatusException
 import javax.servlet.http.HttpServletRequest
 
 private val logger = LoggerFactory.getLogger(OppgaveController::class.java)
-private const val HENT_OPPGAVE_ROLLE = "0000-GA-BD06_HentOppgave"
 private const val AARSAK_PREFIX = "Oppgave lagt tilbake. Årsak: "
 
 @RestController
@@ -34,7 +30,6 @@ private const val AARSAK_PREFIX = "Oppgave lagt tilbake. Årsak: "
 class OppgaveController @Autowired constructor(
         private val oppgaveBehandlingService: OppgaveBehandlingService,
         private val plukkOppgaveService: PlukkOppgaveService,
-        private val ldapService: LDAPService,
         private val henvendelseUtsendingService: HenvendelseUtsendingService,
         private val tilgangkontroll: Tilgangskontroll
 ) {
@@ -60,6 +55,32 @@ class OppgaveController @Autowired constructor(
                 }
     }
 
+    @PostMapping("/plukk/{temagruppe}")
+    fun plukkOppgaver(@PathVariable("temagruppe") temagruppe: String, httpRequest: HttpServletRequest): List<OppgaveDTO> {
+        return tilgangkontroll
+                .check(Policies.tilgangTilModia)
+                .check(Policies.kanPlukkeOppgave)
+                .get(Audit.describe(READ, Henvendelse.Oppgave.Plukk, AuditIdentifier.TEMAGRUPPE to temagruppe)) {
+                    val tildelteOppgaver = oppgaveBehandlingService.finnTildelteOppgaverIGsak()
+                    if (tildelteOppgaver.isNotEmpty()) {
+                        tildelteOppgaver
+                    } else {
+                        plukkOppgaveService
+                                .plukkOppgaver(Temagruppe.valueOf(temagruppe.toUpperCase()),
+                                        CookieUtil.getSaksbehandlersValgteEnhet(httpRequest))
+                    }
+                }.map { mapOppgave(it) }
+    }
+
+    @GetMapping("/tildelt")
+    fun finnTildelte() =
+            tilgangkontroll
+                    .check(Policies.tilgangTilModia)
+                    .get(Audit.describe(READ, Henvendelse.Oppgave.Tildelte)) {
+                        oppgaveBehandlingService.finnTildelteOppgaverIGsak()
+                                .map { mapOppgave(it) }
+                    }
+
     private fun lagLeggTilbakeRequest(request: LeggTilbakeRequest, valgtEnhet: String): LeggTilbakeOppgaveIGsakRequest? {
         require(request.oppgaveId != null)
         val baseRequest = LeggTilbakeOppgaveIGsakRequest()
@@ -79,40 +100,6 @@ class OppgaveController @Autowired constructor(
                 return baseRequest
                         .withBeskrivelse(AARSAK_PREFIX + request.beskrivelse)
             }
-        }
-    }
-
-    @PostMapping("/plukk/{temagruppe}")
-    fun plukkOppgaver(@PathVariable("temagruppe") temagruppe: String, httpRequest: HttpServletRequest): List<OppgaveDTO> {
-        return tilgangkontroll
-                .check(Policies.tilgangTilModia)
-                .check(Policies.kanPlukkeOppgave)
-                .get(Audit.describe(READ, Henvendelse.Oppgave.Plukk, AuditIdentifier.TEMAGRUPPE to temagruppe)) {
-                    val tildelteOppgaver = oppgaveBehandlingService.finnTildelteOppgaverIGsak()
-                    if (tildelteOppgaver.isNotEmpty()) {
-                        tildelteOppgaver
-                    } else {
-                        plukkOppgaveService
-                                .also { verifiserTilgang(HENT_OPPGAVE_ROLLE) }
-                                .plukkOppgaver(Temagruppe.valueOf(temagruppe.toUpperCase()),
-                                        CookieUtil.getSaksbehandlersValgteEnhet(httpRequest))
-                    }
-                }.map { mapOppgave(it) }
-    }
-
-    @GetMapping("/tildelt")
-    fun finnTildelte() =
-            tilgangkontroll
-                    .check(Policies.tilgangTilModia)
-                    .get(Audit.describe(READ, Henvendelse.Oppgave.Tildelte)) {
-                        oppgaveBehandlingService.finnTildelteOppgaverIGsak()
-                                .map { mapOppgave(it) }
-                    }
-
-    private fun verifiserTilgang(rolle: String) {
-        val consumerId = SubjectHandler.getIdent().get()
-        if (!ldapService.saksbehandlerHarRolle(consumerId, rolle)) {
-            throw ResponseStatusException(HttpStatus.FORBIDDEN, "Saksbehandler $consumerId har ikke rollen $rolle")
         }
     }
 }
