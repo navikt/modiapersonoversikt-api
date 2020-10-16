@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface OppgaveBehandlingService {
+    Oppgave hentOppgave(String oppgaveId);
 
     void tilordneOppgaveIGsak(String oppgaveId, Temagruppe temagruppe, String saksbehandlersValgteEnhet) throws FikkIkkeTilordnet;
 

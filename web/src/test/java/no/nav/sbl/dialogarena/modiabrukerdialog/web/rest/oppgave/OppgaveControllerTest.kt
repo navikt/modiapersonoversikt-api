@@ -57,7 +57,6 @@ internal class OppgaveControllerTest {
                     TilgangskontrollMock.get()
             ),
             plukkOppgaveService,
-            ldapService,
             henvendelseUtsendingService,
             TilgangskontrollMock.get()
     )
