@@ -34,7 +34,7 @@ public class DefaultForeldrepengerService implements ForeldrepengerServiceBi {
     @Override
     public ForeldrepengerListeResponse hentForeldrepengerListe(ForeldrepengerListeRequest request) {
 
-        FimHentForeldrepengerettighetRequest rawRequest = mapper.map(request, FimHentForeldrepengerettighetRequest.class);
+        FimHentForeldrepengerettighetRequest rawRequest = mapper.map(request);
         FimHentForeldrepengerettighetResponse rawResponse = null;
         try {
             rawResponse = foreldrepengerService.hentForeldrepengerettighet(rawRequest);
@@ -46,7 +46,7 @@ public class DefaultForeldrepengerService implements ForeldrepengerServiceBi {
             auditLogger.denied("Årsak: " + ex.getMessage());
             throw new AuthorizationException(ex.getMessage(), ex);
         }
-        return mapper.map(rawResponse, ForeldrepengerListeResponse.class);
+        return mapper.map(rawResponse);
     }
 
     public void setMapper(ForeldrepengerMapper mapper) {

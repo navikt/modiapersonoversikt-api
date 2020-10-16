@@ -43,8 +43,7 @@ public class YtelseskontraktMapperTest {
         ytelseskontraktRequest.setFrom(FIXED_DATE);
         ytelseskontraktRequest.setTo(FIXED_DATE);
 
-        FimHentYtelseskontraktListeRequest fimHentYtelseskontraktListeRequest = new FimHentYtelseskontraktListeRequest();
-        mapper.map(ytelseskontraktRequest, fimHentYtelseskontraktListeRequest);
+        FimHentYtelseskontraktListeRequest fimHentYtelseskontraktListeRequest = mapper.map(ytelseskontraktRequest);
 
         assertEquals(ytelseskontraktRequest.getFodselsnummer(), fimHentYtelseskontraktListeRequest.getPersonidentifikator());
 
@@ -96,8 +95,7 @@ public class YtelseskontraktMapperTest {
         kontrakt.setBortfallsprosentUkerIgjen(bortfallsprosentUkerIgjen);
         fimHentYtelseskontraktListeResponse.getYtelseskontraktListe().add(kontrakt);
 
-        YtelseskontraktResponse ytelseskontraktResponse = new YtelseskontraktResponse();
-        mapper.map(fimHentYtelseskontraktListeResponse, ytelseskontraktResponse);
+        YtelseskontraktResponse ytelseskontraktResponse = mapper.map(fimHentYtelseskontraktListeResponse);
 
         assertEquals(fimHentYtelseskontraktListeResponse.getBruker().getRettighetsgruppe().getRettighetsGruppe(), ytelseskontraktResponse.getRettighetsgruppe());
         Dagpengeytelse dagpengeytelse = (Dagpengeytelse) ytelseskontraktResponse.getYtelser().get(0);
@@ -127,8 +125,8 @@ public class YtelseskontraktMapperTest {
         FimYtelseskontrakt ytelsesKontrakt = YtelseskontraktMockFactory.createYtelsesKontrakt();
         FimHentYtelseskontraktListeResponse fimResponse = new FimHentYtelseskontraktListeResponse();
         fimResponse.getYtelseskontraktListe().add(ytelsesKontrakt);
-        YtelseskontraktResponse response = mapper.map(ytelsesKontrakt, YtelseskontraktResponse.class);
-        Ytelse ytelse = mapper.map(ytelsesKontrakt, Ytelse.class);
+        YtelseskontraktResponse response = new YtelseskontraktResponse();
+        Ytelse ytelse = mapper.mapYtelse(ytelsesKontrakt);
 
         snapshot.assertMatches(response);
         snapshot.assertMatches(ytelse);

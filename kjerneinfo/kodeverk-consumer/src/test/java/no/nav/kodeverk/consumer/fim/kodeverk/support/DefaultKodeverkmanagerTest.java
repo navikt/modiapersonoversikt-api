@@ -29,10 +29,10 @@ public class DefaultKodeverkmanagerTest {
 
     @Test
     public void testGetBeskrivelseForKode() throws Exception {
-        EnkeltKodeverk kodeverk = mapper.map(mockFactory.getMockHentKodeverk("MockKodeverk", "tester", "1", 1), EnkeltKodeverk.class);
-        Kode kode1 = mapper.map(mockFactory.getMockKode("Mock 1"), Kode.class);
+        EnkeltKodeverk kodeverk = mapper.map(mockFactory.getMockHentKodeverk("MockKodeverk", "tester", "1", 1));
+        Kode kode1 = mapper.map(mockFactory.getMockKode("Mock 1"));
         kodeverk.put(kode1.getNavn(), kode1);
-        Kode kode2 = mapper.map(mockFactory.getMockKode("Mock 2"), Kode.class);
+        Kode kode2 = mapper.map(mockFactory.getMockKode("Mock 2"));
         kodeverk.put(kode2.getNavn(), kode2);
         kodeverkManager.kodeverkMap.put(kodeverk.getNavn(), kodeverk);
 
@@ -43,10 +43,10 @@ public class DefaultKodeverkmanagerTest {
     @Test
     public void testGetKodeverkList() throws Exception {
         final String kodeverksref = "MockKodeverk";
-        EnkeltKodeverk kodeverk = mapper.map(mockFactory.getMockHentKodeverk(kodeverksref, "tester", "1", 1), EnkeltKodeverk.class);
+        EnkeltKodeverk kodeverk = mapper.map(mockFactory.getMockHentKodeverk(kodeverksref, "tester", "1", 1));
         int antallKoder = 4;
         for (int i = 0; i < antallKoder; i++) {
-            Kode kode = mapper.map(mockFactory.getMockKode("Mock " + i), Kode.class);
+            Kode kode = mapper.map(mockFactory.getMockKode("Mock " + i));
             kodeverk.put(kode.getNavn(), kode);
         }
         kodeverkManager.kodeverkMap.put(kodeverk.getNavn(), kodeverk);
