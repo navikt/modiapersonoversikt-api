@@ -95,7 +95,7 @@ fun lagPersonResponse(searchHit: SokPersonUtenlandskID.searchHit): PersonSokResp
                     midlertidigPostadresse = null,
                     ansvarligEnhet = null
             ),
-            utenlandskID = utenlandskID?.let { UtenlandskIdDTO(it.identifikasjonsnummer, it.utstederland, it.opphoert) }
+            utenlandskID = utenlandskID?.let { UtenlandskIdDTO(it.identifikasjonsnummer, it.utstederland) }
     )
 }
 
@@ -260,7 +260,7 @@ private fun lagNavn(fimPersonnavn: Personnavn) = PersonnavnDTO(
         sammensatt = fimPersonnavn.sammensattNavn
 )
 
-data class UtenlandskIdDTO(val identifikasjonsnummer: String, val utstederland: String, val opphoert: Boolean)
+data class UtenlandskIdDTO(val identifikasjonsnummer: String, val utstederland: String)
 
 data class NorskIdentDTO(val ident: String, val type: KodeverdiDTO?)
 
