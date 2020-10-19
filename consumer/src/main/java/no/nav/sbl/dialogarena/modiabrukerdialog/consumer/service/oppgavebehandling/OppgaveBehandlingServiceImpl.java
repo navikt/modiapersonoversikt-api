@@ -114,6 +114,11 @@ public class OppgaveBehandlingServiceImpl implements OppgaveBehandlingService {
                 .collect(toList());
     }
 
+    @Override
+    public Oppgave hentOppgave(String oppgaveId) {
+        return wsOppgaveToOppgave(hentOppgaveFraGsak(oppgaveId));
+    }
+
     private static Oppgave wsOppgaveToOppgave(WSOppgave wsOppgave) {
         return new Oppgave(
                 wsOppgave.getOppgaveId(),
@@ -218,11 +223,19 @@ public class OppgaveBehandlingServiceImpl implements OppgaveBehandlingService {
         return isBlank(gammelBeskrivelse) ? nyBeskrivelse : nyBeskrivelse + "\n\n" + gammelBeskrivelse;
     }
 
-    WSOppgave hentOppgaveFraGsak(String oppgaveId) {
+    private WSOppgave hentOppgaveFraGsak(String oppgaveId) {
+        return hentOppgaveResponseFraGsak(oppgaveId).getOppgave();
+    }
+
+    private WSHentOppgaveResponse hentOppgaveResponseFraGsak(Integer oppgaveId) {
+        return hentOppgaveResponseFraGsak(String.valueOf(oppgaveId));
+    }
+
+    private WSHentOppgaveResponse hentOppgaveResponseFraGsak(String oppgaveId) {
         try {
-            return oppgaveWS.hentOppgave(new WSHentOppgaveRequest().withOppgaveId(oppgaveId)).getOppgave();
-        } catch (HentOppgaveOppgaveIkkeFunnet hentOppgaveOppgaveIkkeFunnet) {
-            throw new RuntimeException(hentOppgaveOppgaveIkkeFunnet);
+            return oppgaveWS.hentOppgave(new WSHentOppgaveRequest().withOppgaveId(oppgaveId));
+        } catch (HentOppgaveOppgaveIkkeFunnet exc) {
+            throw new RuntimeException(exc);
         }
     }
 
@@ -275,19 +288,10 @@ public class OppgaveBehandlingServiceImpl implements OppgaveBehandlingService {
         }
 
         return response.getOppgaveIder().stream()
-                .map(this::hentTildeltOppgave)
+                .map(this::hentOppgaveResponseFraGsak)
                 .filter(Objects::nonNull)
                 .map(WSHentOppgaveResponse::getOppgave)
                 .collect(toList());
-    }
-
-    private WSHentOppgaveResponse hentTildeltOppgave(Integer oppgaveId) {
-        try {
-            return oppgaveWS.hentOppgave(new WSHentOppgaveRequest()
-                    .withOppgaveId(String.valueOf(oppgaveId)));
-        } catch (HentOppgaveOppgaveIkkeFunnet exc) {
-            throw new IllegalStateException(exc);
-        }
     }
 
     private String enhetFor(Temagruppe temagruppe, String saksbehandlersValgteEnhet) {

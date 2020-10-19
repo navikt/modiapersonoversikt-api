@@ -1,6 +1,7 @@
 package no.nav.sykmeldingsperioder.consumer.sykepenger.mapping;
 
 import no.nav.kjerneinfo.common.domain.Periode;
+import no.nav.kjerneinfo.common.utils.DateUtils;
 import no.nav.sykmeldingsperioder.consumer.sykepenger.mapping.to.SykepengerRequest;
 import no.nav.sykmeldingsperioder.consumer.sykepenger.mapping.to.SykepengerResponse;
 import no.nav.sykmeldingsperioder.domain.*;
@@ -307,14 +308,7 @@ public class SykepengerMapper {
         if (source == null) {
             return null;
         }
-        try {
-            return DatatypeFactory
-                    .newInstance()
-                    .newXMLGregorianCalendarDate(source.getYear(), source.getMonthOfYear(), source.getDayOfMonth(), 0);
-        } catch (DatatypeConfigurationException e) {
-            logger.warn("DatatypeConfigurationException", e.getMessage());
-            throw new RuntimeException("Could not map to XMLGregorianCalendar", e);
-        }
+        return DateUtils.convertDateToXmlGregorianCalendar(source.toDate());
     }
 
     public LocalDate map(XMLGregorianCalendar source) {

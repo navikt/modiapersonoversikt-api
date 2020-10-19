@@ -40,7 +40,7 @@ public class SnapshotRule extends TestWatcher {
 
     @Override
     protected void starting(Description description) {
-        this.name = description.getTestClass().getName() + "::" + description.getMethodName();
+        this.name = description.getTestClass().getName() + "_" + description.getMethodName();
     }
 
     @Override

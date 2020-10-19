@@ -3,6 +3,8 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.pdl
 import com.expediagroup.graphql.client.GraphQLClient
 import com.expediagroup.graphql.types.GraphQLError
 import com.expediagroup.graphql.types.GraphQLResponse
+import com.fasterxml.jackson.datatype.jsr310.JSR310Module
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import io.ktor.client.engine.cio.CIO
 import io.ktor.client.engine.cio.CIOEngineConfig
@@ -31,11 +33,14 @@ fun <T> GraphQLResponse<T>.assertNoErrors(): GraphQLResponse<T> {
     }
 }
 
+private val mapper = jacksonObjectMapper()
+        .registerModule(JavaTimeModule())
+
 @KtorExperimentalAPI
 class PdlClient(
         url: URL,
         private val transformVariables: VariablesTransform? = null
-) : GraphQLClient<CIOEngineConfig>(url, CIO, jacksonObjectMapper(), {}) {
+) : GraphQLClient<CIOEngineConfig>(url, CIO, mapper, {}) {
     private val log = LoggerFactory.getLogger(PdlClient::class.java)
 
     override suspend fun <T> execute(
