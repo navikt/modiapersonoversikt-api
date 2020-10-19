@@ -81,6 +81,7 @@ class PersonsokController @Autowired constructor(
 
 fun lagPersonResponse(searchHit: SokPersonUtenlandskID.searchHit): PersonSokResponsDTO {
     val ident = searchHit.person?.folkeregisteridentifikator?.first()
+    val utenlandskID = searchHit.person?.utenlandskIdentifikasjonsnummer?.first()
     return PersonSokResponsDTO(
             diskresjonskode = null,
             kjonn = null,
@@ -93,7 +94,8 @@ fun lagPersonResponse(searchHit: SokPersonUtenlandskID.searchHit): PersonSokResp
                     gjeldendePostadresseType = null,
                     midlertidigPostadresse = null,
                     ansvarligEnhet = null
-            )
+            ),
+            utenlandskID = utenlandskID?.let { UtenlandskIdDTO(it.identifikasjonsnummer, it.utstederland, it.opphoert) }
     )
 }
 
@@ -214,7 +216,8 @@ data class PersonSokResponsDTO(
         val navn: PersonnavnDTO?,
         val status: KodeverdiDTO?,
         val ident: NorskIdentDTO?,
-        val brukerinfo: BrukerinfoDTO?
+        val brukerinfo: BrukerinfoDTO?,
+        val utenlandskID: UtenlandskIdDTO?
 )
 
 private fun lagPersonResponse(fimPerson: Person) = PersonSokResponsDTO(
@@ -225,7 +228,8 @@ private fun lagPersonResponse(fimPerson: Person) = PersonSokResponsDTO(
         navn = fimPerson.personnavn?.let { lagNavn(it) },
         status = fimPerson.personstatus?.personstatus?.let { lagKodeverdi(it) },
         ident = fimPerson.ident?.let { lagNorskIdent(it) },
-        brukerinfo = lagBrukerinfo(fimPerson)
+        brukerinfo = lagBrukerinfo(fimPerson),
+        utenlandskID = null
 )
 
 private fun lagPostadresse(adr: UstrukturertAdresse): String =
@@ -255,6 +259,8 @@ private fun lagNavn(fimPersonnavn: Personnavn) = PersonnavnDTO(
         mellomnavn = fimPersonnavn.mellomnavn,
         sammensatt = fimPersonnavn.sammensattNavn
 )
+
+data class UtenlandskIdDTO(val identifikasjonsnummer: String, val utstederland: String, val opphoert: Boolean)
 
 data class NorskIdentDTO(val ident: String, val type: KodeverdiDTO?)
 
