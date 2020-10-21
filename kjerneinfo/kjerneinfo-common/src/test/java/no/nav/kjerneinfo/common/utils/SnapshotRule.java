@@ -92,7 +92,7 @@ public class SnapshotRule extends TestWatcher {
 
     private void save(File file, Object object) {
         try {
-            Files.write(file.toPath(), createSnapshot(object).getBytes(UTF8));
+            Files.writeString(file.toPath(), createSnapshot(object), UTF8);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
