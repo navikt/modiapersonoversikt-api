@@ -96,7 +96,7 @@ open class OppgaveOpprettelseClient @Autowired constructor(
                     )
                     .execute()
             val body = response.body()?.string()
-            if (response.code() == 200) {
+            if (response.code() in 200..299) {
                 TjenestekallLogger.info("Oppgave-response: $uuid", mapOf(
                         "status" to "${response.code()} ${response.message()}",
                         "body" to body
