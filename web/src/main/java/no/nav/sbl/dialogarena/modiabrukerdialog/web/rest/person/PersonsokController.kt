@@ -81,6 +81,7 @@ class PersonsokController @Autowired constructor(
 
 fun lagPersonResponse(searchHit: SokPersonUtenlandskID.searchHit): PersonSokResponsDTO {
     val ident = searchHit.person?.folkeregisteridentifikator?.first()
+    val utenlandskID = searchHit.person?.utenlandskIdentifikasjonsnummer?.first()
     return PersonSokResponsDTO(
             diskresjonskode = null,
             kjonn = null,
@@ -94,7 +95,7 @@ fun lagPersonResponse(searchHit: SokPersonUtenlandskID.searchHit): PersonSokResp
                     midlertidigPostadresse = null,
                     ansvarligEnhet = null
             ),
-            utenlandskIDListe = lagUtenlandskIDListe(searchHit)
+            utenlandskID = utenlandskID?.let { UtenlandskIdDTO(it.identifikasjonsnummer, it.utstederland) }
     )
 }
 
@@ -216,7 +217,7 @@ data class PersonSokResponsDTO(
         val status: KodeverdiDTO?,
         val ident: NorskIdentDTO?,
         val brukerinfo: BrukerinfoDTO?,
-        val utenlandskIDListe: UtenlandskIdDTO?
+        val utenlandskID: UtenlandskIdDTO?
 )
 
 private fun lagPersonResponse(fimPerson: Person) = PersonSokResponsDTO(
@@ -228,7 +229,7 @@ private fun lagPersonResponse(fimPerson: Person) = PersonSokResponsDTO(
         status = fimPerson.personstatus?.personstatus?.let { lagKodeverdi(it) },
         ident = fimPerson.ident?.let { lagNorskIdent(it) },
         brukerinfo = lagBrukerinfo(fimPerson),
-        utenlandskIDListe = null
+        utenlandskID = null
 )
 
 private fun lagPostadresse(adr: UstrukturertAdresse): String =
@@ -259,22 +260,7 @@ private fun lagNavn(fimPersonnavn: Personnavn) = PersonnavnDTO(
         sammensatt = fimPersonnavn.sammensattNavn
 )
 
-data class UtenlandskID(val identifikasjonsnummer: String, val utstederland: String)
-
-data class UtenlandskIdDTO(val utenlandskID: List<UtenlandskID>)
-
-private fun lagUtenlandskIDListe(searchHit: SokPersonUtenlandskID.searchHit) : UtenlandskIdDTO {
-    val utenlandskID = UtenlandskIdDTO(
-            utenlandskID = searchHit.person?.utenlandskIdentifikasjonsnummer!!.map {
-
-                UtenlandskID(
-                        identifikasjonsnummer = it.identifikasjonsnummer,
-                        utstederland = it.utstederland
-                )
-            }
-        )
-    return utenlandskID;
-}
+data class UtenlandskIdDTO(val identifikasjonsnummer: String, val utstederland: String)
 
 data class NorskIdentDTO(val ident: String, val type: KodeverdiDTO?)
 
