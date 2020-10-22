@@ -81,7 +81,7 @@ class PersonsokController @Autowired constructor(
 
 fun lagPersonResponse(searchHit: SokPersonUtenlandskID.searchHit): PersonSokResponsDTO {
     val ident = searchHit.person?.folkeregisteridentifikator?.first()
-    val utenlandskID = searchHit.person?.utenlandskIdentifikasjonsnummer?.first()
+    val utenlandskID = searchHit.person?.utenlandskIdentifikasjonsnummer
     return PersonSokResponsDTO(
             diskresjonskode = null,
             kjonn = null,
@@ -95,7 +95,7 @@ fun lagPersonResponse(searchHit: SokPersonUtenlandskID.searchHit): PersonSokResp
                     midlertidigPostadresse = null,
                     ansvarligEnhet = null
             ),
-            utenlandskID = utenlandskID?.let { UtenlandskIdDTO(it.identifikasjonsnummer, it.utstederland) }
+            utenlandskID = utenlandskID?.map { UtenlandskIdDTO(it.identifikasjonsnummer, it.utstederland) }
     )
 }
 
@@ -217,7 +217,7 @@ data class PersonSokResponsDTO(
         val status: KodeverdiDTO?,
         val ident: NorskIdentDTO?,
         val brukerinfo: BrukerinfoDTO?,
-        val utenlandskID: UtenlandskIdDTO?
+        val utenlandskID: List<UtenlandskIdDTO>?
 )
 
 private fun lagPersonResponse(fimPerson: Person) = PersonSokResponsDTO(
