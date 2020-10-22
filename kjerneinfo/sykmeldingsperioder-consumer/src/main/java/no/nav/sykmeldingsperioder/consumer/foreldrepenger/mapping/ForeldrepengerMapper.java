@@ -171,8 +171,12 @@ public class ForeldrepengerMapper {
         Foreldrepengeperiode periode = new Foreldrepengeperiode();
 
         periode.setFodselsnummer(null);
-        periode.setHarAleneomsorgFar(source.getHarAleneomsorgFar());
-        periode.setHarAleneomsorgMor(source.getHarAleneomsorgMor());
+        if (source.getHarAleneomsorgFar() != null) {
+            periode.setHarAleneomsorgFar(source.getHarAleneomsorgFar());
+        }
+        if (source.getHarAleneomsorgMor() != null) {
+            periode.setHarAleneomsorgMor(source.getHarAleneomsorgMor());
+        }
         if (source.getArbeidsprosentMor() != null) {
             periode.setArbeidsprosentMor(source.getArbeidsprosentMor().doubleValue());
         }
