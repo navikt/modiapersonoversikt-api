@@ -18,15 +18,15 @@ public class TemagruppeTemaMappingTest {
 
     @Test
     public void temaTilTemagruppeTest() {
-        assertThat(TemagruppeTemaMapping.hentTemagruppeForTema("IND"), is(ARBD.name()));
-        assertThat(TemagruppeTemaMapping.hentTemagruppeForTema("MOB"), is(HELSE.name()));
+        assertThat(TemagruppeTemaMapping.hentTemagruppeForTema("AAP"), is(ARBD.name()));
+        assertThat(TemagruppeTemaMapping.hentTemagruppeForTema("FOS"), is(ARBD.name()));
         assertThat(TemagruppeTemaMapping.hentTemagruppeForTema("HJE"), is(HJLPM.name()));
         assertThat(TemagruppeTemaMapping.hentTemagruppeForTema("HEL"), is(ORT_HJE.name()));
         assertThat(TemagruppeTemaMapping.hentTemagruppeForTema("TRK"), is(OVRG.name()));
         assertThat(TemagruppeTemaMapping.hentTemagruppeForTema("SUP"), is(PENS.name()));
         assertThat(TemagruppeTemaMapping.hentTemagruppeForTema("UFO"), is(UFRT.name()));
-        assertThat(TemagruppeTemaMapping.hentTemagruppeForTema("YRA"), is(ARBD.name()));
-        assertThat(TemagruppeTemaMapping.hentTemagruppeForTema("YRK"), is(HELSE.name()));
+        assertThat(TemagruppeTemaMapping.hentTemagruppeForTema("TSO"), is(ARBD.name()));
+        assertThat(TemagruppeTemaMapping.hentTemagruppeForTema("TSR"), is(ARBD.name()));
         assertThat(TemagruppeTemaMapping.hentTemagruppeForTema("OMS"), is(FMLI.name()));
     }
 
