@@ -56,14 +56,14 @@ public class JournalforingController {
     }
 
     @PostMapping("/{traadId}")
-    public ResponseEntity<Void> knyttTilSak(@PathVariable("fnr") String fnr, @PathVariable("traadId") String traadId, @RequestBody Sak sak, HttpServletRequest request) throws JournalforingFeilet {
+    public ResponseEntity<Void> knyttTilSak(@PathVariable("fnr") String fnr, @PathVariable("traadId") String traadId, @RequestBody Sak sak, @RequestParam("enhet") String enhet, HttpServletRequest request) throws JournalforingFeilet {
         return tilgangskontroll
                 .check(tilgangTilBruker.with(fnr))
                 .check(behandlingsIderTilhorerBruker.with(new BehandlingsIdTilgangData(fnr, asList(traadId))))
                 .get(Audit.describe(UPDATE, Person.Henvendelse.Journalfor, new Pair<>(AuditIdentifier.FNR, fnr), new Pair<>(AuditIdentifier.TRAAD_ID, traadId), new Pair<>(AuditIdentifier.SAK_ID, sak.saksId)), () -> {
-                    String enhet = hentValgtEnhet(request);
+                    String valgtEnhet = hentValgtEnhet(enhet, request);
                     try {
-                        sakerService.knyttBehandlingskjedeTilSak(fnr, traadId, sak, enhet);
+                        sakerService.knyttBehandlingskjedeTilSak(fnr, traadId, sak, valgtEnhet);
                     } catch (EnhetIkkeSatt exception) {
                         throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, FEILMELDING_UTEN_ENHET, exception);
                     } catch (Exception exception) {

@@ -205,7 +205,14 @@ internal class OppgaveControllerTest {
         assertEquals(0, resultat.size)
     }
 
-    private fun lagRequest() = LeggTilbakeRequest(oppgaveId = OPPGAVE_ID_1, type = LeggTilbakeAarsak.FeilTema, beskrivelse = null, temagruppe = Temagruppe.ARBD, traadId = "123456")
+    private fun lagRequest() = LeggTilbakeRequest(
+            enhet = null,
+            oppgaveId = OPPGAVE_ID_1,
+            type = LeggTilbakeAarsak.FeilTema,
+            beskrivelse = null,
+            temagruppe = Temagruppe.ARBD,
+            traadId = "123456"
+    )
 
     companion object {
         const val OPPGAVE_ID_1 = "OPPGAVE_ID_1"
