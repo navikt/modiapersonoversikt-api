@@ -17,18 +17,26 @@ public class TemagruppeTemaMapping {
             put("DAG", Temagruppe.ARBD.name());
             put("FOS", Temagruppe.ARBD.name());
             put("IND", Temagruppe.ARBD.name());
-            put("MOB", Temagruppe.ARBD.name());
             put("OPP", Temagruppe.ARBD.name());
-            put("REH", Temagruppe.ARBD.name());
             put("SAK", Temagruppe.ARBD.name());
             put("SAP", Temagruppe.ARBD.name());
-            put("SYK", Temagruppe.ARBD.name());
-            put("SYM", Temagruppe.ARBD.name());
             put("VEN", Temagruppe.ARBD.name());
             put("YRA", Temagruppe.ARBD.name());
-            put("YRK", Temagruppe.ARBD.name());
             put("TSO", Temagruppe.ARBD.name());
             put("TSR", Temagruppe.ARBD.name());
+
+            put("AAP", Temagruppe.HELSE.name());
+            put("FOS", Temagruppe.HELSE.name());
+            put("MOB", Temagruppe.HELSE.name());
+            put("OPP", Temagruppe.HELSE.name());
+            put("REH", Temagruppe.HELSE.name());
+            put("SAK", Temagruppe.HELSE.name());
+            put("SAP", Temagruppe.HELSE.name());
+            put("SYK", Temagruppe.HELSE.name());
+            put("SYM", Temagruppe.HELSE.name());
+            put("YRK", Temagruppe.HELSE.name());
+            put("TSO", Temagruppe.HELSE.name());
+            put("TSR", Temagruppe.HELSE.name());
 
             put("BAR", Temagruppe.FMLI.name());
             put("BID", Temagruppe.FMLI.name());
@@ -70,7 +78,8 @@ public class TemagruppeTemaMapping {
 
     public static final Map<String, List<String>> TEMAGRUPPE_TEMA_MAPPING = new HashMap<String, List<String>>() {
         {
-            put(Temagruppe.ARBD.name(), asList("AAP", "DAG", "FOS", "IND", "MOB", "OPP", "REH", "SAK", "SAP", "SYK", "SYM", "VEN", "YRA", "YRK", "TSO", "TSR"));
+            put(Temagruppe.ARBD.name(), asList("AAP", "DAG", "FOS", "IND", "OPP", "SAK", "SAP", "VEN", "YRA", "TSO", "TSR"));
+            put(Temagruppe.HELSE.name(), asList("AAP", "DAG", "FOS", "MOB", "OPP", "REH", "SAK", "SAP", "SYK", "SYM", "YRK", "TSO", "TSR"));
             put(Temagruppe.FMLI.name(), asList("BAR", "BID", "ENF", "FOR", "GRA", "GRU", "KON", "OMS"));
             put(Temagruppe.FDAG.name(), emptyList());
             put(Temagruppe.OVRG.name(), asList("AAR", "AGR", "ERS", "FEI", "FUL", "GEN", "KLA", "KNA", "KTR", "MED", "RVE", "RPO", "SER", "SIK", "STO", "TRK", "TRY", "UFM"));
