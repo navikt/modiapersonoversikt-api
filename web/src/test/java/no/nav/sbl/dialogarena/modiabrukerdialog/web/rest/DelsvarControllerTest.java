@@ -148,6 +148,6 @@ class DelsvarControllerTest {
 
     @NotNull
     private DelsvarRestRequest lagDelsvarRequest() {
-        return new DelsvarRestRequest("", TRAAD_ID, HENVENDELSES_ID, Temagruppe.ARBD.name(), "");
+        return new DelsvarRestRequest(null, "", TRAAD_ID, HENVENDELSES_ID, Temagruppe.ARBD.name(), "");
     }
 }

@@ -22,10 +22,7 @@ import org.joda.time.DateTime
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 import org.springframework.web.server.ResponseStatusException
 import java.time.LocalDateTime
 import java.util.*
@@ -42,7 +39,7 @@ class SakerController @Autowired constructor(private val saksoversiktService: Sa
                                              val tilgangskontroll: Tilgangskontroll
 ) {
     @GetMapping("/sakstema")
-    fun hentSakstema(request: HttpServletRequest, @PathVariable("fnr") fnr: String): Map<String, Any?> {
+    fun hentSakstema(request: HttpServletRequest, @PathVariable("fnr") fnr: String, @RequestParam("enhet") enhet: String?): Map<String, Any?> {
         return tilgangskontroll
                 .check(Policies.tilgangTilBruker.with(fnr))
                 .get(Audit.describe(READ, AuditResources.Person.Saker, AuditIdentifier.FNR to fnr)) {
@@ -53,7 +50,7 @@ class SakerController @Autowired constructor(private val saksoversiktService: Sa
                     tilgangskontrollService.markerIkkeJournalforte(sakstemaWrapper.resultat)
                     saksoversiktService.fjernGamleDokumenter(sakstemaWrapper.resultat)
 
-                    val resultat = ResultatWrapper(mapTilModiaSakstema(sakstemaWrapper.resultat, RestUtils.hentValgtEnhet(request)),
+                    val resultat = ResultatWrapper(mapTilModiaSakstema(sakstemaWrapper.resultat, RestUtils.hentValgtEnhet(enhet, request)),
                             collectFeilendeSystemer(sakerWrapper, sakstemaWrapper))
 
                     byggSakstemaResultat(resultat)

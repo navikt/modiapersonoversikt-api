@@ -78,25 +78,6 @@ public class TilgangskontrollServiceTest {
     }
 
     @Test
-    public void returnererFeilmeldingSaksbehandlerHarValgtGodkjentEnhet() {
-        when(ansattService.hentEnhetsliste()).thenReturn(mockEnhetsListe());
-
-        boolean harGodkjentEnhet = SubjectHandler.withSubject(TEST_SUBJECT, () -> tilgangskontrollService.harGodkjentEnhet(mockRequest));
-
-        assertThat(harGodkjentEnhet, is(true));
-    }
-
-    @Test
-    public void returnererResponseMedFeilmeldingOmSaksbehandlerHarValgtGodkjentEnhet() {
-        when(ansattService.hentEnhetsliste()).thenReturn(mockEnhetsListe());
-        mockRequest.setCookies(lagSaksbehandlerCookie(ANNEN_ENHET));
-
-        boolean harGodkjentEnhet = SubjectHandler.withSubject(TEST_SUBJECT, () -> tilgangskontrollService.harGodkjentEnhet(mockRequest));
-
-        assertThat(harGodkjentEnhet, is(false));
-    }
-
-    @Test
     public void saksbehandlerHarTilgangTilDokumentOk() {
         DokumentMetadata journalpostMetadata = new DokumentMetadata().withTemakode(TEMAKODE);
         TjenesteResultatWrapper result = tilgangskontrollService.harSaksbehandlerTilgangTilDokument(mockRequest, journalpostMetadata, BRUKERS_IDENT, TEMAKODE);

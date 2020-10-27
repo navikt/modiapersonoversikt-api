@@ -79,7 +79,7 @@ public class HodeController {
                 .get(Audit.describe(READ, Saksbehandler.NavnOgEnheter), () -> {
                     String ident = SubjectHandler.getIdent().orElseThrow(() -> new RuntimeException("Fant ikke ident"));
                     Pair<String, String> saksbehandler = hentSaksbehandlerNavn();
-                    String enhetId = hentValgtEnhet(request);
+                    String enhetId = hentValgtEnhet(null, request);
                     String enhetNavn = organisasjonEnhetService.hentEnhetGittEnhetId(enhetId, OrganisasjonEnhetV2Service.WSOppgavebehandlerfilter.UFILTRERT)
                             .map((enhet) -> enhet.enhetNavn)
                             .orElse("[Ukjent enhetId: " + enhetId + "]");
