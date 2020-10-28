@@ -56,7 +56,7 @@ class OppgaveController @Autowired constructor(
     }
 
     @PostMapping("/plukk/{temagruppe}")
-    fun plukkOppgaver(@PathVariable("temagruppe") temagruppe: String, httpRequest: HttpServletRequest): List<OppgaveDTO> {
+    fun plukkOppgaver(@PathVariable("temagruppe") temagruppe: String, @RequestParam("enhet") enhet: String?, httpRequest: HttpServletRequest): List<OppgaveDTO> {
         return tilgangkontroll
                 .check(Policies.tilgangTilModia)
                 .check(Policies.kanPlukkeOppgave)
@@ -67,7 +67,7 @@ class OppgaveController @Autowired constructor(
                     } else {
                         plukkOppgaveService
                                 .plukkOppgaver(Temagruppe.valueOf(temagruppe.toUpperCase()),
-                                        RestUtils.hentValgtEnhet(null, httpRequest))
+                                        RestUtils.hentValgtEnhet(enhet, httpRequest))
                     }
                 }.map { mapOppgave(it) }
     }
