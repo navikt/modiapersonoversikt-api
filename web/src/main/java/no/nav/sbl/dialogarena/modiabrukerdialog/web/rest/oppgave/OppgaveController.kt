@@ -56,7 +56,7 @@ class OppgaveController @Autowired constructor(
     }
 
     @PostMapping("/plukk/{temagruppe}")
-    fun plukkOppgaver(@PathVariable("temagruppe") temagruppe: String, @RequestParam("enhet") enhet: String?, httpRequest: HttpServletRequest): List<OppgaveDTO> {
+    fun plukkOppgaver(@PathVariable("temagruppe") temagruppe: String, @RequestParam(value = "enhet", required = false) enhet: String?, httpRequest: HttpServletRequest): List<OppgaveDTO> {
         return tilgangkontroll
                 .check(Policies.tilgangTilModia)
                 .check(Policies.kanPlukkeOppgave)

@@ -51,7 +51,7 @@ class DialogController @Autowired constructor(
     fun hentMeldinger(
             request: HttpServletRequest,
             @PathVariable("fnr") fnr: String,
-            @RequestParam("enhet") enhet: String?
+            @RequestParam(value = "enhet", required = false) enhet: String?
     ): List<TraadDTO> {
         return tilgangskontroll
                 .check(Policies.tilgangTilBruker.with(fnr))

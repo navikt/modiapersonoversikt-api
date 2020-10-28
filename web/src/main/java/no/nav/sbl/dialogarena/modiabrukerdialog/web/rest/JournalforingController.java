@@ -56,7 +56,7 @@ public class JournalforingController {
     }
 
     @PostMapping("/{traadId}")
-    public ResponseEntity<Void> knyttTilSak(@PathVariable("fnr") String fnr, @PathVariable("traadId") String traadId, @RequestBody Sak sak, @RequestParam("enhet") String enhet, HttpServletRequest request) throws JournalforingFeilet {
+    public ResponseEntity<Void> knyttTilSak(@PathVariable("fnr") String fnr, @PathVariable("traadId") String traadId, @RequestBody Sak sak, @RequestParam(value = "enhet", required = false) String enhet, HttpServletRequest request) throws JournalforingFeilet {
         return tilgangskontroll
                 .check(tilgangTilBruker.with(fnr))
                 .check(behandlingsIderTilhorerBruker.with(new BehandlingsIdTilgangData(fnr, asList(traadId))))

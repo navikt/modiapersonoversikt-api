@@ -39,7 +39,7 @@ class SakerController @Autowired constructor(private val saksoversiktService: Sa
                                              val tilgangskontroll: Tilgangskontroll
 ) {
     @GetMapping("/sakstema")
-    fun hentSakstema(request: HttpServletRequest, @PathVariable("fnr") fnr: String, @RequestParam("enhet") enhet: String?): Map<String, Any?> {
+    fun hentSakstema(request: HttpServletRequest, @PathVariable("fnr") fnr: String, @RequestParam(value = "enhet", required = false) enhet: String?): Map<String, Any?> {
         return tilgangskontroll
                 .check(Policies.tilgangTilBruker.with(fnr))
                 .get(Audit.describe(READ, AuditResources.Person.Saker, AuditIdentifier.FNR to fnr)) {
