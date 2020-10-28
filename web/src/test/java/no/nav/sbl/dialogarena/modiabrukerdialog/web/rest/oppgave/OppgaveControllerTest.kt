@@ -165,7 +165,7 @@ internal class OppgaveControllerTest {
         whenever(oppgaveWSMock.finnOppgaveListe(any()))
                 .thenReturn(WSFinnOppgaveListeResponse())
 
-        val resultat = SubjectHandlerUtil.withIdent(SAKSBEHANDLERS_IDENT, UnsafeSupplier { oppgaveController.plukkOppgaver(TEMAGRUPPE_ARBEID, httpRequest) })
+        val resultat = SubjectHandlerUtil.withIdent(SAKSBEHANDLERS_IDENT, UnsafeSupplier { oppgaveController.plukkOppgaver(TEMAGRUPPE_ARBEID, null, httpRequest) })
 
         assertEquals(oppgaver.size, resultat.size)
         assertEquals(oppgaver[0].oppgaveId, resultat[0].oppgaveId)
@@ -184,7 +184,7 @@ internal class OppgaveControllerTest {
         whenever(plukkOppgaveService.plukkOppgaver(any(), any()))
                 .thenReturn(emptyList())
 
-        val resultat = SubjectHandlerUtil.withIdent(SAKSBEHANDLERS_IDENT, UnsafeSupplier { oppgaveController.plukkOppgaver(TEMAGRUPPE_ARBEID, httpRequest) })
+        val resultat = SubjectHandlerUtil.withIdent(SAKSBEHANDLERS_IDENT, UnsafeSupplier { oppgaveController.plukkOppgaver(TEMAGRUPPE_ARBEID, null, httpRequest) })
 
         verify(plukkOppgaveService, times(0)).plukkOppgaver(any(), any())
         assertEquals(oppgaveliste.size, resultat.size)
@@ -200,7 +200,7 @@ internal class OppgaveControllerTest {
         whenever(oppgaveWSMock.finnOppgaveListe(any()))
                 .thenReturn(WSFinnOppgaveListeResponse())
 
-        val resultat = SubjectHandlerUtil.withIdent(SAKSBEHANDLERS_IDENT, UnsafeSupplier { oppgaveController.plukkOppgaver(TEMAGRUPPE_ARBEID, httpRequest) })
+        val resultat = SubjectHandlerUtil.withIdent(SAKSBEHANDLERS_IDENT, UnsafeSupplier { oppgaveController.plukkOppgaver(TEMAGRUPPE_ARBEID, null, httpRequest) })
 
         assertEquals(0, resultat.size)
     }
