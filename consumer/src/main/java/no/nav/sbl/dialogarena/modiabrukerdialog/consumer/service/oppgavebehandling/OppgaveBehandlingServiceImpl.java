@@ -12,6 +12,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Tilgangskontrol
 import no.nav.tjeneste.virksomhet.oppgave.v3.HentOppgaveOppgaveIkkeFunnet;
 import no.nav.tjeneste.virksomhet.oppgave.v3.OppgaveV3;
 import no.nav.tjeneste.virksomhet.oppgave.v3.informasjon.oppgave.WSOppgave;
+import no.nav.tjeneste.virksomhet.oppgave.v3.informasjon.oppgave.WSUnderkategori;
 import no.nav.tjeneste.virksomhet.oppgave.v3.meldinger.*;
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.LagreOppgaveOppgaveIkkeFunnet;
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.LagreOppgaveOptimistiskLasing;
@@ -120,11 +121,17 @@ public class OppgaveBehandlingServiceImpl implements OppgaveBehandlingService {
     }
 
     private static Oppgave wsOppgaveToOppgave(WSOppgave wsOppgave) {
+        boolean erSTOOppgave = Optional
+                .ofNullable(wsOppgave.getUnderkategori())
+                .map(WSUnderkategori::getKode)
+                .map((kode) -> kode.endsWith("_KNA"))
+                .orElse(false);
+
         return new Oppgave(
                 wsOppgave.getOppgaveId(),
                 wsOppgave.getGjelder().getBrukerId(),
                 wsOppgave.getHenvendelseId(),
-                wsOppgave.getUnderkategori().getKode().endsWith("_KNA")
+                erSTOOppgave
         );
     }
 
@@ -235,7 +242,7 @@ public class OppgaveBehandlingServiceImpl implements OppgaveBehandlingService {
         try {
             return oppgaveWS.hentOppgave(new WSHentOppgaveRequest().withOppgaveId(oppgaveId));
         } catch (HentOppgaveOppgaveIkkeFunnet exc) {
-            throw new RuntimeException(exc);
+            throw new RuntimeException("HentOppgaveOppgaveIkkeFunnet", exc);
         }
     }
 
@@ -338,5 +345,4 @@ public class OppgaveBehandlingServiceImpl implements OppgaveBehandlingService {
                 .withSaksnummer(wsOppgave.getSaksnummer())
                 .withLest(wsOppgave.isLest());
     }
-
 }
