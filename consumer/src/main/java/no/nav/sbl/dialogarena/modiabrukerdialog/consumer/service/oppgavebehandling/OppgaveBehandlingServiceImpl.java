@@ -7,6 +7,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.LeggTilbakeOppgaveIG
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveBehandlingService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.arbeidsfordeling.ArbeidsfordelingV1Service;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.AnsattService;
+import no.nav.sykmeldingsperioder.domain.pleiepenger.Pleiepengeperiode;
 import no.nav.tjeneste.virksomhet.oppgave.v3.HentOppgaveOppgaveIkkeFunnet;
 import no.nav.tjeneste.virksomhet.oppgave.v3.OppgaveV3;
 import no.nav.tjeneste.virksomhet.oppgave.v3.informasjon.oppgave.WSOppgave;
@@ -27,10 +28,12 @@ import javax.inject.Inject;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
+import static java.util.Comparator.comparing;
 import static java.util.Optional.empty;
 import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.toList;
@@ -169,6 +172,20 @@ public class OppgaveBehandlingServiceImpl implements OppgaveBehandlingService {
 
         WSOppgave oppgaveFraGsak = hentOppgaveFraGsak(request.getOppgaveId());
         leggTilbakeOppgaveIGsakDelegate.leggTilbake(oppgaveFraGsak, request);
+    }
+
+    @Override
+    public void leggTilbakeOppgaveIGsak(List<LeggTilbakeOppgaveIGsakRequest> request) {
+        Stream<LeggTilbakeOppgaveIGsakRequest> sortedOppgaver = request.stream().sorted(comparing(LeggTilbakeOppgaveIGsakRequest::getOppgaveId).reversed());
+
+        sortedOppgaver.forEach( it -> {
+            if (it.getOppgaveId() == null || it.getBeskrivelse() == null) {
+                return;
+            }
+                WSOppgave oppgaveFraGsak = hentOppgaveFraGsak(it.getOppgaveId());
+                leggTilbakeOppgaveIGsakDelegate.leggTilbake(oppgaveFraGsak, it);
+
+        });
     }
 
     @Override
