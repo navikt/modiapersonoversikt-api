@@ -177,12 +177,17 @@ public class OppgaveBehandlingServiceImpl implements OppgaveBehandlingService {
         Stream<LeggTilbakeOppgaveIGsakRequest> sortedOppgaver = request.stream().sorted(comparing(LeggTilbakeOppgaveIGsakRequest::getOppgaveId).reversed());
 
         sortedOppgaver.forEach( it -> {
-            if (it.getOppgaveId() == null || it.getBeskrivelse() == null) {
-                return;
-            }
-                WSOppgave oppgaveFraGsak = hentOppgaveFraGsak(it.getOppgaveId());
-                leggTilbakeOppgaveIGsakDelegate.leggTilbake(oppgaveFraGsak, it);
+            try{
+                if (it.getOppgaveId() == null || it.getBeskrivelse() == null) {
+                 return;
+                }
+                    WSOppgave oppgaveFraGsak = hentOppgaveFraGsak(it.getOppgaveId());
+                    leggTilbakeOppgaveIGsakDelegate.leggTilbake(oppgaveFraGsak, it);
 
+            } catch (Exception e){
+                logger.info("Feil ved tilbakelegging av  oppgave " + it.getOppgaveId(), e);
+
+            }
         });
     }
 

@@ -50,7 +50,7 @@ class OppgaveController @Inject constructor(
                     val leggTilbakeOppgaveIGsakRequest = lagLeggTilbakeRequest(request, valgtEnhet)
 
                     try {
-                        oppgaveBehandlingService.leggTilbakeOppgaveIGsak(leggTilbakeOppgaveIGsakRequest)
+                        oppgaveBehandlingService.leggTilbakeOppgaveIGsak(listOf(leggTilbakeOppgaveIGsakRequest))
                         if (request.type == LeggTilbakeAarsak.FeilTema) {
                             henvendelseUtsendingService.oppdaterTemagruppe(request.traadId, request.temagruppe.toString())
                         }
