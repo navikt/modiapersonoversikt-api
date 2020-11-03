@@ -42,7 +42,7 @@ class DialogController @Autowired constructor(
         private val henvendelseService: HenvendelseBehandlingService,
         private val henvendelseUtsendingService: HenvendelseUtsendingService,
         private val sakerService: SakerService,
-        private val oppgaveBehandlingService: OppgaveBehandlingService,
+        private val oppgaveBehandlingService: OppgaveBehandlingService
 ) {
     @GetMapping("/meldinger")
     fun hentMeldinger(
