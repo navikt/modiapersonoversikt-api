@@ -1,15 +1,19 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.oppgavebehandling;
 
-import no.nav.common.auth.SubjectHandler;
+import no.nav.common.auth.subject.SubjectHandler;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Oppgave;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.LeggTilbakeOppgaveIGsakRequest;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveBehandlingService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.arbeidsfordeling.ArbeidsfordelingV1Service;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.AnsattService;
+import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Policies;
+import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Tilgangskontroll;
 import no.nav.tjeneste.virksomhet.oppgave.v3.HentOppgaveOppgaveIkkeFunnet;
 import no.nav.tjeneste.virksomhet.oppgave.v3.OppgaveV3;
 import no.nav.tjeneste.virksomhet.oppgave.v3.informasjon.oppgave.WSOppgave;
+import no.nav.tjeneste.virksomhet.oppgave.v3.informasjon.oppgave.WSOppgavetype;
+import no.nav.tjeneste.virksomhet.oppgave.v3.informasjon.oppgave.WSUnderkategori;
 import no.nav.tjeneste.virksomhet.oppgave.v3.meldinger.*;
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.LagreOppgaveOppgaveIkkeFunnet;
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.LagreOppgaveOptimistiskLasing;
@@ -23,7 +27,7 @@ import no.nav.tjeneste.virksomhet.tildeloppgave.v1.WSTildelFlereOppgaverResponse
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -55,17 +59,20 @@ public class OppgaveBehandlingServiceImpl implements OppgaveBehandlingService {
     private final OppgaveV3 oppgaveWS;
     private final AnsattService ansattWS;
     private LeggTilbakeOppgaveIGsakDelegate leggTilbakeOppgaveIGsakDelegate;
+    private final Tilgangskontroll tilgangskontroll;
 
-    @Inject
+    @Autowired
     public OppgaveBehandlingServiceImpl(OppgavebehandlingV3 oppgavebehandlingWS,
                                         TildelOppgaveV1 tildelOppgaveWS,
                                         OppgaveV3 oppgaveWS,
                                         AnsattService ansattWS,
-                                        ArbeidsfordelingV1Service arbeidsfordelingService) {
+                                        ArbeidsfordelingV1Service arbeidsfordelingService,
+                                        Tilgangskontroll tilgangskontroll) {
         this.oppgavebehandlingWS = oppgavebehandlingWS;
         this.tildelOppgaveWS = tildelOppgaveWS;
         this.oppgaveWS = oppgaveWS;
         this.ansattWS = ansattWS;
+        this.tilgangskontroll = tilgangskontroll;
         this.leggTilbakeOppgaveIGsakDelegate = new LeggTilbakeOppgaveIGsakDelegate(this, arbeidsfordelingService);
     }
 
@@ -77,7 +84,7 @@ public class OppgaveBehandlingServiceImpl implements OppgaveBehandlingService {
     @Override
     public List<Oppgave> finnTildelteOppgaverIGsak() {
         String ident = SubjectHandler.getIdent().orElseThrow(() -> new RuntimeException("Fant ikke ident"));
-        return oppgaveWS
+        return validerTilgangTilbruker(oppgaveWS
                 .finnOppgaveListe(new WSFinnOppgaveListeRequest()
                         .withSok(new WSFinnOppgaveListeSok()
                                 .withAnsvarligId(ident)
@@ -87,7 +94,20 @@ public class OppgaveBehandlingServiceImpl implements OppgaveBehandlingService {
                                 .withOppgavetypeKodeListe(SPORSMAL_OG_SVAR)))
                 .getOppgaveListe().stream()
                 .map(OppgaveBehandlingServiceImpl::wsOppgaveToOppgave)
-                .collect(toList());
+                .collect(toList()));
+    }
+
+    private List<Oppgave> validerTilgangTilbruker(List<Oppgave> oppgaveList) {
+        if (oppgaveList.isEmpty()) {
+            return emptyList();
+        } else if (tilgangskontroll
+                .check(Policies.tilgangTilBruker.with(oppgaveList.get(0).fnr))
+                .getDecision()
+                .isPermit()) {
+            return oppgaveList;
+        }
+        oppgaveList.forEach((enkeltoppgave) -> systemLeggTilbakeOppgaveIGsak(enkeltoppgave.oppgaveId, null, "4100"));
+        return emptyList();
     }
 
     @Override
@@ -98,8 +118,30 @@ public class OppgaveBehandlingServiceImpl implements OppgaveBehandlingService {
                 .collect(toList());
     }
 
+    @Override
+    public Oppgave hentOppgave(String oppgaveId) {
+        return wsOppgaveToOppgave(hentOppgaveFraGsak(oppgaveId));
+    }
+
     private static Oppgave wsOppgaveToOppgave(WSOppgave wsOppgave) {
-        return new Oppgave(wsOppgave.getOppgaveId(), wsOppgave.getGjelder().getBrukerId(), wsOppgave.getHenvendelseId());
+        boolean erSporsmalOgSvarOppgave = Optional
+                .ofNullable(wsOppgave.getOppgavetype())
+                .map(WSOppgavetype::getKode)
+                .map("SPM_OG_SVR"::equals)
+                .orElse(false);
+
+        logger.info(
+                "[OppgaveBehandlingsServiceImpl::map] oppgaveId: {} KNA: {}",
+                wsOppgave.getOppgaveId(),
+                erSporsmalOgSvarOppgave
+        );
+
+        return new Oppgave(
+                wsOppgave.getOppgaveId(),
+                wsOppgave.getGjelder().getBrukerId(),
+                wsOppgave.getHenvendelseId(),
+                erSporsmalOgSvarOppgave
+        );
     }
 
     @Override
@@ -124,7 +166,6 @@ public class OppgaveBehandlingServiceImpl implements OppgaveBehandlingService {
         } catch (Exception e) {
             logger.error("Kunne ikke ferdigstille Gsak oppgave i Modia med oppgaveId " + oppgaveId, e);
             throw e;
-
         }
     }
 
@@ -167,7 +208,6 @@ public class OppgaveBehandlingServiceImpl implements OppgaveBehandlingService {
         if (request.getOppgaveId() == null || request.getBeskrivelse() == null) {
             return;
         }
-
         WSOppgave oppgaveFraGsak = hentOppgaveFraGsak(request.getOppgaveId());
         leggTilbakeOppgaveIGsakDelegate.leggTilbake(oppgaveFraGsak, request);
     }
@@ -218,11 +258,19 @@ public class OppgaveBehandlingServiceImpl implements OppgaveBehandlingService {
         return isBlank(gammelBeskrivelse) ? nyBeskrivelse : nyBeskrivelse + "\n\n" + gammelBeskrivelse;
     }
 
-    WSOppgave hentOppgaveFraGsak(String oppgaveId) {
+    private WSOppgave hentOppgaveFraGsak(String oppgaveId) {
+        return hentOppgaveResponseFraGsak(oppgaveId).getOppgave();
+    }
+
+    private WSHentOppgaveResponse hentOppgaveResponseFraGsak(Integer oppgaveId) {
+        return hentOppgaveResponseFraGsak(String.valueOf(oppgaveId));
+    }
+
+    private WSHentOppgaveResponse hentOppgaveResponseFraGsak(String oppgaveId) {
         try {
-            return oppgaveWS.hentOppgave(new WSHentOppgaveRequest().withOppgaveId(oppgaveId)).getOppgave();
-        } catch (HentOppgaveOppgaveIkkeFunnet hentOppgaveOppgaveIkkeFunnet) {
-            throw new RuntimeException(hentOppgaveOppgaveIkkeFunnet);
+            return oppgaveWS.hentOppgave(new WSHentOppgaveRequest().withOppgaveId(oppgaveId));
+        } catch (HentOppgaveOppgaveIkkeFunnet exc) {
+            throw new RuntimeException("HentOppgaveOppgaveIkkeFunnet", exc);
         }
     }
 
@@ -275,19 +323,10 @@ public class OppgaveBehandlingServiceImpl implements OppgaveBehandlingService {
         }
 
         return response.getOppgaveIder().stream()
-                .map(this::hentTildeltOppgave)
+                .map(this::hentOppgaveResponseFraGsak)
                 .filter(Objects::nonNull)
                 .map(WSHentOppgaveResponse::getOppgave)
                 .collect(toList());
-    }
-
-    private WSHentOppgaveResponse hentTildeltOppgave(Integer oppgaveId) {
-        try {
-            return oppgaveWS.hentOppgave(new WSHentOppgaveRequest()
-                    .withOppgaveId(String.valueOf(oppgaveId)));
-        } catch (HentOppgaveOppgaveIkkeFunnet exc) {
-            throw new IllegalStateException(exc);
-        }
     }
 
     private String enhetFor(Temagruppe temagruppe, String saksbehandlersValgteEnhet) {
@@ -302,7 +341,7 @@ public class OppgaveBehandlingServiceImpl implements OppgaveBehandlingService {
 
         if (temagruppe.equals(FMLI) && saksbehandlersValgteEnhet.equals(STORD_ENHET)) {
             return STORD_ENHET;
-        } else if (asList(ARBD, FMLI, ORT_HJE, PENS, UFRT, PLEIEPENGERSY, UTLAND).contains(temagruppe)) {
+        } else if (asList(ARBD, HELSE, FMLI, FDAG, ORT_HJE, PENS, UFRT, PLEIEPENGERSY, UTLAND).contains(temagruppe)) {
             return DEFAULT_ENHET.toString();
         } else {
             return saksbehandlersValgteEnhet;
@@ -334,5 +373,4 @@ public class OppgaveBehandlingServiceImpl implements OppgaveBehandlingService {
                 .withSaksnummer(wsOppgave.getSaksnummer())
                 .withLest(wsOppgave.isLest());
     }
-
 }

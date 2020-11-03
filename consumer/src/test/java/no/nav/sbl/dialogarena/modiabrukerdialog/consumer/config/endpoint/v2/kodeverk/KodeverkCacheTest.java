@@ -7,7 +7,7 @@ import no.nav.tjeneste.virksomhet.kodeverk.v2.KodeverkPortType;
 import no.nav.tjeneste.virksomhet.kodeverk.v2.meldinger.XMLHentKodeverkRequest;
 import org.junit.jupiter.api.Test;
 
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
@@ -16,7 +16,7 @@ class KodeverkCacheTest extends CacheTest {
 
     private static final String CACHE_NAME = "kodeverkCache";
 
-    @Inject
+    @Autowired
     private KodeverkPortType kodeverk;
 
     KodeverkCacheTest() {
@@ -33,8 +33,6 @@ class KodeverkCacheTest extends CacheTest {
         kodeverk.hentKodeverk(request2);
         kodeverk.hentKodeverk(request2);
 
-        int antallCacheinstanser = getCache().getSize();
-
-        assertThat(antallCacheinstanser, is(2));
+        assertThat(getNativeCache().estimatedSize(), is(2L));
     }
 }

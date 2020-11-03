@@ -2,9 +2,10 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.service;
 
 import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navansatt.GOSYSNAVansatt;
 
-import javax.inject.Named;
-
-import no.nav.common.oidc.SystemUserTokenProvider;
+import no.nav.common.cxf.StsConfig;
+import no.nav.common.sts.NaisSystemUserTokenProvider;
+import no.nav.common.sts.SystemUserTokenProvider;
+import no.nav.common.utils.EnvironmentUtils;
 import no.nav.dkif.consumer.support.DkifServiceImpl;
 import no.nav.kjerneinfo.consumer.egenansatt.EgenAnsattService;
 import no.nav.kjerneinfo.consumer.fim.person.PersonKjerneinfoServiceBi;
@@ -62,14 +63,12 @@ import no.nav.tjeneste.virksomhet.organisasjonenhetkontaktinformasjon.v1.Organis
 import no.nav.tjeneste.virksomhet.pensjonsak.v1.PensjonSakV1;
 import no.nav.tjeneste.virksomhet.person.v3.binding.PersonV3;
 import no.nav.tjeneste.virksomhet.tildeloppgave.v1.TildelOppgaveV1;
+import org.springframework.cache.CacheManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
-import static no.nav.sbl.dialogarena.common.cxf.StsSecurityConstants.SYSTEMUSER_PASSWORD;
-import static no.nav.sbl.dialogarena.common.cxf.StsSecurityConstants.SYSTEMUSER_USERNAME;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.RestConstants.SECURITY_TOKEN_SERVICE_DISCOVERYURL;
-import static no.nav.sbl.util.EnvironmentUtils.*;
 
 /**
  * MODIA ønsker å selv wire inn sine komponenters kontekster for å ha full kontroll over springoppsettet.
@@ -77,6 +76,9 @@ import static no.nav.sbl.util.EnvironmentUtils.*;
 @Configuration
 @EnableScheduling
 public class ServiceConfig {
+    public static final String STS_URL_KEY = "no.nav.modig.security.sts.url";
+    public static final String SYSTEMUSER_USERNAME = "no.nav.modig.security.systemuser.username";
+    public static final String SYSTEMUSER_PASSWORD = "no.nav.modig.security.systemuser.password";
 
     @Bean
     public LDAPService ldapService() {
@@ -90,13 +92,14 @@ public class ServiceConfig {
                                                                    OppgaveBehandlingService oppgaveBehandlingService,
                                                                    SakerService sakerService,
                                                                    Tilgangskontroll tilgangskontroll,
-                                                                   @Named("propertyResolver") ContentRetriever propertyResolver,
+                                                                   ContentRetriever propertyResolver,
                                                                    PersonKjerneinfoServiceBi personKjerneinfoServiceBi,
-                                                                   LDAPService ldapService) {
+                                                                   LDAPService ldapService,
+                                                                   CacheManager cacheManager) {
 
         return new HenvendelseUtsendingServiceImpl(henvendelsePortType, sendUtHenvendelsePortType,
                 behandleHenvendelsePortType, oppgaveBehandlingService, sakerService, tilgangskontroll,
-                propertyResolver, personKjerneinfoServiceBi, ldapService);
+                propertyResolver, personKjerneinfoServiceBi, ldapService, cacheManager);
     }
 
     @Bean
@@ -134,8 +137,9 @@ public class ServiceConfig {
                                                              TildelOppgaveV1 tildelOppgaveV1,
                                                              OppgaveV3 oppgaveV3,
                                                              AnsattService ansattService,
-                                                             ArbeidsfordelingV1Service arbeidsfordelingV1Service) {
-        return new OppgaveBehandlingServiceImpl(oppgavebehandlingV3, tildelOppgaveV1, oppgaveV3, ansattService, arbeidsfordelingV1Service);
+                                                             ArbeidsfordelingV1Service arbeidsfordelingV1Service,
+                                                             Tilgangskontroll tilgangskontroll) {
+        return new OppgaveBehandlingServiceImpl(oppgavebehandlingV3, tildelOppgaveV1, oppgaveV3, ansattService, arbeidsfordelingV1Service, tilgangskontroll);
     }
 
     @Bean
@@ -191,8 +195,12 @@ public class ServiceConfig {
     }
 
     @Bean
-    public VergemalService vergemalService(PersonV3 personPortType, PersonKjerneinfoServiceBi personKjerneinfoServiceBi, KodeverkmanagerBi kodeverkmanagerBi) {
-        return new VergemalService(personPortType, personKjerneinfoServiceBi, kodeverkmanagerBi);
+    public VergemalService vergemalService(
+            PersonV3 personPortType,
+            PdlOppslagService pdl,
+            KodeverkmanagerBi kodeverkmanagerBi
+    ) {
+        return new VergemalService(personPortType, pdl, kodeverkmanagerBi);
     }
 
     @Bean
@@ -202,13 +210,24 @@ public class ServiceConfig {
 
     @Bean
     SystemUserTokenProvider systemUserTokenProvider() {
-        return new SystemUserTokenProvider(
+        return new NaisSystemUserTokenProvider(
                 SECURITY_TOKEN_SERVICE_DISCOVERYURL,
-                getRequiredProperty(SYSTEMUSER_USERNAME, resolveSrvUserPropertyName()),
-                getRequiredProperty(SYSTEMUSER_PASSWORD, resolverSrvPasswordPropertyName())
+                EnvironmentUtils.getRequiredProperty(SYSTEMUSER_USERNAME),
+                EnvironmentUtils.getRequiredProperty(SYSTEMUSER_PASSWORD)
         );
     }
 
     @Bean
-    PdlOppslagService pdlOppslagService() { return new PdlOppslagServiceImpl(); }
+    StsConfig stsConfig() {
+        return StsConfig.builder()
+                .url(EnvironmentUtils.getRequiredProperty("SECURITYTOKENSERVICE_URL"))
+                .username(EnvironmentUtils.getRequiredProperty(SYSTEMUSER_USERNAME))
+                .password(EnvironmentUtils.getRequiredProperty(SYSTEMUSER_PASSWORD))
+                .build();
+    }
+
+    @Bean
+    PdlOppslagService pdlOppslagService(SystemUserTokenProvider sts) {
+        return new PdlOppslagServiceImpl(sts);
+    }
 }

@@ -1,6 +1,7 @@
 package no.nav.kontrakter.consumer.utils;
 
-import no.nav.kjerneinfo.common.mockutils.DateUtils;
+import no.nav.kjerneinfo.common.utils.DateUtils;
+import no.nav.kjerneinfo.common.utils.SnapshotRule;
 import no.nav.kontrakter.consumer.fim.mapping.YtelseskontraktMapper;
 import no.nav.kontrakter.consumer.fim.ytelseskontrakt.mock.YtelseskontraktMockFactory;
 import no.nav.kontrakter.consumer.fim.ytelseskontrakt.to.YtelseskontraktRequest;
@@ -12,6 +13,7 @@ import no.nav.tjeneste.virksomhet.ytelseskontrakt.v3.informasjon.ytelseskontrakt
 import no.nav.tjeneste.virksomhet.ytelseskontrakt.v3.meldinger.FimHentYtelseskontraktListeRequest;
 import no.nav.tjeneste.virksomhet.ytelseskontrakt.v3.meldinger.FimHentYtelseskontraktListeResponse;
 import org.joda.time.LocalDate;
+import org.junit.Rule;
 import org.junit.Test;
 
 import javax.xml.datatype.DatatypeConfigurationException;
@@ -25,9 +27,12 @@ import static org.junit.Assert.assertEquals;
 
 
 public class YtelseskontraktMapperTest {
+    @Rule
+    public SnapshotRule snapshot = new SnapshotRule();
 
     public static final String STATUS = "nr 2";
     public static final String AKTIVITET_FASE = "Aktivitetsfase";
+    private static final LocalDate FIXED_DATE = LocalDate.parse("2020-10-13");
 
     @Test
     public void testMappper() throws DatatypeConfigurationException {
@@ -35,11 +40,10 @@ public class YtelseskontraktMapperTest {
 
         YtelseskontraktRequest ytelseskontraktRequest = new YtelseskontraktRequest();
         ytelseskontraktRequest.setFodselsnummer("123451234");
-        ytelseskontraktRequest.setFrom(new LocalDate());
-        ytelseskontraktRequest.setTo(new LocalDate(System.currentTimeMillis() - 3600 * 1000));
+        ytelseskontraktRequest.setFrom(FIXED_DATE);
+        ytelseskontraktRequest.setTo(FIXED_DATE);
 
-        FimHentYtelseskontraktListeRequest fimHentYtelseskontraktListeRequest = new FimHentYtelseskontraktListeRequest();
-        mapper.map(ytelseskontraktRequest, fimHentYtelseskontraktListeRequest);
+        FimHentYtelseskontraktListeRequest fimHentYtelseskontraktListeRequest = mapper.map(ytelseskontraktRequest);
 
         assertEquals(ytelseskontraktRequest.getFodselsnummer(), fimHentYtelseskontraktListeRequest.getPersonidentifikator());
 
@@ -91,8 +95,7 @@ public class YtelseskontraktMapperTest {
         kontrakt.setBortfallsprosentUkerIgjen(bortfallsprosentUkerIgjen);
         fimHentYtelseskontraktListeResponse.getYtelseskontraktListe().add(kontrakt);
 
-        YtelseskontraktResponse ytelseskontraktResponse = new YtelseskontraktResponse();
-        mapper.map(fimHentYtelseskontraktListeResponse, ytelseskontraktResponse);
+        YtelseskontraktResponse ytelseskontraktResponse = mapper.map(fimHentYtelseskontraktListeResponse);
 
         assertEquals(fimHentYtelseskontraktListeResponse.getBruker().getRettighetsgruppe().getRettighetsGruppe(), ytelseskontraktResponse.getRettighetsgruppe());
         Dagpengeytelse dagpengeytelse = (Dagpengeytelse) ytelseskontraktResponse.getYtelser().get(0);
@@ -110,6 +113,7 @@ public class YtelseskontraktMapperTest {
         assertEquals(AKTIVITET_FASE, (ytelse.getVedtak().get(0).getAktivitetsfase()));
         assertEquals(Integer.valueOf(bortfallsprosentDagerIgjen), (ytelse.getDagerIgjenMedBortfall()));
         assertEquals(Integer.valueOf(bortfallsprosentUkerIgjen), (ytelse.getUkerIgjenMedBortfall()));
+        snapshot.assertMatches(fimHentYtelseskontraktListeRequest);
     }
 
     /**
@@ -122,7 +126,10 @@ public class YtelseskontraktMapperTest {
         FimHentYtelseskontraktListeResponse fimResponse = new FimHentYtelseskontraktListeResponse();
         fimResponse.getYtelseskontraktListe().add(ytelsesKontrakt);
         YtelseskontraktResponse response = new YtelseskontraktResponse();
-        mapper.map(ytelsesKontrakt, response);
+        Ytelse ytelse = mapper.mapYtelse(ytelsesKontrakt);
+
+        snapshot.assertMatches(response);
+        snapshot.assertMatches(ytelse);
     }
 
     private List<FimVedtak> createVedtak() {

@@ -1,7 +1,7 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.consumer.henvendelse;
 
 import kotlin.Pair;
-import no.nav.common.auth.SubjectHandler;
+import no.nav.common.auth.subject.SubjectHandler;
 import no.nav.kjerneinfo.consumer.fim.person.PersonKjerneinfoServiceBi;
 import no.nav.kjerneinfo.consumer.fim.person.to.HentKjerneinformasjonRequest;
 import no.nav.kjerneinfo.domain.person.Person;
@@ -29,8 +29,7 @@ import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.meldinger.WSHentHenven
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.inject.Inject;
-import javax.inject.Named;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
@@ -59,14 +58,14 @@ public class HenvendelseBehandlingServiceImpl implements HenvendelseBehandlingSe
     private final LDAPService ldapService;
     private final ArbeidsfordelingV1Service arbeidsfordelingService;
 
-    @Inject
+    @Autowired
     public HenvendelseBehandlingServiceImpl(
             HenvendelsePortType henvendelsePortType,
             BehandleHenvendelsePortType behandleHenvendelsePortType,
             PersonKjerneinfoServiceBi kjerneinfo,
             Tilgangskontroll tilgangskontroll,
             StandardKodeverk standardKodeverk,
-            @Named("propertyResolver") ContentRetriever propertyResolver,
+            ContentRetriever propertyResolver,
             LDAPService ldapService,
             ArbeidsfordelingV1Service arbeidsfordelingService
     ) {

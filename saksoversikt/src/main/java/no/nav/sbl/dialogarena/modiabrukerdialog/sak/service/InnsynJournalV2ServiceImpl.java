@@ -12,7 +12,7 @@ import no.nav.tjeneste.virksomhet.innsynjournal.v2.meldinger.IdentifiserJournalp
 import no.nav.tjeneste.virksomhet.innsynjournal.v2.meldinger.IdentifiserJournalpostResponse;
 import org.slf4j.Logger;
 
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -26,7 +26,7 @@ public class InnsynJournalV2ServiceImpl implements InnsynJournalV2Service {
 
     private Logger logger = getLogger(InnsynJournalV2ServiceImpl.class);
 
-    @Inject
+    @Autowired
     private InnsynJournalV2 innsynJournalV2;
 
 

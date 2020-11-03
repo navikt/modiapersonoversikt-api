@@ -4,8 +4,6 @@ import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehand
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.Sak;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.sakogbehandling.*;
 
-import javax.xml.datatype.DatatypeConfigurationException;
-
 import static no.nav.sbl.dialogarena.modiabrukerdialog.sak.mock.SakOgBehandlingMocks.toXMLCal;
 import static org.joda.time.DateTime.now;
 

@@ -9,7 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.cache.CacheManager;
 import org.springframework.scheduling.annotation.Scheduled;
 
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
 
 
@@ -20,13 +20,13 @@ public class ScheduledAnsattListePrefetch {
 
     Logger logger = LoggerFactory.getLogger(ScheduledAnsattListePrefetch.class);
 
-    @Inject
+    @Autowired
     private OrganisasjonEnhetV2Service organisasjonEnhetService;
 
-    @Inject
+    @Autowired
     private GOSYSNAVansatt ansattWS;
 
-    @Inject
+    @Autowired
     CacheManager cacheManager;
 
     @Scheduled(cron = "${"+SCHEDULE_KEY+"}")

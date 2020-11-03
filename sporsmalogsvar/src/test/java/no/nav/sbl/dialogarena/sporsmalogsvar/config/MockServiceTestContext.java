@@ -16,7 +16,6 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.AnsattService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.organisasjonsEnhetV2.OrganisasjonEnhetV2Service;
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Tilgangskontroll;
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.TilgangskontrollMock;
-import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.GsakService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.henvendelse.HenvendelseBehandlingService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.henvendelse.domain.Meldinger;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.behandlehenvendelse.BehandleHenvendelsePortType;
@@ -27,8 +26,6 @@ import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.OppgavebehandlingV3;
 import no.nav.tjeneste.virksomhet.sak.v1.informasjon.WSSak;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
-import javax.inject.Named;
 
 import static java.util.Arrays.asList;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.legacy.TestUtils.opprettMeldingEksempel;
@@ -49,14 +46,9 @@ public class MockServiceTestContext {
         return mock(StandardKodeverk.class);
     }
 
-    @Bean(name = "kodeverkPortTypeV2")
+    @Bean
     public KodeverkPortType kodeverkPortType() {
         return mock(KodeverkPortType.class);
-    }
-
-    @Bean
-    public GsakService gsakService() {
-        return mock(GsakService.class);
     }
 
     @Bean
@@ -65,7 +57,6 @@ public class MockServiceTestContext {
     }
 
     @Bean
-    @Named("henvendelseBehandlingServiceMock")
     public HenvendelseBehandlingService henvendelseBehandlingService() {
         HenvendelseBehandlingService henvendelseBehandlingService = mock(HenvendelseBehandlingService.class);
         when(henvendelseBehandlingService.getEnhet(anyString())).thenReturn("1234");

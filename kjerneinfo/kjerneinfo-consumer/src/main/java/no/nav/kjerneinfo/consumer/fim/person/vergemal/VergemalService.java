@@ -1,16 +1,10 @@
 package no.nav.kjerneinfo.consumer.fim.person.vergemal;
 
 import no.nav.kjerneinfo.common.domain.Kodeverdi;
-import no.nav.kjerneinfo.consumer.fim.person.PersonKjerneinfoServiceBi;
-//import no.nav.kjerneinfo.consumer.fim.person.to.HentKjerneinformasjonRequest;
-//import no.nav.kjerneinfo.consumer.fim.person.to.HentKjerneinformasjonResponse;
-//import no.nav.kjerneinfo.consumer.fim.person.vergemal.domain.Periode;
-//import no.nav.kjerneinfo.consumer.fim.person.vergemal.domain.Verge;
-import no.nav.kjerneinfo.consumer.fim.person.to.HentKjerneinformasjonRequest;
-import no.nav.kjerneinfo.consumer.fim.person.to.HentKjerneinformasjonResponse;
 import no.nav.kjerneinfo.consumer.fim.person.vergemal.domain.Periode;
-import no.nav.kjerneinfo.domain.person.Personnavn;
 import no.nav.kodeverk.consumer.fim.kodeverk.KodeverkmanagerBi;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.pdl.generated.HentNavnBolk;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.pdl.PdlOppslagService;
 import no.nav.tjeneste.virksomhet.person.v3.binding.HentVergePersonIkkeFunnet;
 import no.nav.tjeneste.virksomhet.person.v3.binding.HentVergeSikkerhetsbegrensning;
 import no.nav.tjeneste.virksomhet.person.v3.binding.PersonV3;
@@ -22,6 +16,7 @@ import no.nav.tjeneste.virksomhet.person.v3.meldinger.HentVergeRequest;
 import no.nav.tjeneste.virksomhet.person.v3.meldinger.HentVergeResponse;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -29,26 +24,33 @@ public class VergemalService {
 
     public static final String TPS_VERGES_FNR_MANGLENDE_DATA = "00000000000";
 
+    private final PdlOppslagService pdl;
     private final PersonV3 personV3;
-    private final PersonKjerneinfoServiceBi personService;
     private final VergemalKodeverkService vergemalKodeverkService;
 
-    public VergemalService(PersonV3 personV3, PersonKjerneinfoServiceBi personService, KodeverkmanagerBi kodeverkManager) {
+    public VergemalService(PersonV3 personV3, PdlOppslagService pdl, KodeverkmanagerBi kodeverkManager) {
         this.personV3 = personV3;
-        this.personService = personService;
+        this.pdl = pdl;
         this.vergemalKodeverkService = new VergemalKodeverkService(kodeverkManager);
     }
 
     public List<no.nav.kjerneinfo.consumer.fim.person.vergemal.domain.Verge> hentVergemal(String fodselsnummer) {
         HentVergeResponse wsHentVergeResponse = hentVergemalFraTPS(fodselsnummer);
+        List<String> vergeIdenter = wsHentVergeResponse.getVergeListe()
+                .stream()
+                .map(this::getIdentFromVerge)
+                .collect(Collectors.toList());
+        Map<String, HentNavnBolk.Navn> vergeNavn = pdl.hentNavnBolk(vergeIdenter);
+
         return wsHentVergeResponse.getVergeListe().stream()
-                .map(verge -> lagVergeDomeneObjekt(verge))
+                .map(verge -> lagVergeDomeneObjekt(verge, vergeNavn))
                 .collect(Collectors.toList());
     }
 
-    private no.nav.kjerneinfo.consumer.fim.person.vergemal.domain.Verge lagVergeDomeneObjekt(Verge verge) {
+    private no.nav.kjerneinfo.consumer.fim.person.vergemal.domain.Verge lagVergeDomeneObjekt(Verge verge, Map<String, HentNavnBolk.Navn> vergeNavn) {
         String ident = getIdentFromVerge(verge);
-        Personnavn navn = hentPersonnNavn(ident);
+        HentNavnBolk.Navn navn = vergeNavn.get(getIdentFromVerge(verge));
+
         return new no.nav.kjerneinfo.consumer.fim.person.vergemal.domain.Verge()
                 .withSakstype(getVergesakstype(verge).orElse(null))
                 .withMandattype(getMandatype(verge).orElse(null))
@@ -73,12 +75,6 @@ public class VergemalService {
         return new HentVergeRequest().withAktoer(new PersonIdent().withIdent(new NorskIdent().withIdent(fodselsnummer)));
     }
 
-    private HentKjerneinformasjonRequest kjerneInfoRequestMedBegrunnet(String ident) {
-        HentKjerneinformasjonRequest request = new HentKjerneinformasjonRequest(ident);
-        request.setBegrunnet(true);
-        return request;
-    }
-
     private String getIdentFromVerge(Verge verge) {
         Aktoer vergeAktoer = verge.getVerge();
         if (vergeAktoer instanceof PersonIdent) {
@@ -86,18 +82,6 @@ public class VergemalService {
             return ident.equals(TPS_VERGES_FNR_MANGLENDE_DATA) ? null : ident;
         } else {
             throw new RuntimeException("Ident for vegemal er av ukjent type");
-        }
-    }
-
-    private Personnavn hentPersonnNavn(String ident) {
-        if (ident == null) {
-            return null;
-        }
-        try {
-            HentKjerneinformasjonResponse response = personService.hentKjerneinformasjon(kjerneInfoRequestMedBegrunnet(ident));
-            return response.getPerson().getPersonfakta().getPersonnavn();
-        } catch (Exception e) {
-            return null;
         }
     }
 

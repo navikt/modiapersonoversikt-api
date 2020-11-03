@@ -14,33 +14,32 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.interfaces.Tilgangsk
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.saf.SafService
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Policies
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Tilgangskontroll
-import no.nav.sbl.dialogarena.naudit.AuditResources
 import no.nav.sbl.dialogarena.naudit.Audit
-import no.nav.sbl.dialogarena.naudit.Audit.Action.*
+import no.nav.sbl.dialogarena.naudit.Audit.Action.READ
 import no.nav.sbl.dialogarena.naudit.AuditIdentifier
+import no.nav.sbl.dialogarena.naudit.AuditResources
 import org.joda.time.DateTime
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.http.HttpStatus
+import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.*
+import org.springframework.web.server.ResponseStatusException
 import java.time.LocalDateTime
 import java.util.*
-import javax.inject.Inject
 import javax.servlet.http.HttpServletRequest
-import javax.ws.rs.*
-import javax.ws.rs.core.Context
-import javax.ws.rs.core.MediaType
-import javax.ws.rs.core.Response
 
-@Path("/saker/{fnr}")
-class SakerController @Inject constructor(private val saksoversiktService: SaksoversiktService,
-                                          private val sakstemaService: SakstemaService,
-                                          private val saksService: SaksService,
-                                          private val tilgangskontrollService: TilgangskontrollService,
-                                          private val dokumentMetadataService: DokumentMetadataService,
-                                          private val safService: SafService,
-                                          val tilgangskontroll: Tilgangskontroll
+@RestController
+@RequestMapping("/rest/saker/{fnr}")
+class SakerController @Autowired constructor(private val saksoversiktService: SaksoversiktService,
+                                             private val sakstemaService: SakstemaService,
+                                             private val saksService: SaksService,
+                                             private val tilgangskontrollService: TilgangskontrollService,
+                                             private val dokumentMetadataService: DokumentMetadataService,
+                                             private val safService: SafService,
+                                             val tilgangskontroll: Tilgangskontroll
 ) {
-    @GET
-    @Path("/sakstema")
-    @Produces(MediaType.APPLICATION_JSON)
-    fun hentSakstema(@Context request: HttpServletRequest, @PathParam("fnr") fnr: String): Map<String, Any?> {
+    @GetMapping("/sakstema")
+    fun hentSakstema(request: HttpServletRequest, @PathVariable("fnr") fnr: String, @RequestParam(value = "enhet", required = false) enhet: String?): Map<String, Any?> {
         return tilgangskontroll
                 .check(Policies.tilgangTilBruker.with(fnr))
                 .get(Audit.describe(READ, AuditResources.Person.Saker, AuditIdentifier.FNR to fnr)) {
@@ -51,19 +50,17 @@ class SakerController @Inject constructor(private val saksoversiktService: Sakso
                     tilgangskontrollService.markerIkkeJournalforte(sakstemaWrapper.resultat)
                     saksoversiktService.fjernGamleDokumenter(sakstemaWrapper.resultat)
 
-                    val resultat = ResultatWrapper(mapTilModiaSakstema(sakstemaWrapper.resultat, RestUtils.hentValgtEnhet(request)),
+                    val resultat = ResultatWrapper(mapTilModiaSakstema(sakstemaWrapper.resultat, RestUtils.hentValgtEnhet(enhet, request)),
                             collectFeilendeSystemer(sakerWrapper, sakstemaWrapper))
 
-                byggSakstemaResultat(resultat)
-            }
+                    byggSakstemaResultat(resultat)
+                }
     }
 
-    @GET
-    @Path("/dokument/{journalpostId}/{dokumentreferanse}")
-    @Produces("application/pdf")
-    fun hentDokument(@Context request: HttpServletRequest, @PathParam("fnr") fnr: String,
-                     @PathParam("journalpostId") journalpostId: String,
-                     @PathParam("dokumentreferanse") dokumentreferanse: String): Response {
+    @GetMapping(value = ["/dokument/{journalpostId}/{dokumentreferanse}"], produces = ["application/pdf"])
+    fun hentDokument(request: HttpServletRequest, @PathVariable("fnr") fnr: String,
+                     @PathVariable("journalpostId") journalpostId: String,
+                     @PathVariable("dokumentreferanse") dokumentreferanse: String): ResponseEntity<Any?> {
         return tilgangskontroll
                 .check(Policies.tilgangTilBruker.with(fnr))
                 .get(Audit.describe(READ, AuditResources.Person.Dokumenter, AuditIdentifier.FNR to fnr, AuditIdentifier.JOURNALPOST_ID to journalpostId, AuditIdentifier.DOKUMENT_REFERERANSE to dokumentreferanse)) {
@@ -73,14 +70,14 @@ class SakerController @Inject constructor(private val saksoversiktService: Sakso
 
                     // TODO erstatt tilgangsstyring
                     if (!tilgangskontrollResult.result.isPresent || !finnesDokumentReferansenIMetadata(journalpostMetadata, dokumentreferanse)) {
-                        Response.status(Response.Status.FORBIDDEN).build()
+                        throw ResponseStatusException(HttpStatus.FORBIDDEN)
                     } else {
                         val variantformat = finnVariantformat(journalpostMetadata, dokumentreferanse)
 
                         safService.hentDokument(journalpostId, dokumentreferanse, variantformat).let { wrapper ->
                             wrapper.result
-                                    .map { Response.ok(it).build() }
-                                    .orElseGet { Response.status(wrapper.statuskode).build() }
+                                    .map { ResponseEntity(it, HttpStatus.OK) }
+                                    .orElseGet { ResponseEntity(HttpStatus.valueOf(wrapper.statuskode)) }
                         }
                     }
 

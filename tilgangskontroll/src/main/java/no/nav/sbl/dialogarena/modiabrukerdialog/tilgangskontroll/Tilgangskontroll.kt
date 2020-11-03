@@ -4,7 +4,8 @@ import no.nav.sbl.dialogarena.abac.AbacResponse
 import no.nav.sbl.dialogarena.abac.Decision as AbacDecision
 import no.nav.sbl.dialogarena.rsbac.*
 import org.slf4j.LoggerFactory
-import javax.ws.rs.ForbiddenException
+import org.springframework.http.HttpStatus
+import org.springframework.web.server.ResponseStatusException
 
 fun AbacResponse.toDecisionEnum(): DecisionEnums = when (this.getDecision()) {
     AbacDecision.Deny -> DecisionEnums.DENY
@@ -43,6 +44,15 @@ class Policies {
                     DecisionEnums.DENY
             } else {
                 DecisionEnums.NOT_APPLICABLE
+            }
+        }
+
+        @JvmField
+        val featureToggleEnabled = PolicyGenerator<TilgangskontrollContext, String>({ "Featuretoggle ${data} is not enabled" }){
+            if (context.featureToggleEnabled(data)) {
+                DecisionEnums.PERMIT
+            } else {
+                DecisionEnums.DENY
             }
         }
 
@@ -104,6 +114,17 @@ class Policies {
                         if (identer.contains(ident)) DecisionEnums.PERMIT else DecisionEnums.DENY
                     }.orElse(DecisionEnums.DENY)
         }
+
+        val kanStarteHasteUtsending = Policy<TilgangskontrollContext>({ "Saksbehandler (${hentSaksbehandlerId()}) har ikke tilgang til hasteutsending av AAP-greier" }) {
+            val godkjenteIdenter = listOf(
+                    "Z990351", // Testident for preprod
+                    "R155645"  // Robotident prod
+            )
+            hentSaksbehandlerId()
+                    .map {ident ->
+                        if (godkjenteIdenter.contains(ident)) DecisionEnums.PERMIT else DecisionEnums.DENY
+                    }.orElse(DecisionEnums.DENY)
+        }
     }
 }
 
@@ -116,5 +137,5 @@ val log = LoggerFactory.getLogger(Tilgangskontroll::class.java)
 
 open class Tilgangskontroll(context: TilgangskontrollContext) : RSBACImpl<TilgangskontrollContext>(context, {
     log.error(it)
-    ForbiddenException(it)
+    ResponseStatusException(HttpStatus.FORBIDDEN, it)
 })

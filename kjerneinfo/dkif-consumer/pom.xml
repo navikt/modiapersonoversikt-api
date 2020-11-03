@@ -18,46 +18,18 @@
             <artifactId>modig-embedded</artifactId>
         </dependency>
         <dependency>
-            <groupId>no.nav.common</groupId>
-            <artifactId>cxf</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>no.nav.tjenestespesifikasjoner</groupId>
-            <artifactId>dkif-tjenestespesifikasjon</artifactId>
-        </dependency>
-
-        <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>modia-felleskomponenter</artifactId>
         </dependency>
-
-        <!-- SPRING DEPENDENCIES -->
         <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-context</artifactId>
+            <groupId>no.nav.common</groupId>
+            <artifactId>cxf</artifactId>
         </dependency>
 
+        <!-- tjenester -->
         <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-beans</artifactId>
-        </dependency>
-
-
-        <!-- CXF/WS DEPENDENCIES -->
-        <!--        <dependency>-->
-        <!--            <groupId>xml-apis</groupId>-->
-        <!--            <artifactId>xml-apis</artifactId>-->
-        <!--        </dependency>-->
-
-        <!-- DIVERSE DEPENDENCIES -->
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-lang3</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
+            <groupId>no.nav.tjenestespesifikasjoner</groupId>
+            <artifactId>dkif-tjenestespesifikasjon</artifactId>
         </dependency>
 
         <!-- TEST DEPENDENCIES -->
@@ -71,13 +43,16 @@
             <artifactId>junit-jupiter-engine</artifactId>
             <scope>test</scope>
         </dependency>
-
+        <dependency>
+            <groupId>org.junit.vintage</groupId>
+            <artifactId>junit-vintage-engine</artifactId>
+            <scope>test</scope>
+        </dependency>
         <dependency>
             <groupId>org.hamcrest</groupId>
             <artifactId>hamcrest-core</artifactId>
             <scope>test</scope>
         </dependency>
-
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>

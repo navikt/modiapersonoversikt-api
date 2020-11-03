@@ -9,20 +9,19 @@ import no.nav.sbl.dialogarena.naudit.Audit
 import no.nav.sbl.dialogarena.naudit.AuditIdentifier
 import no.nav.sbl.dialogarena.utbetaling.service.UtbetalingService
 import no.nav.tjeneste.virksomhet.utbetaling.v1.informasjon.*
-import javax.inject.Inject
-import javax.ws.rs.*
-import javax.ws.rs.core.MediaType.APPLICATION_JSON
-import javax.ws.rs.core.Response
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.http.HttpStatus
+import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.*
 
-@Path("/utbetaling/{fnr}")
-@Produces(APPLICATION_JSON)
-class UtbetalingController @Inject constructor(private val service: UtbetalingService, private val tilgangskontroll: Tilgangskontroll) {
+@RestController
+@RequestMapping("/rest/utbetaling/{fnr}")
+class UtbetalingController @Autowired constructor(private val service: UtbetalingService, private val tilgangskontroll: Tilgangskontroll) {
 
-    @GET
-    @Path("/")
-    fun hent(@PathParam("fnr") fnr: String,
-             @QueryParam("startDato") start: String?,
-             @QueryParam("sluttDato") slutt: String?): Response {
+    @GetMapping
+    fun hent(@PathVariable("fnr") fnr: String,
+             @RequestParam("startDato") start: String?,
+             @RequestParam("sluttDato") slutt: String?): ResponseEntity<out Any> {
         return tilgangskontroll
                 .check(Policies.tilgangTilBruker.with(fnr))
                 .get(Audit.describe(Audit.Action.READ, AuditResources.Person.Utbetalinger, AuditIdentifier.FNR to fnr)) {
@@ -30,20 +29,19 @@ class UtbetalingController @Inject constructor(private val service: UtbetalingSe
                     val sluttDato = lagRiktigDato(slutt)
 
                     if (startDato == null || sluttDato == null) {
-                        Response.status(Response.Status.BAD_REQUEST)
-                                .entity("queryparam ?startDato=yyyy-MM-dd&sluttDato=yyyy-MM-dd må være satt").build()
+                        ResponseEntity("queryparam ?startDato=yyyy-MM-dd&sluttDato=yyyy-MM-dd må være satt", HttpStatus.BAD_REQUEST)
                     } else {
                         val utbetalinger = service.hentWSUtbetalinger(fnr,
                                 startDato,
                                 sluttDato)
 
-                        Response.ok(mapOf(
+                        ResponseEntity(mapOf(
                                 "utbetalinger" to hentUtbetalinger(utbetalinger),
                                 "periode" to mapOf(
                                         "startDato" to startDato.toString(DATOFORMAT),
                                         "sluttDato" to sluttDato.toString(DATOFORMAT)
                                 )
-                        )).build()
+                        ), HttpStatus.OK)
                     }
                 }
     }

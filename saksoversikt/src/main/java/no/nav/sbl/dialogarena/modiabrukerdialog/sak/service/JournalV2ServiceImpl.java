@@ -10,7 +10,7 @@ import no.nav.tjeneste.virksomhet.journal.v2.meldinger.WSHentDokumentRequest;
 import no.nav.tjeneste.virksomhet.journal.v2.meldinger.WSHentDokumentResponse;
 import org.slf4j.Logger;
 
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import static no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.Feilmelding.*;
 import static org.slf4j.LoggerFactory.getLogger;
@@ -19,7 +19,7 @@ import static org.slf4j.LoggerFactory.getLogger;
 @SuppressWarnings("squid:S1166")
 public class JournalV2ServiceImpl implements JournalV2Service {
 
-    @Inject
+    @Autowired
     private JournalV2 journalV2;
 
     private static final Logger logger = getLogger(JournalV2ServiceImpl.class);

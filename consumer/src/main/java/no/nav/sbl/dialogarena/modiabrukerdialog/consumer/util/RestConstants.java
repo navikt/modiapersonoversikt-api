@@ -1,8 +1,9 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util;
 
-import no.nav.sbl.util.EnvironmentUtils;
+import no.nav.common.utils.EnvironmentUtils;
 
 public class RestConstants {
+    public static final String AUTHORIZATION = "Authorization";
     public static final String NAV_CONSUMER_TOKEN_HEADER = "Nav-Consumer-Token";
     public static final String NAV_CALL_ID_HEADER = "Nav-Call-Id";
     public static final String TEMA_HEADER = "Tema";
@@ -15,7 +16,4 @@ public class RestConstants {
 
     public static final String MODIABRUKERDIALOG_SYSTEM_USER = "srvModiabrukerdialog";
     public static final String MODIABRUKERDIALOG_SYSTEM_USER_PASSWORD = EnvironmentUtils.getRequiredProperty("no.nav.modig.security.systemuser.password", "SRVMODIABRUKERDIALOG_PASSWORD");
-
-    public static final String SAF_GRAPHQL_BASEURL = EnvironmentUtils.getRequiredProperty("SAF_GRAPHQL_URL");
-    public static final String SAF_HENTDOKUMENT_BASEURL = EnvironmentUtils.getRequiredProperty("SAF_HENTDOKUMENT_URL");
 }

@@ -2,11 +2,11 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.kodeve
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import no.nav.common.rest.client.RestClient;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.kodeverksmapper.domain.Behandling;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.HttpClientBuilder;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -22,17 +22,12 @@ public class KodeverksmapperEndpoint implements Kodeverksmapper {
     private final String OPPGAVETYPE_ENDPOINT;
     private final String UNDERKATEGORI_ENDPOINT;
     private final String PING_ENDPOINT;
-    private HttpClient client;
+    private static final OkHttpClient client = RestClient.baseClient();
 
     KodeverksmapperEndpoint(String oppgavetypeEndpoint, String underkategoriEndpoint, String pingEndpoint) {
         this.OPPGAVETYPE_ENDPOINT = oppgavetypeEndpoint;
         this.UNDERKATEGORI_ENDPOINT = underkategoriEndpoint;
         this.PING_ENDPOINT = pingEndpoint;
-        this.client = lagHttpClient();
-    }
-
-    private HttpClient lagHttpClient() {
-        return HttpClientBuilder.create().build();
     }
 
     @Override
@@ -51,15 +46,15 @@ public class KodeverksmapperEndpoint implements Kodeverksmapper {
     }
 
     private String gjorSporring(String url) throws IOException {
-        HttpResponse response = client.execute(new HttpGet(url));
-        if (response.getStatusLine().getStatusCode() != 200) {
-            throw new IOException(format("Kall på URL=\"%s\" returnerte respons med status=\"%s\"", url, response.getStatusLine()));
+        Response response = client.newCall(new Request.Builder().url(url).build()).execute();
+        if (response.code() != 200) {
+            throw new IOException(format("Kall på URL=\"%s\" returnerte respons med status=\"%s\"", url, response.code()));
         }
         return hentInnhold(response);
     }
 
-    private String hentInnhold(HttpResponse response) throws IOException {
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(response.getEntity().getContent()))) {
+    private String hentInnhold(Response response) throws IOException {
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(response.body().byteStream()))) {
             return reader.lines().collect(Collectors.joining("\n"));
         }
     }

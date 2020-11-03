@@ -5,23 +5,20 @@ import no.nav.kodeverk.consumer.fim.kodeverk.KodeverkmanagerBi
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Policies
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Tilgangskontroll
 import no.nav.sbl.dialogarena.naudit.Audit
-import javax.inject.Inject
-import javax.ws.rs.GET
-import javax.ws.rs.Path
-import javax.ws.rs.PathParam
-import javax.ws.rs.Produces
-import javax.ws.rs.core.MediaType.APPLICATION_JSON
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RestController
 
-@Path("/kodeverk/{kodeverkRef}")
-@Produces(APPLICATION_JSON)
-class KodeverkController @Inject constructor(
+@RestController
+@RequestMapping("/rest/kodeverk/{kodeverkRef}")
+class KodeverkController @Autowired constructor(
         private val tilgangskontroll: Tilgangskontroll,
         private val kodeverkManager: KodeverkmanagerBi
 ) {
-
-    @GET
-    @Path("/")
-    fun hentKodeverk(@PathParam("kodeverkRef") kodeverkRef: String) =
+    @GetMapping
+    fun hentKodeverk(@PathVariable("kodeverkRef") kodeverkRef: String) =
             tilgangskontroll
                     .check(Policies.tilgangTilModia)
                     .get(Audit.skipAuditLog()) {

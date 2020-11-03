@@ -1,0 +1,11 @@
+{
+  "bruker" : {
+    "formidlingsgruppe" : "Arbeidsøker",
+    "innsatsgruppe" : "Spesielt tilpasset innsats",
+    "meldeplikt" : true,
+    "rettighetsgruppe" : null,
+    "sykmeldtFrom" : null
+  },
+  "syfoPunkter" : null,
+  "vedtaksdato" : null
+}

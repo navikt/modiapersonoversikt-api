@@ -15,20 +15,6 @@
     <bean id="defaultkeygenerator"
           class="org.springframework.cache.interceptor.SimpleKeyGenerator"/>
 
-    <bean id="managementService" class="net.sf.ehcache.management.ManagementService"
-          init-method="init"
-          destroy-method="dispose">
-        <constructor-arg ref="ehcacheCacheManager"/>
-        <constructor-arg ref="mbeanServer"/>
-        <constructor-arg index="2" value="false"/> <!-- register cachemanager -->
-        <constructor-arg index="3" value="false"/> <!-- register caches -->
-        <constructor-arg index="4" value="false"/> <!-- register cache config -->
-        <constructor-arg index="5" value="true"/>  <!-- register cache statistics -->
-    </bean>
-    <bean id="mbeanServer" class="org.springframework.jmx.support.MBeanServerFactoryBean">
-        <property name="locateExistingServerIfPossible" value="true"/>
-    </bean>
-
     <cache:advice id="shortlivedAdvice" key-generator="userkeygenerator">
         <cache:caching cache="endpointCache">
             <cache:cacheable method="hent*"/>
@@ -131,7 +117,7 @@
         <aop:advisor advice-ref="shortlivedAdvice" pointcut="bean(henvendelseSoknaderPortType)"/>
         <aop:advisor advice-ref="shortlivedAdvice" pointcut="bean(sakOgBehandlingPortType)"/>
         <aop:advisor advice-ref="shortlivedAdvice" pointcut="bean(sakEndpoint)"/>
-        <aop:advisor advice-ref="kodeverkAdvice" pointcut="bean(kodeverkPortTypeV2)"/>
+        <aop:advisor advice-ref="kodeverkAdvice" pointcut="bean(kodeverkPortType)"/>
         <aop:advisor advice-ref="shortlivedAdvice" pointcut="bean(henvendelsePortType)"/>
         <aop:advisor advice-ref="asbogosysAnsattAdvice" pointcut="bean(gosysNavAnsatt)"/>
         <aop:advisor advice-ref="asbogosysEnhetAdvice" pointcut="bean(gosysNavOrgEnhet)"/>

@@ -1,23 +1,27 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v2.organisasjonenhetkontaktinformasjon;
 
+import no.nav.common.cxf.CXFClient;
+import no.nav.common.cxf.StsConfig;
+import no.nav.common.utils.EnvironmentUtils;
 import no.nav.modig.modia.ping.PingableWebService;
-import no.nav.sbl.dialogarena.common.cxf.CXFClient;
-import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.OrganisasjonEnhetKontaktinformasjonV1Mock;
 import no.nav.sbl.dialogarena.types.Pingable;
-import no.nav.sbl.util.EnvironmentUtils;
 import no.nav.tjeneste.virksomhet.organisasjonenhetkontaktinformasjon.v1.OrganisasjonEnhetKontaktinformasjonV1;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import org.springframework.beans.factory.annotation.Autowired;
 
 import static no.nav.metrics.MetricsFactory.createTimerProxyForWebService;
 
 @Configuration
 public class OrganisasjonEnhetKontaktinformasjonV1EndpointConfig {
+    @Autowired
+    private StsConfig stsConfig;
 
     @Bean
     public OrganisasjonEnhetKontaktinformasjonV1 organisasjonEnhetKontaktinformasjonV1() {
         final OrganisasjonEnhetKontaktinformasjonV1 organisasjonEnhetKontaktinformasjonV1 = lagEndpoint()
-                .configureStsForSubject()
+                .configureStsForSubject(stsConfig)
                 .build();
 
         return createTimerProxyForWebService("organisasjonEnhetKontaktinformasjonV1", organisasjonEnhetKontaktinformasjonV1, OrganisasjonEnhetKontaktinformasjonV1.class);
@@ -27,13 +31,9 @@ public class OrganisasjonEnhetKontaktinformasjonV1EndpointConfig {
     public Pingable OrganisasjonEnhetKontaktinformasjonPing() {
         return new PingableWebService(
                 "NORG2 - OrganisasjonEnhetKontaktinformasjonV1",
-                lagEndpoint().configureStsForSystemUser().build()
+                lagEndpoint().configureStsForSystemUser(stsConfig).build()
         );
 
-    }
-
-    private OrganisasjonEnhetKontaktinformasjonV1 lagMockEnpoint() {
-        return OrganisasjonEnhetKontaktinformasjonV1Mock.organisasjonEnhetKontaktinformasjonV1();
     }
 
     private CXFClient<OrganisasjonEnhetKontaktinformasjonV1> lagEndpoint() {

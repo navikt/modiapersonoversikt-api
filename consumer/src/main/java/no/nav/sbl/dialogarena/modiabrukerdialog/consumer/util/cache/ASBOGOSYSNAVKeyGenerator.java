@@ -4,11 +4,11 @@ import _0._0.nav_cons_sak_gosys_3.no.nav.asbo.navansatt.ASBOGOSYSHentNAVAnsattFa
 import _0._0.nav_cons_sak_gosys_3.no.nav.asbo.navansatt.ASBOGOSYSNAVAnsatt;
 import _0._0.nav_cons_sak_gosys_3.no.nav.asbo.navorgenhet.*;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.cache.AutentisertBrukerKeyGenerator;
-import org.apache.commons.collections15.Transformer;
 
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Function;
 
 /**
  * Klasse for å lage cachekey som også tar høyde for
@@ -28,59 +28,59 @@ public class ASBOGOSYSNAVKeyGenerator extends AutentisertBrukerKeyGenerator {
 
     private Object getCacheKey(Object target, Method method, Object... params) {
         Object param0 = params[0];
-        Transformer transformer = asbogosysCachekeyMapper.get(param0.getClass());
+        Function transformer = asbogosysCachekeyMapper.get(param0.getClass());
         if (transformer != null) {
-            return transformer.transform(param0);
+            return transformer.apply(param0);
         }
         return super.generate(target, method, params);
     }
 
-    private static Map<Class, Transformer> asbogosysCachekeyMapper = new HashMap<Class, Transformer>() {{
-        put(ASBOGOSYSNavEnhet.class, new Transformer<ASBOGOSYSNavEnhet, Object>() {
+    private static Map<Class, Function> asbogosysCachekeyMapper = new HashMap<Class, Function>() {{
+        put(ASBOGOSYSNavEnhet.class, new Function<ASBOGOSYSNavEnhet, Object>() {
             @Override
-            public Object transform(ASBOGOSYSNavEnhet obj) {
+            public Object apply(ASBOGOSYSNavEnhet obj) {
                 return obj.getEnhetsId();
             }
         });
 
-        put(ASBOGOSYSHentSpesialEnhetTilPersonRequest.class, new Transformer<ASBOGOSYSHentSpesialEnhetTilPersonRequest, Object>() {
+        put(ASBOGOSYSHentSpesialEnhetTilPersonRequest.class, new Function<ASBOGOSYSHentSpesialEnhetTilPersonRequest, Object>() {
             @Override
-            public Object transform(ASBOGOSYSHentSpesialEnhetTilPersonRequest obj) {
+            public Object apply(ASBOGOSYSHentSpesialEnhetTilPersonRequest obj) {
                 return obj.getFnr();
             }
         });
 
-        put(ASBOGOSYSHentNAVEnhetListeRequest.class, new Transformer<ASBOGOSYSHentNAVEnhetListeRequest, Object>() {
+        put(ASBOGOSYSHentNAVEnhetListeRequest.class, new Function<ASBOGOSYSHentNAVEnhetListeRequest, Object>() {
             @Override
-            public Object transform(ASBOGOSYSHentNAVEnhetListeRequest obj) {
+            public Object apply(ASBOGOSYSHentNAVEnhetListeRequest obj) {
                 return obj.getTypeOrganiserer() + obj.getTypeOrganisertUnder() + obj.getNAVEnhet();
             }
         });
 
-        put(ASBOGOSYSFinnNAVEnhetRequest.class, new Transformer<ASBOGOSYSFinnNAVEnhetRequest, Object>() {
+        put(ASBOGOSYSFinnNAVEnhetRequest.class, new Function<ASBOGOSYSFinnNAVEnhetRequest, Object>() {
             @Override
-            public Object transform(ASBOGOSYSFinnNAVEnhetRequest obj) {
+            public Object apply(ASBOGOSYSFinnNAVEnhetRequest obj) {
                 return obj.getTypeEnhet() + obj.getFagomradeKode();
             }
         });
 
-        put(ASBOGOSYSFinnArenaNAVEnhetListeRequest.class, new Transformer<ASBOGOSYSFinnArenaNAVEnhetListeRequest, Object>() {
+        put(ASBOGOSYSFinnArenaNAVEnhetListeRequest.class, new Function<ASBOGOSYSFinnArenaNAVEnhetListeRequest, Object>() {
             @Override
-            public Object transform(ASBOGOSYSFinnArenaNAVEnhetListeRequest obj) {
+            public Object apply(ASBOGOSYSFinnArenaNAVEnhetListeRequest obj) {
                 return obj.getEnhetIdSokeStreng() + obj.getEnhetNavnSokeStreng() + obj.getMaxantall();
             }
         });
 
-        put(ASBOGOSYSHentNAVAnsattFagomradeListeRequest.class, new Transformer<ASBOGOSYSHentNAVAnsattFagomradeListeRequest, Object>() {
+        put(ASBOGOSYSHentNAVAnsattFagomradeListeRequest.class, new Function<ASBOGOSYSHentNAVAnsattFagomradeListeRequest, Object>() {
             @Override
-            public Object transform(ASBOGOSYSHentNAVAnsattFagomradeListeRequest obj) {
+            public Object apply(ASBOGOSYSHentNAVAnsattFagomradeListeRequest obj) {
                 return obj.getEnhetsId() + obj.getAnsattId();
             }
         });
 
-        put(ASBOGOSYSNAVAnsatt.class, new Transformer<ASBOGOSYSNAVAnsatt, Object>() {
+        put(ASBOGOSYSNAVAnsatt.class, new Function<ASBOGOSYSNAVAnsatt, Object>() {
             @Override
-            public Object transform(ASBOGOSYSNAVAnsatt obj) {
+            public Object apply(ASBOGOSYSNAVAnsatt obj) {
                 return obj.getAnsattId() + obj.getAnsattNavn() + obj.getEnheter().toString();
             }
         });

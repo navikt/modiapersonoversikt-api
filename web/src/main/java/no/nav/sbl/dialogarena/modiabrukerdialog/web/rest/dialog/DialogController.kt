@@ -1,6 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.dialog
 
-import no.nav.common.auth.SubjectHandler
+import no.nav.common.auth.subject.SubjectHandler
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.Sak
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Fritekst
@@ -15,7 +15,6 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.TemagruppeTemaMapping.
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Policies
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Tilgangskontroll
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.api.DTO
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.api.fromDTO
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.api.toDTO
 import no.nav.sbl.dialogarena.naudit.Audit
 import no.nav.sbl.dialogarena.naudit.Audit.Action.*
@@ -24,35 +23,37 @@ import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.henvendelse.HenvendelseBeh
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.henvendelse.domain.Traad
 import no.nav.sbl.dialogarena.naudit.AuditResources.Person
 import java.util.*
-import javax.inject.Inject
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.http.HttpStatus
+import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.*
+import org.springframework.web.server.ResponseStatusException
 import javax.servlet.http.HttpServletRequest
-import javax.ws.rs.*
-import javax.ws.rs.core.Context
-import javax.ws.rs.core.Response
 
+data class BehandlingsId(val behandlingsId: String)
 data class TraadDTO(val traadId: String, val meldinger: List<MeldingDTO>) : DTO
 class MeldingDTO(val map: Map<String, Any?>) : HashMap<String, Any?>(map), DTO
 class FortsettDialogDTO(val behandlingsId: String, val oppgaveId: String?) : DTO
 
-@Path("/dialog/{fnr}")
-@Produces("application/json")
-class DialogController @Inject constructor(
+@RestController
+@RequestMapping("/rest/dialog/{fnr}")
+class DialogController @Autowired constructor(
         private val tilgangskontroll: Tilgangskontroll,
         private val henvendelseService: HenvendelseBehandlingService,
         private val henvendelseUtsendingService: HenvendelseUtsendingService,
         private val sakerService: SakerService,
         private val oppgaveBehandlingService: OppgaveBehandlingService
 ) {
-    @GET
-    @Path("/meldinger")
+    @GetMapping("/meldinger")
     fun hentMeldinger(
-            @Context request: HttpServletRequest,
-            @PathParam("fnr") fnr: String
+            request: HttpServletRequest,
+            @PathVariable("fnr") fnr: String,
+            @RequestParam(value = "enhet", required = false) enhet: String?
     ): List<TraadDTO> {
         return tilgangskontroll
                 .check(Policies.tilgangTilBruker.with(fnr))
                 .get(Audit.describe(READ, Person.Henvendelse.Les, AuditIdentifier.FNR to fnr)) {
-                    val valgtEnhet = RestUtils.hentValgtEnhet(request)
+                    val valgtEnhet = RestUtils.hentValgtEnhet(enhet, request)
                     henvendelseService
                             .hentMeldinger(fnr, valgtEnhet)
                             .traader
@@ -61,60 +62,74 @@ class DialogController @Inject constructor(
                 }
     }
 
-    @POST
-    @Path("/sendreferat")
+    @PostMapping("/sendreferat")
     fun sendMelding(
-            @Context request: HttpServletRequest,
-            @PathParam("fnr") fnr: String,
-            referatRequest: SendReferatRequest
-    ): Response {
+            request: HttpServletRequest,
+            @PathVariable("fnr") fnr: String,
+            @RequestBody referatRequest: SendReferatRequest
+    ): ResponseEntity<BehandlingsId> {
         return tilgangskontroll
                 .check(Policies.tilgangTilBruker.with(fnr))
                 .get(Audit.describe(CREATE, Person.Henvendelse.Les, AuditIdentifier.FNR to fnr)) {
-                    val context = lagSendHenvendelseContext(fnr, request)
-                    henvendelseUtsendingService.sendHenvendelse(lagReferat(referatRequest, context), Optional.empty(), Optional.empty(), context.enhet)
-                    Response.ok().build()
+                    val context = lagSendHenvendelseContext(fnr, referatRequest.enhet, request)
+                    val behandlingsId = henvendelseUtsendingService.sendHenvendelse(lagReferat(referatRequest, context), Optional.empty(), Optional.empty(), context.enhet)
+                    ResponseEntity(BehandlingsId(behandlingsId), HttpStatus.OK)
                 }
     }
 
-    @POST
-    @Path("/sendsporsmal")
+    @PostMapping("/sendsporsmal")
     fun sendSporsmal(
-            @Context request: HttpServletRequest,
-            @PathParam("fnr") fnr: String,
-            sporsmalsRequest: SendSporsmalRequest
-    ): Response {
+            request: HttpServletRequest,
+            @PathVariable("fnr") fnr: String,
+            @RequestBody sporsmalsRequest: SendSporsmalRequest
+    ): ResponseEntity<Void> {
         return tilgangskontroll
                 .check(Policies.tilgangTilBruker.with(fnr))
                 .get(Audit.describe(CREATE, Person.Henvendelse.Les, AuditIdentifier.FNR to fnr)) {
-                    val context = lagSendHenvendelseContext(fnr, request)
+                    val context = lagSendHenvendelseContext(fnr, sporsmalsRequest.enhet, request)
 
                     henvendelseUtsendingService.sendHenvendelse(lagSporsmal(sporsmalsRequest, sporsmalsRequest.sak.temaKode, context), Optional.empty(), Optional.of(sporsmalsRequest.sak), context.enhet)
-                    Response.ok().build()
+                    ResponseEntity(HttpStatus.OK)
                 }
     }
 
-    @POST
-    @Path("/fortsett/opprett")
+    @PostMapping("/sendinfomelding")
+    fun sendInfomelding(
+            request: HttpServletRequest,
+            @PathVariable("fnr") fnr: String,
+            @RequestBody infomeldingRequest: InfomeldingRequest
+    ): ResponseEntity<Void> {
+        return tilgangskontroll
+                .check(Policies.tilgangTilBruker.with(fnr))
+                .get(Audit.describe(CREATE, Person.Henvendelse.Les, AuditIdentifier.FNR to fnr)) {
+                    val context = lagSendHenvendelseContext(fnr, infomeldingRequest.enhet, request)
+
+                    henvendelseUtsendingService.sendHenvendelse(lagInfomelding(infomeldingRequest, infomeldingRequest.sak.temaKode, context), Optional.empty(), Optional.of(infomeldingRequest.sak), context.enhet)
+                    ResponseEntity(HttpStatus.OK)
+                }
+    }
+
+    @PostMapping("/fortsett/opprett")
     fun startFortsettDialog(
-            @Context request: HttpServletRequest,
-            @PathParam("fnr") fnr: String,
-            opprettHenvendelseRequest: OpprettHenvendelseRequest
+            request: HttpServletRequest,
+            @PathVariable("fnr") fnr: String,
+            @RequestBody opprettHenvendelseRequest: OpprettHenvendelseRequest
     ): FortsettDialogDTO {
         return tilgangskontroll
                 .check(Policies.tilgangTilBruker.with(fnr))
                 .get(Audit.describe(CREATE, Person.Henvendelse.Opprettet, AuditIdentifier.FNR to fnr)) {
                     val traadId = opprettHenvendelseRequest.traadId
-                    val context = lagSendHenvendelseContext(fnr, request)
+                    val context = lagSendHenvendelseContext(fnr, opprettHenvendelseRequest.enhet, request)
+
                     val traad = henvendelseService
                             .hentMeldinger(fnr, context.enhet)
                             .traader
                             .find { it.traadId == traadId }
-                            ?: throw WebApplicationException("Fant ingen tråd med id: $traadId", 400)
+                            ?: throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Fant ingen tråd med id: $traadId")
 
                     val oppgaveId: String? = if (erUbesvartSporsmalFraBruker(traad)) {
                         val sporsmal = traad.meldinger.find { it.id == it.traadId }
-                                ?: throw WebApplicationException("Fant ingen spørsmål i tråd med id: $traadId", 400)
+                                ?: throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Fant ingen spørsmål i tråd med id: $traadId")
                         oppgaveBehandlingService.tilordneOppgaveIGsak(
                                 sporsmal.oppgaveId,
                                 Temagruppe.valueOf(sporsmal.temagruppe),
@@ -134,22 +149,21 @@ class DialogController @Inject constructor(
                 }
     }
 
-    @POST
-    @Path("/fortsett/ferdigstill")
+    @PostMapping("/fortsett/ferdigstill")
     fun sendFortsettDialog(
-            @Context request: HttpServletRequest,
-            @PathParam("fnr") fnr: String,
-            fortsettDialogRequest: FortsettDialogRequest
-    ): Response {
+            request: HttpServletRequest,
+            @PathVariable("fnr") fnr: String,
+            @RequestBody fortsettDialogRequest: FortsettDialogRequest
+    ): ResponseEntity<Void> {
         return tilgangskontroll
                 .check(Policies.tilgangTilBruker.with(fnr))
                 .get(Audit.describe(UPDATE, Person.Henvendelse.Ferdigstill, AuditIdentifier.FNR to fnr)) {
-                    val context = lagSendHenvendelseContext(fnr, request)
+                    val context = lagSendHenvendelseContext(fnr, fortsettDialogRequest.enhet, request)
                     val traad = henvendelseService
                             .hentMeldinger(fnr, context.enhet)
                             .traader
                             .find { it.traadId == fortsettDialogRequest.traadId }
-                            ?: throw WebApplicationException("Fant ingen tråd med id: ${fortsettDialogRequest.traadId}", 400)
+                            ?: throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Fant ingen tråd med id: ${fortsettDialogRequest.traadId}")
 
                     henvendelseUtsendingService.ferdigstillHenvendelse(
                             lagFortsettDialog(fortsettDialogRequest, context, traad),
@@ -159,33 +173,32 @@ class DialogController @Inject constructor(
                             context.enhet
                     )
 
-                    Response.ok().build()
+                    ResponseEntity(HttpStatus.OK)
                 }
     }
 
-    @POST
-    @Path("slaasammen")
+    @PostMapping("slaasammen")
     fun slaaSammenTraader(
-            @Context request: HttpServletRequest,
-            @PathParam("fnr") fnr: String,
-            slaaSammenRequest: SlaaSammenRequest
+            request: HttpServletRequest,
+            @PathVariable("fnr") fnr: String,
+            @RequestBody slaaSammenRequest: SlaaSammenRequest
     ): Map<String, Any?> = tilgangskontroll
             .check(Policies.tilgangTilBruker.with(fnr))
             .get(Audit.describe(UPDATE, Person.Henvendelse.SlaSammen, AuditIdentifier.FNR to fnr)) {
                 if (slaaSammenRequest.traader.groupingBy { it -> it.traadId }.eachCount().size < 2) {
-                    throw BadRequestException("Du kan ikke slå sammen mindre enn 2 trådeer")
+                    throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Du kan ikke slå sammen mindre enn 2 trådeer")
                 }
 
                 if (sjekkOmNoenOppgaverErFerdigstilt(slaaSammenRequest)) {
-                    throw BadRequestException("En eller fler av oppgavene er allerede ferdigstilt")
+                    throw ResponseStatusException(HttpStatus.BAD_REQUEST, "En eller fler av oppgavene er allerede ferdigstilt")
                 }
                 val nyTraadId = try {
                     henvendelseUtsendingService.slaaSammenTraader(slaaSammenRequest.traader.map { it.traadId })
                 } catch (e: TraadAlleredeBesvart) {
-                    throw BadRequestException("En eller fler av trådene er allerede besvart")
+                    throw ResponseStatusException(HttpStatus.BAD_REQUEST, "En eller fler av trådene er allerede besvart")
                 }
 
-                val valgtEnhet = RestUtils.hentValgtEnhet(request)
+                val valgtEnhet = RestUtils.hentValgtEnhet(slaaSammenRequest.enhet, request)
                 ferdigstillAlleUnntattEnOppgave(slaaSammenRequest, nyTraadId, valgtEnhet)
 
                 val traader: List<TraadDTO> = henvendelseService
@@ -248,6 +261,19 @@ private fun lagSporsmal(sporsmalRequest: SendSporsmalRequest, sakstema: String, 
             .withTemagruppe(hentTemagruppeForTema(sakstema))
 }
 
+private fun lagInfomelding(infomeldingRequest: InfomeldingRequest, sakstema: String, requestContext: RequestContext) : Melding {
+    val type = Meldingstype.INFOMELDING_MODIA_UTGAAENDE
+    return Melding().withFnr(requestContext.fnr)
+            .withNavIdent(requestContext.ident)
+            .withEksternAktor(requestContext.ident)
+            .withKanal(getKanal(type))
+            .withType(type)
+            .withFritekst(Fritekst(infomeldingRequest.fritekst))
+            .withTilknyttetEnhet(requestContext.enhet)
+            .withErTilknyttetAnsatt(true)
+            .withTemagruppe(hentTemagruppeForTema(sakstema))
+}
+
 private fun erTraadTilknyttetAnsatt(traad: Traad): Boolean =
         if (traad.meldinger.any { it.meldingstype == Meldingstype.SPORSMAL_MODIA_UTGAAENDE }) {
             traad.meldinger.sortedBy { it.visningsDato }.last().erTilknyttetAnsatt
@@ -289,22 +315,32 @@ fun getKanal(type: Meldingstype): String {
 }
 
 data class OpprettHenvendelseRequest(
+        val enhet: String?,
         val traadId: String
 )
 
 data class SendReferatRequest(
+        val enhet: String?,
         val fritekst: String,
         val temagruppe: String,
         val meldingstype: Meldingstype
 )
 
 data class SendSporsmalRequest(
+        val enhet: String?,
         val fritekst: String,
         val sak: Sak,
         val erOppgaveTilknyttetAnsatt: Boolean
 )
 
+data class InfomeldingRequest(
+        val enhet: String?,
+        val fritekst: String,
+        val sak: Sak
+)
+
 data class FortsettDialogRequest(
+        val enhet: String?,
         val traadId: String,
         val behandlingsId: String,
         val fritekst: String,
@@ -314,9 +350,9 @@ data class FortsettDialogRequest(
         val oppgaveId: String?
 )
 
-fun lagSendHenvendelseContext(fnr: String, request: HttpServletRequest): RequestContext {
+fun lagSendHenvendelseContext(fnr: String, enhet: String?, request: HttpServletRequest): RequestContext {
     val ident = SubjectHandler.getIdent().get()
-    val enhet = RestUtils.hentValgtEnhet(request)
+    val enhet = RestUtils.hentValgtEnhet(enhet, request)
 
     require(enhet != null)
     return RequestContext(fnr, ident, enhet)
@@ -329,6 +365,7 @@ data class RequestContext(
 )
 
 data class SlaaSammenRequest(
+        val enhet: String?,
         val traader: List<SlaaSammenTraad>,
         val temagruppe: Temagruppe
 )

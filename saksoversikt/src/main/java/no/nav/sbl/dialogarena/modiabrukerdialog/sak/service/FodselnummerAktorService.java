@@ -7,7 +7,7 @@ import no.nav.tjeneste.virksomhet.aktoer.v1.meldinger.HentAktoerIdForIdentReques
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import static no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.Baksystem.AKTOER;
 
@@ -15,7 +15,7 @@ public class FodselnummerAktorService {
 
     private static final Logger logger = LoggerFactory.getLogger(FodselnummerAktorService.class);
 
-    @Inject
+    @Autowired
     private AktoerPortType aktoerPortType;
 
     public String hentAktorIdForFnr(String fodselsnummer) {

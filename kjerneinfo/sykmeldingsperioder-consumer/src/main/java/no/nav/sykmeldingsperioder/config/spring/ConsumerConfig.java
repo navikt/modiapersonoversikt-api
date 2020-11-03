@@ -24,24 +24,23 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
-import javax.inject.Inject;
-import java.net.MalformedURLException;
+import org.springframework.beans.factory.annotation.Autowired;
 
 @Configuration
 @Import({SykepengerConsumerConfig.class, ForeldrepengerConsumerConfig.class,
         PleiepengerConsumerConfig.class, OrganisasjonV4ConsumerConfig.class})
 public class ConsumerConfig {
 
-    @Inject
+    @Autowired
     private ForeldrepengerV2 foreldrepengerPortType;
 
-    @Inject
+    @Autowired
     private SykepengerV2 sykepengerPortType;
 
-    @Inject
+    @Autowired
     private PleiepengerV1 pleiepengerPortType;
 
-    @Inject
+    @Autowired
     private OrganisasjonV4 organisasjonV4PortType;
 
     @Bean
@@ -53,7 +52,7 @@ public class ConsumerConfig {
     }
 
     @Bean
-    public ForeldrepengerServiceBi foreldrepengerServiceBi() throws MalformedURLException {
+    public ForeldrepengerServiceBi foreldrepengerServiceBi() {
         DefaultForeldrepengerService foreldrepengerService = new DefaultForeldrepengerService();
         foreldrepengerService.setForeldrepengerService(foreldrepengerPortType);
         foreldrepengerService.setMapper(ForeldrepengerMapper.getInstance());

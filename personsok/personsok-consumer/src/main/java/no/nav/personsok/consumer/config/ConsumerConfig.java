@@ -12,16 +12,16 @@ import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 
 @Configuration
 @EnableCaching
 public class ConsumerConfig {
 
-    @Inject
+    @Autowired
     private PersonsokPortType personsokPortType;
 
-    @Inject
+    @Autowired
     private KodeverkPortType kodeverkPortType;
 
     @Bean

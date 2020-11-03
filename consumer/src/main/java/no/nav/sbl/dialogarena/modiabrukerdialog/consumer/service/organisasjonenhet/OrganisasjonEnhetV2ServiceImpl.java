@@ -3,8 +3,6 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.organisasjonen
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.AnsattEnhet;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.organisasjonsEnhetV2.OrganisasjonEnhetV2Service;
 import no.nav.tjeneste.virksomhet.organisasjonenhet.v2.FinnNAVKontorUgyldigInput;
-import no.nav.tjeneste.virksomhet.organisasjonenhet.v2.HentFullstendigEnhetListeResponse;
-import no.nav.tjeneste.virksomhet.organisasjonenhet.v2.HentOverordnetEnhetListeEnhetIkkeFunnet;
 import no.nav.tjeneste.virksomhet.organisasjonenhet.v2.OrganisasjonEnhetV2;
 import no.nav.tjeneste.virksomhet.organisasjonenhet.v2.informasjon.*;
 import no.nav.tjeneste.virksomhet.organisasjonenhet.v2.meldinger.*;
@@ -12,7 +10,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -28,7 +26,7 @@ public class OrganisasjonEnhetV2ServiceImpl implements OrganisasjonEnhetV2Servic
 
     private static final Logger logger = LoggerFactory.getLogger(OrganisasjonEnhetV2ServiceImpl.class);
 
-    @Inject
+    @Autowired
     private OrganisasjonEnhetV2 organisasjonEnhetService;
 
     @Override

@@ -1,13 +1,16 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service
 
-import no.nav.common.auth.SsoToken
-import no.nav.common.auth.SubjectHandler
-import no.nav.common.oidc.SystemUserTokenProvider
+import no.nav.common.auth.subject.SsoToken
+import no.nav.common.auth.subject.SubjectHandler
+import no.nav.common.json.JsonMapper
+import no.nav.common.rest.client.RestClient
+import no.nav.common.sts.SystemUserTokenProvider
+import no.nav.common.utils.EnvironmentUtils.getRequiredProperty
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.HenvendelseLesService
-import no.nav.sbl.rest.RestUtils
-import no.nav.sbl.util.EnvironmentUtils.getRequiredProperty
+import okhttp3.Request
 
 class HenvendelseLesServiceImpl(private val systemTokenProvider: SystemUserTokenProvider) : HenvendelseLesService {
+    private val objectMapper = JsonMapper.defaultObjectMapper()
     private val baseUrl: String = getRequiredProperty("HENVENDELSE_LES_API_URL")
 
     override fun alleBehandlingsIderTilhorerBruker(fnr: String, behandlingsIder: List<String>): Boolean {
@@ -28,14 +31,18 @@ class HenvendelseLesServiceImpl(private val systemTokenProvider: SystemUserToken
 
     private inline fun <reified T : Any> fetch(url: String): T {
         val token = SubjectHandler.getSsoToken(SsoToken.Type.OIDC).orElseThrow { RuntimeException("Fant ikke OIDC-token") }
-        return RestUtils.withClient {
-            it
-                    .target(url)
-                    .request()
-                    .header("Authorization", "Bearer $token")
-                    .header("SystemAuthorization", "Bearer ${systemTokenProvider.systemUserAccessToken}")
-                    .get(T::class.java)
-        }
+        return RestClient.baseClient()
+                .newCall(
+                        Request.Builder()
+                                .url(url)
+                                .header("Authorization", "Bearer $token")
+                                .header("SystemAuthorization", "Bearer ${systemTokenProvider.systemUserToken}")
+                                .build()
+                )
+                .execute()
+                .body()!!
+                .string()
+                .let { objectMapper.readValue(it, T::class.java) }
     }
 
     private fun byggQueryparams(vararg pairs: Pair<String, Any>): String {

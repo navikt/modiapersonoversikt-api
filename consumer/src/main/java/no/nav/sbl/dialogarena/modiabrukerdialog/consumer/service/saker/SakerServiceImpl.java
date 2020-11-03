@@ -7,8 +7,6 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.gsak.SakerService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.kodeverk.StandardKodeverk;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.psak.PsakService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.saker.knyttbehandlingskjedetilsak.KnyttBehandlingskjedeTilSakValidator;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.Feature;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.UnleashService;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.behandlehenvendelse.BehandleHenvendelsePortType;
 import no.nav.tjeneste.virksomhet.behandlesak.v1.BehandleSakV1;
 import no.nav.tjeneste.virksomhet.behandlesak.v1.OpprettSakSakEksistererAllerede;
@@ -24,7 +22,7 @@ import no.nav.virksomhet.tjenester.sak.arbeidogaktivitet.v1.ArbeidOgAktivitet;
 import no.nav.virksomhet.tjenester.sak.meldinger.v1.WSBruker;
 import no.nav.virksomhet.tjenester.sak.meldinger.v1.WSHentSakListeRequest;
 
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
@@ -40,22 +38,21 @@ public class SakerServiceImpl implements SakerService {
 
     public static final String VEDTAKSLOSNINGEN = "FS36";
 
-    @Inject
+
+    @Autowired
     private SakV1 sakV1;
-    @Inject
+    @Autowired
     private BehandleSakV1 behandleSakWS;
-    @Inject
+    @Autowired
     private GsakKodeverk gsakKodeverk;
-    @Inject
+    @Autowired
     private StandardKodeverk standardKodeverk;
-    @Inject
+    @Autowired
     private BehandleHenvendelsePortType behandleHenvendelsePortType;
-    @Inject
+    @Autowired
     private ArbeidOgAktivitet arbeidOgAktivitet;
-    @Inject
+    @Autowired
     private PsakService psakService;
-    @Inject
-    private UnleashService unleashService;
 
     @Override
     public List<Sak> hentSammensatteSaker(String fnr) {
@@ -88,9 +85,11 @@ public class SakerServiceImpl implements SakerService {
             behandleHenvendelsePortType.knyttBehandlingskjedeTilTema(behandlingskjede, "BID");
             return;
         }
-        if (!sak.finnesIPsak && !sak.finnesIGsak) {
+
+        if (sakFinnesIkkeIPsakOgGsak(sak)) {
             sak.saksId = opprettSak(fnr, sak);
         }
+
         try {
             behandleHenvendelsePortType.knyttBehandlingskjedeTilSak(
                     behandlingskjede,
@@ -100,6 +99,10 @@ public class SakerServiceImpl implements SakerService {
         } catch (Exception e) {
             throw new JournalforingFeilet(e);
         }
+    }
+
+    private boolean sakFinnesIkkeIPsakOgGsak(Sak sak) {
+        return !(sak.finnesIPsak || sak.finnesIGsak);
     }
 
     private String opprettSak(String fnr, Sak sak) {
@@ -113,8 +116,11 @@ public class SakerServiceImpl implements SakerService {
                             .withSakstype(new WSSakstyper().withValue(sak.sakstype)));
 
             return behandleSakWS.opprettSak(request).getSakId();
-        } catch (OpprettSakUgyldigInput | OpprettSakSakEksistererAllerede e) {
-            throw new RuntimeException(e);
+        } catch (OpprettSakSakEksistererAllerede opprettSakException) {
+            return finnSakIdFraGsak(fnr, sak)
+                    .orElseThrow(() -> new RuntimeException("Fant ikke sak", opprettSakException));
+        } catch (OpprettSakUgyldigInput opprettSakException) {
+            throw new RuntimeException(opprettSakException);
         }
     }
 
@@ -127,6 +133,26 @@ public class SakerServiceImpl implements SakerService {
             return response.getSakListe().stream().map(TIL_SAK).collect(toList());
         } catch (FinnSakUgyldigInput | FinnSakForMangeForekomster e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    private Optional<String> finnSakIdFraGsak(String fnr, Sak sak) {
+        try {
+            WSFinnSakRequest request = new WSFinnSakRequest()
+                    .withBruker(new no.nav.tjeneste.virksomhet.sak.v1.informasjon.WSPerson().withIdent(fnr))
+                    .withFagomraadeListe(new no.nav.tjeneste.virksomhet.sak.v1.informasjon.WSFagomraader().withValue(sak.temaKode))
+                    .withFagsystem(new no.nav.tjeneste.virksomhet.sak.v1.informasjon.WSFagsystemer().withValue(sak.fagsystemKode))
+                    .withFagsystemSakId(sak.saksId);
+
+            return sakV1
+                    .finnSak(request)
+                    .getSakListe()
+                    .stream()
+                    .filter((finnSak) -> finnSak.getSakstype().getValue().equals(sak.sakstype))
+                    .findFirst()
+                    .map(no.nav.tjeneste.virksomhet.sak.v1.informasjon.WSSak::getSakId);
+        } catch (FinnSakForMangeForekomster | FinnSakUgyldigInput finnSakException) {
+            throw new RuntimeException(finnSakException);
         }
     }
 

@@ -1,9 +1,9 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.consumer;
 
-import no.nav.brukerdialog.security.domain.IdentType;
-import no.nav.common.auth.SsoToken;
-import no.nav.common.auth.Subject;
-import no.nav.common.auth.SubjectHandler;
+import no.nav.common.auth.subject.IdentType;
+import no.nav.common.auth.subject.SsoToken;
+import no.nav.common.auth.subject.Subject;
+import no.nav.common.auth.subject.SubjectHandler;
 import no.nav.kjerneinfo.consumer.fim.person.PersonKjerneinfoServiceBi;
 import no.nav.kjerneinfo.consumer.fim.person.to.HentKjerneinformasjonRequest;
 import no.nav.kjerneinfo.consumer.fim.person.to.HentKjerneinformasjonResponse;
@@ -30,7 +30,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
-import org.mockito.InjectMocks;
 import org.mockito.stubbing.Answer;
 
 import java.util.ArrayList;
@@ -45,11 +44,8 @@ import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHe
 import static no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe.OKSOS;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.legacy.TestUtils.*;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
-import static org.springframework.test.util.ReflectionTestUtils.setField;
 
 class HenvendelseBehandlingServiceImplTest {
     private static final Subject TEST_SUBJECT = new Subject("Z999999", IdentType.InternBruker, SsoToken.oidcToken("token", emptyMap()));
@@ -64,17 +60,16 @@ class HenvendelseBehandlingServiceImplTest {
     @Captor
     private ArgumentCaptor<WSHentHenvendelseListeRequest> wsHentHenvendelseListeRequestArgumentCaptor;
 
-    private HenvendelsePortType henvendelsePortType = mock(HenvendelsePortType.class);
-    private BehandleHenvendelsePortType behandleHenvendelsePortType = mock(BehandleHenvendelsePortType.class);
-    private PersonKjerneinfoServiceBi kjerneinfo = mock(PersonKjerneinfoServiceBi.class);
-    private StandardKodeverk standardKodeverk = mock(StandardKodeverk.class);
-    private ContentRetriever propertyResolver = mock(ContentRetriever.class);
-    private LDAPService ldapService = mock(LDAPService.class);
-    private ArbeidsfordelingV1Service arbeidsfordelingService = mock(ArbeidsfordelingV1Service.class);
-    private TilgangskontrollContext tilgangskontrollContext = mock(TilgangskontrollContext.class);
+    private final HenvendelsePortType henvendelsePortType = mock(HenvendelsePortType.class);
+    private final BehandleHenvendelsePortType behandleHenvendelsePortType = mock(BehandleHenvendelsePortType.class);
+    private final PersonKjerneinfoServiceBi kjerneinfo = mock(PersonKjerneinfoServiceBi.class);
+    private final StandardKodeverk standardKodeverk = mock(StandardKodeverk.class);
+    private final ContentRetriever propertyResolver = mock(ContentRetriever.class);
+    private final LDAPService ldapService = mock(LDAPService.class);
+    private final ArbeidsfordelingV1Service arbeidsfordelingService = mock(ArbeidsfordelingV1Service.class);
+    private final TilgangskontrollContext tilgangskontrollContext = mock(TilgangskontrollContext.class);
 
-    @InjectMocks
-    private HenvendelseBehandlingServiceImpl henvendelseBehandlingService = new HenvendelseBehandlingServiceImpl(
+    private final HenvendelseBehandlingServiceImpl henvendelseBehandlingService = new HenvendelseBehandlingServiceImpl(
             henvendelsePortType,
             behandleHenvendelsePortType,
             kjerneinfo,
@@ -94,7 +89,6 @@ class HenvendelseBehandlingServiceImplTest {
         when(propertyResolver.hentTekst(anyString())).thenAnswer((Answer<String>) invocation -> ((String) invocation.getArguments()[0]));
         when(arbeidsfordelingService.hentGTnummerForEnhet(anyString())).thenReturn(Collections.emptyList());
 
-        setField(henvendelseBehandlingService, "propertyResolver", propertyResolver);
         XMLMeldingFraBruker xmlMeldingFraBruker = new XMLMeldingFraBruker()
                 .withFritekst("fritekst")
                 .withTemagruppe(TEMAGRUPPE);

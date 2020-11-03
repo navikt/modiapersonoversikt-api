@@ -1,0 +1,12 @@
+{
+  "kodeverk" : {
+    "eier" : "Eier1",
+    "gyldighetsperiode" : [ "java.util.ArrayList", [ ] ],
+    "kilde" : null,
+    "kode" : [ "java.util.HashMap", { } ],
+    "navn" : "navn1",
+    "uri" : null,
+    "versjoneringsdato" : null,
+    "versjonsnummer" : "23"
+  }
+}

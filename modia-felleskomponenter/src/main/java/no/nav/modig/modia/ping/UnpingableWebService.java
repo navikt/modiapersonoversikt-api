@@ -1,25 +1,23 @@
 package no.nav.modig.modia.ping;
 
+import no.nav.common.health.HealthCheckResult;
+import no.nav.common.health.selftest.SelfTestCheck;
 import no.nav.sbl.dialogarena.types.Pingable;
 
 public class UnpingableWebService implements Pingable {
-
-    private final String name;
-    private final String address;
+    private final SelfTestCheck instance;
 
     public UnpingableWebService(String name, String address) {
         assert name.length() > 0;
-        this.name = name;
-        this.address = address;
+        this.instance = new SelfTestCheck(
+                String.format("%s via %s", name, address),
+                false,
+                HealthCheckResult::healthy
+        );
     }
 
     @Override
-    public Ping ping() {
-        return Ping.avskrudd(new Ping.PingMetadata(
-                name,
-                address,
-                "",
-                false
-        ));
+    public SelfTestCheck ping() {
+        return instance;
     }
 }

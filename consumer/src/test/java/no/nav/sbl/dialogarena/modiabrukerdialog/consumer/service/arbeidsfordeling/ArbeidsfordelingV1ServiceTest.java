@@ -9,10 +9,6 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.arbeidsfordeling.Fin
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.kodeverksmapper.KodeverksmapperService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.kodeverksmapper.domain.Behandling;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.PropertyRule;
-import no.nav.tjeneste.virksomhet.arbeidsfordeling.v1.binding.FinnBehandlendeEnhetListeUgyldigInput;
-import no.nav.tjeneste.virksomhet.arbeidsfordeling.v1.informasjon.Organisasjonsenhet;
-import no.nav.tjeneste.virksomhet.arbeidsfordeling.v1.meldinger.FinnBehandlendeEnhetListeRequest;
-import no.nav.tjeneste.virksomhet.arbeidsfordeling.v1.meldinger.FinnBehandlendeEnhetListeResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -21,15 +17,11 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 
 import java.io.IOException;
-import java.util.Collections;
 import java.util.Optional;
 
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.strategier.ByEnvironmentStrategy.ENVIRONMENT_PROPERTY;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.TestUtils.sneaky;
-import static java.util.Arrays.asList;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
 class ArbeidsfordelingV1ServiceTest {
@@ -50,7 +42,7 @@ class ArbeidsfordelingV1ServiceTest {
 
     private PersonKjerneinfoServiceBi personService = mock(PersonKjerneinfoServiceBi.class);
     private KodeverksmapperService kodeverksmapper = mock(KodeverksmapperService.class);
-    private ArbeidsfordelingClient arbeidsfordelingClient = ArbeidsfordelingClientMock.get(Collections.emptyList());
+    private ArbeidsfordelingClient arbeidsfordelingClient = mock(ArbeidsfordelingClient.class);
     private EgenAnsattService egenAnsattService = mock(EgenAnsattService.class);
     private ArbeidsfordelingV1Service arbeidsfordelingService;
 
@@ -94,7 +86,7 @@ class ArbeidsfordelingV1ServiceTest {
 
     @Test
     @DisplayName("Arbeidsfordeling kalles med riktige argumenter og bruker REST")
-    void kallerArbeidsfordelingMedRiktigeArgumenterMotNyTjeneste() throws FinnBehandlendeEnhetListeUgyldigInput {
+    void kallerArbeidsfordelingMedRiktigeArgumenterMotNyTjeneste() {
         gitt_at_alt_fungerer();
         gitt_er_egen_ansatt();
 
@@ -133,8 +125,8 @@ class ArbeidsfordelingV1ServiceTest {
     }
 
     private void gitt_feil_ved_henting_av_enheter() {
-        sneaky(() -> {
-            when(arbeidsfordelingClient.hentArbeidsfordeling(any(), any(), any(), any(), anyBoolean())).thenThrow(new IllegalStateException());
-        });
+        sneaky(() ->
+                when(arbeidsfordelingClient.hentArbeidsfordeling(any(), any(), any(), any(), anyBoolean())).thenThrow(new IllegalStateException())
+        );
     }
 }

@@ -9,9 +9,9 @@ import no.nav.tjeneste.virksomhet.organisasjon.v4.meldinger.WSHentNoekkelinfoOrg
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 
-import static no.nav.sbl.dialogarena.test.ssl.SSLTestUtils.setupKeyAndTrustStore;
+import static no.nav.common.utils.SslUtils.setupTruststore;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -21,7 +21,7 @@ class OrganisasjonEnpointCacheTest extends CacheTest {
 
     private static final String CACHE_NAME = "endpointCache";
 
-    @Inject
+    @Autowired
     private OrganisasjonV4 organisasjon;
 
     OrganisasjonEnpointCacheTest() {
@@ -30,7 +30,7 @@ class OrganisasjonEnpointCacheTest extends CacheTest {
 
     @BeforeAll
     static void setup() {
-        setupKeyAndTrustStore();
+        setupTruststore();
     }
 
     @Test

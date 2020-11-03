@@ -9,7 +9,7 @@ import no.nav.tjeneste.virksomhet.pensjonsak.v1.meldinger.WSHentSakSammendragLis
 import no.nav.tjeneste.virksomhet.pensjonsak.v1.meldinger.WSHentSakSammendragListeResponse;
 import org.slf4j.Logger;
 
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,7 +22,7 @@ public class PesysService {
 
     public static final String PESYS_FAGSYSTEM_ID = "PEN";
 
-    @Inject
+    @Autowired
     private PensjonSakV1 pensjonSakV1;
 
     public Optional<List<Sak>> hentSakstemaFraPesys(String uId) {

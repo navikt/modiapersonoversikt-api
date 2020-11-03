@@ -11,7 +11,7 @@ import no.nav.tjeneste.virksomhet.brukervarsel.v1.meldinger.WSHentVarselForBruke
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
 
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 import javax.xml.datatype.XMLGregorianCalendar;
 import java.util.List;
 import java.util.Optional;
@@ -27,7 +27,7 @@ public class VarslerServiceImpl implements VarslerService {
 
     private static final Logger log = getLogger(VarslerServiceImpl.class);
 
-    @Inject
+    @Autowired
     private BrukervarselV1 brukervarsel;
 
     @Override

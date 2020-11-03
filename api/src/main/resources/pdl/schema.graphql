@@ -76,6 +76,7 @@ type Person {
     innflyttingTilNorge: [InnflyttingTilNorge!]!
     utflyttingFraNorge: [UtflyttingFraNorge!]!
     vergemaalEllerFremtidsfullmakt(historikk: Boolean = false): [VergemaalEllerFremtidsfullmakt!]!
+    geografiskTilknytning: GeografiskTilknytning
 }
 
 type DeltBosted {
@@ -87,6 +88,7 @@ type DeltBosted {
     coAdressenavn: String
     vegadresse: Vegadresse
     matrikkeladresse: Matrikkeladresse
+    utenlandskAdresse: UtenlandskAdresse
     ukjentBosted: UkjentBosted
 
     folkeregistermetadata: Folkeregistermetadata!
@@ -95,18 +97,23 @@ type DeltBosted {
 
 type Bostedsadresse {
     angittFlyttedato: Date
+    gyldigFraOgMed: DateTime
+    gyldigTilOgMed: DateTime
 
     coAdressenavn: String
     vegadresse: Vegadresse
     matrikkeladresse: Matrikkeladresse
+    utenlandskAdresse: UtenlandskAdresse
     ukjentBosted: UkjentBosted
 
-    folkeregistermetadata: Folkeregistermetadata!
+    folkeregistermetadata: Folkeregistermetadata
     metadata: Metadata!
 }
 
 type Oppholdsadresse {
-    oppholdsadressedato: Date
+    gyldigFraOgMed: DateTime
+    gyldigTilOgMed: DateTime
+    oppholdsadressedato: Date @deprecated(reason: "Mappes til gyldigFraOgMed. Dette feltet er nå overflødig vil bli fjernet")
 
     coAdressenavn: String
     utenlandskAdresse: UtenlandskAdresse
@@ -146,6 +153,7 @@ type Vegadresse {
     bruksenhetsnummer: String
     adressenavn: String
     kommunenummer: String
+    bydelsnummer: String
     tilleggsnavn: String
     postnummer: String
     koordinater: Koordinater
@@ -213,6 +221,7 @@ type FalskIdentitet {
     rettIdentitetVedIdentifikasjonsnummer: String
     rettIdentitetErUkjent: Boolean
     rettIdentitetVedOpplysninger: FalskIdentitetIdentifiserendeInformasjon
+    folkeregistermetadata: Folkeregistermetadata
     metadata: Metadata!
 }
 
@@ -269,6 +278,7 @@ type UtenlandskIdentifikasjonsnummer {
     identifikasjonsnummer: String!
     utstederland: String!
     opphoert: Boolean!
+    folkeregistermetadata: Folkeregistermetadata
     metadata: Metadata!
 }
 
@@ -291,6 +301,7 @@ type Foedsel {
     foedeland: String
     foedested: String
     foedekommune: String
+    folkeregistermetadata: Folkeregistermetadata
     metadata: Metadata!
 }
 
@@ -303,6 +314,7 @@ type Kjoenn {
 type Doedsfall {
     doedsdato: Date
     metadata: Metadata!
+    folkeregistermetadata: Folkeregistermetadata
 }
 
 type Familierelasjon {
@@ -334,12 +346,28 @@ type Folkeregisterpersonstatus {
     metadata: Metadata!
 }
 
+type GeografiskTilknytning {
+    gtType: GtType!
+    gtKommune: String
+    gtBydel: String
+    gtLand: String
+    metadata: Metadata!
+}
+
+enum GtType {
+    KOMMUNE,
+    BYDEL,
+    UTLAND,
+    UDEFINERT
+}
+
 type Navn {
     fornavn: String!
     mellomnavn: String
     etternavn: String!
     forkortetNavn: String
     originaltNavn: OriginaltNavn
+    gyldigFraOgMed: Date
 
     folkeregistermetadata: Folkeregistermetadata
     metadata: Metadata!
@@ -574,32 +602,47 @@ enum Endringstype {
 input Criterion {
     fieldName:String!
     searchRule:SearchRule!
-    includeHistorical:Boolean
+    searchHistorical:Boolean
 }
 
 input SearchRule {
-    exists :String,
-    notEquals :String,
-    equals :String,
-    contains :String,
-    fuzzy :String,
-    wildcard :String,
-    matches :String,
+    exists:String,
+    notEquals:String,
+    equals:String,
+    contains:String,
+    fuzzy:String,
+    wildcard:String,
+    startsWith:String,
+    regex:String,
     after:String,
     before:String,
-    lessThan :String,
+    lessThan:String,
     greaterThan:String,
     from:String,
-    to:String
+    to:String,
     fromExcluding:String,
-    toExcluding:String
+    toExcluding:String,
+
+    #extra query parameters (can not be used as queries by them self)
+    caseSensitive:Boolean,
+    disablePhonetic:Boolean,
+    boost:Float
 }
 
 input Paging {
     pageNumber:Int = 1,
-    resultsPerPage:Int = 10
+    resultsPerPage:Int = 10,
+    sortBy:[SearchSorting]
 }
 
+input SearchSorting {
+    fieldName:String!
+    direction:Direction!
+}
+enum Direction {
+    ASC,
+    DESC
+}
 type SearchResult {
     hits : [searchHit!]!,
     pageNumber:Int,
@@ -609,6 +652,6 @@ type SearchResult {
 }
 type searchHit {
     person :Person,
-    identer: [IdentInformasjon!]!
+    identer(historikk: Boolean = false): [IdentInformasjon!]!,
     score :Float
 }

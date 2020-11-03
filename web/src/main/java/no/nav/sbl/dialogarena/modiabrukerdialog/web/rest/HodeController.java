@@ -1,7 +1,7 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest;
 
 import kotlin.Pair;
-import no.nav.common.auth.SubjectHandler;
+import no.nav.common.auth.subject.SubjectHandler;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Person;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.ldap.LDAPService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.AnsattService;
@@ -13,32 +13,31 @@ import no.nav.sbl.dialogarena.naudit.AuditIdentifier;
 import no.nav.sbl.dialogarena.naudit.AuditResources.Saksbehandler;
 import no.nav.sbl.dialogarena.naudit.Audit;
 
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.ws.rs.*;
-import javax.ws.rs.core.Context;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.RestUtils.hentValgtEnhet;
 import static no.nav.sbl.dialogarena.naudit.Audit.Action.*;
 
-@Path("/hode")
-@Produces(APPLICATION_JSON)
+@RestController
+@RequestMapping("/rest/hode")
 public class HodeController {
 
-    @Inject
+    @Autowired
     private LDAPService ldapService;
 
-    @Inject
+    @Autowired
     private AnsattService ansattService;
 
-    @Inject
+    @Autowired
     private OrganisasjonEnhetV2Service organisasjonEnhetService;
 
-    @Inject
+    @Autowired
     Tilgangskontroll tilgangskontroll;
 
     class Me {
@@ -73,15 +72,14 @@ public class HodeController {
         }
     }
 
-    @GET
-    @Path("/me")
-    public Me hentSaksbehandler(@Context HttpServletRequest request) {
+    @GetMapping("/me")
+    public Me hentSaksbehandler(HttpServletRequest request) {
         return tilgangskontroll
                 .check(Policies.tilgangTilModia)
                 .get(Audit.describe(READ, Saksbehandler.NavnOgEnheter), () -> {
                     String ident = SubjectHandler.getIdent().orElseThrow(() -> new RuntimeException("Fant ikke ident"));
                     Pair<String, String> saksbehandler = hentSaksbehandlerNavn();
-                    String enhetId = hentValgtEnhet(request);
+                    String enhetId = hentValgtEnhet(null, request);
                     String enhetNavn = organisasjonEnhetService.hentEnhetGittEnhetId(enhetId, OrganisasjonEnhetV2Service.WSOppgavebehandlerfilter.UFILTRERT)
                             .map((enhet) -> enhet.enhetNavn)
                             .orElse("[Ukjent enhetId: " + enhetId + "]");
@@ -89,8 +87,7 @@ public class HodeController {
                 });
     }
 
-    @GET
-    @Path("/enheter")
+    @GetMapping("/enheter")
     public Enheter hentEnheter() {
         return tilgangskontroll
                 .check(Policies.tilgangTilModia)
@@ -105,9 +102,8 @@ public class HodeController {
                 });
     }
 
-    @POST
-    @Path("/velgenhet")
-    public String settValgtEnhet(@Context HttpServletResponse response, String enhetId) {
+    @PostMapping("/velgenhet")
+    public String settValgtEnhet(HttpServletResponse response, @RequestBody String enhetId) {
         return tilgangskontroll
                 .check(Policies.tilgangTilModia)
                 .get(Audit.describe(UPDATE, Saksbehandler.ValgtEnhet, new Pair<>(AuditIdentifier.ENHET_ID, enhetId)), () -> {

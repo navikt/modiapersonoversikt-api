@@ -5,6 +5,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
 import java.util.*;
 
 import static java.util.Arrays.asList;
+import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 
 public class TemagruppeTemaMapping {
@@ -69,8 +70,10 @@ public class TemagruppeTemaMapping {
 
     public static final Map<String, List<String>> TEMAGRUPPE_TEMA_MAPPING = new HashMap<String, List<String>>() {
         {
-            put(Temagruppe.ARBD.name(), asList("AAP", "DAG", "FOS", "IND", "MOB", "OPP", "REH", "SAK", "SAP", "SYK", "SYM", "VEN", "YRA", "YRK", "TSO", "TSR"));
+            put(Temagruppe.ARBD.name(), asList("AAP", "DAG", "FOS", "IND", "MOB", "OPP", "REH", "SAK", "SAP", "SYM", "VEN", "YRA", "YRK", "TSO", "TSR"));
+            put(Temagruppe.HELSE.name(), emptyList());
             put(Temagruppe.FMLI.name(), asList("BAR", "BID", "ENF", "FOR", "GRA", "GRU", "KON", "OMS"));
+            put(Temagruppe.FDAG.name(), emptyList());
             put(Temagruppe.OVRG.name(), asList("AAR", "AGR", "ERS", "FEI", "FUL", "GEN", "KLA", "KNA", "KTR", "MED", "RVE", "RPO", "SER", "SIK", "STO", "TRK", "TRY", "UFM"));
             put(Temagruppe.PENS.name(), asList("PEN", "SUP"));
             put(Temagruppe.HJLPM.name(), asList("HJE", "BIL", "HEL"));

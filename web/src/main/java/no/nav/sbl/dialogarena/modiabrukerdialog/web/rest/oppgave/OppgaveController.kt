@@ -1,52 +1,45 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.oppgave
 
-import no.nav.common.auth.SubjectHandler
-import no.nav.metrics.MetricsFactory.createEvent
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Oppgave
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.HenvendelseUtsendingService
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.LeggTilbakeOppgaveIGsakRequest
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveBehandlingService
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.ldap.LDAPService
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.RestUtils
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.http.CookieUtil
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Policies
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Tilgangskontroll
-import no.nav.sbl.dialogarena.naudit.AuditResources.Person.Henvendelse
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.mapOfNotNullOrEmpty
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.service.plukkoppgave.PlukkOppgaveService
 import no.nav.sbl.dialogarena.naudit.Audit
-import no.nav.sbl.dialogarena.naudit.Audit.Action.*
+import no.nav.sbl.dialogarena.naudit.Audit.Action.READ
+import no.nav.sbl.dialogarena.naudit.Audit.Action.UPDATE
 import no.nav.sbl.dialogarena.naudit.AuditIdentifier
+import no.nav.sbl.dialogarena.naudit.AuditResources.Person.Henvendelse
 import org.slf4j.LoggerFactory
-import javax.inject.Inject
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.http.HttpStatus
+import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.*
 import javax.servlet.http.HttpServletRequest
-import javax.ws.rs.*
-import javax.ws.rs.core.Context
-import javax.ws.rs.core.MediaType.APPLICATION_JSON
-import javax.ws.rs.core.Response
 
 private val logger = LoggerFactory.getLogger(OppgaveController::class.java)
-private const val HENT_OPPGAVE_ROLLE = "0000-GA-BD06_HentOppgave"
 private const val AARSAK_PREFIX = "Oppgave lagt tilbake. Årsak: "
 
-@Path("/oppgaver")
-@Produces(APPLICATION_JSON)
-class OppgaveController @Inject constructor(
+@RestController
+@RequestMapping("/rest/oppgaver")
+class OppgaveController @Autowired constructor(
         private val oppgaveBehandlingService: OppgaveBehandlingService,
         private val plukkOppgaveService: PlukkOppgaveService,
-        private val ldapService: LDAPService,
         private val henvendelseUtsendingService: HenvendelseUtsendingService,
         private val tilgangkontroll: Tilgangskontroll
 ) {
 
-    @POST
-    @Path("/legg-tilbake")
-    fun leggTilbake(@Context httpRequest: HttpServletRequest, request: LeggTilbakeRequest): Response {
+    @PostMapping("/legg-tilbake")
+    fun leggTilbake(httpRequest: HttpServletRequest, @RequestBody request: LeggTilbakeRequest): ResponseEntity<Void> {
         return tilgangkontroll
                 .check(Policies.tilgangTilModia)
                 .get(Audit.describe(UPDATE, Henvendelse.Oppgave.LeggTilbake, AuditIdentifier.OPPGAVE_ID to request.oppgaveId)) {
-                    val valgtEnhet = RestUtils.hentValgtEnhet(httpRequest)
+                    val valgtEnhet = RestUtils.hentValgtEnhet(request.enhet, httpRequest)
                     val leggTilbakeOppgaveIGsakRequest = lagLeggTilbakeRequest(request, valgtEnhet)
 
                     try {
@@ -58,10 +51,43 @@ class OppgaveController @Inject constructor(
                         throw handterRuntimeFeil(exception)
                     }
 
-                    createEvent("hendelse.oppgavecontroller.leggtilbake.fullfort").report()
-                    Response.ok("{\"message\": \"Success\"}").build()
+                    ResponseEntity(HttpStatus.OK)
                 }
     }
+
+    @PostMapping("/plukk/{temagruppe}")
+    fun plukkOppgaver(@PathVariable("temagruppe") temagruppe: String, @RequestParam(value = "enhet", required = false) enhet: String?, httpRequest: HttpServletRequest): List<OppgaveDTO> {
+        return tilgangkontroll
+                .check(Policies.tilgangTilModia)
+                .check(Policies.kanPlukkeOppgave)
+                .get(Audit.describe(READ, Henvendelse.Oppgave.Plukk, AuditIdentifier.TEMAGRUPPE to temagruppe)) {
+                    val tildelteOppgaver = oppgaveBehandlingService.finnTildelteOppgaverIGsak()
+                    if (tildelteOppgaver.isNotEmpty()) {
+                        tildelteOppgaver
+                    } else {
+                        plukkOppgaveService
+                                .plukkOppgaver(Temagruppe.valueOf(temagruppe.toUpperCase()),
+                                        RestUtils.hentValgtEnhet(enhet, httpRequest))
+                    }
+                }.map { mapOppgave(it) }
+    }
+
+    @GetMapping("/tildelt")
+    fun finnTildelte() =
+            tilgangkontroll
+                    .check(Policies.tilgangTilModia)
+                    .get(Audit.describe(READ, Henvendelse.Oppgave.Tildelte)) {
+                        oppgaveBehandlingService.finnTildelteOppgaverIGsak()
+                                .map { mapOppgave(it) }
+                    }
+
+    @GetMapping("/oppgavedata/{oppgaveId}")
+    fun getOppgaveData(@PathVariable("oppgaveId") oppgaveId: String): OppgaveDTO =
+            tilgangkontroll
+                    .check(Policies.tilgangTilModia)
+                    .get(Audit.describe(READ, Henvendelse.Oppgave.Metadata, AuditIdentifier.OPPGAVE_ID to oppgaveId)) {
+                        mapOppgave(oppgaveBehandlingService.hentOppgave(oppgaveId))
+                    }
 
     private fun lagLeggTilbakeRequest(request: LeggTilbakeRequest, valgtEnhet: String): LeggTilbakeOppgaveIGsakRequest? {
         require(request.oppgaveId != null)
@@ -84,54 +110,23 @@ class OppgaveController @Inject constructor(
             }
         }
     }
-
-    @POST
-    @Path("/plukk/{temagruppe}")
-    fun plukkOppgaver(@PathParam("temagruppe") temagruppe: String, @Context httpRequest: HttpServletRequest): List<Map<String, String>> {
-        return tilgangkontroll
-                .check(Policies.tilgangTilModia)
-                .check(Policies.kanPlukkeOppgave)
-                .get(Audit.describe(READ, Henvendelse.Oppgave.Plukk, AuditIdentifier.TEMAGRUPPE to temagruppe)) {
-                    val tildelteOppgaver = oppgaveBehandlingService.finnTildelteOppgaverIGsak()
-                    if (tildelteOppgaver.isNotEmpty()) {
-                        tildelteOppgaver
-                    } else {
-                        plukkOppgaveService
-                                .also { verifiserTilgang(HENT_OPPGAVE_ROLLE) }
-                                .plukkOppgaver(Temagruppe.valueOf(temagruppe.toUpperCase()),
-                                        CookieUtil.getSaksbehandlersValgteEnhet(httpRequest))
-                    }
-                }.map { mapOppgave(it) }
-    }
-
-    @GET
-    @Path("/tildelt")
-    fun finnTildelte() =
-            tilgangkontroll
-                    .check(Policies.tilgangTilModia)
-                    .get(Audit.describe(READ, Henvendelse.Oppgave.Tildelte)) {
-                        oppgaveBehandlingService.finnTildelteOppgaverIGsak()
-                                .map { mapOppgave(it) }
-                    }
-
-    private fun verifiserTilgang(rolle: String) {
-        val consumerId = SubjectHandler.getIdent().get()
-        if (!ldapService.saksbehandlerHarRolle(consumerId, rolle)) {
-            throw ForbiddenException("Saksbehandler $consumerId har ikke rollen $rolle")
-        }
-    }
-
 }
 
-private fun mapOppgave(oppgave: Oppgave) = mapOfNotNullOrEmpty(
-        "oppgaveId" to oppgave.oppgaveId,
-        "traadId" to oppgave.henvendelseId,
-        "fødselsnummer" to oppgave.fnr
+data class OppgaveDTO(
+        val oppgaveId: String,
+        val traadId: String?,
+        val fødselsnummer: String?,
+        val erSTOOppgave: Boolean
+)
+private fun mapOppgave(oppgave: Oppgave) = OppgaveDTO(
+        oppgave.oppgaveId,
+        oppgave.henvendelseId,
+        oppgave.fnr,
+        oppgave.erSTOOppgave
 )
 
 private fun handterRuntimeFeil(exception: RuntimeException): RuntimeException {
     logger.error("Feil ved legging av oppgave tilbake til GSAK", exception)
-    createEvent("hendelse.oppgavecontroller.leggtilbake.runtime-exception").report()
     return exception
 }
 
@@ -142,6 +137,7 @@ enum class LeggTilbakeAarsak {
 }
 
 data class LeggTilbakeRequest(
+        val enhet: String?,
         val type: LeggTilbakeAarsak,
         val oppgaveId: String,
         val temagruppe: Temagruppe?,

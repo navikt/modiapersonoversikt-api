@@ -3,7 +3,6 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service;
 import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navansatt.GOSYSNAVansatt;
 import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navansatt.HentNAVAnsattFaultGOSYSGeneriskfMsg;
 import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navansatt.HentNAVAnsattFaultGOSYSNAVAnsattIkkeFunnetMsg;
-import net.sf.ehcache.Element;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.AnsattEnhet;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.organisasjonsEnhetV2.OrganisasjonEnhetV2Service;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.util.CacheTest;
@@ -16,7 +15,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.support.AnnotationConfigContextLoader;
 
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.util.Arrays;
 import java.util.List;
 
@@ -31,10 +30,10 @@ import static org.mockito.Mockito.when;
 @ContextConfiguration(loader = AnnotationConfigContextLoader.class)
 public class ScheduledAnsattListePrefetchCacheTest extends CacheTest {
 
-    @Inject
+    @Autowired
     OrganisasjonEnhetV2Service organisasjonEnhetService;
 
-    @Inject
+    @Autowired
     ScheduledAnsattListePrefetch prefetch;
 
 
@@ -54,18 +53,18 @@ public class ScheduledAnsattListePrefetchCacheTest extends CacheTest {
         prefetch.prefetchAnsattListe();
 
         assertThat(getCache().getName(), is(CACHE_NAME));
-        assertThat(getCache().getKeys().size(), is(2));
+        assertThat(getNativeCache().estimatedSize(), is(2L));
     }
 
     @Test
     public void tidligereInnholdSlettesVedPrefetch() throws HentNAVAnsattFaultGOSYSGeneriskfMsg, HentNAVAnsattFaultGOSYSNAVAnsattIkkeFunnetMsg {
-        getCache().put(new Element("0000", "innhold"));
-        assertThat(getCache().getKeys().size(), is(1));
+        getCache().put("0000", "innhold");
+        assertThat(getNativeCache().estimatedSize(), is(1L));
 
         prefetch.prefetchAnsattListe();
 
         assertThat(getCache().getName(), is(CACHE_NAME));
-        assertThat(getCache().getKeys().size(), is(2));
+        assertThat(getNativeCache().estimatedSize(), is(2L));
     }
 
     @Configuration

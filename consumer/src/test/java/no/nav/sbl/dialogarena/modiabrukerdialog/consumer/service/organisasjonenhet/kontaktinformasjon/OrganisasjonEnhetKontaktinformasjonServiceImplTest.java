@@ -12,7 +12,6 @@ import org.junit.jupiter.api.*;
 import org.mockito.ArgumentCaptor;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 class OrganisasjonEnhetKontaktinformasjonServiceImplTest {

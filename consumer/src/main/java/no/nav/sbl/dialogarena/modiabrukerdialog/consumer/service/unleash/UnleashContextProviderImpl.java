@@ -2,12 +2,12 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash;
 
 import no.finn.unleash.UnleashContext;
 import no.finn.unleash.UnleashContextProvider;
-import no.nav.common.auth.SubjectHandler;
+import no.nav.common.auth.subject.SubjectHandler;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.AnsattService;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import static java.util.stream.Collectors.joining;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.strategier.ByEnhetStrategy.ENHETER;
@@ -16,7 +16,7 @@ public class UnleashContextProviderImpl implements UnleashContextProvider {
 
     private AnsattService annsattService;
 
-    @Inject
+    @Autowired
     public UnleashContextProviderImpl(AnsattService annsattService) {
         this.annsattService = annsattService;
     }

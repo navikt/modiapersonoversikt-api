@@ -1,42 +1,38 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.henvendelse
 
-import no.nav.common.auth.SubjectHandler
-import no.nav.metrics.MetricsFactory.createEvent
+import no.nav.common.auth.subject.SubjectHandler
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.RestUtils
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.henvendelse.DelsvarRequest.DelsvarRequestBuilder
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.henvendelse.DelsvarService
 import org.slf4j.LoggerFactory
-import javax.inject.Inject
+import org.springframework.beans.factory.annotation.Autowired
 import javax.servlet.http.HttpServletRequest
-import javax.ws.rs.*
-import javax.ws.rs.core.Context
-import javax.ws.rs.core.MediaType.APPLICATION_JSON
-import javax.ws.rs.core.Response
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Policies
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Tilgangskontroll
 import no.nav.sbl.dialogarena.naudit.Audit
 import no.nav.sbl.dialogarena.naudit.Audit.Action.*
 import no.nav.sbl.dialogarena.naudit.AuditIdentifier
 import no.nav.sbl.dialogarena.naudit.AuditResources.Person.Henvendelse
+import org.springframework.http.HttpStatus
+import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.*
 
-@Path("/dialog/{fnr}")
-@Produces(APPLICATION_JSON)
-class DelsvarController @Inject constructor(
+@RestController
+@RequestMapping("/rest/dialog/{fnr}")
+class DelsvarController @Autowired constructor(
         private val tilgangskontroll: Tilgangskontroll,
         private val delsvarService: DelsvarService
 ) {
-    @POST
-    @Path("/delvis-svar")
-    @Consumes(APPLICATION_JSON)
+    @PostMapping("/delvis-svar")
     fun svarDelvis(
-            @PathParam("fnr") fnr: String,
-            @Context httpRequest: HttpServletRequest,
-            request: DelsvarRestRequest): Response
+            httpRequest: HttpServletRequest,
+            @PathVariable("fnr") fnr: String,
+            @RequestBody request: DelsvarRestRequest): ResponseEntity<Void>
     {
         return tilgangskontroll
                 .check(Policies.tilgangTilBruker.with(fnr))
                 .get(Audit.describe(CREATE, Henvendelse.Delsvar, AuditIdentifier.FNR to fnr, AuditIdentifier.BEHANDLING_ID to request.behandlingsId)) {
-                    val saksbehandlersValgteEnhet = RestUtils.hentValgtEnhet(httpRequest)
+                    val saksbehandlersValgteEnhet = RestUtils.hentValgtEnhet(request.enhet, httpRequest)
 
                     val delsvarRequest = DelsvarRequestBuilder()
                             .withFodselsnummer(fnr)
@@ -55,15 +51,12 @@ class DelsvarController @Inject constructor(
                         throw handterRuntimeFeil(exception)
                     }
 
-                    createEvent("hendelse.svardelviscontroller.svardelvis.fullfort").report()
-
-                    Response.ok("{\"message\": \"Success\"}").build()
+                    ResponseEntity(HttpStatus.OK)
                 }
     }
 
     private fun handterRuntimeFeil(exception: RuntimeException): RuntimeException {
         logger.error("Feil ved opprettelse av delvis svar", exception)
-        createEvent("hendelse.svardelviscontroller.svardelvis.runtime-exception").report()
         return exception
     }
 
@@ -73,6 +66,7 @@ class DelsvarController @Inject constructor(
 }
 
 data class DelsvarRestRequest(
+        val enhet: String?,
         val fritekst: String,
         val traadId: String,
         val behandlingsId: String,

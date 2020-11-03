@@ -2,27 +2,24 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.vergemal
 
 import no.nav.kjerneinfo.consumer.fim.person.vergemal.VergemalService
 import no.nav.kjerneinfo.consumer.fim.person.vergemal.domain.Verge
-import no.nav.kjerneinfo.domain.person.Personnavn
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.pdl.generated.HentNavnBolk
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Policies
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Tilgangskontroll
-import no.nav.sbl.dialogarena.naudit.AuditResources
 import no.nav.sbl.dialogarena.naudit.Audit
 import no.nav.sbl.dialogarena.naudit.AuditIdentifier
-import javax.inject.Inject
-import javax.ws.rs.GET
-import javax.ws.rs.Path
-import javax.ws.rs.PathParam
-import javax.ws.rs.Produces
-import javax.ws.rs.core.MediaType.APPLICATION_JSON
+import no.nav.sbl.dialogarena.naudit.AuditResources
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RestController
 
+@RestController
+@RequestMapping("/rest/person/{fnr}/vergemal")
+class VergemalController @Autowired constructor(private val vergemalService: VergemalService, private val tilgangskontroll: Tilgangskontroll) {
 
-@Path("/person/{fnr}/vergemal")
-@Produces(APPLICATION_JSON)
-class VergemalController @Inject constructor(private val vergemalService: VergemalService, private val tilgangskontroll: Tilgangskontroll) {
-
-    @GET
-    @Path("/")
-    fun hent(@PathParam("fnr") fnr: String): Map<String, Any?> {
+    @GetMapping
+    fun hent(@PathVariable("fnr") fnr: String): Map<String, Any?> {
         return tilgangskontroll
                 .check(Policies.tilgangTilBruker.with(fnr))
                 .get(Audit.describe(Audit.Action.READ, AuditResources.Person.Vergemal, AuditIdentifier.FNR to fnr)) {
@@ -52,10 +49,11 @@ class VergemalController @Inject constructor(private val vergemalService: Vergem
         }
     }
 
-    private fun getNavn(personnavn: Personnavn): Map<String, String> {
+    private fun getNavn(personnavn: HentNavnBolk.Navn): Map<String, String> {
         return mapOf(
-                "sammensatt" to personnavn.sammensattNavn
+                "sammensatt" to with(personnavn) {
+                    listOfNotNull(fornavn, mellomnavn, etternavn).joinToString(" ")
+                }
         )
     }
-
 }

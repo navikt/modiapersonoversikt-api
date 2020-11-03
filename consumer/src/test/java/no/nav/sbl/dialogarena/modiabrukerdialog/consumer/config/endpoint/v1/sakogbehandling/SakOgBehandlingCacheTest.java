@@ -2,7 +2,7 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v1.sak
 
 
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.util.CacheTest;
-import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.SakBuilder;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.SakBuilder;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.binding.SakOgBehandlingV1;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.Sak;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.meldinger.FinnSakOgBehandlingskjedeListeRequest;
@@ -10,7 +10,7 @@ import no.nav.tjeneste.virksomhet.sakogbehandling.v1.meldinger.FinnSakOgBehandli
 import org.joda.time.DateTime;
 import org.junit.jupiter.api.Test;
 
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
@@ -21,7 +21,7 @@ class SakOgBehandlingCacheTest extends CacheTest {
 
     private static final String ENDPOINT_CACHE = "endpointCache";
 
-    @Inject
+    @Autowired
     private SakOgBehandlingV1 sakOgBehandling;
 
     SakOgBehandlingCacheTest() {

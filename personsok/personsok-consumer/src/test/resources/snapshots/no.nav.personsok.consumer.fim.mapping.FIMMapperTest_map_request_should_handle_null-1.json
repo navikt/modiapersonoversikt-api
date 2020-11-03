@@ -1,0 +1,12 @@
+{
+  "adresseFilter" : null,
+  "personFilter" : {
+    "alderFra" : null,
+    "alderTil" : null,
+    "enhetId" : null,
+    "foedselsdatoFra" : null,
+    "foedselsdatoTil" : null,
+    "kjoenn" : ""
+  },
+  "soekekriterie" : null
+}

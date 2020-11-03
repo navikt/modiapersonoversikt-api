@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
 
-import static no.nav.sbl.dialogarena.test.SystemProperties.setTemporaryProperty;
+import static no.nav.common.test.SystemProperties.setTemporaryProperty;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 

@@ -1,13 +1,15 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.oppgave
 
 import com.google.gson.GsonBuilder
-import no.nav.common.oidc.SystemUserTokenProvider
-import no.nav.log.MDCConstants
+import no.nav.common.log.MDCConstants
+import no.nav.common.rest.client.RestClient
+import no.nav.common.sts.SystemUserTokenProvider
+import no.nav.common.utils.EnvironmentUtils
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveRequest
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveRestClient
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.oppgave.OppgaveResponse
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.pdl.PdlOppslagService
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.pdl.generated.HentIdent.IdentGruppe
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveResponse
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.kodeverksmapper.KodeverksmapperService
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.kodeverksmapper.domain.Behandling
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.pdl.PdlSyntetiskMapper
@@ -15,18 +17,18 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.RestConstants
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.RestConstants.AUTH_METHOD_BEARER
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.RestConstants.AUTH_SEPERATOR
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.TjenestekallLogger
-import no.nav.sbl.rest.RestUtils
-import no.nav.sbl.util.EnvironmentUtils
+import okhttp3.MediaType
+import okhttp3.Request
+import okhttp3.RequestBody
+import okhttp3.Response
 import org.slf4j.MDC
 import org.slf4j.LoggerFactory
 import java.time.LocalDate
 import java.util.*
-import javax.inject.Inject
-import javax.ws.rs.client.Entity.json
-import javax.ws.rs.core.HttpHeaders.AUTHORIZATION
+import org.springframework.beans.factory.annotation.Autowired
 
 
-open class OppgaveOpprettelseClient @Inject constructor(
+open class OppgaveOpprettelseClient @Autowired constructor(
         val kodeverksmapperService: KodeverksmapperService,
         val pdlOppslagService: PdlOppslagService
 
@@ -37,7 +39,7 @@ open class OppgaveOpprettelseClient @Inject constructor(
     private val log = LoggerFactory.getLogger(OppgaveOpprettelseClient::class.java)
     private val gson = GsonBuilder().setDateFormat("yyyy-MM-dd").create()
 
-    @Inject
+    @Autowired
     private lateinit var stsService: SystemUserTokenProvider
 
 
@@ -73,47 +75,48 @@ open class OppgaveOpprettelseClient @Inject constructor(
         val uuid = UUID.randomUUID()
         try {
 
-            val consumerOidcToken: String = stsService.systemUserAccessToken
+            val consumerOidcToken: String = stsService.systemUserToken
             TjenestekallLogger.info("Oppgaver-request: $uuid", mapOf(
                     "ident" to request.aktoerId,
                     "callId" to MDC.get(MDCConstants.MDC_CALL_ID)
             ))
-
-            val content: String = RestUtils.withClient { client ->
-                val response = client.target(url)
-                        .request()
-                        .header(RestConstants.NAV_CALL_ID_HEADER, MDC.get(MDCConstants.MDC_CALL_ID))
-                        .header("X-Correlation-ID ", MDC.get(MDCConstants.MDC_CALL_ID))
-                        .header(AUTHORIZATION, AUTH_METHOD_BEARER + AUTH_SEPERATOR + consumerOidcToken)
-                        .header(RestConstants.NAV_CONSUMER_TOKEN_HEADER, RestConstants.AUTH_METHOD_BEARER + RestConstants.AUTH_SEPERATOR + consumerOidcToken)
-                        .post(json(request))
-
-                val body = response.readEntity(String::class.java)
-                if (response.status == 200) {
-                    TjenestekallLogger.info("Oppgave-response: $uuid", mapOf(
-                            "status" to "${response.status} ${response.statusInfo}",
-                            "body" to body
-                    ))
-                } else {
-                    TjenestekallLogger.error("Oppgave-response-error: $uuid", mapOf(
-                            "status" to "${response.status} ${response.statusInfo}",
-                            "request" to request,
-                            "body" to body
-                    ))
-                }
-                body
+            val response: Response = RestClient.baseClient()
+                    .newCall(
+                            Request.Builder()
+                                    .url(url)
+                                    .header(RestConstants.NAV_CALL_ID_HEADER, MDC.get(MDCConstants.MDC_CALL_ID))
+                                    .header("X-Correlation-ID", MDC.get(MDCConstants.MDC_CALL_ID))
+                                    .header(RestConstants.AUTHORIZATION, AUTH_METHOD_BEARER + AUTH_SEPERATOR + consumerOidcToken)
+                                    .header(RestConstants.NAV_CONSUMER_TOKEN_HEADER, RestConstants.AUTH_METHOD_BEARER + RestConstants.AUTH_SEPERATOR + consumerOidcToken)
+                                    .post(RequestBody.create(
+                                            MediaType.parse("application/json"),
+                                            gson.toJson(request)
+                                    ))
+                                    .build()
+                    )
+                    .execute()
+            val body = response.body()?.string()
+            if (response.code() in 200..299) {
+                TjenestekallLogger.info("Oppgave-response: $uuid", mapOf(
+                        "status" to "${response.code()} ${response.message()}",
+                        "body" to body
+                ))
+            } else {
+                TjenestekallLogger.error("Oppgave-response-error: $uuid", mapOf(
+                        "status" to "${response.code()} ${response.message()}",
+                        "request" to request,
+                        "body" to body
+                ))
             }
-            return gson.fromJson(content, OppgaveResponse::class.java)
+            return gson.fromJson(body, OppgaveResponse::class.java)
         } catch (exception: Exception) {
             log.error("Feilet ved post mot Oppgave (ID: $uuid)", exception)
             TjenestekallLogger.error("Oppgave-error: $uuid", mapOf(
                     "exception" to exception,
                     "request" to request
             ))
-            return OppgaveResponse()
+            throw exception
         }
-
-
     }
 
 

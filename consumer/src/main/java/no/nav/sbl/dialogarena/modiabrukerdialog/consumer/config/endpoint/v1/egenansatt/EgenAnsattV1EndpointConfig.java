@@ -1,30 +1,29 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v1.egenansatt;
 
+import no.nav.common.cxf.CXFClient;
+import no.nav.common.cxf.StsConfig;
+import no.nav.common.utils.EnvironmentUtils;
 import no.nav.modig.modia.ping.PingableWebService;
-import no.nav.sbl.dialogarena.common.cxf.CXFClient;
 import no.nav.sbl.dialogarena.types.Pingable;
-import no.nav.sbl.util.EnvironmentUtils;
 import no.nav.tjeneste.pip.egen.ansatt.v1.EgenAnsattV1;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import org.springframework.beans.factory.annotation.Autowired;
 
 import static no.nav.metrics.MetricsFactory.createTimerProxyForWebService;
 
 @Configuration
 public class EgenAnsattV1EndpointConfig {
+    @Autowired
+    private StsConfig stsConfig;
 
     @Bean
     public EgenAnsattV1 egenAnsattV1() {
         final EgenAnsattV1 egenAnsattV1 = lagEndpoint();
-        final EgenAnsattV1 egenAnsattV1Mock = lagMockEndpoint();
 
         return createTimerProxyForWebService("egenAnsattV1", egenAnsattV1, EgenAnsattV1.class);
     }
-
-    private EgenAnsattV1 lagMockEndpoint() {
-        return EgenAnsattV1Mock.egenAnsattV1();
-    }
-
 
     @Bean
     public Pingable egenAnsattPing() {
@@ -35,7 +34,7 @@ public class EgenAnsattV1EndpointConfig {
     private EgenAnsattV1 lagEndpoint() {
         return new CXFClient<>(EgenAnsattV1.class)
                 .address(EnvironmentUtils.getRequiredProperty("VIRKSOMHET_EGENANSATT_V1_ENDPOINTURL"))
-                .configureStsForSystemUser()
+                .configureStsForSystemUser(stsConfig)
                 .build();
     }
 

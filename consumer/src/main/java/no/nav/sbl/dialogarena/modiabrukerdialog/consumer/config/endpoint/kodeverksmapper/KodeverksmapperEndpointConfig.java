@@ -1,9 +1,9 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.kodeverksmapper;
 
+import no.nav.common.utils.EnvironmentUtils;
 import no.nav.modig.modia.ping.ConsumerPingable;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.kodeverksmapper.domain.Behandling;
 import no.nav.sbl.dialogarena.types.Pingable;
-import no.nav.sbl.util.EnvironmentUtils;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -25,15 +25,9 @@ public class KodeverksmapperEndpointConfig {
     @Bean
     public Pingable kodeverksmapperPing() {
         Kodeverksmapper endepunkt = lagEndpoint();
-        Pingable.Ping.PingMetadata metadata = new Pingable.Ping.PingMetadata(
-                "Kodeverksmapper",
-                EnvironmentUtils.getRequiredProperty("KODEVERKSMAPPER_OPPGAVETYPE_URL"),
-                "Henter data fra kodeverk",
-                false
-        );
-
         return new ConsumerPingable(
-                metadata,
+                String.format("Koeverksmapper via %s", EnvironmentUtils.getRequiredProperty("KODEVERKSMAPPER_OPPGAVETYPE_URL")),
+                false,
                 endepunkt::ping
         );
     }

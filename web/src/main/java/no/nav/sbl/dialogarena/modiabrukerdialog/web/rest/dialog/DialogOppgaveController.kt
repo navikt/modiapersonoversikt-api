@@ -16,28 +16,25 @@ import no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.DateUtils.arbeidsdager
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.OppgavebehandlingV3
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.meldinger.WSOpprettOppgave
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.meldinger.WSOpprettOppgaveRequest
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.http.HttpStatus
+import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.*
 import java.time.LocalDate
-import javax.inject.Inject
-import javax.ws.rs.GET
-import javax.ws.rs.POST
-import javax.ws.rs.Path
-import javax.ws.rs.Produces
-import javax.ws.rs.core.MediaType.APPLICATION_JSON
-import javax.ws.rs.core.Response
 
 private const val HENVENDELSESTYPE_KODE: String = "DIALOG"
 
-@Path("/dialogoppgave")
-class DialogOppgaveController @Inject constructor(
+@RestController
+@RequestMapping("/rest/dialogoppgave")
+class DialogOppgaveController @Autowired constructor(
         private val gsakKodeverk: GsakKodeverk,
         private val oppgavebehandling: OppgavebehandlingV3,
         private val oppgavebehandlingRest: OppgaveRestClient,
         private val tilgangskontroll: Tilgangskontroll
 ) {
 
-    @POST
-    @Path("/opprett")
-    fun opprettOppgave(request: OpperettOppgaveRequest): Response {
+    @PostMapping("/opprett")
+    fun opprettOppgave(@RequestBody request: OpperettOppgaveRequest): ResponseEntity<Void> {
         return tilgangskontroll
                 .check(Policies.tilgangTilBruker.with(request.fnr))
                 .check(Policies.behandlingsIderTilhorerBruker.with(BehandlingsIdTilgangData(request.fnr, listOf(request.behandlingskjedeId))))
@@ -62,20 +59,18 @@ class DialogOppgaveController @Inject constructor(
                                                     .withLest(false)
                                     )
                     )
-                    Response.ok().build()
+                    ResponseEntity(HttpStatus.OK)
                 }
     }
 
-    @POST
-    @Path("/opprettskjermetoppgave")
-    fun opprettSkjermetOppgave(request: OpperettSkjermetOppgaveDTO
+    @PostMapping("/opprettskjermetoppgave")
+    fun opprettSkjermetOppgave(@RequestBody request: OpperettSkjermetOppgaveDTO
     ): SkjermetOppgaveRespons {
         return tilgangskontroll
                 .check(Policies.tilgangTilModia)
                 .get(Audit.describe(CREATE, Henvendelse.Oppgave.Opprett, AuditIdentifier.FNR to request.fnr)) {
                     val respons = oppgavebehandlingRest
                             .opprettOppgave(OppgaveRequest(
-
                                     fnr = request.fnr,
                                     behandlesAvApplikasjon = "FS22",
                                     beskrivelse = request.beskrivelse,
@@ -88,16 +83,13 @@ class DialogOppgaveController @Inject constructor(
                                     opprettetavenhetsnummer = request.opprettetavenhetsnummer,
                                     oppgaveFrist = kalkulerFrist(request.temaKode, request.oppgaveTypeKode)
                             )
-                            )
-                    SkjermetOppgaveRespons(
-                            oppgaveid = respons!!.getId()
                     )
+
+                    SkjermetOppgaveRespons(oppgaveid = respons.id)
                 }
     }
 
-    @GET
-    @Path("/tema")
-    @Produces(APPLICATION_JSON)
+    @GetMapping("/tema")
     fun hentAlleTema(): List<Map<String, Any?>> {
         return tilgangskontroll
                 .check(Policies.tilgangTilModia)

@@ -8,13 +8,12 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.joark.InnsynJournalEndpointConfig.INNSYN_JOURNAL_V2_URL;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 
@@ -31,7 +30,7 @@ public class InnsynJournalCacheTest extends CacheTest {
         super(INNSYN_CACHE);
     }
 
-    @Inject
+    @Autowired
     private InnsynJournalV2 innsynJournalV2;
 
     @BeforeAll
