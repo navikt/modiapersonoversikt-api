@@ -8,7 +8,8 @@ import org.springframework.context.annotation.Import;
         LoginContext.class,
         ApplicationContextBeans.class,
         ModulesApplicationContext.class,
-        SelftestContext.class
+        SelftestContext.class,
+        EnableCXFSecureLogs.class
 })
 
 public class ModiaApplicationContext {
