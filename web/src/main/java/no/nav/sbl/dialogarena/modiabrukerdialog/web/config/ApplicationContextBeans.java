@@ -36,7 +36,7 @@ import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.RestConstan
 })
 public class ApplicationContextBeans {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(ApplicationContextBeans::class.java);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ApplicationContextBeans.java);
     private static final String ABAC_PDP_URL = EnvironmentUtils.getRequiredProperty("ABAC_PDP_ENDPOINT_URL");
 
     @Bean
@@ -82,7 +82,7 @@ public class ApplicationContextBeans {
     }
 
     @Bean
-    public EnableCXFSecureLogs enableCXFSecureLogs() {
+    EnableCXFSecureLogs enableCXFSecureLogs() {
         try {
             EnvironmentUtils.setProperty("CXF_SECURE_LOG", "enabled", PUBLIC);
             LoggerContext context = (LoggerContext) LoggerFactory.getILoggerFactory();
