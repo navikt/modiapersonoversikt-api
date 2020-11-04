@@ -25,9 +25,6 @@ public class Main {
         // Overstyrer appnavn slik at vi er sikre på at vi later som vi er modiabrukerdialog. ;)
         EnvironmentUtils.setProperty("NAIS_APP_NAME", "modiabrukerdialog", PUBLIC);
 
-        // Aktiverer logging
-        EnvironmentUtils.setProperty("CXF_SECURE_LOG", "enabled", PUBLIC);
-
         SpringApplication.run(Main.class, args);
     }
 
