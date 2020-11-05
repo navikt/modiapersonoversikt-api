@@ -376,3 +376,5 @@ spec:
       value: "true"
     - name: HASTEKASSERING_TILGANG
       value: "Z992323,Z990366,Z990083"
+    - name: CXF_SECURE_LOG
+      value: "enabled"
