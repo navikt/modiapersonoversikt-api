@@ -11,6 +11,8 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Tilgangskontrol
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.TilgangskontrollMock;
 import no.nav.tjeneste.virksomhet.oppgave.v3.HentOppgaveOppgaveIkkeFunnet;
 import no.nav.tjeneste.virksomhet.oppgave.v3.OppgaveV3;
+import no.nav.tjeneste.virksomhet.oppgave.v3.meldinger.WSFinnOppgaveListeRequest;
+import no.nav.tjeneste.virksomhet.oppgave.v3.meldinger.WSFinnOppgaveListeResponse;
 import no.nav.tjeneste.virksomhet.oppgave.v3.meldinger.WSHentOppgaveRequest;
 import no.nav.tjeneste.virksomhet.oppgave.v3.meldinger.WSHentOppgaveResponse;
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.LagreOppgaveOppgaveIkkeFunnet;
@@ -29,6 +31,7 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.Collections;
 
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.oppgavebehandling.OppgaveMockFactory.*;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.oppgavebehandling.OppgaveMockFactory.mockFinnOppgaveListe;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
@@ -73,7 +76,9 @@ class LeggTilbakeOppgaveIGsakDelegateTest {
     void skalLeggeTilbakeOppgaveIGsakUtenEndretTemagruppe() throws HentOppgaveOppgaveIkkeFunnet,
             LagreOppgaveOptimistiskLasing, LagreOppgaveOppgaveIkkeFunnet {
         WSHentOppgaveResponse hentOppgaveResponse = mockHentOppgaveResponseMedTilordning();
+        WSFinnOppgaveListeResponse finnOppgaveListeResponse = mockFinnOppgaveListe();
         when(oppgaveServiceMock.hentOppgave(any(WSHentOppgaveRequest.class))).thenReturn(hentOppgaveResponse);
+        when(oppgaveServiceMock.finnOppgaveListe(any(WSFinnOppgaveListeRequest.class))).thenReturn(finnOppgaveListeResponse);
         String opprinneligBeskrivelse = hentOppgaveResponse.getOppgave().getBeskrivelse();
 
         ArgumentCaptor<WSLagreOppgaveRequest> lagreOppgaveRequestCaptor = ArgumentCaptor.forClass(WSLagreOppgaveRequest.class);
@@ -92,6 +97,7 @@ class LeggTilbakeOppgaveIGsakDelegateTest {
     void skalLeggeTilbakeOppgaveIGsakMedEndretTemagruppe() throws HentOppgaveOppgaveIkkeFunnet,
             LagreOppgaveOptimistiskLasing, LagreOppgaveOppgaveIkkeFunnet {
         when(oppgaveServiceMock.hentOppgave(any(WSHentOppgaveRequest.class))).thenReturn(mockHentOppgaveResponseMedTilordning());
+        when(oppgaveServiceMock.finnOppgaveListe(any(WSFinnOppgaveListeRequest.class))).thenReturn(mockFinnOppgaveListe());
 
         String nyEnhetId = "4100";
 

@@ -1,7 +1,11 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.oppgavebehandling;
 
 import no.nav.tjeneste.virksomhet.oppgave.v3.informasjon.oppgave.*;
+import no.nav.tjeneste.virksomhet.oppgave.v3.meldinger.WSFinnOppgaveListeResponse;
 import no.nav.tjeneste.virksomhet.oppgave.v3.meldinger.WSHentOppgaveResponse;
+
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static org.joda.time.DateTime.now;
 
@@ -13,6 +17,16 @@ class OppgaveMockFactory {
 
     static WSHentOppgaveResponse mockHentOppgaveResponseMedTilordning() {
         return new WSHentOppgaveResponse().withOppgave(lagWSOppgave().withBeskrivelse("opprinnelig beskrivelse"));
+    }
+
+    static WSFinnOppgaveListeResponse mockFinnOppgaveListe() {
+        return new WSFinnOppgaveListeResponse()
+                .withOppgaveListe(
+                        Stream
+                                .generate(WSOppgave::new)
+                                .limit(5)
+                                .map(s -> lagWSOppgave())
+                                .collect(Collectors.toList()));
     }
 
     static WSOppgave lagWSOppgave() {
