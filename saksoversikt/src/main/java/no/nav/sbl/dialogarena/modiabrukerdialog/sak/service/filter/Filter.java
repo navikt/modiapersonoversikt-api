@@ -10,12 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
-import javax.xml.datatype.Duration;
 import javax.xml.datatype.XMLGregorianCalendar;
-import javax.xml.namespace.QName;
-import java.math.BigDecimal;
-import java.math.BigInteger;
-import java.time.LocalDateTime;
 import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
@@ -57,18 +52,17 @@ public class Filter {
 
     private static final Predicate<Behandlingskjede> HAR_LOVLIG_STATUS_PAA_BEHANDLING = kjede ->
             kjede.getSisteBehandlingsstatus().getValue() != null &&
-            ((kjede.getSisteBehandlingsstatus().getValue().equals(FilterUtils.OPPRETTET) && !FilterUtils.erKvitteringstype(kjede.getSisteBehandlingstype().getValue()))
-                    || kjede.getSisteBehandlingsstatus().getValue().equals(FilterUtils.AVSLUTTET));
+                    ((kjede.getSisteBehandlingsstatus().getValue().equals(FilterUtils.OPPRETTET) && !FilterUtils.erKvitteringstype(kjede.getSisteBehandlingstype().getValue()))
+                            || kjede.getSisteBehandlingsstatus().getValue().equals(FilterUtils.AVSLUTTET));
 
     private static final Predicate<Behandlingskjede> HAR_LOVLIG_BEHANDLINGSTYPE_ELLER_AVSLUTTET_KVITTERING = kjede -> {
         String type = kjede.getSisteBehandlingstype().getValue();
 
-            return (FilterUtils.erKvitteringstype(type) && FilterUtils.erAvsluttet(kjede) && Under4UkerSidenFerdigstillelse(kjede) ) || lovligeBehandlingstyper.contains(type);
-       // return (FilterUtils.erKvitteringstype(type) && FilterUtils.erAvsluttet(kjede) ) || lovligeBehandlingstyper.contains(type);
+        return (FilterUtils.erKvitteringstype(type) && FilterUtils.erAvsluttet(kjede) && Under1MndSidenFerdigstillelse(kjede)) || lovligeBehandlingstyper.contains(type);
 
     };
 
-    private static boolean Under4UkerSidenFerdigstillelse(Behandlingskjede kjede) {
+    private static boolean Under1MndSidenFerdigstillelse(Behandlingskjede kjede) {
         if (kjede.getSisteBehandlingsoppdatering() != (null)) {
 
             try {
@@ -78,13 +72,13 @@ public class Filter {
                 xgcMonthAgo.setYear(now.get(Calendar.YEAR));
                 xgcMonthAgo.setMonth(now.get(Calendar.MONTH) - 1);
                 xgcMonthAgo.setDay(now.get(Calendar.DAY_OF_MONTH));
-                return  (sisteDato.getMillisecond() > xgcMonthAgo.getMillisecond());
+                return (sisteDato.getMillisecond() > xgcMonthAgo.getMillisecond());
             } catch (DatatypeConfigurationException e) {
                 e.printStackTrace();
             }
         }
         System.out.println("mangler behandlingstatus");
-        return false; //mangler nødvendig element så skal ikkje behandlingstypen viser
+        return false; //mangler nødvendig element, skal ikkje behandlingstypen vises.
     }
 
 
