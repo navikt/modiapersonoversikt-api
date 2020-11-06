@@ -128,12 +128,6 @@ public class OppgaveBehandlingServiceImpl implements OppgaveBehandlingService {
                 .map("SPM_OG_SVR"::equals)
                 .orElse(false);
 
-        logger.info(
-                "[OppgaveBehandlingsServiceImpl::map] oppgaveId: {} KNA: {}",
-                wsOppgave.getOppgaveId(),
-                erSporsmalOgSvarOppgave
-        );
-
         return new Oppgave(
                 wsOppgave.getOppgaveId(),
                 wsOppgave.getGjelder().getBrukerId(),
