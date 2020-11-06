@@ -28,15 +28,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import org.springframework.beans.factory.annotation.Autowired;
+
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.stream.Stream;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
-import static java.util.Comparator.comparing;
 import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.toList;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe.*;
@@ -83,6 +82,12 @@ public class OppgaveBehandlingServiceImpl implements OppgaveBehandlingService {
 
     @Override
     public List<Oppgave> finnTildelteOppgaverIGsak() {
+        return finnTildelteWSOppgaverIGsak().stream()
+                .map(OppgaveBehandlingServiceImpl::wsOppgaveToOppgave)
+                .collect(toList());
+    }
+
+    private List<WSOppgave> finnTildelteWSOppgaverIGsak() {
         String ident = SubjectHandler.getIdent().orElseThrow(() -> new RuntimeException("Fant ikke ident"));
         return validerTilgangTilbruker(oppgaveWS
                 .finnOppgaveListe(new WSFinnOppgaveListeRequest()
@@ -92,21 +97,20 @@ public class OppgaveBehandlingServiceImpl implements OppgaveBehandlingService {
                         .withFilter(new WSFinnOppgaveListeFilter()
                                 .withAktiv(true)
                                 .withOppgavetypeKodeListe(SPORSMAL_OG_SVAR)))
-                .getOppgaveListe().stream()
-                .map(OppgaveBehandlingServiceImpl::wsOppgaveToOppgave)
-                .collect(toList()));
+                .getOppgaveListe());
     }
 
-    private List<Oppgave> validerTilgangTilbruker(List<Oppgave> oppgaveList) {
+
+    private List<WSOppgave> validerTilgangTilbruker(List<WSOppgave> oppgaveList) {
         if (oppgaveList.isEmpty()) {
             return emptyList();
         } else if (tilgangskontroll
-                .check(Policies.tilgangTilBruker.with(oppgaveList.get(0).fnr))
+                .check(Policies.tilgangTilBruker.with(oppgaveList.get(0).getGjelder().getBrukerId()))
                 .getDecision()
                 .isPermit()) {
             return oppgaveList;
         }
-        oppgaveList.forEach((enkeltoppgave) -> systemLeggTilbakeOppgaveIGsak(enkeltoppgave.oppgaveId, null, "4100"));
+        oppgaveList.forEach((enkeltoppgave) -> systemLeggTilbakeOppgaveIGsak(enkeltoppgave.getOppgaveId(), null, "4100"));
         return emptyList();
     }
 
@@ -209,27 +213,22 @@ public class OppgaveBehandlingServiceImpl implements OppgaveBehandlingService {
             return;
         }
         WSOppgave oppgaveFraGsak = hentOppgaveFraGsak(request.getOppgaveId());
+
+        if (oppgaveFraGsak.getGjelder().getBrukerId() == null || oppgaveFraGsak.getUnderkategori().getKode() == null) {
+            logger.warn("Oppgave fra GSAK manglet fnr eller underkategori : {}", oppgaveFraGsak.getOppgaveId());
+            return;
+        }
+
         leggTilbakeOppgaveIGsakDelegate.leggTilbake(oppgaveFraGsak, request);
+
+        finnTildelteWSOppgaverIGsak()
+                .stream()
+                .filter(oppgave -> oppgaveFraGsak.getGjelder().getBrukerId().equals(oppgave.getGjelder().getBrukerId()))
+                .filter(oppgave -> !oppgaveFraGsak.getOppgaveId().equals(oppgave.getOppgaveId()))
+                .filter(oppgave -> oppgaveFraGsak.getUnderkategori().getKode().equals(oppgave.getUnderkategori().getKode()))
+                .forEach(oppgave -> leggTilbakeOppgaveIGsakDelegate.leggTilbake(oppgave, request));
     }
 
-    @Override
-    public void leggTilbakeOppgaveIGsak(List<LeggTilbakeOppgaveIGsakRequest> request) {
-        Stream<LeggTilbakeOppgaveIGsakRequest> sortedOppgaver = request.stream().sorted(comparing(LeggTilbakeOppgaveIGsakRequest::getOppgaveId).reversed());
-
-        sortedOppgaver.forEach( it -> {
-            try{
-                if (it.getOppgaveId() == null || it.getBeskrivelse() == null) {
-                 return;
-                }
-                    WSOppgave oppgaveFraGsak = hentOppgaveFraGsak(it.getOppgaveId());
-                    leggTilbakeOppgaveIGsakDelegate.leggTilbake(oppgaveFraGsak, it);
-
-            } catch (Exception e){
-                logger.info("Feil ved tilbakelegging av  oppgave " + it.getOppgaveId(), e);
-
-            }
-        });
-    }
 
     @Override
     public void systemLeggTilbakeOppgaveIGsak(String oppgaveId, Temagruppe temagruppe, String saksbehandlersValgteEnhet) {
@@ -374,3 +373,4 @@ public class OppgaveBehandlingServiceImpl implements OppgaveBehandlingService {
                 .withLest(wsOppgave.isLest());
     }
 }
+
