@@ -221,6 +221,7 @@ type FalskIdentitet {
     rettIdentitetVedIdentifikasjonsnummer: String
     rettIdentitetErUkjent: Boolean
     rettIdentitetVedOpplysninger: FalskIdentitetIdentifiserendeInformasjon
+    folkeregistermetadata: Folkeregistermetadata
     metadata: Metadata!
 }
 
@@ -277,6 +278,7 @@ type UtenlandskIdentifikasjonsnummer {
     identifikasjonsnummer: String!
     utstederland: String!
     opphoert: Boolean!
+    folkeregistermetadata: Folkeregistermetadata
     metadata: Metadata!
 }
 
@@ -299,6 +301,7 @@ type Foedsel {
     foedeland: String
     foedested: String
     foedekommune: String
+    folkeregistermetadata: Folkeregistermetadata
     metadata: Metadata!
 }
 
@@ -311,6 +314,7 @@ type Kjoenn {
 type Doedsfall {
     doedsdato: Date
     metadata: Metadata!
+    folkeregistermetadata: Folkeregistermetadata
 }
 
 type Familierelasjon {

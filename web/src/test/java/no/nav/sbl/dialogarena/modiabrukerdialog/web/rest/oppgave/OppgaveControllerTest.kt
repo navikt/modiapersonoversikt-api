@@ -165,7 +165,7 @@ internal class OppgaveControllerTest {
         whenever(oppgaveWSMock.finnOppgaveListe(any()))
                 .thenReturn(WSFinnOppgaveListeResponse())
 
-        val resultat = SubjectHandlerUtil.withIdent(SAKSBEHANDLERS_IDENT, UnsafeSupplier { oppgaveController.plukkOppgaver(TEMAGRUPPE_ARBEID, httpRequest) })
+        val resultat = SubjectHandlerUtil.withIdent(SAKSBEHANDLERS_IDENT, UnsafeSupplier { oppgaveController.plukkOppgaver(TEMAGRUPPE_ARBEID, null, httpRequest) })
 
         assertEquals(oppgaver.size, resultat.size)
         assertEquals(oppgaver[0].oppgaveId, resultat[0].oppgaveId)
@@ -184,7 +184,7 @@ internal class OppgaveControllerTest {
         whenever(plukkOppgaveService.plukkOppgaver(any(), any()))
                 .thenReturn(emptyList())
 
-        val resultat = SubjectHandlerUtil.withIdent(SAKSBEHANDLERS_IDENT, UnsafeSupplier { oppgaveController.plukkOppgaver(TEMAGRUPPE_ARBEID, httpRequest) })
+        val resultat = SubjectHandlerUtil.withIdent(SAKSBEHANDLERS_IDENT, UnsafeSupplier { oppgaveController.plukkOppgaver(TEMAGRUPPE_ARBEID, null, httpRequest) })
 
         verify(plukkOppgaveService, times(0)).plukkOppgaver(any(), any())
         assertEquals(oppgaveliste.size, resultat.size)
@@ -200,12 +200,19 @@ internal class OppgaveControllerTest {
         whenever(oppgaveWSMock.finnOppgaveListe(any()))
                 .thenReturn(WSFinnOppgaveListeResponse())
 
-        val resultat = SubjectHandlerUtil.withIdent(SAKSBEHANDLERS_IDENT, UnsafeSupplier { oppgaveController.plukkOppgaver(TEMAGRUPPE_ARBEID, httpRequest) })
+        val resultat = SubjectHandlerUtil.withIdent(SAKSBEHANDLERS_IDENT, UnsafeSupplier { oppgaveController.plukkOppgaver(TEMAGRUPPE_ARBEID, null, httpRequest) })
 
         assertEquals(0, resultat.size)
     }
 
-    private fun lagRequest() = LeggTilbakeRequest(oppgaveId = OPPGAVE_ID_1, type = LeggTilbakeAarsak.FeilTema, beskrivelse = null, temagruppe = Temagruppe.ARBD, traadId = "123456")
+    private fun lagRequest() = LeggTilbakeRequest(
+            enhet = null,
+            oppgaveId = OPPGAVE_ID_1,
+            type = LeggTilbakeAarsak.FeilTema,
+            beskrivelse = null,
+            temagruppe = Temagruppe.ARBD,
+            traadId = "123456"
+    )
 
     companion object {
         const val OPPGAVE_ID_1 = "OPPGAVE_ID_1"

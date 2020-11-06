@@ -39,7 +39,7 @@ class OppgaveController @Autowired constructor(
         return tilgangkontroll
                 .check(Policies.tilgangTilModia)
                 .get(Audit.describe(UPDATE, Henvendelse.Oppgave.LeggTilbake, AuditIdentifier.OPPGAVE_ID to request.oppgaveId)) {
-                    val valgtEnhet = RestUtils.hentValgtEnhet(httpRequest)
+                    val valgtEnhet = RestUtils.hentValgtEnhet(request.enhet, httpRequest)
                     val leggTilbakeOppgaveIGsakRequest = lagLeggTilbakeRequest(request, valgtEnhet)
 
                     try {
@@ -56,7 +56,7 @@ class OppgaveController @Autowired constructor(
     }
 
     @PostMapping("/plukk/{temagruppe}")
-    fun plukkOppgaver(@PathVariable("temagruppe") temagruppe: String, httpRequest: HttpServletRequest): List<OppgaveDTO> {
+    fun plukkOppgaver(@PathVariable("temagruppe") temagruppe: String, @RequestParam(value = "enhet", required = false) enhet: String?, httpRequest: HttpServletRequest): List<OppgaveDTO> {
         return tilgangkontroll
                 .check(Policies.tilgangTilModia)
                 .check(Policies.kanPlukkeOppgave)
@@ -67,7 +67,7 @@ class OppgaveController @Autowired constructor(
                     } else {
                         plukkOppgaveService
                                 .plukkOppgaver(Temagruppe.valueOf(temagruppe.toUpperCase()),
-                                        CookieUtil.getSaksbehandlersValgteEnhet(httpRequest))
+                                        RestUtils.hentValgtEnhet(enhet, httpRequest))
                     }
                 }.map { mapOppgave(it) }
     }
@@ -137,6 +137,7 @@ enum class LeggTilbakeAarsak {
 }
 
 data class LeggTilbakeRequest(
+        val enhet: String?,
         val type: LeggTilbakeAarsak,
         val oppgaveId: String,
         val temagruppe: Temagruppe?,

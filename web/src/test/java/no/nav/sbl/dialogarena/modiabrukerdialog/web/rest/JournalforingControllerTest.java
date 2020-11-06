@@ -33,7 +33,7 @@ class JournalforingControllerTest {
         JournalforingController journalforingController = new JournalforingController(mock(SakerService.class), TilgangskontrollMock.get());
 
         ResponseEntity response = SubjectHandlerUtil.withIdent(SAKSBEHANDLERS_IDENT, () ->
-                journalforingController.knyttTilSak("10108000398", "traad-id", new Sak(), mockHttpRequest())
+                journalforingController.knyttTilSak("10108000398", "traad-id", new Sak(), null, mockHttpRequest())
         );
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
@@ -48,7 +48,7 @@ class JournalforingControllerTest {
 
         ResponseStatusException exception = assertThrows(ResponseStatusException.class, () ->
                 SubjectHandlerUtil.withIdent(SAKSBEHANDLERS_IDENT, () ->
-                        journalforingController.knyttTilSak("10108000398", "traad-id", new Sak(), mockHttpRequest())
+                        journalforingController.knyttTilSak("10108000398", "traad-id", new Sak(), null, mockHttpRequest())
                 )
         );
 
@@ -64,7 +64,7 @@ class JournalforingControllerTest {
 
         ResponseStatusException exception = assertThrows(ResponseStatusException.class, () ->
                 SubjectHandlerUtil.withIdent(SAKSBEHANDLERS_IDENT, () ->
-                        journalforingController.knyttTilSak("10108000398", "traad-id", new Sak(), mockHttpRequest())
+                        journalforingController.knyttTilSak("10108000398", "traad-id", new Sak(), null, mockHttpRequest())
                 )
         );
 

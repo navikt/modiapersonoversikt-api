@@ -9,7 +9,6 @@ import java.util.List;
 
 public interface TilgangskontrollService {
     TjenesteResultatWrapper harSaksbehandlerTilgangTilDokument(HttpServletRequest request, DokumentMetadata journalpostMetadata, String fnr, String urlTemakode);
-    boolean harGodkjentEnhet(HttpServletRequest request);
     boolean harEnhetTilgangTilTema(String temakode, String valgtEnhet);
     void markerIkkeJournalforte(List<Sakstema> sakstemaList);
 }

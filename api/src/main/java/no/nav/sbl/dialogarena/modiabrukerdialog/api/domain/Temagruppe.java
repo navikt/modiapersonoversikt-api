@@ -6,6 +6,7 @@ import static java.util.Arrays.asList;
 
 public enum Temagruppe {
     ARBD,
+    HELSE,
     FMLI,
     FDAG,
     HJLPM,
@@ -19,8 +20,8 @@ public enum Temagruppe {
     OKSOS,
     ANSOS;
 
-    public static final List<Temagruppe> SAMTALEREFERAT = asList(ARBD, FMLI, HJLPM, PENS, OVRG, OKSOS, ANSOS);
-    public static final List<Temagruppe> LEGG_TILBAKE = asList(ARBD, FMLI, HJLPM, BIL, ORT_HJE, PENS, PLEIEPENGERSY, UFRT, UTLAND, OKSOS, ANSOS);
-    public static final List<Temagruppe> PLUKKBARE = asList(ARBD, FMLI, FDAG, HJLPM, BIL, ORT_HJE, PENS, PLEIEPENGERSY, UFRT, UTLAND);
+    public static final List<Temagruppe> SAMTALEREFERAT = asList(ARBD, HELSE, FMLI, HJLPM, PENS, OVRG, OKSOS, ANSOS);
+    public static final List<Temagruppe> LEGG_TILBAKE = asList(ARBD, HELSE, FMLI, HJLPM, BIL, ORT_HJE, PENS, PLEIEPENGERSY, UFRT, UTLAND, OKSOS, ANSOS);
+    public static final List<Temagruppe> PLUKKBARE = asList(ARBD, HELSE, FMLI, FDAG, HJLPM, BIL, ORT_HJE, PENS, PLEIEPENGERSY, UFRT, UTLAND);
     public static final List<Temagruppe> KOMMUNALE_TJENESTER = asList(OKSOS, ANSOS);
 }

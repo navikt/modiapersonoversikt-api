@@ -47,12 +47,13 @@ class DialogController @Autowired constructor(
     @GetMapping("/meldinger")
     fun hentMeldinger(
             request: HttpServletRequest,
-            @PathVariable("fnr") fnr: String
+            @PathVariable("fnr") fnr: String,
+            @RequestParam(value = "enhet", required = false) enhet: String?
     ): List<TraadDTO> {
         return tilgangskontroll
                 .check(Policies.tilgangTilBruker.with(fnr))
                 .get(Audit.describe(READ, Person.Henvendelse.Les, AuditIdentifier.FNR to fnr)) {
-                    val valgtEnhet = RestUtils.hentValgtEnhet(request)
+                    val valgtEnhet = RestUtils.hentValgtEnhet(enhet, request)
                     henvendelseService
                             .hentMeldinger(fnr, valgtEnhet)
                             .traader
@@ -70,7 +71,7 @@ class DialogController @Autowired constructor(
         return tilgangskontroll
                 .check(Policies.tilgangTilBruker.with(fnr))
                 .get(Audit.describe(CREATE, Person.Henvendelse.Les, AuditIdentifier.FNR to fnr)) {
-                    val context = lagSendHenvendelseContext(fnr, request)
+                    val context = lagSendHenvendelseContext(fnr, referatRequest.enhet, request)
                     val behandlingsId = henvendelseUtsendingService.sendHenvendelse(lagReferat(referatRequest, context), Optional.empty(), Optional.empty(), context.enhet)
                     ResponseEntity(BehandlingsId(behandlingsId), HttpStatus.OK)
                 }
@@ -85,7 +86,7 @@ class DialogController @Autowired constructor(
         return tilgangskontroll
                 .check(Policies.tilgangTilBruker.with(fnr))
                 .get(Audit.describe(CREATE, Person.Henvendelse.Les, AuditIdentifier.FNR to fnr)) {
-                    val context = lagSendHenvendelseContext(fnr, request)
+                    val context = lagSendHenvendelseContext(fnr, sporsmalsRequest.enhet, request)
 
                     henvendelseUtsendingService.sendHenvendelse(lagSporsmal(sporsmalsRequest, sporsmalsRequest.sak.temaKode, context), Optional.empty(), Optional.of(sporsmalsRequest.sak), context.enhet)
                     ResponseEntity(HttpStatus.OK)
@@ -101,7 +102,7 @@ class DialogController @Autowired constructor(
         return tilgangskontroll
                 .check(Policies.tilgangTilBruker.with(fnr))
                 .get(Audit.describe(CREATE, Person.Henvendelse.Les, AuditIdentifier.FNR to fnr)) {
-                    val context = lagSendHenvendelseContext(fnr, request)
+                    val context = lagSendHenvendelseContext(fnr, infomeldingRequest.enhet, request)
 
                     henvendelseUtsendingService.sendHenvendelse(lagInfomelding(infomeldingRequest, infomeldingRequest.sak.temaKode, context), Optional.empty(), Optional.of(infomeldingRequest.sak), context.enhet)
                     ResponseEntity(HttpStatus.OK)
@@ -118,7 +119,7 @@ class DialogController @Autowired constructor(
                 .check(Policies.tilgangTilBruker.with(fnr))
                 .get(Audit.describe(CREATE, Person.Henvendelse.Opprettet, AuditIdentifier.FNR to fnr)) {
                     val traadId = opprettHenvendelseRequest.traadId
-                    val context = lagSendHenvendelseContext(fnr, request)
+                    val context = lagSendHenvendelseContext(fnr, opprettHenvendelseRequest.enhet, request)
 
                     val traad = henvendelseService
                             .hentMeldinger(fnr, context.enhet)
@@ -157,7 +158,7 @@ class DialogController @Autowired constructor(
         return tilgangskontroll
                 .check(Policies.tilgangTilBruker.with(fnr))
                 .get(Audit.describe(UPDATE, Person.Henvendelse.Ferdigstill, AuditIdentifier.FNR to fnr)) {
-                    val context = lagSendHenvendelseContext(fnr, request)
+                    val context = lagSendHenvendelseContext(fnr, fortsettDialogRequest.enhet, request)
                     val traad = henvendelseService
                             .hentMeldinger(fnr, context.enhet)
                             .traader
@@ -197,7 +198,7 @@ class DialogController @Autowired constructor(
                     throw ResponseStatusException(HttpStatus.BAD_REQUEST, "En eller fler av trådene er allerede besvart")
                 }
 
-                val valgtEnhet = RestUtils.hentValgtEnhet(request)
+                val valgtEnhet = RestUtils.hentValgtEnhet(slaaSammenRequest.enhet, request)
                 ferdigstillAlleUnntattEnOppgave(slaaSammenRequest, nyTraadId, valgtEnhet)
 
                 val traader: List<TraadDTO> = henvendelseService
@@ -314,27 +315,32 @@ fun getKanal(type: Meldingstype): String {
 }
 
 data class OpprettHenvendelseRequest(
+        val enhet: String?,
         val traadId: String
 )
 
 data class SendReferatRequest(
+        val enhet: String?,
         val fritekst: String,
         val temagruppe: String,
         val meldingstype: Meldingstype
 )
 
 data class SendSporsmalRequest(
+        val enhet: String?,
         val fritekst: String,
         val sak: Sak,
         val erOppgaveTilknyttetAnsatt: Boolean
 )
 
 data class InfomeldingRequest(
+        val enhet: String?,
         val fritekst: String,
         val sak: Sak
 )
 
 data class FortsettDialogRequest(
+        val enhet: String?,
         val traadId: String,
         val behandlingsId: String,
         val fritekst: String,
@@ -344,9 +350,9 @@ data class FortsettDialogRequest(
         val oppgaveId: String?
 )
 
-fun lagSendHenvendelseContext(fnr: String, request: HttpServletRequest): RequestContext {
+fun lagSendHenvendelseContext(fnr: String, enhet: String?, request: HttpServletRequest): RequestContext {
     val ident = SubjectHandler.getIdent().get()
-    val enhet = RestUtils.hentValgtEnhet(request)
+    val enhet = RestUtils.hentValgtEnhet(enhet, request)
 
     require(enhet != null)
     return RequestContext(fnr, ident, enhet)
@@ -359,6 +365,7 @@ data class RequestContext(
 )
 
 data class SlaaSammenRequest(
+        val enhet: String?,
         val traader: List<SlaaSammenTraad>,
         val temagruppe: Temagruppe
 )

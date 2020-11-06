@@ -32,7 +32,7 @@ class DelsvarController @Autowired constructor(
         return tilgangskontroll
                 .check(Policies.tilgangTilBruker.with(fnr))
                 .get(Audit.describe(CREATE, Henvendelse.Delsvar, AuditIdentifier.FNR to fnr, AuditIdentifier.BEHANDLING_ID to request.behandlingsId)) {
-                    val saksbehandlersValgteEnhet = RestUtils.hentValgtEnhet(httpRequest)
+                    val saksbehandlersValgteEnhet = RestUtils.hentValgtEnhet(request.enhet, httpRequest)
 
                     val delsvarRequest = DelsvarRequestBuilder()
                             .withFodselsnummer(fnr)
@@ -66,6 +66,7 @@ class DelsvarController @Autowired constructor(
 }
 
 data class DelsvarRestRequest(
+        val enhet: String?,
         val fritekst: String,
         val traadId: String,
         val behandlingsId: String,
