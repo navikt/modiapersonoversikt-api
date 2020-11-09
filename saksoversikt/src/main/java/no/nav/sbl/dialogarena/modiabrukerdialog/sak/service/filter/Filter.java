@@ -77,7 +77,6 @@ public class Filter {
                 e.printStackTrace();
             }
         }
-        System.out.println("mangler behandlingstatus");
         return false; //mangler nødvendig element, skal ikkje behandlingstypen vises.
     }
 
