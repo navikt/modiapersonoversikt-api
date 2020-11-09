@@ -70,6 +70,7 @@ internal class OppgaveControllerTest {
         val oppgaveMock: OppgaveV3 = mock()
         whenever(oppgaveMock.hentOppgave(any()))
                 .thenReturn(WSHentOppgaveResponse().withOppgave(mockOppgaveFraGSAK()))
+        whenever(oppgaveMock.finnOppgaveListe(any())).thenReturn(mockOppgaveListeFraGSAK())
         return oppgaveMock
     }
 
@@ -81,13 +82,22 @@ internal class OppgaveControllerTest {
         return gosysNAVAnsatt
     }
 
+    private fun mockOppgaveListeFraGSAK(): WSFinnOppgaveListeResponse {
+        val response: WSFinnOppgaveListeResponse = WSFinnOppgaveListeResponse().withOppgaveListe(
+                List(5) {
+                    mockOppgaveFraGSAK()
+                }
+        )
+        return response
+    }
     private fun mockOppgaveFraGSAK() = WSOppgave()
             .withAnsvarligId(SAKSBEHANDLERS_IDENT)
             .withOppgaveId(OPPGAVE_ID_1)
+            .withAnsvarligEnhetId(VALGT_ENHET)
             .withOppgavetype(WSOppgavetype())
             .withFagomrade(WSFagomrade())
             .withPrioritet(WSPrioritet())
-            .withUnderkategori(WSUnderkategori())
+            .withUnderkategori(WSUnderkategori().withKode("ARBEID_HJE"))
             .withVersjon(5)
             .withLest(false)
             .withGjelder(WSBruker().withBrukerId(BRUKERS_FODSELSNUMMER))
@@ -206,7 +216,7 @@ internal class OppgaveControllerTest {
     }
 
     private fun lagRequest() = LeggTilbakeRequest(
-            enhet = null,
+            enhet = VALGT_ENHET,
             oppgaveId = OPPGAVE_ID_1,
             type = LeggTilbakeAarsak.FeilTema,
             beskrivelse = null,
