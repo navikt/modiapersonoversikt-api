@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
@@ -58,28 +60,47 @@ public class Filter {
     private static final Predicate<Behandlingskjede> HAR_LOVLIG_BEHANDLINGSTYPE_ELLER_AVSLUTTET_KVITTERING = kjede -> {
         String type = kjede.getSisteBehandlingstype().getValue();
 
-        return (FilterUtils.erKvitteringstype(type) && FilterUtils.erAvsluttet(kjede) && Under1MndSidenFerdigstillelse(kjede)) || lovligeBehandlingstyper.contains(type);
+        return erFerdigsUnder1MndSidanEllerInnsendtSoknad(type, kjede) || lovligMenUtgaatStatusEllerUnderBehandling(type, kjede);
 
     };
 
-    private static boolean Under1MndSidenFerdigstillelse(Behandlingskjede kjede) {
+    private static boolean erFerdigsUnder1MndSidanEllerInnsendtSoknad(String type, Behandlingskjede kjede) {
+        if (FilterUtils.erKvitteringstype(type)) {
+            return (FilterUtils.erAvsluttet(kjede) && under1MndSidenFerdigstillelse(kjede));
+        }
+        if (FilterUtils.erAvsluttet(kjede)) {
+            return under1MndSidenFerdigstillelse(kjede) && lovligeBehandlingstyper.contains(type);
+        } else return false;
+    }
+
+    private static boolean lovligMenUtgaatStatusEllerUnderBehandling(String type, Behandlingskjede kjede) {
+
+        if (FilterUtils.erAvsluttet(kjede) && !under1MndSidenFerdigstillelse(kjede)) {
+            return false;
+        }
+        if (lovligeBehandlingstyper.contains(type) && !FilterUtils.erAvsluttet(kjede)) {
+            return true;
+        } else return false;
+    }
+
+    private static boolean under1MndSidenFerdigstillelse(Behandlingskjede kjede) {
         if (kjede.getSisteBehandlingsoppdatering() != (null)) {
 
             try {
                 XMLGregorianCalendar sisteDato = kjede.getSisteBehandlingsoppdatering();
-                XMLGregorianCalendar xgcMonthAgo = DatatypeFactory.newInstance().newXMLGregorianCalendar();
-                GregorianCalendar now = new GregorianCalendar();
-                xgcMonthAgo.setYear(now.get(Calendar.YEAR));
-                xgcMonthAgo.setMonth(now.get(Calendar.MONTH) - 1);
-                xgcMonthAgo.setDay(now.get(Calendar.DAY_OF_MONTH));
-                return (sisteDato.getMillisecond() > xgcMonthAgo.getMillisecond());
+                LocalDate now = LocalDate.now().minus(1, ChronoUnit.MONTHS);
+                XMLGregorianCalendar xgcMonthAgo = DatatypeFactory
+                        .newInstance()
+                        .newXMLGregorianCalendarDate(now.getYear(), now.getMonthValue(), now.getDayOfMonth(), 0);
+                double sisteDatoIMilliSec =  (double)sisteDato.toGregorianCalendar().getTimeInMillis();
+                double mndSidanIMilliSec = (double)xgcMonthAgo.toGregorianCalendar().getTimeInMillis();
+                return (sisteDatoIMilliSec >= mndSidanIMilliSec);
             } catch (DatatypeConfigurationException e) {
                 e.printStackTrace();
             }
         }
-        return false; //mangler nødvendig element, skal ikkje behandlingstypen vises.
+        return false; //om nødvendig element mangler, skal ikkje behandlingstypen vises.
     }
-
 
     private static final Predicate<Behandlingskjede> LOVLIG_BEHANDLING = wsBehandlingskjede -> HAR_LOVLIG_STATUS_PAA_BEHANDLING
             .and(HAR_LOVLIG_BEHANDLINGSTYPE_ELLER_AVSLUTTET_KVITTERING)
