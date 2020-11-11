@@ -5,6 +5,8 @@ import no.nav.common.log.MDCConstants
 import no.nav.common.rest.client.RestClient
 import no.nav.common.sts.SystemUserTokenProvider
 import no.nav.common.utils.EnvironmentUtils
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.oppgave.generated.apis.OppgaveApi
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.oppgave.generated.models.PostOppgaveRequestJsonDTO
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveRequest
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveRestClient
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.pdl.PdlOppslagService
@@ -27,14 +29,12 @@ import java.time.LocalDate
 import java.util.*
 import org.springframework.beans.factory.annotation.Autowired
 
-
 open class OppgaveOpprettelseClient @Autowired constructor(
         val kodeverksmapperService: KodeverksmapperService,
         val pdlOppslagService: PdlOppslagService
-
-
 ) : OppgaveRestClient {
     val OPPGAVE_BASEURL = EnvironmentUtils.getRequiredProperty("OPPGAVE_BASEURL")
+    val client = OppgaveApi(OPPGAVE_BASEURL)
     val url = OPPGAVE_BASEURL + "api/v1/oppgaver"
     private val log = LoggerFactory.getLogger(OppgaveOpprettelseClient::class.java)
     private val gson = GsonBuilder().setDateFormat("yyyy-MM-dd").create()
@@ -52,22 +52,28 @@ open class OppgaveOpprettelseClient @Autowired constructor(
             throw Exception("AktørId-mangler på person")
         }
 
-        val oppgaveskjermetObject = OppgaveSkjermetRequestDTO(
+        val oppgaveskjermetObject = PostOppgaveRequestJsonDTO(
                 opprettetAvEnhetsnr = oppgave.opprettetavenhetsnummer,
                 aktoerId = aktorId,
                 behandlesAvApplikasjon = "FS22",
                 beskrivelse = oppgave.beskrivelse,
                 temagruppe = "",
                 tema = oppgave.tema,
-                behandlingstema = behandling?.map(Behandling::getBehandlingstema).orElse(null),
+                behandlingstema = behandling.map(Behandling::getBehandlingstema).orElse(null),
                 oppgavetype = oppgaveTypeMapped,
-                behandlingstype = behandling?.map(Behandling::getBehandlingstype).orElse(null),
-                aktivDato = LocalDate.now().toString(),
-                fristFerdigstillelse = oppgave.oppgaveFrist.toString(),
-                prioritet = stripTemakode(oppgave.prioritet)
+                behandlingstype = behandling.map(Behandling::getBehandlingstype).orElse(null),
+                aktivDato = LocalDate.now(),
+                fristFerdigstillelse = oppgave.oppgaveFrist,
+                prioritet = PostOppgaveRequestJsonDTO.Prioritet.valueOf(stripTemakode(oppgave.prioritet))
         )
-        return gjorSporring(url, oppgaveskjermetObject)
 
+        val consumerOidcToken: String = stsService.systemUserToken
+        val response = client.opprettOppgave(
+                authorization = consumerOidcToken,
+                xminusCorrelationMinusID = MDC.get(MDCConstants.MDC_CALL_ID),
+                postOppgaveRequestJsonDTO = oppgaveskjermetObject
+        )
+        return OppgaveResponse(response.id?.toString() ?: throw RuntimeException("No oppgaveId found"))
     }
 
 
