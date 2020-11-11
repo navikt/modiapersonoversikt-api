@@ -5,7 +5,10 @@ import no.nav.common.log.MDCConstants
 import no.nav.common.rest.client.RestClient
 import no.nav.common.sts.SystemUserTokenProvider
 import no.nav.common.utils.EnvironmentUtils
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Oppgave
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.oppgave.generated.apis.OppgaveApi
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.oppgave.generated.models.GetOppgaveResponseJsonDTO
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.oppgave.generated.models.OppgaveJsonDTO
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.oppgave.generated.models.PostOppgaveRequestJsonDTO
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveRequest
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveRestClient
@@ -75,6 +78,42 @@ open class OppgaveOpprettelseClient @Autowired constructor(
         )
         return OppgaveResponse(response.id?.toString() ?: throw RuntimeException("No oppgaveId found"))
     }
+
+    override fun hentOppgave(id: String): Oppgave {
+
+        val response = client.hentOppgave(
+                xminusCorrelationMinusID = MDC.get(MDCConstants.MDC_CALL_ID),
+                id = id.toLong()
+        )	        )
+
+        return oppgaveToOppgave(hentOppgaveFraGsak(response.id?.toString() ?: throw java.lang.RuntimeException("No oppgaveId found")))
+    }
+
+    private fun oppgaveToOppgave(oppgaveJsonDTO: OppgaveJsonDTO): Oppgave {
+        val erSporsmalOgSvarOppgave = Optional
+                .ofNullable(oppgaveJsonDTO.oppgavetype)
+                .map { kodeverksmapperService.mapOppgavetype(oppgaveJsonDTO.oppgavetype) }
+                .map { anObject: String? -> "SPM_OG_SVR" == anObject }
+                .orElse(false)
+        return Oppgave(
+                oppgaveJsonDTO.id.toString(),
+                oppgaveJsonDTO.aktoerId,
+                oppgaveJsonDTO.journalpostId,
+                erSporsmalOgSvarOppgave
+        )
+    }
+
+    private fun hentOppgaveFraGsak(oppgaveId: String): OppgaveJsonDTO {
+        return hentOppgaveResponseFraGsak(oppgaveId)
+    }
+
+    private fun hentOppgaveResponseFraGsak(oppgaveId: String): GetOppgaveResponseJsonDTO {
+        return try {
+            client.hentOppgave(MDC.get(MDCConstants.MDC_CALL_ID), oppgaveId.toLong())
+        } catch (exc: Exception) {
+            throw RuntimeException("HentOppgaveOppgaveIkkeFunnet", exc)
+        }
+    }	    }
 
 
     private fun gjorSporring(url: String, request: OppgaveSkjermetRequestDTO): OppgaveResponse {
