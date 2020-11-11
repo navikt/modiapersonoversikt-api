@@ -84,7 +84,7 @@ open class OppgaveOpprettelseClient @Autowired constructor(
         val response = client.hentOppgave(
                 xminusCorrelationMinusID = MDC.get(MDCConstants.MDC_CALL_ID),
                 id = id.toLong()
-        )	        )
+        )
 
         return oppgaveToOppgave(hentOppgaveFraGsak(response.id?.toString() ?: throw java.lang.RuntimeException("No oppgaveId found")))
     }
