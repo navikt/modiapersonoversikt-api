@@ -70,7 +70,9 @@ public class Filter {
         }
         if (FilterUtils.erAvsluttet(kjede)) {
             return under1MndSidenFerdigstillelse(kjede) && lovligeBehandlingstyper.contains(type);
-        } else return false;
+        }
+        
+        return false;
     }
 
     private static boolean lovligMenUtgaatStatusEllerUnderBehandling(String type, Behandlingskjede kjede) {
@@ -80,7 +82,9 @@ public class Filter {
         }
         if (lovligeBehandlingstyper.contains(type) && !FilterUtils.erAvsluttet(kjede)) {
             return true;
-        } else return false;
+        }
+
+        return false;
     }
 
     private static boolean under1MndSidenFerdigstillelse(Behandlingskjede kjede) {
