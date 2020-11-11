@@ -86,35 +86,22 @@ open class OppgaveOpprettelseClient @Autowired constructor(
                 id = id.toLong()
         )
 
-        return oppgaveToOppgave(hentOppgaveFraGsak(response.id?.toString() ?: throw java.lang.RuntimeException("No oppgaveId found")))
+        return oppgaveToOppgave(response)
     }
 
-    private fun oppgaveToOppgave(oppgaveJsonDTO: OppgaveJsonDTO): Oppgave {
-        val erSporsmalOgSvarOppgave = Optional
-                .ofNullable(oppgaveJsonDTO.oppgavetype)
-                .map { kodeverksmapperService.mapOppgavetype(oppgaveJsonDTO.oppgavetype) }
+    private fun oppgaveToOppgave(response: GetOppgaveResponseJsonDTO): Oppgave {
+        val erSTO = Optional
+                .ofNullable(response.oppgavetype)
+                .map { kodeverksmapperService.mapOppgavetype(response.oppgavetype) }
                 .map { anObject: String? -> "SPM_OG_SVR" == anObject }
                 .orElse(false)
         return Oppgave(
-                oppgaveJsonDTO.id.toString(),
-                oppgaveJsonDTO.aktoerId,
-                oppgaveJsonDTO.journalpostId,
-                erSporsmalOgSvarOppgave
+                response.id.toString(),
+                response.aktoerId,
+                response.journalpostId,
+                erSTO
         )
     }
-
-    private fun hentOppgaveFraGsak(oppgaveId: String): OppgaveJsonDTO {
-        return hentOppgaveResponseFraGsak(oppgaveId)
-    }
-
-    private fun hentOppgaveResponseFraGsak(oppgaveId: String): GetOppgaveResponseJsonDTO {
-        return try {
-            client.hentOppgave(MDC.get(MDCConstants.MDC_CALL_ID), oppgaveId.toLong())
-        } catch (exc: Exception) {
-            throw RuntimeException("HentOppgaveOppgaveIkkeFunnet", exc)
-        }
-    }	    }
-
 
     private fun gjorSporring(url: String, request: OppgaveSkjermetRequestDTO): OppgaveResponse {
         val uuid = UUID.randomUUID()
