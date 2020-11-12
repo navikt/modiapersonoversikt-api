@@ -70,7 +70,7 @@ class DialogOppgaveController @Autowired constructor(
                 .check(Policies.tilgangTilModia)
                 .get(Audit.describe(CREATE, Henvendelse.Oppgave.Opprett, AuditIdentifier.FNR to request.fnr)) {
                     val respons = oppgavebehandlingRest
-                            .opprettOppgave(OppgaveRequest(
+                            .opprettSkjermetOppgave(OppgaveRequest(
                                     fnr = request.fnr,
                                     behandlesAvApplikasjon = "FS22",
                                     beskrivelse = request.beskrivelse,

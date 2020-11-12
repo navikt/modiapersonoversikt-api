@@ -1,9 +1,11 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.api.service
 
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Oppgave
 import java.time.LocalDate
 
 interface OppgaveRestClient {
     fun opprettOppgave(request: OppgaveRequest): OppgaveResponse
+    fun opprettSkjermetOppgave(request: OppgaveRequest) : OppgaveResponse
 }
 
 data class OppgaveResponse(

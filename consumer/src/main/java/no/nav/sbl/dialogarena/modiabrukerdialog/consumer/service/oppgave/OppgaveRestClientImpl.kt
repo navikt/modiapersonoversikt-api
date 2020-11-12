@@ -43,6 +43,42 @@ open class OppgaveOpprettelseClient @Autowired constructor(
     private lateinit var stsService: SystemUserTokenProvider
 
 
+
+    private fun opprettOppgave(request: PostOppgaveRequestJsonDTO) : OppgaveResponse{
+        val consumerOidcToken: String = stsService.systemUserToken
+        val response = client.opprettOppgave(
+                authorization = consumerOidcToken,
+                xminusCorrelationMinusID = MDC.get(MDCConstants.MDC_CALL_ID),
+                postOppgaveRequestJsonDTO = request
+        )
+        return OppgaveResponse(response.id?.toString() ?: throw RuntimeException("No oppgaveId found"))
+    }
+    override fun opprettSkjermetOppgave(oppgave: OppgaveRequest) : OppgaveResponse {
+        val behandling: Optional<Behandling> = kodeverksmapperService.mapUnderkategori(oppgave.underkategoriKode)
+        val aktorId = getAktorId(oppgave.fnr)
+        if (aktorId == null || aktorId.isEmpty()) {
+            throw Exception("AktørId-mangler på person")
+        }
+
+        val request = PostOppgaveRequestJsonDTO(
+                opprettetAvEnhetsnr = oppgave.opprettetavenhetsnummer,
+                aktoerId = aktorId,
+                behandlesAvApplikasjon = "FS22",
+                beskrivelse = oppgave.beskrivelse,
+                temagruppe = "",
+                tema = oppgave.tema,
+                behandlingstema = behandling.map(Behandling::getBehandlingstema).orElse(null),
+                oppgavetype = kodeverksmapperService.mapOppgavetype(oppgave.oppgavetype),
+                behandlingstype = behandling.map(Behandling::getBehandlingstype).orElse(null),
+                aktivDato = LocalDate.now(),
+                fristFerdigstillelse = oppgave.oppgaveFrist,
+                prioritet = PostOppgaveRequestJsonDTO.Prioritet.valueOf(stripTemakode(oppgave.prioritet))
+        )
+
+        return opprettOppgave(request)
+    }
+
+
     override fun opprettOppgave(oppgave: OppgaveRequest): OppgaveResponse {
         //Mapping fra gammel kodeverk som frontend bruker til nytt kodeverk som Oppgave bruker
         val behandling: Optional<Behandling> = kodeverksmapperService.mapUnderkategori(oppgave.underkategoriKode)
@@ -52,12 +88,12 @@ open class OppgaveOpprettelseClient @Autowired constructor(
             throw Exception("AktørId-mangler på person")
         }
 
-        val oppgaveskjermetObject = PostOppgaveRequestJsonDTO(
+        val request = PostOppgaveRequestJsonDTO(
                 opprettetAvEnhetsnr = oppgave.opprettetavenhetsnummer,
                 aktoerId = aktorId,
                 behandlesAvApplikasjon = "FS22",
                 beskrivelse = oppgave.beskrivelse,
-                temagruppe = "",
+                temagruppe = oppgave.temagruppe,
                 tema = oppgave.tema,
                 behandlingstema = behandling.map(Behandling::getBehandlingstema).orElse(null),
                 oppgavetype = oppgaveTypeMapped,
@@ -67,13 +103,7 @@ open class OppgaveOpprettelseClient @Autowired constructor(
                 prioritet = PostOppgaveRequestJsonDTO.Prioritet.valueOf(stripTemakode(oppgave.prioritet))
         )
 
-        val consumerOidcToken: String = stsService.systemUserToken
-        val response = client.opprettOppgave(
-                authorization = consumerOidcToken,
-                xminusCorrelationMinusID = MDC.get(MDCConstants.MDC_CALL_ID),
-                postOppgaveRequestJsonDTO = oppgaveskjermetObject
-        )
-        return OppgaveResponse(response.id?.toString() ?: throw RuntimeException("No oppgaveId found"))
+        return opprettOppgave(request)
     }
 
 
