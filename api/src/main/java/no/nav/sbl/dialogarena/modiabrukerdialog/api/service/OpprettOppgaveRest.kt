@@ -2,11 +2,16 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.api.service
 
 import java.time.LocalDate
 
-data class OppgaveResponse(
+interface OppgaveRestClient {
+    fun opprettOppgave(requestOpprett: OpprettOppgaveRequest): OpprettOppgaveResponse
+    fun opprettSkjermetOppgave(requestOpprett: OpprettOppgaveRequest) : OpprettOppgaveResponse
+}
+
+data class OpprettOppgaveResponse(
         val id: String
 )
 
-data class  OppgaveRequest(
+data class  OpprettOppgaveRequest(
         val fnr: String,
         val behandlesAvApplikasjon: String,
         val beskrivelse: String,
@@ -17,5 +22,13 @@ data class  OppgaveRequest(
         val prioritet: String,
         val underkategoriKode: String?,
         val opprettetavenhetsnummer: String,
-        val oppgaveFrist: LocalDate
+        val oppgaveFrist: LocalDate,
+        val valgtEnhetsId: String,
+        val behandlingskjedeId: String,
+        val dagerFrist : Int,
+        val ansvarligEnhetId: String,
+        val ansvarligIdent: String?
+
+
+
 )

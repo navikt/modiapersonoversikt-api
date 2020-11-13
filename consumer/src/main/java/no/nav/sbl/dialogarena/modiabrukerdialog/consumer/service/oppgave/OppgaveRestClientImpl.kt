@@ -5,15 +5,13 @@ import no.nav.common.log.MDCConstants
 import no.nav.common.rest.client.RestClient
 import no.nav.common.sts.SystemUserTokenProvider
 import no.nav.common.utils.EnvironmentUtils
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Oppgave
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.oppgave.generated.apis.OppgaveApi
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.oppgave.generated.models.GetOppgaveResponseJsonDTO
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.oppgave.generated.models.PostOppgaveRequestJsonDTO
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.pdl.generated.HentIdent.IdentGruppe
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveRequest
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveResponse
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveRestClient
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.pdl.PdlOppslagService
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.pdl.generated.HentIdent.IdentGruppe
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.OpprettOppgaveResponse
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.OpprettOppgaveRequest
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.kodeverksmapper.KodeverksmapperService
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.kodeverksmapper.domain.Behandling
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.pdl.PdlSyntetiskMapper
@@ -25,7 +23,6 @@ import okhttp3.MediaType
 import okhttp3.Request
 import okhttp3.RequestBody
 import okhttp3.Response
-import org.apache.commons.lang3.StringUtils
 import org.slf4j.LoggerFactory
 import org.slf4j.MDC
 import org.springframework.beans.factory.annotation.Autowired
@@ -45,75 +42,71 @@ open class OppgaveOpprettelseClient @Autowired constructor(
     @Autowired
     private lateinit var stsService: SystemUserTokenProvider
 
-
-    override fun opprettOppgave(oppgave: OppgaveRequest): OppgaveResponse {
-        //Mapping fra gammel kodeverk som frontend bruker til nytt kodeverk som Oppgave bruker
-        val behandling: Optional<Behandling> = kodeverksmapperService.mapUnderkategori(oppgave.underkategoriKode)
-        val oppgaveTypeMapped: String = kodeverksmapperService.mapOppgavetype(oppgave.oppgavetype)
-        val aktorId = getAktorId(oppgave.fnr)
-        if (aktorId == null || aktorId.isEmpty()) {
-            throw Exception("AktørId-mangler på person")
-        }
-
-        val oppgaveskjermetObject = PostOppgaveRequestJsonDTO(
-                opprettetAvEnhetsnr = oppgave.opprettetavenhetsnummer,
-                aktoerId = aktorId,
-                behandlesAvApplikasjon = "FS22",
-                beskrivelse = oppgave.beskrivelse,
-                temagruppe = "",
-                tema = oppgave.tema,
-                behandlingstema = behandling.map(Behandling::getBehandlingstema).orElse(null),
-                oppgavetype = oppgaveTypeMapped,
-                behandlingstype = behandling.map(Behandling::getBehandlingstype).orElse(null),
-                aktivDato = LocalDate.now(),
-                fristFerdigstillelse = oppgave.oppgaveFrist,
-                prioritet = PostOppgaveRequestJsonDTO.Prioritet.valueOf(stripTemakode(oppgave.prioritet))
-        )
-
+    private fun opprettOppgave(request: PostOppgaveRequestJsonDTO) : OpprettOppgaveResponse {
         val consumerOidcToken: String = stsService.systemUserToken
         val response = client.opprettOppgave(
                 authorization = consumerOidcToken,
                 xminusCorrelationMinusID = MDC.get(MDCConstants.MDC_CALL_ID),
-                postOppgaveRequestJsonDTO = oppgaveskjermetObject
+                postOppgaveRequestJsonDTO = request
         )
-        return OppgaveResponse(response.id?.toString() ?: throw RuntimeException("No oppgaveId found"))
+        return OpprettOppgaveResponse(response.id?.toString() ?: throw RuntimeException("No oppgaveId found"))
     }
 
-    override fun hentOppgave(id: String): Oppgave {
+    override fun opprettSkjermetOppgave(opprettOppgave: OpprettOppgaveRequest) : OpprettOppgaveResponse {
+        val behandling: Optional<Behandling> = kodeverksmapperService.mapUnderkategori(opprettOppgave.underkategoriKode)
+        val aktorId = getAktorId(opprettOppgave.fnr)
+        if (aktorId == null || aktorId.isEmpty()) {
+            throw Exception("AktørId-mangler på person")
+        }
 
-        val response = client.hentOppgave(
-                xminusCorrelationMinusID = MDC.get(MDCConstants.MDC_CALL_ID),
-                id = id.toLong()
+        val request = PostOppgaveRequestJsonDTO(
+                opprettetAvEnhetsnr = opprettOppgave.opprettetavenhetsnummer,
+                aktoerId = aktorId,
+                behandlesAvApplikasjon = "FS22",
+                beskrivelse = opprettOppgave.beskrivelse,
+                temagruppe = "",
+                tema = opprettOppgave.tema,
+                behandlingstema = behandling.map(Behandling::getBehandlingstema).orElse(null),
+                oppgavetype = kodeverksmapperService.mapOppgavetype(opprettOppgave.oppgavetype),
+                behandlingstype = behandling.map(Behandling::getBehandlingstype).orElse(null),
+                aktivDato = LocalDate.now(),
+                fristFerdigstillelse = opprettOppgave.oppgaveFrist,
+                prioritet = PostOppgaveRequestJsonDTO.Prioritet.valueOf(stripTemakode(opprettOppgave.prioritet))
         )
 
-        return oppgaveToOppgave(response)
+        return opprettOppgave(request)
     }
 
-    private fun oppgaveToOppgave(response: GetOppgaveResponseJsonDTO): Oppgave {
-        val erSTO = Optional
-                .ofNullable(response.oppgavetype)
-                .map { kodeverksmapperService.mapOppgavetype(response.oppgavetype) }
-                .map { anObject: String? -> "SPM_OG_SVR" == anObject }
-                .orElse(false)
-        return Oppgave(
-                response.id.toString(),
-                response.aktoerId,
-                response.journalpostId,
-                erSTO
+    override fun opprettOppgave(opprettOppgave: OpprettOppgaveRequest): OpprettOppgaveResponse {
+        //Mapping fra gammel kodeverk som frontend bruker til nytt kodeverk som Oppgave bruker
+        val behandling: Optional<Behandling> = kodeverksmapperService.mapUnderkategori(opprettOppgave.underkategoriKode)
+        val oppgaveTypeMapped: String = kodeverksmapperService.mapOppgavetype(opprettOppgave.oppgavetype)
+        val aktorId = getAktorId(opprettOppgave.fnr)
+        if (aktorId == null || aktorId.isEmpty()) {
+            throw Exception("AktørId-mangler på person")
+        }
+
+        val request = PostOppgaveRequestJsonDTO(
+                opprettetAvEnhetsnr = opprettOppgave.opprettetavenhetsnummer,
+                aktoerId = aktorId,
+                behandlesAvApplikasjon = "FS22",
+                beskrivelse = opprettOppgave.beskrivelse,
+                temagruppe = opprettOppgave.temagruppe,
+                tema = opprettOppgave.tema,
+                behandlingstema = behandling.map(Behandling::getBehandlingstema).orElse(null),
+                oppgavetype = oppgaveTypeMapped,
+                behandlingstype = behandling.map(Behandling::getBehandlingstype).orElse(null),
+                aktivDato = LocalDate.now(),
+                fristFerdigstillelse = opprettOppgave.oppgaveFrist,
+                prioritet = PostOppgaveRequestJsonDTO.Prioritet.valueOf(stripTemakode(opprettOppgave.prioritet))
         )
+
+        val consumerOidcToken: String = stsService.systemUserToken
+
+        return opprettOppgave(request)
     }
 
-    override fun oppgaveErFerdigstilt(oppgaveid: String): Boolean {
-
-        val response = client.hentOppgave(
-                xminusCorrelationMinusID = MDC.get(MDCConstants.MDC_CALL_ID),
-                id = oppgaveid.toLong()
-        )
-
-        return StringUtils.equalsIgnoreCase(response.status.value, GetOppgaveResponseJsonDTO.Status.FERDIGSTILT.value)
-    }
-
-    private fun gjorSporring(url: String, request: OppgaveSkjermetRequestDTO): OppgaveResponse {
+    private fun gjorSporring(url: String, request: OppgaveSkjermetRequestDTO): OpprettOppgaveResponse {
         val uuid = UUID.randomUUID()
         try {
 
@@ -150,7 +143,7 @@ open class OppgaveOpprettelseClient @Autowired constructor(
                         "body" to body
                 ))
             }
-            return gson.fromJson(body, OppgaveResponse::class.java)
+            return gson.fromJson(body, OpprettOppgaveResponse::class.java)
         } catch (exception: Exception) {
             log.error("Feilet ved post mot Oppgave (ID: $uuid)", exception)
             TjenestekallLogger.error("Oppgave-error: $uuid", mapOf(
