@@ -1,24 +1,20 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.dialog
 
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.GsakKodeTema
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveRequest
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveRestClient
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveBehandlingService
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.OpprettOppgaveRequest
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.OpprettOppgaveResponse
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.gsak.GsakKodeverk
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.BehandlingsIdTilgangData
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Policies
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Tilgangskontroll
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.api.toDTO
 import no.nav.sbl.dialogarena.naudit.Audit
 import no.nav.sbl.dialogarena.naudit.Audit.Action.CREATE
 import no.nav.sbl.dialogarena.naudit.AuditIdentifier
 import no.nav.sbl.dialogarena.naudit.AuditResources.Person.Henvendelse
-import no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.DateUtils.arbeidsdagerFraDato
 import no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.DateUtils.arbeidsdagerFraDatoJava
-import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.OppgavebehandlingV3
-import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.meldinger.WSOpprettOppgave
-import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.meldinger.WSOpprettOppgaveRequest
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.http.HttpStatus
-import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import java.time.LocalDate
 
@@ -28,49 +24,28 @@ private const val HENVENDELSESTYPE_KODE: String = "DIALOG"
 @RequestMapping("/rest/dialogoppgave")
 class DialogOppgaveController @Autowired constructor(
         private val gsakKodeverk: GsakKodeverk,
-        private val oppgavebehandling: OppgavebehandlingV3,
-        private val oppgavebehandlingRest: OppgaveRestClient,
+        private val oppgavebehandling: OppgaveBehandlingService,
         private val tilgangskontroll: Tilgangskontroll
 ) {
 
     @PostMapping("/opprett")
-    fun opprettOppgave(@RequestBody request: OpperettOppgaveRequest): ResponseEntity<Void> {
+    fun opprettOppgave(@RequestBody request: OpperettOppgaveRequestDTO): OpprettOppgaveResponsDTO {
         return tilgangskontroll
                 .check(Policies.tilgangTilBruker.with(request.fnr))
                 .check(Policies.behandlingsIderTilhorerBruker.with(BehandlingsIdTilgangData(request.fnr, listOf(request.behandlingskjedeId))))
                 .get(Audit.describe(CREATE, Henvendelse.Oppgave.Opprett, AuditIdentifier.FNR to request.fnr, AuditIdentifier.BEHANDLING_ID to request.behandlingskjedeId)) {
-                    oppgavebehandling.opprettOppgave(
-                            WSOpprettOppgaveRequest()
-                                    .withOpprettetAvEnhetId(request.valgtEnhetId)
-                                    .withHenvendelsetypeKode(HENVENDELSESTYPE_KODE)
-                                    .withOpprettOppgave(
-                                            WSOpprettOppgave()
-                                                    .withHenvendelseId(request.behandlingskjedeId)
-                                                    .withAktivFra(org.joda.time.LocalDate.now())
-                                                    .withAktivTil(arbeidsdagerFraDato(request.dagerFrist, org.joda.time.LocalDate.now()))
-                                                    .withAnsvarligEnhetId(request.ansvarligEnhetId)
-                                                    .withAnsvarligId(request.ansvarligIdent)
-                                                    .withBeskrivelse(request.beskrivelse)
-                                                    .withFagomradeKode(request.temaKode)
-                                                    .withUnderkategoriKode(request.underkategoriKode)
-                                                    .withBrukerId(request.brukerid)
-                                                    .withOppgavetypeKode(request.oppgaveTypeKode)
-                                                    .withPrioritetKode(request.prioritetKode)
-                                                    .withLest(false)
-                                    )
-                    )
-                    ResponseEntity(HttpStatus.OK)
+                     oppgavebehandling.opprettOppgave(request.fromDTO())?.toDTO()
                 }
     }
 
     @PostMapping("/opprettskjermetoppgave")
     fun opprettSkjermetOppgave(@RequestBody request: OpperettSkjermetOppgaveDTO
-    ): SkjermetOppgaveRespons {
+    ): OpprettOppgaveResponsDTO {
         return tilgangskontroll
                 .check(Policies.tilgangTilModia)
                 .get(Audit.describe(CREATE, Henvendelse.Oppgave.Opprett, AuditIdentifier.FNR to request.fnr)) {
-                    val respons = oppgavebehandlingRest
-                            .opprettSkjermetOppgave(OppgaveRequest(
+                    oppgavebehandling
+                            .opprettSkjermetOppgave(OpprettOppgaveRequest(
                                     fnr = request.fnr,
                                     behandlesAvApplikasjon = "FS22",
                                     beskrivelse = request.beskrivelse,
@@ -83,9 +58,7 @@ class DialogOppgaveController @Autowired constructor(
                                     opprettetavenhetsnummer = request.opprettetavenhetsnummer,
                                     oppgaveFrist = kalkulerFrist(request.temaKode, request.oppgaveTypeKode)
                             )
-                    )
-
-                    SkjermetOppgaveRespons(oppgaveid = respons.id)
+                    ).toDTO()
                 }
     }
 
@@ -145,7 +118,11 @@ class DialogOppgaveController @Autowired constructor(
 
 }
 
-data class OpperettOppgaveRequest(
+fun OpperettOppgaveRequestDTO.fromDTO() : OpprettOppgaveRequest = TODO();
+fun OpprettOppgaveResponse.toDTO() : OpprettOppgaveResponsDTO = TODO();
+fun OpperettSkjermetOppgaveDTO.fromDTO() : OpprettOppgaveRequest = TODO();
+
+data class OpperettOppgaveRequestDTO(
         val fnr: String,
         val opprettetavenhetsnummer: String,
         val valgtEnhetId: Int,
@@ -172,6 +149,6 @@ data class OpperettSkjermetOppgaveDTO(
         val prioritetKode: String
 )
 
-data class SkjermetOppgaveRespons(
+data class OpprettOppgaveResponsDTO(
         val oppgaveid: String
 )

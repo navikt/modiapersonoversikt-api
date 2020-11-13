@@ -1,10 +1,12 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.oppgavebehandling;
 
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.OpprettOppgaveRequest;
 import no.nav.common.auth.subject.SubjectHandler;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Oppgave;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.LeggTilbakeOppgaveIGsakRequest;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveBehandlingService;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.OpprettOppgaveResponse;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.arbeidsfordeling.ArbeidsfordelingV1Service;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.AnsattService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Policies;
@@ -13,17 +15,15 @@ import no.nav.tjeneste.virksomhet.oppgave.v3.HentOppgaveOppgaveIkkeFunnet;
 import no.nav.tjeneste.virksomhet.oppgave.v3.OppgaveV3;
 import no.nav.tjeneste.virksomhet.oppgave.v3.informasjon.oppgave.WSOppgave;
 import no.nav.tjeneste.virksomhet.oppgave.v3.informasjon.oppgave.WSOppgavetype;
-import no.nav.tjeneste.virksomhet.oppgave.v3.informasjon.oppgave.WSUnderkategori;
 import no.nav.tjeneste.virksomhet.oppgave.v3.meldinger.*;
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.LagreOppgaveOppgaveIkkeFunnet;
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.LagreOppgaveOptimistiskLasing;
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.OppgavebehandlingV3;
-import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.meldinger.WSEndreOppgave;
-import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.meldinger.WSFerdigstillOppgaveBolkRequest;
-import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.meldinger.WSLagreOppgaveRequest;
+import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.meldinger.*;
 import no.nav.tjeneste.virksomhet.tildeloppgave.v1.TildelOppgaveV1;
 import no.nav.tjeneste.virksomhet.tildeloppgave.v1.WSTildelFlereOppgaverRequest;
 import no.nav.tjeneste.virksomhet.tildeloppgave.v1.WSTildelFlereOppgaverResponse;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,13 +38,17 @@ import static java.util.Collections.singletonList;
 import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.toList;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe.*;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.DateUtils.arbeidsdagerFraDato;
 import static org.apache.commons.lang3.StringUtils.equalsIgnoreCase;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.joda.time.DateTime.now;
 import static org.joda.time.format.DateTimeFormat.forPattern;
 
+
+
 public class OppgaveBehandlingServiceImpl implements OppgaveBehandlingService {
 
+    private final String HENVENDELSESTYPE_KODE = "DIALOG"
     private static final Logger logger = LoggerFactory.getLogger(OppgaveBehandlingServiceImpl.class);
     public static final Integer DEFAULT_ENHET = 4100;
     public static final String STORD_ENHET = "4842";
@@ -72,6 +76,36 @@ public class OppgaveBehandlingServiceImpl implements OppgaveBehandlingService {
         this.ansattWS = ansattWS;
         this.tilgangskontroll = tilgangskontroll;
         this.leggTilbakeOppgaveIGsakDelegate = new LeggTilbakeOppgaveIGsakDelegate(this, arbeidsfordelingService);
+    }
+
+    @Override
+    public OpprettOppgaveResponse opprettOppgave(OpprettOppgaveRequest request){
+        WSOpprettOppgaveResponse response =  oppgavebehandlingWS.opprettOppgave(
+                new WSOpprettOppgaveRequest()
+                        .withOpprettetAvEnhetId(Integer.parseInt(request.getOpprettetavenhetsnummer()))
+                        .withHenvendelsetypeKode(HENVENDELSESTYPE_KODE)
+                        .withOpprettOppgave(
+                                new WSOpprettOppgave()
+                                        .withHenvendelseId(request.getBehandlingskjedeId())
+                                        .withAktivFra(org.joda.time.LocalDate.now())
+                                        .withAktivTil(arbeidsdagerFraDato(request.getDagerFrist(), org.joda.time.LocalDate.now()))
+                                        .withAnsvarligEnhetId(request.getAnsvarligEnhetId())
+                                        .withAnsvarligId(request.getAnsvarligIdent())
+                                        .withBeskrivelse(request.getBeskrivelse())
+                                        .withFagomradeKode(request.getTema())
+                                        .withUnderkategoriKode(request.getUnderkategoriKode())
+                                        .withBrukerId(request.getFnr())
+                                        .withOppgavetypeKode(request.getOppgavetype())
+                                        .withPrioritetKode(request.getPrioritet())
+                                        .withLest(false)
+                        )
+        );
+        return response;
+    }
+
+    @Override
+    public Integer opprettSkjermetOppgave(OpprettOppgaveRequest request) {
+        return null;
     }
 
     @Override
