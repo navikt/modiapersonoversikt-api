@@ -22,6 +22,8 @@ import no.nav.virksomhet.tjenester.sak.arbeidogaktivitet.v1.ArbeidOgAktivitet;
 import no.nav.virksomhet.tjenester.sak.meldinger.v1.WSBruker;
 import no.nav.virksomhet.tjenester.sak.meldinger.v1.WSHentSakListeRequest;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
 import java.util.Optional;
@@ -37,6 +39,7 @@ import static org.joda.time.DateTime.now;
 public class SakerServiceImpl implements SakerService {
 
     public static final String VEDTAKSLOSNINGEN = "FS36";
+    private static final Logger logger = LoggerFactory.getLogger(SakerServiceImpl.class);
 
 
     @Autowired
@@ -256,6 +259,7 @@ public class SakerServiceImpl implements SakerService {
                         return sak;
                     });
         } catch (Exception e) {
+            logger.error("Kunne ikke hente saker fra arena", e);
             return empty();
         }
     }
