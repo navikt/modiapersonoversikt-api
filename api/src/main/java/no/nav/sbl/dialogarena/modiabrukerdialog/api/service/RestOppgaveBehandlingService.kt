@@ -1,13 +1,21 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.api.service
 
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe
+
 interface RestOppgaveBehandlingService {
     fun opprettOppgave(request: OpprettOppgaveRequest) : OpprettOppgaveResponse
     fun opprettSkjermetOppgave(request: OpprettOppgaveRequest): OpprettOppgaveResponse
 
-    fun hentOppgave(oppgaveId: String) : OppgaveRespons
+    fun hentOppgave(oppgaveId: String) : OppgaveResponse
+
+    fun tilordneOppgave(oppgaveId: String, temagruppe: Temagruppe, saksbehandlersValgteEnhet: String)
+
+    fun oppgaveErFerdigstilt(oppgaveid: String): Boolean
+
+    class FikkIkkeTilordnet(cause: Throwable) : Exception(cause)
 }
 
-data class OppgaveRespons(
+data class OppgaveResponse(
         val oppgaveId: String,
         val fnr: String,
         val henvendelseId: String,

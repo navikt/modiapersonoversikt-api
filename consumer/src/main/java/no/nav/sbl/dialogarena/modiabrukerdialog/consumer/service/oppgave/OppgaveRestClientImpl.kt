@@ -12,6 +12,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveRestClient
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.pdl.PdlOppslagService
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.pdl.generated.HentIdent.IdentGruppe
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveResponse
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.OpprettOppgaveResponse
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.kodeverksmapper.KodeverksmapperService
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.kodeverksmapper.domain.Behandling
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.pdl.PdlSyntetiskMapper
@@ -25,6 +26,7 @@ import okhttp3.RequestBody
 import okhttp3.Response
 import org.slf4j.MDC
 import org.slf4j.LoggerFactory
+import org.springframework.beans.factory.annotation.Autowired
 import java.time.LocalDate
 import java.util.*
 
@@ -43,16 +45,16 @@ open class OppgaveOpprettelseClient @Autowired constructor(
 
 
 
-    private fun opprettOppgave(request: PostOppgaveRequestJsonDTO) : OppgaveResponse{
+    private fun opprettOppgave(request: PostOppgaveRequestJsonDTO) : OpprettOppgaveResponse {
         val consumerOidcToken: String = stsService.systemUserToken
         val response = client.opprettOppgave(
                 authorization = consumerOidcToken,
                 xminusCorrelationMinusID = MDC.get(MDCConstants.MDC_CALL_ID),
                 postOppgaveRequestJsonDTO = request
         )
-        return OppgaveResponse(response.id?.toString() ?: throw RuntimeException("No oppgaveId found"))
+        return OpprettOppgaveResponse(response.id?.toString() ?: throw RuntimeException("No oppgaveId found"))
     }
-    override fun opprettSkjermetOppgave(opprettOppgave: OpprettOppgaveRequest) : OppgaveResponse {
+    override fun opprettSkjermetOppgave(opprettOppgave: OpprettOppgaveRequest) : OpprettOppgaveResponse {
         val behandling: Optional<Behandling> = kodeverksmapperService.mapUnderkategori(opprettOppgave.underkategoriKode)
         val aktorId = getAktorId(opprettOppgave.fnr)
         if (aktorId == null || aktorId.isEmpty()) {
@@ -78,7 +80,7 @@ open class OppgaveOpprettelseClient @Autowired constructor(
     }
 
 
-    override fun opprettOppgave(opprettOppgave: OpprettOppgaveRequest): OppgaveResponse {
+    override fun opprettOppgave(opprettOppgave: OpprettOppgaveRequest): OpprettOppgaveResponse {
         //Mapping fra gammel kodeverk som frontend bruker til nytt kodeverk som Oppgave bruker
         val behandling: Optional<Behandling> = kodeverksmapperService.mapUnderkategori(opprettOppgave.underkategoriKode)
         val oppgaveTypeMapped: String = kodeverksmapperService.mapOppgavetype(opprettOppgave.oppgavetype)

@@ -8,7 +8,6 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.gsak.GsakKodeverk
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.BehandlingsIdTilgangData
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Policies
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Tilgangskontroll
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.api.toDTO
 import no.nav.sbl.dialogarena.naudit.Audit
 import no.nav.sbl.dialogarena.naudit.Audit.Action.CREATE
 import no.nav.sbl.dialogarena.naudit.AuditIdentifier
@@ -34,7 +33,7 @@ class DialogOppgaveController @Autowired constructor(
                 .check(Policies.tilgangTilBruker.with(request.fnr))
                 .check(Policies.behandlingsIderTilhorerBruker.with(BehandlingsIdTilgangData(request.fnr, listOf(request.behandlingskjedeId))))
                 .get(Audit.describe(CREATE, Henvendelse.Oppgave.Opprett, AuditIdentifier.FNR to request.fnr, AuditIdentifier.BEHANDLING_ID to request.behandlingskjedeId)) {
-                     oppgavebehandling.opprettOppgave(request.fromDTO())?.toDTO()
+                     oppgavebehandling.opprettOppgave(request.fromDTO()).toDTO()
                 }
     }
 
@@ -44,7 +43,7 @@ class DialogOppgaveController @Autowired constructor(
         return tilgangskontroll
                 .check(Policies.tilgangTilModia)
                 .get(Audit.describe(CREATE, Henvendelse.Oppgave.Opprett, AuditIdentifier.FNR to request.fnr)) {
-                    oppgavebehandling.opprettSkjermetOppgave(request.fromDTO())?.toDTO()
+                    oppgavebehandling.opprettSkjermetOppgave(request.fromDTO()).toDTO()
                 }
     }
 
@@ -63,17 +62,6 @@ class DialogOppgaveController @Autowired constructor(
                         )
                     }
                 }
-    }
-
-    private fun kalkulerFrist(temaKode: String, oppgaveTypeKode: String): LocalDate {
-        val dagerFrist = gsakKodeverk.hentTemaListe()
-                .find { it.kode == temaKode }
-                ?.oppgaveTyper
-                ?.find { it.kode == oppgaveTypeKode }
-                ?.dagerFrist
-                ?: 2
-
-        return arbeidsdagerFraDatoJava(dagerFrist, LocalDate.now())
     }
 
     private fun hentOppgavetyper(oppgavetyper: List<GsakKodeTema.OppgaveType>): List<Map<String, Any?>> =
@@ -136,5 +124,5 @@ data class OpperettSkjermetOppgaveDTO(
 )
 
 data class OpprettOppgaveResponseDTO(
-        val oppgaveid: String
+        val id: String
 )
