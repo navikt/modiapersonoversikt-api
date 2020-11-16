@@ -10,7 +10,7 @@ public interface OppgaveBehandlingService {
 
     OpprettOppgaveResponse opprettOppgave(OpprettOppgaveRequest request);
 
-    Integer opprettSkjermetOppgave(OpprettOppgaveRequest request);
+    OpprettOppgaveResponse opprettSkjermetOppgave(OpprettOppgaveRequest request);
 
 
     Oppgave hentOppgave(String oppgaveId);

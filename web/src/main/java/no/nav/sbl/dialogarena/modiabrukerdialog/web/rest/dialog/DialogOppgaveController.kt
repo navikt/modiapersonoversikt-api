@@ -29,7 +29,7 @@ class DialogOppgaveController @Autowired constructor(
 ) {
 
     @PostMapping("/opprett")
-    fun opprettOppgave(@RequestBody request: OpperettOppgaveRequestDTO): OpprettOppgaveResponsDTO {
+    fun opprettOppgave(@RequestBody request: OpperettOppgaveRequestDTO): OpprettOppgaveResponseDTO {
         return tilgangskontroll
                 .check(Policies.tilgangTilBruker.with(request.fnr))
                 .check(Policies.behandlingsIderTilhorerBruker.with(BehandlingsIdTilgangData(request.fnr, listOf(request.behandlingskjedeId))))
@@ -40,25 +40,11 @@ class DialogOppgaveController @Autowired constructor(
 
     @PostMapping("/opprettskjermetoppgave")
     fun opprettSkjermetOppgave(@RequestBody request: OpperettSkjermetOppgaveDTO
-    ): OpprettOppgaveResponsDTO {
+    ): OpprettOppgaveResponseDTO {
         return tilgangskontroll
                 .check(Policies.tilgangTilModia)
                 .get(Audit.describe(CREATE, Henvendelse.Oppgave.Opprett, AuditIdentifier.FNR to request.fnr)) {
-                    oppgavebehandling
-                            .opprettSkjermetOppgave(OpprettOppgaveRequest(
-                                    fnr = request.fnr,
-                                    behandlesAvApplikasjon = "FS22",
-                                    beskrivelse = request.beskrivelse,
-                                    temagruppe = "", //not in use
-                                    tema = request.temaKode,
-                                    underkategoriKode = request.underkategoriKode,
-                                    oppgavetype = request.oppgaveTypeKode,
-                                    behandlingstype = HENVENDELSESTYPE_KODE,
-                                    prioritet = request.prioritetKode,
-                                    opprettetavenhetsnummer = request.opprettetavenhetsnummer,
-                                    oppgaveFrist = kalkulerFrist(request.temaKode, request.oppgaveTypeKode)
-                            )
-                    ).toDTO()
+                    oppgavebehandling.opprettSkjermetOppgave(request.fromDTO())?.toDTO()
                 }
     }
 
@@ -119,8 +105,8 @@ class DialogOppgaveController @Autowired constructor(
 }
 
 fun OpperettOppgaveRequestDTO.fromDTO() : OpprettOppgaveRequest = TODO();
-fun OpprettOppgaveResponse.toDTO() : OpprettOppgaveResponsDTO = TODO();
 fun OpperettSkjermetOppgaveDTO.fromDTO() : OpprettOppgaveRequest = TODO();
+fun OpprettOppgaveResponse.toDTO() : OpprettOppgaveResponseDTO = TODO();
 
 data class OpperettOppgaveRequestDTO(
         val fnr: String,
@@ -149,6 +135,6 @@ data class OpperettSkjermetOppgaveDTO(
         val prioritetKode: String
 )
 
-data class OpprettOppgaveResponsDTO(
+data class OpprettOppgaveResponseDTO(
         val oppgaveid: String
 )

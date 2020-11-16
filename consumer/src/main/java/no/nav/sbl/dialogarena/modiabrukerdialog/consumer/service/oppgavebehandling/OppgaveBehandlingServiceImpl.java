@@ -48,7 +48,7 @@ import static org.joda.time.format.DateTimeFormat.forPattern;
 
 public class OppgaveBehandlingServiceImpl implements OppgaveBehandlingService {
 
-    private final String HENVENDELSESTYPE_KODE = "DIALOG"
+    private final String HENVENDELSESTYPE_KODE = "DIALOG";
     private static final Logger logger = LoggerFactory.getLogger(OppgaveBehandlingServiceImpl.class);
     public static final Integer DEFAULT_ENHET = 4100;
     public static final String STORD_ENHET = "4842";
@@ -100,11 +100,11 @@ public class OppgaveBehandlingServiceImpl implements OppgaveBehandlingService {
                                         .withLest(false)
                         )
         );
-        return response;
+        return new OpprettOppgaveResponse(response.getOppgaveId());
     }
 
     @Override
-    public Integer opprettSkjermetOppgave(OpprettOppgaveRequest request) {
+    public OpprettOppgaveResponse opprettSkjermetOppgave(OpprettOppgaveRequest request) {
         return null;
     }
 
