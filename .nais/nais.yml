@@ -340,8 +340,6 @@ spec:
       value: "28"
     - name: SAKSOVERSIKT_PRODSETTNINGSDATO
       value: "2016-06-04"
-    - name: MODIABRUKERDIALOG_CXF_LOG_LEVEL
-      value: "INFO"
     - name: FJERN_SOKNADER_FOR_DATO
       value: "2014-12-09"
     - name: TOGGLE_DIGISYFO
