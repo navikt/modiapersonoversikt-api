@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.api.service
 
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Oppgave
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe
 
 interface RestOppgaveBehandlingService {
@@ -8,7 +9,12 @@ interface RestOppgaveBehandlingService {
 
     fun hentOppgave(oppgaveId: String) : OppgaveResponse
 
+    @Throws(FikkIkkeTilordnet::class)
     fun tilordneOppgave(oppgaveId: String, temagruppe: Temagruppe, saksbehandlersValgteEnhet: String)
+
+    fun finnTildelteOppgaver(): List<Oppgave>
+
+    fun systemLeggTilbakeOppgave(oppgaveId: String, temagruppe: Temagruppe, saksbehandlersValgteEnhet: String)
 
     fun oppgaveErFerdigstilt(oppgaveid: String): Boolean
 

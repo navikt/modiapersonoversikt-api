@@ -4,6 +4,7 @@ import no.nav.common.auth.subject.SubjectHandler
 import no.nav.common.log.MDCConstants
 import no.nav.common.sts.SystemUserTokenProvider
 import no.nav.common.utils.EnvironmentUtils
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Oppgave
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.oppgave.generated.apis.OppgaveApi
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.oppgave.generated.models.GetOppgaveResponseJsonDTO
@@ -17,19 +18,29 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.RestOppgaveBehandlin
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.pdl.PdlOppslagService
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.kodeverksmapper.KodeverksmapperService
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.kodeverksmapper.domain.Behandling
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.oppgave.OppgaveOpprettelseClient
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.pdl.PdlSyntetiskMapper
+import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Policies
+import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Tilgangskontroll
+import no.nav.tjeneste.virksomhet.oppgave.v3.informasjon.oppgave.WSOppgave
+import no.nav.tjeneste.virksomhet.oppgave.v3.meldinger.WSFinnOppgaveListeFilter
+import no.nav.tjeneste.virksomhet.oppgave.v3.meldinger.WSFinnOppgaveListeRequest
+import no.nav.tjeneste.virksomhet.oppgave.v3.meldinger.WSFinnOppgaveListeSok
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.LagreOppgaveOppgaveIkkeFunnet
+import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.LagreOppgaveOptimistiskLasing
 import org.apache.commons.lang3.StringUtils
 import org.slf4j.LoggerFactory
 import org.slf4j.MDC
 import org.springframework.beans.factory.annotation.Autowired
 import java.time.LocalDate
 import java.util.*
+import java.util.function.Consumer
+import java.util.function.Function
+import java.util.stream.Collectors
 
 open class RestOppgaveBehandlingServiceImpl @Autowired constructor(
         val kodeverksmapperService: KodeverksmapperService,
-        val pdlOppslagService: PdlOppslagService
+        val pdlOppslagService: PdlOppslagService,
+        val tilgangskontroll: Tilgangskontroll
 ) : RestOppgaveBehandlingService{
 
     @Autowired
@@ -171,8 +182,54 @@ open class RestOppgaveBehandlingServiceImpl @Autowired constructor(
                     )
             )
         } catch (e: LagreOppgaveOppgaveIkkeFunnet) {
+            TODO("Må endre catch")
             log.info("Oppgaven ble ikke funnet ved tilordning til saksbehandler. Oppgaveid: " + respons.id, e)
             throw RuntimeException("Oppgaven ble ikke funnet ved tilordning til saksbehandler", e)
+        }
+    }
+
+    override fun finnTildelteOppgaver(): List<Oppgave> {
+        val ident: String = SubjectHandler.getIdent().orElseThrow { RuntimeException("Fant ikke ident") }
+        val response = apiClient.hentOppgave(
+                xminusCorrelationMinusID = MDC.get(MDCConstants.MDC_CALL_ID),
+                id = ident.toLong()
+        )
+        return validerTilgangTilbruker(oppgaveWS
+                .finnOppgaveListe(WSFinnOppgaveListeRequest()
+                        .withSok(WSFinnOppgaveListeSok()
+                                .withAnsvarligId(ident)
+                                .withFagomradeKodeListe(OppgaveBehandlingServiceImpl.KONTAKT_NAV))
+                        .withFilter(WSFinnOppgaveListeFilter()
+                                .withAktiv(true)
+                                .withOppgavetypeKodeListe(OppgaveBehandlingServiceImpl.SPORSMAL_OG_SVAR)))
+                .getOppgaveListe().stream()
+                .map(Function<WSOppgave, Oppgave> { wsOppgave: WSOppgave? -> OppgaveBehandlingServiceImpl.wsOppgaveToOppgave(wsOppgave) })
+                .collect(Collectors.toList()))
+    }
+
+    private fun validerTilgangTilbruker(oppgaveList: List<Oppgave>): List<Oppgave> {
+        if (oppgaveList.isEmpty()) {
+            return emptyList()
+        } else if (tilgangskontroll
+                        .check(Policies.tilgangTilBruker.with(oppgaveList[0].fnr))
+                        .getDecision()
+                        .isPermit()) {
+            return oppgaveList
+        }
+        oppgaveList.forEach(Consumer { enkeltoppgave: Oppgave -> systemLeggTilbakeOppgave(enkeltoppgave.oppgaveId, null, "4100") })
+        return emptyList()
+    }
+
+    override fun systemLeggTilbakeOppgave(oppgaveId: String, temagruppe: Temagruppe, saksbehandlersValgteEnhet: String) {
+        try {
+            val response = apiClient.hentOppgave(
+                    xminusCorrelationMinusID = MDC.get(MDCConstants.MDC_CALL_ID),
+                    id = oppgaveId.toLong()
+            )
+            lagreOppgave(response, temagruppe, saksbehandlersValgteEnhet)
+        } catch (lagreOppgaveOptimistiskLasing: LagreOppgaveOptimistiskLasing) {
+            TODO("Må endre catch")
+            throw RuntimeException("Oppgaven kunne ikke lagres, den er for øyeblikket låst av en annen bruker.", lagreOppgaveOptimistiskLasing)
         }
     }
 
