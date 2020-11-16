@@ -27,7 +27,6 @@ import org.slf4j.MDC
 import org.slf4j.LoggerFactory
 import java.time.LocalDate
 import java.util.*
-import org.springframework.beans.factory.annotation.Autowired
 
 open class OppgaveOpprettelseClient @Autowired constructor(
         val kodeverksmapperService: KodeverksmapperService,
