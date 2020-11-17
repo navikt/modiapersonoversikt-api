@@ -14,6 +14,8 @@ interface RestOppgaveBehandlingService {
 
     fun finnTildelteOppgaver(): List<OppgaveResponse>
 
+    fun plukkOppgaver(temagruppe: Temagruppe, saksbehandlersValgteEnhet: String): List<OppgaveResponse>
+
     fun systemLeggTilbakeOppgave(oppgaveId: String, temagruppe: Temagruppe, saksbehandlersValgteEnhet: String)
 
     fun oppgaveErFerdigstilt(oppgaveid: String): Boolean

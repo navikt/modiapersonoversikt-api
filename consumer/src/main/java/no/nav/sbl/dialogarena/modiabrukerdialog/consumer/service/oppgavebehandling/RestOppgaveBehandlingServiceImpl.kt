@@ -7,7 +7,10 @@ import no.nav.common.utils.EnvironmentUtils
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Oppgave
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.oppgave.generated.apis.OppgaveApi
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.oppgave.generated.models.*
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.oppgave.generated.models.GetOppgaveResponseJsonDTO
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.oppgave.generated.models.OppgaveJsonDTO
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.oppgave.generated.models.PostOppgaveRequestJsonDTO
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.oppgave.generated.models.PutOppgaveRequestJsonDTO
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.pdl.generated.HentIdent
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveResponse
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.OpprettOppgaveRequest
@@ -20,11 +23,11 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.pdl.PdlSyntetis
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Policies
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Tilgangskontroll
 import no.nav.tjeneste.virksomhet.oppgave.v3.informasjon.oppgave.WSOppgave
-import no.nav.tjeneste.virksomhet.oppgave.v3.meldinger.WSFinnOppgaveListeFilter
-import no.nav.tjeneste.virksomhet.oppgave.v3.meldinger.WSFinnOppgaveListeRequest
-import no.nav.tjeneste.virksomhet.oppgave.v3.meldinger.WSFinnOppgaveListeSok
+import no.nav.tjeneste.virksomhet.oppgave.v3.meldinger.WSHentOppgaveResponse
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.LagreOppgaveOppgaveIkkeFunnet
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.LagreOppgaveOptimistiskLasing
+import no.nav.tjeneste.virksomhet.tildeloppgave.v1.WSTildelFlereOppgaverRequest
+import no.nav.tjeneste.virksomhet.tildeloppgave.v1.WSTildelFlereOppgaverResponse
 import org.apache.commons.lang3.StringUtils
 import org.slf4j.LoggerFactory
 import org.slf4j.MDC
@@ -211,9 +214,9 @@ open class RestOppgaveBehandlingServiceImpl @Autowired constructor(
                 tema = listOf(KONTAKT_NAV),
                 oppgavetype = listOf(SPORSMAL_OG_SVAR),
                 tilordnetRessurs = ident
-        ).oppgaver
-                ?.map { oppgave: OppgaveJsonDTO -> oppgaveToOppgave(oppgave) }
-
+        ).oppgaver!!.stream()
+                .map { oppgave: OppgaveJsonDTO -> oppgaveToOppgave(oppgave) }
+                .collect(Collectors.toList())
 
         return validerTilgangTilbruker(response)
     }
@@ -229,6 +232,33 @@ open class RestOppgaveBehandlingServiceImpl @Autowired constructor(
         }
         oppgaveList.forEach(Consumer { enkeltoppgave: OppgaveResponse -> systemLeggTilbakeOppgave(enkeltoppgave.oppgaveId, null, "4100") })
         return emptyList()
+    }
+
+    override fun plukkOppgaver(temagruppe: Temagruppe, saksbehandlersValgteEnhet: String): List<OppgaveResponse> {
+        val enhetsId = saksbehandlersValgteEnhet.toInt()
+        return tildelEldsteLedigeOppgaver(temagruppe, enhetsId, saksbehandlersValgteEnhet).stream()
+                .map { oppgave: OppgaveJsonDTO -> oppgaveToOppgave(oppgave) }
+                .collect(Collectors.toList())
+    }
+
+    private fun tildelEldsteLedigeOppgaver(temagruppe: Temagruppe, enhetsId: Int, saksbehandlersValgteEnhet: String): List<OppgaveJsonDTO> {
+        TODO("Må endres til å bruke OppgaveApi")
+        val ident = SubjectHandler.getIdent().orElseThrow { RuntimeException("Fant ikke ident") }
+        val response: WSTildelFlereOppgaverResponse = tildelOppgaveWS.tildelFlereOppgaver(
+                WSTildelFlereOppgaverRequest()
+                        .withUnderkategori(OppgaveBehandlingServiceImpl.underkategoriKode(temagruppe))
+                        .withOppgavetype(OppgaveBehandlingServiceImpl.SPORSMAL_OG_SVAR)
+                        .withFagomrade(OppgaveBehandlingServiceImpl.KONTAKT_NAV)
+                        .withAnsvarligEnhetId(enhetFor(temagruppe, saksbehandlersValgteEnhet))
+                        .withIkkeTidligereTildeltSaksbehandlerId(ident)
+                        .withTildeltAvEnhetId(enhetsId)
+                        .withTildelesSaksbehandlerId(ident))
+                ?: return emptyList()
+        return response.oppgaveIder.stream()
+                .map(Function<Int, WSHentOppgaveResponse> { oppgaveId: Int? -> this.hentOppgaveResponseFraGsak(oppgaveId) })
+                .filter { obj: WSHentOppgaveResponse? -> Objects.nonNull(obj) }
+                .map { obj: WSHentOppgaveResponse -> obj.oppgave }
+                .collect(Collectors.toList())
     }
 
     override fun systemLeggTilbakeOppgave(oppgaveId: String, temagruppe: Temagruppe, saksbehandlersValgteEnhet: String) {
