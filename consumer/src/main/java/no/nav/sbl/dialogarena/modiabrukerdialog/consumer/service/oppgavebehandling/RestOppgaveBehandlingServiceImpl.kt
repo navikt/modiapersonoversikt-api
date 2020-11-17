@@ -212,7 +212,7 @@ open class RestOppgaveBehandlingServiceImpl @Autowired constructor(
                 oppgavetype = listOf(SPORSMAL_OG_SVAR),
                 tilordnetRessurs = ident
         ).oppgaver
-                .map { oppgave: OppgaveJsonDTO? -> oppgaveToOppgave(oppgave) }
+                ?.map { oppgave: OppgaveJsonDTO -> oppgaveToOppgave(oppgave) }
 
 
         return validerTilgangTilbruker(response)
