@@ -4,31 +4,30 @@ import no.nav.common.auth.subject.SubjectHandler
 import no.nav.common.log.MDCConstants
 import no.nav.common.sts.SystemUserTokenProvider
 import no.nav.common.utils.EnvironmentUtils
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Oppgave
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.oppgave.generated.apis.OppgaveApi
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.oppgave.generated.models.GetOppgaveResponseJsonDTO
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.oppgave.generated.models.OppgaveJsonDTO
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.oppgave.generated.models.PostOppgaveRequestJsonDTO
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.oppgave.generated.models.PutOppgaveRequestJsonDTO
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.oppgave.generated.models.*
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.pdl.generated.HentIdent
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveResponse
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.OpprettOppgaveRequest
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.OpprettOppgaveResponse
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.RestOppgaveBehandlingService
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.AnsattService
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.pdl.PdlOppslagService
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.kodeverksmapper.KodeverksmapperService
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.kodeverksmapper.domain.Behandling
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.pdl.PdlSyntetiskMapper
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Policies
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Tilgangskontroll
-import no.nav.tjeneste.virksomhet.oppgave.v3.informasjon.oppgave.WSOppgave
-import no.nav.tjeneste.virksomhet.oppgave.v3.meldinger.WSHentOppgaveResponse
+import no.nav.tjeneste.virksomhet.oppgave.v3.HentOppgaveOppgaveIkkeFunnet
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.LagreOppgaveOppgaveIkkeFunnet
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.LagreOppgaveOptimistiskLasing
+import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.meldinger.WSFerdigstillOppgaveBolkRequest
 import no.nav.tjeneste.virksomhet.tildeloppgave.v1.WSTildelFlereOppgaverRequest
 import no.nav.tjeneste.virksomhet.tildeloppgave.v1.WSTildelFlereOppgaverResponse
 import org.apache.commons.lang3.StringUtils
+import org.joda.time.DateTime
+import org.joda.time.format.DateTimeFormat
 import org.slf4j.LoggerFactory
 import org.slf4j.MDC
 import org.springframework.beans.factory.annotation.Autowired
@@ -41,7 +40,8 @@ import java.util.stream.Collectors
 open class RestOppgaveBehandlingServiceImpl @Autowired constructor(
         val kodeverksmapperService: KodeverksmapperService,
         val pdlOppslagService: PdlOppslagService,
-        val tilgangskontroll: Tilgangskontroll
+        val tilgangskontroll: Tilgangskontroll,
+        private val ansattService: AnsattService
 ) : RestOppgaveBehandlingService{
     val SPORSMAL_OG_SVAR = "SPM_OG_SVR"
     val KONTAKT_NAV = "KNA"
@@ -52,6 +52,8 @@ open class RestOppgaveBehandlingServiceImpl @Autowired constructor(
     val OPPGAVE_BASEURL = EnvironmentUtils.getRequiredProperty("OPPGAVE_BASEURL")
     val apiClient = OppgaveApi(OPPGAVE_BASEURL)
     val consumerOidcToken: String = stsService.systemUserToken
+    val DEFAULT_ENHET = 4100
+    val STORD_ENHET = "4842"
 
     private val log = LoggerFactory.getLogger(RestOppgaveBehandlingServiceImpl::class.java)
 
@@ -175,6 +177,10 @@ open class RestOppgaveBehandlingServiceImpl @Autowired constructor(
         lagreOppgave(response, Optional.ofNullable(temagruppe), saksbehandlersValgteEnhet)
     }
 
+    open fun lagreOppgave(response: PutOppgaveRequestJsonDTO, temagruppe: Temagruppe, saksbehandlersValgteEnhet: String) {
+        lagreOppgave(response, Optional.ofNullable(temagruppe), saksbehandlersValgteEnhet)
+    }
+
     private fun lagreOppgave(respons: GetOppgaveResponseJsonDTO, temagruppe: Optional<Temagruppe>, saksbehandlersValgteEnhet: String) {
         try {
             apiClient.endreOppgave(
@@ -193,7 +199,7 @@ open class RestOppgaveBehandlingServiceImpl @Autowired constructor(
                             aktivDato = respons.aktivDato,
                             fristFerdigstillelse = respons.fristFerdigstillelse,
                             prioritet = PutOppgaveRequestJsonDTO.Prioritet.valueOf(stripTemakode(respons.prioritet.toString())),
-                            endretAvEnhetsnr = respons.endretAvEnhetsnr,
+                            endretAvEnhetsnr = enhetFor(temagruppe, saksbehandlersValgteEnhet),
                             status = PutOppgaveRequestJsonDTO.Status.AAPNET,
                             versjon = 1
                     )
@@ -202,6 +208,54 @@ open class RestOppgaveBehandlingServiceImpl @Autowired constructor(
             TODO("Må endre catch")
             log.info("Oppgaven ble ikke funnet ved tilordning til saksbehandler. Oppgaveid: " + respons.id, e)
             throw RuntimeException("Oppgaven ble ikke funnet ved tilordning til saksbehandler", e)
+        }
+    }
+
+    private fun lagreOppgave(respons: PutOppgaveRequestJsonDTO, temagruppe: Optional<Temagruppe>, saksbehandlersValgteEnhet: String) {
+        try {
+            apiClient.endreOppgave(
+                    xminusCorrelationMinusID = MDC.get(MDCConstants.MDC_CALL_ID),
+                    id = respons.id.toString().toLong(),
+                    putOppgaveRequestJsonDTO = PutOppgaveRequestJsonDTO(
+                            tildeltEnhetsnr = respons.tildeltEnhetsnr,
+                            aktoerId = respons.aktoerId,
+                            behandlesAvApplikasjon = "FS22",
+                            beskrivelse = respons.beskrivelse,
+                            temagruppe = respons.temagruppe,
+                            tema = respons.tema,
+                            behandlingstema = respons.behandlingstema,
+                            oppgavetype = respons.oppgavetype,
+                            behandlingstype = respons.behandlingstype,
+                            aktivDato = respons.aktivDato,
+                            fristFerdigstillelse = respons.fristFerdigstillelse,
+                            prioritet = PutOppgaveRequestJsonDTO.Prioritet.valueOf(stripTemakode(respons.prioritet.toString())),
+                            endretAvEnhetsnr = enhetFor(temagruppe, saksbehandlersValgteEnhet),
+                            status = PutOppgaveRequestJsonDTO.Status.AAPNET,
+                            versjon = respons.versjon
+                    )
+            )
+        } catch (e: LagreOppgaveOppgaveIkkeFunnet) {
+            TODO("Må endre catch")
+            log.info("Oppgaven ble ikke funnet ved tilordning til saksbehandler. Oppgaveid: " + respons.id, e)
+            throw RuntimeException("Oppgaven ble ikke funnet ved tilordning til saksbehandler", e)
+        }
+    }
+
+    private fun enhetFor(temagruppe: Temagruppe, saksbehandlersValgteEnhet: String): String {
+        return enhetFor(Optional.ofNullable(temagruppe), saksbehandlersValgteEnhet)
+    }
+
+    private fun enhetFor(optional: Optional<Temagruppe>, saksbehandlersValgteEnhet: String): String {
+        if (!optional.isPresent) {
+            return DEFAULT_ENHET.toString()
+        }
+        val temagruppe = optional.get()
+        return if (temagruppe == Temagruppe.FMLI && saksbehandlersValgteEnhet == STORD_ENHET) {
+            STORD_ENHET
+        } else if (listOf(Temagruppe.ARBD, Temagruppe.HELSE, Temagruppe.FMLI, Temagruppe.FDAG, Temagruppe.ORT_HJE, Temagruppe.PENS, Temagruppe.UFRT, Temagruppe.PLEIEPENGERSY, Temagruppe.UTLAND).contains(temagruppe)) {
+            DEFAULT_ENHET.toString()
+        } else {
+            saksbehandlersValgteEnhet
         }
     }
 
@@ -242,8 +296,8 @@ open class RestOppgaveBehandlingServiceImpl @Autowired constructor(
     }
 
     private fun tildelEldsteLedigeOppgaver(temagruppe: Temagruppe, enhetsId: Int, saksbehandlersValgteEnhet: String): List<OppgaveJsonDTO> {
-        TODO("Må endres til å bruke OppgaveApi")
         val ident = SubjectHandler.getIdent().orElseThrow { RuntimeException("Fant ikke ident") }
+        TODO("Må endre response til å bruke OppgaveApi")
         val response: WSTildelFlereOppgaverResponse = tildelOppgaveWS.tildelFlereOppgaver(
                 WSTildelFlereOppgaverRequest()
                         .withUnderkategori(OppgaveBehandlingServiceImpl.underkategoriKode(temagruppe))
@@ -253,12 +307,111 @@ open class RestOppgaveBehandlingServiceImpl @Autowired constructor(
                         .withIkkeTidligereTildeltSaksbehandlerId(ident)
                         .withTildeltAvEnhetId(enhetsId)
                         .withTildelesSaksbehandlerId(ident))
-                ?: return emptyList()
+        if (response === null) {
+            return emptyList();
+        }
         return response.oppgaveIder.stream()
-                .map(Function<Int, WSHentOppgaveResponse> { oppgaveId: Int? -> this.hentOppgaveResponseFraGsak(oppgaveId) })
-                .filter { obj: WSHentOppgaveResponse? -> Objects.nonNull(obj) }
-                .map { obj: WSHentOppgaveResponse -> obj.oppgave }
+                .map(Function<Int, GetOppgaveResponseJsonDTO> { oppgaveId: Int -> this.hentOppgaveResponse(oppgaveId) })
+                .filter { obj: GetOppgaveResponseJsonDTO -> Objects.nonNull(obj) }
+                .map { obj: GetOppgaveResponseJsonDTO -> oppgaveToOppgave(obj) }
                 .collect(Collectors.toList())
+    }
+
+    private fun hentOppgaveResponse(oppgaveId: Int): GetOppgaveResponseJsonDTO {
+        return hentOppgaveResponse(oppgaveId.toString())
+    }
+
+    private fun hentOppgaveResponse(oppgaveId: String): GetOppgaveResponseJsonDTO {
+        return try {
+            apiClient.hentOppgave(
+                    xminusCorrelationMinusID = MDC.get(MDCConstants.MDC_CALL_ID),
+                    id = oppgaveId.toLong()
+            )
+        } catch (exc: HentOppgaveOppgaveIkkeFunnet) {
+            throw RuntimeException("HentOppgaveOppgaveIkkeFunnet", exc)
+        }
+    }
+
+    override fun ferdigstillOppgave(oppgaveId: String, temagruppe: Temagruppe, saksbehandlersValgteEnhet: String) {
+        ferdigstillOppgave(oppgaveId, Optional.ofNullable(temagruppe), saksbehandlersValgteEnhet)
+    }
+
+    override fun ferdigstillOppgave(oppgaveId: String, temagruppe: Optional<Temagruppe>, saksbehandlersValgteEnhet: String) {
+        ferdigstillOppgaver(listOf(oppgaveId), temagruppe, saksbehandlersValgteEnhet)
+    }
+
+    override fun ferdigstillOppgaver(oppgaveIder: List<String>, temagruppe: Optional<Temagruppe>, saksbehandlersValgteEnhet: String) {
+        for (oppgaveId in oppgaveIder) {
+            oppdaterBeskrivelse(temagruppe, saksbehandlersValgteEnhet, oppgaveId)
+
+        try {
+            apiClient.patchOppgaver(
+                    xminusCorrelationMinusID = MDC.get(MDCConstants.MDC_CALL_ID),
+                    patchOppgaverRequestJsonDTO = PatchOppgaverRequestJsonDTO(
+                            oppgaver = listOf(PatchJsonDTO(1, oppgaveId.toLong())),
+                            status = PatchOppgaverRequestJsonDTO.Status.FERDIGSTILT,
+                            tilordnetRessurs = enhetFor(temagruppe, saksbehandlersValgteEnhet)
+                    )
+            )
+            log.info("Forsøker å ferdigstille oppgave med oppgaveIder" + oppgaveIder + "for enhet" + saksbehandlersValgteEnhet)
+        } catch (e: java.lang.Exception) {
+            val ider = java.lang.String.join(", ", oppgaveIder)
+            log.warn("Ferdigstilling av oppgavebolk med oppgaveider: $ider, med enhet $saksbehandlersValgteEnhet feilet.", e)
+            throw e
+        }}
+    }
+
+     fun leggTilBeskrivelse(gammelBeskrivelse: String?, leggTil: String, valgtEnhet: String): String {
+        val ident = SubjectHandler.getIdent().orElseThrow { RuntimeException("Fant ikke ident") }
+        val header = String.format("--- %s %s (%s, %s) ---\n",
+                DateTimeFormat.forPattern("dd.MM.yyyy HH:mm").print(DateTime.now()),
+                ansattService.hentAnsattNavn(ident),
+                ident,
+                valgtEnhet)
+        val nyBeskrivelse = header + leggTil
+        return if (StringUtils.isBlank(gammelBeskrivelse)) nyBeskrivelse else nyBeskrivelse + "\n\n" + gammelBeskrivelse
+    }
+
+    private fun oppdaterBeskrivelse(temagruppe: Optional<Temagruppe>, saksbehandlersValgteEnhet: String, oppgaveId: String, beskrivelse: String) {
+        try {
+            val respons = apiClient.hentOppgave(
+                    xminusCorrelationMinusID = MDC.get(MDCConstants.MDC_CALL_ID),
+                    id = oppgaveId.toLong()
+            )
+            val oppgave = apiClient.endreOppgave(
+                    xminusCorrelationMinusID = MDC.get(MDCConstants.MDC_CALL_ID),
+                    id = oppgaveId.toLong(),
+                    putOppgaveRequestJsonDTO = PutOppgaveRequestJsonDTO(
+                            tildeltEnhetsnr = respons.tildeltEnhetsnr,
+                            aktoerId = respons.aktoerId,
+                            behandlesAvApplikasjon = "FS22",
+                            beskrivelse = leggTilBeskrivelse(respons.beskrivelse, "Oppgaven er ferdigstilt i Modia. " + beskrivelse, saksbehandlersValgteEnhet),
+                            temagruppe = respons.temagruppe,
+                            tema = respons.tema,
+                            behandlingstema = respons.behandlingstema,
+                            oppgavetype = respons.oppgavetype,
+                            behandlingstype = respons.behandlingstype,
+                            aktivDato = respons.aktivDato,
+                            fristFerdigstillelse = respons.fristFerdigstillelse,
+                            prioritet = PutOppgaveRequestJsonDTO.Prioritet.valueOf(stripTemakode(respons.prioritet.toString())),
+                            endretAvEnhetsnr = respons.endretAvEnhetsnr,
+                            status = PutOppgaveRequestJsonDTO.Status.AAPNET,
+                            versjon = respons.versjon + 1
+                    )
+            )
+
+            lagreOppgave(oppgave, temagruppe, saksbehandlersValgteEnhet)
+        } catch (e: HentOppgaveOppgaveIkkeFunnet) {
+            log.info("Feil ved oppdatering av beskrivelse for oppgave $oppgaveId", e)
+            throw RuntimeException(e)
+        } catch (e: LagreOppgaveOptimistiskLasing) {
+            log.info("Feil ved oppdatering av beskrivelse for oppgave $oppgaveId", e)
+            throw RuntimeException(e)
+        }
+    }
+
+    private fun oppdaterBeskrivelse(temagruppe: Optional<Temagruppe>, saksbehandlersValgteEnhet: String, oppgaveId: String) {
+        oppdaterBeskrivelse(temagruppe, saksbehandlersValgteEnhet, oppgaveId, "")
     }
 
     override fun systemLeggTilbakeOppgave(oppgaveId: String, temagruppe: Temagruppe, saksbehandlersValgteEnhet: String) {

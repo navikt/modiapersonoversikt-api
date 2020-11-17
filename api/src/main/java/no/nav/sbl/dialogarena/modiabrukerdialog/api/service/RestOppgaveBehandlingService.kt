@@ -1,7 +1,7 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.api.service
 
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Oppgave
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe
+import java.util.*
 
 interface RestOppgaveBehandlingService {
     fun opprettOppgave(request: OpprettOppgaveRequest) : OpprettOppgaveResponse
@@ -15,6 +15,12 @@ interface RestOppgaveBehandlingService {
     fun finnTildelteOppgaver(): List<OppgaveResponse>
 
     fun plukkOppgaver(temagruppe: Temagruppe, saksbehandlersValgteEnhet: String): List<OppgaveResponse>
+
+    fun ferdigstillOppgave(oppgaveId: String, temagruppe: Optional<Temagruppe>, saksbehandlersValgteEnhet: String)
+
+    fun ferdigstillOppgave(oppgaveId: String, temagruppe: Temagruppe, saksbehandlersValgteEnhet: String)
+
+    fun ferdigstillOppgaver(oppgaveId: List<String>, temagruppe: Optional<Temagruppe>, saksbehandlersValgteEnhet: String)
 
     fun systemLeggTilbakeOppgave(oppgaveId: String, temagruppe: Temagruppe, saksbehandlersValgteEnhet: String)
 
