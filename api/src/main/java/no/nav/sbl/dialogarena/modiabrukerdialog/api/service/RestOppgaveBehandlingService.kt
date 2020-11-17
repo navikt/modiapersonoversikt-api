@@ -22,6 +22,8 @@ interface RestOppgaveBehandlingService {
 
     fun ferdigstillOppgaver(oppgaveId: List<String>, temagruppe: Optional<Temagruppe>, saksbehandlersValgteEnhet: String)
 
+    fun ferdigstillOppgaveIGsak(oppgaveId: String, temagruppe: Optional<Temagruppe>, saksbehandlersValgteEnhet: String, beskrivelse: String)
+
     fun systemLeggTilbakeOppgave(oppgaveId: String, temagruppe: Temagruppe, saksbehandlersValgteEnhet: String)
 
     fun oppgaveErFerdigstilt(oppgaveid: String): Boolean

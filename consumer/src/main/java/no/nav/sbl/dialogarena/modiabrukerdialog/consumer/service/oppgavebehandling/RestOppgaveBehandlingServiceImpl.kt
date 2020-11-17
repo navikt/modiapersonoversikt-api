@@ -231,7 +231,7 @@ open class RestOppgaveBehandlingServiceImpl @Autowired constructor(
                             prioritet = PutOppgaveRequestJsonDTO.Prioritet.valueOf(stripTemakode(respons.prioritet.toString())),
                             endretAvEnhetsnr = enhetFor(temagruppe, saksbehandlersValgteEnhet),
                             status = PutOppgaveRequestJsonDTO.Status.AAPNET,
-                            versjon = respons.versjon
+                            versjon = 1
                     )
             )
         } catch (e: LagreOppgaveOppgaveIkkeFunnet) {
@@ -361,6 +361,26 @@ open class RestOppgaveBehandlingServiceImpl @Autowired constructor(
         }}
     }
 
+    override fun ferdigstillOppgaveIGsak(oppgaveId: String, temagruppe: Optional<Temagruppe>, saksbehandlersValgteEnhet: String, beskrivelse: String) {
+        oppdaterBeskrivelse(temagruppe, saksbehandlersValgteEnhet, oppgaveId, beskrivelse)
+        try {
+            apiClient.patchOppgave(
+                    xminusCorrelationMinusID = MDC.get(MDCConstants.MDC_CALL_ID),
+                    id = oppgaveId.toLong(),
+                    patchOppgaveRequestJsonDTO = PatchOppgaveRequestJsonDTO(
+                            versjon = 1,
+                            id = oppgaveId.toLong(),
+                            status = PatchOppgaveRequestJsonDTO.Status.FERDIGSTILT,
+                            tilordnetRessurs = enhetFor(temagruppe, saksbehandlersValgteEnhet)
+                    )
+            )
+            log.info("Forsøker å ferdigstille oppgave med oppgaveId" + oppgaveId + "for enhet" + saksbehandlersValgteEnhet)
+        } catch (e: java.lang.Exception) {
+            log.error("Kunne ikke ferdigstille oppgave i Modia med oppgaveId $oppgaveId", e)
+            throw e
+        }
+    }
+
      fun leggTilBeskrivelse(gammelBeskrivelse: String?, leggTil: String, valgtEnhet: String): String {
         val ident = SubjectHandler.getIdent().orElseThrow { RuntimeException("Fant ikke ident") }
         val header = String.format("--- %s %s (%s, %s) ---\n",
@@ -396,7 +416,7 @@ open class RestOppgaveBehandlingServiceImpl @Autowired constructor(
                             prioritet = PutOppgaveRequestJsonDTO.Prioritet.valueOf(stripTemakode(respons.prioritet.toString())),
                             endretAvEnhetsnr = respons.endretAvEnhetsnr,
                             status = PutOppgaveRequestJsonDTO.Status.AAPNET,
-                            versjon = respons.versjon + 1
+                            versjon = 1
                     )
             )
 
