@@ -165,8 +165,14 @@ class DialogController @Autowired constructor(
                             .find { it.traadId == fortsettDialogRequest.traadId }
                             ?: throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Fant ingen tråd med id: ${fortsettDialogRequest.traadId}")
 
+                    var melding = lagFortsettDialog(fortsettDialogRequest, context, traad)
+
+                    if (melding.oppgaveId != fortsettDialogRequest.oppgaveId) {
+                        throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Feil oppgaveId fra client. Forventet: ${melding.oppgaveId} men oppdaget er :${fortsettDialogRequest.oppgaveId}")
+                    }
+
                     henvendelseUtsendingService.ferdigstillHenvendelse(
-                            lagFortsettDialog(fortsettDialogRequest, context, traad),
+                            melding,
                             Optional.ofNullable(fortsettDialogRequest.oppgaveId),
                             Optional.ofNullable(fortsettDialogRequest.sak),
                             fortsettDialogRequest.behandlingsId,
@@ -297,6 +303,7 @@ private fun lagFortsettDialog(request: FortsettDialogRequest, requestContext: Re
             .withKontorsperretEnhet(eldsteMelding.kontorsperretEnhet)
             .withTemagruppe(eldsteMelding.temagruppe)
             .withBrukersEnhet(eldsteMelding.brukersEnhet)
+            .withOppgaveId(eldsteMelding.oppgaveId)
 
 }
 
