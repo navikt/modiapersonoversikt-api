@@ -8,10 +8,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.oppgave.generated.apis.OppgaveApi
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.oppgave.generated.models.*
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.pdl.generated.HentIdent
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveResponse
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.OpprettOppgaveRequest
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.OpprettOppgaveResponse
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.RestOppgaveBehandlingService
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.*
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.AnsattService
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.pdl.PdlOppslagService
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.kodeverksmapper.KodeverksmapperService
@@ -22,7 +19,6 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Tilgangskontrol
 import no.nav.tjeneste.virksomhet.oppgave.v3.HentOppgaveOppgaveIkkeFunnet
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.LagreOppgaveOppgaveIkkeFunnet
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.LagreOppgaveOptimistiskLasing
-import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.meldinger.WSFerdigstillOppgaveBolkRequest
 import no.nav.tjeneste.virksomhet.tildeloppgave.v1.WSTildelFlereOppgaverRequest
 import no.nav.tjeneste.virksomhet.tildeloppgave.v1.WSTildelFlereOppgaverResponse
 import org.apache.commons.lang3.StringUtils
@@ -41,7 +37,8 @@ open class RestOppgaveBehandlingServiceImpl @Autowired constructor(
         val kodeverksmapperService: KodeverksmapperService,
         val pdlOppslagService: PdlOppslagService,
         val tilgangskontroll: Tilgangskontroll,
-        private val ansattService: AnsattService
+        val ansattService: AnsattService,
+        val leggTilbakeOppgaveDelegate: LeggTilbakeOppgaveDelegate
 ) : RestOppgaveBehandlingService{
     val SPORSMAL_OG_SVAR = "SPM_OG_SVR"
     val KONTAKT_NAV = "KNA"
@@ -361,7 +358,7 @@ open class RestOppgaveBehandlingServiceImpl @Autowired constructor(
         }}
     }
 
-    override fun ferdigstillOppgaveIGsak(oppgaveId: String, temagruppe: Optional<Temagruppe>, saksbehandlersValgteEnhet: String, beskrivelse: String) {
+    override fun ferdigstillOppgave(oppgaveId: String, temagruppe: Optional<Temagruppe>, saksbehandlersValgteEnhet: String, beskrivelse: String) {
         oppdaterBeskrivelse(temagruppe, saksbehandlersValgteEnhet, oppgaveId, beskrivelse)
         try {
             apiClient.patchOppgave(
@@ -380,6 +377,18 @@ open class RestOppgaveBehandlingServiceImpl @Autowired constructor(
             throw e
         }
     }
+
+    override fun leggTilbakeOppgave(request: LeggTilbakeOppgaveRequest) {
+        if (request.oppgaveId == null || request.beskrivelse == null) {
+            return
+        }
+        val oppgave: GetOppgaveResponseJsonDTO = apiClient.hentOppgave(
+                xminusCorrelationMinusID = MDC.get(MDCConstants.MDC_CALL_ID),
+                id = request.oppgaveId.toLong()
+        )
+        leggTilbakeOppgaveDelegate.leggTilbake(oppgave, request)
+    }
+
 
      fun leggTilBeskrivelse(gammelBeskrivelse: String?, leggTil: String, valgtEnhet: String): String {
         val ident = SubjectHandler.getIdent().orElseThrow { RuntimeException("Fant ikke ident") }

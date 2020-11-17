@@ -22,7 +22,9 @@ interface RestOppgaveBehandlingService {
 
     fun ferdigstillOppgaver(oppgaveId: List<String>, temagruppe: Optional<Temagruppe>, saksbehandlersValgteEnhet: String)
 
-    fun ferdigstillOppgaveIGsak(oppgaveId: String, temagruppe: Optional<Temagruppe>, saksbehandlersValgteEnhet: String, beskrivelse: String)
+    fun ferdigstillOppgave(oppgaveId: String, temagruppe: Optional<Temagruppe>, saksbehandlersValgteEnhet: String, beskrivelse: String)
+
+    fun leggTilbakeOppgave(request: LeggTilbakeOppgaveRequest)
 
     fun systemLeggTilbakeOppgave(oppgaveId: String, temagruppe: Temagruppe, saksbehandlersValgteEnhet: String)
 
@@ -37,3 +39,12 @@ data class OppgaveResponse(
         val henvendelseId: String,
         val erSTOOppgave: Boolean
 )
+
+data class LeggTilbakeOppgaveRequest (
+    val saksbehandlersValgteEnhet: String,
+    val oppgaveId: String,
+    val beskrivelse: String,
+    val nyTemagruppe: Temagruppe
+) {
+
+}
