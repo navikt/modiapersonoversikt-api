@@ -12,7 +12,7 @@ interface RestOppgaveBehandlingService {
     @Throws(FikkIkkeTilordnet::class)
     fun tilordneOppgave(oppgaveId: String, temagruppe: Temagruppe, saksbehandlersValgteEnhet: String)
 
-    fun finnTildelteOppgaver(): List<Oppgave>
+    fun finnTildelteOppgaver(): List<OppgaveResponse>
 
     fun systemLeggTilbakeOppgave(oppgaveId: String, temagruppe: Temagruppe, saksbehandlersValgteEnhet: String)
 

@@ -649,7 +649,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/FinnOppgaveResponse'
+                $ref: '#/components/schemas/GetOppgaverResponseJson'
         "400":
           description: Ugyldig input
         "401":
@@ -667,11 +667,6 @@ paths:
       description: Oppretter en ny oppgave
       operationId: opprettOppgave
       parameters:
-        - name: Authorization
-          in: header
-          required: true
-          schema:
-            type: string
         - name: X-Correlation-ID
           in: header
           required: true
@@ -1622,7 +1617,7 @@ components:
         tidspunkt:
           type: string
           description: Tidspunkt hendelse fant sted iht. ISO-8601
-    FinnOppgaveResponse:
+    GetOppgaverResponseJson:
       type: object
       properties:
         antallTreffTotalt:

@@ -7,9 +7,7 @@ import no.nav.common.utils.EnvironmentUtils
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Oppgave
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.oppgave.generated.apis.OppgaveApi
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.oppgave.generated.models.GetOppgaveResponseJsonDTO
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.oppgave.generated.models.PostOppgaveRequestJsonDTO
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.oppgave.generated.models.PutOppgaveRequestJsonDTO
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.oppgave.generated.models.*
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.pdl.generated.HentIdent
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveResponse
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.OpprettOppgaveRequest
@@ -42,6 +40,8 @@ open class RestOppgaveBehandlingServiceImpl @Autowired constructor(
         val pdlOppslagService: PdlOppslagService,
         val tilgangskontroll: Tilgangskontroll
 ) : RestOppgaveBehandlingService{
+    val SPORSMAL_OG_SVAR = "SPM_OG_SVR"
+    val KONTAKT_NAV = "KNA"
 
     @Autowired
     private lateinit var stsService: SystemUserTokenProvider
@@ -126,6 +126,20 @@ open class RestOppgaveBehandlingServiceImpl @Autowired constructor(
         )
     }
 
+    private fun oppgaveToOppgave(oppgave: OppgaveJsonDTO): OppgaveResponse {
+        val erSTO = Optional
+                .ofNullable(oppgave.oppgavetype)
+                .map { kodeverksmapperService.mapOppgavetype(oppgave.oppgavetype) }
+                .map { anObject: String? -> "SPM_OG_SVR" == anObject }
+                .orElse(false)
+        return OppgaveResponse(
+                oppgave.id.toString(),
+                oppgave.aktoerId.toString(),
+                oppgave.journalpostId.toString(),
+                erSTO
+        )
+    }
+
     @Throws(RestOppgaveBehandlingService.FikkIkkeTilordnet::class)
     override fun tilordneOppgave(oppgaveId: String, temagruppe: Temagruppe, saksbehandlersValgteEnhet: String) {
         tilordneOppgave(oppgaveId, Optional.ofNullable(temagruppe), saksbehandlersValgteEnhet)
@@ -188,26 +202,23 @@ open class RestOppgaveBehandlingServiceImpl @Autowired constructor(
         }
     }
 
-    override fun finnTildelteOppgaver(): List<Oppgave> {
+    override fun finnTildelteOppgaver(): List<OppgaveResponse> {
         val ident: String = SubjectHandler.getIdent().orElseThrow { RuntimeException("Fant ikke ident") }
-        val response = apiClient.hentOppgave(
+        val aktivStatus = "AAPEN"
+        val response = apiClient.finnOppgaver(
                 xminusCorrelationMinusID = MDC.get(MDCConstants.MDC_CALL_ID),
-                id = ident.toLong()
-        )
-        return validerTilgangTilbruker(oppgaveWS
-                .finnOppgaveListe(WSFinnOppgaveListeRequest()
-                        .withSok(WSFinnOppgaveListeSok()
-                                .withAnsvarligId(ident)
-                                .withFagomradeKodeListe(OppgaveBehandlingServiceImpl.KONTAKT_NAV))
-                        .withFilter(WSFinnOppgaveListeFilter()
-                                .withAktiv(true)
-                                .withOppgavetypeKodeListe(OppgaveBehandlingServiceImpl.SPORSMAL_OG_SVAR)))
-                .getOppgaveListe().stream()
-                .map(Function<WSOppgave, Oppgave> { wsOppgave: WSOppgave? -> OppgaveBehandlingServiceImpl.wsOppgaveToOppgave(wsOppgave) })
-                .collect(Collectors.toList()))
+                statuskategori = aktivStatus,
+                tema = listOf(KONTAKT_NAV),
+                oppgavetype = listOf(SPORSMAL_OG_SVAR),
+                tilordnetRessurs = ident
+        ).oppgaver
+                .map { oppgave: OppgaveJsonDTO? -> oppgaveToOppgave(oppgave) }
+
+
+        return validerTilgangTilbruker(response)
     }
 
-    private fun validerTilgangTilbruker(oppgaveList: List<Oppgave>): List<Oppgave> {
+    private fun validerTilgangTilbruker(oppgaveList: List<OppgaveResponse>): List<OppgaveResponse> {
         if (oppgaveList.isEmpty()) {
             return emptyList()
         } else if (tilgangskontroll
@@ -216,7 +227,7 @@ open class RestOppgaveBehandlingServiceImpl @Autowired constructor(
                         .isPermit()) {
             return oppgaveList
         }
-        oppgaveList.forEach(Consumer { enkeltoppgave: Oppgave -> systemLeggTilbakeOppgave(enkeltoppgave.oppgaveId, null, "4100") })
+        oppgaveList.forEach(Consumer { enkeltoppgave: OppgaveResponse -> systemLeggTilbakeOppgave(enkeltoppgave.oppgaveId, null, "4100") })
         return emptyList()
     }
 
