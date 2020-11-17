@@ -10,14 +10,10 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.oppgave.generated.mod
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.oppgave.generated.models.PostOppgaveRequestJsonDTO
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.oppgave.generated.models.PutOppgaveRequestJsonDTO
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.pdl.generated.HentIdent
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveResponse
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.OpprettOppgaveRequest
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.OpprettOppgaveResponse
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.RestOppgaveBehandlingService
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.*
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.pdl.PdlOppslagService
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.kodeverksmapper.KodeverksmapperService
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.kodeverksmapper.domain.Behandling
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.oppgave.OppgaveOpprettelseClient
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.pdl.PdlSyntetiskMapper
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.LagreOppgaveOppgaveIkkeFunnet
 import org.apache.commons.lang3.StringUtils
@@ -92,13 +88,84 @@ open class RestOppgaveBehandlingServiceImpl @Autowired constructor(
     }
 
 
-    override fun hentOppgave(id: String): OppgaveResponse {
+    override fun hentOppgave(oppgaveId: String): OppgaveResponse {
+        val response = hentOppgaveDTO(oppgaveId)
+        return oppgaveToOppgave(response)
+    }
+
+    @Throws(RestOppgaveBehandlingService.FikkIkkeTilordnet::class)
+    override fun tilordneOppgave(oppgaveId: String, temagruppe: Temagruppe, saksbehandlersValgteEnhet: String) {
+        tilordneOppgave(oppgaveId, Optional.ofNullable(temagruppe), saksbehandlersValgteEnhet)
+    }
+
+    override fun oppgaveErFerdigstilt(oppgaveid: String): Boolean {
+        val response = hentOppgaveDTO(oppgaveid)
+        return StringUtils.equalsIgnoreCase(response.status.value, GetOppgaveResponseJsonDTO.Status.FERDIGSTILT.value)
+    }
+
+
+    @Throws(RestOppgaveBehandlingService.FikkIkkeTilordnet::class)
+    private fun tilordneOppgave(oppgaveId: String, temagruppe: Optional<Temagruppe>, saksbehandlersValgteEnhet: String) {
+        val oppgave = hentOppgaveDTO(oppgaveId)
+        val ident: String = SubjectHandler.getIdent().orElseThrow { RuntimeException("Fant ikke ident") }
+        try {
+            val oppdatertOppgave = oppgave.copy(tilordnetRessurs = ident, tildeltEnhetsnr = saksbehandlersValgteEnhet)
+            lagreOppgave(oppdatertOppgave, temagruppe, saksbehandlersValgteEnhet)
+        } catch (exeption: Exception) {
+            throw RestOppgaveBehandlingService.FikkIkkeTilordnet(exeption)
+        }
+    }
+
+    private fun hentOppgaveDTO(oppgaveId: String) : GetOppgaveResponseJsonDTO {
         val response = apiClient.hentOppgave(
                 xminusCorrelationMinusID = MDC.get(MDCConstants.MDC_CALL_ID),
-                id = id.toLong()
+                id = oppgaveId.toLong()
         )
+        return response;
+    }
 
-        return oppgaveToOppgave(response)
+    private fun lagreOppgave(response: GetOppgaveResponseJsonDTO, temagruppe: Optional<Temagruppe>, saksbehandlersValgteEnhet: String) {
+        try {
+            apiClient.endreOppgave(
+                    xminusCorrelationMinusID = MDC.get(MDCConstants.MDC_CALL_ID),
+                    id = response.id.toString().toLong(),
+                    putOppgaveRequestJsonDTO = PutOppgaveRequestJsonDTO(
+                            tildeltEnhetsnr = saksbehandlersValgteEnhet,
+                            aktoerId = response.aktoerId,
+                            behandlesAvApplikasjon = "FS22",
+                            beskrivelse = response.beskrivelse,
+                            temagruppe = temagruppe.toString(),
+                            tema = response.tema,
+                            behandlingstema = response.behandlingstema,
+                            oppgavetype = response.oppgavetype,
+                            behandlingstype = response.behandlingstype,
+                            aktivDato = response.aktivDato,
+                            fristFerdigstillelse = response.fristFerdigstillelse,
+                            prioritet = PutOppgaveRequestJsonDTO.Prioritet.valueOf(stripTemakode(response.prioritet.toString())),
+                            endretAvEnhetsnr = response.endretAvEnhetsnr,
+                            status = PutOppgaveRequestJsonDTO.Status.AAPNET,
+                            versjon = 1,
+                            tilordnetRessurs = response.tilordnetRessurs
+                    )
+            )
+        } catch (e: LagreOppgaveOppgaveIkkeFunnet) {
+            log.info("Oppgaven ble ikke funnet ved tilordning til saksbehandler. Oppgaveid: " + response.id, e)
+            throw RuntimeException("Oppgaven ble ikke funnet ved tilordning til saksbehandler", e)
+        }
+    }
+
+    private fun getAktorId(fnr: String): String? {
+        return try {
+            pdlOppslagService
+                    .hentIdent(fnr)
+                    ?.identer
+                    ?.find { ident -> ident.gruppe == HentIdent.IdentGruppe.AKTORID }
+                    ?.ident
+                    // syntmapping for Q2 --> Q1
+                    ?.let(PdlSyntetiskMapper::mapAktorIdFraPdl)
+        } catch (exception: Exception) {
+            null
+        }
     }
 
     private fun oppgaveToOppgave(response: GetOppgaveResponseJsonDTO): OppgaveResponse {
@@ -113,92 +180,6 @@ open class RestOppgaveBehandlingServiceImpl @Autowired constructor(
                 response.journalpostId.toString(),
                 erSTO
         )
-    }
-
-    @Throws(RestOppgaveBehandlingService.FikkIkkeTilordnet::class)
-    override fun tilordneOppgave(oppgaveId: String, temagruppe: Temagruppe, saksbehandlersValgteEnhet: String) {
-        tilordneOppgave(oppgaveId, Optional.ofNullable(temagruppe), saksbehandlersValgteEnhet)
-    }
-
-    @Throws(RestOppgaveBehandlingService.FikkIkkeTilordnet::class)
-    private fun tilordneOppgave(oppgaveId: String, temagruppe: Optional<Temagruppe>, saksbehandlersValgteEnhet: String) {
-        val response = apiClient.hentOppgave(
-                xminusCorrelationMinusID = MDC.get(MDCConstants.MDC_CALL_ID),
-                id = oppgaveId.toLong()
-        )
-        tilordneOppgave(response, temagruppe, saksbehandlersValgteEnhet)
-    }
-
-    @Throws(RestOppgaveBehandlingService.FikkIkkeTilordnet::class)
-    private fun tilordneOppgave(response: GetOppgaveResponseJsonDTO, temagruppe: Optional<Temagruppe>, saksbehandlersValgteEnhet: String): GetOppgaveResponseJsonDTO {
-        try {
-            val oppgaveRespons = apiClient.hentOppgave(
-                    xminusCorrelationMinusID = MDC.get(MDCConstants.MDC_CALL_ID),
-                    id = response.id.toString().toLong()
-            )
-            lagreOppgave(oppgaveRespons, temagruppe, saksbehandlersValgteEnhet)
-            return response
-        } catch (exeption: Exception) {
-            throw RestOppgaveBehandlingService.FikkIkkeTilordnet(exeption)
-        }
-    }
-
-    open fun lagreOppgave(response: GetOppgaveResponseJsonDTO, temagruppe: Temagruppe, saksbehandlersValgteEnhet: String) {
-        lagreOppgave(response, Optional.ofNullable(temagruppe), saksbehandlersValgteEnhet)
-    }
-
-    private fun lagreOppgave(respons: GetOppgaveResponseJsonDTO, temagruppe: Optional<Temagruppe>, saksbehandlersValgteEnhet: String) {
-        try {
-            apiClient.endreOppgave(
-                    xminusCorrelationMinusID = MDC.get(MDCConstants.MDC_CALL_ID),
-                    id = respons.id.toString().toLong(),
-                    putOppgaveRequestJsonDTO = PutOppgaveRequestJsonDTO(
-                            tildeltEnhetsnr = respons.tildeltEnhetsnr,
-                            aktoerId = respons.aktoerId,
-                            behandlesAvApplikasjon = "FS22",
-                            beskrivelse = respons.beskrivelse,
-                            temagruppe = respons.temagruppe,
-                            tema = respons.tema,
-                            behandlingstema = respons.behandlingstema,
-                            oppgavetype = respons.oppgavetype,
-                            behandlingstype = respons.behandlingstype,
-                            aktivDato = respons.aktivDato,
-                            fristFerdigstillelse = respons.fristFerdigstillelse,
-                            prioritet = PutOppgaveRequestJsonDTO.Prioritet.valueOf(stripTemakode(respons.prioritet.toString())),
-                            endretAvEnhetsnr = respons.endretAvEnhetsnr,
-                            status = PutOppgaveRequestJsonDTO.Status.AAPNET,
-                            versjon = 1
-                    )
-            )
-        } catch (e: LagreOppgaveOppgaveIkkeFunnet) {
-            log.info("Oppgaven ble ikke funnet ved tilordning til saksbehandler. Oppgaveid: " + respons.id, e)
-            throw RuntimeException("Oppgaven ble ikke funnet ved tilordning til saksbehandler", e)
-        }
-    }
-
-    override fun oppgaveErFerdigstilt(oppgaveid: String): Boolean {
-
-        val response = apiClient.hentOppgave(
-                xminusCorrelationMinusID = MDC.get(MDCConstants.MDC_CALL_ID),
-                id = oppgaveid.toLong()
-        )
-
-        return StringUtils.equalsIgnoreCase(response.status.value, GetOppgaveResponseJsonDTO.Status.FERDIGSTILT.value)
-    }
-
-
-    private fun getAktorId(fnr: String): String? {
-        return try {
-            pdlOppslagService
-                    .hentIdent(fnr)
-                    ?.identer
-                    ?.find { ident -> ident.gruppe == HentIdent.IdentGruppe.AKTORID }
-                    ?.ident
-                    // syntmapping for Q2 --> Q1
-                    ?.let(PdlSyntetiskMapper::mapAktorIdFraPdl)
-        } catch (exception: Exception) {
-            null
-        }
     }
 
     private fun stripTemakode(prioritet: String): String {
