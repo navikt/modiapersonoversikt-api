@@ -13,7 +13,6 @@ import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehand
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.Sak;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.sakogbehandling.*;
 import org.joda.time.DateTime;
-import org.joda.time.LocalDate;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.junit.Before;
@@ -22,6 +21,9 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+
+import static java.util.stream.Collectors.toList;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.sak.transformers.Transformers.TIL_BEHANDLING;
 
 import java.util.List;
 
@@ -79,7 +81,7 @@ public class FilterTest {
     }
 
     @Test
-    public void sakMedFlereUlovligeBehandlinger_slipperIkkeGjennomFilter() {
+    public void sakMedKunUlovligeBehandlinger_slipperIkkeGjennomFilter() {
         DateTime tolvteDesember2014 = new DateTime().withYear(2014).withMonthOfYear(12).withDayOfMonth(9);
 
         List<Sak> saker = asList(
@@ -210,40 +212,40 @@ public class FilterTest {
         assertThat(filtrerteSaker.size(), is(3));
 
 
-
-
     }
+
     @Test
     public void filtererGamleFerdistilteBehandlingsKjeder() {
         DateTime toMndSidan = new DateTime().now().minusMonths(2);
         List<Sak> saker = asList(
-                        SakBuilder.create()
-                                .withSakstema("HJL")
-                                .withBehandlingskjede(
-                                        BehandlingskjedeBuilder.create()
-                                                .withSisteBehandlingsstatus(FilterUtils.AVSLUTTET)
-                                                .withSisteBehandlingstype("ae0034")
-                                                .withSisteBehandlingREF("lovlig")
-                                                .withSisteBehandlingAvslutningsstatus("ok")
-                                                .withSisteBehandlingsoppdatering(toMndSidan)
-                                                .withSisteBehandlingsstatus("avsluttet")
-                                                .withSlutt(toMndSidan)
-                                                .build(),
-                                        BehandlingskjedeBuilder.create()
-                                                .withSisteBehandlingsstatus(FilterUtils.AVSLUTTET)
-                                                .withSisteBehandlingREF("lovlig")
-                                                .withSisteBehandlingstype("ae0047")
-                                                .withSisteBehandlingAvslutningsstatus("ok")
-                                                .withSisteBehandlingsoppdatering(toMndSidan)
-                                                .withSisteBehandlingsstatus("avsluttet")
-                                                .withSlutt(toMndSidan)
-                                                .build()
-                                ).build()
+                SakBuilder.create()
+                        .withSakstema("HJL")
+                        .withBehandlingskjede(
+                                BehandlingskjedeBuilder.create()
+                                        .withSisteBehandlingsstatus(FilterUtils.AVSLUTTET)
+                                        .withSisteBehandlingstype("ae0034")
+                                        .withSisteBehandlingREF("lovlig")
+                                        .withSisteBehandlingAvslutningsstatus("ok")
+                                        .withSisteBehandlingsoppdatering(toMndSidan)
+                                        .withSisteBehandlingsstatus("avsluttet")
+                                        .withSlutt(toMndSidan)
+                                        .build(),
+                                BehandlingskjedeBuilder.create()
+                                        .withSisteBehandlingsstatus(FilterUtils.AVSLUTTET)
+                                        .withSisteBehandlingREF("lovlig")
+                                        .withSisteBehandlingstype("ae0047")
+                                        .withSisteBehandlingAvslutningsstatus("ok")
+                                        .withSisteBehandlingsoppdatering(toMndSidan)
+                                        .withSisteBehandlingsstatus("avsluttet")
+                                        .withSlutt(toMndSidan)
+                                        .build()
+                        ).build()
 
         );
         List<Sak> filtrerteSaker = filter.filtrerSaker(saker);
         assertThat(filtrerteSaker.size(), is(0));
     }
+
     @Test
     public void filtereGamleForeldrePengerMedAnnaStatusEnnOK() {
         DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss.SSSZZ");
@@ -251,6 +253,7 @@ public class FilterTest {
                 SakBuilder.create()
                         .withSakstema("FOR")
                         .withBehandlingskjede(
+
                                 BehandlingskjedeBuilder.create()
                                         .withBehandlingskjedetype("ad0003")
                                         .withBehandlingstema("ab0260")
@@ -260,26 +263,29 @@ public class FilterTest {
                                         .withSisteBehandlingsoppdatering(DateTime.parse("2015-04-17T12:00:00.000+02:00", formatter))
                                         .withSisteBehandlingsstatus("avsluttet")
                                         .withSisteBehandlingAvslutningsstatus("mangl-aktiv")
-                                .build(),
+                                        .withSisteBehandlingREF("171017SU0") //forsvinner grunnet prefix-17
+                                        .build(),
                                 BehandlingskjedeBuilder.create()
                                         .withBehandlingskjedetype("ukjent")
                                         //.withBehandlingstema("ab0260")
                                         .withStart(DateTime.parse("2019-09-13T09:21:10.766+02:00", formatter))
                                         .withSlutt(DateTime.parse("2019-09-13T09:21:11.493+02:00", formatter))
                                         .withSisteBehandlingstype("ae0103")
-                                        .withSisteBehandlingsoppdatering(DateTime.parse("2019-09-13T09:21:10.767+02:00", formatter))
+                                        .withSisteBehandlingsoppdatering(DateTime.parse("2019-09-13T09:21:10.767+02:00", formatter)) //forsvinner grunnet alder
                                         .withSisteBehandlingsstatus("avsluttet")
                                         .withSisteBehandlingAvslutningsstatus("ok")
-                                .build(),
+                                        .withSisteBehandlingREF("1000PKZR2")
+                                        .build(),
                                 BehandlingskjedeBuilder.create()
                                         .withBehandlingskjedetype("ad0003")
                                         .withBehandlingstema("ab0047")
                                         .withStart(DateTime.parse("2020-06-12T10:40:29.000+02:00", formatter))
                                         .withSlutt(DateTime.parse("2020-06-17T08:31:40.143+02:00", formatter))
                                         .withSisteBehandlingstype("ae0028")
-                                        .withSisteBehandlingsoppdatering(DateTime.parse("2019-04-24T12:00:00.000+02:00", formatter))
+                                        .withSisteBehandlingsoppdatering(DateTime.parse("2019-04-24T12:00:00.000+02:00", formatter)) //forsviner grunnet alder
                                         .withSisteBehandlingsstatus("avsluttet")
                                         .withSisteBehandlingAvslutningsstatus("ok")
+                                        .withSisteBehandlingREF("FS36_1495156")
                                         .build(),
                                 BehandlingskjedeBuilder.create()
                                         .withBehandlingskjedetype("ad0003")
@@ -287,15 +293,46 @@ public class FilterTest {
                                         .withStart(DateTime.parse("2019-04-24T12:00:00.000+02:00", formatter))
                                         .withSisteBehandlingstype("ae0034")
                                         .withSisteBehandlingsoppdatering(DateTime.parse("2020-06-17T08:31:38.000+02:00", formatter))
-                                        .withSisteBehandlingsstatus("opprettet")
+                                        .withSisteBehandlingsstatus("opprettet") // blir med i resultat grunnet ulik status enn avsluttet
+                                        .withSisteBehandlingREF("16520E10o")
+                                        .build(),
+                                BehandlingskjedeBuilder.create()
+                                        .withBehandlingskjedetype("ad0003")
+                                        .withBehandlingstema("ab0326")
+                                        .withStart(DateTime.parse("2019-09-11T00:00:00.000+02:00", formatter))
+                                        .withSlutt(DateTime.parse("2019-09-13T09:21:17.194+02:00", formatter))
+                                        .withSisteBehandlingstype("ae0034")
+                                        .withSisteBehandlingsoppdatering(DateTime.parse("2019-09-13T00:00:00.000+02:00", formatter))
+                                        .withSisteBehandlingsstatus("avsluttet")
+                                        .withSisteBehandlingAvslutningsstatus("ok")
+                                        .withSisteBehandlingREF("FS36_1273752")
+                                        .build(),
+                                BehandlingskjedeBuilder.create()
+                                        .withBehandlingskjedetype("ad0003")
+                                        .withBehandlingstema("ab0326")
+                                        .withStart(DateTime.now())
+                                        .withSlutt(DateTime.now())
+                                        .withSisteBehandlingstype("ae0034")
+                                        .withSisteBehandlingsoppdatering(DateTime.now())
+                                        .withSisteBehandlingsstatus("avsluttet")
+                                        .withSisteBehandlingAvslutningsstatus("ok")
+                                        .withSisteBehandlingREF("FS36_1273752")
                                         .build()
+
                         ).build()
 
 
         );
-        List<Sak> filtrerteSaker = filter.filtrerSaker(saker);
-        assertThat(filtrerteSaker.size(), is(0));
+        List<Behandling> filtrerteBehandlinger = filter.filtrerBehandlinger(hentBehandlingerfraBehandlingskjede(saker.get(0).getBehandlingskjede()));
+        assertThat(filtrerteBehandlinger.size(), is(2));
 
+    }
+
+
+    private List<Behandling> hentBehandlingerfraBehandlingskjede(List<Behandlingskjede> behandlingskjede) {
+        return behandlingskjede.stream()
+                .map(TIL_BEHANDLING)
+                .collect(toList());
     }
 
     @Test
@@ -308,17 +345,6 @@ public class FilterTest {
     public void filtrerBehandlingerUlovligBehandlingsstatus() {
         List<Behandling> behandling = filter.filtrerBehandlinger(ulovligBehandlingsstatus());
         assertThat(behandling.size(), is(0));
-    }
-
-    private List<Behandling> lovligBehandling() {
-        return asList(
-                new Behandling()
-                        .withBehandlingKvittering(BehandlingsType.KVITTERING)
-                        .withBehandlingsType(FilterUtils.SEND_SOKNAD_KVITTERINGSTYPE)
-                        .withBehandlingStatus(BehandlingsStatus.FERDIG_BEHANDLET)
-                        .withPrefix("11")
-
-        );
     }
 
     private List<Behandling> ulovligPrefix() {
