@@ -13,6 +13,9 @@ import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehand
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.Sak;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.sakogbehandling.*;
 import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -241,6 +244,59 @@ public class FilterTest {
         List<Sak> filtrerteSaker = filter.filtrerSaker(saker);
         assertThat(filtrerteSaker.size(), is(0));
     }
+    @Test
+    public void filtereGamleForeldrePengerMedAnnaStatusEnnOK() {
+        DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss.SSSZZ");
+        List<Sak> saker = asList(
+                SakBuilder.create()
+                        .withSakstema("FOR")
+                        .withBehandlingskjede(
+                                BehandlingskjedeBuilder.create()
+                                        .withBehandlingskjedetype("ad0003")
+                                        .withBehandlingstema("ab0260")
+                                        .withStart(DateTime.parse("2015-04-17T12:00:00.000+02:00", formatter))
+                                        .withSlutt(DateTime.parse("2015-04-18T00:12:58.526+02:00", formatter))
+                                        .withSisteBehandlingstype("ae0028")
+                                        .withSisteBehandlingsoppdatering(DateTime.parse("2015-04-17T12:00:00.000+02:00", formatter))
+                                        .withSisteBehandlingsstatus("avsluttet")
+                                        .withSisteBehandlingAvslutningsstatus("mangl-aktiv")
+                                .build(),
+                                BehandlingskjedeBuilder.create()
+                                        .withBehandlingskjedetype("ukjent")
+                                        //.withBehandlingstema("ab0260")
+                                        .withStart(DateTime.parse("2019-09-13T09:21:10.766+02:00", formatter))
+                                        .withSlutt(DateTime.parse("2019-09-13T09:21:11.493+02:00", formatter))
+                                        .withSisteBehandlingstype("ae0103")
+                                        .withSisteBehandlingsoppdatering(DateTime.parse("2019-09-13T09:21:10.767+02:00", formatter))
+                                        .withSisteBehandlingsstatus("avsluttet")
+                                        .withSisteBehandlingAvslutningsstatus("ok")
+                                .build(),
+                                BehandlingskjedeBuilder.create()
+                                        .withBehandlingskjedetype("ad0003")
+                                        .withBehandlingstema("ab0047")
+                                        .withStart(DateTime.parse("2020-06-12T10:40:29.000+02:00", formatter))
+                                        .withSlutt(DateTime.parse("2020-06-17T08:31:40.143+02:00", formatter))
+                                        .withSisteBehandlingstype("ae0028")
+                                        .withSisteBehandlingsoppdatering(DateTime.parse("2019-04-24T12:00:00.000+02:00", formatter))
+                                        .withSisteBehandlingsstatus("avsluttet")
+                                        .withSisteBehandlingAvslutningsstatus("ok")
+                                        .build(),
+                                BehandlingskjedeBuilder.create()
+                                        .withBehandlingskjedetype("ad0003")
+                                        .withBehandlingstema("ab0126")
+                                        .withStart(DateTime.parse("2019-04-24T12:00:00.000+02:00", formatter))
+                                        .withSisteBehandlingstype("ae0034")
+                                        .withSisteBehandlingsoppdatering(DateTime.parse("2020-06-17T08:31:38.000+02:00", formatter))
+                                        .withSisteBehandlingsstatus("opprettet")
+                                        .build()
+                        ).build()
+
+
+        );
+        List<Sak> filtrerteSaker = filter.filtrerSaker(saker);
+        assertThat(filtrerteSaker.size(), is(0));
+
+    }
 
     @Test
     public void filtrerBehandlingerUlovligPrefix() {
@@ -284,5 +340,6 @@ public class FilterTest {
 
         );
     }
+
 
 }
