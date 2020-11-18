@@ -27,7 +27,7 @@ jobs:
         run: |
           mvn -P ci -B test --settings .github/maven-settings.xml
       - name: Publish Docker image
-        if: github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/master'
+        if: github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/master' || github.ref == 'refs/heads/opp-1275-arena-endepunkt'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
@@ -35,6 +35,24 @@ jobs:
           docker login docker.pkg.github.com -u ${GITHUB_REPOSITORY} -p ${GITHUB_TOKEN}
           docker build --tag ${IMAGE} .
           docker push ${IMAGE}
+
+  deploy-q1:
+    name: Deploy to preprod
+    needs: build
+    if: github.ref == 'refs/heads/opp-1275-arena-endepunkt'
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        namespace: [q1]
+    steps:
+      - uses: actions/checkout@v1
+      - uses: nais/deploy/actions/deploy@v1
+        env:
+          APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
+          PRINT_PAYLOAD: true
+          CLUSTER: dev-fss
+          RESOURCE: .nais/nais-${{ matrix.namespace }}.yml
+          VAR: version=${{ github.sha }}
 
   deploy-qa:
     name: Deploy to preprod
