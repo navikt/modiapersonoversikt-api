@@ -44,10 +44,10 @@ class AuditResources {
             class Merk {
                 companion object {
                     val Feilsendt = AuditResource("person.henvendelse.merk.feilsendt")
-                    val Bidrag = AuditResource("person.henvendelse.merk.feilsendt")
-                    val Kontorsperre = AuditResource("person.henvendelse.merk.feilsendt")
-                    val Avslutt = AuditResource("person.henvendelse.merk.feilsendt")
-                    val Slett = AuditResource("person.henvendelse.merk.feilsendt")
+                    val Bidrag = AuditResource("person.henvendelse.merk.bidrag")
+                    val Kontorsperre = AuditResource("person.henvendelse.merk.kontorsperre")
+                    val Avslutt = AuditResource("person.henvendelse.merk.avslutt")
+                    val Slett = AuditResource("person.henvendelse.merk.slett")
                 }
             }
 
