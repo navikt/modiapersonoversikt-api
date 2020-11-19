@@ -165,9 +165,9 @@ class DialogController @Autowired constructor(
                             .find { it.traadId == fortsettDialogRequest.traadId }
                             ?: throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Fant ingen tråd med id: ${fortsettDialogRequest.traadId}")
 
-                    var melding = lagFortsettDialog(fortsettDialogRequest, context, traad)
+                    val melding = lagFortsettDialog(fortsettDialogRequest, context, traad)
 
-                    if (melding.oppgaveId != fortsettDialogRequest.oppgaveId) {
+                    if (hentEldsteMelding(traad).oppgaveId != fortsettDialogRequest.oppgaveId) {
                         throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Feil oppgaveId fra client. Forventet: ${melding.oppgaveId} men oppdaget er :${fortsettDialogRequest.oppgaveId}")
                     }
 
@@ -191,7 +191,7 @@ class DialogController @Autowired constructor(
     ): Map<String, Any?> = tilgangskontroll
             .check(Policies.tilgangTilBruker.with(fnr))
             .get(Audit.describe(UPDATE, Person.Henvendelse.SlaSammen, AuditIdentifier.FNR to fnr)) {
-                if (slaaSammenRequest.traader.groupingBy { it -> it.traadId }.eachCount().size < 2) {
+                if (slaaSammenRequest.traader.groupingBy { it.traadId }.eachCount().size < 2) {
                     throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Du kan ikke slå sammen mindre enn 2 trådeer")
                 }
 
@@ -288,8 +288,9 @@ private fun erTraadTilknyttetAnsatt(traad: Traad): Boolean =
         }
 
 private fun lagFortsettDialog(request: FortsettDialogRequest, requestContext: RequestContext, traad: Traad): Melding {
-    val eldsteMelding = traad.meldinger[0]
-    val erOppgaveTilknyttetAnsatt = if (request.meldingstype == Meldingstype.SPORSMAL_MODIA_UTGAAENDE) request.erOppgaveTilknyttetAnsatt else erTraadTilknyttetAnsatt(traad)
+    val eldsteMelding = hentEldsteMelding(traad)
+    val erOppgaveTilknyttetAnsatt = if (request.meldingstype == Meldingstype.SPORSMAL_MODIA_UTGAAENDE) request.erOppgaveTilknyttetAnsatt
+                                            else erTraadTilknyttetAnsatt(traad)
     return Melding()
             .withFnr(requestContext.fnr)
             .withNavIdent(requestContext.ident)
@@ -303,8 +304,10 @@ private fun lagFortsettDialog(request: FortsettDialogRequest, requestContext: Re
             .withKontorsperretEnhet(eldsteMelding.kontorsperretEnhet)
             .withTemagruppe(eldsteMelding.temagruppe)
             .withBrukersEnhet(eldsteMelding.brukersEnhet)
-            .withOppgaveId(eldsteMelding.oppgaveId)
+}
 
+private fun hentEldsteMelding(traad: Traad): Melding {
+    return traad.meldinger[0]
 }
 
 enum class Kanal {
