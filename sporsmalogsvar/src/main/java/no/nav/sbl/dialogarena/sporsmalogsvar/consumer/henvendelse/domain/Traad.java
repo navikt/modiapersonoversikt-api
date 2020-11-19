@@ -18,6 +18,11 @@ public class Traad {
         }
     }
 
+
+    public Melding getEldsteMelding() {
+        return meldinger.get(0);
+    }
+
     public String getTraadId() {
         return getRotmelding().traadId;
     }
