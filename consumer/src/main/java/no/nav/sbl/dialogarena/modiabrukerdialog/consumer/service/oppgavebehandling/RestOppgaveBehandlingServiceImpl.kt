@@ -60,7 +60,6 @@ open class RestOppgaveBehandlingServiceImpl @Autowired constructor(
         val oppgaveTypeMapped: String = kodeverksmapperService.mapOppgavetype(request.oppgavetype)
         val aktorId = getAktorId(request.fnr)
         val response = apiClient.opprettOppgave(
-                authorization = consumerOidcToken,
                 xminusCorrelationMinusID = MDC.get(MDCConstants.MDC_CALL_ID),
                 postOppgaveRequestJsonDTO = PostOppgaveRequestJsonDTO(
                         opprettetAvEnhetsnr = request.opprettetavenhetsnummer,
@@ -83,7 +82,6 @@ open class RestOppgaveBehandlingServiceImpl @Autowired constructor(
     override fun opprettSkjermetOppgave(request: OpprettOppgaveRequest): OpprettOppgaveResponse {
         val behandling: Optional<Behandling> = kodeverksmapperService.mapUnderkategori(request.underkategoriKode)
         val response = apiClient.opprettOppgave(
-                authorization = consumerOidcToken,
                 xminusCorrelationMinusID = MDC.get(MDCConstants.MDC_CALL_ID),
                 postOppgaveRequestJsonDTO = PostOppgaveRequestJsonDTO(
                         aktoerId = getAktorId(request.fnr),
@@ -104,13 +102,10 @@ open class RestOppgaveBehandlingServiceImpl @Autowired constructor(
         return OpprettOppgaveResponse(response.id?.toString() ?: throw java.lang.RuntimeException("No opprageId found"))
     }
 
-
     override fun hentOppgave(oppgaveId: String): OppgaveResponse {
         val response = hentOppgaveDTO(oppgaveId)
         return oppgaveToOppgave(response)
     }
-
-
 
     @Throws(RestOppgaveBehandlingService.FikkIkkeTilordnet::class)
     override fun tilordneOppgave(oppgaveId: String, temagruppe: Temagruppe, saksbehandlersValgteEnhet: String) {
@@ -143,60 +138,40 @@ open class RestOppgaveBehandlingServiceImpl @Autowired constructor(
         return response.fromDTO()
     }
 
-    private fun lagreOppgave(response: OppgaveJsonDTO, temagruppe: Optional<Temagruppe>, saksbehandlersValgteEnhet: String) {
-        try {
-            apiClient.endreOppgave(
-                    xminusCorrelationMinusID = MDC.get(MDCConstants.MDC_CALL_ID),
-                    id = response.id.toString().toLong(),
-                    putOppgaveRequestJsonDTO = PutOppgaveRequestJsonDTO(
-                            tildeltEnhetsnr = saksbehandlersValgteEnhet,
-                            aktoerId = response.aktoerId,
-                            behandlesAvApplikasjon = "FS22",
-                            beskrivelse = response.beskrivelse,
-                            temagruppe = temagruppe.toString(),
-                            tema = response.tema,
-                            behandlingstema = response.behandlingstema,
-                            oppgavetype = response.oppgavetype,
-                            behandlingstype = response.behandlingstype,
-                            aktivDato = response.aktivDato,
-                            fristFerdigstillelse = response.fristFerdigstillelse,
-                            prioritet = PutOppgaveRequestJsonDTO.Prioritet.valueOf(stripTemakode(response.prioritet.toString())),
-                            endretAvEnhetsnr = enhetFor(temagruppe, saksbehandlersValgteEnhet),
-                            status = PutOppgaveRequestJsonDTO.Status.AAPNET,
-                            versjon = 1
-                    )
-            )
-        } catch (e: LagreOppgaveOppgaveIkkeFunnet) {
-            TODO("Må endre catch")
-            log.info("Oppgaven ble ikke funnet ved tilordning til saksbehandler. Oppgaveid: " + response.id, e)
-            throw RuntimeException("Oppgaven ble ikke funnet ved tilordning til saksbehandler", e)
-        }
+    private fun endreOppgaveDTO(response: OppgaveJsonDTO, temagruppe: Optional<Temagruppe>, saksbehandlersValgteEnhet: String) : OppgaveJsonDTO {
+        val oppgave = apiClient.endreOppgave(
+                xminusCorrelationMinusID = MDC.get(MDCConstants.MDC_CALL_ID),
+                id = response.id.toString().toLong(),
+                putOppgaveRequestJsonDTO = PutOppgaveRequestJsonDTO(
+                        id = response.id,
+                        tildeltEnhetsnr = saksbehandlersValgteEnhet,
+                        aktoerId = response.aktoerId,
+                        behandlesAvApplikasjon = "FS22",
+                        beskrivelse = response.beskrivelse,
+                        temagruppe = temagruppe.toString(),
+                        tema = response.tema,
+                        behandlingstema = response.behandlingstema,
+                        oppgavetype = response.oppgavetype,
+                        behandlingstype = response.behandlingstype,
+                        aktivDato = response.aktivDato,
+                        fristFerdigstillelse = response.fristFerdigstillelse,
+                        prioritet = PutOppgaveRequestJsonDTO.Prioritet.valueOf(stripTemakode(response.prioritet.toString())),
+                        endretAvEnhetsnr = enhetFor(temagruppe, saksbehandlersValgteEnhet),
+                        status = PutOppgaveRequestJsonDTO.Status.AAPNET,
+                        versjon = 1,
+                        tilordnetRessurs = response.tilordnetRessurs
+                )
+        )
+        return oppgave.fromDTO();
     }
 
-    private fun lagreOppgave(response: PutOppgaveRequestJsonDTO, temagruppe: Optional<Temagruppe>, saksbehandlersValgteEnhet: String) {
+    private fun lagreOppgave(response: OppgaveJsonDTO, temagruppe: Temagruppe, saksbehandlersValgteEnhet: String) {
+        lagreOppgave(response, Optional.ofNullable(temagruppe), saksbehandlersValgteEnhet)
+    }
+
+    private fun lagreOppgave(response: OppgaveJsonDTO, temagruppe: Optional<Temagruppe>, saksbehandlersValgteEnhet: String) {
         try {
-            apiClient.endreOppgave(
-                    xminusCorrelationMinusID = MDC.get(MDCConstants.MDC_CALL_ID),
-                    id = response.id.toString().toLong(),
-                    putOppgaveRequestJsonDTO = PutOppgaveRequestJsonDTO(
-                            tildeltEnhetsnr = response.tildeltEnhetsnr,
-                            aktoerId = response.aktoerId,
-                            behandlesAvApplikasjon = "FS22",
-                            beskrivelse = response.beskrivelse,
-                            temagruppe = response.temagruppe,
-                            tema = response.tema,
-                            behandlingstema = response.behandlingstema,
-                            oppgavetype = response.oppgavetype,
-                            behandlingstype = response.behandlingstype,
-                            aktivDato = response.aktivDato,
-                            fristFerdigstillelse = response.fristFerdigstillelse,
-                            prioritet = PutOppgaveRequestJsonDTO.Prioritet.valueOf(stripTemakode(response.prioritet.toString())),
-                            endretAvEnhetsnr = enhetFor(temagruppe, saksbehandlersValgteEnhet),
-                            status = PutOppgaveRequestJsonDTO.Status.AAPNET,
-                            versjon = 1,
-                            tilordnetRessurs = response.tilordnetRessurs
-                    )
-            )
+            endreOppgaveDTO(response, temagruppe, saksbehandlersValgteEnhet)
         } catch (e: LagreOppgaveOppgaveIkkeFunnet) {
             log.info("Oppgaven ble ikke funnet ved tilordning til saksbehandler. Oppgaveid: " + response.id, e)
             TODO("Må endre catch")
@@ -305,14 +280,16 @@ open class RestOppgaveBehandlingServiceImpl @Autowired constructor(
     }
 
     override fun ferdigstillOppgaver(oppgaveIder: List<String>, temagruppe: Optional<Temagruppe>, saksbehandlersValgteEnhet: String) {
+        val patchJsonDTOListe = mutableListOf<PatchJsonDTO>()
         for (oppgaveId in oppgaveIder) {
             oppdaterBeskrivelse(temagruppe, saksbehandlersValgteEnhet, oppgaveId)
-
+            patchJsonDTOListe += PatchJsonDTO(1, oppgaveId.toLong())
+        }
         try {
             apiClient.patchOppgaver(
                     xminusCorrelationMinusID = MDC.get(MDCConstants.MDC_CALL_ID),
                     patchOppgaverRequestJsonDTO = PatchOppgaverRequestJsonDTO(
-                            oppgaver = listOf(PatchJsonDTO(1, oppgaveId.toLong())),
+                            oppgaver = patchJsonDTOListe,
                             status = PatchOppgaverRequestJsonDTO.Status.FERDIGSTILT,
                             tilordnetRessurs = enhetFor(temagruppe, saksbehandlersValgteEnhet)
                     )
@@ -322,7 +299,7 @@ open class RestOppgaveBehandlingServiceImpl @Autowired constructor(
             val ider = java.lang.String.join(", ", oppgaveIder)
             log.warn("Ferdigstilling av oppgavebolk med oppgaveider: $ider, med enhet $saksbehandlersValgteEnhet feilet.", e)
             throw e
-        }}
+        }
     }
 
     override fun ferdigstillOppgave(oppgaveId: String, temagruppe: Optional<Temagruppe>, saksbehandlersValgteEnhet: String, beskrivelse: String) {
@@ -346,7 +323,7 @@ open class RestOppgaveBehandlingServiceImpl @Autowired constructor(
     }
 
     override fun leggTilbakeOppgave(request: LeggTilbakeOppgaveRequest) {
-        if (request.oppgaveId == null || request.beskrivelse == null) {
+        if (request.oppgaveId.isNullOrEmpty() || request.beskrivelse.isNullOrEmpty()) {
             return
         }
         val oppgave: GetOppgaveResponseJsonDTO = apiClient.hentOppgave(
@@ -355,7 +332,6 @@ open class RestOppgaveBehandlingServiceImpl @Autowired constructor(
         )
         leggTilbakeOppgaveDelegate.leggTilbake(oppgave, request)
     }
-
 
      fun leggTilBeskrivelse(gammelBeskrivelse: String?, leggTil: String, valgtEnhet: String): String {
         val ident = SubjectHandler.getIdent().orElseThrow { RuntimeException("Fant ikke ident") }
@@ -370,30 +346,12 @@ open class RestOppgaveBehandlingServiceImpl @Autowired constructor(
 
     private fun oppdaterBeskrivelse(temagruppe: Optional<Temagruppe>, saksbehandlersValgteEnhet: String, oppgaveId: String, beskrivelse: String) {
         try {
-            val respons = hentOppgaveDTO(oppgaveId)
-            val oppgave = apiClient.endreOppgave(
-                    xminusCorrelationMinusID = MDC.get(MDCConstants.MDC_CALL_ID),
-                    id = oppgaveId.toLong(),
-                    putOppgaveRequestJsonDTO = PutOppgaveRequestJsonDTO(
-                            tildeltEnhetsnr = respons.tildeltEnhetsnr,
-                            aktoerId = respons.aktoerId,
-                            behandlesAvApplikasjon = "FS22",
-                            beskrivelse = leggTilBeskrivelse(respons.beskrivelse, "Oppgaven er ferdigstilt i Modia. " + beskrivelse, saksbehandlersValgteEnhet),
-                            temagruppe = respons.temagruppe,
-                            tema = respons.tema,
-                            behandlingstema = respons.behandlingstema,
-                            oppgavetype = respons.oppgavetype,
-                            behandlingstype = respons.behandlingstype,
-                            aktivDato = respons.aktivDato,
-                            fristFerdigstillelse = respons.fristFerdigstillelse,
-                            prioritet = PutOppgaveRequestJsonDTO.Prioritet.valueOf(stripTemakode(respons.prioritet.toString())),
-                            endretAvEnhetsnr = respons.endretAvEnhetsnr,
-                            status = PutOppgaveRequestJsonDTO.Status.AAPNET,
-                            versjon = 1
-                    )
-            )
+            val oppgave = hentOppgaveDTO(oppgaveId)
+            val nyBeskrivelse = leggTilBeskrivelse(oppgave.beskrivelse, "Oppgaven er ferdigstilt i Modia. " + beskrivelse, saksbehandlersValgteEnhet)
+            val oppdatertOppgave = oppgave.copy(beskrivelse = nyBeskrivelse)
+            val endretOppgave = endreOppgaveDTO(oppdatertOppgave, temagruppe, saksbehandlersValgteEnhet)
 
-            lagreOppgave(oppgave, temagruppe, saksbehandlersValgteEnhet)
+            lagreOppgave(endretOppgave, temagruppe, saksbehandlersValgteEnhet)
         } catch (e: HentOppgaveOppgaveIkkeFunnet) {
             log.info("Feil ved oppdatering av beskrivelse for oppgave $oppgaveId", e)
             throw RuntimeException(e)
@@ -409,17 +367,13 @@ open class RestOppgaveBehandlingServiceImpl @Autowired constructor(
 
     override fun systemLeggTilbakeOppgave(oppgaveId: String, temagruppe: Temagruppe, saksbehandlersValgteEnhet: String) {
         try {
-            val response = apiClient.hentOppgave(
-                    xminusCorrelationMinusID = MDC.get(MDCConstants.MDC_CALL_ID),
-                    id = oppgaveId.toLong()
-            )
-            lagreOppgave(response, temagruppe, saksbehandlersValgteEnhet)
+            val oppgave = hentOppgaveDTO(oppgaveId)
+            lagreOppgave(oppgave, temagruppe, saksbehandlersValgteEnhet)
         } catch (lagreOppgaveOptimistiskLasing: LagreOppgaveOptimistiskLasing) {
             TODO("Må endre catch")
             throw RuntimeException("Oppgaven kunne ikke lagres, den er for øyeblikket låst av en annen bruker.", lagreOppgaveOptimistiskLasing)
         }
     }
-
 
     private fun getAktorId(fnr: String): String? {
         return try {
@@ -450,6 +404,7 @@ open class RestOppgaveBehandlingServiceImpl @Autowired constructor(
     }
 
     fun GetOppgaveResponseJsonDTO.fromDTO() : OppgaveJsonDTO = TODO()
+    fun PutOppgaveResponseJsonDTO.fromDTO() : OppgaveJsonDTO = TODO()
 
     private fun stripTemakode(prioritet: String): String {
         return prioritet.substringBefore("_")
