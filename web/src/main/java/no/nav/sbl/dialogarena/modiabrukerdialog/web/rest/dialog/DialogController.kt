@@ -176,7 +176,7 @@ class DialogController @Autowired constructor(
 
                     val melding = lagFortsettDialog(fortsettDialogRequest, context, traad)
 
-                    if (traad.hentEldsteMelding().oppgaveId != fortsettDialogRequest.oppgaveId) {
+                    if (traad.getEldsteMelding().oppgaveId != fortsettDialogRequest.oppgaveId) {
                         throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Feil oppgaveId fra client. Forventet: ${melding.oppgaveId} men oppdaget er :${fortsettDialogRequest.oppgaveId}")
                     }
 
@@ -305,7 +305,7 @@ private fun erTraadTilknyttetAnsatt(traad: Traad): Boolean =
         }
 
 private fun lagFortsettDialog(request: FortsettDialogRequest, requestContext: RequestContext, traad: Traad): Melding {
-    val eldsteMelding = traad.hentEldsteMelding()
+    val eldsteMelding = traad.getEldsteMelding()
     val erOppgaveTilknyttetAnsatt = if (request.meldingstype == Meldingstype.SPORSMAL_MODIA_UTGAAENDE) request.erOppgaveTilknyttetAnsatt
                                             else erTraadTilknyttetAnsatt(traad)
     return Melding()

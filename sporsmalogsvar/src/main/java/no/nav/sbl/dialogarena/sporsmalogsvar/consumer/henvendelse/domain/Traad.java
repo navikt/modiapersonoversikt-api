@@ -19,7 +19,7 @@ public class Traad {
     }
 
 
-    public Melding hentEldsteMelding()  {
+    public Melding getEldsteMelding() {
         return meldinger.get(0);
     }
 
