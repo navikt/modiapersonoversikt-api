@@ -1,6 +1,7 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.api.service
 
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe
+import java.util.*
 
 interface RestOppgaveBehandlingService {
     fun opprettOppgave(request: OpprettOppgaveRequest) : OpprettOppgaveResponse
@@ -8,7 +9,24 @@ interface RestOppgaveBehandlingService {
 
     fun hentOppgave(oppgaveId: String) : OppgaveResponse
 
+    @Throws(FikkIkkeTilordnet::class)
     fun tilordneOppgave(oppgaveId: String, temagruppe: Temagruppe, saksbehandlersValgteEnhet: String)
+
+    fun finnTildelteOppgaver(): List<OppgaveResponse>
+
+    fun plukkOppgaver(temagruppe: Temagruppe, saksbehandlersValgteEnhet: String): List<OppgaveResponse>
+
+    fun ferdigstillOppgave(oppgaveId: String, temagruppe: Optional<Temagruppe>, saksbehandlersValgteEnhet: String)
+
+    fun ferdigstillOppgave(oppgaveId: String, temagruppe: Temagruppe, saksbehandlersValgteEnhet: String)
+
+    fun ferdigstillOppgaver(oppgaveId: List<String>, temagruppe: Optional<Temagruppe>, saksbehandlersValgteEnhet: String)
+
+    fun ferdigstillOppgave(oppgaveId: String, temagruppe: Optional<Temagruppe>, saksbehandlersValgteEnhet: String, beskrivelse: String)
+
+    fun leggTilbakeOppgave(request: LeggTilbakeOppgaveRequest)
+
+    fun systemLeggTilbakeOppgave(oppgaveId: String, temagruppe: Temagruppe, saksbehandlersValgteEnhet: String)
 
     fun oppgaveErFerdigstilt(oppgaveid: String): Boolean
 
@@ -21,3 +39,12 @@ data class OppgaveResponse(
         val henvendelseId: String,
         val erSTOOppgave: Boolean
 )
+
+data class LeggTilbakeOppgaveRequest (
+    val saksbehandlersValgteEnhet: String,
+    val oppgaveId: String,
+    val beskrivelse: String,
+    val nyTemagruppe: Temagruppe
+) {
+
+}
