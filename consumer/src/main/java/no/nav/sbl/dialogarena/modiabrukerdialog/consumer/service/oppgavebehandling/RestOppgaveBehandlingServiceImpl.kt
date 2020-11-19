@@ -114,7 +114,7 @@ open class RestOppgaveBehandlingServiceImpl @Autowired constructor(
 
     override fun oppgaveErFerdigstilt(oppgaveid: String): Boolean {
         val response = hentOppgaveDTO(oppgaveid)
-        return StringUtils.equalsIgnoreCase(response.status.value, GetOppgaveResponseJsonDTO.Status.FERDIGSTILT.value)
+        return StringUtils.equalsIgnoreCase(response.status.value, OppgaveJsonDTO.Status.FERDIGSTILT.value)
     }
 
 
@@ -165,11 +165,11 @@ open class RestOppgaveBehandlingServiceImpl @Autowired constructor(
         return oppgave.fromDTO();
     }
 
-    private fun lagreOppgave(response: OppgaveJsonDTO, temagruppe: Temagruppe, saksbehandlersValgteEnhet: String) {
+    fun lagreOppgave(response: OppgaveJsonDTO, temagruppe: Temagruppe, saksbehandlersValgteEnhet: String) {
         lagreOppgave(response, Optional.ofNullable(temagruppe), saksbehandlersValgteEnhet)
     }
 
-    private fun lagreOppgave(response: OppgaveJsonDTO, temagruppe: Optional<Temagruppe>, saksbehandlersValgteEnhet: String) {
+    fun lagreOppgave(response: OppgaveJsonDTO, temagruppe: Optional<Temagruppe>, saksbehandlersValgteEnhet: String) {
         try {
             endreOppgaveDTO(response, temagruppe, saksbehandlersValgteEnhet)
         } catch (e: LagreOppgaveOppgaveIkkeFunnet) {
@@ -227,35 +227,6 @@ open class RestOppgaveBehandlingServiceImpl @Autowired constructor(
         return emptyList()
     }
 
-    override fun plukkOppgaver(temagruppe: Temagruppe, saksbehandlersValgteEnhet: String): List<OppgaveResponse> {
-        val enhetsId = saksbehandlersValgteEnhet.toInt()
-        return tildelEldsteLedigeOppgaver(temagruppe, enhetsId, saksbehandlersValgteEnhet).stream()
-                .map { oppgave: OppgaveJsonDTO -> oppgaveToOppgave(oppgave) }
-                .collect(Collectors.toList())
-    }
-
-    private fun tildelEldsteLedigeOppgaver(temagruppe: Temagruppe, enhetsId: Int, saksbehandlersValgteEnhet: String): List<OppgaveJsonDTO> {
-        val ident = SubjectHandler.getIdent().orElseThrow { RuntimeException("Fant ikke ident") }
-        TODO("Må endre response til å bruke OppgaveApi")
-        val response: WSTildelFlereOppgaverResponse = tildelOppgaveWS.tildelFlereOppgaver(
-                WSTildelFlereOppgaverRequest()
-                        .withUnderkategori(OppgaveBehandlingServiceImpl.underkategoriKode(temagruppe))
-                        .withOppgavetype(OppgaveBehandlingServiceImpl.SPORSMAL_OG_SVAR)
-                        .withFagomrade(OppgaveBehandlingServiceImpl.KONTAKT_NAV)
-                        .withAnsvarligEnhetId(enhetFor(temagruppe, saksbehandlersValgteEnhet))
-                        .withIkkeTidligereTildeltSaksbehandlerId(ident)
-                        .withTildeltAvEnhetId(enhetsId)
-                        .withTildelesSaksbehandlerId(ident))
-        if (response === null) {
-            return emptyList();
-        }
-        return response.oppgaveIder.stream()
-                .map(Function<Int, GetOppgaveResponseJsonDTO> { oppgaveId: Int -> this.hentOppgaveResponse(oppgaveId) })
-                .filter { obj: GetOppgaveResponseJsonDTO -> Objects.nonNull(obj) }
-                .map { obj: GetOppgaveResponseJsonDTO -> oppgaveToOppgave(obj) }
-                .collect(Collectors.toList())
-    }
-
     private fun hentOppgaveResponse(oppgaveId: Int): GetOppgaveResponseJsonDTO {
         return hentOppgaveResponse(oppgaveId.toString())
     }
@@ -269,6 +240,35 @@ open class RestOppgaveBehandlingServiceImpl @Autowired constructor(
         } catch (exc: HentOppgaveOppgaveIkkeFunnet) {
             throw RuntimeException("HentOppgaveOppgaveIkkeFunnet", exc)
         }
+    }
+
+    override fun plukkOppgaver(temagruppe: Temagruppe, saksbehandlersValgteEnhet: String): List<OppgaveResponse> {
+        val enhetsId = saksbehandlersValgteEnhet.toInt()
+        return tildelEldsteLedigeOppgaver(temagruppe, enhetsId, saksbehandlersValgteEnhet).stream()
+                .map { oppgave: OppgaveJsonDTO -> oppgaveToOppgave(oppgave) }
+                .collect(Collectors.toList())
+    }
+
+    private fun tildelEldsteLedigeOppgaver(temagruppe: Temagruppe, enhetsId: Int, saksbehandlersValgteEnhet: String): List<OppgaveJsonDTO> {
+        val ident = SubjectHandler.getIdent().orElseThrow { RuntimeException("Fant ikke ident") }
+        TODO("Endre til å bruke oppgaveApi")
+        val response: WSTildelFlereOppgaverResponse = tildelOppgaveWS.tildelFlereOppgaver(
+                WSTildelFlereOppgaverRequest()
+                        .withUnderkategori(OppgaveBehandlingServiceImpl.underkategoriKode(temagruppe))
+                        .withOppgavetype(OppgaveBehandlingServiceImpl.SPORSMAL_OG_SVAR)
+                        .withFagomrade(OppgaveBehandlingServiceImpl.KONTAKT_NAV)
+                        .withAnsvarligEnhetId(enhetFor(temagruppe, saksbehandlersValgteEnhet))
+                        .withIkkeTidligereTildeltSaksbehandlerId(ident)
+                        .withTildeltAvEnhetId(enhetsId)
+                        .withTildelesSaksbehandlerId(ident))
+        if (response.oppgaveIder.isNullOrEmpty()) {
+            return emptyList();
+        }
+        return response.oppgaveIder.stream()
+                .map { oppgacveId: Int -> hentOppgaveResponse(oppgacveId) }
+                .filter { obj: GetOppgaveResponseJsonDTO -> Objects.nonNull(obj) }
+                .map { obj: GetOppgaveResponseJsonDTO -> oppgaveToOppgave(hentOppgaveDTO(obj.id.toString())) }
+                .collect(Collectors.toList())
     }
 
     override fun ferdigstillOppgave(oppgaveId: String, temagruppe: Temagruppe, saksbehandlersValgteEnhet: String) {
@@ -326,10 +326,7 @@ open class RestOppgaveBehandlingServiceImpl @Autowired constructor(
         if (request.oppgaveId.isNullOrEmpty() || request.beskrivelse.isNullOrEmpty()) {
             return
         }
-        val oppgave: GetOppgaveResponseJsonDTO = apiClient.hentOppgave(
-                xminusCorrelationMinusID = MDC.get(MDCConstants.MDC_CALL_ID),
-                id = request.oppgaveId.toLong()
-        )
+        val oppgave = hentOppgaveDTO(request.oppgaveId)
         leggTilbakeOppgaveDelegate.leggTilbake(oppgave, request)
     }
 

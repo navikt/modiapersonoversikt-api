@@ -3,7 +3,7 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.oppgavebehandl
 import no.nav.common.auth.subject.SubjectHandler
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.AnsattEnhet
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.oppgave.generated.models.GetOppgaveResponseJsonDTO
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.oppgave.generated.models.OppgaveJsonDTO
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.LeggTilbakeOppgaveRequest
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.arbeidsfordeling.ArbeidsfordelingV1Service
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.LagreOppgaveOptimistiskLasing
@@ -16,7 +16,7 @@ open class LeggTilbakeOppgaveDelegate(
         val restOppgaveBehandlingService: RestOppgaveBehandlingServiceImpl,
         val arbeidsfordelingService: ArbeidsfordelingV1Service) {
     private val log = LoggerFactory.getLogger(LeggTilbakeOppgaveDelegate::class.java)
-    fun leggTilbake(oppgave: GetOppgaveResponseJsonDTO, request: LeggTilbakeOppgaveRequest) {
+    fun leggTilbake(oppgave: OppgaveJsonDTO, request: LeggTilbakeOppgaveRequest) {
         validerTilgang(oppgave)
         markerOppgaveSomLagtTilbake(oppgave, request)
         if (temagrupeErSatt(request.nyTemagruppe)) {
@@ -25,7 +25,7 @@ open class LeggTilbakeOppgaveDelegate(
         lagreOppgave(oppgave, request)
     }
 
-    private fun validerTilgang(oppgave: GetOppgaveResponseJsonDTO) {
+    private fun validerTilgang(oppgave: OppgaveJsonDTO) {
         val innloggetSaksbehandler = SubjectHandler.getIdent().orElseThrow { RuntimeException("Fant ikke ident") }
         if (innloggetSaksbehandler != oppgave.tilordnetRessurs) {
             val feilmelding = ("Innlogget saksbehandler " + innloggetSaksbehandler
@@ -35,12 +35,12 @@ open class LeggTilbakeOppgaveDelegate(
         }
     }
 
-    private fun markerOppgaveSomLagtTilbake(oppgave: GetOppgaveResponseJsonDTO, request: LeggTilbakeOppgaveRequest) {
+    private fun markerOppgaveSomLagtTilbake(oppgave: OppgaveJsonDTO, request: LeggTilbakeOppgaveRequest) {
         oppgave.beskrivelse?.replace(oppgave.beskrivelse!!, "")
         oppgave.beskrivelse?.replace(oppgave.beskrivelse!!, lagNyBeskrivelse(oppgave, request))
     }
 
-    private fun lagNyBeskrivelse(oppgave: GetOppgaveResponseJsonDTO, request: LeggTilbakeOppgaveRequest): String {
+    private fun lagNyBeskrivelse(oppgave: OppgaveJsonDTO, request: LeggTilbakeOppgaveRequest): String {
         return restOppgaveBehandlingService.leggTilBeskrivelse(oppgave.beskrivelse, request.beskrivelse,
                 request.saksbehandlersValgteEnhet)
     }
@@ -49,19 +49,19 @@ open class LeggTilbakeOppgaveDelegate(
         return temagruppe != null
     }
 
-    private fun oppdaterForNyTemagruppe(oppgave: GetOppgaveResponseJsonDTO, temagruppe: Temagruppe) {
+    private fun oppdaterForNyTemagruppe(oppgave: OppgaveJsonDTO, temagruppe: Temagruppe) {
         oppgave.tilordnetRessurs?.replace(oppgave.tilordnetRessurs!!, getAnsvarligEnhet(oppgave, temagruppe))
         oppgave.temagruppe?.replace(oppgave.temagruppe!!, temagruppe.name)
     }
 
-    private fun getAnsvarligEnhet(oppgave: GetOppgaveResponseJsonDTO, temagruppe: Temagruppe): String {
+    private fun getAnsvarligEnhet(oppgave: OppgaveJsonDTO, temagruppe: Temagruppe): String {
         val enheter = finnBehandlendeEnhetListe(oppgave, temagruppe).stream()
                 .map { enhet: AnsattEnhet -> enhet.enhetId }
                 .collect(Collectors.toList())
         return if (enheter.isEmpty()) oppgave.tilordnetRessurs!! else enheter[0]
     }
 
-    private fun finnBehandlendeEnhetListe(oppgave: GetOppgaveResponseJsonDTO, temagruppe: Temagruppe): List<AnsattEnhet> {
+    private fun finnBehandlendeEnhetListe(oppgave: OppgaveJsonDTO, temagruppe: Temagruppe): List<AnsattEnhet> {
         return try {
             arbeidsfordelingService.finnBehandlendeEnhetListe(oppgave.tilordnetRessurs,
                     oppgave.tema,
@@ -73,7 +73,7 @@ open class LeggTilbakeOppgaveDelegate(
         }
     }
 
-    private fun lagreOppgave(oppgave: GetOppgaveResponseJsonDTO, request: LeggTilbakeOppgaveRequest) {
+    private fun lagreOppgave(oppgave: OppgaveJsonDTO, request: LeggTilbakeOppgaveRequest) {
         try {
             restOppgaveBehandlingService.lagreOppgave(oppgave, request.nyTemagruppe, request.saksbehandlersValgteEnhet)
         } catch (lagreOppgaveOptimistiskLasing: LagreOppgaveOptimistiskLasing) {
