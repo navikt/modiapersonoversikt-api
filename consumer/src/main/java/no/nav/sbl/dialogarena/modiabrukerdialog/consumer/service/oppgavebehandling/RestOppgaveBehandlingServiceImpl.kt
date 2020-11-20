@@ -164,8 +164,9 @@ open class RestOppgaveBehandlingServiceImpl @Autowired constructor(
     override fun ferdigstillOppgaver(oppgaveIder: List<String>, temagruppe: Temagruppe, saksbehandlersValgteEnhet: String) {
         val patchJsonDTOListe = mutableListOf<PatchJsonDTO>()
         for (oppgaveId in oppgaveIder) {
-            oppdaterBeskrivelse(temagruppe, saksbehandlersValgteEnhet, oppgaveId)
-            patchJsonDTOListe += PatchJsonDTO(1, oppgaveId.toLong())
+            val oppgave = hentOppgaveDTO(oppgaveId)
+            oppgave.copy(beskrivelse = formatterBeskrivelseFerdigstiltOppgave(saksbehandlersValgteEnhet, oppgave.beskrivelse))
+            patchJsonDTOListe += PatchJsonDTO(oppgave.versjon, oppgaveId.toLong())
         }
         try {
             apiClient.patchOppgaver(
