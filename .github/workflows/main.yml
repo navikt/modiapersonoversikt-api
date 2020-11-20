@@ -27,7 +27,7 @@ jobs:
         run: |
           mvn -P ci -B test --settings .github/maven-settings.xml
       - name: Publish Docker image
-        if: github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/master'
+        if: github.ref == 'refs/heads/OPP-1274_orgnization_v4_rest'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
@@ -39,11 +39,11 @@ jobs:
   deploy-qa:
     name: Deploy to preprod
     needs: build
-    if: github.ref == 'refs/heads/dev'
+    if: github.ref == 'refs/heads/OPP-1274_orgnization_v4_rest'
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        namespace: [q0, q1, q6]
+        namespace: [q1]
     steps:
       - uses: actions/checkout@v1
       - uses: nais/deploy/actions/deploy@v1
@@ -52,19 +52,4 @@ jobs:
           PRINT_PAYLOAD: true
           CLUSTER: dev-fss
           RESOURCE: .nais/nais-${{ matrix.namespace }}.yml
-          VAR: version=${{ github.sha }}
-
-  deploy-prod:
-    name: Deploy to prod
-    needs: build
-    if: github.ref == 'refs/heads/master'
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v1
-      - uses: nais/deploy/actions/deploy@v1
-        env:
-          APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
-          PRINT_PAYLOAD: true
-          CLUSTER: prod-fss
-          RESOURCE: .nais/nais.yml
           VAR: version=${{ github.sha }}

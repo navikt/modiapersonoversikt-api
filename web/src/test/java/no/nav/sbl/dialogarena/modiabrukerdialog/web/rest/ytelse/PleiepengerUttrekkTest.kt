@@ -3,7 +3,7 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.ytelse
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
-import no.nav.kjerneinfo.consumer.organisasjon.OrganisasjonServiceImpl
+import no.nav.kjerneinfo.consumer.organisasjon.OrganisasjonService
 import no.nav.modig.core.exception.AuthorizationException
 import no.nav.sykmeldingsperioder.consumer.pleiepenger.PleiepengerServiceImpl
 import no.nav.tjeneste.virksomhet.organisasjon.v4.OrganisasjonV4
@@ -25,20 +25,20 @@ internal class PleiepengerUttrekkTest {
     private val pleiepengerV1: PleiepengerV1 = mock()
     private val service = PleiepengerServiceImpl(pleiepengerV1)
 
-    private val org:  OrganisasjonV4 = mock()
-    private val orgService = OrganisasjonServiceImpl(org)
+    private val org: OrganisasjonV4 = mock()
+    private val orgService: OrganisasjonService = mock()
 
     private val uttrekk = PleiepengerUttrekk(service, orgService)
 
     @Test
-    fun`Kaster Auth exception`() {
+    fun `Kaster Auth exception`() {
         whenever(pleiepengerV1.hentPleiepengerettighet(any())).thenThrow(HentPleiepengerettighetSikkerhetsbegrensning())
 
         assertFailsWith<AuthorizationException> { uttrekk.hent(FNR) }
     }
 
     @Test
-    fun`Tom liste returnerer null`() {
+    fun `Tom liste returnerer null`() {
         whenever(pleiepengerV1.hentPleiepengerettighet(any())).thenReturn(WSHentPleiepengerettighetResponse())
 
         val response = uttrekk.hent(FNR)
@@ -48,7 +48,7 @@ internal class PleiepengerUttrekkTest {
     }
 
     @Test
-    fun`Test på om felter blir satt`() {
+    fun `Test på om felter blir satt`() {
         whenever(pleiepengerV1.hentPleiepengerettighet(any())).thenReturn(mockResponse())
 
         val response = uttrekk.hent(FNR)
