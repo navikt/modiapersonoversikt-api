@@ -174,14 +174,12 @@ class DialogController @Autowired constructor(
                             .find { it.traadId == fortsettDialogRequest.traadId }
                             ?: throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Fant ingen tråd med id: ${fortsettDialogRequest.traadId}")
 
-                    val melding = lagFortsettDialog(fortsettDialogRequest, context, traad)
-
                     if (traad.getEldsteMelding().oppgaveId != fortsettDialogRequest.oppgaveId) {
-                        throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Feil oppgaveId fra client. Forventet: ${melding.oppgaveId} men oppdaget er :${fortsettDialogRequest.oppgaveId}")
+                        throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Feil oppgaveId fra client. Forventet: ${traad.getEldsteMelding().oppgaveId} men oppdaget: ${fortsettDialogRequest.oppgaveId}")
                     }
 
                     henvendelseUtsendingService.ferdigstillHenvendelse(
-                            melding,
+                            lagFortsettDialog(fortsettDialogRequest, context, traad),
                             Optional.ofNullable(fortsettDialogRequest.oppgaveId),
                             Optional.ofNullable(fortsettDialogRequest.sak),
                             fortsettDialogRequest.behandlingsId,
@@ -306,8 +304,13 @@ private fun erTraadTilknyttetAnsatt(traad: Traad): Boolean =
 
 private fun lagFortsettDialog(request: FortsettDialogRequest, requestContext: RequestContext, traad: Traad): Melding {
     val eldsteMelding = traad.getEldsteMelding()
-    val erOppgaveTilknyttetAnsatt = if (request.meldingstype == Meldingstype.SPORSMAL_MODIA_UTGAAENDE) request.erOppgaveTilknyttetAnsatt
-                                            else erTraadTilknyttetAnsatt(traad)
+    val erOppgaveTilknyttetAnsatt =
+            if (request.meldingstype == Meldingstype.SPORSMAL_MODIA_UTGAAENDE) {
+                request.erOppgaveTilknyttetAnsatt
+            } else {
+                erTraadTilknyttetAnsatt(traad)
+            }
+
     return Melding()
             .withFnr(requestContext.fnr)
             .withNavIdent(requestContext.ident)
