@@ -16,13 +16,11 @@ interface RestOppgaveBehandlingService {
 
     fun plukkOppgaver(temagruppe: Temagruppe, saksbehandlersValgteEnhet: String): List<OppgaveResponse>
 
-    fun ferdigstillOppgave(oppgaveId: String, temagruppe: Optional<Temagruppe>, saksbehandlersValgteEnhet: String)
-
     fun ferdigstillOppgave(oppgaveId: String, temagruppe: Temagruppe, saksbehandlersValgteEnhet: String)
 
-    fun ferdigstillOppgaver(oppgaveId: List<String>, temagruppe: Optional<Temagruppe>, saksbehandlersValgteEnhet: String)
+    fun ferdigstillOppgaver(oppgaveId: List<String>, temagruppe: Temagruppe, saksbehandlersValgteEnhet: String)
 
-    fun ferdigstillOppgave(oppgaveId: String, temagruppe: Optional<Temagruppe>, saksbehandlersValgteEnhet: String, beskrivelse: String)
+    fun ferdigstillOppgave(oppgaveId: String, temagruppe: Temagruppe, saksbehandlersValgteEnhet: String, beskrivelse: String)
 
     fun leggTilbakeOppgave(request: LeggTilbakeOppgaveRequest)
 

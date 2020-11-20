@@ -1,6 +1,5 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.oppgavebehandling
 
-import com.sun.xml.xsom.impl.scd.Iterators
 import no.nav.common.auth.subject.SubjectHandler
 import no.nav.common.log.MDCConstants
 import no.nav.common.sts.SystemUserTokenProvider
@@ -20,8 +19,6 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Tilgangskontrol
 import no.nav.tjeneste.virksomhet.oppgave.v3.HentOppgaveOppgaveIkkeFunnet
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.LagreOppgaveOppgaveIkkeFunnet
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.LagreOppgaveOptimistiskLasing
-import no.nav.tjeneste.virksomhet.tildeloppgave.v1.WSTildelFlereOppgaverRequest
-import no.nav.tjeneste.virksomhet.tildeloppgave.v1.WSTildelFlereOppgaverResponse
 import org.apache.commons.lang3.StringUtils
 import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
@@ -59,6 +56,7 @@ open class RestOppgaveBehandlingServiceImpl @Autowired constructor(
         val oppgaveTypeMapped: String = kodeverksmapperService.mapOppgavetype(request.oppgavetype)
         val aktorId = getAktorId(request.fnr)
         val response = apiClient.opprettOppgave(
+                authorization = consumerOidcToken,
                 xminusCorrelationMinusID = MDC.get(MDCConstants.MDC_CALL_ID),
                 postOppgaveRequestJsonDTO = PostOppgaveRequestJsonDTO(
                         opprettetAvEnhetsnr = request.opprettetavenhetsnummer,
@@ -81,6 +79,7 @@ open class RestOppgaveBehandlingServiceImpl @Autowired constructor(
     override fun opprettSkjermetOppgave(request: OpprettOppgaveRequest): OpprettOppgaveResponse {
         val behandling: Optional<Behandling> = kodeverksmapperService.mapUnderkategori(request.underkategoriKode)
         val response = apiClient.opprettOppgave(
+                authorization = consumerOidcToken,
                 xminusCorrelationMinusID = MDC.get(MDCConstants.MDC_CALL_ID),
                 postOppgaveRequestJsonDTO = PostOppgaveRequestJsonDTO(
                         aktoerId = getAktorId(request.fnr),
@@ -102,17 +101,26 @@ open class RestOppgaveBehandlingServiceImpl @Autowired constructor(
     }
 
     override fun hentOppgave(oppgaveId: String): OppgaveResponse {
-        val response = hentOppgaveDTO(oppgaveId)
+        val response = this.hentOppgaveDTO(oppgaveId)
         return oppgaveToOppgave(response)
     }
 
     @Throws(RestOppgaveBehandlingService.FikkIkkeTilordnet::class)
     override fun tilordneOppgave(oppgaveId: String, temagruppe: Temagruppe, saksbehandlersValgteEnhet: String) {
-        tilordneOppgave(oppgaveId, Optional.ofNullable(temagruppe), saksbehandlersValgteEnhet)
+        val oppgave = hentOppgaveDTO(oppgaveId)
+        val ident: String = SubjectHandler.getIdent().orElseThrow { RuntimeException("Fant ikke ident") }
+        try {
+            val oppdatertOppgave = oppgave.copy(
+                    tilordnetRessurs = ident
+            )
+            lagreOppgave(oppdatertOppgave, temagruppe, saksbehandlersValgteEnhet)
+        } catch (exeption: Exception) {
+            throw RestOppgaveBehandlingService.FikkIkkeTilordnet(exeption)
+        }
     }
 
     override fun oppgaveErFerdigstilt(oppgaveid: String): Boolean {
-        val response = hentOppgaveDTO(oppgaveid)
+        val response = this.hentOppgaveDTO(oppgaveid)
         return StringUtils.equalsIgnoreCase(response.status.value, OppgaveJsonDTO.Status.FERDIGSTILT.value)
     }
 
@@ -132,34 +140,20 @@ open class RestOppgaveBehandlingServiceImpl @Autowired constructor(
         return validerTilgangTilbruker(response)
     }
 
-    override fun plukkOppgaver(temagruppe: Temagruppe, saksbehandlersValgteEnhet: String): List<OppgaveResponse> {
-        val enhetsId = saksbehandlersValgteEnhet.toInt()
-        return tildelEldsteLedigeOppgaver(temagruppe, enhetsId, saksbehandlersValgteEnhet).stream()
-                .map { oppgave: OppgaveJsonDTO -> oppgaveToOppgave(oppgave) }
-                .collect(Collectors.toList())
-    }
+    override fun plukkOppgaver(temagruppe: Temagruppe, saksbehandlersValgteEnhet: String): List<OppgaveResponse> {}
 
     override fun ferdigstillOppgave(oppgaveId: String, temagruppe: Temagruppe, saksbehandlersValgteEnhet: String) {
-        ferdigstillOppgave(oppgaveId, Optional.ofNullable(temagruppe), saksbehandlersValgteEnhet)
-    }
-
-    override fun ferdigstillOppgave(oppgaveId: String, temagruppe: Optional<Temagruppe>, saksbehandlersValgteEnhet: String) {
         ferdigstillOppgaver(listOf(oppgaveId), temagruppe, saksbehandlersValgteEnhet)
     }
 
-    override fun ferdigstillOppgave(oppgaveId: String, temagruppe: Optional<Temagruppe>, saksbehandlersValgteEnhet: String, beskrivelse: String) {
-        oppdaterBeskrivelse(temagruppe, saksbehandlersValgteEnhet, oppgaveId, beskrivelse)
+    override fun ferdigstillOppgave(oppgaveId: String, temagruppe: Temagruppe, saksbehandlersValgteEnhet: String, beskrivelse: String) {
         try {
-            apiClient.patchOppgave(
-                    xminusCorrelationMinusID = MDC.get(MDCConstants.MDC_CALL_ID),
-                    id = oppgaveId.toLong(),
-                    patchOppgaveRequestJsonDTO = PatchOppgaveRequestJsonDTO(
-                            versjon = 1,
-                            id = oppgaveId.toLong(),
-                            status = PatchOppgaveRequestJsonDTO.Status.FERDIGSTILT,
-                            tilordnetRessurs = enhetFor(temagruppe, saksbehandlersValgteEnhet)
+            val oppgave = hentOppgaveDTO(oppgaveId)
+            val oppgaveOppdatert = oppgave.copy(
+                    status = OppgaveJsonDTO.Status.FERDIGSTILT,
+                    beskrivelse = formatterBeskrivelseFerdigstiltOppgave(saksbehandlersValgteEnhet, oppgave.beskrivelse, beskrivelse)
                     )
-            )
+            lagreOppgave(oppgaveOppdatert, temagruppe, saksbehandlersValgteEnhet)
             log.info("Forsøker å ferdigstille oppgave med oppgaveId" + oppgaveId + "for enhet" + saksbehandlersValgteEnhet)
         } catch (e: java.lang.Exception) {
             log.error("Kunne ikke ferdigstille oppgave i Modia med oppgaveId $oppgaveId", e)
@@ -167,7 +161,7 @@ open class RestOppgaveBehandlingServiceImpl @Autowired constructor(
         }
     }
 
-    override fun ferdigstillOppgaver(oppgaveIder: List<String>, temagruppe: Optional<Temagruppe>, saksbehandlersValgteEnhet: String) {
+    override fun ferdigstillOppgaver(oppgaveIder: List<String>, temagruppe: Temagruppe, saksbehandlersValgteEnhet: String) {
         val patchJsonDTOListe = mutableListOf<PatchJsonDTO>()
         for (oppgaveId in oppgaveIder) {
             oppdaterBeskrivelse(temagruppe, saksbehandlersValgteEnhet, oppgaveId)
@@ -190,62 +184,51 @@ open class RestOppgaveBehandlingServiceImpl @Autowired constructor(
         }
     }
 
-
-
     override fun leggTilbakeOppgave(request: LeggTilbakeOppgaveRequest) {
         if (request.oppgaveId.isNullOrEmpty() || request.beskrivelse.isNullOrEmpty()) {
             return
         }
-        val oppgave = hentOppgaveDTO(request.oppgaveId)
+        val oppgave = this.hentOppgaveDTO(request.oppgaveId)
         leggTilbakeOppgaveDelegate.leggTilbake(oppgave, request)
     }
 
-    @Throws(RestOppgaveBehandlingService.FikkIkkeTilordnet::class)
-    private fun tilordneOppgave(oppgaveId: String, temagruppe: Optional<Temagruppe>, saksbehandlersValgteEnhet: String) {
-        val oppgave = hentOppgaveDTO(oppgaveId)
-        val ident: String = SubjectHandler.getIdent().orElseThrow { RuntimeException("Fant ikke ident") }
-        try {
-            val oppdatertOppgave = oppgave.copy(tilordnetRessurs = ident, tildeltEnhetsnr = saksbehandlersValgteEnhet)
-            lagreOppgave(oppdatertOppgave, temagruppe, saksbehandlersValgteEnhet)
-        } catch (exeption: Exception) {
-            throw RestOppgaveBehandlingService.FikkIkkeTilordnet(exeption)
-        }
-    }
-
-    private fun endreOppgave(response: OppgaveJsonDTO, temagruppe: Temagruppe, saksbehandlersValgteEnhet: String) : OppgaveJsonDTO {
+    private fun endreOppgave(request: OppgaveJsonDTO) : PutOppgaveResponseJsonDTO {
         val oppgave = apiClient.endreOppgave(
                 xminusCorrelationMinusID = MDC.get(MDCConstants.MDC_CALL_ID),
-                id = response.id.toString().toLong(),
+                id = request.id.toString().toLong(),
                 putOppgaveRequestJsonDTO = PutOppgaveRequestJsonDTO(
-                        id = response.id,
-                        tildeltEnhetsnr = saksbehandlersValgteEnhet,
-                        aktoerId = response.aktoerId,
+                        id = request.id,
+                        tildeltEnhetsnr = request.tildeltEnhetsnr,
+                        aktoerId = request.aktoerId,
                         behandlesAvApplikasjon = "FS22",
-                        beskrivelse = response.beskrivelse,
-                        temagruppe = temagruppe.toString(),
-                        tema = response.tema,
-                        behandlingstema = response.behandlingstema,
-                        oppgavetype = response.oppgavetype,
-                        behandlingstype = response.behandlingstype,
-                        aktivDato = response.aktivDato,
-                        fristFerdigstillelse = response.fristFerdigstillelse,
-                        prioritet = PutOppgaveRequestJsonDTO.Prioritet.valueOf(stripTemakode(response.prioritet.toString())),
-                        endretAvEnhetsnr = enhetFor(temagruppe, saksbehandlersValgteEnhet),
+                        beskrivelse = request.beskrivelse,
+                        temagruppe = request.temagruppe,
+                        tema = request.tema,
+                        behandlingstema = request.behandlingstema,
+                        oppgavetype = request.oppgavetype,
+                        behandlingstype = request.behandlingstype,
+                        aktivDato = request.aktivDato,
+                        fristFerdigstillelse = request.fristFerdigstillelse,
+                        prioritet = PutOppgaveRequestJsonDTO.Prioritet.valueOf(request.prioritet.value),
+                        endretAvEnhetsnr = request.endretAvEnhetsnr,
                         status = PutOppgaveRequestJsonDTO.Status.AAPNET,
                         versjon = 1,
-                        tilordnetRessurs = response.tilordnetRessurs
+                        tilordnetRessurs = request.tilordnetRessurs
                 )
         )
-        return oppgave.fromDTO();
+        return oppgave
     }
 
-    fun lagreOppgave(response: OppgaveJsonDTO, temagruppe: Temagruppe, saksbehandlersValgteEnhet: String) {
+    fun lagreOppgave(request: OppgaveJsonDTO, temagruppe: Temagruppe, saksbehandlersValgteEnhet: String) {
         try {
-            endreOppgave(response, temagruppe, saksbehandlersValgteEnhet)
+            val oppgave = request.copy(
+                    endretAvEnhetsnr = enhetFor(temagruppe, saksbehandlersValgteEnhet)
+            )
+            endreOppgave(oppgave)
         } catch (e: LagreOppgaveOppgaveIkkeFunnet) {
-            log.info("Oppgaven ble ikke funnet ved tilordning til saksbehandler. Oppgaveid: " + response.id, e)
+            log.info("Oppgaven ble ikke funnet ved tilordning til saksbehandler. Oppgaveid: " + request.id, e)
             TODO("Må endre catch")
-            log.info("Oppgaven ble ikke funnet ved tilordning til saksbehandler. Oppgaveid: " + response.id, e)
+            log.info("Oppgaven ble ikke funnet ved tilordning til saksbehandler. Oppgaveid: " + request.id, e)
             throw RuntimeException("Oppgaven ble ikke funnet ved tilordning til saksbehandler", e)
         }
     }
@@ -289,78 +272,21 @@ open class RestOppgaveBehandlingServiceImpl @Autowired constructor(
         return response.fromDTO()
     }
 
-    private fun hentOppgaveResponse(oppgaveId: Int): GetOppgaveResponseJsonDTO {
-        return hentOppgaveResponse(oppgaveId.toString())
+
+
+    private fun formatterBeskrivelseFerdigstiltOppgave(saksbehandlersValgteEnhet: String, gammelBeskrivelse: String?, beskrivelse: String) : String {
+            return leggTilBeskrivelse(gammelBeskrivelse, "Oppgaven er ferdigstilt i Modia. " + beskrivelse, saksbehandlersValgteEnhet)
     }
 
-    private fun hentOppgaveResponse(oppgaveId: String): GetOppgaveResponseJsonDTO {
-        return try {
-            apiClient.hentOppgave(
-                    xminusCorrelationMinusID = MDC.get(MDCConstants.MDC_CALL_ID),
-                    id = oppgaveId.toLong()
-            )
-        } catch (exc: HentOppgaveOppgaveIkkeFunnet) {
-            throw RuntimeException("HentOppgaveOppgaveIkkeFunnet", exc)
-        }
-    }
-
-    private fun tildelEldsteLedigeOppgaver(temagruppe: Temagruppe, enhetsId: Int, saksbehandlersValgteEnhet: String): List<OppgaveJsonDTO> {
-        val ident = SubjectHandler.getIdent().orElseThrow { RuntimeException("Fant ikke ident") }
-        TODO("Endre til å bruke oppgaveApi")
-        val response: WSTildelFlereOppgaverResponse = tildelOppgaveWS.tildelFlereOppgaver(
-                WSTildelFlereOppgaverRequest()
-                        .withUnderkategori(OppgaveBehandlingServiceImpl.underkategoriKode(temagruppe))
-                        .withOppgavetype(OppgaveBehandlingServiceImpl.SPORSMAL_OG_SVAR)
-                        .withFagomrade(OppgaveBehandlingServiceImpl.KONTAKT_NAV)
-                        .withAnsvarligEnhetId(enhetFor(temagruppe, saksbehandlersValgteEnhet))
-                        .withIkkeTidligereTildeltSaksbehandlerId(ident)
-                        .withTildeltAvEnhetId(enhetsId)
-                        .withTildelesSaksbehandlerId(ident))
-        if (response.oppgaveIder.isNullOrEmpty()) {
-            return emptyList();
-        }
-        return response.oppgaveIder.stream()
-                .map { oppgacveId: Int -> hentOppgaveResponse(oppgacveId) }
-                .filter { obj: GetOppgaveResponseJsonDTO -> Objects.nonNull(obj) }
-                .map { obj: GetOppgaveResponseJsonDTO -> oppgaveToOppgave(hentOppgaveDTO(obj.id.toString())) }
-                .collect(Collectors.toList())
-    }
-
-    fun leggTilBeskrivelse(gammelBeskrivelse: String?, leggTil: String, valgtEnhet: String): String {
-        val ident = SubjectHandler.getIdent().orElseThrow { RuntimeException("Fant ikke ident") }
-        val header = String.format("--- %s %s (%s, %s) ---\n",
-                DateTimeFormat.forPattern("dd.MM.yyyy HH:mm").print(DateTime.now()),
-                ansattService.hentAnsattNavn(ident),
-                ident,
-                valgtEnhet)
-        val nyBeskrivelse = header + leggTil
-        return if (StringUtils.isBlank(gammelBeskrivelse)) nyBeskrivelse else nyBeskrivelse + "\n\n" + gammelBeskrivelse
-    }
-
-    private fun oppdaterBeskrivelse(temagruppe: Optional<Temagruppe>, saksbehandlersValgteEnhet: String, oppgaveId: String, beskrivelse: String) {
-        try {
-            val oppgave = hentOppgaveDTO(oppgaveId)
-            val nyBeskrivelse = leggTilBeskrivelse(oppgave.beskrivelse, "Oppgaven er ferdigstilt i Modia. " + beskrivelse, saksbehandlersValgteEnhet)
-            val oppdatertOppgave = oppgave.copy(beskrivelse = nyBeskrivelse)
-            val endretOppgave = endreOppgave(oppdatertOppgave, temagruppe, saksbehandlersValgteEnhet)
-
-            lagreOppgave(endretOppgave, temagruppe, saksbehandlersValgteEnhet)
-        } catch (e: HentOppgaveOppgaveIkkeFunnet) {
-            log.info("Feil ved oppdatering av beskrivelse for oppgave $oppgaveId", e)
-            throw RuntimeException(e)
-        } catch (e: LagreOppgaveOptimistiskLasing) {
-            log.info("Feil ved oppdatering av beskrivelse for oppgave $oppgaveId", e)
-            throw RuntimeException(e)
-        }
-    }
-
-    private fun oppdaterBeskrivelse(temagruppe: Optional<Temagruppe>, saksbehandlersValgteEnhet: String, oppgaveId: String) {
-        oppdaterBeskrivelse(temagruppe, saksbehandlersValgteEnhet, oppgaveId, "")
+    private fun formatterBeskrivelseFerdigstiltOppgave(saksbehandlersValgteEnhet: String, gammelBeskrivelse: String?) : String{
+        return leggTilBeskrivelse(gammelBeskrivelse, "" ,saksbehandlersValgteEnhet)
     }
 
     override fun systemLeggTilbakeOppgave(oppgaveId: String, temagruppe: Temagruppe, saksbehandlersValgteEnhet: String) {
         try {
-            val oppgave = hentOppgaveDTO(oppgaveId)
+            val oppgave = hentOppgaveDTO(oppgaveId).copy(
+                    tilordnetRessurs = ""
+            )
             lagreOppgave(oppgave, temagruppe, saksbehandlersValgteEnhet)
         } catch (lagreOppgaveOptimistiskLasing: LagreOppgaveOptimistiskLasing) {
             TODO("Må endre catch")
@@ -396,78 +322,22 @@ open class RestOppgaveBehandlingServiceImpl @Autowired constructor(
         )
     }
 
-    fun GetOppgaveResponseJsonDTO.fromDTO() : OppgaveJsonDTO = OppgaveJsonDTO(
-        tildeltEnhetsnr = tildeltEnhetsnr,
-        oppgavetype = oppgavetype,
-        versjon = versjon,
-        prioritet = OppgaveJsonDTO.Prioritet.valueOf(stripTemakode(prioritet.toString())),
-        status = OppgaveJsonDTO.Status.valueOf(status.value),
-        aktivDato = aktivDato,
-        id = id,
-        endretAvEnhetsnr = endretAvEnhetsnr,
-        opprettetAvEnhetsnr = opprettetAvEnhetsnr,
-        journalpostId = journalpostId,
-        journalpostkilde = journalpostkilde,
-        behandlesAvApplikasjon = behandlesAvApplikasjon,
-        saksreferanse = saksreferanse,
-        bnr = bnr,
-        samhandlernr = samhandlernr,
-        aktoerId = aktoerId,
-        identer = identer,
-        orgnr = orgnr,
-        tilordnetRessurs = tilordnetRessurs,
-        beskrivelse = beskrivelse,
-        temagruppe = temagruppe,
-        tema = tema,
-        behandlingstema = behandlingstema,
-        behandlingstype = behandlingstype,
-        mappeId = mappeId,
-        opprettetAv = opprettetAv,
-        endretAv = endretAv,
-        metadata = metadata,
-        fristFerdigstillelse = fristFerdigstillelse,
-        opprettetTidspunkt = opprettetTidspunkt,
-        ferdigstiltTidspunkt = ferdigstiltTidspunkt,
-        endretTidspunkt = endretTidspunkt
+    fun GetOppgaveResponseJsonDTO.fromDTO() : OppgaveJsonDTO = TODO();
 
-    )
-
-    fun PutOppgaveResponseJsonDTO.fromDTO() : OppgaveJsonDTO = OppgaveJsonDTO(
-            tildeltEnhetsnr = tildeltEnhetsnr,
-            oppgavetype = oppgavetype,
-            versjon = versjon,
-            prioritet = OppgaveJsonDTO.Prioritet.valueOf(stripTemakode(prioritet.toString())),
-            status = OppgaveJsonDTO.Status.valueOf(status.value),
-            aktivDato = aktivDato,
-            id = id,
-            endretAvEnhetsnr = endretAvEnhetsnr,
-            opprettetAvEnhetsnr = opprettetAvEnhetsnr,
-            journalpostId = journalpostId,
-            journalpostkilde = journalpostkilde,
-            behandlesAvApplikasjon = behandlesAvApplikasjon,
-            saksreferanse = saksreferanse,
-            bnr = bnr,
-            samhandlernr = samhandlernr,
-            aktoerId = aktoerId,
-            identer = identer,
-            orgnr = orgnr,
-            tilordnetRessurs = tilordnetRessurs,
-            beskrivelse = beskrivelse,
-            temagruppe = temagruppe,
-            tema = tema,
-            behandlingstema = behandlingstema,
-            behandlingstype = behandlingstype,
-            mappeId = mappeId,
-            opprettetAv = opprettetAv,
-            endretAv = endretAv,
-            metadata = metadata,
-            fristFerdigstillelse = fristFerdigstillelse,
-            opprettetTidspunkt = opprettetTidspunkt,
-            ferdigstiltTidspunkt = ferdigstiltTidspunkt,
-            endretTidspunkt = endretTidspunkt
-    )
+    fun PutOppgaveResponseJsonDTO.fromDTO() : OppgaveJsonDTO = TODO();
 
     private fun stripTemakode(prioritet: String): String {
         return prioritet.substringBefore("_")
+    }
+
+    private fun leggTilBeskrivelse(gammelBeskrivelse: String?, leggTil: String, valgtEnhet: String): String {
+        val ident = SubjectHandler.getIdent().orElseThrow { RuntimeException("Fant ikke ident") }
+        val header = String.format("--- %s %s (%s, %s) ---\n",
+                DateTimeFormat.forPattern("dd.MM.yyyy HH:mm").print(DateTime.now()),
+                ansattService.hentAnsattNavn(ident),
+                ident,
+                valgtEnhet)
+        val nyBeskrivelse = header + leggTil
+        return if (StringUtils.isBlank(gammelBeskrivelse)) nyBeskrivelse else nyBeskrivelse + "\n\n" + gammelBeskrivelse
     }
 }
