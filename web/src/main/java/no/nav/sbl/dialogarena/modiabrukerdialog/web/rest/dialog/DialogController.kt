@@ -174,7 +174,7 @@ class DialogController @Autowired constructor(
                             .find { it.traadId == fortsettDialogRequest.traadId }
                             ?: throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Fant ingen tråd med id: ${fortsettDialogRequest.traadId}")
 
-                    if (traad.getEldsteMelding().oppgaveId != fortsettDialogRequest.oppgaveId) {
+                    if (!traad.harTilknyttningTilOppgave(fortsettDialogRequest.oppgaveId)) {
                         throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Feil oppgaveId fra client. Forventet: ${traad.getEldsteMelding().oppgaveId} men oppdaget: ${fortsettDialogRequest.oppgaveId}")
                     }
 
