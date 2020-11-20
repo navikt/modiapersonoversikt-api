@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.oppgavebehandling
 
+import com.sun.xml.xsom.impl.scd.Iterators
 import no.nav.common.auth.subject.SubjectHandler
 import no.nav.common.log.MDCConstants
 import no.nav.common.sts.SystemUserTokenProvider
@@ -395,8 +396,76 @@ open class RestOppgaveBehandlingServiceImpl @Autowired constructor(
         )
     }
 
-    fun GetOppgaveResponseJsonDTO.fromDTO() : OppgaveJsonDTO = TODO()
-    fun PutOppgaveResponseJsonDTO.fromDTO() : OppgaveJsonDTO = TODO()
+    fun GetOppgaveResponseJsonDTO.fromDTO() : OppgaveJsonDTO = OppgaveJsonDTO(
+        tildeltEnhetsnr = tildeltEnhetsnr,
+        oppgavetype = oppgavetype,
+        versjon = versjon,
+        prioritet = OppgaveJsonDTO.Prioritet.valueOf(stripTemakode(prioritet.toString())),
+        status = OppgaveJsonDTO.Status.valueOf(status.value),
+        aktivDato = aktivDato,
+        id = id,
+        endretAvEnhetsnr = endretAvEnhetsnr,
+        opprettetAvEnhetsnr = opprettetAvEnhetsnr,
+        journalpostId = journalpostId,
+        journalpostkilde = journalpostkilde,
+        behandlesAvApplikasjon = behandlesAvApplikasjon,
+        saksreferanse = saksreferanse,
+        bnr = bnr,
+        samhandlernr = samhandlernr,
+        aktoerId = aktoerId,
+        identer = identer,
+        orgnr = orgnr,
+        tilordnetRessurs = tilordnetRessurs,
+        beskrivelse = beskrivelse,
+        temagruppe = temagruppe,
+        tema = tema,
+        behandlingstema = behandlingstema,
+        behandlingstype = behandlingstype,
+        mappeId = mappeId,
+        opprettetAv = opprettetAv,
+        endretAv = endretAv,
+        metadata = metadata,
+        fristFerdigstillelse = fristFerdigstillelse,
+        opprettetTidspunkt = opprettetTidspunkt,
+        ferdigstiltTidspunkt = ferdigstiltTidspunkt,
+        endretTidspunkt = endretTidspunkt
+
+    )
+
+    fun PutOppgaveResponseJsonDTO.fromDTO() : OppgaveJsonDTO = OppgaveJsonDTO(
+            tildeltEnhetsnr = tildeltEnhetsnr,
+            oppgavetype = oppgavetype,
+            versjon = versjon,
+            prioritet = OppgaveJsonDTO.Prioritet.valueOf(stripTemakode(prioritet.toString())),
+            status = OppgaveJsonDTO.Status.valueOf(status.value),
+            aktivDato = aktivDato,
+            id = id,
+            endretAvEnhetsnr = endretAvEnhetsnr,
+            opprettetAvEnhetsnr = opprettetAvEnhetsnr,
+            journalpostId = journalpostId,
+            journalpostkilde = journalpostkilde,
+            behandlesAvApplikasjon = behandlesAvApplikasjon,
+            saksreferanse = saksreferanse,
+            bnr = bnr,
+            samhandlernr = samhandlernr,
+            aktoerId = aktoerId,
+            identer = identer,
+            orgnr = orgnr,
+            tilordnetRessurs = tilordnetRessurs,
+            beskrivelse = beskrivelse,
+            temagruppe = temagruppe,
+            tema = tema,
+            behandlingstema = behandlingstema,
+            behandlingstype = behandlingstype,
+            mappeId = mappeId,
+            opprettetAv = opprettetAv,
+            endretAv = endretAv,
+            metadata = metadata,
+            fristFerdigstillelse = fristFerdigstillelse,
+            opprettetTidspunkt = opprettetTidspunkt,
+            ferdigstiltTidspunkt = ferdigstiltTidspunkt,
+            endretTidspunkt = endretTidspunkt
+    )
 
     private fun stripTemakode(prioritet: String): String {
         return prioritet.substringBefore("_")
