@@ -256,12 +256,8 @@ spec:
       value: "LTPA"
     - name: VIRKSOMHET_OPPGAVEBEHANDLING_V3_WSDLURL
       value: "http://maven.adeo.no/nexus/content/groups/public/no/nav/tjenester/fim/nav-fim-oppgavebehandling-v3-tjenestespesifikasjon/3.1.1/nav-fim-oppgavebehandling-v3-tjenestespesifikasjon-3.1.1.zip"
-    - name: VIRKSOMHET_ORGANISASJON_V4_ENDPOINTURL
-      value: "https://service-gw.adeo.no/"
-    - name: VIRKSOMHET_ORGANISASJON_V4_SECURITYTOKEN
-      value: "SAML"
-    - name: VIRKSOMHET_ORGANISASJON_V4_WSDLURL
-      value: "http://maven.adeo.no/nexus/content/groups/public/no/nav/tjenester/fim/nav-fim-organisasjon-v4-tjenestespesifikasjon/1.0.4/nav-fim-organisasjon-v4-tjenestespesifikasjon-1.0.4.zip"
+    - name: EREG_ENDPOINTURL
+      value: "https://modapp.adeo.no/ereg/"
     - name: VIRKSOMHET_ORGANISASJONENHET_V2_ENDPOINTURL
       value: "https://app.adeo.no/norg2/ws/OrganisasjonEnhet/v2"
     - name: VIRKSOMHET_ORGANISASJONENHET_V2_SECURITYTOKEN

@@ -13,8 +13,8 @@ import no.nav.common.auth.subject.IdentType
 import no.nav.common.auth.subject.SsoToken
 import no.nav.common.auth.subject.Subject
 import no.nav.common.sts.SystemUserTokenProvider
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.RestConstants
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.RestConstants.ALLE_TEMA_HEADERVERDI
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.RestConstants
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.RestConstants.ALLE_TEMA_HEADERVERDI
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.SubjectRule
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.TestUtils
 import org.junit.Assert.*

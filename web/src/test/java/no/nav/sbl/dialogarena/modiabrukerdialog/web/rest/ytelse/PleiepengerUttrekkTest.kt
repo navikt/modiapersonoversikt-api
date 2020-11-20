@@ -3,7 +3,7 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.ytelse
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
-import no.nav.kjerneinfo.consumer.organisasjon.OrganisasjonV4ServiceImpl
+import no.nav.kjerneinfo.consumer.organisasjon.OrganisasjonServiceImpl
 import no.nav.modig.core.exception.AuthorizationException
 import no.nav.sykmeldingsperioder.consumer.pleiepenger.PleiepengerServiceImpl
 import no.nav.tjeneste.virksomhet.organisasjon.v4.OrganisasjonV4
@@ -26,7 +26,7 @@ internal class PleiepengerUttrekkTest {
     private val service = PleiepengerServiceImpl(pleiepengerV1)
 
     private val org:  OrganisasjonV4 = mock()
-    private val orgService = OrganisasjonV4ServiceImpl(org)
+    private val orgService = OrganisasjonServiceImpl(org)
 
     private val uttrekk = PleiepengerUttrekk(service, orgService)
 

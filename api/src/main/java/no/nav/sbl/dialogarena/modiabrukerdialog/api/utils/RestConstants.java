@@ -1,4 +1,4 @@
-package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util;
+package no.nav.sbl.dialogarena.modiabrukerdialog.api.utils;
 
 import no.nav.common.utils.EnvironmentUtils;
 

@@ -13,7 +13,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.pdl.generated.HentNav
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.pdl.generated.HentPerson
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.pdl.generated.SokPersonUtenlandskID
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.pdl.PdlOppslagService
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.RestConstants.*
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.RestConstants.*
 import java.net.URL
 
 @KtorExperimentalAPI

@@ -44,6 +44,10 @@
             <artifactId>auth</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>no.nav.common</groupId>
+            <artifactId>sts</artifactId>
+        </dependency>
         <!-- Kjerneinfo -->
         <dependency>
             <groupId>${project.groupId}</groupId>
