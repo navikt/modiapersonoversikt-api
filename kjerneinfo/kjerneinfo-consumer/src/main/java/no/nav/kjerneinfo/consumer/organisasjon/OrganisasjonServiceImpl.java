@@ -1,16 +1,12 @@
 package no.nav.kjerneinfo.consumer.organisasjon;
 
-import no.nav.common.health.HealthCheckResult;
-import no.nav.common.health.selftest.SelfTestCheck;
 import no.nav.kjerneinfo.domain.organisasjon.Organisasjon;
-import org.springframework.context.annotation.Bean;
 
 import java.util.Optional;
 
 import static java.util.Optional.of;
 
 public class OrganisasjonServiceImpl implements OrganisasjonService {
-
 
     private final OrganisasjonV1RestClient organisasjonV1RestClient;
 
@@ -23,10 +19,7 @@ public class OrganisasjonServiceImpl implements OrganisasjonService {
         return of(new Organisasjon().withNavn(formatterOrgNavn));
     }
 
-
     private String formaterNavn(String wsNavn) {
         return String.join(" ", wsNavn);
     }
-
-
 }

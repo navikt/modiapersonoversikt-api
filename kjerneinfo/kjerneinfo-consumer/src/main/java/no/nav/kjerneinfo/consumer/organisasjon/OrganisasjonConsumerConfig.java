@@ -10,8 +10,8 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class OrganisasjonConsumerConfig {
 
-    private static final String NAV_ORGNUMMER = "990983666";
-    private static final String NAV_ORGNAVN = "NAV IKT";
+    private static final String ORG_NUMMER_NAV = "990983666";
+    private static final String ORG_NAVN_NAV = "NAV IKT";
 
 
     @Autowired
@@ -30,12 +30,12 @@ public class OrganisasjonConsumerConfig {
     @Bean
     public SelfTestCheck eregOrganisasjonCheck() {
         return new SelfTestCheck(
-                String.format("EREG Organisasjon  %s", NAV_ORGNUMMER),
+                String.format("EREG Organisasjon  %s", ORG_NUMMER_NAV),
                 false,
                 () -> {
                     try {
-                        OrganisasjonResponse organisasjonResponse = organisasjonV1RestClient().hentKjernInfoFraRestClient(NAV_ORGNUMMER);
-                        if (organisasjonResponse.getNavn().getNavnelinje1().equals(NAV_ORGNAVN))
+                        OrganisasjonResponse organisasjonResponse = organisasjonV1RestClient().hentKjernInfoFraRestClient(ORG_NUMMER_NAV);
+                        if (organisasjonResponse.getNavn().getNavnelinje1().equals(ORG_NAVN_NAV))
                             return HealthCheckResult.healthy();
                         else
                             return HealthCheckResult.unhealthy("Feil ved henting av data. Sjekke tjeneste logg");
