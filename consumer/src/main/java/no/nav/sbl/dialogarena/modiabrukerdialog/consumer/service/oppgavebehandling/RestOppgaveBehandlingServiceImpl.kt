@@ -36,7 +36,7 @@ open class RestOppgaveBehandlingServiceImpl @Autowired constructor(
         val tilgangskontroll: Tilgangskontroll,
         val ansattService: AnsattService,
         val leggTilbakeOppgaveDelegate: LeggTilbakeOppgaveDelegate
-) : RestOppgaveBehandlingService{
+) : RestOppgaveBehandlingService {
     val SPORSMAL_OG_SVAR = "SPM_OG_SVR"
     val KONTAKT_NAV = "KNA"
 
@@ -152,7 +152,7 @@ open class RestOppgaveBehandlingServiceImpl @Autowired constructor(
             val oppgaveOppdatert = oppgave.copy(
                     status = OppgaveJsonDTO.Status.FERDIGSTILT,
                     beskrivelse = formatterBeskrivelseFerdigstiltOppgave(saksbehandlersValgteEnhet, oppgave.beskrivelse, beskrivelse)
-                    )
+            )
             lagreOppgave(oppgaveOppdatert, temagruppe, saksbehandlersValgteEnhet)
             log.info("Forsøker å ferdigstille oppgave med oppgaveId" + oppgaveId + "for enhet" + saksbehandlersValgteEnhet)
         } catch (e: java.lang.Exception) {
@@ -163,11 +163,13 @@ open class RestOppgaveBehandlingServiceImpl @Autowired constructor(
 
     override fun ferdigstillOppgaver(oppgaveIder: List<String>, temagruppe: Temagruppe, saksbehandlersValgteEnhet: String) {
         val patchJsonDTOListe = mutableListOf<PatchJsonDTO>()
-        for (oppgaveId in oppgaveIder) {
-            oppdaterBeskrivelse(temagruppe, saksbehandlersValgteEnhet, oppgaveId)
-            patchJsonDTOListe += PatchJsonDTO(1, oppgaveId.toLong())
-        }
         try {
+            for (oppgaveId in oppgaveIder) {
+                val oppgave = hentOppgaveDTO(oppgaveId)
+                val oppdatertBeskrivelse = oppgave.copy(beskrivelse = formatterBeskrivelseFerdigstiltOppgave(saksbehandlersValgteEnhet, oppgave.beskrivelse))
+                lagreOppgave(oppdatertBeskrivelse, temagruppe, saksbehandlersValgteEnhet)
+                patchJsonDTOListe += PatchJsonDTO(1, oppgaveId.toLong())
+            }
             apiClient.patchOppgaver(
                     xminusCorrelationMinusID = MDC.get(MDCConstants.MDC_CALL_ID),
                     patchOppgaverRequestJsonDTO = PatchOppgaverRequestJsonDTO(
@@ -192,7 +194,7 @@ open class RestOppgaveBehandlingServiceImpl @Autowired constructor(
         leggTilbakeOppgaveDelegate.leggTilbake(oppgave, request)
     }
 
-    private fun endreOppgave(request: OppgaveJsonDTO) : PutOppgaveResponseJsonDTO {
+    private fun endreOppgave(request: OppgaveJsonDTO): PutOppgaveResponseJsonDTO {
         val oppgave = apiClient.endreOppgave(
                 xminusCorrelationMinusID = MDC.get(MDCConstants.MDC_CALL_ID),
                 id = request.id.toString().toLong(),
@@ -264,7 +266,7 @@ open class RestOppgaveBehandlingServiceImpl @Autowired constructor(
         return emptyList()
     }
 
-    private fun hentOppgaveDTO(oppgaveId: String) : OppgaveJsonDTO {
+    private fun hentOppgaveDTO(oppgaveId: String): OppgaveJsonDTO {
         val response = apiClient.hentOppgave(
                 xminusCorrelationMinusID = MDC.get(MDCConstants.MDC_CALL_ID),
                 id = oppgaveId.toLong()
@@ -273,13 +275,12 @@ open class RestOppgaveBehandlingServiceImpl @Autowired constructor(
     }
 
 
-
-    private fun formatterBeskrivelseFerdigstiltOppgave(saksbehandlersValgteEnhet: String, gammelBeskrivelse: String?, beskrivelse: String) : String {
-            return leggTilBeskrivelse(gammelBeskrivelse, "Oppgaven er ferdigstilt i Modia. " + beskrivelse, saksbehandlersValgteEnhet)
+    private fun formatterBeskrivelseFerdigstiltOppgave(saksbehandlersValgteEnhet: String, gammelBeskrivelse: String?, beskrivelse: String): String {
+        return leggTilBeskrivelse(gammelBeskrivelse, "Oppgaven er ferdigstilt i Modia. " + beskrivelse, saksbehandlersValgteEnhet)
     }
 
-    private fun formatterBeskrivelseFerdigstiltOppgave(saksbehandlersValgteEnhet: String, gammelBeskrivelse: String?) : String{
-        return leggTilBeskrivelse(gammelBeskrivelse, "" ,saksbehandlersValgteEnhet)
+    private fun formatterBeskrivelseFerdigstiltOppgave(saksbehandlersValgteEnhet: String, gammelBeskrivelse: String?): String {
+        return leggTilBeskrivelse(gammelBeskrivelse, "", saksbehandlersValgteEnhet)
     }
 
     override fun systemLeggTilbakeOppgave(oppgaveId: String, temagruppe: Temagruppe, saksbehandlersValgteEnhet: String) {
@@ -322,9 +323,9 @@ open class RestOppgaveBehandlingServiceImpl @Autowired constructor(
         )
     }
 
-    fun GetOppgaveResponseJsonDTO.fromDTO() : OppgaveJsonDTO = TODO();
+    fun GetOppgaveResponseJsonDTO.fromDTO(): OppgaveJsonDTO = TODO();
 
-    fun PutOppgaveResponseJsonDTO.fromDTO() : OppgaveJsonDTO = TODO();
+    fun PutOppgaveResponseJsonDTO.fromDTO(): OppgaveJsonDTO = TODO();
 
     private fun stripTemakode(prioritet: String): String {
         return prioritet.substringBefore("_")
