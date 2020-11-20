@@ -4,6 +4,7 @@ import no.nav.common.cxf.CXFClient;
 import no.nav.common.cxf.StsConfig;
 import no.nav.common.utils.EnvironmentUtils;
 import no.nav.modig.modia.ping.PingableWebService;
+import no.nav.sbl.dialogarena.types.Pingable;
 import no.nav.tjeneste.virksomhet.utbetaling.v1.UtbetalingV1;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -26,11 +27,11 @@ public class UtbetalingEndpointConfig {
     }
 
     @Bean
-    public UtbetalingPing pingUtbetalingV1() {
+    public Pingable pingUtbetalingV1() {
         UtbetalingV1 pingPorttype = createUtbetalingPortType()
                 .configureStsForSystemUser(stsConfig)
                 .build();
-        return new UtbetalingPing("Utbetaling", pingPorttype);
+        return new PingableWebService("UtbetalingV1", pingPorttype);
     }
 
     private CXFClient<UtbetalingV1> createUtbetalingPortType() {
@@ -39,13 +40,6 @@ public class UtbetalingEndpointConfig {
                 .serviceName(new QName("http://nav.no/tjeneste/virksomhet/utbetaling/v1/Binding", "Utbetaling_v1"))
                 .endpointName(new QName("http://nav.no/tjeneste/virksomhet/utbetaling/v1/Binding", "Utbetaling_v1Port"))
                 .address(EnvironmentUtils.getRequiredProperty("UTBETALING_V1_ENDPOINTURL"));
-    }
-
-    public class UtbetalingPing extends PingableWebService {
-
-        public UtbetalingPing(String name, Object webservice) {
-            super(name, webservice);
-        }
     }
 }
 
