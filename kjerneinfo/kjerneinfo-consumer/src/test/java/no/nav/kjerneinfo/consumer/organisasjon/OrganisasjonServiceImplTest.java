@@ -12,7 +12,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class OrganisasjonV4ServiceImplTest {
+public class OrganisasjonServiceImplTest {
 
     private static final String ORGNAVN = "Syverkiosken AS";
     private static final String ORGNUMMER = "123456789";

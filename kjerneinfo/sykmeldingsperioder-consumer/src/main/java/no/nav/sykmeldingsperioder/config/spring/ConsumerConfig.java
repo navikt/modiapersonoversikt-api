@@ -1,7 +1,6 @@
 package no.nav.sykmeldingsperioder.config.spring;
 
-import no.nav.common.sts.SystemUserTokenProvider;
-import no.nav.kjerneinfo.consumer.organisasjon.*;
+import no.nav.kjerneinfo.consumer.organisasjon.OrganisasjonConsumerConfig;
 import no.nav.sykmeldingsperioder.config.spring.foreldrepenger.ForeldrepengerConsumerConfig;
 import no.nav.sykmeldingsperioder.config.spring.sykepenger.SykepengerConsumerConfig;
 import no.nav.sykmeldingsperioder.consumer.foreldrepenger.DefaultForeldrepengerService;
@@ -37,12 +36,6 @@ public class ConsumerConfig {
     @Autowired
     private PleiepengerV1 pleiepengerPortType;
 
-    @Autowired
-    private OrganisasjonService organisasjonService;
-
-    @Autowired
-    private SystemUserTokenProvider systemUserTokenProvider;
-
     @Bean
     public SykepengerServiceBi sykepengerServiceBi() {
         DefaultSykepengerService sykepengerService = new DefaultSykepengerService();
@@ -62,16 +55,6 @@ public class ConsumerConfig {
     @Bean
     public PleiepengerService pleiepengerService() {
         return new PleiepengerServiceImpl(pleiepengerPortType);
-    }
-
-    @Bean
-    public OrganisasjonService organisasjonService() {
-        return new OrganisasjonServiceImpl(organisasjonV1RestClient());
-    }
-
-    @Bean
-    public OrganisasjonV1RestClient organisasjonV1RestClient() {
-        return new OrganisasjonRestClientImpl(systemUserTokenProvider);
     }
 
     @Bean
