@@ -49,18 +49,7 @@ open class OrganisasjonRestClientImpl @Autowired constructor(
                     )
                     .execute()
             val body = response.body()?.string()
-            if (response.code() in 200..299) {
-                TjenestekallLogger.info("Ereg hent orgnavn-response: $uuid", mapOf(
-                        "status" to "${response.code()} ${response.message()}",
-                        "body" to body
-                ))
-            } else {
-                TjenestekallLogger.error("Ereg hent orgnavn-response-error: $uuid", mapOf(
-                        "status" to "${response.code()} ${response.message()}",
-                        "orgnummer" to orgnummer,
-                        "body" to body
-                ))
-            }
+            validateResponse(response, uuid, body, orgnummer)
             return gson.fromJson(body, OrganisasjonResponse::class.java)
         } catch (exception: Exception) {
             log.error("Feilet ved GET kall mot ereg  (ID: $uuid)", exception)
@@ -69,6 +58,21 @@ open class OrganisasjonRestClientImpl @Autowired constructor(
                     "orgnummer" to orgnummer
             ))
             throw exception
+        }
+    }
+
+    private fun validateResponse(response: Response, uuid: UUID?, body: String?, orgnummer: String) {
+        if (response.code() in 200..299) {
+            TjenestekallLogger.info("Ereg hent orgnavn-response: $uuid", mapOf(
+                    "status" to "${response.code()} ${response.message()}",
+                    "body" to body
+            ))
+        } else {
+            TjenestekallLogger.error("Ereg hent orgnavn-response-error: $uuid", mapOf(
+                    "status" to "${response.code()} ${response.message()}",
+                    "orgnummer" to orgnummer,
+                    "body" to body
+            ))
         }
     }
 }

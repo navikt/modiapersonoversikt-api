@@ -1,25 +1,19 @@
-package no.nav.kjerneinfo.consumer.organisasjon;
+package no.nav.kjerneinfo.consumer.organisasjon
 
-import no.nav.kjerneinfo.domain.organisasjon.Organisasjon;
+import no.nav.kjerneinfo.domain.organisasjon.Organisasjon
+import java.util.*
 
-import java.util.Optional;
+interface OrganisasjonService {
+    fun hentNoekkelinfo(orgnummer: String?): Optional<Organisasjon>
+}
 
-import static java.util.Optional.of;
-
-public class OrganisasjonServiceImpl implements OrganisasjonService {
-
-    private final OrganisasjonV1RestClient organisasjonV1RestClient;
-
-    public OrganisasjonServiceImpl(OrganisasjonV1RestClient organisasjonV1RestClient) {
-        this.organisasjonV1RestClient = organisasjonV1RestClient;
+class OrganisasjonServiceImpl(private val organisasjonV1RestClient: OrganisasjonV1RestClient) : OrganisasjonService {
+    override fun hentNoekkelinfo(orgnummer: String?): Optional<Organisasjon> {
+        val formatterOrgNavn = formaterNavn(organisasjonV1RestClient.hentKjernInfoFraRestClient(orgnummer!!).navn.navnelinje1)
+        return Optional.of(Organisasjon().withNavn(formatterOrgNavn))
     }
 
-    public Optional<Organisasjon> hentNoekkelinfo(String orgnummer) {
-        String formatterOrgNavn = formaterNavn(organisasjonV1RestClient.hentKjernInfoFraRestClient(orgnummer).getNavn().getNavnelinje1());
-        return of(new Organisasjon().withNavn(formatterOrgNavn));
-    }
-
-    private String formaterNavn(String wsNavn) {
-        return String.join(" ", wsNavn);
+    private fun formaterNavn(wsNavn: String): String {
+        return java.lang.String.join(" ", wsNavn)
     }
 }
