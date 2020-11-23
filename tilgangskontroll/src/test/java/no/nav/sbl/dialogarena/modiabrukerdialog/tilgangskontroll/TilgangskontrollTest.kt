@@ -14,8 +14,9 @@ import org.junit.Test
 import java.util.*
 import kotlin.test.assertEquals
 
-internal class TilgangskontrollTest {
+class TilgangskontrollTest {
     @Rule
+    @JvmField
     val subject = SubjectRule(Subject("Z999999", IdentType.InternBruker, SsoToken.oidcToken("token", emptyMap<String, Any>())))
 
     @Test

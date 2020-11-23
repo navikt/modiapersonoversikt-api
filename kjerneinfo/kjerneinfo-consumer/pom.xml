@@ -44,6 +44,10 @@
             <artifactId>auth</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>no.nav.common</groupId>
+            <artifactId>sts</artifactId>
+        </dependency>
         <!-- Kjerneinfo -->
         <dependency>
             <groupId>${project.groupId}</groupId>
@@ -129,6 +133,16 @@
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-engine</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.vintage</groupId>
+            <artifactId>junit-vintage-engine</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.github.tomakehurst</groupId>
+            <artifactId>wiremock-standalone</artifactId>
             <scope>test</scope>
         </dependency>
 

@@ -14,7 +14,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.EnhetsGeografisk
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.arbeidsfordeling.ArbeidsfordelingEnhet
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.kodeverksmapper.domain.Behandling
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.strategier.ByEnvironmentStrategy.ENVIRONMENT_PROPERTY
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.RestConstants.*
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.RestConstants.*
 import okhttp3.MediaType
 import okhttp3.Request
 import okhttp3.RequestBody

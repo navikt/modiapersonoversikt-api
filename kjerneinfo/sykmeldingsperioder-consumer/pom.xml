@@ -17,7 +17,10 @@
             <groupId>no.nav.common</groupId>
             <artifactId>metrics</artifactId>
         </dependency>
-
+        <dependency>
+            <groupId>no.nav.common</groupId>
+            <artifactId>sts</artifactId>
+        </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>sykmeldingsperioder-domain</artifactId>
