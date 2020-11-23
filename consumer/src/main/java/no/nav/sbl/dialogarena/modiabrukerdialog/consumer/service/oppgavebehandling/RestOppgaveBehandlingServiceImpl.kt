@@ -100,7 +100,7 @@ open class RestOppgaveBehandlingServiceImpl @Autowired constructor(
     }
 
     override fun hentOppgave(oppgaveId: String): OppgaveResponse {
-        val response = this.hentOppgaveDTO(oppgaveId)
+        val response = hentOppgaveDTO(oppgaveId)
         return oppgaveToOppgave(response)
     }
 
@@ -119,7 +119,7 @@ open class RestOppgaveBehandlingServiceImpl @Autowired constructor(
     }
 
     override fun oppgaveErFerdigstilt(oppgaveid: String): Boolean {
-        val response = this.hentOppgaveDTO(oppgaveid)
+        val response = hentOppgaveDTO(oppgaveid)
         return StringUtils.equalsIgnoreCase(response.status.value, OppgaveJsonDTO.Status.FERDIGSTILT.value)
     }
 
@@ -189,7 +189,7 @@ open class RestOppgaveBehandlingServiceImpl @Autowired constructor(
         if (request.oppgaveId.isNullOrEmpty() || request.beskrivelse.isNullOrEmpty()) {
             return
         }
-        val oppgave = this.hentOppgaveDTO(request.oppgaveId)
+        val oppgave = hentOppgaveDTO(request.oppgaveId)
         leggTilbakeOppgaveDelegate.leggTilbake(oppgave, request)
     }
 
