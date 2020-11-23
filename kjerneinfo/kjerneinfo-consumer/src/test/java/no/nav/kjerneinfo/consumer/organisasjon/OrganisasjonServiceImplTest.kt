@@ -1,47 +1,56 @@
-package no.nav.kjerneinfo.consumer.organisasjon;
+package no.nav.kjerneinfo.consumer.organisasjon
 
-import no.nav.kjerneinfo.domain.organisasjon.Organisasjon;
-import org.junit.Before;
-import org.junit.Test;
+import com.github.tomakehurst.wiremock.client.WireMock.*
+import com.github.tomakehurst.wiremock.junit.WireMockRule
+import org.hamcrest.MatcherAssert.assertThat
+import org.hamcrest.core.Is.`is`
+import org.junit.Rule
+import org.junit.Test
 
-import java.util.Optional;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.core.Is.is;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+class OrganisasjonServiceImplTest {
+    @Rule
+    @JvmField
+    val wiremock = WireMockRule(0)
 
-public class OrganisasjonServiceImplTest {
+    private val gyldigRespons = "{\"organisasjonsnummer\": \"orgnr\", \"navn\": { \"navnelinje2\": \"NAV\", \"navnelinje5\": \"IT\" }}"
 
-    private static final String ORGNAVN = "Syverkiosken AS";
-    private static final String ORGNUMMER = "123456789";
-
-    private OrganisasjonService organisasjonService;
-    private OrganisasjonV1RestClient mock;
-
-    @Before
-    public void setUp() {
-        mock = mock(OrganisasjonV1RestClient.class);
-        organisasjonService = new OrganisasjonServiceImpl(mock);
+    @Test
+    fun `håndterer 200 statusCode med data`() {
+        withMockServer(statusCode = 200, body = gyldigRespons) { service ->
+            val nokkelInfo = service.hentNoekkelinfo("any")
+            assertThat(nokkelInfo.isPresent, `is`(true))
+            assertThat(nokkelInfo.get().navn, `is`("NAV IT"))
+        }
     }
 
     @Test
-    public void hentNoekkelinfoMedGyldigOrgnummerReturnererNavn() {
-        when(mock.hentKjernInfoFraRestClient(ORGNUMMER))
-                .thenReturn(new OrganisasjonResponse(ORGNUMMER, new OrgNavn("", ORGNAVN)));
-
-        Optional<Organisasjon> organisasjon = organisasjonService.hentNoekkelinfo(ORGNUMMER);
-
-        assertThat(organisasjon.isPresent(), is(true));
-        assertThat(organisasjon.get().getNavn(), is(ORGNAVN));
+    fun `håndterer ukjent json uten alvorlig feil`() {
+        withMockServer(statusCode = 200, body = "{\"json\": true}") { service ->
+            assertThat(service.hentNoekkelinfo("any").isEmpty, `is`(true))
+        }
     }
 
     @Test
-    public void hentNoekkelinfoMedUgyldigOrgnummerGirEmpty() {
-        when(mock.hentKjernInfoFraRestClient(any()))
-                .thenThrow(new Exception());
+    fun `håndterer status coder utenfor 200-299 rangen`() {
+        withMockServer(statusCode = 404, body = gyldigRespons) { service ->
+            assertThat(service.hentNoekkelinfo("any").isEmpty, `is`(true))
+        }
 
-        assertThat(organisasjonService.hentNoekkelinfo(ORGNUMMER).isPresent(), is(false));
+        withMockServer(statusCode = 500) { service ->
+            assertThat(service.hentNoekkelinfo("any").isEmpty, `is`(true))
+        }
+    }
+
+    internal fun withMockServer(statusCode: Int = 200, body: String? = null, test: (OrganisasjonService) -> Unit) {
+        stubFor(get(anyUrl())
+                .willReturn(aResponse()
+                        .withStatus(statusCode)
+                        .withHeader("Content-Type", "application/json")
+                        .withBody(body)))
+
+        val client = OrganisasjonV1ClientImpl("http://localhost:${wiremock.port()}/")
+        val service = OrganisasjonServiceImpl(client)
+        test(service)
     }
 }

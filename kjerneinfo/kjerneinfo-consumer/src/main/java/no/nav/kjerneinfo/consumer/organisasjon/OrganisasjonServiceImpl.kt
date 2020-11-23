@@ -4,16 +4,25 @@ import no.nav.kjerneinfo.domain.organisasjon.Organisasjon
 import java.util.*
 
 interface OrganisasjonService {
-    fun hentNoekkelinfo(orgnummer: String?): Optional<Organisasjon>
+    fun hentNoekkelinfo(orgnummer: String): Optional<Organisasjon>
 }
 
-class OrganisasjonServiceImpl(private val organisasjonV1RestClient: OrganisasjonV1RestClient) : OrganisasjonService {
-    override fun hentNoekkelinfo(orgnummer: String?): Optional<Organisasjon> {
-        val formatterOrgNavn = formaterNavn(organisasjonV1RestClient.hentKjernInfoFraRestClient(orgnummer!!).navn.navnelinje1)
-        return Optional.of(Organisasjon().withNavn(formatterOrgNavn))
+class OrganisasjonServiceImpl(private val organisasjonV1Client: OrganisasjonV1Client) : OrganisasjonService {
+    override fun hentNoekkelinfo(orgnummer: String): Optional<Organisasjon> {
+        return Optional.ofNullable(organisasjonV1Client.hentNokkelInfo(orgnummer))
+                .map { nokkelInfo ->
+                    val formatterOrgNavn = formaterNavn(nokkelInfo.navn)
+                    Organisasjon().withNavn(formatterOrgNavn)
+                }
     }
 
-    private fun formaterNavn(wsNavn: String): String {
-        return java.lang.String.join(" ", wsNavn)
+    private fun formaterNavn(orgNavn: OrgNavn): String {
+        return listOfNotNull(
+                orgNavn.navnelinje1,
+                orgNavn.navnelinje2,
+                orgNavn.navnelinje3,
+                orgNavn.navnelinje4,
+                orgNavn.navnelinje5
+        ).joinToString(" ")
     }
 }
