@@ -151,7 +151,7 @@ open class RestOppgaveBehandlingServiceImpl @Autowired constructor(
             val oppgaveOppdatert = oppgave.copy(
                     status = OppgaveJsonDTO.Status.FERDIGSTILT,
                     beskrivelse = formatterBeskrivelseFerdigstiltOppgave(saksbehandlersValgteEnhet, oppgave.beskrivelse, beskrivelse)
-                    )
+            )
             lagreOppgave(oppgaveOppdatert, temagruppe, saksbehandlersValgteEnhet)
             log.info("Forsøker å ferdigstille oppgave med oppgaveId" + oppgaveId + "for enhet" + saksbehandlersValgteEnhet)
         } catch (e: java.lang.Exception) {
@@ -270,13 +270,13 @@ open class RestOppgaveBehandlingServiceImpl @Autowired constructor(
                 xminusCorrelationMinusID = MDC.get(MDCConstants.MDC_CALL_ID),
                 id = oppgaveId.toLong()
         )
-        return response.fromDTO()
+        return response.toOppgaveJsonDTO()
     }
 
 
 
     private fun formatterBeskrivelseFerdigstiltOppgave(saksbehandlersValgteEnhet: String, gammelBeskrivelse: String?, beskrivelse: String) : String {
-            return leggTilBeskrivelse(gammelBeskrivelse, "Oppgaven er ferdigstilt i Modia. " + beskrivelse, saksbehandlersValgteEnhet)
+        return leggTilBeskrivelse(gammelBeskrivelse, "Oppgaven er ferdigstilt i Modia. " + beskrivelse, saksbehandlersValgteEnhet)
     }
 
     private fun formatterBeskrivelseFerdigstiltOppgave(saksbehandlersValgteEnhet: String, gammelBeskrivelse: String?) : String{
@@ -323,9 +323,39 @@ open class RestOppgaveBehandlingServiceImpl @Autowired constructor(
         )
     }
 
-    fun GetOppgaveResponseJsonDTO.fromDTO() : OppgaveJsonDTO = TODO();
-
-    fun PutOppgaveResponseJsonDTO.fromDTO() : OppgaveJsonDTO = TODO();
+    fun GetOppgaveResponseJsonDTO.toOppgaveJsonDTO() : OppgaveJsonDTO = OppgaveJsonDTO(
+            tildeltEnhetsnr = tildeltEnhetsnr,
+            oppgavetype = oppgavetype,
+            versjon = versjon,
+            prioritet = OppgaveJsonDTO.Prioritet.valueOf(GetOppgaveResponseJsonDTO.Prioritet.valueOf(prioritet.value).value),
+            status = OppgaveJsonDTO.Status.valueOf(GetOppgaveResponseJsonDTO.Status.valueOf(status.value).value),
+            aktivDato = aktivDato,
+            id = id,
+            endretAvEnhetsnr = endretAvEnhetsnr,
+            journalpostId = journalpostId,
+            journalpostkilde = journalpostkilde,
+            behandlesAvApplikasjon = behandlesAvApplikasjon,
+            saksreferanse = saksreferanse,
+            bnr = bnr,
+            samhandlernr = samhandlernr,
+            aktoerId = aktoerId,
+            identer = identer,
+            orgnr = orgnr,
+            tilordnetRessurs = tilordnetRessurs,
+            beskrivelse = beskrivelse,
+            temagruppe = temagruppe,
+            tema = tema,
+            behandlingstema = behandlingstema,
+            behandlingstype = behandlingstype,
+            mappeId = mappeId,
+            opprettetAv = opprettetAv,
+            endretAv = endretAv,
+            metadata = metadata,
+            fristFerdigstillelse = fristFerdigstillelse,
+            opprettetTidspunkt = opprettetTidspunkt,
+            ferdigstiltTidspunkt = ferdigstiltTidspunkt,
+            endretTidspunkt = endretTidspunkt
+    )
 
     private fun stripTemakode(prioritet: String): String {
         return prioritet.substringBefore("_")
