@@ -18,7 +18,7 @@ interface OrganisasjonV1Client {
     fun hentNokkelInfo(orgnummer: String): OrganisasjonResponse?
 }
 
-open class OrganisasjonV1ClientImpl(val baseUrl: String = EnvironmentUtils.getRequiredProperty("EREG_ENDPOINTURL")) : OrganisasjonV1Client {
+class OrganisasjonV1ClientImpl(val baseUrl: String = EnvironmentUtils.getRequiredProperty("EREG_ENDPOINTURL")) : OrganisasjonV1Client {
     val url = baseUrl + "api/v1/organisasjon/"
     private val log = LoggerFactory.getLogger(OrganisasjonV1ClientImpl::class.java)
     private val client = RestClient.baseClient()
