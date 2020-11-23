@@ -16,6 +16,7 @@ import no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.DateUtils.arbeidsdager
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*
 import java.time.LocalDate
+import java.time.temporal.TemporalAmount
 
 private const val HENVENDELSESTYPE_KODE: String = "DIALOG"
 
@@ -92,9 +93,45 @@ class DialogOppgaveController @Autowired constructor(
 
 }
 
-fun OpperettOppgaveRequestDTO.fromDTO() : OpprettOppgaveRequest = TODO();
-fun OpperettSkjermetOppgaveDTO.fromDTO() : OpprettOppgaveRequest = TODO();
-fun OpprettOppgaveResponse.toDTO() : OpprettOppgaveResponseDTO = TODO();
+fun OpperettOppgaveRequestDTO.fromDTO() : OpprettOppgaveRequest = OpprettOppgaveRequest(
+        fnr = fnr,
+        behandlesAvApplikasjon = "FS22",
+        beskrivelse = beskrivelse,
+        temagruppe = "",
+        tema = temaKode,
+        oppgavetype = oppgaveTypeKode,
+        behandlingstype = "",
+        prioritet = prioritetKode,
+        underkategoriKode = underkategoriKode,
+        opprettetavenhetsnummer = opprettetavenhetsnummer,
+        oppgaveFrist = LocalDate.now().plusDays(dagerFrist.toLong()),
+        valgtEnhetsId = valgtEnhetId.toString(),
+        behandlingskjedeId = behandlingskjedeId,
+        dagerFrist = dagerFrist,
+        ansvarligEnhetId = ansvarligEnhetId,
+        ansvarligIdent = ansvarligIdent
+
+)
+fun OpperettSkjermetOppgaveDTO.fromDTO() : OpprettOppgaveRequest = OpprettOppgaveRequest(
+        behandlesAvApplikasjon = "FS22",
+        beskrivelse = beskrivelse,
+        temagruppe = "",
+        tema = temaKode,
+        oppgavetype = oppgaveTypeKode,
+        behandlingstype = "",
+        prioritet = prioritetKode,
+        underkategoriKode = underkategoriKode,
+        opprettetavenhetsnummer = opprettetavenhetsnummer,
+        oppgaveFrist = LocalDate.now(),
+        valgtEnhetsId = "",
+        behandlingskjedeId = "",
+        dagerFrist = 0,
+        ansvarligEnhetId = "",
+        ansvarligIdent = ""
+)
+fun OpprettOppgaveResponse.toDTO() : OpprettOppgaveResponseDTO = OpprettOppgaveResponseDTO(
+        id = id
+)
 
 data class OpperettOppgaveRequestDTO(
         val fnr: String,
