@@ -212,7 +212,7 @@ open class RestOppgaveBehandlingServiceImpl @Autowired constructor(
                         prioritet = PutOppgaveRequestJsonDTO.Prioritet.valueOf(request.prioritet.value),
                         endretAvEnhetsnr = request.endretAvEnhetsnr,
                         status = PutOppgaveRequestJsonDTO.Status.AAPNET,
-                        versjon = 1,
+                        versjon = request.versjon + 1,
                         tilordnetRessurs = request.tilordnetRessurs
                 )
         )
