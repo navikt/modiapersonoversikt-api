@@ -113,6 +113,7 @@ fun OpperettOppgaveRequestDTO.fromDTO() : OpprettOppgaveRequest = OpprettOppgave
 
 )
 fun OpperettSkjermetOppgaveDTO.fromDTO() : OpprettOppgaveRequest = OpprettOppgaveRequest(
+        fnr = fnr,
         behandlesAvApplikasjon = "FS22",
         beskrivelse = beskrivelse,
         temagruppe = "",
