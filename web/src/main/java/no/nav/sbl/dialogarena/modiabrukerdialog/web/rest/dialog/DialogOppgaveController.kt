@@ -12,11 +12,9 @@ import no.nav.sbl.dialogarena.naudit.Audit
 import no.nav.sbl.dialogarena.naudit.Audit.Action.CREATE
 import no.nav.sbl.dialogarena.naudit.AuditIdentifier
 import no.nav.sbl.dialogarena.naudit.AuditResources.Person.Henvendelse
-import no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.DateUtils.arbeidsdagerFraDatoJava
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*
 import java.time.LocalDate
-import java.time.temporal.TemporalAmount
 
 private const val HENVENDELSESTYPE_KODE: String = "DIALOG"
 
@@ -90,7 +88,6 @@ class DialogOppgaveController @Autowired constructor(
 
     private fun hentGsakKodeTema(kodeTema: GsakKodeTema): Array<Pair<String, Any?>> =
             arrayOf(Pair("kode", kodeTema.kode), Pair("tekst", kodeTema.tekst))
-
 }
 
 fun OpperettOppgaveRequestDTO.fromDTO() : OpprettOppgaveRequest = OpprettOppgaveRequest(
@@ -100,7 +97,7 @@ fun OpperettOppgaveRequestDTO.fromDTO() : OpprettOppgaveRequest = OpprettOppgave
         temagruppe = "",
         tema = temaKode,
         oppgavetype = oppgaveTypeKode,
-        behandlingstype = "",
+        behandlingstype = HENVENDELSESTYPE_KODE,
         prioritet = prioritetKode,
         underkategoriKode = underkategoriKode,
         opprettetavenhetsnummer = opprettetavenhetsnummer,
@@ -119,14 +116,14 @@ fun OpperettSkjermetOppgaveDTO.fromDTO() : OpprettOppgaveRequest = OpprettOppgav
         temagruppe = "",
         tema = temaKode,
         oppgavetype = oppgaveTypeKode,
-        behandlingstype = "",
+        behandlingstype = HENVENDELSESTYPE_KODE,
         prioritet = prioritetKode,
         underkategoriKode = underkategoriKode,
         opprettetavenhetsnummer = opprettetavenhetsnummer,
         oppgaveFrist = LocalDate.now(),
         valgtEnhetsId = "",
         behandlingskjedeId = "",
-        dagerFrist = 0,
+        dagerFrist = 2,
         ansvarligEnhetId = "",
         ansvarligIdent = ""
 )
