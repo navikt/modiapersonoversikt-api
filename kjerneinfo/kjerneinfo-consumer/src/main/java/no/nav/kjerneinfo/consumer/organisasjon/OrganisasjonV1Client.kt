@@ -19,11 +19,10 @@ interface OrganisasjonV1Client {
 }
 
 class OrganisasjonV1ClientImpl(val baseUrl: String = EnvironmentUtils.getRequiredProperty("EREG_ENDPOINTURL")) : OrganisasjonV1Client {
-    val url = baseUrl + "api/v1/organisasjon/"
+    private val url = baseUrl + "api/v1/organisasjon/"
     private val log = LoggerFactory.getLogger(OrganisasjonV1ClientImpl::class.java)
     private val client = RestClient.baseClient()
     private val objectMapper = jacksonObjectMapper()
-
 
     override fun hentNokkelInfo(orgnummer: String): OrganisasjonResponse? {
         val uuid = UUID.randomUUID()
@@ -35,7 +34,7 @@ class OrganisasjonV1ClientImpl(val baseUrl: String = EnvironmentUtils.getRequire
             val response: Response = client
                     .newCall(
                             Request.Builder()
-                                    .url("$baseUrl$orgnummer/noekkelinfo")
+                                    .url("$url$orgnummer/noekkelinfo")
                                     .header(RestConstants.NAV_CALL_ID_HEADER, MDC.get(MDCConstants.MDC_CALL_ID) ?: UUID.randomUUID().toString())
                                     .header(RestConstants.NAV_CONSUMER_ID_HEADER, MODIABRUKERDIALOG_SYSTEM_USER)
                                     .header("accept", "application/json")
