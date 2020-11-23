@@ -173,7 +173,8 @@ open class RestOppgaveBehandlingServiceImpl @Autowired constructor(
                     xminusCorrelationMinusID = MDC.get(MDCConstants.MDC_CALL_ID),
                     patchOppgaverRequestJsonDTO = PatchOppgaverRequestJsonDTO(
                             oppgaver = patchJsonDTOListe,
-                            status = PatchOppgaverRequestJsonDTO.Status.FERDIGSTILT
+                            status = PatchOppgaverRequestJsonDTO.Status.FERDIGSTILT,
+                            endretAvEnhetsnr = enhetFor(temagruppe, saksbehandlersValgteEnhet)
                     )
             )
             log.info("Forsøker å ferdigstille oppgave med oppgaveIder" + oppgaveIder + "for enhet" + saksbehandlersValgteEnhet)
