@@ -165,6 +165,7 @@ open class RestOppgaveBehandlingServiceImpl @Autowired constructor(
         for (oppgaveId in oppgaveIder) {
             val oppgave = hentOppgaveDTO(oppgaveId)
             oppgave.copy(beskrivelse = formatterBeskrivelseFerdigstiltOppgave(saksbehandlersValgteEnhet, oppgave.beskrivelse))
+            lagreOppgave(oppgave, temagruppe, saksbehandlersValgteEnhet)
             patchJsonDTOListe += PatchJsonDTO(oppgave.versjon, oppgaveId.toLong())
         }
         try {
@@ -172,8 +173,7 @@ open class RestOppgaveBehandlingServiceImpl @Autowired constructor(
                     xminusCorrelationMinusID = MDC.get(MDCConstants.MDC_CALL_ID),
                     patchOppgaverRequestJsonDTO = PatchOppgaverRequestJsonDTO(
                             oppgaver = patchJsonDTOListe,
-                            status = PatchOppgaverRequestJsonDTO.Status.FERDIGSTILT,
-                            tilordnetRessurs = enhetFor(temagruppe, saksbehandlersValgteEnhet)
+                            status = PatchOppgaverRequestJsonDTO.Status.FERDIGSTILT
                     )
             )
             log.info("Forsøker å ferdigstille oppgave med oppgaveIder" + oppgaveIder + "for enhet" + saksbehandlersValgteEnhet)
