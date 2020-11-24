@@ -165,7 +165,9 @@ open class RestOppgaveBehandlingServiceImpl @Autowired constructor(
         return finnOppgaverMedTilgang(tildelteOppgaver)
     }
 
-    override fun plukkOppgaver(temagruppe: Temagruppe, saksbehandlersValgteEnhet: String): List<OppgaveResponse> {}
+    override fun plukkOppgaver(temagruppe: Temagruppe, saksbehandlersValgteEnhet: String): List<OppgaveResponse> {
+        TODO("Må gjøre plukkOppgaver(...)")
+    }
 
     override fun ferdigstillOppgave(oppgaveId: String, temagruppe: Temagruppe, saksbehandlersValgteEnhet: String) {
         ferdigstillOppgaver(listOf(oppgaveId), temagruppe, saksbehandlersValgteEnhet)
