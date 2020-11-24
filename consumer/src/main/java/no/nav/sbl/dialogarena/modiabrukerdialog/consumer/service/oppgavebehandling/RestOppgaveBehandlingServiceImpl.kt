@@ -134,9 +134,32 @@ open class RestOppgaveBehandlingServiceImpl @Autowired constructor(
         val response = apiClient.finnOppgaver(
                 xminusCorrelationMinusID = MDC.get(MDCConstants.MDC_CALL_ID),
                 statuskategori = aktivStatus,
+                status = null,
                 tema = listOf(KONTAKT_NAV),
                 oppgavetype = listOf(SPORSMAL_OG_SVAR),
-                tilordnetRessurs = ident
+                tildeltEnhetsnr = null,
+                tildeltRessurs = null,
+                tilordnetRessurs = ident,
+                behandlingstema = null,
+                behandlingstype = null,
+                erUtenMappe = null,
+                aktoerId = null,
+                journalpostId = null,
+                saksreferanse = null,
+                opprettetAv = null,
+                opprettetAvEnhetsnr = null,
+                aktivDatoFom = null,
+                aktivDatoTom = null,
+                opprettetFom = null,
+                opprettetTom = null,
+                ferdigstiltFom = null,
+                ferdigstiltTom = null,
+                fristFom = null,
+                fristTom = null,
+                orgnr = null,
+                sorteringsfelt = null,
+                limit = null,
+                offset = null
         )
         val tildelteOppgaver = response.oppgaver!!.map { oppgave: OppgaveJsonDTO -> oppgaveToOppgave(oppgave) }
         return finnOppgaverMedTilgang(tildelteOppgaver)
