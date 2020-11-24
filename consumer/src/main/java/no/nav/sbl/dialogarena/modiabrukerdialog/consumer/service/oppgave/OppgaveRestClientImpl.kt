@@ -48,7 +48,6 @@ open class OppgaveOpprettelseClient @Autowired constructor(
     private fun opprettOppgave(request: PostOppgaveRequestJsonDTO) : OpprettOppgaveResponse {
         val consumerOidcToken: String = stsService.systemUserToken
         val response = client.opprettOppgave(
-                authorization = consumerOidcToken,
                 xminusCorrelationMinusID = MDC.get(MDCConstants.MDC_CALL_ID),
                 postOppgaveRequestJsonDTO = request
         )

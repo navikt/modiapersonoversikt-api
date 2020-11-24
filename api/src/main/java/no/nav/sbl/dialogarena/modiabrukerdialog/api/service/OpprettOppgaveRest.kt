@@ -28,8 +28,19 @@ data class  OpprettOppgaveRequest(
         val dagerFrist : Int,
         val ansvarligEnhetId: String,
         val ansvarligIdent: String?
+)
 
-
-
+data class  OpprettSkjermetOppgaveRequest(
+        val fnr: String,
+        val behandlesAvApplikasjon: String,
+        val beskrivelse: String,
+        val temagruppe: String,
+        val tema: String,
+        val oppgavetype: String,
+        val behandlingstype: String,
+        val prioritet: String,
+        val underkategoriKode: String?,
+        val opprettetavenhetsnummer: String,
+        val oppgaveFrist: LocalDate
 )
 
