@@ -1,7 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.api.service
 
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe
-import java.util.*
 
 interface RestOppgaveBehandlingService {
     fun opprettOppgave(request: OpprettOppgaveRequest) : OpprettOppgaveResponse

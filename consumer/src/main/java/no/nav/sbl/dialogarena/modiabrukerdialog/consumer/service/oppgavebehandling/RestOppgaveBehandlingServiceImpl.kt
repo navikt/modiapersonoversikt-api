@@ -16,8 +16,6 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.kodeverksmapper
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.pdl.PdlSyntetiskMapper
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Policies
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Tilgangskontroll
-import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.LagreOppgaveOppgaveIkkeFunnet
-import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.LagreOppgaveOptimistiskLasing
 import org.apache.commons.lang3.StringUtils
 import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
@@ -26,8 +24,7 @@ import org.slf4j.MDC
 import org.springframework.beans.factory.annotation.Autowired
 import java.time.LocalDate
 import java.util.*
-import java.util.function.Consumer
-import java.util.stream.Collectors
+
 
 open class RestOppgaveBehandlingServiceImpl @Autowired constructor(
         val kodeverksmapperService: KodeverksmapperService,
@@ -54,6 +51,9 @@ open class RestOppgaveBehandlingServiceImpl @Autowired constructor(
         val behandling: Optional<Behandling> = kodeverksmapperService.mapUnderkategori(request.underkategoriKode)
         val oppgaveTypeMapped: String = kodeverksmapperService.mapOppgavetype(request.oppgavetype)
         val aktorId = getAktorId(request.fnr)
+        if (aktorId == null || aktorId.isEmpty()) {
+            throw Exception("AktørId-mangler på person")
+        }
         val response = apiClient.opprettOppgave(
                 authorization = consumerOidcToken,
                 xminusCorrelationMinusID = MDC.get(MDCConstants.MDC_CALL_ID),
@@ -77,18 +77,23 @@ open class RestOppgaveBehandlingServiceImpl @Autowired constructor(
 
     override fun opprettSkjermetOppgave(request: OpprettOppgaveRequest): OpprettOppgaveResponse {
         val behandling: Optional<Behandling> = kodeverksmapperService.mapUnderkategori(request.underkategoriKode)
+        val oppgaveTypeMapped: String = kodeverksmapperService.mapOppgavetype(request.oppgavetype)
+        val aktorId = getAktorId(request.fnr)
+        if (aktorId == null || aktorId.isEmpty()) {
+            throw Exception("AktørId-mangler på person")
+        }
         val response = apiClient.opprettOppgave(
                 authorization = consumerOidcToken,
                 xminusCorrelationMinusID = MDC.get(MDCConstants.MDC_CALL_ID),
                 postOppgaveRequestJsonDTO = PostOppgaveRequestJsonDTO(
-                        aktoerId = getAktorId(request.fnr),
+                        aktoerId = aktorId,
                         opprettetAvEnhetsnr = request.opprettetavenhetsnummer,
                         behandlesAvApplikasjon = "FS22",
                         beskrivelse = request.beskrivelse,
                         temagruppe = "",
                         tema = request.tema,
                         behandlingstema = behandling.map(Behandling::getBehandlingstema).orElse(null),
-                        oppgavetype = kodeverksmapperService.mapOppgavetype(request.oppgavetype),
+                        oppgavetype = oppgaveTypeMapped,
                         behandlingstype = behandling.map(Behandling::getBehandlingstype).orElse(null),
                         aktivDato = LocalDate.now(),
                         fristFerdigstillelse = request.oppgaveFrist,
@@ -96,7 +101,7 @@ open class RestOppgaveBehandlingServiceImpl @Autowired constructor(
                 )
         )
 
-        return OpprettOppgaveResponse(response.id?.toString() ?: throw java.lang.RuntimeException("No opprageId found"))
+        return OpprettOppgaveResponse(response.id?.toString() ?: throw java.lang.RuntimeException("No oppgaveId found"))
     }
 
     override fun hentOppgave(oppgaveId: String): OppgaveResponse {
@@ -113,8 +118,8 @@ open class RestOppgaveBehandlingServiceImpl @Autowired constructor(
                     tilordnetRessurs = ident
             )
             lagreOppgave(oppdatertOppgave, temagruppe, saksbehandlersValgteEnhet)
-        } catch (exeption: Exception) {
-            throw RestOppgaveBehandlingService.FikkIkkeTilordnet(exeption)
+        } catch (e: Exception) {
+            throw RestOppgaveBehandlingService.FikkIkkeTilordnet(e)
         }
     }
 
@@ -132,11 +137,9 @@ open class RestOppgaveBehandlingServiceImpl @Autowired constructor(
                 tema = listOf(KONTAKT_NAV),
                 oppgavetype = listOf(SPORSMAL_OG_SVAR),
                 tilordnetRessurs = ident
-        ).oppgaver!!.stream()
-                .map { oppgave: OppgaveJsonDTO -> oppgaveToOppgave(oppgave) }
-                .collect(Collectors.toList())
-
-        return validerTilgangTilbruker(response)
+        )
+        val tildelteOppgaver = response.oppgaver!!.map { oppgave: OppgaveJsonDTO -> oppgaveToOppgave(oppgave) }
+        return finnOppgaverMedTilgang(tildelteOppgaver)
     }
 
     override fun plukkOppgaver(temagruppe: Temagruppe, saksbehandlersValgteEnhet: String): List<OppgaveResponse> {}
@@ -154,7 +157,7 @@ open class RestOppgaveBehandlingServiceImpl @Autowired constructor(
             )
             lagreOppgave(oppgaveOppdatert, temagruppe, saksbehandlersValgteEnhet)
             log.info("Forsøker å ferdigstille oppgave med oppgaveId" + oppgaveId + "for enhet" + saksbehandlersValgteEnhet)
-        } catch (e: java.lang.Exception) {
+        } catch (e: Exception) {
             log.error("Kunne ikke ferdigstille oppgave i Modia med oppgaveId $oppgaveId", e)
             throw e
         }
@@ -178,7 +181,7 @@ open class RestOppgaveBehandlingServiceImpl @Autowired constructor(
                     )
             )
             log.info("Forsøker å ferdigstille oppgave med oppgaveIder" + oppgaveIder + "for enhet" + saksbehandlersValgteEnhet)
-        } catch (e: java.lang.Exception) {
+        } catch (e: Exception) {
             val ider = java.lang.String.join(", ", oppgaveIder)
             log.warn("Ferdigstilling av oppgavebolk med oppgaveider: $ider, med enhet $saksbehandlersValgteEnhet feilet.", e)
             throw e
@@ -226,9 +229,7 @@ open class RestOppgaveBehandlingServiceImpl @Autowired constructor(
                     endretAvEnhetsnr = enhetFor(temagruppe, saksbehandlersValgteEnhet)
             )
             endreOppgave(oppgave)
-        } catch (e: LagreOppgaveOppgaveIkkeFunnet) {
-            log.info("Oppgaven ble ikke funnet ved tilordning til saksbehandler. Oppgaveid: " + request.id, e)
-            TODO("Må endre catch")
+        } catch (e: Exception) {
             log.info("Oppgaven ble ikke funnet ved tilordning til saksbehandler. Oppgaveid: " + request.id, e)
             throw RuntimeException("Oppgaven ble ikke funnet ved tilordning til saksbehandler", e)
         }
@@ -252,7 +253,7 @@ open class RestOppgaveBehandlingServiceImpl @Autowired constructor(
         }
     }
 
-    private fun validerTilgangTilbruker(oppgaveList: List<OppgaveResponse>): List<OppgaveResponse> {
+    private fun finnOppgaverMedTilgang(oppgaveList: List<OppgaveResponse>): List<OppgaveResponse> {
         if (oppgaveList.isEmpty()) {
             return emptyList()
         } else if (tilgangskontroll
@@ -261,7 +262,7 @@ open class RestOppgaveBehandlingServiceImpl @Autowired constructor(
                         .isPermit()) {
             return oppgaveList
         }
-        oppgaveList.forEach(Consumer { enkeltoppgave: OppgaveResponse -> systemLeggTilbakeOppgave(enkeltoppgave.oppgaveId, null, "4100") })
+        oppgaveList.forEach { oppgave: OppgaveResponse -> systemLeggTilbakeOppgave(oppgave.oppgaveId, Temagruppe.valueOf(null.toString()), "4100") }
         return emptyList()
     }
 
@@ -280,7 +281,7 @@ open class RestOppgaveBehandlingServiceImpl @Autowired constructor(
     }
 
     private fun formatterBeskrivelseFerdigstiltOppgave(saksbehandlersValgteEnhet: String, gammelBeskrivelse: String?) : String{
-        return leggTilBeskrivelse(gammelBeskrivelse, "" ,saksbehandlersValgteEnhet)
+        return leggTilBeskrivelse(gammelBeskrivelse, "", saksbehandlersValgteEnhet)
     }
 
     override fun systemLeggTilbakeOppgave(oppgaveId: String, temagruppe: Temagruppe, saksbehandlersValgteEnhet: String) {
@@ -289,9 +290,8 @@ open class RestOppgaveBehandlingServiceImpl @Autowired constructor(
                     tilordnetRessurs = ""
             )
             lagreOppgave(oppgave, temagruppe, saksbehandlersValgteEnhet)
-        } catch (lagreOppgaveOptimistiskLasing: LagreOppgaveOptimistiskLasing) {
-            TODO("Må endre catch")
-            throw RuntimeException("Oppgaven kunne ikke lagres, den er for øyeblikket låst av en annen bruker.", lagreOppgaveOptimistiskLasing)
+        } catch (e: Exception) {
+            throw RuntimeException("Oppgaven kunne ikke lagres, den er for øyeblikket låst av en annen bruker.", e)
         }
     }
 
@@ -304,7 +304,7 @@ open class RestOppgaveBehandlingServiceImpl @Autowired constructor(
                     ?.ident
                     // syntmapping for Q2 --> Q1
                     ?.let(PdlSyntetiskMapper::mapAktorIdFraPdl)
-        } catch (exception: Exception) {
+        } catch (e: Exception) {
             null
         }
     }
