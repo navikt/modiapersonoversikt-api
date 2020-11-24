@@ -1,5 +1,6 @@
 package no.nav.kjerneinfo.consumer.organisasjon
 
+import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import no.nav.common.log.MDCConstants
@@ -23,6 +24,7 @@ class OrganisasjonV1ClientImpl(val baseUrl: String = EnvironmentUtils.getRequire
     private val log = LoggerFactory.getLogger(OrganisasjonV1ClientImpl::class.java)
     private val client = RestClient.baseClient()
     private val objectMapper = jacksonObjectMapper()
+            .apply { configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false) }
 
     override fun hentNokkelInfo(orgnummer: String): OrganisasjonResponse? {
         val uuid = UUID.randomUUID()
