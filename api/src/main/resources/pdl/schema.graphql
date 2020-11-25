@@ -644,26 +644,14 @@ enum Direction {
     DESC
 }
 type SearchResult {
-    hits : [SearchHit!]!
+    hits : [searchHit!]!,
     pageNumber:Int,
     totalPages:Int
     totalHits:Int
 
 }
-type SearchHit {
+type searchHit {
     person :Person,
     identer(historikk: Boolean = false): [IdentInformasjon!]!,
     score :Float
-    highlights:[SearchHighlight]
-}
-type SearchHighlight {
-    opplysning:String
-    opplysningsId: String
-    historisk: Boolean
-    matches:[SearchMatch]
-}
-type SearchMatch {
-    field:String!
-    type: String
-    fragments: [String]
 }
