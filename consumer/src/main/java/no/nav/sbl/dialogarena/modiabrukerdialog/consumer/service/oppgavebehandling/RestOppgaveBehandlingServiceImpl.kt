@@ -164,7 +164,7 @@ open class RestOppgaveBehandlingServiceImpl @Autowired constructor(
                 offset = null
         )
         val tildelteOppgaver = response.oppgaver!!.map { oppgave: OppgaveJsonDTO -> oppgaveJsonDTOToOppgaveResponse(oppgave) }
-        return finnOppgaverMedTilgang(tildelteOppgaver)
+        return finnOppgaverMedTilgangTilBruker(tildelteOppgaver)
     }
 
     override fun plukkOppgaver(temagruppe: Temagruppe, saksbehandlersValgteEnhet: String): List<OppgaveResponse> {
@@ -298,7 +298,7 @@ open class RestOppgaveBehandlingServiceImpl @Autowired constructor(
         }
     }
 
-    private fun finnOppgaverMedTilgang(oppgaveList: List<OppgaveResponse>): List<OppgaveResponse> {
+    private fun finnOppgaverMedTilgangTilBruker(oppgaveList: List<OppgaveResponse>): List<OppgaveResponse> {
         if (oppgaveList.isEmpty()) {
             return emptyList()
         } else if (tilgangskontroll
