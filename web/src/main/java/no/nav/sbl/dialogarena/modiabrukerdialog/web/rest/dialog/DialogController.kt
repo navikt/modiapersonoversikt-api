@@ -174,6 +174,10 @@ class DialogController @Autowired constructor(
                             .find { it.traadId == fortsettDialogRequest.traadId }
                             ?: throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Fant ingen tråd med id: ${fortsettDialogRequest.traadId}")
 
+                    if (!traad.harTilknyttningTilOppgave(fortsettDialogRequest.oppgaveId)) {
+                        throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Feil oppgaveId fra client. Forventet: ${traad.getEldsteMelding().oppgaveId} men oppdaget: ${fortsettDialogRequest.oppgaveId}")
+                    }
+
                     henvendelseUtsendingService.ferdigstillHenvendelse(
                             lagFortsettDialog(fortsettDialogRequest, context, traad),
                             Optional.ofNullable(fortsettDialogRequest.oppgaveId),
@@ -299,8 +303,14 @@ private fun erTraadTilknyttetAnsatt(traad: Traad): Boolean =
         }
 
 private fun lagFortsettDialog(request: FortsettDialogRequest, requestContext: RequestContext, traad: Traad): Melding {
-    val eldsteMelding = traad.meldinger[0]
-    val erOppgaveTilknyttetAnsatt = if (request.meldingstype == Meldingstype.SPORSMAL_MODIA_UTGAAENDE) request.erOppgaveTilknyttetAnsatt else erTraadTilknyttetAnsatt(traad)
+    val eldsteMelding = traad.getEldsteMelding()
+    val erOppgaveTilknyttetAnsatt =
+            if (request.meldingstype == Meldingstype.SPORSMAL_MODIA_UTGAAENDE) {
+                request.erOppgaveTilknyttetAnsatt
+            } else {
+                erTraadTilknyttetAnsatt(traad)
+            }
+
     return Melding()
             .withFnr(requestContext.fnr)
             .withNavIdent(requestContext.ident)
@@ -314,7 +324,6 @@ private fun lagFortsettDialog(request: FortsettDialogRequest, requestContext: Re
             .withKontorsperretEnhet(eldsteMelding.kontorsperretEnhet)
             .withTemagruppe(eldsteMelding.temagruppe)
             .withBrukersEnhet(eldsteMelding.brukersEnhet)
-
 }
 
 enum class Kanal {

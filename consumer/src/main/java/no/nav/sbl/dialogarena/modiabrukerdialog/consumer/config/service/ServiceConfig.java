@@ -68,7 +68,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.RestConstants.SECURITY_TOKEN_SERVICE_DISCOVERYURL;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.RestConstants.SECURITY_TOKEN_SERVICE_DISCOVERYURL;
 
 /**
  * MODIA ønsker å selv wire inn sine komponenters kontekster for å ha full kontroll over springoppsettet.

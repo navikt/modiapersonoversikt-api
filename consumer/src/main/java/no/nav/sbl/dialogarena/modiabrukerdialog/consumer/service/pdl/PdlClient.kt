@@ -3,7 +3,6 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.pdl
 import com.expediagroup.graphql.client.GraphQLClient
 import com.expediagroup.graphql.types.GraphQLError
 import com.expediagroup.graphql.types.GraphQLResponse
-import com.fasterxml.jackson.datatype.jsr310.JSR310Module
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import io.ktor.client.engine.cio.CIO
@@ -12,8 +11,8 @@ import io.ktor.client.request.HttpRequestBuilder
 import io.ktor.client.request.header
 import io.ktor.util.KtorExperimentalAPI
 import no.nav.common.log.MDCConstants
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.RestConstants
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.TjenestekallLogger
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.RestConstants
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.TjenestekallLogger
 import org.slf4j.LoggerFactory
 import org.slf4j.MDC
 import java.net.URL

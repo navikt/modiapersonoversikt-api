@@ -1,8 +1,8 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.pdl
 
 import com.expediagroup.graphql.client.GraphQLClient
-import io.ktor.client.request.header
-import io.ktor.util.KtorExperimentalAPI
+import io.ktor.client.request.*
+import io.ktor.util.*
 import kotlinx.coroutines.runBlocking
 import no.nav.common.auth.subject.SsoToken
 import no.nav.common.auth.subject.SubjectHandler
@@ -13,8 +13,9 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.pdl.generated.HentNav
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.pdl.generated.HentPerson
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.pdl.generated.SokPersonUtenlandskID
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.pdl.PdlOppslagService
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.RestConstants.*
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.RestConstants.*
 import java.net.URL
+import kotlin.collections.set
 
 @KtorExperimentalAPI
 class PdlOppslagServiceImpl constructor(
@@ -53,7 +54,7 @@ class PdlOppslagServiceImpl constructor(
                 ?.hentIdenter
     }
 
-    override fun sokPersonUtenlandskID(utenlandskID: String): List<SokPersonUtenlandskID.searchHit> = runBlocking {
+    override fun sokPersonUtenlandskID(utenlandskID: String): List<SokPersonUtenlandskID.SearchHit> = runBlocking {
         val utenlandskIDPaging = SokPersonUtenlandskID.Paging(
                 pageNumber = 1,
                 resultsPerPage = 30
@@ -65,7 +66,7 @@ class PdlOppslagServiceImpl constructor(
                 )
         )
         SokPersonUtenlandskID(pdlClient)
-                .execute(SokPersonUtenlandskID.Variables(paging=utenlandskIDPaging, criteria = listOf(utenlandskIDKriterie)), userTokenAuthorizationHeaders)
+                .execute(SokPersonUtenlandskID.Variables(paging = utenlandskIDPaging, criteria = listOf(utenlandskIDKriterie)), userTokenAuthorizationHeaders)
                 .assertNoErrors()
                 .data
                 ?.sokPerson

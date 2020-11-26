@@ -13,10 +13,10 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveResponse
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.kodeverksmapper.KodeverksmapperService
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.kodeverksmapper.domain.Behandling
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.pdl.PdlSyntetiskMapper
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.RestConstants
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.RestConstants.AUTH_METHOD_BEARER
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.RestConstants.AUTH_SEPERATOR
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.TjenestekallLogger
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.RestConstants
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.RestConstants.AUTH_METHOD_BEARER
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.RestConstants.AUTH_SEPERATOR
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.TjenestekallLogger
 import okhttp3.MediaType
 import okhttp3.Request
 import okhttp3.RequestBody
