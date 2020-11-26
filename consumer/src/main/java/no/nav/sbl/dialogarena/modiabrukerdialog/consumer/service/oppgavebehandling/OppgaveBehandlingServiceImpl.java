@@ -212,20 +212,22 @@ public class OppgaveBehandlingServiceImpl implements OppgaveBehandlingService {
         if (request.getOppgaveId() == null || request.getBeskrivelse() == null) {
             return;
         }
-        WSOppgave oppgaveFraGsak = hentOppgaveFraGsak(request.getOppgaveId());
 
+        WSOppgave oppgaveFraGsak = hentOppgaveFraGsak(request.getOppgaveId());
         if (oppgaveFraGsak.getGjelder().getBrukerId() == null || oppgaveFraGsak.getUnderkategori().getKode() == null) {
             logger.warn("Oppgave fra GSAK manglet fnr eller underkategori : {}", oppgaveFraGsak.getOppgaveId());
             return;
         }
+        String orginalUnderkategori = oppgaveFraGsak.getUnderkategori().getKode();
 
         leggTilbakeOppgaveIGsakDelegate.leggTilbake(oppgaveFraGsak, request);
 
+        request.withTemagruppe(null);
         finnTildelteWSOppgaverIGsak()
                 .stream()
                 .filter(oppgave -> oppgaveFraGsak.getGjelder().getBrukerId().equals(oppgave.getGjelder().getBrukerId()))
                 .filter(oppgave -> !oppgaveFraGsak.getOppgaveId().equals(oppgave.getOppgaveId()))
-                .filter(oppgave -> oppgaveFraGsak.getUnderkategori().getKode().equals(oppgave.getUnderkategori().getKode()))
+                .filter(oppgave -> orginalUnderkategori.equals(oppgave.getUnderkategori().getKode()))
                 .forEach(oppgave -> leggTilbakeOppgaveIGsakDelegate.leggTilbake(oppgave, request));
     }
 

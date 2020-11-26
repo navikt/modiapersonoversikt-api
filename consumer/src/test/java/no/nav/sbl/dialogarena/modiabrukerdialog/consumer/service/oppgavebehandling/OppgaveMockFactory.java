@@ -5,6 +5,7 @@ import no.nav.tjeneste.virksomhet.oppgave.v3.meldinger.WSFinnOppgaveListeRespons
 import no.nav.tjeneste.virksomhet.oppgave.v3.meldinger.WSHentOppgaveResponse;
 
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import static org.joda.time.DateTime.now;
@@ -22,16 +23,14 @@ class OppgaveMockFactory {
     static WSFinnOppgaveListeResponse mockFinnOppgaveListe() {
         return new WSFinnOppgaveListeResponse()
                 .withOppgaveListe(
-                        Stream
-                                .generate(WSOppgave::new)
-                                .limit(5)
-                                .map(s -> lagWSOppgave())
+                        IntStream.range(0, 5)
+                                .mapToObj(OppgaveMockFactory::lagWSOppgave)
                                 .collect(Collectors.toList()));
     }
 
-    static WSOppgave lagWSOppgave() {
+    static WSOppgave lagWSOppgave(int id) {
         return new WSOppgave()
-                .withOppgaveId(OPPGAVE_ID)
+                .withOppgaveId(String.valueOf(id))
                 .withAnsvarligId(ANSVARLIG_SAKSBEHANDLER)
                 .withGjelder(new WSBruker().withBrukerId(FNR_MOSS_TESTFAMILIEN).withBrukertypeKode("brukertypekode"))
                 .withDokumentId("dokumentid")
@@ -49,6 +48,10 @@ class OppgaveMockFactory {
                 .withSaksnummer("saksnummer")
                 .withStatus(new WSStatus().withKode("statuskode"))
                 .withLest(false);
+    }
+
+    static WSOppgave lagWSOppgave() {
+        return lagWSOppgave(123123123);
     }
 
 }

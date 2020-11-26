@@ -32,9 +32,9 @@ import java.util.Collections;
 
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.oppgavebehandling.OppgaveMockFactory.*;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.oppgavebehandling.OppgaveMockFactory.mockFinnOppgaveListe;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
@@ -83,14 +83,29 @@ class LeggTilbakeOppgaveIGsakDelegateTest {
 
         ArgumentCaptor<WSLagreOppgaveRequest> lagreOppgaveRequestCaptor = ArgumentCaptor.forClass(WSLagreOppgaveRequest.class);
 
-        SubjectHandlerUtil.withIdent(ANSVARLIG_SAKSBEHANDLER, () -> oppgaveBehandlingService.leggTilbakeOppgaveIGsak(lagRequest()));
+        SubjectHandlerUtil.withIdent(ANSVARLIG_SAKSBEHANDLER, () -> oppgaveBehandlingService.leggTilbakeOppgaveIGsak(lagLeggTilbakeNyTemagruppeRequest()));
 
-        verify(oppgavebehandlingMock).lagreOppgave(lagreOppgaveRequestCaptor.capture());
-        WSEndreOppgave endreOppgave = lagreOppgaveRequestCaptor.getValue().getEndreOppgave();
-        assertThat(endreOppgave.getAnsvarligId(), is(""));
-        assertThat(endreOppgave.getBeskrivelse(), containsString("\n" + opprinneligBeskrivelse));
-        assertThat(endreOppgave.getFagomradeKode(), is("ARBD_KNA"));
-        assertThat(endreOppgave.getAnsvarligEnhetId(), is(hentOppgaveResponse.getOppgave().getAnsvarligEnhetId()));
+        verify(oppgavebehandlingMock, times(6)).lagreOppgave(lagreOppgaveRequestCaptor.capture());
+        WSEndreOppgave endreOriginalOppgave = lagreOppgaveRequestCaptor.getAllValues().get(0).getEndreOppgave();
+        assertThat(endreOriginalOppgave.getAnsvarligId(), is(""));
+        assertThat(endreOriginalOppgave.getBeskrivelse(), containsString("\n" + opprinneligBeskrivelse));
+        assertThat(endreOriginalOppgave.getBeskrivelse(), containsString("\n" + "nyBeskrivelse"));
+        assertThat(endreOriginalOppgave.getFagomradeKode(), is("ARBD_KNA"));
+        assertThat(endreOriginalOppgave.getUnderkategoriKode(), is("FMLI_KNA"));
+        assertThat(endreOriginalOppgave.getAnsvarligEnhetId(), is(hentOppgaveResponse.getOppgave().getAnsvarligEnhetId()));
+
+        lagreOppgaveRequestCaptor.getAllValues()
+                .stream()
+                .skip(1)
+                .map(WSLagreOppgaveRequest::getEndreOppgave)
+                .forEach((oppgaveSomErLagtTilbake) -> {
+                    assertThat(oppgaveSomErLagtTilbake.getAnsvarligId(), is(""));
+                    assertThat(oppgaveSomErLagtTilbake.getBeskrivelse(), containsString("\nbeskrivelse"));
+                    assertThat(oppgaveSomErLagtTilbake.getBeskrivelse(), containsString("\nnyBeskrivelse"));
+                    assertThat(oppgaveSomErLagtTilbake.getFagomradeKode(), is("ARBD_KNA"));
+                    assertThat(oppgaveSomErLagtTilbake.getUnderkategoriKode(), is("ARBEID_HJE"));
+                    assertThat(oppgaveSomErLagtTilbake.getAnsvarligEnhetId(), is("ansvarligenhetid"));
+                });
     }
 
     @Test
@@ -108,7 +123,7 @@ class LeggTilbakeOppgaveIGsakDelegateTest {
         String opprinneligBeskrivelse = mockHentOppgaveResponseMedTilordning().getOppgave().getBeskrivelse();
 
         ArgumentCaptor<WSLagreOppgaveRequest> lagreOppgaveRequestCaptor = ArgumentCaptor.forClass(WSLagreOppgaveRequest.class);
-        SubjectHandlerUtil.withIdent(ANSVARLIG_SAKSBEHANDLER, () -> oppgaveBehandlingService.leggTilbakeOppgaveIGsak(lagRequest()));
+        SubjectHandlerUtil.withIdent(ANSVARLIG_SAKSBEHANDLER, () -> oppgaveBehandlingService.leggTilbakeOppgaveIGsak(lagLeggTilbakeNyTemagruppeRequest()));
 
         verify(oppgavebehandlingMock).lagreOppgave(lagreOppgaveRequestCaptor.capture());
         WSEndreOppgave endreOppgave = lagreOppgaveRequestCaptor.getValue().getEndreOppgave();
@@ -126,14 +141,14 @@ class LeggTilbakeOppgaveIGsakDelegateTest {
 
         ResponseStatusException exception = assertThrows(ResponseStatusException.class, () ->
                 SubjectHandlerUtil.withIdent(ANSVARLIG_SAKSBEHANDLER, () ->
-                        oppgaveBehandlingService.leggTilbakeOppgaveIGsak(lagRequest()
+                        oppgaveBehandlingService.leggTilbakeOppgaveIGsak(lagLeggTilbakeNyTemagruppeRequest()
                         )
                 )
         );
         assertThat(exception.getStatus(), is(HttpStatus.FORBIDDEN));
     }
 
-    private LeggTilbakeOppgaveIGsakRequest lagRequest() {
+    private LeggTilbakeOppgaveIGsakRequest lagLeggTilbakeNyTemagruppeRequest() {
         String nyBeskrivelse = "nyBeskrivelse";
         return new LeggTilbakeOppgaveIGsakRequest()
                 .withSaksbehandlersValgteEnhet(VALGT_ENHET)
