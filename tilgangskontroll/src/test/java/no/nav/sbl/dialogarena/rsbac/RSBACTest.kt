@@ -1,5 +1,8 @@
 package no.nav.sbl.dialogarena.rsbac
 
+import com.nhaarman.mockitokotlin2.eq
+import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.verify
 import no.nav.sbl.dialogarena.naudit.Audit
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
@@ -112,6 +115,51 @@ internal class RSBACTest {
                 .get(Audit.skipAuditLog) { "OK" }
 
         assertEquals("OK", biased)
+    }
+
+    @Test
+    fun `should log audit-descriptor`() {
+        val rsbac = RSBACImpl(null)
+        val auditDescriptor = mock<Audit.AuditDescriptor<String>>()
+
+        runCatching {
+            rsbac
+                    .permit("Error 1") { true }
+                    .get(auditDescriptor) { "OK" }
+        }
+
+        verify(auditDescriptor).log(eq("OK"))
+    }
+
+    @Test
+    fun `should log deny-audit-descriptor`() {
+        val rsbac = RSBACImpl(null)
+        val auditDescriptor = mock<Audit.AuditDescriptor<String>>()
+
+        runCatching {
+            rsbac
+                    .deny("Error 1") { true }
+                    .get(auditDescriptor) { "OK" }
+        }
+
+        verify(auditDescriptor).denied(eq("Error 1"))
+    }
+
+    @Test
+    fun `should log failed-audit-descriptor`() {
+        val rsbac = RSBACImpl(null)
+        val auditDescriptor = mock<Audit.AuditDescriptor<String>>()
+        val exception = IllegalStateException("Something wrong")
+
+        val result = runCatching {
+            rsbac
+                    .permit("Error 1") { true }
+                    .get(auditDescriptor) { throw exception }
+        }
+
+        assertEquals(result.isFailure, true)
+        assertEquals(result.exceptionOrNull(), exception)
+        verify(auditDescriptor).failed(eq(exception))
     }
 
     @Test
