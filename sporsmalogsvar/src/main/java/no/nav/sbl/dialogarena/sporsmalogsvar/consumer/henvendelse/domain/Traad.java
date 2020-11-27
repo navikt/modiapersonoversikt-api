@@ -40,9 +40,9 @@ public class Traad {
                 .orElseThrow(IllegalStateException::new);
     }
 
-    public boolean harTilknyttningTilOppgave(@Nullable Oppgave oppgave) {
+    public boolean besvaringKanFerdigstilleOppgave(@Nullable Oppgave oppgave) {
         if (oppgave == null) {
-            return false;
+            return true;
         }
         return meldinger
                 .stream()
