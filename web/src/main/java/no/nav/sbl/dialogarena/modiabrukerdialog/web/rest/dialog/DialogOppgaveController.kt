@@ -4,6 +4,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.GsakKodeTema
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveBehandlingService
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.OpprettOppgaveRequest
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.OpprettOppgaveResponse
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.OpprettSkjermetOppgaveRequest
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.gsak.GsakKodeverk
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.BehandlingsIdTilgangData
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Policies
@@ -28,7 +29,7 @@ class DialogOppgaveController @Autowired constructor(
 ) {
 
     @PostMapping("/opprett")
-    fun opprettOppgave(@RequestBody request: OpperettOppgaveRequestDTO): OpprettOppgaveResponseDTO {
+    fun opprettOppgave(@RequestBody request: OpprettOppgaveRequestDTO): OpprettOppgaveResponseDTO {
         return tilgangskontroll
                 .check(Policies.tilgangTilBruker.with(request.fnr))
                 .check(Policies.behandlingsIderTilhorerBruker.with(BehandlingsIdTilgangData(request.fnr, listOf(request.behandlingskjedeId))))
@@ -38,7 +39,7 @@ class DialogOppgaveController @Autowired constructor(
     }
 
     @PostMapping("/opprettskjermetoppgave")
-    fun opprettSkjermetOppgave(@RequestBody request: OpperettSkjermetOppgaveDTO
+    fun opprettSkjermetOppgave(@RequestBody request: OpprettSkjermetOppgaveDTO
     ): OpprettOppgaveResponseDTO {
         return tilgangskontroll
                 .check(Policies.tilgangTilModia)
@@ -62,6 +63,16 @@ class DialogOppgaveController @Autowired constructor(
                         )
                     }
                 }
+    }
+
+    private fun kalkulerFrist(temaKode: String, oppgaveTypeKode: String): LocalDate {
+        val dagerFrist = gsakKodeverk.hentTemaListe()
+                .find { it.kode == temaKode }
+                ?.oppgaveTyper
+                ?.find { it.kode == oppgaveTypeKode }
+                ?.dagerFrist
+                ?: 2
+        return arbeidsdagerFraDatoJava(dagerFrist, LocalDate.now())
     }
 
     private fun hentOppgavetyper(oppgavetyper: List<GsakKodeTema.OppgaveType>): List<Map<String, Any?>> =
@@ -90,13 +101,47 @@ class DialogOppgaveController @Autowired constructor(
     private fun hentGsakKodeTema(kodeTema: GsakKodeTema): Array<Pair<String, Any?>> =
             arrayOf(Pair("kode", kodeTema.kode), Pair("tekst", kodeTema.tekst))
 
+    fun OpprettOppgaveRequestDTO.fromDTO() : OpprettOppgaveRequest = OpprettOppgaveRequest(
+            fnr = fnr,
+            behandlesAvApplikasjon = "FS22",
+            beskrivelse = beskrivelse,
+            temagruppe = "",
+            tema = temaKode,
+            oppgavetype = oppgaveTypeKode,
+            behandlingstype = HENVENDELSESTYPE_KODE,
+            prioritet = prioritetKode,
+            underkategoriKode = underkategoriKode,
+            opprettetavenhetsnummer = opprettetavenhetsnummer,
+            oppgaveFrist = kalkulerFrist(temaKode, oppgaveTypeKode),
+            valgtEnhetsId = valgtEnhetId.toString(),
+            behandlingskjedeId = behandlingskjedeId,
+            dagerFrist = dagerFrist,
+            ansvarligEnhetId = ansvarligEnhetId,
+            ansvarligIdent = ansvarligIdent
+
+    )
+
+    fun OpprettSkjermetOppgaveDTO.fromDTO() : OpprettSkjermetOppgaveRequest = OpprettSkjermetOppgaveRequest(
+            fnr = fnr,
+            behandlesAvApplikasjon = "FS22",
+            beskrivelse = beskrivelse,
+            temagruppe = "",
+            tema = temaKode,
+            oppgavetype = oppgaveTypeKode,
+            behandlingstype = HENVENDELSESTYPE_KODE,
+            prioritet = prioritetKode,
+            underkategoriKode = underkategoriKode,
+            opprettetavenhetsnummer = opprettetavenhetsnummer,
+            oppgaveFrist = kalkulerFrist(temaKode, oppgaveTypeKode)
+    )
+
+    fun OpprettOppgaveResponse.toDTO() : OpprettOppgaveResponseDTO = OpprettOppgaveResponseDTO(
+            id = id
+    )
 }
 
-fun OpperettOppgaveRequestDTO.fromDTO() : OpprettOppgaveRequest = TODO();
-fun OpperettSkjermetOppgaveDTO.fromDTO() : OpprettOppgaveRequest = TODO();
-fun OpprettOppgaveResponse.toDTO() : OpprettOppgaveResponseDTO = TODO();
 
-data class OpperettOppgaveRequestDTO(
+data class OpprettOppgaveRequestDTO(
         val fnr: String,
         val opprettetavenhetsnummer: String,
         val valgtEnhetId: Int,
@@ -112,7 +157,7 @@ data class OpperettOppgaveRequestDTO(
         val prioritetKode: String
 )
 
-data class OpperettSkjermetOppgaveDTO(
+data class OpprettSkjermetOppgaveDTO(
         val opprettetavenhetsnummer: String,
         val fnr: String,
         val beskrivelse: String,

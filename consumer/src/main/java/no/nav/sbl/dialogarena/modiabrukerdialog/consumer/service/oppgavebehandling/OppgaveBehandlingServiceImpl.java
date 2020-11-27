@@ -1,17 +1,13 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.oppgavebehandling;
 
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.OpprettOppgaveRequest;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.*;
 import no.nav.common.auth.subject.SubjectHandler;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Oppgave;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.LeggTilbakeOppgaveIGsakRequest;
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveBehandlingService;
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.OpprettOppgaveResponse;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.arbeidsfordeling.ArbeidsfordelingV1Service;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.AnsattService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Policies;
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Tilgangskontroll;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.DateUtils.arbeidsdagerFraDato;
 import no.nav.tjeneste.virksomhet.oppgave.v3.HentOppgaveOppgaveIkkeFunnet;
 import no.nav.tjeneste.virksomhet.oppgave.v3.OppgaveV3;
 import no.nav.tjeneste.virksomhet.oppgave.v3.informasjon.oppgave.WSOppgave;
@@ -105,7 +101,7 @@ public class OppgaveBehandlingServiceImpl implements OppgaveBehandlingService {
     }
 
     @Override
-    public OpprettOppgaveResponse opprettSkjermetOppgave(OpprettOppgaveRequest request) {
+    public OpprettOppgaveResponse opprettSkjermetOppgave(OpprettSkjermetOppgaveRequest request) {
         return null;
     }
 
