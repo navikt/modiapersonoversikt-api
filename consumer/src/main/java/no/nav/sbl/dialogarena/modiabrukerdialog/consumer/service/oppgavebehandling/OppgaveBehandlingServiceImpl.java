@@ -94,8 +94,7 @@ public class OppgaveBehandlingServiceImpl implements OppgaveBehandlingService {
                         .withFilter(new WSFinnOppgaveListeFilter().withAktiv(true)))
                 .getOppgaveListe()
                 .stream()
-                .filter((oppgave) -> oppgave.getHenvendelseId() != null)
-        )
+                .filter((oppgave) -> oppgave.getHenvendelseId() != null).collect(toList()));
     }
 
 
