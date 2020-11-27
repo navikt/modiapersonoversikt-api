@@ -36,6 +36,7 @@ class OppgaveMockFactory {
                 .withDokumentId("dokumentid")
                 .withKravId("kravid")
                 .withAnsvarligEnhetId("ansvarligenhetid")
+                .withHenvendelseId("henvendelsesid")
 
                 .withFagomrade(new WSFagomrade().withKode("ARBD_KNA"))
                 .withOppgavetype(new WSOppgavetype().withKode("wsOppgavetype"))
