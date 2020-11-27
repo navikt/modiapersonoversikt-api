@@ -152,10 +152,6 @@ internal class OppgaveControllerTest {
         SubjectHandlerUtil.withIdent(SAKSBEHANDLERS_IDENT) { oppgaveController.finnTildelte() }
         verify(oppgaveWSMock).finnOppgaveListe(check {
             assertEquals(SAKSBEHANDLERS_IDENT, it.sok.ansvarligId)
-            assertEquals(1, it.sok.fagomradeKodeListe.size)
-            assertEquals("KNA", it.sok.fagomradeKodeListe[0])
-            assertEquals(1, it.filter.oppgavetypeKodeListe.size)
-            assertEquals("SPM_OG_SVR", it.filter.oppgavetypeKodeListe[0])
             assertTrue(it.filter.isAktiv)
         })
     }

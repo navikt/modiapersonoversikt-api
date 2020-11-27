@@ -179,13 +179,11 @@ spec:
     - name: TJENESTER_URL
       value: "https://tjenester-q6.nav.no"
     - name: UNLEASH_API_URL
-      value: "https://unleash.nais.adeo.no/api/"
+      value: "https://unleash.nais.io/api/"
     - name: UTBETALING_V1_DESCRIPTION
       value: "Utbetalingsoversikt"
-    #    - name: UTBETALING_V1_ENDPOINTURL
-    #      value: "https\://wasapp-q6.adeo.no/nav-utbetaldata-ws/virksomhet/Utbetaling_v1"
     - name: UTBETALING_V1_ENDPOINTURL
-      value: "https://service-gw-q6.preprod.local/"
+      value: "https://wasapp-q6.adeo.no/nav-utbetaldata-ws/virksomhet/Utbetaling_v1"
     - name: UTBETALING_V1_SECURITYTOKEN
       value: "SAML"
     - name: UTBETALING_V1_WSDLURL
@@ -264,12 +262,8 @@ spec:
       value: "LTPA"
     - name: VIRKSOMHET_OPPGAVEBEHANDLING_V3_WSDLURL
       value: "http://maven.adeo.no/nexus/content/groups/public/no/nav/tjenester/fim/nav-fim-oppgavebehandling-v3-tjenestespesifikasjon/3.1.1/nav-fim-oppgavebehandling-v3-tjenestespesifikasjon-3.1.1.zip"
-    - name: VIRKSOMHET_ORGANISASJON_V4_ENDPOINTURL
-      value: "https://service-gw-q6.preprod.local/"
-    - name: VIRKSOMHET_ORGANISASJON_V4_SECURITYTOKEN
-      value: "SAML"
-    - name: VIRKSOMHET_ORGANISASJON_V4_WSDLURL
-      value: "http://maven.adeo.no/nexus/content/groups/public/no/nav/tjenester/fim/nav-fim-organisasjon-v4-tjenestespesifikasjon/1.0.4/nav-fim-organisasjon-v4-tjenestespesifikasjon-1.0.4.zip"
+    - name: EREG_ENDPOINTURL
+      value: "https://modapp-q6.adeo.no/ereg/"
     - name: VIRKSOMHET_ORGANISASJONENHET_V2_ENDPOINTURL
       value: "https://app-q6.adeo.no/norg2/ws/OrganisasjonEnhet/v2"
     - name: VIRKSOMHET_ORGANISASJONENHET_V2_SECURITYTOKEN
@@ -348,8 +342,6 @@ spec:
       value: "28"
     - name: SAKSOVERSIKT_PRODSETTNINGSDATO
       value: "2016-06-04"
-    - name: MODIABRUKERDIALOG_CXF_LOG_LEVEL
-      value: "INFO"
     - name: FJERN_SOKNADER_FOR_DATO
       value: "2014-12-09"
     - name: TOGGLE_DIGISYFO
@@ -372,3 +364,5 @@ spec:
       value: "true"
     - name: HASTEKASSERING_TILGANG
       value: "Z992323,Z990366,Z990083"
+    - name: CXF_SECURE_LOG
+      value: "enabled"

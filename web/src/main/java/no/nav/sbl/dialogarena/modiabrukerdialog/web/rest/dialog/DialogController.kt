@@ -19,15 +19,15 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.api.toDTO
 import no.nav.sbl.dialogarena.naudit.Audit
 import no.nav.sbl.dialogarena.naudit.Audit.Action.*
 import no.nav.sbl.dialogarena.naudit.AuditIdentifier
+import no.nav.sbl.dialogarena.naudit.AuditResources.Person
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.henvendelse.HenvendelseBehandlingService
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.henvendelse.domain.Traad
-import no.nav.sbl.dialogarena.naudit.AuditResources.Person
-import java.util.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.server.ResponseStatusException
+import java.util.*
 import javax.servlet.http.HttpServletRequest
 
 data class BehandlingsId(val behandlingsId: String)
@@ -115,9 +115,13 @@ class DialogController @Autowired constructor(
             @PathVariable("fnr") fnr: String,
             @RequestBody opprettHenvendelseRequest: OpprettHenvendelseRequest
     ): FortsettDialogDTO {
+        val auditIdentifier = arrayOf(
+                AuditIdentifier.FNR to fnr,
+                AuditIdentifier.TRAAD_ID to opprettHenvendelseRequest.traadId
+        )
         return tilgangskontroll
                 .check(Policies.tilgangTilBruker.with(fnr))
-                .get(Audit.describe(CREATE, Person.Henvendelse.Opprettet, AuditIdentifier.FNR to fnr)) {
+                .get(Audit.describe(CREATE, Person.Henvendelse.Opprettet, *auditIdentifier)) {
                     val traadId = opprettHenvendelseRequest.traadId
                     val context = lagSendHenvendelseContext(fnr, opprettHenvendelseRequest.enhet, request)
 
@@ -155,15 +159,24 @@ class DialogController @Autowired constructor(
             @PathVariable("fnr") fnr: String,
             @RequestBody fortsettDialogRequest: FortsettDialogRequest
     ): ResponseEntity<Void> {
+        val auditIdentifier = arrayOf(
+                AuditIdentifier.FNR to fnr,
+                AuditIdentifier.BEHANDLING_ID to fortsettDialogRequest.behandlingsId,
+                AuditIdentifier.OPPGAVE_ID to fortsettDialogRequest.oppgaveId
+        )
         return tilgangskontroll
                 .check(Policies.tilgangTilBruker.with(fnr))
-                .get(Audit.describe(UPDATE, Person.Henvendelse.Ferdigstill, AuditIdentifier.FNR to fnr)) {
+                .get(Audit.describe(UPDATE, Person.Henvendelse.Ferdigstill, *auditIdentifier)) {
                     val context = lagSendHenvendelseContext(fnr, fortsettDialogRequest.enhet, request)
                     val traad = henvendelseService
                             .hentMeldinger(fnr, context.enhet)
                             .traader
                             .find { it.traadId == fortsettDialogRequest.traadId }
                             ?: throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Fant ingen tråd med id: ${fortsettDialogRequest.traadId}")
+
+                    if (!traad.harTilknyttningTilOppgave(fortsettDialogRequest.oppgaveId)) {
+                        throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Feil oppgaveId fra client. Forventet: ${traad.getEldsteMelding().oppgaveId} men oppdaget: ${fortsettDialogRequest.oppgaveId}")
+                    }
 
                     henvendelseUtsendingService.ferdigstillHenvendelse(
                             lagFortsettDialog(fortsettDialogRequest, context, traad),
@@ -182,35 +195,43 @@ class DialogController @Autowired constructor(
             request: HttpServletRequest,
             @PathVariable("fnr") fnr: String,
             @RequestBody slaaSammenRequest: SlaaSammenRequest
-    ): Map<String, Any?> = tilgangskontroll
-            .check(Policies.tilgangTilBruker.with(fnr))
-            .get(Audit.describe(UPDATE, Person.Henvendelse.SlaSammen, AuditIdentifier.FNR to fnr)) {
-                if (slaaSammenRequest.traader.groupingBy { it -> it.traadId }.eachCount().size < 2) {
-                    throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Du kan ikke slå sammen mindre enn 2 trådeer")
+    ): Map<String, Any?> {
+        val auditIdentifier = arrayOf(
+                AuditIdentifier.FNR to fnr,
+                AuditIdentifier.TRAAD_ID to slaaSammenRequest.traader.joinToString(" ") {
+                    "${it.traadId}:${it.oppgaveId}"
                 }
+        )
+        return tilgangskontroll
+                .check(Policies.tilgangTilBruker.with(fnr))
+                .get(Audit.describe(UPDATE, Person.Henvendelse.SlaSammen, *auditIdentifier)) {
+                    if (slaaSammenRequest.traader.groupingBy { it -> it.traadId }.eachCount().size < 2) {
+                        throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Du kan ikke slå sammen mindre enn 2 trådeer")
+                    }
 
-                if (sjekkOmNoenOppgaverErFerdigstilt(slaaSammenRequest)) {
-                    throw ResponseStatusException(HttpStatus.BAD_REQUEST, "En eller fler av oppgavene er allerede ferdigstilt")
+                    if (sjekkOmNoenOppgaverErFerdigstilt(slaaSammenRequest)) {
+                        throw ResponseStatusException(HttpStatus.BAD_REQUEST, "En eller fler av oppgavene er allerede ferdigstilt")
+                    }
+                    val nyTraadId = try {
+                        henvendelseUtsendingService.slaaSammenTraader(slaaSammenRequest.traader.map { it.traadId })
+                    } catch (e: TraadAlleredeBesvart) {
+                        throw ResponseStatusException(HttpStatus.BAD_REQUEST, "En eller fler av trådene er allerede besvart")
+                    }
+
+                    val valgtEnhet = RestUtils.hentValgtEnhet(slaaSammenRequest.enhet, request)
+                    ferdigstillAlleUnntattEnOppgave(slaaSammenRequest, nyTraadId, valgtEnhet)
+
+                    val traader: List<TraadDTO> = henvendelseService
+                            .hentMeldinger(fnr, valgtEnhet)
+                            .traader
+                            .toDTO()
+
+                    mapOf(
+                            "traader" to traader,
+                            "nyTraadId" to nyTraadId
+                    )
                 }
-                val nyTraadId = try {
-                    henvendelseUtsendingService.slaaSammenTraader(slaaSammenRequest.traader.map { it.traadId })
-                } catch (e: TraadAlleredeBesvart) {
-                    throw ResponseStatusException(HttpStatus.BAD_REQUEST, "En eller fler av trådene er allerede besvart")
-                }
-
-                val valgtEnhet = RestUtils.hentValgtEnhet(slaaSammenRequest.enhet, request)
-                ferdigstillAlleUnntattEnOppgave(slaaSammenRequest, nyTraadId, valgtEnhet)
-
-                val traader: List<TraadDTO> = henvendelseService
-                        .hentMeldinger(fnr, valgtEnhet)
-                        .traader
-                        .toDTO()
-
-                mapOf(
-                        "traader" to traader,
-                        "nyTraadId" to nyTraadId
-                )
-            }
+    }
 
     private fun ferdigstillAlleUnntattEnOppgave(request: SlaaSammenRequest, nyTraadId: String, enhet: String) {
         request.traader.filter { it.traadId != nyTraadId }.forEach {
@@ -261,7 +282,7 @@ private fun lagSporsmal(sporsmalRequest: SendSporsmalRequest, sakstema: String, 
             .withTemagruppe(hentTemagruppeForTema(sakstema))
 }
 
-private fun lagInfomelding(infomeldingRequest: InfomeldingRequest, sakstema: String, requestContext: RequestContext) : Melding {
+private fun lagInfomelding(infomeldingRequest: InfomeldingRequest, sakstema: String, requestContext: RequestContext): Melding {
     val type = Meldingstype.INFOMELDING_MODIA_UTGAAENDE
     return Melding().withFnr(requestContext.fnr)
             .withNavIdent(requestContext.ident)
@@ -282,8 +303,14 @@ private fun erTraadTilknyttetAnsatt(traad: Traad): Boolean =
         }
 
 private fun lagFortsettDialog(request: FortsettDialogRequest, requestContext: RequestContext, traad: Traad): Melding {
-    val eldsteMelding = traad.meldinger[0]
-    val erOppgaveTilknyttetAnsatt = if (request.meldingstype == Meldingstype.SPORSMAL_MODIA_UTGAAENDE) request.erOppgaveTilknyttetAnsatt else erTraadTilknyttetAnsatt(traad)
+    val eldsteMelding = traad.getEldsteMelding()
+    val erOppgaveTilknyttetAnsatt =
+            if (request.meldingstype == Meldingstype.SPORSMAL_MODIA_UTGAAENDE) {
+                request.erOppgaveTilknyttetAnsatt
+            } else {
+                erTraadTilknyttetAnsatt(traad)
+            }
+
     return Melding()
             .withFnr(requestContext.fnr)
             .withNavIdent(requestContext.ident)
@@ -297,7 +324,6 @@ private fun lagFortsettDialog(request: FortsettDialogRequest, requestContext: Re
             .withKontorsperretEnhet(eldsteMelding.kontorsperretEnhet)
             .withTemagruppe(eldsteMelding.temagruppe)
             .withBrukersEnhet(eldsteMelding.brukersEnhet)
-
 }
 
 enum class Kanal {

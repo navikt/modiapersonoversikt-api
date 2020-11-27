@@ -1,8 +1,6 @@
 package no.nav.sykmeldingsperioder.config.spring;
 
-import no.nav.kjerneinfo.consumer.organisasjon.OrganisasjonService;
-import no.nav.kjerneinfo.consumer.organisasjon.OrganisasjonV4ConsumerConfig;
-import no.nav.kjerneinfo.consumer.organisasjon.OrganisasjonV4ServiceImpl;
+import no.nav.kjerneinfo.consumer.organisasjon.OrganisasjonConsumerConfig;
 import no.nav.sykmeldingsperioder.config.spring.foreldrepenger.ForeldrepengerConsumerConfig;
 import no.nav.sykmeldingsperioder.config.spring.sykepenger.SykepengerConsumerConfig;
 import no.nav.sykmeldingsperioder.consumer.foreldrepenger.DefaultForeldrepengerService;
@@ -17,18 +15,16 @@ import no.nav.sykmeldingsperioder.consumer.sykepenger.mapping.SykepengerMapper;
 import no.nav.sykmeldingsperioder.consumer.utbetalinger.UtbetalingerService;
 import no.nav.sykmeldingsperioder.consumer.utbetalinger.UtbetalingerServiceImpl;
 import no.nav.tjeneste.virksomhet.foreldrepenger.v2.ForeldrepengerV2;
-import no.nav.tjeneste.virksomhet.organisasjon.v4.OrganisasjonV4;
 import no.nav.tjeneste.virksomhet.pleiepenger.v1.PleiepengerV1;
 import no.nav.tjeneste.virksomhet.sykepenger.v2.SykepengerV2;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
-import org.springframework.beans.factory.annotation.Autowired;
-
 @Configuration
 @Import({SykepengerConsumerConfig.class, ForeldrepengerConsumerConfig.class,
-        PleiepengerConsumerConfig.class, OrganisasjonV4ConsumerConfig.class})
+        PleiepengerConsumerConfig.class, OrganisasjonConsumerConfig.class})
 public class ConsumerConfig {
 
     @Autowired
@@ -39,9 +35,6 @@ public class ConsumerConfig {
 
     @Autowired
     private PleiepengerV1 pleiepengerPortType;
-
-    @Autowired
-    private OrganisasjonV4 organisasjonV4PortType;
 
     @Bean
     public SykepengerServiceBi sykepengerServiceBi() {
@@ -62,11 +55,6 @@ public class ConsumerConfig {
     @Bean
     public PleiepengerService pleiepengerService() {
         return new PleiepengerServiceImpl(pleiepengerPortType);
-    }
-
-    @Bean
-    public OrganisasjonService organisasjonV4Service() {
-        return new OrganisasjonV4ServiceImpl(organisasjonV4PortType);
     }
 
     @Bean

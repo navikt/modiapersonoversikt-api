@@ -28,7 +28,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import org.springframework.beans.factory.annotation.Autowired;
-
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -91,13 +90,12 @@ public class OppgaveBehandlingServiceImpl implements OppgaveBehandlingService {
         String ident = SubjectHandler.getIdent().orElseThrow(() -> new RuntimeException("Fant ikke ident"));
         return validerTilgangTilbruker(oppgaveWS
                 .finnOppgaveListe(new WSFinnOppgaveListeRequest()
-                        .withSok(new WSFinnOppgaveListeSok()
-                                .withAnsvarligId(ident)
-                                .withFagomradeKodeListe(KONTAKT_NAV))
-                        .withFilter(new WSFinnOppgaveListeFilter()
-                                .withAktiv(true)
-                                .withOppgavetypeKodeListe(SPORSMAL_OG_SVAR)))
-                .getOppgaveListe());
+                        .withSok(new WSFinnOppgaveListeSok().withAnsvarligId(ident))
+                        .withFilter(new WSFinnOppgaveListeFilter().withAktiv(true)))
+                .getOppgaveListe()
+                .stream()
+                .filter((oppgave) -> oppgave.getHenvendelseId() != null)
+        )
     }
 
 
@@ -133,12 +131,6 @@ public class OppgaveBehandlingServiceImpl implements OppgaveBehandlingService {
                 .map(WSOppgavetype::getKode)
                 .map("SPM_OG_SVR"::equals)
                 .orElse(false);
-
-        logger.info(
-                "[OppgaveBehandlingsServiceImpl::map] oppgaveId: {} KNA: {}",
-                wsOppgave.getOppgaveId(),
-                erSporsmalOgSvarOppgave
-        );
 
         return new Oppgave(
                 wsOppgave.getOppgaveId(),
@@ -375,4 +367,3 @@ public class OppgaveBehandlingServiceImpl implements OppgaveBehandlingService {
                 .withLest(wsOppgave.isLest());
     }
 }
-
