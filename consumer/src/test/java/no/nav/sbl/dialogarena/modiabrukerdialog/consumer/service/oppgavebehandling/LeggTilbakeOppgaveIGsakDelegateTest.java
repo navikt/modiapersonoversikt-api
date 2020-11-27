@@ -119,18 +119,30 @@ class LeggTilbakeOppgaveIGsakDelegateTest {
         when(arbeidsfordelingMock.finnBehandlendeEnhetListe(anyString(), anyString(), anyString(), anyString()))
                 .thenReturn(Collections.singletonList(new AnsattEnhet(nyEnhetId, null)));
 
-        String nyBeskrivelse = "nyBeskrivelse";
         String opprinneligBeskrivelse = mockHentOppgaveResponseMedTilordning().getOppgave().getBeskrivelse();
 
         ArgumentCaptor<WSLagreOppgaveRequest> lagreOppgaveRequestCaptor = ArgumentCaptor.forClass(WSLagreOppgaveRequest.class);
         SubjectHandlerUtil.withIdent(ANSVARLIG_SAKSBEHANDLER, () -> oppgaveBehandlingService.leggTilbakeOppgaveIGsak(lagLeggTilbakeNyTemagruppeRequest()));
 
-        verify(oppgavebehandlingMock).lagreOppgave(lagreOppgaveRequestCaptor.capture());
-        WSEndreOppgave endreOppgave = lagreOppgaveRequestCaptor.getValue().getEndreOppgave();
-        assertThat(endreOppgave.getAnsvarligId(), is(""));
-        assertThat(endreOppgave.getBeskrivelse(), containsString("\n" + opprinneligBeskrivelse));
-        assertThat(endreOppgave.getUnderkategoriKode(), is("FMLI_KNA"));
-        assertThat(endreOppgave.getAnsvarligEnhetId(), is(nyEnhetId));
+        verify(oppgavebehandlingMock, times(6)).lagreOppgave(lagreOppgaveRequestCaptor.capture());
+        WSEndreOppgave endreOriginalOppgave = lagreOppgaveRequestCaptor.getAllValues().get(0).getEndreOppgave();
+        assertThat(endreOriginalOppgave.getAnsvarligId(), is(""));
+        assertThat(endreOriginalOppgave.getBeskrivelse(), containsString("\n" + opprinneligBeskrivelse));
+        assertThat(endreOriginalOppgave.getUnderkategoriKode(), is("FMLI_KNA"));
+        assertThat(endreOriginalOppgave.getAnsvarligEnhetId(), is(nyEnhetId));
+
+        lagreOppgaveRequestCaptor.getAllValues()
+                .stream()
+                .skip(1)
+                .map(WSLagreOppgaveRequest::getEndreOppgave)
+                .forEach((oppgaveSomErLagtTilbake) -> {
+                    assertThat(oppgaveSomErLagtTilbake.getAnsvarligId(), is(""));
+                    assertThat(oppgaveSomErLagtTilbake.getBeskrivelse(), containsString("\nbeskrivelse"));
+                    assertThat(oppgaveSomErLagtTilbake.getBeskrivelse(), containsString("\nnyBeskrivelse"));
+                    assertThat(oppgaveSomErLagtTilbake.getFagomradeKode(), is("ARBD_KNA"));
+                    assertThat(oppgaveSomErLagtTilbake.getUnderkategoriKode(), is("ARBEID_HJE"));
+                    assertThat(oppgaveSomErLagtTilbake.getAnsvarligEnhetId(), is("ansvarligenhetid"));
+                });
     }
 
     @Test
