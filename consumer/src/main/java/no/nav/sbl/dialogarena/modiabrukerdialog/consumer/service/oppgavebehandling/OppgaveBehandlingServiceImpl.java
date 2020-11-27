@@ -84,13 +84,11 @@ public class OppgaveBehandlingServiceImpl implements OppgaveBehandlingService {
         String ident = SubjectHandler.getIdent().orElseThrow(() -> new RuntimeException("Fant ikke ident"));
         return validerTilgangTilbruker(oppgaveWS
                 .finnOppgaveListe(new WSFinnOppgaveListeRequest()
-                        .withSok(new WSFinnOppgaveListeSok()
-                                .withAnsvarligId(ident)
-                                .withFagomradeKodeListe(KONTAKT_NAV))
-                        .withFilter(new WSFinnOppgaveListeFilter()
-                                .withAktiv(true)
-                                .withOppgavetypeKodeListe(SPORSMAL_OG_SVAR)))
-                .getOppgaveListe().stream()
+                        .withSok(new WSFinnOppgaveListeSok().withAnsvarligId(ident))
+                        .withFilter(new WSFinnOppgaveListeFilter().withAktiv(true)))
+                .getOppgaveListe()
+                .stream()
+                .filter((oppgave) -> oppgave.getHenvendelseId() != null)
                 .map(OppgaveBehandlingServiceImpl::wsOppgaveToOppgave)
                 .collect(toList()));
     }

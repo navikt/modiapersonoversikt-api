@@ -187,8 +187,8 @@ public class OppgaveBehandlingServiceImplTest {
     @Test
     void skalFinneTilordnaOppgaver() throws HentOppgaveOppgaveIkkeFunnet {
         List<WSOppgave> oppgaveliste = Arrays.asList(
-                lagWSOppgave().withOppgaveId("1").withGjelder( new WSBruker().withBrukerId("10108000398")),
-                lagWSOppgave().withOppgaveId("2").withGjelder( new WSBruker().withBrukerId("10108000398"))
+                lagWSOppgave().withOppgaveId("1").withGjelder( new WSBruker().withBrukerId("10108000398")).withHenvendelseId("henv1"),
+                lagWSOppgave().withOppgaveId("2").withGjelder( new WSBruker().withBrukerId("10108000398")).withHenvendelseId("henv2")
         );
         when(oppgaveWS.finnOppgaveListe(any(WSFinnOppgaveListeRequest.class)))
                 .thenReturn(new WSFinnOppgaveListeResponse()
