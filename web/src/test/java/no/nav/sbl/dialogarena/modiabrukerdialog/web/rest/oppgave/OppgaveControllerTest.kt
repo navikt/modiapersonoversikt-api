@@ -172,7 +172,11 @@ internal class OppgaveControllerTest {
     fun `Returnerer tildelt oppgave hvis saksbehandler allerede har en tildelt oppgave ved plukk`() {
         val httpRequest = HttpRequestUtil.mockHttpServletRequestMedCookie(SAKSBEHANDLERS_IDENT, VALGT_ENHET)
 
-        val oppgaveliste = listOf(lagWSOppgave().withOppgaveId(OPPGAVE_ID_1), lagWSOppgave().withOppgaveId("2").withGjelder(WSBruker().withBrukerId("1234")))
+        val stoOppgave = WSOppgavetype().withKode("SPM_OG_SVR")
+        val oppgaveliste = listOf(
+                lagWSOppgave().withOppgaveId(OPPGAVE_ID_1).withOppgavetype(stoOppgave),
+                lagWSOppgave().withOppgaveId("2").withGjelder(WSBruker().withBrukerId("1234")).withOppgavetype(stoOppgave)
+        )
 
         whenever(oppgaveWSMock.finnOppgaveListe(any()))
                 .thenReturn(WSFinnOppgaveListeResponse()
