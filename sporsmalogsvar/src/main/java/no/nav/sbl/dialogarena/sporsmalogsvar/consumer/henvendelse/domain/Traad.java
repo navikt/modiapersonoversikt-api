@@ -1,13 +1,12 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.consumer.henvendelse.domain;
 
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Oppgave;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.henvendelse.delsvar.DelsvarSammenslaaer;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.henvendelse.delsvar.DelsvarUtils;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
-
-import static java.util.stream.Collectors.toList;
 
 public class Traad {
 
@@ -41,12 +40,12 @@ public class Traad {
                 .orElseThrow(IllegalStateException::new);
     }
 
-    public boolean harTilknyttningTilOppgave(@Nullable String oppgaveId) {
-        List<String> oppgaveIdTilknyttetTrad = meldinger
+    public boolean harTilknyttningTilOppgave(@Nullable Oppgave oppgave) {
+        if (oppgave == null) {
+            return false;
+        }
+        return meldinger
                 .stream()
-                .map((melding) -> melding.oppgaveId)
-                .collect(toList());
-
-        return oppgaveIdTilknyttetTrad.contains(oppgaveId);
+                .anyMatch((melding) -> melding.id.contains(oppgave.henvendelseId));
     }
 }

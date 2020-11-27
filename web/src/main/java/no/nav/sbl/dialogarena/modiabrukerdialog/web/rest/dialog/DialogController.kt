@@ -168,13 +168,14 @@ class DialogController @Autowired constructor(
                 .check(Policies.tilgangTilBruker.with(fnr))
                 .get(Audit.describe(UPDATE, Person.Henvendelse.Ferdigstill, *auditIdentifier)) {
                     val context = lagSendHenvendelseContext(fnr, fortsettDialogRequest.enhet, request)
+                    val oppgave = fortsettDialogRequest.oppgaveId?.let(oppgaveBehandlingService::hentOppgave)
                     val traad = henvendelseService
                             .hentMeldinger(fnr, context.enhet)
                             .traader
                             .find { it.traadId == fortsettDialogRequest.traadId }
                             ?: throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Fant ingen tråd med id: ${fortsettDialogRequest.traadId}")
 
-                    if (!traad.harTilknyttningTilOppgave(fortsettDialogRequest.oppgaveId)) {
+                    if (!traad.harTilknyttningTilOppgave(oppgave)) {
                         throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Feil oppgaveId fra client. Forventet: ${traad.getEldsteMelding().oppgaveId} men oppdaget: ${fortsettDialogRequest.oppgaveId}")
                     }
 
