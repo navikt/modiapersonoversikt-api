@@ -13,8 +13,6 @@ interface RestOppgaveBehandlingService {
 
     fun finnTildelteOppgaver(): List<OppgaveResponse>
 
-    fun plukkOppgaver(temagruppe: Temagruppe, saksbehandlersValgteEnhet: String): List<OppgaveResponse>
-
     fun ferdigstillOppgave(oppgaveId: String, temagruppe: Temagruppe, saksbehandlersValgteEnhet: String)
 
     fun ferdigstillOppgaver(oppgaveId: List<String>, temagruppe: Temagruppe, saksbehandlersValgteEnhet: String)

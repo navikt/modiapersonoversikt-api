@@ -164,11 +164,7 @@ open class RestOppgaveBehandlingServiceImpl @Autowired constructor(
                 offset = null
         )
         val tildelteOppgaver = response.oppgaver!!.map { oppgave: OppgaveJsonDTO -> oppgaveJsonDTOToOppgaveResponse(oppgave) }
-        return finnOppgaverMedTilgangTilBruker(tildelteOppgaver)
-    }
-
-    override fun plukkOppgaver(temagruppe: Temagruppe, saksbehandlersValgteEnhet: String): List<OppgaveResponse> {
-        TODO("Må gjøre plukkOppgaver(...)")
+        return finnOppgavergit stMedTilgangTilBruker(tildelteOppgaver)
     }
 
     override fun ferdigstillOppgave(oppgaveId: String, temagruppe: Temagruppe, saksbehandlersValgteEnhet: String) {
