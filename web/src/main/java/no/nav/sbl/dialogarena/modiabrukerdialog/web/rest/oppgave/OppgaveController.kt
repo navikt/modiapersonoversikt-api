@@ -61,7 +61,7 @@ class OppgaveController @Autowired constructor(
                 .check(Policies.kanPlukkeOppgave)
                 .get(Audit.describe(READ, Henvendelse.Oppgave.Plukk, AuditIdentifier.TEMAGRUPPE to temagruppe)) {
                     val tildelteOppgaver = oppgaveBehandlingService.finnTildelteOppgaverIGsak()
-                    if (tildelteOppgaver.isNotEmpty()) {
+                    if (tildelteOppgaver.any { it.erSTOOppgave }) {
                         tildelteOppgaver
                     } else {
                         plukkOppgaveService
