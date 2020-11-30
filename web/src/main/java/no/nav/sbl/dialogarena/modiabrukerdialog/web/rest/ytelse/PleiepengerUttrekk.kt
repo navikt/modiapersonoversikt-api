@@ -39,7 +39,7 @@ class PleiepengerUttrekk constructor(private val pleiepengerService: Pleiepenger
                     "forbrukteDagerTomIDag" to it.forbrukteDagerTOMIDag,
                     "pleiepengedager" to it.pleiepengedager,
                     "restDagerAnvist" to it.restDagerAnvist,
-                    "perioder" to it.perioder?.let { hentPleiepengePerioder(it) }
+                    "perioder" to it.perioder?.let { perioder -> hentPleiepengePerioder(perioder) }
             )
         }
     }
@@ -49,8 +49,8 @@ class PleiepengerUttrekk constructor(private val pleiepengerService: Pleiepenger
             mapOf(
                     "fom" to it.fraOgMed?.format(DateTimeFormatter.ofPattern(DATOFORMAT)),
                     "antallPleiepengedager" to it.antallPleiepengedager,
-                    "arbeidsforhold" to it.arbeidsforholdListe?.let { hentArbeidsforhold(it) },
-                    "vedtak" to it.vedtakListe?.let { hentVedtak(it) }
+                    "arbeidsforhold" to it.arbeidsforholdListe?.let { liste -> hentArbeidsforhold(liste) },
+                    "vedtak" to it.vedtakListe?.let { liste -> hentVedtak(liste) }
             )
         }
     }
@@ -58,7 +58,7 @@ class PleiepengerUttrekk constructor(private val pleiepengerService: Pleiepenger
     private fun hentArbeidsforhold(arbeidsforhold: List<Arbeidsforhold>): List<Map<String, Any?>> {
         return arbeidsforhold.map {
             mapOf(
-                    "arbeidsgiverNavn" to it.arbeidsgiverOrgnr?.let {hentArbeidsgiverNavn(organisasjonService, it)},
+                    "arbeidsgiverNavn" to it.arbeidsgiverOrgnr?.let { orgnr -> hentArbeidsgiverNavn(organisasjonService, orgnr)},
                     "arbeidsgiverKontonr" to it.arbeidsgiverKontonr,
                     "inntektsperiode" to it.inntektsperiode,
                     "inntektForPerioden" to it.inntektForPerioden,
@@ -73,7 +73,7 @@ class PleiepengerUttrekk constructor(private val pleiepengerService: Pleiepenger
     private fun hentVedtak(vedtak: List<Vedtak>): List<Map<String, Any?>> {
         return vedtak.map {
             mapOf(
-                    "periode" to it.periode?.let { lagPleiepengePeriode(it) },
+                    "periode" to it.periode?.let { periode -> lagPleiepengePeriode(periode) },
                     "kompensasjonsgrad" to it.kompensasjonsgrad,
                     "utbetalingsgrad" to it.utbetalingsgrad,
                     "anvistUtbetaling" to it.anvistUtbetaling?.format(DateTimeFormatter.ofPattern(DATOFORMAT)),

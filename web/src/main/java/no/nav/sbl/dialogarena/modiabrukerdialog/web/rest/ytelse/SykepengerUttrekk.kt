@@ -27,27 +27,27 @@ class SykepengerUttrekk constructor(private val sykepengerService: SykepengerSer
                     "fødselsnummer" to it.fodselsnummer,
                     "sykmeldtFom" to it.sykmeldtFom?.toString(DATOFORMAT),
                     "forbrukteDager" to it.forbrukteDager,
-                    "ferie1" to it.ferie1?.let { lagPeriode(it) },
-                    "ferie2" to it.ferie2?.let { lagPeriode(it) },
-                    "sanksjon" to it.sanksjon?.let { lagPeriode(it) },
+                    "ferie1" to it.ferie1?.let { ferie -> lagPeriode(ferie) },
+                    "ferie2" to it.ferie2?.let { ferie -> lagPeriode(ferie) },
+                    "sanksjon" to it.sanksjon?.let { periode -> lagPeriode(periode) },
                     "stansårsak" to it.stansarsak?.termnavn,
                     "unntakAktivitet" to it.unntakAktivitet?.termnavn,
-                    "forsikring" to it.gjeldendeForsikring?.let {
+                    "forsikring" to it.gjeldendeForsikring?.let { forsikring ->
                         mapOf(
-                                "forsikringsordning" to it.forsikringsordning,
-                                "premiegrunnlag" to it.premiegrunnlag,
-                                "erGyldig" to it.erGyldig,
-                                "forsikret" to it.forsikret?.let { lagPeriode(it) }
+                                "forsikringsordning" to forsikring.forsikringsordning,
+                                "premiegrunnlag" to forsikring.premiegrunnlag,
+                                "erGyldig" to forsikring.erGyldig,
+                                "forsikret" to forsikring.forsikret?.let { periode -> lagPeriode(periode) }
                         )
                     },
-                    "sykmeldinger" to it.sykmeldinger?.let { hentSykmeldinger(it) },
-                    "historiskeUtbetalinger" to it.historiskeUtbetalinger?.let { hentHistoriskeUtbetalinger(it) },
-                    "kommendeUtbetalinger" to it.kommendeUtbetalinger?.let { hentKommendeUtbetalinger(it) },
-                    "utbetalingerPåVent" to it.utbetalingerPaVent?.let { hentUtbetalingerPaVent(it) },
+                    "sykmeldinger" to it.sykmeldinger?.let { sykemeldinger -> hentSykmeldinger(sykemeldinger) },
+                    "historiskeUtbetalinger" to it.historiskeUtbetalinger?.let { utbetalinger -> hentHistoriskeUtbetalinger(utbetalinger) },
+                    "kommendeUtbetalinger" to it.kommendeUtbetalinger?.let { utbetalinger -> hentKommendeUtbetalinger(utbetalinger) },
+                    "utbetalingerPåVent" to it.utbetalingerPaVent?.let { utbetalinger -> hentUtbetalingerPaVent(utbetalinger) },
                     "bruker" to it.bruker?.ident,
                     "midlertidigStanset" to it.midlertidigStanset?.toString(DATOFORMAT),
                     "slutt" to it.slutt?.toString(DATOFORMAT),
-                    "arbeidsforholdListe" to it.arbeidsforholdListe?.let { hentArbeidsgiverForhold(it) },
+                    "arbeidsforholdListe" to it.arbeidsforholdListe?.let { arbeidsforhold -> hentArbeidsgiverForhold(arbeidsforhold) },
                     "erArbeidsgiverperiode" to it.erArbeidsgiverperiode,
                     "arbeidskategori" to it.arbeidskategori.termnavn
             )
@@ -64,7 +64,7 @@ class SykepengerUttrekk constructor(private val sykepengerService: SykepengerSer
                     "refusjonTom" to it.refusjonTom?.toString(DATOFORMAT),
                     "refusjonstype" to it.refusjonstype?.termnavn,
                     "sykepengerFom" to it.sykepengerFom?.toString(DATOFORMAT)
-            );
+            )
         }
     }
 
@@ -73,16 +73,16 @@ class SykepengerUttrekk constructor(private val sykepengerService: SykepengerSer
             mapOf(
                     "sykmelder" to it.sykmelder,
                     "behandlet" to it.behandlet?.toString(DATOFORMAT),
-                    "sykmeldt" to it.sykmeldt?.let { lagPeriode(it) },
+                    "sykmeldt" to it.sykmeldt?.let { periode -> lagPeriode(periode) },
                     "sykmeldingsgrad" to it.sykmeldingsgrad,
-                    "gjelderYrkesskade" to it.gjelderYrkesskade?.let {
+                    "gjelderYrkesskade" to it.gjelderYrkesskade?.let { yrkesskade ->
                         mapOf(
-                                "yrkesskadeart" to it.yrkesskadeart?.termnavn,
-                                "skadet" to it.skadet?.toString(DATOFORMAT),
-                                "vedtatt" to it.vedtatt?.toString(DATOFORMAT)
+                                "yrkesskadeart" to yrkesskade.yrkesskadeart?.termnavn,
+                                "skadet" to yrkesskade.skadet?.toString(DATOFORMAT),
+                                "vedtatt" to yrkesskade.vedtatt?.toString(DATOFORMAT)
                         )
                     },
-                    "gradAvSykmeldingListe" to it.gradAvSykmeldingListe?.let { hentGraderinger(it) }
+                    "gradAvSykmeldingListe" to it.gradAvSykmeldingListe?.let { sykemeldinger -> hentGraderinger(sykemeldinger) }
             )
         }
     }
@@ -90,7 +90,7 @@ class SykepengerUttrekk constructor(private val sykepengerService: SykepengerSer
     private fun hentGraderinger(graderinger: List<Gradering>): List<Map<String, Any?>> {
         return graderinger.map {
             mapOf(
-                    "gradert" to it.gradert?.let { lagPeriode(it) },
+                    "gradert" to it.gradert?.let { periode -> lagPeriode(periode) },
                     "sykmeldingsgrad" to it.sykmeldingsgrad
             )
         }
@@ -99,15 +99,15 @@ class SykepengerUttrekk constructor(private val sykepengerService: SykepengerSer
     private fun hentUtbetalingerPaVent(utbetalingerPaVent: List<UtbetalingPaVent>): List<Map<String, Any?>> {
         return utbetalingerPaVent.map {
             mapOf(
-                    "vedtak" to it.vedtak?.let { lagPeriode(it) },
+                    "vedtak" to it.vedtak?.let { vedtak -> lagPeriode(vedtak) },
                     "utbetalingsgrad" to it.utbetalingsgrad,
                     "oppgjørstype" to it.oppgjoerstype?.termnavn,
                     "arbeidskategori" to it.arbeidskategori?.termnavn,
                     "stansårsak" to it.stansaarsak?.termnavn,
-                    "ferie1" to it.ferie1?.let { lagPeriode(it) },
-                    "ferie2" to it.ferie2?.let { lagPeriode(it) },
-                    "sanksjon" to it.sanksjon?.let { lagPeriode(it) },
-                    "sykmeldt" to it.sykmeldt?.let { lagPeriode(it) }
+                    "ferie1" to it.ferie1?.let { ferie -> lagPeriode(ferie) },
+                    "ferie2" to it.ferie2?.let { ferie -> lagPeriode(ferie) },
+                    "sanksjon" to it.sanksjon?.let { sanksjon -> lagPeriode(sanksjon) },
+                    "sykmeldt" to it.sykmeldt?.let { sykmeldt -> lagPeriode(sykmeldt) }
             )
         }
     }

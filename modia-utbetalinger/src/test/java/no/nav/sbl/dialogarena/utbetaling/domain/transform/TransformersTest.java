@@ -276,8 +276,8 @@ public class TransformersTest {
 
     @Test
     public void transformererIntervalKorrekt() {
-        DateTime start = new DateTime(2015, 01, 01, 01, 01);
-        DateTime end = new DateTime(2015, 01, 02, 01, 01);
+        DateTime start = new DateTime(2015, 1, 1, 1, 1);
+        DateTime end = new DateTime(2015, 1, 2, 1, 1);
         Interval periode = Transformers.createPeriode(new WSPeriode().withFom(start).withTom(end));
         assertNotNull(periode);
         assertThat(periode.getStart(), is(start));

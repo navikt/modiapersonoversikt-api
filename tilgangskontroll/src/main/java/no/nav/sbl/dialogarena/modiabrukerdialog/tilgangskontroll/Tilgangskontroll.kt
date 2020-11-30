@@ -3,6 +3,7 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll
 import no.nav.sbl.dialogarena.abac.AbacResponse
 import no.nav.sbl.dialogarena.abac.Decision as AbacDecision
 import no.nav.sbl.dialogarena.rsbac.*
+import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus
 import org.springframework.web.server.ResponseStatusException
@@ -22,7 +23,7 @@ fun AbacResponse.toDecision(denyReason: AbacResponse.() -> String): Decision = w
 class Policies {
     companion object {
         @JvmField
-        val tilgangTilModia = RulePolicy<TilgangskontrollContext>() {
+        val tilgangTilModia = RulePolicy<TilgangskontrollContext> {
             checkAbac(AbacPolicies.tilgangTilModia())
                     .toDecision {
                         "Saksbehandler (${hentSaksbehandlerId()}) har ikke tilgang til modia. Årsak: ${getCause()}"
@@ -48,7 +49,7 @@ class Policies {
         }
 
         @JvmField
-        val featureToggleEnabled = PolicyGenerator<TilgangskontrollContext, String>({ "Featuretoggle ${data} is not enabled" }){
+        val featureToggleEnabled = PolicyGenerator<TilgangskontrollContext, String>({ "Featuretoggle $data is not enabled" }){
             if (context.featureToggleEnabled(data)) {
                 DecisionEnums.PERMIT
             } else {
@@ -133,7 +134,7 @@ data class TilgangTilOksosSperreData(val valgtEnhet: String, val brukersEnhet: S
 data class BehandlingsIdTilgangData(val fnr: String, val behandlingsIder: List<String>)
 data class TilgangTilTemaData(val valgtEnhet: String, val tema: String?)
 
-val log = LoggerFactory.getLogger(Tilgangskontroll::class.java)
+val log: Logger = LoggerFactory.getLogger(Tilgangskontroll::class.java)
 
 open class Tilgangskontroll(context: TilgangskontrollContext) : RSBACImpl<TilgangskontrollContext>(context, {
     log.error(it)

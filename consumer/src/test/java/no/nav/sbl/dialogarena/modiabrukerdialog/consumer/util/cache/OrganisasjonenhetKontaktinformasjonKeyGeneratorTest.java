@@ -26,17 +26,13 @@ class OrganisasjonenhetKontaktinformasjonKeyGeneratorTest {
     @Test
     @DisplayName("Null som argument til generate skal kaste feil")
     void nullParamkasterFeil() {
-        assertThrows(IllegalArgumentException.class, () -> {
-            generator.generate(mock(OrganisasjonEnhetKontaktinformasjonV1.class), method);
-        });
+        assertThrows(IllegalArgumentException.class, () -> generator.generate(mock(OrganisasjonEnhetKontaktinformasjonV1.class), method));
     }
 
     @Test
     @DisplayName("Et annet objekt som argument til generate skal kaste feil")
     void feilObjektKasterFeil() {
-        assertThrows(IllegalArgumentException.class, () -> {
-            generator.generate(mock(OrganisasjonEnhetKontaktinformasjonV1.class), method, "String objekt");
-        });
+        assertThrows(IllegalArgumentException.class, () -> generator.generate(mock(OrganisasjonEnhetKontaktinformasjonV1.class), method, "String objekt"));
     }
 
     @Test

@@ -49,9 +49,9 @@ class ForeldrepengerUttrekk constructor(private val forelderpengerService: Forel
                     "rettighetFom" to it.rettighetFom?.toString(DATOFORMAT),
                     "eldsteIdDato" to it.eldsteIdDato?.toString(DATOFORMAT),
                     "foreldreAvSammeKjønn" to it.foreldreAvSammeKjoenn?.termnavn,
-                    "periode" to it.periode?.let { hentForeldrepengeperioder(it) },
+                    "periode" to it.periode?.let { periode -> hentForeldrepengeperioder(periode) },
                     "slutt" to it.slutt?.toString(DATOFORMAT),
-                    "arbeidsforhold" to it.arbeidsforholdListe?.let { hentArbeidsforhold(it) },
+                    "arbeidsforhold" to it.arbeidsforholdListe?.let { liste -> hentArbeidsforhold(liste) },
                     "erArbeidsgiverperiode" to it.erArbeidsgiverperiode,
                     "arbeidskategori" to it.arbeidskategori?.termnavn,
                     when (it) {
@@ -89,9 +89,9 @@ class ForeldrepengerUttrekk constructor(private val forelderpengerService: Forel
                     "disponibelGradering" to it.disponibelGradering,
                     "erFedrekvote" to it.isErFedrekvote,
                     "forskyvelsesårsak1" to it.forskyvelsesaarsak1?.termnavn,
-                    "forskyvelsesperiode1" to it.forskyvelsesperiode?.let { lagPeriode(it) },
+                    "forskyvelsesperiode1" to it.forskyvelsesperiode?.let { periode -> lagPeriode(periode) },
                     "forskyvelsesårsak2" to it.forskyvelsesaarsak2?.termnavn,
-                    "forskyvelsesperiode2" to it.forskyvelsesperiode2?.let { lagPeriode(it) },
+                    "forskyvelsesperiode2" to it.forskyvelsesperiode2?.let { periode -> lagPeriode(periode) },
                     "foreldrepengerFom" to it.foreldrepengerFom?.toString(DATOFORMAT),
                     "midlertidigStansDato" to it.midlertidigStansDato?.toString(DATOFORMAT),
                     "erMødrekvote" to it.isErModrekvote,
@@ -99,8 +99,8 @@ class ForeldrepengerUttrekk constructor(private val forelderpengerService: Forel
                     "rettTilFedrekvote" to it.rettTilFedrekvote?.termnavn,
                     "rettTilMødrekvote" to it.isRettTilModrekvote?.termnavn,
                     "stansårsak" to it.stansaarsak?.termnavn,
-                    "historiskeUtbetalinger" to it.historiskeUtbetalinger?.let { hentHistoriskeUtbetalinger(it) },
-                    "kommendeUtbetalinger" to it.kommendeUtbetalinger?.let { hentKommendeUtbetalinger(it) }
+                    "historiskeUtbetalinger" to it.historiskeUtbetalinger?.let { utbetalinger -> hentHistoriskeUtbetalinger(utbetalinger) },
+                    "kommendeUtbetalinger" to it.kommendeUtbetalinger?.let { utbetalinger -> hentKommendeUtbetalinger(utbetalinger) }
             )
         }
     }

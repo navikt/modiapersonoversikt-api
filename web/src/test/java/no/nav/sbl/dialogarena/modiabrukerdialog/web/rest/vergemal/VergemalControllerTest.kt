@@ -26,7 +26,7 @@ class VergemalControllerTest {
 
     @Test
     fun `Henter vergemål`() {
-        whenever(vergemalService.hentVergemal(any())).thenReturn(Arrays.asList(Verge()
+        whenever(vergemalService.hentVergemal(any())).thenReturn(listOf(Verge()
                 .withIdent(VERGES_IDENT)
                 .withVirkningsperiode(Periode(null, null))
                 .withPersonnavn(HentNavnBolk.Navn("", null, ""))))

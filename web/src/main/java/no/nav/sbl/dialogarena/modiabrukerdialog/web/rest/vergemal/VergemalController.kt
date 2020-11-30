@@ -35,7 +35,7 @@ class VergemalController @Autowired constructor(private val vergemalService: Ver
         return vergemal.map {
             mapOf(
                     "ident" to it.ident,
-                    "navn" to it.personnavn?.let { getNavn(it) },
+                    "navn" to it.personnavn?.let { navn -> getNavn(navn) },
                     "embete" to it.embete,
                     "mandattekst" to it.mandattekst,
                     "mandattype" to it.mandattype,

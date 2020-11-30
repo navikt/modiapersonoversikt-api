@@ -98,7 +98,7 @@ public class OppfolgingsinfoApiServiceImpl implements OppfolgingsinfoApiService 
     }
 
     private String hentPingURL() {
-        return apiUrl + String.format("ping");
+        return apiUrl + "ping";
     }
 
     private <T> T gjorSporring(String url, Class<T> targetClass) {

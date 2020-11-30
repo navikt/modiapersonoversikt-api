@@ -126,7 +126,7 @@ class SakerController @Autowired constructor(private val saksoversiktService: Sa
                     "navn" to it.navn,
                     "journalpostId" to it.journalpostId,
                     "hoveddokument" to hentDokument(it.hoveddokument),
-                    "vedlegg" to it.vedlegg.map { hentDokument(it) },
+                    "vedlegg" to it.vedlegg.map { vedlegg -> hentDokument(vedlegg) },
                     "avsender" to it.avsender,
                     "mottaker" to it.mottaker,
                     "tilhørendeSaksid" to it.tilhorendeSakid,

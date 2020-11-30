@@ -44,14 +44,7 @@ public class PingableWebService implements Pingable {
     private String endepunktBeskrivelse(String name, Object webservice) {
         try {
             EndpointInfo endpointInfo = getProxy(webservice).getClient().getEndpoint().getEndpointInfo();
-            return new StringBuilder()
-                    .append("(")
-                    .append(name)
-                    .append(") ")
-                    .append(endpointInfo.getName().getLocalPart())
-                    .append(" via ")
-                    .append(endpointInfo.getAddress())
-                    .toString();
+            return "(" + name + ") " + endpointInfo.getName().getLocalPart() + " via " + endpointInfo.getAddress();
 
         } catch (Exception e) {
             return "Not recognized proxy: (" + name + ") " + webservice.getClass().getSimpleName();

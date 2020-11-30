@@ -49,7 +49,6 @@ public class SaksoversiktServiceTest {
     }
 
     private List<Sakstema> getMockSaksteman() {
-        List<Sakstema> sakstema = new ArrayList<>();
         DokumentMetadata dokumentmetadata1 = new DokumentMetadata().withJournalpostId("1").withBaksystem(SAF).withDato(LocalDateTime.of(2013, Month.APRIL, 8, 12, 30));
         DokumentMetadata dokumentmetadata2 = new DokumentMetadata().withJournalpostId("2").withBaksystem(SAF).withBaksystem(HENVENDELSE).withDato(LocalDateTime.of(2013, Month.APRIL, 8, 12, 30));
         DokumentMetadata dokumentmetadata3 = new DokumentMetadata().withJournalpostId("3").withBaksystem(HENVENDELSE).withDato(LocalDateTime.of(2013, Month.APRIL, 8, 12, 30));
@@ -63,7 +62,6 @@ public class SaksoversiktServiceTest {
         Sakstema sakstema2 = new Sakstema().withDokumentMetadata(asList(dokumentmetadata4, dokumentmetadata5, dokumentmetadata6));
         Sakstema sakstema3 = new Sakstema().withDokumentMetadata(asList(dokumentmetadata7, dokumentmetadata8));
 
-        sakstema.addAll(asList(sakstema1, sakstema2, sakstema3));
-        return sakstema;
+        return new ArrayList<>(asList(sakstema1, sakstema2, sakstema3));
     }
 }

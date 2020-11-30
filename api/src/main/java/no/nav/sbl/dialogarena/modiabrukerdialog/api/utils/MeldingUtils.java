@@ -246,11 +246,7 @@ public class MeldingUtils {
 
     private static void settTemagruppe(Melding melding, String temagruppe, ContentRetriever propertyResolver) {
         melding.temagruppe = temagruppe;
-        if (temagruppe == null) {
-            melding.temagruppeNavn = propertyResolver.hentTekst("temagruppe.kassert");
-        } else {
-            melding.temagruppeNavn = propertyResolver.hentTekst(temagruppe);
-        }
+        melding.temagruppeNavn = propertyResolver.hentTekst(Objects.requireNonNullElse(temagruppe, "temagruppe.kassert"));
     }
 
     public static boolean innholdErKassert(XMLHenvendelse xmlHenvendelse) {

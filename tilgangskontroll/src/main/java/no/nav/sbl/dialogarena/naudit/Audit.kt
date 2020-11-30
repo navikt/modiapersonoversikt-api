@@ -88,7 +88,7 @@ class Audit {
 
         private fun logInternal(action: Action, resourceType: AuditResource, identifiers: Array<out Pair<AuditIdentifier, String?>>) {
             val subject = SubjectHandler.getIdent()
-            val logline = listOf(
+            val logline = listOfNotNull(
                     "action='$action'",
                     subject
                             .map { "subject='$it'" }
@@ -98,7 +98,6 @@ class Audit {
                             .map { "${it.first}='${it.second ?: "-"}'" }
                             .toTypedArray()
             )
-                    .filterNotNull()
                     .joinToString(" ")
 
             tjenestekallLogg.info(logline)

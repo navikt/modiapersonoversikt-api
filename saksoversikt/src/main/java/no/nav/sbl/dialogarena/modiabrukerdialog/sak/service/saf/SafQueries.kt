@@ -51,6 +51,5 @@ fun dokumentoversiktBrukerJsonQuery(fnr: String): String {
     val medFnrOgFjernLinebreak = dokumentoversiktBrukerGraphQLQuery
             .replace("[FNR]", fnr)
             .replace("\n", "")
-    val medJsonQueryParameter = "{\"query\":\"$medFnrOgFjernLinebreak\"}"
-    return medJsonQueryParameter
+    return "{\"query\":\"$medFnrOgFjernLinebreak\"}"
 }

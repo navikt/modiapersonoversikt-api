@@ -114,7 +114,7 @@ class OppfolgingsinfoServiceImplTest {
         Oppfolgingsinfo oppfolgingsinfo = oppfolgingsinfoServiceMock.hentOppfolgingsinfo(FODSELSNUMMER, ldapServiceMock);
 
         verify(ldapServiceMock).hentSaksbehandler(stringArgumentCaptor.capture());
-        System.out.println(ldapServiceMock.hentSaksbehandler(stringArgumentCaptor.capture().toString()));
+        System.out.println(ldapServiceMock.hentSaksbehandler(stringArgumentCaptor.capture()));
         assertThat(stringArgumentCaptor.getValue(), is(VEILEDER_IDENT));
     }
 

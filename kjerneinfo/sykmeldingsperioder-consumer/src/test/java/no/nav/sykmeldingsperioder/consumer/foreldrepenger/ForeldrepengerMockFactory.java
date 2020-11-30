@@ -168,14 +168,14 @@ public class ForeldrepengerMockFactory {
     }
 
     private Foedsel createForeldrepengerettighetFoedsel(String personID) {
-        Foreldrepengerettighet foreldrepengerettighet = new Foedsel();
+        Foedsel foreldrepengerettighet = new Foedsel();
 
         foreldrepengerettighet.setForelder(createBruker(personID));
         foreldrepengerettighet.setArbeidsforholdListe(createArbeidsforholdList());
         foreldrepengerettighet.setPeriode(createForeldrepengeperiodeList());
-        createForeldrepengerettighetFaktaFoedsel((Foedsel) foreldrepengerettighet);
-        foreldrepengerettighet.setRettighetFom(((Foedsel) foreldrepengerettighet).getTermin());
-        return (Foedsel) foreldrepengerettighet;
+        createForeldrepengerettighetFaktaFoedsel(foreldrepengerettighet);
+        foreldrepengerettighet.setRettighetFom(foreldrepengerettighet.getTermin());
+        return foreldrepengerettighet;
     }
 
     private void createForeldrepengerettighetFaktaFoedsel(Foedsel foreldrepengerettighet) {

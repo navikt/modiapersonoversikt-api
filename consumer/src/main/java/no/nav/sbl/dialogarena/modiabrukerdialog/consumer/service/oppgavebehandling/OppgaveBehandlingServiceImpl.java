@@ -13,7 +13,6 @@ import no.nav.tjeneste.virksomhet.oppgave.v3.HentOppgaveOppgaveIkkeFunnet;
 import no.nav.tjeneste.virksomhet.oppgave.v3.OppgaveV3;
 import no.nav.tjeneste.virksomhet.oppgave.v3.informasjon.oppgave.WSOppgave;
 import no.nav.tjeneste.virksomhet.oppgave.v3.informasjon.oppgave.WSOppgavetype;
-import no.nav.tjeneste.virksomhet.oppgave.v3.informasjon.oppgave.WSUnderkategori;
 import no.nav.tjeneste.virksomhet.oppgave.v3.meldinger.*;
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.LagreOppgaveOppgaveIkkeFunnet;
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.LagreOppgaveOptimistiskLasing;
@@ -149,7 +148,7 @@ public class OppgaveBehandlingServiceImpl implements OppgaveBehandlingService {
         try {
             oppgavebehandlingWS.ferdigstillOppgaveBolk(new WSFerdigstillOppgaveBolkRequest()
                     .withOppgaveIdListe(singletonList(oppgaveId))
-                    .withFerdigstiltAvEnhetId(Integer.valueOf(enhetFor(temagruppe, saksbehandlersValgteEnhet)))
+                    .withFerdigstiltAvEnhetId(Integer.parseInt(enhetFor(temagruppe, saksbehandlersValgteEnhet)))
             );
             logger.info("Forsøker å ferdigstille oppgave med oppgaveId" + oppgaveId + "for enhet" + saksbehandlersValgteEnhet);
 
@@ -168,7 +167,7 @@ public class OppgaveBehandlingServiceImpl implements OppgaveBehandlingService {
         try {
             oppgavebehandlingWS.ferdigstillOppgaveBolk(new WSFerdigstillOppgaveBolkRequest()
                     .withOppgaveIdListe(oppgaveIder)
-                    .withFerdigstiltAvEnhetId(Integer.valueOf(enhetFor(temagruppe, saksbehandlersValgteEnhet))));
+                    .withFerdigstiltAvEnhetId(Integer.parseInt(enhetFor(temagruppe, saksbehandlersValgteEnhet))));
             logger.info("Forsøker å ferdigstille oppgave med oppgaveIder" + oppgaveIder + "for enhet" + saksbehandlersValgteEnhet);
         } catch (Exception e) {
             String ider = String.join(", ", oppgaveIder);
@@ -269,7 +268,7 @@ public class OppgaveBehandlingServiceImpl implements OppgaveBehandlingService {
             oppgavebehandlingWS.lagreOppgave(
                     new WSLagreOppgaveRequest()
                             .withEndreOppgave(tilWSEndreOppgave(wsOppgave))
-                            .withEndretAvEnhetId(Integer.valueOf(enhetFor(temagruppe, saksbehandlersValgteEnhet)))
+                            .withEndretAvEnhetId(Integer.parseInt(enhetFor(temagruppe, saksbehandlersValgteEnhet)))
             );
         } catch (LagreOppgaveOppgaveIkkeFunnet e) {
             logger.info("Oppgaven ble ikke funnet ved tilordning til saksbehandler. Oppgaveid: " + wsOppgave.getOppgaveId(), e);

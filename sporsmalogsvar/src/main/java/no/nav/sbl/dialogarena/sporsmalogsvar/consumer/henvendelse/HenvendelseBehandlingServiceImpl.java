@@ -90,8 +90,8 @@ public class HenvendelseBehandlingServiceImpl implements HenvendelseBehandlingSe
         List<EnhetsGeografiskeTilknytning> valgtEnhetSGTenheter = arbeidsfordelingService.hentGTnummerForEnhet(valgtEnhet);
         List<String> enhetslistGTogEnhet = new ArrayList<>();
         enhetslistGTogEnhet.add(valgtEnhet);
-        for (int i = 0; valgtEnhetSGTenheter.size() > i; i++) {
-            enhetslistGTogEnhet.add(valgtEnhetSGTenheter.get(i).geografiskOmraade);
+        for (EnhetsGeografiskeTilknytning enhetsGeografiskeTilknytning : valgtEnhetSGTenheter) {
+            enhetslistGTogEnhet.add(enhetsGeografiskeTilknytning.geografiskOmraade);
         }
         WSHentHenvendelseListeResponse wsHentHenvendelseListeResponse = henvendelsePortType
                 .hentHenvendelseListe(new WSHentHenvendelseListeRequest().withFodselsnummer(fnr).withTyper(HenvendelseUtils.AKTUELLE_HENVENDELSE_TYPER));
@@ -167,12 +167,10 @@ public class HenvendelseBehandlingServiceImpl implements HenvendelseBehandlingSe
     }
 
     private Predicate<Melding> kontorsperreTilgangMedGT(final List<String> valgEnhetsGT) {
-        return melding -> {
-            return isBlank(melding.kontorsperretEnhet) || (valgEnhetsGT
-                    .stream()
-                    .anyMatch(enhet -> enhet.equals(melding.kontorsperretEnhet))
-            );
-        };
+        return melding -> isBlank(melding.kontorsperretEnhet) || (valgEnhetsGT
+                .stream()
+                .anyMatch(enhet -> enhet.equals(melding.kontorsperretEnhet))
+        );
     }
 
     private Function<Melding, Melding> okonomiskSosialhjelpTilgangMedGT(final List<String> valgtEnhetsGT, final String valgtEnhet) {

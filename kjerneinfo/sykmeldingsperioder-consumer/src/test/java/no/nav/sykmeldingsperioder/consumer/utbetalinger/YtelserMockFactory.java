@@ -25,7 +25,7 @@ public class YtelserMockFactory {
                 .withKreditor(kreditor);
     }
     private static Double finnYtelseskomponentersum(List<WSYtelseskomponent> ytelseskomponenterliste) {
-        Double ytelseskomponentersum = 0.0;
+        double ytelseskomponentersum = 0.0;
         for (WSYtelseskomponent ytelseskomponent : ytelseskomponenterliste) {
             ytelseskomponentersum += ytelseskomponent.getYtelseskomponentbeloep();
         }

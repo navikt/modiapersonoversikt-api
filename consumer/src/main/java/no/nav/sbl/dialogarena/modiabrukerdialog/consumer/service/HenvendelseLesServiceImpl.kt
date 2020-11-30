@@ -53,8 +53,6 @@ class HenvendelseLesServiceImpl(private val systemTokenProvider: SystemUserToken
                     } else {
                         listOf(Pair(pair.first, pair.second.toString()))
                     }
-                }
-                .map { "${it.first}=${it.second}" }
-                .joinToString("&")
+                }.joinToString("&") { "${it.first}=${it.second}" }
     }
 }

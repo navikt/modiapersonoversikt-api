@@ -10,7 +10,7 @@ import no.nav.sykmeldingsperioder.domain.Kreditortrekk
 fun hentHistoriskeUtbetalinger(historiskeUtbetalinger: List<HistoriskUtbetaling>) =
     historiskeUtbetalinger.map {
         mapOf(
-                "vedtak" to it.vedtak?.let { lagPeriode(it) },
+                "vedtak" to it.vedtak?.let { vedtak -> lagPeriode(vedtak) },
                 "utbetalingsgrad" to it.utbetalingsgrad,
                 "utbetalingsdato" to it.utbetalingsdato?.toString(DATOFORMAT),
                 "nettobeløp" to it.nettobelop,
@@ -20,7 +20,7 @@ fun hentHistoriskeUtbetalinger(historiskeUtbetalinger: List<HistoriskUtbetaling>
                 "arbeidsgiverOrgNr" to it.arbeidsgiverOrgNr,
                 "dagsats" to it.dagsats,
                 "type" to it.type,
-                "trekk" to it.trekk?.let { hentKreditorTrekk(it) }
+                "trekk" to it.trekk?.let { trekk -> hentKreditorTrekk(trekk) }
         )
     }
 
@@ -28,7 +28,7 @@ fun hentHistoriskeUtbetalinger(historiskeUtbetalinger: List<HistoriskUtbetaling>
 fun hentKommendeUtbetalinger(kommendeUtbetalinger: List<KommendeUtbetaling>) =
     kommendeUtbetalinger.map {
         mapOf(
-                "vedtak" to it.vedtak?.let { lagPeriode(it) },
+                "vedtak" to it.vedtak?.let { vedtak -> lagPeriode(vedtak) },
                 "utbetalingsgrad" to it.utbetalingsgrad,
                 "utbetalingsdato" to it.utbetalingsdato?.toString(DATOFORMAT),
                 "bruttobeløp" to it.bruttobeloep,

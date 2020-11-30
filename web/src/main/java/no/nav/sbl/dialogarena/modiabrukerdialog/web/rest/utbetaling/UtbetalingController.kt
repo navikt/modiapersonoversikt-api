@@ -61,7 +61,7 @@ class UtbetalingController @Autowired constructor(private val service: Utbetalin
                     "metode" to it.utbetalingsmetode?.trim(),
                     "status" to it.utbetalingsstatus?.trim(),
                     "konto" to it.utbetaltTilKonto?.kontonummer?.trim(),
-                    "ytelser" to it.ytelseListe?.let { hentYtelserForUtbetaling(it) }
+                    "ytelser" to it.ytelseListe?.let { ytelser -> hentYtelserForUtbetaling(ytelser) }
             )
         }
     }
@@ -70,16 +70,16 @@ class UtbetalingController @Autowired constructor(private val service: Utbetalin
         return ytelser.map {
             mapOf(
                     "type" to it.ytelsestype?.value?.trim(),
-                    "ytelseskomponentListe" to it.ytelseskomponentListe?.let { hentYtelsekomponentListe(it) },
+                    "ytelseskomponentListe" to it.ytelseskomponentListe?.let { ytelser -> hentYtelsekomponentListe(ytelser) },
                     "ytelseskomponentersum" to it.ytelseskomponentersum,
-                    "trekkListe" to it.trekkListe?.let { hentTrekkListe(it) },
+                    "trekkListe" to it.trekkListe?.let { trekkliste -> hentTrekkListe(trekkliste) },
                     "trekksum" to it.trekksum,
-                    "skattListe" to it.skattListe?.let { hentSkattListe(it) },
+                    "skattListe" to it.skattListe?.let { skattListe -> hentSkattListe(skattListe) },
                     "skattsum" to it.skattsum,
-                    "periode" to it.ytelsesperiode?.let { hentYtelsesperiode(it) },
+                    "periode" to it.ytelsesperiode?.let { ytelsesperiode -> hentYtelsesperiode(ytelsesperiode) },
                     "nettobeløp" to it.ytelseNettobeloep,
                     "bilagsnummer" to it.bilagsnummer?.trim(),
-                    "arbeidsgiver" to it.refundertForOrg?.let { hentArbeidsgiver(it) }
+                    "arbeidsgiver" to it.refundertForOrg?.let { orgnr -> hentArbeidsgiver(orgnr) }
             )
         }
     }

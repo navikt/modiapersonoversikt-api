@@ -109,7 +109,7 @@ internal class PersonControllerTest {
     }
 
     @Test
-    fun `Familierelasjoner`() {
+    fun Familierelasjoner() {
         val mockPersonResponse = mockPersonResponse().apply {
             person.withHarFraRolleI(Familierelasjon()
                     .withTilPerson(Person()
@@ -242,7 +242,7 @@ internal class PersonControllerTest {
     inner class `Tilrettelagt kommunikasjon` {
 
         @Test
-        fun `Mapping`() {
+        fun Mapping() {
             whenever(kodeverk.getKodeverkList(any(), any())).thenReturn(listOf(Kodeverdi("SV", "Svensk")))
             whenever(personV3.hentPerson(any())).thenReturn(mockPersonResponse())
             whenever(pdlOppslagService.hentPerson(any())).thenReturn(mockPdlPerson().copy(

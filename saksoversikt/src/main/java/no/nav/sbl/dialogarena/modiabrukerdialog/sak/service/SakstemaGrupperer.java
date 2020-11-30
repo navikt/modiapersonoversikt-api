@@ -40,13 +40,12 @@ public class SakstemaGrupperer {
                 .collect(toMap(Map.Entry::getKey, Map.Entry::getValue));
 
         Set<String> ugrupperteTema = Java8Utils.concat(
-                saker.stream().map(s -> s.getTemakode()),
+                saker.stream().map(Sak::getTemakode),
                 dokumentMetadata.stream()
                         .filter(dm -> dm.getBaksystem().contains(Baksystem.HENVENDELSE))
-                        .map(s -> s.getTemakode())
+                        .map(DokumentMetadata::getTemakode)
                 ,
-                behandlingskjeder.entrySet().stream()
-                        .map(e -> e.getKey())
+                behandlingskjeder.keySet().stream()
         )
                 .filter(tema -> temaFinnesIkkeITemagruppe(tema, temaMedOppfolging))
                 .collect(toSet());
@@ -104,8 +103,8 @@ public class SakstemaGrupperer {
     }
 
     private static boolean temaFinnesIkkeITemagruppe(String tema, Map<String, Set<String>> temagrupper) {
-        return !(temagrupper.entrySet().stream()
-                .anyMatch(map -> map.getValue().contains(tema)));
+        return temagrupper.entrySet().stream()
+                .noneMatch(map -> map.getValue().contains(tema));
     }
 
     private static List<Pair<String, String>> finnTemagruppeForSak(Map<String, List<String>> temagrupperMedTemaer, Sak sak) {

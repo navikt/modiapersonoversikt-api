@@ -109,8 +109,7 @@ public class SakstemaService {
     }
 
     private List<Sakstema> grupperSykepengerOgSykemelding(List<Sakstema> sakstema) {
-
-        List<Sakstema> listeKopi = sakstema.stream().collect(toList());
+        List<Sakstema> listeKopi = new ArrayList<>(sakstema);
 
         Optional<Sakstema> maybeSykepenger = listeKopi.stream().filter(st -> st.temakode.equals("SYK")).findFirst();
         Optional<Sakstema> maybeSykemelding = listeKopi.stream().filter(st -> st.temakode.equals("SYM")).findFirst();

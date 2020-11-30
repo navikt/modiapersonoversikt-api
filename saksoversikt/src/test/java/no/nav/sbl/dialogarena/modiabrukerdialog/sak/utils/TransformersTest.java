@@ -14,6 +14,7 @@ import org.junit.Test;
 
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static java.util.Arrays.asList;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.HenvendelseType.DOKUMENTINNSENDING;
@@ -143,7 +144,7 @@ public class TransformersTest {
 
     @Test
     public void mapperBehandlingskjedeTilBehandling() {
-        List<Behandling> collect = asList(
+        List<Behandling> collect = Stream.of(
                 BehandlingskjedeBuilder.create()
                         .withSisteBehandlingstype("type")
                         .withSisteBehandlingsstatus(FilterUtils.AVSLUTTET)
@@ -152,7 +153,6 @@ public class TransformersTest {
                         .withSisteBehandlingREF("hovedskjemakodeverkref")
                 .build()
         )
-                .stream()
                 .map(Transformers.TIL_BEHANDLING)
                 .collect(Collectors.toList());
 
@@ -163,7 +163,7 @@ public class TransformersTest {
 
     @Test
     public void mapperAvbruttBehandlingskjedeTilBehandling() {
-        List<Behandling> collect = asList(
+        List<Behandling> collect = Stream.of(
                 BehandlingskjedeBuilder.create()
                         .withSisteBehandlingstype("type")
                         .withSisteBehandlingsstatus(FilterUtils.AVBRUTT)
@@ -171,7 +171,6 @@ public class TransformersTest {
                         .withStart(new DateTime().minusDays(1))
                         .withSisteBehandlingREF("hovedskjemakodeverkref")
                         .build())
-                .stream()
                 .map(Transformers.TIL_BEHANDLING)
                 .collect(Collectors.toList());
 
@@ -181,7 +180,7 @@ public class TransformersTest {
 
     @Test
     public void mapperOpprettetBehandlingskjedeTilBehandling() {
-        List<Behandling> collect = asList(
+        List<Behandling> collect = Stream.of(
                 BehandlingskjedeBuilder.create()
                         .withSisteBehandlingstype("type")
                         .withSisteBehandlingsstatus(FilterUtils.OPPRETTET)
@@ -189,7 +188,6 @@ public class TransformersTest {
                         .withStart(new DateTime().minusDays(1))
                         .withSisteBehandlingREF("hovedskjemakodeverkref")
                         .build())
-                .stream()
                 .map(Transformers.TIL_BEHANDLING)
                 .collect(Collectors.toList());
 
@@ -200,7 +198,7 @@ public class TransformersTest {
 
     @Test(expected = ApplicationException.class)
     public void ugyldigBehandlingsstatusKasterException() {
-            asList(
+            Stream.of(
                     BehandlingskjedeBuilder.create()
                         .withSisteBehandlingstype("type")
                         .withSisteBehandlingsstatus("IKKE_EN_STATUS")
@@ -208,7 +206,6 @@ public class TransformersTest {
                         .withStart(new DateTime().minusDays(1))
                         .withSisteBehandlingREF("hovedskjemakodeverkref")
                 .build())
-                .stream()
                 .map(Transformers.TIL_BEHANDLING)
                 .collect(Collectors.toList());
 

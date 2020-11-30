@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.saf
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
@@ -12,25 +13,23 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.Dokument
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.DokumentMetadata
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.resultatwrappere.ResultatWrapper
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.resultatwrappere.TjenesteResultatWrapper
-import okhttp3.MediaType
-import okhttp3.Request
-import okhttp3.RequestBody
-import okhttp3.Response
+import okhttp3.*
 import org.slf4j.LoggerFactory
 
-val SAF_GRAPHQL_BASEURL = EnvironmentUtils.getRequiredProperty("SAF_GRAPHQL_URL")
-val SAF_HENTDOKUMENT_BASEURL = EnvironmentUtils.getRequiredProperty("SAF_HENTDOKUMENT_URL")
+val SAF_GRAPHQL_BASEURL: String = EnvironmentUtils.getRequiredProperty("SAF_GRAPHQL_URL")
+val SAF_HENTDOKUMENT_BASEURL: String = EnvironmentUtils.getRequiredProperty("SAF_HENTDOKUMENT_URL")
 
 private val LOG = LoggerFactory.getLogger(SafService::class.java)
+private val mapper: ObjectMapper = jacksonObjectMapper().registerModule(JavaTimeModule())
 
 class SafService {
-    val JSON = MediaType.parse("application/json; charset=utf-8")
-    val client = RestClient.baseClient()
+    private val jsonType: MediaType? = MediaType.parse("application/json; charset=utf-8")
+    private val client: OkHttpClient = RestClient.baseClient()
     fun hentJournalposter(fnr: String): ResultatWrapper<List<DokumentMetadata>> {
         val jsonQuery = dokumentoversiktBrukerJsonQuery(fnr)
         val response = client.newCall(
                 veilederAutorisertClient(SAF_GRAPHQL_BASEURL)
-                        .post(RequestBody.create(JSON, jsonQuery))
+                        .post(RequestBody.create(jsonType, jsonQuery))
                         .build()
         ).execute()
 
@@ -70,7 +69,6 @@ private fun handterResponse(response: Response): ResultatWrapper<List<DokumentMe
     )
 }
 
-val mapper = jacksonObjectMapper().registerModule(JavaTimeModule())
 private fun safDokumentResponsFraResponse(response: Response): SafDokumentResponse {
     val rawJson = response.body()?.string()!!
 

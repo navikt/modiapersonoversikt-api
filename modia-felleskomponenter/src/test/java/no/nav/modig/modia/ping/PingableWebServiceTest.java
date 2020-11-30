@@ -52,7 +52,7 @@ public class PingableWebServiceTest {
         assertThat(pingResult.getCheck().checkHealth().isHealthy(), is(false));
     }
 
-    private class UnpingableWS {
+    private static class UnpingableWS {
 
     }
 
