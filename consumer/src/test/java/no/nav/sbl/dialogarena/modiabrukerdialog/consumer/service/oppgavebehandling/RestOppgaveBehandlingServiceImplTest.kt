@@ -149,6 +149,10 @@ class RestOppgaveBehandlingServiceImplTest {
         return lagOppgave().toGetOppgaveResponseJsonDTO()
     }
 
+    private fun nyLagOppgave(oppgaveId: String, aktorId: String) : OppgaveJsonDTO {
+        return lagOppgave().copy(id = oppgaveId.toLong(), aktoerId = aktorId)
+    }
+
     @Test
     fun skalKonvertereFraOppgaveJsonDTOTilPutOppgaveResponseJsonDTO() {
         val oppgaveJsonDTO = lagOppgave()
@@ -207,8 +211,8 @@ class RestOppgaveBehandlingServiceImplTest {
     @Throws(HentOppgaveOppgaveIkkeFunnet::class)
     fun skalFinneTilordnaOppgave() {
         val oppgaveliste: List<OppgaveJsonDTO> = listOf(
-                lagOppgave().copy(id = "1".toLong(), aktoerId = "10108000398"),
-                lagOppgave().copy(id = "2".toLong(), aktoerId = "10108000398")
+                nyLagOppgave("1", "10108000398"),
+                nyLagOppgave("2", "10108000398")
         )
 
         `when`(oppgave!!.finnOppgaver(
@@ -263,14 +267,8 @@ class RestOppgaveBehandlingServiceImplTest {
     @Throws(HentOppgaveOppgaveIkkeFunnet::class)
     fun skalLeggeTilbakeTilordnetOppgaveUtenTilgang() {
         val oppgaveliste : List<OppgaveJsonDTO> = listOf(
-                lagOppgave().copy(
-                        id = "1".toLong(),
-                        aktoerId = "10108000398"
-                ),
-                lagOppgave().copy(
-                        id = "2".toLong(),
-                        aktoerId = "10108000398"
-                )
+                nyLagOppgave("1", "10108000398"),
+                nyLagOppgave("2", "10108000398")
         )
 
         `when`(tilgangskontrollContext.checkAbac(any(AbacRequest::class.java))).thenReturn(
