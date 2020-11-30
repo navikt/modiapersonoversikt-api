@@ -68,7 +68,7 @@ public class InnsynJournalV2ServiceImplTest {
     }
 
     @Test
-    public void feilendeBaksystemResultatOmJournalpostIkkeInngående() {
+    public void feilendeBaksystemResultatOmJournalpostIkkeInngaende() {
         assertJoarkFeilendeBaksystemForException(new IdentifiserJournalpostJournalpostIkkeInngaaende());
     }
 

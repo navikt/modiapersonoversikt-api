@@ -321,10 +321,10 @@ class PersonController @Autowired constructor(private val kjerneinfoService: Per
             prioritet = telefon.prioritet
     )
 
-    private fun getBegrensetInnsyn(fødselsnummer: String?, melding: String?) = mapOf(
+    private fun getBegrensetInnsyn(fodselsnummer: String?, melding: String?) = mapOf(
             "begrunnelse" to melding,
             "sikkerhetstiltak" to kjerneinfoService
-                    .hentSikkerhetstiltak(HentSikkerhetstiltakRequest(fødselsnummer))
+                    .hentSikkerhetstiltak(HentSikkerhetstiltakRequest(fodselsnummer))
                     ?.let { hentSikkerhetstiltak(it) }
     )
 

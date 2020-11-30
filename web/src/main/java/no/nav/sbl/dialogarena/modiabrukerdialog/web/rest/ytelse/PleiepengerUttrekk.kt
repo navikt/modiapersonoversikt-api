@@ -14,9 +14,9 @@ import java.time.format.DateTimeFormatter
 class PleiepengerUttrekk constructor(private val pleiepengerService: PleiepengerService,
                                      private val organisasjonService: OrganisasjonService) {
 
-    fun hent(fødselsnummer: String): Map<String, Any?> {
+    fun hent(fodselsnummer: String): Map<String, Any?> {
 
-        val pleiepenger = pleiepengerService.hentPleiepengerListe(PleiepengerListeRequest(fødselsnummer))
+        val pleiepenger = pleiepengerService.hentPleiepengerListe(PleiepengerListeRequest(fodselsnummer))
 
         return mapOf(
                 "pleiepenger" to pleiepenger?.pleieepengerettighetListe?.let {

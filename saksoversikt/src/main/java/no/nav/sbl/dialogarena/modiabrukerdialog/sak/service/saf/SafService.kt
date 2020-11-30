@@ -34,7 +34,7 @@ class SafService {
                         .build()
         ).execute()
 
-        return håndterStatus(response)
+        return handterStatus(response)
     }
 
     fun hentDokument(journalpostId: String, dokumentInfoId: String, variantFormat: Dokument.Variantformat): TjenesteResultatWrapper {
@@ -50,16 +50,16 @@ class SafService {
     }
 }
 
-private fun håndterStatus(response: Response): ResultatWrapper<List<DokumentMetadata>> =
+private fun handterStatus(response: Response): ResultatWrapper<List<DokumentMetadata>> =
         when (response.code()) {
-            200 -> håndterResponse(response)
+            200 -> handterResponse(response)
             else -> {
-                håndterJournalpostFeilKoder(response.code())
+                handterJournalpostFeilKoder(response.code())
                 ResultatWrapper(emptyList(), setOf(Baksystem.SAF))
             }
         }
 
-private fun håndterResponse(response: Response): ResultatWrapper<List<DokumentMetadata>> {
+private fun handterResponse(response: Response): ResultatWrapper<List<DokumentMetadata>> {
     val safDokumentResponse = safDokumentResponsFraResponse(response)
 
     safDokumentResponse.errors?.also { logJournalpostErrors(safDokumentResponse.errors) }
@@ -112,7 +112,7 @@ private fun logJournalpostErrors(errors: List<SafError>) {
     LOG.error("Feil i kall mot SAF - dokumentoversiktBruker \n Mottat feilmelding: $msg")
 }
 
-private fun håndterJournalpostFeilKoder(statuskode: Int) {
+private fun handterJournalpostFeilKoder(statuskode: Int) {
     when (statuskode) {
         404 -> LOG.error("Responskode 404 fra SAF - dokumentoversiktBruker")
         500 -> LOG.warn("Responskode 500 fra SAF - dokumentoversiktBruker")

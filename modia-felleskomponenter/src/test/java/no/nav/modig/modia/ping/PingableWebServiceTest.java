@@ -33,13 +33,13 @@ public class PingableWebServiceTest {
     }
 
     @Test
-    public void skalKallePingNårKlassenErPingable() throws Exception {
+    public void skalKallePingNarKlassenErPingable() throws Exception {
         pingable.ping().getCheck().checkHealth();
         verify(ws, times(1)).ping();
     }
 
     @Test
-    public void skalReturnereOkResultatNårTjenestenErOk() throws Exception {
+    public void skalReturnereOkResultatNarTjenestenErOk() throws Exception {
         SelfTestCheck pingResult = pingable.ping();
         assertThat(pingResult.getCheck().checkHealth().isHealthy(), is(true));
         assertThat(pingResult.getDescription(), CoreMatchers.containsString("WS"));

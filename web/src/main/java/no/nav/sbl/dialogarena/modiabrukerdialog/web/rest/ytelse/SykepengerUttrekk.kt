@@ -13,8 +13,8 @@ import org.joda.time.LocalDate
 
 class SykepengerUttrekk constructor(private val sykepengerService: SykepengerServiceBi) {
 
-    fun hent(fødselsnummer: String): Map<String, Any?> {
-        val sykepenger = sykepengerService.hentSykmeldingsperioder(SykepengerRequest(LocalDate.now().minusYears(2), fødselsnummer, LocalDate.now()))
+    fun hent(fodselsnummer: String): Map<String, Any?> {
+        val sykepenger = sykepengerService.hentSykmeldingsperioder(SykepengerRequest(LocalDate.now().minusYears(2), fodselsnummer, LocalDate.now()))
 
         return mapOf(
                 "sykepenger" to sykepenger?.sykmeldingsperioder?.let { hentSykemeldingsperioder(it) }
@@ -43,7 +43,7 @@ class SykepengerUttrekk constructor(private val sykepengerService: SykepengerSer
                     "sykmeldinger" to it.sykmeldinger?.let { hentSykmeldinger(it) },
                     "historiskeUtbetalinger" to it.historiskeUtbetalinger?.let { hentHistoriskeUtbetalinger(it) },
                     "kommendeUtbetalinger" to it.kommendeUtbetalinger?.let { hentKommendeUtbetalinger(it) },
-                    "utbetalingerPåVent" to it.utbetalingerPaVent?.let { hentUtbetalingerPåVent(it) },
+                    "utbetalingerPåVent" to it.utbetalingerPaVent?.let { hentUtbetalingerPaVent(it) },
                     "bruker" to it.bruker?.ident,
                     "midlertidigStanset" to it.midlertidigStanset?.toString(DATOFORMAT),
                     "slutt" to it.slutt?.toString(DATOFORMAT),
@@ -96,8 +96,8 @@ class SykepengerUttrekk constructor(private val sykepengerService: SykepengerSer
         }
     }
 
-    private fun hentUtbetalingerPåVent(utbetalingerPåVent: List<UtbetalingPaVent>): List<Map<String, Any?>> {
-        return utbetalingerPåVent.map {
+    private fun hentUtbetalingerPaVent(utbetalingerPaVent: List<UtbetalingPaVent>): List<Map<String, Any?>> {
+        return utbetalingerPaVent.map {
             mapOf(
                     "vedtak" to it.vedtak?.let { lagPeriode(it) },
                     "utbetalingsgrad" to it.utbetalingsgrad,

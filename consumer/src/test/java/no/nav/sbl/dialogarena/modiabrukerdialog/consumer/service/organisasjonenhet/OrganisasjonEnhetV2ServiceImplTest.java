@@ -93,7 +93,6 @@ public class OrganisasjonEnhetV2ServiceImplTest {
     }
 
     @Test
-    @SuppressWarnings("ConstantConditions")
     public void finnNAVKontorReturnererOptionalMedKorrektMappetAnsattEnhetDersomWebserviceReturnererNAVKontor() throws Exception {
         when(enhet.finnNAVKontor(any())).thenReturn(lagFinnNAVKontorResponse("1234"));
 
