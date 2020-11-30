@@ -65,6 +65,14 @@ class Policies {
         }
 
         @JvmField
+        val tilgangTilBrukerMedAktorId = RulePolicyGenerator<TilgangskontrollContext, String> {
+            context.checkAbac(AbacPolicies.tilgangTilBrukerMedAktorId(data))
+                    .toDecision {
+                        "Saksbehandler (${context.hentSaksbehandlerId()}) har ikke tilgang til ${data}. Årsak: ${getCause()}"
+                    }
+        }
+
+        @JvmField
         val kanPlukkeOppgave = Policy<TilgangskontrollContext>({ "Saksbehandler (${hentSaksbehandlerId()}) har ikke tilgang til plukk oppgave" }) {
             checkAbac(AbacPolicies.kanPlukkeOppgave())
                     .toDecisionEnum()
