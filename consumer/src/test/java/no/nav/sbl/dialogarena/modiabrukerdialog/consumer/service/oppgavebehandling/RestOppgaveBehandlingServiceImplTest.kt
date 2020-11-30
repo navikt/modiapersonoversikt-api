@@ -102,6 +102,7 @@ class RestOppgaveBehandlingServiceImplTest {
                 xminusCorrelationMinusID = MDC.get(MDCConstants.MDC_CALL_ID),
                 id = ArgumentMatchers.any(oppgaveJsonDTO!!.id!!.toLong()::class.java))
         ).thenReturn(mockHentOppgaveResponse())
+
         `when`(ansatt!!.hentAnsattNavn(anyString())).thenReturn("")
 
         SubjectHandlerUtil.withIdent("Z999999"
@@ -115,6 +116,7 @@ class RestOppgaveBehandlingServiceImplTest {
                     endretAvEnhetsnr = ferdigstillOppgaveBolkRequestCaptor!!.capture().endretAvEnhetsnr
                 )
         )
+
         Assert.assertThat(ferdigstillOppgaveBolkRequestCaptor!!.value.oppgaver[0].id.toString(), Matchers.`is`("1"))
     }
 
@@ -125,17 +127,21 @@ class RestOppgaveBehandlingServiceImplTest {
                 xminusCorrelationMinusID = MDC.get(MDCConstants.MDC_CALL_ID),
                 id = ArgumentMatchers.any(oppgaveJsonDTO?.id.toString().toLong()::class.java))
         ).thenReturn(mockHentOppgaveResponseMedTilordning().toGetOppgaveResponseJsonDTO())
+
         restOppgaveBehandlingService!!.systemLeggTilbakeOppgave("1", Temagruppe.ARBD, SAKSBEHANDLERS_VALGTE_ENHET)
+
         verify<OppgaveJsonDTO>(oppgave.patchOppgave(
                 xminusCorrelationMinusID = MDC.get(MDCConstants.MDC_CALL_ID),
                 id = lagreOppgaveRequestCaptor!!.value.id,
                 patchOppgaveRequestJsonDTO = lagreOppgaveRequestCaptor!!.capture()
         ))
+
         val endreOppgave: OppgaveJsonDTO = oppgave.patchOppgave(
                 xminusCorrelationMinusID = MDC.get(MDCConstants.MDC_CALL_ID),
                 id = lagreOppgaveRequestCaptor!!.value.id,
                 patchOppgaveRequestJsonDTO = lagreOppgaveRequestCaptor!!.value
         )
+
         Assert.assertThat(endreOppgave.beskrivelse, Matchers.`is`(mockHentOppgaveResponseMedTilordning().beskrivelse))
     }
 
