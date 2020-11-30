@@ -49,7 +49,7 @@ public class ScheduledAnsattListePrefetchCacheTest extends CacheTest {
 
 
     @Test
-    public void prefetchLagrerTilAnsattCache() throws HentNAVAnsattFaultGOSYSGeneriskfMsg, HentNAVAnsattFaultGOSYSNAVAnsattIkkeFunnetMsg {
+    public void prefetchLagrerTilAnsattCache() {
         prefetch.prefetchAnsattListe();
 
         assertThat(getCache().getName(), is(CACHE_NAME));
@@ -57,7 +57,7 @@ public class ScheduledAnsattListePrefetchCacheTest extends CacheTest {
     }
 
     @Test
-    public void tidligereInnholdSlettesVedPrefetch() throws HentNAVAnsattFaultGOSYSGeneriskfMsg, HentNAVAnsattFaultGOSYSNAVAnsattIkkeFunnetMsg {
+    public void tidligereInnholdSlettesVedPrefetch() {
         getCache().put("0000", "innhold");
         assertThat(getNativeCache().estimatedSize(), is(1L));
 

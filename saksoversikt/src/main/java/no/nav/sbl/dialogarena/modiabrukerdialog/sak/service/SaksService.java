@@ -42,7 +42,7 @@ public class SaksService {
         }
 
         Stream<Sak> fraGSak = maybeFraGSak.orElse(Stream.empty());
-        Stream<Sak> fraPesys = maybeFraPesys.map(Collection::stream).orElse(Stream.empty());
+        Stream<Sak> fraPesys = maybeFraPesys.stream().flatMap(Collection::stream);
 
         return new ResultatWrapper<>(Java8Utils.concat(fraGSak, fraPesys)
                 .collect(toList()), feilendeBaksystemer);

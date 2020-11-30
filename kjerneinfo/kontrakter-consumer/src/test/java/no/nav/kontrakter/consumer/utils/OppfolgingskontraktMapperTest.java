@@ -59,7 +59,7 @@ public class OppfolgingskontraktMapperTest {
     }
 
     @Test
-    public void testResponseMapping() throws DatatypeConfigurationException {
+    public void testResponseMapping() {
         OppfolgingskontraktMapper mapper = OppfolgingskontraktMapper.getInstance();
 
         WSHentOppfoelgingskontraktListeResponse fimResponse = new WSHentOppfoelgingskontraktListeResponse();

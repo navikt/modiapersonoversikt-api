@@ -36,7 +36,7 @@ class GsakKodeverkTemaTest {
     }
 
     @Test
-    public void underkategorierHvorErGyldigErLikFalseForGosysSkalIgnoreres() throws Exception {
+    public void underkategorierHvorErGyldigErLikFalseForGosysSkalIgnoreres() {
         final List<GsakKodeTema.Tema> alleTema = GsakKodeverkTema.Parser.parse();
         final List<GsakKodeTema.Tema> etTema = alleTema.stream()
                 .filter(tema -> tema.kode.equals("STO"))
@@ -47,7 +47,7 @@ class GsakKodeverkTemaTest {
     }
 
     @Test
-    public void underkategorierHvorErGyldigErTrueMenTOMErForbiForGosysSkalIgnoreres() throws Exception {
+    public void underkategorierHvorErGyldigErTrueMenTOMErForbiForGosysSkalIgnoreres() {
         final List<GsakKodeTema.Tema> alleTema = GsakKodeverkTema.Parser.parse();
         final List<GsakKodeTema.Tema> etTema = alleTema.stream()
                 .filter(tema -> tema.kode.equals("MED"))

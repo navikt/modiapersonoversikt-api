@@ -42,7 +42,7 @@ public class SakstemaGruppererTest {
     }
 
     @Test
-    public void gruppererOppfolgingAleneOmDetManglerTilknyttedeSaker() throws Exception {
+    public void gruppererOppfolgingAleneOmDetManglerTilknyttedeSaker() {
 
         Sak oppfolinging = new Sak()
                 .withSaksId("321")
@@ -60,7 +60,7 @@ public class SakstemaGruppererTest {
     }
 
     @Test
-    public void gruppererIkkeSelvstendigTemaSomTilhorerTemagruppe() throws Exception {
+    public void gruppererIkkeSelvstendigTemaSomTilhorerTemagruppe() {
 
         Sak oppfolinging = new Sak()
                 .withSaksId("321")
@@ -76,7 +76,7 @@ public class SakstemaGruppererTest {
     }
 
     @Test
-    public void fjernGrupperingOmDetIkkeFinnesOppfolging() throws Exception {
+    public void fjernGrupperingOmDetIkkeFinnesOppfolging() {
 
         Sak sak = new Sak()
                 .withSaksId("321")

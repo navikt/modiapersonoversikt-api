@@ -59,7 +59,6 @@ public class ConsumerConfig {
 
     @Bean
     public UtbetalingerService utbetalingerService() {
-        UtbetalingerService utbetalingerService = new UtbetalingerServiceImpl();
-        return utbetalingerService;
+        return new UtbetalingerServiceImpl();
     }
 }

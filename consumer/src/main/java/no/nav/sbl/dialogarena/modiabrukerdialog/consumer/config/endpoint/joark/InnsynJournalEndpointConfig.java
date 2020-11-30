@@ -21,7 +21,7 @@ public class InnsynJournalEndpointConfig {
     public static final String INNSYN_JOURNAL_V2_URL = "INNSYNJOURNAL_V2_ENDPOINTURL";
 
     @Bean
-    public InnsynJournalV2 innsynJournalV2() throws Exception {
+    public InnsynJournalV2 innsynJournalV2() {
         InnsynJournalV2 prod = createInnsynJournalV2PortType().configureStsForSubject(stsConfig).build();
         return createTimerProxyForWebService("InnsynJournalV2Service", prod, InnsynJournalV2.class);
     }

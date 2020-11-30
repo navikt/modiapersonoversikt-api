@@ -59,12 +59,14 @@ public class DefaultKodeverkClient implements KodeverkClient {
         }
     }
 
-    private void filtrerGyldigKodeverksElement(Collection<? extends XMLKodeverkselement> liste) {
-        Collection gyldige = liste.stream()
-                .filter(kodeverkselement -> kodeverkselement.getGyldighetsperiode().stream()
-                        .filter(xmlPeriode -> now().isAfter(xmlPeriode.getFom()) && now().isBefore(xmlPeriode.getTom()))
-                        .findAny()
-                        .isPresent())
+    private <T extends XMLKodeverkselement> void filtrerGyldigKodeverksElement(Collection<T> liste) {
+        Collection<T> gyldige = liste
+                .stream()
+                .filter(kodeverkselement -> kodeverkselement
+                        .getGyldighetsperiode()
+                        .stream()
+                        .anyMatch(xmlPeriode -> now().isAfter(xmlPeriode.getFom()) && now().isBefore(xmlPeriode.getTom()))
+                )
                 .collect(toList());
         liste.clear();
         liste.addAll(gyldige);
@@ -84,7 +86,7 @@ public class DefaultKodeverkClient implements KodeverkClient {
                 .filter(xmlKode -> kodenavn.equals(xmlKode.getNavn()))
                 .findFirst();
 
-        if (!kode.isPresent()) {
+        if (kode.isEmpty()) {
             throw new ApplicationException("Ingen gyldig term for '" + kodenavn + "' funnet i kodeverk '" + xmlEnkeltKodeverk.getNavn() + "'");
         }
         return kode.get().getTerm().get(0).getNavn();

@@ -39,7 +39,7 @@ public class OppfolgingsinfoApiServiceImpl implements OppfolgingsinfoApiService 
     public Oppfolgingsinfo hentOppfolgingsinfo(String fodselsnummer, LDAPService ldapService) {
         OppfolgingsStatus status = hentOppfolgingStatus(fodselsnummer);
         OppfolgingsEnhetOgVeileder enhetOgVeileder;
-        if (status.isUnderOppfolging() == true) {
+        if (status.isUnderOppfolging()) {
             enhetOgVeileder = hentOppfolgingsEnhetOgVeileder(fodselsnummer);
         } else {
             enhetOgVeileder = setTomEnhet();

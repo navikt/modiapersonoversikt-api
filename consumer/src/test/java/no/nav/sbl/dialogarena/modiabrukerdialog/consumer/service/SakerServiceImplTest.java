@@ -297,21 +297,21 @@ public class SakerServiceImplTest {
     }
 
     @Test
-    void knyttBehandlingskjedeTilSakKasterFeilHvisEnhetIkkeErSatt() throws JournalforingFeilet, OpprettSakUgyldigInput, OpprettSakSakEksistererAllerede {
+    void knyttBehandlingskjedeTilSakKasterFeilHvisEnhetIkkeErSatt() throws OpprettSakUgyldigInput, OpprettSakSakEksistererAllerede {
         when(behandleSak.opprettSak(any(WSOpprettSakRequest.class))).thenReturn(new WSOpprettSakResponse().withSakId(SAKS_ID));
 
         assertThrows(IllegalArgumentException.class, () -> sakerService.knyttBehandlingskjedeTilSak(FNR, BEHANDLINGSKJEDEID, lagSak(), ""));
     }
 
     @Test
-    void knyttBehandlingskjedeTilSakKasterFeilHvisBehandlingskjedeIkkeErSatt() throws JournalforingFeilet, OpprettSakUgyldigInput, OpprettSakSakEksistererAllerede {
+    void knyttBehandlingskjedeTilSakKasterFeilHvisBehandlingskjedeIkkeErSatt() throws OpprettSakUgyldigInput, OpprettSakSakEksistererAllerede {
         when(behandleSak.opprettSak(any(WSOpprettSakRequest.class))).thenReturn(new WSOpprettSakResponse().withSakId(SAKS_ID));
 
         assertThrows(IllegalArgumentException.class, () -> sakerService.knyttBehandlingskjedeTilSak(FNR, null, lagSak(), "1337"));
     }
 
     @Test
-    void knyttBehandlingskjedeTilSakKasterFeilHvisFnrIkkeErSatt() throws JournalforingFeilet, OpprettSakUgyldigInput, OpprettSakSakEksistererAllerede {
+    void knyttBehandlingskjedeTilSakKasterFeilHvisFnrIkkeErSatt() throws OpprettSakUgyldigInput, OpprettSakSakEksistererAllerede {
         when(behandleSak.opprettSak(any(WSOpprettSakRequest.class))).thenReturn(new WSOpprettSakResponse().withSakId(SAKS_ID));
 
         assertThrows(IllegalArgumentException.class, () -> sakerService.knyttBehandlingskjedeTilSak("", BEHANDLINGSKJEDEID, lagSak(), "1337"));

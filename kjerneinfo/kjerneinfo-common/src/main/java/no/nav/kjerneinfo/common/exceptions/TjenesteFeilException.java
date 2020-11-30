@@ -7,9 +7,4 @@ public class TjenesteFeilException extends SystemException {
 	public TjenesteFeilException(String message, Throwable cause) {
 		super(message, cause);
 	}
-
-	@Override
-	public synchronized Throwable getCause() {
-		return super.getCause();
-	}
 }

@@ -515,8 +515,7 @@ public class ForeldrepengerMockFactory {
     }
 
     private static List<FimArbeidsforhold> createArbeidsforholdEmpty() {
-        List<FimArbeidsforhold> arbeidsforhold = new ArrayList<>();
-        return arbeidsforhold;
+        return new ArrayList<>();
     }
 
     private static List<FimArbeidsforhold> createArbeidsforhold() {

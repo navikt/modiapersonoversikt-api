@@ -15,7 +15,6 @@ public final class SystemProperties {
         Properties properties = new Properties();
         try (InputStream inputStream =  Properties.class.getResourceAsStream(resourcePath)) {
             properties.load(inputStream);
-            inputStream.close();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

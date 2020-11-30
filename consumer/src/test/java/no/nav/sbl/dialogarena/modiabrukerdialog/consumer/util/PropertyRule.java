@@ -16,12 +16,12 @@ public class PropertyRule implements BeforeAllCallback, AfterAllCallback {
     }
 
     @Override
-    public void beforeAll(ExtensionContext extensionContext) throws Exception {
+    public void beforeAll(ExtensionContext extensionContext) {
         System.setProperty(propertyName, propertyValue);
     }
 
     @Override
-    public void afterAll(ExtensionContext extensionContext) throws Exception {
+    public void afterAll(ExtensionContext extensionContext) {
         if (originalValue == null) {
             System.clearProperty(propertyName);
         } else {

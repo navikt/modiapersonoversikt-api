@@ -278,7 +278,7 @@ public class PersonfaktaTest {
     }
 
     @Test
-    public void testharTilrettelagtKommunikasjon() throws Exception {
+    public void testharTilrettelagtKommunikasjon() {
         assertFalse(emptyPersonfakta.isHarTilrettelagtKommunikasjon());
 
         emptyPersonfakta.getTilrettelagtKommunikasjon().add(new Kodeverdi());

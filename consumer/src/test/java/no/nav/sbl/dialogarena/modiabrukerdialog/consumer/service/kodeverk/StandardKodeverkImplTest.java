@@ -38,7 +38,7 @@ public class StandardKodeverkImplTest {
     private StandardKodeverkImpl kodeverk;
 
     @BeforeEach
-    public void wireUpKodeverk() throws HentKodeverkHentKodeverkKodeverkIkkeFunnet {
+    public void wireUpKodeverk() {
         initMocks(this);
         ReflectionTestUtils.setField(kodeverk, "brukerprofilDataDirectory", dumpDir);
         kodeverk.initKodeverk();

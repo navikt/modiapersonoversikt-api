@@ -32,6 +32,6 @@ public class VarslerServiceImplTest {
         when(brukervarsel.hentVarselForBruker(any(WSHentVarselForBrukerRequest.class))).thenThrow(SOAPFaultException.class);
         Optional<List<Varsel>> varsler = impl.hentAlleVarsler("10108000398");
 
-        assertTrue(!varsler.isPresent());
+        assertTrue(varsler.isEmpty());
     }
 }

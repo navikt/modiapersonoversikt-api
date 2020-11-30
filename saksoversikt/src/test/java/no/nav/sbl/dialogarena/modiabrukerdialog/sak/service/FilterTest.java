@@ -126,8 +126,8 @@ public class FilterTest {
     }
 
     @Test
-    public void sjekkerAtEldreEnn1MndgamleBehandlingstyperUtelukkes_vedFiltrering_avSaker() throws Exception {
-        DateTime dagensDato = new DateTime().now();
+    public void sjekkerAtEldreEnn1MndgamleBehandlingstyperUtelukkes_vedFiltrering_avSaker() {
+        DateTime dagensDato = DateTime.now();
         List<Sak> saker = asList(
                 SakBuilder.create()
                         .withSakstema("DAG")
@@ -215,7 +215,7 @@ public class FilterTest {
 
     @Test
     public void filtererGamleFerdistilteBehandlingsKjeder() {
-        DateTime toMndSidan = new DateTime().now().minusMonths(2);
+        DateTime toMndSidan = DateTime.now().minusMonths(2);
         List<Sak> saker = asList(
                 SakBuilder.create()
                         .withSakstema("HJL")

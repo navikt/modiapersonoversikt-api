@@ -42,21 +42,21 @@ public class KodeverksmapperEndpointConfig {
     private Kodeverksmapper lagMockEnpoint() {
         return new Kodeverksmapper() {
             @Override
-            public Map<String, String> hentOppgavetype() throws IOException {
+            public Map<String, String> hentOppgavetype() {
                 Map<String, String> oppgavetyper = new HashMap<>();
                 oppgavetyper.put("VUR_UFO", "VUR");
                 return oppgavetyper;
             }
 
             @Override
-            public Map<String, Behandling> hentUnderkategori() throws IOException {
+            public Map<String, Behandling> hentUnderkategori() {
                 Map<String, Behandling> underkategorier = new HashMap<>();
                 underkategorier.put("UTLAND_BID", new Behandling().withBehandlingstype("ae0106"));
                 return underkategorier;
             }
 
             @Override
-            public void ping() throws IOException {
+            public void ping() {
             }
         };
     }

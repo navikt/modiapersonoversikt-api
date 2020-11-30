@@ -32,13 +32,13 @@ public class JsonKodeverkTest {
     }
 
     @Test(expected = ApplicationException.class)
-    public void shouldThrowExceptionWhenMissingValue() throws IOException {
+    public void shouldThrowExceptionWhenMissingValue() {
         InputStream resourceAsStream = getClass().getResourceAsStream("/kodeverk_feil.json");
         new JsonKodeverk(resourceAsStream);
     }
 
     @Test
-    public void shouldReadEmptyFile() throws IOException {
+    public void shouldReadEmptyFile() {
         InputStream resourceAsStream = getClass().getResourceAsStream("/kodeverk_tom.json");
         new JsonKodeverk(resourceAsStream);
     }

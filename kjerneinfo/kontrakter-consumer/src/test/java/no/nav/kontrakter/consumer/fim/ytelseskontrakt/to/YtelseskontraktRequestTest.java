@@ -8,7 +8,7 @@ import static org.junit.Assert.assertTrue;
 
 public class YtelseskontraktRequestTest {
     @Test
-    public void testEquals() throws Exception {
+    public void testEquals() {
 
         YtelseskontraktRequest request1 = new YtelseskontraktRequest();
         YtelseskontraktRequest request2 = null;
@@ -59,7 +59,7 @@ public class YtelseskontraktRequestTest {
     }
 
     @Test
-    public void testHashCode() throws Exception {
+    public void testHashCode() {
         YtelseskontraktRequest request1 = new YtelseskontraktRequest();
         YtelseskontraktRequest request2 = request1;
         assertTrue(request1.hashCode() == request2.hashCode());

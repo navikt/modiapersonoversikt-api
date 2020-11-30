@@ -305,7 +305,7 @@ public class OppgaveBehandlingServiceImpl implements OppgaveBehandlingService {
     }
 
     private String enhetFor(Optional<Temagruppe> optional, String saksbehandlersValgteEnhet) {
-        if (!optional.isPresent()) {
+        if (optional.isEmpty()) {
             return DEFAULT_ENHET.toString();
         }
         Temagruppe temagruppe = optional.get();

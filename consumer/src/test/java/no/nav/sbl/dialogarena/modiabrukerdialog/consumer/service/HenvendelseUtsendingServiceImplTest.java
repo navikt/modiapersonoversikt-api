@@ -126,7 +126,7 @@ class HenvendelseUtsendingServiceImplTest {
     }
 
     @Test
-    void skalSendeSvar() throws Exception {
+    void skalSendeSvar() {
         Melding melding = new Melding()
                 .withFnr(FNR)
                 .withFritekst(mockFritekst())
@@ -139,7 +139,7 @@ class HenvendelseUtsendingServiceImplTest {
     }
 
     @Test
-    void skalSendeReferat() throws Exception {
+    void skalSendeReferat() {
         Melding melding = new Melding()
                 .withFnr(FNR)
                 .withFritekst(mockFritekst())
@@ -152,7 +152,7 @@ class HenvendelseUtsendingServiceImplTest {
     }
 
     @Test
-    void skalSendeSporsmal() throws Exception {
+    void skalSendeSporsmal() {
         Melding melding = new Melding()
                 .withFnr(FNR)
                 .withFritekst(mockFritekst())
@@ -203,7 +203,7 @@ class HenvendelseUtsendingServiceImplTest {
     }
 
     @Test
-    void skalFerdigstilleOppgaveDersomDenneErSatt() throws Exception {
+    void skalFerdigstilleOppgaveDersomDenneErSatt() {
         String oppgaveId = "oppgaveId";
         Melding melding = new Melding()
                 .withFnr(FNR)
@@ -307,7 +307,7 @@ class HenvendelseUtsendingServiceImplTest {
     }
 
     @Test
-    void kontorsperrerHenvendelsePaaAndreSosialeTjenester() throws Exception {
+    void kontorsperrerHenvendelsePaaAndreSosialeTjenester() {
         Melding melding = new Melding().withFnr(FNR).withFritekst(mockFritekst()).withType(SAMTALEREFERAT_OPPMOTE).withTemagruppe(Temagruppe.ANSOS.toString());
         henvendelseUtsendingService.sendHenvendelse(melding, Optional.empty(), Optional.empty(), SAKSBEHANDLERS_VALGTE_ENHET);
 
@@ -315,7 +315,7 @@ class HenvendelseUtsendingServiceImplTest {
     }
 
     @Test
-    void kontorsperrerIkkeHenvendelsePaaOkonomiskSosialhjelp() throws Exception {
+    void kontorsperrerIkkeHenvendelsePaaOkonomiskSosialhjelp() {
         Melding melding = new Melding().withFnr(FNR).withFritekst(mockFritekst()).withType(SAMTALEREFERAT_OPPMOTE).withTemagruppe(Temagruppe.OKSOS.toString());
         henvendelseUtsendingService.sendHenvendelse(melding, Optional.empty(), Optional.empty(), SAKSBEHANDLERS_VALGTE_ENHET);
 
@@ -323,7 +323,7 @@ class HenvendelseUtsendingServiceImplTest {
     }
 
     @Test
-    void knyttetHenvendelsenTilBrukersEnhetFraTPS() throws Exception {
+    void knyttetHenvendelsenTilBrukersEnhetFraTPS() {
         Melding melding = new Melding().withFnr(FNR).withFritekst(mockFritekst()).withType(SAMTALEREFERAT_OPPMOTE).withTemagruppe(Temagruppe.ARBD.toString());
         henvendelseUtsendingService.sendHenvendelse(melding, Optional.empty(), Optional.empty(), SAKSBEHANDLERS_VALGTE_ENHET);
 
@@ -334,7 +334,7 @@ class HenvendelseUtsendingServiceImplTest {
     }
 
     @Test
-    void knyttetHenvendelsenTilBrukersEnhetFraMelding() throws Exception {
+    void knyttetHenvendelsenTilBrukersEnhetFraMelding() {
         String brukersEnhet = "0123";
 
         Melding melding = new Melding()
@@ -352,7 +352,7 @@ class HenvendelseUtsendingServiceImplTest {
     }
 
     @Test
-    void knyttetHenvendelsenTilTomEnhetDersomBrukerIkkeHarNavkontor() throws Exception {
+    void knyttetHenvendelsenTilTomEnhetDersomBrukerIkkeHarNavkontor() {
         String brukersEnhet = null;
 
         HentKjerneinformasjonResponse kjerneinformasjonResponse = new HentKjerneinformasjonResponse();

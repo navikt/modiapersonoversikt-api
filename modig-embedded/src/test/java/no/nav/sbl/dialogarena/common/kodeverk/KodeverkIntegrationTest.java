@@ -43,25 +43,25 @@ public class KodeverkIntegrationTest {
     }
 
     @Test
-    public void skalHenteKodeverk() throws Exception {
+    public void skalHenteKodeverk() {
         XMLEnkeltKodeverk kodeverk = (XMLEnkeltKodeverk) defaultKodeverkClient.hentKodeverk("Byer");
         logger.info(kodeverk.toString());
     }
 
     @Test
-    public void skalHenteFoersteTermnavnForKode() throws Exception {
+    public void skalHenteFoersteTermnavnForKode() {
         String termnavn = defaultKodeverkClient.hentFoersteTermnavnForKode("aa0013", "Tema");
         assertThat(termnavn, is("Forsikring"));
     }
 
     @Test
-    public void skalHenteHierarkiskKodeverk() throws Exception {
+    public void skalHenteHierarkiskKodeverk() {
         XMLSammensattKodeverk kodeverk = (XMLSammensattKodeverk) defaultKodeverkClient.hentKodeverk("teste igjen");
         logger.info(kodeverk.toString());
     }
 
     @Test
-    public void skalHenteKodeverkMedCaching() throws Exception {
+    public void skalHenteKodeverkMedCaching() {
         XMLEnkeltKodeverk kodeverk = (XMLEnkeltKodeverk) cachingClient.hentKodeverk("Byer");
         logger.info(kodeverk.toString());
     }

@@ -35,20 +35,20 @@ public class DefaultKodeverkManagerTest {
     }
 
     @Test
-    public void testGetBeskrivelseForKodeValid() throws Exception {
+    public void testGetBeskrivelseForKodeValid() {
         when(mockServiceDelegate.hentKodeverk(any(XMLHentKodeverkRequest.class))).thenReturn(getKodeverk(createCode(CODE_NAME, CODE_DESCRIPTION)));
         String decodeValue = kodeverkManager.getBeskrivelseForKode(CODE_NAME, KODEVERK_NAVN, SPRAAK);
         assertEquals(CODE_DESCRIPTION, decodeValue);
     }
 
     @Test
-    public void testGetBeskrivelseForKodeEmptyCode() throws Exception {
+    public void testGetBeskrivelseForKodeEmptyCode() {
         String decodeValue = kodeverkManager.getBeskrivelseForKode(null, KODEVERK_NAVN, SPRAAK);
         assertEquals(EMPTY, decodeValue);
     }
 
     @Test
-    public void testGetBeskrivelseForKodeEmptyKodeverknavn() throws Exception {
+    public void testGetBeskrivelseForKodeEmptyKodeverknavn() {
         String decodeValue = kodeverkManager.getBeskrivelseForKode(CODE_NAME, null, SPRAAK);
         assertEquals(EMPTY, decodeValue);
     }

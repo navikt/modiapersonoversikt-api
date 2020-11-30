@@ -53,7 +53,7 @@ public class OrganisasjonEnhetV2ServiceImplTest {
     }
 
     @Test
-    public void hentEnhetGittEnhetIdSkalReturnereHenteEnkeltEnhetGittEnhetId() throws Exception {
+    public void hentEnhetGittEnhetIdSkalReturnereHenteEnkeltEnhetGittEnhetId() {
         final WSHentEnhetBolkResponse response = new WSHentEnhetBolkResponse();
         final WSOrganisasjonsenhet navEnhet = lagEnhet("0100");
         response.getEnhetListe().add(navEnhet);
@@ -67,7 +67,7 @@ public class OrganisasjonEnhetV2ServiceImplTest {
     }
 
     @Test
-    public void hentEnhetGittEnhetIdSkalReturnereTomOptionalDersomEnhetIdReturnererTomRespons() throws Exception {
+    public void hentEnhetGittEnhetIdSkalReturnereTomOptionalDersomEnhetIdReturnererTomRespons() {
         WSHentEnhetBolkResponse hentEnhetBolkResponse = new WSHentEnhetBolkResponse();
         when(enhet.hentEnhetBolk(any(WSHentEnhetBolkRequest.class))).thenReturn(hentEnhetBolkResponse);
         final Optional<AnsattEnhet> enhetFraTjenesten = organisasjonEnhetServiceImpl.hentEnhetGittEnhetId("0100", OrganisasjonEnhetV2Service.WSOppgavebehandlerfilter.KUN_OPPGAVEBEHANDLERE);
@@ -75,7 +75,7 @@ public class OrganisasjonEnhetV2ServiceImplTest {
     }
 
     @Test
-    public void hentEnhetGittEnhetIdSkalReturnereTomOptionalDersomEnhetIdInneholderUgyldigInput() throws Exception {
+    public void hentEnhetGittEnhetIdSkalReturnereTomOptionalDersomEnhetIdInneholderUgyldigInput() {
         when(enhet.hentEnhetBolk(any(WSHentEnhetBolkRequest.class))).thenReturn(new WSHentEnhetBolkResponse());
         final Optional<AnsattEnhet> enhetFraTjenesten = organisasjonEnhetServiceImpl.hentEnhetGittEnhetId("x0100", OrganisasjonEnhetV2Service.WSOppgavebehandlerfilter.KUN_OPPGAVEBEHANDLERE);
         assertFalse(enhetFraTjenesten.isPresent());
