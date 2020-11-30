@@ -289,7 +289,7 @@ open class RestOppgaveBehandlingServiceImpl @Autowired constructor(
         if (oppgaveList.isEmpty()) {
             return emptyList()
         } else if (tilgangskontroll
-                        .check(Policies.tilgangTilBruker.with(oppgaveList[0].aktoerId!!))
+                        .check(Policies.tilgangTilBrukerMedAktorId.with(oppgaveList[0].aktoerId!!))
                         .getDecision()
                         .isPermit()) {
             return oppgaveList
