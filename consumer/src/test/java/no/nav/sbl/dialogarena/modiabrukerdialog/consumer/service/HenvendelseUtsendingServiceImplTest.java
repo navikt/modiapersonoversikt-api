@@ -42,7 +42,7 @@ import static java.util.Collections.singletonList;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype.*;
 import static org.hamcrest.Matchers.*;
 import static org.joda.time.DateTime.now;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -168,7 +168,7 @@ class HenvendelseUtsendingServiceImplTest {
     void skalOppretteHenvendelse() {
         henvendelseUtsendingService.opprettHenvendelse(SVAR_SKRIFTLIG.name(), FNR, BEHANDLINGS_ID);
 
-        verify(sendUtHenvendelsePortType).opprettHenvendelse(SVAR_SKRIFTLIG.name(), FNR,  BEHANDLINGS_ID);
+        verify(sendUtHenvendelsePortType).opprettHenvendelse(SVAR_SKRIFTLIG.name(), FNR, BEHANDLINGS_ID);
     }
 
     @Test
@@ -294,7 +294,7 @@ class HenvendelseUtsendingServiceImplTest {
     void skalHenteTraadMedBlankFritekstOmManIkkeHarTilgang() {
         WSHentHenvendelseListeResponse resp =
                 new WSHentHenvendelseListeResponse().withAny(createTraadMedJournalfortTemaGruppe(TRAAD_ID, JOURNALFORT_TEMA).toArray());
-        ((XMLHenvendelse)resp.getAny().get(1)).getJournalfortInformasjon().setJournalfortTema("Noe annet");
+        ((XMLHenvendelse) resp.getAny().get(1)).getJournalfortInformasjon().setJournalfortTema("Noe annet");
 
         when(henvendelsePortType.hentHenvendelseListe(any(WSHentHenvendelseListeRequest.class))).thenReturn(resp);
         when(tilgangskontrollContext.hentTemagrupperForSaksbehandler(ArgumentMatchers.anyString())).thenReturn(new TreeSet<>(asList(JOURNALFORT_TEMA)));
@@ -302,8 +302,8 @@ class HenvendelseUtsendingServiceImplTest {
         List<Melding> traad = henvendelseUtsendingService.hentTraad(FNR, TRAAD_ID, SAKSBEHANDLERS_VALGTE_ENHET);
 
         assertThat(traad, hasSize(3));
-        assertThat(traad.get(1).getFritekst(), isEmptyString());
-        assertThat(traad.get(2).getFritekst(), not(isEmptyString()));
+        assertThat(traad.get(1).getFritekst(), emptyString());
+        assertThat(traad.get(2).getFritekst(), not(emptyString()));
     }
 
     @Test

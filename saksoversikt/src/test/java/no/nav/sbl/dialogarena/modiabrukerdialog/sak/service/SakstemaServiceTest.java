@@ -26,7 +26,8 @@ import static java.util.Optional.of;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.joda.time.DateTime.now;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -92,7 +93,7 @@ public class SakstemaServiceTest {
 
         List<Sakstema> sakstema = sakstemaService.hentSakstema(saker, FNR, true).resultat;
 
-        assertTrue(sakstema.size() == 1);
+        assertEquals(1, sakstema.size());
         assertThat(sakstema.get(0).temanavn, equalTo("Dagpenger"));
     }
 
