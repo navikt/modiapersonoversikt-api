@@ -181,7 +181,7 @@ class RestOppgaveBehandlingServiceImplTest {
 
     @Test
     fun skalKonvertereFraGetOppgaveResponseJsonDTOTilOppgaveJsonDTO() {
-        val getOppgaveResponseJsonDTO = oppgave.hentOppgave(
+        val getOppgaveResponseJsonDTO = oppgave!!.hentOppgave(
                 xminusCorrelationMinusID = MDC.get(MDCConstants.MDC_CALL_ID),
                 id = RestOppgaveMockFactory.OPPGAVE_ID.toLong()
         )
