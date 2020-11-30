@@ -9,6 +9,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.oppgave.generated.api
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.oppgave.generated.models.*
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.pdl.generated.HentIdent
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.*
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.arbeidsfordeling.ArbeidsfordelingV1Service
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.AnsattService
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.pdl.PdlOppslagService
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.kodeverksmapper.KodeverksmapperService
@@ -26,24 +27,55 @@ import java.time.LocalDate
 import java.util.*
 
 
-open class RestOppgaveBehandlingServiceImpl @Autowired constructor(
+class RestOppgaveBehandlingServiceImpl @Autowired constructor(
         val kodeverksmapperService: KodeverksmapperService,
         val pdlOppslagService: PdlOppslagService,
         val tilgangskontroll: Tilgangskontroll,
         val ansattService: AnsattService,
-        val leggTilbakeOppgaveDelegate: LeggTilbakeOppgaveDelegate
+        val arbeidsfordelingService: ArbeidsfordelingV1Service
 ) : RestOppgaveBehandlingService{
-    val SPORSMAL_OG_SVAR = "SPM_OG_SVR"
-    val KONTAKT_NAV = "KNA"
+    companion object {
+        const val DEFAULT_ENHET = 4100
+        const val STORD_ENHET = "4842"
+        const val KONTAKT_NAV = "KNA"
+        const val SPORSMAL_OG_SVAR = "SPM_OG_SVR"
+
+        val OPPGAVE_BASEURL = EnvironmentUtils.getRequiredProperty("OPPGAVE_BASEURL")
+        val apiClient = OppgaveApi(OPPGAVE_BASEURL)
+
+        fun endreOppgave(request: OppgaveJsonDTO) : PutOppgaveResponseJsonDTO {
+            val oppgave = apiClient.endreOppgave(
+                    xminusCorrelationMinusID = MDC.get(MDCConstants.MDC_CALL_ID),
+                    id = request.id!!.toLong(),
+                    putOppgaveRequestJsonDTO = PutOppgaveRequestJsonDTO(
+                            id = request.id,
+                            tildeltEnhetsnr = request.tildeltEnhetsnr,
+                            aktoerId = request.aktoerId,
+                            behandlesAvApplikasjon = "FS22",
+                            beskrivelse = request.beskrivelse,
+                            temagruppe = request.temagruppe,
+                            tema = request.tema,
+                            behandlingstema = request.behandlingstema,
+                            oppgavetype = request.oppgavetype,
+                            behandlingstype = request.behandlingstype,
+                            aktivDato = request.aktivDato,
+                            fristFerdigstillelse = request.fristFerdigstillelse,
+                            prioritet = PutOppgaveRequestJsonDTO.Prioritet.valueOf(request.prioritet.value),
+                            endretAvEnhetsnr = request.endretAvEnhetsnr,
+                            status = PutOppgaveRequestJsonDTO.Status.AAPNET,
+                            versjon = request.versjon + 1,
+                            tilordnetRessurs = request.tilordnetRessurs
+                    )
+            )
+            return oppgave
+        }
+    }
+
+    val leggTilbakeOppgaveDelegate: LeggTilbakeOppgaveDelegate = LeggTilbakeOppgaveDelegate(this, arbeidsfordelingService)
 
     @Autowired
     private lateinit var stsService: SystemUserTokenProvider
-
-    val OPPGAVE_BASEURL = EnvironmentUtils.getRequiredProperty("OPPGAVE_BASEURL")
-    val apiClient = OppgaveApi(OPPGAVE_BASEURL)
     val consumerOidcToken: String = stsService.systemUserToken
-    val DEFAULT_ENHET = 4100
-    val STORD_ENHET = "4842"
 
     private val log = LoggerFactory.getLogger(RestOppgaveBehandlingServiceImpl::class.java)
 
@@ -239,33 +271,6 @@ open class RestOppgaveBehandlingServiceImpl @Autowired constructor(
         }
         val oppgave = hentOppgaveDTO(request.oppgaveId)
         leggTilbakeOppgaveDelegate.leggTilbake(oppgave, request)
-    }
-
-    private fun endreOppgave(request: OppgaveJsonDTO) : PutOppgaveResponseJsonDTO {
-        val oppgave = apiClient.endreOppgave(
-                xminusCorrelationMinusID = MDC.get(MDCConstants.MDC_CALL_ID),
-                id = request.id!!.toLong(),
-                putOppgaveRequestJsonDTO = PutOppgaveRequestJsonDTO(
-                        id = request.id,
-                        tildeltEnhetsnr = request.tildeltEnhetsnr,
-                        aktoerId = request.aktoerId,
-                        behandlesAvApplikasjon = "FS22",
-                        beskrivelse = request.beskrivelse,
-                        temagruppe = request.temagruppe,
-                        tema = request.tema,
-                        behandlingstema = request.behandlingstema,
-                        oppgavetype = request.oppgavetype,
-                        behandlingstype = request.behandlingstype,
-                        aktivDato = request.aktivDato,
-                        fristFerdigstillelse = request.fristFerdigstillelse,
-                        prioritet = PutOppgaveRequestJsonDTO.Prioritet.valueOf(request.prioritet.value),
-                        endretAvEnhetsnr = request.endretAvEnhetsnr,
-                        status = PutOppgaveRequestJsonDTO.Status.AAPNET,
-                        versjon = request.versjon + 1,
-                        tilordnetRessurs = request.tilordnetRessurs
-                )
-        )
-        return oppgave
     }
 
     fun lagreOppgave(request: OppgaveJsonDTO, temagruppe: Temagruppe, saksbehandlersValgteEnhet: String) {
