@@ -36,7 +36,7 @@ open class LeggTilbakeOppgaveDelegateTest @Autowired constructor(
         var arbeidsfordelingMock: ArbeidsfordelingV1Service,
         private var tilgangskontroll: Tilgangskontroll,
         val kodeverksmapperService: KodeverksmapperService,
-        val pdlOppslagService: PdlOppslagService,
+        val pdlOppslagService: PdlOppslagService
 ){
     val VALGT_ENHET : String = "4300"
     val OPPGAVE_BASEURL = EnvironmentUtils.getRequiredProperty("OPPGAVE_BASEURL")

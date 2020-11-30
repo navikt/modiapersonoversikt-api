@@ -7,26 +7,18 @@ import no.nav.sbl.dialogarena.abac.Decision
 import no.nav.sbl.dialogarena.abac.Response
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.oppgave.generated.apis.OppgaveApi
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.oppgave.generated.models.GetOppgaveResponseJsonDTO
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.oppgave.generated.models.GetOppgaverResponseJsonDTO
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.oppgave.generated.models.OppgaveJsonDTO
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.oppgave.generated.models.PatchOppgaveRequestJsonDTO
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.oppgave.generated.models.*
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveResponse
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.AnsattService
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.http.SubjectHandlerUtil
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.oppgavebehandling.RestOppgaveMockFactory.lagOppgave
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.oppgavebehandling.RestOppgaveMockFactory.mockHentOppgaveResponseMedTilordning
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.Collections
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Tilgangskontroll
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.TilgangskontrollContext
 import no.nav.tjeneste.virksomhet.oppgave.v3.HentOppgaveOppgaveIkkeFunnet
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.LagreOppgaveOppgaveIkkeFunnet
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.LagreOppgaveOptimistiskLasing
-import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.OppgavebehandlingV3
-import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.meldinger.WSFerdigstillOppgaveBolkRequest
-import no.nav.tjeneste.virksomhet.tildeloppgave.v1.TildelOppgaveV1
 import no.nav.tjeneste.virksomhet.tildeloppgave.v1.WSTildelFlereOppgaverRequest
-import no.nav.tjeneste.virksomhet.tildeloppgave.v1.WSTildelFlereOppgaverResponse
 import org.hamcrest.Matchers
 import org.junit.Assert
 import org.junit.jupiter.api.BeforeEach
@@ -34,23 +26,19 @@ import org.junit.jupiter.api.Test
 import org.mockito.*
 import org.mockito.Mockito.*
 import org.slf4j.MDC
-import java.util.stream.Collectors
 
 class RestOppgaveBehandlingServiceImplTest {
     val SAKSBEHANDLERS_VALGTE_ENHET = "4100"
     val aktivStatus = "AAPEN"
 
     @Captor
-    var ferdigstillOppgaveBolkRequestCaptor: ArgumentCaptor<WSFerdigstillOppgaveBolkRequest>? = null
+    var ferdigstillOppgaveBolkRequestCaptor: ArgumentCaptor<PatchOppgaverRequestJsonDTO>? = null
 
     @Captor
     var lagreOppgaveRequestCaptor: ArgumentCaptor<PatchOppgaveRequestJsonDTO>? = null
 
     @Captor
     var tildelFlereOppgaverRequestCaptor: ArgumentCaptor<WSTildelFlereOppgaverRequest>? = null
-
-    @Captor
-    var hentOppgaveRequestCaptor: ArgumentCaptor<OppgaveJsonDTO>? = null
 
     @Mock
     private val ansatt: AnsattService? = null
@@ -63,12 +51,6 @@ class RestOppgaveBehandlingServiceImplTest {
 
     @Mock
     private val oppgavebehandling: OppgaveApi? = null
-
-    @Mock
-    private val oppgavebehandlingWS: OppgavebehandlingV3? = null
-
-    @Mock
-    private val tildelOppgave: TildelOppgaveV1? = null
 
     // Kan ikke bruke `@Mock` siden vi er avhengig av at verdien er definert ved opprettelsen av `Tilgangskontroll`
     private val tilgangskontrollContext = mock(TilgangskontrollContext::class.java)
@@ -115,50 +97,6 @@ class RestOppgaveBehandlingServiceImplTest {
 
     @Test
     @Throws(HentOppgaveOppgaveIkkeFunnet::class)
-    fun skalPlukkeOppgaver() {
-        val tildelFlereOppgaverResponse = WSTildelFlereOppgaverResponse()
-                .withOppgaveIder(Integer.valueOf(OPPGAVE_ID_1), Integer.valueOf(OPPGAVE_ID_2))
-
-        val lagOppgave1 = lagOppgave().copy(id = OPPGAVE_ID_1.toLong())
-
-        val hentOppgaveResponse1: GetOppgaveResponseJsonDTO = oppgave!!.hentOppgave(
-                xminusCorrelationMinusID = MDC.get(MDCConstants.MDC_CALL_ID),
-                id = lagOppgave1.id.toString().toLong()
-        )
-
-        val lagOppgave2 = lagOppgave().copy(id = OPPGAVE_ID_2.toLong())
-        val hentOppgaveResponse2: GetOppgaveResponseJsonDTO = oppgave!!.hentOppgave(
-                xminusCorrelationMinusID = MDC.get(MDCConstants.MDC_CALL_ID),
-                id = lagOppgave2.id.toString().toLong()
-        )
-
-        `when`<WSTildelFlereOppgaverResponse>(tildelOppgave?.tildelFlereOppgaver(ArgumentMatchers.any(WSTildelFlereOppgaverRequest::class.java)))
-                .thenReturn(tildelFlereOppgaverResponse)
-        `when`<GetOppgaveResponseJsonDTO>(oppgave!!.hentOppgave(
-                xminusCorrelationMinusID = MDC.get(MDCConstants.MDC_CALL_ID),
-                id = ArgumentMatchers.any(oppgaveJsonDTO?.id.toString().toLong()::class.java)))
-                .thenReturn(hentOppgaveResponse1, hentOppgaveResponse2)
-
-        SubjectHandlerUtil.withIdent<List<OppgaveResponse>>("Z999999"
-        ) { restOppgaveBehandlingService!!.plukkOppgaver(Temagruppe.ARBD, SAKSBEHANDLERS_VALGTE_ENHET) }
-
-        verify(tildelOppgave)!!.tildelFlereOppgaver(tildelFlereOppgaverRequestCaptor!!.capture())
-
-        verify(oppgave, times(2))!!.hentOppgave(
-                xminusCorrelationMinusID = MDC.get(MDCConstants.MDC_CALL_ID),
-                id = hentOppgaveRequestCaptor!!.capture().id!!.toLong())
-
-        Assert.assertThat(hentOppgaveRequestCaptor!!.allValues.stream()
-                .map { obj: OppgaveJsonDTO -> obj.id.toString() }
-                .collect(Collectors.toSet()),
-                Matchers.`is`(Collections.asSet(OPPGAVE_ID_1, OPPGAVE_ID_2)))
-        Assert.assertNotNull(tildelFlereOppgaverRequestCaptor!!.value)
-        Assert.assertThat(tildelFlereOppgaverRequestCaptor!!.value.fagomrade, Matchers.`is`("KNA"))
-        Assert.assertThat(tildelFlereOppgaverRequestCaptor!!.value.oppgavetype, Matchers.`is`("SPM_OG_SVR"))
-    }
-
-    @Test
-    @Throws(HentOppgaveOppgaveIkkeFunnet::class)
     fun skalFerdigstilleOppgaver() {
         `when`(oppgave!!.hentOppgave(
                 xminusCorrelationMinusID = MDC.get(MDCConstants.MDC_CALL_ID),
@@ -169,8 +107,11 @@ class RestOppgaveBehandlingServiceImplTest {
         SubjectHandlerUtil.withIdent("Z999999"
         ) { restOppgaveBehandlingService!!.ferdigstillOppgave("1", Temagruppe.ARBD, SAKSBEHANDLERS_VALGTE_ENHET) }
 
-        verify(oppgavebehandlingWS)!!.ferdigstillOppgaveBolk(ferdigstillOppgaveBolkRequestCaptor!!.capture())
-        Assert.assertThat(ferdigstillOppgaveBolkRequestCaptor!!.value.oppgaveIdListe[0], Matchers.`is`("1"))
+        verify(oppgavebehandling)!!.patchOppgaver(
+                xminusCorrelationMinusID = MDC.get(MDCConstants.MDC_CALL_ID),
+                patchOppgaverRequestJsonDTO = ferdigstillOppgaveBolkRequestCaptor!!.capture()
+        )
+        Assert.assertThat(ferdigstillOppgaveBolkRequestCaptor!!.value.oppgaver[0].id.toString(), Matchers.`is`("1"))
     }
 
     @Test
