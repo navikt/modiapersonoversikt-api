@@ -130,7 +130,11 @@ open class RestOppgaveBehandlingServiceImpl @Autowired constructor(
         return StringUtils.equalsIgnoreCase(response.status.value, OppgaveJsonDTO.Status.FERDIGSTILT.value)
     }
 
-    override fun finnTildelteOppgaver(): List<OppgaveResponse> {
+    override fun finnTildelteOppgaver() : List<OppgaveResponse> {
+        return finnOppgaver().map { oppgaveJsonDTO -> oppgaveJsonDTOToOppgaveResponse(oppgaveJsonDTO) }
+    }
+
+    private fun finnOppgaver(): List<OppgaveJsonDTO> {
         val ident: String = SubjectHandler.getIdent().orElseThrow { RuntimeException("Fant ikke ident") }
         val aktivStatus = "AAPEN"
         val response = apiClient.finnOppgaver(
@@ -163,8 +167,7 @@ open class RestOppgaveBehandlingServiceImpl @Autowired constructor(
                 limit = null,
                 offset = null
         )
-        val tildelteOppgaver = response.oppgaver!!.map { oppgave: OppgaveJsonDTO -> oppgaveJsonDTOToOppgaveResponse(oppgave) }
-        return finnOppgavergit stMedTilgangTilBruker(tildelteOppgaver)
+        return finnOppgaverMedTilgangTilBruker(response.oppgaver!!)
     }
 
     override fun ferdigstillOppgave(oppgaveId: String, temagruppe: Temagruppe, saksbehandlersValgteEnhet: String) {
@@ -282,16 +285,16 @@ open class RestOppgaveBehandlingServiceImpl @Autowired constructor(
         }
     }
 
-    private fun finnOppgaverMedTilgangTilBruker(oppgaveList: List<OppgaveResponse>): List<OppgaveResponse> {
+    private fun finnOppgaverMedTilgangTilBruker(oppgaveList: List<OppgaveJsonDTO>): List<OppgaveJsonDTO> {
         if (oppgaveList.isEmpty()) {
             return emptyList()
         } else if (tilgangskontroll
-                        .check(Policies.tilgangTilBruker.with(oppgaveList[0].fnr))
+                        .check(Policies.tilgangTilBruker.with(oppgaveList[0].aktoerId!!))
                         .getDecision()
                         .isPermit()) {
             return oppgaveList
         }
-        oppgaveList.forEach { oppgave: OppgaveResponse -> systemLeggTilbakeOppgave(oppgave.oppgaveId, Temagruppe.valueOf(null.toString()), "4100") }
+        oppgaveList.forEach { oppgave: OppgaveJsonDTO -> systemLeggTilbakeOppgave(oppgave.id.toString(), Temagruppe.valueOf(null.toString()), "4100") }
         return emptyList()
     }
 
