@@ -116,7 +116,7 @@ class RestOppgaveBehandlingServiceImplTest {
 
     @Test
     @Throws(HentOppgaveOppgaveIkkeFunnet::class, LagreOppgaveOptimistiskLasing::class, LagreOppgaveOppgaveIkkeFunnet::class)
-    fun systemetLeggerTilbakeOppgaveIGsakUtenEndringer() {
+    fun systemetLeggerTilbakeOppgaveUtenEndringer() {
         `when`<GetOppgaveResponseJsonDTO>(oppgave!!.hentOppgave(
                 xminusCorrelationMinusID = MDC.get(MDCConstants.MDC_CALL_ID),
                 id = ArgumentMatchers.any(oppgaveJsonDTO?.id.toString().toLong()::class.java))
