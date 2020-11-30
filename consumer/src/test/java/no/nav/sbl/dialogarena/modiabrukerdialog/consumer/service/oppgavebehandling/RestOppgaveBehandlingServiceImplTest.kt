@@ -87,12 +87,12 @@ class RestOppgaveBehandlingServiceImplTest {
 
         verify<OppgaveApi>(oppgavebehandling).patchOppgave(
                 xminusCorrelationMinusID = MDC.get(MDCConstants.MDC_CALL_ID),
-                id = oppgaveJsonDTO?.id.toString().toLong(),
+                id = lagreOppgaveRequestCaptor!!.capture().id,
                 patchOppgaveRequestJsonDTO = lagreOppgaveRequestCaptor!!.capture()
         )
-        val request: PatchOppgaveRequestJsonDTO? = lagreOppgaveRequestCaptor!!.value
-        Assert.assertThat(request?.tilordnetRessurs, Matchers.`is`("Z999999"))
-        Assert.assertThat(request?.endretAvEnhetsnr, Matchers.`is`(RestOppgaveBehandlingServiceImpl.DEFAULT_ENHET.toString()))
+        val request: PatchOppgaveRequestJsonDTO = lagreOppgaveRequestCaptor!!.value
+        Assert.assertThat(request.tilordnetRessurs, Matchers.`is`("Z999999"))
+        Assert.assertThat(request.endretAvEnhetsnr, Matchers.`is`(RestOppgaveBehandlingServiceImpl.DEFAULT_ENHET.toString()))
     }
 
     @Test
@@ -109,7 +109,11 @@ class RestOppgaveBehandlingServiceImplTest {
 
         verify(oppgavebehandling)!!.patchOppgaver(
                 xminusCorrelationMinusID = MDC.get(MDCConstants.MDC_CALL_ID),
-                patchOppgaverRequestJsonDTO = ferdigstillOppgaveBolkRequestCaptor!!.capture()
+                patchOppgaverRequestJsonDTO = PatchOppgaverRequestJsonDTO(
+                    oppgaver = ferdigstillOppgaveBolkRequestCaptor!!.capture().oppgaver,
+                    status = PatchOppgaverRequestJsonDTO.Status.FERDIGSTILT,
+                    endretAvEnhetsnr = ferdigstillOppgaveBolkRequestCaptor!!.capture().endretAvEnhetsnr
+                )
         )
         Assert.assertThat(ferdigstillOppgaveBolkRequestCaptor!!.value.oppgaver[0].id.toString(), Matchers.`is`("1"))
     }
