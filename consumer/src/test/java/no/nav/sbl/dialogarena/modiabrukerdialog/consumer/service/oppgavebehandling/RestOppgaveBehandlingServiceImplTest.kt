@@ -176,6 +176,34 @@ class RestOppgaveBehandlingServiceImplTest {
     }
 
     @Test
+    fun skalKonvertereFraGetOppgaveResponseJsonDTOTilOppgaveJsonDTO() {
+        val getOppgaveResponseJsonDTO = oppgave.hentOppgave(
+                xminusCorrelationMinusID = MDC.get(MDCConstants.MDC_CALL_ID),
+                id = RestOppgaveMockFactory.OPPGAVE_ID.toLong()
+        )
+
+        val oppgaveJsonDTO = lagOppgave()
+
+        Assert.assertThat(oppgaveJsonDTO.id, Matchers.`is`<Long>(getOppgaveResponseJsonDTO.id))
+        Assert.assertThat(oppgaveJsonDTO.tildeltEnhetsnr, Matchers.`is`<String>(getOppgaveResponseJsonDTO.tildeltEnhetsnr))
+        Assert.assertThat(oppgaveJsonDTO.aktoerId, Matchers.`is`<String>(getOppgaveResponseJsonDTO.aktoerId))
+        Assert.assertThat(oppgaveJsonDTO.behandlesAvApplikasjon, Matchers.`is`<String>(getOppgaveResponseJsonDTO.behandlesAvApplikasjon))
+        Assert.assertThat(oppgaveJsonDTO.beskrivelse, Matchers.`is`<String>(getOppgaveResponseJsonDTO.beskrivelse))
+        Assert.assertThat(oppgaveJsonDTO.temagruppe, Matchers.`is`<String>(getOppgaveResponseJsonDTO.temagruppe))
+        Assert.assertThat(oppgaveJsonDTO.tema, Matchers.`is`<String>(getOppgaveResponseJsonDTO.tema))
+        Assert.assertThat(oppgaveJsonDTO.behandlingstema, Matchers.`is`<String>(getOppgaveResponseJsonDTO.behandlingstema))
+        Assert.assertThat(oppgaveJsonDTO.oppgavetype, Matchers.`is`<String>(getOppgaveResponseJsonDTO.oppgavetype))
+        Assert.assertThat(oppgaveJsonDTO.behandlingstype, Matchers.`is`<String>(getOppgaveResponseJsonDTO.behandlingstype))
+        Assert.assertThat(oppgaveJsonDTO.aktivDato, Matchers.`is`<java.time.LocalDate>(getOppgaveResponseJsonDTO.aktivDato))
+        Assert.assertThat(oppgaveJsonDTO.fristFerdigstillelse, Matchers.`is`<java.time.LocalDate>(getOppgaveResponseJsonDTO.fristFerdigstillelse))
+        Assert.assertThat(oppgaveJsonDTO.prioritet.value, Matchers.`is`<String>(getOppgaveResponseJsonDTO.prioritet.value))
+        Assert.assertThat(oppgaveJsonDTO.endretAvEnhetsnr, Matchers.`is`<String>(getOppgaveResponseJsonDTO.endretAvEnhetsnr))
+        Assert.assertThat(oppgaveJsonDTO.status.value, Matchers.`is`<String>(getOppgaveResponseJsonDTO.status.value))
+        Assert.assertThat(oppgaveJsonDTO.versjon, Matchers.`is`<Int>(getOppgaveResponseJsonDTO.versjon))
+        Assert.assertThat(oppgaveJsonDTO.tilordnetRessurs, Matchers.`is`<String>(getOppgaveResponseJsonDTO.tilordnetRessurs))
+    }
+
+    @Test
     @Throws(HentOppgaveOppgaveIkkeFunnet::class)
     fun skalFinneTilordnaOppgave() {
         val oppgaveliste: List<OppgaveJsonDTO> = listOf(
