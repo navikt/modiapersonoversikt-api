@@ -10,7 +10,7 @@ import java.util.Map;
 
 import static no.nav.sbl.dialogarena.common.kodeverk.Kodeverk.Nokkel;
 import static org.hamcrest.CoreMatchers.*;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 public class JsonKodeverkTest {
 

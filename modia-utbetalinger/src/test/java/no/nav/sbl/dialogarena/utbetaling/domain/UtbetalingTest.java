@@ -11,6 +11,7 @@ import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
 import static no.nav.sbl.dialogarena.utbetaling.domain.util.YtelseUtils.SISTE_HOVEDYTELSESDATO_FORST;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.*;
 
 public class UtbetalingTest {

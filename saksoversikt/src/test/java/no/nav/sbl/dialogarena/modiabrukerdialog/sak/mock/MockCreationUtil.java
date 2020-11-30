@@ -36,7 +36,7 @@ public class MockCreationUtil {
 
     private static <T extends Kodeverdi> T kodeverk(Class<T> type, String kodeverkref) {
         try {
-            T t = type.newInstance();
+            T t = type.getDeclaredConstructor().newInstance();
             t.setKodeRef(kodeverkref);
             return t;
         } catch (Exception e) {

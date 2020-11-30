@@ -13,6 +13,7 @@ import static java.util.Arrays.asList;
 import static no.nav.sbl.dialogarena.utbetaling.domain.transform.Transformers.*;
 import static org.hamcrest.Matchers.*;
 import static org.joda.time.DateTime.now;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.*;
 
 public class TransformersTest {
@@ -40,7 +41,7 @@ public class TransformersTest {
         DateTime hovedytelseDato = determineHovedytelseDato(wsUtbetaling);
         assertThat(hovedytelseDato, is(new DateTime(2010, 1, 1, 1, 1)));
     }
-    
+
     @Test
     public void hovedytelsesDatoErPosteringsdatoNaarUtbetalingsdatoOgForfallsdatoIkkeEksisterer() {
         WSUtbetaling wsUtbetaling = new WSUtbetaling()

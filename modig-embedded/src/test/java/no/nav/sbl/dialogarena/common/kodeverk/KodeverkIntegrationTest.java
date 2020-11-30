@@ -17,7 +17,7 @@ import java.util.UUID;
 
 import static java.util.Optional.of;
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 /**
  * Integrasjonstest for kodeverk. Bør sjekkes inn med @Ignore, siden bygget kan brekke hvis kodeverktjenesten går ned.

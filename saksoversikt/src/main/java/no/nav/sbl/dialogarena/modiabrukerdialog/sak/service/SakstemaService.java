@@ -173,11 +173,11 @@ public class SakstemaService {
         }
     }
 
-    private static final Predicate<DokumentMetadata> tilhorendeFraJoark(List<Sak> tilhorendeSaker) {
+    private static Predicate<DokumentMetadata> tilhorendeFraJoark(List<Sak> tilhorendeSaker) {
         return dm -> tilhorendeSaker.stream().map(Sak::getSaksId).collect(toList()).contains(dm.getTilhorendeSakid());
     }
 
-    private static final Predicate<DokumentMetadata> tilhorendeFraHenvendelse(Map.Entry<String, Set<String>> temagruppe, String temakode) {
+    private static Predicate<DokumentMetadata> tilhorendeFraHenvendelse(Map.Entry<String, Set<String>> temagruppe, String temakode) {
         return dm -> dm.getBaksystem().contains(HENVENDELSE)
                 && (dm.getTemakode().equals(temakode)
                 || (!temagruppe.getKey().equals(RESTERENDE_TEMA) && dm.getTemakode().equals(OPPFOLGING)));

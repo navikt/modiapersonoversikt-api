@@ -8,7 +8,9 @@ import org.junit.Test;
 import static no.nav.sbl.dialogarena.utbetaling.domain.util.DateUtils.*;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.*;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertFalse;
 
 public class DateUtilsTest {
 

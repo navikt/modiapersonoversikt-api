@@ -257,7 +257,7 @@ public class MeldingUtils {
         return xmlHenvendelse.getMetadataListe() == null;
     }
 
-    public static final Status henvendelseStatus(XMLHenvendelse henvendelse) {
+    public static Status henvendelseStatus(XMLHenvendelse henvendelse) {
         Meldingstype meldingstype = MELDINGSTYPE_MAP.get(XMLHenvendelseType.fromValue(henvendelse.getHenvendelseType()));
 
         if (VisningUtils.FRA_BRUKER.contains(meldingstype)) {
