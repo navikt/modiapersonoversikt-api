@@ -62,7 +62,10 @@ class RestOppgaveBehandlingServiceImplTest {
     private val oppgaveJsonDTO: OppgaveJsonDTO? = null
 
     @Mock
-    private val oppgavebehandling: OppgavebehandlingV3? = null
+    private val oppgavebehandling: OppgaveApi? = null
+
+    @Mock
+    private val oppgavebehandlingWS: OppgavebehandlingV3? = null
 
     @Mock
     private val tildelOppgave: TildelOppgaveV1? = null
@@ -100,7 +103,7 @@ class RestOppgaveBehandlingServiceImplTest {
             )
         }
 
-        verify<OppgaveApi>(OppgaveApi()).patchOppgave(
+        verify<OppgaveApi>(oppgavebehandling).patchOppgave(
                 xminusCorrelationMinusID = MDC.get(MDCConstants.MDC_CALL_ID),
                 id = oppgaveJsonDTO?.id.toString().toLong(),
                 patchOppgaveRequestJsonDTO = lagreOppgaveRequestCaptor!!.capture()
@@ -118,13 +121,13 @@ class RestOppgaveBehandlingServiceImplTest {
 
         val lagOppgave1 = lagOppgave().copy(id = OPPGAVE_ID_1.toLong())
 
-        val hentOppgaveResponse1: GetOppgaveResponseJsonDTO = OppgaveApi().hentOppgave(
+        val hentOppgaveResponse1: GetOppgaveResponseJsonDTO = oppgave!!.hentOppgave(
                 xminusCorrelationMinusID = MDC.get(MDCConstants.MDC_CALL_ID),
                 id = lagOppgave1.id.toString().toLong()
         )
 
         val lagOppgave2 = lagOppgave().copy(id = OPPGAVE_ID_2.toLong())
-        val hentOppgaveResponse2: GetOppgaveResponseJsonDTO = OppgaveApi().hentOppgave(
+        val hentOppgaveResponse2: GetOppgaveResponseJsonDTO = oppgave!!.hentOppgave(
                 xminusCorrelationMinusID = MDC.get(MDCConstants.MDC_CALL_ID),
                 id = lagOppgave2.id.toString().toLong()
         )
@@ -166,7 +169,7 @@ class RestOppgaveBehandlingServiceImplTest {
         SubjectHandlerUtil.withIdent("Z999999"
         ) { restOppgaveBehandlingService!!.ferdigstillOppgave("1", Temagruppe.ARBD, SAKSBEHANDLERS_VALGTE_ENHET) }
 
-        verify(oppgavebehandling)!!.ferdigstillOppgaveBolk(ferdigstillOppgaveBolkRequestCaptor!!.capture())
+        verify(oppgavebehandlingWS)!!.ferdigstillOppgaveBolk(ferdigstillOppgaveBolkRequestCaptor!!.capture())
         Assert.assertThat(ferdigstillOppgaveBolkRequestCaptor!!.value.oppgaveIdListe[0], Matchers.`is`("1"))
     }
 
@@ -178,12 +181,12 @@ class RestOppgaveBehandlingServiceImplTest {
                 id = ArgumentMatchers.any(oppgaveJsonDTO?.id.toString().toLong()::class.java))
         ).thenReturn(mockHentOppgaveResponseMedTilordning().toGetOppgaveResponseJsonDTO())
         restOppgaveBehandlingService!!.systemLeggTilbakeOppgave("1", Temagruppe.ARBD, SAKSBEHANDLERS_VALGTE_ENHET)
-        verify<OppgaveJsonDTO>(OppgaveApi().patchOppgave(
+        verify<OppgaveJsonDTO>(oppgave.patchOppgave(
                 xminusCorrelationMinusID = MDC.get(MDCConstants.MDC_CALL_ID),
                 id = lagreOppgaveRequestCaptor!!.value.id,
                 patchOppgaveRequestJsonDTO = lagreOppgaveRequestCaptor!!.capture()
         ))
-        val endreOppgave: OppgaveJsonDTO = OppgaveApi().patchOppgave(
+        val endreOppgave: OppgaveJsonDTO = oppgave.patchOppgave(
                 xminusCorrelationMinusID = MDC.get(MDCConstants.MDC_CALL_ID),
                 id = lagreOppgaveRequestCaptor!!.value.id,
                 patchOppgaveRequestJsonDTO = lagreOppgaveRequestCaptor!!.value
