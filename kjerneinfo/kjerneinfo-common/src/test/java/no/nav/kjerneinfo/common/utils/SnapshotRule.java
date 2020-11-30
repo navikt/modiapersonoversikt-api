@@ -10,14 +10,13 @@ import org.junit.runner.Description;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.junit.Assert.assertEquals;
 
 public class SnapshotRule extends TestWatcher {
-    private static final Charset UTF8 = Charset.forName("UTF-8");
     private String path;
     private String name;
     private int counter = 0;
@@ -92,14 +91,14 @@ public class SnapshotRule extends TestWatcher {
 
     private void save(File file, Object object) {
         try {
-            Files.writeString(file.toPath(), createSnapshot(object), UTF8);
+            Files.writeString(file.toPath(), createSnapshot(object), UTF_8);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
     private static String readSnapshot(File file) throws IOException {
-        return Files.readString(file.toPath(), UTF8);
+        return Files.readString(file.toPath(), UTF_8);
     }
 
     private static String createSnapshot(Object object) {

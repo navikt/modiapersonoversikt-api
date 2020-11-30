@@ -5,5 +5,5 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.AnsattEnhet;
 import java.util.Optional;
 
 public interface OppfolgingsenhetService {
-    public Optional<AnsattEnhet> hentOppfolgingsenhet(String fodselsnummer);
+    Optional<AnsattEnhet> hentOppfolgingsenhet(String fodselsnummer);
 }

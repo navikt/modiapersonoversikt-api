@@ -182,7 +182,7 @@ public class Fodselsnummer implements Serializable {
             StringBuilder fnr = new StringBuilder(value);
 
             if (day < 10) {
-                fnr.replace(0, 2, "0" + Integer.toString(day));
+                fnr.replace(0, 2, "0" + day);
             } else {
                 fnr.replace(0, 2, Integer.toString(day));
             }
@@ -194,7 +194,7 @@ public class Fodselsnummer implements Serializable {
             StringBuilder fnr = new StringBuilder(value);
 
             if (month < 10) {
-                fnr.replace(2, 4, "0" + Integer.toString(month));
+                fnr.replace(2, 4, "0" + month);
             } else {
                 fnr.replace(2, 4, Integer.toString(month));
             }

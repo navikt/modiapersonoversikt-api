@@ -16,7 +16,7 @@ public enum Familierelasjonstype {
     EKTE("ekte");
     private final String value;
 
-    private Familierelasjonstype(String v) {
+    Familierelasjonstype(String v) {
         value = v;
     }
 
