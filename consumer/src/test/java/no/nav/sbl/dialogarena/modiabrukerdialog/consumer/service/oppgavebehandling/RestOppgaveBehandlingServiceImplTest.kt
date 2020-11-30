@@ -150,7 +150,7 @@ class RestOppgaveBehandlingServiceImplTest {
     }
 
     @Test
-    fun skalKonvertereFraOppgaveJsonDTOTilEndreOppgave() {
+    fun skalKonvertereFraOppgaveJsonDTOTilPutOppgaveResponseJsonDTO() {
         val oppgaveJsonDTO = lagOppgave()
 
         val endreOppgave = RestOppgaveBehandlingServiceImpl.endreOppgave(oppgaveJsonDTO)
