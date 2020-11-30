@@ -1,12 +1,10 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.oppgavebehandling;
 
 import no.nav.common.log.MDCConstants
-import no.nav.common.utils.EnvironmentUtils
 import no.nav.sbl.dialogarena.abac.AbacRequest
 import no.nav.sbl.dialogarena.abac.AbacResponse
 import no.nav.sbl.dialogarena.abac.Decision
 import no.nav.sbl.dialogarena.abac.Response
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Oppgave
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.oppgave.generated.apis.OppgaveApi
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.oppgave.generated.models.GetOppgaveResponseJsonDTO
@@ -22,10 +20,6 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.Collections
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Tilgangskontroll
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.TilgangskontrollContext
 import no.nav.tjeneste.virksomhet.oppgave.v3.HentOppgaveOppgaveIkkeFunnet
-import no.nav.tjeneste.virksomhet.oppgave.v3.meldinger.WSFinnOppgaveListeRequest
-import no.nav.tjeneste.virksomhet.oppgave.v3.meldinger.WSFinnOppgaveListeResponse
-import no.nav.tjeneste.virksomhet.oppgave.v3.meldinger.WSHentOppgaveRequest
-import no.nav.tjeneste.virksomhet.oppgave.v3.meldinger.WSHentOppgaveResponse
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.LagreOppgaveOppgaveIkkeFunnet
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.LagreOppgaveOptimistiskLasing
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.OppgavebehandlingV3
@@ -40,7 +34,6 @@ import org.junit.jupiter.api.Test
 import org.mockito.*
 import org.mockito.Mockito.*
 import org.slf4j.MDC
-import java.util.function.Function
 import java.util.stream.Collectors
 
 class RestOppgaveBehandlingServiceImplTest {
@@ -75,7 +68,7 @@ class RestOppgaveBehandlingServiceImplTest {
     private val tildelOppgave: TildelOppgaveV1? = null
 
     // Kan ikke bruke `@Mock` siden vi er avhengig av at verdien er definert ved opprettelsen av `Tilgangskontroll`
-    private val tilgangskontrollContext = Mockito.mock(TilgangskontrollContext::class.java)
+    private val tilgangskontrollContext = mock(TilgangskontrollContext::class.java)
 
     @Spy
     private val tilgangskontroll = Tilgangskontroll(tilgangskontrollContext)
@@ -140,7 +133,7 @@ class RestOppgaveBehandlingServiceImplTest {
                 .thenReturn(tildelFlereOppgaverResponse)
         `when`<GetOppgaveResponseJsonDTO>(oppgave!!.hentOppgave(
                 xminusCorrelationMinusID = MDC.get(MDCConstants.MDC_CALL_ID),
-                id = ArgumentMatchers.any(OppgaveResponse().oppgaveId.toLong()::class.java)))
+                id = ArgumentMatchers.any(oppgaveJsonDTO?.id.toString().toLong()::class.java)))
                 .thenReturn(hentOppgaveResponse1, hentOppgaveResponse2)
 
         SubjectHandlerUtil.withIdent<List<OppgaveResponse>>("Z999999"
@@ -153,7 +146,7 @@ class RestOppgaveBehandlingServiceImplTest {
                 id = hentOppgaveRequestCaptor!!.capture().id!!.toLong())
 
         Assert.assertThat(hentOppgaveRequestCaptor!!.allValues.stream()
-                .map(Function<OppgaveJsonDTO, String> { obj: OppgaveJsonDTO -> obj.id.toString() })
+                .map { obj: OppgaveJsonDTO -> obj.id.toString() }
                 .collect(Collectors.toSet()),
                 Matchers.`is`(Collections.asSet(OPPGAVE_ID_1, OPPGAVE_ID_2)))
         Assert.assertNotNull(tildelFlereOppgaverRequestCaptor!!.value)
@@ -182,7 +175,7 @@ class RestOppgaveBehandlingServiceImplTest {
     fun systemetLeggerTilbakeOppgaveIGsakUtenEndringer() {
         `when`<GetOppgaveResponseJsonDTO>(oppgave!!.hentOppgave(
                 xminusCorrelationMinusID = MDC.get(MDCConstants.MDC_CALL_ID),
-                id = ArgumentMatchers.any(OppgaveJsonDTO().id!!.toLong()::class.java))
+                id = ArgumentMatchers.any(oppgaveJsonDTO?.id.toString().toLong()::class.java))
         ).thenReturn(mockHentOppgaveResponseMedTilordning().toGetOppgaveResponseJsonDTO())
         restOppgaveBehandlingService!!.systemLeggTilbakeOppgave("1", Temagruppe.ARBD, SAKSBEHANDLERS_VALGTE_ENHET)
         verify<OppgaveJsonDTO>(OppgaveApi().patchOppgave(
