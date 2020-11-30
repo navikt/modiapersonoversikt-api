@@ -1,6 +1,7 @@
 package no.nav.sbl.dialogarena.naudit
 
 enum class AuditIdentifier {
+    FAIL_REASON,
     DENY_REASON,
     FNR,
     BEHANDLING_ID,
