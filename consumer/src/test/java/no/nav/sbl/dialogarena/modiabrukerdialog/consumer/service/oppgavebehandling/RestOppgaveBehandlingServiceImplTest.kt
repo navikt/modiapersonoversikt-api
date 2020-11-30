@@ -96,7 +96,7 @@ class RestOppgaveBehandlingServiceImplTest {
             restOppgaveBehandlingService!!.tilordneOppgave(
                     "oppgaveid",
                     Temagruppe.ARBD,
-                    OppgaveBehandlingServiceImplTest.SAKSBEHANDLERS_VALGTE_ENHET
+                    SAKSBEHANDLERS_VALGTE_ENHET
             )
         }
 
