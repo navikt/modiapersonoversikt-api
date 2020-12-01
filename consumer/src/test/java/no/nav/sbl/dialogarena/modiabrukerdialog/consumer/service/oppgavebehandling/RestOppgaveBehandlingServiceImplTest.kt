@@ -11,8 +11,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.oppgave.generated.mod
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveResponse
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.AnsattService
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.http.SubjectHandlerUtil
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.oppgavebehandling.RestOppgaveMockFactory.lagOppgave
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.oppgavebehandling.RestOppgaveMockFactory.mockHentOppgaveResponseMedTilordning
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.oppgavebehandling.RestOppgaveMockFactory
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Tilgangskontroll
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.TilgangskontrollContext
 import no.nav.tjeneste.virksomhet.oppgave.v3.HentOppgaveOppgaveIkkeFunnet
@@ -27,7 +26,7 @@ import org.mockito.*
 import org.mockito.Mockito.*
 import org.slf4j.MDC
 
-class RestOppgaveBehandlingServiceImplTest {
+open class RestOppgaveBehandlingServiceImplTest {
     val SAKSBEHANDLERS_VALGTE_ENHET = "4100"
     val aktivStatus = "AAPEN"
 
@@ -126,7 +125,7 @@ class RestOppgaveBehandlingServiceImplTest {
         `when`<GetOppgaveResponseJsonDTO>(oppgave!!.hentOppgave(
                 xminusCorrelationMinusID = MDC.get(MDCConstants.MDC_CALL_ID),
                 id = ArgumentMatchers.any(oppgaveJsonDTO?.id.toString().toLong()::class.java))
-        ).thenReturn(mockHentOppgaveResponseMedTilordning().toGetOppgaveResponseJsonDTO())
+        ).thenReturn(RestOppgaveMockFactory.mockHentOppgaveResponseMedTilordning().toGetOppgaveResponseJsonDTO())
 
         restOppgaveBehandlingService!!.systemLeggTilbakeOppgave("1", Temagruppe.ARBD, SAKSBEHANDLERS_VALGTE_ENHET)
 
@@ -142,20 +141,20 @@ class RestOppgaveBehandlingServiceImplTest {
                 patchOppgaveRequestJsonDTO = lagreOppgaveRequestCaptor!!.value
         )
 
-        Assert.assertThat(endreOppgave.beskrivelse, Matchers.`is`(mockHentOppgaveResponseMedTilordning().beskrivelse))
+        Assert.assertThat(endreOppgave.beskrivelse, Matchers.`is`(RestOppgaveMockFactory.mockHentOppgaveResponseMedTilordning().beskrivelse))
     }
 
     private fun mockHentOppgaveResponse(): GetOppgaveResponseJsonDTO {
-        return lagOppgave().toGetOppgaveResponseJsonDTO()
+        return RestOppgaveMockFactory.lagOppgave().toGetOppgaveResponseJsonDTO()
     }
 
     private fun nyLagOppgave(oppgaveId: String, aktorId: String) : OppgaveJsonDTO {
-        return lagOppgave().copy(id = oppgaveId.toLong(), aktoerId = aktorId)
+        return RestOppgaveMockFactory.lagOppgave().copy(id = oppgaveId.toLong(), aktoerId = aktorId)
     }
 
     @Test
     fun skalKonvertereFraOppgaveJsonDTOTilPutOppgaveResponseJsonDTO() {
-        val oppgaveJsonDTO = lagOppgave()
+        val oppgaveJsonDTO = RestOppgaveMockFactory.lagOppgave()
 
         val endreOppgave = RestOppgaveBehandlingServiceImpl.endreOppgave(oppgaveJsonDTO)
 
@@ -186,7 +185,7 @@ class RestOppgaveBehandlingServiceImplTest {
                 id = RestOppgaveMockFactory.OPPGAVE_ID.toLong()
         )
 
-        val oppgaveJsonDTO = lagOppgave()
+        val oppgaveJsonDTO = RestOppgaveMockFactory.lagOppgave()
 
         Assert.assertThat(oppgaveJsonDTO.id, Matchers.`is`<Long>(getOppgaveResponseJsonDTO.id))
         Assert.assertThat(oppgaveJsonDTO.tildeltEnhetsnr, Matchers.`is`<String>(getOppgaveResponseJsonDTO.tildeltEnhetsnr))
@@ -249,7 +248,7 @@ class RestOppgaveBehandlingServiceImplTest {
         `when`(oppgave.hentOppgave(
                 xminusCorrelationMinusID = MDC.get(MDCConstants.MDC_CALL_ID),
                 id = oppgaveJsonDTO?.id.toString().toLong()
-        )).thenReturn(mockHentOppgaveResponseMedTilordning().toGetOppgaveResponseJsonDTO())
+        )).thenReturn(RestOppgaveMockFactory.mockHentOppgaveResponseMedTilordning().toGetOppgaveResponseJsonDTO())
 
         `when`(tilgangskontrollContext.checkAbac(any(AbacRequest::class.java))).thenReturn(
                 AbacResponse(listOf(Response(Decision.Permit, emptyList())))
@@ -308,7 +307,7 @@ class RestOppgaveBehandlingServiceImplTest {
         `when`<GetOppgaveResponseJsonDTO>(oppgave.hentOppgave(
                 xminusCorrelationMinusID = MDC.get(MDCConstants.MDC_CALL_ID),
                 id = oppgaveJsonDTO?.id.toString().toLong()
-        )).thenReturn(mockHentOppgaveResponseMedTilordning().toGetOppgaveResponseJsonDTO())
+        )).thenReturn(RestOppgaveMockFactory.mockHentOppgaveResponseMedTilordning().toGetOppgaveResponseJsonDTO())
 
         val resultat = SubjectHandlerUtil.withIdent<List<OppgaveResponse>>("Z999999") { restOppgaveBehandlingService!!.finnTildelteOppgaver() }
 
