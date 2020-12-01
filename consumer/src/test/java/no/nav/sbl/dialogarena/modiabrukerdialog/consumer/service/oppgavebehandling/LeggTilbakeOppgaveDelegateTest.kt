@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.oppgavebehandling;
 
+import com.nhaarman.mockitokotlin2.mock
 import no.nav.common.log.MDCConstants
 import no.nav.common.utils.EnvironmentUtils
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe
@@ -45,7 +46,7 @@ open class LeggTilbakeOppgaveDelegateTest @Autowired constructor(
     @BeforeEach
     open fun before() {
         mockTjenester()
-        restOppgaveBehandlingService = RestOppgaveBehandlingServiceImpl(kodeverksmapperService, pdlOppslagService, tilgangskontroll, ansattServiceMock, arbeidsfordelingMock)
+        restOppgaveBehandlingService = RestOppgaveBehandlingServiceImpl(restOppgaveServiceMock, kodeverksmapperService, pdlOppslagService, tilgangskontroll, ansattServiceMock, arbeidsfordelingMock, mock())
     }
 
     private fun mockTjenester() {

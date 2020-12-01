@@ -1,349 +1,120 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.oppgavebehandling;
 
-import no.nav.common.log.MDCConstants
-import no.nav.sbl.dialogarena.abac.AbacRequest
-import no.nav.sbl.dialogarena.abac.AbacResponse
-import no.nav.sbl.dialogarena.abac.Decision
-import no.nav.sbl.dialogarena.abac.Response
+import io.mockk.every
+import io.mockk.mockk
+import io.mockk.verify
+import io.mockk.verifySequence
+import no.nav.common.sts.SystemUserTokenProvider
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.oppgave.generated.apis.OppgaveApi
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.oppgave.generated.models.*
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveResponse
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.AnsattService
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.RestOppgaveBehandlingService
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.http.SubjectHandlerUtil
-import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Tilgangskontroll
-import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.TilgangskontrollContext
-import no.nav.tjeneste.virksomhet.oppgave.v3.HentOppgaveOppgaveIkkeFunnet
-import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.LagreOppgaveOppgaveIkkeFunnet
-import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.LagreOppgaveOptimistiskLasing
-import no.nav.tjeneste.virksomhet.tildeloppgave.v1.WSTildelFlereOppgaverRequest
-import org.hamcrest.Matchers
-import org.junit.Assert
-import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
-import org.mockito.*
-import org.mockito.Mockito.*
-import org.slf4j.MDC
+import java.time.LocalDate.now
 
-open class RestOppgaveBehandlingServiceImplTest {
-    val SAKSBEHANDLERS_VALGTE_ENHET = "4100"
-    val aktivStatus = "AAPEN"
+val mockOppgave: OppgaveJsonDTO = OppgaveJsonDTO(
+        id = 1234,
+        tildeltEnhetsnr = "4100",
+        oppgavetype = "SPM_OG_SVR",
+        versjon = 1,
+        prioritet = OppgaveJsonDTO.Prioritet.NORM,
+        status = OppgaveJsonDTO.Status.AAPNET,
+        aktivDato = now()
+)
 
-    @Captor
-    var ferdigstillOppgaveBolkRequestCaptor: ArgumentCaptor<PatchOppgaverRequestJsonDTO>? = null
-
-    @Captor
-    var lagreOppgaveRequestCaptor: ArgumentCaptor<PatchOppgaveRequestJsonDTO>? = null
-
-    @Captor
-    var tildelFlereOppgaverRequestCaptor: ArgumentCaptor<WSTildelFlereOppgaverRequest>? = null
-
-    @Mock
-    private val ansatt: AnsattService? = null
-
-    @Mock
-    private val oppgave: OppgaveApi? = null
-
-    @Mock
-    private val oppgaveJsonDTO: OppgaveJsonDTO? = null
-
-    @Mock
-    private val oppgavebehandling: OppgaveApi? = null
-
-    // Kan ikke bruke `@Mock` siden vi er avhengig av at verdien er definert ved opprettelsen av `Tilgangskontroll`
-    private val tilgangskontrollContext = mock(TilgangskontrollContext::class.java)
-
-    @Spy
-    private val tilgangskontroll = Tilgangskontroll(tilgangskontrollContext)
-
-    @InjectMocks
-    private val restOppgaveBehandlingService: RestOppgaveBehandlingServiceImpl? = null
-
-    private val OPPGAVE_ID_1 = "123"
-    private val OPPGAVE_ID_2 = "456"
-
-    @BeforeEach
-    fun init() {
-        MockitoAnnotations.initMocks(this)
-    }
+class RestOppgaveBehandlingServiceImplRedoTest {
+    val apiClient: OppgaveApi = mockk()
+    val stsService: SystemUserTokenProvider = mockk()
+    val oppgaveBehandlingService: RestOppgaveBehandlingService = RestOppgaveBehandlingServiceImpl(
+            apiClient,
+            mockk(),
+            mockk(),
+            mockk(),
+            mockk(),
+            mockk(),
+            stsService
+    )
 
     @Test
-    @Throws(HentOppgaveOppgaveIkkeFunnet::class, LagreOppgaveOppgaveIkkeFunnet::class, LagreOppgaveOptimistiskLasing::class)
-    fun skalHenteSporsmaalOgTilordneOppgave() {
-        `when`(oppgave!!.hentOppgave(
-                xminusCorrelationMinusID = MDC.get(MDCConstants.MDC_CALL_ID),
-                id = oppgaveJsonDTO?.id.toString().toLong()
-        )).thenReturn(mockHentOppgaveResponse())
+    fun `skal hente og tilordne oppgave, setter 4100 som standard enhet`() {
+        every { stsService.systemUserToken } returns "DummyToken"
+        every { apiClient.hentOppgave(any(), any()) } returns mockOppgave.asGetResponse()
+        every { apiClient.patchOppgave(any(), any(), any()) } returns mockOppgave
 
-        SubjectHandlerUtil.withIdent("Z999999") {
-            restOppgaveBehandlingService!!.tilordneOppgave(
-                    "oppgaveid",
-                    Temagruppe.ARBD,
-                    SAKSBEHANDLERS_VALGTE_ENHET
+        SubjectHandlerUtil.withIdent("Z999998") {
+            oppgaveBehandlingService.tilordneOppgave(
+                    "1234",
+                    Temagruppe.FMLI,
+                    "4110"
             )
         }
 
-        verify<OppgaveApi>(oppgavebehandling).patchOppgave(
-                xminusCorrelationMinusID = MDC.get(MDCConstants.MDC_CALL_ID),
-                id = lagreOppgaveRequestCaptor!!.capture().id,
-                patchOppgaveRequestJsonDTO = lagreOppgaveRequestCaptor!!.capture()
-        )
-        val request: PatchOppgaveRequestJsonDTO = lagreOppgaveRequestCaptor!!.value
-        Assert.assertThat(request.tilordnetRessurs, Matchers.`is`("Z999999"))
-        Assert.assertThat(request.endretAvEnhetsnr, Matchers.`is`(RestOppgaveBehandlingServiceImpl.DEFAULT_ENHET.toString()))
+        verify {
+            apiClient.hentOppgave(any(), any())
+            apiClient.patchOppgave(any(), any(), PatchOppgaveRequestJsonDTO(
+                    id = 1234,
+                    versjon = 1,
+                    endretAvEnhetsnr = "4100",
+                    tilordnetRessurs = "Z999998"
+            ))
+        }
     }
 
     @Test
-    @Throws(HentOppgaveOppgaveIkkeFunnet::class)
+    fun `skal hente og tilordne oppgave, bruker saksbehandlers valgte enhet for ANSOS etc `() {
+        every { stsService.systemUserToken } returns "DummyToken"
+        every { apiClient.hentOppgave(any(), any()) } returns mockOppgave.asGetResponse()
+        every { apiClient.patchOppgave(any(), any(), any()) } returns mockOppgave
+
+        SubjectHandlerUtil.withIdent("Z999998") {
+            oppgaveBehandlingService.tilordneOppgave(
+                    "1234",
+                    Temagruppe.ANSOS,
+                    "4110"
+            )
+        }
+
+        verify {
+            apiClient.hentOppgave(any(), any())
+            apiClient.patchOppgave(any(), any(), PatchOppgaveRequestJsonDTO(
+                    id = 1234,
+                    versjon = 1,
+                    endretAvEnhetsnr = "4110",
+                    tilordnetRessurs = "Z999998"
+            ))
+        }
+    }
+
+    @Test
     fun skalFerdigstilleOppgaver() {
-        `when`(oppgave!!.hentOppgave(
-                xminusCorrelationMinusID = MDC.get(MDCConstants.MDC_CALL_ID),
-                id = ArgumentMatchers.any(oppgaveJsonDTO!!.id!!.toLong()::class.java))
-        ).thenReturn(mockHentOppgaveResponse())
-
-        `when`(ansatt!!.hentAnsattNavn(anyString())).thenReturn("")
-
-        SubjectHandlerUtil.withIdent("Z999999"
-        ) { restOppgaveBehandlingService!!.ferdigstillOppgave("1", Temagruppe.ARBD, SAKSBEHANDLERS_VALGTE_ENHET) }
-
-        verify(oppgavebehandling)!!.patchOppgaver(
-                xminusCorrelationMinusID = MDC.get(MDCConstants.MDC_CALL_ID),
-                patchOppgaverRequestJsonDTO = PatchOppgaverRequestJsonDTO(
-                    oppgaver = ferdigstillOppgaveBolkRequestCaptor!!.capture().oppgaver,
-                    status = PatchOppgaverRequestJsonDTO.Status.FERDIGSTILT,
-                    endretAvEnhetsnr = ferdigstillOppgaveBolkRequestCaptor!!.capture().endretAvEnhetsnr
-                )
-        )
-
-        Assert.assertThat(ferdigstillOppgaveBolkRequestCaptor!!.value.oppgaver[0].id.toString(), Matchers.`is`("1"))
+        SubjectHandlerUtil.withIdent("Z999998") {
+            oppgaveBehandlingService.ferdigstillOppgave(
+                    "1234",
+                    Temagruppe.ANSOS,
+                    "4110"
+            )
+        }
     }
 
     @Test
-    @Throws(HentOppgaveOppgaveIkkeFunnet::class, LagreOppgaveOptimistiskLasing::class, LagreOppgaveOppgaveIkkeFunnet::class)
     fun systemetLeggerTilbakeOppgaveUtenEndringer() {
-        `when`<GetOppgaveResponseJsonDTO>(oppgave!!.hentOppgave(
-                xminusCorrelationMinusID = MDC.get(MDCConstants.MDC_CALL_ID),
-                id = ArgumentMatchers.any(oppgaveJsonDTO?.id.toString().toLong()::class.java))
-        ).thenReturn(RestOppgaveMockFactory.mockHentOppgaveResponseMedTilordning().toGetOppgaveResponseJsonDTO())
-
-        restOppgaveBehandlingService!!.systemLeggTilbakeOppgave("1", Temagruppe.ARBD, SAKSBEHANDLERS_VALGTE_ENHET)
-
-        verify<OppgaveJsonDTO>(oppgave.patchOppgave(
-                xminusCorrelationMinusID = MDC.get(MDCConstants.MDC_CALL_ID),
-                id = lagreOppgaveRequestCaptor!!.value.id,
-                patchOppgaveRequestJsonDTO = lagreOppgaveRequestCaptor!!.capture()
-        ))
-
-        val endreOppgave: OppgaveJsonDTO = oppgave.patchOppgave(
-                xminusCorrelationMinusID = MDC.get(MDCConstants.MDC_CALL_ID),
-                id = lagreOppgaveRequestCaptor!!.value.id,
-                patchOppgaveRequestJsonDTO = lagreOppgaveRequestCaptor!!.value
-        )
-
-        Assert.assertThat(endreOppgave.beskrivelse, Matchers.`is`(RestOppgaveMockFactory.mockHentOppgaveResponseMedTilordning().beskrivelse))
-    }
-
-    private fun mockHentOppgaveResponse(): GetOppgaveResponseJsonDTO {
-        return RestOppgaveMockFactory.lagOppgave().toGetOppgaveResponseJsonDTO()
-    }
-
-    private fun nyLagOppgave(oppgaveId: String, aktorId: String) : OppgaveJsonDTO {
-        return RestOppgaveMockFactory.lagOppgave().copy(id = oppgaveId.toLong(), aktoerId = aktorId)
     }
 
     @Test
     fun skalKonvertereFraOppgaveJsonDTOTilPutOppgaveResponseJsonDTO() {
-        val oppgaveJsonDTO = RestOppgaveMockFactory.lagOppgave()
-
-        val endreOppgave = RestOppgaveBehandlingServiceImpl.endreOppgave(oppgaveJsonDTO)
-
-        Assert.assertThat(endreOppgave.id, Matchers.`is`<Long>(oppgaveJsonDTO.id))
-        Assert.assertThat(endreOppgave.tildeltEnhetsnr, Matchers.`is`<String>(oppgaveJsonDTO.tildeltEnhetsnr))
-        Assert.assertThat(endreOppgave.aktoerId, Matchers.`is`<String>(oppgaveJsonDTO.aktoerId))
-        Assert.assertThat(endreOppgave.behandlesAvApplikasjon, Matchers.`is`<String>(oppgaveJsonDTO.behandlesAvApplikasjon))
-        Assert.assertThat(endreOppgave.beskrivelse, Matchers.`is`<String>(oppgaveJsonDTO.beskrivelse))
-        Assert.assertThat(endreOppgave.temagruppe, Matchers.`is`<String>(oppgaveJsonDTO.temagruppe))
-        Assert.assertThat(endreOppgave.tema, Matchers.`is`<String>(oppgaveJsonDTO.tema))
-        Assert.assertThat(endreOppgave.behandlingstema, Matchers.`is`<String>(oppgaveJsonDTO.behandlingstema))
-        Assert.assertThat(endreOppgave.oppgavetype, Matchers.`is`<String>(oppgaveJsonDTO.oppgavetype))
-        Assert.assertThat(endreOppgave.behandlingstype, Matchers.`is`<String>(oppgaveJsonDTO.behandlingstype))
-        Assert.assertThat(endreOppgave.aktivDato, Matchers.`is`<java.time.LocalDate>(oppgaveJsonDTO.aktivDato))
-        Assert.assertThat(endreOppgave.fristFerdigstillelse, Matchers.`is`<java.time.LocalDate>(oppgaveJsonDTO.fristFerdigstillelse))
-        Assert.assertThat(endreOppgave.prioritet.value, Matchers.`is`<String>(oppgaveJsonDTO.prioritet.value))
-        Assert.assertThat(endreOppgave.endretAvEnhetsnr, Matchers.`is`<String>(oppgaveJsonDTO.endretAvEnhetsnr))
-        Assert.assertThat(endreOppgave.status.value, Matchers.`is`<String>(oppgaveJsonDTO.status.value))
-        Assert.assertThat(endreOppgave.versjon, Matchers.`is`<Int>(oppgaveJsonDTO.versjon))
-        Assert.assertThat(endreOppgave.tilordnetRessurs, Matchers.`is`<String>(oppgaveJsonDTO.tilordnetRessurs))
-
     }
 
     @Test
     fun skalKonvertereFraGetOppgaveResponseJsonDTOTilOppgaveJsonDTO() {
-        val getOppgaveResponseJsonDTO = oppgave!!.hentOppgave(
-                xminusCorrelationMinusID = MDC.get(MDCConstants.MDC_CALL_ID),
-                id = RestOppgaveMockFactory.OPPGAVE_ID.toLong()
-        )
-
-        val oppgaveJsonDTO = RestOppgaveMockFactory.lagOppgave()
-
-        Assert.assertThat(oppgaveJsonDTO.id, Matchers.`is`<Long>(getOppgaveResponseJsonDTO.id))
-        Assert.assertThat(oppgaveJsonDTO.tildeltEnhetsnr, Matchers.`is`<String>(getOppgaveResponseJsonDTO.tildeltEnhetsnr))
-        Assert.assertThat(oppgaveJsonDTO.aktoerId, Matchers.`is`<String>(getOppgaveResponseJsonDTO.aktoerId))
-        Assert.assertThat(oppgaveJsonDTO.behandlesAvApplikasjon, Matchers.`is`<String>(getOppgaveResponseJsonDTO.behandlesAvApplikasjon))
-        Assert.assertThat(oppgaveJsonDTO.beskrivelse, Matchers.`is`<String>(getOppgaveResponseJsonDTO.beskrivelse))
-        Assert.assertThat(oppgaveJsonDTO.temagruppe, Matchers.`is`<String>(getOppgaveResponseJsonDTO.temagruppe))
-        Assert.assertThat(oppgaveJsonDTO.tema, Matchers.`is`<String>(getOppgaveResponseJsonDTO.tema))
-        Assert.assertThat(oppgaveJsonDTO.behandlingstema, Matchers.`is`<String>(getOppgaveResponseJsonDTO.behandlingstema))
-        Assert.assertThat(oppgaveJsonDTO.oppgavetype, Matchers.`is`<String>(getOppgaveResponseJsonDTO.oppgavetype))
-        Assert.assertThat(oppgaveJsonDTO.behandlingstype, Matchers.`is`<String>(getOppgaveResponseJsonDTO.behandlingstype))
-        Assert.assertThat(oppgaveJsonDTO.aktivDato, Matchers.`is`<java.time.LocalDate>(getOppgaveResponseJsonDTO.aktivDato))
-        Assert.assertThat(oppgaveJsonDTO.fristFerdigstillelse, Matchers.`is`<java.time.LocalDate>(getOppgaveResponseJsonDTO.fristFerdigstillelse))
-        Assert.assertThat(oppgaveJsonDTO.prioritet.value, Matchers.`is`<String>(getOppgaveResponseJsonDTO.prioritet.value))
-        Assert.assertThat(oppgaveJsonDTO.endretAvEnhetsnr, Matchers.`is`<String>(getOppgaveResponseJsonDTO.endretAvEnhetsnr))
-        Assert.assertThat(oppgaveJsonDTO.status.value, Matchers.`is`<String>(getOppgaveResponseJsonDTO.status.value))
-        Assert.assertThat(oppgaveJsonDTO.versjon, Matchers.`is`<Int>(getOppgaveResponseJsonDTO.versjon))
-        Assert.assertThat(oppgaveJsonDTO.tilordnetRessurs, Matchers.`is`<String>(getOppgaveResponseJsonDTO.tilordnetRessurs))
     }
 
     @Test
-    @Throws(HentOppgaveOppgaveIkkeFunnet::class)
     fun skalFinneTilordnaOppgave() {
-        val oppgaveliste: List<OppgaveJsonDTO> = listOf(
-                nyLagOppgave("1", "10108000398"),
-                nyLagOppgave("2", "10108000398")
-        )
-
-        `when`(oppgave!!.finnOppgaver(
-                xminusCorrelationMinusID = MDC.get(MDCConstants.MDC_CALL_ID),
-                aktoerId = oppgaveliste.mapNotNull { oppgave -> oppgave.aktoerId },
-                statuskategori = aktivStatus,
-                status = null,
-                tema = null,
-                oppgavetype = null,
-                tildeltEnhetsnr = null,
-                tildeltRessurs = null,
-                tilordnetRessurs = null,
-                behandlingstema = null,
-                behandlingstype = null,
-                erUtenMappe = null,
-                journalpostId = null,
-                saksreferanse = null,
-                opprettetAv = null,
-                opprettetAvEnhetsnr = null,
-                aktivDatoFom = null,
-                aktivDatoTom = null,
-                opprettetFom = null,
-                opprettetTom = null,
-                ferdigstiltFom = null,
-                ferdigstiltTom = null,
-                fristFom = null,
-                fristTom = null,
-                orgnr = null,
-                sorteringsfelt = null,
-                limit = null,
-                offset = null
-        )).thenReturn(GetOppgaverResponseJsonDTO(oppgaveliste.size.toLong(), oppgaveliste))
-
-        `when`(oppgave.hentOppgave(
-                xminusCorrelationMinusID = MDC.get(MDCConstants.MDC_CALL_ID),
-                id = oppgaveJsonDTO?.id.toString().toLong()
-        )).thenReturn(RestOppgaveMockFactory.mockHentOppgaveResponseMedTilordning().toGetOppgaveResponseJsonDTO())
-
-        `when`(tilgangskontrollContext.checkAbac(any(AbacRequest::class.java))).thenReturn(
-                AbacResponse(listOf(Response(Decision.Permit, emptyList())))
-        )
-
-        val resultat = SubjectHandlerUtil.withIdent<List<OppgaveResponse>>("Z999999") { restOppgaveBehandlingService!!.finnTildelteOppgaver() }
-
-        Assert.assertThat(resultat.size, Matchers.`is`(oppgaveliste.size))
-        Assert.assertThat(resultat[0].oppgaveId, Matchers.`is`(oppgaveliste[0].id.toString()))
-        Assert.assertThat(resultat[1].oppgaveId, Matchers.`is`(oppgaveliste[1].id.toString()))
-
     }
 
     @Test
-    @Throws(HentOppgaveOppgaveIkkeFunnet::class)
     fun skalLeggeTilbakeTilordnetOppgaveUtenTilgang() {
-        val oppgaveliste : List<OppgaveJsonDTO> = listOf(
-                nyLagOppgave("1", "10108000398"),
-                nyLagOppgave("2", "10108000398")
-        )
-
-        `when`(tilgangskontrollContext.checkAbac(any(AbacRequest::class.java))).thenReturn(
-                AbacResponse(listOf(Response(Decision.Deny, emptyList())))
-        )
-        `when`(oppgave!!.finnOppgaver(
-                xminusCorrelationMinusID = MDC.get(MDCConstants.MDC_CALL_ID),
-                aktoerId = oppgaveliste.mapNotNull { oppgave -> oppgave.aktoerId },
-                statuskategori = aktivStatus,
-                status = null,
-                tema = null,
-                oppgavetype = null,
-                tildeltEnhetsnr = null,
-                tildeltRessurs = null,
-                tilordnetRessurs = null,
-                behandlingstema = null,
-                behandlingstype = null,
-                erUtenMappe = null,
-                journalpostId = null,
-                saksreferanse = null,
-                opprettetAv = null,
-                opprettetAvEnhetsnr = null,
-                aktivDatoFom = null,
-                aktivDatoTom = null,
-                opprettetFom = null,
-                opprettetTom = null,
-                ferdigstiltFom = null,
-                ferdigstiltTom = null,
-                fristFom = null,
-                fristTom = null,
-                orgnr = null,
-                sorteringsfelt = null,
-                limit = null,
-                offset = null
-        )).thenReturn(GetOppgaverResponseJsonDTO(oppgaveliste.size.toLong(), oppgaveliste))
-
-        `when`<GetOppgaveResponseJsonDTO>(oppgave.hentOppgave(
-                xminusCorrelationMinusID = MDC.get(MDCConstants.MDC_CALL_ID),
-                id = oppgaveJsonDTO?.id.toString().toLong()
-        )).thenReturn(RestOppgaveMockFactory.mockHentOppgaveResponseMedTilordning().toGetOppgaveResponseJsonDTO())
-
-        val resultat = SubjectHandlerUtil.withIdent<List<OppgaveResponse>>("Z999999") { restOppgaveBehandlingService!!.finnTildelteOppgaver() }
-
-        Assert.assertThat(resultat.size, Matchers.`is`(0))
     }
-
-    fun OppgaveJsonDTO.toGetOppgaveResponseJsonDTO() : GetOppgaveResponseJsonDTO = GetOppgaveResponseJsonDTO(
-            tildeltEnhetsnr = tildeltEnhetsnr,
-            oppgavetype = oppgavetype,
-            versjon = versjon,
-            prioritet = GetOppgaveResponseJsonDTO.Prioritet.valueOf(OppgaveJsonDTO.Prioritet.valueOf(prioritet.value).value),
-            status = GetOppgaveResponseJsonDTO.Status.valueOf(OppgaveJsonDTO.Status.valueOf(status.value).value),
-            aktivDato = aktivDato,
-            id = id,
-            endretAvEnhetsnr = endretAvEnhetsnr,
-            journalpostId = journalpostId,
-            journalpostkilde = journalpostkilde,
-            behandlesAvApplikasjon = behandlesAvApplikasjon,
-            saksreferanse = saksreferanse,
-            bnr = bnr,
-            samhandlernr = samhandlernr,
-            aktoerId = aktoerId,
-            identer = identer,
-            orgnr = orgnr,
-            tilordnetRessurs = tilordnetRessurs,
-            beskrivelse = beskrivelse,
-            temagruppe = temagruppe,
-            tema = tema,
-            behandlingstema = behandlingstema,
-            behandlingstype = behandlingstype,
-            mappeId = mappeId,
-            opprettetAv = opprettetAv,
-            endretAv = endretAv,
-            metadata = metadata,
-            fristFerdigstillelse = fristFerdigstillelse,
-            opprettetTidspunkt = opprettetTidspunkt,
-            ferdigstiltTidspunkt = ferdigstiltTidspunkt,
-            endretTidspunkt = endretTidspunkt
-    )
 }
