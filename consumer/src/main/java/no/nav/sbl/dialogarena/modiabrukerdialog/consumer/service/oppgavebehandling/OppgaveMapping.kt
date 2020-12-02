@@ -51,6 +51,43 @@ fun OppgaveJsonDTO.asPut() = PutOppgaveRequestJsonDTO(
         fristFerdigstillelse = this.fristFerdigstillelse
 )
 
+fun OppgaveJsonDTO.asPutResponse() = PutOppgaveResponseJsonDTO(
+        tildeltEnhetsnr = this.tildeltEnhetsnr,
+        oppgavetype = this.oppgavetype,
+        versjon = this.versjon,
+        prioritet = convertEnum(this.prioritet),
+        status = convertEnum(this.status),
+        aktivDato = this.aktivDato,
+        id = this.id,
+        endretAvEnhetsnr = this.endretAvEnhetsnr,
+        opprettetAvEnhetsnr = this.opprettetAvEnhetsnr,
+        journalpostId = this.journalpostId,
+        journalpostkilde = this.journalpostkilde,
+        behandlesAvApplikasjon = this.behandlesAvApplikasjon,
+        saksreferanse = this.saksreferanse,
+        bnr = this.bnr,
+        samhandlernr = this.samhandlernr,
+        aktoerId = this.aktoerId,
+        identer = this.identer,
+        orgnr = this.orgnr,
+        tilordnetRessurs = this.tilordnetRessurs,
+        beskrivelse = this.beskrivelse,
+        temagruppe = this.temagruppe,
+        tema = this.tema,
+        behandlingstema = this.behandlingstema,
+        behandlingstype = this.behandlingstype,
+        mappeId = this.mappeId,
+        opprettetAv = this.opprettetAv,
+        endretAv = this.endretAv,
+        metadata = this.metadata,
+        fristFerdigstillelse = this.fristFerdigstillelse,
+        opprettetTidspunkt = this.opprettetTidspunkt,
+        ferdigstiltTidspunkt = this.ferdigstiltTidspunkt,
+        endretTidspunkt = this.endretTidspunkt
+)
+
+fun OppgaveJsonDTO.asPatchResponse() = PatchOppgaverResponseJsonDTO()
+
 
 fun OppgaveJsonDTO.asGetResponse() = GetOppgaveResponseJsonDTO(
         tildeltEnhetsnr = this.tildeltEnhetsnr,
