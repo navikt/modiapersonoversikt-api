@@ -86,9 +86,6 @@ fun OppgaveJsonDTO.asPutResponse() = PutOppgaveResponseJsonDTO(
         endretTidspunkt = this.endretTidspunkt
 )
 
-fun OppgaveJsonDTO.asPatchResponse() = PatchOppgaverResponseJsonDTO()
-
-
 fun OppgaveJsonDTO.asGetResponse() = GetOppgaveResponseJsonDTO(
         tildeltEnhetsnr = this.tildeltEnhetsnr,
         oppgavetype = this.oppgavetype,

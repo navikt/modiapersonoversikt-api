@@ -37,6 +37,12 @@ val mockOppgaveFerdigstilt: OppgaveJsonDTO = OppgaveJsonDTO(
         aktivDato = mockOppgave.aktivDato
 )
 
+val mockOppgaverFerdigstilt: PatchOppgaverResponseJsonDTO = PatchOppgaverResponseJsonDTO(
+        suksess = 0,
+        feilet = 1
+)
+
+
 class RestOppgaveBehandlingServiceImplRedoTest {
     val apiClient: OppgaveApi = mockk()
     val kodeverksmapperService: KodeverksmapperService = mockk()
@@ -139,7 +145,7 @@ class RestOppgaveBehandlingServiceImplRedoTest {
         every { stsService.systemUserToken } returns "DummyToken"
         every { apiClient.hentOppgave(any(), any()) } returns mockOppgave.asGetResponse()
         every { apiClient.endreOppgave(any(), any(), any()) } returns mockOppgave.asPutResponse()
-        every { apiClient.patchOppgaver(any(), any()) } returns mockOppgaveFerdigstilt.asPatchResponse()
+        every { apiClient.patchOppgaver(any(), any()) } returns mockOppgaverFerdigstilt
         every { ansattService.hentAnsattNavn(any()) } returns ""
 
         SubjectHandlerUtil.withIdent("Z999998") {
