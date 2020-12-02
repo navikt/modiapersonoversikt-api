@@ -3,7 +3,6 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.oppgavebehandl
 import no.nav.common.auth.subject.SubjectHandler
 import no.nav.common.log.MDCConstants
 import no.nav.common.sts.SystemUserTokenProvider
-import no.nav.common.utils.EnvironmentUtils
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.oppgave.generated.apis.OppgaveApi
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.oppgave.generated.models.*
@@ -28,49 +27,21 @@ import java.util.*
 
 
 open class RestOppgaveBehandlingServiceImpl @Autowired constructor(
+        val apiClient: OppgaveApi,
         val kodeverksmapperService: KodeverksmapperService,
         val pdlOppslagService: PdlOppslagService,
         val tilgangskontroll: Tilgangskontroll,
         val ansattService: AnsattService,
-        val arbeidsfordelingService: ArbeidsfordelingV1Service
-) : RestOppgaveBehandlingService{
+        val arbeidsfordelingService: ArbeidsfordelingV1Service,
+        val stsService: SystemUserTokenProvider
+) : RestOppgaveBehandlingService {
     companion object {
         const val DEFAULT_ENHET = 4100
         const val STORD_ENHET = "4842"
         const val KONTAKT_NAV = "KNA"
         const val SPORSMAL_OG_SVAR = "SPM_OG_SVR"
 
-        val OPPGAVE_BASEURL = EnvironmentUtils.getRequiredProperty("OPPGAVE_BASEURL")
-        val apiClient = OppgaveApi(OPPGAVE_BASEURL)
-
-        fun endreOppgave(request: OppgaveJsonDTO) : PutOppgaveResponseJsonDTO {
-            val oppgave = apiClient.endreOppgave(
-                    xminusCorrelationMinusID = MDC.get(MDCConstants.MDC_CALL_ID),
-                    id = request.id!!.toLong(),
-                    putOppgaveRequestJsonDTO = PutOppgaveRequestJsonDTO(
-                            id = request.id,
-                            tildeltEnhetsnr = request.tildeltEnhetsnr,
-                            aktoerId = request.aktoerId,
-                            behandlesAvApplikasjon = "FS22",
-                            beskrivelse = request.beskrivelse,
-                            temagruppe = request.temagruppe,
-                            tema = request.tema,
-                            behandlingstema = request.behandlingstema,
-                            oppgavetype = request.oppgavetype,
-                            behandlingstype = request.behandlingstype,
-                            aktivDato = request.aktivDato,
-                            fristFerdigstillelse = request.fristFerdigstillelse,
-                            prioritet = PutOppgaveRequestJsonDTO.Prioritet.valueOf(request.prioritet.value),
-                            endretAvEnhetsnr = request.endretAvEnhetsnr,
-                            status = PutOppgaveRequestJsonDTO.Status.AAPNET,
-                            versjon = request.versjon + 1,
-                            tilordnetRessurs = request.tilordnetRessurs
-                    )
-            )
-            return oppgave
-        }
-
-        fun GetOppgaveResponseJsonDTO.toOppgaveJsonDTO() : OppgaveJsonDTO = OppgaveJsonDTO(
+        fun GetOppgaveResponseJsonDTO.toOppgaveJsonDTO(): OppgaveJsonDTO = OppgaveJsonDTO(
                 tildeltEnhetsnr = tildeltEnhetsnr,
                 oppgavetype = oppgavetype,
                 versjon = versjon,
@@ -107,11 +78,38 @@ open class RestOppgaveBehandlingServiceImpl @Autowired constructor(
 
     val leggTilbakeOppgaveDelegate: LeggTilbakeOppgaveDelegate = LeggTilbakeOppgaveDelegate(this, arbeidsfordelingService)
 
-    @Autowired
-    private lateinit var stsService: SystemUserTokenProvider
-    val consumerOidcToken: String = stsService.systemUserToken
-
     private val log = LoggerFactory.getLogger(RestOppgaveBehandlingServiceImpl::class.java)
+
+    fun endreOppgave(request: OppgaveJsonDTO): PutOppgaveResponseJsonDTO {
+        val oppgaveId = requireNotNull(request.id) {
+            "OppgaveId var null ved endre oppgave-kall"
+        }
+        val oppgave = apiClient.endreOppgave(
+                xminusCorrelationMinusID = correlationId(),
+                id = oppgaveId,
+                putOppgaveRequestJsonDTO = PutOppgaveRequestJsonDTO(
+                        id = oppgaveId,
+                        tildeltEnhetsnr = request.tildeltEnhetsnr,
+                        aktoerId = request.aktoerId,
+                        behandlesAvApplikasjon = request.behandlesAvApplikasjon,
+                        beskrivelse = request.beskrivelse,
+                        temagruppe = request.temagruppe,
+                        tema = request.tema,
+                        behandlingstema = request.behandlingstema,
+                        oppgavetype = request.oppgavetype,
+                        behandlingstype = request.behandlingstype,
+                        aktivDato = request.aktivDato,
+                        fristFerdigstillelse = request.fristFerdigstillelse,
+                        prioritet = PutOppgaveRequestJsonDTO.Prioritet.valueOf(request.prioritet.value),
+                        endretAvEnhetsnr = request.endretAvEnhetsnr,
+                        status = PutOppgaveRequestJsonDTO.Status.AAPNET,
+                        versjon = request.versjon,
+                        tilordnetRessurs = request.tilordnetRessurs
+                )
+        )
+        return oppgave
+    }
+
 
     override fun opprettOppgave(request: OpprettOppgaveRequest): OpprettOppgaveResponse {
         val behandling: Optional<Behandling> = kodeverksmapperService.mapUnderkategori(request.underkategoriKode)
@@ -121,8 +119,8 @@ open class RestOppgaveBehandlingServiceImpl @Autowired constructor(
             throw Exception("AktørId-mangler på person")
         }
         val response = apiClient.opprettOppgave(
-                authorization = consumerOidcToken,
-                xminusCorrelationMinusID = MDC.get(MDCConstants.MDC_CALL_ID),
+                authorization = stsService.systemUserToken,
+                xminusCorrelationMinusID = correlationId(),
                 postOppgaveRequestJsonDTO = PostOppgaveRequestJsonDTO(
                         opprettetAvEnhetsnr = request.opprettetavenhetsnummer,
                         aktoerId = aktorId,
@@ -151,8 +149,8 @@ open class RestOppgaveBehandlingServiceImpl @Autowired constructor(
             throw Exception("AktørId-mangler på person")
         }
         val response = apiClient.opprettOppgave(
-                authorization = consumerOidcToken,
-                xminusCorrelationMinusID = MDC.get(MDCConstants.MDC_CALL_ID),
+                authorization = stsService.systemUserToken,
+                xminusCorrelationMinusID = correlationId(),
                 postOppgaveRequestJsonDTO = PostOppgaveRequestJsonDTO(
                         aktoerId = aktorId,
                         opprettetAvEnhetsnr = request.opprettetavenhetsnummer,
@@ -182,10 +180,13 @@ open class RestOppgaveBehandlingServiceImpl @Autowired constructor(
         val oppgave = hentOppgaveDTO(oppgaveId)
         val ident: String = SubjectHandler.getIdent().orElseThrow { RuntimeException("Fant ikke ident") }
         try {
-            val oppdatertOppgave = oppgave.copy(
-                    tilordnetRessurs = ident
+            val oppdatertOppgave = PatchOppgaveRequestJsonDTO(
+                    id = oppgaveId.toLong(),
+                    versjon = oppgave.versjon,
+                    tilordnetRessurs = ident,
+                    endretAvEnhetsnr = enhetFor(temagruppe, saksbehandlersValgteEnhet)
             )
-            lagreOppgave(oppdatertOppgave, temagruppe, saksbehandlersValgteEnhet)
+            apiClient.patchOppgave(correlationId(), oppgaveId.toLong(), oppdatertOppgave)
         } catch (e: Exception) {
             throw RestOppgaveBehandlingService.FikkIkkeTilordnet(e)
         }
@@ -200,7 +201,7 @@ open class RestOppgaveBehandlingServiceImpl @Autowired constructor(
         val ident: String = SubjectHandler.getIdent().orElseThrow { RuntimeException("Fant ikke ident") }
         val aktivStatus = "AAPEN"
         val response = apiClient.finnOppgaver(
-                xminusCorrelationMinusID = MDC.get(MDCConstants.MDC_CALL_ID),
+                xminusCorrelationMinusID = correlationId(),
                 statuskategori = aktivStatus,
                 status = null,
                 tema = listOf(KONTAKT_NAV),
@@ -253,7 +254,7 @@ open class RestOppgaveBehandlingServiceImpl @Autowired constructor(
         lagreOppgave(oppgaveOppdatert, temagruppe, saksbehandlersValgteEnhet)
         try {
             apiClient.patchOppgave(
-                    xminusCorrelationMinusID = MDC.get(MDCConstants.MDC_CALL_ID),
+                    xminusCorrelationMinusID = correlationId(),
                     id = oppgaveId.toLong(),
                     patchOppgaveRequestJsonDTO = PatchOppgaveRequestJsonDTO(
                             id = oppgaveId.toLong(),
@@ -284,7 +285,7 @@ open class RestOppgaveBehandlingServiceImpl @Autowired constructor(
         }
         try {
             apiClient.patchOppgaver(
-                    xminusCorrelationMinusID = MDC.get(MDCConstants.MDC_CALL_ID),
+                    xminusCorrelationMinusID = correlationId(),
                     patchOppgaverRequestJsonDTO = PatchOppgaverRequestJsonDTO(
                             oppgaver = patchJsonDTOListe,
                             status = PatchOppgaverRequestJsonDTO.Status.FERDIGSTILT,
@@ -350,13 +351,15 @@ open class RestOppgaveBehandlingServiceImpl @Autowired constructor(
         return emptyList()
     }
 
-    private fun hentOppgaveDTO(oppgaveId: String) : OppgaveJsonDTO {
+    private fun hentOppgaveDTO(oppgaveId: String): OppgaveJsonDTO {
         val response = apiClient.hentOppgave(
-                xminusCorrelationMinusID = MDC.get(MDCConstants.MDC_CALL_ID),
+                xminusCorrelationMinusID = correlationId(),
                 id = oppgaveId.toLong()
         )
         return response.toOppgaveJsonDTO()
     }
+
+    private fun correlationId() = MDC.get(MDCConstants.MDC_CALL_ID) ?: UUID.randomUUID().toString()
 
     private fun formatterBeskrivelseFerdigstiltOppgave(saksbehandlersValgteEnhet: String, gammelBeskrivelse: String?, beskrivelse: String) : String {
         return leggTilBeskrivelse(gammelBeskrivelse, "Oppgaven er ferdigstilt i Modia. " + beskrivelse, saksbehandlersValgteEnhet)
