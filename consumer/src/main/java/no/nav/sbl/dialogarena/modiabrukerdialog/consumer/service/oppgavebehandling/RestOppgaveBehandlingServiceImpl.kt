@@ -256,8 +256,17 @@ open class RestOppgaveBehandlingServiceImpl @Autowired constructor(
         if (request.oppgaveId.isNullOrEmpty() || request.beskrivelse.isNullOrEmpty()) {
             return
         }
-        val oppgave = hentOppgaveDTO(request.oppgaveId)
-        leggTilbakeOppgaveDelegate.leggTilbake(oppgave, request)
+        val orginalOppgave = hentOppgaveDTO(request.oppgaveId)
+        if(orginalOppgave.aktoerId.isNullOrEmpty()){
+            log.warn("Oppgave manglet aktørId", orginalOppgave.id)
+            return;
+        }
+        request.copy(nyTemagruppe = Temagruppe.NULL);
+        finnOppgaver()
+                .filter {oppgave -> orginalOppgave.aktoerId === oppgave.aktoerId}
+                .filter { oppgave -> orginalOppgave.id === oppgave.id }
+                .forEach{ oppgave -> leggTilbakeOppgaveDelegate.leggTilbake(oppgave, request)}
+        leggTilbakeOppgaveDelegate.leggTilbake(orginalOppgave, request)
     }
 
     fun lagreOppgave(request: OppgaveJsonDTO, temagruppe: Temagruppe, saksbehandlersValgteEnhet: String) {
@@ -343,6 +352,7 @@ open class RestOppgaveBehandlingServiceImpl @Autowired constructor(
             null
         }
     }
+
 
     private fun oppgaveJsonDTOToOppgaveResponse(response: OppgaveJsonDTO): OppgaveResponse {
         val erSTO = Optional
