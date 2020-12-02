@@ -11,11 +11,14 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.*
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.arbeidsfordeling.ArbeidsfordelingV1Service
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.AnsattService
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.pdl.PdlOppslagService
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.TemagruppeTemaMapping
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.kodeverksmapper.KodeverksmapperService
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.kodeverksmapper.domain.Behandling
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.pdl.PdlSyntetiskMapper
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Policies
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Tilgangskontroll
+import no.nav.tjeneste.virksomhet.arbeidsfordeling.v1.informasjon.Tema
+import no.nav.tjeneste.virksomhet.arbeidsfordeling.v1.informasjon.Temagrupper
 import org.apache.commons.lang3.StringUtils
 import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
@@ -347,7 +350,7 @@ open class RestOppgaveBehandlingServiceImpl @Autowired constructor(
                         .isPermit()) {
             return oppgaveList
         }
-        oppgaveList.forEach { oppgave: OppgaveResponse -> systemLeggTilbakeOppgave(oppgave.oppgaveId, Temagruppe.valueOf(null.toString()), "4100") }
+        oppgaveList.forEach { oppgave: OppgaveResponse -> systemLeggTilbakeOppgave(oppgave.oppgaveId, Temagruppe.NULL, "4100") }
         return emptyList()
     }
 
