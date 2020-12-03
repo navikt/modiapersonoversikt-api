@@ -13,13 +13,9 @@ interface RestOppgaveBehandlingService {
 
     fun finnTildelteOppgaver(): List<OppgaveResponse>
 
-    fun plukkOppgaver(temagruppe: Temagruppe, saksbehandlersValgteEnhet: String): List<OppgaveResponse>
+    fun ferdigstillOppgaver(oppgaveIder: List<String>, temagruppe: Temagruppe, saksbehandlersValgteEnhet: String)
 
-    fun ferdigstillOppgave(oppgaveId: String, temagruppe: Temagruppe, saksbehandlersValgteEnhet: String)
-
-    fun ferdigstillOppgaver(oppgaveId: List<String>, temagruppe: Temagruppe, saksbehandlersValgteEnhet: String)
-
-    fun ferdigstillOppgave(oppgaveId: String, temagruppe: Temagruppe, saksbehandlersValgteEnhet: String, beskrivelse: String)
+    fun ferdigstillOppgave(oppgaveId: String, temagruppe: Temagruppe, saksbehandlersValgteEnhet: String, beskrivelse: String = "")
 
     fun leggTilbakeOppgave(request: LeggTilbakeOppgaveRequest)
 
@@ -42,6 +38,4 @@ data class LeggTilbakeOppgaveRequest (
     val oppgaveId: String,
     val beskrivelse: String,
     val nyTemagruppe: Temagruppe
-) {
-
-}
+)

@@ -11,14 +11,11 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.*
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.arbeidsfordeling.ArbeidsfordelingV1Service
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.AnsattService
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.pdl.PdlOppslagService
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.TemagruppeTemaMapping
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.kodeverksmapper.KodeverksmapperService
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.kodeverksmapper.domain.Behandling
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.pdl.PdlSyntetiskMapper
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Policies
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Tilgangskontroll
-import no.nav.tjeneste.virksomhet.arbeidsfordeling.v1.informasjon.Tema
-import no.nav.tjeneste.virksomhet.arbeidsfordeling.v1.informasjon.Temagrupper
 import org.apache.commons.lang3.StringUtils
 import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
@@ -237,14 +234,6 @@ open class RestOppgaveBehandlingServiceImpl @Autowired constructor(
         return finnOppgaverMedTilgangTilBruker(tildelteOppgaver)
     }
 
-    override fun plukkOppgaver(temagruppe: Temagruppe, saksbehandlersValgteEnhet: String): List<OppgaveResponse> {
-        TODO("Må gjøre plukkOppgaver(...)")
-    }
-
-    override fun ferdigstillOppgave(oppgaveId: String, temagruppe: Temagruppe, saksbehandlersValgteEnhet: String) {
-        ferdigstillOppgaver(listOf(oppgaveId), temagruppe, saksbehandlersValgteEnhet)
-    }
-
     override fun ferdigstillOppgave(oppgaveId: String, temagruppe: Temagruppe, saksbehandlersValgteEnhet: String, beskrivelse: String) {
         val oppgave = hentOppgaveDTO(oppgaveId)
         val oppgaveOppdatert = oppgave.copy(
@@ -280,7 +269,8 @@ open class RestOppgaveBehandlingServiceImpl @Autowired constructor(
             val oppgaveOppdatert = oppgave.copy(
                     beskrivelse = formatterBeskrivelseFerdigstiltOppgave(
                             saksbehandlersValgteEnhet,
-                            oppgave.beskrivelse
+                            oppgave.beskrivelse,
+                            ""
                     )
             )
             lagreOppgave(oppgaveOppdatert, temagruppe, saksbehandlersValgteEnhet)
@@ -365,11 +355,7 @@ open class RestOppgaveBehandlingServiceImpl @Autowired constructor(
     private fun correlationId() = MDC.get(MDCConstants.MDC_CALL_ID) ?: UUID.randomUUID().toString()
 
     private fun formatterBeskrivelseFerdigstiltOppgave(saksbehandlersValgteEnhet: String, gammelBeskrivelse: String?, beskrivelse: String) : String {
-        return leggTilBeskrivelse(gammelBeskrivelse, "Oppgaven er ferdigstilt i Modia. " + beskrivelse, saksbehandlersValgteEnhet)
-    }
-
-    private fun formatterBeskrivelseFerdigstiltOppgave(saksbehandlersValgteEnhet: String, gammelBeskrivelse: String?) : String{
-        return leggTilBeskrivelse(gammelBeskrivelse, "", saksbehandlersValgteEnhet)
+        return leggTilBeskrivelse(gammelBeskrivelse, beskrivelse, saksbehandlersValgteEnhet)
     }
 
     override fun systemLeggTilbakeOppgave(oppgaveId: String, temagruppe: Temagruppe, saksbehandlersValgteEnhet: String) {
@@ -422,7 +408,7 @@ open class RestOppgaveBehandlingServiceImpl @Autowired constructor(
                 ansattService.hentAnsattNavn(ident),
                 ident,
                 valgtEnhet)
-        val nyBeskrivelse = header + leggTil
+        val nyBeskrivelse = header + "Oppgaven er ferdigstilt i Modia. " + leggTil
         return if (StringUtils.isBlank(gammelBeskrivelse)) nyBeskrivelse else nyBeskrivelse + "\n\n" + gammelBeskrivelse
     }
 }
