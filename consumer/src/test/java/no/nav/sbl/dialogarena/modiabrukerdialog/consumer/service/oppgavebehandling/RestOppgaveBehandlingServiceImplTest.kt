@@ -143,6 +143,34 @@ class RestOppgaveBehandlingServiceImplRedoTest {
     }
 
     @Test
+    fun `skal ferdigstille oppgave uten beskrivelse`() {
+        every { stsService.systemUserToken } returns "DummyToken"
+        every { apiClient.hentOppgave(any(), any()) } returns mockOppgave.asGetResponse()
+        every { apiClient.endreOppgave(any(), any(), any()) } returns mockOppgave.asPutResponse()
+        every { apiClient.patchOppgave(any(), any(), any()) } returns mockOppgaveFerdigstilt
+        every { ansattService.hentAnsattNavn(any()) } returns ""
+
+        SubjectHandlerUtil.withIdent("Z999998") {
+            oppgaveBehandlingService.ferdigstillOppgave(
+                    "1234",
+                    Temagruppe.ANSOS,
+                    "4110"
+            )
+        }
+
+        verify {
+            apiClient.hentOppgave(any(), any())
+            apiClient.endreOppgave(any(), any(), any())
+            apiClient.patchOppgave(any(), any(), PatchOppgaveRequestJsonDTO(
+                    id = 1234,
+                    versjon = 1,
+                    endretAvEnhetsnr = "4110",
+                    status = PatchOppgaveRequestJsonDTO.Status.FERDIGSTILT
+            ))
+        }
+    }
+
+    @Test
     fun `skal ferdigstille oppgave med beskrivelse`() {
         every { stsService.systemUserToken } returns "DummyToken"
         every { apiClient.hentOppgave(any(), any()) } returns mockOppgave.asGetResponse()
@@ -215,11 +243,6 @@ class RestOppgaveBehandlingServiceImplRedoTest {
             apiClient.hentOppgave(any(), any())
             apiClient.endreOppgave(any(), any(), any())
         }
-    }
-
-    @Test
-    fun `skal konvertere fra PutOppgaveResponseJsonDTO til OppgaveJsonDTO`() {
-        TODO("Kan ikke hente ut endreOppgave, så må finne en løsning på det så man faktisk kan gjøre denne testen her")
     }
 
     @Test
@@ -319,4 +342,6 @@ class RestOppgaveBehandlingServiceImplRedoTest {
             apiClient.endreOppgave(any(), any(), any())
         }
     }
+
+
 }
