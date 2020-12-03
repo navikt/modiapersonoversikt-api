@@ -114,7 +114,7 @@ open class RestOppgaveBehandlingServiceImpl @Autowired constructor(
     override fun opprettOppgave(request: OpprettOppgaveRequest): OpprettOppgaveResponse {
         val behandling: Optional<Behandling> = kodeverksmapperService.mapUnderkategori(request.underkategoriKode)
         val oppgaveTypeMapped: String = kodeverksmapperService.mapOppgavetype(request.oppgavetype)
-        val aktorId = getAktorId(request.fnr)
+         val aktorId = getAktorId(request.fnr)
         if (aktorId == null || aktorId.isEmpty()) {
             throw Exception("AktørId-mangler på person")
         }
@@ -130,9 +130,9 @@ open class RestOppgaveBehandlingServiceImpl @Autowired constructor(
                         beskrivelse = request.beskrivelse,
                         temagruppe = request.temagruppe,
                         tema = request.tema,
-                        behandlingstema = behandling.map(Behandling::getBehandlingstema).orElse(null),
+                        behandlingstema = behandling.map(Behandling::getBehandlingstema).orElse(""),
                         oppgavetype = oppgaveTypeMapped,
-                        behandlingstype = behandling.map(Behandling::getBehandlingstype).orElse(null),
+                        behandlingstype = behandling.map(Behandling::getBehandlingstype).orElse(""),
                         aktivDato = LocalDate.now(),
                         fristFerdigstillelse = request.oppgaveFrist,
                         prioritet = PostOppgaveRequestJsonDTO.Prioritet.valueOf(stripTemakode(request.prioritet))
@@ -158,9 +158,11 @@ open class RestOppgaveBehandlingServiceImpl @Autowired constructor(
                         beskrivelse = request.beskrivelse,
                         temagruppe = "",
                         tema = request.tema,
-                        behandlingstema = behandling.map(Behandling::getBehandlingstema).orElse(null),
+                        tildeltEnhetsnr = "",
+                        tilordnetRessurs = "",
+                        behandlingstema = behandling.map(Behandling::getBehandlingstema).orElse(""),
                         oppgavetype = oppgaveTypeMapped,
-                        behandlingstype = behandling.map(Behandling::getBehandlingstype).orElse(null),
+                        behandlingstype = behandling.map(Behandling::getBehandlingstype).orElse(""),
                         aktivDato = LocalDate.now(),
                         fristFerdigstillelse = request.oppgaveFrist,
                         prioritet = PostOppgaveRequestJsonDTO.Prioritet.valueOf(stripTemakode(request.prioritet))

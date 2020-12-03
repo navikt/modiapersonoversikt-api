@@ -8,8 +8,12 @@ import no.nav.sbl.dialogarena.abac.AbacResponse
 import no.nav.sbl.dialogarena.abac.Decision
 import no.nav.sbl.dialogarena.abac.Response
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.AnsattEnhet
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.oppgave.generated.apis.OppgaveApi
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.oppgave.generated.models.*
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.pdl.generated.HentIdent
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.LeggTilbakeOppgaveRequest
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.OpprettOppgaveRequest
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.RestOppgaveBehandlingService
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.arbeidsfordeling.ArbeidsfordelingV1Service
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.AnsattService
@@ -20,6 +24,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Tilgangskontrol
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.TilgangskontrollContext
 import org.junit.jupiter.api.Test
 import java.time.LocalDate.now
+import java.util.*
 
 val mockOppgave: OppgaveJsonDTO = OppgaveJsonDTO(
         id = 1234,
@@ -49,21 +54,41 @@ val mockOppgaverFerdigstilt: PatchOppgaverResponseJsonDTO = PatchOppgaverRespons
 val mockOppgaveResponse: OppgaveJsonDTO = OppgaveJsonDTO(
         id = 1234,
         tildeltEnhetsnr = "4100",
-        aktoerId = "12345678910",
+        aktoerId = "07063000250",
         behandlesAvApplikasjon = "FS22",
         beskrivelse = "beskrivelse",
         temagruppe = "ARBD_KNA",
         tema = "KNA",
-        behandlingstema = "behandlingstema",
+        behandlingstema = "",
         oppgavetype = "SPM_OG_SVR",
-        behandlingstype = "behandlingstype",
+        behandlingstype = "",
         aktivDato = now(),
         fristFerdigstillelse = now(),
         prioritet = OppgaveJsonDTO.Prioritet.NORM,
-        endretAvEnhetsnr = "4110",
+        endretAvEnhetsnr = "",
         status = OppgaveJsonDTO.Status.AAPNET,
         versjon = 1,
-        tilordnetRessurs = "Z999998"
+        tilordnetRessurs = "Z999998",
+        opprettetAvEnhetsnr = "4100"
+)
+
+val mockOppgaveResponseSkjermet: OppgaveJsonDTO = OppgaveJsonDTO(
+        id = 1234,
+        opprettetAvEnhetsnr = "4100",
+        aktoerId = "07063000250",
+        behandlesAvApplikasjon = "FS22",
+        beskrivelse = "beskrivelse",
+        temagruppe = "",
+        tema = "KNA",
+        behandlingstema = "",
+        oppgavetype = "SPM_OG_SVR",
+        behandlingstype = "",
+        aktivDato = now(),
+        fristFerdigstillelse = now(),
+        prioritet = OppgaveJsonDTO.Prioritet.NORM,
+        status = OppgaveJsonDTO.Status.AAPNET,
+        versjon = 1,
+        tildeltEnhetsnr = ""
 )
 
 val mockOppgaverResponse: GetOppgaverResponseJsonDTO = GetOppgaverResponseJsonDTO(
@@ -71,8 +96,9 @@ val mockOppgaverResponse: GetOppgaverResponseJsonDTO = GetOppgaverResponseJsonDT
         oppgaver = listOf(mockOppgaveResponse, mockOppgaveResponse.copy(id = 5678))
 )
 
-val tilgangskontrollContext: TilgangskontrollContext = mockk()
+val mockAnsattEnhetListe = listOf(AnsattEnhet("4100", "NKS"))
 
+val tilgangskontrollContext: TilgangskontrollContext = mockk()
 
 class RestOppgaveBehandlingServiceImplRedoTest {
     val apiClient: OppgaveApi = mockk()
@@ -91,6 +117,108 @@ class RestOppgaveBehandlingServiceImplRedoTest {
             arbeidsfordelingService,
             stsService
     )
+
+    @Test
+    fun `skal opprette oppgave`() {
+        every { stsService.systemUserToken } returns "DummyToken"
+        every { apiClient.opprettOppgave(any(), any(), any()) } returns mockOppgaveResponse.asPost()
+        every { kodeverksmapperService.mapUnderkategori(any()) } returns Optional.empty()
+        every { kodeverksmapperService.mapOppgavetype(any()) } returns "SPM_OG_SVR"
+        every { pdlOppslagService.hentIdent(any()) } returns HentIdent.Identliste(listOf(HentIdent.IdentInformasjon("07063000250", HentIdent.IdentGruppe.AKTORID)))
+
+        SubjectHandlerUtil.withIdent("Z999998") {
+            oppgaveBehandlingService.opprettOppgave(
+                    OpprettOppgaveRequest(
+                            fnr = "07063000250",
+                            behandlesAvApplikasjon = "FS22",
+                            beskrivelse = "beskrivelse",
+                            temagruppe = "ARBD_KNA",
+                            tema = "KNA",
+                            oppgavetype = "SPM_OG_SVR",
+                            behandlingstype = "",
+                            prioritet = OppgaveJsonDTO.Prioritet.NORM.value,
+                            underkategoriKode = "",
+                            opprettetavenhetsnummer = "4100",
+                            oppgaveFrist = now(),
+                            valgtEnhetsId = "",
+                            behandlingskjedeId = "",
+                            dagerFrist = 3,
+                            ansvarligIdent = "",
+                            ansvarligEnhetId = ""
+                    )
+            )
+        }
+
+        verify {
+            apiClient.opprettOppgave(any(), any(), PostOppgaveRequestJsonDTO(
+                    aktoerId = "07063000250",
+                    behandlesAvApplikasjon = "FS22",
+                    beskrivelse = "beskrivelse",
+                    temagruppe = "ARBD_KNA",
+                    tema = "KNA",
+                    oppgavetype = "SPM_OG_SVR",
+                    behandlingstype = "",
+                    prioritet = PostOppgaveRequestJsonDTO.Prioritet.NORM,
+                    tilordnetRessurs = "",
+                    opprettetAvEnhetsnr = "4100",
+                    behandlingstema = "",
+                    aktivDato = now(),
+                    fristFerdigstillelse = now()
+            ))
+        }
+
+    }
+
+    @Test
+    fun `skal opprette skjermet oppgave`() {
+        every { stsService.systemUserToken } returns "DummyToken"
+        every { apiClient.opprettOppgave(any(), any(), any()) } returns mockOppgaveResponseSkjermet.asPost()
+        every { kodeverksmapperService.mapUnderkategori(any()) } returns Optional.empty()
+        every { kodeverksmapperService.mapOppgavetype(any()) } returns "SPM_OG_SVR"
+        every { pdlOppslagService.hentIdent(any()) } returns HentIdent.Identliste(listOf(HentIdent.IdentInformasjon("07063000250", HentIdent.IdentGruppe.AKTORID)))
+
+        SubjectHandlerUtil.withIdent("Z999998") {
+            oppgaveBehandlingService.opprettSkjermetOppgave(
+                    OpprettOppgaveRequest(
+                            fnr = "07063000250",
+                            behandlesAvApplikasjon = "FS22",
+                            beskrivelse = "beskrivelse",
+                            temagruppe = "A",
+                            tema = "KNA",
+                            oppgavetype = "SPM_OG_SVR",
+                            behandlingstype = "",
+                            prioritet = OppgaveJsonDTO.Prioritet.NORM.value,
+                            underkategoriKode = "",
+                            opprettetavenhetsnummer = "4100",
+                            oppgaveFrist = now(),
+                            valgtEnhetsId = "",
+                            behandlingskjedeId = "",
+                            dagerFrist = 3,
+                            ansvarligIdent = "",
+                            ansvarligEnhetId = ""
+                    )
+            )
+        }
+
+        verify {
+            apiClient.opprettOppgave(any(), any(), PostOppgaveRequestJsonDTO(
+                    aktoerId = "07063000250",
+                    behandlesAvApplikasjon = "FS22",
+                    beskrivelse = "beskrivelse",
+                    temagruppe = "",
+                    tema = "KNA",
+                    oppgavetype = "SPM_OG_SVR",
+                    behandlingstype = "",
+                    prioritet = PostOppgaveRequestJsonDTO.Prioritet.NORM,
+                    tilordnetRessurs = "",
+                    tildeltEnhetsnr = "",
+                    opprettetAvEnhetsnr = "4100",
+                    behandlingstema = "",
+                    aktivDato = now(),
+                    fristFerdigstillelse = now()
+            ))
+        }
+    }
 
     @Test
     fun `skal hente og tilordne oppgave, setter 4100 som standard enhet`() {
@@ -293,7 +421,7 @@ class RestOppgaveBehandlingServiceImplRedoTest {
     }
 
     @Test
-    fun skalLeggeTilbakeTilordnetOppgaveUtenTilgang() {
+    fun `skal legge tilbake tilordnet oppgave uten tilgang`() {
         every { apiClient.finnOppgaver(any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any(),
                 any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any(),
                 any(), any())
@@ -341,6 +469,46 @@ class RestOppgaveBehandlingServiceImplRedoTest {
             apiClient.hentOppgave(any(), any())
             apiClient.endreOppgave(any(), any(), any())
         }
+    }
+
+    @Test
+    fun `skal legge tilbake oppgave`() {
+        every { apiClient.hentOppgave(any(), any()) } returns mockOppgaveResponse.asGetResponse()
+        every { ansattService.hentAnsattNavn(any()) } returns ""
+        every { arbeidsfordelingService.finnBehandlendeEnhetListe(any(), any(), any(), any()) } returns mockAnsattEnhetListe
+        every { apiClient.endreOppgave(any(), any(), any()) } returns mockOppgaveResponse.asPutResponse()
+
+        SubjectHandlerUtil.withIdent("Z999998") {
+            oppgaveBehandlingService.leggTilbakeOppgave(
+                     LeggTilbakeOppgaveRequest(
+                             "4100",
+                             "1234",
+                             "beskrivelse",
+                             Temagruppe.ANSOS
+                     )
+            )
+        }
+
+        verify {
+            apiClient.hentOppgave(any(), 1234)
+        }
+
+    }
+
+    @Test
+    fun `oppgave er ferdigstilt`() {
+        every { apiClient.hentOppgave(any(), any()) } returns mockOppgave.asGetResponse()
+
+        SubjectHandlerUtil.withIdent("Z999998") {
+            oppgaveBehandlingService.oppgaveErFerdigstilt(
+                    "1234"
+            )
+        }
+
+        verify {
+            apiClient.hentOppgave(any(), 1234)
+        }
+
     }
 
 
