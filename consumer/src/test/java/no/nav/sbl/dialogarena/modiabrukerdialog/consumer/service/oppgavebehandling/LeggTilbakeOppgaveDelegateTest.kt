@@ -1,6 +1,5 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.oppgavebehandling;
 
-import io.ktor.http.cio.*
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
@@ -20,7 +19,6 @@ import org.joda.time.format.DateTimeFormat
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
-import org.springframework.http.HttpStatus
 import org.springframework.web.server.ResponseStatusException
 import java.time.LocalDate
 
