@@ -162,8 +162,8 @@ class RestOppgaveBehandlingServiceImplTest {
         }
 
         verify {
-            apiClient.hentOppgave(any(), any())
-            apiClient.patchOppgave(any(), any(), PatchOppgaveRequestJsonDTO(
+            apiClient.hentOppgave(any(), 1234)
+            apiClient.patchOppgave(any(), 1234, PatchOppgaveRequestJsonDTO(
                     id = 1234,
                     versjon = 1,
                     endretAvEnhetsnr = "4100",
@@ -187,8 +187,8 @@ class RestOppgaveBehandlingServiceImplTest {
         }
 
         verify {
-            apiClient.hentOppgave(any(), any())
-            apiClient.patchOppgave(any(), any(), PatchOppgaveRequestJsonDTO(
+            apiClient.hentOppgave(any(), 1234)
+            apiClient.patchOppgave(any(), 1234, PatchOppgaveRequestJsonDTO(
                     id = 1234,
                     versjon = 1,
                     endretAvEnhetsnr = "4110",
@@ -200,9 +200,9 @@ class RestOppgaveBehandlingServiceImplTest {
     @Test
     fun `skal ferdigstille oppgave uten beskrivelse`() {
         every { stsService.systemUserToken } returns "DummyToken"
-        every { apiClient.hentOppgave(any(), any()) } returns RestOppgaveMockFactory.mockOppgave.asGetResponse()
-        every { apiClient.endreOppgave(any(), any(), any()) } returns RestOppgaveMockFactory.mockOppgave.asPutResponse()
-        every { apiClient.patchOppgave(any(), any(), any()) } returns RestOppgaveMockFactory.mockOppgaveFerdigstilt
+        every { apiClient.hentOppgave(any(), any()) } returns RestOppgaveMockFactory.mockOppgaveResponse.asGetResponse()
+        every { apiClient.endreOppgave(any(), any(), any()) } returns RestOppgaveMockFactory.mockOppgaveResponse.asPutResponse()
+        every { apiClient.patchOppgave(any(), any(), any()) } returns RestOppgaveMockFactory.mockOppgaveFerdigstiltUtenBeskrivelse
         every { ansattService.hentAnsattNavn(any()) } returns ""
 
         SubjectHandlerUtil.withIdent("Z999998") {
@@ -214,9 +214,31 @@ class RestOppgaveBehandlingServiceImplTest {
         }
 
         verify {
-            apiClient.hentOppgave(any(), any())
-            apiClient.endreOppgave(any(), any(), any())
-            apiClient.patchOppgave(any(), any(), PatchOppgaveRequestJsonDTO(
+            apiClient.hentOppgave(any(), 1234)
+            apiClient.endreOppgave(any(), 1234, PutOppgaveRequestJsonDTO(
+                    id = 1234,
+                    tildeltEnhetsnr = "4100",
+                    aktoerId = "07063000250",
+                    behandlesAvApplikasjon = "FS22",
+                    beskrivelse = String.format("--- %s %s (%s, %s) ---\n",
+                            DateTimeFormat.forPattern("dd.MM.yyyy HH:mm").print(DateTime.now()),
+                            ansattService.hentAnsattNavn("Z999998"),
+                            "Z999998",
+                            "4110") + "Oppgaven er ferdigstilt i Modia. " + "\n\n" + "beskrivelse",
+                    temagruppe = "ARBD_KNA",
+                    tema = "KNA",
+                    behandlingstema = "",
+                    oppgavetype = "SPM_OG_SVR",
+                    behandlingstype = "",
+                    aktivDato = now(),
+                    fristFerdigstillelse = now(),
+                    prioritet = PutOppgaveRequestJsonDTO.Prioritet.NORM,
+                    endretAvEnhetsnr = "4110",
+                    status = PutOppgaveRequestJsonDTO.Status.AAPNET,
+                    versjon = 1,
+                    tilordnetRessurs = "Z999998"
+            ))
+            apiClient.patchOppgave(any(), 1234, PatchOppgaveRequestJsonDTO(
                     id = 1234,
                     versjon = 1,
                     endretAvEnhetsnr = "4110",
@@ -228,9 +250,9 @@ class RestOppgaveBehandlingServiceImplTest {
     @Test
     fun `skal ferdigstille oppgave med beskrivelse`() {
         every { stsService.systemUserToken } returns "DummyToken"
-        every { apiClient.hentOppgave(any(), any()) } returns RestOppgaveMockFactory.mockOppgave.asGetResponse()
-        every { apiClient.endreOppgave(any(), any(), any()) } returns RestOppgaveMockFactory.mockOppgave.asPutResponse()
-        every { apiClient.patchOppgave(any(), any(), any()) } returns RestOppgaveMockFactory.mockOppgaveFerdigstilt
+        every { apiClient.hentOppgave(any(), any()) } returns RestOppgaveMockFactory.mockOppgaveResponse.asGetResponse()
+        every { apiClient.endreOppgave(any(), any(), any()) } returns RestOppgaveMockFactory.mockOppgaveResponse.asPutResponse()
+        every { apiClient.patchOppgave(any(), any(), any()) } returns RestOppgaveMockFactory.mockOppgaveFerdigstiltMedBeskrivelse
         every { ansattService.hentAnsattNavn(any()) } returns ""
 
         SubjectHandlerUtil.withIdent("Z999998") {
@@ -243,9 +265,31 @@ class RestOppgaveBehandlingServiceImplTest {
         }
 
         verify {
-            apiClient.hentOppgave(any(), any())
-            apiClient.endreOppgave(any(), any(), any())
-            apiClient.patchOppgave(any(), any(), PatchOppgaveRequestJsonDTO(
+            apiClient.hentOppgave(any(), 1234)
+            apiClient.endreOppgave(any(), 1234, PutOppgaveRequestJsonDTO(
+                    id = 1234,
+                    tildeltEnhetsnr = "4100",
+                    aktoerId = "07063000250",
+                    behandlesAvApplikasjon = "FS22",
+                    beskrivelse = String.format("--- %s %s (%s, %s) ---\n",
+                            DateTimeFormat.forPattern("dd.MM.yyyy HH:mm").print(DateTime.now()),
+                            ansattService.hentAnsattNavn("Z999998"),
+                            "Z999998",
+                            "4110") + "Oppgaven er ferdigstilt i Modia. " + "ny beskrivelse" + "\n\n" + "beskrivelse",
+                    temagruppe = "ARBD_KNA",
+                    tema = "KNA",
+                    behandlingstema = "",
+                    oppgavetype = "SPM_OG_SVR",
+                    behandlingstype = "",
+                    aktivDato = now(),
+                    fristFerdigstillelse = now(),
+                    prioritet = PutOppgaveRequestJsonDTO.Prioritet.NORM,
+                    endretAvEnhetsnr = "4110",
+                    status = PutOppgaveRequestJsonDTO.Status.AAPNET,
+                    versjon = 1,
+                    tilordnetRessurs = "Z999998"
+            ))
+            apiClient.patchOppgave(any(), 1234, PatchOppgaveRequestJsonDTO(
                     id = 1234,
                     versjon = 1,
                     endretAvEnhetsnr = "4110",
@@ -257,8 +301,8 @@ class RestOppgaveBehandlingServiceImplTest {
     @Test
     fun `skal ferdigstille oppgaver`() {
         every { stsService.systemUserToken } returns "DummyToken"
-        every { apiClient.hentOppgave(any(), any()) } returns RestOppgaveMockFactory.mockOppgave.asGetResponse()
-        every { apiClient.endreOppgave(any(), any(), any()) } returns RestOppgaveMockFactory.mockOppgave.asPutResponse()
+        every { apiClient.hentOppgave(any(), any()) } returns RestOppgaveMockFactory.mockOppgaveResponse.asGetResponse()
+        every { apiClient.endreOppgave(any(), any(), any()) } returns RestOppgaveMockFactory.mockOppgaveResponse.asPutResponse()
         every { apiClient.patchOppgaver(any(), any()) } returns RestOppgaveMockFactory.mockOppgaverFerdigstilt
         every { ansattService.hentAnsattNavn(any()) } returns ""
 
@@ -271,8 +315,32 @@ class RestOppgaveBehandlingServiceImplTest {
         }
 
         verify {
-            apiClient.hentOppgave(any(), any())
-            apiClient.endreOppgave(any(), any(), any())
+            RestOppgaveMockFactory.mockOppgaverResponse.oppgaver!![0].id?.let { apiClient.hentOppgave(any(), it) }
+            RestOppgaveMockFactory.mockOppgaverResponse.oppgaver!![0].id?.let {
+                apiClient.endreOppgave(any(), it, PutOppgaveRequestJsonDTO(
+                        id = it,
+                        tildeltEnhetsnr = "4100",
+                        aktoerId = "07063000250",
+                        behandlesAvApplikasjon = "FS22",
+                        beskrivelse = String.format("--- %s %s (%s, %s) ---\n",
+                                DateTimeFormat.forPattern("dd.MM.yyyy HH:mm").print(DateTime.now()),
+                                ansattService.hentAnsattNavn("Z999998"),
+                                "Z999998",
+                                "4110") + "Oppgaven er ferdigstilt i Modia. " + "\n\n" + "beskrivelse",
+                        temagruppe = "ARBD_KNA",
+                        tema = "KNA",
+                        behandlingstema = "",
+                        oppgavetype = "SPM_OG_SVR",
+                        behandlingstype = "",
+                        aktivDato = now(),
+                        fristFerdigstillelse = now(),
+                        prioritet = PutOppgaveRequestJsonDTO.Prioritet.NORM,
+                        endretAvEnhetsnr = "4110",
+                        status = PutOppgaveRequestJsonDTO.Status.AAPNET,
+                        versjon = 1,
+                        tilordnetRessurs = "Z999998"
+                ))
+            }
             apiClient.patchOppgaver(any(), PatchOppgaverRequestJsonDTO(
                     oppgaver = listOf(PatchJsonDTO(versjon = 1, id = 1234)),
                     status = PatchOppgaverRequestJsonDTO.Status.FERDIGSTILT,
@@ -296,7 +364,7 @@ class RestOppgaveBehandlingServiceImplTest {
 
         verify {
             apiClient.hentOppgave(any(), 1234)
-            apiClient.endreOppgave(any(), any(), PutOppgaveRequestJsonDTO(
+            apiClient.endreOppgave(any(), 1234, PutOppgaveRequestJsonDTO(
                     id = 1234,
                     tildeltEnhetsnr = "4100",
                     aktoerId = "07063000250",
@@ -411,8 +479,28 @@ class RestOppgaveBehandlingServiceImplTest {
                     limit = null,
                     offset = null
             )
-            apiClient.hentOppgave(any(), any())
-            apiClient.endreOppgave(any(), any(), any())
+            RestOppgaveMockFactory.mockOppgaverResponse.oppgaver!![0].id?.let { apiClient.hentOppgave(any(), it) }
+            RestOppgaveMockFactory.mockOppgaverResponse.oppgaver!![0].id?.let {
+                apiClient.endreOppgave(any(), it, PutOppgaveRequestJsonDTO(
+                        id = it,
+                        tildeltEnhetsnr = "4100",
+                        aktoerId = "07063000250",
+                        behandlesAvApplikasjon = "FS22",
+                        beskrivelse = "beskrivelse",
+                        temagruppe = "ARBD_KNA",
+                        tema = "KNA",
+                        behandlingstema = "",
+                        oppgavetype = "SPM_OG_SVR",
+                        behandlingstype = "",
+                        aktivDato = now(),
+                        fristFerdigstillelse = now(),
+                        prioritet = PutOppgaveRequestJsonDTO.Prioritet.NORM,
+                        endretAvEnhetsnr = "4100",
+                        status = PutOppgaveRequestJsonDTO.Status.AAPNET,
+                        versjon = 1,
+                        tilordnetRessurs = ""
+                ))
+            }
         }
     }
 
@@ -436,7 +524,7 @@ class RestOppgaveBehandlingServiceImplTest {
 
         verify {
             apiClient.hentOppgave(any(), 1234)
-            apiClient.endreOppgave(any(), any(), PutOppgaveRequestJsonDTO(
+            apiClient.endreOppgave(any(), 1234, PutOppgaveRequestJsonDTO(
                     id = 1234,
                     tildeltEnhetsnr = "4100",
                     aktoerId = "07063000250",

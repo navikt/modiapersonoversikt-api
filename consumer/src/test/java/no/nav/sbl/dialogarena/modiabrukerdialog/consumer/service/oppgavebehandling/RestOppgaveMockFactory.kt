@@ -7,6 +7,8 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.oppgave.generated.mod
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.oppgave.generated.models.OppgaveJsonDTO
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.oppgave.generated.models.PatchOppgaverResponseJsonDTO
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.TilgangskontrollContext
+import org.joda.time.DateTime
+import org.joda.time.format.DateTimeFormat
 import java.time.LocalDate
 
 open class RestOppgaveMockFactory {
@@ -23,14 +25,46 @@ open class RestOppgaveMockFactory {
                 aktivDato = LocalDate.now()
         )
 
-        val mockOppgaveFerdigstilt: OppgaveJsonDTO = OppgaveJsonDTO(
+        val mockOppgaveFerdigstiltUtenBeskrivelse: OppgaveJsonDTO = OppgaveJsonDTO(
                 id = 1234,
                 tildeltEnhetsnr = "4100",
+                aktoerId = "07063000250",
+                behandlesAvApplikasjon = "FS22",
+                beskrivelse = "",
+                temagruppe = Temagruppe.ANSOS.name,
+                tema = "KNA",
+                behandlingstema = "",
                 oppgavetype = "SPM_OG_SVR",
-                versjon = 1,
+                behandlingstype = "",
+                aktivDato = LocalDate.now(),
+                fristFerdigstillelse = LocalDate.now(),
                 prioritet = OppgaveJsonDTO.Prioritet.NORM,
+                endretAvEnhetsnr = "",
                 status = OppgaveJsonDTO.Status.FERDIGSTILT,
-                aktivDato = mockOppgave.aktivDato
+                versjon = 1,
+                tilordnetRessurs = "Z999998",
+                opprettetAvEnhetsnr = "4100"
+        )
+
+        val mockOppgaveFerdigstiltMedBeskrivelse: OppgaveJsonDTO = OppgaveJsonDTO(
+                id = 1234,
+                tildeltEnhetsnr = "4100",
+                aktoerId = "07063000250",
+                behandlesAvApplikasjon = "FS22",
+                beskrivelse = "",
+                temagruppe = Temagruppe.ANSOS.name,
+                tema = "KNA",
+                behandlingstema = "ny beskrivelse",
+                oppgavetype = "SPM_OG_SVR",
+                behandlingstype = "",
+                aktivDato = LocalDate.now(),
+                fristFerdigstillelse = LocalDate.now(),
+                prioritet = OppgaveJsonDTO.Prioritet.NORM,
+                endretAvEnhetsnr = "",
+                status = OppgaveJsonDTO.Status.FERDIGSTILT,
+                versjon = 1,
+                tilordnetRessurs = "Z999998",
+                opprettetAvEnhetsnr = "4100"
         )
 
         val mockOppgaverFerdigstilt: PatchOppgaverResponseJsonDTO = PatchOppgaverResponseJsonDTO(
