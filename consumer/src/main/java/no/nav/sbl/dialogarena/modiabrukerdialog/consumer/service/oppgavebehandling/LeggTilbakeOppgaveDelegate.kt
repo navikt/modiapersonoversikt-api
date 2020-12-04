@@ -52,8 +52,8 @@ open class LeggTilbakeOppgaveDelegate(
                 request.saksbehandlersValgteEnhet)
     }
 
-    private fun temagrupeErSatt(temagruppe: Temagruppe?): Boolean {
-        return temagruppe != null
+    private fun temagrupeErSatt(temagruppe: Temagruppe): Boolean {
+        return temagruppe != Temagruppe.NULL
     }
 
     private fun oppdaterForNyTemagruppe(oppgave: OppgaveJsonDTO, temagruppe: Temagruppe): OppgaveJsonDTO {

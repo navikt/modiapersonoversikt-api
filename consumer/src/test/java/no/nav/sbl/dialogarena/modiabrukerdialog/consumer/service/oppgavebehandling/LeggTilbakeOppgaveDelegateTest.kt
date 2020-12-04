@@ -42,7 +42,7 @@ open class LeggTilbakeOppgaveDelegateTest {
     )
 
     @Test
-    fun `skal legge tilbake oppgave`() {
+    fun `skal legge tilbake oppgave med endret temagruppe`() {
         every { apiClient.endreOppgave(any(), any(), any()) } returns RestOppgaveMockFactory.mockOppgaveResponse.asPutResponse()
         every { arbeidsfordelingService.finnBehandlendeEnhetListe(any(), any(), any(), any()) } returns RestOppgaveMockFactory.mockAnsattEnhetListe
         every { ansattService.hentAnsattNavn(any()) } returns ""
@@ -70,6 +70,49 @@ open class LeggTilbakeOppgaveDelegateTest {
                         "Z999998",
                         "4110") + "ny beskrivelse" + "\n\n" + "beskrivelse",
                 temagruppe = Temagruppe.ANSOS.name,
+                tema = "KNA",
+                behandlingstema = "",
+                oppgavetype = "SPM_OG_SVR",
+                behandlingstype = "",
+                aktivDato = LocalDate.now(),
+                fristFerdigstillelse = LocalDate.now(),
+                prioritet = PutOppgaveRequestJsonDTO.Prioritet.NORM,
+                endretAvEnhetsnr = "4110",
+                status = PutOppgaveRequestJsonDTO.Status.AAPNET,
+                versjon = 1,
+                tilordnetRessurs = ""
+        )) }
+    }
+
+    @Test
+    fun `skal legge tilbake oppgave uten endret temagruppe`() {
+        every { apiClient.endreOppgave(any(), any(), any()) } returns RestOppgaveMockFactory.mockOppgaveResponse.asPutResponse()
+        every { arbeidsfordelingService.finnBehandlendeEnhetListe(any(), any(), any(), any()) } returns RestOppgaveMockFactory.mockAnsattEnhetListe
+        every { ansattService.hentAnsattNavn(any()) } returns ""
+
+        SubjectHandlerUtil.withIdent("Z999998") {
+            leggTilbakeOppgaveDelegate.leggTilbake(
+                    RestOppgaveMockFactory.mockOppgaveResponse,
+                    LeggTilbakeOppgaveRequest(
+                            "4110",
+                            "1234",
+                            "ny beskrivelse",
+                            Temagruppe.NULL
+                    )
+            )
+        }
+
+        verify { apiClient.endreOppgave(any(), any(), PutOppgaveRequestJsonDTO(
+                id = 1234,
+                tildeltEnhetsnr = "4100",
+                aktoerId = "07063000250",
+                behandlesAvApplikasjon = "FS22",
+                beskrivelse = String.format("--- %s %s (%s, %s) ---\n",
+                        DateTimeFormat.forPattern("dd.MM.yyyy HH:mm").print(DateTime.now()),
+                        ansattService.hentAnsattNavn("Z999998"),
+                        "Z999998",
+                        "4110") + "ny beskrivelse" + "\n\n" + "beskrivelse",
+                temagruppe = "ARBD_KNA",
                 tema = "KNA",
                 behandlingstema = "",
                 oppgavetype = "SPM_OG_SVR",
