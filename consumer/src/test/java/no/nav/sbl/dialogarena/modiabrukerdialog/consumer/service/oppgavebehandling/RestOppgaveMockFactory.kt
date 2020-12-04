@@ -1,6 +1,7 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.oppgavebehandling
 
 import io.mockk.mockk
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.AnsattEnhet
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.oppgave.generated.models.GetOppgaverResponseJsonDTO
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.oppgave.generated.models.OppgaveJsonDTO
@@ -96,6 +97,24 @@ open class RestOppgaveMockFactory {
                 status = OppgaveJsonDTO.Status.AAPNET,
                 versjon = 1,
                 tildeltEnhetsnr = ""
+        )
+
+        val mockLeggTilbakeOppgaveResponse: OppgaveJsonDTO = OppgaveJsonDTO(
+                id = 1234,
+                opprettetAvEnhetsnr = "4100",
+                aktoerId = "07063000250",
+                behandlesAvApplikasjon = "FS22",
+                beskrivelse = "ny beskrivelse",
+                temagruppe = Temagruppe.ANSOS.name,
+                tema = "KNA",
+                behandlingstema = "",
+                oppgavetype = "SPM_OG_SVR",
+                aktivDato = LocalDate.now(),
+                prioritet = OppgaveJsonDTO.Prioritet.NORM,
+                status = OppgaveJsonDTO.Status.AAPNET,
+                versjon = 1,
+                tildeltEnhetsnr = "4100",
+                endretAvEnhetsnr = "4110"
         )
 
         val mockOppgaverResponse: GetOppgaverResponseJsonDTO = GetOppgaverResponseJsonDTO(
