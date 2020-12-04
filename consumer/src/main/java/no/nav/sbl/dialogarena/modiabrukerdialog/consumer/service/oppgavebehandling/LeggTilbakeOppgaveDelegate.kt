@@ -21,11 +21,13 @@ open class LeggTilbakeOppgaveDelegate(
 
     fun leggTilbake(oppgave: OppgaveJsonDTO, request: LeggTilbakeOppgaveRequest) {
         validerTilgang(oppgave)
-        markerOppgaveSomLagtTilbake(oppgave, request)
+        val markerOppgave = markerOppgaveSomLagtTilbake(oppgave, request)
         if (temagrupeErSatt(request.nyTemagruppe)) {
-            oppdaterForNyTemagruppe(oppgave, request.nyTemagruppe)
+            val oppdaterOppgave = oppdaterForNyTemagruppe(markerOppgave, request.nyTemagruppe)
+            lagreOppgave(oppdaterOppgave, request)
+        } else {
+            lagreOppgave(markerOppgave, request)
         }
-        lagreOppgave(oppgave, request)
     }
 
     private fun validerTilgang(oppgave: OppgaveJsonDTO) {
@@ -38,9 +40,11 @@ open class LeggTilbakeOppgaveDelegate(
         }
     }
 
-    private fun markerOppgaveSomLagtTilbake(oppgave: OppgaveJsonDTO, request: LeggTilbakeOppgaveRequest) {
-        oppgave.tilordnetRessurs?.replace(oppgave.tilordnetRessurs!!, "")
-        oppgave.beskrivelse?.replace(oppgave.beskrivelse!!, lagNyBeskrivelse(oppgave, request))
+    private fun markerOppgaveSomLagtTilbake(oppgave: OppgaveJsonDTO, request: LeggTilbakeOppgaveRequest): OppgaveJsonDTO {
+        return oppgave.copy(
+                tilordnetRessurs = "",
+                beskrivelse = lagNyBeskrivelse(oppgave, request)
+        )
     }
 
     private fun lagNyBeskrivelse(oppgave: OppgaveJsonDTO, request: LeggTilbakeOppgaveRequest): String {
@@ -52,21 +56,22 @@ open class LeggTilbakeOppgaveDelegate(
         return temagruppe != null
     }
 
-    private fun oppdaterForNyTemagruppe(oppgave: OppgaveJsonDTO, temagruppe: Temagruppe) {
-        oppgave.tilordnetRessurs?.replace(oppgave.tilordnetRessurs!!, getAnsvarligEnhet(oppgave, temagruppe))
-        oppgave.temagruppe?.replace(oppgave.temagruppe!!, temagruppe.name)
+    private fun oppdaterForNyTemagruppe(oppgave: OppgaveJsonDTO, temagruppe: Temagruppe): OppgaveJsonDTO {
+        return oppgave.copy(
+                tildeltEnhetsnr = getAnsvarligEnhet(oppgave, temagruppe),
+                temagruppe = temagruppe.name
+        )
     }
 
     private fun getAnsvarligEnhet(oppgave: OppgaveJsonDTO, temagruppe: Temagruppe): String {
-        val enheter = finnBehandlendeEnhetListe(oppgave, temagruppe).stream()
+        val enheter = finnBehandlendeEnhetListe(oppgave, temagruppe)
                 .map { enhet: AnsattEnhet -> enhet.enhetId }
-                .collect(Collectors.toList())
-        return if (enheter.isEmpty()) oppgave.tilordnetRessurs!! else enheter[0]
+        return if (enheter.isEmpty()) oppgave.tildeltEnhetsnr!! else enheter[0]
     }
 
     private fun finnBehandlendeEnhetListe(oppgave: OppgaveJsonDTO, temagruppe: Temagruppe): List<AnsattEnhet> {
         return try {
-            arbeidsfordelingService.finnBehandlendeEnhetListe(oppgave.tilordnetRessurs,
+            arbeidsfordelingService.finnBehandlendeEnhetListe(oppgave.aktoerId,
                     oppgave.tema,
                     oppgave.oppgavetype,
                     underkategoriKode_arbeidsfordelingOverstyrt(temagruppe))
@@ -79,8 +84,8 @@ open class LeggTilbakeOppgaveDelegate(
     private fun lagreOppgave(oppgave: OppgaveJsonDTO, request: LeggTilbakeOppgaveRequest) {
         try {
             restOppgaveBehandlingService.lagreOppgave(oppgave, request.nyTemagruppe, request.saksbehandlersValgteEnhet)
-        } catch (lagreOppgaveOptimistiskLasing: LagreOppgaveOptimistiskLasing) {
-            throw RuntimeException("Oppgaven kunne ikke lagres, den er for øyeblikket låst av en annen bruker.", lagreOppgaveOptimistiskLasing)
+        } catch (e: Exception) {
+            throw RuntimeException("Oppgaven kunne ikke lagres, den er for øyeblikket låst av en annen bruker.", e)
         }
     }
 
