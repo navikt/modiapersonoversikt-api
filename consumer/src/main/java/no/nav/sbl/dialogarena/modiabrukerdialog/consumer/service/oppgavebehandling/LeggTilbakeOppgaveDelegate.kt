@@ -14,8 +14,11 @@ import java.util.stream.Collectors
 
 open class LeggTilbakeOppgaveDelegate(
         val restOppgaveBehandlingService: RestOppgaveBehandlingServiceImpl,
-        val arbeidsfordelingService: ArbeidsfordelingV1Service) {
+        val arbeidsfordelingService: ArbeidsfordelingV1Service
+    ) {
+
     private val log = LoggerFactory.getLogger(LeggTilbakeOppgaveDelegate::class.java)
+
     fun leggTilbake(oppgave: OppgaveJsonDTO, request: LeggTilbakeOppgaveRequest) {
         validerTilgang(oppgave)
         markerOppgaveSomLagtTilbake(oppgave, request)
@@ -36,7 +39,7 @@ open class LeggTilbakeOppgaveDelegate(
     }
 
     private fun markerOppgaveSomLagtTilbake(oppgave: OppgaveJsonDTO, request: LeggTilbakeOppgaveRequest) {
-        oppgave.beskrivelse?.replace(oppgave.beskrivelse!!, "")
+        oppgave.tilordnetRessurs?.replace(oppgave.tilordnetRessurs!!, "")
         oppgave.beskrivelse?.replace(oppgave.beskrivelse!!, lagNyBeskrivelse(oppgave, request))
     }
 
