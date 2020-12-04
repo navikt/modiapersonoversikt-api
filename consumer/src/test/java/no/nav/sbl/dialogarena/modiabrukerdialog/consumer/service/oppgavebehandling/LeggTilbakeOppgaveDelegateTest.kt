@@ -14,6 +14,8 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.pdl.PdlOppslagServic
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.http.SubjectHandlerUtil
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.kodeverksmapper.KodeverksmapperService
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Tilgangskontroll
+import org.joda.time.DateTime
+import org.joda.time.format.DateTimeFormat
 import org.junit.jupiter.api.Test
 import java.time.LocalDate
 
@@ -41,7 +43,7 @@ open class LeggTilbakeOppgaveDelegateTest {
 
     @Test
     fun `skal legge tilbake oppgave`() {
-        every { apiClient.endreOppgave(any(), any(), any()) } returns RestOppgaveMockFactory.mockOppgave.asPutResponse()
+        every { apiClient.endreOppgave(any(), any(), any()) } returns RestOppgaveMockFactory.mockOppgaveResponse.asPutResponse()
         every { arbeidsfordelingService.finnBehandlendeEnhetListe(any(), any(), any(), any()) } returns RestOppgaveMockFactory.mockAnsattEnhetListe
         every { ansattService.hentAnsattNavn(any()) } returns ""
 
@@ -49,9 +51,9 @@ open class LeggTilbakeOppgaveDelegateTest {
             leggTilbakeOppgaveDelegate.leggTilbake(
                     RestOppgaveMockFactory.mockOppgaveResponse,
                     LeggTilbakeOppgaveRequest(
-                            "4100",
+                            "4110",
                             "1234",
-                            "beskrivelse",
+                            "ny beskrivelse",
                             Temagruppe.ANSOS
                     )
             )
@@ -62,8 +64,12 @@ open class LeggTilbakeOppgaveDelegateTest {
                 tildeltEnhetsnr = "4100",
                 aktoerId = "07063000250",
                 behandlesAvApplikasjon = "FS22",
-                beskrivelse = "beskrivelse",
-                temagruppe = "ARBD_KNA",
+                beskrivelse = String.format("--- %s %s (%s, %s) ---\n",
+                        DateTimeFormat.forPattern("dd.MM.yyyy HH:mm").print(DateTime.now()),
+                        ansattService.hentAnsattNavn("Z999998"),
+                        "Z999998",
+                        "4110") + "ny beskrivelse" + "\n\n" + "beskrivelse",
+                temagruppe = Temagruppe.ANSOS.name,
                 tema = "KNA",
                 behandlingstema = "",
                 oppgavetype = "SPM_OG_SVR",
@@ -71,10 +77,10 @@ open class LeggTilbakeOppgaveDelegateTest {
                 aktivDato = LocalDate.now(),
                 fristFerdigstillelse = LocalDate.now(),
                 prioritet = PutOppgaveRequestJsonDTO.Prioritet.NORM,
-                endretAvEnhetsnr = "4100",
+                endretAvEnhetsnr = "4110",
                 status = PutOppgaveRequestJsonDTO.Status.AAPNET,
                 versjon = 1,
-                tilordnetRessurs = "Z999998"
+                tilordnetRessurs = ""
         )) }
     }
 
