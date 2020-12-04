@@ -8,7 +8,6 @@ import no.nav.sbl.dialogarena.abac.AbacResponse
 import no.nav.sbl.dialogarena.abac.Decision
 import no.nav.sbl.dialogarena.abac.Response
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.AnsattEnhet
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.oppgave.generated.apis.OppgaveApi
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.oppgave.generated.models.*
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.pdl.generated.HentIdent
@@ -21,90 +20,15 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.pdl.PdlOppslagServic
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.http.SubjectHandlerUtil
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.kodeverksmapper.KodeverksmapperService
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Tilgangskontroll
-import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.TilgangskontrollContext
 import org.junit.jupiter.api.Test
 import java.time.LocalDate.now
 import java.util.*
 
-val mockOppgave: OppgaveJsonDTO = OppgaveJsonDTO(
-        id = 1234,
-        tildeltEnhetsnr = "4100",
-        oppgavetype = "SPM_OG_SVR",
-        versjon = 1,
-        prioritet = OppgaveJsonDTO.Prioritet.NORM,
-        status = OppgaveJsonDTO.Status.AAPNET,
-        aktivDato = now()
-)
-
-val mockOppgaveFerdigstilt: OppgaveJsonDTO = OppgaveJsonDTO(
-        id = 1234,
-        tildeltEnhetsnr = "4100",
-        oppgavetype = "SPM_OG_SVR",
-        versjon = 1,
-        prioritet = OppgaveJsonDTO.Prioritet.NORM,
-        status = OppgaveJsonDTO.Status.FERDIGSTILT,
-        aktivDato = mockOppgave.aktivDato
-)
-
-val mockOppgaverFerdigstilt: PatchOppgaverResponseJsonDTO = PatchOppgaverResponseJsonDTO(
-        suksess = 0,
-        feilet = 1
-)
-
-val mockOppgaveResponse: OppgaveJsonDTO = OppgaveJsonDTO(
-        id = 1234,
-        tildeltEnhetsnr = "4100",
-        aktoerId = "07063000250",
-        behandlesAvApplikasjon = "FS22",
-        beskrivelse = "beskrivelse",
-        temagruppe = "ARBD_KNA",
-        tema = "KNA",
-        behandlingstema = "",
-        oppgavetype = "SPM_OG_SVR",
-        behandlingstype = "",
-        aktivDato = now(),
-        fristFerdigstillelse = now(),
-        prioritet = OppgaveJsonDTO.Prioritet.NORM,
-        endretAvEnhetsnr = "",
-        status = OppgaveJsonDTO.Status.AAPNET,
-        versjon = 1,
-        tilordnetRessurs = "Z999998",
-        opprettetAvEnhetsnr = "4100"
-)
-
-val mockOppgaveResponseSkjermet: OppgaveJsonDTO = OppgaveJsonDTO(
-        id = 1234,
-        opprettetAvEnhetsnr = "4100",
-        aktoerId = "07063000250",
-        behandlesAvApplikasjon = "FS22",
-        beskrivelse = "beskrivelse",
-        temagruppe = "",
-        tema = "KNA",
-        behandlingstema = "",
-        oppgavetype = "SPM_OG_SVR",
-        behandlingstype = "",
-        aktivDato = now(),
-        fristFerdigstillelse = now(),
-        prioritet = OppgaveJsonDTO.Prioritet.NORM,
-        status = OppgaveJsonDTO.Status.AAPNET,
-        versjon = 1,
-        tildeltEnhetsnr = ""
-)
-
-val mockOppgaverResponse: GetOppgaverResponseJsonDTO = GetOppgaverResponseJsonDTO(
-        antallTreffTotalt = 2,
-        oppgaver = listOf(mockOppgaveResponse, mockOppgaveResponse.copy(id = 5678))
-)
-
-val mockAnsattEnhetListe = listOf(AnsattEnhet("4100", "NKS"))
-
-val tilgangskontrollContext: TilgangskontrollContext = mockk()
-
-class RestOppgaveBehandlingServiceImplRedoTest {
+class RestOppgaveBehandlingServiceImplTest {
     val apiClient: OppgaveApi = mockk()
     val kodeverksmapperService: KodeverksmapperService = mockk()
     val pdlOppslagService: PdlOppslagService = mockk()
-    val tilgangskontroll: Tilgangskontroll = Tilgangskontroll(tilgangskontrollContext)
+    val tilgangskontroll: Tilgangskontroll = Tilgangskontroll(RestOppgaveMockFactory.tilgangskontrollContext)
     val ansattService: AnsattService = mockk()
     val arbeidsfordelingService: ArbeidsfordelingV1Service = mockk()
     val stsService: SystemUserTokenProvider = mockk()
@@ -121,7 +45,7 @@ class RestOppgaveBehandlingServiceImplRedoTest {
     @Test
     fun `skal opprette oppgave`() {
         every { stsService.systemUserToken } returns "DummyToken"
-        every { apiClient.opprettOppgave(any(), any(), any()) } returns mockOppgaveResponse.asPost()
+        every { apiClient.opprettOppgave(any(), any(), any()) } returns RestOppgaveMockFactory.mockOpprettOppgaveResponse.asPost()
         every { kodeverksmapperService.mapUnderkategori(any()) } returns Optional.empty()
         every { kodeverksmapperService.mapOppgavetype(any()) } returns "SPM_OG_SVR"
         every { pdlOppslagService.hentIdent(any()) } returns HentIdent.Identliste(listOf(HentIdent.IdentInformasjon("07063000250", HentIdent.IdentGruppe.AKTORID)))
@@ -163,7 +87,8 @@ class RestOppgaveBehandlingServiceImplRedoTest {
                     opprettetAvEnhetsnr = "4100",
                     behandlingstema = "",
                     aktivDato = now(),
-                    fristFerdigstillelse = now()
+                    fristFerdigstillelse = now(),
+                    tildeltEnhetsnr = ""
             ))
         }
 
@@ -172,7 +97,7 @@ class RestOppgaveBehandlingServiceImplRedoTest {
     @Test
     fun `skal opprette skjermet oppgave`() {
         every { stsService.systemUserToken } returns "DummyToken"
-        every { apiClient.opprettOppgave(any(), any(), any()) } returns mockOppgaveResponseSkjermet.asPost()
+        every { apiClient.opprettOppgave(any(), any(), any()) } returns RestOppgaveMockFactory.mockOpprettOppgaveResponseSkjermet.asPost()
         every { kodeverksmapperService.mapUnderkategori(any()) } returns Optional.empty()
         every { kodeverksmapperService.mapOppgavetype(any()) } returns "SPM_OG_SVR"
         every { pdlOppslagService.hentIdent(any()) } returns HentIdent.Identliste(listOf(HentIdent.IdentInformasjon("07063000250", HentIdent.IdentGruppe.AKTORID)))
@@ -183,7 +108,7 @@ class RestOppgaveBehandlingServiceImplRedoTest {
                             fnr = "07063000250",
                             behandlesAvApplikasjon = "FS22",
                             beskrivelse = "beskrivelse",
-                            temagruppe = "A",
+                            temagruppe = "",
                             tema = "KNA",
                             oppgavetype = "SPM_OG_SVR",
                             behandlingstype = "",
@@ -223,8 +148,8 @@ class RestOppgaveBehandlingServiceImplRedoTest {
     @Test
     fun `skal hente og tilordne oppgave, setter 4100 som standard enhet`() {
         every { stsService.systemUserToken } returns "DummyToken"
-        every { apiClient.hentOppgave(any(), any()) } returns mockOppgave.asGetResponse()
-        every { apiClient.patchOppgave(any(), any(), any()) } returns mockOppgave
+        every { apiClient.hentOppgave(any(), any()) } returns RestOppgaveMockFactory.mockOppgave.asGetResponse()
+        every { apiClient.patchOppgave(any(), any(), any()) } returns RestOppgaveMockFactory.mockOppgave
 
         SubjectHandlerUtil.withIdent("Z999998") {
             oppgaveBehandlingService.tilordneOppgave(
@@ -248,8 +173,8 @@ class RestOppgaveBehandlingServiceImplRedoTest {
     @Test
     fun `skal hente og tilordne oppgave, bruker saksbehandlers valgte enhet for ANSOS etc `() {
         every { stsService.systemUserToken } returns "DummyToken"
-        every { apiClient.hentOppgave(any(), any()) } returns mockOppgave.asGetResponse()
-        every { apiClient.patchOppgave(any(), any(), any()) } returns mockOppgave
+        every { apiClient.hentOppgave(any(), any()) } returns RestOppgaveMockFactory.mockOppgave.asGetResponse()
+        every { apiClient.patchOppgave(any(), any(), any()) } returns RestOppgaveMockFactory.mockOppgave
 
         SubjectHandlerUtil.withIdent("Z999998") {
             oppgaveBehandlingService.tilordneOppgave(
@@ -273,9 +198,9 @@ class RestOppgaveBehandlingServiceImplRedoTest {
     @Test
     fun `skal ferdigstille oppgave uten beskrivelse`() {
         every { stsService.systemUserToken } returns "DummyToken"
-        every { apiClient.hentOppgave(any(), any()) } returns mockOppgave.asGetResponse()
-        every { apiClient.endreOppgave(any(), any(), any()) } returns mockOppgave.asPutResponse()
-        every { apiClient.patchOppgave(any(), any(), any()) } returns mockOppgaveFerdigstilt
+        every { apiClient.hentOppgave(any(), any()) } returns RestOppgaveMockFactory.mockOppgave.asGetResponse()
+        every { apiClient.endreOppgave(any(), any(), any()) } returns RestOppgaveMockFactory.mockOppgave.asPutResponse()
+        every { apiClient.patchOppgave(any(), any(), any()) } returns RestOppgaveMockFactory.mockOppgaveFerdigstilt
         every { ansattService.hentAnsattNavn(any()) } returns ""
 
         SubjectHandlerUtil.withIdent("Z999998") {
@@ -301,9 +226,9 @@ class RestOppgaveBehandlingServiceImplRedoTest {
     @Test
     fun `skal ferdigstille oppgave med beskrivelse`() {
         every { stsService.systemUserToken } returns "DummyToken"
-        every { apiClient.hentOppgave(any(), any()) } returns mockOppgave.asGetResponse()
-        every { apiClient.endreOppgave(any(), any(), any()) } returns mockOppgave.asPutResponse()
-        every { apiClient.patchOppgave(any(), any(), any()) } returns mockOppgaveFerdigstilt
+        every { apiClient.hentOppgave(any(), any()) } returns RestOppgaveMockFactory.mockOppgave.asGetResponse()
+        every { apiClient.endreOppgave(any(), any(), any()) } returns RestOppgaveMockFactory.mockOppgave.asPutResponse()
+        every { apiClient.patchOppgave(any(), any(), any()) } returns RestOppgaveMockFactory.mockOppgaveFerdigstilt
         every { ansattService.hentAnsattNavn(any()) } returns ""
 
         SubjectHandlerUtil.withIdent("Z999998") {
@@ -330,9 +255,9 @@ class RestOppgaveBehandlingServiceImplRedoTest {
     @Test
     fun `skal ferdigstille oppgaver`() {
         every { stsService.systemUserToken } returns "DummyToken"
-        every { apiClient.hentOppgave(any(), any()) } returns mockOppgave.asGetResponse()
-        every { apiClient.endreOppgave(any(), any(), any()) } returns mockOppgave.asPutResponse()
-        every { apiClient.patchOppgaver(any(), any()) } returns mockOppgaverFerdigstilt
+        every { apiClient.hentOppgave(any(), any()) } returns RestOppgaveMockFactory.mockOppgave.asGetResponse()
+        every { apiClient.endreOppgave(any(), any(), any()) } returns RestOppgaveMockFactory.mockOppgave.asPutResponse()
+        every { apiClient.patchOppgaver(any(), any()) } returns RestOppgaveMockFactory.mockOppgaverFerdigstilt
         every { ansattService.hentAnsattNavn(any()) } returns ""
 
         SubjectHandlerUtil.withIdent("Z999998") {
@@ -356,8 +281,8 @@ class RestOppgaveBehandlingServiceImplRedoTest {
 
     @Test
     fun `systemet legger tilbake oppgave uten endringer`() {
-        every { apiClient.hentOppgave(any(), any()) } returns mockOppgave.asGetResponse()
-        every { apiClient.endreOppgave(any(), any(), any()) } returns mockOppgave.asPutResponse()
+        every { apiClient.hentOppgave(any(), any()) } returns RestOppgaveMockFactory.mockOppgave.asGetResponse()
+        every { apiClient.endreOppgave(any(), any(), any()) } returns RestOppgaveMockFactory.mockOppgave.asPutResponse()
 
         SubjectHandlerUtil.withIdent("Z999998") {
             oppgaveBehandlingService.systemLeggTilbakeOppgave(
@@ -378,9 +303,9 @@ class RestOppgaveBehandlingServiceImplRedoTest {
         every { apiClient.finnOppgaver(any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any(),
                 any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any(),
                 any(), any())
-        } returns mockOppgaverResponse
+        } returns RestOppgaveMockFactory.mockOppgaverResponse
         every { kodeverksmapperService.mapOppgavetype(any()) } returns ""
-        every { tilgangskontrollContext.checkAbac(any()) } returns AbacResponse(listOf(Response(Decision.Permit, emptyList())))
+        every { RestOppgaveMockFactory.tilgangskontrollContext.checkAbac(any()) } returns AbacResponse(listOf(Response(Decision.Permit, emptyList())))
 
         SubjectHandlerUtil.withIdent("Z999998") {
             oppgaveBehandlingService.finnTildelteOppgaver()
@@ -425,11 +350,11 @@ class RestOppgaveBehandlingServiceImplRedoTest {
         every { apiClient.finnOppgaver(any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any(),
                 any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any(),
                 any(), any())
-        } returns mockOppgaverResponse
-        every { apiClient.hentOppgave(any(), any()) } returns mockOppgaveResponse.asGetResponse()
-        every { apiClient.endreOppgave(any(), any(), any()) } returns mockOppgaveResponse.asPutResponse()
+        } returns RestOppgaveMockFactory.mockOppgaverResponse
+        every { apiClient.hentOppgave(any(), any()) } returns RestOppgaveMockFactory.mockOppgaveResponse.asGetResponse()
+        every { apiClient.endreOppgave(any(), any(), any()) } returns RestOppgaveMockFactory.mockOppgaveResponse.asPutResponse()
         every { kodeverksmapperService.mapOppgavetype(any()) } returns ""
-        every { tilgangskontrollContext.checkAbac(any()) } returns AbacResponse(listOf(Response(Decision.Deny, emptyList())))
+        every { RestOppgaveMockFactory.tilgangskontrollContext.checkAbac(any()) } returns AbacResponse(listOf(Response(Decision.Deny, emptyList())))
 
         SubjectHandlerUtil.withIdent("Z999998") {
             oppgaveBehandlingService.finnTildelteOppgaver()
@@ -473,10 +398,10 @@ class RestOppgaveBehandlingServiceImplRedoTest {
 
     @Test
     fun `skal legge tilbake oppgave`() {
-        every { apiClient.hentOppgave(any(), any()) } returns mockOppgaveResponse.asGetResponse()
+        every { apiClient.hentOppgave(any(), any()) } returns RestOppgaveMockFactory.mockOppgaveResponse.asGetResponse()
         every { ansattService.hentAnsattNavn(any()) } returns ""
-        every { arbeidsfordelingService.finnBehandlendeEnhetListe(any(), any(), any(), any()) } returns mockAnsattEnhetListe
-        every { apiClient.endreOppgave(any(), any(), any()) } returns mockOppgaveResponse.asPutResponse()
+        every { arbeidsfordelingService.finnBehandlendeEnhetListe(any(), any(), any(), any()) } returns RestOppgaveMockFactory.mockAnsattEnhetListe
+        every { apiClient.endreOppgave(any(), any(), any()) } returns RestOppgaveMockFactory.mockOppgaveResponse.asPutResponse()
 
         SubjectHandlerUtil.withIdent("Z999998") {
             oppgaveBehandlingService.leggTilbakeOppgave(
@@ -497,7 +422,7 @@ class RestOppgaveBehandlingServiceImplRedoTest {
 
     @Test
     fun `oppgave er ferdigstilt`() {
-        every { apiClient.hentOppgave(any(), any()) } returns mockOppgave.asGetResponse()
+        every { apiClient.hentOppgave(any(), any()) } returns RestOppgaveMockFactory.mockOppgave.asGetResponse()
 
         SubjectHandlerUtil.withIdent("Z999998") {
             oppgaveBehandlingService.oppgaveErFerdigstilt(

@@ -1,35 +1,110 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.oppgavebehandling
 
+import io.mockk.mockk
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.AnsattEnhet
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.oppgave.generated.models.GetOppgaverResponseJsonDTO
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.oppgave.generated.models.OppgaveJsonDTO
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.oppgave.generated.models.PatchOppgaverResponseJsonDTO
+import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.TilgangskontrollContext
 import java.time.LocalDate
 
 open class RestOppgaveMockFactory {
     companion object {
-        val ANSVARLIG_SAKSBEHANDLER = "z554455"
-        val OPPGAVE_ID = "123123123"
-        val FNR_MOSS_TESTFAMILIEN = "07063000250"
+        val ANSVARLIG_SAKSBEHANDLER = "Z554455"
 
-        fun mockHentOppgaveResponseMedTilordning() : OppgaveJsonDTO{
-            return lagOppgave().copy(beskrivelse = "opprinnelig beskrivelse")
-        }
+        val mockOppgave: OppgaveJsonDTO = OppgaveJsonDTO(
+                id = 1234,
+                tildeltEnhetsnr = "4100",
+                oppgavetype = "SPM_OG_SVR",
+                versjon = 1,
+                prioritet = OppgaveJsonDTO.Prioritet.NORM,
+                status = OppgaveJsonDTO.Status.AAPNET,
+                aktivDato = LocalDate.now()
+        )
 
-        fun lagOppgave(): OppgaveJsonDTO {
-            return OppgaveJsonDTO(
-                    id = OPPGAVE_ID.toLong(),
-                    tilordnetRessurs = ANSVARLIG_SAKSBEHANDLER,
-                    aktoerId = FNR_MOSS_TESTFAMILIEN,
-                    tildeltEnhetsnr = "ansvarligenhetid",
-                    behandlesAvApplikasjon = "FS22",
-                    beskrivelse = "beskrivelse",
-                    temagruppe = "ARBD_KNA",
-                    tema = "ARBEID_HJE",
-                    oppgavetype = "oppgavetype",
-                    aktivDato = LocalDate.now(),
-                    prioritet = OppgaveJsonDTO.Prioritet.NORM,
-                    status = OppgaveJsonDTO.Status.OPPRETTET,
-                    versjon = 1,
-                    saksreferanse = "saksnummer"
-            )
-        }
+        val mockOppgaveFerdigstilt: OppgaveJsonDTO = OppgaveJsonDTO(
+                id = 1234,
+                tildeltEnhetsnr = "4100",
+                oppgavetype = "SPM_OG_SVR",
+                versjon = 1,
+                prioritet = OppgaveJsonDTO.Prioritet.NORM,
+                status = OppgaveJsonDTO.Status.FERDIGSTILT,
+                aktivDato = mockOppgave.aktivDato
+        )
+
+        val mockOppgaverFerdigstilt: PatchOppgaverResponseJsonDTO = PatchOppgaverResponseJsonDTO(
+                suksess = 0,
+                feilet = 1
+        )
+
+        val mockOppgaveResponse: OppgaveJsonDTO = OppgaveJsonDTO(
+                id = 1234,
+                tildeltEnhetsnr = "4100",
+                aktoerId = "07063000250",
+                behandlesAvApplikasjon = "FS22",
+                beskrivelse = "beskrivelse",
+                temagruppe = "ARBD_KNA",
+                tema = "KNA",
+                behandlingstema = "",
+                oppgavetype = "SPM_OG_SVR",
+                behandlingstype = "",
+                aktivDato = LocalDate.now(),
+                fristFerdigstillelse = LocalDate.now(),
+                prioritet = OppgaveJsonDTO.Prioritet.NORM,
+                endretAvEnhetsnr = "",
+                status = OppgaveJsonDTO.Status.AAPNET,
+                versjon = 1,
+                tilordnetRessurs = "Z999998",
+                opprettetAvEnhetsnr = "4100"
+        )
+
+        val mockOpprettOppgaveResponse: OppgaveJsonDTO = OppgaveJsonDTO(
+                id = 1234,
+                tildeltEnhetsnr = "",
+                aktoerId = "07063000250",
+                behandlesAvApplikasjon = "FS22",
+                beskrivelse = "beskrivelse",
+                temagruppe = "ARBD_KNA",
+                tema = "KNA",
+                behandlingstema = "",
+                oppgavetype = "SPM_OG_SVR",
+                behandlingstype = "",
+                aktivDato = LocalDate.now(),
+                fristFerdigstillelse = LocalDate.now(),
+                prioritet = OppgaveJsonDTO.Prioritet.NORM,
+                endretAvEnhetsnr = "",
+                status = OppgaveJsonDTO.Status.AAPNET,
+                versjon = 1,
+                tilordnetRessurs = "",
+                opprettetAvEnhetsnr = "4100"
+        )
+
+        val mockOpprettOppgaveResponseSkjermet: OppgaveJsonDTO = OppgaveJsonDTO(
+                id = 1234,
+                opprettetAvEnhetsnr = "4100",
+                aktoerId = "07063000250",
+                behandlesAvApplikasjon = "FS22",
+                beskrivelse = "beskrivelse",
+                temagruppe = "",
+                tema = "KNA",
+                behandlingstema = "",
+                oppgavetype = "SPM_OG_SVR",
+                behandlingstype = "",
+                aktivDato = LocalDate.now(),
+                fristFerdigstillelse = LocalDate.now(),
+                prioritet = OppgaveJsonDTO.Prioritet.NORM,
+                status = OppgaveJsonDTO.Status.AAPNET,
+                versjon = 1,
+                tildeltEnhetsnr = ""
+        )
+
+        val mockOppgaverResponse: GetOppgaverResponseJsonDTO = GetOppgaverResponseJsonDTO(
+                antallTreffTotalt = 2,
+                oppgaver = listOf(mockOppgaveResponse, mockOppgaveResponse.copy(id = 5678))
+        )
+
+        val mockAnsattEnhetListe = listOf(AnsattEnhet("4100", "NKS"))
+
+        val tilgangskontrollContext: TilgangskontrollContext = mockk()
     }
 }
