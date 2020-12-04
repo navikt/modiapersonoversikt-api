@@ -20,6 +20,8 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.pdl.PdlOppslagServic
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.http.SubjectHandlerUtil
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.kodeverksmapper.KodeverksmapperService
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Tilgangskontroll
+import org.joda.time.DateTime
+import org.joda.time.format.DateTimeFormat
 import org.junit.jupiter.api.Test
 import java.time.LocalDate.now
 import java.util.*
@@ -281,20 +283,38 @@ class RestOppgaveBehandlingServiceImplTest {
 
     @Test
     fun `systemet legger tilbake oppgave uten endringer`() {
-        every { apiClient.hentOppgave(any(), any()) } returns RestOppgaveMockFactory.mockOppgave.asGetResponse()
-        every { apiClient.endreOppgave(any(), any(), any()) } returns RestOppgaveMockFactory.mockOppgave.asPutResponse()
+        every { apiClient.hentOppgave(any(), any()) } returns RestOppgaveMockFactory.mockOppgaveResponse.asGetResponse()
+        every { apiClient.endreOppgave(any(), any(), any()) } returns RestOppgaveMockFactory.mockOppgaveResponse.asPutResponse()
 
         SubjectHandlerUtil.withIdent("Z999998") {
             oppgaveBehandlingService.systemLeggTilbakeOppgave(
                     "1234",
-                    Temagruppe.ANSOS,
-                    "4110"
+                    Temagruppe.ARBD,
+                    "4100"
             )
         }
 
         verify {
-            apiClient.hentOppgave(any(), any())
-            apiClient.endreOppgave(any(), any(), any())
+            apiClient.hentOppgave(any(), 1234)
+            apiClient.endreOppgave(any(), any(), PutOppgaveRequestJsonDTO(
+                    id = 1234,
+                    tildeltEnhetsnr = "4100",
+                    aktoerId = "07063000250",
+                    behandlesAvApplikasjon = "FS22",
+                    beskrivelse = "beskrivelse",
+                    temagruppe = "ARBD_KNA",
+                    tema = "KNA",
+                    behandlingstema = "",
+                    oppgavetype = "SPM_OG_SVR",
+                    behandlingstype = "",
+                    aktivDato = now(),
+                    fristFerdigstillelse = now(),
+                    prioritet = PutOppgaveRequestJsonDTO.Prioritet.NORM,
+                    endretAvEnhetsnr = "4100",
+                    status = PutOppgaveRequestJsonDTO.Status.AAPNET,
+                    versjon = 1,
+                    tilordnetRessurs = ""
+            ))
         }
     }
 
@@ -401,14 +421,14 @@ class RestOppgaveBehandlingServiceImplTest {
         every { apiClient.hentOppgave(any(), any()) } returns RestOppgaveMockFactory.mockOppgaveResponse.asGetResponse()
         every { ansattService.hentAnsattNavn(any()) } returns ""
         every { arbeidsfordelingService.finnBehandlendeEnhetListe(any(), any(), any(), any()) } returns RestOppgaveMockFactory.mockAnsattEnhetListe
-        every { apiClient.endreOppgave(any(), any(), any()) } returns RestOppgaveMockFactory.mockOppgaveResponse.asPutResponse()
+        every { apiClient.endreOppgave(any(), any(), any()) } returns RestOppgaveMockFactory.mockLeggTilbakeOppgaveResponse.asPutResponse()
 
         SubjectHandlerUtil.withIdent("Z999998") {
             oppgaveBehandlingService.leggTilbakeOppgave(
                      LeggTilbakeOppgaveRequest(
-                             "4100",
+                             "4110",
                              "1234",
-                             "beskrivelse",
+                             "ny beskrivelse",
                              Temagruppe.ANSOS
                      )
             )
@@ -416,6 +436,29 @@ class RestOppgaveBehandlingServiceImplTest {
 
         verify {
             apiClient.hentOppgave(any(), 1234)
+            apiClient.endreOppgave(any(), any(), PutOppgaveRequestJsonDTO(
+                    id = 1234,
+                    tildeltEnhetsnr = "4100",
+                    aktoerId = "07063000250",
+                    behandlesAvApplikasjon = "FS22",
+                    beskrivelse = String.format("--- %s %s (%s, %s) ---\n",
+                            DateTimeFormat.forPattern("dd.MM.yyyy HH:mm").print(DateTime.now()),
+                            ansattService.hentAnsattNavn("Z999998"),
+                            "Z999998",
+                            "4110") + "ny beskrivelse" + "\n\n" + "beskrivelse",
+                    temagruppe = Temagruppe.ANSOS.name,
+                    tema = "KNA",
+                    behandlingstema = "",
+                    oppgavetype = "SPM_OG_SVR",
+                    behandlingstype = "",
+                    aktivDato = now(),
+                    fristFerdigstillelse = now(),
+                    prioritet = PutOppgaveRequestJsonDTO.Prioritet.NORM,
+                    endretAvEnhetsnr = "4110",
+                    status = PutOppgaveRequestJsonDTO.Status.AAPNET,
+                    versjon = 1,
+                    tilordnetRessurs = ""
+            ))
         }
 
     }
