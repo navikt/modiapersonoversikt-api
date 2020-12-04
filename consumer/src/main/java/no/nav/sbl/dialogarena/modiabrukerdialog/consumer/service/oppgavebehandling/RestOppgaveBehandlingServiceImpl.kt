@@ -357,7 +357,8 @@ open class RestOppgaveBehandlingServiceImpl @Autowired constructor(
     private fun correlationId() = MDC.get(MDCConstants.MDC_CALL_ID) ?: UUID.randomUUID().toString()
 
     private fun formatterBeskrivelseFerdigstiltOppgave(saksbehandlersValgteEnhet: String, gammelBeskrivelse: String?, beskrivelse: String) : String {
-        return leggTilBeskrivelse(gammelBeskrivelse, beskrivelse, saksbehandlersValgteEnhet)
+        val beskrivelseFerdigstilt = "Oppgaven er ferdigstilt i Modia. " + beskrivelse
+        return leggTilBeskrivelse(gammelBeskrivelse, beskrivelseFerdigstilt, saksbehandlersValgteEnhet)
     }
 
     override fun systemLeggTilbakeOppgave(oppgaveId: String, temagruppe: Temagruppe, saksbehandlersValgteEnhet: String) {
@@ -410,7 +411,7 @@ open class RestOppgaveBehandlingServiceImpl @Autowired constructor(
                 ansattService.hentAnsattNavn(ident),
                 ident,
                 valgtEnhet)
-        val nyBeskrivelse = header + "Oppgaven er ferdigstilt i Modia. " + leggTil
+        val nyBeskrivelse = header + leggTil
         return if (StringUtils.isBlank(gammelBeskrivelse)) nyBeskrivelse else nyBeskrivelse + "\n\n" + gammelBeskrivelse
     }
 }
