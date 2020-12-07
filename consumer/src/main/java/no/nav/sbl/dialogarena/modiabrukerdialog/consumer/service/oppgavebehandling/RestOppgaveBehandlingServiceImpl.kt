@@ -358,7 +358,7 @@ open class RestOppgaveBehandlingServiceImpl @Autowired constructor(
                         .isPermit()) {
             return oppgaveList
         }
-        oppgaveList.forEach { oppgave: OppgaveJsonDTO -> systemLeggTilbakeOppgave(oppgave.id.toString(), Temagruppe.valueOf(null.toString()), "4100") }
+        oppgaveList.forEach { oppgave: OppgaveJsonDTO -> systemLeggTilbakeOppgave(oppgave.id.toString(), Temagruppe.NULL, "4100") }
         return emptyList()
     }
 
