@@ -332,14 +332,9 @@ open class RestOppgaveBehandlingServiceImpl @Autowired constructor(
     }
 
     private fun enhetFor(temagruppe: Temagruppe, saksbehandlersValgteEnhet: String): String {
-        return enhetFor(Optional.ofNullable(temagruppe), saksbehandlersValgteEnhet)
-    }
-
-    private fun enhetFor(optional: Optional<Temagruppe>, saksbehandlersValgteEnhet: String): String {
-        if (!optional.isPresent) {
+        if (temagruppe == Temagruppe.NULL) {
             return DEFAULT_ENHET.toString()
         }
-        val temagruppe = optional.get()
         return if (temagruppe == Temagruppe.FMLI && saksbehandlersValgteEnhet == STORD_ENHET) {
             STORD_ENHET
         } else if (listOf(Temagruppe.ARBD, Temagruppe.HELSE, Temagruppe.FMLI, Temagruppe.FDAG, Temagruppe.ORT_HJE, Temagruppe.PENS, Temagruppe.UFRT, Temagruppe.PLEIEPENGERSY, Temagruppe.UTLAND).contains(temagruppe)) {
