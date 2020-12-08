@@ -114,7 +114,7 @@ open class RestOppgaveBehandlingServiceImpl @Autowired constructor(
     override fun opprettOppgave(request: OpprettOppgaveRequest): OpprettOppgaveResponse {
         val behandling: Optional<Behandling> = kodeverksmapperService.mapUnderkategori(request.underkategoriKode)
         val oppgaveTypeMapped: String = kodeverksmapperService.mapOppgavetype(request.oppgavetype)
-         val aktorId = getAktorId(request.fnr)
+        val aktorId = getAktorId(request.fnr)
         if (aktorId == null || aktorId.isEmpty()) {
             throw Exception("AktørId-mangler på person")
         }
@@ -412,6 +412,9 @@ open class RestOppgaveBehandlingServiceImpl @Autowired constructor(
 
     private fun oppgaveJsonDTOToOppgaveResponse(response: OppgaveJsonDTO): OppgaveResponse {
         val fnr = getFnr(response.aktoerId!!)
+        if (fnr == null || fnr.isEmpty()) {
+            throw Exception("Fnr mangler på person")
+        }
         val erSTO = Optional
                 .ofNullable(response.oppgavetype)
                 .map { kodeverksmapperService.mapOppgavetype(response.oppgavetype) }
