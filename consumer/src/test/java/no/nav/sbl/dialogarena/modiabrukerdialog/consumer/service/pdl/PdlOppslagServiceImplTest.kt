@@ -44,7 +44,7 @@ internal class PdlOppslagServiceImplTest {
         }
 
         TestUtils.withEnv("PDL_API_URL", "http://dummy.no") {
-            PdlOppslagServiceImpl(stsMock, client).hentIdent("ident")
+            PdlOppslagServiceImpl(stsMock, client).hentIdent("fnr")
         }
     }
 
@@ -56,7 +56,7 @@ internal class PdlOppslagServiceImplTest {
         }
 
         TestUtils.withEnv("PDL_API_URL", "http://dummy.no") {
-            PdlOppslagServiceImpl(stsMock, client).hentNavnBolk(listOf("ident"))
+            PdlOppslagServiceImpl(stsMock, client).hentNavnBolk(listOf("fnr"))
         }
     }
 
