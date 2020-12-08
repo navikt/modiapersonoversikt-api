@@ -7,12 +7,9 @@ import no.nav.common.sts.SystemUserTokenProvider
 import no.nav.common.utils.EnvironmentUtils
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.oppgave.generated.apis.OppgaveApi
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.oppgave.generated.models.PostOppgaveRequestJsonDTO
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.OpprettOppgaveRequest
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveRestClient
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.pdl.PdlOppslagService
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.pdl.generated.HentIdent.IdentGruppe
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveResponse
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.OpprettOppgaveResponse
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.*
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.kodeverksmapper.KodeverksmapperService
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.kodeverksmapper.domain.Behandling
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.pdl.PdlSyntetiskMapper
@@ -54,26 +51,26 @@ open class OppgaveOpprettelseClient @Autowired constructor(
         )
         return OpprettOppgaveResponse(response.id?.toString() ?: throw RuntimeException("No oppgaveId found"))
     }
-    override fun opprettSkjermetOppgave(opprettOppgave: OpprettOppgaveRequest) : OpprettOppgaveResponse {
-        val behandling: Optional<Behandling> = kodeverksmapperService.mapUnderkategori(opprettOppgave.underkategoriKode)
-        val aktorId = getAktorId(opprettOppgave.fnr)
+    override fun opprettSkjermetOppgave(request: OpprettSkjermetOppgaveRequest) : OpprettOppgaveResponse {
+        val behandling: Optional<Behandling> = kodeverksmapperService.mapUnderkategori(request.underkategoriKode)
+        val aktorId = getAktorId(request.fnr)
         if (aktorId == null || aktorId.isEmpty()) {
             throw Exception("AktørId-mangler på person")
         }
 
         val request = PostOppgaveRequestJsonDTO(
-                opprettetAvEnhetsnr = opprettOppgave.opprettetavenhetsnummer,
+                opprettetAvEnhetsnr = request.opprettetavenhetsnummer,
                 aktoerId = aktorId,
                 behandlesAvApplikasjon = "FS22",
-                beskrivelse = opprettOppgave.beskrivelse,
+                beskrivelse = request.beskrivelse,
                 temagruppe = "",
-                tema = opprettOppgave.tema,
+                tema = request.tema,
                 behandlingstema = behandling.map(Behandling::getBehandlingstema).orElse(null),
-                oppgavetype = kodeverksmapperService.mapOppgavetype(opprettOppgave.oppgavetype),
+                oppgavetype = kodeverksmapperService.mapOppgavetype(request.oppgavetype),
                 behandlingstype = behandling.map(Behandling::getBehandlingstype).orElse(null),
                 aktivDato = LocalDate.now(),
-                fristFerdigstillelse = opprettOppgave.oppgaveFrist,
-                prioritet = PostOppgaveRequestJsonDTO.Prioritet.valueOf(stripTemakode(opprettOppgave.prioritet))
+                fristFerdigstillelse = request.oppgaveFrist,
+                prioritet = PostOppgaveRequestJsonDTO.Prioritet.valueOf(stripTemakode(request.prioritet))
         )
 
         return opprettOppgave(request)

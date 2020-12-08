@@ -77,38 +77,7 @@ open class RestOppgaveBehandlingServiceImpl @Autowired constructor(
     }
 
     val leggTilbakeOppgaveDelegate: LeggTilbakeOppgaveDelegate = LeggTilbakeOppgaveDelegate(this, arbeidsfordelingService)
-
     private val log = LoggerFactory.getLogger(RestOppgaveBehandlingServiceImpl::class.java)
-
-    fun endreOppgave(request: OppgaveJsonDTO): PutOppgaveResponseJsonDTO {
-        val oppgaveId = requireNotNull(request.id) {
-            "OppgaveId var null ved endre oppgave-kall"
-        }
-        val oppgave = apiClient.endreOppgave(
-                xminusCorrelationMinusID = correlationId(),
-                id = oppgaveId,
-                putOppgaveRequestJsonDTO = PutOppgaveRequestJsonDTO(
-                        id = oppgaveId,
-                        tildeltEnhetsnr = request.tildeltEnhetsnr,
-                        aktoerId = request.aktoerId,
-                        behandlesAvApplikasjon = request.behandlesAvApplikasjon,
-                        beskrivelse = request.beskrivelse,
-                        temagruppe = request.temagruppe,
-                        tema = request.tema,
-                        behandlingstema = request.behandlingstema,
-                        oppgavetype = request.oppgavetype,
-                        behandlingstype = request.behandlingstype,
-                        aktivDato = request.aktivDato,
-                        fristFerdigstillelse = request.fristFerdigstillelse,
-                        prioritet = PutOppgaveRequestJsonDTO.Prioritet.valueOf(request.prioritet.value),
-                        endretAvEnhetsnr = request.endretAvEnhetsnr,
-                        status = PutOppgaveRequestJsonDTO.Status.AAPNET,
-                        versjon = request.versjon,
-                        tilordnetRessurs = request.tilordnetRessurs
-                )
-        )
-        return oppgave
-    }
 
 
     override fun opprettOppgave(request: OpprettOppgaveRequest): OpprettOppgaveResponse {
@@ -318,6 +287,16 @@ open class RestOppgaveBehandlingServiceImpl @Autowired constructor(
                 .forEach{ oppgave -> leggTilbakeOppgaveDelegate.leggTilbake(oppgave, request)}
         leggTilbakeOppgaveDelegate.leggTilbake(orginalOppgave, request)
     }
+    override fun systemLeggTilbakeOppgave(oppgaveId: String, temagruppe: Temagruppe, saksbehandlersValgteEnhet: String) {
+        try {
+            val oppgave = hentOppgaveDTO(oppgaveId).copy(
+                    tilordnetRessurs = ""
+            )
+            lagreOppgave(oppgave, temagruppe, saksbehandlersValgteEnhet)
+        } catch (e: Exception) {
+            throw RuntimeException("Oppgaven kunne ikke lagres, den er for øyeblikket låst av en annen bruker.", e)
+        }
+    }
 
     fun lagreOppgave(request: OppgaveJsonDTO, temagruppe: Temagruppe, saksbehandlersValgteEnhet: String) {
         try {
@@ -329,6 +308,36 @@ open class RestOppgaveBehandlingServiceImpl @Autowired constructor(
             log.info("Oppgaven ble ikke funnet ved tilordning til saksbehandler. Oppgaveid: " + request.id, e)
             throw RuntimeException("Oppgaven ble ikke funnet ved tilordning til saksbehandler", e)
         }
+    }
+
+    fun endreOppgave(request: OppgaveJsonDTO): PutOppgaveResponseJsonDTO {
+        val oppgaveId = requireNotNull(request.id) {
+            "OppgaveId var null ved endre oppgave-kall"
+        }
+        val oppgave = apiClient.endreOppgave(
+                xminusCorrelationMinusID = correlationId(),
+                id = oppgaveId,
+                putOppgaveRequestJsonDTO = PutOppgaveRequestJsonDTO(
+                        id = oppgaveId,
+                        tildeltEnhetsnr = request.tildeltEnhetsnr,
+                        aktoerId = request.aktoerId,
+                        behandlesAvApplikasjon = request.behandlesAvApplikasjon,
+                        beskrivelse = request.beskrivelse,
+                        temagruppe = request.temagruppe,
+                        tema = request.tema,
+                        behandlingstema = request.behandlingstema,
+                        oppgavetype = request.oppgavetype,
+                        behandlingstype = request.behandlingstype,
+                        aktivDato = request.aktivDato,
+                        fristFerdigstillelse = request.fristFerdigstillelse,
+                        prioritet = PutOppgaveRequestJsonDTO.Prioritet.valueOf(request.prioritet.value),
+                        endretAvEnhetsnr = request.endretAvEnhetsnr,
+                        status = PutOppgaveRequestJsonDTO.Status.AAPNET,
+                        versjon = request.versjon,
+                        tilordnetRessurs = request.tilordnetRessurs
+                )
+        )
+        return oppgave
     }
 
     private fun enhetFor(temagruppe: Temagruppe, saksbehandlersValgteEnhet: String): String {
@@ -377,16 +386,7 @@ open class RestOppgaveBehandlingServiceImpl @Autowired constructor(
         return leggTilBeskrivelse(gammelBeskrivelse, beskrivelseFerdigstilt, saksbehandlersValgteEnhet)
     }
 
-    override fun systemLeggTilbakeOppgave(oppgaveId: String, temagruppe: Temagruppe, saksbehandlersValgteEnhet: String) {
-        try {
-            val oppgave = hentOppgaveDTO(oppgaveId).copy(
-                    tilordnetRessurs = ""
-            )
-            lagreOppgave(oppgave, temagruppe, saksbehandlersValgteEnhet)
-        } catch (e: Exception) {
-            throw RuntimeException("Oppgaven kunne ikke lagres, den er for øyeblikket låst av en annen bruker.", e)
-        }
-    }
+
 
     private fun getAktorId(fnr: String): String? {
         return try {

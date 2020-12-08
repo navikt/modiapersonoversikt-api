@@ -3,6 +3,7 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.oppgavebehandl
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.AnsattEnhet;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.LeggTilbakeOppgaveIGsakRequest;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveRestClient;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.arbeidsfordeling.ArbeidsfordelingV1Service;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.AnsattService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.http.SubjectHandlerUtil;
@@ -45,13 +46,14 @@ class LeggTilbakeOppgaveIGsakDelegateTest {
     private TildelOppgaveV1 tildelOppgaveMock;
     private ArbeidsfordelingV1Service arbeidsfordelingMock;
     private Tilgangskontroll tilgangskontroll;
+    private OppgaveRestClient oppgave;
 
     private OppgaveBehandlingServiceImpl oppgaveBehandlingService;
 
     @BeforeEach
     void before() {
         mockTjenester();
-        oppgaveBehandlingService = new OppgaveBehandlingServiceImpl(oppgavebehandlingMock, tildelOppgaveMock, oppgaveServiceMock, ansattServiceMock, arbeidsfordelingMock, tilgangskontroll);
+        oppgaveBehandlingService = new OppgaveBehandlingServiceImpl(oppgavebehandlingMock, tildelOppgaveMock, oppgaveServiceMock, ansattServiceMock, arbeidsfordelingMock, tilgangskontroll, oppgave);
     }
 
     private void mockTjenester() {

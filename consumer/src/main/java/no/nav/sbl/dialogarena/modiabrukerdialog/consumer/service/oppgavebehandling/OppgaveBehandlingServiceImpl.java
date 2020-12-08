@@ -59,6 +59,7 @@ public class OppgaveBehandlingServiceImpl implements OppgaveBehandlingService {
     private final AnsattService ansattWS;
     private LeggTilbakeOppgaveIGsakDelegate leggTilbakeOppgaveIGsakDelegate;
     private final Tilgangskontroll tilgangskontroll;
+    private final OppgaveRestClient oppgaveRestClient;
 
     @Autowired
     public OppgaveBehandlingServiceImpl(OppgavebehandlingV3 oppgavebehandlingWS,
@@ -66,13 +67,15 @@ public class OppgaveBehandlingServiceImpl implements OppgaveBehandlingService {
                                         OppgaveV3 oppgaveWS,
                                         AnsattService ansattWS,
                                         ArbeidsfordelingV1Service arbeidsfordelingService,
-                                        Tilgangskontroll tilgangskontroll) {
+                                        Tilgangskontroll tilgangskontroll,
+                                        OppgaveRestClient oppgave) {
         this.oppgavebehandlingWS = oppgavebehandlingWS;
         this.tildelOppgaveWS = tildelOppgaveWS;
         this.oppgaveWS = oppgaveWS;
         this.ansattWS = ansattWS;
         this.tilgangskontroll = tilgangskontroll;
         this.leggTilbakeOppgaveIGsakDelegate = new LeggTilbakeOppgaveIGsakDelegate(this, arbeidsfordelingService);
+        this.oppgaveRestClient = oppgave;
     }
 
     @Override
@@ -102,7 +105,7 @@ public class OppgaveBehandlingServiceImpl implements OppgaveBehandlingService {
 
     @Override
     public OpprettOppgaveResponse opprettSkjermetOppgave(OpprettSkjermetOppgaveRequest request) {
-        return null;
+        return oppgaveRestClient.opprettSkjermetOppgave(request);
     }
 
     @Override

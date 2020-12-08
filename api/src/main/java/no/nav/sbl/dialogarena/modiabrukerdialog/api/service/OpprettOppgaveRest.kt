@@ -4,7 +4,7 @@ import java.time.LocalDate
 
 interface OppgaveRestClient {
     fun opprettOppgave(requestOpprett: OpprettOppgaveRequest): OpprettOppgaveResponse
-    fun opprettSkjermetOppgave(requestOpprett: OpprettOppgaveRequest) : OpprettOppgaveResponse
+    fun opprettSkjermetOppgave(requestOpprett: OpprettSkjermetOppgaveRequest) : OpprettOppgaveResponse
 }
 
 data class OpprettOppgaveResponse(
