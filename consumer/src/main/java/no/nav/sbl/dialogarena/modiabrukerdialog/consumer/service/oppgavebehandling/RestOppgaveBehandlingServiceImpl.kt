@@ -411,6 +411,9 @@ open class RestOppgaveBehandlingServiceImpl @Autowired constructor(
     }
 
     private fun oppgaveJsonDTOToOppgaveResponse(response: OppgaveJsonDTO): OppgaveResponse {
+        if (response.aktoerId == null || response.aktoerId!!.isEmpty()) {
+            throw Exception("AktørId mangler på person")
+        }
         val fnr = getFnr(response.aktoerId!!)
         if (fnr == null || fnr.isEmpty()) {
             throw Exception("Fnr mangler på person")
