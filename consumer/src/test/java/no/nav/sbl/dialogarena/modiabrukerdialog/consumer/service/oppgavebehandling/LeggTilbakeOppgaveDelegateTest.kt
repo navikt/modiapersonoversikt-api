@@ -123,7 +123,7 @@ open class LeggTilbakeOppgaveDelegateTest {
                 aktivDato = LocalDate.now(),
                 fristFerdigstillelse = LocalDate.now(),
                 prioritet = PutOppgaveRequestJsonDTO.Prioritet.NORM,
-                endretAvEnhetsnr = "4110",
+                endretAvEnhetsnr = "4100",
                 status = PutOppgaveRequestJsonDTO.Status.AAPNET,
                 versjon = 1,
                 tilordnetRessurs = ""

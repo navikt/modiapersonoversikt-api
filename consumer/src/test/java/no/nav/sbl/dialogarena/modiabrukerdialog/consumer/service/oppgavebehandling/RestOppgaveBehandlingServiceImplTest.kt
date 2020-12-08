@@ -507,6 +507,10 @@ class RestOppgaveBehandlingServiceImplTest {
     @Test
     fun `skal legge tilbake oppgave`() {
         every { apiClient.hentOppgave(any(), any()) } returns RestOppgaveMockFactory.mockOppgaveResponse.asGetResponse()
+        every { apiClient.finnOppgaver(any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any(),
+                any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any(),
+                any(), any())
+        } returns RestOppgaveMockFactory.mockOppgaverResponse
         every { ansattService.hentAnsattNavn(any()) } returns ""
         every { arbeidsfordelingService.finnBehandlendeEnhetListe(any(), any(), any(), any()) } returns RestOppgaveMockFactory.mockAnsattEnhetListe
         every { apiClient.endreOppgave(any(), any(), any()) } returns RestOppgaveMockFactory.mockLeggTilbakeOppgaveResponse.asPutResponse()
@@ -524,6 +528,36 @@ class RestOppgaveBehandlingServiceImplTest {
 
         verify {
             apiClient.hentOppgave(any(), 1234)
+            apiClient.finnOppgaver(
+                    xminusCorrelationMinusID = any(),
+                    statuskategori = "AAPEN",
+                    tema = listOf("KNA"),
+                    oppgavetype = listOf("SPM_OG_SVR"),
+                    tilordnetRessurs = "Z999998",
+                    status = null,
+                    tildeltEnhetsnr = null,
+                    tildeltRessurs = null,
+                    behandlingstema = null,
+                    behandlingstype = null,
+                    erUtenMappe = null,
+                    aktoerId = null,
+                    journalpostId = null,
+                    saksreferanse = null,
+                    opprettetAv = null,
+                    opprettetAvEnhetsnr = null,
+                    aktivDatoFom = null,
+                    aktivDatoTom = null,
+                    opprettetFom = null,
+                    opprettetTom = null,
+                    ferdigstiltFom = null,
+                    ferdigstiltTom = null,
+                    fristFom = null,
+                    fristTom = null,
+                    orgnr = null,
+                    sorteringsfelt = null,
+                    limit = null,
+                    offset = null
+            )
             apiClient.endreOppgave(any(), 1234, PutOppgaveRequestJsonDTO(
                     id = 1234,
                     tildeltEnhetsnr = "4100",

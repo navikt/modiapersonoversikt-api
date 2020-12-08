@@ -341,14 +341,9 @@ open class RestOppgaveBehandlingServiceImpl @Autowired constructor(
     }
 
     private fun enhetFor(temagruppe: Temagruppe, saksbehandlersValgteEnhet: String): String {
-        return enhetFor(Optional.ofNullable(temagruppe), saksbehandlersValgteEnhet)
-    }
-
-    private fun enhetFor(optional: Optional<Temagruppe>, saksbehandlersValgteEnhet: String): String {
-        if (!optional.isPresent) {
+        if (temagruppe == Temagruppe.NULL) {
             return DEFAULT_ENHET.toString()
         }
-        val temagruppe = optional.get()
         return if (temagruppe == Temagruppe.FMLI && saksbehandlersValgteEnhet == STORD_ENHET) {
             STORD_ENHET
         } else if (listOf(Temagruppe.ARBD, Temagruppe.HELSE, Temagruppe.FMLI, Temagruppe.FDAG, Temagruppe.ORT_HJE, Temagruppe.PENS, Temagruppe.UFRT, Temagruppe.PLEIEPENGERSY, Temagruppe.UTLAND).contains(temagruppe)) {
@@ -367,7 +362,7 @@ open class RestOppgaveBehandlingServiceImpl @Autowired constructor(
                         .isPermit()) {
             return oppgaveList
         }
-        oppgaveList.forEach { oppgave: OppgaveJsonDTO -> systemLeggTilbakeOppgave(oppgave.id.toString(), Temagruppe.valueOf(null.toString()), "4100") }
+        oppgaveList.forEach { oppgave: OppgaveJsonDTO -> systemLeggTilbakeOppgave(oppgave.id.toString(), Temagruppe.NULL, "4100") }
         return emptyList()
     }
 
