@@ -7,14 +7,10 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.oppgave.generated.mod
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.oppgave.generated.models.OppgaveJsonDTO
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.oppgave.generated.models.PatchOppgaverResponseJsonDTO
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.TilgangskontrollContext
-import org.joda.time.DateTime
-import org.joda.time.format.DateTimeFormat
 import java.time.LocalDate
 
 open class RestOppgaveMockFactory {
     companion object {
-        val ANSVARLIG_SAKSBEHANDLER = "Z554455"
-
         val mockOppgave: OppgaveJsonDTO = OppgaveJsonDTO(
                 id = 1234,
                 tildeltEnhetsnr = "4100",
