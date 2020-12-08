@@ -422,7 +422,7 @@ open class RestOppgaveBehandlingServiceImpl @Autowired constructor(
                 .orElse(false)
         return OppgaveResponse(
                 response.id.toString(),
-                fnr.toString(),
+                fnr,
                 response.journalpostId.toString(),
                 erSTO
         )
