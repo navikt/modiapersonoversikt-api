@@ -394,6 +394,8 @@ class RestOppgaveBehandlingServiceImplTest {
         } returns RestOppgaveMockFactory.mockOppgaverResponse
         every { kodeverksmapperService.mapOppgavetype(any()) } returns ""
         every { RestOppgaveMockFactory.tilgangskontrollContext.checkAbac(any()) } returns AbacResponse(listOf(Response(Decision.Permit, emptyList())))
+        every { pdlOppslagService.hentIdent(any()) } returns HentIdent.Identliste(listOf(HentIdent.IdentInformasjon("07063000250", HentIdent.IdentGruppe.FOLKEREGISTERIDENT)))
+
 
         SubjectHandlerUtil.withIdent("Z999998") {
             oppgaveBehandlingService.finnTildelteOppgaver()

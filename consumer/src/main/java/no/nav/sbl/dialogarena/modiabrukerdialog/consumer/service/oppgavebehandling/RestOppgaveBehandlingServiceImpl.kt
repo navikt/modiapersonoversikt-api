@@ -397,7 +397,21 @@ open class RestOppgaveBehandlingServiceImpl @Autowired constructor(
         }
     }
 
+    private fun getFnr(aktorId: String): String? {
+        return try {
+            pdlOppslagService
+                    .hentIdent(aktorId)
+                    ?.identer
+                    ?.find { ident -> ident.gruppe == HentIdent.IdentGruppe.FOLKEREGISTERIDENT }
+                    ?.ident
+                    ?.let(PdlSyntetiskMapper::mapFnrTilPdl)
+        } catch (e: Exception) {
+            null
+        }
+    }
+
     private fun oppgaveJsonDTOToOppgaveResponse(response: OppgaveJsonDTO): OppgaveResponse {
+        val fnr = getFnr(response.aktoerId!!)
         val erSTO = Optional
                 .ofNullable(response.oppgavetype)
                 .map { kodeverksmapperService.mapOppgavetype(response.oppgavetype) }
@@ -405,7 +419,7 @@ open class RestOppgaveBehandlingServiceImpl @Autowired constructor(
                 .orElse(false)
         return OppgaveResponse(
                 response.id.toString(),
-                response.aktoerId.toString(),
+                fnr.toString(),
                 response.journalpostId.toString(),
                 erSTO
         )
