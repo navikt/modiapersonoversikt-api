@@ -48,7 +48,7 @@ internal class OppgaveControllerTest {
     private val plukkOppgaveService: PlukkOppgaveService = mock()
     private val ldapService: LDAPService = mock()
     private val henvendelseUtsendingService: HenvendelseUtsendingService = mock()
-    private val oppgaveClient: OppgaveRestClient = mock()
+    private val oppgaveRestClient: OppgaveRestClient = mock()
     private val oppgaveController: OppgaveController = OppgaveController(
             OppgaveBehandlingServiceImpl(
                     oppgaveBehandlingMock,
@@ -57,7 +57,7 @@ internal class OppgaveControllerTest {
                     ansattWSMock,
                     arbeidsfordelingV1Service,
                     TilgangskontrollMock.get(),
-                    oppgaveClient
+                    oppgaveRestClient
             ),
             plukkOppgaveService,
             henvendelseUtsendingService,
