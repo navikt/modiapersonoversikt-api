@@ -148,9 +148,9 @@ class RestOppgaveBehandlingServiceImpl @Autowired constructor(
 
     @Throws(RestOppgaveBehandlingService.FikkIkkeTilordnet::class)
     override fun tilordneOppgave(oppgaveId: String, temagruppe: Temagruppe, saksbehandlersValgteEnhet: String) {
-        val oppgave = hentOppgaveDTO(oppgaveId)
         val ident: String = SubjectHandler.getIdent().orElseThrow { RuntimeException("Fant ikke ident") }
         try {
+            val oppgave = hentOppgaveDTO(oppgaveId)
             val oppdatertOppgave = PatchOppgaveRequestJsonDTO(
                     id = oppgaveId.toLong(),
                     versjon = oppgave.versjon,
