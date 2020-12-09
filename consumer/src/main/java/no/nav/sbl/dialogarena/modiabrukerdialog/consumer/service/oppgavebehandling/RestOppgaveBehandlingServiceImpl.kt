@@ -314,7 +314,7 @@ open class RestOppgaveBehandlingServiceImpl @Autowired constructor(
         val oppgaveId = requireNotNull(request.id) {
             "OppgaveId var null ved endre oppgave-kall"
         }
-        val oppgave = apiClient.endreOppgave(
+        val response = apiClient.endreOppgave(
                 xminusCorrelationMinusID = correlationId(),
                 id = oppgaveId,
                 putOppgaveRequestJsonDTO = PutOppgaveRequestJsonDTO(
@@ -337,7 +337,7 @@ open class RestOppgaveBehandlingServiceImpl @Autowired constructor(
                         tilordnetRessurs = request.tilordnetRessurs
                 )
         )
-        return oppgave
+        return response
     }
 
     private fun enhetFor(temagruppe: Temagruppe, saksbehandlersValgteEnhet: String): String {
