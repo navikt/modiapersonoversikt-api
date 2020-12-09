@@ -26,7 +26,7 @@ import java.time.LocalDate
 import java.util.*
 
 
-open class RestOppgaveBehandlingServiceImpl @Autowired constructor(
+class RestOppgaveBehandlingServiceImpl @Autowired constructor(
         val apiClient: OppgaveApi,
         val kodeverksmapperService: KodeverksmapperService,
         val pdlOppslagService: PdlOppslagService,
