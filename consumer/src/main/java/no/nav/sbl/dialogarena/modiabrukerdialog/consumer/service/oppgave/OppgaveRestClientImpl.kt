@@ -56,9 +56,9 @@ open class OppgaveOpprettelseClient @Autowired constructor(
                 beskrivelse = oppgave.beskrivelse,
                 temagruppe = "",
                 tema = oppgave.tema,
-                behandlingstema = behandling?.map(Behandling::getBehandlingstema).orElse(null),
+                behandlingstema = behandling.map(Behandling::getBehandlingstema).orElse(null),
                 oppgavetype = oppgaveTypeMapped,
-                behandlingstype = behandling?.map(Behandling::getBehandlingstype).orElse(null),
+                behandlingstype = behandling.map(Behandling::getBehandlingstype).orElse(null),
                 aktivDato = LocalDate.now().toString(),
                 fristFerdigstillelse = oppgave.oppgaveFrist.toString(),
                 prioritet = stripTemakode(oppgave.prioritet)

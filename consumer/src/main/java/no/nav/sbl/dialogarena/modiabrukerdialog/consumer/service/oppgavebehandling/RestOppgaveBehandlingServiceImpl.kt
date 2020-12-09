@@ -99,9 +99,9 @@ class RestOppgaveBehandlingServiceImpl @Autowired constructor(
                         beskrivelse = request.beskrivelse,
                         temagruppe = request.temagruppe,
                         tema = request.tema,
-                        behandlingstema = behandling.map(Behandling::getBehandlingstema).orElse(""),
+                        behandlingstema = behandling.map(Behandling::getBehandlingstema).orElse(null),
                         oppgavetype = oppgaveTypeMapped,
-                        behandlingstype = behandling.map(Behandling::getBehandlingstype).orElse(""),
+                        behandlingstype = behandling.map(Behandling::getBehandlingstype).orElse(null),
                         aktivDato = LocalDate.now(),
                         fristFerdigstillelse = request.oppgaveFrist,
                         prioritet = PostOppgaveRequestJsonDTO.Prioritet.valueOf(stripTemakode(request.prioritet))
@@ -129,9 +129,9 @@ class RestOppgaveBehandlingServiceImpl @Autowired constructor(
                         tema = request.tema,
                         tildeltEnhetsnr = "",
                         tilordnetRessurs = "",
-                        behandlingstema = behandling.map(Behandling::getBehandlingstema).orElse(""),
+                        behandlingstema = behandling.map(Behandling::getBehandlingstema).orElse(null),
                         oppgavetype = oppgaveTypeMapped,
-                        behandlingstype = behandling.map(Behandling::getBehandlingstype).orElse(""),
+                        behandlingstype = behandling.map(Behandling::getBehandlingstype).orElse(null),
                         aktivDato = LocalDate.now(),
                         fristFerdigstillelse = request.oppgaveFrist,
                         prioritet = PostOppgaveRequestJsonDTO.Prioritet.valueOf(stripTemakode(request.prioritet))
