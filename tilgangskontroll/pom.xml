@@ -25,6 +25,14 @@
             <artifactId>rest</artifactId>
         </dependency>
         <dependency>
+            <groupId>no.nav.common</groupId>
+            <artifactId>health</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>no.nav.sbl.dialogarena</groupId>
+            <artifactId>modia-felleskomponenter</artifactId>
+        </dependency>
+        <dependency>
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
             <version>2.7</version>
