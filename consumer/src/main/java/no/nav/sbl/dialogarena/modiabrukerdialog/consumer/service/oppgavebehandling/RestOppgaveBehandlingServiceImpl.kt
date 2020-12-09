@@ -146,7 +146,6 @@ open class RestOppgaveBehandlingServiceImpl @Autowired constructor(
         return oppgaveJsonDTOToOppgaveResponse(response)
     }
 
-    @Throws(RestOppgaveBehandlingService.FikkIkkeTilordnet::class)
     override fun tilordneOppgave(oppgaveId: String, temagruppe: Temagruppe, saksbehandlersValgteEnhet: String) {
         val oppgave = hentOppgaveDTO(oppgaveId)
         val ident: String = SubjectHandler.getIdent().orElseThrow { RuntimeException("Fant ikke ident") }
@@ -159,7 +158,7 @@ open class RestOppgaveBehandlingServiceImpl @Autowired constructor(
             )
             apiClient.patchOppgave(correlationId(), oppgaveId.toLong(), oppdatertOppgave)
         } catch (e: Exception) {
-            throw RestOppgaveBehandlingService.FikkIkkeTilordnet(e)
+            throw Exception("Kunne ikke tilordneOppgave", e)
         }
     }
 

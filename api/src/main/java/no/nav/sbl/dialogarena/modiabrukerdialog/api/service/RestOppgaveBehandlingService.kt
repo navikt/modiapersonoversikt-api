@@ -4,11 +4,11 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe
 
 interface RestOppgaveBehandlingService {
     fun opprettOppgave(request: OpprettOppgaveRequest) : OpprettOppgaveResponse
+
     fun opprettSkjermetOppgave(request: OpprettOppgaveRequest): OpprettOppgaveResponse
 
     fun hentOppgave(oppgaveId: String) : OppgaveResponse
 
-    @Throws(FikkIkkeTilordnet::class)
     fun tilordneOppgave(oppgaveId: String, temagruppe: Temagruppe, saksbehandlersValgteEnhet: String)
 
     fun finnTildelteOppgaver(): List<OppgaveResponse>
@@ -22,8 +22,6 @@ interface RestOppgaveBehandlingService {
     fun systemLeggTilbakeOppgave(oppgaveId: String, temagruppe: Temagruppe, saksbehandlersValgteEnhet: String)
 
     fun oppgaveErFerdigstilt(oppgaveid: String): Boolean
-
-    class FikkIkkeTilordnet(cause: Throwable) : Exception(cause)
 }
 
 data class OppgaveResponse(
