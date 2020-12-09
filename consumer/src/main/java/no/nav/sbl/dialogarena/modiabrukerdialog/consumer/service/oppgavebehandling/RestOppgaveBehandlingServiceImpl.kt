@@ -26,7 +26,7 @@ import java.time.LocalDate
 import java.util.*
 
 
-open class RestOppgaveBehandlingServiceImpl @Autowired constructor(
+class RestOppgaveBehandlingServiceImpl @Autowired constructor(
         val apiClient: OppgaveApi,
         val kodeverksmapperService: KodeverksmapperService,
         val pdlOppslagService: PdlOppslagService,
@@ -93,7 +93,7 @@ open class RestOppgaveBehandlingServiceImpl @Autowired constructor(
                 postOppgaveRequestJsonDTO = PostOppgaveRequestJsonDTO(
                         opprettetAvEnhetsnr = request.opprettetavenhetsnummer,
                         aktoerId = aktorId,
-                        behandlesAvApplikasjon = "FS22",
+                        behandlesAvApplikasjon = request.behandlesAvApplikasjon,
                         tilordnetRessurs = request.ansvarligIdent,
                         tildeltEnhetsnr = request.ansvarligEnhetId,
                         beskrivelse = request.beskrivelse,
@@ -147,9 +147,9 @@ open class RestOppgaveBehandlingServiceImpl @Autowired constructor(
     }
 
     override fun tilordneOppgave(oppgaveId: String, temagruppe: Temagruppe, saksbehandlersValgteEnhet: String) {
-        val oppgave = hentOppgaveDTO(oppgaveId)
         val ident: String = SubjectHandler.getIdent().orElseThrow { RuntimeException("Fant ikke ident") }
         try {
+            val oppgave = hentOppgaveDTO(oppgaveId)
             val oppdatertOppgave = PatchOppgaveRequestJsonDTO(
                     id = oppgaveId.toLong(),
                     versjon = oppgave.versjon,

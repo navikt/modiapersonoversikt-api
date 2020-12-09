@@ -23,7 +23,7 @@ import org.springframework.web.server.ResponseStatusException
 import java.time.LocalDate
 
 
-open class LeggTilbakeOppgaveDelegateTest {
+class LeggTilbakeOppgaveDelegateTest {
     val apiClient: OppgaveApi = mockk()
     val kodeverksmapperService: KodeverksmapperService = mockk()
     val pdlOppslagService: PdlOppslagService = mockk()

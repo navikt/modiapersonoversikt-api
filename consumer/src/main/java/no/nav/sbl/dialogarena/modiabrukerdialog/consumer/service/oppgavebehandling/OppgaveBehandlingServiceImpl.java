@@ -68,14 +68,14 @@ public class OppgaveBehandlingServiceImpl implements OppgaveBehandlingService {
                                         AnsattService ansattWS,
                                         ArbeidsfordelingV1Service arbeidsfordelingService,
                                         Tilgangskontroll tilgangskontroll,
-                                        OppgaveRestClient oppgave) {
+                                        OppgaveRestClient oppgaveRestClient) {
         this.oppgavebehandlingWS = oppgavebehandlingWS;
         this.tildelOppgaveWS = tildelOppgaveWS;
         this.oppgaveWS = oppgaveWS;
         this.ansattWS = ansattWS;
         this.tilgangskontroll = tilgangskontroll;
         this.leggTilbakeOppgaveIGsakDelegate = new LeggTilbakeOppgaveIGsakDelegate(this, arbeidsfordelingService);
-        this.oppgaveRestClient = oppgave;
+        this.oppgaveRestClient = oppgaveRestClient;
     }
 
     @Override

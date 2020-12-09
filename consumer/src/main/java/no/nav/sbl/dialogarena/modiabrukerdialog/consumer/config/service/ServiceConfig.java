@@ -139,8 +139,8 @@ public class ServiceConfig {
                                                              AnsattService ansattService,
                                                              ArbeidsfordelingV1Service arbeidsfordelingV1Service,
                                                              Tilgangskontroll tilgangskontroll,
-                                                             OppgaveRestClient oppgave) {
-        return new OppgaveBehandlingServiceImpl(oppgavebehandlingV3, tildelOppgaveV1, oppgaveV3, ansattService, arbeidsfordelingV1Service, tilgangskontroll, oppgave);
+                                                             OppgaveRestClient oppgaveRestClient) {
+        return new OppgaveBehandlingServiceImpl(oppgavebehandlingV3, tildelOppgaveV1, oppgaveV3, ansattService, arbeidsfordelingV1Service, tilgangskontroll, oppgaveRestClient);
     }
 
     @Bean
