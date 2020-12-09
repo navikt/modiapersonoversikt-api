@@ -83,7 +83,7 @@ open class RestOppgaveBehandlingServiceImpl @Autowired constructor(
     override fun opprettOppgave(request: OpprettOppgaveRequest): OpprettOppgaveResponse {
         val behandling: Optional<Behandling> = kodeverksmapperService.mapUnderkategori(request.underkategoriKode)
         val oppgaveTypeMapped: String = kodeverksmapperService.mapOppgavetype(request.oppgavetype)
-         val aktorId = getAktorId(request.fnr)
+        val aktorId = getAktorId(request.fnr)
         if (aktorId == null || aktorId.isEmpty()) {
             throw Exception("AktørId-mangler på person")
         }
@@ -397,7 +397,27 @@ open class RestOppgaveBehandlingServiceImpl @Autowired constructor(
         }
     }
 
+    private fun getFnr(aktorId: String): String? {
+        return try {
+            pdlOppslagService
+                    .hentIdent(aktorId)
+                    ?.identer
+                    ?.find { ident -> ident.gruppe == HentIdent.IdentGruppe.FOLKEREGISTERIDENT }
+                    ?.ident
+                    ?.let(PdlSyntetiskMapper::mapFnrTilPdl)
+        } catch (e: Exception) {
+            null
+        }
+    }
+
     private fun oppgaveJsonDTOToOppgaveResponse(response: OppgaveJsonDTO): OppgaveResponse {
+        if (response.aktoerId == null || response.aktoerId!!.isEmpty()) {
+            throw Exception("AktørId mangler på person")
+        }
+        val fnr = getFnr(response.aktoerId!!)
+        if (fnr == null || fnr.isEmpty()) {
+            throw Exception("Fnr mangler på person")
+        }
         val erSTO = Optional
                 .ofNullable(response.oppgavetype)
                 .map { kodeverksmapperService.mapOppgavetype(response.oppgavetype) }
@@ -405,7 +425,7 @@ open class RestOppgaveBehandlingServiceImpl @Autowired constructor(
                 .orElse(false)
         return OppgaveResponse(
                 response.id.toString(),
-                response.aktoerId.toString(),
+                fnr,
                 response.journalpostId.toString(),
                 erSTO
         )
