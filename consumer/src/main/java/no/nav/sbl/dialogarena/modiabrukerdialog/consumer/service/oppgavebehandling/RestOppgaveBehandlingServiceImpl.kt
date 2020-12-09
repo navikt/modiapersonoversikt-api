@@ -93,7 +93,7 @@ class RestOppgaveBehandlingServiceImpl @Autowired constructor(
                 postOppgaveRequestJsonDTO = PostOppgaveRequestJsonDTO(
                         opprettetAvEnhetsnr = request.opprettetavenhetsnummer,
                         aktoerId = aktorId,
-                        behandlesAvApplikasjon = "FS22",
+                        behandlesAvApplikasjon = request.behandlesAvApplikasjon,
                         tilordnetRessurs = request.ansvarligIdent,
                         tildeltEnhetsnr = request.ansvarligEnhetId,
                         beskrivelse = request.beskrivelse,
