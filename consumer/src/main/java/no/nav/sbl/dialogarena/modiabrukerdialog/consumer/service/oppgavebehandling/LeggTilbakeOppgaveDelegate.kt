@@ -85,6 +85,7 @@ open class LeggTilbakeOppgaveDelegate(
         try {
             restOppgaveBehandlingService.lagreOppgave(oppgave, request.nyTemagruppe, request.saksbehandlersValgteEnhet)
         } catch (e: Exception) {
+            log.error("Oppgaven kunne ikke lagres, den er for øyeblikket låst av en annen bruker.", e)
             throw RuntimeException("Oppgaven kunne ikke lagres, den er for øyeblikket låst av en annen bruker.", e)
         }
     }
