@@ -28,16 +28,14 @@ import java.util.*
 
 open class OppgaveOpprettelseClient @Autowired constructor(
         val kodeverksmapperService: KodeverksmapperService,
-        val pdlOppslagService: PdlOppslagService
+        val pdlOppslagService: PdlOppslagService,
+        val stsService: SystemUserTokenProvider
 ) : OppgaveRestClient {
     val OPPGAVE_BASEURL = EnvironmentUtils.getRequiredProperty("OPPGAVE_BASEURL")
     val client = OppgaveApi(OPPGAVE_BASEURL)
     val url = OPPGAVE_BASEURL + "api/v1/oppgaver"
     private val log = LoggerFactory.getLogger(OppgaveOpprettelseClient::class.java)
     private val gson = GsonBuilder().setDateFormat("yyyy-MM-dd").create()
-
-    @Autowired
-    private lateinit var stsService: SystemUserTokenProvider
 
 
     override fun opprettSkjermetOppgave(oppgave: OpprettSkjermetOppgaveRequest): OpprettOppgaveResponse {

@@ -113,8 +113,8 @@ public class ServiceConfig {
     }
 
     @Bean
-    public OppgaveRestClient oppgaveOpprettelseClient(KodeverksmapperService kodeverksmapperService, PdlOppslagService pdlOppslagService) {
-        return new OppgaveOpprettelseClient(kodeverksmapperService, pdlOppslagService);
+    public OppgaveRestClient oppgaveOpprettelseClient(KodeverksmapperService kodeverksmapperService, PdlOppslagService pdlOppslagService, SystemUserTokenProvider stsService) {
+        return new OppgaveOpprettelseClient(kodeverksmapperService, pdlOppslagService, stsService);
     }
 
     @Bean
