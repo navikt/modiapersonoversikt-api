@@ -156,6 +156,40 @@ fun OppgaveJsonDTO.asPost() = PostOppgaveResponseJsonDTO(
         endretTidspunkt = this.endretTidspunkt
 )
 
+fun GetOppgaveResponseJsonDTO.toOppgaveJsonDTO() = OppgaveJsonDTO(
+        tildeltEnhetsnr = tildeltEnhetsnr,
+        oppgavetype = oppgavetype,
+        versjon = versjon,
+        prioritet = convertEnum(this.prioritet),
+        status = convertEnum(this.status),
+        aktivDato = aktivDato,
+        id = id,
+        endretAvEnhetsnr = endretAvEnhetsnr,
+        journalpostId = journalpostId,
+        journalpostkilde = journalpostkilde,
+        behandlesAvApplikasjon = behandlesAvApplikasjon,
+        saksreferanse = saksreferanse,
+        bnr = bnr,
+        samhandlernr = samhandlernr,
+        aktoerId = aktoerId,
+        identer = identer,
+        orgnr = orgnr,
+        tilordnetRessurs = tilordnetRessurs,
+        beskrivelse = beskrivelse,
+        temagruppe = temagruppe,
+        tema = tema,
+        behandlingstema = behandlingstema,
+        behandlingstype = behandlingstype,
+        mappeId = mappeId,
+        opprettetAv = opprettetAv,
+        endretAv = endretAv,
+        metadata = metadata,
+        fristFerdigstillelse = fristFerdigstillelse,
+        opprettetTidspunkt = opprettetTidspunkt,
+        ferdigstiltTidspunkt = ferdigstiltTidspunkt,
+        endretTidspunkt = endretTidspunkt
+)
+
 internal inline fun <S : Enum<S>, reified T : Enum<T>> convertEnum(value: S): T {
     val allowValues: Array<T> = T::class.java.enumConstants
     return allowValues

@@ -40,40 +40,6 @@ class RestOppgaveBehandlingServiceImpl @Autowired constructor(
         const val STORD_ENHET = "4842"
         const val KONTAKT_NAV = "KNA"
         const val SPORSMAL_OG_SVAR = "SPM_OG_SVR"
-
-        fun GetOppgaveResponseJsonDTO.toOppgaveJsonDTO(): OppgaveJsonDTO = OppgaveJsonDTO(
-                tildeltEnhetsnr = tildeltEnhetsnr,
-                oppgavetype = oppgavetype,
-                versjon = versjon,
-                prioritet = OppgaveJsonDTO.Prioritet.valueOf(GetOppgaveResponseJsonDTO.Prioritet.valueOf(prioritet.value).value),
-                status = OppgaveJsonDTO.Status.valueOf(GetOppgaveResponseJsonDTO.Status.valueOf(status.value).value),
-                aktivDato = aktivDato,
-                id = id,
-                endretAvEnhetsnr = endretAvEnhetsnr,
-                journalpostId = journalpostId,
-                journalpostkilde = journalpostkilde,
-                behandlesAvApplikasjon = behandlesAvApplikasjon,
-                saksreferanse = saksreferanse,
-                bnr = bnr,
-                samhandlernr = samhandlernr,
-                aktoerId = aktoerId,
-                identer = identer,
-                orgnr = orgnr,
-                tilordnetRessurs = tilordnetRessurs,
-                beskrivelse = beskrivelse,
-                temagruppe = temagruppe,
-                tema = tema,
-                behandlingstema = behandlingstema,
-                behandlingstype = behandlingstype,
-                mappeId = mappeId,
-                opprettetAv = opprettetAv,
-                endretAv = endretAv,
-                metadata = metadata,
-                fristFerdigstillelse = fristFerdigstillelse,
-                opprettetTidspunkt = opprettetTidspunkt,
-                ferdigstiltTidspunkt = ferdigstiltTidspunkt,
-                endretTidspunkt = endretTidspunkt
-        )
     }
 
     val leggTilbakeOppgaveDelegate: LeggTilbakeOppgaveDelegate = LeggTilbakeOppgaveDelegate(this, arbeidsfordelingService)
