@@ -26,6 +26,7 @@ import org.joda.time.format.DateTimeFormat
 import org.slf4j.LoggerFactory
 import org.slf4j.MDC
 import org.springframework.beans.factory.annotation.Autowired
+import java.lang.UnsupportedOperationException
 import java.time.LocalDate
 import java.util.*
 
@@ -127,6 +128,13 @@ class RestOppgaveBehandlingServiceImpl @Autowired constructor(
             throw e
         } catch (e: ServerException) {
             TjenestekallLogger.error("Oppgave-error: ${correlationId()}", mapOf(
+                    "exception" to e,
+                    "request" to request
+            ))
+            throw e
+        } catch (e: UnsupportedOperationException) {
+            TjenestekallLogger.error("Oppgave-unsuported-operations-error: ${correlationId()}", mapOf(
+                    "stautsMessage" to "${e.message}",
                     "exception" to e,
                     "request" to request
             ))
