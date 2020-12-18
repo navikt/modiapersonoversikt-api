@@ -1,10 +1,13 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.oppgavebehandling
 
+import io.ktor.http.*
 import no.nav.common.auth.subject.SubjectHandler
 import no.nav.common.log.MDCConstants
 import no.nav.common.sts.SystemUserTokenProvider
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.oppgave.generated.apis.OppgaveApi
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.oppgave.generated.infrastructure.ClientException
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.oppgave.generated.infrastructure.ServerException
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.oppgave.generated.models.*
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.pdl.generated.HentIdent
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.*
@@ -14,6 +17,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.pdl.PdlOppslagServic
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.kodeverksmapper.KodeverksmapperService
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.kodeverksmapper.domain.Behandling
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.pdl.PdlSyntetiskMapper
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.TjenestekallLogger
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Policies
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Tilgangskontroll
 import org.apache.commons.lang3.StringUtils
@@ -53,27 +57,23 @@ class RestOppgaveBehandlingServiceImpl @Autowired constructor(
         if (aktorId == null || aktorId.isEmpty()) {
             throw Exception("AktørId-mangler på person")
         }
-        val response = apiClient.opprettOppgave(
-                authorization = stsService.systemUserToken,
-                xminusCorrelationMinusID = correlationId(),
-                postOppgaveRequestJsonDTO = PostOppgaveRequestJsonDTO(
-                        opprettetAvEnhetsnr = request.opprettetavenhetsnummer,
-                        aktoerId = aktorId,
-                        behandlesAvApplikasjon = request.behandlesAvApplikasjon,
-                        tilordnetRessurs = request.ansvarligIdent,
-                        tildeltEnhetsnr = request.ansvarligEnhetId,
-                        beskrivelse = request.beskrivelse,
-                        temagruppe = request.temagruppe,
-                        tema = request.tema,
-                        behandlingstema = behandling.map(Behandling::getBehandlingstema).orElse(""),
-                        oppgavetype = oppgaveTypeMapped,
-                        behandlingstype = behandling.map(Behandling::getBehandlingstype).orElse(""),
-                        aktivDato = LocalDate.now(),
-                        fristFerdigstillelse = request.oppgaveFrist,
-                        prioritet = PostOppgaveRequestJsonDTO.Prioritet.valueOf(stripTemakode(request.prioritet))
-                )
+        val request = PostOppgaveRequestJsonDTO(
+                opprettetAvEnhetsnr = request.opprettetavenhetsnummer,
+                aktoerId = aktorId,
+                behandlesAvApplikasjon = request.behandlesAvApplikasjon,
+                tilordnetRessurs = request.ansvarligIdent,
+                tildeltEnhetsnr = request.ansvarligEnhetId,
+                beskrivelse = request.beskrivelse,
+                temagruppe = request.temagruppe,
+                tema = request.tema,
+                behandlingstema = behandling.map(Behandling::getBehandlingstema).orElse(""),
+                oppgavetype = oppgaveTypeMapped,
+                behandlingstype = behandling.map(Behandling::getBehandlingstype).orElse(""),
+                aktivDato = LocalDate.now(),
+                fristFerdigstillelse = request.oppgaveFrist,
+                prioritet = PostOppgaveRequestJsonDTO.Prioritet.valueOf(stripTemakode(request.prioritet))
         )
-        return OpprettOppgaveResponse(response.id?.toString() ?: throw RuntimeException("No oppgaveId found"))
+        return gjorSporring(stsService.systemUserToken, correlationId(), request)
     }
 
     override fun opprettSkjermetOppgave(request: OpprettOppgaveRequest): OpprettOppgaveResponse {
@@ -83,28 +83,55 @@ class RestOppgaveBehandlingServiceImpl @Autowired constructor(
         if (aktorId == null || aktorId.isEmpty()) {
             throw Exception("AktørId-mangler på person")
         }
-        val response = apiClient.opprettOppgave(
-                authorization = stsService.systemUserToken,
-                xminusCorrelationMinusID = correlationId(),
-                postOppgaveRequestJsonDTO = PostOppgaveRequestJsonDTO(
-                        aktoerId = aktorId,
-                        opprettetAvEnhetsnr = request.opprettetavenhetsnummer,
-                        behandlesAvApplikasjon = "FS22",
-                        beskrivelse = request.beskrivelse,
-                        temagruppe = "",
-                        tema = request.tema,
-                        tildeltEnhetsnr = "",
-                        tilordnetRessurs = "",
-                        behandlingstema = behandling.map(Behandling::getBehandlingstema).orElse(""),
-                        oppgavetype = oppgaveTypeMapped,
-                        behandlingstype = behandling.map(Behandling::getBehandlingstype).orElse(""),
-                        aktivDato = LocalDate.now(),
-                        fristFerdigstillelse = request.oppgaveFrist,
-                        prioritet = PostOppgaveRequestJsonDTO.Prioritet.valueOf(stripTemakode(request.prioritet))
-                )
+        val request = PostOppgaveRequestJsonDTO(
+                aktoerId = aktorId,
+                opprettetAvEnhetsnr = request.opprettetavenhetsnummer,
+                behandlesAvApplikasjon = "FS22",
+                beskrivelse = request.beskrivelse,
+                temagruppe = "",
+                tema = request.tema,
+                tildeltEnhetsnr = "",
+                tilordnetRessurs = "",
+                behandlingstema = behandling.map(Behandling::getBehandlingstema).orElse(""),
+                oppgavetype = oppgaveTypeMapped,
+                behandlingstype = behandling.map(Behandling::getBehandlingstype).orElse(""),
+                aktivDato = LocalDate.now(),
+                fristFerdigstillelse = request.oppgaveFrist,
+                prioritet = PostOppgaveRequestJsonDTO.Prioritet.valueOf(stripTemakode(request.prioritet))
         )
+        return gjorSporring(stsService.systemUserToken, correlationId(), request)
+    }
 
-        return OpprettOppgaveResponse(response.id?.toString() ?: throw java.lang.RuntimeException("No oppgaveId found"))
+    private fun gjorSporring(auth: String, xCorrelationId: String, request: PostOppgaveRequestJsonDTO): OpprettOppgaveResponse {
+        try {
+            TjenestekallLogger.info("Oppgaver-request: ${correlationId()}", mapOf(
+                    "ident" to request.aktoerId,
+                    "callId" to correlationId()
+            ))
+            val response = apiClient.opprettOppgave(
+                    authorization = auth,
+                    xminusCorrelationMinusID = xCorrelationId,
+                    postOppgaveRequestJsonDTO = request
+            )
+            TjenestekallLogger.info("Oppgave-response: ${correlationId()}", mapOf(
+                    "status" to "${HttpStatusCode.Created} Oppgave opprettet",
+                    "body" to response
+            ))
+            return OpprettOppgaveResponse(response.id?.toString() ?: throw java.lang.RuntimeException("No oppgaveId found"))
+        } catch (e: ClientException) {
+            TjenestekallLogger.error("Oppgave-response-error: ${correlationId()}", mapOf(
+                    "status" to "${e.statusCode} ${e.message}",
+                    "request" to request,
+                    "body" to e.response
+            ))
+            throw e
+        } catch (e: ServerException) {
+            TjenestekallLogger.error("Oppgave-error: ${correlationId()}", mapOf(
+                    "exception" to e,
+                    "request" to request
+            ))
+            throw e
+        }
     }
 
     override fun hentOppgave(oppgaveId: String): OppgaveResponse {
