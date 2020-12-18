@@ -128,8 +128,9 @@ class RestOppgaveBehandlingServiceImpl @Autowired constructor(
             throw e
         } catch (e: ServerException) {
             TjenestekallLogger.error("Oppgave-error: ${correlationId()}", mapOf(
-                    "exception" to e,
-                    "request" to request
+                    "status" to "${e.statusCode} ${e.message}",
+                    "request" to request,
+                    "body" to e.response
             ))
             throw e
         } catch (e: UnsupportedOperationException) {
