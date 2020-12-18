@@ -57,7 +57,7 @@ class RestOppgaveBehandlingServiceImpl @Autowired constructor(
         if (aktorId == null || aktorId.isEmpty()) {
             throw Exception("AktørId-mangler på person")
         }
-        val request = PostOppgaveRequestJsonDTO(
+        val oppgaveRequest = PostOppgaveRequestJsonDTO(
                 opprettetAvEnhetsnr = request.opprettetavenhetsnummer,
                 aktoerId = aktorId,
                 behandlesAvApplikasjon = request.behandlesAvApplikasjon,
@@ -73,7 +73,7 @@ class RestOppgaveBehandlingServiceImpl @Autowired constructor(
                 fristFerdigstillelse = request.oppgaveFrist,
                 prioritet = PostOppgaveRequestJsonDTO.Prioritet.valueOf(stripTemakode(request.prioritet))
         )
-        return gjorSporring(stsService.systemUserToken, correlationId(), request)
+        return gjorSporring(stsService.systemUserToken, correlationId(), oppgaveRequest)
     }
 
     override fun opprettSkjermetOppgave(request: OpprettOppgaveRequest): OpprettOppgaveResponse {
@@ -83,7 +83,7 @@ class RestOppgaveBehandlingServiceImpl @Autowired constructor(
         if (aktorId == null || aktorId.isEmpty()) {
             throw Exception("AktørId-mangler på person")
         }
-        val request = PostOppgaveRequestJsonDTO(
+        val skjermetOppgaveRequest = PostOppgaveRequestJsonDTO(
                 aktoerId = aktorId,
                 opprettetAvEnhetsnr = request.opprettetavenhetsnummer,
                 behandlesAvApplikasjon = "FS22",
@@ -99,7 +99,7 @@ class RestOppgaveBehandlingServiceImpl @Autowired constructor(
                 fristFerdigstillelse = request.oppgaveFrist,
                 prioritet = PostOppgaveRequestJsonDTO.Prioritet.valueOf(stripTemakode(request.prioritet))
         )
-        return gjorSporring(stsService.systemUserToken, correlationId(), request)
+        return gjorSporring(stsService.systemUserToken, correlationId(), skjermetOppgaveRequest)
     }
 
     private fun gjorSporring(auth: String, xCorrelationId: String, request: PostOppgaveRequestJsonDTO): OpprettOppgaveResponse {
