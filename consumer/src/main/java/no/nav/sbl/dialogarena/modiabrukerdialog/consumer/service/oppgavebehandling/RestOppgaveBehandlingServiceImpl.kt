@@ -120,14 +120,14 @@ class RestOppgaveBehandlingServiceImpl @Autowired constructor(
             ))
             return OpprettOppgaveResponse(response.id?.toString() ?: throw java.lang.RuntimeException("No oppgaveId found"))
         } catch (e: ClientException) {
-            TjenestekallLogger.error("Oppgave-response-error: ${correlationId()}", mapOf(
+            TjenestekallLogger.error("Oppgave-client-error: ${correlationId()}", mapOf(
                     "status" to "${e.statusCode} ${e.message}",
                     "request" to request,
                     "body" to e.response
             ))
             throw e
         } catch (e: ServerException) {
-            TjenestekallLogger.error("Oppgave-error: ${correlationId()}", mapOf(
+            TjenestekallLogger.error("Oppgave-server-error: ${correlationId()}", mapOf(
                     "status" to "${e.statusCode} ${e.message}",
                     "request" to request,
                     "body" to e.response
