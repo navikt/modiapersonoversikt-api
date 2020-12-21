@@ -140,6 +140,13 @@ class RestOppgaveBehandlingServiceImpl @Autowired constructor(
                     "request" to request
             ))
             throw e
+        } catch (e: Exception) {
+            log.error("Feilet ved post mot Oppgave (ID: ${correlationId()})", e)
+            TjenestekallLogger.error("Oppgave-error: ${correlationId()}", mapOf(
+                    "exception" to e,
+                    "request" to request
+            ))
+            throw e
         }
     }
 
