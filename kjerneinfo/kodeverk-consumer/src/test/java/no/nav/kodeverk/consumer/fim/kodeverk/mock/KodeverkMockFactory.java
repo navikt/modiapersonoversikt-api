@@ -2,7 +2,6 @@ package no.nav.kodeverk.consumer.fim.kodeverk.mock;
 
 import no.nav.tjeneste.virksomhet.kodeverk.v2.informasjon.*;
 import no.nav.tjeneste.virksomhet.kodeverk.v2.informasjon.finnkodeverkliste.Kodeverk;
-import org.joda.time.DateMidnight;
 import org.joda.time.LocalDate;
 
 

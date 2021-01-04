@@ -39,7 +39,7 @@ public class OppfolgingsinfoApiServiceImpl implements OppfolgingsinfoApiService 
     public Oppfolgingsinfo hentOppfolgingsinfo(String fodselsnummer, LDAPService ldapService) {
         OppfolgingsStatus status = hentOppfolgingStatus(fodselsnummer);
         OppfolgingsEnhetOgVeileder enhetOgVeileder;
-        if (status.isUnderOppfolging() == true) {
+        if (status.isUnderOppfolging()) {
             enhetOgVeileder = hentOppfolgingsEnhetOgVeileder(fodselsnummer);
         } else {
             enhetOgVeileder = setTomEnhet();
@@ -98,7 +98,7 @@ public class OppfolgingsinfoApiServiceImpl implements OppfolgingsinfoApiService 
     }
 
     private String hentPingURL() {
-        return apiUrl + String.format("ping");
+        return apiUrl + "ping";
     }
 
     private <T> T gjorSporring(String url, Class<T> targetClass) {

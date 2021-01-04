@@ -18,7 +18,7 @@ public class SaksoversiktServiceImpl implements SaksoversiktService {
 
     public void fjernGamleDokumenter(List<Sakstema> resultat) {
         List<String> journalpostIdAaFjerne = getJournalpostIdAaFjerne(resultat);
-        resultat.stream()
+        resultat
                 .forEach(sakstema -> sakstema.withDokumentMetadata(sakstema.dokumentMetadata.stream()
                         .filter(dokumentMetadata -> !journalpostIdAaFjerne
                                 .contains(dokumentMetadata.getJournalpostId())).collect(Collectors.toList())));

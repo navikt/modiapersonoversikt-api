@@ -10,14 +10,15 @@ public enum Kommunikasjonsretning {
     public static final String JOURNALPOST_INTERN = "N";
 
     public static Kommunikasjonsretning fraJournalpostretning(String kommunikasjonsretning) {
-        if (kommunikasjonsretning.equals(JOURNALPOST_INNGAAENDE)) {
-            return Kommunikasjonsretning.INN;
-        } else if (kommunikasjonsretning.equals(JOURNALPOST_UTGAAENDE)){
-            return Kommunikasjonsretning.UT;
-        } else if (kommunikasjonsretning.equals(JOURNALPOST_INTERN)){
-            return Kommunikasjonsretning.INTERN;
-        } else {
-            throw new IllegalArgumentException(String.format("Kommunikasjonsretningen fra Journalpost er ikke definert: %s",kommunikasjonsretning));
+        switch (kommunikasjonsretning) {
+            case JOURNALPOST_INNGAAENDE:
+                return Kommunikasjonsretning.INN;
+            case JOURNALPOST_UTGAAENDE:
+                return Kommunikasjonsretning.UT;
+            case JOURNALPOST_INTERN:
+                return Kommunikasjonsretning.INTERN;
+            default:
+                throw new IllegalArgumentException(String.format("Kommunikasjonsretningen fra Journalpost er ikke definert: %s", kommunikasjonsretning));
         }
     }
 }

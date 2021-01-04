@@ -106,7 +106,7 @@ public class HentPersonServiceTest {
     }
 
     @Test
-    public void harTilgang() throws Exception {
+    public void harTilgang() {
         HentKjerneinformasjonResponse response = service.hentPerson(request);
 
         assertNotNull(response.getPerson());
@@ -166,7 +166,7 @@ public class HentPersonServiceTest {
     }
 
     @Test
-    public void harTilgangMedBegrunnelse() throws Exception {
+    public void harTilgangMedBegrunnelse() {
         HentKjerneinformasjonRequest requestWithBegrunnelse = new HentKjerneinformasjonRequest(IDENT);
         requestWithBegrunnelse.setBegrunnet(true);
 
@@ -177,12 +177,12 @@ public class HentPersonServiceTest {
 
     @Ignore
     @Test(expected = RecoverableAuthorizationException.class)
-    public void harTilgangVedUtviding() throws Exception {
+    public void harTilgangVedUtviding() {
         service.hentPerson(request);
     }
 
     @Test
-    public void harTilgangFamilierelasjonFilteringFjernerIngen() throws Exception {
+    public void harTilgangFamilierelasjonFilteringFjernerIngen() {
         response.setPerson(new Bruker()
                 .withHarFraRolleI(new Familierelasjon(), new Familierelasjon(), new Familierelasjon())
                 .withAktoer(new PersonIdent().withIdent(new NorskIdent().withIdent("12345678910"))));
@@ -194,7 +194,7 @@ public class HentPersonServiceTest {
     }
 
     @Test
-    public void harTilgangFamilierelasjonFilteringFjernerSiste() throws Exception {
+    public void harTilgangFamilierelasjonFilteringFjernerSiste() {
         Person person = new Bruker()
                 .withHarFraRolleI(new Familierelasjon(), new Familierelasjon(), new Familierelasjon(), mockTomFamilieRelasjon(FNR_BRUKER))
                 .withAktoer(new PersonIdent().withIdent(new NorskIdent().withIdent("12345678910")));
@@ -207,7 +207,7 @@ public class HentPersonServiceTest {
     }
 
     @Test
-    public void harTilgangFamilierelasjonFilteringFjernerToSiste() throws Exception {
+    public void harTilgangFamilierelasjonFilteringFjernerToSiste() {
         Person person = new Bruker().withHarFraRolleI(new Familierelasjon(), new Familierelasjon(),
                 new Familierelasjon(), mockTomFamilieRelasjon(FNR_SAMBOER), mockTomFamilieRelasjon(FNR_SAMBOER))
                 .withAktoer(new PersonIdent().withIdent(new NorskIdent().withIdent("12345678910")));
@@ -220,7 +220,7 @@ public class HentPersonServiceTest {
     }
 
     @Test
-    public void harTilgangFamilierelasjonFilteringFjernerDenIMidten() throws Exception {
+    public void harTilgangFamilierelasjonFilteringFjernerDenIMidten() {
         Person person = new Bruker().withHarFraRolleI(new Familierelasjon(), new Familierelasjon(),
                 new Familierelasjon(), mockTomFamilieRelasjon(FNR_SAMBOER),
                 mockFactory.getMockFamilieRelasjon("samboer", FNR_SAMBOER))
@@ -234,7 +234,7 @@ public class HentPersonServiceTest {
     }
 
     @Test
-    public void skalOppdatereAnsvarligEnhetMedInformasjonFraNORGDersomGeografiskTilknytningErSatt() throws Exception {
+    public void skalOppdatereAnsvarligEnhetMedInformasjonFraNORGDersomGeografiskTilknytningErSatt() {
         final String ansvarligEnhetId = "9999";
         final String ansvarligEnhetNavn = "NAV Ansvarlig Enhet";
 

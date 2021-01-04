@@ -12,7 +12,7 @@ public class DokumentFeilmelding {
     private Boolean kanVises = FALSE;
     private Map<String, String> ekstrafeilinfo;
 
-    public DokumentFeilmelding(String tittel, String feilmeldingEnonicKey, String bildeUrl, Map ekstrafeilinfo) {
+    public DokumentFeilmelding(String tittel, String feilmeldingEnonicKey, String bildeUrl, Map<String, String> ekstrafeilinfo) {
         this.tittel = tittel;
         this.feilmeldingEnonicKey = feilmeldingEnonicKey;
         this.bildeUrl = bildeUrl;

@@ -33,18 +33,19 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.*;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 
+import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toSet;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.oppgavebehandling.OppgaveBehandlingServiceImpl.DEFAULT_ENHET;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.oppgavebehandling.OppgaveMockFactory.lagWSOppgave;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.oppgavebehandling.OppgaveMockFactory.mockHentOppgaveResponseMedTilordning;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.Collections.asSet;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
 
@@ -124,14 +125,14 @@ public class OppgaveBehandlingServiceImplTest {
         assertThat(hentOppgaveRequestCaptor.getAllValues().stream()
                         .map(WSHentOppgaveRequest::getOppgaveId)
                         .collect(toSet()),
-                is(asSet(OPPGAVE_ID_1, OPPGAVE_ID_2)));
+                is(new HashSet<>(asList(OPPGAVE_ID_1, OPPGAVE_ID_2))));
         assertNotNull(tildelFlereOppgaverRequestCaptor.getValue());
         assertThat(tildelFlereOppgaverRequestCaptor.getValue().getFagomrade(), is("KNA"));
         assertThat(tildelFlereOppgaverRequestCaptor.getValue().getOppgavetype(), is("SPM_OG_SVR"));
     }
 
     @Test
-    public void skalFerdigstilleOppgaveFraGsak() throws HentOppgaveOppgaveIkkeFunnet, HentNAVAnsattFaultGOSYSGeneriskfMsg, HentNAVAnsattFaultGOSYSNAVAnsattIkkeFunnetMsg {
+    public void skalFerdigstilleOppgaveFraGsak() throws HentOppgaveOppgaveIkkeFunnet {
         when(oppgaveWS.hentOppgave(any(WSHentOppgaveRequest.class))).thenReturn(mockHentOppgaveResponse());
         when(ansattWS.hentAnsattNavn(anyString())).thenReturn("");
 
@@ -186,7 +187,7 @@ public class OppgaveBehandlingServiceImplTest {
 
     @Test
     void skalFinneTilordnaOppgaver() throws HentOppgaveOppgaveIkkeFunnet {
-        List<WSOppgave> oppgaveliste = Arrays.asList(
+        List<WSOppgave> oppgaveliste = asList(
                 lagWSOppgave().withOppgaveId("1").withGjelder( new WSBruker().withBrukerId("10108000398")).withHenvendelseId("henv1"),
                 lagWSOppgave().withOppgaveId("2").withGjelder( new WSBruker().withBrukerId("10108000398")).withHenvendelseId("henv2")
         );
@@ -208,7 +209,7 @@ public class OppgaveBehandlingServiceImplTest {
     }
     @Test
     void skalLeggeTilbakeTilordnetOppgaveUtenTilgang() throws HentOppgaveOppgaveIkkeFunnet {
-        List<WSOppgave> oppgaveliste = Arrays.asList(
+        List<WSOppgave> oppgaveliste = asList(
                 lagWSOppgave().withOppgaveId("1").withGjelder( new WSBruker().withBrukerId("10108000398")),
                 lagWSOppgave().withOppgaveId("2").withGjelder( new WSBruker().withBrukerId("10108000398"))
         );

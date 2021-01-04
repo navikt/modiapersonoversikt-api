@@ -29,7 +29,7 @@ class JournalforingControllerTest {
 
     @Test
     @DisplayName("Knytter til sak og returnerer 200 OK")
-    void journalforingKnytterTilSak() throws JournalforingFeilet {
+    void journalforingKnytterTilSak() {
         JournalforingController journalforingController = new JournalforingController(mock(SakerService.class), TilgangskontrollMock.get());
 
         ResponseEntity response = SubjectHandlerUtil.withIdent(SAKSBEHANDLERS_IDENT, () ->

@@ -81,7 +81,6 @@ public class PersonsokDoFactory {
 
 
 	public static Adresse createAdresseConstructor(String adresseString, AdresseType adresseType) {
-		Adresse adresse = new Adresse(adresseString, adresseType);
-		return adresse;
+		return new Adresse(adresseString, adresseType);
 	}
 }

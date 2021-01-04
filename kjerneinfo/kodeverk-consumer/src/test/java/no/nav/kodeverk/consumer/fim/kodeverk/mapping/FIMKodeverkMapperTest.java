@@ -30,7 +30,7 @@ public class FIMKodeverkMapperTest {
     private KodeverkMockFactory mockFactory;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         mapper = KodeverkMapper.getInstance();
         mockFactory = new KodeverkMockFactory();
     }

@@ -15,6 +15,6 @@ public interface OrganisasjonEnhetV2Service {
     enum WSOppgavebehandlerfilter {
         KUN_OPPGAVEBEHANDLERE,
         INGEN_OPPGAVEBEHANDLERE,
-        UFILTRERT;
+        UFILTRERT
     }
 }

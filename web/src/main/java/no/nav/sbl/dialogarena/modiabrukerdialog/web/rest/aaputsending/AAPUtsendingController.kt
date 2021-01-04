@@ -16,8 +16,8 @@ class AAPUtsendingController @Autowired constructor(
         sakerService: SakerService,
         henvendelseService: HenvendelseUtsendingService
 ) {
-    val leaderElectionClient = LeaderElectionHttpClient()
-    val service = AAPUtsendingService(sakerService, henvendelseService, leaderElectionClient)
+    private val leaderElectionClient = LeaderElectionHttpClient()
+    private val service = AAPUtsendingService(sakerService, henvendelseService, leaderElectionClient)
 
     @GetMapping("/status")
     fun hentStatus(): AAPUtsendingService.Status {

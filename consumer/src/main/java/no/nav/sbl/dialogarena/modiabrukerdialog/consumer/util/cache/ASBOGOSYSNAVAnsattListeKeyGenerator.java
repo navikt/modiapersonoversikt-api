@@ -1,6 +1,7 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.cache;
 
 import _0._0.nav_cons_sak_gosys_3.no.nav.asbo.navorgenhet.ASBOGOSYSNavEnhet;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.cache.interceptor.SimpleKeyGenerator;
 
 import java.lang.reflect.Method;

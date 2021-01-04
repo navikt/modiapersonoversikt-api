@@ -42,7 +42,7 @@ public abstract class CacheTest {
         return (com.github.benmanes.caffeine.cache.Cache<Object, Object>) cm.getCache(cachename).getNativeCache();
     }
 
-    protected static Object unwrapProxy(Object proxy) throws Exception {
+    protected static Object unwrapProxy(Object proxy) {
         return AopProxyUtils.getSingletonTarget(proxy);
     }
 }

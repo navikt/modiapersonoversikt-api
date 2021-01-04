@@ -13,7 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import static no.nav.common.utils.SslUtils.setupTruststore;
 import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 

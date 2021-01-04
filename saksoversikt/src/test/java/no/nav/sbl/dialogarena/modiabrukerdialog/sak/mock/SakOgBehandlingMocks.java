@@ -39,7 +39,7 @@ public class SakOgBehandlingMocks {
         behandlingskjede.setSisteBehandlingstype(behandlingstyper("behandlingstype-ref-mock"));
         behandlingskjede.setSisteBehandlingsstegREF("siste-behandling-steg-ref-mock");
         behandlingskjede.setSisteBehandlingsstegtype(behandlingsstegtyper("behandlingssteg-ref-mock"));
-        ;
+
         return behandlingskjede;
     }
 

@@ -50,8 +50,7 @@ class AuthIntropectionDTO(val expirationDate: Long) {
 }
 
 internal fun SsoToken.getExpirationDate(): AuthIntropectionDTO {
-    val exp: Any? = this.attributes["exp"]
-    return when(exp) {
+    return when(val exp: Any? = this.attributes["exp"]) {
         null -> AuthIntropectionDTO.INVALID
         is Date -> AuthIntropectionDTO(exp.time)
         is Number -> AuthIntropectionDTO(exp.toLong() * 1000) // Er epoch-seconds, men vil ha epoch-ms

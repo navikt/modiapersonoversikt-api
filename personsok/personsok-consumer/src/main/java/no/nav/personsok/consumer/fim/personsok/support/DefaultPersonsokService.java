@@ -44,8 +44,7 @@ public class DefaultPersonsokService implements PersonsokServiceBi {
         }
         logger.info("finnPersonReturnerte " + rawResponse.getPersonListe().size() + " treff.");
 
-        FinnPersonResponse response = mapper.map(rawResponse);
-        return response;
+        return mapper.map(rawResponse);
     }
 
     public void setPersonsokService(PersonsokPortType personsokService) {

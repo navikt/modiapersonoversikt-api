@@ -48,7 +48,7 @@ import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.saker.Sa
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.core.Is.is;
 import static org.joda.time.DateTime.now;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
@@ -297,21 +297,21 @@ public class SakerServiceImplTest {
     }
 
     @Test
-    void knyttBehandlingskjedeTilSakKasterFeilHvisEnhetIkkeErSatt() throws JournalforingFeilet, OpprettSakUgyldigInput, OpprettSakSakEksistererAllerede {
+    void knyttBehandlingskjedeTilSakKasterFeilHvisEnhetIkkeErSatt() throws OpprettSakUgyldigInput, OpprettSakSakEksistererAllerede {
         when(behandleSak.opprettSak(any(WSOpprettSakRequest.class))).thenReturn(new WSOpprettSakResponse().withSakId(SAKS_ID));
 
         assertThrows(IllegalArgumentException.class, () -> sakerService.knyttBehandlingskjedeTilSak(FNR, BEHANDLINGSKJEDEID, lagSak(), ""));
     }
 
     @Test
-    void knyttBehandlingskjedeTilSakKasterFeilHvisBehandlingskjedeIkkeErSatt() throws JournalforingFeilet, OpprettSakUgyldigInput, OpprettSakSakEksistererAllerede {
+    void knyttBehandlingskjedeTilSakKasterFeilHvisBehandlingskjedeIkkeErSatt() throws OpprettSakUgyldigInput, OpprettSakSakEksistererAllerede {
         when(behandleSak.opprettSak(any(WSOpprettSakRequest.class))).thenReturn(new WSOpprettSakResponse().withSakId(SAKS_ID));
 
         assertThrows(IllegalArgumentException.class, () -> sakerService.knyttBehandlingskjedeTilSak(FNR, null, lagSak(), "1337"));
     }
 
     @Test
-    void knyttBehandlingskjedeTilSakKasterFeilHvisFnrIkkeErSatt() throws JournalforingFeilet, OpprettSakUgyldigInput, OpprettSakSakEksistererAllerede {
+    void knyttBehandlingskjedeTilSakKasterFeilHvisFnrIkkeErSatt() throws OpprettSakUgyldigInput, OpprettSakSakEksistererAllerede {
         when(behandleSak.opprettSak(any(WSOpprettSakRequest.class))).thenReturn(new WSOpprettSakResponse().withSakId(SAKS_ID));
 
         assertThrows(IllegalArgumentException.class, () -> sakerService.knyttBehandlingskjedeTilSak("", BEHANDLINGSKJEDEID, lagSak(), "1337"));

@@ -94,9 +94,7 @@ public class VarslerServiceImpl implements VarslerService {
                 .collect(toList());
 
         boolean erRevarsling = varselMeldingliste.stream()
-                .filter(varselMelding -> varselMelding.erRevarsel)
-                .findAny()
-                .isPresent();
+                .anyMatch(varselMelding -> varselMelding.erRevarsel);
 
         return new Varsel(varselType, sendtTidspunkt, varselMeldingliste, erRevarsling);
     };

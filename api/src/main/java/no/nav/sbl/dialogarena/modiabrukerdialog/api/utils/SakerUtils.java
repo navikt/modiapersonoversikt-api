@@ -10,7 +10,7 @@ import java.util.Map;
 public class SakerUtils {
 
     public static void leggTilFagsystemnavnOgTemanavn(List<Sak> sakerForBruker, final Map<String, String> fagsystemMapping, final StandardKodeverk standardKodeverk) {
-        sakerForBruker.stream().forEach(sak -> {
+        sakerForBruker.forEach(sak -> {
             String fagsystemnavn = fagsystemMapping.get(sak.fagsystemKode);
             sak.fagsystemNavn = fagsystemnavn != null ? fagsystemnavn : sak.fagsystemKode;
 

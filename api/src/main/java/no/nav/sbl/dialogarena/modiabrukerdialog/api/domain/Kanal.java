@@ -13,7 +13,7 @@ public enum Kanal {
 
     private final String kvitteringKey;
 
-    private Kanal(String kvitteringKey) {
+    Kanal(String kvitteringKey) {
         this.kvitteringKey = kvitteringKey;
     }
 

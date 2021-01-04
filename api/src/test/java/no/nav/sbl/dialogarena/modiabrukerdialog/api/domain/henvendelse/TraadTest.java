@@ -13,7 +13,7 @@ import static org.hamcrest.Matchers.is;
 public class TraadTest {
 
     @Test
-    public void traaderSkalSorteresMedNyesteMeldingForst() throws Exception {
+    public void traaderSkalSorteresMedNyesteMeldingForst() {
         final String traadId = "traadId";
         final Traad traad = new Traad(traadId, 2,
                 Arrays.asList(

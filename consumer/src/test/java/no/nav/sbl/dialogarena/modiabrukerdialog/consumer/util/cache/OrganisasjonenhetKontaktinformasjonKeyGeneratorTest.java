@@ -26,17 +26,13 @@ class OrganisasjonenhetKontaktinformasjonKeyGeneratorTest {
     @Test
     @DisplayName("Null som argument til generate skal kaste feil")
     void nullParamkasterFeil() {
-        assertThrows(IllegalArgumentException.class, () -> {
-            generator.generate(mock(OrganisasjonEnhetKontaktinformasjonV1.class), method);
-        });
+        assertThrows(IllegalArgumentException.class, () -> generator.generate(mock(OrganisasjonEnhetKontaktinformasjonV1.class), method));
     }
 
     @Test
     @DisplayName("Et annet objekt som argument til generate skal kaste feil")
     void feilObjektKasterFeil() {
-        assertThrows(IllegalArgumentException.class, () -> {
-            generator.generate(mock(OrganisasjonEnhetKontaktinformasjonV1.class), method, "String objekt");
-        });
+        assertThrows(IllegalArgumentException.class, () -> generator.generate(mock(OrganisasjonEnhetKontaktinformasjonV1.class), method, "String objekt"));
     }
 
     @Test
@@ -49,7 +45,7 @@ class OrganisasjonenhetKontaktinformasjonKeyGeneratorTest {
 
     @Test
     @DisplayName("Key for en enkelt enhet")
-    void lagerKeyForEnEnhet() throws NoSuchMethodException {
+    void lagerKeyForEnEnhet() {
         String key = (String) generator.generate(mock(OrganisasjonEnhetKontaktinformasjonV1.class), method, lagRequest("1337"));
 
         assertEquals("1337", key);
@@ -57,7 +53,7 @@ class OrganisasjonenhetKontaktinformasjonKeyGeneratorTest {
 
     @Test
     @DisplayName("Key for tre enheter i request")
-    void lagerKeyForTreEnheter() throws NoSuchMethodException {
+    void lagerKeyForTreEnheter() {
         String key = (String) generator.generate(mock(OrganisasjonEnhetKontaktinformasjonV1.class), method, lagRequest("1337", "2000", "3001"));
 
         assertEquals("1337,2000,3001", key);
@@ -65,7 +61,7 @@ class OrganisasjonenhetKontaktinformasjonKeyGeneratorTest {
 
     @Test
     @DisplayName("Key for tre enheter i request er sortert numerisk")
-    void lagerSortertKeyForTreEnheter() throws NoSuchMethodException {
+    void lagerSortertKeyForTreEnheter() {
         String key = (String) generator.generate(mock(OrganisasjonEnhetKontaktinformasjonV1.class), method, lagRequest("3001", "2000", "15337"));
 
         assertEquals("2000,3001,15337", key);

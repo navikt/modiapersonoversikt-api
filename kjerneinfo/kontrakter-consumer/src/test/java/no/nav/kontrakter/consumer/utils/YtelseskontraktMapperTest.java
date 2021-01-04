@@ -108,7 +108,7 @@ public class YtelseskontraktMapperTest {
         assertEquals(fomGyldighetsperiode, toXMLGregorian(dagpengeytelse.getFom()));
         assertEquals(tomGyldighetsperiode, toXMLGregorian(dagpengeytelse.getTom()));
 
-        Ytelse ytelse = (Ytelse) ytelseskontraktResponse.getYtelser().get(1);
+        Ytelse ytelse = ytelseskontraktResponse.getYtelser().get(1);
         assertEquals(STATUS, (ytelse.getVedtak().get(0).getVedtakstatus()));
         assertEquals(AKTIVITET_FASE, (ytelse.getVedtak().get(0).getAktivitetsfase()));
         assertEquals(Integer.valueOf(bortfallsprosentDagerIgjen), (ytelse.getDagerIgjenMedBortfall()));

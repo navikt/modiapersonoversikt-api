@@ -40,7 +40,7 @@ public class HodeController {
     @Autowired
     Tilgangskontroll tilgangskontroll;
 
-    class Me {
+    static class Me {
         public final String ident, navn, fornavn, etternavn, enhetId, enhetNavn;
 
         public Me(String ident, String fornavn, String etternavn, String enhetId, String enhetNavn) {
@@ -53,7 +53,7 @@ public class HodeController {
         }
     }
 
-    class Enhet {
+    static class Enhet {
         public final String enhetId, navn;
 
         public Enhet(String enhetId, String navn) {

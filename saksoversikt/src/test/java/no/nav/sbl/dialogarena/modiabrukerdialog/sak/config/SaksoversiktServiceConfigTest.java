@@ -15,6 +15,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 public class SaksoversiktServiceConfigTest {
 
     @Test
-    public void shouldSetupAppContext() { }
+    public void shouldSetupAppContext() {
+        System.out.println("Testing that spring-config works");
+    }
 
 }

@@ -24,6 +24,7 @@ public class ApplicationContextTest {
 
     @Test
     public void shouldSetupAppContext() {
+        System.out.println("Testing that spring-config works");
     }
 
 }

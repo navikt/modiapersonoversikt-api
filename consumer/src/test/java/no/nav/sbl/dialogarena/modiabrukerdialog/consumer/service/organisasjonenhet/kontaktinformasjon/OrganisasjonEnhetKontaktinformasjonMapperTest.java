@@ -189,8 +189,8 @@ class OrganisasjonEnhetKontaktinformasjonMapperTest {
     private WSAapningstider mockApningstider() {
         WSAapningstider aapningstider = new WSAapningstider();
         WSAapningstid aapningstidTirsdag = new WSAapningstid();
-        aapningstidTirsdag.setAapentFra(lagTidPaDagen(String.valueOf(APNER_TIRSDAG_TIME), String.valueOf(APNER_TIRSDAG_MINUTT), String.valueOf(APNER_TIRSDAG_SEKUND)));
-        aapningstidTirsdag.setAapentTil(lagTidPaDagen(String.valueOf(STENGER_TIRSDAG_TIME), String.valueOf(STENGER_TIRSDAG_MINUTT), String.valueOf(STENGER_TIRSDAG_SEKUND)));
+        aapningstidTirsdag.setAapentFra(lagTidPaDagen(APNER_TIRSDAG_TIME, APNER_TIRSDAG_MINUTT, APNER_TIRSDAG_SEKUND));
+        aapningstidTirsdag.setAapentTil(lagTidPaDagen(STENGER_TIRSDAG_TIME, STENGER_TIRSDAG_MINUTT, STENGER_TIRSDAG_SEKUND));
         aapningstider.setTirsdag(aapningstidTirsdag);
         return aapningstider;
     }

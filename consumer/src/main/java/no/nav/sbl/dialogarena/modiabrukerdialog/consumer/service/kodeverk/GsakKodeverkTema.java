@@ -49,7 +49,7 @@ public class GsakKodeverkTema implements Serializable {
                 return new GsakKodeTema.Underkategori(getParentNodeValue(node, KODE), getParentNodeValue(node, DEKODE))
                         .withErGyldig(erGyldig)
                         .withDatoTom(datoTom);
-        };
+        }
 
         public static List<GsakKodeTema.Tema> parse() {
             try (

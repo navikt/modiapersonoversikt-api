@@ -7,8 +7,8 @@ import java.util.Map;
  */
 public interface Kodeverk {
 
-    public static final String ANNET = "N6"; // skjemanummer for egendefinert vedlegg
-    public static final String KVITTERING = "L7"; // skjemanummer for kvittering
+    String ANNET = "N6"; // skjemanummer for egendefinert vedlegg
+    String KVITTERING = "L7"; // skjemanummer for kvittering
 
 
     /**

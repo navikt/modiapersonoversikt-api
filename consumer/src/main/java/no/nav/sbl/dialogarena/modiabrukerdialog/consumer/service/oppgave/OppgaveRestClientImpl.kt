@@ -34,8 +34,8 @@ open class OppgaveOpprettelseClient @Autowired constructor(
 
 
 ) : OppgaveRestClient {
-    val OPPGAVE_BASEURL = EnvironmentUtils.getRequiredProperty("OPPGAVE_BASEURL")
-    val url = OPPGAVE_BASEURL + "api/v1/oppgaver"
+    val baseUrl: String = EnvironmentUtils.getRequiredProperty("OPPGAVE_BASEURL")
+    val url = baseUrl + "api/v1/oppgaver"
     private val log = LoggerFactory.getLogger(OppgaveOpprettelseClient::class.java)
     private val gson = GsonBuilder().setDateFormat("yyyy-MM-dd").create()
 
@@ -87,7 +87,7 @@ open class OppgaveOpprettelseClient @Autowired constructor(
                                     .header(RestConstants.NAV_CALL_ID_HEADER, MDC.get(MDCConstants.MDC_CALL_ID))
                                     .header("X-Correlation-ID", MDC.get(MDCConstants.MDC_CALL_ID))
                                     .header(RestConstants.AUTHORIZATION, AUTH_METHOD_BEARER + AUTH_SEPERATOR + consumerOidcToken)
-                                    .header(RestConstants.NAV_CONSUMER_TOKEN_HEADER, RestConstants.AUTH_METHOD_BEARER + RestConstants.AUTH_SEPERATOR + consumerOidcToken)
+                                    .header(RestConstants.NAV_CONSUMER_TOKEN_HEADER, AUTH_METHOD_BEARER + AUTH_SEPERATOR + consumerOidcToken)
                                     .post(RequestBody.create(
                                             MediaType.parse("application/json"),
                                             gson.toJson(request)

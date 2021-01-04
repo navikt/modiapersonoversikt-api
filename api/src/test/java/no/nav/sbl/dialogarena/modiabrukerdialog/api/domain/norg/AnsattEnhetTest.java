@@ -9,21 +9,21 @@ import static org.hamcrest.core.Is.is;
 public class AnsattEnhetTest {
 
     @Test
-    public void erAktivReturnererTrueDersomEnhetErAktivIUppercase() throws Exception {
+    public void erAktivReturnererTrueDersomEnhetErAktivIUppercase() {
         final AnsattEnhet ansattEnhet = new AnsattEnhet("1", "NAV Testenheten", "AKTIV");
 
         assertThat(ansattEnhet.erAktiv(), is(true));
     }
 
     @Test
-    public void erAktivReturnererTrueDersomEnhetErAktivILowercase() throws Exception {
+    public void erAktivReturnererTrueDersomEnhetErAktivILowercase() {
         final AnsattEnhet ansattEnhet = new AnsattEnhet("1", "NAV Testenheten", "aktiv");
 
         assertThat(ansattEnhet.erAktiv(), is(true));
     }
 
     @Test
-    public void erAktivReturnererFalseDersomEnhetIkkeErAktiv() throws Exception {
+    public void erAktivReturnererFalseDersomEnhetIkkeErAktiv() {
         final AnsattEnhet ansattEnhet = new AnsattEnhet("1", "NAV Testenheten", "slettesIkkeAktiv");
 
         assertThat(ansattEnhet.erAktiv(), is(false));
