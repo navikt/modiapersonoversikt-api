@@ -121,7 +121,7 @@ class RestOppgaveBehandlingServiceImpl @Autowired constructor(
         return OpprettOppgaveResponse(response.id?.toString() ?: throw java.lang.RuntimeException("No oppgaveId found"))
     }
 
-    private fun <T, S> gjorSporring(ident: String, request: T, response: S): S {
+    private fun <S, T> gjorSporring(ident: String, request: S, response: T): T {
         try {
             TjenestekallLogger.info("Oppgaver-request: ${correlationId()}", mapOf(
                     "ident" to ident,
