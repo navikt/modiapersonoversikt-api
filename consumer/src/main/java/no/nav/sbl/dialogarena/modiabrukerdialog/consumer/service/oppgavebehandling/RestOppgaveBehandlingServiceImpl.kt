@@ -74,7 +74,16 @@ class RestOppgaveBehandlingServiceImpl @Autowired constructor(
                 fristFerdigstillelse = request.oppgaveFrist,
                 prioritet = PostOppgaveRequestJsonDTO.Prioritet.valueOf(stripTemakode(request.prioritet))
         )
-        return gjorSporring(stsService.systemUserToken, correlationId(), oppgaveRequest)
+
+        val oppgaveResponse = apiClient.opprettOppgave(
+                authorization = stsService.systemUserToken,
+                xminusCorrelationMinusID = correlationId(),
+                postOppgaveRequestJsonDTO = oppgaveRequest
+        )
+
+        val response = gjorSporring<PostOppgaveRequestJsonDTO, PostOppgaveResponseJsonDTO>(oppgaveResponse.aktoerId.toString(), oppgaveRequest, oppgaveResponse)
+
+        return OpprettOppgaveResponse(response.id?.toString() ?: throw java.lang.RuntimeException("No oppgaveId found"))
     }
 
     override fun opprettSkjermetOppgave(request: OpprettOppgaveRequest): OpprettOppgaveResponse {
@@ -100,25 +109,29 @@ class RestOppgaveBehandlingServiceImpl @Autowired constructor(
                 fristFerdigstillelse = request.oppgaveFrist,
                 prioritet = PostOppgaveRequestJsonDTO.Prioritet.valueOf(stripTemakode(request.prioritet))
         )
-        return gjorSporring(stsService.systemUserToken, correlationId(), skjermetOppgaveRequest)
+
+        val skjermpetOppgaveResponse = apiClient.opprettOppgave(
+                authorization = stsService.systemUserToken,
+                xminusCorrelationMinusID = correlationId(),
+                postOppgaveRequestJsonDTO = skjermetOppgaveRequest
+        )
+
+        val response = gjorSporring<PostOppgaveRequestJsonDTO, PostOppgaveResponseJsonDTO>(skjermetOppgaveRequest.aktoerId.toString(), skjermetOppgaveRequest, skjermpetOppgaveResponse)
+
+        return OpprettOppgaveResponse(response.id?.toString() ?: throw java.lang.RuntimeException("No oppgaveId found"))
     }
 
-    private fun gjorSporring(auth: String, xCorrelationId: String, request: PostOppgaveRequestJsonDTO): OpprettOppgaveResponse {
+    private fun <T, S> gjorSporring(ident: String, request: T, response: S): S {
         try {
             TjenestekallLogger.info("Oppgaver-request: ${correlationId()}", mapOf(
-                    "ident" to request.aktoerId,
+                    "ident" to ident,
                     "callId" to correlationId()
             ))
-            val response = apiClient.opprettOppgave(
-                    authorization = auth,
-                    xminusCorrelationMinusID = xCorrelationId,
-                    postOppgaveRequestJsonDTO = request
-            )
             TjenestekallLogger.info("Oppgave-response: ${correlationId()}", mapOf(
-                    "status" to "${HttpStatusCode.Created} Oppgave opprettet",
+                    "status" to HttpStatusCode,
                     "body" to response
             ))
-            return OpprettOppgaveResponse(response.id?.toString() ?: throw java.lang.RuntimeException("No oppgaveId found"))
+            return response
         } catch (e: ClientException) {
             TjenestekallLogger.error("Oppgave-client-error: ${correlationId()}", mapOf(
                     "status" to "${e.statusCode} ${e.message}",
