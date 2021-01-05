@@ -6,6 +6,7 @@ import no.nav.common.rest.client.RestClient
 import no.nav.common.sts.SystemUserTokenProvider
 import no.nav.common.utils.EnvironmentUtils
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.oppgave.generated.apis.OppgaveApi
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.oppgave.generated.infrastructure.ApiClient
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.pdl.PdlOppslagService
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.pdl.generated.HentIdent.IdentGruppe
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.*
@@ -16,23 +17,60 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.RestConstants
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.RestConstants.AUTH_METHOD_BEARER
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.RestConstants.AUTH_SEPERATOR
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.TjenestekallLogger
-import okhttp3.MediaType
-import okhttp3.Request
-import okhttp3.RequestBody
-import okhttp3.Response
+import okhttp3.*
+import okio.Buffer
 import org.slf4j.MDC
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import java.time.LocalDate
 import java.util.*
 
+class LoggingInterceptor : Interceptor {
+    fun Request.copy() = this.newBuilder().build()
+    fun Response.copy() = this.newBuilder().build()
+
+    fun Request.peekContent(): String? {
+        val body = this.copy().body() ?: return null
+        val buffer = Buffer()
+        body.writeTo(buffer)
+        return buffer.readUtf8()
+    }
+    fun Response.peekContent(): String? {
+        return this.copy().body()?.string()
+    }
+
+    override fun intercept(chain: Interceptor.Chain): Response {
+        val request = chain.request()
+        val requestBody = request.peekContent()
+        val response = chain.proceed(request)
+        val responseBody = response.peekContent()
+        return response
+    }
+}
+
+class AuthInterceptor(val stsService: SystemUserTokenProvider) : Interceptor {
+    override fun intercept(chain: Interceptor.Chain): Response {
+        val request = chain.request()
+                .newBuilder()
+                .addHeader("Authorization", "Bearer ${stsService.systemUserToken}")
+                .build()
+        return chain.proceed(request)
+    }
+}
+
 open class OppgaveOpprettelseClient @Autowired constructor(
         val kodeverksmapperService: KodeverksmapperService,
         val pdlOppslagService: PdlOppslagService,
         val stsService: SystemUserTokenProvider
 ) : OppgaveRestClient {
+    val httpClient = OkHttpClient.Builder()
+            .addInterceptor(LoggingInterceptor())
+            .addInterceptor(AuthInterceptor(stsService))
+            .build()
+
     val OPPGAVE_BASEURL = EnvironmentUtils.getRequiredProperty("OPPGAVE_BASEURL")
-    val client = OppgaveApi(OPPGAVE_BASEURL)
+    val client = OppgaveApi(OPPGAVE_BASEURL, httpClient)
+
     val url = OPPGAVE_BASEURL + "api/v1/oppgaver"
     private val log = LoggerFactory.getLogger(OppgaveOpprettelseClient::class.java)
     private val gson = GsonBuilder().setDateFormat("yyyy-MM-dd").create()

@@ -19,15 +19,11 @@ import {{packageName}}.infrastructure.RequestMethod
 import {{packageName}}.infrastructure.ResponseType
 import {{packageName}}.infrastructure.Success
 import {{packageName}}.infrastructure.toMultiValue
+import okhttp3.OkHttpClient
 
 {{#operations}}
-{{#nonPublicApi}}internal {{/nonPublicApi}}class {{classname}}(basePath: kotlin.String = defaultBasePath) : ApiClient(basePath) {
-    companion object {
-        @JvmStatic
-        val defaultBasePath: String by lazy {
-            System.getProperties().getProperty("{{packageName}}.baseUrl", "{{{basePath}}}")
-        }
-    }
+{{#nonPublicApi}}internal {{/nonPublicApi}}class {{classname}}(val client: ApiClient) {
+    constructor(basePath: kotlin.String, httpClient: OkHttpClient = OkHttpClient()): this(ApiClient(basePath, httpClient))
 
     {{#operation}}
     /**
@@ -78,7 +74,7 @@ import {{packageName}}.infrastructure.toMultiValue
             query = localVariableQuery,
             headers = localVariableHeaders
         )
-        val localVarResponse = request<{{#returnType}}{{{returnType}}}{{/returnType}}{{^returnType}}Any?{{/returnType}}>(
+        val localVarResponse = client.request<{{#returnType}}{{{returnType}}}{{/returnType}}{{^returnType}}Any?{{/returnType}}>(
             localVariableConfig,
             localVariableBody
         )
