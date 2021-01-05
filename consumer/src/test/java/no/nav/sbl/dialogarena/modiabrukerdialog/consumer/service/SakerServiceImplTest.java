@@ -2,10 +2,8 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service;
 
 
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.Sak;
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.exceptions.JournalforingFeilet;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.gsak.GsakKodeverk;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.kodeverk.StandardKodeverk;
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.psak.PsakService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.saker.SakerServiceImpl;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.Feature;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.UnleashService;
@@ -80,8 +78,7 @@ public class SakerServiceImplTest {
     private ArbeidOgAktivitet arbeidOgAktivitet;
     @Mock
     private BehandleHenvendelsePortType behandleHenvendelsePortType;
-    @Mock
-    private PsakService psakService;
+
     @Mock
     private UnleashService unleashService;
 
@@ -110,21 +107,6 @@ public class SakerServiceImplTest {
         assertThat(saksliste.get(3).fagsystemKode, is(""));
         assertThat(saksliste.get(saksliste.size() - 1).sakstype, is(SAKSTYPE_MED_FAGSAK));
         assertThat(saksliste.get(saksliste.size() - 1).temaKode, is(BIDRAG_MARKOR));
-    }
-
-    @Test
-    void transformererResponseTilSakslistePensjon() {
-        Sak pensjon = new Sak();
-        pensjon.temaKode = "PENS";
-        Sak ufore = new Sak();
-        ufore.temaKode = "UFO";
-        List<Sak> pensjonssaker = asList(pensjon, ufore);
-        when(psakService.hentSakerFor(FNR)).thenReturn(pensjonssaker);
-        List<Sak> saksliste = sakerService.hentPensjonSaker(FNR);
-
-        assertThat(saksliste.size(), is(2));
-        assertThat(saksliste.get(0).temaNavn, is("PENS"));
-        assertThat(saksliste.get(1).temaNavn, is("UFO"));
     }
 
     @Test

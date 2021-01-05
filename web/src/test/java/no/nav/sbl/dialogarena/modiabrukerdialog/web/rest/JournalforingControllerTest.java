@@ -5,6 +5,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.exceptions.JournalforingFeil
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.gsak.SakerService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.RestUtils;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.http.SubjectHandlerUtil;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.saker.PensjonSaker;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.saker.knyttbehandlingskjedetilsak.EnhetIkkeSatt;
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.TilgangskontrollMock;
 import org.junit.jupiter.api.DisplayName;
@@ -30,7 +31,7 @@ class JournalforingControllerTest {
     @Test
     @DisplayName("Knytter til sak og returnerer 200 OK")
     void journalforingKnytterTilSak() {
-        JournalforingController journalforingController = new JournalforingController(mock(SakerService.class), TilgangskontrollMock.get());
+        JournalforingController journalforingController = new JournalforingController(mock(SakerService.class), TilgangskontrollMock.get(), mock(PensjonSaker.class));
 
         ResponseEntity response = SubjectHandlerUtil.withIdent(SAKSBEHANDLERS_IDENT, () ->
                 journalforingController.knyttTilSak("10108000398", "traad-id", new Sak(), null, mockHttpRequest())
@@ -44,7 +45,7 @@ class JournalforingControllerTest {
     void journalforingSomFeilerKasterFeil() throws JournalforingFeilet {
         SakerService mock = mock(SakerService.class);
         doThrow(RuntimeException.class).when(mock).knyttBehandlingskjedeTilSak(any(), any(), any(), any());
-        JournalforingController journalforingController = new JournalforingController(mock, TilgangskontrollMock.get());
+        JournalforingController journalforingController = new JournalforingController(mock, TilgangskontrollMock.get(), mock(PensjonSaker.class));
 
         ResponseStatusException exception = assertThrows(ResponseStatusException.class, () ->
                 SubjectHandlerUtil.withIdent(SAKSBEHANDLERS_IDENT, () ->
@@ -60,7 +61,7 @@ class JournalforingControllerTest {
     void journalforingUtenEnhetKasterFeil() throws JournalforingFeilet {
         SakerService mock = mock(SakerService.class);
         doThrow(EnhetIkkeSatt.class).when(mock).knyttBehandlingskjedeTilSak(any(), any(), any(), any());
-        JournalforingController journalforingController = new JournalforingController(mock, TilgangskontrollMock.get());
+        JournalforingController journalforingController = new JournalforingController(mock, TilgangskontrollMock.get(), mock(PensjonSaker.class));
 
         ResponseStatusException exception = assertThrows(ResponseStatusException.class, () ->
                 SubjectHandlerUtil.withIdent(SAKSBEHANDLERS_IDENT, () ->

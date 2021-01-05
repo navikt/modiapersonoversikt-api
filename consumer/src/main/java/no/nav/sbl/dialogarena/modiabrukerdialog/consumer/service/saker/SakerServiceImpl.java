@@ -54,8 +54,6 @@ public class SakerServiceImpl implements SakerService {
     private BehandleHenvendelsePortType behandleHenvendelsePortType;
     @Autowired
     private ArbeidOgAktivitet arbeidOgAktivitet;
-    @Autowired
-    private PsakService psakService;
 
     @Override
     public List<Sak> hentSammensatteSaker(String fnr) {
@@ -71,13 +69,6 @@ public class SakerServiceImpl implements SakerService {
         return saker.stream()
                 .filter(GODKJENT_FAGSAK.or(GODKJENT_GENERELL))
                 .collect(toList());
-    }
-
-    @Override
-    public List<Sak> hentPensjonSaker(String fnr) {
-        List<Sak> saker = psakService.hentSakerFor(fnr);
-        leggTilFagsystemnavnOgTemanavn(saker, gsakKodeverk.hentFagsystemMapping(), standardKodeverk);
-        return saker;
     }
 
     @Override

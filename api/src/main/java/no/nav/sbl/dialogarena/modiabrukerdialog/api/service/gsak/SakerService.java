@@ -9,7 +9,5 @@ public interface SakerService {
 
     List<Sak> hentSammensatteSaker(String fnr);
 
-    List<Sak> hentPensjonSaker(String fnr);
-
     void knyttBehandlingskjedeTilSak(String fnr, String behandlingskjede, Sak sak, String enhet) throws JournalforingFeilet;
 }

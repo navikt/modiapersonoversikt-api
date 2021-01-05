@@ -2,8 +2,8 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest;
 
 import kotlin.Pair;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.Sak;
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.exceptions.JournalforingFeilet;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.gsak.SakerService;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.saker.PensjonSaker;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.saker.knyttbehandlingskjedetilsak.EnhetIkkeSatt;
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.BehandlingsIdTilgangData;
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Tilgangskontroll;
@@ -34,11 +34,13 @@ public class JournalforingController {
 
     private final SakerService sakerService;
     private final Tilgangskontroll tilgangskontroll;
+    private final PensjonSaker pensjonSaker;
 
     @Autowired
-    public JournalforingController(SakerService sakerService, Tilgangskontroll tilgangskontroll) {
+    public JournalforingController(SakerService sakerService, Tilgangskontroll tilgangskontroll, PensjonSaker pensjonSaker) {
         this.sakerService = sakerService;
         this.tilgangskontroll = tilgangskontroll;
+        this.pensjonSaker = pensjonSaker;
     }
 
     @GetMapping("/saker/sammensatte")
@@ -52,7 +54,7 @@ public class JournalforingController {
     public List<Sak> hentPensjonSaker(@PathVariable("fnr") String fnr) {
         return tilgangskontroll
                 .check(tilgangTilBruker.with(fnr))
-                .get(Audit.describe(READ, Person.PesysSaker, new Pair<>(AuditIdentifier.FNR, fnr)), () -> sakerService.hentPensjonSaker(fnr));
+                .get(Audit.describe(READ, Person.PesysSaker, new Pair<>(AuditIdentifier.FNR, fnr)), () -> pensjonSaker.hentPensjonSaker(fnr));
     }
 
     @PostMapping("/{traadId}")
