@@ -160,6 +160,7 @@
                             <library>jvm-okhttp3</library>
                             <packageName>no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.oppgave.generated</packageName>
                             <modelNameSuffix>DTO</modelNameSuffix>
+                            <templateDirectory>${project.basedir}/src/main/resources/oppgave/templates</templateDirectory>
                             <configOptions>
                                 <enumPropertyNaming>original</enumPropertyNaming>
                                 <serializationLibrary>jackson</serializationLibrary>
