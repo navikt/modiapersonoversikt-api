@@ -16,7 +16,7 @@ import java.time.LocalDate;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNull.notNullValue;
 import static org.hamcrest.core.IsNull.nullValue;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 public class VedtaksMapperTest {
 
@@ -27,8 +27,8 @@ public class VedtaksMapperTest {
             DateUtils.convertDateTimeToXmlGregorianCalendar(LocalDateTime.parse("2015-04-14"));
     private static final XMLGregorianCalendar ANVIST_UTBETALING =
             DateUtils.convertDateTimeToXmlGregorianCalendar(LocalDateTime.parse("2016-04-14"));
-    private static final BigDecimal BRUTTO_BELOP = new BigDecimal(5067.55);
-    private static final BigDecimal DAGSATS = new BigDecimal(314.15);
+    private static final BigDecimal BRUTTO_BELOP = new BigDecimal("5067.55");
+    private static final BigDecimal DAGSATS = new BigDecimal("314.15");
     private static final Integer PLEIEPENGEGRAD = 66;
 
     private VedtaksMapper mapper;

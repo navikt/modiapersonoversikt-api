@@ -3,7 +3,6 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.sak.transformers;
 import no.nav.modig.core.exception.ApplicationException;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.*;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.filter.FilterUtils;
-import no.nav.sbl.dialogarena.modiabrukerdialog.sak.utils.Java8Utils;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsesoknader.v1.informasjon.WSDokumentforventning;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsesoknader.v1.informasjon.WSHenvendelseType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsesoknader.v1.informasjon.WSSoknad;
@@ -67,14 +66,15 @@ public class Transformers {
 
     private static BehandlingsStatus behandlingsStatus(Behandlingskjede wsBehandlingskjede) {
         if (wsBehandlingskjede.getSisteBehandlingsstatus() != null) {
-            if (wsBehandlingskjede.getSisteBehandlingsstatus().getValue().equals(FilterUtils.AVSLUTTET)) {
-                return FERDIG_BEHANDLET;
-            } else if (wsBehandlingskjede.getSisteBehandlingsstatus().getValue().equals(FilterUtils.OPPRETTET)) {
-                return UNDER_BEHANDLING;
-            } else if (wsBehandlingskjede.getSisteBehandlingsstatus().getValue().equals(FilterUtils.AVBRUTT)) {
-                return AVBRUTT;
-            } else {
-                throw new ApplicationException("Ukjent behandlingsstatus mottatt: " + wsBehandlingskjede.getSisteBehandlingsstatus().getValue());
+            switch (wsBehandlingskjede.getSisteBehandlingsstatus().getValue()) {
+                case FilterUtils.AVSLUTTET:
+                    return FERDIG_BEHANDLET;
+                case FilterUtils.OPPRETTET:
+                    return UNDER_BEHANDLING;
+                case FilterUtils.AVBRUTT:
+                    return AVBRUTT;
+                default:
+                    throw new ApplicationException("Ukjent behandlingsstatus mottatt: " + wsBehandlingskjede.getSisteBehandlingsstatus().getValue());
             }
         }
         throw new ApplicationException("Ukjent behandlingsstatus mottatt: " + wsBehandlingskjede.getSisteBehandlingsstatus().getValue());

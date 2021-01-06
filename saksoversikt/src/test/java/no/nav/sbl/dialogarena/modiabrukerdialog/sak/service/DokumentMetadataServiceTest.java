@@ -21,7 +21,7 @@ import static java.util.Collections.singletonList;
 import static junit.framework.TestCase.assertFalse;
 import static org.hamcrest.core.Is.is;
 import static org.joda.time.DateTime.now;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -59,7 +59,7 @@ public class DokumentMetadataServiceTest {
         mockSaf(brukerMottattDokumentFraNavMedLogiskeOgVanligeVedlegg());
         when(bulletproofKodeverkService.getKode(anyString(), any())).thenReturn("FOR");
 
-        when(bulletproofKodeverkService.getTemanavnForTemakode(anyString(), anyString())).thenReturn(new ResultatWrapper("Dagpenger"));
+        when(bulletproofKodeverkService.getTemanavnForTemakode(anyString(), anyString())).thenReturn(new ResultatWrapper<>("Dagpenger"));
         when(henvendelseService.hentInnsendteSoknader(anyString())).thenReturn(singletonList(lagHenvendelse("2")));
 
         ResultatWrapper<List<DokumentMetadata>> wrapper = dokumentMetadataService.hentDokumentMetadata("");
@@ -74,7 +74,7 @@ public class DokumentMetadataServiceTest {
 
         mockSaf(brukerMottattDokumentFraNavMedLogiskeOgVanligeVedlegg());
 
-        when(bulletproofKodeverkService.getTemanavnForTemakode(Konstanter.DAGPENGER, BulletproofKodeverkService.ARKIVTEMA)).thenReturn(new ResultatWrapper("Dagpenger"));
+        when(bulletproofKodeverkService.getTemanavnForTemakode(Konstanter.DAGPENGER, BulletproofKodeverkService.ARKIVTEMA)).thenReturn(new ResultatWrapper<>("Dagpenger"));
 
         when(henvendelseService.hentInnsendteSoknader(anyString())).thenReturn(singletonList(lagHenvendelse("2")));
 
@@ -88,7 +88,7 @@ public class DokumentMetadataServiceTest {
     public void hvisViFaarJournalpostFraHenvendelseSomIkkeFinnesIJoarkSkalDenneBrukesVidere() {
         mockSaf(brukerMottattDokumentFraNavMedLogiskeOgVanligeVedlegg());
 
-        when(bulletproofKodeverkService.getTemanavnForTemakode(Konstanter.DAGPENGER, BulletproofKodeverkService.ARKIVTEMA)).thenReturn(new ResultatWrapper("Dagpenger"));
+        when(bulletproofKodeverkService.getTemanavnForTemakode(Konstanter.DAGPENGER, BulletproofKodeverkService.ARKIVTEMA)).thenReturn(new ResultatWrapper<>("Dagpenger"));
 
         when(henvendelseService.hentInnsendteSoknader(anyString())).thenReturn(singletonList(lagHenvendelse("En annen journalpost")));
 
@@ -101,7 +101,7 @@ public class DokumentMetadataServiceTest {
     public void hvisViFaarSammeJournalpostFraHenvendelseOgJoarkSkalViBrukeInformasjonenFraJoarkMenTaMedInformasjonOmEttersendelseFraHenvendelse() {
         mockSaf(brukerMottattDokumentFraNavMedLogiskeOgVanligeVedlegg());
 
-        when(bulletproofKodeverkService.getTemanavnForTemakode(Konstanter.DAGPENGER, BulletproofKodeverkService.ARKIVTEMA)).thenReturn(new ResultatWrapper("Dagpenger"));
+        when(bulletproofKodeverkService.getTemanavnForTemakode(Konstanter.DAGPENGER, BulletproofKodeverkService.ARKIVTEMA)).thenReturn(new ResultatWrapper<>("Dagpenger"));
 
         String SAMME_JOURNALPOST = "2";
         when(henvendelseService.hentInnsendteSoknader(anyString())).thenReturn(singletonList(lagHenvendelse(SAMME_JOURNALPOST)));
@@ -127,7 +127,7 @@ public class DokumentMetadataServiceTest {
     public void hvisJournalpostKommerFraBadeJoarkOgHenvendelseSkalBeggeSettesSomBaksystem() {
         mockSaf(brukerMottattDokumentFraNavMedLogiskeOgVanligeVedlegg());
 
-        when(bulletproofKodeverkService.getTemanavnForTemakode(Konstanter.DAGPENGER, BulletproofKodeverkService.ARKIVTEMA)).thenReturn(new ResultatWrapper("Dagpenger"));
+        when(bulletproofKodeverkService.getTemanavnForTemakode(Konstanter.DAGPENGER, BulletproofKodeverkService.ARKIVTEMA)).thenReturn(new ResultatWrapper<>("Dagpenger"));
 
         when(henvendelseService.hentInnsendteSoknader(anyString())).thenReturn(singletonList(lagHenvendelse("2")));
 
@@ -153,7 +153,7 @@ public class DokumentMetadataServiceTest {
     public void hvisJournalpostKunKommerFraHenvendelseSkalKunHenvendelseSettesSomBaksystem() {
         mockSaf();
 
-        when(bulletproofKodeverkService.getTemanavnForTemakode(Konstanter.DAGPENGER, BulletproofKodeverkService.ARKIVTEMA)).thenReturn(new ResultatWrapper("Dagpenger"));
+        when(bulletproofKodeverkService.getTemanavnForTemakode(Konstanter.DAGPENGER, BulletproofKodeverkService.ARKIVTEMA)).thenReturn(new ResultatWrapper<>("Dagpenger"));
 
         when(henvendelseService.hentInnsendteSoknader(anyString())).thenReturn(singletonList(lagHenvendelse("2")));
 
@@ -168,7 +168,7 @@ public class DokumentMetadataServiceTest {
     public void hvisDokmotSoknadIkkeHarJournalpostIdBrukesBehandlingsIdForAFinneJournalpostIdOgMatche() {
         when(bulletproofKodeverkService.getKode(anyString(), any())).thenReturn(DOKMOT_TEMA);
         mockSaf(brukerMottattDokumentFraNavMedLogiskeOgVanligeVedlegg().withTemakode(DOKMOT_TEMA));
-        when(bulletproofKodeverkService.getTemanavnForTemakode(DOKMOT_TEMA, BulletproofKodeverkService.ARKIVTEMA)).thenReturn(new ResultatWrapper("Bil"));
+        when(bulletproofKodeverkService.getTemanavnForTemakode(DOKMOT_TEMA, BulletproofKodeverkService.ARKIVTEMA)).thenReturn(new ResultatWrapper<>("Bil"));
         when(henvendelseService.hentInnsendteSoknader(anyString())).thenReturn(singletonList(lagHenvendelse(null)));
 
         List<DokumentMetadata> dokumenter = dokumentMetadataService.hentDokumentMetadata("").resultat;
@@ -181,7 +181,7 @@ public class DokumentMetadataServiceTest {
 
     private void mockSaf(DokumentMetadata... safDokumentMetadata) {
         when(safService.hentJournalposter(anyString()))
-                .thenReturn(new ResultatWrapper((asList(safDokumentMetadata))));
+                .thenReturn(new ResultatWrapper<>((asList(safDokumentMetadata))));
     }
 
     private DokumentMetadata brukerMottattDokumentFraNavMedLogiskeOgVanligeVedlegg() {

@@ -10,13 +10,13 @@ class ADRolleParserKtTest {
 
     @Test
     fun parserADStrengTilRolle() {
-        val rolle = parseADRolle(Arrays.asList("CN=MIN_ROLLE,OU=AccountGroups,OU=Groups,OU=NAV,OU=BusinessUnits,DC=test,DC=local"))
+        val rolle = parseADRolle(listOf("CN=MIN_ROLLE,OU=AccountGroups,OU=Groups,OU=NAV,OU=BusinessUnits,DC=test,DC=local"))
         assertEquals("MIN_ROLLE", rolle[0])
     }
 
     @Test
     @DisplayName("Kaster excepction hvis strenger har feil format")
     fun kasterFeilVedFeilFormat() {
-        assertThrows(IllegalStateException::class.java, {parseADRolle(Arrays.asList("Ugyldig streng"))})
+        assertThrows(IllegalStateException::class.java) { parseADRolle(Arrays.asList("Ugyldig streng")) }
     }
 }

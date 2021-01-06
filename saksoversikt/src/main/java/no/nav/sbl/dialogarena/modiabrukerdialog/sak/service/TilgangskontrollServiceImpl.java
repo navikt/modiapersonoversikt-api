@@ -1,6 +1,5 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.sak.service;
 
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.AnsattService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.DokumentMetadata;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.Sakstema;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.resultatwrappere.TjenesteResultatWrapper;
@@ -81,14 +80,14 @@ public class TilgangskontrollServiceImpl implements TilgangskontrollService {
     }
 
     private Map journalfortAnnetTemaEktraFeilInfo(String temanavn, String fnr) {
-        Map map = new HashMap<>();
+        Map<String, String> map = new HashMap<>();
         map.put("temanavn", temanavn);
         map.put("fnr", fnr);
         return map;
     }
 
     private Map ikkeJournalfortEkstraFeilInfo(String fnr) {
-        Map map = new HashMap<>();
+        Map<String, String> map = new HashMap<>();
         map.put("fnr", fnr);
         return map;
     }

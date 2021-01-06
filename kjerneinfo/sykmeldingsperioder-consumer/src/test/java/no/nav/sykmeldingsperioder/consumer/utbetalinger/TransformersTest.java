@@ -13,7 +13,7 @@ import java.util.List;
 import static java.util.stream.Collectors.toList;
 import static no.nav.sykmeldingsperioder.consumer.utbetalinger.Transformers.TO_HOVEDYTELSE;
 import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 public class TransformersTest {
 

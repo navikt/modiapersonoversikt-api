@@ -9,7 +9,7 @@ import static org.junit.Assert.assertEquals;
 public class ForsikringTest {
 
     public static final String FORSIKRINGSORDNING = "fORSIKRINGS ORDNING";
-    public static final Double PREMIEGRUNNLAG = new Double(2.5);
+    public static final Double PREMIEGRUNNLAG = 2.5;
     public static final boolean GYLDIG = true;
     public static final LocalDate PERIODEFRA = new LocalDate(2013, 1, 1);
     public static final LocalDate PERIODETOM = new LocalDate(2014, 1, 1);

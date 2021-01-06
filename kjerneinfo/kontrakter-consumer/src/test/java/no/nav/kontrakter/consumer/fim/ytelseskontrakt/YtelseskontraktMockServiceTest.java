@@ -13,13 +13,13 @@ public class YtelseskontraktMockServiceTest {
     YtelseskontraktMockService mockService;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         mockService = new YtelseskontraktMockService();
         mockService.setMapper(YtelseskontraktMapper.getInstance());
     }
 
     @Test
-    public void testHentYtelseskontrakter() throws Exception {
+    public void testHentYtelseskontrakter() {
         YtelseskontraktRequest request = new YtelseskontraktRequest();
 
         YtelseskontraktResponse response = mockService.hentYtelseskontrakter(request);

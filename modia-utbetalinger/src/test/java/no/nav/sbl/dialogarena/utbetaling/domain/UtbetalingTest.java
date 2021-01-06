@@ -11,6 +11,7 @@ import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
 import static no.nav.sbl.dialogarena.utbetaling.domain.util.YtelseUtils.SISTE_HOVEDYTELSESDATO_FORST;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.*;
 
 public class UtbetalingTest {
@@ -18,7 +19,7 @@ public class UtbetalingTest {
     private static final String ID = "id";
 
     @Test
-    public void testSortering_SammeDato_SorterPaaNavn() throws Exception {
+    public void testSortering_SammeDato_SorterPaaNavn() {
         DateTime idag = new DateTime();
         Hovedytelse hovedytelse = new Hovedytelse()
                 .withId(ID)
@@ -39,7 +40,7 @@ public class UtbetalingTest {
     }
 
     @Test
-    public void testSortering_ForskjelligDato_SorterNyestForst() throws Exception {
+    public void testSortering_ForskjelligDato_SorterNyestForst() {
         DateTime idag = new DateTime();
         DateTime igaar = idag.minusDays(1);
         Hovedytelse hovedytelse = new Hovedytelse()

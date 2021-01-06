@@ -29,10 +29,10 @@ public class MainTest {
     private static void setupRestClient() {
         RestClient.setBaseClient(RestClient.baseClientBuilder()
                 .sslSocketFactory(new TrustAllSSLSocketFactory(), new X509TrustManager() {
-                    public void checkClientTrusted(X509Certificate[] x509Certificates, String s) throws CertificateException {
+                    public void checkClientTrusted(X509Certificate[] x509Certificates, String s) {
                     }
 
-                    public void checkServerTrusted(X509Certificate[] x509Certificates, String s) throws CertificateException {
+                    public void checkServerTrusted(X509Certificate[] x509Certificates, String s) {
                     }
 
                     public X509Certificate[] getAcceptedIssuers() {

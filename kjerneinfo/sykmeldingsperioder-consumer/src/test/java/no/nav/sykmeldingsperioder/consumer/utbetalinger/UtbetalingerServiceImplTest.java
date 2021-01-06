@@ -16,7 +16,7 @@ import java.util.List;
 import static no.nav.sykmeldingsperioder.consumer.utbetalinger.UtbetalingerMockFactory.*;
 import static org.hamcrest.Matchers.is;
 import static org.joda.time.LocalDate.now;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.spy;
 

@@ -36,7 +36,7 @@ public class ScheduledAnsattListePrefetch {
         cacheManager.getCache(CACHE_NAME).clear();
 
         List<AnsattEnhet> alleEnheter = organisasjonEnhetService.hentAlleEnheter(OrganisasjonEnhetV2Service.WSOppgavebehandlerfilter.KUN_OPPGAVEBEHANDLERE);
-        alleEnheter.stream().forEach(ansattEnhet -> {
+        alleEnheter.forEach(ansattEnhet -> {
             ASBOGOSYSNavEnhet hentNAVAnsattListeRequest = new ASBOGOSYSNavEnhet();
             hentNAVAnsattListeRequest.setEnhetsId(ansattEnhet.enhetId);
             hentNAVAnsattListeRequest.setEnhetsNavn(ansattEnhet.enhetNavn);

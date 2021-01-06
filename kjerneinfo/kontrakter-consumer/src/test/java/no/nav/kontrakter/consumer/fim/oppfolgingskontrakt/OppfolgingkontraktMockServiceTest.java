@@ -13,14 +13,14 @@ public class OppfolgingkontraktMockServiceTest {
     OppfolgingkontraktMockService mockService;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         mockService = new OppfolgingkontraktMockService();
         mockService.setMapper(OppfolgingskontraktMapper.getInstance());
 
     }
 
     @Test
-    public void testHentOppfolgingskontrakter() throws Exception {
+    public void testHentOppfolgingskontrakter() {
         OppfolgingskontraktRequest request = new OppfolgingskontraktRequest();
 
         OppfolgingskontraktResponse response = mockService.hentOppfolgingskontrakter(request);

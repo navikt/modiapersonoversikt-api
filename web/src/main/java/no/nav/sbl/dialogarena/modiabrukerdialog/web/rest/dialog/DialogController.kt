@@ -176,7 +176,7 @@ class DialogController @Autowired constructor(
                             ?: throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Fant ingen tråd med id: ${fortsettDialogRequest.traadId}")
 
                     if (!traad.besvaringKanFerdigstilleOppgave(oppgave)) {
-                        throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Feil oppgaveId fra client. Forventet: ${traad.getEldsteMelding().oppgaveId} men oppdaget: ${fortsettDialogRequest.oppgaveId}")
+                        throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Feil oppgaveId fra client. Forventet: ${traad.eldsteMelding.oppgaveId} men oppdaget: ${fortsettDialogRequest.oppgaveId}")
                     }
 
                     henvendelseUtsendingService.ferdigstillHenvendelse(
@@ -206,7 +206,7 @@ class DialogController @Autowired constructor(
         return tilgangskontroll
                 .check(Policies.tilgangTilBruker.with(fnr))
                 .get(Audit.describe(UPDATE, Person.Henvendelse.SlaSammen, *auditIdentifier)) {
-                    if (slaaSammenRequest.traader.groupingBy { it -> it.traadId }.eachCount().size < 2) {
+                    if (slaaSammenRequest.traader.groupingBy { it.traadId }.eachCount().size < 2) {
                         throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Du kan ikke slå sammen mindre enn 2 trådeer")
                     }
 
@@ -304,7 +304,7 @@ private fun erTraadTilknyttetAnsatt(traad: Traad): Boolean =
         }
 
 private fun lagFortsettDialog(request: FortsettDialogRequest, requestContext: RequestContext, traad: Traad): Melding {
-    val eldsteMelding = traad.getEldsteMelding()
+    val eldsteMelding = traad.eldsteMelding
     val erOppgaveTilknyttetAnsatt =
             if (request.meldingstype == Meldingstype.SPORSMAL_MODIA_UTGAAENDE) {
                 request.erOppgaveTilknyttetAnsatt

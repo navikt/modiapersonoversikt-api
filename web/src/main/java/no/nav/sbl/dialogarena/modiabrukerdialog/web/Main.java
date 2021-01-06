@@ -7,7 +7,6 @@ import no.nav.common.utils.NaisUtils;
 import no.nav.common.utils.SslUtils;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.ldap.LdapContextProvider;
 import org.springframework.boot.SpringApplication;
-import org.springframework.boot.actuate.autoconfigure.metrics.cache.CacheMetricsAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import static no.nav.common.utils.EnvironmentUtils.Type.PUBLIC;

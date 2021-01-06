@@ -22,6 +22,7 @@ import java.util.stream.Collectors;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.core.Is.is;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.*;
 
 public class PersonfaktaTest {
@@ -277,7 +278,7 @@ public class PersonfaktaTest {
     }
 
     @Test
-    public void testharTilrettelagtKommunikasjon() throws Exception {
+    public void testharTilrettelagtKommunikasjon() {
         assertFalse(emptyPersonfakta.isHarTilrettelagtKommunikasjon());
 
         emptyPersonfakta.getTilrettelagtKommunikasjon().add(new Kodeverdi());

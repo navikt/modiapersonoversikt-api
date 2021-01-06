@@ -118,8 +118,9 @@ class ArchSightCEFLogger(private val config: CEFLoggerConfig) {
         event.identifiers.forEach { attributes.addStringValue(it.first, it.second ?: "-") }
 
         val extension = attributes.createCEFAttributes()
-                .map { "${it.first.attribute}=${escapeAttribute(it.second)}" }
-                .joinToString(" ")
+                .joinToString(" ") {
+                    "${it.first.attribute}=${escapeAttribute(it.second)}"
+                }
 
         return "$descriptor|${event.severity}|$extension"
     }

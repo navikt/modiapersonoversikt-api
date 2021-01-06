@@ -181,12 +181,12 @@ class PersonController @Autowired constructor(private val kjerneinfoService: Per
         mapOf(
                 "harSammeBosted" to if (it.tilPerson.isHideFodselsnummerOgNavn) null else it.harSammeBosted,
                 "tilPerson" to mapOf(
-                        "navn" to it.tilPerson.personfakta.personnavn?.let { getNavn(it) },
+                        "navn" to it.tilPerson.personfakta.personnavn?.let { navn -> getNavn(navn) },
                         "alder" to alder,
                         "alderMåneder" to alderIManeder,
                         "fødselsnummer" to if (it.tilPerson.isHideFodselsnummerOgNavn) null else it.tilPerson.fodselsnummer.nummer,
                         "personstatus" to getPersonstatus(it.tilPerson),
-                        "diskresjonskode" to it.tilPerson.personfakta.diskresjonskode?.let { Kode(it) }
+                        "diskresjonskode" to it.tilPerson.personfakta.diskresjonskode?.let { kode -> Kode(kode) }
                 ),
                 "rolle" to it.tilRolle
         )
@@ -212,23 +212,23 @@ class PersonController @Autowired constructor(private val kjerneinfoService: Per
                     "sistEndretAv" to endringsinformasjon.endretAv
             ).plus(
                     if (it.isBankkontoIUtland) {
-                        (this as BankkontoUtland).let {
+                        (this as BankkontoUtland).let { bankkonto ->
                             mapOfNotNullOrEmpty(
-                                    "bankkode" to it.bankkode,
-                                    "swift" to it.swift,
-                                    "landkode" to it.landkode?.let(::Kode),
-                                    "adresse" to it.bankadresse?.let {
+                                    "bankkode" to bankkonto.bankkode,
+                                    "swift" to bankkonto.swift,
+                                    "landkode" to bankkonto.landkode?.let(::Kode),
+                                    "adresse" to bankkonto.bankadresse?.let { adresse ->
                                         mapOfNotNullOrEmpty(
-                                                "linje1" to (it.adresselinje1 ?: ""),
-                                                "linje2" to (it.adresselinje2 ?: ""),
-                                                "linje3" to (it.adresselinje3 ?: "")
+                                                "linje1" to (adresse.adresselinje1 ?: ""),
+                                                "linje2" to (adresse.adresselinje2 ?: ""),
+                                                "linje3" to (adresse.adresselinje3 ?: "")
                                         )
                                     },
-                                    "valuta" to it.valuta?.let(::Kode)
+                                    "valuta" to bankkonto.valuta?.let(::Kode)
                             )
                         }
                     } else {
-                        emptyMap<String, Any?>()
+                        emptyMap()
                     }
             )
         }
@@ -239,7 +239,7 @@ class PersonController @Autowired constructor(private val kjerneinfoService: Per
                     when (adresselinje) {
                         is Adresse -> "gateadresse" to hentGateAdresse(adresselinje)
                         is Matrikkeladresse -> "matrikkeladresse" to hentMatrikkeladresse(adresselinje)
-                        is Postboksadresse -> "postboksadresse" to hentPostboksadresse(adresselinje);
+                        is Postboksadresse -> "postboksadresse" to hentPostboksadresse(adresselinje)
                         is AlternativAdresseUtland -> "utlandsadresse" to hentAlternativAdresseUtland(adresselinje)
                         else -> "ustrukturert" to mapOf("adresselinje" to adresselinje.adresselinje)
                     }
@@ -321,10 +321,10 @@ class PersonController @Autowired constructor(private val kjerneinfoService: Per
             prioritet = telefon.prioritet
     )
 
-    private fun getBegrensetInnsyn(fødselsnummer: String?, melding: String?) = mapOf(
+    private fun getBegrensetInnsyn(fodselsnummer: String?, melding: String?) = mapOf(
             "begrunnelse" to melding,
             "sikkerhetstiltak" to kjerneinfoService
-                    .hentSikkerhetstiltak(HentSikkerhetstiltakRequest(fødselsnummer))
+                    .hentSikkerhetstiltak(HentSikkerhetstiltakRequest(fodselsnummer))
                     ?.let { hentSikkerhetstiltak(it) }
     )
 

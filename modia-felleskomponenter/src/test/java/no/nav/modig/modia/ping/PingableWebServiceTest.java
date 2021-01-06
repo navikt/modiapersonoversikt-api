@@ -16,43 +16,43 @@ public class PingableWebServiceTest {
     private PingableWebService pingable;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         ws = mock(Pingable.class);
         pingable = new PingableWebService("WS", ws);
     }
 
     @Test(expected = UnsupportedOperationException.class)
-    public void skalFeileNarKlassenIkkeHarPing() throws Exception {
+    public void skalFeileNarKlassenIkkeHarPing() {
         PingableWebService pingable = new PingableWebService("WS", new UnpingableWS());
         pingable.ping();
     }
 
     @Test(expected = AssertionError.class)
-    public void skalFeilePingableIkkeNavngis() throws Exception {
+    public void skalFeilePingableIkkeNavngis() {
         PingableWebService pingable = new PingableWebService("", ws);
     }
 
     @Test
-    public void skalKallePingNårKlassenErPingable() throws Exception {
+    public void skalKallePingNarKlassenErPingable() {
         pingable.ping().getCheck().checkHealth();
         verify(ws, times(1)).ping();
     }
 
     @Test
-    public void skalReturnereOkResultatNårTjenestenErOk() throws Exception {
+    public void skalReturnereOkResultatNarTjenestenErOk() {
         SelfTestCheck pingResult = pingable.ping();
         assertThat(pingResult.getCheck().checkHealth().isHealthy(), is(true));
         assertThat(pingResult.getDescription(), CoreMatchers.containsString("WS"));
     }
 
     @Test
-    public void skalReturnereFeilNarTjenestenFeiler() throws Exception {
+    public void skalReturnereFeilNarTjenestenFeiler() {
         when(ws.ping()).thenThrow(new RuntimeException());
         SelfTestCheck pingResult = pingable.ping();
         assertThat(pingResult.getCheck().checkHealth().isHealthy(), is(false));
     }
 
-    private class UnpingableWS {
+    private static class UnpingableWS {
 
     }
 

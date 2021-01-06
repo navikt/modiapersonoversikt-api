@@ -3,7 +3,6 @@ package no.nav.kjerneinfo.consumer.fim.person.support;
 import no.nav.kjerneinfo.common.domain.Periode;
 import no.nav.kjerneinfo.consumer.mdc.MDCUtils;
 import no.nav.kjerneinfo.domain.person.fakta.Sikkerhetstiltak;
-;
 import no.nav.tjeneste.virksomhet.person.v3.binding.HentSikkerhetstiltakPersonIkkeFunnet;
 import no.nav.tjeneste.virksomhet.person.v3.binding.PersonV3;
 import no.nav.tjeneste.virksomhet.person.v3.informasjon.NorskIdent;

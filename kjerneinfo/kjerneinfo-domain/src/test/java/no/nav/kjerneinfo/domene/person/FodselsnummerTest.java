@@ -58,7 +58,7 @@ public class FodselsnummerTest {
 	}
 
     @Test
-    public void parsingAvFodselsnummerForDodfodt() throws Exception {
+    public void parsingAvFodselsnummerForDodfodt() {
         fnr.setNummer("29020000001");
         assertEquals(29, fnr.getFodselsdato().getDayOfMonth());
         assertEquals(2, fnr.getFodselsdato().getMonthOfYear());

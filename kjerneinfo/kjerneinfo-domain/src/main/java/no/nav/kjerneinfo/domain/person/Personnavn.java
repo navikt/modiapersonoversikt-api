@@ -61,8 +61,6 @@ public class Personnavn implements Serializable {
             navn = navn.append(etternavn);
         } else if (isNotBlank(sammensattNavn)) {
             navn = navn.append(sammensattNavn);
-        } else {
-            navn = navn.append("");
         }
         return navn.toString();
     }

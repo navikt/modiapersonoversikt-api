@@ -11,7 +11,7 @@ import java.util.List;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 public class ForeldrepengerettighetTest {
 
@@ -24,9 +24,9 @@ public class ForeldrepengerettighetTest {
     public static final LocalDate FEDREKVOTETOM = new LocalDate(2013, 1, 1);
     public static final LocalDate MOEDREKVOTE = new LocalDate(2013, 1, 2);
     public static final Kodeverkstype FORELDREPENGETYPE = new Kodeverkstype("kode", "term");
-    public static final Integer GRADERINGSDAGER = new Integer("60");
+    public static final Integer GRADERINGSDAGER = Integer.parseInt("60");
     public static final LocalDate MAKSDATO = new LocalDate(2013, 1, 1);
-    public static final Integer RESTDAGER = new Integer("60");
+    public static final Integer RESTDAGER = Integer.parseInt("60");
     public static final LocalDate RETTIGHETFOM = new LocalDate(2013, 1, 1);
     public static final String BRUKERID = "ABC123";
     public static final Bruker bruker = new Bruker(BRUKERID);

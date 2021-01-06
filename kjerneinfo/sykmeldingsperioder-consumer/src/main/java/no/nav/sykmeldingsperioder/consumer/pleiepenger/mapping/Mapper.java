@@ -49,7 +49,7 @@ abstract class Mapper {
 
     private <T> Optional<Function<Object, Object>> getMapper(Class<T> fromClass) {
         Optional<Function<Object, Object>> mapper = Optional.ofNullable(mappers.get(fromClass));
-        if (!mapper.isPresent()) {
+        if (mapper.isEmpty()) {
             return getMapper(fromClass.getSuperclass());
         }
         return mapper;

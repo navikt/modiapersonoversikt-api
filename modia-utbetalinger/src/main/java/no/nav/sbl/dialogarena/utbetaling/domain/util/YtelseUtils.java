@@ -177,8 +177,6 @@ public class YtelseUtils {
         Map<String, List<Hovedytelse>> hovedytelserGruppertPaaYtelse = ytelser
                 .stream()
                 .collect(groupingBy(Hovedytelse::getYtelse));
-        ArrayList<List<Hovedytelse>> lists = new ArrayList<>();
-        lists.addAll(hovedytelserGruppertPaaYtelse.values());
-        return lists;
+        return new ArrayList<>(hovedytelserGruppertPaaYtelse.values());
     }
 }

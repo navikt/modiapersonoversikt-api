@@ -80,8 +80,7 @@ public class HentSikkerhetstiltakServiceTest {
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         String strDate = dateFormat.format(date);
         try {
-            XMLGregorianCalendar xmlDate = DatatypeFactory.newInstance().newXMLGregorianCalendar(strDate);
-            return xmlDate;
+            return DatatypeFactory.newInstance().newXMLGregorianCalendar(strDate);
         } catch (DatatypeConfigurationException e) {
             throw new RuntimeException(e);
         }

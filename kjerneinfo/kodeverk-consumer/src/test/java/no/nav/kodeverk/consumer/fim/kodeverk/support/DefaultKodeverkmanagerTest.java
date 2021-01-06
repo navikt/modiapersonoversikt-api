@@ -28,7 +28,7 @@ public class DefaultKodeverkmanagerTest {
     }
 
     @Test
-    public void testGetBeskrivelseForKode() throws Exception {
+    public void testGetBeskrivelseForKode() {
         EnkeltKodeverk kodeverk = mapper.map(mockFactory.getMockHentKodeverk("MockKodeverk", "tester", "1", 1));
         Kode kode1 = mapper.map(mockFactory.getMockKode("Mock 1"));
         kodeverk.put(kode1.getNavn(), kode1);
@@ -41,7 +41,7 @@ public class DefaultKodeverkmanagerTest {
     }
 
     @Test
-    public void testGetKodeverkList() throws Exception {
+    public void testGetKodeverkList() {
         final String kodeverksref = "MockKodeverk";
         EnkeltKodeverk kodeverk = mapper.map(mockFactory.getMockHentKodeverk(kodeverksref, "tester", "1", 1));
         int antallKoder = 4;

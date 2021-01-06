@@ -16,7 +16,7 @@ public class JacksonConfig {
         mapper.registerModule(new JodaModule());
         mapper.registerModule(new KotlinModule().addDeserializer(LocalDate.class, new JsonDeserializer<LocalDate>() {
             @Override
-            public LocalDate deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException, JsonProcessingException {
+            public LocalDate deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException {
                 return LocalDate.parse(jsonParser.getText());
             }
         }));

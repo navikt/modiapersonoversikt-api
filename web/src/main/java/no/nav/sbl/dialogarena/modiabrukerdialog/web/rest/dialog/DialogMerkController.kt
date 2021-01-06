@@ -111,7 +111,7 @@ class DialogMerkController @Autowired constructor(private val behandleHenvendels
         return tilgangskontroll
                 .check(Policies.tilgangTilBruker.with(request.fnr))
                 .get(Audit.describe(UPDATE, Henvendelse.Oppgave.Avslutt, *auditIdentifier)) {
-                    oppgaveBehandlingService.ferdigstillOppgaveIGsak(request.oppgaveid, Optional.empty(), request.saksbehandlerValgtEnhet, request.beskrivelse);
+                    oppgaveBehandlingService.ferdigstillOppgaveIGsak(request.oppgaveid, Optional.empty(), request.saksbehandlerValgtEnhet, request.beskrivelse)
                     ResponseEntity(HttpStatus.OK)
                 }
     }
@@ -127,7 +127,7 @@ class DialogMerkController @Autowired constructor(private val behandleHenvendels
                 .check(Policies.tilgangTilBruker.with(request.fnr))
                 .check(Policies.behandlingsIderTilhorerBruker.with(BehandlingsIdTilgangData(request.fnr, request.behandlingsidListe)))
                 .get(Audit.describe(DELETE, Henvendelse.Merk.Slett, *auditIdentifier)) {
-                    behandleHenvendelsePortType.markerTraadForHasteKassering(request.behandlingsidListe);
+                    behandleHenvendelsePortType.markerTraadForHasteKassering(request.behandlingsidListe)
                     ResponseEntity(HttpStatus.OK)
                 }
     }

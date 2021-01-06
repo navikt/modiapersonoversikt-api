@@ -50,8 +50,7 @@ public class DateUtils {
     }
 
     public static LocalDateTime getLocalDateTime(int year, int month, int day) {
-        LocalDateTime cal = new LocalDateTime(year, month, day, 0, 0, 0);
-        return cal;
+        return new LocalDateTime(year, month, day, 0, 0, 0);
     }
 
     public static XMLGregorianCalendar convertDateToXmlGregorianCalendar(Date date) {

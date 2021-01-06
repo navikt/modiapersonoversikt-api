@@ -8,7 +8,7 @@ public class DownloadedFileTest {
 
     @Test
     @SuppressWarnings("PMD.SystemPrintln")
-    public void shouldParseDownloadedFile() throws FileNotFoundException {
+    public void shouldParseDownloadedFile() {
         System.out.println("Trying to parse new kodeverk");
         new JsonKodeverk(DownloadedFileTest.class.getResourceAsStream("/kodeverk.json"));
         System.out.println("Kodeverk OK!");

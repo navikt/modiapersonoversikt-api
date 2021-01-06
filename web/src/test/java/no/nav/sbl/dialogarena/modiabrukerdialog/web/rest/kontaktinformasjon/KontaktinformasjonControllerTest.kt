@@ -71,7 +71,7 @@ class KontaktinformasjonControllerTest {
                 .withDigitalKontaktinformasjon(WSKontaktinformasjon()))
 
         val response = controller.hentKontaktinformasjon(FNR)
-        val epost = response["epost"];
+        val epost = response["epost"]
         val mobiltelefon = response["mobiltelefon"]
 
         assertEquals(null, epost)
