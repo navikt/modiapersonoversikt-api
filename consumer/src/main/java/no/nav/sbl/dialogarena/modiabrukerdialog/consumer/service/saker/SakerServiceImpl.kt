@@ -19,7 +19,6 @@ import org.slf4j.LoggerFactory
 import org.slf4j.MDC
 import org.springframework.beans.factory.annotation.Autowired
 import java.util.concurrent.CompletableFuture
-import java.util.function.Predicate
 import javax.annotation.PostConstruct
 
 private val logger = LoggerFactory.getLogger(SakerServiceImpl::class.java)
@@ -93,9 +92,8 @@ class SakerServiceImpl : SakerService {
     }
 
     private fun SakerService.Resultat.fjernIkkeGodkjenteSaker(): SakerService.Resultat {
-        this.saker = this.saker.filter { GODKJENT_FAGSAK.or(GODKJENT_GENERELL).test(it) }
         return SakerService.Resultat(
-                this.saker.filter { GODKJENT_FAGSAK.or(GODKJENT_GENERELL).test(it) },
+                this.saker.filter(GODKJENT_FAGSAK or GODKJENT_GENERELL),
                 this.feiledeSystemer
         )
     }
@@ -161,13 +159,13 @@ class SakerServiceImpl : SakerService {
             return !(sak.finnesIPsak || sak.finnesIGsak)
         }
 
-        private val GODKJENT_FAGSAK = Predicate { sak: Sak ->
+        private val GODKJENT_FAGSAK: (Sak) -> Boolean = { sak ->
             !sak.isSakstypeForVisningGenerell &&
                     Sak.GODKJENTE_FAGSYSTEMER_FOR_FAGSAKER.contains(sak.fagsystemKode) &&
                     Sak.TEMAKODE_KLAGE_ANKE != sak.temaKode
         }
 
-        private val GODKJENT_GENERELL = Predicate { sak: Sak ->
+        private val GODKJENT_GENERELL: (Sak) -> Boolean = { sak ->
             sak.isSakstypeForVisningGenerell &&
                     Sak.GYLDIGE_FAGSYSTEM_FOR_GENERELLE_SAKER.contains(sak.fagsystemKode) &&
                     Sak.GODKJENTE_TEMA_FOR_GENERELL_SAK.contains(sak.temaKode)
@@ -175,7 +173,7 @@ class SakerServiceImpl : SakerService {
     }
 }
 
-
+private infix fun <T> ((T) -> Boolean).or(other: (T) -> Boolean): (T) -> Boolean = { this(it) || other(it) }
 internal fun <T> copyAuthAndMDC(fn: () -> T): () -> T {
     val callId = MDC.get(MDCConstants.MDC_CALL_ID)
     val subject = SubjectHandler.getSubject()

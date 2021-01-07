@@ -4,20 +4,14 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.Sak
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.saker.SakerKilde
 import no.nav.tjeneste.virksomhet.behandlesak.v1.BehandleSakV1
 import no.nav.tjeneste.virksomhet.behandlesak.v1.OpprettSakSakEksistererAllerede
-import no.nav.tjeneste.virksomhet.behandlesak.v1.OpprettSakUgyldigInput
 import no.nav.tjeneste.virksomhet.behandlesak.v1.informasjon.WSFagomraader
 import no.nav.tjeneste.virksomhet.behandlesak.v1.informasjon.WSFagsystemer
 import no.nav.tjeneste.virksomhet.behandlesak.v1.informasjon.WSSakstyper
 import no.nav.tjeneste.virksomhet.behandlesak.v1.meldinger.WSOpprettSakRequest
-import no.nav.tjeneste.virksomhet.sak.v1.FinnSakForMangeForekomster
-import no.nav.tjeneste.virksomhet.sak.v1.FinnSakUgyldigInput
 import no.nav.tjeneste.virksomhet.sak.v1.SakV1
 import no.nav.tjeneste.virksomhet.sak.v1.informasjon.WSPerson
 import no.nav.tjeneste.virksomhet.sak.v1.informasjon.WSSak
 import no.nav.tjeneste.virksomhet.sak.v1.meldinger.WSFinnSakRequest
-import java.util.*
-import java.util.function.Function
-import java.util.stream.Collectors
 
 internal class GsakSaker(val sakV1: SakV1, val behandleSakWS: BehandleSakV1) : SakerKilde {
     override val kildeNavn: String
@@ -27,7 +21,7 @@ internal class GsakSaker(val sakV1: SakV1, val behandleSakWS: BehandleSakV1) : S
         val response = sakV1.finnSak(
                 WSFinnSakRequest()
                         .withBruker(WSPerson().withIdent(fnr)))
-        val gsakSaker = response.sakListe.stream().map(TIL_SAK).collect(Collectors.toList())
+        val gsakSaker = response.sakListe.map(TIL_SAK)
         saker.addAll(gsakSaker)
     }
 
@@ -42,48 +36,38 @@ internal class GsakSaker(val sakV1: SakV1, val behandleSakWS: BehandleSakV1) : S
                             .withSakstype(WSSakstyper().withValue(sak.sakstype)))
             behandleSakWS.opprettSak(request).sakId
         } catch (opprettSakException: OpprettSakSakEksistererAllerede) {
-            finnSakIdFraGsak(fnr, sak)
-                    .orElseThrow { RuntimeException("Fant ikke sak", opprettSakException) }
-        } catch (opprettSakException: OpprettSakUgyldigInput) {
-            throw RuntimeException(opprettSakException)
+            finnSakIdFraGsak(fnr, sak) ?: throw RuntimeException("Fant ikke sak", opprettSakException)
         }
     }
 
-    private fun finnSakIdFraGsak(fnr: String, sak: Sak): Optional<String> {
-        return try {
-            val request = WSFinnSakRequest()
-                    .withBruker(WSPerson().withIdent(fnr))
-                    .withFagomraadeListe(no.nav.tjeneste.virksomhet.sak.v1.informasjon.WSFagomraader().withValue(sak.temaKode))
-                    .withFagsystem(no.nav.tjeneste.virksomhet.sak.v1.informasjon.WSFagsystemer().withValue(sak.fagsystemKode))
-                    .withFagsystemSakId(sak.saksId)
-            sakV1
-                    .finnSak(request)
-                    .sakListe
-                    .stream()
-                    .filter { finnSak: WSSak -> finnSak.sakstype.value == sak.sakstype }
-                    .findFirst()
-                    .map { it.sakId }
-        } catch (finnSakException: FinnSakForMangeForekomster) {
-            throw RuntimeException(finnSakException)
-        } catch (finnSakException: FinnSakUgyldigInput) {
-            throw RuntimeException(finnSakException)
-        }
+    private fun finnSakIdFraGsak(fnr: String, sak: Sak): String? {
+        val request = WSFinnSakRequest()
+                .withBruker(WSPerson().withIdent(fnr))
+                .withFagomraadeListe(no.nav.tjeneste.virksomhet.sak.v1.informasjon.WSFagomraader().withValue(sak.temaKode))
+                .withFagsystem(no.nav.tjeneste.virksomhet.sak.v1.informasjon.WSFagsystemer().withValue(sak.fagsystemKode))
+                .withFagsystemSakId(sak.saksId)
+
+        return sakV1
+                .finnSak(request)
+                .sakListe
+                .firstOrNull { wsSak: WSSak -> wsSak.sakstype.value == sak.sakstype }
+                ?.sakId
     }
 
     companion object {
         private const val VEDTAKSLOSNINGEN = "FS36"
 
         @JvmField
-        val TIL_SAK = Function { wsSak: WSSak ->
-            val sak = Sak()
-            sak.opprettetDato = wsSak.opprettelsetidspunkt
-            sak.saksId = wsSak.sakId
-            sak.fagsystemSaksId = getFagsystemSakId(wsSak)
-            sak.temaKode = wsSak.fagomraade.value
-            sak.sakstype = getSakstype(wsSak)
-            sak.fagsystemKode = wsSak.fagsystem.value
-            sak.finnesIGsak = true
-            sak
+        val TIL_SAK = { wsSak: WSSak ->
+            Sak().apply {
+                opprettetDato = wsSak.opprettelsetidspunkt
+                saksId = wsSak.sakId
+                fagsystemSaksId = getFagsystemSakId(wsSak)
+                temaKode = wsSak.fagomraade.value
+                sakstype = getSakstype(wsSak)
+                fagsystemKode = wsSak.fagsystem.value
+                finnesIGsak = true
+            }
         }
 
         private fun getSakstype(wsSak: WSSak): String {
