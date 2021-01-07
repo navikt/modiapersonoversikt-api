@@ -68,7 +68,6 @@ class SakerServiceImpl : SakerService {
         SakerUtils.leggTilFagsystemnavnOgTemanavn(resultat.saker, gsakKodeverk.hentFagsystemMapping(), standardKodeverk)
 
         return resultat
-                .fjernGenerelleSakerOmFagsakEksisterer()
     }
 
     override fun hentSammensatteSaker(fnr: String): List<Sak> {
@@ -97,21 +96,6 @@ class SakerServiceImpl : SakerService {
         this.saker = this.saker.filter { GODKJENT_FAGSAK.or(GODKJENT_GENERELL).test(it) }
         return SakerService.Resultat(
                 this.saker.filter { GODKJENT_FAGSAK.or(GODKJENT_GENERELL).test(it) },
-                this.feiledeSystemer
-        )
-    }
-
-    private fun SakerService.Resultat.fjernGenerelleSakerOmFagsakEksisterer(): SakerService.Resultat {
-        val grupperteSaker = this.saker.groupBy { it.isSakstypeForVisningGenerell }
-        val generelle = requireNotNull(grupperteSaker[true])
-        val fagsaker = requireNotNull(grupperteSaker[false])
-
-        val fagsakTemakoder = fagsaker.map{ it.temaKode }.toSet()
-        val generelleSakerUtenFagsak = generelle
-                .filter { !fagsakTemakoder.contains(it.temaKode) }
-
-        return SakerService.Resultat(
-                fagsaker + generelleSakerUtenFagsak,
                 this.feiledeSystemer
         )
     }
