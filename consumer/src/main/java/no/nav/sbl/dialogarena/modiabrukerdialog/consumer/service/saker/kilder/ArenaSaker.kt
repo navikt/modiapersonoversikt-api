@@ -8,7 +8,7 @@ import no.nav.virksomhet.tjenester.sak.meldinger.v1.WSHentSakListeRequest
 import java.util.*
 import java.util.function.Function
 
-class ArenaSaker(val arbeidOgAktivitet: ArbeidOgAktivitet) : SakerKilde {
+internal class ArenaSaker(val arbeidOgAktivitet: ArbeidOgAktivitet) : SakerKilde {
     override val kildeNavn: String
         get() = "ARENA"
 

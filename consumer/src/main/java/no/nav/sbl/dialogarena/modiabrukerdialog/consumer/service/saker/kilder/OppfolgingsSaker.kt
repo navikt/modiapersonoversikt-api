@@ -5,7 +5,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.saker.SakerKild
 import org.joda.time.DateTime
 import java.util.stream.Collectors
 
-class OppfolgingsSaker : SakerKilde {
+internal class OppfolgingsSaker : SakerKilde {
     override val kildeNavn: String
         get() = "OPPFOLGING"
 

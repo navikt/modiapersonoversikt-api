@@ -3,7 +3,7 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.saker.kilder
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.Sak
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.saker.SakerKilde
 
-class BidragSaker : SakerKilde {
+internal class BidragSaker : SakerKilde {
     override val kildeNavn: String
         get() = "BIDRAG"
 

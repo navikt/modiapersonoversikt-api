@@ -19,7 +19,7 @@ import java.util.*
 import java.util.function.Function
 import java.util.stream.Collectors
 
-class GsakSaker(val sakV1: SakV1, val behandleSakWS: BehandleSakV1) : SakerKilde {
+internal class GsakSaker(val sakV1: SakV1, val behandleSakWS: BehandleSakV1) : SakerKilde {
     override val kildeNavn: String
         get() = "GSAK"
 

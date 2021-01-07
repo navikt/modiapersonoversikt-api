@@ -4,7 +4,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.Sak
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.psak.PsakService
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.saker.SakerKilde
 
-class PensjonSaker(val psakService: PsakService) : SakerKilde {
+internal class PensjonSaker(val psakService: PsakService) : SakerKilde {
     override val kildeNavn: String
         get() = "PESYS"
 
