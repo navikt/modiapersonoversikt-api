@@ -14,6 +14,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.pdl.PdlOppslagServic
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.http.SubjectHandlerUtil
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.kodeverksmapper.KodeverksmapperService
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Tilgangskontroll
+import okhttp3.OkHttpClient
 import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
 import org.junit.jupiter.api.DisplayName
@@ -33,7 +34,6 @@ class LeggTilbakeOppgaveDelegateTest {
     val stsService: SystemUserTokenProvider = mockk()
     val leggTilbakeOppgaveDelegate: LeggTilbakeOppgaveDelegate = LeggTilbakeOppgaveDelegate(
             RestOppgaveBehandlingServiceImpl(
-                    apiClient,
                     kodeverksmapperService,
                     pdlOppslagService,
                     tilgangskontroll,

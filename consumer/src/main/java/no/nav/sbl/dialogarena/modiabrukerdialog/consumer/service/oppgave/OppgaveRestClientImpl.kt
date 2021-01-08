@@ -6,7 +6,6 @@ import no.nav.common.rest.client.RestClient
 import no.nav.common.sts.SystemUserTokenProvider
 import no.nav.common.utils.EnvironmentUtils
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.oppgave.generated.apis.OppgaveApi
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.oppgave.generated.infrastructure.ApiClient
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.pdl.PdlOppslagService
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.pdl.generated.HentIdent.IdentGruppe
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.*
@@ -25,7 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import java.time.LocalDate
 import java.util.*
 
-class LoggingInterceptor : Interceptor {
+class LoggingInterceptor(val callIdExtractor: (Request) -> String) : Interceptor {
     fun Request.copy() = this.newBuilder().build()
     fun Response.copy() = this.newBuilder().build()
 
@@ -35,15 +34,43 @@ class LoggingInterceptor : Interceptor {
         body.writeTo(buffer)
         return buffer.readUtf8()
     }
+
     fun Response.peekContent(): String? {
         return this.copy().body()?.string()
     }
 
     override fun intercept(chain: Interceptor.Chain): Response {
         val request = chain.request()
+        val callId = callIdExtractor(request)
         val requestBody = request.peekContent()
-        val response = chain.proceed(request)
+
+        TjenestekallLogger.info("Oppgaver-request: $callId", mapOf(
+                "body" to requestBody,
+                "callId" to MDC.get(MDCConstants.MDC_CALL_ID)
+        ))
+
+        val response: Response = runCatching { chain.proceed(request) }
+                .onFailure { exception ->
+                    TjenestekallLogger.error("Oppgave-response-error: $callId", mapOf(
+                            "exception" to exception
+                    ))
+                }
+                .getOrThrow()
+
         val responseBody = response.peekContent()
+
+        if (response.code() in 200..299) {
+            TjenestekallLogger.info("Oppgave-response: $callId", mapOf(
+                    "status" to "${response.code()} ${response.message()}",
+                    "body" to responseBody
+            ))
+        } else {
+            TjenestekallLogger.error("Oppgave-response-error: $callId", mapOf(
+                    "status" to "${response.code()} ${response.message()}",
+                    "request" to request,
+                    "body" to responseBody
+            ))
+        }
         return response
     }
 }
@@ -64,7 +91,11 @@ open class OppgaveOpprettelseClient @Autowired constructor(
         val stsService: SystemUserTokenProvider
 ) : OppgaveRestClient {
     val httpClient = OkHttpClient.Builder()
-            .addInterceptor(LoggingInterceptor())
+            .addInterceptor(LoggingInterceptor { request ->
+                requireNotNull(request.header("X-Correlation-ID")) {
+                    "Kall uten \"X-Correlation-ID\" er ikke lov"
+                }
+            })
             .addInterceptor(AuthInterceptor(stsService))
             .build()
 
@@ -188,8 +219,3 @@ data class OppgaveSkjermetRequestDTO(
         val prioritet: String
 
 )
-
-enum class Prioritet {
-    NORM, LAV, HOY
-}
-
