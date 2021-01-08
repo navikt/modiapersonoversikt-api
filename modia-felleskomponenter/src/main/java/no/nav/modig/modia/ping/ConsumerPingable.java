@@ -5,6 +5,8 @@ import no.nav.common.health.selftest.SelfTestCheck;
 import no.nav.common.utils.fn.UnsafeRunnable;
 import no.nav.sbl.dialogarena.types.Pingable;
 
+import java.lang.reflect.InvocationTargetException;
+
 public class ConsumerPingable implements Pingable {
     private final UnsafeRunnable ping;
     private final SelfTestCheck instance;
@@ -32,6 +34,9 @@ public class ConsumerPingable implements Pingable {
             ping.runUnsafe();
             return HealthCheckResult.healthy();
         } catch (Throwable e) {
+            if (e instanceof InvocationTargetException) {
+                return HealthCheckResult.unhealthy(((InvocationTargetException) e).getTargetException());
+            }
             return HealthCheckResult.unhealthy(e);
         }
     }
