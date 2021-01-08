@@ -1,6 +1,5 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.oppgavebehandling
 
-import com.squareup.okhttp.mockwebserver.MockWebServer
 import io.mockk.*
 import no.nav.common.sts.SystemUserTokenProvider
 import no.nav.sbl.dialogarena.abac.AbacResponse
@@ -20,6 +19,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.http.SubjectHandlerUti
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.kodeverksmapper.KodeverksmapperService
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.TestUtils
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Tilgangskontroll
+import okhttp3.mockwebserver.MockWebServer
 import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
 import org.junit.jupiter.api.Test
@@ -35,7 +35,9 @@ class RestOppgaveBehandlingServiceImplTest {
     val arbeidsfordelingService: ArbeidsfordelingV1Service = mockk()
     val stsService: SystemUserTokenProvider = mockk()
 
-    val mockserver = MockWebServer().
+    val mockserver = MockWebServer().also {
+        it.start()
+    }
 
     val oppgaveBehandlingService: RestOppgaveBehandlingService
         get() = RestOppgaveBehandlingServiceImpl(
