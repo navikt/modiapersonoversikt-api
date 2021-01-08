@@ -208,12 +208,6 @@ spec:
       value: "SAML"
     - name: VIRKSOMHET_ARBEIDSFORDELING_V1_WSDLURL
       value: "http://maven.adeo.no/nexus/content/groups/public/no/nav/tjenester/nav-arbeidsfordeling-v1-tjenestespesifikasjon/1.1.0/nav-arbeidsfordeling-v1-tjenestespesifikasjon-1.1.0.zip"
-    - name: VIRKSOMHET_BEHANDLEPERSON_V1_ENDPOINTURL
-      value: "https://wasapp-q0.adeo.no/tpsws/ws/BehandlePerson/v1"
-    - name: VIRKSOMHET_BEHANDLEPERSON_V1_SECURITYTOKEN
-      value: "SAML"
-    - name: VIRKSOMHET_BEHANDLEPERSON_V1_WSDLURL
-      value: "http://maven.adeo.no/nexus/content/groups/public/no/nav/tjenester/nav-behandle-person-v1-tjenestespesifikasjon/1.8.2/nav-behandle-person-v1-tjenestespesifikasjon-1.8.2.zip"
     - name: VIRKSOMHET_BEHANDLESAK_V1_ENDPOINTURL
       value: "https://wasapp-q0.adeo.no/nav-gsak-ws/BehandleSakV1"
     - name: VIRKSOMHET_BEHANDLESAK_V1_SECURITYTOKEN
@@ -227,7 +221,7 @@ spec:
     - name: VIRKSOMHET_DIGITALKONTAKINFORMASJON_V1_WSDLURL
       value: "http://maven.adeo.no/nexus/service/local/artifact/maven/redirect?a=nav-digitalKontaktinformasjon-v1-tjenestespesifikasjon&e=zip&g=no.nav.tjenester.fim&r=m2internal&v=2.0.0"
     - name: VIRKSOMHET_EGENANSATT_V1_ENDPOINTURL
-      value: "https://wasapp-q0.adeo.no/tpsws/EgenAnsatt_v1"
+      value: "https://app-q0.adeo.no/tpsws-aura/ws/EgenAnsatt/v1"
     - name: VIRKSOMHET_EGENANSATT_V1_SECURITYTOKEN
       value: "SAML"
     - name: VIRKSOMHET_EGENANSATT_V1_WSDLURL
@@ -281,13 +275,13 @@ spec:
     - name: VIRKSOMHET_ORGANISASJONENHETKONTAKTINFORMASJON_V1_WSDLURL
       value: "http://maven.adeo.no/nexus/content/groups/public/no/nav/tjenester/nav-organisasjonEnhetKontaktinformasjon-v1-tjenestespesifikasjon/1.1.0/nav-organisasjonEnhetKontaktinformasjon-v1-tjenestespesifikasjon-1.1.0.zip"
     - name: VIRKSOMHET_PERSON_V3_ENDPOINTURL
-      value: "https://wasapp-q0.adeo.no/tpsws/ws/Person/v3"
+      value: "https://app-q0.adeo.no/tpsws-aura/ws/Person/v3"
     - name: VIRKSOMHET_PERSON_V3_SECURITYTOKEN
       value: "SAML"
     - name: VIRKSOMHET_PERSON_V3_WSDLURL
       value: "http://maven.adeo.no/nexus/content/groups/public/no/nav/tjenester/nav-person-v3-tjenestespesifikasjon/3.6.1/nav-person-v3-tjenestespesifikasjon-3.6.1.zip"
     - name: VIRKSOMHET_PERSONSOK_V1_ENDPOINTURL
-      value: "https://wasapp-q0.adeo.no/tpsws/Personsok_v1"
+      value: "https://app-q0.adeo.no/tpsws-aura/ws/Personsok/v1"
     - name: VIRKSOMHET_PERSONSOK_V1_SECURITYTOKEN
       value: "SAML"
     - name: VIRKSOMHET_PERSONSOK_V1_WSDLURL
