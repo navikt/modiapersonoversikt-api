@@ -481,24 +481,41 @@
             </plugin>
         </plugins>
     </build>
-    <repositories>
-        <repository>
-            <id>github-package-registry-navikt</id>
-            <url>https://maven.pkg.github.com/navikt/maven-release</url>
-        </repository>
-        <repository>
-            <id>external-mirror-github-navikt</id>
-            <url>https://github-package-registry-mirror.gc.nav.no/cached/maven-release</url>
-        </repository>
-    </repositories>
-    <pluginRepositories>
-        <pluginRepository>
-            <id>github-package-registry-navikt</id>
-            <url>https://maven.pkg.github.com/navikt/maven-release</url>
-        </pluginRepository>
-        <pluginRepository>
-            <id>external-mirror-github-navikt-plugins</id>
-            <url>https://github-package-registry-mirror.gc.nav.no/cached/maven-release</url>
-        </pluginRepository>
-    </pluginRepositories>
+    <profiles>
+        <profile>
+            <id>local</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <repositories>
+                <repository>
+                    <snapshots>
+                        <enabled>false</enabled>
+                    </snapshots>
+                    <id>central</id>
+                    <name>Central Repository</name>
+                    <url>https://repo.maven.apache.org/maven2</url>
+                </repository>
+                <repository>
+                    <id>external-mirror-github-navikt</id>
+                    <url>https://github-package-registry-mirror.gc.nav.no/cached/maven-release</url>
+                </repository>
+            </repositories>
+        </profile>
+        <profile>
+            <id>ci</id>
+            <repositories>
+                <repository>
+                    <id>github-package-registry-navikt</id>
+                    <url>https://maven.pkg.github.com/navikt/maven-release</url>
+                </repository>
+            </repositories>
+            <pluginRepositories>
+                <pluginRepository>
+                    <id>github-package-registry-navikt</id>
+                    <url>https://maven.pkg.github.com/navikt/maven-release</url>
+                </pluginRepository>
+            </pluginRepositories>
+        </profile>
+    </profiles>
 </project>
