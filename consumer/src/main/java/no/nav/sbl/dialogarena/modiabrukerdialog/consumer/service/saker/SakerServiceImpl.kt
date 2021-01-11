@@ -99,7 +99,7 @@ class SakerServiceImpl : SakerService {
     }
 
     fun hentPensjonSakerResultat(fnr: String): SakerService.Resultat {
-        val resultat = SakerService.Resultat().leggTilDataFraKilde(fnr, pensjonSaker);
+        val resultat = SakerService.Resultat().leggTilDataFraKilde(fnr, pensjonSaker)
         SakerUtils.leggTilFagsystemnavnOgTemanavn(resultat.saker, gsakKodeverk.hentFagsystemMapping(), standardKodeverk)
         return resultat
     }
@@ -186,7 +186,7 @@ internal fun <T> copyAuthAndMDC(fn: () -> T): () -> T {
 
 internal fun <T> withCallId(callId: String, fn: () -> T): T {
     val originalCallId = MDC.get(MDCConstants.MDC_CALL_ID)
-    MDC.put(MDCConstants.MDC_CALL_ID, callId);
+    MDC.put(MDCConstants.MDC_CALL_ID, callId)
     val result = fn()
     MDC.put(MDCConstants.MDC_CALL_ID, originalCallId)
     return result
