@@ -3158,4 +3158,10 @@
         <gosys datoOpprettet="2017-05-23T12:00:00" endretAv="PK-43233" underkategori="INNSYN_FRI"/>
         <gsak datoOpprettet="2017-05-23T12:00:00" endretAv="PK-43233" kode="INNSYN_FRI"/>
     </underkategori>
+    <underkategori kode="BESTRID_SYM_SYK" datoFom="2017-05-23" datoOpprettet="2017-05-23T12:00:00" dekode="Bestridelse av sykmelding"
+                   endretAv="OPP-1306" erGyldig="true" fagomrade="SYK" opprettetAv="OPP-1306" gosys="true" gsak="true"
+                   leveranse="2017-HL3" jiraissue="PK-43233">
+        <gosys datoOpprettet="2017-05-23T12:00:00" endretAv="PK-43233" underkategori="BESTRID_SYM_SYK"/>
+        <gsak datoOpprettet="2017-05-23T12:00:00" endretAv="PK-43233" kode="BESTRID_SYM_SYK"/>
+    </underkategori>
 </underkategoriListe>
