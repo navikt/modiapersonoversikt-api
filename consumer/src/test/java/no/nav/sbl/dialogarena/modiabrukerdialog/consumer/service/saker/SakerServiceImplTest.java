@@ -1,21 +1,18 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.saker;
 
 
+import no.nav.common.log.MDCConstants;
+import no.nav.common.utils.EnvironmentUtils;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.Sak;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.gsak.GsakKodeverk;
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.gsak.SakerService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.kodeverk.StandardKodeverk;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.psak.PsakService;
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.http.SubjectHandlerUtil;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.saker.kilder.GsakSaker;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.saker.kilder.GsakSakerTest;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.saker.kilder.SakDataGenerator;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.saker.mediation.SakApiGateway;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.Feature;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.UnleashService;
-import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.behandlehenvendelse.BehandleHenvendelsePortType;
 import no.nav.tjeneste.virksomhet.behandlesak.v1.BehandleSakV1;
-import no.nav.tjeneste.virksomhet.behandlesak.v1.OpprettSakSakEksistererAllerede;
-import no.nav.tjeneste.virksomhet.behandlesak.v1.OpprettSakUgyldigInput;
-import no.nav.tjeneste.virksomhet.behandlesak.v1.meldinger.WSOpprettSakRequest;
-import no.nav.tjeneste.virksomhet.behandlesak.v1.meldinger.WSOpprettSakResponse;
 import no.nav.tjeneste.virksomhet.sak.v1.FinnSakForMangeForekomster;
 import no.nav.tjeneste.virksomhet.sak.v1.FinnSakUgyldigInput;
 import no.nav.tjeneste.virksomhet.sak.v1.SakV1;
@@ -37,22 +34,16 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.slf4j.MDC;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.Sak.*;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.http.SubjectHandlerUtil.withIdent;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.saker.SakerServiceImplKt.withCallId;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
-import static org.joda.time.DateTime.now;
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
 
@@ -61,7 +52,6 @@ public class SakerServiceImplTest {
     private static final DateTime FIRE_DAGER_SIDEN = now().minusDays(4);
     private static final String FNR = "fnr";
     private static final String BEHANDLINGSKJEDEID = "behandlingsKjedeId";
-    public static final String SAKS_ID = "123";
     public static final String SakId_1 = "1";
     public static final String FagsystemSakId_1 = "11";
     public static final String SakId_2 = "2";
@@ -82,49 +72,31 @@ public class SakerServiceImplTest {
     @Mock
     private ArbeidOgAktivitet arbeidOgAktivitet;
     @Mock
-    private BehandleHenvendelsePortType behandleHenvendelsePortType;
-    @Mock
     private PsakService psakService;
     @Mock
     private UnleashService unleashService;
+    @Mock
+    private SakApiGateway sakApiGateway;
 
     @InjectMocks
     private SakerServiceImpl sakerService;
 
-    private List<WSSak> sakerListe;
-
     @BeforeEach
-    void setUp() throws FinnSakUgyldigInput, FinnSakForMangeForekomster {
+    void setUp() {
+        EnvironmentUtils.setProperty("SAK_ENDPOINTURL", "https://sak-url", EnvironmentUtils.Type.PUBLIC);
         initMocks(this);
         sakerService.setup(); // Kaller @PostConstruct manuelt siden vi kjører testen uten spring
-
-        sakerListe = createSaksliste();
-
-        when(sakV1.finnSak(any(WSFinnSakRequest.class))).thenReturn(new WSFinnSakResponse().withSakListe(sakerListe));
-
         when(arbeidOgAktivitet.hentSakListe(any(WSHentSakListeRequest.class))).thenReturn(new WSHentSakListeResponse());
         when(unleashService.isEnabled(anyString())).thenReturn(true);
         when(unleashService.isEnabled(any(Feature.class))).thenReturn(true);
+        MDC.put(MDCConstants.MDC_CALL_ID, "12345");
+
     }
 
     @Test
     void transformererResponseTilSaksliste() {
-        List<Sak> saksliste = sakerService.hentSammensatteSaker(FNR);
-        assertThat(saksliste.get(0).saksId, is(SakId_1));
-        assertThat(saksliste.get(3).fagsystemKode, is(""));
-        assertThat(saksliste.get(saksliste.size() - 1).sakstype, is(SAKSTYPE_MED_FAGSAK));
-        assertThat(saksliste.get(saksliste.size() - 1).temaKode, is(BIDRAG_MARKOR));
-        assertThat(saksliste.get(saksliste.size() - 1).temaNavn, is("Bidrag"));
-        assertThat(saksliste.get(saksliste.size() - 1).fagsystemNavn, is("Kopiert inn i Bisys"));
-    }
-
-    @Test
-    void transformererResponseTilSakslisteVedHentingAvAlleSaker() {
-        SakerService.Resultat resultat = withCallId("CALLID", () ->
-                withIdent("Z999999", () -> sakerService.hentSaker(FNR))
-        );
-        List<Sak> saksliste = resultat.saker;
-
+        when(sakApiGateway.hentSaker(anyString())).thenReturn(SakDataGenerator.Companion.createSaksliste());
+        List<Sak> saksliste = sakerService.hentSammensatteSakerResultat(FNR).getSaker();
         assertThat(saksliste.get(0).saksId, is(SakId_1));
         assertThat(saksliste.get(3).fagsystemKode, is(""));
         assertThat(saksliste.get(saksliste.size() - 1).sakstype, is(SAKSTYPE_MED_FAGSAK));
@@ -149,79 +121,18 @@ public class SakerServiceImplTest {
     }
 
     @Test
-    void transformasjonenGenerererRelevanteFelter() {
-        Sak sak = GsakSaker.TIL_SAK.invoke(sakerListe.get(0));
+    void oppretterIkkeGenerellOppfolgingssakOgfjernerGenerellOppfolgingssakDersomFagsakerInneholderOppfolgingssak() {
 
-        assertThat(sak.saksId, is(SakId_1));
-        assertThat(sak.fagsystemSaksId, is(FagsystemSakId_1));
-        assertThat(sak.temaKode, is(GODKJENTE_TEMA_FOR_GENERELL_SAK.get(0)));
-        assertThat(sak.sakstype, is(SAKSTYPE_GENERELL));
-        assertThat(sak.fagsystemKode, is(FAGSYSTEM_FOR_OPPRETTELSE_AV_GENERELL_SAK));
-        assertThat(sak.opprettetDato, is(FIRE_DAGER_SIDEN));
-        assertThat(sak.finnesIGsak, is(true));
-    }
-
-    @Test
-    void transformasjonenBrukerSaksIdForFagsystemIdOgMFSSomSakstypeOmFagsystemErVedtakslosningen() {
-        WSSak wsSak = sakerListe.get(0);
-        wsSak.withFagsystem(new WSFagsystemer().withValue(VEDTAKSLOSNINGEN));
-        Sak sak = GsakSaker.TIL_SAK.invoke(wsSak);
-
-        assertThat(sak.saksId, is(SakId_1));
-        assertThat(sak.fagsystemSaksId, is(SakId_1));
-        assertThat(sak.temaKode, is(GODKJENTE_TEMA_FOR_GENERELL_SAK.get(0)));
-        assertThat(sak.sakstype, is(SAKSTYPE_MED_FAGSAK));
-        assertThat(sak.fagsystemKode, is(VEDTAKSLOSNINGEN));
-        assertThat(sak.opprettetDato, is(FIRE_DAGER_SIDEN));
-        assertThat(sak.finnesIGsak, is(true));
-    }
-
-    @Test
-    void oppretterIkkeGenerellOppfolgingssakDersomFagsakerInneholderOppfolgingssak() throws FinnSakUgyldigInput, FinnSakForMangeForekomster {
-        List<WSSak> wsSaker = Arrays.asList(new WSSak()
-                        .withSakId("4")
-                        .withFagsystemSakId("44")
-                        .withFagomraade(new WSFagomraader().withValue(TEMAKODE_OPPFOLGING))
-                        .withOpprettelsetidspunkt(now())
-                        .withSakstype(new WSSakstyper().withValue("Fag"))
-                        .withFagsystem(new WSFagsystemer().withValue(GODKJENTE_FAGSYSTEMER_FOR_FAGSAKER.get(0))),
-                new WSSak()
-                        .withSakId("5")
-                        .withFagsystemSakId("45")
-                        .withFagomraade(new WSFagomraader().withValue(TEMAKODE_OPPFOLGING))
-                        .withOpprettelsetidspunkt(now())
-                        .withSakstype(new WSSakstyper().withValue(SAKSTYPE_GENERELL))
-                        .withFagsystem(new WSFagsystemer().withValue(FAGSYSTEM_FOR_OPPRETTELSE_AV_GENERELL_SAK)));
-
-        when(sakV1.finnSak(any(WSFinnSakRequest.class))).thenReturn(new WSFinnSakResponse().withSakListe(wsSaker));
-
-        List<Sak> saker = sakerService.hentSammensatteSaker(FNR).stream().filter(harTemaKode(TEMAKODE_OPPFOLGING)).collect(toList());
+        when(sakApiGateway.hentSaker(anyString())).thenReturn(SakDataGenerator.Companion.createOppfolgingSaksliste());
+        List<Sak> saker = sakerService.hentSammensatteSakerResultat(FNR).getSaker().stream().filter(harTemaKode(TEMAKODE_OPPFOLGING)).collect(toList());
 
         assertThat(saker.size(), is(1));
         assertThat(saker.get(0).sakstype, not(is(SAKSTYPE_GENERELL)));
     }
 
     @Test
-    void oppretterIkkeGenerellOppfolgingssakDersomDenneFinnesAlleredeSelvOmFagsakerIkkeInneholderOppfolgingssak() throws FinnSakUgyldigInput, FinnSakForMangeForekomster {
-        List<WSSak> wsSaker = Arrays.asList(new WSSak()
-                        .withSakId("4")
-                        .withFagsystemSakId("44")
-                        .withFagomraade(new WSFagomraader().withValue(TEMAKODE_OPPFOLGING))
-                        .withOpprettelsetidspunkt(now())
-                        .withSakstype(new WSSakstyper().withValue(SAKSTYPE_GENERELL))
-                        .withFagsystem(new WSFagsystemer().withValue(GODKJENTE_FAGSYSTEMER_FOR_FAGSAKER.get(0))),
-                new WSSak()
-                        .withSakId("5")
-                        .withFagsystemSakId("45")
-                        .withFagomraade(new WSFagomraader().withValue(TEMAKODE_OPPFOLGING))
-                        .withOpprettelsetidspunkt(now())
-                        .withSakstype(new WSSakstyper().withValue(SAKSTYPE_GENERELL))
-                        .withFagsystem(new WSFagsystemer().withValue(FAGSYSTEM_FOR_OPPRETTELSE_AV_GENERELL_SAK)));
-
-        when(sakV1.finnSak(any(WSFinnSakRequest.class))).thenReturn(new WSFinnSakResponse().withSakListe(wsSaker));
-
+    void oppretterIkkeGenerellOppfolgingssakDersomDenneFinnesAlleredeSelvOmFagsakerIkkeInneholderOppfolgingssak() {
         List<Sak> saker = sakerService.hentSammensatteSaker(FNR).stream().filter(harTemaKode(TEMAKODE_OPPFOLGING)).collect(toList());
-
         assertThat(saker.size(), is(1));
         assertThat(saker.get(0).sakstype, is(SAKSTYPE_GENERELL));
     }
@@ -273,129 +184,4 @@ public class SakerServiceImplTest {
         assertThat(saker.get(0).finnesIGsak, is(false));
     }
 
-    @Test
-    void knytterBehandlingsKjedeTilSakUavhengigOmDenFinnesIGsak() throws Exception {
-        Sak sak = lagSak();
-        String valgtNavEnhet = "0219";
-
-        WSOpprettSakResponse opprettSakResponse = new WSOpprettSakResponse();
-        opprettSakResponse.setSakId(SAKS_ID);
-
-        when(behandleSak.opprettSak(any(WSOpprettSakRequest.class))).thenReturn(opprettSakResponse);
-
-        sakerService.knyttBehandlingskjedeTilSak(FNR, BEHANDLINGSKJEDEID, sak, valgtNavEnhet);
-
-        verify(behandleHenvendelsePortType, times(1)).knyttBehandlingskjedeTilSak(BEHANDLINGSKJEDEID, SAKS_ID, sak.temaKode, valgtNavEnhet);
-    }
-
-    @Test
-    void knytterBehandlingsKjedeTilSakUavhengigOmDenFinnesIGsakUtenFagsystemId() throws Exception {
-        Sak sak = lagSakUtenFagsystemId();
-        String valgtNavEnhet = "0219";
-
-        WSOpprettSakResponse opprettSakResponse = new WSOpprettSakResponse();
-        opprettSakResponse.setSakId(SAKS_ID);
-
-        when(behandleSak.opprettSak(any(WSOpprettSakRequest.class))).thenReturn(opprettSakResponse);
-
-        sakerService.knyttBehandlingskjedeTilSak(FNR, BEHANDLINGSKJEDEID, sak, valgtNavEnhet);
-
-        verify(behandleHenvendelsePortType, times(1)).knyttBehandlingskjedeTilSak(BEHANDLINGSKJEDEID, SAKS_ID, sak.temaKode, valgtNavEnhet);
-    }
-
-    @Test
-    void knyttBehandlingskjedeTilSakKallerAlternativMetodeOmBidragsHackSakenErValgt() throws Exception {
-        String valgtNavEnhet = "0219";
-        Sak sak = new Sak();
-        sak.syntetisk = true;
-        sak.fagsystemKode = BIDRAG_MARKOR;
-
-        sakerService.knyttBehandlingskjedeTilSak(FNR, BEHANDLINGSKJEDEID, sak, valgtNavEnhet);
-
-        verify(behandleSak, never()).opprettSak(any(WSOpprettSakRequest.class));
-        verify(behandleHenvendelsePortType, never()).knyttBehandlingskjedeTilSak(anyString(), anyString(), anyString(), anyString());
-        verify(behandleHenvendelsePortType, times(1)).knyttBehandlingskjedeTilTema(BEHANDLINGSKJEDEID, "BID");
-    }
-
-    @Test
-    void knyttBehandlingskjedeTilSakKasterFeilHvisEnhetIkkeErSatt() throws OpprettSakUgyldigInput, OpprettSakSakEksistererAllerede {
-        when(behandleSak.opprettSak(any(WSOpprettSakRequest.class))).thenReturn(new WSOpprettSakResponse().withSakId(SAKS_ID));
-
-        assertThrows(IllegalArgumentException.class, () -> sakerService.knyttBehandlingskjedeTilSak(FNR, BEHANDLINGSKJEDEID, lagSak(), ""));
-    }
-
-    @Test
-    void knyttBehandlingskjedeTilSakKasterFeilHvisBehandlingskjedeIkkeErSatt() throws OpprettSakUgyldigInput, OpprettSakSakEksistererAllerede {
-        when(behandleSak.opprettSak(any(WSOpprettSakRequest.class))).thenReturn(new WSOpprettSakResponse().withSakId(SAKS_ID));
-
-        assertThrows(IllegalArgumentException.class, () -> sakerService.knyttBehandlingskjedeTilSak(FNR, null, lagSak(), "1337"));
-    }
-
-    @Test
-    void knyttBehandlingskjedeTilSakKasterFeilHvisFnrIkkeErSatt() throws OpprettSakUgyldigInput, OpprettSakSakEksistererAllerede {
-        when(behandleSak.opprettSak(any(WSOpprettSakRequest.class))).thenReturn(new WSOpprettSakResponse().withSakId(SAKS_ID));
-
-        assertThrows(IllegalArgumentException.class, () -> sakerService.knyttBehandlingskjedeTilSak("", BEHANDLINGSKJEDEID, lagSak(), "1337"));
-    }
-
-    @Test
-    void skalHandtereMangledeGagsystemSakId() {
-        WSSak wsSak = new WSSak();
-        assertDoesNotThrow(() -> {
-            GsakSaker.TIL_SAK.invoke(wsSak);
-        });
-    }
-
-    private ArrayList<WSSak> createSaksliste() {
-        return new ArrayList<>(asList(
-                new WSSak()
-                        .withSakId(SakId_1)
-                        .withFagsystemSakId(FagsystemSakId_1)
-                        .withFagomraade(new WSFagomraader().withValue(GODKJENTE_TEMA_FOR_GENERELL_SAK.get(0)))
-                        .withOpprettelsetidspunkt(FIRE_DAGER_SIDEN)
-                        .withSakstype(new WSSakstyper().withValue(SAKSTYPE_GENERELL))
-                        .withFagsystem(new WSFagsystemer().withValue(FAGSYSTEM_FOR_OPPRETTELSE_AV_GENERELL_SAK)),
-                new WSSak()
-                        .withSakId(SakId_2)
-                        .withFagsystemSakId(FagsystemSakId_2)
-                        .withFagomraade(new WSFagomraader().withValue(GODKJENTE_TEMA_FOR_GENERELL_SAK.get(1)))
-                        .withOpprettelsetidspunkt(now().minusDays(3))
-                        .withSakstype(new WSSakstyper().withValue(SAKSTYPE_GENERELL))
-                        .withFagsystem(new WSFagsystemer().withValue(FAGSYSTEM_FOR_OPPRETTELSE_AV_GENERELL_SAK)),
-                new WSSak()
-                        .withSakId(SakId_3)
-                        .withFagsystemSakId(FagsystemSakId_3)
-                        .withFagomraade(new WSFagomraader().withValue("AAP"))
-                        .withOpprettelsetidspunkt(now().minusDays(5))
-                        .withSakstype(new WSSakstyper().withValue("Fag"))
-                        .withFagsystem(new WSFagsystemer().withValue(GODKJENTE_FAGSYSTEMER_FOR_FAGSAKER.get(0))),
-                new WSSak()
-                        .withSakId(SakId_4)
-                        .withFagsystemSakId(FagsystemSakId_4)
-                        .withFagomraade(new WSFagomraader().withValue("STO"))
-                        .withOpprettelsetidspunkt(now().minusDays(5))
-                        .withSakstype(new WSSakstyper().withValue(SAKSTYPE_GENERELL))
-                        .withFagsystem(new WSFagsystemer().withValue(""))
-        ));
-    }
-
-    private Sak lagSak() {
-        Sak sak = new Sak();
-        sak.temaKode = "GEN";
-        sak.finnesIGsak = false;
-        sak.fagsystemKode = FAGSYSTEM_FOR_OPPRETTELSE_AV_GENERELL_SAK;
-        sak.sakstype = SAKSTYPE_GENERELL;
-        sak.opprettetDato = now();
-        return sak;
-    }
-
-    private Sak lagSakUtenFagsystemId() {
-        Sak sak = new Sak();
-        sak.temaKode = "STO";
-        sak.finnesIGsak = false;
-        sak.fagsystemKode = "";
-        sak.sakstype = SAKSTYPE_GENERELL;
-        sak.opprettetDato = now();
-        return sak;
-    }
 }
