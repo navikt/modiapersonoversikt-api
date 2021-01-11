@@ -10,7 +10,6 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.kodeverk.StandardKod
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.psak.PsakService
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.SakerUtils
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.saker.kilder.*
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.saker.knyttbehandlingskjedetilsak.KnyttBehandlingskjedeTilSakValidator
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.behandlehenvendelse.BehandleHenvendelsePortType
 import no.nav.tjeneste.virksomhet.behandlesak.v1.BehandleSakV1
 import no.nav.tjeneste.virksomhet.sak.v1.SakV1
@@ -20,9 +19,12 @@ import org.slf4j.MDC
 import org.springframework.beans.factory.annotation.Autowired
 import java.util.concurrent.CompletableFuture
 import javax.annotation.PostConstruct
+import kotlin.contracts.ExperimentalContracts
 
+@ExperimentalContracts
 private val logger = LoggerFactory.getLogger(SakerServiceImpl::class.java)
 
+@ExperimentalContracts
 class SakerServiceImpl : SakerService {
     @Autowired
     private lateinit var sakV1: SakV1
@@ -57,7 +59,8 @@ class SakerServiceImpl : SakerService {
 
     }
 
-    override fun hentSaker(fnr: String): SakerService.Resultat {
+    override fun hentSaker(fnr: String?): SakerService.Resultat {
+        requireFnrNotNullOrBlank(fnr)
         val (gsakSaker, pesysSaker) = inParallel(
                 { hentSammensatteSakerResultat(fnr) },
                 { hentPensjonSakerResultat(fnr) }
@@ -69,15 +72,18 @@ class SakerServiceImpl : SakerService {
         return resultat
     }
 
-    override fun hentSammensatteSaker(fnr: String): List<Sak> {
+    override fun hentSammensatteSaker(fnr: String?): List<Sak> {
+        requireFnrNotNullOrBlank(fnr)
         return hentSammensatteSakerResultat(fnr).saker
     }
 
-    override fun hentPensjonSaker(fnr: String): List<Sak> {
+    override fun hentPensjonSaker(fnr: String?): List<Sak> {
+        requireFnrNotNullOrBlank(fnr)
         return hentPensjonSakerResultat(fnr).saker
     }
 
-    fun hentSammensatteSakerResultat(fnr: String): SakerService.Resultat {
+    fun hentSammensatteSakerResultat(fnr: String?): SakerService.Resultat {
+        requireFnrNotNullOrBlank(fnr)
         val resultat = SakerService.Resultat()
         resultat.leggTilDataFraKilde(fnr, gsakSaker)
         resultat.leggTilDataFraKilde(fnr, arenaSaker)
@@ -98,14 +104,15 @@ class SakerServiceImpl : SakerService {
         )
     }
 
-    fun hentPensjonSakerResultat(fnr: String): SakerService.Resultat {
+    fun hentPensjonSakerResultat(fnr: String?): SakerService.Resultat {
+        requireFnrNotNullOrBlank(fnr)
         val resultat = SakerService.Resultat().leggTilDataFraKilde(fnr, pensjonSaker)
         SakerUtils.leggTilFagsystemnavnOgTemanavn(resultat.saker, gsakKodeverk.hentFagsystemMapping(), standardKodeverk)
         return resultat
     }
 
-    override fun knyttBehandlingskjedeTilSak(fnr: String?, behandlingskjede: String?, sak: Sak, enhet: String?) {
-        KnyttBehandlingskjedeTilSakValidator.validate(fnr, behandlingskjede, sak, enhet)
+    override fun knyttBehandlingskjedeTilSak(fnr: String?, behandlingskjede: String?, sak: Sak?, enhet: String?) {
+        requireKnyttTilSakParametereNotNullOrBlank(sak, behandlingskjede, fnr, enhet)
 
         if (sak.syntetisk && Sak.BIDRAG_MARKOR == sak.fagsystemKode) {
             behandleHenvendelsePortType.knyttBehandlingskjedeTilTema(behandlingskjede, "BID")
@@ -113,7 +120,7 @@ class SakerServiceImpl : SakerService {
         }
 
         if (sakFinnesIkkeIPsakOgGsak(sak)) {
-            sak.saksId = gsakSaker.opprettSak(fnr!!, sak)
+            sak.saksId = gsakSaker.opprettSak(fnr, sak)
         }
 
         try {
