@@ -119,6 +119,10 @@ class SakerServiceImpl : SakerService {
             return
         }
 
+        requireNotNullOrBlank(sak.saksId) {
+            "SaksId-parameter må være tilstede for å kunne knytte behandlingskjede $behandlingskjede til sak."
+        }
+
         if (sakFinnesIkkeIPsakOgGsak(sak)) {
             sak.saksId = gsakSaker.opprettSak(fnr, sak)
         }

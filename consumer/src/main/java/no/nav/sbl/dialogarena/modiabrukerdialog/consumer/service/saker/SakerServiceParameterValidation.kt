@@ -5,6 +5,7 @@ import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.contract
 
 private const val INGEN_BEHANDLINGSID = "[INGEN BEHANDLINGSKJEDEID]"
+private const val INGEN_SAKSID = "[INGEN SAKSID]"
 
 class EnhetIkkeSatt(message: String) : IllegalArgumentException(message)
 
@@ -17,9 +18,8 @@ fun requireKnyttTilSakParametereNotNullOrBlank(sak: Sak?, behandlingskjede: Stri
     requireNotNull(sak) {
         "Sak-parameter må være tilstede for å kunne knytte behandlingskjede ${behandlingskjede ?: INGEN_BEHANDLINGSID} til sak."
     }
-    val saksId = requireNotNullOrBlank(sak.saksId) {
-        "SaksId-parameter må være tilstede for å kunne knytte behandlingskjede ${behandlingskjede ?: INGEN_BEHANDLINGSID} til sak."
-    }
+    val saksId = sak.saksId ?: INGEN_SAKSID
+
     requireNotNullOrBlank(behandlingskjede) {
         "Behandlingskjede-parameter må være tilstede for å kunne knytte behandlingskjeden til sak $saksId."
     }
@@ -38,7 +38,7 @@ internal fun requireFnrNotNullOrBlank(fnr: String?): String {
 }
 
 @ExperimentalContracts
-private inline fun requireNotNullOrBlank(value: String?, lazyMessage: () -> String): String {
+inline fun requireNotNullOrBlank(value: String?, lazyMessage: () -> String): String {
     contract {
         returns() implies (value != null)
     }
@@ -46,7 +46,7 @@ private inline fun requireNotNullOrBlank(value: String?, lazyMessage: () -> Stri
 }
 
 @ExperimentalContracts
-private inline fun requireNotNullOrBlank(value: String?, exception: (String) -> Exception = { IllegalArgumentException(it) }, lazyMessage: () -> String): String {
+inline fun requireNotNullOrBlank(value: String?, exception: (String) -> Exception = { IllegalArgumentException(it) }, lazyMessage: () -> String): String {
     contract {
         returns() implies (value != null)
     }

@@ -32,15 +32,6 @@ class SakerServiceParameterValidationTest {
     }
 
     @Test
-    fun `kaster exception om saksid mangler eller er blankt`() {
-        assertThatThrownBy { requireKnyttTilSakParametereNotNullOrBlank(Sak(), behandlingskjedeId, fnr, enhet) }
-                .isExactlyInstanceOf(java.lang.IllegalArgumentException::class.java)
-
-        assertThatThrownBy { requireKnyttTilSakParametereNotNullOrBlank(Sak().apply { saksId = "" }, null, fnr, enhet) }
-                .isExactlyInstanceOf(IllegalArgumentException::class.java)
-    }
-
-    @Test
     fun `kaster exception om behandlingskjedeid mangler eller er blankt`() {
         assertThatThrownBy { requireKnyttTilSakParametereNotNullOrBlank(sak, null, fnr, enhet) }
                 .isExactlyInstanceOf(IllegalArgumentException::class.java)
