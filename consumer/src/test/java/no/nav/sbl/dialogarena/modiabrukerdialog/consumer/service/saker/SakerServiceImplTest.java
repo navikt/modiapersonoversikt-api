@@ -1,12 +1,11 @@
-package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service;
+package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.saker;
 
 
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.Sak;
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.exceptions.JournalforingFeilet;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.gsak.GsakKodeverk;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.kodeverk.StandardKodeverk;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.psak.PsakService;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.saker.SakerServiceImpl;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.saker.kilder.GsakSaker;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.Feature;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.UnleashService;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.behandlehenvendelse.BehandleHenvendelsePortType;
@@ -44,17 +43,16 @@ import java.util.List;
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.Sak.*;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.saker.SakerServiceImpl.VEDTAKSLOSNINGEN;
 import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.joda.time.DateTime.now;
-import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 public class SakerServiceImplTest {
-
+    private static final String VEDTAKSLOSNINGEN = "FS36";
     private static final DateTime FIRE_DAGER_SIDEN = now().minusDays(4);
     private static final String FNR = "fnr";
     private static final String BEHANDLINGSKJEDEID = "behandlingsKjedeId";
@@ -93,6 +91,7 @@ public class SakerServiceImplTest {
     @BeforeEach
     void setUp() throws FinnSakUgyldigInput, FinnSakForMangeForekomster {
         initMocks(this);
+        sakerService.setup(); // Kaller @PostConstruct manuelt siden vi kjører testen uten spring
 
         sakerListe = createSaksliste();
 
@@ -129,7 +128,7 @@ public class SakerServiceImplTest {
 
     @Test
     void transformasjonenGenerererRelevanteFelter() {
-        Sak sak = SakerServiceImpl.TIL_SAK.apply(sakerListe.get(0));
+        Sak sak = GsakSaker.TIL_SAK.invoke(sakerListe.get(0));
 
         assertThat(sak.saksId, is(SakId_1));
         assertThat(sak.fagsystemSaksId, is(FagsystemSakId_1));
@@ -144,7 +143,7 @@ public class SakerServiceImplTest {
     void transformasjonenBrukerSaksIdForFagsystemIdOgMFSSomSakstypeOmFagsystemErVedtakslosningen() {
         WSSak wsSak = sakerListe.get(0);
         wsSak.withFagsystem(new WSFagsystemer().withValue(VEDTAKSLOSNINGEN));
-        Sak sak = SakerServiceImpl.TIL_SAK.apply(wsSak);
+        Sak sak = GsakSaker.TIL_SAK.invoke(wsSak);
 
         assertThat(sak.saksId, is(SakId_1));
         assertThat(sak.fagsystemSaksId, is(SakId_1));
