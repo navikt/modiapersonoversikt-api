@@ -109,6 +109,8 @@ public class SakerServiceImplTest {
         assertThat(saksliste.get(3).fagsystemKode, is(""));
         assertThat(saksliste.get(saksliste.size() - 1).sakstype, is(SAKSTYPE_MED_FAGSAK));
         assertThat(saksliste.get(saksliste.size() - 1).temaKode, is(BIDRAG_MARKOR));
+        assertThat(saksliste.get(saksliste.size() - 1).temaNavn, is("Bidrag"));
+        assertThat(saksliste.get(saksliste.size() - 1).fagsystemNavn, is("Kopiert inn i Bisys"));
     }
 
     @Test
@@ -368,5 +370,4 @@ public class SakerServiceImplTest {
         sak.opprettetDato = now();
         return sak;
     }
-
 }

@@ -83,9 +83,14 @@ class SakerServiceImpl : SakerService {
         resultat.leggTilDataFraKilde(fnr, arenaSaker)
         resultat.leggTilDataFraKilde(fnr, generelleSaker)
         resultat.leggTilDataFraKilde(fnr, oppfolgingsSaker)
-        resultat.leggTilDataFraKilde(fnr, bidragSaker)
 
         SakerUtils.leggTilFagsystemnavnOgTemanavn(resultat.saker, gsakKodeverk.hentFagsystemMapping(), standardKodeverk)
+
+        /**
+         * Bidragssaken må legges til etter `leggTilFagsystemnavnOgTemanavn` siden vi ikke har
+         * fagsystemkode-mapping for bidrag-hack saken
+         */
+        resultat.leggTilDataFraKilde(fnr, bidragSaker)
 
         return resultat
                 .fjernIkkeGodkjenteSaker()
