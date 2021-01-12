@@ -18,6 +18,7 @@ import no.nav.virksomhet.tjenester.sak.arbeidogaktivitet.v1.ArbeidOgAktivitet
 import org.slf4j.LoggerFactory
 import org.slf4j.MDC
 import org.springframework.beans.factory.annotation.Autowired
+import java.util.*
 import java.util.concurrent.CompletableFuture
 import javax.annotation.PostConstruct
 
@@ -63,10 +64,7 @@ class SakerServiceImpl : SakerService {
                 { hentPensjonSakerResultat(fnr) }
         )
 
-        val resultat = slaSammenGsakPesysSaker(gsakSaker, pesysSaker)
-        SakerUtils.leggTilFagsystemnavnOgTemanavn(resultat.saker, gsakKodeverk.hentFagsystemMapping(), standardKodeverk)
-
-        return resultat
+        return slaSammenGsakPesysSaker(gsakSaker, pesysSaker)
     }
 
     override fun hentSammensatteSaker(fnr: String): List<Sak> {
@@ -189,7 +187,7 @@ internal fun <T> copyAuthAndMDC(fn: () -> T): () -> T {
     }
 }
 
-internal fun <T> withCallId(callId: String, fn: () -> T): T {
+fun <T> withCallId(callId: String, fn: () -> T): T {
     val originalCallId = MDC.get(MDCConstants.MDC_CALL_ID)
     MDC.put(MDCConstants.MDC_CALL_ID, callId)
     val result = fn()

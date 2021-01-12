@@ -3,8 +3,10 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.saker;
 
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.Sak;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.gsak.GsakKodeverk;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.gsak.SakerService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.kodeverk.StandardKodeverk;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.psak.PsakService;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.http.SubjectHandlerUtil;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.saker.kilder.GsakSaker;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.Feature;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.UnleashService;
@@ -43,6 +45,8 @@ import java.util.List;
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.Sak.*;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.http.SubjectHandlerUtil.withIdent;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.saker.SakerServiceImplKt.withCallId;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
@@ -105,6 +109,21 @@ public class SakerServiceImplTest {
     @Test
     void transformererResponseTilSaksliste() {
         List<Sak> saksliste = sakerService.hentSammensatteSaker(FNR);
+        assertThat(saksliste.get(0).saksId, is(SakId_1));
+        assertThat(saksliste.get(3).fagsystemKode, is(""));
+        assertThat(saksliste.get(saksliste.size() - 1).sakstype, is(SAKSTYPE_MED_FAGSAK));
+        assertThat(saksliste.get(saksliste.size() - 1).temaKode, is(BIDRAG_MARKOR));
+        assertThat(saksliste.get(saksliste.size() - 1).temaNavn, is("Bidrag"));
+        assertThat(saksliste.get(saksliste.size() - 1).fagsystemNavn, is("Kopiert inn i Bisys"));
+    }
+
+    @Test
+    void transformererResponseTilSakslisteVedHentingAvAlleSaker() {
+        SakerService.Resultat resultat = withCallId("CALLID", () ->
+                withIdent("Z999999", () -> sakerService.hentSaker(FNR))
+        );
+        List<Sak> saksliste = resultat.saker;
+
         assertThat(saksliste.get(0).saksId, is(SakId_1));
         assertThat(saksliste.get(3).fagsystemKode, is(""));
         assertThat(saksliste.get(saksliste.size() - 1).sakstype, is(SAKSTYPE_MED_FAGSAK));
