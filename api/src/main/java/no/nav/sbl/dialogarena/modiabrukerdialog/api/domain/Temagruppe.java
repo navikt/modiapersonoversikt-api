@@ -5,7 +5,6 @@ import java.util.List;
 import static java.util.Arrays.asList;
 
 public enum Temagruppe {
-    NULL,
     ARBD,
     HELSE,
     FMLI,
