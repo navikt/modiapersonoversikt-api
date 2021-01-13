@@ -36,6 +36,6 @@ public class ByEnhetStrategy implements Strategy {
 
     private boolean ansattHarEnhet(UnleashContext unleashContext, String enhet) {
         String enheter = unleashContext.getProperties().get(ENHETER) != null ? unleashContext.getProperties().get(ENHETER) : "";
-        return Arrays.stream(enheter.split(",")).anyMatch(enhet::equals);
+        return Arrays.asList(enheter.split(",")).contains(enhet);
     }
 }

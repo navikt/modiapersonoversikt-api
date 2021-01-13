@@ -51,11 +51,9 @@ open class TilgangskontrollContextImpl(
 
     override fun hentSaksbehandlereMedTilgangTilHastekassering(): List<String> {
         return EnvironmentUtils.getRequiredProperty("HASTEKASSERING_TILGANG", "")
-                .let {
-                    it.split(",")
-                            .map(String::trim)
-                            .map(String::toUpperCase)
-                }
+                .split(",")
+                .map(String::trim)
+                .map(String::toUpperCase)
     }
 
     override fun alleBehandlingsIderTilhorerBruker(fnr: String, behandlingsIder: List<String>): Boolean {

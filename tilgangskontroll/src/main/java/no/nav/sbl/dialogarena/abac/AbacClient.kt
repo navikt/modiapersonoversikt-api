@@ -1,6 +1,10 @@
 package no.nav.sbl.dialogarena.abac
 
+import no.nav.common.health.HealthCheck
+import no.nav.common.health.HealthCheckResult
+import no.nav.common.health.selftest.SelfTestCheck
 import no.nav.common.rest.client.RestClient
+import no.nav.sbl.dialogarena.types.Pingable
 import okhttp3.Credentials
 import okhttp3.MediaType
 import okhttp3.OkHttpClient
@@ -19,7 +23,7 @@ data class AbacClientConfig(
 private infix fun Int.inRange(range: Pair<Int, Int>): Boolean = this >= range.first && this < range.second
 val abacLogger: Logger = LoggerFactory.getLogger(AbacClient::class.java)
 
-open class AbacClient(val config: AbacClientConfig) {
+open class AbacClient(val config: AbacClientConfig) : HealthCheck, Pingable {
     private val basicCredential = Credentials.basic(config.username, config.password)
     private val client : OkHttpClient = RestClient.baseClient().newBuilder()
             .authenticator { _, response ->
@@ -51,4 +55,17 @@ open class AbacClient(val config: AbacClientConfig) {
         val responseJson = response.body()?.string()!!
         return JsonMapper.deserialize(responseJson, AbacResponse::class.java)
     }
+
+    override fun checkHealth(): HealthCheckResult {
+        val request = okhttp3.Request.Builder()
+                .url(config.endpointUrl)
+                .build()
+        return runCatching { client.newCall(request).execute() }
+                .fold(
+                        onSuccess = { HealthCheckResult.healthy() },
+                        onFailure = { exception -> HealthCheckResult.unhealthy("Helsesjekk mot Abac feiled", exception) }
+                )
+    }
+
+    override fun ping() = SelfTestCheck("Abac", true, this)
 }

@@ -6,7 +6,6 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.HenvendelseUtsending
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.LeggTilbakeOppgaveIGsakRequest
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveBehandlingService
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.RestUtils
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.http.CookieUtil
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Policies
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Tilgangskontroll
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.service.plukkoppgave.PlukkOppgaveService
@@ -62,7 +61,7 @@ class OppgaveController @Autowired constructor(
                 .check(Policies.kanPlukkeOppgave)
                 .get(Audit.describe(READ, Henvendelse.Oppgave.Plukk, AuditIdentifier.TEMAGRUPPE to temagruppe)) {
                     val tildelteOppgaver = oppgaveBehandlingService.finnTildelteOppgaverIGsak()
-                    if (tildelteOppgaver.isNotEmpty()) {
+                    if (tildelteOppgaver.any { it.erSTOOppgave }) {
                         tildelteOppgaver
                     } else {
                         plukkOppgaveService

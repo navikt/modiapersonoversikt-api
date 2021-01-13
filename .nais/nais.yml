@@ -179,11 +179,11 @@ spec:
     - name: TJENESTER_URL
       value: "https://tjenester.nav.no"
     - name: UNLEASH_API_URL
-      value: "https://unleash.nais.adeo.no/api/"
+      value: "https://unleash.nais.io/api/"
     - name: UTBETALING_V1_DESCRIPTION
       value: "Utbetalingsoversikt"
     - name: UTBETALING_V1_ENDPOINTURL
-      value: "https://service-gw.adeo.no/"
+      value: "https://wasapp.adeo.no/nav-utbetaldata-ws/virksomhet/Utbetaling_v1"
     - name: UTBETALING_V1_SECURITYTOKEN
       value: "SAML"
     - name: UTBETALING_V1_WSDLURL
@@ -202,12 +202,6 @@ spec:
       value: "SAML"
     - name: VIRKSOMHET_ARBEIDSFORDELING_V1_WSDLURL
       value: "http://maven.adeo.no/nexus/content/groups/public/no/nav/tjenester/nav-arbeidsfordeling-v1-tjenestespesifikasjon/1.1.0/nav-arbeidsfordeling-v1-tjenestespesifikasjon-1.1.0.zip"
-    - name: VIRKSOMHET_BEHANDLEPERSON_V1_ENDPOINTURL
-      value: "https://wasapp.adeo.no/tpsws/ws/BehandlePerson/v1"
-    - name: VIRKSOMHET_BEHANDLEPERSON_V1_SECURITYTOKEN
-      value: "SAML"
-    - name: VIRKSOMHET_BEHANDLEPERSON_V1_WSDLURL
-      value: "http://maven.adeo.no/nexus/content/groups/public/no/nav/tjenester/nav-behandle-person-v1-tjenestespesifikasjon/1.8.2/nav-behandle-person-v1-tjenestespesifikasjon-1.8.2.zip"
     - name: VIRKSOMHET_BEHANDLESAK_V1_ENDPOINTURL
       value: "https://wasapp.adeo.no/nav-gsak-ws/BehandleSakV1"
     - name: VIRKSOMHET_BEHANDLESAK_V1_SECURITYTOKEN
@@ -221,7 +215,7 @@ spec:
     - name: VIRKSOMHET_DIGITALKONTAKINFORMASJON_V1_WSDLURL
       value: "http://maven.adeo.no/nexus/service/local/artifact/maven/redirect?a=nav-digitalKontaktinformasjon-v1-tjenestespesifikasjon&e=zip&g=no.nav.tjenester.fim&r=m2internal&v=2.0.0"
     - name: VIRKSOMHET_EGENANSATT_V1_ENDPOINTURL
-      value: "https://wasapp.adeo.no/tpsws/EgenAnsatt_v1"
+      value: "https://app.adeo.no/tpsws-aura/ws/EgenAnsatt/v1"
     - name: VIRKSOMHET_EGENANSATT_V1_SECURITYTOKEN
       value: "SAML"
     - name: VIRKSOMHET_EGENANSATT_V1_WSDLURL
@@ -256,12 +250,8 @@ spec:
       value: "LTPA"
     - name: VIRKSOMHET_OPPGAVEBEHANDLING_V3_WSDLURL
       value: "http://maven.adeo.no/nexus/content/groups/public/no/nav/tjenester/fim/nav-fim-oppgavebehandling-v3-tjenestespesifikasjon/3.1.1/nav-fim-oppgavebehandling-v3-tjenestespesifikasjon-3.1.1.zip"
-    - name: VIRKSOMHET_ORGANISASJON_V4_ENDPOINTURL
-      value: "https://service-gw.adeo.no/"
-    - name: VIRKSOMHET_ORGANISASJON_V4_SECURITYTOKEN
-      value: "SAML"
-    - name: VIRKSOMHET_ORGANISASJON_V4_WSDLURL
-      value: "http://maven.adeo.no/nexus/content/groups/public/no/nav/tjenester/fim/nav-fim-organisasjon-v4-tjenestespesifikasjon/1.0.4/nav-fim-organisasjon-v4-tjenestespesifikasjon-1.0.4.zip"
+    - name: EREG_ENDPOINTURL
+      value: "https://modapp.adeo.no/ereg/"
     - name: VIRKSOMHET_ORGANISASJONENHET_V2_ENDPOINTURL
       value: "https://app.adeo.no/norg2/ws/OrganisasjonEnhet/v2"
     - name: VIRKSOMHET_ORGANISASJONENHET_V2_SECURITYTOKEN
@@ -275,13 +265,13 @@ spec:
     - name: VIRKSOMHET_ORGANISASJONENHETKONTAKTINFORMASJON_V1_WSDLURL
       value: "http://maven.adeo.no/nexus/content/groups/public/no/nav/tjenester/nav-organisasjonEnhetKontaktinformasjon-v1-tjenestespesifikasjon/1.1.0/nav-organisasjonEnhetKontaktinformasjon-v1-tjenestespesifikasjon-1.1.0.zip"
     - name: VIRKSOMHET_PERSON_V3_ENDPOINTURL
-      value: "https://wasapp.adeo.no/tpsws/ws/Person/v3"
+      value: "https://app.adeo.no/tpsws-aura/ws/Person/v3"
     - name: VIRKSOMHET_PERSON_V3_SECURITYTOKEN
       value: "SAML"
     - name: VIRKSOMHET_PERSON_V3_WSDLURL
       value: "http://maven.adeo.no/nexus/content/groups/public/no/nav/tjenester/nav-person-v3-tjenestespesifikasjon/3.6.1/nav-person-v3-tjenestespesifikasjon-3.6.1.zip"
     - name: VIRKSOMHET_PERSONSOK_V1_ENDPOINTURL
-      value: "https://wasapp.adeo.no/tpsws/Personsok_v1"
+      value: "https://app.adeo.no/tpsws-aura/ws/Personsok/v1"
     - name: VIRKSOMHET_PERSONSOK_V1_SECURITYTOKEN
       value: "SAML"
     - name: VIRKSOMHET_PERSONSOK_V1_WSDLURL
@@ -340,8 +330,6 @@ spec:
       value: "28"
     - name: SAKSOVERSIKT_PRODSETTNINGSDATO
       value: "2016-06-04"
-    - name: MODIABRUKERDIALOG_CXF_LOG_LEVEL
-      value: "INFO"
     - name: FJERN_SOKNADER_FOR_DATO
       value: "2014-12-09"
     - name: TOGGLE_DIGISYFO

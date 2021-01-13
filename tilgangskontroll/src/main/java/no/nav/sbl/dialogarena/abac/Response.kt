@@ -21,7 +21,7 @@ data class AbacResponse(private val response: List<Response>) {
         }.invoke()
 
     fun getCause(): DenyCause {
-        val associatedAdvice = result.associatedAdvice ?: emptyList();
+        val associatedAdvice = result.associatedAdvice ?: emptyList()
         val denyReasonAttributes = associatedAdvice
                 .find { advice -> advice.id == NavAttributes.ADVICE_DENY_REASON.attributeId }
                 ?.attributeAssignment

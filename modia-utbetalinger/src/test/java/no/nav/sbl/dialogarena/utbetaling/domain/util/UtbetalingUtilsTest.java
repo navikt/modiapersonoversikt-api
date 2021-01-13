@@ -6,7 +6,7 @@ import org.junit.Test;
 import static no.nav.sbl.dialogarena.utbetaling.domain.util.UtbetalingUtils.erDatoISokeperioden;
 import static org.hamcrest.Matchers.is;
 import static org.joda.time.LocalDate.now;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 public class UtbetalingUtilsTest {
     public static final int NUMBER_OF_DAYS_TO_SHOW = 30;

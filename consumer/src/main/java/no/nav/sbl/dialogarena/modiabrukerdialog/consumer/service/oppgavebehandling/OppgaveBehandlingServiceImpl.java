@@ -118,13 +118,11 @@ public class OppgaveBehandlingServiceImpl implements OppgaveBehandlingService {
         String ident = SubjectHandler.getIdent().orElseThrow(() -> new RuntimeException("Fant ikke ident"));
         return validerTilgangTilbruker(oppgaveWS
                 .finnOppgaveListe(new WSFinnOppgaveListeRequest()
-                        .withSok(new WSFinnOppgaveListeSok()
-                                .withAnsvarligId(ident)
-                                .withFagomradeKodeListe(KONTAKT_NAV))
-                        .withFilter(new WSFinnOppgaveListeFilter()
-                                .withAktiv(true)
-                                .withOppgavetypeKodeListe(SPORSMAL_OG_SVAR)))
-                .getOppgaveListe().stream()
+                        .withSok(new WSFinnOppgaveListeSok().withAnsvarligId(ident))
+                        .withFilter(new WSFinnOppgaveListeFilter().withAktiv(true)))
+                .getOppgaveListe()
+                .stream()
+                .filter((oppgave) -> oppgave.getHenvendelseId() != null)
                 .map(OppgaveBehandlingServiceImpl::wsOppgaveToOppgave)
                 .collect(toList()));
     }
@@ -185,7 +183,7 @@ public class OppgaveBehandlingServiceImpl implements OppgaveBehandlingService {
         try {
             oppgavebehandlingWS.ferdigstillOppgaveBolk(new WSFerdigstillOppgaveBolkRequest()
                     .withOppgaveIdListe(singletonList(oppgaveId))
-                    .withFerdigstiltAvEnhetId(Integer.valueOf(enhetFor(temagruppe, saksbehandlersValgteEnhet)))
+                    .withFerdigstiltAvEnhetId(Integer.parseInt(enhetFor(temagruppe, saksbehandlersValgteEnhet)))
             );
             logger.info("Forsøker å ferdigstille oppgave med oppgaveId" + oppgaveId + "for enhet" + saksbehandlersValgteEnhet);
 
@@ -204,7 +202,7 @@ public class OppgaveBehandlingServiceImpl implements OppgaveBehandlingService {
         try {
             oppgavebehandlingWS.ferdigstillOppgaveBolk(new WSFerdigstillOppgaveBolkRequest()
                     .withOppgaveIdListe(oppgaveIder)
-                    .withFerdigstiltAvEnhetId(Integer.valueOf(enhetFor(temagruppe, saksbehandlersValgteEnhet))));
+                    .withFerdigstiltAvEnhetId(Integer.parseInt(enhetFor(temagruppe, saksbehandlersValgteEnhet))));
             logger.info("Forsøker å ferdigstille oppgave med oppgaveIder" + oppgaveIder + "for enhet" + saksbehandlersValgteEnhet);
         } catch (Exception e) {
             String ider = String.join(", ", oppgaveIder);
@@ -305,7 +303,7 @@ public class OppgaveBehandlingServiceImpl implements OppgaveBehandlingService {
             oppgavebehandlingWS.lagreOppgave(
                     new WSLagreOppgaveRequest()
                             .withEndreOppgave(tilWSEndreOppgave(wsOppgave))
-                            .withEndretAvEnhetId(Integer.valueOf(enhetFor(temagruppe, saksbehandlersValgteEnhet)))
+                            .withEndretAvEnhetId(Integer.parseInt(enhetFor(temagruppe, saksbehandlersValgteEnhet)))
             );
         } catch (LagreOppgaveOppgaveIkkeFunnet e) {
             logger.info("Oppgaven ble ikke funnet ved tilordning til saksbehandler. Oppgaveid: " + wsOppgave.getOppgaveId(), e);
@@ -341,7 +339,7 @@ public class OppgaveBehandlingServiceImpl implements OppgaveBehandlingService {
     }
 
     private String enhetFor(Optional<Temagruppe> optional, String saksbehandlersValgteEnhet) {
-        if (!optional.isPresent()) {
+        if (optional.isEmpty()) {
             return DEFAULT_ENHET.toString();
         }
         Temagruppe temagruppe = optional.get();

@@ -14,16 +14,17 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.EnhetsGeografisk
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.arbeidsfordeling.ArbeidsfordelingEnhet
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.kodeverksmapper.domain.Behandling
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.strategier.ByEnvironmentStrategy.ENVIRONMENT_PROPERTY
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.RestConstants.*
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.RestConstants.*
 import okhttp3.MediaType
 import okhttp3.Request
 import okhttp3.RequestBody
+import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.slf4j.MDC
 import java.util.*
 import org.springframework.beans.factory.annotation.Autowired
 
-val log = LoggerFactory.getLogger(ArbeidsfordelingClient::class.java)
+val log: Logger = LoggerFactory.getLogger(ArbeidsfordelingClient::class.java)
 private val norgClient = RestClient.baseClient()
 private val objectMapper = JsonMapper.defaultObjectMapper()
 
@@ -32,12 +33,10 @@ private val EnhetsGeografiskTilknytningResponse = object : TypeReference<List<En
 
 open class ArbeidsfordelingClient {
     companion object {
-        private val NORG2_URL = if ("p".equals(EnvironmentUtils.getRequiredProperty(ENVIRONMENT_PROPERTY))) {
-            "https://app.adeo.no/norg2"
-        } else if ("q1".equals(EnvironmentUtils.getRequiredProperty(ENVIRONMENT_PROPERTY))) {
-            "https://app-q1.adeo.no/norg2"
-        } else {
-            "https://app-q0.adeo.no/norg2"
+        private val NORG2_URL = when {
+            "p" == EnvironmentUtils.getRequiredProperty(ENVIRONMENT_PROPERTY) -> "https://app.adeo.no/norg2"
+            "q1" == EnvironmentUtils.getRequiredProperty(ENVIRONMENT_PROPERTY) -> "https://app-q1.adeo.no/norg2"
+            else -> "https://app-q0.adeo.no/norg2"
         }
     }
 

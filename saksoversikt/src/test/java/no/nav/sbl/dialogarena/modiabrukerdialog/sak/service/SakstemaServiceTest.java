@@ -26,8 +26,8 @@ import static java.util.Optional.of;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.joda.time.DateTime.now;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
@@ -74,12 +74,12 @@ public class SakstemaServiceTest {
     }
 
     @Test
-    public void lagSakstemaUtenOppfolging() throws HentSakSammendragListeSakManglerEierenhet, HentSakSammendragListePersonIkkeFunnet {
+    public void lagSakstemaUtenOppfolging() {
         List dokumentmetadata = new ArrayList<>();
 
         List<Sak> saker = asList(lagSakMedAvsluttetDato(of(now().minusDays(30))));
 
-        when(kodeverk.getTemanavnForTemakode(anyString(), anyString())).thenReturn(new ResultatWrapper("Dagpenger"));
+        when(kodeverk.getTemanavnForTemakode(anyString(), anyString())).thenReturn(new ResultatWrapper<>("Dagpenger"));
 
         when(dokumentMetadataService.hentDokumentMetadata(anyString())).thenReturn(new ResultatWrapper<>(dokumentmetadata, emptySet()));
 
@@ -92,13 +92,13 @@ public class SakstemaServiceTest {
 
         List<Sakstema> sakstema = sakstemaService.hentSakstema(saker, FNR, true).resultat;
 
-        assertTrue(sakstema.size() == 1);
+        assertEquals(1, sakstema.size());
         assertThat(sakstema.get(0).temanavn, equalTo("Dagpenger"));
     }
 
     @Test
     public void lagSakstemaMedOppfoling() {
-        when(kodeverk.getTemanavnForTemakode(Konstanter.DAGPENGER, BulletproofKodeverkService.ARKIVTEMA)).thenReturn(new ResultatWrapper("Dagpenger"));
+        when(kodeverk.getTemanavnForTemakode(Konstanter.DAGPENGER, BulletproofKodeverkService.ARKIVTEMA)).thenReturn(new ResultatWrapper<>("Dagpenger"));
 
         Sak sak = new Sak()
                 .withSaksId("123")
@@ -118,7 +118,7 @@ public class SakstemaServiceTest {
 
     @Test
     public void sakstemaMedKunOppfolgingGrupperesIkke() {
-        when(kodeverk.getTemanavnForTemakode(SakstemaGrupperer.OPPFOLGING, BulletproofKodeverkService.ARKIVTEMA)).thenReturn(new ResultatWrapper("Oppfølging"));
+        when(kodeverk.getTemanavnForTemakode(SakstemaGrupperer.OPPFOLGING, BulletproofKodeverkService.ARKIVTEMA)).thenReturn(new ResultatWrapper<>("Oppfølging"));
 
         Sak oppfolinging = new Sak()
                 .withSaksId("321")
@@ -143,7 +143,7 @@ public class SakstemaServiceTest {
 
     @Test
     public void etSakstemaMedOppfolgingGirEtSakstema() {
-        when(kodeverk.getTemanavnForTemakode(Konstanter.DAGPENGER, BulletproofKodeverkService.ARKIVTEMA)).thenReturn(new ResultatWrapper("Dagpenger"));
+        when(kodeverk.getTemanavnForTemakode(Konstanter.DAGPENGER, BulletproofKodeverkService.ARKIVTEMA)).thenReturn(new ResultatWrapper<>("Dagpenger"));
 
         Sak oppfolinging = new Sak()
                 .withSaksId("321")
@@ -174,8 +174,8 @@ public class SakstemaServiceTest {
 
     @Test
     public void sakMedOppfolgingIHenvendelseSkalGrupperesOgFaaTilhorendeMetadata() {
-        when(kodeverk.getTemanavnForTemakode(Konstanter.DAGPENGER, BulletproofKodeverkService.ARKIVTEMA)).thenReturn(new ResultatWrapper("Dagpenger"));
-        when(kodeverk.getTemanavnForTemakode(Konstanter.ARBEIDSAVKLARINGSPENGER, BulletproofKodeverkService.ARKIVTEMA)).thenReturn(new ResultatWrapper("Arbeidsavklaringspenger"));
+        when(kodeverk.getTemanavnForTemakode(Konstanter.DAGPENGER, BulletproofKodeverkService.ARKIVTEMA)).thenReturn(new ResultatWrapper<>("Dagpenger"));
+        when(kodeverk.getTemanavnForTemakode(Konstanter.ARBEIDSAVKLARINGSPENGER, BulletproofKodeverkService.ARKIVTEMA)).thenReturn(new ResultatWrapper<>("Arbeidsavklaringspenger"));
 
         Sak sak = new Sak()
                 .withSaksId("123")
@@ -205,7 +205,7 @@ public class SakstemaServiceTest {
 
     @Test
     public void sakFraSakogBehandlingUtenTilhoerendeSakstemaOppretterEgetSakstema() {
-        when(kodeverk.getTemanavnForTemakode(Konstanter.DAGPENGER, BulletproofKodeverkService.ARKIVTEMA)).thenReturn(new ResultatWrapper("Dagpenger"));
+        when(kodeverk.getTemanavnForTemakode(Konstanter.DAGPENGER, BulletproofKodeverkService.ARKIVTEMA)).thenReturn(new ResultatWrapper<>("Dagpenger"));
         when(dokumentMetadataService.hentDokumentMetadata(anyString())).thenReturn(new ResultatWrapper<>(emptyList()));
 
         Map<String, Set<String>> gruppertTema = new HashMap<String, Set<String>>() {{
@@ -226,7 +226,7 @@ public class SakstemaServiceTest {
 
     @Test
     public void sakFraSakogBehandlingMedTilhoerendeSakstemaOppretterIkkeEgetSakstema() {
-        when(kodeverk.getTemanavnForTemakode(Konstanter.DAGPENGER, BulletproofKodeverkService.ARKIVTEMA)).thenReturn(new ResultatWrapper("Dagpenger"));
+        when(kodeverk.getTemanavnForTemakode(Konstanter.DAGPENGER, BulletproofKodeverkService.ARKIVTEMA)).thenReturn(new ResultatWrapper<>("Dagpenger"));
         when(dokumentMetadataService.hentDokumentMetadata(anyString())).thenReturn(new ResultatWrapper<>(asList(new DokumentMetadata().withTemakode("DAG").withBaksystem(Baksystem.HENVENDELSE))));
         Map<String, Set<String>> gruppertTema = new HashMap<>();
         Set set = new HashSet<>();
@@ -247,8 +247,8 @@ public class SakstemaServiceTest {
 
     @Test
     public void forskjelligTemakodeSakOgBehandlingOgAnnet() {
-        when(kodeverk.getTemanavnForTemakode(Konstanter.DAGPENGER, BulletproofKodeverkService.ARKIVTEMA)).thenReturn(new ResultatWrapper("Dagpenger"));
-        when(kodeverk.getTemanavnForTemakode("FOR", BulletproofKodeverkService.ARKIVTEMA)).thenReturn(new ResultatWrapper("Foreldrepenger"));
+        when(kodeverk.getTemanavnForTemakode(Konstanter.DAGPENGER, BulletproofKodeverkService.ARKIVTEMA)).thenReturn(new ResultatWrapper<>("Dagpenger"));
+        when(kodeverk.getTemanavnForTemakode("FOR", BulletproofKodeverkService.ARKIVTEMA)).thenReturn(new ResultatWrapper<>("Foreldrepenger"));
         when(dokumentMetadataService.hentDokumentMetadata(anyString())).thenReturn(new ResultatWrapper<>(asList(new DokumentMetadata().withTemakode("FOR").withBaksystem(Baksystem.HENVENDELSE))));
 
         Map<String, Set<String>> gruppertTema = new HashMap<String, Set<String>>() {{
@@ -281,8 +281,8 @@ public class SakstemaServiceTest {
 
     @Test
     public void FlereSakstemaMedOppfolgingGirFlereSakstemaMedOppfolging() {
-        when(kodeverk.getTemanavnForTemakode(Konstanter.DAGPENGER, BulletproofKodeverkService.ARKIVTEMA)).thenReturn(new ResultatWrapper("Dagpenger"));
-        when(kodeverk.getTemanavnForTemakode(Konstanter.ARBEIDSAVKLARINGSPENGER, BulletproofKodeverkService.ARKIVTEMA)).thenReturn(new ResultatWrapper("Arbeidsavklaringspenger"));
+        when(kodeverk.getTemanavnForTemakode(Konstanter.DAGPENGER, BulletproofKodeverkService.ARKIVTEMA)).thenReturn(new ResultatWrapper<>("Dagpenger"));
+        when(kodeverk.getTemanavnForTemakode(Konstanter.ARBEIDSAVKLARINGSPENGER, BulletproofKodeverkService.ARKIVTEMA)).thenReturn(new ResultatWrapper<>("Arbeidsavklaringspenger"));
 
         Sak oppfolinging = new Sak()
                 .withSaksId("321")
@@ -319,8 +319,8 @@ public class SakstemaServiceTest {
 
     @Test
     public void gruppererNyttTemaFraSogBOmViHarEnOppfolgingssak() {
-        when(kodeverk.getTemanavnForTemakode(Konstanter.DAGPENGER, BulletproofKodeverkService.ARKIVTEMA)).thenReturn(new ResultatWrapper("Dagpenger"));
-        when(kodeverk.getTemanavnForTemakode(Konstanter.ARBEIDSAVKLARINGSPENGER, BulletproofKodeverkService.ARKIVTEMA)).thenReturn(new ResultatWrapper("Arbeidsavklaringspenger"));
+        when(kodeverk.getTemanavnForTemakode(Konstanter.DAGPENGER, BulletproofKodeverkService.ARKIVTEMA)).thenReturn(new ResultatWrapper<>("Dagpenger"));
+        when(kodeverk.getTemanavnForTemakode(Konstanter.ARBEIDSAVKLARINGSPENGER, BulletproofKodeverkService.ARKIVTEMA)).thenReturn(new ResultatWrapper<>("Arbeidsavklaringspenger"));
 
         when(dokumentMetadataService.hentDokumentMetadata(anyString()))
                 .thenReturn(
@@ -358,8 +358,8 @@ public class SakstemaServiceTest {
 
     @Test
     public void slaarSammenSykepengerOgSykemeldingMedOppfolging() {
-        when(kodeverk.getTemanavnForTemakode("SYK", BulletproofKodeverkService.ARKIVTEMA)).thenReturn(new ResultatWrapper("Sykepenger"));
-        when(kodeverk.getTemanavnForTemakode("SYM", BulletproofKodeverkService.ARKIVTEMA)).thenReturn(new ResultatWrapper("Sykemeldinger"));
+        when(kodeverk.getTemanavnForTemakode("SYK", BulletproofKodeverkService.ARKIVTEMA)).thenReturn(new ResultatWrapper<>("Sykepenger"));
+        when(kodeverk.getTemanavnForTemakode("SYM", BulletproofKodeverkService.ARKIVTEMA)).thenReturn(new ResultatWrapper<>("Sykemeldinger"));
 
         when(dokumentMetadataService.hentDokumentMetadata(anyString()))
                 .thenReturn(
@@ -410,8 +410,8 @@ public class SakstemaServiceTest {
 
     @Test
     public void slaarSammenSykepengerOgSykemeldingUtenOppfolging() {
-        when(kodeverk.getTemanavnForTemakode("SYK", BulletproofKodeverkService.ARKIVTEMA)).thenReturn(new ResultatWrapper("Sykepenger"));
-        when(kodeverk.getTemanavnForTemakode("SYM", BulletproofKodeverkService.ARKIVTEMA)).thenReturn(new ResultatWrapper("Sykemeldinger"));
+        when(kodeverk.getTemanavnForTemakode("SYK", BulletproofKodeverkService.ARKIVTEMA)).thenReturn(new ResultatWrapper<>("Sykepenger"));
+        when(kodeverk.getTemanavnForTemakode("SYM", BulletproofKodeverkService.ARKIVTEMA)).thenReturn(new ResultatWrapper<>("Sykemeldinger"));
 
         when(dokumentMetadataService.hentDokumentMetadata(anyString()))
                 .thenReturn(
@@ -459,7 +459,7 @@ public class SakstemaServiceTest {
 
     @Test
     public void slaarIkkeSammenSykepengerOgSykemeldingHvisEnErTomtTema() {
-        when(kodeverk.getTemanavnForTemakode("SYM", BulletproofKodeverkService.ARKIVTEMA)).thenReturn(new ResultatWrapper("Sykemeldinger"));
+        when(kodeverk.getTemanavnForTemakode("SYM", BulletproofKodeverkService.ARKIVTEMA)).thenReturn(new ResultatWrapper<>("Sykemeldinger"));
 
         when(dokumentMetadataService.hentDokumentMetadata(anyString()))
                 .thenReturn(
@@ -502,9 +502,9 @@ public class SakstemaServiceTest {
 
     @Test
     public void slaarIkkeSammenSykepengerOgSykemeldingForModia() {
-        when(kodeverk.getTemanavnForTemakode("SYK", BulletproofKodeverkService.ARKIVTEMA)).thenReturn(new ResultatWrapper("Sykepenger"));
-        when(kodeverk.getTemanavnForTemakode("SYM", BulletproofKodeverkService.ARKIVTEMA)).thenReturn(new ResultatWrapper("Sykemeldinger"));
-        when(kodeverk.getTemanavnForTemakode(SakstemaGrupperer.OPPFOLGING, BulletproofKodeverkService.ARKIVTEMA)).thenReturn(new ResultatWrapper("Oppfølging"));
+        when(kodeverk.getTemanavnForTemakode("SYK", BulletproofKodeverkService.ARKIVTEMA)).thenReturn(new ResultatWrapper<>("Sykepenger"));
+        when(kodeverk.getTemanavnForTemakode("SYM", BulletproofKodeverkService.ARKIVTEMA)).thenReturn(new ResultatWrapper<>("Sykemeldinger"));
+        when(kodeverk.getTemanavnForTemakode(SakstemaGrupperer.OPPFOLGING, BulletproofKodeverkService.ARKIVTEMA)).thenReturn(new ResultatWrapper<>("Oppfølging"));
 
         when(dokumentMetadataService.hentDokumentMetadata(anyString()))
                 .thenReturn(

@@ -2,6 +2,7 @@ package no.nav.sbl.dialogarena.naudit
 
 import no.nav.common.auth.subject.SubjectHandler
 import no.nav.sbl.dialogarena.naudit.AuditIdentifier.DENY_REASON
+import no.nav.sbl.dialogarena.naudit.AuditIdentifier.FAIL_REASON
 import org.slf4j.LoggerFactory
 
 private val tjenestekallLogg = LoggerFactory.getLogger("SecureLog")
@@ -22,6 +23,9 @@ class Audit {
     interface AuditDescriptor<T> {
         fun log(resource: T)
         fun denied(reason: String)
+        fun failed(exception: Throwable)
+
+        fun Throwable.getFailureReason(): String = this.message ?: this.toString()
     }
 
     internal class WithDataDescriptor<T>(
@@ -37,11 +41,16 @@ class Audit {
         override fun denied(reason: String) {
             logInternal(action, resourceType, arrayOf(DENY_REASON to reason))
         }
+
+        override fun failed(exception: Throwable) {
+            logInternal(action, resourceType, arrayOf(FAIL_REASON to exception.getFailureReason()))
+        }
     }
 
     internal class NoopDescriptor<T> : AuditDescriptor<T> {
         override fun log(resource: T) {}
         override fun denied(reason: String) {}
+        override fun failed(exception: Throwable) {}
     }
 
     internal class NothingDescriptor(
@@ -54,6 +63,10 @@ class Audit {
 
         override fun denied(reason: String) {
             logInternal(action, resourceType, arrayOf(DENY_REASON to reason))
+        }
+
+        override fun failed(exception: Throwable) {
+            logInternal(action, resourceType, arrayOf(FAIL_REASON to exception.getFailureReason()))
         }
     }
 
@@ -75,7 +88,7 @@ class Audit {
 
         private fun logInternal(action: Action, resourceType: AuditResource, identifiers: Array<out Pair<AuditIdentifier, String?>>) {
             val subject = SubjectHandler.getIdent()
-            val logline = listOf(
+            val logline = listOfNotNull(
                     "action='$action'",
                     subject
                             .map { "subject='$it'" }
@@ -85,7 +98,6 @@ class Audit {
                             .map { "${it.first}='${it.second ?: "-"}'" }
                             .toTypedArray()
             )
-                    .filterNotNull()
                     .joinToString(" ")
 
             tjenestekallLogg.info(logline)

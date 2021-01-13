@@ -20,8 +20,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.RestConstants.MODIABRUKERDIALOG_SYSTEM_USER;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.RestConstants.MODIABRUKERDIALOG_SYSTEM_USER_PASSWORD;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.RestConstants.MODIABRUKERDIALOG_SYSTEM_USER;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.RestConstants.MODIABRUKERDIALOG_SYSTEM_USER_PASSWORD;
 
 @Configuration
 @Import({

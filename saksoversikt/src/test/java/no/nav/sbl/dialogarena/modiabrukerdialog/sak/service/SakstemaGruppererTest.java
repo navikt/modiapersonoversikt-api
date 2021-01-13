@@ -16,9 +16,11 @@ import org.mockito.junit.MockitoJUnitRunner;
 import java.util.*;
 
 import static java.util.Arrays.asList;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.core.IsEqual.equalTo;
-import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -40,7 +42,7 @@ public class SakstemaGruppererTest {
     }
 
     @Test
-    public void gruppererOppfolgingAleneOmDetManglerTilknyttedeSaker() throws Exception {
+    public void gruppererOppfolgingAleneOmDetManglerTilknyttedeSaker() {
 
         Sak oppfolinging = new Sak()
                 .withSaksId("321")
@@ -58,7 +60,7 @@ public class SakstemaGruppererTest {
     }
 
     @Test
-    public void gruppererIkkeSelvstendigTemaSomTilhorerTemagruppe() throws Exception {
+    public void gruppererIkkeSelvstendigTemaSomTilhorerTemagruppe() {
 
         Sak oppfolinging = new Sak()
                 .withSaksId("321")
@@ -74,7 +76,7 @@ public class SakstemaGruppererTest {
     }
 
     @Test
-    public void fjernGrupperingOmDetIkkeFinnesOppfolging() throws Exception {
+    public void fjernGrupperingOmDetIkkeFinnesOppfolging() {
 
         Sak sak = new Sak()
                 .withSaksId("321")

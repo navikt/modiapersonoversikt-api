@@ -151,7 +151,7 @@ open class OppgaveOpprettelseClient @Autowired constructor(
                                     .header(RestConstants.NAV_CALL_ID_HEADER, MDC.get(MDCConstants.MDC_CALL_ID))
                                     .header("X-Correlation-ID", MDC.get(MDCConstants.MDC_CALL_ID))
                                     .header(RestConstants.AUTHORIZATION, AUTH_METHOD_BEARER + AUTH_SEPERATOR + consumerOidcToken)
-                                    .header(RestConstants.NAV_CONSUMER_TOKEN_HEADER, RestConstants.AUTH_METHOD_BEARER + RestConstants.AUTH_SEPERATOR + consumerOidcToken)
+                                    .header(RestConstants.NAV_CONSUMER_TOKEN_HEADER, AUTH_METHOD_BEARER + AUTH_SEPERATOR + consumerOidcToken)
                                     .post(RequestBody.create(
                                             MediaType.parse("application/json"),
                                             gson.toJson(request)

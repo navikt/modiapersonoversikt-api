@@ -104,39 +104,45 @@ private fun lagBostedsadresse(adr: List<SokPersonUtenlandskID.Bostedsadresse>?):
         return null
     }
     val adresse = adr.first()
-    if (adresse.ukjentBosted != null) {
-        return adresse.ukjentBosted!!.bostedskommune
-    } else if (adresse.matrikkeladresse != null) {
-        return listOfNotNull(
-                adresse.matrikkeladresse!!.bruksenhetsnummer,
-                adresse.matrikkeladresse!!.tilleggsnavn,
-                adresse.matrikkeladresse!!.postnummer,
-                adresse.matrikkeladresse!!.kommunenummer
-        ).joinToString(" ")
-    } else if (adresse.utenlandskAdresse != null) {
-        return listOfNotNull(
-                adresse.utenlandskAdresse!!.bygningEtasjeLeilighet,
-                adresse.utenlandskAdresse!!.adressenavnNummer,
-                adresse.utenlandskAdresse!!.regionDistriktOmraade,
-                adresse.utenlandskAdresse!!.postboksNummerNavn,
-                adresse.utenlandskAdresse!!.postkode,
-                adresse.utenlandskAdresse!!.bySted,
-                adresse.utenlandskAdresse!!.landkode
-        )
-                .joinToString(" ")
-    } else if (adresse.vegadresse != null) {
-        return listOfNotNull(
-                adresse.vegadresse!!.adressenavn,
-                adresse.vegadresse!!.husnummer,
-                adresse.vegadresse!!.husbokstav,
-                adresse.vegadresse!!.bruksenhetsnummer,
-                adresse.vegadresse!!.postnummer,
-                adresse.vegadresse!!.bydelsnummer,
-                adresse.vegadresse!!.kommunenummer
+    when {
+        adresse.ukjentBosted != null -> {
+            return adresse.ukjentBosted!!.bostedskommune
+        }
+        adresse.matrikkeladresse != null -> {
+            return listOfNotNull(
+                    adresse.matrikkeladresse!!.bruksenhetsnummer,
+                    adresse.matrikkeladresse!!.tilleggsnavn,
+                    adresse.matrikkeladresse!!.postnummer,
+                    adresse.matrikkeladresse!!.kommunenummer
+            ).joinToString(" ")
+        }
+        adresse.utenlandskAdresse != null -> {
+            return listOfNotNull(
+                    adresse.utenlandskAdresse!!.bygningEtasjeLeilighet,
+                    adresse.utenlandskAdresse!!.adressenavnNummer,
+                    adresse.utenlandskAdresse!!.regionDistriktOmraade,
+                    adresse.utenlandskAdresse!!.postboksNummerNavn,
+                    adresse.utenlandskAdresse!!.postkode,
+                    adresse.utenlandskAdresse!!.bySted,
+                    adresse.utenlandskAdresse!!.landkode
+            )
+                    .joinToString(" ")
+        }
+        adresse.vegadresse != null -> {
+            return listOfNotNull(
+                    adresse.vegadresse!!.adressenavn,
+                    adresse.vegadresse!!.husnummer,
+                    adresse.vegadresse!!.husbokstav,
+                    adresse.vegadresse!!.bruksenhetsnummer,
+                    adresse.vegadresse!!.postnummer,
+                    adresse.vegadresse!!.bydelsnummer,
+                    adresse.vegadresse!!.kommunenummer
 
-        ).joinToString(" ")
-    } else  {
-        return null
+            ).joinToString(" ")
+        }
+        else -> {
+            return null
+        }
     }
 }
 
@@ -145,52 +151,59 @@ fun lagPostadresse(adr: List<SokPersonUtenlandskID.Kontaktadresse>?): String? {
         return null
     }
     val adresse = adr.first()
-    if (adresse.postadresseIFrittFormat != null) {
-        return listOfNotNull(
-                adresse.postadresseIFrittFormat!!.adresselinje1,
-                adresse.postadresseIFrittFormat!!.adresselinje2,
-                adresse.postadresseIFrittFormat!!.adresselinje3,
-                adresse.postadresseIFrittFormat!!.postnummer)
-                .joinToString(" ")
-    } else if (adresse.utenlandskAdresseIFrittFormat != null) {
-        return listOfNotNull(
-                adresse.utenlandskAdresseIFrittFormat!!.adresselinje1,
-                adresse.utenlandskAdresseIFrittFormat!!.adresselinje2,
-                adresse.utenlandskAdresseIFrittFormat!!.adresselinje3,
-                adresse.utenlandskAdresseIFrittFormat!!.postkode,
-                adresse.utenlandskAdresseIFrittFormat!!.byEllerStedsnavn,
-                adresse.utenlandskAdresseIFrittFormat!!.landkode)
-                .joinToString(" ")
-    } else if (adresse.postboksadresse != null) {
-        return listOfNotNull(
-                adresse.postboksadresse!!.postbokseier,
-                adresse.postboksadresse!!.postboks,
-                adresse.postboksadresse!!.postnummer
-        ).joinToString(" ")
-    } else if (adresse.utenlandskAdresse != null) {
-        return listOfNotNull(
-                adresse.utenlandskAdresse!!.bygningEtasjeLeilighet,
-                adresse.utenlandskAdresse!!.adressenavnNummer,
-                adresse.utenlandskAdresse!!.regionDistriktOmraade,
-                adresse.utenlandskAdresse!!.postboksNummerNavn,
-                adresse.utenlandskAdresse!!.postkode,
-                adresse.utenlandskAdresse!!.bySted,
-                adresse.utenlandskAdresse!!.landkode
-        )
-                .joinToString(" ")
-    } else if (adresse.vegadresse != null) {
-        return listOfNotNull(
-                adresse.vegadresse!!.adressenavn,
-                adresse.vegadresse!!.husnummer,
-                adresse.vegadresse!!.husbokstav,
-                adresse.vegadresse!!.bruksenhetsnummer,
-                adresse.vegadresse!!.postnummer,
-                adresse.vegadresse!!.bydelsnummer,
-                adresse.vegadresse!!.kommunenummer
+    when {
+        adresse.postadresseIFrittFormat != null -> {
+            return listOfNotNull(
+                    adresse.postadresseIFrittFormat!!.adresselinje1,
+                    adresse.postadresseIFrittFormat!!.adresselinje2,
+                    adresse.postadresseIFrittFormat!!.adresselinje3,
+                    adresse.postadresseIFrittFormat!!.postnummer)
+                    .joinToString(" ")
+        }
+        adresse.utenlandskAdresseIFrittFormat != null -> {
+            return listOfNotNull(
+                    adresse.utenlandskAdresseIFrittFormat!!.adresselinje1,
+                    adresse.utenlandskAdresseIFrittFormat!!.adresselinje2,
+                    adresse.utenlandskAdresseIFrittFormat!!.adresselinje3,
+                    adresse.utenlandskAdresseIFrittFormat!!.postkode,
+                    adresse.utenlandskAdresseIFrittFormat!!.byEllerStedsnavn,
+                    adresse.utenlandskAdresseIFrittFormat!!.landkode)
+                    .joinToString(" ")
+        }
+        adresse.postboksadresse != null -> {
+            return listOfNotNull(
+                    adresse.postboksadresse!!.postbokseier,
+                    adresse.postboksadresse!!.postboks,
+                    adresse.postboksadresse!!.postnummer
+            ).joinToString(" ")
+        }
+        adresse.utenlandskAdresse != null -> {
+            return listOfNotNull(
+                    adresse.utenlandskAdresse!!.bygningEtasjeLeilighet,
+                    adresse.utenlandskAdresse!!.adressenavnNummer,
+                    adresse.utenlandskAdresse!!.regionDistriktOmraade,
+                    adresse.utenlandskAdresse!!.postboksNummerNavn,
+                    adresse.utenlandskAdresse!!.postkode,
+                    adresse.utenlandskAdresse!!.bySted,
+                    adresse.utenlandskAdresse!!.landkode
+            )
+                    .joinToString(" ")
+        }
+        adresse.vegadresse != null -> {
+            return listOfNotNull(
+                    adresse.vegadresse!!.adressenavn,
+                    adresse.vegadresse!!.husnummer,
+                    adresse.vegadresse!!.husbokstav,
+                    adresse.vegadresse!!.bruksenhetsnummer,
+                    adresse.vegadresse!!.postnummer,
+                    adresse.vegadresse!!.bydelsnummer,
+                    adresse.vegadresse!!.kommunenummer
 
-        ).joinToString(" ")
-    } else {
-        return null
+            ).joinToString(" ")
+        }
+        else -> {
+            return null
+        }
     }
 }
 

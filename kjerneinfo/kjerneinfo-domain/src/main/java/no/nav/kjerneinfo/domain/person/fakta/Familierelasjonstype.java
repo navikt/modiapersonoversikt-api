@@ -16,7 +16,7 @@ public enum Familierelasjonstype {
     EKTE("ekte");
     private final String value;
 
-    private Familierelasjonstype(String v) {
+    Familierelasjonstype(String v) {
         value = v;
     }
 
@@ -27,7 +27,7 @@ public enum Familierelasjonstype {
     @Override
     public String toString() {
         String familierelasjonsType = super.toString();
-        return familierelasjonsType.substring(0, 1) + familierelasjonsType.substring(1).toLowerCase();
+        return familierelasjonsType.charAt(0) + familierelasjonsType.substring(1).toLowerCase();
     }
 
     public static Familierelasjonstype fromValue(String v) {

@@ -1,8 +1,10 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.consumer.henvendelse.domain;
 
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Oppgave;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.henvendelse.delsvar.DelsvarSammenslaaer;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.henvendelse.delsvar.DelsvarUtils;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
@@ -16,6 +18,11 @@ public class Traad {
         } else {
             this.meldinger = meldinger;
         }
+    }
+
+
+    public Melding getEldsteMelding() {
+        return meldinger.get(0);
     }
 
     public String getTraadId() {
@@ -33,4 +40,12 @@ public class Traad {
                 .orElseThrow(IllegalStateException::new);
     }
 
+    public boolean besvaringKanFerdigstilleOppgave(@Nullable Oppgave oppgave) {
+        if (oppgave == null) {
+            return true;
+        }
+        return meldinger
+                .stream()
+                .anyMatch((melding) -> melding.id.contains(oppgave.henvendelseId));
+    }
 }

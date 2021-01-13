@@ -12,12 +12,12 @@ public class SykepengerMockServiceTest {
     SykepengerMockService mockService;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         mockService = new SykepengerMockService(SykepengerMapper.getInstance());
     }
 
     @Test
-    public void testHentOppfolgingskontrakter() throws Exception {
+    public void testHentOppfolgingskontrakter() {
         SykepengerRequest request = new SykepengerRequest();
 
         SykepengerResponse response = mockService.hentSykmeldingsperioder(request);

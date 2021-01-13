@@ -100,7 +100,7 @@ class SakerController @Autowired constructor(private val saksoversiktService: Sa
                             "erGruppert" to it.erGruppert,
                             "behandlingskjeder" to hentBehandlingskjeder(it.behandlingskjeder),
                             "dokumentMetadata" to hentDokumentMetadata(it.dokumentMetadata),
-                            "tilhørendeSaker" to hentTilhørendeSaker(it.tilhorendeSaker),
+                            "tilhørendeSaker" to hentTilhorendeSaker(it.tilhorendeSaker),
                             "feilkoder" to it.feilkoder,
                             "harTilgang" to it.harTilgang
                     )
@@ -126,7 +126,7 @@ class SakerController @Autowired constructor(private val saksoversiktService: Sa
                     "navn" to it.navn,
                     "journalpostId" to it.journalpostId,
                     "hoveddokument" to hentDokument(it.hoveddokument),
-                    "vedlegg" to it.vedlegg.map { hentDokument(it) },
+                    "vedlegg" to it.vedlegg.map { vedlegg -> hentDokument(vedlegg) },
                     "avsender" to it.avsender,
                     "mottaker" to it.mottaker,
                     "tilhørendeSaksid" to it.tilhorendeSakid,
@@ -145,7 +145,7 @@ class SakerController @Autowired constructor(private val saksoversiktService: Sa
         }
     }
 
-    private fun hentTilhørendeSaker(saker: List<Sak>): List<Map<String, Any?>> {
+    private fun hentTilhorendeSaker(saker: List<Sak>): List<Map<String, Any?>> {
         return saker.map {
             mapOf(
                     "temakode" to it.temakode,

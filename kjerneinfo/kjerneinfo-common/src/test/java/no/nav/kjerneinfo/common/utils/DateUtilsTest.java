@@ -13,7 +13,7 @@ import static org.junit.Assert.assertTrue;
 public class DateUtilsTest {
 
     @Test
-    public void testConvertDateToXmlGregorianCalendar() throws Exception {
+    public void testConvertDateToXmlGregorianCalendar() {
         final DateTime date = new DateTime(2013, 2, 13, 0, 0);
 
         XMLGregorianCalendar xmlGregorianCalendar = DateUtils.convertDateToXmlGregorianCalendar(date.toDate());
@@ -24,7 +24,7 @@ public class DateUtilsTest {
     }
 
     @Test
-    public void testGetRandomDate() throws Exception {
+    public void testGetRandomDate() {
         Interval interval = new Interval(DateTime.now().minusMonths(2), DateTime.now().plusMonths(1));
 
         Date date = DateUtils.getRandomDate();
@@ -33,7 +33,7 @@ public class DateUtilsTest {
     }
 
     @Test
-    public void testGetRandomDatePair() throws Exception {
+    public void testGetRandomDatePair() {
         Date[] datePair = DateUtils.getRandomDatePair();
 
         boolean valid = datePair[0].before(datePair[1]) || datePair[0].equals(datePair[1]);

@@ -304,7 +304,7 @@ public class MeldingUtilsTest {
     }
 
     @Test
-    public void getTekstForMeldingStatusForDynamiskNokkelSkalReturnereKeyBruktSomParameterDersomKeyIkkeEksiserer() throws Exception {
+    public void getTekstForMeldingStatusForDynamiskNokkelSkalReturnereKeyBruktSomParameterDersomKeyIkkeEksiserer() {
         final String key = "melding.status.SVAR_SKRIFTLIG";
         final ContentRetriever propertyResolver = mock(ContentRetriever.class);
         when(propertyResolver.hentTekst(anyString())).thenThrow(new NoSuchElementException());
@@ -315,7 +315,7 @@ public class MeldingUtilsTest {
     }
 
     @Test
-    public void hentEnonicTekstDynamicSkalBrukeDefaultKeyDersomUthentingMedParameterKeyFeiler() throws Exception {
+    public void hentEnonicTekstDynamicSkalBrukeDefaultKeyDersomUthentingMedParameterKeyFeiler() {
         final String keySomFeiler = "key-som-feiler";
         final String defaultKey = "default-key";
         final String valueForDefaultKey = "value-for-default-key";
@@ -329,7 +329,7 @@ public class MeldingUtilsTest {
     }
 
     @Test
-    public void lagerMeldingSomErOppgaveMeldingOmOppgaveVarsel() throws Exception {
+    public void lagerMeldingSomErOppgaveMeldingOmOppgaveVarsel() {
         XMLHenvendelse xmlHenvendelse = lagXMLHenvendelseMedOppgaveVarsel();
 
         Melding oppgaveVarsel = tilMelding(propertyResolver, ldapService).apply(xmlHenvendelse);

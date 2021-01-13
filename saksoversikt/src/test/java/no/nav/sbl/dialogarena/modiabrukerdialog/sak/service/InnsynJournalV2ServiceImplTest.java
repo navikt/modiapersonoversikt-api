@@ -63,12 +63,11 @@ public class InnsynJournalV2ServiceImplTest {
             assertThat(e.getBaksystem(), is(JOARK));
         } catch (Exception e) {
             fail("En uventet exception ble kastet");
-            return;
         }
     }
 
     @Test
-    public void feilendeBaksystemResultatOmJournalpostIkkeInngående() {
+    public void feilendeBaksystemResultatOmJournalpostIkkeInngaende() {
         assertJoarkFeilendeBaksystemForException(new IdentifiserJournalpostJournalpostIkkeInngaaende());
     }
 

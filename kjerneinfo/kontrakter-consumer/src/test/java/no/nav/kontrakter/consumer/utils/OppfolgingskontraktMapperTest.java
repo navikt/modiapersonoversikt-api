@@ -59,7 +59,7 @@ public class OppfolgingskontraktMapperTest {
     }
 
     @Test
-    public void testResponseMapping() throws DatatypeConfigurationException {
+    public void testResponseMapping() {
         OppfolgingskontraktMapper mapper = OppfolgingskontraktMapper.getInstance();
 
         WSHentOppfoelgingskontraktListeResponse fimResponse = new WSHentOppfoelgingskontraktListeResponse();
@@ -136,14 +136,14 @@ public class OppfolgingskontraktMapperTest {
         Bruker bruker = to.getBruker();
         assertEquals(formidlingsgruppe, bruker.getFormidlingsgruppe());
         assertEquals(servicegruppeVerdi, bruker.getInnsatsgruppe());
-        assertEquals(meldepliktVerdi, bruker.getMeldeplikt().booleanValue());
+        assertEquals(meldepliktVerdi, bruker.getMeldeplikt());
         snapshot.assertMatches(to);
     }
 
     private void checkBruker(WSSYFOkontrakt kontrakt, WSBruker bruker, OppfolgingskontraktResponse oppfolgingskontraktResponse) {
         assertEquals(bruker.getFormidlingsgruppe(), oppfolgingskontraktResponse.getBruker().getFormidlingsgruppe());
         assertEquals(bruker.getServicegruppe().get(0).getServiceGruppe(), oppfolgingskontraktResponse.getBruker().getInnsatsgruppe());
-        assertEquals(Boolean.valueOf(bruker.getMeldeplikt().get(0).isMeldeplikt()), oppfolgingskontraktResponse.getBruker().getMeldeplikt());
+        assertEquals(bruker.getMeldeplikt().get(0).isMeldeplikt(), oppfolgingskontraktResponse.getBruker().getMeldeplikt());
         assertEquals(kontrakt.getSykmeldtFra(), toXMLGregorian(oppfolgingskontraktResponse.getBruker().getSykmeldtFrom()));
     }
 

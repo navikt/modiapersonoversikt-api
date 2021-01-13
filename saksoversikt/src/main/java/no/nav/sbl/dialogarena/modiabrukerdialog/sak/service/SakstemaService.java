@@ -109,8 +109,7 @@ public class SakstemaService {
     }
 
     private List<Sakstema> grupperSykepengerOgSykemelding(List<Sakstema> sakstema) {
-
-        List<Sakstema> listeKopi = sakstema.stream().collect(toList());
+        List<Sakstema> listeKopi = new ArrayList<>(sakstema);
 
         Optional<Sakstema> maybeSykepenger = listeKopi.stream().filter(st -> st.temakode.equals("SYK")).findFirst();
         Optional<Sakstema> maybeSykemelding = listeKopi.stream().filter(st -> st.temakode.equals("SYM")).findFirst();
@@ -173,11 +172,11 @@ public class SakstemaService {
         }
     }
 
-    private static final Predicate<DokumentMetadata> tilhorendeFraJoark(List<Sak> tilhorendeSaker) {
+    private static Predicate<DokumentMetadata> tilhorendeFraJoark(List<Sak> tilhorendeSaker) {
         return dm -> tilhorendeSaker.stream().map(Sak::getSaksId).collect(toList()).contains(dm.getTilhorendeSakid());
     }
 
-    private static final Predicate<DokumentMetadata> tilhorendeFraHenvendelse(Map.Entry<String, Set<String>> temagruppe, String temakode) {
+    private static Predicate<DokumentMetadata> tilhorendeFraHenvendelse(Map.Entry<String, Set<String>> temagruppe, String temakode) {
         return dm -> dm.getBaksystem().contains(HENVENDELSE)
                 && (dm.getTemakode().equals(temakode)
                 || (!temagruppe.getKey().equals(RESTERENDE_TEMA) && dm.getTemakode().equals(OPPFOLGING)));

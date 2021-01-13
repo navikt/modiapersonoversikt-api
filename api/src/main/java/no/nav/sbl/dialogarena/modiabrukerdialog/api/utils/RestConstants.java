@@ -1,4 +1,4 @@
-package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util;
+package no.nav.sbl.dialogarena.modiabrukerdialog.api.utils;
 
 import no.nav.common.utils.EnvironmentUtils;
 
@@ -6,6 +6,7 @@ public class RestConstants {
     public static final String AUTHORIZATION = "Authorization";
     public static final String NAV_CONSUMER_TOKEN_HEADER = "Nav-Consumer-Token";
     public static final String NAV_CALL_ID_HEADER = "Nav-Call-Id";
+    public static final String NAV_CONSUMER_ID_HEADER = "Nav-Consumer-Id";
     public static final String TEMA_HEADER = "Tema";
     public static final String ALLE_TEMA_HEADERVERDI = "GEN";
 

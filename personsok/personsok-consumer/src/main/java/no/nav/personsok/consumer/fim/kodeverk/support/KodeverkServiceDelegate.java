@@ -34,8 +34,7 @@ public class KodeverkServiceDelegate {
     @Cacheable(value = "kodeverk_consumer.kodeverkCache", key = "#request.getNavn()")
     public XMLHentKodeverkResponse hentKodeverk(XMLHentKodeverkRequest request) {
         try {
-            XMLHentKodeverkResponse xmlHentKodeverkResponse = kodeverkPortType.hentKodeverk(request);
-            return xmlHentKodeverkResponse;
+            return kodeverkPortType.hentKodeverk(request);
         } catch (HentKodeverkHentKodeverkKodeverkIkkeFunnet ex) {
             logger.warn("Attempt to retrieve a nonexisting kodeverk {}", request.getNavn(), ex);
         } catch (Exception ex) {

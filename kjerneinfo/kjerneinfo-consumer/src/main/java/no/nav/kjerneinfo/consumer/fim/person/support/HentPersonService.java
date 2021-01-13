@@ -158,7 +158,7 @@ public class HentPersonService {
     }
 
     private HentPersonRequest lagHentPersonRequest(String requestIdent) {
-        HentPersonRequest wsRequest = new HentPersonRequest()
+        return new HentPersonRequest()
                 .withAktoer(lagAktoer(requestIdent))
                 .withInformasjonsbehov(
                         Informasjonsbehov.ADRESSE,
@@ -166,7 +166,6 @@ public class HentPersonService {
                         Informasjonsbehov.FAMILIERELASJONER,
                         Informasjonsbehov.KOMMUNIKASJON,
                         Informasjonsbehov.SPORINGSINFORMASJON);
-        return wsRequest;
     }
 
     private PersonIdent lagAktoer(String ident) {

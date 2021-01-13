@@ -27,7 +27,7 @@ import java.math.BigInteger;
 import java.util.List;
 
 import static org.hamcrest.CoreMatchers.equalTo;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertTrue;
 
 public class ForeldrepengerMapperTest {
@@ -325,8 +325,7 @@ public class ForeldrepengerMapperTest {
             foreldrepengerettighet.setForeldrepengetype(foreldrepengertype);
 
             FimAdopsjon adopsjon = (FimAdopsjon) foreldrepengerettighet;
-            LocalDate omsorgsovertakelseDate = OMSORGSOVERTAKELSESDATO;
-            XMLGregorianCalendar omsorgsovertakelseXMLDate = DateUtils.convertDateToXmlGregorianCalendar(omsorgsovertakelseDate.toDate());
+            XMLGregorianCalendar omsorgsovertakelseXMLDate = DateUtils.convertDateToXmlGregorianCalendar(OMSORGSOVERTAKELSESDATO.toDate());
             adopsjon.setOmsorgsovertakelse(omsorgsovertakelseXMLDate);
             return adopsjon;
         } else if (foreldrepengerettighet instanceof FimFoedsel) {
@@ -336,8 +335,7 @@ public class ForeldrepengerMapperTest {
             foreldrepengerettighet.setForeldrepengetype(foreldrepengertype);
 
             FimFoedsel foedsel = (FimFoedsel) foreldrepengerettighet;
-            LocalDate terminDate = TERMINDATO;
-            XMLGregorianCalendar terminXMLDate = DateUtils.convertDateToXmlGregorianCalendar(terminDate.toDate());
+            XMLGregorianCalendar terminXMLDate = DateUtils.convertDateToXmlGregorianCalendar(TERMINDATO.toDate());
             foedsel.setTermin(terminXMLDate);
             return foedsel;
         }

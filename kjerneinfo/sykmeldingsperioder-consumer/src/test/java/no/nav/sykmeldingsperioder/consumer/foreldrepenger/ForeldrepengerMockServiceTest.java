@@ -12,12 +12,12 @@ public class ForeldrepengerMockServiceTest {
     ForeldrepengerMockService mockService;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         mockService = new ForeldrepengerMockService(ForeldrepengerMapper.getInstance());
     }
 
     @Test
-    public void testHentOppfolgingskontrakter() throws Exception {
+    public void testHentOppfolgingskontrakter() {
         ForeldrepengerListeRequest request = new ForeldrepengerListeRequest();
 
         ForeldrepengerListeResponse response = mockService.hentForeldrepengerListe(request);

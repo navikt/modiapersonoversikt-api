@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import static java.util.Collections.emptyList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -85,7 +86,7 @@ class LDAPServiceImplTest {
         @Test
         @DisplayName("Henter saksbehandler fra AD")
         void henterSaksbehandler() {
-            LdapContextProvider ldapContextProvider = mockLdapContextProvider(Collections.EMPTY_LIST);
+            LdapContextProvider ldapContextProvider = mockLdapContextProvider(emptyList());
             LDAPService ldapService = new LDAPServiceImpl(ldapContextProvider);
 
             Saksbehandler saksbehandler = ldapService.hentSaksbehandler("123");

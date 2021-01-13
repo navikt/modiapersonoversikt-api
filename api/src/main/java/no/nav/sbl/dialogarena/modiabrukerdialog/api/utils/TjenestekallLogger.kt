@@ -1,4 +1,4 @@
-package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util
+package no.nav.sbl.dialogarena.modiabrukerdialog.api.utils
 
 import org.slf4j.LoggerFactory
 import java.lang.StringBuilder
