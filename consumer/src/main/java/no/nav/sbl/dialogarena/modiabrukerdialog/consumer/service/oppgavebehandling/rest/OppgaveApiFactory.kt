@@ -3,7 +3,7 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.oppgavebehandl
 import no.nav.common.log.MDCConstants
 import no.nav.common.utils.EnvironmentUtils
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.oppgave.generated.apis.OppgaveApi
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.TjenestekallLogger
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.TjenestekallLogger
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.Request

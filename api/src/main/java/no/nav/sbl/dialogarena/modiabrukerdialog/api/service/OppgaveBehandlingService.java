@@ -2,13 +2,12 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.api.service;
 
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Oppgave;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Optional;
 
 public interface OppgaveBehandlingService {
-    Oppgave hentOppgave(@NotNull String oppgaveId);
+    Oppgave hentOppgave(String oppgaveId);
 
     OpprettOppgaveResponse opprettOppgave(OpprettOppgaveRequest request);
 
