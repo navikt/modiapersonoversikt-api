@@ -108,8 +108,8 @@ public class ServiceConfig {
     }
 
     @Bean
-    public OppgaveRestClient oppgaveOpprettelseClient(KodeverksmapperService kodeverksmapperService, PdlOppslagService pdlOppslagService) {
-        return new OppgaveOpprettelseClient(kodeverksmapperService, pdlOppslagService);
+    public OppgaveRestClient oppgaveOpprettelseClient(KodeverksmapperService kodeverksmapperService, PdlOppslagService pdlOppslagService, SystemUserTokenProvider stsService) {
+        return new OppgaveOpprettelseClient(kodeverksmapperService, pdlOppslagService, stsService);
     }
 
     @Bean
@@ -133,8 +133,9 @@ public class ServiceConfig {
                                                              OppgaveV3 oppgaveV3,
                                                              AnsattService ansattService,
                                                              ArbeidsfordelingV1Service arbeidsfordelingV1Service,
-                                                             Tilgangskontroll tilgangskontroll) {
-        return new OppgaveBehandlingServiceImpl(oppgavebehandlingV3, tildelOppgaveV1, oppgaveV3, ansattService, arbeidsfordelingV1Service, tilgangskontroll);
+                                                             Tilgangskontroll tilgangskontroll,
+                                                             OppgaveRestClient oppgaveRestClient) {
+        return new OppgaveBehandlingServiceImpl(oppgavebehandlingV3, tildelOppgaveV1, oppgaveV3, ansattService, arbeidsfordelingV1Service, tilgangskontroll, oppgaveRestClient);
     }
 
     @Bean

@@ -10,6 +10,10 @@ import java.util.Optional;
 public interface OppgaveBehandlingService {
     Oppgave hentOppgave(@NotNull String oppgaveId);
 
+    OpprettOppgaveResponse opprettOppgave(OpprettOppgaveRequest request);
+
+    OpprettOppgaveResponse opprettSkjermetOppgave(OpprettSkjermetOppgaveRequest request);
+
     void tilordneOppgaveIGsak(String oppgaveId, Temagruppe temagruppe, String saksbehandlersValgteEnhet) throws FikkIkkeTilordnet;
 
     List<Oppgave> finnTildelteOppgaverIGsak();
