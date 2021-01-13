@@ -1,6 +1,8 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.oppgave
 
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.oppgave.generated.models.*
+import kotlin.reflect.KClass
+import kotlin.reflect.jvm.internal.impl.resolve.constants.KClassValue
 
 object OppgaveMappingHelpers {
     fun requiredOppgaveId(value: Long?): Long {
@@ -20,11 +22,11 @@ object OppgaveMappingHelpers {
     fun convertEnumToGetResp(value: OppgaveJsonDTO.Status): GetOppgaveResponseJsonDTO.Status = convertEnum(value)
     fun convertEnumToGetResp(value: OppgaveJsonDTO.Prioritet): GetOppgaveResponseJsonDTO.Prioritet = convertEnum(value)
 
-    fun convertEnum(value: GetOppgaveResponseJsonDTO.Status): OppgaveJsonDTO.Status = convertEnum(value)
-    fun convertEnum(value: GetOppgaveResponseJsonDTO.Prioritet): OppgaveJsonDTO.Prioritet = convertEnum(value)
+    fun convertEnumToJson(value: GetOppgaveResponseJsonDTO.Status): OppgaveJsonDTO.Status = convertEnum(value)
+    fun convertEnumToJson(value: GetOppgaveResponseJsonDTO.Prioritet): OppgaveJsonDTO.Prioritet = convertEnum(value)
 
 
-    internal inline fun <S : Enum<S>, reified T : Enum<T>> convertEnum(value: S): T {
+    private inline fun <S : Enum<S>, reified T : Enum<T>> convertEnum(value: S): T {
         val allowValues: Array<T> = T::class.java.enumConstants
         return allowValues
                 .find { it.name == value.name }

@@ -36,9 +36,9 @@ public fun GetOppgaveResponseJsonDTO.toOppgaveJsonDTO(): OppgaveJsonDTO = Oppgav
     ferdigstiltTidspunkt = this.ferdigstiltTidspunkt,
     endretTidspunkt = this.endretTidspunkt,
     status =
-    no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.oppgave.OppgaveMappingHelpers.convertEnum(this.status),
+    no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.oppgave.OppgaveMappingHelpers.convertEnumToJson(this.status),
     prioritet =
-    no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.oppgave.OppgaveMappingHelpers.convertEnum(this.prioritet)
+    no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.oppgave.OppgaveMappingHelpers.convertEnumToJson(this.prioritet)
 )
 
 public fun OppgaveJsonDTO.toPutOppgaveRequestJsonDTO(): PutOppgaveRequestJsonDTO =
