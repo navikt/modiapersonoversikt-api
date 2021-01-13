@@ -3,7 +3,7 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.oppgavebehandl
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.AnsattEnhet;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.LeggTilbakeOppgaveIGsakRequest;
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveRestClient;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveBehandlingService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.arbeidsfordeling.ArbeidsfordelingV1Service;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.AnsattService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.http.SubjectHandlerUtil;
@@ -46,7 +46,7 @@ class LeggTilbakeOppgaveIGsakDelegateTest {
     private TildelOppgaveV1 tildelOppgaveMock;
     private ArbeidsfordelingV1Service arbeidsfordelingMock;
     private Tilgangskontroll tilgangskontroll;
-    private OppgaveRestClient oppgaveRestClientMock;
+    private OppgaveBehandlingService oppgaveRestClientMock;
 
     private OppgaveBehandlingServiceImpl oppgaveBehandlingService;
 
@@ -63,7 +63,7 @@ class LeggTilbakeOppgaveIGsakDelegateTest {
         tildelOppgaveMock = mock(TildelOppgaveV1.class);
         arbeidsfordelingMock = mock(ArbeidsfordelingV1ServiceImpl.class);
         tilgangskontroll = TilgangskontrollMock.get();
-        oppgaveRestClientMock = mock(OppgaveRestClient.class);
+        oppgaveRestClientMock = mock(OppgaveBehandlingService.class);
     }
 
     private AnsattService mockAnsattService() {

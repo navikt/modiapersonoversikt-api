@@ -1,9 +1,9 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.oppgavebehandling;
 
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.*;
 import no.nav.common.auth.subject.SubjectHandler;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Oppgave;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.*;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.arbeidsfordeling.ArbeidsfordelingV1Service;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.AnsattService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Policies;
@@ -20,10 +20,8 @@ import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.meldinger.*;
 import no.nav.tjeneste.virksomhet.tildeloppgave.v1.TildelOppgaveV1;
 import no.nav.tjeneste.virksomhet.tildeloppgave.v1.WSTildelFlereOppgaverRequest;
 import no.nav.tjeneste.virksomhet.tildeloppgave.v1.WSTildelFlereOppgaverResponse;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
 import java.util.Objects;
@@ -42,7 +40,6 @@ import static org.joda.time.DateTime.now;
 import static org.joda.time.format.DateTimeFormat.forPattern;
 
 
-
 public class OppgaveBehandlingServiceImpl implements OppgaveBehandlingService {
 
     private final String HENVENDELSESTYPE_KODE = "DIALOG";
@@ -59,7 +56,7 @@ public class OppgaveBehandlingServiceImpl implements OppgaveBehandlingService {
     private final AnsattService ansattWS;
     private LeggTilbakeOppgaveIGsakDelegate leggTilbakeOppgaveIGsakDelegate;
     private final Tilgangskontroll tilgangskontroll;
-    private final OppgaveRestClient oppgaveRestClient;
+    private final OppgaveBehandlingService oppgaveRestClient;
 
     @Autowired
     public OppgaveBehandlingServiceImpl(OppgavebehandlingV3 oppgavebehandlingWS,
@@ -68,7 +65,7 @@ public class OppgaveBehandlingServiceImpl implements OppgaveBehandlingService {
                                         AnsattService ansattWS,
                                         ArbeidsfordelingV1Service arbeidsfordelingService,
                                         Tilgangskontroll tilgangskontroll,
-                                        OppgaveRestClient oppgaveRestClient) {
+                                        OppgaveBehandlingService oppgaveRestClient) {
         this.oppgavebehandlingWS = oppgavebehandlingWS;
         this.tildelOppgaveWS = tildelOppgaveWS;
         this.oppgaveWS = oppgaveWS;
@@ -79,8 +76,8 @@ public class OppgaveBehandlingServiceImpl implements OppgaveBehandlingService {
     }
 
     @Override
-    public OpprettOppgaveResponse opprettOppgave(OpprettOppgaveRequest request){
-        WSOpprettOppgaveResponse response =  oppgavebehandlingWS.opprettOppgave(
+    public OpprettOppgaveResponse opprettOppgave(OpprettOppgaveRequest request) {
+        WSOpprettOppgaveResponse response = oppgavebehandlingWS.opprettOppgave(
                 new WSOpprettOppgaveRequest()
                         .withOpprettetAvEnhetId(Integer.parseInt(request.getOpprettetavenhetsnummer()))
                         .withHenvendelsetypeKode(HENVENDELSESTYPE_KODE)

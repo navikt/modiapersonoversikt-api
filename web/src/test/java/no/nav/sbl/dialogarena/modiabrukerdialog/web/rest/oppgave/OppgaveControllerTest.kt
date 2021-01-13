@@ -9,7 +9,7 @@ import no.nav.common.utils.fn.UnsafeSupplier
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Oppgave
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.HenvendelseUtsendingService
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveRestClient
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveBehandlingService
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.arbeidsfordeling.ArbeidsfordelingV1Service
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.ldap.LDAPService
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.http.HttpRequestUtil
@@ -48,7 +48,7 @@ internal class OppgaveControllerTest {
     private val plukkOppgaveService: PlukkOppgaveService = mock()
     private val ldapService: LDAPService = mock()
     private val henvendelseUtsendingService: HenvendelseUtsendingService = mock()
-    private val oppgaveRestClient: OppgaveRestClient = mock()
+    private val oppgaveRestClient: OppgaveBehandlingService = mock()
     private val oppgaveController: OppgaveController = OppgaveController(
             OppgaveBehandlingServiceImpl(
                     oppgaveBehandlingMock,

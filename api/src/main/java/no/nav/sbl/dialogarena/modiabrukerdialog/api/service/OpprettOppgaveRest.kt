@@ -2,10 +2,6 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.api.service
 
 import java.time.LocalDate
 
-interface OppgaveRestClient {
-    fun opprettSkjermetOppgave(requestOpprett: OpprettSkjermetOppgaveRequest) : OpprettOppgaveResponse
-}
-
 data class OpprettOppgaveResponse(
         val id: String
 )
