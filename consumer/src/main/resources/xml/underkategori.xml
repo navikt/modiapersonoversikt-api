@@ -3177,19 +3177,19 @@
         <gosys datoOpprettet="2021-01-11T12:00:00" endretAv="PK-43233" underkategori="REG_SYM"/>
         <gsak datoOpprettet="2021-01-11T12:00:00" endretAv="PK-43233" kode="REG_SYM"/>
     </underkategori>
-    <underkategori kode="ENKELTST_BEH_SYM" datoFom="2021-01-11" datoOpprettet="2021-01-11T12:00:00" dekode="Bestridelse av sykmelding"
+    <underkategori kode="ENKELTST_BEH_SYM" datoFom="2021-01-11" datoOpprettet="2021-01-11T12:00:00" dekode="Enkeltstående behandling"
                    endretAv="OPP-1306" erGyldig="true" fagomrade="SYM" opprettetAv="OPP-1306" gosys="true" gsak="true"
                    leveranse="OPP-1306" jiraissue="OPP-1306">
         <gosys datoOpprettet="2021-01-11T12:00:00" endretAv="PK-43233" underkategori="ENKELTST_BEH_SYM"/>
         <gsak datoOpprettet="2021-01-11T12:00:00" endretAv="PK-43233" kode="ENKELTST_BEH_SYM"/>
     </underkategori>
-    <underkategori kode="REISETILSKUDD_SYM" datoFom="2021-01-11" datoOpprettet="2021-01-11T12:00:00" dekode="Bestridelse av sykmelding"
+    <underkategori kode="REISETILSKUDD_SYM" datoFom="2021-01-11" datoOpprettet="2021-01-11T12:00:00" dekode="Reisetilskudd"
                    endretAv="OPP-1306" erGyldig="true" fagomrade="SYM" opprettetAv="OPP-1306" gosys="true" gsak="true"
                    leveranse="OPP-1306" jiraissue="OPP-1306">
         <gosys datoOpprettet="2021-01-11T12:00:00" endretAv="PK-43233" underkategori="REISETILSKUDD_SYM"/>
         <gsak datoOpprettet="2021-01-11T12:00:00" endretAv="PK-43233" kode="REISETILSKUDD_SYM"/>
     </underkategori>
-    <underkategori kode="OPP_FAGSYS_SYM" datoFom="2021-01-11" datoOpprettet="2021-01-11T12:00:00" dekode="Bestridelse av sykmelding"
+    <underkategori kode="OPP_FAGSYS_SYM" datoFom="2021-01-11" datoOpprettet="2021-01-11T12:00:00" dekode="Oppdatering fagsystem"
                    endretAv="OPP-1306" erGyldig="true" fagomrade="SYM" opprettetAv="OPP-1306" gosys="true" gsak="true"
                    leveranse="OPP-1306" jiraissue="OPP-1306">
         <gosys datoOpprettet="2021-01-11T12:00:00" endretAv="PK-43233" underkategori="OPP_FAGSYS_SYM"/>
