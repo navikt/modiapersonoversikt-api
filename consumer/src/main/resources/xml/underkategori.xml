@@ -3195,6 +3195,12 @@
         <gosys datoOpprettet="2021-01-11T12:00:00" endretAv="PK-43233" underkategori="OPP_FAGSYS_SYM"/>
         <gsak datoOpprettet="2021-01-11T12:00:00" endretAv="PK-43233" kode="OPP_FAGSYS_SYM"/>
     </underkategori>
+    <underkategori kode="KLAGE_SYM" datoFom="2021-01-14" datoOpprettet="2021-01-14T12:00:00" dekode="Klage"
+                   endretAv="OPP-1306" erGyldig="true" fagomrade="SYM" opprettetAv="OPP-1306" gosys="true" gsak="true"
+                   leveranse="OPP-1306" jiraissue="OPP-1306">
+        <gosys datoOpprettet="2021-01-14T12:00:00" endretAv="PK-43233" underkategori="KLAGE_SYM"/>
+        <gsak datoOpprettet="2021-01-14T12:00:00" endretAv="PK-43233" kode="KLAGE_SYM"/>
+    </underkategori>
 </underkategoriListe>
 
 
