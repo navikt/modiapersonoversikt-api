@@ -27,6 +27,8 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Tilgangskontrol
 import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
 import org.slf4j.MDC
+import org.springframework.http.HttpStatus
+import org.springframework.web.server.ResponseStatusException
 import java.time.LocalDate
 import java.util.*
 import java.util.Optional.ofNullable
@@ -55,7 +57,7 @@ class RestOppgaveBehandlingServiceImpl(
     override fun opprettOppgave(request: OpprettOppgaveRequest?): OpprettOppgaveResponse {
         requireNotNull(request)
         val behandling = kodeverksmapperService.mapUnderkategori(request.underkategoriKode)
-        val oppgaveType = kodeverksmapperService.mapOppgavetype(request.oppgavetype);
+        val oppgaveType = kodeverksmapperService.mapOppgavetype(request.oppgavetype)
         val aktorId = getAktorId(request.fnr) ?: throw IllegalArgumentException("Fant ikke aktorId for ${request.fnr}")
 
         val response = apiClient.opprettOppgave(
@@ -85,7 +87,7 @@ class RestOppgaveBehandlingServiceImpl(
     override fun opprettSkjermetOppgave(request: OpprettSkjermetOppgaveRequest?): OpprettOppgaveResponse {
         requireNotNull(request)
         val behandling = kodeverksmapperService.mapUnderkategori(request.underkategoriKode)
-        val oppgaveType = kodeverksmapperService.mapOppgavetype(request.oppgavetype);
+        val oppgaveType = kodeverksmapperService.mapOppgavetype(request.oppgavetype)
         val aktorId = getAktorId(request.fnr) ?: throw IllegalArgumentException("Fant ikke aktorId for ${request.fnr}")
 
         val response = apiClient.opprettOppgave(
@@ -211,7 +213,13 @@ class RestOppgaveBehandlingServiceImpl(
     override fun leggTilbakeOppgaveIGsak(request: LeggTilbakeOppgaveIGsakRequest?) {
         requireNotNull(request)
         requireNotNull(request.oppgaveId)
+        val ident: String = SubjectHandler.getIdent().orElseThrow { IllegalStateException("Fant ikke ident") }
         val oppgave = hentOppgaveJsonDTO(request.oppgaveId)
+
+        if (oppgave.tilordnetRessurs !== ident) {
+            val feilmelding = "Innlogget saksbehandler $ident er ikke tilordnet oppgave ${request.oppgaveId}, den er tilordnet: ${oppgave.tilordnetRessurs}"
+            throw ResponseStatusException(HttpStatus.FORBIDDEN, feilmelding)
+        }
 
         var oppdatertOppgave = oppgave.copy(
             tilordnetRessurs = null,
