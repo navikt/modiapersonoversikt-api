@@ -304,11 +304,5 @@
             <artifactId>hamcrest-core</artifactId>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>no.nav.sbl.dialogarena</groupId>
-            <artifactId>sporsmal-og-svar</artifactId>
-            <version>dev</version>
-            <scope>compile</scope>
-        </dependency>
     </dependencies>
 </project>
