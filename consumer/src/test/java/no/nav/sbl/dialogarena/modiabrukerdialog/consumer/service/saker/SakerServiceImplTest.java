@@ -351,7 +351,6 @@ public class SakerServiceImplTest {
 
     private Sak lagSak() {
         Sak sak = new Sak();
-        sak.saksId = "4567";
         sak.temaKode = "GEN";
         sak.finnesIGsak = false;
         sak.fagsystemKode = FAGSYSTEM_FOR_OPPRETTELSE_AV_GENERELL_SAK;
@@ -362,7 +361,6 @@ public class SakerServiceImplTest {
 
     private Sak lagSakUtenFagsystemId() {
         Sak sak = new Sak();
-        sak.saksId = "1234";
         sak.temaKode = "STO";
         sak.finnesIGsak = false;
         sak.fagsystemKode = "";
