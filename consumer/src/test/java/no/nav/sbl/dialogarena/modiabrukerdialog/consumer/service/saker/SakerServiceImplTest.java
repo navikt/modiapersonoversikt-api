@@ -51,6 +51,7 @@ import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.joda.time.DateTime.now;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
@@ -335,6 +336,14 @@ public class SakerServiceImplTest {
         when(behandleSak.opprettSak(any(WSOpprettSakRequest.class))).thenReturn(new WSOpprettSakResponse().withSakId(SAKS_ID));
 
         assertThrows(IllegalArgumentException.class, () -> sakerService.knyttBehandlingskjedeTilSak("", BEHANDLINGSKJEDEID, lagSak(), "1337"));
+    }
+
+    @Test
+    void skalHandtereMangledeGagsystemSakId() {
+        WSSak wsSak = new WSSak();
+        assertDoesNotThrow(() -> {
+            GsakSaker.TIL_SAK.invoke(wsSak);
+        });
     }
 
     private ArrayList<WSSak> createSaksliste() {
