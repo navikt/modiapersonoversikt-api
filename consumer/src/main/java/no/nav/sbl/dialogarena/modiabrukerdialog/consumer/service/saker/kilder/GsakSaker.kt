@@ -2,6 +2,8 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.saker.kilder
 
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.Sak
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.saker.SakerKilde
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.saker.mediation.SakApiGateway
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.saker.mediation.SakDto
 import no.nav.tjeneste.virksomhet.behandlesak.v1.BehandleSakV1
 import no.nav.tjeneste.virksomhet.behandlesak.v1.OpprettSakSakEksistererAllerede
 import no.nav.tjeneste.virksomhet.behandlesak.v1.informasjon.WSFagomraader
@@ -13,15 +15,17 @@ import no.nav.tjeneste.virksomhet.sak.v1.informasjon.WSPerson
 import no.nav.tjeneste.virksomhet.sak.v1.informasjon.WSSak
 import no.nav.tjeneste.virksomhet.sak.v1.meldinger.WSFinnSakRequest
 
-internal class GsakSaker(val sakV1: SakV1, val behandleSakWS: BehandleSakV1) : SakerKilde {
+internal class GsakSaker(
+        private val sakV1: SakV1,
+        private val behandleSakWS: BehandleSakV1,
+        private val sakApiGateway: SakApiGateway) : SakerKilde {
+
     override val kildeNavn: String
         get() = "GSAK"
 
     override fun leggTilSaker(fnr: String, saker: MutableList<Sak>) {
-        val response = sakV1.finnSak(
-                WSFinnSakRequest()
-                        .withBruker(WSPerson().withIdent(fnr)))
-        val gsakSaker = response.sakListe.map(TIL_SAK)
+        val response = sakApiGateway.hentSaker(fnr)
+        val gsakSaker = response.map(TIL_SAK)
         saker.addAll(gsakSaker)
     }
 
@@ -56,26 +60,39 @@ internal class GsakSaker(val sakV1: SakV1, val behandleSakWS: BehandleSakV1) : S
 
     companion object {
         private const val VEDTAKSLOSNINGEN = "FS36"
+        private const val SAKSTYPE_GENERELL = "GEN"
+        private const val SAKSTYPE_MED_FAGSAK = "MFS"
+
 
         @JvmField
-        val TIL_SAK = { wsSak: WSSak ->
+        val TIL_SAK = { sakDto: SakDto ->
             Sak().apply {
-                opprettetDato = wsSak.opprettelsetidspunkt
-                saksId = wsSak.sakId
-                fagsystemSaksId = getFagsystemSakId(wsSak)
-                temaKode = wsSak.fagomraade?.value
-                sakstype = getSakstype(wsSak)
-                fagsystemKode = wsSak.fagsystem?.value
+                opprettetDato = sakDto.opprettetTidspunkt
+                saksId = sakDto.id.toString()
+                fagsystemSaksId = getFagsystemSakId(sakDto)
+                temaKode = sakDto.tema
+                fagsystemKode = sakDto.applikasjon
                 finnesIGsak = true
+                sakstype = getSakstype(sakDto)
+            }
+
+        }
+
+        private fun getSakstype(sakDto: SakDto): String? {
+
+            return when (sakDto.applikasjon) {
+                VEDTAKSLOSNINGEN -> SAKSTYPE_MED_FAGSAK
+                else -> {
+                    if (sakDto.fagsakNr != null)
+                        SAKSTYPE_MED_FAGSAK
+                    else
+                        SAKSTYPE_GENERELL
+                }
             }
         }
 
-        private fun getSakstype(wsSak: WSSak): String? {
-            return if (VEDTAKSLOSNINGEN == wsSak.fagsystem?.value) Sak.SAKSTYPE_MED_FAGSAK else wsSak.sakstype?.value
-        }
-
-        private fun getFagsystemSakId(wsSak: WSSak): String? {
-            return if (VEDTAKSLOSNINGEN == wsSak.fagsystem?.value) wsSak.sakId else wsSak.fagsystemSakId
+        private fun getFagsystemSakId(sakDto: SakDto): String? {
+            return if (VEDTAKSLOSNINGEN == sakDto.applikasjon) sakDto.id.toString() else sakDto.fagsakNr
         }
     }
 }

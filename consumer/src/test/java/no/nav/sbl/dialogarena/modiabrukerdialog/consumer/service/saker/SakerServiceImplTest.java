@@ -13,22 +13,13 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.saker.mediation
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.Feature;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.UnleashService;
 import no.nav.tjeneste.virksomhet.behandlesak.v1.BehandleSakV1;
-import no.nav.tjeneste.virksomhet.sak.v1.FinnSakForMangeForekomster;
-import no.nav.tjeneste.virksomhet.sak.v1.FinnSakUgyldigInput;
 import no.nav.tjeneste.virksomhet.sak.v1.SakV1;
-import no.nav.tjeneste.virksomhet.sak.v1.informasjon.WSFagomraader;
-import no.nav.tjeneste.virksomhet.sak.v1.informasjon.WSFagsystemer;
-import no.nav.tjeneste.virksomhet.sak.v1.informasjon.WSSak;
-import no.nav.tjeneste.virksomhet.sak.v1.informasjon.WSSakstyper;
-import no.nav.tjeneste.virksomhet.sak.v1.meldinger.WSFinnSakRequest;
-import no.nav.tjeneste.virksomhet.sak.v1.meldinger.WSFinnSakResponse;
 import no.nav.virksomhet.gjennomforing.sak.arbeidogaktivitet.v1.EndringsInfo;
 import no.nav.virksomhet.gjennomforing.sak.arbeidogaktivitet.v1.Fagomradekode;
 import no.nav.virksomhet.gjennomforing.sak.arbeidogaktivitet.v1.Sakstypekode;
 import no.nav.virksomhet.tjenester.sak.arbeidogaktivitet.v1.ArbeidOgAktivitet;
 import no.nav.virksomhet.tjenester.sak.meldinger.v1.WSHentSakListeRequest;
 import no.nav.virksomhet.tjenester.sak.meldinger.v1.WSHentSakListeResponse;
-import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -48,18 +39,8 @@ import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 public class SakerServiceImplTest {
-    private static final String VEDTAKSLOSNINGEN = "FS36";
-    private static final DateTime FIRE_DAGER_SIDEN = now().minusDays(4);
     private static final String FNR = "fnr";
-    private static final String BEHANDLINGSKJEDEID = "behandlingsKjedeId";
     public static final String SakId_1 = "1";
-    public static final String FagsystemSakId_1 = "11";
-    public static final String SakId_2 = "2";
-    public static final String FagsystemSakId_2 = "22";
-    public static final String SakId_3 = "3";
-    public static final String FagsystemSakId_3 = "33";
-    public static final String SakId_4 = "4";
-    public static final String FagsystemSakId_4 = "44";
 
     @Mock
     private SakV1 sakV1;
@@ -135,31 +116,6 @@ public class SakerServiceImplTest {
         List<Sak> saker = sakerService.hentSammensatteSaker(FNR).stream().filter(harTemaKode(TEMAKODE_OPPFOLGING)).collect(toList());
         assertThat(saker.size(), is(1));
         assertThat(saker.get(0).sakstype, is(SAKSTYPE_GENERELL));
-    }
-
-    @Test
-    void fjernerGenerellOppfolgingssakDersomDenneFinnesOgOppfolgingssakFinnesIFagsaker() throws FinnSakUgyldigInput, FinnSakForMangeForekomster {
-        List<WSSak> wsSaker = Arrays.asList(new WSSak()
-                        .withSakId("4")
-                        .withFagsystemSakId("44")
-                        .withFagomraade(new WSFagomraader().withValue(TEMAKODE_OPPFOLGING))
-                        .withOpprettelsetidspunkt(now())
-                        .withSakstype(new WSSakstyper().withValue(SAKSTYPE_GENERELL))
-                        .withFagsystem(new WSFagsystemer().withValue(FAGSYSTEM_FOR_OPPRETTELSE_AV_GENERELL_SAK)),
-                new WSSak()
-                        .withSakId("5")
-                        .withFagsystemSakId("55")
-                        .withFagomraade(new WSFagomraader().withValue(TEMAKODE_OPPFOLGING))
-                        .withOpprettelsetidspunkt(now())
-                        .withSakstype(new WSSakstyper().withValue("Fag"))
-                        .withFagsystem(new WSFagsystemer().withValue(FAGSYSTEMKODE_ARENA)));
-
-        when(sakV1.finnSak(any(WSFinnSakRequest.class))).thenReturn(new WSFinnSakResponse().withSakListe(wsSaker));
-
-        List<Sak> saker = sakerService.hentSammensatteSaker(FNR).stream().filter(harTemaKode(TEMAKODE_OPPFOLGING)).collect(toList());
-
-        assertThat(saker.size(), is(1));
-        assertThat(saker.get(0).sakstype, not(is(SAKSTYPE_GENERELL)));
     }
 
     @Test

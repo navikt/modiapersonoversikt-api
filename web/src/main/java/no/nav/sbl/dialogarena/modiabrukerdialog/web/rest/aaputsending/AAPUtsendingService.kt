@@ -146,7 +146,7 @@ class AAPUtsendingService(
     }
 
     private fun sendHenvendelse(ident: String, fnr: String) {
-        val saker: List<Sak> = sakerService.hentSammensatteSaker(fnr)
+        val saker: List<Sak> = sakerService.hentSammensatteSaker(fnr)!!
         val sak: Sak = saker.find { it.temaKode == MELDING_TEMAKODE }
                 ?: throw IllegalStateException("Fant ikke $MELDING_TEMAKODE sak for $fnr")
 

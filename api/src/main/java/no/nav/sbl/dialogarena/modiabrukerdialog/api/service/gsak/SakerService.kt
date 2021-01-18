@@ -1,33 +1,20 @@
-package no.nav.sbl.dialogarena.modiabrukerdialog.api.service.gsak;
+package no.nav.sbl.dialogarena.modiabrukerdialog.api.service.gsak
 
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.Sak;
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.exceptions.JournalforingFeilet;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.Sak
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.exceptions.JournalforingFeilet
 
-import java.util.ArrayList;
-import java.util.List;
 
-public interface SakerService {
-    class Resultat {
-        public List<Sak> saker;
-        public List<String> feiledeSystemer;
+interface SakerService {
+    class Resultat @JvmOverloads constructor(var saker: List<Sak> = ArrayList(), var feiledeSystemer: List<String?> = ArrayList())
 
-        public Resultat() {
-            this(new ArrayList<>(), new ArrayList<>());
-        }
+    fun hentSaker(fnr: String): Resultat
 
-        public Resultat(List<Sak> saker, List<String> feiledeSystemer) {
-            this.saker = saker;
-            this.feiledeSystemer = feiledeSystemer;
-        }
-    }
+    @Deprecated("")
+    fun hentSammensatteSaker(fnr: String): List<Sak>?
 
-    Resultat hentSaker(String fnr);
+    @Deprecated("")
+    fun hentPensjonSaker(fnr: String): List<Sak>?
 
-    @Deprecated
-    List<Sak> hentSammensatteSaker(String fnr);
-
-    @Deprecated
-    List<Sak> hentPensjonSaker(String fnr);
-
-    void knyttBehandlingskjedeTilSak(String fnr, String behandlingskjede, Sak sak, String enhet) throws JournalforingFeilet;
+    @Throws(JournalforingFeilet::class)
+    fun knyttBehandlingskjedeTilSak(fnr: String?, behandlingskjede: String?, sak: Sak, enhet: String?)
 }

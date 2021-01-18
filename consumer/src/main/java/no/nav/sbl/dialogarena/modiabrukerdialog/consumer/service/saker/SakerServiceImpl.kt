@@ -10,6 +10,8 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.kodeverk.StandardKod
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.psak.PsakService
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.SakerUtils
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.saker.kilder.*
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.saker.knyttbehandlingskjedetilsak.KnyttBehandlingskjedeTilSakValidator
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.saker.mediation.SakApiGateway
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.behandlehenvendelse.BehandleHenvendelsePortType
 import no.nav.tjeneste.virksomhet.behandlesak.v1.BehandleSakV1
 import no.nav.tjeneste.virksomhet.sak.v1.SakV1
@@ -17,7 +19,6 @@ import no.nav.virksomhet.tjenester.sak.arbeidogaktivitet.v1.ArbeidOgAktivitet
 import org.slf4j.LoggerFactory
 import org.slf4j.MDC
 import org.springframework.beans.factory.annotation.Autowired
-import java.util.*
 import java.util.concurrent.CompletableFuture
 import javax.annotation.PostConstruct
 import kotlin.contracts.ExperimentalContracts
@@ -41,6 +42,8 @@ class SakerServiceImpl : SakerService {
     private lateinit var arbeidOgAktivitet: ArbeidOgAktivitet
     @Autowired
     private lateinit var psakService: PsakService
+    @Autowired
+    private lateinit var sakApiGateway: SakApiGateway
 
     private lateinit var arenaSaker: ArenaSaker
     private lateinit var bidragSaker: BidragSaker
@@ -54,7 +57,7 @@ class SakerServiceImpl : SakerService {
         arenaSaker = ArenaSaker(arbeidOgAktivitet)
         bidragSaker = BidragSaker()
         generelleSaker = GenerelleSaker()
-        gsakSaker = GsakSaker(sakV1, behandleSakWS)
+        gsakSaker = GsakSaker(sakV1, behandleSakWS, sakApiGateway)
         oppfolgingsSaker = OppfolgingsSaker()
         pensjonSaker = PensjonSaker(psakService)
 
@@ -72,8 +75,6 @@ class SakerServiceImpl : SakerService {
 
     override fun hentSammensatteSaker(fnr: String?): List<Sak> {
         requireFnrNotNullOrBlank(fnr)
-        return hentSammensatteSakerResultat(fnr).saker
-    }
 
     override fun hentPensjonSaker(fnr: String?): List<Sak> {
         requireFnrNotNullOrBlank(fnr)
@@ -144,10 +145,10 @@ class SakerServiceImpl : SakerService {
     companion object {
         private fun SakerService.Resultat.leggTilDataFraKilde(fnr: String, kilde: SakerKilde): SakerService.Resultat {
             try {
-                kilde.leggTilSaker(fnr, this.saker)
+                kilde.leggTilSaker(fnr, this.saker as MutableList<Sak>)
             } catch (e: Exception) {
                 logger.error("Kunne ikke hente saker fra ${kilde.kildeNavn}", e)
-                this.feiledeSystemer.add(kilde.kildeNavn)
+                this.feiledeSystemer.plus(kilde.kildeNavn)
             }
             return this
         }

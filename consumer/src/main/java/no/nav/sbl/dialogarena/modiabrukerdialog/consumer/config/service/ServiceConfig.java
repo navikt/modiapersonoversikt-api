@@ -46,6 +46,9 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.organisasjonenh
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.organisasjonenhet.kontaktinformasjon.service.OrganisasjonEnhetKontaktinformasjonServiceImpl;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.pdl.PdlOppslagServiceImpl;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.saker.SakerServiceImpl;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.saker.mediation.SakApiGateway;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.saker.mediation.SakApiGatewayImpl;
+import no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.FodselnummerAktorService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Tilgangskontroll;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.behandlehenvendelse.BehandleHenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.senduthenvendelse.SendUtHenvendelsePortType;
@@ -58,9 +61,11 @@ import no.nav.tjeneste.virksomhet.organisasjonenhetkontaktinformasjon.v1.Organis
 import no.nav.tjeneste.virksomhet.pensjonsak.v1.PensjonSakV1;
 import no.nav.tjeneste.virksomhet.person.v3.binding.PersonV3;
 import no.nav.tjeneste.virksomhet.tildeloppgave.v1.TildelOppgaveV1;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.CacheManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
 import static no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.RestConstants.SECURITY_TOKEN_SERVICE_DISCOVERYURL;
@@ -69,8 +74,11 @@ import static no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.RestConstants.S
  * MODIA ønsker å selv wire inn sine komponenters kontekster for å ha full kontroll over springoppsettet.
  */
 @Configuration
+@Import(no.nav.sbl.dialogarena.modiabrukerdialog.sak.config.ServiceConfig.class)
 @EnableScheduling
 public class ServiceConfig {
+
+    @Autowired no.nav.sbl.dialogarena.modiabrukerdialog.sak.config.ServiceConfig sakServiceConfig;
     public static final String STS_URL_KEY = "no.nav.modig.security.sts.url";
     public static final String SYSTEMUSER_USERNAME = "no.nav.modig.security.systemuser.username";
     public static final String SYSTEMUSER_PASSWORD = "no.nav.modig.security.systemuser.password";
@@ -161,6 +169,12 @@ public class ServiceConfig {
     public SakerService sakerService() {
         return new SakerServiceImpl();
     }
+
+    @Bean
+    public SakApiGateway sakApiGateway(){
+        return new SakApiGatewayImpl(sakServiceConfig.fodselnummerAktorService(), EnvironmentUtils.getRequiredProperty("SAK_ENDPOINTURL"));
+    }
+
 
     @Bean
     public PsakService psakService(PensjonSakV1 pensjonSakV1) {
