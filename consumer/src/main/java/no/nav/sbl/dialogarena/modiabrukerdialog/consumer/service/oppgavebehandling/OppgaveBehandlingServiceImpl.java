@@ -33,7 +33,7 @@ import static java.util.Collections.singletonList;
 import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.toList;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe.*;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.DateUtils.arbeidsdagerFraDato;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.DateUtils.arbeidsdagerFraDato;
 import static org.apache.commons.lang3.StringUtils.equalsIgnoreCase;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.joda.time.DateTime.now;

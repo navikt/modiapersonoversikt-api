@@ -62,6 +62,10 @@
             <artifactId>joda-time</artifactId>
         </dependency>
         <dependency>
+            <groupId>no.bekk.bekkopen</groupId>
+            <artifactId>nocommons</artifactId>
+        </dependency>
+        <dependency>
             <groupId>no.finn.unleash</groupId>
             <artifactId>unleash-client-java</artifactId>
             <version>3.2.2</version>
