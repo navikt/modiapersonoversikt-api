@@ -1591,7 +1591,9 @@
         <ruting antallFristDager="1" datoOpprettet="2010-10-02T05:00:04" endretAv="KAA2812" oppgaveT="KONT_BRUK_SYK" opprettGsak="false" opprettOppgaveArena="false" opprettSakInfotrygd="false" opprettetAv="KAA2812"/>
     </oppgaveT>
     <oppgaveT kode="KONT_BRUK_SYM" datoFom="2010-10-02" datoOpprettet="2010-10-02T05:00:04" dekode="Kontakt bruker" endretAv="KAA2812" erGyldig="true" fagomrade="SYM" opprettetAv="KAA2812" ruting="true">
-        <ruting antallFristDager="1" oppgaveT="KONT_BRUK_SYM" opprettGsak="false" opprettOppgaveArena="false" opprettSakInfotrygd="false"/>
+        <gosys antallFristDager="2" bedrift="true" beskrivelse="0" datoOpprettet="2021-01-11T19:36:06" endretAv="OPP-1306" endringTillatt="true" gruppeKode="KONT_BRUK_GR" juridisk="true" oppgaveT="KONT_BRUK_SYM" opprettGsak="true" opprettOppgaveArena="false" opprettSakInfotrygd="false" opprettetAv="OPP_1306" orgLedd="true" person="true" samhandler="false"/>
+        <gsak antDagerFrist="1" datoOpprettet="2021-01-11T04:24:21" endretAv="OPP-1306" kode="KONT_BRUK_SYM" opprettetAv="OPP-1306"/>
+        <ruting antallFristDager="1" oppgaveT="KONT_BRUK_SYM" opprettGsak="true" opprettOppgaveArena="false" opprettSakInfotrygd="false"/>
     </oppgaveT>
     <oppgaveT kode="KONT_BRUK_TIL" datoFom="2010-10-02" datoOpprettet="2010-10-02T04:24:21" dekode="Kontakt bruker" endretAv="JLA2812" erGyldig="true" fagomrade="TIL" opprettetAv="JLA2812" gosys="true" gsak="true">
         <gosys antallFristDager="2" bedrift="true" beskrivelse="0" datoOpprettet="2010-10-28T19:36:06" endretAv="KAA2812" endringTillatt="true" gruppeKode="KONT_BRUK_GR" juridisk="false" oppgaveT="KONT_BRUK_TIL" opprettGsak="true" opprettOppgaveArena="false" opprettSakInfotrygd="false" opprettetAv="KAA2812" orgLedd="false" person="false" samhandler="false"/>
@@ -2697,6 +2699,11 @@
         <gosys antallFristDager="0" bedrift="false" beskrivelse="0" datoOpprettet="2010-10-28T19:36:06" endretAv="CTB2990" endringTillatt="true" gruppeKode="VUR_HENV_GR" juridisk="false" oppgaveT="VURD_HENV_SYK" opprettGsak="true" opprettOppgaveArena="false" opprettSakInfotrygd="false" opprettetAv="CTB2990" orgLedd="false" person="true" samhandler="false"/>
         <gsak antDagerFrist="0" datoOpprettet="2010-10-28T19:33:15" endretAv="CTB2990" kode="VURD_HENV_SYK" opprettetAv="CTB2990"/>
         <ruting antallFristDager="1" datoOpprettet="2010-12-07T20:11:09" endretAv="KAA2812" oppgaveT="VURD_HENV_SYK" opprettGsak="false" opprettOppgaveArena="false" opprettSakInfotrygd="false" opprettetAv="KAA2812"/>
+    </oppgaveT>
+    <oppgaveT kode="VURD_HENV_SYM" datoFom="2010-10-28" datoOpprettet="2021-01-11T19:33:15" dekode="Vurder henvendelse" endretAv="OPP-1306" erGyldig="true" fagomrade="SYM" opprettetAv="OPP-1603" gosys="true" gsak="true" ruting="true">
+        <gosys antallFristDager="0" bedrift="false" beskrivelse="0" datoOpprettet="2021-01-11T19:36:06" endretAv="OPP-1306" endringTillatt="true" gruppeKode="VUR_HENV_GR" juridisk="false" oppgaveT="VURD_HENV_SYM" opprettGsak="true" opprettOppgaveArena="false" opprettSakInfotrygd="false" opprettetAv="OPP-1306" orgLedd="false" person="true" samhandler="false"/>
+        <gsak antDagerFrist="0" datoOpprettet="2021-01-11T19:33:15" endretAv="OPP-1306" kode="VURD_HENV_SYM" opprettetAv="OPP-1306"/>
+        <ruting antallFristDager="1" datoOpprettet="2021-01-11T20:11:09" endretAv="OPP-1306" oppgaveT="VURD_HENV_SYM" opprettGsak="false" opprettOppgaveArena="false" opprettSakInfotrygd="false" opprettetAv="OPP-1306"/>
     </oppgaveT>
     <oppgaveT kode="VURD_HENV_TIL" datoFom="2010-10-28" datoOpprettet="2010-10-28T19:33:15" dekode="Vurder henvendelse" endretAv="CTB2990" erGyldig="true" fagomrade="TIL" opprettetAv="CTB2990" gosys="true" gsak="true" ruting="true">
         <gosys antallFristDager="0" bedrift="true" beskrivelse="0" datoOpprettet="2010-10-28T19:36:06" endretAv="CTB2990" endringTillatt="true" gruppeKode="VUR_HENV_GR" juridisk="false" oppgaveT="VURD_HENV_TIL" opprettGsak="true" opprettOppgaveArena="false" opprettSakInfotrygd="false" opprettetAv="CTB2990" orgLedd="false" person="false" samhandler="false"/>
