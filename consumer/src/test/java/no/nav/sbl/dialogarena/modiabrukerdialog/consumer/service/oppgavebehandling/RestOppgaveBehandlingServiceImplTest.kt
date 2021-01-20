@@ -23,8 +23,8 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.pdl.PdlOppslagServic
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.http.SubjectHandlerUtil
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.kodeverksmapper.KodeverksmapperService
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.oppgavebehandling.rest.RestOppgaveBehandlingServiceImpl
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.oppgavebehandling.rest.RestOppgaveBehandlingServiceImpl.Companion.KONTAKT_NAV
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.oppgavebehandling.rest.RestOppgaveBehandlingServiceImpl.Companion.SPORSMAL_OG_SVAR
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.oppgavebehandling.rest.Utils.KONTAKT_NAV
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.oppgavebehandling.rest.Utils.SPORSMAL_OG_SVAR
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Tilgangskontroll
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.TilgangskontrollContext
 import org.assertj.core.api.Assertions.assertThat
@@ -76,7 +76,7 @@ class RestOppgaveBehandlingServiceImplTest {
     val dummyOppgave = OppgaveJsonDTO(
         id = 1234,
         aktivDato = now(),
-        oppgavetype = "",
+        oppgavetype = SPORSMAL_OG_SVAR,
         prioritet = OppgaveJsonDTO.Prioritet.HOY,
         status = OppgaveJsonDTO.Status.AAPNET,
         tildeltEnhetsnr = "",

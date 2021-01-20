@@ -24,6 +24,8 @@ object OppgaveMappingHelpers {
 
     fun convertEnumToJson(value: GetOppgaveResponseJsonDTO.Status): OppgaveJsonDTO.Status = convertEnum(value)
     fun convertEnumToJson(value: GetOppgaveResponseJsonDTO.Prioritet): OppgaveJsonDTO.Prioritet = convertEnum(value)
+    fun convertEnumToJson(value: PutOppgaveResponseJsonDTO.Status): OppgaveJsonDTO.Status = convertEnum(value)
+    fun convertEnumToJson(value: PutOppgaveResponseJsonDTO.Prioritet): OppgaveJsonDTO.Prioritet = convertEnum(value)
 
 
     private inline fun <S : Enum<S>, reified T : Enum<T>> convertEnum(value: S): T {

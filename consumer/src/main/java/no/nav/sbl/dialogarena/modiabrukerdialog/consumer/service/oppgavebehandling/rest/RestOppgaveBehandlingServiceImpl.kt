@@ -7,7 +7,8 @@ import no.nav.common.sts.SystemUserTokenProvider
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.MetadataKey
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Oppgave
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe.*
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe.ANSOS
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe.OKSOS
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.AnsattEnhet
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.oppgave.generated.apis.OppgaveApi
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.oppgave.generated.models.OppgaveJsonDTO
@@ -21,11 +22,14 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.AnsattService
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.pdl.PdlOppslagService
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.kodeverksmapper.KodeverksmapperService
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.kodeverksmapper.domain.Behandling
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.oppgavebehandling.rest.Utils.KONTAKT_NAV
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.oppgavebehandling.rest.Utils.SPORSMAL_OG_SVAR
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.oppgavebehandling.rest.Utils.beskrivelseInnslag
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.oppgavebehandling.rest.Utils.endretAvEnhet
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.oppgavebehandling.rest.Utils.leggTilBeskrivelse
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.pdl.PdlSyntetiskMapper
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Policies
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Tilgangskontroll
-import org.joda.time.DateTime
-import org.joda.time.format.DateTimeFormat
 import org.slf4j.MDC
 import org.springframework.http.HttpStatus
 import org.springframework.web.server.ResponseStatusException
@@ -47,12 +51,10 @@ class RestOppgaveBehandlingServiceImpl(
         stsService.systemUserToken
     }
 ) : OppgaveBehandlingService {
-    companion object {
-        const val DEFAULT_ENHET = "4100"
-        const val STORD_ENHET = "4842"
-        const val KONTAKT_NAV = "KNA"
-        const val SPORSMAL_OG_SVAR = "SPM_OG_SVR"
-    }
+    private val plukkOppgaveApi = PlukkOppgaveApi(
+        apiClient,
+        kodeverksmapperService
+    )
 
     override fun opprettOppgave(request: OpprettOppgaveRequest?): OpprettOppgaveResponse {
         requireNotNull(request)
@@ -155,7 +157,9 @@ class RestOppgaveBehandlingServiceImpl(
         temagruppe: Temagruppe?,
         saksbehandlersValgteEnhet: String?
     ): MutableList<Oppgave> {
-        TODO("Not yet implemented")
+        return plukkOppgaveApi.plukkOppgaverFraGsak(temagruppe, saksbehandlersValgteEnhet)
+            .map(this::mapTilOppgave)
+            .toMutableList()
     }
 
     override fun ferdigstillOppgaveIGsak(
@@ -181,12 +185,17 @@ class RestOppgaveBehandlingServiceImpl(
         beskrivelse: String?
     ) {
         requireNotNull(oppgaveId)
+        val ident: String = SubjectHandler.getIdent().orElseThrow { IllegalStateException("Fant ikke ident") }
         val oppgave = hentOppgaveJsonDTO(oppgaveId)
 
-        val oppdatertBeskrivelse = oppdatertBeskrivelse(
-            gammelBeskrivelse = oppgave.beskrivelse,
-            leggTil = "Oppgaven er ferdigstilt i Modia. $beskrivelse",
-            valgtEnhet = saksbehandlersValgteEnhet
+        val oppdatertBeskrivelse = leggTilBeskrivelse(
+            oppgave.beskrivelse,
+            beskrivelseInnslag(
+                ident = ident,
+                navn = ansattService.hentAnsattNavn(ident),
+                enhet = saksbehandlersValgteEnhet,
+                innhold = "Oppgaven er ferdigstilt i Modia. $beskrivelse"
+            )
         )
         apiClient.endreOppgave(
             correlationId(),
@@ -223,10 +232,14 @@ class RestOppgaveBehandlingServiceImpl(
 
         var oppdatertOppgave = oppgave.copy(
             tilordnetRessurs = null,
-            beskrivelse = oppdatertBeskrivelse(
+            beskrivelse = leggTilBeskrivelse(
                 oppgave.beskrivelse,
-                request.beskrivelse,
-                request.saksbehandlersValgteEnhet
+                beskrivelseInnslag(
+                    ident = ident,
+                    navn = ansattService.hentAnsattNavn(ident),
+                    enhet = request.saksbehandlersValgteEnhet,
+                    innhold = request.beskrivelse
+                )
             ),
             endretAvEnhetsnr = endretAvEnhet(request.nyTemagruppe, request.saksbehandlersValgteEnhet)
         )
@@ -291,24 +304,6 @@ class RestOppgaveBehandlingServiceImpl(
         return "${overstyrtTemagruppe.name}_KNA"
     }
 
-    private fun oppdatertBeskrivelse(gammelBeskrivelse: String?, leggTil: String, valgtEnhet: String?): String {
-        val ident: String = SubjectHandler.getIdent().orElseThrow { IllegalStateException("Fant ikke ident") }
-        val header = String.format(
-            "--- %s %s (%s, %s) ---\n",
-            DateTimeFormat.forPattern("dd.MM.yyyy HH:mm").print(DateTime.now()),
-            ansattService.hentAnsattNavn(ident),
-            ident,
-            valgtEnhet
-        )
-
-        val nyBeskrivelse = header + leggTil
-        return if (gammelBeskrivelse.isNullOrBlank()) {
-            nyBeskrivelse
-        } else {
-            "$nyBeskrivelse\n\n$gammelBeskrivelse"
-        }
-    }
-
     private fun mapTilOppgave(oppgave: OppgaveJsonDTO): Oppgave {
         val oppgaveId = requireNotNull(oppgave.id) {
             "OppgaveId må være satt for konvertering til Oppgave"
@@ -319,8 +314,7 @@ class RestOppgaveBehandlingServiceImpl(
         }
         val henvendelseId = oppgave.metadata?.get(MetadataKey.EKSTERN_HENVENDELSE_ID.name)
         val erSTO = oppgave.oppgavetype
-            .let { kodeverksmapperService.mapOppgavetype(it) }
-            .let { "SPM_OG_SVR" == it }
+            .let { it == SPORSMAL_OG_SVAR }
 
         return Oppgave(
             oppgaveId.toString(),
@@ -357,22 +351,7 @@ class RestOppgaveBehandlingServiceImpl(
         }
     }
 
-    private fun correlationId() = MDC.get(MDCConstants.MDC_CALL_ID) ?: UUID.randomUUID().toString()
-    private fun stripTemakode(prioritet: String) = prioritet.substringBefore("_")
-
-    fun endretAvEnhet(temagruppe: Temagruppe?, valgtEnhet: String?): String {
-        return if (temagruppe == null) {
-            DEFAULT_ENHET
-        } else if (temagruppe == FMLI && valgtEnhet == STORD_ENHET) {
-            STORD_ENHET
-        } else if (listOf(ARBD, HELSE, FMLI, FDAG, ORT_HJE, PENS, UFRT, PLEIEPENGERSY, UTLAND).contains(temagruppe)) {
-            DEFAULT_ENHET
-        } else {
-            valgtEnhet ?: throw IllegalStateException("Kunne ikke utlede endretAvEnhet gitt $temagruppe og $valgtEnhet")
-        }
-    }
-
-    fun filtrerUtOppgaverMedManglendeTilgang(oppgaver: List<OppgaveJsonDTO>): List<OppgaveJsonDTO> {
+    private fun filtrerUtOppgaverMedManglendeTilgang(oppgaver: List<OppgaveJsonDTO>): List<OppgaveJsonDTO> {
         val aktoerer = oppgaver.groupBy { it.aktoerId }
         val tilganger = aktoerer
             .map { entry ->
@@ -411,5 +390,7 @@ class RestOppgaveBehandlingServiceImpl(
         return oppgaverSomErGodkjent
     }
 
-    fun String?.coerceBlankToNull() = if (this == null || this.isBlank()) null else this
+    private fun correlationId() = MDC.get(MDCConstants.MDC_CALL_ID) ?: UUID.randomUUID().toString()
+    private fun stripTemakode(prioritet: String) = prioritet.substringBefore("_")
+    private fun String?.coerceBlankToNull() = if (this == null || this.isBlank()) null else this
 }
