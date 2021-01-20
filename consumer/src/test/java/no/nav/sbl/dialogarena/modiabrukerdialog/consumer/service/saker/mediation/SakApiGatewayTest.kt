@@ -3,6 +3,8 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.saker.mediatio
 import com.github.tomakehurst.wiremock.WireMockServer
 import com.github.tomakehurst.wiremock.client.WireMock.*
 import com.github.tomakehurst.wiremock.matching.AnythingPattern
+import no.nav.common.log.MDCConstants
+import no.nav.common.sts.SystemUserTokenProvider
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.RestConstants
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.FodselnummerAktorService
 import org.hamcrest.MatcherAssert
@@ -13,11 +15,14 @@ import org.junit.jupiter.api.Test
 import org.mockito.Mock
 import org.mockito.Mockito
 import org.mockito.MockitoAnnotations
+import org.slf4j.MDC
 
 class SakApiGatewayTest {
 
     @Mock
     private val fodselnummerAktorService: FodselnummerAktorService? = null
+    @Mock
+    private val stsService: SystemUserTokenProvider? = null
 
     private val AKTOERID = "11111"
     private val FNR = "000000001"
@@ -37,6 +42,9 @@ class SakApiGatewayTest {
     fun setUp() {
         MockitoAnnotations.initMocks(this)
         Mockito.`when`(fodselnummerAktorService!!.hentAktorIdForFnr(FNR)).thenReturn(AKTOERID)
+        Mockito.`when`(stsService!!.systemUserToken).thenReturn("TOKEN")
+        MDC.put(MDCConstants.MDC_CALL_ID, "MDC_CALL_ID")
+
     }
 
     @Test
@@ -80,7 +88,7 @@ class SakApiGatewayTest {
                         .withBody(body)))
         wm.start()
 
-        val client = SakApiGatewayImpl( fodselnummerAktorService!!, "http://localhost:${wm.port()}/api/v1/saker")
+        val client = SakApiGatewayImpl( fodselnummerAktorService!!, "http://localhost:${wm.port()}", stsService!!)
         test(client)
 
 

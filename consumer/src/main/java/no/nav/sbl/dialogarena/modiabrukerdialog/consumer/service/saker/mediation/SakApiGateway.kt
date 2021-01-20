@@ -5,6 +5,7 @@ import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import no.nav.common.log.MDCConstants
 import no.nav.common.rest.client.RestClient
+import no.nav.common.sts.SystemUserTokenProvider
 import no.nav.common.utils.EnvironmentUtils
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.RestConstants
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.RestConstants.MODIABRUKERDIALOG_SYSTEM_USER
@@ -14,6 +15,7 @@ import okhttp3.Request
 import okhttp3.Response
 import org.slf4j.LoggerFactory
 import org.slf4j.MDC
+import org.springframework.beans.factory.annotation.Autowired
 import java.util.*
 
 
@@ -21,9 +23,13 @@ internal interface SakApiGateway {
     fun hentSaker(fnr: String): List<SakDto>
 }
 
-internal class SakApiGatewayImpl(val fodselnummerAktorService: FodselnummerAktorService, val baseUrl: String = EnvironmentUtils.getRequiredProperty("SAK_ENDPOINTURL")) : SakApiGateway {
+internal class SakApiGatewayImpl(val fodselnummerAktorService: FodselnummerAktorService,
+                                 val baseUrl: String = EnvironmentUtils.getRequiredProperty("SAK_ENDPOINTURL"),
+                                 val stsService: SystemUserTokenProvider
+                                ) : SakApiGateway {
 
-    val url = baseUrl + "api/v1/saker"
+
+    val url = baseUrl + "/api/v1/saker"
     private val log = LoggerFactory.getLogger(SakApiGatewayImpl::class.java)
     private val client = RestClient.baseClient()
     private val objectMapper = jacksonObjectMapper()
@@ -32,6 +38,7 @@ internal class SakApiGatewayImpl(val fodselnummerAktorService: FodselnummerAktor
         objectMapper.registerModule(JodaModule())
         val uuid = UUID.randomUUID()
         try {
+            val consumerOidcToken: String = stsService.systemUserToken
             val aktoerId = fodselnummerAktorService.hentAktorIdForFnr(fnr)
             TjenestekallLogger.info("Oppgaver-request: $uuid", mapOf(
                     "orgnummer" to fnr,
@@ -40,9 +47,12 @@ internal class SakApiGatewayImpl(val fodselnummerAktorService: FodselnummerAktor
             val response: Response = client
                     .newCall(
                             Request.Builder()
-                                    .url("$baseUrl?aktoerId=$aktoerId")
+                                    .url("$url?aktoerId=$aktoerId")
                                     .header(RestConstants.NAV_CALL_ID_HEADER, MDC.get(MDCConstants.MDC_CALL_ID)
                                             ?: UUID.randomUUID().toString())
+                                    .header("X-Correlation-ID", MDC.get(MDCConstants.MDC_CALL_ID))
+                                    .header(RestConstants.AUTHORIZATION, RestConstants.AUTH_METHOD_BEARER + RestConstants.AUTH_SEPERATOR + consumerOidcToken)
+                                    .header(RestConstants.NAV_CONSUMER_TOKEN_HEADER, RestConstants.AUTH_METHOD_BEARER + RestConstants.AUTH_SEPERATOR + consumerOidcToken)
                                     .header(RestConstants.NAV_CONSUMER_ID_HEADER, MODIABRUKERDIALOG_SYSTEM_USER)
                                     .header("accept", "application/json")
                                     .build()

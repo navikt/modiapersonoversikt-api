@@ -44,7 +44,7 @@ public class JournalforingController {
     public List<Sak> hentSammensatteSaker(@PathVariable("fnr") String fnr) {
         return tilgangskontroll
                 .check(tilgangTilBruker.with(fnr))
-                .get(Audit.describe(READ, Person.GsakSaker, new Pair<>(AuditIdentifier.FNR, fnr)), () -> sakerService.hentSammensatteSaker(fnr));
+                .get(Audit.describe(READ, Person.GsakSaker, new Pair<>(AuditIdentifier.FNR, fnr)), () -> sakerService.hentSaker(fnr).getSaker());
     }
 
     @GetMapping("/saker/pensjon")

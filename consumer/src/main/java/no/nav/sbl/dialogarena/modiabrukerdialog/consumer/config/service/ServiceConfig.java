@@ -46,9 +46,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.organisasjonenh
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.organisasjonenhet.kontaktinformasjon.service.OrganisasjonEnhetKontaktinformasjonServiceImpl;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.pdl.PdlOppslagServiceImpl;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.saker.SakerServiceImpl;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.saker.mediation.SakApiGateway;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.saker.mediation.SakApiGatewayImpl;
-import no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.FodselnummerAktorService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Tilgangskontroll;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.behandlehenvendelse.BehandleHenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.senduthenvendelse.SendUtHenvendelsePortType;
@@ -78,8 +76,8 @@ import static no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.RestConstants.S
 @EnableScheduling
 public class ServiceConfig {
 
-    @Autowired no.nav.sbl.dialogarena.modiabrukerdialog.sak.config.ServiceConfig sakServiceConfig;
-    public static final String STS_URL_KEY = "no.nav.modig.security.sts.url";
+    @Autowired
+    no.nav.sbl.dialogarena.modiabrukerdialog.sak.config.ServiceConfig sakServiceConfig;
     public static final String SYSTEMUSER_USERNAME = "no.nav.modig.security.systemuser.username";
     public static final String SYSTEMUSER_PASSWORD = "no.nav.modig.security.systemuser.password";
 
@@ -171,10 +169,12 @@ public class ServiceConfig {
     }
 
     @Bean
-    public SakApiGateway sakApiGateway(){
-        return new SakApiGatewayImpl(sakServiceConfig.fodselnummerAktorService(), EnvironmentUtils.getRequiredProperty("SAK_ENDPOINTURL"));
+    public SakApiGatewayImpl sakApiGateway() {
+        return new SakApiGatewayImpl(sakServiceConfig.fodselnummerAktorService(),
+                EnvironmentUtils.getRequiredProperty("SAK_ENDPOINTURL"),
+                systemUserTokenProvider()
+        );
     }
-
 
     @Bean
     public PsakService psakService(PensjonSakV1 pensjonSakV1) {
