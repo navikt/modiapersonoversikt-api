@@ -9,6 +9,7 @@ spec:
   image: "{{image}}"
   port: 8080
   team: personoversikt
+  webproxy: true
   liveness:
     path: /modiapersonoversikt-api/internal/isAlive
     initialDelay: 50
