@@ -13,6 +13,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Tilgangskontrol
 import no.nav.tjeneste.virksomhet.oppgave.v3.OppgaveV3
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.OppgavebehandlingV3
 import no.nav.tjeneste.virksomhet.tildeloppgave.v1.TildelOppgaveV1
+import org.slf4j.LoggerFactory
 import java.lang.reflect.InvocationHandler
 import java.lang.reflect.Proxy
 
@@ -28,6 +29,7 @@ fun createOppgaveBehandlingSwitcher(
     stsService: SystemUserTokenProvider,
     unleashService: UnleashService
 ): OppgaveBehandlingService {
+    val log = LoggerFactory.getLogger(OppgaveBehandlingService::class.java)
     val restClient: OppgaveBehandlingService = RestOppgaveBehandlingServiceImpl(
         kodeverksmapperService,
         pdlOppslagService,
@@ -49,6 +51,7 @@ fun createOppgaveBehandlingSwitcher(
     val invocationHandler = InvocationHandler { _, method, args ->
         if (unleashService.isEnabled(Feature.USE_REST_OPPGAVE_IMPL)) {
             method.invoke(restClient, args)
+            log.warn("[OppgaveBehandlingService] bruker rest-implementasjonen av OppgaveBehandlingService")
         } else {
             method.invoke(soapClient, args)
         }
