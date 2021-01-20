@@ -317,7 +317,7 @@ spec:
     - name: VIRKSOMHET_YTELSESKONTRAKT_V3_WSDLURL
       value: "http://maven.adeo.no/nexus/content/groups/public/no/nav/tjenester/fim/nav-fim-ytelseskontrakt-v3-tjenestespesifikasjon/3.0.1/nav-fim-ytelseskontrakt-v3-tjenestespesifikasjon-3.0.1.zip"
     - name: HENVENDELSE_LES_API_URL
-      value: "https://modapp-q0.adeo.no/henvendelse-les/api"
+      value: "https://henvendelse-les.nais.preprod.local/henvendelse-les/api"
     - name: PDL_API_URL
       value: "https://pdl-api.nais.preprod.local/graphql"
     - name: PERSONFORVALTER_URL
