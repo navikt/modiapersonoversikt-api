@@ -7,10 +7,19 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.gsak.GsakKodeverk
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.kodeverk.StandardKodeverk
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.psak.PsakService
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.saker.SakerServiceImpl
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.saker.kilder.SakDataGenerator.Companion.BEHANDLINGSKJEDEID
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.saker.kilder.SakDataGenerator.Companion.FIRE_DAGER_SIDEN
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.saker.kilder.SakDataGenerator.Companion.FNR
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.saker.kilder.SakDataGenerator.Companion.FagsystemSakId_1
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.saker.kilder.SakDataGenerator.Companion.SAKS_ID
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.saker.kilder.SakDataGenerator.Companion.SakId_1
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.saker.kilder.SakDataGenerator.Companion.VEDTAKSLOSNINGEN
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.saker.kilder.SakDataGenerator.Companion.createSaksliste
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.saker.kilder.SakDataGenerator.Companion.lagSak
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.saker.kilder.SakDataGenerator.Companion.lagSakUtenFagsystemId
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.saker.mediation.SakApiGateway
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.saker.mediation.SakDto
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.UnleashService
-import no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.FodselnummerAktorService
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.behandlehenvendelse.BehandleHenvendelsePortType
 import no.nav.tjeneste.virksomhet.behandlesak.v1.BehandleSakV1
 import no.nav.tjeneste.virksomhet.behandlesak.v1.OpprettSakSakEksistererAllerede
@@ -26,12 +35,10 @@ import no.nav.virksomhet.tjenester.sak.meldinger.v1.WSHentSakListeResponse
 import org.hamcrest.CoreMatchers.nullValue
 import org.hamcrest.MatcherAssert
 import org.hamcrest.core.Is
-import org.joda.time.DateTime
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.*
-import java.util.*
 
 class GsakSakerTest {
     @Mock
@@ -57,9 +64,6 @@ class GsakSakerTest {
 
     @Mock
     private val psakService: PsakService? = null
-
-    @Mock
-    private val fodselnummerAktorService: FodselnummerAktorService? = null
 
     @Mock
     private val sakApiGateway: SakApiGateway? = null
@@ -183,106 +187,6 @@ class GsakSakerTest {
     fun skalHandtereMangledeGagsystemSakId() {
         val sakDto = SakDto()
         Assertions.assertDoesNotThrow { GsakSaker.TIL_SAK.invoke(sakDto) }
-    }
-
-    companion object {
-
-        fun createSaksliste(): List<SakDto>? {
-            return ArrayList(listOf(
-                    SakDto(id = SakId_1,
-                            tema = "AAP",
-                            applikasjon = "IT01",
-                            aktoerId = "123",
-                            orgnr = null,
-                            fagsakNr = FagsystemSakId_1,
-                            opprettetAv = null,
-                            opprettetTidspunkt = FIRE_DAGER_SIDEN),
-
-                    SakDto(id = SakId_2,
-                            tema = "AGR",
-                            applikasjon = "IT01",
-                            aktoerId = "123",
-                            orgnr = null,
-                            fagsakNr = FagsystemSakId_2,
-                            opprettetAv = null,
-                            opprettetTidspunkt = DateTime.now().minusDays(3)),
-
-                    SakDto(id = SakId_3,
-                            tema = "AAP",
-                            applikasjon = "IT01",
-                            aktoerId = "123",
-                            orgnr = null,
-                            fagsakNr = FagsystemSakId_3,
-                            opprettetAv = null,
-                            opprettetTidspunkt = DateTime.now().minusDays(5)),
-
-                    SakDto(id = SakId_4,
-                            tema = "STO",
-                            applikasjon = "",
-                            aktoerId = "123",
-                            orgnr = null,
-                            fagsakNr = null,
-                            opprettetAv = null,
-                            opprettetTidspunkt = DateTime.now().minusDays(5))))
-        }
-
-        fun lagSak(): Sak {
-            val sak = Sak()
-            sak.temaKode = "GEN"
-            sak.finnesIGsak = false
-            sak.fagsystemKode = Sak.FAGSYSTEM_FOR_OPPRETTELSE_AV_GENERELL_SAK
-            sak.sakstype = Sak.SAKSTYPE_GENERELL
-            sak.opprettetDato = DateTime.now()
-            return sak
-        }
-
-        private fun lagSakUtenFagsystemId(): Sak {
-            val sak = Sak()
-            sak.temaKode = "STO"
-            sak.finnesIGsak = false
-            sak.fagsystemKode = ""
-            sak.sakstype = Sak.SAKSTYPE_GENERELL
-            sak.opprettetDato = DateTime.now()
-            return sak
-        }
-
-
-        fun createOppfolgingSaksliste(): MutableList<SakDto> {
-
-            return ArrayList(listOf(
-                    SakDto(id = "4",
-                            tema = "OPP",
-                            applikasjon = "AO01",
-                            aktoerId = "123",
-                            orgnr = null,
-                            fagsakNr = "44",
-                            opprettetAv = null,
-                            opprettetTidspunkt = DateTime()),
-
-                    SakDto(id = "5",
-                            tema = "OPP",
-                            applikasjon = "FS22",
-                            aktoerId = "123",
-                            orgnr = null,
-                            fagsakNr = null,
-                            opprettetAv = null,
-                            opprettetTidspunkt = DateTime.now().minusDays(3))))
-
-        }
-
-        private const val VEDTAKSLOSNINGEN = "FS36"
-        private val FIRE_DAGER_SIDEN = DateTime.now().minusDays(4)
-        private const val FNR = "fnr"
-        private const val BEHANDLINGSKJEDEID = "behandlingsKjedeId"
-        const val SAKS_ID = "123"
-        const val SakId_1 = "1"
-        const val FagsystemSakId_1 = "11"
-        const val SakId_2 = "2"
-        const val FagsystemSakId_2 = "22"
-        const val SakId_3 = "3"
-        const val FagsystemSakId_3 = "33"
-        const val SakId_4 = "4"
-        const val FagsystemSakId_4 = "44"
     }
 
 

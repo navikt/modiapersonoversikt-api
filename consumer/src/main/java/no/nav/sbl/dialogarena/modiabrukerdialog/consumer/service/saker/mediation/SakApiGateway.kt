@@ -28,7 +28,6 @@ internal class SakApiGatewayImpl(val fodselnummerAktorService: FodselnummerAktor
                                 ) : SakApiGateway {
 
 
-    val url = "$baseUrl/api/v1/saker"
     private val log = LoggerFactory.getLogger(SakApiGatewayImpl::class.java)
     private val client = RestClient.baseClient()
     private val objectMapper = jacksonObjectMapper()
@@ -46,7 +45,7 @@ internal class SakApiGatewayImpl(val fodselnummerAktorService: FodselnummerAktor
             val response: Response = client
                     .newCall(
                             Request.Builder()
-                                    .url("$url?aktoerId=$aktoerId")
+                                    .url("$baseUrl/api/v1/saker?aktoerId=$aktoerId")
                                     .header(RestConstants.NAV_CALL_ID_HEADER, MDC.get(MDCConstants.MDC_CALL_ID)
                                             ?: UUID.randomUUID().toString())
                                     .header("X-Correlation-ID", MDC.get(MDCConstants.MDC_CALL_ID))

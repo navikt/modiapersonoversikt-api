@@ -9,7 +9,6 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.RestConstants
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.FodselnummerAktorService
 import org.hamcrest.MatcherAssert
 import org.hamcrest.core.Is.`is`
-import org.joda.time.DateTime
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
@@ -17,7 +16,7 @@ import org.mockito.Mockito
 import org.mockito.MockitoAnnotations
 import org.slf4j.MDC
 
-class SakApiGatewayTest {
+internal class SakApiGatewayTest {
 
     @Mock
     private val fodselnummerAktorService: FodselnummerAktorService? = null
@@ -36,7 +35,7 @@ class SakApiGatewayTest {
                     "    \"fagsakNr\": \"0326A02\",\n" +
                     "    \"opprettetAv\": \"srvRuting\",\n" +
                     "    \"opprettetTidspunkt\": \"2019-10-23T17:45:12.529+02:00\"\n" +
-                    "  }]";
+                    "  }]"
 
     @BeforeEach
     fun setUp() {
@@ -49,32 +48,21 @@ class SakApiGatewayTest {
 
     @Test
     fun `hent saker som list av data objects fra SakApi`() {
-        val sakDto1 = SakDto(
-                "141481247",
-                "BAR",
-                "IT01",
-                "1000006766539",
-                null,
-                "0326A02",
-                "srvRuting",
-                DateTime.parse("2019-10-23T17:45:12.529+02:00")
-        )
-
         withMockGateway(statusCode = 200, body = response) { sakApiGateway ->
             val response = sakApiGateway.hentSaker(FNR)
-            MatcherAssert.assertThat(response?.size, `is`(1))
+            MatcherAssert.assertThat(response.size, `is`(1))
 
         }
     }
 
     @Test
-    fun `håndterer status coder utenfor 200-299 rangen`() {
+    fun `handterer status coder utenfor 200-299 rangen`() {
         withMockGateway(statusCode = 404, body = response) { sakApiGateway ->
-            MatcherAssert.assertThat(sakApiGateway.hentSaker(FNR)?.isEmpty(), `is`(true))
+            MatcherAssert.assertThat(sakApiGateway.hentSaker(FNR).isEmpty(), `is`(true))
         }
 
         withMockGateway(statusCode = 500) { sakApiGateway ->
-            MatcherAssert.assertThat(sakApiGateway.hentSaker(FNR)?.isEmpty(), `is`(true))
+            MatcherAssert.assertThat(sakApiGateway.hentSaker(FNR).isEmpty(), `is`(true))
         }
     }
 
