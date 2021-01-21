@@ -8,7 +8,6 @@ import no.nav.common.rest.client.RestClient
 import no.nav.common.sts.SystemUserTokenProvider
 import no.nav.common.utils.EnvironmentUtils
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.RestConstants
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.RestConstants.MODIABRUKERDIALOG_SYSTEM_USER
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.TjenestekallLogger
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.FodselnummerAktorService
 import okhttp3.Request
@@ -34,24 +33,20 @@ internal class SakApiGatewayImpl(val fodselnummerAktorService: FodselnummerAktor
 
     override fun hentSaker(fnr: String): List<SakDto> {
         objectMapper.registerModule(JodaModule())
-        val uuid = UUID.randomUUID()
+        val  callId = MDC.get(MDCConstants.MDC_CALL_ID) ?: UUID.randomUUID().toString()
         try {
             val consumerOidcToken: String = stsService.systemUserToken
             val aktoerId = fodselnummerAktorService.hentAktorIdForFnr(fnr)
-            TjenestekallLogger.info("Oppgaver-request: $uuid", mapOf(
-                    "orgnummer" to fnr,
-                    "callId" to MDC.get(MDCConstants.MDC_CALL_ID)
-            ))
+            TjenestekallLogger.info("sakapi-request: $callId", mapOf(
+                    "fnr" to fnr,
+                    "callId" to callId)
+            )
             val response: Response = client
                     .newCall(
                             Request.Builder()
                                     .url("$baseUrl/api/v1/saker?aktoerId=$aktoerId")
-                                    .header(RestConstants.NAV_CALL_ID_HEADER, MDC.get(MDCConstants.MDC_CALL_ID)
-                                            ?: UUID.randomUUID().toString())
-                                    .header("X-Correlation-ID", MDC.get(MDCConstants.MDC_CALL_ID))
+                                    .header("X-Correlation-ID", callId)
                                     .header(RestConstants.AUTHORIZATION, RestConstants.AUTH_METHOD_BEARER + RestConstants.AUTH_SEPERATOR + consumerOidcToken)
-                                    .header(RestConstants.NAV_CONSUMER_TOKEN_HEADER, RestConstants.AUTH_METHOD_BEARER + RestConstants.AUTH_SEPERATOR + consumerOidcToken)
-                                    .header(RestConstants.NAV_CONSUMER_ID_HEADER, MODIABRUKERDIALOG_SYSTEM_USER)
                                     .header("accept", "application/json")
                                     .build()
                     )
@@ -64,15 +59,15 @@ internal class SakApiGatewayImpl(val fodselnummerAktorService: FodselnummerAktor
             )
 
             if (response.code() in 200..299 && body != null) {
-                TjenestekallLogger.info("hent saker-response: $uuid", tjenestekallInfo)
+                TjenestekallLogger.info("hent saker-api-response: $callId", tjenestekallInfo)
                 return objectMapper.readValue(body)
             } else {
-                TjenestekallLogger.error("hent sak-response-error: $uuid", tjenestekallInfo)
+                TjenestekallLogger.error("hent saker-api-response-error: $callId", tjenestekallInfo)
 
             }
         } catch (exception: Exception) {
-            log.error("Feilet ved GET kall mot Sak  (ID: $uuid)", exception)
-            TjenestekallLogger.error("Sak-error: $uuid", mapOf(
+            log.error("Feilet ved GET kall mot Sak API  (ID: $callId)", exception)
+            TjenestekallLogger.error("Sak-error: $callId", mapOf(
                     "exception" to exception,
                     "fnr" to fnr
             ))

@@ -7,7 +7,6 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.Sak;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.gsak.GsakKodeverk;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.kodeverk.StandardKodeverk;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.psak.PsakService;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.saker.kilder.GsakSakerTest;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.saker.kilder.SakDataGenerator;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.saker.mediation.SakApiGateway;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.Feature;

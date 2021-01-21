@@ -19,29 +19,30 @@ import org.slf4j.MDC
 internal class SakApiGatewayTest {
 
     @Mock
-    private val fodselnummerAktorService: FodselnummerAktorService? = null
+    private lateinit var fodselnummerAktorService: FodselnummerAktorService
+
     @Mock
-    private val stsService: SystemUserTokenProvider? = null
+    private lateinit var stsService: SystemUserTokenProvider
 
     private val AKTOERID = "11111"
     private val FNR = "000000001"
-    private val response =
-            "  [{\n" +
-                    "    \"id\": 141481247,\n" +
-                    "    \"tema\": \"BAR\",\n" +
-                    "    \"applikasjon\": \"IT01\",\n" +
-                    "    \"aktoerId\": \"1000006766539\",\n" +
-                    "    \"orgnr\": null,\n" +
-                    "    \"fagsakNr\": \"0326A02\",\n" +
-                    "    \"opprettetAv\": \"srvRuting\",\n" +
-                    "    \"opprettetTidspunkt\": \"2019-10-23T17:45:12.529+02:00\"\n" +
-                    "  }]"
+    private val response = """
+                            [{
+                                "id": 141481247,
+                                "tema": "BAR",
+                                "applikasjon": "IT01",
+                                "aktoerId": 1000006766539,
+                                "orgnr": null,
+                                "fagsakNr": "0326A02",
+                                "opprettetAv": "srvRuting",
+                                "opprettetTidspunkt": "2019-10-23T17:45:12.529+02:00"
+                              }]""".trimIndent()
 
     @BeforeEach
     fun setUp() {
         MockitoAnnotations.initMocks(this)
-        Mockito.`when`(fodselnummerAktorService!!.hentAktorIdForFnr(FNR)).thenReturn(AKTOERID)
-        Mockito.`when`(stsService!!.systemUserToken).thenReturn("TOKEN")
+        Mockito.`when`(fodselnummerAktorService.hentAktorIdForFnr(FNR)).thenReturn(AKTOERID)
+        Mockito.`when`(stsService.systemUserToken).thenReturn("TOKEN")
         MDC.put(MDCConstants.MDC_CALL_ID, "MDC_CALL_ID")
 
     }
@@ -67,26 +68,25 @@ internal class SakApiGatewayTest {
     }
 
     internal fun withMockGateway(statusCode: Int = 200, body: String? = null, test: (SakApiGateway) -> Unit) {
-        val wm = WireMockServer()
+        val wireMockServer = WireMockServer()
 
-        wm.stubFor(get(anyUrl())
+        wireMockServer.stubFor(get(anyUrl())
                 .willReturn(aResponse()
                         .withStatus(statusCode)
                         .withHeader("Content-Type", "application/json")
                         .withBody(body)))
-        wm.start()
+        wireMockServer.start()
 
-        val client = SakApiGatewayImpl( fodselnummerAktorService!!, "http://localhost:${wm.port()}", stsService!!)
+        val client = SakApiGatewayImpl(fodselnummerAktorService, "http://localhost:${wireMockServer.port()}", stsService)
         test(client)
 
 
         verify(
                 getRequestedFor(urlEqualTo("/api/v1/saker?aktoerId=$AKTOERID"))
                         .withHeader(RestConstants.NAV_CALL_ID_HEADER, AnythingPattern())
-                        .withHeader(RestConstants.NAV_CONSUMER_ID_HEADER, matching(RestConstants.MODIABRUKERDIALOG_SYSTEM_USER))
                         .withHeader("accept", matching("application/json"))
         )
-        wm.stop()
+        wireMockServer.stop()
     }
 
 }

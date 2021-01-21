@@ -5,9 +5,12 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.exceptions.JournalforingFeil
 
 
 interface SakerService {
-    class Resultat @JvmOverloads constructor(var saker: List<Sak> = ArrayList(), var feiledeSystemer: List<String?> = ArrayList())
+    class Resultat constructor(val saker: ArrayList<Sak> = ArrayList<Sak>(), val feiledeSystemer: ArrayList<String?> = ArrayList<String?>())
 
     fun hentSaker(fnr: String): Resultat
+
+    @Deprecated("")
+    fun hentSammensatteSaker(fnr: String): List<Sak>?
 
     @Deprecated("")
     fun hentPensjonSaker(fnr: String): List<Sak>?

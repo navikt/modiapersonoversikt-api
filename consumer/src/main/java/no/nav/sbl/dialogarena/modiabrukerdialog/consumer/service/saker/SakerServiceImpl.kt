@@ -75,6 +75,8 @@ class SakerServiceImpl : SakerService {
 
     override fun hentSammensatteSaker(fnr: String?): List<Sak> {
         requireFnrNotNullOrBlank(fnr)
+        return hentSammensatteSakerResultat(fnr).saker
+    }
 
     override fun hentPensjonSaker(fnr: String?): List<Sak> {
         requireFnrNotNullOrBlank(fnr)
@@ -103,7 +105,7 @@ class SakerServiceImpl : SakerService {
 
     private fun SakerService.Resultat.fjernIkkeGodkjenteSaker(): SakerService.Resultat {
         return SakerService.Resultat(
-                this.saker.filter(GODKJENT_FAGSAK or GODKJENT_GENERELL),
+                this.saker.filter(GODKJENT_FAGSAK or GODKJENT_GENERELL) as ArrayList<Sak>,
                 this.feiledeSystemer
         )
     }
@@ -145,10 +147,10 @@ class SakerServiceImpl : SakerService {
     companion object {
         private fun SakerService.Resultat.leggTilDataFraKilde(fnr: String, kilde: SakerKilde): SakerService.Resultat {
             try {
-                kilde.leggTilSaker(fnr, this.saker as MutableList<Sak>)
+                kilde.leggTilSaker(fnr, this.saker)
             } catch (e: Exception) {
                 logger.error("Kunne ikke hente saker fra ${kilde.kildeNavn}", e)
-                this.feiledeSystemer.plus(kilde.kildeNavn)
+                this.feiledeSystemer.add(kilde.kildeNavn)
             }
             return this
         }
@@ -156,8 +158,8 @@ class SakerServiceImpl : SakerService {
         private fun slaSammenGsakPesysSaker(gsak: SakerService.Resultat, pesys: SakerService.Resultat): SakerService.Resultat {
             val pesysIder = pesys.saker.map { it.fagsystemSaksId }
             return SakerService.Resultat(
-                    pesys.saker + gsak.saker.filter { !pesysIder.contains(it.fagsystemSaksId) },
-                    pesys.feiledeSystemer + gsak.feiledeSystemer
+                    (pesys.saker + gsak.saker.filter { !pesysIder.contains(it.fagsystemSaksId) }) as ArrayList<Sak>,
+                    (pesys.feiledeSystemer + gsak.feiledeSystemer) as ArrayList<String?>
             )
         }
 
