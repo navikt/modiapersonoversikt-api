@@ -15,7 +15,6 @@ import okhttp3.Request
 import okhttp3.Response
 import org.slf4j.LoggerFactory
 import org.slf4j.MDC
-import org.springframework.beans.factory.annotation.Autowired
 import java.util.*
 
 
@@ -29,7 +28,7 @@ internal class SakApiGatewayImpl(val fodselnummerAktorService: FodselnummerAktor
                                 ) : SakApiGateway {
 
 
-    val url = baseUrl + "/api/v1/saker"
+    val url = "$baseUrl/api/v1/saker"
     private val log = LoggerFactory.getLogger(SakApiGatewayImpl::class.java)
     private val client = RestClient.baseClient()
     private val objectMapper = jacksonObjectMapper()

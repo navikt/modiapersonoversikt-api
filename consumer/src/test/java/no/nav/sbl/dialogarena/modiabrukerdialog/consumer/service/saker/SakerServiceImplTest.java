@@ -113,7 +113,7 @@ public class SakerServiceImplTest {
 
     @Test
     void oppretterIkkeGenerellOppfolgingssakDersomDenneFinnesAlleredeSelvOmFagsakerIkkeInneholderOppfolgingssak() {
-        List<Sak> saker = sakerService.hentSammensatteSaker(FNR).stream().filter(harTemaKode(TEMAKODE_OPPFOLGING)).collect(toList());
+        List<Sak> saker = sakerService.hentSaker(FNR).getSaker().stream().filter(harTemaKode(TEMAKODE_OPPFOLGING)).collect(toList());
         assertThat(saker.size(), is(1));
         assertThat(saker.get(0).sakstype, is(SAKSTYPE_GENERELL));
     }
