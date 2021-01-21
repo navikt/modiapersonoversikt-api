@@ -86,7 +86,8 @@ spec:
       value: "SAML"
     - name: BRUKERVARSELV1_WSDLURL
       value: "http://maven.adeo.no/nexus/content/groups/public/no/nav/tjenester/nav-brukervarsel-v1-tjenestespesifikasjon/1.0.4/nav-brukervarsel-v1-tjenestespesifikasjon-1.0.4.zip"
-    - name: DOMENE_BRUKERDIALOG_BEHANDLEHENVENDELSE_V1_ENDPOINTURL
+    - name: DOMENE_BRUKERDIALOG_BEHANDLE
+    _V1_ENDPOINTURL
       value: "https://modapp-q0.adeo.no/henvendelse/services/domene.Brukerdialog/BehandleHenvendelse_v1"
     - name: DOMENE_BRUKERDIALOG_BEHANDLEHENVENDELSE_V1_SECURITYTOKEN
       value: "SAML"
@@ -317,7 +318,7 @@ spec:
     - name: VIRKSOMHET_YTELSESKONTRAKT_V3_WSDLURL
       value: "http://maven.adeo.no/nexus/content/groups/public/no/nav/tjenester/fim/nav-fim-ytelseskontrakt-v3-tjenestespesifikasjon/3.0.1/nav-fim-ytelseskontrakt-v3-tjenestespesifikasjon-3.0.1.zip"
     - name: HENVENDELSE_LES_API_URL
-      value: "https://henvendelse-les.nais.preprod.local/henvendelse-les/api"
+      value: "https://modapp-q0.adeo.no/henvendelse-les/api"
     - name: PDL_API_URL
       value: "https://pdl-api.nais.preprod.local/graphql"
     - name: PERSONFORVALTER_URL
