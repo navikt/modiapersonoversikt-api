@@ -22,7 +22,6 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.AnsattService
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.pdl.PdlOppslagService
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.kodeverksmapper.KodeverksmapperService
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.kodeverksmapper.domain.Behandling
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.oppgavebehandling.rest.Utils.KONTAKT_NAV
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.oppgavebehandling.rest.Utils.SPORSMAL_OG_SVAR
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.oppgavebehandling.rest.Utils.beskrivelseInnslag
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.oppgavebehandling.rest.Utils.endretAvEnhet
@@ -198,21 +197,20 @@ class RestOppgaveBehandlingServiceImpl(
         val ident: String = SubjectHandler.getIdent().orElseThrow { IllegalStateException("Fant ikke ident") }
         val oppgave = hentOppgaveJsonDTO(oppgaveId)
 
-        val oppdatertBeskrivelse = leggTilBeskrivelse(
-            oppgave.beskrivelse,
-            beskrivelseInnslag(
-                ident = ident,
-                navn = ansattService.hentAnsattNavn(ident),
-                enhet = saksbehandlersValgteEnhet,
-                innhold = "Oppgaven er ferdigstilt i Modia. $beskrivelse"
-            )
-        )
         apiClient.endreOppgave(
             correlationId(),
             oppgaveId.toLong(),
             oppgave.copy(
                 status = OppgaveJsonDTO.Status.FERDIGSTILT,
-                beskrivelse = oppdatertBeskrivelse,
+                beskrivelse = leggTilBeskrivelse(
+                    oppgave.beskrivelse,
+                    beskrivelseInnslag(
+                        ident = ident,
+                        navn = ansattService.hentAnsattNavn(ident),
+                        enhet = saksbehandlersValgteEnhet,
+                        innhold = "Oppgaven er ferdigstilt i Modia. $beskrivelse"
+                    )
+                ),
                 endretAvEnhetsnr = endretAvEnhet(temagruppe?.orElse(null), saksbehandlersValgteEnhet)
             ).toPutOppgaveRequestJsonDTO()
         )
@@ -313,7 +311,7 @@ class RestOppgaveBehandlingServiceImpl(
 
     private fun underkategoriOverstyringForArbeidsfordeling(temagruppe: Temagruppe): String {
         val overstyrtTemagruppe = if (temagruppe == OKSOS) ANSOS else temagruppe
-        return "${overstyrtTemagruppe.name}_KNA"
+        return overstyrtTemagruppe.underkategori
     }
 
     private fun mapTilOppgave(oppgave: OppgaveJsonDTO): Oppgave {
