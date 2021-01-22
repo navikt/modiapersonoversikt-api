@@ -63,19 +63,19 @@ internal class GsakSaker(val sakV1: SakV1, val behandleSakWS: BehandleSakV1) : S
                 opprettetDato = wsSak.opprettelsetidspunkt
                 saksId = wsSak.sakId
                 fagsystemSaksId = getFagsystemSakId(wsSak)
-                temaKode = wsSak.fagomraade.value
+                temaKode = wsSak.fagomraade?.value
                 sakstype = getSakstype(wsSak)
-                fagsystemKode = wsSak.fagsystem.value
+                fagsystemKode = wsSak.fagsystem?.value
                 finnesIGsak = true
             }
         }
 
-        private fun getSakstype(wsSak: WSSak): String {
-            return if (VEDTAKSLOSNINGEN == wsSak.fagsystem.value) Sak.SAKSTYPE_MED_FAGSAK else wsSak.sakstype.value
+        private fun getSakstype(wsSak: WSSak): String? {
+            return if (VEDTAKSLOSNINGEN == wsSak.fagsystem?.value) Sak.SAKSTYPE_MED_FAGSAK else wsSak.sakstype?.value
         }
 
-        private fun getFagsystemSakId(wsSak: WSSak): String {
-            return if (VEDTAKSLOSNINGEN == wsSak.fagsystem.value) wsSak.sakId else wsSak.fagsystemSakId
+        private fun getFagsystemSakId(wsSak: WSSak): String? {
+            return if (VEDTAKSLOSNINGEN == wsSak.fagsystem?.value) wsSak.sakId else wsSak.fagsystemSakId
         }
     }
 }
