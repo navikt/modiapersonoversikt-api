@@ -114,15 +114,12 @@ class PlukkOppgaveApi(private val apiClient: OppgaveApi, private val kodeverksma
 
     private fun sokEtterOppgaver(
         correlationId: String,
-        temagruppe: Temagruppe?,
+        temagruppe: Temagruppe,
         aktoerId: String? = null,
         limit: Long = 20
     ): GetOppgaverResponseJsonDTO {
-        requireNotNull(temagruppe)
-
         val ident: String = SubjectHandler.getIdent().orElseThrow { IllegalStateException("Fant ikke ident") }
-        val underkategori = "${temagruppe.name}_KNA"
-        val behandling = kodeverksmapperService.mapUnderkategori(underkategori)
+        val behandling = kodeverksmapperService.mapUnderkategori(temagruppe.underkategori)
         val oppgaveType = kodeverksmapperService.mapOppgavetype(SPORSMAL_OG_SVAR)
         val aktoerIdList = if (aktoerId == null) null else listOf(aktoerId)
 
