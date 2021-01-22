@@ -94,6 +94,7 @@ class RestOppgaveBehandlingServiceImpl(
 
     override fun opprettSkjermetOppgave(request: OpprettSkjermetOppgaveRequest?): OpprettOppgaveResponse {
         requireNotNull(request)
+        val ident: String = SubjectHandler.getIdent().orElseThrow { IllegalStateException("Fant ikke ident") }
         val behandling = kodeverksmapperService.mapUnderkategori(request.underkategoriKode)
         val oppgaveType = kodeverksmapperService.mapOppgavetype(request.oppgavetype)
         val aktorId = getAktorId(request.fnr) ?: throw IllegalArgumentException("Fant ikke aktorId for ${request.fnr}")
@@ -103,12 +104,16 @@ class RestOppgaveBehandlingServiceImpl(
             postOppgaveRequestJsonDTO = PostOppgaveRequestJsonDTO(
                 opprettetAvEnhetsnr = request.opprettetavenhetsnummer.coerceBlankToNull(),
                 aktoerId = aktorId,
-                behandlesAvApplikasjon = "FS22",
-                beskrivelse = request.beskrivelse.coerceBlankToNull(),
-                temagruppe = null,
+                behandlesAvApplikasjon = request.behandlesAvApplikasjon.coerceBlankToNull(),
+                beskrivelse =  beskrivelseInnslag(
+                    ident = ident,
+                    navn = ansattService.hentAnsattNavn(ident),
+                    enhet = request.opprettetavenhetsnummer,
+                    innhold = request.beskrivelse
+                ),
                 tema = request.tema.coerceBlankToNull(),
-                behandlingstema = behandling.map(Behandling::getBehandlingstema).orElse(null),
                 oppgavetype = oppgaveType,
+                behandlingstema = behandling.map(Behandling::getBehandlingstema).orElse(null),
                 behandlingstype = behandling.map(Behandling::getBehandlingstype).orElse(null),
                 aktivDato = LocalDate.now(),
                 fristFerdigstillelse = request.oppgaveFrist,
