@@ -254,9 +254,11 @@ class RestOppgaveBehandlingServiceImpl(
             endretAvEnhetsnr = endretAvEnhet(request.nyTemagruppe, request.saksbehandlersValgteEnhet)
         )
         if (request.nyTemagruppe != null) {
+            val behandling = kodeverksmapperService.mapUnderkategori(request.nyTemagruppe.underkategori)
             oppdatertOppgave = oppdatertOppgave.copy(
                 tildeltEnhetsnr = finnAnsvarligEnhet(oppgave, request.nyTemagruppe),
-                temagruppe = request.nyTemagruppe.toString()
+                behandlingstema = behandling.map(Behandling::getBehandlingstema).orElse(null),
+                behandlingstype = behandling.map(Behandling::getBehandlingstype).orElse(null)
             )
         }
 
