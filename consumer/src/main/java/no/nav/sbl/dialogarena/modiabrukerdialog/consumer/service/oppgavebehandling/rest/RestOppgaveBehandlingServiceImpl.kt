@@ -152,10 +152,9 @@ class RestOppgaveBehandlingServiceImpl(
         val ident: String = SubjectHandler.getIdent().orElseThrow { IllegalStateException("Fant ikke ident") }
         val response = apiClient.finnOppgaver(
             correlationId(),
-            statuskategori = "AAPEN",
-            tema = listOf(KONTAKT_NAV),
-            oppgavetype = listOf(SPORSMAL_OG_SVAR),
-            tilordnetRessurs = ident
+            tilordnetRessurs = ident,
+            aktivDatoTom = LocalDate.now().toString(),
+            statuskategori = "AAPEN"
         )
 
         val oppgaver = response.oppgaver ?: emptyList()
