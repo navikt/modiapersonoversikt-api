@@ -58,6 +58,7 @@ class RestOppgaveBehandlingServiceImpl(
 
     override fun opprettOppgave(request: OpprettOppgaveRequest?): OpprettOppgaveResponse {
         requireNotNull(request)
+        val ident: String = SubjectHandler.getIdent().orElseThrow { IllegalStateException("Fant ikke ident") }
         val behandling = kodeverksmapperService.mapUnderkategori(request.underkategoriKode)
         val oppgaveType = kodeverksmapperService.mapOppgavetype(request.oppgavetype)
         val aktorId = getAktorId(request.fnr) ?: throw IllegalArgumentException("Fant ikke aktorId for ${request.fnr}")
@@ -68,17 +69,22 @@ class RestOppgaveBehandlingServiceImpl(
                 opprettetAvEnhetsnr = request.opprettetavenhetsnummer.coerceBlankToNull(),
                 aktoerId = aktorId,
                 behandlesAvApplikasjon = request.behandlesAvApplikasjon.coerceBlankToNull(),
-                tilordnetRessurs = request.ansvarligIdent.coerceBlankToNull(),
                 tildeltEnhetsnr = request.ansvarligEnhetId.coerceBlankToNull(),
-                beskrivelse = request.beskrivelse.coerceBlankToNull(),
-                temagruppe = request.temagruppe.coerceBlankToNull(),
+                tilordnetRessurs = request.ansvarligIdent.coerceBlankToNull(),
+                beskrivelse =  beskrivelseInnslag(
+                    ident = ident,
+                    navn = ansattService.hentAnsattNavn(ident),
+                    enhet = request.opprettetavenhetsnummer,
+                    innhold = request.beskrivelse
+                ),
                 tema = request.tema.coerceBlankToNull(),
-                behandlingstema = behandling.map(Behandling::getBehandlingstema).orElse(null),
                 oppgavetype = oppgaveType,
+                behandlingstema = behandling.map(Behandling::getBehandlingstema).orElse(null),
                 behandlingstype = behandling.map(Behandling::getBehandlingstype).orElse(null),
                 aktivDato = LocalDate.now(),
                 fristFerdigstillelse = request.oppgaveFrist,
-                prioritet = PostOppgaveRequestJsonDTO.Prioritet.valueOf(stripTemakode(request.prioritet))
+                prioritet = PostOppgaveRequestJsonDTO.Prioritet.valueOf(stripTemakode(request.prioritet)),
+                metadata = mapOf(MetadataKey.EKSTERN_HENVENDELSE_ID.name to request.behandlingskjedeId)
             )
         )
 
