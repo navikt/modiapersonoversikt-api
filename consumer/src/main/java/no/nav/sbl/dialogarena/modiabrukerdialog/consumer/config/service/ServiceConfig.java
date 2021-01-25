@@ -59,11 +59,9 @@ import no.nav.tjeneste.virksomhet.organisasjonenhetkontaktinformasjon.v1.Organis
 import no.nav.tjeneste.virksomhet.pensjonsak.v1.PensjonSakV1;
 import no.nav.tjeneste.virksomhet.person.v3.binding.PersonV3;
 import no.nav.tjeneste.virksomhet.tildeloppgave.v1.TildelOppgaveV1;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.CacheManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
 import static no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.RestConstants.SECURITY_TOKEN_SERVICE_DISCOVERYURL;
@@ -72,12 +70,8 @@ import static no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.RestConstants.S
  * MODIA ønsker å selv wire inn sine komponenters kontekster for å ha full kontroll over springoppsettet.
  */
 @Configuration
-@Import(no.nav.sbl.dialogarena.modiabrukerdialog.sak.config.ServiceConfig.class)
 @EnableScheduling
 public class ServiceConfig {
-
-    @Autowired
-    no.nav.sbl.dialogarena.modiabrukerdialog.sak.config.ServiceConfig sakServiceConfig;
     public static final String SYSTEMUSER_USERNAME = "no.nav.modig.security.systemuser.username";
     public static final String SYSTEMUSER_PASSWORD = "no.nav.modig.security.systemuser.password";
 
@@ -170,7 +164,7 @@ public class ServiceConfig {
 
     @Bean
     public SakApiGatewayImpl sakApiGateway() {
-        return new SakApiGatewayImpl(sakServiceConfig.fodselnummerAktorService(),
+        return new SakApiGatewayImpl(pdlOppslagService(systemUserTokenProvider()),
                 EnvironmentUtils.getRequiredProperty("SAK_ENDPOINTURL"),
                 systemUserTokenProvider()
         );

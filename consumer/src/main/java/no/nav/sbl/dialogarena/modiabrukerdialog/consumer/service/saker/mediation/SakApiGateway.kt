@@ -1,19 +1,27 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.saker.mediation
 
-import com.fasterxml.jackson.datatype.joda.JodaModule
+import com.fasterxml.jackson.databind.SerializationFeature
+import com.fasterxml.jackson.datatype.jsr310.JSR310Module
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import no.nav.common.log.MDCConstants
 import no.nav.common.rest.client.RestClient
 import no.nav.common.sts.SystemUserTokenProvider
 import no.nav.common.utils.EnvironmentUtils
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.pdl.generated.HentIdent
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.pdl.PdlOppslagService
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.RestConstants
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.TjenestekallLogger
-import no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.FodselnummerAktorService
 import okhttp3.Request
 import okhttp3.Response
 import org.slf4j.LoggerFactory
 import org.slf4j.MDC
+import java.text.SimpleDateFormat
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+import java.time.format.DateTimeFormatter.*
 import java.util.*
 
 
@@ -21,26 +29,33 @@ internal interface SakApiGateway {
     fun hentSaker(fnr: String): List<SakDto>
 }
 
-internal class SakApiGatewayImpl(val fodselnummerAktorService: FodselnummerAktorService,
+internal class SakApiGatewayImpl(val pdlOppslagService: PdlOppslagService,
                                  val baseUrl: String = EnvironmentUtils.getRequiredProperty("SAK_ENDPOINTURL"),
                                  val stsService: SystemUserTokenProvider
-                                ) : SakApiGateway {
+) : SakApiGateway {
 
 
     private val log = LoggerFactory.getLogger(SakApiGatewayImpl::class.java)
     private val client = RestClient.baseClient()
-    private val objectMapper = jacksonObjectMapper()
+    private val objectMapper = jacksonObjectMapper().apply {
+        registerModule(JavaTimeModule().addDeserializer(LocalDateTime::class.java , LocalDateTimeDeserializer(ISO_DATE_TIME)))
+    }
 
     override fun hentSaker(fnr: String): List<SakDto> {
-        objectMapper.registerModule(JodaModule())
-        val  callId = MDC.get(MDCConstants.MDC_CALL_ID) ?: UUID.randomUUID().toString()
+        val callId = MDC.get(MDCConstants.MDC_CALL_ID) ?: UUID.randomUUID().toString()
         try {
             val consumerOidcToken: String = stsService.systemUserToken
-            val aktoerId = fodselnummerAktorService.hentAktorIdForFnr(fnr)
+            val identliste = pdlOppslagService.hentIdent(fnr)
+
             TjenestekallLogger.info("sakapi-request: $callId", mapOf(
                     "fnr" to fnr,
                     "callId" to callId)
             )
+            val aktoerId = identliste
+                    ?.identer
+                    ?.find { it -> it.gruppe == HentIdent.IdentGruppe.AKTORID }
+                    ?.ident ?: throw Exception("PDL Oppslag feilet for å hente aktørID")
+
             val response: Response = client
                     .newCall(
                             Request.Builder()
@@ -85,5 +100,5 @@ data class SakDto(
         val orgnr: String? = null, //Orgnr til foretaket saken gjelder
         val fagsakNr: String? = null, //Fagsaknr for den aktuelle saken - hvis aktuelt
         val opprettetAv: String? = null, //Brukerident til den som opprettet saken
-        val opprettetTidspunkt: org.joda.time.DateTime? = null)
+        val opprettetTidspunkt: java.time.LocalDateTime? = null)
 

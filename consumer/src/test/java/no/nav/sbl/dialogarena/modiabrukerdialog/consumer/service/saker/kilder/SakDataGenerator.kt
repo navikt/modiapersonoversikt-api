@@ -3,10 +3,14 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.saker.kilder
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.Sak
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.saker.mediation.SakDto
 import org.joda.time.DateTime
+import java.time.LocalDateTime
 import java.util.ArrayList
 
 internal class SakDataGenerator {
     companion object {
+
+        fun beforeDateTimeWithOffSet(offset: Long): java.time.LocalDateTime = LocalDateTime.now().minusDays(offset)
+
 
         fun createSaksliste(): List<SakDto>? {
             return ArrayList(listOf(
@@ -17,7 +21,7 @@ internal class SakDataGenerator {
                             orgnr = null,
                             fagsakNr = FagsystemSakId_1,
                             opprettetAv = null,
-                            opprettetTidspunkt = FIRE_DAGER_SIDEN),
+                            opprettetTidspunkt = beforeDateTimeWithOffSet(4)),
 
                     SakDto(id = SakId_2,
                             tema = "AGR",
@@ -26,7 +30,7 @@ internal class SakDataGenerator {
                             orgnr = null,
                             fagsakNr = FagsystemSakId_2,
                             opprettetAv = null,
-                            opprettetTidspunkt = DateTime.now().minusDays(3)),
+                            opprettetTidspunkt = beforeDateTimeWithOffSet(3)),
 
                     SakDto(id = SakId_3,
                             tema = "AAP",
@@ -35,7 +39,7 @@ internal class SakDataGenerator {
                             orgnr = null,
                             fagsakNr = FagsystemSakId_3,
                             opprettetAv = null,
-                            opprettetTidspunkt = DateTime.now().minusDays(5)),
+                            opprettetTidspunkt = beforeDateTimeWithOffSet(5)),
 
                     SakDto(id = SakId_4,
                             tema = "STO",
@@ -44,7 +48,7 @@ internal class SakDataGenerator {
                             orgnr = null,
                             fagsakNr = null,
                             opprettetAv = null,
-                            opprettetTidspunkt = DateTime.now().minusDays(5))))
+                            opprettetTidspunkt = beforeDateTimeWithOffSet(5))))
         }
 
         fun lagSak(): Sak {
@@ -78,7 +82,7 @@ internal class SakDataGenerator {
                             orgnr = null,
                             fagsakNr = "44",
                             opprettetAv = null,
-                            opprettetTidspunkt = DateTime()),
+                            opprettetTidspunkt = beforeDateTimeWithOffSet(0)),
 
                     SakDto(id = "5",
                             tema = "OPP",
@@ -87,12 +91,12 @@ internal class SakDataGenerator {
                             orgnr = null,
                             fagsakNr = null,
                             opprettetAv = null,
-                            opprettetTidspunkt = DateTime.now().minusDays(3))))
+                            opprettetTidspunkt = beforeDateTimeWithOffSet(3))))
 
         }
 
         const val VEDTAKSLOSNINGEN = "FS36"
-        val FIRE_DAGER_SIDEN = DateTime.now().minusDays(4)
+        val FIRE_DAGER_SIDEN = DateTime.now().minusDays(4) //joda.DateTime
         const val FNR = "fnr"
         const val BEHANDLINGSKJEDEID = "behandlingsKjedeId"
         const val SAKS_ID = "123"
@@ -104,5 +108,7 @@ internal class SakDataGenerator {
         const val FagsystemSakId_3 = "33"
         const val SakId_4 = "4"
         const val FagsystemSakId_4 = "44"
+
     }
+
 }

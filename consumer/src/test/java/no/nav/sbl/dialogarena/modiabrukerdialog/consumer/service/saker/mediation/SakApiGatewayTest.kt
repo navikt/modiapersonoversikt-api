@@ -3,25 +3,26 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.saker.mediatio
 import com.github.tomakehurst.wiremock.WireMockServer
 import com.github.tomakehurst.wiremock.client.WireMock.*
 import com.github.tomakehurst.wiremock.matching.AnythingPattern
+import io.mockk.MockKAnnotations
+import io.mockk.every
+import io.mockk.impl.annotations.MockK
 import no.nav.common.log.MDCConstants
 import no.nav.common.sts.SystemUserTokenProvider
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.pdl.generated.HentIdent
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.pdl.PdlOppslagService
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.RestConstants
-import no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.FodselnummerAktorService
 import org.hamcrest.MatcherAssert
 import org.hamcrest.core.Is.`is`
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.mockito.Mock
-import org.mockito.Mockito
-import org.mockito.MockitoAnnotations
 import org.slf4j.MDC
 
 internal class SakApiGatewayTest {
 
-    @Mock
-    private lateinit var fodselnummerAktorService: FodselnummerAktorService
+    @MockK
+    private lateinit var pdlOpslagService: PdlOppslagService
 
-    @Mock
+    @MockK
     private lateinit var stsService: SystemUserTokenProvider
 
     private val AKTOERID = "11111"
@@ -38,11 +39,22 @@ internal class SakApiGatewayTest {
                                 "opprettetTidspunkt": "2019-10-23T17:45:12.529+02:00"
                               }]""".trimIndent()
 
+    private val withHeader = {
+        verify(getRequestedFor(urlEqualTo("/api/v1/saker?aktoerId=$AKTOERID"))
+                .withHeader(RestConstants.NAV_CALL_ID_HEADER, AnythingPattern())
+                .withHeader("accept", matching("application/json")))
+    }
+
     @BeforeEach
     fun setUp() {
-        MockitoAnnotations.initMocks(this)
-        Mockito.`when`(fodselnummerAktorService.hentAktorIdForFnr(FNR)).thenReturn(AKTOERID)
-        Mockito.`when`(stsService.systemUserToken).thenReturn("TOKEN")
+        MockKAnnotations.init(this, relaxUnitFun = true)
+
+        val identer = listOf(
+                HentIdent.IdentInformasjon(AKTOERID, HentIdent.IdentGruppe.AKTORID)
+        )
+
+        every { pdlOpslagService.hentIdent(FNR) } returns (HentIdent.Identliste(identer))
+        every { stsService.systemUserToken } returns ("TOKEN")
         MDC.put(MDCConstants.MDC_CALL_ID, "MDC_CALL_ID")
 
     }
@@ -57,6 +69,14 @@ internal class SakApiGatewayTest {
     }
 
     @Test
+    fun `handterer null ident informasjon fra pdl oppslag`() {
+        every { pdlOpslagService.hentIdent(FNR) } returns (null)
+        withMockGateway(verify = {}) { sakApiGateway ->
+            MatcherAssert.assertThat(sakApiGateway.hentSaker(FNR).isEmpty(), `is`(true))
+        }
+    }
+
+    @Test
     fun `handterer status coder utenfor 200-299 rangen`() {
         withMockGateway(statusCode = 404, body = response) { sakApiGateway ->
             MatcherAssert.assertThat(sakApiGateway.hentSaker(FNR).isEmpty(), `is`(true))
@@ -67,7 +87,10 @@ internal class SakApiGatewayTest {
         }
     }
 
-    internal fun withMockGateway(statusCode: Int = 200, body: String? = null, test: (SakApiGateway) -> Unit) {
+    internal fun withMockGateway(statusCode: Int = 200,
+                                 body: String? = null,
+                                 verify: (() -> Unit)? = withHeader,
+                                 test: (SakApiGateway) -> Unit) {
         val wireMockServer = WireMockServer()
 
         wireMockServer.stubFor(get(anyUrl())
@@ -77,15 +100,11 @@ internal class SakApiGatewayTest {
                         .withBody(body)))
         wireMockServer.start()
 
-        val client = SakApiGatewayImpl(fodselnummerAktorService, "http://localhost:${wireMockServer.port()}", stsService)
+        val client = SakApiGatewayImpl(pdlOpslagService, "http://localhost:${wireMockServer.port()}", stsService)
         test(client)
 
+        if (verify != null) verify()
 
-        verify(
-                getRequestedFor(urlEqualTo("/api/v1/saker?aktoerId=$AKTOERID"))
-                        .withHeader(RestConstants.NAV_CALL_ID_HEADER, AnythingPattern())
-                        .withHeader("accept", matching("application/json"))
-        )
         wireMockServer.stop()
     }
 

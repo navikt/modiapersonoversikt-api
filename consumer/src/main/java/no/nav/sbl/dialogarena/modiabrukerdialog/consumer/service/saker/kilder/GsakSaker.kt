@@ -14,6 +14,10 @@ import no.nav.tjeneste.virksomhet.sak.v1.SakV1
 import no.nav.tjeneste.virksomhet.sak.v1.informasjon.WSPerson
 import no.nav.tjeneste.virksomhet.sak.v1.informasjon.WSSak
 import no.nav.tjeneste.virksomhet.sak.v1.meldinger.WSFinnSakRequest
+import org.joda.time.DateTime
+import java.time.ZoneId
+import java.time.ZonedDateTime
+
 
 internal class GsakSaker(
         private val sakV1: SakV1,
@@ -67,7 +71,7 @@ internal class GsakSaker(
         @JvmField
         val TIL_SAK = { sakDto: SakDto ->
             Sak().apply {
-                opprettetDato = sakDto.opprettetTidspunkt
+                opprettetDato = sakDto.opprettetTidspunkt?.let { convertJavaDateTimeToJoda(it) }
                 saksId = sakDto.id.toString()
                 fagsystemSaksId = getFagsystemSakId(sakDto)
                 temaKode = sakDto.tema
@@ -94,5 +98,11 @@ internal class GsakSaker(
         private fun getFagsystemSakId(sakDto: SakDto): String? {
             return if (VEDTAKSLOSNINGEN == sakDto.applikasjon) sakDto.id.toString() else sakDto.fagsakNr
         }
+
+        private fun convertJavaDateTimeToJoda(dateTime: java.time.LocalDateTime): org.joda.time.DateTime {
+            val zdt: ZonedDateTime = dateTime.atZone(ZoneId.systemDefault())
+            return DateTime(zdt.toInstant().toEpochMilli())
+        }
     }
+
 }
