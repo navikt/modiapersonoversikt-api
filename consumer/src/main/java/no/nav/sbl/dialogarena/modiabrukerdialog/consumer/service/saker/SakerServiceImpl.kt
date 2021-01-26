@@ -10,7 +10,6 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.kodeverk.StandardKod
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.psak.PsakService
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.SakerUtils
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.saker.kilder.*
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.saker.knyttbehandlingskjedetilsak.KnyttBehandlingskjedeTilSakValidator
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.saker.mediation.SakApiGateway
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.behandlehenvendelse.BehandleHenvendelsePortType
 import no.nav.tjeneste.virksomhet.behandlesak.v1.BehandleSakV1
@@ -63,7 +62,7 @@ class SakerServiceImpl : SakerService {
 
     }
 
-    override fun hentSaker(fnr: String?): SakerService.Resultat {
+    override fun hentSaker(fnr: String): SakerService.Resultat {
         requireFnrNotNullOrBlank(fnr)
         val (gsakSaker, pesysSaker) = inParallel(
                 { hentSammensatteSakerResultat(fnr) },
@@ -73,12 +72,12 @@ class SakerServiceImpl : SakerService {
         return slaSammenGsakPesysSaker(gsakSaker, pesysSaker)
     }
 
-    override fun hentSammensatteSaker(fnr: String?): List<Sak> {
+    override fun hentSammensatteSaker(fnr: String): List<Sak> {
         requireFnrNotNullOrBlank(fnr)
         return hentSammensatteSakerResultat(fnr).saker
     }
 
-    override fun hentPensjonSaker(fnr: String?): List<Sak> {
+    override fun hentPensjonSaker(fnr: String): List<Sak> {
         requireFnrNotNullOrBlank(fnr)
         return hentPensjonSakerResultat(fnr).saker
     }
@@ -117,7 +116,7 @@ class SakerServiceImpl : SakerService {
         return resultat
     }
 
-    override fun knyttBehandlingskjedeTilSak(fnr: String?, behandlingskjede: String?, sak: Sak?, enhet: String?) {
+    override fun knyttBehandlingskjedeTilSak(fnr: String?, behandlingskjede: String?, sak: Sak, enhet: String?) {
         requireKnyttTilSakParametereNotNullOrBlank(sak, behandlingskjede, fnr, enhet)
 
         if (sak.syntetisk && Sak.BIDRAG_MARKOR == sak.fagsystemKode) {

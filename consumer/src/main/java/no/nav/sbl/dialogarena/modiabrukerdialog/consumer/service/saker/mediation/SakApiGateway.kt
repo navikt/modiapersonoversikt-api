@@ -1,7 +1,5 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.saker.mediation
 
-import com.fasterxml.jackson.databind.SerializationFeature
-import com.fasterxml.jackson.datatype.jsr310.JSR310Module
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
@@ -18,10 +16,8 @@ import okhttp3.Request
 import okhttp3.Response
 import org.slf4j.LoggerFactory
 import org.slf4j.MDC
-import java.text.SimpleDateFormat
 import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
-import java.time.format.DateTimeFormatter.*
+import java.time.format.DateTimeFormatter.ISO_DATE_TIME
 import java.util.*
 
 
@@ -38,7 +34,7 @@ internal class SakApiGatewayImpl(val pdlOppslagService: PdlOppslagService,
     private val log = LoggerFactory.getLogger(SakApiGatewayImpl::class.java)
     private val client = RestClient.baseClient()
     private val objectMapper = jacksonObjectMapper().apply {
-        registerModule(JavaTimeModule().addDeserializer(LocalDateTime::class.java , LocalDateTimeDeserializer(ISO_DATE_TIME)))
+        registerModule(JavaTimeModule().addDeserializer(LocalDateTime::class.java, LocalDateTimeDeserializer(ISO_DATE_TIME)))
     }
 
     override fun hentSaker(fnr: String): List<SakDto> {

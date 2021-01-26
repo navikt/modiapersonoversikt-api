@@ -35,7 +35,9 @@ import org.mockito.Mockito.*
 import org.slf4j.MDC
 import java.util.*
 import java.util.stream.Collectors
+import kotlin.contracts.ExperimentalContracts
 
+@ExperimentalContracts
 class SakerServiceImplTest {
     @Mock
     private val sakV1: SakV1? = null
