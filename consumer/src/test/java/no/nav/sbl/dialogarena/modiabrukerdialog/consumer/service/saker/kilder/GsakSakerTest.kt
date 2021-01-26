@@ -5,7 +5,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.saker.kilder.Sa
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.saker.kilder.SakDataGenerator.Companion.FagsystemSakId_1
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.saker.kilder.SakDataGenerator.Companion.SakId_1
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.saker.kilder.SakDataGenerator.Companion.VEDTAKSLOSNINGEN
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.saker.kilder.SakDataGenerator.Companion.beforeDateTimeWithOffSet
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.saker.kilder.SakDataGenerator.Companion.earlierDateTimeWithOffSet
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.saker.mediation.SakDto
 import org.hamcrest.CoreMatchers.`is`
 import org.hamcrest.CoreMatchers.nullValue
@@ -28,7 +28,7 @@ class GsakSakerTest {
                 orgnr = null,
                 fagsakNr = null,
                 opprettetAv = null,
-                opprettetTidspunkt = beforeDateTimeWithOffSet(4))
+                opprettetTidspunkt = earlierDateTimeWithOffSet(4))
         val sak = GsakSaker.TIL_SAK.invoke(sakDto)
         assertThat(sak.saksId, `is`(SakId_1))
         assertThat(sak.fagsystemSaksId, `is`(nullValue()))
@@ -48,7 +48,7 @@ class GsakSakerTest {
                 orgnr = null,
                 fagsakNr = FagsystemSakId_1,
                 opprettetAv = null,
-                opprettetTidspunkt = beforeDateTimeWithOffSet(4))
+                opprettetTidspunkt = earlierDateTimeWithOffSet(4))
 
         val sak = GsakSaker.TIL_SAK.invoke(sakDto)
         assertThat(sak.saksId, `is`(SakId_1))

@@ -104,7 +104,7 @@ class SakerServiceImpl : SakerService {
 
     private fun SakerService.Resultat.fjernIkkeGodkjenteSaker(): SakerService.Resultat {
         return SakerService.Resultat(
-                this.saker.filter(GODKJENT_FAGSAK or GODKJENT_GENERELL) as ArrayList<Sak>,
+                ArrayList(this.saker.filter(GODKJENT_FAGSAK or GODKJENT_GENERELL)),
                 this.feiledeSystemer
         )
     }
@@ -157,8 +157,8 @@ class SakerServiceImpl : SakerService {
         private fun slaSammenGsakPesysSaker(gsak: SakerService.Resultat, pesys: SakerService.Resultat): SakerService.Resultat {
             val pesysIder = pesys.saker.map { it.fagsystemSaksId }
             return SakerService.Resultat(
-                    (pesys.saker + gsak.saker.filter { !pesysIder.contains(it.fagsystemSaksId) }) as ArrayList<Sak>,
-                    (pesys.feiledeSystemer + gsak.feiledeSystemer) as ArrayList<String?>
+                    ArrayList(pesys.saker + gsak.saker.filter { !pesysIder.contains(it.fagsystemSaksId) }),
+                    ArrayList(pesys.feiledeSystemer + gsak.feiledeSystemer)
             )
         }
 

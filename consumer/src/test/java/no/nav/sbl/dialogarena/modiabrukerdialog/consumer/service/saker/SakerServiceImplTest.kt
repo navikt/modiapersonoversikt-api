@@ -27,7 +27,7 @@ import org.hamcrest.CoreMatchers
 import org.hamcrest.CoreMatchers.`is`
 import org.hamcrest.MatcherAssert.assertThat
 import org.joda.time.LocalDate
-import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.*
@@ -160,7 +160,7 @@ class SakerServiceImplTest {
         opprettSakResponse.sakId = SakDataGenerator.SAKS_ID
         `when`(behandleSak!!.opprettSak(ArgumentMatchers.any(WSOpprettSakRequest::class.java))).thenReturn(opprettSakResponse)
         sakerService!!.knyttBehandlingskjedeTilSak(SakDataGenerator.FNR, SakDataGenerator.BEHANDLINGSKJEDEID, sak, valgtNavEnhet)
-        com.nhaarman.mockitokotlin2.verify(behandleHenvendelsePortType, times(1))!!.knyttBehandlingskjedeTilSak(SakDataGenerator.BEHANDLINGSKJEDEID, SakDataGenerator.SAKS_ID, sak.temaKode, valgtNavEnhet)
+        verify(behandleHenvendelsePortType, times(1))!!.knyttBehandlingskjedeTilSak(SakDataGenerator.BEHANDLINGSKJEDEID, SakDataGenerator.SAKS_ID, sak.temaKode, valgtNavEnhet)
     }
 
     @Test
@@ -178,19 +178,19 @@ class SakerServiceImplTest {
     @Test
     fun `knytt behandlingskjede til sak kaster feil hvis enhet ikke er satt`() {
         `when`(behandleSak?.opprettSak(ArgumentMatchers.any(WSOpprettSakRequest::class.java))).thenReturn(WSOpprettSakResponse().withSakId(SakDataGenerator.SAKS_ID))
-        Assertions.assertThrows(IllegalArgumentException::class.java) { sakerService!!.knyttBehandlingskjedeTilSak(SakDataGenerator.FNR, SakDataGenerator.BEHANDLINGSKJEDEID, SakDataGenerator.lagSak(), "") }
+        assertThrows(IllegalArgumentException::class.java) { sakerService!!.knyttBehandlingskjedeTilSak(SakDataGenerator.FNR, SakDataGenerator.BEHANDLINGSKJEDEID, SakDataGenerator.lagSak(), "") }
     }
 
     @Test
     fun `knytt behandlingskjede til sak kaster feil hvis behandlingskjede ikke er satt`() {
         `when`(behandleSak?.opprettSak(ArgumentMatchers.any(WSOpprettSakRequest::class.java))).thenReturn(WSOpprettSakResponse().withSakId(SakDataGenerator.SAKS_ID))
-        Assertions.assertThrows(IllegalArgumentException::class.java) { sakerService!!.knyttBehandlingskjedeTilSak(SakDataGenerator.FNR, null, SakDataGenerator.lagSak(), "1337") }
+        assertThrows(IllegalArgumentException::class.java) { sakerService!!.knyttBehandlingskjedeTilSak(SakDataGenerator.FNR, null, SakDataGenerator.lagSak(), "1337") }
     }
 
     @Test
     fun `knytt Behandlingskjede til sak kaster feil hvis FNR ikke er satt`() {
         `when`(behandleSak?.opprettSak(ArgumentMatchers.any(WSOpprettSakRequest::class.java))).thenReturn(WSOpprettSakResponse().withSakId(SakDataGenerator.SAKS_ID))
-        Assertions.assertThrows(IllegalArgumentException::class.java) { sakerService!!.knyttBehandlingskjedeTilSak("", SakDataGenerator.BEHANDLINGSKJEDEID, SakDataGenerator.lagSak(), "1337") }
+        assertThrows(IllegalArgumentException::class.java) { sakerService!!.knyttBehandlingskjedeTilSak("", SakDataGenerator.BEHANDLINGSKJEDEID, SakDataGenerator.lagSak(), "1337") }
     }
 
 

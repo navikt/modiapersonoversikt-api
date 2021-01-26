@@ -99,7 +99,7 @@ internal class GsakSaker(
             return if (VEDTAKSLOSNINGEN == sakDto.applikasjon) sakDto.id.toString() else sakDto.fagsakNr
         }
 
-        private fun convertJavaDateTimeToJoda(dateTime: java.time.LocalDateTime): org.joda.time.DateTime {
+        private fun convertJavaDateTimeToJoda(dateTime: java.time.LocalDateTime): DateTime {
             val zdt: ZonedDateTime = dateTime.atZone(ZoneId.systemDefault())
             return DateTime(zdt.toInstant().toEpochMilli())
         }

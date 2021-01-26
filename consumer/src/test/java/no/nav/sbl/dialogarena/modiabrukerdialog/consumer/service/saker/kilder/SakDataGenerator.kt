@@ -9,7 +9,7 @@ import java.util.ArrayList
 internal class SakDataGenerator {
     companion object {
 
-        fun beforeDateTimeWithOffSet(offset: Long): java.time.LocalDateTime = LocalDateTime.now().minusDays(offset)
+        fun earlierDateTimeWithOffSet(offset: Long): LocalDateTime = LocalDateTime.now().minusDays(offset)
 
 
         fun createSaksliste(): List<SakDto>? {
@@ -21,7 +21,7 @@ internal class SakDataGenerator {
                             orgnr = null,
                             fagsakNr = FagsystemSakId_1,
                             opprettetAv = null,
-                            opprettetTidspunkt = beforeDateTimeWithOffSet(4)),
+                            opprettetTidspunkt = earlierDateTimeWithOffSet(4)),
 
                     SakDto(id = SakId_2,
                             tema = "AGR",
@@ -30,7 +30,7 @@ internal class SakDataGenerator {
                             orgnr = null,
                             fagsakNr = FagsystemSakId_2,
                             opprettetAv = null,
-                            opprettetTidspunkt = beforeDateTimeWithOffSet(3)),
+                            opprettetTidspunkt = earlierDateTimeWithOffSet(3)),
 
                     SakDto(id = SakId_3,
                             tema = "AAP",
@@ -39,7 +39,7 @@ internal class SakDataGenerator {
                             orgnr = null,
                             fagsakNr = FagsystemSakId_3,
                             opprettetAv = null,
-                            opprettetTidspunkt = beforeDateTimeWithOffSet(5)),
+                            opprettetTidspunkt = earlierDateTimeWithOffSet(5)),
 
                     SakDto(id = SakId_4,
                             tema = "STO",
@@ -48,7 +48,7 @@ internal class SakDataGenerator {
                             orgnr = null,
                             fagsakNr = null,
                             opprettetAv = null,
-                            opprettetTidspunkt = beforeDateTimeWithOffSet(5))))
+                            opprettetTidspunkt = earlierDateTimeWithOffSet(5))))
         }
 
         fun lagSak(): Sak {
@@ -82,7 +82,7 @@ internal class SakDataGenerator {
                             orgnr = null,
                             fagsakNr = "44",
                             opprettetAv = null,
-                            opprettetTidspunkt = beforeDateTimeWithOffSet(0)),
+                            opprettetTidspunkt = earlierDateTimeWithOffSet(0)),
 
                     SakDto(id = "5",
                             tema = "OPP",
@@ -91,7 +91,7 @@ internal class SakDataGenerator {
                             orgnr = null,
                             fagsakNr = null,
                             opprettetAv = null,
-                            opprettetTidspunkt = beforeDateTimeWithOffSet(3))))
+                            opprettetTidspunkt = earlierDateTimeWithOffSet(3))))
 
         }
 

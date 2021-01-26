@@ -47,7 +47,7 @@ internal class SakApiGatewayImpl(val pdlOppslagService: PdlOppslagService,
                     "fnr" to fnr,
                     "callId" to callId)
             )
-            val aktoerId = identliste
+            val aktørId = identliste
                     ?.identer
                     ?.find { it -> it.gruppe == HentIdent.IdentGruppe.AKTORID }
                     ?.ident ?: throw Exception("PDL Oppslag feilet for å hente aktørID")
@@ -55,7 +55,7 @@ internal class SakApiGatewayImpl(val pdlOppslagService: PdlOppslagService,
             val response: Response = client
                     .newCall(
                             Request.Builder()
-                                    .url("$baseUrl/api/v1/saker?aktoerId=$aktoerId")
+                                    .url("$baseUrl/api/v1/saker?aktoerId=$aktørId")
                                     .header("X-Correlation-ID", callId)
                                     .header(RestConstants.AUTHORIZATION, RestConstants.AUTH_METHOD_BEARER + RestConstants.AUTH_SEPERATOR + consumerOidcToken)
                                     .header("accept", "application/json")
@@ -96,5 +96,5 @@ data class SakDto(
         val orgnr: String? = null, //Orgnr til foretaket saken gjelder
         val fagsakNr: String? = null, //Fagsaknr for den aktuelle saken - hvis aktuelt
         val opprettetAv: String? = null, //Brukerident til den som opprettet saken
-        val opprettetTidspunkt: java.time.LocalDateTime? = null)
+        val opprettetTidspunkt: LocalDateTime? = null)
 

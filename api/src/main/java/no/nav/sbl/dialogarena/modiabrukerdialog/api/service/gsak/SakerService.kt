@@ -5,7 +5,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.exceptions.JournalforingFeil
 
 
 interface SakerService {
-    class Resultat(val saker: ArrayList<Sak> = ArrayList<Sak>(), val feiledeSystemer: ArrayList<String?> = ArrayList<String?>())
+    class Resultat(val saker: ArrayList<Sak> = ArrayList(), val feiledeSystemer: ArrayList<String?> = ArrayList())
 
     fun hentSaker(fnr: String): Resultat
 

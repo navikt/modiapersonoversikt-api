@@ -66,11 +66,6 @@
             <artifactId>unleash-client-java</artifactId>
             <version>3.2.2</version>
         </dependency>
-        <dependency>
-            <groupId>com.fasterxml.jackson.datatype</groupId>
-            <artifactId>jackson-datatype-jsr310</artifactId>
-            <version>2.9.8</version>
-        </dependency>
         <!-- intern avhengigheter -->
         <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>
@@ -304,10 +299,6 @@
             <groupId>io.mockk</groupId>
             <artifactId>mockk</artifactId>
             <scope>test</scope>
-        </dependency>
-        <dependency><!--delete this-->
-            <groupId>com.fasterxml.jackson.datatype</groupId>
-            <artifactId>jackson-datatype-joda</artifactId>
         </dependency>
     </dependencies>
 </project>
