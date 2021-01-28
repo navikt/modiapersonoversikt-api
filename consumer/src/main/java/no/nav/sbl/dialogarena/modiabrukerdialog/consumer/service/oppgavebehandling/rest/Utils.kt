@@ -2,8 +2,9 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.oppgavebehandl
 
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe.*
-import org.joda.time.DateTime
-import org.joda.time.format.DateTimeFormat
+import java.time.Clock
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 object Utils {
     const val DEFAULT_ENHET = "4100"
@@ -23,10 +24,16 @@ object Utils {
         }
     }
 
-    fun beskrivelseInnslag(ident: String, navn: String, enhet: String?, innhold: String?): String {
+    fun beskrivelseInnslag(
+        ident: String,
+        navn: String,
+        enhet: String?,
+        innhold: String?,
+        clock: Clock
+    ): String {
         return String.format(
             "--- %s %s (%s, %s) ---\n%s",
-            DateTimeFormat.forPattern("dd.MM.yyyy HH:mm").print(DateTime.now()),
+            DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm").format(LocalDateTime.now(clock)),
             navn,
             ident,
             enhet,

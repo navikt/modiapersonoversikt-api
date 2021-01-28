@@ -32,6 +32,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Tilgangskontrol
 import org.slf4j.MDC
 import org.springframework.http.HttpStatus
 import org.springframework.web.server.ResponseStatusException
+import java.time.Clock
 import java.time.LocalDate
 import java.util.*
 import java.util.Optional.ofNullable
@@ -48,7 +49,8 @@ class RestOppgaveBehandlingServiceImpl(
     },
     private val systemApiClient: OppgaveApi = OppgaveApiFactory.createClient {
         stsService.systemUserToken
-    }
+    },
+    private val clock: Clock = Clock.systemDefaultZone()
 ) : OppgaveBehandlingService {
     private val plukkOppgaveApi = PlukkOppgaveApi(
         apiClient,
@@ -74,16 +76,18 @@ class RestOppgaveBehandlingServiceImpl(
                     ident = ident,
                     navn = ansattService.hentAnsattNavn(ident),
                     enhet = request.opprettetavenhetsnummer,
-                    innhold = request.beskrivelse
+                    innhold = request.beskrivelse,
+                    clock = clock
                 ),
                 tema = request.tema.coerceBlankToNull(),
                 oppgavetype = oppgaveType,
                 behandlingstema = behandling.map(Behandling::getBehandlingstema).orElse(null),
                 behandlingstype = behandling.map(Behandling::getBehandlingstype).orElse(null),
-                aktivDato = LocalDate.now(),
+                aktivDato = LocalDate.now(clock),
                 fristFerdigstillelse = request.oppgaveFrist,
                 prioritet = PostOppgaveRequestJsonDTO.Prioritet.valueOf(stripTemakode(request.prioritet)),
-                metadata = mapOf(MetadataKey.EKSTERN_HENVENDELSE_ID.name to request.behandlingskjedeId)
+                metadata = request.behandlingskjedeId.coerceBlankToNull()
+                    ?.let { mapOf(MetadataKey.EKSTERN_HENVENDELSE_ID.name to it) }
             )
         )
 
@@ -108,13 +112,14 @@ class RestOppgaveBehandlingServiceImpl(
                     ident = ident,
                     navn = ansattService.hentAnsattNavn(ident),
                     enhet = request.opprettetavenhetsnummer,
-                    innhold = request.beskrivelse
+                    innhold = request.beskrivelse,
+                    clock = clock
                 ),
                 tema = request.tema.coerceBlankToNull(),
                 oppgavetype = oppgaveType,
                 behandlingstema = behandling.map(Behandling::getBehandlingstema).orElse(null),
                 behandlingstype = behandling.map(Behandling::getBehandlingstype).orElse(null),
-                aktivDato = LocalDate.now(),
+                aktivDato = LocalDate.now(clock),
                 fristFerdigstillelse = request.oppgaveFrist,
                 prioritet = PostOppgaveRequestJsonDTO.Prioritet.valueOf(stripTemakode(request.prioritet))
             )
@@ -152,7 +157,7 @@ class RestOppgaveBehandlingServiceImpl(
         val response = apiClient.finnOppgaver(
             correlationId(),
             tilordnetRessurs = ident,
-            aktivDatoTom = LocalDate.now().toString(),
+            aktivDatoTom = LocalDate.now(clock).toString(),
             statuskategori = "AAPEN"
         )
 
@@ -208,7 +213,8 @@ class RestOppgaveBehandlingServiceImpl(
                         ident = ident,
                         navn = ansattService.hentAnsattNavn(ident),
                         enhet = saksbehandlersValgteEnhet,
-                        innhold = "Oppgaven er ferdigstilt i Modia. $beskrivelse"
+                        innhold = "Oppgaven er ferdigstilt i Modia. $beskrivelse",
+                        clock = clock
                     )
                 ),
                 endretAvEnhetsnr = endretAvEnhet(temagruppe?.orElse(null), saksbehandlersValgteEnhet)
@@ -246,7 +252,8 @@ class RestOppgaveBehandlingServiceImpl(
                     ident = ident,
                     navn = ansattService.hentAnsattNavn(ident),
                     enhet = request.saksbehandlersValgteEnhet,
-                    innhold = request.beskrivelse
+                    innhold = request.beskrivelse,
+                    clock = clock
                 )
             ),
             endretAvEnhetsnr = endretAvEnhet(request.nyTemagruppe, request.saksbehandlersValgteEnhet)

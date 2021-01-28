@@ -6,7 +6,7 @@ data class OpprettOppgaveResponse(
         val id: String
 )
 
-data class  OpprettOppgaveRequest(
+data class OpprettOppgaveRequest(
         val fnr: String,
         val behandlesAvApplikasjon: String,
         val beskrivelse: String,

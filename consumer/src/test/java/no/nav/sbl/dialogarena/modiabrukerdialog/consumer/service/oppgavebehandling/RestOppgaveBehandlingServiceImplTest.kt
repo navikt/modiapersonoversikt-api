@@ -22,18 +22,20 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.AnsattService
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.pdl.PdlOppslagService
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.http.SubjectHandlerUtil
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.kodeverksmapper.KodeverksmapperService
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.kodeverksmapper.domain.Behandling
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.oppgavebehandling.rest.RestOppgaveBehandlingServiceImpl
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.oppgavebehandling.rest.Utils.KONTAKT_NAV
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.oppgavebehandling.rest.Utils
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.oppgavebehandling.rest.Utils.SPORSMAL_OG_SVAR
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Tilgangskontroll
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.TilgangskontrollContext
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
-import org.joda.time.DateTime
-import org.joda.time.format.DateTimeFormat
 import org.junit.jupiter.api.*
 import org.springframework.web.server.ResponseStatusException
+import java.time.Clock
+import java.time.Instant
 import java.time.LocalDate.now
+import java.time.ZoneId
 import java.util.*
 
 class RestOppgaveBehandlingServiceImplTest {
@@ -46,6 +48,7 @@ class RestOppgaveBehandlingServiceImplTest {
     private val ansattService: AnsattService = mockk()
     private val arbeidsfordelingService: ArbeidsfordelingV1Service = mockk()
     private val stsService: SystemUserTokenProvider = mockk()
+    private val fixedClock = Clock.fixed(Instant.parse("2021-01-25T10:15:30Z"), ZoneId.systemDefault())
 
     private val oppgaveBehandlingService = RestOppgaveBehandlingServiceImpl(
         kodeverksmapperService,
@@ -55,7 +58,8 @@ class RestOppgaveBehandlingServiceImplTest {
         tilgangskontroll,
         stsService,
         apiClient,
-        systemApiClient
+        systemApiClient,
+        fixedClock
     )
 
     @BeforeEach
@@ -75,7 +79,7 @@ class RestOppgaveBehandlingServiceImplTest {
 
     val dummyOppgave = OppgaveJsonDTO(
         id = 1234,
-        aktivDato = now(),
+        aktivDato = now(fixedClock),
         oppgavetype = SPORSMAL_OG_SVAR,
         prioritet = OppgaveJsonDTO.Prioritet.HOY,
         status = OppgaveJsonDTO.Status.AAPNET,
@@ -89,27 +93,30 @@ class RestOppgaveBehandlingServiceImplTest {
         @Test
         fun `skal opprette oppgave`() {
             every { apiClient.opprettOppgave(any(), any()) } returns dummyOppgave.toPostOppgaveResponseJsonDTO()
+            every { ansattService.hentAnsattNavn(eq("Z999999")) } returns "Fornavn Etternavn"
 
-            val response: OpprettOppgaveResponse = oppgaveBehandlingService.opprettOppgave(
-                OpprettOppgaveRequest(
-                    fnr = "07063000250",
-                    behandlesAvApplikasjon = "FS22",
-                    beskrivelse = "beskrivelse",
-                    temagruppe = "",
-                    tema = "KNA",
-                    oppgavetype = "SPM_OG_SVR",
-                    behandlingstype = "",
-                    prioritet = "NORM",
-                    underkategoriKode = "KNA",
-                    opprettetavenhetsnummer = "4100",
-                    oppgaveFrist = now(),
-                    valgtEnhetsId = "",
-                    behandlingskjedeId = "",
-                    dagerFrist = 3,
-                    ansvarligIdent = "",
-                    ansvarligEnhetId = ""
+            val response: OpprettOppgaveResponse = withIdent("Z999999") {
+                oppgaveBehandlingService.opprettOppgave(
+                    OpprettOppgaveRequest(
+                        fnr = "07063000250",
+                        behandlesAvApplikasjon = "FS22",
+                        beskrivelse = "beskrivelse",
+                        temagruppe = "",
+                        tema = "KNA",
+                        oppgavetype = "SPM_OG_SVR",
+                        behandlingstype = "",
+                        prioritet = "NORM",
+                        underkategoriKode = "KNA",
+                        opprettetavenhetsnummer = "4100",
+                        oppgaveFrist = now(fixedClock),
+                        valgtEnhetsId = "",
+                        behandlingskjedeId = "",
+                        dagerFrist = 3,
+                        ansvarligIdent = "",
+                        ansvarligEnhetId = ""
+                    )
                 )
-            )
+            }
 
             assertThat(response.id).isEqualTo("1234")
             verifySequence {
@@ -119,11 +126,11 @@ class RestOppgaveBehandlingServiceImplTest {
                         opprettetAvEnhetsnr = "4100",
                         aktoerId = "00007063000250000",
                         behandlesAvApplikasjon = "FS22",
-                        beskrivelse = "beskrivelse",
+                        beskrivelse = "--- 25.01.2021 11:15 Fornavn Etternavn (Z999999, 4100) ---\nbeskrivelse",
                         tema = "KNA",
                         oppgavetype = "SPM_OG_SVR",
-                        aktivDato = now(),
-                        fristFerdigstillelse = now(),
+                        aktivDato = now(fixedClock),
+                        fristFerdigstillelse = now(fixedClock),
                         prioritet = PostOppgaveRequestJsonDTO.Prioritet.NORM
                     )
                 )
@@ -133,22 +140,26 @@ class RestOppgaveBehandlingServiceImplTest {
         @Test
         fun `skal opprette skjermet oppgave`() {
             every { apiClient.opprettOppgave(any(), any()) } returns dummyOppgave.toPostOppgaveResponseJsonDTO()
+            every { ansattService.hentAnsattNavn(eq("Z999999")) } returns "Fornavn Etternavn"
 
-            val response = oppgaveBehandlingService.opprettSkjermetOppgave(
-                OpprettSkjermetOppgaveRequest(
-                    fnr = "07063000250",
-                    behandlesAvApplikasjon = "FS22",
-                    beskrivelse = "beskrivelse",
-                    temagruppe = "",
-                    tema = "KNA",
-                    oppgavetype = "SPM_OG_SVR",
-                    behandlingstype = "",
-                    prioritet = OppgaveJsonDTO.Prioritet.NORM.value,
-                    underkategoriKode = "",
-                    opprettetavenhetsnummer = "4100",
-                    oppgaveFrist = now()
+
+            val response = withIdent("Z999999") {
+                oppgaveBehandlingService.opprettSkjermetOppgave(
+                    OpprettSkjermetOppgaveRequest(
+                        fnr = "07063000250",
+                        behandlesAvApplikasjon = "FS22",
+                        beskrivelse = "beskrivelse",
+                        temagruppe = "",
+                        tema = "KNA",
+                        oppgavetype = "SPM_OG_SVR",
+                        behandlingstype = "",
+                        prioritet = OppgaveJsonDTO.Prioritet.NORM.value,
+                        underkategoriKode = "",
+                        opprettetavenhetsnummer = "4100",
+                        oppgaveFrist = now(fixedClock)
+                    )
                 )
-            )
+            }
 
             assertThat(response.id).isEqualTo("1234")
             verifySequence {
@@ -157,13 +168,13 @@ class RestOppgaveBehandlingServiceImplTest {
                     postOppgaveRequestJsonDTO = PostOppgaveRequestJsonDTO(
                         aktoerId = "00007063000250000",
                         behandlesAvApplikasjon = "FS22",
-                        beskrivelse = "beskrivelse",
+                        beskrivelse = "--- 25.01.2021 11:15 Fornavn Etternavn (Z999999, 4100) ---\nbeskrivelse",
                         tema = "KNA",
                         oppgavetype = "SPM_OG_SVR",
                         prioritet = PostOppgaveRequestJsonDTO.Prioritet.NORM,
                         opprettetAvEnhetsnr = "4100",
-                        aktivDato = now(),
-                        fristFerdigstillelse = now()
+                        aktivDato = now(fixedClock),
+                        fristFerdigstillelse = now(fixedClock)
                     )
                 )
             }
@@ -177,7 +188,7 @@ class RestOppgaveBehandlingServiceImplTest {
             every { apiClient.hentOppgave(any(), any()) } returns dummyOppgave.toGetOppgaveResponseJsonDTO()
             every { apiClient.endreOppgave(any(), any(), any()) } returns dummyOppgave.toPutOppgaveResponseJsonDTO()
 
-            SubjectHandlerUtil.withIdent("Z999999") {
+            withIdent("Z999999") {
                 oppgaveBehandlingService.tilordneOppgaveIGsak(
                     "1234",
                     Temagruppe.FMLI,
@@ -201,7 +212,7 @@ class RestOppgaveBehandlingServiceImplTest {
             every { apiClient.hentOppgave(any(), any()) } returns dummyOppgave.toGetOppgaveResponseJsonDTO()
             every { apiClient.endreOppgave(any(), any(), any()) } returns dummyOppgave.toPutOppgaveResponseJsonDTO()
 
-            SubjectHandlerUtil.withIdent("Z999999") {
+            withIdent("Z999999") {
                 oppgaveBehandlingService.tilordneOppgaveIGsak(
                     "1234",
                     Temagruppe.ANSOS,
@@ -253,9 +264,8 @@ class RestOppgaveBehandlingServiceImplTest {
                 apiClient.finnOppgaver(
                     xminusCorrelationMinusID = any(),
                     statuskategori = "AAPEN",
-                    tema = listOf(KONTAKT_NAV),
-                    oppgavetype = listOf(SPORSMAL_OG_SVAR),
-                    tilordnetRessurs = "Z999999"
+                    tilordnetRessurs = "Z999999",
+                    aktivDatoTom = now(fixedClock).toString()
                 )
             }
         }
@@ -291,10 +301,9 @@ class RestOppgaveBehandlingServiceImplTest {
             verifySequence {
                 apiClient.finnOppgaver(
                     xminusCorrelationMinusID = any(),
-                    statuskategori = "AAPEN",
-                    tema = listOf(KONTAKT_NAV),
-                    oppgavetype = listOf(SPORSMAL_OG_SVAR),
-                    tilordnetRessurs = "Z999999"
+                    tilordnetRessurs = "Z999999",
+                    aktivDatoTom = now(fixedClock).toString(),
+                    statuskategori = "AAPEN"
                 )
                 systemApiClient.endreOppgave(
                     any(), 1234, henvendelseOppgave.toPutOppgaveRequestJsonDTO().copy(
@@ -317,7 +326,7 @@ class RestOppgaveBehandlingServiceImplTest {
             every { apiClient.endreOppgave(any(), any(), any()) } returns dummyOppgave.toPutOppgaveResponseJsonDTO()
             every { ansattService.hentAnsattNavn(eq("Z999999")) } returns "Fornavn Etternavn"
 
-            SubjectHandlerUtil.withIdent("Z999999") {
+            withIdent("Z999999") {
                 oppgaveBehandlingService.ferdigstillOppgaveIGsak(
                     "1234",
                     Temagruppe.ANSOS,
@@ -348,7 +357,7 @@ class RestOppgaveBehandlingServiceImplTest {
             every { apiClient.endreOppgave(any(), any(), any()) } returns dummyOppgave.toPutOppgaveResponseJsonDTO()
             every { ansattService.hentAnsattNavn(eq("Z999999")) } returns "Fornavn Etternavn"
 
-            SubjectHandlerUtil.withIdent("Z999999") {
+            withIdent("Z999999") {
                 oppgaveBehandlingService.ferdigstillOppgaveIGsak(
                     "1234",
                     Optional.of(Temagruppe.ANSOS),
@@ -380,7 +389,7 @@ class RestOppgaveBehandlingServiceImplTest {
             every { apiClient.endreOppgave(any(), any(), any()) } returns dummyOppgave.toPutOppgaveResponseJsonDTO()
             every { ansattService.hentAnsattNavn(eq("Z999999")) } returns "Fornavn Etternavn"
 
-            SubjectHandlerUtil.withIdent("Z999999") {
+            withIdent("Z999999") {
                 oppgaveBehandlingService.ferdigstillOppgaverIGsak(
                     mutableListOf("1234"),
                     Optional.of(Temagruppe.ANSOS),
@@ -449,7 +458,7 @@ class RestOppgaveBehandlingServiceImplTest {
                 AnsattEnhet("4567", "NAV Mockenhet")
             )
 
-            SubjectHandlerUtil.withIdent("Z999999") {
+            withIdent("Z999999") {
                 oppgaveBehandlingService.leggTilbakeOppgaveIGsak(
                     LeggTilbakeOppgaveIGsakRequest()
                         .withSaksbehandlersValgteEnhet("4110")
@@ -471,8 +480,7 @@ class RestOppgaveBehandlingServiceImplTest {
                             tekst = "ny beskrivelse"
                         ),
                         endretAvEnhetsnr = "4110",
-                        tildeltEnhetsnr = "4567",
-                        temagruppe = "ANSOS"
+                        tildeltEnhetsnr = "4567"
                     )
                 )
             }
@@ -488,8 +496,12 @@ class RestOppgaveBehandlingServiceImplTest {
             every { arbeidsfordelingService.finnBehandlendeEnhetListe(any(), any(), any(), any()) } returns listOf(
                 AnsattEnhet("4567", "NAV Mockenhet")
             )
+            every { kodeverksmapperService.mapUnderkategori(any()) } returns Optional.of(Behandling()
+                .withBehandlingstema("behandlingstema_ANSOS")
+                .withBehandlingstype("behandlingstype_ANSOS")
+            )
 
-            SubjectHandlerUtil.withIdent("Z999999") {
+            withIdent("Z999999") {
                 oppgaveBehandlingService.leggTilbakeOppgaveIGsak(
                     LeggTilbakeOppgaveIGsakRequest()
                         .withSaksbehandlersValgteEnhet("4110")
@@ -512,7 +524,8 @@ class RestOppgaveBehandlingServiceImplTest {
                         ),
                         endretAvEnhetsnr = "4110",
                         tildeltEnhetsnr = "4567",
-                        temagruppe = "ANSOS"
+                        behandlingstema = "behandlingstema_ANSOS",
+                        behandlingstype = "behandlingstype_ANSOS"
                     )
                 )
             }
@@ -529,7 +542,7 @@ class RestOppgaveBehandlingServiceImplTest {
                 AnsattEnhet("4567", "NAV Mockenhet")
             )
 
-            SubjectHandlerUtil.withIdent("Z999999") {
+            withIdent("Z999999") {
                 oppgaveBehandlingService.leggTilbakeOppgaveIGsak(
                     LeggTilbakeOppgaveIGsakRequest()
                         .withSaksbehandlersValgteEnhet("4110")
@@ -602,19 +615,16 @@ class RestOppgaveBehandlingServiceImplTest {
             apiClient.hentOppgave(any(), 1234)
         }
     }
+
+    private fun <T> withIdent(ident: String, fn: () -> T): T {
+        return SubjectHandlerUtil.withIdent(ident, fn)
+    }
+
+    private fun OppgaveJsonDTO.nybeskrivelse(ident: String, navn: String, enhet: String, tekst: String): String {
+        return Utils.leggTilBeskrivelse(
+            this.beskrivelse,
+            Utils.beskrivelseInnslag(ident, navn, enhet, tekst, fixedClock)
+        )
+    }
 }
 
-private fun <T> withIdent(ident: String, fn: () -> T): T {
-    return SubjectHandlerUtil.withIdent(ident, fn)
-}
-
-private fun OppgaveJsonDTO.nybeskrivelse(ident: String, navn: String, enhet: String, tekst: String): String {
-    val header = String.format(
-        "--- %s %s (%s, %s) ---",
-        DateTimeFormat.forPattern("dd.MM.yyyy HH:mm").print(DateTime.now()),
-        navn,
-        ident,
-        enhet
-    )
-    return "$header\n$tekst\n\n${this.beskrivelse}"
-}
