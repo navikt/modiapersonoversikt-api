@@ -5,7 +5,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.exceptions.JournalforingFeil
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.gsak.SakerService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.RestUtils;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.http.SubjectHandlerUtil;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.saker.knyttbehandlingskjedetilsak.EnhetIkkeSatt;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.saker.EnhetIkkeSatt;
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.TilgangskontrollMock;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
