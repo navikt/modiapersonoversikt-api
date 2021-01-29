@@ -3201,6 +3201,96 @@
         <gosys datoOpprettet="2021-01-14T12:00:00" endretAv="PK-43233" underkategori="KLAGE_SYM"/>
         <gsak datoOpprettet="2021-01-14T12:00:00" endretAv="PK-43233" kode="KLAGE_SYM"/>
     </underkategori>
+    <underkategori kode="TILBAKEDATERING_SYK" datoFom="2021-01-29" datoOpprettet="2021-01-29T12:00:00" dekode="Tilbakedatering Sykemelding"
+                   endretAv="OPP-1315" erGyldig="true" fagomrade="SYK" opprettetAv="OPP-1315" gosys="true" gsak="true"
+                   leveranse="OPP-1315" jiraissue="OPP-1315">
+        <gosys datoOpprettet="2021-01-28T12:00:00" endretAv="OPP-1315" underkategori="TILBAKEDATERING_SYK"/>
+        <gsak datoOpprettet="2021-01-28T12:00:00" endretAv="OPP-1315" kode="TILBAKEDATERING_SYK"/>
+    </underkategori>
+    <underkategori kode="UFOR_FLYKT_FGSOK_SUP" datoFom="2021-01-29" datoOpprettet="2021-01-29T12:00:00" dekode="Ufør flyktning- Førstegangssøknad"
+                   endretAv="OPP-1315" erGyldig="true" fagomrade="SUP" opprettetAv="OPP-1315" gosys="true" gsak="true"
+                   leveranse="OPP-1315" jiraissue="OPP-1315">
+        <gosys datoOpprettet="2021-01-28T12:00:00" endretAv="OPP-1315" underkategori="UFOR_FLYKT_FGSOK_SUP"/>
+        <gsak datoOpprettet="2021-01-28T12:00:00" endretAv="OPP-1315" kode="UFOR_FLYKT_FGSOK_SUP"/>
+    </underkategori>
+    <underkategori kode="UFOR_FLYKT_NYPER_SUP" datoFom="2021-01-29" datoOpprettet="2021-01-29T12:00:00" dekode="Ufør flyktning- Ny periode"
+                   endretAv="OPP-1315" erGyldig="true" fagomrade="SUP" opprettetAv="OPP-1315" gosys="true" gsak="true"
+                   leveranse="OPP-1315" jiraissue="OPP-1315">
+        <gosys datoOpprettet="2021-01-28T12:00:00" endretAv="OPP-1315" underkategori="UFOR_FLYKT_NYPER_SUP"/>
+        <gsak datoOpprettet="2021-01-28T12:00:00" endretAv="OPP-1315" kode="UFOR_FLYKT_NYPER_SUP"/>
+    </underkategori>
+    <underkategori kode="UFOR_FLYKT_REVUR_SUP" datoFom="2021-01-29" datoOpprettet="2021-01-29T12:00:00" dekode="Ufør flyktning- Revudering"
+                   endretAv="OPP-1315" erGyldig="true" fagomrade="SUP" opprettetAv="OPP-1315" gosys="true" gsak="true"
+                   leveranse="OPP-1315" jiraissue="OPP-1315">
+        <gosys datoOpprettet="2021-01-28T12:00:00" endretAv="OPP-1315" underkategori="UFOR_FLYKT_REVUR_SUP"/>
+        <gsak datoOpprettet="2021-01-28T12:00:00" endretAv="OPP-1315" kode="UFOR_FLYKT_REVUR_SUP"/>
+    </underkategori>
+    <underkategori kode="UFOR_FLYKT_KLAGE_SUP" datoFom="2021-01-29" datoOpprettet="2021-01-29T12:00:00" dekode="Ufør flyktning- Klage"
+                   endretAv="OPP-1315" erGyldig="true" fagomrade="SUP" opprettetAv="OPP-1315" gosys="true" gsak="true"
+                   leveranse="OPP-1315" jiraissue="OPP-1315">
+        <gosys datoOpprettet="2021-01-28T12:00:00" endretAv="OPP-1315" underkategori="UFOR_FLYKT_KLAGE_SUP"/>
+        <gsak datoOpprettet="2021-01-28T12:00:00" endretAv="OPP-1315" kode="UFOR_FLYKT_KLAGE_SUP"/>
+    </underkategori>
+    <underkategori kode="UFOR_FLYKT_ANKE_SUP" datoFom="2021-01-29" datoOpprettet="2021-01-29T12:00:00" dekode="Ufør flyktning- Anke"
+                   endretAv="OPP-1315" erGyldig="true" fagomrade="SUP" opprettetAv="OPP-1315" gosys="true" gsak="true"
+                   leveranse="OPP-1315" jiraissue="OPP-1315">
+        <gosys datoOpprettet="2021-01-28T12:00:00" endretAv="OPP-1315" underkategori="UFOR_FLYKT_ANKE_SUP"/>
+        <gsak datoOpprettet="2021-01-28T12:00:00" endretAv="OPP-1315" kode="UFOR_FLYKT_ANKE_SUP"/>
+    </underkategori>
+    <underkategori kode="UFOR_FLYKT_TILBK_SUP" datoFom="2021-01-29" datoOpprettet="2021-01-29T12:00:00" dekode="Ufør flyktning- Tilbakekreving"
+                   endretAv="OPP-1315" erGyldig="true" fagomrade="SUP" opprettetAv="OPP-1315" gosys="true" gsak="true"
+                   leveranse="OPP-1315" jiraissue="OPP-1315">
+        <gosys datoOpprettet="2021-01-28T12:00:00" endretAv="OPP-1315" underkategori="UFOR_FLYKT_TILBK_SUP"/>
+        <gsak datoOpprettet="2021-01-28T12:00:00" endretAv="OPP-1315" kode="UFOR_FLYKT_TILBK_SUP"/>
+    </underkategori>
+    <underkategori kode="UFOR_FLYKT_PARTI_SUP" datoFom="2021-01-29" datoOpprettet="2021-01-29T12:00:00" dekode="Ufør flyktning- Partsinnsyn"
+                   endretAv="OPP-1315" erGyldig="true" fagomrade="SUP" opprettetAv="OPP-1315" gosys="true" gsak="true"
+                   leveranse="OPP-1315" jiraissue="OPP-1315">
+        <gosys datoOpprettet="2021-01-28T12:00:00" endretAv="OPP-1315" underkategori="UFOR_FLYKT_PARTI_SUP"/>
+        <gsak datoOpprettet="2021-01-28T12:00:00" endretAv="OPP-1315" kode="UFOR_FLYKT_PARTI_SUP"/>
+    </underkategori>
+    <underkategori kode="ALDER_FGSOK_SUP" datoFom="2021-01-29" datoOpprettet="2021-01-29T12:00:00" dekode="Alder- Førstegangssøknad"
+                   endretAv="OPP-1315" erGyldig="true" fagomrade="SUP" opprettetAv="OPP-1315" gosys="true" gsak="true"
+                   leveranse="OPP-1315" jiraissue="OPP-1315">
+        <gosys datoOpprettet="2021-01-28T12:00:00" endretAv="OPP-1315" underkategori="ALDER_FGSOK_SUP"/>
+        <gsak datoOpprettet="2021-01-28T12:00:00" endretAv="OPP-1315" kode="ALDER_FGSOK_SUP"/>
+    </underkategori>
+    <underkategori kode="ALDER_NYPER_SUP" datoFom="2021-01-29" datoOpprettet="2021-01-29T12:00:00" dekode="Alder- Ny periode"
+                   endretAv="OPP-1315" erGyldig="true" fagomrade="SUP" opprettetAv="OPP-1315" gosys="true" gsak="true"
+                   leveranse="OPP-1315" jiraissue="OPP-1315">
+        <gosys datoOpprettet="2021-01-28T12:00:00" endretAv="OPP-1315" underkategori="ALDER_NYPER_SUP"/>
+        <gsak datoOpprettet="2021-01-28T12:00:00" endretAv="OPP-1315" kode="ALDER_NYPER_SUP"/>
+    </underkategori>
+    <underkategori kode="ALDER_REVUR_SUP" datoFom="2021-01-29" datoOpprettet="2021-01-29T12:00:00" dekode="Alder- Revudering"
+                   endretAv="OPP-1315" erGyldig="true" fagomrade="SUP" opprettetAv="OPP-1315" gosys="true" gsak="true"
+                   leveranse="OPP-1315" jiraissue="OPP-1315">
+        <gosys datoOpprettet="2021-01-28T12:00:00" endretAv="OPP-1315" underkategori="ALDER_REVUR_SUP"/>
+        <gsak datoOpprettet="2021-01-28T12:00:00" endretAv="OPP-1315" kode="ALDER_REVUR_SUP"/>
+    </underkategori>
+    <underkategori kode="ALDER_KLAGE_SUP" datoFom="2021-01-29" datoOpprettet="2021-01-29T12:00:00" dekode="Alder- Klage"
+                   endretAv="OPP-1315" erGyldig="true" fagomrade="SUP" opprettetAv="OPP-1315" gosys="true" gsak="true"
+                   leveranse="OPP-1315" jiraissue="OPP-1315">
+        <gosys datoOpprettet="2021-01-28T12:00:00" endretAv="OPP-1315" underkategori="ALDER_KLAGE_SUP"/>
+        <gsak datoOpprettet="2021-01-28T12:00:00" endretAv="OPP-1315" kode="ALDER_KLAGE_SUP"/>
+    </underkategori>
+    <underkategori kode="ALDER_ANKE_SUP" datoFom="2021-01-29" datoOpprettet="2021-01-29T12:00:00" dekode="Alder- Anke"
+                   endretAv="OPP-1315" erGyldig="true" fagomrade="SUP" opprettetAv="OPP-1315" gosys="true" gsak="true"
+                   leveranse="OPP-1315" jiraissue="OPP-1315">
+        <gosys datoOpprettet="2021-01-28T12:00:00" endretAv="OPP-1315" underkategori="ALDER_ANKE_SUP"/>
+        <gsak datoOpprettet="2021-01-28T12:00:00" endretAv="OPP-1315" kode="ALDER_ANKE_SUP"/>
+    </underkategori>
+    <underkategori kode="ALDER_TILBK_SUP" datoFom="2021-01-29" datoOpprettet="2021-01-29T12:00:00" dekode="Alder- Tilbakekreving"
+                   endretAv="OPP-1315" erGyldig="true" fagomrade="SUP" opprettetAv="OPP-1315" gosys="true" gsak="true"
+                   leveranse="OPP-1315" jiraissue="OPP-1315">
+        <gosys datoOpprettet="2021-01-28T12:00:00" endretAv="OPP-1315" underkategori="ALDER_TILBK_SUP"/>
+        <gsak datoOpprettet="2021-01-28T12:00:00" endretAv="OPP-1315" kode="ALDER_TILBK_SUP"/>
+    </underkategori>
+    <underkategori kode="ALDER_PARTI_SUP" datoFom="2021-01-29" datoOpprettet="2021-01-29T12:00:00" dekode="Alder- Partsinnsyn"
+                   endretAv="OPP-1315" erGyldig="true" fagomrade="SUP" opprettetAv="OPP-1315" gosys="true" gsak="true"
+                   leveranse="OPP-1315" jiraissue="OPP-1315">
+        <gosys datoOpprettet="2021-01-28T12:00:00" endretAv="OPP-1315" underkategori="ALDER_PARTI_SUP"/>
+        <gsak datoOpprettet="2021-01-28T12:00:00" endretAv="OPP-1315" kode="ALDER_PARTI_SUP"/>
+    </underkategori>
 </underkategoriListe>
 
 
