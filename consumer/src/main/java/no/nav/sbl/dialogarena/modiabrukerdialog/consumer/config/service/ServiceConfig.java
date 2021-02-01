@@ -163,8 +163,8 @@ public class ServiceConfig {
     }
 
     @Bean
-    public SakApiGatewayImpl sakApiGateway() {
-        return new SakApiGatewayImpl(pdlOppslagService(systemUserTokenProvider()),
+    public SakApiGatewayImpl sakApiGateway(PdlOppslagService pdlOppslagService) {
+        return new SakApiGatewayImpl(pdlOppslagService,
                 EnvironmentUtils.getRequiredProperty("SAK_ENDPOINTURL"),
                 systemUserTokenProvider()
         );

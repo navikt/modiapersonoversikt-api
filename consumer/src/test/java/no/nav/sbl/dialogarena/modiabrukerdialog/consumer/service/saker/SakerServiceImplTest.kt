@@ -1,5 +1,10 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.saker
 
+import io.mockk.MockKAnnotations
+import io.mockk.every
+import io.mockk.impl.annotations.InjectMockKs
+import io.mockk.impl.annotations.MockK
+import io.mockk.verify
 import no.nav.common.log.MDCConstants
 import no.nav.common.utils.EnvironmentUtils
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.Sak
@@ -23,67 +28,68 @@ import no.nav.virksomhet.gjennomforing.sak.arbeidogaktivitet.v1.Sakstypekode
 import no.nav.virksomhet.tjenester.sak.arbeidogaktivitet.v1.ArbeidOgAktivitet
 import no.nav.virksomhet.tjenester.sak.meldinger.v1.WSHentSakListeRequest
 import no.nav.virksomhet.tjenester.sak.meldinger.v1.WSHentSakListeResponse
-import org.hamcrest.CoreMatchers
 import org.hamcrest.CoreMatchers.`is`
+import org.hamcrest.CoreMatchers.not
 import org.hamcrest.MatcherAssert.assertThat
 import org.joda.time.LocalDate
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.mockito.*
-import org.mockito.Mockito.*
 import org.slf4j.MDC
 import java.util.*
-import java.util.stream.Collectors
 import kotlin.contracts.ExperimentalContracts
+import kotlin.streams.toList
 
 @ExperimentalContracts
 class SakerServiceImplTest {
-    @Mock
-    private val sakV1: SakV1? = null
+    @MockK
+    private lateinit var sakV1: SakV1
 
-    @Mock
-    private val behandleSak: BehandleSakV1? = null
+    @MockK
+    private lateinit var behandleSak: BehandleSakV1
 
-    @Mock
-    private val gsakKodeverk: GsakKodeverk? = null
+    @MockK
+    private lateinit var gsakKodeverk: GsakKodeverk
 
-    @Mock
-    private val standardKodeverk: StandardKodeverk? = null
+    @MockK
+    private lateinit var standardKodeverk: StandardKodeverk
 
-    @Mock
-    private val arbeidOgAktivitet: ArbeidOgAktivitet? = null
+    @MockK
+    private lateinit var arbeidOgAktivitet: ArbeidOgAktivitet
 
-    @Mock
+    @MockK
     private lateinit var behandleHenvendelsePortType: BehandleHenvendelsePortType
 
-    @Mock
-    private val psakService: PsakService? = null
+    @MockK
+    private lateinit var psakService: PsakService
 
-    @Mock
-    private val unleashService: UnleashService? = null
+    @MockK
+    private lateinit var unleashService: UnleashService
 
-    @Mock
-    private val sakApiGateway: SakApiGateway? = null
+    @MockK
+    private lateinit var sakApiGateway: SakApiGateway
 
-    @InjectMocks
-    private val sakerService: SakerServiceImpl? = null
+    @InjectMockKs
+    private lateinit var sakerService: SakerServiceImpl
 
     @BeforeEach
     fun setUp() {
         EnvironmentUtils.setProperty("SAK_ENDPOINTURL", "https://sak-url", EnvironmentUtils.Type.PUBLIC)
-        MockitoAnnotations.initMocks(this)
-        sakerService!!.setup() // Kaller @PostConstruct manuelt siden vi kjører testen uten spring
-        `when`(arbeidOgAktivitet!!.hentSakListe(ArgumentMatchers.any(WSHentSakListeRequest::class.java))).thenReturn(WSHentSakListeResponse())
-        `when`(unleashService!!.isEnabled(ArgumentMatchers.anyString())).thenReturn(true)
-        `when`(unleashService.isEnabled(ArgumentMatchers.any(Feature::class.java))).thenReturn(true)
+        MockKAnnotations.init(this, relaxUnitFun = true)
+        sakerService.setup() // Kaller @PostConstruct manuelt siden vi kjører testen uten spring
+        every { arbeidOgAktivitet.hentSakListe(WSHentSakListeRequest()) } returns WSHentSakListeResponse()
+        every { unleashService.isEnabled(String()) } returns true
+        every { unleashService.isEnabled(Feature.SAMPLE_FEATURE) } returns true
+        every { gsakKodeverk.hentFagsystemMapping() } returns emptyMap()
+        every { standardKodeverk.getArkivtemaNavn(any()) } returns null
+        every { sakApiGateway.hentSaker(any()) } returns createSaksliste()
         MDC.put(MDCConstants.MDC_CALL_ID, "12345")
+
     }
 
     @Test
     fun `transformerer response til saksliste`() {
-        `when`(sakApiGateway!!.hentSaker(ArgumentMatchers.anyString())).thenReturn(createSaksliste())
-        val saksliste: List<Sak> = sakerService!!.hentSammensatteSakerResultat(FNR).saker
+        val saksliste: List<Sak> = sakerService.hentSammensatteSakerResultat(FNR).saker
         assertThat(saksliste[0].saksId, `is`(SakId_1))
         assertThat(saksliste[3].fagsystemKode, `is`(""))
         assertThat(saksliste[saksliste.size - 1].sakstype, `is`(Sak.SAKSTYPE_MED_FAGSAK))
@@ -92,15 +98,17 @@ class SakerServiceImplTest {
         assertThat(saksliste[saksliste.size - 1].fagsystemNavn, `is`("Kopiert inn i Bisys"))
     }
 
+
     @Test
     fun `transformerer response til saksliste pensjon`() {
         val pensjon = Sak()
         pensjon.temaKode = "PENS"
         val ufore = Sak()
         ufore.temaKode = "UFO"
-        val pensjonssaker = Arrays.asList(pensjon, ufore)
-        `when`(psakService!!.hentSakerFor(FNR)).thenReturn(pensjonssaker)
-        val saksliste = sakerService!!.hentPensjonSaker(FNR)
+        val pensjonssaker = listOf(pensjon, ufore)
+        every { psakService.hentSakerFor(FNR) } returns pensjonssaker
+
+        val saksliste = sakerService.hentPensjonSaker(FNR)
         assertThat(saksliste.size, `is`(2))
         assertThat(saksliste[0].temaNavn, `is`("PENS"))
         assertThat(saksliste[1].temaNavn, `is`("UFO"))
@@ -108,31 +116,32 @@ class SakerServiceImplTest {
 
     @Test
     fun `oppretter ikke generell oppfolgingssak og fjerner generell oppfolgingssak dersom fagsaker inneholder oppfolgingssak`() {
-        `when`(sakApiGateway!!.hentSaker(ArgumentMatchers.anyString())).thenReturn(createOppfolgingSaksliste())
-        val saker = sakerService!!.hentSammensatteSakerResultat(FNR).saker.stream().filter(Sak.harTemaKode(Sak.TEMAKODE_OPPFOLGING)).collect(Collectors.toList())
+        every { sakApiGateway.hentSaker(any()) } returns createOppfolgingSaksliste()
+        val saker = sakerService.hentSammensatteSakerResultat(FNR).saker.stream().filter(Sak.harTemaKode(Sak.TEMAKODE_OPPFOLGING)).toList()
         assertThat(saker.size, `is`(1))
-        assertThat(saker[0].sakstype, CoreMatchers.not(`is`(Sak.SAKSTYPE_GENERELL)))
+        assertThat(saker[0].sakstype, not(`is`(Sak.SAKSTYPE_GENERELL)))
     }
 
     @Test
     fun `oppretter ìkke generell oppfolgingssak dersom denne finnes allerede selv om fagsaker ikke inneholder oppfolgingssak`() {
-        val saker = sakerService!!.hentSammensatteSaker(FNR).stream().filter(Sak.harTemaKode(Sak.TEMAKODE_OPPFOLGING)).collect(Collectors.toList())
+        val saker = sakerService.hentSammensatteSaker(FNR).stream().filter(Sak.harTemaKode(Sak.TEMAKODE_OPPFOLGING)).toList()
         assertThat(saker.size, `is`(1))
         assertThat(saker[0].sakstype, `is`(Sak.SAKSTYPE_GENERELL))
     }
+
 
     @Test
     fun `legger til oppfolgingssak fra Arena dersom denne ikke finnes i gsak`() {
         val saksId = "123456"
         val dato = LocalDate.now().minusDays(1)
-        `when`(arbeidOgAktivitet!!.hentSakListe(ArgumentMatchers.any(WSHentSakListeRequest::class.java))).thenReturn(WSHentSakListeResponse().withSakListe(
+        every { arbeidOgAktivitet.hentSakListe(any()) } returns WSHentSakListeResponse().withSakListe(
                 no.nav.virksomhet.gjennomforing.sak.arbeidogaktivitet.v1.Sak()
                         .withFagomradeKode(Fagomradekode().withKode(Sak.TEMAKODE_OPPFOLGING))
                         .withSaksId(saksId)
                         .withEndringsInfo(EndringsInfo().withOpprettetDato(dato))
                         .withSakstypeKode(Sakstypekode().withKode("ARBEID"))
-        ))
-        val saker = sakerService!!.hentSammensatteSaker(FNR).stream().filter(Sak.harTemaKode(Sak.TEMAKODE_OPPFOLGING)).collect(Collectors.toList())
+        )
+        val saker = sakerService.hentSammensatteSaker(FNR).stream().filter(Sak.harTemaKode(Sak.TEMAKODE_OPPFOLGING)).toList()
         assertThat(saker.size, `is`(1))
         assertThat(saker[0].saksIdVisning, `is`(saksId))
         assertThat(saker[0].opprettetDato, `is`(dato.toDateTimeAtStartOfDay()))
@@ -146,9 +155,9 @@ class SakerServiceImplTest {
         val valgtNavEnhet = "0219"
         val opprettSakResponse = WSOpprettSakResponse()
         opprettSakResponse.sakId = SakDataGenerator.SAKS_ID
-        `when`(behandleSak?.opprettSak(ArgumentMatchers.any(WSOpprettSakRequest::class.java))).thenReturn(opprettSakResponse)
-        sakerService!!.knyttBehandlingskjedeTilSak(SakDataGenerator.FNR, SakDataGenerator.BEHANDLINGSKJEDEID, sak, valgtNavEnhet)
-        verify(behandleHenvendelsePortType, times(1)).knyttBehandlingskjedeTilSak(SakDataGenerator.BEHANDLINGSKJEDEID, SakDataGenerator.SAKS_ID, sak.temaKode, valgtNavEnhet)
+        every { behandleSak.opprettSak(any()) } returns opprettSakResponse
+        sakerService.knyttBehandlingskjedeTilSak(SakDataGenerator.FNR, SakDataGenerator.BEHANDLINGSKJEDEID, sak, valgtNavEnhet)
+        verify(exactly = 1) { behandleHenvendelsePortType.knyttBehandlingskjedeTilSak(SakDataGenerator.BEHANDLINGSKJEDEID, SakDataGenerator.SAKS_ID, sak.temaKode, valgtNavEnhet) }
     }
 
 
@@ -158,9 +167,9 @@ class SakerServiceImplTest {
         val valgtNavEnhet = "0219"
         val opprettSakResponse = WSOpprettSakResponse()
         opprettSakResponse.sakId = SakDataGenerator.SAKS_ID
-        `when`(behandleSak!!.opprettSak(ArgumentMatchers.any(WSOpprettSakRequest::class.java))).thenReturn(opprettSakResponse)
-        sakerService!!.knyttBehandlingskjedeTilSak(SakDataGenerator.FNR, SakDataGenerator.BEHANDLINGSKJEDEID, sak, valgtNavEnhet)
-        verify(behandleHenvendelsePortType, times(1))!!.knyttBehandlingskjedeTilSak(SakDataGenerator.BEHANDLINGSKJEDEID, SakDataGenerator.SAKS_ID, sak.temaKode, valgtNavEnhet)
+        every { behandleSak.opprettSak(any()) } returns opprettSakResponse
+        sakerService.knyttBehandlingskjedeTilSak(SakDataGenerator.FNR, SakDataGenerator.BEHANDLINGSKJEDEID, sak, valgtNavEnhet)
+        verify(exactly = 1) { behandleHenvendelsePortType.knyttBehandlingskjedeTilSak(SakDataGenerator.BEHANDLINGSKJEDEID, SakDataGenerator.SAKS_ID, sak.temaKode, valgtNavEnhet) }
     }
 
     @Test
@@ -169,28 +178,28 @@ class SakerServiceImplTest {
         val sak = Sak()
         sak.syntetisk = true
         sak.fagsystemKode = Sak.BIDRAG_MARKOR
-        sakerService!!.knyttBehandlingskjedeTilSak(SakDataGenerator.FNR, SakDataGenerator.BEHANDLINGSKJEDEID, sak, valgtNavEnhet)
-        verify(behandleSak, Mockito.never())!!.opprettSak(ArgumentMatchers.any(WSOpprettSakRequest::class.java))
-        verify(behandleHenvendelsePortType, Mockito.never())!!.knyttBehandlingskjedeTilSak(ArgumentMatchers.anyString(), ArgumentMatchers.anyString(), ArgumentMatchers.anyString(), ArgumentMatchers.anyString())
-        verify(behandleHenvendelsePortType, times(1))!!.knyttBehandlingskjedeTilTema(SakDataGenerator.BEHANDLINGSKJEDEID, "BID")
+        sakerService.knyttBehandlingskjedeTilSak(SakDataGenerator.FNR, SakDataGenerator.BEHANDLINGSKJEDEID, sak, valgtNavEnhet)
+        verify(exactly = 0) { behandleSak.opprettSak(WSOpprettSakRequest()) }
+        verify(exactly = 0) { behandleHenvendelsePortType.knyttBehandlingskjedeTilSak(String(), String(), String(), String()) }
+        verify(exactly = 1) { behandleHenvendelsePortType.knyttBehandlingskjedeTilTema(SakDataGenerator.BEHANDLINGSKJEDEID, "BID") }
     }
 
     @Test
     fun `knytt behandlingskjede til sak kaster feil hvis enhet ikke er satt`() {
-        `when`(behandleSak?.opprettSak(ArgumentMatchers.any(WSOpprettSakRequest::class.java))).thenReturn(WSOpprettSakResponse().withSakId(SakDataGenerator.SAKS_ID))
-        assertThrows(IllegalArgumentException::class.java) { sakerService!!.knyttBehandlingskjedeTilSak(SakDataGenerator.FNR, SakDataGenerator.BEHANDLINGSKJEDEID, SakDataGenerator.lagSak(), "") }
+        every { behandleSak.opprettSak(WSOpprettSakRequest()) } returns WSOpprettSakResponse().withSakId(SakDataGenerator.SAKS_ID)
+        assertThrows(IllegalArgumentException::class.java) { sakerService.knyttBehandlingskjedeTilSak(SakDataGenerator.FNR, SakDataGenerator.BEHANDLINGSKJEDEID, SakDataGenerator.lagSak(), "") }
     }
 
     @Test
     fun `knytt behandlingskjede til sak kaster feil hvis behandlingskjede ikke er satt`() {
-        `when`(behandleSak?.opprettSak(ArgumentMatchers.any(WSOpprettSakRequest::class.java))).thenReturn(WSOpprettSakResponse().withSakId(SakDataGenerator.SAKS_ID))
-        assertThrows(IllegalArgumentException::class.java) { sakerService!!.knyttBehandlingskjedeTilSak(SakDataGenerator.FNR, null, SakDataGenerator.lagSak(), "1337") }
+        every { behandleSak.opprettSak(WSOpprettSakRequest()) } returns WSOpprettSakResponse().withSakId(SakDataGenerator.SAKS_ID)
+        assertThrows(IllegalArgumentException::class.java) { sakerService.knyttBehandlingskjedeTilSak(SakDataGenerator.FNR, null, SakDataGenerator.lagSak(), "1337") }
     }
 
     @Test
     fun `knytt Behandlingskjede til sak kaster feil hvis FNR ikke er satt`() {
-        `when`(behandleSak?.opprettSak(ArgumentMatchers.any(WSOpprettSakRequest::class.java))).thenReturn(WSOpprettSakResponse().withSakId(SakDataGenerator.SAKS_ID))
-        assertThrows(IllegalArgumentException::class.java) { sakerService!!.knyttBehandlingskjedeTilSak("", SakDataGenerator.BEHANDLINGSKJEDEID, SakDataGenerator.lagSak(), "1337") }
+        every { behandleSak.opprettSak(WSOpprettSakRequest()) } returns WSOpprettSakResponse().withSakId(SakDataGenerator.SAKS_ID)
+        assertThrows(IllegalArgumentException::class.java) { sakerService.knyttBehandlingskjedeTilSak("", SakDataGenerator.BEHANDLINGSKJEDEID, SakDataGenerator.lagSak(), "1337") }
     }
 
 

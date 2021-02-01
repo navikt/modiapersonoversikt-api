@@ -12,7 +12,7 @@ internal class SakDataGenerator {
         fun earlierDateTimeWithOffSet(offset: Long): LocalDateTime = LocalDateTime.now().minusDays(offset)
 
 
-        fun createSaksliste(): List<SakDto>? {
+        fun createSaksliste(): List<SakDto> {
             return ArrayList(listOf(
                     SakDto(id = SakId_1,
                             tema = "AAP",
