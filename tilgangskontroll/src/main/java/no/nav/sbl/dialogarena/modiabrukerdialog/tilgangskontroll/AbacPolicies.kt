@@ -3,11 +3,7 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll
 import no.nav.common.auth.subject.SsoToken
 import no.nav.common.auth.subject.SubjectHandler
 import no.nav.sbl.dialogarena.abac.*
-import no.nav.sbl.dialogarena.abac.NavAttributes.ENVIRONMENT_FELLES_OIDC_TOKEN_BODY
-import no.nav.sbl.dialogarena.abac.NavAttributes.ENVIRONMENT_FELLES_PEP_ID
-import no.nav.sbl.dialogarena.abac.NavAttributes.RESOURCE_FELLES_DOMENE
-import no.nav.sbl.dialogarena.abac.NavAttributes.RESOURCE_FELLES_PERSON_FNR
-import no.nav.sbl.dialogarena.abac.NavAttributes.RESOURCE_FELLES_RESOURCE_TYPE
+import no.nav.sbl.dialogarena.abac.NavAttributes.*
 import no.nav.sbl.dialogarena.abac.StandardAttributter.ACTION_ID
 import java.util.*
 
@@ -46,6 +42,19 @@ object AbacPolicies {
                     attribute(RESOURCE_FELLES_DOMENE, "modia")
                     attribute(RESOURCE_FELLES_RESOURCE_TYPE, "no.nav.abac.attributter.resource.modia")
                     attribute(RESOURCE_FELLES_PERSON_FNR, fnr)
+                }
+            }
+
+    fun tilgangTilBrukerMedAktorId(aktorId: String): AbacRequest = SubjectHandler.getSsoToken()
+            .createWithTokenBody {tokenBody ->
+                environment {
+                    attribute(ENVIRONMENT_FELLES_PEP_ID, "modia")
+                    attribute(ENVIRONMENT_FELLES_OIDC_TOKEN_BODY, tokenBody)
+                }
+                resource {
+                    attribute(RESOURCE_FELLES_DOMENE, "modia")
+                    attribute(RESOURCE_FELLES_RESOURCE_TYPE, "no.nav.abac.attributter.resource.modia")
+                    attribute(RESOURCE_FELLES_PERSON_AKTOERID_RESOURCE, aktorId)
                 }
             }
 
