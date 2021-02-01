@@ -1,7 +1,6 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.common.utils;
 
 import org.joda.time.DateTime;
-import org.joda.time.LocalDate;
 import org.joda.time.format.DateTimeFormat;
 
 import java.time.ZoneId;
@@ -15,11 +14,6 @@ import static no.bekk.bekkopen.date.NorwegianDateUtil.addWorkingDaysToDate;
 public class DateUtils {
 
     private static Locale locale = Locale.getDefault();
-
-    public static LocalDate arbeidsdagerFraDato(int ukedager, LocalDate startDato) {
-        return LocalDate.fromDateFields(addWorkingDaysToDate(startDato.toDate(), ukedager));
-    }
-
 
     public static java.time.LocalDate arbeidsdagerFraDatoJava(int ukedager, java.time.LocalDate startDato) {
         ZoneId zone = ZoneId.systemDefault();

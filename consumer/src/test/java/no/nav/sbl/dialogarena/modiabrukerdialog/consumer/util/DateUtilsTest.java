@@ -1,12 +1,12 @@
-package no.nav.sbl.dialogarena.sporsmalogsvar.common.utils;
+package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util;
 
 import org.joda.time.LocalDate;
 import org.junit.jupiter.api.Test;
 
-import static no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.DateUtils.arbeidsdagerFraDato;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.DateUtils.arbeidsdagerFraDato;
 import static org.hamcrest.CoreMatchers.is;
-import static org.joda.time.Days.daysBetween;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.joda.time.Days.daysBetween;
 
 public class DateUtilsTest {
 
