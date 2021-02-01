@@ -49,11 +49,12 @@ fun createOppgaveBehandlingSwitcher(
     )
 
     val invocationHandler = InvocationHandler { _, method, args ->
+        val nullsafeArgs = args ?: arrayOfNulls<Any>(0)
         if (unleashService.isEnabled(Feature.USE_REST_OPPGAVE_IMPL)) {
-            method.invoke(restClient, args)
+            method.invoke(restClient, *nullsafeArgs)
             log.warn("[OppgaveBehandlingService] bruker rest-implementasjonen av OppgaveBehandlingService")
         } else {
-            method.invoke(soapClient, args)
+            method.invoke(soapClient, *nullsafeArgs)
         }
     }
     val proxy = Proxy.newProxyInstance(
