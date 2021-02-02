@@ -19,6 +19,7 @@ import org.slf4j.LoggerFactory
 import org.slf4j.MDC
 import org.springframework.beans.factory.annotation.Autowired
 import java.util.concurrent.CompletableFuture
+import java.util.function.Predicate.not
 import javax.annotation.PostConstruct
 import kotlin.contracts.ExperimentalContracts
 
@@ -29,18 +30,25 @@ private val logger = LoggerFactory.getLogger(SakerServiceImpl::class.java)
 class SakerServiceImpl : SakerService {
     @Autowired
     private lateinit var sakV1: SakV1
+
     @Autowired
     private lateinit var behandleSakWS: BehandleSakV1
+
     @Autowired
     private lateinit var gsakKodeverk: GsakKodeverk
+
     @Autowired
     private lateinit var standardKodeverk: StandardKodeverk
+
     @Autowired
     private lateinit var behandleHenvendelsePortType: BehandleHenvendelsePortType
+
     @Autowired
     private lateinit var arbeidOgAktivitet: ArbeidOgAktivitet
+
     @Autowired
     private lateinit var psakService: PsakService
+
     @Autowired
     private lateinit var sakApiGateway: SakApiGateway
 
@@ -103,10 +111,8 @@ class SakerServiceImpl : SakerService {
     }
 
     private fun SakerService.Resultat.fjernIkkeGodkjenteSaker(): SakerService.Resultat {
-        return SakerService.Resultat(
-                ArrayList(this.saker.filter(GODKJENT_FAGSAK or GODKJENT_GENERELL)),
-                this.feiledeSystemer
-        )
+        this.saker.removeIf(not(GODKJENT_FAGSAK or GODKJENT_GENERELL))
+        return this
     }
 
     fun hentPensjonSakerResultat(fnr: String?): SakerService.Resultat {
@@ -157,8 +163,8 @@ class SakerServiceImpl : SakerService {
         private fun slaSammenGsakPesysSaker(gsak: SakerService.Resultat, pesys: SakerService.Resultat): SakerService.Resultat {
             val pesysIder = pesys.saker.map { it.fagsystemSaksId }
             return SakerService.Resultat(
-                    ArrayList(pesys.saker + gsak.saker.filter { !pesysIder.contains(it.fagsystemSaksId) }),
-                    ArrayList(pesys.feiledeSystemer + gsak.feiledeSystemer)
+                    (pesys.saker + gsak.saker.filter { !pesysIder.contains(it.fagsystemSaksId) }).toMutableList(),
+                    (pesys.feiledeSystemer + gsak.feiledeSystemer).toMutableList()
             )
         }
 
