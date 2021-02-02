@@ -501,6 +501,20 @@
                     <url>https://github-package-registry-mirror.gc.nav.no/cached/maven-release</url>
                 </repository>
             </repositories>
+            <pluginRepositories>
+                <pluginRepository>
+                    <snapshots>
+                        <enabled>false</enabled>
+                    </snapshots>
+                    <id>central</id>
+                    <name>Central Repository</name>
+                    <url>https://repo.maven.apache.org/maven2</url>
+                </pluginRepository>
+                <pluginRepository>
+                    <id>external-mirror-github-navikt</id>
+                    <url>https://github-package-registry-mirror.gc.nav.no/cached/maven-release</url>
+                </pluginRepository>
+            </pluginRepositories>
         </profile>
         <profile>
             <id>ci</id>
