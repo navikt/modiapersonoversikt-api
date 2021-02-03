@@ -147,7 +147,7 @@ spec:
     - name: MODIABRUKERDIALOG_STANDARDTEKSTER_TILBAKEMELDING_URL
       value: "https://navet.adeo.no/411275.cms"
     - name: PENSJON_PENSJONSAK_V1_ENDPOINTURL
-      value: "https://wasapp-q0.adeo.no/pensjon-ws/PensjonSak_v1"
+      value: "https://pensjon-pen-q0.nais.preprod.local/pen/services/PensjonSak_v1"
     - name: PENSJON_PENSJONSAK_V1_SECURITYTOKEN
       value: "SAML"
     - name: PENSJON_PENSJONSAK_V1_WSDLURL

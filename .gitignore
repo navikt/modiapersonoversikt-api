@@ -11,5 +11,6 @@
 .settings
 target
 /credentials.properties
+.DS_Store
 node_modules/
 web/src/test/resources/.vault.properties

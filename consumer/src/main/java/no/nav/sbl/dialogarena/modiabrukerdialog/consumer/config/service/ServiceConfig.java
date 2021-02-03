@@ -1,6 +1,7 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.service;
 
 import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navansatt.GOSYSNAVansatt;
+
 import no.nav.common.cxf.StsConfig;
 import no.nav.common.sts.NaisSystemUserTokenProvider;
 import no.nav.common.sts.SystemUserTokenProvider;
@@ -16,7 +17,6 @@ import no.nav.modig.content.ContentRetriever;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.HenvendelseLesService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.HenvendelseUtsendingService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveBehandlingService;
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveRestClient;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.arbeidsfordeling.ArbeidsfordelingV1Service;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.gsak.GsakKodeverk;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.gsak.SakerService;
@@ -28,7 +28,11 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.organisasjonsEnhetV2
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.pdl.PdlOppslagService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.psak.PsakService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.kodeverksmapper.Kodeverksmapper;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.*;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.AnsattServiceImpl;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.HenvendelseLesServiceImpl;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.HenvendelseUtsendingServiceImpl;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.PsakServiceImpl;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.ScheduledAnsattListePrefetch;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.arbeidsfordeling.ArbeidsfordelingClient;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.arbeidsfordeling.ArbeidsfordelingV1ServiceImpl;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.henvendelse.DelsvarService;
@@ -39,13 +43,12 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.kodeverksmapper
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.ldap.LDAPServiceImpl;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.ldap.LdapContextProvider;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.oppfolgingsinfo.OppfolgingsenhetServiceImpl;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.oppgave.OppgaveOpprettelseClient;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.oppgavebehandling.OppgaveBehandlingServiceImpl;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.organisasjonenhet.OrganisasjonEnhetV2ServiceImpl;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.organisasjonenhet.kontaktinformasjon.service.OrganisasjonEnhetKontaktinformasjonService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.organisasjonenhet.kontaktinformasjon.service.OrganisasjonEnhetKontaktinformasjonServiceImpl;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.pdl.PdlOppslagServiceImpl;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.saker.SakerServiceImpl;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.UnleashService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Tilgangskontroll;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.behandlehenvendelse.BehandleHenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.senduthenvendelse.SendUtHenvendelsePortType;
@@ -64,6 +67,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
 import static no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.RestConstants.SECURITY_TOKEN_SERVICE_DISCOVERYURL;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.oppgavebehandling.OppgaveBehandlingServiceSwitcherKt.createOppgaveBehandlingSwitcher;
 
 /**
  * MODIA ønsker å selv wire inn sine komponenters kontekster for å ha full kontroll over springoppsettet.
@@ -108,11 +112,6 @@ public class ServiceConfig {
     }
 
     @Bean
-    public OppgaveRestClient oppgaveOpprettelseClient(KodeverksmapperService kodeverksmapperService, PdlOppslagService pdlOppslagService) {
-        return new OppgaveOpprettelseClient(kodeverksmapperService, pdlOppslagService);
-    }
-
-    @Bean
     public KodeverksmapperService kodeverksmapperService(Kodeverksmapper kodeverksmapper) {
         return new KodeverksmapperService(kodeverksmapper);
     }
@@ -131,10 +130,25 @@ public class ServiceConfig {
     public OppgaveBehandlingService oppgaveBehandlingService(OppgavebehandlingV3 oppgavebehandlingV3,
                                                              TildelOppgaveV1 tildelOppgaveV1,
                                                              OppgaveV3 oppgaveV3,
+                                                             KodeverksmapperService kodeverksmapperService,
+                                                             PdlOppslagService pdlOppslagService,
                                                              AnsattService ansattService,
                                                              ArbeidsfordelingV1Service arbeidsfordelingV1Service,
-                                                             Tilgangskontroll tilgangskontroll) {
-        return new OppgaveBehandlingServiceImpl(oppgavebehandlingV3, tildelOppgaveV1, oppgaveV3, ansattService, arbeidsfordelingV1Service, tilgangskontroll);
+                                                             Tilgangskontroll tilgangskontroll,
+                                                             SystemUserTokenProvider stsService,
+                                                             UnleashService unleashService) {
+        return createOppgaveBehandlingSwitcher(
+                oppgavebehandlingV3,
+                tildelOppgaveV1,
+                oppgaveV3,
+                kodeverksmapperService,
+                pdlOppslagService,
+                ansattService,
+                arbeidsfordelingV1Service,
+                tilgangskontroll,
+                stsService,
+                unleashService
+        );
     }
 
     @Bean

@@ -24,20 +24,20 @@ class PdlOppslagServiceImpl constructor(
 ) : PdlOppslagService {
     constructor(stsService: SystemUserTokenProvider) : this(stsService, createClient())
 
-    override fun hentPerson(fnr: String): HentPerson.Person? = runBlocking {
+    override fun hentPerson(ident: String): HentPerson.Person? = runBlocking {
         HentPerson(pdlClient)
-                .execute(HentPerson.Variables(fnr), userTokenAuthorizationHeaders)
+                .execute(HentPerson.Variables(ident), userTokenAuthorizationHeaders)
                 .data
                 ?.hentPerson
     }
 
-    override fun hentNavnBolk(fnrs: List<String>): Map<String, HentNavnBolk.Navn?>? {
-        if (fnrs.isEmpty()) {
+    override fun hentNavnBolk(identer: List<String>): Map<String, HentNavnBolk.Navn?>? {
+        if (identer.isEmpty()) {
             return emptyMap()
         }
 
         return runBlocking {
-            HentNavnBolk(pdlClient).execute(HentNavnBolk.Variables(fnrs), systemTokenAuthorizationHeaders)
+            HentNavnBolk(pdlClient).execute(HentNavnBolk.Variables(identer), systemTokenAuthorizationHeaders)
         }
                 .data
                 ?.hentPersonBolk
@@ -47,9 +47,9 @@ class PdlOppslagServiceImpl constructor(
                 }
     }
 
-    override fun hentIdent(fnr: String): HentIdent.Identliste? = runBlocking {
+    override fun hentIdent(ident: String): HentIdent.Identliste? = runBlocking {
         HentIdent(pdlClient)
-                .execute(HentIdent.Variables(fnr), userTokenAuthorizationHeaders)
+                .execute(HentIdent.Variables(ident), userTokenAuthorizationHeaders)
                 .data
                 ?.hentIdenter
     }
