@@ -15,6 +15,7 @@ import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.OppgavebehandlingV3
 import no.nav.tjeneste.virksomhet.tildeloppgave.v1.TildelOppgaveV1
 import org.slf4j.LoggerFactory
 import java.lang.reflect.InvocationHandler
+import java.lang.reflect.InvocationTargetException
 import java.lang.reflect.Proxy
 
 fun createOppgaveBehandlingSwitcher(
@@ -50,11 +51,15 @@ fun createOppgaveBehandlingSwitcher(
 
     val invocationHandler = InvocationHandler { _, method, args ->
         val nullsafeArgs = args ?: arrayOfNulls<Any>(0)
-        if (unleashService.isEnabled(Feature.USE_REST_OPPGAVE_IMPL)) {
-            method.invoke(restClient, *nullsafeArgs)
-            log.warn("[OppgaveBehandlingService] bruker rest-implementasjonen av OppgaveBehandlingService")
-        } else {
-            method.invoke(soapClient, *nullsafeArgs)
+        try {
+            if (unleashService.isEnabled(Feature.USE_REST_OPPGAVE_IMPL)) {
+                method.invoke(restClient, *nullsafeArgs)
+                log.warn("[OppgaveBehandlingService] bruker rest-implementasjonen av OppgaveBehandlingService")
+            } else {
+                method.invoke(soapClient, *nullsafeArgs)
+            }
+        } catch (e: InvocationTargetException) {
+            throw e.targetException
         }
     }
     val proxy = Proxy.newProxyInstance(
