@@ -9,24 +9,19 @@ import io.mockk.impl.annotations.MockK
 import no.nav.common.log.MDCConstants
 import no.nav.common.sts.SystemUserTokenProvider
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.pdl.generated.HentIdent
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.pdl.PdlOppslagService
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.RestConstants
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.core.Is.`is`
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 import org.slf4j.MDC
 
 internal class SakApiGatewayTest {
-
-    @MockK
-    private lateinit var pdlOpslagService: PdlOppslagService
-
     @MockK
     private lateinit var stsService: SystemUserTokenProvider
 
     private val AKTOERID = "11111"
-    private val FNR = "000000001"
     private val response = """
                             [{
                                 "id": 141481247,
@@ -54,7 +49,6 @@ internal class SakApiGatewayTest {
                 HentIdent.IdentInformasjon(AKTOERID, HentIdent.IdentGruppe.AKTORID)
         )
 
-        every { pdlOpslagService.hentIdent(FNR) } returns (HentIdent.Identliste(identer))
         every { stsService.systemUserToken } returns ("TOKEN")
         MDC.put(MDCConstants.MDC_CALL_ID, "MDC_CALL_ID")
 
@@ -63,50 +57,47 @@ internal class SakApiGatewayTest {
     @Test
     fun `hent saker som list av data objects fra SakApi`() {
         withMockGateway(statusCode = 200, body = response) { sakApiGateway ->
-            val response = sakApiGateway.hentSaker(FNR)
+            val response = sakApiGateway.hentSaker(AKTOERID)
             assertThat(response.size, `is`(1))
 
         }
     }
 
     @Test
-    fun `handterer null ident informasjon fra pdl oppslag`() {
-        every { pdlOpslagService.hentIdent(FNR) } returns (null)
-        withMockGateway(verify = {}) { sakApiGateway ->
-            assertThat(sakApiGateway.hentSaker(FNR).isEmpty(), `is`(true))
-        }
-    }
-
-    @Test
     fun `handterer status coder utenfor 200-299 rangen`() {
         withMockGateway(statusCode = 404, body = response) { sakApiGateway ->
-            assertThat(sakApiGateway.hentSaker(FNR).isEmpty(), `is`(true))
+            assertThrows<IllegalStateException> {
+                sakApiGateway.hentSaker(AKTOERID)
+            }
         }
 
         withMockGateway(statusCode = 500) { sakApiGateway ->
-            assertThat(sakApiGateway.hentSaker(FNR).isEmpty(), `is`(true))
+            assertThrows<IllegalStateException> {
+                sakApiGateway.hentSaker(AKTOERID)
+            }
         }
     }
 
-    internal fun withMockGateway(statusCode: Int = 200,
+    private fun withMockGateway(statusCode: Int = 200,
                                  body: String? = null,
                                  verify: (() -> Unit)? = withHeader,
                                  test: (SakApiGateway) -> Unit) {
         val wireMockServer = WireMockServer()
+        try{
+            wireMockServer.stubFor(get(anyUrl())
+                    .willReturn(aResponse()
+                            .withStatus(statusCode)
+                            .withHeader("Content-Type", "application/json")
+                            .withBody(body)))
+            wireMockServer.start()
 
-        wireMockServer.stubFor(get(anyUrl())
-                .willReturn(aResponse()
-                        .withStatus(statusCode)
-                        .withHeader("Content-Type", "application/json")
-                        .withBody(body)))
-        wireMockServer.start()
+            val client = SakApiGatewayImpl("http://localhost:${wireMockServer.port()}", stsService)
+            test(client)
 
-        val client = SakApiGatewayImpl(pdlOpslagService, "http://localhost:${wireMockServer.port()}", stsService)
-        test(client)
-
-        if (verify != null) verify()
-
-        wireMockServer.stop()
+            if (verify != null) verify()
+        } finally {
+            wireMockServer.stop()
+        }
     }
 
 }

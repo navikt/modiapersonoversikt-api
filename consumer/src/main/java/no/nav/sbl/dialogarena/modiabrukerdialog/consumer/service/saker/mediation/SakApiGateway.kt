@@ -1,100 +1,89 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.saker.mediation
 
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
-import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
-import no.nav.common.log.MDCConstants
 import no.nav.common.rest.client.RestClient
 import no.nav.common.sts.SystemUserTokenProvider
 import no.nav.common.utils.EnvironmentUtils
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.pdl.generated.HentIdent
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.pdl.PdlOppslagService
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.RestConstants
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.TjenestekallLogger
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.http.AuthorizationInterceptor
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.http.LoggingInterceptor
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.http.OkHttpUtils
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.http.OkHttpUtils.MediaTypes
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.http.XCorrelationIdInterceptor
 import okhttp3.Request
+import okhttp3.RequestBody
 import okhttp3.Response
-import org.slf4j.LoggerFactory
-import org.slf4j.MDC
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter.ISO_DATE_TIME
-import java.util.*
+import java.time.ZonedDateTime
 
-
-internal interface SakApiGateway {
-    fun hentSaker(fnr: String): List<SakDto>
+interface SakApiGateway {
+    fun hentSaker(aktorId: String): List<SakDto>
+    fun opprettSak(sak: SakDto): SakDto
 }
 
-internal class SakApiGatewayImpl(val pdlOppslagService: PdlOppslagService,
-                                 val baseUrl: String = EnvironmentUtils.getRequiredProperty("SAK_ENDPOINTURL"),
-                                 val stsService: SystemUserTokenProvider
+class SakApiGatewayImpl(
+    private val baseUrl: String = EnvironmentUtils.getRequiredProperty("SAK_ENDPOINTURL"),
+    private val stsService: SystemUserTokenProvider
 ) : SakApiGateway {
+    private val objectMapper = OkHttpUtils.objectMapper
+    private val client = RestClient.baseClient().newBuilder()
+        .addInterceptor(XCorrelationIdInterceptor())
+        .addInterceptor(AuthorizationInterceptor {
+            stsService.systemUserToken
+        })
+        .addInterceptor(LoggingInterceptor("Sak") { request ->
+            requireNotNull(request.header("X-Correlation-ID")) {
+                "Kall uten \"X-Correlation-ID\" er ikke lov"
+            }
+        })
+        .build()
 
+    override fun hentSaker(aktorId: String): List<SakDto> {
+        val request = Request
+            .Builder()
+            .url("$baseUrl/api/v1/saker?aktoerId=$aktorId")
+            .header("accept", "application/json")
+            .build()
 
-    private val log = LoggerFactory.getLogger(SakApiGatewayImpl::class.java)
-    private val client = RestClient.baseClient()
-    private val objectMapper = jacksonObjectMapper().apply {
-        registerModule(JavaTimeModule().addDeserializer(LocalDateTime::class.java, LocalDateTimeDeserializer(ISO_DATE_TIME)))
+        return fetch(request)
     }
 
-    override fun hentSaker(fnr: String): List<SakDto> {
-        val callId = MDC.get(MDCConstants.MDC_CALL_ID) ?: UUID.randomUUID().toString()
-        try {
-            val consumerOidcToken: String = stsService.systemUserToken
-            val identliste = pdlOppslagService.hentIdent(fnr)
+    override fun opprettSak(sak: SakDto): SakDto {
+        val requestBody = RequestBody.create(
+            MediaTypes.JSON,
+            objectMapper.writeValueAsString(sak)
+        )
+        val request = Request
+            .Builder()
+            .url("$baseUrl/api/v1/saker")
+            .header("accept", "application/json")
+            .post(requestBody)
+            .build()
 
-            TjenestekallLogger.info("sakapi-request: $callId", mapOf(
-                    "fnr" to fnr,
-                    "callId" to callId)
-            )
-            val aktørId = identliste
-                    ?.identer
-                    ?.find { it -> it.gruppe == HentIdent.IdentGruppe.AKTORID }
-                    ?.ident ?: throw Exception("PDL Oppslag feilet for å hente aktørID")
+        return fetch(request)
+    }
 
-            val response: Response = client
-                    .newCall(
-                            Request.Builder()
-                                    .url("$baseUrl/api/v1/saker?aktoerId=$aktørId")
-                                    .header("X-Correlation-ID", callId)
-                                    .header(RestConstants.AUTHORIZATION, RestConstants.AUTH_METHOD_BEARER + RestConstants.AUTH_SEPERATOR + consumerOidcToken)
-                                    .header("accept", "application/json")
-                                    .build()
-                    )
-                    .execute()
-            val body = response.body()?.string()
-            val tjenestekallInfo = mapOf(
-                    "status" to "${response.code()} ${response.message()}",
-                    "fnr" to fnr,
-                    "body" to body
-            )
+    private inline fun <reified RESPONSE> fetch(request: Request): RESPONSE {
+        val response: Response = client
+            .newCall(request)
+            .execute()
 
-            if (response.code() in 200..299 && body != null) {
-                TjenestekallLogger.info("hent saker-api-response: $callId", tjenestekallInfo)
-                return objectMapper.readValue(body)
-            } else {
-                TjenestekallLogger.error("hent saker-api-response-error: $callId", tjenestekallInfo)
+        val body = response.body()?.string()
 
-            }
-        } catch (exception: Exception) {
-            log.error("Feilet ved GET kall mot Sak API  (ID: $callId)", exception)
-            TjenestekallLogger.error("Sak-error: $callId", mapOf(
-                    "exception" to exception,
-                    "fnr" to fnr
-            ))
-
+        return if (response.code() in 200..299 && body != null) {
+            objectMapper.readValue(body)
+        } else {
+            throw IllegalStateException("Forventet 200-range svar og body fra sak-api, men fikk: ${response.code()} $body")
         }
-        return emptyList()
     }
 }
 
 data class SakDto(
-        val id: String? = null,
-        val tema: String? = null, //example: AAP
-        val applikasjon: String? = null, //example: IT01 Kode for applikasjon iht. felles kodeverk
-        val aktoerId: String? = null, //example: 10038999999 Id til aktøren saken gjelder
-        val orgnr: String? = null, //Orgnr til foretaket saken gjelder
-        val fagsakNr: String? = null, //Fagsaknr for den aktuelle saken - hvis aktuelt
-        val opprettetAv: String? = null, //Brukerident til den som opprettet saken
-        val opprettetTidspunkt: LocalDateTime? = null)
+    val id: String? = null,
+    val tema: String? = null, //example: AAP
+    val applikasjon: String? = null, //example: IT01 Kode for applikasjon iht. felles kodeverk
+    val aktoerId: String? = null, //example: 10038999999 Id til aktøren saken gjelder
+    val orgnr: String? = null, //Orgnr til foretaket saken gjelder
+    val fagsakNr: String? = null, //Fagsaknr for den aktuelle saken - hvis aktuelt
+    val opprettetAv: String? = null, //Brukerident til den som opprettet saken
+    val opprettetTidspunkt: ZonedDateTime? = null
+)
 
