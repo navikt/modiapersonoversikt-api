@@ -87,7 +87,7 @@ class SakerServiceImplTest {
         sakerService.setup() // Kaller @PostConstruct manuelt siden vi kjører testen uten spring
         every { arbeidOgAktivitet.hentSakListe(WSHentSakListeRequest()) } returns WSHentSakListeResponse()
         every { unleashService.isEnabled(String()) } returns false
-        every { unleashService.isEnabled(Feature.USE_REST_SAK_IMPL) } returns false
+        every { unleashService.isEnabled(Feature.USE_REST_SAK_IMPL.propertyKey) } returns false
         every { gsakKodeverk.hentFagsystemMapping() } returns emptyMap()
         every { standardKodeverk.getArkivtemaNavn(any()) } returns null
         every { sakV1.finnSak(any()) } returns WSFinnSakResponse().withSakListe(createSaksliste())
