@@ -18,7 +18,7 @@ object UnleashProxySwitcher {
         val name = T::class.java.simpleName
         val invocationHandler = InvocationHandler { _, method, args ->
             val nullsafeArgs = args ?: arrayOfNulls<Any>(0)
-            if (unleashService.isEnabled(featureToggle.propertyKey)) {
+            if (unleashService.isEnabled(featureToggle)) {
                 method.invoke(ftEnabledImpl, *nullsafeArgs)
                 log.warn("[UnleashProxySwitcher] $name is enabled")
             } else {
