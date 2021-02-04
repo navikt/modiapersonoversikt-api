@@ -40,15 +40,15 @@ object UnleashProxySwitcher {
     inline fun <reified T : Any> createSwitcher(
         featureToggle: Feature,
         unleashService: UnleashService,
-        ftDisabledImpl: T,
-        ftEnabledImpl: T
+        ifEnabled: T,
+        ifDisabled: T
     ): T {
         val invocationHandler = UnleashHandler(
             type = T::class,
             feature = featureToggle,
             unleashService = unleashService,
-            ifEnabled = ftEnabledImpl,
-            ifDisabled = ftDisabledImpl
+            ifEnabled = ifEnabled,
+            ifDisabled = ifDisabled
         )
 
         val proxy = Proxy.newProxyInstance(

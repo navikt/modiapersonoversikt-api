@@ -33,8 +33,8 @@ interface GsakSaker : SakerKilde {
             return UnleashProxySwitcher.createSwitcher(
                 featureToggle = Feature.USE_REST_SAK_IMPL,
                 unleashService = unleashService,
-                ftEnabledImpl = restClient,
-                ftDisabledImpl = soapClient
+                ifEnabled = restClient,
+                ifDisabled = soapClient
             )
         }
     }
