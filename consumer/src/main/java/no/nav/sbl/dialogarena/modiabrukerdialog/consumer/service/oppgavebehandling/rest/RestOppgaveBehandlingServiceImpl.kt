@@ -27,8 +27,10 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.oppgavebehandli
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.oppgavebehandling.rest.Utils.endretAvEnhet
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.oppgavebehandling.rest.Utils.leggTilBeskrivelse
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.pdl.PdlSyntetiskMapper
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.SafeListAggregate
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Policies
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Tilgangskontroll
+import no.nav.sbl.dialogarena.rsbac.DecisionEnums
 import org.slf4j.MDC
 import org.springframework.http.HttpStatus
 import org.springframework.web.server.ResponseStatusException
@@ -162,8 +164,15 @@ class RestOppgaveBehandlingServiceImpl(
         )
 
         val oppgaver = response.oppgaver ?: emptyList()
-        return filtrerUtOppgaverMedManglendeTilgang(oppgaver)
-            .map(this::mapTilOppgave)
+
+        val aktorIdTilganger: Map<String?, DecisionEnums> = hentAktorIdTilgang(oppgaver)
+        return SafeListAggregate<OppgaveJsonDTO, OppgaveJsonDTO>(oppgaver)
+            .filter { aktorIdTilganger[it.aktoerId] == DecisionEnums.PERMIT }
+            .fold(
+                transformSuccess = this::mapTilOppgave,
+                transformFailure = { it }
+            )
+            .getWithFailureHandling { failures -> systemLeggTilbakeOppgaver(failures) }
             .toMutableList()
     }
 
@@ -171,8 +180,16 @@ class RestOppgaveBehandlingServiceImpl(
         temagruppe: Temagruppe?,
         saksbehandlersValgteEnhet: String?
     ): MutableList<Oppgave> {
-        return plukkOppgaveApi.plukkOppgaverFraGsak(temagruppe, saksbehandlersValgteEnhet)
-            .map(this::mapTilOppgave)
+        val oppgaver = plukkOppgaveApi.plukkOppgaverFraGsak(temagruppe, saksbehandlersValgteEnhet)
+        val aktorIdTilganger: Map<String?, DecisionEnums> = hentAktorIdTilgang(oppgaver)
+
+        return SafeListAggregate<OppgaveJsonDTO, OppgaveJsonDTO>(oppgaver)
+            .filter { aktorIdTilganger[it.aktoerId] == DecisionEnums.PERMIT }
+            .fold(
+                transformSuccess = this::mapTilOppgave,
+                transformFailure = { it }
+            )
+            .getWithFailureHandling { failures -> systemLeggTilbakeOppgaver(failures) }
             .toMutableList()
     }
 
@@ -330,8 +347,7 @@ class RestOppgaveBehandlingServiceImpl(
             "Fant ikke fnr for aktorId $aktorId"
         }
         val henvendelseId = oppgave.metadata?.get(MetadataKey.EKSTERN_HENVENDELSE_ID.name)
-        val erSTO = oppgave.oppgavetype
-            .let { it == SPORSMAL_OG_SVAR }
+        val erSTO = oppgave.oppgavetype == SPORSMAL_OG_SVAR
 
         return Oppgave(
             oppgaveId.toString(),
@@ -368,30 +384,27 @@ class RestOppgaveBehandlingServiceImpl(
         }
     }
 
-    private fun filtrerUtOppgaverMedManglendeTilgang(oppgaver: List<OppgaveJsonDTO>): List<OppgaveJsonDTO> {
+    private fun hentAktorIdTilgang(oppgaver: List<OppgaveJsonDTO>): Map<String?, DecisionEnums> {
         val aktoerer = oppgaver.groupBy { it.aktoerId }
-        val tilganger = aktoerer
+        return aktoerer
             .map { entry ->
                 val aktoerId = entry.key
-                val isPermit =
+                val decision =
                     if (aktoerId.isNullOrEmpty()) {
-                        false
+                        DecisionEnums.DENY
                     } else {
                         tilgangskontroll
                             .check(Policies.tilgangTilBrukerMedAktorId.with(aktoerId))
                             .getDecision()
-                            .isPermit()
+                            .value
                     }
-
-                Triple(entry.key, entry.value, isPermit)
+                Pair(aktoerId, decision)
             }
+            .toMap()
+    }
 
-        val oppgaverSomSkalLeggesTilbake: List<OppgaveJsonDTO> = tilganger
-            .filter { (_, _, isPermit) -> !isPermit }
-            .flatMap { (_, oppgavelist, _) -> oppgavelist }
-        val oppgaverSomErGodkjent = oppgaver.minus(oppgaverSomSkalLeggesTilbake)
-
-        for (oppgave in oppgaverSomSkalLeggesTilbake) {
+    private fun systemLeggTilbakeOppgaver(oppgaver: List<OppgaveJsonDTO>) {
+        for (oppgave in oppgaver) {
             systemApiClient.endreOppgave(
                 correlationId(),
                 requireNotNull(oppgave.id) { "Kan ikke legge tilbake oppgave uten oppgaveId" },
@@ -403,8 +416,6 @@ class RestOppgaveBehandlingServiceImpl(
                     .toPutOppgaveRequestJsonDTO()
             )
         }
-
-        return oppgaverSomErGodkjent
     }
 
     private fun correlationId() = MDC.get(MDCConstants.MDC_CALL_ID) ?: UUID.randomUUID().toString()
