@@ -48,7 +48,7 @@ fun createOppgaveBehandlingSwitcher(
     return UnleashProxySwitcher.createSwitcher(
         featureToggle = Feature.USE_REST_OPPGAVE_IMPL,
         unleashService = unleashService,
-        ftEnabledImpl = restClient,
-        ftDisabledImpl = soapClient
+        ifEnabled = restClient,
+        ifDisabled = soapClient
     )
 }
