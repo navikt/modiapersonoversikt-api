@@ -67,7 +67,7 @@ class PlukkOppgaveApi(private val apiClient: OppgaveApi, private val kodeverksma
         temagruppe: Temagruppe?,
         valgtEnhet: String?
     ): OppgaveJsonDTO? {
-        for (i in 0..5) {
+        for (i in 0 until 5) {
             try {
                 return finnEldsteOppgave(correlationId, temagruppe, valgtEnhet)
             } catch (e: Exception) {
