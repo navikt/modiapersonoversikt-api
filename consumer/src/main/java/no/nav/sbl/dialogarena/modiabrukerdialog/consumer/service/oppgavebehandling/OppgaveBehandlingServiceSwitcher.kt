@@ -28,7 +28,7 @@ class UnleashHandler<T : Any>(
 ) : InvocationHandler {
     val log: Logger = LoggerFactory.getLogger(UnleashHandler::class.java)
 
-    override fun invoke(proxy: Any, method: Method, args: Array<out Any>?): Any {
+    override fun invoke(proxy: Any, method: Method, args: Array<out Any>?): Any? {
         val nullsafeArgs = args ?: arrayOfNulls<Any>(0)
         return try {
             if (unleashService.isEnabled(feature)) {
