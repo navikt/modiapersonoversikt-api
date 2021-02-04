@@ -31,6 +31,7 @@ private class LoggingInterceptor(val callIdExtractor: (Request) -> String) : Int
 
         TjenestekallLogger.info(
             "Oppgaver-request: $callId", mapOf(
+                "url" to request.url().toString(),
                 "body" to requestBody,
                 "callId" to MDC.get(MDCConstants.MDC_CALL_ID)
             )
