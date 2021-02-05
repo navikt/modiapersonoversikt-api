@@ -45,7 +45,7 @@ jobs:
       
       - name: Deploy to preprod
         uses: nais/deploy/actions/deploy@v1
-      #  if: env.isDeploy == 'true'
+        if: env.isDeploy == 'true'
         env:
           APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
           PRINT_PAYLOAD: true
