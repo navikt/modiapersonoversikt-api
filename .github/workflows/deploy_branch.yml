@@ -9,7 +9,7 @@ on:
 env:
   IMAGE: docker.pkg.github.com/${{ github.repository }}/modiapersonoversikt-api:${{ github.sha }}
   TZ: Europe/Oslo
-  isDeploy: true
+  isDeploy: false
 
 jobs:
   build:
