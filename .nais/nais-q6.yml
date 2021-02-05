@@ -290,6 +290,8 @@ spec:
       value: "http://maven.adeo.no/nexus/content/groups/public/no/nav/tjenester/nav-pleiepenger-v1-tjenestespesifikasjon/1.0.4/nav-pleiepenger-v1-tjenestespesifikasjon-1.0.4.zip"
     - name: VIRKSOMHET_SAK_V1_ENDPOINTURL
       value: "https://wasapp-q6.adeo.no/nav-gsak-ws/SakV1"
+    - name: SAK_ENDPOINTURL
+      value: "https://sak.nais.preprod.local"
     - name: VIRKSOMHET_SAK_V1_SECURITYTOKEN
       value: "SAML"
     - name: VIRKSOMHET_SAK_V1_WSDLURL
