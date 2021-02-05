@@ -41,21 +41,4 @@ jobs:
           docker build --tag ${IMAGE} .
           docker push ${IMAGE}
 
-  deploy-qa:
-    name: Deploy to preprod
-    needs: build
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        namespace: [q6]
-    steps:
-      - name: deploy to preprod environment
-        if: env.isDeploy == 'true'
-      - uses: nais/deploy/actions/deploy@v1
-        env:
-          APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
-          PRINT_PAYLOAD: true
-          CLUSTER: dev-fss
-          RESOURCE: .nais/nais-${{ matrix.namespace }}.yml
-          VAR: version=${{ github.sha }}
 
