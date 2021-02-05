@@ -51,7 +51,6 @@ jobs:
     steps:
       - name: deploy to preprod environment
         if: env.isDeploy == 'true'
-      - uses: actions/checkout@v1
       - uses: nais/deploy/actions/deploy@v1
         env:
           APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
