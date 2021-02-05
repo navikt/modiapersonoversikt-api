@@ -9,12 +9,12 @@ on:
 env:
   IMAGE: docker.pkg.github.com/${{ github.repository }}/modiapersonoversikt-api:${{ github.sha }}
   TZ: Europe/Oslo
-  isDeploy: true
+  isDeploy: false
   deploy_namespace: q6 
 
 jobs:
   build:
-    name: Build and test
+    name: Build, test and deploy 
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
