@@ -44,16 +44,15 @@ jobs:
   deploy-qa:
     name: Deploy to preprod
     needs: build
-
     runs-on: ubuntu-latest
     strategy:
       matrix:
         namespace: [q6]
     steps:
-      - uses: actions/checkout@v1
-      - uses: nais/deploy/actions/deploy@v1
       - name: deploy to preprod environment
         if: env.isDeploy == 'true'
+      - uses: actions/checkout@v1
+      - uses: nais/deploy/actions/deploy@v1
         env:
           APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
           PRINT_PAYLOAD: true
