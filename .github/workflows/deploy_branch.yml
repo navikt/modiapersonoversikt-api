@@ -9,7 +9,7 @@ on:
 env:
   IMAGE: docker.pkg.github.com/${{ github.repository }}/modiapersonoversikt-api:${{ github.sha }}
   TZ: Europe/Oslo
-  isDeploy: false
+  isDeploy: true
 
 jobs:
   build:
@@ -41,4 +41,17 @@ jobs:
           docker build --tag ${IMAGE} .
           docker push ${IMAGE}
 
+      - name: Deploy to preprod
+        if: env.isDeploy == 'true'
+        needs: build
+        strategy:
+          matrix:
+            namespace: [q6]
+        - uses: nais/deploy/actions/deploy@v1
+          env:
+            APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
+            PRINT_PAYLOAD: true
+            CLUSTER: dev-fss
+            RESOURCE: .nais/nais-${{ matrix.namespace }}.yml
+            VAR: version=${{ github.sha }}
 
