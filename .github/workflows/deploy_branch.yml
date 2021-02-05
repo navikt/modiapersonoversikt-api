@@ -42,9 +42,9 @@ jobs:
           docker build --tag ${IMAGE} .
           docker push ${IMAGE}
 
+      - uses: nais/deploy/actions/deploy@v1
       - name: Deploy to preprod
       #  if: env.isDeploy == 'true'
-      - uses: nais/deploy/actions/deploy@v1
         env:
           APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
           PRINT_PAYLOAD: true
