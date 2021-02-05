@@ -1,7 +1,10 @@
 name: Build, push, and deploy
 
-on: [push]
-
+on: push
+      branches:
+        branches-ignore:
+          - master
+          - dev
 env:
   IMAGE: docker.pkg.github.com/${{ github.repository }}/modiapersonoversikt-api:${{ github.sha }}
   TZ: Europe/Oslo
@@ -29,7 +32,7 @@ jobs:
         run: |
           mvn -T1C -P ci -B test --settings .github/maven-settings.xml
       - name: Publish Docker image
-        if: $DEPLOY == 'TRUE' && (github.ref != 'refs/heads/dev' || github.ref != 'refs/heads/master')
+        if: ${DEPLOY} == 'TRUE'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
@@ -41,11 +44,11 @@ jobs:
   deploy-qa:
     name: Deploy branch to designated preprod environment
     needs: build
-    if: $DEPLOY == 'TRUE'
+    if: ${DEPLOY} == 'TRUE'
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        namespace: [$NAME_SPACE]
+        namespace: [${NAME_SPACE}]
     steps:
       - uses: actions/checkout@v1
       - uses: nais/deploy/actions/deploy@v1
