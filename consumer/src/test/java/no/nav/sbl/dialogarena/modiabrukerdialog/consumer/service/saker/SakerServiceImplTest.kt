@@ -9,6 +9,7 @@ import no.nav.common.log.MDCConstants
 import no.nav.common.utils.EnvironmentUtils
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.Sak
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.Sak.*
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.FodselnummerAktorService
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.gsak.GsakKodeverk
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.kodeverk.StandardKodeverk
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.pdl.PdlOppslagService
@@ -75,7 +76,7 @@ class SakerServiceImplTest {
     private lateinit var sakApiGateway: SakApiGateway
 
     @MockK
-    private lateinit var pdlOppslagService: PdlOppslagService
+    private lateinit var fodselnummerAktorService: FodselnummerAktorService
 
     @InjectMockKs
     private lateinit var sakerService: SakerServiceImpl
