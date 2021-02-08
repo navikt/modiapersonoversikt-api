@@ -329,11 +329,6 @@
             </dependency>
             <dependency>
                 <groupId>no.nav.tjenestespesifikasjoner</groupId>
-                <artifactId>aktorid-jaxws</artifactId>
-                <version>${tjenestespesifikasjoner.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>no.nav.tjenestespesifikasjoner</groupId>
                 <artifactId>dial-nav-tjeneste-aktoer_v2</artifactId>
                 <version>${tjenestespesifikasjoner.version}</version>
             </dependency>

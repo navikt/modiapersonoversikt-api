@@ -157,10 +157,6 @@
         <!-- tjenester -->
         <dependency>
             <groupId>no.nav.tjenestespesifikasjoner</groupId>
-            <artifactId>aktorid-jaxws</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>no.nav.tjenestespesifikasjoner</groupId>
             <artifactId>dial-nav-tjeneste-aktoer_v2</artifactId>
         </dependency>
         <dependency>
