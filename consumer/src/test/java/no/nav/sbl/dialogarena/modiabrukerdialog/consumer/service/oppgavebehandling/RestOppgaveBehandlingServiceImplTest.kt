@@ -42,7 +42,7 @@ class RestOppgaveBehandlingServiceImplTest {
     private val apiClient: OppgaveApi = mockk()
     private val systemApiClient: OppgaveApi = mockk()
     private val kodeverksmapperService: KodeverksmapperService = mockk()
-    private val pdlOppslagService: PdlOppslagService = mockk()
+    private val fodselnummerAktorService: FodselnummerAktorService = mockk()
     private val tilgangskontrollContext: TilgangskontrollContext = mockk()
     private val tilgangskontroll: Tilgangskontroll = Tilgangskontroll(tilgangskontrollContext)
     private val ansattService: AnsattService = mockk()
@@ -52,7 +52,7 @@ class RestOppgaveBehandlingServiceImplTest {
 
     private val oppgaveBehandlingService = RestOppgaveBehandlingServiceImpl(
         kodeverksmapperService,
-        pdlOppslagService,
+        fodselnummerAktorService,
         ansattService,
         arbeidsfordelingService,
         tilgangskontroll,
@@ -66,14 +66,13 @@ class RestOppgaveBehandlingServiceImplTest {
     fun setupStandardMocker() {
         every { kodeverksmapperService.mapUnderkategori(any()) } returns Optional.empty()
         every { kodeverksmapperService.mapOppgavetype(any()) } returns "SPM_OG_SVR"
-        every { pdlOppslagService.hentIdent(any()) } answers {
+        every { fodselnummerAktorService.hentAktorIdForFnr(any()) } answers {
             val ident = this.args[0] as String
-            HentIdent.Identliste(
-                listOf(
-                    HentIdent.IdentInformasjon("000${ident}000", HentIdent.IdentGruppe.AKTORID),
-                    HentIdent.IdentInformasjon("07063000250", HentIdent.IdentGruppe.FOLKEREGISTERIDENT)
-                )
-            )
+            "000${ident}000"
+        }
+        every { fodselnummerAktorService.hentFnrForAktorId(any()) } answers {
+            val ident = this.args[0] as String
+            ident.substring(3, ident.length - 3)
         }
     }
 

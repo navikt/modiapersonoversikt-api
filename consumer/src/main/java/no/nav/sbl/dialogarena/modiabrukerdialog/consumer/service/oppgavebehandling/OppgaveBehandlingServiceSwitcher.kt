@@ -1,6 +1,7 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.oppgavebehandling
 
 import no.nav.common.sts.SystemUserTokenProvider
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.FodselnummerAktorService
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveBehandlingService
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.arbeidsfordeling.ArbeidsfordelingV1Service
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.AnsattService
@@ -20,7 +21,7 @@ fun createOppgaveBehandlingSwitcher(
     tildelOppgaveV1: TildelOppgaveV1,
     oppgaveV3: OppgaveV3,
     kodeverksmapperService: KodeverksmapperService,
-    pdlOppslagService: PdlOppslagService,
+    fodselnummerAktorService: FodselnummerAktorService,
     ansattService: AnsattService,
     arbeidsfordelingService: ArbeidsfordelingV1Service,
     tilgangskontroll: Tilgangskontroll,
@@ -29,7 +30,7 @@ fun createOppgaveBehandlingSwitcher(
 ): OppgaveBehandlingService {
     val restClient: OppgaveBehandlingService = RestOppgaveBehandlingServiceImpl(
         kodeverksmapperService,
-        pdlOppslagService,
+        fodselnummerAktorService,
         ansattService,
         arbeidsfordelingService,
         tilgangskontroll,
