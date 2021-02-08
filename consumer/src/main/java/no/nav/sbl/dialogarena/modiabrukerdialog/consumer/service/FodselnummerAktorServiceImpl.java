@@ -3,7 +3,9 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service;
 import no.nav.modig.core.exception.SystemException;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.FodselnummerAktorService;
 import no.nav.tjeneste.virksomhet.aktoer.v2.Aktoer_v2;
+import no.nav.tjeneste.virksomhet.aktoer.v2.HentIdentForAktoerIdPersonIkkeFunnet;
 import no.nav.tjeneste.virksomhet.aktoer.v2.meldinger.WSHentAktoerIdForIdentRequest;
+import no.nav.tjeneste.virksomhet.aktoer.v2.meldinger.WSHentIdentForAktoerIdRequest;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,7 +18,8 @@ public class FodselnummerAktorServiceImpl implements FodselnummerAktorService {
     @Autowired
     private Aktoer_v2 aktoerPortType;
 
-    public String hentAktorIdForFnr(String fodselsnummer) {
+    @NotNull
+    public String hentAktorIdForFnr(@NotNull String fodselsnummer) {
         try {
             WSHentAktoerIdForIdentRequest request = new WSHentAktoerIdForIdentRequest();
             request.setIdent(fodselsnummer);
@@ -30,6 +33,13 @@ public class FodselnummerAktorServiceImpl implements FodselnummerAktorService {
     @NotNull
     @Override
     public String hentFnrForAktorId(@NotNull String aktorId) {
-        throw new UnsupportedOperationException("Not implemented yet");
+        try {
+            WSHentIdentForAktoerIdRequest request = new WSHentIdentForAktoerIdRequest();
+            request.setAktoerId(aktorId);
+            return aktoerPortType.hentIdentForAktoerId(request).getIdent();
+        } catch (Exception e) {
+            logger.error("Det skjedde en uventet feil mot Aktoerservice", e);
+            throw new SystemException("Feil ved henting av fnr for aktorId: " + aktorId, e);
+        }
     }
 }
