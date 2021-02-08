@@ -5,7 +5,7 @@ import io.mockk.mockk
 import io.mockk.verify
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.Sak
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.pdl.generated.HentIdent
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.pdl.PdlOppslagService
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.FodselnummerAktorService
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.http.SubjectHandlerUtil
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.saker.mediation.SakApiGateway
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.saker.mediation.SakDto
@@ -33,15 +33,13 @@ class RestGsakSakerTest {
 
     val fixedClock = Clock.fixed(Instant.parse("2021-01-25T10:15:30Z"), ZoneId.systemDefault())
     val api = mockk<SakApiGateway>()
-    val pdl = mockk<PdlOppslagService>()
-    val restClient = RestGsakSaker(api, pdl, fixedClock)
+    val fodselnummerAktorService = mockk<FodselnummerAktorService>()
+    val restClient = RestGsakSaker(api, fodselnummerAktorService, fixedClock)
 
     @Test
     fun `legg til saker legger til sakene i listen`() {
-        every { pdl.hentIdent(any()) } returns HentIdent.Identliste(listOf(
-            HentIdent.IdentInformasjon("456", HentIdent.IdentGruppe.FOLKEREGISTERIDENT),
-            HentIdent.IdentInformasjon("123", HentIdent.IdentGruppe.AKTORID)
-        ))
+        every { fodselnummerAktorService.hentAktorIdForFnr(any()) } returns "123"
+        every { fodselnummerAktorService.hentFnrForAktorId(any()) } returns "456"
         every { api.hentSaker(any()) } returns listOf(
             SakDto(
                 id = SakId_1,
@@ -63,10 +61,8 @@ class RestGsakSakerTest {
     @Test
     fun `ved feil kastes feilene videre`() {
         every { api.hentSaker(any()) } throws IllegalStateException("Ukjent feil")
-        every { pdl.hentIdent(any()) } returns HentIdent.Identliste(listOf(
-            HentIdent.IdentInformasjon("456", HentIdent.IdentGruppe.FOLKEREGISTERIDENT),
-            HentIdent.IdentInformasjon("123", HentIdent.IdentGruppe.AKTORID)
-        ))
+        every { fodselnummerAktorService.hentAktorIdForFnr(any()) } returns "123"
+        every { fodselnummerAktorService.hentFnrForAktorId(any()) } returns "456"
 
         val saker = mutableListOf<Sak>()
         assertThrows<IllegalStateException> {
@@ -83,10 +79,8 @@ class RestGsakSakerTest {
             fagsakNr = FagsystemSakId_1
         )
         every { api.opprettSak(any()) } returns sakDto
-        every { pdl.hentIdent(any()) } returns HentIdent.Identliste(listOf(
-            HentIdent.IdentInformasjon("456", HentIdent.IdentGruppe.FOLKEREGISTERIDENT),
-            HentIdent.IdentInformasjon("123", HentIdent.IdentGruppe.AKTORID)
-        ))
+        every { fodselnummerAktorService.hentAktorIdForFnr(any()) } returns "123"
+        every { fodselnummerAktorService.hentFnrForAktorId(any()) } returns "456"
         SubjectHandlerUtil.withIdent("Z999999") {
             restClient.opprettSak("fnr", RestGsakSaker.TIL_SAK(sakDto))
         }
