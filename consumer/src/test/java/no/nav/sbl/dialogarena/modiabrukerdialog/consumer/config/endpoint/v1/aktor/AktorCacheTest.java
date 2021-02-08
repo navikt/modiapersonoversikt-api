@@ -1,10 +1,10 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v1.aktor;
 
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.util.CacheTest;
-import no.nav.tjeneste.virksomhet.aktoer.v1.AktoerPortType;
-import no.nav.tjeneste.virksomhet.aktoer.v1.HentAktoerIdForIdentPersonIkkeFunnet;
-import no.nav.tjeneste.virksomhet.aktoer.v1.meldinger.HentAktoerIdForIdentRequest;
-import no.nav.tjeneste.virksomhet.aktoer.v1.meldinger.HentAktoerIdForIdentResponse;
+import no.nav.tjeneste.virksomhet.aktoer.v2.Aktoer_v2;
+import no.nav.tjeneste.virksomhet.aktoer.v2.HentAktoerIdForIdentPersonIkkeFunnet;
+import no.nav.tjeneste.virksomhet.aktoer.v2.meldinger.WSHentAktoerIdForIdentRequest;
+import no.nav.tjeneste.virksomhet.aktoer.v2.meldinger.WSHentAktoerIdForIdentResponse;
 import org.junit.jupiter.api.Test;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +18,7 @@ class AktorCacheTest extends CacheTest {
     private static final String AKTOR_CACHE = "aktorIdCache";
 
     @Autowired
-    private AktoerPortType aktoer;
+    private Aktoer_v2 aktoer;
 
     AktorCacheTest() {
         super(AKTOR_CACHE);
@@ -27,15 +27,15 @@ class AktorCacheTest extends CacheTest {
     @Test
     void cacheManager_harEntryForAktorCache_etterKallTilAktor() throws HentAktoerIdForIdentPersonIkkeFunnet {
         when(aktoer.hentAktoerIdForIdent(any())).thenReturn(
-                new HentAktoerIdForIdentResponse("1"),
-                new HentAktoerIdForIdentResponse("2")
+                new WSHentAktoerIdForIdentResponse().withAktoerId("123"),
+                new WSHentAktoerIdForIdentResponse().withAktoerId("567")
         );
 
-        HentAktoerIdForIdentRequest request1 = new HentAktoerIdForIdentRequest("242424 55555");
-        HentAktoerIdForIdentRequest request2 = new HentAktoerIdForIdentRequest("242424 55555");
+        WSHentAktoerIdForIdentRequest request1 = new WSHentAktoerIdForIdentRequest().withIdent("242424 55555");
+        WSHentAktoerIdForIdentRequest request2 = new WSHentAktoerIdForIdentRequest().withIdent("242424 55555");
 
-        HentAktoerIdForIdentResponse resp1 = aktoer.hentAktoerIdForIdent(request1);
-        HentAktoerIdForIdentResponse resp2 = aktoer.hentAktoerIdForIdent(request2);
+        WSHentAktoerIdForIdentResponse resp1 = aktoer.hentAktoerIdForIdent(request1);
+        WSHentAktoerIdForIdentResponse resp2 = aktoer.hentAktoerIdForIdent(request2);
 
         assertThat(resp1.getAktoerId(), is(resp2.getAktoerId()));
     }

@@ -10,7 +10,6 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.DokumentMetad
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.Sakstema;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.resultatwrappere.TjenesteResultatWrapper;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.interfaces.TilgangskontrollService;
-import no.nav.tjeneste.virksomhet.aktoer.v1.meldinger.HentAktoerIdForIdentResponse;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -50,8 +49,6 @@ public class TilgangskontrollServiceTest {
     @Before
     public void setup() {
         mockRequest.setCookies(lagSaksbehandlerCookie(GODKJENT_ENHET));
-        HentAktoerIdForIdentResponse hentAktoerIdForIdentResponse = new HentAktoerIdForIdentResponse();
-        hentAktoerIdForIdentResponse.setAktoerId(BRUKERS_IDENT);
     }
 
     @Test

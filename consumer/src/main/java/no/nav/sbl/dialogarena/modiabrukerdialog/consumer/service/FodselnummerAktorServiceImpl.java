@@ -2,8 +2,8 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service;
 
 import no.nav.modig.core.exception.SystemException;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.FodselnummerAktorService;
-import no.nav.tjeneste.virksomhet.aktoer.v1.AktoerPortType;
-import no.nav.tjeneste.virksomhet.aktoer.v1.meldinger.HentAktoerIdForIdentRequest;
+import no.nav.tjeneste.virksomhet.aktoer.v2.Aktoer_v2;
+import no.nav.tjeneste.virksomhet.aktoer.v2.meldinger.WSHentAktoerIdForIdentRequest;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,11 +14,11 @@ public class FodselnummerAktorServiceImpl implements FodselnummerAktorService {
     private static final Logger logger = LoggerFactory.getLogger(FodselnummerAktorServiceImpl.class);
 
     @Autowired
-    private AktoerPortType aktoerPortType;
+    private Aktoer_v2 aktoerPortType;
 
     public String hentAktorIdForFnr(String fodselsnummer) {
         try {
-            HentAktoerIdForIdentRequest request = new HentAktoerIdForIdentRequest();
+            WSHentAktoerIdForIdentRequest request = new WSHentAktoerIdForIdentRequest();
             request.setIdent(fodselsnummer);
             return aktoerPortType.hentAktoerIdForIdent(request).getAktoerId();
         } catch (Exception e) {

@@ -72,6 +72,8 @@ spec:
       value: "https://wasapp.adeo.no/asm-pdp/authorize"
     - name: AKTOER_V1_ENDPOINTURL
       value: "https://app.adeo.no/aktoerregister/ws/Aktoer/v1"
+    - name: AKTOER_V2_ENDPOINTURL
+      value: "https://app.adeo.no/aktoerregister/ws/Aktoer/v2"
     - name: AKTOER_V1_SECURITYTOKEN
       value: "SAML"
     - name: AKTOER_V1_WSDLURL

@@ -18,6 +18,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v1.pens
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v1.personsok.PersonsokEndpointConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v1.sakogbehandling.SakOgBehandlingEndpointConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v1.utbetaling.UtbetalingEndpointConfig;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v2.aktor.AktorV2EndpointConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v2.henvendelse.BehandleHenvendelseEndpointConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v2.henvendelse.HenvendelseEndpointConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v2.henvendelse.SendUtHenvendelseEndpointConfig;
@@ -48,6 +49,7 @@ import org.springframework.context.annotation.Import;
         GsakOpprettSakEndpointConfig.class,
         SakOgBehandlingEndpointConfig.class,
         AktorEndpointConfig.class,
+        AktorV2EndpointConfig.class,
         HenvendelseSoknaderEndpointConfig.class,
         NAVAnsattEndpointConfig.class,
         NAVOrgEnhetEndpointConfig.class,

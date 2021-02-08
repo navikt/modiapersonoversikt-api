@@ -10,7 +10,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.SakOgBehandlingServi
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Tilgangskontroll;
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.TilgangskontrollMock;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsesoknader.v1.HenvendelseSoknaderPortType;
-import no.nav.tjeneste.virksomhet.aktoer.v1.AktoerPortType;
+import no.nav.tjeneste.virksomhet.aktoer.v2.Aktoer_v2;
 import no.nav.tjeneste.virksomhet.innsynjournal.v2.binding.InnsynJournalV2;
 import no.nav.tjeneste.virksomhet.journal.v2.JournalV2;
 import no.nav.tjeneste.virksomhet.pensjonsak.v1.PensjonSakV1;
@@ -32,8 +32,8 @@ import static org.mockito.Mockito.when;
 public class ModiaStubConfig {
 
     @Bean
-    public AktoerPortType aktoerPortType() {
-        return mock(AktoerPortType.class);
+    public Aktoer_v2 aktoerPortType() {
+        return mock(Aktoer_v2.class);
     }
 
     @Bean
