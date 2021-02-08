@@ -55,11 +55,6 @@ public class ServiceConfig {
     }
 
     @Bean
-    public FodselnummerAktorService fodselnummerAktorService() {
-        return new FodselnummerAktorService();
-    }
-
-    @Bean
     public DokumentMetadataService dokumentMetadataService(InnsynJournalV2Service innsynJournalV2Service,
                                                            HenvendelseService henvendelseService,
                                                            DokumentMetadataTransformer dokumentMetadataTransformer,

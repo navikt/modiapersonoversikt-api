@@ -42,10 +42,6 @@
         </dependency>
         <dependency>
             <groupId>no.nav.tjenestespesifikasjoner</groupId>
-            <artifactId>aktorid-jaxws</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>no.nav.tjenestespesifikasjoner</groupId>
             <artifactId>henvendelse-soknader-tjenestespesifikasjon</artifactId>
         </dependency>
         <dependency>

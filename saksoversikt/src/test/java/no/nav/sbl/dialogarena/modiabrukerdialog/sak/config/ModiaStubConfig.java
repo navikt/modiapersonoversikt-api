@@ -2,6 +2,7 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.sak.config;
 
 import no.nav.modig.content.ContentRetriever;
 import no.nav.sbl.dialogarena.common.kodeverk.KodeverkClient;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.FodselnummerAktorService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.AnsattService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.GsakSakerService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.HenvendelseService;
@@ -103,4 +104,7 @@ public class ModiaStubConfig {
     public ContentRetriever contentRetriever() {
         return mock(ContentRetriever.class);
     }
+
+    @Bean
+    public FodselnummerAktorService fodselnummerAktorService() { return mock(FodselnummerAktorService.class); }
 }
