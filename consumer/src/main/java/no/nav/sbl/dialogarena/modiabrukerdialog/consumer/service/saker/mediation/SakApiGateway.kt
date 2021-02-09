@@ -16,7 +16,7 @@ import java.time.OffsetDateTime
 
 interface SakApiGateway {
     fun hentSaker(aktorId: String): List<SakDto>
-    fun opprettSak(sak: SakDto): SakDto
+    fun opprettSak(sak: OpprettSakDto): SakDto
 }
 
 class SakApiGatewayImpl(
@@ -46,7 +46,7 @@ class SakApiGatewayImpl(
         return fetch(request)
     }
 
-    override fun opprettSak(sak: SakDto): SakDto {
+    override fun opprettSak(sak: OpprettSakDto): SakDto {
         val requestBody = RequestBody.create(
             MediaTypes.JSON,
             objectMapper.writeValueAsString(sak)
@@ -75,6 +75,15 @@ class SakApiGatewayImpl(
         }
     }
 }
+
+data class OpprettSakDto(
+    val aktoerId: String,
+    val tema: String,
+    val fagsakNr: String,
+    val applikasjon: String,
+    val opprettetAv: String
+    // val orgnr: String, // Vi oppretter ikke saker tilknyttet foretak, så denne skal aldri være satt i modia
+)
 
 data class SakDto(
     val id: String? = null,

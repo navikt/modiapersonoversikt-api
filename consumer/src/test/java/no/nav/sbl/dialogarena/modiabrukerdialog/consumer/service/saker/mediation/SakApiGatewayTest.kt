@@ -90,8 +90,17 @@ internal class SakApiGatewayTest {
             verify = verifyHeaders(postRequestedFor(urlEqualTo("/api/v1/saker"))),
             stub = postWithBody(statusCode = 200, body = sakDtoJson)
         ) { sakApiGateway ->
-            val opprettetDto = sakApiGateway.opprettSak(sakDto)
-            assertThat(opprettetDto.opprettetTidspunkt, `is`(sakDto.opprettetTidspunkt))
+            val opprettetDto = sakApiGateway.opprettSak(
+                OpprettSakDto(
+                    aktoerId = sakDto.aktoerId!!,
+                    tema = sakDto.tema!!,
+                    fagsakNr = sakDto.fagsakNr!!,
+                    applikasjon = sakDto.applikasjon!!,
+                    opprettetAv = sakDto.opprettetAv!!
+                )
+            )
+
+            assertThat(opprettetDto, `is`(sakDto))
         }
     }
 
