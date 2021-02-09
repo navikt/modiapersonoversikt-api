@@ -18,10 +18,7 @@ import org.joda.time.DateTime
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
-import java.time.Clock
-import java.time.Instant
-import java.time.ZoneId
-import java.time.ZonedDateTime
+import java.time.*
 
 
 class RestGsakSakerTest {
@@ -100,7 +97,7 @@ class RestGsakSakerTest {
                     aktoerId = "123",
                     fagsakNr = FagsystemSakId_1,
                     opprettetAv = "Z999999",
-                    opprettetTidspunkt = ZonedDateTime.now(fixedClock)
+                    opprettetTidspunkt = OffsetDateTime.now(fixedClock)
                 )
             )
         }
@@ -166,6 +163,6 @@ class RestGsakSakerTest {
         }
     }
 
-    fun earlierDateTimeWithOffSet(offset: Long): ZonedDateTime = ZonedDateTime.now().minusDays(offset)
+    fun earlierDateTimeWithOffSet(offset: Long): OffsetDateTime = OffsetDateTime.now().minusDays(offset)
 }
 
