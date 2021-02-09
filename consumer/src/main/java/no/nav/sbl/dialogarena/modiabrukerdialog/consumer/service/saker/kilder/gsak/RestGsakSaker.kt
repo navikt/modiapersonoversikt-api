@@ -9,7 +9,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.saker.mediation
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.saker.mediation.SakDto
 import org.joda.time.DateTime
 import java.time.Clock
-import java.time.ZonedDateTime
+import java.time.OffsetDateTime
 
 class RestGsakSaker(
     private val sakApiGateway: SakApiGateway,
@@ -35,7 +35,7 @@ class RestGsakSaker(
                 orgnr = null,
                 fagsakNr = sak.fagsystemSaksId,
                 opprettetAv = ident,
-                opprettetTidspunkt = ZonedDateTime.now(clock)
+                opprettetTidspunkt = OffsetDateTime.now(clock)
             )
         )
 
@@ -81,7 +81,7 @@ class RestGsakSaker(
             return if (GsakSaker.VEDTAKSLOSNINGEN == sakDto.applikasjon) sakDto.id.toString() else sakDto.fagsakNr
         }
 
-        private fun convertJavaDateTimeToJoda(dateTime: ZonedDateTime): DateTime {
+        private fun convertJavaDateTimeToJoda(dateTime: OffsetDateTime): DateTime {
             return DateTime(dateTime.toInstant().toEpochMilli())
         }
     }

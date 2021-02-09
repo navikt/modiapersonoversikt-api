@@ -12,7 +12,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.http.XCorrelationIdInte
 import okhttp3.Request
 import okhttp3.RequestBody
 import okhttp3.Response
-import java.time.ZonedDateTime
+import java.time.OffsetDateTime
 
 interface SakApiGateway {
     fun hentSaker(aktorId: String): List<SakDto>
@@ -84,6 +84,6 @@ data class SakDto(
     val orgnr: String? = null, //Orgnr til foretaket saken gjelder
     val fagsakNr: String? = null, //Fagsaknr for den aktuelle saken - hvis aktuelt
     val opprettetAv: String? = null, //Brukerident til den som opprettet saken
-    val opprettetTidspunkt: ZonedDateTime? = null
+    val opprettetTidspunkt: OffsetDateTime? = null
 )
 
