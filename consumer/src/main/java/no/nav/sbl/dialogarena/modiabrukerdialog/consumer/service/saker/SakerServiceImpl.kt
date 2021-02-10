@@ -7,9 +7,13 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.exceptions.JournalforingFeil
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.gsak.GsakKodeverk
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.gsak.SakerService
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.kodeverk.StandardKodeverk
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.pdl.PdlOppslagService
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.psak.PsakService
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.SakerUtils
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.saker.kilder.*
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.saker.kilder.gsak.GsakSaker
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.saker.mediation.SakApiGateway
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.UnleashService
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.behandlehenvendelse.BehandleHenvendelsePortType
 import no.nav.tjeneste.virksomhet.behandlesak.v1.BehandleSakV1
 import no.nav.tjeneste.virksomhet.sak.v1.SakV1
@@ -17,8 +21,8 @@ import no.nav.virksomhet.tjenester.sak.arbeidogaktivitet.v1.ArbeidOgAktivitet
 import org.slf4j.LoggerFactory
 import org.slf4j.MDC
 import org.springframework.beans.factory.annotation.Autowired
-import java.util.*
 import java.util.concurrent.CompletableFuture
+import java.util.function.Predicate.not
 import javax.annotation.PostConstruct
 import kotlin.contracts.ExperimentalContracts
 
@@ -29,18 +33,33 @@ private val logger = LoggerFactory.getLogger(SakerServiceImpl::class.java)
 class SakerServiceImpl : SakerService {
     @Autowired
     private lateinit var sakV1: SakV1
+
     @Autowired
     private lateinit var behandleSakWS: BehandleSakV1
+
     @Autowired
     private lateinit var gsakKodeverk: GsakKodeverk
+
     @Autowired
     private lateinit var standardKodeverk: StandardKodeverk
+
     @Autowired
     private lateinit var behandleHenvendelsePortType: BehandleHenvendelsePortType
+
     @Autowired
     private lateinit var arbeidOgAktivitet: ArbeidOgAktivitet
+
     @Autowired
     private lateinit var psakService: PsakService
+
+    @Autowired
+    private lateinit var sakApiGateway: SakApiGateway
+
+    @Autowired
+    private lateinit var pdlOppslagService: PdlOppslagService
+
+    @Autowired
+    private lateinit var unleashService: UnleashService
 
     private lateinit var arenaSaker: ArenaSaker
     private lateinit var bidragSaker: BidragSaker
@@ -54,28 +73,28 @@ class SakerServiceImpl : SakerService {
         arenaSaker = ArenaSaker(arbeidOgAktivitet)
         bidragSaker = BidragSaker()
         generelleSaker = GenerelleSaker()
-        gsakSaker = GsakSaker(sakV1, behandleSakWS)
+        gsakSaker = GsakSaker.createProxy(sakV1, behandleSakWS, sakApiGateway, pdlOppslagService, unleashService)
         oppfolgingsSaker = OppfolgingsSaker()
         pensjonSaker = PensjonSaker(psakService)
 
     }
 
-    override fun hentSaker(fnr: String?): SakerService.Resultat {
+    override fun hentSaker(fnr: String): SakerService.Resultat {
         requireFnrNotNullOrBlank(fnr)
         val (gsakSaker, pesysSaker) = inParallel(
-                { hentSammensatteSakerResultat(fnr) },
-                { hentPensjonSakerResultat(fnr) }
+            { hentSammensatteSakerResultat(fnr) },
+            { hentPensjonSakerResultat(fnr) }
         )
 
         return slaSammenGsakPesysSaker(gsakSaker, pesysSaker)
     }
 
-    override fun hentSammensatteSaker(fnr: String?): List<Sak> {
+    override fun hentSammensatteSaker(fnr: String): List<Sak> {
         requireFnrNotNullOrBlank(fnr)
         return hentSammensatteSakerResultat(fnr).saker
     }
 
-    override fun hentPensjonSaker(fnr: String?): List<Sak> {
+    override fun hentPensjonSaker(fnr: String): List<Sak> {
         requireFnrNotNullOrBlank(fnr)
         return hentPensjonSakerResultat(fnr).saker
     }
@@ -97,14 +116,12 @@ class SakerServiceImpl : SakerService {
         resultat.leggTilDataFraKilde(fnr, bidragSaker)
 
         return resultat
-                .fjernIkkeGodkjenteSaker()
+            .fjernIkkeGodkjenteSaker()
     }
 
     private fun SakerService.Resultat.fjernIkkeGodkjenteSaker(): SakerService.Resultat {
-        return SakerService.Resultat(
-                this.saker.filter(GODKJENT_FAGSAK or GODKJENT_GENERELL),
-                this.feiledeSystemer
-        )
+        this.saker.removeIf(not(GODKJENT_FAGSAK or GODKJENT_GENERELL))
+        return this
     }
 
     fun hentPensjonSakerResultat(fnr: String?): SakerService.Resultat {
@@ -114,7 +131,7 @@ class SakerServiceImpl : SakerService {
         return resultat
     }
 
-    override fun knyttBehandlingskjedeTilSak(fnr: String?, behandlingskjede: String?, sak: Sak?, enhet: String?) {
+    override fun knyttBehandlingskjedeTilSak(fnr: String?, behandlingskjede: String?, sak: Sak, enhet: String?) {
         requireKnyttTilSakParametereNotNullOrBlank(sak, behandlingskjede, fnr, enhet)
 
         if (sak.syntetisk && Sak.BIDRAG_MARKOR == sak.fagsystemKode) {
@@ -132,10 +149,11 @@ class SakerServiceImpl : SakerService {
 
         try {
             behandleHenvendelsePortType.knyttBehandlingskjedeTilSak(
-                    behandlingskjede,
-                    sak.saksId,
-                    sak.temaKode,
-                    enhet)
+                behandlingskjede,
+                sak.saksId,
+                sak.temaKode,
+                enhet
+            )
         } catch (e: Exception) {
             throw JournalforingFeilet(e)
         }
@@ -152,11 +170,14 @@ class SakerServiceImpl : SakerService {
             return this
         }
 
-        private fun slaSammenGsakPesysSaker(gsak: SakerService.Resultat, pesys: SakerService.Resultat): SakerService.Resultat {
+        private fun slaSammenGsakPesysSaker(
+            gsak: SakerService.Resultat,
+            pesys: SakerService.Resultat
+        ): SakerService.Resultat {
             val pesysIder = pesys.saker.map { it.fagsystemSaksId }
             return SakerService.Resultat(
-                    pesys.saker + gsak.saker.filter { !pesysIder.contains(it.fagsystemSaksId) },
-                    pesys.feiledeSystemer + gsak.feiledeSystemer
+                (pesys.saker + gsak.saker.filter { !pesysIder.contains(it.fagsystemSaksId) }).toMutableList(),
+                (pesys.feiledeSystemer + gsak.feiledeSystemer).toMutableList()
             )
         }
 

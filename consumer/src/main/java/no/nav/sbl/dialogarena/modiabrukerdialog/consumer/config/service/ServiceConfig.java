@@ -1,7 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.service;
 
 import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navansatt.GOSYSNAVansatt;
-
 import no.nav.common.cxf.StsConfig;
 import no.nav.common.sts.NaisSystemUserTokenProvider;
 import no.nav.common.sts.SystemUserTokenProvider;
@@ -28,11 +27,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.organisasjonsEnhetV2
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.pdl.PdlOppslagService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.psak.PsakService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.kodeverksmapper.Kodeverksmapper;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.AnsattServiceImpl;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.HenvendelseLesServiceImpl;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.HenvendelseUtsendingServiceImpl;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.PsakServiceImpl;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.ScheduledAnsattListePrefetch;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.*;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.arbeidsfordeling.ArbeidsfordelingClient;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.arbeidsfordeling.ArbeidsfordelingV1ServiceImpl;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.henvendelse.DelsvarService;
@@ -48,6 +43,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.organisasjonenh
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.organisasjonenhet.kontaktinformasjon.service.OrganisasjonEnhetKontaktinformasjonServiceImpl;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.pdl.PdlOppslagServiceImpl;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.saker.SakerServiceImpl;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.saker.mediation.SakApiGatewayImpl;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.UnleashService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Tilgangskontroll;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.behandlehenvendelse.BehandleHenvendelsePortType;
@@ -75,7 +71,6 @@ import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.oppgaveb
 @Configuration
 @EnableScheduling
 public class ServiceConfig {
-    public static final String STS_URL_KEY = "no.nav.modig.security.sts.url";
     public static final String SYSTEMUSER_USERNAME = "no.nav.modig.security.systemuser.username";
     public static final String SYSTEMUSER_PASSWORD = "no.nav.modig.security.systemuser.password";
 
@@ -174,6 +169,14 @@ public class ServiceConfig {
     @Bean
     public SakerService sakerService() {
         return new SakerServiceImpl();
+    }
+
+    @Bean
+    public SakApiGatewayImpl sakApiGateway(SystemUserTokenProvider stsService) {
+        return new SakApiGatewayImpl(
+                EnvironmentUtils.getRequiredProperty("SAK_ENDPOINTURL"),
+                stsService
+        );
     }
 
     @Bean
