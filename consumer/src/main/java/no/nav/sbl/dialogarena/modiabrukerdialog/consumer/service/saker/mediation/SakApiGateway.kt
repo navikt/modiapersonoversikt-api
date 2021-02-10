@@ -79,7 +79,7 @@ class SakApiGatewayImpl(
 data class OpprettSakDto(
     val aktoerId: String,
     val tema: String,
-    val fagsakNr: String,
+    val fagsakNr: String? = null,
     val applikasjon: String,
     val opprettetAv: String
     // val orgnr: String, // Vi oppretter ikke saker tilknyttet foretak, så denne skal aldri være satt i modia
