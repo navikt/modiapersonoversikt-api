@@ -1,6 +1,7 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.saker.kilder.gsak
 
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.Sak
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.FodselnummerAktorService
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.pdl.PdlOppslagService
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.saker.SakerKilde
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.saker.mediation.SakApiGateway
@@ -24,10 +25,10 @@ interface GsakSaker : SakerKilde {
             sakV1: SakV1,
             behandleSakWS: BehandleSakV1,
             sakApiGateway: SakApiGateway,
-            pdlOppslagService: PdlOppslagService,
+            fodselnummerAktorService: FodselnummerAktorService,
             unleashService: UnleashService
         ): GsakSaker {
-            val restClient = RestGsakSaker(sakApiGateway, pdlOppslagService)
+            val restClient = RestGsakSaker(sakApiGateway, fodselnummerAktorService)
             val soapClient = SoapGsakSaker(sakV1, behandleSakWS)
 
             return UnleashProxySwitcher.createSwitcher(
