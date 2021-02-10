@@ -5,6 +5,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.Sak
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.pdl.generated.HentIdent
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.pdl.generated.HentIdent.IdentGruppe.AKTORID
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.pdl.PdlOppslagService
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.saker.mediation.OpprettSakDto
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.saker.mediation.SakApiGateway
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.saker.mediation.SakDto
 import org.joda.time.DateTime
@@ -27,15 +28,12 @@ class RestGsakSaker(
     override fun opprettSak(fnr: String, sak: Sak): String {
         val ident = SubjectHandler.getIdent().orElseThrow { IllegalStateException("Fant ikke ident") }
         val opprettetSak = sakApiGateway.opprettSak(
-            SakDto(
-                id = sak.saksId,
-                tema = sak.temaKode,
-                applikasjon = sak.fagsystemKode,
+            OpprettSakDto(
                 aktoerId = identMapping(fnr, AKTORID),
-                orgnr = null,
+                tema = sak.temaKode,
                 fagsakNr = sak.fagsystemSaksId,
-                opprettetAv = ident,
-                opprettetTidspunkt = OffsetDateTime.now(clock)
+                applikasjon = sak.fagsystemKode,
+                opprettetAv = ident
             )
         )
 
