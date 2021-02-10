@@ -8,10 +8,7 @@ import no.nav.common.auth.subject.SsoToken
 import no.nav.common.auth.subject.SubjectHandler
 import no.nav.common.sts.SystemUserTokenProvider
 import no.nav.common.utils.EnvironmentUtils
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.pdl.generated.HentIdent
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.pdl.generated.HentNavnBolk
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.pdl.generated.HentPerson
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.pdl.generated.SokPersonUtenlandskID
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.pdl.generated.*
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.pdl.PdlOppslagService
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.RestConstants.*
 import java.net.URL
@@ -71,6 +68,15 @@ class PdlOppslagServiceImpl constructor(
                 .data
                 ?.sokPerson
                 ?.hits
+                ?: emptyList()
+    }
+
+    override fun hentPersonVergemaalEllerFullmakt(ident: String): List<HentPersonVergemaalEllerFullmakt.VergemaalEllerFremtidsfullmakt> = runBlocking {
+        HentPersonVergemaalEllerFullmakt(pdlClient)
+                .execute(HentPersonVergemaalEllerFullmakt.Variables(ident), userTokenAuthorizationHeaders)
+                .data
+                ?.hentPerson
+                ?.vergemaalEllerFremtidsfullmakt
                 ?: emptyList()
     }
 
