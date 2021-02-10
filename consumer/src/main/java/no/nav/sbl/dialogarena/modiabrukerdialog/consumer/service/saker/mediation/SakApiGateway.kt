@@ -12,11 +12,11 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.http.XCorrelationIdInte
 import okhttp3.Request
 import okhttp3.RequestBody
 import okhttp3.Response
-import java.time.ZonedDateTime
+import java.time.OffsetDateTime
 
 interface SakApiGateway {
     fun hentSaker(aktorId: String): List<SakDto>
-    fun opprettSak(sak: SakDto): SakDto
+    fun opprettSak(sak: OpprettSakDto): SakDto
 }
 
 class SakApiGatewayImpl(
@@ -46,7 +46,7 @@ class SakApiGatewayImpl(
         return fetch(request)
     }
 
-    override fun opprettSak(sak: SakDto): SakDto {
+    override fun opprettSak(sak: OpprettSakDto): SakDto {
         val requestBody = RequestBody.create(
             MediaTypes.JSON,
             objectMapper.writeValueAsString(sak)
@@ -76,6 +76,15 @@ class SakApiGatewayImpl(
     }
 }
 
+data class OpprettSakDto(
+    val aktoerId: String,
+    val tema: String,
+    val fagsakNr: String? = null,
+    val applikasjon: String,
+    val opprettetAv: String
+    // val orgnr: String, // Vi oppretter ikke saker tilknyttet foretak, så denne skal aldri være satt i modia
+)
+
 data class SakDto(
     val id: String? = null,
     val tema: String? = null, //example: AAP
@@ -84,6 +93,6 @@ data class SakDto(
     val orgnr: String? = null, //Orgnr til foretaket saken gjelder
     val fagsakNr: String? = null, //Fagsaknr for den aktuelle saken - hvis aktuelt
     val opprettetAv: String? = null, //Brukerident til den som opprettet saken
-    val opprettetTidspunkt: ZonedDateTime? = null
+    val opprettetTidspunkt: OffsetDateTime? = null
 )
 

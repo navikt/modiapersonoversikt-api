@@ -7,6 +7,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.Sak
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.pdl.generated.HentIdent
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.FodselnummerAktorService
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.http.SubjectHandlerUtil
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.saker.mediation.OpprettSakDto
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.saker.mediation.SakApiGateway
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.saker.mediation.SakDto
 import org.hamcrest.CoreMatchers.`is`
@@ -18,10 +19,7 @@ import org.joda.time.DateTime
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
-import java.time.Clock
-import java.time.Instant
-import java.time.ZoneId
-import java.time.ZonedDateTime
+import java.time.*
 
 
 class RestGsakSakerTest {
@@ -87,14 +85,12 @@ class RestGsakSakerTest {
 
         verify {
             api.opprettSak(
-                SakDto(
-                    id = SakId_1,
-                    tema = "AAP",
-                    applikasjon = "FS22",
+                OpprettSakDto(
                     aktoerId = "123",
+                    tema = "AAP",
                     fagsakNr = FagsystemSakId_1,
-                    opprettetAv = "Z999999",
-                    opprettetTidspunkt = ZonedDateTime.now(fixedClock)
+                    applikasjon = "FS22",
+                    opprettetAv = "Z999999"
                 )
             )
         }
@@ -160,6 +156,6 @@ class RestGsakSakerTest {
         }
     }
 
-    fun earlierDateTimeWithOffSet(offset: Long): ZonedDateTime = ZonedDateTime.now().minusDays(offset)
+    fun earlierDateTimeWithOffSet(offset: Long): OffsetDateTime = OffsetDateTime.now().minusDays(offset)
 }
 

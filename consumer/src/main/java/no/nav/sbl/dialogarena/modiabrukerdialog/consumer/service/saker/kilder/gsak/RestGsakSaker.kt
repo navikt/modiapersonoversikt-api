@@ -3,11 +3,12 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.saker.kilder.g
 import no.nav.common.auth.subject.SubjectHandler
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.Sak
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.FodselnummerAktorService
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.saker.mediation.OpprettSakDto
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.saker.mediation.SakApiGateway
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.saker.mediation.SakDto
 import org.joda.time.DateTime
 import java.time.Clock
-import java.time.ZonedDateTime
+import java.time.OffsetDateTime
 
 class RestGsakSaker(
     private val sakApiGateway: SakApiGateway,
@@ -29,15 +30,14 @@ class RestGsakSaker(
     override fun opprettSak(fnr: String, sak: Sak): String {
         val ident = SubjectHandler.getIdent().orElseThrow { IllegalStateException("Fant ikke ident") }
         val opprettetSak = sakApiGateway.opprettSak(
-            SakDto(
-                id = sak.saksId,
+            OpprettSakDto(
+                aktoerId = requireNotNull(fodselnummerAktorService.hentAktorIdForFnr(fnr)) {
+                    "Kan ikke opprette sak når mapping til aktorId feilet"
+                },
                 tema = sak.temaKode,
-                applikasjon = sak.fagsystemKode,
-                aktoerId = fodselnummerAktorService.hentAktorIdForFnr(fnr),
-                orgnr = null,
                 fagsakNr = sak.fagsystemSaksId,
-                opprettetAv = ident,
-                opprettetTidspunkt = ZonedDateTime.now(clock)
+                applikasjon = sak.fagsystemKode,
+                opprettetAv = ident
             )
         )
 
@@ -74,7 +74,7 @@ class RestGsakSaker(
             return if (GsakSaker.VEDTAKSLOSNINGEN == sakDto.applikasjon) sakDto.id.toString() else sakDto.fagsakNr
         }
 
-        private fun convertJavaDateTimeToJoda(dateTime: ZonedDateTime): DateTime {
+        private fun convertJavaDateTimeToJoda(dateTime: OffsetDateTime): DateTime {
             return DateTime(dateTime.toInstant().toEpochMilli())
         }
     }
