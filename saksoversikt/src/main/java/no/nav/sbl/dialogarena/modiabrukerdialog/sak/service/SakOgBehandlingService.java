@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.sak.service;
 
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.FodselnummerAktorService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.Behandling;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.FeilendeBaksystemException;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.filter.Filter;

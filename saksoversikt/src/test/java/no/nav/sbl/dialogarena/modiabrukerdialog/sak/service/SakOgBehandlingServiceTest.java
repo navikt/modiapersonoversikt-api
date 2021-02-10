@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.sak.service;
 
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.FodselnummerAktorService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.mock.MockCreationUtil;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.filter.Filter;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.binding.SakOgBehandlingV1;
