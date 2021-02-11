@@ -42,9 +42,7 @@ public class LoginContext {
                 .withClientId(fpsakClientId)
                 .withDiscoveryUrl(issoDiscoveryUrl)
                 .withIdTokenCookieName(Constants.OPEN_AM_ID_TOKEN_COOKIE_NAME)
-                .withIdentType(IdentType.InternBruker)
-                .withRefreshUrl(issoRefreshUrl)
-                .withRefreshTokenCookieName(Constants.REFRESH_TOKEN_COOKIE_NAME);
+                .withIdentType(IdentType.InternBruker);
 
         return OidcAuthenticator.fromConfig(config);
     }
