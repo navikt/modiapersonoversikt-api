@@ -13,6 +13,7 @@ import no.nav.kjerneinfo.consumer.fim.person.support.KjerneinfoMapper;
 import no.nav.kjerneinfo.consumer.fim.person.vergemal.VergemalService;
 import no.nav.kodeverk.consumer.fim.kodeverk.KodeverkmanagerBi;
 import no.nav.modig.content.ContentRetriever;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.FodselnummerAktorService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.HenvendelseLesService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.HenvendelseUtsendingService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveBehandlingService;
@@ -126,7 +127,7 @@ public class ServiceConfig {
                                                              TildelOppgaveV1 tildelOppgaveV1,
                                                              OppgaveV3 oppgaveV3,
                                                              KodeverksmapperService kodeverksmapperService,
-                                                             PdlOppslagService pdlOppslagService,
+                                                             FodselnummerAktorService fodselnummerAktorService,
                                                              AnsattService ansattService,
                                                              ArbeidsfordelingV1Service arbeidsfordelingV1Service,
                                                              Tilgangskontroll tilgangskontroll,
@@ -137,7 +138,7 @@ public class ServiceConfig {
                 tildelOppgaveV1,
                 oppgaveV3,
                 kodeverksmapperService,
-                pdlOppslagService,
+                fodselnummerAktorService,
                 ansattService,
                 arbeidsfordelingV1Service,
                 tilgangskontroll,
@@ -236,6 +237,11 @@ public class ServiceConfig {
                 .username(EnvironmentUtils.getRequiredProperty(SYSTEMUSER_USERNAME))
                 .password(EnvironmentUtils.getRequiredProperty(SYSTEMUSER_PASSWORD))
                 .build();
+    }
+
+    @Bean
+    public FodselnummerAktorService fodselnummerAktorService() {
+        return new FodselnummerAktorServiceImpl();
     }
 
     @Bean

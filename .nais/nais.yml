@@ -72,6 +72,8 @@ spec:
       value: "https://wasapp.adeo.no/asm-pdp/authorize"
     - name: AKTOER_V1_ENDPOINTURL
       value: "https://app.adeo.no/aktoerregister/ws/Aktoer/v1"
+    - name: AKTOER_V2_ENDPOINTURL
+      value: "https://app.adeo.no/aktoerregister/ws/Aktoer/v2"
     - name: AKTOER_V1_SECURITYTOKEN
       value: "SAML"
     - name: AKTOER_V1_WSDLURL
@@ -285,7 +287,7 @@ spec:
     - name: VIRKSOMHET_SAK_V1_ENDPOINTURL
       value: "https://wasapp.adeo.no/nav-gsak-ws/SakV1"
     - name: SAK_ENDPOINTURL
-      value: "https://sak.nais.adeo.local"
+      value: "https://sak.nais.adeo.no"
     - name: VIRKSOMHET_SAK_V1_SECURITYTOKEN
       value: "SAML"
     - name: VIRKSOMHET_SAK_V1_WSDLURL

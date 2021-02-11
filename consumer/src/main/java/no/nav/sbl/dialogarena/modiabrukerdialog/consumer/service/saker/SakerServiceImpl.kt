@@ -4,6 +4,7 @@ import no.nav.common.auth.subject.SubjectHandler
 import no.nav.common.log.MDCConstants
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.Sak
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.exceptions.JournalforingFeilet
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.FodselnummerAktorService
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.gsak.GsakKodeverk
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.gsak.SakerService
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.kodeverk.StandardKodeverk
@@ -56,7 +57,7 @@ class SakerServiceImpl : SakerService {
     private lateinit var sakApiGateway: SakApiGateway
 
     @Autowired
-    private lateinit var pdlOppslagService: PdlOppslagService
+    private lateinit var fodselnummerAktorService: FodselnummerAktorService
 
     @Autowired
     private lateinit var unleashService: UnleashService
@@ -73,7 +74,7 @@ class SakerServiceImpl : SakerService {
         arenaSaker = ArenaSaker(arbeidOgAktivitet)
         bidragSaker = BidragSaker()
         generelleSaker = GenerelleSaker()
-        gsakSaker = GsakSaker.createProxy(sakV1, behandleSakWS, sakApiGateway, pdlOppslagService, unleashService)
+        gsakSaker = GsakSaker.createProxy(sakV1, behandleSakWS, sakApiGateway, fodselnummerAktorService, unleashService)
         oppfolgingsSaker = OppfolgingsSaker()
         pensjonSaker = PensjonSaker(psakService)
 
