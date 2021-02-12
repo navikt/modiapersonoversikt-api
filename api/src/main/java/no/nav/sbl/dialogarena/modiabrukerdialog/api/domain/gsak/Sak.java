@@ -5,7 +5,6 @@ import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 
 import java.io.Serializable;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.function.Function;
@@ -38,9 +37,9 @@ public class Sak implements Serializable, Comparable<Sak> {
     public static final String FAGSYSTEM_FOR_OPPRETTELSE_AV_GENERELL_SAK = "FS22";
     public static final String BIDRAG_MARKOR = "BID-HACK";
 
-    public static final List<String> GYLDIGE_FAGSYSTEM_FOR_GENERELLE_SAKER = Arrays.asList(FAGSYSTEM_FOR_OPPRETTELSE_AV_GENERELL_SAK, "");
-    public static final List<String> GODKJENTE_TEMA_FOR_GENERELL_SAK = Arrays.asList("AAP", "AGR", "BAR", "BIL", "DAG", "ENF", "ERS", "FEI", "FOR", "FOS", "FUL", "GEN", "GRA", "GRU", "HEL", "HJE", "IND", "KON", "KTR", "MED", "MOB", "OMS", "REH", "RVE", "RPO", "SAK", "SAP", "SER", "STO", "SUP", "SYK", "SYM", "TRK", "TRY", "TSR", "TSO", "UFM", "VEN", "YRA", "YRK", "FRI", TEMAKODE_OPPFOLGING);
-    public static final List<String> GODKJENTE_FAGSYSTEMER_FOR_FAGSAKER = Arrays.asList(BIDRAG_MARKOR, FAGSYSTEMKODE_ARENA, FAGSYSTEMKODE_PSAK, "IT01", "OEBS", "V2", "AO11", "FS36", "FS38", "K9");
+    public static final List<String> GYLDIGE_FAGSYSTEM_FOR_GENERELLE_SAKER = List.of(FAGSYSTEM_FOR_OPPRETTELSE_AV_GENERELL_SAK, "");
+    public static final List<String> GODKJENTE_TEMA_FOR_GENERELL_SAK = List.of("AAP", "AGR", "BAR", "BIL", "DAG", "ENF", "ERS", "FEI", "FOR", "FOS", "FUL", "GEN", "GRA", "GRU", "HEL", "HJE", "IND", "KON", "KTR", "MED", "MOB", "OMS", "REH", "RVE", "RPO", "SAK", "SAP", "SER", "STO", "SUP", "SYK", "SYM", "TRK", "TRY", "TSR", "TSO", "UFM", "VEN", "YRA", "YRK", "FRI", TEMAKODE_OPPFOLGING);
+    public static final List<String> GODKJENTE_FAGSYSTEMER_FOR_FAGSAKER = List.of(BIDRAG_MARKOR, FAGSYSTEMKODE_ARENA, FAGSYSTEMKODE_PSAK, "IT01", "OEBS", "V2", "AO11", "FS36", "FS38", "K9");
 
     public boolean isSakstypeForVisningGenerell() {
         return SAKSTYPE_GENERELL.equals(sakstype);

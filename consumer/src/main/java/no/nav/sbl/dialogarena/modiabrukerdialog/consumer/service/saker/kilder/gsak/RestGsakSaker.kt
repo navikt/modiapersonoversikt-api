@@ -2,6 +2,7 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.saker.kilder.g
 
 import no.nav.common.auth.subject.SubjectHandler
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.Sak
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.Sak.FAGSYSTEM_FOR_OPPRETTELSE_AV_GENERELL_SAK
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.FodselnummerAktorService
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.saker.mediation.OpprettSakDto
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.saker.mediation.SakApiGateway
@@ -52,10 +53,16 @@ class RestGsakSaker(
                 saksId = sakDto.id.toString()
                 fagsystemSaksId = getFagsystemSakId(sakDto)
                 temaKode = sakDto.tema
-                fagsystemKode = sakDto.applikasjon
+                fagsystemKode = getFagsystemKode(sakDto)
                 finnesIGsak = true
                 sakstype = getSakstype(sakDto)
             }
+        }
+
+        private fun getFagsystemKode(sakDto: SakDto): String {
+            return if (sakDto.applikasjon == null ) {
+                FAGSYSTEM_FOR_OPPRETTELSE_AV_GENERELL_SAK
+            } else sakDto.applikasjon
         }
 
         private fun getSakstype(sakDto: SakDto): String {
