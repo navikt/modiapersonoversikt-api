@@ -15,18 +15,15 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.oppgave.generated.mod
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.oppgave.generated.models.PostOppgaveRequestJsonDTO
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.oppgave.toOppgaveJsonDTO
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.oppgave.toPutOppgaveRequestJsonDTO
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.pdl.generated.HentIdent
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.*
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.arbeidsfordeling.ArbeidsfordelingV1Service
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.AnsattService
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.pdl.PdlOppslagService
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.kodeverksmapper.KodeverksmapperService
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.kodeverksmapper.domain.Behandling
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.oppgavebehandling.rest.Utils.SPORSMAL_OG_SVAR
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.oppgavebehandling.rest.Utils.beskrivelseInnslag
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.oppgavebehandling.rest.Utils.endretAvEnhet
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.oppgavebehandling.rest.Utils.leggTilBeskrivelse
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.pdl.PdlSyntetiskMapper
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.SafeListAggregate
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Policies
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Tilgangskontroll
@@ -41,7 +38,7 @@ import java.util.Optional.ofNullable
 
 class RestOppgaveBehandlingServiceImpl(
     private val kodeverksmapperService: KodeverksmapperService,
-    private val pdlOppslagService: PdlOppslagService,
+    private val fodselnummerAktorService: FodselnummerAktorService,
     private val ansattService: AnsattService,
     private val arbeidsfordelingService: ArbeidsfordelingV1Service,
     private val tilgangskontroll: Tilgangskontroll,
@@ -64,7 +61,8 @@ class RestOppgaveBehandlingServiceImpl(
         val ident: String = SubjectHandler.getIdent().orElseThrow { IllegalStateException("Fant ikke ident") }
         val behandling = kodeverksmapperService.mapUnderkategori(request.underkategoriKode)
         val oppgaveType = kodeverksmapperService.mapOppgavetype(request.oppgavetype)
-        val aktorId = getAktorId(request.fnr) ?: throw IllegalArgumentException("Fant ikke aktorId for ${request.fnr}")
+        val aktorId = fodselnummerAktorService.hentAktorIdForFnr(request.fnr)
+            ?: throw IllegalArgumentException("Fant ikke aktorId for ${request.fnr}")
 
         val response = apiClient.opprettOppgave(
             xminusCorrelationMinusID = correlationId(),
@@ -102,7 +100,8 @@ class RestOppgaveBehandlingServiceImpl(
         val ident: String = SubjectHandler.getIdent().orElseThrow { IllegalStateException("Fant ikke ident") }
         val behandling = kodeverksmapperService.mapUnderkategori(request.underkategoriKode)
         val oppgaveType = kodeverksmapperService.mapOppgavetype(request.oppgavetype)
-        val aktorId = getAktorId(request.fnr) ?: throw IllegalArgumentException("Fant ikke aktorId for ${request.fnr}")
+        val aktorId = fodselnummerAktorService.hentAktorIdForFnr(request.fnr)
+            ?: throw IllegalArgumentException("Fant ikke aktorId for ${request.fnr}")
 
         val response = apiClient.opprettOppgave(
             xminusCorrelationMinusID = correlationId(),
@@ -325,7 +324,7 @@ class RestOppgaveBehandlingServiceImpl(
     private fun finnAnsvarligEnhet(oppgave: OppgaveJsonDTO, temagruppe: Temagruppe): String {
         val aktorId = requireNotNull(oppgave.aktoerId)
         val enheter: List<AnsattEnhet> = arbeidsfordelingService.finnBehandlendeEnhetListe(
-            getFnr(aktorId),
+            fodselnummerAktorService.hentFnrForAktorId(aktorId),
             oppgave.tema,
             oppgave.oppgavetype,
             underkategoriOverstyringForArbeidsfordeling(temagruppe)
@@ -343,7 +342,7 @@ class RestOppgaveBehandlingServiceImpl(
             "OppgaveId må være satt for konvertering til Oppgave"
         }
         val aktorId = requireNotNull(oppgave.aktoerId)
-        val fnr = requireNotNull(getFnr(aktorId)) {
+        val fnr = requireNotNull(fodselnummerAktorService.hentFnrForAktorId(aktorId)) {
             "Fant ikke fnr for aktorId $aktorId"
         }
         val henvendelseId = oppgave.metadata?.get(MetadataKey.EKSTERN_HENVENDELSE_ID.name)
@@ -355,33 +354,6 @@ class RestOppgaveBehandlingServiceImpl(
             henvendelseId,
             erSTO
         )
-    }
-
-    private fun getAktorId(fnr: String): String? {
-        return try {
-            pdlOppslagService
-                .hentIdent(fnr)
-                ?.identer
-                ?.find { ident -> ident.gruppe == HentIdent.IdentGruppe.AKTORID }
-                ?.ident
-                // syntmapping for Q2 --> Q1
-                ?.let(PdlSyntetiskMapper::mapAktorIdFraPdl)
-        } catch (e: Exception) {
-            null
-        }
-    }
-
-    private fun getFnr(aktorId: String): String? {
-        return try {
-            pdlOppslagService
-                .hentIdent(aktorId)
-                ?.identer
-                ?.find { ident -> ident.gruppe == HentIdent.IdentGruppe.FOLKEREGISTERIDENT }
-                ?.ident
-                ?.let(PdlSyntetiskMapper::mapFnrTilPdl)
-        } catch (e: Exception) {
-            null
-        }
     }
 
     private fun hentAktorIdTilgang(oppgaver: List<OppgaveJsonDTO>): Map<String?, DecisionEnums> {

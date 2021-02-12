@@ -70,7 +70,6 @@
             <artifactId>unleash-client-java</artifactId>
             <version>3.2.2</version>
         </dependency>
-
         <!-- intern avhengigheter -->
         <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>
@@ -158,7 +157,7 @@
         <!-- tjenester -->
         <dependency>
             <groupId>no.nav.tjenestespesifikasjoner</groupId>
-            <artifactId>aktorid-jaxws</artifactId>
+            <artifactId>dial-nav-tjeneste-aktoer_v2</artifactId>
         </dependency>
         <dependency>
             <groupId>no.nav.tjenestespesifikasjoner</groupId>
@@ -306,6 +305,16 @@
         <dependency>
             <groupId>org.hamcrest</groupId>
             <artifactId>hamcrest-core</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.github.tomakehurst</groupId>
+            <artifactId>wiremock-standalone</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.mockk</groupId>
+            <artifactId>mockk</artifactId>
             <scope>test</scope>
         </dependency>
     </dependencies>

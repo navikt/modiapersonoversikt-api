@@ -76,6 +76,8 @@ spec:
       value: "https://wasapp-q0.adeo.no/asm-pdp/authorize"
     - name: AKTOER_V1_ENDPOINTURL
       value: "https://app-q0.adeo.no/aktoerregister/ws/Aktoer/v1"
+    - name: AKTOER_V2_ENDPOINTURL
+      value: "https://app-q0.adeo.no/aktoerregister/ws/Aktoer/v2"
     - name: AKTOER_V1_SECURITYTOKEN
       value: "SAML"
     - name: AKTOER_V1_WSDLURL
@@ -298,6 +300,8 @@ spec:
       value: "SAML"
     - name: VIRKSOMHET_SAK_V1_WSDLURL
       value: "http://maven.adeo.no/nexus/content/groups/public/no/nav/tjenester/fim/nav-fim-sak-v1-tjenestespesifikasjon/1.0.0/nav-fim-sak-v1-tjenestespesifikasjon-1.0.0.zip"
+    - name: SAK_ENDPOINTURL
+      value: "https://sak.nais.preprod.local"
     - name: VIRKSOMHET_SYKEPENGER_V2_ENDPOINTURL
       value: "https://modapp-q0.adeo.no/infotrygd-ws/SykepengerService/v2"
     - name: VIRKSOMHET_SYKEPENGER_V2_SECURITYTOKEN

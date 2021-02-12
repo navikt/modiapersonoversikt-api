@@ -1,0 +1,55 @@
+name: Build, push, and deploy
+
+on:
+  push:
+    branches-ignore:
+      - 'master'
+      - 'dev'
+
+env:
+  IMAGE: docker.pkg.github.com/${{ github.repository }}/modiapersonoversikt-api:${{ github.sha }}
+  TZ: Europe/Oslo
+  isDeploy: false
+  deploy_namespace: q6 
+
+jobs:
+  build:
+    name: Build, test and deploy 
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - uses: actions/setup-java@v1
+        with:
+          java-version: 11
+      - uses: actions/cache@v1
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-maven-cache-${{ hashFiles('pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-cache-
+      - name: Build using maven
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          mvn -P ci -B test --settings .github/maven-settings.xml
+      - name: Publish Docker image
+        if: env.isDeploy == 'true'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          mvn -P ci -B package --settings .github/maven-settings.xml -DskipTests
+          docker login docker.pkg.github.com -u ${GITHUB_REPOSITORY} -p ${GITHUB_TOKEN}
+          docker build --tag ${IMAGE} .
+          docker push ${IMAGE}
+
+      
+      - name: Deploy to preprod
+        uses: nais/deploy/actions/deploy@v1
+        if: env.isDeploy == 'true'
+        env:
+          APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
+          PRINT_PAYLOAD: true
+          CLUSTER: dev-fss
+          RESOURCE: .nais/nais-${{ env.deploy_namespace }}.yml
+          VAR: version=${{ github.sha }}
+
