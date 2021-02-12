@@ -335,7 +335,8 @@ class RestOppgaveBehandlingServiceImplTest {
             every { tilgangskontrollContext.checkAbac(any()) } returns AbacResponse(
                 listOf(Response(Decision.Permit, null))
             )
-            every { pdlOppslagService.hentIdent(any()) } returns null
+            every { fodselnummerAktorService.hentAktorIdForFnr(any()) } returns null
+            every { fodselnummerAktorService.hentFnrForAktorId(any()) } returns null
 
             val result = withIdent("Z999999") {
                 oppgaveBehandlingService.finnTildelteOppgaverIGsak()
