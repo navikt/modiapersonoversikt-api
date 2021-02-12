@@ -13,6 +13,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.psak.PsakService
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.SakerUtils
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.saker.kilder.*
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.saker.kilder.gsak.GsakSaker
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.saker.kilder.gsak.RestGsakSaker
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.saker.mediation.SakApiGateway
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.UnleashService
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.behandlehenvendelse.BehandleHenvendelsePortType
@@ -65,7 +66,7 @@ class SakerServiceImpl : SakerService {
     private lateinit var arenaSaker: ArenaSaker
     private lateinit var bidragSaker: BidragSaker
     private lateinit var generelleSaker: GenerelleSaker
-    private lateinit var gsakSaker: GsakSaker
+    private lateinit var restSakSaker: RestGsakSaker
     private lateinit var oppfolgingsSaker: OppfolgingsSaker
     private lateinit var pensjonSaker: PensjonSaker
 
@@ -74,7 +75,7 @@ class SakerServiceImpl : SakerService {
         arenaSaker = ArenaSaker(arbeidOgAktivitet)
         bidragSaker = BidragSaker()
         generelleSaker = GenerelleSaker()
-        gsakSaker = GsakSaker.createProxy(sakV1, behandleSakWS, sakApiGateway, fodselnummerAktorService, unleashService)
+        restSakSaker = RestGsakSaker(sakApiGateway, fodselnummerAktorService)
         oppfolgingsSaker = OppfolgingsSaker()
         pensjonSaker = PensjonSaker(psakService)
 
@@ -103,7 +104,7 @@ class SakerServiceImpl : SakerService {
     fun hentSammensatteSakerResultat(fnr: String?): SakerService.Resultat {
         requireFnrNotNullOrBlank(fnr)
         val resultat = SakerService.Resultat()
-        resultat.leggTilDataFraKilde(fnr, gsakSaker)
+        resultat.leggTilDataFraKilde(fnr, restSakSaker)
         resultat.leggTilDataFraKilde(fnr, arenaSaker)
         resultat.leggTilDataFraKilde(fnr, generelleSaker)
         resultat.leggTilDataFraKilde(fnr, oppfolgingsSaker)
@@ -141,7 +142,7 @@ class SakerServiceImpl : SakerService {
         }
 
         if (sakFinnesIkkeIPsakOgGsak(sak)) {
-            sak.saksId = gsakSaker.opprettSak(fnr, sak)
+            sak.saksId = restSakSaker.opprettSak(fnr, sak)
         }
 
         requireNotNullOrBlank(sak.saksId) {
