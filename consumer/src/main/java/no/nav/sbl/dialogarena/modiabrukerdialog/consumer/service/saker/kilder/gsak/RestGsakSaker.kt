@@ -71,7 +71,7 @@ class RestGsakSaker(
         }
 
         private fun getFagsystemSakId(sakDto: SakDto): String? {
-            return if (GsakSaker.VEDTAKSLOSNINGEN == sakDto.applikasjon) sakDto.id.toString() else sakDto.fagsakNr
+            return if (GsakSaker.VEDTAKSLOSNINGEN == sakDto.applikasjon && sakDto.fagsakNr == null) sakDto.id.toString() else sakDto.fagsakNr
         }
 
         private fun convertJavaDateTimeToJoda(dateTime: OffsetDateTime): DateTime {

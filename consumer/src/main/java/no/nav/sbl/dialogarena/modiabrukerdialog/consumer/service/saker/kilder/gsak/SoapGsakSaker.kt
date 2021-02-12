@@ -79,7 +79,7 @@ class SoapGsakSaker(
         }
 
         private fun getFagsystemSakId(wsSak: WSSak): String? {
-            return if (GsakSaker.VEDTAKSLOSNINGEN == wsSak.fagsystem?.value) wsSak.sakId else wsSak.fagsystemSakId
+            return if (GsakSaker.VEDTAKSLOSNINGEN == wsSak.fagsystem?.value && wsSak.fagsystemSakId == null) wsSak.sakId else wsSak.fagsystemSakId
         }
     }
 }
