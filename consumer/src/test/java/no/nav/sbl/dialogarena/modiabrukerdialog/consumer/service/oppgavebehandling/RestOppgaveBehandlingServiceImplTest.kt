@@ -312,6 +312,54 @@ class RestOppgaveBehandlingServiceImplTest {
                 )
             }
         }
+
+        @Test
+        fun `skal legge tilbake oppgave om aktørId fra oppgave ikke finnes i PDL`() {
+            val oppgave = dummyOppgave
+                .copy(
+                    aktoerId = "00007063000250000",
+                    metadata = mapOf(MetadataKey.EKSTERN_HENVENDELSE_ID.name to "henvid")
+                )
+            every { apiClient.finnOppgaver(allAny()) } returns GetOppgaverResponseJsonDTO(
+                antallTreffTotalt = 1,
+                oppgaver = listOf(oppgave)
+            )
+            every {
+                systemApiClient.endreOppgave(
+                    any(),
+                    any(),
+                    any()
+                )
+            } returns oppgave.toPutOppgaveResponseJsonDTO()
+
+            every { tilgangskontrollContext.checkAbac(any()) } returns AbacResponse(
+                listOf(Response(Decision.Permit, null))
+            )
+            every { fodselnummerAktorService.hentAktorIdForFnr(any()) } returns null
+            every { fodselnummerAktorService.hentFnrForAktorId(any()) } returns null
+
+            val result = withIdent("Z999999") {
+                oppgaveBehandlingService.finnTildelteOppgaverIGsak()
+            }
+
+            assertThat(result).isEmpty()
+            verifySequence {
+                apiClient.finnOppgaver(
+                    xminusCorrelationMinusID = any(),
+                    statuskategori = "AAPEN",
+                    tilordnetRessurs = "Z999999",
+                    aktivDatoTom = now(fixedClock).toString()
+                )
+                systemApiClient.endreOppgave(
+                    any(),
+                    1234,
+                    oppgave.toPutOppgaveRequestJsonDTO().copy(
+                        tilordnetRessurs = null,
+                        endretAvEnhetsnr = "4100"
+                    )
+                )
+            }
+        }
     }
 
     @Nested
