@@ -119,14 +119,14 @@ class RestGsakSakerTest {
     }
 
     @Test
-    fun `transformasjonen bruker SaksId for fagsystemId og MFS som sakstype om fagsystem er vedtakslosningen`() {
+    fun `transformasjonen bruker SaksId for fagsystemId og MFS som sakstype om fagsystem er der vedtakslosningen ikke leverer fagsystemSakId`() {
         val sakDto = SakDto(
             id = SakId_1,
             tema = "AAP",
             applikasjon = VEDTAKSLOSNINGEN,
             aktoerId = "123",
             orgnr = null,
-            fagsakNr = FagsystemSakId_1,
+            //fagsakNr = FagsystemSakId_1,
             opprettetAv = null,
             opprettetTidspunkt = earlierDateTimeWithOffSet(4)
         )
@@ -146,6 +146,30 @@ class RestGsakSakerTest {
         val sakDto = SakDto()
         Assertions.assertDoesNotThrow { RestGsakSaker.TIL_SAK.invoke(sakDto) }
     }
+    @Test
+    fun `kal handtere at FS36 har fagsystemId`() {
+        val sakDto = SakDto(
+                id = SakId_1,
+                tema = "AAP",
+                applikasjon = VEDTAKSLOSNINGEN,
+                aktoerId = "123",
+                orgnr = null,
+                fagsakNr = FagsystemSakId_1,
+                opprettetAv = null,
+                opprettetTidspunkt = earlierDateTimeWithOffSet(4)
+            )
+
+            val sak = RestGsakSaker.TIL_SAK.invoke(sakDto)
+            assertThat(sak.saksId, `is`(SakId_1))
+            assertThat(sak.fagsystemSaksId, `is`(FagsystemSakId_1))
+            assertThat(sak.temaKode, `is`(Sak.GODKJENTE_TEMA_FOR_GENERELL_SAK[0]))
+            assertThat(sak.sakstype, `is`(Sak.SAKSTYPE_MED_FAGSAK))
+            assertThat(sak.fagsystemKode, `is`(VEDTAKSLOSNINGEN))
+            assertThat(sak.opprettetDato, dateMatcher(`is`(true)))
+            assertThat(sak.finnesIGsak, `is`(true))
+
+    }
+
 
     fun dateMatcher(matcher: Matcher<in Boolean?>?): Matcher<DateTime?>? {
         return object : FeatureMatcher<DateTime, Boolean?>(matcher, "Date comparison", "dateMatcher") {
