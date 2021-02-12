@@ -9,12 +9,12 @@ on:
 env:
   IMAGE: docker.pkg.github.com/${{ github.repository }}/modiapersonoversikt-api:${{ github.sha }}
   TZ: Europe/Oslo
-  isDeploy: false
-  deploy_namespace: q6 
+  isDeploy: true
+  deploy_namespace: q0
 
 jobs:
   build:
-    name: Build, test and deploy 
+    name: Build, test and deploy
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
@@ -42,7 +42,7 @@ jobs:
           docker build --tag ${IMAGE} .
           docker push ${IMAGE}
 
-      
+
       - name: Deploy to preprod
         uses: nais/deploy/actions/deploy@v1
         if: env.isDeploy == 'true'
