@@ -13,6 +13,7 @@ import no.nav.kodeverk.consumer.fim.kodeverk.KodeverkmanagerBi
 import no.nav.kodeverk.consumer.fim.kodeverk.to.feil.HentKodeverkKodeverkIkkeFunnet
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.pdl.PdlOppslagService
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.pdl.generated.HentPerson
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.kodeverk.StandardKodeverk
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Policies
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Tilgangskontroll
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.kodeverk.Kode
@@ -125,7 +126,7 @@ class PersonController @Autowired constructor(private val kjerneinfoService: Per
                             "motpartsRolle" to it.motpartsRolle,
                             "motpartsPersonident" to it.motpartsPersonident,
                             "motpartsPersonNavn" to navn,
-                            "omraade" to it.omraader,
+                            "omraade" to it.omraader.map { StandardKodeverk::getArkivtemaNavn },
                             "gyldigFraOgMed" to formatDate(it.gyldigFraOgMed.value),
                             "gyldigTilOgMed" to formatDate(it.gyldigTilOgMed.value)
                     )
