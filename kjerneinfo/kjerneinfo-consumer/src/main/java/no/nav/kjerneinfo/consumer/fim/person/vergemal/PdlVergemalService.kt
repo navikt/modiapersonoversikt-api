@@ -29,8 +29,8 @@ class PdlVergemalService(
         requireNotNull(verge)
         val ident = verge.vergeEllerFullmektig.motpartsPersonident
         val omfang = verge.vergeEllerFullmektig.omfang
-        val gyldighetstidspunkt = verge.folkeregistermetadata.gyldighetstidspunkt
-        val opphoerstidspunkt = verge.folkeregistermetadata.opphoerstidspunkt
+        val gyldighetstidspunkt = verge.folkeregistermetadata?.gyldighetstidspunkt
+        val opphoerstidspunkt = verge.folkeregistermetadata?.opphoerstidspunkt
         return no.nav.kjerneinfo.consumer.fim.person.vergemal.domain.PdlVerge()
                 .withIdent(ident)
                 .withPersonnavn(verge.vergeEllerFullmektig)
