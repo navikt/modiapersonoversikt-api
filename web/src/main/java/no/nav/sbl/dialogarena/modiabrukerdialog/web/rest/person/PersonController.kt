@@ -44,7 +44,8 @@ private const val TILRETTELAGT_KOMMUNIKASJON_KODEVERKSPRAK = "nb"
 class PersonController @Autowired constructor(private val kjerneinfoService: PersonKjerneinfoServiceBi,
                                            private val kodeverk: KodeverkmanagerBi,
                                            private val tilgangskontroll: Tilgangskontroll,
-                                           private val pdlOppslagService: PdlOppslagService) {
+                                           private val pdlOppslagService: PdlOppslagService,
+                                            private val standardKodeverk: StandardKodeverk) {
 
     private val logger = LoggerFactory.getLogger(PersonController::class.java)
 
@@ -126,7 +127,7 @@ class PersonController @Autowired constructor(private val kjerneinfoService: Per
                             "motpartsRolle" to it.motpartsRolle,
                             "motpartsPersonident" to it.motpartsPersonident,
                             "motpartsPersonNavn" to navn,
-                            "omraade" to it.omraader.map { StandardKodeverk::getArkivtemaNavn },
+                            "omraade" to it.omraader.map (standardKodeverk::getArkivtemaNavn),
                             "gyldigFraOgMed" to formatDate(it.gyldigFraOgMed.value),
                             "gyldigTilOgMed" to formatDate(it.gyldigTilOgMed.value)
                     )
