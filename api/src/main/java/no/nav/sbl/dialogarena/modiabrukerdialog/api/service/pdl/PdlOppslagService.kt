@@ -7,5 +7,5 @@ interface PdlOppslagService {
     fun hentPerson(ident: String): HentPerson.Person?
     fun hentIdent(ident: String): HentIdent.Identliste?
     fun hentNavnBolk(identer: List<String>): Map<String, HentNavnBolk.Navn?>?
-    fun hentPersonVergemaalEllerFullmakt(ident: String): List<HentPersonVergemaalEllerFullmakt.VergemaalEllerFremtidsfullmakt?>
+    fun hentPersonVergemaalEllerFullmakt(ident: String): List<HentPersonVergemaalEllerFullmakt.VergemaalEllerFremtidsfullmakt?>?
 }

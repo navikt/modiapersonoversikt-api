@@ -71,7 +71,7 @@ class PdlOppslagServiceImpl constructor(
                 ?: emptyList()
     }
 
-    override fun hentPersonVergemaalEllerFullmakt(ident: String): List<HentPersonVergemaalEllerFullmakt.VergemaalEllerFremtidsfullmakt> = runBlocking {
+    override fun hentPersonVergemaalEllerFullmakt(ident: String): List<HentPersonVergemaalEllerFullmakt.VergemaalEllerFremtidsfullmakt>? = runBlocking {
         HentPersonVergemaalEllerFullmakt(pdlClient)
                 .execute(HentPersonVergemaalEllerFullmakt.Variables(ident), userTokenAuthorizationHeaders)
                 .data
