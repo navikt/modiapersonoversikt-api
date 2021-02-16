@@ -28,16 +28,14 @@ class PdlVergemalService(
     private fun lagVergeDomeneObjekt(verge: HentPersonVergemaalEllerFullmakt.VergemaalEllerFremtidsfullmakt?): no.nav.kjerneinfo.consumer.fim.person.vergemal.domain.PdlVerge {
         requireNotNull(verge)
         val ident = verge.vergeEllerFullmektig.motpartsPersonident
-        val omfang = verge.vergeEllerFullmektig.omfang
-        val gyldighetstidspunkt = verge.folkeregistermetadata?.gyldighetstidspunkt
-        val opphoerstidspunkt = verge.folkeregistermetadata?.opphoerstidspunkt
-        return no.nav.kjerneinfo.consumer.fim.person.vergemal.domain.PdlVerge()
-                .withIdent(ident)
-                .withPersonnavn(verge.vergeEllerFullmektig)
-                .withVergesakstype(verge.type)
-                .withOmfang(omfang)
-                .withEmbete(verge.embete)
-                .withGyldighetstidspunkt(gyldighetstidspunkt)
-                .withOpphoerstidspunkt(opphoerstidspunkt)
+        return no.nav.kjerneinfo.consumer.fim.person.vergemal.domain.PdlVerge(
+                ident = ident,
+                personnavn = verge.vergeEllerFullmektig.navn,
+                vergesakstype = verge.type,
+                omfang = verge.vergeEllerFullmektig.omfang,
+                embete = verge.embete,
+                gyldighetstidspunkt = verge.folkeregistermetadata!!.gyldighetstidspunkt,
+                opphoerstidspunkt = verge.folkeregistermetadata?.opphoerstidspunkt
+        )
     }
 }

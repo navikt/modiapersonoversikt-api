@@ -10,8 +10,7 @@ import no.nav.kjerneinfo.consumer.egenansatt.EgenAnsattService;
 import no.nav.kjerneinfo.consumer.fim.person.PersonKjerneinfoServiceBi;
 import no.nav.kjerneinfo.consumer.fim.person.support.DefaultPersonKjerneinfoService;
 import no.nav.kjerneinfo.consumer.fim.person.support.KjerneinfoMapper;
-import no.nav.kjerneinfo.consumer.fim.person.vergemal.VergemalService;
-import no.nav.kodeverk.consumer.fim.kodeverk.KodeverkmanagerBi;
+import no.nav.kjerneinfo.consumer.fim.person.vergemal.PdlVergemalService;
 import no.nav.modig.content.ContentRetriever;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.HenvendelseLesService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.HenvendelseUtsendingService;
@@ -207,12 +206,10 @@ public class ServiceConfig {
     }
 
     @Bean
-    public VergemalService vergemalService(
-            PersonV3 personPortType,
-            PdlOppslagService pdl,
-            KodeverkmanagerBi kodeverkmanagerBi
+    public PdlVergemalService vergemalService(
+            PdlOppslagService pdl
     ) {
-        return new VergemalService(personPortType, pdl, kodeverkmanagerBi);
+        return new PdlVergemalService(pdl);
     }
 
     @Bean

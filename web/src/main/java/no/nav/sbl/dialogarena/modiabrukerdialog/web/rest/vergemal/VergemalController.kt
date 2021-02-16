@@ -1,8 +1,7 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.vergemal
 
-import no.nav.kjerneinfo.consumer.fim.person.vergemal.VergemalService
-import no.nav.kjerneinfo.consumer.fim.person.vergemal.domain.Verge
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.pdl.generated.HentNavnBolk
+import no.nav.kjerneinfo.consumer.fim.person.vergemal.PdlVergemalService
+import no.nav.kjerneinfo.consumer.fim.person.vergemal.domain.PdlVerge
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Policies
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Tilgangskontroll
 import no.nav.sbl.dialogarena.naudit.Audit
@@ -16,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("/rest/person/{fnr}/vergemal")
-class VergemalController @Autowired constructor(private val vergemalService: VergemalService, private val tilgangskontroll: Tilgangskontroll) {
+class VergemalController @Autowired constructor(private val vergemalService: PdlVergemalService, private val tilgangskontroll: Tilgangskontroll) {
 
     @GetMapping
     fun hent(@PathVariable("fnr") fnr: String): Map<String, Any?> {
@@ -31,29 +30,19 @@ class VergemalController @Autowired constructor(private val vergemalService: Ver
                 }
     }
 
-    private fun getVerger(vergemal: List<Verge>): List<Map<String, Any?>> {
+    private fun getVerger(vergemal: List<PdlVerge>): List<Map<String, Any?>> {
         return vergemal.map {
             mapOf(
-                    "ident" to it.ident,
-                    "navn" to it.personnavn?.let { navn -> getNavn(navn) },
-                    "embete" to it.embete,
-                    "mandattekst" to it.mandattekst,
-                    "mandattype" to it.mandattype,
-                    "vergesakstype" to it.vergesakstype,
-                    "vergetype" to it.vergetype,
+                    "ident" to it.getIdent(),
+                    "navn" to it.getPersonnavn(),
+                    "embete" to it.getEmbete(),
+                    "mandattype" to it.getOmfang(),
+                    "vergesakstype" to it.getVergesakstype(),
                     "virkningsperiode" to mapOf(
-                            "fom" to it.virkningsperiode.fom,
-                            "tom" to it.virkningsperiode.tom
+                            "fom" to it.getGyldighetstidspunkt(),
+                            "tom" to it.getOpphoerstidspunkt()
                     )
             )
         }
-    }
-
-    private fun getNavn(personnavn: HentNavnBolk.Navn): Map<String, String> {
-        return mapOf(
-                "sammensatt" to with(personnavn) {
-                    listOfNotNull(fornavn, mellomnavn, etternavn).joinToString(" ")
-                }
-        )
     }
 }

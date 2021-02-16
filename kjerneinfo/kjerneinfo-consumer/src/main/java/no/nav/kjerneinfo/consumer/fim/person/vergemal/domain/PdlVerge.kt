@@ -3,57 +3,21 @@ package no.nav.kjerneinfo.consumer.fim.person.vergemal.domain
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.pdl.generated.HentPersonVergemaalEllerFullmakt
 
 class PdlVerge(
-
+        private val ident: String?,
+        private val personnavn: HentPersonVergemaalEllerFullmakt.Personnavn2?,
+        private val vergesakstype: String?,
+        private val embete: String?,
+        private val omfang: String?,
+        private val gyldighetstidspunkt: HentPersonVergemaalEllerFullmakt.DateTime?,
+        private val opphoerstidspunkt: HentPersonVergemaalEllerFullmakt.DateTime?
 ) {
-    private var identVerge: String? = null
-    private var personnavnVerge: HentPersonVergemaalEllerFullmakt.Personnavn2? = null
-    private var vergesakstype: String? = null
-    private var vergeEmbete: String? = null
-    private var vergeOmfang: String? = null
-    private var gyldighetstidspunkt: HentPersonVergemaalEllerFullmakt.DateTime? = null
-    private var opphoerstidspunkt: HentPersonVergemaalEllerFullmakt.DateTime? = null
-
-    fun withIdent(ident: String?): PdlVerge {
-        identVerge = ident
-        return this
-    }
-
-    fun withPersonnavn(verge: HentPersonVergemaalEllerFullmakt.VergeEllerFullmektig): PdlVerge {
-        personnavnVerge = verge.navn
-        return this
-    }
-
-    fun withVergesakstype(type: String?): PdlVerge {
-        vergesakstype = type
-        return this
-    }
-
-    fun withOmfang(omfang: String?): PdlVerge {
-        vergeOmfang = omfang
-        return this
-    }
-
-    fun withGyldighetstidspunkt(gyldigTidspunkt: HentPersonVergemaalEllerFullmakt.DateTime?): PdlVerge {
-        gyldighetstidspunkt = gyldigTidspunkt
-        return this
-    }
-
-    fun withOpphoerstidspunkt(opphoer: HentPersonVergemaalEllerFullmakt.DateTime?): PdlVerge {
-        opphoerstidspunkt = opphoer
-        return this
-    }
-
-    fun withEmbete(embete: String?): PdlVerge {
-        vergeEmbete = embete
-        return this
-    }
 
     fun getIdent(): String? {
-        return identVerge
+        return ident
     }
 
     fun getPersonnavn(): HentPersonVergemaalEllerFullmakt.Personnavn2? {
-        return personnavnVerge
+        return personnavn
     }
 
     fun getVergesakstype(): String? {
@@ -61,11 +25,11 @@ class PdlVerge(
     }
     
     fun getEmbete(): String? {
-        return vergeEmbete
+        return embete
     }
 
     fun getOmfang(): String? {
-        return vergeOmfang
+        return omfang
     }
 
     fun getGyldighetstidspunkt(): HentPersonVergemaalEllerFullmakt.DateTime? {
