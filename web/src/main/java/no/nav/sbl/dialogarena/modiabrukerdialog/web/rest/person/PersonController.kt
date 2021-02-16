@@ -127,7 +127,7 @@ class PersonController @Autowired constructor(private val kjerneinfoService: Per
                             "motpartsRolle" to it.motpartsRolle,
                             "motpartsPersonident" to it.motpartsPersonident,
                             "motpartsPersonNavn" to navn,
-                            "omraade" to it.omraader.map (standardKodeverk::getArkivtemaNavn),
+                            "omraade" to it.omraader.map { omraade -> standardKodeverk.getArkivtemaNavn(omraade) ?: omraade },
                             "gyldigFraOgMed" to formatDate(it.gyldigFraOgMed.value),
                             "gyldigTilOgMed" to formatDate(it.gyldigTilOgMed.value)
                     )
