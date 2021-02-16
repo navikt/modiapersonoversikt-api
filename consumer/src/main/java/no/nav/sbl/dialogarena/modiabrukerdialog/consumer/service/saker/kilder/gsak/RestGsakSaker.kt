@@ -53,16 +53,10 @@ class RestGsakSaker(
                 saksId = sakDto.id.toString()
                 fagsystemSaksId = getFagsystemSakId(sakDto)
                 temaKode = sakDto.tema
-                fagsystemKode = getFagsystemKode(sakDto)
+                fagsystemKode = sakDto.applikasjon?: FAGSYSTEM_FOR_OPPRETTELSE_AV_GENERELL_SAK
                 finnesIGsak = true
                 sakstype = getSakstype(sakDto)
             }
-        }
-
-        private fun getFagsystemKode(sakDto: SakDto): String {
-            return if (sakDto.applikasjon == null ) {
-                FAGSYSTEM_FOR_OPPRETTELSE_AV_GENERELL_SAK
-            } else sakDto.applikasjon
         }
 
         private fun getSakstype(sakDto: SakDto): String {
