@@ -9,6 +9,7 @@ import no.nav.kjerneinfo.domain.person.Fodselsnummer
 import no.nav.kjerneinfo.domain.person.Person
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.pdl.PdlOppslagService
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.pdl.generated.HentPerson
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.kodeverk.StandardKodeverk
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.TilgangskontrollMock
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.person.PersonController
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.person.Telefonnummer
@@ -22,6 +23,7 @@ internal class PersonControllerIntTest {
         val clock = Clock.fixed(Instant.parse("2020-04-20T12:00:00.00Z"), ZoneId.systemDefault())
         val kjerneinfoMock: PersonKjerneinfoServiceBi = mock()
         val pdlMock : PdlOppslagService = mock()
+        val standardKodeverk: StandardKodeverk = mock()
         val advokatSomKontakt = HentPerson.KontaktinformasjonForDoedsboAdvokatSomKontakt(HentPerson.Personnavn2(fornavn = "Ola",mellomnavn =  null, etternavn =  "Nordmann"), organisasjonsnavn = null, organisasjonsnummer = null)
         val adresse= HentPerson.KontaktinformasjonForDoedsboAdresse(adresselinje1 = "testadresse 21", adresselinje2 = null, poststedsnavn = "Fossviken", postnummer = "1234", landkode = null)
         val pdldodsbo =  HentPerson.KontaktinformasjonForDoedsbo(adresse = adresse, attestutstedelsesdato = HentPerson.Date.create("2019-12-12"), organisasjonSomKontakt = null, skifteform = HentPerson.KontaktinformasjonForDoedsboSkifteform.ANNET, personSomKontakt = null, advokatSomKontakt = advokatSomKontakt   )
@@ -55,7 +57,8 @@ internal class PersonControllerIntTest {
                 kjerneinfoMock,
                 mock(),
                 TilgangskontrollMock.get(),
-                pdlMock
+                pdlMock,
+            standardKodeverk
         )
 
         val person = personController.hent("10108000398")

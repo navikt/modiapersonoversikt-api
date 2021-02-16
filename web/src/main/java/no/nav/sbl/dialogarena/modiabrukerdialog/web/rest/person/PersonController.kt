@@ -13,6 +13,7 @@ import no.nav.kodeverk.consumer.fim.kodeverk.KodeverkmanagerBi
 import no.nav.kodeverk.consumer.fim.kodeverk.to.feil.HentKodeverkKodeverkIkkeFunnet
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.pdl.PdlOppslagService
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.pdl.generated.HentPerson
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.kodeverk.StandardKodeverk
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Policies
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Tilgangskontroll
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.kodeverk.Kode
@@ -43,7 +44,8 @@ private const val TILRETTELAGT_KOMMUNIKASJON_KODEVERKSPRAK = "nb"
 class PersonController @Autowired constructor(private val kjerneinfoService: PersonKjerneinfoServiceBi,
                                            private val kodeverk: KodeverkmanagerBi,
                                            private val tilgangskontroll: Tilgangskontroll,
-                                           private val pdlOppslagService: PdlOppslagService) {
+                                           private val pdlOppslagService: PdlOppslagService,
+                                            private val standardKodeverk: StandardKodeverk) {
 
     private val logger = LoggerFactory.getLogger(PersonController::class.java)
 
@@ -125,7 +127,7 @@ class PersonController @Autowired constructor(private val kjerneinfoService: Per
                             "motpartsRolle" to it.motpartsRolle,
                             "motpartsPersonident" to it.motpartsPersonident,
                             "motpartsPersonNavn" to navn,
-                            "omraade" to it.omraader,
+                            "omraade" to it.omraader.map { omraade -> standardKodeverk.getArkivtemaNavn(omraade) ?: omraade },
                             "gyldigFraOgMed" to formatDate(it.gyldigFraOgMed.value),
                             "gyldigTilOgMed" to formatDate(it.gyldigTilOgMed.value)
                     )
