@@ -22,42 +22,69 @@ internal class PersonControllerIntTest {
     fun test() {
         val clock = Clock.fixed(Instant.parse("2020-04-20T12:00:00.00Z"), ZoneId.systemDefault())
         val kjerneinfoMock: PersonKjerneinfoServiceBi = mock()
-        val pdlMock : PdlOppslagService = mock()
+        val pdlMock: PdlOppslagService = mock()
         val standardKodeverk: StandardKodeverk = mock()
-        val advokatSomKontakt = HentPerson.KontaktinformasjonForDoedsboAdvokatSomKontakt(HentPerson.Personnavn2(fornavn = "Ola",mellomnavn =  null, etternavn =  "Nordmann"), organisasjonsnavn = null, organisasjonsnummer = null)
-        val adresse= HentPerson.KontaktinformasjonForDoedsboAdresse(adresselinje1 = "testadresse 21", adresselinje2 = null, poststedsnavn = "Fossviken", postnummer = "1234", landkode = null)
-        val pdldodsbo =  HentPerson.KontaktinformasjonForDoedsbo(adresse = adresse, attestutstedelsesdato = HentPerson.Date.create("2019-12-12"), organisasjonSomKontakt = null, skifteform = HentPerson.KontaktinformasjonForDoedsboSkifteform.ANNET, personSomKontakt = null, advokatSomKontakt = advokatSomKontakt   )
+        val advokatSomKontakt = HentPerson.KontaktinformasjonForDoedsboAdvokatSomKontakt(
+            HentPerson.Personnavn2(
+                fornavn = "Ola",
+                mellomnavn = null,
+                etternavn = "Nordmann"
+            ), organisasjonsnavn = null, organisasjonsnummer = null
+        )
+        val adresse = HentPerson.KontaktinformasjonForDoedsboAdresse(
+            adresselinje1 = "testadresse 21",
+            adresselinje2 = null,
+            poststedsnavn = "Fossviken",
+            postnummer = "1234",
+            landkode = null
+        )
+        val pdldodsbo = HentPerson.KontaktinformasjonForDoedsbo(
+            adresse = adresse,
+            attestutstedelsesdato = HentPerson.Date.create("2019-12-12"),
+            organisasjonSomKontakt = null,
+            skifteform = HentPerson.KontaktinformasjonForDoedsboSkifteform.ANNET,
+            personSomKontakt = null,
+            advokatSomKontakt = advokatSomKontakt
+        )
         val kontaktiformasjonForDoedsbo: List<HentPerson.KontaktinformasjonForDoedsbo> = listOf(pdldodsbo)
 
         whenever(kjerneinfoMock.hentKjerneinformasjon(any())).thenReturn(HentKjerneinformasjonResponse()
-                .apply {
-                    this.person = Person()
-                            .apply {
-                                this.fodselsnummer = Fodselsnummer("10108000398".trimIndent())
-                            }
-                }
+            .apply {
+                this.person = Person()
+                    .apply {
+                        this.fodselsnummer = Fodselsnummer("10108000398".trimIndent())
+                    }
+            }
         )
-        whenever(pdlMock.hentPerson(any())).thenReturn(HentPerson.Person(
-                        navn = emptyList(),
-                        kontaktinformasjonForDoedsbo = kontaktiformasjonForDoedsbo,
-                        tilrettelagtKommunikasjon = emptyList(),
-                        fullmakt = emptyList(),
-                        telefonnummer = listOf(HentPerson.Telefonnummer(
-                                "+47",
-                                "10101010",
-                                1,
-                                HentPerson.Metadata(listOf(HentPerson.Endring(
-                                        HentPerson.DateTime(LocalDateTime.now(clock)),
-                                        "BRUKER"
-                                )))
-                        ))
-        ))
+        whenever(pdlMock.hentPerson(any())).thenReturn(
+            HentPerson.Person(
+                navn = emptyList(),
+                kontaktinformasjonForDoedsbo = kontaktiformasjonForDoedsbo,
+                tilrettelagtKommunikasjon = emptyList(),
+                fullmakt = emptyList(),
+                telefonnummer = listOf(
+                    HentPerson.Telefonnummer(
+                        "+47",
+                        "10101010",
+                        1,
+                        HentPerson.Metadata(
+                            listOf(
+                                HentPerson.Endring(
+                                    HentPerson.DateTime(LocalDateTime.now(clock)),
+                                    "BRUKER"
+                                )
+                            )
+                        )
+                    )
+                )
+            )
+        )
 
         val personController = PersonController(
-                kjerneinfoMock,
-                mock(),
-                TilgangskontrollMock.get(),
-                pdlMock,
+            kjerneinfoMock,
+            mock(),
+            TilgangskontrollMock.get(),
+            pdlMock,
             standardKodeverk
         )
 
@@ -77,20 +104,19 @@ internal class PersonControllerIntTest {
 fun Map<String, Any?>.deepget(path: String): Any? {
     var instance: Any? = this
     path.split(".")
-            .forEach {
-                fragment ->
-                instance = when (instance) {
-                    is Map<*, *> -> {
-                        (instance as Map<*, *>)[fragment]
-                    }
-                    is List<*> -> {
-                        (instance as List<*>).get(Integer(fragment).toInt())
-                    }
-                    else -> {
-                        throw IllegalStateException("Instance er $instance prøver å hente ut $fragment")
-                    }
+        .forEach { fragment ->
+            instance = when (instance) {
+                is Map<*, *> -> {
+                    (instance as Map<*, *>)[fragment]
+                }
+                is List<*> -> {
+                    (instance as List<*>).get(Integer(fragment).toInt())
+                }
+                else -> {
+                    throw IllegalStateException("Instance er $instance prøver å hente ut $fragment")
                 }
             }
+        }
 
     return instance
 }

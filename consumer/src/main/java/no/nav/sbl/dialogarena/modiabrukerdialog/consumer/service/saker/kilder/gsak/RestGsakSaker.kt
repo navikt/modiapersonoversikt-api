@@ -53,7 +53,7 @@ class RestGsakSaker(
                 saksId = sakDto.id.toString()
                 fagsystemSaksId = getFagsystemSakId(sakDto)
                 temaKode = sakDto.tema
-                fagsystemKode = sakDto.applikasjon?: FAGSYSTEM_FOR_OPPRETTELSE_AV_GENERELL_SAK
+                fagsystemKode = sakDto.applikasjon ?: FAGSYSTEM_FOR_OPPRETTELSE_AV_GENERELL_SAK
                 finnesIGsak = true
                 sakstype = getSakstype(sakDto)
             }
