@@ -3,15 +3,12 @@ package no.nav.kjerneinfo.consumer.fim.person.vergemal
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
-import no.nav.kjerneinfo.consumer.fim.person.vergemal.VergemalServiceTest.MedVergemal
 import no.nav.kjerneinfo.consumer.fim.person.vergemal.domain.PdlVerge
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.pdl.generated.HentNavnBolk
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.pdl.PdlOppslagService
 import org.junit.jupiter.api.Test
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.pdl.generated.HentPersonVergemaalEllerFullmakt
 import org.junit.jupiter.api.DisplayName
-import java.util.HashMap
-import javax.swing.UIManager.put
 import kotlin.test.assertEquals
 
 private const val OMFANG_KODEREF = "personligeInteresser"
