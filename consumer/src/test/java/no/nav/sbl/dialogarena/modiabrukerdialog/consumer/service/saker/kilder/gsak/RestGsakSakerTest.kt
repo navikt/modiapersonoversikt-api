@@ -119,6 +119,24 @@ class RestGsakSakerTest {
     }
 
     @Test
+    fun `inkludere dummy saker for brukere som har ikke tilknytning til noen fagsystemer og lagt i gosys`() {
+        val sakDto = SakDto(
+                id = SakId_1,
+                tema = "AAP",
+                applikasjon = null,
+                aktoerId = "123",
+                orgnr = null,
+                fagsakNr = null,
+                opprettetAv = null,
+                opprettetTidspunkt = earlierDateTimeWithOffSet(4)
+        )
+        val sak = RestGsakSaker.TIL_SAK.invoke(sakDto)
+        assertThat(sak.fagsystemKode, `is`(Sak.FAGSYSTEM_FOR_OPPRETTELSE_AV_GENERELL_SAK))
+        assertThat(sak.sakstype, `is`(Sak.SAKSTYPE_GENERELL))
+
+    }
+
+    @Test
     fun `transformasjonen bruker SaksId for fagsystemId og MFS som sakstype om fagsystem er der vedtakslosningen ikke leverer fagsystemSakId`() {
         val sakDto = SakDto(
             id = SakId_1,
