@@ -103,7 +103,7 @@ class RestOppgaveBehandlingServiceImpl(
         val aktorId = fodselnummerAktorService.hentAktorIdForFnr(request.fnr)
             ?: throw IllegalArgumentException("Fant ikke aktorId for ${request.fnr}")
 
-        val response = apiClient.opprettOppgave(
+        val response = systemApiClient.opprettOppgave(
             xminusCorrelationMinusID = correlationId(),
             postOppgaveRequestJsonDTO = PostOppgaveRequestJsonDTO(
                 opprettetAvEnhetsnr = request.opprettetavenhetsnummer.coerceBlankToNull(),
