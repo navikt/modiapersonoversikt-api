@@ -2,9 +2,9 @@ package no.nav.kjerneinfo.consumer.fim.person.vergemal.domain
 
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.pdl.generated.HentPersonVergemaalEllerFullmakt
 
-class PdlVerge(
+open class PdlVerge(
         private val ident: String?,
-        private val personnavn: HentPersonVergemaalEllerFullmakt.Personnavn2?,
+        private val personnavn: HentPersonVergemaalEllerFullmakt.Personnavn?,
         private val vergesakstype: String?,
         private val embete: String?,
         private val omfang: String?,
@@ -16,7 +16,7 @@ class PdlVerge(
         return ident
     }
 
-    fun getPersonnavn(): HentPersonVergemaalEllerFullmakt.Personnavn2? {
+    fun getPersonnavn(): HentPersonVergemaalEllerFullmakt.Personnavn? {
         return personnavn
     }
 

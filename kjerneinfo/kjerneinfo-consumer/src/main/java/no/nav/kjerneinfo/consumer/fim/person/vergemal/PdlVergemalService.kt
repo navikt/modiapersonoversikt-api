@@ -10,14 +10,13 @@ class PdlVergemalService(
     ) {
 
     fun hentVergemal(fodselsnummer: String): List<no.nav.kjerneinfo.consumer.fim.person.vergemal.domain.PdlVerge> {
-        val hentVergeResponse: List<HentPersonVergemaalEllerFullmakt.VergemaalEllerFremtidsfullmakt?>? = hentVergemalFraPdl(fodselsnummer)
-        requireNotNull(hentVergeResponse)
+        val hentVergeResponse: List<HentPersonVergemaalEllerFullmakt.VergemaalEllerFremtidsfullmakt> = hentVergemalFraPdl(fodselsnummer)
         return hentVergeResponse.stream()
-                .map { verge -> lagVergeDomeneObjekt(verge) }
+                .map { verge -> lagVergeDomeneObjekt(requireNotNull(verge)) }
                 .toList()
     }
 
-    fun hentVergemalFraPdl(fodselsnummer: String): List<HentPersonVergemaalEllerFullmakt.VergemaalEllerFremtidsfullmakt?>? {
+    fun hentVergemalFraPdl(fodselsnummer: String): List<HentPersonVergemaalEllerFullmakt.VergemaalEllerFremtidsfullmakt> {
         try {
             return pdl.hentPersonVergemaalEllerFullmakt(fodselsnummer)
         } catch (e: Exception) {
@@ -25,8 +24,7 @@ class PdlVergemalService(
         }
     }
 
-    private fun lagVergeDomeneObjekt(verge: HentPersonVergemaalEllerFullmakt.VergemaalEllerFremtidsfullmakt?): no.nav.kjerneinfo.consumer.fim.person.vergemal.domain.PdlVerge {
-        requireNotNull(verge)
+    private fun lagVergeDomeneObjekt(verge: HentPersonVergemaalEllerFullmakt.VergemaalEllerFremtidsfullmakt): no.nav.kjerneinfo.consumer.fim.person.vergemal.domain.PdlVerge {
         val ident = verge.vergeEllerFullmektig.motpartsPersonident
         return no.nav.kjerneinfo.consumer.fim.person.vergemal.domain.PdlVerge(
                 ident = ident,
@@ -34,7 +32,7 @@ class PdlVergemalService(
                 vergesakstype = verge.type,
                 omfang = verge.vergeEllerFullmektig.omfang,
                 embete = verge.embete,
-                gyldighetstidspunkt = verge.folkeregistermetadata!!.gyldighetstidspunkt,
+                gyldighetstidspunkt = verge.folkeregistermetadata?.gyldighetstidspunkt,
                 opphoerstidspunkt = verge.folkeregistermetadata?.opphoerstidspunkt
         )
     }

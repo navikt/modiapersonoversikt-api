@@ -71,7 +71,7 @@ class PdlOppslagServiceImpl constructor(
                 ?: emptyList()
     }
 
-    override fun hentPersonVergemaalEllerFullmakt(ident: String): List<HentPersonVergemaalEllerFullmakt.VergemaalEllerFremtidsfullmakt>? = runBlocking {
+    override fun hentPersonVergemaalEllerFullmakt(ident: String): List<HentPersonVergemaalEllerFullmakt.VergemaalEllerFremtidsfullmakt> = runBlocking {
         HentPersonVergemaalEllerFullmakt(pdlClient)
                 .execute(HentPersonVergemaalEllerFullmakt.Variables(ident), userTokenAuthorizationHeaders)
                 .data
@@ -116,6 +116,10 @@ class PdlOppslagServiceImpl constructor(
                     HentIdent.Variables(ident)
                 }
                 is SokPersonUtenlandskID.Variables -> variables
+                is HentPersonVergemaalEllerFullmakt.Variables -> {
+                    val ident = variables.ident.let(PdlSyntetiskMapper::mapFnrTilPdl)
+                    HentPersonVergemaalEllerFullmakt.Variables(ident)
+                }
                 else -> throw IllegalStateException("Unrecognized graphql variables type: ${variables.javaClass.simpleName}")
             }
         }
