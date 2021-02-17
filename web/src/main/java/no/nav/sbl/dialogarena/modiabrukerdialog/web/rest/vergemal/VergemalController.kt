@@ -33,14 +33,14 @@ class VergemalController @Autowired constructor(private val vergemalService: Pdl
     private fun getVerger(vergemal: List<PdlVerge>): List<Map<String, Any?>> {
         return vergemal.map {
             mapOf(
-                    "ident" to it.getIdent(),
-                    "navn" to it.getPersonnavn(),
-                    "embete" to it.getEmbete(),
-                    "mandattype" to it.getOmfang(),
-                    "vergesakstype" to it.getVergesakstype(),
+                    "ident" to it.ident,
+                    "navn" to it.personnavn,
+                    "embete" to it.embete,
+                    "mandattype" to it.omfang,
+                    "vergesakstype" to it.vergesakstype,
                     "virkningsperiode" to mapOf(
-                            "fom" to it.getGyldighetstidspunkt(),
-                            "tom" to it.getOpphoerstidspunkt()
+                            "fom" to it.gyldighetstidspunkt,
+                            "tom" to it.opphoerstidspunkt
                     )
             )
         }

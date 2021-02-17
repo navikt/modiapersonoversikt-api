@@ -1,12 +1,9 @@
 package no.nav.kjerneinfo.consumer.fim.person.vergemal
 
 import no.nav.kjerneinfo.consumer.fim.person.vergemal.domain.PdlVerge
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.pdl.generated.HentNavnBolk
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.pdl.generated.HentPersonVergemaalEllerFullmakt
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.pdl.PdlOppslagService
 import java.lang.RuntimeException
-import java.util.stream.Collectors
-import kotlin.streams.toList
 
 class PdlVergemalService(
     private val pdl: PdlOppslagService
@@ -16,14 +13,8 @@ class PdlVergemalService(
 
     fun hentVergemal(fodselsnummer: String): List<PdlVerge> {
         val hentVergeResponse: List<HentPersonVergemaalEllerFullmakt.VergemaalEllerFremtidsfullmakt> = hentVergemalFraPdl(fodselsnummer)
-        val vergeIdenter: List<String> = pdl.hentPersonVergemaalEllerFullmakt(fodselsnummer)
-                .stream()
-                .map { verge: HentPersonVergemaalEllerFullmakt.VergemaalEllerFremtidsfullmakt? -> getIdentFromVerge(verge?.vergeEllerFullmektig) }
-                .collect(Collectors.toList<String>())
-        val vergeNavn = pdl.hentNavnBolk(vergeIdenter)
-        return hentVergeResponse.stream()
-                .map { verge -> lagVergeDomeneObjekt(verge, vergeNavn) }
-                .toList()
+        return hentVergeResponse
+                .map { verge -> lagVergeDomeneObjekt(verge) }
     }
 
     fun hentVergemalFraPdl(fodselsnummer: String): List<HentPersonVergemaalEllerFullmakt.VergemaalEllerFremtidsfullmakt> {
@@ -34,9 +25,9 @@ class PdlVergemalService(
         }
     }
 
-    private fun lagVergeDomeneObjekt(verge: HentPersonVergemaalEllerFullmakt.VergemaalEllerFremtidsfullmakt, vergeNavn: Map<String, HentNavnBolk.Navn?>?): PdlVerge {
+    private fun lagVergeDomeneObjekt(verge: HentPersonVergemaalEllerFullmakt.VergemaalEllerFremtidsfullmakt): PdlVerge {
         val ident = getIdentFromVerge(verge.vergeEllerFullmektig)
-        val navn: HentNavnBolk.Navn? = vergeNavn?.get(getIdentFromVerge(verge.vergeEllerFullmektig))
+        val navn = if (ident != null) verge.vergeEllerFullmektig?.navn else null
         return PdlVerge(
                 ident = ident,
                 personnavn = navn,

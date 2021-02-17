@@ -1,43 +1,13 @@
 package no.nav.kjerneinfo.consumer.fim.person.vergemal.domain
 
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.pdl.generated.HentNavnBolk
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.pdl.generated.HentPersonVergemaalEllerFullmakt
 
-open class PdlVerge(
-        private val ident: String?,
-        private val personnavn: HentNavnBolk.Navn?,
-        private val vergesakstype: String?,
-        private val embete: String?,
-        private val omfang: String?,
-        private val gyldighetstidspunkt: HentPersonVergemaalEllerFullmakt.DateTime?,
-        private val opphoerstidspunkt: HentPersonVergemaalEllerFullmakt.DateTime?
-) {
-
-    fun getIdent(): String? {
-        return ident
-    }
-
-    fun getPersonnavn(): HentNavnBolk.Navn? {
-        return personnavn
-    }
-
-    fun getVergesakstype(): String? {
-        return vergesakstype
-    }
-    
-    fun getEmbete(): String? {
-        return embete
-    }
-
-    fun getOmfang(): String? {
-        return omfang
-    }
-
-    fun getGyldighetstidspunkt(): HentPersonVergemaalEllerFullmakt.DateTime? {
-        return gyldighetstidspunkt
-    }
-
-    fun getOpphoerstidspunkt(): HentPersonVergemaalEllerFullmakt.DateTime? {
-        return opphoerstidspunkt
-    }
-}
+data class PdlVerge(
+        val ident: String?,
+        val personnavn: HentPersonVergemaalEllerFullmakt.Personnavn?,
+        val vergesakstype: String?,
+        val embete: String?,
+        val omfang: String?,
+        val gyldighetstidspunkt: HentPersonVergemaalEllerFullmakt.DateTime?,
+        val opphoerstidspunkt: HentPersonVergemaalEllerFullmakt.DateTime?
+)

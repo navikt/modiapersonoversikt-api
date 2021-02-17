@@ -14,12 +14,8 @@ query($ident: ID!){
                 omfangetErInnenPersonligOmraade
             }
             folkeregistermetadata {
-                ajourholdstidspunkt
                 gyldighetstidspunkt
                 opphoerstidspunkt
-                kilde
-                aarsak
-                sekvens
             }
             metadata {
                 opplysningsId
