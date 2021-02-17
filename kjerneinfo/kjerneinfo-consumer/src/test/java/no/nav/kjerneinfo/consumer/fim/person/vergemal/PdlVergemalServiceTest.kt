@@ -52,6 +52,7 @@ class PdlVergemalServiceTest {
     @Test
     fun `Verges fodselsnummer satt til 0`() {
         whenever(pdl.hentPersonVergemaalEllerFullmakt(any())).thenReturn(listOf(getVergeMock(pdlVergemalService.PDL_VERGES_FNR_MANGLENDE_DATA)))
+        whenever(pdl.hentNavnBolk(any())).thenReturn(mockPersonnavnForVerge())
         val vergemal: List<PdlVerge> = pdlVergemalService.hentVergemal(pdlVergemalService.PDL_VERGES_FNR_MANGLENDE_DATA)
         val verge: PdlVerge = vergemal[0]
 
