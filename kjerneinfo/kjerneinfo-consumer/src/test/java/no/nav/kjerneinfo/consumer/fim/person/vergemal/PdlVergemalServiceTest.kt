@@ -90,34 +90,4 @@ class PdlVergemalServiceTest {
     private fun mockPersonnavnForVerge(): Map<String, HentNavnBolk.Navn?>? {
         return mapOf(Pair(VERGES_IDENT, HentNavnBolk.Navn(VERGES_NAVN, null, "") ))
     }
-
-
-    private fun getVergeMockManglendeData(ident: String): HentPersonVergemaalEllerFullmakt.VergemaalEllerFremtidsfullmakt {
-        return HentPersonVergemaalEllerFullmakt.VergemaalEllerFremtidsfullmakt(
-                type = null,
-                embete = null,
-                vergeEllerFullmektig = HentPersonVergemaalEllerFullmakt.VergeEllerFullmektig(
-                        navn = HentPersonVergemaalEllerFullmakt.Personnavn(
-                                fornavn = "",
-                                mellomnavn = null,
-                                etternavn = ""
-                        ),
-                        motpartsPersonident = null,
-                        omfang = null,
-                        omfangetErInnenPersonligOmraade = false
-
-                ),
-                folkeregistermetadata = HentPersonVergemaalEllerFullmakt.Folkeregistermetadata(
-                        ajourholdstidspunkt = null,
-                        gyldighetstidspunkt = null,
-                        opphoerstidspunkt = null,
-                        kilde = null,
-                        aarsak = null,
-                        sekvens = null
-                ),
-                metadata = HentPersonVergemaalEllerFullmakt.Metadata(
-                        opplysningsId = null
-                )
-        )
-    }
 }
