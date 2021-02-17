@@ -138,7 +138,7 @@ class RestOppgaveBehandlingServiceImplTest {
 
         @Test
         fun `skal opprette skjermet oppgave`() {
-            every { apiClient.opprettOppgave(any(), any()) } returns dummyOppgave.toPostOppgaveResponseJsonDTO()
+            every { systemApiClient.opprettOppgave(any(), any()) } returns dummyOppgave.toPostOppgaveResponseJsonDTO()
             every { ansattService.hentAnsattNavn(eq("Z999999")) } returns "Fornavn Etternavn"
 
 
@@ -162,7 +162,7 @@ class RestOppgaveBehandlingServiceImplTest {
 
             assertThat(response.id).isEqualTo("1234")
             verifySequence {
-                apiClient.opprettOppgave(
+                systemApiClient.opprettOppgave(
                     xminusCorrelationMinusID = any(),
                     postOppgaveRequestJsonDTO = PostOppgaveRequestJsonDTO(
                         aktoerId = "00007063000250000",
