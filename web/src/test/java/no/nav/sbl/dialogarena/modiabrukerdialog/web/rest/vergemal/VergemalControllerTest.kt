@@ -5,7 +5,7 @@ import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
 import no.nav.kjerneinfo.consumer.fim.person.vergemal.PdlVergemalService
 import no.nav.kjerneinfo.consumer.fim.person.vergemal.domain.PdlVerge
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.pdl.generated.HentPersonVergemaalEllerFullmakt
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.pdl.generated.HentNavnBolk
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.TilgangskontrollMock
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
@@ -26,7 +26,7 @@ class VergemalControllerTest {
     fun `Henter vergemål`() {
         whenever(vergemalService.hentVergemal(any())).thenReturn(listOf(PdlVerge(
                 ident = VERGES_IDENT,
-                personnavn = HentPersonVergemaalEllerFullmakt.Personnavn(
+                personnavn = HentNavnBolk.Navn(
                         fornavn = "",
                         mellomnavn = null,
                         etternavn = ""

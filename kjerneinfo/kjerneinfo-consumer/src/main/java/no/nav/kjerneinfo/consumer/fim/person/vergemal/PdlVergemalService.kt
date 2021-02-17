@@ -1,5 +1,6 @@
 package no.nav.kjerneinfo.consumer.fim.person.vergemal
 
+import no.nav.kjerneinfo.consumer.fim.person.vergemal.domain.PdlVerge
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.pdl.generated.HentNavnBolk
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.pdl.generated.HentPersonVergemaalEllerFullmakt
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.pdl.PdlOppslagService
@@ -13,7 +14,7 @@ class PdlVergemalService(
 
     val PDL_VERGES_FNR_MANGLENDE_DATA = "00000000000"
 
-    fun hentVergemal(fodselsnummer: String): List<no.nav.kjerneinfo.consumer.fim.person.vergemal.domain.PdlVerge> {
+    fun hentVergemal(fodselsnummer: String): List<PdlVerge> {
         val hentVergeResponse: List<HentPersonVergemaalEllerFullmakt.VergemaalEllerFremtidsfullmakt> = hentVergemalFraPdl(fodselsnummer)
         val vergeIdenter: List<String> = pdl.hentPersonVergemaalEllerFullmakt(fodselsnummer)
                 .stream()
@@ -33,10 +34,10 @@ class PdlVergemalService(
         }
     }
 
-    private fun lagVergeDomeneObjekt(verge: HentPersonVergemaalEllerFullmakt.VergemaalEllerFremtidsfullmakt, vergeNavn: Map<String, HentNavnBolk.Navn?>?): no.nav.kjerneinfo.consumer.fim.person.vergemal.domain.PdlVerge {
+    private fun lagVergeDomeneObjekt(verge: HentPersonVergemaalEllerFullmakt.VergemaalEllerFremtidsfullmakt, vergeNavn: Map<String, HentNavnBolk.Navn?>?): PdlVerge {
         val ident = getIdentFromVerge(verge.vergeEllerFullmektig)
         val navn: HentNavnBolk.Navn? = vergeNavn?.get(getIdentFromVerge(verge.vergeEllerFullmektig))
-        return no.nav.kjerneinfo.consumer.fim.person.vergemal.domain.PdlVerge(
+        return PdlVerge(
                 ident = ident,
                 personnavn = navn,
                 vergesakstype = verge.type,

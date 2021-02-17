@@ -3,11 +3,15 @@ package no.nav.kjerneinfo.consumer.fim.person.vergemal
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
+import no.nav.kjerneinfo.consumer.fim.person.vergemal.VergemalServiceTest.MedVergemal
 import no.nav.kjerneinfo.consumer.fim.person.vergemal.domain.PdlVerge
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.pdl.generated.HentNavnBolk
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.pdl.PdlOppslagService
 import org.junit.jupiter.api.Test
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.pdl.generated.HentPersonVergemaalEllerFullmakt
 import org.junit.jupiter.api.DisplayName
+import java.util.HashMap
+import javax.swing.UIManager.put
 import kotlin.test.assertEquals
 
 private const val OMFANG_KODEREF = "personligeInteresser"
@@ -34,6 +38,7 @@ class PdlVergemalServiceTest {
     @Test
     fun `Henter informasjon om verge fra PDL`() {
         whenever(pdl.hentPersonVergemaalEllerFullmakt(any())).thenReturn(listOf(getVergeMock(VERGES_IDENT)))
+        whenever(pdl.hentNavnBolk(any())).thenReturn(mockPersonnavnForVerge())
         val vergemal: List<PdlVerge> = pdlVergemalService.hentVergemal(VERGES_IDENT)
         val verge: PdlVerge = vergemal[0]
 
@@ -46,12 +51,12 @@ class PdlVergemalServiceTest {
     @DisplayName("Med vergemål med ufullstendig data")
     @Test
     fun `Verges fodselsnummer satt til 0`() {
-        whenever(pdl.hentPersonVergemaalEllerFullmakt(any())).thenReturn(listOf(getVergeMockManglendeData(pdlVergemalService.PDL_VERGES_FNR_MANGLENDE_DATA)))
+        whenever(pdl.hentPersonVergemaalEllerFullmakt(any())).thenReturn(listOf(getVergeMock(pdlVergemalService.PDL_VERGES_FNR_MANGLENDE_DATA)))
         val vergemal: List<PdlVerge> = pdlVergemalService.hentVergemal(pdlVergemalService.PDL_VERGES_FNR_MANGLENDE_DATA)
         val verge: PdlVerge = vergemal[0]
 
         assertEquals(null, verge.getIdent())
-        assertEquals("", verge.getPersonnavn()?.fornavn)
+        assertEquals(null, verge.getPersonnavn()?.fornavn)
     }
 
     private fun getVergeMock(ident: String): HentPersonVergemaalEllerFullmakt.VergemaalEllerFremtidsfullmakt {
@@ -82,6 +87,12 @@ class PdlVergemalServiceTest {
                 )
         )
     }
+
+
+    private fun mockPersonnavnForVerge(): Map<String, HentNavnBolk.Navn?>? {
+        return mapOf(Pair(VERGES_IDENT, HentNavnBolk.Navn(VERGES_NAVN, null, "") ))
+    }
+
 
     private fun getVergeMockManglendeData(ident: String): HentPersonVergemaalEllerFullmakt.VergemaalEllerFremtidsfullmakt {
         return HentPersonVergemaalEllerFullmakt.VergemaalEllerFremtidsfullmakt(
