@@ -119,6 +119,23 @@ class RestGsakSakerTest {
     }
 
     @Test
+    fun `transformasjon setter default verdi for fagsystemKode og sakstype om applikasjon er null fra rest-tjenesten`() {
+        val sakDto = SakDto(
+            id = SakId_1,
+            tema = "AAP",
+            applikasjon = null,
+            aktoerId = "123",
+            orgnr = null,
+            fagsakNr = null,
+            opprettetAv = null,
+            opprettetTidspunkt = earlierDateTimeWithOffSet(4)
+        )
+        val sak = RestGsakSaker.TIL_SAK.invoke(sakDto)
+        assertThat(sak.fagsystemKode, `is`(Sak.FAGSYSTEM_FOR_OPPRETTELSE_AV_GENERELL_SAK))
+        assertThat(sak.sakstype, `is`(Sak.SAKSTYPE_GENERELL))
+    }
+
+    @Test
     fun `transformasjonen bruker SaksId for fagsystemId og MFS som sakstype om fagsystem er der vedtakslosningen ikke leverer fagsystemSakId`() {
         val sakDto = SakDto(
             id = SakId_1,
@@ -126,7 +143,6 @@ class RestGsakSakerTest {
             applikasjon = VEDTAKSLOSNINGEN,
             aktoerId = "123",
             orgnr = null,
-            //fagsakNr = FagsystemSakId_1,
             opprettetAv = null,
             opprettetTidspunkt = earlierDateTimeWithOffSet(4)
         )
@@ -146,27 +162,28 @@ class RestGsakSakerTest {
         val sakDto = SakDto()
         Assertions.assertDoesNotThrow { RestGsakSaker.TIL_SAK.invoke(sakDto) }
     }
+
     @Test
     fun `kal handtere at FS36 har fagsystemId`() {
         val sakDto = SakDto(
-                id = SakId_1,
-                tema = "AAP",
-                applikasjon = VEDTAKSLOSNINGEN,
-                aktoerId = "123",
-                orgnr = null,
-                fagsakNr = FagsystemSakId_1,
-                opprettetAv = null,
-                opprettetTidspunkt = earlierDateTimeWithOffSet(4)
-            )
+            id = SakId_1,
+            tema = "AAP",
+            applikasjon = VEDTAKSLOSNINGEN,
+            aktoerId = "123",
+            orgnr = null,
+            fagsakNr = FagsystemSakId_1,
+            opprettetAv = null,
+            opprettetTidspunkt = earlierDateTimeWithOffSet(4)
+        )
 
-            val sak = RestGsakSaker.TIL_SAK.invoke(sakDto)
-            assertThat(sak.saksId, `is`(SakId_1))
-            assertThat(sak.fagsystemSaksId, `is`(FagsystemSakId_1))
-            assertThat(sak.temaKode, `is`(Sak.GODKJENTE_TEMA_FOR_GENERELL_SAK[0]))
-            assertThat(sak.sakstype, `is`(Sak.SAKSTYPE_MED_FAGSAK))
-            assertThat(sak.fagsystemKode, `is`(VEDTAKSLOSNINGEN))
-            assertThat(sak.opprettetDato, dateMatcher(`is`(true)))
-            assertThat(sak.finnesIGsak, `is`(true))
+        val sak = RestGsakSaker.TIL_SAK.invoke(sakDto)
+        assertThat(sak.saksId, `is`(SakId_1))
+        assertThat(sak.fagsystemSaksId, `is`(FagsystemSakId_1))
+        assertThat(sak.temaKode, `is`(Sak.GODKJENTE_TEMA_FOR_GENERELL_SAK[0]))
+        assertThat(sak.sakstype, `is`(Sak.SAKSTYPE_MED_FAGSAK))
+        assertThat(sak.fagsystemKode, `is`(VEDTAKSLOSNINGEN))
+        assertThat(sak.opprettetDato, dateMatcher(`is`(true)))
+        assertThat(sak.finnesIGsak, `is`(true))
 
     }
 

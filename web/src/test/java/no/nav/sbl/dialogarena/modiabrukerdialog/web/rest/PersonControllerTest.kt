@@ -10,6 +10,7 @@ import no.nav.kodeverk.consumer.fim.kodeverk.KodeverkmanagerBi
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.organisasjonsEnhetV2.OrganisasjonEnhetV2Service
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.pdl.PdlOppslagService
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.pdl.generated.HentPerson
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.kodeverk.StandardKodeverk
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Tilgangskontroll
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.TilgangskontrollContext
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.TilgangskontrollMock
@@ -51,9 +52,10 @@ internal class PersonControllerTest {
     private val tilgangskontrollUtenTPSContext: TilgangskontrollContext = mock()
     private val tilgangskontrollUtenTPS = Tilgangskontroll(tilgangskontrollUtenTPSContext)
     private val tilgangskontroll: Tilgangskontroll = TilgangskontrollMock.get()
+    private val standardKodeverk: StandardKodeverk = mock()
 
     private val service = DefaultPersonKjerneinfoService(personV3, mapper, tilgangskontrollUtenTPS, organisasjonenhetV2Service)
-    private val controller = PersonController(service, kodeverk, tilgangskontroll, pdlOppslagService)
+    private val controller = PersonController(service, kodeverk, tilgangskontroll, pdlOppslagService, standardKodeverk)
 
     @BeforeEach
     fun before() {
