@@ -26,7 +26,7 @@ class VergemalControllerTest {
     fun `Henter vergemål`() {
         whenever(vergemalService.hentVergemal(any())).thenReturn(listOf(PdlVerge(
                 ident = VERGES_IDENT,
-                personnavn = HentPersonVergemaalEllerFullmakt.Personnavn2(
+                personnavn = HentPersonVergemaalEllerFullmakt.Personnavn(
                         fornavn = "",
                         mellomnavn = null,
                         etternavn = ""
