@@ -15,7 +15,6 @@ private const val TYPE_KODEREF = "voksen"
 private const val EMBETE_KODEREF = "fylkesmannenIHedmark"
 private const val VERGES_IDENT = "123"
 private const val VERGES_NAVN = "Arne"
-private const val PDL_VERGES_FNR_MANGLENDE_DATA = "00000000000"
 
 class PdlVergemalServiceTest {
     private val pdl: PdlOppslagService = mock()
@@ -47,8 +46,8 @@ class PdlVergemalServiceTest {
     @DisplayName("Med vergemål med ufullstendig data")
     @Test
     fun `Verges fodselsnummer satt til 0`() {
-        whenever(pdl.hentPersonVergemaalEllerFullmakt(any())).thenReturn(listOf(getVergeMockManglendeData(PDL_VERGES_FNR_MANGLENDE_DATA)))
-        val vergemal: List<PdlVerge> = pdlVergemalService.hentVergemal(PDL_VERGES_FNR_MANGLENDE_DATA)
+        whenever(pdl.hentPersonVergemaalEllerFullmakt(any())).thenReturn(listOf(getVergeMockManglendeData(pdlVergemalService.PDL_VERGES_FNR_MANGLENDE_DATA)))
+        val vergemal: List<PdlVerge> = pdlVergemalService.hentVergemal(pdlVergemalService.PDL_VERGES_FNR_MANGLENDE_DATA)
         val verge: PdlVerge = vergemal[0]
 
         assertEquals(null, verge.getIdent())
