@@ -34,6 +34,8 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.server.ResponseStatusException
 import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+import java.time.format.DateTimeFormatter.ISO_DATE_TIME
 
 private const val TPS_UKJENT_VERDI = "???"
 private const val DATO_TID_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS"
@@ -122,8 +124,8 @@ class PersonController @Autowired constructor(
         val vergesaktype: String?,
         val omfang: String?,
         val embete: String?,
-        val gyldighetstidspunkt: LocalDateTime?,
-        val opphoerstidspunkt: LocalDateTime?
+        val gyldighetstidspunkt: String?,
+        val opphoerstidspunkt: String?
     )
     data class PersonnavnDTO(
         val fornavn: String,
@@ -143,8 +145,8 @@ class PersonController @Autowired constructor(
                     vergesaktype = it.type,
                     omfang = it.vergeEllerFullmektig.omfang,
                     embete = it.embete,
-                    gyldighetstidspunkt = it.folkeregistermetadata?.gyldighetstidspunkt?.value,
-                    opphoerstidspunkt = it.folkeregistermetadata?.opphoerstidspunkt?.value
+                    gyldighetstidspunkt = it.folkeregistermetadata?.gyldighetstidspunkt?.value?.format(ISO_DATE_TIME),
+                    opphoerstidspunkt = it.folkeregistermetadata?.opphoerstidspunkt?.value?.format(ISO_DATE_TIME)
                 )
             }
     }
