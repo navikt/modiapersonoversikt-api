@@ -2,6 +2,7 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.vergemal
 
 import no.nav.kjerneinfo.consumer.fim.person.vergemal.PdlVergemalService
 import no.nav.kjerneinfo.consumer.fim.person.vergemal.domain.PdlVerge
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.pdl.generated.HentPersonVergemaalEllerFullmakt
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Policies
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Tilgangskontroll
 import no.nav.sbl.dialogarena.naudit.Audit
@@ -34,7 +35,7 @@ class VergemalController @Autowired constructor(private val vergemalService: Pdl
         return vergemal.map {
             mapOf(
                     "ident" to it.ident,
-                    "navn" to it.personnavn,
+                    "navn" to it.personnavn?.let { navn -> getNavn(navn) },
                     "embete" to it.embete,
                     "mandattype" to it.omfang,
                     "vergesakstype" to it.vergesakstype,
@@ -44,5 +45,13 @@ class VergemalController @Autowired constructor(private val vergemalService: Pdl
                     )
             )
         }
+    }
+
+    private fun getNavn(personnavn: HentPersonVergemaalEllerFullmakt.Personnavn): Map<String, String> {
+        return mapOf(
+                "sammensatt" to with(personnavn) {
+                    listOfNotNull(fornavn, mellomnavn, etternavn).joinToString(" ")
+                }
+        )
     }
 }
