@@ -9,8 +9,6 @@ class PdlVergemalService(
     private val pdl: PdlOppslagService
     ) {
 
-    val PDL_VERGES_FNR_MANGLENDE_DATA = "00000000000"
-
     fun hentVergemal(fodselsnummer: String): List<PdlVerge> {
         val hentVergeResponse: List<HentPersonVergemaalEllerFullmakt.VergemaalEllerFremtidsfullmakt> = hentVergemalFraPdl(fodselsnummer)
         return hentVergeResponse
@@ -42,8 +40,7 @@ class PdlVergemalService(
     private fun getIdentFromVerge(verge: HentPersonVergemaalEllerFullmakt.VergeEllerFullmektig?): String? {
         val vergeAktoer = verge
         return if (vergeAktoer is HentPersonVergemaalEllerFullmakt.VergeEllerFullmektig) {
-            val ident = vergeAktoer.motpartsPersonident
-            if (ident == PDL_VERGES_FNR_MANGLENDE_DATA) null else ident
+            return vergeAktoer.motpartsPersonident
         } else {
             throw RuntimeException("Ident for vegemal er av ukjent type")
         }

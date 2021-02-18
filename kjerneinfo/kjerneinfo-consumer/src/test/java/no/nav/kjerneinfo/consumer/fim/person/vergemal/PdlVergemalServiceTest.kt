@@ -8,7 +8,6 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.pdl.generated.HentNav
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.pdl.PdlOppslagService
 import org.junit.jupiter.api.Test
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.pdl.generated.HentPersonVergemaalEllerFullmakt
-import org.junit.jupiter.api.Nested
 import kotlin.test.assertEquals
 
 private const val OMFANG_KODEREF = "personligeInteresser"
@@ -31,29 +30,15 @@ class PdlVergemalServiceTest {
         assertEquals(0, vergemal.size)
     }
 
-    @Nested
-    inner class MedVergemal {
-        @Test
-        fun `Henter informasjon om verge fra PDL`() {
-            whenever(pdl.hentPersonVergemaalEllerFullmakt(any())).thenReturn(listOf(getVergeMock(VERGES_IDENT)))
-            whenever(pdl.hentNavnBolk(any())).thenReturn(mockPersonnavnForVerge())
-            val vergemal: List<PdlVerge> = pdlVergemalService.hentVergemal(VERGES_IDENT)
-            val verge: PdlVerge = vergemal[0]
+    @Test
+    fun `Henter informasjon om verge fra PDL`() {
+        whenever(pdl.hentPersonVergemaalEllerFullmakt(any())).thenReturn(listOf(getVergeMock(VERGES_IDENT)))
+        whenever(pdl.hentNavnBolk(any())).thenReturn(mockPersonnavnForVerge())
+        val vergemal: List<PdlVerge> = pdlVergemalService.hentVergemal(VERGES_IDENT)
+        val verge: PdlVerge = vergemal[0]
 
-            assertEquals(VERGES_IDENT, verge.ident)
-            assertEquals(VERGES_NAVN, verge.personnavn?.fornavn)
-        }
-
-        @Test
-        fun `Verges fodselsnummer satt til 0`() {
-            whenever(pdl.hentPersonVergemaalEllerFullmakt(any())).thenReturn(listOf(getVergeMock(pdlVergemalService.PDL_VERGES_FNR_MANGLENDE_DATA)))
-            whenever(pdl.hentNavnBolk(any())).thenReturn(mockPersonnavnForVerge())
-            val vergemal: List<PdlVerge> = pdlVergemalService.hentVergemal(pdlVergemalService.PDL_VERGES_FNR_MANGLENDE_DATA)
-            val verge: PdlVerge = vergemal[0]
-
-            assertEquals(null, verge.ident)
-            assertEquals(null, verge.personnavn?.fornavn)
-        }
+        assertEquals(VERGES_IDENT, verge.ident)
+        assertEquals(VERGES_NAVN, verge.personnavn?.fornavn)
     }
 
     private fun getVergeMock(ident: String): HentPersonVergemaalEllerFullmakt.VergemaalEllerFremtidsfullmakt {
