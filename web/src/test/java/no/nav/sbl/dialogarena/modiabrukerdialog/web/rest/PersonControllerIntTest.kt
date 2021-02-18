@@ -19,7 +19,7 @@ import kotlin.test.assertEquals
 
 internal class PersonControllerIntTest {
     @Test
-    fun test() {
+    fun `verifiserer at informasjon fra pdl blir riktig merget i personcontroller`() {
         val clock = Clock.fixed(Instant.parse("2020-04-20T12:00:00.00Z"), ZoneId.systemDefault())
         val kjerneinfoMock: PersonKjerneinfoServiceBi = mock()
         val pdlMock: PdlOppslagService = mock()
@@ -47,6 +47,19 @@ internal class PersonControllerIntTest {
             advokatSomKontakt = advokatSomKontakt
         )
         val kontaktiformasjonForDoedsbo: List<HentPerson.KontaktinformasjonForDoedsbo> = listOf(pdldodsbo)
+        val vergemal = HentPerson.VergemaalEllerFremtidsfullmakt(
+            type = null,
+            embete = null,
+            vergeEllerFullmektig = HentPerson.VergeEllerFullmektig(
+                navn = HentPerson.Personnavn2("Fornavn", "Mellomnavn", "Etternavn"),
+                motpartsPersonident = null,
+                omfang = null,
+                omfangetErInnenPersonligOmraade = false
+            ),
+            folkeregistermetadata = null,
+            metadata = HentPerson.Metadata2(null)
+        )
+        val vergemaalEllerFremtidsfullmakt: List<HentPerson.VergemaalEllerFremtidsfullmakt> = listOf(vergemal)
 
         whenever(kjerneinfoMock.hentKjerneinformasjon(any())).thenReturn(HentKjerneinformasjonResponse()
             .apply {
@@ -76,7 +89,8 @@ internal class PersonControllerIntTest {
                             )
                         )
                     )
-                )
+                ),
+                vergemaalEllerFremtidsfullmakt = vergemaalEllerFremtidsfullmakt
             )
         )
 
@@ -91,12 +105,14 @@ internal class PersonControllerIntTest {
         val person = personController.hent("10108000398")
         val fornavn = person.deepget("kontaktinformasjonForDoedsbo.0.adressat.advokatSomAdressat.kontaktperson.fornavn")
         val telefonnummer = person.deepget("telefonnummer.0") as Telefonnummer
+        val vergeSammensattNavn = person.deepget("vergemal.0") as PersonController.VergemalDTO
 
         assertEquals("Ola", fornavn)
         assertEquals("+47", telefonnummer.retningsnummer?.kodeRef)
         assertEquals("10101010", telefonnummer.identifikator)
         assertEquals("2020-04-20", telefonnummer.sistEndret)
         assertEquals("BRUKER", telefonnummer.sistEndretAv)
+        assertEquals("Fornavn Mellomnavn Etternavn", vergeSammensattNavn.navn?.sammensattnavn)
     }
 }
 

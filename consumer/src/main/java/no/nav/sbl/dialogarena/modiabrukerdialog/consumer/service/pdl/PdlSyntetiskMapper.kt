@@ -14,7 +14,7 @@ object PdlSyntetiskMapper {
     // TODO TpsFnr skal kunne være for fiktive personer (e.g. Testfamilien).
     // TODO PdlFnr er genererte syntetiske fnr/personer.
     private val fnrmap : Map<TpsFnr, List<PdlFnr>> = mapOf(
-            TpsFnr("10108000398") to listOf(PdlFnr("12028213016")), // Aremark Testfamilien
+            TpsFnr("10108000398") to listOf(PdlFnr("19096118867")), // Aremark Testfamilien
             TpsFnr("06128074978") to listOf(), // Trøgstad Testfamilien
             TpsFnr("07063000250") to listOf() // Moss Testfamilien
     )
