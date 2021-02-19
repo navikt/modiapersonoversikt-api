@@ -1,7 +1,7 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.api.utils;
 
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.Sak;
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.gsak.GsakKodeverk;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.saker.Sak;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.saker.GsakKodeverk;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.kodeverk.StandardKodeverk;
 import org.joda.time.DateTime;
 import org.junit.jupiter.api.BeforeEach;
@@ -11,7 +11,7 @@ import org.mockito.Mock;
 import java.util.*;
 
 import static java.util.Arrays.asList;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.Sak.*;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.saker.Sak.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.mockito.Mockito.when;

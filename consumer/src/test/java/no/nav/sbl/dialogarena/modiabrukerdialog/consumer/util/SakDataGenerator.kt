@@ -1,9 +1,8 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util
 
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.Sak
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.saker.Sak
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.saker.mediation.SakDto
 import org.joda.time.DateTime
-import java.time.LocalDateTime
 import java.time.OffsetDateTime
 import java.util.ArrayList
 

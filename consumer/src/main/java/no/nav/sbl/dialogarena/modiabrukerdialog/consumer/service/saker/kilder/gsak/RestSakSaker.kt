@@ -1,24 +1,23 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.saker.kilder.gsak
 
 import no.nav.common.auth.subject.SubjectHandler
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.Sak
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.Sak.FAGSYSTEM_FOR_OPPRETTELSE_AV_GENERELL_SAK
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.saker.Sak
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.saker.Sak.FAGSYSTEM_FOR_OPPRETTELSE_AV_GENERELL_SAK
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.FodselnummerAktorService
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.saker.SakerKilde
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.saker.mediation.OpprettSakDto
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.saker.mediation.SakApiGateway
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.saker.mediation.SakDto
 import org.joda.time.DateTime
-import java.time.Clock
 import java.time.OffsetDateTime
 
-class RestGsakSaker(
+class RestSakSaker(
     private val sakApiGateway: SakApiGateway,
-    private val fodselnummerAktorService: FodselnummerAktorService,
-    private val clock: Clock = Clock.systemDefaultZone()
-) : GsakSaker {
+    private val fodselnummerAktorService: FodselnummerAktorService
+): SakerKilde {
     override val kildeNavn: String = "SAK"
 
-    override fun leggTilSaker(fnr: String, saker: MutableList<Sak>) {
+     override fun leggTilSaker(fnr: String, saker: MutableList<Sak>) {
         val response = sakApiGateway.hentSaker(
             requireNotNull(fodselnummerAktorService.hentAktorIdForFnr(fnr)) {
                 "Kan ikke hente ut saker når mapping til aktorId feilet"
@@ -28,7 +27,7 @@ class RestGsakSaker(
         saker.addAll(gsakSaker)
     }
 
-    override fun opprettSak(fnr: String, sak: Sak): String {
+     fun opprettSak(fnr: String, sak: Sak): String {
         val ident = SubjectHandler.getIdent().orElseThrow { IllegalStateException("Fant ikke ident") }
         val opprettetSak = sakApiGateway.opprettSak(
             OpprettSakDto(
@@ -47,6 +46,10 @@ class RestGsakSaker(
     }
 
     companion object {
+        const val VEDTAKSLOSNINGEN = "FS36"
+        const val SAKSTYPE_GENERELL = "GEN"
+        const val SAKSTYPE_MED_FAGSAK = "MFS"
+
         val TIL_SAK = { sakDto: SakDto ->
             Sak().apply {
                 opprettetDato = sakDto.opprettetTidspunkt?.let { convertJavaDateTimeToJoda(it) }
@@ -61,18 +64,18 @@ class RestGsakSaker(
 
         private fun getSakstype(sakDto: SakDto): String {
             return when (sakDto.applikasjon) {
-                GsakSaker.VEDTAKSLOSNINGEN -> GsakSaker.SAKSTYPE_MED_FAGSAK
+                VEDTAKSLOSNINGEN -> SAKSTYPE_MED_FAGSAK
                 else -> {
                     if (sakDto.fagsakNr != null)
-                        GsakSaker.SAKSTYPE_MED_FAGSAK
+                        SAKSTYPE_MED_FAGSAK
                     else
-                        GsakSaker.SAKSTYPE_GENERELL
+                        SAKSTYPE_GENERELL
                 }
             }
         }
 
         private fun getFagsystemSakId(sakDto: SakDto): String? {
-            return if (GsakSaker.VEDTAKSLOSNINGEN == sakDto.applikasjon && sakDto.fagsakNr == null) sakDto.id.toString() else sakDto.fagsakNr
+            return if (VEDTAKSLOSNINGEN == sakDto.applikasjon && sakDto.fagsakNr == null) sakDto.id.toString() else sakDto.fagsakNr
         }
 
         private fun convertJavaDateTimeToJoda(dateTime: OffsetDateTime): DateTime {

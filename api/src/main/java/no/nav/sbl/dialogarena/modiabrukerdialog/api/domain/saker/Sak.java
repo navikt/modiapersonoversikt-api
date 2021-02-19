@@ -1,4 +1,4 @@
-package no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak;
+package no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.saker;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.joda.time.DateTime;
@@ -9,9 +9,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.function.Function;
 import java.util.function.Predicate;
-
-import static java.util.Arrays.asList;
-import static java.util.Collections.unmodifiableList;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Sak implements Serializable, Comparable<Sak> {

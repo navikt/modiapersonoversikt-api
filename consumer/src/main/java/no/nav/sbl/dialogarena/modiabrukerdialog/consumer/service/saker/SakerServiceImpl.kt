@@ -2,23 +2,19 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.saker
 
 import no.nav.common.auth.subject.SubjectHandler
 import no.nav.common.log.MDCConstants
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.Sak
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.saker.Sak
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.exceptions.JournalforingFeilet
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.FodselnummerAktorService
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.gsak.GsakKodeverk
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.gsak.SakerService
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.saker.GsakKodeverk
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.saker.SakerService
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.kodeverk.StandardKodeverk
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.pdl.PdlOppslagService
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.psak.PsakService
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.SakerUtils
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.saker.kilder.*
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.saker.kilder.gsak.GsakSaker
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.saker.kilder.gsak.RestGsakSaker
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.saker.kilder.gsak.RestSakSaker
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.saker.mediation.SakApiGateway
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.UnleashService
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.behandlehenvendelse.BehandleHenvendelsePortType
-import no.nav.tjeneste.virksomhet.behandlesak.v1.BehandleSakV1
-import no.nav.tjeneste.virksomhet.sak.v1.SakV1
 import no.nav.virksomhet.tjenester.sak.arbeidogaktivitet.v1.ArbeidOgAktivitet
 import org.slf4j.LoggerFactory
 import org.slf4j.MDC
@@ -33,12 +29,6 @@ private val logger = LoggerFactory.getLogger(SakerServiceImpl::class.java)
 
 @ExperimentalContracts
 class SakerServiceImpl : SakerService {
-    @Autowired
-    private lateinit var sakV1: SakV1
-
-    @Autowired
-    private lateinit var behandleSakWS: BehandleSakV1
-
     @Autowired
     private lateinit var gsakKodeverk: GsakKodeverk
 
@@ -60,13 +50,10 @@ class SakerServiceImpl : SakerService {
     @Autowired
     private lateinit var fodselnummerAktorService: FodselnummerAktorService
 
-    @Autowired
-    private lateinit var unleashService: UnleashService
-
     private lateinit var arenaSaker: ArenaSaker
     private lateinit var bidragSaker: BidragSaker
     private lateinit var generelleSaker: GenerelleSaker
-    private lateinit var restSakSaker: RestGsakSaker
+    private lateinit var restSakSaker: RestSakSaker
     private lateinit var oppfolgingsSaker: OppfolgingsSaker
     private lateinit var pensjonSaker: PensjonSaker
 
@@ -75,7 +62,7 @@ class SakerServiceImpl : SakerService {
         arenaSaker = ArenaSaker(arbeidOgAktivitet)
         bidragSaker = BidragSaker()
         generelleSaker = GenerelleSaker()
-        restSakSaker = RestGsakSaker(sakApiGateway, fodselnummerAktorService)
+        restSakSaker = RestSakSaker(sakApiGateway, fodselnummerAktorService)
         oppfolgingsSaker = OppfolgingsSaker()
         pensjonSaker = PensjonSaker(psakService)
 
@@ -83,12 +70,12 @@ class SakerServiceImpl : SakerService {
 
     override fun hentSaker(fnr: String): SakerService.Resultat {
         requireFnrNotNullOrBlank(fnr)
-        val (gsakSaker, pesysSaker) = inParallel(
+        val (restSakSaker, pesysSaker) = inParallel(
             { hentSammensatteSakerResultat(fnr) },
             { hentPensjonSakerResultat(fnr) }
         )
 
-        return slaSammenGsakPesysSaker(gsakSaker, pesysSaker)
+        return slaSammenGsakPesysSaker(restSakSaker, pesysSaker)
     }
 
     override fun hentSammensatteSaker(fnr: String): List<Sak> {
@@ -173,13 +160,13 @@ class SakerServiceImpl : SakerService {
         }
 
         private fun slaSammenGsakPesysSaker(
-            gsak: SakerService.Resultat,
-            pesys: SakerService.Resultat
+                restSak: SakerService.Resultat,
+                pesys: SakerService.Resultat
         ): SakerService.Resultat {
             val pesysIder = pesys.saker.map { it.fagsystemSaksId }
             return SakerService.Resultat(
-                (pesys.saker + gsak.saker.filter { !pesysIder.contains(it.fagsystemSaksId) }).toMutableList(),
-                (pesys.feiledeSystemer + gsak.feiledeSystemer).toMutableList()
+                (pesys.saker + restSak.saker.filter { !pesysIder.contains(it.fagsystemSaksId) }).toMutableList(),
+                (pesys.feiledeSystemer + restSak.feiledeSystemer).toMutableList()
             )
         }
 

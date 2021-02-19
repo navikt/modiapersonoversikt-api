@@ -6,28 +6,18 @@ import io.mockk.impl.annotations.MockK
 import no.nav.common.auth.subject.SubjectHandler
 import no.nav.common.log.MDCConstants
 import no.nav.common.utils.EnvironmentUtils
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.Sak
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.Sak.*
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.saker.Sak
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.saker.Sak.*
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.FodselnummerAktorService
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.gsak.GsakKodeverk
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.saker.GsakKodeverk
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.kodeverk.StandardKodeverk
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.pdl.PdlOppslagService
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.psak.PsakService
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.saker.mediation.SakApiGateway
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.saker.mediation.SakDto
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.Feature
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.UnleashService
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.SakDataGenerator
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.SakDataGenerator.Companion.createOppfolgingSaksliste
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.SakDataGenerator.Companion.createSaksliste
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.behandlehenvendelse.BehandleHenvendelsePortType
-import no.nav.tjeneste.virksomhet.behandlesak.v1.BehandleSakV1
-import no.nav.tjeneste.virksomhet.behandlesak.v1.meldinger.WSOpprettSakRequest
 import no.nav.tjeneste.virksomhet.behandlesak.v1.meldinger.WSOpprettSakResponse
-import no.nav.tjeneste.virksomhet.sak.v1.SakV1
-import no.nav.tjeneste.virksomhet.sak.v1.informasjon.WSFagomraader
-import no.nav.tjeneste.virksomhet.sak.v1.informasjon.WSFagsystemer
-import no.nav.tjeneste.virksomhet.sak.v1.informasjon.WSSak
-import no.nav.tjeneste.virksomhet.sak.v1.informasjon.WSSakstyper
-import no.nav.tjeneste.virksomhet.sak.v1.meldinger.WSFinnSakResponse
 import no.nav.virksomhet.gjennomforing.sak.arbeidogaktivitet.v1.EndringsInfo
 import no.nav.virksomhet.gjennomforing.sak.arbeidogaktivitet.v1.Fagomradekode
 import no.nav.virksomhet.gjennomforing.sak.arbeidogaktivitet.v1.Sakstypekode
@@ -39,7 +29,6 @@ import org.hamcrest.CoreMatchers.not
 import org.hamcrest.MatcherAssert.assertThat
 import org.joda.time.DateTime
 import org.joda.time.LocalDate
-import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.BeforeEach
@@ -52,9 +41,6 @@ import kotlin.streams.toList
 
 @ExperimentalContracts
 class SakerServiceImplTest {
-
-    @MockK
-    private lateinit var behandleSak: BehandleSakV1
 
     @MockK
     private lateinit var gsakKodeverk: GsakKodeverk
@@ -104,7 +90,7 @@ class SakerServiceImplTest {
 
     @Test
     fun `transformerer response til saksliste`() {
-        every { sakApiGateway.hentSaker(any()) } returns SakDataGenerator.createSaksliste()
+        every { sakApiGateway.hentSaker(any()) } returns createSaksliste()
         val saksliste: List<Sak> = sakerService.hentSammensatteSakerResultat(FNR).saker
         assertThat(saksliste[0].saksId, `is`(SakId_1))
         assertThat(saksliste[3].fagsystemKode, `is`(""))
@@ -133,7 +119,7 @@ class SakerServiceImplTest {
     @Test
     fun `oppretter ikke generell oppfolgingssak og fjerner generell oppfolgingssak dersom fagsaker inneholder oppfolgingssak`() {
 
-        every { sakApiGateway.hentSaker(any()) } returns SakDataGenerator.createOppfolgingSaksliste()
+        every { sakApiGateway.hentSaker(any()) } returns createOppfolgingSaksliste()
         val saker = sakerService.hentSammensatteSakerResultat(FNR).saker.stream()
             .filter(harTemaKode(TEMAKODE_OPPFOLGING)).toList()
         assertThat(saker.size, `is`(1))
@@ -282,54 +268,11 @@ class SakerServiceImplTest {
         }
     }
 
-
     companion object {
-        const val VEDTAKSLOSNINGEN = "FS36"
-        val FIRE_DAGER_SIDEN = DateTime.now().minusDays(4) //joda.DateTime
         const val FNR = "fnr"
         const val BEHANDLINGSKJEDEID = "behandlingsKjedeId"
         const val SAKS_ID = "123"
         const val SakId_1 = "1"
-        const val FagsystemSakId_1 = "11"
-        const val SakId_2 = "2"
-        const val FagsystemSakId_2 = "22"
-        const val SakId_3 = "3"
-        const val FagsystemSakId_3 = "33"
-        const val SakId_4 = "4"
-        const val FagsystemSakId_4 = "44"
-
-        private fun createSaksliste(): List<WSSak> {
-            return listOf(
-                WSSak()
-                    .withSakId(SakId_1)
-                    .withFagsystemSakId(FagsystemSakId_1)
-                    .withFagomraade(WSFagomraader().withValue(GODKJENTE_TEMA_FOR_GENERELL_SAK[0]))
-                    .withOpprettelsetidspunkt(FIRE_DAGER_SIDEN)
-                    .withSakstype(WSSakstyper().withValue(SAKSTYPE_GENERELL))
-                    .withFagsystem(WSFagsystemer().withValue(FAGSYSTEM_FOR_OPPRETTELSE_AV_GENERELL_SAK)),
-                WSSak()
-                    .withSakId(SakId_2)
-                    .withFagsystemSakId(FagsystemSakId_2)
-                    .withFagomraade(WSFagomraader().withValue(GODKJENTE_TEMA_FOR_GENERELL_SAK[1]))
-                    .withOpprettelsetidspunkt(DateTime.now().minusDays(3))
-                    .withSakstype(WSSakstyper().withValue(SAKSTYPE_GENERELL))
-                    .withFagsystem(WSFagsystemer().withValue(FAGSYSTEM_FOR_OPPRETTELSE_AV_GENERELL_SAK)),
-                WSSak()
-                    .withSakId(SakId_3)
-                    .withFagsystemSakId(FagsystemSakId_3)
-                    .withFagomraade(WSFagomraader().withValue("AAP"))
-                    .withOpprettelsetidspunkt(DateTime.now().minusDays(5))
-                    .withSakstype(WSSakstyper().withValue("Fag"))
-                    .withFagsystem(WSFagsystemer().withValue(GODKJENTE_FAGSYSTEMER_FOR_FAGSAKER[0])),
-                WSSak()
-                    .withSakId(SakId_4)
-                    .withFagsystemSakId(FagsystemSakId_4)
-                    .withFagomraade(WSFagomraader().withValue("STO"))
-                    .withOpprettelsetidspunkt(DateTime.now().minusDays(5))
-                    .withSakstype(WSSakstyper().withValue(SAKSTYPE_GENERELL))
-                    .withFagsystem(WSFagsystemer().withValue(""))
-            )
-        }
 
         fun lagSak(): Sak {
             val sak = Sak()
