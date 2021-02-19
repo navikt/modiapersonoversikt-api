@@ -22,7 +22,7 @@ import org.junit.jupiter.api.assertThrows
 import java.time.*
 
 
-class RestApiSakerTest {
+class RestSakSakerTest {
     val VEDTAKSLOSNINGEN = "FS36"
     val FIRE_DAGER_SIDEN = DateTime.now().minusDays(4) //joda.DateTime
     val FNR = "fnr"
