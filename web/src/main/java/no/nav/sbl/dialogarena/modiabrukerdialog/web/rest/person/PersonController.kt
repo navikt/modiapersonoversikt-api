@@ -124,8 +124,7 @@ class PersonController @Autowired constructor(
         val vergesaktype: String?,
         val omfang: String?,
         val embete: String?,
-        val gyldighetstidspunkt: String?,
-        val opphoerstidspunkt: String?
+        val virkningsperiode: PeriodeDTO
     )
     data class PersonnavnDTO(
         val fornavn: String,
@@ -134,6 +133,10 @@ class PersonController @Autowired constructor(
     ) {
         val sammensattnavn = listOfNotNull(fornavn, mellomnavn, etternavn).joinToString(" ")
     }
+    data class PeriodeDTO(
+        val gyldighetstidspunkt: String?,
+        val opphoerstidspunkt: String?
+    )
     private fun hentVergemal(vergemal: List<HentPerson.VergemaalEllerFremtidsfullmakt>): List<VergemalDTO> {
         return vergemal
             .map {
@@ -145,8 +148,10 @@ class PersonController @Autowired constructor(
                     vergesaktype = it.type,
                     omfang = it.vergeEllerFullmektig.omfang,
                     embete = it.embete,
-                    gyldighetstidspunkt = it.folkeregistermetadata?.gyldighetstidspunkt?.value?.format(ISO_DATE_TIME),
-                    opphoerstidspunkt = it.folkeregistermetadata?.opphoerstidspunkt?.value?.format(ISO_DATE_TIME)
+                    virkningsperiode = PeriodeDTO(
+                        gyldighetstidspunkt = it.folkeregistermetadata?.gyldighetstidspunkt?.value?.format(ISO_DATE_TIME),
+                        opphoerstidspunkt = it.folkeregistermetadata?.opphoerstidspunkt?.value?.format(ISO_DATE_TIME)
+                    )
                 )
             }
     }
