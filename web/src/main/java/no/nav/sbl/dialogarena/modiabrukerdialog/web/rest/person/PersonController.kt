@@ -132,7 +132,7 @@ class PersonController @Autowired constructor(
         val mellomnavn: String?,
         val etternavn: String
     ) {
-        val sammensattnavn = listOfNotNull(fornavn, mellomnavn, etternavn).joinToString(" ")
+        val sammensatt = listOfNotNull(fornavn, mellomnavn, etternavn).joinToString(" ")
     }
     private fun hentVergemal(vergemal: List<HentPerson.VergemaalEllerFremtidsfullmakt>): List<VergemalDTO> {
         return vergemal
