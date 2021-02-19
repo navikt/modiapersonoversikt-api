@@ -496,8 +496,10 @@ class RestOppgaveBehandlingServiceImplTest {
 
         @Test
         fun `skal legge tilbake oppgave`() {
+            // Bygger opp `tilordnetRessurs` vha buildString for å sikre at jvm string-pool ikke gjenbruker instansen
+            val tilordnetRessurs = buildString { append("Z999999") }
             val testoppgave = dummyOppgave
-                .copy(tilordnetRessurs = "Z999999", aktoerId = "00007063000250000")
+                .copy(tilordnetRessurs = tilordnetRessurs, aktoerId = "00007063000250000")
             every { apiClient.hentOppgave(any(), any()) } returns testoppgave.toGetOppgaveResponseJsonDTO()
             every { apiClient.endreOppgave(any(), any(), any()) } returns testoppgave.toPutOppgaveResponseJsonDTO()
             every { ansattService.hentAnsattNavn(eq("Z999999")) } returns "Fornavn Etternavn"

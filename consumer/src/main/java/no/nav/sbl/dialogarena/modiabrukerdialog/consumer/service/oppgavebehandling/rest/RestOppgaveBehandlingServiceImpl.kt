@@ -255,7 +255,7 @@ class RestOppgaveBehandlingServiceImpl(
         val ident: String = SubjectHandler.getIdent().orElseThrow { IllegalStateException("Fant ikke ident") }
         val oppgave = hentOppgaveJsonDTO(request.oppgaveId)
 
-        if (oppgave.tilordnetRessurs !== ident) {
+        if (oppgave.tilordnetRessurs != ident) {
             val feilmelding = "Innlogget saksbehandler $ident er ikke tilordnet oppgave ${request.oppgaveId}, den er tilordnet: ${oppgave.tilordnetRessurs}"
             throw ResponseStatusException(HttpStatus.FORBIDDEN, feilmelding)
         }
