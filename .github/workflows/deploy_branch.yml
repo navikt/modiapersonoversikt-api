@@ -9,8 +9,8 @@ on:
 env:
   IMAGE: docker.pkg.github.com/${{ github.repository }}/modiapersonoversikt-api:${{ github.sha }}
   TZ: Europe/Oslo
-  isDeploy: true
-  deploy_namespace: q0
+  isDeploy: false
+  deploy_namespace: q6
 
 jobs:
   build:
@@ -31,13 +31,13 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          mvn -P ci -B test --settings .github/maven-settings.xml
+          mvn -T1C -P ci -B test --settings .github/maven-settings.xml
       - name: Publish Docker image
         if: env.isDeploy == 'true'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          mvn -P ci -B package --settings .github/maven-settings.xml -DskipTests
+          mvn -T1C -P ci -B package --settings .github/maven-settings.xml -DskipTests
           docker login docker.pkg.github.com -u ${GITHUB_REPOSITORY} -p ${GITHUB_TOKEN}
           docker build --tag ${IMAGE} .
           docker push ${IMAGE}
