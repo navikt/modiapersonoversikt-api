@@ -1,4 +1,4 @@
-package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.saker.kilder.gsak
+package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.saker
 
 import io.mockk.every
 import io.mockk.mockk
@@ -6,6 +6,7 @@ import io.mockk.verify
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.saker.Sak
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.FodselnummerAktorService
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.http.SubjectHandlerUtil
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.saker.kilder.RestSakSaker
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.saker.mediation.OpprettSakDto
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.saker.mediation.SakApiGateway
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.saker.mediation.SakDto

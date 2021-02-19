@@ -1,4 +1,4 @@
-package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.saker.kilder.gsak
+package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.saker.kilder
 
 import no.nav.common.auth.subject.SubjectHandler
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.saker.Sak
