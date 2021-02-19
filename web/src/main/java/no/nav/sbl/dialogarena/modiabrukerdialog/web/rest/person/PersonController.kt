@@ -121,7 +121,7 @@ class PersonController @Autowired constructor(
     data class VergemalDTO(
         val ident: String?,
         val navn: PersonnavnDTO?,
-        val vergesaktype: String?,
+        val vergesakstype: String?,
         val omfang: String?,
         val embete: String?,
         val gyldighetstidspunkt: String?,
@@ -142,7 +142,7 @@ class PersonController @Autowired constructor(
                     navn = it.vergeEllerFullmektig.navn?.let { personnavn ->
                         PersonnavnDTO(personnavn.fornavn, personnavn.mellomnavn, personnavn.etternavn)
                     },
-                    vergesaktype = it.type,
+                    vergesakstype = it.type,
                     omfang = it.vergeEllerFullmektig.omfang,
                     embete = it.embete,
                     gyldighetstidspunkt = it.folkeregistermetadata?.gyldighetstidspunkt?.value?.format(ISO_DATE_TIME),
