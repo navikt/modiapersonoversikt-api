@@ -1,8 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util
 
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.saker.Sak
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.saker.mediation.SakDto
-import org.joda.time.DateTime
 import java.time.OffsetDateTime
 import java.util.ArrayList
 
@@ -51,26 +49,6 @@ internal class SakDataGenerator {
                             opprettetTidspunkt = earlierDateTimeWithOffSet(5))))
         }
 
-        fun lagSak(): Sak {
-            val sak = Sak()
-            sak.temaKode = "GEN"
-            sak.finnesIGsak = false
-            sak.fagsystemKode = Sak.FAGSYSTEM_FOR_OPPRETTELSE_AV_GENERELL_SAK
-            sak.sakstype = Sak.SAKSTYPE_GENERELL
-            sak.opprettetDato = DateTime.now()
-            return sak
-        }
-
-        fun lagSakUtenFagsystemId(): Sak {
-            val sak = Sak()
-            sak.temaKode = "STO"
-            sak.finnesIGsak = false
-            sak.fagsystemKode = ""
-            sak.sakstype = Sak.SAKSTYPE_GENERELL
-            sak.opprettetDato = DateTime.now()
-            return sak
-        }
-
 
         fun createOppfolgingSaksliste(): MutableList<SakDto> {
 
@@ -95,11 +73,7 @@ internal class SakDataGenerator {
 
         }
 
-        const val VEDTAKSLOSNINGEN = "FS36"
-        val FIRE_DAGER_SIDEN = DateTime.now().minusDays(4) //joda.DateTime
         const val FNR = "fnr"
-        const val BEHANDLINGSKJEDEID = "behandlingsKjedeId"
-        const val SAKS_ID = "123"
         const val SakId_1 = "1"
         const val FagsystemSakId_1 = "11"
         const val SakId_2 = "2"
@@ -107,7 +81,6 @@ internal class SakDataGenerator {
         const val SakId_3 = "3"
         const val FagsystemSakId_3 = "33"
         const val SakId_4 = "4"
-        const val FagsystemSakId_4 = "44"
 
     }
 
