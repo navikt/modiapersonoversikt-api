@@ -112,7 +112,7 @@ internal class PersonControllerIntTest {
         assertEquals("10101010", telefonnummer.identifikator)
         assertEquals("2020-04-20", telefonnummer.sistEndret)
         assertEquals("BRUKER", telefonnummer.sistEndretAv)
-        assertEquals("Fornavn Mellomnavn Etternavn", vergeSammensattNavn.navn?.sammensattnavn)
+        assertEquals("Fornavn Mellomnavn Etternavn", vergeSammensattNavn.navn?.sammensatt)
     }
 }
 
