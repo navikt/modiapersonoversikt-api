@@ -33,6 +33,9 @@ import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.server.ResponseStatusException
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+import java.time.format.DateTimeFormatter.ISO_DATE_TIME
 
 private const val TPS_UKJENT_VERDI = "???"
 private const val DATO_TID_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS"
@@ -63,6 +66,7 @@ class PersonController @Autowired constructor(
                     val pdlPerson: HentPerson.Person? = pdlOppslagService.hentPerson(fodselsnummer)
                     val kontaktinfoForDoedsbo = pdlPerson?.kontaktinformasjonForDoedsbo ?: emptyList()
                     val fullmakt = pdlPerson?.fullmakt ?: emptyList()
+                    val vergemal = pdlPerson?.vergemaalEllerFremtidsfullmakt ?: emptyList()
                     val pdlTelefonnummer = (pdlPerson?.telefonnummer ?: emptyList())
                         .sortedBy { it.prioritet }
                         .map(::getPdlTelefon)
@@ -92,7 +96,8 @@ class PersonController @Autowired constructor(
                         "kontaktinformasjon" to getTelefoner(person?.personfakta),
                         "telefonnummer" to pdlTelefonnummer,
                         "kontaktinformasjonForDoedsbo" to DoedsboMapping.mapKontaktinfoForDoedsbo(kontaktinfoForDoedsbo),
-                        "fullmakt" to hentFullmakter(fullmakt)
+                        "fullmakt" to hentFullmakter(fullmakt),
+                        "vergemal" to hentVergemal(vergemal)
                     )
                 } catch (exception: AuthorizationWithSikkerhetstiltakException) {
                     getBegrensetInnsyn(fodselsnummer, exception.message)
@@ -110,6 +115,39 @@ class PersonController @Autowired constructor(
                         }
                     }
                 }
+            }
+    }
+
+    data class VergemalDTO(
+        val ident: String?,
+        val navn: PersonnavnDTO?,
+        val vergesaktype: String?,
+        val omfang: String?,
+        val embete: String?,
+        val gyldighetstidspunkt: String?,
+        val opphoerstidspunkt: String?
+    )
+    data class PersonnavnDTO(
+        val fornavn: String,
+        val mellomnavn: String?,
+        val etternavn: String
+    ) {
+        val sammensattnavn = listOfNotNull(fornavn, mellomnavn, etternavn).joinToString(" ")
+    }
+    private fun hentVergemal(vergemal: List<HentPerson.VergemaalEllerFremtidsfullmakt>): List<VergemalDTO> {
+        return vergemal
+            .map {
+                VergemalDTO(
+                    ident = it.vergeEllerFullmektig.motpartsPersonident,
+                    navn = it.vergeEllerFullmektig.navn?.let { personnavn ->
+                        PersonnavnDTO(personnavn.fornavn, personnavn.mellomnavn, personnavn.etternavn)
+                    },
+                    vergesaktype = it.type,
+                    omfang = it.vergeEllerFullmektig.omfang,
+                    embete = it.embete,
+                    gyldighetstidspunkt = it.folkeregistermetadata?.gyldighetstidspunkt?.value?.format(ISO_DATE_TIME),
+                    opphoerstidspunkt = it.folkeregistermetadata?.opphoerstidspunkt?.value?.format(ISO_DATE_TIME)
+                )
             }
     }
 

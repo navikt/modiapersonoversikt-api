@@ -75,5 +75,26 @@ query($ident: ID!){
                 }
             }
         }
+        vergemaalEllerFremtidsfullmakt {
+            type
+            embete
+            vergeEllerFullmektig {
+                navn  {
+                    fornavn
+                    mellomnavn
+                    etternavn
+                }
+                motpartsPersonident
+                omfang
+                omfangetErInnenPersonligOmraade
+            }
+            folkeregistermetadata {
+                gyldighetstidspunkt
+                opphoerstidspunkt
+            }
+            metadata {
+                opplysningsId
+            }
+        }
     }
 }
