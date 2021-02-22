@@ -119,16 +119,15 @@ class SakerServiceImplTest {
     fun `oppretter ikke generell oppfolgingssak og fjerner generell oppfolgingssak dersom fagsaker inneholder oppfolgingssak`() {
         every { sakApiGateway.hentSaker(any()) } returns createOppfolgingSaksliste()
         val saker = sakerService.hentSammensatteSakerResultat(FNR).saker.stream()
-                .filter(harTemaKode(TEMAKODE_OPPFOLGING)).toList()
+            .filter(harTemaKode(TEMAKODE_OPPFOLGING)).toList()
         assertThat(saker.size, `is`(1))
         assertThat(saker[0].sakstype, not(`is`(SAKSTYPE_GENERELL)))
     }
 
     @Test
     fun `oppretter ìkke generell oppfolgingssak dersom denne finnes allerede selv om fagsaker ikke inneholder oppfolgingssak`() {
-
         val saker =
-                sakerService.hentSammensatteSaker(FNR).stream().filter(harTemaKode(TEMAKODE_OPPFOLGING)).toList()
+            sakerService.hentSammensatteSaker(FNR).stream().filter(Sak.harTemaKode(Sak.TEMAKODE_OPPFOLGING)).toList()
         assertThat(saker.size, `is`(1))
         assertThat(saker[0].sakstype, `is`(SAKSTYPE_GENERELL))
     }
@@ -139,14 +138,14 @@ class SakerServiceImplTest {
         val saksId = "123456"
         val dato = LocalDate.now().minusDays(1)
         every { arbeidOgAktivitet.hentSakListe(any()) } returns WSHentSakListeResponse().withSakListe(
-                no.nav.virksomhet.gjennomforing.sak.arbeidogaktivitet.v1.Sak()
-                        .withFagomradeKode(Fagomradekode().withKode(TEMAKODE_OPPFOLGING))
-                        .withSaksId(saksId)
-                        .withEndringsInfo(EndringsInfo().withOpprettetDato(dato))
-                        .withSakstypeKode(Sakstypekode().withKode("ARBEID"))
+            no.nav.virksomhet.gjennomforing.sak.arbeidogaktivitet.v1.Sak()
+                .withFagomradeKode(Fagomradekode().withKode(Sak.TEMAKODE_OPPFOLGING))
+                .withSaksId(saksId)
+                .withEndringsInfo(EndringsInfo().withOpprettetDato(dato))
+                .withSakstypeKode(Sakstypekode().withKode("ARBEID"))
         )
         val saker =
-                sakerService.hentSammensatteSaker(FNR).stream().filter(harTemaKode(TEMAKODE_OPPFOLGING)).toList()
+            sakerService.hentSammensatteSaker(FNR).stream().filter(Sak.harTemaKode(Sak.TEMAKODE_OPPFOLGING)).toList()
         assertThat(saker.size, `is`(1))
         assertThat(saker[0].saksIdVisning, `is`(saksId))
         assertThat(saker[0].opprettetDato, `is`(dato.toDateTimeAtStartOfDay()))
@@ -161,17 +160,17 @@ class SakerServiceImplTest {
         val opprettSakResponse = WSOpprettSakResponse()
         opprettSakResponse.sakId = SAKS_ID
         sakerService.knyttBehandlingskjedeTilSak(
-                FNR,
-                BEHANDLINGSKJEDEID,
-                sak,
-                valgtNavEnhet
+            FNR,
+            BEHANDLINGSKJEDEID,
+            sak,
+            valgtNavEnhet
         )
         verify(exactly = 1) {
             behandleHenvendelsePortType.knyttBehandlingskjedeTilSak(
-                    BEHANDLINGSKJEDEID,
-                    SAKS_ID,
-                    sak.temaKode,
-                    valgtNavEnhet
+                BEHANDLINGSKJEDEID,
+                SAKS_ID,
+                sak.temaKode,
+                valgtNavEnhet
             )
         }
     }
@@ -184,17 +183,17 @@ class SakerServiceImplTest {
         val opprettSakResponse = WSOpprettSakResponse()
         opprettSakResponse.sakId = SAKS_ID
         sakerService.knyttBehandlingskjedeTilSak(
-                FNR,
-                BEHANDLINGSKJEDEID,
-                sak,
-                valgtNavEnhet
+            FNR,
+            BEHANDLINGSKJEDEID,
+            sak,
+            valgtNavEnhet
         )
         verify(exactly = 1) {
             behandleHenvendelsePortType.knyttBehandlingskjedeTilSak(
-                    BEHANDLINGSKJEDEID,
-                    SAKS_ID,
-                    sak.temaKode,
-                    valgtNavEnhet
+                BEHANDLINGSKJEDEID,
+                SAKS_ID,
+                sak.temaKode,
+                valgtNavEnhet
             )
         }
     }
@@ -206,23 +205,23 @@ class SakerServiceImplTest {
         sak.syntetisk = true
         sak.fagsystemKode = BIDRAG_MARKOR
         sakerService.knyttBehandlingskjedeTilSak(
-                FNR,
-                BEHANDLINGSKJEDEID,
-                sak,
-                valgtNavEnhet
+            FNR,
+            BEHANDLINGSKJEDEID,
+            sak,
+            valgtNavEnhet
         )
         verify(exactly = 0) {
             behandleHenvendelsePortType.knyttBehandlingskjedeTilSak(
-                    String(),
-                    String(),
-                    String(),
-                    String()
+                String(),
+                String(),
+                String(),
+                String()
             )
         }
         verify(exactly = 1) {
             behandleHenvendelsePortType.knyttBehandlingskjedeTilTema(
-                    BEHANDLINGSKJEDEID,
-                    "BID"
+                BEHANDLINGSKJEDEID,
+                "BID"
             )
         }
     }
@@ -232,10 +231,10 @@ class SakerServiceImplTest {
 
         assertThrows(IllegalArgumentException::class.java) {
             sakerService.knyttBehandlingskjedeTilSak(
-                    FNR,
-                    BEHANDLINGSKJEDEID,
-                    lagSak(),
-                    ""
+                FNR,
+                BEHANDLINGSKJEDEID,
+                lagSak(),
+                ""
             )
         }
     }
@@ -245,10 +244,10 @@ class SakerServiceImplTest {
 
         assertThrows(IllegalArgumentException::class.java) {
             sakerService.knyttBehandlingskjedeTilSak(
-                    FNR,
-                    null,
-                    lagSak(),
-                    "1337"
+                FNR,
+                null,
+                lagSak(),
+                "1337"
             )
         }
     }
@@ -258,10 +257,10 @@ class SakerServiceImplTest {
 
         assertThrows(IllegalArgumentException::class.java) {
             sakerService.knyttBehandlingskjedeTilSak(
-                    "",
-                    BEHANDLINGSKJEDEID,
-                    lagSak(),
-                    "1337"
+                "",
+                BEHANDLINGSKJEDEID,
+                lagSak(),
+                "1337"
             )
         }
     }
@@ -302,65 +301,64 @@ class SakerServiceImplTest {
         fun earlierDateTimeWithOffSet(offset: Long): OffsetDateTime = OffsetDateTime.now().minusDays(offset)
 
         fun createSaksliste(): List<SakDto> {
-            return ArrayList(listOf(
-                    SakDto(id = SakId_1,
-                            tema = "AAP",
-                            applikasjon = "IT01",
-                            aktoerId = "123",
-                            orgnr = null,
-                            fagsakNr = FagsystemSakId_1,
-                            opprettetAv = null,
-                            opprettetTidspunkt = earlierDateTimeWithOffSet(4)),
+        return ArrayList(listOf(
+            SakDto(id = SakId_1,
+                tema = "AAP",
+                applikasjon = "IT01",
+                aktoerId = "123",
+                orgnr = null,
+                fagsakNr = FagsystemSakId_1,
+                opprettetAv = null,
+                opprettetTidspunkt = earlierDateTimeWithOffSet(4)),
 
-                    SakDto(id = SakId_2,
-                            tema = "AGR",
-                            applikasjon = "IT01",
-                            aktoerId = "123",
-                            orgnr = null,
-                            fagsakNr = FagsystemSakId_2,
-                            opprettetAv = null,
-                            opprettetTidspunkt = earlierDateTimeWithOffSet(3)),
+            SakDto(id = SakId_2,
+                tema = "AGR",
+                applikasjon = "IT01",
+                aktoerId = "123",
+                orgnr = null,
+                fagsakNr = FagsystemSakId_2,
+                opprettetAv = null,
+                opprettetTidspunkt = earlierDateTimeWithOffSet(3)),
 
-                    SakDto(id = SakId_3,
-                            tema = "AAP",
-                            applikasjon = "IT01",
-                            aktoerId = "123",
-                            orgnr = null,
-                            fagsakNr = FagsystemSakId_3,
-                            opprettetAv = null,
-                            opprettetTidspunkt = earlierDateTimeWithOffSet(5)),
+            SakDto(id = SakId_3,
+                tema = "AAP",
+                applikasjon = "IT01",
+                aktoerId = "123",
+                orgnr = null,
+                fagsakNr = FagsystemSakId_3,
+                opprettetAv = null,
+                opprettetTidspunkt = earlierDateTimeWithOffSet(5)),
 
-                    SakDto(id = SakId_4,
-                            tema = "STO",
-                            applikasjon = "",
-                            aktoerId = "123",
-                            orgnr = null,
-                            fagsakNr = null,
-                            opprettetAv = null,
-                            opprettetTidspunkt = earlierDateTimeWithOffSet(5))))
+            SakDto(id = SakId_4,
+                tema = "STO",
+                applikasjon = "",
+                aktoerId = "123",
+                orgnr = null,
+                fagsakNr = null,
+                opprettetAv = null,
+                opprettetTidspunkt = earlierDateTimeWithOffSet(5))))
         }
 
         fun createOppfolgingSaksliste(): MutableList<SakDto> {
 
             return ArrayList(listOf(
-                    SakDto(id = "4",
-                            tema = "OPP",
-                            applikasjon = "AO01",
-                            aktoerId = "123",
-                            orgnr = null,
-                            fagsakNr = "44",
-                            opprettetAv = null,
-                            opprettetTidspunkt = earlierDateTimeWithOffSet(0)),
+                SakDto(id = "4",
+                    tema = "OPP",
+                    applikasjon = "AO01",
+                    aktoerId = "123",
+                    orgnr = null,
+                    fagsakNr = "44",
+                    opprettetAv = null,
+                    opprettetTidspunkt = earlierDateTimeWithOffSet(0)),
 
-                    SakDto(id = "5",
-                            tema = "OPP",
-                            applikasjon = "FS22",
-                            aktoerId = "123",
-                            orgnr = null,
-                            fagsakNr = null,
-                            opprettetAv = null,
-                            opprettetTidspunkt = earlierDateTimeWithOffSet(3))))
-
+                SakDto(id = "5",
+                    tema = "OPP",
+                    applikasjon = "FS22",
+                    aktoerId = "123",
+                    orgnr = null,
+                    fagsakNr = null,
+                    opprettetAv = null,
+                    opprettetTidspunkt = earlierDateTimeWithOffSet(3))))
         }
     }
 }
