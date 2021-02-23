@@ -1,6 +1,6 @@
-package no.nav.sbl.dialogarena.modiabrukerdialog.api.service.gsak
+package no.nav.sbl.dialogarena.modiabrukerdialog.api.service.saker
 
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.Sak
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.saker.Sak
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.exceptions.JournalforingFeilet
 
 

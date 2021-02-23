@@ -1,6 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.kodeverk;
 
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.GsakKodeTema;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.saker.GsakKodeTema;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;

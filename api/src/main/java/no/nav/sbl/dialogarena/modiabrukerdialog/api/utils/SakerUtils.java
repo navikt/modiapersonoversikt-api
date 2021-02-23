@@ -1,6 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.api.utils;
 
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.Sak;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.saker.Sak;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.kodeverk.StandardKodeverk;
 
 import java.util.List;

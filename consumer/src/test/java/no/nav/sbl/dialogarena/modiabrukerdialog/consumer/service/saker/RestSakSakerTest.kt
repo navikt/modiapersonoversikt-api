@@ -1,12 +1,12 @@
-package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.saker.kilder.gsak
+package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.saker
 
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.Sak
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.pdl.generated.HentIdent
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.saker.Sak
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.FodselnummerAktorService
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.http.SubjectHandlerUtil
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.saker.kilder.RestSakSaker
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.saker.mediation.OpprettSakDto
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.saker.mediation.SakApiGateway
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.saker.mediation.SakDto
@@ -22,17 +22,16 @@ import org.junit.jupiter.api.assertThrows
 import java.time.*
 
 
-class RestGsakSakerTest {
+class RestSakSakerTest {
     val VEDTAKSLOSNINGEN = "FS36"
     val FIRE_DAGER_SIDEN = DateTime.now().minusDays(4) //joda.DateTime
     val FNR = "fnr"
     val SakId_1 = "1"
     val FagsystemSakId_1 = "11"
 
-    val fixedClock = Clock.fixed(Instant.parse("2021-01-25T10:15:30Z"), ZoneId.systemDefault())
     val api = mockk<SakApiGateway>()
     val fodselnummerAktorService = mockk<FodselnummerAktorService>()
-    val restClient = RestGsakSaker(api, fodselnummerAktorService, fixedClock)
+    val restClient = RestSakSaker(api, fodselnummerAktorService)
 
     @Test
     fun `legg til saker legger til sakene i listen`() {
@@ -53,7 +52,7 @@ class RestGsakSakerTest {
         val saker = mutableListOf<Sak>()
         restClient.leggTilSaker("fnr", saker)
 
-        assertThat(saker.size, `is`(1));
+        assertThat(saker.size, `is`(1))
     }
 
     @Test
@@ -80,7 +79,7 @@ class RestGsakSakerTest {
         every { fodselnummerAktorService.hentAktorIdForFnr(any()) } returns "123"
         every { fodselnummerAktorService.hentFnrForAktorId(any()) } returns "456"
         SubjectHandlerUtil.withIdent("Z999999") {
-            restClient.opprettSak("fnr", RestGsakSaker.TIL_SAK(sakDto))
+            restClient.opprettSak("fnr", RestSakSaker.TIL_SAK(sakDto))
         }
 
         verify {
@@ -108,7 +107,7 @@ class RestGsakSakerTest {
             opprettetAv = null,
             opprettetTidspunkt = earlierDateTimeWithOffSet(4)
         )
-        val sak = RestGsakSaker.TIL_SAK.invoke(sakDto)
+        val sak = RestSakSaker.TIL_SAK.invoke(sakDto)
         assertThat(sak.saksId, `is`(SakId_1))
         assertThat(sak.fagsystemSaksId, `is`(nullValue()))
         assertThat(sak.temaKode, `is`(Sak.GODKJENTE_TEMA_FOR_GENERELL_SAK[0]))
@@ -130,7 +129,7 @@ class RestGsakSakerTest {
             opprettetAv = null,
             opprettetTidspunkt = earlierDateTimeWithOffSet(4)
         )
-        val sak = RestGsakSaker.TIL_SAK.invoke(sakDto)
+        val sak = RestSakSaker.TIL_SAK.invoke(sakDto)
         assertThat(sak.fagsystemKode, `is`(Sak.FAGSYSTEM_FOR_OPPRETTELSE_AV_GENERELL_SAK))
         assertThat(sak.sakstype, `is`(Sak.SAKSTYPE_GENERELL))
     }
@@ -147,7 +146,7 @@ class RestGsakSakerTest {
             opprettetTidspunkt = earlierDateTimeWithOffSet(4)
         )
 
-        val sak = RestGsakSaker.TIL_SAK.invoke(sakDto)
+        val sak = RestSakSaker.TIL_SAK.invoke(sakDto)
         assertThat(sak.saksId, `is`(SakId_1))
         assertThat(sak.fagsystemSaksId, `is`(SakId_1))
         assertThat(sak.temaKode, `is`(Sak.GODKJENTE_TEMA_FOR_GENERELL_SAK[0]))
@@ -160,7 +159,7 @@ class RestGsakSakerTest {
     @Test
     fun `skal handtere manglede fagsystemSakId`() {
         val sakDto = SakDto()
-        Assertions.assertDoesNotThrow { RestGsakSaker.TIL_SAK.invoke(sakDto) }
+        Assertions.assertDoesNotThrow { RestSakSaker.TIL_SAK.invoke(sakDto) }
     }
 
     @Test
@@ -176,7 +175,7 @@ class RestGsakSakerTest {
             opprettetTidspunkt = earlierDateTimeWithOffSet(4)
         )
 
-        val sak = RestGsakSaker.TIL_SAK.invoke(sakDto)
+        val sak = RestSakSaker.TIL_SAK.invoke(sakDto)
         assertThat(sak.saksId, `is`(SakId_1))
         assertThat(sak.fagsystemSaksId, `is`(FagsystemSakId_1))
         assertThat(sak.temaKode, `is`(Sak.GODKJENTE_TEMA_FOR_GENERELL_SAK[0]))
@@ -187,8 +186,7 @@ class RestGsakSakerTest {
 
     }
 
-
-    fun dateMatcher(matcher: Matcher<in Boolean?>?): Matcher<DateTime?>? {
+    private fun dateMatcher(matcher: Matcher<in Boolean?>?): Matcher<DateTime?>? {
         return object : FeatureMatcher<DateTime, Boolean?>(matcher, "Date comparison", "dateMatcher") {
             override fun featureValueOf(actual: DateTime): Boolean? {
                 return actual.millis - FIRE_DAGER_SIDEN.millis < 1000
@@ -197,6 +195,6 @@ class RestGsakSakerTest {
         }
     }
 
-    fun earlierDateTimeWithOffSet(offset: Long): OffsetDateTime = OffsetDateTime.now().minusDays(offset)
+    private fun earlierDateTimeWithOffSet(offset: Long): OffsetDateTime = OffsetDateTime.now().minusDays(offset)
 }
 
