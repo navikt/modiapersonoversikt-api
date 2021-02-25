@@ -37,7 +37,6 @@ import java.util.*
 import kotlin.contracts.ExperimentalContracts
 import kotlin.streams.toList
 
-
 @ExperimentalContracts
 class SakerServiceImplTest {
 
@@ -79,7 +78,6 @@ class SakerServiceImplTest {
         every { sakApiGateway.opprettSak(any()) } returns SakDto(id = "123")
 
         MDC.put(MDCConstants.MDC_CALL_ID, "12345")
-
     }
 
     @AfterEach
@@ -98,7 +96,6 @@ class SakerServiceImplTest {
         assertThat(saksliste[saksliste.size - 1].temaNavn, `is`("Bidrag"))
         assertThat(saksliste[saksliste.size - 1].fagsystemNavn, `is`("Kopiert inn i Bisys"))
     }
-
 
     @Test
     fun `transformerer response til saksliste pensjon`() {
@@ -131,7 +128,6 @@ class SakerServiceImplTest {
         assertThat(saker.size, `is`(1))
         assertThat(saker[0].sakstype, `is`(SAKSTYPE_GENERELL))
     }
-
 
     @Test
     fun `legger til oppfolgingssak fra Arena dersom denne ikke finnes i gsak`() {
@@ -174,7 +170,6 @@ class SakerServiceImplTest {
             )
         }
     }
-
 
     @Test
     fun `knytter behandlingsKjede til sak uavhengig om den finnesIGsak uten fagsystemId`() {
@@ -277,7 +272,6 @@ class SakerServiceImplTest {
         const val FagsystemSakId_3 = "33"
         const val SakId_4 = "4"
 
-
         fun lagSak(): Sak {
             val sak = Sak()
             sak.temaKode = "GEN"
@@ -301,64 +295,82 @@ class SakerServiceImplTest {
         fun earlierDateTimeWithOffSet(offset: Long): OffsetDateTime = OffsetDateTime.now().minusDays(offset)
 
         fun createSaksliste(): List<SakDto> {
-            return ArrayList(listOf(
-                SakDto(id = SakId_1,
-                    tema = "AAP",
-                    applikasjon = "IT01",
-                    aktoerId = "123",
-                    orgnr = null,
-                    fagsakNr = FagsystemSakId_1,
-                    opprettetAv = null,
-                    opprettetTidspunkt = earlierDateTimeWithOffSet(4)),
+            return ArrayList(
+                listOf(
+                    SakDto(
+                        id = SakId_1,
+                        tema = "AAP",
+                        applikasjon = "IT01",
+                        aktoerId = "123",
+                        orgnr = null,
+                        fagsakNr = FagsystemSakId_1,
+                        opprettetAv = null,
+                        opprettetTidspunkt = earlierDateTimeWithOffSet(4)
+                    ),
 
-                SakDto(id = SakId_2,
-                    tema = "AGR",
-                    applikasjon = "IT01",
-                    aktoerId = "123",
-                    orgnr = null,
-                    fagsakNr = FagsystemSakId_2,
-                    opprettetAv = null,
-                    opprettetTidspunkt = earlierDateTimeWithOffSet(3)),
+                    SakDto(
+                        id = SakId_2,
+                        tema = "AGR",
+                        applikasjon = "IT01",
+                        aktoerId = "123",
+                        orgnr = null,
+                        fagsakNr = FagsystemSakId_2,
+                        opprettetAv = null,
+                        opprettetTidspunkt = earlierDateTimeWithOffSet(3)
+                    ),
 
-                SakDto(id = SakId_3,
-                    tema = "AAP",
-                    applikasjon = "IT01",
-                    aktoerId = "123",
-                    orgnr = null,
-                    fagsakNr = FagsystemSakId_3,
-                    opprettetAv = null,
-                    opprettetTidspunkt = earlierDateTimeWithOffSet(5)),
+                    SakDto(
+                        id = SakId_3,
+                        tema = "AAP",
+                        applikasjon = "IT01",
+                        aktoerId = "123",
+                        orgnr = null,
+                        fagsakNr = FagsystemSakId_3,
+                        opprettetAv = null,
+                        opprettetTidspunkt = earlierDateTimeWithOffSet(5)
+                    ),
 
-                SakDto(id = SakId_4,
-                    tema = "STO",
-                    applikasjon = "",
-                    aktoerId = "123",
-                    orgnr = null,
-                    fagsakNr = null,
-                    opprettetAv = null,
-                    opprettetTidspunkt = earlierDateTimeWithOffSet(5))))
+                    SakDto(
+                        id = SakId_4,
+                        tema = "STO",
+                        applikasjon = "",
+                        aktoerId = "123",
+                        orgnr = null,
+                        fagsakNr = null,
+                        opprettetAv = null,
+                        opprettetTidspunkt = earlierDateTimeWithOffSet(5)
+                    )
+                )
+            )
         }
 
         fun createOppfolgingSaksliste(): MutableList<SakDto> {
 
-            return ArrayList(listOf(
-                SakDto(id = "4",
-                    tema = "OPP",
-                    applikasjon = "AO01",
-                    aktoerId = "123",
-                    orgnr = null,
-                    fagsakNr = "44",
-                    opprettetAv = null,
-                    opprettetTidspunkt = earlierDateTimeWithOffSet(0)),
+            return ArrayList(
+                listOf(
+                    SakDto(
+                        id = "4",
+                        tema = "OPP",
+                        applikasjon = "AO01",
+                        aktoerId = "123",
+                        orgnr = null,
+                        fagsakNr = "44",
+                        opprettetAv = null,
+                        opprettetTidspunkt = earlierDateTimeWithOffSet(0)
+                    ),
 
-                SakDto(id = "5",
-                    tema = "OPP",
-                    applikasjon = "FS22",
-                    aktoerId = "123",
-                    orgnr = null,
-                    fagsakNr = null,
-                    opprettetAv = null,
-                    opprettetTidspunkt = earlierDateTimeWithOffSet(3))))
+                    SakDto(
+                        id = "5",
+                        tema = "OPP",
+                        applikasjon = "FS22",
+                        aktoerId = "123",
+                        orgnr = null,
+                        fagsakNr = null,
+                        opprettetAv = null,
+                        opprettetTidspunkt = earlierDateTimeWithOffSet(3)
+                    )
+                )
+            )
         }
     }
 }

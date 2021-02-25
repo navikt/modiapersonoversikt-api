@@ -14,62 +14,62 @@ private fun parseOidcToken(ssoToken: SsoToken): String {
 
 private fun Optional<SsoToken>.createWithTokenBody(block: Request.(token: String) -> Unit): AbacRequest {
     return this
-            .map(::parseOidcToken)
-            .map { token -> abacRequest { block(this, token) } }
-            .orElseThrow { IllegalStateException("Fant ikke saksbehandler-token") }
+        .map(::parseOidcToken)
+        .map { token -> abacRequest { block(this, token) } }
+        .orElseThrow { IllegalStateException("Fant ikke saksbehandler-token") }
 }
 
 object AbacPolicies {
     fun tilgangTilModia(): AbacRequest = SubjectHandler.getSsoToken()
-            .createWithTokenBody { tokenBody ->
-                environment {
-                    attribute(ENVIRONMENT_FELLES_PEP_ID, "modia")
-                    attribute(ENVIRONMENT_FELLES_OIDC_TOKEN_BODY, tokenBody)
-                }
-                resource {
-                    attribute(RESOURCE_FELLES_DOMENE, "modia")
-                    attribute(RESOURCE_FELLES_RESOURCE_TYPE, "no.nav.abac.attributter.resource.modia")
-                }
+        .createWithTokenBody { tokenBody ->
+            environment {
+                attribute(ENVIRONMENT_FELLES_PEP_ID, "modia")
+                attribute(ENVIRONMENT_FELLES_OIDC_TOKEN_BODY, tokenBody)
             }
+            resource {
+                attribute(RESOURCE_FELLES_DOMENE, "modia")
+                attribute(RESOURCE_FELLES_RESOURCE_TYPE, "no.nav.abac.attributter.resource.modia")
+            }
+        }
 
     fun tilgangTilBruker(fnr: String): AbacRequest = SubjectHandler.getSsoToken()
-            .createWithTokenBody { tokenBody ->
-                environment {
-                    attribute(ENVIRONMENT_FELLES_PEP_ID, "modia")
-                    attribute(ENVIRONMENT_FELLES_OIDC_TOKEN_BODY, tokenBody)
-                }
-                resource {
-                    attribute(RESOURCE_FELLES_DOMENE, "modia")
-                    attribute(RESOURCE_FELLES_RESOURCE_TYPE, "no.nav.abac.attributter.resource.modia")
-                    attribute(RESOURCE_FELLES_PERSON_FNR, fnr)
-                }
+        .createWithTokenBody { tokenBody ->
+            environment {
+                attribute(ENVIRONMENT_FELLES_PEP_ID, "modia")
+                attribute(ENVIRONMENT_FELLES_OIDC_TOKEN_BODY, tokenBody)
             }
+            resource {
+                attribute(RESOURCE_FELLES_DOMENE, "modia")
+                attribute(RESOURCE_FELLES_RESOURCE_TYPE, "no.nav.abac.attributter.resource.modia")
+                attribute(RESOURCE_FELLES_PERSON_FNR, fnr)
+            }
+        }
 
     fun tilgangTilBrukerMedAktorId(aktorId: String): AbacRequest = SubjectHandler.getSsoToken()
-            .createWithTokenBody {tokenBody ->
-                environment {
-                    attribute(ENVIRONMENT_FELLES_PEP_ID, "modia")
-                    attribute(ENVIRONMENT_FELLES_OIDC_TOKEN_BODY, tokenBody)
-                }
-                resource {
-                    attribute(RESOURCE_FELLES_DOMENE, "modia")
-                    attribute(RESOURCE_FELLES_RESOURCE_TYPE, "no.nav.abac.attributter.resource.modia")
-                    attribute(RESOURCE_FELLES_PERSON_AKTOERID_RESOURCE, aktorId)
-                }
+        .createWithTokenBody { tokenBody ->
+            environment {
+                attribute(ENVIRONMENT_FELLES_PEP_ID, "modia")
+                attribute(ENVIRONMENT_FELLES_OIDC_TOKEN_BODY, tokenBody)
             }
+            resource {
+                attribute(RESOURCE_FELLES_DOMENE, "modia")
+                attribute(RESOURCE_FELLES_RESOURCE_TYPE, "no.nav.abac.attributter.resource.modia")
+                attribute(RESOURCE_FELLES_PERSON_AKTOERID_RESOURCE, aktorId)
+            }
+        }
 
     fun kanPlukkeOppgave(): AbacRequest = SubjectHandler.getSsoToken()
-            .createWithTokenBody { tokenBody ->
-                environment {
-                    attribute(ENVIRONMENT_FELLES_PEP_ID, "modia")
-                    attribute(ENVIRONMENT_FELLES_OIDC_TOKEN_BODY, tokenBody)
-                }
-                resource {
-                    attribute(RESOURCE_FELLES_DOMENE, "modia")
-                    attribute(RESOURCE_FELLES_RESOURCE_TYPE, "no.nav.abac.attributter.resource.modia.oppgave")
-                }
-                action {
-                    attribute(ACTION_ID, "read")
-                }
+        .createWithTokenBody { tokenBody ->
+            environment {
+                attribute(ENVIRONMENT_FELLES_PEP_ID, "modia")
+                attribute(ENVIRONMENT_FELLES_OIDC_TOKEN_BODY, tokenBody)
             }
+            resource {
+                attribute(RESOURCE_FELLES_DOMENE, "modia")
+                attribute(RESOURCE_FELLES_RESOURCE_TYPE, "no.nav.abac.attributter.resource.modia.oppgave")
+            }
+            action {
+                attribute(ACTION_ID, "read")
+            }
+        }
 }

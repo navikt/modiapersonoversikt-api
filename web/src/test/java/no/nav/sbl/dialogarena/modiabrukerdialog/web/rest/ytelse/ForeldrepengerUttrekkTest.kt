@@ -65,7 +65,9 @@ internal class ForeldrepengerUttrekkTest {
     private fun createXMLGregorianCalendar() = DatatypeFactory.newInstance().newXMLGregorianCalendarDate(2000, 2, 1, 1)
 
     private fun mockResponse() = FimHentForeldrepengerettighetResponse()
-            .withForeldrepengerettighet(FimFoedsel()
-                    .withAntallBarn(BigInteger.TEN)
-                    .withBarnetFoedt(createXMLGregorianCalendar()))
+        .withForeldrepengerettighet(
+            FimFoedsel()
+                .withAntallBarn(BigInteger.TEN)
+                .withBarnetFoedt(createXMLGregorianCalendar())
+        )
 }

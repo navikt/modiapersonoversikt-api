@@ -14,21 +14,20 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @RequestMapping("/rest/kodeverk/{kodeverkRef}")
 class KodeverkController @Autowired constructor(
-        private val tilgangskontroll: Tilgangskontroll,
-        private val kodeverkManager: KodeverkmanagerBi
+    private val tilgangskontroll: Tilgangskontroll,
+    private val kodeverkManager: KodeverkmanagerBi
 ) {
     @GetMapping
     fun hentKodeverk(@PathVariable("kodeverkRef") kodeverkRef: String) =
-            tilgangskontroll
-                    .check(Policies.tilgangTilModia)
-                    .get(Audit.skipAuditLog()) {
-                        mapOf(
-                                "kodeverk" to kodeverkManager
-                                        .getKodeverkList(kodeverkRef, "nb")
-                                        .map(::Kode)
-                        )
-                    }
-
+        tilgangskontroll
+            .check(Policies.tilgangTilModia)
+            .get(Audit.skipAuditLog()) {
+                mapOf(
+                    "kodeverk" to kodeverkManager
+                        .getKodeverkList(kodeverkRef, "nb")
+                        .map(::Kode)
+                )
+            }
 }
 
 data class Kode(val kodeRef: String, val beskrivelse: String) {

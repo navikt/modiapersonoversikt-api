@@ -17,37 +17,39 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("/rest/ytelse")
-class YtelseController @Autowired constructor(private val sykepengerService: SykepengerServiceBi,
-                                              private val foreldrepengerServiceDefault: ForeldrepengerServiceBi,
-                                              private val pleiepengerService: PleiepengerService,
-                                              private val tilgangskontroll: Tilgangskontroll,
-                                              private val organisasjonService: OrganisasjonService) {
+class YtelseController @Autowired constructor(
+    private val sykepengerService: SykepengerServiceBi,
+    private val foreldrepengerServiceDefault: ForeldrepengerServiceBi,
+    private val pleiepengerService: PleiepengerService,
+    private val tilgangskontroll: Tilgangskontroll,
+    private val organisasjonService: OrganisasjonService
+) {
 
     @GetMapping("sykepenger/{fnr}")
     fun hentSykepenger(@PathVariable("fnr") fnr: String): Map<String, Any?> {
         return tilgangskontroll
-                .check(Policies.tilgangTilBruker.with(fnr))
-                .get(Audit.describe(Audit.Action.READ, AuditResources.Person.Sykepenger, AuditIdentifier.FNR to fnr)) {
-                    SykepengerUttrekk(sykepengerService).hent(fnr)
-                }
+            .check(Policies.tilgangTilBruker.with(fnr))
+            .get(Audit.describe(Audit.Action.READ, AuditResources.Person.Sykepenger, AuditIdentifier.FNR to fnr)) {
+                SykepengerUttrekk(sykepengerService).hent(fnr)
+            }
     }
 
     @GetMapping("foreldrepenger/{fnr}")
     fun hentForeldrepenger(@PathVariable("fnr") fnr: String): Map<String, Any?> {
         return tilgangskontroll
-                .check(Policies.tilgangTilBruker.with(fnr))
-                .get(Audit.describe(Audit.Action.READ, AuditResources.Person.Foreldrepenger, AuditIdentifier.FNR to fnr)) {
-                    ForeldrepengerUttrekk(getForeldrepengerService()).hent(fnr)
-                }
+            .check(Policies.tilgangTilBruker.with(fnr))
+            .get(Audit.describe(Audit.Action.READ, AuditResources.Person.Foreldrepenger, AuditIdentifier.FNR to fnr)) {
+                ForeldrepengerUttrekk(getForeldrepengerService()).hent(fnr)
+            }
     }
 
     @GetMapping("pleiepenger/{fnr}")
     fun hentPleiepenger(@PathVariable("fnr") fnr: String): Map<String, Any?> {
         return tilgangskontroll
-                .check(Policies.tilgangTilBruker.with(fnr))
-                .get(Audit.describe(Audit.Action.READ, AuditResources.Person.Pleiepenger, AuditIdentifier.FNR to fnr)) {
-                    PleiepengerUttrekk(pleiepengerService, organisasjonService).hent(fnr)
-                }
+            .check(Policies.tilgangTilBruker.with(fnr))
+            .get(Audit.describe(Audit.Action.READ, AuditResources.Person.Pleiepenger, AuditIdentifier.FNR to fnr)) {
+                PleiepengerUttrekk(pleiepengerService, organisasjonService).hent(fnr)
+            }
     }
 
     private fun getForeldrepengerService(): ForeldrepengerServiceBi {

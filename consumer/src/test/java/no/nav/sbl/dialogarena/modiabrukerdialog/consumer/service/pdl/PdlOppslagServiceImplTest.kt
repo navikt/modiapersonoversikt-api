@@ -75,11 +75,13 @@ internal class PdlOppslagServiceImplTest {
     }
 
     fun createMockGraphQLClient(handler: MockRequestHandleScope.(request: HttpRequestData) -> HttpResponseData): GraphQLClient<*> {
-        return GraphQLClient(url = URL("http://dummy.no"), engineFactory = MockEngine, configuration = {
-            engine {
-                addHandler { handler.invoke(this, it) }
+        return GraphQLClient(
+            url = URL("http://dummy.no"), engineFactory = MockEngine,
+            configuration = {
+                engine {
+                    addHandler { handler.invoke(this, it) }
+                }
             }
-        })
+        )
     }
 }
-

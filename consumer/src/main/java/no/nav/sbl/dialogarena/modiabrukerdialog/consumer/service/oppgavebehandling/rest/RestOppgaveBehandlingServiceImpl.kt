@@ -72,7 +72,7 @@ class RestOppgaveBehandlingServiceImpl(
                 behandlesAvApplikasjon = request.behandlesAvApplikasjon.coerceBlankToNull(),
                 tildeltEnhetsnr = request.ansvarligEnhetId.coerceBlankToNull(),
                 tilordnetRessurs = request.ansvarligIdent.coerceBlankToNull(),
-                beskrivelse =  beskrivelseInnslag(
+                beskrivelse = beskrivelseInnslag(
                     ident = ident,
                     navn = ansattService.hentAnsattNavn(ident),
                     enhet = request.opprettetavenhetsnummer,
@@ -109,7 +109,7 @@ class RestOppgaveBehandlingServiceImpl(
                 opprettetAvEnhetsnr = request.opprettetavenhetsnummer.coerceBlankToNull(),
                 aktoerId = aktorId,
                 behandlesAvApplikasjon = request.behandlesAvApplikasjon.coerceBlankToNull(),
-                beskrivelse =  beskrivelseInnslag(
+                beskrivelse = beskrivelseInnslag(
                     ident = ident,
                     navn = ansattService.hentAnsattNavn(ident),
                     enhet = request.opprettetavenhetsnummer,

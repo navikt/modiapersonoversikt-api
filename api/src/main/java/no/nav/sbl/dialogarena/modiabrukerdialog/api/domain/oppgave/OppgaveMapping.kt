@@ -81,32 +81,32 @@ public fun PutOppgaveResponseJsonDTO.toOppgaveJsonDTO(): OppgaveJsonDTO = Oppgav
 
 public fun OppgaveJsonDTO.toPutOppgaveRequestJsonDTO(): PutOppgaveRequestJsonDTO =
     PutOppgaveRequestJsonDTO(
-    tildeltEnhetsnr = this.tildeltEnhetsnr,
-    oppgavetype = this.oppgavetype,
-    versjon = this.versjon,
-    aktivDato = this.aktivDato,
-    id =
-    no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.oppgave.OppgaveMappingHelpers.requiredOppgaveId(this.id),
-    endretAvEnhetsnr = this.endretAvEnhetsnr,
-    journalpostId = this.journalpostId,
-    journalpostkilde = this.journalpostkilde,
-    behandlesAvApplikasjon = this.behandlesAvApplikasjon,
-    saksreferanse = this.saksreferanse,
-    bnr = this.bnr,
-    samhandlernr = this.samhandlernr,
-    aktoerId = this.aktoerId,
-    orgnr = this.orgnr,
-    tilordnetRessurs = this.tilordnetRessurs,
-    beskrivelse = this.beskrivelse,
-    temagruppe = this.temagruppe,
-    tema = this.tema,
-    behandlingstema = this.behandlingstema,
-    behandlingstype = this.behandlingstype,
-    mappeId = this.mappeId,
-    metadata = this.metadata,
-    fristFerdigstillelse = this.fristFerdigstillelse,
-    status =
-    no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.oppgave.OppgaveMappingHelpers.convertEnumToPutReq(this.status),
-    prioritet =
-    no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.oppgave.OppgaveMappingHelpers.convertEnumToPutReq(this.prioritet)
-)
+        tildeltEnhetsnr = this.tildeltEnhetsnr,
+        oppgavetype = this.oppgavetype,
+        versjon = this.versjon,
+        aktivDato = this.aktivDato,
+        id =
+        no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.oppgave.OppgaveMappingHelpers.requiredOppgaveId(this.id),
+        endretAvEnhetsnr = this.endretAvEnhetsnr,
+        journalpostId = this.journalpostId,
+        journalpostkilde = this.journalpostkilde,
+        behandlesAvApplikasjon = this.behandlesAvApplikasjon,
+        saksreferanse = this.saksreferanse,
+        bnr = this.bnr,
+        samhandlernr = this.samhandlernr,
+        aktoerId = this.aktoerId,
+        orgnr = this.orgnr,
+        tilordnetRessurs = this.tilordnetRessurs,
+        beskrivelse = this.beskrivelse,
+        temagruppe = this.temagruppe,
+        tema = this.tema,
+        behandlingstema = this.behandlingstema,
+        behandlingstype = this.behandlingstype,
+        mappeId = this.mappeId,
+        metadata = this.metadata,
+        fristFerdigstillelse = this.fristFerdigstillelse,
+        status =
+        no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.oppgave.OppgaveMappingHelpers.convertEnumToPutReq(this.status),
+        prioritet =
+        no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.oppgave.OppgaveMappingHelpers.convertEnumToPutReq(this.prioritet)
+    )

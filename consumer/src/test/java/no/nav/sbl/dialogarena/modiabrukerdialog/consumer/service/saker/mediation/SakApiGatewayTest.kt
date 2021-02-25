@@ -149,5 +149,4 @@ internal class SakApiGatewayTest {
             wireMockServer.stop()
         }
     }
-
 }

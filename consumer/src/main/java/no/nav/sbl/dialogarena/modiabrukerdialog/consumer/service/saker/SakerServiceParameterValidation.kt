@@ -10,7 +10,7 @@ private const val INGEN_SAKSID = "[INGEN SAKSID]"
 class EnhetIkkeSatt(message: String) : IllegalArgumentException(message)
 
 @ExperimentalContracts
-fun requireKnyttTilSakParametereNotNullOrBlank(sak: Sak?, behandlingskjede: String?, fnr: String?, enhet: String?): Unit {
+fun requireKnyttTilSakParametereNotNullOrBlank(sak: Sak?, behandlingskjede: String?, fnr: String?, enhet: String?) {
     contract {
         returns() implies (sak != null && behandlingskjede != null && fnr != null && enhet != null)
     }

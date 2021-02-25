@@ -7,17 +7,17 @@ import com.google.gson.JsonDeserializer
 import no.nav.sbl.dialogarena.abac.mapper.JsonMapperTypes.*
 
 private val serializer: Gson = GsonBuilder()
-        .setFieldNamingPolicy(FieldNamingPolicy.UPPER_CAMEL_CASE)
-        .setPrettyPrinting()
-        .create()
+    .setFieldNamingPolicy(FieldNamingPolicy.UPPER_CAMEL_CASE)
+    .setPrettyPrinting()
+    .create()
 
 private val deserializer: Gson = GsonBuilder()
-        .setFieldNamingPolicy(FieldNamingPolicy.UPPER_CAMEL_CASE)
-        .setPrettyPrinting()
-        .registerTypeAdapter(responseType, forcedListAdapter<Response>())
-        .registerTypeAdapter(associatedAdviceType, forcedListAdapter<Advice>())
-        .registerTypeAdapter(attributeAssignmentType, forcedListAdapter<AttributeAssignment>())
-        .create()
+    .setFieldNamingPolicy(FieldNamingPolicy.UPPER_CAMEL_CASE)
+    .setPrettyPrinting()
+    .registerTypeAdapter(responseType, forcedListAdapter<Response>())
+    .registerTypeAdapter(associatedAdviceType, forcedListAdapter<Advice>())
+    .registerTypeAdapter(attributeAssignmentType, forcedListAdapter<AttributeAssignment>())
+    .create()
 
 internal inline fun <reified T> forcedListAdapter(): JsonDeserializer<List<T>> {
     return JsonDeserializer { json, _, context ->

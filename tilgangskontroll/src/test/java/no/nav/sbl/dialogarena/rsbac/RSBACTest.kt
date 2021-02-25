@@ -15,14 +15,14 @@ internal class RSBACTest {
 
         assertThrows<RSBACException> {
             rsbac
-                    .deny("") { true }
-                    .get(Audit.skipAuditLog) { "OK" }
+                .deny("") { true }
+                .get(Audit.skipAuditLog) { "OK" }
         }
 
         assertThrows<RSBACException> {
             rsbac
-                    .deny("") { true }
-                    .get(Audit.skipAuditLog) { "OK" }
+                .deny("") { true }
+                .get(Audit.skipAuditLog) { "OK" }
         }
     }
 
@@ -32,14 +32,14 @@ internal class RSBACTest {
 
         assertThrows<RSBACException> {
             rsbac
-                    .permit("") { false }
-                    .get(Audit.skipAuditLog) { "OK" }
+                .permit("") { false }
+                .get(Audit.skipAuditLog) { "OK" }
         }
 
         assertThrows<RSBACException> {
             rsbac
-                    .permit("") { false }
-                    .get(Audit.skipAuditLog) { "OK" }
+                .permit("") { false }
+                .get(Audit.skipAuditLog) { "OK" }
         }
     }
 
@@ -49,17 +49,17 @@ internal class RSBACTest {
 
         val failOnFirst: () -> Unit = {
             rsbac
-                    .permit("Error 1") { false }
-                    .permit("Error 2") { false }
-                    .get(Audit.skipAuditLog) { "OK" }
+                .permit("Error 1") { false }
+                .permit("Error 2") { false }
+                .get(Audit.skipAuditLog) { "OK" }
         }
         assertThrowsMessage<RSBACException>("Error 1", failOnFirst)
 
         val failOnLast: () -> Unit = {
             rsbac
-                    .permit("Error 1") { true }
-                    .permit("Error 2") { false }
-                    .get(Audit.skipAuditLog) { "OK" }
+                .permit("Error 1") { true }
+                .permit("Error 2") { false }
+                .get(Audit.skipAuditLog) { "OK" }
         }
 
         assertThrowsMessage<RSBACException>("Error 2", failOnLast)
@@ -70,11 +70,11 @@ internal class RSBACTest {
         val rsbac = RSBACImpl(null)
 
         val result = rsbac
-                .permit("Error 1") { true }
-                .deny("Error 2") { false }
-                .permit("Error 3") { true }
-                .deny("Error 4") { false }
-                .get(Audit.skipAuditLog) { "OK" }
+            .permit("Error 1") { true }
+            .deny("Error 2") { false }
+            .permit("Error 3") { true }
+            .deny("Error 4") { false }
+            .get(Audit.skipAuditLog) { "OK" }
 
         assertEquals("OK", result)
     }
@@ -84,10 +84,10 @@ internal class RSBACTest {
         val rsbac = RSBACImpl("Value")
 
         val result = rsbac
-                .permit("Error 1") { context: String -> context == "Value" }
-                .permit("Error 2") { context: String -> context == "Value" }
-                .deny("Error 3") { context: String -> context != "Value" }
-                .get(Audit.skipAuditLog) { "OK" }
+            .permit("Error 1") { context: String -> context == "Value" }
+            .permit("Error 2") { context: String -> context == "Value" }
+            .deny("Error 3") { context: String -> context != "Value" }
+            .get(Audit.skipAuditLog) { "OK" }
 
         assertEquals("OK", result)
     }
@@ -98,8 +98,8 @@ internal class RSBACTest {
 
         val biased: () -> Unit = {
             rsbac
-                    .check(Policy("I have no Idea") { DecisionEnums.NOT_APPLICABLE })
-                    .get(Audit.skipAuditLog) { "OK" }
+                .check(Policy("I have no Idea") { DecisionEnums.NOT_APPLICABLE })
+                .get(Audit.skipAuditLog) { "OK" }
         }
 
         assertThrowsMessage<RSBACException>("No matching rule found", biased)
@@ -110,9 +110,9 @@ internal class RSBACTest {
         val rsbac = RSBACImpl("value")
 
         val biased = rsbac
-                .bias(DecisionEnums.PERMIT)
-                .check(Policy("I have no Idea") { DecisionEnums.NOT_APPLICABLE })
-                .get(Audit.skipAuditLog) { "OK" }
+            .bias(DecisionEnums.PERMIT)
+            .check(Policy("I have no Idea") { DecisionEnums.NOT_APPLICABLE })
+            .get(Audit.skipAuditLog) { "OK" }
 
         assertEquals("OK", biased)
     }
@@ -124,8 +124,8 @@ internal class RSBACTest {
 
         runCatching {
             rsbac
-                    .permit("Error 1") { true }
-                    .get(auditDescriptor) { "OK" }
+                .permit("Error 1") { true }
+                .get(auditDescriptor) { "OK" }
         }
 
         verify(auditDescriptor).log(eq("OK"))
@@ -138,8 +138,8 @@ internal class RSBACTest {
 
         runCatching {
             rsbac
-                    .deny("Error 1") { true }
-                    .get(auditDescriptor) { "OK" }
+                .deny("Error 1") { true }
+                .get(auditDescriptor) { "OK" }
         }
 
         verify(auditDescriptor).denied(eq("Error 1"))
@@ -153,8 +153,8 @@ internal class RSBACTest {
 
         val result = runCatching {
             rsbac
-                    .permit("Error 1") { true }
-                    .get(auditDescriptor) { throw exception }
+                .permit("Error 1") { true }
+                .get(auditDescriptor) { throw exception }
         }
 
         assertEquals(result.isFailure, true)
@@ -166,13 +166,13 @@ internal class RSBACTest {
     fun `should return bias if exceptions are caught in policies`() {
         val rsbac = RSBACImpl("value")
         val denyBiased = rsbac
-                .bias(DecisionEnums.DENY)
-                .check(Policy("I have no Idea") { throw RuntimeException("An error", IllegalStateException("Not allowed...")) })
-                .getDecision()
+            .bias(DecisionEnums.DENY)
+            .check(Policy("I have no Idea") { throw RuntimeException("An error", IllegalStateException("Not allowed...")) })
+            .getDecision()
         val permitBiased = rsbac
-                .bias(DecisionEnums.PERMIT)
-                .check(Policy("I have no Idea") { throw RuntimeException("An error", IllegalStateException("Not allowed...")) })
-                .getDecision()
+            .bias(DecisionEnums.PERMIT)
+            .check(Policy("I have no Idea") { throw RuntimeException("An error", IllegalStateException("Not allowed...")) })
+            .getDecision()
 
         assertEquals(DecisionEnums.DENY, denyBiased.value)
         assertEquals(DecisionEnums.PERMIT, permitBiased.value)
@@ -181,17 +181,19 @@ internal class RSBACTest {
     @Test
     fun `should return bias if exceptions are caught in context`() {
         val result = RSBACImpl(ThrowingContext())
-                .check(Policy("Its ok") {
+            .check(
+                Policy("Its ok") {
                     thisThrowsAnException()
                     DecisionEnums.PERMIT
-                })
-                .getDecision()
+                }
+            )
+            .getDecision()
 
         assertEquals(DecisionEnums.DENY, result.value)
     }
 
     inline fun <reified T : Throwable> assertThrowsMessage(expected: String, noinline executable: () -> Unit) =
-            assertEquals(expected, assertThrows<T>(executable).message)
+        assertEquals(expected, assertThrows<T>(executable).message)
 
     class ThrowingContext {
         fun thisThrowsAnException() {

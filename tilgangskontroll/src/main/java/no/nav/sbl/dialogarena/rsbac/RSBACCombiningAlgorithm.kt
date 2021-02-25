@@ -14,7 +14,7 @@ abstract class CombiningAlgo {
 }
 
 // Inspirert av https://www.axiomatics.com/blog/understanding-xacml-combining-algorithms/
-private open class DecisionOverride(val overrideValue : DecisionEnums) : CombiningAlgo() {
+private open class DecisionOverride(val overrideValue: DecisionEnums) : CombiningAlgo() {
     override fun <CONTEXT> combine(policies: List<Combinable<CONTEXT>>, context: CONTEXT): Decision {
         var combinedDecision = Decision("No matching rule found", DecisionEnums.NOT_APPLICABLE)
         for (policy: Combinable<CONTEXT> in policies) {
@@ -28,7 +28,6 @@ private open class DecisionOverride(val overrideValue : DecisionEnums) : Combini
         }
         return combinedDecision
     }
-
 }
 
 private class PermitOverride : DecisionOverride(DecisionEnums.PERMIT)

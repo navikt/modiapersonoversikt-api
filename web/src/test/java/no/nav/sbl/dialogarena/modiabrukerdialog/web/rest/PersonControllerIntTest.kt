@@ -7,9 +7,9 @@ import no.nav.kjerneinfo.consumer.fim.person.PersonKjerneinfoServiceBi
 import no.nav.kjerneinfo.consumer.fim.person.to.HentKjerneinformasjonResponse
 import no.nav.kjerneinfo.domain.person.Fodselsnummer
 import no.nav.kjerneinfo.domain.person.Person
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.pdl.PdlOppslagService
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.pdl.generated.HentPerson
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.kodeverk.StandardKodeverk
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.pdl.PdlOppslagService
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.TilgangskontrollMock
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.person.PersonController
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.person.Telefonnummer
@@ -29,7 +29,8 @@ internal class PersonControllerIntTest {
                 fornavn = "Ola",
                 mellomnavn = null,
                 etternavn = "Nordmann"
-            ), organisasjonsnavn = null, organisasjonsnummer = null
+            ),
+            organisasjonsnavn = null, organisasjonsnummer = null
         )
         val adresse = HentPerson.KontaktinformasjonForDoedsboAdresse(
             adresselinje1 = "testadresse 21",
@@ -61,13 +62,14 @@ internal class PersonControllerIntTest {
         )
         val vergemaalEllerFremtidsfullmakt: List<HentPerson.VergemaalEllerFremtidsfullmakt> = listOf(vergemal)
 
-        whenever(kjerneinfoMock.hentKjerneinformasjon(any())).thenReturn(HentKjerneinformasjonResponse()
-            .apply {
-                this.person = Person()
-                    .apply {
-                        this.fodselsnummer = Fodselsnummer("10108000398".trimIndent())
-                    }
-            }
+        whenever(kjerneinfoMock.hentKjerneinformasjon(any())).thenReturn(
+            HentKjerneinformasjonResponse()
+                .apply {
+                    this.person = Person()
+                        .apply {
+                            this.fodselsnummer = Fodselsnummer("10108000398".trimIndent())
+                        }
+                }
         )
         whenever(pdlMock.hentPerson(any())).thenReturn(
             HentPerson.Person(
@@ -116,7 +118,6 @@ internal class PersonControllerIntTest {
     }
 }
 
-
 fun Map<String, Any?>.deepget(path: String): Any? {
     var instance: Any? = this
     path.split(".")
@@ -136,5 +137,3 @@ fun Map<String, Any?>.deepget(path: String): Any? {
 
     return instance
 }
-
-

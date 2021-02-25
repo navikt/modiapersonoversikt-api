@@ -3,10 +3,10 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.aaputsending
 import no.nav.common.auth.subject.Subject
 import no.nav.common.auth.subject.SubjectHandler
 import no.nav.common.leaderelection.LeaderElectionClient
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.saker.Sak
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Fritekst
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.saker.Sak
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.HenvendelseUtsendingService
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.saker.SakerService
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.dialog.RequestContext
@@ -17,7 +17,7 @@ import java.util.concurrent.Executors
 import java.util.concurrent.Future
 import java.util.concurrent.atomic.AtomicReference
 
-private const val RPA_ENHET = "2830" //4151
+private const val RPA_ENHET = "2830" // 4151
 private const val MELDING_FRITEKST = """
 Forsinket utbetaling
 
@@ -33,9 +33,9 @@ private const val MELDING_TEMAKODE = "AAP"
 private const val MELDING_TEMAGRUPPE = "ARBD"
 
 class Prosessor<S>(
-        private val subject: Subject,
-        private val list: Collection<S>,
-        private val block: (s: S) -> Unit
+    private val subject: Subject,
+    private val list: Collection<S>,
+    private val block: (s: S) -> Unit
 ) {
     private val executor = Executors.newSingleThreadExecutor()
     private var job: Future<*>? = null
@@ -43,16 +43,16 @@ class Prosessor<S>(
     private val success: MutableList<S> = mutableListOf()
 
     data class Status<S>(
-            val isRunning: Boolean,
-            val isDone: Boolean,
-            val processed: Int,
-            val total: Int,
-            val success: List<S>,
-            val errors: List<Pair<S, Throwable>>
+        val isRunning: Boolean,
+        val isDone: Boolean,
+        val processed: Int,
+        val total: Int,
+        val success: List<S>,
+        val errors: List<Pair<S, Throwable>>
     )
 
     init {
-       job = executor.submit {
+        job = executor.submit {
             SubjectHandler.withSubject(subject) {
                 list.forEach { element ->
                     try {
@@ -67,49 +67,49 @@ class Prosessor<S>(
     }
 
     fun getStatus() = Status(
-            isRunning = job != null,
-            isDone = job?.isDone ?: false,
-            processed = success.size + errors.size,
-            total = list.size,
-            success = success,
-            errors = errors
+        isRunning = job != null,
+        isDone = job?.isDone ?: false,
+        processed = success.size + errors.size,
+        total = list.size,
+        success = success,
+        errors = errors
     )
 }
 
 class AAPUtsendingService(
-        private val sakerService: SakerService,
-        private val henvendelseService: HenvendelseUtsendingService,
-        private val leaderElection: LeaderElectionClient
+    private val sakerService: SakerService,
+    private val henvendelseService: HenvendelseUtsendingService,
+    private val leaderElection: LeaderElectionClient
 ) {
     private val processorReference: AtomicReference<Prosessor<String>?> = AtomicReference(null)
 
     data class Status(
-            val isLeader: Boolean,
-            val hostname: String,
-            val prosessorStatus: Prosessor.Status<String>
+        val isLeader: Boolean,
+        val hostname: String,
+        val prosessorStatus: Prosessor.Status<String>
     )
 
     fun status(): Status {
         val processor = processorReference.get()
         if (processor != null) {
             return Status(
-                    isLeader = leaderElection.isLeader,
-                    hostname = InetAddress.getLocalHost().hostName,
-                    prosessorStatus = processor.getStatus()
+                isLeader = leaderElection.isLeader,
+                hostname = InetAddress.getLocalHost().hostName,
+                prosessorStatus = processor.getStatus()
             )
         }
 
         return Status(
-                isLeader = leaderElection.isLeader,
-                hostname = InetAddress.getLocalHost().hostName,
-                prosessorStatus = Prosessor.Status(
-                        isRunning = false,
-                        isDone = false,
-                        processed = -1,
-                        total = -1,
-                        success = emptyList(),
-                        errors = emptyList()
-                )
+            isLeader = leaderElection.isLeader,
+            hostname = InetAddress.getLocalHost().hostName,
+            prosessorStatus = Prosessor.Status(
+                isRunning = false,
+                isDone = false,
+                processed = -1,
+                total = -1,
+                success = emptyList(),
+                errors = emptyList()
+            )
         )
     }
 
@@ -135,10 +135,10 @@ class AAPUtsendingService(
             val ident = subject.uid
 
             processorReference.set(
-                    Prosessor(subject, fnrs) { fnr ->
-                        sendHenvendelse(ident, fnr)
-                        Thread.sleep(500)
-                    }
+                Prosessor(subject, fnrs) { fnr ->
+                    sendHenvendelse(ident, fnr)
+                    Thread.sleep(500)
+                }
             )
         }
 
@@ -148,24 +148,24 @@ class AAPUtsendingService(
     private fun sendHenvendelse(ident: String, fnr: String) {
         val saker: List<Sak> = sakerService.hentSammensatteSaker(fnr)
         val sak: Sak = saker.find { it.temaKode == MELDING_TEMAKODE }
-                ?: throw IllegalStateException("Fant ikke $MELDING_TEMAKODE sak for $fnr")
+            ?: throw IllegalStateException("Fant ikke $MELDING_TEMAKODE sak for $fnr")
 
         val requestContext = RequestContext(
-                fnr = fnr,
-                ident = ident,
-                enhet = RPA_ENHET
+            fnr = fnr,
+            ident = ident,
+            enhet = RPA_ENHET
         )
 
         val type = Meldingstype.INFOMELDING_MODIA_UTGAAENDE
         val melding = Melding().withFnr(requestContext.fnr)
-                .withNavIdent(requestContext.ident)
-                .withEksternAktor(requestContext.ident)
-                .withKanal(getKanal(type))
-                .withType(type)
-                .withFritekst(Fritekst(MELDING_FRITEKST))
-                .withTilknyttetEnhet(requestContext.enhet)
-                .withErTilknyttetAnsatt(MELDING_TILKNYTTETANSATT)
-                .withTemagruppe(MELDING_TEMAGRUPPE)
+            .withNavIdent(requestContext.ident)
+            .withEksternAktor(requestContext.ident)
+            .withKanal(getKanal(type))
+            .withType(type)
+            .withFritekst(Fritekst(MELDING_FRITEKST))
+            .withTilknyttetEnhet(requestContext.enhet)
+            .withErTilknyttetAnsatt(MELDING_TILKNYTTETANSATT)
+            .withTemagruppe(MELDING_TEMAGRUPPE)
 
         henvendelseService.sendHenvendelse(melding, Optional.empty(), Optional.ofNullable(sak), RPA_ENHET)
     }

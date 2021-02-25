@@ -50,18 +50,18 @@ internal class OppgaveControllerTest {
     private val henvendelseUtsendingService: HenvendelseUtsendingService = mock()
     private val oppgaveRestClient: OppgaveBehandlingService = mock()
     private val oppgaveController: OppgaveController = OppgaveController(
-            OppgaveBehandlingServiceImpl(
-                    oppgaveBehandlingMock,
-                    tildelOppgaveMock,
-                    oppgaveWSMock,
-                    ansattWSMock,
-                    arbeidsfordelingV1Service,
-                    TilgangskontrollMock.get(),
-                    oppgaveRestClient
-            ),
-            plukkOppgaveService,
-            henvendelseUtsendingService,
-            TilgangskontrollMock.get()
+        OppgaveBehandlingServiceImpl(
+            oppgaveBehandlingMock,
+            tildelOppgaveMock,
+            oppgaveWSMock,
+            ansattWSMock,
+            arbeidsfordelingV1Service,
+            TilgangskontrollMock.get(),
+            oppgaveRestClient
+        ),
+        plukkOppgaveService,
+        henvendelseUtsendingService,
+        TilgangskontrollMock.get()
     )
 
     @BeforeEach
@@ -72,7 +72,7 @@ internal class OppgaveControllerTest {
     private fun mockOppgaveWs(): OppgaveV3 {
         val oppgaveMock: OppgaveV3 = mock()
         whenever(oppgaveMock.hentOppgave(any()))
-                .thenReturn(WSHentOppgaveResponse().withOppgave(mockOppgaveFraGSAK()))
+            .thenReturn(WSHentOppgaveResponse().withOppgave(mockOppgaveFraGSAK()))
         return oppgaveMock
     }
 
@@ -80,20 +80,20 @@ internal class OppgaveControllerTest {
         val gosysNAVAnsatt: GOSYSNAVansatt = mock()
         whenever(gosysNAVAnsatt.hentNAVAnsatt(any())).thenReturn(ASBOGOSYSNAVAnsatt())
         whenever(gosysNAVAnsatt.hentNAVAnsattEnhetListe(any()))
-                .thenReturn(ASBOGOSYSNAVEnhetListe().apply { navEnheter.add(ASBOGOSYSNavEnhet()) })
+            .thenReturn(ASBOGOSYSNAVEnhetListe().apply { navEnheter.add(ASBOGOSYSNavEnhet()) })
         return gosysNAVAnsatt
     }
 
     private fun mockOppgaveFraGSAK() = WSOppgave()
-            .withAnsvarligId(SAKSBEHANDLERS_IDENT)
-            .withOppgaveId(OPPGAVE_ID_1)
-            .withOppgavetype(WSOppgavetype())
-            .withFagomrade(WSFagomrade())
-            .withPrioritet(WSPrioritet())
-            .withUnderkategori(WSUnderkategori())
-            .withVersjon(5)
-            .withLest(false)
-            .withGjelder(WSBruker().withBrukerId(BRUKERS_FODSELSNUMMER))
+        .withAnsvarligId(SAKSBEHANDLERS_IDENT)
+        .withOppgaveId(OPPGAVE_ID_1)
+        .withOppgavetype(WSOppgavetype())
+        .withFagomrade(WSFagomrade())
+        .withPrioritet(WSPrioritet())
+        .withUnderkategori(WSUnderkategori())
+        .withVersjon(5)
+        .withLest(false)
+        .withGjelder(WSBruker().withBrukerId(BRUKERS_FODSELSNUMMER))
 
     @Test
     fun `Legger tilbake oppgave ved å kalle lagreOppgave mot GSAK`() {
@@ -103,14 +103,17 @@ internal class OppgaveControllerTest {
             oppgaveController.leggTilbake(httpRequest, lagRequest())
         }
 
-        verify(oppgaveBehandlingMock).lagreOppgave(check {
-            assertAll("Oppgave lagret i GSAK",
+        verify(oppgaveBehandlingMock).lagreOppgave(
+            check {
+                assertAll(
+                    "Oppgave lagret i GSAK",
                     Executable { assertEquals(OPPGAVE_ID_1, it.endreOppgave.oppgaveId) },
                     Executable { assertEquals("", it.endreOppgave.ansvarligId) },
                     Executable { assertEquals(UNDERKATEGORI_KODE_FOR_TEMAGRUPPE_ARBEID, it.endreOppgave.underkategoriKode) },
                     Executable { assertThat(it.endreOppgave.beskrivelse, containsString(VALGT_ENHET)) }
-            )
-        })
+                )
+            }
+        )
     }
 
     @Test
@@ -129,8 +132,10 @@ internal class OppgaveControllerTest {
         val oppgaveliste = listOf(lagWSOppgave().withOppgaveId("1"), lagWSOppgave().withOppgaveId("2"))
 
         whenever(oppgaveWSMock.finnOppgaveListe(any()))
-                .thenReturn(WSFinnOppgaveListeResponse()
-                        .withOppgaveListe(oppgaveliste))
+            .thenReturn(
+                WSFinnOppgaveListeResponse()
+                    .withOppgaveListe(oppgaveliste)
+            )
 
         val resultat = SubjectHandlerUtil.withIdent(SAKSBEHANDLERS_IDENT, UnsafeSupplier { oppgaveController.finnTildelte() })
 
@@ -143,26 +148,28 @@ internal class OppgaveControllerTest {
     fun `Kaller finnOppgaveListe med riktig request`() {
         whenever(oppgaveWSMock.finnOppgaveListe(any())).thenReturn(WSFinnOppgaveListeResponse())
         SubjectHandlerUtil.withIdent(SAKSBEHANDLERS_IDENT) { oppgaveController.finnTildelte() }
-        verify(oppgaveWSMock).finnOppgaveListe(check {
-            assertEquals(SAKSBEHANDLERS_IDENT, it.sok.ansvarligId)
-            assertTrue(it.filter.isAktiv)
-        })
+        verify(oppgaveWSMock).finnOppgaveListe(
+            check {
+                assertEquals(SAKSBEHANDLERS_IDENT, it.sok.ansvarligId)
+                assertTrue(it.filter.isAktiv)
+            }
+        )
     }
 
     @Test
     fun `Returnerer oppgaver ved plukk`() {
         val httpRequest = HttpRequestUtil.mockHttpServletRequestMedCookie(SAKSBEHANDLERS_IDENT, VALGT_ENHET)
         val oppgaver = listOf(
-                Oppgave(OPPGAVE_ID_1, "fnr", "traadId", true),
-                Oppgave(OPPGAVE_ID_2, "fnr", "traadId", true)
+            Oppgave(OPPGAVE_ID_1, "fnr", "traadId", true),
+            Oppgave(OPPGAVE_ID_2, "fnr", "traadId", true)
         )
 
         whenever(tildelOppgaveMock.tildelFlereOppgaver(any()))
-                .thenReturn(WSTildelFlereOppgaverResponse().withOppgaveIder(1, 2))
+            .thenReturn(WSTildelFlereOppgaverResponse().withOppgaveIder(1, 2))
         whenever(plukkOppgaveService.plukkOppgaver(any(), any()))
-                .thenReturn(oppgaver)
+            .thenReturn(oppgaver)
         whenever(oppgaveWSMock.finnOppgaveListe(any()))
-                .thenReturn(WSFinnOppgaveListeResponse())
+            .thenReturn(WSFinnOppgaveListeResponse())
 
         val resultat = SubjectHandlerUtil.withIdent(SAKSBEHANDLERS_IDENT, UnsafeSupplier { oppgaveController.plukkOppgaver(TEMAGRUPPE_ARBEID, null, httpRequest) })
 
@@ -177,15 +184,17 @@ internal class OppgaveControllerTest {
 
         val stoOppgave = WSOppgavetype().withKode("SPM_OG_SVR")
         val oppgaveliste = listOf(
-                lagWSOppgave().withOppgaveId(OPPGAVE_ID_1).withOppgavetype(stoOppgave),
-                lagWSOppgave().withOppgaveId("2").withGjelder(WSBruker().withBrukerId("1234")).withOppgavetype(stoOppgave)
+            lagWSOppgave().withOppgaveId(OPPGAVE_ID_1).withOppgavetype(stoOppgave),
+            lagWSOppgave().withOppgaveId("2").withGjelder(WSBruker().withBrukerId("1234")).withOppgavetype(stoOppgave)
         )
 
         whenever(oppgaveWSMock.finnOppgaveListe(any()))
-                .thenReturn(WSFinnOppgaveListeResponse()
-                        .withOppgaveListe(oppgaveliste))
+            .thenReturn(
+                WSFinnOppgaveListeResponse()
+                    .withOppgaveListe(oppgaveliste)
+            )
         whenever(plukkOppgaveService.plukkOppgaver(any(), any()))
-                .thenReturn(emptyList())
+            .thenReturn(emptyList())
 
         val resultat = SubjectHandlerUtil.withIdent(SAKSBEHANDLERS_IDENT, UnsafeSupplier { oppgaveController.plukkOppgaver(TEMAGRUPPE_ARBEID, null, httpRequest) })
 
@@ -199,9 +208,9 @@ internal class OppgaveControllerTest {
         val httpRequest = HttpRequestUtil.mockHttpServletRequestMedCookie(SAKSBEHANDLERS_IDENT, VALGT_ENHET)
 
         whenever(tildelOppgaveMock.tildelFlereOppgaver(any()))
-                .thenReturn(WSTildelFlereOppgaverResponse())
+            .thenReturn(WSTildelFlereOppgaverResponse())
         whenever(oppgaveWSMock.finnOppgaveListe(any()))
-                .thenReturn(WSFinnOppgaveListeResponse())
+            .thenReturn(WSFinnOppgaveListeResponse())
 
         val resultat = SubjectHandlerUtil.withIdent(SAKSBEHANDLERS_IDENT, UnsafeSupplier { oppgaveController.plukkOppgaver(TEMAGRUPPE_ARBEID, null, httpRequest) })
 
@@ -209,12 +218,12 @@ internal class OppgaveControllerTest {
     }
 
     private fun lagRequest() = LeggTilbakeRequest(
-            enhet = null,
-            oppgaveId = OPPGAVE_ID_1,
-            type = LeggTilbakeAarsak.FeilTema,
-            beskrivelse = null,
-            temagruppe = Temagruppe.ARBD,
-            traadId = "123456"
+        enhet = null,
+        oppgaveId = OPPGAVE_ID_1,
+        type = LeggTilbakeAarsak.FeilTema,
+        beskrivelse = null,
+        temagruppe = Temagruppe.ARBD,
+        traadId = "123456"
     )
 
     companion object {
@@ -233,18 +242,16 @@ internal class OppgaveControllerTest {
 
     fun lagWSOppgave(oppgaveId: String): WSOppgave {
         return WSOppgave()
-                .withOppgaveId(oppgaveId)
-                .withHenvendelseId(UUID.randomUUID().toString())
-                .withOppgavetype(WSOppgavetype().withKode("wsOppgavetype"))
-                .withGjelder(WSBruker().withBrukerId("10108000398"))
-                .withStatus(WSStatus().withKode("statuskode"))
-                .withFagomrade(WSFagomrade().withKode("HJE"))
-                .withAktivFra(DateTime.now().toLocalDate())
-                .withPrioritet(WSPrioritet().withKode("NORM_GEN"))
-                .withUnderkategori(WSUnderkategori().withKode("ARBEID_HJE"))
-                .withLest(false)
-                .withVersjon(1)
-
+            .withOppgaveId(oppgaveId)
+            .withHenvendelseId(UUID.randomUUID().toString())
+            .withOppgavetype(WSOppgavetype().withKode("wsOppgavetype"))
+            .withGjelder(WSBruker().withBrukerId("10108000398"))
+            .withStatus(WSStatus().withKode("statuskode"))
+            .withFagomrade(WSFagomrade().withKode("HJE"))
+            .withAktivFra(DateTime.now().toLocalDate())
+            .withPrioritet(WSPrioritet().withKode("NORM_GEN"))
+            .withUnderkategori(WSUnderkategori().withKode("ARBEID_HJE"))
+            .withLest(false)
+            .withVersjon(1)
     }
-
 }

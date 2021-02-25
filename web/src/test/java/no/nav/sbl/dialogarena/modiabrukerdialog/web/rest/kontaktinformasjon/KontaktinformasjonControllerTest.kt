@@ -39,11 +39,15 @@ class KontaktinformasjonControllerTest {
         val mobiltelefon = WSMobiltelefonnummer().withValue(MOBILTELEFON).withSistOppdatert(lagDato(SIST_OPPDATERT))
 
         whenever(dkifService.hentDigitalKontaktinformasjon(FNR))
-                .thenReturn(WSHentDigitalKontaktinformasjonResponse()
-                        .withDigitalKontaktinformasjon(WSKontaktinformasjon()
-                                .withReservasjon(RESERVASJON)
-                                .withEpostadresse(epost)
-                                .withMobiltelefonnummer(mobiltelefon)))
+            .thenReturn(
+                WSHentDigitalKontaktinformasjonResponse()
+                    .withDigitalKontaktinformasjon(
+                        WSKontaktinformasjon()
+                            .withReservasjon(RESERVASJON)
+                            .withEpostadresse(epost)
+                            .withMobiltelefonnummer(mobiltelefon)
+                    )
+            )
     }
 
     @Test
@@ -52,14 +56,16 @@ class KontaktinformasjonControllerTest {
         val epost = response["epost"] as Map<String, String>
         val mobiltelefon = response["mobiltelefon"] as Map<String, String>
 
-        assertAll("Henter epost",
-                Executable { assertEquals(EPOST, epost["value"]) },
-                Executable { assertEquals(lagDato(SIST_OPPDATERT), epost["sistOppdatert"]) }
+        assertAll(
+            "Henter epost",
+            Executable { assertEquals(EPOST, epost["value"]) },
+            Executable { assertEquals(lagDato(SIST_OPPDATERT), epost["sistOppdatert"]) }
         )
 
-        assertAll("Henter mobiltelefon",
-                Executable { assertEquals(MOBILTELEFON, mobiltelefon["value"]) },
-                Executable { assertEquals(lagDato(SIST_OPPDATERT), mobiltelefon["sistOppdatert"]) }
+        assertAll(
+            "Henter mobiltelefon",
+            Executable { assertEquals(MOBILTELEFON, mobiltelefon["value"]) },
+            Executable { assertEquals(lagDato(SIST_OPPDATERT), mobiltelefon["sistOppdatert"]) }
         )
 
         assertEquals(RESERVASJON, response["reservasjon"])
@@ -67,8 +73,10 @@ class KontaktinformasjonControllerTest {
 
     @Test
     fun `Når bruker ikke har epost eller mobil`() {
-        whenever(dkifService.hentDigitalKontaktinformasjon(FNR)).thenReturn(WSHentDigitalKontaktinformasjonResponse()
-                .withDigitalKontaktinformasjon(WSKontaktinformasjon()))
+        whenever(dkifService.hentDigitalKontaktinformasjon(FNR)).thenReturn(
+            WSHentDigitalKontaktinformasjonResponse()
+                .withDigitalKontaktinformasjon(WSKontaktinformasjon())
+        )
 
         val response = controller.hentKontaktinformasjon(FNR)
         val epost = response["epost"]
@@ -85,5 +93,4 @@ class KontaktinformasjonControllerTest {
 
         return DatatypeFactory.newInstance().newXMLGregorianCalendar(date)
     }
-
 }

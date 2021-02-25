@@ -24,30 +24,33 @@ class OrganisasjonV1ClientImpl(val baseUrl: String = EnvironmentUtils.getRequire
     private val log = LoggerFactory.getLogger(OrganisasjonV1ClientImpl::class.java)
     private val client = RestClient.baseClient()
     private val objectMapper = jacksonObjectMapper()
-            .apply { configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false) }
+        .apply { configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false) }
 
     override fun hentNokkelInfo(orgnummer: String): OrganisasjonResponse? {
         val uuid = UUID.randomUUID()
         try {
-            TjenestekallLogger.info("Oppgaver-request: $uuid", mapOf(
+            TjenestekallLogger.info(
+                "Oppgaver-request: $uuid",
+                mapOf(
                     "orgnummer" to orgnummer,
                     "callId" to MDC.get(MDCConstants.MDC_CALL_ID)
-            ))
+                )
+            )
             val response: Response = client
-                    .newCall(
-                            Request.Builder()
-                                    .url("$url$orgnummer/noekkelinfo")
-                                    .header(RestConstants.NAV_CALL_ID_HEADER, MDC.get(MDCConstants.MDC_CALL_ID) ?: UUID.randomUUID().toString())
-                                    .header(RestConstants.NAV_CONSUMER_ID_HEADER, MODIABRUKERDIALOG_SYSTEM_USER)
-                                    .header("accept", "application/json")
-                                    .build()
-                    )
-                    .execute()
+                .newCall(
+                    Request.Builder()
+                        .url("$url$orgnummer/noekkelinfo")
+                        .header(RestConstants.NAV_CALL_ID_HEADER, MDC.get(MDCConstants.MDC_CALL_ID) ?: UUID.randomUUID().toString())
+                        .header(RestConstants.NAV_CONSUMER_ID_HEADER, MODIABRUKERDIALOG_SYSTEM_USER)
+                        .header("accept", "application/json")
+                        .build()
+                )
+                .execute()
             val body = response.body()?.string()
             val tjenestekallInfo = mapOf(
-                    "status" to "${response.code()} ${response.message()}",
-                    "orgnummer" to orgnummer,
-                    "body" to body
+                "status" to "${response.code()} ${response.message()}",
+                "orgnummer" to orgnummer,
+                "body" to body
             )
 
             if (response.code() in 200..299 && body != null) {
@@ -59,25 +62,28 @@ class OrganisasjonV1ClientImpl(val baseUrl: String = EnvironmentUtils.getRequire
             }
         } catch (exception: Exception) {
             log.error("Feilet ved GET kall mot ereg  (ID: $uuid)", exception)
-            TjenestekallLogger.error("ereg orgnavn-error: $uuid", mapOf(
+            TjenestekallLogger.error(
+                "ereg orgnavn-error: $uuid",
+                mapOf(
                     "exception" to exception,
                     "orgnummer" to orgnummer
-            ))
+                )
+            )
             return null
         }
     }
 }
 
 data class OrgNavn(
-        val redigertnavn: String? = null,
-        val navnelinje1: String? = null,
-        val navnelinje2: String? = null,
-        val navnelinje3: String? = null,
-        val navnelinje4: String? = null,
-        val navnelinje5: String? = null
+    val redigertnavn: String? = null,
+    val navnelinje1: String? = null,
+    val navnelinje2: String? = null,
+    val navnelinje3: String? = null,
+    val navnelinje4: String? = null,
+    val navnelinje5: String? = null
 )
 
 data class OrganisasjonResponse(
-        val organisasjonsnummer: String,
-        val navn: OrgNavn
+    val organisasjonsnummer: String,
+    val navn: OrgNavn
 )

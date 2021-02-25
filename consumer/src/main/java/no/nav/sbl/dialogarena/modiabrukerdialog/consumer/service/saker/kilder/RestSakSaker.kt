@@ -14,10 +14,10 @@ import java.time.OffsetDateTime
 class RestSakSaker(
     private val sakApiGateway: SakApiGateway,
     private val fodselnummerAktorService: FodselnummerAktorService
-): SakerKilde {
+) : SakerKilde {
     override val kildeNavn: String = "SAK"
 
-     override fun leggTilSaker(fnr: String, saker: MutableList<Sak>) {
+    override fun leggTilSaker(fnr: String, saker: MutableList<Sak>) {
         val response = sakApiGateway.hentSaker(
             requireNotNull(fodselnummerAktorService.hentAktorIdForFnr(fnr)) {
                 "Kan ikke hente ut saker når mapping til aktorId feilet"
@@ -27,7 +27,7 @@ class RestSakSaker(
         saker.addAll(gsakSaker)
     }
 
-     fun opprettSak(fnr: String, sak: Sak): String {
+    fun opprettSak(fnr: String, sak: Sak): String {
         val ident = SubjectHandler.getIdent().orElseThrow { IllegalStateException("Fant ikke ident") }
         val opprettetSak = sakApiGateway.opprettSak(
             OpprettSakDto(
