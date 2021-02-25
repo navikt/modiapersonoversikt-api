@@ -1,8 +1,8 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.kodeverk;
 
 
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.GsakKodeTema;
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.gsak.GsakKodeverk;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.saker.GsakKodeTema;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.saker.GsakKodeverk;
 
 import java.util.List;
 import java.util.Map;

@@ -1,11 +1,11 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.dialog
 
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.GsakKodeTema
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.saker.GsakKodeTema
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveBehandlingService
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.OpprettOppgaveRequest
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.OpprettOppgaveResponse
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.OpprettSkjermetOppgaveRequest
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.gsak.GsakKodeverk
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.saker.GsakKodeverk
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.BehandlingsIdTilgangData
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Policies
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Tilgangskontroll

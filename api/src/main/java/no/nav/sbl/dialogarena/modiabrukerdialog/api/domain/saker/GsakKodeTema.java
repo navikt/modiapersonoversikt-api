@@ -1,4 +1,4 @@
-package no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak;
+package no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.saker;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 

@@ -2,14 +2,14 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.dialog
 
 import no.nav.common.auth.subject.SubjectHandler
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.Sak
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.saker.Sak
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Fritekst
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.exceptions.TraadAlleredeBesvart
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.HenvendelseUtsendingService
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveBehandlingService
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.gsak.SakerService
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.saker.SakerService
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.RestUtils
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.TemagruppeTemaMapping.hentTemagruppeForTema
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Policies

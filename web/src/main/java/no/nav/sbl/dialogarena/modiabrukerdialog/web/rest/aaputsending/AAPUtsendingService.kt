@@ -3,12 +3,12 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.aaputsending
 import no.nav.common.auth.subject.Subject
 import no.nav.common.auth.subject.SubjectHandler
 import no.nav.common.leaderelection.LeaderElectionClient
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.Sak
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.saker.Sak
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Fritekst
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.HenvendelseUtsendingService
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.gsak.SakerService
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.saker.SakerService
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.dialog.RequestContext
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.dialog.getKanal
 import java.net.InetAddress

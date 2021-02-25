@@ -1,32 +1,21 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.saker
 
-import io.mockk.MockKAnnotations
-import io.mockk.every
+import io.mockk.*
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
-import io.mockk.verify
+import no.nav.common.auth.subject.SubjectHandler
 import no.nav.common.log.MDCConstants
 import no.nav.common.utils.EnvironmentUtils
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.Sak
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.Sak.*
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.saker.Sak
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.saker.Sak.*
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.FodselnummerAktorService
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.gsak.GsakKodeverk
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.kodeverk.StandardKodeverk
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.pdl.PdlOppslagService
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.psak.PsakService
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.saker.GsakKodeverk
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.saker.mediation.SakApiGateway
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.Feature
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.UnleashService
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.saker.mediation.SakDto
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.behandlehenvendelse.BehandleHenvendelsePortType
-import no.nav.tjeneste.virksomhet.behandlesak.v1.BehandleSakV1
-import no.nav.tjeneste.virksomhet.behandlesak.v1.meldinger.WSOpprettSakRequest
 import no.nav.tjeneste.virksomhet.behandlesak.v1.meldinger.WSOpprettSakResponse
-import no.nav.tjeneste.virksomhet.sak.v1.SakV1
-import no.nav.tjeneste.virksomhet.sak.v1.informasjon.WSFagomraader
-import no.nav.tjeneste.virksomhet.sak.v1.informasjon.WSFagsystemer
-import no.nav.tjeneste.virksomhet.sak.v1.informasjon.WSSak
-import no.nav.tjeneste.virksomhet.sak.v1.informasjon.WSSakstyper
-import no.nav.tjeneste.virksomhet.sak.v1.meldinger.WSFinnSakResponse
 import no.nav.virksomhet.gjennomforing.sak.arbeidogaktivitet.v1.EndringsInfo
 import no.nav.virksomhet.gjennomforing.sak.arbeidogaktivitet.v1.Fagomradekode
 import no.nav.virksomhet.gjennomforing.sak.arbeidogaktivitet.v1.Sakstypekode
@@ -38,21 +27,19 @@ import org.hamcrest.CoreMatchers.not
 import org.hamcrest.MatcherAssert.assertThat
 import org.joda.time.DateTime
 import org.joda.time.LocalDate
+import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.slf4j.MDC
+import java.time.OffsetDateTime
+import java.util.*
 import kotlin.contracts.ExperimentalContracts
 import kotlin.streams.toList
 
 
 @ExperimentalContracts
 class SakerServiceImplTest {
-    @MockK
-    private lateinit var sakV1: SakV1
-
-    @MockK
-    private lateinit var behandleSak: BehandleSakV1
 
     @MockK
     private lateinit var gsakKodeverk: GsakKodeverk
@@ -70,9 +57,6 @@ class SakerServiceImplTest {
     private lateinit var psakService: PsakService
 
     @MockK
-    private lateinit var unleashService: UnleashService
-
-    @MockK
     private lateinit var sakApiGateway: SakApiGateway
 
     @MockK
@@ -87,22 +71,30 @@ class SakerServiceImplTest {
         MockKAnnotations.init(this, relaxUnitFun = true)
         sakerService.setup() // Kaller @PostConstruct manuelt siden vi kjører testen uten spring
         every { arbeidOgAktivitet.hentSakListe(WSHentSakListeRequest()) } returns WSHentSakListeResponse()
-        every { unleashService.isEnabled(String()) } returns false
-        every { unleashService.isEnabled(Feature.USE_REST_SAK_IMPL) } returns false
         every { gsakKodeverk.hentFagsystemMapping() } returns emptyMap()
         every { standardKodeverk.getArkivtemaNavn(any()) } returns null
-        every { sakV1.finnSak(any()) } returns WSFinnSakResponse().withSakListe(createSaksliste())
+        every { fodselnummerAktorService.hentAktorIdForFnr(any()) } returns "123456789"
+        mockkStatic(SubjectHandler::class)
+        every { SubjectHandler.getIdent() } returns Optional.ofNullable("")
+        every { sakApiGateway.opprettSak(any()) } returns SakDto(id = "123")
+
         MDC.put(MDCConstants.MDC_CALL_ID, "12345")
 
     }
 
+    @AfterEach
+    fun destroy() {
+        unmockkStatic(SubjectHandler::class)
+    }
+
     @Test
     fun `transformerer response til saksliste`() {
+        every { sakApiGateway.hentSaker(any()) } returns createSaksliste()
         val saksliste: List<Sak> = sakerService.hentSammensatteSakerResultat(FNR).saker
         assertThat(saksliste[0].saksId, `is`(SakId_1))
         assertThat(saksliste[3].fagsystemKode, `is`(""))
-        assertThat(saksliste[saksliste.size - 1].sakstype, `is`(Sak.SAKSTYPE_MED_FAGSAK))
-        assertThat(saksliste[saksliste.size - 1].temaKode, `is`(Sak.BIDRAG_MARKOR))
+        assertThat(saksliste[saksliste.size - 1].sakstype, `is`(SAKSTYPE_MED_FAGSAK))
+        assertThat(saksliste[saksliste.size - 1].temaKode, `is`(BIDRAG_MARKOR))
         assertThat(saksliste[saksliste.size - 1].temaNavn, `is`("Bidrag"))
         assertThat(saksliste[saksliste.size - 1].fagsystemNavn, `is`("Kopiert inn i Bisys"))
     }
@@ -125,28 +117,11 @@ class SakerServiceImplTest {
 
     @Test
     fun `oppretter ikke generell oppfolgingssak og fjerner generell oppfolgingssak dersom fagsaker inneholder oppfolgingssak`() {
-        val wsSaker: List<WSSak> = listOf(
-            WSSak()
-                .withSakId("4")
-                .withFagsystemSakId("44")
-                .withFagomraade(WSFagomraader().withValue(TEMAKODE_OPPFOLGING))
-                .withOpprettelsetidspunkt(DateTime.now())
-                .withSakstype(WSSakstyper().withValue("Fag"))
-                .withFagsystem(WSFagsystemer().withValue(GODKJENTE_FAGSYSTEMER_FOR_FAGSAKER[0])),
-            WSSak()
-                .withSakId("5")
-                .withFagsystemSakId("45")
-                .withFagomraade(WSFagomraader().withValue(TEMAKODE_OPPFOLGING))
-                .withOpprettelsetidspunkt(DateTime.now())
-                .withSakstype(WSSakstyper().withValue(SAKSTYPE_GENERELL))
-                .withFagsystem(WSFagsystemer().withValue(FAGSYSTEM_FOR_OPPRETTELSE_AV_GENERELL_SAK))
-        )
-
-        every { sakV1.finnSak(any()) } returns WSFinnSakResponse().withSakListe(wsSaker)
+        every { sakApiGateway.hentSaker(any()) } returns createOppfolgingSaksliste()
         val saker = sakerService.hentSammensatteSakerResultat(FNR).saker.stream()
-            .filter(Sak.harTemaKode(Sak.TEMAKODE_OPPFOLGING)).toList()
+            .filter(harTemaKode(TEMAKODE_OPPFOLGING)).toList()
         assertThat(saker.size, `is`(1))
-        assertThat(saker[0].sakstype, not(`is`(Sak.SAKSTYPE_GENERELL)))
+        assertThat(saker[0].sakstype, not(`is`(SAKSTYPE_GENERELL)))
     }
 
     @Test
@@ -154,7 +129,7 @@ class SakerServiceImplTest {
         val saker =
             sakerService.hentSammensatteSaker(FNR).stream().filter(Sak.harTemaKode(Sak.TEMAKODE_OPPFOLGING)).toList()
         assertThat(saker.size, `is`(1))
-        assertThat(saker[0].sakstype, `is`(Sak.SAKSTYPE_GENERELL))
+        assertThat(saker[0].sakstype, `is`(SAKSTYPE_GENERELL))
     }
 
 
@@ -174,7 +149,7 @@ class SakerServiceImplTest {
         assertThat(saker.size, `is`(1))
         assertThat(saker[0].saksIdVisning, `is`(saksId))
         assertThat(saker[0].opprettetDato, `is`(dato.toDateTimeAtStartOfDay()))
-        assertThat(saker[0].fagsystemKode, `is`(Sak.FAGSYSTEMKODE_ARENA))
+        assertThat(saker[0].fagsystemKode, `is`(FAGSYSTEMKODE_ARENA))
         assertThat(saker[0].finnesIGsak, `is`(false))
     }
 
@@ -184,7 +159,6 @@ class SakerServiceImplTest {
         val valgtNavEnhet = "0219"
         val opprettSakResponse = WSOpprettSakResponse()
         opprettSakResponse.sakId = SAKS_ID
-        every { behandleSak.opprettSak(any()) } returns opprettSakResponse
         sakerService.knyttBehandlingskjedeTilSak(
             FNR,
             BEHANDLINGSKJEDEID,
@@ -208,7 +182,6 @@ class SakerServiceImplTest {
         val valgtNavEnhet = "0219"
         val opprettSakResponse = WSOpprettSakResponse()
         opprettSakResponse.sakId = SAKS_ID
-        every { behandleSak.opprettSak(any()) } returns opprettSakResponse
         sakerService.knyttBehandlingskjedeTilSak(
             FNR,
             BEHANDLINGSKJEDEID,
@@ -230,14 +203,13 @@ class SakerServiceImplTest {
         val valgtNavEnhet = "0219"
         val sak = Sak()
         sak.syntetisk = true
-        sak.fagsystemKode = Sak.BIDRAG_MARKOR
+        sak.fagsystemKode = BIDRAG_MARKOR
         sakerService.knyttBehandlingskjedeTilSak(
             FNR,
             BEHANDLINGSKJEDEID,
             sak,
             valgtNavEnhet
         )
-        verify(exactly = 0) { behandleSak.opprettSak(WSOpprettSakRequest()) }
         verify(exactly = 0) {
             behandleHenvendelsePortType.knyttBehandlingskjedeTilSak(
                 String(),
@@ -256,9 +228,7 @@ class SakerServiceImplTest {
 
     @Test
     fun `knytt behandlingskjede til sak kaster feil hvis enhet ikke er satt`() {
-        every { behandleSak.opprettSak(WSOpprettSakRequest()) } returns WSOpprettSakResponse().withSakId(
-            SAKS_ID
-        )
+
         assertThrows(IllegalArgumentException::class.java) {
             sakerService.knyttBehandlingskjedeTilSak(
                 FNR,
@@ -271,9 +241,7 @@ class SakerServiceImplTest {
 
     @Test
     fun `knytt behandlingskjede til sak kaster feil hvis behandlingskjede ikke er satt`() {
-        every { behandleSak.opprettSak(WSOpprettSakRequest()) } returns WSOpprettSakResponse().withSakId(
-            SAKS_ID
-        )
+
         assertThrows(IllegalArgumentException::class.java) {
             sakerService.knyttBehandlingskjedeTilSak(
                 FNR,
@@ -286,9 +254,7 @@ class SakerServiceImplTest {
 
     @Test
     fun `knytt Behandlingskjede til sak kaster feil hvis FNR ikke er satt`() {
-        every { behandleSak.opprettSak(WSOpprettSakRequest()) } returns WSOpprettSakResponse().withSakId(
-            SAKS_ID
-        )
+
         assertThrows(IllegalArgumentException::class.java) {
             sakerService.knyttBehandlingskjedeTilSak(
                 "",
@@ -299,13 +265,10 @@ class SakerServiceImplTest {
         }
     }
 
-
     companion object {
-        const val VEDTAKSLOSNINGEN = "FS36"
-        val FIRE_DAGER_SIDEN = DateTime.now().minusDays(4) //joda.DateTime
-        const val FNR = "fnr"
         const val BEHANDLINGSKJEDEID = "behandlingsKjedeId"
         const val SAKS_ID = "123"
+        const val FNR = "fnr"
         const val SakId_1 = "1"
         const val FagsystemSakId_1 = "11"
         const val SakId_2 = "2"
@@ -313,47 +276,14 @@ class SakerServiceImplTest {
         const val SakId_3 = "3"
         const val FagsystemSakId_3 = "33"
         const val SakId_4 = "4"
-        const val FagsystemSakId_4 = "44"
 
-        private fun createSaksliste(): List<WSSak> {
-            return listOf(
-                WSSak()
-                    .withSakId(SakId_1)
-                    .withFagsystemSakId(FagsystemSakId_1)
-                    .withFagomraade(WSFagomraader().withValue(GODKJENTE_TEMA_FOR_GENERELL_SAK[0]))
-                    .withOpprettelsetidspunkt(FIRE_DAGER_SIDEN)
-                    .withSakstype(WSSakstyper().withValue(SAKSTYPE_GENERELL))
-                    .withFagsystem(WSFagsystemer().withValue(FAGSYSTEM_FOR_OPPRETTELSE_AV_GENERELL_SAK)),
-                WSSak()
-                    .withSakId(SakId_2)
-                    .withFagsystemSakId(FagsystemSakId_2)
-                    .withFagomraade(WSFagomraader().withValue(GODKJENTE_TEMA_FOR_GENERELL_SAK[1]))
-                    .withOpprettelsetidspunkt(DateTime.now().minusDays(3))
-                    .withSakstype(WSSakstyper().withValue(SAKSTYPE_GENERELL))
-                    .withFagsystem(WSFagsystemer().withValue(FAGSYSTEM_FOR_OPPRETTELSE_AV_GENERELL_SAK)),
-                WSSak()
-                    .withSakId(SakId_3)
-                    .withFagsystemSakId(FagsystemSakId_3)
-                    .withFagomraade(WSFagomraader().withValue("AAP"))
-                    .withOpprettelsetidspunkt(DateTime.now().minusDays(5))
-                    .withSakstype(WSSakstyper().withValue("Fag"))
-                    .withFagsystem(WSFagsystemer().withValue(GODKJENTE_FAGSYSTEMER_FOR_FAGSAKER[0])),
-                WSSak()
-                    .withSakId(SakId_4)
-                    .withFagsystemSakId(FagsystemSakId_4)
-                    .withFagomraade(WSFagomraader().withValue("STO"))
-                    .withOpprettelsetidspunkt(DateTime.now().minusDays(5))
-                    .withSakstype(WSSakstyper().withValue(SAKSTYPE_GENERELL))
-                    .withFagsystem(WSFagsystemer().withValue(""))
-            )
-        }
 
         fun lagSak(): Sak {
             val sak = Sak()
             sak.temaKode = "GEN"
             sak.finnesIGsak = false
-            sak.fagsystemKode = Sak.FAGSYSTEM_FOR_OPPRETTELSE_AV_GENERELL_SAK
-            sak.sakstype = Sak.SAKSTYPE_GENERELL
+            sak.fagsystemKode = FAGSYSTEM_FOR_OPPRETTELSE_AV_GENERELL_SAK
+            sak.sakstype = SAKSTYPE_GENERELL
             sak.opprettetDato = DateTime.now()
             return sak
         }
@@ -363,9 +293,72 @@ class SakerServiceImplTest {
             sak.temaKode = "STO"
             sak.finnesIGsak = false
             sak.fagsystemKode = ""
-            sak.sakstype = Sak.SAKSTYPE_GENERELL
+            sak.sakstype = SAKSTYPE_GENERELL
             sak.opprettetDato = DateTime.now()
             return sak
+        }
+
+        fun earlierDateTimeWithOffSet(offset: Long): OffsetDateTime = OffsetDateTime.now().minusDays(offset)
+
+        fun createSaksliste(): List<SakDto> {
+            return ArrayList(listOf(
+                SakDto(id = SakId_1,
+                    tema = "AAP",
+                    applikasjon = "IT01",
+                    aktoerId = "123",
+                    orgnr = null,
+                    fagsakNr = FagsystemSakId_1,
+                    opprettetAv = null,
+                    opprettetTidspunkt = earlierDateTimeWithOffSet(4)),
+
+                SakDto(id = SakId_2,
+                    tema = "AGR",
+                    applikasjon = "IT01",
+                    aktoerId = "123",
+                    orgnr = null,
+                    fagsakNr = FagsystemSakId_2,
+                    opprettetAv = null,
+                    opprettetTidspunkt = earlierDateTimeWithOffSet(3)),
+
+                SakDto(id = SakId_3,
+                    tema = "AAP",
+                    applikasjon = "IT01",
+                    aktoerId = "123",
+                    orgnr = null,
+                    fagsakNr = FagsystemSakId_3,
+                    opprettetAv = null,
+                    opprettetTidspunkt = earlierDateTimeWithOffSet(5)),
+
+                SakDto(id = SakId_4,
+                    tema = "STO",
+                    applikasjon = "",
+                    aktoerId = "123",
+                    orgnr = null,
+                    fagsakNr = null,
+                    opprettetAv = null,
+                    opprettetTidspunkt = earlierDateTimeWithOffSet(5))))
+        }
+
+        fun createOppfolgingSaksliste(): MutableList<SakDto> {
+
+            return ArrayList(listOf(
+                SakDto(id = "4",
+                    tema = "OPP",
+                    applikasjon = "AO01",
+                    aktoerId = "123",
+                    orgnr = null,
+                    fagsakNr = "44",
+                    opprettetAv = null,
+                    opprettetTidspunkt = earlierDateTimeWithOffSet(0)),
+
+                SakDto(id = "5",
+                    tema = "OPP",
+                    applikasjon = "FS22",
+                    aktoerId = "123",
+                    orgnr = null,
+                    fagsakNr = null,
+                    opprettetAv = null,
+                    opprettetTidspunkt = earlierDateTimeWithOffSet(3))))
         }
     }
 }

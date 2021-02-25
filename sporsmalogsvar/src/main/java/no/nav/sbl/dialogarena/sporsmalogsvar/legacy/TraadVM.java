@@ -3,7 +3,7 @@ package no.nav.sbl.dialogarena.sporsmalogsvar.legacy;
 
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Saksbehandler;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe;
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.gsak.Sak;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.saker.Sak;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype;
 import org.joda.time.DateTime;
 

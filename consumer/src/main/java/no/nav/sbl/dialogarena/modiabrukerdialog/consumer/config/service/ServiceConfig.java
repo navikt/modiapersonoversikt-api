@@ -18,8 +18,8 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.HenvendelseLesServic
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.HenvendelseUtsendingService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveBehandlingService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.arbeidsfordeling.ArbeidsfordelingV1Service;
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.gsak.GsakKodeverk;
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.gsak.SakerService;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.saker.GsakKodeverk;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.saker.SakerService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.kodeverk.StandardKodeverk;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.ldap.LDAPService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.AnsattService;
