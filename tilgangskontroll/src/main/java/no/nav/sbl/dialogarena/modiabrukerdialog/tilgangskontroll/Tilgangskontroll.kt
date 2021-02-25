@@ -34,15 +34,17 @@ class Policies {
         val tilgangTilDiskresjonskode = PolicyGenerator<TilgangskontrollContext, String>({ "Saksbehandler (${context.hentSaksbehandlerId()}) har ikke tilgang til $data" }) {
             val diskresjonskode = data
             if (arrayOf("6", "SPSF").contains(diskresjonskode)) {
-                if (context.harSaksbehandlerRolle("0000-GA-GOSYS_KODE6"))
+                if (context.harSaksbehandlerRolle("0000-GA-GOSYS_KODE6")) {
                     DecisionEnums.PERMIT
-                else
+                } else {
                     DecisionEnums.DENY
+                }
             } else if (arrayOf("7", "SPFO").contains(diskresjonskode)) {
-                if (context.harSaksbehandlerRolle("0000-GA-GOSYS_KODE7"))
+                if (context.harSaksbehandlerRolle("0000-GA-GOSYS_KODE7")) {
                     DecisionEnums.PERMIT
-                else
+                } else {
                     DecisionEnums.DENY
+                }
             } else {
                 DecisionEnums.NOT_APPLICABLE
             }
@@ -109,10 +111,11 @@ class Policies {
 
         @JvmField
         val behandlingsIderTilhorerBruker = PolicyGenerator<TilgangskontrollContext, BehandlingsIdTilgangData>({ "Ikke alle behandlingsIder tilhørte medsendt fødselsnummer. Spørring gjort av ${context.hentSaksbehandlerId()}" }) {
-            if (context.alleBehandlingsIderTilhorerBruker(data.fnr, data.behandlingsIder))
+            if (context.alleBehandlingsIderTilhorerBruker(data.fnr, data.behandlingsIder)) {
                 DecisionEnums.PERMIT
-            else
+            } else {
                 DecisionEnums.DENY
+            }
         }
 
         @JvmField

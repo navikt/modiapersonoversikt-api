@@ -15,7 +15,6 @@ import org.joda.time.LocalDate
 class ForeldrepengerUttrekk constructor(private val forelderpengerService: ForeldrepengerServiceBi) {
 
     fun hent(fodselsnummer: String): Map<String, Any?> {
-
         val foreldrepenger = forelderpengerService.hentForeldrepengerListe(ForeldrepengerListeRequest(fodselsnummer, Periode(LocalDate.now().minusYears(2), LocalDate.now())))
 
         return mapOf(
@@ -33,7 +32,6 @@ class ForeldrepengerUttrekk constructor(private val forelderpengerService: Forel
     }
 
     fun hentFraInfotrygd(foreldrepenger: Foreldrepengerettighet): Map<String, Any?> {
-
         return foreldrepenger.let {
             mapOf(
                 "forelder" to it.forelder?.ident,

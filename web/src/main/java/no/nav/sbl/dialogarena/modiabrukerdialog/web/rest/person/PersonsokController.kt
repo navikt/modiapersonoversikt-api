@@ -254,8 +254,12 @@ private fun lagBostedsadresse(adr: StrukturertAdresse): String? =
     when (adr) {
         is Gateadresse -> arrayOf(adr.gatenavn, adr.husnummer, adr.husbokstav, adr.poststed?.value).filterNotNull().joinToString(" ")
         is Matrikkeladresse -> arrayOf(
-            adr.matrikkelnummer.bruksnummer, adr.matrikkelnummer.festenummer, adr.matrikkelnummer.gaardsnummer,
-            adr.matrikkelnummer.seksjonsnummer, adr.matrikkelnummer.undernummer, adr.poststed?.value
+            adr.matrikkelnummer.bruksnummer,
+            adr.matrikkelnummer.festenummer,
+            adr.matrikkelnummer.gaardsnummer,
+            adr.matrikkelnummer.seksjonsnummer,
+            adr.matrikkelnummer.undernummer,
+            adr.poststed?.value
         ).filterNotNull().joinToString(" ")
         is StedsadresseNorge -> arrayOf(adr.tilleggsadresse, adr.bolignummer, adr.poststed?.value).filterNotNull().joinToString(" ")
         is PostboksadresseNorsk -> arrayOf(adr.postboksanlegg, adr.poststed?.value).filterNotNull().joinToString(" ")

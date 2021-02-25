@@ -6,8 +6,10 @@ abstract class CombiningAlgo {
     companion object {
         @JvmField
         val denyOverride: CombiningAlgo = DenyOverride2()
+
         @JvmField
         val permitOverride: CombiningAlgo = PermitOverride()
+
         @JvmField
         val firstApplicable: CombiningAlgo = FirstApplicable()
     }

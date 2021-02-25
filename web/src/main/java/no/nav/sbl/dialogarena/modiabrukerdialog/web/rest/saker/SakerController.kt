@@ -73,7 +73,9 @@ class SakerController @Autowired constructor(
                 val journalpostMetadata = hentDokumentMetadata(journalpostId, fnr)
                 val tilgangskontrollResult = tilgangskontrollService.harSaksbehandlerTilgangTilDokument(
                     request,
-                    journalpostMetadata, fnr, journalpostMetadata.temakode
+                    journalpostMetadata,
+                    fnr,
+                    journalpostMetadata.temakode
                 )
 
                 // TODO erstatt tilgangsstyring

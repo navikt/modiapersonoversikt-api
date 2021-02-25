@@ -66,10 +66,11 @@ class RestSakSaker(
             return when (sakDto.applikasjon) {
                 VEDTAKSLOSNINGEN -> SAKSTYPE_MED_FAGSAK
                 else -> {
-                    if (sakDto.fagsakNr != null)
+                    if (sakDto.fagsakNr != null) {
                         SAKSTYPE_MED_FAGSAK
-                    else
+                    } else {
                         SAKSTYPE_GENERELL
+                    }
                 }
             }
         }

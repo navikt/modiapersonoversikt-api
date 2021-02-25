@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController
 class NaisController {
     @Autowired
     lateinit var checks: List<SelfTestCheck>
+
     @Autowired
     lateinit var pingables: List<Pingable>
 

@@ -17,7 +17,6 @@ class PleiepengerUttrekk constructor(
 ) {
 
     fun hent(fodselsnummer: String): Map<String, Any?> {
-
         val pleiepenger = pleiepengerService.hentPleiepengerListe(PleiepengerListeRequest(fodselsnummer))
 
         return mapOf(
