@@ -3,6 +3,8 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.aaputsending
 import no.nav.common.auth.subject.Subject
 import no.nav.common.auth.subject.SubjectHandler
 import no.nav.common.leaderelection.LeaderElectionClient
+import no.nav.common.log.MDCConstants
+import no.nav.kjerneinfo.consumer.mdc.MDCUtils
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.saker.Sak
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Fritekst
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding
@@ -10,6 +12,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingst
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.HenvendelseUtsendingService
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.saker.SakerService
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.dialog.getKanal
+import org.slf4j.MDC
 import java.net.InetAddress
 import java.util.*
 import java.util.concurrent.Executors
@@ -37,6 +40,7 @@ class Prosessor<S>(
         private val block: (s: S) -> Unit
 ) {
     private val executor = Executors.newSingleThreadExecutor()
+    private val callId = MDC.get(MDCConstants.MDC_CALL_ID) ?: UUID.randomUUID().toString()
     private var job: Future<*>? = null
     private val errors: MutableList<Pair<S, Throwable>> = mutableListOf()
     private val success: MutableList<S> = mutableListOf()
@@ -52,6 +56,7 @@ class Prosessor<S>(
 
     init {
        job = executor.submit {
+            MDC.put(MDCConstants.MDC_CALL_ID, callId)
             SubjectHandler.withSubject(subject) {
                 list.forEach { element ->
                     try {
