@@ -9,7 +9,6 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.HenvendelseUtsendingService
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.saker.SakerService
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.dialog.RequestContext
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.dialog.getKanal
 import java.net.InetAddress
 import java.util.*
@@ -17,20 +16,26 @@ import java.util.concurrent.Executors
 import java.util.concurrent.Future
 import java.util.concurrent.atomic.AtomicReference
 
-private const val RPA_ENHET = "2830" //4151
 private const val MELDING_FRITEKST = """
-Forsinket utbetaling
+Vi skriver til deg fordi du tidligere har mottatt arbeidsavklaringspenger (AAP) som arbeidssøker. 
+Det er nå gjort en endring i det midlertidige regelverket som gjelder under koronapandemien. 
+Dersom du fortsatt oppfyller vilkårene for å få AAP som arbeidssøker, 
+kan du å få innvilget en fornyet periode med AAP som arbeidssøker fra 1. mars og til og med 30. juni. 
+Du må søke om dette senest 1. april for å få ytelsen fra 1. mars. 
+Hvis du søker etter 1. april, får du fra den dagen du søker og til og med 30. juni. 
+Du må være registrert som arbeidssøker og sende meldekort som vanlig.  
 
-Det har dessverre skjedd en teknisk feil som medfører at utbetalingen din kan ha blitt forsinket.
-Vi beklager dette, og vi jobber nå med å rette opp feilen. Pengene vil bli utbetalt i løpet av denne uken.
-Hvis du allerede har mottatt utbetalingen din kan du se bort fra denne meldingen.
+Hvis du ønsker å søke om en ny periode med AAP som arbeidssøker: 
+Svar med denne teksten: Jeg søker om AAP som arbeidssøker fra 1. mars (evt. annen dato). 
 
-Med vennlig hilsen
-NAV
+Hvis du ikke ønsker å søke: 
+Svar: Nei
 """
 private const val MELDING_TILKNYTTETANSATT = false
 private const val MELDING_TEMAKODE = "AAP"
 private const val MELDING_TEMAGRUPPE = "ARBD"
+
+class FnrEnhet(val fnr: String, val enhet: String)
 
 class Prosessor<S>(
         private val subject: Subject,
@@ -81,12 +86,12 @@ class AAPUtsendingService(
         private val henvendelseService: HenvendelseUtsendingService,
         private val leaderElection: LeaderElectionClient
 ) {
-    private val processorReference: AtomicReference<Prosessor<String>?> = AtomicReference(null)
+    private val processorReference: AtomicReference<Prosessor<FnrEnhet>?> = AtomicReference(null)
 
     data class Status(
             val isLeader: Boolean,
             val hostname: String,
-            val prosessorStatus: Prosessor.Status<String>
+            val prosessorStatus: Prosessor.Status<FnrEnhet>
     )
 
     fun status(): Status {
@@ -122,7 +127,7 @@ class AAPUtsendingService(
         return status()
     }
 
-    fun utsendingAAP(fnrs: List<String>): Status {
+    fun utsendingAAP(data: List<FnrEnhet>): Status {
         if (!leaderElection.isLeader) {
             return status()
         }
@@ -135,8 +140,8 @@ class AAPUtsendingService(
             val ident = subject.uid
 
             processorReference.set(
-                    Prosessor(subject, fnrs) { fnr ->
-                        sendHenvendelse(ident, fnr)
+                    Prosessor(subject, data) { element ->
+                        sendHenvendelse(ident, element)
                         Thread.sleep(500)
                     }
             )
@@ -145,28 +150,24 @@ class AAPUtsendingService(
         return status()
     }
 
-    private fun sendHenvendelse(ident: String, fnr: String) {
+    private fun sendHenvendelse(ident: String, data: FnrEnhet) {
+        val fnr = data.fnr
+        val enhet = data.enhet
         val saker: List<Sak> = sakerService.hentSammensatteSaker(fnr)
         val sak: Sak = saker.find { it.temaKode == MELDING_TEMAKODE }
                 ?: throw IllegalStateException("Fant ikke $MELDING_TEMAKODE sak for $fnr")
 
-        val requestContext = RequestContext(
-                fnr = fnr,
-                ident = ident,
-                enhet = RPA_ENHET
-        )
-
-        val type = Meldingstype.INFOMELDING_MODIA_UTGAAENDE
-        val melding = Melding().withFnr(requestContext.fnr)
-                .withNavIdent(requestContext.ident)
-                .withEksternAktor(requestContext.ident)
+        val type = Meldingstype.SPORSMAL_MODIA_UTGAAENDE
+        val melding = Melding().withFnr(fnr)
+                .withNavIdent(ident)
+                .withEksternAktor(ident)
                 .withKanal(getKanal(type))
                 .withType(type)
                 .withFritekst(Fritekst(MELDING_FRITEKST))
-                .withTilknyttetEnhet(requestContext.enhet)
+                .withTilknyttetEnhet(enhet)
                 .withErTilknyttetAnsatt(MELDING_TILKNYTTETANSATT)
                 .withTemagruppe(MELDING_TEMAGRUPPE)
 
-        henvendelseService.sendHenvendelse(melding, Optional.empty(), Optional.ofNullable(sak), RPA_ENHET)
+        henvendelseService.sendHenvendelse(melding, Optional.empty(), Optional.ofNullable(sak), enhet)
     }
 }

@@ -30,7 +30,7 @@ class AAPUtsendingController @Autowired constructor(
     }
 
     @PostMapping("/start")
-    fun startUtsending(@RequestBody fnrs: List<String>): AAPUtsendingService.Status {
+    fun startUtsending(@RequestBody fnrs: List<FnrEnhet>): AAPUtsendingService.Status {
         return tilgangskontroll
                 .check(Policies.tilgangTilModia)
                 .check(Policies.kanStarteHasteUtsending)
