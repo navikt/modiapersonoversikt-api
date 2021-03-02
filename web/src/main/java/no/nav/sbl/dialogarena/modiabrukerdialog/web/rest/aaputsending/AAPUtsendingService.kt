@@ -17,13 +17,7 @@ import java.util.concurrent.Future
 import java.util.concurrent.atomic.AtomicReference
 
 private const val MELDING_FRITEKST = """
-Vi skriver til deg fordi du tidligere har mottatt arbeidsavklaringspenger (AAP) som arbeidssøker. 
-Det er nå gjort en endring i det midlertidige regelverket som gjelder under koronapandemien. 
-Dersom du fortsatt oppfyller vilkårene for å få AAP som arbeidssøker, 
-kan du å få innvilget en fornyet periode med AAP som arbeidssøker fra 1. mars og til og med 30. juni. 
-Du må søke om dette senest 1. april for å få ytelsen fra 1. mars. 
-Hvis du søker etter 1. april, får du fra den dagen du søker og til og med 30. juni. 
-Du må være registrert som arbeidssøker og sende meldekort som vanlig.  
+Vi skriver til deg fordi du tidligere har mottatt arbeidsavklaringspenger (AAP) som arbeidssøker. Det er nå gjort en endring i det midlertidige regelverket som gjelder under koronapandemien. Dersom du fortsatt oppfyller vilkårene for å få AAP som arbeidssøker, kan du å få innvilget en fornyet periode med AAP som arbeidssøker fra 1. mars og til og med 30. juni. Du må søke om dette senest 1. april for å få ytelsen fra 1. mars. Hvis du søker etter 1. april, får du fra den dagen du søker og til og med 30. juni. Du må være registrert som arbeidssøker og sende meldekort som vanlig.  
 
 Hvis du ønsker å søke om en ny periode med AAP som arbeidssøker: 
 Svar med denne teksten: Jeg søker om AAP som arbeidssøker fra 1. mars (evt. annen dato). 
