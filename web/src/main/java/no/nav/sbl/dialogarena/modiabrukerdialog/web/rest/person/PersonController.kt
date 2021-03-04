@@ -11,9 +11,9 @@ import no.nav.kjerneinfo.domain.person.fakta.Sikkerhetstiltak
 import no.nav.kjerneinfo.domain.person.fakta.Telefon
 import no.nav.kodeverk.consumer.fim.kodeverk.KodeverkmanagerBi
 import no.nav.kodeverk.consumer.fim.kodeverk.to.feil.HentKodeverkKodeverkIkkeFunnet
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.pdl.PdlOppslagService
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.pdl.generated.HentPerson
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.kodeverk.StandardKodeverk
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.pdl.PdlOppslagService
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Policies
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Tilgangskontroll
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.kodeverk.Kode
@@ -33,8 +33,6 @@ import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.server.ResponseStatusException
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeFormatter.ISO_DATE_TIME
 
 private const val TPS_UKJENT_VERDI = "???"
@@ -127,6 +125,7 @@ class PersonController @Autowired constructor(
         val gyldighetstidspunkt: String?,
         val opphoerstidspunkt: String?
     )
+
     data class PersonnavnDTO(
         val fornavn: String,
         val mellomnavn: String?,
@@ -134,14 +133,27 @@ class PersonController @Autowired constructor(
     ) {
         val sammensatt = listOfNotNull(fornavn, mellomnavn, etternavn).joinToString(" ")
     }
+
     private fun hentVergemal(vergemal: List<HentPerson.VergemaalEllerFremtidsfullmakt>): List<VergemalDTO> {
+        val allenavn: Map<String, PersonnavnDTO> = vergemal
+            .mapNotNull { it.vergeEllerFullmektig.motpartsPersonident }
+            .let { pdlOppslagService.hentNavnBolk(it) }
+            ?.filterValues { it != null }
+            ?.mapValues { entry ->
+                val personnavn = entry.value!!
+                PersonnavnDTO(personnavn.fornavn, personnavn.mellomnavn, personnavn.etternavn)
+            }
+            ?: emptyMap()
+
         return vergemal
             .map {
+                val motpartsNavn = allenavn[it.vergeEllerFullmektig.motpartsPersonident]
+                val navn = it.vergeEllerFullmektig.navn?.let { personnavn ->
+                    PersonnavnDTO(personnavn.fornavn, personnavn.mellomnavn, personnavn.etternavn)
+                }
                 VergemalDTO(
                     ident = it.vergeEllerFullmektig.motpartsPersonident,
-                    navn = it.vergeEllerFullmektig.navn?.let { personnavn ->
-                        PersonnavnDTO(personnavn.fornavn, personnavn.mellomnavn, personnavn.etternavn)
-                    },
+                    navn = motpartsNavn ?: navn,
                     vergesakstype = it.type,
                     omfang = it.vergeEllerFullmektig.omfang,
                     embete = it.embete,
@@ -174,7 +186,6 @@ class PersonController @Autowired constructor(
                     "gyldigFraOgMed" to formatDate(it.gyldigFraOgMed.value),
                     "gyldigTilOgMed" to formatDate(it.gyldigTilOgMed.value)
                 )
-
             }
     }
 
@@ -223,7 +234,6 @@ class PersonController @Autowired constructor(
 
         return out.toList()
     }
-
 
     private fun getNavn(personnavn: Personnavn?) = mapOf(
         "endringsinfo" to personnavn?.sistEndret?.let { hentEndringsinformasjon(it) },
