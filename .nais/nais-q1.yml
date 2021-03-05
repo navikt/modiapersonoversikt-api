@@ -68,7 +68,7 @@ spec:
     - name: ISSO_REFRESH_URL
       value: "https://app-q1.adeo.no/veilarblogin/api/openam-refresh"
     - name: MODIA_REFRESH_URL
-      value: "https://modia-q1.dev.adeo.no/modialogin/api/openam-refresh"
+      value: "https://modia-q1.dev.adeo.no/modialogin/api/refresh"
     - name: SECURITY_TOKEN_SERVICE_DISCOVERY_URL
       value: "https://security-token-service.nais.preprod.local/rest/v1/sts/.well-known/openid-configuration"
     - name: SECURITYTOKENSERVICE_URL
