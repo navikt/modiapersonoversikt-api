@@ -13,19 +13,19 @@ internal class ArenaSaker(val arbeidOgAktivitet: ArbeidOgAktivitet) : SakerKilde
     override fun leggTilSaker(fnr: String, saker: MutableList<Sak>) {
         if (saker.none(Sak.IS_ARENA_OPPFOLGING::test)) {
             hentOppfolgingssakFraArena(fnr)
-                    ?.also { saker.add(it) }
+                ?.also { saker.add(it) }
         }
     }
 
     private fun hentOppfolgingssakFraArena(fnr: String): Sak? {
         val request = WSHentSakListeRequest()
-                .withBruker(WSBruker().withBrukertypeKode("PERSON").withBruker(fnr))
-                .withFagomradeKode("OPP")
+            .withBruker(WSBruker().withBrukertypeKode("PERSON").withBruker(fnr))
+            .withFagomradeKode("OPP")
 
         return arbeidOgAktivitet.hentSakListe(request)
-                .sakListe
-                .firstOrNull()
-                ?.let(TIL_SAK)
+            .sakListe
+            .firstOrNull()
+            ?.let(TIL_SAK)
     }
 
     companion object {

@@ -21,16 +21,16 @@ class KontaktinformasjonController @Autowired constructor(private val dkifServic
     @GetMapping
     fun hentKontaktinformasjon(@PathVariable("fnr") fnr: String): Map<String, Any?> {
         return tilgangskontroll
-                .check(Policies.tilgangTilBruker.with(fnr))
-                .get(Audit.describe(READ, Person.Kontaktinformasjon, AuditIdentifier.FNR to fnr)) {
-                    val response = dkifService.hentDigitalKontaktinformasjon(fnr)
+            .check(Policies.tilgangTilBruker.with(fnr))
+            .get(Audit.describe(READ, Person.Kontaktinformasjon, AuditIdentifier.FNR to fnr)) {
+                val response = dkifService.hentDigitalKontaktinformasjon(fnr)
 
-                    mapOf(
-                            "epost" to getEpost(response),
-                            "mobiltelefon" to getMobiltelefon(response),
-                            "reservasjon" to response.digitalKontaktinformasjon.reservasjon
-                    )
-                }
+                mapOf(
+                    "epost" to getEpost(response),
+                    "mobiltelefon" to getMobiltelefon(response),
+                    "reservasjon" to response.digitalKontaktinformasjon.reservasjon
+                )
+            }
     }
 
     private fun getEpost(response: WSHentDigitalKontaktinformasjonResponse): Map<String, Any>? {
@@ -38,8 +38,8 @@ class KontaktinformasjonController @Autowired constructor(private val dkifServic
             return null
         }
         return mapOf(
-                "value" to response.digitalKontaktinformasjon.epostadresse.value,
-                "sistOppdatert" to response.digitalKontaktinformasjon.epostadresse.sistOppdatert
+            "value" to response.digitalKontaktinformasjon.epostadresse.value,
+            "sistOppdatert" to response.digitalKontaktinformasjon.epostadresse.sistOppdatert
         )
     }
 
@@ -48,9 +48,8 @@ class KontaktinformasjonController @Autowired constructor(private val dkifServic
             return null
         }
         return mapOf(
-                "value" to response.digitalKontaktinformasjon.mobiltelefonnummer.value,
-                "sistOppdatert" to response.digitalKontaktinformasjon.mobiltelefonnummer.sistOppdatert
+            "value" to response.digitalKontaktinformasjon.mobiltelefonnummer.value,
+            "sistOppdatert" to response.digitalKontaktinformasjon.mobiltelefonnummer.sistOppdatert
         )
     }
-
 }

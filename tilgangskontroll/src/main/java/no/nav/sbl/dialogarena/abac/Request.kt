@@ -40,7 +40,7 @@ class Request {
 }
 
 data class AbacRequest(
-        val request: Map<Category, CategoryAttribute>
+    val request: Map<Category, CategoryAttribute>
 )
 
 fun abacRequest(block: Request.() -> Unit): AbacRequest {

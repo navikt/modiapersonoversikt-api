@@ -22,8 +22,8 @@ class TilgangskontrollTest {
     @Test
     fun `deny om saksbehandler mangler modia-roller`() {
         val (message, decision) = Tilgangskontroll(mockContext(abacTilgang = Decision.Deny))
-                .check(Policies.tilgangTilModia)
-                .getDecision()
+            .check(Policies.tilgangTilModia)
+            .getDecision()
 
         assertEquals("Saksbehandler (Optional[Z999999]) har ikke tilgang til modia. Årsak: FP3_EGEN_ANSATT", message)
         assertEquals(DecisionEnums.DENY, decision)
@@ -32,8 +32,8 @@ class TilgangskontrollTest {
     @Test
     fun `permit om saksbehandler har modiagenerell-rollen`() {
         val (_, decision) = Tilgangskontroll(mockContext())
-                .check(Policies.tilgangTilModia)
-                .getDecision()
+            .check(Policies.tilgangTilModia)
+            .getDecision()
 
         assertEquals(DecisionEnums.PERMIT, decision)
     }
@@ -53,25 +53,34 @@ class TilgangskontrollTest {
 
         assertEquals(DecisionEnums.DENY, decision)
     }
-
 }
 
 private fun mockContext(
-        saksbehandlerIdent: String = "Z999999",
-        tematilganger: Set<String> = setOf(),
-        abacTilgang: Decision = Decision.Permit
+    saksbehandlerIdent: String = "Z999999",
+    tematilganger: Set<String> = setOf(),
+    abacTilgang: Decision = Decision.Permit
 ): TilgangskontrollContext {
     val context: TilgangskontrollContext = mock()
     whenever(context.hentSaksbehandlerId()).thenReturn(Optional.of(saksbehandlerIdent))
     whenever(context.hentTemagrupperForSaksbehandler(any())).thenReturn(tematilganger)
-    whenever(context.checkAbac(any())).thenReturn(AbacResponse(listOf(
-            Response(abacTilgang, listOf(
-                    Advice(NavAttributes.ADVICE_DENY_REASON.attributeId, listOf(
-                            AttributeAssignment(NavAttributes.ADVICEOROBLIGATION_CAUSE.attributeId, "cause-0001-manglerrolle"),
-                            AttributeAssignment(NavAttributes.ADVICEOROBLIGATION_DENY_POLICY.attributeId, "fp3_behandle_egen_ansatt"),
-                            AttributeAssignment(NavAttributes.ADVICEOROBLIGATION_DENY_RULE.attributeId, "intern_behandle_kode6_mangler_gruppetilgang")
-                    ))
-            ))
-    )))
+    whenever(context.checkAbac(any())).thenReturn(
+        AbacResponse(
+            listOf(
+                Response(
+                    abacTilgang,
+                    listOf(
+                        Advice(
+                            NavAttributes.ADVICE_DENY_REASON.attributeId,
+                            listOf(
+                                AttributeAssignment(NavAttributes.ADVICEOROBLIGATION_CAUSE.attributeId, "cause-0001-manglerrolle"),
+                                AttributeAssignment(NavAttributes.ADVICEOROBLIGATION_DENY_POLICY.attributeId, "fp3_behandle_egen_ansatt"),
+                                AttributeAssignment(NavAttributes.ADVICEOROBLIGATION_DENY_RULE.attributeId, "intern_behandle_kode6_mangler_gruppetilgang")
+                            )
+                        )
+                    )
+                )
+            )
+        )
+    )
     return context
 }

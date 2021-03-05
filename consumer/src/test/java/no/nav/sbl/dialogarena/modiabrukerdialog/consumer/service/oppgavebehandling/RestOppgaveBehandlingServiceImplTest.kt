@@ -15,11 +15,9 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.oppgave.toGetOppgaveR
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.oppgave.toPostOppgaveResponseJsonDTO
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.oppgave.toPutOppgaveRequestJsonDTO
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.oppgave.toPutOppgaveResponseJsonDTO
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.pdl.generated.HentIdent
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.*
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.arbeidsfordeling.ArbeidsfordelingV1Service
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.AnsattService
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.pdl.PdlOppslagService
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.http.SubjectHandlerUtil
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.kodeverksmapper.KodeverksmapperService
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.kodeverksmapper.domain.Behandling
@@ -141,7 +139,6 @@ class RestOppgaveBehandlingServiceImplTest {
             every { systemApiClient.opprettOppgave(any(), any()) } returns dummyOppgave.toPostOppgaveResponseJsonDTO()
             every { ansattService.hentAnsattNavn(eq("Z999999")) } returns "Fornavn Etternavn"
 
-
             val response = withIdent("Z999999") {
                 oppgaveBehandlingService.opprettSkjermetOppgave(
                     OpprettSkjermetOppgaveRequest(
@@ -198,7 +195,8 @@ class RestOppgaveBehandlingServiceImplTest {
             verifySequence {
                 apiClient.hentOppgave(any(), 1234)
                 apiClient.endreOppgave(
-                    any(), 1234, dummyOppgave.toPutOppgaveRequestJsonDTO().copy(
+                    any(), 1234,
+                    dummyOppgave.toPutOppgaveRequestJsonDTO().copy(
                         endretAvEnhetsnr = "4100",
                         tilordnetRessurs = "Z999999"
                     )
@@ -222,7 +220,8 @@ class RestOppgaveBehandlingServiceImplTest {
             verifySequence {
                 apiClient.hentOppgave(any(), 1234)
                 apiClient.endreOppgave(
-                    any(), 1234, dummyOppgave.toPutOppgaveRequestJsonDTO().copy(
+                    any(), 1234,
+                    dummyOppgave.toPutOppgaveRequestJsonDTO().copy(
                         endretAvEnhetsnr = "4110",
                         tilordnetRessurs = "Z999999"
                     )
@@ -305,7 +304,8 @@ class RestOppgaveBehandlingServiceImplTest {
                     statuskategori = "AAPEN"
                 )
                 systemApiClient.endreOppgave(
-                    any(), 1234, henvendelseOppgave.toPutOppgaveRequestJsonDTO().copy(
+                    any(), 1234,
+                    henvendelseOppgave.toPutOppgaveRequestJsonDTO().copy(
                         tilordnetRessurs = null,
                         endretAvEnhetsnr = "4100"
                     )
@@ -363,7 +363,7 @@ class RestOppgaveBehandlingServiceImplTest {
     }
 
     @Nested
-    inner class PlukkOppgave {}
+    inner class PlukkOppgave
 
     @Nested
     inner class FerdigstillOppgave {
@@ -384,7 +384,8 @@ class RestOppgaveBehandlingServiceImplTest {
             verifySequence {
                 apiClient.hentOppgave(any(), 1234)
                 apiClient.endreOppgave(
-                    any(), 1234, dummyOppgave.toPutOppgaveRequestJsonDTO().copy(
+                    any(), 1234,
+                    dummyOppgave.toPutOppgaveRequestJsonDTO().copy(
                         status = PutOppgaveRequestJsonDTO.Status.FERDIGSTILT,
                         beskrivelse = dummyOppgave.nybeskrivelse(
                             ident = "Z999999",
@@ -416,7 +417,8 @@ class RestOppgaveBehandlingServiceImplTest {
             verifySequence {
                 apiClient.hentOppgave(any(), 1234)
                 apiClient.endreOppgave(
-                    any(), 1234, dummyOppgave.toPutOppgaveRequestJsonDTO().copy(
+                    any(), 1234,
+                    dummyOppgave.toPutOppgaveRequestJsonDTO().copy(
                         status = PutOppgaveRequestJsonDTO.Status.FERDIGSTILT,
                         beskrivelse = dummyOppgave.nybeskrivelse(
                             ident = "Z999999",
@@ -447,7 +449,8 @@ class RestOppgaveBehandlingServiceImplTest {
             verifySequence {
                 apiClient.hentOppgave(any(), 1234)
                 apiClient.endreOppgave(
-                    any(), 1234, dummyOppgave.toPutOppgaveRequestJsonDTO().copy(
+                    any(), 1234,
+                    dummyOppgave.toPutOppgaveRequestJsonDTO().copy(
                         status = PutOppgaveRequestJsonDTO.Status.FERDIGSTILT,
                         beskrivelse = dummyOppgave.nybeskrivelse(
                             ident = "Z999999",
@@ -486,7 +489,8 @@ class RestOppgaveBehandlingServiceImplTest {
             verifySequence {
                 apiClient.hentOppgave(any(), 1234)
                 systemApiClient.endreOppgave(
-                    any(), 1234, dummyOppgave.toPutOppgaveRequestJsonDTO().copy(
+                    any(), 1234,
+                    dummyOppgave.toPutOppgaveRequestJsonDTO().copy(
                         tilordnetRessurs = null,
                         endretAvEnhetsnr = "4100"
                     )
@@ -520,7 +524,8 @@ class RestOppgaveBehandlingServiceImplTest {
             verifyAll {
                 apiClient.hentOppgave(any(), 1234)
                 apiClient.endreOppgave(
-                    any(), 1234, testoppgave.toPutOppgaveRequestJsonDTO().copy(
+                    any(), 1234,
+                    testoppgave.toPutOppgaveRequestJsonDTO().copy(
                         tilordnetRessurs = null,
                         beskrivelse = testoppgave.nybeskrivelse(
                             ident = "Z999999",
@@ -545,9 +550,10 @@ class RestOppgaveBehandlingServiceImplTest {
             every { arbeidsfordelingService.finnBehandlendeEnhetListe(any(), any(), any(), any()) } returns listOf(
                 AnsattEnhet("4567", "NAV Mockenhet")
             )
-            every { kodeverksmapperService.mapUnderkategori(any()) } returns Optional.of(Behandling()
-                .withBehandlingstema("behandlingstema_ANSOS")
-                .withBehandlingstype("behandlingstype_ANSOS")
+            every { kodeverksmapperService.mapUnderkategori(any()) } returns Optional.of(
+                Behandling()
+                    .withBehandlingstema("behandlingstema_ANSOS")
+                    .withBehandlingstype("behandlingstype_ANSOS")
             )
 
             withIdent("Z999999") {
@@ -563,7 +569,8 @@ class RestOppgaveBehandlingServiceImplTest {
             verifyAll {
                 apiClient.hentOppgave(any(), 1234)
                 apiClient.endreOppgave(
-                    any(), 1234, testoppgave.toPutOppgaveRequestJsonDTO().copy(
+                    any(), 1234,
+                    testoppgave.toPutOppgaveRequestJsonDTO().copy(
                         tilordnetRessurs = null,
                         beskrivelse = testoppgave.nybeskrivelse(
                             ident = "Z999999",
@@ -603,7 +610,8 @@ class RestOppgaveBehandlingServiceImplTest {
             verifyAll {
                 apiClient.hentOppgave(any(), 1234)
                 apiClient.endreOppgave(
-                    any(), 1234, testoppgave.toPutOppgaveRequestJsonDTO().copy(
+                    any(), 1234,
+                    testoppgave.toPutOppgaveRequestJsonDTO().copy(
                         tilordnetRessurs = null,
                         beskrivelse = testoppgave.nybeskrivelse(
                             ident = "Z999999",
@@ -645,7 +653,6 @@ class RestOppgaveBehandlingServiceImplTest {
         }
     }
 
-
     @Test
     fun `oppgave er ferdigstilt`() {
         every { apiClient.hentOppgave(any(), any()) } returnsMany listOf(
@@ -676,4 +683,3 @@ class RestOppgaveBehandlingServiceImplTest {
         )
     }
 }
-

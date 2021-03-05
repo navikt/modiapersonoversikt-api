@@ -4,6 +4,7 @@ on: [push]
 
 env:
   IMAGE: docker.pkg.github.com/${{ github.repository }}/modiapersonoversikt-api:${{ github.sha }}
+  CI: true
   TZ: Europe/Oslo
 
 jobs:
@@ -15,12 +16,17 @@ jobs:
       - uses: actions/setup-java@v1
         with:
           java-version: 11
+      - uses: nbadal/action-ktlint-setup@v1
+        with:
+          ktlint_version: '0.40.0'
       - uses: actions/cache@v1
         with:
           path: ~/.m2
           key: ${{ runner.os }}-maven-cache-${{ hashFiles('pom.xml') }}
           restore-keys: |
             ${{ runner.os }}-maven-cache-
+      - name: Ktlint
+        run: bash ./linting.sh
       - name: Build using maven
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

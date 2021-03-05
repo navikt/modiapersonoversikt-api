@@ -31,7 +31,8 @@ object OkHttpUtils {
                     .withFieldVisibility(Visibility.ANY)
                     .withGetterVisibility(Visibility.NONE)
                     .withSetterVisibility(Visibility.NONE)
-                    .withCreatorVisibility(Visibility.NONE))
+                    .withCreatorVisibility(Visibility.NONE)
+            )
         }
     object MediaTypes {
         val JSON: MediaType = requireNotNull(MediaType.parse("application/json; charset=utf-8"))
@@ -58,7 +59,8 @@ class LoggingInterceptor(val name: String, val callIdExtractor: (Request) -> Str
         val requestBody = request.peekContent()
 
         TjenestekallLogger.info(
-            "$name-request: $callId", mapOf(
+            "$name-request: $callId",
+            mapOf(
                 "url" to request.url().toString(),
                 "body" to requestBody
             )
@@ -68,7 +70,8 @@ class LoggingInterceptor(val name: String, val callIdExtractor: (Request) -> Str
             .onFailure { exception ->
                 log.error("$name-response-error (ID: $callId)", exception)
                 TjenestekallLogger.error(
-                    "$name-response-error: $callId", mapOf(
+                    "$name-response-error: $callId",
+                    mapOf(
                         "exception" to exception
                     )
                 )
@@ -79,14 +82,16 @@ class LoggingInterceptor(val name: String, val callIdExtractor: (Request) -> Str
 
         if (response.code() in 200..299) {
             TjenestekallLogger.info(
-                "$name-response: $callId", mapOf(
+                "$name-response: $callId",
+                mapOf(
                     "status" to "${response.code()} ${response.message()}",
                     "body" to responseBody
                 )
             )
         } else {
             TjenestekallLogger.error(
-                "$name-response-error: $callId", mapOf(
+                "$name-response-error: $callId",
+                mapOf(
                     "status" to "${response.code()} ${response.message()}",
                     "request" to request,
                     "body" to responseBody
@@ -107,7 +112,7 @@ sealed class HeadersInterceptor(val headersProvider: () -> Map<String, String>) 
         return chain.proceed(builder.build())
     }
 }
-class XCorrelationIdInterceptor(): HeadersInterceptor({
+class XCorrelationIdInterceptor() : HeadersInterceptor({
     mapOf("X-Correlation-ID" to (MDC.get(MDCConstants.MDC_CALL_ID) ?: UUID.randomUUID().toString()))
 })
 class AuthorizationInterceptor(val tokenProvider: () -> String) : HeadersInterceptor({

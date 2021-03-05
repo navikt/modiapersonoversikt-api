@@ -15,11 +15,11 @@ import kotlin.test.assertEquals
 class EnhetControllerTest {
     private val organisasjonEnhetV2Service: OrganisasjonEnhetV2Service = mock()
     private val controller = EnhetController(
-            mock(),
-            organisasjonEnhetV2Service,
-            mock(),
-            mock(),
-            TilgangskontrollMock.get()
+        mock(),
+        organisasjonEnhetV2Service,
+        mock(),
+        mock(),
+        TilgangskontrollMock.get()
     )
 
     @Test
@@ -31,5 +31,4 @@ class EnhetControllerTest {
 
         assertEquals(HttpStatus.BAD_REQUEST, exception.status)
     }
-
 }

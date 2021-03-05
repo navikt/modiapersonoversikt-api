@@ -15,9 +15,9 @@ import org.springframework.cache.annotation.Cacheable
 
 class AbacException(message: String) : RuntimeException(message)
 data class AbacClientConfig(
-        val username: String,
-        val password: String,
-        val endpointUrl: String
+    val username: String,
+    val password: String,
+    val endpointUrl: String
 )
 
 private infix fun Int.inRange(range: Pair<Int, Int>): Boolean = this >= range.first && this < range.second
@@ -25,23 +25,23 @@ val abacLogger: Logger = LoggerFactory.getLogger(AbacClient::class.java)
 
 open class AbacClient(val config: AbacClientConfig) : HealthCheck, Pingable {
     private val basicCredential = Credentials.basic(config.username, config.password)
-    private val client : OkHttpClient = RestClient.baseClient().newBuilder()
-            .authenticator { _, response ->
-                response
-                        .request()
-                        .newBuilder()
-                        .addHeader("Authorization", basicCredential)
-                        .build()
-            }
-            .build()
+    private val client: OkHttpClient = RestClient.baseClient().newBuilder()
+        .authenticator { _, response ->
+            response
+                .request()
+                .newBuilder()
+                .addHeader("Authorization", basicCredential)
+                .build()
+        }
+        .build()
 
     @Cacheable("abacClientCache")
     open fun evaluate(request: AbacRequest): AbacResponse {
         val requestJson = JsonMapper.serialize(request)
         val httpRequest = okhttp3.Request.Builder()
-                .url(config.endpointUrl)
-                .post(RequestBody.create(MediaType.parse("application/xacml+json"), requestJson))
-                .build()
+            .url(config.endpointUrl)
+            .post(RequestBody.create(MediaType.parse("application/xacml+json"), requestJson))
+            .build()
         val response = client.newCall(httpRequest).execute()
 
         if (response.code() inRange Pair(500, 600)) {
@@ -58,13 +58,13 @@ open class AbacClient(val config: AbacClientConfig) : HealthCheck, Pingable {
 
     override fun checkHealth(): HealthCheckResult {
         val request = okhttp3.Request.Builder()
-                .url(config.endpointUrl)
-                .build()
+            .url(config.endpointUrl)
+            .build()
         return runCatching { client.newCall(request).execute() }
-                .fold(
-                        onSuccess = { HealthCheckResult.healthy() },
-                        onFailure = { exception -> HealthCheckResult.unhealthy("Helsesjekk mot Abac feiled", exception) }
-                )
+            .fold(
+                onSuccess = { HealthCheckResult.healthy() },
+                onFailure = { exception -> HealthCheckResult.unhealthy("Helsesjekk mot Abac feiled", exception) }
+            )
     }
 
     override fun ping() = SelfTestCheck("Abac", true, this)

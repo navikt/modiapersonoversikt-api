@@ -16,8 +16,10 @@ class AuditResources {
         companion object {
             @JvmField
             val NavnOgEnheter = AuditResource("saksbehandler.navnOgEnheter")
+
             @JvmField
             val Enheter = AuditResource("saksbehandler.enheter")
+
             @JvmField
             val ValgtEnhet = AuditResource("saksbehandler.valgtenhet")
             val EgenAnsatt = AuditResource("saksbehandler.egenansatt")
@@ -30,6 +32,7 @@ class AuditResources {
             companion object {
                 @JvmField
                 val Les = AuditResource("person.henvendelse.les")
+
                 @JvmField
                 val Sok = AuditResource("person.henvendelse.sok")
                 val Opprettet = AuditResource("person.henvendelse.opprettet")
@@ -37,6 +40,7 @@ class AuditResources {
                 val SlaSammen = AuditResource("person.henvendelse.slasammen")
                 val Print = AuditResource("person.henvendelse.print")
                 val Delsvar = AuditResource("person.henvendelse.delsvar")
+
                 @JvmField
                 val Journalfor = AuditResource("person.henvendelse.journalfor")
             }
@@ -66,27 +70,36 @@ class AuditResources {
         companion object {
             val Kontaktinformasjon = AuditResource("person.kontaktinformasjon")
             val Oppfolging = AuditResource("person.oppfolging")
+
             @JvmField
             val Ytelser = AuditResource("person.ytelser")
+
             @JvmField
             val Kontrakter = AuditResource("person.kontrakter")
             val YtelserOgKontrakter = AuditResource("person.ytelserogkontrakter")
+
             @JvmField
             val Personalia = AuditResource("person.personalia")
             val Saker = AuditResource("person.saker")
+
             @JvmField
             val GsakSaker = AuditResource("person.gsaksaker")
+
             @JvmField
             val PesysSaker = AuditResource("person.pesyssaker")
             val Dokumenter = AuditResource("person.dokumenter")
             val Utbetalinger = AuditResource("person.utbetalinger")
             val Vergemal = AuditResource("person.vergemal")
+
             @JvmField
             val Sykepenger = AuditResource("person.sykepenger")
+
             @JvmField
             val Foreldrepenger = AuditResource("person.foreldrepenger")
+
             @JvmField
             val Pleiepenger = AuditResource("person.pleiepenger")
+
             @JvmField
             val Varsler = AuditResource("person.varsler")
         }

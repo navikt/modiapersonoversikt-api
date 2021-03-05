@@ -21,10 +21,9 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import java.time.*
 
-
 class RestSakSakerTest {
     val VEDTAKSLOSNINGEN = "FS36"
-    val FIRE_DAGER_SIDEN = DateTime.now().minusDays(4) //joda.DateTime
+    val FIRE_DAGER_SIDEN = DateTime.now().minusDays(4) // joda.DateTime
     val FNR = "fnr"
     val SakId_1 = "1"
     val FagsystemSakId_1 = "11"
@@ -183,7 +182,6 @@ class RestSakSakerTest {
         assertThat(sak.fagsystemKode, `is`(VEDTAKSLOSNINGEN))
         assertThat(sak.opprettetDato, dateMatcher(`is`(true)))
         assertThat(sak.finnesIGsak, `is`(true))
-
     }
 
     private fun dateMatcher(matcher: Matcher<in Boolean?>?): Matcher<DateTime?>? {
@@ -191,10 +189,8 @@ class RestSakSakerTest {
             override fun featureValueOf(actual: DateTime): Boolean? {
                 return actual.millis - FIRE_DAGER_SIDEN.millis < 1000
             }
-
         }
     }
 
     private fun earlierDateTimeWithOffSet(offset: Long): OffsetDateTime = OffsetDateTime.now().minusDays(offset)
 }
-
