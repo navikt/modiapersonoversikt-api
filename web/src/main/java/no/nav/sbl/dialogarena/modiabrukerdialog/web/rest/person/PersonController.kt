@@ -125,6 +125,7 @@ class PersonController @Autowired constructor(
         val gyldighetstidspunkt: String?,
         val opphoerstidspunkt: String?
     )
+
     data class PersonnavnDTO(
         val fornavn: String,
         val mellomnavn: String?,
@@ -132,14 +133,27 @@ class PersonController @Autowired constructor(
     ) {
         val sammensatt = listOfNotNull(fornavn, mellomnavn, etternavn).joinToString(" ")
     }
+
     private fun hentVergemal(vergemal: List<HentPerson.VergemaalEllerFremtidsfullmakt>): List<VergemalDTO> {
+        val allenavn: Map<String, PersonnavnDTO> = vergemal
+            .mapNotNull { it.vergeEllerFullmektig.motpartsPersonident }
+            .let { pdlOppslagService.hentNavnBolk(it) }
+            ?.filterValues { it != null }
+            ?.mapValues { entry ->
+                val personnavn = entry.value!!
+                PersonnavnDTO(personnavn.fornavn, personnavn.mellomnavn, personnavn.etternavn)
+            }
+            ?: emptyMap()
+
         return vergemal
             .map {
+                val motpartsNavn = allenavn[it.vergeEllerFullmektig.motpartsPersonident]
+                val navn = it.vergeEllerFullmektig.navn?.let { personnavn ->
+                    PersonnavnDTO(personnavn.fornavn, personnavn.mellomnavn, personnavn.etternavn)
+                }
                 VergemalDTO(
                     ident = it.vergeEllerFullmektig.motpartsPersonident,
-                    navn = it.vergeEllerFullmektig.navn?.let { personnavn ->
-                        PersonnavnDTO(personnavn.fornavn, personnavn.mellomnavn, personnavn.etternavn)
-                    },
+                    navn = motpartsNavn ?: navn,
                     vergesakstype = it.type,
                     omfang = it.vergeEllerFullmektig.omfang,
                     embete = it.embete,

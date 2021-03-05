@@ -7,6 +7,7 @@ import no.nav.kjerneinfo.consumer.fim.person.PersonKjerneinfoServiceBi
 import no.nav.kjerneinfo.consumer.fim.person.to.HentKjerneinformasjonResponse
 import no.nav.kjerneinfo.domain.person.Fodselsnummer
 import no.nav.kjerneinfo.domain.person.Person
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.pdl.generated.HentNavnBolk
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.pdl.generated.HentPerson
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.kodeverk.StandardKodeverk
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.pdl.PdlOppslagService
@@ -60,7 +61,15 @@ internal class PersonControllerIntTest {
             folkeregistermetadata = null,
             metadata = HentPerson.Metadata2(null)
         )
-        val vergemaalEllerFremtidsfullmakt: List<HentPerson.VergemaalEllerFremtidsfullmakt> = listOf(vergemal)
+        val vergemalMedMotpartsIdent = vergemal.copy(
+            vergeEllerFullmektig = vergemal.vergeEllerFullmektig.copy(
+                motpartsPersonident = "12345678910"
+            )
+        )
+        val vergemaalEllerFremtidsfullmakt: List<HentPerson.VergemaalEllerFremtidsfullmakt> = listOf(
+            vergemal,
+            vergemalMedMotpartsIdent
+        )
 
         whenever(kjerneinfoMock.hentKjerneinformasjon(any())).thenReturn(
             HentKjerneinformasjonResponse()
@@ -70,6 +79,11 @@ internal class PersonControllerIntTest {
                             this.fodselsnummer = Fodselsnummer("10108000398".trimIndent())
                         }
                 }
+        )
+        whenever(pdlMock.hentNavnBolk(any())).thenReturn(
+            mapOf(
+                "12345678910" to HentNavnBolk.Navn("Verge", "Vergesen", "Olsen")
+            )
         )
         whenever(pdlMock.hentPerson(any())).thenReturn(
             HentPerson.Person(
@@ -107,14 +121,18 @@ internal class PersonControllerIntTest {
         val person = personController.hent("10108000398")
         val fornavn = person.deepget("kontaktinformasjonForDoedsbo.0.adressat.advokatSomAdressat.kontaktperson.fornavn")
         val telefonnummer = person.deepget("telefonnummer.0") as Telefonnummer
-        val vergeSammensattNavn = person.deepget("vergemal.0") as PersonController.VergemalDTO
+        val vergeUtenMotpartsIdent = person.deepget("vergemal.0") as PersonController.VergemalDTO
+        val vergeMedMotpartsIdent = person.deepget("vergemal.1") as PersonController.VergemalDTO
 
         assertEquals("Ola", fornavn)
         assertEquals("+47", telefonnummer.retningsnummer?.kodeRef)
         assertEquals("10101010", telefonnummer.identifikator)
         assertEquals("2020-04-20", telefonnummer.sistEndret)
         assertEquals("BRUKER", telefonnummer.sistEndretAv)
-        assertEquals("Fornavn Mellomnavn Etternavn", vergeSammensattNavn.navn?.sammensatt)
+        assertEquals("Fornavn Mellomnavn Etternavn", vergeUtenMotpartsIdent.navn?.sammensatt)
+        assertEquals(null, vergeUtenMotpartsIdent.ident)
+        assertEquals("Verge Vergesen Olsen", vergeMedMotpartsIdent.navn?.sammensatt)
+        assertEquals("12345678910", vergeMedMotpartsIdent.ident)
     }
 }
 
