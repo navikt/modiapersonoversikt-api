@@ -35,6 +35,7 @@ spec:
     - https://modiapersonoversikt-api-q0.nais.preprod.local
     - https://app-q0.adeo.no/modiapersonoversikt-api
     - https://modapp-q0.adeo.no/modiapersonoversikt-api
+    - https://modia-q0.dev.adeo.no/modiapersonoversikt-api
   replicas:
     min: 2
     max: 4
@@ -62,12 +63,16 @@ spec:
       value: "q0"
     - name: ISSO_CLIENT_ID
       value: "veilarblogin-q0"
+    - name: MODIA_CLIENT_ID
+      value: "modialogin-q0"
     - name: FPSAK_CLIENT_ID
       value: "fpsak-frontend-q0"
     - name: ISSO_DISCOVERY_URL
       value: "https://isso-q.adeo.no/isso/oauth2/.well-known/openid-configuration"
     - name: ISSO_REFRESH_URL
       value: "https://app-q0.adeo.no/veilarblogin/api/openam-refresh"
+    - name: MODIA_REFRESH_URL
+      value: "https://modia-q0.dev.adeo.no/modialogin/api/refresh"
     - name: SECURITY_TOKEN_SERVICE_DISCOVERY_URL
       value: "https://security-token-service.nais.preprod.local/rest/v1/sts/.well-known/openid-configuration"
     - name: SECURITYTOKENSERVICE_URL
