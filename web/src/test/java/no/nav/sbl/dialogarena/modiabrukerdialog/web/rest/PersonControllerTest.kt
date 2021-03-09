@@ -273,7 +273,8 @@ internal class PersonControllerTest {
                 fullmakt = emptyList(),
                 kontaktinformasjonForDoedsbo = emptyList(),
                 telefonnummer = emptyList(),
-                vergemaalEllerFremtidsfullmakt = emptyList()
+                vergemaalEllerFremtidsfullmakt = emptyList(),
+                foreldreansvar = emptyList()
         )
     }
 

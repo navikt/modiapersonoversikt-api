@@ -33,6 +33,8 @@ import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.server.ResponseStatusException
+import java.time.LocalDate
+import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter.ISO_DATE_TIME
 
 private const val TPS_UKJENT_VERDI = "???"
@@ -68,7 +70,7 @@ class PersonController @Autowired constructor(
                     val pdlTelefonnummer = (pdlPerson?.telefonnummer ?: emptyList())
                         .sortedBy { it.prioritet }
                         .map(::getPdlTelefon)
-
+                   val foreldreansvar = pdlPerson?.foreldreansvar ?: emptyList()
                     mapOf(
                         "fødselsnummer" to person?.fodselsnummer?.nummer,
                         "alder" to person?.fodselsnummer?.alder,
@@ -95,7 +97,8 @@ class PersonController @Autowired constructor(
                         "telefonnummer" to pdlTelefonnummer,
                         "kontaktinformasjonForDoedsbo" to DoedsboMapping.mapKontaktinfoForDoedsbo(kontaktinfoForDoedsbo),
                         "fullmakt" to hentFullmakter(fullmakt),
-                        "vergemal" to hentVergemal(vergemal)
+                        "vergemal" to hentVergemal(vergemal),
+                        "foreldreansvar" to hentForeldreansvar(foreldreansvar)
                     )
                 } catch (exception: AuthorizationWithSikkerhetstiltakException) {
                     getBegrensetInnsyn(fodselsnummer, exception.message)
@@ -132,6 +135,36 @@ class PersonController @Autowired constructor(
         val etternavn: String
     ) {
         val sammensatt = listOfNotNull(fornavn, mellomnavn, etternavn).joinToString(" ")
+    }
+
+    data class ForeldreansvarDTO(
+        val ansvar: String,
+        val ansvarlig: String?,
+        val ansvarligUtenIdentifikator: RelatertBiPerson
+    )
+
+    data class RelatertBiPerson(
+        val navn: PersonController.PersonnavnDTO?,
+        val foedselsdato: LocalDate?,
+        val statsborgerskap: String?,
+        val kjoenn: String?
+    )
+
+    private fun hentForeldreansvar(foreldreansvar: List<HentPerson.Foreldreansvar>) : List<ForeldreansvarDTO> {
+        return foreldreansvar.map {
+            val navn = it.ansvarligUtenIdentifikator?.navn?.let { person -> PersonnavnDTO(person.fornavn, person.mellomnavn, person.etternavn)
+            }
+            ForeldreansvarDTO(
+                ansvar = it.ansvar ?: "Kunne ikke finne ansvarlig",
+                ansvarlig = it.ansvarlig ?: "Kunne ikke finne ansvarlig",
+                ansvarligUtenIdentifikator = RelatertBiPerson(
+                    navn = navn,
+                    foedselsdato = it.ansvarligUtenIdentifikator?.foedselsdato?.value,
+                    statsborgerskap = it.ansvarligUtenIdentifikator?.statsborgerskap,
+                    kjoenn = it.ansvarligUtenIdentifikator?.statsborgerskap
+                )
+            )
+        }
     }
 
     private fun hentVergemal(vergemal: List<HentPerson.VergemaalEllerFremtidsfullmakt>): List<VergemalDTO> {
@@ -188,6 +221,8 @@ class PersonController @Autowired constructor(
                 )
             }
     }
+
+    //private fun hentForeldreansvar(foreldreansvar: List<HentPerson.foreldre>)
 
     private fun mapStatsborgerskap(personfakta: Personfakta?) =
         personfakta?.statsborgerskap?.let { if (it.kodeRef == TPS_UKJENT_VERDI) null else Kode(it) }
@@ -426,4 +461,17 @@ data class Telefonnummer(
     val sistEndretAv: String,
     val sistEndret: String?,
     val prioritet: Int = -1
+)
+
+data class ForeldreansvarDTO(
+    val ansvar: String,
+    val ansvarlig: String?,
+    val ansvarligUtenIdentifikator: RelatertBiPerson
+)
+
+data class RelatertBiPerson(
+    val navn: PersonController.PersonnavnDTO?,
+    val foedselsdato: LocalDate?,
+    val statsborgerskap: String?,
+    val kjoenn: String?
 )
