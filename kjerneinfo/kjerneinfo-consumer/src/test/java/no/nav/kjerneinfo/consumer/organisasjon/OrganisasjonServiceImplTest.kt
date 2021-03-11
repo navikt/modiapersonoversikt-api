@@ -9,7 +9,6 @@ import org.hamcrest.core.Is.`is`
 import org.junit.Rule
 import org.junit.Test
 
-
 class OrganisasjonServiceImplTest {
     @Rule
     @JvmField
@@ -46,21 +45,25 @@ class OrganisasjonServiceImplTest {
     }
 
     internal fun withMockServer(statusCode: Int = 200, body: String? = null, test: (OrganisasjonService) -> Unit) {
-        stubFor(get(anyUrl())
-                .willReturn(aResponse()
+        stubFor(
+            get(anyUrl())
+                .willReturn(
+                    aResponse()
                         .withStatus(statusCode)
                         .withHeader("Content-Type", "application/json")
-                        .withBody(body)))
+                        .withBody(body)
+                )
+        )
 
         val client = OrganisasjonV1ClientImpl("http://localhost:${wiremock.port()}/")
         val service = OrganisasjonServiceImpl(client)
         test(service)
 
         verify(
-                getRequestedFor(urlEqualTo("/api/v1/organisasjon/$ORG_NR/noekkelinfo"))
-                        .withHeader(RestConstants.NAV_CALL_ID_HEADER, AnythingPattern())
-                        .withHeader(RestConstants.NAV_CONSUMER_ID_HEADER, matching(RestConstants.MODIABRUKERDIALOG_SYSTEM_USER))
-                        .withHeader("accept", matching("application/json"))
+            getRequestedFor(urlEqualTo("/api/v1/organisasjon/$ORG_NR/noekkelinfo"))
+                .withHeader(RestConstants.NAV_CALL_ID_HEADER, AnythingPattern())
+                .withHeader(RestConstants.NAV_CONSUMER_ID_HEADER, matching(RestConstants.MODIABRUKERDIALOG_SYSTEM_USER))
+                .withHeader("accept", matching("application/json"))
         )
     }
 }

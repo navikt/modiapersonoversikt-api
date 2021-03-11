@@ -19,10 +19,10 @@ constructor(private val ldapService: LDAPService, private val tilgangskontroll: 
     @GetMapping("/roller")
     fun hentRollerForInnloggetVeileder(): Map<String, MutableList<String>> {
         return tilgangskontroll
-                .check(Policies.tilgangTilModia)
-                .get(Audit.describe(READ, Saksbehandler.Roller)) {
-                    val ident = SubjectHandler.getIdent().get()
-                    mapOf("roller" to ldapService.hentRollerForVeileder(ident))
-                }
+            .check(Policies.tilgangTilModia)
+            .get(Audit.describe(READ, Saksbehandler.Roller)) {
+                val ident = SubjectHandler.getIdent().get()
+                mapOf("roller" to ldapService.hentRollerForVeileder(ident))
+            }
     }
 }

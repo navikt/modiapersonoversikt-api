@@ -15,12 +15,11 @@ enum class ApplikasjonsFeilType(private val status: Response.Status) : Feil.Type
     override fun getStatus(): Response.Status {
         return status
     }
-
 }
 
 internal class JournalforingFeiletException(t: Throwable) : Feil(ApplikasjonsFeilType.JOURNALFORING_FEILET, t)
 internal class OppgaveErFerdigstiltException : Feil(ApplikasjonsFeilType.OPPGAVE_ER_FERDIGSTILT)
 internal class IngenMeldingerException(fnr: String?, traadId: String?) : Feil(
-        ApplikasjonsFeilType.INGEN_MELDINGER,
-        "Fant ingen meldinger for fnr: $fnr med traadId: $traadId"
+    ApplikasjonsFeilType.INGEN_MELDINGER,
+    "Fant ingen meldinger for fnr: $fnr med traadId: $traadId"
 )

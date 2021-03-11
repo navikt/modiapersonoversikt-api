@@ -27,101 +27,104 @@ private const val AARSAK_PREFIX = "Oppgave lagt tilbake. Årsak: "
 @RestController
 @RequestMapping("/rest/oppgaver")
 class OppgaveController @Autowired constructor(
-        private val oppgaveBehandlingService: OppgaveBehandlingService,
-        private val plukkOppgaveService: PlukkOppgaveService,
-        private val henvendelseUtsendingService: HenvendelseUtsendingService,
-        private val tilgangkontroll: Tilgangskontroll
+    private val oppgaveBehandlingService: OppgaveBehandlingService,
+    private val plukkOppgaveService: PlukkOppgaveService,
+    private val henvendelseUtsendingService: HenvendelseUtsendingService,
+    private val tilgangkontroll: Tilgangskontroll
 ) {
 
     @PostMapping("/legg-tilbake")
     fun leggTilbake(httpRequest: HttpServletRequest, @RequestBody request: LeggTilbakeRequest): ResponseEntity<Void> {
         return tilgangkontroll
-                .check(Policies.tilgangTilModia)
-                .get(Audit.describe(UPDATE, Henvendelse.Oppgave.LeggTilbake, AuditIdentifier.OPPGAVE_ID to request.oppgaveId)) {
-                    val valgtEnhet = RestUtils.hentValgtEnhet(request.enhet, httpRequest)
-                    val leggTilbakeOppgaveIGsakRequest = lagLeggTilbakeRequest(request, valgtEnhet)
+            .check(Policies.tilgangTilModia)
+            .get(Audit.describe(UPDATE, Henvendelse.Oppgave.LeggTilbake, AuditIdentifier.OPPGAVE_ID to request.oppgaveId)) {
+                val valgtEnhet = RestUtils.hentValgtEnhet(request.enhet, httpRequest)
+                val leggTilbakeOppgaveIGsakRequest = lagLeggTilbakeRequest(request, valgtEnhet)
 
-                    try {
-                        oppgaveBehandlingService.leggTilbakeOppgaveIGsak(leggTilbakeOppgaveIGsakRequest)
-                        if (request.type == LeggTilbakeAarsak.FeilTema) {
-                            henvendelseUtsendingService.oppdaterTemagruppe(request.traadId, request.temagruppe.toString())
-                        }
-                    } catch (exception: RuntimeException) {
-                        throw handterRuntimeFeil(exception)
+                try {
+                    oppgaveBehandlingService.leggTilbakeOppgaveIGsak(leggTilbakeOppgaveIGsakRequest)
+                    if (request.type == LeggTilbakeAarsak.FeilTema) {
+                        henvendelseUtsendingService.oppdaterTemagruppe(request.traadId, request.temagruppe.toString())
                     }
-
-                    ResponseEntity(HttpStatus.OK)
+                } catch (exception: RuntimeException) {
+                    throw handterRuntimeFeil(exception)
                 }
+
+                ResponseEntity(HttpStatus.OK)
+            }
     }
 
     @PostMapping("/plukk/{temagruppe}")
     fun plukkOppgaver(@PathVariable("temagruppe") temagruppe: String, @RequestParam(value = "enhet", required = false) enhet: String?, httpRequest: HttpServletRequest): List<OppgaveDTO> {
         return tilgangkontroll
-                .check(Policies.tilgangTilModia)
-                .check(Policies.kanPlukkeOppgave)
-                .get(Audit.describe(READ, Henvendelse.Oppgave.Plukk, AuditIdentifier.TEMAGRUPPE to temagruppe)) {
-                    val tildelteOppgaver = oppgaveBehandlingService.finnTildelteOppgaverIGsak()
-                    if (tildelteOppgaver.any { it.erSTOOppgave }) {
-                        tildelteOppgaver
-                    } else {
-                        plukkOppgaveService
-                                .plukkOppgaver(Temagruppe.valueOf(temagruppe.toUpperCase()),
-                                        RestUtils.hentValgtEnhet(enhet, httpRequest))
-                    }
-                }.map { mapOppgave(it) }
+            .check(Policies.tilgangTilModia)
+            .check(Policies.kanPlukkeOppgave)
+            .get(Audit.describe(READ, Henvendelse.Oppgave.Plukk, AuditIdentifier.TEMAGRUPPE to temagruppe)) {
+                val tildelteOppgaver = oppgaveBehandlingService.finnTildelteOppgaverIGsak()
+                if (tildelteOppgaver.any { it.erSTOOppgave }) {
+                    tildelteOppgaver
+                } else {
+                    plukkOppgaveService
+                        .plukkOppgaver(
+                            Temagruppe.valueOf(temagruppe.toUpperCase()),
+                            RestUtils.hentValgtEnhet(enhet, httpRequest)
+                        )
+                }
+            }.map { mapOppgave(it) }
     }
 
     @GetMapping("/tildelt")
     fun finnTildelte() =
-            tilgangkontroll
-                    .check(Policies.tilgangTilModia)
-                    .get(Audit.describe(READ, Henvendelse.Oppgave.Tildelte)) {
-                        oppgaveBehandlingService.finnTildelteOppgaverIGsak()
-                                .map { mapOppgave(it) }
-                    }
+        tilgangkontroll
+            .check(Policies.tilgangTilModia)
+            .get(Audit.describe(READ, Henvendelse.Oppgave.Tildelte)) {
+                oppgaveBehandlingService.finnTildelteOppgaverIGsak()
+                    .map { mapOppgave(it) }
+            }
 
     @GetMapping("/oppgavedata/{oppgaveId}")
     fun getOppgaveData(@PathVariable("oppgaveId") oppgaveId: String): OppgaveDTO =
-            tilgangkontroll
-                    .check(Policies.tilgangTilModia)
-                    .get(Audit.describe(READ, Henvendelse.Oppgave.Metadata, AuditIdentifier.OPPGAVE_ID to oppgaveId)) {
-                        mapOppgave(oppgaveBehandlingService.hentOppgave(oppgaveId))
-                    }
+        tilgangkontroll
+            .check(Policies.tilgangTilModia)
+            .get(Audit.describe(READ, Henvendelse.Oppgave.Metadata, AuditIdentifier.OPPGAVE_ID to oppgaveId)) {
+                mapOppgave(oppgaveBehandlingService.hentOppgave(oppgaveId))
+            }
 
     private fun lagLeggTilbakeRequest(request: LeggTilbakeRequest, valgtEnhet: String): LeggTilbakeOppgaveIGsakRequest? {
         require(request.oppgaveId != null)
         val baseRequest = LeggTilbakeOppgaveIGsakRequest()
-                .withOppgaveId(request.oppgaveId)
-                .withSaksbehandlersValgteEnhet(valgtEnhet)
+            .withOppgaveId(request.oppgaveId)
+            .withSaksbehandlersValgteEnhet(valgtEnhet)
         return when (request.type) {
-            LeggTilbakeAarsak.Innhabil -> baseRequest
+            LeggTilbakeAarsak.Innhabil ->
+                baseRequest
                     .withBeskrivelse(AARSAK_PREFIX + "inhabil")
             LeggTilbakeAarsak.FeilTema -> {
                 require(request.temagruppe != null)
                 return baseRequest
-                        .withBeskrivelse(AARSAK_PREFIX + "feil temagruppe")
-                        .withTemagruppe(request.temagruppe)
+                    .withBeskrivelse(AARSAK_PREFIX + "feil temagruppe")
+                    .withTemagruppe(request.temagruppe)
             }
             LeggTilbakeAarsak.AnnenAarsak -> {
                 require(request.beskrivelse != null)
                 return baseRequest
-                        .withBeskrivelse(AARSAK_PREFIX + request.beskrivelse)
+                    .withBeskrivelse(AARSAK_PREFIX + request.beskrivelse)
             }
         }
     }
 }
 
 data class OppgaveDTO(
-        val oppgaveId: String,
-        val traadId: String?,
-        val fødselsnummer: String?,
-        val erSTOOppgave: Boolean
+    val oppgaveId: String,
+    val traadId: String?,
+    val fødselsnummer: String?,
+    val erSTOOppgave: Boolean
 )
 private fun mapOppgave(oppgave: Oppgave) = OppgaveDTO(
-        oppgave.oppgaveId,
-        oppgave.henvendelseId,
-        oppgave.fnr,
-        oppgave.erSTOOppgave
+    oppgave.oppgaveId,
+    oppgave.henvendelseId,
+    oppgave.fnr,
+    oppgave.erSTOOppgave
 )
 
 private fun handterRuntimeFeil(exception: RuntimeException): RuntimeException {
@@ -136,10 +139,10 @@ enum class LeggTilbakeAarsak {
 }
 
 data class LeggTilbakeRequest(
-        val enhet: String?,
-        val type: LeggTilbakeAarsak,
-        val oppgaveId: String,
-        val temagruppe: Temagruppe?,
-        val beskrivelse: String?,
-        val traadId: String?
+    val enhet: String?,
+    val type: LeggTilbakeAarsak,
+    val oppgaveId: String,
+    val temagruppe: Temagruppe?,
+    val beskrivelse: String?,
+    val traadId: String?
 )

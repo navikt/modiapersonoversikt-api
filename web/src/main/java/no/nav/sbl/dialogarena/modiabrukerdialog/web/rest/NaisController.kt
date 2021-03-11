@@ -15,9 +15,10 @@ import org.springframework.web.bind.annotation.RestController
 @RequestMapping("/internal")
 class NaisController {
     @Autowired
-    lateinit var checks : List<SelfTestCheck>
+    lateinit var checks: List<SelfTestCheck>
+
     @Autowired
-    lateinit var pingables : List<Pingable>
+    lateinit var pingables: List<Pingable>
 
     @GetMapping("/isReady")
     fun isReady(): ResponseEntity<Void> = ResponseEntity.status(200).build()
@@ -29,9 +30,8 @@ class NaisController {
     fun selftest(): ResponseEntity<String> {
         val result = SelfTestUtils.checkAll(checks.plus(pingables.map { it.ping() }))
         return ResponseEntity
-                .status(SelfTestUtils.findHttpStatusCode(result))
-                .contentType(MediaType.TEXT_HTML)
-                .body(SelftestHtmlGenerator.generate(result))
+            .status(SelfTestUtils.findHttpStatusCode(result))
+            .contentType(MediaType.TEXT_HTML)
+            .body(SelftestHtmlGenerator.generate(result))
     }
-
 }

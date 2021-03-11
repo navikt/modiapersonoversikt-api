@@ -15,11 +15,11 @@ import org.slf4j.LoggerFactory
 import java.util.*
 
 open class TilgangskontrollContextImpl(
-        private val abacClient: AbacClient,
-        private val ldap: LDAPService,
-        private val ansattService: GOSYSNAVansatt,
-        private val henvendelseLesService: HenvendelseLesService,
-        private val unleashService: UnleashService
+    private val abacClient: AbacClient,
+    private val ldap: LDAPService,
+    private val ansattService: GOSYSNAVansatt,
+    private val henvendelseLesService: HenvendelseLesService,
+    private val unleashService: UnleashService
 ) : TilgangskontrollContext {
     private val logger = LoggerFactory.getLogger(TilgangskontrollContext::class.java)
 
@@ -32,10 +32,10 @@ open class TilgangskontrollContextImpl(
         ansattFagomraderRequest.enhetsId = valgtEnhet
 
         ansattService
-                .hentNAVAnsattFagomradeListe(ansattFagomraderRequest)
-                .fagomrader
-                .map { it.fagomradeKode }
-                .toSet()
+            .hentNAVAnsattFagomradeListe(ansattFagomraderRequest)
+            .fagomrader
+            .map { it.fagomradeKode }
+            .toSet()
     } catch (e: Exception) {
         when (e) {
             is HentNAVAnsattFagomradeListeFaultGOSYSNAVAnsattIkkeFunnetMsg ->
@@ -51,9 +51,9 @@ open class TilgangskontrollContextImpl(
 
     override fun hentSaksbehandlereMedTilgangTilHastekassering(): List<String> {
         return EnvironmentUtils.getRequiredProperty("HASTEKASSERING_TILGANG", "")
-                .split(",")
-                .map(String::trim)
-                .map(String::toUpperCase)
+            .split(",")
+            .map(String::trim)
+            .map(String::toUpperCase)
     }
 
     override fun alleBehandlingsIderTilhorerBruker(fnr: String, behandlingsIder: List<String>): Boolean {
@@ -63,8 +63,8 @@ open class TilgangskontrollContextImpl(
     override fun featureToggleEnabled(featureToggle: String): Boolean = unleashService.isEnabled(featureToggle)
 
     private fun hentSaksbehandlerRoller(): List<String> =
-            hentSaksbehandlerId()
-                    .map(ldap::hentRollerForVeileder)
-                    .orElse(emptyList())
-                    .map { it.toLowerCase() }
+        hentSaksbehandlerId()
+            .map(ldap::hentRollerForVeileder)
+            .orElse(emptyList())
+            .map { it.toLowerCase() }
 }

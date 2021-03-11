@@ -69,15 +69,16 @@ internal class SykepengerUttrekkTest {
 
     private fun mockResponse(): FimHentSykepengerListeResponse {
         val periode = FimsykSykmeldingsperiode()
-                .withStansaarsak(FimsykStansaarsak()
-                        .withTermnavn(STANS))
-                .withSykmeldtFom(createXMLGregorianCalendar())
-                .withArbeidskategori(FimsykArbeidskategori())
+            .withStansaarsak(
+                FimsykStansaarsak()
+                    .withTermnavn(STANS)
+            )
+            .withSykmeldtFom(createXMLGregorianCalendar())
+            .withArbeidskategori(FimsykArbeidskategori())
         periode.sykmeldt = FimsykBruker().withIdent(FNR)
 
         return FimHentSykepengerListeResponse().withSykmeldingsperiodeListe(periode)
     }
 
     private fun createXMLGregorianCalendar() = DatatypeFactory.newInstance().newXMLGregorianCalendarDate(2000, 2, 1, 1)
-
 }

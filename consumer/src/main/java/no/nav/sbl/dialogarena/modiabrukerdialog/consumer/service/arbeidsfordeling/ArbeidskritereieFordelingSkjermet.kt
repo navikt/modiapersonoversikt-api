@@ -12,7 +12,3 @@ data class ArbeidskritereieFordelingSkjermet(
     val temagruppe: String?
 
 )
-
-
-
-

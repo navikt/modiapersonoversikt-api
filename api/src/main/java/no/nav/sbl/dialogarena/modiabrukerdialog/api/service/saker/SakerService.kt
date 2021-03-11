@@ -3,7 +3,6 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.api.service.saker
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.saker.Sak
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.exceptions.JournalforingFeilet
 
-
 interface SakerService {
     class Resultat(val saker: MutableList<Sak> = mutableListOf(), val feiledeSystemer: MutableList<String> = mutableListOf())
 

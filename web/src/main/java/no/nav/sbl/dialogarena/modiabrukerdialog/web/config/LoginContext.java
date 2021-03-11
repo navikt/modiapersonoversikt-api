@@ -19,8 +19,10 @@ import static no.nav.common.utils.EnvironmentUtils.isDevelopment;
 @Configuration
 public class LoginContext {
     private static final String issoClientId = EnvironmentUtils.getRequiredProperty("ISSO_CLIENT_ID");
+    private static final String modiaClientId = EnvironmentUtils.getRequiredProperty("MODIA_CLIENT_ID");
     private static final String issoDiscoveryUrl = EnvironmentUtils.getRequiredProperty("ISSO_DISCOVERY_URL");
     private static final String issoRefreshUrl = EnvironmentUtils.getRequiredProperty("ISSO_REFRESH_URL");
+    private static final String modiaRefreshUrl = EnvironmentUtils.getRequiredProperty("MODIA_REFRESH_URL");
     private static final String fpsakClientId = EnvironmentUtils.getRequiredProperty("FPSAK_CLIENT_ID");
 
     @Bean
@@ -31,6 +33,19 @@ public class LoginContext {
                 .withIdTokenCookieName(Constants.OPEN_AM_ID_TOKEN_COOKIE_NAME)
                 .withIdentType(IdentType.InternBruker)
                 .withRefreshUrl(issoRefreshUrl)
+                .withRefreshTokenCookieName(Constants.REFRESH_TOKEN_COOKIE_NAME);
+
+        return OidcAuthenticator.fromConfig(config);
+    }
+
+    @Bean
+    public OidcAuthenticator openAmModiaAuthConfig() {
+        OidcAuthenticatorConfig config = new OidcAuthenticatorConfig()
+                .withClientId(modiaClientId)
+                .withDiscoveryUrl(issoDiscoveryUrl)
+                .withIdTokenCookieName(Constants.OPEN_AM_ID_TOKEN_COOKIE_NAME)
+                .withIdentType(IdentType.InternBruker)
+                .withRefreshUrl(modiaRefreshUrl)
                 .withRefreshTokenCookieName(Constants.REFRESH_TOKEN_COOKIE_NAME);
 
         return OidcAuthenticator.fromConfig(config);

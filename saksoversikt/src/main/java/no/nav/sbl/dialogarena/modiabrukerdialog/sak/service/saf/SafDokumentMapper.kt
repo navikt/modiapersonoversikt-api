@@ -35,39 +35,39 @@ fun DokumentMetadata.fraSafJournalpost(journalpost: Journalpost): DokumentMetada
 }
 
 private fun getRetning(journalpost: Journalpost): Kommunikasjonsretning? =
-        when (journalpost.journalposttype) {
-            JOURNALPOSTTYPE_INN -> Kommunikasjonsretning.INN
-            JOURNALPOSTTYPE_UT -> Kommunikasjonsretning.UT
-            JOURNALPOSTTYPE_INTERN -> Kommunikasjonsretning.INTERN
-            else -> throw RuntimeException("Ukjent journalposttype: " + journalpost.journalposttype)
-        }
+    when (journalpost.journalposttype) {
+        JOURNALPOSTTYPE_INN -> Kommunikasjonsretning.INN
+        JOURNALPOSTTYPE_UT -> Kommunikasjonsretning.UT
+        JOURNALPOSTTYPE_INTERN -> Kommunikasjonsretning.INTERN
+        else -> throw RuntimeException("Ukjent journalposttype: " + journalpost.journalposttype)
+    }
 
 private fun getDato(journalpost: Journalpost): LocalDateTime? =
-        when (journalpost.journalposttype) {
-            JOURNALPOSTTYPE_INN -> getRelevantDatoForType(DATOTYPE_REGISTRERT, journalpost)
-            JOURNALPOSTTYPE_UT -> getDatoSendt(journalpost)
-            JOURNALPOSTTYPE_INTERN -> getRelevantDatoForType(DATOTYPE_JOURNALFOERT, journalpost)
-            else -> now()
-        } ?: now()
+    when (journalpost.journalposttype) {
+        JOURNALPOSTTYPE_INN -> getRelevantDatoForType(DATOTYPE_REGISTRERT, journalpost)
+        JOURNALPOSTTYPE_UT -> getDatoSendt(journalpost)
+        JOURNALPOSTTYPE_INTERN -> getRelevantDatoForType(DATOTYPE_JOURNALFOERT, journalpost)
+        else -> now()
+    } ?: now()
 
 private fun getDatoSendt(journalpost: Journalpost): LocalDateTime? =
-        listOfNotNull(
-                getRelevantDatoForType(DATOTYPE_EKSPEDERT, journalpost),
-                getRelevantDatoForType(DATOTYPE_SENDT_PRINT, journalpost),
-                getRelevantDatoForType(DATOTYPE_JOURNALFOERT, journalpost)
-        ).firstOrNull()
+    listOfNotNull(
+        getRelevantDatoForType(DATOTYPE_EKSPEDERT, journalpost),
+        getRelevantDatoForType(DATOTYPE_SENDT_PRINT, journalpost),
+        getRelevantDatoForType(DATOTYPE_JOURNALFOERT, journalpost)
+    ).firstOrNull()
 
 private fun getRelevantDatoForType(datotype: String, journalpost: Journalpost): LocalDateTime? =
-        journalpost.relevanteDatoer.orEmpty()
-                .filter { dato -> dato.datotype == datotype }
-                .map { relevantDato -> relevantDato.dato }
-                .firstOrNull()
+    journalpost.relevanteDatoer.orEmpty()
+        .filter { dato -> dato.datotype == datotype }
+        .map { relevantDato -> relevantDato.dato }
+        .firstOrNull()
 
 private fun getNavn(journalpost: Journalpost) =
-        journalpost.avsenderMottaker?.navn ?: "ukjent"
+    journalpost.avsenderMottaker?.navn ?: "ukjent"
 
 private fun getHoveddokumentet(journalpost: Journalpost): DokumentInfo =
-        journalpost.dokumenter?.get(0) ?: throw RuntimeException("Fant sak uten hoveddokument!")
+    journalpost.dokumenter?.get(0) ?: throw RuntimeException("Fant sak uten hoveddokument!")
 
 private fun Dokument.fraSafDokumentInfo(dokumentInfo: DokumentInfo): Dokument {
     tittel = dokumentInfo.tittel
@@ -81,37 +81,36 @@ private fun Dokument.fraSafDokumentInfo(dokumentInfo: DokumentInfo): Dokument {
 }
 
 private fun getVariantformat(dokumentInfo: DokumentInfo): Variantformat =
-        when (getVariant(dokumentInfo).variantformat) {
-            Variantformat.ARKIV.name -> Variantformat.ARKIV
-            Variantformat.SLADDET.name -> Variantformat.SLADDET
-            Variantformat.FULLVERSJON.name -> Variantformat.FULLVERSJON
-            Variantformat.PRODUKSJON.name -> Variantformat.PRODUKSJON
-            Variantformat.PRODUKSJON_DLF.name -> Variantformat.PRODUKSJON_DLF
-            else -> throw RuntimeException("Ugyldig tekst for mapping til variantformat. Tekst: ${getVariant(dokumentInfo).variantformat}")
-        }
+    when (getVariant(dokumentInfo).variantformat) {
+        Variantformat.ARKIV.name -> Variantformat.ARKIV
+        Variantformat.SLADDET.name -> Variantformat.SLADDET
+        Variantformat.FULLVERSJON.name -> Variantformat.FULLVERSJON
+        Variantformat.PRODUKSJON.name -> Variantformat.PRODUKSJON
+        Variantformat.PRODUKSJON_DLF.name -> Variantformat.PRODUKSJON_DLF
+        else -> throw RuntimeException("Ugyldig tekst for mapping til variantformat. Tekst: ${getVariant(dokumentInfo).variantformat}")
+    }
 
 private fun getSkjerming(dokumentInfo: DokumentInfo): String? =
-        getVariant(dokumentInfo).skjerming
+    getVariant(dokumentInfo).skjerming
 
 private fun getVariant(dokumentInfo: DokumentInfo): Dokumentvariant =
-        dokumentInfo.dokumentvarianter.let {
-            it.find { variant -> variant.variantformat == Variantformat.SLADDET.name }
-                    ?: it.find { variant -> variant.variantformat == Variantformat.ARKIV.name }
-                    ?: throw RuntimeException("Dokument med id ${dokumentInfo.dokumentInfoId} mangler både ARKIV og SLADDET variantformat")
-        }
+    dokumentInfo.dokumentvarianter.let {
+        it.find { variant -> variant.variantformat == Variantformat.SLADDET.name }
+            ?: it.find { variant -> variant.variantformat == Variantformat.ARKIV.name }
+            ?: throw RuntimeException("Dokument med id ${dokumentInfo.dokumentInfoId} mangler både ARKIV og SLADDET variantformat")
+    }
 
 private fun getVedlegg(journalpost: Journalpost): List<Dokument> =
-        getElektroniskeVedlegg(journalpost).plus(getLogiskeVedlegg(journalpost))
-
+    getElektroniskeVedlegg(journalpost).plus(getLogiskeVedlegg(journalpost))
 
 private fun getElektroniskeVedlegg(journalpost: Journalpost): List<Dokument> =
-        journalpost.dokumenter
-                .orEmpty()
-                .subList(VEDLEGG_START_INDEX, journalpost.dokumenter?.size ?: 0)
-                .map { dok -> Dokument().fraSafDokumentInfo(dok) }
+    journalpost.dokumenter
+        .orEmpty()
+        .subList(VEDLEGG_START_INDEX, journalpost.dokumenter?.size ?: 0)
+        .map { dok -> Dokument().fraSafDokumentInfo(dok) }
 
 private fun getLogiskeVedlegg(journalpost: Journalpost): List<Dokument> =
-        getHoveddokumentet(journalpost).logiskeVedlegg.map { logiskVedlegg -> Dokument().fraSafLogiskVedlegg(logiskVedlegg) }
+    getHoveddokumentet(journalpost).logiskeVedlegg.map { logiskVedlegg -> Dokument().fraSafLogiskVedlegg(logiskVedlegg) }
 
 private fun getAvsender(journalpost: Journalpost): Entitet = getAvsenderMottaker(journalpost).first
 private fun getMottaker(journalpost: Journalpost): Entitet = getAvsenderMottaker(journalpost).second
@@ -130,7 +129,7 @@ private fun getAvsenderMottaker(journalpost: Journalpost): Pair<Entitet, Entitet
 }
 
 private fun sluttbrukerErMottakerEllerAvsender(journalpost: Journalpost): Boolean =
-        journalpost.avsenderMottaker?.erLikBruker ?: false
+    journalpost.avsenderMottaker?.erLikBruker ?: false
 
 private fun Dokument.fraSafLogiskVedlegg(logiskVedlegg: LogiskVedlegg): Dokument {
     tittel = logiskVedlegg.tittel

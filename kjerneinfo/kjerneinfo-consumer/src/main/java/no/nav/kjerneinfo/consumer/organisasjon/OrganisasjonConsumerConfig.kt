@@ -20,8 +20,9 @@ open class OrganisasjonConsumerConfig {
 
     @Bean
     open fun eregOrganisasjonCheck(): SelfTestCheck {
-        return SelfTestCheck(String.format("EREG Organisasjon  %s", ORG_NUMMER_NAV),
-                false
+        return SelfTestCheck(
+            String.format("EREG Organisasjon  %s", ORG_NUMMER_NAV),
+            false
         ) {
             try {
                 val (_, navn) = requireNotNull(organisasjonV1Client().hentNokkelInfo(ORG_NUMMER_NAV))

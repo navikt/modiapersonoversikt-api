@@ -6,13 +6,15 @@ import no.nav.sbl.dialogarena.naudit.AuditIdentifier.FAIL_REASON
 import org.slf4j.LoggerFactory
 
 private val tjenestekallLogg = LoggerFactory.getLogger("SecureLog")
-val cefLogger = ArchSightCEFLogger(CEFLoggerConfig(
+val cefLogger = ArchSightCEFLogger(
+    CEFLoggerConfig(
         applicationName = "modia",
         logName = "personoversikt",
         filter = { (action: Audit.Action, resource: Audit.AuditResource) ->
             action != Audit.Action.READ || resource == AuditResources.Person.Personalia
         }
-))
+    )
+)
 
 class Audit {
     open class AuditResource(val resource: String)
@@ -29,9 +31,9 @@ class Audit {
     }
 
     internal class WithDataDescriptor<T>(
-            private val action: Action,
-            private val resourceType: AuditResource,
-            private val extractIdentifiers: (T) -> List<Pair<AuditIdentifier, String?>>
+        private val action: Action,
+        private val resourceType: AuditResource,
+        private val extractIdentifiers: (T) -> List<Pair<AuditIdentifier, String?>>
     ) : AuditDescriptor<T> {
         override fun log(resource: T) {
             val identifiers = extractIdentifiers(resource).toTypedArray()
@@ -54,9 +56,10 @@ class Audit {
     }
 
     internal class NothingDescriptor(
-            private val action: Action,
-            private val resourceType: AuditResource,
-            private val identifiers: Array<out Pair<AuditIdentifier, String?>>) : AuditDescriptor<Any> {
+        private val action: Action,
+        private val resourceType: AuditResource,
+        private val identifiers: Array<out Pair<AuditIdentifier, String?>>
+    ) : AuditDescriptor<Any> {
         override fun log(resource: Any) {
             logInternal(action, resourceType, identifiers)
         }
@@ -89,16 +92,16 @@ class Audit {
         private fun logInternal(action: Action, resourceType: AuditResource, identifiers: Array<out Pair<AuditIdentifier, String?>>) {
             val subject = SubjectHandler.getIdent()
             val logline = listOfNotNull(
-                    "action='$action'",
-                    subject
-                            .map { "subject='$it'" }
-                            .orElse(null),
-                    "resource='${resourceType.resource}'",
-                    *identifiers
-                            .map { "${it.first}='${it.second ?: "-"}'" }
-                            .toTypedArray()
+                "action='$action'",
+                subject
+                    .map { "subject='$it'" }
+                    .orElse(null),
+                "resource='${resourceType.resource}'",
+                *identifiers
+                    .map { "${it.first}='${it.second ?: "-"}'" }
+                    .toTypedArray()
             )
-                    .joinToString(" ")
+                .joinToString(" ")
 
             tjenestekallLogg.info(logline)
             cefLogger.log(CEFEvent(action, resourceType, subject.orElse("-"), identifiers))

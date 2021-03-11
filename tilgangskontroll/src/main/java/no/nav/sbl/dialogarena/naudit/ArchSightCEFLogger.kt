@@ -10,30 +10,30 @@ enum class CEFSeverity {
 }
 
 fun escapeHeader(value: String): String = value
-        .replace("\\", "\\\\")
-        .replace("|", "\\|")
+    .replace("\\", "\\\\")
+    .replace("|", "\\|")
 
 fun escapeAttribute(value: String): String = value
-        .replace("\\", "\\\\")
-        .replace("=", "\\=")
+    .replace("\\", "\\\\")
+    .replace("=", "\\=")
 
 data class CEFLoggerConfig(
-        val cefVersion: String = "0",
-        val applicationName: String,
-        val logName: String = "Leselogg",
-        val logFormatVersion: String = "1.0",
-        val eventType: String = "audit:access",
-        val description: String = "SporingsLogger",
-        val filter: (event: CEFEvent) -> Boolean = { true }
+    val cefVersion: String = "0",
+    val applicationName: String,
+    val logName: String = "Leselogg",
+    val logFormatVersion: String = "1.0",
+    val eventType: String = "audit:access",
+    val description: String = "SporingsLogger",
+    val filter: (event: CEFEvent) -> Boolean = { true }
 )
 
 data class CEFEvent(
-        val action: Audit.Action,
-        val resource: Audit.AuditResource,
-        val subject: String,
-        val identifiers: Array<out Pair<AuditIdentifier, String?>>,
-        val severity: CEFSeverity = CEFSeverity.INFO,
-        val time: Long = Instant.now().toEpochMilli()
+    val action: Audit.Action,
+    val resource: Audit.AuditResource,
+    val subject: String,
+    val identifiers: Array<out Pair<AuditIdentifier, String?>>,
+    val severity: CEFSeverity = CEFSeverity.INFO,
+    val time: Long = Instant.now().toEpochMilli()
 )
 
 enum class CEFAttributeName(val attribute: String) {
@@ -85,25 +85,27 @@ class CEFAttributes {
     fun createCEFAttributes(): List<Pair<CEFAttributeName, String>> {
         var counter = 1
         return attributes
-                .flatMap { when(it) {
+            .flatMap {
+                when (it) {
                     is CEFAttributesType.EnumDescriptor -> listOf(it.attribute to it.value)
                     is CEFAttributesType.StringDescriptor -> listOf(
-                            CEFAttributeName.getStringKey(counter) to it.value,
-                            CEFAttributeName.getStringLabelKey(counter++) to it.attribute
+                        CEFAttributeName.getStringKey(counter) to it.value,
+                        CEFAttributeName.getStringLabelKey(counter++) to it.attribute
                     )
-                } }
+                }
+            }
     }
 }
 
 class ArchSightCEFLogger(private val config: CEFLoggerConfig) {
     private val descriptor: String = String.format(
-            "CEF:%s|%s|%s|%s|%s|%s",
-            escapeHeader(config.cefVersion),
-            escapeHeader(config.applicationName),
-            escapeHeader(config.logName),
-            escapeHeader(config.logFormatVersion),
-            escapeHeader(config.eventType),
-            escapeHeader(config.description)
+        "CEF:%s|%s|%s|%s|%s|%s",
+        escapeHeader(config.cefVersion),
+        escapeHeader(config.applicationName),
+        escapeHeader(config.logName),
+        escapeHeader(config.logFormatVersion),
+        escapeHeader(config.eventType),
+        escapeHeader(config.description)
     )
 
     internal fun create(event: CEFEvent): String? {
@@ -118,14 +120,14 @@ class ArchSightCEFLogger(private val config: CEFLoggerConfig) {
         event.identifiers.forEach { attributes.addStringValue(it.first, it.second ?: "-") }
 
         val extension = attributes.createCEFAttributes()
-                .joinToString(" ") {
-                    "${it.first.attribute}=${escapeAttribute(it.second)}"
-                }
+            .joinToString(" ") {
+                "${it.first.attribute}=${escapeAttribute(it.second)}"
+            }
 
         return "$descriptor|${event.severity}|$extension"
     }
 
     fun log(event: CEFEvent) {
-        create(event)?.also{ auditLogg.info(it) }
+        create(event)?.also { auditLogg.info(it) }
     }
 }

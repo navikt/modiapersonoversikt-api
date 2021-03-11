@@ -26,43 +26,43 @@ import org.springframework.web.server.ResponseStatusException
 @RestController
 @RequestMapping("/rest/personsok")
 class PersonsokController @Autowired constructor(
-        private val personsokPortType: PersonsokPortType,
-        private val pdlOppslagService: PdlOppslagService,
-        val tilgangskontroll: Tilgangskontroll
+    private val personsokPortType: PersonsokPortType,
+    private val pdlOppslagService: PdlOppslagService,
+    val tilgangskontroll: Tilgangskontroll
 ) {
     private val auditDescriptor = Audit.describe<List<PersonSokResponsDTO>>(Audit.Action.READ, AuditResources.Personsok.Resultat) { resultat ->
         val fnr = resultat.map { it.ident }.joinToString(", ")
         listOf(
-                AuditIdentifier.FNR to fnr
+            AuditIdentifier.FNR to fnr
         )
     }
 
     @PostMapping
     fun sok(@RequestBody personsokRequest: PersonsokRequest): List<PersonSokResponsDTO> {
         return tilgangskontroll
-                .check(Policies.tilgangTilModia)
-                .get(auditDescriptor) {
-                    handterFeil {
-                        if (!personsokRequest.utenlandskID.isNullOrBlank()) {
-                            sokEtterUtenlandskIdMotPDL(personsokRequest.utenlandskID)
-                        } else {
-                            legacySokMotTPS(personsokRequest)
-                        }
+            .check(Policies.tilgangTilModia)
+            .get(auditDescriptor) {
+                handterFeil {
+                    if (!personsokRequest.utenlandskID.isNullOrBlank()) {
+                        sokEtterUtenlandskIdMotPDL(personsokRequest.utenlandskID)
+                    } else {
+                        legacySokMotTPS(personsokRequest)
                     }
                 }
+            }
     }
 
-    private fun sokEtterUtenlandskIdMotPDL(utenlandskID: String): List<PersonSokResponsDTO>  {
-            return pdlOppslagService.sokPersonUtenlandskID(utenlandskID)
-                    .map(::lagPersonResponse)
+    private fun sokEtterUtenlandskIdMotPDL(utenlandskID: String): List<PersonSokResponsDTO> {
+        return pdlOppslagService.sokPersonUtenlandskID(utenlandskID)
+            .map(::lagPersonResponse)
     }
 
     private fun legacySokMotTPS(personsokRequest: PersonsokRequest): List<PersonSokResponsDTO> {
         return personsokPortType
-                .finnPerson(lagPersonsokRequest(personsokRequest))
-                .personListe
-                ?.map { lagPersonResponse(it) }
-                ?: emptyList()
+            .finnPerson(lagPersonsokRequest(personsokRequest))
+            .personListe
+            ?.map { lagPersonResponse(it) }
+            ?: emptyList()
     }
 
     private fun <T> handterFeil(block: () -> T): T = try {
@@ -83,19 +83,19 @@ fun lagPersonResponse(searchHit: SokPersonUtenlandskID.SearchHit): PersonSokResp
     val ident = searchHit.person?.folkeregisteridentifikator?.first()
     val utenlandskID = searchHit.person?.utenlandskIdentifikasjonsnummer
     return PersonSokResponsDTO(
-            diskresjonskode = null,
-            kjonn = null,
-            status = null,
-            ident = ident?.let { NorskIdentDTO(it.identifikasjonsnummer, KodeverdiDTO(it.type, null)) },
-            navn = hentNavn(searchHit.person),
-            postadresse = lagPostadresse(searchHit.person?.kontaktadresse),
-            bostedsadresse = lagBostedsadresse(searchHit.person?.bostedsadresse),
-            brukerinfo = BrukerinfoDTO(
-                    gjeldendePostadresseType = null,
-                    midlertidigPostadresse = null,
-                    ansvarligEnhet = null
-            ),
-            utenlandskID = utenlandskID?.map { UtenlandskIdDTO(it.identifikasjonsnummer, it.utstederland) }
+        diskresjonskode = null,
+        kjonn = null,
+        status = null,
+        ident = ident?.let { NorskIdentDTO(it.identifikasjonsnummer, KodeverdiDTO(it.type, null)) },
+        navn = hentNavn(searchHit.person),
+        postadresse = lagPostadresse(searchHit.person?.kontaktadresse),
+        bostedsadresse = lagBostedsadresse(searchHit.person?.bostedsadresse),
+        brukerinfo = BrukerinfoDTO(
+            gjeldendePostadresseType = null,
+            midlertidigPostadresse = null,
+            ansvarligEnhet = null
+        ),
+        utenlandskID = utenlandskID?.map { UtenlandskIdDTO(it.identifikasjonsnummer, it.utstederland) }
     )
 }
 
@@ -110,33 +110,33 @@ private fun lagBostedsadresse(adr: List<SokPersonUtenlandskID.Bostedsadresse>?):
         }
         adresse.matrikkeladresse != null -> {
             return listOfNotNull(
-                    adresse.matrikkeladresse!!.bruksenhetsnummer,
-                    adresse.matrikkeladresse!!.tilleggsnavn,
-                    adresse.matrikkeladresse!!.postnummer,
-                    adresse.matrikkeladresse!!.kommunenummer
+                adresse.matrikkeladresse!!.bruksenhetsnummer,
+                adresse.matrikkeladresse!!.tilleggsnavn,
+                adresse.matrikkeladresse!!.postnummer,
+                adresse.matrikkeladresse!!.kommunenummer
             ).joinToString(" ")
         }
         adresse.utenlandskAdresse != null -> {
             return listOfNotNull(
-                    adresse.utenlandskAdresse!!.bygningEtasjeLeilighet,
-                    adresse.utenlandskAdresse!!.adressenavnNummer,
-                    adresse.utenlandskAdresse!!.regionDistriktOmraade,
-                    adresse.utenlandskAdresse!!.postboksNummerNavn,
-                    adresse.utenlandskAdresse!!.postkode,
-                    adresse.utenlandskAdresse!!.bySted,
-                    adresse.utenlandskAdresse!!.landkode
+                adresse.utenlandskAdresse!!.bygningEtasjeLeilighet,
+                adresse.utenlandskAdresse!!.adressenavnNummer,
+                adresse.utenlandskAdresse!!.regionDistriktOmraade,
+                adresse.utenlandskAdresse!!.postboksNummerNavn,
+                adresse.utenlandskAdresse!!.postkode,
+                adresse.utenlandskAdresse!!.bySted,
+                adresse.utenlandskAdresse!!.landkode
             )
-                    .joinToString(" ")
+                .joinToString(" ")
         }
         adresse.vegadresse != null -> {
             return listOfNotNull(
-                    adresse.vegadresse!!.adressenavn,
-                    adresse.vegadresse!!.husnummer,
-                    adresse.vegadresse!!.husbokstav,
-                    adresse.vegadresse!!.bruksenhetsnummer,
-                    adresse.vegadresse!!.postnummer,
-                    adresse.vegadresse!!.bydelsnummer,
-                    adresse.vegadresse!!.kommunenummer
+                adresse.vegadresse!!.adressenavn,
+                adresse.vegadresse!!.husnummer,
+                adresse.vegadresse!!.husbokstav,
+                adresse.vegadresse!!.bruksenhetsnummer,
+                adresse.vegadresse!!.postnummer,
+                adresse.vegadresse!!.bydelsnummer,
+                adresse.vegadresse!!.kommunenummer
 
             ).joinToString(" ")
         }
@@ -154,50 +154,52 @@ fun lagPostadresse(adr: List<SokPersonUtenlandskID.Kontaktadresse>?): String? {
     when {
         adresse.postadresseIFrittFormat != null -> {
             return listOfNotNull(
-                    adresse.postadresseIFrittFormat!!.adresselinje1,
-                    adresse.postadresseIFrittFormat!!.adresselinje2,
-                    adresse.postadresseIFrittFormat!!.adresselinje3,
-                    adresse.postadresseIFrittFormat!!.postnummer)
-                    .joinToString(" ")
+                adresse.postadresseIFrittFormat!!.adresselinje1,
+                adresse.postadresseIFrittFormat!!.adresselinje2,
+                adresse.postadresseIFrittFormat!!.adresselinje3,
+                adresse.postadresseIFrittFormat!!.postnummer
+            )
+                .joinToString(" ")
         }
         adresse.utenlandskAdresseIFrittFormat != null -> {
             return listOfNotNull(
-                    adresse.utenlandskAdresseIFrittFormat!!.adresselinje1,
-                    adresse.utenlandskAdresseIFrittFormat!!.adresselinje2,
-                    adresse.utenlandskAdresseIFrittFormat!!.adresselinje3,
-                    adresse.utenlandskAdresseIFrittFormat!!.postkode,
-                    adresse.utenlandskAdresseIFrittFormat!!.byEllerStedsnavn,
-                    adresse.utenlandskAdresseIFrittFormat!!.landkode)
-                    .joinToString(" ")
+                adresse.utenlandskAdresseIFrittFormat!!.adresselinje1,
+                adresse.utenlandskAdresseIFrittFormat!!.adresselinje2,
+                adresse.utenlandskAdresseIFrittFormat!!.adresselinje3,
+                adresse.utenlandskAdresseIFrittFormat!!.postkode,
+                adresse.utenlandskAdresseIFrittFormat!!.byEllerStedsnavn,
+                adresse.utenlandskAdresseIFrittFormat!!.landkode
+            )
+                .joinToString(" ")
         }
         adresse.postboksadresse != null -> {
             return listOfNotNull(
-                    adresse.postboksadresse!!.postbokseier,
-                    adresse.postboksadresse!!.postboks,
-                    adresse.postboksadresse!!.postnummer
+                adresse.postboksadresse!!.postbokseier,
+                adresse.postboksadresse!!.postboks,
+                adresse.postboksadresse!!.postnummer
             ).joinToString(" ")
         }
         adresse.utenlandskAdresse != null -> {
             return listOfNotNull(
-                    adresse.utenlandskAdresse!!.bygningEtasjeLeilighet,
-                    adresse.utenlandskAdresse!!.adressenavnNummer,
-                    adresse.utenlandskAdresse!!.regionDistriktOmraade,
-                    adresse.utenlandskAdresse!!.postboksNummerNavn,
-                    adresse.utenlandskAdresse!!.postkode,
-                    adresse.utenlandskAdresse!!.bySted,
-                    adresse.utenlandskAdresse!!.landkode
+                adresse.utenlandskAdresse!!.bygningEtasjeLeilighet,
+                adresse.utenlandskAdresse!!.adressenavnNummer,
+                adresse.utenlandskAdresse!!.regionDistriktOmraade,
+                adresse.utenlandskAdresse!!.postboksNummerNavn,
+                adresse.utenlandskAdresse!!.postkode,
+                adresse.utenlandskAdresse!!.bySted,
+                adresse.utenlandskAdresse!!.landkode
             )
-                    .joinToString(" ")
+                .joinToString(" ")
         }
         adresse.vegadresse != null -> {
             return listOfNotNull(
-                    adresse.vegadresse!!.adressenavn,
-                    adresse.vegadresse!!.husnummer,
-                    adresse.vegadresse!!.husbokstav,
-                    adresse.vegadresse!!.bruksenhetsnummer,
-                    adresse.vegadresse!!.postnummer,
-                    adresse.vegadresse!!.bydelsnummer,
-                    adresse.vegadresse!!.kommunenummer
+                adresse.vegadresse!!.adressenavn,
+                adresse.vegadresse!!.husnummer,
+                adresse.vegadresse!!.husbokstav,
+                adresse.vegadresse!!.bruksenhetsnummer,
+                adresse.vegadresse!!.postnummer,
+                adresse.vegadresse!!.bydelsnummer,
+                adresse.vegadresse!!.kommunenummer
 
             ).joinToString(" ")
         }
@@ -209,68 +211,73 @@ fun lagPostadresse(adr: List<SokPersonUtenlandskID.Kontaktadresse>?): String? {
 
 fun hentNavn(person: SokPersonUtenlandskID.Person?): PersonnavnDTO? {
     return person
-            ?.navn
-            ?.first()
-            ?.let {
-                PersonnavnDTO(
-                        fornavn = it.fornavn,
-                        etternavn = it.etternavn,
-                        mellomnavn = it.mellomnavn,
-                        sammensatt = listOfNotNull(it.fornavn, it.mellomnavn, it.etternavn).joinToString(" ")
-                )
-            }
+        ?.navn
+        ?.first()
+        ?.let {
+            PersonnavnDTO(
+                fornavn = it.fornavn,
+                etternavn = it.etternavn,
+                mellomnavn = it.mellomnavn,
+                sammensatt = listOfNotNull(it.fornavn, it.mellomnavn, it.etternavn).joinToString(" ")
+            )
+        }
 }
 
 data class PersonSokResponsDTO(
-        val diskresjonskode: KodeverdiDTO?,
-        val postadresse: String?,
-        val bostedsadresse: String?,
-        val kjonn: KodeverdiDTO?,
-        val navn: PersonnavnDTO?,
-        val status: KodeverdiDTO?,
-        val ident: NorskIdentDTO?,
-        val brukerinfo: BrukerinfoDTO?,
-        val utenlandskID: List<UtenlandskIdDTO>?
+    val diskresjonskode: KodeverdiDTO?,
+    val postadresse: String?,
+    val bostedsadresse: String?,
+    val kjonn: KodeverdiDTO?,
+    val navn: PersonnavnDTO?,
+    val status: KodeverdiDTO?,
+    val ident: NorskIdentDTO?,
+    val brukerinfo: BrukerinfoDTO?,
+    val utenlandskID: List<UtenlandskIdDTO>?
 )
 
 private fun lagPersonResponse(fimPerson: Person) = PersonSokResponsDTO(
-        diskresjonskode = fimPerson.diskresjonskode?.let { lagKodeverdi(it) },
-        postadresse = fimPerson.postadresse?.ustrukturertAdresse?.let { lagPostadresse(it) },
-        bostedsadresse = fimPerson.bostedsadresse?.strukturertAdresse?.let { lagBostedsadresse(it) },
-        kjonn = fimPerson.kjoenn?.kjoenn?.let { lagKodeverdi(it) },
-        navn = fimPerson.personnavn?.let { lagNavn(it) },
-        status = fimPerson.personstatus?.personstatus?.let { lagKodeverdi(it) },
-        ident = fimPerson.ident?.let { lagNorskIdent(it) },
-        brukerinfo = lagBrukerinfo(fimPerson),
-        utenlandskID = null
+    diskresjonskode = fimPerson.diskresjonskode?.let { lagKodeverdi(it) },
+    postadresse = fimPerson.postadresse?.ustrukturertAdresse?.let { lagPostadresse(it) },
+    bostedsadresse = fimPerson.bostedsadresse?.strukturertAdresse?.let { lagBostedsadresse(it) },
+    kjonn = fimPerson.kjoenn?.kjoenn?.let { lagKodeverdi(it) },
+    navn = fimPerson.personnavn?.let { lagNavn(it) },
+    status = fimPerson.personstatus?.personstatus?.let { lagKodeverdi(it) },
+    ident = fimPerson.ident?.let { lagNorskIdent(it) },
+    brukerinfo = lagBrukerinfo(fimPerson),
+    utenlandskID = null
 )
 
 private fun lagPostadresse(adr: UstrukturertAdresse): String =
-        arrayOf(adr.adresselinje1, adr.adresselinje2, adr.adresselinje3, adr.adresselinje4, adr.landkode?.value).filterNotNull().joinToString(" ")
-
+    arrayOf(adr.adresselinje1, adr.adresselinje2, adr.adresselinje3, adr.adresselinje4, adr.landkode?.value).filterNotNull().joinToString(" ")
 
 private fun lagBostedsadresse(adr: StrukturertAdresse): String? =
-        when (adr) {
-            is Gateadresse -> arrayOf(adr.gatenavn, adr.husnummer, adr.husbokstav, adr.poststed?.value).filterNotNull().joinToString(" ")
-            is Matrikkeladresse -> arrayOf(adr.matrikkelnummer.bruksnummer, adr.matrikkelnummer.festenummer, adr.matrikkelnummer.gaardsnummer,
-                    adr.matrikkelnummer.seksjonsnummer, adr.matrikkelnummer.undernummer, adr.poststed?.value).filterNotNull().joinToString(" ")
-            is StedsadresseNorge -> arrayOf(adr.tilleggsadresse, adr.bolignummer, adr.poststed?.value).filterNotNull().joinToString(" ")
-            is PostboksadresseNorsk -> arrayOf(adr.postboksanlegg, adr.poststed?.value).filterNotNull().joinToString(" ")
-            else -> null
-        }
+    when (adr) {
+        is Gateadresse -> arrayOf(adr.gatenavn, adr.husnummer, adr.husbokstav, adr.poststed?.value).filterNotNull().joinToString(" ")
+        is Matrikkeladresse -> arrayOf(
+            adr.matrikkelnummer.bruksnummer,
+            adr.matrikkelnummer.festenummer,
+            adr.matrikkelnummer.gaardsnummer,
+            adr.matrikkelnummer.seksjonsnummer,
+            adr.matrikkelnummer.undernummer,
+            adr.poststed?.value
+        ).filterNotNull().joinToString(" ")
+        is StedsadresseNorge -> arrayOf(adr.tilleggsadresse, adr.bolignummer, adr.poststed?.value).filterNotNull().joinToString(" ")
+        is PostboksadresseNorsk -> arrayOf(adr.postboksanlegg, adr.poststed?.value).filterNotNull().joinToString(" ")
+        else -> null
+    }
 
 data class PersonnavnDTO(
-        val fornavn: String,
-        val etternavn: String,
-        val mellomnavn: String?,
-        val sammensatt: String
+    val fornavn: String,
+    val etternavn: String,
+    val mellomnavn: String?,
+    val sammensatt: String
 )
 
 private fun lagNavn(fimPersonnavn: Personnavn) = PersonnavnDTO(
-        fornavn = fimPersonnavn.fornavn,
-        etternavn = fimPersonnavn.etternavn,
-        mellomnavn = fimPersonnavn.mellomnavn,
-        sammensatt = fimPersonnavn.sammensattNavn
+    fornavn = fimPersonnavn.fornavn,
+    etternavn = fimPersonnavn.etternavn,
+    mellomnavn = fimPersonnavn.mellomnavn,
+    sammensatt = fimPersonnavn.sammensattNavn
 )
 
 data class UtenlandskIdDTO(val identifikasjonsnummer: String, val utstederland: String)
@@ -278,78 +285,78 @@ data class UtenlandskIdDTO(val identifikasjonsnummer: String, val utstederland: 
 data class NorskIdentDTO(val ident: String, val type: KodeverdiDTO?)
 
 private fun lagNorskIdent(fimNorskIdent: NorskIdent) = NorskIdentDTO(
-        fimNorskIdent.ident,
-        fimNorskIdent.type?.let { lagKodeverdi(it) }
+    fimNorskIdent.ident,
+    fimNorskIdent.type?.let { lagKodeverdi(it) }
 )
 
 data class BrukerinfoDTO(
-        val gjeldendePostadresseType: KodeverdiDTO?,
-        val midlertidigPostadresse: String?,
-        val ansvarligEnhet: String?
+    val gjeldendePostadresseType: KodeverdiDTO?,
+    val midlertidigPostadresse: String?,
+    val ansvarligEnhet: String?
 )
 
 private fun lagBrukerinfo(fimPerson: Person): BrukerinfoDTO? =
-        if (fimPerson is Bruker) {
-            BrukerinfoDTO(
-                    gjeldendePostadresseType = fimPerson.gjeldendePostadresseType?.let { lagKodeverdi(it) },
-                    midlertidigPostadresse = fimPerson.midlertidigPostadresse?.let { lagMidlertidigAdresse(it) },
-                    ansvarligEnhet = fimPerson.harAnsvarligEnhet?.enhet?.organisasjonselementID
-            )
-        } else {
-            null
-        }
+    if (fimPerson is Bruker) {
+        BrukerinfoDTO(
+            gjeldendePostadresseType = fimPerson.gjeldendePostadresseType?.let { lagKodeverdi(it) },
+            midlertidigPostadresse = fimPerson.midlertidigPostadresse?.let { lagMidlertidigAdresse(it) },
+            ansvarligEnhet = fimPerson.harAnsvarligEnhet?.enhet?.organisasjonselementID
+        )
+    } else {
+        null
+    }
 
 private fun lagMidlertidigAdresse(fimMidlertidigPostadresse: MidlertidigPostadresse): String? =
-        when (fimMidlertidigPostadresse) {
-            is MidlertidigPostadresseNorge -> lagPostadresse(fimMidlertidigPostadresse.ustrukturertAdresse)
-            is MidlertidigPostadresseUtland -> lagPostadresse(fimMidlertidigPostadresse.ustrukturertAdresse)
-            else -> null
-        }
+    when (fimMidlertidigPostadresse) {
+        is MidlertidigPostadresseNorge -> lagPostadresse(fimMidlertidigPostadresse.ustrukturertAdresse)
+        is MidlertidigPostadresseUtland -> lagPostadresse(fimMidlertidigPostadresse.ustrukturertAdresse)
+        else -> null
+    }
 
 data class KodeverdiDTO(val kodeRef: String?, val beskrivelse: String?)
 
 private fun lagKodeverdi(fimKodeverdi: Kodeverdi) = KodeverdiDTO(fimKodeverdi.kodeRef, fimKodeverdi.value)
 
 private fun lagPersonsokRequest(request: PersonsokRequest): FinnPersonRequest =
-        FinnPersonRequest()
+    FinnPersonRequest()
+        .apply {
+            soekekriterie = Soekekriterie()
                 .apply {
-                    soekekriterie = Soekekriterie()
-                            .apply {
-                                fornavn = request.fornavn
-                                etternavn = request.etternavn
-                                gatenavn = request.gatenavn
-                                bankkontoNorge = request.kontonummer
-                            }
-                    personFilter = PersonFilter()
-                            .apply {
-                                alderFra = request.alderFra
-                                alderTil = request.alderTil
-                                enhetId = request.kommunenummer
-                                foedselsdatoFra = lagXmlGregorianDato(request.fodselsdatoFra)
-                                foedselsdatoTil = lagXmlGregorianDato(request.fodselsdatoTil)
-                                kjoenn = request.kjonn
-                            }
-                    adresseFilter = AdresseFilter()
-                            .apply {
-                                gatenummer = request.husnummer
-                                husbokstav = request.husbokstav
-                                postnummer = request.postnummer
-                            }
+                    fornavn = request.fornavn
+                    etternavn = request.etternavn
+                    gatenavn = request.gatenavn
+                    bankkontoNorge = request.kontonummer
                 }
+            personFilter = PersonFilter()
+                .apply {
+                    alderFra = request.alderFra
+                    alderTil = request.alderTil
+                    enhetId = request.kommunenummer
+                    foedselsdatoFra = lagXmlGregorianDato(request.fodselsdatoFra)
+                    foedselsdatoTil = lagXmlGregorianDato(request.fodselsdatoTil)
+                    kjoenn = request.kjonn
+                }
+            adresseFilter = AdresseFilter()
+                .apply {
+                    gatenummer = request.husnummer
+                    husbokstav = request.husbokstav
+                    postnummer = request.postnummer
+                }
+        }
 
 data class PersonsokRequest(
-        val fornavn: String?,
-        val etternavn: String?,
-        val gatenavn: String?,
-        val kontonummer: String?,
-        val utenlandskID: String?,
-        val alderFra: Int?,
-        val alderTil: Int?,
-        val kommunenummer: String?,
-        val fodselsdatoFra: String?,
-        val fodselsdatoTil: String?,
-        val kjonn: String?,
-        val husnummer: Int?,
-        val husbokstav: String?,
-        val postnummer: String?
+    val fornavn: String?,
+    val etternavn: String?,
+    val gatenavn: String?,
+    val kontonummer: String?,
+    val utenlandskID: String?,
+    val alderFra: Int?,
+    val alderTil: Int?,
+    val kommunenummer: String?,
+    val fodselsdatoFra: String?,
+    val fodselsdatoTil: String?,
+    val kjonn: String?,
+    val husnummer: Int?,
+    val husbokstav: String?,
+    val postnummer: String?
 )

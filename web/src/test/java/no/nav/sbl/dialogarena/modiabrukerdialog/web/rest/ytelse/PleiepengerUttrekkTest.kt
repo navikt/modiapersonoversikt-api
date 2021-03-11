@@ -59,9 +59,15 @@ internal class PleiepengerUttrekkTest {
     }
 
     private fun mockResponse() = WSHentPleiepengerettighetResponse()
-            .withPleiepengerettighetListe(WSPleiepengerettighet()
-                    .withBarnet(WSPerson()
-                            .withIdent(BARNETS_FNR))
-                    .withOmsorgsperson(WSPerson()
-                            .withIdent(FNR)))
+        .withPleiepengerettighetListe(
+            WSPleiepengerettighet()
+                .withBarnet(
+                    WSPerson()
+                        .withIdent(BARNETS_FNR)
+                )
+                .withOmsorgsperson(
+                    WSPerson()
+                        .withIdent(FNR)
+                )
+        )
 }

@@ -15,17 +15,16 @@ private const val APPLICATION_PREFIX = "modiabrukerdialog."
 @RestController
 @RequestMapping("/rest/featuretoggle")
 class FeatureToggleController @Autowired constructor(
-        private val unleashService: UnleashService,
-        private val tilgangskontroll: Tilgangskontroll
+    private val unleashService: UnleashService,
+    private val tilgangskontroll: Tilgangskontroll
 ) {
     @GetMapping("/{id}")
     fun hentMedId(@PathVariable("id") toggleId: String): Boolean =
-            tilgangskontroll
-                    .check(Policies.tilgangTilModia)
-                    .get(Audit.skipAuditLog()) {
-                        unleashService.isEnabled(sjekkPrefix(toggleId))
-                    }
-
+        tilgangskontroll
+            .check(Policies.tilgangTilModia)
+            .get(Audit.skipAuditLog()) {
+                unleashService.isEnabled(sjekkPrefix(toggleId))
+            }
 
     fun sjekkPrefix(propertyKey: String): String {
         return if (propertyKey.contains(".")) propertyKey else APPLICATION_PREFIX + propertyKey

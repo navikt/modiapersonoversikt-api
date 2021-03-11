@@ -25,7 +25,7 @@ class TilgangskontrollMock {
     companion object {
         @JvmStatic
         fun get(): Tilgangskontroll {
-            val tilgangskontroll : Tilgangskontroll = mock()
+            val tilgangskontroll: Tilgangskontroll = mock()
             val rsbacInstance: RSBACInstance<TilgangskontrollContext> = RSBACMock()
             whenever(tilgangskontroll.check(any<Combinable<TilgangskontrollContext>>())).thenReturn(rsbacInstance)
             whenever(tilgangskontroll.check(any<Policy<TilgangskontrollContext>>())).thenReturn(rsbacInstance)

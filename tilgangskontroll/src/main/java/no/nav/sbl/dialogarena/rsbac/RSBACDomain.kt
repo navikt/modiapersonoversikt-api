@@ -48,8 +48,8 @@ interface Generator<in CONTEXT, DATA> {
 }
 
 class PolicySet<CONTEXT>(
-        val combining: CombiningAlgo = CombiningAlgo.denyOverride,
-        val policies: List<Combinable<CONTEXT>>
+    val combining: CombiningAlgo = CombiningAlgo.denyOverride,
+    val policies: List<Combinable<CONTEXT>>
 ) : Combinable<CONTEXT> {
     private var result: Decision? = null
 
@@ -70,7 +70,6 @@ class RulePolicy<CONTEXT>(private val rule: CONTEXT.() -> Decision) : Combinable
     }
 
     override fun invoke(context: CONTEXT): Decision = rule(context)
-
 }
 
 class Policy<CONTEXT> : Combinable<CONTEXT> {
@@ -78,13 +77,13 @@ class Policy<CONTEXT> : Combinable<CONTEXT> {
     private val rule: Rule<CONTEXT>
 
     constructor(message: String, rule: Function<CONTEXT, Boolean>, effect: DecisionEnums) : this(
-            { message },
-            { if (rule.invoke(this)) effect else effect.negate() }
+        { message },
+        { if (rule.invoke(this)) effect else effect.negate() }
     )
 
     constructor(message: String, rule: Rule<CONTEXT>) : this(
-            { message },
-            rule
+        { message },
+        rule
     )
 
     constructor(message: CONTEXT.() -> String, rule: Rule<CONTEXT>) {
@@ -103,7 +102,7 @@ class Policy<CONTEXT> : Combinable<CONTEXT> {
 
 class RuleData<CONTEXT, DATA>(val context: CONTEXT, val data: DATA)
 class RulePolicyGenerator<CONTEXT, DATA>(
-        private val rule: RuleData<CONTEXT, DATA>.() -> Decision
+    private val rule: RuleData<CONTEXT, DATA>.() -> Decision
 ) : Generator<CONTEXT, DATA> {
     override fun with(data: DATA): Combinable<CONTEXT> = RulePolicy {
         rule.invoke(RuleData(this, data))
@@ -111,8 +110,8 @@ class RulePolicyGenerator<CONTEXT, DATA>(
 }
 
 class PolicyGenerator<CONTEXT, DATA>(
-        private val message: RuleData<CONTEXT, DATA>.() -> String,
-        private val rule: Rule<RuleData<CONTEXT, DATA>>
+    private val message: RuleData<CONTEXT, DATA>.() -> String,
+    private val rule: Rule<RuleData<CONTEXT, DATA>>
 ) : Generator<CONTEXT, DATA> {
     override fun with(data: DATA): Policy<CONTEXT> = Policy({ message(RuleData(this, data)) }) {
         rule.invoke(RuleData(this, data))
@@ -122,12 +121,12 @@ class PolicyGenerator<CONTEXT, DATA>(
 }
 
 class PolicySetGenerator<in CONTEXT, DATA>(
-        private val combining: CombiningAlgo = CombiningAlgo.denyOverride,
-        private val policies: List<Generator<CONTEXT, DATA>>
+    private val combining: CombiningAlgo = CombiningAlgo.denyOverride,
+    private val policies: List<Generator<CONTEXT, DATA>>
 ) : Generator<CONTEXT, DATA> {
 
     override fun with(data: DATA): Combinable<CONTEXT> = PolicySet(
-            this.combining,
-            this.policies.map { it.with(data) }
+        this.combining,
+        this.policies.map { it.with(data) }
     )
 }

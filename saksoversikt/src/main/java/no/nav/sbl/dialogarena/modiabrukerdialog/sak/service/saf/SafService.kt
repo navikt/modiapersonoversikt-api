@@ -28,9 +28,9 @@ class SafService {
     fun hentJournalposter(fnr: String): ResultatWrapper<List<DokumentMetadata>> {
         val jsonQuery = dokumentoversiktBrukerJsonQuery(fnr)
         val response = client.newCall(
-                veilederAutorisertClient(SAF_GRAPHQL_BASEURL)
-                        .post(RequestBody.create(jsonType, jsonQuery))
-                        .build()
+            veilederAutorisertClient(SAF_GRAPHQL_BASEURL)
+                .post(RequestBody.create(jsonType, jsonQuery))
+                .build()
         ).execute()
 
         return handterStatus(response)
@@ -40,7 +40,7 @@ class SafService {
         val url = lagHentDokumentURL(journalpostId, dokumentInfoId, variantFormat)
 
         val response = client.newCall(
-                veilederAutorisertClient(url).build()
+            veilederAutorisertClient(url).build()
         ).execute()
         return when (response.code()) {
             200 -> TjenesteResultatWrapper(response.body()?.bytes())
@@ -50,13 +50,13 @@ class SafService {
 }
 
 private fun handterStatus(response: Response): ResultatWrapper<List<DokumentMetadata>> =
-        when (response.code()) {
-            200 -> handterResponse(response)
-            else -> {
-                handterJournalpostFeilKoder(response.code())
-                ResultatWrapper(emptyList(), setOf(Baksystem.SAF))
-            }
+    when (response.code()) {
+        200 -> handterResponse(response)
+        else -> {
+            handterJournalpostFeilKoder(response.code())
+            ResultatWrapper(emptyList(), setOf(Baksystem.SAF))
         }
+    }
 
 private fun handterResponse(response: Response): ResultatWrapper<List<DokumentMetadata>> {
     val safDokumentResponse = safDokumentResponsFraResponse(response)
@@ -64,8 +64,8 @@ private fun handterResponse(response: Response): ResultatWrapper<List<DokumentMe
     safDokumentResponse.errors?.also { logJournalpostErrors(safDokumentResponse.errors) }
 
     return ResultatWrapper(
-            getDokumentMetadata(safDokumentResponse),
-            safDokumentResponse.errors?.let { setOf(Baksystem.SAF) }.orEmpty()
+        getDokumentMetadata(safDokumentResponse),
+        safDokumentResponse.errors?.let { setOf(Baksystem.SAF) }.orEmpty()
     )
 }
 
@@ -80,33 +80,34 @@ private fun safDokumentResponsFraResponse(response: Response): SafDokumentRespon
 }
 
 private fun getDokumentMetadata(safDokumentResponse: SafDokumentResponse): List<DokumentMetadata> =
-        safDokumentResponse.data?.dokumentoversiktBruker?.journalposter
-                .orEmpty()
-                .map { journalpost -> DokumentMetadata().fraSafJournalpost(journalpost) }
+    safDokumentResponse.data?.dokumentoversiktBruker?.journalposter
+        .orEmpty()
+        .map { journalpost -> DokumentMetadata().fraSafJournalpost(journalpost) }
 
 private fun veilederAutorisertClient(url: String): Request.Builder {
     val veilederOidcToken = SubjectHandler.getSsoToken(SsoToken.Type.OIDC)
-            .orElseThrow { IllegalStateException("Fant ikke OIDC-token") }
+        .orElseThrow { IllegalStateException("Fant ikke OIDC-token") }
 
     return Request.Builder()
-                    .url(url)
-                    .header("Authorization", "Bearer $veilederOidcToken")
-                    .header("Content-Type", "application/json")
+        .url(url)
+        .header("Authorization", "Bearer $veilederOidcToken")
+        .header("Content-Type", "application/json")
 }
 
 private fun lagHentDokumentURL(journalpostId: String, dokumentInfoId: String, variantFormat: Dokument.Variantformat) =
-        SAF_HENTDOKUMENT_BASEURL + String.format(
-                "/%s/%s/%s/",
-                journalpostId,
-                dokumentInfoId,
-                variantFormat.name)
+    SAF_HENTDOKUMENT_BASEURL + String.format(
+        "/%s/%s/%s/",
+        journalpostId,
+        dokumentInfoId,
+        variantFormat.name
+    )
 
 private fun logJournalpostErrors(errors: List<SafError>) {
     val msg = errors
-            .map { err ->
-                err.message +
-                        " Lokasjon: " + err.locations.toString()
-            }.reduce { a, b -> "$a \n $b" }
+        .map { err ->
+            err.message +
+                " Lokasjon: " + err.locations.toString()
+        }.reduce { a, b -> "$a \n $b" }
     LOG.error("Feil i kall mot SAF - dokumentoversiktBruker \n Mottat feilmelding: $msg")
 }
 

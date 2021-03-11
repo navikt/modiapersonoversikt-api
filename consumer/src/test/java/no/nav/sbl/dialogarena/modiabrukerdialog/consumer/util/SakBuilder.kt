@@ -59,7 +59,6 @@ class BehandlingskjedeBuilder {
     private var sisteBehandlingsstatus: Behandlingsstatuser? = null
     private var sisteBehandlingAvslutningsstatus: Avslutningsstatuser? = null
 
-
     fun withBehandlingskjedeId(behandlingskjedeId: String): BehandlingskjedeBuilder {
         this.behandlingskjedeId = behandlingskjedeId
         return this
@@ -114,25 +113,23 @@ class BehandlingskjedeBuilder {
         return this
     }
 
-
     fun build(): Behandlingskjede {
         val builder = this
         return Behandlingskjede()
-                .apply {
-                    behandlingskjedeId = builder.behandlingskjedeId
-                    behandlingskjedetype = builder.behandlingskjedetype
-                    behandlingstema = builder.behandlingstema
-                    start = toXMLCalendar(builder.start)
-                    slutt = toXMLCalendar(builder.slutt)
-                    sisteBehandlingREF = builder.sisteBehandlingREF
-                    sisteBehandlingstype = builder.sisteBehandlingstype
-                    behandlingsListeRef.add(builder.behandlingsListeRef)
-                    sisteBehandlingsoppdatering = toXMLCalendar(builder.sisteBehandlingsoppdatering)
-                    sisteBehandlingsstatus = builder.sisteBehandlingsstatus
-                    sisteBehandlingAvslutningsstatus = builder.sisteBehandlingAvslutningsstatus
-                }
+            .apply {
+                behandlingskjedeId = builder.behandlingskjedeId
+                behandlingskjedetype = builder.behandlingskjedetype
+                behandlingstema = builder.behandlingstema
+                start = toXMLCalendar(builder.start)
+                slutt = toXMLCalendar(builder.slutt)
+                sisteBehandlingREF = builder.sisteBehandlingREF
+                sisteBehandlingstype = builder.sisteBehandlingstype
+                behandlingsListeRef.add(builder.behandlingsListeRef)
+                sisteBehandlingsoppdatering = toXMLCalendar(builder.sisteBehandlingsoppdatering)
+                sisteBehandlingsstatus = builder.sisteBehandlingsstatus
+                sisteBehandlingAvslutningsstatus = builder.sisteBehandlingAvslutningsstatus
+            }
     }
-
 
     companion object {
         @JvmStatic
@@ -140,9 +137,9 @@ class BehandlingskjedeBuilder {
     }
 }
 
-private fun toXMLCalendar(date: DateTime?):XMLGregorianCalendar? {
+private fun toXMLCalendar(date: DateTime?): XMLGregorianCalendar? {
     return date
-            ?.let {
-                DatatypeFactory.newInstance().newXMLGregorianCalendar(it.toString())
-            }
+        ?.let {
+            DatatypeFactory.newInstance().newXMLGregorianCalendar(it.toString())
+        }
 }

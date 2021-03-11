@@ -15,16 +15,16 @@ class HenvendelseLesServiceImpl(private val systemTokenProvider: SystemUserToken
 
     override fun alleBehandlingsIderTilhorerBruker(fnr: String, behandlingsIder: List<String>): Boolean {
         val queryparams = byggQueryparams(
-                "fnr" to fnr,
-                "id" to behandlingsIder
+            "fnr" to fnr,
+            "id" to behandlingsIder
         )
         return fetch("$baseUrl/behandlingsider?$queryparams")
     }
 
     override fun alleHenvendelseIderTilhorerBruker(fnr: String, henvendelseIder: List<String>): Boolean {
         val queryparams = byggQueryparams(
-                "fnr" to fnr,
-                "id" to henvendelseIder
+            "fnr" to fnr,
+            "id" to henvendelseIder
         )
         return fetch("$baseUrl/henvendelseider?$queryparams")
     }
@@ -32,27 +32,27 @@ class HenvendelseLesServiceImpl(private val systemTokenProvider: SystemUserToken
     private inline fun <reified T : Any> fetch(url: String): T {
         val token = SubjectHandler.getSsoToken(SsoToken.Type.OIDC).orElseThrow { RuntimeException("Fant ikke OIDC-token") }
         return RestClient.baseClient()
-                .newCall(
-                        Request.Builder()
-                                .url(url)
-                                .header("Authorization", "Bearer $token")
-                                .header("SystemAuthorization", "Bearer ${systemTokenProvider.systemUserToken}")
-                                .build()
-                )
-                .execute()
-                .body()!!
-                .string()
-                .let { objectMapper.readValue(it, T::class.java) }
+            .newCall(
+                Request.Builder()
+                    .url(url)
+                    .header("Authorization", "Bearer $token")
+                    .header("SystemAuthorization", "Bearer ${systemTokenProvider.systemUserToken}")
+                    .build()
+            )
+            .execute()
+            .body()!!
+            .string()
+            .let { objectMapper.readValue(it, T::class.java) }
     }
 
     private fun byggQueryparams(vararg pairs: Pair<String, Any>): String {
         return pairs
-                .flatMap { pair ->
-                    if (pair.second is Iterable<*>) {
-                        (pair.second as Iterable<*>).map { Pair(pair.first, it.toString()) }
-                    } else {
-                        listOf(Pair(pair.first, pair.second.toString()))
-                    }
-                }.joinToString("&") { "${it.first}=${it.second}" }
+            .flatMap { pair ->
+                if (pair.second is Iterable<*>) {
+                    (pair.second as Iterable<*>).map { Pair(pair.first, it.toString()) }
+                } else {
+                    listOf(Pair(pair.first, pair.second.toString()))
+                }
+            }.joinToString("&") { "${it.first}=${it.second}" }
     }
 }
