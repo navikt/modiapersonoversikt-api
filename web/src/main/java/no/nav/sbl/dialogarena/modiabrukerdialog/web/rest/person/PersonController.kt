@@ -164,7 +164,7 @@ class PersonController @Autowired constructor(
             val navn = it.ansvarligUtenIdentifikator?.navn?.let { person -> PersonnavnDTO(person.fornavn, person.mellomnavn, person.etternavn) }
             val ansvarlig = allenavn[it.ansvarlig]
             ForeldreansvarDTO(
-                ansvar = it.ansvar ?: "Kunne ikke finne ansvarlig",
+                ansvar = it.ansvar ?: "Kunne ikke hente type ansvar",
                 ansvarlig = ansvarlig,
                 ansvarligUtenIdentifikator = RelatertBiPerson(
                     navn = navn,
