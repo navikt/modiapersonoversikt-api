@@ -139,29 +139,38 @@ class PersonController @Autowired constructor(
 
     data class ForeldreansvarDTO(
         val ansvar: String,
-        val ansvarlig: String?,
+        val ansvarlig: PersonnavnDTO?,
         val ansvarligUtenIdentifikator: RelatertBiPerson
     )
 
     data class RelatertBiPerson(
-        val navn: PersonController.PersonnavnDTO?,
+        val navn: PersonnavnDTO?,
         val foedselsdato: LocalDate?,
         val statsborgerskap: String?,
         val kjoenn: String?
     )
 
     private fun hentForeldreansvar(foreldreansvar: List<HentPerson.Foreldreansvar>) : List<ForeldreansvarDTO> {
-        return foreldreansvar.map {
-            val navn = it.ansvarligUtenIdentifikator?.navn?.let { person -> PersonnavnDTO(person.fornavn, person.mellomnavn, person.etternavn)
+        val allenavn: Map<String, PersonnavnDTO> = foreldreansvar
+            .mapNotNull { it.ansvarlig }
+            .let { pdlOppslagService.hentNavnBolk(it) }
+            ?.filterValues { it != null }
+            ?.mapValues { entry ->
+                val personnavn = entry.value!!
+                PersonnavnDTO(personnavn.fornavn, personnavn.mellomnavn, personnavn.etternavn)
             }
+            ?: emptyMap()
+        return foreldreansvar.map {
+            val navn = it.ansvarligUtenIdentifikator?.navn?.let { person -> PersonnavnDTO(person.fornavn, person.mellomnavn, person.etternavn) }
+            val ansvarlig = allenavn[it.ansvarlig]
             ForeldreansvarDTO(
                 ansvar = it.ansvar ?: "Kunne ikke finne ansvarlig",
-                ansvarlig = it.ansvarlig ?: "Kunne ikke finne ansvarlig",
+                ansvarlig = ansvarlig,
                 ansvarligUtenIdentifikator = RelatertBiPerson(
                     navn = navn,
                     foedselsdato = it.ansvarligUtenIdentifikator?.foedselsdato?.value,
                     statsborgerskap = it.ansvarligUtenIdentifikator?.statsborgerskap,
-                    kjoenn = it.ansvarligUtenIdentifikator?.statsborgerskap
+                    kjoenn = it.ansvarligUtenIdentifikator?.kjoenn?.name
                 )
             )
         }
