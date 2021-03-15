@@ -139,16 +139,9 @@ class PersonController @Autowired constructor(
 
     data class ForeldreansvarDTO(
         val ansvar: String,
-        val ansvarlig: PersonnavnDTO?,
-        val ansvarligUtenIdentifikator: RelatertBiPerson
+        val ansvarlig: PersonnavnDTO?
     )
 
-    data class RelatertBiPerson(
-        val navn: PersonnavnDTO?,
-        val foedselsdato: LocalDate?,
-        val statsborgerskap: String?,
-        val kjoenn: String?
-    )
 
     private fun hentForeldreansvar(foreldreansvar: List<HentPerson.Foreldreansvar>) : List<ForeldreansvarDTO> {
         val allenavn: Map<String, PersonnavnDTO> = foreldreansvar
@@ -161,17 +154,11 @@ class PersonController @Autowired constructor(
             }
             ?: emptyMap()
         return foreldreansvar.map {
-            val navn = it.ansvarligUtenIdentifikator?.navn?.let { person -> PersonnavnDTO(person.fornavn, person.mellomnavn, person.etternavn) }
+            val ansvarligUtenIdNavn = it.ansvarligUtenIdentifikator?.navn?.let { person -> PersonnavnDTO(person.fornavn, person.mellomnavn, person.etternavn) }
             val ansvarlig = allenavn[it.ansvarlig]
             ForeldreansvarDTO(
                 ansvar = it.ansvar ?: "Kunne ikke hente type ansvar",
-                ansvarlig = ansvarlig,
-                ansvarligUtenIdentifikator = RelatertBiPerson(
-                    navn = navn,
-                    foedselsdato = it.ansvarligUtenIdentifikator?.foedselsdato?.value,
-                    statsborgerskap = it.ansvarligUtenIdentifikator?.statsborgerskap,
-                    kjoenn = it.ansvarligUtenIdentifikator?.kjoenn?.name
-                )
+                ansvarlig = ansvarlig ?: ansvarligUtenIdNavn
             )
         }
     }
