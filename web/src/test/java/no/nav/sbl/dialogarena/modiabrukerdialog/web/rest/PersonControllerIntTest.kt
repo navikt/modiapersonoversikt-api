@@ -71,7 +71,7 @@ internal class PersonControllerIntTest {
         )
 
         val foreldreansvar = listOf(HentPerson.Foreldreansvar(
-            ansvar = null,
+            ansvar = "felles",
             ansvarlig = null,
             ansvarligUtenIdentifikator = HentPerson.RelatertBiPerson(
                 navn = HentPerson.Personnavn2("Fornavn", "Mellomnavn", "Etternavn"),
@@ -131,7 +131,7 @@ internal class PersonControllerIntTest {
         val telefonnummer = person.deepget("telefonnummer.0") as Telefonnummer
         val vergeUtenMotpartsIdent = person.deepget("vergemal.0") as PersonController.VergemalDTO
         val vergeMedMotpartsIdent = person.deepget("vergemal.1") as PersonController.VergemalDTO
-        val foreldreansvarligUtenIdentifikator = person.deepget("foreldreansvar.0") as PersonController.ForeldreansvarDTO
+        val foreldreansvarlig = person.deepget("foreldreansvar.0") as PersonController.ForeldreansvarDTO
 
         assertEquals("Ola", fornavn)
         assertEquals("+47", telefonnummer.retningsnummer?.kodeRef)
@@ -142,7 +142,7 @@ internal class PersonControllerIntTest {
         assertEquals(null, vergeUtenMotpartsIdent.ident)
         assertEquals("Verge Vergesen Olsen", vergeMedMotpartsIdent.navn?.sammensatt)
         assertEquals("12345678910", vergeMedMotpartsIdent.ident)
-        assertEquals("Fornavn Mellomnavn Etternavn", foreldreansvarligUtenIdentifikator.ansvarligUtenIdentifikator.navn?.sammensatt)
+        assertEquals("felles", foreldreansvarlig.ansvar)
     }
 }
 
