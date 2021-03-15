@@ -456,16 +456,3 @@ data class Telefonnummer(
     val sistEndret: String?,
     val prioritet: Int = -1
 )
-
-data class ForeldreansvarDTO(
-    val ansvar: String,
-    val ansvarlig: String?,
-    val ansvarligUtenIdentifikator: RelatertBiPerson
-)
-
-data class RelatertBiPerson(
-    val navn: PersonController.PersonnavnDTO?,
-    val foedselsdato: LocalDate?,
-    val statsborgerskap: String?,
-    val kjoenn: String?
-)
