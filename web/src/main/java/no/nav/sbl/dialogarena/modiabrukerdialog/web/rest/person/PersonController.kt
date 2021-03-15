@@ -218,8 +218,6 @@ class PersonController @Autowired constructor(
             }
     }
 
-    //private fun hentForeldreansvar(foreldreansvar: List<HentPerson.foreldre>)
-
     private fun mapStatsborgerskap(personfakta: Personfakta?) =
         personfakta?.statsborgerskap?.let { if (it.kodeRef == TPS_UKJENT_VERDI) null else Kode(it) }
 
