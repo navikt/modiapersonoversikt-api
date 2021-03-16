@@ -153,6 +153,11 @@
             <artifactId>junit-jupiter-api</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>no.nav.sbl.dialogarena</groupId>
+            <artifactId>modiabrukerdialog-consumer</artifactId>
+            <version>dev</version>
+        </dependency>
     </dependencies>
 
     <build>

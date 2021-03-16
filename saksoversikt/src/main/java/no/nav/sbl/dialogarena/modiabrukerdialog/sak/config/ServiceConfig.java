@@ -10,8 +10,12 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.sak.transformers.DokumentMetadat
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.utils.TemagrupperHenter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 
 @Configuration
+@Import({
+        no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.service.ServiceConfig.class
+})
 public class ServiceConfig {
 
     @Bean
