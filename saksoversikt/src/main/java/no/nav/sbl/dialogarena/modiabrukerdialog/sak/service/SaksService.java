@@ -31,7 +31,7 @@ public class SaksService {
     @Autowired
     private UnleashService unleashService;
 
-    private static String SAK_FEATURE = "modiabrukerdialog.rest-sak-impl";
+    private static final String SAK_FEATURE = "modiabrukerdialog.rest-sak-impl";
 
     public ResultatWrapper<List<Sak>> hentAlleSaker(String fnr) {
         Set<Baksystem> feilendeBaksystemer = new HashSet<>();
