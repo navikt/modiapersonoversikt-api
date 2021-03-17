@@ -43,16 +43,15 @@ public class SaksService {
             if (unleashService.isEnabled(SAK_FEATURE)) {
                 maybeFraGSak = Optional.of(sakerService.hentSakSaker(fnr).getSaker().stream().map(
                         sak ->
-                            new Sak()
-                                    .withSaksId(sak.saksId)
-                                    .withFagsaksnummer(sak.fagsystemSaksId)
-                                    .withTemakode(sak.temaKode)
-                                    .withBaksystem(GSAK)
-                                    .withFagsystem(sak.fagsystemKode)
-                                    .withFagsystem(GSAK_FAGSYSTEM_ID)
+                                new Sak()
+                                        .withSaksId(sak.saksId)
+                                        .withFagsaksnummer(sak.fagsystemSaksId)
+                                        .withTemakode(sak.temaKode)
+                                        .withBaksystem(GSAK)
+                                        .withFagsystem(sak.fagsystemKode)
+                                        .withFagsystem(GSAK_FAGSYSTEM_ID)
 
                 ));
-
             } else {
                 maybeFraGSak = gsakSakerService.hentSaker(fnr);
             }
