@@ -4,6 +4,8 @@ import no.nav.modig.content.ContentRetriever;
 import no.nav.sbl.dialogarena.common.kodeverk.KodeverkClient;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.FodselnummerAktorService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.AnsattService;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.saker.SakerService;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.UnleashService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.GsakSakerService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.HenvendelseService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.SakOgBehandlingService;
@@ -107,4 +109,11 @@ public class ModiaStubConfig {
 
     @Bean
     public FodselnummerAktorService fodselnummerAktorService() { return mock(FodselnummerAktorService.class); }
+
+    @Bean
+    public SakerService sakerService() { return mock(SakerService.class); }
+
+    @Bean
+    public UnleashService unleashService() { return mock(UnleashService.class); }
+
 }

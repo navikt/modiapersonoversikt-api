@@ -72,7 +72,6 @@ class SakerServiceImpl : SakerService {
         return resultat.leggTilDataFraKilde(fnr, restSakSaker)
     }
 
-
     override fun hentSaker(fnr: String): SakerService.Resultat {
         requireFnrNotNullOrBlank(fnr)
         val (restSakSaker, pesysSaker) = inParallel(
