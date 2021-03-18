@@ -23,19 +23,19 @@ interface RSBACInstance<CONTEXT> : RSBAC<CONTEXT> {
     fun getDecision(): Decision
 }
 
-open class RSBACImpl<CONTEXT>(private val context: CONTEXT, private val exception:  Function<String, RuntimeException> = { RSBACException(it) }) : RSBAC<CONTEXT> {
-    override fun permit(message: String, rule: Function<CONTEXT, Boolean>) : RSBACInstance<CONTEXT> = RSBACInstanceImpl<CONTEXT, Void>(context, exception).permit(message, rule)
-    override fun deny(message: String, rule: Function<CONTEXT, Boolean>) : RSBACInstance<CONTEXT> = RSBACInstanceImpl<CONTEXT, Void>(context, exception).deny(message, rule)
-    override fun check(policy: Policy<CONTEXT>) : RSBACInstance<CONTEXT> = RSBACInstanceImpl<CONTEXT, Void>(context, exception).check(policy)
-    override fun check(policyset: PolicySet<CONTEXT>) : RSBACInstance<CONTEXT> = RSBACInstanceImpl<CONTEXT, Void>(context, exception).check(policyset)
-    override fun check(combinable: Combinable<CONTEXT>) : RSBACInstance<CONTEXT> = RSBACInstanceImpl<CONTEXT, Void>(context, exception).check(combinable)
-    override fun combining(combiningAlgo: CombiningAlgo) : RSBACInstance<CONTEXT> = RSBACInstanceImpl<CONTEXT, Void>(context, exception).combining(combiningAlgo)
-    override fun bias(bias: DecisionEnums) : RSBACInstance<CONTEXT> = RSBACInstanceImpl<CONTEXT, Void>(context, exception).bias(bias)
-    override fun exception(exception: Function<String, RuntimeException>) : RSBACInstance<CONTEXT> = RSBACInstanceImpl<CONTEXT, Void>(context, exception).exception(exception)
+open class RSBACImpl<CONTEXT>(private val context: CONTEXT, private val exception: Function<String, RuntimeException> = { RSBACException(it) }) : RSBAC<CONTEXT> {
+    override fun permit(message: String, rule: Function<CONTEXT, Boolean>): RSBACInstance<CONTEXT> = RSBACInstanceImpl<CONTEXT, Void>(context, exception).permit(message, rule)
+    override fun deny(message: String, rule: Function<CONTEXT, Boolean>): RSBACInstance<CONTEXT> = RSBACInstanceImpl<CONTEXT, Void>(context, exception).deny(message, rule)
+    override fun check(policy: Policy<CONTEXT>): RSBACInstance<CONTEXT> = RSBACInstanceImpl<CONTEXT, Void>(context, exception).check(policy)
+    override fun check(policyset: PolicySet<CONTEXT>): RSBACInstance<CONTEXT> = RSBACInstanceImpl<CONTEXT, Void>(context, exception).check(policyset)
+    override fun check(combinable: Combinable<CONTEXT>): RSBACInstance<CONTEXT> = RSBACInstanceImpl<CONTEXT, Void>(context, exception).check(combinable)
+    override fun combining(combiningAlgo: CombiningAlgo): RSBACInstance<CONTEXT> = RSBACInstanceImpl<CONTEXT, Void>(context, exception).combining(combiningAlgo)
+    override fun bias(bias: DecisionEnums): RSBACInstance<CONTEXT> = RSBACInstanceImpl<CONTEXT, Void>(context, exception).bias(bias)
+    override fun exception(exception: Function<String, RuntimeException>): RSBACInstance<CONTEXT> = RSBACInstanceImpl<CONTEXT, Void>(context, exception).exception(exception)
     override fun context(): CONTEXT = context
 }
 
-class RSBACInstanceImpl<CONTEXT, OUTPUT>(val context: CONTEXT, var exception:  Function<String, RuntimeException>) : RSBACInstance<CONTEXT> {
+class RSBACInstanceImpl<CONTEXT, OUTPUT>(val context: CONTEXT, var exception: Function<String, RuntimeException>) : RSBACInstance<CONTEXT> {
     private var combiningAlgo: CombiningAlgo = CombiningAlgo.denyOverride
     private var policies: List<Combinable<CONTEXT>> = emptyList()
     private var bias = DENY
@@ -73,9 +73,9 @@ class RSBACInstanceImpl<CONTEXT, OUTPUT>(val context: CONTEXT, var exception:  F
 
         if (decision.value == PERMIT) {
             return runCatching(supplier)
-                    .onSuccess(auditDescriptor::log)
-                    .onFailure(auditDescriptor::failed)
-                    .getOrThrow()
+                .onSuccess(auditDescriptor::log)
+                .onFailure(auditDescriptor::failed)
+                .getOrThrow()
         } else if (decision.value == DENY) {
             auditDescriptor.denied(decision.message)
         }
@@ -85,13 +85,12 @@ class RSBACInstanceImpl<CONTEXT, OUTPUT>(val context: CONTEXT, var exception:  F
 
     override fun getDecision(): Decision = try {
         combiningAlgo
-                .combine(this.policies, context)
-                .withBias(this.bias)
+            .combine(this.policies, context)
+            .withBias(this.bias)
     } catch (exception: Exception) {
         val sw = StringWriter()
         exception.printStackTrace(PrintWriter(sw))
         Decision(sw.toString(), this.bias)
     } finally {
-
     }
 }

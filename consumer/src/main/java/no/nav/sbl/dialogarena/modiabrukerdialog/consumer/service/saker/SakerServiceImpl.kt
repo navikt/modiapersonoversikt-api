@@ -5,10 +5,10 @@ import no.nav.common.log.MDCConstants
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.saker.Sak
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.exceptions.JournalforingFeilet
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.FodselnummerAktorService
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.saker.GsakKodeverk
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.saker.SakerService
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.kodeverk.StandardKodeverk
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.psak.PsakService
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.saker.GsakKodeverk
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.saker.SakerService
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.SakerUtils
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.saker.kilder.*
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.saker.kilder.RestSakSaker
@@ -64,7 +64,6 @@ class SakerServiceImpl : SakerService {
         restSakSaker = RestSakSaker(sakApiGateway, fodselnummerAktorService)
         oppfolgingsSaker = OppfolgingsSaker()
         pensjonSaker = PensjonSaker(psakService)
-
     }
 
     override fun hentSaker(fnr: String): SakerService.Resultat {
@@ -159,8 +158,8 @@ class SakerServiceImpl : SakerService {
         }
 
         private fun slaSammenGsakPesysSaker(
-                restSak: SakerService.Resultat,
-                pesys: SakerService.Resultat
+            restSak: SakerService.Resultat,
+            pesys: SakerService.Resultat
         ): SakerService.Resultat {
             val pesysIder = pesys.saker.map { it.fagsystemSaksId }
             return SakerService.Resultat(
@@ -184,14 +183,14 @@ class SakerServiceImpl : SakerService {
 
         private val GODKJENT_FAGSAK: (Sak) -> Boolean = { sak ->
             !sak.isSakstypeForVisningGenerell &&
-                    Sak.GODKJENTE_FAGSYSTEMER_FOR_FAGSAKER.contains(sak.fagsystemKode) &&
-                    Sak.TEMAKODE_KLAGE_ANKE != sak.temaKode
+                Sak.GODKJENTE_FAGSYSTEMER_FOR_FAGSAKER.contains(sak.fagsystemKode) &&
+                Sak.TEMAKODE_KLAGE_ANKE != sak.temaKode
         }
 
         private val GODKJENT_GENERELL: (Sak) -> Boolean = { sak ->
             sak.isSakstypeForVisningGenerell &&
-                    Sak.GYLDIGE_FAGSYSTEM_FOR_GENERELLE_SAKER.contains(sak.fagsystemKode) &&
-                    Sak.GODKJENTE_TEMA_FOR_GENERELL_SAK.contains(sak.temaKode)
+                Sak.GYLDIGE_FAGSYSTEM_FOR_GENERELLE_SAKER.contains(sak.fagsystemKode) &&
+                Sak.GODKJENTE_TEMA_FOR_GENERELL_SAK.contains(sak.temaKode)
         }
     }
 }

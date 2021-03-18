@@ -16,17 +16,15 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @RequestMapping("/rest/egenansatt/{fnr}")
 class EgenAnsattController @Autowired constructor(
-        private val egenAnsattService: EgenAnsattService,
-        private val tilgangskontroll: Tilgangskontroll
+    private val egenAnsattService: EgenAnsattService,
+    private val tilgangskontroll: Tilgangskontroll
 ) {
     @GetMapping
     fun erEgenAnsatt(@PathVariable("fnr") fnr: String): Map<String, Boolean> {
         return tilgangskontroll
-                .check(Policies.tilgangTilBruker.with(fnr))
-                .get(Audit.describe(READ, Saksbehandler.EgenAnsatt, AuditIdentifier.FNR to fnr)) {
-                    mapOf("erEgenAnsatt" to egenAnsattService.erEgenAnsatt(fnr))
-                }
+            .check(Policies.tilgangTilBruker.with(fnr))
+            .get(Audit.describe(READ, Saksbehandler.EgenAnsatt, AuditIdentifier.FNR to fnr)) {
+                mapOf("erEgenAnsatt" to egenAnsattService.erEgenAnsatt(fnr))
+            }
     }
 }
-
-

@@ -23,17 +23,17 @@ data class AbacResponse(private val response: List<Response>) {
     fun getCause(): DenyCause {
         val associatedAdvice = result.associatedAdvice ?: emptyList()
         val denyReasonAttributes = associatedAdvice
-                .find { advice -> advice.id == NavAttributes.ADVICE_DENY_REASON.attributeId }
-                ?.attributeAssignment
-                ?: emptyList()
+            .find { advice -> advice.id == NavAttributes.ADVICE_DENY_REASON.attributeId }
+            ?.attributeAssignment
+            ?: emptyList()
 
         val denyReasonPolicy = denyReasonAttributes
-                .find { it.attributeId == NavAttributes.ADVICEOROBLIGATION_DENY_POLICY.attributeId }
-                ?.value
+            .find { it.attributeId == NavAttributes.ADVICEOROBLIGATION_DENY_POLICY.attributeId }
+            ?.value
 
         val denyCause = DenyCause
-                .values()
-                .find { it.policy == denyReasonPolicy }
+            .values()
+            .find { it.policy == denyReasonPolicy }
 
         if (denyCause == null) {
             abacLogger.warn("Couldn't determind denyCause", associatedAdvice)
@@ -56,16 +56,16 @@ enum class DenyCause(val policy: String) {
 }
 
 data class Response(
-        val decision: Decision,
-        val associatedAdvice: List<Advice>?
+    val decision: Decision,
+    val associatedAdvice: List<Advice>?
 )
 
 data class Advice(
-        val id: String,
-        val attributeAssignment: List<AttributeAssignment>?
+    val id: String,
+    val attributeAssignment: List<AttributeAssignment>?
 )
 
 data class AttributeAssignment(
-        val attributeId: String,
-        val value: String
+    val attributeId: String,
+    val value: String
 )

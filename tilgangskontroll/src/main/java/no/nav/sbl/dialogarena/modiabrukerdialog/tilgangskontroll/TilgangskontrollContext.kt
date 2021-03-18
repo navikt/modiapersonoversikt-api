@@ -6,7 +6,7 @@ import java.util.*
 
 interface TilgangskontrollContext {
     fun checkAbac(request: AbacRequest): AbacResponse
-    fun hentSaksbehandlerId() : Optional<String>
+    fun hentSaksbehandlerId(): Optional<String>
     fun harSaksbehandlerRolle(rolle: String): Boolean
     fun hentTemagrupperForSaksbehandler(valgtEnhet: String): Set<String>
     fun hentSaksbehandlereMedTilgangTilHastekassering(): List<String>

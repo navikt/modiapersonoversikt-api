@@ -45,7 +45,6 @@ internal class SafDokumentMapperKtTest {
 
         val dokumentMetadata = DokumentMetadata().fraSafJournalpost(journalpost)
 
-
         assertEquals(Kommunikasjonsretning.INN, dokumentMetadata.retning)
         assertEquals(relevantdato, dokumentMetadata.dato)
         assertEquals(avsenderMottakerNavn, dokumentMetadata.navn)
@@ -71,13 +70,12 @@ internal class SafDokumentMapperKtTest {
         assert(dokumentMetadata.baksystem.contains(Baksystem.SAF))
         assertEquals(tema, dokumentMetadata.temakode)
         assertEquals(temanavn, dokumentMetadata.temakodeVisning)
-
     }
 
     @Test
     fun `Sak uten hoveddokument kaster runtimeException`() {
         val journalpost = lagJournalpost().copy(
-                dokumenter = emptyList()
+            dokumenter = emptyList()
         )
 
         assertThrows(RuntimeException::class.java) {
@@ -115,22 +113,22 @@ internal class SafDokumentMapperKtTest {
     @Test
     fun `Sett variantformat til SLADDET om SLADDET eksisterer`() {
         val journalpost = lagJournalpost().copy(
-                dokumenter = listOf(
-                        lagHoveddokument().copy(
-                                dokumentvarianter = listOf(
-                                        Dokumentvariant(true, ARKIV.name, null),
-                                        Dokumentvariant(true, SLADDET.name, null),
-                                        Dokumentvariant(true, "ANNET_FORMAT", null)
-                                )
-                        ),
-                        lagVedlegg().copy(
-                                dokumentvarianter = listOf(
-                                        Dokumentvariant(true, ARKIV.name, null),
-                                        Dokumentvariant(true, SLADDET.name, null),
-                                        Dokumentvariant(true, "ANNET_FORMAT", null)
-                                )
-                        )
+            dokumenter = listOf(
+                lagHoveddokument().copy(
+                    dokumentvarianter = listOf(
+                        Dokumentvariant(true, ARKIV.name, null),
+                        Dokumentvariant(true, SLADDET.name, null),
+                        Dokumentvariant(true, "ANNET_FORMAT", null)
+                    )
+                ),
+                lagVedlegg().copy(
+                    dokumentvarianter = listOf(
+                        Dokumentvariant(true, ARKIV.name, null),
+                        Dokumentvariant(true, SLADDET.name, null),
+                        Dokumentvariant(true, "ANNET_FORMAT", null)
+                    )
                 )
+            )
         )
 
         val dokumentMetadata = DokumentMetadata().fraSafJournalpost(journalpost)
@@ -143,22 +141,22 @@ internal class SafDokumentMapperKtTest {
     @Test
     fun `Sett variantformat til ARKIV om ingen SLADDET eksisterer`() {
         val journalpost = lagJournalpost().copy(
-                dokumenter = listOf(
-                        lagHoveddokument().copy(
-                                dokumentvarianter = listOf(
-                                        Dokumentvariant(true, "ANNET_FORMAT", null),
-                                        Dokumentvariant(true, ARKIV.name, null),
-                                        Dokumentvariant(true, "ANNET_FORMAT", null)
-                                )
-                        ),
-                        lagVedlegg().copy(
-                                dokumentvarianter = listOf(
-                                        Dokumentvariant(true, "ANNET_FORMAT", null),
-                                        Dokumentvariant(true, ARKIV.name, null),
-                                        Dokumentvariant(true, "ANNET_FORMAT", null)
-                                )
-                        )
+            dokumenter = listOf(
+                lagHoveddokument().copy(
+                    dokumentvarianter = listOf(
+                        Dokumentvariant(true, "ANNET_FORMAT", null),
+                        Dokumentvariant(true, ARKIV.name, null),
+                        Dokumentvariant(true, "ANNET_FORMAT", null)
+                    )
+                ),
+                lagVedlegg().copy(
+                    dokumentvarianter = listOf(
+                        Dokumentvariant(true, "ANNET_FORMAT", null),
+                        Dokumentvariant(true, ARKIV.name, null),
+                        Dokumentvariant(true, "ANNET_FORMAT", null)
+                    )
                 )
+            )
         )
 
         val dokumentMetadata = DokumentMetadata().fraSafJournalpost(journalpost)
@@ -171,20 +169,20 @@ internal class SafDokumentMapperKtTest {
     @Test
     fun `Kast feil om vi mangler både ARKIV og SLADDET i variantformater`() {
         val journalpost = lagJournalpost().copy(
-                dokumenter = listOf(
-                        lagHoveddokument().copy(
-                                dokumentvarianter = listOf(
-                                        Dokumentvariant(true, "ANNET_FORMAT", null),
-                                        Dokumentvariant(true, "ANNET_FORMAT", null)
-                                )
-                        ),
-                        lagVedlegg().copy(
-                                dokumentvarianter = listOf(
-                                        Dokumentvariant(true, "ANNET_FORMAT", null),
-                                        Dokumentvariant(true, "ANNET_FORMAT", null)
-                                )
-                        )
+            dokumenter = listOf(
+                lagHoveddokument().copy(
+                    dokumentvarianter = listOf(
+                        Dokumentvariant(true, "ANNET_FORMAT", null),
+                        Dokumentvariant(true, "ANNET_FORMAT", null)
+                    )
+                ),
+                lagVedlegg().copy(
+                    dokumentvarianter = listOf(
+                        Dokumentvariant(true, "ANNET_FORMAT", null),
+                        Dokumentvariant(true, "ANNET_FORMAT", null)
+                    )
                 )
+            )
         )
 
         assertThrows(RuntimeException::class.java) {
@@ -195,18 +193,18 @@ internal class SafDokumentMapperKtTest {
     @Test
     fun `Hvis dokumentvarient er kun arkiv skjermet vis arkiv skjermet`() {
         val journalpost = lagJournalpost().copy(
-                dokumenter = listOf(
-                        lagHoveddokument().copy(
-                                dokumentvarianter = listOf(
-                                        Dokumentvariant(true, ARKIV.name, POL)
-                                )
-                        ),
-                        lagVedlegg().copy(
-                                dokumentvarianter = listOf(
-                                        Dokumentvariant(true, ARKIV.name, POL)
-                                )
-                        )
+            dokumenter = listOf(
+                lagHoveddokument().copy(
+                    dokumentvarianter = listOf(
+                        Dokumentvariant(true, ARKIV.name, POL)
+                    )
+                ),
+                lagVedlegg().copy(
+                    dokumentvarianter = listOf(
+                        Dokumentvariant(true, ARKIV.name, POL)
+                    )
                 )
+            )
         )
 
         val dokumentMetadata = DokumentMetadata().fraSafJournalpost(journalpost)
@@ -220,14 +218,14 @@ internal class SafDokumentMapperKtTest {
     @Test
     fun `Hvis arkiv skjermet men eksiterer sladdet ikke skjermet, vis sladdet ikke skjermet`() {
         val journalpost = lagJournalpost().copy(
-                dokumenter = listOf(
-                        lagHoveddokument().copy(
-                                dokumentvarianter = listOf(
-                                        Dokumentvariant(true, ARKIV.name, POL),
-                                        Dokumentvariant(true, SLADDET.name, null)
-                                )
-                        )
+            dokumenter = listOf(
+                lagHoveddokument().copy(
+                    dokumentvarianter = listOf(
+                        Dokumentvariant(true, ARKIV.name, POL),
+                        Dokumentvariant(true, SLADDET.name, null)
+                    )
                 )
+            )
         )
 
         val dokumentMetadata = DokumentMetadata().fraSafJournalpost(journalpost)
@@ -239,14 +237,14 @@ internal class SafDokumentMapperKtTest {
     @Test
     fun `Hvis arkiv skjermet og eksisterer sladdet som er skjermet vis sladdet skjermet`() {
         val journalpost = lagJournalpost().copy(
-                dokumenter = listOf(
-                        lagHoveddokument().copy(
-                                dokumentvarianter = listOf(
-                                        Dokumentvariant(true, SLADDET.name, POL),
-                                        Dokumentvariant(true, ARKIV.name, POL)
-                                )
-                        )
+            dokumenter = listOf(
+                lagHoveddokument().copy(
+                    dokumentvarianter = listOf(
+                        Dokumentvariant(true, SLADDET.name, POL),
+                        Dokumentvariant(true, ARKIV.name, POL)
+                    )
                 )
+            )
         )
 
         val dokumentMetadata = DokumentMetadata().fraSafJournalpost(journalpost)
@@ -259,23 +257,24 @@ internal class SafDokumentMapperKtTest {
     fun `Bruker som avsender mappes korrekt`() {
         val navn = "Aremark"
         val journalpost = lagJournalpost().copy(
-                avsenderMottaker = AvsenderMottaker(true, navn),
-                journalposttype = JOURNALPOSTTYPE_INN)
+            avsenderMottaker = AvsenderMottaker(true, navn),
+            journalposttype = JOURNALPOSTTYPE_INN
+        )
 
         val dokumentMetadata = DokumentMetadata().fraSafJournalpost(journalpost)
 
         assertEquals(SLUTTBRUKER, dokumentMetadata.avsender)
         assertEquals(NAV, dokumentMetadata.mottaker)
         assertEquals(navn, dokumentMetadata.navn)
-
     }
 
     @Test
     fun `Bruker som mottaker mappes korrekt`() {
         val navn = "Aremark"
         val journalpost = lagJournalpost().copy(
-                avsenderMottaker = AvsenderMottaker(true, navn),
-                journalposttype = JOURNALPOSTTYPE_UT)
+            avsenderMottaker = AvsenderMottaker(true, navn),
+            journalposttype = JOURNALPOSTTYPE_UT
+        )
 
         val dokumentMetadata = DokumentMetadata().fraSafJournalpost(journalpost)
 
@@ -287,8 +286,9 @@ internal class SafDokumentMapperKtTest {
     @Test
     fun `Intern retning mappes korrekt`() {
         val journalpost = lagJournalpost().copy(
-                avsenderMottaker = AvsenderMottaker(false, "Aremark"),
-                journalposttype = JOURNALPOSTTYPE_INTERN)
+            avsenderMottaker = AvsenderMottaker(false, "Aremark"),
+            journalposttype = JOURNALPOSTTYPE_INTERN
+        )
 
         val dokumentMetadata = DokumentMetadata().fraSafJournalpost(journalpost)
 
@@ -300,9 +300,10 @@ internal class SafDokumentMapperKtTest {
     fun `Ekstern som mottaker mappes korrekt`() {
         val eksternNavn = "Aremark sin lege"
         val journalpost = lagJournalpost().copy(
-                bruker = lagJournalpost().bruker?.copy(id = "10108000398"),
-                avsenderMottaker = AvsenderMottaker(false, eksternNavn),
-                journalposttype = JOURNALPOSTTYPE_UT)
+            bruker = lagJournalpost().bruker?.copy(id = "10108000398"),
+            avsenderMottaker = AvsenderMottaker(false, eksternNavn),
+            journalposttype = JOURNALPOSTTYPE_UT
+        )
 
         val dokumentMetadata = DokumentMetadata().fraSafJournalpost(journalpost)
 
@@ -315,9 +316,10 @@ internal class SafDokumentMapperKtTest {
     fun `Ekstern som avsender mappes korrekt`() {
         val eksternNavn = "Aremark sin lege"
         val journalpost = lagJournalpost().copy(
-                bruker = lagJournalpost().bruker?.copy(id = "10108000398"),
-                avsenderMottaker = AvsenderMottaker(false, eksternNavn),
-                journalposttype = JOURNALPOSTTYPE_INN)
+            bruker = lagJournalpost().bruker?.copy(id = "10108000398"),
+            avsenderMottaker = AvsenderMottaker(false, eksternNavn),
+            journalposttype = JOURNALPOSTTYPE_INN
+        )
 
         val dokumentMetadata = DokumentMetadata().fraSafJournalpost(journalpost)
 
@@ -329,7 +331,7 @@ internal class SafDokumentMapperKtTest {
     @Test
     fun `Navn blir ukjent når avsenderMottaker er null`() {
         val journalpost = lagJournalpost().copy(
-                avsenderMottaker = null
+            avsenderMottaker = null
         )
 
         val dokumentMetadata = DokumentMetadata().fraSafJournalpost(journalpost)
@@ -344,7 +346,6 @@ internal class SafDokumentMapperKtTest {
         assertThrows(RuntimeException::class.java) {
             DokumentMetadata().fraSafJournalpost(journalpost)
         }
-
     }
 
     @Test
@@ -353,8 +354,9 @@ internal class SafDokumentMapperKtTest {
         val nowDate = mockLocalDateTimeNow()
 
         val journalpost = lagJournalpost().copy(
-                journalposttype = JOURNALPOSTTYPE_INN,
-                relevanteDatoer = emptyList())
+            journalposttype = JOURNALPOSTTYPE_INN,
+            relevanteDatoer = emptyList()
+        )
 
         val dokumentMetadata = DokumentMetadata().fraSafJournalpost(journalpost)
 
@@ -366,11 +368,13 @@ internal class SafDokumentMapperKtTest {
         val registrertDato = LocalDateTime.parse("2018-11-11T13:23:57", DateTimeFormatter.ISO_DATE_TIME)
 
         val journalpost = lagJournalpost().copy(
-                relevanteDatoer = listOf(
-                        RelevantDato(
-                                datotype = DATOTYPE_REGISTRERT,
-                                dato = registrertDato
-                        )))
+            relevanteDatoer = listOf(
+                RelevantDato(
+                    datotype = DATOTYPE_REGISTRERT,
+                    dato = registrertDato
+                )
+            )
+        )
 
         val dokumentMetadata = DokumentMetadata().fraSafJournalpost(journalpost)
 
@@ -384,20 +388,21 @@ internal class SafDokumentMapperKtTest {
         val journalFoertDato = LocalDateTime.parse("2016-01-01T13:23:57", DateTimeFormatter.ISO_DATE_TIME)
 
         val journalpost = lagJournalpost().copy(
-                journalposttype = JOURNALPOSTTYPE_UT,
-                relevanteDatoer = listOf(
-                        RelevantDato(
-                                datotype = DATOTYPE_EKSPEDERT,
-                                dato = ekspedertDato
-                        ),
-                        RelevantDato(
-                                datotype = DATOTYPE_SENDT_PRINT,
-                                dato = sendtPrintDato
-                        ),
-                        RelevantDato(
-                                datotype = DATOTYPE_JOURNALFOERT,
-                                dato = journalFoertDato
-                        ))
+            journalposttype = JOURNALPOSTTYPE_UT,
+            relevanteDatoer = listOf(
+                RelevantDato(
+                    datotype = DATOTYPE_EKSPEDERT,
+                    dato = ekspedertDato
+                ),
+                RelevantDato(
+                    datotype = DATOTYPE_SENDT_PRINT,
+                    dato = sendtPrintDato
+                ),
+                RelevantDato(
+                    datotype = DATOTYPE_JOURNALFOERT,
+                    dato = journalFoertDato
+                )
+            )
         )
 
         val dokumentMetadata = DokumentMetadata().fraSafJournalpost(journalpost)
@@ -411,17 +416,17 @@ internal class SafDokumentMapperKtTest {
         val journalFoertDato = LocalDateTime.parse("2016-01-01T13:23:57", DateTimeFormatter.ISO_DATE_TIME)
 
         val journalpost = lagJournalpost().copy(
-                journalposttype = JOURNALPOSTTYPE_UT,
-                relevanteDatoer = listOf(
-                        RelevantDato(
-                                datotype = DATOTYPE_SENDT_PRINT,
-                                dato = sendtPrintDato
-                        ),
-                        RelevantDato(
-                                datotype = DATOTYPE_JOURNALFOERT,
-                                dato = journalFoertDato
-                        )
+            journalposttype = JOURNALPOSTTYPE_UT,
+            relevanteDatoer = listOf(
+                RelevantDato(
+                    datotype = DATOTYPE_SENDT_PRINT,
+                    dato = sendtPrintDato
+                ),
+                RelevantDato(
+                    datotype = DATOTYPE_JOURNALFOERT,
+                    dato = journalFoertDato
                 )
+            )
         )
 
         val dokumentMetadata = DokumentMetadata().fraSafJournalpost(journalpost)
@@ -434,13 +439,13 @@ internal class SafDokumentMapperKtTest {
         val journalFoertDato = LocalDateTime.parse("2016-01-01T13:23:57", DateTimeFormatter.ISO_DATE_TIME)
 
         val journalpost = lagJournalpost().copy(
-                journalposttype = JOURNALPOSTTYPE_UT,
-                relevanteDatoer = listOf(
-                        RelevantDato(
-                                datotype = DATOTYPE_JOURNALFOERT,
-                                dato = journalFoertDato
-                        )
+            journalposttype = JOURNALPOSTTYPE_UT,
+            relevanteDatoer = listOf(
+                RelevantDato(
+                    datotype = DATOTYPE_JOURNALFOERT,
+                    dato = journalFoertDato
                 )
+            )
         )
 
         val dokumentMetadata = DokumentMetadata().fraSafJournalpost(journalpost)
@@ -453,12 +458,13 @@ internal class SafDokumentMapperKtTest {
         val journalFoertDato = LocalDateTime.parse("2018-11-11T13:23:57", DateTimeFormatter.ISO_DATE_TIME)
 
         val journalpost = lagJournalpost().copy(
-                relevanteDatoer = listOf(
-                        RelevantDato(
-                                datotype = DATOTYPE_JOURNALFOERT,
-                                dato = journalFoertDato
-                        )),
-                journalposttype = JOURNALPOSTTYPE_INTERN
+            relevanteDatoer = listOf(
+                RelevantDato(
+                    datotype = DATOTYPE_JOURNALFOERT,
+                    dato = journalFoertDato
+                )
+            ),
+            journalposttype = JOURNALPOSTTYPE_INTERN
         )
 
         val dokumentMetadata = DokumentMetadata().fraSafJournalpost(journalpost)
@@ -475,27 +481,28 @@ private fun lagJournalpost(): Journalpost {
     val sak = lagSak()
 
     return Journalpost(
-            avsenderMottaker = lagAvsenderMottaker(),
-            bruker = bruker,
-            dokumenter = dokumenter,
-            journalpostId = journalpostId,
-            tittel = journalpostTittel,
-            datoOpprettet = datoOpprettet,
-            journalposttype = journalpostType,
-            journalstatus = journalStatus,
-            relevanteDatoer = relevanteDatoer,
-            tema = tema,
-            temanavn = temanavn,
-            sak = sak
+        avsenderMottaker = lagAvsenderMottaker(),
+        bruker = bruker,
+        dokumenter = dokumenter,
+        journalpostId = journalpostId,
+        tittel = journalpostTittel,
+        datoOpprettet = datoOpprettet,
+        journalposttype = journalpostType,
+        journalstatus = journalStatus,
+        relevanteDatoer = relevanteDatoer,
+        tema = tema,
+        temanavn = temanavn,
+        sak = sak
     )
 }
 
 private fun lagSak(): Sak {
     return Sak(
-            arkivsaksnummer = arkivsaknummer,
-            arkivsaksystem = arkivsaksystem,
-            fagsakId = fagsakId,
-            fagsaksystem = fagsakSystem)
+        arkivsaksnummer = arkivsaknummer,
+        arkivsaksystem = arkivsaksystem,
+        fagsakId = fagsakId,
+        fagsaksystem = fagsakSystem
+    )
 }
 
 private fun lagAvsenderMottaker() = AvsenderMottaker(true, avsenderMottakerNavn)
@@ -504,15 +511,15 @@ private fun lagHoveddokument(): DokumentInfo = lagDokumentInfo(hovedDokumentTitt
 
 private fun lagDokumentInfo(tittel: String): DokumentInfo {
     return DokumentInfo(
-            tittel = tittel,
-            dokumentInfoId = dokumentinfoid,
-            dokumentvarianter = listOf(lagDokumentVariant()),
-            logiskeVedlegg = listOf(LogiskVedlegg(logiskVedleggtittel))
+        tittel = tittel,
+        dokumentInfoId = dokumentinfoid,
+        dokumentvarianter = listOf(lagDokumentVariant()),
+        logiskeVedlegg = listOf(LogiskVedlegg(logiskVedleggtittel))
     )
 }
 
 private fun lagDokumentVariant(): Dokumentvariant =
-        Dokumentvariant(true, variantformat, null)
+    Dokumentvariant(true, variantformat, null)
 
 private fun mockLocalDateTimeNow(): LocalDateTime {
     mockkStatic(LocalDateTime::class)

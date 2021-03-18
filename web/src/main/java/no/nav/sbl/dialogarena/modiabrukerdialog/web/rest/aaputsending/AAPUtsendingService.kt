@@ -4,11 +4,10 @@ import no.nav.common.auth.subject.Subject
 import no.nav.common.auth.subject.SubjectHandler
 import no.nav.common.leaderelection.LeaderElectionClient
 import no.nav.common.log.MDCConstants
-import no.nav.kjerneinfo.consumer.mdc.MDCUtils
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.saker.Sak
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Fritekst
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Melding
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.henvendelse.Meldingstype
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.saker.Sak
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.HenvendelseUtsendingService
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.saker.SakerService
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.dialog.getKanal
@@ -35,9 +34,9 @@ private const val MELDING_TEMAGRUPPE = "ARBD"
 class FnrEnhet(val fnr: String, val enhet: String)
 
 class Prosessor<S>(
-        private val subject: Subject,
-        private val list: Collection<S>,
-        private val block: (s: S) -> Unit
+    private val subject: Subject,
+    private val list: Collection<S>,
+    private val block: (s: S) -> Unit
 ) {
     private val executor = Executors.newSingleThreadExecutor()
     private val callId = MDC.get(MDCConstants.MDC_CALL_ID) ?: UUID.randomUUID().toString()
@@ -46,16 +45,16 @@ class Prosessor<S>(
     private val success: MutableList<S> = mutableListOf()
 
     data class Status<S>(
-            val isRunning: Boolean,
-            val isDone: Boolean,
-            val processed: Int,
-            val total: Int,
-            val success: List<S>,
-            val errors: List<Pair<S, Throwable>>
+        val isRunning: Boolean,
+        val isDone: Boolean,
+        val processed: Int,
+        val total: Int,
+        val success: List<S>,
+        val errors: List<Pair<S, Throwable>>
     )
 
     init {
-       job = executor.submit {
+        job = executor.submit {
             MDC.put(MDCConstants.MDC_CALL_ID, callId)
             SubjectHandler.withSubject(subject) {
                 list.forEach { element ->
@@ -71,49 +70,49 @@ class Prosessor<S>(
     }
 
     fun getStatus() = Status(
-            isRunning = job != null,
-            isDone = job?.isDone ?: false,
-            processed = success.size + errors.size,
-            total = list.size,
-            success = success,
-            errors = errors
+        isRunning = job != null,
+        isDone = job?.isDone ?: false,
+        processed = success.size + errors.size,
+        total = list.size,
+        success = success,
+        errors = errors
     )
 }
 
 class AAPUtsendingService(
-        private val sakerService: SakerService,
-        private val henvendelseService: HenvendelseUtsendingService,
-        private val leaderElection: LeaderElectionClient
+    private val sakerService: SakerService,
+    private val henvendelseService: HenvendelseUtsendingService,
+    private val leaderElection: LeaderElectionClient
 ) {
     private val processorReference: AtomicReference<Prosessor<FnrEnhet>?> = AtomicReference(null)
 
     data class Status(
-            val isLeader: Boolean,
-            val hostname: String,
-            val prosessorStatus: Prosessor.Status<FnrEnhet>
+        val isLeader: Boolean,
+        val hostname: String,
+        val prosessorStatus: Prosessor.Status<FnrEnhet>
     )
 
     fun status(): Status {
         val processor = processorReference.get()
         if (processor != null) {
             return Status(
-                    isLeader = leaderElection.isLeader,
-                    hostname = InetAddress.getLocalHost().hostName,
-                    prosessorStatus = processor.getStatus()
+                isLeader = leaderElection.isLeader,
+                hostname = InetAddress.getLocalHost().hostName,
+                prosessorStatus = processor.getStatus()
             )
         }
 
         return Status(
-                isLeader = leaderElection.isLeader,
-                hostname = InetAddress.getLocalHost().hostName,
-                prosessorStatus = Prosessor.Status(
-                        isRunning = false,
-                        isDone = false,
-                        processed = -1,
-                        total = -1,
-                        success = emptyList(),
-                        errors = emptyList()
-                )
+            isLeader = leaderElection.isLeader,
+            hostname = InetAddress.getLocalHost().hostName,
+            prosessorStatus = Prosessor.Status(
+                isRunning = false,
+                isDone = false,
+                processed = -1,
+                total = -1,
+                success = emptyList(),
+                errors = emptyList()
+            )
         )
     }
 
@@ -139,10 +138,10 @@ class AAPUtsendingService(
             val ident = subject.uid
 
             processorReference.set(
-                    Prosessor(subject, data) { element ->
-                        sendHenvendelse(ident, element)
-                        Thread.sleep(500)
-                    }
+                Prosessor(subject, data) { element ->
+                    sendHenvendelse(ident, element)
+                    Thread.sleep(500)
+                }
             )
         }
 
@@ -154,18 +153,18 @@ class AAPUtsendingService(
         val enhet = data.enhet
         val saker: List<Sak> = sakerService.hentSammensatteSaker(fnr)
         val sak: Sak = saker.find { it.temaKode == MELDING_TEMAKODE }
-                ?: throw IllegalStateException("Fant ikke $MELDING_TEMAKODE sak for $fnr")
+            ?: throw IllegalStateException("Fant ikke $MELDING_TEMAKODE sak for $fnr")
 
         val type = Meldingstype.SPORSMAL_MODIA_UTGAAENDE
         val melding = Melding().withFnr(fnr)
-                .withNavIdent(ident)
-                .withEksternAktor(ident)
-                .withKanal(getKanal(type))
-                .withType(type)
-                .withFritekst(Fritekst(MELDING_FRITEKST))
-                .withTilknyttetEnhet(enhet)
-                .withErTilknyttetAnsatt(MELDING_TILKNYTTETANSATT)
-                .withTemagruppe(MELDING_TEMAGRUPPE)
+            .withNavIdent(ident)
+            .withEksternAktor(ident)
+            .withKanal(getKanal(type))
+            .withType(type)
+            .withFritekst(Fritekst(MELDING_FRITEKST))
+            .withTilknyttetEnhet(enhet)
+            .withErTilknyttetAnsatt(MELDING_TILKNYTTETANSATT)
+            .withTemagruppe(MELDING_TEMAGRUPPE)
 
         henvendelseService.sendHenvendelse(melding, Optional.empty(), Optional.ofNullable(sak), enhet)
     }

@@ -12,9 +12,9 @@ import org.springframework.web.bind.annotation.*
 @RestController
 @RequestMapping("/internal/aaputsending")
 class AAPUtsendingController @Autowired constructor(
-        private val tilgangskontroll: Tilgangskontroll,
-        sakerService: SakerService,
-        henvendelseService: HenvendelseUtsendingService
+    private val tilgangskontroll: Tilgangskontroll,
+    sakerService: SakerService,
+    henvendelseService: HenvendelseUtsendingService
 ) {
     private val leaderElectionClient = LeaderElectionHttpClient()
     private val service = AAPUtsendingService(sakerService, henvendelseService, leaderElectionClient)
@@ -22,31 +22,31 @@ class AAPUtsendingController @Autowired constructor(
     @GetMapping("/status")
     fun hentStatus(): AAPUtsendingService.Status {
         return tilgangskontroll
-                .check(Policies.tilgangTilModia)
-                .check(Policies.kanStarteHasteUtsending)
-                .get(skipAuditLog) {
-                    return@get service.status()
-                }
+            .check(Policies.tilgangTilModia)
+            .check(Policies.kanStarteHasteUtsending)
+            .get(skipAuditLog) {
+                return@get service.status()
+            }
     }
 
     @PostMapping("/start")
     fun startUtsending(@RequestBody fnrs: List<FnrEnhet>): AAPUtsendingService.Status {
         return tilgangskontroll
-                .check(Policies.tilgangTilModia)
-                .check(Policies.kanStarteHasteUtsending)
-                .get(skipAuditLog) {
-                    val unikeFnr = fnrs.toSet().toList()
-                    return@get service.utsendingAAP(unikeFnr)
-                }
+            .check(Policies.tilgangTilModia)
+            .check(Policies.kanStarteHasteUtsending)
+            .get(skipAuditLog) {
+                val unikeFnr = fnrs.toSet().toList()
+                return@get service.utsendingAAP(unikeFnr)
+            }
     }
 
     @PostMapping("/reset")
     fun reset(): AAPUtsendingService.Status {
         return tilgangskontroll
-                .check(Policies.tilgangTilModia)
-                .check(Policies.kanStarteHasteUtsending)
-                .get(skipAuditLog) {
-                    return@get service.reset()
-                }
+            .check(Policies.tilgangTilModia)
+            .check(Policies.kanStarteHasteUtsending)
+            .get(skipAuditLog) {
+                return@get service.reset()
+            }
     }
 }

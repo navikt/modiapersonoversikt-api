@@ -21,39 +21,39 @@ class VergemalController @Autowired constructor(private val vergemalService: Ver
     @GetMapping
     fun hent(@PathVariable("fnr") fnr: String): Map<String, Any?> {
         return tilgangskontroll
-                .check(Policies.tilgangTilBruker.with(fnr))
-                .get(Audit.describe(Audit.Action.READ, AuditResources.Person.Vergemal, AuditIdentifier.FNR to fnr)) {
-                    val vergemal = vergemalService.hentVergemal(fnr)
+            .check(Policies.tilgangTilBruker.with(fnr))
+            .get(Audit.describe(Audit.Action.READ, AuditResources.Person.Vergemal, AuditIdentifier.FNR to fnr)) {
+                val vergemal = vergemalService.hentVergemal(fnr)
 
-                    mapOf(
-                            "verger" to getVerger(vergemal)
-                    )
-                }
+                mapOf(
+                    "verger" to getVerger(vergemal)
+                )
+            }
     }
 
     private fun getVerger(vergemal: List<Verge>): List<Map<String, Any?>> {
         return vergemal.map {
             mapOf(
-                    "ident" to it.ident,
-                    "navn" to it.personnavn?.let { navn -> getNavn(navn) },
-                    "embete" to it.embete,
-                    "mandattekst" to it.mandattekst,
-                    "mandattype" to it.mandattype,
-                    "vergesakstype" to it.vergesakstype,
-                    "vergetype" to it.vergetype,
-                    "virkningsperiode" to mapOf(
-                            "fom" to it.virkningsperiode.fom,
-                            "tom" to it.virkningsperiode.tom
-                    )
+                "ident" to it.ident,
+                "navn" to it.personnavn?.let { navn -> getNavn(navn) },
+                "embete" to it.embete,
+                "mandattekst" to it.mandattekst,
+                "mandattype" to it.mandattype,
+                "vergesakstype" to it.vergesakstype,
+                "vergetype" to it.vergetype,
+                "virkningsperiode" to mapOf(
+                    "fom" to it.virkningsperiode.fom,
+                    "tom" to it.virkningsperiode.tom
+                )
             )
         }
     }
 
     private fun getNavn(personnavn: HentNavnBolk.Navn): Map<String, String> {
         return mapOf(
-                "sammensatt" to with(personnavn) {
-                    listOfNotNull(fornavn, mellomnavn, etternavn).joinToString(" ")
-                }
+            "sammensatt" to with(personnavn) {
+                listOfNotNull(fornavn, mellomnavn, etternavn).joinToString(" ")
+            }
         )
     }
 }

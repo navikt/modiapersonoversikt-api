@@ -10,11 +10,13 @@ object OppgaveApiFactory {
     fun createClient(tokenProvider: () -> String): OppgaveApi {
         val url = EnvironmentUtils.getRequiredProperty("OPPGAVE_BASEURL")
         val client = RestClient.baseClient().newBuilder()
-            .addInterceptor(LoggingInterceptor("Oppgave") { request ->
-                requireNotNull(request.header("X-Correlation-ID")) {
-                    "Kall uten \"X-Correlation-ID\" er ikke lov"
+            .addInterceptor(
+                LoggingInterceptor("Oppgave") { request ->
+                    requireNotNull(request.header("X-Correlation-ID")) {
+                        "Kall uten \"X-Correlation-ID\" er ikke lov"
+                    }
                 }
-            })
+            )
             .addInterceptor(AuthorizationInterceptor(tokenProvider))
             .build()
         return OppgaveApi(url, client)
