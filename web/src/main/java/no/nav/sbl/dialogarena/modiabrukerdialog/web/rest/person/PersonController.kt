@@ -159,7 +159,7 @@ class PersonController @Autowired constructor(
         val coAdressenavn: String?
     )
 
-    private fun hentDeltBosted(deltBosted: List<HentPerson.DeltBosted>) : List<DeltBostedDTO> {
+    private fun hentDeltBosted(deltBosted: List<HentPerson.DeltBosted>): List<DeltBostedDTO> {
         return deltBosted.map {
             DeltBostedDTO(
                 startdatoForKontrakt = it.startdatoForKontrakt?.value?.format(ISO_DATE_TIME),
@@ -177,8 +177,8 @@ class PersonController @Autowired constructor(
                 gyldighetstidspunkt = it.folkeregistermetadata?.gyldighetstidspunkt?.value?.format(ISO_DATE_TIME),
                 opphoerstidspunkt = it.folkeregistermetadata?.opphoerstidspunkt?.value?.format(ISO_DATE_TIME),
                 ukjentBosted = UkjentBostedDTO(
-                        bostedskommune = it.ukjentBosted?.bostedskommune
-                    )
+                    bostedskommune = it.ukjentBosted?.bostedskommune
+                )
             )
         }
     }
