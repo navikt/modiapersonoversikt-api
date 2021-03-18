@@ -96,5 +96,36 @@ query($ident: ID!){
                 opplysningsId
             }
         }
+        deltBosted{
+            startdatoForKontrakt
+            coAdressenavn
+            vegadresse{
+                matrikkelId
+                husnummer
+                husbokstav
+                bruksenhetsnummer
+                adressenavn
+                kommunenummer
+                bydelsnummer
+                tilleggsnavn
+                postnummer
+            }
+            utenlandskAdresse{
+                adressenavnNummer
+                bygningEtasjeLeilighet
+                postboksNummerNavn
+                postkode
+                bySted
+                regionDistriktOmraade
+                landkode
+            }
+            ukjentBosted{
+                bostedskommune
+            }
+            folkeregistermetadata{
+                gyldighetstidspunkt
+                opphoerstidspunkt
+            }
+        }
     }
 }

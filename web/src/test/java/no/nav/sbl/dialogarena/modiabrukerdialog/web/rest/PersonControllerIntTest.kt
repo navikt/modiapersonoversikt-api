@@ -106,7 +106,8 @@ internal class PersonControllerIntTest {
                         )
                     )
                 ),
-                vergemaalEllerFremtidsfullmakt = vergemaalEllerFremtidsfullmakt
+                vergemaalEllerFremtidsfullmakt = vergemaalEllerFremtidsfullmakt,
+                deltBosted = emptyList()
             )
         )
 

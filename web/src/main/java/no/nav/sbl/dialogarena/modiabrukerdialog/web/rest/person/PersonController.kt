@@ -65,6 +65,7 @@ class PersonController @Autowired constructor(
                     val kontaktinfoForDoedsbo = pdlPerson?.kontaktinformasjonForDoedsbo ?: emptyList()
                     val fullmakt = pdlPerson?.fullmakt ?: emptyList()
                     val vergemal = pdlPerson?.vergemaalEllerFremtidsfullmakt ?: emptyList()
+                    val deltBosted = pdlPerson?.deltBosted ?: emptyList()
                     val pdlTelefonnummer = (pdlPerson?.telefonnummer ?: emptyList())
                         .sortedBy { it.prioritet }
                         .map(::getPdlTelefon)
@@ -95,7 +96,8 @@ class PersonController @Autowired constructor(
                         "telefonnummer" to pdlTelefonnummer,
                         "kontaktinformasjonForDoedsbo" to DoedsboMapping.mapKontaktinfoForDoedsbo(kontaktinfoForDoedsbo),
                         "fullmakt" to hentFullmakter(fullmakt),
-                        "vergemal" to hentVergemal(vergemal)
+                        "vergemal" to hentVergemal(vergemal),
+                        "deltBosted" to hentDeltBosted(deltBosted)
                     )
                 } catch (exception: AuthorizationWithSikkerhetstiltakException) {
                     getBegrensetInnsyn(fodselsnummer, exception.message)
@@ -132,6 +134,46 @@ class PersonController @Autowired constructor(
         val etternavn: String
     ) {
         val sammensatt = listOfNotNull(fornavn, mellomnavn, etternavn).joinToString(" ")
+    }
+    data class DeltBostedDTO(
+        val startdatoForKontrakt: String?,
+        val opphoerstidspunkt: String?,
+        val gyldighetstidspunkt: String?,
+        val adresse: AdresseDTO?
+    )
+    data class AdresseDTO(
+        val adressenavn: String?,
+        val husnummer: String?,
+        val husbokstav: String?,
+        val bruksenhetsnummer: String?,
+        val kommunenummer: String?,
+        val postnummer: String?,
+        val bydelsnummer: String?,
+        val tilleggsnavn: String?,
+        val coAdressenavn: String?,
+        val land: String?
+    )
+
+    private fun hentDeltBosted(deltBosted: List<HentPerson.DeltBosted>) : List<DeltBostedDTO> {
+        return deltBosted.map {
+            DeltBostedDTO(
+                startdatoForKontrakt = it.startdatoForKontrakt?.value?.format(ISO_DATE_TIME),
+                adresse = AdresseDTO(
+                    adressenavn = it.vegadresse?.adressenavn,
+                    husbokstav = it.vegadresse?.husbokstav,
+                    husnummer = it.vegadresse?.husnummer,
+                    bruksenhetsnummer = it.vegadresse?.bruksenhetsnummer,
+                    kommunenummer = it.vegadresse?.kommunenummer ?: it.ukjentBosted?.bostedskommune,
+                    postnummer = it.vegadresse?.postnummer,
+                    bydelsnummer = it.vegadresse?.bydelsnummer,
+                    tilleggsnavn = it.vegadresse?.tilleggsnavn,
+                    coAdressenavn = it.coAdressenavn,
+                    land = it.utenlandskAdresse?.landkode
+                ),
+                gyldighetstidspunkt = it.folkeregistermetadata?.gyldighetstidspunkt?.value?.format(ISO_DATE_TIME),
+                opphoerstidspunkt = it.folkeregistermetadata?.opphoerstidspunkt?.value?.format(ISO_DATE_TIME)
+            )
+        }
     }
 
     private fun hentVergemal(vergemal: List<HentPerson.VergemaalEllerFremtidsfullmakt>): List<VergemalDTO> {
