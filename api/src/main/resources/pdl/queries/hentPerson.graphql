@@ -110,14 +110,12 @@ query($ident: ID!){
                 tilleggsnavn
                 postnummer
             }
-            utenlandskAdresse{
-                adressenavnNummer
-                bygningEtasjeLeilighet
-                postboksNummerNavn
-                postkode
-                bySted
-                regionDistriktOmraade
-                landkode
+            matrikkeladresse{
+                matrikkelId
+                bruksenhetsnummer
+                tilleggsnavn
+                postnummer
+                kommunenummer
             }
             ukjentBosted{
                 bostedskommune

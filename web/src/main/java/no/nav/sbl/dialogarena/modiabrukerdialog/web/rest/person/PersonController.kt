@@ -139,8 +139,14 @@ class PersonController @Autowired constructor(
         val startdatoForKontrakt: String?,
         val opphoerstidspunkt: String?,
         val gyldighetstidspunkt: String?,
-        val adresse: AdresseDTO?
+        val adresse: AdresseDTO?,
+        val ukjentBosted: UkjentBostedDTO?
     )
+
+    data class UkjentBostedDTO(
+        val bostedskommune: String?
+    )
+
     data class AdresseDTO(
         val adressenavn: String?,
         val husnummer: String?,
@@ -150,8 +156,7 @@ class PersonController @Autowired constructor(
         val postnummer: String?,
         val bydelsnummer: String?,
         val tilleggsnavn: String?,
-        val coAdressenavn: String?,
-        val land: String?
+        val coAdressenavn: String?
     )
 
     private fun hentDeltBosted(deltBosted: List<HentPerson.DeltBosted>) : List<DeltBostedDTO> {
@@ -162,16 +167,18 @@ class PersonController @Autowired constructor(
                     adressenavn = it.vegadresse?.adressenavn,
                     husbokstav = it.vegadresse?.husbokstav,
                     husnummer = it.vegadresse?.husnummer,
-                    bruksenhetsnummer = it.vegadresse?.bruksenhetsnummer,
-                    kommunenummer = it.vegadresse?.kommunenummer ?: it.ukjentBosted?.bostedskommune,
-                    postnummer = it.vegadresse?.postnummer,
+                    bruksenhetsnummer = it.vegadresse?.bruksenhetsnummer ?: it.matrikkeladresse?.bruksenhetsnummer,
+                    kommunenummer = it.vegadresse?.kommunenummer ?: it.matrikkeladresse?.kommunenummer,
+                    postnummer = it.vegadresse?.postnummer ?: it.matrikkeladresse?.postnummer,
                     bydelsnummer = it.vegadresse?.bydelsnummer,
-                    tilleggsnavn = it.vegadresse?.tilleggsnavn,
-                    coAdressenavn = it.coAdressenavn,
-                    land = it.utenlandskAdresse?.landkode
+                    tilleggsnavn = it.vegadresse?.tilleggsnavn ?: it.matrikkeladresse?.tilleggsnavn,
+                    coAdressenavn = it.coAdressenavn
                 ),
                 gyldighetstidspunkt = it.folkeregistermetadata?.gyldighetstidspunkt?.value?.format(ISO_DATE_TIME),
-                opphoerstidspunkt = it.folkeregistermetadata?.opphoerstidspunkt?.value?.format(ISO_DATE_TIME)
+                opphoerstidspunkt = it.folkeregistermetadata?.opphoerstidspunkt?.value?.format(ISO_DATE_TIME),
+                ukjentBosted = UkjentBostedDTO(
+                        bostedskommune = it.ukjentBosted?.bostedskommune
+                    )
             )
         }
     }
