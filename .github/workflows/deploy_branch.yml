@@ -1,4 +1,4 @@
-name: Build, push, and deploy
+name: Branch Build, push, and deploy
 
 on:
   push:
@@ -10,7 +10,7 @@ env:
   IMAGE: docker.pkg.github.com/${{ github.repository }}/modiapersonoversikt-api:${{ github.sha }}
   TZ: Europe/Oslo
   isDeploy: false
-  deploy_namespace: q6
+  deploy_namespace: q1
 
 jobs:
   build:

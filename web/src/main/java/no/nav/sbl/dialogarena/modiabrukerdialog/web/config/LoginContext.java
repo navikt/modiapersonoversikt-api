@@ -43,10 +43,10 @@ public class LoginContext {
         OidcAuthenticatorConfig config = new OidcAuthenticatorConfig()
                 .withClientId(modiaClientId)
                 .withDiscoveryUrl(issoDiscoveryUrl)
-                .withIdTokenCookieName(Constants.OPEN_AM_ID_TOKEN_COOKIE_NAME)
+                .withIdTokenCookieName("modia_ID_token")
                 .withIdentType(IdentType.InternBruker)
                 .withRefreshUrl(modiaRefreshUrl)
-                .withRefreshTokenCookieName(Constants.REFRESH_TOKEN_COOKIE_NAME);
+                .withRefreshTokenCookieName("modia_refresh_token");
 
         return OidcAuthenticator.fromConfig(config);
     }

@@ -8,6 +8,8 @@ interface SakerService {
 
     fun hentSaker(fnr: String): Resultat
 
+    fun hentSakSaker(fnr: String): Resultat
+
     @Deprecated("")
     fun hentSammensatteSaker(fnr: String): List<Sak>
 
