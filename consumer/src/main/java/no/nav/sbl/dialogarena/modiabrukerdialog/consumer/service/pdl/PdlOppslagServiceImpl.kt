@@ -54,7 +54,7 @@ class PdlOppslagServiceImpl constructor(
             ?.hentIdenter
     }
 
-    override fun sokPersonUtenlandskID(utenlandskID: String): List<SokPersonUtenlandskID.SearchHit> = runBlocking {
+    override fun sokPersonUtenlandskID(utenlandskID: String): List<SokPersonUtenlandskID.PersonSearchHit> = runBlocking {
         val utenlandskIDPaging = SokPersonUtenlandskID.Paging(
             pageNumber = 1,
             resultsPerPage = 30
