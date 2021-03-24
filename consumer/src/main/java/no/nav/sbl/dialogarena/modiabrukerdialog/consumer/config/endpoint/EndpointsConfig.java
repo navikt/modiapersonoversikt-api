@@ -8,8 +8,6 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.oppfolg
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v1.arena.arbeidogaktivitet.ArbeidOgAktivitetEndpointConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v1.egenansatt.EgenAnsattV1EndpointConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v1.gsak.GsakTildelOppgaveV1EndpointConfig;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v1.gsak.behandlesak.GsakOpprettSakEndpointConfig;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v1.gsak.hentsaker.GsakSakV1EndpointConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v1.henvendelsesoknader.HenvendelseSoknaderEndpointConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v1.norg.NAVAnsattEndpointConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v1.norg.NAVOrgEnhetEndpointConfig;
@@ -44,8 +42,6 @@ import org.springframework.context.annotation.Import;
         GsakOppgaveV3EndpointConfig.class,
         GsakOppgavebehandlingV3EndpointConfig.class,
         GsakTildelOppgaveV1EndpointConfig.class,
-        GsakSakV1EndpointConfig.class,
-        GsakOpprettSakEndpointConfig.class,
         SakOgBehandlingEndpointConfig.class,
         AktorV2EndpointConfig.class,
         HenvendelseSoknaderEndpointConfig.class,

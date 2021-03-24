@@ -78,7 +78,6 @@ class SakerServiceImpl : SakerService {
             { hentSammensatteSakerResultat(fnr) },
             { hentPensjonSakerResultat(fnr) }
         )
-
         return slaSammenGsakPesysSaker(restSakSaker, pesysSaker)
     }
 
