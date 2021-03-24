@@ -98,6 +98,7 @@ query($ident: ID!){
         }
         deltBosted{
             startdatoForKontrakt
+            sluttdatoForKontrakt
             coAdressenavn
             vegadresse{
                 matrikkelId
@@ -119,10 +120,6 @@ query($ident: ID!){
             }
             ukjentBosted{
                 bostedskommune
-            }
-            folkeregistermetadata{
-                gyldighetstidspunkt
-                opphoerstidspunkt
             }
         }
     }

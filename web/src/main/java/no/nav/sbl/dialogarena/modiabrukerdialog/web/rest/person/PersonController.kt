@@ -137,8 +137,7 @@ class PersonController @Autowired constructor(
     }
     data class DeltBostedDTO(
         val startdatoForKontrakt: String?,
-        val opphoerstidspunkt: String?,
-        val gyldighetstidspunkt: String?,
+        val sluttdatoForKontrakt: String?,
         val adresse: AdresseDTO?,
         val ukjentBosted: UkjentBostedDTO?
     )
@@ -163,6 +162,7 @@ class PersonController @Autowired constructor(
         return deltBosted.map {
             DeltBostedDTO(
                 startdatoForKontrakt = it.startdatoForKontrakt?.value?.format(ISO_DATE_TIME),
+                sluttdatoForKontrakt = it.sluttdatoForKontrakt?.value?.format(ISO_DATE_TIME),
                 adresse = AdresseDTO(
                     adressenavn = it.vegadresse?.adressenavn,
                     husbokstav = it.vegadresse?.husbokstav,
@@ -174,8 +174,7 @@ class PersonController @Autowired constructor(
                     tilleggsnavn = it.vegadresse?.tilleggsnavn ?: it.matrikkeladresse?.tilleggsnavn,
                     coAdressenavn = it.coAdressenavn
                 ),
-                gyldighetstidspunkt = it.folkeregistermetadata?.gyldighetstidspunkt?.value?.format(ISO_DATE_TIME),
-                opphoerstidspunkt = it.folkeregistermetadata?.opphoerstidspunkt?.value?.format(ISO_DATE_TIME),
+
                 ukjentBosted = UkjentBostedDTO(
                     bostedskommune = it.ukjentBosted?.bostedskommune
                 )
