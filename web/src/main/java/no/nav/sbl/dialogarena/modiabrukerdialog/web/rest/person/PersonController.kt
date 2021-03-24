@@ -33,8 +33,6 @@ import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.server.ResponseStatusException
-import java.time.LocalDate
-import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter.ISO_DATE_TIME
 
 private const val TPS_UKJENT_VERDI = "???"
@@ -70,7 +68,7 @@ class PersonController @Autowired constructor(
                     val pdlTelefonnummer = (pdlPerson?.telefonnummer ?: emptyList())
                         .sortedBy { it.prioritet }
                         .map(::getPdlTelefon)
-                   val foreldreansvar = pdlPerson?.foreldreansvar ?: emptyList()
+                    val foreldreansvar = pdlPerson?.foreldreansvar ?: emptyList()
                     mapOf(
                         "fødselsnummer" to person?.fodselsnummer?.nummer,
                         "alder" to person?.fodselsnummer?.alder,
@@ -142,8 +140,7 @@ class PersonController @Autowired constructor(
         val ansvarlig: PersonnavnDTO?
     )
 
-
-    private fun hentForeldreansvar(foreldreansvar: List<HentPerson.Foreldreansvar>) : List<ForeldreansvarDTO> {
+    private fun hentForeldreansvar(foreldreansvar: List<HentPerson.Foreldreansvar>): List<ForeldreansvarDTO> {
         val allenavn: Map<String, PersonnavnDTO> = foreldreansvar
             .mapNotNull { it.ansvarlig }
             .let { pdlOppslagService.hentNavnBolk(it) }

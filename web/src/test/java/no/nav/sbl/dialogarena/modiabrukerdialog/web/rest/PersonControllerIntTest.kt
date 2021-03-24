@@ -70,16 +70,18 @@ internal class PersonControllerIntTest {
             vergemal,
             vergemalMedMotpartsIdent
         )
-        val foreldreansvar = listOf(HentPerson.Foreldreansvar(
-            ansvar = "felles",
-            ansvarlig = null,
-            ansvarligUtenIdentifikator = HentPerson.RelatertBiPerson(
-                navn = HentPerson.Personnavn2("Fornavn", "Mellomnavn", "Etternavn"),
-                foedselsdato = null,
-                kjoenn = null,
-                statsborgerskap = null
+        val foreldreansvar = listOf(
+            HentPerson.Foreldreansvar(
+                ansvar = "felles",
+                ansvarlig = null,
+                ansvarligUtenIdentifikator = HentPerson.RelatertBiPerson(
+                    navn = HentPerson.Personnavn2("Fornavn", "Mellomnavn", "Etternavn"),
+                    foedselsdato = null,
+                    kjoenn = null,
+                    statsborgerskap = null
+                )
             )
-        ))
+        )
 
         whenever(kjerneinfoMock.hentKjerneinformasjon(any())).thenReturn(
             HentKjerneinformasjonResponse()
