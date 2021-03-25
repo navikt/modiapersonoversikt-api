@@ -1,6 +1,5 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.config;
 
-import no.nav.common.auth.Constants;
 import no.nav.common.auth.oidc.filter.OidcAuthenticationFilter;
 import no.nav.common.auth.oidc.filter.OidcAuthenticator;
 import no.nav.common.auth.oidc.filter.OidcAuthenticatorConfig;
@@ -18,12 +17,9 @@ import static no.nav.common.utils.EnvironmentUtils.isDevelopment;
 
 @Configuration
 public class LoginContext {
-    private static final String issoClientId = EnvironmentUtils.getRequiredProperty("ISSO_CLIENT_ID");
-    private static final String modiaClientId = EnvironmentUtils.getRequiredProperty("MODIA_CLIENT_ID");
     private static final String issoDiscoveryUrl = EnvironmentUtils.getRequiredProperty("ISSO_DISCOVERY_URL");
-    private static final String issoRefreshUrl = EnvironmentUtils.getRequiredProperty("ISSO_REFRESH_URL");
+    private static final String modiaClientId = EnvironmentUtils.getRequiredProperty("MODIA_CLIENT_ID");
     private static final String modiaRefreshUrl = EnvironmentUtils.getRequiredProperty("MODIA_REFRESH_URL");
-    private static final String fpsakClientId = EnvironmentUtils.getRequiredProperty("FPSAK_CLIENT_ID");
 
     @Bean
     public OidcAuthenticator openAmModiaAuthConfig() {
@@ -34,17 +30,6 @@ public class LoginContext {
                 .withIdentType(IdentType.InternBruker)
                 .withRefreshUrl(modiaRefreshUrl)
                 .withRefreshTokenCookieName("modia_refresh_token");
-
-        return OidcAuthenticator.fromConfig(config);
-    }
-
-    @Bean
-    public OidcAuthenticator fpsakAuthConfig() {
-        OidcAuthenticatorConfig config = new OidcAuthenticatorConfig()
-                .withClientId(fpsakClientId)
-                .withDiscoveryUrl(issoDiscoveryUrl)
-                .withIdTokenCookieName(Constants.OPEN_AM_ID_TOKEN_COOKIE_NAME)
-                .withIdentType(IdentType.InternBruker);
 
         return OidcAuthenticator.fromConfig(config);
     }
