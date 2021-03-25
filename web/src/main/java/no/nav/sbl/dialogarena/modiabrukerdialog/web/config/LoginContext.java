@@ -26,19 +26,6 @@ public class LoginContext {
     private static final String fpsakClientId = EnvironmentUtils.getRequiredProperty("FPSAK_CLIENT_ID");
 
     @Bean
-    public OidcAuthenticator openAmAuthConfig() {
-        OidcAuthenticatorConfig config = new OidcAuthenticatorConfig()
-                .withClientId(issoClientId)
-                .withDiscoveryUrl(issoDiscoveryUrl)
-                .withIdTokenCookieName(Constants.OPEN_AM_ID_TOKEN_COOKIE_NAME)
-                .withIdentType(IdentType.InternBruker)
-                .withRefreshUrl(issoRefreshUrl)
-                .withRefreshTokenCookieName(Constants.REFRESH_TOKEN_COOKIE_NAME);
-
-        return OidcAuthenticator.fromConfig(config);
-    }
-
-    @Bean
     public OidcAuthenticator openAmModiaAuthConfig() {
         OidcAuthenticatorConfig config = new OidcAuthenticatorConfig()
                 .withClientId(modiaClientId)
