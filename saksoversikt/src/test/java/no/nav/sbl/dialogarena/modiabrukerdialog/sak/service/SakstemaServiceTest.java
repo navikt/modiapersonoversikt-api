@@ -7,8 +7,6 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.*;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.resultatwrappere.ResultatWrapper;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.filter.FilterUtils;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.utils.Konstanter;
-import no.nav.tjeneste.virksomhet.pensjonsak.v1.HentSakSammendragListePersonIkkeFunnet;
-import no.nav.tjeneste.virksomhet.pensjonsak.v1.HentSakSammendragListeSakManglerEierenhet;
 import org.joda.time.DateTime;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -40,9 +38,6 @@ public class SakstemaServiceTest {
 
     @Mock
     private HenvendelseService henvendelseService;
-
-    @Mock
-    private GsakSakerService gsakSakerService;
 
     @Mock
     private HttpServletRequest request;

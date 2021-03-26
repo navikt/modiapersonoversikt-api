@@ -15,7 +15,6 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.saker.GsakKodeverk
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.saker.mediation.SakApiGateway
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.saker.mediation.SakDto
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.behandlehenvendelse.BehandleHenvendelsePortType
-import no.nav.tjeneste.virksomhet.behandlesak.v1.meldinger.WSOpprettSakResponse
 import no.nav.virksomhet.gjennomforing.sak.arbeidogaktivitet.v1.EndringsInfo
 import no.nav.virksomhet.gjennomforing.sak.arbeidogaktivitet.v1.Fagomradekode
 import no.nav.virksomhet.gjennomforing.sak.arbeidogaktivitet.v1.Sakstypekode
@@ -153,8 +152,6 @@ class SakerServiceImplTest {
     fun `knytter behandlingskjede til sak uavhengig om den finnesIGsak`() {
         val sak = lagSak()
         val valgtNavEnhet = "0219"
-        val opprettSakResponse = WSOpprettSakResponse()
-        opprettSakResponse.sakId = SAKS_ID
         sakerService.knyttBehandlingskjedeTilSak(
             FNR,
             BEHANDLINGSKJEDEID,
@@ -175,8 +172,6 @@ class SakerServiceImplTest {
     fun `knytter behandlingsKjede til sak uavhengig om den finnesIGsak uten fagsystemId`() {
         val sak = lagSakUtenFagsystemId()
         val valgtNavEnhet = "0219"
-        val opprettSakResponse = WSOpprettSakResponse()
-        opprettSakResponse.sakId = SAKS_ID
         sakerService.knyttBehandlingskjedeTilSak(
             FNR,
             BEHANDLINGSKJEDEID,

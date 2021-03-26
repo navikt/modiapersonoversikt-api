@@ -23,7 +23,6 @@ import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.henvendelse.Henvendels
 import no.nav.tjeneste.virksomhet.kodeverk.v2.KodeverkPortType;
 import no.nav.tjeneste.virksomhet.oppgave.v3.OppgaveV3;
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.OppgavebehandlingV3;
-import no.nav.tjeneste.virksomhet.sak.v1.informasjon.WSSak;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -92,11 +91,6 @@ public class MockServiceTestContext {
     @Bean
     public OppgaveV3 oppgaveV3() {
         return mock(OppgaveV3.class);
-    }
-
-    @Bean
-    public WSSak sakWs() {
-        return mock(WSSak.class);
     }
 
     @Bean
