@@ -3,6 +3,9 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.saker
 import io.mockk.*
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
+import no.nav.common.auth.subject.IdentType
+import no.nav.common.auth.subject.SsoToken
+import no.nav.common.auth.subject.Subject
 import no.nav.common.auth.subject.SubjectHandler
 import no.nav.common.log.MDCConstants
 import no.nav.common.utils.EnvironmentUtils
@@ -73,7 +76,7 @@ class SakerServiceImplTest {
         every { standardKodeverk.getArkivtemaNavn(any()) } returns null
         every { fodselnummerAktorService.hentAktorIdForFnr(any()) } returns "123456789"
         mockkStatic(SubjectHandler::class)
-        every { SubjectHandler.getIdent() } returns Optional.ofNullable("")
+        every { SubjectHandler.getSubject() } returns Optional.of(Subject("12345678910", IdentType.EksternBruker, SsoToken.oidcToken("token", HashMap<String, Any?>())))
         every { sakApiGateway.opprettSak(any()) } returns SakDto(id = "123")
 
         MDC.put(MDCConstants.MDC_CALL_ID, "12345")
@@ -123,24 +126,25 @@ class SakerServiceImplTest {
     @Test
     fun `oppretter ìkke generell oppfolgingssak dersom denne finnes allerede selv om fagsaker ikke inneholder oppfolgingssak`() {
         val saker =
-            sakerService.hentSammensatteSaker(FNR).stream().filter(Sak.harTemaKode(Sak.TEMAKODE_OPPFOLGING)).toList()
+            sakerService.hentSaker(FNR).saker.stream().filter(harTemaKode(TEMAKODE_OPPFOLGING)).toList()
         assertThat(saker.size, `is`(1))
         assertThat(saker[0].sakstype, `is`(SAKSTYPE_GENERELL))
     }
 
     @Test
-    fun `legger til oppfolgingssak fra Arena dersom denne ikke finnes i gsak`() {
+    fun `legger til oppfolgingssak fra Arena dersom denne ikke finnes i sak`() {
+        every { psakService.hentSakerFor(any()) } returns emptyList()
         val saksId = "123456"
         val dato = LocalDate.now().minusDays(1)
         every { arbeidOgAktivitet.hentSakListe(any()) } returns WSHentSakListeResponse().withSakListe(
             no.nav.virksomhet.gjennomforing.sak.arbeidogaktivitet.v1.Sak()
-                .withFagomradeKode(Fagomradekode().withKode(Sak.TEMAKODE_OPPFOLGING))
+                .withFagomradeKode(Fagomradekode().withKode(TEMAKODE_OPPFOLGING))
                 .withSaksId(saksId)
                 .withEndringsInfo(EndringsInfo().withOpprettetDato(dato))
                 .withSakstypeKode(Sakstypekode().withKode("ARBEID"))
         )
         val saker =
-            sakerService.hentSammensatteSaker(FNR).stream().filter(Sak.harTemaKode(Sak.TEMAKODE_OPPFOLGING)).toList()
+            sakerService.hentSaker(FNR).saker.stream().filter(harTemaKode(TEMAKODE_OPPFOLGING)).toList()
         assertThat(saker.size, `is`(1))
         assertThat(saker[0].saksIdVisning, `is`(saksId))
         assertThat(saker[0].opprettetDato, `is`(dato.toDateTimeAtStartOfDay()))
