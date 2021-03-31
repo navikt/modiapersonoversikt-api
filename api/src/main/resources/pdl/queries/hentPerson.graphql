@@ -96,5 +96,19 @@ query($ident: ID!){
                 opplysningsId
             }
         }
+        foreldreansvar {
+            ansvar
+            ansvarlig
+            ansvarligUtenIdentifikator {
+                navn {
+                    fornavn
+                    mellomnavn
+                    etternavn
+                }
+                foedselsdato
+                statsborgerskap
+                kjoenn
+            }
+        }
     }
 }
