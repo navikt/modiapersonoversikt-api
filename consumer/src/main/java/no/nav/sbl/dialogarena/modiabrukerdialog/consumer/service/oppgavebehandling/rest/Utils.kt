@@ -12,7 +12,7 @@ object Utils {
     const val KONTAKT_NAV = "KNA"
     const val SPORSMAL_OG_SVAR = "SPM_OG_SVR"
 
-    fun endretAvEnhet(temagruppe: Temagruppe?, valgtEnhet: String?): String {
+    fun defaultEnhetGittTemagruppe(temagruppe: Temagruppe?, valgtEnhet: String?): String {
         return if (temagruppe == null) {
             DEFAULT_ENHET
         } else if (temagruppe == FMLI && valgtEnhet == STORD_ENHET) {
