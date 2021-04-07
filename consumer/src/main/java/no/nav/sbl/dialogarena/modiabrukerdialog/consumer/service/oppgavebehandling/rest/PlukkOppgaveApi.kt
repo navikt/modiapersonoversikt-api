@@ -10,7 +10,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.oppgave.toPutOppgaveR
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.kodeverksmapper.KodeverksmapperService
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.oppgavebehandling.rest.Utils.KONTAKT_NAV
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.oppgavebehandling.rest.Utils.SPORSMAL_OG_SVAR
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.oppgavebehandling.rest.Utils.endretAvEnhet
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.oppgavebehandling.rest.Utils.defaultEnhetGittTemagruppe
 import org.slf4j.LoggerFactory
 import java.util.*
 
@@ -30,17 +30,19 @@ class PlukkOppgaveApi(private val apiClient: OppgaveApi, private val kodeverksma
         val oppgaverTilknyttetAktor = sokEtterOppgaver(
             correlationId = correlationId,
             temagruppe = temagruppe,
+            enhet = defaultEnhetGittTemagruppe(temagruppe, valgtEnhet),
             aktoerId = aktorId,
             limit = 100
         )
 
-        val tildelteOppgaver = tilordneAlleOppgaver(correlationId, oppgaverTilknyttetAktor.oppgaver ?: emptyList())
+        val enhet = defaultEnhetGittTemagruppe(temagruppe, valgtEnhet)
+        val tildelteOppgaver = tilordneAlleOppgaver(correlationId, enhet, oppgaverTilknyttetAktor.oppgaver ?: emptyList())
         tildelteOppgaver.add(eldsteOppgave)
 
         return tildelteOppgaver
     }
 
-    private fun tilordneAlleOppgaver(correlationId: String, oppgaver: List<OppgaveJsonDTO>): MutableList<OppgaveJsonDTO> {
+    private fun tilordneAlleOppgaver(correlationId: String, enhet: String, oppgaver: List<OppgaveJsonDTO>): MutableList<OppgaveJsonDTO> {
         val ident: String = SubjectHandler.getIdent().orElseThrow { IllegalStateException("Fant ikke ident") }
         val tildelteOppgaver = mutableListOf<OppgaveJsonDTO>()
         for (oppgave in oppgaver) {
@@ -50,7 +52,8 @@ class PlukkOppgaveApi(private val apiClient: OppgaveApi, private val kodeverksma
                         xminusCorrelationMinusID = correlationId,
                         id = requireNotNull(oppgave.id),
                         putOppgaveRequestJsonDTO = oppgave.copy(
-                            tilordnetRessurs = ident
+                            tilordnetRessurs = ident,
+                            endretAvEnhetsnr = enhet
                         ).toPutOppgaveRequestJsonDTO()
                     )
                 tildelteOppgaver.add(tildeltOppgave.toOppgaveJsonDTO())
@@ -86,7 +89,7 @@ class PlukkOppgaveApi(private val apiClient: OppgaveApi, private val kodeverksma
         requireNotNull(valgtEnhet)
 
         val ident: String = SubjectHandler.getIdent().orElseThrow { IllegalStateException("Fant ikke ident") }
-        val response = sokEtterOppgaver(correlationId, temagruppe)
+        val response = sokEtterOppgaver(correlationId, temagruppe, defaultEnhetGittTemagruppe(temagruppe, valgtEnhet))
 
         val eldsteOppgave = (response.oppgaver ?: emptyList())
             .minBy {
@@ -107,7 +110,7 @@ class PlukkOppgaveApi(private val apiClient: OppgaveApi, private val kodeverksma
             requireNotNull(eldsteOppgave.id),
             eldsteOppgave.copy(
                 tilordnetRessurs = ident,
-                endretAvEnhetsnr = endretAvEnhet(temagruppe, valgtEnhet)
+                endretAvEnhetsnr = defaultEnhetGittTemagruppe(temagruppe, valgtEnhet)
             ).toPutOppgaveRequestJsonDTO()
         ).toOppgaveJsonDTO()
     }
@@ -115,6 +118,7 @@ class PlukkOppgaveApi(private val apiClient: OppgaveApi, private val kodeverksma
     private fun sokEtterOppgaver(
         correlationId: String,
         temagruppe: Temagruppe,
+        enhet: String,
         aktoerId: String? = null,
         limit: Long = 20
     ): GetOppgaverResponseJsonDTO {
@@ -131,6 +135,7 @@ class PlukkOppgaveApi(private val apiClient: OppgaveApi, private val kodeverksma
             oppgavetype = listOf(oppgaveType),
             tildeltRessurs = false,
             ikkeTidligereTilordnetRessurs = ident,
+            tildeltEnhetsnr = enhet,
             behandlingstema = behandling.map { it.behandlingstema }.orElse(null),
             behandlingstype = behandling.map { it.behandlingstype }.orElse(null),
             sorteringsfelt = "OPPRETTET_TIDSPUNKT",

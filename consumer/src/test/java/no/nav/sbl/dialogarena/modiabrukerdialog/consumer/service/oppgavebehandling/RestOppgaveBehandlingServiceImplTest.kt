@@ -33,6 +33,7 @@ import org.springframework.web.server.ResponseStatusException
 import java.time.Clock
 import java.time.Instant
 import java.time.LocalDate.now
+import java.time.OffsetDateTime
 import java.time.ZoneId
 import java.util.*
 
@@ -76,12 +77,14 @@ class RestOppgaveBehandlingServiceImplTest {
 
     val dummyOppgave = OppgaveJsonDTO(
         id = 1234,
+        aktoerId = "00007063000250000",
         aktivDato = now(fixedClock),
         oppgavetype = SPORSMAL_OG_SVAR,
         prioritet = OppgaveJsonDTO.Prioritet.HOY,
         status = OppgaveJsonDTO.Status.AAPNET,
         tildeltEnhetsnr = "",
         beskrivelse = "eksisterende beskrivelse",
+        opprettetTidspunkt = OffsetDateTime.now(),
         versjon = 1
     )
 
@@ -363,7 +366,98 @@ class RestOppgaveBehandlingServiceImplTest {
     }
 
     @Nested
-    inner class PlukkOppgave
+    inner class PlukkOppgave {
+        @Test
+        fun `skal hente eldste oppgave`() {
+            val eldsteOppgave = dummyOppgave.copy(
+                id = 1111,
+                opprettetTidspunkt = OffsetDateTime.now().minusDays(1)
+            )
+            every { tilgangskontrollContext.checkAbac(any()) } returns AbacResponse(
+                listOf(Response(Decision.Permit, null))
+            )
+            every { apiClient.finnOppgaver(allAny()) } returnsMany listOf(
+                GetOppgaverResponseJsonDTO(
+                    antallTreffTotalt = 3,
+                    oppgaver = listOf(dummyOppgave, dummyOppgave.copy(id = 1235), eldsteOppgave)
+                ),
+                GetOppgaverResponseJsonDTO(
+                    antallTreffTotalt = 2,
+                    oppgaver = listOf(dummyOppgave, dummyOppgave.copy(id = 1235)) // eldsteOppgave blir tilordnet i forkant
+                )
+            )
+            every { apiClient.endreOppgave(any(), any(), any()) } answers {
+                thirdArg<PutOppgaveRequestJsonDTO>().toPutOppgaveResponseJsonDTO()
+            }
+            every { kodeverksmapperService.mapUnderkategori(any()) } returns Optional.of(
+                Behandling()
+                    .withBehandlingstema("behandlingstema_ARBD")
+                    .withBehandlingstype("behandlingstype_ARBD")
+            )
+
+            withIdent("Z999999") {
+                oppgaveBehandlingService.plukkOppgaverFraGsak(Temagruppe.ARBD, "4110")
+            }
+
+            verifySequence {
+                apiClient.finnOppgaver(
+                    xminusCorrelationMinusID = any(),
+                    aktoerId = null,
+                    statuskategori = "AAPEN",
+                    tema = listOf("KNA"),
+                    oppgavetype = listOf("SPM_OG_SVR"),
+                    tildeltRessurs = false,
+                    tildeltEnhetsnr = "4100",
+                    ikkeTidligereTilordnetRessurs = "Z999999",
+                    behandlingstema = "behandlingstema_ARBD",
+                    behandlingstype = "behandlingstype_ARBD",
+                    sorteringsfelt = "OPPRETTET_TIDSPUNKT",
+                    sorteringsrekkefolge = "ASC",
+                    limit = 20
+                )
+                apiClient.endreOppgave(
+                    any(),
+                    1111,
+                    eldsteOppgave.toPutOppgaveRequestJsonDTO().copy(
+                        tilordnetRessurs = "Z999999",
+                        endretAvEnhetsnr = "4100"
+                    )
+                )
+                apiClient.finnOppgaver(
+                    xminusCorrelationMinusID = any(),
+                    aktoerId = listOf("00007063000250000"),
+                    statuskategori = "AAPEN",
+                    tema = listOf("KNA"),
+                    oppgavetype = listOf("SPM_OG_SVR"),
+                    tildeltRessurs = false,
+                    tildeltEnhetsnr = "4100",
+                    ikkeTidligereTilordnetRessurs = "Z999999",
+                    behandlingstema = "behandlingstema_ARBD",
+                    behandlingstype = "behandlingstype_ARBD",
+                    sorteringsfelt = "OPPRETTET_TIDSPUNKT",
+                    sorteringsrekkefolge = "ASC",
+                    limit = 100
+                )
+                apiClient.endreOppgave(
+                    any(),
+                    1234,
+                    dummyOppgave.toPutOppgaveRequestJsonDTO().copy(
+                        tilordnetRessurs = "Z999999",
+                        endretAvEnhetsnr = "4100"
+                    )
+                )
+                apiClient.endreOppgave(
+                    any(),
+                    1235,
+                    dummyOppgave.toPutOppgaveRequestJsonDTO().copy(
+                        id = 1235,
+                        tilordnetRessurs = "Z999999",
+                        endretAvEnhetsnr = "4100"
+                    )
+                )
+            }
+        }
+    }
 
     @Nested
     inner class FerdigstillOppgave {

@@ -22,7 +22,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.kodeverksmapper
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.kodeverksmapper.domain.Behandling
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.oppgavebehandling.rest.Utils.SPORSMAL_OG_SVAR
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.oppgavebehandling.rest.Utils.beskrivelseInnslag
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.oppgavebehandling.rest.Utils.endretAvEnhet
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.oppgavebehandling.rest.Utils.defaultEnhetGittTemagruppe
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.oppgavebehandling.rest.Utils.leggTilBeskrivelse
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.SafeListAggregate
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Policies
@@ -148,7 +148,7 @@ class RestOppgaveBehandlingServiceImpl(
             oppgaveId.toLong(),
             oppgave.copy(
                 tilordnetRessurs = ident,
-                endretAvEnhetsnr = endretAvEnhet(temagruppe, saksbehandlersValgteEnhet)
+                endretAvEnhetsnr = defaultEnhetGittTemagruppe(temagruppe, saksbehandlersValgteEnhet)
             ).toPutOppgaveRequestJsonDTO()
         )
     }
@@ -233,7 +233,7 @@ class RestOppgaveBehandlingServiceImpl(
                         clock = clock
                     )
                 ),
-                endretAvEnhetsnr = endretAvEnhet(temagruppe?.orElse(null), saksbehandlersValgteEnhet)
+                endretAvEnhetsnr = defaultEnhetGittTemagruppe(temagruppe?.orElse(null), saksbehandlersValgteEnhet)
             ).toPutOppgaveRequestJsonDTO()
         )
     }
@@ -272,7 +272,7 @@ class RestOppgaveBehandlingServiceImpl(
                     clock = clock
                 )
             ),
-            endretAvEnhetsnr = endretAvEnhet(request.nyTemagruppe, request.saksbehandlersValgteEnhet)
+            endretAvEnhetsnr = defaultEnhetGittTemagruppe(request.nyTemagruppe, request.saksbehandlersValgteEnhet)
         )
         if (request.nyTemagruppe != null) {
             val behandling = kodeverksmapperService.mapUnderkategori(request.nyTemagruppe.underkategori)
@@ -303,7 +303,7 @@ class RestOppgaveBehandlingServiceImpl(
                 oppgaveId.toLong(),
                 oppgave.copy(
                     tilordnetRessurs = null,
-                    endretAvEnhetsnr = endretAvEnhet(temagruppe, saksbehandlersValgteEnhet)
+                    endretAvEnhetsnr = defaultEnhetGittTemagruppe(temagruppe, saksbehandlersValgteEnhet)
                 ).toPutOppgaveRequestJsonDTO()
             )
     }
@@ -383,7 +383,7 @@ class RestOppgaveBehandlingServiceImpl(
                 oppgave
                     .copy(
                         tilordnetRessurs = null,
-                        endretAvEnhetsnr = endretAvEnhet(null, "4100")
+                        endretAvEnhetsnr = defaultEnhetGittTemagruppe(null, "4100")
                     )
                     .toPutOppgaveRequestJsonDTO()
             )
