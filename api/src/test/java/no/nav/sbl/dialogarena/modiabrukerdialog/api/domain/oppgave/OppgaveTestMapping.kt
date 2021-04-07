@@ -1,9 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.oppgave
 
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.oppgave.generated.models.GetOppgaveResponseJsonDTO
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.oppgave.generated.models.OppgaveJsonDTO
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.oppgave.generated.models.PostOppgaveResponseJsonDTO
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.oppgave.generated.models.PutOppgaveResponseJsonDTO
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.oppgave.generated.models.*
 
 public fun OppgaveJsonDTO.toPostOppgaveResponseJsonDTO(): PostOppgaveResponseJsonDTO =
     PostOppgaveResponseJsonDTO(
@@ -113,6 +110,37 @@ public fun OppgaveJsonDTO.toPutOppgaveResponseJsonDTO(): PutOppgaveResponseJsonD
         opprettetTidspunkt = this.opprettetTidspunkt,
         ferdigstiltTidspunkt = this.ferdigstiltTidspunkt,
         endretTidspunkt = this.endretTidspunkt,
+        status =
+        no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.oppgave.OppgaveMappingHelpers.convertEnumToPutResp(this.status),
+        prioritet =
+        no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.oppgave.OppgaveMappingHelpers.convertEnumToPutResp(this.prioritet)
+    )
+
+public fun PutOppgaveRequestJsonDTO.toPutOppgaveResponseJsonDTO(): PutOppgaveResponseJsonDTO =
+    PutOppgaveResponseJsonDTO(
+        tildeltEnhetsnr = this.tildeltEnhetsnr,
+        oppgavetype = this.oppgavetype,
+        versjon = this.versjon,
+        aktivDato = this.aktivDato,
+        id = this.id,
+        endretAvEnhetsnr = this.endretAvEnhetsnr,
+        journalpostId = this.journalpostId,
+        journalpostkilde = this.journalpostkilde,
+        behandlesAvApplikasjon = this.behandlesAvApplikasjon,
+        saksreferanse = this.saksreferanse,
+        bnr = this.bnr,
+        samhandlernr = this.samhandlernr,
+        aktoerId = this.aktoerId,
+        orgnr = this.orgnr,
+        tilordnetRessurs = this.tilordnetRessurs,
+        beskrivelse = this.beskrivelse,
+        temagruppe = this.temagruppe,
+        tema = this.tema,
+        behandlingstema = this.behandlingstema,
+        behandlingstype = this.behandlingstype,
+        mappeId = this.mappeId,
+        metadata = this.metadata,
+        fristFerdigstillelse = this.fristFerdigstillelse,
         status =
         no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.oppgave.OppgaveMappingHelpers.convertEnumToPutResp(this.status),
         prioritet =
