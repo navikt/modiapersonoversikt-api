@@ -363,6 +363,53 @@ class RestOppgaveBehandlingServiceImplTest {
                 )
             }
         }
+
+        @Test
+        fun `skal filtere bort oppgaver som ikke har henvendelse tilknyttning`() {
+            every { apiClient.finnOppgaver(allAny()) } returns GetOppgaverResponseJsonDTO(
+                antallTreffTotalt = 3,
+                oppgaver = listOf(
+                    dummyOppgave
+                        .copy(
+                            id = 1111,
+                            aktoerId = "00007063000250000"
+                        ),
+                    dummyOppgave
+                        .copy(
+                            aktoerId = "00007063000250000",
+                            metadata = mapOf(MetadataKey.EKSTERN_HENVENDELSE_ID.name to "henvid")
+                        ),
+                    dummyOppgave
+                        .copy(
+                            id = 1114,
+                            aktoerId = "00007063000250000"
+                        )
+                )
+            )
+            every { tilgangskontrollContext.checkAbac(any()) } returns AbacResponse(
+                listOf(Response(Decision.Permit, null))
+            )
+
+            val result: List<Oppgave> = withIdent("Z999999") {
+                oppgaveBehandlingService.finnTildelteOppgaverIGsak()
+            }
+            val oppgave: Oppgave = result[0]
+
+            assertThat(result).hasSize(1)
+            assertThat(oppgave.oppgaveId).isEqualTo("1234")
+            assertThat(oppgave.fnr).isEqualTo("07063000250")
+            assertThat(oppgave.henvendelseId).isEqualTo("henvid")
+            assertThat(oppgave.erSTOOppgave).isEqualTo(true)
+
+            verifySequence {
+                apiClient.finnOppgaver(
+                    xminusCorrelationMinusID = any(),
+                    statuskategori = "AAPEN",
+                    tilordnetRessurs = "Z999999",
+                    aktivDatoTom = now(fixedClock).toString()
+                )
+            }
+        }
     }
 
     @Nested
