@@ -10,12 +10,6 @@ interface SakerService {
 
     fun hentSakSaker(fnr: String): Resultat
 
-    @Deprecated("")
-    fun hentSammensatteSaker(fnr: String): List<Sak>
-
-    @Deprecated("")
-    fun hentPensjonSaker(fnr: String): List<Sak>
-
     @Throws(JournalforingFeilet::class)
     fun knyttBehandlingskjedeTilSak(fnr: String?, behandlingskjede: String?, sak: Sak, enhet: String?)
 }
