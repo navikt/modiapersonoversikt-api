@@ -168,10 +168,14 @@ class RestOppgaveBehandlingServiceImpl(
         return SafeListAggregate<OppgaveJsonDTO, OppgaveJsonDTO>(oppgaver)
             .filter { aktorIdTilganger[it.aktoerId] == DecisionEnums.PERMIT }
             .fold(
-                transformSuccess = this::mapTilOppgave,
+                transformSuccess = { it to this.mapTilOppgave(it) },
                 transformFailure = { it }
             )
             .getWithFailureHandling { failures -> systemLeggTilbakeOppgaver(failures) }
+            .filter { (oppgaveJson, _) ->
+                oppgaveJson.metadata?.containsKey(MetadataKey.EKSTERN_HENVENDELSE_ID.name) ?: false
+            }
+            .map { (_, oppgave) -> oppgave }
             .toMutableList()
     }
 
