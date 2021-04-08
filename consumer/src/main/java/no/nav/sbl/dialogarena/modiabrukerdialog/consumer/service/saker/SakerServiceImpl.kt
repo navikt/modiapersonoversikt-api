@@ -81,16 +81,6 @@ class SakerServiceImpl : SakerService {
         return slaSammenGsakPesysSaker(restSakSaker, pesysSaker)
     }
 
-    override fun hentSammensatteSaker(fnr: String): List<Sak> {
-        requireFnrNotNullOrBlank(fnr)
-        return hentSammensatteSakerResultat(fnr).saker
-    }
-
-    override fun hentPensjonSaker(fnr: String): List<Sak> {
-        requireFnrNotNullOrBlank(fnr)
-        return hentPensjonSakerResultat(fnr).saker
-    }
-
     fun hentSammensatteSakerResultat(fnr: String?): SakerService.Resultat {
         requireFnrNotNullOrBlank(fnr)
         val resultat = SakerService.Resultat()
