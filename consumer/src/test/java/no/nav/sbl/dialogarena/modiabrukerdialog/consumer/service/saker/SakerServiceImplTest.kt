@@ -36,6 +36,7 @@ import org.junit.jupiter.api.Test
 import org.slf4j.MDC
 import java.time.OffsetDateTime
 import java.util.*
+import kotlin.collections.ArrayList
 import kotlin.contracts.ExperimentalContracts
 import kotlin.streams.toList
 
@@ -101,6 +102,8 @@ class SakerServiceImplTest {
 
     @Test
     fun `transformerer response til saksliste pensjon`() {
+        every { sakApiGateway.hentSaker(any()) } returns listOf()
+        every { arbeidOgAktivitet.hentSakListe(any()) } returns WSHentSakListeResponse()
         val pensjon = Sak()
         pensjon.temaKode = "PENS"
         val ufore = Sak()
@@ -108,8 +111,8 @@ class SakerServiceImplTest {
         val pensjonssaker = listOf(pensjon, ufore)
         every { psakService.hentSakerFor(FNR) } returns pensjonssaker
 
-        val saksliste = sakerService.hentPensjonSaker(FNR)
-        assertThat(saksliste.size, `is`(2))
+        val saksliste = sakerService.hentSaker(FNR).saker
+        assertThat(saksliste.size, `is`(3))
         assertThat(saksliste[0].temaNavn, `is`("PENS"))
         assertThat(saksliste[1].temaNavn, `is`("UFO"))
     }

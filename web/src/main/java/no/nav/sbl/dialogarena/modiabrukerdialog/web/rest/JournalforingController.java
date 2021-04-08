@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.List;
 
 import static java.util.Arrays.asList;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.RestUtils.hentValgtEnhet;
@@ -46,20 +45,6 @@ public class JournalforingController {
         return tilgangskontroll
                 .check(tilgangTilBruker.with(fnr))
                 .get(Audit.describe(READ, Person.GsakSaker, new Pair<>(AuditIdentifier.FNR, fnr)), () ->  sakerService.hentSaker(fnr));
-    }
-
-    @GetMapping("/saker/sammensatte")
-    public List<Sak> hentSammensatteSaker(@PathVariable("fnr") String fnr) {
-        return tilgangskontroll
-                .check(tilgangTilBruker.with(fnr))
-                .get(Audit.describe(READ, Person.GsakSaker, new Pair<>(AuditIdentifier.FNR, fnr)), () -> sakerService.hentSammensatteSaker(fnr));
-    }
-
-    @GetMapping("/saker/pensjon")
-    public List<Sak> hentPensjonSaker(@PathVariable("fnr") String fnr) {
-        return tilgangskontroll
-                .check(tilgangTilBruker.with(fnr))
-                .get(Audit.describe(READ, Person.PesysSaker, new Pair<>(AuditIdentifier.FNR, fnr)), () -> sakerService.hentPensjonSaker(fnr));
     }
 
     @PostMapping("/{traadId}")
