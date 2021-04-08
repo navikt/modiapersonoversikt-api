@@ -17,7 +17,7 @@ object Utils {
             DEFAULT_ENHET
         } else if (temagruppe == FMLI && valgtEnhet == STORD_ENHET) {
             STORD_ENHET
-        } else if (listOf(ARBD, HELSE, FMLI, FDAG, ORT_HJE, PENS, UFRT, PLEIEPENGERSY, UTLAND).contains(temagruppe)) {
+        } else if (listOf(ARBD, HELSE, FMLI, FDAG, ORT_HJE, PENS, UFRT, PLEIEPENGERSY, UTLAND, OVRG).contains(temagruppe)) {
             DEFAULT_ENHET
         } else {
             valgtEnhet ?: throw IllegalStateException("Kunne ikke utlede endretAvEnhet gitt $temagruppe og $valgtEnhet")
