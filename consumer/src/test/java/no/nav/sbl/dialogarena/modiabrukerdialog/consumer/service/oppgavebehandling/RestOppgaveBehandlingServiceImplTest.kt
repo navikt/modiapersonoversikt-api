@@ -610,7 +610,7 @@ class RestOppgaveBehandlingServiceImplTest {
     inner class LeggTilbakeOppgave {
         @Test
         fun `systemet legger tilbake oppgave uten endringer`() {
-            every { apiClient.hentOppgave(any(), any()) } returns dummyOppgave
+            every { systemApiClient.hentOppgave(any(), any()) } returns dummyOppgave
                 .copy(tilordnetRessurs = "Z999999")
                 .toGetOppgaveResponseJsonDTO()
             every {
@@ -628,7 +628,7 @@ class RestOppgaveBehandlingServiceImplTest {
             )
 
             verifySequence {
-                apiClient.hentOppgave(any(), 1234)
+                systemApiClient.hentOppgave(any(), 1234)
                 systemApiClient.endreOppgave(
                     any(), 1234,
                     dummyOppgave.toPutOppgaveRequestJsonDTO().copy(
