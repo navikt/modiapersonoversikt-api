@@ -162,20 +162,21 @@ class RestOppgaveBehandlingServiceImpl(
             statuskategori = "AAPEN"
         )
 
-        val oppgaver = response.oppgaver ?: emptyList()
+        val oppgaver = (response.oppgaver ?: emptyList())
+            .filter { oppgaveJson ->
+                val erTilknyttetHenvendelse = oppgaveJson.metadata?.containsKey(MetadataKey.EKSTERN_HENVENDELSE_ID.name) ?: false
+                val harAktorId = !oppgaveJson.aktoerId.isNullOrBlank()
+                erTilknyttetHenvendelse && harAktorId
+            }
 
         val aktorIdTilganger: Map<String?, DecisionEnums> = hentAktorIdTilgang(oppgaver)
         return SafeListAggregate<OppgaveJsonDTO, OppgaveJsonDTO>(oppgaver)
             .filter { aktorIdTilganger[it.aktoerId] == DecisionEnums.PERMIT }
             .fold(
-                transformSuccess = { it to this.mapTilOppgave(it) },
+                transformSuccess = this::mapTilOppgave,
                 transformFailure = { it }
             )
             .getWithFailureHandling { failures -> systemLeggTilbakeOppgaver(failures) }
-            .filter { (oppgaveJson, _) ->
-                oppgaveJson.metadata?.containsKey(MetadataKey.EKSTERN_HENVENDELSE_ID.name) ?: false
-            }
-            .map { (_, oppgave) -> oppgave }
             .toMutableList()
     }
 
