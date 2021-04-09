@@ -300,7 +300,15 @@ class RestOppgaveBehandlingServiceImpl(
         saksbehandlersValgteEnhet: String?
     ) {
         requireNotNull(oppgaveId)
-        val oppgave = hentOppgaveJsonDTO(oppgaveId)
+        /**
+         * NB Viktig at systemApiClient brukes her.
+         * Vi skal potensielt sett hente en oppgave saksbehandler ikke har tilgang til.
+         */
+        val oppgave = systemApiClient.hentOppgave(
+            xminusCorrelationMinusID = correlationId(),
+            id = oppgaveId.toLong()
+        ).toOppgaveJsonDTO()
+
         systemApiClient
             .endreOppgave(
                 correlationId(),
