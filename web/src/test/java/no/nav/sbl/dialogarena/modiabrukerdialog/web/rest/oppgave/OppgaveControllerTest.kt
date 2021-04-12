@@ -20,7 +20,7 @@ import kotlin.test.assertEquals
 internal class OppgaveControllerTest {
     private val plukkOppgaveService: PlukkOppgaveService = mockk()
     private val henvendelseUtsendingService: HenvendelseUtsendingService = mockk()
-    private val oppgavebehandlingService: OppgaveBehandlingService = mockk();
+    private val oppgavebehandlingService: OppgaveBehandlingService = mockk()
     private val oppgaveController: OppgaveController = OppgaveController(
         oppgavebehandlingService,
         plukkOppgaveService,
@@ -67,9 +67,12 @@ internal class OppgaveControllerTest {
         )
 
         every { oppgavebehandlingService.finnTildelteOppgaverIGsak() } returns oppgaveliste
-        val resultat = SubjectHandlerUtil.withIdent(SAKSBEHANDLERS_IDENT, UnsafeSupplier {
-            oppgaveController.finnTildelte()
-        })
+        val resultat = SubjectHandlerUtil.withIdent(
+            SAKSBEHANDLERS_IDENT,
+            UnsafeSupplier {
+                oppgaveController.finnTildelte()
+            }
+        )
 
         assertEquals(oppgaveliste.size, resultat.size)
         assertEquals(oppgaveliste[0].oppgaveId, resultat[0].oppgaveId)
@@ -87,9 +90,12 @@ internal class OppgaveControllerTest {
         every { oppgavebehandlingService.finnTildelteOppgaverIGsak() } returns mutableListOf()
         every { plukkOppgaveService.plukkOppgaver(any(), any()) } returns oppgaver
 
-        val resultat = SubjectHandlerUtil.withIdent(SAKSBEHANDLERS_IDENT, UnsafeSupplier {
-            oppgaveController.plukkOppgaver(TEMAGRUPPE_ARBEID, null, httpRequest)
-        })
+        val resultat = SubjectHandlerUtil.withIdent(
+            SAKSBEHANDLERS_IDENT,
+            UnsafeSupplier {
+                oppgaveController.plukkOppgaver(TEMAGRUPPE_ARBEID, null, httpRequest)
+            }
+        )
 
         assertEquals(oppgaver.size, resultat.size)
         assertEquals(oppgaver[0].oppgaveId, resultat[0].oppgaveId)
@@ -105,9 +111,12 @@ internal class OppgaveControllerTest {
         )
         every { oppgavebehandlingService.finnTildelteOppgaverIGsak() } returns oppgaveliste
 
-        val resultat = SubjectHandlerUtil.withIdent(SAKSBEHANDLERS_IDENT, UnsafeSupplier {
-            oppgaveController.plukkOppgaver(TEMAGRUPPE_ARBEID, null, httpRequest)
-        })
+        val resultat = SubjectHandlerUtil.withIdent(
+            SAKSBEHANDLERS_IDENT,
+            UnsafeSupplier {
+                oppgaveController.plukkOppgaver(TEMAGRUPPE_ARBEID, null, httpRequest)
+            }
+        )
 
         verify(exactly = 0) {
             plukkOppgaveService.plukkOppgaver(any(), any())
@@ -122,9 +131,12 @@ internal class OppgaveControllerTest {
         every { oppgavebehandlingService.finnTildelteOppgaverIGsak() } returns mutableListOf()
         every { plukkOppgaveService.plukkOppgaver(any(), any()) } returns mutableListOf()
 
-        val resultat = SubjectHandlerUtil.withIdent(SAKSBEHANDLERS_IDENT, UnsafeSupplier {
-            oppgaveController.plukkOppgaver(TEMAGRUPPE_ARBEID, null, httpRequest)
-        })
+        val resultat = SubjectHandlerUtil.withIdent(
+            SAKSBEHANDLERS_IDENT,
+            UnsafeSupplier {
+                oppgaveController.plukkOppgaver(TEMAGRUPPE_ARBEID, null, httpRequest)
+            }
+        )
 
         assertEquals(0, resultat.size)
     }

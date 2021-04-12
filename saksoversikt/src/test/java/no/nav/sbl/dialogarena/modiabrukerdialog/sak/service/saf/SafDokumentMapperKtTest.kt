@@ -40,7 +40,6 @@ internal class SafDokumentMapperKtTest {
 
     @Test
     fun `dokumentMetadata mapper hele objektet`() {
-
         val journalpost = lagJournalpost()
 
         val dokumentMetadata = DokumentMetadata().fraSafJournalpost(journalpost)
@@ -350,7 +349,6 @@ internal class SafDokumentMapperKtTest {
 
     @Test
     fun `Setter nådato om relevant dato for type ikke eksisterer`() {
-
         val nowDate = mockLocalDateTimeNow()
 
         val journalpost = lagJournalpost().copy(
@@ -474,7 +472,6 @@ internal class SafDokumentMapperKtTest {
 }
 
 private fun lagJournalpost(): Journalpost {
-
     val bruker = Bruker(id = aremarkFNR, type = "FNR")
     val dokumenter: List<DokumentInfo> = listOf(lagHoveddokument(), lagVedlegg())
     val relevanteDatoer = listOf(RelevantDato(dato = relevantdato, datotype = datotype))

@@ -25,6 +25,7 @@ import java.net.URL
 
 internal class PdlOppslagServiceImplTest {
     val userToken = "RND-USER-TOKEN"
+
     @Rule
     @JvmField
     val subject = SubjectRule(Subject("Z999999", IdentType.InternBruker, SsoToken.oidcToken(userToken, emptyMap<String, Any>())))
@@ -76,7 +77,8 @@ internal class PdlOppslagServiceImplTest {
 
     fun createMockGraphQLClient(handler: MockRequestHandleScope.(request: HttpRequestData) -> HttpResponseData): GraphQLClient<*> {
         return GraphQLClient(
-            url = URL("http://dummy.no"), engineFactory = MockEngine,
+            url = URL("http://dummy.no"),
+            engineFactory = MockEngine,
             configuration = {
                 engine {
                     addHandler { handler.invoke(this, it) }

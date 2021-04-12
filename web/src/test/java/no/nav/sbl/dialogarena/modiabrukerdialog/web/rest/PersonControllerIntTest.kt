@@ -31,7 +31,8 @@ internal class PersonControllerIntTest {
                 mellomnavn = null,
                 etternavn = "Nordmann"
             ),
-            organisasjonsnavn = null, organisasjonsnummer = null
+            organisasjonsnavn = null,
+            organisasjonsnummer = null
         )
         val adresse = HentPerson.KontaktinformasjonForDoedsboAdresse(
             adresselinje1 = "testadresse 21",
