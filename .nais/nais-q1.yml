@@ -234,22 +234,6 @@ spec:
       value: "SAML"
     - name: VIRKSOMHET_OPPFOLGING_V1_WSDLURL
       value: "http://maven.adeo.no/nexus/content/repositories/public/no/nav/tjenester/fim/nav-fim-oppfoelging-v1-tjenestespesifikasjon/1.2.0/nav-fim-oppfoelging-v1-tjenestespesifikasjon-1.2.0.zip"
-    #    - name: VIRKSOMHET_OPPGAVE_V3_ENDPOINTURL
-    #      value: "https\://wasapp-q1.adeo.no/nav-gsak-ws/OppgaveV3"
-    - name: VIRKSOMHET_OPPGAVE_V3_ENDPOINTURL
-      value: "https://service-gw-q1.preprod.local/"
-    - name: VIRKSOMHET_OPPGAVE_V3_SECURITYTOKEN
-      value: "LTPA"
-    - name: VIRKSOMHET_OPPGAVE_V3_WSDLURL
-      value: "http://maven.adeo.no/nexus/content/groups/public/no/nav/sbl/dialogarena/oppgave-v3-tjenestespesifikasjon/3.1.2/oppgave-v3-tjenestespesifikasjon-3.1.2.zip"
-    #    - name: VIRKSOMHET_OPPGAVEBEHANDLING_V3_ENDPOINTURL
-    #      value: "https\://wasapp-q1.adeo.no/nav-gsak-ws/OppgavebehandlingV3"
-    - name: VIRKSOMHET_OPPGAVEBEHANDLING_V3_ENDPOINTURL
-      value: "https://service-gw-q1.preprod.local/"
-    - name: VIRKSOMHET_OPPGAVEBEHANDLING_V3_SECURITYTOKEN
-      value: "LTPA"
-    - name: VIRKSOMHET_OPPGAVEBEHANDLING_V3_WSDLURL
-      value: "http://maven.adeo.no/nexus/content/groups/public/no/nav/tjenester/fim/nav-fim-oppgavebehandling-v3-tjenestespesifikasjon/3.1.1/nav-fim-oppgavebehandling-v3-tjenestespesifikasjon-3.1.1.zip"
     - name: EREG_ENDPOINTURL
       value: "https://modapp-q1.adeo.no/ereg/"
     - name: VIRKSOMHET_ORGANISASJONENHET_V2_ENDPOINTURL
@@ -290,12 +274,6 @@ spec:
       value: "SAML"
     - name: VIRKSOMHET_SYKEPENGER_V2_WSDLURL
       value: "http://maven.adeo.no/nexus/content/groups/public/no/nav/tjenester/nav-sykepenger-v2-tjenestespesifikasjon/2.0.1/nav-sykepenger-v2-tjenestespesifikasjon-2.0.1.zip"
-    - name: VIRKSOMHET_TILDELOPPGAVE_V1_ENDPOINTURL
-      value: "https://wasapp-q1.adeo.no/nav-gsak-ws/TildelOppgaveV1"
-    - name: VIRKSOMHET_TILDELOPPGAVE_V1_SECURITYTOKEN
-      value: "SAML"
-    - name: VIRKSOMHET_TILDELOPPGAVE_V1_WSDLURL
-      value: "http://maven.adeo.no/nexus/content/groups/public/no/nav/sbl/dialogarena/tildeloppgave-v1-tjenestespesifikasjon/1.1.0/tildeloppgave-v1-tjenestespesifikasjon-1.1.0.zip"
     - name: VIRKSOMHET_YTELSESKONTRAKT_V3_ENDPOINTURL
       value: "https://arena-q1.adeo.no/ail_ws/Ytelseskontrakt_v3"
     - name: VIRKSOMHET_YTELSESKONTRAKT_V3_SECURITYTOKEN

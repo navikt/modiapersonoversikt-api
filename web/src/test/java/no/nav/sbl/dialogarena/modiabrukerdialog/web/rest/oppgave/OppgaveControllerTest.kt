@@ -1,159 +1,79 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.oppgave
 
-import _0._0.nav_cons_sak_gosys_3.no.nav.asbo.navansatt.ASBOGOSYSNAVAnsatt
-import _0._0.nav_cons_sak_gosys_3.no.nav.asbo.navorgenhet.ASBOGOSYSNAVEnhetListe
-import _0._0.nav_cons_sak_gosys_3.no.nav.asbo.navorgenhet.ASBOGOSYSNavEnhet
-import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navansatt.GOSYSNAVansatt
-import com.nhaarman.mockitokotlin2.*
+import io.mockk.every
+import io.mockk.mockk
+import io.mockk.verify
+import io.mockk.verifySequence
 import no.nav.common.utils.fn.UnsafeSupplier
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Oppgave
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.HenvendelseUtsendingService
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.LeggTilbakeOppgaveIGsakRequest
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveBehandlingService
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.arbeidsfordeling.ArbeidsfordelingV1Service
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.ldap.LDAPService
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.http.HttpRequestUtil
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.http.SubjectHandlerUtil
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.AnsattServiceImpl
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.oppgavebehandling.OppgaveBehandlingServiceImpl
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.TilgangskontrollMock
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.service.plukkoppgave.PlukkOppgaveService
-import no.nav.tjeneste.virksomhet.oppgave.v3.OppgaveV3
-import no.nav.tjeneste.virksomhet.oppgave.v3.informasjon.oppgave.*
-import no.nav.tjeneste.virksomhet.oppgave.v3.meldinger.WSFinnOppgaveListeResponse
-import no.nav.tjeneste.virksomhet.oppgave.v3.meldinger.WSHentOppgaveResponse
-import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.OppgavebehandlingV3
-import no.nav.tjeneste.virksomhet.tildeloppgave.v1.TildelOppgaveV1
-import no.nav.tjeneste.virksomhet.tildeloppgave.v1.WSTildelFlereOppgaverResponse
-import org.hamcrest.MatcherAssert.assertThat
-import org.hamcrest.core.StringContains.containsString
-import org.joda.time.DateTime
-import org.junit.jupiter.api.Assertions.assertAll
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.function.Executable
-import org.springframework.http.HttpStatus
-import org.springframework.web.server.ResponseStatusException
-import java.util.*
 import kotlin.test.assertEquals
-import kotlin.test.assertFailsWith
-import kotlin.test.assertTrue
 
 internal class OppgaveControllerTest {
-    private val oppgaveBehandlingMock: OppgavebehandlingV3 = mock()
-    private val tildelOppgaveMock: TildelOppgaveV1 = mock()
-    private val oppgaveWSMock: OppgaveV3 = mockOppgaveWs()
-    private val ansattWSMock: AnsattServiceImpl = AnsattServiceImpl(mockGosysNavAnsatt())
-    private val arbeidsfordelingV1Service: ArbeidsfordelingV1Service = mock()
-    private val plukkOppgaveService: PlukkOppgaveService = mock()
-    private val ldapService: LDAPService = mock()
-    private val henvendelseUtsendingService: HenvendelseUtsendingService = mock()
-    private val oppgaveRestClient: OppgaveBehandlingService = mock()
+    private val plukkOppgaveService: PlukkOppgaveService = mockk()
+    private val henvendelseUtsendingService: HenvendelseUtsendingService = mockk()
+    private val oppgavebehandlingService: OppgaveBehandlingService = mockk();
     private val oppgaveController: OppgaveController = OppgaveController(
-        OppgaveBehandlingServiceImpl(
-            oppgaveBehandlingMock,
-            tildelOppgaveMock,
-            oppgaveWSMock,
-            ansattWSMock,
-            arbeidsfordelingV1Service,
-            TilgangskontrollMock.get(),
-            oppgaveRestClient
-        ),
+        oppgavebehandlingService,
         plukkOppgaveService,
         henvendelseUtsendingService,
         TilgangskontrollMock.get()
     )
 
-    @BeforeEach
-    fun before() {
-        whenever(ldapService.saksbehandlerHarRolle(any(), any())).thenReturn(true)
-    }
-
-    private fun mockOppgaveWs(): OppgaveV3 {
-        val oppgaveMock: OppgaveV3 = mock()
-        whenever(oppgaveMock.hentOppgave(any()))
-            .thenReturn(WSHentOppgaveResponse().withOppgave(mockOppgaveFraGSAK()))
-        return oppgaveMock
-    }
-
-    private fun mockGosysNavAnsatt(): GOSYSNAVansatt {
-        val gosysNAVAnsatt: GOSYSNAVansatt = mock()
-        whenever(gosysNAVAnsatt.hentNAVAnsatt(any())).thenReturn(ASBOGOSYSNAVAnsatt())
-        whenever(gosysNAVAnsatt.hentNAVAnsattEnhetListe(any()))
-            .thenReturn(ASBOGOSYSNAVEnhetListe().apply { navEnheter.add(ASBOGOSYSNavEnhet()) })
-        return gosysNAVAnsatt
-    }
-
-    private fun mockOppgaveFraGSAK() = WSOppgave()
-        .withAnsvarligId(SAKSBEHANDLERS_IDENT)
-        .withOppgaveId(OPPGAVE_ID_1)
-        .withOppgavetype(WSOppgavetype())
-        .withFagomrade(WSFagomrade())
-        .withPrioritet(WSPrioritet())
-        .withUnderkategori(WSUnderkategori())
-        .withVersjon(5)
-        .withLest(false)
-        .withGjelder(WSBruker().withBrukerId(BRUKERS_FODSELSNUMMER))
-
     @Test
     fun `Legger tilbake oppgave ved å kalle lagreOppgave mot GSAK`() {
         val httpRequest = HttpRequestUtil.mockHttpServletRequestMedCookie(SAKSBEHANDLERS_IDENT, VALGT_ENHET)
+        every { oppgavebehandlingService.leggTilbakeOppgaveIGsak(any()) } returns Unit
+        every { henvendelseUtsendingService.oppdaterTemagruppe(any(), any()) } returns Unit
+
+        val leggTilbakeRequest = LeggTilbakeRequest(
+            enhet = null,
+            oppgaveId = OPPGAVE_ID_1,
+            type = LeggTilbakeAarsak.FeilTema,
+            beskrivelse = null,
+            temagruppe = Temagruppe.ARBD,
+            traadId = "123456"
+        )
 
         SubjectHandlerUtil.withIdent(SAKSBEHANDLERS_IDENT) {
-            oppgaveController.leggTilbake(httpRequest, lagRequest())
+            oppgaveController.leggTilbake(httpRequest, leggTilbakeRequest)
         }
 
-        verify(oppgaveBehandlingMock).lagreOppgave(
-            check {
-                assertAll(
-                    "Oppgave lagret i GSAK",
-                    Executable { assertEquals(OPPGAVE_ID_1, it.endreOppgave.oppgaveId) },
-                    Executable { assertEquals("", it.endreOppgave.ansvarligId) },
-                    Executable { assertEquals(UNDERKATEGORI_KODE_FOR_TEMAGRUPPE_ARBEID, it.endreOppgave.underkategoriKode) },
-                    Executable { assertThat(it.endreOppgave.beskrivelse, containsString(VALGT_ENHET)) }
-                )
-            }
-        )
-    }
-
-    @Test
-    fun `Sjekker at ansvarlig for oppgaven er samme person som forsøker å legge den tilbake`() {
-        val exception = assertFailsWith<ResponseStatusException> {
-            val httpRequest = HttpRequestUtil.mockHttpServletRequestMedCookie("annen-saksbehandler", VALGT_ENHET)
-            SubjectHandlerUtil.withIdent("annen-saksbehandler") {
-                oppgaveController.leggTilbake(httpRequest, lagRequest())
-            }
+        verifySequence {
+            oppgavebehandlingService.leggTilbakeOppgaveIGsak(
+                LeggTilbakeOppgaveIGsakRequest()
+                    .withOppgaveId(OPPGAVE_ID_1)
+                    .withSaksbehandlersValgteEnhet(VALGT_ENHET)
+                    .withBeskrivelse("Oppgave lagt tilbake. Årsak: feil temagruppe")
+                    .withTemagruppe(Temagruppe.ARBD)
+            )
+            henvendelseUtsendingService.oppdaterTemagruppe("123456", "ARBD")
         }
-        assertEquals(exception.status, HttpStatus.FORBIDDEN)
     }
 
     @Test
     fun `Returnerer tildelte oppgaver`() {
-        val oppgaveliste = listOf(lagWSOppgave().withOppgaveId("1"), lagWSOppgave().withOppgaveId("2"))
+        val oppgaveliste = listOf(
+            Oppgave(OPPGAVE_ID_1, "fnr", "traadId", true),
+            Oppgave(OPPGAVE_ID_2, "fnr", "traadId", true)
+        )
 
-        whenever(oppgaveWSMock.finnOppgaveListe(any()))
-            .thenReturn(
-                WSFinnOppgaveListeResponse()
-                    .withOppgaveListe(oppgaveliste)
-            )
-
-        val resultat = SubjectHandlerUtil.withIdent(SAKSBEHANDLERS_IDENT, UnsafeSupplier { oppgaveController.finnTildelte() })
+        every { oppgavebehandlingService.finnTildelteOppgaverIGsak() } returns oppgaveliste
+        val resultat = SubjectHandlerUtil.withIdent(SAKSBEHANDLERS_IDENT, UnsafeSupplier {
+            oppgaveController.finnTildelte()
+        })
 
         assertEquals(oppgaveliste.size, resultat.size)
         assertEquals(oppgaveliste[0].oppgaveId, resultat[0].oppgaveId)
         assertEquals(oppgaveliste[1].oppgaveId, resultat[1].oppgaveId)
-    }
-
-    @Test
-    fun `Kaller finnOppgaveListe med riktig request`() {
-        whenever(oppgaveWSMock.finnOppgaveListe(any())).thenReturn(WSFinnOppgaveListeResponse())
-        SubjectHandlerUtil.withIdent(SAKSBEHANDLERS_IDENT) { oppgaveController.finnTildelte() }
-        verify(oppgaveWSMock).finnOppgaveListe(
-            check {
-                assertEquals(SAKSBEHANDLERS_IDENT, it.sok.ansvarligId)
-                assertTrue(it.filter.isAktiv)
-            }
-        )
     }
 
     @Test
@@ -164,14 +84,12 @@ internal class OppgaveControllerTest {
             Oppgave(OPPGAVE_ID_2, "fnr", "traadId", true)
         )
 
-        whenever(tildelOppgaveMock.tildelFlereOppgaver(any()))
-            .thenReturn(WSTildelFlereOppgaverResponse().withOppgaveIder(1, 2))
-        whenever(plukkOppgaveService.plukkOppgaver(any(), any()))
-            .thenReturn(oppgaver)
-        whenever(oppgaveWSMock.finnOppgaveListe(any()))
-            .thenReturn(WSFinnOppgaveListeResponse())
+        every { oppgavebehandlingService.finnTildelteOppgaverIGsak() } returns mutableListOf()
+        every { plukkOppgaveService.plukkOppgaver(any(), any()) } returns oppgaver
 
-        val resultat = SubjectHandlerUtil.withIdent(SAKSBEHANDLERS_IDENT, UnsafeSupplier { oppgaveController.plukkOppgaver(TEMAGRUPPE_ARBEID, null, httpRequest) })
+        val resultat = SubjectHandlerUtil.withIdent(SAKSBEHANDLERS_IDENT, UnsafeSupplier {
+            oppgaveController.plukkOppgaver(TEMAGRUPPE_ARBEID, null, httpRequest)
+        })
 
         assertEquals(oppgaver.size, resultat.size)
         assertEquals(oppgaver[0].oppgaveId, resultat[0].oppgaveId)
@@ -181,24 +99,19 @@ internal class OppgaveControllerTest {
     @Test
     fun `Returnerer tildelt oppgave hvis saksbehandler allerede har en tildelt oppgave ved plukk`() {
         val httpRequest = HttpRequestUtil.mockHttpServletRequestMedCookie(SAKSBEHANDLERS_IDENT, VALGT_ENHET)
-
-        val stoOppgave = WSOppgavetype().withKode("SPM_OG_SVR")
         val oppgaveliste = listOf(
-            lagWSOppgave().withOppgaveId(OPPGAVE_ID_1).withOppgavetype(stoOppgave),
-            lagWSOppgave().withOppgaveId("2").withGjelder(WSBruker().withBrukerId("1234")).withOppgavetype(stoOppgave)
+            Oppgave(OPPGAVE_ID_1, "fnr", "id", true),
+            Oppgave("2", "1234", "id", true)
         )
+        every { oppgavebehandlingService.finnTildelteOppgaverIGsak() } returns oppgaveliste
 
-        whenever(oppgaveWSMock.finnOppgaveListe(any()))
-            .thenReturn(
-                WSFinnOppgaveListeResponse()
-                    .withOppgaveListe(oppgaveliste)
-            )
-        whenever(plukkOppgaveService.plukkOppgaver(any(), any()))
-            .thenReturn(emptyList())
+        val resultat = SubjectHandlerUtil.withIdent(SAKSBEHANDLERS_IDENT, UnsafeSupplier {
+            oppgaveController.plukkOppgaver(TEMAGRUPPE_ARBEID, null, httpRequest)
+        })
 
-        val resultat = SubjectHandlerUtil.withIdent(SAKSBEHANDLERS_IDENT, UnsafeSupplier { oppgaveController.plukkOppgaver(TEMAGRUPPE_ARBEID, null, httpRequest) })
-
-        verify(plukkOppgaveService, times(0)).plukkOppgaver(any(), any())
+        verify(exactly = 0) {
+            plukkOppgaveService.plukkOppgaver(any(), any())
+        }
         assertEquals(oppgaveliste.size, resultat.size)
         assertEquals(oppgaveliste[0].oppgaveId, resultat[0].oppgaveId)
     }
@@ -206,52 +119,21 @@ internal class OppgaveControllerTest {
     @Test
     fun `Returnerer tom liste hvis tjenesten returnerer tom liste`() {
         val httpRequest = HttpRequestUtil.mockHttpServletRequestMedCookie(SAKSBEHANDLERS_IDENT, VALGT_ENHET)
+        every { oppgavebehandlingService.finnTildelteOppgaverIGsak() } returns mutableListOf()
+        every { plukkOppgaveService.plukkOppgaver(any(), any()) } returns mutableListOf()
 
-        whenever(tildelOppgaveMock.tildelFlereOppgaver(any()))
-            .thenReturn(WSTildelFlereOppgaverResponse())
-        whenever(oppgaveWSMock.finnOppgaveListe(any()))
-            .thenReturn(WSFinnOppgaveListeResponse())
-
-        val resultat = SubjectHandlerUtil.withIdent(SAKSBEHANDLERS_IDENT, UnsafeSupplier { oppgaveController.plukkOppgaver(TEMAGRUPPE_ARBEID, null, httpRequest) })
+        val resultat = SubjectHandlerUtil.withIdent(SAKSBEHANDLERS_IDENT, UnsafeSupplier {
+            oppgaveController.plukkOppgaver(TEMAGRUPPE_ARBEID, null, httpRequest)
+        })
 
         assertEquals(0, resultat.size)
     }
 
-    private fun lagRequest() = LeggTilbakeRequest(
-        enhet = null,
-        oppgaveId = OPPGAVE_ID_1,
-        type = LeggTilbakeAarsak.FeilTema,
-        beskrivelse = null,
-        temagruppe = Temagruppe.ARBD,
-        traadId = "123456"
-    )
-
     companion object {
         const val OPPGAVE_ID_1 = "OPPGAVE_ID_1"
         const val OPPGAVE_ID_2 = "OPPGAVE_ID_2"
-        const val BRUKERS_FODSELSNUMMER = "10108000398"
         const val SAKSBEHANDLERS_IDENT = "SAKSBEHANDLER"
-        const val UNDERKATEGORI_KODE_FOR_TEMAGRUPPE_ARBEID = "ARBD_KNA"
         const val TEMAGRUPPE_ARBEID = "ARBD"
         const val VALGT_ENHET = "4300"
-    }
-
-    fun lagWSOppgave(): WSOppgave {
-        return lagWSOppgave("1")
-    }
-
-    fun lagWSOppgave(oppgaveId: String): WSOppgave {
-        return WSOppgave()
-            .withOppgaveId(oppgaveId)
-            .withHenvendelseId(UUID.randomUUID().toString())
-            .withOppgavetype(WSOppgavetype().withKode("wsOppgavetype"))
-            .withGjelder(WSBruker().withBrukerId("10108000398"))
-            .withStatus(WSStatus().withKode("statuskode"))
-            .withFagomrade(WSFagomrade().withKode("HJE"))
-            .withAktivFra(DateTime.now().toLocalDate())
-            .withPrioritet(WSPrioritet().withKode("NORM_GEN"))
-            .withUnderkategori(WSUnderkategori().withKode("ARBEID_HJE"))
-            .withLest(false)
-            .withVersjon(1)
     }
 }

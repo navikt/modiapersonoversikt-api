@@ -21,8 +21,6 @@ import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.henvendelse.domain.Melding
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.behandlehenvendelse.BehandleHenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.henvendelse.HenvendelsePortType;
 import no.nav.tjeneste.virksomhet.kodeverk.v2.KodeverkPortType;
-import no.nav.tjeneste.virksomhet.oppgave.v3.OppgaveV3;
-import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.OppgavebehandlingV3;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -81,16 +79,6 @@ public class MockServiceTestContext {
     @Bean
     public BehandleHenvendelsePortType behandleHenvendelsePortType() {
         return mock(BehandleHenvendelsePortType.class);
-    }
-
-    @Bean
-    public OppgavebehandlingV3 oppgavebehandling() {
-        return mock(OppgavebehandlingV3.class);
-    }
-
-    @Bean
-    public OppgaveV3 oppgaveV3() {
-        return mock(OppgaveV3.class);
     }
 
     @Bean

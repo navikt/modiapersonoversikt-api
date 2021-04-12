@@ -211,6 +211,11 @@
             <artifactId>mockito-kotlin</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>io.mockk</groupId>
+            <artifactId>mockk</artifactId>
+            <scope>test</scope>
+        </dependency>
 
         <dependency>
             <groupId>org.mockito</groupId>

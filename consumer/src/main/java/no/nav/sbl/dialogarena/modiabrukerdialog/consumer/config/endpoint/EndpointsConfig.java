@@ -7,7 +7,6 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.kodever
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.oppfolgingsinfo.OppfolgingsinfoApiEndpointConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v1.arena.arbeidogaktivitet.ArbeidOgAktivitetEndpointConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v1.egenansatt.EgenAnsattV1EndpointConfig;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v1.gsak.GsakTildelOppgaveV1EndpointConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v1.henvendelsesoknader.HenvendelseSoknaderEndpointConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v1.norg.NAVAnsattEndpointConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v1.norg.NAVOrgEnhetEndpointConfig;
@@ -22,8 +21,6 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v2.henv
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v2.kodeverk.KodeverkV2EndpointConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v2.organisasjonenhet.OrganisasjonEnhetV2EndpointConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v2.organisasjonenhetkontaktinformasjon.OrganisasjonEnhetKontaktinformasjonV1EndpointConfig;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v3.gsak.GsakOppgaveV3EndpointConfig;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v3.gsak.GsakOppgavebehandlingV3EndpointConfig;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
@@ -39,9 +36,6 @@ import org.springframework.context.annotation.Import;
         BehandleHenvendelseEndpointConfig.class,
         HenvendelseEndpointConfig.class,
         JoarkEndpointConfig.class,
-        GsakOppgaveV3EndpointConfig.class,
-        GsakOppgavebehandlingV3EndpointConfig.class,
-        GsakTildelOppgaveV1EndpointConfig.class,
         SakOgBehandlingEndpointConfig.class,
         AktorV2EndpointConfig.class,
         HenvendelseSoknaderEndpointConfig.class,
