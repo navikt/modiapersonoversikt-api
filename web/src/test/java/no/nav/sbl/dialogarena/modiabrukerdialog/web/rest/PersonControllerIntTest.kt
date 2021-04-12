@@ -26,7 +26,7 @@ internal class PersonControllerIntTest {
         val pdlMock: PdlOppslagService = mock()
         val standardKodeverk: StandardKodeverk = mock()
         val advokatSomKontakt = HentPerson.KontaktinformasjonForDoedsboAdvokatSomKontakt(
-            HentPerson.Personnavn2(
+            HentPerson.Personnavn(
                 fornavn = "Ola",
                 mellomnavn = null,
                 etternavn = "Nordmann"
@@ -53,13 +53,12 @@ internal class PersonControllerIntTest {
             type = null,
             embete = null,
             vergeEllerFullmektig = HentPerson.VergeEllerFullmektig(
-                navn = HentPerson.Personnavn2("Fornavn", "Mellomnavn", "Etternavn"),
+                navn = HentPerson.Personnavn("Fornavn", "Mellomnavn", "Etternavn"),
                 motpartsPersonident = null,
                 omfang = null,
                 omfangetErInnenPersonligOmraade = false
             ),
-            folkeregistermetadata = null,
-            metadata = HentPerson.Metadata2(null)
+            folkeregistermetadata = null
         )
         val vergemalMedMotpartsIdent = vergemal.copy(
             vergeEllerFullmektig = vergemal.vergeEllerFullmektig.copy(
@@ -75,7 +74,7 @@ internal class PersonControllerIntTest {
                 ansvar = "felles",
                 ansvarlig = null,
                 ansvarligUtenIdentifikator = HentPerson.RelatertBiPerson(
-                    navn = HentPerson.Personnavn2("Fornavn", "Mellomnavn", "Etternavn"),
+                    navn = HentPerson.Personnavn("Fornavn", "Mellomnavn", "Etternavn"),
                     foedselsdato = null,
                     kjoenn = null,
                     statsborgerskap = null

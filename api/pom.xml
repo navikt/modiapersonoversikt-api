@@ -12,7 +12,7 @@
     <artifactId>modiabrukerdialog-api</artifactId>
 
     <properties>
-        <graphql-kotlin.version>3.5.0</graphql-kotlin.version>
+        <graphql-kotlin.version>3.6.8</graphql-kotlin.version>
     </properties>
 
     <dependencies>
