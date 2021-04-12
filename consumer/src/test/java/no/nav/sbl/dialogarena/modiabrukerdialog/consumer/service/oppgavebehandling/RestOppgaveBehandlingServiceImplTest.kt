@@ -317,6 +317,48 @@ class RestOppgaveBehandlingServiceImplTest {
         }
 
         @Test
+        fun `oppgave tilknyttet orgnr istedetfor aktorId skal ikke automatisk legges tilbake`() {
+            val henvendelseOppgave = dummyOppgave
+                .copy(
+                    aktoerId = null,
+                    orgnr = "123456",
+                    metadata = mapOf(MetadataKey.EKSTERN_HENVENDELSE_ID.name to "henvid")
+                )
+            every { apiClient.finnOppgaver(allAny()) } returns GetOppgaverResponseJsonDTO(
+                antallTreffTotalt = 1,
+                oppgaver = listOf(henvendelseOppgave)
+            )
+            every {
+                systemApiClient.endreOppgave(
+                    any(),
+                    any(),
+                    any()
+                )
+            } returns henvendelseOppgave.toPutOppgaveResponseJsonDTO()
+
+            val result = withIdent("Z999999") {
+                oppgaveBehandlingService.finnTildelteOppgaverIGsak()
+            }
+
+            assertThat(result).isEmpty()
+            verify {
+                apiClient.finnOppgaver(
+                    xminusCorrelationMinusID = any(),
+                    tilordnetRessurs = "Z999999",
+                    aktivDatoTom = now(fixedClock).toString(),
+                    statuskategori = "AAPEN"
+                )
+            }
+
+            verify(exactly = 0) {
+                // Skal ikke legge tilbake oppgaven siden den tilhører en org.nr.
+                systemApiClient.endreOppgave(any(), any(), any())
+            }
+
+            confirmVerified(apiClient, systemApiClient)
+        }
+
+        @Test
         fun `skal legge tilbake oppgave om aktørId fra oppgave ikke finnes i PDL`() {
             val oppgave = dummyOppgave
                 .copy(
