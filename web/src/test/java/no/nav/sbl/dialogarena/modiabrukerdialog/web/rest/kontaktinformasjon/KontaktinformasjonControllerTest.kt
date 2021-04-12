@@ -1,7 +1,7 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.kontaktinformasjon
 
-import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.whenever
+import io.mockk.every
+import io.mockk.mockk
 import no.nav.dkif.consumer.DkifService
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.TilgangskontrollMock
 import no.nav.tjeneste.virksomhet.digitalkontaktinformasjon.v1.informasjon.WSEpostadresse
@@ -26,7 +26,7 @@ private const val RESERVASJON = "Reservert"
 
 class KontaktinformasjonControllerTest {
 
-    private val dkifService: DkifService = mock()
+    private val dkifService: DkifService = mockk()
     private val controller = KontaktinformasjonController(dkifService, TilgangskontrollMock.get())
 
     @BeforeEach
@@ -38,15 +38,12 @@ class KontaktinformasjonControllerTest {
         val epost = WSEpostadresse().withValue(EPOST).withSistOppdatert(lagDato(SIST_OPPDATERT))
         val mobiltelefon = WSMobiltelefonnummer().withValue(MOBILTELEFON).withSistOppdatert(lagDato(SIST_OPPDATERT))
 
-        whenever(dkifService.hentDigitalKontaktinformasjon(FNR))
-            .thenReturn(
-                WSHentDigitalKontaktinformasjonResponse()
-                    .withDigitalKontaktinformasjon(
-                        WSKontaktinformasjon()
-                            .withReservasjon(RESERVASJON)
-                            .withEpostadresse(epost)
-                            .withMobiltelefonnummer(mobiltelefon)
-                    )
+        every { dkifService.hentDigitalKontaktinformasjon(FNR) } returns WSHentDigitalKontaktinformasjonResponse()
+            .withDigitalKontaktinformasjon(
+                WSKontaktinformasjon()
+                    .withReservasjon(RESERVASJON)
+                    .withEpostadresse(epost)
+                    .withMobiltelefonnummer(mobiltelefon)
             )
     }
 
@@ -73,10 +70,9 @@ class KontaktinformasjonControllerTest {
 
     @Test
     fun `Når bruker ikke har epost eller mobil`() {
-        whenever(dkifService.hentDigitalKontaktinformasjon(FNR)).thenReturn(
+        every { dkifService.hentDigitalKontaktinformasjon(FNR) } returns
             WSHentDigitalKontaktinformasjonResponse()
                 .withDigitalKontaktinformasjon(WSKontaktinformasjon())
-        )
 
         val response = controller.hentKontaktinformasjon(FNR)
         val epost = response["epost"]

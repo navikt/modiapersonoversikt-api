@@ -1,8 +1,7 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll
 
-import com.nhaarman.mockitokotlin2.any
-import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.whenever
+import io.mockk.every
+import io.mockk.mockk
 import no.nav.common.auth.subject.IdentType
 import no.nav.common.auth.subject.SsoToken
 import no.nav.common.auth.subject.Subject
@@ -60,27 +59,26 @@ private fun mockContext(
     tematilganger: Set<String> = setOf(),
     abacTilgang: Decision = Decision.Permit
 ): TilgangskontrollContext {
-    val context: TilgangskontrollContext = mock()
-    whenever(context.hentSaksbehandlerId()).thenReturn(Optional.of(saksbehandlerIdent))
-    whenever(context.hentTemagrupperForSaksbehandler(any())).thenReturn(tematilganger)
-    whenever(context.checkAbac(any())).thenReturn(
-        AbacResponse(
-            listOf(
-                Response(
-                    abacTilgang,
-                    listOf(
-                        Advice(
-                            NavAttributes.ADVICE_DENY_REASON.attributeId,
-                            listOf(
-                                AttributeAssignment(NavAttributes.ADVICEOROBLIGATION_CAUSE.attributeId, "cause-0001-manglerrolle"),
-                                AttributeAssignment(NavAttributes.ADVICEOROBLIGATION_DENY_POLICY.attributeId, "fp3_behandle_egen_ansatt"),
-                                AttributeAssignment(NavAttributes.ADVICEOROBLIGATION_DENY_RULE.attributeId, "intern_behandle_kode6_mangler_gruppetilgang")
-                            )
+    val context: TilgangskontrollContext = mockk()
+    every { context.hentSaksbehandlerId() } returns Optional.of(saksbehandlerIdent)
+    every { context.hentTemagrupperForSaksbehandler(any()) } returns tematilganger
+    every { context.checkAbac(any()) } returns AbacResponse(
+        listOf(
+            Response(
+                abacTilgang,
+                listOf(
+                    Advice(
+                        NavAttributes.ADVICE_DENY_REASON.attributeId,
+                        listOf(
+                            AttributeAssignment(NavAttributes.ADVICEOROBLIGATION_CAUSE.attributeId, "cause-0001-manglerrolle"),
+                            AttributeAssignment(NavAttributes.ADVICEOROBLIGATION_DENY_POLICY.attributeId, "fp3_behandle_egen_ansatt"),
+                            AttributeAssignment(NavAttributes.ADVICEOROBLIGATION_DENY_RULE.attributeId, "intern_behandle_kode6_mangler_gruppetilgang")
                         )
                     )
                 )
             )
         )
     )
+
     return context
 }

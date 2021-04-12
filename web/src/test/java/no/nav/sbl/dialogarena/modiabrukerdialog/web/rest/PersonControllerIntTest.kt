@@ -1,8 +1,7 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest
 
-import com.nhaarman.mockitokotlin2.any
-import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.whenever
+import io.mockk.every
+import io.mockk.mockk
 import no.nav.kjerneinfo.consumer.fim.person.PersonKjerneinfoServiceBi
 import no.nav.kjerneinfo.consumer.fim.person.to.HentKjerneinformasjonResponse
 import no.nav.kjerneinfo.domain.person.Fodselsnummer
@@ -22,9 +21,9 @@ internal class PersonControllerIntTest {
     @Test
     fun `verifiserer at informasjon fra pdl blir riktig merget i personcontroller`() {
         val clock = Clock.fixed(Instant.parse("2020-04-20T12:00:00.00Z"), ZoneId.systemDefault())
-        val kjerneinfoMock: PersonKjerneinfoServiceBi = mock()
-        val pdlMock: PdlOppslagService = mock()
-        val standardKodeverk: StandardKodeverk = mock()
+        val kjerneinfoMock: PersonKjerneinfoServiceBi = mockk()
+        val pdlMock: PdlOppslagService = mockk()
+        val standardKodeverk: StandardKodeverk = mockk()
         val advokatSomKontakt = HentPerson.KontaktinformasjonForDoedsboAdvokatSomKontakt(
             HentPerson.Personnavn(
                 fornavn = "Ola",
@@ -83,49 +82,43 @@ internal class PersonControllerIntTest {
             )
         )
 
-        whenever(kjerneinfoMock.hentKjerneinformasjon(any())).thenReturn(
-            HentKjerneinformasjonResponse()
-                .apply {
-                    this.person = Person()
-                        .apply {
-                            this.fodselsnummer = Fodselsnummer("10108000398".trimIndent())
-                        }
-                }
+        every { kjerneinfoMock.hentKjerneinformasjon(any()) } returns HentKjerneinformasjonResponse()
+            .apply {
+                this.person = Person()
+                    .apply {
+                        this.fodselsnummer = Fodselsnummer("10108000398".trimIndent())
+                    }
+            }
+        every { pdlMock.hentNavnBolk(any()) } returns mapOf(
+            "12345678910" to HentNavnBolk.Navn("Verge", "Vergesen", "Olsen")
         )
-        whenever(pdlMock.hentNavnBolk(any())).thenReturn(
-            mapOf(
-                "12345678910" to HentNavnBolk.Navn("Verge", "Vergesen", "Olsen")
-            )
-        )
-        whenever(pdlMock.hentPerson(any())).thenReturn(
-            HentPerson.Person(
-                navn = emptyList(),
-                kontaktinformasjonForDoedsbo = kontaktiformasjonForDoedsbo,
-                tilrettelagtKommunikasjon = emptyList(),
-                fullmakt = emptyList(),
-                telefonnummer = listOf(
-                    HentPerson.Telefonnummer(
-                        "+47",
-                        "10101010",
-                        1,
-                        HentPerson.Metadata(
-                            listOf(
-                                HentPerson.Endring(
-                                    HentPerson.DateTime(LocalDateTime.now(clock)),
-                                    "BRUKER"
-                                )
+        every { pdlMock.hentPerson(any()) } returns HentPerson.Person(
+            navn = emptyList(),
+            kontaktinformasjonForDoedsbo = kontaktiformasjonForDoedsbo,
+            tilrettelagtKommunikasjon = emptyList(),
+            fullmakt = emptyList(),
+            telefonnummer = listOf(
+                HentPerson.Telefonnummer(
+                    "+47",
+                    "10101010",
+                    1,
+                    HentPerson.Metadata(
+                        listOf(
+                            HentPerson.Endring(
+                                HentPerson.DateTime(LocalDateTime.now(clock)),
+                                "BRUKER"
                             )
                         )
                     )
-                ),
-                vergemaalEllerFremtidsfullmakt = vergemaalEllerFremtidsfullmakt,
-                foreldreansvar = foreldreansvar
-            )
+                )
+            ),
+            vergemaalEllerFremtidsfullmakt = vergemaalEllerFremtidsfullmakt,
+            foreldreansvar = foreldreansvar
         )
 
         val personController = PersonController(
             kjerneinfoMock,
-            mock(),
+            mockk(),
             TilgangskontrollMock.get(),
             pdlMock,
             standardKodeverk

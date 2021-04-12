@@ -1,8 +1,7 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.utbetaling
 
-import com.nhaarman.mockitokotlin2.any
-import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.whenever
+import io.mockk.every
+import io.mockk.mockk
 import no.nav.modig.core.exception.ApplicationException
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.TilgangskontrollMock
 import no.nav.sbl.dialogarena.utbetaling.service.UtbetalingService
@@ -17,13 +16,13 @@ private const val FEIL_DATO_FORMAT = "234-14-7"
 
 internal class UtbetalingControllerTest {
 
-    private val service: UtbetalingService = mock()
+    private val service: UtbetalingService = mockk()
 
     private val controller: UtbetalingController = UtbetalingController(service, TilgangskontrollMock.get())
 
     @Test
     fun `Kaster ApplicationException`() {
-        whenever(service.hentWSUtbetalinger(any(), any(), any())).thenThrow(ApplicationException(""))
+        every { service.hentWSUtbetalinger(any(), any(), any()) } throws ApplicationException("")
         assertFailsWith<ApplicationException> { controller.hent(FNR, DATO_START, DATO_SLUTT) }
     }
 
