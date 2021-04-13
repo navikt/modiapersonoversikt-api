@@ -92,9 +92,6 @@ query($ident: ID!){
                 gyldighetstidspunkt
                 opphoerstidspunkt
             }
-            metadata {
-                opplysningsId
-            }
         }
         foreldreansvar {
             ansvar

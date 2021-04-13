@@ -66,16 +66,6 @@ object DoedsboMapping {
             "organisasjonsnummer" to adressat.organisasjonsnummer
         )
 
-    private fun personNavn(personNavn: HentPerson.Personnavn2?): Map<String, Any?> {
-        return personNavn(
-            HentPerson.Personnavn(
-                fornavn = personNavn?.fornavn ?: "",
-                mellomnavn = personNavn?.mellomnavn,
-                etternavn = personNavn?.etternavn ?: ""
-            )
-        )
-    }
-
     private fun personNavn(personNavn: HentPerson.Personnavn?): Map<String, Any?> {
         val sammensatNavn = "${personNavn?.fornavn.textOrEmpty()} ${personNavn?.mellomnavn.textOrEmpty()} ${personNavn?.etternavn.textOrEmpty()}"
         return mapOf(
