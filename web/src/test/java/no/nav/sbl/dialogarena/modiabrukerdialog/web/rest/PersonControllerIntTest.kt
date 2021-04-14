@@ -26,7 +26,7 @@ internal class PersonControllerIntTest {
         val pdlMock: PdlOppslagService = mock()
         val standardKodeverk: StandardKodeverk = mock()
         val advokatSomKontakt = HentPerson.KontaktinformasjonForDoedsboAdvokatSomKontakt(
-            HentPerson.Personnavn2(
+            HentPerson.Personnavn(
                 fornavn = "Ola",
                 mellomnavn = null,
                 etternavn = "Nordmann"
@@ -53,13 +53,12 @@ internal class PersonControllerIntTest {
             type = null,
             embete = null,
             vergeEllerFullmektig = HentPerson.VergeEllerFullmektig(
-                navn = HentPerson.Personnavn2("Fornavn", "Mellomnavn", "Etternavn"),
+                navn = HentPerson.Personnavn("Fornavn", "Mellomnavn", "Etternavn"),
                 motpartsPersonident = null,
                 omfang = null,
                 omfangetErInnenPersonligOmraade = false
             ),
-            folkeregistermetadata = null,
-            metadata = HentPerson.Metadata2(null)
+            folkeregistermetadata = null
         )
         val vergemalMedMotpartsIdent = vergemal.copy(
             vergeEllerFullmektig = vergemal.vergeEllerFullmektig.copy(
@@ -69,6 +68,18 @@ internal class PersonControllerIntTest {
         val vergemaalEllerFremtidsfullmakt: List<HentPerson.VergemaalEllerFremtidsfullmakt> = listOf(
             vergemal,
             vergemalMedMotpartsIdent
+        )
+        val foreldreansvar = listOf(
+            HentPerson.Foreldreansvar(
+                ansvar = "felles",
+                ansvarlig = null,
+                ansvarligUtenIdentifikator = HentPerson.RelatertBiPerson(
+                    navn = HentPerson.Personnavn("Fornavn", "Mellomnavn", "Etternavn"),
+                    foedselsdato = null,
+                    kjoenn = null,
+                    statsborgerskap = null
+                )
+            )
         )
 
         whenever(kjerneinfoMock.hentKjerneinformasjon(any())).thenReturn(
@@ -107,6 +118,7 @@ internal class PersonControllerIntTest {
                     )
                 ),
                 vergemaalEllerFremtidsfullmakt = vergemaalEllerFremtidsfullmakt,
+                foreldreansvar = foreldreansvar,
                 deltBosted = emptyList()
             )
         )
@@ -124,6 +136,7 @@ internal class PersonControllerIntTest {
         val telefonnummer = person.deepget("telefonnummer.0") as Telefonnummer
         val vergeUtenMotpartsIdent = person.deepget("vergemal.0") as PersonController.VergemalDTO
         val vergeMedMotpartsIdent = person.deepget("vergemal.1") as PersonController.VergemalDTO
+        val foreldreansvarlig = person.deepget("foreldreansvar.0") as PersonController.ForeldreansvarDTO
 
         assertEquals("Ola", fornavn)
         assertEquals("+47", telefonnummer.retningsnummer?.kodeRef)
@@ -134,6 +147,7 @@ internal class PersonControllerIntTest {
         assertEquals(null, vergeUtenMotpartsIdent.ident)
         assertEquals("Verge Vergesen Olsen", vergeMedMotpartsIdent.navn?.sammensatt)
         assertEquals("12345678910", vergeMedMotpartsIdent.ident)
+        assertEquals("felles", foreldreansvarlig.ansvar)
     }
 }
 

@@ -66,24 +66,19 @@ class SakerServiceImpl : SakerService {
         pensjonSaker = PensjonSaker(psakService)
     }
 
+    override fun hentSakSaker(fnr: String): SakerService.Resultat {
+        requireFnrNotNullOrBlank(fnr)
+        val resultat = SakerService.Resultat()
+        return resultat.leggTilDataFraKilde(fnr, restSakSaker)
+    }
+
     override fun hentSaker(fnr: String): SakerService.Resultat {
         requireFnrNotNullOrBlank(fnr)
         val (restSakSaker, pesysSaker) = inParallel(
             { hentSammensatteSakerResultat(fnr) },
             { hentPensjonSakerResultat(fnr) }
         )
-
         return slaSammenGsakPesysSaker(restSakSaker, pesysSaker)
-    }
-
-    override fun hentSammensatteSaker(fnr: String): List<Sak> {
-        requireFnrNotNullOrBlank(fnr)
-        return hentSammensatteSakerResultat(fnr).saker
-    }
-
-    override fun hentPensjonSaker(fnr: String): List<Sak> {
-        requireFnrNotNullOrBlank(fnr)
-        return hentPensjonSakerResultat(fnr).saker
     }
 
     fun hentSammensatteSakerResultat(fnr: String?): SakerService.Resultat {

@@ -4,7 +4,8 @@ import no.nav.modig.content.ContentRetriever;
 import no.nav.sbl.dialogarena.common.kodeverk.KodeverkClient;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.FodselnummerAktorService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.AnsattService;
-import no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.GsakSakerService;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.saker.SakerService;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.UnleashService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.HenvendelseService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.service.SakOgBehandlingService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Tilgangskontroll;
@@ -14,7 +15,6 @@ import no.nav.tjeneste.virksomhet.aktoer.v2.Aktoer_v2;
 import no.nav.tjeneste.virksomhet.innsynjournal.v2.binding.InnsynJournalV2;
 import no.nav.tjeneste.virksomhet.journal.v2.JournalV2;
 import no.nav.tjeneste.virksomhet.pensjonsak.v1.PensjonSakV1;
-import no.nav.tjeneste.virksomhet.sak.v1.SakV1;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.binding.SakOgBehandlingV1;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.meldinger.FinnSakOgBehandlingskjedeListeRequest;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.meldinger.FinnSakOgBehandlingskjedeListeResponse;
@@ -76,16 +76,6 @@ public class ModiaStubConfig {
     }
 
     @Bean
-    public GsakSakerService gSakService() {
-        return mock(GsakSakerService.class);
-    }
-
-    @Bean
-    public SakV1 sakEndpoint() {
-        return mock(SakV1.class);
-    }
-
-    @Bean
     public PensjonSakV1 pensjonSakV1() {
         return mock(PensjonSakV1.class);
     }
@@ -107,4 +97,11 @@ public class ModiaStubConfig {
 
     @Bean
     public FodselnummerAktorService fodselnummerAktorService() { return mock(FodselnummerAktorService.class); }
+
+    @Bean
+    public SakerService sakerService() { return mock(SakerService.class); }
+
+    @Bean
+    public UnleashService unleashService() { return mock(UnleashService.class); }
+
 }

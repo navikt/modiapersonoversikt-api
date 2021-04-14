@@ -56,18 +56,12 @@ spec:
       value: "p"
     - name: APP_VERSION
       value: "{{ version }}"
-    - name: ISSO_CLIENT_ID
-      value: "veilarblogin-p"
     - name: MODIA_CLIENT_ID
       value: "modialogin-p"
-    - name: FPSAK_CLIENT_ID
-      value: "fpsak-frontend-p"
-    - name: ISSO_DISCOVERY_URL
-      value: "https://isso.adeo.no/isso/oauth2/.well-known/openid-configuration"
-    - name: ISSO_REFRESH_URL
-      value: "https://app.adeo.no/veilarblogin/api/openam-refresh"
     - name: MODIA_REFRESH_URL
       value: "https://app.adeo.no/modialogin/api/refresh"
+    - name: ISSO_DISCOVERY_URL
+      value: "https://isso.adeo.no/isso/oauth2/.well-known/openid-configuration"
     - name: SECURITY_TOKEN_SERVICE_DISCOVERY_URL
       value: "https://security-token-service.nais.adeo.no/rest/v1/sts/.well-known/openid-configuration"
     - name: SECURITYTOKENSERVICE_URL
@@ -208,12 +202,6 @@ spec:
       value: "SAML"
     - name: VIRKSOMHET_ARBEIDSFORDELING_V1_WSDLURL
       value: "http://maven.adeo.no/nexus/content/groups/public/no/nav/tjenester/nav-arbeidsfordeling-v1-tjenestespesifikasjon/1.1.0/nav-arbeidsfordeling-v1-tjenestespesifikasjon-1.1.0.zip"
-    - name: VIRKSOMHET_BEHANDLESAK_V1_ENDPOINTURL
-      value: "https://wasapp.adeo.no/nav-gsak-ws/BehandleSakV1"
-    - name: VIRKSOMHET_BEHANDLESAK_V1_SECURITYTOKEN
-      value: "SAML"
-    - name: VIRKSOMHET_BEHANDLESAK_V1_WSDLURL
-      value: "http://maven.adeo.no/nexus/content/groups/public/no/nav/tjenester/fim/nav-fim-behandleSak-v1-tjenestespesifikasjon/1.0.0/nav-fim-behandleSak-v1-tjenestespesifikasjon-1.0.0.zip"
     - name: VIRKSOMHET_DIGITALKONTAKINFORMASJON_V1_ENDPOINTURL
       value: "https://dkif.nais.adeo.no/ws/DigitalKontaktinformasjon/v1"
     - name: VIRKSOMHET_DIGITALKONTAKINFORMASJON_V1_SECURITYTOKEN
@@ -288,14 +276,8 @@ spec:
       value: "SAML"
     - name: VIRKSOMHET_PLEIEPENGER_V1_WSDLURL
       value: "http://maven.adeo.no/nexus/content/groups/public/no/nav/tjenester/nav-pleiepenger-v1-tjenestespesifikasjon/1.0.4/nav-pleiepenger-v1-tjenestespesifikasjon-1.0.4.zip"
-    - name: VIRKSOMHET_SAK_V1_ENDPOINTURL
-      value: "https://wasapp.adeo.no/nav-gsak-ws/SakV1"
     - name: SAK_ENDPOINTURL
       value: "https://sak.nais.adeo.no"
-    - name: VIRKSOMHET_SAK_V1_SECURITYTOKEN
-      value: "SAML"
-    - name: VIRKSOMHET_SAK_V1_WSDLURL
-      value: "http://maven.adeo.no/nexus/content/groups/public/no/nav/tjenester/fim/nav-fim-sak-v1-tjenestespesifikasjon/1.0.0/nav-fim-sak-v1-tjenestespesifikasjon-1.0.0.zip"
     - name: VIRKSOMHET_SYKEPENGER_V2_ENDPOINTURL
       value: "https://modapp.adeo.no/infotrygd-ws/SykepengerService/v2"
     - name: VIRKSOMHET_SYKEPENGER_V2_SECURITYTOKEN

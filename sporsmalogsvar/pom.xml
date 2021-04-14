@@ -36,10 +36,6 @@
             <groupId>no.nav.tjenestespesifikasjoner</groupId>
             <artifactId>dialogarena-behandlingsinformasjon</artifactId>
         </dependency>
-        <dependency>
-            <groupId>no.nav.tjenestespesifikasjoner</groupId>
-            <artifactId>dial-nav-tjeneste-sak</artifactId>
-        </dependency>
 
         <!-- intern avhengigheter -->
         <dependency>

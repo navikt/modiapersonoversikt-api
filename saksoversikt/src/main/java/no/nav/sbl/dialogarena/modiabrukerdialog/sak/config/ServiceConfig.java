@@ -29,10 +29,6 @@ public class ServiceConfig {
         return new HenvendelseService();
     }
 
-    @Bean
-    public GsakSakerService gSakService() {
-        return new GsakSakerService();
-    }
 
     @Bean
     public PesysService pesysService() {
@@ -47,11 +43,6 @@ public class ServiceConfig {
     @Bean
     public SaksService saksService() {
         return new SaksService();
-    }
-
-    @Bean
-    public GsakSakerService gsakSakerService() {
-        return new GsakSakerService();
     }
 
     @Bean

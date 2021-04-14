@@ -69,7 +69,7 @@ class PersonController @Autowired constructor(
                     val pdlTelefonnummer = (pdlPerson?.telefonnummer ?: emptyList())
                         .sortedBy { it.prioritet }
                         .map(::getPdlTelefon)
-
+                    val foreldreansvar = pdlPerson?.foreldreansvar ?: emptyList()
                     mapOf(
                         "fødselsnummer" to person?.fodselsnummer?.nummer,
                         "alder" to person?.fodselsnummer?.alder,
@@ -97,6 +97,7 @@ class PersonController @Autowired constructor(
                         "kontaktinformasjonForDoedsbo" to DoedsboMapping.mapKontaktinfoForDoedsbo(kontaktinfoForDoedsbo),
                         "fullmakt" to hentFullmakter(fullmakt),
                         "vergemal" to hentVergemal(vergemal),
+                        "foreldreansvar" to hentForeldreansvar(foreldreansvar),
                         "deltBosted" to hentDeltBosted(deltBosted)
                     )
                 } catch (exception: AuthorizationWithSikkerhetstiltakException) {
@@ -178,6 +179,31 @@ class PersonController @Autowired constructor(
                 ukjentBosted = UkjentBostedDTO(
                     bostedskommune = it.ukjentBosted?.bostedskommune
                 )
+            )
+        }
+    }
+
+    data class ForeldreansvarDTO(
+        val ansvar: String,
+        val ansvarlig: PersonnavnDTO?
+    )
+
+    private fun hentForeldreansvar(foreldreansvar: List<HentPerson.Foreldreansvar>): List<ForeldreansvarDTO> {
+        val allenavn: Map<String, PersonnavnDTO> = foreldreansvar
+            .mapNotNull { it.ansvarlig }
+            .let { pdlOppslagService.hentNavnBolk(it) }
+            ?.filterValues { it != null }
+            ?.mapValues { entry ->
+                val personnavn = entry.value!!
+                PersonnavnDTO(personnavn.fornavn, personnavn.mellomnavn, personnavn.etternavn)
+            }
+            ?: emptyMap()
+        return foreldreansvar.map {
+            val ansvarligUtenIdNavn = it.ansvarligUtenIdentifikator?.navn?.let { person -> PersonnavnDTO(person.fornavn, person.mellomnavn, person.etternavn) }
+            val ansvarlig = allenavn[it.ansvarlig]
+            ForeldreansvarDTO(
+                ansvar = it.ansvar ?: "Kunne ikke hente type ansvar",
+                ansvarlig = ansvarlig ?: ansvarligUtenIdNavn
             )
         }
     }

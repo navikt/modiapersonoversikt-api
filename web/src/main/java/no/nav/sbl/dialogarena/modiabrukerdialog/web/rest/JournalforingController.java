@@ -6,10 +6,9 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.saker.SakerService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.saker.EnhetIkkeSatt;
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.BehandlingsIdTilgangData;
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Tilgangskontroll;
+import no.nav.sbl.dialogarena.naudit.Audit;
 import no.nav.sbl.dialogarena.naudit.AuditIdentifier;
 import no.nav.sbl.dialogarena.naudit.AuditResources.Person;
-import no.nav.sbl.dialogarena.naudit.Audit;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,13 +16,13 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.List;
 
 import static java.util.Arrays.asList;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.RestUtils.hentValgtEnhet;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Policies.behandlingsIderTilhorerBruker;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Policies.tilgangTilBruker;
-import static no.nav.sbl.dialogarena.naudit.Audit.Action.*;
+import static no.nav.sbl.dialogarena.naudit.Audit.Action.READ;
+import static no.nav.sbl.dialogarena.naudit.Audit.Action.UPDATE;
 
 @RestController
 @RequestMapping("/rest/journalforing/{fnr}")
@@ -34,24 +33,18 @@ public class JournalforingController {
     private final SakerService sakerService;
     private final Tilgangskontroll tilgangskontroll;
 
+
     @Autowired
     public JournalforingController(SakerService sakerService, Tilgangskontroll tilgangskontroll) {
         this.sakerService = sakerService;
         this.tilgangskontroll = tilgangskontroll;
     }
 
-    @GetMapping("/saker/sammensatte")
-    public List<Sak> hentSammensatteSaker(@PathVariable("fnr") String fnr) {
+    @GetMapping("/saker/")
+    public SakerService.Resultat hentSaker(@PathVariable("fnr") String fnr) {
         return tilgangskontroll
                 .check(tilgangTilBruker.with(fnr))
-                .get(Audit.describe(READ, Person.GsakSaker, new Pair<>(AuditIdentifier.FNR, fnr)), () -> sakerService.hentSammensatteSaker(fnr));
-    }
-
-    @GetMapping("/saker/pensjon")
-    public List<Sak> hentPensjonSaker(@PathVariable("fnr") String fnr) {
-        return tilgangskontroll
-                .check(tilgangTilBruker.with(fnr))
-                .get(Audit.describe(READ, Person.PesysSaker, new Pair<>(AuditIdentifier.FNR, fnr)), () -> sakerService.hentPensjonSaker(fnr));
+                .get(Audit.describe(READ, Person.GsakSaker, new Pair<>(AuditIdentifier.FNR, fnr)), () ->  sakerService.hentSaker(fnr));
     }
 
     @PostMapping("/{traadId}")
