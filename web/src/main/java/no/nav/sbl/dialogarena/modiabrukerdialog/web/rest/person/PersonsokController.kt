@@ -79,7 +79,7 @@ class PersonsokController @Autowired constructor(
     }
 }
 
-fun lagPersonResponse(searchHit: SokPersonUtenlandskID.SearchHit): PersonSokResponsDTO {
+fun lagPersonResponse(searchHit: SokPersonUtenlandskID.PersonSearchHit): PersonSokResponsDTO {
     val ident = searchHit.person?.folkeregisteridentifikator?.first()
     val utenlandskID = searchHit.person?.utenlandskIdentifikasjonsnummer
     return PersonSokResponsDTO(
