@@ -6,6 +6,7 @@ import kotlin.test.assertEquals
 
 internal class ArchSightCEFLoggerTest {
     val cefHeader: String = "CEF:0|modia|personoversikt|1.0|audit:access|SporingsLogger|INFO|end=%s"
+
     @Test
     fun `standard CEF-format`() {
         val time = Instant.now().toEpochMilli()

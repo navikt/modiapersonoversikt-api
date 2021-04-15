@@ -39,32 +39,28 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.kodeverksmapper
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.ldap.LDAPServiceImpl;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.ldap.LdapContextProvider;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.oppfolgingsinfo.OppfolgingsenhetServiceImpl;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.oppgavebehandling.RestOppgaveBehandlingServiceImpl;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.organisasjonenhet.OrganisasjonEnhetV2ServiceImpl;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.organisasjonenhet.kontaktinformasjon.service.OrganisasjonEnhetKontaktinformasjonService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.organisasjonenhet.kontaktinformasjon.service.OrganisasjonEnhetKontaktinformasjonServiceImpl;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.pdl.PdlOppslagServiceImpl;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.saker.SakerServiceImpl;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.saker.mediation.SakApiGatewayImpl;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.UnleashService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Tilgangskontroll;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.behandlehenvendelse.BehandleHenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.senduthenvendelse.SendUtHenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.henvendelse.HenvendelsePortType;
 import no.nav.tjeneste.virksomhet.digitalkontaktinformasjon.v1.DigitalKontaktinformasjonV1;
 import no.nav.tjeneste.virksomhet.oppfoelging.v1.OppfoelgingPortType;
-import no.nav.tjeneste.virksomhet.oppgave.v3.OppgaveV3;
-import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.OppgavebehandlingV3;
 import no.nav.tjeneste.virksomhet.organisasjonenhetkontaktinformasjon.v1.OrganisasjonEnhetKontaktinformasjonV1;
 import no.nav.tjeneste.virksomhet.pensjonsak.v1.PensjonSakV1;
 import no.nav.tjeneste.virksomhet.person.v3.binding.PersonV3;
-import no.nav.tjeneste.virksomhet.tildeloppgave.v1.TildelOppgaveV1;
 import org.springframework.cache.CacheManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
 import static no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.RestConstants.SECURITY_TOKEN_SERVICE_DISCOVERYURL;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.oppgavebehandling.OppgaveBehandlingServiceSwitcherKt.createOppgaveBehandlingSwitcher;
 
 /**
  * MODIA ønsker å selv wire inn sine komponenters kontekster for å ha full kontroll over springoppsettet.
@@ -123,27 +119,19 @@ public class ServiceConfig {
     }
 
     @Bean
-    public OppgaveBehandlingService oppgaveBehandlingService(OppgavebehandlingV3 oppgavebehandlingV3,
-                                                             TildelOppgaveV1 tildelOppgaveV1,
-                                                             OppgaveV3 oppgaveV3,
-                                                             KodeverksmapperService kodeverksmapperService,
+    public OppgaveBehandlingService oppgaveBehandlingService(KodeverksmapperService kodeverksmapperService,
                                                              FodselnummerAktorService fodselnummerAktorService,
                                                              AnsattService ansattService,
                                                              ArbeidsfordelingV1Service arbeidsfordelingV1Service,
                                                              Tilgangskontroll tilgangskontroll,
-                                                             SystemUserTokenProvider stsService,
-                                                             UnleashService unleashService) {
-        return createOppgaveBehandlingSwitcher(
-                oppgavebehandlingV3,
-                tildelOppgaveV1,
-                oppgaveV3,
+                                                             SystemUserTokenProvider stsService) {
+        return RestOppgaveBehandlingServiceImpl.create(
                 kodeverksmapperService,
                 fodselnummerAktorService,
                 ansattService,
                 arbeidsfordelingV1Service,
                 tilgangskontroll,
-                stsService,
-                unleashService
+                stsService
         );
     }
 
