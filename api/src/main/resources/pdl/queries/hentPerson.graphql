@@ -107,5 +107,31 @@ query($ident: ID!){
                 kjoenn
             }
         }
+        deltBosted{
+            startdatoForKontrakt
+            sluttdatoForKontrakt
+            coAdressenavn
+            vegadresse{
+                matrikkelId
+                husnummer
+                husbokstav
+                bruksenhetsnummer
+                adressenavn
+                kommunenummer
+                bydelsnummer
+                tilleggsnavn
+                postnummer
+            }
+            matrikkeladresse{
+                matrikkelId
+                bruksenhetsnummer
+                tilleggsnavn
+                postnummer
+                kommunenummer
+            }
+            ukjentBosted{
+                bostedskommune
+            }
+        }
     }
 }

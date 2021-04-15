@@ -113,7 +113,8 @@ internal class PersonControllerIntTest {
                 )
             ),
             vergemaalEllerFremtidsfullmakt = vergemaalEllerFremtidsfullmakt,
-            foreldreansvar = foreldreansvar
+            foreldreansvar = foreldreansvar,
+            deltBosted = emptyList()
         )
 
         val personController = PersonController(

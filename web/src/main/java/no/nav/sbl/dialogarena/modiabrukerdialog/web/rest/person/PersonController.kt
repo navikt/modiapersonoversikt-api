@@ -65,6 +65,7 @@ class PersonController @Autowired constructor(
                     val kontaktinfoForDoedsbo = pdlPerson?.kontaktinformasjonForDoedsbo ?: emptyList()
                     val fullmakt = pdlPerson?.fullmakt ?: emptyList()
                     val vergemal = pdlPerson?.vergemaalEllerFremtidsfullmakt ?: emptyList()
+                    val deltBosted = pdlPerson?.deltBosted ?: emptyList()
                     val pdlTelefonnummer = (pdlPerson?.telefonnummer ?: emptyList())
                         .sortedBy { it.prioritet }
                         .map(::getPdlTelefon)
@@ -96,7 +97,8 @@ class PersonController @Autowired constructor(
                         "kontaktinformasjonForDoedsbo" to DoedsboMapping.mapKontaktinfoForDoedsbo(kontaktinfoForDoedsbo),
                         "fullmakt" to hentFullmakter(fullmakt),
                         "vergemal" to hentVergemal(vergemal),
-                        "foreldreansvar" to hentForeldreansvar(foreldreansvar)
+                        "foreldreansvar" to hentForeldreansvar(foreldreansvar),
+                        "deltBosted" to hentDeltBosted(deltBosted)
                     )
                 } catch (exception: AuthorizationWithSikkerhetstiltakException) {
                     getBegrensetInnsyn(fodselsnummer, exception.message)
@@ -133,6 +135,52 @@ class PersonController @Autowired constructor(
         val etternavn: String
     ) {
         val sammensatt = listOfNotNull(fornavn, mellomnavn, etternavn).joinToString(" ")
+    }
+    data class DeltBostedDTO(
+        val startdatoForKontrakt: String?,
+        val sluttdatoForKontrakt: String?,
+        val adresse: AdresseDTO?,
+        val ukjentBosted: UkjentBostedDTO?
+    )
+
+    data class UkjentBostedDTO(
+        val bostedskommune: String?
+    )
+
+    data class AdresseDTO(
+        val adressenavn: String?,
+        val husnummer: String?,
+        val husbokstav: String?,
+        val bruksenhetsnummer: String?,
+        val kommunenummer: String?,
+        val postnummer: String?,
+        val bydelsnummer: String?,
+        val tilleggsnavn: String?,
+        val coAdressenavn: String?
+    )
+
+    private fun hentDeltBosted(deltBosted: List<HentPerson.DeltBosted>): List<DeltBostedDTO> {
+        return deltBosted.map {
+            DeltBostedDTO(
+                startdatoForKontrakt = it.startdatoForKontrakt?.value?.format(ISO_DATE_TIME),
+                sluttdatoForKontrakt = it.sluttdatoForKontrakt?.value?.format(ISO_DATE_TIME),
+                adresse = AdresseDTO(
+                    adressenavn = it.vegadresse?.adressenavn,
+                    husbokstav = it.vegadresse?.husbokstav,
+                    husnummer = it.vegadresse?.husnummer,
+                    bruksenhetsnummer = it.vegadresse?.bruksenhetsnummer ?: it.matrikkeladresse?.bruksenhetsnummer,
+                    kommunenummer = it.vegadresse?.kommunenummer ?: it.matrikkeladresse?.kommunenummer,
+                    postnummer = it.vegadresse?.postnummer ?: it.matrikkeladresse?.postnummer,
+                    bydelsnummer = it.vegadresse?.bydelsnummer,
+                    tilleggsnavn = it.vegadresse?.tilleggsnavn ?: it.matrikkeladresse?.tilleggsnavn,
+                    coAdressenavn = it.coAdressenavn
+                ),
+
+                ukjentBosted = UkjentBostedDTO(
+                    bostedskommune = it.ukjentBosted?.bostedskommune
+                )
+            )
+        }
     }
 
     data class ForeldreansvarDTO(
