@@ -1,4 +1,4 @@
-package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.oppgavebehandling.rest
+package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.oppgavebehandling
 
 import no.nav.common.auth.subject.SubjectHandler
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe
@@ -8,9 +8,9 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.oppgave.generated.mod
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.oppgave.toOppgaveJsonDTO
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.oppgave.toPutOppgaveRequestJsonDTO
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.kodeverksmapper.KodeverksmapperService
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.oppgavebehandling.rest.Utils.KONTAKT_NAV
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.oppgavebehandling.rest.Utils.SPORSMAL_OG_SVAR
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.oppgavebehandling.rest.Utils.defaultEnhetGittTemagruppe
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.oppgavebehandling.Utils.KONTAKT_NAV
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.oppgavebehandling.Utils.SPORSMAL_OG_SVAR
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.oppgavebehandling.Utils.defaultEnhetGittTemagruppe
 import org.slf4j.LoggerFactory
 import java.util.*
 

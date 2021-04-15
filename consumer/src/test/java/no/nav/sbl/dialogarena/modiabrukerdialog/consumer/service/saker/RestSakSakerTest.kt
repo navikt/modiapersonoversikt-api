@@ -23,6 +23,7 @@ import java.time.*
 
 class RestSakSakerTest {
     val VEDTAKSLOSNINGEN = "FS36"
+
     val FIRE_DAGER_SIDEN = DateTime.now().minusDays(4) // joda.DateTime
     val FNR = "fnr"
     val SakId_1 = "1"

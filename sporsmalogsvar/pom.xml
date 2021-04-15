@@ -26,10 +26,6 @@
         </dependency>
         <dependency>
             <groupId>no.nav.tjenestespesifikasjoner</groupId>
-            <artifactId>gsak-oppgave-tjenestespesifikasjon</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>no.nav.tjenestespesifikasjoner</groupId>
             <artifactId>kodeverk-tjenestespesifikasjon</artifactId>
         </dependency>
         <dependency>

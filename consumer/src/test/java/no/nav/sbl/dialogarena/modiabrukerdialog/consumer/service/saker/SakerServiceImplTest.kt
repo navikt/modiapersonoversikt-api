@@ -225,7 +225,6 @@ class SakerServiceImplTest {
 
     @Test
     fun `knytt behandlingskjede til sak kaster feil hvis enhet ikke er satt`() {
-
         assertThrows(IllegalArgumentException::class.java) {
             sakerService.knyttBehandlingskjedeTilSak(
                 FNR,
@@ -238,7 +237,6 @@ class SakerServiceImplTest {
 
     @Test
     fun `knytt behandlingskjede til sak kaster feil hvis behandlingskjede ikke er satt`() {
-
         assertThrows(IllegalArgumentException::class.java) {
             sakerService.knyttBehandlingskjedeTilSak(
                 FNR,
@@ -251,7 +249,6 @@ class SakerServiceImplTest {
 
     @Test
     fun `knytt Behandlingskjede til sak kaster feil hvis FNR ikke er satt`() {
-
         assertThrows(IllegalArgumentException::class.java) {
             sakerService.knyttBehandlingskjedeTilSak(
                 "",
@@ -347,7 +344,6 @@ class SakerServiceImplTest {
         }
 
         fun createOppfolgingSaksliste(): MutableList<SakDto> {
-
             return ArrayList(
                 listOf(
                     SakDto(

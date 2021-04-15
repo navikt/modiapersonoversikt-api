@@ -1,4 +1,4 @@
-package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.oppgavebehandling.rest
+package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.oppgavebehandling
 
 import no.nav.common.auth.subject.SsoToken
 import no.nav.common.auth.subject.SubjectHandler
@@ -20,10 +20,10 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.arbeidsfordeling.Arb
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.AnsattService
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.kodeverksmapper.KodeverksmapperService
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.kodeverksmapper.domain.Behandling
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.oppgavebehandling.rest.Utils.SPORSMAL_OG_SVAR
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.oppgavebehandling.rest.Utils.beskrivelseInnslag
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.oppgavebehandling.rest.Utils.defaultEnhetGittTemagruppe
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.oppgavebehandling.rest.Utils.leggTilBeskrivelse
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.oppgavebehandling.Utils.SPORSMAL_OG_SVAR
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.oppgavebehandling.Utils.beskrivelseInnslag
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.oppgavebehandling.Utils.defaultEnhetGittTemagruppe
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.oppgavebehandling.Utils.leggTilBeskrivelse
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.SafeListAggregate
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Policies
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Tilgangskontroll
@@ -51,6 +51,26 @@ class RestOppgaveBehandlingServiceImpl(
     },
     private val clock: Clock = Clock.systemDefaultZone()
 ) : OppgaveBehandlingService {
+
+    companion object {
+        @JvmStatic
+        fun create(
+            kodeverksmapperService: KodeverksmapperService,
+            fodselnummerAktorService: FodselnummerAktorService,
+            ansattService: AnsattService,
+            arbeidsfordelingService: ArbeidsfordelingV1Service,
+            tilgangskontroll: Tilgangskontroll,
+            stsService: SystemUserTokenProvider
+        ): OppgaveBehandlingService = RestOppgaveBehandlingServiceImpl(
+            kodeverksmapperService = kodeverksmapperService,
+            fodselnummerAktorService = fodselnummerAktorService,
+            ansattService = ansattService,
+            arbeidsfordelingService = arbeidsfordelingService,
+            tilgangskontroll = tilgangskontroll,
+            stsService = stsService
+        )
+    }
+
     private val plukkOppgaveApi = PlukkOppgaveApi(
         apiClient,
         kodeverksmapperService
@@ -159,7 +179,8 @@ class RestOppgaveBehandlingServiceImpl(
             correlationId(),
             tilordnetRessurs = ident,
             aktivDatoTom = LocalDate.now(clock).toString(),
-            statuskategori = "AAPEN"
+            statuskategori = "AAPEN",
+            limit = 1000
         )
 
         val oppgaver = (response.oppgaver ?: emptyList())

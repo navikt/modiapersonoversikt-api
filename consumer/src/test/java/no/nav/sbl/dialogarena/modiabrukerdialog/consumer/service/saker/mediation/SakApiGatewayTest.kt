@@ -26,8 +26,13 @@ internal class SakApiGatewayTest {
 
     private val AKTOERID = "11111"
     private val opprettetDato = OffsetDateTime.of(
-        2019, 10, 23,
-        15, 45, 12, 529000000,
+        2019,
+        10,
+        23,
+        15,
+        45,
+        12,
+        529000000,
         ZoneOffset.UTC
     )
     private val sakDto = SakDto(

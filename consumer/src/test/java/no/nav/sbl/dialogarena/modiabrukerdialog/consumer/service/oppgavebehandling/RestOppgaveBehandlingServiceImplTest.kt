@@ -21,9 +21,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.AnsattService
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.http.SubjectHandlerUtil
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.kodeverksmapper.KodeverksmapperService
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.kodeverksmapper.domain.Behandling
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.oppgavebehandling.rest.RestOppgaveBehandlingServiceImpl
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.oppgavebehandling.rest.Utils
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.oppgavebehandling.rest.Utils.SPORSMAL_OG_SVAR
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.oppgavebehandling.Utils.SPORSMAL_OG_SVAR
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Tilgangskontroll
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.TilgangskontrollContext
 import org.assertj.core.api.Assertions.assertThat
@@ -198,7 +196,8 @@ class RestOppgaveBehandlingServiceImplTest {
             verifySequence {
                 apiClient.hentOppgave(any(), 1234)
                 apiClient.endreOppgave(
-                    any(), 1234,
+                    any(),
+                    1234,
                     dummyOppgave.toPutOppgaveRequestJsonDTO().copy(
                         endretAvEnhetsnr = "4100",
                         tilordnetRessurs = "Z999999"
@@ -223,7 +222,8 @@ class RestOppgaveBehandlingServiceImplTest {
             verifySequence {
                 apiClient.hentOppgave(any(), 1234)
                 apiClient.endreOppgave(
-                    any(), 1234,
+                    any(),
+                    1234,
                     dummyOppgave.toPutOppgaveRequestJsonDTO().copy(
                         endretAvEnhetsnr = "4110",
                         tilordnetRessurs = "Z999999"
@@ -266,7 +266,8 @@ class RestOppgaveBehandlingServiceImplTest {
                     xminusCorrelationMinusID = any(),
                     statuskategori = "AAPEN",
                     tilordnetRessurs = "Z999999",
-                    aktivDatoTom = now(fixedClock).toString()
+                    aktivDatoTom = now(fixedClock).toString(),
+                    limit = 1000
                 )
             }
         }
@@ -304,10 +305,12 @@ class RestOppgaveBehandlingServiceImplTest {
                     xminusCorrelationMinusID = any(),
                     tilordnetRessurs = "Z999999",
                     aktivDatoTom = now(fixedClock).toString(),
-                    statuskategori = "AAPEN"
+                    statuskategori = "AAPEN",
+                    limit = 1000
                 )
                 systemApiClient.endreOppgave(
-                    any(), 1234,
+                    any(),
+                    1234,
                     henvendelseOppgave.toPutOppgaveRequestJsonDTO().copy(
                         tilordnetRessurs = null,
                         endretAvEnhetsnr = "4100"
@@ -346,7 +349,8 @@ class RestOppgaveBehandlingServiceImplTest {
                     xminusCorrelationMinusID = any(),
                     tilordnetRessurs = "Z999999",
                     aktivDatoTom = now(fixedClock).toString(),
-                    statuskategori = "AAPEN"
+                    statuskategori = "AAPEN",
+                    limit = 1000
                 )
             }
 
@@ -393,7 +397,8 @@ class RestOppgaveBehandlingServiceImplTest {
                     xminusCorrelationMinusID = any(),
                     statuskategori = "AAPEN",
                     tilordnetRessurs = "Z999999",
-                    aktivDatoTom = now(fixedClock).toString()
+                    aktivDatoTom = now(fixedClock).toString(),
+                    limit = 1000
                 )
                 systemApiClient.endreOppgave(
                     any(),
@@ -448,7 +453,8 @@ class RestOppgaveBehandlingServiceImplTest {
                     xminusCorrelationMinusID = any(),
                     statuskategori = "AAPEN",
                     tilordnetRessurs = "Z999999",
-                    aktivDatoTom = now(fixedClock).toString()
+                    aktivDatoTom = now(fixedClock).toString(),
+                    limit = 1000
                 )
             }
         }
@@ -567,7 +573,8 @@ class RestOppgaveBehandlingServiceImplTest {
             verifySequence {
                 apiClient.hentOppgave(any(), 1234)
                 apiClient.endreOppgave(
-                    any(), 1234,
+                    any(),
+                    1234,
                     dummyOppgave.toPutOppgaveRequestJsonDTO().copy(
                         status = PutOppgaveRequestJsonDTO.Status.FERDIGSTILT,
                         beskrivelse = dummyOppgave.nybeskrivelse(
@@ -600,7 +607,8 @@ class RestOppgaveBehandlingServiceImplTest {
             verifySequence {
                 apiClient.hentOppgave(any(), 1234)
                 apiClient.endreOppgave(
-                    any(), 1234,
+                    any(),
+                    1234,
                     dummyOppgave.toPutOppgaveRequestJsonDTO().copy(
                         status = PutOppgaveRequestJsonDTO.Status.FERDIGSTILT,
                         beskrivelse = dummyOppgave.nybeskrivelse(
@@ -632,7 +640,8 @@ class RestOppgaveBehandlingServiceImplTest {
             verifySequence {
                 apiClient.hentOppgave(any(), 1234)
                 apiClient.endreOppgave(
-                    any(), 1234,
+                    any(),
+                    1234,
                     dummyOppgave.toPutOppgaveRequestJsonDTO().copy(
                         status = PutOppgaveRequestJsonDTO.Status.FERDIGSTILT,
                         beskrivelse = dummyOppgave.nybeskrivelse(
@@ -672,7 +681,8 @@ class RestOppgaveBehandlingServiceImplTest {
             verifySequence {
                 systemApiClient.hentOppgave(any(), 1234)
                 systemApiClient.endreOppgave(
-                    any(), 1234,
+                    any(),
+                    1234,
                     dummyOppgave.toPutOppgaveRequestJsonDTO().copy(
                         tilordnetRessurs = null,
                         endretAvEnhetsnr = "4100"
@@ -707,7 +717,8 @@ class RestOppgaveBehandlingServiceImplTest {
             verifyAll {
                 apiClient.hentOppgave(any(), 1234)
                 apiClient.endreOppgave(
-                    any(), 1234,
+                    any(),
+                    1234,
                     testoppgave.toPutOppgaveRequestJsonDTO().copy(
                         tilordnetRessurs = null,
                         beskrivelse = testoppgave.nybeskrivelse(
@@ -752,7 +763,8 @@ class RestOppgaveBehandlingServiceImplTest {
             verifyAll {
                 apiClient.hentOppgave(any(), 1234)
                 apiClient.endreOppgave(
-                    any(), 1234,
+                    any(),
+                    1234,
                     testoppgave.toPutOppgaveRequestJsonDTO().copy(
                         tilordnetRessurs = null,
                         beskrivelse = testoppgave.nybeskrivelse(
@@ -793,7 +805,8 @@ class RestOppgaveBehandlingServiceImplTest {
             verifyAll {
                 apiClient.hentOppgave(any(), 1234)
                 apiClient.endreOppgave(
-                    any(), 1234,
+                    any(),
+                    1234,
                     testoppgave.toPutOppgaveRequestJsonDTO().copy(
                         tilordnetRessurs = null,
                         beskrivelse = testoppgave.nybeskrivelse(

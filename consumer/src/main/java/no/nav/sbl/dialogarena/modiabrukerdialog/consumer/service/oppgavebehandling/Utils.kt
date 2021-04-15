@@ -1,4 +1,4 @@
-package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.oppgavebehandling.rest
+package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.oppgavebehandling
 
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe.*
