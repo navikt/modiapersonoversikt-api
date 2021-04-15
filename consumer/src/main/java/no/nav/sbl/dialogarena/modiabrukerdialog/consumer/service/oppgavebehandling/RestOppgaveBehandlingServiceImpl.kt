@@ -180,7 +180,7 @@ class RestOppgaveBehandlingServiceImpl(
             tilordnetRessurs = ident,
             aktivDatoTom = LocalDate.now(clock).toString(),
             statuskategori = "AAPEN",
-            limit = 1000
+            limit = 50
         )
 
         val oppgaver = (response.oppgaver ?: emptyList())
