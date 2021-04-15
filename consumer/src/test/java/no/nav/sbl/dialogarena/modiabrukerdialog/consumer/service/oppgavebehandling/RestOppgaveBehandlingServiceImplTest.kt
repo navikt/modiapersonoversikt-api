@@ -267,7 +267,7 @@ class RestOppgaveBehandlingServiceImplTest {
                     statuskategori = "AAPEN",
                     tilordnetRessurs = "Z999999",
                     aktivDatoTom = now(fixedClock).toString(),
-                    limit = 1000
+                    limit = 50
                 )
             }
         }
@@ -306,7 +306,7 @@ class RestOppgaveBehandlingServiceImplTest {
                     tilordnetRessurs = "Z999999",
                     aktivDatoTom = now(fixedClock).toString(),
                     statuskategori = "AAPEN",
-                    limit = 1000
+                    limit = 50
                 )
                 systemApiClient.endreOppgave(
                     any(),
@@ -350,7 +350,7 @@ class RestOppgaveBehandlingServiceImplTest {
                     tilordnetRessurs = "Z999999",
                     aktivDatoTom = now(fixedClock).toString(),
                     statuskategori = "AAPEN",
-                    limit = 1000
+                    limit = 50
                 )
             }
 
@@ -398,7 +398,7 @@ class RestOppgaveBehandlingServiceImplTest {
                     statuskategori = "AAPEN",
                     tilordnetRessurs = "Z999999",
                     aktivDatoTom = now(fixedClock).toString(),
-                    limit = 1000
+                    limit = 50
                 )
                 systemApiClient.endreOppgave(
                     any(),
@@ -454,7 +454,7 @@ class RestOppgaveBehandlingServiceImplTest {
                     statuskategori = "AAPEN",
                     tilordnetRessurs = "Z999999",
                     aktivDatoTom = now(fixedClock).toString(),
-                    limit = 1000
+                    limit = 50
                 )
             }
         }
