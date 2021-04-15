@@ -266,7 +266,8 @@ class RestOppgaveBehandlingServiceImplTest {
                     xminusCorrelationMinusID = any(),
                     statuskategori = "AAPEN",
                     tilordnetRessurs = "Z999999",
-                    aktivDatoTom = now(fixedClock).toString()
+                    aktivDatoTom = now(fixedClock).toString(),
+                    limit = Long.MAX_VALUE
                 )
             }
         }
@@ -304,7 +305,8 @@ class RestOppgaveBehandlingServiceImplTest {
                     xminusCorrelationMinusID = any(),
                     tilordnetRessurs = "Z999999",
                     aktivDatoTom = now(fixedClock).toString(),
-                    statuskategori = "AAPEN"
+                    statuskategori = "AAPEN",
+                    limit = Long.MAX_VALUE
                 )
                 systemApiClient.endreOppgave(
                     any(),
@@ -347,7 +349,8 @@ class RestOppgaveBehandlingServiceImplTest {
                     xminusCorrelationMinusID = any(),
                     tilordnetRessurs = "Z999999",
                     aktivDatoTom = now(fixedClock).toString(),
-                    statuskategori = "AAPEN"
+                    statuskategori = "AAPEN",
+                    limit = Long.MAX_VALUE
                 )
             }
 
@@ -394,7 +397,8 @@ class RestOppgaveBehandlingServiceImplTest {
                     xminusCorrelationMinusID = any(),
                     statuskategori = "AAPEN",
                     tilordnetRessurs = "Z999999",
-                    aktivDatoTom = now(fixedClock).toString()
+                    aktivDatoTom = now(fixedClock).toString(),
+                    limit = Long.MAX_VALUE
                 )
                 systemApiClient.endreOppgave(
                     any(),
@@ -449,7 +453,8 @@ class RestOppgaveBehandlingServiceImplTest {
                     xminusCorrelationMinusID = any(),
                     statuskategori = "AAPEN",
                     tilordnetRessurs = "Z999999",
-                    aktivDatoTom = now(fixedClock).toString()
+                    aktivDatoTom = now(fixedClock).toString(),
+                    limit = Long.MAX_VALUE
                 )
             }
         }

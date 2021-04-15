@@ -179,7 +179,8 @@ class RestOppgaveBehandlingServiceImpl(
             correlationId(),
             tilordnetRessurs = ident,
             aktivDatoTom = LocalDate.now(clock).toString(),
-            statuskategori = "AAPEN"
+            statuskategori = "AAPEN",
+            limit = Long.MAX_VALUE
         )
 
         val oppgaver = (response.oppgaver ?: emptyList())
