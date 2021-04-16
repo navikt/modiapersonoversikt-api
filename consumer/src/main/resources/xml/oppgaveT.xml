@@ -2696,13 +2696,13 @@
         <ruting antallFristDager="1" datoFom="2012-03-24" datoOpprettet="2012-03-24T03:45:38" endretAv="A134798/Mario" oppgaveT="VURD_HENV_SUP" opprettGsak="true" opprettOppgaveArena="false" opprettSakInfotrygd="false"/>
     </oppgaveT>
     <oppgaveT kode="VURD_HENV_SYK" datoFom="2010-10-28" datoOpprettet="2010-10-28T19:33:15" dekode="Vurder henvendelse" endretAv="CTB2990" erGyldig="true" fagomrade="SYK" opprettetAv="CTB2990" gosys="true" gsak="true" ruting="true">
-        <gosys antallFristDager="0" bedrift="false" beskrivelse="0" datoOpprettet="2010-10-28T19:36:06" endretAv="CTB2990" endringTillatt="true" gruppeKode="VUR_HENV_GR" juridisk="false" oppgaveT="VURD_HENV_SYK" opprettGsak="true" opprettOppgaveArena="false" opprettSakInfotrygd="false" opprettetAv="CTB2990" orgLedd="false" person="true" samhandler="false"/>
-        <gsak antDagerFrist="0" datoOpprettet="2010-10-28T19:33:15" endretAv="CTB2990" kode="VURD_HENV_SYK" opprettetAv="CTB2990"/>
+        <gosys antallFristDager="2" bedrift="false" beskrivelse="0" datoOpprettet="2010-10-28T19:36:06" endretAv="CTB2990" endringTillatt="true" gruppeKode="VUR_HENV_GR" juridisk="false" oppgaveT="VURD_HENV_SYK" opprettGsak="true" opprettOppgaveArena="false" opprettSakInfotrygd="false" opprettetAv="CTB2990" orgLedd="false" person="true" samhandler="false"/>
+        <gsak antDagerFrist="2" datoOpprettet="2010-10-28T19:33:15" endretAv="CTB2990" kode="VURD_HENV_SYK" opprettetAv="CTB2990"/>
         <ruting antallFristDager="1" datoOpprettet="2010-12-07T20:11:09" endretAv="KAA2812" oppgaveT="VURD_HENV_SYK" opprettGsak="false" opprettOppgaveArena="false" opprettSakInfotrygd="false" opprettetAv="KAA2812"/>
     </oppgaveT>
     <oppgaveT kode="VURD_HENV_SYM" datoFom="2010-10-28" datoOpprettet="2021-01-11T19:33:15" dekode="Vurder henvendelse" endretAv="OPP-1306" erGyldig="true" fagomrade="SYM" opprettetAv="OPP-1603" gosys="true" gsak="true" ruting="true">
-        <gosys antallFristDager="0" bedrift="false" beskrivelse="0" datoOpprettet="2021-01-11T19:36:06" endretAv="OPP-1306" endringTillatt="true" gruppeKode="VUR_HENV_GR" juridisk="false" oppgaveT="VURD_HENV_SYM" opprettGsak="true" opprettOppgaveArena="false" opprettSakInfotrygd="false" opprettetAv="OPP-1306" orgLedd="false" person="true" samhandler="false"/>
-        <gsak antDagerFrist="0" datoOpprettet="2021-01-11T19:33:15" endretAv="OPP-1306" kode="VURD_HENV_SYM" opprettetAv="OPP-1306"/>
+        <gosys antallFristDager="2" bedrift="false" beskrivelse="0" datoOpprettet="2021-01-11T19:36:06" endretAv="OPP-1306" endringTillatt="true" gruppeKode="VUR_HENV_GR" juridisk="false" oppgaveT="VURD_HENV_SYM" opprettGsak="true" opprettOppgaveArena="false" opprettSakInfotrygd="false" opprettetAv="OPP-1306" orgLedd="false" person="true" samhandler="false"/>
+        <gsak antDagerFrist="2" datoOpprettet="2021-01-11T19:33:15" endretAv="OPP-1306" kode="VURD_HENV_SYM" opprettetAv="OPP-1306"/>
         <ruting antallFristDager="1" datoOpprettet="2021-01-11T20:11:09" endretAv="OPP-1306" oppgaveT="VURD_HENV_SYM" opprettGsak="false" opprettOppgaveArena="false" opprettSakInfotrygd="false" opprettetAv="OPP-1306"/>
     </oppgaveT>
     <oppgaveT kode="VURD_HENV_TIL" datoFom="2010-10-28" datoOpprettet="2010-10-28T19:33:15" dekode="Vurder henvendelse" endretAv="CTB2990" erGyldig="true" fagomrade="TIL" opprettetAv="CTB2990" gosys="true" gsak="true" ruting="true">
@@ -2896,8 +2896,8 @@
         <ruting antallFristDager="1" datoFom="2010-10-02" datoOpprettet="2010-10-02T05:00:04" endretAv="KAA2812" oppgaveT="VUR_KONS_YTE_SUP" opprettGsak="false" opprettOppgaveArena="false" opprettSakInfotrygd="false" opprettetAv="KAA2812"/>
     </oppgaveT>
     <oppgaveT kode="VUR_KONS_YTE_SYK" datoFom="2011-12-10" datoOpprettet="2011-12-10T04:41:56" dekode="Vurder konsekvens for ytelse" endretAv="KHG2990" erGyldig="true" fagomrade="SYK" opprettetAv="KHG2990" gosys="true" gsak="true" ruting="true">
-        <gosys antallFristDager="0" bedrift="false" beskrivelse="0" datoFom="2011-12-10" datoOpprettet="2011-12-10T04:11:33" endretAv="A134798" endringTillatt="true" juridisk="false" oppgaveT="VUR_KONS_YTE_SYK" opprettGsak="true" opprettOppgaveArena="false" opprettSakInfotrygd="false" opprettetAv="A134798" orgLedd="false" person="true" samhandler="false"/>
-        <gsak antDagerFrist="0" datoFom="2011-12-10" datoOpprettet="2011-12-10T04:41:56" endretAv="KHG2990" kode="VUR_KONS_YTE_SYK" opprettetAv="KHG2990"/>
+        <gosys antallFristDager="2" bedrift="false" beskrivelse="0" datoFom="2011-12-10" datoOpprettet="2011-12-10T04:11:33" endretAv="A134798" endringTillatt="true" juridisk="false" oppgaveT="VUR_KONS_YTE_SYK" opprettGsak="true" opprettOppgaveArena="false" opprettSakInfotrygd="false" opprettetAv="A134798" orgLedd="false" person="true" samhandler="false"/>
+        <gsak antDagerFrist="2" datoFom="2011-12-10" datoOpprettet="2011-12-10T04:41:56" endretAv="KHG2990" kode="VUR_KONS_YTE_SYK" opprettetAv="KHG2990"/>
         <ruting antallFristDager="1" datoFom="2011-12-10" datoOpprettet="2011-12-10T04:56:20" endretAv="KHG2990" oppgaveT="VUR_KONS_YTE_SYK" opprettGsak="false" opprettOppgaveArena="false" opprettSakInfotrygd="false" opprettetAv="KHG2990"/>
     </oppgaveT>
     <oppgaveT kode="VUR_KONS_YTE_YRK" datoFom="2009-04-25" datoOpprettet="2009-04-25T04:43:20" dekode="Vurder konsekvens for ytelse" endretAv="Joachim L" erGyldig="true" fagomrade="YRK" opprettetAv="Joachim L" gosys="true" gsak="true" ruting="true">
