@@ -11,6 +11,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe.ANSOS
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe.OKSOS
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.norg.AnsattEnhet
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.oppgave.generated.apis.OppgaveApi
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.oppgave.generated.models.GetOppgaverResponseJsonDTO
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.oppgave.generated.models.OppgaveJsonDTO
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.oppgave.generated.models.PostOppgaveRequestJsonDTO
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.oppgave.toOppgaveJsonDTO
@@ -24,6 +25,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.oppgavebehandli
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.oppgavebehandling.Utils.beskrivelseInnslag
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.oppgavebehandling.Utils.defaultEnhetGittTemagruppe
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.oppgavebehandling.Utils.leggTilBeskrivelse
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.oppgavebehandling.Utils.paginering
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.SafeListAggregate
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Policies
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Tilgangskontroll
@@ -53,6 +55,12 @@ class RestOppgaveBehandlingServiceImpl(
 ) : OppgaveBehandlingService {
 
     companion object {
+        /**
+         * Maks 50 om man bruker userToken mot oppgave.
+         * En liten off-by-one bug i oppgave gjør at vi per nå må sette den til 49
+         */
+        val LIMIT: Long = 49
+
         @JvmStatic
         fun create(
             kodeverksmapperService: KodeverksmapperService,
@@ -175,15 +183,24 @@ class RestOppgaveBehandlingServiceImpl(
 
     override fun finnTildelteOppgaverIGsak(): MutableList<Oppgave> {
         val ident: String = SubjectHandler.getIdent().orElseThrow { IllegalStateException("Fant ikke ident") }
-        val response = apiClient.finnOppgaver(
-            correlationId(),
-            tilordnetRessurs = ident,
-            aktivDatoTom = LocalDate.now(clock).toString(),
-            statuskategori = "AAPEN",
-            limit = 50
+        val correlationId = correlationId()
+
+        val response = paginering<GetOppgaverResponseJsonDTO, OppgaveJsonDTO>(
+            total = { it.antallTreffTotalt ?: 0 },
+            data = { it.oppgaver ?: emptyList() },
+            action = { offset ->
+                apiClient.finnOppgaver(
+                    correlationId,
+                    tilordnetRessurs = ident,
+                    aktivDatoTom = LocalDate.now(clock).toString(),
+                    statuskategori = "AAPEN",
+                    limit = LIMIT,
+                    offset = offset
+                )
+            }
         )
 
-        val oppgaver = (response.oppgaver ?: emptyList())
+        val oppgaver = response
             .filter { oppgaveJson ->
                 val erTilknyttetHenvendelse = oppgaveJson.metadata?.containsKey(MetadataKey.EKSTERN_HENVENDELSE_ID.name) ?: false
                 val harAktorId = !oppgaveJson.aktoerId.isNullOrBlank()
