@@ -1,8 +1,7 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll
 
-import com.nhaarman.mockitokotlin2.any
-import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.whenever
+import io.mockk.every
+import io.mockk.mockk
 import no.nav.sbl.dialogarena.naudit.Audit
 import no.nav.sbl.dialogarena.rsbac.*
 import no.nav.sbl.dialogarena.rsbac.Function
@@ -25,11 +24,11 @@ class TilgangskontrollMock {
     companion object {
         @JvmStatic
         fun get(): Tilgangskontroll {
-            val tilgangskontroll: Tilgangskontroll = mock()
+            val tilgangskontroll: Tilgangskontroll = mockk()
             val rsbacInstance: RSBACInstance<TilgangskontrollContext> = RSBACMock()
-            whenever(tilgangskontroll.check(any<Combinable<TilgangskontrollContext>>())).thenReturn(rsbacInstance)
-            whenever(tilgangskontroll.check(any<Policy<TilgangskontrollContext>>())).thenReturn(rsbacInstance)
-            whenever(tilgangskontroll.check(any<PolicySet<TilgangskontrollContext>>())).thenReturn(rsbacInstance)
+            every { tilgangskontroll.check(any<Combinable<TilgangskontrollContext>>()) } returns rsbacInstance
+            every { tilgangskontroll.check(any<Policy<TilgangskontrollContext>>()) } returns rsbacInstance
+            every { tilgangskontroll.check(any<PolicySet<TilgangskontrollContext>>()) } returns rsbacInstance
 
             return tilgangskontroll
         }

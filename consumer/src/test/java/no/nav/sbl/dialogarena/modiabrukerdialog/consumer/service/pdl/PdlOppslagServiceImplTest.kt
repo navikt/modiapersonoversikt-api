@@ -1,14 +1,14 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.pdl
 
 import com.expediagroup.graphql.client.GraphQLClient
-import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.whenever
 import io.ktor.client.engine.mock.MockEngine
 import io.ktor.client.engine.mock.MockRequestHandleScope
 import io.ktor.client.engine.mock.respond
 import io.ktor.client.request.HttpRequestData
 import io.ktor.client.request.HttpResponseData
 import io.ktor.http.*
+import io.mockk.every
+import io.mockk.mockk
 import no.nav.common.auth.subject.IdentType
 import no.nav.common.auth.subject.SsoToken
 import no.nav.common.auth.subject.Subject
@@ -30,11 +30,11 @@ internal class PdlOppslagServiceImplTest {
     @JvmField
     val subject = SubjectRule(Subject("Z999999", IdentType.InternBruker, SsoToken.oidcToken(userToken, emptyMap<String, Any>())))
     val systemuserToken = "RND-STS-TOKEN"
-    val stsMock: SystemUserTokenProvider = mock()
+    val stsMock: SystemUserTokenProvider = mockk()
 
     @Before
     fun before() {
-        whenever(stsMock.systemUserToken).thenReturn(systemuserToken)
+        every { stsMock.systemUserToken } returns systemuserToken
     }
 
     @Test

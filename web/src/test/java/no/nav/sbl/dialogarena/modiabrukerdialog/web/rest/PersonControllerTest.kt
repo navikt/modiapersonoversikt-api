@@ -1,8 +1,7 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest
 
-import com.nhaarman.mockitokotlin2.any
-import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.whenever
+import io.mockk.every
+import io.mockk.mockk
 import no.nav.kjerneinfo.common.domain.Kodeverdi
 import no.nav.kjerneinfo.consumer.fim.person.support.DefaultPersonKjerneinfoService
 import no.nav.kjerneinfo.consumer.fim.person.support.KjerneinfoMapper
@@ -43,43 +42,44 @@ private const val SWIFT = "Taylor"
 private const val LANDKODE = "IOT"
 
 internal class PersonControllerTest {
-
-    private val personV3: PersonV3 = mock()
-    private val pdlOppslagService: PdlOppslagService = mock()
-    private val organisasjonenhetV2Service: OrganisasjonEnhetV2Service = mock()
-    private val kodeverk: KodeverkmanagerBi = mock()
+    private val personV3: PersonV3 = mockk()
+    private val pdlOppslagService: PdlOppslagService = mockk()
+    private val organisasjonenhetV2Service: OrganisasjonEnhetV2Service = mockk()
+    private val kodeverk: KodeverkmanagerBi = mockk()
     private val mapper = KjerneinfoMapper(kodeverk)
-    private val tilgangskontrollUtenTPSContext: TilgangskontrollContext = mock()
+    private val tilgangskontrollUtenTPSContext: TilgangskontrollContext = mockk()
     private val tilgangskontrollUtenTPS = Tilgangskontroll(tilgangskontrollUtenTPSContext)
     private val tilgangskontroll: Tilgangskontroll = TilgangskontrollMock.get()
-    private val standardKodeverk: StandardKodeverk = mock()
+    private val standardKodeverk: StandardKodeverk = mockk()
 
-    private val service = DefaultPersonKjerneinfoService(personV3, mapper, tilgangskontrollUtenTPS, organisasjonenhetV2Service)
+    private val service =
+        DefaultPersonKjerneinfoService(personV3, mapper, tilgangskontrollUtenTPS, organisasjonenhetV2Service)
     private val controller = PersonController(service, kodeverk, tilgangskontroll, pdlOppslagService, standardKodeverk)
 
     @BeforeEach
     fun before() {
-        whenever(organisasjonenhetV2Service.finnNAVKontor(any(), any())).thenReturn(Optional.empty())
+        every { organisasjonenhetV2Service.finnNAVKontor(any(), any()) } returns Optional.empty()
+        every { kodeverk.getBeskrivelseForKode("K", "Kj_c3_b8nnstyper", "nb") } returns "KVINNE"
+        every { kodeverk.getBeskrivelseForKode("???", "Landkoder", "nb") } returns "Ukjent"
+        every { kodeverk.getBeskrivelseForKode("IOT", "Landkoder", "nb") } returns "Det britiske territoriet i Indiahavet"
+        every { kodeverk.getBeskrivelseForKode("SPFO", "Diskresjonskoder", "nb") } returns "Kode7"
+        every { pdlOppslagService.hentPerson(any()) } returns null
+        every { pdlOppslagService.hentNavnBolk(any()) } returns null
     }
 
     @Test
     fun `Kaster 404 hvis personen ikke ble funnet`() {
-        whenever(personV3.hentPerson(any())).thenThrow(HentPersonPersonIkkeFunnet("", PersonIkkeFunnet()))
+        every { personV3.hentPerson(any()) } throws HentPersonPersonIkkeFunnet("", PersonIkkeFunnet())
         val exception = assertThrows<ResponseStatusException> { controller.hent(FNR) }
         assertEquals(HttpStatus.NOT_FOUND, exception.status)
     }
 
     @Test
     fun `Returnerer begrenset innsyn object ved ikke tilgang`() {
-        whenever(personV3.hentPerson(any())).thenThrow(HentPersonSikkerhetsbegrensning("", Sikkerhetsbegrensning()))
-        whenever(personV3.hentSikkerhetstiltak(any()))
-            .thenReturn(
-                HentSikkerhetstiltakResponse()
-                    .withSikkerhetstiltak(
-                        Sikkerhetstiltak()
-                            .withSikkerhetstiltaksbeskrivelse("")
-                    )
-            )
+        every { personV3.hentPerson(any()) } throws HentPersonSikkerhetsbegrensning("", Sikkerhetsbegrensning())
+        every { personV3.hentSikkerhetstiltak(any()) } returns HentSikkerhetstiltakResponse()
+            .withSikkerhetstiltak(Sikkerhetstiltak().withSikkerhetstiltaksbeskrivelse(""))
+
         val o = controller.hent(FNR)
         assertTrue { o.containsKey("begrunnelse") }
     }
@@ -89,7 +89,7 @@ internal class PersonControllerTest {
         val mockPersonResponse = mockPersonResponse().apply {
             person.withStatsborgerskap(Statsborgerskap().withLand(Landkoder().withValue("???")))
         }
-        whenever(personV3.hentPerson(any())).thenReturn(mockPersonResponse)
+        every { personV3.hentPerson(any()) } returns mockPersonResponse
 
         val response = controller.hent(FNR)
         val statsborgerskap = response["statsborgerskap"]
@@ -108,8 +108,8 @@ internal class PersonControllerTest {
                 )
             )
         }
-        whenever(kodeverk.getBeskrivelseForKode("NOR", "Land", "nb")).thenReturn("NORGE")
-        whenever(personV3.hentPerson(any())).thenReturn(mockPersonResponse)
+        every { kodeverk.getBeskrivelseForKode("NOR", "Land", "nb") } returns "NORGE"
+        every { personV3.hentPerson(any()) } returns mockPersonResponse
 
         val response = controller.hent(FNR)
         val statsborgerskap = response["statsborgerskap"] as Kode
@@ -131,7 +131,7 @@ internal class PersonControllerTest {
             )
         }
 
-        whenever(personV3.hentPerson(any())).thenReturn(mockPersonResponse)
+        every { personV3.hentPerson(any()) } returns mockPersonResponse
 
         val response = controller.hent(FNR)
         val relasjoner = response["familierelasjoner"] as ArrayList<*>
@@ -161,7 +161,7 @@ internal class PersonControllerTest {
             val mockPersonResponse = mockPersonResponse().apply {
                 person.withDiskresjonskode(Diskresjonskoder().withValue("SPFO"))
             }
-            whenever(personV3.hentPerson(any())).thenReturn(mockPersonResponse)
+            every { personV3.hentPerson(any()) } returns mockPersonResponse
 
             val response = controller.hent(FNR)
             val diskresjonskode = response["diskresjonskode"] as Kode
@@ -171,7 +171,7 @@ internal class PersonControllerTest {
 
         @Test
         fun `Uten diskresjonskode`() {
-            whenever(personV3.hentPerson(any())).thenReturn(mockPersonResponse())
+            every { personV3.hentPerson(any()) } returns mockPersonResponse()
 
             val response = controller.hent(FNR)
             val diskresjonskode = response["diskresjonskode"]
@@ -192,7 +192,7 @@ internal class PersonControllerTest {
                 )
             }
 
-            whenever(personV3.hentPerson(any())).thenReturn(mockPersonResponse)
+            every { personV3.hentPerson(any()) } returns mockPersonResponse
 
             val response = controller.hent(FNR)
             val relasjoner = response["familierelasjoner"] as ArrayList<*>
@@ -221,11 +221,12 @@ internal class PersonControllerTest {
         @Test
         fun `Med mobil`() {
             val mockPersonResponse = responseMedMobil()
-            whenever(personV3.hentPerson(any())).thenReturn(mockPersonResponse)
+            every { personV3.hentPerson(any()) } returns mockPersonResponse
 
             val response = controller.hent(FNR)
             val kontaktinformasjon = response["kontaktinformasjon"] as Map<*, *>
-            val mobil = kontaktinformasjon["mobil"] as no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.person.Telefonnummer
+            val mobil =
+                kontaktinformasjon["mobil"] as no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.person.Telefonnummer
             val retningsnummer = mobil.retningsnummer
             val nummer = mobil.identifikator
 
@@ -246,7 +247,7 @@ internal class PersonControllerTest {
 
         @Test
         fun `Uten mobil`() {
-            whenever(personV3.hentPerson(any())).thenReturn(mockPersonResponse())
+            every { personV3.hentPerson(any()) } returns mockPersonResponse()
 
             val response = controller.hent(FNR)
             val kontaktinformasjon = response["kontaktinformasjon"] as Map<*, *>
@@ -261,15 +262,13 @@ internal class PersonControllerTest {
 
         @Test
         fun Mapping() {
-            whenever(kodeverk.getKodeverkList(any(), any())).thenReturn(listOf(Kodeverdi("SV", "Svensk")))
-            whenever(personV3.hentPerson(any())).thenReturn(mockPersonResponse())
-            whenever(pdlOppslagService.hentPerson(any())).thenReturn(
-                mockPdlPerson().copy(
-                    tilrettelagtKommunikasjon = listOf(
-                        HentPerson.TilrettelagtKommunikasjon(
-                            talespraaktolk = HentPerson.Tolk("SV"),
-                            tegnspraaktolk = null
-                        )
+            every { kodeverk.getKodeverkList(any(), any()) } returns listOf(Kodeverdi("SV", "Svensk"))
+            every { personV3.hentPerson(any()) } returns mockPersonResponse()
+            every { pdlOppslagService.hentPerson(any()) } returns mockPdlPerson().copy(
+                tilrettelagtKommunikasjon = listOf(
+                    HentPerson.TilrettelagtKommunikasjon(
+                        talespraaktolk = HentPerson.Tolk("SV"),
+                        tegnspraaktolk = null
                     )
                 )
             )
@@ -301,8 +300,8 @@ internal class PersonControllerTest {
 
         @Test
         fun `Norsk konto`() {
-            whenever(personV3.hentPerson(any())).thenReturn(
-                mockPersonResponse().apply {
+            every { personV3.hentPerson(any()) } returns mockPersonResponse()
+                .apply {
                     (person as Bruker)
                         .withBankkonto(
                             BankkontoNorge()
@@ -313,7 +312,6 @@ internal class PersonControllerTest {
                                 )
                         )
                 }
-            )
 
             val response = controller.hent(FNR)["bankkonto"] as Map<*, *>
 
@@ -323,8 +321,8 @@ internal class PersonControllerTest {
 
         @Test
         fun `Utenlandsk konto`() {
-            whenever(personV3.hentPerson(any())).thenReturn(
-                mockPersonResponse().apply {
+            every { personV3.hentPerson(any()) } returns mockPersonResponse()
+                .apply {
                     (person as Bruker)
                         .withBankkonto(
                             BankkontoUtland()
@@ -337,7 +335,6 @@ internal class PersonControllerTest {
                                 )
                         )
                 }
-            )
 
             val response = controller.hent(FNR)["bankkonto"] as Map<*, *>
 

@@ -1,8 +1,7 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.ytelse
 
-import com.nhaarman.mockitokotlin2.any
-import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.whenever
+import io.mockk.every
+import io.mockk.mockk
 import no.nav.kjerneinfo.consumer.organisasjon.OrganisasjonService
 import no.nav.modig.core.exception.AuthorizationException
 import no.nav.sykmeldingsperioder.consumer.pleiepenger.PleiepengerServiceImpl
@@ -22,24 +21,24 @@ private const val BARNETS_FNR = "01010012345"
 
 internal class PleiepengerUttrekkTest {
 
-    private val pleiepengerV1: PleiepengerV1 = mock()
+    private val pleiepengerV1: PleiepengerV1 = mockk()
     private val service = PleiepengerServiceImpl(pleiepengerV1)
 
-    private val org: OrganisasjonV4 = mock()
-    private val orgService: OrganisasjonService = mock()
+    private val org: OrganisasjonV4 = mockk()
+    private val orgService: OrganisasjonService = mockk()
 
     private val uttrekk = PleiepengerUttrekk(service, orgService)
 
     @Test
     fun `Kaster Auth exception`() {
-        whenever(pleiepengerV1.hentPleiepengerettighet(any())).thenThrow(HentPleiepengerettighetSikkerhetsbegrensning())
+        every { pleiepengerV1.hentPleiepengerettighet(any()) } throws HentPleiepengerettighetSikkerhetsbegrensning()
 
         assertFailsWith<AuthorizationException> { uttrekk.hent(FNR) }
     }
 
     @Test
     fun `Tom liste returnerer null`() {
-        whenever(pleiepengerV1.hentPleiepengerettighet(any())).thenReturn(WSHentPleiepengerettighetResponse())
+        every { pleiepengerV1.hentPleiepengerettighet(any()) } returns WSHentPleiepengerettighetResponse()
 
         val response = uttrekk.hent(FNR)
         val pleiepenger = response.get("pleiepenger")
@@ -49,7 +48,7 @@ internal class PleiepengerUttrekkTest {
 
     @Test
     fun `Test på om felter blir satt`() {
-        whenever(pleiepengerV1.hentPleiepengerettighet(any())).thenReturn(mockResponse())
+        every { pleiepengerV1.hentPleiepengerettighet(any()) } returns mockResponse()
 
         val response = uttrekk.hent(FNR)
         val pleiepengerListe = response.get("pleiepenger") as List<*>
