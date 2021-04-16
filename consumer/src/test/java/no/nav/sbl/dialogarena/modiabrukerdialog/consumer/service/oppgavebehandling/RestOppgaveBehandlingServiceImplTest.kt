@@ -267,7 +267,66 @@ class RestOppgaveBehandlingServiceImplTest {
                     statuskategori = "AAPEN",
                     tilordnetRessurs = "Z999999",
                     aktivDatoTom = now(fixedClock).toString(),
-                    limit = 50
+                    limit = 49,
+                    offset = 0
+                )
+            }
+        }
+
+        @Test
+        fun `skal finne tildelte oppgaver når det er flere enn 50`() {
+            val antallTreffTotalt = 111
+            val forventetSvarFraOppgave = List(antallTreffTotalt) {
+                dummyOppgave.copy(
+                    id = (1234 + it).toLong(),
+                    aktoerId = "00007063000250000",
+                    metadata = mapOf(MetadataKey.EKSTERN_HENVENDELSE_ID.name to "henvid")
+                )
+            }.chunked(49)
+            every { apiClient.finnOppgaver(allAny()) } returnsMany forventetSvarFraOppgave.map { oppgaveListe ->
+                GetOppgaverResponseJsonDTO(
+                    antallTreffTotalt = antallTreffTotalt.toLong(),
+                    oppgaver = oppgaveListe
+                )
+            }
+            every { tilgangskontrollContext.checkAbac(any()) } returns AbacResponse(
+                listOf(Response(Decision.Permit, null))
+            )
+
+            val result: List<Oppgave> = withIdent("Z999999") {
+                oppgaveBehandlingService.finnTildelteOppgaverIGsak()
+            }
+            val oppgave: Oppgave = result[0]
+
+            assertThat(oppgave.oppgaveId).isEqualTo("1234")
+            assertThat(oppgave.fnr).isEqualTo("07063000250")
+            assertThat(oppgave.henvendelseId).isEqualTo("henvid")
+            assertThat(oppgave.erSTOOppgave).isEqualTo(true)
+
+            verifySequence {
+                apiClient.finnOppgaver(
+                    xminusCorrelationMinusID = any(),
+                    statuskategori = "AAPEN",
+                    tilordnetRessurs = "Z999999",
+                    aktivDatoTom = now(fixedClock).toString(),
+                    limit = 49,
+                    offset = 0
+                )
+                apiClient.finnOppgaver(
+                    xminusCorrelationMinusID = any(),
+                    statuskategori = "AAPEN",
+                    tilordnetRessurs = "Z999999",
+                    aktivDatoTom = now(fixedClock).toString(),
+                    limit = 49,
+                    offset = 49
+                )
+                apiClient.finnOppgaver(
+                    xminusCorrelationMinusID = any(),
+                    statuskategori = "AAPEN",
+                    tilordnetRessurs = "Z999999",
+                    aktivDatoTom = now(fixedClock).toString(),
+                    limit = 49,
+                    offset = 98
                 )
             }
         }
@@ -306,7 +365,8 @@ class RestOppgaveBehandlingServiceImplTest {
                     tilordnetRessurs = "Z999999",
                     aktivDatoTom = now(fixedClock).toString(),
                     statuskategori = "AAPEN",
-                    limit = 50
+                    limit = 49,
+                    offset = 0
                 )
                 systemApiClient.endreOppgave(
                     any(),
@@ -350,7 +410,8 @@ class RestOppgaveBehandlingServiceImplTest {
                     tilordnetRessurs = "Z999999",
                     aktivDatoTom = now(fixedClock).toString(),
                     statuskategori = "AAPEN",
-                    limit = 50
+                    limit = 49,
+                    offset = 0
                 )
             }
 
@@ -398,7 +459,8 @@ class RestOppgaveBehandlingServiceImplTest {
                     statuskategori = "AAPEN",
                     tilordnetRessurs = "Z999999",
                     aktivDatoTom = now(fixedClock).toString(),
-                    limit = 50
+                    limit = 49,
+                    offset = 0
                 )
                 systemApiClient.endreOppgave(
                     any(),
@@ -454,7 +516,8 @@ class RestOppgaveBehandlingServiceImplTest {
                     statuskategori = "AAPEN",
                     tilordnetRessurs = "Z999999",
                     aktivDatoTom = now(fixedClock).toString(),
-                    limit = 50
+                    limit = 49,
+                    offset = 0
                 )
             }
         }

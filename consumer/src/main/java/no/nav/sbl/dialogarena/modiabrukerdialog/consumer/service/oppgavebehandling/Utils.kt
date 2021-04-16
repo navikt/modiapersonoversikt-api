@@ -48,4 +48,23 @@ object Utils {
             "$leggTil\n\n$gammelBeskrivelse"
         }
     }
+
+    fun <RESPONSE, DATA> paginering(
+        total: (response: RESPONSE) -> Long,
+        data: (response: RESPONSE) -> List<DATA>,
+        action: (offset: Long) -> RESPONSE
+    ): List<DATA> {
+        var offset: Long = 0
+        val buffer = mutableListOf<DATA>()
+
+        do {
+            val response: RESPONSE = action(offset)
+            val inTotal: Long = total(response)
+            val actionData: List<DATA> = data(response)
+            buffer.addAll(actionData)
+            offset += actionData.size
+        } while (offset < inTotal)
+
+        return buffer
+    }
 }
