@@ -30,6 +30,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.SafeListAggregate
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Policies
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Tilgangskontroll
 import no.nav.sbl.dialogarena.rsbac.DecisionEnums
+import org.slf4j.LoggerFactory
 import org.slf4j.MDC
 import org.springframework.http.HttpStatus
 import org.springframework.web.server.ResponseStatusException
@@ -38,6 +39,7 @@ import java.time.LocalDate
 import java.util.*
 import java.util.Optional.ofNullable
 
+private val tjenestekallLogg = LoggerFactory.getLogger("SecureLog")
 class RestOppgaveBehandlingServiceImpl(
     private val kodeverksmapperService: KodeverksmapperService,
     private val fodselnummerAktorService: FodselnummerAktorService,
@@ -248,7 +250,11 @@ class RestOppgaveBehandlingServiceImpl(
                 transformSuccess = this::mapTilOppgave,
                 transformFailure = { it }
             )
-            .getWithFailureHandling { failures -> systemLeggTilbakeOppgaver(failures) }
+            .getWithFailureHandling { failures ->
+                val oppgaveIds = failures.joinToString(", ") { it.id?.toString() ?: "Mangler oppgave id" }
+                tjenestekallLogg.warn("[OPPGAVE] plukkOppgaverFraGsak la tilbake oppgaver pga manglende tilgang: $oppgaveIds")
+                systemLeggTilbakeOppgaver(failures)
+            }
             .toMutableList()
     }
 
@@ -365,6 +371,7 @@ class RestOppgaveBehandlingServiceImpl(
             id = oppgaveId.toLong()
         ).toOppgaveJsonDTO()
 
+        tjenestekallLogg.warn("[OPPGAVE] systemLeggTilbakeOppgaveIGsak la tilbake oppgaver pga manglende tilgang: $oppgaveId")
         systemApiClient
             .endreOppgave(
                 correlationId(),
@@ -411,7 +418,11 @@ class RestOppgaveBehandlingServiceImpl(
                 transformSuccess = this::mapTilOppgave,
                 transformFailure = { it }
             )
-            .getWithFailureHandling { failures -> systemLeggTilbakeOppgaver(failures) }
+            .getWithFailureHandling { failures ->
+                val oppgaveIds = failures.joinToString(", ") { it.id?.toString() ?: "Mangler oppgave id" }
+                tjenestekallLogg.warn("[OPPGAVE] hentOppgaverPaginertOgTilgangskontroll la tilbake oppgaver pga manglende tilgang: $oppgaveIds")
+                systemLeggTilbakeOppgaver(failures)
+            }
             .toMutableList()
     }
 
