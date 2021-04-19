@@ -21,6 +21,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.arbeidsfordeling.Arb
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.AnsattService
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.kodeverksmapper.KodeverksmapperService
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.kodeverksmapper.domain.Behandling
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.oppgavebehandling.Utils.OPPGAVE_MAX_LIMIT
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.oppgavebehandling.Utils.SPORSMAL_OG_SVAR
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.oppgavebehandling.Utils.beskrivelseInnslag
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.oppgavebehandling.Utils.defaultEnhetGittTemagruppe
@@ -55,12 +56,6 @@ class RestOppgaveBehandlingServiceImpl(
 ) : OppgaveBehandlingService {
 
     companion object {
-        /**
-         * Maks 50 om man bruker userToken mot oppgave.
-         * En liten off-by-one bug i oppgave gjør at vi per nå må sette den til 49
-         */
-        val LIMIT: Long = 49
-
         @JvmStatic
         fun create(
             kodeverksmapperService: KodeverksmapperService,
@@ -194,7 +189,7 @@ class RestOppgaveBehandlingServiceImpl(
                     tilordnetRessurs = ident,
                     aktivDatoTom = LocalDate.now(clock).toString(),
                     statuskategori = "AAPEN",
-                    limit = LIMIT,
+                    limit = OPPGAVE_MAX_LIMIT,
                     offset = offset
                 )
             }

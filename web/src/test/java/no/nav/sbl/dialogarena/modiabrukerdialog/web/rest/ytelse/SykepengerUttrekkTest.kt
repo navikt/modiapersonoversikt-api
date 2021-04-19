@@ -1,8 +1,7 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.ytelse
 
-import com.nhaarman.mockitokotlin2.any
-import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.whenever
+import io.mockk.every
+import io.mockk.mockk
 import no.nav.modig.core.exception.AuthorizationException
 import no.nav.sykmeldingsperioder.consumer.sykepenger.DefaultSykepengerService
 import no.nav.sykmeldingsperioder.consumer.sykepenger.mapping.SykepengerMapper
@@ -24,7 +23,7 @@ private const val STANS = "STANS"
 
 internal class SykepengerUttrekkTest {
 
-    private val sykepengerV2: SykepengerV2 = mock()
+    private val sykepengerV2: SykepengerV2 = mockk()
 
     private val service = DefaultSykepengerService()
 
@@ -38,14 +37,14 @@ internal class SykepengerUttrekkTest {
 
     @Test
     fun`Kaster Auth exception`() {
-        whenever(sykepengerV2.hentSykepengerListe(any())).thenThrow(HentSykepengerListeSikkerhetsbegrensning())
+        every { sykepengerV2.hentSykepengerListe(any()) } throws HentSykepengerListeSikkerhetsbegrensning()
 
         assertFailsWith<AuthorizationException> { uttrekk.hent(FNR) }
     }
 
     @Test
     fun`Test på om felter blir satt`() {
-        whenever(sykepengerV2.hentSykepengerListe(any())).thenReturn(mockResponse())
+        every { sykepengerV2.hentSykepengerListe(any()) } returns mockResponse()
 
         val sykmeldingsperiode = unwrapResponse()
 
@@ -54,7 +53,7 @@ internal class SykepengerUttrekkTest {
 
     @Test
     fun `Riktig dato formattering`() {
-        whenever(sykepengerV2.hentSykepengerListe(any())).thenReturn(mockResponse())
+        every { sykepengerV2.hentSykepengerListe(any()) } returns mockResponse()
 
         val sykmeldingsperiode = unwrapResponse()
 

@@ -1,8 +1,7 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.rest.ytelse
 
-import com.nhaarman.mockitokotlin2.any
-import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.whenever
+import io.mockk.every
+import io.mockk.mockk
 import no.nav.modig.core.exception.AuthorizationException
 import no.nav.sykmeldingsperioder.consumer.foreldrepenger.DefaultForeldrepengerService
 import no.nav.sykmeldingsperioder.consumer.foreldrepenger.mapping.ForeldrepengerMapper
@@ -21,7 +20,7 @@ private const val FNR = "10108000398"
 
 internal class ForeldrepengerUttrekkTest {
 
-    private val foreldrepengerServiceV2: ForeldrepengerV2 = mock()
+    private val foreldrepengerServiceV2: ForeldrepengerV2 = mockk()
 
     private val service = DefaultForeldrepengerService()
 
@@ -35,14 +34,14 @@ internal class ForeldrepengerUttrekkTest {
 
     @Test
     fun `Kaster Auth exception`() {
-        whenever(foreldrepengerServiceV2.hentForeldrepengerettighet(any())).thenThrow(HentForeldrepengerettighetSikkerhetsbegrensning())
+        every { foreldrepengerServiceV2.hentForeldrepengerettighet(any()) } throws HentForeldrepengerettighetSikkerhetsbegrensning()
 
         assertFailsWith<AuthorizationException> { uttrekk.hent(FNR) }
     }
 
     @Test
     fun `Test på om felter blir satt`() {
-        whenever(foreldrepengerServiceV2.hentForeldrepengerettighet(any())).thenReturn(mockResponse())
+        every { foreldrepengerServiceV2.hentForeldrepengerettighet(any()) } returns mockResponse()
 
         val response = uttrekk.hent(FNR)
         val foreldrepengerListe = response.get("foreldrepenger") as List<*>
@@ -53,7 +52,7 @@ internal class ForeldrepengerUttrekkTest {
 
     @Test
     fun `Tester datosetting`() {
-        whenever(foreldrepengerServiceV2.hentForeldrepengerettighet(any())).thenReturn(mockResponse())
+        every { foreldrepengerServiceV2.hentForeldrepengerettighet(any()) } returns mockResponse()
 
         val response = uttrekk.hent(FNR)
         val foreldrepengerListe = response.get("foreldrepenger") as List<*>

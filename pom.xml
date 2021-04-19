@@ -393,13 +393,6 @@
                 <artifactId>kotlin-reflect</artifactId>
                 <version>${kotlin.version}</version>
             </dependency>
-
-            <dependency>
-                <groupId>com.nhaarman.mockitokotlin2</groupId>
-                <artifactId>mockito-kotlin</artifactId>
-                <version>${mockito-kotlin.version}</version>
-                <scope>test</scope>
-            </dependency>
             <dependency>
                 <groupId>org.mockito</groupId>
                 <artifactId>mockito-inline</artifactId>
