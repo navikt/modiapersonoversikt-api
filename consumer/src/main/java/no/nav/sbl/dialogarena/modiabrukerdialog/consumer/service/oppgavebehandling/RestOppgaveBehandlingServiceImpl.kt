@@ -185,37 +185,54 @@ class RestOppgaveBehandlingServiceImpl(
         val ident: String = SubjectHandler.getIdent().orElseThrow { IllegalStateException("Fant ikke ident") }
         val correlationId = correlationId()
 
-        val response = paginering<GetOppgaverResponseJsonDTO, OppgaveJsonDTO>(
-            total = { it.antallTreffTotalt ?: 0 },
-            data = { it.oppgaver ?: emptyList() },
-            action = { offset ->
-                apiClient.finnOppgaver(
-                    correlationId,
-                    tilordnetRessurs = ident,
-                    aktivDatoTom = LocalDate.now(clock).toString(),
-                    statuskategori = "AAPEN",
-                    limit = LIMIT,
-                    offset = offset
-                )
-            }
-        )
-
-        val oppgaver = response
-            .filter { oppgaveJson ->
-                val erTilknyttetHenvendelse = oppgaveJson.metadata?.containsKey(MetadataKey.EKSTERN_HENVENDELSE_ID.name) ?: false
-                val harAktorId = !oppgaveJson.aktoerId.isNullOrBlank()
-                erTilknyttetHenvendelse && harAktorId
-            }
-
-        val aktorIdTilganger: Map<String?, DecisionEnums> = hentAktorIdTilgang(oppgaver)
-        return SafeListAggregate<OppgaveJsonDTO, OppgaveJsonDTO>(oppgaver)
-            .filter { aktorIdTilganger[it.aktoerId] == DecisionEnums.PERMIT }
-            .fold(
-                transformSuccess = this::mapTilOppgave,
-                transformFailure = { it }
+        return hentOppgaverPaginertOgTilgangskontroll { offset ->
+            apiClient.finnOppgaver(
+                correlationId,
+                tilordnetRessurs = ident,
+                aktivDatoTom = LocalDate.now(clock).toString(),
+                statuskategori = "AAPEN",
+                limit = LIMIT,
+                offset = offset
             )
-            .getWithFailureHandling { failures -> systemLeggTilbakeOppgaver(failures) }
-            .toMutableList()
+        }
+    }
+
+    override fun finnTildelteOppgaverIGsak(fnr: String): MutableList<Oppgave> {
+        val ident: String = SubjectHandler.getIdent().orElseThrow { IllegalStateException("Fant ikke ident") }
+        val aktorId = fodselnummerAktorService.hentAktorIdForFnr(fnr)
+            ?: throw IllegalArgumentException("Fant ikke aktorId for $fnr")
+        val correlationId = correlationId()
+
+        return hentOppgaverPaginertOgTilgangskontroll { offset ->
+            apiClient.finnOppgaver(
+                correlationId,
+                aktoerId = listOf(aktorId),
+                tilordnetRessurs = ident,
+                aktivDatoTom = LocalDate.now(clock).toString(),
+                statuskategori = "AAPEN",
+                limit = LIMIT,
+                offset = offset
+            )
+        }
+    }
+
+    override fun finnTildelteKNAOppgaverIGsak(): MutableList<Oppgave> {
+        val ident: String = SubjectHandler.getIdent().orElseThrow { IllegalStateException("Fant ikke ident") }
+        val correlationId = correlationId()
+        val oppgaveType = kodeverksmapperService.mapOppgavetype(SPORSMAL_OG_SVAR)
+
+        return hentOppgaverPaginertOgTilgangskontroll { offset ->
+            apiClient.finnOppgaver(
+                correlationId,
+                tilordnetRessurs = ident,
+                tema = listOf(Utils.KONTAKT_NAV),
+                oppgavetype = listOf(oppgaveType),
+                aktivDatoTom = LocalDate.now(clock).toString(),
+                statuskategori = "AAPEN",
+                limit = LIMIT,
+                offset = offset
+            )
+        }
     }
 
     override fun plukkOppgaverFraGsak(
@@ -370,6 +387,32 @@ class RestOppgaveBehandlingServiceImpl(
             xminusCorrelationMinusID = correlationId(),
             id = oppgaveId.toLong()
         ).toOppgaveJsonDTO()
+    }
+
+    private fun hentOppgaverPaginertOgTilgangskontroll(action: (offset: Long) -> GetOppgaverResponseJsonDTO): MutableList<Oppgave> {
+        val response = paginering(
+            total = { it.antallTreffTotalt ?: 0 },
+            data = { it.oppgaver ?: emptyList() },
+            action = action
+        )
+
+        val oppgaver = response
+            .filter { oppgaveJson ->
+                val erTilknyttetHenvendelse =
+                    oppgaveJson.metadata?.containsKey(MetadataKey.EKSTERN_HENVENDELSE_ID.name) ?: false
+                val harAktorId = !oppgaveJson.aktoerId.isNullOrBlank()
+                erTilknyttetHenvendelse && harAktorId
+            }
+
+        val aktorIdTilganger: Map<String?, DecisionEnums> = hentAktorIdTilgang(oppgaver)
+        return SafeListAggregate<OppgaveJsonDTO, OppgaveJsonDTO>(oppgaver)
+            .filter { aktorIdTilganger[it.aktoerId] == DecisionEnums.PERMIT }
+            .fold(
+                transformSuccess = this::mapTilOppgave,
+                transformFailure = { it }
+            )
+            .getWithFailureHandling { failures -> systemLeggTilbakeOppgaver(failures) }
+            .toMutableList()
     }
 
     private fun finnAnsvarligEnhet(oppgave: OppgaveJsonDTO, temagruppe: Temagruppe): String {
