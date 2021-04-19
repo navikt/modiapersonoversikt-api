@@ -17,6 +17,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.oppgave.generated.mod
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.oppgave.toOppgaveJsonDTO
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.oppgave.toPutOppgaveRequestJsonDTO
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.*
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveBehandlingService.AlleredeTildeltAnnenSaksbehandler
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.arbeidsfordeling.ArbeidsfordelingV1Service
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.AnsattService
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.kodeverksmapper.KodeverksmapperService
@@ -167,11 +168,21 @@ class RestOppgaveBehandlingServiceImpl(
         return mapTilOppgave(oppgave)
     }
 
-    override fun tilordneOppgaveIGsak(oppgaveId: String?, temagruppe: Temagruppe?, saksbehandlersValgteEnhet: String?) {
+    override fun tilordneOppgaveIGsak(
+        oppgaveId: String?,
+        temagruppe: Temagruppe?,
+        saksbehandlersValgteEnhet: String?,
+        tvungenTilordning: Boolean
+    ) {
         requireNotNull(oppgaveId)
         val ident: String = SubjectHandler.getIdent().orElseThrow { IllegalStateException("Fant ikke ident") }
 
         val oppgave = hentOppgaveJsonDTO(oppgaveId)
+        if (tvungenTilordning) {
+            tjenestekallLogg.warn("[OPPGAVE] $ident gjorde en tvungen tilordning av $oppgaveId, som allerede var tildelt ${oppgave.tilordnetRessurs}")
+        } else if (oppgave.tilordnetRessurs != null && oppgave.tilordnetRessurs != ident) {
+            throw AlleredeTildeltAnnenSaksbehandler("Oppgaven er allerede tildelt " + oppgave.tilordnetRessurs)
+        }
 
         apiClient.endreOppgave(
             correlationId(),
