@@ -5,6 +5,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Temagruppe.*
 import java.time.Clock
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
+import kotlin.math.ceil
 
 object Utils {
     const val DEFAULT_ENHET = "4100"
@@ -49,21 +50,27 @@ object Utils {
         }
     }
 
+    /**
+     * Maks 50 om man bruker userToken mot oppgave.
+     * En liten off-by-one bug i oppgave gjør at vi per nå må sette den til 49
+     */
+    val OPPGAVE_MAX_LIMIT: Long = 49
     fun <RESPONSE, DATA> paginering(
         total: (response: RESPONSE) -> Long,
         data: (response: RESPONSE) -> List<DATA>,
         action: (offset: Long) -> RESPONSE
     ): List<DATA> {
-        var offset: Long = 0
+        var page: Long = 0
         val buffer = mutableListOf<DATA>()
 
         do {
-            val response: RESPONSE = action(offset)
+            val response: RESPONSE = action(page * OPPGAVE_MAX_LIMIT)
             val inTotal: Long = total(response)
+            val maxPage = ceil(inTotal.toDouble() / OPPGAVE_MAX_LIMIT).toInt()
             val actionData: List<DATA> = data(response)
             buffer.addAll(actionData)
-            offset += actionData.size
-        } while (offset < inTotal)
+            page++
+        } while (page < maxPage)
 
         return buffer
     }
