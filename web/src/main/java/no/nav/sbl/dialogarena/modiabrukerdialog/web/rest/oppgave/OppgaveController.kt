@@ -60,7 +60,7 @@ class OppgaveController @Autowired constructor(
             .check(Policies.tilgangTilModia)
             .check(Policies.kanPlukkeOppgave)
             .get(Audit.describe(READ, Henvendelse.Oppgave.Plukk, AuditIdentifier.TEMAGRUPPE to temagruppe)) {
-                val tildelteOppgaver = oppgaveBehandlingService.finnTildelteOppgaverIGsak()
+                val tildelteOppgaver = oppgaveBehandlingService.finnTildelteKNAOppgaverIGsak()
                 if (tildelteOppgaver.any { it.erSTOOppgave }) {
                     tildelteOppgaver
                 } else {
@@ -73,12 +73,22 @@ class OppgaveController @Autowired constructor(
             }.map { mapOppgave(it) }
     }
 
+    @Deprecated("Ønsker å bytte om til å bare hente tildelte oppgaver gitt en person")
     @GetMapping("/tildelt")
     fun finnTildelte() =
         tilgangkontroll
             .check(Policies.tilgangTilModia)
             .get(Audit.describe(READ, Henvendelse.Oppgave.Tildelte)) {
                 oppgaveBehandlingService.finnTildelteOppgaverIGsak()
+                    .map { mapOppgave(it) }
+            }
+
+    @GetMapping("/tildelt/{fnr}")
+    fun finnTildelte(@PathVariable("fnr") fnr: String): List<OppgaveDTO> =
+        tilgangkontroll
+            .check(Policies.tilgangTilModia)
+            .get(Audit.describe(READ, Henvendelse.Oppgave.Tildelte)) {
+                oppgaveBehandlingService.finnTildelteOppgaverIGsak(fnr)
                     .map { mapOppgave(it) }
             }
 
