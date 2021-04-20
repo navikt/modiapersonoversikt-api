@@ -87,7 +87,7 @@ internal class OppgaveControllerTest {
             Oppgave(OPPGAVE_ID_2, "fnr", "traadId", true)
         )
 
-        every { oppgavebehandlingService.finnTildelteOppgaverIGsak() } returns mutableListOf()
+        every { oppgavebehandlingService.finnTildelteKNAOppgaverIGsak() } returns mutableListOf()
         every { plukkOppgaveService.plukkOppgaver(any(), any()) } returns oppgaver
 
         val resultat = SubjectHandlerUtil.withIdent(
@@ -109,7 +109,7 @@ internal class OppgaveControllerTest {
             Oppgave(OPPGAVE_ID_1, "fnr", "id", true),
             Oppgave("2", "1234", "id", true)
         )
-        every { oppgavebehandlingService.finnTildelteOppgaverIGsak() } returns oppgaveliste
+        every { oppgavebehandlingService.finnTildelteKNAOppgaverIGsak() } returns oppgaveliste
 
         val resultat = SubjectHandlerUtil.withIdent(
             SAKSBEHANDLERS_IDENT,
@@ -128,7 +128,7 @@ internal class OppgaveControllerTest {
     @Test
     fun `Returnerer tom liste hvis tjenesten returnerer tom liste`() {
         val httpRequest = HttpRequestUtil.mockHttpServletRequestMedCookie(SAKSBEHANDLERS_IDENT, VALGT_ENHET)
-        every { oppgavebehandlingService.finnTildelteOppgaverIGsak() } returns mutableListOf()
+        every { oppgavebehandlingService.finnTildelteKNAOppgaverIGsak() } returns mutableListOf()
         every { plukkOppgaveService.plukkOppgaver(any(), any()) } returns mutableListOf()
 
         val resultat = SubjectHandlerUtil.withIdent(
