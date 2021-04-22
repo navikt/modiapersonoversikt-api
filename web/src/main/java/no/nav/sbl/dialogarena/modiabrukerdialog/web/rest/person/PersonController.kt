@@ -189,8 +189,6 @@ class PersonController @Autowired constructor(
         }
     }
 
-
-
     private fun hentForeldreansvar(foreldreansvar: List<HentPerson.Foreldreansvar>): List<ForeldreansvarDTO> {
         val allenavn: Map<String, PersonnavnDTO> = foreldreansvar
             .mapNotNull { it.ansvarlig }
