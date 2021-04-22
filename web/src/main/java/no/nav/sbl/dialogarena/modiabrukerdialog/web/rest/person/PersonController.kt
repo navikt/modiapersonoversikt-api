@@ -33,6 +33,7 @@ import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.server.ResponseStatusException
+import java.time.format.DateTimeFormatter.ISO_DATE
 import java.time.format.DateTimeFormatter.ISO_DATE_TIME
 
 private const val TPS_UKJENT_VERDI = "???"
@@ -159,11 +160,16 @@ class PersonController @Autowired constructor(
         val coAdressenavn: String?
     )
 
+    data class ForeldreansvarDTO(
+        val ansvar: String,
+        val ansvarlig: PersonnavnDTO?
+    )
+
     private fun hentDeltBosted(deltBosted: List<HentPerson.DeltBosted>): List<DeltBostedDTO> {
         return deltBosted.map {
             DeltBostedDTO(
-                startdatoForKontrakt = it.startdatoForKontrakt?.value?.format(ISO_DATE_TIME),
-                sluttdatoForKontrakt = it.sluttdatoForKontrakt?.value?.format(ISO_DATE_TIME),
+                startdatoForKontrakt = it.startdatoForKontrakt?.value?.format(ISO_DATE),
+                sluttdatoForKontrakt = it.sluttdatoForKontrakt?.value?.format(ISO_DATE),
                 adresse = AdresseDTO(
                     adressenavn = it.vegadresse?.adressenavn,
                     husbokstav = it.vegadresse?.husbokstav,
@@ -183,10 +189,7 @@ class PersonController @Autowired constructor(
         }
     }
 
-    data class ForeldreansvarDTO(
-        val ansvar: String,
-        val ansvarlig: PersonnavnDTO?
-    )
+
 
     private fun hentForeldreansvar(foreldreansvar: List<HentPerson.Foreldreansvar>): List<ForeldreansvarDTO> {
         val allenavn: Map<String, PersonnavnDTO> = foreldreansvar
