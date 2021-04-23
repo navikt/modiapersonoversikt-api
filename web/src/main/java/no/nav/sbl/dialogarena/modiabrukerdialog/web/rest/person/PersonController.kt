@@ -179,7 +179,7 @@ class PersonController @Autowired constructor(
                     bruksenhetsnummer = it.vegadresse?.bruksenhetsnummer ?: it.matrikkeladresse?.bruksenhetsnummer,
                     kommunenummer = it.vegadresse?.kommunenummer ?: it.matrikkeladresse?.kommunenummer,
                     postnummer = postnummer,
-                    poststed = hentPoststed(postnummer ?: ""),
+                    poststed = hentPoststed(postnummer),
                     bydelsnummer = it.vegadresse?.bydelsnummer,
                     tilleggsnavn = it.vegadresse?.tilleggsnavn ?: it.matrikkeladresse?.tilleggsnavn,
                     coAdressenavn = it.coAdressenavn
@@ -484,7 +484,10 @@ class PersonController @Autowired constructor(
             ?: "Ukjent kodeverdi: $sprakRef"
     }
 
-    private fun hentPoststed(postnummer: String): String {
+    private fun hentPoststed(postnummer: String?): String {
+        if (postnummer.isNullOrBlank()) {
+            return ""
+        }
         val postKodeverk: List<Kodeverdi> = kodeverk.getKodeverkList("Postnummer", "nb")
         return postKodeverk
             .find { kodeverdi ->
