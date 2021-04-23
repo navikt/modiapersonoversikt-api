@@ -113,6 +113,7 @@ class DialogController @Autowired constructor(
     fun startFortsettDialog(
         request: HttpServletRequest,
         @PathVariable("fnr") fnr: String,
+        @RequestHeader("Ignore-Conflict") ignorerConflict: Boolean,
         @RequestBody opprettHenvendelseRequest: OpprettHenvendelseRequest
     ): FortsettDialogDTO {
         val auditIdentifier = arrayOf(
@@ -131,7 +132,7 @@ class DialogController @Autowired constructor(
                     .find { it.traadId == traadId }
                     ?: throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Fant ingen tråd med id: $traadId")
 
-                val oppgaveId: String? = finnOppgaveIdTilTrad(traad, context, opprettHenvendelseRequest)
+                val oppgaveId: String? = finnOgTilordneOppgaveIdTilTrad(traad, context, ignorerConflict)
 
                 val behandlingsId = henvendelseUtsendingService.opprettHenvendelse(
                     Meldingstype.SVAR_SKRIFTLIG.name,
@@ -224,10 +225,10 @@ class DialogController @Autowired constructor(
             }
     }
 
-    private fun finnOppgaveIdTilTrad(
+    private fun finnOgTilordneOppgaveIdTilTrad(
         traad: Traad,
         context: RequestContext,
-        opprettHenvendelseRequest: OpprettHenvendelseRequest
+        ignorerConflict: Boolean
     ): String? {
         if (erUbesvartSporsmalFraBruker(traad)) {
             val sporsmal = traad.meldinger.find { it.id == it.traadId }
@@ -238,7 +239,7 @@ class DialogController @Autowired constructor(
                     sporsmal.oppgaveId,
                     Temagruppe.valueOf(sporsmal.temagruppe),
                     context.enhet,
-                    opprettHenvendelseRequest.tvungenTilordningAvOppgave
+                    ignorerConflict
                 )
             } catch (e: AlleredeTildeltAnnenSaksbehandler) {
                 throw ResponseStatusException(HttpStatus.CONFLICT, e.message)
@@ -358,8 +359,7 @@ fun getKanal(type: Meldingstype): String {
 
 data class OpprettHenvendelseRequest(
     val enhet: String?,
-    val traadId: String,
-    val tvungenTilordningAvOppgave: Boolean = false
+    val traadId: String
 )
 
 data class SendReferatRequest(
