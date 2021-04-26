@@ -18,8 +18,6 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.HenvendelseLesServic
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.HenvendelseUtsendingService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveBehandlingService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.arbeidsfordeling.ArbeidsfordelingV1Service;
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.saker.GsakKodeverk;
-import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.saker.SakerService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.kodeverk.StandardKodeverk;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.ldap.LDAPService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.norg.AnsattService;
@@ -27,6 +25,8 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.oppfolgingsinfo.Oppf
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.organisasjonsEnhetV2.OrganisasjonEnhetV2Service;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.pdl.PdlOppslagService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.psak.PsakService;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.saker.GsakKodeverk;
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.saker.SakerService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.kodeverksmapper.Kodeverksmapper;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.*;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.arbeidsfordeling.ArbeidsfordelingClient;
@@ -46,6 +46,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.organisasjonenh
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.pdl.PdlOppslagServiceImpl;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.saker.SakerServiceImpl;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.saker.mediation.SakApiGatewayImpl;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.UnleashService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Tilgangskontroll;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.behandlehenvendelse.BehandleHenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.senduthenvendelse.SendUtHenvendelsePortType;
@@ -119,19 +120,23 @@ public class ServiceConfig {
     }
 
     @Bean
-    public OppgaveBehandlingService oppgaveBehandlingService(KodeverksmapperService kodeverksmapperService,
-                                                             FodselnummerAktorService fodselnummerAktorService,
-                                                             AnsattService ansattService,
-                                                             ArbeidsfordelingV1Service arbeidsfordelingV1Service,
-                                                             Tilgangskontroll tilgangskontroll,
-                                                             SystemUserTokenProvider stsService) {
+    public OppgaveBehandlingService oppgaveBehandlingService(
+            KodeverksmapperService kodeverksmapperService,
+            FodselnummerAktorService fodselnummerAktorService,
+            AnsattService ansattService,
+            ArbeidsfordelingV1Service arbeidsfordelingV1Service,
+            Tilgangskontroll tilgangskontroll,
+            SystemUserTokenProvider stsService,
+            UnleashService unleashService
+    ) {
         return RestOppgaveBehandlingServiceImpl.create(
                 kodeverksmapperService,
                 fodselnummerAktorService,
                 ansattService,
                 arbeidsfordelingV1Service,
                 tilgangskontroll,
-                stsService
+                stsService,
+                unleashService
         );
     }
 

@@ -23,6 +23,8 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.http.SubjectHandlerUti
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.kodeverksmapper.KodeverksmapperService
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.kodeverksmapper.domain.Behandling
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.oppgavebehandling.Utils.SPORSMAL_OG_SVAR
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.Feature
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.UnleashService
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Tilgangskontroll
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.TilgangskontrollContext
 import org.assertj.core.api.Assertions.assertThat
@@ -46,6 +48,7 @@ class RestOppgaveBehandlingServiceImplTest {
     private val ansattService: AnsattService = mockk()
     private val arbeidsfordelingService: ArbeidsfordelingV1Service = mockk()
     private val stsService: SystemUserTokenProvider = mockk()
+    private val unleashService: UnleashService = mockk()
     private val fixedClock = Clock.fixed(Instant.parse("2021-01-25T10:15:30Z"), ZoneId.systemDefault())
 
     private val oppgaveBehandlingService = RestOppgaveBehandlingServiceImpl(
@@ -55,6 +58,7 @@ class RestOppgaveBehandlingServiceImplTest {
         arbeidsfordelingService,
         tilgangskontroll,
         stsService,
+        unleashService,
         apiClient,
         systemApiClient,
         fixedClock
@@ -62,6 +66,7 @@ class RestOppgaveBehandlingServiceImplTest {
 
     @BeforeEach
     fun setupStandardMocker() {
+        every { unleashService.isEnabled(any<Feature>()) } returns true
         every { kodeverksmapperService.mapUnderkategori(any()) } returns Optional.empty()
         every { kodeverksmapperService.mapOppgavetype(any()) } returns "SPM_OG_SVR"
         every { fodselnummerAktorService.hentAktorIdForFnr(any()) } answers {
@@ -251,6 +256,36 @@ class RestOppgaveBehandlingServiceImplTest {
                     )
                 }
             }.isExactlyInstanceOf(AlleredeTildeltAnnenSaksbehandler::class.java)
+        }
+
+        @Test
+        fun `skal ignorere allerede-tilordnet sjekk om feature er skrudd av`() {
+            every { unleashService.isEnabled(any<Feature>()) } returns false
+            every { apiClient.hentOppgave(any(), any()) } returns dummyOppgave
+                .copy(tilordnetRessurs = "Z999998")
+                .toGetOppgaveResponseJsonDTO()
+            every { apiClient.endreOppgave(any(), any(), any()) } returns dummyOppgave.toPutOppgaveResponseJsonDTO()
+
+            withIdent("Z999999") {
+                oppgaveBehandlingService.tilordneOppgaveIGsak(
+                    "1234",
+                    Temagruppe.FMLI,
+                    "4110",
+                    false
+                )
+            }
+
+            verifySequence {
+                apiClient.hentOppgave(any(), 1234)
+                apiClient.endreOppgave(
+                    any(),
+                    1234,
+                    dummyOppgave.toPutOppgaveRequestJsonDTO().copy(
+                        endretAvEnhetsnr = "4100",
+                        tilordnetRessurs = "Z999999"
+                    )
+                )
+            }
         }
 
         @Test
