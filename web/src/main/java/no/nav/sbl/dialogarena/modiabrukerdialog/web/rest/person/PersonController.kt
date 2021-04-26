@@ -155,6 +155,7 @@ class PersonController @Autowired constructor(
         val bruksenhetsnummer: String?,
         val kommunenummer: String?,
         val postnummer: String?,
+        val poststed: String?,
         val bydelsnummer: String?,
         val tilleggsnavn: String?,
         val coAdressenavn: String?
@@ -167,6 +168,7 @@ class PersonController @Autowired constructor(
 
     private fun hentDeltBosted(deltBosted: List<HentPerson.DeltBosted>): List<DeltBostedDTO> {
         return deltBosted.map {
+            val postnummer = it.vegadresse?.postnummer ?: it.matrikkeladresse?.postnummer
             DeltBostedDTO(
                 startdatoForKontrakt = it.startdatoForKontrakt?.value?.format(ISO_DATE),
                 sluttdatoForKontrakt = it.sluttdatoForKontrakt?.value?.format(ISO_DATE),
@@ -176,7 +178,8 @@ class PersonController @Autowired constructor(
                     husnummer = it.vegadresse?.husnummer,
                     bruksenhetsnummer = it.vegadresse?.bruksenhetsnummer ?: it.matrikkeladresse?.bruksenhetsnummer,
                     kommunenummer = it.vegadresse?.kommunenummer ?: it.matrikkeladresse?.kommunenummer,
-                    postnummer = it.vegadresse?.postnummer ?: it.matrikkeladresse?.postnummer,
+                    postnummer = postnummer,
+                    poststed = hentPoststed(postnummer),
                     bydelsnummer = it.vegadresse?.bydelsnummer,
                     tilleggsnavn = it.vegadresse?.tilleggsnavn ?: it.matrikkeladresse?.tilleggsnavn,
                     coAdressenavn = it.coAdressenavn
@@ -479,6 +482,19 @@ class PersonController @Autowired constructor(
             }
             ?.let(Kodeverdi::getBeskrivelse)
             ?: "Ukjent kodeverdi: $sprakRef"
+    }
+
+    private fun hentPoststed(postnummer: String?): String {
+        if (postnummer.isNullOrBlank()) {
+            return ""
+        }
+        val postKodeverk: List<Kodeverdi> = kodeverk.getKodeverkList("Postnummer", "nb")
+        return postKodeverk
+            .find { kodeverdi ->
+                kodeverdi.kodeRef == postnummer
+            }
+            ?.let(Kodeverdi::getBeskrivelse)
+            ?: "Ukjent kodeverdi: $postnummer"
     }
 
     private fun hentSortertKodeverkslisteForTilrettelagtKommunikasjon() = try {
