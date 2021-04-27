@@ -18,20 +18,24 @@ public class Fritekst implements Serializable {
 
     public static final Comparator<Fritekst> ELDSTE_FORST = Comparator.comparing(o -> o.dato);
 
+    private String filtrererBortUgyldigXML(String tekst) {
+        return tekst.replaceAll("[^\\u0009\\u000a\\u000d\\u0020-\\uD7FF\\uE000-\\uFFFD]", "");
+    }
+
     public Fritekst(String fritekst, Person forfatter, DateTime dato) {
-        this.fritekst = fritekst;
+        this.fritekst = filtrererBortUgyldigXML(fritekst);
         this.forfatter = forfatter;
         this.dato = dato;
     }
 
     public Fritekst(String fritekst) {
-        this.fritekst = fritekst;
+        this.fritekst = filtrererBortUgyldigXML(fritekst);
         this.forfatter = null;
         this.dato = null;
     }
 
     public String getFritekst() {
-        return fritekst;
+        return filtrererBortUgyldigXML(fritekst);
     }
 
     public Optional<Saksbehandler> getSaksbehandler() {
