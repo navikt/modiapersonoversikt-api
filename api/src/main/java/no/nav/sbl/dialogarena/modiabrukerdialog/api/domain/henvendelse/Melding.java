@@ -7,10 +7,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.VisningUtils;
 import org.joda.time.DateTime;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -81,6 +78,9 @@ public class Melding implements Serializable {
     public Melding withKanal(String kanal) {
         this.kanal = kanal;
         return this;
+    }
+    private String filtrererBortUgyldigXML(String tekst) {
+        return tekst.replaceAll("[^\\u0009\\u000a\\u000d\\u0020-\\uD7FF\\uE000-\\uFFFD]", "");
     }
 
     public Melding withFritekst(Fritekst... fritekster) {
