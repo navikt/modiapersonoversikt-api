@@ -147,7 +147,7 @@
             <plugin>
                 <groupId>org.openapitools</groupId>
                 <artifactId>openapi-generator-maven-plugin</artifactId>
-                <version>5.0.0-beta2</version>
+                <version>5.1.0</version>
                 <executions>
                     <execution>
                         <id>default</id>
