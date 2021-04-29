@@ -79,9 +79,6 @@ public class Melding implements Serializable {
         this.kanal = kanal;
         return this;
     }
-    private String filtrererBortUgyldigXML(String tekst) {
-        return tekst.replaceAll("[^\\u0009\\u000a\\u000d\\u0020-\\uD7FF\\uE000-\\uFFFD]", "");
-    }
 
     public Melding withFritekst(Fritekst... fritekster) {
         if (asList(fritekster).contains(null)) {
