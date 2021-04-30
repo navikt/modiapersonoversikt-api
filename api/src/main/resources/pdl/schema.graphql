@@ -57,7 +57,7 @@ type Person {
     doedfoedtBarn: [DoedfoedtBarn!]!
     doedsfall: [Doedsfall!]!
     falskIdentitet: FalskIdentitet
-    familierelasjoner: [Familierelasjon!]!
+    familierelasjoner : [Familierelasjon!]! @deprecated(reason: "Opplysningen Familierelasjon har byttet navn til ForelderBarnRelasjon. Mer informasjon i dokumentasjonen. Familierelasjoner vil bli fjernet fra PDL 1. september 2021.")
     foedsel: [Foedsel!]!
     folkeregisteridentifikator(historikk: Boolean = false): [Folkeregisteridentifikator!]!
     folkeregisterpersonstatus(historikk: Boolean = false): [Folkeregisterpersonstatus!]!
@@ -312,6 +312,7 @@ type Doedsfall {
     folkeregistermetadata: Folkeregistermetadata
 }
 
+# todo: DEPRCATED & FOR REMOVAL: Familierelasjoner vil bli fjernet fra PDL 1. september 2021: Opplysningen Familierelasjon har byttet navn til ForelderBarnRelasjon. Mer informasjon i dokumentasjonen.
 type Familierelasjon {
     relatertPersonsIdent: String!
     relatertPersonsRolle: Familierelasjonsrolle!
@@ -493,12 +494,8 @@ enum Oppholdstillatelse {
 type Sivilstand {
     type: Sivilstandstype!
     gyldigFraOgMed: Date
-    myndighet: String @deprecated(reason: "Feltene myndighet, kommune, sted og utland fjernes i nær fremtid")
-    kommune: String @deprecated(reason: "Feltene myndighet, kommune, sted og utland fjernes i nær fremtid")
-    sted: String @deprecated(reason: "Feltene myndighet, kommune, sted og utland fjernes i nær fremtid")
-    utland: String @deprecated(reason: "Feltene myndighet, kommune, sted og utland fjernes i nær fremtid")
     relatertVedSivilstand: String
-    bekreftelsesdato: String
+    bekreftelsesdato: Date
 
     folkeregistermetadata: Folkeregistermetadata
     metadata: Metadata!
