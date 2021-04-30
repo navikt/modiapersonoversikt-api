@@ -119,7 +119,7 @@ class RestOppgaveBehandlingServiceImplTest {
             assertThat(response.id).isEqualTo("1234")
             verifySequence {
                 apiClient.opprettOppgave(
-                    xminusCorrelationMinusID = any(),
+                    xCorrelationID = any(),
                     postOppgaveRequestJsonDTO = PostOppgaveRequestJsonDTO(
                         opprettetAvEnhetsnr = "4100",
                         aktoerId = "00007063000250000",
@@ -161,7 +161,7 @@ class RestOppgaveBehandlingServiceImplTest {
             assertThat(response.id).isEqualTo("1234")
             verifySequence {
                 systemApiClient.opprettOppgave(
-                    xminusCorrelationMinusID = any(),
+                    xCorrelationID = any(),
                     postOppgaveRequestJsonDTO = PostOppgaveRequestJsonDTO(
                         aktoerId = "00007063000250000",
                         behandlesAvApplikasjon = "FS22",
@@ -263,7 +263,7 @@ class RestOppgaveBehandlingServiceImplTest {
 
             verifySequence {
                 apiClient.finnOppgaver(
-                    xminusCorrelationMinusID = any(),
+                    xCorrelationID = any(),
                     statuskategori = "AAPEN",
                     tilordnetRessurs = "Z999999",
                     aktivDatoTom = now(fixedClock).toString(),
@@ -301,7 +301,7 @@ class RestOppgaveBehandlingServiceImplTest {
 
             verifySequence {
                 apiClient.finnOppgaver(
-                    xminusCorrelationMinusID = any(),
+                    xCorrelationID = any(),
                     aktoerId = listOf("00007063000250000"),
                     statuskategori = "AAPEN",
                     tilordnetRessurs = "Z999999",
@@ -340,7 +340,7 @@ class RestOppgaveBehandlingServiceImplTest {
 
             verifySequence {
                 apiClient.finnOppgaver(
-                    xminusCorrelationMinusID = any(),
+                    xCorrelationID = any(),
                     statuskategori = "AAPEN",
                     tilordnetRessurs = "Z999999",
                     oppgavetype = listOf("SPM_OG_SVR"),
@@ -384,7 +384,7 @@ class RestOppgaveBehandlingServiceImplTest {
 
             verifySequence {
                 apiClient.finnOppgaver(
-                    xminusCorrelationMinusID = any(),
+                    xCorrelationID = any(),
                     statuskategori = "AAPEN",
                     tilordnetRessurs = "Z999999",
                     aktivDatoTom = now(fixedClock).toString(),
@@ -392,7 +392,7 @@ class RestOppgaveBehandlingServiceImplTest {
                     offset = 0
                 )
                 apiClient.finnOppgaver(
-                    xminusCorrelationMinusID = any(),
+                    xCorrelationID = any(),
                     statuskategori = "AAPEN",
                     tilordnetRessurs = "Z999999",
                     aktivDatoTom = now(fixedClock).toString(),
@@ -400,7 +400,7 @@ class RestOppgaveBehandlingServiceImplTest {
                     offset = 49
                 )
                 apiClient.finnOppgaver(
-                    xminusCorrelationMinusID = any(),
+                    xCorrelationID = any(),
                     statuskategori = "AAPEN",
                     tilordnetRessurs = "Z999999",
                     aktivDatoTom = now(fixedClock).toString(),
@@ -440,7 +440,7 @@ class RestOppgaveBehandlingServiceImplTest {
             assertThat(result).isEmpty()
             verifySequence {
                 apiClient.finnOppgaver(
-                    xminusCorrelationMinusID = any(),
+                    xCorrelationID = any(),
                     tilordnetRessurs = "Z999999",
                     aktivDatoTom = now(fixedClock).toString(),
                     statuskategori = "AAPEN",
@@ -485,7 +485,7 @@ class RestOppgaveBehandlingServiceImplTest {
             assertThat(result).isEmpty()
             verify {
                 apiClient.finnOppgaver(
-                    xminusCorrelationMinusID = any(),
+                    xCorrelationID = any(),
                     tilordnetRessurs = "Z999999",
                     aktivDatoTom = now(fixedClock).toString(),
                     statuskategori = "AAPEN",
@@ -534,7 +534,7 @@ class RestOppgaveBehandlingServiceImplTest {
             assertThat(result).isEmpty()
             verifySequence {
                 apiClient.finnOppgaver(
-                    xminusCorrelationMinusID = any(),
+                    xCorrelationID = any(),
                     statuskategori = "AAPEN",
                     tilordnetRessurs = "Z999999",
                     aktivDatoTom = now(fixedClock).toString(),
@@ -591,7 +591,7 @@ class RestOppgaveBehandlingServiceImplTest {
 
             verifySequence {
                 apiClient.finnOppgaver(
-                    xminusCorrelationMinusID = any(),
+                    xCorrelationID = any(),
                     statuskategori = "AAPEN",
                     tilordnetRessurs = "Z999999",
                     aktivDatoTom = now(fixedClock).toString(),
@@ -638,7 +638,7 @@ class RestOppgaveBehandlingServiceImplTest {
 
             verifySequence {
                 apiClient.finnOppgaver(
-                    xminusCorrelationMinusID = any(),
+                    xCorrelationID = any(),
                     aktoerId = null,
                     statuskategori = "AAPEN",
                     tema = listOf("KNA"),
@@ -661,7 +661,7 @@ class RestOppgaveBehandlingServiceImplTest {
                     )
                 )
                 apiClient.finnOppgaver(
-                    xminusCorrelationMinusID = any(),
+                    xCorrelationID = any(),
                     aktoerId = listOf("00007063000250000"),
                     statuskategori = "AAPEN",
                     tema = listOf("KNA"),

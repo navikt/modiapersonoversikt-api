@@ -49,7 +49,7 @@ class PlukkOppgaveApi(private val apiClient: OppgaveApi, private val kodeverksma
             try {
                 val tildeltOppgave = apiClient
                     .endreOppgave(
-                        xminusCorrelationMinusID = correlationId,
+                        xCorrelationID = correlationId,
                         id = requireNotNull(oppgave.id),
                         putOppgaveRequestJsonDTO = oppgave.copy(
                             tilordnetRessurs = ident,
@@ -128,7 +128,7 @@ class PlukkOppgaveApi(private val apiClient: OppgaveApi, private val kodeverksma
         val aktoerIdList = if (aktoerId == null) null else listOf(aktoerId)
 
         return apiClient.finnOppgaver(
-            xminusCorrelationMinusID = correlationId,
+            xCorrelationID = correlationId,
             aktoerId = aktoerIdList,
             statuskategori = "AAPEN",
             tema = listOf(KONTAKT_NAV),

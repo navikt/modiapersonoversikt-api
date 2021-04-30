@@ -90,7 +90,7 @@ class RestOppgaveBehandlingServiceImpl(
             ?: throw IllegalArgumentException("Fant ikke aktorId for ${request.fnr}")
 
         val response = apiClient.opprettOppgave(
-            xminusCorrelationMinusID = correlationId(),
+            xCorrelationID = correlationId(),
             postOppgaveRequestJsonDTO = PostOppgaveRequestJsonDTO(
                 opprettetAvEnhetsnr = request.opprettetavenhetsnummer.coerceBlankToNull(),
                 aktoerId = aktorId,
@@ -129,7 +129,7 @@ class RestOppgaveBehandlingServiceImpl(
             ?: throw IllegalArgumentException("Fant ikke aktorId for ${request.fnr}")
 
         val response = systemApiClient.opprettOppgave(
-            xminusCorrelationMinusID = correlationId(),
+            xCorrelationID = correlationId(),
             postOppgaveRequestJsonDTO = PostOppgaveRequestJsonDTO(
                 opprettetAvEnhetsnr = request.opprettetavenhetsnummer.coerceBlankToNull(),
                 aktoerId = aktorId,
@@ -362,7 +362,7 @@ class RestOppgaveBehandlingServiceImpl(
          * Vi skal potensielt sett hente en oppgave saksbehandler ikke har tilgang til.
          */
         val oppgave = systemApiClient.hentOppgave(
-            xminusCorrelationMinusID = correlationId(),
+            xCorrelationID = correlationId(),
             id = oppgaveId.toLong()
         ).toOppgaveJsonDTO()
 
@@ -386,7 +386,7 @@ class RestOppgaveBehandlingServiceImpl(
 
     private fun hentOppgaveJsonDTO(oppgaveId: String): OppgaveJsonDTO {
         return apiClient.hentOppgave(
-            xminusCorrelationMinusID = correlationId(),
+            xCorrelationID = correlationId(),
             id = oppgaveId.toLong()
         ).toOppgaveJsonDTO()
     }
