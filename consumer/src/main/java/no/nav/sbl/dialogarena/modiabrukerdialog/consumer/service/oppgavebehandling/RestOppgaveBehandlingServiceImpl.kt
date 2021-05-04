@@ -178,7 +178,9 @@ class RestOppgaveBehandlingServiceImpl(
         val ident: String = SubjectHandler.getIdent().orElseThrow { IllegalStateException("Fant ikke ident") }
 
         val oppgave = hentOppgaveJsonDTO(oppgaveId)
-        if (!unleashService.isEnabled(Feature.STOPP_OPPGAVE_STJELING) || tvungenTilordning) {
+        if (oppgave.tilordnetRessurs == ident) {
+            return
+        } else if (!unleashService.isEnabled(Feature.STOPP_OPPGAVE_STJELING) || tvungenTilordning) {
             tjenestekallLogg.warn("[OPPGAVE] $ident gjorde en tvungen tilordning av $oppgaveId, som allerede var tildelt ${oppgave.tilordnetRessurs}")
         } else if (oppgave.tilordnetRessurs != null && oppgave.tilordnetRessurs != ident) {
             throw AlleredeTildeltAnnenSaksbehandler("Oppgaven er allerede tildelt ${oppgave.tilordnetRessurs}. Vil du overstyre dette?")
