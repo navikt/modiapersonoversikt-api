@@ -12,11 +12,7 @@ internal class GenerelleSaker : SakerKilde {
         val generelleSaker = saker
             .filter { obj: Sak -> obj.isSakstypeForVisningGenerell }
 
-        val manglendeGenerelleSaker = Sak.GODKJENTE_TEMA_FOR_GENERELL_SAK
-            .filter { temakode: String -> harIngenSakerMedTemakode(temakode, generelleSaker) && Sak.TEMAKODE_OPPFOLGING != temakode }
-            .map { temakode: String -> lagGenerellSakMedTema(temakode) }
-
-        saker.addAll(manglendeGenerelleSaker)
+        saker.addAll(generelleSaker)
     }
 
     companion object {
