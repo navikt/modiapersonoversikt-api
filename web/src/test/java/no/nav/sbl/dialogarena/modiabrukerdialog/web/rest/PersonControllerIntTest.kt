@@ -73,6 +73,7 @@ internal class PersonControllerIntTest {
             HentPerson.Foreldreansvar(
                 ansvar = "felles",
                 ansvarlig = null,
+                ansvarssubjekt = "12345678910",
                 ansvarligUtenIdentifikator = HentPerson.RelatertBiPerson(
                     navn = HentPerson.Personnavn("Fornavn", "Mellomnavn", "Etternavn"),
                     foedselsdato = null,
