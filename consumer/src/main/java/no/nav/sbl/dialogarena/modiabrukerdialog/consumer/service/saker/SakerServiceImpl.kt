@@ -186,6 +186,7 @@ class SakerServiceImpl : SakerService {
             sak.isSakstypeForVisningGenerell &&
                     Sak.GYLDIGE_FAGSYSTEM_FOR_GENERELLE_SAKER.contains(sak.fagsystemKode) &&
                     Sak.GODKJENTE_TEMA_FOR_GENERELL_SAK.contains(sak.temaKode)
+        }
     }
 }
 
