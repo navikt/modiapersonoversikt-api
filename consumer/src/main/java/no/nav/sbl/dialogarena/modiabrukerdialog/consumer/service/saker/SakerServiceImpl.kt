@@ -178,13 +178,14 @@ class SakerServiceImpl : SakerService {
 
         private val GODKJENT_FAGSAK: (Sak) -> Boolean = { sak ->
             !sak.isSakstypeForVisningGenerell &&
-                Sak.GODKJENTE_FAGSYSTEMER_FOR_FAGSAKER.contains(sak.fagsystemKode) &&
-                Sak.TEMAKODE_KLAGE_ANKE != sak.temaKode
+            Sak.GODKJENTE_FAGSYSTEMER_FOR_FAGSAKER.contains(sak.fagsystemKode) &&
+            Sak.TEMAKODE_KLAGE_ANKE != sak.temaKode
         }
 
         private val GODKJENT_GENERELL: (Sak) -> Boolean = { sak ->
             sak.isSakstypeForVisningGenerell &&
-                Sak.GYLDIGE_FAGSYSTEM_FOR_GENERELLE_SAKER.contains(sak.fagsystemKode)
+            Sak.GYLDIGE_FAGSYSTEM_FOR_GENERELLE_SAKER.contains(sak.fagsystemKode) &&
+            Sak.GODKJENTE_TEMA_FOR_GENERELL_SAK.contains(sak.temaKode)
         }
     }
 }
