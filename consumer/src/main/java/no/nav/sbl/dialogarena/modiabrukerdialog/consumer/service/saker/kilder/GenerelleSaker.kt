@@ -9,8 +9,11 @@ internal class GenerelleSaker : SakerKilde {
         get() = "GENERELLE"
 
     override fun leggTilSaker(fnr: String, saker: MutableList<Sak>) {
+        val generelleSaker = saker
+            .filter { obj: Sak -> obj.isSakstypeForVisningGenerell }
+
         val manglendeGenerelleSaker = Sak.GODKJENTE_TEMA_FOR_GENERELL_SAK
-            .filter { temakode: String -> harIngenSakerMedTemakode(temakode, saker) && Sak.TEMAKODE_OPPFOLGING != temakode }
+            .filter { temakode: String -> harIngenSakerMedTemakode(temakode, generelleSaker) && Sak.TEMAKODE_OPPFOLGING != temakode }
             .map { temakode: String -> lagGenerellSakMedTema(temakode) }
 
         saker.addAll(manglendeGenerelleSaker)
