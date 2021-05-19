@@ -184,8 +184,8 @@ class SakerServiceImpl : SakerService {
 
         private val GODKJENT_GENERELL: (Sak) -> Boolean = { sak ->
             sak.isSakstypeForVisningGenerell &&
-                    Sak.GYLDIGE_FAGSYSTEM_FOR_GENERELLE_SAKER.contains(sak.fagsystemKode) &&
-                    Sak.GODKJENTE_TEMA_FOR_GENERELL_SAK.contains(sak.temaKode)
+                Sak.GYLDIGE_FAGSYSTEM_FOR_GENERELLE_SAKER.contains(sak.fagsystemKode) &&
+                Sak.GODKJENTE_TEMA_FOR_GENERELL_SAK.contains(sak.temaKode)
         }
     }
 }
