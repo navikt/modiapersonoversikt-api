@@ -163,7 +163,8 @@ class PersonController @Autowired constructor(
 
     data class ForeldreansvarDTO(
         val ansvar: String,
-        val ansvarlig: PersonnavnDTO?
+        val ansvarlig: PersonnavnDTO?,
+        val ansvarssubjekt: PersonnavnDTO?
     )
 
     private fun hentDeltBosted(deltBosted: List<HentPerson.DeltBosted>): List<DeltBostedDTO> {
@@ -205,9 +206,11 @@ class PersonController @Autowired constructor(
         return foreldreansvar.map {
             val ansvarligUtenIdNavn = it.ansvarligUtenIdentifikator?.navn?.let { person -> PersonnavnDTO(person.fornavn, person.mellomnavn, person.etternavn) }
             val ansvarlig = allenavn[it.ansvarlig]
+            val ansvarssubjekt = allenavn[it.ansvarssubjekt]
             ForeldreansvarDTO(
                 ansvar = it.ansvar ?: "Kunne ikke hente type ansvar",
-                ansvarlig = ansvarlig ?: ansvarligUtenIdNavn
+                ansvarlig = ansvarlig ?: ansvarligUtenIdNavn,
+                ansvarssubjekt = ansvarssubjekt
             )
         }
     }
