@@ -460,7 +460,8 @@ internal class SafDokumentMapperKtTest {
                 RelevantDato(
                     datotype = DATOTYPE_JOURNALFOERT,
                     dato = journalFoertDato
-                ), RelevantDato(
+                ),
+                RelevantDato(
                     datotype = DATOTYPE_REGISTRERT,
                     dato = mottattDato
                 )
