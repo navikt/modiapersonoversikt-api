@@ -201,8 +201,8 @@ class PersonController @Autowired constructor(
             .let { pdlOppslagService.hentNavnBolk(it) }
             ?.filterValues { it != null }
             ?.mapValues {
-                val personanvn = it.value!!
-                PersonnavnDTO(personanvn.fornavn, personanvn.mellomnavn, personanvn.etternavn)
+                val personnavn = it.value!!
+                PersonnavnDTO(personnavn.fornavn, personnavn.mellomnavn, personnavn.etternavn)
             }
             ?: emptyMap()
         return foreldreansvar.map {
