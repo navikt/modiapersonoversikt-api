@@ -29,7 +29,7 @@ class SafService {
     private val client: OkHttpClient = RestClient.baseClient().newBuilder()
         .addInterceptor(XCorrelationIdInterceptor())
         .addInterceptor(
-            LoggingInterceptor("Sak") { request ->
+            LoggingInterceptor("Saf") { request ->
                 requireNotNull(request.header("X-Correlation-ID")) {
                     "Kall uten \"X-Correlation-ID\" er ikke lov"
                 }
