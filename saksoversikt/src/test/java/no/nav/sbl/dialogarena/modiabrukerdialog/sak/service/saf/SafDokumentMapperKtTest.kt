@@ -452,18 +452,13 @@ internal class SafDokumentMapperKtTest {
     }
 
     @Test
-    fun `Bruker mottatt dato for Intern`() {
+    fun `Bruker journalfoert dato for Intern`() {
         val journalFoertDato = LocalDateTime.parse("2018-11-11T13:23:57", DateTimeFormatter.ISO_DATE_TIME)
-        val mottattDato = LocalDateTime.parse("2017-10-10T09:23:57", DateTimeFormatter.ISO_DATE_TIME)
         val journalpost = lagJournalpost().copy(
             relevanteDatoer = listOf(
                 RelevantDato(
                     datotype = DATOTYPE_JOURNALFOERT,
                     dato = journalFoertDato
-                ),
-                RelevantDato(
-                    datotype = DATOTYPE_REGISTRERT,
-                    dato = mottattDato
                 )
             ),
             journalposttype = JOURNALPOSTTYPE_INTERN
@@ -471,7 +466,7 @@ internal class SafDokumentMapperKtTest {
 
         val dokumentMetadata = DokumentMetadata().fraSafJournalpost(journalpost)
 
-        assertEquals(mottattDato, dokumentMetadata.dato)
+        assertEquals(journalFoertDato, dokumentMetadata.dato)
     }
 }
 
