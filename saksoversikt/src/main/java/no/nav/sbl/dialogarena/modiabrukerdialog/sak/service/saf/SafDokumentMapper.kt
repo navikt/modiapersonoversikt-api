@@ -46,7 +46,7 @@ private fun getDato(journalpost: Journalpost): LocalDateTime? =
     when (journalpost.journalposttype) {
         JOURNALPOSTTYPE_INN -> getRelevantDatoForType(DATOTYPE_REGISTRERT, journalpost)
         JOURNALPOSTTYPE_UT -> getDatoSendt(journalpost)
-        JOURNALPOSTTYPE_INTERN -> getRelevantDatoForType(DATOTYPE_REGISTRERT, journalpost)
+        JOURNALPOSTTYPE_INTERN -> getRelevantDatoForType(DATOTYPE_JOURNALFOERT, journalpost)
         else -> now()
     } ?: now()
 
