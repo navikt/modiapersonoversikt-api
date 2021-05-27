@@ -6,8 +6,10 @@ import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import no.nav.common.auth.subject.SsoToken
 import no.nav.common.auth.subject.SubjectHandler
+import no.nav.common.log.MDCConstants
 import no.nav.common.rest.client.RestClient
 import no.nav.common.utils.EnvironmentUtils
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.TjenestekallLogger
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.Baksystem
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.Dokument
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.DokumentMetadata
@@ -15,6 +17,8 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.resultatwrapp
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.resultatwrappere.TjenesteResultatWrapper
 import okhttp3.*
 import org.slf4j.LoggerFactory
+import org.slf4j.MDC
+import java.util.*
 
 val SAF_GRAPHQL_BASEURL: String = EnvironmentUtils.getRequiredProperty("SAF_GRAPHQL_URL")
 val SAF_HENTDOKUMENT_BASEURL: String = EnvironmentUtils.getRequiredProperty("SAF_HENTDOKUMENT_URL")
@@ -27,6 +31,7 @@ class SafService {
     private val client: OkHttpClient = RestClient.baseClient()
     fun hentJournalposter(fnr: String): ResultatWrapper<List<DokumentMetadata>> {
         val jsonQuery = dokumentoversiktBrukerJsonQuery(fnr)
+
         val response = client.newCall(
             veilederAutorisertClient(SAF_GRAPHQL_BASEURL)
                 .post(RequestBody.create(jsonType, jsonQuery))
@@ -60,6 +65,15 @@ private fun handterStatus(response: Response): ResultatWrapper<List<DokumentMeta
 
 private fun handterResponse(response: Response): ResultatWrapper<List<DokumentMetadata>> {
     val safDokumentResponse = safDokumentResponsFraResponse(response)
+
+    val uuid = UUID.randomUUID()
+
+    val tjenestekallFelt = mapOf(
+        "body" to response.body(),
+        "message" to response.message()
+    )
+
+    TjenestekallLogger.info("SAF-dokument-response: $uuid", tjenestekallFelt)
 
     safDokumentResponse.errors?.also { logJournalpostErrors(safDokumentResponse.errors) }
 
