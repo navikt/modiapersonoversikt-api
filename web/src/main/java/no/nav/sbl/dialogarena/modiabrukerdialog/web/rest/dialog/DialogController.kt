@@ -9,6 +9,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.api.domain.saker.Sak
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.exceptions.TraadAlleredeBesvart
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.HenvendelseUtsendingService
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveBehandlingService
+import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.OppgaveBehandlingService.AlleredeTildeltAnnenSaksbehandler
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.service.saker.SakerService
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.RestUtils
 import no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.TemagruppeTemaMapping.hentTemagruppeForTema
@@ -112,6 +113,7 @@ class DialogController @Autowired constructor(
     fun startFortsettDialog(
         request: HttpServletRequest,
         @PathVariable("fnr") fnr: String,
+        @RequestHeader(value = "Ignore-Conflict", required = false) ignorerConflict: Boolean?,
         @RequestBody opprettHenvendelseRequest: OpprettHenvendelseRequest
     ): FortsettDialogDTO {
         val auditIdentifier = arrayOf(
@@ -130,17 +132,7 @@ class DialogController @Autowired constructor(
                     .find { it.traadId == traadId }
                     ?: throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Fant ingen tråd med id: $traadId")
 
-                val oppgaveId: String? = if (erUbesvartSporsmalFraBruker(traad)) {
-                    val sporsmal = traad.meldinger.find { it.id == it.traadId }
-                        ?: throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Fant ingen spørsmål i tråd med id: $traadId")
-                    oppgaveBehandlingService.tilordneOppgaveIGsak(
-                        sporsmal.oppgaveId,
-                        Temagruppe.valueOf(sporsmal.temagruppe),
-                        context.enhet
-                    )
-
-                    sporsmal.oppgaveId
-                } else null
+                val oppgaveId: String? = finnOgTilordneOppgaveIdTilTrad(traad, context, ignorerConflict ?: false)
 
                 val behandlingsId = henvendelseUtsendingService.opprettHenvendelse(
                     Meldingstype.SVAR_SKRIFTLIG.name,
@@ -231,6 +223,31 @@ class DialogController @Autowired constructor(
                     "nyTraadId" to nyTraadId
                 )
             }
+    }
+
+    private fun finnOgTilordneOppgaveIdTilTrad(
+        traad: Traad,
+        context: RequestContext,
+        ignorerConflict: Boolean
+    ): String? {
+        if (erUbesvartSporsmalFraBruker(traad)) {
+            val sporsmal = traad.meldinger.find { it.id == it.traadId }
+                ?: throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Fant ingen spørsmål i tråd med id: ${traad.traadId}")
+
+            try {
+                oppgaveBehandlingService.tilordneOppgaveIGsak(
+                    sporsmal.oppgaveId,
+                    Temagruppe.valueOf(sporsmal.temagruppe),
+                    context.enhet,
+                    ignorerConflict
+                )
+            } catch (e: AlleredeTildeltAnnenSaksbehandler) {
+                throw ResponseStatusException(HttpStatus.CONFLICT, e.message)
+            }
+            return sporsmal.oppgaveId
+        } else {
+            return null
+        }
     }
 
     private fun ferdigstillAlleUnntattEnOppgave(request: SlaaSammenRequest, nyTraadId: String, enhet: String) {

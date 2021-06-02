@@ -163,7 +163,8 @@ class PersonController @Autowired constructor(
 
     data class ForeldreansvarDTO(
         val ansvar: String,
-        val ansvarlig: PersonnavnDTO?
+        val ansvarlig: PersonnavnDTO?,
+        val ansvarssubjekt: PersonnavnDTO?
     )
 
     private fun hentDeltBosted(deltBosted: List<HentPerson.DeltBosted>): List<DeltBostedDTO> {
@@ -193,21 +194,25 @@ class PersonController @Autowired constructor(
     }
 
     private fun hentForeldreansvar(foreldreansvar: List<HentPerson.Foreldreansvar>): List<ForeldreansvarDTO> {
-        val allenavn: Map<String, PersonnavnDTO> = foreldreansvar
-            .mapNotNull { it.ansvarlig }
+        val ansvarlige = foreldreansvar.mapNotNull { it.ansvarlig }
+        val ansvarssubjekt = foreldreansvar.mapNotNull { it.ansvarssubjekt }
+        val alleNavn = (ansvarlige + ansvarssubjekt)
+            .distinct()
             .let { pdlOppslagService.hentNavnBolk(it) }
             ?.filterValues { it != null }
-            ?.mapValues { entry ->
-                val personnavn = entry.value!!
+            ?.mapValues {
+                val personnavn = it.value!!
                 PersonnavnDTO(personnavn.fornavn, personnavn.mellomnavn, personnavn.etternavn)
             }
             ?: emptyMap()
         return foreldreansvar.map {
             val ansvarligUtenIdNavn = it.ansvarligUtenIdentifikator?.navn?.let { person -> PersonnavnDTO(person.fornavn, person.mellomnavn, person.etternavn) }
-            val ansvarlig = allenavn[it.ansvarlig]
+            val ansvarlig = alleNavn[it.ansvarlig]
+            val ansvarssubjekt = alleNavn[it.ansvarssubjekt]
             ForeldreansvarDTO(
                 ansvar = it.ansvar ?: "Kunne ikke hente type ansvar",
-                ansvarlig = ansvarlig ?: ansvarligUtenIdNavn
+                ansvarlig = ansvarlig ?: ansvarligUtenIdNavn,
+                ansvarssubjekt = ansvarssubjekt
             )
         }
     }

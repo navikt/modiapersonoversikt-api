@@ -8,6 +8,8 @@ import no.nav.common.auth.subject.SsoToken
 import no.nav.common.auth.subject.SubjectHandler
 import no.nav.common.rest.client.RestClient
 import no.nav.common.utils.EnvironmentUtils
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.http.LoggingInterceptor
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.http.XCorrelationIdInterceptor
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.Baksystem
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.Dokument
 import no.nav.sbl.dialogarena.modiabrukerdialog.sak.providerdomain.DokumentMetadata
@@ -24,9 +26,20 @@ private val mapper: ObjectMapper = jacksonObjectMapper().registerModule(JavaTime
 
 class SafService {
     private val jsonType: MediaType? = MediaType.parse("application/json; charset=utf-8")
-    private val client: OkHttpClient = RestClient.baseClient()
+    private val client: OkHttpClient = RestClient.baseClient().newBuilder()
+        .addInterceptor(XCorrelationIdInterceptor())
+        .addInterceptor(
+            LoggingInterceptor("Saf") { request ->
+                requireNotNull(request.header("X-Correlation-ID")) {
+                    "Kall uten \"X-Correlation-ID\" er ikke lov"
+                }
+            }
+        )
+        .build()
+
     fun hentJournalposter(fnr: String): ResultatWrapper<List<DokumentMetadata>> {
         val jsonQuery = dokumentoversiktBrukerJsonQuery(fnr)
+
         val response = client.newCall(
             veilederAutorisertClient(SAF_GRAPHQL_BASEURL)
                 .post(RequestBody.create(jsonType, jsonQuery))

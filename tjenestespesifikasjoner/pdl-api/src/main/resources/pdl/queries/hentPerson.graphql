@@ -96,6 +96,7 @@ query($ident: ID!){
         foreldreansvar {
             ansvar
             ansvarlig
+            ansvarssubjekt
             ansvarligUtenIdentifikator {
                 navn {
                     fornavn

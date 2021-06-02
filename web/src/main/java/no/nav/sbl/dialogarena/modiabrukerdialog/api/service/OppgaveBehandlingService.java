@@ -13,7 +13,7 @@ public interface OppgaveBehandlingService {
 
     OpprettOppgaveResponse opprettSkjermetOppgave(OpprettSkjermetOppgaveRequest request);
 
-    void tilordneOppgaveIGsak(String oppgaveId, Temagruppe temagruppe, String saksbehandlersValgteEnhet) throws FikkIkkeTilordnet;
+    void tilordneOppgaveIGsak(String oppgaveId, Temagruppe temagruppe, String saksbehandlersValgteEnhet, boolean tvungenTilordning) throws FikkIkkeTilordnet;
 
     @Deprecated
     List<Oppgave> finnTildelteOppgaverIGsak();
@@ -39,6 +39,11 @@ public interface OppgaveBehandlingService {
     class FikkIkkeTilordnet extends Exception {
         public FikkIkkeTilordnet(Throwable cause) {
             super(cause);
+        }
+    }
+    class AlleredeTildeltAnnenSaksbehandler extends Exception {
+        public AlleredeTildeltAnnenSaksbehandler(String message) {
+            super(message);
         }
     }
 }

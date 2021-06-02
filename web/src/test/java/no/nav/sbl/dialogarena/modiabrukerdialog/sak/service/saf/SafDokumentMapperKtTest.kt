@@ -457,7 +457,6 @@ internal class SafDokumentMapperKtTest {
     @Test
     fun `Bruker journalfoert dato for Intern`() {
         val journalFoertDato = LocalDateTime.parse("2018-11-11T13:23:57", DateTimeFormatter.ISO_DATE_TIME)
-
         val journalpost = lagJournalpost().copy(
             relevanteDatoer = listOf(
                 RelevantDato(
