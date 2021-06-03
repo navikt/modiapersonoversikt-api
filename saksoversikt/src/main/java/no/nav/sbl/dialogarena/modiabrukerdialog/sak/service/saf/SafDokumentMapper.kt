@@ -9,6 +9,7 @@ const val DATOTYPE_REGISTRERT = "DATO_REGISTRERT"
 const val DATOTYPE_JOURNALFOERT = "DATO_JOURNALFOERT"
 const val DATOTYPE_EKSPEDERT = "DATO_EKSPEDERT"
 const val DATOTYPE_SENDT_PRINT = "DATO_SENDT_PRINT"
+const val DATOTYPE_DOKUMENT = "DATO_DOKUMENT"
 
 const val JOURNALPOSTTYPE_INN = "I"
 const val JOURNALPOSTTYPE_UT = "U"
@@ -46,7 +47,7 @@ private fun getDato(journalpost: Journalpost): LocalDateTime? =
     when (journalpost.journalposttype) {
         JOURNALPOSTTYPE_INN -> getRelevantDatoForType(DATOTYPE_REGISTRERT, journalpost)
         JOURNALPOSTTYPE_UT -> getDatoSendt(journalpost)
-        JOURNALPOSTTYPE_INTERN -> getRelevantDatoForType(DATOTYPE_JOURNALFOERT, journalpost)
+        JOURNALPOSTTYPE_INTERN -> getRelevantDatoForType(DATOTYPE_DOKUMENT, journalpost)
         else -> now()
     } ?: now()
 
