@@ -46,6 +46,7 @@ private fun getDato(journalpost: Journalpost): LocalDateTime? =
     when (journalpost.journalposttype) {
         JOURNALPOSTTYPE_INN -> getRelevantDatoForType(DATOTYPE_REGISTRERT, journalpost)
         JOURNALPOSTTYPE_UT -> getDatoSendt(journalpost)
+        /* Her kan man ikke sortere notat på dato fordi dataene finnes ikke */
         JOURNALPOSTTYPE_INTERN -> getRelevantDatoForType(DATOTYPE_JOURNALFOERT, journalpost)
         else -> now()
     } ?: now()
