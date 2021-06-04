@@ -1,1 +1,1 @@
-no.nav.kjerneinfo.domain.person.Person,getFodselsnummer.getNummer,ident
+no.nav.modiapersonoversikt.legacy.kjerneinfo.domain.person.Person,getFodselsnummer.getNummer,ident

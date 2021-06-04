@@ -5,13 +5,13 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
 
     <bean id="userkeygenerator"
-          class="no.nav.sbl.dialogarena.modiabrukerdialog.api.utils.cache.AutentisertBrukerKeyGenerator"/>
+          class="no.nav.modiapersonoversikt.api.utils.cache.AutentisertBrukerKeyGenerator"/>
     <bean id="asbogosyskeygenerator"
-          class="no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.cache.ASBOGOSYSNAVKeyGenerator"/>
+          class="no.nav.modiapersonoversikt.infrastructure.cache.ASBOGOSYSNAVKeyGenerator"/>
     <bean id="asbogosysansattlistekeygenerator"
-          class="no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.cache.ASBOGOSYSNAVAnsattListeKeyGenerator"/>
+          class="no.nav.modiapersonoversikt.infrastructure.cache.ASBOGOSYSNAVAnsattListeKeyGenerator"/>
     <bean id="organisasjonEnhetKontantinformasjonGenerator"
-          class="no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.cache.OrganisasjonenhetKontaktinformasjonKeyGenerator"/>
+          class="no.nav.modiapersonoversikt.infrastructure.cache.OrganisasjonenhetKontaktinformasjonKeyGenerator"/>
     <bean id="defaultkeygenerator"
           class="org.springframework.cache.interceptor.SimpleKeyGenerator"/>
 
