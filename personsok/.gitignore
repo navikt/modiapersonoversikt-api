@@ -1,6 +1,0 @@
-# .gitignore file for git-svn users
-target/
-.idea/
-*.iml
-
-personsok-web/velocity.log
