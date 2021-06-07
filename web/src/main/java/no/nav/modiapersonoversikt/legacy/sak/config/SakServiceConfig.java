@@ -2,6 +2,7 @@ package no.nav.modiapersonoversikt.legacy.sak.config;
 
 import no.nav.modiapersonoversikt.integration.kodeverk2.JsonKodeverk;
 import no.nav.modiapersonoversikt.integration.kodeverk2.Kodeverk;
+import no.nav.modiapersonoversikt.integration.kodeverk2.config.KodeverkConfig;
 import no.nav.modiapersonoversikt.legacy.sak.service.*;
 import no.nav.modiapersonoversikt.legacy.sak.service.filter.Filter;
 import no.nav.modiapersonoversikt.legacy.sak.service.interfaces.InnsynJournalV2Service;
@@ -10,8 +11,10 @@ import no.nav.modiapersonoversikt.legacy.sak.transformers.DokumentMetadataTransf
 import no.nav.modiapersonoversikt.legacy.sak.utils.TemagrupperHenter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 
 @Configuration
+@Import({KodeverkConfig.class})
 public class SakServiceConfig {
 
     @Bean
@@ -66,11 +69,6 @@ public class SakServiceConfig {
     @Bean
     public BulletproofKodeverkService bulletproofKodeverkService() {
         return new BulletproofKodeverkService();
-    }
-
-    @Bean
-    public Kodeverk kodeverk() {
-        return new JsonKodeverk(getClass().getResourceAsStream("/kodeverk.json"));
     }
 
     @Bean
