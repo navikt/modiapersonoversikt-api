@@ -3,13 +3,13 @@ package no.nav.modiapersonoversikt.config;
 import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navansatt.GOSYSNAVansatt;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import no.nav.common.utils.EnvironmentUtils;
+import no.nav.modiapersonoversikt.infrastructure.cache.CacheConfig;
 import no.nav.modiapersonoversikt.integration.abac.AbacClient;
 import no.nav.modiapersonoversikt.integration.abac.AbacClientConfig;
 import no.nav.modiapersonoversikt.legacy.api.service.HenvendelseLesService;
 import no.nav.modiapersonoversikt.legacy.api.service.OppgaveBehandlingService;
 import no.nav.modiapersonoversikt.legacy.api.service.ldap.LDAPService;
 import no.nav.modiapersonoversikt.service.unleash.UnleashService;
-import no.nav.modiapersonoversikt.infrastructure.cache.CacheConfiguration;
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll;
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.TilgangskontrollContext;
 import no.nav.modiapersonoversikt.service.plukkoppgave.PlukkOppgaveService;
@@ -25,7 +25,7 @@ import static no.nav.modiapersonoversikt.legacy.api.utils.RestConstants.MODIABRU
 @Configuration
 @Import({
         ConsumerContext.class,
-        CacheConfiguration.class
+        CacheConfig.class
 })
 public class ApplicationContextBeans {
 

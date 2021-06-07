@@ -8,12 +8,16 @@ import org.springframework.cache.caffeine.CaffeineCache;
 import org.springframework.cache.support.SimpleCacheManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.EnableAspectJAutoProxy;
+import org.springframework.context.annotation.ImportResource;
 
 import java.time.Duration;
 import java.util.Arrays;
 
 @Configuration
 @EnableCaching
+@EnableAspectJAutoProxy
+@ImportResource("classpath*:*cacheconfig.xml")
 public class CacheConfig {
 
     @Bean

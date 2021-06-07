@@ -1,6 +1,6 @@
 package no.nav.modiapersonoversikt.config.endpoint.util;
 
-import no.nav.modiapersonoversikt.infrastructure.cache.CacheConfiguration;
+import no.nav.modiapersonoversikt.infrastructure.cache.CacheConfig;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.aop.framework.AopProxyUtils;
@@ -13,7 +13,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = {CacheConfiguration.class, CacheTestConfig.class})
+@ContextConfiguration(classes = {CacheConfig.class, CacheTestConfig.class})
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 public abstract class CacheTest {
     private static CacheManager cm;
