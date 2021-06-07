@@ -11,9 +11,9 @@ import org.springframework.context.annotation.Import;
         DkifConsumerConfig.class,
         PersonV3EndpointConfig.class,
         EgenAnsattWrapper.class,
-        no.nav.modiapersonoversikt.legacy.kjerneinfo.consumer.config.ConsumerConfig.class,
-        no.nav.modiapersonoversikt.integration.kodeverk.consumer.config.ConsumerConfig.class,
-        no.nav.modiapersonoversikt.integration.sykmeldingsperioder.config.spring.ConsumerConfig.class
+        no.nav.modiapersonoversikt.legacy.kjerneinfo.consumer.config.KjerneinfoConsumerConfig.class,
+        no.nav.modiapersonoversikt.integration.kodeverk.consumer.config.KodeverkConsumerConfig.class,
+        no.nav.modiapersonoversikt.integration.sykmeldingsperioder.config.spring.SykmeldingsperioderConsumerConfig.class
 })
 public class KjerneinfoContext {
 }

@@ -16,7 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 @Configuration
 @EnableCaching
-public class ConsumerConfig {
+public class PersonsokServiceConsumerConfig {
 
     @Autowired
     private PersonsokPortType personsokPortType;

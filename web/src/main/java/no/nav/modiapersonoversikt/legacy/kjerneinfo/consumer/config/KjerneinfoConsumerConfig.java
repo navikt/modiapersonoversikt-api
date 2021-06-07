@@ -7,6 +7,6 @@ import org.springframework.context.annotation.Import;
 
 @Configuration
 @Import({PersonV3EndpointConfig.class, PersonKjerneinfoMapperConfig.class})
-public class ConsumerConfig {
+public class KjerneinfoConsumerConfig {
 
 }

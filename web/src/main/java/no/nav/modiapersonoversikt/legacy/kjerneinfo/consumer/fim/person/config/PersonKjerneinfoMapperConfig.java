@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.beans.factory.annotation.Autowired;
 
 @Configuration
-@Import({no.nav.modiapersonoversikt.integration.kodeverk.consumer.config.ConsumerConfig.class})
+@Import({no.nav.modiapersonoversikt.integration.kodeverk.consumer.config.KodeverkConsumerConfig.class})
 public class PersonKjerneinfoMapperConfig {
 
     @Autowired

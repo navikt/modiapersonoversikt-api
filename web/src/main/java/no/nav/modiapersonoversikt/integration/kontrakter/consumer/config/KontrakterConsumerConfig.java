@@ -18,7 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 @Configuration
 @Import({OppfolgingskontraktConsumerConfig.class, YtelseskontraktConsumerConfig.class})
-public class ConsumerConfig {
+public class KontrakterConsumerConfig {
 
 	@Autowired
 	private YtelseskontraktV3 ytelseskontraktPortType;

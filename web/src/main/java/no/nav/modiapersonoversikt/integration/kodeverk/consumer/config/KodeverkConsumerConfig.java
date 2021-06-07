@@ -13,7 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 @Configuration
 @Import(EnvironmentPropertiesConfig.class)
 @EnableCaching
-public class ConsumerConfig {
+public class KodeverkConsumerConfig {
 
     @Autowired
     private KodeverkPortType kodeverkPortType;

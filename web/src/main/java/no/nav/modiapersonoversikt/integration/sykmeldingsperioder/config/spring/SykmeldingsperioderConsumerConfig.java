@@ -25,7 +25,7 @@ import org.springframework.context.annotation.Import;
 @Configuration
 @Import({SykepengerConsumerConfig.class, ForeldrepengerConsumerConfig.class,
         PleiepengerConsumerConfig.class, OrganisasjonConsumerConfig.class})
-public class ConsumerConfig {
+public class SykmeldingsperioderConsumerConfig {
 
     @Autowired
     private ForeldrepengerV2 foreldrepengerPortType;
