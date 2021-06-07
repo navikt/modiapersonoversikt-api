@@ -1,8 +1,8 @@
 package no.nav.modiapersonoversikt.service.kodeverk;
 
 
-import no.nav.modiapersonoversikt.api.domain.saker.GsakKodeTema;
-import no.nav.modiapersonoversikt.api.service.saker.GsakKodeverk;
+import no.nav.modiapersonoversikt.legacy.api.domain.saker.GsakKodeTema;
+import no.nav.modiapersonoversikt.legacy.api.service.saker.GsakKodeverk;
 
 import java.util.List;
 import java.util.Map;

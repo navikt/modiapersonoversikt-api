@@ -3,7 +3,7 @@ package no.nav.modiapersonoversikt.service.unleash;
 import no.finn.unleash.UnleashContext;
 import no.finn.unleash.UnleashContextProvider;
 import no.nav.common.auth.subject.SubjectHandler;
-import no.nav.modiapersonoversikt.api.service.norg.AnsattService;
+import no.nav.modiapersonoversikt.legacy.api.service.norg.AnsattService;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 

@@ -1,7 +1,7 @@
 package no.nav.modiapersonoversikt.service;
 
 import no.nav.modiapersonoversikt.infrastructure.core.exception.SystemException;
-import no.nav.modiapersonoversikt.api.service.FodselnummerAktorService;
+import no.nav.modiapersonoversikt.legacy.api.service.FodselnummerAktorService;
 import no.nav.tjeneste.virksomhet.aktoer.v2.Aktoer_v2;
 import no.nav.tjeneste.virksomhet.aktoer.v2.meldinger.WSHentAktoerIdForIdentRequest;
 import no.nav.tjeneste.virksomhet.aktoer.v2.meldinger.WSHentIdentForAktoerIdRequest;

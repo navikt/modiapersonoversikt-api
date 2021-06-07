@@ -1,11 +1,10 @@
 package no.nav.modiapersonoversikt.rest;
 
-import no.nav.modiapersonoversikt.rest.JournalforingController;
-import no.nav.modiapersonoversikt.api.domain.saker.Sak;
-import no.nav.modiapersonoversikt.api.exceptions.JournalforingFeilet;
-import no.nav.modiapersonoversikt.api.service.saker.SakerService;
-import no.nav.modiapersonoversikt.api.utils.RestUtils;
-import no.nav.modiapersonoversikt.api.utils.http.SubjectHandlerUtil;
+import no.nav.modiapersonoversikt.legacy.api.domain.saker.Sak;
+import no.nav.modiapersonoversikt.legacy.api.exceptions.JournalforingFeilet;
+import no.nav.modiapersonoversikt.legacy.api.service.saker.SakerService;
+import no.nav.modiapersonoversikt.legacy.api.utils.RestUtils;
+import no.nav.modiapersonoversikt.legacy.api.utils.http.SubjectHandlerUtil;
 import no.nav.modiapersonoversikt.service.saker.EnhetIkkeSatt;
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.TilgangskontrollMock;
 import org.junit.jupiter.api.DisplayName;

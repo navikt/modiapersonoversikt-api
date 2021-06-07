@@ -1,6 +1,6 @@
 package no.nav.modiapersonoversikt.service.saker
 
-import no.nav.modiapersonoversikt.api.domain.saker.Sak
+import no.nav.modiapersonoversikt.legacy.api.domain.saker.Sak
 
 interface SakerKilde {
     val kildeNavn: String

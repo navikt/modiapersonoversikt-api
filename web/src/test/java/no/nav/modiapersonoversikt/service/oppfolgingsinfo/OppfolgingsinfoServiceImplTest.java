@@ -1,10 +1,10 @@
 package no.nav.modiapersonoversikt.service.oppfolgingsinfo;
 
-import no.nav.modiapersonoversikt.api.domain.Saksbehandler;
-import no.nav.modiapersonoversikt.api.domain.norg.AnsattEnhet;
-import no.nav.modiapersonoversikt.api.domain.oppfolgingsinfo.Oppfolgingsinfo;
-import no.nav.modiapersonoversikt.api.service.ldap.LDAPService;
-import no.nav.modiapersonoversikt.api.service.oppfolgingsinfo.OppfolgingsinfoApiService;
+import no.nav.modiapersonoversikt.legacy.api.domain.Saksbehandler;
+import no.nav.modiapersonoversikt.legacy.api.domain.norg.AnsattEnhet;
+import no.nav.modiapersonoversikt.legacy.api.domain.oppfolgingsinfo.Oppfolgingsinfo;
+import no.nav.modiapersonoversikt.legacy.api.service.ldap.LDAPService;
+import no.nav.modiapersonoversikt.legacy.api.service.oppfolgingsinfo.OppfolgingsinfoApiService;
 import no.nav.tjeneste.virksomhet.oppfolgingsinfo.v1.OppfolgingsinfoV1;
 import no.nav.tjeneste.virksomhet.oppfolgingsinfo.v1.meldinger.OppfolgingsstatusRequest;
 import no.nav.tjeneste.virksomhet.oppfolgingsinfo.v1.meldinger.OppfolgingsstatusResponse;

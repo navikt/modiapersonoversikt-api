@@ -2,14 +2,14 @@ package no.nav.modiapersonoversikt.rest
 
 import io.mockk.every
 import io.mockk.mockk
-import no.nav.modiapersonoversikt.api.domain.pdl.generated.HentPerson
-import no.nav.modiapersonoversikt.api.service.kodeverk.StandardKodeverk
-import no.nav.modiapersonoversikt.api.service.organisasjonsEnhetV2.OrganisasjonEnhetV2Service
-import no.nav.modiapersonoversikt.api.service.pdl.PdlOppslagService
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.TilgangskontrollContext
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.TilgangskontrollMock
 import no.nav.modiapersonoversikt.integration.kodeverk.consumer.fim.kodeverk.KodeverkmanagerBi
+import no.nav.modiapersonoversikt.legacy.api.domain.pdl.generated.HentPerson
+import no.nav.modiapersonoversikt.legacy.api.service.kodeverk.StandardKodeverk
+import no.nav.modiapersonoversikt.legacy.api.service.organisasjonsEnhetV2.OrganisasjonEnhetV2Service
+import no.nav.modiapersonoversikt.legacy.api.service.pdl.PdlOppslagService
 import no.nav.modiapersonoversikt.legacy.kjerneinfo.common.domain.Kodeverdi
 import no.nav.modiapersonoversikt.legacy.kjerneinfo.consumer.fim.person.support.DefaultPersonKjerneinfoService
 import no.nav.modiapersonoversikt.legacy.kjerneinfo.consumer.fim.person.support.KjerneinfoMapper

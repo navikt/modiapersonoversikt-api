@@ -14,20 +14,20 @@ import no.nav.modiapersonoversikt.legacy.kjerneinfo.consumer.fim.person.vergemal
 import no.nav.modiapersonoversikt.integration.kodeverk.consumer.fim.kodeverk.KodeverkmanagerBi;
 import no.nav.modiapersonoversikt.infrastructure.content.ContentRetriever;
 import no.nav.modiapersonoversikt.service.*;
-import no.nav.modiapersonoversikt.api.service.FodselnummerAktorService;
-import no.nav.modiapersonoversikt.api.service.HenvendelseLesService;
-import no.nav.modiapersonoversikt.api.service.HenvendelseUtsendingService;
-import no.nav.modiapersonoversikt.api.service.OppgaveBehandlingService;
-import no.nav.modiapersonoversikt.api.service.arbeidsfordeling.ArbeidsfordelingV1Service;
-import no.nav.modiapersonoversikt.api.service.kodeverk.StandardKodeverk;
-import no.nav.modiapersonoversikt.api.service.ldap.LDAPService;
-import no.nav.modiapersonoversikt.api.service.norg.AnsattService;
-import no.nav.modiapersonoversikt.api.service.oppfolgingsinfo.OppfolgingsenhetService;
-import no.nav.modiapersonoversikt.api.service.organisasjonsEnhetV2.OrganisasjonEnhetV2Service;
-import no.nav.modiapersonoversikt.api.service.pdl.PdlOppslagService;
-import no.nav.modiapersonoversikt.api.service.psak.PsakService;
-import no.nav.modiapersonoversikt.api.service.saker.GsakKodeverk;
-import no.nav.modiapersonoversikt.api.service.saker.SakerService;
+import no.nav.modiapersonoversikt.legacy.api.service.FodselnummerAktorService;
+import no.nav.modiapersonoversikt.legacy.api.service.HenvendelseLesService;
+import no.nav.modiapersonoversikt.legacy.api.service.HenvendelseUtsendingService;
+import no.nav.modiapersonoversikt.legacy.api.service.OppgaveBehandlingService;
+import no.nav.modiapersonoversikt.legacy.api.service.arbeidsfordeling.ArbeidsfordelingV1Service;
+import no.nav.modiapersonoversikt.legacy.api.service.kodeverk.StandardKodeverk;
+import no.nav.modiapersonoversikt.legacy.api.service.ldap.LDAPService;
+import no.nav.modiapersonoversikt.legacy.api.service.norg.AnsattService;
+import no.nav.modiapersonoversikt.legacy.api.service.oppfolgingsinfo.OppfolgingsenhetService;
+import no.nav.modiapersonoversikt.legacy.api.service.organisasjonsEnhetV2.OrganisasjonEnhetV2Service;
+import no.nav.modiapersonoversikt.legacy.api.service.pdl.PdlOppslagService;
+import no.nav.modiapersonoversikt.legacy.api.service.psak.PsakService;
+import no.nav.modiapersonoversikt.legacy.api.service.saker.GsakKodeverk;
+import no.nav.modiapersonoversikt.legacy.api.service.saker.SakerService;
 import no.nav.modiapersonoversikt.config.endpoint.kodeverksmapper.Kodeverksmapper;
 import no.nav.modiapersonoversikt.service.arbeidsfordeling.ArbeidsfordelingClient;
 import no.nav.modiapersonoversikt.service.arbeidsfordeling.ArbeidsfordelingV1ServiceImpl;
@@ -61,7 +61,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
-import static no.nav.modiapersonoversikt.api.utils.RestConstants.SECURITY_TOKEN_SERVICE_DISCOVERYURL;
+import static no.nav.modiapersonoversikt.legacy.api.utils.RestConstants.SECURITY_TOKEN_SERVICE_DISCOVERYURL;
 
 /**
  * MODIA ønsker å selv wire inn sine komponenters kontekster for å ha full kontroll over springoppsettet.

@@ -2,8 +2,8 @@ package no.nav.modiapersonoversikt.service;
 
 import _0._0.nav_cons_sak_gosys_3.no.nav.asbo.navorgenhet.ASBOGOSYSNavEnhet;
 import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navansatt.GOSYSNAVansatt;
-import no.nav.modiapersonoversikt.api.domain.norg.AnsattEnhet;
-import no.nav.modiapersonoversikt.api.service.organisasjonsEnhetV2.OrganisasjonEnhetV2Service;
+import no.nav.modiapersonoversikt.legacy.api.domain.norg.AnsattEnhet;
+import no.nav.modiapersonoversikt.legacy.api.service.organisasjonsEnhetV2.OrganisasjonEnhetV2Service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cache.CacheManager;

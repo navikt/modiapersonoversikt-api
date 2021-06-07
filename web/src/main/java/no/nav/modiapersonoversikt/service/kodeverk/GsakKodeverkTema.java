@@ -1,7 +1,7 @@
 package no.nav.modiapersonoversikt.service.kodeverk;
 
 import no.nav.modiapersonoversikt.infrastructure.core.exception.ApplicationException;
-import no.nav.modiapersonoversikt.api.domain.saker.GsakKodeTema;
+import no.nav.modiapersonoversikt.legacy.api.domain.saker.GsakKodeTema;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 

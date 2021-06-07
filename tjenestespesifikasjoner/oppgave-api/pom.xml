@@ -51,7 +51,7 @@
                             <inputSpec>${project.basedir}/src/main/resources/oppgave/openapi.yaml</inputSpec>
                             <generatorName>kotlin</generatorName>
                             <library>jvm-okhttp3</library>
-                            <packageName>no.nav.modiapersonoversikt.api.domain.oppgave.generated</packageName>
+                            <packageName>no.nav.modiapersonoversikt.legacy.api.domain.oppgave.generated</packageName>
                             <modelNameSuffix>DTO</modelNameSuffix>
                             <templateDirectory>${project.basedir}/src/main/resources/oppgave/templates</templateDirectory>
                             <configOptions>

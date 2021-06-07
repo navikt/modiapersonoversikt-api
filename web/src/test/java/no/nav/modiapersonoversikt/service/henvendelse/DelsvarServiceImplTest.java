@@ -1,10 +1,10 @@
 package no.nav.modiapersonoversikt.service.henvendelse;
 
-import no.nav.modiapersonoversikt.api.domain.Kanal;
-import no.nav.modiapersonoversikt.api.domain.Temagruppe;
-import no.nav.modiapersonoversikt.api.domain.henvendelse.Melding;
-import no.nav.modiapersonoversikt.api.service.HenvendelseUtsendingService;
-import no.nav.modiapersonoversikt.api.service.OppgaveBehandlingService;
+import no.nav.modiapersonoversikt.legacy.api.domain.Kanal;
+import no.nav.modiapersonoversikt.legacy.api.domain.Temagruppe;
+import no.nav.modiapersonoversikt.legacy.api.domain.henvendelse.Melding;
+import no.nav.modiapersonoversikt.legacy.api.service.HenvendelseUtsendingService;
+import no.nav.modiapersonoversikt.legacy.api.service.OppgaveBehandlingService;
 import no.nav.modiapersonoversikt.service.henvendelse.DelsvarRequest.DelsvarRequestBuilder;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

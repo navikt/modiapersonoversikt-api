@@ -3,9 +3,9 @@ package no.nav.modiapersonoversikt.service.saker
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
-import no.nav.modiapersonoversikt.api.domain.saker.Sak
-import no.nav.modiapersonoversikt.api.service.FodselnummerAktorService
-import no.nav.modiapersonoversikt.api.utils.http.SubjectHandlerUtil
+import no.nav.modiapersonoversikt.legacy.api.domain.saker.Sak
+import no.nav.modiapersonoversikt.legacy.api.service.FodselnummerAktorService
+import no.nav.modiapersonoversikt.legacy.api.utils.http.SubjectHandlerUtil
 import no.nav.modiapersonoversikt.service.saker.kilder.RestSakSaker
 import no.nav.modiapersonoversikt.service.saker.mediation.OpprettSakDto
 import no.nav.modiapersonoversikt.service.saker.mediation.SakApiGateway

@@ -1,6 +1,6 @@
 package no.nav.modiapersonoversikt.legacy.sak.service;
 
-import no.nav.modiapersonoversikt.api.service.FodselnummerAktorService;
+import no.nav.modiapersonoversikt.legacy.api.service.FodselnummerAktorService;
 import no.nav.modiapersonoversikt.legacy.sak.mock.MockCreationUtil;
 import no.nav.modiapersonoversikt.legacy.sak.service.filter.Filter;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.binding.SakOgBehandlingV1;

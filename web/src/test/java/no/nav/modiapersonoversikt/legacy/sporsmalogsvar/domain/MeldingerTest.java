@@ -1,9 +1,9 @@
 package no.nav.modiapersonoversikt.legacy.sporsmalogsvar.domain;
 
-import no.nav.modiapersonoversikt.api.domain.Person;
-import no.nav.modiapersonoversikt.api.domain.henvendelse.Fritekst;
-import no.nav.modiapersonoversikt.api.domain.henvendelse.Melding;
-import no.nav.modiapersonoversikt.api.domain.henvendelse.Meldingstype;
+import no.nav.modiapersonoversikt.legacy.api.domain.Person;
+import no.nav.modiapersonoversikt.legacy.api.domain.henvendelse.Fritekst;
+import no.nav.modiapersonoversikt.legacy.api.domain.henvendelse.Melding;
+import no.nav.modiapersonoversikt.legacy.api.domain.henvendelse.Meldingstype;
 import no.nav.modiapersonoversikt.legacy.sporsmalogsvar.consumer.henvendelse.domain.Meldinger;
 import org.joda.time.DateTime;
 import org.junit.jupiter.api.DisplayName;

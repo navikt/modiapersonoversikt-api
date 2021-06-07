@@ -8,10 +8,10 @@ import no.nav.common.log.MDCConstants
 import no.nav.common.rest.client.RestClient
 import no.nav.common.sts.SystemUserTokenProvider
 import no.nav.common.utils.EnvironmentUtils
-import no.nav.modiapersonoversikt.api.domain.norg.AnsattEnhet
-import no.nav.modiapersonoversikt.api.domain.norg.EnhetsGeografiskeTilknytning
-import no.nav.modiapersonoversikt.api.service.arbeidsfordeling.ArbeidsfordelingEnhet
-import no.nav.modiapersonoversikt.api.utils.RestConstants.*
+import no.nav.modiapersonoversikt.legacy.api.domain.norg.AnsattEnhet
+import no.nav.modiapersonoversikt.legacy.api.domain.norg.EnhetsGeografiskeTilknytning
+import no.nav.modiapersonoversikt.legacy.api.service.arbeidsfordeling.ArbeidsfordelingEnhet
+import no.nav.modiapersonoversikt.legacy.api.utils.RestConstants.*
 import no.nav.modiapersonoversikt.legacy.kjerneinfo.domain.person.GeografiskTilknytning
 import no.nav.modiapersonoversikt.service.kodeverksmapper.domain.Behandling
 import no.nav.modiapersonoversikt.service.unleash.strategier.ByEnvironmentStrategy.ENVIRONMENT_PROPERTY

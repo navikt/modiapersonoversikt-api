@@ -1,11 +1,5 @@
 package no.nav.modiapersonoversikt.rest.oppgave
 
-import no.nav.modiapersonoversikt.api.domain.Oppgave
-import no.nav.modiapersonoversikt.api.domain.Temagruppe
-import no.nav.modiapersonoversikt.api.service.HenvendelseUtsendingService
-import no.nav.modiapersonoversikt.api.service.LeggTilbakeOppgaveIGsakRequest
-import no.nav.modiapersonoversikt.api.service.OppgaveBehandlingService
-import no.nav.modiapersonoversikt.api.utils.RestUtils
 import no.nav.modiapersonoversikt.infrastructure.naudit.Audit
 import no.nav.modiapersonoversikt.infrastructure.naudit.Audit.Action.READ
 import no.nav.modiapersonoversikt.infrastructure.naudit.Audit.Action.UPDATE
@@ -13,6 +7,12 @@ import no.nav.modiapersonoversikt.infrastructure.naudit.AuditIdentifier
 import no.nav.modiapersonoversikt.infrastructure.naudit.AuditResources.Person.Henvendelse
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Policies
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll
+import no.nav.modiapersonoversikt.legacy.api.domain.Oppgave
+import no.nav.modiapersonoversikt.legacy.api.domain.Temagruppe
+import no.nav.modiapersonoversikt.legacy.api.service.HenvendelseUtsendingService
+import no.nav.modiapersonoversikt.legacy.api.service.LeggTilbakeOppgaveIGsakRequest
+import no.nav.modiapersonoversikt.legacy.api.service.OppgaveBehandlingService
+import no.nav.modiapersonoversikt.legacy.api.utils.RestUtils
 import no.nav.modiapersonoversikt.service.plukkoppgave.PlukkOppgaveService
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired

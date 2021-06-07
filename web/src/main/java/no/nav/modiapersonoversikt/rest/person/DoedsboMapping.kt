@@ -1,6 +1,6 @@
 package no.nav.modiapersonoversikt.rest.person
 
-import no.nav.modiapersonoversikt.api.domain.pdl.generated.HentPerson
+import no.nav.modiapersonoversikt.legacy.api.domain.pdl.generated.HentPerson
 
 object DoedsboMapping {
     fun mapKontaktinfoForDoedsbo(doedsbo: List<HentPerson.KontaktinformasjonForDoedsbo>): List<Map<String, Any?>> {

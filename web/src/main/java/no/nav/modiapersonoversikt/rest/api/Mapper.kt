@@ -1,8 +1,8 @@
 package no.nav.modiapersonoversikt.rest.api
 
-import no.nav.modiapersonoversikt.api.domain.Person
-import no.nav.modiapersonoversikt.api.domain.Saksbehandler
-import no.nav.modiapersonoversikt.api.domain.henvendelse.Melding
+import no.nav.modiapersonoversikt.legacy.api.domain.Person
+import no.nav.modiapersonoversikt.legacy.api.domain.Saksbehandler
+import no.nav.modiapersonoversikt.legacy.api.domain.henvendelse.Melding
 import no.nav.modiapersonoversikt.legacy.sporsmalogsvar.consumer.henvendelse.domain.Traad
 import no.nav.modiapersonoversikt.rest.DATO_TID_FORMAT
 import no.nav.modiapersonoversikt.rest.dialog.MeldingDTO

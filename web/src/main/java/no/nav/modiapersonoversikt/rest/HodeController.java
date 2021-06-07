@@ -2,11 +2,11 @@ package no.nav.modiapersonoversikt.rest;
 
 import kotlin.Pair;
 import no.nav.common.auth.subject.SubjectHandler;
-import no.nav.modiapersonoversikt.api.domain.Person;
-import no.nav.modiapersonoversikt.api.service.ldap.LDAPService;
-import no.nav.modiapersonoversikt.api.service.norg.AnsattService;
-import no.nav.modiapersonoversikt.api.service.organisasjonsEnhetV2.OrganisasjonEnhetV2Service;
-import no.nav.modiapersonoversikt.api.utils.http.CookieUtil;
+import no.nav.modiapersonoversikt.legacy.api.domain.Person;
+import no.nav.modiapersonoversikt.legacy.api.service.ldap.LDAPService;
+import no.nav.modiapersonoversikt.legacy.api.service.norg.AnsattService;
+import no.nav.modiapersonoversikt.legacy.api.service.organisasjonsEnhetV2.OrganisasjonEnhetV2Service;
+import no.nav.modiapersonoversikt.legacy.api.utils.http.CookieUtil;
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Policies;
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll;
 import no.nav.modiapersonoversikt.infrastructure.naudit.AuditIdentifier;
@@ -21,7 +21,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static no.nav.modiapersonoversikt.api.utils.RestUtils.hentValgtEnhet;
+import static no.nav.modiapersonoversikt.legacy.api.utils.RestUtils.hentValgtEnhet;
 import static no.nav.modiapersonoversikt.infrastructure.naudit.Audit.Action.*;
 
 @RestController

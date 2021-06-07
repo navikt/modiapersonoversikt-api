@@ -1,9 +1,5 @@
 package no.nav.modiapersonoversikt.rest.oppfolging
 
-import no.nav.modiapersonoversikt.api.domain.Saksbehandler
-import no.nav.modiapersonoversikt.api.domain.norg.AnsattEnhet
-import no.nav.modiapersonoversikt.api.service.ldap.LDAPService
-import no.nav.modiapersonoversikt.api.service.oppfolgingsinfo.OppfolgingsinfoApiService
 import no.nav.modiapersonoversikt.infrastructure.naudit.Audit
 import no.nav.modiapersonoversikt.infrastructure.naudit.Audit.Action.READ
 import no.nav.modiapersonoversikt.infrastructure.naudit.AuditIdentifier
@@ -18,6 +14,10 @@ import no.nav.modiapersonoversikt.integration.kontrakter.domain.oppfolging.SYFOP
 import no.nav.modiapersonoversikt.integration.kontrakter.domain.ytelse.Dagpengeytelse
 import no.nav.modiapersonoversikt.integration.kontrakter.domain.ytelse.Vedtak
 import no.nav.modiapersonoversikt.integration.kontrakter.domain.ytelse.Ytelse
+import no.nav.modiapersonoversikt.legacy.api.domain.Saksbehandler
+import no.nav.modiapersonoversikt.legacy.api.domain.norg.AnsattEnhet
+import no.nav.modiapersonoversikt.legacy.api.service.ldap.LDAPService
+import no.nav.modiapersonoversikt.legacy.api.service.oppfolgingsinfo.OppfolgingsinfoApiService
 import no.nav.modiapersonoversikt.rest.DATOFORMAT
 import no.nav.modiapersonoversikt.rest.lagRiktigDato
 import org.slf4j.LoggerFactory

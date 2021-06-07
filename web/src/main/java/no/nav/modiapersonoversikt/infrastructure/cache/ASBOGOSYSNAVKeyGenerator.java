@@ -3,7 +3,7 @@ package no.nav.modiapersonoversikt.infrastructure.cache;
 import _0._0.nav_cons_sak_gosys_3.no.nav.asbo.navansatt.ASBOGOSYSHentNAVAnsattFagomradeListeRequest;
 import _0._0.nav_cons_sak_gosys_3.no.nav.asbo.navansatt.ASBOGOSYSNAVAnsatt;
 import _0._0.nav_cons_sak_gosys_3.no.nav.asbo.navorgenhet.*;
-import no.nav.modiapersonoversikt.api.utils.cache.AutentisertBrukerKeyGenerator;
+import no.nav.modiapersonoversikt.legacy.api.utils.cache.AutentisertBrukerKeyGenerator;
 
 import java.lang.reflect.Method;
 import java.util.HashMap;

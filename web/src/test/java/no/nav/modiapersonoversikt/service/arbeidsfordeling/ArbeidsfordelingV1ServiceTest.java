@@ -4,8 +4,8 @@ import no.nav.modiapersonoversikt.legacy.kjerneinfo.consumer.egenansatt.EgenAnsa
 import no.nav.modiapersonoversikt.legacy.kjerneinfo.consumer.fim.person.PersonKjerneinfoServiceBi;
 import no.nav.modiapersonoversikt.legacy.kjerneinfo.domain.person.GeografiskTilknytning;
 import no.nav.modiapersonoversikt.legacy.kjerneinfo.domain.person.GeografiskTilknytningstyper;
-import no.nav.modiapersonoversikt.api.service.arbeidsfordeling.ArbeidsfordelingV1Service;
-import no.nav.modiapersonoversikt.api.service.arbeidsfordeling.FinnBehandlendeEnhetException;
+import no.nav.modiapersonoversikt.legacy.api.service.arbeidsfordeling.ArbeidsfordelingV1Service;
+import no.nav.modiapersonoversikt.legacy.api.service.arbeidsfordeling.FinnBehandlendeEnhetException;
 import no.nav.modiapersonoversikt.service.kodeverksmapper.KodeverksmapperService;
 import no.nav.modiapersonoversikt.service.kodeverksmapper.domain.Behandling;
 import no.nav.modiapersonoversikt.utils.PropertyRule;

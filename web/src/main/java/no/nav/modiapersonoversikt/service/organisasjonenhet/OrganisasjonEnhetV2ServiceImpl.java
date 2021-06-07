@@ -1,7 +1,7 @@
 package no.nav.modiapersonoversikt.service.organisasjonenhet;
 
-import no.nav.modiapersonoversikt.api.domain.norg.AnsattEnhet;
-import no.nav.modiapersonoversikt.api.service.organisasjonsEnhetV2.OrganisasjonEnhetV2Service;
+import no.nav.modiapersonoversikt.legacy.api.domain.norg.AnsattEnhet;
+import no.nav.modiapersonoversikt.legacy.api.service.organisasjonsEnhetV2.OrganisasjonEnhetV2Service;
 import no.nav.tjeneste.virksomhet.organisasjonenhet.v2.FinnNAVKontorUgyldigInput;
 import no.nav.tjeneste.virksomhet.organisasjonenhet.v2.OrganisasjonEnhetV2;
 import no.nav.tjeneste.virksomhet.organisasjonenhet.v2.informasjon.*;

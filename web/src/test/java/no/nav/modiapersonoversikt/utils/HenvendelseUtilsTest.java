@@ -3,10 +3,9 @@ package no.nav.modiapersonoversikt.utils;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelse;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLMeldingTilBruker;
-import no.nav.modiapersonoversikt.utils.HenvendelseUtils;
-import no.nav.modiapersonoversikt.api.domain.Saksbehandler;
-import no.nav.modiapersonoversikt.api.domain.henvendelse.Fritekst;
-import no.nav.modiapersonoversikt.api.domain.henvendelse.Melding;
+import no.nav.modiapersonoversikt.legacy.api.domain.Saksbehandler;
+import no.nav.modiapersonoversikt.legacy.api.domain.henvendelse.Fritekst;
+import no.nav.modiapersonoversikt.legacy.api.domain.henvendelse.Melding;
 import org.joda.time.DateTime;
 import org.junit.jupiter.api.Test;
 

@@ -17,8 +17,8 @@ import no.nav.modiapersonoversikt.legacy.kjerneinfo.domain.person.fakta.Familier
 import no.nav.modiapersonoversikt.legacy.kjerneinfo.domain.person.fakta.Organisasjonsenhet;
 import no.nav.modiapersonoversikt.infrastructure.core.exception.ApplicationException;
 import no.nav.modiapersonoversikt.infrastructure.core.exception.AuthorizationException;
-import no.nav.modiapersonoversikt.api.domain.norg.AnsattEnhet;
-import no.nav.modiapersonoversikt.api.service.organisasjonsEnhetV2.OrganisasjonEnhetV2Service;
+import no.nav.modiapersonoversikt.legacy.api.domain.norg.AnsattEnhet;
+import no.nav.modiapersonoversikt.legacy.api.service.organisasjonsEnhetV2.OrganisasjonEnhetV2Service;
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Policies;
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll;
 import no.nav.modiapersonoversikt.infrastructure.naudit.Audit;

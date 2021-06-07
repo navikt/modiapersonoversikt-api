@@ -8,12 +8,12 @@ import no.nav.common.auth.subject.SsoToken
 import no.nav.common.auth.subject.SubjectHandler
 import no.nav.common.sts.SystemUserTokenProvider
 import no.nav.common.utils.EnvironmentUtils
-import no.nav.modiapersonoversikt.api.domain.pdl.generated.HentIdent
-import no.nav.modiapersonoversikt.api.domain.pdl.generated.HentNavnBolk
-import no.nav.modiapersonoversikt.api.domain.pdl.generated.HentPerson
-import no.nav.modiapersonoversikt.api.domain.pdl.generated.SokPersonUtenlandskID
-import no.nav.modiapersonoversikt.api.service.pdl.PdlOppslagService
-import no.nav.modiapersonoversikt.api.utils.RestConstants.*
+import no.nav.modiapersonoversikt.legacy.api.domain.pdl.generated.HentIdent
+import no.nav.modiapersonoversikt.legacy.api.domain.pdl.generated.HentNavnBolk
+import no.nav.modiapersonoversikt.legacy.api.domain.pdl.generated.HentPerson
+import no.nav.modiapersonoversikt.legacy.api.domain.pdl.generated.SokPersonUtenlandskID
+import no.nav.modiapersonoversikt.legacy.api.service.pdl.PdlOppslagService
+import no.nav.modiapersonoversikt.legacy.api.utils.RestConstants.*
 import java.net.URL
 import kotlin.collections.set
 

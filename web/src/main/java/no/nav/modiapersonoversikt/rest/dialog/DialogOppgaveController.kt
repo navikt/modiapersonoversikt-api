@@ -1,11 +1,5 @@
 package no.nav.modiapersonoversikt.rest.dialog
 
-import no.nav.modiapersonoversikt.api.domain.saker.GsakKodeTema
-import no.nav.modiapersonoversikt.api.service.OppgaveBehandlingService
-import no.nav.modiapersonoversikt.api.service.OpprettOppgaveRequest
-import no.nav.modiapersonoversikt.api.service.OpprettOppgaveResponse
-import no.nav.modiapersonoversikt.api.service.OpprettSkjermetOppgaveRequest
-import no.nav.modiapersonoversikt.api.service.saker.GsakKodeverk
 import no.nav.modiapersonoversikt.infrastructure.naudit.Audit
 import no.nav.modiapersonoversikt.infrastructure.naudit.Audit.Action.CREATE
 import no.nav.modiapersonoversikt.infrastructure.naudit.AuditIdentifier
@@ -13,6 +7,12 @@ import no.nav.modiapersonoversikt.infrastructure.naudit.AuditResources.Person.He
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.BehandlingsIdTilgangData
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Policies
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll
+import no.nav.modiapersonoversikt.legacy.api.domain.saker.GsakKodeTema
+import no.nav.modiapersonoversikt.legacy.api.service.OppgaveBehandlingService
+import no.nav.modiapersonoversikt.legacy.api.service.OpprettOppgaveRequest
+import no.nav.modiapersonoversikt.legacy.api.service.OpprettOppgaveResponse
+import no.nav.modiapersonoversikt.legacy.api.service.OpprettSkjermetOppgaveRequest
+import no.nav.modiapersonoversikt.legacy.api.service.saker.GsakKodeverk
 import no.nav.modiapersonoversikt.legacy.sporsmalogsvar.common.utils.DateUtils.arbeidsdagerFraDatoJava
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*

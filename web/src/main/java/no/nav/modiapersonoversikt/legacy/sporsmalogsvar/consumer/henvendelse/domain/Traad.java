@@ -1,9 +1,9 @@
 package no.nav.modiapersonoversikt.legacy.sporsmalogsvar.consumer.henvendelse.domain;
 
-import no.nav.modiapersonoversikt.api.domain.Oppgave;
-import no.nav.modiapersonoversikt.api.domain.henvendelse.Melding;
-import no.nav.modiapersonoversikt.api.utils.henvendelse.delsvar.DelsvarSammenslaaer;
-import no.nav.modiapersonoversikt.api.utils.henvendelse.delsvar.DelsvarUtils;
+import no.nav.modiapersonoversikt.legacy.api.domain.Oppgave;
+import no.nav.modiapersonoversikt.legacy.api.domain.henvendelse.Melding;
+import no.nav.modiapersonoversikt.legacy.api.utils.henvendelse.delsvar.DelsvarSammenslaaer;
+import no.nav.modiapersonoversikt.legacy.api.utils.henvendelse.delsvar.DelsvarUtils;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;

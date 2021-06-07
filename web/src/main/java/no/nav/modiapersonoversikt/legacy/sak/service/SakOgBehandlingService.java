@@ -1,6 +1,6 @@
 package no.nav.modiapersonoversikt.legacy.sak.service;
 
-import no.nav.modiapersonoversikt.api.service.FodselnummerAktorService;
+import no.nav.modiapersonoversikt.legacy.api.service.FodselnummerAktorService;
 import no.nav.modiapersonoversikt.legacy.sak.providerdomain.Behandling;
 import no.nav.modiapersonoversikt.legacy.sak.providerdomain.FeilendeBaksystemException;
 import no.nav.modiapersonoversikt.legacy.sak.service.filter.Filter;

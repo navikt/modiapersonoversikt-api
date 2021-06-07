@@ -4,10 +4,10 @@ import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendel
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLJournalfortInformasjon;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLMetadataListe;
-import no.nav.modiapersonoversikt.api.domain.Temagruppe;
-import no.nav.modiapersonoversikt.api.domain.henvendelse.Melding;
-import no.nav.modiapersonoversikt.api.domain.henvendelse.Meldingstype;
-import no.nav.modiapersonoversikt.api.domain.henvendelse.Status;
+import no.nav.modiapersonoversikt.legacy.api.domain.Temagruppe;
+import no.nav.modiapersonoversikt.legacy.api.domain.henvendelse.Melding;
+import no.nav.modiapersonoversikt.legacy.api.domain.henvendelse.Meldingstype;
+import no.nav.modiapersonoversikt.legacy.api.domain.henvendelse.Status;
 import org.joda.time.DateTime;
 
 import java.util.ArrayList;

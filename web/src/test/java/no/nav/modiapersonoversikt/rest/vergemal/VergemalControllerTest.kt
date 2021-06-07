@@ -2,8 +2,8 @@ package no.nav.modiapersonoversikt.rest.vergemal
 
 import io.mockk.every
 import io.mockk.mockk
-import no.nav.modiapersonoversikt.api.domain.pdl.generated.HentNavnBolk
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.TilgangskontrollMock
+import no.nav.modiapersonoversikt.legacy.api.domain.pdl.generated.HentNavnBolk
 import no.nav.modiapersonoversikt.legacy.kjerneinfo.consumer.fim.person.vergemal.VergemalService
 import no.nav.modiapersonoversikt.legacy.kjerneinfo.consumer.fim.person.vergemal.domain.Periode
 import no.nav.modiapersonoversikt.legacy.kjerneinfo.consumer.fim.person.vergemal.domain.Verge

@@ -1,7 +1,7 @@
 package no.nav.modiapersonoversikt.config.endpoint.cms;
 
 import no.nav.modiapersonoversikt.infrastructure.content.ContentRetriever;
-import no.nav.modiapersonoversikt.api.domain.henvendelse.Melding;
+import no.nav.modiapersonoversikt.legacy.api.domain.henvendelse.Melding;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 

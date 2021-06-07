@@ -4,7 +4,7 @@ import no.nav.common.log.MDCConstants;
 import no.nav.common.utils.EnvironmentUtils;
 import no.nav.common.utils.IdUtils;
 import no.nav.modiapersonoversikt.infrastructure.core.exception.SystemException;
-import no.nav.modiapersonoversikt.api.service.kodeverk.StandardKodeverk;
+import no.nav.modiapersonoversikt.legacy.api.service.kodeverk.StandardKodeverk;
 import no.nav.tjeneste.virksomhet.kodeverk.v2.HentKodeverkHentKodeverkKodeverkIkkeFunnet;
 import no.nav.tjeneste.virksomhet.kodeverk.v2.KodeverkPortType;
 import no.nav.tjeneste.virksomhet.kodeverk.v2.informasjon.*;

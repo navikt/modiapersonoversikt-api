@@ -7,14 +7,14 @@ import no.nav.modiapersonoversikt.legacy.kjerneinfo.consumer.fim.person.to.HentK
 import no.nav.modiapersonoversikt.legacy.kjerneinfo.domain.person.Person;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelse;
 import no.nav.modiapersonoversikt.infrastructure.content.ContentRetriever;
-import no.nav.modiapersonoversikt.api.domain.Temagruppe;
-import no.nav.modiapersonoversikt.api.domain.henvendelse.Fritekst;
-import no.nav.modiapersonoversikt.api.domain.henvendelse.HenvendelseUtils;
-import no.nav.modiapersonoversikt.api.domain.henvendelse.Melding;
-import no.nav.modiapersonoversikt.api.domain.norg.EnhetsGeografiskeTilknytning;
-import no.nav.modiapersonoversikt.api.service.arbeidsfordeling.ArbeidsfordelingV1Service;
-import no.nav.modiapersonoversikt.api.service.kodeverk.StandardKodeverk;
-import no.nav.modiapersonoversikt.api.service.ldap.LDAPService;
+import no.nav.modiapersonoversikt.legacy.api.domain.Temagruppe;
+import no.nav.modiapersonoversikt.legacy.api.domain.henvendelse.Fritekst;
+import no.nav.modiapersonoversikt.legacy.api.domain.henvendelse.HenvendelseUtils;
+import no.nav.modiapersonoversikt.legacy.api.domain.henvendelse.Melding;
+import no.nav.modiapersonoversikt.legacy.api.domain.norg.EnhetsGeografiskeTilknytning;
+import no.nav.modiapersonoversikt.legacy.api.service.arbeidsfordeling.ArbeidsfordelingV1Service;
+import no.nav.modiapersonoversikt.legacy.api.service.kodeverk.StandardKodeverk;
+import no.nav.modiapersonoversikt.legacy.api.service.ldap.LDAPService;
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.*;
 import no.nav.modiapersonoversikt.infrastructure.naudit.Audit;
 import no.nav.modiapersonoversikt.infrastructure.naudit.AuditIdentifier;
@@ -37,7 +37,7 @@ import java.util.function.Predicate;
 
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
-import static no.nav.modiapersonoversikt.api.utils.MeldingUtils.tilMelding;
+import static no.nav.modiapersonoversikt.legacy.api.utils.MeldingUtils.tilMelding;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
 public class HenvendelseBehandlingServiceImpl implements HenvendelseBehandlingService {

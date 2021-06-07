@@ -9,10 +9,10 @@ import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendel
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLMeldingFraBruker;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLMetadataListe;
 import no.nav.modiapersonoversikt.infrastructure.content.ContentRetriever;
-import no.nav.modiapersonoversikt.api.domain.Temagruppe;
-import no.nav.modiapersonoversikt.api.service.OppgaveBehandlingService;
-import no.nav.modiapersonoversikt.api.utils.http.HttpRequestUtil;
-import no.nav.modiapersonoversikt.api.utils.http.SubjectHandlerUtil;
+import no.nav.modiapersonoversikt.legacy.api.domain.Temagruppe;
+import no.nav.modiapersonoversikt.legacy.api.service.OppgaveBehandlingService;
+import no.nav.modiapersonoversikt.legacy.api.utils.http.HttpRequestUtil;
+import no.nav.modiapersonoversikt.legacy.api.utils.http.SubjectHandlerUtil;
 import no.nav.modiapersonoversikt.service.HenvendelseUtsendingServiceImpl;
 import no.nav.modiapersonoversikt.service.henvendelse.DelsvarServiceImpl;
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.TilgangskontrollMock;

@@ -4,12 +4,12 @@ import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendel
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLMeldingTilBruker;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLMetadataListe;
-import no.nav.modiapersonoversikt.api.domain.henvendelse.Melding;
-import no.nav.modiapersonoversikt.api.domain.henvendelse.Meldingstype;
+import no.nav.modiapersonoversikt.legacy.api.domain.henvendelse.Melding;
+import no.nav.modiapersonoversikt.legacy.api.domain.henvendelse.Meldingstype;
 
 import java.util.Map;
 
-import static no.nav.modiapersonoversikt.api.utils.MeldingUtils.MELDINGSTYPE_MAP;
+import static no.nav.modiapersonoversikt.legacy.api.utils.MeldingUtils.MELDINGSTYPE_MAP;
 import static org.joda.time.DateTime.now;
 
 public class HenvendelseUtils {

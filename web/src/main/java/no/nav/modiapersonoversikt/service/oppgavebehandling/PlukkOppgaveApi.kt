@@ -1,12 +1,12 @@
 package no.nav.modiapersonoversikt.service.oppgavebehandling
 
 import no.nav.common.auth.subject.SubjectHandler
-import no.nav.modiapersonoversikt.api.domain.Temagruppe
-import no.nav.modiapersonoversikt.api.domain.oppgave.generated.apis.OppgaveApi
-import no.nav.modiapersonoversikt.api.domain.oppgave.generated.models.GetOppgaverResponseJsonDTO
-import no.nav.modiapersonoversikt.api.domain.oppgave.generated.models.OppgaveJsonDTO
-import no.nav.modiapersonoversikt.api.domain.oppgave.toOppgaveJsonDTO
-import no.nav.modiapersonoversikt.api.domain.oppgave.toPutOppgaveRequestJsonDTO
+import no.nav.modiapersonoversikt.legacy.api.domain.Temagruppe
+import no.nav.modiapersonoversikt.legacy.api.domain.oppgave.generated.apis.OppgaveApi
+import no.nav.modiapersonoversikt.legacy.api.domain.oppgave.generated.models.GetOppgaverResponseJsonDTO
+import no.nav.modiapersonoversikt.legacy.api.domain.oppgave.generated.models.OppgaveJsonDTO
+import no.nav.modiapersonoversikt.legacy.api.domain.oppgave.toOppgaveJsonDTO
+import no.nav.modiapersonoversikt.legacy.api.domain.oppgave.toPutOppgaveRequestJsonDTO
 import no.nav.modiapersonoversikt.service.oppgavebehandling.Utils.KONTAKT_NAV
 import no.nav.modiapersonoversikt.service.oppgavebehandling.Utils.SPORSMAL_OG_SVAR
 import no.nav.modiapersonoversikt.service.oppgavebehandling.Utils.defaultEnhetGittTemagruppe

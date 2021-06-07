@@ -1,7 +1,7 @@
 package no.nav.modiapersonoversikt.service.ldap;
 
-import no.nav.modiapersonoversikt.api.domain.Saksbehandler;
-import no.nav.modiapersonoversikt.api.service.ldap.LDAPService;
+import no.nav.modiapersonoversikt.legacy.api.domain.Saksbehandler;
+import no.nav.modiapersonoversikt.legacy.api.service.ldap.LDAPService;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;

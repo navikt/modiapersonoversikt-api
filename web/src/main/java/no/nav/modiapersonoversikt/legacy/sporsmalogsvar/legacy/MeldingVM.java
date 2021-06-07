@@ -1,8 +1,8 @@
 package no.nav.modiapersonoversikt.legacy.sporsmalogsvar.legacy;
 
-import no.nav.modiapersonoversikt.api.domain.Saksbehandler;
-import no.nav.modiapersonoversikt.api.domain.henvendelse.Melding;
-import no.nav.modiapersonoversikt.api.domain.henvendelse.Meldingstype;
+import no.nav.modiapersonoversikt.legacy.api.domain.Saksbehandler;
+import no.nav.modiapersonoversikt.legacy.api.domain.henvendelse.Melding;
+import no.nav.modiapersonoversikt.legacy.api.domain.henvendelse.Meldingstype;
 import no.nav.modiapersonoversikt.legacy.sporsmalogsvar.common.utils.DateUtils;
 import org.joda.time.DateTime;
 
@@ -10,7 +10,7 @@ import java.io.Serializable;
 import java.util.Optional;
 
 import static java.util.Optional.ofNullable;
-import static no.nav.modiapersonoversikt.api.utils.VisningUtils.lagMeldingStatusTekstKey;
+import static no.nav.modiapersonoversikt.legacy.api.utils.VisningUtils.lagMeldingStatusTekstKey;
 
 public class MeldingVM implements Serializable {
 

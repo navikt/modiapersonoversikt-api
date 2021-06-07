@@ -1,7 +1,7 @@
 package no.nav.modiapersonoversikt.service;
 
-import no.nav.modiapersonoversikt.api.domain.saker.Sak;
-import no.nav.modiapersonoversikt.api.service.psak.PsakService;
+import no.nav.modiapersonoversikt.legacy.api.domain.saker.Sak;
+import no.nav.modiapersonoversikt.legacy.api.service.psak.PsakService;
 import no.nav.tjeneste.virksomhet.pensjonsak.v1.PensjonSakV1;
 import no.nav.tjeneste.virksomhet.pensjonsak.v1.informasjon.WSPeriode;
 import no.nav.tjeneste.virksomhet.pensjonsak.v1.informasjon.WSSakSammendrag;
@@ -14,7 +14,7 @@ import java.util.function.Function;
 
 import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.toList;
-import static no.nav.modiapersonoversikt.api.domain.saker.Sak.FAGSYSTEMKODE_PSAK;
+import static no.nav.modiapersonoversikt.legacy.api.domain.saker.Sak.FAGSYSTEMKODE_PSAK;
 
 public class PsakServiceImpl implements PsakService {
 

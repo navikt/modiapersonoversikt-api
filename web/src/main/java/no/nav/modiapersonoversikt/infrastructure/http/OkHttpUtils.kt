@@ -7,7 +7,7 @@ import com.fasterxml.jackson.datatype.jdk8.Jdk8Module
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import no.nav.common.log.MDCConstants
-import no.nav.modiapersonoversikt.api.utils.TjenestekallLogger
+import no.nav.modiapersonoversikt.legacy.api.utils.TjenestekallLogger
 import okhttp3.Interceptor
 import okhttp3.MediaType
 import okhttp3.Request

@@ -1,7 +1,6 @@
 package no.nav.modiapersonoversikt.rest.dialog
 
 import no.nav.common.auth.subject.SubjectHandler
-import no.nav.modiapersonoversikt.api.service.OppgaveBehandlingService
 import no.nav.modiapersonoversikt.infrastructure.naudit.Audit
 import no.nav.modiapersonoversikt.infrastructure.naudit.Audit.Action.*
 import no.nav.modiapersonoversikt.infrastructure.naudit.AuditIdentifier
@@ -9,6 +8,7 @@ import no.nav.modiapersonoversikt.infrastructure.naudit.AuditResources.Person.He
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.BehandlingsIdTilgangData
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Policies
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll
+import no.nav.modiapersonoversikt.legacy.api.service.OppgaveBehandlingService
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.behandlehenvendelse.BehandleHenvendelsePortType
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus

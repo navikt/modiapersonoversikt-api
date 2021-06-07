@@ -24,8 +24,8 @@ import no.nav.modiapersonoversikt.legacy.kjerneinfo.consumer.fim.person.to.Recov
 import no.nav.modiapersonoversikt.integration.kodeverk.consumer.fim.kodeverk.support.DefaultKodeverkmanager;
 import no.nav.modiapersonoversikt.infrastructure.core.exception.ApplicationException;
 import no.nav.modiapersonoversikt.infrastructure.core.exception.AuthorizationException;
-import no.nav.modiapersonoversikt.api.domain.norg.AnsattEnhet;
-import no.nav.modiapersonoversikt.api.service.organisasjonsEnhetV2.OrganisasjonEnhetV2Service;
+import no.nav.modiapersonoversikt.legacy.api.domain.norg.AnsattEnhet;
+import no.nav.modiapersonoversikt.legacy.api.service.organisasjonsEnhetV2.OrganisasjonEnhetV2Service;
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll;
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.TilgangskontrollMock;
 import no.nav.tjeneste.virksomhet.kodeverk.v2.KodeverkPortType;

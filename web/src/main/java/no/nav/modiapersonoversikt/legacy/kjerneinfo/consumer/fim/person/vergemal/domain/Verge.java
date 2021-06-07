@@ -1,7 +1,7 @@
 package no.nav.modiapersonoversikt.legacy.kjerneinfo.consumer.fim.person.vergemal.domain;
 
 import no.nav.modiapersonoversikt.legacy.kjerneinfo.common.domain.Kodeverdi;
-import no.nav.modiapersonoversikt.api.domain.pdl.generated.HentNavnBolk;
+import no.nav.modiapersonoversikt.legacy.api.domain.pdl.generated.HentNavnBolk;
 
 public class Verge {
 

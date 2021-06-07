@@ -6,9 +6,9 @@ import com.fasterxml.jackson.module.kotlin.readValue
 import no.nav.common.log.MDCConstants
 import no.nav.common.rest.client.RestClient
 import no.nav.common.utils.EnvironmentUtils
-import no.nav.modiapersonoversikt.api.utils.RestConstants
-import no.nav.modiapersonoversikt.api.utils.RestConstants.MODIABRUKERDIALOG_SYSTEM_USER
-import no.nav.modiapersonoversikt.api.utils.TjenestekallLogger
+import no.nav.modiapersonoversikt.legacy.api.utils.RestConstants
+import no.nav.modiapersonoversikt.legacy.api.utils.RestConstants.MODIABRUKERDIALOG_SYSTEM_USER
+import no.nav.modiapersonoversikt.legacy.api.utils.TjenestekallLogger
 import okhttp3.Request
 import okhttp3.Response
 import org.slf4j.LoggerFactory

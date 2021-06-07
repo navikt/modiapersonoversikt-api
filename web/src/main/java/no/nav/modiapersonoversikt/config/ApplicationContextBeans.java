@@ -5,9 +5,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import no.nav.common.utils.EnvironmentUtils;
 import no.nav.modiapersonoversikt.integration.abac.AbacClient;
 import no.nav.modiapersonoversikt.integration.abac.AbacClientConfig;
-import no.nav.modiapersonoversikt.api.service.HenvendelseLesService;
-import no.nav.modiapersonoversikt.api.service.OppgaveBehandlingService;
-import no.nav.modiapersonoversikt.api.service.ldap.LDAPService;
+import no.nav.modiapersonoversikt.legacy.api.service.HenvendelseLesService;
+import no.nav.modiapersonoversikt.legacy.api.service.OppgaveBehandlingService;
+import no.nav.modiapersonoversikt.legacy.api.service.ldap.LDAPService;
 import no.nav.modiapersonoversikt.service.unleash.UnleashService;
 import no.nav.modiapersonoversikt.infrastructure.cache.CacheConfiguration;
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll;
@@ -19,8 +19,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 
-import static no.nav.modiapersonoversikt.api.utils.RestConstants.MODIABRUKERDIALOG_SYSTEM_USER;
-import static no.nav.modiapersonoversikt.api.utils.RestConstants.MODIABRUKERDIALOG_SYSTEM_USER_PASSWORD;
+import static no.nav.modiapersonoversikt.legacy.api.utils.RestConstants.MODIABRUKERDIALOG_SYSTEM_USER;
+import static no.nav.modiapersonoversikt.legacy.api.utils.RestConstants.MODIABRUKERDIALOG_SYSTEM_USER_PASSWORD;
 
 @Configuration
 @Import({

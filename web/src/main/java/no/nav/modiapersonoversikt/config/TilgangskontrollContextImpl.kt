@@ -4,12 +4,12 @@ import _0._0.nav_cons_sak_gosys_3.no.nav.asbo.navansatt.ASBOGOSYSHentNAVAnsattFa
 import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navansatt.*
 import no.nav.common.auth.subject.SubjectHandler
 import no.nav.common.utils.EnvironmentUtils
-import no.nav.modiapersonoversikt.api.service.HenvendelseLesService
-import no.nav.modiapersonoversikt.api.service.ldap.LDAPService
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.TilgangskontrollContext
 import no.nav.modiapersonoversikt.integration.abac.AbacClient
 import no.nav.modiapersonoversikt.integration.abac.AbacRequest
 import no.nav.modiapersonoversikt.integration.abac.AbacResponse
+import no.nav.modiapersonoversikt.legacy.api.service.HenvendelseLesService
+import no.nav.modiapersonoversikt.legacy.api.service.ldap.LDAPService
 import org.slf4j.LoggerFactory
 import java.util.*
 

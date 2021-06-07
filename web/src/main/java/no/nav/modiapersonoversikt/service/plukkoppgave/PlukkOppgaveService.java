@@ -1,7 +1,7 @@
 package no.nav.modiapersonoversikt.service.plukkoppgave;
 
-import no.nav.modiapersonoversikt.api.domain.Oppgave;
-import no.nav.modiapersonoversikt.api.domain.Temagruppe;
+import no.nav.modiapersonoversikt.legacy.api.domain.Oppgave;
+import no.nav.modiapersonoversikt.legacy.api.domain.Temagruppe;
 
 import java.util.List;
 

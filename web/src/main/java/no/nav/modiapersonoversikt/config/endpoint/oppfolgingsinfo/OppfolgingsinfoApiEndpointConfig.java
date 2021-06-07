@@ -2,7 +2,7 @@ package no.nav.modiapersonoversikt.config.endpoint.oppfolgingsinfo;
 
 import no.nav.common.utils.EnvironmentUtils;
 import no.nav.modiapersonoversikt.infrastructure.ping.ConsumerPingable;
-import no.nav.modiapersonoversikt.api.service.oppfolgingsinfo.OppfolgingsinfoApiService;
+import no.nav.modiapersonoversikt.legacy.api.service.oppfolgingsinfo.OppfolgingsinfoApiService;
 import no.nav.modiapersonoversikt.service.oppfolgingsinfo.OppfolgingsinfoApiServiceImpl;
 import no.nav.modiapersonoversikt.infrastructure.types.Pingable;
 import org.springframework.context.annotation.Bean;

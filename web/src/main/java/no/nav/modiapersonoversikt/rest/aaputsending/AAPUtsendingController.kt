@@ -1,11 +1,11 @@
 package no.nav.modiapersonoversikt.rest.aaputsending
 
 import no.nav.common.leaderelection.LeaderElectionHttpClient
-import no.nav.modiapersonoversikt.api.service.HenvendelseUtsendingService
-import no.nav.modiapersonoversikt.api.service.saker.SakerService
 import no.nav.modiapersonoversikt.infrastructure.naudit.Audit.Companion.skipAuditLog
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Policies
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll
+import no.nav.modiapersonoversikt.legacy.api.service.HenvendelseUtsendingService
+import no.nav.modiapersonoversikt.legacy.api.service.saker.SakerService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*
 

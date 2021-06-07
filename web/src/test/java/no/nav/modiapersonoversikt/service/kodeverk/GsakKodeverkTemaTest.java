@@ -1,6 +1,6 @@
 package no.nav.modiapersonoversikt.service.kodeverk;
 
-import no.nav.modiapersonoversikt.api.domain.saker.GsakKodeTema;
+import no.nav.modiapersonoversikt.legacy.api.domain.saker.GsakKodeTema;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;

@@ -6,7 +6,7 @@ import no.nav.common.json.JsonMapper
 import no.nav.common.rest.client.RestClient
 import no.nav.common.sts.SystemUserTokenProvider
 import no.nav.common.utils.EnvironmentUtils.getRequiredProperty
-import no.nav.modiapersonoversikt.api.service.HenvendelseLesService
+import no.nav.modiapersonoversikt.legacy.api.service.HenvendelseLesService
 import okhttp3.Request
 
 class HenvendelseLesServiceImpl(private val systemTokenProvider: SystemUserTokenProvider) : HenvendelseLesService {

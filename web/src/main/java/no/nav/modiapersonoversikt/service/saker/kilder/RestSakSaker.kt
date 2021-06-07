@@ -1,9 +1,9 @@
 package no.nav.modiapersonoversikt.service.saker.kilder
 
 import no.nav.common.auth.subject.SubjectHandler
-import no.nav.modiapersonoversikt.api.domain.saker.Sak
-import no.nav.modiapersonoversikt.api.domain.saker.Sak.FAGSYSTEM_FOR_OPPRETTELSE_AV_GENERELL_SAK
-import no.nav.modiapersonoversikt.api.service.FodselnummerAktorService
+import no.nav.modiapersonoversikt.legacy.api.domain.saker.Sak
+import no.nav.modiapersonoversikt.legacy.api.domain.saker.Sak.FAGSYSTEM_FOR_OPPRETTELSE_AV_GENERELL_SAK
+import no.nav.modiapersonoversikt.legacy.api.service.FodselnummerAktorService
 import no.nav.modiapersonoversikt.service.saker.SakerKilde
 import no.nav.modiapersonoversikt.service.saker.mediation.OpprettSakDto
 import no.nav.modiapersonoversikt.service.saker.mediation.SakApiGateway

@@ -1,7 +1,7 @@
 package no.nav.modiapersonoversikt.legacy.sporsmalogsvar.consumer.henvendelse.domain;
 
-import no.nav.modiapersonoversikt.api.domain.henvendelse.Melding;
-import no.nav.modiapersonoversikt.api.utils.MeldingUtils;
+import no.nav.modiapersonoversikt.legacy.api.domain.henvendelse.Melding;
+import no.nav.modiapersonoversikt.legacy.api.utils.MeldingUtils;
 
 import java.util.List;
 import java.util.Map;

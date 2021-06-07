@@ -1,8 +1,8 @@
 package no.nav.modiapersonoversikt.service.ldap;
 
 import no.nav.common.utils.EnvironmentUtils;
-import no.nav.modiapersonoversikt.api.domain.Saksbehandler;
-import no.nav.modiapersonoversikt.api.service.ldap.LDAPService;
+import no.nav.modiapersonoversikt.legacy.api.domain.Saksbehandler;
+import no.nav.modiapersonoversikt.legacy.api.service.ldap.LDAPService;
 
 import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;

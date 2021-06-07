@@ -1,8 +1,5 @@
 package no.nav.modiapersonoversikt.rest.person
 
-import no.nav.modiapersonoversikt.api.domain.pdl.generated.HentPerson
-import no.nav.modiapersonoversikt.api.service.kodeverk.StandardKodeverk
-import no.nav.modiapersonoversikt.api.service.pdl.PdlOppslagService
 import no.nav.modiapersonoversikt.infrastructure.naudit.Audit
 import no.nav.modiapersonoversikt.infrastructure.naudit.Audit.Action.READ
 import no.nav.modiapersonoversikt.infrastructure.naudit.AuditIdentifier
@@ -11,6 +8,9 @@ import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Policies
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll
 import no.nav.modiapersonoversikt.integration.kodeverk.consumer.fim.kodeverk.KodeverkmanagerBi
 import no.nav.modiapersonoversikt.integration.kodeverk.consumer.fim.kodeverk.to.feil.HentKodeverkKodeverkIkkeFunnet
+import no.nav.modiapersonoversikt.legacy.api.domain.pdl.generated.HentPerson
+import no.nav.modiapersonoversikt.legacy.api.service.kodeverk.StandardKodeverk
+import no.nav.modiapersonoversikt.legacy.api.service.pdl.PdlOppslagService
 import no.nav.modiapersonoversikt.legacy.kjerneinfo.common.domain.Kodeverdi
 import no.nav.modiapersonoversikt.legacy.kjerneinfo.consumer.fim.person.PersonKjerneinfoServiceBi
 import no.nav.modiapersonoversikt.legacy.kjerneinfo.consumer.fim.person.exception.AuthorizationWithSikkerhetstiltakException

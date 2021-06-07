@@ -10,7 +10,7 @@ import io.mockk.every
 import io.mockk.impl.annotations.MockK
 import no.nav.common.log.MDCConstants
 import no.nav.common.sts.SystemUserTokenProvider
-import no.nav.modiapersonoversikt.api.utils.RestConstants
+import no.nav.modiapersonoversikt.legacy.api.utils.RestConstants
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.core.Is.`is`
 import org.junit.jupiter.api.BeforeEach

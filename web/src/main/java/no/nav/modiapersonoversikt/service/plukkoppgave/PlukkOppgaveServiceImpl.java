@@ -1,8 +1,8 @@
 package no.nav.modiapersonoversikt.service.plukkoppgave;
 
-import no.nav.modiapersonoversikt.api.domain.Oppgave;
-import no.nav.modiapersonoversikt.api.domain.Temagruppe;
-import no.nav.modiapersonoversikt.api.service.OppgaveBehandlingService;
+import no.nav.modiapersonoversikt.legacy.api.domain.Oppgave;
+import no.nav.modiapersonoversikt.legacy.api.domain.Temagruppe;
+import no.nav.modiapersonoversikt.legacy.api.service.OppgaveBehandlingService;
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Policies;
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll;
 
