@@ -16,19 +16,7 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>api</module>
         <module>web</module>
-        <module>consumer</module>
-        <module>sporsmalogsvar</module>
-        <module>saksoversikt</module>
-        <module>modia-utbetalinger</module>
-        <module>modia-varsling</module>
-        <module>modig-content</module>
-        <module>personsok</module>
-        <module>tilgangskontroll</module>
-        <module>kjerneinfo</module>
-        <module>modia-felleskomponenter</module>
-        <module>modig-embedded</module>
         <module>tjenestespesifikasjoner</module>
     </modules>
 
