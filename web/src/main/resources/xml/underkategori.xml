@@ -3291,6 +3291,60 @@
         <gosys datoOpprettet="2021-01-28T12:00:00" endretAv="OPP-1315" underkategori="ALDER_PARTI_SUP"/>
         <gsak datoOpprettet="2021-01-28T12:00:00" endretAv="OPP-1315" kode="ALDER_PARTI_SUP"/>
     </underkategori>
+    <underkategori kode="TVANGSMULKT_VURD_AAR" datoFom="2021-06-10" datoOpprettet="2021-06-10T12:00:00" dekode="Tvangsmulkt vurdering"
+                   endretAv="OPP-1367" erGyldig="true" fagomrade="AAR" opprettetAv="OPP-1367" gosys="true" gsak="true"
+                   leveranse="OPP-1367" jiraissue="OPP-1367">
+        <gosys datoOpprettet="2021-06-10T12:00:00" endretAv="OPP-1367" underkategori="TVANGSMULKT_VURD_AAR"/>
+        <gsak datoOpprettet="2021-06-10T12:00:00" endretAv="OPP-1367" kode="TVANGSMULKT_VURD_AAR"/>
+    </underkategori>
+    <underkategori kode="SOKNAD_ETTERGIV_AAR" datoFom="2021-06-10" datoOpprettet="2021-06-10T12:00:00" dekode="Søknad om ettergivelse"
+                   endretAv="OPP-1367" erGyldig="true" fagomrade="AAR" opprettetAv="OPP-1367" gosys="true" gsak="true"
+                   leveranse="OPP-1367" jiraissue="OPP-1367">
+        <gosys datoOpprettet="2021-06-10T12:00:00" endretAv="OPP-1367" underkategori="SOKNAD_ETTERGIV_AAR"/>
+        <gsak datoOpprettet="2021-06-10T12:00:00" endretAv="OPP-1367" kode="SOKNAD_ETTERGIV_AAR"/>
+    </underkategori>
+    <underkategori kode="SAKSOMKOSTNINGER_AAR" datoFom="2021-06-10" datoOpprettet="2021-06-10T12:00:00" dekode="Saksomkostninger"
+                   endretAv="OPP-1367" erGyldig="true" fagomrade="AAR" opprettetAv="OPP-1367" gosys="true" gsak="true"
+                   leveranse="OPP-1367" jiraissue="OPP-1367">
+        <gosys datoOpprettet="2021-06-10T12:00:00" endretAv="OPP-1367" underkategori="SAKSOMKOSTNINGER_AAR"/>
+        <gsak datoOpprettet="2021-06-10T12:00:00" endretAv="OPP-1367" kode="SAKSOMKOSTNINGER_AAR"/>
+    </underkategori>
+    <underkategori kode="GEBYR_AAR" datoFom="2021-06-10" datoOpprettet="2021-06-10T12:00:00" dekode="Gebyr"
+                   endretAv="OPP-1367" erGyldig="true" fagomrade="AAR" opprettetAv="OPP-1367" gosys="true" gsak="true"
+                   leveranse="OPP-1367" jiraissue="OPP-1367">
+        <gosys datoOpprettet="2021-06-10T12:00:00" endretAv="OPP-1367" underkategori="GEBYR_AAR"/>
+        <gsak datoOpprettet="2021-06-10T12:00:00" endretAv="OPP-1367" kode="GEBYR_AAR"/>
+    </underkategori>
+    <underkategori kode="KVALITETKONTROLL_AAR" datoFom="2021-06-10" datoOpprettet="2021-06-10T12:00:00" dekode="Kvalitetskontroll"
+                   endretAv="OPP-1367" erGyldig="true" fagomrade="AAR" opprettetAv="OPP-1367" gosys="true" gsak="true"
+                   leveranse="OPP-1367" jiraissue="OPP-1367">
+        <gosys datoOpprettet="2021-06-10T12:00:00" endretAv="OPP-1367" underkategori="KVALITETKONTROLL_AAR"/>
+        <gsak datoOpprettet="2021-06-10T12:00:00" endretAv="OPP-1367" kode="KVALITETKONTROLL_AAR"/>
+    </underkategori>
+    <underkategori kode="UTTREKK_AAR" datoFom="2021-06-10" datoOpprettet="2021-06-10T12:00:00" dekode="Uttrekk"
+                   endretAv="OPP-1367" erGyldig="true" fagomrade="AAR" opprettetAv="OPP-1367" gosys="true" gsak="true"
+                   leveranse="OPP-1367" jiraissue="OPP-1367">
+        <gosys datoOpprettet="2021-06-10T12:00:00" endretAv="OPP-1367" underkategori="UTTREKK_AAR"/>
+        <gsak datoOpprettet="2021-06-10T12:00:00" endretAv="OPP-1367" kode="UTTREKK_AAR"/>
+    </underkategori>
+    <underkategori kode="REDIGER_PERSONOP_AAR" datoFom="2021-06-10" datoOpprettet="2021-06-10T12:00:00" dekode="Redigering av personopplysninger"
+                   endretAv="OPP-1367" erGyldig="true" fagomrade="AAR" opprettetAv="OPP-1367" gosys="true" gsak="true"
+                   leveranse="OPP-1367" jiraissue="OPP-1367">
+        <gosys datoOpprettet="2021-06-10T12:00:00" endretAv="OPP-1367" underkategori="REDIGER_PERSONOP_AAR"/>
+        <gsak datoOpprettet="2021-06-10T12:00:00" endretAv="OPP-1367" kode="REDIGER_PERSONOP_AAR"/>
+    </underkategori>
+    <underkategori kode="SLETT_PERSONOP_AAR" datoFom="2021-06-10" datoOpprettet="2021-06-10T12:00:00" dekode="Sletting av personopplysninger"
+                   endretAv="OPP-1367" erGyldig="true" fagomrade="AAR" opprettetAv="OPP-1367" gosys="true" gsak="true"
+                   leveranse="OPP-1367" jiraissue="OPP-1367">
+        <gosys datoOpprettet="2021-06-10T12:00:00" endretAv="OPP-1367" underkategori="SLETT_PERSONOP_AAR"/>
+        <gsak datoOpprettet="2021-06-10T12:00:00" endretAv="OPP-1367" kode="SLETT_PERSONOP_AAR"/>
+    </underkategori>
+    <underkategori kode="VEI_INF_OPP_AAR" datoFom="2021-06-10" datoOpprettet="2021-06-10T12:00:00" dekode="Veiledning, informasjon og oppfølging"
+                   endretAv="OPP-1367" erGyldig="true" fagomrade="AAR" opprettetAv="OPP-1367" gosys="true" gsak="true"
+                   leveranse="OPP-1367" jiraissue="OPP-1367">
+        <gosys datoOpprettet="2021-06-10T12:00:00" endretAv="OPP-1367" underkategori="VEI_INF_OPP_AAR"/>
+        <gsak datoOpprettet="2021-06-10T12:00:00" endretAv="OPP-1367" kode="VEI_INF_OPP_AAR"/>
+    </underkategori>
 </underkategoriListe>
 
 
