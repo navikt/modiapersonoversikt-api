@@ -9,7 +9,7 @@
         <ruting datoOpprettet="2010-10-02T05:00:03" endretAv="TBA2812" fagomrade="AAP" opprettetAv="TBA2812" gyldigForBatch="true"/>
     </fagomrade>
     <fagomrade kode="AAR" datoFom="2010-10-02" datoOpprettet="2010-10-02T04:21:03" dekode="Aa-registeret" endretAv="u109747" erGyldig="true" opprettetAv="KAA2812" gosys="true" gsak="true" ruting="true" leveranse="HL2_2013" jiraissue="FELLPK-1045">
-        <gosys bedrift="true" datoFom="2010-10-28" datoOpprettet="2010-10-28T19:35:54" endretAv="OEB2990" fagomrade="AAR" fagomradeNr="56" juridisk="true" omrade="IT" opprettArena="false" opprettetAv="KAA2812" orgLedd="true" person="false" relevantSak="true" samhandler="false"/>
+        <gosys bedrift="true" datoFom="2010-10-28" datoOpprettet="2010-10-28T19:35:54" endretAv="OEB2990" fagomrade="AAR" fagomradeNr="56" juridisk="true" omrade="IT" opprettArena="false" opprettetAv="KAA2812" orgLedd="true" person="true" relevantSak="true" samhandler="false"/>
         <gsak datoFom="2010-10-02" datoOpprettet="2010-10-02T04:21:03" endretAv="KAA2812" kode="AAR" opprettetAv="KAA2812" tidsregisAktivert="0"/>
         <ruting datoFom="2010-12-07" datoOpprettet="2010-12-07T21:39:39" endretAv="TBA2813" fagomrade="AAR" opprettetAv="TBA2813" gyldigForBatch="true"/>
     </fagomrade>
