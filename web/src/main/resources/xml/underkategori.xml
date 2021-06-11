@@ -106,10 +106,6 @@
         <gosys datoOpprettet="2011-03-24T20:51:01" endretAv="KHG2990" opprettetAv="KHG2990" underkategori="ARENATEKNISK_STO"/>
         <gsak datoOpprettet="2011-03-24T20:37:03" endretAv="MAB2990" kode="ARENATEKNISK_STO" opprettetAv="MAB2990"/>
     </underkategori>
-    <underkategori kode="ARS_KON_AAR" datoFom="2010-10-02" datoOpprettet="2010-10-02T04:21:59" dekode="Årskontroll" endretAv="KAA2812" erGyldig="true" fagomrade="AAR" opprettetAv="KAA2812" gosys="true" gsak="true">
-        <gosys datoOpprettet="2010-10-28T19:36:07" underkategori="ARS_KON_AAR"/>
-        <gsak datoOpprettet="2010-10-02T04:21:59" kode="ARS_KON_AAR"/>
-    </underkategori>
     <underkategori kode="ATTFORINGSLAN_STO" datoFom="2009-02-05" datoOpprettet="2009-02-05T21:36:59" dekode="Attføringslån" endretAv="Fredrik D-J" erGyldig="false" fagomrade="STO" opprettetAv="Fredrik D-J" gosys="true" gsak="true">
         <gosys datoFom="2010-10-28" datoOpprettet="2010-10-28T19:36:07" endretAv="KAA2812" opprettetAv="KAA2812" underkategori="ATTFORINGSLAN_STO"/>
         <gsak datoFom="2009-02-05" datoOpprettet="2009-02-05T21:36:59" endretAv="Fredrik D-J" kode="ATTFORINGSLAN_STO" opprettetAv="Fredrik D-J"/>
@@ -131,10 +127,6 @@
     <underkategori kode="BA" datoFom="2011-03-24" datoOpprettet="2011-03-24T20:33:08" dekode="BA" endretAv="Oe. Wiborg" erGyldig="true" fagomrade="OKO" opprettetAv="Oe. Wiborg" gosys="true" gsak="true">
         <gosys datoOpprettet="2011-03-24T20:48:06" underkategori="BA"/>
         <gsak datoOpprettet="2011-03-24T20:33:08" kode="BA"/>
-    </underkategori>
-    <underkategori kode="BANKKONTONR_AAR" datoFom="2013-08-01" datoOpprettet="2013-08-13T15:33:08" dekode="Bankkontonummer" endretAv="M139825" erGyldig="true" fagomrade="AAR" opprettetAv="M139825" gosys="true" gsak="true" leveranse="HL4_2013" jiraissue="PK-2173">
-        <gosys datoOpprettet="2011-03-01T20:48:06" underkategori="BANKKONTONR_AAR"/>
-        <gsak datoOpprettet="2011-03-24T20:33:08" kode="BANKKONTONR_AAR"/>
     </underkategori>
     <underkategori kode="BARETRANSPORT_GRA" datoFom="2010-01-19" datoOpprettet="2010-01-19T16:02:51" dekode="Båretransport" endretAv="KAA2812" erGyldig="true" fagomrade="GRA" opprettetAv="KAA2812" gosys="true" gsak="true" ruting="true">
         <gosys datoOpprettet="2010-10-28T19:36:07" underkategori="BARETRANSPORT_GRA"/>
@@ -2581,10 +2573,6 @@
     <underkategori kode="KLAGE_YRK" datoFom="2017-05-23" datoOpprettet="2017-05-23T12:00:00" dekode="Klage" endretAv="PK-43233" erGyldig="true" fagomrade="YRK" opprettetAv="PK-43233" gosys="true" gsak="true" leveranse="2017-HL3" jiraissue="PK-43233">
         <gosys datoOpprettet="2017-05-23T12:00:00" endretAv="PK-43233" underkategori="KLAGE_YRK"/>
         <gsak datoOpprettet="2017-05-23T12:00:00" endretAv="PK-43233" kode="KLAGE_YRK"/>
-    </underkategori>
-    <underkategori kode="ANKE_AAR" datoFom="2017-05-23" datoOpprettet="2017-05-23T12:00:00" dekode="Anke" endretAv="PK-43233" erGyldig="true" fagomrade="AAR" opprettetAv="PK-43233" gosys="true" gsak="true" leveranse="2017-HL3" jiraissue="PK-43233">
-        <gosys datoOpprettet="2017-05-23T12:00:00" endretAv="PK-43233" underkategori="ANKE_AAR"/>
-        <gsak datoOpprettet="2017-05-23T12:00:00" endretAv="PK-43233" kode="ANKE_AAR"/>
     </underkategori>
     <underkategori kode="ANKE_BAR" datoFom="2017-05-23" datoOpprettet="2017-05-23T12:00:00" dekode="Anke" endretAv="PK-43233" erGyldig="true" fagomrade="BAR" opprettetAv="PK-43233" gosys="true" gsak="true" leveranse="2017-HL3" jiraissue="PK-43233">
         <gosys datoOpprettet="2017-05-23T12:00:00" endretAv="PK-43233" underkategori="ANKE_BAR"/>
