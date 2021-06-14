@@ -5,7 +5,7 @@ import no.nav.modiapersonoversikt.legacy.kjerneinfo.consumer.fim.person.to.HentK
 import no.nav.modiapersonoversikt.legacy.kjerneinfo.domain.person.Diskresjonskoder;
 import no.nav.modiapersonoversikt.legacy.kjerneinfo.domain.person.Person;
 import no.nav.modiapersonoversikt.legacy.kjerneinfo.domain.person.fakta.Familierelasjon;
-import no.nav.modiapersonoversikt.integration.kodeverk.consumer.fim.kodeverk.support.DefaultKodeverkmanager;
+import no.nav.modiapersonoversikt.consumer.kodeverk.consumer.fim.kodeverk.support.DefaultKodeverkmanager;
 import no.nav.tjeneste.virksomhet.kodeverk.v2.KodeverkPortType;
 import no.nav.tjeneste.virksomhet.person.v3.informasjon.Bruker;
 import no.nav.tjeneste.virksomhet.person.v3.informasjon.NorskIdent;

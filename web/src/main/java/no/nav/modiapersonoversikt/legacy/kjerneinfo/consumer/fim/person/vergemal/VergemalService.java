@@ -2,7 +2,7 @@ package no.nav.modiapersonoversikt.legacy.kjerneinfo.consumer.fim.person.vergema
 
 import no.nav.modiapersonoversikt.legacy.kjerneinfo.common.domain.Kodeverdi;
 import no.nav.modiapersonoversikt.legacy.kjerneinfo.consumer.fim.person.vergemal.domain.Periode;
-import no.nav.modiapersonoversikt.integration.kodeverk.consumer.fim.kodeverk.KodeverkmanagerBi;
+import no.nav.modiapersonoversikt.consumer.kodeverk.consumer.fim.kodeverk.KodeverkmanagerBi;
 import no.nav.modiapersonoversikt.legacy.api.domain.pdl.generated.HentNavnBolk;
 import no.nav.modiapersonoversikt.legacy.api.service.pdl.PdlOppslagService;
 import no.nav.tjeneste.virksomhet.person.v3.binding.HentVergePersonIkkeFunnet;

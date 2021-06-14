@@ -2,9 +2,9 @@ package no.nav.modiapersonoversikt.infrastructure.tilgangskontroll
 
 import no.nav.common.auth.subject.SsoToken
 import no.nav.common.auth.subject.SubjectHandler
-import no.nav.modiapersonoversikt.integration.abac.*
-import no.nav.modiapersonoversikt.integration.abac.NavAttributes.*
-import no.nav.modiapersonoversikt.integration.abac.StandardAttributter.ACTION_ID
+import no.nav.modiapersonoversikt.consumer.abac.*
+import no.nav.modiapersonoversikt.consumer.abac.NavAttributes.*
+import no.nav.modiapersonoversikt.consumer.abac.StandardAttributter.ACTION_ID
 import java.util.*
 
 private fun parseOidcToken(ssoToken: SsoToken): String {

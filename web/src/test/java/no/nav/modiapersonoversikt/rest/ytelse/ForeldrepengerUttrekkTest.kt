@@ -2,9 +2,9 @@ package no.nav.modiapersonoversikt.rest.ytelse
 
 import io.mockk.every
 import io.mockk.mockk
+import no.nav.modiapersonoversikt.consumer.sykmeldingsperioder.consumer.foreldrepenger.DefaultForeldrepengerService
+import no.nav.modiapersonoversikt.consumer.sykmeldingsperioder.consumer.foreldrepenger.mapping.ForeldrepengerMapper
 import no.nav.modiapersonoversikt.infrastructure.core.exception.AuthorizationException
-import no.nav.modiapersonoversikt.integration.sykmeldingsperioder.consumer.foreldrepenger.DefaultForeldrepengerService
-import no.nav.modiapersonoversikt.integration.sykmeldingsperioder.consumer.foreldrepenger.mapping.ForeldrepengerMapper
 import no.nav.tjeneste.virksomhet.foreldrepenger.v2.ForeldrepengerV2
 import no.nav.tjeneste.virksomhet.foreldrepenger.v2.HentForeldrepengerettighetSikkerhetsbegrensning
 import no.nav.tjeneste.virksomhet.foreldrepenger.v2.informasjon.FimFoedsel

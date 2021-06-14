@@ -1,7 +1,7 @@
 package no.nav.modiapersonoversikt.legacy.sak.config;
 
 import no.nav.modiapersonoversikt.infrastructure.content.ContentRetriever;
-import no.nav.modiapersonoversikt.integration.kodeverk2.KodeverkClient;
+import no.nav.modiapersonoversikt.consumer.kodeverk2.KodeverkClient;
 import no.nav.modiapersonoversikt.legacy.api.service.FodselnummerAktorService;
 import no.nav.modiapersonoversikt.legacy.api.service.norg.AnsattService;
 import no.nav.modiapersonoversikt.legacy.api.service.saker.SakerService;

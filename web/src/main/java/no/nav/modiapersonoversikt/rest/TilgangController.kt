@@ -2,11 +2,11 @@ package no.nav.modiapersonoversikt.rest
 
 import no.nav.common.auth.subject.SsoToken
 import no.nav.common.auth.subject.SubjectHandler
+import no.nav.modiapersonoversikt.consumer.abac.AbacClient
+import no.nav.modiapersonoversikt.consumer.abac.AbacResponse
+import no.nav.modiapersonoversikt.consumer.abac.Decision
+import no.nav.modiapersonoversikt.consumer.abac.DenyCause
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.AbacPolicies
-import no.nav.modiapersonoversikt.integration.abac.AbacClient
-import no.nav.modiapersonoversikt.integration.abac.AbacResponse
-import no.nav.modiapersonoversikt.integration.abac.Decision
-import no.nav.modiapersonoversikt.integration.abac.DenyCause
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable

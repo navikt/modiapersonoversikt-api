@@ -1,6 +1,6 @@
 package no.nav.modiapersonoversikt.legacy.sak.transformers;
 
-import no.nav.modiapersonoversikt.integration.kodeverk2.Kodeverk;
+import no.nav.modiapersonoversikt.consumer.kodeverk2.Kodeverk;
 import no.nav.modiapersonoversikt.legacy.sak.providerdomain.*;
 import no.nav.modiapersonoversikt.legacy.sak.providerdomain.resultatwrappere.ResultatWrapper;
 import no.nav.modiapersonoversikt.legacy.sak.service.BulletproofKodeverkService;

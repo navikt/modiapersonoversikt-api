@@ -1,12 +1,12 @@
 package no.nav.modiapersonoversikt.infrastructure.tilgangskontroll
 
+import no.nav.modiapersonoversikt.consumer.abac.AbacResponse
 import no.nav.modiapersonoversikt.infrastructure.rsbac.*
-import no.nav.modiapersonoversikt.integration.abac.AbacResponse
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus
 import org.springframework.web.server.ResponseStatusException
-import no.nav.modiapersonoversikt.integration.abac.Decision as AbacDecision
+import no.nav.modiapersonoversikt.consumer.abac.Decision as AbacDecision
 
 fun AbacResponse.toDecisionEnum(): DecisionEnums = when (this.getDecision()) {
     AbacDecision.Deny -> DecisionEnums.DENY

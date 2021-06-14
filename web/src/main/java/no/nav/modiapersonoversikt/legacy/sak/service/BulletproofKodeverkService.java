@@ -1,8 +1,8 @@
 package no.nav.modiapersonoversikt.legacy.sak.service;
 
 import no.nav.modiapersonoversikt.infrastructure.core.exception.ApplicationException;
-import no.nav.modiapersonoversikt.integration.kodeverk2.Kodeverk;
-import no.nav.modiapersonoversikt.integration.kodeverk2.KodeverkClient;
+import no.nav.modiapersonoversikt.consumer.kodeverk2.Kodeverk;
+import no.nav.modiapersonoversikt.consumer.kodeverk2.KodeverkClient;
 import no.nav.modiapersonoversikt.legacy.sak.providerdomain.Baksystem;
 import no.nav.modiapersonoversikt.legacy.sak.providerdomain.resultatwrappere.ResultatWrapper;
 import org.apache.commons.lang3.StringUtils;

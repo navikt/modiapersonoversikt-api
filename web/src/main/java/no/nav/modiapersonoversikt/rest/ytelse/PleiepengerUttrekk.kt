@@ -1,11 +1,11 @@
 package no.nav.modiapersonoversikt.rest.ytelse
 
-import no.nav.modiapersonoversikt.integration.sykmeldingsperioder.consumer.pleiepenger.PleiepengerService
-import no.nav.modiapersonoversikt.integration.sykmeldingsperioder.consumer.pleiepenger.mapping.to.PleiepengerListeRequest
-import no.nav.modiapersonoversikt.integration.sykmeldingsperioder.domain.pleiepenger.Arbeidsforhold
-import no.nav.modiapersonoversikt.integration.sykmeldingsperioder.domain.pleiepenger.Pleiepengeperiode
-import no.nav.modiapersonoversikt.integration.sykmeldingsperioder.domain.pleiepenger.Pleiepengerrettighet
-import no.nav.modiapersonoversikt.integration.sykmeldingsperioder.domain.pleiepenger.Vedtak
+import no.nav.modiapersonoversikt.consumer.sykmeldingsperioder.consumer.pleiepenger.PleiepengerService
+import no.nav.modiapersonoversikt.consumer.sykmeldingsperioder.consumer.pleiepenger.mapping.to.PleiepengerListeRequest
+import no.nav.modiapersonoversikt.consumer.sykmeldingsperioder.domain.pleiepenger.Arbeidsforhold
+import no.nav.modiapersonoversikt.consumer.sykmeldingsperioder.domain.pleiepenger.Pleiepengeperiode
+import no.nav.modiapersonoversikt.consumer.sykmeldingsperioder.domain.pleiepenger.Pleiepengerrettighet
+import no.nav.modiapersonoversikt.consumer.sykmeldingsperioder.domain.pleiepenger.Vedtak
 import no.nav.modiapersonoversikt.legacy.kjerneinfo.consumer.organisasjon.OrganisasjonService
 import no.nav.modiapersonoversikt.rest.DATOFORMAT
 import no.nav.modiapersonoversikt.rest.lagPleiepengePeriode

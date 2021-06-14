@@ -1,13 +1,13 @@
 package no.nav.modiapersonoversikt.rest.ytelse
 
+import no.nav.modiapersonoversikt.consumer.sykmeldingsperioder.consumer.foreldrepenger.ForeldrepengerServiceBi
+import no.nav.modiapersonoversikt.consumer.sykmeldingsperioder.consumer.pleiepenger.PleiepengerService
+import no.nav.modiapersonoversikt.consumer.sykmeldingsperioder.consumer.sykepenger.SykepengerServiceBi
 import no.nav.modiapersonoversikt.infrastructure.naudit.Audit
 import no.nav.modiapersonoversikt.infrastructure.naudit.AuditIdentifier
 import no.nav.modiapersonoversikt.infrastructure.naudit.AuditResources
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Policies
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll
-import no.nav.modiapersonoversikt.integration.sykmeldingsperioder.consumer.foreldrepenger.ForeldrepengerServiceBi
-import no.nav.modiapersonoversikt.integration.sykmeldingsperioder.consumer.pleiepenger.PleiepengerService
-import no.nav.modiapersonoversikt.integration.sykmeldingsperioder.consumer.sykepenger.SykepengerServiceBi
 import no.nav.modiapersonoversikt.legacy.kjerneinfo.consumer.organisasjon.OrganisasjonService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.GetMapping

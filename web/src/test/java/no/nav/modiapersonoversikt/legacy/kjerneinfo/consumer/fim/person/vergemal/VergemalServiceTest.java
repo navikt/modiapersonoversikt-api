@@ -1,8 +1,8 @@
 package no.nav.modiapersonoversikt.legacy.kjerneinfo.consumer.fim.person.vergemal;
 
 import no.nav.modiapersonoversikt.legacy.kjerneinfo.consumer.fim.person.vergemal.domain.Verge;
-import no.nav.modiapersonoversikt.integration.kodeverk.consumer.fim.kodeverk.KodeverkmanagerBi;
-import no.nav.modiapersonoversikt.integration.kodeverk.consumer.fim.kodeverk.to.feil.HentKodeverkKodeverkIkkeFunnet;
+import no.nav.modiapersonoversikt.consumer.kodeverk.consumer.fim.kodeverk.KodeverkmanagerBi;
+import no.nav.modiapersonoversikt.consumer.kodeverk.consumer.fim.kodeverk.to.feil.HentKodeverkKodeverkIkkeFunnet;
 import no.nav.modiapersonoversikt.legacy.api.domain.pdl.generated.HentNavnBolk;
 import no.nav.modiapersonoversikt.legacy.api.service.pdl.PdlOppslagService;
 import no.nav.tjeneste.virksomhet.person.v3.binding.HentVergePersonIkkeFunnet;
@@ -20,7 +20,7 @@ import java.util.List;
 
 import static java.util.Collections.emptyMap;
 import static no.nav.modiapersonoversikt.legacy.kjerneinfo.consumer.fim.person.vergemal.VergemalService.TPS_VERGES_FNR_MANGLENDE_DATA;
-import static no.nav.modiapersonoversikt.integration.kodeverk.consumer.fim.kodeverk.support.DefaultKodeverkmanager.*;
+import static no.nav.modiapersonoversikt.consumer.kodeverk.consumer.fim.kodeverk.support.DefaultKodeverkmanager.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;

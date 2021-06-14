@@ -22,8 +22,8 @@ import no.nav.modiapersonoversikt.legacy.kjerneinfo.domain.person.UstrukturertAd
 import no.nav.modiapersonoversikt.legacy.kjerneinfo.domain.person.fakta.Familierelasjon;
 import no.nav.modiapersonoversikt.legacy.kjerneinfo.domain.person.fakta.Telefon;
 import no.nav.modiapersonoversikt.legacy.kjerneinfo.domain.person.predicate.AdresseUtils;
-import no.nav.modiapersonoversikt.integration.kodeverk.consumer.fim.kodeverk.KodeverkmanagerBi;
-import no.nav.modiapersonoversikt.integration.kodeverk.consumer.fim.kodeverk.to.feil.HentKodeverkKodeverkIkkeFunnet;
+import no.nav.modiapersonoversikt.consumer.kodeverk.consumer.fim.kodeverk.KodeverkmanagerBi;
+import no.nav.modiapersonoversikt.consumer.kodeverk.consumer.fim.kodeverk.to.feil.HentKodeverkKodeverkIkkeFunnet;
 import no.nav.tjeneste.virksomhet.person.v3.informasjon.*;
 import no.nav.tjeneste.virksomhet.person.v3.meldinger.HentPersonResponse;
 import org.joda.time.LocalDate;

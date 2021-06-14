@@ -21,7 +21,7 @@ import no.nav.modiapersonoversikt.legacy.kjerneinfo.consumer.fim.person.mock.Per
 import no.nav.modiapersonoversikt.legacy.kjerneinfo.consumer.fim.person.to.HentKjerneinformasjonRequest;
 import no.nav.modiapersonoversikt.legacy.kjerneinfo.consumer.fim.person.to.HentKjerneinformasjonResponse;
 import no.nav.modiapersonoversikt.legacy.kjerneinfo.consumer.fim.person.to.RecoverableAuthorizationException;
-import no.nav.modiapersonoversikt.integration.kodeverk.consumer.fim.kodeverk.support.DefaultKodeverkmanager;
+import no.nav.modiapersonoversikt.consumer.kodeverk.consumer.fim.kodeverk.support.DefaultKodeverkmanager;
 import no.nav.modiapersonoversikt.infrastructure.core.exception.ApplicationException;
 import no.nav.modiapersonoversikt.infrastructure.core.exception.AuthorizationException;
 import no.nav.modiapersonoversikt.legacy.api.domain.norg.AnsattEnhet;

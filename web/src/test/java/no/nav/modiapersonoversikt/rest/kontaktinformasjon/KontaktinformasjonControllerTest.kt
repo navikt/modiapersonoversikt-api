@@ -2,8 +2,8 @@ package no.nav.modiapersonoversikt.rest.kontaktinformasjon
 
 import io.mockk.every
 import io.mockk.mockk
+import no.nav.modiapersonoversikt.consumer.dkif.consumer.DkifService
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.TilgangskontrollMock
-import no.nav.modiapersonoversikt.integration.dkif.consumer.DkifService
 import no.nav.tjeneste.virksomhet.digitalkontaktinformasjon.v1.informasjon.WSEpostadresse
 import no.nav.tjeneste.virksomhet.digitalkontaktinformasjon.v1.informasjon.WSKontaktinformasjon
 import no.nav.tjeneste.virksomhet.digitalkontaktinformasjon.v1.informasjon.WSMobiltelefonnummer

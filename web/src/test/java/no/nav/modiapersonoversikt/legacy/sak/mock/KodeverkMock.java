@@ -1,6 +1,6 @@
 package no.nav.modiapersonoversikt.legacy.sak.mock;
 
-import no.nav.modiapersonoversikt.integration.kodeverk2.Kodeverk;
+import no.nav.modiapersonoversikt.consumer.kodeverk2.Kodeverk;
 import no.nav.modiapersonoversikt.legacy.sak.service.BulletproofKodeverkService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

@@ -2,11 +2,11 @@ package no.nav.modiapersonoversikt.service.oppgavebehandling
 
 import io.mockk.*
 import no.nav.common.sts.SystemUserTokenProvider
+import no.nav.modiapersonoversikt.consumer.abac.AbacResponse
+import no.nav.modiapersonoversikt.consumer.abac.Decision
+import no.nav.modiapersonoversikt.consumer.abac.Response
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.TilgangskontrollContext
-import no.nav.modiapersonoversikt.integration.abac.AbacResponse
-import no.nav.modiapersonoversikt.integration.abac.Decision
-import no.nav.modiapersonoversikt.integration.abac.Response
 import no.nav.modiapersonoversikt.legacy.api.domain.MetadataKey
 import no.nav.modiapersonoversikt.legacy.api.domain.Oppgave
 import no.nav.modiapersonoversikt.legacy.api.domain.Temagruppe

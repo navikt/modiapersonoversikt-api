@@ -5,8 +5,8 @@ import io.mockk.mockk
 import no.nav.common.auth.subject.IdentType
 import no.nav.common.auth.subject.SsoToken
 import no.nav.common.auth.subject.Subject
+import no.nav.modiapersonoversikt.consumer.abac.*
 import no.nav.modiapersonoversikt.infrastructure.rsbac.DecisionEnums
-import no.nav.modiapersonoversikt.integration.abac.*
 import no.nav.modiapersonoversikt.utils.SubjectRule
 import org.junit.Rule
 import org.junit.Test

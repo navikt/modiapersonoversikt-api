@@ -1,9 +1,9 @@
 package no.nav.modiapersonoversikt.service;
 
-import no.nav.modiapersonoversikt.integration.abac.AbacRequest;
-import no.nav.modiapersonoversikt.integration.abac.AbacResponse;
-import no.nav.modiapersonoversikt.integration.abac.Decision;
-import no.nav.modiapersonoversikt.integration.abac.Response;
+import no.nav.modiapersonoversikt.consumer.abac.AbacRequest;
+import no.nav.modiapersonoversikt.consumer.abac.AbacResponse;
+import no.nav.modiapersonoversikt.consumer.abac.Decision;
+import no.nav.modiapersonoversikt.consumer.abac.Response;
 import no.nav.modiapersonoversikt.legacy.api.domain.Oppgave;
 import no.nav.modiapersonoversikt.legacy.api.domain.Temagruppe;
 import no.nav.modiapersonoversikt.legacy.api.service.OppgaveBehandlingService;

@@ -1,14 +1,14 @@
 package no.nav.modiapersonoversikt.legacy.kjerneinfo.consumer.fim.person.vergemal;
 
 import no.nav.modiapersonoversikt.legacy.kjerneinfo.common.domain.Kodeverdi;
-import no.nav.modiapersonoversikt.integration.kodeverk.consumer.fim.kodeverk.KodeverkmanagerBi;
-import no.nav.modiapersonoversikt.integration.kodeverk.consumer.fim.kodeverk.to.feil.HentKodeverkKodeverkIkkeFunnet;
+import no.nav.modiapersonoversikt.consumer.kodeverk.consumer.fim.kodeverk.KodeverkmanagerBi;
+import no.nav.modiapersonoversikt.consumer.kodeverk.consumer.fim.kodeverk.to.feil.HentKodeverkKodeverkIkkeFunnet;
 import no.nav.tjeneste.virksomhet.person.v3.informasjon.Fylkesmannsembete;
 import no.nav.tjeneste.virksomhet.person.v3.informasjon.Mandattyper;
 import no.nav.tjeneste.virksomhet.person.v3.informasjon.Vergesakstyper;
 import no.nav.tjeneste.virksomhet.person.v3.informasjon.Vergetyper;
 
-import static no.nav.modiapersonoversikt.integration.kodeverk.consumer.fim.kodeverk.support.DefaultKodeverkmanager.*;
+import static no.nav.modiapersonoversikt.consumer.kodeverk.consumer.fim.kodeverk.support.DefaultKodeverkmanager.*;
 
 public class VergemalKodeverkService {
 

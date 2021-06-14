@@ -1,7 +1,7 @@
 package no.nav.modiapersonoversikt.infrastructure.tilgangskontroll
 
-import no.nav.modiapersonoversikt.integration.abac.AbacRequest
-import no.nav.modiapersonoversikt.integration.abac.AbacResponse
+import no.nav.modiapersonoversikt.consumer.abac.AbacRequest
+import no.nav.modiapersonoversikt.consumer.abac.AbacResponse
 import java.util.*
 
 interface TilgangskontrollContext {

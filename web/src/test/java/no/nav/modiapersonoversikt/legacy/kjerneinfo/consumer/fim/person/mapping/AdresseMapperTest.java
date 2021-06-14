@@ -6,7 +6,7 @@ import no.nav.modiapersonoversikt.legacy.kjerneinfo.domain.person.*;
 import no.nav.modiapersonoversikt.legacy.kjerneinfo.domain.person.Matrikkeladresse;
 import no.nav.modiapersonoversikt.legacy.kjerneinfo.domain.person.Person;
 import no.nav.modiapersonoversikt.legacy.kjerneinfo.domain.person.Postboksadresse;
-import no.nav.modiapersonoversikt.integration.kodeverk.consumer.fim.kodeverk.support.DefaultKodeverkmanager;
+import no.nav.modiapersonoversikt.consumer.kodeverk.consumer.fim.kodeverk.support.DefaultKodeverkmanager;
 import no.nav.tjeneste.virksomhet.person.v3.informasjon.*;
 import no.nav.tjeneste.virksomhet.person.v3.informasjon.UstrukturertAdresse;
 import org.joda.time.LocalDateTime;

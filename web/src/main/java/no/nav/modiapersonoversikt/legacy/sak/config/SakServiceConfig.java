@@ -1,8 +1,6 @@
 package no.nav.modiapersonoversikt.legacy.sak.config;
 
-import no.nav.modiapersonoversikt.integration.kodeverk2.JsonKodeverk;
-import no.nav.modiapersonoversikt.integration.kodeverk2.Kodeverk;
-import no.nav.modiapersonoversikt.integration.kodeverk2.config.KodeverkConfig;
+import no.nav.modiapersonoversikt.consumer.kodeverk2.config.KodeverkConfig;
 import no.nav.modiapersonoversikt.legacy.sak.service.*;
 import no.nav.modiapersonoversikt.legacy.sak.service.filter.Filter;
 import no.nav.modiapersonoversikt.legacy.sak.service.interfaces.InnsynJournalV2Service;

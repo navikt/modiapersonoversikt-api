@@ -1,9 +1,9 @@
 package no.nav.modiapersonoversikt.config.artifact.kjerneinfo;
 
-import no.nav.modiapersonoversikt.integration.kontrakter.consumer.fim.mapping.YtelseskontraktMapper;
-import no.nav.modiapersonoversikt.integration.kontrakter.consumer.fim.oppfolgingskontrakt.support.DefaultOppfolgingskontraktService;
-import no.nav.modiapersonoversikt.integration.kontrakter.consumer.fim.ytelseskontrakt.support.DefaultYtelseskontraktService;
-import no.nav.modiapersonoversikt.integration.kontrakter.consumer.utils.OppfolgingskontraktMapper;
+import no.nav.modiapersonoversikt.consumer.kontrakter.consumer.fim.mapping.YtelseskontraktMapper;
+import no.nav.modiapersonoversikt.consumer.kontrakter.consumer.fim.oppfolgingskontrakt.support.DefaultOppfolgingskontraktService;
+import no.nav.modiapersonoversikt.consumer.kontrakter.consumer.fim.ytelseskontrakt.support.DefaultYtelseskontraktService;
+import no.nav.modiapersonoversikt.consumer.kontrakter.consumer.utils.OppfolgingskontraktMapper;
 import no.nav.tjeneste.virksomhet.oppfoelging.v1.OppfoelgingPortType;
 import no.nav.tjeneste.virksomhet.ytelseskontrakt.v3.YtelseskontraktV3;
 

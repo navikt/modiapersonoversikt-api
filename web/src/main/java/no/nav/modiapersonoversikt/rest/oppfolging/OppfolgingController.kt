@@ -1,19 +1,19 @@
 package no.nav.modiapersonoversikt.rest.oppfolging
 
+import no.nav.modiapersonoversikt.consumer.kontrakter.consumer.fim.oppfolgingskontrakt.OppfolgingskontraktServiceBi
+import no.nav.modiapersonoversikt.consumer.kontrakter.consumer.fim.oppfolgingskontrakt.to.OppfolgingskontraktRequest
+import no.nav.modiapersonoversikt.consumer.kontrakter.consumer.fim.ytelseskontrakt.YtelseskontraktServiceBi
+import no.nav.modiapersonoversikt.consumer.kontrakter.consumer.fim.ytelseskontrakt.to.YtelseskontraktRequest
+import no.nav.modiapersonoversikt.consumer.kontrakter.domain.oppfolging.SYFOPunkt
+import no.nav.modiapersonoversikt.consumer.kontrakter.domain.ytelse.Dagpengeytelse
+import no.nav.modiapersonoversikt.consumer.kontrakter.domain.ytelse.Vedtak
+import no.nav.modiapersonoversikt.consumer.kontrakter.domain.ytelse.Ytelse
 import no.nav.modiapersonoversikt.infrastructure.naudit.Audit
 import no.nav.modiapersonoversikt.infrastructure.naudit.Audit.Action.READ
 import no.nav.modiapersonoversikt.infrastructure.naudit.AuditIdentifier
 import no.nav.modiapersonoversikt.infrastructure.naudit.AuditResources.Person
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Policies
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll
-import no.nav.modiapersonoversikt.integration.kontrakter.consumer.fim.oppfolgingskontrakt.OppfolgingskontraktServiceBi
-import no.nav.modiapersonoversikt.integration.kontrakter.consumer.fim.oppfolgingskontrakt.to.OppfolgingskontraktRequest
-import no.nav.modiapersonoversikt.integration.kontrakter.consumer.fim.ytelseskontrakt.YtelseskontraktServiceBi
-import no.nav.modiapersonoversikt.integration.kontrakter.consumer.fim.ytelseskontrakt.to.YtelseskontraktRequest
-import no.nav.modiapersonoversikt.integration.kontrakter.domain.oppfolging.SYFOPunkt
-import no.nav.modiapersonoversikt.integration.kontrakter.domain.ytelse.Dagpengeytelse
-import no.nav.modiapersonoversikt.integration.kontrakter.domain.ytelse.Vedtak
-import no.nav.modiapersonoversikt.integration.kontrakter.domain.ytelse.Ytelse
 import no.nav.modiapersonoversikt.legacy.api.domain.Saksbehandler
 import no.nav.modiapersonoversikt.legacy.api.domain.norg.AnsattEnhet
 import no.nav.modiapersonoversikt.legacy.api.service.ldap.LDAPService

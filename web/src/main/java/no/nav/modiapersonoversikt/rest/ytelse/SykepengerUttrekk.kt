@@ -1,12 +1,12 @@
 package no.nav.modiapersonoversikt.rest.ytelse
 
-import no.nav.modiapersonoversikt.integration.sykmeldingsperioder.consumer.sykepenger.SykepengerServiceBi
-import no.nav.modiapersonoversikt.integration.sykmeldingsperioder.consumer.sykepenger.mapping.to.SykepengerRequest
-import no.nav.modiapersonoversikt.integration.sykmeldingsperioder.domain.Arbeidsforhold
-import no.nav.modiapersonoversikt.integration.sykmeldingsperioder.domain.UtbetalingPaVent
-import no.nav.modiapersonoversikt.integration.sykmeldingsperioder.domain.sykepenger.Gradering
-import no.nav.modiapersonoversikt.integration.sykmeldingsperioder.domain.sykepenger.Sykmelding
-import no.nav.modiapersonoversikt.integration.sykmeldingsperioder.domain.sykepenger.Sykmeldingsperiode
+import no.nav.modiapersonoversikt.consumer.sykmeldingsperioder.consumer.sykepenger.SykepengerServiceBi
+import no.nav.modiapersonoversikt.consumer.sykmeldingsperioder.consumer.sykepenger.mapping.to.SykepengerRequest
+import no.nav.modiapersonoversikt.consumer.sykmeldingsperioder.domain.Arbeidsforhold
+import no.nav.modiapersonoversikt.consumer.sykmeldingsperioder.domain.UtbetalingPaVent
+import no.nav.modiapersonoversikt.consumer.sykmeldingsperioder.domain.sykepenger.Gradering
+import no.nav.modiapersonoversikt.consumer.sykmeldingsperioder.domain.sykepenger.Sykmelding
+import no.nav.modiapersonoversikt.consumer.sykmeldingsperioder.domain.sykepenger.Sykmeldingsperiode
 import no.nav.modiapersonoversikt.rest.DATOFORMAT
 import no.nav.modiapersonoversikt.rest.lagPeriode
 import org.joda.time.LocalDate

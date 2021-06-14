@@ -1,6 +1,6 @@
 package no.nav.modiapersonoversikt.legacy.sak.service;
 
-import no.nav.modiapersonoversikt.integration.kodeverk2.KodeverkClient;
+import no.nav.modiapersonoversikt.consumer.kodeverk2.KodeverkClient;
 import no.nav.modiapersonoversikt.legacy.sak.BehandlingskjedeBuilder;
 import no.nav.modiapersonoversikt.legacy.sak.SakBuilder;
 import no.nav.modiapersonoversikt.legacy.sak.providerdomain.*;

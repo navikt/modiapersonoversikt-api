@@ -1,12 +1,12 @@
 package no.nav.modiapersonoversikt.rest.ytelse
 
-import no.nav.modiapersonoversikt.integration.sykmeldingsperioder.consumer.foreldrepenger.ForeldrepengerServiceBi
-import no.nav.modiapersonoversikt.integration.sykmeldingsperioder.consumer.foreldrepenger.mapping.to.ForeldrepengerListeRequest
-import no.nav.modiapersonoversikt.integration.sykmeldingsperioder.domain.Arbeidsforhold
-import no.nav.modiapersonoversikt.integration.sykmeldingsperioder.domain.foreldrepenger.Adopsjon
-import no.nav.modiapersonoversikt.integration.sykmeldingsperioder.domain.foreldrepenger.Foedsel
-import no.nav.modiapersonoversikt.integration.sykmeldingsperioder.domain.foreldrepenger.Foreldrepengeperiode
-import no.nav.modiapersonoversikt.integration.sykmeldingsperioder.domain.foreldrepenger.Foreldrepengerettighet
+import no.nav.modiapersonoversikt.consumer.sykmeldingsperioder.consumer.foreldrepenger.ForeldrepengerServiceBi
+import no.nav.modiapersonoversikt.consumer.sykmeldingsperioder.consumer.foreldrepenger.mapping.to.ForeldrepengerListeRequest
+import no.nav.modiapersonoversikt.consumer.sykmeldingsperioder.domain.Arbeidsforhold
+import no.nav.modiapersonoversikt.consumer.sykmeldingsperioder.domain.foreldrepenger.Adopsjon
+import no.nav.modiapersonoversikt.consumer.sykmeldingsperioder.domain.foreldrepenger.Foedsel
+import no.nav.modiapersonoversikt.consumer.sykmeldingsperioder.domain.foreldrepenger.Foreldrepengeperiode
+import no.nav.modiapersonoversikt.consumer.sykmeldingsperioder.domain.foreldrepenger.Foreldrepengerettighet
 import no.nav.modiapersonoversikt.legacy.kjerneinfo.common.domain.Periode
 import no.nav.modiapersonoversikt.rest.DATOFORMAT
 import no.nav.modiapersonoversikt.rest.lagPeriode

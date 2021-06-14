@@ -23,7 +23,7 @@ fun lagPeriode(periode: Periode) = mapOf(
     "til" to periode.to?.toString(DATOFORMAT)
 )
 
-fun lagPleiepengePeriode(periode: no.nav.modiapersonoversikt.integration.sykmeldingsperioder.domain.pleiepenger.Periode) = mapOf(
+fun lagPleiepengePeriode(periode: no.nav.modiapersonoversikt.consumer.sykmeldingsperioder.domain.pleiepenger.Periode) = mapOf(
     "fom" to periode.fraOgMed?.format(DateTimeFormatter.ofPattern(DATOFORMAT)),
     "tom" to periode.tilOgMed?.format(DateTimeFormatter.ofPattern(DATOFORMAT))
 )
