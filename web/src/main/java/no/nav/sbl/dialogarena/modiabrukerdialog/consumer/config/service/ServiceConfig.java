@@ -126,8 +126,7 @@ public class ServiceConfig {
             AnsattService ansattService,
             ArbeidsfordelingV1Service arbeidsfordelingV1Service,
             Tilgangskontroll tilgangskontroll,
-            SystemUserTokenProvider stsService,
-            UnleashService unleashService
+            SystemUserTokenProvider stsService
     ) {
         return RestOppgaveBehandlingServiceImpl.create(
                 kodeverksmapperService,
@@ -135,8 +134,7 @@ public class ServiceConfig {
                 ansattService,
                 arbeidsfordelingV1Service,
                 tilgangskontroll,
-                stsService,
-                unleashService
+                stsService
         );
     }
 
