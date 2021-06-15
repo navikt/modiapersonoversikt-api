@@ -28,8 +28,6 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.oppgavebehandli
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.oppgavebehandling.Utils.defaultEnhetGittTemagruppe
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.oppgavebehandling.Utils.leggTilBeskrivelse
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.oppgavebehandling.Utils.paginering
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.Feature
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.unleash.UnleashService
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.SafeListAggregate
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Policies
 import no.nav.sbl.dialogarena.modiabrukerdialog.tilgangskontroll.Tilgangskontroll
@@ -51,7 +49,6 @@ class RestOppgaveBehandlingServiceImpl(
     private val arbeidsfordelingService: ArbeidsfordelingV1Service,
     private val tilgangskontroll: Tilgangskontroll,
     private val stsService: SystemUserTokenProvider,
-    private val unleashService: UnleashService,
     private val apiClient: OppgaveApi = OppgaveApiFactory.createClient {
         SubjectHandler.getSsoToken(SsoToken.Type.OIDC).orElseThrow { IllegalStateException("Fant ikke OIDC-token") }
     },
@@ -69,16 +66,14 @@ class RestOppgaveBehandlingServiceImpl(
             ansattService: AnsattService,
             arbeidsfordelingService: ArbeidsfordelingV1Service,
             tilgangskontroll: Tilgangskontroll,
-            stsService: SystemUserTokenProvider,
-            unleashService: UnleashService
+            stsService: SystemUserTokenProvider
         ): OppgaveBehandlingService = RestOppgaveBehandlingServiceImpl(
             kodeverksmapperService = kodeverksmapperService,
             fodselnummerAktorService = fodselnummerAktorService,
             ansattService = ansattService,
             arbeidsfordelingService = arbeidsfordelingService,
             tilgangskontroll = tilgangskontroll,
-            stsService = stsService,
-            unleashService = unleashService
+            stsService = stsService
         )
     }
 
@@ -180,7 +175,7 @@ class RestOppgaveBehandlingServiceImpl(
         val oppgave = hentOppgaveJsonDTO(oppgaveId)
         if (oppgave.tilordnetRessurs == ident) {
             return
-        } else if (!unleashService.isEnabled(Feature.STOPP_OPPGAVE_STJELING) || tvungenTilordning) {
+        } else if (tvungenTilordning) {
             tjenestekallLogg.warn("[OPPGAVE] $ident gjorde en tvungen tilordning av $oppgaveId, som allerede var tildelt ${oppgave.tilordnetRessurs}")
         } else if (oppgave.tilordnetRessurs != null && oppgave.tilordnetRessurs != ident) {
             throw AlleredeTildeltAnnenSaksbehandler("Oppgaven er allerede tildelt ${oppgave.tilordnetRessurs}. Vil du overstyre dette?")
