@@ -22,9 +22,9 @@ import no.nav.modiapersonoversikt.legacy.api.service.OppgaveBehandlingService.Al
 import no.nav.modiapersonoversikt.legacy.api.service.arbeidsfordeling.ArbeidsfordelingV1Service
 import no.nav.modiapersonoversikt.legacy.api.service.norg.AnsattService
 import no.nav.modiapersonoversikt.legacy.api.utils.http.SubjectHandlerUtil
+import no.nav.modiapersonoversikt.service.kodeverksmapper.KodeverksmapperService
 import no.nav.modiapersonoversikt.service.kodeverksmapper.domain.Behandling
 import no.nav.modiapersonoversikt.service.oppgavebehandling.Utils.SPORSMAL_OG_SVAR
-import no.nav.modiapersonoversikt.service.unleash.Feature
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.*
@@ -39,14 +39,13 @@ import java.util.*
 class RestOppgaveBehandlingServiceImplTest {
     private val apiClient: OppgaveApi = mockk()
     private val systemApiClient: OppgaveApi = mockk()
-    private val kodeverksmapperService: no.nav.modiapersonoversikt.service.kodeverksmapper.KodeverksmapperService = mockk()
+    private val kodeverksmapperService: KodeverksmapperService = mockk()
     private val fodselnummerAktorService: FodselnummerAktorService = mockk()
     private val tilgangskontrollContext: TilgangskontrollContext = mockk()
     private val tilgangskontroll: Tilgangskontroll = Tilgangskontroll(tilgangskontrollContext)
     private val ansattService: AnsattService = mockk()
     private val arbeidsfordelingService: ArbeidsfordelingV1Service = mockk()
     private val stsService: SystemUserTokenProvider = mockk()
-    private val unleashService: no.nav.modiapersonoversikt.service.unleash.UnleashService = mockk()
     private val fixedClock = Clock.fixed(Instant.parse("2021-01-25T10:15:30Z"), ZoneId.systemDefault())
 
     private val oppgaveBehandlingService = RestOppgaveBehandlingServiceImpl(
@@ -56,7 +55,6 @@ class RestOppgaveBehandlingServiceImplTest {
         arbeidsfordelingService,
         tilgangskontroll,
         stsService,
-        unleashService,
         apiClient,
         systemApiClient,
         fixedClock
@@ -64,7 +62,6 @@ class RestOppgaveBehandlingServiceImplTest {
 
     @BeforeEach
     fun setupStandardMocker() {
-        every { unleashService.isEnabled(any<Feature>()) } returns true
         every { kodeverksmapperService.mapUnderkategori(any()) } returns Optional.empty()
         every { kodeverksmapperService.mapOppgavetype(any()) } returns "SPM_OG_SVR"
         every { fodselnummerAktorService.hentAktorIdForFnr(any()) } answers {
@@ -254,36 +251,6 @@ class RestOppgaveBehandlingServiceImplTest {
                     )
                 }
             }.isExactlyInstanceOf(AlleredeTildeltAnnenSaksbehandler::class.java)
-        }
-
-        @Test
-        fun `skal ignorere allerede-tilordnet sjekk om feature er skrudd av`() {
-            every { unleashService.isEnabled(any<Feature>()) } returns false
-            every { apiClient.hentOppgave(any(), any()) } returns dummyOppgave
-                .copy(tilordnetRessurs = "Z999998")
-                .toGetOppgaveResponseJsonDTO()
-            every { apiClient.endreOppgave(any(), any(), any()) } returns dummyOppgave.toPutOppgaveResponseJsonDTO()
-
-            withIdent("Z999999") {
-                oppgaveBehandlingService.tilordneOppgaveIGsak(
-                    "1234",
-                    Temagruppe.FMLI,
-                    "4110",
-                    false
-                )
-            }
-
-            verifySequence {
-                apiClient.hentOppgave(any(), 1234)
-                apiClient.endreOppgave(
-                    any(),
-                    1234,
-                    dummyOppgave.toPutOppgaveRequestJsonDTO().copy(
-                        endretAvEnhetsnr = "4100",
-                        tilordnetRessurs = "Z999999"
-                    )
-                )
-            }
         }
 
         @Test

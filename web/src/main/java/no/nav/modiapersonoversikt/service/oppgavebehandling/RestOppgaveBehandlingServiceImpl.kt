@@ -23,6 +23,7 @@ import no.nav.modiapersonoversikt.legacy.api.service.*
 import no.nav.modiapersonoversikt.legacy.api.service.OppgaveBehandlingService.AlleredeTildeltAnnenSaksbehandler
 import no.nav.modiapersonoversikt.legacy.api.service.arbeidsfordeling.ArbeidsfordelingV1Service
 import no.nav.modiapersonoversikt.legacy.api.service.norg.AnsattService
+import no.nav.modiapersonoversikt.service.kodeverksmapper.KodeverksmapperService
 import no.nav.modiapersonoversikt.service.kodeverksmapper.domain.Behandling
 import no.nav.modiapersonoversikt.service.oppgavebehandling.Utils.OPPGAVE_MAX_LIMIT
 import no.nav.modiapersonoversikt.service.oppgavebehandling.Utils.SPORSMAL_OG_SVAR
@@ -30,7 +31,6 @@ import no.nav.modiapersonoversikt.service.oppgavebehandling.Utils.beskrivelseInn
 import no.nav.modiapersonoversikt.service.oppgavebehandling.Utils.defaultEnhetGittTemagruppe
 import no.nav.modiapersonoversikt.service.oppgavebehandling.Utils.leggTilBeskrivelse
 import no.nav.modiapersonoversikt.service.oppgavebehandling.Utils.paginering
-import no.nav.modiapersonoversikt.service.unleash.Feature
 import no.nav.modiapersonoversikt.utils.SafeListAggregate
 import org.slf4j.LoggerFactory
 import org.slf4j.MDC
@@ -43,13 +43,12 @@ import java.util.Optional.ofNullable
 
 private val tjenestekallLogg = LoggerFactory.getLogger("SecureLog")
 class RestOppgaveBehandlingServiceImpl(
-    private val kodeverksmapperService: no.nav.modiapersonoversikt.service.kodeverksmapper.KodeverksmapperService,
+    private val kodeverksmapperService: KodeverksmapperService,
     private val fodselnummerAktorService: FodselnummerAktorService,
     private val ansattService: AnsattService,
     private val arbeidsfordelingService: ArbeidsfordelingV1Service,
     private val tilgangskontroll: Tilgangskontroll,
     private val stsService: SystemUserTokenProvider,
-    private val unleashService: no.nav.modiapersonoversikt.service.unleash.UnleashService,
     private val apiClient: OppgaveApi = OppgaveApiFactory.createClient {
         SubjectHandler.getSsoToken(SsoToken.Type.OIDC).orElseThrow { IllegalStateException("Fant ikke OIDC-token") }
     },
@@ -62,21 +61,19 @@ class RestOppgaveBehandlingServiceImpl(
     companion object {
         @JvmStatic
         fun create(
-            kodeverksmapperService: no.nav.modiapersonoversikt.service.kodeverksmapper.KodeverksmapperService,
+            kodeverksmapperService: KodeverksmapperService,
             fodselnummerAktorService: FodselnummerAktorService,
             ansattService: AnsattService,
             arbeidsfordelingService: ArbeidsfordelingV1Service,
             tilgangskontroll: Tilgangskontroll,
-            stsService: SystemUserTokenProvider,
-            unleashService: no.nav.modiapersonoversikt.service.unleash.UnleashService
+            stsService: SystemUserTokenProvider
         ): OppgaveBehandlingService = RestOppgaveBehandlingServiceImpl(
             kodeverksmapperService = kodeverksmapperService,
             fodselnummerAktorService = fodselnummerAktorService,
             ansattService = ansattService,
             arbeidsfordelingService = arbeidsfordelingService,
             tilgangskontroll = tilgangskontroll,
-            stsService = stsService,
-            unleashService = unleashService
+            stsService = stsService
         )
     }
 
@@ -178,7 +175,7 @@ class RestOppgaveBehandlingServiceImpl(
         val oppgave = hentOppgaveJsonDTO(oppgaveId)
         if (oppgave.tilordnetRessurs == ident) {
             return
-        } else if (!unleashService.isEnabled(Feature.STOPP_OPPGAVE_STJELING) || tvungenTilordning) {
+        } else if (tvungenTilordning) {
             tjenestekallLogg.warn("[OPPGAVE] $ident gjorde en tvungen tilordning av $oppgaveId, som allerede var tildelt ${oppgave.tilordnetRessurs}")
         } else if (oppgave.tilordnetRessurs != null && oppgave.tilordnetRessurs != ident) {
             throw AlleredeTildeltAnnenSaksbehandler("Oppgaven er allerede tildelt ${oppgave.tilordnetRessurs}. Vil du overstyre dette?")
