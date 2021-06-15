@@ -67,7 +67,7 @@ spec:
     - name: SECURITYTOKENSERVICE_URL
       value: "https://sts-q1.preprod.local/SecurityTokenServiceProvider/"
     - name: ABAC_PDP_ENDPOINT_URL
-      value: "https://wasapp-q1.adeo.no/asm-pdp/authorize"
+      value: "https://abac-modia-q1.dev.intern.nav.no/application/authorize"
     - name: AKTOER_V1_ENDPOINTURL
       value: "https://app-q1.adeo.no/aktoerregister/ws/Aktoer/v1"
     - name: AKTOER_V2_ENDPOINTURL
