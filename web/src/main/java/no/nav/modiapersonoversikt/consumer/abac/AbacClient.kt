@@ -67,5 +67,5 @@ open class AbacClient(val config: AbacClientConfig) : HealthCheck, Pingable {
             )
     }
 
-    override fun ping() = SelfTestCheck("Abac", true, this)
+    override fun ping() = SelfTestCheck("Abac via ${config.endpointUrl}", true, this)
 }
