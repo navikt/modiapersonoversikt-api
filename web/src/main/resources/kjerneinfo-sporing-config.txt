@@ -1,1 +1,0 @@
-no.nav.kjerneinfo.domain.person.Person,getFodselsnummer.getNummer,ident
