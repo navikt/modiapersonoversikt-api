@@ -1,5 +1,6 @@
 package no.nav.modiapersonoversikt.rest.person
 
+import no.nav.modiapersonoversikt.infrastructure.http.GraphQLException
 import no.nav.modiapersonoversikt.infrastructure.naudit.Audit
 import no.nav.modiapersonoversikt.infrastructure.naudit.AuditIdentifier
 import no.nav.modiapersonoversikt.infrastructure.naudit.AuditResources
@@ -8,7 +9,6 @@ import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontro
 import no.nav.modiapersonoversikt.legacy.api.domain.pdl.generated.SokPersonUtenlandskID
 import no.nav.modiapersonoversikt.legacy.api.service.pdl.PdlOppslagService
 import no.nav.modiapersonoversikt.rest.lagXmlGregorianDato
-import no.nav.modiapersonoversikt.service.pdl.GraphQLException
 import no.nav.tjeneste.virksomhet.personsoek.v1.PersonsokPortType
 import no.nav.tjeneste.virksomhet.personsoek.v1.informasjon.*
 import no.nav.tjeneste.virksomhet.personsoek.v1.meldinger.AdresseFilter

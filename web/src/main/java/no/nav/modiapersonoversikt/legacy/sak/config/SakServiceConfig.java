@@ -5,6 +5,7 @@ import no.nav.modiapersonoversikt.legacy.sak.service.*;
 import no.nav.modiapersonoversikt.legacy.sak.service.filter.Filter;
 import no.nav.modiapersonoversikt.legacy.sak.service.interfaces.InnsynJournalV2Service;
 import no.nav.modiapersonoversikt.legacy.sak.service.saf.SafService;
+import no.nav.modiapersonoversikt.legacy.sak.service.saf.SafServiceImpl;
 import no.nav.modiapersonoversikt.legacy.sak.transformers.DokumentMetadataTransformer;
 import no.nav.modiapersonoversikt.legacy.sak.utils.TemagrupperHenter;
 import org.springframework.context.annotation.Bean;
@@ -76,7 +77,8 @@ public class SakServiceConfig {
 
     @Bean
     public SafService safService() {
-        return new SafService();
+        // TODO her kan man bruke UnleashProxySwitcher for å styre bruken av SafServiceImpl vs SafGraphqlServiceImpl
+        return new SafServiceImpl();
     }
 
 }
