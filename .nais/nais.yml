@@ -283,7 +283,7 @@ spec:
     - name: PDL_API_URL
       value: "https://pdl-api.nais.adeo.no/graphql"
     - name: PERSONFORVALTER_URL
-      value: "https://person-forvalter.nais.adeo.no/endreperson"
+      value: "https://pdl-web.intern.nav.no/endreperson"
     - name: OPPGAVE_BASEURL
       value: "https://oppgave.nais.adeo.no/"
     - name: TILLATMOCK
