@@ -6,7 +6,6 @@ import no.nav.modiapersonoversikt.legacy.sak.providerdomain.FeilendeBaksystemExc
 import no.nav.modiapersonoversikt.legacy.sak.providerdomain.resultatwrappere.ResultatWrapper;
 import no.nav.modiapersonoversikt.legacy.sak.service.interfaces.InnsynJournalV2Service;
 import no.nav.modiapersonoversikt.legacy.sak.service.saf.SafService;
-import no.nav.modiapersonoversikt.legacy.sak.transformers.DokumentMetadataTransformer;
 import no.nav.modiapersonoversikt.legacy.sak.utils.Java8Utils;
 
 import java.util.ArrayList;
@@ -25,18 +24,12 @@ public class DokumentMetadataService {
     private static final String DOKMOT_TEMA_REGEX = "BIL|FOR";
 
     private InnsynJournalV2Service innsynJournalV2Service;
-    private HenvendelseService henvendelseService;
-    private DokumentMetadataTransformer dokumentMetadataTransformer;
     private SafService safService;
 
     public DokumentMetadataService(InnsynJournalV2Service innsynJournalV2Service,
-                                   HenvendelseService henvendelseService,
-                                   DokumentMetadataTransformer dokumentMetadataTransformer,
                                    SafService safService) {
 
         this.innsynJournalV2Service = innsynJournalV2Service;
-        this.henvendelseService = henvendelseService;
-        this.dokumentMetadataTransformer = dokumentMetadataTransformer;
         this.safService = safService;
     }
 
@@ -44,7 +37,6 @@ public class DokumentMetadataService {
         DokumentMetadataResultat resultat = new DokumentMetadataResultat();
 
         hentJournalposter(fnr, resultat);   // Populerer journalposter med data fra SAF
-        hentSoknader(fnr, resultat);        // Populerer soknader med data fra henvendelse
 
         populerDokmotSoknaderMedJournalpostIdFraJoark(resultat); // Augmenterer soknader med data fra joark
 
@@ -79,17 +71,6 @@ public class DokumentMetadataService {
         } catch (FeilendeBaksystemException e) {
             resultat.feilendeBaksystem.add(e.getBaksystem());
             return null;
-        }
-    }
-
-    private void hentSoknader(String fnr, DokumentMetadataResultat resultat) {
-        try {
-            resultat.soknader.addAll(henvendelseService.hentInnsendteSoknader(fnr)
-                    .stream()
-                    .map(soknad -> dokumentMetadataTransformer.dokumentMetadataFraHenvendelseSoknader(soknad))
-                    .collect(toList()));
-        } catch (FeilendeBaksystemException e) {
-            resultat.feilendeBaksystem.add(e.getBaksystem());
         }
     }
 

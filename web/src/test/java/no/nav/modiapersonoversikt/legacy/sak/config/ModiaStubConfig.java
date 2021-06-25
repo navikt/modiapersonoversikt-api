@@ -6,7 +6,6 @@ import no.nav.modiapersonoversikt.legacy.api.service.FodselnummerAktorService;
 import no.nav.modiapersonoversikt.legacy.api.service.norg.AnsattService;
 import no.nav.modiapersonoversikt.legacy.api.service.saker.SakerService;
 import no.nav.modiapersonoversikt.service.unleash.UnleashService;
-import no.nav.modiapersonoversikt.legacy.sak.service.HenvendelseService;
 import no.nav.modiapersonoversikt.legacy.sak.service.SakOgBehandlingService;
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll;
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.TilgangskontrollMock;
@@ -58,11 +57,6 @@ public class ModiaStubConfig {
     @Bean
     public InnsynJournalV2 innsynJournalV2(){
         return mock(InnsynJournalV2.class);
-    }
-
-    @Bean
-    public HenvendelseService henvendelseService() {
-        return mock(HenvendelseService.class);
     }
 
     @Bean
