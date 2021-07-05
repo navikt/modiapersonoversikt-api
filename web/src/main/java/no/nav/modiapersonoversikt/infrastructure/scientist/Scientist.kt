@@ -35,13 +35,18 @@ object Scientist {
         }
     }
 
+    data class Result<T>(
+        val experimentRun: Boolean,
+        val controlValue: T,
+        val experimentValue: T? = null,
+        val experimentException: Throwable? = null
+    )
     class Experiment<T> internal constructor(private val config: Config) {
         private val timer = Timer()
-
-        fun run(
+        fun runIntrospected(
             control: () -> T,
             experiment: () -> T
-        ): T {
+        ): Result<T> {
             if (Random.nextDouble() < config.experimentRate) {
                 val fields = mutableMapOf<String, Any?>()
                 val controlResult = timer.time(control)
@@ -63,11 +68,22 @@ object Scientist {
 
                 config.reporter("[SCIENCE] ${config.name}", fields)
 
-                return controlResult.value
+                return Result(
+                    experimentRun = true,
+                    controlValue = controlResult.value,
+                    experimentValue = experimentResult.getOrNull()?.value,
+                    experimentException = experimentResult.exceptionOrNull()
+                )
             } else {
-                return control()
+                return Result(
+                    experimentRun = false,
+                    controlValue = control()
+                )
             }
         }
+
+        fun run(control: () -> T, experiment: () -> T): T =
+            runIntrospected(control, experiment).controlValue
     }
 
     fun <T : Any?> createExperiment(config: Config) = Experiment<T>(config)
