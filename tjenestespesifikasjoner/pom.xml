@@ -32,6 +32,7 @@
         <module>nav-cons-sak-gosys-3.0.0</module>
         <module>oppgave-api</module>
         <module>pdl-api</module>
+        <module>saf-api</module>
     </modules>
 
     <dependencyManagement>

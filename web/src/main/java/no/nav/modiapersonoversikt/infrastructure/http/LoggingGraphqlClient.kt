@@ -1,4 +1,4 @@
-package no.nav.modiapersonoversikt.service.pdl
+package no.nav.modiapersonoversikt.infrastructure.http
 
 import com.expediagroup.graphql.client.GraphQLClient
 import com.expediagroup.graphql.types.GraphQLError
@@ -36,11 +36,12 @@ private val mapper = jacksonObjectMapper()
     .registerModule(JavaTimeModule())
 
 @KtorExperimentalAPI
-class PdlClient(
+class LoggingGraphqlClient(
+    private val name: String,
     url: URL,
     private val transformVariables: VariablesTransform? = null
 ) : GraphQLClient<CIOEngineConfig>(url, CIO, mapper, {}) {
-    private val log = LoggerFactory.getLogger(PdlClient::class.java)
+    private val log = LoggerFactory.getLogger(LoggingGraphqlClient::class.java)
 
     override suspend fun <T> execute(
         query: String,
@@ -55,9 +56,10 @@ class PdlClient(
             val mappedRequestBuilder: HeadersBuilder = {
                 requestBuilder.invoke(this)
                 header(RestConstants.NAV_CALL_ID_HEADER, callId)
+                header("X-Correlation-ID", callId)
             }
             TjenestekallLogger.info(
-                "PDL-request: $callId",
+                "$name-request: $callId",
                 mapOf(
                     "operationName" to operationName,
                     "variables" to mappedVariables
@@ -73,16 +75,16 @@ class PdlClient(
             )
 
             if (response.errors.isNullOrEmpty()) {
-                TjenestekallLogger.info("PDL-response: $callId", tjenestekallFelt)
+                TjenestekallLogger.info("$name-response: $callId", tjenestekallFelt)
             } else {
-                TjenestekallLogger.error("PDL-response: $callId", tjenestekallFelt)
+                TjenestekallLogger.error("$name-response: $callId", tjenestekallFelt)
             }
 
             response
         } catch (exception: Exception) {
-            log.error("Feilet ved oppslag mot PDL (ID: $callId)", exception)
-            TjenestekallLogger.error("PDL-response: $callId", mapOf("exception" to exception))
-            val error = GraphQLError("Feilet ved oppslag mot PDL (ID: $callId)")
+            log.error("Feilet ved oppslag mot $name (ID: $callId)", exception)
+            TjenestekallLogger.error("$name-response: $callId", mapOf("exception" to exception))
+            val error = GraphQLError("Feilet ved oppslag mot $name (ID: $callId)")
             GraphQLResponse(errors = listOf(error))
         }
     }

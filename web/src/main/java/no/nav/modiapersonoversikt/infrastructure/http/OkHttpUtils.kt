@@ -102,7 +102,7 @@ class LoggingInterceptor(val name: String, val callIdExtractor: (Request) -> Str
     }
 }
 
-sealed class HeadersInterceptor(val headersProvider: () -> Map<String, String>) : Interceptor {
+open class HeadersInterceptor(val headersProvider: () -> Map<String, String>) : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
         val builder = chain.request()
             .newBuilder()

@@ -8,6 +8,9 @@ import no.nav.common.auth.subject.SsoToken
 import no.nav.common.auth.subject.SubjectHandler
 import no.nav.common.sts.SystemUserTokenProvider
 import no.nav.common.utils.EnvironmentUtils
+import no.nav.modiapersonoversikt.infrastructure.http.HeadersBuilder
+import no.nav.modiapersonoversikt.infrastructure.http.LoggingGraphqlClient
+import no.nav.modiapersonoversikt.infrastructure.http.assertNoErrors
 import no.nav.modiapersonoversikt.legacy.api.domain.pdl.generated.HentIdent
 import no.nav.modiapersonoversikt.legacy.api.domain.pdl.generated.HentNavnBolk
 import no.nav.modiapersonoversikt.legacy.api.domain.pdl.generated.HentPerson
@@ -24,20 +27,20 @@ class PdlOppslagServiceImpl constructor(
 ) : PdlOppslagService {
     constructor(stsService: SystemUserTokenProvider) : this(stsService, createClient())
 
-    override fun hentPerson(ident: String): HentPerson.Person? = runBlocking {
+    override fun hentPerson(fnr: String): HentPerson.Person? = runBlocking {
         HentPerson(pdlClient)
-            .execute(HentPerson.Variables(ident), userTokenAuthorizationHeaders)
+            .execute(HentPerson.Variables(fnr), userTokenAuthorizationHeaders)
             .data
             ?.hentPerson
     }
 
-    override fun hentNavnBolk(identer: List<String>): Map<String, HentNavnBolk.Navn?>? {
-        if (identer.isEmpty()) {
+    override fun hentNavnBolk(fnrs: List<String>): Map<String, HentNavnBolk.Navn?>? {
+        if (fnrs.isEmpty()) {
             return emptyMap()
         }
 
         return runBlocking {
-            HentNavnBolk(pdlClient).execute(HentNavnBolk.Variables(identer), systemTokenAuthorizationHeaders)
+            HentNavnBolk(pdlClient).execute(HentNavnBolk.Variables(fnrs), systemTokenAuthorizationHeaders)
         }
             .data
             ?.hentPersonBolk
@@ -47,9 +50,9 @@ class PdlOppslagServiceImpl constructor(
             }
     }
 
-    override fun hentIdent(ident: String): HentIdent.Identliste? = runBlocking {
+    override fun hentIdent(fnr: String): HentIdent.Identliste? = runBlocking {
         HentIdent(pdlClient)
-            .execute(HentIdent.Variables(ident), userTokenAuthorizationHeaders)
+            .execute(HentIdent.Variables(fnr), userTokenAuthorizationHeaders)
             .data
             ?.hentIdenter
     }
@@ -94,7 +97,7 @@ class PdlOppslagServiceImpl constructor(
     companion object {
         private val pdlApiUrl: URL = EnvironmentUtils.getRequiredProperty("PDL_API_URL").let(::URL)
 
-        fun createClient() = PdlClient(pdlApiUrl) { variables ->
+        fun createClient() = LoggingGraphqlClient("PDL", pdlApiUrl) { variables ->
             when (variables) {
                 null -> emptyList<String>() to variables
                 is HentPerson.Variables -> {
