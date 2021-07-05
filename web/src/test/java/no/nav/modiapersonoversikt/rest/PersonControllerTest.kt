@@ -285,6 +285,7 @@ internal class PersonControllerTest {
     fun mockPdlPerson(): HentPerson.Person {
         return HentPerson.Person(
             navn = emptyList(),
+            kjoenn = emptyList(),
             tilrettelagtKommunikasjon = emptyList(),
             fullmakt = emptyList(),
             kontaktinformasjonForDoedsbo = emptyList(),

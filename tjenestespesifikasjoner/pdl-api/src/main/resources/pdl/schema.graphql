@@ -633,7 +633,7 @@ input SearchRule {
     contains:String
     # Søk som gir treff også for små variasjoner i skrivemåte
     fuzzy:String
-    # Søk som gir tilfeldig poengsum til hvert treff (kun men til generering av testdata)
+    # Søk som gir tilfeldig poengsum til hvert treff (kun ment til generering av testdata)
     random:String
     # Bruk "?" som wildcard for enkelt tegn, og "*" som wildcard for 0 eller flere tegn.
     wildcard:String
@@ -762,7 +762,7 @@ type MatrikkeladresseResult {
     matrikkelId:String
     tilleggsnavn:String
     kommunenummer:String
-    gardsnummer:String
+    gaardsnummer:String
     bruksnummer:String
     postnummer:String
     poststed:String
