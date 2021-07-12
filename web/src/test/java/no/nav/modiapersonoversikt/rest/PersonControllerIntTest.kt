@@ -79,7 +79,8 @@ internal class PersonControllerIntTest {
                     foedselsdato = null,
                     kjoenn = null,
                     statsborgerskap = null
-                )
+                ),
+                metadata = HentPerson.Metadata2(historisk = false)
             )
         )
 

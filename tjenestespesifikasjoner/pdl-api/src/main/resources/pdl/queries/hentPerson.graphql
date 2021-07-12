@@ -97,6 +97,9 @@ query($ident: ID!){
             ansvar
             ansvarlig
             ansvarssubjekt
+            metadata {
+                historisk
+            }
             ansvarligUtenIdentifikator {
                 navn {
                     fornavn
