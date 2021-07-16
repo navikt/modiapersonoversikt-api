@@ -1,8 +1,9 @@
 query($ident: ID!){
-    hentIdenter(ident: $ident) {
+    hentIdenter(ident: $ident, historikk: true) {
         identer {
             ident
             gruppe
+            historisk
         }
     }
 }
