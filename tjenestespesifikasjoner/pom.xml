@@ -31,6 +31,7 @@
         <module>nav-foreldrepenger-v2-tjenestespesifikasjon</module>
         <module>nav-cons-sak-gosys-3.0.0</module>
         <module>oppgave-api</module>
+        <module>sf-henvendelse-api</module>
         <module>pdl-api</module>
     </modules>
 
