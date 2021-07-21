@@ -3,9 +3,7 @@ package no.nav.modiapersonoversikt.legacy.sak.config;
 import no.nav.modiapersonoversikt.consumer.kodeverk2.config.KodeverkConfig;
 import no.nav.modiapersonoversikt.legacy.sak.service.*;
 import no.nav.modiapersonoversikt.legacy.sak.service.filter.Filter;
-import no.nav.modiapersonoversikt.legacy.sak.service.interfaces.InnsynJournalV2Service;
 import no.nav.modiapersonoversikt.legacy.sak.service.saf.SafService;
-import no.nav.modiapersonoversikt.legacy.sak.transformers.DokumentMetadataTransformer;
 import no.nav.modiapersonoversikt.legacy.sak.utils.TemagrupperHenter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -26,12 +24,6 @@ public class SakServiceConfig {
     }
 
     @Bean
-    public HenvendelseService henvendelseService() {
-        return new HenvendelseService();
-    }
-
-
-    @Bean
     public PesysService pesysService() {
         return new PesysService();
     }
@@ -47,11 +39,8 @@ public class SakServiceConfig {
     }
 
     @Bean
-    public DokumentMetadataService dokumentMetadataService(InnsynJournalV2Service innsynJournalV2Service,
-                                                           HenvendelseService henvendelseService,
-                                                           DokumentMetadataTransformer dokumentMetadataTransformer,
-                                                           SafService safService) {
-        return new DokumentMetadataService(innsynJournalV2Service, henvendelseService, dokumentMetadataTransformer, safService);
+    public DokumentMetadataService dokumentMetadataService(SafService safService) {
+        return new DokumentMetadataService(safService);
     }
 
     @Bean
@@ -67,11 +56,6 @@ public class SakServiceConfig {
     @Bean
     public BulletproofKodeverkService bulletproofKodeverkService() {
         return new BulletproofKodeverkService();
-    }
-
-    @Bean
-    public DokumentMetadataTransformer dokumentMetadataTransformer(BulletproofKodeverkService bulletproofKodeverkService) {
-        return new DokumentMetadataTransformer(bulletproofKodeverkService);
     }
 
     @Bean
