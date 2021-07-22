@@ -9,6 +9,32 @@
     { "url": "https://test.salesforce.com/services/apexrest" }
   ],
   "paths": {
+    "/henvendelse/kodeverk/temagrupper": {
+      "get": {
+        "tags": ["Kodeverk"],
+        "description": "Returnerer gyldige temagrupper for en henvendelse",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Temagruppe"
+                }
+              }
+            }
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerError"
+          }
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/X-Correlation-ID"
+          }
+        ]
+      }
+    },
     "/henvendelse/journal": {
       "post": {
         "tags": ["Journal"],
@@ -180,7 +206,7 @@
     "/henvendelseinfo/henvendelseliste": {
       "get": {
         "tags": ["Henvendelse Info"],
-        "description": "",
+        "description": "Returnerer en liste med henvendelser for en gitt aktør",
         "parameters": [
           {
             "name": "aktorid",
@@ -220,11 +246,73 @@
           }
         }
       }
+    },
+    "/henvendelseinfo/henvendelse": {
+      "get": {
+        "tags": ["Henvendelse Info"],
+        "description": "Returnerer informasjon for en gitt henvendelse",
+        "parameters": [
+          {
+            "name": "henvendelseId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Unik ID til henvendelsen"
+          },
+          {
+            "$ref": "#/components/parameters/X-Correlation-ID"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Henvendelse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerError"
+          }
+        }
+      }
     }
   },
   "security": [{ "Salesforce_auth": [] }],
   "components": {
     "schemas": {
+      "Markering": {
+        "type": "object",
+        "properties": {
+          "markeringstype": {
+            "type": "string",
+            "enum": ["FEILSENDT", "KONTORSPERRE"],
+            "example": "FEILSENDT"
+          },
+          "markertDato": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2021-06-27T12:00:00.000Z"
+          },
+          "markertAv": {
+            "type": "string",
+            "description": "NAV ident til veileder/saksbehandler som har markert henvendelsen",
+            "example": "Z999999"
+          }
+        },
+        "required": ["markeringstype", "markertDato", "markertAv"]
+      },
       "MeldingRequest": {
         "type": "object",
         "properties": {
@@ -244,7 +332,8 @@
             "type": "string",
             "example": "Dette er en melding"
           }
-        }
+        },
+        "required": ["aktorId", "temagruppe", "enhet", "fritekst"]
       },
       "SamtalereferatRequest": {
         "type": "object",
@@ -271,7 +360,8 @@
             "description": "Definerer om referatet er skrevet etter en telefonsamtale eller et fysisk oppmote hos NAV",
             "example": "TELEFON"
           }
-        }
+        },
+        "required": ["aktorId", "temagruppe", "enhet", "fritekst", "kanal"]
       },
       "JournalRequest": {
         "type": "object",
@@ -280,11 +370,6 @@
             "type": "string",
             "description": "NAV-enhet til veilder/saksbehandler som opprettet journalposten",
             "example": "4100"
-          },
-          "journalforerNavIdent": {
-            "type": "string",
-            "description": "NAV-Ident til veilder/saksbehandler som opprettet journalposten",
-            "example": "Z999999"
           },
           "saksId": {
             "type": "string",
@@ -301,7 +386,8 @@
             "description": "Unik ID til henvendelsen som skal journalføres",
             "example": "a0J3N000004dUBJUA2"
           }
-        }
+        },
+        "required": ["journalforendeEnhet", "temakode", "henvendelseId"]
       },
       "Journalpost": {
         "type": "object",
@@ -319,6 +405,7 @@
           "journalfortDato": {
             "type": "string",
             "description": "Dato for opprettelse av journalpost",
+            "format": "date-time",
             "example": "2021-06-27T12:00:00.000Z"
           },
           "journalfortTema": {
@@ -331,7 +418,14 @@
             "description": "Unik referanse til journalpost i JOARK",
             "example": "509934220"
           }
-        }
+        },
+        "required": [
+          "journalforerNavIdent",
+          "journalforendeEnhet",
+          "journalfortDato",
+          "journalfortTema",
+          "journalpostId"
+        ]
       },
       "MeldingFra": {
         "type": "object",
@@ -346,8 +440,14 @@
             "type": "string",
             "description": "Avsenders ident (AKTORID/NAVIDENT)",
             "example": "Z999999"
+          },
+          "navEnhet": {
+            "type": "string",
+            "description": "NAV enhet til avsender hvis identType = NAVIDENT",
+            "example": "4100"
           }
-        }
+        },
+        "required": ["identType", "ident"]
       },
       "Melding": {
         "type": "object",
@@ -359,24 +459,27 @@
           "sendtDato": {
             "type": "string",
             "description": "Datetime string",
+            "format": "date-time",
             "example": "2021-06-27T12:00:00.000Z"
           },
           "lestDato": {
             "type": "string",
             "description": "Datetime string",
+            "format": "date-time",
             "example": "2021-06-27T12:00:00.000Z"
           },
           "fra": {
             "$ref": "#/components/schemas/MeldingFra"
           }
-        }
+        },
+        "required": ["fritekst", "sendtDato", "fra"]
       },
       "Henvendelse": {
         "type": "object",
         "properties": {
           "henvendelseType": {
             "type": "string",
-            "enum": ["SAMTALEREFERAT", "MELDING", "MELDINGSKJEDE"]
+            "enum": ["SAMTALEREFERAT", "MELDINGSKJEDE"]
           },
           "fnr": {
             "type": "string",
@@ -393,17 +496,30 @@
           "opprettetDato": {
             "type": "string",
             "description": "Datetime string",
+            "format": "date-time",
             "example": "2021-06-27T12:00:00.000Z"
           },
           "avsluttetDato": {
             "type": "string",
             "description": "Datetime string",
+            "format": "date-time",
             "example": "2021-06-28T12:00:00.000Z"
           },
           "kasseringsDato": {
             "type": "string",
             "description": "Datetime string",
+            "format": "date-time",
             "example": "2021-06-27T12:00:00.000Z"
+          },
+          "kontorsperre": {
+            "type": "boolean",
+            "description": "Definerer om henvendelsen er markert som kontorsperret. Markeringsinformasjon finnes i listen av markeringer",
+            "example": false
+          },
+          "feilsendt": {
+            "type": "boolean",
+            "description": "Definerer om henvendelsen er markert som feilsendt. Markeringsinformasjon finnes i listen av markeringer",
+            "example": true
           },
           "henvendelseId": {
             "type": "string"
@@ -430,8 +546,39 @@
             "items": {
               "$ref": "#/components/schemas/Melding"
             }
+          },
+          "markeringer": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Markering"
+            }
           }
-        }
+        },
+        "required": [
+          "henvendelseType",
+          "aktorId",
+          "fnr",
+          "opprinneligGT",
+          "opprettetDato",
+          "kontorsperre",
+          "feilsendt",
+          "henvendelseId",
+          "gjeldendeTemagruppe"
+        ]
+      },
+      "Temagruppe": {
+        "type": "object",
+        "properties": {
+          "navn": {
+            "type": "string",
+            "example": "Familie"
+          },
+          "kode": {
+            "type": "string",
+            "example": "FMLI"
+          }
+        },
+        "required": ["navn", "kode"]
       },
       "Error": {
         "type": "object",
@@ -442,7 +589,8 @@
           "message": {
             "type": "string"
           }
-        }
+        },
+        "required": ["statusCode", "message"]
       }
     },
     "responses": {

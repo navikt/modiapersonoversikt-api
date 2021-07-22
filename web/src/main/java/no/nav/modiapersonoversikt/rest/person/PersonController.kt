@@ -8,7 +8,7 @@ import no.nav.modiapersonoversikt.infrastructure.naudit.AuditIdentifier
 import no.nav.modiapersonoversikt.infrastructure.naudit.AuditResources
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Policies
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll
-import no.nav.modiapersonoversikt.legacy.api.domain.pdl.generated.HentIdent
+import no.nav.modiapersonoversikt.legacy.api.domain.pdl.generated.HentIdenter
 import no.nav.modiapersonoversikt.legacy.api.domain.pdl.generated.HentPerson
 import no.nav.modiapersonoversikt.legacy.api.service.kodeverk.StandardKodeverk
 import no.nav.modiapersonoversikt.legacy.api.service.pdl.PdlOppslagService
@@ -122,8 +122,8 @@ class PersonController @Autowired constructor(
     }
 
     @GetMapping("/identer")
-    fun hentIdenter(@PathVariable("fnr") fodselsnummer: String): HentIdent.Identliste? {
-        return pdlOppslagService.hentIdent(fodselsnummer)
+    fun hentIdenter(@PathVariable("fnr") fodselsnummer: String): HentIdenter.Identliste? {
+        return pdlOppslagService.hentIdenter(fodselsnummer)
     }
 
     data class VergemalDTO(
