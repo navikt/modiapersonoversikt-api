@@ -126,31 +126,32 @@ class SakerController @Autowired constructor(
     }
 
     private fun hentDokumentMetadata(dokumenter: List<DokumentMetadata>): List<Map<String, Any?>> {
-        return dokumenter.map {
-            mapOf(
-                "id" to unikId(),
-                "retning" to it.retning,
-                "dato" to hentDato(it.dato),
-                "navn" to it.navn,
-                "journalpostId" to it.journalpostId,
-                "hoveddokument" to hentDokument(it.hoveddokument),
-                "vedlegg" to it.vedlegg.map { vedlegg -> hentDokument(vedlegg) },
-                "avsender" to it.avsender,
-                "mottaker" to it.mottaker,
-                "tilhørendeSaksid" to it.tilhorendeSakid,
-                "tilhørendeFagsaksid" to it.tilhorendeFagsakId,
-                "behandlingsid" to it.behandlingsId,
-                "baksystem" to it.baksystem,
-                "temakode" to it.temakode,
-                "temakodeVisning" to it.temakodeVisning,
-                "ettersending" to it.isEttersending,
-                "erJournalført" to it.isErJournalfort,
-                "feil" to mapOf(
-                    "inneholderFeil" to it.feilWrapper?.inneholderFeil,
-                    "feilmelding" to it.feilWrapper?.feilmelding
+        return dokumenter.filterNot { it.baksystem == Baksystem.HENVENDELSE && it.journalpostId == null && it.tilhorendeSakid == null }
+            .map {
+                mapOf(
+                    "id" to unikId(),
+                    "retning" to it.retning,
+                    "dato" to hentDato(it.dato),
+                    "navn" to it.navn,
+                    "journalpostId" to it.journalpostId,
+                    "hoveddokument" to hentDokument(it.hoveddokument),
+                    "vedlegg" to it.vedlegg.map { vedlegg -> hentDokument(vedlegg) },
+                    "avsender" to it.avsender,
+                    "mottaker" to it.mottaker,
+                    "tilhørendeSaksid" to it.tilhorendeSakid,
+                    "tilhørendeFagsaksid" to it.tilhorendeFagsakId,
+                    "behandlingsid" to it.behandlingsId,
+                    "baksystem" to it.baksystem,
+                    "temakode" to it.temakode,
+                    "temakodeVisning" to it.temakodeVisning,
+                    "ettersending" to it.isEttersending,
+                    "erJournalført" to it.isErJournalfort,
+                    "feil" to mapOf(
+                        "inneholderFeil" to it.feilWrapper?.inneholderFeil,
+                        "feilmelding" to it.feilWrapper?.feilmelding
+                    )
                 )
-            )
-        }
+            }
     }
 
     private fun hentTilhorendeSaker(saker: List<Sak>): List<Map<String, Any?>> {
