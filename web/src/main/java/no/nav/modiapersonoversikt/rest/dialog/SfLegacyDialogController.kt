@@ -6,10 +6,13 @@ import no.nav.modiapersonoversikt.infrastructure.naudit.AuditResources
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Policies
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll
 import no.nav.modiapersonoversikt.legacy.api.domain.Oppgave
+import no.nav.modiapersonoversikt.legacy.api.domain.Saksbehandler
 import no.nav.modiapersonoversikt.legacy.api.domain.Temagruppe
 import no.nav.modiapersonoversikt.legacy.api.domain.henvendelse.Meldingstype
 import no.nav.modiapersonoversikt.legacy.api.domain.sfhenvendelse.generated.models.SamtalereferatRequestDTO
 import no.nav.modiapersonoversikt.legacy.api.service.OppgaveBehandlingService
+import no.nav.modiapersonoversikt.legacy.api.service.kodeverk.StandardKodeverk
+import no.nav.modiapersonoversikt.legacy.api.service.ldap.LDAPService
 import no.nav.modiapersonoversikt.legacy.api.utils.RestUtils
 import no.nav.modiapersonoversikt.legacy.api.utils.TemagruppeTemaMapping
 import no.nav.modiapersonoversikt.rest.api.toDTO
@@ -28,7 +31,9 @@ import javax.ws.rs.NotSupportedException
 class SfLegacyDialogController @Autowired constructor(
     private val tilgangskontroll: Tilgangskontroll,
     private val sfHenvendelseService: SfHenvendelseService,
-    private val oppgaveBehandlingService: OppgaveBehandlingService
+    private val oppgaveBehandlingService: OppgaveBehandlingService,
+    private val ldapService: LDAPService,
+    private val kodeverk: StandardKodeverk
 ) {
     @GetMapping("/meldinger")
     fun hentMeldinger(
@@ -41,9 +46,11 @@ class SfLegacyDialogController @Autowired constructor(
             .get(Audit.describe(Audit.Action.READ, AuditResources.Person.Henvendelse.Les, AuditIdentifier.FNR to fnr)) {
                 val valgtEnhet = RestUtils.hentValgtEnhet(enhet, request)
                 val bruker = EksternBruker.Fnr(fnr)
-                sfHenvendelseService
+                val trader: List<TraadDTO> = sfHenvendelseService
                     .hentHenvendelser(bruker, valgtEnhet)
                     .toDTO()
+
+                fyllutKodeverkOgNavn(trader)
             }
     }
 
@@ -209,6 +216,52 @@ class SfLegacyDialogController @Autowired constructor(
             .get(Audit.describe(Audit.Action.UPDATE, AuditResources.Person.Henvendelse.SlaSammen, *auditIdentifier)) {
                 throw NotSupportedException("Operasjonen er ikke støttet av Salesforce")
             }
+    }
+
+    fun fyllutKodeverkOgNavn(trader: List<TraadDTO>): List<TraadDTO> {
+        val temakoder: List<String> = trader
+            .flatMap { it.meldinger.map { melding -> melding["journalfortTemanavn"] as String? } }
+            .distinct()
+            .filterNotNull()
+        val identer: List<String> = trader
+            .flatMap {
+                it.meldinger.flatMap { melding ->
+                    listOf(
+                        melding["skrevetAvTekst"] as String?,
+                        melding["journalfortAv"] as String?,
+                        melding["kontorsperretAv"] as String?,
+                        melding["markertSomFeilsendtAv"] as String?
+                    )
+                }
+            }
+            .distinct()
+            .filterNotNull()
+
+        val temakodeMap: Map<String, String> = temakoder.associateWith { kode -> kodeverk.getArkivtemaNavn(kode) ?: kode }
+        val identMap: Map<String, Saksbehandler?> = identer.associateWith { ident -> ldapService.hentSaksbehandler(ident) }
+
+        trader.forEach { trad ->
+            trad.meldinger.forEach { melding ->
+                melding["journalfortTemanavn"] = temakodeMap[melding["journalfortTemanavn"]]
+                melding["skrevetAvTekst"] = identMap[melding["skrevetAvTekst"]]
+                    ?.let { "${it.navn} (${it.ident})" }
+                    ?: "Ukjent"
+                melding["journalfortAv"] = identMap[melding["journalfortAv"]]
+                    ?.let {
+                        mapOf("fornavn" to it.fornavn, "etternavn" to it.etternavn)
+                    }
+                melding["kontorsperretAv"] = identMap[melding["kontorsperretAv"]]
+                    ?.let {
+                        mapOf("fornavn" to it.fornavn, "etternavn" to it.etternavn, "ident" to it.ident)
+                    }
+                melding["markertSomFeilsendtAv"] = identMap[melding["markertSomFeilsendtAv"]]
+                    ?.let {
+                        mapOf("fornavn" to it.fornavn, "etternavn" to it.etternavn, "ident" to it.ident)
+                    }
+            }
+        }
+
+        return trader
     }
 
     fun Meldingstype.getKanal(): SamtalereferatRequestDTO.Kanal {
