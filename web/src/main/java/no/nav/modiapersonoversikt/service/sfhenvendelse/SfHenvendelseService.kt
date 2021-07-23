@@ -7,8 +7,6 @@ import no.nav.common.rest.client.RestClient
 import no.nav.common.utils.EnvironmentUtils.getRequiredProperty
 import no.nav.modiapersonoversikt.infrastructure.http.AuthorizationInterceptor
 import no.nav.modiapersonoversikt.infrastructure.http.LoggingInterceptor
-import no.nav.modiapersonoversikt.legacy.api.domain.Kanal
-import no.nav.modiapersonoversikt.legacy.api.domain.Temagruppe
 import no.nav.modiapersonoversikt.legacy.api.domain.sfhenvendelse.generated.apis.HenvendelseBehandlingApi
 import no.nav.modiapersonoversikt.legacy.api.domain.sfhenvendelse.generated.apis.HenvendelseInfoApi
 import no.nav.modiapersonoversikt.legacy.api.domain.sfhenvendelse.generated.apis.JournalApi
@@ -30,35 +28,52 @@ sealed class EksternBruker(val ident: String) {
     class Fnr(fnr: String) : EksternBruker(fnr)
 }
 
-interface SfHenvendelseApi {
-    fun hentHenvendelser(bruker: EksternBruker): List<HenvendelseDTO>
+interface SfHenvendelseService {
+    fun hentHenvendelser(bruker: EksternBruker, enhet: String): List<HenvendelseDTO>
+    fun hentHenvendelse(henvendelseId: String): HenvendelseDTO
     fun journalforHenvendelse(enhet: String, henvendelseId: String, saksId: String?, saksTema: String)
-    fun sendSamtalereferat(bruker: EksternBruker, enhet: String, temagruppe: Temagruppe, kanal: Kanal, fritekst: String)
-    fun sendMeldingPaNyTrad(bruker: EksternBruker, enhet: String, temagruppe: Temagruppe, fritekst: String)
-    fun sendMeldingPaEksisterendeTrad(
+    fun sendSamtalereferat(bruker: EksternBruker, enhet: String, temagruppe: String, kanal: SamtalereferatRequestDTO.Kanal, fritekst: String)
+    fun opprettNyDialogOgSendMelding(
+        bruker: EksternBruker,
+        enhet: String,
+        temagruppe: String,
+        fritekst: String
+    )
+    fun sendMeldingPaEksisterendeDialog(
         bruker: EksternBruker,
         kjedeId: String,
         enhet: String,
-        temagruppe: Temagruppe,
         fritekst: String
     )
 
-    fun leggTilKontorsperre(henvendelseId: String, enhet: String)
-    fun markerSomFeilsendt(henvendelseId: String)
-    fun markerForHastekassering(henvendelseId: String)
-    fun markerSomOversendtTilBisys(enhet: String, henvendelseId: String)
+    fun henvendelseTilhorerBruker(bruker: EksternBruker, henvendelseId: String): Boolean
+    fun sjekkEierskap(bruker: EksternBruker, henvendelse: HenvendelseDTO): Boolean
+    fun merkSomKontorsperret(henvendelseId: String, enhet: String)
+    fun merkSomFeilsendt(henvendelseId: String)
+    fun merkForHastekassering(henvendelseId: String)
 }
 
-class SfHenvendelseApiImpl(
+class SfHenvendelseServiceImpl(
     private val henvendelseBehandlingApi: HenvendelseBehandlingApi = SfHenvendelseApiFactory.createHenvendelseBehandlingApi(),
     private val henvendelseInfoApi: HenvendelseInfoApi = SfHenvendelseApiFactory.createHenvendelseInfoApi(),
     private val henvendelseJournalApi: JournalApi = SfHenvendelseApiFactory.createHenvendelseJournalApi(),
     private val henvendelseOpprettApi: NyHenvendelseApi = SfHenvendelseApiFactory.createHenvendelseOpprettApi(),
     private val pdlOppslagService: PdlOppslagService
-) : SfHenvendelseApi {
+) : SfHenvendelseService {
+    constructor(pdlOppslagService: PdlOppslagService) : this(
+        SfHenvendelseApiFactory.createHenvendelseBehandlingApi(),
+        SfHenvendelseApiFactory.createHenvendelseInfoApi(),
+        SfHenvendelseApiFactory.createHenvendelseJournalApi(),
+        SfHenvendelseApiFactory.createHenvendelseOpprettApi(),
+        pdlOppslagService
+    )
 
-    override fun hentHenvendelser(bruker: EksternBruker): List<HenvendelseDTO> {
+    override fun hentHenvendelser(bruker: EksternBruker, enhet: String): List<HenvendelseDTO> {
         return henvendelseInfoApi.henvendelseinfoHenvendelselisteGet(bruker.aktorId(), callId())
+    }
+
+    override fun hentHenvendelse(henvendelseId: String): HenvendelseDTO {
+        return henvendelseInfoApi.henvendelseinfoHenvendelseGet(henvendelseId, callId())
     }
 
     override fun journalforHenvendelse(enhet: String, henvendelseId: String, saksId: String?, saksTema: String) {
@@ -77,8 +92,8 @@ class SfHenvendelseApiImpl(
     override fun sendSamtalereferat(
         bruker: EksternBruker,
         enhet: String,
-        temagruppe: Temagruppe,
-        kanal: Kanal,
+        temagruppe: String,
+        kanal: SamtalereferatRequestDTO.Kanal,
         fritekst: String
     ) {
         henvendelseOpprettApi
@@ -86,18 +101,18 @@ class SfHenvendelseApiImpl(
                 callId(),
                 SamtalereferatRequestDTO(
                     aktorId = bruker.aktorId(),
-                    temagruppe = temagruppe.name,
+                    temagruppe = temagruppe,
                     enhet = enhet,
-                    kanal = SamtalereferatRequestDTO.Kanal.valueOf(kanal.name),
+                    kanal = kanal,
                     fritekst = fritekst
                 )
             )
     }
 
-    override fun sendMeldingPaNyTrad(
+    override fun opprettNyDialogOgSendMelding(
         bruker: EksternBruker,
         enhet: String,
-        temagruppe: Temagruppe,
+        temagruppe: String,
         fritekst: String
     ) {
         henvendelseOpprettApi
@@ -106,34 +121,51 @@ class SfHenvendelseApiImpl(
                 kjedeId = null,
                 meldingRequestDTO = MeldingRequestDTO(
                     aktorId = bruker.aktorId(),
-                    temagruppe = temagruppe.name,
+                    temagruppe = temagruppe,
                     enhet = enhet,
                     fritekst = fritekst
                 )
             )
     }
 
-    override fun sendMeldingPaEksisterendeTrad(
+    override fun sendMeldingPaEksisterendeDialog(
         bruker: EksternBruker,
         kjedeId: String,
         enhet: String,
-        temagruppe: Temagruppe,
         fritekst: String
     ) {
+        val callId = callId()
+        val henvendelse = henvendelseInfoApi.henvendelseinfoHenvendelseGet(kjedeId, callId)
+        val kjedeTilhorerBruker = sjekkEierskap(bruker, henvendelse)
+        if (!kjedeTilhorerBruker) {
+            throw IllegalStateException("Henvendelse $kjedeId tilhørte ikke bruker")
+        }
         henvendelseOpprettApi
             .henvendelseNyMeldingPost(
-                callId(),
+                callId,
                 kjedeId = kjedeId,
                 meldingRequestDTO = MeldingRequestDTO(
                     aktorId = bruker.aktorId(),
-                    temagruppe = temagruppe.name,
+                    temagruppe = henvendelse.gjeldendeTemagruppe,
                     enhet = enhet,
                     fritekst = fritekst
                 )
             )
     }
 
-    override fun leggTilKontorsperre(henvendelseId: String, enhet: String) {
+    override fun henvendelseTilhorerBruker(bruker: EksternBruker, henvendelseId: String): Boolean {
+        val henvendelse = henvendelseInfoApi.henvendelseinfoHenvendelseGet(henvendelseId, callId())
+        return sjekkEierskap(bruker, henvendelse)
+    }
+
+    override fun sjekkEierskap(bruker: EksternBruker, henvendelse: HenvendelseDTO): Boolean {
+        return when (bruker) {
+            is EksternBruker.Fnr -> bruker.ident == henvendelse.fnr
+            is EksternBruker.AktorId -> bruker.ident == henvendelse.aktorId
+        }
+    }
+
+    override fun merkSomKontorsperret(henvendelseId: String, enhet: String) {
         val request: RequestConfig<Map<String, Any?>> = createPatchRequest(
             henvendelseId,
             PatchNote<HenvendelseDTO>()
@@ -142,7 +174,7 @@ class SfHenvendelseApiImpl(
         henvendelseBehandlingApi.client.request<Map<String, Any?>, Unit>(request)
     }
 
-    override fun markerSomFeilsendt(henvendelseId: String) {
+    override fun merkSomFeilsendt(henvendelseId: String) {
         val callId = callId()
         val henvendelse = henvendelseInfoApi.henvendelseinfoHenvendelseGet(henvendelseId, callId)
         val request: RequestConfig<Map<String, Any?>> = createPatchRequest(
@@ -153,27 +185,13 @@ class SfHenvendelseApiImpl(
         henvendelseBehandlingApi.client.request<Map<String, Any?>, Unit>(request)
     }
 
-    override fun markerForHastekassering(henvendelseId: String) {
+    override fun merkForHastekassering(henvendelseId: String) {
         val request: RequestConfig<Map<String, Any?>> = createPatchRequest(
             henvendelseId,
             PatchNote<HenvendelseDTO>()
                 .set(HenvendelseDTO::kasseringsDato).to(OffsetDateTime.now())
         )
         henvendelseBehandlingApi.client.request<Map<String, Any?>, Unit>(request)
-    }
-
-    override fun markerSomOversendtTilBisys(enhet: String, henvendelseId: String) {
-        // TODO vi trenger sannsynligvis ikke spesialhåndtering fra frontend siden apiet ser ok ut for oss nå
-        henvendelseJournalApi
-            .henvendelseJournalPost(
-                callId(),
-                JournalRequestDTO(
-                    henvendelseId = henvendelseId,
-                    saksId = null,
-                    temakode = "BID",
-                    journalforendeEnhet = enhet
-                )
-            )
     }
 
     private fun createPatchRequest(
@@ -206,7 +224,7 @@ class SfHenvendelseApiImpl(
         }
     }
 
-    fun EksternBruker.aktorId(): String {
+    private fun EksternBruker.aktorId(): String {
         return when (this) {
             is EksternBruker.AktorId -> this.ident
             is EksternBruker.Fnr -> requireNotNull(pdlOppslagService.hentAktorId(this.ident)) {

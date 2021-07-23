@@ -46,7 +46,8 @@ import no.nav.modiapersonoversikt.service.organisasjonenhet.kontaktinformasjon.s
 import no.nav.modiapersonoversikt.service.pdl.PdlOppslagServiceImpl;
 import no.nav.modiapersonoversikt.service.saker.SakerServiceImpl;
 import no.nav.modiapersonoversikt.service.saker.mediation.SakApiGatewayImpl;
-import no.nav.modiapersonoversikt.service.unleash.UnleashService;
+import no.nav.modiapersonoversikt.service.sfhenvendelse.SfHenvendelseService;
+import no.nav.modiapersonoversikt.service.sfhenvendelse.SfHenvendelseServiceImpl;
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.behandlehenvendelse.BehandleHenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.senduthenvendelse.SendUtHenvendelsePortType;
@@ -236,7 +237,12 @@ public class ServiceConfig {
     }
 
     @Bean
-    PdlOppslagService pdlOppslagService(SystemUserTokenProvider sts) {
+    public PdlOppslagService pdlOppslagService(SystemUserTokenProvider sts) {
         return new PdlOppslagServiceImpl(sts);
+    }
+
+    @Bean
+    public SfHenvendelseService sfHenvendelseApi(PdlOppslagService pdlOppslagService) {
+        return new SfHenvendelseServiceImpl(pdlOppslagService);
     }
 }
