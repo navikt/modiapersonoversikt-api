@@ -34,5 +34,6 @@ class KodeverkCacheTest extends CacheTest {
         kodeverk.hentKodeverk(request2);
 
         assertThat(getNativeCache().estimatedSize(), is(2L));
+        assertThat(getKey(), is(generatedByDefaultKeyGenerator()));
     }
 }
