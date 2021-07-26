@@ -287,7 +287,7 @@ spec:
     - name: HENVENDELSE_LES_API_URL
       value: "https://modapp-q0.adeo.no/henvendelse-les/api"
     - name: PDL_API_URL
-      value: "https://pdl-api.nais.preprod.local/graphql"
+      value: "https://pdl-api-q0.dev.intern.nav.no/graphql"
     - name: PERSONFORVALTER_URL
       value: "https://pdl-web.dev.intern.nav.no/endreperson"
     - name: OPPGAVE_BASEURL
