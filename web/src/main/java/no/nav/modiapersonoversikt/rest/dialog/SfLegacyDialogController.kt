@@ -9,13 +9,14 @@ import no.nav.modiapersonoversikt.legacy.api.domain.Oppgave
 import no.nav.modiapersonoversikt.legacy.api.domain.Saksbehandler
 import no.nav.modiapersonoversikt.legacy.api.domain.Temagruppe
 import no.nav.modiapersonoversikt.legacy.api.domain.henvendelse.Meldingstype
-import no.nav.modiapersonoversikt.legacy.api.domain.sfhenvendelse.generated.models.SamtalereferatRequestDTO
+import no.nav.modiapersonoversikt.legacy.api.domain.henvendelse.Status
+import no.nav.modiapersonoversikt.legacy.api.domain.sfhenvendelse.generated.models.*
 import no.nav.modiapersonoversikt.legacy.api.service.OppgaveBehandlingService
 import no.nav.modiapersonoversikt.legacy.api.service.kodeverk.StandardKodeverk
 import no.nav.modiapersonoversikt.legacy.api.service.ldap.LDAPService
 import no.nav.modiapersonoversikt.legacy.api.utils.RestUtils
 import no.nav.modiapersonoversikt.legacy.api.utils.TemagruppeTemaMapping
-import no.nav.modiapersonoversikt.rest.api.toDTO
+import no.nav.modiapersonoversikt.rest.DATO_TID_FORMAT
 import no.nav.modiapersonoversikt.service.sfhenvendelse.EksternBruker
 import no.nav.modiapersonoversikt.service.sfhenvendelse.SfHenvendelseService
 import org.springframework.beans.factory.annotation.Autowired
@@ -23,6 +24,7 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.server.ResponseStatusException
+import java.time.format.DateTimeFormatter
 import javax.servlet.http.HttpServletRequest
 import javax.ws.rs.NotSupportedException
 
@@ -46,11 +48,17 @@ class SfLegacyDialogController @Autowired constructor(
             .get(Audit.describe(Audit.Action.READ, AuditResources.Person.Henvendelse.Les, AuditIdentifier.FNR to fnr)) {
                 val valgtEnhet = RestUtils.hentValgtEnhet(enhet, request)
                 val bruker = EksternBruker.Fnr(fnr)
-                val trader: List<TraadDTO> = sfHenvendelseService
-                    .hentHenvendelser(bruker, valgtEnhet)
-                    .toDTO()
 
-                fyllutKodeverkOgNavn(trader)
+                val sfHenvendelser = sfHenvendelseService.hentHenvendelser(bruker, valgtEnhet)
+                val (temakodeMap, identMap) = lagOppslagsverk(sfHenvendelser)
+                sfHenvendelser
+                    .map {
+                        mapSfHenvendelserTilLegacyFormat(
+                            temakodeMap = temakodeMap,
+                            identMap = identMap,
+                            henvendelse = it
+                        )
+                    }
             }
     }
 
@@ -218,50 +226,95 @@ class SfLegacyDialogController @Autowired constructor(
             }
     }
 
-    fun fyllutKodeverkOgNavn(trader: List<TraadDTO>): List<TraadDTO> {
-        val temakoder: List<String> = trader
-            .flatMap { it.meldinger.map { melding -> melding["journalfortTemanavn"] as String? } }
+    private fun lagOppslagsverk(henvendelser: List<HenvendelseDTO>): Pair<Map<String, String>, Map<String, Saksbehandler>> {
+        val temakoder = henvendelser
+            .flatMap { it.journalposter ?: emptyList() }
+            .map { it.journalfortTema }
             .distinct()
-            .filterNotNull()
-        val identer: List<String> = trader
-            .flatMap {
-                it.meldinger.flatMap { melding ->
-                    listOf(
-                        melding["skrevetAvTekst"] as String?,
-                        melding["journalfortAv"] as String?,
-                        melding["kontorsperretAv"] as String?,
-                        melding["markertSomFeilsendtAv"] as String?
-                    )
+        val identer = henvendelser
+            .flatMap { henvendelse ->
+                val journalportIdenter: List<String>? = henvendelse.journalposter?.map { it.journalforerNavIdent }
+                val markeringIdenter: List<String>? = henvendelse.markeringer?.map { it.markertAv }
+                val meldingFraIdenter: List<String>? = henvendelse.meldinger
+                    ?.filter { it.fra.identType == MeldingFraDTO.IdentType.AKTORID }
+                    ?.map { it.fra.ident }
+                (journalportIdenter ?: emptyList())
+                    .plus(markeringIdenter ?: emptyList())
+                    .plus(meldingFraIdenter ?: emptyList())
+            }
+            .distinct()
+
+        val temakodeMap = temakoder.associateWith { kode -> kodeverk.getArkivtemaNavn(kode) }
+        val identMap = identer.associateWith { ident -> ldapService.hentSaksbehandler(ident) }
+
+        return Pair(temakodeMap, identMap)
+    }
+
+    private fun mapSfHenvendelserTilLegacyFormat(
+        temakodeMap: Map<String, String>,
+        identMap: Map<String, Saksbehandler>,
+        henvendelse: HenvendelseDTO
+    ): TraadDTO {
+        val journalpost: JournalpostDTO? = henvendelse.journalposter?.firstOrNull()
+        val meldinger: List<MeldingDTO> = (henvendelse.meldinger ?: emptyList()).map { melding ->
+            MeldingDTO(
+                mapOf(
+                    "id" to "${henvendelse.kjedeId}-${(henvendelse.hashCode())}",
+                    "oppgaveId" to null,
+                    "meldingstype" to meldingstypeFraSfTyper(henvendelse, melding),
+                    "temagruppe" to henvendelse.gjeldendeTemagruppe,
+                    "skrevetAvTekst" to (
+                        identMap[melding.fra.ident]
+                            ?.let { "${it.navn} (${it.ident})" } ?: "Ukjent"
+                        ),
+                    "journalfortAv" to identMap[journalpost?.journalforerNavIdent]
+                        ?.let { mapOf("fornavn" to it.fornavn, "etternavn" to it.etternavn) },
+                    "journalfortDato" to journalpost?.journalfortDato?.format(DateTimeFormatter.ofPattern(DATO_TID_FORMAT)),
+                    "journalfortTema" to journalpost?.journalfortTema,
+                    "journalfortTemanavn" to temakodeMap[journalpost?.journalfortTema],
+                    "journalfortSaksid" to journalpost?.journalpostId,
+                    "fritekst" to melding.fritekst,
+                    "lestDato" to melding.lestDato?.format(DateTimeFormatter.ofPattern(DATO_TID_FORMAT)),
+                    "status" to when {
+                        melding.fra.identType == MeldingFraDTO.IdentType.AKTORID -> Status.IKKE_BESVART
+                        melding.lestDato != null -> Status.LEST_AV_BRUKER
+                        else -> Status.IKKE_LEST_AV_BRUKER
+                    },
+                    "statusTekst" to null, // Blir ikke brukt av frontend uansett
+                    "opprettetDato" to melding.sendtDato.format(DateTimeFormatter.ofPattern(DATO_TID_FORMAT)),
+                    "ferdigstiltDato" to melding.sendtDato.format(DateTimeFormatter.ofPattern(DATO_TID_FORMAT)),
+                    "erFerdigstiltUtenSvar" to false, // TODO Informasjon finnes ikke i SF
+                    "ferdigstiltUtenSvarDato" to null, // TODO Informasjon finnes ikke i SF
+                    "ferdigstiltUtenSvarAv" to null, // TODO Informasjon finnes ikke i SF
+                    "kontorsperretEnhet" to if (henvendelse.kontorsperre) henvendelse.opprinneligGT else null,
+                    "kontorsperretAv" to henvendelse.markeringer
+                        ?.find { it.markeringstype == MarkeringDTO.Markeringstype.KONTORSPERRE }
+                        ?.markertAv
+                        ?.let { identMap[it] }
+                        ?.let { mapOf("fornavn" to it.fornavn, "etternavn" to it.etternavn, "ident" to it.ident) },
+                    "markertSomFeilsendtAv" to henvendelse.markeringer
+                        ?.find { it.markeringstype == MarkeringDTO.Markeringstype.FEILSENDT }
+                        ?.markertAv
+                        ?.let { identMap[it] }
+                        ?.let { mapOf("fornavn" to it.fornavn, "etternavn" to it.etternavn, "ident" to it.ident) },
+                    "erDokumentMelding" to false // Brukes ikke
+                )
+            )
+        }
+        return TraadDTO(requireNotNull(henvendelse.kjedeId), meldinger)
+    }
+
+    private fun meldingstypeFraSfTyper(henvendelse: HenvendelseDTO, melding: no.nav.modiapersonoversikt.legacy.api.domain.sfhenvendelse.generated.models.MeldingDTO): Meldingstype {
+        val erForsteMelding = henvendelse.meldinger?.firstOrNull() == melding
+        return when (henvendelse.henvendelseType) {
+            HenvendelseDTO.HenvendelseType.SAMTALEREFERAT -> Meldingstype.SAMTALEREFERAT_TELEFON // TODO trenger kanal fra SF her
+            HenvendelseDTO.HenvendelseType.MELDINGSKJEDE -> {
+                when (melding.fra.identType) {
+                    MeldingFraDTO.IdentType.AKTORID -> if (erForsteMelding) Meldingstype.SPORSMAL_SKRIFTLIG else Meldingstype.SVAR_SBL_INNGAAENDE
+                    MeldingFraDTO.IdentType.NAVIDENT -> if (erForsteMelding) Meldingstype.SPORSMAL_MODIA_UTGAAENDE else Meldingstype.SVAR_SKRIFTLIG
                 }
             }
-            .distinct()
-            .filterNotNull()
-
-        val temakodeMap: Map<String, String> = temakoder.associateWith { kode -> kodeverk.getArkivtemaNavn(kode) ?: kode }
-        val identMap: Map<String, Saksbehandler?> = identer.associateWith { ident -> ldapService.hentSaksbehandler(ident) }
-
-        trader.forEach { trad ->
-            trad.meldinger.forEach { melding ->
-                melding["journalfortTemanavn"] = temakodeMap[melding["journalfortTemanavn"]]
-                melding["skrevetAvTekst"] = identMap[melding["skrevetAvTekst"]]
-                    ?.let { "${it.navn} (${it.ident})" }
-                    ?: "Ukjent"
-                melding["journalfortAv"] = identMap[melding["journalfortAv"]]
-                    ?.let {
-                        mapOf("fornavn" to it.fornavn, "etternavn" to it.etternavn)
-                    }
-                melding["kontorsperretAv"] = identMap[melding["kontorsperretAv"]]
-                    ?.let {
-                        mapOf("fornavn" to it.fornavn, "etternavn" to it.etternavn, "ident" to it.ident)
-                    }
-                melding["markertSomFeilsendtAv"] = identMap[melding["markertSomFeilsendtAv"]]
-                    ?.let {
-                        mapOf("fornavn" to it.fornavn, "etternavn" to it.etternavn, "ident" to it.ident)
-                    }
-            }
         }
-
-        return trader
     }
 
     fun Meldingstype.getKanal(): SamtalereferatRequestDTO.Kanal {
