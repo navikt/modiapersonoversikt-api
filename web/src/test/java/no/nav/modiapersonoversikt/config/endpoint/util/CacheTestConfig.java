@@ -2,6 +2,8 @@ package no.nav.modiapersonoversikt.config.endpoint.util;
 
 import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navansatt.GOSYSNAVansatt;
 import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navorgenhet.GOSYSNAVOrgEnhet;
+import no.nav.modiapersonoversikt.legacy.api.service.ldap.LDAPService;
+import no.nav.modiapersonoversikt.legacy.api.service.oppfolgingsinfo.OppfolgingsinfoApiService;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.henvendelse.HenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsesoknader.v1.HenvendelseSoknaderPortType;
 import no.nav.tjeneste.virksomhet.aktoer.v2.Aktoer_v2;
@@ -77,5 +79,15 @@ public class CacheTestConfig {
     @Bean
     public OrganisasjonV4 organisasjonV4PortType() {
         return mock(OrganisasjonV4.class);
+    }
+
+    @Bean
+    public LDAPService ldapService() {
+        return mock(LDAPService.class);
+    }
+
+    @Bean
+    public OppfolgingsinfoApiService oppfolgingsApi() {
+        return mock(OppfolgingsinfoApiService.class);
     }
 }
