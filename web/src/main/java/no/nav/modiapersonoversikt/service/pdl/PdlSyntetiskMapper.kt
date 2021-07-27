@@ -1,13 +1,11 @@
 package no.nav.modiapersonoversikt.service.pdl
 
-import no.nav.common.utils.EnvironmentUtils
-import no.nav.modiapersonoversikt.service.unleash.strategier.ByEnvironmentStrategy
 import org.slf4j.LoggerFactory
 
 internal data class TpsFnr(val tpsIdent: String)
 internal data class PdlFnr(val pdlIdent: String)
 
-internal val enableMapper = "p" != EnvironmentUtils.getOptionalProperty(ByEnvironmentStrategy.ENVIRONMENT_PROPERTY).orElse("p")
+internal val enableMapper = false // "p" != EnvironmentUtils.getOptionalProperty(ByEnvironmentStrategy.ENVIRONMENT_PROPERTY).orElse("p")
 internal val log = LoggerFactory.getLogger(PdlSyntetiskMapper::class.java)
 
 object PdlSyntetiskMapper {
