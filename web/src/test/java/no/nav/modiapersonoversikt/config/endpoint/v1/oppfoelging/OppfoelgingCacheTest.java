@@ -56,6 +56,16 @@ class OppfoelgingCacheTest extends CacheTest {
     }
 
     @Test
+    void cacheSetupMedRiktigKeyGenerator() throws Exception {
+        WSHentOppfoelgingsstatusRequest request1 = new WSHentOppfoelgingsstatusRequest();
+        request1.setPersonidentifikator(FODSELSNUMMER_AREMARK);
+        oppfolgingPortType.hentOppfoelgingsstatus(request1);
+
+        assertThat(getNativeCache().estimatedSize(), is(1L));
+        assertThat(getKey(), is(generatedByUserKeyGenerator()));
+    }
+
+    @Test
     void toKallTilHentOppfoelgingsstatusMedSammeIdentGirBareEttTjenestekall() throws Exception {
         WSHentOppfoelgingsstatusRequest request1 = new WSHentOppfoelgingsstatusRequest();
         request1.setPersonidentifikator(FODSELSNUMMER_AREMARK);

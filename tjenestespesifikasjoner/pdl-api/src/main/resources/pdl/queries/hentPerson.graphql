@@ -11,6 +11,9 @@ query($ident: ID!){
                 etternavn
             }
         }
+        kjoenn {
+            kjoenn
+        }
         kontaktinformasjonForDoedsbo {
             skifteform
             attestutstedelsesdato
@@ -97,6 +100,9 @@ query($ident: ID!){
             ansvar
             ansvarlig
             ansvarssubjekt
+            metadata {
+                historisk
+            }
             ansvarligUtenIdentifikator {
                 navn {
                     fornavn
