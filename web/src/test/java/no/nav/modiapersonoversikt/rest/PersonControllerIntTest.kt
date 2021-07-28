@@ -96,6 +96,7 @@ internal class PersonControllerIntTest {
         )
         every { pdlMock.hentPerson(any()) } returns HentPerson.Person(
             navn = emptyList(),
+            kjoenn = emptyList(),
             kontaktinformasjonForDoedsbo = kontaktiformasjonForDoedsbo,
             tilrettelagtKommunikasjon = emptyList(),
             fullmakt = emptyList(),
