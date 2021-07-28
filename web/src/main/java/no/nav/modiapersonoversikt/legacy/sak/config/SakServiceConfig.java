@@ -4,6 +4,8 @@ import no.nav.modiapersonoversikt.consumer.kodeverk2.config.KodeverkConfig;
 import no.nav.modiapersonoversikt.legacy.sak.service.*;
 import no.nav.modiapersonoversikt.legacy.sak.service.filter.Filter;
 import no.nav.modiapersonoversikt.legacy.sak.service.interfaces.InnsynJournalV2Service;
+import no.nav.modiapersonoversikt.legacy.sak.service.saf.ExperimentSafService;
+import no.nav.modiapersonoversikt.legacy.sak.service.saf.SafGraphqlServiceImpl;
 import no.nav.modiapersonoversikt.legacy.sak.service.saf.SafService;
 import no.nav.modiapersonoversikt.legacy.sak.service.saf.SafServiceImpl;
 import no.nav.modiapersonoversikt.legacy.sak.transformers.DokumentMetadataTransformer;
@@ -77,10 +79,9 @@ public class SakServiceConfig {
 
     @Bean
     public SafService safService() {
-        // TODO her kan man bruke UnleashProxySwitcher for å styre bruken av SafServiceImpl vs SafGraphqlServiceImpl
-        return new SafServiceImpl();
+        return new ExperimentSafService(
+                new SafServiceImpl(),
+                new SafGraphqlServiceImpl()
+        );
     }
-
 }
-
-
