@@ -27,7 +27,7 @@ public class LdapServiceCacheTest extends CacheTest {
 
     @Test
     void cacheKeysSkalVareUnikeForUlikeMetoder() {
-        verifyUniqueCacheKeys(
+        verifyUniqueAndStableCacheKeys(
                 () -> ldapService.hentSaksbehandler("Z999999"),
                 () -> ldapService.hentRollerForVeileder("Z999999")
         );

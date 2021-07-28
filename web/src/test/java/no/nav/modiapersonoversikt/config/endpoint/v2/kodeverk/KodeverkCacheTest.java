@@ -6,7 +6,6 @@ import no.nav.tjeneste.virksomhet.kodeverk.v2.HentKodeverkHentKodeverkKodeverkIk
 import no.nav.tjeneste.virksomhet.kodeverk.v2.KodeverkPortType;
 import no.nav.tjeneste.virksomhet.kodeverk.v2.meldinger.XMLFinnKodeverkListeRequest;
 import no.nav.tjeneste.virksomhet.kodeverk.v2.meldinger.XMLHentKodeverkRequest;
-import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,7 +40,7 @@ class KodeverkCacheTest extends CacheTest {
 
     @Test
     void cacheKeysSkalVareUnikeForUlikeMetoder() {
-        verifyUniqueCacheKeys(
+        verifyUniqueAndStableCacheKeys(
                 () -> kodeverk.finnKodeverkListe(new XMLFinnKodeverkListeRequest()),
                 () -> kodeverk.hentKodeverk(new XMLHentKodeverkRequest())
         );

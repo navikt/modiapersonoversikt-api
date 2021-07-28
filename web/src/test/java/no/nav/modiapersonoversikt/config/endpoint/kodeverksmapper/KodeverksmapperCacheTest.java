@@ -26,7 +26,7 @@ class KodeverksmapperCacheTest extends CacheTest {
 
     @Test
     void cacheKeysSkalVareUnikeForUlikeMetoder() {
-        verifyUniqueCacheKeys(
+        verifyUniqueAndStableCacheKeys(
                 () -> kodeverksmapper.hentUnderkategori(),
                 () -> kodeverksmapper.hentOppgavetype()
         );

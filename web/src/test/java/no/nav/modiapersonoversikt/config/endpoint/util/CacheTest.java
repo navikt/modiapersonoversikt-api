@@ -82,9 +82,11 @@ public abstract class CacheTest {
                 .orElse(null);
     }
 
-    protected void verifyUniqueCacheKeys(UnsafeRunneable... runnables) {
+    protected void verifyUniqueAndStableCacheKeys(UnsafeRunneable... runnables) {
         long length = runnables.length;
         for (UnsafeRunneable runnable : runnables) {
+            TestUtils.sneaky(runnable);
+            // Running twice to verify stability
             TestUtils.sneaky(runnable);
         }
         assertThat("Cache-size should equal the number of operations in test", getNativeCache().estimatedSize(), Matchers.is(length));

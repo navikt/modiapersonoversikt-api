@@ -9,7 +9,6 @@ import no.nav.tjeneste.virksomhet.organisasjonenhet.v2.meldinger.WSFinnNAVKontor
 import no.nav.tjeneste.virksomhet.organisasjonenhet.v2.meldinger.WSHentEnhetBolkRequest;
 import no.nav.tjeneste.virksomhet.organisasjonenhet.v2.meldinger.WSHentFullstendigEnhetListeRequest;
 import no.nav.tjeneste.virksomhet.organisasjonenhet.v2.meldinger.WSHentOverordnetEnhetListeRequest;
-import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -60,7 +59,7 @@ class OrganisasjonEnhetV2EndpointCacheTest extends CacheTest {
 
     @Test
     void cacheKeysSkalVareUnikeForUlikeMetoder() {
-        verifyUniqueCacheKeys(
+        verifyUniqueAndStableCacheKeys(
                 () -> organisasjonEnhetService.hentFullstendigEnhetListe(new WSHentFullstendigEnhetListeRequest()),
                 () -> organisasjonEnhetService.hentOverordnetEnhetListe(new WSHentOverordnetEnhetListeRequest()),
                 () -> organisasjonEnhetService.finnNAVKontor(new WSFinnNAVKontorRequest()),

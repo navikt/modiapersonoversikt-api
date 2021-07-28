@@ -51,7 +51,7 @@ class OrganisasjonEnpointCacheTest extends CacheTest {
 
     @Test
     void cacheKeysSkalVareUnikeForUlikeMetoder() {
-        verifyUniqueCacheKeys(
+        verifyUniqueAndStableCacheKeys(
                 () -> organisasjon.hentOrganisasjon(new WSHentOrganisasjonRequest()),
                 () -> organisasjon.hentOrganisasjonsnavnBolk(new WSHentOrganisasjonsnavnBolkRequest()),
                 () -> organisasjon.finnOrganisasjonsendringerListe(new WSFinnOrganisasjonsendringerListeRequest()),
