@@ -140,7 +140,6 @@ class SakerController @Autowired constructor(
                     "mottaker" to it.mottaker,
                     "tilhørendeSaksid" to it.tilhorendeSakid,
                     "tilhørendeFagsaksid" to it.tilhorendeFagsakId,
-                    "behandlingsid" to it.behandlingsId,
                     "baksystem" to it.baksystem,
                     "temakode" to it.temakode,
                     "temakodeVisning" to it.temakodeVisning,

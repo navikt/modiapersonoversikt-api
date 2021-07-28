@@ -19,7 +19,6 @@ public class DokumentMetadata {
     private Entitet mottaker;
     private String tilhorendeSakid;
     private String tilhorendeFagsakId;
-    private String behandlingsId;
     private Set<Baksystem> baksystem = new HashSet<>();
     private String temakode;
     private String temakodeVisning;
@@ -34,11 +33,6 @@ public class DokumentMetadata {
 
     public void setEttersending(boolean ettersending) {
         this.ettersending = ettersending;
-    }
-
-    public DokumentMetadata withEttersending(boolean ettersending) {
-        this.ettersending = ettersending;
-        return this;
     }
 
     public Set<Baksystem> getBaksystem() {
@@ -188,19 +182,6 @@ public class DokumentMetadata {
 
     public DokumentMetadata withTilhorendeSakid(final String tilhorendeSakid) {
         this.tilhorendeSakid = tilhorendeSakid;
-        return this;
-    }
-
-    public String getBehandlingsId() {
-        return behandlingsId;
-    }
-
-    public void setBehandlingsId(String behandlingsId) {
-        this.behandlingsId = behandlingsId;
-    }
-
-    public DokumentMetadata withBehandlingsId(String behandlingsId) {
-        this.behandlingsId = behandlingsId;
         return this;
     }
 
