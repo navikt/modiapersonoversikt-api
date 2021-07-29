@@ -6,6 +6,8 @@
 
     <bean id="userkeygenerator"
           class="no.nav.modiapersonoversikt.legacy.api.utils.cache.AutentisertBrukerKeyGenerator"/>
+    <bean id="methodawarekeygenerator"
+          class="no.nav.modiapersonoversikt.legacy.api.utils.cache.MethodAwareKeyGenerator" />
     <bean id="asbogosyskeygenerator"
           class="no.nav.modiapersonoversikt.infrastructure.cache.ASBOGOSYSNAVKeyGenerator"/>
     <bean id="asbogosysansattlistekeygenerator"
@@ -62,7 +64,7 @@
             <cache:cacheable method="finn*"/>
         </cache:caching>
     </cache:advice>
-    <cache:advice id="ldapServiceAdvice" key-generator="defaultkeygenerator">
+    <cache:advice id="ldapServiceAdvice" key-generator="methodawarekeygenerator">
         <cache:caching cache="ldap">
             <cache:cacheable method="hent*"/>
             <cache:cacheable method="finn*"/>
