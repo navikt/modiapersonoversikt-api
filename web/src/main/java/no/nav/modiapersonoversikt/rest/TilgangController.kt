@@ -6,6 +6,9 @@ import no.nav.modiapersonoversikt.consumer.abac.AbacClient
 import no.nav.modiapersonoversikt.consumer.abac.AbacResponse
 import no.nav.modiapersonoversikt.consumer.abac.Decision
 import no.nav.modiapersonoversikt.consumer.abac.DenyCause
+import no.nav.modiapersonoversikt.infrastructure.naudit.Audit
+import no.nav.modiapersonoversikt.infrastructure.naudit.AuditIdentifier
+import no.nav.modiapersonoversikt.infrastructure.naudit.AuditResources
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.AbacPolicies
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.GetMapping
@@ -18,12 +21,16 @@ import java.util.*
 @RestController
 @RequestMapping("/rest/tilgang")
 class TilgangController @Autowired constructor(private val abacClient: AbacClient) {
+    val audit = Audit.describe<String>(Audit.Action.READ, AuditResources.Person.Tilgang) {
+        listOf(AuditIdentifier.FNR to it)
+    }
 
     @GetMapping("/{fnr}")
     fun harTilgang(@PathVariable("fnr") fnr: String): TilgangDTO {
         return abacClient
             .evaluate(AbacPolicies.tilgangTilBruker(fnr))
             .makeResponse()
+            .logAudit(audit, fnr)
     }
 
     @GetMapping
@@ -46,6 +53,14 @@ class AuthIntropectionDTO(val expirationDate: Long) {
     companion object {
         val INVALID = AuthIntropectionDTO(-1)
     }
+}
+
+private fun TilgangDTO.logAudit(audit: Audit.AuditDescriptor<String>, fnr: String): TilgangDTO {
+    when (this.harTilgang) {
+        true -> audit.log(fnr)
+        else -> audit.denied("Ikke tilgang til $fnr, årsak: ${this.ikkeTilgangArsak}")
+    }
+    return this
 }
 
 internal fun SsoToken.getExpirationDate(): AuthIntropectionDTO {
