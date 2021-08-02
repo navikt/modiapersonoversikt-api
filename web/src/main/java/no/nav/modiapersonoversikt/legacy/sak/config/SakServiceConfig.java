@@ -4,7 +4,10 @@ import no.nav.modiapersonoversikt.consumer.kodeverk2.config.KodeverkConfig;
 import no.nav.modiapersonoversikt.legacy.sak.service.*;
 import no.nav.modiapersonoversikt.legacy.sak.service.filter.Filter;
 import no.nav.modiapersonoversikt.legacy.sak.service.interfaces.InnsynJournalV2Service;
+import no.nav.modiapersonoversikt.legacy.sak.service.saf.ExperimentSafService;
+import no.nav.modiapersonoversikt.legacy.sak.service.saf.SafGraphqlServiceImpl;
 import no.nav.modiapersonoversikt.legacy.sak.service.saf.SafService;
+import no.nav.modiapersonoversikt.legacy.sak.service.saf.SafServiceImpl;
 import no.nav.modiapersonoversikt.legacy.sak.transformers.DokumentMetadataTransformer;
 import no.nav.modiapersonoversikt.legacy.sak.utils.TemagrupperHenter;
 import org.springframework.context.annotation.Bean;
@@ -76,9 +79,9 @@ public class SakServiceConfig {
 
     @Bean
     public SafService safService() {
-        return new SafService();
+        return new ExperimentSafService(
+                new SafServiceImpl(),
+                new SafGraphqlServiceImpl()
+        );
     }
-
 }
-
-
