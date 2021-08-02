@@ -4,13 +4,11 @@ import no.nav.common.auth.subject.SsoToken
 import no.nav.common.auth.subject.SubjectHandler
 import no.nav.common.log.MDCConstants
 import no.nav.common.rest.client.RestClient
+import no.nav.common.sts.SystemUserTokenProvider
 import no.nav.common.utils.EnvironmentUtils.getRequiredProperty
 import no.nav.modiapersonoversikt.infrastructure.http.AuthorizationInterceptor
 import no.nav.modiapersonoversikt.infrastructure.http.LoggingInterceptor
-import no.nav.modiapersonoversikt.legacy.api.domain.sfhenvendelse.generated.apis.HenvendelseBehandlingApi
-import no.nav.modiapersonoversikt.legacy.api.domain.sfhenvendelse.generated.apis.HenvendelseInfoApi
-import no.nav.modiapersonoversikt.legacy.api.domain.sfhenvendelse.generated.apis.JournalApi
-import no.nav.modiapersonoversikt.legacy.api.domain.sfhenvendelse.generated.apis.NyHenvendelseApi
+import no.nav.modiapersonoversikt.legacy.api.domain.sfhenvendelse.generated.apis.*
 import no.nav.modiapersonoversikt.legacy.api.domain.sfhenvendelse.generated.infrastructure.RequestConfig
 import no.nav.modiapersonoversikt.legacy.api.domain.sfhenvendelse.generated.infrastructure.RequestMethod
 import no.nav.modiapersonoversikt.legacy.api.domain.sfhenvendelse.generated.models.HenvendelseDTO
@@ -18,6 +16,7 @@ import no.nav.modiapersonoversikt.legacy.api.domain.sfhenvendelse.generated.mode
 import no.nav.modiapersonoversikt.legacy.api.domain.sfhenvendelse.generated.models.MeldingRequestDTO
 import no.nav.modiapersonoversikt.legacy.api.domain.sfhenvendelse.generated.models.SamtalereferatRequestDTO
 import no.nav.modiapersonoversikt.legacy.api.service.pdl.PdlOppslagService
+import okhttp3.OkHttpClient
 import org.slf4j.MDC
 import java.time.OffsetDateTime
 import java.util.*
@@ -51,6 +50,8 @@ interface SfHenvendelseService {
     fun merkSomKontorsperret(henvendelseId: String, enhet: String)
     fun merkSomFeilsendt(henvendelseId: String)
     fun merkForHastekassering(henvendelseId: String)
+
+    fun ping()
 }
 
 class SfHenvendelseServiceImpl(
@@ -58,14 +59,23 @@ class SfHenvendelseServiceImpl(
     private val henvendelseInfoApi: HenvendelseInfoApi = SfHenvendelseApiFactory.createHenvendelseInfoApi(),
     private val henvendelseJournalApi: JournalApi = SfHenvendelseApiFactory.createHenvendelseJournalApi(),
     private val henvendelseOpprettApi: NyHenvendelseApi = SfHenvendelseApiFactory.createHenvendelseOpprettApi(),
-    private val pdlOppslagService: PdlOppslagService
+    private val pdlOppslagService: PdlOppslagService,
+    private val stsService: SystemUserTokenProvider
 ) : SfHenvendelseService {
-    constructor(pdlOppslagService: PdlOppslagService) : this(
+    private val adminKodeverkApiForPing = KodeverkApi(
+        SfHenvendelseApiFactory.url,
+        SfHenvendelseApiFactory.createClient {
+            stsService.systemUserToken
+        }
+    )
+
+    constructor(pdlOppslagService: PdlOppslagService, stsService: SystemUserTokenProvider) : this(
         SfHenvendelseApiFactory.createHenvendelseBehandlingApi(),
         SfHenvendelseApiFactory.createHenvendelseInfoApi(),
         SfHenvendelseApiFactory.createHenvendelseJournalApi(),
         SfHenvendelseApiFactory.createHenvendelseOpprettApi(),
-        pdlOppslagService
+        pdlOppslagService,
+        stsService
     )
 
     override fun hentHenvendelser(bruker: EksternBruker, enhet: String): List<HenvendelseDTO> {
@@ -194,6 +204,10 @@ class SfHenvendelseServiceImpl(
         henvendelseBehandlingApi.client.request<Map<String, Any?>, Unit>(request)
     }
 
+    override fun ping() {
+        adminKodeverkApiForPing.henvendelseKodeverkTemagrupperGet(callId())
+    }
+
     private fun createPatchRequest(
         henvendelseId: String,
         patchnote: PatchNote<HenvendelseDTO>
@@ -233,12 +247,17 @@ class SfHenvendelseServiceImpl(
         }
     }
 
-    fun callId(): String = MDC.get(MDCConstants.MDC_CALL_ID) ?: UUID.randomUUID().toString()
+    private fun callId(): String = MDC.get(MDCConstants.MDC_CALL_ID) ?: UUID.randomUUID().toString()
 }
 
 object SfHenvendelseApiFactory {
-    private val url = getRequiredProperty("SF_HENVENDELSE_URL")
-    private val client = RestClient.baseClient().newBuilder()
+    internal val url = getRequiredProperty("SF_HENVENDELSE_URL")
+    private val client = createClient {
+        SubjectHandler.getSsoToken(SsoToken.Type.OIDC)
+            .orElseThrow { IllegalStateException("Fant ikke OIDC-token") }
+    }
+
+    fun createClient(tokenProvider: () -> String): OkHttpClient = RestClient.baseClient().newBuilder()
         .addInterceptor(
             LoggingInterceptor("SF-Henvendelse") { request ->
                 requireNotNull(request.header("X-Correlation-ID")) {
@@ -247,13 +266,9 @@ object SfHenvendelseApiFactory {
             }
         )
         .addInterceptor(
-            AuthorizationInterceptor {
-                SubjectHandler.getSsoToken(SsoToken.Type.OIDC)
-                    .orElseThrow { IllegalStateException("Fant ikke OIDC-token") }
-            }
+            AuthorizationInterceptor(tokenProvider)
         )
         .build()
-
     fun createHenvendelseBehandlingApi() = HenvendelseBehandlingApi(url, client)
     fun createHenvendelseInfoApi() = HenvendelseInfoApi(url, client)
     fun createHenvendelseJournalApi() = JournalApi(url, client)

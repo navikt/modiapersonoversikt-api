@@ -240,9 +240,4 @@ public class ServiceConfig {
     public PdlOppslagService pdlOppslagService(SystemUserTokenProvider sts) {
         return new PdlOppslagServiceImpl(sts);
     }
-
-    @Bean
-    public SfHenvendelseService sfHenvendelseApi(PdlOppslagService pdlOppslagService) {
-        return new SfHenvendelseServiceImpl(pdlOppslagService);
-    }
 }
