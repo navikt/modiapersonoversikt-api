@@ -6,6 +6,8 @@
 
     <bean id="userkeygenerator"
           class="no.nav.modiapersonoversikt.legacy.api.utils.cache.AutentisertBrukerKeyGenerator"/>
+    <bean id="methodawarekeygenerator"
+          class="no.nav.modiapersonoversikt.legacy.api.utils.cache.MethodAwareKeyGenerator" />
     <bean id="asbogosyskeygenerator"
           class="no.nav.modiapersonoversikt.infrastructure.cache.ASBOGOSYSNAVKeyGenerator"/>
     <bean id="asbogosysansattlistekeygenerator"
@@ -56,13 +58,13 @@
             <cache:cacheable method="hent*"/>
         </cache:caching>
     </cache:advice>
-    <cache:advice id="kodeverkAdvice" key-generator="userkeygenerator">
+    <cache:advice id="kodeverkAdvice" key-generator="defaultkeygenerator">
         <cache:caching cache="kodeverkCache">
             <cache:cacheable method="hent*"/>
             <cache:cacheable method="finn*"/>
         </cache:caching>
     </cache:advice>
-    <cache:advice id="ldapServiceAdvice" key-generator="userkeygenerator">
+    <cache:advice id="ldapServiceAdvice" key-generator="methodawarekeygenerator">
         <cache:caching cache="ldap">
             <cache:cacheable method="hent*"/>
             <cache:cacheable method="finn*"/>
@@ -95,17 +97,17 @@
             <cache:cacheable method="hent*" />
         </cache:caching>
     </cache:advice>
-    <cache:advice id="oppfolgingsinfoAdvice" key-generator="defaultkeygenerator">
+    <cache:advice id="oppfolgingsinfoAdvice" key-generator="userkeygenerator">
         <cache:caching cache="oppfolgingsinfoCache">
             <cache:cacheable method="hent*" />
         </cache:caching>
     </cache:advice>
-    <cache:advice id="oppfolgingsAdvice" key-generator="defaultkeygenerator">
+    <cache:advice id="oppfolgingsAdvice" key-generator="userkeygenerator">
         <cache:caching cache="oppfolgingCache">
             <cache:cacheable method="hent*" />
         </cache:caching>
     </cache:advice>
-    <cache:advice id="innsynJournalAdvice" key-generator="defaultkeygenerator">
+    <cache:advice id="innsynJournalAdvice" key-generator="userkeygenerator">
         <cache:caching cache="innsynJournalCache">
             <cache:cacheable method="identifiserJournalpost" />
             <cache:cacheable method="hent*" />

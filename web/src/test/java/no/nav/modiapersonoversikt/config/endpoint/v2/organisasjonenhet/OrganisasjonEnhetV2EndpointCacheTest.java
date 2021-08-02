@@ -7,8 +7,9 @@ import no.nav.tjeneste.virksomhet.organisasjonenhet.v2.informasjon.WSDiskresjons
 import no.nav.tjeneste.virksomhet.organisasjonenhet.v2.informasjon.WSGeografi;
 import no.nav.tjeneste.virksomhet.organisasjonenhet.v2.meldinger.WSFinnNAVKontorRequest;
 import no.nav.tjeneste.virksomhet.organisasjonenhet.v2.meldinger.WSHentEnhetBolkRequest;
+import no.nav.tjeneste.virksomhet.organisasjonenhet.v2.meldinger.WSHentFullstendigEnhetListeRequest;
+import no.nav.tjeneste.virksomhet.organisasjonenhet.v2.meldinger.WSHentOverordnetEnhetListeRequest;
 import org.junit.jupiter.api.Test;
-
 import org.springframework.beans.factory.annotation.Autowired;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -54,6 +55,16 @@ class OrganisasjonEnhetV2EndpointCacheTest extends CacheTest {
 
         assertThat(getCache().getName(), is(CACHE_NAME));
         assertThat(getNativeCache().estimatedSize(), is(2L));
+    }
+
+    @Test
+    void cacheKeysSkalVareUnikeForUlikeMetoder() {
+        verifyUniqueAndStableCacheKeys(
+                () -> organisasjonEnhetService.hentFullstendigEnhetListe(new WSHentFullstendigEnhetListeRequest()),
+                () -> organisasjonEnhetService.hentOverordnetEnhetListe(new WSHentOverordnetEnhetListeRequest()),
+                () -> organisasjonEnhetService.finnNAVKontor(new WSFinnNAVKontorRequest()),
+                () -> organisasjonEnhetService.hentEnhetBolk(new WSHentEnhetBolkRequest())
+        );
     }
 
     private WSFinnNAVKontorRequest lagFinnNAVKontorRequest(String geografiskTilhorighet, String diskresjonskode) {
