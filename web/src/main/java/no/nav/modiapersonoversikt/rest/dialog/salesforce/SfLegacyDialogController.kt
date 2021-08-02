@@ -1,4 +1,4 @@
-package no.nav.modiapersonoversikt.rest.dialog
+package no.nav.modiapersonoversikt.rest.dialog.salesforce
 
 import no.nav.modiapersonoversikt.infrastructure.naudit.Audit
 import no.nav.modiapersonoversikt.infrastructure.naudit.AuditIdentifier
@@ -17,32 +17,25 @@ import no.nav.modiapersonoversikt.legacy.api.service.ldap.LDAPService
 import no.nav.modiapersonoversikt.legacy.api.utils.RestUtils
 import no.nav.modiapersonoversikt.legacy.api.utils.TemagruppeTemaMapping
 import no.nav.modiapersonoversikt.rest.DATO_TID_FORMAT
+import no.nav.modiapersonoversikt.rest.dialog.apis.*
+import no.nav.modiapersonoversikt.rest.dialog.apis.MeldingDTO
 import no.nav.modiapersonoversikt.service.sfhenvendelse.EksternBruker
 import no.nav.modiapersonoversikt.service.sfhenvendelse.SfHenvendelseService
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.*
 import org.springframework.web.server.ResponseStatusException
 import java.time.format.DateTimeFormatter
 import javax.servlet.http.HttpServletRequest
 import javax.ws.rs.NotSupportedException
 
-@RestController
-@RequestMapping("/rest/sf-legacy-dialog/{fnr}")
-class SfLegacyDialogController @Autowired constructor(
+class SfLegacyDialogController(
     private val tilgangskontroll: Tilgangskontroll,
     private val sfHenvendelseService: SfHenvendelseService,
     private val oppgaveBehandlingService: OppgaveBehandlingService,
     private val ldapService: LDAPService,
     private val kodeverk: StandardKodeverk
-) {
-    @GetMapping("/meldinger")
-    fun hentMeldinger(
-        request: HttpServletRequest,
-        @PathVariable("fnr") fnr: String,
-        @RequestParam(value = "enhet", required = false) enhet: String?
-    ): List<TraadDTO> {
+) : DialogApi {
+    override fun hentMeldinger(request: HttpServletRequest, fnr: String, enhet: String?): List<TraadDTO> {
         return tilgangskontroll
             .check(Policies.tilgangTilBruker.with(fnr))
             .get(Audit.describe(Audit.Action.READ, AuditResources.Person.Henvendelse.Les, AuditIdentifier.FNR to fnr)) {
@@ -62,12 +55,7 @@ class SfLegacyDialogController @Autowired constructor(
             }
     }
 
-    @PostMapping("/sendreferat")
-    fun sendMelding(
-        request: HttpServletRequest,
-        @PathVariable("fnr") fnr: String,
-        @RequestBody body: SendReferatRequest
-    ): ResponseEntity<Void> {
+    override fun sendMelding(request: HttpServletRequest, fnr: String, body: SendReferatRequest): ResponseEntity<Void> {
         return tilgangskontroll
             .check(Policies.tilgangTilBruker.with(fnr))
             .get(Audit.describe(Audit.Action.CREATE, AuditResources.Person.Henvendelse.Les, AuditIdentifier.FNR to fnr)) {
@@ -82,12 +70,7 @@ class SfLegacyDialogController @Autowired constructor(
             }
     }
 
-    @PostMapping("/sendsporsmal")
-    fun sendSporsmal(
-        request: HttpServletRequest,
-        @PathVariable("fnr") fnr: String,
-        @RequestBody body: SendSporsmalRequest
-    ): ResponseEntity<Void> {
+    override fun sendSporsmal(request: HttpServletRequest, fnr: String, body: SendSporsmalRequest): ResponseEntity<Void> {
         return tilgangskontroll
             .check(Policies.tilgangTilBruker.with(fnr))
             .get(Audit.describe(Audit.Action.CREATE, AuditResources.Person.Henvendelse.Les, AuditIdentifier.FNR to fnr)) {
@@ -103,12 +86,7 @@ class SfLegacyDialogController @Autowired constructor(
             }
     }
 
-    @PostMapping("/sendinfomelding")
-    fun sendInfomelding(
-        request: HttpServletRequest,
-        @PathVariable("fnr") fnr: String,
-        @RequestBody body: InfomeldingRequest
-    ): ResponseEntity<Void> {
+    override fun sendInfomelding(request: HttpServletRequest, fnr: String, body: InfomeldingRequest): ResponseEntity<Void> {
         return tilgangskontroll
             .check(Policies.tilgangTilBruker.with(fnr))
             .get(Audit.describe(Audit.Action.CREATE, AuditResources.Person.Henvendelse.Les, AuditIdentifier.FNR to fnr)) {
@@ -132,12 +110,11 @@ class SfLegacyDialogController @Autowired constructor(
             }
     }
 
-    @PostMapping("/fortsett/opprett")
-    fun startFortsettDialog(
+    override fun startFortsettDialog(
         request: HttpServletRequest,
-        @PathVariable("fnr") fnr: String,
-        @RequestHeader(value = "Ignore-Conflict", required = false) ignorerConflict: Boolean?,
-        @RequestBody body: OpprettHenvendelseRequest
+        fnr: String,
+        ignorerConflict: Boolean?,
+        body: OpprettHenvendelseRequest
     ): FortsettDialogDTO {
         val auditIdentifier = arrayOf(
             AuditIdentifier.FNR to fnr,
@@ -153,11 +130,10 @@ class SfLegacyDialogController @Autowired constructor(
             }
     }
 
-    @PostMapping("/fortsett/ferdigstill")
-    fun sendFortsettDialog(
+    override fun sendFortsettDialog(
         request: HttpServletRequest,
-        @PathVariable("fnr") fnr: String,
-        @RequestBody body: FortsettDialogRequest
+        fnr: String,
+        body: FortsettDialogRequest
     ): ResponseEntity<Void> {
         val auditIdentifier = arrayOf(
             AuditIdentifier.FNR to fnr,
@@ -207,11 +183,10 @@ class SfLegacyDialogController @Autowired constructor(
             }
     }
 
-    @PostMapping("slaasammen")
-    fun slaaSammenTraader(
+    override fun slaaSammenTraader(
         request: HttpServletRequest,
-        @PathVariable("fnr") fnr: String,
-        @RequestBody slaaSammenRequest: SlaaSammenRequest
+        fnr: String,
+        slaaSammenRequest: SlaaSammenRequest
     ): Map<String, Any?> {
         val auditIdentifier = arrayOf(
             AuditIdentifier.FNR to fnr,

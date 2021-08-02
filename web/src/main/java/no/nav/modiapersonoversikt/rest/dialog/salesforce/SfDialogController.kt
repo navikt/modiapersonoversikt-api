@@ -1,4 +1,4 @@
-package no.nav.modiapersonoversikt.rest.dialog
+package no.nav.modiapersonoversikt.rest.dialog.salesforce
 
 import no.nav.common.auth.subject.SubjectHandler
 import no.nav.modiapersonoversikt.infrastructure.naudit.Audit

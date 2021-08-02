@@ -1,31 +1,33 @@
 package no.nav.modiapersonoversikt.rest;
 
+import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelse;
+import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLMeldingFraBruker;
+import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLMetadataListe;
+import no.nav.modiapersonoversikt.infrastructure.content.ContentRetriever;
+import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll;
+import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.TilgangskontrollMock;
+import no.nav.modiapersonoversikt.legacy.api.domain.Temagruppe;
+import no.nav.modiapersonoversikt.legacy.api.service.OppgaveBehandlingService;
+import no.nav.modiapersonoversikt.legacy.api.utils.http.HttpRequestUtil;
+import no.nav.modiapersonoversikt.legacy.api.utils.http.SubjectHandlerUtil;
 import no.nav.modiapersonoversikt.legacy.kjerneinfo.consumer.fim.person.PersonKjerneinfoServiceBi;
 import no.nav.modiapersonoversikt.legacy.kjerneinfo.consumer.fim.person.to.HentKjerneinformasjonRequest;
 import no.nav.modiapersonoversikt.legacy.kjerneinfo.consumer.fim.person.to.HentKjerneinformasjonResponse;
 import no.nav.modiapersonoversikt.legacy.kjerneinfo.domain.person.Person;
 import no.nav.modiapersonoversikt.legacy.kjerneinfo.domain.person.Personfakta;
-import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelse;
-import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLMeldingFraBruker;
-import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLMetadataListe;
-import no.nav.modiapersonoversikt.infrastructure.content.ContentRetriever;
-import no.nav.modiapersonoversikt.legacy.api.domain.Temagruppe;
-import no.nav.modiapersonoversikt.legacy.api.service.OppgaveBehandlingService;
-import no.nav.modiapersonoversikt.legacy.api.utils.http.HttpRequestUtil;
-import no.nav.modiapersonoversikt.legacy.api.utils.http.SubjectHandlerUtil;
+import no.nav.modiapersonoversikt.rest.dialog.apis.DelsvarRestRequest;
+import no.nav.modiapersonoversikt.rest.dialog.henvendelse.HenvendelseDelsvar;
 import no.nav.modiapersonoversikt.service.HenvendelseUtsendingServiceImpl;
 import no.nav.modiapersonoversikt.service.henvendelse.DelsvarServiceImpl;
-import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.TilgangskontrollMock;
-import no.nav.modiapersonoversikt.rest.dialog.DelsvarController;
-import no.nav.modiapersonoversikt.rest.dialog.DelsvarRestRequest;
-import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.senduthenvendelse.SendUtHenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.senduthenvendelse.meldinger.WSFerdigstillHenvendelseRequest;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.henvendelse.HenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.meldinger.WSHentHenvendelseListeRequest;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.meldinger.WSHentHenvendelseListeResponse;
 import org.jetbrains.annotations.NotNull;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
@@ -37,7 +39,7 @@ import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHe
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
-class DelsvarControllerTest {
+class HenvendelseDelsvarTest {
 
     private static final String SAKSBEHANDLERS_IDENT = "z999666";
     private static final String BRUKERS_FNR = "10108000398";
@@ -47,14 +49,14 @@ class DelsvarControllerTest {
 
     private OppgaveBehandlingService oppgaveBehandlingServiceMock = mock(OppgaveBehandlingService.class);
     private MockHttpServletRequest httpMockRequest;
-    private DelsvarController delsvarController;
+    private HenvendelseDelsvar delsvarController;
     private SendUtHenvendelsePortType sendUtHenvendelsePortTypeMock;
     private Tilgangskontroll tilgangskontrollMock = TilgangskontrollMock.get();
 
     @BeforeEach
     void before() {
         httpMockRequest = HttpRequestUtil.mockHttpServletRequestMedCookie(SAKSBEHANDLERS_IDENT, VALGT_ENHET);
-        delsvarController = new DelsvarController(tilgangskontrollMock, new DelsvarServiceImpl(setupHenvendelseUtsendingService(), oppgaveBehandlingServiceMock));
+        delsvarController = new HenvendelseDelsvar(new DelsvarServiceImpl(setupHenvendelseUtsendingService(), oppgaveBehandlingServiceMock));
     }
 
     private HenvendelseUtsendingServiceImpl setupHenvendelseUtsendingService() {
