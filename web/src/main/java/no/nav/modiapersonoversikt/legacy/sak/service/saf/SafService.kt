@@ -18,8 +18,8 @@ import no.nav.modiapersonoversikt.legacy.sak.providerdomain.resultatwrappere.Tje
 import okhttp3.*
 import org.slf4j.LoggerFactory
 
-val SAF_GRAPHQL_BASEURL: String = EnvironmentUtils.getRequiredProperty("SAF_GRAPHQL_URL")
-val SAF_HENTDOKUMENT_BASEURL: String = EnvironmentUtils.getRequiredProperty("SAF_HENTDOKUMENT_URL")
+private val SAF_GRAPHQL_BASEURL: String = EnvironmentUtils.getRequiredProperty("SAF_GRAPHQL_URL")
+private val SAF_HENTDOKUMENT_BASEURL: String = EnvironmentUtils.getRequiredProperty("SAF_HENTDOKUMENT_URL")
 
 private val LOG = LoggerFactory.getLogger(SafService::class.java)
 private val mapper: ObjectMapper = jacksonObjectMapper().registerModule(JavaTimeModule())

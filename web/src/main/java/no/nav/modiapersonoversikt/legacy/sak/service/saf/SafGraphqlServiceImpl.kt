@@ -22,13 +22,14 @@ import java.net.URL
 import java.time.LocalDateTime
 import java.util.*
 
+private val SAF_GRAPHQL_BASEURL: String = EnvironmentUtils.getRequiredProperty("SAF_GRAPHQL_URL")
+private val SAF_HENTDOKUMENT_BASEURL: String = EnvironmentUtils.getRequiredProperty("SAF_HENTDOKUMENT_URL")
+
 @KtorExperimentalAPI
+private val graphQLClient = LoggingGraphqlClient("SAF", URL(SAF_GRAPHQL_BASEURL))
+
 class SafGraphqlServiceImpl : SafService {
     private val LOG = LoggerFactory.getLogger(SafService::class.java)
-    private val SAF_GRAPHQL_BASEURL: String = EnvironmentUtils.getRequiredProperty("SAF_GRAPHQL_URL")
-    private val SAF_HENTDOKUMENT_BASEURL: String = EnvironmentUtils.getRequiredProperty("SAF_HENTDOKUMENT_URL")
-
-    private val graphQLClient = LoggingGraphqlClient("SAF", URL(SAF_GRAPHQL_BASEURL))
 
     private val client: OkHttpClient = RestClient.baseClient().newBuilder()
         .addInterceptor(
