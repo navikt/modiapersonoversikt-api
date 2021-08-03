@@ -1,5 +1,6 @@
 package no.nav.modiapersonoversikt.legacy.sak.service.saf
 
+import io.ktor.client.request.*
 import io.ktor.util.*
 import kotlinx.coroutines.runBlocking
 import no.nav.common.auth.subject.SsoToken
@@ -32,18 +33,7 @@ class SafGraphqlServiceImpl : SafService {
     private val LOG = LoggerFactory.getLogger(SafService::class.java)
 
     private val client: OkHttpClient = RestClient.baseClient().newBuilder()
-        .addInterceptor(
-            HeadersInterceptor {
-                val token = SubjectHandler.getSsoToken(SsoToken.Type.OIDC)
-                    .orElseThrow { IllegalStateException("Fant ikke OIDC-token") }
-                val callId = MDC.get(MDCConstants.MDC_CALL_ID) ?: UUID.randomUUID().toString()
-                mapOf(
-                    "Authorization" to "Bearer $token",
-                    "Content-Type" to "application/json",
-                    "X-Correlation-ID" to callId
-                )
-            }
-        )
+        .addInterceptor(HeadersInterceptor(this::httpHeaders))
         .addInterceptor(
             LoggingInterceptor("Saf") { request ->
                 requireNotNull(request.header("X-Correlation-ID")) {
@@ -66,7 +56,7 @@ class SafGraphqlServiceImpl : SafService {
         )
 
         return runBlocking {
-            val response = HentBrukersDokumenter(graphQLClient).execute(variables)
+            val response = HentBrukersDokumenter(graphQLClient).execute(variables, userTokenAuthorizationHeaders)
             if (response.errors.isNullOrEmpty()) {
                 val data = requireNotNull(response.data)
                     .dokumentoversiktBruker
@@ -93,6 +83,21 @@ class SafGraphqlServiceImpl : SafService {
             200 -> TjenesteResultatWrapper(response.body()?.bytes())
             else -> handterDokumentFeilKoder(response.code())
         }
+    }
+
+    private fun httpHeaders(): Map<String, String> {
+        val token = SubjectHandler.getSsoToken(SsoToken.Type.OIDC)
+            .orElseThrow { IllegalStateException("Fant ikke OIDC-token") }
+        val callId = MDC.get(MDCConstants.MDC_CALL_ID) ?: UUID.randomUUID().toString()
+        return mapOf(
+            "Authorization" to "Bearer $token",
+            "Content-Type" to "application/json",
+            "X-Correlation-ID" to callId
+        )
+    }
+
+    private val userTokenAuthorizationHeaders: HeadersBuilder = {
+        httpHeaders().forEach { (key, value) -> header(key, value) }
     }
 
     private fun handterDokumentFeilKoder(statuskode: Int): TjenesteResultatWrapper {
