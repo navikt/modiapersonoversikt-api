@@ -62,6 +62,7 @@ class LoggingInterceptor(val name: String, val callIdExtractor: (Request) -> Str
             "$name-request: $callId",
             mapOf(
                 "url" to request.url().toString(),
+                "headers" to request.headers().names().joinToString(", "),
                 "body" to requestBody
             )
         )
