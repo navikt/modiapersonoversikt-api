@@ -118,7 +118,7 @@ class SafGraphqlServiceImpl : SafService {
         vedlegg = getVedlegg(journalpost)
         avsender = getAvsender(journalpost)
         mottaker = getMottaker(journalpost)
-//        tilhorendeSakid = journalpost.sak?.arkivsaksnummer // TODO denne er deprecated
+        tilhorendeSakid = journalpost.sak?.arkivsaksnummer // TODO denne er deprecated, men brukes per i dag.
         tilhorendeFagsakId = journalpost.sak?.fagsakId
         baksystem = baksystem.plus(Baksystem.SAF)
         temakode = journalpost.tema?.name
@@ -164,14 +164,13 @@ class SafGraphqlServiceImpl : SafService {
             else -> LocalDateTime.now()
         } ?: LocalDateTime.now()
 
-    private fun HentBrukersDokumenter.Journalpost.getRelevantDatoForType(type: Datotype): LocalDateTime {
+    private fun HentBrukersDokumenter.Journalpost.getRelevantDatoForType(type: Datotype): LocalDateTime? {
         return this.relevanteDatoer
             .orEmpty()
             .filterNotNull()
             .find { it.datotype == type }
             ?.dato
             ?.value
-            ?: LocalDateTime.now()
     }
 
     private fun getVedlegg(journalpost: HentBrukersDokumenter.Journalpost): List<Dokument> =

@@ -26,8 +26,8 @@ query($brukerId: BrukerIdInput!) {
             sak{
                 fagsakId
                 fagsaksystem
+                arkivsaksnummer # Denne er deprecated. Må undersøke om vi har behov for denne
 #                arkivsaksystem  # Denne er deprecated. Må undersøke om vi har behov for denne
-#                arkivsaksnummer # Denne er deprecated. Må undersøke om vi har behov for denne
             }
             tema
             temanavn
