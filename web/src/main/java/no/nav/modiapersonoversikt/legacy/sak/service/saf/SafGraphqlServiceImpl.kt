@@ -197,7 +197,7 @@ class SafGraphqlServiceImpl : SafService {
         isKanVises = true
         isLogiskDokument = false
         variantformat = getVariantformat(dokumentInfo)
-        skjerming = getSkjerming(dokumentInfo).toString()
+        skjerming = getSkjerming(dokumentInfo)?.toString()
 
         return this
     }
