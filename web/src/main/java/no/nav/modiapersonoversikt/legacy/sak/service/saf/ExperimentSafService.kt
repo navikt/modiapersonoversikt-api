@@ -11,7 +11,7 @@ class ExperimentSafService(
     private val control: SafService,
     private val experiment: SafService
 ) : SafService {
-    private val experimentRate = 0.05
+    private val experimentRate = 0.5
     private val journalportExperiment =
         createExperiment<ResultatWrapper<List<DokumentMetadata>>>(Config("SAF-Journalpost", experimentRate))
 
