@@ -1,5 +1,6 @@
 package no.nav.modiapersonoversikt.infrastructure.scientist
 
+import no.nav.modiapersonoversikt.legacy.sak.providerdomain.Sak
 import org.assertj.core.api.AssertionsForInterfaceTypes.assertThat
 import org.assertj.core.data.Offset.offset
 import org.junit.jupiter.api.Test
@@ -42,9 +43,11 @@ internal class ScientistTest {
                 reporter = { header, fields ->
                     assertThat(fields).containsEntry("ok", false)
                     assertThat(fields).containsKey("control")
+                    assertThat(fields).containsKey("controlTime")
                     assertThat(fields).containsKey("experiment")
-                    assertThat((fields["control"] as Scientist.TimedValue<Any>).value).isEqualTo("Hello")
-                    assertThat((fields["experiment"] as Scientist.TimedValue<Any>).value).isEqualTo("World")
+                    assertThat(fields).containsKey("experimentTime")
+                    assertThat((fields["control"] as String)).isEqualTo("\"Hello\"")
+                    assertThat((fields["experiment"] as String)).isEqualTo("\"World\"")
                 }
             )
         ).run({ "Hello" }, { "World" })
@@ -64,5 +67,32 @@ internal class ScientistTest {
             experiment.run({ "Hello" }, { "World" })
         }
         assertThat(experimentsRun).isCloseTo(700, offset(100))
+    }
+
+    @Test
+    fun `experiment should serialize results and do deep comparision`() {
+        val controlResult = listOf(
+            Sak().withSaksId("123").withTemakode("DAG"),
+            Sak().withSaksId("456").withTemakode("AAP"),
+            Sak().withSaksId("789").withTemakode("SYK")
+        )
+        val experimentResult = listOf(
+            Sak().withSaksId("123").withTemakode("DAG"),
+            Sak().withSaksId("456").withTemakode("AAP"),
+            Sak().withSaksId("789").withTemakode("SYK")
+        )
+        Scientist.createExperiment<List<Sak>>(
+            Scientist.Config(
+                name = "DummyExperiment",
+                experimentRate = 1.0,
+                reporter = { header, fields ->
+                    assertThat(fields).containsEntry("ok", true)
+                    assertThat(fields).containsKey("control")
+                    assertThat(fields).containsKey("controlTime")
+                    assertThat(fields).containsKey("experiment")
+                    assertThat(fields).containsKey("experimentTime")
+                }
+            )
+        ).run({ controlResult }, { experimentResult })
     }
 }
