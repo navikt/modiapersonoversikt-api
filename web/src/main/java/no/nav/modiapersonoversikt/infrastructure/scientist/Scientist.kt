@@ -16,12 +16,12 @@ object Scientist {
     private class Timer {
         private var startTime: Long = 0L
         fun start() {
-            this.startTime = System.nanoTime()
+            this.startTime = System.currentTimeMillis()
         }
 
         fun elapsed(): Long {
             try {
-                return System.nanoTime() - this.startTime
+                return System.currentTimeMillis() - this.startTime
             } finally {
                 this.startTime = 0L
             }
