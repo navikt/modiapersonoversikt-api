@@ -95,4 +95,39 @@ internal class ScientistTest {
             )
         ).run({ controlResult }, { experimentResult })
     }
+
+    private data class Dataholder(val id: String, val count: Int, val isDone: Boolean)
+
+    @Test
+    fun `experiment should compare untyped maps to typed objects correctly`() {
+        val controlResult = listOf(
+            mapOf(
+                "id" to "123",
+                "count" to 4,
+                "isDone" to false
+            ),
+            mapOf(
+                "id" to "126",
+                "count" to 6,
+                "isDone" to true
+            )
+        )
+        val experimentResult = listOf(
+            Dataholder("123", 4, false),
+            Dataholder("126", 6, true)
+        )
+        Scientist.createExperiment<List<Map<String, Any?>>>(
+            Scientist.Config(
+                name = "DummyExperiment",
+                experimentRate = 1.0,
+                reporter = { header, fields ->
+                    assertThat(fields).containsEntry("ok", true)
+                    assertThat(fields).containsKey("control")
+                    assertThat(fields).containsKey("controlTime")
+                    assertThat(fields).containsKey("experiment")
+                    assertThat(fields).containsKey("experimentTime")
+                }
+            )
+        ).run({ controlResult }, { experimentResult })
+    }
 }
