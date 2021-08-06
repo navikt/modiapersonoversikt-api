@@ -5,6 +5,9 @@ import no.nav.common.auth.subject.SsoToken;
 import no.nav.common.auth.subject.SubjectHandler;
 import no.nav.common.json.JsonMapper;
 import no.nav.common.rest.client.RestClient;
+import no.nav.modiapersonoversikt.infrastructure.http.AuthorizationInterceptor;
+import no.nav.modiapersonoversikt.infrastructure.http.LoggingInterceptor;
+import no.nav.modiapersonoversikt.infrastructure.http.XCorrelationIdInterceptor;
 import no.nav.modiapersonoversikt.legacy.api.domain.Saksbehandler;
 import no.nav.modiapersonoversikt.legacy.api.domain.norg.AnsattEnhet;
 import no.nav.modiapersonoversikt.legacy.api.domain.oppfolgingsinfo.Oppfolgingsinfo;
@@ -13,18 +16,26 @@ import no.nav.modiapersonoversikt.legacy.api.domain.oppfolgingsinfo.rest.Oppfolg
 import no.nav.modiapersonoversikt.legacy.api.domain.oppfolgingsinfo.rest.Oppfolgingsenhet;
 import no.nav.modiapersonoversikt.legacy.api.service.ldap.LDAPService;
 import no.nav.modiapersonoversikt.legacy.api.service.oppfolgingsinfo.OppfolgingsinfoApiService;
+import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
-
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.IOException;
 
-import static javax.ws.rs.core.HttpHeaders.AUTHORIZATION;
-
 public class OppfolgingsinfoApiServiceImpl implements OppfolgingsinfoApiService {
     private ObjectMapper objectMapper = JsonMapper.defaultObjectMapper();
     private String apiUrl;
+    private OkHttpClient client = RestClient
+            .baseClient()
+            .newBuilder()
+            .addInterceptor(new XCorrelationIdInterceptor())
+            .addInterceptor(new LoggingInterceptor("Oppfolging", (request) -> request.header("X-Correlation-ID")))
+            .addInterceptor(new AuthorizationInterceptor(() ->
+                    SubjectHandler
+                            .getSsoToken(SsoToken.Type.OIDC)
+                            .orElseThrow(() -> new RuntimeException("Fant ikke OIDC-token"))))
+            .build();
 
     @Autowired
     public OppfolgingsinfoApiServiceImpl(String apiUrl) {
@@ -103,17 +114,20 @@ public class OppfolgingsinfoApiServiceImpl implements OppfolgingsinfoApiService 
 
     private <T> T gjorSporring(String url, Class<T> targetClass) {
         try {
-            String ssoToken = SubjectHandler.getSsoToken(SsoToken.Type.OIDC).orElseThrow(() -> new RuntimeException("Fant ikke OIDC-token"));
-            Response response = RestClient
-                    .baseClient()
-                    .newCall(
-                            new Request.Builder()
-                                    .url(url)
-                                    .header(AUTHORIZATION, "Bearer " + ssoToken)
-                            .build()
-                    )
-                    .execute();
-            return objectMapper.readValue(response.body().string(), targetClass);
+            Request request = new Request
+                    .Builder()
+                    .url(url)
+                    .build();
+
+            Response response = client.newCall(request).execute();
+            int statusCode = response.code();
+            String body = response.body() != null ? response.body().string() : null;
+
+            if (statusCode >= 200 && statusCode < 300 && body != null) {
+                return objectMapper.readValue(body, targetClass);
+            } else {
+                throw new IllegalStateException("Forventet 200-range svar og body fra oppfolging-api, men fikk: " + statusCode + " " + body);
+            }
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
