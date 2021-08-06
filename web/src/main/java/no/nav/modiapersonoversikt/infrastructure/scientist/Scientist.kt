@@ -1,5 +1,7 @@
 package no.nav.modiapersonoversikt.infrastructure.scientist
 
+import com.fasterxml.jackson.databind.JsonNode
+import no.nav.modiapersonoversikt.config.JacksonConfig
 import no.nav.modiapersonoversikt.legacy.api.utils.TjenestekallLogger
 import kotlin.random.Random
 
@@ -16,12 +18,12 @@ object Scientist {
     private class Timer {
         private var startTime: Long = 0L
         fun start() {
-            this.startTime = System.nanoTime()
+            this.startTime = System.currentTimeMillis()
         }
 
         fun elapsed(): Long {
             try {
-                return System.nanoTime() - this.startTime
+                return System.currentTimeMillis() - this.startTime
             } finally {
                 this.startTime = 0L
             }
@@ -56,14 +58,18 @@ object Scientist {
 
                 if (experimentResult.isFailure) {
                     fields["ok"] = false
-                    fields["control"] = controlResult
+                    fields["control"] = controlResult.value
+                    fields["controlTime"] = controlResult.time
                     fields["exception"] = experimentResult.exceptionOrNull()
                 } else {
                     val controlValue = controlResult.value
                     val experimentValue = experimentResult.getOrThrow().value
-                    fields["ok"] = controlValue == experimentValue
-                    fields["control"] = controlResult
-                    fields["experiment"] = experimentResult.getOrThrow()
+                    val (ok, controlJson, experimentJson) = compareAndSerialize(controlValue, experimentValue)
+                    fields["ok"] = ok
+                    fields["control"] = controlJson
+                    fields["controlTime"] = controlResult.time
+                    fields["experiment"] = experimentJson
+                    fields["experimentTime"] = experimentResult.getOrThrow().time
                 }
 
                 config.reporter("[SCIENCE] ${config.name}", fields)
@@ -87,4 +93,20 @@ object Scientist {
     }
 
     fun <T : Any?> createExperiment(config: Config) = Experiment<T>(config)
+
+    private fun compareAndSerialize(controlValue: Any?, experimentValue: Any?): Triple<Boolean, String, String> {
+        val (controlJson, controlTree) = process(controlValue)
+        val (experimentJson, experimentTree) = process(experimentValue)
+        return Triple(
+            controlTree == experimentTree,
+            controlJson,
+            experimentJson
+        )
+    }
+
+    private fun process(value: Any?): Pair<String, JsonNode> {
+        val json = JacksonConfig.mapper.writeValueAsString(value)
+        val tree = JacksonConfig.mapper.readTree(json)
+        return Pair(json, tree)
+    }
 }

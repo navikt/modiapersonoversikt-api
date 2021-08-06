@@ -18,13 +18,18 @@ import no.nav.modiapersonoversikt.legacy.sak.providerdomain.resultatwrappere.Tje
 import okhttp3.*
 import org.slf4j.LoggerFactory
 
-val SAF_GRAPHQL_BASEURL: String = EnvironmentUtils.getRequiredProperty("SAF_GRAPHQL_URL")
-val SAF_HENTDOKUMENT_BASEURL: String = EnvironmentUtils.getRequiredProperty("SAF_HENTDOKUMENT_URL")
+private val SAF_GRAPHQL_BASEURL: String = EnvironmentUtils.getRequiredProperty("SAF_GRAPHQL_URL")
+private val SAF_HENTDOKUMENT_BASEURL: String = EnvironmentUtils.getRequiredProperty("SAF_HENTDOKUMENT_URL")
 
 private val LOG = LoggerFactory.getLogger(SafService::class.java)
 private val mapper: ObjectMapper = jacksonObjectMapper().registerModule(JavaTimeModule())
 
-class SafService {
+interface SafService {
+    fun hentJournalposter(fnr: String): ResultatWrapper<List<DokumentMetadata>>
+    fun hentDokument(journalpostId: String, dokumentInfoId: String, variantFormat: Dokument.Variantformat): TjenesteResultatWrapper
+}
+
+class SafServiceImpl : SafService {
     private val jsonType: MediaType? = MediaType.parse("application/json; charset=utf-8")
     private val client: OkHttpClient = RestClient.baseClient().newBuilder()
         .addInterceptor(XCorrelationIdInterceptor())
@@ -37,7 +42,7 @@ class SafService {
         )
         .build()
 
-    fun hentJournalposter(fnr: String): ResultatWrapper<List<DokumentMetadata>> {
+    override fun hentJournalposter(fnr: String): ResultatWrapper<List<DokumentMetadata>> {
         val jsonQuery = dokumentoversiktBrukerJsonQuery(fnr)
 
         val response = client.newCall(
@@ -49,7 +54,7 @@ class SafService {
         return handterStatus(response)
     }
 
-    fun hentDokument(journalpostId: String, dokumentInfoId: String, variantFormat: Dokument.Variantformat): TjenesteResultatWrapper {
+    override fun hentDokument(journalpostId: String, dokumentInfoId: String, variantFormat: Dokument.Variantformat): TjenesteResultatWrapper {
         val url = lagHentDokumentURL(journalpostId, dokumentInfoId, variantFormat)
 
         val response = client.newCall(
