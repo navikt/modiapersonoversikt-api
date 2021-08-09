@@ -40,14 +40,14 @@ object Scientist {
     data class Result<T>(
         val experimentRun: Boolean,
         val controlValue: T,
-        val experimentValue: T? = null,
+        val experimentValue: Any? = null,
         val experimentException: Throwable? = null
     )
     class Experiment<T> internal constructor(private val config: Config) {
         private val timer = Timer()
         fun runIntrospected(
             control: () -> T,
-            experiment: () -> T
+            experiment: () -> Any?
         ): Result<T> {
             if (Random.nextDouble() < config.experimentRate) {
                 val fields = mutableMapOf<String, Any?>()
@@ -88,7 +88,7 @@ object Scientist {
             }
         }
 
-        fun run(control: () -> T, experiment: () -> T): T =
+        fun run(control: () -> T, experiment: () -> Any?): T =
             runIntrospected(control, experiment).controlValue
     }
 
