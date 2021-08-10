@@ -9,6 +9,7 @@ val dokumentoversiktBrukerGraphQLQuery = """
               tittel
               journalpostId
               journalstatus
+              kanalnavn
               dokumenter {
                 tittel
                 dokumentInfoId

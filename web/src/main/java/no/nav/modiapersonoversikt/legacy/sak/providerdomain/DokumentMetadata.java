@@ -25,6 +25,7 @@ public class DokumentMetadata {
     private String temakodeVisning;
     private boolean ettersending;
     private boolean erJournalfort = TRUE;
+    private String kanalNavn;
     private FeilWrapper feilWrapper = new FeilWrapper();
 
 
@@ -119,6 +120,14 @@ public class DokumentMetadata {
 
     public void setMottaker(Entitet mottaker) {
         this.mottaker = mottaker;
+    }
+
+    public String getKanalNavn() {
+        return kanalNavn;
+    }
+
+    public void setKanalNavn(String kanalNavn) {
+        this.kanalNavn = kanalNavn;
     }
 
     public DokumentMetadata withRetning(final Kommunikasjonsretning retning) {

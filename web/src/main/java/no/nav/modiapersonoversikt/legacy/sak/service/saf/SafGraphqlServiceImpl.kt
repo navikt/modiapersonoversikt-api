@@ -123,6 +123,7 @@ class SafGraphqlServiceImpl : SafService {
         baksystem = baksystem.plus(Baksystem.SAF)
         temakode = journalpost.tema?.name
         temakodeVisning = journalpost.temanavn
+        kanalNavn = journalpost.kanalnavn
         return this
     }
 
