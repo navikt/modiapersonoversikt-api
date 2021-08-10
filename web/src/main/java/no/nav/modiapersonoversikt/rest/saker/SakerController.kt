@@ -145,6 +145,9 @@ class SakerController @Autowired constructor(
                 "temakodeVisning" to it.temakodeVisning,
                 "ettersending" to it.isEttersending,
                 "erJournalført" to it.isErJournalfort,
+                "kanalNavn" to it.kanalNavn,
+                "erDigitalSendt" to it.isDigitalSendt,
+                "erSendtViaPost" to it.isSendtViaPost,
                 "feil" to mapOf(
                     "inneholderFeil" to it.feilWrapper?.inneholderFeil,
                     "feilmelding" to it.feilWrapper?.feilmelding
@@ -172,7 +175,8 @@ class SakerController @Autowired constructor(
             "dokumentreferanse" to dokument.dokumentreferanse,
             "kanVises" to dokument.isKanVises,
             "logiskDokument" to dokument.isLogiskDokument,
-            "skjerming" to dokument.skjerming
+            "skjerming" to dokument.skjerming,
+            "erKassert" to dokument.isKassert
         )
     }
 

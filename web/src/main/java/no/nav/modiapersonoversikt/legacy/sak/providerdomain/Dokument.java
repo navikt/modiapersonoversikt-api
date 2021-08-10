@@ -25,6 +25,10 @@ public class Dokument {
         PRODUKSJON_DLF
     }
 
+    public boolean isKassert() {
+        return dokumentStatus == DokumentStatus.KASSERT;
+    }
+
     public DokumentStatus getDokumentStatus() {
         return dokumentStatus;
     }
