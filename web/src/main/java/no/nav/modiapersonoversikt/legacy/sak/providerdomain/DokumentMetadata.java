@@ -26,8 +26,26 @@ public class DokumentMetadata {
     private boolean ettersending;
     private boolean erJournalfort = TRUE;
     private String kanalNavn;
+    private boolean erDigitalSendt;
+    private boolean erSendtViaPost = false;
+
     private FeilWrapper feilWrapper = new FeilWrapper();
 
+    public boolean isSendtViaPost() {
+        return erSendtViaPost;
+    }
+
+    public void setSendtViaPost(boolean erSendtViaPost) {
+        this.erSendtViaPost = erSendtViaPost;
+    }
+
+    public boolean isDigitalSendt() {
+        return erDigitalSendt;
+    }
+
+    public void setDigitalSendt(boolean erDigitalSendt) {
+        this.erDigitalSendt = erDigitalSendt;
+    }
 
     public boolean isEttersending() {
         return ettersending;

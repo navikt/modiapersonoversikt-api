@@ -12,6 +12,7 @@ query($brukerId: BrukerIdInput!) {
             journalpostId
             journalstatus
             kanalnavn
+            kanal
             dokumenter {
                 tittel
                 dokumentInfoId

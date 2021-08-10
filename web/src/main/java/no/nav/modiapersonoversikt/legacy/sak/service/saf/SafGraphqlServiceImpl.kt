@@ -124,8 +124,24 @@ class SafGraphqlServiceImpl : SafService {
         temakode = journalpost.tema?.name
         temakodeVisning = journalpost.temanavn
         kanalNavn = journalpost.kanalnavn
+        isDigitalSendt = sjekkDigitalSending(journalpost)
+        isSendtViaPost = sjekkPapirSending(journalpost)
         return this
     }
+
+    private fun sjekkPapirSending(journalpost: HentBrukersDokumenter.Journalpost) =
+        listOf(
+            "LOKAL_UTSKRIFT",
+            "SENTRAL_UTSKRIFT",
+            "SKAN_NETS",
+            "SKAN_PEN",
+            "SKAN_IM"
+        ).contains(journalpost.kanal?.name)
+
+    private fun sjekkDigitalSending(journalpost: HentBrukersDokumenter.Journalpost) =
+        listOf("NAV_NO", "NAV_NO_UINNLOGGET", "ALTINN", "EESSI", "HELSENETTET", "NAV_NO_UINNLOGGET", "SDP").contains(
+            journalpost.kanal?.name
+        )
 
     private fun getAvsender(journalpost: HentBrukersDokumenter.Journalpost): Entitet =
         when (journalpost.journalposttype) {
@@ -204,7 +220,7 @@ class SafGraphqlServiceImpl : SafService {
     }
 
     private fun getDokumentStatus(dokumentInfo: HentBrukersDokumenter.DokumentInfo): Dokument.DokumentStatus =
-        when(dokumentInfo.dokumentstatus) {
+        when (dokumentInfo.dokumentstatus) {
             HentBrukersDokumenter.Dokumentstatus.UNDER_REDIGERING -> Dokument.DokumentStatus.UNDER_REDIGERING
             HentBrukersDokumenter.Dokumentstatus.FERDIGSTILT -> Dokument.DokumentStatus.FERDIGSTILT
             HentBrukersDokumenter.Dokumentstatus.KASSERT -> Dokument.DokumentStatus.KASSERT
