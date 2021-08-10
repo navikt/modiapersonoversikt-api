@@ -21,6 +21,7 @@ val dokumentoversiktBrukerGraphQLQuery = """
                 logiskeVedlegg {
                   tittel
                 }
+                dokumentstatus
               }
               sak{
                 fagsakId

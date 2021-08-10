@@ -8,6 +8,14 @@ public class Dokument {
     private boolean logiskDokument;
     private Variantformat variantformat;
     private String skjerming;
+    private DokumentStatus dokumentStatus;
+
+    public enum DokumentStatus {
+        UNDER_REDIGERING,
+        FERDIGSTILT,
+        AVBRUTT,
+        KASSERT
+    }
 
     public enum Variantformat {
         ARKIV,
@@ -15,6 +23,14 @@ public class Dokument {
         FULLVERSJON,
         PRODUKSJON,
         PRODUKSJON_DLF
+    }
+
+    public DokumentStatus getDokumentStatus() {
+        return dokumentStatus;
+    }
+
+    public void setDokumentStatus(DokumentStatus dokumentStatus) {
+        this.dokumentStatus = dokumentStatus;
     }
 
     public String getTittel() {

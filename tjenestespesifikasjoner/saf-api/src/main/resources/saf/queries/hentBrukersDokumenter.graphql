@@ -23,6 +23,7 @@ query($brukerId: BrukerIdInput!) {
                 logiskeVedlegg {
                     tittel
                 }
+                dokumentstatus
             }
             sak{
                 fagsakId
