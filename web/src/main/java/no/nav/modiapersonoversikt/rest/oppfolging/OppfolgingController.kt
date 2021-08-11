@@ -45,7 +45,6 @@ class OppfolgingController @Autowired constructor(
                 val oppfolging = service.hentOppfolgingsinfo(fodselsnummer, ldapService)
 
                 mapOf(
-                    "erUnderOppfølging" to oppfolging.erUnderOppfolging, // TODO skal fjernes når frontend er oppdatert
                     "erUnderOppfolging" to oppfolging.erUnderOppfolging,
                     "veileder" to hentVeileder(oppfolging.veileder),
                     "enhet" to hentEnhet(oppfolging.oppfolgingsenhet)
@@ -69,7 +68,6 @@ class OppfolgingController @Autowired constructor(
                 val oppfolgingstatus = runCatching { hent(fodselsnummer) }
 
                 mapOf(
-                    "oppfølging" to oppfolgingstatus.getOrThrow(), // TODO denne skal fjernes såfort frontend er oppdatert
                     "oppfolging" to oppfolgingstatus.getOrNull(),
                     "meldeplikt" to kontraktResponse.bruker?.meldeplikt,
                     "formidlingsgruppe" to kontraktResponse.bruker?.formidlingsgruppe,
