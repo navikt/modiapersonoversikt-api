@@ -8,7 +8,10 @@ import no.nav.common.auth.subject.SubjectHandler
 import no.nav.common.log.MDCConstants
 import no.nav.common.rest.client.RestClient
 import no.nav.common.utils.EnvironmentUtils
-import no.nav.modiapersonoversikt.infrastructure.http.*
+import no.nav.modiapersonoversikt.infrastructure.http.HeadersBuilder
+import no.nav.modiapersonoversikt.infrastructure.http.HeadersInterceptor
+import no.nav.modiapersonoversikt.infrastructure.http.LoggingGraphqlClient
+import no.nav.modiapersonoversikt.infrastructure.http.LoggingInterceptor
 import no.nav.modiapersonoversikt.legacy.api.domain.saf.generated.HentBrukersDokumenter
 import no.nav.modiapersonoversikt.legacy.api.domain.saf.generated.HentBrukersDokumenter.Datotype
 import no.nav.modiapersonoversikt.legacy.api.domain.saf.generated.HentBrukersDokumenter.Journalposttype
@@ -124,10 +127,16 @@ class SafGraphqlServiceImpl : SafService {
         temakode = journalpost.tema?.name
         temakodeVisning = journalpost.temanavn
         kanalNavn = journalpost.kanalnavn
-        isDigitalSendt = sjekkDigitalSending(journalpost)
-        isSendtViaPost = sjekkPapirSending(journalpost)
+        kanalType = hentKanalType(journalpost)
         return this
     }
+
+    private fun hentKanalType(journalpost: HentBrukersDokumenter.Journalpost): KanalType =
+        when {
+            sjekkPapirSending(journalpost) -> KanalType.PRINT
+            sjekkDigitalSending(journalpost) -> KanalType.DIGITAL
+            else -> KanalType.UKJENT
+        }
 
     private fun sjekkPapirSending(journalpost: HentBrukersDokumenter.Journalpost) =
         listOf(
@@ -225,7 +234,7 @@ class SafGraphqlServiceImpl : SafService {
             HentBrukersDokumenter.Dokumentstatus.FERDIGSTILT -> Dokument.DokumentStatus.FERDIGSTILT
             HentBrukersDokumenter.Dokumentstatus.KASSERT -> Dokument.DokumentStatus.KASSERT
             HentBrukersDokumenter.Dokumentstatus.AVBRUTT -> Dokument.DokumentStatus.AVBRUTT
-            else -> throw RuntimeException("Ugyldig tekst for mapping til dokumentstatus. Tekst: ${dokumentInfo.dokumentstatus}")
+            else -> Dokument.DokumentStatus.FERDIGSTILT
         }
 
     private fun getVariantformat(dokumentInfo: HentBrukersDokumenter.DokumentInfo): Dokument.Variantformat =
