@@ -1,4 +1,4 @@
-package no.nav.modiapersonoversikt.legacy.sak.service.saf
+package no.nav.modiapersonoversikt.legacy.sak.service.saf.graphql
 
 import io.ktor.client.request.*
 import io.ktor.util.*
@@ -18,6 +18,8 @@ import no.nav.modiapersonoversikt.legacy.api.domain.saf.generated.HentBrukersDok
 import no.nav.modiapersonoversikt.legacy.sak.providerdomain.*
 import no.nav.modiapersonoversikt.legacy.sak.providerdomain.resultatwrappere.ResultatWrapper
 import no.nav.modiapersonoversikt.legacy.sak.providerdomain.resultatwrappere.TjenesteResultatWrapper
+import no.nav.modiapersonoversikt.legacy.sak.service.saf.rest.SafService
+import no.nav.modiapersonoversikt.legacy.sak.service.saf.rest.VEDLEGG_START_INDEX
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import org.slf4j.LoggerFactory

@@ -1,4 +1,4 @@
-package no.nav.modiapersonoversikt.legacy.sak.service.saf
+package no.nav.modiapersonoversikt.legacy.sak.service.saf.rest
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
@@ -15,6 +15,7 @@ import no.nav.modiapersonoversikt.legacy.sak.providerdomain.Dokument
 import no.nav.modiapersonoversikt.legacy.sak.providerdomain.DokumentMetadata
 import no.nav.modiapersonoversikt.legacy.sak.providerdomain.resultatwrappere.ResultatWrapper
 import no.nav.modiapersonoversikt.legacy.sak.providerdomain.resultatwrappere.TjenesteResultatWrapper
+import no.nav.modiapersonoversikt.legacy.sak.service.saf.graphql.dokumentoversiktBrukerJsonQuery
 import okhttp3.*
 import org.slf4j.LoggerFactory
 

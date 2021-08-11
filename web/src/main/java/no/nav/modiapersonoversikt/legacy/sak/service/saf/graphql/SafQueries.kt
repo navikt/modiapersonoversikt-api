@@ -1,4 +1,4 @@
-package no.nav.modiapersonoversikt.legacy.sak.service.saf
+package no.nav.modiapersonoversikt.legacy.sak.service.saf.graphql
 
 val dokumentoversiktBrukerGraphQLQuery = """
     query {

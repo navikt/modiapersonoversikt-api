@@ -2,12 +2,12 @@ package no.nav.modiapersonoversikt.legacy.sak.service.saf
 
 import io.mockk.every
 import io.mockk.mockkStatic
-import no.nav.modiapersonoversikt.legacy.sak.providerdomain.Baksystem
+import no.nav.modiapersonoversikt.legacy.sak.providerdomain.*
 import no.nav.modiapersonoversikt.legacy.sak.providerdomain.Dokument.Variantformat.ARKIV
 import no.nav.modiapersonoversikt.legacy.sak.providerdomain.Dokument.Variantformat.SLADDET
-import no.nav.modiapersonoversikt.legacy.sak.providerdomain.DokumentMetadata
 import no.nav.modiapersonoversikt.legacy.sak.providerdomain.Entitet.*
-import no.nav.modiapersonoversikt.legacy.sak.providerdomain.Kommunikasjonsretning
+import no.nav.modiapersonoversikt.legacy.sak.service.saf.rest.*
+import no.nav.modiapersonoversikt.legacy.sak.service.saf.rest.Sak
 import org.junit.Assert.assertEquals
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Test
@@ -35,6 +35,10 @@ private const val dokumentinfoid = "123"
 private const val hovedDokumentTittel = "Dokument Tittel"
 private const val vedleggTittel = "Vedleggtittel"
 private const val aremarkFNR = "10108000398"
+private const val kanalNavn = "NAV_NO"
+private const val kanalType = "NAV_NO"
+private const val dokumentStatus = "FERDIGSTILT"
+
 
 internal class SafDokumentMapperKtTest {
 
@@ -54,6 +58,7 @@ internal class SafDokumentMapperKtTest {
         assertEquals(true, dokumentMetadata.hoveddokument.isKanVises)
         assertEquals(false, dokumentMetadata.hoveddokument.isLogiskDokument)
         assertEquals(ARKIV, dokumentMetadata.hoveddokument.variantformat)
+        assertEquals(Dokument.DokumentStatus.FERDIGSTILT, dokumentMetadata.hoveddokument.dokumentStatus)
 
         assertEquals(2, dokumentMetadata.vedlegg.size)
         assertEquals(vedleggTittel, dokumentMetadata.vedlegg[0].tittel)
@@ -69,6 +74,7 @@ internal class SafDokumentMapperKtTest {
         assert(dokumentMetadata.baksystem.contains(Baksystem.SAF))
         assertEquals(tema, dokumentMetadata.temakode)
         assertEquals(temanavn, dokumentMetadata.temakodeVisning)
+        assertEquals(KanalType.DIGITAL, dokumentMetadata.kanalType)
     }
 
     @Test
@@ -491,7 +497,10 @@ private fun lagJournalpost(): Journalpost {
         relevanteDatoer = relevanteDatoer,
         tema = tema,
         temanavn = temanavn,
-        sak = sak
+        sak = sak,
+        kanalNavn = kanalNavn,
+        kanalType = kanalType
+
     )
 }
 
@@ -513,7 +522,9 @@ private fun lagDokumentInfo(tittel: String): DokumentInfo {
         tittel = tittel,
         dokumentInfoId = dokumentinfoid,
         dokumentvarianter = listOf(lagDokumentVariant()),
-        logiskeVedlegg = listOf(LogiskVedlegg(logiskVedleggtittel))
+        logiskeVedlegg = listOf(LogiskVedlegg(logiskVedleggtittel)),
+        dokumentStatus = dokumentStatus
+
     )
 }
 
