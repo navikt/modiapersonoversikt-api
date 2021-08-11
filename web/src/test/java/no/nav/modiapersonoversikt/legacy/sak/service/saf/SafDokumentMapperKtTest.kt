@@ -39,7 +39,6 @@ private const val kanalNavn = "NAV_NO"
 private const val kanalType = "NAV_NO"
 private const val dokumentStatus = "FERDIGSTILT"
 
-
 internal class SafDokumentMapperKtTest {
 
     @Test
