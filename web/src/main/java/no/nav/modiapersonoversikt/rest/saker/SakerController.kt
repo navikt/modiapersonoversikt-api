@@ -146,8 +146,7 @@ class SakerController @Autowired constructor(
                 "ettersending" to it.isEttersending,
                 "erJournalført" to it.isErJournalfort,
                 "kanalNavn" to it.kanalNavn,
-                "erDigitalSendt" to it.isDigitalSendt,
-                "erSendtViaPost" to it.isSendtViaPost,
+                "kanalType" to it.kanalType,
                 "feil" to mapOf(
                     "inneholderFeil" to it.feilWrapper?.inneholderFeil,
                     "feilmelding" to it.feilWrapper?.feilmelding
