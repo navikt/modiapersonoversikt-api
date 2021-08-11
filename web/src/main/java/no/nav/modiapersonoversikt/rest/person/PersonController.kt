@@ -25,6 +25,7 @@ import no.nav.modiapersonoversikt.legacy.kjerneinfo.domain.person.fakta.Telefon
 import no.nav.modiapersonoversikt.rest.kodeverk.Kode
 import no.nav.modiapersonoversikt.rest.lagPeriode
 import no.nav.modiapersonoversikt.rest.mapOfNotNullOrEmpty
+import no.nav.modiapersonoversikt.rest.person.pdl.PdlMapper
 import no.nav.tjeneste.virksomhet.person.v3.binding.HentPersonPersonIkkeFunnet
 import no.nav.tjeneste.virksomhet.person.v3.binding.HentPersonSikkerhetsbegrensning
 import org.slf4j.LoggerFactory
@@ -54,6 +55,7 @@ class PersonController @Autowired constructor(
 ) {
     private val logger = LoggerFactory.getLogger(PersonController::class.java)
     private val kjoennExperiment = Scientist.createExperiment<String?>(Scientist.Config("PDL-Kjønn", 0.2))
+    private val pdlExperiment = Scientist.createExperiment<Map<String, Any?>>(Scientist.Config("PDL", 0.05))
 
     @GetMapping
     fun hent(@PathVariable("fnr") fodselsnummer: String): Map<String, Any?> {
@@ -79,36 +81,40 @@ class PersonController @Autowired constructor(
                         { person?.personfakta?.kjonn?.kodeRef },
                         { pdlPerson?.kjoenn?.get(0)?.kjoenn?.name }
                     )
-
-                    mapOf(
-                        "fødselsnummer" to person?.fodselsnummer?.nummer,
-                        "alder" to person?.fodselsnummer?.alder,
-                        "kjønn" to kjoenn,
-                        "geografiskTilknytning" to person?.personfakta?.geografiskTilknytning?.value,
-                        "navn" to getNavn(person?.personfakta?.personnavn),
-                        "diskresjonskode" to person?.personfakta?.diskresjonskode?.let { Kode(it) },
-                        "bankkonto" to hentBankkonto(person),
-                        "tilrettelagtKomunikasjonsListe" to hentTilrettelagtKommunikasjon(pdlPerson),
-                        "personstatus" to getPersonstatus(person),
-                        "statsborgerskap" to mapStatsborgerskap(person?.personfakta),
-                        "sivilstand" to mapOf(
-                            "kodeRef" to person?.personfakta?.sivilstand?.kodeRef,
-                            "beskrivelse" to person?.personfakta?.sivilstand?.beskrivelse,
-                            "fraOgMed" to person?.personfakta?.sivilstandFom
-                        ),
-                        "familierelasjoner" to getFamilierelasjoner(person),
-                        "fodselsdato" to person?.fodselsnummer?.fodselsdato,
-                        "folkeregistrertAdresse" to person?.personfakta?.bostedsadresse?.let { hentAdresse(it) },
-                        "alternativAdresse" to person?.personfakta?.alternativAdresse?.let { hentAdresse(it) },
-                        "postadresse" to person?.personfakta?.postadresse?.let { hentAdresse(it) },
-                        "sikkerhetstiltak" to person?.personfakta?.sikkerhetstiltak?.let { hentSikkerhetstiltak(it) },
-                        "kontaktinformasjon" to getTelefoner(person?.personfakta),
-                        "telefonnummer" to pdlTelefonnummer,
-                        "kontaktinformasjonForDoedsbo" to DoedsboMapping.mapKontaktinfoForDoedsbo(kontaktinfoForDoedsbo),
-                        "fullmakt" to hentFullmakter(fullmakt),
-                        "vergemal" to hentVergemal(vergemal),
-                        "foreldreansvar" to hentForeldreansvar(foreldreansvar),
-                        "deltBosted" to hentDeltBosted(deltBosted)
+                    pdlExperiment.run(
+                        control = {
+                            mapOf(
+                                "fødselsnummer" to person?.fodselsnummer?.nummer,
+                                "alder" to person?.fodselsnummer?.alder,
+                                "kjønn" to kjoenn,
+                                "geografiskTilknytning" to person?.personfakta?.geografiskTilknytning?.value,
+                                "navn" to getNavn(person?.personfakta?.personnavn),
+                                "diskresjonskode" to person?.personfakta?.diskresjonskode?.let { Kode(it) },
+                                "bankkonto" to hentBankkonto(person),
+                                "tilrettelagtKomunikasjonsListe" to hentTilrettelagtKommunikasjon(pdlPerson),
+                                "personstatus" to getPersonstatus(person),
+                                "statsborgerskap" to mapStatsborgerskap(person?.personfakta),
+                                "sivilstand" to mapOf(
+                                    "kodeRef" to person?.personfakta?.sivilstand?.kodeRef,
+                                    "beskrivelse" to person?.personfakta?.sivilstand?.beskrivelse,
+                                    "fraOgMed" to person?.personfakta?.sivilstandFom
+                                ),
+                                "familierelasjoner" to getFamilierelasjoner(person),
+                                "fodselsdato" to person?.fodselsnummer?.fodselsdato,
+                                "folkeregistrertAdresse" to person?.personfakta?.bostedsadresse?.let { hentAdresse(it) },
+                                "alternativAdresse" to person?.personfakta?.alternativAdresse?.let { hentAdresse(it) },
+                                "postadresse" to person?.personfakta?.postadresse?.let { hentAdresse(it) },
+                                "sikkerhetstiltak" to person?.personfakta?.sikkerhetstiltak?.let { hentSikkerhetstiltak(it) },
+                                "kontaktinformasjon" to getTelefoner(person?.personfakta),
+                                "telefonnummer" to pdlTelefonnummer,
+                                "kontaktinformasjonForDoedsbo" to DoedsboMapping.mapKontaktinfoForDoedsbo(kontaktinfoForDoedsbo),
+                                "fullmakt" to hentFullmakter(fullmakt),
+                                "vergemal" to hentVergemal(vergemal),
+                                "foreldreansvar" to hentForeldreansvar(foreldreansvar),
+                                "deltBosted" to hentDeltBosted(deltBosted)
+                            )
+                        },
+                        experiment = { PdlMapper.from(requireNotNull(pdlPerson)) }
                     )
                 } catch (exception: AuthorizationWithSikkerhetstiltakException) {
                     getBegrensetInnsyn(fodselsnummer, exception.message)

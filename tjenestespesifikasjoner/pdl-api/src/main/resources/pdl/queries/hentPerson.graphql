@@ -1,5 +1,10 @@
 query($ident: ID!){
     hentPerson(ident: $ident) {
+        folkeregisteridentifikator {
+            identifikasjonsnummer
+            status
+            type
+        }
         navn {
             fornavn
             mellomnavn
@@ -13,6 +18,32 @@ query($ident: ID!){
         }
         kjoenn {
             kjoenn
+        }
+        foedsel {
+            foedselsdato
+            foedselsaar
+        }
+        adressebeskyttelse {
+            gradering
+        }
+        statsborgerskap {
+            land
+        }
+        doedsfall {
+            doedsdato
+        }
+        folkeregisterpersonstatus {
+            status
+        }
+        sivilstand {
+            type
+            gyldigFraOgMed
+        }
+        sikkerhetstiltak {
+            tiltakstype
+            beskrivelse
+            gyldigFraOgMed
+            gyldigTilOgMed
         }
         kontaktinformasjonForDoedsbo {
             skifteform
@@ -140,5 +171,40 @@ query($ident: ID!){
                 bostedskommune
             }
         }
+        bostedsadresse {
+            folkeregistermetadata {
+                ajourholdstidspunkt
+                kilde
+            }
+            vegadresse {
+                husnummer
+                husbokstav
+                bruksenhetsnummer
+                adressenavn
+                kommunenummer
+                bydelsnummer
+                tilleggsnavn
+                postnummer
+            }
+            matrikkeladresse {
+                bruksenhetsnummer
+                tilleggsnavn
+                postnummer
+                kommunenummer
+            }
+            utenlandskAdresse {
+                adressenavnNummer
+                bygningEtasjeLeilighet
+                postboksNummerNavn
+                postkode
+                bySted
+                regionDistriktOmraade
+                landkode
+            }
+            ukjentBosted {
+                bostedskommune
+            }
+        }
+
     }
 }

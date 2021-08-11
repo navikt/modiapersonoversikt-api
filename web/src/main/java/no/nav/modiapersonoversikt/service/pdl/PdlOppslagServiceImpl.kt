@@ -11,12 +11,10 @@ import no.nav.common.utils.EnvironmentUtils
 import no.nav.modiapersonoversikt.infrastructure.http.HeadersBuilder
 import no.nav.modiapersonoversikt.infrastructure.http.LoggingGraphqlClient
 import no.nav.modiapersonoversikt.infrastructure.http.assertNoErrors
-import no.nav.modiapersonoversikt.legacy.api.domain.pdl.generated.HentIdent
-import no.nav.modiapersonoversikt.legacy.api.domain.pdl.generated.HentNavnBolk
-import no.nav.modiapersonoversikt.legacy.api.domain.pdl.generated.HentPerson
-import no.nav.modiapersonoversikt.legacy.api.domain.pdl.generated.SokPersonUtenlandskID
+import no.nav.modiapersonoversikt.legacy.api.domain.pdl.generated.*
 import no.nav.modiapersonoversikt.legacy.api.service.pdl.PdlOppslagService
 import no.nav.modiapersonoversikt.legacy.api.utils.RestConstants.*
+import no.nav.modiapersonoversikt.utils.KotlinUtils.filterValuesNotNull
 import java.net.URL
 import kotlin.collections.set
 
@@ -34,7 +32,7 @@ class PdlOppslagServiceImpl constructor(
             ?.hentPerson
     }
 
-    override fun hentNavnBolk(fnrs: List<String>): Map<String, HentNavnBolk.Navn?>? {
+    override fun hentNavnBolk(fnrs: List<String>): Map<String, HentNavnBolk.Navn> {
         if (fnrs.isEmpty()) {
             return emptyMap()
         }
@@ -44,10 +42,10 @@ class PdlOppslagServiceImpl constructor(
         }
             .data
             ?.hentPersonBolk
-            ?.fold(mutableMapOf()) { acc, bolkResult ->
-                acc[bolkResult.ident] = bolkResult.person?.navn?.get(0)
-                acc
-            }
+            ?.associateBy { it.ident }
+            ?.mapValues { it.value.person?.navn?.first() }
+            ?.filterValuesNotNull()
+            ?: emptyMap()
     }
 
     override fun hentIdent(fnr: String): HentIdent.Identliste? = runBlocking {
@@ -75,6 +73,13 @@ class PdlOppslagServiceImpl constructor(
             ?.sokPerson
             ?.hits
             ?: emptyList()
+    }
+
+    override fun hentGeografiskTilknyttning(fnr: String): HentGt.GeografiskTilknytning? = runBlocking {
+        HentGt(pdlClient)
+            .execute(HentGt.Variables(fnr), userTokenAuthorizationHeaders)
+            .data
+            ?.hentGeografiskTilknytning
     }
 
     private val userTokenAuthorizationHeaders: HeadersBuilder = {
