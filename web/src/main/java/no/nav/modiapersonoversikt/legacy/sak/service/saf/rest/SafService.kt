@@ -26,7 +26,7 @@ private val SAF_HENTDOKUMENT_BASEURL: String = EnvironmentUtils.getRequiredPrope
 private val LOG = LoggerFactory.getLogger(SafService::class.java)
 private val mapper: ObjectMapper = jacksonObjectMapper().registerModule(JavaTimeModule()).configure(
     DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false
-);
+)
 
 interface SafService {
     fun hentJournalposter(fnr: String): ResultatWrapper<List<DokumentMetadata>>

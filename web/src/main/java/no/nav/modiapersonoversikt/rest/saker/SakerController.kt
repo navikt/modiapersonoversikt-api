@@ -175,7 +175,8 @@ class SakerController @Autowired constructor(
             "kanVises" to dokument.isKanVises,
             "logiskDokument" to dokument.isLogiskDokument,
             "skjerming" to dokument.skjerming,
-            "erKassert" to dokument.isKassert
+            "erKassert" to dokument.isKassert,
+            "dokumentStatus" to dokument.dokumentStatus
         )
     }
 
