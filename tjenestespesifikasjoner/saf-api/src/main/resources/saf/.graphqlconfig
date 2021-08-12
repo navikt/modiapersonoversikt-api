@@ -1,0 +1,15 @@
+{
+  "name": "saf-api",
+  "schemaPath": "schema.graphql",
+  "extensions": {
+    "endpoints": {
+      "PDL GraphQL Endpoint": {
+        "url": "https://dummyurl.com",
+        "headers": {
+          "user-agent": "srvmodiabrukerdialog"
+        },
+        "introspect": false
+      }
+    }
+  }
+}

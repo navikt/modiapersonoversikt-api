@@ -46,9 +46,16 @@ public class InnsynJournalCacheTest extends CacheTest {
         IdentifiserJournalpostResponse response1 = new IdentifiserJournalpostResponse().withJournalpostId(JOURNALPOST_ID_1);
         IdentifiserJournalpostResponse response2 = new IdentifiserJournalpostResponse().withJournalpostId(JOURNALPOST_ID_2);
         when(unwrapped.identifiserJournalpost(any())).thenReturn(response1, response2);
-
     }
 
+    @Test
+    void cacheSetupMedRiktigKeyGenerator() throws Exception {
+        IdentifiserJournalpostRequest identifiserJournalpostRequest = new IdentifiserJournalpostRequest().withKanalReferanseId(BEHANDLINGS_ID_1);
+        innsynJournalV2.identifiserJournalpost(identifiserJournalpostRequest);
+
+        assertThat(getNativeCache().estimatedSize(), is(1L));
+        assertThat(getKey(), is(generatedByUserKeyGenerator()));
+    }
 
     @Test
     void toKallTilIdentifiserJournalPostMedSammeDataGirBareEttKall() throws Exception {

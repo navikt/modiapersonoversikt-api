@@ -33,6 +33,7 @@
         <module>oppgave-api</module>
         <module>sf-henvendelse-api</module>
         <module>pdl-api</module>
+        <module>saf-api</module>
     </modules>
 
     <dependencyManagement>

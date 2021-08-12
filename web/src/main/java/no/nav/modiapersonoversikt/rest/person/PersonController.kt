@@ -6,6 +6,7 @@ import no.nav.modiapersonoversikt.infrastructure.naudit.Audit
 import no.nav.modiapersonoversikt.infrastructure.naudit.Audit.Action.READ
 import no.nav.modiapersonoversikt.infrastructure.naudit.AuditIdentifier
 import no.nav.modiapersonoversikt.infrastructure.naudit.AuditResources
+import no.nav.modiapersonoversikt.infrastructure.scientist.Scientist
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Policies
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll
 import no.nav.modiapersonoversikt.legacy.api.domain.pdl.generated.HentIdenter
@@ -52,6 +53,7 @@ class PersonController @Autowired constructor(
     private val standardKodeverk: StandardKodeverk
 ) {
     private val logger = LoggerFactory.getLogger(PersonController::class.java)
+    private val kjoennExperiment = Scientist.createExperiment<String?>(Scientist.Config("PDL-Kjønn", 0.2))
 
     @GetMapping
     fun hent(@PathVariable("fnr") fodselsnummer: String): Map<String, Any?> {
@@ -72,10 +74,16 @@ class PersonController @Autowired constructor(
                         .sortedBy { it.prioritet }
                         .map(::getPdlTelefon)
                     val foreldreansvar = pdlPerson?.foreldreansvar ?: emptyList()
+
+                    val kjoenn = kjoennExperiment.run(
+                        { person?.personfakta?.kjonn?.kodeRef },
+                        { pdlPerson?.kjoenn?.get(0)?.kjoenn?.name }
+                    )
+
                     mapOf(
                         "fødselsnummer" to person?.fodselsnummer?.nummer,
                         "alder" to person?.fodselsnummer?.alder,
-                        "kjønn" to person?.personfakta?.kjonn?.kodeRef,
+                        "kjønn" to kjoenn,
                         "geografiskTilknytning" to person?.personfakta?.geografiskTilknytning?.value,
                         "navn" to getNavn(person?.personfakta?.personnavn),
                         "diskresjonskode" to person?.personfakta?.diskresjonskode?.let { Kode(it) },

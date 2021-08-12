@@ -62,6 +62,7 @@ class LoggingInterceptor(val name: String, val callIdExtractor: (Request) -> Str
             "$name-request: $callId",
             mapOf(
                 "url" to request.url().toString(),
+                "headers" to request.headers().names().joinToString(", "),
                 "body" to requestBody
             )
         )
@@ -102,7 +103,7 @@ class LoggingInterceptor(val name: String, val callIdExtractor: (Request) -> Str
     }
 }
 
-sealed class HeadersInterceptor(val headersProvider: () -> Map<String, String>) : Interceptor {
+open class HeadersInterceptor(val headersProvider: () -> Map<String, String>) : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
         val builder = chain.request()
             .newBuilder()
