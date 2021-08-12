@@ -147,6 +147,7 @@ class SakerController @Autowired constructor(
                 "erJournalført" to it.isErJournalfort,
                 "kanalNavn" to it.kanalNavn,
                 "kanalType" to it.kanalType,
+                "antallRetur" to it.antallRetur,
                 "feil" to mapOf(
                     "inneholderFeil" to it.feilWrapper?.inneholderFeil,
                     "feilmelding" to it.feilWrapper?.feilmelding
