@@ -22,14 +22,14 @@ object PdlDTO {
         val personstatus: Bostatus,
         val sivilstand: Sivilstand,
         val familierelasjoner: List<Familierelasjon>,
-        val kontaktinformasjon: NavKontaktinformasjon,
+        val kontaktinformasjon: NavKontaktinformasjon?,
         val kontaktinformasjonForDoedsbo: List<Dodsbo>,
         val fullmakt: List<Fullmakt>,
         val telefonnummer: List<Telefon>,
         val vergemal: List<Verge>,
         val foreldreansvar: List<Foreldreansvar>,
         val deltBosted: List<DeltBosted>,
-        val sikkerhetstiltak: Sikkerhetstiltak
+        val sikkerhetstiltak: Sikkerhetstiltak?
     )
 
     data class Navn(
@@ -180,9 +180,9 @@ object PdlDTO {
         val navn: Navn?
     )
     data class KontaktpersonUtenId(
-        val foedselsdato: String?,
-        val fodselsdato: String?,
-        val navn: Navn
+        val foedselsdato: LocalDate?,
+        val fodselsdato: LocalDate?,
+        val navn: Navn?
     )
     data class OrganisasjonSomAdressat(
         val kontaktperson: Navn?,
@@ -244,7 +244,7 @@ object PdlDTO {
         val sistEndret: String
     )
     data class Periode(
-        val fra: String,
-        val til: String
+        val fra: LocalDate,
+        val til: LocalDate
     )
 }

@@ -249,11 +249,38 @@ class PdlMapper(val pdlOppslagService: PdlOppslagService) {
     }
 
     private fun hentFamilierelasjon(person: HentPerson.Person): List<PdlDTO.Familierelasjon> {
-        TODO("Not yet implemented")
+        return person.forelderBarnRelasjon.map {
+            PdlDTO.Familierelasjon(
+                harSammeBosted = false, // TODO denne må vi finne ut av selv
+                rolle = when (it.relatertPersonsRolle) {
+                    HentPerson.ForelderBarnRelasjonRolle.BARN -> PdlDTO.Relasjonstype.BARN
+                    HentPerson.ForelderBarnRelasjonRolle.MOR -> PdlDTO.Relasjonstype.MORA
+                    HentPerson.ForelderBarnRelasjonRolle.FAR -> PdlDTO.Relasjonstype.FARA
+                    HentPerson.ForelderBarnRelasjonRolle.MEDMOR -> PdlDTO.Relasjonstype.MORA
+                    HentPerson.ForelderBarnRelasjonRolle.__UNKNOWN_VALUE -> throw IllegalStateException("Ukjent relasjonstype")
+                },
+                tilPerson = PdlDTO.Familierelasjon.Person(
+                    // TODO Informasjon som trengs må hentes ut fra PDL i eget kall
+                    navn = PdlDTO.Navn(null, "", "", ""),
+                    alder = 0,
+                    alderMåneder = 0,
+                    alderManeder = 0,
+                    fødselsnummer = "",
+                    fodselsnummer = "",
+                    personstatus = PdlDTO.Bostatus(
+                        dødsdato = LocalDate.now(),
+                        dodsdato = LocalDate.now(),
+                        bostatus = PdlDTO.Kodeverk(kodeRef = "", beskrivelse = "")
+                    ),
+                    diskresjonskode = PdlDTO.Kodeverk(kodeRef = "", beskrivelse = "")
+                )
+            )
+        }
     }
 
-    private fun hentNavKontaktinformasjon(person: HentPerson.Person): PdlDTO.NavKontaktinformasjon {
-        TODO("Not yet implemented")
+    private fun hentNavKontaktinformasjon(person: HentPerson.Person): PdlDTO.NavKontaktinformasjon? {
+        // TODO Denne informasjonen finnes ikke i PDL
+        return null
     }
 
     private fun hentDodsbo(person: HentPerson.Person): List<PdlDTO.Dodsbo> {
@@ -331,7 +358,17 @@ class PdlMapper(val pdlOppslagService: PdlOppslagService) {
     }
 
     private fun hentkontaktpersonUtenIdNummerSomAdressat(dodsbo: HentPerson.KontaktinformasjonForDoedsbo): PdlDTO.KontaktpersonUtenId? {
-        TODO("Not yet implemented")
+        val addresat = dodsbo.personSomKontakt ?: return null
+        val identifikasjonsnummer = addresat.identifikasjonsnummer
+        return if (identifikasjonsnummer != null) {
+            null
+        } else {
+            PdlDTO.KontaktpersonUtenId(
+                foedselsdato = addresat.foedselsdato?.value,
+                fodselsdato = addresat.foedselsdato?.value,
+                navn = addresat.personnavn?.let { PdlDTO.Navn(null, it.fornavn, it.mellomnavn, it.etternavn) }
+            )
+        }
     }
 
     private fun hentFullmakt(
@@ -434,7 +471,17 @@ class PdlMapper(val pdlOppslagService: PdlOppslagService) {
         }
     }
 
-    private fun hentSikkerhetstiltak(person: HentPerson.Person): PdlDTO.Sikkerhetstiltak {
-        TODO("Not yet implemented")
+    private fun hentSikkerhetstiltak(person: HentPerson.Person): PdlDTO.Sikkerhetstiltak? {
+        return person.sikkerhetstiltak.firstOrNull()
+            ?.let {
+                PdlDTO.Sikkerhetstiltak(
+                    sikkerhetstiltakskode = it.tiltakstype,
+                    sikkerhetstiltaksbeskrivelse = it.beskrivelse,
+                    periode = PdlDTO.Periode(
+                        fra = it.gyldigFraOgMed.value,
+                        til = it.gyldigTilOgMed.value
+                    )
+                )
+            }
     }
 }

@@ -145,6 +145,10 @@ query($ident: ID!){
                 kjoenn
             }
         }
+        forelderBarnRelasjon {
+            relatertPersonsIdent
+            relatertPersonsRolle
+        }
         deltBosted{
             startdatoForKontrakt
             sluttdatoForKontrakt
