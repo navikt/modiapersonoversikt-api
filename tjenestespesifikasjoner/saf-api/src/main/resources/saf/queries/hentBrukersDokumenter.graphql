@@ -13,6 +13,7 @@ query($brukerId: BrukerIdInput!) {
             journalstatus
             kanalnavn
             kanal
+            antallRetur
             dokumenter {
                 tittel
                 dokumentInfoId

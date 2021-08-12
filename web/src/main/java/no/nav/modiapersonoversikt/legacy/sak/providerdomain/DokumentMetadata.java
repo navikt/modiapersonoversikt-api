@@ -27,6 +27,7 @@ public class DokumentMetadata {
     private boolean erJournalfort = TRUE;
     private String kanalNavn;
     private KanalType kanalType;
+    public String antallRetur;
 
     private FeilWrapper feilWrapper = new FeilWrapper();
 
@@ -137,6 +138,14 @@ public class DokumentMetadata {
 
     public void setKanalNavn(String kanalNavn) {
         this.kanalNavn = kanalNavn;
+    }
+
+    public String getAntallRetur() {
+        return antallRetur;
+    }
+
+    public void setAntallRetur(String antallRetur) {
+        this.antallRetur = antallRetur;
     }
 
     public DokumentMetadata withRetning(final Kommunikasjonsretning retning) {

@@ -22,8 +22,8 @@ data class Journalpost(
     val temanavn: String?,
     val tittel: String?,
     val kanalNavn: String?,
-    val kanalType: String?
-
+    val kanalType: String?,
+    val antallRetur: String?
 )
 
 data class AvsenderMottaker(

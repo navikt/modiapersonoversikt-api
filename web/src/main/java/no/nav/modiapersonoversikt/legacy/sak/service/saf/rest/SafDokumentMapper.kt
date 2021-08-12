@@ -32,7 +32,7 @@ fun DokumentMetadata.fraSafJournalpost(journalpost: Journalpost): DokumentMetada
     temakodeVisning = journalpost.temanavn
     kanalNavn = journalpost.kanalNavn
     kanalType = hentKanalType(journalpost)
-
+    antallRetur = journalpost.antallRetur
     return this
 }
 

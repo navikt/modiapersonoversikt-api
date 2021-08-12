@@ -38,6 +38,7 @@ private const val aremarkFNR = "10108000398"
 private const val kanalNavn = "NAV_NO"
 private const val kanalType = "NAV_NO"
 private const val dokumentStatus = "FERDIGSTILT"
+private const val antallRetur = "2"
 
 internal class SafDokumentMapperKtTest {
 
@@ -74,6 +75,7 @@ internal class SafDokumentMapperKtTest {
         assertEquals(tema, dokumentMetadata.temakode)
         assertEquals(temanavn, dokumentMetadata.temakodeVisning)
         assertEquals(KanalType.DIGITAL, dokumentMetadata.kanalType)
+        assertEquals(antallRetur, dokumentMetadata.antallRetur)
     }
 
     @Test
@@ -498,8 +500,8 @@ private fun lagJournalpost(): Journalpost {
         temanavn = temanavn,
         sak = sak,
         kanalNavn = kanalNavn,
-        kanalType = kanalType
-
+        kanalType = kanalType,
+        antallRetur = antallRetur
     )
 }
 

@@ -130,6 +130,7 @@ class SafGraphqlServiceImpl : SafService {
         temakodeVisning = journalpost.temanavn
         kanalNavn = journalpost.kanalnavn
         kanalType = hentKanalType(journalpost)
+        antallRetur = journalpost.antallRetur
         return this
     }
 

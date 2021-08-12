@@ -11,6 +11,7 @@ val dokumentoversiktBrukerGraphQLQuery = """
               journalstatus
               kanalnavn
               kanal
+              antallRetur
               dokumenter {
                 tittel
                 dokumentInfoId
