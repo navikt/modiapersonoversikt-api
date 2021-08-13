@@ -25,8 +25,8 @@ public class DokumentMetadata {
     private String temakodeVisning;
     private boolean ettersending;
     private boolean erJournalfort = TRUE;
-
     private FeilWrapper feilWrapper = new FeilWrapper();
+
 
     public boolean isEttersending() {
         return ettersending;

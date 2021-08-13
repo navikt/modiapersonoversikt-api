@@ -8,10 +8,7 @@ import no.nav.common.auth.subject.SubjectHandler
 import no.nav.common.log.MDCConstants
 import no.nav.common.rest.client.RestClient
 import no.nav.common.utils.EnvironmentUtils
-import no.nav.modiapersonoversikt.infrastructure.http.HeadersBuilder
-import no.nav.modiapersonoversikt.infrastructure.http.HeadersInterceptor
-import no.nav.modiapersonoversikt.infrastructure.http.LoggingGraphqlClient
-import no.nav.modiapersonoversikt.infrastructure.http.LoggingInterceptor
+import no.nav.modiapersonoversikt.infrastructure.http.*
 import no.nav.modiapersonoversikt.legacy.api.domain.saf.generated.HentBrukersDokumenter
 import no.nav.modiapersonoversikt.legacy.api.domain.saf.generated.HentBrukersDokumenter.Datotype
 import no.nav.modiapersonoversikt.legacy.api.domain.saf.generated.HentBrukersDokumenter.Journalposttype
