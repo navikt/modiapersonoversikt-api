@@ -6,8 +6,6 @@ import no.nav.modiapersonoversikt.legacy.sak.providerdomain.*
 import no.nav.modiapersonoversikt.legacy.sak.providerdomain.Dokument.Variantformat.ARKIV
 import no.nav.modiapersonoversikt.legacy.sak.providerdomain.Dokument.Variantformat.SLADDET
 import no.nav.modiapersonoversikt.legacy.sak.providerdomain.Entitet.*
-import no.nav.modiapersonoversikt.legacy.sak.service.saf.rest.*
-import no.nav.modiapersonoversikt.legacy.sak.service.saf.rest.Sak
 import org.junit.Assert.assertEquals
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Test
@@ -35,10 +33,7 @@ private const val dokumentinfoid = "123"
 private const val hovedDokumentTittel = "Dokument Tittel"
 private const val vedleggTittel = "Vedleggtittel"
 private const val aremarkFNR = "10108000398"
-private const val kanalNavn = "NAV_NO"
-private const val kanalType = "NAV_NO"
 private const val dokumentStatus = "FERDIGSTILT"
-private const val antallRetur = "2"
 
 internal class SafDokumentMapperKtTest {
 
@@ -74,8 +69,6 @@ internal class SafDokumentMapperKtTest {
         assert(dokumentMetadata.baksystem.contains(Baksystem.SAF))
         assertEquals(tema, dokumentMetadata.temakode)
         assertEquals(temanavn, dokumentMetadata.temakodeVisning)
-        assertEquals(KanalType.DIGITAL, dokumentMetadata.kanalType)
-        assertEquals(antallRetur, dokumentMetadata.antallRetur)
     }
 
     @Test
@@ -498,10 +491,7 @@ private fun lagJournalpost(): Journalpost {
         relevanteDatoer = relevanteDatoer,
         tema = tema,
         temanavn = temanavn,
-        sak = sak,
-        kanalNavn = kanalNavn,
-        kanalType = kanalType,
-        antallRetur = antallRetur
+        sak = sak
     )
 }
 

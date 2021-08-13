@@ -25,19 +25,8 @@ public class DokumentMetadata {
     private String temakodeVisning;
     private boolean ettersending;
     private boolean erJournalfort = TRUE;
-    private String kanalNavn;
-    private KanalType kanalType;
-    public String antallRetur;
 
     private FeilWrapper feilWrapper = new FeilWrapper();
-
-    public KanalType getKanalType() {
-        return kanalType;
-    }
-
-    public void setKanalType(KanalType kanalType) {
-        this.kanalType = kanalType;
-    }
 
     public boolean isEttersending() {
         return ettersending;
@@ -130,22 +119,6 @@ public class DokumentMetadata {
 
     public void setMottaker(Entitet mottaker) {
         this.mottaker = mottaker;
-    }
-
-    public String getKanalNavn() {
-        return kanalNavn;
-    }
-
-    public void setKanalNavn(String kanalNavn) {
-        this.kanalNavn = kanalNavn;
-    }
-
-    public String getAntallRetur() {
-        return antallRetur;
-    }
-
-    public void setAntallRetur(String antallRetur) {
-        this.antallRetur = antallRetur;
     }
 
     public DokumentMetadata withRetning(final Kommunikasjonsretning retning) {

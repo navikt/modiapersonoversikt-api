@@ -1,4 +1,4 @@
-package no.nav.modiapersonoversikt.legacy.sak.service.saf.rest
+package no.nav.modiapersonoversikt.legacy.sak.service.saf
 
 import java.time.LocalDateTime
 
@@ -20,10 +20,7 @@ data class Journalpost(
     val sak: Sak?,
     val tema: String?,
     val temanavn: String?,
-    val tittel: String?,
-    val kanalNavn: String?,
-    val kanalType: String?,
-    val antallRetur: String?
+    val tittel: String?
 )
 
 data class AvsenderMottaker(

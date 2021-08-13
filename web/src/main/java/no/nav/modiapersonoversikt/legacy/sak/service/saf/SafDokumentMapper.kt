@@ -1,4 +1,4 @@
-package no.nav.modiapersonoversikt.legacy.sak.service.saf.rest
+package no.nav.modiapersonoversikt.legacy.sak.service.saf
 
 import no.nav.modiapersonoversikt.legacy.sak.providerdomain.*
 import no.nav.modiapersonoversikt.legacy.sak.providerdomain.Dokument.Variantformat
@@ -30,32 +30,8 @@ fun DokumentMetadata.fraSafJournalpost(journalpost: Journalpost): DokumentMetada
     baksystem = baksystem.plus(Baksystem.SAF)
     temakode = journalpost.tema
     temakodeVisning = journalpost.temanavn
-    kanalNavn = journalpost.kanalNavn
-    kanalType = hentKanalType(journalpost)
-    antallRetur = journalpost.antallRetur
     return this
 }
-
-private fun hentKanalType(journalpost: Journalpost): KanalType =
-    when {
-        sjekkPapirSending(journalpost) -> KanalType.PRINT
-        sjekkDigitalSending(journalpost) -> KanalType.DIGITAL
-        else -> KanalType.UKJENT
-    }
-
-private fun sjekkPapirSending(journalpost: Journalpost) =
-    listOf(
-        "LOKAL_UTSKRIFT",
-        "SENTRAL_UTSKRIFT",
-        "SKAN_NETS",
-        "SKAN_PEN",
-        "SKAN_IM"
-    ).contains(journalpost.kanalType)
-
-private fun sjekkDigitalSending(journalpost: Journalpost) =
-    listOf("NAV_NO", "NAV_NO_UINNLOGGET", "ALTINN", "EESSI", "HELSENETTET", "NAV_NO_UINNLOGGET", "SDP").contains(
-        journalpost.kanalType
-    )
 
 private fun getRetning(journalpost: Journalpost): Kommunikasjonsretning? =
     when (journalpost.journalposttype) {

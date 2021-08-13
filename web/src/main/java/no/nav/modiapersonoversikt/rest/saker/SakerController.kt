@@ -17,7 +17,7 @@ import no.nav.modiapersonoversikt.legacy.sak.service.SaksService
 import no.nav.modiapersonoversikt.legacy.sak.service.SakstemaService
 import no.nav.modiapersonoversikt.legacy.sak.service.interfaces.SaksoversiktService
 import no.nav.modiapersonoversikt.legacy.sak.service.interfaces.TilgangskontrollService
-import no.nav.modiapersonoversikt.legacy.sak.service.saf.rest.SafService
+import no.nav.modiapersonoversikt.legacy.sak.service.saf.SafService
 import org.joda.time.DateTime
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
@@ -145,9 +145,6 @@ class SakerController @Autowired constructor(
                 "temakodeVisning" to it.temakodeVisning,
                 "ettersending" to it.isEttersending,
                 "erJournalført" to it.isErJournalfort,
-                "kanalNavn" to it.kanalNavn,
-                "kanalType" to it.kanalType,
-                "antallRetur" to it.antallRetur,
                 "feil" to mapOf(
                     "inneholderFeil" to it.feilWrapper?.inneholderFeil,
                     "feilmelding" to it.feilWrapper?.feilmelding

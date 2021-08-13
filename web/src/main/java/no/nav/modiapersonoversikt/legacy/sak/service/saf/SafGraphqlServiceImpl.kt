@@ -1,4 +1,4 @@
-package no.nav.modiapersonoversikt.legacy.sak.service.saf.graphql
+package no.nav.modiapersonoversikt.legacy.sak.service.saf
 
 import io.ktor.client.request.*
 import io.ktor.util.*
@@ -18,8 +18,6 @@ import no.nav.modiapersonoversikt.legacy.api.domain.saf.generated.HentBrukersDok
 import no.nav.modiapersonoversikt.legacy.sak.providerdomain.*
 import no.nav.modiapersonoversikt.legacy.sak.providerdomain.resultatwrappere.ResultatWrapper
 import no.nav.modiapersonoversikt.legacy.sak.providerdomain.resultatwrappere.TjenesteResultatWrapper
-import no.nav.modiapersonoversikt.legacy.sak.service.saf.rest.SafService
-import no.nav.modiapersonoversikt.legacy.sak.service.saf.rest.VEDLEGG_START_INDEX
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import org.slf4j.LoggerFactory
@@ -128,32 +126,8 @@ class SafGraphqlServiceImpl : SafService {
         baksystem = baksystem.plus(Baksystem.SAF)
         temakode = journalpost.tema?.name
         temakodeVisning = journalpost.temanavn
-        kanalNavn = journalpost.kanalnavn
-        kanalType = hentKanalType(journalpost)
-        antallRetur = journalpost.antallRetur
         return this
     }
-
-    private fun hentKanalType(journalpost: HentBrukersDokumenter.Journalpost): KanalType =
-        when {
-            sjekkPapirSending(journalpost) -> KanalType.PRINT
-            sjekkDigitalSending(journalpost) -> KanalType.DIGITAL
-            else -> KanalType.UKJENT
-        }
-
-    private fun sjekkPapirSending(journalpost: HentBrukersDokumenter.Journalpost) =
-        listOf(
-            "LOKAL_UTSKRIFT",
-            "SENTRAL_UTSKRIFT",
-            "SKAN_NETS",
-            "SKAN_PEN",
-            "SKAN_IM"
-        ).contains(journalpost.kanal?.name)
-
-    private fun sjekkDigitalSending(journalpost: HentBrukersDokumenter.Journalpost) =
-        listOf("NAV_NO", "NAV_NO_UINNLOGGET", "ALTINN", "EESSI", "HELSENETTET", "NAV_NO_UINNLOGGET", "SDP").contains(
-            journalpost.kanal?.name
-        )
 
     private fun getAvsender(journalpost: HentBrukersDokumenter.Journalpost): Entitet =
         when (journalpost.journalposttype) {

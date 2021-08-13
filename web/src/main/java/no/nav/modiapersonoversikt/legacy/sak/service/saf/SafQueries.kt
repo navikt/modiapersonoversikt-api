@@ -1,4 +1,4 @@
-package no.nav.modiapersonoversikt.legacy.sak.service.saf.graphql
+package no.nav.modiapersonoversikt.legacy.sak.service.saf
 
 val dokumentoversiktBrukerGraphQLQuery = """
     query {
@@ -9,9 +9,6 @@ val dokumentoversiktBrukerGraphQLQuery = """
               tittel
               journalpostId
               journalstatus
-              kanalnavn
-              kanal
-              antallRetur
               dokumenter {
                 tittel
                 dokumentInfoId

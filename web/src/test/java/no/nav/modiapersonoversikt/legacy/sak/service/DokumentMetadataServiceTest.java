@@ -3,7 +3,7 @@ package no.nav.modiapersonoversikt.legacy.sak.service;
 import no.nav.modiapersonoversikt.legacy.sak.providerdomain.*;
 import no.nav.modiapersonoversikt.legacy.sak.providerdomain.resultatwrappere.ResultatWrapper;
 import no.nav.modiapersonoversikt.legacy.sak.service.interfaces.InnsynJournalV2Service;
-import no.nav.modiapersonoversikt.legacy.sak.service.saf.rest.SafService;
+import no.nav.modiapersonoversikt.legacy.sak.service.saf.SafService;
 import no.nav.modiapersonoversikt.legacy.sak.transformers.DokumentMetadataTransformer;
 import no.nav.modiapersonoversikt.legacy.sak.utils.Konstanter;
 import org.hamcrest.Matchers;
