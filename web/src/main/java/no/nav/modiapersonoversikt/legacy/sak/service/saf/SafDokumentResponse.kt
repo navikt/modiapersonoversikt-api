@@ -37,7 +37,8 @@ data class DokumentInfo(
     val dokumentInfoId: String,
     val dokumentvarianter: List<Dokumentvariant>,
     val logiskeVedlegg: List<LogiskVedlegg>,
-    val tittel: String?
+    val tittel: String?,
+    val dokumentStatus: String?
 )
 
 data class Dokumentvariant(
