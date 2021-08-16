@@ -179,7 +179,7 @@ class SfHenvendelseServiceImpl(
         val request: RequestConfig<Map<String, Any?>> = createPatchRequest(
             henvendelseId,
             PatchNote<HenvendelseDTO>()
-                .set(HenvendelseDTO::kasseringsDato).to(null)
+                .set(HenvendelseDTO::kontorsperre).to(true)
         )
         henvendelseBehandlingApi.client.request<Map<String, Any?>, Unit>(request)
     }
