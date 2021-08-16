@@ -19,7 +19,10 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Temagruppe"
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Temagruppe"
+                  }
                 }
               }
             }
@@ -253,7 +256,7 @@
         "description": "Returnerer informasjon for en gitt henvendelse",
         "parameters": [
           {
-            "name": "henvendelseId",
+            "name": "kjedeId",
             "in": "path",
             "required": true,
             "schema": {
@@ -312,6 +315,39 @@
           }
         },
         "required": ["markeringstype", "markertDato", "markertAv"]
+      },
+      "Kontorsperremarkering": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/Markering"
+          }
+        ],
+        "type": "object",
+        "description": "Klasse som arver den generiske modellen til Markering og utvidet med kontorsperreinformasjon",
+        "properties": {
+          "markeringstype": {
+            "type": "string",
+            "enum": [
+              "KONTORSPERRE"
+            ],
+            "example": "KONTORSPERRE"
+          },
+          "kontorsperreEnhet": {
+            "type": "string",
+            "description": "Enheten henvendelsen er kontorsperret til",
+            "example": "3410"
+          },
+          "kontorsperreGT": {
+            "type": "string",
+            "description": "GT henvendelsen er kontorsperret til",
+            "example": "3410"
+          }
+        },
+        "required": [
+          "markeringstype",
+          "markertDato",
+          "markertAv"
+        ]
       },
       "MeldingRequest": {
         "type": "object",
@@ -381,13 +417,13 @@
             "description": "Temakode for journalpost som skal opprettes",
             "example": "DAG"
           },
-          "henvendelseId": {
+          "kjedeId": {
             "type": "string",
             "description": "Unik ID til henvendelsen som skal journalføres",
             "example": "a0J3N000004dUBJUA2"
           }
         },
-        "required": ["journalforendeEnhet", "temakode", "henvendelseId"]
+        "required": ["journalforendeEnhet", "temakode", "kjedeId"]
       },
       "Journalpost": {
         "type": "object",
@@ -468,6 +504,16 @@
             "format": "date-time",
             "example": "2021-06-27T12:00:00.000Z"
           },
+          "kanal": {
+            "type": "string",
+            "description": "Meldingskanalen",
+            "enum": [
+              "TELEFON",
+              "OPPMOTE",
+              "DIGITAL"
+            ],
+            "example": "DIGITAL"
+          },
           "fra": {
             "$ref": "#/components/schemas/MeldingFra"
           }
@@ -521,11 +567,9 @@
             "description": "Definerer om henvendelsen er markert som feilsendt. Markeringsinformasjon finnes i listen av markeringer",
             "example": true
           },
-          "henvendelseId": {
-            "type": "string"
-          },
           "kjedeId": {
-            "type": "string"
+            "type": "string",
+            "description": "Unik if for henvendelsen"
           },
           "gjeldendeTemagruppe": {
             "type": "string",
@@ -562,7 +606,7 @@
           "opprettetDato",
           "kontorsperre",
           "feilsendt",
-          "henvendelseId",
+          "kjedeId",
           "gjeldendeTemagruppe"
         ]
       },

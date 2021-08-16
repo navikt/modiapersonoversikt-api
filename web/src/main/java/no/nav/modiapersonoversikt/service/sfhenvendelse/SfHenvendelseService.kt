@@ -29,8 +29,8 @@ sealed class EksternBruker(val ident: String) {
 
 interface SfHenvendelseService {
     fun hentHenvendelser(bruker: EksternBruker, enhet: String): List<HenvendelseDTO>
-    fun hentHenvendelse(henvendelseId: String): HenvendelseDTO
-    fun journalforHenvendelse(enhet: String, henvendelseId: String, saksId: String?, saksTema: String)
+    fun hentHenvendelse(kjedeId: String): HenvendelseDTO
+    fun journalforHenvendelse(enhet: String, kjedeId: String, saksId: String?, saksTema: String)
     fun sendSamtalereferat(bruker: EksternBruker, enhet: String, temagruppe: String, kanal: SamtalereferatRequestDTO.Kanal, fritekst: String)
     fun opprettNyDialogOgSendMelding(
         bruker: EksternBruker,
@@ -45,11 +45,11 @@ interface SfHenvendelseService {
         fritekst: String
     )
 
-    fun henvendelseTilhorerBruker(bruker: EksternBruker, henvendelseId: String): Boolean
+    fun henvendelseTilhorerBruker(bruker: EksternBruker, kjedeId: String): Boolean
     fun sjekkEierskap(bruker: EksternBruker, henvendelse: HenvendelseDTO): Boolean
-    fun merkSomKontorsperret(henvendelseId: String, enhet: String)
-    fun merkSomFeilsendt(henvendelseId: String)
-    fun merkForHastekassering(henvendelseId: String)
+    fun merkSomKontorsperret(kjedeId: String, enhet: String)
+    fun merkSomFeilsendt(kjedeId: String)
+    fun merkForHastekassering(kjedeId: String)
 
     fun ping()
 }
@@ -82,16 +82,16 @@ class SfHenvendelseServiceImpl(
         return henvendelseInfoApi.henvendelseinfoHenvendelselisteGet(bruker.aktorId(), callId())
     }
 
-    override fun hentHenvendelse(henvendelseId: String): HenvendelseDTO {
-        return henvendelseInfoApi.henvendelseinfoHenvendelseGet(henvendelseId, callId())
+    override fun hentHenvendelse(kjedeId: String): HenvendelseDTO {
+        return henvendelseInfoApi.henvendelseinfoHenvendelseGet(kjedeId, callId())
     }
 
-    override fun journalforHenvendelse(enhet: String, henvendelseId: String, saksId: String?, saksTema: String) {
+    override fun journalforHenvendelse(enhet: String, kjedeId: String, saksId: String?, saksTema: String) {
         henvendelseJournalApi
             .henvendelseJournalPost(
                 callId(),
                 JournalRequestDTO(
-                    henvendelseId = henvendelseId,
+                    kjedeId = kjedeId,
                     saksId = saksId,
                     temakode = saksTema,
                     journalforendeEnhet = enhet
@@ -163,8 +163,8 @@ class SfHenvendelseServiceImpl(
             )
     }
 
-    override fun henvendelseTilhorerBruker(bruker: EksternBruker, henvendelseId: String): Boolean {
-        val henvendelse = henvendelseInfoApi.henvendelseinfoHenvendelseGet(henvendelseId, callId())
+    override fun henvendelseTilhorerBruker(bruker: EksternBruker, kjedeId: String): Boolean {
+        val henvendelse = henvendelseInfoApi.henvendelseinfoHenvendelseGet(kjedeId, callId())
         return sjekkEierskap(bruker, henvendelse)
     }
 
@@ -175,29 +175,29 @@ class SfHenvendelseServiceImpl(
         }
     }
 
-    override fun merkSomKontorsperret(henvendelseId: String, enhet: String) {
+    override fun merkSomKontorsperret(kjedeId: String, enhet: String) {
         val request: RequestConfig<Map<String, Any?>> = createPatchRequest(
-            henvendelseId,
+            kjedeId,
             PatchNote<HenvendelseDTO>()
                 .set(HenvendelseDTO::kontorsperre).to(true)
         )
         henvendelseBehandlingApi.client.request<Map<String, Any?>, Unit>(request)
     }
 
-    override fun merkSomFeilsendt(henvendelseId: String) {
+    override fun merkSomFeilsendt(kjedeId: String) {
         val callId = callId()
-        val henvendelse = henvendelseInfoApi.henvendelseinfoHenvendelseGet(henvendelseId, callId)
+        val henvendelse = henvendelseInfoApi.henvendelseinfoHenvendelseGet(kjedeId, callId)
         val request: RequestConfig<Map<String, Any?>> = createPatchRequest(
-            henvendelseId,
+            kjedeId,
             PatchNote<HenvendelseDTO>()
                 .set(HenvendelseDTO::kasseringsDato).to(henvendelse.opprettetDato.plusYears(2))
         )
         henvendelseBehandlingApi.client.request<Map<String, Any?>, Unit>(request)
     }
 
-    override fun merkForHastekassering(henvendelseId: String) {
+    override fun merkForHastekassering(kjedeId: String) {
         val request: RequestConfig<Map<String, Any?>> = createPatchRequest(
-            henvendelseId,
+            kjedeId,
             PatchNote<HenvendelseDTO>()
                 .set(HenvendelseDTO::kasseringsDato).to(OffsetDateTime.now())
         )
@@ -209,7 +209,7 @@ class SfHenvendelseServiceImpl(
     }
 
     private fun createPatchRequest(
-        henvendelseId: String,
+        kjedeId: String,
         patchnote: PatchNote<HenvendelseDTO>
     ): RequestConfig<Map<String, Any?>> {
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf(
@@ -219,7 +219,7 @@ class SfHenvendelseServiceImpl(
         patchnote.patches.mapKeys { it.key.name }
         return RequestConfig(
             method = RequestMethod.PATCH,
-            path = "/henvendelse/behandling/$henvendelseId",
+            path = "/henvendelse/behandling/$kjedeId",
             query = mutableMapOf(),
             headers = localVariableHeaders,
             body = patchnote.patches.mapKeys { it.key.name }

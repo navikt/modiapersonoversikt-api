@@ -152,7 +152,7 @@ class SfDialogController @Autowired constructor(
             .get(Audit.describe(Audit.Action.UPDATE, AuditResources.Person.Henvendelse.Journalfor, *auditIdentifier)) {
                 sfHenvendelseService.journalforHenvendelse(
                     enhet = enhet,
-                    henvendelseId = kjedeId,
+                    kjedeId = kjedeId,
                     saksId = request.saksId,
                     saksTema = request.saksTema
                 )

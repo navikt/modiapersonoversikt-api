@@ -102,7 +102,7 @@ class SfLegacyDialogController(
                 // TODO Hvordan vil vi håndtere dette??
                 sfHenvendelseService.journalforHenvendelse(
                     enhet = enhet,
-                    henvendelseId = "???",
+                    kjedeId = "???",
                     saksId = body.sak.saksId,
                     saksTema = body.sak.temaKode
                 )
