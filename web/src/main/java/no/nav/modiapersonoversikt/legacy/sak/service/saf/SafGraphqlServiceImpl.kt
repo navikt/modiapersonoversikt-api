@@ -198,9 +198,18 @@ class SafGraphqlServiceImpl : SafService {
         isLogiskDokument = false
         variantformat = getVariantformat(dokumentInfo)
         skjerming = getSkjerming(dokumentInfo)?.toString()
-
+        dokumentStatus = getDokumentStatus(dokumentInfo)
         return this
     }
+
+    private fun getDokumentStatus(dokumentInfo: HentBrukersDokumenter.DokumentInfo): Dokument.DokumentStatus =
+        when (dokumentInfo.dokumentstatus) {
+            HentBrukersDokumenter.Dokumentstatus.UNDER_REDIGERING -> Dokument.DokumentStatus.UNDER_REDIGERING
+            HentBrukersDokumenter.Dokumentstatus.FERDIGSTILT -> Dokument.DokumentStatus.FERDIGSTILT
+            HentBrukersDokumenter.Dokumentstatus.KASSERT -> Dokument.DokumentStatus.KASSERT
+            HentBrukersDokumenter.Dokumentstatus.AVBRUTT -> Dokument.DokumentStatus.AVBRUTT
+            else -> Dokument.DokumentStatus.FERDIGSTILT
+        }
 
     private fun getVariantformat(dokumentInfo: HentBrukersDokumenter.DokumentInfo): Dokument.Variantformat =
         when (getVariant(dokumentInfo).variantformat) {

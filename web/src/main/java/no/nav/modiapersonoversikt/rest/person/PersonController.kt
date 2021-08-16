@@ -9,7 +9,7 @@ import no.nav.modiapersonoversikt.infrastructure.naudit.AuditResources
 import no.nav.modiapersonoversikt.infrastructure.scientist.Scientist
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Policies
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll
-import no.nav.modiapersonoversikt.legacy.api.domain.pdl.generated.HentIdent
+import no.nav.modiapersonoversikt.legacy.api.domain.pdl.generated.HentIdenter
 import no.nav.modiapersonoversikt.legacy.api.domain.pdl.generated.HentPerson
 import no.nav.modiapersonoversikt.legacy.api.service.kodeverk.StandardKodeverk
 import no.nav.modiapersonoversikt.legacy.api.service.pdl.PdlOppslagService
@@ -56,6 +56,7 @@ class PersonController @Autowired constructor(
     private val logger = LoggerFactory.getLogger(PersonController::class.java)
     private val kjoennExperiment = Scientist.createExperiment<String?>(Scientist.Config("PDL-Kjønn", 0.2))
     private val pdlExperiment = Scientist.createExperiment<Map<String, Any?>>(Scientist.Config("PDL", 0.05))
+    private val pdlMapper = PdlMapper(pdlOppslagService)
 
     @GetMapping
     fun hent(@PathVariable("fnr") fodselsnummer: String): Map<String, Any?> {
@@ -114,7 +115,7 @@ class PersonController @Autowired constructor(
                                 "deltBosted" to hentDeltBosted(deltBosted)
                             )
                         },
-                        experiment = { PdlMapper.from(requireNotNull(pdlPerson)) }
+                        experiment = { pdlMapper.from(requireNotNull(pdlPerson)) }
                     )
                 } catch (exception: AuthorizationWithSikkerhetstiltakException) {
                     getBegrensetInnsyn(fodselsnummer, exception.message)
@@ -136,8 +137,8 @@ class PersonController @Autowired constructor(
     }
 
     @GetMapping("/identer")
-    fun hentIdenter(@PathVariable("fnr") fodselsnummer: String): HentIdent.Identliste? {
-        return pdlOppslagService.hentIdent(fodselsnummer)
+    fun hentIdenter(@PathVariable("fnr") fodselsnummer: String): HentIdenter.Identliste? {
+        return pdlOppslagService.hentIdenter(fodselsnummer)
     }
 
     data class VergemalDTO(

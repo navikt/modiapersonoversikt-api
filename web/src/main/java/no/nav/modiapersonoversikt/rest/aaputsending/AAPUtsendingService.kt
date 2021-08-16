@@ -10,7 +10,7 @@ import no.nav.modiapersonoversikt.legacy.api.domain.henvendelse.Meldingstype
 import no.nav.modiapersonoversikt.legacy.api.domain.saker.Sak
 import no.nav.modiapersonoversikt.legacy.api.service.HenvendelseUtsendingService
 import no.nav.modiapersonoversikt.legacy.api.service.saker.SakerService
-import no.nav.modiapersonoversikt.rest.dialog.getKanal
+import no.nav.modiapersonoversikt.rest.dialog.henvendelse.getKanal
 import org.slf4j.MDC
 import java.net.InetAddress
 import java.util.*

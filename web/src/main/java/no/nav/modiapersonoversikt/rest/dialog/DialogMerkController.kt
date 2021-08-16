@@ -1,6 +1,5 @@
 package no.nav.modiapersonoversikt.rest.dialog
 
-import no.nav.common.auth.subject.SubjectHandler
 import no.nav.modiapersonoversikt.infrastructure.naudit.Audit
 import no.nav.modiapersonoversikt.infrastructure.naudit.Audit.Action.*
 import no.nav.modiapersonoversikt.infrastructure.naudit.AuditIdentifier
@@ -8,20 +7,16 @@ import no.nav.modiapersonoversikt.infrastructure.naudit.AuditResources.Person.He
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.BehandlingsIdTilgangData
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Policies
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll
-import no.nav.modiapersonoversikt.legacy.api.service.OppgaveBehandlingService
-import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.behandlehenvendelse.BehandleHenvendelsePortType
+import no.nav.modiapersonoversikt.rest.dialog.apis.*
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
-import java.util.*
 
 @RestController
 @RequestMapping("/rest/dialogmerking")
 class DialogMerkController @Autowired constructor(
-    private val behandleHenvendelsePortType: BehandleHenvendelsePortType,
-    private val oppgaveBehandlingService: OppgaveBehandlingService,
-    private val tilgangskontroll: Tilgangskontroll
+    private val tilgangskontroll: Tilgangskontroll,
+    private val dialogMerkApi: DialogMerkApi
 ) {
 
     @PostMapping("/feilsendt")
@@ -34,8 +29,7 @@ class DialogMerkController @Autowired constructor(
             .check(Policies.tilgangTilBruker.with(request.fnr))
             .check(Policies.behandlingsIderTilhorerBruker.with(BehandlingsIdTilgangData(request.fnr, request.behandlingsidListe)))
             .get(Audit.describe(UPDATE, Henvendelse.Merk.Feilsendt, *auditIdentifier)) {
-                behandleHenvendelsePortType.oppdaterTilKassering(request.behandlingsidListe)
-                ResponseEntity(HttpStatus.OK)
+                dialogMerkApi.merkSomFeilsendt(request)
             }
     }
 
@@ -49,8 +43,7 @@ class DialogMerkController @Autowired constructor(
             .check(Policies.tilgangTilBruker.with(request.fnr))
             .check(Policies.behandlingsIderTilhorerBruker.with(BehandlingsIdTilgangData(request.fnr, listOf(request.eldsteMeldingTraadId))))
             .get(Audit.describe(UPDATE, Henvendelse.Merk.Bidrag, *auditIdentifier)) {
-                behandleHenvendelsePortType.knyttBehandlingskjedeTilTema(request.eldsteMeldingTraadId, "BID")
-                ResponseEntity(HttpStatus.OK)
+                dialogMerkApi.merkSomBidrag(request)
             }
     }
 
@@ -64,8 +57,7 @@ class DialogMerkController @Autowired constructor(
             .check(Policies.tilgangTilBruker.with(request.fnr))
             .check(Policies.behandlingsIderTilhorerBruker.with(BehandlingsIdTilgangData(request.fnr, request.meldingsidListe)))
             .get(Audit.describe(UPDATE, Henvendelse.Merk.Kontorsperre, *auditIdentifier)) {
-                behandleHenvendelsePortType.oppdaterKontorsperre(request.enhet, request.meldingsidListe)
-                ResponseEntity(HttpStatus.OK)
+                dialogMerkApi.merkSomKontorsperret(request)
             }
     }
 
@@ -80,9 +72,7 @@ class DialogMerkController @Autowired constructor(
             .check(Policies.tilgangTilBruker.with(request.fnr))
             .check(Policies.behandlingsIderTilhorerBruker.with(BehandlingsIdTilgangData(request.fnr, listOf(request.eldsteMeldingTraadId))))
             .get(Audit.describe(UPDATE, Henvendelse.Merk.Avslutt, *auditIdentifier)) {
-                behandleHenvendelsePortType.ferdigstillUtenSvar(request.eldsteMeldingTraadId, request.saksbehandlerValgtEnhet)
-                oppgaveBehandlingService.ferdigstillOppgaveIGsak(request.eldsteMeldingOppgaveId, Optional.empty(), request.saksbehandlerValgtEnhet)
-                ResponseEntity(HttpStatus.OK)
+                dialogMerkApi.avsluttUtenSvar(request)
             }
     }
 
@@ -97,9 +87,7 @@ class DialogMerkController @Autowired constructor(
             .check(Policies.tilgangTilBruker.with(request.fnr))
             .check(Policies.behandlingsIderTilhorerBruker.with(BehandlingsIdTilgangData(request.fnr, listOf(request.eldsteMeldingTraadId))))
             .get(Audit.describe(UPDATE, Henvendelse.Merk.Avslutt, *auditIdentifier)) {
-                behandleHenvendelsePortType.ferdigstillUtenSvar(request.eldsteMeldingTraadId, request.saksbehandlerValgtEnhet)
-                oppgaveBehandlingService.ferdigstillOppgaveIGsak(request.eldsteMeldingOppgaveId, Optional.empty(), request.saksbehandlerValgtEnhet, request.beskrivelse)
-                ResponseEntity(HttpStatus.OK)
+                dialogMerkApi.tvungenFerdigstill(request)
             }
     }
 
@@ -112,8 +100,7 @@ class DialogMerkController @Autowired constructor(
         return tilgangskontroll
             .check(Policies.tilgangTilBruker.with(request.fnr))
             .get(Audit.describe(UPDATE, Henvendelse.Oppgave.Avslutt, *auditIdentifier)) {
-                oppgaveBehandlingService.ferdigstillOppgaveIGsak(request.oppgaveid, Optional.empty(), request.saksbehandlerValgtEnhet, request.beskrivelse)
-                ResponseEntity(HttpStatus.OK)
+                dialogMerkApi.avsluttGosysOppgave(request)
             }
     }
 
@@ -128,8 +115,7 @@ class DialogMerkController @Autowired constructor(
             .check(Policies.tilgangTilBruker.with(request.fnr))
             .check(Policies.behandlingsIderTilhorerBruker.with(BehandlingsIdTilgangData(request.fnr, request.behandlingsidListe)))
             .get(Audit.describe(DELETE, Henvendelse.Merk.Slett, *auditIdentifier)) {
-                behandleHenvendelsePortType.markerTraadForHasteKassering(request.behandlingsidListe)
-                ResponseEntity(HttpStatus.OK)
+                dialogMerkApi.slettBehandlingskjede(request)
             }
     }
 
@@ -138,41 +124,7 @@ class DialogMerkController @Autowired constructor(
         return tilgangskontroll
             .check(Policies.tilgangTilModia)
             .get(Audit.skipAuditLog()) {
-                val godkjenteSaksbehandlere = tilgangskontroll.context().hentSaksbehandlereMedTilgangTilHastekassering()
-                val saksbehandlerId = SubjectHandler.getIdent().map(String::toUpperCase).get()
-                ResponseEntity(godkjenteSaksbehandlere.contains(saksbehandlerId), HttpStatus.OK)
+                dialogMerkApi.kanSlette()
             }
     }
 }
-
-data class FeilmerkRequest(val fnr: String, val behandlingsidListe: List<String>)
-
-data class BidragRequest(val fnr: String, val eldsteMeldingTraadId: String)
-
-data class KontorsperretRequest(
-    val fnr: String,
-    val enhet: String,
-    val meldingsidListe: List<String>
-)
-
-data class AvsluttUtenSvarRequest(
-    val fnr: String,
-    val saksbehandlerValgtEnhet: String,
-    val eldsteMeldingTraadId: String,
-    val eldsteMeldingOppgaveId: String
-)
-
-data class TvungenFerdigstillRequest(
-    val fnr: String,
-    val saksbehandlerValgtEnhet: String,
-    val eldsteMeldingTraadId: String,
-    val eldsteMeldingOppgaveId: String,
-    val beskrivelse: String
-)
-
-data class FerdigstillOppgaveRequest(
-    val fnr: String,
-    val oppgaveid: String,
-    val beskrivelse: String,
-    val saksbehandlerValgtEnhet: String
-)

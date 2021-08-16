@@ -8,6 +8,7 @@ import no.nav.modiapersonoversikt.legacy.api.domain.henvendelse.Meldingstype;
 import no.nav.modiapersonoversikt.legacy.api.service.HenvendelseUtsendingService;
 import no.nav.modiapersonoversikt.legacy.api.service.LeggTilbakeOppgaveIGsakRequest;
 import no.nav.modiapersonoversikt.legacy.api.service.OppgaveBehandlingService;
+import no.nav.modiapersonoversikt.rest.dialog.apis.DialogDelsvarApi;
 
 import java.util.NoSuchElementException;
 import java.util.Optional;

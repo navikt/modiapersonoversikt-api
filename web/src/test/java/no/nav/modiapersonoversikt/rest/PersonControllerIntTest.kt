@@ -14,7 +14,10 @@ import no.nav.modiapersonoversikt.legacy.kjerneinfo.domain.person.Person
 import no.nav.modiapersonoversikt.rest.person.PersonController
 import no.nav.modiapersonoversikt.rest.person.Telefonnummer
 import org.junit.jupiter.api.Test
-import java.time.*
+import java.time.Clock
+import java.time.Instant
+import java.time.LocalDateTime
+import java.time.ZoneId
 import kotlin.test.assertEquals
 
 internal class PersonControllerIntTest {
@@ -117,7 +120,17 @@ internal class PersonControllerIntTest {
             ),
             vergemaalEllerFremtidsfullmakt = vergemaalEllerFremtidsfullmakt,
             foreldreansvar = foreldreansvar,
-            deltBosted = emptyList()
+            deltBosted = emptyList(),
+            folkeregisteridentifikator = emptyList(),
+            foedsel = emptyList(),
+            adressebeskyttelse = emptyList(),
+            statsborgerskap = emptyList(),
+            doedsfall = emptyList(),
+            folkeregisterpersonstatus = emptyList(),
+            sivilstand = emptyList(),
+            sikkerhetstiltak = emptyList(),
+            forelderBarnRelasjon = emptyList(),
+            bostedsadresse = emptyList()
         )
 
         val personController = PersonController(

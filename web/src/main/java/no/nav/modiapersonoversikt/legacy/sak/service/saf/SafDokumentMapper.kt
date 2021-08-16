@@ -30,7 +30,6 @@ fun DokumentMetadata.fraSafJournalpost(journalpost: Journalpost): DokumentMetada
     baksystem = baksystem.plus(Baksystem.SAF)
     temakode = journalpost.tema
     temakodeVisning = journalpost.temanavn
-
     return this
 }
 
@@ -77,6 +76,8 @@ private fun Dokument.fraSafDokumentInfo(dokumentInfo: DokumentInfo): Dokument {
     isLogiskDokument = false
     variantformat = getVariantformat(dokumentInfo)
     skjerming = getSkjerming(dokumentInfo)
+    dokumentStatus =
+        dokumentInfo.dokumentStatus?.let { Dokument.DokumentStatus.valueOf(it) } ?: Dokument.DokumentStatus.FERDIGSTILT
 
     return this
 }

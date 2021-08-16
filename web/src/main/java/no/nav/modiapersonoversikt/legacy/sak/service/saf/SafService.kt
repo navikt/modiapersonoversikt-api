@@ -1,5 +1,6 @@
 package no.nav.modiapersonoversikt.legacy.sak.service.saf
 
+import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
@@ -22,7 +23,7 @@ private val SAF_GRAPHQL_BASEURL: String = EnvironmentUtils.getRequiredProperty("
 private val SAF_HENTDOKUMENT_BASEURL: String = EnvironmentUtils.getRequiredProperty("SAF_HENTDOKUMENT_URL")
 
 private val LOG = LoggerFactory.getLogger(SafService::class.java)
-private val mapper: ObjectMapper = jacksonObjectMapper().registerModule(JavaTimeModule())
+private val mapper: ObjectMapper = jacksonObjectMapper().registerModule(JavaTimeModule()).configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
 
 interface SafService {
     fun hentJournalposter(fnr: String): ResultatWrapper<List<DokumentMetadata>>

@@ -280,6 +280,8 @@ spec:
       value: "http://maven.adeo.no/nexus/content/groups/public/no/nav/tjenester/fim/nav-fim-ytelseskontrakt-v3-tjenestespesifikasjon/3.0.1/nav-fim-ytelseskontrakt-v3-tjenestespesifikasjon-3.0.1.zip"
     - name: HENVENDELSE_LES_API_URL
       value: "https://modapp.adeo.no/henvendelse-les/api"
+    - name: SF_HENVENDELSE_URL
+      value: "https://sf-henvendelse.intern.nav.no/api"
     - name: PDL_API_URL
       value: "https://pdl-api.nais.adeo.no/graphql"
     - name: PERSONFORVALTER_URL

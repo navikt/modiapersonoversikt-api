@@ -64,7 +64,7 @@ internal class PersonControllerTest {
         every { kodeverk.getBeskrivelseForKode("IOT", "Landkoder", "nb") } returns "Det britiske territoriet i Indiahavet"
         every { kodeverk.getBeskrivelseForKode("SPFO", "Diskresjonskoder", "nb") } returns "Kode7"
         every { pdlOppslagService.hentPerson(any()) } returns null
-        every { pdlOppslagService.hentNavnBolk(any()) } returns null
+        every { pdlOppslagService.hentNavnBolk(any()) } returns emptyMap()
     }
 
     @Test
@@ -292,7 +292,17 @@ internal class PersonControllerTest {
             telefonnummer = emptyList(),
             vergemaalEllerFremtidsfullmakt = emptyList(),
             foreldreansvar = emptyList(),
-            deltBosted = emptyList()
+            deltBosted = emptyList(),
+            folkeregisteridentifikator = emptyList(),
+            foedsel = emptyList(),
+            adressebeskyttelse = emptyList(),
+            statsborgerskap = emptyList(),
+            doedsfall = emptyList(),
+            folkeregisterpersonstatus = emptyList(),
+            sivilstand = emptyList(),
+            sikkerhetstiltak = emptyList(),
+            forelderBarnRelasjon = emptyList(),
+            bostedsadresse = emptyList()
         )
     }
 

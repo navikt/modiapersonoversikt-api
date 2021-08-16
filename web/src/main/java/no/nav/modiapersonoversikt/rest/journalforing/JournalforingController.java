@@ -1,4 +1,4 @@
-package no.nav.modiapersonoversikt.rest;
+package no.nav.modiapersonoversikt.rest.journalforing;
 
 import kotlin.Pair;
 import no.nav.modiapersonoversikt.legacy.api.domain.saker.Sak;
