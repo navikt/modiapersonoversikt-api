@@ -5,9 +5,10 @@ import no.nav.modiapersonoversikt.legacy.api.domain.Saksbehandler
 import no.nav.modiapersonoversikt.legacy.api.domain.henvendelse.Melding
 import no.nav.modiapersonoversikt.legacy.sporsmalogsvar.consumer.henvendelse.domain.Traad
 import no.nav.modiapersonoversikt.rest.DATO_TID_FORMAT
-import no.nav.modiapersonoversikt.rest.dialog.MeldingDTO
-import no.nav.modiapersonoversikt.rest.dialog.TraadDTO
+import no.nav.modiapersonoversikt.rest.dialog.apis.MeldingDTO
+import no.nav.modiapersonoversikt.rest.dialog.apis.TraadDTO
 import org.joda.time.format.DateTimeFormat
+import kotlin.collections.HashMap
 
 typealias Function<S, T> = (s: S) -> T
 interface DTO

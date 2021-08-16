@@ -52,6 +52,7 @@ import org.springframework.context.annotation.Import;
         UnleashEndpointConfig.class,
         InnsynJournalEndpointConfig.class,
         OppfolgingsinfoApiEndpointConfig.class,
+        SfHenvendelseConfig.class,
         PersonsokEndpointConfig.class
 })
 public class EndpointsConfig {
