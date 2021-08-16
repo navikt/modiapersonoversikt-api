@@ -78,17 +78,17 @@ import okhttp3.OkHttpClient
                 {{#queryParams}}
                 {{^required}}
                 if ({{{paramName}}} != null) {
-                    put("{{baseName}}", {{#isContainer}}toMultiValue({{{paramName}}}.toList(), "{{collectionFormat}}"){{/isContainer}}{{^isContainer}}listOf({{#isDateTime}}parseDateToQueryString({{{paramName}}}){{/isDateTime}}{{#isDate}}parseDateToQueryString({{{paramName}}}){{/isDate}}{{^isDateTime}}{{^isDate}}{{{paramName}}}.toString(){{/isDate}}{{/isDateTime}}){{/isContainer}})
+                    put("{{baseName}}", {{#isContainer}}toMultiValue({{{paramName}}}.toList(), "{{collectionFormat}}"){{/isContainer}}{{^isContainer}}listOf({{#isDateTime}}client.parseDateToQueryString({{{paramName}}}){{/isDateTime}}{{#isDate}}client.parseDateToQueryString({{{paramName}}}){{/isDate}}{{^isDateTime}}{{^isDate}}{{{paramName}}}.toString(){{/isDate}}{{/isDateTime}}){{/isContainer}})
                 }
                 {{/required}}
                 {{#required}}
                 {{#isNullable}}
                 if ({{{paramName}}} != null) {
-                    put("{{baseName}}", {{#isContainer}}toMultiValue({{{paramName}}}.toList(), "{{collectionFormat}}"){{/isContainer}}{{^isContainer}}listOf({{#isDateTime}}parseDateToQueryString({{{paramName}}}){{/isDateTime}}{{#isDate}}parseDateToQueryString({{{paramName}}}){{/isDate}}{{^isDateTime}}{{^isDate}}{{{paramName}}}.toString(){{/isDate}}{{/isDateTime}}){{/isContainer}})
+                    put("{{baseName}}", {{#isContainer}}toMultiValue({{{paramName}}}.toList(), "{{collectionFormat}}"){{/isContainer}}{{^isContainer}}listOf({{#isDateTime}}client.parseDateToQueryString({{{paramName}}}){{/isDateTime}}{{#isDate}}client.parseDateToQueryString({{{paramName}}}){{/isDate}}{{^isDateTime}}{{^isDate}}{{{paramName}}}.toString(){{/isDate}}{{/isDateTime}}){{/isContainer}})
                 }
                 {{/isNullable}}
                 {{^isNullable}}
-                put("{{baseName}}", {{#isContainer}}toMultiValue({{{paramName}}}.toList(), "{{collectionFormat}}"){{/isContainer}}{{^isContainer}}listOf({{#isDateTime}}parseDateToQueryString({{{paramName}}}){{/isDateTime}}{{#isDate}}parseDateToQueryString({{{paramName}}}){{/isDate}}{{^isDateTime}}{{^isDate}}{{{paramName}}}.toString(){{/isDate}}{{/isDateTime}}){{/isContainer}})
+                put("{{baseName}}", {{#isContainer}}toMultiValue({{{paramName}}}.toList(), "{{collectionFormat}}"){{/isContainer}}{{^isContainer}}listOf({{#isDateTime}}client.parseDateToQueryString({{{paramName}}}){{/isDateTime}}{{#isDate}}client.parseDateToQueryString({{{paramName}}}){{/isDate}}{{^isDateTime}}{{^isDate}}{{{paramName}}}.toString(){{/isDate}}{{/isDateTime}}){{/isContainer}})
                 {{/isNullable}}
                 {{/required}}
                 {{/queryParams}}

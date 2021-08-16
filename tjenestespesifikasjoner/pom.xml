@@ -34,6 +34,7 @@
         <module>sf-henvendelse-api</module>
         <module>pdl-api</module>
         <module>saf-api</module>
+        <module>kodeverk-api</module>
     </modules>
 
     <dependencyManagement>
