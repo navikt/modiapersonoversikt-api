@@ -82,6 +82,7 @@ class PersonController @Autowired constructor(
 
                     mapOf(
                         "fødselsnummer" to person?.fodselsnummer?.nummer,
+                        "aktorId" to hentAktorId(fodselsnummer),
                         "alder" to person?.fodselsnummer?.alder,
                         "kjønn" to kjoenn,
                         "geografiskTilknytning" to person?.personfakta?.geografiskTilknytning?.value,
@@ -132,6 +133,10 @@ class PersonController @Autowired constructor(
     @GetMapping("/identer")
     fun hentIdenter(@PathVariable("fnr") fodselsnummer: String): HentIdenter.Identliste? {
         return pdlOppslagService.hentIdenter(fodselsnummer)
+    }
+
+    private fun hentAktorId(fnr: String): String? {
+        return pdlOppslagService.hentAktorId(fnr)
     }
 
     data class VergemalDTO(
