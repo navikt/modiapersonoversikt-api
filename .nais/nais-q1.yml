@@ -327,6 +327,6 @@ spec:
     - name: FEATURE_NYTTVISITTKORT
       value: "true"
     - name: HASTEKASSERING_TILGANG
-      value: "Z992323,Z990366,Z990083"
+      value: "Z992323,Z990366,Z990083,Z990351"
     - name: CXF_SECURE_LOG
       value: "enabled"
