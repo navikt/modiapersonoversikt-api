@@ -134,6 +134,11 @@ class PersonController @Autowired constructor(
         return pdlOppslagService.hentIdenter(fodselsnummer)
     }
 
+    @GetMapping("/aktorid")
+    fun hentAktorId(@PathVariable("fnr") fodselsnummer: String): String? {
+        return pdlOppslagService.hentAktorId(fodselsnummer)
+    }
+
     data class VergemalDTO(
         val ident: String?,
         val navn: PersonnavnDTO?,
