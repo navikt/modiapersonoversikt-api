@@ -51,7 +51,6 @@
                             <generatorName>kotlin</generatorName>
                             <library>jvm-okhttp3</library>
                             <packageName>no.nav.modiapersonoversikt.legacy.api.domain.bidragsak.generated</packageName>
-                            <modelNameSuffix>DTO</modelNameSuffix>
                             <templateDirectory>${project.basedir}/../openapi-templates</templateDirectory>
                             <configOptions>
                                 <enumPropertyNaming>original</enumPropertyNaming>
