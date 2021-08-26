@@ -2,18 +2,15 @@ package no.nav.modiapersonoversikt.rest.kontaktinformasjon
 
 import io.mockk.every
 import io.mockk.mockk
-import no.nav.modiapersonoversikt.service.dkif.Dkif
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.TilgangskontrollMock
+import no.nav.modiapersonoversikt.service.dkif.Dkif
 import org.junit.jupiter.api.Assertions.assertAll
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.function.Executable
-import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.util.*
-import javax.xml.datatype.DatatypeFactory
-import javax.xml.datatype.XMLGregorianCalendar
 
 private const val FNR = "10108000398"
 private const val EPOST = "test@testesen.com"

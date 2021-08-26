@@ -2,7 +2,6 @@ package no.nav.modiapersonoversikt.service.dkif
 
 import no.nav.tjeneste.virksomhet.digitalkontaktinformasjon.v1.meldinger.WSHentDigitalKontaktinformasjonResponse
 import java.time.LocalDate
-import java.time.LocalDateTime
 import javax.xml.datatype.XMLGregorianCalendar
 
 object DkifSoapExtentions {

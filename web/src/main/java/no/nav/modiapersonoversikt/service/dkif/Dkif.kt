@@ -2,7 +2,6 @@ package no.nav.modiapersonoversikt.service.dkif
 
 import java.time.LocalDate
 
-
 object Dkif {
     interface Service {
         fun hentDigitalKontaktinformasjon(fnr: String): DigitalKontaktinformasjon
