@@ -5,15 +5,11 @@ import no.nav.common.cxf.StsConfig;
 import no.nav.common.sts.NaisSystemUserTokenProvider;
 import no.nav.common.sts.SystemUserTokenProvider;
 import no.nav.common.utils.EnvironmentUtils;
+import no.nav.modiapersonoversikt.config.endpoint.kodeverksmapper.Kodeverksmapper;
 import no.nav.modiapersonoversikt.consumer.dkif.consumer.support.DkifServiceImpl;
-import no.nav.modiapersonoversikt.legacy.kjerneinfo.consumer.egenansatt.EgenAnsattService;
-import no.nav.modiapersonoversikt.legacy.kjerneinfo.consumer.fim.person.PersonKjerneinfoServiceBi;
-import no.nav.modiapersonoversikt.legacy.kjerneinfo.consumer.fim.person.support.DefaultPersonKjerneinfoService;
-import no.nav.modiapersonoversikt.legacy.kjerneinfo.consumer.fim.person.support.KjerneinfoMapper;
-import no.nav.modiapersonoversikt.legacy.kjerneinfo.consumer.fim.person.vergemal.VergemalService;
 import no.nav.modiapersonoversikt.consumer.kodeverk.consumer.fim.kodeverk.KodeverkmanagerBi;
 import no.nav.modiapersonoversikt.infrastructure.content.ContentRetriever;
-import no.nav.modiapersonoversikt.service.*;
+import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll;
 import no.nav.modiapersonoversikt.legacy.api.service.FodselnummerAktorService;
 import no.nav.modiapersonoversikt.legacy.api.service.HenvendelseLesService;
 import no.nav.modiapersonoversikt.legacy.api.service.HenvendelseUtsendingService;
@@ -28,7 +24,12 @@ import no.nav.modiapersonoversikt.legacy.api.service.pdl.PdlOppslagService;
 import no.nav.modiapersonoversikt.legacy.api.service.psak.PsakService;
 import no.nav.modiapersonoversikt.legacy.api.service.saker.GsakKodeverk;
 import no.nav.modiapersonoversikt.legacy.api.service.saker.SakerService;
-import no.nav.modiapersonoversikt.config.endpoint.kodeverksmapper.Kodeverksmapper;
+import no.nav.modiapersonoversikt.legacy.kjerneinfo.consumer.egenansatt.EgenAnsattService;
+import no.nav.modiapersonoversikt.legacy.kjerneinfo.consumer.fim.person.PersonKjerneinfoServiceBi;
+import no.nav.modiapersonoversikt.legacy.kjerneinfo.consumer.fim.person.support.DefaultPersonKjerneinfoService;
+import no.nav.modiapersonoversikt.legacy.kjerneinfo.consumer.fim.person.support.KjerneinfoMapper;
+import no.nav.modiapersonoversikt.legacy.kjerneinfo.consumer.fim.person.vergemal.VergemalService;
+import no.nav.modiapersonoversikt.service.*;
 import no.nav.modiapersonoversikt.service.arbeidsfordeling.ArbeidsfordelingClient;
 import no.nav.modiapersonoversikt.service.arbeidsfordeling.ArbeidsfordelingV1ServiceImpl;
 import no.nav.modiapersonoversikt.service.henvendelse.DelsvarService;
@@ -45,10 +46,9 @@ import no.nav.modiapersonoversikt.service.organisasjonenhet.kontaktinformasjon.s
 import no.nav.modiapersonoversikt.service.organisasjonenhet.kontaktinformasjon.service.OrganisasjonEnhetKontaktinformasjonServiceImpl;
 import no.nav.modiapersonoversikt.service.pdl.PdlOppslagServiceImpl;
 import no.nav.modiapersonoversikt.service.saker.SakerServiceImpl;
+import no.nav.modiapersonoversikt.service.saker.mediation.BidragApiClient;
+import no.nav.modiapersonoversikt.service.saker.mediation.BidragApiClientImpl;
 import no.nav.modiapersonoversikt.service.saker.mediation.SakApiGatewayImpl;
-import no.nav.modiapersonoversikt.service.sfhenvendelse.SfHenvendelseService;
-import no.nav.modiapersonoversikt.service.sfhenvendelse.SfHenvendelseServiceImpl;
-import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.behandlehenvendelse.BehandleHenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.senduthenvendelse.SendUtHenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.henvendelse.HenvendelsePortType;
@@ -170,6 +170,12 @@ public class ServiceConfig {
                 EnvironmentUtils.getRequiredProperty("SAK_ENDPOINTURL"),
                 stsService
         );
+    }
+
+    @Bean
+    public BidragApiClient bidragApiClient() {
+        return new BidragApiClientImpl(
+                EnvironmentUtils.getRequiredProperty("BISYS_BASEURL"));
     }
 
     @Bean

@@ -6,9 +6,16 @@ import no.nav.modiapersonoversikt.infrastructure.http.AuthorizationInterceptor
 import no.nav.modiapersonoversikt.infrastructure.http.LoggingInterceptor
 import no.nav.modiapersonoversikt.legacy.api.domain.bidragsak.generated.apis.BidragSakControllerApi
 
-object BidragApiFactory {
+interface BidragApiClient {
+    fun createClient(tokenProvider: () -> String): BidragSakControllerApi
+}
+
+class BidragApiClientImpl(
+    private val baseUrl: String = EnvironmentUtils.getRequiredProperty("BISYS_ENDPOINTURL")
+) : BidragApiClient {
+
+    override
     fun createClient(tokenProvider: () -> String): BidragSakControllerApi {
-        val url = EnvironmentUtils.getRequiredProperty("BISYS_BASEURL")
         val client = RestClient.baseClient().newBuilder()
             .addInterceptor(
                 LoggingInterceptor("Bisys") { request ->
@@ -19,7 +26,6 @@ object BidragApiFactory {
             )
             .addInterceptor(AuthorizationInterceptor(tokenProvider))
             .build()
-        return BidragSakControllerApi(url, client)
+        return BidragSakControllerApi(baseUrl, client)
     }
 }
-
