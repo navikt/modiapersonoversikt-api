@@ -509,7 +509,8 @@ class RestOppgaveBehandlingServiceImplTest {
         }
 
         @Test
-        fun `oppgave tilknyttet orgnr istedetfor aktorId skal ikke automatisk legges tilbake`() {
+        @DisplayName("oppgave tilknyttet orgnr istedetfor aktorId skal ikke automatisk legges tilbake")
+        fun `oppgave tilknyttet orgnr`() {
             val henvendelseOppgave = dummyOppgave
                 .copy(
                     aktoerId = null,

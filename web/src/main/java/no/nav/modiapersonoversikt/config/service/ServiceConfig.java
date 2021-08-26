@@ -5,7 +5,7 @@ import no.nav.common.cxf.StsConfig;
 import no.nav.common.sts.NaisSystemUserTokenProvider;
 import no.nav.common.sts.SystemUserTokenProvider;
 import no.nav.common.utils.EnvironmentUtils;
-import no.nav.modiapersonoversikt.consumer.dkif.consumer.support.DkifServiceImpl;
+import no.nav.modiapersonoversikt.service.dkif.DkifServiceImpl;
 import no.nav.modiapersonoversikt.legacy.kjerneinfo.consumer.egenansatt.EgenAnsattService;
 import no.nav.modiapersonoversikt.legacy.kjerneinfo.consumer.fim.person.PersonKjerneinfoServiceBi;
 import no.nav.modiapersonoversikt.legacy.kjerneinfo.consumer.fim.person.support.DefaultPersonKjerneinfoService;
@@ -46,8 +46,6 @@ import no.nav.modiapersonoversikt.service.organisasjonenhet.kontaktinformasjon.s
 import no.nav.modiapersonoversikt.service.pdl.PdlOppslagServiceImpl;
 import no.nav.modiapersonoversikt.service.saker.SakerServiceImpl;
 import no.nav.modiapersonoversikt.service.saker.mediation.SakApiGatewayImpl;
-import no.nav.modiapersonoversikt.service.sfhenvendelse.SfHenvendelseService;
-import no.nav.modiapersonoversikt.service.sfhenvendelse.SfHenvendelseServiceImpl;
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.behandlehenvendelse.BehandleHenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.senduthenvendelse.SendUtHenvendelsePortType;
