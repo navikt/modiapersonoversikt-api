@@ -21,7 +21,8 @@ private const val RESERVASJON = "Reservert"
 class KontaktinformasjonControllerTest {
 
     private val dkifService: Dkif.Service = mockk()
-    private val controller = KontaktinformasjonController(dkifService, TilgangskontrollMock.get())
+    private val dkifRestService: Dkif.Service = mockk()
+    private val controller = KontaktinformasjonController(dkifService, dkifRestService, TilgangskontrollMock.get())
 
     @BeforeEach
     fun before() {

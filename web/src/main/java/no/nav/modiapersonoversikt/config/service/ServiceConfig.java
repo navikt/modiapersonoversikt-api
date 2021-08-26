@@ -5,6 +5,7 @@ import no.nav.common.cxf.StsConfig;
 import no.nav.common.sts.NaisSystemUserTokenProvider;
 import no.nav.common.sts.SystemUserTokenProvider;
 import no.nav.common.utils.EnvironmentUtils;
+import no.nav.modiapersonoversikt.service.dkif.Dkif;
 import no.nav.modiapersonoversikt.service.dkif.DkifServiceImpl;
 import no.nav.modiapersonoversikt.legacy.kjerneinfo.consumer.egenansatt.EgenAnsattService;
 import no.nav.modiapersonoversikt.legacy.kjerneinfo.consumer.fim.person.PersonKjerneinfoServiceBi;
@@ -31,6 +32,7 @@ import no.nav.modiapersonoversikt.legacy.api.service.saker.SakerService;
 import no.nav.modiapersonoversikt.config.endpoint.kodeverksmapper.Kodeverksmapper;
 import no.nav.modiapersonoversikt.service.arbeidsfordeling.ArbeidsfordelingClient;
 import no.nav.modiapersonoversikt.service.arbeidsfordeling.ArbeidsfordelingV1ServiceImpl;
+import no.nav.modiapersonoversikt.service.dkif.DkifServiceRestImpl;
 import no.nav.modiapersonoversikt.service.henvendelse.DelsvarService;
 import no.nav.modiapersonoversikt.service.henvendelse.DelsvarServiceImpl;
 import no.nav.modiapersonoversikt.service.kodeverk.GsakKodeverkFraFil;
@@ -206,9 +208,16 @@ public class ServiceConfig {
         return new VergemalService(personPortType, pdl, kodeverkmanagerBi);
     }
 
-    @Bean
-    DkifServiceImpl defaultDkifService(DigitalKontaktinformasjonV1 dkifV1) {
+    @Bean(name = "DkifSoap")
+    public Dkif.Service defaultDkifService(DigitalKontaktinformasjonV1 dkifV1) {
         return new DkifServiceImpl(dkifV1);
+    }
+
+    @Bean(name = "DkifRest")
+    public Dkif.Service restDkifService() {
+        return new DkifServiceRestImpl(
+                EnvironmentUtils.getRequiredProperty("DKIF_REST_URL")
+        );
     }
 
     @Bean

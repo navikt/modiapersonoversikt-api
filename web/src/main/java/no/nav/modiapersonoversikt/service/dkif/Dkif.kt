@@ -25,4 +25,10 @@ object Dkif {
         val sistOppdatert: LocalDate? = null,
         val sisVerifisert: LocalDate? = null
     )
+
+    val INGEN_KONTAKTINFO = DigitalKontaktinformasjon(
+        reservasjon = "",
+        epostadresse = Dkif.Epostadresse(value = ""),
+        mobiltelefonnummer = Dkif.MobilTelefon(value = "")
+    )
 }

@@ -1,5 +1,6 @@
 package no.nav.modiapersonoversikt.service.dkif;
 
+import no.nav.common.health.selftest.SelfTestCheck;
 import no.nav.modiapersonoversikt.infrastructure.core.exception.ApplicationException;
 import no.nav.tjeneste.virksomhet.digitalkontaktinformasjon.v1.DigitalKontaktinformasjonV1;
 import no.nav.tjeneste.virksomhet.digitalkontaktinformasjon.v1.HentDigitalKontaktinformasjonKontaktinformasjonIkkeFunnet;
