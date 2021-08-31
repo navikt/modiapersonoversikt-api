@@ -1,4 +1,4 @@
-package no.nav.modiapersonoversikt.consumer.dkif.config.spring;
+package no.nav.modiapersonoversikt.config;
 
 import no.nav.common.cxf.CXFClient;
 import no.nav.common.cxf.StsConfig;

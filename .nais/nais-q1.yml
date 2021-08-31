@@ -206,6 +206,8 @@ spec:
       value: "http://maven.adeo.no/nexus/content/groups/public/no/nav/tjenester/nav-arbeidsfordeling-v1-tjenestespesifikasjon/1.1.0/nav-arbeidsfordeling-v1-tjenestespesifikasjon-1.1.0.zip"
     - name: VIRKSOMHET_DIGITALKONTAKINFORMASJON_V1_ENDPOINTURL
       value: "https://dkif.nais.preprod.local/ws/DigitalKontaktinformasjon/v1"
+    - name: DKIF_REST_URL
+      value: "https://dkif.dev.adeo.no/"
     - name: VIRKSOMHET_DIGITALKONTAKINFORMASJON_V1_SECURITYTOKEN
       value: "SAML"
     - name: VIRKSOMHET_DIGITALKONTAKINFORMASJON_V1_WSDLURL
