@@ -7,6 +7,8 @@ import kotlin.random.Random
 
 typealias Reporter = (header: String, fields: Map<String, Any?>) -> Unit
 object Scientist {
+
+    internal val forceExperiment: ThreadLocal<Boolean> = ThreadLocal()
     private val defaultReporter: Reporter = { header, fields -> TjenestekallLogger.info(header, fields) }
     data class Config(
         val name: String,
