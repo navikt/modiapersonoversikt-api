@@ -8,6 +8,7 @@ import no.nav.common.auth.subject.IdentType;
 import no.nav.common.log.LogFilter;
 import no.nav.common.rest.filter.SetStandardHttpHeadersFilter;
 import no.nav.common.utils.EnvironmentUtils;
+import no.nav.modiapersonoversikt.infrastructure.scientist.ScientistFilter;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -60,6 +61,15 @@ public class LoginContext {
         registration.setFilter(new SetStandardHttpHeadersFilter());
         registration.setOrder(3);
         registration.addUrlPatterns("/*");
+        return registration;
+    }
+
+    @Bean
+    public FilterRegistrationBean scientistFilterRegistrationBean() {
+        FilterRegistrationBean<ScientistFilter> registration = new FilterRegistrationBean<>();
+        registration.setFilter(new ScientistFilter());
+        registration.setOrder(4);
+        registration.addUrlPatterns("/rest/*");
         return registration;
     }
 

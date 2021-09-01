@@ -35,6 +35,7 @@ import org.joda.time.LocalDate
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.slf4j.MDC
 import java.time.OffsetDateTime
@@ -135,7 +136,8 @@ class SakerServiceImplTest {
     }
 
     @Test
-    fun `oppretter ikke generell oppfolgingssak og fjerner generell oppfolgingssak dersom fagsaker inneholder oppfolgingssak`() {
+    @DisplayName("oppretter ikke generell oppfolgingssak og fjerner generell oppfolgingssak dersom fagsaker inneholder oppfolgingssak")
+    fun `oppretter ikke generell oppfolgingssak`() {
         every { sakApiGateway.hentSaker(any()) } returns createOppfolgingSaksliste()
         val saker = sakerService.hentSammensatteSakerResultat(FNR).saker.stream()
             .filter(harTemaKode(TEMAKODE_OPPFOLGING)).toList()
@@ -144,7 +146,8 @@ class SakerServiceImplTest {
     }
 
     @Test
-    fun `oppretter ìkke generell oppfolgingssak dersom denne finnes allerede selv om fagsaker ikke inneholder oppfolgingssak`() {
+    @DisplayName("oppretter ìkke generell oppfolgingssak dersom denne finnes allerede selv om fagsaker ikke inneholder oppfolgingssak")
+    fun `oppretter ìkke generell oppfolgingssak dersom denne finnes allerede`() {
         val saker =
             sakerService.hentSaker(FNR).saker.stream().filter(harTemaKode(TEMAKODE_OPPFOLGING)).toList()
         assertThat(saker.size, `is`(1))

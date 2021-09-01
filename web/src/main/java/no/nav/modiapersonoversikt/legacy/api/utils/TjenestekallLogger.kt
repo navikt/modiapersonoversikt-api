@@ -6,6 +6,7 @@ import java.lang.StringBuilder
 private val tjenestekallLogg = LoggerFactory.getLogger("SecureLog")
 object TjenestekallLogger {
     fun info(header: String, fields: Map<String, Any?>) = tjenestekallLogg.info(format(header, fields))
+    fun warn(header: String, fields: Map<String, Any?>) = tjenestekallLogg.warn(format(header, fields))
     fun error(header: String, fields: Map<String, Any?>) = tjenestekallLogg.error(format(header, fields))
     fun error(header: String, fields: Map<String, Any?>, throwable: Throwable) = tjenestekallLogg.error(format(header, fields), throwable)
 
