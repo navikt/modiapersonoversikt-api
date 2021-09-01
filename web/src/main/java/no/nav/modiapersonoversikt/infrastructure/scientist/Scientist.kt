@@ -7,6 +7,8 @@ import kotlin.random.Random
 
 typealias Reporter = (header: String, fields: Map<String, Any?>) -> Unit
 object Scientist {
+
+    internal val forceExperiment: ThreadLocal<Boolean?> = ThreadLocal()
     private val defaultReporter: Reporter = { header, fields -> TjenestekallLogger.info(header, fields) }
     data class Config(
         val name: String,
@@ -49,7 +51,7 @@ object Scientist {
             control: () -> T,
             experiment: () -> Any?
         ): Result<T> {
-            if (Random.nextDouble() < config.experimentRate) {
+            if (forceExperiment.get() == true || Random.nextDouble() < config.experimentRate) {
                 val fields = mutableMapOf<String, Any?>()
                 val controlResult = timer.time(control)
                 val experimentResult = runCatching {

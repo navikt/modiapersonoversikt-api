@@ -1,7 +1,6 @@
 package no.nav.modiapersonoversikt.service.saker.mediation
 
 import com.github.tomakehurst.wiremock.WireMockServer
-import com.github.tomakehurst.wiremock.client.MappingBuilder
 import com.github.tomakehurst.wiremock.client.WireMock.*
 import com.github.tomakehurst.wiremock.matching.AnythingPattern
 import com.github.tomakehurst.wiremock.matching.RequestPatternBuilder
@@ -11,6 +10,9 @@ import io.mockk.impl.annotations.MockK
 import no.nav.common.log.MDCConstants
 import no.nav.common.sts.SystemUserTokenProvider
 import no.nav.modiapersonoversikt.legacy.api.utils.RestConstants
+import no.nav.modiapersonoversikt.utils.WireMockUtils
+import no.nav.modiapersonoversikt.utils.WireMockUtils.getWithBody
+import no.nav.modiapersonoversikt.utils.WireMockUtils.postWithBody
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.core.Is.`is`
 import org.junit.jupiter.api.BeforeEach
@@ -109,24 +111,6 @@ internal class SakApiGatewayTest {
         }
     }
 
-    private fun getWithBody(statusCode: Int = 200, body: String? = null): WireMockServer.() -> Unit = {
-        this.stubFor(get(anyUrl()).withBody(statusCode, body))
-    }
-
-    private fun postWithBody(statusCode: Int = 200, body: String? = null): WireMockServer.() -> Unit = {
-        this.stubFor(post(anyUrl()).withBody(statusCode, body))
-    }
-
-    private fun MappingBuilder.withBody(statusCode: Int = 200, body: String? = null): MappingBuilder {
-        this.willReturn(
-            aResponse()
-                .withStatus(statusCode)
-                .withHeader("Content-Type", "application/json")
-                .withBody(body)
-        )
-        return this
-    }
-
     private fun verifyHeaders(server: WireMockServer, call: RequestPatternBuilder): () -> Unit = {
         server.verify(
             call
@@ -141,21 +125,20 @@ internal class SakApiGatewayTest {
         verify: ((WireMockServer) -> Unit)? = null,
         test: (SakApiGateway) -> Unit
     ) {
-        val wireMockServer = WireMockServer()
-        try {
-            stub(wireMockServer)
-            wireMockServer.start()
-
-            val client = SakApiGatewayImpl("http://localhost:${wireMockServer.port()}", stsService)
-            test(client)
-
-            if (verify == null) {
-                verifyHeaders(wireMockServer, getRequestedFor(urlEqualTo("/api/v1/saker?aktoerId=$AKTOERID")))()
-            } else {
-                verify(wireMockServer)
+        WireMockUtils.withMockGateway(
+            stub = stub,
+            verify = {
+                if (verify == null) {
+                    verifyHeaders(it, getRequestedFor(urlEqualTo("/api/v1/saker?aktoerId=$AKTOERID")))()
+                }
+            },
+            test = { url ->
+                val client = SakApiGatewayImpl(
+                    baseUrl = url,
+                    stsService = stsService
+                )
+                test(client)
             }
-        } finally {
-            wireMockServer.stop()
-        }
+        )
     }
 }

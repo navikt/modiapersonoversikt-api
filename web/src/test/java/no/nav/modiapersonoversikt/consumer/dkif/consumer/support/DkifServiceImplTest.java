@@ -1,5 +1,7 @@
 package no.nav.modiapersonoversikt.consumer.dkif.consumer.support;
 
+import no.nav.modiapersonoversikt.service.dkif.Dkif;
+import no.nav.modiapersonoversikt.service.dkif.DkifServiceImpl;
 import no.nav.modiapersonoversikt.infrastructure.core.exception.ApplicationException;
 import no.nav.tjeneste.virksomhet.digitalkontaktinformasjon.v1.DigitalKontaktinformasjonV1;
 import no.nav.tjeneste.virksomhet.digitalkontaktinformasjon.v1.HentDigitalKontaktinformasjonKontaktinformasjonIkkeFunnet;
@@ -39,10 +41,10 @@ public class DkifServiceImplTest {
                                 .withEpostadresse(new WSEpostadresse().withValue(EPOST))
                                 .withPersonident(PERSONIDENT)));
 
-        WSHentDigitalKontaktinformasjonResponse response = service.hentDigitalKontaktinformasjon(PERSONIDENT);
+        Dkif.DigitalKontaktinformasjon response = service.hentDigitalKontaktinformasjon(PERSONIDENT);
 
-        assertThat(response.getDigitalKontaktinformasjon().getPersonident(), is(PERSONIDENT));
-        assertThat(response.getDigitalKontaktinformasjon().getEpostadresse().getValue(), is(EPOST));
+        assertThat(response.getPersonident(), is(PERSONIDENT));
+        assertThat(response.getEpostadresse().getValue(), is(EPOST));
     }
 
     @Test
@@ -51,11 +53,11 @@ public class DkifServiceImplTest {
         when(wsService.hentDigitalKontaktinformasjon(any(WSHentDigitalKontaktinformasjonRequest.class)))
             .thenThrow(new HentDigitalKontaktinformasjonKontaktinformasjonIkkeFunnet());
 
-        WSHentDigitalKontaktinformasjonResponse response = service.hentDigitalKontaktinformasjon(PERSONIDENT);
+        Dkif.DigitalKontaktinformasjon response = service.hentDigitalKontaktinformasjon(PERSONIDENT);
 
-        assertThat(response.getDigitalKontaktinformasjon().getEpostadresse().getValue(), is(""));
-        assertThat(response.getDigitalKontaktinformasjon().getMobiltelefonnummer().getValue(), is(""));
-        assertThat(response.getDigitalKontaktinformasjon().getReservasjon(), is(""));
+        assertThat(response.getEpostadresse().getValue(), is(""));
+        assertThat(response.getMobiltelefonnummer().getValue(), is(""));
+        assertThat(response.getReservasjon(), is(""));
     }
 
     @Test(expected= ApplicationException.class)
