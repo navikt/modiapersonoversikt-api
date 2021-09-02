@@ -4,6 +4,7 @@ import no.nav.common.rest.client.RestClient
 import no.nav.common.utils.EnvironmentUtils
 import no.nav.modiapersonoversikt.infrastructure.http.AuthorizationInterceptor
 import no.nav.modiapersonoversikt.infrastructure.http.LoggingInterceptor
+import no.nav.modiapersonoversikt.infrastructure.http.XCorrelationIdInterceptor
 import no.nav.modiapersonoversikt.legacy.api.domain.bidragsak.generated.apis.BidragSakControllerApi
 
 interface BidragApiClient {
@@ -17,6 +18,7 @@ class BidragApiClientImpl(
     override
     fun createClient(tokenProvider: () -> String): BidragSakControllerApi {
         val client = RestClient.baseClient().newBuilder()
+            .addInterceptor(XCorrelationIdInterceptor())
             .addInterceptor(
                 LoggingInterceptor("Bisys") { request ->
                     requireNotNull(request.header("X-Correlation-ID")) {
