@@ -1,0 +1,459 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "description": "REST-grensesnittet som er tilgjengelig for konsumering av andre applikasjoner og komponenter, for å hente informasjon om kodeverkene som finnes.",
+    "title": "API versjon 1"
+  },
+  "host": "kodeverk.nais.preprod.local",
+  "basePath": "/",
+  "tags": [
+    {
+      "name": "hierarki",
+      "description": "Endepunkt for å hente hierarki"
+    },
+    {
+      "name": "kodeverk",
+      "description": "Endepunkt for å hente kodeverk"
+    }
+  ],
+  "paths": {
+    "/api/v1/hierarki": {
+      "get": {
+        "tags": [
+          "hierarki"
+        ],
+        "summary": "Returnerer en liste med navnene på alle hierarkiene som er registrert.",
+        "operationId": "hierarkiUsingGET",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "Nav-Call-Id",
+            "in": "header",
+            "description": "En ID som identifiserer kallkjeden som dette kallet er en del av.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "Nav-Consumer-Id",
+            "in": "header",
+            "description": "ID'en på systemet som gjør kallet, som regel service brukeren til applikasjonen, for eksempel \"srvmedl2\".",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/GetHierarkiResponse"
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        },
+        "deprecated": false
+      }
+    },
+    "/api/v1/hierarki/{hierarkinavn}/noder": {
+      "get": {
+        "tags": [
+          "hierarki"
+        ],
+        "summary": "Returnerer to lister som viser informasjon om et hierarki. Første liste er nivåer, andre liste er hierarkiet.",
+        "operationId": "noderTilHierarkiUsingGET",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "Nav-Call-Id",
+            "in": "header",
+            "description": "En ID som identifiserer kallkjeden som dette kallet er en del av.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "Nav-Consumer-Id",
+            "in": "header",
+            "description": "Nav-Consumer-Id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "hierarkinavn",
+            "in": "path",
+            "description": "Hvilket hierarki man skal hente.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "spraak",
+            "in": "query",
+            "description": "En liste over de språkene som termene skal returneres på. Tjenesten vil hente ut alle termene på norsk. Om du ønsker flere spraak kan du angi det. Eksempelverdier er \"nb\" og \"nn\" for henholdsvis bokmål og nynorsk.",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "collectionFormat": "multi",
+            "allowEmptyValue": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/GetHierarkiNoderResponse"
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "deprecated": false
+      }
+    },
+    "/api/v1/kodeverk": {
+      "get": {
+        "tags": [
+          "kodeverk"
+        ],
+        "summary": "Returnerer en liste med navnene på alle kodeverkene som er registrert.",
+        "operationId": "kodeverkUsingGET",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "Nav-Call-Id",
+            "in": "header",
+            "description": "En ID som identifiserer kallkjeden som dette kallet er en del av.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "Nav-Consumer-Id",
+            "in": "header",
+            "description": "ID'en på systemet som gjør kallet, som regel service brukeren til applikasjonen, for eksempel \"srvmedl2\".",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/GetKodeverkResponse"
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        },
+        "deprecated": false
+      }
+    },
+    "/api/v1/kodeverk/{kodeverksnavn}/koder": {
+      "get": {
+        "tags": [
+          "kodeverk"
+        ],
+        "summary": "Returnerer en liste med de kodene som er registrert under det angitte kodeverket.",
+        "operationId": "koderUsingGET",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "Nav-Call-Id",
+            "in": "header",
+            "description": "En ID som identifiserer kallkjeden som dette kallet er en del av.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "Nav-Consumer-Id",
+            "in": "header",
+            "description": "Nav-Consumer-Id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "kodeverksnavn",
+            "in": "path",
+            "description": "Hvilket kodeverk man skal hente koder fra.",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/GetKodeverkKoderResponse"
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "deprecated": false
+      }
+    },
+    "/api/v1/kodeverk/{kodeverksnavn}/koder/betydninger": {
+      "get": {
+        "tags": [
+          "kodeverk"
+        ],
+        "summary": "Returnerer informasjon om betydningene av kodene som finnes i et gitt kodeverk.",
+        "operationId": "betydningUsingGET",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "Nav-Call-Id",
+            "in": "header",
+            "description": "En ID som identifiserer kallkjeden som dette kallet er en del av.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "Nav-Consumer-Id",
+            "in": "header",
+            "description": "Nav-Consumer-Id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "ekskluderUgyldige",
+            "in": "query",
+            "description": "Kan brukes for filtrering av betydninger basert på gyldighetsperiodene. Er denne satt til \"false\" så vil alle betydningene for alle kodene i kodeverket returneres, og er den \"true\" så vil kun de betydningene som er gyldige på den angitte \"oppslagsdato\" inkluderes. Dersom denne ikke er spesifisert vil den settes til \"true\".",
+            "required": false,
+            "type": "boolean",
+            "allowEmptyValue": false
+          },
+          {
+            "name": "kodeverksnavn",
+            "in": "path",
+            "description": "Hvilket kodeverk man skal hente koders betydninger fra.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "oppslagsdato",
+            "in": "query",
+            "description": "Den funksjonelle datoen man henter betydninger for, på YYYY-MM-DD format. Denne parameteren har ingen effekt med mindre \"ekskluderUgyldige\" er satt til \"true\". Dersom denne ikke er spesifisert vil dagens dato brukes.",
+            "required": false,
+            "type": "string",
+            "format": "date",
+            "allowEmptyValue": false
+          },
+          {
+            "name": "spraak",
+            "in": "query",
+            "description": "En liste over de språkene som beskrivelsene skal returneres på. Tjenesten vil ikke feile dersom de angitte språkene er utilgjengelige, men beskrivelsene vil komme på bokmål isteden. Eksempelverdier er \"nb\" og \"nn\" for henholdsvis bokmål og nynorsk.",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "collectionFormat": "multi",
+            "allowEmptyValue": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/GetKodeverkKoderBetydningerResponse"
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "deprecated": false
+      }
+    }
+  },
+  "definitions": {
+    "Beskrivelse": {
+      "type": "object",
+      "required": [
+        "tekst",
+        "term"
+      ],
+      "properties": {
+        "tekst": {
+          "type": "string",
+          "description": "En mer utfyllende versjon av beskrivelsen, og derfor passer denne verdien bedre som ledetekster der antall tegn ikke er et like stort problem. Ikke alle beskrivelser har en utfyllende versjon, og i de tilfellene vil kortversjonen gå igjen i dette feltet."
+        },
+        "term": {
+          "type": "string",
+          "description": "En kort versjon av beskrivelsen, og passer derfor godt til fremvisning i GUI-elementer."
+        }
+      },
+      "title": "Beskrivelse",
+      "description": "En beskrivelse er den tekstlige delen av betydningen til en kode, og den kan derfor komme på flere språk. For eksempel, landkoden \"NOR\" kan ha beskrivelsen \"Norge\" på norsk, men \"Norway\" på engelsk. Dersom man ber om å få beskrivelsene på et språk som ikke finnes, så vil bokmålsversjonen brukes isteden."
+    },
+    "Betydning": {
+      "type": "object",
+      "required": [
+        "beskrivelser",
+        "gyldigFra",
+        "gyldigTil"
+      ],
+      "properties": {
+        "beskrivelser": {
+          "type": "object",
+          "description": "En samling beskrivelser for denne betydningen, mappet til en språkkode.",
+          "additionalProperties": {
+            "$ref": "#/definitions/Beskrivelse"
+          }
+        },
+        "gyldigFra": {
+          "type": "string",
+          "format": "date",
+          "description": "Når denne betydningen trådte i kraft, på YYYY-MM-DD format."
+        },
+        "gyldigTil": {
+          "type": "string",
+          "format": "date",
+          "description": "Når denne betydningen slutter å være gyldig, på YYYY-MM-DD format."
+        }
+      },
+      "title": "Betydning",
+      "description": "En betydning er en tidsbegrenset periode hvor en gitt kode har en reell betydning. For eksempel kunne koden \"OSLO\" hatt to betydninger: en fra 1048 til 1624, og en fra 1925. Dette er fordi Oslo ble omdøpt til Christiania i en periode."
+    },
+    "GetHierarkiNoderResponse": {
+      "type": "object",
+      "required": [
+        "hierarkinivaaer",
+        "noder"
+      ],
+      "properties": {
+        "hierarkinivaaer": {
+          "type": "array",
+          "description": "En liste over kodeverk som tilsvarer nivåene i hierarkiet. ",
+          "items": {
+            "type": "string"
+          }
+        },
+        "noder": {
+          "type": "object",
+          "description": "Et map med alle de gyldige nodene i et hierarki. ",
+          "additionalProperties": {
+            "$ref": "#/definitions/Hierarkinode"
+          }
+        }
+      },
+      "title": "GetHierarkiNoderResponse",
+      "description": "Responsen fra GET /api/v1/hierarki/{hierarkinavn}/noder/."
+    },
+    "GetHierarkiResponse": {
+      "type": "object",
+      "required": [
+        "hierarkinavn"
+      ],
+      "properties": {
+        "hierarkinavn": {
+          "type": "array",
+          "description": "En liste med navnene på alle eksisterende hierarki.",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "title": "GetHierarkiResponse",
+      "description": "Responsen fra GET /api/v1/hierarki."
+    },
+    "GetKodeverkKoderBetydningerResponse": {
+      "type": "object",
+      "required": [
+        "betydninger"
+      ],
+      "properties": {
+        "betydninger": {
+          "type": "object",
+          "description": "Et map med alle eksisterende koder for kodeverket og alle tilhørende betydninger som passer søkekriteriene.",
+          "additionalProperties": {
+            "type": "array",
+            "items": {
+              "$ref": "#/definitions/Betydning"
+            }
+          }
+        }
+      },
+      "title": "GetKodeverkKoderBetydningerResponse",
+      "description": "Responsen fra GET /api/v1/kodeverk/{kodeverksnavn}/koder/betydninger."
+    },
+    "GetKodeverkKoderResponse": {
+      "type": "object",
+      "required": [
+        "koder"
+      ],
+      "properties": {
+        "koder": {
+          "type": "array",
+          "description": "En liste med alle de eksisterende kodene som tilhører kodeverket.",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "title": "GetKodeverkKoderResponse",
+      "description": "Responsen fra GET /api/v1/kodeverk/{kodeverksnavn}/koder."
+    },
+    "GetKodeverkResponse": {
+      "type": "object",
+      "required": [
+        "kodeverksnavn"
+      ],
+      "properties": {
+        "kodeverksnavn": {
+          "type": "array",
+          "description": "En liste med navnene på alle eksisterende kodeverk.",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "title": "GetKodeverkResponse",
+      "description": "Responsen fra GET /api/v1/kodeverk."
+    },
+    "Hierarkinode": {
+      "type": "object",
+      "required": [
+        "kode"
+      ],
+      "properties": {
+        "kode": {
+          "type": "string",
+          "description": "Kode er navn på kode i et kodeverk og vil være navnet til en node."
+        },
+        "termer": {
+          "type": "object",
+          "description": "Termene er er beskrivelsen for noden, mappet til en språkkode.",
+          "additionalProperties": {
+            "type": "string"
+          }
+        }
+      },
+      "title": "Hierarkinode",
+      "description": "Et hierarki inneholder kodeverk og koder som er fremstilt på en hierarkisk måte. For eksempel, hierarkiet Geografi, inneholder flere nivåer av kodeverk som inneholder koder. "
+    }
+  }
+}

@@ -36,6 +36,7 @@
         <module>saf-api</module>
         <module>bisys-api</module>
         <module>dkif-api</module>
+        <module>kodeverk-api</module>
     </modules>
 
     <dependencyManagement>

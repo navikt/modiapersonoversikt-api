@@ -9,7 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>dkif-api</artifactId>
+    <artifactId>kodeverk-api</artifactId>
 
     <properties>
         <maven.compiler.source>11</maven.compiler.source>
@@ -53,10 +53,10 @@
                             <goal>generate</goal>
                         </goals>
                         <configuration>
-                            <inputSpec>${project.basedir}/src/main/resources/dkif/openapi.json</inputSpec>
+                            <inputSpec>${project.basedir}/src/main/resources/kodeverk/openapi.json</inputSpec>
                             <generatorName>kotlin</generatorName>
                             <library>jvm-okhttp3</library>
-                            <packageName>no.nav.modiapersonoversikt.legacy.api.domain.dkif.generated</packageName>
+                            <packageName>no.nav.modiapersonoversikt.legacy.api.domain.kodeverk.generated</packageName>
                             <modelNameSuffix>DTO</modelNameSuffix>
                             <templateDirectory>${project.basedir}/../openapi-templates</templateDirectory>
                             <configOptions>
@@ -79,7 +79,8 @@
                         </goals>
                         <configuration>
                             <sourceDirs>
-                                <sourceDir>${project.build.directory}/generated-sources/openapi/src/main/kotlin</sourceDir>
+                                <sourceDir>${project.build.directory}/generated-sources/openapi/src/main/kotlin
+                                </sourceDir>
                             </sourceDirs>
                         </configuration>
                     </execution>
