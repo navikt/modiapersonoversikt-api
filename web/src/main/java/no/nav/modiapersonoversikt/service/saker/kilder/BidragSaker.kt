@@ -8,25 +8,24 @@ import no.nav.modiapersonoversikt.legacy.api.domain.saker.Sak.BIDRAG_MARKOR
 import no.nav.modiapersonoversikt.service.saker.SakerKilde
 import no.nav.modiapersonoversikt.service.saker.mediation.BidragApiClient
 
-internal class BidragSaker(private val bidragApiClient: BidragApiClient) : SakerKilde {
-    override val kildeNavn: String
-        get() = "BIDRAG"
+internal class BidragSaker(bidragApiClient: BidragApiClient) : SakerKilde {
+    private val bidragSakControllerApi = bidragApiClient.createClient {
+        SubjectHandler.getSsoToken(SsoToken.Type.OIDC)
+            .orElseThrow { IllegalStateException("Fant ikke OIDC-token") }
+    }
+
+    override val kildeNavn: String = "BIDRAG"
 
     override fun leggTilSaker(fnr: String, saker: MutableList<Sak>) {
-        val bidragSakControllerApi = bidragApiClient.createClient {
-            SubjectHandler.getSsoToken(SsoToken.Type.OIDC)
-                .orElseThrow { IllegalStateException("Fant ikke OIDC-token") }
-        }
-
         val sakerFra = bidragSakControllerApi.find(fnr)
 
         val tilSaker = sakerFra.map { BIDRAGSAK_TIL_SAK.invoke(it) }
         saker.addAll(tilSaker)
-        saker.add(sakInstant())
+        saker.add(generellBidragsSak())
     }
 
     companion object {
-        fun sakInstant(): Sak {
+        fun generellBidragsSak(): Sak {
             return Sak().apply {
                 saksId = "-"
                 fagsystemSaksId = "-"
@@ -42,7 +41,7 @@ internal class BidragSaker(private val bidragApiClient: BidragApiClient) : Saker
         }
 
         val BIDRAGSAK_TIL_SAK = { bidragSakDto: BidragSakDto ->
-            sakInstant().apply {
+            generellBidragsSak().apply {
                 saksId = bidragSakDto.saksnummer
                 sakstype = Sak.SAKSTYPE_MED_FAGSAK
                 fagsystemKode = Sak.FAGSYSTEMKODE_BIDRAG
