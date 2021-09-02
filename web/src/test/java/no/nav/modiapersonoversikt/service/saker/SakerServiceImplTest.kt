@@ -219,7 +219,6 @@ class SakerServiceImplTest {
     fun `knytt behandlingskjede til sak kaller alternativ metode om bidrags hack saken er valgt`() {
         val valgtNavEnhet = "0219"
         val sak = Sak()
-        sak.syntetisk = true
         sak.temaKode = BIDRAG_MARKOR
         sakerService.knyttBehandlingskjedeTilSak(
             FNR,

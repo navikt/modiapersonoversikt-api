@@ -20,10 +20,6 @@ public class Sak implements Serializable, Comparable<Sak> {
     public String temaKode, temaNavn, fagsystemKode, fagsystemNavn, sakstype;
     public DateTime opprettetDato;
     public Boolean finnesIGsak = false, finnesIPsak = false;
-    /**
-     * Brukes for å markere saker som må spesial-håndteres
-     */
-    public Boolean syntetisk = false;
 
     public static final String TEMAKODE_OPPFOLGING = "OPP";
     public static final String TEMAKODE_KLAGE_ANKE = "KLA";

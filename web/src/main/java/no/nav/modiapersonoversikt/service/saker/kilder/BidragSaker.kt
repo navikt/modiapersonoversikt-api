@@ -38,7 +38,6 @@ internal class BidragSaker(private val bidragApiClient: BidragApiClient) : Saker
                 opprettetDato = null
                 finnesIGsak = false
                 finnesIPsak = false
-                syntetisk = true
             }
         }
 
@@ -48,7 +47,6 @@ internal class BidragSaker(private val bidragApiClient: BidragApiClient) : Saker
                 sakstype = Sak.SAKSTYPE_MED_FAGSAK
                 fagsystemKode = Sak.FAGSYSTEMKODE_BIDRAG
                 temaKode = Sak.FAGSYSTEMKODE_BIDRAG
-                syntetisk = false
             }
         }
     }
