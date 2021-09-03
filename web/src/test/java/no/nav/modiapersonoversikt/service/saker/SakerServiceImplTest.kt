@@ -17,7 +17,6 @@ import no.nav.modiapersonoversikt.legacy.api.service.FodselnummerAktorService
 import no.nav.modiapersonoversikt.legacy.api.service.kodeverk.StandardKodeverk
 import no.nav.modiapersonoversikt.legacy.api.service.psak.PsakService
 import no.nav.modiapersonoversikt.legacy.api.service.saker.GsakKodeverk
-import no.nav.modiapersonoversikt.service.saker.mediation.BidragApiClient
 import no.nav.modiapersonoversikt.service.saker.mediation.SakApiGateway
 import no.nav.modiapersonoversikt.service.saker.mediation.SakDto
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.behandlehenvendelse.BehandleHenvendelsePortType
@@ -71,9 +70,6 @@ class SakerServiceImplTest {
     @MockK
     private lateinit var bidragSakControllerApi: BidragSakControllerApi
 
-    @MockK
-    private lateinit var bidragApiClient: BidragApiClient
-
     @InjectMockKs
     private lateinit var sakerService: SakerServiceImpl
 
@@ -87,7 +83,6 @@ class SakerServiceImplTest {
         every { gsakKodeverk.hentFagsystemMapping() } returns emptyMap()
         every { standardKodeverk.getArkivtemaNavn(any()) } returns null
         every { fodselnummerAktorService.hentAktorIdForFnr(any()) } returns "123456789"
-        every { bidragApiClient.createClient(any()) } returns bidragSakControllerApi
         every { bidragSakControllerApi.find(any()) } returns listOf(BidragSakDto(roller = listOf(), saksnummer = "123", erParagraf19 = false))
 
         mockkStatic(SubjectHandler::class)
