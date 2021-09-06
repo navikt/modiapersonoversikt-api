@@ -175,7 +175,7 @@ public class ServiceConfig {
     }
 
     @Bean
-    public BidragSakControllerApi bidragApiClient() {
+    public BidragSakControllerApi bidragSakControllerApi() {
         return new BidragSakControllerApi(
                 EnvironmentUtils.getRequiredProperty("BISYS_BASEURL"),
                 BidragApiClient.INSTANCE.getClient()
