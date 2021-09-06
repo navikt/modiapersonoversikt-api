@@ -6,11 +6,12 @@ import no.nav.modiapersonoversikt.legacy.api.domain.saker.Sak
 import no.nav.modiapersonoversikt.legacy.api.domain.saker.Sak.BIDRAG_MARKOR
 import no.nav.modiapersonoversikt.service.saker.SakerKilde
 
+private const val hentDataFraBisys = false
 internal class BidragSaker(private val client: BidragSakControllerApi) : SakerKilde {
     override val kildeNavn: String = "BIDRAG"
 
     override fun leggTilSaker(fnr: String, saker: MutableList<Sak>) {
-        val sakerFra = client.find(fnr)
+        val sakerFra = if (hentDataFraBisys) client.find(fnr) else emptyList()
 
         val tilSaker = sakerFra.map { BIDRAGSAK_TIL_SAK.invoke(it) }
         saker.addAll(tilSaker)
@@ -26,7 +27,7 @@ internal class BidragSaker(private val client: BidragSakControllerApi) : SakerKi
                 temaNavn = "Bidrag"
                 fagsystemKode = ""
                 fagsystemNavn = "Kopiert inn i Bisys"
-                sakstype = Sak.SAKSTYPE_GENERELL
+                sakstype = if (hentDataFraBisys) Sak.SAKSTYPE_GENERELL else Sak.SAKSTYPE_MED_FAGSAK
                 opprettetDato = null
                 finnesIGsak = false
                 finnesIPsak = false
