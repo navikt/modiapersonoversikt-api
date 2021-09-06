@@ -1,0 +1,209 @@
+query($ident: ID!){
+    hentPerson(ident: $ident) {
+        folkeregisteridentifikator {
+            identifikasjonsnummer
+            status
+            type
+        }
+        navn {
+            fornavn
+            mellomnavn
+            etternavn
+        }
+        kjoenn {
+            kjoenn
+        }
+        foedsel {
+            foedselsdato
+        }
+        adressebeskyttelse {
+            gradering
+        }
+        statsborgerskap {
+            land,
+            gyldigFraOgMed,
+            gyldigTilOgMed
+        }
+        doedsfall {
+            doedsdato
+        }
+        folkeregisterpersonstatus {
+            status
+        }
+        sivilstand {
+            type
+            gyldigFraOgMed
+        }
+        sikkerhetstiltak {
+            tiltakstype
+            beskrivelse
+            gyldigFraOgMed
+            gyldigTilOgMed
+        }
+        kontaktinformasjonForDoedsbo {
+            skifteform
+            attestutstedelsesdato
+            personSomKontakt {
+                foedselsdato
+                personnavn {
+                    fornavn
+                    mellomnavn
+                    etternavn
+                }
+                identifikasjonsnummer
+            }
+            advokatSomKontakt {
+                personnavn {
+                    fornavn
+                    mellomnavn
+                    etternavn
+                }
+                organisasjonsnavn
+                organisasjonsnummer
+            }
+            organisasjonSomKontakt {
+                organisasjonsnavn
+                organisasjonsnummer
+                kontaktperson {
+                    fornavn
+                    mellomnavn
+                    etternavn
+                }
+            }
+            adresse {
+                adresselinje1
+                adresselinje2
+                poststedsnavn
+                postnummer
+                landkode
+            }
+        }
+        tilrettelagtKommunikasjon {
+            talespraaktolk {
+                spraak
+            }
+            tegnspraaktolk {
+                spraak
+            }
+        }
+        fullmakt {
+            motpartsPersonident
+            motpartsRolle
+            omraader
+            gyldigFraOgMed
+            gyldigTilOgMed
+        }
+        telefonnummer {
+            landskode
+            nummer
+            prioritet
+            metadata {
+                endringer {
+                    registrert
+                    registrertAv
+                }
+            }
+        }
+        vergemaalEllerFremtidsfullmakt {
+            type
+            embete
+            vergeEllerFullmektig {
+                navn  {
+                    fornavn
+                    mellomnavn
+                    etternavn
+                }
+                motpartsPersonident
+                omfang
+                omfangetErInnenPersonligOmraade
+            }
+            folkeregistermetadata {
+                gyldighetstidspunkt
+                opphoerstidspunkt
+            }
+        }
+        foreldreansvar {
+            ansvar
+            ansvarlig
+            ansvarssubjekt
+            metadata {
+                historisk
+            }
+            ansvarligUtenIdentifikator {
+                navn {
+                    fornavn
+                    mellomnavn
+                    etternavn
+                }
+                foedselsdato
+                statsborgerskap
+                kjoenn
+            }
+        }
+        forelderBarnRelasjon {
+            relatertPersonsIdent
+            relatertPersonsRolle
+        }
+        deltBosted{
+            startdatoForKontrakt
+            sluttdatoForKontrakt
+            coAdressenavn
+            vegadresse{
+                matrikkelId
+                husnummer
+                husbokstav
+                bruksenhetsnummer
+                adressenavn
+                kommunenummer
+                bydelsnummer
+                tilleggsnavn
+                postnummer
+            }
+            matrikkeladresse{
+                matrikkelId
+                bruksenhetsnummer
+                tilleggsnavn
+                postnummer
+                kommunenummer
+            }
+            ukjentBosted{
+                bostedskommune
+            }
+        }
+        bostedsadresse {
+            folkeregistermetadata {
+                ajourholdstidspunkt
+                kilde
+            }
+            vegadresse {
+                husnummer
+                husbokstav
+                bruksenhetsnummer
+                adressenavn
+                kommunenummer
+                bydelsnummer
+                tilleggsnavn
+                postnummer
+            }
+            matrikkeladresse {
+                bruksenhetsnummer
+                tilleggsnavn
+                postnummer
+                kommunenummer
+            }
+            utenlandskAdresse {
+                adressenavnNummer
+                bygningEtasjeLeilighet
+                postboksNummerNavn
+                postkode
+                bySted
+                regionDistriktOmraade
+                landkode
+            }
+            ukjentBosted {
+                bostedskommune
+            }
+        }
+
+    }
+}
