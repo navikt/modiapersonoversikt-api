@@ -40,6 +40,7 @@ class DkifServiceRestImpl(
     override fun hentDigitalKontaktinformasjon(fnr: String): Dkif.DigitalKontaktinformasjon {
         val (feil, kontaktinfo) = client.digitalKontaktinformasjonUsingGET(
             authorization = SubjectHandler.getSsoToken(SsoToken.Type.OIDC)
+                .map { "Bearer $it" }
                 .orElseThrow { IllegalStateException("Fant ikke OIDC-token") },
             navCallId = MDC.get(MDCConstants.MDC_CALL_ID) ?: UUID.randomUUID().toString(),
             navConsumerId = RestConstants.MODIABRUKERDIALOG_SYSTEM_USER,
