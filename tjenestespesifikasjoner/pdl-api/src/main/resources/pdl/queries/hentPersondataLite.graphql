@@ -1,0 +1,55 @@
+query($identer: [ID!]!){
+    hentPersonBolk(identer: $identer) {
+        ident
+        person {
+            navn {
+                fornavn
+                mellomnavn
+                etternavn
+                forkortetNavn
+                originaltNavn {
+                    fornavn
+                    mellomnavn
+                    etternavn
+                }
+            }
+            adressebeskyttelse {
+                gradering
+            }
+            bostedsadresse {
+                folkeregistermetadata {
+                    ajourholdstidspunkt
+                    kilde
+                }
+                vegadresse {
+                    husnummer
+                    husbokstav
+                    bruksenhetsnummer
+                    adressenavn
+                    kommunenummer
+                    bydelsnummer
+                    tilleggsnavn
+                    postnummer
+                }
+                matrikkeladresse {
+                    bruksenhetsnummer
+                    tilleggsnavn
+                    postnummer
+                    kommunenummer
+                }
+                utenlandskAdresse {
+                    adressenavnNummer
+                    bygningEtasjeLeilighet
+                    postboksNummerNavn
+                    postkode
+                    bySted
+                    regionDistriktOmraade
+                    landkode
+                }
+                ukjentBosted {
+                    bostedskommune
+                }
+            }
+        }
+    }
+}
