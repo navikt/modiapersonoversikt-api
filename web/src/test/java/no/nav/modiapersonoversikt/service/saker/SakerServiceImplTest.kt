@@ -9,6 +9,8 @@ import no.nav.common.auth.subject.Subject
 import no.nav.common.auth.subject.SubjectHandler
 import no.nav.common.log.MDCConstants
 import no.nav.common.utils.EnvironmentUtils
+import no.nav.modiapersonoversikt.legacy.api.domain.bidragsak.generated.apis.BidragSakControllerApi
+import no.nav.modiapersonoversikt.legacy.api.domain.bidragsak.generated.models.BidragSakDto
 import no.nav.modiapersonoversikt.legacy.api.domain.saker.Sak
 import no.nav.modiapersonoversikt.legacy.api.domain.saker.Sak.*
 import no.nav.modiapersonoversikt.legacy.api.service.FodselnummerAktorService
@@ -65,18 +67,24 @@ class SakerServiceImplTest {
     @MockK
     private lateinit var fodselnummerAktorService: FodselnummerAktorService
 
+    @MockK
+    private lateinit var bidragSakControllerApi: BidragSakControllerApi
+
     @InjectMockKs
     private lateinit var sakerService: SakerServiceImpl
 
     @BeforeEach
     fun setUp() {
         EnvironmentUtils.setProperty("SAK_ENDPOINTURL", "https://sak-url", EnvironmentUtils.Type.PUBLIC)
+        EnvironmentUtils.setProperty("BISYS_BASEURL", "https://bisys-url", EnvironmentUtils.Type.PUBLIC)
         MockKAnnotations.init(this, relaxUnitFun = true)
         sakerService.setup() // Kaller @PostConstruct manuelt siden vi kjører testen uten spring
         every { arbeidOgAktivitet.hentSakListe(WSHentSakListeRequest()) } returns WSHentSakListeResponse()
         every { gsakKodeverk.hentFagsystemMapping() } returns emptyMap()
         every { standardKodeverk.getArkivtemaNavn(any()) } returns null
         every { fodselnummerAktorService.hentAktorIdForFnr(any()) } returns "123456789"
+        every { bidragSakControllerApi.find(any()) } returns listOf(BidragSakDto(roller = listOf(), saksnummer = "123", erParagraf19 = false))
+
         mockkStatic(SubjectHandler::class)
         every { SubjectHandler.getSubject() } returns Optional.of(Subject("12345678910", IdentType.EksternBruker, SsoToken.oidcToken("token", HashMap<String, Any?>())))
         every { sakApiGateway.opprettSak(any()) } returns SakDto(id = "123")
@@ -92,10 +100,12 @@ class SakerServiceImplTest {
     @Test
     fun `transformerer response til saksliste`() {
         every { sakApiGateway.hentSaker(any()) } returns createSaksliste()
+        every { arbeidOgAktivitet.hentSakListe(any()) } returns WSHentSakListeResponse()
         val saksliste: List<Sak> = sakerService.hentSammensatteSakerResultat(FNR).saker
         assertThat(saksliste[0].saksId, `is`(SakId_1))
+        assertThat(saksliste[0].saksId, `is`(SakId_1))
         assertThat(saksliste[3].fagsystemKode, `is`(""))
-        assertThat(saksliste[saksliste.size - 1].sakstype, `is`(SAKSTYPE_MED_FAGSAK))
+        assertThat(saksliste[saksliste.size - 1].sakstype, `is`(SAKSTYPE_GENERELL))
         assertThat(saksliste[saksliste.size - 1].temaKode, `is`(BIDRAG_MARKOR))
         assertThat(saksliste[saksliste.size - 1].temaNavn, `is`("Bidrag"))
         assertThat(saksliste[saksliste.size - 1].fagsystemNavn, `is`("Kopiert inn i Bisys"))
@@ -105,6 +115,8 @@ class SakerServiceImplTest {
     fun `transformerer response til saksliste pensjon`() {
         every { sakApiGateway.hentSaker(any()) } returns listOf()
         every { arbeidOgAktivitet.hentSakListe(any()) } returns WSHentSakListeResponse()
+        every { bidragSakControllerApi.find(any()) } returns listOf()
+
         val pensjon = Sak()
         pensjon.temaKode = "PENS"
         val ufore = Sak()
@@ -202,8 +214,7 @@ class SakerServiceImplTest {
     fun `knytt behandlingskjede til sak kaller alternativ metode om bidrags hack saken er valgt`() {
         val valgtNavEnhet = "0219"
         val sak = Sak()
-        sak.syntetisk = true
-        sak.fagsystemKode = BIDRAG_MARKOR
+        sak.temaKode = BIDRAG_MARKOR
         sakerService.knyttBehandlingskjedeTilSak(
             FNR,
             BEHANDLINGSKJEDEID,

@@ -35,7 +35,7 @@
           "401": {
             "description": "Manglende eller utløpt id-token",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/NySakResponseDto"
                 }
@@ -45,7 +45,7 @@
           "403": {
             "description": "Saksbehandler mangler tilgang til å lese metadata for aktuell sak",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/NySakResponseDto"
                 }
@@ -55,7 +55,7 @@
           "201": {
             "description": "Sak opprettet",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/NySakResponseDto"
                 }
@@ -91,7 +91,7 @@
           "200": {
             "description": "Metadata for sak hentet. Hvis saksbehandler mangler tilgang til å lese metadata for aktuell sak så blir det sendt tom liste med roller i responsen",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/BidragSakDto"
                 }
@@ -175,7 +175,7 @@
           "200": {
             "description": "Metadata for sak hentet. Hvis saksbehandler mangler tilgang til å lese metadata for sak så blir kun fødslesnummer fra kallet inkludert i saken",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
                   "type": "array",
                   "items": {

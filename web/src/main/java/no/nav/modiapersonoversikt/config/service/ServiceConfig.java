@@ -5,8 +5,7 @@ import no.nav.common.cxf.StsConfig;
 import no.nav.common.sts.NaisSystemUserTokenProvider;
 import no.nav.common.sts.SystemUserTokenProvider;
 import no.nav.common.utils.EnvironmentUtils;
-import no.nav.modiapersonoversikt.service.dkif.Dkif;
-import no.nav.modiapersonoversikt.service.dkif.DkifServiceImpl;
+import no.nav.modiapersonoversikt.legacy.api.domain.bidragsak.generated.apis.BidragSakControllerApi;
 import no.nav.modiapersonoversikt.legacy.kjerneinfo.consumer.egenansatt.EgenAnsattService;
 import no.nav.modiapersonoversikt.legacy.kjerneinfo.consumer.fim.person.PersonKjerneinfoServiceBi;
 import no.nav.modiapersonoversikt.legacy.kjerneinfo.consumer.fim.person.support.DefaultPersonKjerneinfoService;
@@ -32,6 +31,8 @@ import no.nav.modiapersonoversikt.legacy.api.service.saker.SakerService;
 import no.nav.modiapersonoversikt.config.endpoint.kodeverksmapper.Kodeverksmapper;
 import no.nav.modiapersonoversikt.service.arbeidsfordeling.ArbeidsfordelingClient;
 import no.nav.modiapersonoversikt.service.arbeidsfordeling.ArbeidsfordelingV1ServiceImpl;
+import no.nav.modiapersonoversikt.service.dkif.Dkif;
+import no.nav.modiapersonoversikt.service.dkif.DkifServiceImpl;
 import no.nav.modiapersonoversikt.service.dkif.DkifServiceRestImpl;
 import no.nav.modiapersonoversikt.service.henvendelse.DelsvarService;
 import no.nav.modiapersonoversikt.service.henvendelse.DelsvarServiceImpl;
@@ -47,6 +48,7 @@ import no.nav.modiapersonoversikt.service.organisasjonenhet.kontaktinformasjon.s
 import no.nav.modiapersonoversikt.service.organisasjonenhet.kontaktinformasjon.service.OrganisasjonEnhetKontaktinformasjonServiceImpl;
 import no.nav.modiapersonoversikt.service.pdl.PdlOppslagServiceImpl;
 import no.nav.modiapersonoversikt.service.saker.SakerServiceImpl;
+import no.nav.modiapersonoversikt.service.saker.mediation.BidragApiClient;
 import no.nav.modiapersonoversikt.service.saker.mediation.SakApiGatewayImpl;
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.behandlehenvendelse.BehandleHenvendelsePortType;
@@ -169,6 +171,14 @@ public class ServiceConfig {
         return new SakApiGatewayImpl(
                 EnvironmentUtils.getRequiredProperty("SAK_ENDPOINTURL"),
                 stsService
+        );
+    }
+
+    @Bean
+    public BidragSakControllerApi bidragSakControllerApi() {
+        return new BidragSakControllerApi(
+                EnvironmentUtils.getRequiredProperty("BISYS_BASEURL"),
+                BidragApiClient.INSTANCE.getClient()
         );
     }
 

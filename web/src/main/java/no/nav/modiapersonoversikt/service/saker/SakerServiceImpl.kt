@@ -2,6 +2,7 @@ package no.nav.modiapersonoversikt.service.saker
 
 import no.nav.common.auth.subject.SubjectHandler
 import no.nav.common.log.MDCConstants
+import no.nav.modiapersonoversikt.legacy.api.domain.bidragsak.generated.apis.BidragSakControllerApi
 import no.nav.modiapersonoversikt.legacy.api.domain.saker.Sak
 import no.nav.modiapersonoversikt.legacy.api.exceptions.JournalforingFeilet
 import no.nav.modiapersonoversikt.legacy.api.service.FodselnummerAktorService
@@ -11,10 +12,6 @@ import no.nav.modiapersonoversikt.legacy.api.service.saker.GsakKodeverk
 import no.nav.modiapersonoversikt.legacy.api.service.saker.SakerService
 import no.nav.modiapersonoversikt.legacy.api.utils.SakerUtils
 import no.nav.modiapersonoversikt.service.saker.kilder.*
-import no.nav.modiapersonoversikt.service.saker.kilder.ArenaSaker
-import no.nav.modiapersonoversikt.service.saker.kilder.GenerelleSaker
-import no.nav.modiapersonoversikt.service.saker.kilder.OppfolgingsSaker
-import no.nav.modiapersonoversikt.service.saker.kilder.PensjonSaker
 import no.nav.modiapersonoversikt.service.saker.mediation.SakApiGateway
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.behandlehenvendelse.BehandleHenvendelsePortType
 import no.nav.virksomhet.tjenester.sak.arbeidogaktivitet.v1.ArbeidOgAktivitet
@@ -50,6 +47,9 @@ class SakerServiceImpl : SakerService {
     private lateinit var sakApiGateway: SakApiGateway
 
     @Autowired
+    private lateinit var bidragApiClient: BidragSakControllerApi
+
+    @Autowired
     private lateinit var fodselnummerAktorService: FodselnummerAktorService
 
     private lateinit var arenaSaker: ArenaSaker
@@ -62,7 +62,7 @@ class SakerServiceImpl : SakerService {
     @PostConstruct
     fun setup() {
         arenaSaker = ArenaSaker(arbeidOgAktivitet)
-        bidragSaker = BidragSaker()
+        bidragSaker = BidragSaker(bidragApiClient)
         generelleSaker = GenerelleSaker()
         restSakSaker = RestSakSaker(sakApiGateway, fodselnummerAktorService)
         oppfolgingsSaker = OppfolgingsSaker()
@@ -119,7 +119,7 @@ class SakerServiceImpl : SakerService {
     override fun knyttBehandlingskjedeTilSak(fnr: String?, behandlingskjede: String?, sak: Sak, enhet: String?) {
         requireKnyttTilSakParametereNotNullOrBlank(sak, behandlingskjede, fnr, enhet)
 
-        if (sak.syntetisk && Sak.BIDRAG_MARKOR == sak.fagsystemKode) {
+        if (Sak.FAGSYSTEMKODE_BIDRAG == sak.temaKode || Sak.BIDRAG_MARKOR == sak.temaKode) {
             behandleHenvendelsePortType.knyttBehandlingskjedeTilTema(behandlingskjede, "BID")
             return
         }
