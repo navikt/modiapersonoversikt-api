@@ -6,7 +6,6 @@ import no.nav.modiapersonoversikt.legacy.api.domain.saker.Sak
 import no.nav.modiapersonoversikt.legacy.api.domain.saker.Sak.BIDRAG_MARKOR
 import no.nav.modiapersonoversikt.service.saker.SakerKilde
 
-private const val hentDataFraBisys = false
 internal class BidragSaker(private val client: BidragSakControllerApi) : SakerKilde {
     override val kildeNavn: String = "BIDRAG"
 
@@ -19,6 +18,7 @@ internal class BidragSaker(private val client: BidragSakControllerApi) : SakerKi
     }
 
     companion object {
+        const val hentDataFraBisys = false
         fun generellBidragsSak(): Sak {
             return Sak().apply {
                 saksId = "-"

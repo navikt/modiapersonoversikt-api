@@ -17,6 +17,7 @@ import no.nav.modiapersonoversikt.legacy.api.service.FodselnummerAktorService
 import no.nav.modiapersonoversikt.legacy.api.service.kodeverk.StandardKodeverk
 import no.nav.modiapersonoversikt.legacy.api.service.psak.PsakService
 import no.nav.modiapersonoversikt.legacy.api.service.saker.GsakKodeverk
+import no.nav.modiapersonoversikt.service.saker.kilder.BidragSaker
 import no.nav.modiapersonoversikt.service.saker.mediation.SakApiGateway
 import no.nav.modiapersonoversikt.service.saker.mediation.SakDto
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.behandlehenvendelse.BehandleHenvendelsePortType
@@ -106,9 +107,15 @@ class SakerServiceImplTest {
         assertThat(saksliste[0].saksId, `is`(SakId_1))
         assertThat(saksliste[3].fagsystemKode, `is`(""))
         assertThat(saksliste[saksliste.size - 1].sakstype, `is`(SAKSTYPE_GENERELL))
-        assertThat(saksliste[saksliste.size - 1].temaKode, `is`(BIDRAG_MARKOR))
-        assertThat(saksliste[saksliste.size - 1].temaNavn, `is`("Bidrag"))
-        assertThat(saksliste[saksliste.size - 1].fagsystemNavn, `is`("Kopiert inn i Bisys"))
+        if (BidragSaker.hentDataFraBisys) {
+            assertThat(saksliste[saksliste.size - 1].temaKode, `is`(BIDRAG_MARKOR))
+            assertThat(saksliste[saksliste.size - 1].temaNavn, `is`("Bidrag"))
+            assertThat(saksliste[saksliste.size - 1].fagsystemNavn, `is`("Kopiert inn i Bisys"))
+        } else {
+            assertThat(saksliste[saksliste.size - 1].temaKode, `is`("OPP"))
+            assertThat(saksliste[saksliste.size - 1].temaNavn, `is`("OPP"))
+            assertThat(saksliste[saksliste.size - 1].fagsystemNavn, `is`("FS22"))
+        }
     }
 
     @Test
@@ -125,7 +132,11 @@ class SakerServiceImplTest {
         every { psakService.hentSakerFor(FNR) } returns pensjonssaker
 
         val saksliste = sakerService.hentSaker(FNR).saker
-        assertThat(saksliste.size, `is`(3))
+        if (BidragSaker.hentDataFraBisys) {
+            assertThat(saksliste.size, `is`(3))
+        } else {
+            assertThat(saksliste.size, `is`(2))
+        }
         assertThat(saksliste[0].temaNavn, `is`("PENS"))
         assertThat(saksliste[1].temaNavn, `is`("UFO"))
     }
