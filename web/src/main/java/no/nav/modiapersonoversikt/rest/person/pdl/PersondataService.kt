@@ -126,7 +126,7 @@ class PersondataServiceImpl(
             }
         }
 
-        return when(kode) {
+        return when (kode) {
             6 -> if (harTilgangTilKode6) this else this.fjernAdresseInformasjon()
             7 -> if (harTilgangTilKode7) this else this.fjernAdresseInformasjon()
             else -> this
@@ -144,5 +144,3 @@ class PersondataServiceImpl(
         }
     )
 }
-
-
