@@ -31,7 +31,7 @@ class PersonsokController @Autowired constructor(
     val tilgangskontroll: Tilgangskontroll
 ) {
     private val auditDescriptor = Audit.describe<List<PersonSokResponsDTO>>(Audit.Action.READ, AuditResources.Personsok.Resultat) { resultat ->
-        val fnr = resultat.map { it.ident }.joinToString(", ")
+        val fnr = resultat?.map { it.ident }?.joinToString(", ") ?: "--"
         listOf(
             AuditIdentifier.FNR to fnr
         )
