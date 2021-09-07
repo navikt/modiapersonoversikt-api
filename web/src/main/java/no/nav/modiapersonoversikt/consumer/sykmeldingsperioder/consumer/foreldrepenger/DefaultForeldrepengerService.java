@@ -16,7 +16,10 @@ import no.nav.tjeneste.virksomhet.foreldrepenger.v2.meldinger.FimHentForeldrepen
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Optional;
+
 import static java.util.Collections.singletonList;
+import static java.util.Optional.ofNullable;
 
 /**
  * Vår standardimplementasjonen av den eksterne tjenesten for foreldrepenger.
@@ -25,7 +28,7 @@ public class DefaultForeldrepengerService implements ForeldrepengerServiceBi {
     private static Audit.AuditDescriptor<FimPerson> auditLogger = Audit.describe(
             Audit.Action.READ,
             AuditResources.Person.Foreldrepenger,
-            (person) -> singletonList(new Pair<>(AuditIdentifier.FNR, person.getIdent()))
+            (person) -> singletonList(new Pair<>(AuditIdentifier.FNR, ofNullable(person).map(FimPerson::getIdent).orElse("--")))
     );
     private static final Logger logger = LoggerFactory.getLogger(DefaultForeldrepengerService.class);
     private ForeldrepengerV2 foreldrepengerService;
