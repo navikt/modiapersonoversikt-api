@@ -21,7 +21,6 @@ interface KodeverkService {
     fun hentVerdi(kodeverk: Kodeverk, kodeterm: String, sprak: String = "nb"): String
 }
 
-
 class PersondataFletter(val kodeverk: KodeverkService) {
     data class Data(
         val persondata: HentPersondata.Person,

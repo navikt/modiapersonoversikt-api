@@ -6,7 +6,7 @@ import java.time.LocalDate
 object Persondata {
     sealed class Result<T>(val system: String) {
         fun <S> map(newSystem: String = system, block: (t: T) -> S): Result<S> {
-            return when(this) {
+            return when (this) {
                 is Failure<*> -> this as Result<S>
                 is Success<T> -> runCatching(newSystem) {
                     block(this.value)
@@ -15,14 +15,14 @@ object Persondata {
         }
 
         fun getOrElse(other: T): T {
-            return when(this) {
+            return when (this) {
                 is Failure<*> -> other
                 is Success<T> -> this.value
             }
         }
 
         fun getOrNull(): T? {
-            return when(this) {
+            return when (this) {
                 is Failure<*> -> null
                 is Success<T> -> this.value
             }
@@ -98,7 +98,6 @@ object Persondata {
         val gyldigFraOgMed: LocalDate,
         val gyldigTilOgMed: LocalDate
     )
-
 
     data class Adresse(
         val linje1: String,
@@ -242,7 +241,6 @@ object Persondata {
         SEPARERT_PARTNER("SEPA"),
         SKILT_PARTNER("SKPA"),
         GJENLEVENDE_PARTNER("GJPA")
-
     }
 
     enum class SikkerhetstiltakType(val beskrivelse: String) {
@@ -253,4 +251,3 @@ object Persondata {
         TOAN("To ansatte i samtale")
     }
 }
-
