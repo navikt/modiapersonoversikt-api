@@ -33,13 +33,13 @@ class PersondataServiceImpl(
         val persondata = requireNotNull(pdl.hentPersondata(fnr)) {
             "Fant ikke person med fnr $fnr"
         }
-        val geografiskeTilknytning = Persondata.runCatching("PDL-GT") { pdl.hentGeografiskTilknyttning(fnr) }
+        val geografiskeTilknytning = PersondataResult.runCatching("PDL-GT") { pdl.hentGeografiskTilknyttning(fnr) }
         val navEnhet = hentNavEnhet(persondata, geografiskeTilknytning)
-        val erEgenAnsatt = Persondata.runCatching("TPS-EGEN-ANSATT") { egenAnsattService.erEgenAnsatt(fnr) }
+        val erEgenAnsatt = PersondataResult.runCatching("TPS-EGEN-ANSATT") { egenAnsattService.erEgenAnsatt(fnr) }
 
         val harTilgangTilKode6 = tilgangskontroll.harSaksbehandlerRolle("0000-GA-GOSYS_KODE6")
         val harTilgangTilKode7 = tilgangskontroll.harSaksbehandlerRolle("0000-GA-GOSYS_KODE7")
-        val tredjepartsPerson = Persondata.runCatching("PDL") {
+        val tredjepartsPerson = PersondataResult.runCatching("PDL") {
             persondata
                 .findTredjepartsPersoner()
                 .let { pdl.hentPersondataLite(it) }
@@ -47,8 +47,8 @@ class PersondataServiceImpl(
                 .associateBy { it.fnr }
         }
 
-        val dkifData = Persondata.runCatching("DKIF") { dkif.hentDigitalKontaktinformasjon(fnr) }
-        val bankkonto = Persondata.runCatching("TPS") { hentBankkonto(fnr) }
+        val dkifData = PersondataResult.runCatching("DKIF") { dkif.hentDigitalKontaktinformasjon(fnr) }
+        val bankkonto = PersondataResult.runCatching("TPS") { hentBankkonto(fnr) }
 
         return persondateFletter.flettSammenData(
             PersondataFletter.Data(
@@ -73,8 +73,8 @@ class PersondataServiceImpl(
 
     private fun hentNavEnhet(
         persondata: HentPersondata.Person,
-        geografiskeTilknytning: Persondata.Result<String?>
-    ): Persondata.Result<AnsattEnhet> {
+        geografiskeTilknytning: PersondataResult<String?>
+    ): PersondataResult<AnsattEnhet> {
         var diskresjonskode = ""
         val adressebeskyttelse = persondata.adressebeskyttelse
         for (beskyttelse in adressebeskyttelse) {

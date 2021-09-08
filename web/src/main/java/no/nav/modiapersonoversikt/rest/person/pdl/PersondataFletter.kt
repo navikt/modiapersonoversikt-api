@@ -38,12 +38,12 @@ class PersondataFletter(val kodeverk: KodeverkService) {
 
     data class Data(
         val persondata: HentPersondata.Person,
-        val geografiskeTilknytning: Persondata.Result<String?>,
-        val erEgenAnsatt: Persondata.Result<Boolean>,
-        val navEnhet: Persondata.Result<AnsattEnhet>,
-        val dkifData: Persondata.Result<Dkif.DigitalKontaktinformasjon>,
-        val bankkonto: Persondata.Result<HentPersonResponse>,
-        val tredjepartsPerson: Persondata.Result<Map<String, Persondata.TredjepartsPerson>>
+        val geografiskeTilknytning: PersondataResult<String?>,
+        val erEgenAnsatt: PersondataResult<Boolean>,
+        val navEnhet: PersondataResult<AnsattEnhet>,
+        val dkifData: PersondataResult<Dkif.DigitalKontaktinformasjon>,
+        val bankkonto: PersondataResult<HentPersonResponse>,
+        val tredjepartsPerson: PersondataResult<Map<String, Persondata.TredjepartsPerson>>
     ) {
         private val ekstraDatapunker = listOf(
             geografiskeTilknytning,
@@ -56,7 +56,7 @@ class PersondataFletter(val kodeverk: KodeverkService) {
 
         fun feilendeSystemer(): List<String> {
             return ekstraDatapunker.mapNotNull {
-                if (it is Persondata.Result.Failure<*>) {
+                if (it is PersondataResult.Failure<*>) {
                     it.system
                 } else {
                     null
@@ -490,12 +490,12 @@ class PersondataFletter(val kodeverk: KodeverkService) {
 
     private fun hentTelefonnummer(data: Data): List<Persondata.Telefon> {
         return data.persondata.telefonnummer.map {
-            val sisteEndring = it.metadata.endringer.maxBy { dato -> dato.registrert.value }!!
+            val sisteEndring = it.metadata.endringer.maxBy { dato -> dato.registrert.value }
             Persondata.Telefon(
                 retningsnummer = kodeverk.hentKodeBeskrivelse(Kodeverk.RETNINGSNUMRE, it.landskode),
                 identifikator = it.nummer,
-                sistEndretAv = sisteEndring.registrertAv,
-                sistEndret = sisteEndring.registrert.value
+                sistEndretAv = sisteEndring?.registrertAv,
+                sistEndret = sisteEndring?.registrert?.value
             )
         }
     }
