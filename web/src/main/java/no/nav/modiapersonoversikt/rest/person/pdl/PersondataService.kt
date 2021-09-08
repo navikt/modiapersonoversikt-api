@@ -3,7 +3,6 @@ package no.nav.modiapersonoversikt.rest.person.pdl
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.TilgangskontrollContext
 import no.nav.modiapersonoversikt.legacy.api.domain.norg.AnsattEnhet
 import no.nav.modiapersonoversikt.legacy.api.domain.pdl.generated.HentPersondata
-import no.nav.modiapersonoversikt.legacy.api.domain.pdl.generated.HentPersondataLite
 import no.nav.modiapersonoversikt.legacy.api.service.organisasjonsEnhetV2.OrganisasjonEnhetV2Service
 import no.nav.modiapersonoversikt.legacy.api.service.pdl.PdlOppslagService
 import no.nav.modiapersonoversikt.legacy.kjerneinfo.consumer.egenansatt.EgenAnsattService
@@ -28,6 +27,8 @@ class PersondataServiceImpl(
     private val tilgangskontroll: TilgangskontrollContext
 ) : PersondataService {
     val persondateFletter: PersondataFletter = TODO()
+    val persondataLiteMapping: PersondataLiteMapping = TODO()
+
     override fun hentPerson(fnr: String): Persondata.Data {
         val persondata = requireNotNull(pdl.hentPersondata(fnr)) {
             "Fant ikke person med fnr $fnr"
@@ -42,7 +43,8 @@ class PersondataServiceImpl(
             persondata
                 .findTredjepartsPersoner()
                 .let { pdl.hentPersondataLite(it) }
-                .map { it.saksbehandlerHarTilgangTilBruker(harTilgangTilKode6, harTilgangTilKode7) }
+                .map { persondataLiteMapping.lagTredjepartsperson(it, harTilgangTilKode6, harTilgangTilKode7) }
+                .associateBy { it.fnr }
         }
 
         val dkifData = Persondata.runCatching("DKIF") { dkif.hentDigitalKontaktinformasjon(fnr) }
@@ -105,42 +107,4 @@ class PersondataServiceImpl(
             *this.foreldreansvar.mapNotNull { it.ansvarssubjekt }.toTypedArray()
         ).toList()
     }
-
-    private fun HentPersondataLite.HentPersonBolkResult.saksbehandlerHarTilgangTilBruker(
-        harTilgangTilKode6: Boolean,
-        harTilgangTilKode7: Boolean
-    ): HentPersondataLite.HentPersonBolkResult {
-        val person = this.person ?: return this
-        var kode = 0
-        val adressebeskyttelse = person.adressebeskyttelse
-        for (beskyttelse in adressebeskyttelse) {
-            if (beskyttelse.gradering == HentPersondataLite.AdressebeskyttelseGradering.STRENGT_FORTROLIG_UTLAND) {
-                kode = 6
-                break
-            } else if (beskyttelse.gradering == HentPersondataLite.AdressebeskyttelseGradering.STRENGT_FORTROLIG) {
-                kode = 6
-                break
-            } else if (beskyttelse.gradering == HentPersondataLite.AdressebeskyttelseGradering.FORTROLIG) {
-                kode = 7
-                break
-            }
-        }
-
-        return when (kode) {
-            6 -> if (harTilgangTilKode6) this else this.fjernAdresseInformasjon()
-            7 -> if (harTilgangTilKode7) this else this.fjernAdresseInformasjon()
-            else -> this
-        }
-    }
-
-    private fun HentPersondataLite.HentPersonBolkResult.fjernAdresseInformasjon() = HentPersondataLite.HentPersonBolkResult(
-        ident = this.ident,
-        person = this.person?.let {
-            HentPersondataLite.Person(
-                navn = it.navn,
-                adressebeskyttelse = it.adressebeskyttelse,
-                bostedsadresse = emptyList()
-            )
-        }
-    )
 }
