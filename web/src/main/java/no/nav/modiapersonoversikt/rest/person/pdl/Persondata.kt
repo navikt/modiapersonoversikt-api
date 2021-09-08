@@ -5,42 +5,6 @@ import java.time.LocalDate
 import java.time.LocalDateTime
 
 object Persondata {
-    sealed class Result<T>(val system: String) {
-        fun <S> map(newSystem: String = system, block: (t: T) -> S): Result<S> {
-            return when (this) {
-                is Failure<*> -> this as Result<S>
-                is Success<T> -> runCatching(newSystem) {
-                    block(this.value)
-                }
-            }
-        }
-
-        fun getOrElse(other: T): T {
-            return when (this) {
-                is Failure<*> -> other
-                is Success<T> -> this.value
-            }
-        }
-
-        fun getOrNull(): T? {
-            return when (this) {
-                is Failure<*> -> null
-                is Success<T> -> this.value
-            }
-        }
-
-        class Success<T>(name: String, val value: T) : Result<T>(name)
-        class Failure<T>(name: String, val exception: Throwable) : Result<T>(name)
-    }
-
-    fun <T> runCatching(system: String, block: () -> T): Result<T> {
-        return try {
-            Result.Success(system, block())
-        } catch (e: Throwable) {
-            Result.Failure(system, e)
-        }
-    }
-
     data class Data(
         val feilendeSystemer: List<String>,
         val person: Person
@@ -138,9 +102,6 @@ object Persondata {
         val registrert: LocalDate,
         val skifteform: Skifteform
     )
-    enum class Skifteform {
-        OFFENTLIG, ANNET, UKJENT
-    }
 
     data class Adressat(
         val advokatSomAdressat: AdvokatSomAdressat?,
@@ -183,6 +144,7 @@ object Persondata {
         val talesprak: List<KodeBeskrivelse<String>>,
         val tegnsprak: List<KodeBeskrivelse<String>>
     )
+
     data class Fullmakt(
         val motpartsPersonident: String,
         val motpartsPersonNavn: Navn,
@@ -191,17 +153,12 @@ object Persondata {
         val gyldigFraOgMed: LocalDate,
         val gyldigTilOgMed: LocalDate
     )
-    enum class FullmaktsRolle {
-        FULLMAKTSGIVER,
-        FULLMEKTIG,
-        UKJENT
-    }
 
     data class Telefon(
         val retningsnummer: KodeBeskrivelse<String>?,
         val identifikator: String,
-        val sistEndret: LocalDateTime,
-        val sistEndretAv: String,
+        val sistEndret: LocalDateTime?,
+        val sistEndretAv: String?,
         val prioritet: Int = -1
     )
 
@@ -214,11 +171,13 @@ object Persondata {
         val gyldighetstidspunkt: LocalDate?,
         val opphoerstidspunkt: LocalDate?
     )
+
     data class Foreldreansvar(
         val ansvar: String,
         val ansvarlig: Navn?,
         val ansvarsubject: Navn?
     )
+
     data class DeltBosted(
         val startdatoForKontrakt: LocalDate,
         val sluttdatoForKontrakt: LocalDate?,
@@ -269,5 +228,15 @@ object Persondata {
         FTUS("Fysisk/telefonisk utestengelse"),
         DIUS("Digital utestengelse"),
         TOAN("To ansatte i samtale")
+    }
+
+    enum class Skifteform {
+        OFFENTLIG, ANNET, UKJENT
+    }
+
+    enum class FullmaktsRolle {
+        FULLMAKTSGIVER,
+        FULLMEKTIG,
+        UKJENT
     }
 }
