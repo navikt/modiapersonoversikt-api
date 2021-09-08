@@ -16,6 +16,11 @@ import no.nav.tjeneste.virksomhet.person.v3.meldinger.HentPersonResponse
 
 interface PersondataService {
     fun hentPerson(fnr: String): Persondata.Data
+
+    data class Tilganger(
+        val kode6: Boolean,
+        val kode7: Boolean
+    )
 }
 
 class PersondataServiceImpl(
@@ -28,7 +33,7 @@ class PersondataServiceImpl(
     kodeverk: KodeverkService
 ) : PersondataService {
     val persondateFletter = PersondataFletter(kodeverk)
-    val persondataLiteMapping = PersondataLiteMapping(kodeverk)
+    val tredjepartspersonMapper = TredjepartspersonMapper(kodeverk)
 
     override fun hentPerson(fnr: String): Persondata.Data {
         val persondata = requireNotNull(pdl.hentPersondata(fnr)) {
@@ -37,14 +42,14 @@ class PersondataServiceImpl(
         val geografiskeTilknytning = PersondataResult.runCatching("PDL-GT") { pdl.hentGeografiskTilknyttning(fnr) }
         val navEnhet = hentNavEnhet(persondata, geografiskeTilknytning)
         val erEgenAnsatt = PersondataResult.runCatching("TPS-EGEN-ANSATT") { egenAnsattService.erEgenAnsatt(fnr) }
-
-        val harTilgangTilKode6 = tilgangskontroll.harSaksbehandlerRolle("0000-GA-GOSYS_KODE6")
-        val harTilgangTilKode7 = tilgangskontroll.harSaksbehandlerRolle("0000-GA-GOSYS_KODE7")
+        val tilganger = PersondataResult
+            .runCatching("TILGANGSKONTROLL") { hentTilganger() }
+            .getOrElse(PersondataService.Tilganger(kode6 = false, kode7 = false))
         val tredjepartsPerson = PersondataResult.runCatching("PDL") {
             persondata
                 .findTredjepartsPersoner()
                 .let { pdl.hentPersondataLite(it) }
-                .map { persondataLiteMapping.lagTredjepartsperson(it, harTilgangTilKode6, harTilgangTilKode7) }
+                .map { tredjepartspersonMapper.lagTredjepartsperson(it, tilganger) }
                 .associateBy { it.fnr }
         }
 
@@ -108,4 +113,9 @@ class PersondataServiceImpl(
             *this.foreldreansvar.mapNotNull { it.ansvarssubjekt }.toTypedArray()
         ).toList()
     }
+
+    private fun hentTilganger() = PersondataService.Tilganger(
+        kode6 = tilgangskontroll.harSaksbehandlerRolle("0000-GA-GOSYS_KODE6"),
+        kode7 = tilgangskontroll.harSaksbehandlerRolle("0000-GA-GOSYS_KODE7")
+    )
 }
