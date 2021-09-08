@@ -2,11 +2,10 @@ package no.nav.modiapersonoversikt.rest.person.pdl
 
 import no.nav.modiapersonoversikt.legacy.api.domain.pdl.generated.HentPersondataLite
 
-class PersondataLiteMapping(val kodeverk: KodeverkService) {
+class TredjepartspersonMapper(val kodeverk: KodeverkService) {
     fun lagTredjepartsperson(
         person: HentPersondataLite.HentPersonBolkResult,
-        harTilgangTilKode6: Boolean,
-        harTilgangTilKode7: Boolean
+        tilganger: PersondataService.Tilganger
     ): Persondata.TredjepartsPerson {
         return Persondata.TredjepartsPerson(
             fnr = person.ident,
@@ -19,7 +18,7 @@ class PersondataLiteMapping(val kodeverk: KodeverkService) {
             },
             adressebeskyttelse = person.person?.adressebeskyttelse?.let(::hentAdressebeskyttelse),
             bostedAdresse = person.person?.bostedsadresse?.let {
-                if (person.harTilgang(harTilgangTilKode6, harTilgangTilKode7)) {
+                if (person.harTilgang(tilganger)) {
                     hentBostedAdresse(it)
                 } else {
                     null
@@ -113,10 +112,7 @@ class PersondataLiteMapping(val kodeverk: KodeverkService) {
         return Persondata.KodeBeskrivelse(kode = adressebeskyttelse, beskrivelse = kodebeskrivelse.beskrivelse)
     }
 
-    fun HentPersondataLite.HentPersonBolkResult.harTilgang(
-        harTilgangTilKode6: Boolean,
-        harTilgangTilKode7: Boolean
-    ): Boolean {
+    fun HentPersondataLite.HentPersonBolkResult.harTilgang(tilganger: PersondataService.Tilganger): Boolean {
         val person = this.person ?: return false
         var kode = 0
         val adressebeskyttelse = person.adressebeskyttelse
@@ -134,8 +130,8 @@ class PersondataLiteMapping(val kodeverk: KodeverkService) {
         }
 
         return when (kode) {
-            6 -> harTilgangTilKode6
-            7 -> harTilgangTilKode7
+            6 -> tilganger.kode6
+            7 -> tilganger.kode7
             else -> true
         }
     }
