@@ -24,10 +24,11 @@ class PersondataServiceImpl(
     private val organisasjonEnhetV2Service: OrganisasjonEnhetV2Service,
     private val personV3: PersonV3,
     private val egenAnsattService: EgenAnsattService,
-    private val tilgangskontroll: TilgangskontrollContext
+    private val tilgangskontroll: TilgangskontrollContext,
+    kodeverk: KodeverkService
 ) : PersondataService {
-    val persondateFletter: PersondataFletter = TODO()
-    val persondataLiteMapping: PersondataLiteMapping = TODO()
+    val persondateFletter = PersondataFletter(kodeverk)
+    val persondataLiteMapping = PersondataLiteMapping(kodeverk)
 
     override fun hentPerson(fnr: String): Persondata.Data {
         val persondata = requireNotNull(pdl.hentPersondata(fnr)) {
