@@ -2,6 +2,7 @@ package no.nav.modiapersonoversikt.rest.person.pdl
 
 import no.nav.modiapersonoversikt.service.dkif.Dkif
 import java.time.LocalDate
+import java.time.LocalDateTime
 
 object Persondata {
     sealed class Result<T>(val system: String) {
@@ -47,28 +48,35 @@ object Persondata {
 
     data class Person(
         val fnr: String,
-        val navn: Navn,
-        val kjonn: KodeBeskrivelse<Kjonn>,
-        val fodselsdato: LocalDate?,
-        val dodsdato: LocalDate?,
-        val bostedAdresse: Adresse?,
-        val kontaktAdresse: Adresse?,
+        val navn: List<Navn>,
+        val kjonn: List<KodeBeskrivelse<Kjonn>>,
+        val fodselsdato: List<LocalDate>,
+        val dodsdato: List<LocalDate>,
+        val bostedAdresse: List<Adresse>,
+        val kontaktAdresse: List<Adresse>,
         val navEnhet: Enhet?,
         val statsborgerskap: List<Statsborgerskap>,
-        val adressebeskyttelse: KodeBeskrivelse<AdresseBeskyttelse>,
+        val adressebeskyttelse: List<KodeBeskrivelse<AdresseBeskyttelse>>,
         val sikkerhetstiltak: List<Sikkerhetstiltak>,
         val erEgenAnsatt: EgenAnsatt,
-        val personstatus: KodeBeskrivelse<PersonStatus>,
-        val sivilstand: Sivilstand,
+        val personstatus: List<KodeBeskrivelse<PersonStatus>>,
+        val sivilstand: List<Sivilstand>,
         val foreldreansvar: List<Foreldreansvar>,
         val deltBosted: List<DeltBosted>,
         val dodsbo: List<Dodsbo>,
         val fullmakt: List<Fullmakt>,
         val vergemal: List<Verge>,
-        val tilrettelagtKommunikasjon: List<TilrettelagtKommunikasjon>,
+        val tilrettelagtKommunikasjon: TilrettelagtKommunikasjon,
         val telefonnummer: List<Telefon>,
         val kontaktOgReservasjon: Dkif.DigitalKontaktinformasjon?,
-        val bankkonto: Bankkonto
+        val bankkonto: Bankkonto?
+    )
+
+    data class TredjepartsPerson(
+        val fnr: String,
+        val navn: Navn?,
+        val adressebeskyttelse: KodeBeskrivelse<AdresseBeskyttelse>?,
+        val bostedAdresse: Adresse?
     )
 
     data class KodeBeskrivelse<T>(
@@ -80,7 +88,11 @@ object Persondata {
         val fornavn: String,
         val mellomnavn: String?,
         val etternavn: String
-    )
+    ) {
+        companion object {
+            val UKJENT = Navn("", "", "")
+        }
+    }
 
     data class Statsborgerskap(
         val land: KodeBeskrivelse<String>,
@@ -90,7 +102,7 @@ object Persondata {
 
     data class Sivilstand(
         val type: KodeBeskrivelse<SivilstandType>,
-        val gyldigFraOgMed: LocalDate
+        val gyldigFraOgMed: LocalDate?
     )
 
     data class Sikkerhetstiltak(
@@ -99,11 +111,21 @@ object Persondata {
         val gyldigTilOgMed: LocalDate
     )
 
-    data class Adresse(
+    data class Adresse constructor(
         val linje1: String,
         val linje2: String? = null,
         val linje3: String? = null
-    )
+    ) {
+        constructor(
+            linje1: List<String?>,
+            linje2: List<String?>? = null,
+            linje3: List<String?>? = null
+        ) : this(
+            linje1.filterNotNull().joinToString(" "),
+            linje2?.filterNotNull()?.joinToString(" "),
+            linje3?.filterNotNull()?.joinToString(" ")
+        )
+    }
 
     data class Enhet(
         val id: String,
@@ -112,60 +134,73 @@ object Persondata {
 
     data class Dodsbo(
         val adressat: Adressat,
-        val adresselinje1: String,
-        val adresselinje2: String?,
-        val postnummer: String,
-        val poststed: String,
-        val landkode: String?,
+        val adresse: Adresse,
         val registrert: LocalDate,
-        val skifteform: String
+        val skifteform: Skifteform
     )
+    enum class Skifteform {
+        OFFENTLIG, ANNET, UKJENT
+    }
 
     data class Adressat(
         val advokatSomAdressat: AdvokatSomAdressat?,
-        val kontaktpersonMedIdNummerSomAdressat: KontaktpersonMedId?,
-        val kontaktpersonUtenIdNummerSomAdressat: KontaktpersonUtenId?,
+        val personSomAdressat: PersonSomAdressat?,
         val organisasjonSomAdressat: OrganisasjonSomAdressat?
     )
+
     data class AdvokatSomAdressat(
         val kontaktperson: Navn,
         val organisasjonsnavn: String?,
         val organisasjonsnummer: String?
     )
-    data class KontaktpersonMedId(
-        val idNummer: String,
-        val navn: Navn?
+
+    data class PersonSomAdressat(
+        val fnr: String?,
+        val navn: Navn?,
+        val fodselsdato: LocalDate?
     )
-    data class KontaktpersonUtenId(
-        val foedselsdato: LocalDate?,
-        val fodselsdato: LocalDate?,
-        val navn: Navn?
-    )
+
     data class OrganisasjonSomAdressat(
         val kontaktperson: Navn?,
         val organisasjonsnavn: String,
         val organisasjonsnummer: String?
     )
 
-    data class Bankkonto(val nr: String)
+    data class Bankkonto(
+        val kontonummer: String,
+        val banknavn: String,
+        val sistEndret: LocalDateTime,
+        val sistEndretAv: String,
+
+        val bankkode: String? = null,
+        val swift: String? = null,
+        val landkode: KodeBeskrivelse<String>? = null,
+        val adresse: Adresse? = null,
+        val valuta: KodeBeskrivelse<String>? = null
+    )
 
     data class TilrettelagtKommunikasjon(
-        val talesprak: KodeBeskrivelse<String>,
-        val tegnsprak: KodeBeskrivelse<String>
+        val talesprak: List<KodeBeskrivelse<String>>,
+        val tegnsprak: List<KodeBeskrivelse<String>>
     )
     data class Fullmakt(
-        val motpartsRolle: String,
         val motpartsPersonident: String,
-        val motpartsPersonNavn: String,
+        val motpartsPersonNavn: Navn,
+        val motpartsRolle: FullmaktsRolle,
         val omraade: List<String>,
-        val gyldigFraOgMed: String,
-        val gyldigTilOgMed: String
+        val gyldigFraOgMed: LocalDate,
+        val gyldigTilOgMed: LocalDate
     )
+    enum class FullmaktsRolle {
+        FULLMAKTSGIVER,
+        FULLMEKTIG,
+        UKJENT
+    }
 
     data class Telefon(
         val retningsnummer: KodeBeskrivelse<String>?,
         val identifikator: String,
-        val sistEndret: String,
+        val sistEndret: LocalDateTime,
         val sistEndretAv: String,
         val prioritet: Int = -1
     )
@@ -176,8 +211,8 @@ object Persondata {
         val vergesakstype: String?,
         val omfang: String?,
         val embete: String?,
-        val gyldighetstidspunkt: String?,
-        val opphoerstidspunkt: String?
+        val gyldighetstidspunkt: LocalDate?,
+        val opphoerstidspunkt: LocalDate?
     )
     data class Foreldreansvar(
         val ansvar: String,
@@ -185,25 +220,9 @@ object Persondata {
         val ansvarsubject: Navn?
     )
     data class DeltBosted(
-        val startdatoForKontrakt: String?,
-        val sluttdatoForKontrakt: String?,
-        val adresse: DeltBostedAdresse?,
-        val ukjentBosted: UkjentBosted?
-    )
-    data class DeltBostedAdresse(
-        val adressenavn: String?,
-        val husnummer: String?,
-        val husbokstav: String?,
-        val bruksenhetsnummer: String?,
-        val kommunenummer: String?,
-        val postnummer: String?,
-        val poststed: String?,
-        val bydelsnummer: String?,
-        val tilleggsnavn: String?,
-        val coAdressenavn: String?
-    )
-    data class UkjentBosted(
-        val bostedskommune: String?
+        val startdatoForKontrakt: LocalDate,
+        val sluttdatoForKontrakt: LocalDate?,
+        val adresse: Adresse?
     )
 
     enum class Kjonn {
@@ -227,7 +246,8 @@ object Persondata {
         FORSVUNNET("FOSV"),
         UTFLYTTET("UTVA"),
         IKKE_BOSATT("UREG"),
-        FODSELSREGISTERT("FØDR")
+        FODSELSREGISTERT("FØDR"),
+        UKJENT("UKJENT")
     }
 
     enum class SivilstandType(val tpsKode: String) {

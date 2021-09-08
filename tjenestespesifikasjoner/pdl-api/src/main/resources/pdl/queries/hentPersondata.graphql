@@ -1,3 +1,31 @@
+fragment vegadresse on Vegadresse {
+    matrikkelId
+    husnummer
+    husbokstav
+    bruksenhetsnummer
+    adressenavn
+    kommunenummer
+    bydelsnummer
+    tilleggsnavn
+    postnummer
+}
+fragment matrikkeladresse on Matrikkeladresse {
+    matrikkelId
+    bruksenhetsnummer
+    tilleggsnavn
+    postnummer
+    kommunenummer
+}
+fragment utenlandskadresse on UtenlandskAdresse {
+    adressenavnNummer
+    bygningEtasjeLeilighet
+    postboksNummerNavn
+    postkode
+    bySted
+    regionDistriktOmraade
+    landkode
+}
+
 query($ident: ID!){
     hentPerson(ident: $ident) {
         folkeregisteridentifikator {
@@ -148,23 +176,14 @@ query($ident: ID!){
             startdatoForKontrakt
             sluttdatoForKontrakt
             coAdressenavn
-            vegadresse{
-                matrikkelId
-                husnummer
-                husbokstav
-                bruksenhetsnummer
-                adressenavn
-                kommunenummer
-                bydelsnummer
-                tilleggsnavn
-                postnummer
+            vegadresse {
+                ...vegadresse
             }
-            matrikkeladresse{
-                matrikkelId
-                bruksenhetsnummer
-                tilleggsnavn
-                postnummer
-                kommunenummer
+            matrikkeladresse {
+                ...matrikkeladresse
+            }
+            utenlandskAdresse {
+                ...utenlandskadresse
             }
             ukjentBosted{
                 bostedskommune
@@ -176,34 +195,26 @@ query($ident: ID!){
                 kilde
             }
             vegadresse {
-                husnummer
-                husbokstav
-                bruksenhetsnummer
-                adressenavn
-                kommunenummer
-                bydelsnummer
-                tilleggsnavn
-                postnummer
+                ...vegadresse
             }
             matrikkeladresse {
-                bruksenhetsnummer
-                tilleggsnavn
-                postnummer
-                kommunenummer
+                ...matrikkeladresse
             }
             utenlandskAdresse {
-                adressenavnNummer
-                bygningEtasjeLeilighet
-                postboksNummerNavn
-                postkode
-                bySted
-                regionDistriktOmraade
-                landkode
+                ...utenlandskadresse
             }
             ukjentBosted {
                 bostedskommune
             }
         }
-
+        kontaktadresse {
+            coAdressenavn
+            vegadresse {
+                ...vegadresse
+            }
+            utenlandskAdresse {
+                ...utenlandskadresse
+            }
+        }
     }
 }
