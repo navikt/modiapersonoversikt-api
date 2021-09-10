@@ -8,6 +8,7 @@ import no.nav.modiapersonoversikt.infrastructure.naudit.AuditResources;
 import no.nav.modiapersonoversikt.consumer.sykmeldingsperioder.consumer.sykepenger.mapping.SykepengerMapper;
 import no.nav.modiapersonoversikt.consumer.sykmeldingsperioder.consumer.sykepenger.mapping.to.SykepengerRequest;
 import no.nav.modiapersonoversikt.consumer.sykmeldingsperioder.consumer.sykepenger.mapping.to.SykepengerResponse;
+import no.nav.tjeneste.virksomhet.foreldrepenger.v2.informasjon.FimPerson;
 import no.nav.tjeneste.virksomhet.sykepenger.v2.HentSykepengerListeSikkerhetsbegrensning;
 import no.nav.tjeneste.virksomhet.sykepenger.v2.SykepengerV2;
 import no.nav.tjeneste.virksomhet.sykepenger.v2.informasjon.FimsykBruker;
@@ -18,6 +19,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.util.CollectionUtils;
 
 import static java.util.Collections.singletonList;
+import static java.util.Optional.ofNullable;
 
 /**
  * Vår standardimplementasjonen av den eksterne tjenesten for sykmeldingsperioder.
@@ -26,7 +28,7 @@ public class DefaultSykepengerService implements SykepengerServiceBi {
     private static Audit.AuditDescriptor<FimsykBruker> auditLogger = Audit.describe(
             Audit.Action.READ,
             AuditResources.Person.Sykepenger,
-            (person) -> singletonList(new Pair<>(AuditIdentifier.FNR, person.getIdent()))
+            (person) -> singletonList(new Pair<>(AuditIdentifier.FNR, ofNullable(person).map(FimsykBruker::getIdent).orElse("--")))
     );
     private static final Logger logger = LoggerFactory.getLogger(DefaultSykepengerService.class);
     private SykepengerV2 sykepengerService;

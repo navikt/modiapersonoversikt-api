@@ -18,6 +18,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.util.CollectionUtils;
 
 import static java.util.Collections.singletonList;
+import static java.util.Optional.ofNullable;
 
 /**
  * Vår standardimplementasjonen av den eksterne tjenesten for oppfolgingskontraker.
@@ -26,7 +27,7 @@ public class DefaultOppfolgingskontraktService implements OppfolgingskontraktSer
     private static Audit.AuditDescriptor<WSHentOppfoelgingskontraktListeRequest> auditLogger = Audit.describe(
             Audit.Action.READ,
             AuditResources.Person.Kontrakter,
-            (person) -> singletonList(new Pair<>(AuditIdentifier.FNR, person.getPersonidentifikator()))
+            (person) -> singletonList(new Pair<>(AuditIdentifier.FNR, ofNullable(person).map(WSHentOppfoelgingskontraktListeRequest::getPersonidentifikator).orElse("--")))
     );
 
     private OppfoelgingPortType oppfolgingskontraktService = null;

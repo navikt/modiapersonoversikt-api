@@ -1,6 +1,7 @@
 package no.nav.modiapersonoversikt.legacy.kjerneinfo.consumer.fim.person.support;
 
 import static java.util.Collections.singletonList;
+import static java.util.Optional.ofNullable;
 
 import java.util.Iterator;
 import java.util.Optional;
@@ -9,6 +10,7 @@ import kotlin.Pair;
 import no.nav.modiapersonoversikt.legacy.kjerneinfo.consumer.fim.person.to.HentKjerneinformasjonRequest;
 import no.nav.modiapersonoversikt.legacy.kjerneinfo.consumer.fim.person.to.HentKjerneinformasjonResponse;
 import no.nav.modiapersonoversikt.legacy.kjerneinfo.consumer.mdc.MDCUtils;
+import no.nav.modiapersonoversikt.legacy.kjerneinfo.domain.person.Fodselsnummer;
 import no.nav.modiapersonoversikt.legacy.kjerneinfo.domain.person.GeografiskTilknytning;
 import no.nav.modiapersonoversikt.legacy.kjerneinfo.domain.person.GeografiskTilknytningstyper;
 import no.nav.modiapersonoversikt.legacy.kjerneinfo.domain.person.Person;
@@ -47,7 +49,11 @@ public class HentPersonService {
     private static Audit.AuditDescriptor<Person> auditLogger = Audit.describe(
             Audit.Action.READ,
             AuditResources.Person.Personalia,
-            (person) -> singletonList(new Pair<>(AuditIdentifier.FNR, person.getFodselsnummer().getNummer()))
+            (person) -> singletonList(new Pair<>(AuditIdentifier.FNR, ofNullable(person)
+                    .map(Person::getFodselsnummer)
+                    .map(Fodselsnummer::getNummer)
+                    .orElse("--")
+            ))
     );
     private static final String FNR_REGEX = "\\d{11}";
 
@@ -141,13 +147,13 @@ public class HentPersonService {
     }
 
     private String getDiskresjonskode(HentGeografiskTilknytningResponse response) {
-        return Optional.ofNullable(response.getDiskresjonskode())
+        return ofNullable(response.getDiskresjonskode())
                 .map(Kodeverdi::getValue)
                 .orElse(null);
     }
 
     private String getGeografiskTilknytning(HentGeografiskTilknytningResponse response) {
-        return Optional.ofNullable(response.getGeografiskTilknytning())
+        return ofNullable(response.getGeografiskTilknytning())
                 .map(no.nav.tjeneste.virksomhet.person.v3.informasjon.GeografiskTilknytning::getGeografiskTilknytning)
                 .orElse(null);
     }

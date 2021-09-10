@@ -11,11 +11,13 @@ import no.nav.modiapersonoversikt.infrastructure.naudit.AuditResources;
 import no.nav.tjeneste.virksomhet.personsoek.v1.FinnPersonFault;
 import no.nav.tjeneste.virksomhet.personsoek.v1.FinnPersonFault1;
 import no.nav.tjeneste.virksomhet.personsoek.v1.PersonsokPortType;
+import no.nav.tjeneste.virksomhet.personsoek.v1.informasjon.NorskIdent;
 import no.nav.tjeneste.virksomhet.personsoek.v1.informasjon.Person;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import static java.util.Collections.singletonList;
+import static java.util.Optional.ofNullable;
 
 /**
  * Vår standardimplementasjonen av den eksterne tjenesten.
@@ -24,7 +26,11 @@ public class DefaultPersonsokService implements PersonsokServiceBi {
     private static Audit.AuditDescriptor<Person> auditLogger = Audit.describe(
             Audit.Action.READ,
             AuditResources.Person.Personalia,
-            (person) -> singletonList(new Pair<>(AuditIdentifier.FNR, person.getIdent().getIdent()))
+            (person) -> singletonList(new Pair<>(AuditIdentifier.FNR, ofNullable(person)
+                    .map(Person::getIdent)
+                    .map(NorskIdent::getIdent)
+                    .orElse("--")
+            ))
     );
 
     private PersonsokPortType personsokService;
