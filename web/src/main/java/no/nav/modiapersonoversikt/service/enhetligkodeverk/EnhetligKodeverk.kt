@@ -6,7 +6,6 @@ object EnhetligKodeverk {
     }
 
     class Kodeverk(private val kodeverk: Map<String, String>) {
-
         fun hentBeskrivelse(kodeRef: String): String? = kodeverk[kodeRef]
     }
 

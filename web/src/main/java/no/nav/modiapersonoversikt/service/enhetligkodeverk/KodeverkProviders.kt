@@ -27,7 +27,6 @@ class KodeverkProviders(
         val respons = sfHenvendelseKodeverk.henvendelseKodeverkTemagrupperGet(
             MDC.get(MDCConstants.MDC_CALL_ID) ?: UUID.randomUUID().toString()
         )
-
         return hentKodeverk(respons)
     }
 
@@ -35,7 +34,6 @@ class KodeverkProviders(
         val kodeverk = respons.map { (navn, kode) ->
             kode to navn
         }.toMap()
-
         return EnhetligKodeverk.Kodeverk(kodeverk)
     }
 

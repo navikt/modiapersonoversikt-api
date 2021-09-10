@@ -24,6 +24,8 @@ class EnhetligKodeverkServiceImpl(val providers: KodeverkProviders) : EnhetligKo
         }
     }
 
+    fun getCache() = this.cache
+
     private fun hentScheduleDatoInstant(): Instant {
         // Kl 01:00 den aktuelle dagen
         return LocalDate.now().atTime(1, 0)
