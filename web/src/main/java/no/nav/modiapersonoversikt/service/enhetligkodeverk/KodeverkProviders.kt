@@ -20,27 +20,25 @@ class KodeverkProviders(
             kodeverksnavn = kodeverkNavn,
             spraak = listOf("nb")
         )
-        return hentKodeverk(respons)
+        return EnhetligKodeverk.Kodeverk(kodeverkNavn, parseTilKodeverk(respons))
     }
 
     fun fraSfHenvendelseKodeverk(): EnhetligKodeverk.Kodeverk {
         val respons = sfHenvendelseKodeverk.henvendelseKodeverkTemagrupperGet(
             MDC.get(MDCConstants.MDC_CALL_ID) ?: UUID.randomUUID().toString()
         )
-        return hentKodeverk(respons)
+        return EnhetligKodeverk.Kodeverk("SF_TEMAGRUPPE", parseTilKodeverk(respons))
     }
 
-    private fun hentKodeverk(respons: List<TemagruppeDTO>): EnhetligKodeverk.Kodeverk {
-        val kodeverk = respons.map { (navn, kode) ->
+    private fun parseTilKodeverk(respons: List<TemagruppeDTO>): Map<String, String> {
+        return respons.associate { (navn, kode) ->
             kode to navn
-        }.toMap()
-        return EnhetligKodeverk.Kodeverk(kodeverk)
+        }
     }
 
-    private fun hentKodeverk(respons: GetKodeverkKoderBetydningerResponseDTO): EnhetligKodeverk.Kodeverk {
-        val kodeverk = respons.betydninger.mapValues { entry ->
+    private fun parseTilKodeverk(respons: GetKodeverkKoderBetydningerResponseDTO): Map<String, String> {
+        return respons.betydninger.mapValues { entry ->
             entry.value.first().beskrivelser["nb"]?.term ?: entry.key
         }
-        return EnhetligKodeverk.Kodeverk(kodeverk)
     }
 }

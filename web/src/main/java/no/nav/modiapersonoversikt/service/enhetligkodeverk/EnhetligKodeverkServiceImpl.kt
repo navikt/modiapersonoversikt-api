@@ -1,48 +1,54 @@
 package no.nav.modiapersonoversikt.service.enhetligkodeverk
 
+import org.slf4j.LoggerFactory
 import java.time.*
+import java.time.temporal.ChronoUnit
 import java.util.*
 import kotlin.concurrent.scheduleAtFixedRate
 
-class EnhetligKodeverkServiceImpl(val providers: KodeverkProviders) : EnhetligKodeverk.Service {
-
+class EnhetligKodeverkServiceImpl(
+    val providers: KodeverkProviders,
+    scheduler: Timer = Timer()
+) : EnhetligKodeverk.Service {
+    private val log = LoggerFactory.getLogger(EnhetligKodeverkServiceImpl::class.java)
     private val cache: MutableMap<KodeverkConfig, EnhetligKodeverk.Kodeverk> = mutableMapOf()
-    private val scheduler = Timer()
+    private val emptyKodeverk = EnhetligKodeverk.Kodeverk("EMPTY", emptyMap())
 
     init {
-        val schedulertDatoTidspunkt = hentScheduleDatoInstant()
-
-        if (schedulertDatoTidspunkt.isAfter(Instant.now())) {
-            prepopulerCache()
-        }
+        prepopulerCache()
 
         scheduler.scheduleAtFixedRate(
-            time = Date.from(schedulertDatoTidspunkt),
+            time = Date.from(hentScheduleDatoInstant()),
             period = Duration.ofHours(24).toMillis()
         ) {
             prepopulerCache()
         }
     }
 
-    fun getCache() = this.cache
-
     private fun hentScheduleDatoInstant(): Instant {
-        // Kl 01:00 den aktuelle dagen
-        return LocalDate.now().atTime(1, 0)
+        val kjoringIdag = LocalDate.now().atTime(1, 0)
             .atZone(ZoneId.systemDefault())
             .toInstant()
-    }
 
-    private fun prepopulerCache() {
-        KodeverkConfig.values().forEach { config ->
-            cache[config] = config.hentKodeverk(providers)
+        return if (kjoringIdag.isBefore(Instant.now())) {
+            // Flytter en dag frem i tid, siden tidspunktet allerede er passert
+            kjoringIdag.plus(1, ChronoUnit.DAYS)
+        } else {
+            kjoringIdag
         }
-        println("Prepoluerte cache")
     }
 
     override fun hentKodeverk(kodeverkNavn: KodeverkConfig): EnhetligKodeverk.Kodeverk {
-        return requireNotNull(cache[kodeverkNavn]) {
-            "Fant ikke kodeverkNavn $kodeverkNavn"
+        return cache[kodeverkNavn] ?: emptyKodeverk
+    }
+
+    internal fun prepopulerCache() {
+        KodeverkConfig.values().forEach { config ->
+            try {
+                cache[config] = config.hentKodeverk(providers)
+            } catch (e: Exception) {
+                log.error("Feil ved uthenting av kodeverk $config")
+            }
         }
     }
 }
