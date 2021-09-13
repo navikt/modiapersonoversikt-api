@@ -5,21 +5,26 @@ import no.nav.modiapersonoversikt.legacy.api.domain.bidragsak.generated.models.B
 import no.nav.modiapersonoversikt.legacy.api.domain.saker.Sak
 import no.nav.modiapersonoversikt.legacy.api.domain.saker.Sak.BIDRAG_MARKOR
 import no.nav.modiapersonoversikt.service.saker.SakerKilde
+import no.nav.modiapersonoversikt.service.unleash.Feature
+import no.nav.modiapersonoversikt.service.unleash.UnleashService
 
-internal class BidragSaker(private val client: BidragSakControllerApi) : SakerKilde {
+internal class BidragSaker(
+    private val client: BidragSakControllerApi,
+    private val unleashService: UnleashService
+) : SakerKilde {
     override val kildeNavn: String = "BIDRAG"
 
     override fun leggTilSaker(fnr: String, saker: MutableList<Sak>) {
+        val hentDataFraBisys = unleashService.isEnabled(Feature.HENT_BISYS_SAKER)
         val sakerFra = if (hentDataFraBisys) client.find(fnr) else emptyList()
 
-        val tilSaker = sakerFra.map { BIDRAGSAK_TIL_SAK.invoke(it) }
-        saker.addAll(tilSaker)
-        saker.add(generellBidragsSak())
+        saker.addAll(sakerFra.map(::tilSak))
+        saker.add(generellBidragsSak(hentDataFraBisys))
     }
 
+
     companion object {
-        const val hentDataFraBisys = false
-        fun generellBidragsSak(): Sak {
+        private fun generellBidragsSak(hentDataFraBisys: Boolean = true): Sak {
             return Sak().apply {
                 saksId = "-"
                 fagsystemSaksId = "-"
@@ -34,13 +39,11 @@ internal class BidragSaker(private val client: BidragSakControllerApi) : SakerKi
             }
         }
 
-        val BIDRAGSAK_TIL_SAK = { bidragSakDto: BidragSakDto ->
-            generellBidragsSak().apply {
+        private fun tilSak(bidragSakDto: BidragSakDto) = generellBidragsSak().apply {
                 saksId = bidragSakDto.saksnummer
                 sakstype = Sak.SAKSTYPE_MED_FAGSAK
                 fagsystemKode = Sak.FAGSYSTEMKODE_BIDRAG
                 temaKode = Sak.FAGSYSTEMKODE_BIDRAG
-            }
         }
     }
 }

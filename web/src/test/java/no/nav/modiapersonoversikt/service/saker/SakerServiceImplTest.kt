@@ -20,6 +20,8 @@ import no.nav.modiapersonoversikt.legacy.api.service.saker.GsakKodeverk
 import no.nav.modiapersonoversikt.service.saker.kilder.BidragSaker
 import no.nav.modiapersonoversikt.service.saker.mediation.SakApiGateway
 import no.nav.modiapersonoversikt.service.saker.mediation.SakDto
+import no.nav.modiapersonoversikt.service.unleash.Feature
+import no.nav.modiapersonoversikt.service.unleash.UnleashService
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.behandlehenvendelse.BehandleHenvendelsePortType
 import no.nav.virksomhet.gjennomforing.sak.arbeidogaktivitet.v1.EndringsInfo
 import no.nav.virksomhet.gjennomforing.sak.arbeidogaktivitet.v1.Fagomradekode
@@ -71,6 +73,9 @@ class SakerServiceImplTest {
     @MockK
     private lateinit var bidragSakControllerApi: BidragSakControllerApi
 
+    @MockK
+    private lateinit var unleashService: UnleashService
+
     @InjectMockKs
     private lateinit var sakerService: SakerServiceImpl
 
@@ -85,6 +90,7 @@ class SakerServiceImplTest {
         every { standardKodeverk.getArkivtemaNavn(any()) } returns null
         every { fodselnummerAktorService.hentAktorIdForFnr(any()) } returns "123456789"
         every { bidragSakControllerApi.find(any()) } returns listOf(BidragSakDto(roller = listOf(), saksnummer = "123", erParagraf19 = false))
+        every { unleashService.isEnabled(any<Feature>()) } returns true
 
         mockkStatic(SubjectHandler::class)
         every { SubjectHandler.getSubject() } returns Optional.of(Subject("12345678910", IdentType.EksternBruker, SsoToken.oidcToken("token", HashMap<String, Any?>())))
@@ -107,15 +113,9 @@ class SakerServiceImplTest {
         assertThat(saksliste[0].saksId, `is`(SakId_1))
         assertThat(saksliste[3].fagsystemKode, `is`(""))
         assertThat(saksliste[saksliste.size - 1].sakstype, `is`(SAKSTYPE_GENERELL))
-        if (BidragSaker.hentDataFraBisys) {
-            assertThat(saksliste[saksliste.size - 1].temaKode, `is`(BIDRAG_MARKOR))
-            assertThat(saksliste[saksliste.size - 1].temaNavn, `is`("Bidrag"))
-            assertThat(saksliste[saksliste.size - 1].fagsystemNavn, `is`("Kopiert inn i Bisys"))
-        } else {
-            assertThat(saksliste[saksliste.size - 1].temaKode, `is`("OPP"))
-            assertThat(saksliste[saksliste.size - 1].temaNavn, `is`("OPP"))
-            assertThat(saksliste[saksliste.size - 1].fagsystemNavn, `is`("FS22"))
-        }
+        assertThat(saksliste[saksliste.size - 1].temaKode, `is`(BIDRAG_MARKOR))
+        assertThat(saksliste[saksliste.size - 1].temaNavn, `is`("Bidrag"))
+        assertThat(saksliste[saksliste.size - 1].fagsystemNavn, `is`("Kopiert inn i Bisys"))
     }
 
     @Test
@@ -132,11 +132,8 @@ class SakerServiceImplTest {
         every { psakService.hentSakerFor(FNR) } returns pensjonssaker
 
         val saksliste = sakerService.hentSaker(FNR).saker
-        if (BidragSaker.hentDataFraBisys) {
-            assertThat(saksliste.size, `is`(3))
-        } else {
-            assertThat(saksliste.size, `is`(2))
-        }
+
+        assertThat(saksliste.size, `is`(3))
         assertThat(saksliste[0].temaNavn, `is`("PENS"))
         assertThat(saksliste[1].temaNavn, `is`("UFO"))
     }

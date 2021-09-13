@@ -13,6 +13,7 @@ import no.nav.modiapersonoversikt.legacy.api.service.saker.SakerService
 import no.nav.modiapersonoversikt.legacy.api.utils.SakerUtils
 import no.nav.modiapersonoversikt.service.saker.kilder.*
 import no.nav.modiapersonoversikt.service.saker.mediation.SakApiGateway
+import no.nav.modiapersonoversikt.service.unleash.UnleashService
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.behandlehenvendelse.BehandleHenvendelsePortType
 import no.nav.virksomhet.tjenester.sak.arbeidogaktivitet.v1.ArbeidOgAktivitet
 import org.slf4j.LoggerFactory
@@ -52,6 +53,9 @@ class SakerServiceImpl : SakerService {
     @Autowired
     private lateinit var fodselnummerAktorService: FodselnummerAktorService
 
+    @Autowired
+    private lateinit var unleashService: UnleashService
+
     private lateinit var arenaSaker: ArenaSaker
     private lateinit var bidragSaker: BidragSaker
     private lateinit var generelleSaker: GenerelleSaker
@@ -62,7 +66,7 @@ class SakerServiceImpl : SakerService {
     @PostConstruct
     fun setup() {
         arenaSaker = ArenaSaker(arbeidOgAktivitet)
-        bidragSaker = BidragSaker(bidragApiClient)
+        bidragSaker = BidragSaker(bidragApiClient, unleashService)
         generelleSaker = GenerelleSaker()
         restSakSaker = RestSakSaker(sakApiGateway, fodselnummerAktorService)
         oppfolgingsSaker = OppfolgingsSaker()
