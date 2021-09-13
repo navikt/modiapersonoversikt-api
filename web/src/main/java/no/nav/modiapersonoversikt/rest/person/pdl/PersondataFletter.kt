@@ -7,33 +7,16 @@ import no.nav.modiapersonoversikt.legacy.api.domain.pdl.generated.HentPersondata
 import no.nav.modiapersonoversikt.legacy.api.domain.pdl.generated.HentPersondata.KontaktinformasjonForDoedsboSkifteform.OFFENTLIG
 import no.nav.modiapersonoversikt.legacy.api.utils.TjenestekallLogger
 import no.nav.modiapersonoversikt.service.dkif.Dkif
+import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk
 import no.nav.tjeneste.virksomhet.person.v3.informasjon.BankkontoNorge
 import no.nav.tjeneste.virksomhet.person.v3.informasjon.BankkontoUtland
 import no.nav.tjeneste.virksomhet.person.v3.informasjon.Bruker
 import no.nav.tjeneste.virksomhet.person.v3.meldinger.HentPersonResponse
 import org.slf4j.LoggerFactory
 import java.time.LocalDate
+import no.nav.modiapersonoversikt.service.enhetligkodeverk.KodeverkConfig as Kodeverk
 
-// TODO TEMP KODEVERK
-interface KodeverkKilde
-class FelleskodeverkKilde(val kodeverk: String) : KodeverkKilde
-enum class Kodeverk(val kilde: KodeverkKilde) {
-    KJONN(FelleskodeverkKilde("Kjønnstyper")),
-    LAND(FelleskodeverkKilde("Landkoder")),
-    SPRAK(FelleskodeverkKilde("Språk")),
-    RETNINGSNUMRE(FelleskodeverkKilde("Retningsnumre")),
-    POSTNUMMER(FelleskodeverkKilde("Postnumre")),
-    PERSONSTATUSER(FelleskodeverkKilde("Personstatuser")),
-    SIVILSTAND(FelleskodeverkKilde("Personstatuser")),
-    DISKRESJONSKODER(FelleskodeverkKilde("Diskresjonskoder")),
-    VALUTA(FelleskodeverkKilde("Valutaer"))
-}
-
-interface KodeverkService {
-    fun hentVerdi(kodeverk: Kodeverk, kodeterm: String, sprak: String = "nb"): String
-}
-
-class PersondataFletter(val kodeverk: KodeverkService) {
+class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
     private val log = LoggerFactory.getLogger(PersondataFletter::class.java)
 
     data class Data(
@@ -211,7 +194,7 @@ class PersondataFletter(val kodeverk: KodeverkService) {
                 adresse.regionDistriktOmraade
             ),
             linje3 = listOf(
-                kodeverk.hentVerdi(Kodeverk.LAND, adresse.landkode)
+                kodeverk.hentKodeverk(Kodeverk.LAND).hentBeskrivelse(adresse.landkode)
             )
         )
 
@@ -225,7 +208,7 @@ class PersondataFletter(val kodeverk: KodeverkService) {
             ),
             linje2 = listOf(
                 adresse.postnummer,
-                adresse.postnummer?.let { kodeverk.hentVerdi(Kodeverk.POSTNUMMER, it) }
+                adresse.postnummer?.let { kodeverk.hentKodeverk(Kodeverk.POSTNUMMER).hentBeskrivelse(it) }
             ),
             linje3 = listOf(
                 adresse.bydelsnummer,
@@ -551,14 +534,14 @@ class PersondataFletter(val kodeverk: KodeverkService) {
     }
 }
 
-fun <T> KodeverkService.hentKodeBeskrivelse(
-    kodeverk: Kodeverk,
-    termnavn: T,
-    sprak: String = "nb"
+fun <T> EnhetligKodeverk.Service.hentKodeBeskrivelse(
+    kodeverkRef: Kodeverk,
+    kodeRef: T
 ): Persondata.KodeBeskrivelse<T> {
-    val beskrivelse = this.hentVerdi(kodeverk, termnavn.toString(), sprak)
+    val kodeverk = this.hentKodeverk(kodeverkRef)
+    val beskrivelse = kodeverk.hentBeskrivelse(kodeRef.toString())
     return Persondata.KodeBeskrivelse(
-        kode = termnavn,
+        kode = kodeRef,
         beskrivelse = beskrivelse
     )
 }

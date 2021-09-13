@@ -1,8 +1,10 @@
 package no.nav.modiapersonoversikt.rest.person.pdl
 
 import no.nav.modiapersonoversikt.legacy.api.domain.pdl.generated.HentPersondataLite
+import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk
+import no.nav.modiapersonoversikt.service.enhetligkodeverk.KodeverkConfig as Kodeverk
 
-class TredjepartspersonMapper(val kodeverk: KodeverkService) {
+class TredjepartspersonMapper(val kodeverk: EnhetligKodeverk.Service) {
     fun lagTredjepartsperson(
         person: HentPersondataLite.HentPersonBolkResult,
         tilganger: PersondataService.Tilganger
@@ -48,7 +50,7 @@ class TredjepartspersonMapper(val kodeverk: KodeverkService) {
             ),
             linje2 = listOf(
                 adresse.postnummer,
-                adresse.postnummer?.let { kodeverk.hentVerdi(Kodeverk.POSTNUMMER, it) }
+                adresse.postnummer?.let { kodeverk.hentKodeverk(Kodeverk.POSTNUMMER).hentBeskrivelse(it) }
             ),
             linje3 = listOf(
                 adresse.bydelsnummer,
@@ -83,7 +85,7 @@ class TredjepartspersonMapper(val kodeverk: KodeverkService) {
                 adresse.regionDistriktOmraade
             ),
             linje3 = listOf(
-                kodeverk.hentVerdi(Kodeverk.LAND, adresse.landkode)
+                kodeverk.hentKodeverk(Kodeverk.LAND).hentBeskrivelse(adresse.landkode)
             )
         )
     }

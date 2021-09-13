@@ -7,6 +7,7 @@ import no.nav.modiapersonoversikt.legacy.api.service.organisasjonsEnhetV2.Organi
 import no.nav.modiapersonoversikt.legacy.api.service.pdl.PdlOppslagService
 import no.nav.modiapersonoversikt.legacy.kjerneinfo.consumer.egenansatt.EgenAnsattService
 import no.nav.modiapersonoversikt.service.dkif.Dkif
+import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk
 import no.nav.tjeneste.virksomhet.person.v3.binding.PersonV3
 import no.nav.tjeneste.virksomhet.person.v3.informasjon.Informasjonsbehov
 import no.nav.tjeneste.virksomhet.person.v3.informasjon.NorskIdent
@@ -30,7 +31,7 @@ class PersondataServiceImpl(
     private val personV3: PersonV3,
     private val egenAnsattService: EgenAnsattService,
     private val tilgangskontroll: TilgangskontrollContext,
-    kodeverk: KodeverkService
+    kodeverk: EnhetligKodeverk.Service
 ) : PersondataService {
     val persondateFletter = PersondataFletter(kodeverk)
     val tredjepartspersonMapper = TredjepartspersonMapper(kodeverk)
