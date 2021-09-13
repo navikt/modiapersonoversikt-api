@@ -33,7 +33,7 @@ class Audit {
     internal class WithDataDescriptor<T>(
         private val action: Action,
         private val resourceType: AuditResource,
-        private val extractIdentifiers: (T) -> List<Pair<AuditIdentifier, String?>>
+        private val extractIdentifiers: (T?) -> List<Pair<AuditIdentifier, String?>>
     ) : AuditDescriptor<T> {
         override fun log(resource: T) {
             val identifiers = extractIdentifiers(resource).toTypedArray()
@@ -41,11 +41,13 @@ class Audit {
         }
 
         override fun denied(reason: String) {
-            logInternal(action, resourceType, arrayOf(DENY_REASON to reason))
+            val identifiers = extractIdentifiers(null).toTypedArray().plus(DENY_REASON to reason)
+            logInternal(action, resourceType, identifiers)
         }
 
         override fun failed(exception: Throwable) {
-            logInternal(action, resourceType, arrayOf(FAIL_REASON to exception.getFailureReason()))
+            val identifiers = extractIdentifiers(null).toTypedArray().plus(FAIL_REASON to exception.getFailureReason())
+            logInternal(action, resourceType, identifiers)
         }
     }
 
@@ -58,18 +60,18 @@ class Audit {
     internal class NothingDescriptor(
         private val action: Action,
         private val resourceType: AuditResource,
-        private val identifiers: Array<out Pair<AuditIdentifier, String?>>
+        private val identifiers: Array<Pair<AuditIdentifier, String?>>
     ) : AuditDescriptor<Any> {
         override fun log(resource: Any) {
             logInternal(action, resourceType, identifiers)
         }
 
         override fun denied(reason: String) {
-            logInternal(action, resourceType, arrayOf(DENY_REASON to reason))
+            logInternal(action, resourceType, identifiers.plus(DENY_REASON to reason))
         }
 
         override fun failed(exception: Throwable) {
-            logInternal(action, resourceType, arrayOf(FAIL_REASON to exception.getFailureReason()))
+            logInternal(action, resourceType, identifiers.plus(FAIL_REASON to exception.getFailureReason()))
         }
     }
 
@@ -81,15 +83,15 @@ class Audit {
 
         @JvmStatic
         fun describe(action: Action, resourceType: AuditResource, vararg identifiers: Pair<AuditIdentifier, String?>): AuditDescriptor<Any> {
-            return NothingDescriptor(action, resourceType, identifiers)
+            return NothingDescriptor(action, resourceType, identifiers as Array<Pair<AuditIdentifier, String?>>)
         }
 
         @JvmStatic
-        fun <T> describe(action: Action, resourceType: AuditResource, extractIdentifiers: (T) -> List<Pair<AuditIdentifier, String?>>): AuditDescriptor<T> {
+        fun <T> describe(action: Action, resourceType: AuditResource, extractIdentifiers: (T?) -> List<Pair<AuditIdentifier, String?>>): AuditDescriptor<T> {
             return WithDataDescriptor(action, resourceType, extractIdentifiers)
         }
 
-        private fun logInternal(action: Action, resourceType: AuditResource, identifiers: Array<out Pair<AuditIdentifier, String?>>) {
+        private fun logInternal(action: Action, resourceType: AuditResource, identifiers: Array<Pair<AuditIdentifier, String?>>) {
             val subject = SubjectHandler.getIdent()
             val logline = listOfNotNull(
                 "action='$action'",
