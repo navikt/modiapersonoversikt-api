@@ -209,6 +209,11 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
+            <groupId>no.nav.sbl.dialogarena</groupId>
+            <artifactId>kodeverk-api</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
             <groupId>no.nav.tjenestespesifikasjoner</groupId>
             <artifactId>nav-fim-personsok-v1-tjenestespesifikasjon</artifactId>
         </dependency>

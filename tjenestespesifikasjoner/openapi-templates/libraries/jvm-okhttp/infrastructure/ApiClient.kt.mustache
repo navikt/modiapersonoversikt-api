@@ -354,7 +354,7 @@ import org.threeten.bp.OffsetTime
         else -> value.toString()
     }
 
-    protected inline fun <reified T: Any> parseDateToQueryString(value : T): String {
+    inline fun <reified T: Any> parseDateToQueryString(value : T): String {
         {{#toJson}}
         /*
         .replace("\"", "") converts the json object string to an actual string for the query parameter.
