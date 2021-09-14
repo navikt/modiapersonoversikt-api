@@ -1,6 +1,10 @@
 package no.nav.modiapersonoversikt.service.enhetligkodeverk
 
 import no.nav.common.log.MDCConstants
+import no.nav.common.rest.client.RestClient
+import no.nav.common.utils.EnvironmentUtils
+import no.nav.modiapersonoversikt.infrastructure.http.LoggingInterceptor
+import no.nav.modiapersonoversikt.infrastructure.http.XCorrelationIdInterceptor
 import no.nav.modiapersonoversikt.legacy.api.domain.kodeverk.generated.apis.KodeverkApi
 import no.nav.modiapersonoversikt.legacy.api.domain.kodeverk.generated.models.GetKodeverkKoderBetydningerResponseDTO
 import no.nav.modiapersonoversikt.legacy.api.domain.sfhenvendelse.generated.models.TemagruppeDTO
@@ -39,6 +43,24 @@ class KodeverkProviders(
     private fun parseTilKodeverk(respons: GetKodeverkKoderBetydningerResponseDTO): Map<String, String> {
         return respons.betydninger.mapValues { entry ->
             entry.value.first().beskrivelser["nb"]?.term ?: entry.key
+        }
+    }
+
+    companion object {
+        private val url = EnvironmentUtils.getRequiredProperty("FELLES_KODEVERK_URL")
+        private val client = RestClient.baseClient().newBuilder()
+            .addInterceptor(XCorrelationIdInterceptor())
+            .addInterceptor(
+                LoggingInterceptor("Felleskodeverk") { request ->
+                    requireNotNull(request.header("X-Correlation-ID")) {
+                        "Kall uten \"X-Correlation-ID\" er ikke lov"
+                    }
+                }
+            )
+            .build()
+
+        fun createFelleskodeverkApi(): KodeverkApi {
+            return KodeverkApi(url, client)
         }
     }
 }

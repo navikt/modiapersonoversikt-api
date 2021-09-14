@@ -273,4 +273,5 @@ object SfHenvendelseApiFactory {
     fun createHenvendelseInfoApi() = HenvendelseInfoApi(url, client)
     fun createHenvendelseJournalApi() = JournalApi(url, client)
     fun createHenvendelseOpprettApi() = NyHenvendelseApi(url, client)
+    fun createHenvendelseKodeverkApi() = KodeverkApi(url, client)
 }
