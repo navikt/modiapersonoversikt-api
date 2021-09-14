@@ -7,7 +7,7 @@ object EnhetligKodeverk {
         fun hentKodeverk(kodeverkNavn: KodeverkConfig): Kodeverk
     }
 
-    class Kodeverk(private val navn: String, private val kodeverk: Map<String, String>) {
+    class Kodeverk(val navn: String, val kodeverk: Map<String, String>) {
         private val log = LoggerFactory.getLogger(Kodeverk::class.java)
 
         fun hentBeskrivelse(kodeRef: String): String {

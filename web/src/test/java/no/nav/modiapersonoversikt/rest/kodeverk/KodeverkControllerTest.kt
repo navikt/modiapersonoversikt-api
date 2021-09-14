@@ -3,7 +3,6 @@ package no.nav.modiapersonoversikt.rest.kodeverk
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.ninjasquad.springmockk.MockkBean
 import io.mockk.every
-import io.mockk.mockk
 import no.nav.modiapersonoversikt.consumer.kodeverk.consumer.fim.kodeverk.KodeverkmanagerBi
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.TilgangskontrollMock
@@ -24,10 +23,10 @@ internal class KodeverkControllerTest {
     open class TestConfig {
         @Bean
         open fun tilgangskontroll(): Tilgangskontroll = TilgangskontrollMock.get()
-
-        @Bean
-        open fun legacyKodeverk(): KodeverkmanagerBi = mockk()
     }
+
+    @MockkBean
+    lateinit var legacyKodeverk: KodeverkmanagerBi
 
     @MockkBean
     lateinit var kodeverkMock: EnhetligKodeverk.Service
@@ -46,7 +45,7 @@ internal class KodeverkControllerTest {
             "kode3" to "verdi3"
         )
         every { kodeverkMock.hentKodeverk(any()) } returns EnhetligKodeverk.Kodeverk(
-            navn = "kodeverksnavn",
+            navn = "dummykodeverk",
             kodeverk = kodeverk
         )
         mockMvc
@@ -57,7 +56,14 @@ internal class KodeverkControllerTest {
             )
             .andExpect { result ->
                 assertThat(result.response.status).isEqualTo(200)
-                assertThat(result.response.contentAsString).isEqualTo(mapper.writeValueAsString(kodeverk))
+                assertThat(result.response.contentAsString).isEqualTo(
+                    mapper.writeValueAsString(
+                        mapOf(
+                            "navn" to "dummykodeverk",
+                            "kodeverk" to kodeverk
+                        )
+                    )
+                )
             }
     }
 }
