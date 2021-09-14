@@ -45,7 +45,7 @@ class OppfolgingController @Autowired constructor(
                 val oppfolging = service.hentOppfolgingsinfo(fodselsnummer, ldapService)
 
                 mapOf(
-                    "erUnderOppfølging" to oppfolging.erUnderOppfolging,
+                    "erUnderOppfolging" to oppfolging.erUnderOppfolging,
                     "veileder" to hentVeileder(oppfolging.veileder),
                     "enhet" to hentEnhet(oppfolging.oppfolgingsenhet)
                 )
@@ -65,9 +65,10 @@ class OppfolgingController @Autowired constructor(
                     lagOppfolgingskontraktRequest(fodselsnummer, start, slutt)
                 )
                 val ytelserResponse = ytelseskontraktService.hentYtelseskontrakter(lagYtelseRequest(fodselsnummer, start, slutt))
+                val oppfolgingstatus = runCatching { hent(fodselsnummer) }
 
                 mapOf(
-                    "oppfølging" to hent(fodselsnummer),
+                    "oppfolging" to oppfolgingstatus.getOrNull(),
                     "meldeplikt" to kontraktResponse.bruker?.meldeplikt,
                     "formidlingsgruppe" to kontraktResponse.bruker?.formidlingsgruppe,
                     "innsatsgruppe" to kontraktResponse.bruker?.innsatsgruppe,

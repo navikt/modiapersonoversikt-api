@@ -29,7 +29,7 @@ public class PleiepengerServiceImpl implements PleiepengerService {
     private static Audit.AuditDescriptor<WSPerson> auditLogger = Audit.describe(
             Audit.Action.READ,
             AuditResources.Person.Pleiepenger,
-            (person) -> singletonList(new Pair<>(AuditIdentifier.FNR, person.getIdent()))
+            (person) -> singletonList(new Pair<>(AuditIdentifier.FNR, ofNullable(person).map(WSPerson::getIdent).orElse("--")))
     );
     private static final Logger logger = LoggerFactory.getLogger(PleiepengerServiceImpl.class);
 

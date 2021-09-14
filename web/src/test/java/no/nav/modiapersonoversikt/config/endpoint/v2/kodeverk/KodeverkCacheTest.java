@@ -4,6 +4,7 @@ package no.nav.modiapersonoversikt.config.endpoint.v2.kodeverk;
 import no.nav.modiapersonoversikt.config.endpoint.util.CacheTest;
 import no.nav.tjeneste.virksomhet.kodeverk.v2.HentKodeverkHentKodeverkKodeverkIkkeFunnet;
 import no.nav.tjeneste.virksomhet.kodeverk.v2.KodeverkPortType;
+import no.nav.tjeneste.virksomhet.kodeverk.v2.meldinger.XMLFinnKodeverkListeRequest;
 import no.nav.tjeneste.virksomhet.kodeverk.v2.meldinger.XMLHentKodeverkRequest;
 import org.junit.jupiter.api.Test;
 
@@ -34,5 +35,14 @@ class KodeverkCacheTest extends CacheTest {
         kodeverk.hentKodeverk(request2);
 
         assertThat(getNativeCache().estimatedSize(), is(2L));
+        assertThat(getKey(), is(generatedByDefaultKeyGenerator()));
+    }
+
+    @Test
+    void cacheKeysSkalVareUnikeForUlikeMetoder() {
+        verifyUniqueAndStableCacheKeys(
+                () -> kodeverk.finnKodeverkListe(new XMLFinnKodeverkListeRequest()),
+                () -> kodeverk.hentKodeverk(new XMLHentKodeverkRequest())
+        );
     }
 }

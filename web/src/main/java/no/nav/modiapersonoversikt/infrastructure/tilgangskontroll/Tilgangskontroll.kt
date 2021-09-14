@@ -119,6 +119,15 @@ class Policies {
         }
 
         @JvmField
+        val sfDialogTilhorerBruker = PolicyGenerator<TilgangskontrollContext, KjedeIdTilgangData>({ "KjedeId tilhørte ikke bruker. Spørring gjort av ${context.hentSaksbehandlerId()}" }) {
+            if (context.sfDialogTilhorerBruker(data.fnr, data.kjedeId)) {
+                DecisionEnums.PERMIT
+            } else {
+                DecisionEnums.DENY
+            }
+        }
+
+        @JvmField
         val kanHastekassere = Policy<TilgangskontrollContext>({ "Saksbehandler (${hentSaksbehandlerId()}) har ikke tilgang til hastekassering" }) {
             hentSaksbehandlerId()
                 .map { ident ->
@@ -143,6 +152,7 @@ class Policies {
 data class TilgangTilKontorSperreData(val valgtEnhet: String, val ansvarligEnhet: String?)
 data class TilgangTilOksosSperreData(val valgtEnhet: String, val brukersEnhet: String?)
 data class BehandlingsIdTilgangData(val fnr: String, val behandlingsIder: List<String>)
+data class KjedeIdTilgangData(val fnr: String, val kjedeId: String)
 data class TilgangTilTemaData(val valgtEnhet: String, val tema: String?)
 
 val log: Logger = LoggerFactory.getLogger(Tilgangskontroll::class.java)

@@ -80,6 +80,7 @@ class AuditResources {
 
             @JvmField
             val Personalia = AuditResource("person.personalia")
+            val Tilgang = AuditResource("person.tilgang")
             val Saker = AuditResource("person.saker")
 
             @JvmField

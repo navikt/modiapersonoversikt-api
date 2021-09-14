@@ -130,6 +130,8 @@ spec:
       value: "Mapper fra underkategorier i fellessystemers kodeverk til behandlingstema og behandlingstype i felles kodeverk"
     - name: KODEVERKSMAPPER_UNDERKATEGORI_URL
       value: "https://kodeverksmapper.nais.adeo.no/kodeverksmapper/mapUnderkategori"
+    - name: FELLES_KODEVERK_URL
+      value: "https://kodeverk.nais.adeo.no"
     - name: LDAP_BASEDN
       value: "dc=adeo,dc=no"
     - name: LDAP_DOMAIN
@@ -204,6 +206,8 @@ spec:
       value: "http://maven.adeo.no/nexus/content/groups/public/no/nav/tjenester/nav-arbeidsfordeling-v1-tjenestespesifikasjon/1.1.0/nav-arbeidsfordeling-v1-tjenestespesifikasjon-1.1.0.zip"
     - name: VIRKSOMHET_DIGITALKONTAKINFORMASJON_V1_ENDPOINTURL
       value: "https://dkif.nais.adeo.no/ws/DigitalKontaktinformasjon/v1"
+    - name: DKIF_REST_URL
+      value: "https://dkif.nais.adeo.no/"
     - name: VIRKSOMHET_DIGITALKONTAKINFORMASJON_V1_SECURITYTOKEN
       value: "SAML"
     - name: VIRKSOMHET_DIGITALKONTAKINFORMASJON_V1_WSDLURL
@@ -280,6 +284,8 @@ spec:
       value: "http://maven.adeo.no/nexus/content/groups/public/no/nav/tjenester/fim/nav-fim-ytelseskontrakt-v3-tjenestespesifikasjon/3.0.1/nav-fim-ytelseskontrakt-v3-tjenestespesifikasjon-3.0.1.zip"
     - name: HENVENDELSE_LES_API_URL
       value: "https://modapp.adeo.no/henvendelse-les/api"
+    - name: SF_HENVENDELSE_URL
+      value: "https://sf-henvendelse.intern.nav.no/api"
     - name: PDL_API_URL
       value: "https://pdl-api.nais.adeo.no/graphql"
     - name: PERSONFORVALTER_URL

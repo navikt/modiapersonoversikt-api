@@ -9,6 +9,7 @@ import no.nav.modiapersonoversikt.consumer.abac.AbacClientConfig;
 import no.nav.modiapersonoversikt.legacy.api.service.HenvendelseLesService;
 import no.nav.modiapersonoversikt.legacy.api.service.OppgaveBehandlingService;
 import no.nav.modiapersonoversikt.legacy.api.service.ldap.LDAPService;
+import no.nav.modiapersonoversikt.service.sfhenvendelse.SfHenvendelseService;
 import no.nav.modiapersonoversikt.service.unleash.UnleashService;
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll;
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.TilgangskontrollContext;
@@ -61,6 +62,7 @@ public class ApplicationContextBeans {
             LDAPService ldapService,
             GOSYSNAVansatt ansattService, // TODO undersøk om denne kan erstattes med axsys
             HenvendelseLesService henvendelseLesService,
+            SfHenvendelseService sfHenvendelseService,
             UnleashService unleashService
     ) {
         TilgangskontrollContext context = new TilgangskontrollContextImpl(
@@ -68,6 +70,7 @@ public class ApplicationContextBeans {
                 ldapService,
                 ansattService,
                 henvendelseLesService,
+                sfHenvendelseService,
                 unleashService
         );
         return new Tilgangskontroll(context);

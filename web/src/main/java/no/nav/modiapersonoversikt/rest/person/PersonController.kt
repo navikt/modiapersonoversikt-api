@@ -6,9 +6,10 @@ import no.nav.modiapersonoversikt.infrastructure.naudit.Audit
 import no.nav.modiapersonoversikt.infrastructure.naudit.Audit.Action.READ
 import no.nav.modiapersonoversikt.infrastructure.naudit.AuditIdentifier
 import no.nav.modiapersonoversikt.infrastructure.naudit.AuditResources
+import no.nav.modiapersonoversikt.infrastructure.scientist.Scientist
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Policies
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll
-import no.nav.modiapersonoversikt.legacy.api.domain.pdl.generated.HentIdent
+import no.nav.modiapersonoversikt.legacy.api.domain.pdl.generated.HentIdenter
 import no.nav.modiapersonoversikt.legacy.api.domain.pdl.generated.HentPerson
 import no.nav.modiapersonoversikt.legacy.api.service.kodeverk.StandardKodeverk
 import no.nav.modiapersonoversikt.legacy.api.service.pdl.PdlOppslagService
@@ -52,6 +53,7 @@ class PersonController @Autowired constructor(
     private val standardKodeverk: StandardKodeverk
 ) {
     private val logger = LoggerFactory.getLogger(PersonController::class.java)
+    private val kjoennExperiment = Scientist.createExperiment<String?>(Scientist.Config("PDL-Kjønn", 0.2))
 
     @GetMapping
     fun hent(@PathVariable("fnr") fodselsnummer: String): Map<String, Any?> {
@@ -72,10 +74,16 @@ class PersonController @Autowired constructor(
                         .sortedBy { it.prioritet }
                         .map(::getPdlTelefon)
                     val foreldreansvar = pdlPerson?.foreldreansvar ?: emptyList()
+
+                    val kjoenn = kjoennExperiment.run(
+                        { person?.personfakta?.kjonn?.kodeRef },
+                        { pdlPerson?.kjoenn?.get(0)?.kjoenn?.name }
+                    )
+
                     mapOf(
                         "fødselsnummer" to person?.fodselsnummer?.nummer,
                         "alder" to person?.fodselsnummer?.alder,
-                        "kjønn" to person?.personfakta?.kjonn?.kodeRef,
+                        "kjønn" to kjoenn,
                         "geografiskTilknytning" to person?.personfakta?.geografiskTilknytning?.value,
                         "navn" to getNavn(person?.personfakta?.personnavn),
                         "diskresjonskode" to person?.personfakta?.diskresjonskode?.let { Kode(it) },
@@ -122,8 +130,13 @@ class PersonController @Autowired constructor(
     }
 
     @GetMapping("/identer")
-    fun hentIdenter(@PathVariable("fnr") fodselsnummer: String): HentIdent.Identliste? {
-        return pdlOppslagService.hentIdent(fodselsnummer)
+    fun hentIdenter(@PathVariable("fnr") fodselsnummer: String): HentIdenter.Identliste? {
+        return pdlOppslagService.hentIdenter(fodselsnummer)
+    }
+
+    @GetMapping("/aktorid")
+    fun hentAktorId(@PathVariable("fnr") fodselsnummer: String): String? {
+        return pdlOppslagService.hentAktorId(fodselsnummer)
     }
 
     data class VergemalDTO(

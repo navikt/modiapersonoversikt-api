@@ -36,8 +36,8 @@ spec:
     - https://app-q0.adeo.no/modiapersonoversikt-api
     - https://modapp-q0.adeo.no/modiapersonoversikt-api
   replicas:
-    min: 1
-    max: 1
+    min: 2
+    max: 4
     cpuThresholdPercentage: 60
   vault:
     enabled: true
@@ -134,6 +134,8 @@ spec:
       value: "Mapper fra underkategorier i fellessystemers kodeverk til behandlingstema og behandlingstype i felles kodeverk"
     - name: KODEVERKSMAPPER_UNDERKATEGORI_URL
       value: "https://kodeverksmapper.nais.preprod.local/kodeverksmapper/mapUnderkategori"
+    - name: FELLES_KODEVERK_URL
+      value: "https://kodeverk.nais.preprod.local"
     - name: LDAP_BASEDN
       value: "dc=preprod,dc=local"
     - name: LDAP_DOMAIN
@@ -210,6 +212,8 @@ spec:
       value: "http://maven.adeo.no/nexus/content/groups/public/no/nav/tjenester/nav-arbeidsfordeling-v1-tjenestespesifikasjon/1.1.0/nav-arbeidsfordeling-v1-tjenestespesifikasjon-1.1.0.zip"
     - name: VIRKSOMHET_DIGITALKONTAKINFORMASJON_V1_ENDPOINTURL
       value: "https://dkif.nais.preprod.local/ws/DigitalKontaktinformasjon/v1"
+    - name: DKIF_REST_URL
+      value: "https://dkif.dev.adeo.no/"
     - name: VIRKSOMHET_DIGITALKONTAKINFORMASJON_V1_SECURITYTOKEN
       value: "SAML"
     - name: VIRKSOMHET_DIGITALKONTAKINFORMASJON_V1_WSDLURL
@@ -286,8 +290,10 @@ spec:
       value: "http://maven.adeo.no/nexus/content/groups/public/no/nav/tjenester/fim/nav-fim-ytelseskontrakt-v3-tjenestespesifikasjon/3.0.1/nav-fim-ytelseskontrakt-v3-tjenestespesifikasjon-3.0.1.zip"
     - name: HENVENDELSE_LES_API_URL
       value: "https://modapp-q0.adeo.no/henvendelse-les/api"
+    - name: SF_HENVENDELSE_URL
+      value: "https://sf-henvendelse.dev.intern.nav.no/api"
     - name: PDL_API_URL
-      value: "https://pdl-api.nais.preprod.local/graphql"
+      value: "https://pdl-api-q0.dev.intern.nav.no/graphql"
     - name: PERSONFORVALTER_URL
       value: "https://pdl-web.dev.intern.nav.no/endreperson"
     - name: OPPGAVE_BASEURL
@@ -329,6 +335,6 @@ spec:
     - name: FEATURE_NYTTVISITTKORT
       value: "true"
     - name: HASTEKASSERING_TILGANG
-      value: "Z992323,Z990366,Z990083"
+      value: "Z992323,Z990366,Z990083,Z990351"
     - name: CXF_SECURE_LOG
       value: "enabled"

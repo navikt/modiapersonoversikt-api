@@ -45,7 +45,7 @@ internal class PdlOppslagServiceImplTest {
         }
 
         TestUtils.withEnv("PDL_API_URL", "http://dummy.no") {
-            PdlOppslagServiceImpl(stsMock, client).hentIdent("ident")
+            PdlOppslagServiceImpl(stsMock, client).hentIdenter("ident")
         }
     }
 

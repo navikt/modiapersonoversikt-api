@@ -5,6 +5,7 @@ import no.nav.modiapersonoversikt.legacy.api.exceptions.JournalforingFeilet;
 import no.nav.modiapersonoversikt.legacy.api.service.saker.SakerService;
 import no.nav.modiapersonoversikt.legacy.api.utils.RestUtils;
 import no.nav.modiapersonoversikt.legacy.api.utils.http.SubjectHandlerUtil;
+import no.nav.modiapersonoversikt.rest.journalforing.JournalforingController;
 import no.nav.modiapersonoversikt.service.saker.EnhetIkkeSatt;
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.TilgangskontrollMock;
 import org.junit.jupiter.api.DisplayName;
@@ -16,7 +17,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import javax.servlet.http.Cookie;
 
-import static no.nav.modiapersonoversikt.rest.JournalforingController.FEILMELDING_UTEN_ENHET;
+import static no.nav.modiapersonoversikt.rest.journalforing.JournalforingController.FEILMELDING_UTEN_ENHET;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;

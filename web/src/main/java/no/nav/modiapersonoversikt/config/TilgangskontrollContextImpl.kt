@@ -10,6 +10,8 @@ import no.nav.modiapersonoversikt.consumer.abac.AbacResponse
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.TilgangskontrollContext
 import no.nav.modiapersonoversikt.legacy.api.service.HenvendelseLesService
 import no.nav.modiapersonoversikt.legacy.api.service.ldap.LDAPService
+import no.nav.modiapersonoversikt.service.sfhenvendelse.EksternBruker
+import no.nav.modiapersonoversikt.service.sfhenvendelse.SfHenvendelseService
 import org.slf4j.LoggerFactory
 import java.util.*
 
@@ -18,6 +20,7 @@ open class TilgangskontrollContextImpl(
     private val ldap: LDAPService,
     private val ansattService: GOSYSNAVansatt,
     private val henvendelseLesService: HenvendelseLesService,
+    private val sfHenvendelseService: SfHenvendelseService,
     private val unleashService: no.nav.modiapersonoversikt.service.unleash.UnleashService
 ) : TilgangskontrollContext {
     private val logger = LoggerFactory.getLogger(TilgangskontrollContext::class.java)
@@ -57,6 +60,10 @@ open class TilgangskontrollContextImpl(
 
     override fun alleBehandlingsIderTilhorerBruker(fnr: String, behandlingsIder: List<String>): Boolean {
         return henvendelseLesService.alleBehandlingsIderTilhorerBruker(fnr, behandlingsIder)
+    }
+
+    override fun sfDialogTilhorerBruker(fnr: String, kjedeId: String): Boolean {
+        return sfHenvendelseService.henvendelseTilhorerBruker(EksternBruker.Fnr(fnr), kjedeId)
     }
 
     override fun featureToggleEnabled(featureToggle: String): Boolean = unleashService.isEnabled(featureToggle)
