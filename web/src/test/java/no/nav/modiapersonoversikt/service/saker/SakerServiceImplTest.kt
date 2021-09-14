@@ -17,7 +17,6 @@ import no.nav.modiapersonoversikt.legacy.api.service.FodselnummerAktorService
 import no.nav.modiapersonoversikt.legacy.api.service.kodeverk.StandardKodeverk
 import no.nav.modiapersonoversikt.legacy.api.service.psak.PsakService
 import no.nav.modiapersonoversikt.legacy.api.service.saker.GsakKodeverk
-import no.nav.modiapersonoversikt.service.saker.kilder.BidragSaker
 import no.nav.modiapersonoversikt.service.saker.mediation.SakApiGateway
 import no.nav.modiapersonoversikt.service.saker.mediation.SakDto
 import no.nav.modiapersonoversikt.service.unleash.Feature

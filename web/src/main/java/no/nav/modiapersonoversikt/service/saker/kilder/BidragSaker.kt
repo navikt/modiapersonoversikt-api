@@ -22,7 +22,6 @@ internal class BidragSaker(
         saker.add(generellBidragsSak(hentDataFraBisys))
     }
 
-
     companion object {
         private fun generellBidragsSak(hentDataFraBisys: Boolean = true): Sak {
             return Sak().apply {
@@ -40,10 +39,10 @@ internal class BidragSaker(
         }
 
         private fun tilSak(bidragSakDto: BidragSakDto) = generellBidragsSak().apply {
-                saksId = bidragSakDto.saksnummer
-                sakstype = Sak.SAKSTYPE_MED_FAGSAK
-                fagsystemKode = Sak.FAGSYSTEMKODE_BIDRAG
-                temaKode = Sak.FAGSYSTEMKODE_BIDRAG
+            saksId = bidragSakDto.saksnummer
+            sakstype = Sak.SAKSTYPE_MED_FAGSAK
+            fagsystemKode = Sak.FAGSYSTEMKODE_BIDRAG
+            temaKode = Sak.FAGSYSTEMKODE_BIDRAG
         }
     }
 }
