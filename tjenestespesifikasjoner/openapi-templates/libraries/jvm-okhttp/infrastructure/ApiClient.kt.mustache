@@ -4,9 +4,7 @@ package {{packageName}}.infrastructure
 import android.os.Build
 {{/supportAndroidApiLevel25AndBelow}}
 {{#hasAuthMethods}}
-{{#isBasicBasic}}
 import okhttp3.Credentials
-{{/isBasicBasic}}
 {{/hasAuthMethods}}
 import okhttp3.OkHttpClient
 import okhttp3.RequestBody
