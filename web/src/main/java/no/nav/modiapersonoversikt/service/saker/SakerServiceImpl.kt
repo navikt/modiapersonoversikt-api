@@ -19,6 +19,8 @@ import no.nav.virksomhet.tjenester.sak.arbeidogaktivitet.v1.ArbeidOgAktivitet
 import org.slf4j.LoggerFactory
 import org.slf4j.MDC
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.web.context.request.RequestAttributes
+import org.springframework.web.context.request.RequestContextHolder
 import java.util.concurrent.CompletableFuture
 import java.util.function.Predicate.not
 import javax.annotation.PostConstruct
@@ -201,9 +203,12 @@ private infix fun <T> ((T) -> Boolean).or(other: (T) -> Boolean): (T) -> Boolean
 internal fun <T> copyAuthAndMDC(fn: () -> T): () -> T {
     val callId = MDC.get(MDCConstants.MDC_CALL_ID)
     val subject = SubjectHandler.getSubject()
+    val requestAttributes: RequestAttributes? = RequestContextHolder.getRequestAttributes()
     return {
-        withCallId(callId) {
-            SubjectHandler.withSubject(subject.get(), fn)
+        withRequestAttributes(requestAttributes) {
+            withCallId(callId) {
+                SubjectHandler.withSubject(subject.get(), fn)
+            }
         }
     }
 }
@@ -213,5 +218,13 @@ fun <T> withCallId(callId: String, fn: () -> T): T {
     MDC.put(MDCConstants.MDC_CALL_ID, callId)
     val result = fn()
     MDC.put(MDCConstants.MDC_CALL_ID, originalCallId)
+    return result
+}
+
+fun <T> withRequestAttributes(requestAttributes: RequestAttributes?, fn: () -> T): T {
+    val original: RequestAttributes? = RequestContextHolder.getRequestAttributes()
+    RequestContextHolder.setRequestAttributes(requestAttributes)
+    val result = fn()
+    RequestContextHolder.setRequestAttributes(original)
     return result
 }
