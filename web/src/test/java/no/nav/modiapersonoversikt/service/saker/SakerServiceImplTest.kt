@@ -89,7 +89,7 @@ class SakerServiceImplTest {
         every { standardKodeverk.getArkivtemaNavn(any()) } returns null
         every { fodselnummerAktorService.hentAktorIdForFnr(any()) } returns "123456789"
         every { bidragSakControllerApi.find(any()) } returns listOf(BidragSakDto(roller = listOf(), saksnummer = "123", erParagraf19 = false))
-        every { unleashService.isEnabled(any<Feature>()) } returns true
+        every { unleashService.isEnabled(any<Feature>()) } returns false
 
         mockkStatic(SubjectHandler::class)
         every { SubjectHandler.getSubject() } returns Optional.of(Subject("12345678910", IdentType.EksternBruker, SsoToken.oidcToken("token", HashMap<String, Any?>())))
@@ -111,7 +111,7 @@ class SakerServiceImplTest {
         assertThat(saksliste[0].saksId, `is`(SakId_1))
         assertThat(saksliste[0].saksId, `is`(SakId_1))
         assertThat(saksliste[3].fagsystemKode, `is`(""))
-        assertThat(saksliste[saksliste.size - 1].sakstype, `is`(SAKSTYPE_GENERELL))
+        assertThat(saksliste[saksliste.size - 1].sakstype, `is`(SAKSTYPE_MED_FAGSAK))
         assertThat(saksliste[saksliste.size - 1].temaKode, `is`(BIDRAG_MARKOR))
         assertThat(saksliste[saksliste.size - 1].temaNavn, `is`("Bidrag"))
         assertThat(saksliste[saksliste.size - 1].fagsystemNavn, `is`("Kopiert inn i Bisys"))

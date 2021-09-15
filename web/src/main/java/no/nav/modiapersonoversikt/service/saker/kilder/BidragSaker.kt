@@ -18,6 +18,12 @@ internal class BidragSaker(
         val hentDataFraBisys = unleashService.isEnabled(Feature.HENT_BISYS_SAKER)
         val sakerFra = if (hentDataFraBisys) client.find(fnr) else emptyList()
 
+        /**
+         * Må fjerne tidligere generelle saker lagt til for BID fra GenerelleSaker.
+         * Dette må gjøres fordi disse sakene ikke nødvendigvis blir lagt til med riktige markør-felt.
+         */
+        saker.removeIf { it.temaKode == BIDRAG_MARKOR }
+
         saker.addAll(sakerFra.map(::tilSak))
         saker.add(generellBidragsSak(hentDataFraBisys))
     }
@@ -29,7 +35,7 @@ internal class BidragSaker(
                 fagsystemSaksId = "-"
                 temaKode = BIDRAG_MARKOR
                 temaNavn = "Bidrag"
-                fagsystemKode = ""
+                fagsystemKode = BIDRAG_MARKOR
                 fagsystemNavn = "Kopiert inn i Bisys"
                 sakstype = if (hentDataFraBisys) Sak.SAKSTYPE_GENERELL else Sak.SAKSTYPE_MED_FAGSAK
                 opprettetDato = null
