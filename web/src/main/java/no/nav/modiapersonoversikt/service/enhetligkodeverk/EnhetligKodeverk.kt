@@ -1,9 +1,10 @@
 package no.nav.modiapersonoversikt.service.enhetligkodeverk
 
+import no.nav.modiapersonoversikt.infrastructure.types.Pingable
 import org.slf4j.LoggerFactory
 
 object EnhetligKodeverk {
-    interface Service {
+    interface Service : Pingable {
         fun hentKodeverk(kodeverkNavn: KodeverkConfig): Kodeverk
     }
 
