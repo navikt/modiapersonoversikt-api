@@ -51,16 +51,23 @@ class EnhetligKodeverkServiceImpl(
 
     override fun ping() = SelfTestCheck(
         "EnhetligKodeverk",
-        true
+        false
     ) {
         val limit = LocalDateTime.now(clock).minus(cacheRetention.plus(cacheGraceperiod))
-        val outdatedCacheEntries = cache.values.filter { it.timestamp.isBefore(limit) }
+        val missingValues: List<KodeverkConfig> = KodeverkConfig.values().toList().minus(cache.keys)
+        val outdatedCacheEntries = cache.entries.filter { it.value.timestamp.isBefore(limit) }
 
-        if (outdatedCacheEntries.isEmpty()) {
+        if (outdatedCacheEntries.isEmpty() && missingValues.isEmpty()) {
             HealthCheckResult.healthy()
         } else {
-            val outdatedCaches = outdatedCacheEntries.joinToString { it.kodeverk.navn }
-            HealthCheckResult.unhealthy("Outdated cache entries for: $outdatedCaches")
+            val outdatedCaches = outdatedCacheEntries.joinToString(", ") { it.key.name }
+            val missingCaches = missingValues.joinToString(", ")
+            HealthCheckResult.unhealthy(
+                """
+                Manglende cache verdier: [$missingCaches]                
+                Utdaterte cache verdier: [$outdatedCaches]
+                """.trimIndent()
+            )
         }
     }
 
