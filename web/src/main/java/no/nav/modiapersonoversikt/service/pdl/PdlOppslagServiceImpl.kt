@@ -157,6 +157,9 @@ class PdlOppslagServiceImpl constructor(
                     HentAktorid.Variables(ident)
                 } //
                 is SokPersonUtenlandskID.Variables -> variables
+                is HentPersondata.Variables -> variables
+                is HentPersondataLite.Variables -> variables
+                is HentGeografiskTilknyttning.Variables -> variables
                 else -> throw IllegalStateException("Unrecognized graphql variables type: ${variables.javaClass.simpleName}")
             }
         }
