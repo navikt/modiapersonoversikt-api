@@ -1,4 +1,4 @@
-package no.nav.modiapersonoversikt.rest.person.pdl
+package no.nav.modiapersonoversikt.rest.persondata
 
 import no.nav.modiapersonoversikt.service.dkif.Dkif
 import java.time.LocalDate

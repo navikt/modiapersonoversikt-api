@@ -1,4 +1,4 @@
-package no.nav.modiapersonoversikt.rest.person.pdl
+package no.nav.modiapersonoversikt.rest.persondata
 
 import no.nav.modiapersonoversikt.legacy.api.domain.norg.AnsattEnhet
 import no.nav.modiapersonoversikt.legacy.api.domain.pdl.generated.HentPersondata
@@ -12,13 +12,10 @@ import no.nav.tjeneste.virksomhet.person.v3.informasjon.BankkontoNorge
 import no.nav.tjeneste.virksomhet.person.v3.informasjon.BankkontoUtland
 import no.nav.tjeneste.virksomhet.person.v3.informasjon.Bruker
 import no.nav.tjeneste.virksomhet.person.v3.meldinger.HentPersonResponse
-import org.slf4j.LoggerFactory
 import java.time.LocalDate
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.KodeverkConfig as Kodeverk
 
 class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
-    private val log = LoggerFactory.getLogger(PersondataFletter::class.java)
-
     data class Data(
         val persondata: HentPersondata.Person,
         val geografiskeTilknytning: PersondataResult<String?>,

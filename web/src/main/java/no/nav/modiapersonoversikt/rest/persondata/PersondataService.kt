@@ -1,6 +1,6 @@
-package no.nav.modiapersonoversikt.rest.person.pdl
+package no.nav.modiapersonoversikt.rest.persondata
 
-import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.TilgangskontrollContext
+import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll
 import no.nav.modiapersonoversikt.legacy.api.domain.norg.AnsattEnhet
 import no.nav.modiapersonoversikt.legacy.api.domain.pdl.generated.HentPersondata
 import no.nav.modiapersonoversikt.legacy.api.service.organisasjonsEnhetV2.OrganisasjonEnhetV2Service
@@ -30,10 +30,10 @@ class PersondataServiceImpl(
     private val organisasjonEnhetV2Service: OrganisasjonEnhetV2Service,
     private val personV3: PersonV3,
     private val egenAnsattService: EgenAnsattService,
-    private val tilgangskontroll: TilgangskontrollContext,
+    private val tilgangskontroll: Tilgangskontroll,
     kodeverk: EnhetligKodeverk.Service
 ) : PersondataService {
-    val persondateFletter = PersondataFletter(kodeverk)
+    val persondataFletter = PersondataFletter(kodeverk)
     val tredjepartspersonMapper = TredjepartspersonMapper(kodeverk)
 
     override fun hentPerson(fnr: String): Persondata.Data {
@@ -57,7 +57,7 @@ class PersondataServiceImpl(
         val dkifData = PersondataResult.runCatching("DKIF") { dkif.hentDigitalKontaktinformasjon(fnr) }
         val bankkonto = PersondataResult.runCatching("TPS") { hentBankkonto(fnr) }
 
-        return persondateFletter.flettSammenData(
+        return persondataFletter.flettSammenData(
             PersondataFletter.Data(
                 persondata,
                 geografiskeTilknytning,
@@ -116,7 +116,7 @@ class PersondataServiceImpl(
     }
 
     private fun hentTilganger() = PersondataService.Tilganger(
-        kode6 = tilgangskontroll.harSaksbehandlerRolle("0000-GA-GOSYS_KODE6"),
-        kode7 = tilgangskontroll.harSaksbehandlerRolle("0000-GA-GOSYS_KODE7")
+        kode6 = tilgangskontroll.context().harSaksbehandlerRolle("0000-GA-GOSYS_KODE6"),
+        kode7 = tilgangskontroll.context().harSaksbehandlerRolle("0000-GA-GOSYS_KODE7")
     )
 }

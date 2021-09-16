@@ -1,4 +1,4 @@
-package no.nav.modiapersonoversikt.rest.person.pdl
+package no.nav.modiapersonoversikt.rest.persondata
 
 import no.nav.modiapersonoversikt.legacy.api.domain.pdl.generated.HentPersondataLite
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk

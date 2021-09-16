@@ -1,4 +1,4 @@
-package no.nav.modiapersonoversikt.rest.person.pdl
+package no.nav.modiapersonoversikt.rest.persondata
 
 sealed class PersondataResult<T>(val system: String) {
     fun <S> map(newSystem: String = system, block: (t: T) -> S): PersondataResult<S> {
