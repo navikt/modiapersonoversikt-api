@@ -2,10 +2,12 @@ package no.nav.modiapersonoversikt.service.enhetligkodeverk
 
 import no.nav.common.health.HealthCheckResult
 import no.nav.common.health.selftest.SelfTestCheck
+import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.time.*
 import java.time.temporal.ChronoUnit
 import java.util.*
+import kotlin.concurrent.schedule
 import kotlin.concurrent.scheduleAtFixedRate
 
 class EnhetligKodeverkServiceImpl(
@@ -73,11 +75,44 @@ class EnhetligKodeverkServiceImpl(
 
     internal fun prepopulerCache() {
         KodeverkConfig.values().forEach { config ->
-            try {
+            retry(
+                times = 3,
+                initDelay = 100,
+                factor = 1.5,
+                delayLimit = 1000,
+                logger = log,
+                logMessage = "Feil ved uthenting av kodeverk $config"
+            ) {
                 cache[config] = KodeverkCacheEntry(LocalDateTime.now(clock), config.hentKodeverk(providers))
-            } catch (e: Exception) {
-                log.error("Feil ved uthenting av kodeverk $config")
             }
         }
     }
+}
+
+fun <T> retry(
+    times: Int,
+    initDelay: Long,
+    factor: Double,
+    delayLimit: Long = 1000,
+    scheduler: Timer = Timer(),
+    logger: Logger? = null,
+    logMessage: String = "",
+    block: () -> T
+) : T {
+    var currentDelay = initDelay
+    var attemptNo = 0
+    repeat(times) {
+        attemptNo++
+        try {
+            return block()
+        } catch (e: Exception) {
+            logger?.error("'$logMessage' at attempt ${attemptNo} with error: ${e.message}")
+            currentDelay = (currentDelay * factor).toLong().coerceAtMost(delayLimit)
+            println(currentDelay)
+            scheduler.schedule(delay = currentDelay) {
+                block()
+            }
+        }
+    }
+    return block()
 }
