@@ -111,7 +111,8 @@ internal class EnhetligKodeverkServiceImplTest {
         val result = service.ping().check.checkHealth()
         assertThat(result.isUnhealthy).isTrue()
         assertThat(result.errorMessage).hasValueSatisfying { errorMessage ->
-            assertThat(errorMessage).contains("LAND, SF_TEMAGRUPPER")
+            assertThat(errorMessage).contains("LAND")
+            assertThat(errorMessage).contains("SF_TEMAGRUPPER")
         }
     }
 
