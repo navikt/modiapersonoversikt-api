@@ -1,0 +1,242 @@
+package no.nav.modiapersonoversikt.rest.persondata
+
+import no.nav.modiapersonoversikt.service.dkif.Dkif
+import java.time.LocalDate
+import java.time.LocalDateTime
+
+object Persondata {
+    data class Data(
+        val feilendeSystemer: List<String>,
+        val person: Person
+    )
+
+    data class Person(
+        val fnr: String,
+        val navn: List<Navn>,
+        val kjonn: List<KodeBeskrivelse<Kjonn>>,
+        val fodselsdato: List<LocalDate>,
+        val dodsdato: List<LocalDate>,
+        val bostedAdresse: List<Adresse>,
+        val kontaktAdresse: List<Adresse>,
+        val navEnhet: Enhet?,
+        val statsborgerskap: List<Statsborgerskap>,
+        val adressebeskyttelse: List<KodeBeskrivelse<AdresseBeskyttelse>>,
+        val sikkerhetstiltak: List<Sikkerhetstiltak>,
+        val erEgenAnsatt: EgenAnsatt,
+        val personstatus: List<KodeBeskrivelse<PersonStatus>>,
+        val sivilstand: List<Sivilstand>,
+        val foreldreansvar: List<Foreldreansvar>,
+        val deltBosted: List<DeltBosted>,
+        val dodsbo: List<Dodsbo>,
+        val fullmakt: List<Fullmakt>,
+        val vergemal: List<Verge>,
+        val tilrettelagtKommunikasjon: TilrettelagtKommunikasjon,
+        val telefonnummer: List<Telefon>,
+        val kontaktOgReservasjon: Dkif.DigitalKontaktinformasjon?,
+        val bankkonto: Bankkonto?
+    )
+
+    data class TredjepartsPerson(
+        val fnr: String,
+        val navn: Navn?,
+        val adressebeskyttelse: KodeBeskrivelse<AdresseBeskyttelse>?,
+        val bostedAdresse: Adresse?
+    )
+
+    data class KodeBeskrivelse<T>(
+        val kode: T,
+        val beskrivelse: String
+    )
+
+    data class Navn(
+        val fornavn: String,
+        val mellomnavn: String?,
+        val etternavn: String
+    ) {
+        companion object {
+            val UKJENT = Navn("", "", "")
+        }
+    }
+
+    data class Statsborgerskap(
+        val land: KodeBeskrivelse<String>,
+        val gyldigFraOgMed: LocalDate?,
+        val gyldigTilOgMed: LocalDate?
+    )
+
+    data class Sivilstand(
+        val type: KodeBeskrivelse<SivilstandType>,
+        val gyldigFraOgMed: LocalDate?
+    )
+
+    data class Sikkerhetstiltak(
+        val type: SikkerhetstiltakType,
+        val gyldigFraOgMed: LocalDate,
+        val gyldigTilOgMed: LocalDate
+    )
+
+    data class Adresse constructor(
+        val linje1: String,
+        val linje2: String? = null,
+        val linje3: String? = null
+    ) {
+        constructor(
+            linje1: List<String?>,
+            linje2: List<String?>? = null,
+            linje3: List<String?>? = null
+        ) : this(
+            linje1.filterNotNull().joinToString(" "),
+            linje2?.filterNotNull()?.joinToString(" "),
+            linje3?.filterNotNull()?.joinToString(" ")
+        )
+    }
+
+    data class Enhet(
+        val id: String,
+        val navn: String
+    )
+
+    data class Dodsbo(
+        val adressat: Adressat,
+        val adresse: Adresse,
+        val registrert: LocalDate,
+        val skifteform: Skifteform
+    )
+
+    data class Adressat(
+        val advokatSomAdressat: AdvokatSomAdressat?,
+        val personSomAdressat: PersonSomAdressat?,
+        val organisasjonSomAdressat: OrganisasjonSomAdressat?
+    )
+
+    data class AdvokatSomAdressat(
+        val kontaktperson: Navn,
+        val organisasjonsnavn: String?,
+        val organisasjonsnummer: String?
+    )
+
+    data class PersonSomAdressat(
+        val fnr: String?,
+        val navn: Navn?,
+        val fodselsdato: LocalDate?
+    )
+
+    data class OrganisasjonSomAdressat(
+        val kontaktperson: Navn?,
+        val organisasjonsnavn: String,
+        val organisasjonsnummer: String?
+    )
+
+    data class Bankkonto(
+        val kontonummer: String,
+        val banknavn: String,
+        val sistEndret: LocalDateTime,
+        val sistEndretAv: String,
+
+        val bankkode: String? = null,
+        val swift: String? = null,
+        val landkode: KodeBeskrivelse<String>? = null,
+        val adresse: Adresse? = null,
+        val valuta: KodeBeskrivelse<String>? = null
+    )
+
+    data class TilrettelagtKommunikasjon(
+        val talesprak: List<KodeBeskrivelse<String>>,
+        val tegnsprak: List<KodeBeskrivelse<String>>
+    )
+
+    data class Fullmakt(
+        val motpartsPersonident: String,
+        val motpartsPersonNavn: Navn,
+        val motpartsRolle: FullmaktsRolle,
+        val omraade: List<String>,
+        val gyldigFraOgMed: LocalDate,
+        val gyldigTilOgMed: LocalDate
+    )
+
+    data class Telefon(
+        val retningsnummer: KodeBeskrivelse<String>?,
+        val identifikator: String,
+        val sistEndret: LocalDateTime?,
+        val sistEndretAv: String?,
+        val prioritet: Int = -1
+    )
+
+    data class Verge(
+        val ident: String?,
+        val navn: Navn?,
+        val vergesakstype: String?,
+        val omfang: String?,
+        val embete: String?,
+        val gyldighetstidspunkt: LocalDate?,
+        val opphoerstidspunkt: LocalDate?
+    )
+
+    data class Foreldreansvar(
+        val ansvar: String,
+        val ansvarlig: Navn?,
+        val ansvarsubject: Navn?
+    )
+
+    data class DeltBosted(
+        val startdatoForKontrakt: LocalDate,
+        val sluttdatoForKontrakt: LocalDate?,
+        val adresse: Adresse?
+    )
+
+    enum class Kjonn {
+        M, K, U
+    }
+
+    enum class AdresseBeskyttelse {
+        KODE6, KODE6_UTLAND, KODE7, UGRADERT, UKJENT
+    }
+
+    enum class EgenAnsatt {
+        JA, NEI, UKJENT
+    }
+
+    enum class PersonStatus(val tpsKode: String) {
+        BOSATT("BOSA"),
+        DOD("DØD"),
+        OPPHORT("UTPE"),
+        INAKTIV("ADNR"),
+        MIDLERTIDIG("ADNR"),
+        FORSVUNNET("FOSV"),
+        UTFLYTTET("UTVA"),
+        IKKE_BOSATT("UREG"),
+        FODSELSREGISTERT("FØDR"),
+        UKJENT("UKJENT")
+    }
+
+    enum class SivilstandType(val tpsKode: String) {
+        UOPPGITT("NULL"),
+        UGIFT("UGIF"),
+        GIFT("GIFT"),
+        ENKE_ELLER_ENKEMANN("ENKE"),
+        SKILT("SKIL"),
+        SEPARERT("SEPR"),
+        REGISTRERT_PARTNER("REPA"),
+        SEPARERT_PARTNER("SEPA"),
+        SKILT_PARTNER("SKPA"),
+        GJENLEVENDE_PARTNER("GJPA")
+    }
+
+    enum class SikkerhetstiltakType(val beskrivelse: String) {
+        FYUS("Fysisk utestengelse"),
+        TFUS("Telefonisk utestengelse"),
+        FTUS("Fysisk/telefonisk utestengelse"),
+        DIUS("Digital utestengelse"),
+        TOAN("To ansatte i samtale")
+    }
+
+    enum class Skifteform {
+        OFFENTLIG, ANNET, UKJENT
+    }
+
+    enum class FullmaktsRolle {
+        FULLMAKTSGIVER,
+        FULLMEKTIG,
+        UKJENT
+    }
+}

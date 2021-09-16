@@ -20,6 +20,85 @@ type Query {
     sokPerson(criteria:[Criterion], paging:Paging): PersonSearchResult
     sokAdresse(criteria:[Criterion], paging:Paging): AdresseSearchResult
     forslagAdresse(parameters:CompletionParameters): AdresseCompletionResult
+    hentAdresse(matrikkelId: ID!): KartverketAdresse
+}
+
+type KartverketAdresse {
+    id: Long!
+    vegadresse: KartverketVegadresse
+    matrikkeladresse: KartverketMatrikkeladresse
+}
+
+type KartverketMatrikkeladresse {
+    undernummer: Int
+    representasjonspunkt: KartverketRepresentasjonspunkt
+    adressetilleggsnavn: String
+    kortnavn: String
+    postnummeromraade: KartverketPostnummeromraade
+    grunnkrets: KartverketGrunnkrets
+    bydel: KartverketBydel
+    matrikkelnummer: KartverketMatrikkelnummer
+}
+
+type KartverketMatrikkelnummer {
+    kommunenummer: String
+    gaardsnummer: Int
+    bruksnummer: Int
+    festenummer: Int
+    seksjonsnummer: Int
+}
+
+type KartverketVegadresse {
+    nummer: Int
+    bokstav: String
+    representasjonspunkt: KartverketRepresentasjonspunkt
+    adressetilleggsnavn: String
+    kortnavn: String
+    postnummeromraade: KartverketPostnummeromraade
+    grunnkrets: KartverketGrunnkrets
+    veg: KartverketVeg
+    bydel: KartverketBydel
+}
+
+type KartverketPostnummeromraade {
+    poststed: String
+    postnummer: String
+}
+
+type KartverketGrunnkrets {
+    grunnkretsnavn: String
+    grunnkretsnummer: String
+}
+
+type KartverketRepresentasjonspunkt {
+    posisjonskvalitet: Int
+    x: Float
+    y: Float
+    z: Float
+}
+
+type KartverketBydel {
+    bydelsnavn: String
+    bydelsnummer: String
+}
+
+type KartverketVeg {
+    adressekode: Int
+    adressenavn: String
+    kortnavn: String
+    stedsnummer: String
+    kommune: KartverketKommune
+}
+
+type KartverketKommune {
+    nummer: String
+    navn: String
+    fylke: KartverketFylke
+}
+
+type KartverketFylke {
+    nummer: String
+    navn: String
 }
 
 type Identliste {
@@ -57,7 +136,6 @@ type Person {
     doedfoedtBarn: [DoedfoedtBarn!]!
     doedsfall: [Doedsfall!]!
     falskIdentitet: FalskIdentitet
-    familierelasjoner : [Familierelasjon!]! @deprecated(reason: "Opplysningen Familierelasjon har byttet navn til ForelderBarnRelasjon. Mer informasjon i dokumentasjonen. Familierelasjoner vil bli fjernet fra PDL 1. september 2021.")
     foedsel: [Foedsel!]!
     folkeregisteridentifikator(historikk: Boolean = false): [Folkeregisteridentifikator!]!
     folkeregisterpersonstatus(historikk: Boolean = false): [Folkeregisterpersonstatus!]!
@@ -310,16 +388,6 @@ type Doedsfall {
     doedsdato: Date
     metadata: Metadata!
     folkeregistermetadata: Folkeregistermetadata
-}
-
-# todo: DEPRCATED & FOR REMOVAL: Familierelasjoner vil bli fjernet fra PDL 1. september 2021: Opplysningen Familierelasjon har byttet navn til ForelderBarnRelasjon. Mer informasjon i dokumentasjonen.
-type Familierelasjon {
-    relatertPersonsIdent: String!
-    relatertPersonsRolle: Familierelasjonsrolle!
-    minRolleForPerson: Familierelasjonsrolle
-
-    folkeregistermetadata: Folkeregistermetadata
-    metadata: Metadata!
 }
 
 type ForelderBarnRelasjon {
