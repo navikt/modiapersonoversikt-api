@@ -136,7 +136,6 @@ type Person {
     doedfoedtBarn: [DoedfoedtBarn!]!
     doedsfall: [Doedsfall!]!
     falskIdentitet: FalskIdentitet
-    familierelasjoner : [Familierelasjon!]! @deprecated(reason: "Opplysningen Familierelasjon har byttet navn til ForelderBarnRelasjon. Mer informasjon i dokumentasjonen. Familierelasjoner vil bli fjernet fra PDL 1. september 2021.")
     foedsel: [Foedsel!]!
     folkeregisteridentifikator(historikk: Boolean = false): [Folkeregisteridentifikator!]!
     folkeregisterpersonstatus(historikk: Boolean = false): [Folkeregisterpersonstatus!]!
@@ -389,16 +388,6 @@ type Doedsfall {
     doedsdato: Date
     metadata: Metadata!
     folkeregistermetadata: Folkeregistermetadata
-}
-
-# todo: DEPRCATED & FOR REMOVAL: Familierelasjoner vil bli fjernet fra PDL 1. september 2021: Opplysningen Familierelasjon har byttet navn til ForelderBarnRelasjon. Mer informasjon i dokumentasjonen.
-type Familierelasjon {
-    relatertPersonsIdent: String!
-    relatertPersonsRolle: Familierelasjonsrolle!
-    minRolleForPerson: Familierelasjonsrolle
-
-    folkeregistermetadata: Folkeregistermetadata
-    metadata: Metadata!
 }
 
 type ForelderBarnRelasjon {
