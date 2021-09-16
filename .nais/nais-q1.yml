@@ -294,6 +294,8 @@ spec:
       value: "https://pdl-web.dev.intern.nav.no/endreperson"
     - name: OPPGAVE_BASEURL
       value: "https://oppgave.nais.preprod.local/"
+    - name: BISYS_BASEURL
+      value: "https://bidrag-sak.dev.adeo.no/bidrag-sak"
     - name: TILLATMOCK
       value: "true"
     - name: VISUTBETALINGER

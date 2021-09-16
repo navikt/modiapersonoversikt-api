@@ -4,6 +4,12 @@
     "title": "bidrag-sak",
     "version": "v1"
   },
+  "servers": [
+    {
+      "url": "https://bidrag-sak.nais.adeo.no/bidrag-sak",
+      "description": "Generated server url"
+    }
+  ],
   "paths": {
     "/sak/ny": {
       "post": {
@@ -98,11 +104,11 @@
               }
             }
           },
-          "404": {
-            "description": "Sak ikke funnet"
-          },
           "401": {
             "description": "Manglende eller utløpt id-token"
+          },
+          "404": {
+            "description": "Sak ikke funnet"
           }
         },
         "security": [
@@ -303,6 +309,10 @@
         "type": "http",
         "scheme": "bearer",
         "bearerFormat": "JWT"
+      },
+      "basic-auth": {
+        "type": "http",
+        "scheme": "basic"
       }
     }
   }
