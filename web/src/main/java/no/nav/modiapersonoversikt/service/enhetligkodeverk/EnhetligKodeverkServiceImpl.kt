@@ -2,6 +2,7 @@ package no.nav.modiapersonoversikt.service.enhetligkodeverk
 
 import no.nav.common.health.HealthCheckResult
 import no.nav.common.health.selftest.SelfTestCheck
+import no.nav.modiapersonoversikt.utils.ScheduleUtils
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.time.*
@@ -12,7 +13,7 @@ import kotlin.concurrent.scheduleAtFixedRate
 
 class EnhetligKodeverkServiceImpl(
     private val providers: KodeverkProviders,
-    scheduler: Timer = Timer(),
+    private val scheduler: Timer = Timer(),
     private val clock: Clock = Clock.systemDefaultZone()
 ) : EnhetligKodeverk.Service {
     private data class KodeverkCacheEntry(val timestamp: LocalDateTime, val kodeverk: EnhetligKodeverk.Kodeverk)
@@ -75,11 +76,11 @@ class EnhetligKodeverkServiceImpl(
 
     internal fun prepopulerCache() {
         KodeverkConfig.values().forEach { config ->
-            retry(
-                times = 3,
+            ScheduleUtils.retry(
                 initDelay = 100,
                 factor = 1.5,
-                delayLimit = 1000,
+                scheduler = scheduler,
+                delayLimit = 2000,
                 logger = log,
                 logMessage = "Feil ved uthenting av kodeverk $config"
             ) {
@@ -89,30 +90,3 @@ class EnhetligKodeverkServiceImpl(
     }
 }
 
-fun <T> retry(
-    times: Int,
-    initDelay: Long,
-    factor: Double,
-    delayLimit: Long = 1000,
-    scheduler: Timer = Timer(),
-    logger: Logger? = null,
-    logMessage: String = "",
-    block: () -> T
-) : T {
-    var currentDelay = initDelay
-    var attemptNo = 0
-    repeat(times) {
-        attemptNo++
-        try {
-            return block()
-        } catch (e: Exception) {
-            logger?.error("'$logMessage' at attempt ${attemptNo} with error: ${e.message}")
-            currentDelay = (currentDelay * factor).toLong().coerceAtMost(delayLimit)
-            println(currentDelay)
-            scheduler.schedule(delay = currentDelay) {
-                block()
-            }
-        }
-    }
-    return block()
-}
