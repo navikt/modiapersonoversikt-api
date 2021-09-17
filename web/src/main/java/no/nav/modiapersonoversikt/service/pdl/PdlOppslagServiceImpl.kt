@@ -31,6 +31,21 @@ class PdlOppslagServiceImpl constructor(
             ?.hentPerson
     }
 
+    override fun hentPersondata(fnr: String): HentPersondata.Person? = runBlocking {
+        HentPersondata(pdlClient)
+            .execute(HentPersondata.Variables(fnr), userTokenAuthorizationHeaders)
+            .data
+            ?.hentPerson
+    }
+
+    override fun hentPersondataLite(fnrs: List<String>): List<HentPersondataLite.HentPersonBolkResult> = runBlocking {
+        HentPersondataLite(pdlClient)
+            .execute(HentPersondataLite.Variables(fnrs), systemTokenAuthorizationHeaders)
+            .data
+            ?.hentPersonBolk
+            ?: emptyList()
+    }
+
     override fun hentNavnBolk(fnrs: List<String>): Map<String, HentNavnBolk.Navn?>? {
         if (fnrs.isEmpty()) {
             return emptyMap()
@@ -52,6 +67,16 @@ class PdlOppslagServiceImpl constructor(
             .execute(HentIdenter.Variables(fnr), userTokenAuthorizationHeaders)
             .data
             ?.hentIdenter
+    }
+
+    override fun hentGeografiskTilknyttning(fnr: String): String? = runBlocking {
+        HentGeografiskTilknyttning(pdlClient)
+            .execute(HentGeografiskTilknyttning.Variables(fnr), userTokenAuthorizationHeaders)
+            .data
+            ?.hentGeografiskTilknytning
+            ?.run {
+                gtBydel ?: gtKommune ?: gtLand
+            }
     }
 
     override fun hentAktorId(fnr: String): String? = runBlocking {
@@ -132,6 +157,9 @@ class PdlOppslagServiceImpl constructor(
                     HentAktorid.Variables(ident)
                 } //
                 is SokPersonUtenlandskID.Variables -> variables
+                is HentPersondata.Variables -> variables
+                is HentPersondataLite.Variables -> variables
+                is HentGeografiskTilknyttning.Variables -> variables
                 else -> throw IllegalStateException("Unrecognized graphql variables type: ${variables.javaClass.simpleName}")
             }
         }
