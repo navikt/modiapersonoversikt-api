@@ -2,7 +2,7 @@ package no.nav.modiapersonoversikt.consumer.sykmeldingsperioder.consumer.sykepen
 
 import no.nav.modiapersonoversikt.legacy.kjerneinfo.common.domain.Periode;
 import no.nav.modiapersonoversikt.legacy.kjerneinfo.common.utils.DateUtils;
-import no.nav.modiapersonoversikt.legacy.kjerneinfo.common.utils.SnapshotRule;
+import no.nav.modiapersonoversikt.testutils.SnapshotRule;
 import no.nav.modiapersonoversikt.consumer.sykmeldingsperioder.consumer.sykepenger.SykepengerMockFactory;
 import no.nav.modiapersonoversikt.consumer.sykmeldingsperioder.consumer.sykepenger.mapping.to.SykepengerRequest;
 import no.nav.modiapersonoversikt.consumer.sykmeldingsperioder.consumer.sykepenger.mapping.to.SykepengerResponse;

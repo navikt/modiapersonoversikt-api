@@ -1,6 +1,6 @@
 package no.nav.modiapersonoversikt.consumer.personsok.consumer.fim.mapping;
 
-import no.nav.modiapersonoversikt.legacy.kjerneinfo.common.utils.SnapshotRule;
+import no.nav.modiapersonoversikt.testutils.SnapshotRule;
 import no.nav.modiapersonoversikt.consumer.personsok.consumer.fim.kodeverk.KodeverkManager;
 import no.nav.modiapersonoversikt.consumer.personsok.consumer.fim.personsok.to.FinnPersonRequest;
 import no.nav.modiapersonoversikt.consumer.personsok.domain.Kjonn;

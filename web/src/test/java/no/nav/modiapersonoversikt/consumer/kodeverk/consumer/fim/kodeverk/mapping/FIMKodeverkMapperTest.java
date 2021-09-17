@@ -1,7 +1,7 @@
 package no.nav.modiapersonoversikt.consumer.kodeverk.consumer.fim.kodeverk.mapping;
 
 import no.nav.modiapersonoversikt.legacy.kjerneinfo.common.domain.Periode;
-import no.nav.modiapersonoversikt.legacy.kjerneinfo.common.utils.SnapshotRule;
+import no.nav.modiapersonoversikt.testutils.SnapshotRule;
 import no.nav.modiapersonoversikt.consumer.kodeverk.consumer.fim.kodeverk.mock.KodeverkMockFactory;
 import no.nav.modiapersonoversikt.consumer.kodeverk.consumer.utils.KodeverkMapper;
 import no.nav.tjeneste.virksomhet.kodeverk.v2.informasjon.XMLEnkeltKodeverk;
