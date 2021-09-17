@@ -2,27 +2,31 @@ package no.nav.modiapersonoversikt.service.enhetligkodeverk
 
 import no.nav.common.health.HealthCheckResult
 import no.nav.common.health.selftest.SelfTestCheck
-import no.nav.modiapersonoversikt.utils.ScheduleUtils
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
+import no.nav.modiapersonoversikt.utils.Retry
 import java.time.*
 import java.time.temporal.ChronoUnit
 import java.util.*
-import kotlin.concurrent.schedule
 import kotlin.concurrent.scheduleAtFixedRate
 
 class EnhetligKodeverkServiceImpl(
     private val providers: KodeverkProviders,
-    private val scheduler: Timer = Timer(),
+    scheduler: Timer = Timer(),
     private val clock: Clock = Clock.systemDefaultZone()
 ) : EnhetligKodeverk.Service {
     private data class KodeverkCacheEntry(val timestamp: LocalDateTime, val kodeverk: EnhetligKodeverk.Kodeverk)
 
-    private val log = LoggerFactory.getLogger(EnhetligKodeverkServiceImpl::class.java)
     private val emptyKodeverk = EnhetligKodeverk.Kodeverk("EMPTY", emptyMap())
     private val cache: MutableMap<KodeverkConfig, KodeverkCacheEntry> = mutableMapOf()
     private val cacheRetention = Duration.ofHours(24)
     private val cacheGraceperiod = Duration.ofMinutes(15)
+    private val retry = Retry(
+        Retry.Config(
+            initDelay = 30 * 1000,
+            growthFactor = 2.0,
+            delayLimit = 60 * 60 * 1000,
+            scheduler = scheduler
+        )
+    )
 
     init {
         prepopulerCache()
@@ -76,17 +80,9 @@ class EnhetligKodeverkServiceImpl(
 
     internal fun prepopulerCache() {
         KodeverkConfig.values().forEach { config ->
-            ScheduleUtils.retry(
-                initDelay = 100,
-                factor = 1.5,
-                scheduler = scheduler,
-                delayLimit = 2000,
-                logger = log,
-                logMessage = "Feil ved uthenting av kodeverk $config"
-            ) {
+            retry.run {
                 cache[config] = KodeverkCacheEntry(LocalDateTime.now(clock), config.hentKodeverk(providers))
             }
         }
     }
 }
-

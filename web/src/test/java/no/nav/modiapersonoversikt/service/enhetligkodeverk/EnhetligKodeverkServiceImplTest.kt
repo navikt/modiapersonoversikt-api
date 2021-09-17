@@ -53,11 +53,13 @@ internal class EnhetligKodeverkServiceImplTest {
         val service = EnhetligKodeverkServiceImpl(providers)
 
         assertThat(service.hentKodeverk(KodeverkConfig.LAND)).isNotNull
+        assertThat(service.hentKodeverk(KodeverkConfig.LAND).hentBeskrivelse("NO")).isEqualTo("Norge")
         every { providers.fraFellesKodeverk(any()) } throws IllegalStateException("Noe gikk feil")
 
         service.prepopulerCache()
 
         assertThat(service.hentKodeverk(KodeverkConfig.LAND)).isNotNull
+        assertThat(service.hentKodeverk(KodeverkConfig.LAND).hentBeskrivelse("NO")).isEqualTo("Norge")
     }
 
     @Test
