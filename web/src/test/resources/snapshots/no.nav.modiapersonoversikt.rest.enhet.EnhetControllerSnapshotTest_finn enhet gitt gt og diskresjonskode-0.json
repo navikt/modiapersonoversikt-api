@@ -1,0 +1,26 @@
+{
+  "enhetId" : "1234",
+  "enhetNavn" : "NAV Test",
+  "publikumsmottak" : [ {
+    "besoksadresse" : {
+      "gatenavn" : null,
+      "husnummer" : null,
+      "husbokstav" : null,
+      "postnummer" : null,
+      "poststed" : null
+    },
+    "apningstider" : [ {
+      "ukedag" : "FREDAG",
+      "apentFra" : {
+        "time" : "8",
+        "minutt" : "0",
+        "sekund" : "0"
+      },
+      "apentTil" : {
+        "time" : "8",
+        "minutt" : "0",
+        "sekund" : "0"
+      }
+    } ]
+  } ]
+}
