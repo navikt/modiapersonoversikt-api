@@ -4,6 +4,7 @@ import no.nav.common.auth.subject.Subject
 import no.nav.common.auth.subject.SubjectHandler
 import no.nav.common.leaderelection.LeaderElectionClient
 import no.nav.common.log.MDCConstants
+import no.nav.modiapersonoversikt.infrastructure.http.getCallId
 import no.nav.modiapersonoversikt.legacy.api.domain.henvendelse.Fritekst
 import no.nav.modiapersonoversikt.legacy.api.domain.henvendelse.Melding
 import no.nav.modiapersonoversikt.legacy.api.domain.henvendelse.Meldingstype
@@ -39,7 +40,7 @@ class Prosessor<S>(
     private val block: (s: S) -> Unit
 ) {
     private val executor = Executors.newSingleThreadExecutor()
-    private val callId = MDC.get(MDCConstants.MDC_CALL_ID) ?: UUID.randomUUID().toString()
+    private val callId = getCallId()
     private var job: Future<*>? = null
     private val errors: MutableList<Pair<S, Throwable>> = mutableListOf()
     private val success: MutableList<S> = mutableListOf()

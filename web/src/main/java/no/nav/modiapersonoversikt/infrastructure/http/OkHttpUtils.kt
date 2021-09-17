@@ -114,8 +114,10 @@ open class HeadersInterceptor(val headersProvider: () -> Map<String, String>) : 
     }
 }
 class XCorrelationIdInterceptor() : HeadersInterceptor({
-    mapOf("X-Correlation-ID" to (MDC.get(MDCConstants.MDC_CALL_ID) ?: UUID.randomUUID().toString()))
+    mapOf("X-Correlation-ID" to getCallId())
 })
 class AuthorizationInterceptor(val tokenProvider: () -> String) : HeadersInterceptor({
     mapOf("Authorization" to "Bearer ${tokenProvider()}")
 })
+
+fun getCallId(): String = MDC.get(MDCConstants.MDC_CALL_ID) ?: UUID.randomUUID().toString()

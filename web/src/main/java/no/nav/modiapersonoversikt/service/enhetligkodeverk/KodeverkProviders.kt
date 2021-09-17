@@ -1,18 +1,16 @@
 package no.nav.modiapersonoversikt.service.enhetligkodeverk
 
-import no.nav.common.log.MDCConstants
 import no.nav.common.rest.client.RestClient
 import no.nav.common.sts.SystemUserTokenProvider
 import no.nav.common.utils.EnvironmentUtils
 import no.nav.modiapersonoversikt.infrastructure.http.AuthorizationInterceptor
 import no.nav.modiapersonoversikt.infrastructure.http.LoggingInterceptor
 import no.nav.modiapersonoversikt.infrastructure.http.XCorrelationIdInterceptor
+import no.nav.modiapersonoversikt.infrastructure.http.getCallId
 import no.nav.modiapersonoversikt.legacy.api.domain.kodeverk.generated.apis.KodeverkApi
 import no.nav.modiapersonoversikt.legacy.api.domain.kodeverk.generated.models.GetKodeverkKoderBetydningerResponseDTO
 import no.nav.modiapersonoversikt.legacy.api.domain.sfhenvendelse.generated.models.TemagruppeDTO
 import no.nav.modiapersonoversikt.legacy.api.utils.RestConstants
-import org.slf4j.MDC
-import java.util.*
 import no.nav.modiapersonoversikt.legacy.api.domain.sfhenvendelse.generated.apis.KodeverkApi as KodeverkApiSf
 
 class KodeverkProviders(
@@ -21,7 +19,7 @@ class KodeverkProviders(
 ) {
     fun fraFellesKodeverk(kodeverkNavn: String): EnhetligKodeverk.Kodeverk {
         val respons = fellesKodeverk.betydningUsingGET(
-            navCallId = MDC.get(MDCConstants.MDC_CALL_ID) ?: UUID.randomUUID().toString(),
+            navCallId = getCallId(),
             navConsumerId = RestConstants.MODIABRUKERDIALOG_SYSTEM_USER,
             kodeverksnavn = kodeverkNavn,
             spraak = listOf("nb")
@@ -31,7 +29,7 @@ class KodeverkProviders(
 
     fun fraSfHenvendelseKodeverk(): EnhetligKodeverk.Kodeverk {
         val respons = sfHenvendelseKodeverk.henvendelseKodeverkTemagrupperGet(
-            MDC.get(MDCConstants.MDC_CALL_ID) ?: UUID.randomUUID().toString()
+            getCallId()
         )
         return EnhetligKodeverk.Kodeverk("SF_TEMAGRUPPE", parseTilKodeverk(respons))
     }

@@ -10,13 +10,10 @@ import io.ktor.client.engine.cio.CIOEngineConfig
 import io.ktor.client.request.HttpRequestBuilder
 import io.ktor.client.request.header
 import io.ktor.util.KtorExperimentalAPI
-import no.nav.common.log.MDCConstants
 import no.nav.modiapersonoversikt.legacy.api.utils.RestConstants
 import no.nav.modiapersonoversikt.legacy.api.utils.TjenestekallLogger
 import org.slf4j.LoggerFactory
-import org.slf4j.MDC
 import java.net.URL
-import java.util.*
 
 typealias HeadersBuilder = HttpRequestBuilder.() -> Unit
 typealias VariablesTransform = (Any?) -> Any?
@@ -88,6 +85,4 @@ class LoggingGraphqlClient(
             GraphQLResponse(errors = listOf(error))
         }
     }
-
-    private fun getCallId(): String = MDC.get(MDCConstants.MDC_CALL_ID) ?: UUID.randomUUID().toString()
 }

@@ -5,7 +5,6 @@ import io.ktor.util.*
 import kotlinx.coroutines.runBlocking
 import no.nav.common.auth.subject.SsoToken
 import no.nav.common.auth.subject.SubjectHandler
-import no.nav.common.log.MDCConstants
 import no.nav.common.rest.client.RestClient
 import no.nav.common.utils.EnvironmentUtils
 import no.nav.modiapersonoversikt.infrastructure.http.*
@@ -18,10 +17,8 @@ import no.nav.modiapersonoversikt.legacy.sak.providerdomain.resultatwrappere.Tje
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import org.slf4j.LoggerFactory
-import org.slf4j.MDC
 import java.net.URL
 import java.time.LocalDateTime
-import java.util.*
 
 private val SAF_GRAPHQL_BASEURL: String = EnvironmentUtils.getRequiredProperty("SAF_GRAPHQL_URL")
 private val SAF_HENTDOKUMENT_BASEURL: String = EnvironmentUtils.getRequiredProperty("SAF_HENTDOKUMENT_URL")
@@ -88,7 +85,7 @@ class SafGraphqlServiceImpl : SafService {
     private fun httpHeaders(): Map<String, String> {
         val token = SubjectHandler.getSsoToken(SsoToken.Type.OIDC)
             .orElseThrow { IllegalStateException("Fant ikke OIDC-token") }
-        val callId = MDC.get(MDCConstants.MDC_CALL_ID) ?: UUID.randomUUID().toString()
+        val callId = getCallId()
         return mapOf(
             "Authorization" to "Bearer $token",
             "Content-Type" to "application/json",

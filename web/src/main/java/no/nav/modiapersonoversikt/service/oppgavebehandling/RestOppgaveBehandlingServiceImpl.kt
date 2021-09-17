@@ -2,8 +2,8 @@ package no.nav.modiapersonoversikt.service.oppgavebehandling
 
 import no.nav.common.auth.subject.SsoToken
 import no.nav.common.auth.subject.SubjectHandler
-import no.nav.common.log.MDCConstants
 import no.nav.common.sts.SystemUserTokenProvider
+import no.nav.modiapersonoversikt.infrastructure.http.getCallId
 import no.nav.modiapersonoversikt.infrastructure.rsbac.DecisionEnums
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Policies
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll
@@ -33,7 +33,6 @@ import no.nav.modiapersonoversikt.service.oppgavebehandling.Utils.leggTilBeskriv
 import no.nav.modiapersonoversikt.service.oppgavebehandling.Utils.paginering
 import no.nav.modiapersonoversikt.utils.SafeListAggregate
 import org.slf4j.LoggerFactory
-import org.slf4j.MDC
 import org.springframework.http.HttpStatus
 import org.springframework.web.server.ResponseStatusException
 import java.time.Clock
@@ -503,7 +502,7 @@ class RestOppgaveBehandlingServiceImpl(
         }
     }
 
-    private fun correlationId() = MDC.get(MDCConstants.MDC_CALL_ID) ?: UUID.randomUUID().toString()
+    private fun correlationId() = getCallId()
     private fun stripTemakode(prioritet: String) = prioritet.substringBefore("_")
     private fun String?.coerceBlankToNull() = if (this == null || this.isBlank()) null else this
 }
