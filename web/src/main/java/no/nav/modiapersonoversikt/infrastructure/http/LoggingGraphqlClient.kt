@@ -19,7 +19,6 @@ import java.net.URL
 import java.util.*
 
 typealias HeadersBuilder = HttpRequestBuilder.() -> Unit
-typealias VariablesTransform = (Any?) -> Any?
 
 class GraphQLException(override val message: String, val errors: List<GraphQLError>) : RuntimeException(message)
 fun <T> GraphQLResponse<T>.assertNoErrors(): GraphQLResponse<T> {
@@ -38,8 +37,7 @@ private val mapper = jacksonObjectMapper()
 @KtorExperimentalAPI
 class LoggingGraphqlClient(
     private val name: String,
-    url: URL,
-    private val transformVariables: VariablesTransform? = null
+    url: URL
 ) : GraphQLClient<CIOEngineConfig>(url, CIO, mapper, {}) {
     private val log = LoggerFactory.getLogger(LoggingGraphqlClient::class.java)
 
@@ -52,7 +50,6 @@ class LoggingGraphqlClient(
     ): GraphQLResponse<T> {
         val callId = getCallId()
         return try {
-            val mappedVariables = transformVariables?.invoke(variables) ?: variables
             val mappedRequestBuilder: HeadersBuilder = {
                 requestBuilder.invoke(this)
                 header(RestConstants.NAV_CALL_ID_HEADER, callId)
@@ -62,11 +59,11 @@ class LoggingGraphqlClient(
                 "$name-request: $callId",
                 mapOf(
                     "operationName" to operationName,
-                    "variables" to mappedVariables
+                    "variables" to variables
                 )
             )
 
-            val response = super.execute(query, operationName, mappedVariables, resultType, mappedRequestBuilder)
+            val response = super.execute(query, operationName, variables, resultType, mappedRequestBuilder)
 
             val tjenestekallFelt = mapOf(
                 "data" to response.data,
