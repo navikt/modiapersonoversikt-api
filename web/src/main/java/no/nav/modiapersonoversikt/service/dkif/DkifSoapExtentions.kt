@@ -20,7 +20,7 @@ object DkifSoapExtentions {
         return Dkif.MobilTelefon(
             value = mobiltelefonnummer.value,
             sistOppdatert = mobiltelefonnummer.sistOppdatert.toLocalDate(),
-            sisVerifisert = mobiltelefonnummer.sistVerifisert.toLocalDate()
+            sistVerifisert = mobiltelefonnummer.sistVerifisert.toLocalDate()
         )
     }
 
@@ -29,7 +29,7 @@ object DkifSoapExtentions {
         return Dkif.Epostadresse(
             value = epostadresse.value,
             sistOppdatert = epostadresse.sistOppdatert.toLocalDate(),
-            sisVerifisert = epostadresse.sistVerifisert.toLocalDate()
+            sistVerifisert = epostadresse.sistVerifisert.toLocalDate()
         )
     }
 
