@@ -137,31 +137,6 @@ class PdlOppslagServiceImpl constructor(
     companion object {
         private val pdlApiUrl: URL = EnvironmentUtils.getRequiredProperty("PDL_API_URL").let(::URL)
 
-        fun createClient() = LoggingGraphqlClient("PDL", pdlApiUrl) { variables ->
-            when (variables) {
-                null -> emptyList<String>() to variables
-                is HentPerson.Variables -> {
-                    val ident = variables.ident.let(PdlSyntetiskMapper::mapFnrTilPdl)
-                    HentPerson.Variables(ident)
-                }
-                is HentNavnBolk.Variables -> {
-                    val identer = variables.identer.map(PdlSyntetiskMapper::mapFnrTilPdl)
-                    HentNavnBolk.Variables(identer)
-                }
-                is HentIdenter.Variables -> {
-                    val ident = variables.ident.let(PdlSyntetiskMapper::mapFnrTilPdl)
-                    HentIdenter.Variables(ident)
-                }
-                is HentAktorid.Variables -> {
-                    val ident = variables.ident.let(PdlSyntetiskMapper::mapFnrTilPdl)
-                    HentAktorid.Variables(ident)
-                } //
-                is SokPersonUtenlandskID.Variables -> variables
-                is HentPersondata.Variables -> variables
-                is HentPersondataLite.Variables -> variables
-                is HentGeografiskTilknyttning.Variables -> variables
-                else -> throw IllegalStateException("Unrecognized graphql variables type: ${variables.javaClass.simpleName}")
-            }
-        }
+        fun createClient() = LoggingGraphqlClient("PDL", pdlApiUrl)
     }
 }
