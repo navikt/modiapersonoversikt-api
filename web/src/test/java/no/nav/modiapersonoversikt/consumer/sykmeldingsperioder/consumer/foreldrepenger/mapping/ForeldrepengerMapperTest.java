@@ -2,7 +2,7 @@ package no.nav.modiapersonoversikt.consumer.sykmeldingsperioder.consumer.foreldr
 
 import no.nav.modiapersonoversikt.legacy.kjerneinfo.common.domain.Periode;
 import no.nav.modiapersonoversikt.legacy.kjerneinfo.common.utils.DateUtils;
-import no.nav.modiapersonoversikt.legacy.kjerneinfo.common.utils.SnapshotRule;
+import no.nav.modiapersonoversikt.testutils.SnapshotRule;
 import no.nav.modiapersonoversikt.consumer.sykmeldingsperioder.consumer.foreldrepenger.ForeldrepengerMockFactory;
 import no.nav.modiapersonoversikt.consumer.sykmeldingsperioder.consumer.foreldrepenger.mapping.to.ForeldrepengerListeRequest;
 import no.nav.modiapersonoversikt.consumer.sykmeldingsperioder.consumer.foreldrepenger.mapping.to.ForeldrepengerListeResponse;

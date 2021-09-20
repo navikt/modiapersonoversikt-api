@@ -1,0 +1,24 @@
+{
+  "enhetId" : "1234",
+  "kontaktinformasjon" : {
+    "publikumsmottak" : [ {
+      "besoeksadresse" : null,
+      "apningstider" : {
+        "apningstider" : [ {
+          "ukedag" : "FREDAG",
+          "apentFra" : {
+            "time" : "8",
+            "minutt" : "0",
+            "sekund" : "0"
+          },
+          "apentTil" : {
+            "time" : "8",
+            "minutt" : "0",
+            "sekund" : "0"
+          }
+        } ]
+      }
+    } ]
+  },
+  "enhetNavn" : "NAV Test"
+}
