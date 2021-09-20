@@ -17,13 +17,13 @@ object Dkif {
     data class Epostadresse(
         val value: String? = null,
         val sistOppdatert: LocalDate? = null,
-        val sisVerifisert: LocalDate? = null
+        val sistVerifisert: LocalDate? = null
     )
 
     data class MobilTelefon(
         val value: String? = null,
         val sistOppdatert: LocalDate? = null,
-        val sisVerifisert: LocalDate? = null
+        val sistVerifisert: LocalDate? = null
     )
 
     val INGEN_KONTAKTINFO = DigitalKontaktinformasjon(
