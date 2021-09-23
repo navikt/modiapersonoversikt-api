@@ -8,6 +8,7 @@ import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Policies
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll
 import no.nav.modiapersonoversikt.rest.dialog.apis.DelsvarRestRequest
 import no.nav.modiapersonoversikt.rest.dialog.apis.DialogDelsvarApi
+import no.nav.modiapersonoversikt.service.unleash.Feature
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -26,6 +27,7 @@ class DelsvarController @Autowired constructor(
         @RequestBody request: DelsvarRestRequest
     ): ResponseEntity<Void> {
         return tilgangskontroll
+            .check(Policies.featureToggleDisabled.with(Feature.STENG_STO.propertyKey))
             .check(Policies.tilgangTilBruker.with(fnr))
             .get(Audit.describe(CREATE, Henvendelse.Delsvar, AuditIdentifier.FNR to fnr, AuditIdentifier.BEHANDLING_ID to request.behandlingsId)) {
                 delsvarApi.svarDelvis(httpRequest, fnr, request)

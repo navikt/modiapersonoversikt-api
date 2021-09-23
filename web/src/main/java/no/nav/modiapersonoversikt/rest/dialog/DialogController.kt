@@ -7,6 +7,7 @@ import no.nav.modiapersonoversikt.infrastructure.naudit.AuditResources.Person
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Policies
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll
 import no.nav.modiapersonoversikt.rest.dialog.apis.*
+import no.nav.modiapersonoversikt.service.unleash.Feature
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -38,6 +39,7 @@ class DialogController @Autowired constructor(
         @RequestBody referatRequest: SendReferatRequest
     ): ResponseEntity<Void> {
         return tilgangskontroll
+            .check(Policies.featureToggleDisabled.with(Feature.STENG_STO.propertyKey))
             .check(Policies.tilgangTilBruker.with(fnr))
             .get(Audit.describe(CREATE, Person.Henvendelse.Les, AuditIdentifier.FNR to fnr)) {
                 dialogapi.sendMelding(request, fnr, referatRequest)
@@ -51,6 +53,7 @@ class DialogController @Autowired constructor(
         @RequestBody sporsmalsRequest: SendSporsmalRequest
     ): ResponseEntity<Void> {
         return tilgangskontroll
+            .check(Policies.featureToggleDisabled.with(Feature.STENG_STO.propertyKey))
             .check(Policies.tilgangTilBruker.with(fnr))
             .get(Audit.describe(CREATE, Person.Henvendelse.Les, AuditIdentifier.FNR to fnr)) {
                 dialogapi.sendSporsmal(request, fnr, sporsmalsRequest)
@@ -64,6 +67,7 @@ class DialogController @Autowired constructor(
         @RequestBody infomeldingRequest: InfomeldingRequest
     ): ResponseEntity<Void> {
         return tilgangskontroll
+            .check(Policies.featureToggleDisabled.with(Feature.STENG_STO.propertyKey))
             .check(Policies.tilgangTilBruker.with(fnr))
             .get(Audit.describe(CREATE, Person.Henvendelse.Les, AuditIdentifier.FNR to fnr)) {
                 dialogapi.sendInfomelding(request, fnr, infomeldingRequest)
