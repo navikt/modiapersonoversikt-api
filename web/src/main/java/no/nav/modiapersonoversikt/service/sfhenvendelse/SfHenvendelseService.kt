@@ -2,12 +2,12 @@ package no.nav.modiapersonoversikt.service.sfhenvendelse
 
 import no.nav.common.auth.subject.SsoToken
 import no.nav.common.auth.subject.SubjectHandler
-import no.nav.common.log.MDCConstants
 import no.nav.common.rest.client.RestClient
 import no.nav.common.sts.SystemUserTokenProvider
 import no.nav.common.utils.EnvironmentUtils.getRequiredProperty
 import no.nav.modiapersonoversikt.infrastructure.http.AuthorizationInterceptor
 import no.nav.modiapersonoversikt.infrastructure.http.LoggingInterceptor
+import no.nav.modiapersonoversikt.infrastructure.http.getCallId
 import no.nav.modiapersonoversikt.legacy.api.domain.sfhenvendelse.generated.apis.*
 import no.nav.modiapersonoversikt.legacy.api.domain.sfhenvendelse.generated.infrastructure.RequestConfig
 import no.nav.modiapersonoversikt.legacy.api.domain.sfhenvendelse.generated.infrastructure.RequestMethod
@@ -17,9 +17,7 @@ import no.nav.modiapersonoversikt.legacy.api.domain.sfhenvendelse.generated.mode
 import no.nav.modiapersonoversikt.legacy.api.domain.sfhenvendelse.generated.models.SamtalereferatRequestDTO
 import no.nav.modiapersonoversikt.legacy.api.service.pdl.PdlOppslagService
 import okhttp3.OkHttpClient
-import org.slf4j.MDC
 import java.time.OffsetDateTime
-import java.util.*
 import kotlin.reflect.KProperty1
 
 sealed class EksternBruker(val ident: String) {
@@ -79,17 +77,17 @@ class SfHenvendelseServiceImpl(
     )
 
     override fun hentHenvendelser(bruker: EksternBruker, enhet: String): List<HenvendelseDTO> {
-        return henvendelseInfoApi.henvendelseinfoHenvendelselisteGet(bruker.aktorId(), callId())
+        return henvendelseInfoApi.henvendelseinfoHenvendelselisteGet(bruker.aktorId(), getCallId())
     }
 
     override fun hentHenvendelse(kjedeId: String): HenvendelseDTO {
-        return henvendelseInfoApi.henvendelseinfoHenvendelseGet(kjedeId, callId())
+        return henvendelseInfoApi.henvendelseinfoHenvendelseGet(kjedeId, getCallId())
     }
 
     override fun journalforHenvendelse(enhet: String, kjedeId: String, saksId: String?, saksTema: String) {
         henvendelseJournalApi
             .henvendelseJournalPost(
-                callId(),
+                getCallId(),
                 JournalRequestDTO(
                     kjedeId = kjedeId,
                     saksId = saksId,
@@ -108,7 +106,7 @@ class SfHenvendelseServiceImpl(
     ) {
         henvendelseOpprettApi
             .henvendelseNySamtalereferatPost(
-                callId(),
+                getCallId(),
                 SamtalereferatRequestDTO(
                     aktorId = bruker.aktorId(),
                     temagruppe = temagruppe,
@@ -127,7 +125,7 @@ class SfHenvendelseServiceImpl(
     ) {
         henvendelseOpprettApi
             .henvendelseNyMeldingPost(
-                callId(),
+                getCallId(),
                 kjedeId = null,
                 meldingRequestDTO = MeldingRequestDTO(
                     aktorId = bruker.aktorId(),
@@ -144,7 +142,7 @@ class SfHenvendelseServiceImpl(
         enhet: String,
         fritekst: String
     ) {
-        val callId = callId()
+        val callId = getCallId()
         val henvendelse = henvendelseInfoApi.henvendelseinfoHenvendelseGet(kjedeId, callId)
         val kjedeTilhorerBruker = sjekkEierskap(bruker, henvendelse)
         if (!kjedeTilhorerBruker) {
@@ -164,7 +162,7 @@ class SfHenvendelseServiceImpl(
     }
 
     override fun henvendelseTilhorerBruker(bruker: EksternBruker, kjedeId: String): Boolean {
-        val henvendelse = henvendelseInfoApi.henvendelseinfoHenvendelseGet(kjedeId, callId())
+        val henvendelse = henvendelseInfoApi.henvendelseinfoHenvendelseGet(kjedeId, getCallId())
         return sjekkEierskap(bruker, henvendelse)
     }
 
@@ -185,7 +183,7 @@ class SfHenvendelseServiceImpl(
     }
 
     override fun merkSomFeilsendt(kjedeId: String) {
-        val callId = callId()
+        val callId = getCallId()
         val henvendelse = henvendelseInfoApi.henvendelseinfoHenvendelseGet(kjedeId, callId)
         val request: RequestConfig<Map<String, Any?>> = createPatchRequest(
             kjedeId,
@@ -205,7 +203,7 @@ class SfHenvendelseServiceImpl(
     }
 
     override fun ping() {
-        adminKodeverkApiForPing.henvendelseKodeverkTemagrupperGet(callId())
+        adminKodeverkApiForPing.henvendelseKodeverkTemagrupperGet(getCallId())
     }
 
     private fun createPatchRequest(
@@ -213,7 +211,7 @@ class SfHenvendelseServiceImpl(
         patchnote: PatchNote<HenvendelseDTO>
     ): RequestConfig<Map<String, Any?>> {
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf(
-            "X-Correlation-ID" to callId()
+            "X-Correlation-ID" to getCallId()
         )
 
         patchnote.patches.mapKeys { it.key.name }
@@ -246,8 +244,6 @@ class SfHenvendelseServiceImpl(
             }
         }
     }
-
-    private fun callId(): String = MDC.get(MDCConstants.MDC_CALL_ID) ?: UUID.randomUUID().toString()
 }
 
 object SfHenvendelseApiFactory {
