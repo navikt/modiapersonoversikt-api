@@ -2,6 +2,7 @@ package no.nav.modiapersonoversikt.service.saker
 
 import no.nav.common.auth.subject.SubjectHandler
 import no.nav.common.log.MDCConstants
+import no.nav.modiapersonoversikt.infrastructure.http.getCallId
 import no.nav.modiapersonoversikt.legacy.api.domain.bidragsak.generated.apis.BidragSakControllerApi
 import no.nav.modiapersonoversikt.legacy.api.domain.saker.Sak
 import no.nav.modiapersonoversikt.legacy.api.exceptions.JournalforingFeilet
@@ -201,7 +202,7 @@ class SakerServiceImpl : SakerService {
 
 private infix fun <T> ((T) -> Boolean).or(other: (T) -> Boolean): (T) -> Boolean = { this(it) || other(it) }
 internal fun <T> copyAuthAndMDC(fn: () -> T): () -> T {
-    val callId = MDC.get(MDCConstants.MDC_CALL_ID)
+    val callId = getCallId()
     val subject = SubjectHandler.getSubject()
     val requestAttributes: RequestAttributes? = RequestContextHolder.getRequestAttributes()
     return {
@@ -214,7 +215,7 @@ internal fun <T> copyAuthAndMDC(fn: () -> T): () -> T {
 }
 
 fun <T> withCallId(callId: String, fn: () -> T): T {
-    val originalCallId = MDC.get(MDCConstants.MDC_CALL_ID)
+    val originalCallId = getCallId()
     MDC.put(MDCConstants.MDC_CALL_ID, callId)
     val result = fn()
     MDC.put(MDCConstants.MDC_CALL_ID, originalCallId)

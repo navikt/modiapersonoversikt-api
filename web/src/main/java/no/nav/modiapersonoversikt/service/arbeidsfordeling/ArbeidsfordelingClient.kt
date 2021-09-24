@@ -4,10 +4,10 @@ import com.fasterxml.jackson.core.type.TypeReference
 import no.nav.common.auth.subject.SsoToken
 import no.nav.common.auth.subject.SubjectHandler
 import no.nav.common.json.JsonMapper
-import no.nav.common.log.MDCConstants
 import no.nav.common.rest.client.RestClient
 import no.nav.common.sts.SystemUserTokenProvider
 import no.nav.common.utils.EnvironmentUtils
+import no.nav.modiapersonoversikt.infrastructure.http.getCallId
 import no.nav.modiapersonoversikt.legacy.api.domain.norg.AnsattEnhet
 import no.nav.modiapersonoversikt.legacy.api.domain.norg.EnhetsGeografiskeTilknytning
 import no.nav.modiapersonoversikt.legacy.api.service.arbeidsfordeling.ArbeidsfordelingEnhet
@@ -20,7 +20,6 @@ import okhttp3.Request
 import okhttp3.RequestBody
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
-import org.slf4j.MDC
 import org.springframework.beans.factory.annotation.Autowired
 import java.util.*
 
@@ -75,7 +74,7 @@ open class ArbeidsfordelingClient {
             .newCall(
                 Request.Builder()
                     .url("$NORG2_URL/api/v1/arbeidsfordeling/enheter/bestmatch")
-                    .header(NAV_CALL_ID_HEADER, MDC.get(MDCConstants.MDC_CALL_ID))
+                    .header(NAV_CALL_ID_HEADER, getCallId())
                     .header(AUTHORIZATION, AUTH_METHOD_BEARER + AUTH_SEPERATOR + veilederOidcToken)
                     .header(NAV_CONSUMER_TOKEN_HEADER, AUTH_METHOD_BEARER + AUTH_SEPERATOR + consumerOidcToken)
                     .post(
