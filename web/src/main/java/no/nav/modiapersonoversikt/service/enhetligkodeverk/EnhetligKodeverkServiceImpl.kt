@@ -2,7 +2,7 @@ package no.nav.modiapersonoversikt.service.enhetligkodeverk
 
 import no.nav.common.health.HealthCheckResult
 import no.nav.common.health.selftest.SelfTestCheck
-import org.slf4j.LoggerFactory
+import no.nav.modiapersonoversikt.utils.Retry
 import java.time.*
 import java.time.temporal.ChronoUnit
 import java.util.*
@@ -15,11 +15,18 @@ class EnhetligKodeverkServiceImpl(
 ) : EnhetligKodeverk.Service {
     private data class KodeverkCacheEntry(val timestamp: LocalDateTime, val kodeverk: EnhetligKodeverk.Kodeverk)
 
-    private val log = LoggerFactory.getLogger(EnhetligKodeverkServiceImpl::class.java)
     private val emptyKodeverk = EnhetligKodeverk.Kodeverk("EMPTY", emptyMap())
     private val cache: MutableMap<KodeverkConfig, KodeverkCacheEntry> = mutableMapOf()
     private val cacheRetention = Duration.ofHours(24)
     private val cacheGraceperiod = Duration.ofMinutes(15)
+    private val retry = Retry(
+        Retry.Config(
+            initDelay = 30 * 1000,
+            growthFactor = 2.0,
+            delayLimit = 60 * 60 * 1000,
+            scheduler = scheduler
+        )
+    )
 
     init {
         prepopulerCache()
@@ -73,10 +80,8 @@ class EnhetligKodeverkServiceImpl(
 
     internal fun prepopulerCache() {
         KodeverkConfig.values().forEach { config ->
-            try {
+            retry.run {
                 cache[config] = KodeverkCacheEntry(LocalDateTime.now(clock), config.hentKodeverk(providers))
-            } catch (e: Exception) {
-                log.error("Feil ved uthenting av kodeverk $config")
             }
         }
     }
