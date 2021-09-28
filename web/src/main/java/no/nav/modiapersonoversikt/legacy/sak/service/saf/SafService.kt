@@ -1,5 +1,6 @@
 package no.nav.modiapersonoversikt.legacy.sak.service.saf
 
+import com.expediagroup.graphql.types.GraphQLResponse
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
@@ -11,6 +12,7 @@ import no.nav.common.rest.client.RestClient
 import no.nav.common.utils.EnvironmentUtils
 import no.nav.modiapersonoversikt.infrastructure.http.LoggingInterceptor
 import no.nav.modiapersonoversikt.infrastructure.http.XCorrelationIdInterceptor
+import no.nav.modiapersonoversikt.legacy.api.domain.saf.generated.Hentbrukerssaker
 import no.nav.modiapersonoversikt.legacy.sak.providerdomain.Baksystem
 import no.nav.modiapersonoversikt.legacy.sak.providerdomain.Dokument
 import no.nav.modiapersonoversikt.legacy.sak.providerdomain.DokumentMetadata
@@ -28,6 +30,7 @@ private val mapper: ObjectMapper = jacksonObjectMapper().registerModule(JavaTime
 interface SafService {
     fun hentJournalposter(fnr: String): ResultatWrapper<List<DokumentMetadata>>
     fun hentDokument(journalpostId: String, dokumentInfoId: String, variantFormat: Dokument.Variantformat): TjenesteResultatWrapper
+    fun hentSaker(ident: String): GraphQLResponse<Hentbrukerssaker.Result>
 }
 
 class SafServiceImpl : SafService {
@@ -65,6 +68,10 @@ class SafServiceImpl : SafService {
             200 -> TjenesteResultatWrapper(response.body()?.bytes())
             else -> handterDokumentFeilKoder(response.code())
         }
+    }
+
+    override fun hentSaker(ident: String): GraphQLResponse<Hentbrukerssaker.Result> {
+        TODO("Not yet implemented")
     }
 }
 

@@ -1,5 +1,6 @@
 package no.nav.modiapersonoversikt.legacy.sak.service.saf
 
+import com.expediagroup.graphql.types.GraphQLResponse
 import io.ktor.client.request.*
 import io.ktor.util.*
 import kotlinx.coroutines.runBlocking
@@ -11,6 +12,7 @@ import no.nav.modiapersonoversikt.infrastructure.http.*
 import no.nav.modiapersonoversikt.legacy.api.domain.saf.generated.HentBrukersDokumenter
 import no.nav.modiapersonoversikt.legacy.api.domain.saf.generated.HentBrukersDokumenter.Datotype
 import no.nav.modiapersonoversikt.legacy.api.domain.saf.generated.HentBrukersDokumenter.Journalposttype
+import no.nav.modiapersonoversikt.legacy.api.domain.saf.generated.Hentbrukerssaker
 import no.nav.modiapersonoversikt.legacy.sak.providerdomain.*
 import no.nav.modiapersonoversikt.legacy.sak.providerdomain.resultatwrappere.ResultatWrapper
 import no.nav.modiapersonoversikt.legacy.sak.providerdomain.resultatwrappere.TjenesteResultatWrapper
@@ -64,6 +66,28 @@ class SafGraphqlServiceImpl : SafService {
             } else {
                 ResultatWrapper(emptyList(), setOf(Baksystem.SAF))
             }
+        }
+    }
+
+    override fun hentSaker(ident: String): GraphQLResponse<Hentbrukerssaker.Result> {
+        val variables = if (ident.length == 11) {
+            Hentbrukerssaker.Variables(
+                Hentbrukerssaker.BrukerIdInput(
+                    id = ident,
+                    type = Hentbrukerssaker.BrukerIdType.FNR
+                )
+            )
+        } else {
+            Hentbrukerssaker.Variables(
+                Hentbrukerssaker.BrukerIdInput(
+                    id = ident,
+                    type = Hentbrukerssaker.BrukerIdType.AKTOERID
+                )
+            )
+        }
+        return runBlocking {
+            Hentbrukerssaker(graphQLClient)
+                .execute(variables, userTokenAuthorizationHeaders)
         }
     }
 
