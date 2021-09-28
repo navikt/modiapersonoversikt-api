@@ -71,7 +71,8 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
                 tilrettelagtKommunikasjon = hentTilrettelagtKommunikasjon(data),
                 telefonnummer = hentTelefonnummer(data),
                 kontaktOgReservasjon = hentKontaktOgReservasjon(data),
-                bankkonto = hentBankkonto(data)
+                bankkonto = hentBankkonto(data),
+                forelderBarnRelasjon = hentForelderBarnRelasjon(data)
             )
         )
     }
@@ -528,6 +529,21 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
                 }
             }
             .getOrNull()
+    }
+
+    fun hentForelderBarnRelasjon(data: Data): List<Persondata.ForelderBarnRelasjon> {
+        return data.persondata.forelderBarnRelasjon.map {
+            Persondata.ForelderBarnRelasjon(
+                relatertPersonsIdent = it.relatertPersonsIdent,
+                relatertPersonsRolle = when (it.relatertPersonsRolle) {
+                    HentPersondata.ForelderBarnRelasjonRolle.MOR -> Persondata.ForelderBarnRelasjonRolle.MOR
+                    HentPersondata.ForelderBarnRelasjonRolle.FAR -> Persondata.ForelderBarnRelasjonRolle.FAR
+                    HentPersondata.ForelderBarnRelasjonRolle.MEDMOR -> Persondata.ForelderBarnRelasjonRolle.MEDMOR
+                    HentPersondata.ForelderBarnRelasjonRolle.BARN -> Persondata.ForelderBarnRelasjonRolle.BARN
+                    else -> Persondata.ForelderBarnRelasjonRolle.UKJENT
+                }
+            )
+        }
     }
 }
 

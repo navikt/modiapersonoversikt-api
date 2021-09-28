@@ -33,7 +33,8 @@ object Persondata {
         val tilrettelagtKommunikasjon: TilrettelagtKommunikasjon,
         val telefonnummer: List<Telefon>,
         val kontaktOgReservasjon: Dkif.DigitalKontaktinformasjon?,
-        val bankkonto: Bankkonto?
+        val bankkonto: Bankkonto?,
+        val forelderBarnRelasjon: List<ForelderBarnRelasjon>
     )
 
     data class TredjepartsPerson(
@@ -184,6 +185,11 @@ object Persondata {
         val adresse: Adresse?
     )
 
+    data class ForelderBarnRelasjon(
+        val relatertPersonsIdent: String,
+        val relatertPersonsRolle: ForelderBarnRelasjonRolle
+    )
+
     enum class Kjonn {
         M, K, U
     }
@@ -237,6 +243,14 @@ object Persondata {
     enum class FullmaktsRolle {
         FULLMAKTSGIVER,
         FULLMEKTIG,
+        UKJENT
+    }
+
+    enum class ForelderBarnRelasjonRolle {
+        BARN,
+        MOR,
+        FAR,
+        MEDMOR,
         UKJENT
     }
 }
