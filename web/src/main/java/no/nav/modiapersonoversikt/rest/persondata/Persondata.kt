@@ -15,6 +15,7 @@ object Persondata {
         val navn: List<Navn>,
         val kjonn: List<KodeBeskrivelse<Kjonn>>,
         val fodselsdato: List<LocalDate>,
+        val alder: Int?,
         val dodsdato: List<LocalDate>,
         val bostedAdresse: List<Adresse>,
         val kontaktAdresse: List<Adresse>,
@@ -39,9 +40,12 @@ object Persondata {
 
     data class TredjepartsPerson(
         val fnr: String,
-        val navn: Navn?,
-        val adressebeskyttelse: KodeBeskrivelse<AdresseBeskyttelse>?,
-        val bostedAdresse: Adresse?
+        val navn: List<Navn>,
+        val fodselsdato: List<LocalDate>,
+        val alder: Int?,
+        val adressebeskyttelse: List<KodeBeskrivelse<AdresseBeskyttelse>>,
+        val bostedAdresse: List<Adresse>,
+        val personstatus: List<KodeBeskrivelse<PersonStatus>>
     )
 
     data class KodeBeskrivelse<T>(
@@ -186,8 +190,14 @@ object Persondata {
     )
 
     data class ForelderBarnRelasjon(
-        val relatertPersonsIdent: String,
-        val relatertPersonsRolle: ForelderBarnRelasjonRolle
+        val ident: String,
+        val rolle: ForelderBarnRelasjonRolle,
+        val navn: List<Navn>,
+        val fodselsdato: List<LocalDate>,
+        val alder: Int?,
+        val adressebeskyttelse: List<KodeBeskrivelse<AdresseBeskyttelse>>,
+        val bostedAdresse: List<Adresse>,
+        val personstatus: List<KodeBeskrivelse<PersonStatus>>
     )
 
     enum class Kjonn {

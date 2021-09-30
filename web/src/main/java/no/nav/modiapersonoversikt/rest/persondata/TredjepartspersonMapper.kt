@@ -1,36 +1,50 @@
 package no.nav.modiapersonoversikt.rest.persondata
 
-import no.nav.modiapersonoversikt.legacy.api.domain.pdl.generated.HentPersondataLite
+import no.nav.modiapersonoversikt.legacy.api.domain.pdl.generated.HentTredjepartspersondata
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk
+import java.time.LocalDate
+import java.time.Period
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.KodeverkConfig as Kodeverk
 
 class TredjepartspersonMapper(val kodeverk: EnhetligKodeverk.Service) {
     fun lagTredjepartsperson(
-        person: HentPersondataLite.HentPersonBolkResult,
+        ident: String,
+        person: HentTredjepartspersondata.Person?,
         tilganger: PersondataService.Tilganger
-    ): Persondata.TredjepartsPerson {
+    ): Persondata.TredjepartsPerson? {
+        if (person == null) return null
+        val fodselsdato = person.foedsel.mapNotNull { it.foedselsdato?.value }
         return Persondata.TredjepartsPerson(
-            fnr = person.ident,
-            navn = person.person?.navn?.firstOrNull()?.let {
+            fnr = ident,
+            navn = person.navn.map {
                 Persondata.Navn(
                     fornavn = it.fornavn,
                     mellomnavn = it.mellomnavn,
                     etternavn = it.etternavn
                 )
             },
-            adressebeskyttelse = person.person?.adressebeskyttelse?.let(::hentAdressebeskyttelse),
-            bostedAdresse = person.person?.bostedsadresse?.let {
+            fodselsdato = fodselsdato,
+            alder = hentAlder(fodselsdato),
+            adressebeskyttelse = person.adressebeskyttelse.let(::hentAdressebeskyttelse),
+            bostedAdresse = person.bostedsadresse.mapNotNull {
                 if (person.harTilgang(tilganger)) {
                     hentBostedAdresse(it)
                 } else {
                     null
                 }
-            }
+            },
+            personstatus = hentTredjepartspersonstatus(person.folkeregisterpersonstatus)
         )
     }
 
-    private fun hentBostedAdresse(adresser: List<HentPersondataLite.Bostedsadresse>): Persondata.Adresse? {
-        val adresse = adresser.firstOrNull() ?: return null
+    private fun hentAlder(fodselsdato: List<LocalDate>): Int? {
+        return fodselsdato.firstOrNull()
+            ?.let {
+                Period.between(it, LocalDate.now()).years
+            }
+    }
+
+    private fun hentBostedAdresse(adresse: HentTredjepartspersondata.Bostedsadresse): Persondata.Adresse? {
         return when {
             adresse.vegadresse != null -> lagAdresseFraVegadresse(adresse.vegadresse!!)
             adresse.matrikkeladresse != null -> lagAdresseFraMatrikkeladresse(adresse.matrikkeladresse!!)
@@ -40,7 +54,26 @@ class TredjepartspersonMapper(val kodeverk: EnhetligKodeverk.Service) {
         }
     }
 
-    private fun lagAdresseFraVegadresse(adresse: HentPersondataLite.Vegadresse): Persondata.Adresse? {
+    private fun hentTredjepartspersonstatus(folkeregisterpersonstatus: List<HentTredjepartspersondata.Folkeregisterpersonstatus>): List<Persondata.KodeBeskrivelse<Persondata.PersonStatus>> {
+        return folkeregisterpersonstatus.map {
+            val tpsKode = when (it.status) {
+                "bosatt" -> Persondata.PersonStatus.BOSATT
+                "doed" -> Persondata.PersonStatus.DOD
+                "opphoert" -> Persondata.PersonStatus.OPPHORT
+                "inaktiv" -> Persondata.PersonStatus.INAKTIV
+                "midlertidig" -> Persondata.PersonStatus.MIDLERTIDIG
+                "forsvunnet" -> Persondata.PersonStatus.FORSVUNNET
+                "utflyttet" -> Persondata.PersonStatus.UTFLYTTET
+                "ikkeBosatt" -> Persondata.PersonStatus.IKKE_BOSATT
+                "foedselsregistrert" -> Persondata.PersonStatus.FODSELSREGISTERT
+                else -> Persondata.PersonStatus.UKJENT
+            }
+            val beskrivelse = kodeverk.hentKodeBeskrivelse(Kodeverk.PERSONSTATUSER, tpsKode.tpsKode)
+            Persondata.KodeBeskrivelse(tpsKode, beskrivelse.beskrivelse)
+        }
+    }
+
+    private fun lagAdresseFraVegadresse(adresse: HentTredjepartspersondata.Vegadresse): Persondata.Adresse? {
         return Persondata.Adresse(
             linje1 = listOf(
                 adresse.adressenavn,
@@ -59,7 +92,7 @@ class TredjepartspersonMapper(val kodeverk: EnhetligKodeverk.Service) {
         )
     }
 
-    private fun lagAdresseFraMatrikkeladresse(adresse: HentPersondataLite.Matrikkeladresse): Persondata.Adresse? {
+    private fun lagAdresseFraMatrikkeladresse(adresse: HentTredjepartspersondata.Matrikkeladresse): Persondata.Adresse? {
         return Persondata.Adresse(
             linje1 = listOf(
                 adresse.bruksenhetsnummer,
@@ -72,7 +105,7 @@ class TredjepartspersonMapper(val kodeverk: EnhetligKodeverk.Service) {
         )
     }
 
-    private fun lagAdresseFraUtenlandskAdresse(adresse: HentPersondataLite.UtenlandskAdresse): Persondata.Adresse? {
+    private fun lagAdresseFraUtenlandskAdresse(adresse: HentTredjepartspersondata.UtenlandskAdresse): Persondata.Adresse? {
         return Persondata.Adresse(
             linje1 = listOf(
                 adresse.postboksNummerNavn,
@@ -90,42 +123,40 @@ class TredjepartspersonMapper(val kodeverk: EnhetligKodeverk.Service) {
         )
     }
 
-    fun hentAdressebeskyttelse(adressebeskyttelseListe: List<HentPersondataLite.Adressebeskyttelse>): Persondata.KodeBeskrivelse<Persondata.AdresseBeskyttelse> {
-        val kodebeskrivelse = when (adressebeskyttelseListe.first().gradering) {
-            HentPersondataLite.AdressebeskyttelseGradering.STRENGT_FORTROLIG_UTLAND,
-            HentPersondataLite.AdressebeskyttelseGradering.STRENGT_FORTROLIG -> kodeverk.hentKodeBeskrivelse(
-                Kodeverk.DISKRESJONSKODER,
-                "SPSF"
-            )
-            HentPersondataLite.AdressebeskyttelseGradering.FORTROLIG -> kodeverk.hentKodeBeskrivelse(
-                Kodeverk.DISKRESJONSKODER,
-                "SPSO"
-            )
-            HentPersondataLite.AdressebeskyttelseGradering.UGRADERT -> Persondata.KodeBeskrivelse("", "Ugradert")
-            else -> Persondata.KodeBeskrivelse("", "Ukjent")
+    private fun hentAdressebeskyttelse(adressebeskyttelseListe: List<HentTredjepartspersondata.Adressebeskyttelse>): List<Persondata.KodeBeskrivelse<Persondata.AdresseBeskyttelse>> {
+        return adressebeskyttelseListe.map {
+            val kodebeskrivelse = when (it.gradering) {
+                HentTredjepartspersondata.AdressebeskyttelseGradering.STRENGT_FORTROLIG_UTLAND, HentTredjepartspersondata.AdressebeskyttelseGradering.STRENGT_FORTROLIG -> kodeverk.hentKodeBeskrivelse(
+                    Kodeverk.DISKRESJONSKODER,
+                    "SPSF"
+                )
+                HentTredjepartspersondata.AdressebeskyttelseGradering.FORTROLIG -> kodeverk.hentKodeBeskrivelse(Kodeverk.DISKRESJONSKODER, "SPSO")
+                HentTredjepartspersondata.AdressebeskyttelseGradering.UGRADERT -> Persondata.KodeBeskrivelse("", "Ugradert")
+                else -> Persondata.KodeBeskrivelse("", "Ukjent")
+            }
+            val adressebeskyttelse = when (it.gradering) {
+                HentTredjepartspersondata.AdressebeskyttelseGradering.STRENGT_FORTROLIG_UTLAND -> Persondata.AdresseBeskyttelse.KODE6_UTLAND
+                HentTredjepartspersondata.AdressebeskyttelseGradering.STRENGT_FORTROLIG -> Persondata.AdresseBeskyttelse.KODE6
+                HentTredjepartspersondata.AdressebeskyttelseGradering.FORTROLIG -> Persondata.AdresseBeskyttelse.KODE7
+                HentTredjepartspersondata.AdressebeskyttelseGradering.UGRADERT -> Persondata.AdresseBeskyttelse.UGRADERT
+                else -> Persondata.AdresseBeskyttelse.UKJENT
+            }
+            Persondata.KodeBeskrivelse(kode = adressebeskyttelse, beskrivelse = kodebeskrivelse.beskrivelse)
         }
-        val adressebeskyttelse = when (adressebeskyttelseListe.first().gradering) {
-            HentPersondataLite.AdressebeskyttelseGradering.STRENGT_FORTROLIG_UTLAND -> Persondata.AdresseBeskyttelse.KODE6_UTLAND
-            HentPersondataLite.AdressebeskyttelseGradering.STRENGT_FORTROLIG -> Persondata.AdresseBeskyttelse.KODE6
-            HentPersondataLite.AdressebeskyttelseGradering.FORTROLIG -> Persondata.AdresseBeskyttelse.KODE7
-            HentPersondataLite.AdressebeskyttelseGradering.UGRADERT -> Persondata.AdresseBeskyttelse.UGRADERT
-            else -> Persondata.AdresseBeskyttelse.UKJENT
-        }
-        return Persondata.KodeBeskrivelse(kode = adressebeskyttelse, beskrivelse = kodebeskrivelse.beskrivelse)
     }
 
-    fun HentPersondataLite.HentPersonBolkResult.harTilgang(tilganger: PersondataService.Tilganger): Boolean {
-        val person = this.person ?: return false
+    private fun HentTredjepartspersondata.Person?.harTilgang(tilganger: PersondataService.Tilganger): Boolean {
+        val person = this ?: return false
         var kode = 0
         val adressebeskyttelse = person.adressebeskyttelse
         for (beskyttelse in adressebeskyttelse) {
-            if (beskyttelse.gradering == HentPersondataLite.AdressebeskyttelseGradering.STRENGT_FORTROLIG_UTLAND) {
+            if (beskyttelse.gradering == HentTredjepartspersondata.AdressebeskyttelseGradering.STRENGT_FORTROLIG_UTLAND) {
                 kode = 6
                 break
-            } else if (beskyttelse.gradering == HentPersondataLite.AdressebeskyttelseGradering.STRENGT_FORTROLIG) {
+            } else if (beskyttelse.gradering == HentTredjepartspersondata.AdressebeskyttelseGradering.STRENGT_FORTROLIG) {
                 kode = 6
                 break
-            } else if (beskyttelse.gradering == HentPersondataLite.AdressebeskyttelseGradering.FORTROLIG) {
+            } else if (beskyttelse.gradering == HentTredjepartspersondata.AdressebeskyttelseGradering.FORTROLIG) {
                 kode = 7
                 break
             }
