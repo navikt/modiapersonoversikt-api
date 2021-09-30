@@ -37,6 +37,7 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
         fun feilendeSystemer(): List<String> {
             return ekstraDatapunker.mapNotNull {
                 if (it is PersondataResult.Failure<*>) {
+                    TjenestekallLogger.logger.error("Persondata feilet system: ${it.system}", it.exception)
                     it.system
                 } else {
                     null
