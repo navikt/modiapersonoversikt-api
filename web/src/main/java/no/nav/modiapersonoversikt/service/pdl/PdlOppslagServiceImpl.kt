@@ -39,11 +39,15 @@ class PdlOppslagServiceImpl constructor(
     }
 
     override fun hentTredjepartspersondata(fnrs: List<String>): List<HentTredjepartspersondata.HentPersonBolkResult> = runBlocking {
-        HentTredjepartspersondata(pdlClient)
-            .execute(HentTredjepartspersondata.Variables(fnrs), systemTokenAuthorizationHeaders)
-            .data
-            ?.hentPersonBolk
-            ?: emptyList()
+        if (fnrs.isEmpty()) {
+            emptyList()
+        } else {
+            HentTredjepartspersondata(pdlClient)
+                .execute(HentTredjepartspersondata.Variables(fnrs), systemTokenAuthorizationHeaders)
+                .data
+                ?.hentPersonBolk
+                ?: emptyList()
+        }
     }
 
     override fun hentNavnBolk(fnrs: List<String>): Map<String, HentNavnBolk.Navn?>? {
