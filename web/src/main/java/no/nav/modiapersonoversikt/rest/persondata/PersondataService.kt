@@ -49,8 +49,8 @@ class PersondataServiceImpl(
         val tredjepartsPerson = PersondataResult.runCatching("PDL") {
             persondata
                 .findTredjepartsPersoner()
-                .let { pdl.hentPersondataLite(it) }
-                .map { tredjepartspersonMapper.lagTredjepartsperson(it, tilganger) }
+                .let { pdl.hentTredjepartspersondata(it) }
+                .mapNotNull { tredjepartspersonMapper.lagTredjepartsperson(it.ident, it.person, tilganger) }
                 .associateBy { it.fnr }
         }
 
