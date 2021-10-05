@@ -10,6 +10,7 @@ interface TilgangskontrollContext {
     fun harSaksbehandlerRolle(rolle: String): Boolean
     fun hentTemagrupperForSaksbehandler(valgtEnhet: String): Set<String>
     fun hentSaksbehandlereMedTilgangTilHastekassering(): List<String>
+    fun hentSaksbehandlereMedTilgangTilInternal(): List<String>
     fun alleBehandlingsIderTilhorerBruker(fnr: String, behandlingsIder: List<String>): Boolean
     fun sfDialogTilhorerBruker(fnr: String, kjedeId: String): Boolean
     fun featureToggleEnabled(featureToggle: String): Boolean
