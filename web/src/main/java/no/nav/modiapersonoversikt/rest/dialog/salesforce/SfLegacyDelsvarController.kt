@@ -12,6 +12,6 @@ class SfLegacyDelsvarController : DialogDelsvarApi {
         fnr: String,
         request: DelsvarRestRequest
     ): ResponseEntity<Void> {
-        throw NotSupportedException("Delvar er ikke støttet av Salesforce")
+        throw NotSupportedException("Delsvar er ikke støttet av Salesforce")
     }
 }

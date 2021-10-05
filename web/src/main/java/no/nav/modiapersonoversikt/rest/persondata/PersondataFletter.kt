@@ -13,6 +13,7 @@ import no.nav.tjeneste.virksomhet.person.v3.informasjon.BankkontoUtland
 import no.nav.tjeneste.virksomhet.person.v3.informasjon.Bruker
 import no.nav.tjeneste.virksomhet.person.v3.meldinger.HentPersonResponse
 import java.time.LocalDate
+import java.time.Period
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.KodeverkConfig as Kodeverk
 
 class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
@@ -54,6 +55,7 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
                 navn = hentNavn(data),
                 kjonn = hentKjonn(data),
                 fodselsdato = hentFodselsdato(data),
+                alder = hentAlder(data),
                 dodsdato = hentDodsdato(data),
                 bostedAdresse = hentBostedAdresse(data),
                 kontaktAdresse = hentKontaktAdresse(data),
@@ -72,7 +74,8 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
                 tilrettelagtKommunikasjon = hentTilrettelagtKommunikasjon(data),
                 telefonnummer = hentTelefonnummer(data),
                 kontaktOgReservasjon = hentKontaktOgReservasjon(data),
-                bankkonto = hentBankkonto(data)
+                bankkonto = hentBankkonto(data),
+                forelderBarnRelasjon = hentForelderBarnRelasjon(data)
             )
         )
     }
@@ -328,8 +331,8 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
             val ansvarligsubject = data.tredjepartsPerson.map { it[forelderansvar.ansvarssubjekt] }.getOrNull()
             Persondata.Foreldreansvar(
                 ansvar = forelderansvar.ansvar ?: "Kunne ikke hente type ansvar",
-                ansvarlig = ansvarlig?.navn ?: ansvarligUtenNavn,
-                ansvarsubject = ansvarligsubject?.navn
+                ansvarlig = ansvarlig?.navn?.firstOrNull() ?: ansvarligUtenNavn,
+                ansvarsubject = ansvarligsubject?.navn?.firstOrNull()
             )
         }
     }
@@ -418,7 +421,7 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
 
             Persondata.Fullmakt(
                 motpartsPersonident = it.motpartsPersonident,
-                motpartsPersonNavn = navn ?: Persondata.Navn.UKJENT,
+                motpartsPersonNavn = navn?.firstOrNull() ?: Persondata.Navn.UKJENT,
                 motpartsRolle = when (it.motpartsRolle) {
                     HentPersondata.FullmaktsRolle.FULLMAKTSGIVER -> Persondata.FullmaktsRolle.FULLMAKTSGIVER
                     HentPersondata.FullmaktsRolle.FULLMEKTIG -> Persondata.FullmaktsRolle.FULLMEKTIG
@@ -440,7 +443,7 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
 
             Persondata.Verge(
                 ident = vergemal.vergeEllerFullmektig.motpartsPersonident,
-                navn = motpart ?: navn,
+                navn = motpart?.firstOrNull() ?: navn,
                 vergesakstype = vergemal.type,
                 omfang = vergemal.vergeEllerFullmektig.omfang,
                 embete = vergemal.embete,
@@ -529,6 +532,35 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
                 }
             }
             .getOrNull()
+    }
+
+    fun hentForelderBarnRelasjon(data: Data): List<Persondata.ForelderBarnRelasjon> {
+        return data.persondata.forelderBarnRelasjon.map { relasjon ->
+            val tredjepartsPerson = data.tredjepartsPerson.map { it[relasjon.relatertPersonsIdent] }.getOrNull()
+            Persondata.ForelderBarnRelasjon(
+                ident = relasjon.relatertPersonsIdent,
+                rolle = when (relasjon.relatertPersonsRolle) {
+                    HentPersondata.ForelderBarnRelasjonRolle.MOR -> Persondata.ForelderBarnRelasjonRolle.MOR
+                    HentPersondata.ForelderBarnRelasjonRolle.FAR -> Persondata.ForelderBarnRelasjonRolle.FAR
+                    HentPersondata.ForelderBarnRelasjonRolle.MEDMOR -> Persondata.ForelderBarnRelasjonRolle.MEDMOR
+                    HentPersondata.ForelderBarnRelasjonRolle.BARN -> Persondata.ForelderBarnRelasjonRolle.BARN
+                    else -> Persondata.ForelderBarnRelasjonRolle.UKJENT
+                },
+                navn = tredjepartsPerson?.navn ?: emptyList(),
+                fodselsdato = tredjepartsPerson?.fodselsdato ?: emptyList(),
+                alder = tredjepartsPerson?.alder,
+                adressebeskyttelse = tredjepartsPerson?.adressebeskyttelse ?: emptyList(),
+                bostedAdresse = tredjepartsPerson?.bostedAdresse ?: emptyList(),
+                personstatus = tredjepartsPerson?.personstatus ?: emptyList()
+            )
+        }
+    }
+
+    private fun hentAlder(data: Data): Int? {
+        return data.persondata.foedsel.firstOrNull()?.foedselsdato
+            ?.let {
+                Period.between(it.value, LocalDate.now()).years
+            }
     }
 }
 

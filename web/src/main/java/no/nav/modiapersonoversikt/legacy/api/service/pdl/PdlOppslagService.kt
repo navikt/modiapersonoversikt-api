@@ -6,7 +6,7 @@ interface PdlOppslagService {
     fun sokPersonUtenlandskID(utenlandskID: String): List<SokPersonUtenlandskID.PersonSearchHit>
     fun hentPerson(fnr: String): HentPerson.Person?
     fun hentPersondata(fnr: String): HentPersondata.Person?
-    fun hentPersondataLite(fnrs: List<String>): List<HentPersondataLite.HentPersonBolkResult>
+    fun hentTredjepartspersondata(fnrs: List<String>): List<HentTredjepartspersondata.HentPersonBolkResult>
     fun hentGeografiskTilknyttning(fnr: String): String?
     fun hentIdenter(fnr: String): HentIdenter.Identliste?
     fun hentAktorId(fnr: String): String?

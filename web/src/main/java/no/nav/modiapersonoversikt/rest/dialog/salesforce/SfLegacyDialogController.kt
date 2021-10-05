@@ -36,6 +36,7 @@ class SfLegacyDialogController(
     private val kodeverk: StandardKodeverk
 ) : DialogApi {
     override fun hentMeldinger(request: HttpServletRequest, fnr: String, enhet: String?): List<TraadDTO> {
+        // TODO Fjern tilgangskontroll
         return tilgangskontroll
             .check(Policies.tilgangTilBruker.with(fnr))
             .get(Audit.describe(Audit.Action.READ, AuditResources.Person.Henvendelse.Les, AuditIdentifier.FNR to fnr)) {
