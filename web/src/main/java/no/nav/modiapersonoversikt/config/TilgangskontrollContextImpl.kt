@@ -58,6 +58,13 @@ open class TilgangskontrollContextImpl(
             .map(String::toUpperCase)
     }
 
+    override fun hentSaksbehandlereMedTilgangTilInternal(): List<String> {
+        return EnvironmentUtils.getRequiredProperty("INTERNAL_TILGANG", "")
+            .split(",")
+            .map(String::trim)
+            .map(String::toUpperCase)
+    }
+
     override fun alleBehandlingsIderTilhorerBruker(fnr: String, behandlingsIder: List<String>): Boolean {
         return henvendelseLesService.alleBehandlingsIderTilhorerBruker(fnr, behandlingsIder)
     }

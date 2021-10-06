@@ -3,6 +3,11 @@ package no.nav.modiapersonoversikt.infrastructure.naudit
 import no.nav.modiapersonoversikt.infrastructure.naudit.Audit.AuditResource
 
 class AuditResources {
+    class Introspection {
+        companion object {
+            val Tokens = AuditResource("introspection.token")
+        }
+    }
     class Enhet {
         companion object {
             val Kontaktinformasjon = AuditResource("enhet.kontaktinformasjon")
