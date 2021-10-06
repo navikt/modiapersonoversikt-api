@@ -45,36 +45,36 @@ class SfLegacyDialogController(
             }
     }
 
-    override fun sendMelding(request: HttpServletRequest, fnr: String, body: SendReferatRequest): ResponseEntity<Void> {
+    override fun sendMelding(request: HttpServletRequest, fnr: String, referatRequest: SendReferatRequest): ResponseEntity<Void> {
         sfHenvendelseService.sendSamtalereferat(
             bruker = EksternBruker.Fnr(fnr),
             enhet = RestUtils.hentValgtEnhet(null, request),
-            temagruppe = body.temagruppe,
-            kanal = body.meldingstype.getKanal(),
-            fritekst = body.fritekst
+            temagruppe = referatRequest.temagruppe,
+            kanal = referatRequest.meldingstype.getKanal(),
+            fritekst = referatRequest.fritekst
         )
         return ResponseEntity(HttpStatus.OK)
     }
 
-    override fun sendSporsmal(request: HttpServletRequest, fnr: String, body: SendSporsmalRequest): ResponseEntity<Void> {
+    override fun sendSporsmal(request: HttpServletRequest, fnr: String, sporsmalsRequest: SendSporsmalRequest): ResponseEntity<Void> {
         sfHenvendelseService.opprettNyDialogOgSendMelding(
             bruker = EksternBruker.Fnr(fnr),
-            enhet = RestUtils.hentValgtEnhet(body.enhet, request),
-            temagruppe = TemagruppeTemaMapping.hentTemagruppeForTema(body.sak.temaKode),
-            fritekst = body.fritekst
+            enhet = RestUtils.hentValgtEnhet(sporsmalsRequest.enhet, request),
+            temagruppe = TemagruppeTemaMapping.hentTemagruppeForTema(sporsmalsRequest.sak.temaKode),
+            fritekst = sporsmalsRequest.fritekst
         )
         // Ja, sak blir sendt inn. Men vi kan ikke journalføre henvendelsen her siden den da blir lukket, og bruker kan ikke svare.
         // TODO Hvordan vil vi håndtere dette?? Hvordan blir dette med tilgangskontroll på tema?
         return ResponseEntity(HttpStatus.OK)
     }
 
-    override fun sendInfomelding(request: HttpServletRequest, fnr: String, body: InfomeldingRequest): ResponseEntity<Void> {
-        val enhet = RestUtils.hentValgtEnhet(body.enhet, request)
+    override fun sendInfomelding(request: HttpServletRequest, fnr: String, infomeldingRequest: InfomeldingRequest): ResponseEntity<Void> {
+        val enhet = RestUtils.hentValgtEnhet(infomeldingRequest.enhet, request)
         sfHenvendelseService.opprettNyDialogOgSendMelding(
             bruker = EksternBruker.Fnr(fnr),
             enhet = enhet,
-            temagruppe = TemagruppeTemaMapping.hentTemagruppeForTema(body.sak.temaKode),
-            fritekst = body.fritekst
+            temagruppe = TemagruppeTemaMapping.hentTemagruppeForTema(infomeldingRequest.sak.temaKode),
+            fritekst = infomeldingRequest.fritekst
         )
 
         // Direkte journalforing slik at dialog lukkes for svar fra bruker
@@ -82,8 +82,8 @@ class SfLegacyDialogController(
         sfHenvendelseService.journalforHenvendelse(
             enhet = enhet,
             kjedeId = "???",
-            saksId = body.sak.saksId,
-            saksTema = body.sak.temaKode
+            saksId = infomeldingRequest.sak.saksId,
+            saksTema = infomeldingRequest.sak.temaKode
         )
         return ResponseEntity(HttpStatus.OK)
     }
@@ -92,25 +92,25 @@ class SfLegacyDialogController(
         request: HttpServletRequest,
         fnr: String,
         ignorerConflict: Boolean?,
-        body: OpprettHenvendelseRequest
+        opprettHenvendelseRequest: OpprettHenvendelseRequest
     ): FortsettDialogDTO {
         /**
          * Artifakt av legacy-henvendelse, beholdt for å holde apiene like.
          */
-        return FortsettDialogDTO(body.traadId, null)
+        return FortsettDialogDTO(opprettHenvendelseRequest.traadId, null)
     }
 
     override fun sendFortsettDialog(
         request: HttpServletRequest,
         fnr: String,
-        body: FortsettDialogRequest
+        fortsettDialogRequest: FortsettDialogRequest
     ): ResponseEntity<Void> {
-        val kjedeId = body.traadId
-        val oppgaveId = body.oppgaveId
+        val kjedeId = fortsettDialogRequest.traadId
+        val oppgaveId = fortsettDialogRequest.oppgaveId
 
         val bruker = EksternBruker.Fnr(fnr)
-        val enhet = RestUtils.hentValgtEnhet(body.enhet, request)
-        val henvendelse = sfHenvendelseService.hentHenvendelse(body.traadId)
+        val enhet = RestUtils.hentValgtEnhet(fortsettDialogRequest.enhet, request)
+        val henvendelse = sfHenvendelseService.hentHenvendelse(fortsettDialogRequest.traadId)
 
         val henvendelseTilhorerBruker = sfHenvendelseService.sjekkEierskap(bruker, henvendelse)
         if (!henvendelseTilhorerBruker) {
@@ -119,8 +119,8 @@ class SfLegacyDialogController(
 
         if (oppgaveId != null) {
             val oppgave: Oppgave? = oppgaveBehandlingService.hentOppgave(oppgaveId)
-            if (body.traadId != oppgave?.henvendelseId) {
-                throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Feil oppgaveId fra client. Forventet '${body.traadId}', men fant '${oppgave?.henvendelseId}'")
+            if (fortsettDialogRequest.traadId != oppgave?.henvendelseId) {
+                throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Feil oppgaveId fra client. Forventet '${fortsettDialogRequest.traadId}', men fant '${oppgave?.henvendelseId}'")
             } else if (oppgaveBehandlingService.oppgaveErFerdigstilt(oppgaveId)) {
                 throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Feil oppgaveId fra client. Oppgaven er allerede ferdigstilt")
             }
@@ -128,9 +128,9 @@ class SfLegacyDialogController(
 
         sfHenvendelseService.sendMeldingPaEksisterendeDialog(
             bruker = bruker,
-            kjedeId = body.traadId,
+            kjedeId = fortsettDialogRequest.traadId,
             enhet = enhet,
-            fritekst = body.fritekst
+            fritekst = fortsettDialogRequest.fritekst
         )
 
         if (oppgaveId != null) {
