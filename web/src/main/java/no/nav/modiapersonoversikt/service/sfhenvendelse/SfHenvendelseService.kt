@@ -81,7 +81,7 @@ class SfHenvendelseServiceImpl(
     }
 
     override fun hentHenvendelse(kjedeId: String): HenvendelseDTO {
-        return henvendelseInfoApi.henvendelseinfoHenvendelseGet(kjedeId, getCallId())
+        return henvendelseInfoApi.henvendelseinfoHenvendelseKjedeIdGet(kjedeId, getCallId())
     }
 
     override fun journalforHenvendelse(enhet: String, kjedeId: String, saksId: String?, saksTema: String) {
@@ -143,7 +143,7 @@ class SfHenvendelseServiceImpl(
         fritekst: String
     ) {
         val callId = getCallId()
-        val henvendelse = henvendelseInfoApi.henvendelseinfoHenvendelseGet(kjedeId, callId)
+        val henvendelse = henvendelseInfoApi.henvendelseinfoHenvendelseKjedeIdGet(kjedeId, callId)
         val kjedeTilhorerBruker = sjekkEierskap(bruker, henvendelse)
         if (!kjedeTilhorerBruker) {
             throw IllegalStateException("Henvendelse $kjedeId tilhørte ikke bruker")
@@ -162,7 +162,7 @@ class SfHenvendelseServiceImpl(
     }
 
     override fun henvendelseTilhorerBruker(bruker: EksternBruker, kjedeId: String): Boolean {
-        val henvendelse = henvendelseInfoApi.henvendelseinfoHenvendelseGet(kjedeId, getCallId())
+        val henvendelse = henvendelseInfoApi.henvendelseinfoHenvendelseKjedeIdGet(kjedeId, getCallId())
         return sjekkEierskap(bruker, henvendelse)
     }
 
@@ -184,7 +184,7 @@ class SfHenvendelseServiceImpl(
 
     override fun merkSomFeilsendt(kjedeId: String) {
         val callId = getCallId()
-        val henvendelse = henvendelseInfoApi.henvendelseinfoHenvendelseGet(kjedeId, callId)
+        val henvendelse = henvendelseInfoApi.henvendelseinfoHenvendelseKjedeIdGet(kjedeId, callId)
         val request: RequestConfig<Map<String, Any?>> = createPatchRequest(
             kjedeId,
             PatchNote<HenvendelseDTO>()
