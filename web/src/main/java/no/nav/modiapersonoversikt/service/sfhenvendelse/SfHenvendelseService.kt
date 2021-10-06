@@ -195,6 +195,7 @@ class SfHenvendelseServiceImpl(
         henvendelseBehandlingApi.client.request<Map<String, Any?>, Unit>(request)
     }
 
+    // TODO mulig denne forsvinner fra modia, da brukerstøtte skal kunne gjøre sletting fra SF
     override fun merkForHastekassering(kjedeId: String) {
         val request: RequestConfig<Map<String, Any?>> = createPatchRequest(
             kjedeId,
