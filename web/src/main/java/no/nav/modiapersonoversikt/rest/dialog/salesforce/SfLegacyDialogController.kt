@@ -1,10 +1,5 @@
 package no.nav.modiapersonoversikt.rest.dialog.salesforce
 
-import no.nav.modiapersonoversikt.infrastructure.naudit.Audit
-import no.nav.modiapersonoversikt.infrastructure.naudit.AuditIdentifier
-import no.nav.modiapersonoversikt.infrastructure.naudit.AuditResources
-import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Policies
-import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll
 import no.nav.modiapersonoversikt.legacy.api.domain.Oppgave
 import no.nav.modiapersonoversikt.legacy.api.domain.Saksbehandler
 import no.nav.modiapersonoversikt.legacy.api.domain.Temagruppe
@@ -29,86 +24,68 @@ import javax.servlet.http.HttpServletRequest
 import javax.ws.rs.NotSupportedException
 
 class SfLegacyDialogController(
-    private val tilgangskontroll: Tilgangskontroll,
     private val sfHenvendelseService: SfHenvendelseService,
     private val oppgaveBehandlingService: OppgaveBehandlingService,
     private val ldapService: LDAPService,
     private val kodeverk: StandardKodeverk
 ) : DialogApi {
     override fun hentMeldinger(request: HttpServletRequest, fnr: String, enhet: String?): List<TraadDTO> {
-        // TODO Fjern tilgangskontroll
-        return tilgangskontroll
-            .check(Policies.tilgangTilBruker.with(fnr))
-            .get(Audit.describe(Audit.Action.READ, AuditResources.Person.Henvendelse.Les, AuditIdentifier.FNR to fnr)) {
-                val valgtEnhet = RestUtils.hentValgtEnhet(enhet, request)
-                val bruker = EksternBruker.Fnr(fnr)
+        val valgtEnhet = RestUtils.hentValgtEnhet(enhet, request)
+        val bruker = EksternBruker.Fnr(fnr)
 
-                val sfHenvendelser = sfHenvendelseService.hentHenvendelser(bruker, valgtEnhet)
-                val (temakodeMap, identMap) = lagOppslagsverk(sfHenvendelser)
-                sfHenvendelser
-                    .map {
-                        mapSfHenvendelserTilLegacyFormat(
-                            temakodeMap = temakodeMap,
-                            identMap = identMap,
-                            henvendelse = it
-                        )
-                    }
+        val sfHenvendelser = sfHenvendelseService.hentHenvendelser(bruker, valgtEnhet)
+        val (temakodeMap, identMap) = lagOppslagsverk(sfHenvendelser)
+        return sfHenvendelser
+            .map {
+                mapSfHenvendelserTilLegacyFormat(
+                    temakodeMap = temakodeMap,
+                    identMap = identMap,
+                    henvendelse = it
+                )
             }
     }
 
     override fun sendMelding(request: HttpServletRequest, fnr: String, body: SendReferatRequest): ResponseEntity<Void> {
-        return tilgangskontroll
-            .check(Policies.tilgangTilBruker.with(fnr))
-            .get(Audit.describe(Audit.Action.CREATE, AuditResources.Person.Henvendelse.Les, AuditIdentifier.FNR to fnr)) {
-                sfHenvendelseService.sendSamtalereferat(
-                    bruker = EksternBruker.Fnr(fnr),
-                    enhet = RestUtils.hentValgtEnhet(null, request),
-                    temagruppe = body.temagruppe,
-                    kanal = body.meldingstype.getKanal(),
-                    fritekst = body.fritekst
-                )
-                ResponseEntity(HttpStatus.OK)
-            }
+        sfHenvendelseService.sendSamtalereferat(
+            bruker = EksternBruker.Fnr(fnr),
+            enhet = RestUtils.hentValgtEnhet(null, request),
+            temagruppe = body.temagruppe,
+            kanal = body.meldingstype.getKanal(),
+            fritekst = body.fritekst
+        )
+        return ResponseEntity(HttpStatus.OK)
     }
 
     override fun sendSporsmal(request: HttpServletRequest, fnr: String, body: SendSporsmalRequest): ResponseEntity<Void> {
-        return tilgangskontroll
-            .check(Policies.tilgangTilBruker.with(fnr))
-            .get(Audit.describe(Audit.Action.CREATE, AuditResources.Person.Henvendelse.Les, AuditIdentifier.FNR to fnr)) {
-                sfHenvendelseService.opprettNyDialogOgSendMelding(
-                    bruker = EksternBruker.Fnr(fnr),
-                    enhet = RestUtils.hentValgtEnhet(body.enhet, request),
-                    temagruppe = TemagruppeTemaMapping.hentTemagruppeForTema(body.sak.temaKode),
-                    fritekst = body.fritekst
-                )
-                // Ja, sak blir sendt inn. Men vi kan ikke journalføre henvendelsen her siden den da blir lukket, og bruker kan ikke svare.
-                // TODO Hvordan vil vi håndtere dette?? Hvordan blir dette med tilgangskontroll på tema?
-                ResponseEntity(HttpStatus.OK)
-            }
+        sfHenvendelseService.opprettNyDialogOgSendMelding(
+            bruker = EksternBruker.Fnr(fnr),
+            enhet = RestUtils.hentValgtEnhet(body.enhet, request),
+            temagruppe = TemagruppeTemaMapping.hentTemagruppeForTema(body.sak.temaKode),
+            fritekst = body.fritekst
+        )
+        // Ja, sak blir sendt inn. Men vi kan ikke journalføre henvendelsen her siden den da blir lukket, og bruker kan ikke svare.
+        // TODO Hvordan vil vi håndtere dette?? Hvordan blir dette med tilgangskontroll på tema?
+        return ResponseEntity(HttpStatus.OK)
     }
 
     override fun sendInfomelding(request: HttpServletRequest, fnr: String, body: InfomeldingRequest): ResponseEntity<Void> {
-        return tilgangskontroll
-            .check(Policies.tilgangTilBruker.with(fnr))
-            .get(Audit.describe(Audit.Action.CREATE, AuditResources.Person.Henvendelse.Les, AuditIdentifier.FNR to fnr)) {
-                val enhet = RestUtils.hentValgtEnhet(body.enhet, request)
-                sfHenvendelseService.opprettNyDialogOgSendMelding(
-                    bruker = EksternBruker.Fnr(fnr),
-                    enhet = enhet,
-                    temagruppe = TemagruppeTemaMapping.hentTemagruppeForTema(body.sak.temaKode),
-                    fritekst = body.fritekst
-                )
+        val enhet = RestUtils.hentValgtEnhet(body.enhet, request)
+        sfHenvendelseService.opprettNyDialogOgSendMelding(
+            bruker = EksternBruker.Fnr(fnr),
+            enhet = enhet,
+            temagruppe = TemagruppeTemaMapping.hentTemagruppeForTema(body.sak.temaKode),
+            fritekst = body.fritekst
+        )
 
-                // Direkte journalforing slik at dialog lukkes for svar fra bruker
-                // TODO Hvordan vil vi håndtere dette??
-                sfHenvendelseService.journalforHenvendelse(
-                    enhet = enhet,
-                    kjedeId = "???",
-                    saksId = body.sak.saksId,
-                    saksTema = body.sak.temaKode
-                )
-                ResponseEntity(HttpStatus.OK)
-            }
+        // Direkte journalforing slik at dialog lukkes for svar fra bruker
+        // TODO Hvordan vil vi håndtere dette??
+        sfHenvendelseService.journalforHenvendelse(
+            enhet = enhet,
+            kjedeId = "???",
+            saksId = body.sak.saksId,
+            saksTema = body.sak.temaKode
+        )
+        return ResponseEntity(HttpStatus.OK)
     }
 
     override fun startFortsettDialog(
@@ -117,18 +94,10 @@ class SfLegacyDialogController(
         ignorerConflict: Boolean?,
         body: OpprettHenvendelseRequest
     ): FortsettDialogDTO {
-        val auditIdentifier = arrayOf(
-            AuditIdentifier.FNR to fnr,
-            AuditIdentifier.TRAAD_ID to body.traadId
-        )
-        return tilgangskontroll
-            .check(Policies.tilgangTilBruker.with(fnr))
-            .get(Audit.describe(Audit.Action.CREATE, AuditResources.Person.Henvendelse.Opprettet, *auditIdentifier)) {
-                /**
-                 * Artifakt av legacy-henvendelse, beholdt for å holde apiene like.
-                 */
-                FortsettDialogDTO(body.traadId, null)
-            }
+        /**
+         * Artifakt av legacy-henvendelse, beholdt for å holde apiene like.
+         */
+        return FortsettDialogDTO(body.traadId, null)
     }
 
     override fun sendFortsettDialog(
@@ -136,52 +105,43 @@ class SfLegacyDialogController(
         fnr: String,
         body: FortsettDialogRequest
     ): ResponseEntity<Void> {
-        val auditIdentifier = arrayOf(
-            AuditIdentifier.FNR to fnr,
-            AuditIdentifier.BEHANDLING_ID to body.behandlingsId,
-            AuditIdentifier.OPPGAVE_ID to body.oppgaveId
-        )
-        return tilgangskontroll
-            .check(Policies.tilgangTilBruker.with(fnr))
-            .get(Audit.describe(Audit.Action.UPDATE, AuditResources.Person.Henvendelse.Ferdigstill, *auditIdentifier)) {
-                val kjedeId = body.traadId
-                val oppgaveId = body.oppgaveId
+        val kjedeId = body.traadId
+        val oppgaveId = body.oppgaveId
 
-                val bruker = EksternBruker.Fnr(fnr)
-                val enhet = RestUtils.hentValgtEnhet(body.enhet, request)
-                val henvendelse = sfHenvendelseService.hentHenvendelse(body.traadId)
+        val bruker = EksternBruker.Fnr(fnr)
+        val enhet = RestUtils.hentValgtEnhet(body.enhet, request)
+        val henvendelse = sfHenvendelseService.hentHenvendelse(body.traadId)
 
-                val henvendelseTilhorerBruker = sfHenvendelseService.sjekkEierskap(bruker, henvendelse)
-                if (!henvendelseTilhorerBruker) {
-                    throw ResponseStatusException(HttpStatus.FORBIDDEN, "Henvendelse $kjedeId tilhørte ikke bruker")
-                }
+        val henvendelseTilhorerBruker = sfHenvendelseService.sjekkEierskap(bruker, henvendelse)
+        if (!henvendelseTilhorerBruker) {
+            throw ResponseStatusException(HttpStatus.FORBIDDEN, "Henvendelse $kjedeId tilhørte ikke bruker")
+        }
 
-                if (oppgaveId != null) {
-                    val oppgave: Oppgave? = oppgaveBehandlingService.hentOppgave(oppgaveId)
-                    if (body.traadId != oppgave?.henvendelseId) {
-                        throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Feil oppgaveId fra client. Forventet '${body.traadId}', men fant '${oppgave?.henvendelseId}'")
-                    } else if (oppgaveBehandlingService.oppgaveErFerdigstilt(oppgaveId)) {
-                        throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Feil oppgaveId fra client. Oppgaven er allerede ferdigstilt")
-                    }
-                }
-
-                sfHenvendelseService.sendMeldingPaEksisterendeDialog(
-                    bruker = bruker,
-                    kjedeId = body.traadId,
-                    enhet = enhet,
-                    fritekst = body.fritekst
-                )
-
-                if (oppgaveId != null) {
-                    oppgaveBehandlingService.ferdigstillOppgaveIGsak(
-                        oppgaveId,
-                        Temagruppe.valueOf(henvendelse.gjeldendeTemagruppe),
-                        enhet
-                    )
-                }
-
-                ResponseEntity(HttpStatus.OK)
+        if (oppgaveId != null) {
+            val oppgave: Oppgave? = oppgaveBehandlingService.hentOppgave(oppgaveId)
+            if (body.traadId != oppgave?.henvendelseId) {
+                throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Feil oppgaveId fra client. Forventet '${body.traadId}', men fant '${oppgave?.henvendelseId}'")
+            } else if (oppgaveBehandlingService.oppgaveErFerdigstilt(oppgaveId)) {
+                throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Feil oppgaveId fra client. Oppgaven er allerede ferdigstilt")
             }
+        }
+
+        sfHenvendelseService.sendMeldingPaEksisterendeDialog(
+            bruker = bruker,
+            kjedeId = body.traadId,
+            enhet = enhet,
+            fritekst = body.fritekst
+        )
+
+        if (oppgaveId != null) {
+            oppgaveBehandlingService.ferdigstillOppgaveIGsak(
+                oppgaveId,
+                Temagruppe.valueOf(henvendelse.gjeldendeTemagruppe),
+                enhet
+            )
+        }
+
+        return ResponseEntity(HttpStatus.OK)
     }
 
     override fun slaaSammenTraader(
@@ -189,17 +149,7 @@ class SfLegacyDialogController(
         fnr: String,
         slaaSammenRequest: SlaaSammenRequest
     ): Map<String, Any?> {
-        val auditIdentifier = arrayOf(
-            AuditIdentifier.FNR to fnr,
-            AuditIdentifier.TRAAD_ID to slaaSammenRequest.traader.joinToString(" ") {
-                "${it.traadId}:${it.oppgaveId}"
-            }
-        )
-        return tilgangskontroll
-            .check(Policies.tilgangTilBruker.with(fnr))
-            .get(Audit.describe(Audit.Action.UPDATE, AuditResources.Person.Henvendelse.SlaSammen, *auditIdentifier)) {
-                throw NotSupportedException("Operasjonen er ikke støttet av Salesforce")
-            }
+        throw NotSupportedException("Operasjonen er ikke støttet av Salesforce")
     }
 
     private fun lagOppslagsverk(henvendelser: List<HenvendelseDTO>): Pair<Map<String, String>, Map<String, Saksbehandler>> {
