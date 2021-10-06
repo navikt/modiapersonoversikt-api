@@ -114,7 +114,8 @@ class SfHenvendelseServiceImpl(
                     enhet = enhet,
                     kanal = kanal,
                     fritekst = fritekst
-                )
+                ),
+                null // Skal alltid være enkeltstående samtalereferat
             )
     }
 
