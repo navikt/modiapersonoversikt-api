@@ -6,6 +6,7 @@ import no.nav.modiapersonoversikt.legacy.api.domain.Temagruppe
 import no.nav.modiapersonoversikt.legacy.api.domain.henvendelse.Meldingstype
 import no.nav.modiapersonoversikt.legacy.api.domain.henvendelse.Status
 import no.nav.modiapersonoversikt.legacy.api.domain.sfhenvendelse.generated.models.*
+import no.nav.modiapersonoversikt.legacy.api.domain.sfhenvendelse.generated.models.MeldingDTO.*
 import no.nav.modiapersonoversikt.legacy.api.service.OppgaveBehandlingService
 import no.nav.modiapersonoversikt.legacy.api.service.kodeverk.StandardKodeverk
 import no.nav.modiapersonoversikt.legacy.api.service.ldap.LDAPService
@@ -256,7 +257,14 @@ class SfLegacyDialogController(
     private fun meldingstypeFraSfTyper(henvendelse: HenvendelseDTO, melding: no.nav.modiapersonoversikt.legacy.api.domain.sfhenvendelse.generated.models.MeldingDTO): Meldingstype {
         val erForsteMelding = henvendelse.meldinger?.firstOrNull() == melding
         return when (henvendelse.henvendelseType) {
-            HenvendelseDTO.HenvendelseType.SAMTALEREFERAT -> Meldingstype.SAMTALEREFERAT_TELEFON // TODO trenger kanal fra SF her
+            HenvendelseDTO.HenvendelseType.SAMTALEREFERAT -> {
+                when (melding.kanal) {
+                    Kanal.OPPMOTE -> Meldingstype.SAMTALEREFERAT_OPPMOTE
+                    Kanal.TELEFON -> Meldingstype.SAMTALEREFERAT_TELEFON
+                    Kanal.DIGITAL -> Meldingstype.SAMTALEREFERAT_TELEFON // Har ikke tilsvarende i gamle api.
+                    else -> Meldingstype.SAMTALEREFERAT_TELEFON
+                }
+            }
             HenvendelseDTO.HenvendelseType.MELDINGSKJEDE -> {
                 when (melding.fra.identType) {
                     MeldingFraDTO.IdentType.AKTORID -> if (erForsteMelding) Meldingstype.SPORSMAL_SKRIFTLIG else Meldingstype.SVAR_SBL_INNGAAENDE
