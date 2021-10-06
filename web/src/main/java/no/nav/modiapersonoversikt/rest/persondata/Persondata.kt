@@ -83,16 +83,22 @@ object Persondata {
     data class Adresse constructor(
         val linje1: String,
         val linje2: String? = null,
-        val linje3: String? = null
+        val linje3: String? = null,
+        val registrert: LocalDateTime? = null,
+        val registrertAv: String? = null
     ) {
         constructor(
             linje1: List<String?>,
             linje2: List<String?>? = null,
-            linje3: List<String?>? = null
+            linje3: List<String?>? = null,
+            registrert: LocalDateTime? = null,
+            registrertAv: String? = null
         ) : this(
             linje1.filterNotNull().joinToString(" "),
             linje2?.filterNotNull()?.joinToString(" "),
-            linje3?.filterNotNull()?.joinToString(" ")
+            linje3?.filterNotNull()?.joinToString(" "),
+            registrert,
+            registrertAv
         )
     }
 

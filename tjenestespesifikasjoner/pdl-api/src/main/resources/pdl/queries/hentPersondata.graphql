@@ -190,6 +190,12 @@ query($ident: ID!){
             }
         }
         bostedsadresse {
+            metadata {
+                endringer {
+                    registrert
+                    registrertAv
+                }
+            }
             folkeregistermetadata {
                 ajourholdstidspunkt
                 kilde
