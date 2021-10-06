@@ -57,34 +57,38 @@ class SfLegacyDialogController(
     }
 
     override fun sendSporsmal(request: HttpServletRequest, fnr: String, sporsmalsRequest: SendSporsmalRequest): ResponseEntity<Void> {
-        sfHenvendelseService.opprettNyDialogOgSendMelding(
+        val enhet = RestUtils.hentValgtEnhet(sporsmalsRequest.enhet, request)
+        val henvendelse = sfHenvendelseService.opprettNyDialogOgSendMelding(
             bruker = EksternBruker.Fnr(fnr),
-            enhet = RestUtils.hentValgtEnhet(sporsmalsRequest.enhet, request),
+            enhet = enhet,
             temagruppe = TemagruppeTemaMapping.hentTemagruppeForTema(sporsmalsRequest.sak.temaKode),
             fritekst = sporsmalsRequest.fritekst
         )
-        // Ja, sak blir sendt inn. Men vi kan ikke journalføre henvendelsen her siden den da blir lukket, og bruker kan ikke svare.
-        // TODO Hvordan vil vi håndtere dette?? Hvordan blir dette med tilgangskontroll på tema?
+        sfHenvendelseService.journalforHenvendelse(
+            enhet = enhet,
+            kjedeId = henvendelse.kjedeId,
+            saksId = sporsmalsRequest.sak.saksId,
+            saksTema = sporsmalsRequest.sak.temaKode
+        )
         return ResponseEntity(HttpStatus.OK)
     }
 
     override fun sendInfomelding(request: HttpServletRequest, fnr: String, infomeldingRequest: InfomeldingRequest): ResponseEntity<Void> {
         val enhet = RestUtils.hentValgtEnhet(infomeldingRequest.enhet, request)
-        sfHenvendelseService.opprettNyDialogOgSendMelding(
+        val henvendelse = sfHenvendelseService.opprettNyDialogOgSendMelding(
             bruker = EksternBruker.Fnr(fnr),
             enhet = enhet,
             temagruppe = TemagruppeTemaMapping.hentTemagruppeForTema(infomeldingRequest.sak.temaKode),
             fritekst = infomeldingRequest.fritekst
         )
-
-        // Direkte journalforing slik at dialog lukkes for svar fra bruker
-        // TODO Hvordan vil vi håndtere dette??
         sfHenvendelseService.journalforHenvendelse(
             enhet = enhet,
-            kjedeId = "???",
+            kjedeId = henvendelse.kjedeId,
             saksId = infomeldingRequest.sak.saksId,
             saksTema = infomeldingRequest.sak.temaKode
         )
+        sfHenvendelseService.lukkTraad(henvendelse.kjedeId)
+
         return ResponseEntity(HttpStatus.OK)
     }
 
@@ -110,7 +114,7 @@ class SfLegacyDialogController(
 
         val bruker = EksternBruker.Fnr(fnr)
         val enhet = RestUtils.hentValgtEnhet(fortsettDialogRequest.enhet, request)
-        val henvendelse = sfHenvendelseService.hentHenvendelse(fortsettDialogRequest.traadId)
+        var henvendelse = sfHenvendelseService.hentHenvendelse(fortsettDialogRequest.traadId)
 
         val henvendelseTilhorerBruker = sfHenvendelseService.sjekkEierskap(bruker, henvendelse)
         if (!henvendelseTilhorerBruker) {
@@ -126,12 +130,21 @@ class SfLegacyDialogController(
             }
         }
 
-        sfHenvendelseService.sendMeldingPaEksisterendeDialog(
+        henvendelse = sfHenvendelseService.sendMeldingPaEksisterendeDialog(
             bruker = bruker,
             kjedeId = fortsettDialogRequest.traadId,
             enhet = enhet,
             fritekst = fortsettDialogRequest.fritekst
         )
+
+        if (fortsettDialogRequest.sak != null) {
+            sfHenvendelseService.journalforHenvendelse(
+                enhet = enhet,
+                kjedeId = henvendelse.kjedeId,
+                saksId = fortsettDialogRequest.sak.saksId,
+                saksTema = fortsettDialogRequest.sak.temaKode
+            )
+        }
 
         if (oppgaveId != null) {
             oppgaveBehandlingService.ferdigstillOppgaveIGsak(
@@ -182,6 +195,25 @@ class SfLegacyDialogController(
         henvendelse: HenvendelseDTO
     ): TraadDTO {
         val journalpost: JournalpostDTO? = henvendelse.journalposter?.firstOrNull()
+
+        val journalfortSaksid = "-" // Ikke levert fra SF, mulig journalpostId kan brukes?
+        val journalfortDato = journalpost?.journalfortDato?.format(DateTimeFormatter.ofPattern(DATO_TID_FORMAT))
+        val journalfortTema = journalpost?.journalfortTema
+        val journalfortTemanavn = temakodeMap[journalpost?.journalfortTema ?: ""]
+        val journalfortAv: Map<String, String>? = identMap[journalpost?.journalforerNavIdent ?: ""]
+            ?.let { mapOf("fornavn" to it.fornavn, "etternavn" to it.etternavn) }
+
+        val kontorsperre: MarkeringDTO? = henvendelse.markeringer
+            ?.find { it.markeringstype == MarkeringDTO.Markeringstype.KONTORSPERRE }
+        val kontorsperretEnhet: String? = kontorsperre?.kontorsperreGT ?: kontorsperre?.kontorsperreEnhet
+        val kontorsperretAv = identMap[kontorsperre?.markertAv ?: ""]
+            ?.let { mapOf("fornavn" to it.fornavn, "etternavn" to it.etternavn, "ident" to it.ident) }
+
+        val markertSomFeilsendt = henvendelse.markeringer
+            ?.find { it.markeringstype == MarkeringDTO.Markeringstype.FEILSENDT }
+        val markertSomFeilsendtAv = identMap[markertSomFeilsendt?.markertAv ?: ""]
+            ?.let { mapOf("fornavn" to it.fornavn, "etternavn" to it.etternavn, "ident" to it.ident) }
+
         val meldinger: List<MeldingDTO> = (henvendelse.meldinger ?: emptyList()).map { melding ->
             MeldingDTO(
                 mapOf(
@@ -193,12 +225,11 @@ class SfLegacyDialogController(
                         identMap[melding.fra.ident]
                             ?.let { "${it.navn} (${it.ident})" } ?: "Ukjent"
                         ),
-                    "journalfortAv" to identMap[journalpost?.journalforerNavIdent]
-                        ?.let { mapOf("fornavn" to it.fornavn, "etternavn" to it.etternavn) },
-                    "journalfortDato" to journalpost?.journalfortDato?.format(DateTimeFormatter.ofPattern(DATO_TID_FORMAT)),
-                    "journalfortTema" to journalpost?.journalfortTema,
-                    "journalfortTemanavn" to temakodeMap[journalpost?.journalfortTema],
-                    "journalfortSaksid" to journalpost?.journalpostId,
+                    "journalfortAv" to journalfortAv,
+                    "journalfortDato" to journalfortDato,
+                    "journalfortTema" to journalfortTema,
+                    "journalfortTemanavn" to journalfortTemanavn,
+                    "journalfortSaksid" to journalfortSaksid,
                     "fritekst" to melding.fritekst,
                     "lestDato" to melding.lestDato?.format(DateTimeFormatter.ofPattern(DATO_TID_FORMAT)),
                     "status" to when {
@@ -212,22 +243,14 @@ class SfLegacyDialogController(
                     "erFerdigstiltUtenSvar" to false, // TODO Informasjon finnes ikke i SF
                     "ferdigstiltUtenSvarDato" to null, // TODO Informasjon finnes ikke i SF
                     "ferdigstiltUtenSvarAv" to null, // TODO Informasjon finnes ikke i SF
-                    "kontorsperretEnhet" to if (henvendelse.kontorsperre) henvendelse.opprinneligGT else null,
-                    "kontorsperretAv" to henvendelse.markeringer
-                        ?.find { it.markeringstype == MarkeringDTO.Markeringstype.KONTORSPERRE }
-                        ?.markertAv
-                        ?.let { identMap[it] }
-                        ?.let { mapOf("fornavn" to it.fornavn, "etternavn" to it.etternavn, "ident" to it.ident) },
-                    "markertSomFeilsendtAv" to henvendelse.markeringer
-                        ?.find { it.markeringstype == MarkeringDTO.Markeringstype.FEILSENDT }
-                        ?.markertAv
-                        ?.let { identMap[it] }
-                        ?.let { mapOf("fornavn" to it.fornavn, "etternavn" to it.etternavn, "ident" to it.ident) },
+                    "kontorsperretEnhet" to kontorsperretEnhet,
+                    "kontorsperretAv" to kontorsperretAv,
+                    "markertSomFeilsendtAv" to markertSomFeilsendtAv,
                     "erDokumentMelding" to false // Brukes ikke
                 )
             )
         }
-        return TraadDTO(requireNotNull(henvendelse.kjedeId), meldinger)
+        return TraadDTO(henvendelse.kjedeId, meldinger)
     }
 
     private fun meldingstypeFraSfTyper(henvendelse: HenvendelseDTO, melding: no.nav.modiapersonoversikt.legacy.api.domain.sfhenvendelse.generated.models.MeldingDTO): Meldingstype {
@@ -243,7 +266,7 @@ class SfLegacyDialogController(
         }
     }
 
-    fun Meldingstype.getKanal(): SamtalereferatRequestDTO.Kanal {
+    private fun Meldingstype.getKanal(): SamtalereferatRequestDTO.Kanal {
         return when (this) {
             Meldingstype.SAMTALEREFERAT_OPPMOTE -> SamtalereferatRequestDTO.Kanal.OPPMOTE
             Meldingstype.SAMTALEREFERAT_TELEFON -> SamtalereferatRequestDTO.Kanal.TELEFON
