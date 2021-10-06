@@ -197,7 +197,7 @@ class SfLegacyDialogController(
     ): TraadDTO {
         val journalpost: JournalpostDTO? = henvendelse.journalposter?.firstOrNull()
 
-        val journalfortSaksid = "-" // Ikke levert fra SF, mulig journalpostId kan brukes?
+        val journalfortSaksid = "-" // TODO Ikke levert fra SF, mulig journalpostId kan brukes?
         val journalfortDato = journalpost?.journalfortDato?.format(DateTimeFormatter.ofPattern(DATO_TID_FORMAT))
         val journalfortTema = journalpost?.journalfortTema
         val journalfortTemanavn = temakodeMap[journalpost?.journalfortTema ?: ""]
