@@ -35,19 +35,20 @@ interface SfHenvendelseService {
         enhet: String,
         temagruppe: String,
         fritekst: String
-    )
+    ): HenvendelseDTO
     fun sendMeldingPaEksisterendeDialog(
         bruker: EksternBruker,
         kjedeId: String,
         enhet: String,
         fritekst: String
-    )
+    ): HenvendelseDTO
 
     fun henvendelseTilhorerBruker(bruker: EksternBruker, kjedeId: String): Boolean
     fun sjekkEierskap(bruker: EksternBruker, henvendelse: HenvendelseDTO): Boolean
     fun merkSomKontorsperret(kjedeId: String, enhet: String)
     fun merkSomFeilsendt(kjedeId: String)
     fun merkForHastekassering(kjedeId: String)
+    fun lukkTraad(kjedeId: String)
 
     fun ping()
 }
@@ -81,7 +82,7 @@ class SfHenvendelseServiceImpl(
     }
 
     override fun hentHenvendelse(kjedeId: String): HenvendelseDTO {
-        return henvendelseInfoApi.henvendelseinfoHenvendelseGet(kjedeId, getCallId())
+        return henvendelseInfoApi.henvendelseinfoHenvendelseKjedeIdGet(kjedeId, getCallId())
     }
 
     override fun journalforHenvendelse(enhet: String, kjedeId: String, saksId: String?, saksTema: String) {
@@ -113,7 +114,8 @@ class SfHenvendelseServiceImpl(
                     enhet = enhet,
                     kanal = kanal,
                     fritekst = fritekst
-                )
+                ),
+                null // Skal alltid være enkeltstående samtalereferat
             )
     }
 
@@ -122,8 +124,8 @@ class SfHenvendelseServiceImpl(
         enhet: String,
         temagruppe: String,
         fritekst: String
-    ) {
-        henvendelseOpprettApi
+    ): HenvendelseDTO {
+        return henvendelseOpprettApi
             .henvendelseNyMeldingPost(
                 getCallId(),
                 kjedeId = null,
@@ -141,14 +143,14 @@ class SfHenvendelseServiceImpl(
         kjedeId: String,
         enhet: String,
         fritekst: String
-    ) {
+    ): HenvendelseDTO {
         val callId = getCallId()
-        val henvendelse = henvendelseInfoApi.henvendelseinfoHenvendelseGet(kjedeId, callId)
+        val henvendelse = henvendelseInfoApi.henvendelseinfoHenvendelseKjedeIdGet(kjedeId, callId)
         val kjedeTilhorerBruker = sjekkEierskap(bruker, henvendelse)
         if (!kjedeTilhorerBruker) {
             throw IllegalStateException("Henvendelse $kjedeId tilhørte ikke bruker")
         }
-        henvendelseOpprettApi
+        return henvendelseOpprettApi
             .henvendelseNyMeldingPost(
                 callId,
                 kjedeId = kjedeId,
@@ -162,7 +164,7 @@ class SfHenvendelseServiceImpl(
     }
 
     override fun henvendelseTilhorerBruker(bruker: EksternBruker, kjedeId: String): Boolean {
-        val henvendelse = henvendelseInfoApi.henvendelseinfoHenvendelseGet(kjedeId, getCallId())
+        val henvendelse = henvendelseInfoApi.henvendelseinfoHenvendelseKjedeIdGet(kjedeId, getCallId())
         return sjekkEierskap(bruker, henvendelse)
     }
 
@@ -184,7 +186,7 @@ class SfHenvendelseServiceImpl(
 
     override fun merkSomFeilsendt(kjedeId: String) {
         val callId = getCallId()
-        val henvendelse = henvendelseInfoApi.henvendelseinfoHenvendelseGet(kjedeId, callId)
+        val henvendelse = henvendelseInfoApi.henvendelseinfoHenvendelseKjedeIdGet(kjedeId, callId)
         val request: RequestConfig<Map<String, Any?>> = createPatchRequest(
             kjedeId,
             PatchNote<HenvendelseDTO>()
@@ -193,6 +195,7 @@ class SfHenvendelseServiceImpl(
         henvendelseBehandlingApi.client.request<Map<String, Any?>, Unit>(request)
     }
 
+    // TODO mulig denne forsvinner fra modia, da brukerstøtte skal kunne gjøre sletting fra SF
     override fun merkForHastekassering(kjedeId: String) {
         val request: RequestConfig<Map<String, Any?>> = createPatchRequest(
             kjedeId,
@@ -200,6 +203,13 @@ class SfHenvendelseServiceImpl(
                 .set(HenvendelseDTO::kasseringsDato).to(OffsetDateTime.now())
         )
         henvendelseBehandlingApi.client.request<Map<String, Any?>, Unit>(request)
+    }
+
+    override fun lukkTraad(kjedeId: String) {
+        henvendelseBehandlingApi.henvendelseMeldingskjedeLukkPatch(
+            kjedeId,
+            getCallId()
+        )
     }
 
     override fun ping() {

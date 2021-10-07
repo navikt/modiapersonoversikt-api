@@ -30,13 +30,13 @@ public class JournalforingController {
 
     public static final String FEILMELDING_UTEN_ENHET = "Det er dessverre ikke mulig å journalføre henvendelsen. Du må velge enhet du jobber på vegne av på nytt. Bekreft enhet med å trykke på \"Velg\"-knappen.";
 
-    private final SakerService sakerService;
+    private final JournalforingApi journalforingApi;
     private final Tilgangskontroll tilgangskontroll;
 
 
     @Autowired
-    public JournalforingController(SakerService sakerService, Tilgangskontroll tilgangskontroll) {
-        this.sakerService = sakerService;
+    public JournalforingController(JournalforingApi journalforingApi, Tilgangskontroll tilgangskontroll) {
+        this.journalforingApi = journalforingApi;
         this.tilgangskontroll = tilgangskontroll;
     }
 
@@ -44,7 +44,7 @@ public class JournalforingController {
     public SakerService.Resultat hentSaker(@PathVariable("fnr") String fnr) {
         return tilgangskontroll
                 .check(tilgangTilBruker.with(fnr))
-                .get(Audit.describe(READ, Person.GsakSaker, new Pair<>(AuditIdentifier.FNR, fnr)), () ->  sakerService.hentSaker(fnr));
+                .get(Audit.describe(READ, Person.GsakSaker, new Pair<>(AuditIdentifier.FNR, fnr)), () ->  journalforingApi.hentSaker(fnr));
     }
 
     @PostMapping("/{traadId}")
@@ -55,7 +55,7 @@ public class JournalforingController {
                 .get(Audit.describe(UPDATE, Person.Henvendelse.Journalfor, new Pair<>(AuditIdentifier.FNR, fnr), new Pair<>(AuditIdentifier.TRAAD_ID, traadId), new Pair<>(AuditIdentifier.SAK_ID, sak.saksId)), () -> {
                     String valgtEnhet = hentValgtEnhet(enhet, request);
                     try {
-                        sakerService.knyttBehandlingskjedeTilSak(fnr, traadId, sak, valgtEnhet);
+                        journalforingApi.knyttTilSak(fnr, traadId, sak, valgtEnhet);
                     } catch (EnhetIkkeSatt exception) {
                         throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, FEILMELDING_UTEN_ENHET, exception);
                     } catch (Exception exception) {

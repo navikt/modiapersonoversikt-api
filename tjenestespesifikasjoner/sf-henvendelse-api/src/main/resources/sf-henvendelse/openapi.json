@@ -6,6 +6,7 @@
   },
   "servers": [
     { "url": "https://sf-henvendelse.dev.intern.nav.no/api" },
+    { "url": "https://sf-henvendelse.intern.nav.no/api" },
     { "url": "https://test.salesforce.com/services/apexrest" }
   ],
   "paths": {
@@ -121,6 +122,37 @@
         }
       }
     },
+    "/henvendelse/meldingskjede/lukk": {
+      "patch": {
+        "tags": ["Henvendelse Behandling"],
+        "description": "Endepunkt som benyttes for lukking av en meldingskjede. Når kjeden er lukket er det ikke lenger mulig å skrive flere meldinger.",
+        "parameters": [
+          {
+            "name": "kjedeId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Unik kjedeId til meldingstråden som skal lukkes"
+          },
+          {
+            "$ref": "#/components/parameters/X-Correlation-ID"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerError"
+          }
+        }
+      }
+    },
     "/henvendelse/ny/samtalereferat": {
       "post": {
         "tags": ["Ny Henvendelse"],
@@ -138,11 +170,28 @@
         "parameters": [
           {
             "$ref": "#/components/parameters/X-Correlation-ID"
+          },
+          {
+            "name": "kjedeId",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Kjedeid hvis referatet skal knyttes som et oppfølingsreferat."
           }
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "$ref": "#/components/schemas/Henvendelse"
+                }
+              }
+            }
           },
           "400": {
             "$ref": "#/components/responses/BadRequest"
@@ -189,7 +238,15 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "$ref": "#/components/schemas/Henvendelse"
+                }
+              }
+            }
           },
           "400": {
             "$ref": "#/components/responses/BadRequest"
@@ -250,7 +307,7 @@
         }
       }
     },
-    "/henvendelseinfo/henvendelse": {
+    "/henvendelseinfo/henvendelse/{kjedeId}": {
       "get": {
         "tags": ["Henvendelse Info"],
         "description": "Returnerer informasjon for en gitt henvendelse",
@@ -301,7 +358,7 @@
           "markeringstype": {
             "type": "string",
             "enum": ["FEILSENDT", "KONTORSPERRE"],
-            "example": "FEILSENDT"
+            "example": "KONTORSPERRE"
           },
           "markertDato": {
             "type": "string",
@@ -312,42 +369,19 @@
             "type": "string",
             "description": "NAV ident til veileder/saksbehandler som har markert henvendelsen",
             "example": "Z999999"
-          }
-        },
-        "required": ["markeringstype", "markertDato", "markertAv"]
-      },
-      "Kontorsperremarkering": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/Markering"
-          }
-        ],
-        "type": "object",
-        "description": "Klasse som arver den generiske modellen til Markering og utvidet med kontorsperreinformasjon",
-        "properties": {
-          "markeringstype": {
-            "type": "string",
-            "enum": [
-              "KONTORSPERRE"
-            ],
-            "example": "KONTORSPERRE"
           },
           "kontorsperreEnhet": {
             "type": "string",
-            "description": "Enheten henvendelsen er kontorsperret til",
+            "description": "Enheten henvendelsen er kontorsperret til. Kun definert hvis markeringstype = KONTORSPERRE",
             "example": "3410"
           },
           "kontorsperreGT": {
             "type": "string",
-            "description": "GT henvendelsen er kontorsperret til",
+            "description": "GT henvendelsen er kontorsperret til. Kun definert hvis markeringstype = KONTORSPERRE",
             "example": "3410"
           }
         },
-        "required": [
-          "markeringstype",
-          "markertDato",
-          "markertAv"
-        ]
+        "required": ["markeringstype", "markertDato", "markertAv"]
       },
       "MeldingRequest": {
         "type": "object",
@@ -359,6 +393,11 @@
           "temagruppe": {
             "type": "string",
             "example": "ARBD"
+          },
+          "tema": {
+            "type": "string",
+            "description": "Temakode for journalpost som skal opprettes",
+            "example": "DAG"
           },
           "enhet": {
             "type": "string",
@@ -381,6 +420,11 @@
           "temagruppe": {
             "type": "string",
             "example": "ARBD"
+          },
+          "tema": {
+            "type": "string",
+            "description": "Temakode for journalpost som skal opprettes",
+            "example": "DAG"
           },
           "enhet": {
             "type": "string",
@@ -507,11 +551,7 @@
           "kanal": {
             "type": "string",
             "description": "Meldingskanalen",
-            "enum": [
-              "TELEFON",
-              "OPPMOTE",
-              "DIGITAL"
-            ],
+            "enum": ["TELEFON", "OPPMOTE", "DIGITAL"],
             "example": "DIGITAL"
           },
           "fra": {

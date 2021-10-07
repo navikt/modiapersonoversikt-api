@@ -27,7 +27,7 @@ public class Sak implements Serializable, Comparable<Sak> {
     public static final String SAKSTYPE_MED_FAGSAK = "MFS";
     public static final String FAGSYSTEMKODE_ARENA = "AO01";
     public static final String FAGSYSTEMKODE_PSAK = "PP01";
-    public static final String FAGSYSTEMKODE_BIDRAG = "BID";
+    public static final String FAGSYSTEMKODE_BIDRAG = "BISYS";
     public static final String FAGSYSTEM_FOR_OPPRETTELSE_AV_GENERELL_SAK = "FS22";
     public static final String BIDRAG_MARKOR = "BID-HACK";
 

@@ -63,7 +63,6 @@ open class DialogConfig {
             featureToggle = Feature.USE_SALESFORCE_DIALOG,
             unleashService = unleashService,
             ifEnabled = SfLegacyDialogController(
-                tilgangskontroll,
                 sfHenvendelseService,
                 oppgaveBehandlingService,
                 ldapService,

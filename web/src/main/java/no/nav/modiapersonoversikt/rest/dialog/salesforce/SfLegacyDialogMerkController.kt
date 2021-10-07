@@ -37,8 +37,10 @@ class SfLegacyDialogMerkController(
     }
 
     override fun avsluttUtenSvar(request: AvsluttUtenSvarRequest): ResponseEntity<Void> {
-        // TODO kan vi patche avsluttet dato?
-        throw NotSupportedException("Operasjonen er ikke støttet av Salesforce")
+        // TODO vil det være innafor å merke meldinger på denne måten.
+        // Hva skjer evt om vi forsøker å gjøre det med samtalereferat etc?
+        sfHenvendelseService.lukkTraad(request.eldsteMeldingTraadId)
+        return ResponseEntity(HttpStatus.OK)
     }
 
     override fun tvungenFerdigstill(request: TvungenFerdigstillRequest): ResponseEntity<Void> {

@@ -76,6 +76,7 @@ class SfDialogController @Autowired constructor(
                         )
                     }
                 }
+                Unit
             }
     }
 
