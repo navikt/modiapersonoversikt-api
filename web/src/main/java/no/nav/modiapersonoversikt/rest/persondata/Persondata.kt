@@ -80,25 +80,28 @@ object Persondata {
         val gyldigTilOgMed: LocalDate
     )
 
+    data class SistEndret(
+        val ident: String,
+        val tidspunkt: LocalDateTime,
+        val system: String
+    )
+
     data class Adresse constructor(
         val linje1: String,
         val linje2: String? = null,
         val linje3: String? = null,
-        val registrert: LocalDateTime? = null,
-        val registrertAv: String? = null
+        val sistEndret: SistEndret? = null
     ) {
         constructor(
             linje1: List<String?>,
             linje2: List<String?>? = null,
             linje3: List<String?>? = null,
-            registrert: LocalDateTime? = null,
-            registrertAv: String? = null
+            sistEndret: SistEndret? = null
         ) : this(
             linje1.filterNotNull().joinToString(" "),
             linje2?.filterNotNull()?.joinToString(" "),
             linje3?.filterNotNull()?.joinToString(" "),
-            registrert,
-            registrertAv
+            sistEndret
         )
     }
 
@@ -111,7 +114,8 @@ object Persondata {
         val adressat: Adressat,
         val adresse: Adresse,
         val registrert: LocalDate,
-        val skifteform: Skifteform
+        val skifteform: Skifteform,
+        val sistEndret: SistEndret?
     )
 
     data class Adressat(
@@ -168,8 +172,7 @@ object Persondata {
     data class Telefon(
         val retningsnummer: KodeBeskrivelse<String>?,
         val identifikator: String,
-        val sistEndret: LocalDateTime?,
-        val sistEndretAv: String?,
+        val sistEndret: SistEndret?,
         val prioritet: Int = -1
     )
 

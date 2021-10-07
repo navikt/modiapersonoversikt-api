@@ -179,12 +179,22 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
         }
     }
 
-    private fun hentSisteEndringFraMetadata(metadata: HentPersondata.Metadata?) =
-        metadata?.endringer?.maxBy { endring -> endring.registrert.value }
+    private fun hentSisteEndringFraMetadata(metadata: HentPersondata.Metadata?): Persondata.SistEndret? {
+        val sisteEndring = metadata?.endringer?.maxBy { endring -> endring.registrert.value }
+        return if (sisteEndring != null) {
+            Persondata.SistEndret(
+                ident = sisteEndring.registrertAv,
+                tidspunkt = sisteEndring.registrert.value,
+                system = sisteEndring.systemkilde
+            )
+        } else {
+            null
+        }
+    }
 
     private fun lagAdresseFraMatrikkeladresse(
         adresse: HentPersondata.Matrikkeladresse,
-        sisteEndring: HentPersondata.Endring? = null
+        sisteEndring: Persondata.SistEndret? = null
     ) = Persondata.Adresse(
         linje1 = listOf(
             adresse.bruksenhetsnummer,
@@ -194,13 +204,12 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
             adresse.postnummer,
             adresse.kommunenummer
         ),
-        registrert = sisteEndring?.registrert?.value,
-        registrertAv = sisteEndring?.registrertAv
+        sistEndret = sisteEndring
     )
 
     private fun lagAdresseFraUtenlandskAdresse(
         adresse: HentPersondata.UtenlandskAdresse,
-        sisteEndring: HentPersondata.Endring? = null
+        sisteEndring: Persondata.SistEndret? = null
     ) = Persondata.Adresse(
         linje1 = listOf(
             adresse.postboksNummerNavn,
@@ -215,13 +224,12 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
         linje3 = listOf(
             kodeverk.hentKodeverk(Kodeverk.LAND).hentBeskrivelse(adresse.landkode)
         ),
-        registrert = sisteEndring?.registrert?.value,
-        registrertAv = sisteEndring?.registrertAv
+        sistEndret = sisteEndring
     )
 
     private fun lagAdresseFraVegadresse(
         adresse: HentPersondata.Vegadresse,
-        sisteEndring: HentPersondata.Endring? = null
+        sisteEndring: Persondata.SistEndret? = null
     ) = Persondata.Adresse(
         linje1 = listOf(
             adresse.adressenavn,
@@ -237,8 +245,7 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
             adresse.bydelsnummer,
             adresse.kommunenummer
         ),
-        registrert = sisteEndring?.registrert?.value,
-        registrertAv = sisteEndring?.registrertAv
+        sistEndret = sisteEndring
     )
 
     private fun hentNavEnhet(data: Data): Persondata.Enhet? {
@@ -388,7 +395,8 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
                     OFFENTLIG -> Persondata.Skifteform.OFFENTLIG
                     ANNET -> Persondata.Skifteform.ANNET
                     else -> Persondata.Skifteform.UKJENT
-                }
+                },
+                sistEndret = hentSisteEndringFraMetadata(dodsbo.metadata)
             )
         }
     }
@@ -502,8 +510,7 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
             Persondata.Telefon(
                 retningsnummer = kodeverk.hentKodeBeskrivelse(Kodeverk.RETNINGSNUMRE, it.landskode),
                 identifikator = it.nummer,
-                sistEndretAv = sisteEndring?.registrertAv,
-                sistEndret = sisteEndring?.registrert?.value
+                sistEndret = sisteEndring
             )
         }
     }
