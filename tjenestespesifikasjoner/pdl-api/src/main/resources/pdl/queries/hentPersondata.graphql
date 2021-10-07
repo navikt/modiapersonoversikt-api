@@ -26,6 +26,14 @@ fragment utenlandskadresse on UtenlandskAdresse {
     landkode
 }
 
+fragment sistEndret on Metadata {
+    endringer {
+        registrert
+        registrertAv
+        systemkilde
+    }
+}
+
 query($ident: ID!){
     hentPerson(ident: $ident) {
         folkeregisteridentifikator {
@@ -105,6 +113,9 @@ query($ident: ID!){
                 postnummer
                 landkode
             }
+            metadata {
+                ...sistEndret
+            }
         }
         tilrettelagtKommunikasjon {
             talespraaktolk {
@@ -126,10 +137,7 @@ query($ident: ID!){
             nummer
             prioritet
             metadata {
-                endringer {
-                    registrert
-                    registrertAv
-                }
+                ...sistEndret
             }
         }
         vergemaalEllerFremtidsfullmakt {
@@ -191,10 +199,7 @@ query($ident: ID!){
         }
         bostedsadresse {
             metadata {
-                endringer {
-                    registrert
-                    registrertAv
-                }
+                ...sistEndret
             }
             folkeregistermetadata {
                 ajourholdstidspunkt
