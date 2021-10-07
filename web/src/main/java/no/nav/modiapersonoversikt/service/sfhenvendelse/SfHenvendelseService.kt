@@ -29,7 +29,7 @@ interface SfHenvendelseService {
     fun hentHenvendelser(bruker: EksternBruker, enhet: String): List<HenvendelseDTO>
     fun hentHenvendelse(kjedeId: String): HenvendelseDTO
     fun journalforHenvendelse(enhet: String, kjedeId: String, saksId: String?, saksTema: String)
-    fun sendSamtalereferat(bruker: EksternBruker, enhet: String, temagruppe: String, kanal: SamtalereferatRequestDTO.Kanal, fritekst: String)
+    fun sendSamtalereferat(kjedeId: String?, bruker: EksternBruker, enhet: String, temagruppe: String, kanal: SamtalereferatRequestDTO.Kanal, fritekst: String): HenvendelseDTO
     fun opprettNyDialogOgSendMelding(
         bruker: EksternBruker,
         enhet: String,
@@ -99,23 +99,24 @@ class SfHenvendelseServiceImpl(
     }
 
     override fun sendSamtalereferat(
+        kjedeId: String?,
         bruker: EksternBruker,
         enhet: String,
         temagruppe: String,
         kanal: SamtalereferatRequestDTO.Kanal,
         fritekst: String
-    ) {
-        henvendelseOpprettApi
+    ): HenvendelseDTO {
+        return henvendelseOpprettApi
             .henvendelseNySamtalereferatPost(
-                getCallId(),
-                SamtalereferatRequestDTO(
+                xCorrelationID = getCallId(),
+                samtalereferatRequestDTO = SamtalereferatRequestDTO(
                     aktorId = bruker.aktorId(),
                     temagruppe = temagruppe,
                     enhet = enhet,
                     kanal = kanal,
                     fritekst = fritekst
                 ),
-                null // Skal alltid være enkeltstående samtalereferat
+                kjedeId = kjedeId
             )
     }
 

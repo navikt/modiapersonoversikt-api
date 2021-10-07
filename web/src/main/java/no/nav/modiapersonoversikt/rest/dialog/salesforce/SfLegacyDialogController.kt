@@ -24,6 +24,11 @@ import java.time.format.DateTimeFormatter
 import javax.servlet.http.HttpServletRequest
 import javax.ws.rs.NotSupportedException
 
+private val REFERAT_TYPER = listOf(
+    Meldingstype.SAMTALEREFERAT_TELEFON,
+    Meldingstype.SAMTALEREFERAT_OPPMOTE
+)
+
 class SfLegacyDialogController(
     private val sfHenvendelseService: SfHenvendelseService,
     private val oppgaveBehandlingService: OppgaveBehandlingService,
@@ -48,6 +53,7 @@ class SfLegacyDialogController(
 
     override fun sendMelding(request: HttpServletRequest, fnr: String, referatRequest: SendReferatRequest): ResponseEntity<Void> {
         sfHenvendelseService.sendSamtalereferat(
+            kjedeId = null,
             bruker = EksternBruker.Fnr(fnr),
             enhet = RestUtils.hentValgtEnhet(null, request),
             temagruppe = referatRequest.temagruppe,
@@ -130,23 +136,43 @@ class SfLegacyDialogController(
                 throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Feil oppgaveId fra client. Oppgaven er allerede ferdigstilt")
             }
         }
-
-        henvendelse = sfHenvendelseService.sendMeldingPaEksisterendeDialog(
-            bruker = bruker,
-            kjedeId = fortsettDialogRequest.traadId,
-            enhet = enhet,
-            fritekst = fortsettDialogRequest.fritekst
-        )
-
-        if (fortsettDialogRequest.sak != null) {
-            sfHenvendelseService.journalforHenvendelse(
+        val erSamtalereferat = REFERAT_TYPER.contains(fortsettDialogRequest.meldingstype)
+        if (erSamtalereferat) {
+            henvendelse = sfHenvendelseService.sendSamtalereferat(
+                kjedeId = fortsettDialogRequest.traadId,
+                bruker = bruker,
                 enhet = enhet,
-                kjedeId = henvendelse.kjedeId,
-                saksId = fortsettDialogRequest.sak.saksId,
-                saksTema = fortsettDialogRequest.sak.temaKode
+                temagruppe = henvendelse.gjeldendeTemagruppe,
+                kanal = fortsettDialogRequest.meldingstype.getKanal(),
+                fritekst = fortsettDialogRequest.fritekst
             )
-        }
+            val journalposter = (henvendelse.journalposter ?: emptyList())
+                .distinctBy { it.journalpostId /* Må byttes ut med saksId */ }
+            journalposter.forEach {
+                sfHenvendelseService.journalforHenvendelse(
+                    enhet = enhet,
+                    kjedeId = henvendelse.kjedeId,
+                    saksId = "-", // TODO ikke eksponert enda it.saksId
+                    saksTema = it.journalfortTema
+                )
+            }
+        } else {
+            henvendelse = sfHenvendelseService.sendMeldingPaEksisterendeDialog(
+                bruker = bruker,
+                kjedeId = fortsettDialogRequest.traadId,
+                enhet = enhet,
+                fritekst = fortsettDialogRequest.fritekst
+            )
 
+            if (fortsettDialogRequest.sak != null) {
+                sfHenvendelseService.journalforHenvendelse(
+                    enhet = enhet,
+                    kjedeId = henvendelse.kjedeId,
+                    saksId = fortsettDialogRequest.sak.saksId,
+                    saksTema = fortsettDialogRequest.sak.temaKode
+                )
+            }
+        }
         if (oppgaveId != null) {
             oppgaveBehandlingService.ferdigstillOppgaveIGsak(
                 oppgaveId,
@@ -240,6 +266,7 @@ class SfLegacyDialogController(
                     },
                     "statusTekst" to null, // Blir ikke brukt av frontend uansett
                     "opprettetDato" to melding.sendtDato.format(DateTimeFormatter.ofPattern(DATO_TID_FORMAT)),
+                    "avsluttetDato" to henvendelse.avsluttetDato?.format(DateTimeFormatter.ofPattern(DATO_TID_FORMAT)),
                     "ferdigstiltDato" to melding.sendtDato.format(DateTimeFormatter.ofPattern(DATO_TID_FORMAT)),
                     "erFerdigstiltUtenSvar" to false, // TODO Informasjon finnes ikke i SF
                     "ferdigstiltUtenSvarDato" to null, // TODO Informasjon finnes ikke i SF

@@ -59,6 +59,7 @@ class SfDialogController @Autowired constructor(
                 when (request.type) {
                     HenvendelseDTO.HenvendelseType.SAMTALEREFERAT ->
                         sfHenvendelseService.sendSamtalereferat(
+                            kjedeId = null,
                             bruker = bruker,
                             enhet = enhet,
                             temagruppe = request.temagruppe,
