@@ -141,7 +141,8 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
                     sisteEndring = hentSisteEndringFraMetadata(adresse.metadata)
                 )
                 adresse.ukjentBosted != null -> Persondata.Adresse(
-                    adresse.ukjentBosted?.bostedskommune ?: "Ukjent kommune"
+                    linje1 = adresse.ukjentBosted?.bostedskommune ?: "Ukjent kommune",
+                    sistEndret = null
                 )
                 else -> {
                     TjenestekallLogger.warn(
@@ -161,7 +162,10 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
     private fun hentKontaktAdresse(data: Data): List<Persondata.Adresse> {
         return data.persondata.kontaktadresse.mapNotNull { adresse ->
             when {
-                adresse.coAdressenavn != null -> Persondata.Adresse(adresse.coAdressenavn ?: "Ukjent kommune")
+                adresse.coAdressenavn != null -> Persondata.Adresse(
+                    linje1 = adresse.coAdressenavn ?: "Ukjent kommune",
+                    sistEndret = null
+                )
                 adresse.utenlandskAdresse != null -> lagAdresseFraUtenlandskAdresse(adresse.utenlandskAdresse!!)
                 adresse.vegadresse != null -> lagAdresseFraVegadresse(adresse.vegadresse!!)
                 else -> {
@@ -179,17 +183,15 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
         }
     }
 
-    private fun hentSisteEndringFraMetadata(metadata: HentPersondata.Metadata?): Persondata.SistEndret? {
-        val sisteEndring = metadata?.endringer?.maxBy { endring -> endring.registrert.value }
-        return if (sisteEndring != null) {
-            Persondata.SistEndret(
-                ident = sisteEndring.registrertAv,
-                tidspunkt = sisteEndring.registrert.value,
-                system = sisteEndring.systemkilde
-            )
-        } else {
-            null
-        }
+    private fun hentSisteEndringFraMetadata(metadata: HentPersondata.Metadata): Persondata.SistEndret? {
+        return metadata.endringer.maxBy { it.registrert.value }
+            ?.let {
+                Persondata.SistEndret(
+                    ident = it.registrertAv,
+                    tidspunkt = it.registrert.value,
+                    system = it.systemkilde
+                )
+            }
     }
 
     private fun lagAdresseFraMatrikkeladresse(
@@ -377,8 +379,14 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
                     it.vegadresse != null -> lagAdresseFraVegadresse(it.vegadresse!!)
                     it.matrikkeladresse != null -> lagAdresseFraMatrikkeladresse(it.matrikkeladresse!!)
                     it.utenlandskAdresse != null -> lagAdresseFraUtenlandskAdresse(it.utenlandskAdresse!!)
-                    it.coAdressenavn != null -> Persondata.Adresse(it.coAdressenavn!!)
-                    it.ukjentBosted != null -> Persondata.Adresse(it.ukjentBosted?.bostedskommune ?: "Ukjent kommune")
+                    it.coAdressenavn != null -> Persondata.Adresse(
+                        linje1 = it.coAdressenavn!!,
+                        sistEndret = null
+                    )
+                    it.ukjentBosted != null -> Persondata.Adresse(
+                        linje1 = it.ukjentBosted?.bostedskommune ?: "Ukjent kommune",
+                        sistEndret = null
+                    )
                     else -> null
                 }
             )
@@ -441,7 +449,8 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
         return Persondata.Adresse(
             linje1 = listOf(adresse.adresselinje1),
             linje2 = if (adresse.adresselinje2 == null) sisteLinje else listOf(adresse.adresselinje2),
-            linje3 = if (adresse.adresselinje2 == null) null else sisteLinje
+            linje3 = if (adresse.adresselinje2 == null) null else sisteLinje,
+            sistEndret = null
         )
     }
 
@@ -549,7 +558,8 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
                             adresse = Persondata.Adresse(
                                 linje1 = bankkonto.bankkontoUtland.bankadresse.adresselinje1 ?: "Ukjent adresse",
                                 linje2 = bankkonto.bankkontoUtland.bankadresse.adresselinje2,
-                                linje3 = bankkonto.bankkontoUtland.bankadresse.adresselinje3
+                                linje3 = bankkonto.bankkontoUtland.bankadresse.adresselinje3,
+                                sistEndret = null
                             ),
                             valuta = kodeverk.hentKodeBeskrivelse(
                                 Kodeverk.VALUTA,

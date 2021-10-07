@@ -90,13 +90,13 @@ object Persondata {
         val linje1: String,
         val linje2: String? = null,
         val linje3: String? = null,
-        val sistEndret: SistEndret? = null
+        val sistEndret: SistEndret?
     ) {
         constructor(
             linje1: List<String?>,
             linje2: List<String?>? = null,
             linje3: List<String?>? = null,
-            sistEndret: SistEndret? = null
+            sistEndret: SistEndret?
         ) : this(
             linje1.filterNotNull().joinToString(" "),
             linje2?.filterNotNull()?.joinToString(" "),
