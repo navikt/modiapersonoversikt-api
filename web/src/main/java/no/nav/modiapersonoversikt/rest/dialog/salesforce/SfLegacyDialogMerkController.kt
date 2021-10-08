@@ -37,7 +37,7 @@ class SfLegacyDialogMerkController(
     }
 
     override fun avsluttUtenSvar(request: AvsluttUtenSvarRequest): ResponseEntity<Void> {
-        // TODO vil det være innafor å merke meldinger på denne måten.
+        // TODO SF vil det være innafor å merke meldinger på denne måten.
         // Hva skjer evt om vi forsøker å gjøre det med samtalereferat etc?
         sfHenvendelseService.lukkTraad(request.eldsteMeldingTraadId)
         return ResponseEntity(HttpStatus.OK)

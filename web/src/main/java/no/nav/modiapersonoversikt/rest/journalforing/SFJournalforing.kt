@@ -17,8 +17,9 @@ class SFJournalforing @Autowired constructor(
         sfHenvendelseService.journalforHenvendelse(
             enhet = enhet,
             kjedeId = traadId,
-            saksId = sak.fagsystemSaksId,
-            saksTema = sak.temaKode
+            saksTema = sak.temaKode,
+            fagsakSystem = sak.fagsystemKode,
+            saksId = sak.fagsystemSaksId
         )
     }
 }

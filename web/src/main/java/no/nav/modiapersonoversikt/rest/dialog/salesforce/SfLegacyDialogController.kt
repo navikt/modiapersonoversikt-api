@@ -74,8 +74,9 @@ class SfLegacyDialogController(
         sfHenvendelseService.journalforHenvendelse(
             enhet = enhet,
             kjedeId = henvendelse.kjedeId,
-            saksId = sporsmalsRequest.sak.saksId,
-            saksTema = sporsmalsRequest.sak.temaKode
+            saksId = sporsmalsRequest.sak.fagsystemSaksId,
+            saksTema = sporsmalsRequest.sak.temaKode,
+            fagsakSystem = sporsmalsRequest.sak.fagsystemKode
         )
         return ResponseEntity(HttpStatus.OK)
     }
@@ -91,8 +92,9 @@ class SfLegacyDialogController(
         sfHenvendelseService.journalforHenvendelse(
             enhet = enhet,
             kjedeId = henvendelse.kjedeId,
-            saksId = infomeldingRequest.sak.saksId,
-            saksTema = infomeldingRequest.sak.temaKode
+            saksId = infomeldingRequest.sak.fagsystemSaksId,
+            saksTema = infomeldingRequest.sak.temaKode,
+            fagsakSystem = infomeldingRequest.sak.fagsystemKode
         )
         sfHenvendelseService.lukkTraad(henvendelse.kjedeId)
 
@@ -147,13 +149,14 @@ class SfLegacyDialogController(
                 fritekst = fortsettDialogRequest.fritekst
             )
             val journalposter = (henvendelse.journalposter ?: emptyList())
-                .distinctBy { it.journalpostId /* Må byttes ut med saksId */ }
+                .distinctBy { it.saksId }
             journalposter.forEach {
                 sfHenvendelseService.journalforHenvendelse(
                     enhet = enhet,
                     kjedeId = henvendelse.kjedeId,
-                    saksId = "-", // TODO ikke eksponert enda it.saksId
-                    saksTema = it.journalfortTema
+                    saksId = it.saksId,
+                    saksTema = it.journalfortTema,
+                    fagsakSystem = it.fagsaksystem?.name
                 )
             }
         } else {
@@ -168,8 +171,9 @@ class SfLegacyDialogController(
                 sfHenvendelseService.journalforHenvendelse(
                     enhet = enhet,
                     kjedeId = henvendelse.kjedeId,
-                    saksId = fortsettDialogRequest.sak.saksId,
-                    saksTema = fortsettDialogRequest.sak.temaKode
+                    saksId = fortsettDialogRequest.sak.fagsystemSaksId,
+                    saksTema = fortsettDialogRequest.sak.temaKode,
+                    fagsakSystem = fortsettDialogRequest.sak.fagsystemKode
                 )
             }
         }
@@ -223,7 +227,7 @@ class SfLegacyDialogController(
     ): TraadDTO {
         val journalpost: JournalpostDTO? = henvendelse.journalposter?.firstOrNull()
 
-        val journalfortSaksid = "-" // TODO Ikke levert fra SF, mulig journalpostId kan brukes?
+        val journalfortSaksid = journalpost?.saksId
         val journalfortDato = journalpost?.journalfortDato?.format(DateTimeFormatter.ofPattern(DATO_TID_FORMAT))
         val journalfortTema = journalpost?.journalfortTema
         val journalfortTemanavn = temakodeMap[journalpost?.journalfortTema ?: ""]
