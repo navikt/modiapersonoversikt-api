@@ -10,8 +10,12 @@ import java.nio.charset.StandardCharsets.UTF_8
 import java.nio.file.Files
 import java.nio.file.NoSuchFileException
 import kotlin.test.assertEquals
+import kotlin.test.fail
 
-class SnapshotExtension(path: String = "src/test/resources/snapshots") : ParameterResolver, BeforeTestExecutionCallback, AfterTestExecutionCallback {
+class SnapshotExtension(
+    path: String = "src/test/resources/snapshots",
+    val debug: Boolean = false
+) : ParameterResolver, BeforeTestExecutionCallback, AfterTestExecutionCallback {
     private val path: String
     private var name: String? = null
     private var counter: Int = 0
@@ -69,7 +73,13 @@ class SnapshotExtension(path: String = "src/test/resources/snapshots") : Paramet
 
     private fun assertMatches(file: File, value: Any) {
         try {
-            assertEquals(read(file), createSnapshot(value))
+            val snapshot = createSnapshot(value)
+            if (debug) {
+                fail("Debugmode enabled.\nSnapshot:\n$snapshot");
+
+            } else {
+                assertEquals(read(file), snapshot)
+            }
         } catch (e: NoSuchFileException) {
             save(file, value)
             assertMatches(file, value)
@@ -84,7 +94,9 @@ class SnapshotExtension(path: String = "src/test/resources/snapshots") : Paramet
     }
 
     private fun save(file: File, value: Any) {
-        Files.writeString(file.toPath(), createSnapshot(value), UTF_8)
+        if (!debug) {
+            Files.writeString(file.toPath(), createSnapshot(value), UTF_8)
+        }
     }
 
     private fun read(file: File): String {
