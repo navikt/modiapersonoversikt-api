@@ -219,6 +219,9 @@ query($ident: ID!){
             }
         }
         kontaktadresse {
+            metadata {
+               ...sistEndret
+            }
             coAdressenavn
             vegadresse {
                 ...vegadresse

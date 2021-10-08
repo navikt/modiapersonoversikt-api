@@ -164,10 +164,16 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
             when {
                 adresse.coAdressenavn != null -> Persondata.Adresse(
                     linje1 = adresse.coAdressenavn ?: "Ukjent kommune",
-                    sistEndret = null
+                    sistEndret = hentSisteEndringFraMetadata(adresse.metadata)
                 )
-                adresse.utenlandskAdresse != null -> lagAdresseFraUtenlandskAdresse(adresse.utenlandskAdresse!!)
-                adresse.vegadresse != null -> lagAdresseFraVegadresse(adresse.vegadresse!!)
+                adresse.utenlandskAdresse != null -> lagAdresseFraUtenlandskAdresse(
+                    adresse = adresse.utenlandskAdresse!!,
+                    sisteEndring = hentSisteEndringFraMetadata(adresse.metadata)
+                )
+                adresse.vegadresse != null -> lagAdresseFraVegadresse(
+                    adresse = adresse.vegadresse!!,
+                    sisteEndring = hentSisteEndringFraMetadata(adresse.metadata)
+                )
                 else -> {
                     TjenestekallLogger.warn(
                         "PersondataFletter",
