@@ -28,8 +28,8 @@ sealed class EksternBruker(val ident: String) {
 interface SfHenvendelseService {
     fun hentHenvendelser(bruker: EksternBruker, enhet: String): List<HenvendelseDTO>
     fun hentHenvendelse(kjedeId: String): HenvendelseDTO
-    fun journalforHenvendelse(enhet: String, kjedeId: String, saksId: String?, saksTema: String)
-    fun sendSamtalereferat(bruker: EksternBruker, enhet: String, temagruppe: String, kanal: SamtalereferatRequestDTO.Kanal, fritekst: String)
+    fun journalforHenvendelse(enhet: String, kjedeId: String, saksTema: String, saksId: String?, fagsakSystem: String?)
+    fun sendSamtalereferat(kjedeId: String?, bruker: EksternBruker, enhet: String, temagruppe: String, kanal: SamtalereferatRequestDTO.Kanal, fritekst: String): HenvendelseDTO
     fun opprettNyDialogOgSendMelding(
         bruker: EksternBruker,
         enhet: String,
@@ -85,37 +85,48 @@ class SfHenvendelseServiceImpl(
         return henvendelseInfoApi.henvendelseinfoHenvendelseKjedeIdGet(kjedeId, getCallId())
     }
 
-    override fun journalforHenvendelse(enhet: String, kjedeId: String, saksId: String?, saksTema: String) {
+    override fun journalforHenvendelse(enhet: String, kjedeId: String, saksTema: String, saksId: String?, fagsakSystem: String?) {
+        val fagsaksystem = if (saksId != null) {
+            JournalRequestDTO.Fagsaksystem.valueOf(
+                requireNotNull(fagsakSystem) {
+                    "Ved journalføring mot $saksId er det påkrevd å sende med fagsakSystem saken kommer fra"
+                }
+            )
+        } else {
+            null
+        }
         henvendelseJournalApi
             .henvendelseJournalPost(
                 getCallId(),
                 JournalRequestDTO(
+                    journalforendeEnhet = enhet,
                     kjedeId = kjedeId,
-                    saksId = saksId,
                     temakode = saksTema,
-                    journalforendeEnhet = enhet
+                    saksId = saksId,
+                    fagsaksystem = fagsaksystem
                 )
             )
     }
 
     override fun sendSamtalereferat(
+        kjedeId: String?,
         bruker: EksternBruker,
         enhet: String,
         temagruppe: String,
         kanal: SamtalereferatRequestDTO.Kanal,
         fritekst: String
-    ) {
-        henvendelseOpprettApi
+    ): HenvendelseDTO {
+        return henvendelseOpprettApi
             .henvendelseNySamtalereferatPost(
-                getCallId(),
-                SamtalereferatRequestDTO(
+                xCorrelationID = getCallId(),
+                samtalereferatRequestDTO = SamtalereferatRequestDTO(
                     aktorId = bruker.aktorId(),
                     temagruppe = temagruppe,
                     enhet = enhet,
                     kanal = kanal,
                     fritekst = fritekst
                 ),
-                null // Skal alltid være enkeltstående samtalereferat
+                kjedeId = kjedeId
             )
     }
 
@@ -195,7 +206,7 @@ class SfHenvendelseServiceImpl(
         henvendelseBehandlingApi.client.request<Map<String, Any?>, Unit>(request)
     }
 
-    // TODO mulig denne forsvinner fra modia, da brukerstøtte skal kunne gjøre sletting fra SF
+    // TODO SF mulig denne forsvinner fra modia, da brukerstøtte skal kunne gjøre sletting fra SF
     override fun merkForHastekassering(kjedeId: String) {
         val request: RequestConfig<Map<String, Any?>> = createPatchRequest(
             kjedeId,

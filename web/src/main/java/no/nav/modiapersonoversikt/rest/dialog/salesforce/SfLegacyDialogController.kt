@@ -24,6 +24,11 @@ import java.time.format.DateTimeFormatter
 import javax.servlet.http.HttpServletRequest
 import javax.ws.rs.NotSupportedException
 
+private val REFERAT_TYPER = listOf(
+    Meldingstype.SAMTALEREFERAT_TELEFON,
+    Meldingstype.SAMTALEREFERAT_OPPMOTE
+)
+
 class SfLegacyDialogController(
     private val sfHenvendelseService: SfHenvendelseService,
     private val oppgaveBehandlingService: OppgaveBehandlingService,
@@ -48,6 +53,7 @@ class SfLegacyDialogController(
 
     override fun sendMelding(request: HttpServletRequest, fnr: String, referatRequest: SendReferatRequest): ResponseEntity<Void> {
         sfHenvendelseService.sendSamtalereferat(
+            kjedeId = null,
             bruker = EksternBruker.Fnr(fnr),
             enhet = RestUtils.hentValgtEnhet(null, request),
             temagruppe = referatRequest.temagruppe,
@@ -68,8 +74,9 @@ class SfLegacyDialogController(
         sfHenvendelseService.journalforHenvendelse(
             enhet = enhet,
             kjedeId = henvendelse.kjedeId,
-            saksId = sporsmalsRequest.sak.saksId,
-            saksTema = sporsmalsRequest.sak.temaKode
+            saksId = sporsmalsRequest.sak.fagsystemSaksId,
+            saksTema = sporsmalsRequest.sak.temaKode,
+            fagsakSystem = sporsmalsRequest.sak.fagsystemKode
         )
         return ResponseEntity(HttpStatus.OK)
     }
@@ -85,8 +92,9 @@ class SfLegacyDialogController(
         sfHenvendelseService.journalforHenvendelse(
             enhet = enhet,
             kjedeId = henvendelse.kjedeId,
-            saksId = infomeldingRequest.sak.saksId,
-            saksTema = infomeldingRequest.sak.temaKode
+            saksId = infomeldingRequest.sak.fagsystemSaksId,
+            saksTema = infomeldingRequest.sak.temaKode,
+            fagsakSystem = infomeldingRequest.sak.fagsystemKode
         )
         sfHenvendelseService.lukkTraad(henvendelse.kjedeId)
 
@@ -130,23 +138,45 @@ class SfLegacyDialogController(
                 throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Feil oppgaveId fra client. Oppgaven er allerede ferdigstilt")
             }
         }
-
-        henvendelse = sfHenvendelseService.sendMeldingPaEksisterendeDialog(
-            bruker = bruker,
-            kjedeId = fortsettDialogRequest.traadId,
-            enhet = enhet,
-            fritekst = fortsettDialogRequest.fritekst
-        )
-
-        if (fortsettDialogRequest.sak != null) {
-            sfHenvendelseService.journalforHenvendelse(
+        val erSamtalereferat = REFERAT_TYPER.contains(fortsettDialogRequest.meldingstype)
+        if (erSamtalereferat) {
+            henvendelse = sfHenvendelseService.sendSamtalereferat(
+                kjedeId = fortsettDialogRequest.traadId,
+                bruker = bruker,
                 enhet = enhet,
-                kjedeId = henvendelse.kjedeId,
-                saksId = fortsettDialogRequest.sak.saksId,
-                saksTema = fortsettDialogRequest.sak.temaKode
+                temagruppe = henvendelse.gjeldendeTemagruppe,
+                kanal = fortsettDialogRequest.meldingstype.getKanal(),
+                fritekst = fortsettDialogRequest.fritekst
             )
-        }
+            val journalposter = (henvendelse.journalposter ?: emptyList())
+                .distinctBy { it.saksId }
+            journalposter.forEach {
+                sfHenvendelseService.journalforHenvendelse(
+                    enhet = enhet,
+                    kjedeId = henvendelse.kjedeId,
+                    saksId = it.saksId,
+                    saksTema = it.journalfortTema,
+                    fagsakSystem = it.fagsaksystem?.name
+                )
+            }
+        } else {
+            henvendelse = sfHenvendelseService.sendMeldingPaEksisterendeDialog(
+                bruker = bruker,
+                kjedeId = fortsettDialogRequest.traadId,
+                enhet = enhet,
+                fritekst = fortsettDialogRequest.fritekst
+            )
 
+            if (fortsettDialogRequest.sak != null) {
+                sfHenvendelseService.journalforHenvendelse(
+                    enhet = enhet,
+                    kjedeId = henvendelse.kjedeId,
+                    saksId = fortsettDialogRequest.sak.fagsystemSaksId,
+                    saksTema = fortsettDialogRequest.sak.temaKode,
+                    fagsakSystem = fortsettDialogRequest.sak.fagsystemKode
+                )
+            }
+        }
         if (oppgaveId != null) {
             oppgaveBehandlingService.ferdigstillOppgaveIGsak(
                 oppgaveId,
@@ -197,7 +227,7 @@ class SfLegacyDialogController(
     ): TraadDTO {
         val journalpost: JournalpostDTO? = henvendelse.journalposter?.firstOrNull()
 
-        val journalfortSaksid = "-" // TODO Ikke levert fra SF, mulig journalpostId kan brukes?
+        val journalfortSaksid = journalpost?.saksId
         val journalfortDato = journalpost?.journalfortDato?.format(DateTimeFormatter.ofPattern(DATO_TID_FORMAT))
         val journalfortTema = journalpost?.journalfortTema
         val journalfortTemanavn = temakodeMap[journalpost?.journalfortTema ?: ""]
@@ -240,6 +270,7 @@ class SfLegacyDialogController(
                     },
                     "statusTekst" to null, // Blir ikke brukt av frontend uansett
                     "opprettetDato" to melding.sendtDato.format(DateTimeFormatter.ofPattern(DATO_TID_FORMAT)),
+                    "avsluttetDato" to henvendelse.avsluttetDato?.format(DateTimeFormatter.ofPattern(DATO_TID_FORMAT)),
                     "ferdigstiltDato" to melding.sendtDato.format(DateTimeFormatter.ofPattern(DATO_TID_FORMAT)),
                     "erFerdigstiltUtenSvar" to false, // TODO Informasjon finnes ikke i SF
                     "ferdigstiltUtenSvarDato" to null, // TODO Informasjon finnes ikke i SF
