@@ -545,9 +545,9 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
                             sistEndret = Persondata.SistEndret(
                                 ident = bankkonto.endretAv,
                                 tidspunkt = bankkonto.endringstidspunkt
-                                .toGregorianCalendar()
-                                .toZonedDateTime()
-                                .toLocalDateTime(),
+                                    .toGregorianCalendar()
+                                    .toZonedDateTime()
+                                    .toLocalDateTime(),
                                 system = ""
                             )
                         )
