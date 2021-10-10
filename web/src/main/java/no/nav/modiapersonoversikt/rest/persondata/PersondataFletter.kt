@@ -542,19 +542,26 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
                         is BankkontoNorge -> Persondata.Bankkonto(
                             kontonummer = bankkonto.bankkonto.bankkontonummer,
                             banknavn = bankkonto.bankkonto.banknavn,
-                            sistEndret = bankkonto.endringstidspunkt
+                            sistEndret = Persondata.SistEndret(
+                                ident = bankkonto.endretAv,
+                                tidspunkt = bankkonto.endringstidspunkt
                                 .toGregorianCalendar()
                                 .toZonedDateTime()
                                 .toLocalDateTime(),
-                            sistEndretAv = bankkonto.endretAv
+                                system = ""
+                            )
                         )
                         is BankkontoUtland -> Persondata.Bankkonto(
                             kontonummer = bankkonto.bankkontoUtland.bankkontonummer,
                             banknavn = bankkonto.bankkontoUtland.banknavn,
-                            sistEndret = bankkonto.endringstidspunkt.toGregorianCalendar().toZonedDateTime()
-                                .toLocalDateTime(),
-                            sistEndretAv = bankkonto.endretAv,
-
+                            sistEndret = Persondata.SistEndret(
+                                ident = bankkonto.endretAv,
+                                tidspunkt = bankkonto.endringstidspunkt
+                                    .toGregorianCalendar()
+                                    .toZonedDateTime()
+                                    .toLocalDateTime(),
+                                system = ""
+                            ),
                             bankkode = bankkonto.bankkontoUtland.bankkode,
                             swift = bankkonto.bankkontoUtland.swift,
                             landkode = kodeverk.hentKodeBeskrivelse(
