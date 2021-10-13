@@ -111,7 +111,8 @@ class PersondataServiceImpl(
                 it.vergeEllerFullmektig.motpartsPersonident
             }.toTypedArray(),
             *this.foreldreansvar.mapNotNull { it.ansvarlig }.toTypedArray(),
-            *this.foreldreansvar.mapNotNull { it.ansvarssubjekt }.toTypedArray()
+            *this.foreldreansvar.mapNotNull { it.ansvarssubjekt }.toTypedArray(),
+            *this.sivilstand.mapNotNull { it.relatertVedSivilstand }.toTypedArray()
         ).toList()
     }
 
