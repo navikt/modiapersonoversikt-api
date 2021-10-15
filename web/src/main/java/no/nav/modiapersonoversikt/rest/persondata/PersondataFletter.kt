@@ -1,6 +1,5 @@
 package no.nav.modiapersonoversikt.rest.persondata
 
-import jdk.nashorn.internal.objects.Global.undefined
 import no.nav.modiapersonoversikt.legacy.api.domain.norg.AnsattEnhet
 import no.nav.modiapersonoversikt.legacy.api.domain.pdl.generated.HentPersondata
 import no.nav.modiapersonoversikt.legacy.api.domain.pdl.generated.HentPersondata.AdressebeskyttelseGradering.*
@@ -515,18 +514,18 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
     }
 
     private fun hentVergemalOmfang(omfang: String?): String {
-        return when(omfang) {
-        "utlendingssakerPersonligeOgOekonomiskeInteresser" ->
-            "Ivareta personens interesser innenfor det personlige og økonomiske området herunder utlendingssaken (kun for EMA)"
-        "personligeOgOekonomiskeInteresser" -> "Ivareta personens interesser innenfor det personlige og økonomiske området"
-        "oekonomiskeInteresser" -> "Ivareta personens interesser innenfor det økonomiske området"
-        "personligeInteresser" -> "Ivareta personens interesser innenfor det personlige området"
-        else -> "Ikke oppgitt"
+        return when (omfang) {
+            "utlendingssakerPersonligeOgOekonomiskeInteresser" ->
+                "Ivareta personens interesser innenfor det personlige og økonomiske området herunder utlendingssaken (kun for EMA)"
+            "personligeOgOekonomiskeInteresser" -> "Ivareta personens interesser innenfor det personlige og økonomiske området"
+            "oekonomiskeInteresser" -> "Ivareta personens interesser innenfor det økonomiske området"
+            "personligeInteresser" -> "Ivareta personens interesser innenfor det personlige området"
+            else -> "Ikke oppgitt"
         }
     }
 
     private fun hentVergemalType(type: String?): String {
-        return when(type) {
+        return when (type) {
             "ensligMindreaarigAsylsoeker" -> "Enslig mindreårig asylsøker"
             "ensligMindreaarigFlyktning" -> "Enslig mindreårig flyktning inklusive midlertidige saker for denne gruppen"
             "voksen" -> "Voksen"
