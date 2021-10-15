@@ -187,8 +187,8 @@ object Persondata {
     data class Verge(
         val ident: String?,
         val navn: Navn?,
-        val vergesakstype: String?,
-        val omfang: String?,
+        val vergesakstype: String,
+        val omfang: String,
         val embete: String?,
         val gyldighetstidspunkt: LocalDate?,
         val opphoerstidspunkt: LocalDate?
