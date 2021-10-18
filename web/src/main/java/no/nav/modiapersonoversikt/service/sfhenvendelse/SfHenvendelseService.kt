@@ -47,7 +47,6 @@ interface SfHenvendelseService {
     fun sjekkEierskap(bruker: EksternBruker, henvendelse: HenvendelseDTO): Boolean
     fun merkSomKontorsperret(kjedeId: String, enhet: String)
     fun merkSomFeilsendt(kjedeId: String)
-    fun merkForHastekassering(kjedeId: String)
     fun lukkTraad(kjedeId: String)
 
     fun ping()
@@ -215,28 +214,16 @@ class SfHenvendelseServiceImpl(
     }
 
     override fun merkSomFeilsendt(kjedeId: String) {
-        val callId = getCallId()
-        val henvendelse = henvendelseInfoApi.henvendelseinfoHenvendelseKjedeIdGet(kjedeId, callId)
         val request: RequestConfig<Map<String, Any?>> = createPatchRequest(
             kjedeId,
             PatchNote<HenvendelseDTO>()
-                .set(HenvendelseDTO::kasseringsDato).to(henvendelse.opprettetDato.plusYears(2))
-        )
-        henvendelseBehandlingApi.client.request<Map<String, Any?>, Unit>(request)
-    }
-
-    // TODO SF mulig denne forsvinner fra modia, da brukerstøtte skal kunne gjøre sletting fra SF
-    override fun merkForHastekassering(kjedeId: String) {
-        val request: RequestConfig<Map<String, Any?>> = createPatchRequest(
-            kjedeId,
-            PatchNote<HenvendelseDTO>()
-                .set(HenvendelseDTO::kasseringsDato).to(OffsetDateTime.now())
+                .set(HenvendelseDTO::feilsendt).to(true)
         )
         henvendelseBehandlingApi.client.request<Map<String, Any?>, Unit>(request)
     }
 
     override fun lukkTraad(kjedeId: String) {
-        henvendelseBehandlingApi.henvendelseMeldingskjedeLukkPatch(
+        henvendelseBehandlingApi.henvendelseMeldingskjedeLukkPost(
             kjedeId,
             getCallId()
         )
@@ -315,7 +302,10 @@ class SfHenvendelseServiceImpl(
 
         patchnote.patches.mapKeys { it.key.name }
         return RequestConfig(
-            method = RequestMethod.PATCH,
+            /**
+             * Var original PATCH og følger semantikken til PATCH, men endret til PUT pga støtte i sf-henvendelse proxy
+             */
+            method = RequestMethod.PUT,
             path = "/henvendelse/behandling/$kjedeId",
             query = mutableMapOf(),
             headers = localVariableHeaders,
