@@ -1,6 +1,5 @@
 package no.nav.modiapersonoversikt.rest.dialog.salesforce
 
-import no.nav.common.auth.subject.SubjectHandler
 import no.nav.modiapersonoversikt.infrastructure.naudit.Audit
 import no.nav.modiapersonoversikt.infrastructure.naudit.AuditIdentifier
 import no.nav.modiapersonoversikt.infrastructure.naudit.AuditResources
@@ -203,35 +202,6 @@ class SfDialogController @Autowired constructor(
             .check(Policies.sfDialogTilhorerBruker.with(KjedeIdTilgangData(fnr, kjedeId)))
             .get(Audit.describe(Audit.Action.UPDATE, AuditResources.Person.Henvendelse.Merk.Kontorsperre, *auditIdentifier)) {
                 sfHenvendelseService.merkSomKontorsperret(kjedeId, enhet)
-            }
-    }
-
-    @PostMapping("/{fnr}/{kjedeId}/merkForHastekassering")
-    fun merkForHastekassering(
-        @PathVariable("fnr") fnr: String,
-        @PathVariable("kjedeId") kjedeId: String
-    ) {
-        val auditIdentifier = arrayOf(
-            AuditIdentifier.FNR to fnr,
-            AuditIdentifier.TRAAD_ID to kjedeId
-        )
-        return tilgangskontroll
-            .check(Policies.kanHastekassere)
-            .check(Policies.tilgangTilBruker.with(fnr))
-            .check(Policies.sfDialogTilhorerBruker.with(KjedeIdTilgangData(fnr, kjedeId)))
-            .get(Audit.describe(Audit.Action.UPDATE, AuditResources.Person.Henvendelse.Merk.Slett, *auditIdentifier)) {
-                sfHenvendelseService.merkForHastekassering(kjedeId)
-            }
-    }
-
-    @GetMapping("/kanMerkForHastekassering")
-    fun kanMerkeForHasteKassering(): Boolean {
-        return tilgangskontroll
-            .check(Policies.tilgangTilModia)
-            .get(Audit.skipAuditLog()) {
-                val godkjenteSaksbehandlere = tilgangskontroll.context().hentSaksbehandlereMedTilgangTilHastekassering()
-                val saksbehandlerId = SubjectHandler.getIdent().map(String::toUpperCase).get()
-                godkjenteSaksbehandlere.contains(saksbehandlerId)
             }
     }
 }
