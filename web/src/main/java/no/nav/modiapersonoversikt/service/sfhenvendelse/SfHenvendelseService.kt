@@ -8,12 +8,12 @@ import no.nav.common.utils.EnvironmentUtils.getRequiredProperty
 import no.nav.modiapersonoversikt.infrastructure.http.AuthorizationInterceptor
 import no.nav.modiapersonoversikt.infrastructure.http.LoggingInterceptor
 import no.nav.modiapersonoversikt.infrastructure.http.getCallId
-import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll
 import no.nav.modiapersonoversikt.legacy.api.domain.sfhenvendelse.generated.apis.*
 import no.nav.modiapersonoversikt.legacy.api.domain.sfhenvendelse.generated.infrastructure.RequestConfig
 import no.nav.modiapersonoversikt.legacy.api.domain.sfhenvendelse.generated.infrastructure.RequestMethod
 import no.nav.modiapersonoversikt.legacy.api.domain.sfhenvendelse.generated.models.*
 import no.nav.modiapersonoversikt.legacy.api.service.arbeidsfordeling.ArbeidsfordelingV1Service
+import no.nav.modiapersonoversikt.legacy.api.service.norg.AnsattService
 import no.nav.modiapersonoversikt.legacy.api.service.pdl.PdlOppslagService
 import okhttp3.OkHttpClient
 import org.slf4j.LoggerFactory
@@ -59,7 +59,7 @@ class SfHenvendelseServiceImpl(
     private val henvendelseOpprettApi: NyHenvendelseApi = SfHenvendelseApiFactory.createHenvendelseOpprettApi(),
     private val pdlOppslagService: PdlOppslagService,
     private val arbeidsfordeling: ArbeidsfordelingV1Service,
-    private val tilgangskontroll: Tilgangskontroll,
+    private val ansattService: AnsattService,
     private val stsService: SystemUserTokenProvider
 ) : SfHenvendelseService {
     private val logger = LoggerFactory.getLogger(SfHenvendelseServiceImpl::class.java)
@@ -73,7 +73,7 @@ class SfHenvendelseServiceImpl(
     constructor(
         pdlOppslagService: PdlOppslagService,
         arbeidsfordeling: ArbeidsfordelingV1Service,
-        tilgangskontroll: Tilgangskontroll,
+        ansattService: AnsattService,
         stsService: SystemUserTokenProvider
     ) : this(
         SfHenvendelseApiFactory.createHenvendelseBehandlingApi(),
@@ -82,7 +82,7 @@ class SfHenvendelseServiceImpl(
         SfHenvendelseApiFactory.createHenvendelseOpprettApi(),
         pdlOppslagService,
         arbeidsfordeling,
-        tilgangskontroll,
+        ansattService,
         stsService
     )
 
@@ -90,7 +90,10 @@ class SfHenvendelseServiceImpl(
         val enhetOgGTListe = arbeidsfordeling.hentGTnummerForEnhet(enhet)
             .map { it.geografiskOmraade }
             .plus(enhet)
-        val tematilganger = tilgangskontroll.context().hentTemagrupperForSaksbehandler(enhet)
+        val tematilganger = ansattService.hentAnsattFagomrader(
+            SubjectHandler.getIdent().orElseThrow(),
+            enhet
+        )
 
         return henvendelseInfoApi
             .henvendelseinfoHenvendelselisteGet(bruker.aktorId(), getCallId())

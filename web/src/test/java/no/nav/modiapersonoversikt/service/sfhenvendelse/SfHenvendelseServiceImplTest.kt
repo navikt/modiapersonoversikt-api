@@ -2,11 +2,11 @@ package no.nav.modiapersonoversikt.service.sfhenvendelse
 
 import io.mockk.every
 import io.mockk.mockk
+import no.nav.common.auth.subject.IdentType
+import no.nav.common.auth.subject.SsoToken
+import no.nav.common.auth.subject.Subject
 import no.nav.common.sts.SystemUserTokenProvider
 import no.nav.modiapersonoversikt.config.endpoint.Utils.withProperty
-import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll
-import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.TilgangskontrollContext
-import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.TilgangskontrollMock
 import no.nav.modiapersonoversikt.legacy.api.domain.norg.EnhetsGeografiskeTilknytning
 import no.nav.modiapersonoversikt.legacy.api.domain.sfhenvendelse.generated.apis.HenvendelseBehandlingApi
 import no.nav.modiapersonoversikt.legacy.api.domain.sfhenvendelse.generated.apis.HenvendelseInfoApi
@@ -14,13 +14,21 @@ import no.nav.modiapersonoversikt.legacy.api.domain.sfhenvendelse.generated.apis
 import no.nav.modiapersonoversikt.legacy.api.domain.sfhenvendelse.generated.apis.NyHenvendelseApi
 import no.nav.modiapersonoversikt.legacy.api.domain.sfhenvendelse.generated.models.*
 import no.nav.modiapersonoversikt.legacy.api.service.arbeidsfordeling.ArbeidsfordelingV1Service
+import no.nav.modiapersonoversikt.legacy.api.service.norg.AnsattService
 import no.nav.modiapersonoversikt.legacy.api.service.pdl.PdlOppslagService
+import no.nav.modiapersonoversikt.testutils.SubjectExtension
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.extension.RegisterExtension
 import java.time.OffsetDateTime
 import java.time.ZoneOffset
 
 internal class SfHenvendelseServiceImplTest {
+    companion object {
+        @JvmField
+        @RegisterExtension
+        val subject = SubjectExtension(Subject("Z999999", IdentType.InternBruker, SsoToken.oidcToken("token", emptyMap<String, Any>())))
+    }
     private val henvendelseBehandlingApi: HenvendelseBehandlingApi = mockk()
     private val henvendelseInfoApi: HenvendelseInfoApi = mockk()
     private val henvendelseJournalApi: JournalApi = mockk()
@@ -28,8 +36,7 @@ internal class SfHenvendelseServiceImplTest {
     private val pdlOppslagService: PdlOppslagService = mockk()
     private val arbeidsfordeling: ArbeidsfordelingV1Service = mockk()
     private val stsService: SystemUserTokenProvider = mockk()
-    private val tilgangskontrollContext: TilgangskontrollContext = mockk()
-    private val tilgangskontroll: Tilgangskontroll = TilgangskontrollMock.get()
+    private val ansattService: AnsattService = mockk()
     private val sfHenvendelseServiceImpl = withProperty("SF_HENVENDELSE_URL", "http://dummy.io") {
         SfHenvendelseServiceImpl(
             henvendelseBehandlingApi,
@@ -38,15 +45,14 @@ internal class SfHenvendelseServiceImplTest {
             henvendelseOpprettApi,
             pdlOppslagService,
             arbeidsfordeling,
-            tilgangskontroll,
+            ansattService,
             stsService
         )
     }
 
     @Test
     internal fun `skal fjerne kontorsperrede henvendelser`() {
-        every { tilgangskontroll.context() } returns tilgangskontrollContext
-        every { tilgangskontrollContext.hentTemagrupperForSaksbehandler(any()) } returns setOf("DAG", "OPP")
+        every { ansattService.hentAnsattFagomrader(any(), any()) } returns setOf("DAG", "OPP")
         every { arbeidsfordeling.hentGTnummerForEnhet(any()) } returns listOf(
             EnhetsGeografiskeTilknytning().also {
                 it.enhetId = 5678
@@ -65,8 +71,7 @@ internal class SfHenvendelseServiceImplTest {
 
     @Test
     internal fun `skal fjerne innhold om man ikke har tematilgang`() {
-        every { tilgangskontroll.context() } returns tilgangskontrollContext
-        every { tilgangskontrollContext.hentTemagrupperForSaksbehandler(any()) } returns setOf("DAG", "OPP")
+        every { ansattService.hentAnsattFagomrader(any(), any()) } returns setOf("DAG", "OPP")
         every { arbeidsfordeling.hentGTnummerForEnhet(any()) } returns listOf(
             EnhetsGeografiskeTilknytning().also {
                 it.enhetId = 5678
@@ -86,8 +91,7 @@ internal class SfHenvendelseServiceImplTest {
 
     @Test
     internal fun `skal fjerne lage dummy innhold om henvendelse er kassert`() {
-        every { tilgangskontroll.context() } returns tilgangskontrollContext
-        every { tilgangskontrollContext.hentTemagrupperForSaksbehandler(any()) } returns setOf("DAG", "OPP")
+        every { ansattService.hentAnsattFagomrader(any(), any()) } returns setOf("DAG", "OPP")
         every { arbeidsfordeling.hentGTnummerForEnhet(any()) } returns listOf(
             EnhetsGeografiskeTilknytning().also {
                 it.enhetId = 5678
