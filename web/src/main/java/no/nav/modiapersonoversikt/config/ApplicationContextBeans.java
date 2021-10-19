@@ -62,7 +62,6 @@ public class ApplicationContextBeans {
             LDAPService ldapService,
             AnsattService ansattService,
             HenvendelseLesService henvendelseLesService,
-            SfHenvendelseService sfHenvendelseService,
             UnleashService unleashService
     ) {
         TilgangskontrollContext context = new TilgangskontrollContextImpl(
@@ -70,7 +69,6 @@ public class ApplicationContextBeans {
                 ldapService,
                 ansattService,
                 henvendelseLesService,
-                sfHenvendelseService,
                 unleashService
         );
         return new Tilgangskontroll(context);

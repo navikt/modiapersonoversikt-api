@@ -120,11 +120,7 @@ class Policies {
 
         @JvmField
         val sfDialogTilhorerBruker = PolicyGenerator<TilgangskontrollContext, KjedeIdTilgangData>({ "KjedeId tilhørte ikke bruker. Spørring gjort av ${context.hentSaksbehandlerId()}" }) {
-            if (context.sfDialogTilhorerBruker(data.fnr, data.kjedeId)) {
-                DecisionEnums.PERMIT
-            } else {
-                DecisionEnums.DENY
-            }
+            DecisionEnums.DENY
         }
 
         @JvmField

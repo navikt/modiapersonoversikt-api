@@ -21,9 +21,11 @@ import org.springframework.web.server.ResponseStatusException
 /**
  * En forenklet api-modell som kan brukes av frontend-koden etterhver.
  * Per i dag vil frontend bruke de gamle api-ene implementert av `SfLegacyXXXXXX` filene
+ *
+ * Disabled for nå
  */
-@RestController
-@RequestMapping("/rest/sf-dialog")
+// @RestController
+// @RequestMapping("/rest/sf-dialog")
 class SfDialogController @Autowired constructor(
     private val tilgangskontroll: Tilgangskontroll,
     private val sfHenvendelseService: SfHenvendelseService,
