@@ -128,11 +128,21 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
     private fun hentBostedAdresse(data: Data): List<Persondata.Adresse> {
         return data.persondata.bostedsadresse.mapNotNull { adresse ->
             when {
-                adresse.vegadresse != null -> lagAdresseFraVegadresse(adresse.vegadresse!!)
-                adresse.matrikkeladresse != null -> lagAdresseFraMatrikkeladresse(adresse.matrikkeladresse!!)
-                adresse.utenlandskAdresse != null -> lagAdresseFraUtenlandskAdresse(adresse.utenlandskAdresse!!)
+                adresse.vegadresse != null -> lagAdresseFraVegadresse(
+                    adresse = adresse.vegadresse!!,
+                    sisteEndring = hentSisteEndringFraMetadata(adresse.metadata)
+                )
+                adresse.matrikkeladresse != null -> lagAdresseFraMatrikkeladresse(
+                    adresse = adresse.matrikkeladresse!!,
+                    sisteEndring = hentSisteEndringFraMetadata(adresse.metadata)
+                )
+                adresse.utenlandskAdresse != null -> lagAdresseFraUtenlandskAdresse(
+                    adresse = adresse.utenlandskAdresse!!,
+                    sisteEndring = hentSisteEndringFraMetadata(adresse.metadata)
+                )
                 adresse.ukjentBosted != null -> Persondata.Adresse(
-                    adresse.ukjentBosted?.bostedskommune ?: "Ukjent kommune"
+                    linje1 = adresse.ukjentBosted?.bostedskommune ?: "Ukjent kommune",
+                    sistEndret = null
                 )
                 else -> {
                     TjenestekallLogger.warn(
@@ -152,9 +162,18 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
     private fun hentKontaktAdresse(data: Data): List<Persondata.Adresse> {
         return data.persondata.kontaktadresse.mapNotNull { adresse ->
             when {
-                adresse.coAdressenavn != null -> Persondata.Adresse(adresse.coAdressenavn ?: "Ukjent kommune")
-                adresse.utenlandskAdresse != null -> lagAdresseFraUtenlandskAdresse(adresse.utenlandskAdresse!!)
-                adresse.vegadresse != null -> lagAdresseFraVegadresse(adresse.vegadresse!!)
+                adresse.coAdressenavn != null -> Persondata.Adresse(
+                    linje1 = adresse.coAdressenavn ?: "Ukjent kommune",
+                    sistEndret = hentSisteEndringFraMetadata(adresse.metadata)
+                )
+                adresse.utenlandskAdresse != null -> lagAdresseFraUtenlandskAdresse(
+                    adresse = adresse.utenlandskAdresse!!,
+                    sisteEndring = hentSisteEndringFraMetadata(adresse.metadata)
+                )
+                adresse.vegadresse != null -> lagAdresseFraVegadresse(
+                    adresse = adresse.vegadresse!!,
+                    sisteEndring = hentSisteEndringFraMetadata(adresse.metadata)
+                )
                 else -> {
                     TjenestekallLogger.warn(
                         "PersondataFletter",
@@ -170,52 +189,72 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
         }
     }
 
-    private fun lagAdresseFraMatrikkeladresse(adresse: HentPersondata.Matrikkeladresse) =
-        Persondata.Adresse(
-            linje1 = listOf(
-                adresse.bruksenhetsnummer,
-                adresse.tilleggsnavn
-            ),
-            linje2 = listOf(
-                adresse.postnummer,
-                adresse.kommunenummer
-            )
-        )
+    private fun hentSisteEndringFraMetadata(metadata: HentPersondata.Metadata): Persondata.SistEndret? {
+        return metadata.endringer.maxBy { it.registrert.value }
+            ?.let {
+                Persondata.SistEndret(
+                    ident = it.registrertAv,
+                    tidspunkt = it.registrert.value,
+                    system = it.systemkilde
+                )
+            }
+    }
 
-    private fun lagAdresseFraUtenlandskAdresse(adresse: HentPersondata.UtenlandskAdresse) =
-        Persondata.Adresse(
-            linje1 = listOf(
-                adresse.postboksNummerNavn,
-                adresse.adressenavnNummer,
-                adresse.bygningEtasjeLeilighet
-            ),
-            linje2 = listOf(
-                adresse.postkode,
-                adresse.bySted,
-                adresse.regionDistriktOmraade
-            ),
-            linje3 = listOf(
-                kodeverk.hentKodeverk(Kodeverk.LAND).hentBeskrivelse(adresse.landkode)
-            )
-        )
+    private fun lagAdresseFraMatrikkeladresse(
+        adresse: HentPersondata.Matrikkeladresse,
+        sisteEndring: Persondata.SistEndret? = null
+    ) = Persondata.Adresse(
+        linje1 = listOf(
+            adresse.bruksenhetsnummer,
+            adresse.tilleggsnavn
+        ),
+        linje2 = listOf(
+            adresse.postnummer,
+            adresse.kommunenummer
+        ),
+        sistEndret = sisteEndring
+    )
 
-    private fun lagAdresseFraVegadresse(adresse: HentPersondata.Vegadresse) =
-        Persondata.Adresse(
-            linje1 = listOf(
-                adresse.adressenavn,
-                adresse.husnummer,
-                adresse.husbokstav,
-                adresse.bruksenhetsnummer
-            ),
-            linje2 = listOf(
-                adresse.postnummer,
-                adresse.postnummer?.let { kodeverk.hentKodeverk(Kodeverk.POSTNUMMER).hentBeskrivelse(it) }
-            ),
-            linje3 = listOf(
-                adresse.bydelsnummer,
-                adresse.kommunenummer
-            )
-        )
+    private fun lagAdresseFraUtenlandskAdresse(
+        adresse: HentPersondata.UtenlandskAdresse,
+        sisteEndring: Persondata.SistEndret? = null
+    ) = Persondata.Adresse(
+        linje1 = listOf(
+            adresse.postboksNummerNavn,
+            adresse.adressenavnNummer,
+            adresse.bygningEtasjeLeilighet
+        ),
+        linje2 = listOf(
+            adresse.postkode,
+            adresse.bySted,
+            adresse.regionDistriktOmraade
+        ),
+        linje3 = listOf(
+            kodeverk.hentKodeverk(Kodeverk.LAND).hentBeskrivelse(adresse.landkode)
+        ),
+        sistEndret = sisteEndring
+    )
+
+    private fun lagAdresseFraVegadresse(
+        adresse: HentPersondata.Vegadresse,
+        sisteEndring: Persondata.SistEndret? = null
+    ) = Persondata.Adresse(
+        linje1 = listOf(
+            adresse.adressenavn,
+            adresse.husnummer,
+            adresse.husbokstav,
+            adresse.bruksenhetsnummer
+        ),
+        linje2 = listOf(
+            adresse.postnummer,
+            adresse.postnummer?.let { kodeverk.hentKodeverk(Kodeverk.POSTNUMMER).hentBeskrivelse(it) }
+        ),
+        linje3 = listOf(
+            adresse.bydelsnummer,
+            adresse.kommunenummer
+        ),
+        sistEndret = sisteEndring
+    )
 
     private fun hentNavEnhet(data: Data): Persondata.Enhet? {
         return data.navEnhet
@@ -346,8 +385,14 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
                     it.vegadresse != null -> lagAdresseFraVegadresse(it.vegadresse!!)
                     it.matrikkeladresse != null -> lagAdresseFraMatrikkeladresse(it.matrikkeladresse!!)
                     it.utenlandskAdresse != null -> lagAdresseFraUtenlandskAdresse(it.utenlandskAdresse!!)
-                    it.coAdressenavn != null -> Persondata.Adresse(it.coAdressenavn!!)
-                    it.ukjentBosted != null -> Persondata.Adresse(it.ukjentBosted?.bostedskommune ?: "Ukjent kommune")
+                    it.coAdressenavn != null -> Persondata.Adresse(
+                        linje1 = it.coAdressenavn!!,
+                        sistEndret = null
+                    )
+                    it.ukjentBosted != null -> Persondata.Adresse(
+                        linje1 = it.ukjentBosted?.bostedskommune ?: "Ukjent kommune",
+                        sistEndret = null
+                    )
                     else -> null
                 }
             )
@@ -364,7 +409,8 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
                     OFFENTLIG -> Persondata.Skifteform.OFFENTLIG
                     ANNET -> Persondata.Skifteform.ANNET
                     else -> Persondata.Skifteform.UKJENT
-                }
+                },
+                sistEndret = hentSisteEndringFraMetadata(dodsbo.metadata)
             )
         }
     }
@@ -409,7 +455,8 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
         return Persondata.Adresse(
             linje1 = listOf(adresse.adresselinje1),
             linje2 = if (adresse.adresselinje2 == null) sisteLinje else listOf(adresse.adresselinje2),
-            linje3 = if (adresse.adresselinje2 == null) null else sisteLinje
+            linje3 = if (adresse.adresselinje2 == null) null else sisteLinje,
+            sistEndret = null
         )
     }
 
@@ -474,12 +521,11 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
 
     private fun hentTelefonnummer(data: Data): List<Persondata.Telefon> {
         return data.persondata.telefonnummer.map {
-            val sisteEndring = it.metadata.endringer.maxBy { dato -> dato.registrert.value }
+            val sisteEndring = hentSisteEndringFraMetadata(it.metadata)
             Persondata.Telefon(
                 retningsnummer = kodeverk.hentKodeBeskrivelse(Kodeverk.RETNINGSNUMRE, it.landskode),
                 identifikator = it.nummer,
-                sistEndretAv = sisteEndring?.registrertAv,
-                sistEndret = sisteEndring?.registrert?.value
+                sistEndret = sisteEndring
             )
         }
     }
@@ -496,19 +542,26 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
                         is BankkontoNorge -> Persondata.Bankkonto(
                             kontonummer = bankkonto.bankkonto.bankkontonummer,
                             banknavn = bankkonto.bankkonto.banknavn,
-                            sistEndret = bankkonto.endringstidspunkt
-                                .toGregorianCalendar()
-                                .toZonedDateTime()
-                                .toLocalDateTime(),
-                            sistEndretAv = bankkonto.endretAv
+                            sistEndret = Persondata.SistEndret(
+                                ident = bankkonto.endretAv,
+                                tidspunkt = bankkonto.endringstidspunkt
+                                    .toGregorianCalendar()
+                                    .toZonedDateTime()
+                                    .toLocalDateTime(),
+                                system = ""
+                            )
                         )
                         is BankkontoUtland -> Persondata.Bankkonto(
                             kontonummer = bankkonto.bankkontoUtland.bankkontonummer,
                             banknavn = bankkonto.bankkontoUtland.banknavn,
-                            sistEndret = bankkonto.endringstidspunkt.toGregorianCalendar().toZonedDateTime()
-                                .toLocalDateTime(),
-                            sistEndretAv = bankkonto.endretAv,
-
+                            sistEndret = Persondata.SistEndret(
+                                ident = bankkonto.endretAv,
+                                tidspunkt = bankkonto.endringstidspunkt
+                                    .toGregorianCalendar()
+                                    .toZonedDateTime()
+                                    .toLocalDateTime(),
+                                system = ""
+                            ),
                             bankkode = bankkonto.bankkontoUtland.bankkode,
                             swift = bankkonto.bankkontoUtland.swift,
                             landkode = kodeverk.hentKodeBeskrivelse(
@@ -518,7 +571,8 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
                             adresse = Persondata.Adresse(
                                 linje1 = bankkonto.bankkontoUtland.bankadresse.adresselinje1 ?: "Ukjent adresse",
                                 linje2 = bankkonto.bankkontoUtland.bankadresse.adresselinje2,
-                                linje3 = bankkonto.bankkontoUtland.bankadresse.adresselinje3
+                                linje3 = bankkonto.bankkontoUtland.bankadresse.adresselinje3,
+                                sistEndret = null
                             ),
                             valuta = kodeverk.hentKodeBeskrivelse(
                                 Kodeverk.VALUTA,
@@ -549,6 +603,7 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
                 navn = tredjepartsPerson?.navn ?: emptyList(),
                 fodselsdato = tredjepartsPerson?.fodselsdato ?: emptyList(),
                 alder = tredjepartsPerson?.alder,
+                kjonn = tredjepartsPerson?.kjonn ?: emptyList(),
                 adressebeskyttelse = tredjepartsPerson?.adressebeskyttelse ?: emptyList(),
                 bostedAdresse = tredjepartsPerson?.bostedAdresse ?: emptyList(),
                 personstatus = tredjepartsPerson?.personstatus ?: emptyList()

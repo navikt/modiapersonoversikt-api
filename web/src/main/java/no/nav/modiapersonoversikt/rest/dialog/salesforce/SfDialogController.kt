@@ -1,6 +1,5 @@
 package no.nav.modiapersonoversikt.rest.dialog.salesforce
 
-import no.nav.common.auth.subject.SubjectHandler
 import no.nav.modiapersonoversikt.infrastructure.naudit.Audit
 import no.nav.modiapersonoversikt.infrastructure.naudit.AuditIdentifier
 import no.nav.modiapersonoversikt.infrastructure.naudit.AuditResources
@@ -19,8 +18,14 @@ import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.server.ResponseStatusException
 
-@RestController
-@RequestMapping("/rest/sf-dialog")
+/**
+ * En forenklet api-modell som kan brukes av frontend-koden etterhver.
+ * Per i dag vil frontend bruke de gamle api-ene implementert av `SfLegacyXXXXXX` filene
+ *
+ * Disabled for nå
+ */
+// @RestController
+// @RequestMapping("/rest/sf-dialog")
 class SfDialogController @Autowired constructor(
     private val tilgangskontroll: Tilgangskontroll,
     private val sfHenvendelseService: SfHenvendelseService,
@@ -59,6 +64,7 @@ class SfDialogController @Autowired constructor(
                 when (request.type) {
                     HenvendelseDTO.HenvendelseType.SAMTALEREFERAT ->
                         sfHenvendelseService.sendSamtalereferat(
+                            kjedeId = null,
                             bruker = bruker,
                             enhet = enhet,
                             temagruppe = request.temagruppe,
@@ -76,6 +82,7 @@ class SfDialogController @Autowired constructor(
                         )
                     }
                 }
+                Unit
             }
     }
 
@@ -132,7 +139,11 @@ class SfDialogController @Autowired constructor(
             }
     }
 
-    data class JournalforHenvendelseRequest(val saksId: String?, val saksTema: String)
+    data class JournalforHenvendelseRequest(
+        val saksId: String,
+        val fagsaksystem: String,
+        val saksTema: String
+    )
 
     @PostMapping("/{fnr}/{kjedeId}/journalfor")
     fun journalforHenvendelse(
@@ -150,10 +161,12 @@ class SfDialogController @Autowired constructor(
             .check(Policies.tilgangTilBruker.with(fnr))
             .check(Policies.sfDialogTilhorerBruker.with(KjedeIdTilgangData(fnr, kjedeId)))
             .get(Audit.describe(Audit.Action.UPDATE, AuditResources.Person.Henvendelse.Journalfor, *auditIdentifier)) {
+                // NB Denne controlleren er ikke ibruk per idag. Men dette må tittes nærmere på før en evt overgang.
                 sfHenvendelseService.journalforHenvendelse(
                     enhet = enhet,
                     kjedeId = kjedeId,
                     saksId = request.saksId,
+                    fagsakSystem = request.fagsaksystem,
                     saksTema = request.saksTema
                 )
             }
@@ -191,35 +204,6 @@ class SfDialogController @Autowired constructor(
             .check(Policies.sfDialogTilhorerBruker.with(KjedeIdTilgangData(fnr, kjedeId)))
             .get(Audit.describe(Audit.Action.UPDATE, AuditResources.Person.Henvendelse.Merk.Kontorsperre, *auditIdentifier)) {
                 sfHenvendelseService.merkSomKontorsperret(kjedeId, enhet)
-            }
-    }
-
-    @PostMapping("/{fnr}/{kjedeId}/merkForHastekassering")
-    fun merkForHastekassering(
-        @PathVariable("fnr") fnr: String,
-        @PathVariable("kjedeId") kjedeId: String
-    ) {
-        val auditIdentifier = arrayOf(
-            AuditIdentifier.FNR to fnr,
-            AuditIdentifier.TRAAD_ID to kjedeId
-        )
-        return tilgangskontroll
-            .check(Policies.kanHastekassere)
-            .check(Policies.tilgangTilBruker.with(fnr))
-            .check(Policies.sfDialogTilhorerBruker.with(KjedeIdTilgangData(fnr, kjedeId)))
-            .get(Audit.describe(Audit.Action.UPDATE, AuditResources.Person.Henvendelse.Merk.Slett, *auditIdentifier)) {
-                sfHenvendelseService.merkForHastekassering(kjedeId)
-            }
-    }
-
-    @GetMapping("/kanMerkForHastekassering")
-    fun kanMerkeForHasteKassering(): Boolean {
-        return tilgangskontroll
-            .check(Policies.tilgangTilModia)
-            .get(Audit.skipAuditLog()) {
-                val godkjenteSaksbehandlere = tilgangskontroll.context().hentSaksbehandlereMedTilgangTilHastekassering()
-                val saksbehandlerId = SubjectHandler.getIdent().map(String::toUpperCase).get()
-                godkjenteSaksbehandlere.contains(saksbehandlerId)
             }
     }
 }

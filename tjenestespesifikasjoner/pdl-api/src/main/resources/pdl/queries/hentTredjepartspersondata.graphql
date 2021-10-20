@@ -13,6 +13,9 @@ query($identer: [ID!]!){
                     etternavn
                 }
             }
+            kjoenn {
+                kjoenn
+            }
             foedsel {
                 foedselsdato
             }

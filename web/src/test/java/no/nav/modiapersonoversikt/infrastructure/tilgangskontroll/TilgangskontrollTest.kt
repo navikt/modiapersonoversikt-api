@@ -7,7 +7,7 @@ import no.nav.common.auth.subject.SsoToken
 import no.nav.common.auth.subject.Subject
 import no.nav.modiapersonoversikt.consumer.abac.*
 import no.nav.modiapersonoversikt.infrastructure.rsbac.DecisionEnums
-import no.nav.modiapersonoversikt.utils.SubjectRule
+import no.nav.modiapersonoversikt.testutils.SubjectRule
 import org.junit.Rule
 import org.junit.Test
 import java.util.*

@@ -6,7 +6,8 @@
   },
   "servers": [
     { "url": "https://sf-henvendelse.dev.intern.nav.no/api" },
-    { "url": "https://test.salesforce.com/services/apexrest" }
+    { "url": "https://sf-henvendelse.intern.nav.no/api" },
+    { "url": "https://navdialog--uat.my.salesforce.com/services/apexrest" }
   ],
   "paths": {
     "/henvendelse/kodeverk/temagrupper": {
@@ -41,7 +42,7 @@
     "/henvendelse/journal": {
       "post": {
         "tags": ["Journal"],
-        "description": "Endepunkt for igangsettelse av journalføring mot JOARK.",
+        "description": "Endepunkt for igangsettelse av journalføring mot JOARK. Referanse til fagsak i overenstemmelse med påkrevd input til [Dokarkiv API](https://dokarkiv-q2.nais.preprod.local/swagger-ui.html#/arkiver-og-journalfoer-rest-controller/opprettJournalpostUsingPOST). Ved blank/null som saksId vil journalposten opprettes som generell sak på tema.",
         "requestBody": {
           "required": true,
           "description": "JSON request med metadata for journalpost",
@@ -74,8 +75,8 @@
         }
       }
     },
-    "/henvendelse/behandling/{henvId}": {
-      "patch": {
+    "/henvendelse/behandling/{kjedeId}": {
+      "put": {
         "tags": ["Henvendelse Behandling"],
         "description": "Behandling/oppdatering av eksisterende henvendelser. Benyttes til f.eks å oppdatere felter som kasseringsdato, gjeldendeTema. Request body er JSON som følger objektmodellen til henvendelse, men krever kun at du sender med felter hvor dataene skal oppdateres.",
         "requestBody": {
@@ -90,7 +91,7 @@
         },
         "parameters": [
           {
-            "name": "henvId",
+            "name": "kjedeId",
             "in": "path",
             "required": true,
             "schema": {
@@ -104,13 +105,45 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "$ref": "#/components/schemas/Henvendelse"
           },
           "400": {
             "$ref": "#/components/responses/BadRequest"
           },
           "403": {
             "$ref": "#/components/responses/Forbidden"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerError"
+          }
+        }
+      }
+    },
+    "/henvendelse/meldingskjede/lukk": {
+      "post": {
+        "tags": ["Henvendelse Behandling"],
+        "description": "Endepunkt som benyttes for lukking av en meldingskjede. Når kjeden er lukket er det ikke lenger mulig å skrive flere meldinger.",
+        "parameters": [
+          {
+            "name": "kjedeId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Unik kjedeId til meldingstråden som skal lukkes"
+          },
+          {
+            "$ref": "#/components/parameters/X-Correlation-ID"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
           },
           "404": {
             "$ref": "#/components/responses/NotFound"
@@ -138,11 +171,28 @@
         "parameters": [
           {
             "$ref": "#/components/parameters/X-Correlation-ID"
+          },
+          {
+            "name": "kjedeId",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Kjedeid hvis referatet skal knyttes som et oppfølingsreferat."
           }
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "$ref": "#/components/schemas/Henvendelse"
+                }
+              }
+            }
           },
           "400": {
             "$ref": "#/components/responses/BadRequest"
@@ -189,7 +239,15 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "$ref": "#/components/schemas/Henvendelse"
+                }
+              }
+            }
           },
           "400": {
             "$ref": "#/components/responses/BadRequest"
@@ -250,7 +308,7 @@
         }
       }
     },
-    "/henvendelseinfo/henvendelse": {
+    "/henvendelseinfo/henvendelse/{kjedeId}": {
       "get": {
         "tags": ["Henvendelse Info"],
         "description": "Returnerer informasjon for en gitt henvendelse",
@@ -301,7 +359,7 @@
           "markeringstype": {
             "type": "string",
             "enum": ["FEILSENDT", "KONTORSPERRE"],
-            "example": "FEILSENDT"
+            "example": "KONTORSPERRE"
           },
           "markertDato": {
             "type": "string",
@@ -312,42 +370,19 @@
             "type": "string",
             "description": "NAV ident til veileder/saksbehandler som har markert henvendelsen",
             "example": "Z999999"
-          }
-        },
-        "required": ["markeringstype", "markertDato", "markertAv"]
-      },
-      "Kontorsperremarkering": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/Markering"
-          }
-        ],
-        "type": "object",
-        "description": "Klasse som arver den generiske modellen til Markering og utvidet med kontorsperreinformasjon",
-        "properties": {
-          "markeringstype": {
-            "type": "string",
-            "enum": [
-              "KONTORSPERRE"
-            ],
-            "example": "KONTORSPERRE"
           },
           "kontorsperreEnhet": {
             "type": "string",
-            "description": "Enheten henvendelsen er kontorsperret til",
+            "description": "Enheten henvendelsen er kontorsperret til. Kun definert hvis markeringstype = KONTORSPERRE",
             "example": "3410"
           },
           "kontorsperreGT": {
             "type": "string",
-            "description": "GT henvendelsen er kontorsperret til",
+            "description": "GT henvendelsen er kontorsperret til. Kun definert hvis markeringstype = KONTORSPERRE",
             "example": "3410"
           }
         },
-        "required": [
-          "markeringstype",
-          "markertDato",
-          "markertAv"
-        ]
+        "required": ["markeringstype", "markertDato", "markertAv"]
       },
       "MeldingRequest": {
         "type": "object",
@@ -359,6 +394,11 @@
           "temagruppe": {
             "type": "string",
             "example": "ARBD"
+          },
+          "tema": {
+            "type": "string",
+            "description": "Temakode for journalpost som skal opprettes",
+            "example": "DAG"
           },
           "enhet": {
             "type": "string",
@@ -381,6 +421,11 @@
           "temagruppe": {
             "type": "string",
             "example": "ARBD"
+          },
+          "tema": {
+            "type": "string",
+            "description": "Temakode for journalpost som skal opprettes",
+            "example": "DAG"
           },
           "enhet": {
             "type": "string",
@@ -411,6 +456,29 @@
             "type": "string",
             "description": "Referanse til fagsak i overenstemmelse med påkrevd input til [Dokarkiv API](https://dokarkiv-q2.nais.preprod.local/swagger-ui.html#/arkiver-og-journalfoer-rest-controller/opprettJournalpostUsingPOST). Ved blank/null som saksId vil journalposten opprettes som generell sak på tema.",
             "example": "005602185"
+          },
+          "fagsaksystem": {
+            "type": "string",
+            "enum": [
+              "FS38",
+              "FS36",
+              "UFM",
+              "AO01",
+              "AO11",
+              "IT01",
+              "OEBS",
+              "PP01",
+              "K9",
+              "BISYS",
+              "BA",
+              "EF",
+              "KONT",
+              "SUPSTONAD",
+              "OMSORGSPENGER",
+              "HJELPEMIDLER"
+            ],
+            "description": "Fagsystemet som saken behandles i, required hvis saksId er definert",
+            "example": "AO01"
           },
           "temakode": {
             "type": "string",
@@ -449,19 +517,41 @@
             "description": "Tema for opprettet journalpost",
             "example": "DAG"
           },
+          "saksId": {
+            "type": "string",
+            "description": "Referanse til fagsak",
+            "example": "005602185"
+          },
+          "fagsaksystem": {
+            "type": "string",
+            "enum": [
+              "FS38",
+              "FS36",
+              "UFM",
+              "AO01",
+              "AO11",
+              "IT01",
+              "OEBS",
+              "PP01",
+              "K9",
+              "BISYS",
+              "BA",
+              "EF",
+              "KONT",
+              "SUPSTONAD",
+              "OMSORGSPENGER",
+              "HJELPEMIDLER"
+            ],
+            "description": "Fagsystemet som saken behandles i.",
+            "example": "AO01"
+          },
           "journalpostId": {
             "type": "string",
             "description": "Unik referanse til journalpost i JOARK",
             "example": "509934220"
           }
         },
-        "required": [
-          "journalforerNavIdent",
-          "journalforendeEnhet",
-          "journalfortDato",
-          "journalfortTema",
-          "journalpostId"
-        ]
+        "required": ["journalforerNavIdent", "journalforendeEnhet", "journalfortDato", "journalfortTema"]
       },
       "MeldingFra": {
         "type": "object",
@@ -507,11 +597,7 @@
           "kanal": {
             "type": "string",
             "description": "Meldingskanalen",
-            "enum": [
-              "TELEFON",
-              "OPPMOTE",
-              "DIGITAL"
-            ],
+            "enum": ["TELEFON", "OPPMOTE", "DIGITAL"],
             "example": "DIGITAL"
           },
           "fra": {

@@ -120,11 +120,7 @@ class Policies {
 
         @JvmField
         val sfDialogTilhorerBruker = PolicyGenerator<TilgangskontrollContext, KjedeIdTilgangData>({ "KjedeId tilhørte ikke bruker. Spørring gjort av ${context.hentSaksbehandlerId()}" }) {
-            if (context.sfDialogTilhorerBruker(data.fnr, data.kjedeId)) {
-                DecisionEnums.PERMIT
-            } else {
-                DecisionEnums.DENY
-            }
+            DecisionEnums.DENY
         }
 
         @JvmField
@@ -132,6 +128,14 @@ class Policies {
             hentSaksbehandlerId()
                 .map { ident ->
                     val identer = hentSaksbehandlereMedTilgangTilHastekassering()
+                    if (identer.contains(ident)) DecisionEnums.PERMIT else DecisionEnums.DENY
+                }.orElse(DecisionEnums.DENY)
+        }
+
+        val kanBrukeInternal = Policy<TilgangskontrollContext>({ "Saksbehandler (${hentSaksbehandlerId()}) har ikke tilgang til internal endepunkter" }) {
+            hentSaksbehandlerId()
+                .map { ident ->
+                    val identer = hentSaksbehandlereMedTilgangTilInternal()
                     if (identer.contains(ident)) DecisionEnums.PERMIT else DecisionEnums.DENY
                 }.orElse(DecisionEnums.DENY)
         }

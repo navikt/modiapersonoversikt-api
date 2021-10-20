@@ -43,6 +43,7 @@ object Persondata {
         val navn: List<Navn>,
         val fodselsdato: List<LocalDate>,
         val alder: Int?,
+        val kjonn: List<KodeBeskrivelse<Kjonn>>,
         val adressebeskyttelse: List<KodeBeskrivelse<AdresseBeskyttelse>>,
         val bostedAdresse: List<Adresse>,
         val personstatus: List<KodeBeskrivelse<PersonStatus>>
@@ -80,19 +81,28 @@ object Persondata {
         val gyldigTilOgMed: LocalDate
     )
 
+    data class SistEndret(
+        val ident: String,
+        val tidspunkt: LocalDateTime,
+        val system: String
+    )
+
     data class Adresse constructor(
         val linje1: String,
         val linje2: String? = null,
-        val linje3: String? = null
+        val linje3: String? = null,
+        val sistEndret: SistEndret?
     ) {
         constructor(
             linje1: List<String?>,
             linje2: List<String?>? = null,
-            linje3: List<String?>? = null
+            linje3: List<String?>? = null,
+            sistEndret: SistEndret?
         ) : this(
             linje1.filterNotNull().joinToString(" "),
             linje2?.filterNotNull()?.joinToString(" "),
-            linje3?.filterNotNull()?.joinToString(" ")
+            linje3?.filterNotNull()?.joinToString(" "),
+            sistEndret
         )
     }
 
@@ -105,7 +115,8 @@ object Persondata {
         val adressat: Adressat,
         val adresse: Adresse,
         val registrert: LocalDate,
-        val skifteform: Skifteform
+        val skifteform: Skifteform,
+        val sistEndret: SistEndret?
     )
 
     data class Adressat(
@@ -135,9 +146,7 @@ object Persondata {
     data class Bankkonto(
         val kontonummer: String,
         val banknavn: String,
-        val sistEndret: LocalDateTime,
-        val sistEndretAv: String,
-
+        val sistEndret: SistEndret,
         val bankkode: String? = null,
         val swift: String? = null,
         val landkode: KodeBeskrivelse<String>? = null,
@@ -162,8 +171,7 @@ object Persondata {
     data class Telefon(
         val retningsnummer: KodeBeskrivelse<String>?,
         val identifikator: String,
-        val sistEndret: LocalDateTime?,
-        val sistEndretAv: String?,
+        val sistEndret: SistEndret?,
         val prioritet: Int = -1
     )
 
@@ -194,6 +202,7 @@ object Persondata {
         val rolle: ForelderBarnRelasjonRolle,
         val navn: List<Navn>,
         val fodselsdato: List<LocalDate>,
+        val kjonn: List<KodeBeskrivelse<Kjonn>>,
         val alder: Int?,
         val adressebeskyttelse: List<KodeBeskrivelse<AdresseBeskyttelse>>,
         val bostedAdresse: List<Adresse>,
