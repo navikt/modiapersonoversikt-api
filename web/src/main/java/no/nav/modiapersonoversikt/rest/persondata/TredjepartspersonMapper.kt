@@ -49,7 +49,10 @@ class TredjepartspersonMapper(val kodeverk: EnhetligKodeverk.Service) {
             adresse.vegadresse != null -> lagAdresseFraVegadresse(adresse.vegadresse!!)
             adresse.matrikkeladresse != null -> lagAdresseFraMatrikkeladresse(adresse.matrikkeladresse!!)
             adresse.utenlandskAdresse != null -> lagAdresseFraUtenlandskAdresse(adresse.utenlandskAdresse!!)
-            adresse.ukjentBosted != null -> Persondata.Adresse(adresse.ukjentBosted?.bostedskommune ?: "Ukjent kommune")
+            adresse.ukjentBosted != null -> Persondata.Adresse(
+                linje1 = adresse.ukjentBosted?.bostedskommune ?: "Ukjent kommune",
+                sistEndret = null
+            )
             else -> null
         }
     }
@@ -73,7 +76,7 @@ class TredjepartspersonMapper(val kodeverk: EnhetligKodeverk.Service) {
         }
     }
 
-    private fun lagAdresseFraVegadresse(adresse: HentTredjepartspersondata.Vegadresse): Persondata.Adresse? {
+    private fun lagAdresseFraVegadresse(adresse: HentTredjepartspersondata.Vegadresse): Persondata.Adresse {
         return Persondata.Adresse(
             linje1 = listOf(
                 adresse.adressenavn,
@@ -88,11 +91,12 @@ class TredjepartspersonMapper(val kodeverk: EnhetligKodeverk.Service) {
             linje3 = listOf(
                 adresse.bydelsnummer,
                 adresse.kommunenummer
-            )
+            ),
+            sistEndret = null
         )
     }
 
-    private fun lagAdresseFraMatrikkeladresse(adresse: HentTredjepartspersondata.Matrikkeladresse): Persondata.Adresse? {
+    private fun lagAdresseFraMatrikkeladresse(adresse: HentTredjepartspersondata.Matrikkeladresse): Persondata.Adresse {
         return Persondata.Adresse(
             linje1 = listOf(
                 adresse.bruksenhetsnummer,
@@ -101,11 +105,12 @@ class TredjepartspersonMapper(val kodeverk: EnhetligKodeverk.Service) {
             linje2 = listOf(
                 adresse.postnummer,
                 adresse.kommunenummer
-            )
+            ),
+            sistEndret = null
         )
     }
 
-    private fun lagAdresseFraUtenlandskAdresse(adresse: HentTredjepartspersondata.UtenlandskAdresse): Persondata.Adresse? {
+    private fun lagAdresseFraUtenlandskAdresse(adresse: HentTredjepartspersondata.UtenlandskAdresse): Persondata.Adresse {
         return Persondata.Adresse(
             linje1 = listOf(
                 adresse.postboksNummerNavn,
@@ -119,7 +124,8 @@ class TredjepartspersonMapper(val kodeverk: EnhetligKodeverk.Service) {
             ),
             linje3 = listOf(
                 kodeverk.hentKodeverk(Kodeverk.LAND).hentBeskrivelse(adresse.landkode)
-            )
+            ),
+            sistEndret = null
         )
     }
 
