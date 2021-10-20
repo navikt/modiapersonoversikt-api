@@ -43,6 +43,7 @@ object Persondata {
         val navn: List<Navn>,
         val fodselsdato: List<LocalDate>,
         val alder: Int?,
+        val kjonn: List<KodeBeskrivelse<Kjonn>>,
         val adressebeskyttelse: List<KodeBeskrivelse<AdresseBeskyttelse>>,
         val bostedAdresse: List<Adresse>,
         val personstatus: List<KodeBeskrivelse<PersonStatus>>
@@ -201,6 +202,7 @@ object Persondata {
         val rolle: ForelderBarnRelasjonRolle,
         val navn: List<Navn>,
         val fodselsdato: List<LocalDate>,
+        val kjonn: List<KodeBeskrivelse<Kjonn>>,
         val alder: Int?,
         val adressebeskyttelse: List<KodeBeskrivelse<AdresseBeskyttelse>>,
         val bostedAdresse: List<Adresse>,
