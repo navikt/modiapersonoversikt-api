@@ -603,6 +603,7 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
                 navn = tredjepartsPerson?.navn ?: emptyList(),
                 fodselsdato = tredjepartsPerson?.fodselsdato ?: emptyList(),
                 alder = tredjepartsPerson?.alder,
+                kjonn = tredjepartsPerson?.kjonn ?: emptyList(),
                 adressebeskyttelse = tredjepartsPerson?.adressebeskyttelse ?: emptyList(),
                 bostedAdresse = tredjepartsPerson?.bostedAdresse ?: emptyList(),
                 personstatus = tredjepartsPerson?.personstatus ?: emptyList()

@@ -25,6 +25,7 @@ class TredjepartspersonMapper(val kodeverk: EnhetligKodeverk.Service) {
             },
             fodselsdato = fodselsdato,
             alder = hentAlder(fodselsdato),
+            kjonn = hentKjonn(person),
             adressebeskyttelse = person.adressebeskyttelse.let(::hentAdressebeskyttelse),
             bostedAdresse = person.bostedsadresse.mapNotNull {
                 if (person.harTilgang(tilganger)) {
@@ -35,6 +36,16 @@ class TredjepartspersonMapper(val kodeverk: EnhetligKodeverk.Service) {
             },
             personstatus = hentTredjepartspersonstatus(person.folkeregisterpersonstatus)
         )
+    }
+
+    private fun hentKjonn(person: HentTredjepartspersondata.Person?): List<Persondata.KodeBeskrivelse<Persondata.Kjonn>> {
+        return person?.kjoenn?.map {
+            when (it.kjoenn) {
+                HentTredjepartspersondata.KjoennType.MANN -> kodeverk.hentKodeBeskrivelse(Kodeverk.KJONN, Persondata.Kjonn.M)
+                HentTredjepartspersondata.KjoennType.KVINNE -> kodeverk.hentKodeBeskrivelse(Kodeverk.KJONN, Persondata.Kjonn.K)
+                else -> kodeverk.hentKodeBeskrivelse(Kodeverk.KJONN, Persondata.Kjonn.U)
+            }
+        } ?: emptyList()
     }
 
     private fun hentAlder(fodselsdato: List<LocalDate>): Int? {
