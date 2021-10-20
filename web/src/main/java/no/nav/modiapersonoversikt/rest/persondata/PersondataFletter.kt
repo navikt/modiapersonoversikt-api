@@ -616,11 +616,10 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
     }
 
     private fun harSammeAdresse(personAdresse: Persondata.Adresse?, tredjepartsPersonAdresse: Persondata.Adresse?): Boolean {
-        return if (personAdresse == null) {
-            false
-        } else {
-            personAdresse == tredjepartsPersonAdresse
+        if (personAdresse == null || tredjepartsPersonAdresse == null) {
+            return false
         }
+        return personAdresse == tredjepartsPersonAdresse
     }
 
     private fun hentAlder(data: Data): Int? {
