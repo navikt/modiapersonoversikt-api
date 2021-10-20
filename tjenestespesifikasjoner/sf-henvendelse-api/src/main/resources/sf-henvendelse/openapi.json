@@ -7,7 +7,7 @@
   "servers": [
     { "url": "https://sf-henvendelse.dev.intern.nav.no/api" },
     { "url": "https://sf-henvendelse.intern.nav.no/api" },
-    { "url": "https://test.salesforce.com/services/apexrest" }
+    { "url": "https://navdialog--uat.my.salesforce.com/services/apexrest" }
   ],
   "paths": {
     "/henvendelse/kodeverk/temagrupper": {
@@ -75,8 +75,8 @@
         }
       }
     },
-    "/henvendelse/behandling/{henvId}": {
-      "patch": {
+    "/henvendelse/behandling/{kjedeId}": {
+      "put": {
         "tags": ["Henvendelse Behandling"],
         "description": "Behandling/oppdatering av eksisterende henvendelser. Benyttes til f.eks å oppdatere felter som kasseringsdato, gjeldendeTema. Request body er JSON som følger objektmodellen til henvendelse, men krever kun at du sender med felter hvor dataene skal oppdateres.",
         "requestBody": {
@@ -91,7 +91,7 @@
         },
         "parameters": [
           {
-            "name": "henvId",
+            "name": "kjedeId",
             "in": "path",
             "required": true,
             "schema": {
@@ -105,7 +105,8 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "$ref": "#/components/schemas/Henvendelse"
           },
           "400": {
             "$ref": "#/components/responses/BadRequest"
@@ -123,7 +124,7 @@
       }
     },
     "/henvendelse/meldingskjede/lukk": {
-      "patch": {
+      "post": {
         "tags": ["Henvendelse Behandling"],
         "description": "Endepunkt som benyttes for lukking av en meldingskjede. Når kjeden er lukket er det ikke lenger mulig å skrive flere meldinger.",
         "parameters": [

@@ -11,12 +11,12 @@ import no.nav.modiapersonoversikt.infrastructure.http.getCallId
 import no.nav.modiapersonoversikt.legacy.api.domain.sfhenvendelse.generated.apis.*
 import no.nav.modiapersonoversikt.legacy.api.domain.sfhenvendelse.generated.infrastructure.RequestConfig
 import no.nav.modiapersonoversikt.legacy.api.domain.sfhenvendelse.generated.infrastructure.RequestMethod
-import no.nav.modiapersonoversikt.legacy.api.domain.sfhenvendelse.generated.models.HenvendelseDTO
-import no.nav.modiapersonoversikt.legacy.api.domain.sfhenvendelse.generated.models.JournalRequestDTO
-import no.nav.modiapersonoversikt.legacy.api.domain.sfhenvendelse.generated.models.MeldingRequestDTO
-import no.nav.modiapersonoversikt.legacy.api.domain.sfhenvendelse.generated.models.SamtalereferatRequestDTO
+import no.nav.modiapersonoversikt.legacy.api.domain.sfhenvendelse.generated.models.*
+import no.nav.modiapersonoversikt.legacy.api.service.arbeidsfordeling.ArbeidsfordelingV1Service
+import no.nav.modiapersonoversikt.legacy.api.service.norg.AnsattService
 import no.nav.modiapersonoversikt.legacy.api.service.pdl.PdlOppslagService
 import okhttp3.OkHttpClient
+import org.slf4j.LoggerFactory
 import java.time.OffsetDateTime
 import kotlin.reflect.KProperty1
 
@@ -47,7 +47,6 @@ interface SfHenvendelseService {
     fun sjekkEierskap(bruker: EksternBruker, henvendelse: HenvendelseDTO): Boolean
     fun merkSomKontorsperret(kjedeId: String, enhet: String)
     fun merkSomFeilsendt(kjedeId: String)
-    fun merkForHastekassering(kjedeId: String)
     fun lukkTraad(kjedeId: String)
 
     fun ping()
@@ -59,8 +58,11 @@ class SfHenvendelseServiceImpl(
     private val henvendelseJournalApi: JournalApi = SfHenvendelseApiFactory.createHenvendelseJournalApi(),
     private val henvendelseOpprettApi: NyHenvendelseApi = SfHenvendelseApiFactory.createHenvendelseOpprettApi(),
     private val pdlOppslagService: PdlOppslagService,
+    private val arbeidsfordeling: ArbeidsfordelingV1Service,
+    private val ansattService: AnsattService,
     private val stsService: SystemUserTokenProvider
 ) : SfHenvendelseService {
+    private val logger = LoggerFactory.getLogger(SfHenvendelseServiceImpl::class.java)
     private val adminKodeverkApiForPing = KodeverkApi(
         SfHenvendelseApiFactory.url,
         SfHenvendelseApiFactory.createClient {
@@ -68,17 +70,36 @@ class SfHenvendelseServiceImpl(
         }
     )
 
-    constructor(pdlOppslagService: PdlOppslagService, stsService: SystemUserTokenProvider) : this(
+    constructor(
+        pdlOppslagService: PdlOppslagService,
+        arbeidsfordeling: ArbeidsfordelingV1Service,
+        ansattService: AnsattService,
+        stsService: SystemUserTokenProvider
+    ) : this(
         SfHenvendelseApiFactory.createHenvendelseBehandlingApi(),
         SfHenvendelseApiFactory.createHenvendelseInfoApi(),
         SfHenvendelseApiFactory.createHenvendelseJournalApi(),
         SfHenvendelseApiFactory.createHenvendelseOpprettApi(),
         pdlOppslagService,
+        arbeidsfordeling,
+        ansattService,
         stsService
     )
 
     override fun hentHenvendelser(bruker: EksternBruker, enhet: String): List<HenvendelseDTO> {
-        return henvendelseInfoApi.henvendelseinfoHenvendelselisteGet(bruker.aktorId(), getCallId())
+        val enhetOgGTListe = arbeidsfordeling.hentGTnummerForEnhet(enhet)
+            .map { it.geografiskOmraade }
+            .plus(enhet)
+        val tematilganger = ansattService.hentAnsattFagomrader(
+            SubjectHandler.getIdent().orElseThrow(),
+            enhet
+        )
+
+        return henvendelseInfoApi
+            .henvendelseinfoHenvendelselisteGet(bruker.aktorId(), getCallId())
+            .filter(kontorsperreTilgang(enhetOgGTListe))
+            .map(kassertInnhold(OffsetDateTime.now()))
+            .map(journalfortTemaTilgang(tematilganger))
     }
 
     override fun hentHenvendelse(kjedeId: String): HenvendelseDTO {
@@ -196,28 +217,16 @@ class SfHenvendelseServiceImpl(
     }
 
     override fun merkSomFeilsendt(kjedeId: String) {
-        val callId = getCallId()
-        val henvendelse = henvendelseInfoApi.henvendelseinfoHenvendelseKjedeIdGet(kjedeId, callId)
         val request: RequestConfig<Map<String, Any?>> = createPatchRequest(
             kjedeId,
             PatchNote<HenvendelseDTO>()
-                .set(HenvendelseDTO::kasseringsDato).to(henvendelse.opprettetDato.plusYears(2))
-        )
-        henvendelseBehandlingApi.client.request<Map<String, Any?>, Unit>(request)
-    }
-
-    // TODO SF mulig denne forsvinner fra modia, da brukerstøtte skal kunne gjøre sletting fra SF
-    override fun merkForHastekassering(kjedeId: String) {
-        val request: RequestConfig<Map<String, Any?>> = createPatchRequest(
-            kjedeId,
-            PatchNote<HenvendelseDTO>()
-                .set(HenvendelseDTO::kasseringsDato).to(OffsetDateTime.now())
+                .set(HenvendelseDTO::feilsendt).to(true)
         )
         henvendelseBehandlingApi.client.request<Map<String, Any?>, Unit>(request)
     }
 
     override fun lukkTraad(kjedeId: String) {
-        henvendelseBehandlingApi.henvendelseMeldingskjedeLukkPatch(
+        henvendelseBehandlingApi.henvendelseMeldingskjedeLukkPost(
             kjedeId,
             getCallId()
         )
@@ -225,6 +234,65 @@ class SfHenvendelseServiceImpl(
 
     override fun ping() {
         adminKodeverkApiForPing.henvendelseKodeverkTemagrupperGet(getCallId())
+    }
+
+    private fun kontorsperreTilgang(enhetOgGTListe: List<String>): (HenvendelseDTO) -> Boolean {
+        return { henvendelseDTO ->
+            if (!henvendelseDTO.kontorsperre) {
+                true
+            } else {
+                val sperre = henvendelseDTO.markeringer?.find { it.markeringstype == MarkeringDTO.Markeringstype.KONTORSPERRE }
+                val enhetEllerGT: String? = sperre?.kontorsperreGT ?: sperre?.kontorsperreEnhet
+                enhetEllerGT == null || enhetOgGTListe.any { it == enhetEllerGT }
+            }
+        }
+    }
+
+    private fun kassertInnhold(now: OffsetDateTime): (HenvendelseDTO) -> HenvendelseDTO {
+        return { henvendelseDTO ->
+            if (henvendelseDTO.kasseringsDato != null && henvendelseDTO.kasseringsDato!!.isBefore(now)) {
+                henvendelseDTO.copy(
+                    meldinger = henvendelseDTO.meldinger?.map { melding ->
+                        melding.copy(
+                            fritekst = "Innholdet i denne henvendelsen er slettet av NAV."
+                        )
+                    }
+                )
+            } else {
+                henvendelseDTO
+            }
+        }
+    }
+
+    private fun journalfortTemaTilgang(tematilganger: Set<String>): (HenvendelseDTO) -> HenvendelseDTO {
+        return { henvendelseDTO ->
+            val journalforteTemaer = (henvendelseDTO.journalposter ?: emptyList())
+                .map { it.journalfortTema }
+            val harTilgangTilAlleJournalforteTema: Boolean = journalforteTemaer
+                .all { tema -> tematilganger.contains(tema) }
+
+            if (harTilgangTilAlleJournalforteTema) {
+                henvendelseDTO
+            } else {
+                val ident = SubjectHandler.getIdent().orElse("-")
+                logger.info(
+                    """
+                    Ikke tilgang til tema. 
+                    Ident: $ident
+                    Henvendelse: ${henvendelseDTO.kjedeId}
+                    Journalførte: $journalforteTemaer
+                    Tilganger: $tematilganger
+                    """.trimIndent()
+                )
+                henvendelseDTO.copy(
+                    meldinger = henvendelseDTO.meldinger?.map { melding ->
+                        melding.copy(
+                            fritekst = "Du kan ikke se innholdet i denne henvendelsen fordi tråden er journalført på et tema du ikke har tilgang til."
+                        )
+                    }
+                )
+            }
+        }
     }
 
     private fun createPatchRequest(
@@ -237,7 +305,10 @@ class SfHenvendelseServiceImpl(
 
         patchnote.patches.mapKeys { it.key.name }
         return RequestConfig(
-            method = RequestMethod.PATCH,
+            /**
+             * Var original PATCH og følger semantikken til PATCH, men endret til PUT pga støtte i sf-henvendelse proxy
+             */
+            method = RequestMethod.PUT,
             path = "/henvendelse/behandling/$kjedeId",
             query = mutableMapOf(),
             headers = localVariableHeaders,

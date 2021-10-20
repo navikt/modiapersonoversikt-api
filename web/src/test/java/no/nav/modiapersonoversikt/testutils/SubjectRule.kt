@@ -1,4 +1,4 @@
-package no.nav.modiapersonoversikt.utils
+package no.nav.modiapersonoversikt.testutils
 
 import no.nav.common.auth.subject.Subject
 import no.nav.common.auth.subject.SubjectHandler
