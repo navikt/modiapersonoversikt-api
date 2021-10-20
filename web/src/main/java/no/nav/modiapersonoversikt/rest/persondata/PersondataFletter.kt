@@ -271,7 +271,8 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
             Persondata.Statsborgerskap(
                 land = land,
                 gyldigFraOgMed = it.gyldigFraOgMed?.value,
-                gyldigTilOgMed = it.gyldigTilOgMed?.value
+                gyldigTilOgMed = it.gyldigTilOgMed?.value,
+                erHistorisk = it.metadata.historisk
             )
         }
     }

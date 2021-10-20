@@ -67,7 +67,8 @@ object Persondata {
     data class Statsborgerskap(
         val land: KodeBeskrivelse<String>,
         val gyldigFraOgMed: LocalDate?,
-        val gyldigTilOgMed: LocalDate?
+        val gyldigTilOgMed: LocalDate?,
+        val erHistorisk: Boolean
     )
 
     data class Sivilstand(

@@ -55,11 +55,6 @@ query($ident: ID!){
         adressebeskyttelse {
             gradering
         }
-        statsborgerskap {
-            land,
-            gyldigFraOgMed,
-            gyldigTilOgMed
-        }
         doedsfall {
             doedsdato
         }
@@ -116,6 +111,14 @@ query($ident: ID!){
             }
             metadata {
                 ...sistEndret
+            }
+        }
+        statsborgerskap {
+            land,
+            gyldigFraOgMed,
+            gyldigTilOgMed,
+            metadata {
+                historisk
             }
         }
         tilrettelagtKommunikasjon {
