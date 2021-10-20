@@ -607,7 +607,7 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
                 adressebeskyttelse = tredjepartsPerson?.adressebeskyttelse ?: emptyList(),
                 bostedAdresse = tredjepartsPerson?.bostedAdresse ?: emptyList(),
                 harSammeAdresse = harSammeAdresse(
-                    persondata = data,
+                    personAdresse = hentBostedAdresse(data).firstOrNull(),
                     tredjepartsPersonAdresse = tredjepartsPerson?.bostedAdresse?.firstOrNull()
                 ),
                 personstatus = tredjepartsPerson?.personstatus ?: emptyList()
@@ -615,13 +615,12 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
         }
     }
 
-    private fun harSammeAdresse(persondata: Data, tredjepartsPersonAdresse: Persondata.Adresse?): Boolean {
-        val personAdresse = hentBostedAdresse(persondata).firstOrNull()
-        return if (personAdresse == null || tredjepartsPersonAdresse == null) {
+    private fun harSammeAdresse(personAdresse: Persondata.Adresse?, tredjepartsPersonAdresse: Persondata.Adresse?): Boolean {
+        return if (personAdresse == null) {
             false
-        } else (personAdresse.linje1 == tredjepartsPersonAdresse.linje1) &&
-            (personAdresse.linje2 == tredjepartsPersonAdresse.linje2) &&
-            (personAdresse.linje3 == tredjepartsPersonAdresse.linje3)
+        } else {
+            personAdresse == tredjepartsPersonAdresse
+        }
     }
 
     private fun hentAlder(data: Data): Int? {
