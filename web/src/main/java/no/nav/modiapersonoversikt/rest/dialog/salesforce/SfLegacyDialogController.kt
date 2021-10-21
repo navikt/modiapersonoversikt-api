@@ -206,8 +206,8 @@ class SfLegacyDialogController(
                 val journalportIdenter: List<String>? = henvendelse.journalposter?.map { it.journalforerNavIdent }
                 val markeringIdenter: List<String>? = henvendelse.markeringer?.map { it.markertAv }
                 val meldingFraIdenter: List<String>? = henvendelse.meldinger
-                    ?.filter { it.fra.identType == MeldingFraDTO.IdentType.AKTORID }
-                    ?.map { it.fra.ident }
+                    ?.filter { it.fra.identType == MeldingFraDTO.IdentType.NAVIDENT }
+                    ?.mapNotNull { it.fra.ident }
                 (journalportIdenter ?: emptyList())
                     .plus(markeringIdenter ?: emptyList())
                     .plus(meldingFraIdenter ?: emptyList())

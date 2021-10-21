@@ -21,8 +21,8 @@ import java.time.OffsetDateTime
 import kotlin.reflect.KProperty1
 
 sealed class EksternBruker(val ident: String) {
-    class AktorId(aktorId: String) : EksternBruker(aktorId)
-    class Fnr(fnr: String) : EksternBruker(fnr)
+    data class AktorId(val aktorId: String) : EksternBruker(aktorId)
+    data class Fnr(val fnr: String) : EksternBruker(fnr)
 }
 
 interface SfHenvendelseService {
@@ -97,6 +97,7 @@ class SfHenvendelseServiceImpl(
 
         return henvendelseInfoApi
             .henvendelseinfoHenvendelselisteGet(bruker.aktorId(), getCallId())
+            .also { loggFeilSomErSpesialHandtert(bruker, it) }
             .filter(kontorsperreTilgang(enhetOgGTListe))
             .map(kassertInnhold(OffsetDateTime.now()))
             .map(journalfortTemaTilgang(tematilganger))
@@ -234,6 +235,30 @@ class SfHenvendelseServiceImpl(
 
     override fun ping() {
         adminKodeverkApiForPing.henvendelseKodeverkTemagrupperGet(getCallId())
+    }
+
+    private fun loggFeilSomErSpesialHandtert(bruker: EksternBruker, henvendelser: List<HenvendelseDTO>) {
+        val manglendeOpprinneligGt = mutableListOf<String>()
+        val manglendeIdentIMelding = mutableListOf<String>()
+        for (henvendelse in henvendelser) {
+            if (henvendelse.opprinneligGT == null) {
+                manglendeOpprinneligGt.add(henvendelse.kjedeId)
+            }
+            val meldinger = henvendelse.meldinger ?: emptyList()
+            if (meldinger.any { it.fra.ident == null }) {
+                manglendeIdentIMelding.add(henvendelse.kjedeId)
+            }
+        }
+        if (manglendeOpprinneligGt.isEmpty() && manglendeIdentIMelding.isEmpty()) {
+            return
+        }
+        val sb = StringBuilder()
+        sb.appendln("[SF-HENVENDELSE]")
+        sb.appendln("Fant feil i dataformat til henvendelser fra $bruker")
+        sb.appendln("Kjeder med manglende GT: ${manglendeOpprinneligGt.joinToString(", ")}")
+        sb.appendln("Kjeder med meldinger uten ident: ${manglendeIdentIMelding.joinToString(", ")}")
+
+        logger.warn(sb.toString())
     }
 
     private fun kontorsperreTilgang(enhetOgGTListe: List<String>): (HenvendelseDTO) -> Boolean {

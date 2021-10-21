@@ -573,7 +573,7 @@
             "example": "4100"
           }
         },
-        "required": ["identType", "ident"]
+        "required": ["identType"]
       },
       "Melding": {
         "type": "object",
