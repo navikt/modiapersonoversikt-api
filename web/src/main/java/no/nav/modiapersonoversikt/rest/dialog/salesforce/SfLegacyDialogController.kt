@@ -203,7 +203,7 @@ class SfLegacyDialogController(
             .distinct()
         val identer = henvendelser
             .flatMap { henvendelse ->
-                val journalportIdenter: List<String>? = henvendelse.journalposter?.map { it.journalforerNavIdent }
+                val journalportIdenter: List<String>? = henvendelse.journalposter?.mapNotNull { it.journalforerNavIdent } // TODO SF bør ikke svare med null for ident her. Rapportert feil
                 val markeringIdenter: List<String>? = henvendelse.markeringer?.map { it.markertAv }
                 val meldingFraIdenter: List<String>? = henvendelse.meldinger
                     ?.filter { it.fra.identType == MeldingFraDTO.IdentType.NAVIDENT }

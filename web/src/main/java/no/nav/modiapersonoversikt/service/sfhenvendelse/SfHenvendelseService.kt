@@ -237,35 +237,43 @@ class SfHenvendelseServiceImpl(
         adminKodeverkApiForPing.henvendelseKodeverkTemagrupperGet(getCallId())
     }
 
+    enum class ApiFeilType {
+        GT, IDENT, TEMAGRUPPE, JOURNALFORENDE_ENHET, JOURNALFORENDE_IDENT
+    }
+    data class ApiFeil(val type: ApiFeilType, val kjedeId: String)
     private fun loggFeilSomErSpesialHandtert(bruker: EksternBruker, henvendelser: List<HenvendelseDTO>): List<HenvendelseDTO> {
-        val manglendeOpprinneligGt = mutableListOf<String>()
-        val manglendeIdentIMelding = mutableListOf<String>()
-        val manglendeTemagruppe = mutableListOf<String>()
+        val feil = mutableListOf<ApiFeil>()
         for (henvendelse in henvendelser) {
             if (henvendelse.opprinneligGT == null) {
-                manglendeOpprinneligGt.add(henvendelse.kjedeId)
+                feil.add(ApiFeil(ApiFeilType.GT, henvendelse.kjedeId))
             }
             val meldinger = henvendelse.meldinger ?: emptyList()
             if (meldinger.any { it.fra.ident == null }) {
-                manglendeIdentIMelding.add(henvendelse.kjedeId)
+                feil.add(ApiFeil(ApiFeilType.IDENT, henvendelse.kjedeId))
             }
             if (henvendelse.gjeldendeTemagruppe == null) {
-                manglendeTemagruppe.add(henvendelse.kjedeId)
+                feil.add(ApiFeil(ApiFeilType.TEMAGRUPPE, henvendelse.kjedeId))
+            }
+            val journalposter = henvendelse.journalposter ?: emptyList()
+            if (journalposter.any { it.journalforendeEnhet == null }) {
+                feil.add(ApiFeil(ApiFeilType.JOURNALFORENDE_ENHET, henvendelse.kjedeId))
+            }
+            if (journalposter.any { it.journalforerNavIdent == null }) {
+                feil.add(ApiFeil(ApiFeilType.JOURNALFORENDE_IDENT, henvendelse.kjedeId))
             }
         }
         val kanJobbesMedIModia = henvendelser.filter { it.gjeldendeTemagruppe != null }
-        val antallFeil = listOf(
-            manglendeOpprinneligGt.size,
-            manglendeIdentIMelding.size,
-            manglendeTemagruppe.size
-        ).sum()
-        if (antallFeil > 0) {
+        if (feil.isNotEmpty()) {
+            val grupperteFeil = feil
+                .groupBy { it.type }
+                .mapValues { apifeil -> apifeil.value.map { it.kjedeId } }
+
             val sb = StringBuilder()
             sb.appendln("[SF-HENVENDELSE]")
-            sb.appendln("Fant feil i dataformat til henvendelser fra $bruker")
-            sb.appendln("Kjeder med manglende GT: ${manglendeOpprinneligGt.joinToString(", ")}")
-            sb.appendln("Kjeder med meldinger uten ident: ${manglendeIdentIMelding.joinToString(", ")}")
-            sb.appendln("Kjeder med manglende temagruppe: ${manglendeTemagruppe.joinToString(", ")}")
+            sb.appendln("Fant ${feil.size} feil i dataformat til henvendelser fra $bruker")
+            for ((feiltype, kjedeIder) in grupperteFeil) {
+                sb.appendln("Type: $feiltype KjedeIder: ${kjedeIder.joinToString(", ")}")
+            }
 
             logger.warn(sb.toString())
         }
