@@ -14,7 +14,7 @@ import org.junit.jupiter.api.extension.RegisterExtension
 internal class TredjepartspersonMapperTest {
     @JvmField
     @RegisterExtension
-    val snapshot = SnapshotExtension(debug = true)
+    val snapshot = SnapshotExtension()
 
     val kodeverk: EnhetligKodeverk.Service = mockk()
     val mapper = TredjepartspersonMapper(kodeverk)
@@ -57,12 +57,37 @@ internal class TredjepartspersonMapperTest {
 
     @Test
     internal fun `skal fjerne informasjon relatert til kode 6-7 ved manglende tilgang`() {
-        TODO("Not yet implemented")
-    }
-
-    @Test
-    internal fun `skal ikke stoppe ved feil i kodeverk`() {
-        TODO("Not yet implemented")
+        val tilganger = gittTilganger(kode6 = false, kode7 = false)
+        snapshot.assertMatches(
+            mapper.lagTredjepartsperson(
+                ident = "00000000000",
+                tilganger = tilganger,
+                person = gittPerson(
+                    adressebeskyttelse = AdressebeskyttelseGradering.FORTROLIG,
+                    bosted = ukjentBosted("Ett sted i Aremark")
+                )
+            )
+        )
+        snapshot.assertMatches(
+            mapper.lagTredjepartsperson(
+                ident = "00000000000",
+                tilganger = tilganger,
+                person = gittPerson(
+                    adressebeskyttelse = AdressebeskyttelseGradering.STRENGT_FORTROLIG,
+                    bosted = ukjentBosted("Ett sted i Aremark")
+                )
+            )
+        )
+        snapshot.assertMatches(
+            mapper.lagTredjepartsperson(
+                ident = "00000000000",
+                tilganger = tilganger,
+                person = gittPerson(
+                    adressebeskyttelse = AdressebeskyttelseGradering.STRENGT_FORTROLIG_UTLAND,
+                    bosted = ukjentBosted("Ett sted i Aremark")
+                )
+            )
+        )
     }
 
     private fun gittPerson(
