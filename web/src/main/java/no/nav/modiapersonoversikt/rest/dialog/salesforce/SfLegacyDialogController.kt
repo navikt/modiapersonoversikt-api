@@ -17,6 +17,7 @@ import no.nav.modiapersonoversikt.rest.dialog.apis.*
 import no.nav.modiapersonoversikt.rest.dialog.apis.MeldingDTO
 import no.nav.modiapersonoversikt.service.sfhenvendelse.EksternBruker
 import no.nav.modiapersonoversikt.service.sfhenvendelse.SfHenvendelseService
+import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.server.ResponseStatusException
@@ -35,6 +36,7 @@ class SfLegacyDialogController(
     private val ldapService: LDAPService,
     private val kodeverk: StandardKodeverk
 ) : DialogApi {
+    private val logger = LoggerFactory.getLogger(SfLegacyDialogController::class.java)
     override fun hentMeldinger(request: HttpServletRequest, fnr: String, enhet: String?): List<TraadDTO> {
         val valgtEnhet = RestUtils.hentValgtEnhet(enhet, request)
         val bruker = EksternBruker.Fnr(fnr)
@@ -215,7 +217,14 @@ class SfLegacyDialogController(
             .distinct()
 
         val temakodeMap = temakoder.associateWith { kode -> kodeverk.getArkivtemaNavn(kode) }
-        val identMap = identer.associateWith { ident -> ldapService.hentSaksbehandler(ident) }
+        val identMap = identer.associateWith { ident ->
+            runCatching {
+                ldapService.hentSaksbehandler(ident)
+            }.recover {
+                logger.error("Fant ikke saksbehandler for $ident", it)
+                Saksbehandler("-", "-", ident)
+            }.getOrThrow()
+        }
 
         return Pair(temakodeMap, identMap)
     }
