@@ -109,7 +109,7 @@ object Persondata {
     
     
     data class Publikumsmottak(
-        val besoeksadresse: Adresse?,
+        val besoeksadresse: Adresse,
         val apningstider: List<Apningstid>
     )
 
