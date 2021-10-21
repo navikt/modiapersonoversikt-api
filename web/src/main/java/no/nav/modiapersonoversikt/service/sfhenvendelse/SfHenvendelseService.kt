@@ -97,7 +97,7 @@ class SfHenvendelseServiceImpl(
 
         return henvendelseInfoApi
             .henvendelseinfoHenvendelselisteGet(bruker.aktorId(), getCallId())
-            .also { loggFeilSomErSpesialHandtert(bruker, it) }
+            .let { loggFeilSomErSpesialHandtert(bruker, it) }
             .filter(kontorsperreTilgang(enhetOgGTListe))
             .map(kassertInnhold(OffsetDateTime.now()))
             .map(journalfortTemaTilgang(tematilganger))
@@ -189,7 +189,7 @@ class SfHenvendelseServiceImpl(
                 kjedeId = kjedeId,
                 meldingRequestDTO = MeldingRequestDTO(
                     aktorId = bruker.aktorId(),
-                    temagruppe = henvendelse.gjeldendeTemagruppe,
+                    temagruppe = henvendelse.gjeldendeTemagruppe!!, // TODO må fikses av SF-api. Temagruppe kan ikke være null
                     enhet = enhet,
                     fritekst = fritekst
                 )
@@ -237,9 +237,10 @@ class SfHenvendelseServiceImpl(
         adminKodeverkApiForPing.henvendelseKodeverkTemagrupperGet(getCallId())
     }
 
-    private fun loggFeilSomErSpesialHandtert(bruker: EksternBruker, henvendelser: List<HenvendelseDTO>) {
+    private fun loggFeilSomErSpesialHandtert(bruker: EksternBruker, henvendelser: List<HenvendelseDTO>): List<HenvendelseDTO> {
         val manglendeOpprinneligGt = mutableListOf<String>()
         val manglendeIdentIMelding = mutableListOf<String>()
+        val manglendeTemagruppe = mutableListOf<String>()
         for (henvendelse in henvendelser) {
             if (henvendelse.opprinneligGT == null) {
                 manglendeOpprinneligGt.add(henvendelse.kjedeId)
@@ -248,17 +249,28 @@ class SfHenvendelseServiceImpl(
             if (meldinger.any { it.fra.ident == null }) {
                 manglendeIdentIMelding.add(henvendelse.kjedeId)
             }
+            if (henvendelse.gjeldendeTemagruppe == null) {
+                manglendeTemagruppe.add(henvendelse.kjedeId)
+            }
         }
-        if (manglendeOpprinneligGt.isEmpty() && manglendeIdentIMelding.isEmpty()) {
-            return
-        }
-        val sb = StringBuilder()
-        sb.appendln("[SF-HENVENDELSE]")
-        sb.appendln("Fant feil i dataformat til henvendelser fra $bruker")
-        sb.appendln("Kjeder med manglende GT: ${manglendeOpprinneligGt.joinToString(", ")}")
-        sb.appendln("Kjeder med meldinger uten ident: ${manglendeIdentIMelding.joinToString(", ")}")
+        val kanJobbesMedIModia = henvendelser.filter { it.gjeldendeTemagruppe != null }
+        val antallFeil = listOf(
+            manglendeOpprinneligGt.size,
+            manglendeIdentIMelding.size,
+            manglendeTemagruppe.size
+        ).sum()
+        if (antallFeil > 0) {
+            val sb = StringBuilder()
+            sb.appendln("[SF-HENVENDELSE]")
+            sb.appendln("Fant feil i dataformat til henvendelser fra $bruker")
+            sb.appendln("Kjeder med manglende GT: ${manglendeOpprinneligGt.joinToString(", ")}")
+            sb.appendln("Kjeder med meldinger uten ident: ${manglendeIdentIMelding.joinToString(", ")}")
+            sb.appendln("Kjeder med manglende temagruppe: ${manglendeTemagruppe.joinToString(", ")}")
 
-        logger.warn(sb.toString())
+            logger.warn(sb.toString())
+        }
+
+        return kanJobbesMedIModia
     }
 
     private fun kontorsperreTilgang(enhetOgGTListe: List<String>): (HenvendelseDTO) -> Boolean {

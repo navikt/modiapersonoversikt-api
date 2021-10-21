@@ -144,7 +144,7 @@ class SfLegacyDialogController(
                 kjedeId = fortsettDialogRequest.traadId,
                 bruker = bruker,
                 enhet = enhet,
-                temagruppe = henvendelse.gjeldendeTemagruppe,
+                temagruppe = henvendelse.gjeldendeTemagruppe!!, // TODO må fikses av SF-api. Temagruppe kan ikke være null
                 kanal = fortsettDialogRequest.meldingstype.getKanal(),
                 fritekst = fortsettDialogRequest.fritekst
             )
@@ -180,7 +180,7 @@ class SfLegacyDialogController(
         if (oppgaveId != null) {
             oppgaveBehandlingService.ferdigstillOppgaveIGsak(
                 oppgaveId,
-                Temagruppe.valueOf(henvendelse.gjeldendeTemagruppe),
+                Temagruppe.valueOf(henvendelse.gjeldendeTemagruppe!!), // TODO må fikses av SF-api. Temagruppe kan ikke være null
                 enhet
             )
         }

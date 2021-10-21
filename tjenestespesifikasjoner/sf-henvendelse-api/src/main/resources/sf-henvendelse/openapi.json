@@ -691,8 +691,7 @@
           "opprettetDato",
           "kontorsperre",
           "feilsendt",
-          "kjedeId",
-          "gjeldendeTemagruppe"
+          "kjedeId"
         ]
       },
       "Temagruppe": {
