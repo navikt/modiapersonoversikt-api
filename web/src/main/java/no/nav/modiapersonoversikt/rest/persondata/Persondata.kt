@@ -106,8 +106,7 @@ object Persondata {
             sistEndret
         )
     }
-    
-    
+
     data class Publikumsmottak(
         val besoeksadresse: Adresse,
         val apningstider: List<Apningstid>

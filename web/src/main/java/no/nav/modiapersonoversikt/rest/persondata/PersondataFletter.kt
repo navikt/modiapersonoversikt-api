@@ -236,7 +236,7 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
         ),
         sistEndret = sisteEndring
     )
-    
+
     private fun lagAdresseFraBesoksadresse(
         adresse: Gateadresse
     ) = Persondata.Adresse(
@@ -278,7 +278,7 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
             .map { Persondata.Enhet(it.enhetId, it.enhetNavn, hentPublikumsmottak(it.publikumsmottak)) }
             .getOrNull()
     }
-    
+
     private fun hentPublikumsmottak(publikumsmottak: List<Publikumsmottak>): List<Persondata.Publikumsmottak> {
         return publikumsmottak.map {
             Persondata.Publikumsmottak(
@@ -287,7 +287,7 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
             )
         }
     }
-    
+
     private fun hentStatsborgerskap(data: Data): List<Persondata.Statsborgerskap> {
         return data.persondata.statsborgerskap.map {
             val land = when (it.land) {
