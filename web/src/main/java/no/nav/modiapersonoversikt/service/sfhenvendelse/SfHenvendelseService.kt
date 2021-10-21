@@ -238,15 +238,12 @@ class SfHenvendelseServiceImpl(
     }
 
     enum class ApiFeilType {
-        GT, IDENT, TEMAGRUPPE, JOURNALFORENDE_ENHET, JOURNALFORENDE_IDENT
+        IDENT, TEMAGRUPPE, JOURNALFORENDE_IDENT
     }
     data class ApiFeil(val type: ApiFeilType, val kjedeId: String)
     private fun loggFeilSomErSpesialHandtert(bruker: EksternBruker, henvendelser: List<HenvendelseDTO>): List<HenvendelseDTO> {
         val feil = mutableListOf<ApiFeil>()
         for (henvendelse in henvendelser) {
-            if (henvendelse.opprinneligGT == null) {
-                feil.add(ApiFeil(ApiFeilType.GT, henvendelse.kjedeId))
-            }
             val meldinger = henvendelse.meldinger ?: emptyList()
             if (meldinger.any { it.fra.ident == null }) {
                 feil.add(ApiFeil(ApiFeilType.IDENT, henvendelse.kjedeId))
@@ -255,9 +252,6 @@ class SfHenvendelseServiceImpl(
                 feil.add(ApiFeil(ApiFeilType.TEMAGRUPPE, henvendelse.kjedeId))
             }
             val journalposter = henvendelse.journalposter ?: emptyList()
-            if (journalposter.any { it.journalforendeEnhet == null }) {
-                feil.add(ApiFeil(ApiFeilType.JOURNALFORENDE_ENHET, henvendelse.kjedeId))
-            }
             if (journalposter.any { it.journalforerNavIdent == null }) {
                 feil.add(ApiFeil(ApiFeilType.JOURNALFORENDE_IDENT, henvendelse.kjedeId))
             }
