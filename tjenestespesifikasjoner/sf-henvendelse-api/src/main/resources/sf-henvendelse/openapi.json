@@ -551,7 +551,7 @@
             "example": "509934220"
           }
         },
-        "required": ["journalforerNavIdent", "journalforendeEnhet", "journalfortDato", "journalfortTema"]
+        "required": ["journalforerNavIdent", "journalfortDato", "journalfortTema"]
       },
       "MeldingFra": {
         "type": "object",
