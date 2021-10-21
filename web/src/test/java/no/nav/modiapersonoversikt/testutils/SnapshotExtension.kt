@@ -57,7 +57,7 @@ class SnapshotExtension(
         return this
     }
 
-    fun assertMatches(value: Any) {
+    fun assertMatches(value: Any?) {
         assertMatches(getFile(counter++), value)
     }
 
@@ -71,12 +71,11 @@ class SnapshotExtension(
         }
     }
 
-    private fun assertMatches(file: File, value: Any) {
+    private fun assertMatches(file: File, value: Any?) {
         try {
             val snapshot = createSnapshot(value)
             if (debug) {
-                fail("Debugmode enabled.\nSnapshot:\n$snapshot");
-
+                fail("Debugmode enabled.\nSnapshot:\n$snapshot")
             } else {
                 assertEquals(read(file), snapshot)
             }
@@ -93,7 +92,7 @@ class SnapshotExtension(
             ?: throw IllegalStateException("No name...")
     }
 
-    private fun save(file: File, value: Any) {
+    private fun save(file: File, value: Any?) {
         if (!debug) {
             Files.writeString(file.toPath(), createSnapshot(value), UTF_8)
         }
@@ -103,8 +102,10 @@ class SnapshotExtension(
         return Files.readString(file.toPath(), UTF_8)
     }
 
-    private fun createSnapshot(value: Any): String {
-        if (value is String) {
+    private fun createSnapshot(value: Any?): String {
+        if (value == null) {
+            return "null"
+        } else if (value is String) {
             try {
                 val tree = json.readTree(value)
                 return json

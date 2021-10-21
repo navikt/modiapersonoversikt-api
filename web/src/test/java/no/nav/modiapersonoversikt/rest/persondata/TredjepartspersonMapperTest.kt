@@ -1,11 +1,13 @@
 package no.nav.modiapersonoversikt.rest.persondata
 
+import io.mockk.every
 import io.mockk.mockk
-import no.nav.modiapersonoversikt.legacy.api.domain.pdl.generated.HentPersondataLite
-import no.nav.modiapersonoversikt.legacy.api.domain.pdl.generated.HentPersondataLite.AdressebeskyttelseGradering
-import no.nav.modiapersonoversikt.legacy.api.domain.pdl.generated.HentPersondataLite.Bostedsadresse
+import no.nav.modiapersonoversikt.legacy.api.domain.pdl.generated.HentTredjepartspersondata
+import no.nav.modiapersonoversikt.legacy.api.domain.pdl.generated.HentTredjepartspersondata.AdressebeskyttelseGradering
+import no.nav.modiapersonoversikt.legacy.api.domain.pdl.generated.HentTredjepartspersondata.Bostedsadresse
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk
 import no.nav.modiapersonoversikt.testutils.SnapshotExtension
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.RegisterExtension
 
@@ -17,6 +19,11 @@ internal class TredjepartspersonMapperTest {
     val kodeverk: EnhetligKodeverk.Service = mockk()
     val mapper = TredjepartspersonMapper(kodeverk)
 
+    @BeforeEach
+    internal fun setUp() {
+        every { kodeverk.hentKodeverk(any()) } returns EnhetligKodeverk.Kodeverk("kodeverk", emptyMap())
+    }
+
     @Test
     internal fun `skal mapper ulike adresse typer til internt domene`() {
         val tilganger = gittTilganger(kode6 = false, kode7 = false)
@@ -27,24 +34,25 @@ internal class TredjepartspersonMapperTest {
         )
         snapshot.assertMatches(
             mapper.lagTredjepartsperson(
-                tilganger = tilganger, person = person.asBolkResult()
+                ident = "00000000000",
+                tilganger = tilganger,
+                person = person
             )
         )
         snapshot.assertMatches(
             mapper.lagTredjepartsperson(
-                tilganger = tilganger, person = person
-                    .copy(bostedsadresse = vegadresse())
-                    .asBolkResult()
+                ident = "00000000000",
+                tilganger = tilganger,
+                person = person.copy(bostedsadresse = vegadresse())
             )
         )
         snapshot.assertMatches(
             mapper.lagTredjepartsperson(
-                tilganger = tilganger, person = person
-                    .copy(bostedsadresse = matrikkel())
-                    .asBolkResult()
+                ident = "00000000000",
+                tilganger = tilganger,
+                person = person.copy(bostedsadresse = matrikkel())
             )
         )
-
     }
 
     @Test
@@ -61,25 +69,22 @@ internal class TredjepartspersonMapperTest {
         navn: String = "Harry Tester Testesen",
         adressebeskyttelse: AdressebeskyttelseGradering = AdressebeskyttelseGradering.UGRADERT,
         bosted: List<Bostedsadresse> = ukjentBosted("Ingen ved hvor harry bor")
-    ) = HentPersondataLite.Person(
+    ) = HentTredjepartspersondata.Person(
         navn = listOf(gittNavn(navn)),
         adressebeskyttelse = listOf(
-            HentPersondataLite.Adressebeskyttelse(adressebeskyttelse)
+            HentTredjepartspersondata.Adressebeskyttelse(adressebeskyttelse)
         ),
-        bostedsadresse = bosted
+        bostedsadresse = bosted,
+        kjoenn = emptyList(),
+        foedsel = emptyList(),
+        folkeregisterpersonstatus = emptyList()
     )
-
-    private fun HentPersondataLite.Person.asBolkResult(fnr: String = "0".repeat(11)) =
-        HentPersondataLite.HentPersonBolkResult(
-            ident = fnr,
-            person = this
-        )
 
     private fun gittTilganger(kode6: Boolean, kode7: Boolean) = PersondataService.Tilganger(kode6, kode7)
 
-    private fun gittNavn(navn: String): HentPersondataLite.Navn {
+    private fun gittNavn(navn: String): HentTredjepartspersondata.Navn {
         val split = navn.split(" ")
-        return HentPersondataLite.Navn(
+        return HentTredjepartspersondata.Navn(
             fornavn = split.first(),
             mellomnavn = if (split.size <= 2) null else {
                 split.subList(1, split.size - 1).joinToString(" ")
@@ -109,7 +114,7 @@ internal class TredjepartspersonMapperTest {
         postnummer: String? = "1234"
     ) = listOf(
         adresse.copy(
-            vegadresse = HentPersondataLite.Vegadresse(
+            vegadresse = HentTredjepartspersondata.Vegadresse(
                 husnummer = husnummer,
                 husbokstav = husbokstav,
                 bruksenhetsnummer = bruksenhetsnummer,
@@ -129,7 +134,7 @@ internal class TredjepartspersonMapperTest {
         kommunenummer: String? = "Skauen"
     ) = listOf(
         adresse.copy(
-            matrikkeladresse = HentPersondataLite.Matrikkeladresse(
+            matrikkeladresse = HentTredjepartspersondata.Matrikkeladresse(
                 bruksenhetsnummer = bruksenhetsnummer,
                 tilleggsnavn = tilleggsnavn,
                 postnummer = postnummer,
@@ -140,8 +145,7 @@ internal class TredjepartspersonMapperTest {
 
     private fun ukjentBosted(bosted: String) = listOf(
         adresse.copy(
-            ukjentBosted = HentPersondataLite.UkjentBosted(bosted)
+            ukjentBosted = HentTredjepartspersondata.UkjentBosted(bosted)
         )
     )
-
 }
