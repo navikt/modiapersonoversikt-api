@@ -18,7 +18,7 @@ class LenientDateModule : SimpleModule("lenient-date-module") {
 }
 
 class LenientDateDeserializer : JsonDeserializer<OffsetDateTime>() {
-    val fmt = DateTimeFormatterBuilder()
+    private val fmt = DateTimeFormatterBuilder()
         .append(DateTimeFormatter.ISO_LOCAL_DATE_TIME)
         .optionalStart().appendOffset("+HH:MM", "+00:00").optionalEnd()
         .optionalStart().appendOffset("+HHMM", "+0000").optionalEnd()
