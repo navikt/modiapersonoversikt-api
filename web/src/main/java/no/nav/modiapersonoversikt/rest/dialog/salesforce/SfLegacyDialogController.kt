@@ -151,12 +151,12 @@ class SfLegacyDialogController(
                 fritekst = fortsettDialogRequest.fritekst
             )
             val journalposter = (henvendelse.journalposter ?: emptyList())
-                .distinctBy { it.saksId }
+                .distinctBy { it.fagsakId }
             journalposter.forEach {
                 sfHenvendelseService.journalforHenvendelse(
                     enhet = enhet,
                     kjedeId = henvendelse.kjedeId,
-                    saksId = it.saksId,
+                    saksId = it.fagsakId,
                     saksTema = it.journalfortTema,
                     fagsakSystem = it.fagsaksystem?.name
                 )
@@ -236,7 +236,7 @@ class SfLegacyDialogController(
     ): TraadDTO {
         val journalpost: JournalpostDTO? = henvendelse.journalposter?.firstOrNull()
 
-        val journalfortSaksid = journalpost?.saksId
+        val journalfortSaksid = journalpost?.fagsakId
         val journalfortDato = journalpost?.journalfortDato?.format(DateTimeFormatter.ofPattern(DATO_TID_FORMAT))
         val journalfortTema = journalpost?.journalfortTema
         val journalfortTemanavn = temakodeMap[journalpost?.journalfortTema ?: ""]

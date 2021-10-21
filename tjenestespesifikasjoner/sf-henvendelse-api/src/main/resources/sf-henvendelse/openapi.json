@@ -61,7 +61,8 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "$ref": "#/components/schemas/Henvendelse"
           },
           "400": {
             "$ref": "#/components/responses/BadRequest"
@@ -452,7 +453,7 @@
             "description": "NAV-enhet til veilder/saksbehandler som opprettet journalposten",
             "example": "4100"
           },
-          "fagsakId": {
+          "saksId": {
             "type": "string",
             "description": "Referanse til fagsak i overenstemmelse med påkrevd input til [Dokarkiv API](https://dokarkiv-q2.nais.preprod.local/swagger-ui.html#/arkiver-og-journalfoer-rest-controller/opprettJournalpostUsingPOST). Ved blank/null som saksId vil journalposten opprettes som generell sak på tema.",
             "example": "005602185"
@@ -517,7 +518,7 @@
             "description": "Tema for opprettet journalpost",
             "example": "DAG"
           },
-          "saksId": {
+          "fagsakId": {
             "type": "string",
             "description": "Referanse til fagsak",
             "example": "005602185"
