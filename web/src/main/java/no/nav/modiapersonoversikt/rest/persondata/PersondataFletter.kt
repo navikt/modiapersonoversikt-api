@@ -1,11 +1,13 @@
 package no.nav.modiapersonoversikt.rest.persondata
 
-import no.nav.modiapersonoversikt.legacy.api.domain.norg.AnsattEnhet
 import no.nav.modiapersonoversikt.legacy.api.domain.pdl.generated.HentPersondata
 import no.nav.modiapersonoversikt.legacy.api.domain.pdl.generated.HentPersondata.AdressebeskyttelseGradering.*
 import no.nav.modiapersonoversikt.legacy.api.domain.pdl.generated.HentPersondata.KontaktinformasjonForDoedsboSkifteform.ANNET
 import no.nav.modiapersonoversikt.legacy.api.domain.pdl.generated.HentPersondata.KontaktinformasjonForDoedsboSkifteform.OFFENTLIG
 import no.nav.modiapersonoversikt.legacy.api.utils.TjenestekallLogger
+import no.nav.modiapersonoversikt.rest.enhet.model.EnhetKontaktinformasjon
+import no.nav.modiapersonoversikt.rest.enhet.model.Gateadresse
+import no.nav.modiapersonoversikt.rest.enhet.model.Publikumsmottak
 import no.nav.modiapersonoversikt.service.dkif.Dkif
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk
 import no.nav.tjeneste.virksomhet.person.v3.informasjon.BankkontoNorge
@@ -21,7 +23,7 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
         val persondata: HentPersondata.Person,
         val geografiskeTilknytning: PersondataResult<String?>,
         val erEgenAnsatt: PersondataResult<Boolean>,
-        val navEnhet: PersondataResult<AnsattEnhet>,
+        val navEnhet: PersondataResult<EnhetKontaktinformasjon>,
         val dkifData: PersondataResult<Dkif.DigitalKontaktinformasjon>,
         val bankkonto: PersondataResult<HentPersonResponse>,
         val tredjepartsPerson: PersondataResult<Map<String, Persondata.TredjepartsPerson>>
@@ -234,6 +236,21 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
         ),
         sistEndret = sisteEndring
     )
+    
+    private fun lagAdresseFraBesoksadresse(
+        adresse: Gateadresse
+    ) = Persondata.Adresse(
+        linje1 = listOf(
+            adresse.gatenavn,
+            adresse.husnummer,
+            adresse.husbokstav
+        ),
+        linje2 = listOf(
+            adresse.postnummer,
+            adresse.poststed
+        ),
+        sistEndret = null
+    )
 
     private fun lagAdresseFraVegadresse(
         adresse: HentPersondata.Vegadresse,
@@ -258,10 +275,19 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
 
     private fun hentNavEnhet(data: Data): Persondata.Enhet? {
         return data.navEnhet
-            .map { Persondata.Enhet(it.enhetId, it.enhetNavn) }
+            .map { Persondata.Enhet(it.enhetId, it.enhetNavn, hentPublikumsmottak(it.publikumsmottak)) }
             .getOrNull()
     }
-
+    
+    private fun hentPublikumsmottak(publikumsmottak: List<Publikumsmottak>): List<Persondata.Publikumsmottak> {
+        return publikumsmottak.map {
+            Persondata.Publikumsmottak(
+                besoeksadresse = lagAdresseFraBesoksadresse(it.besoksadresse),
+                apningstider = it.apningstider
+            )
+        }
+    }
+    
     private fun hentStatsborgerskap(data: Data): List<Persondata.Statsborgerskap> {
         return data.persondata.statsborgerskap.map {
             val land = when (it.land) {
