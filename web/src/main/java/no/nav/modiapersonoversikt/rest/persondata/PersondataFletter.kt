@@ -588,7 +588,7 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
             .getOrNull()
     }
 
-    fun hentForelderBarnRelasjon(data: Data): List<Persondata.ForelderBarnRelasjon> {
+    private fun hentForelderBarnRelasjon(data: Data): List<Persondata.ForelderBarnRelasjon> {
         return data.persondata.forelderBarnRelasjon.map { relasjon ->
             val tredjepartsPerson = data.tredjepartsPerson.map { it[relasjon.relatertPersonsIdent] }.getOrNull()
             Persondata.ForelderBarnRelasjon(
@@ -606,9 +606,20 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
                 kjonn = tredjepartsPerson?.kjonn ?: emptyList(),
                 adressebeskyttelse = tredjepartsPerson?.adressebeskyttelse ?: emptyList(),
                 bostedAdresse = tredjepartsPerson?.bostedAdresse ?: emptyList(),
+                harSammeAdresse = harSammeAdresse(
+                    personAdresse = hentBostedAdresse(data).firstOrNull(),
+                    tredjepartsPersonAdresse = tredjepartsPerson?.bostedAdresse?.firstOrNull()
+                ),
                 personstatus = tredjepartsPerson?.personstatus ?: emptyList()
             )
         }
+    }
+
+    private fun harSammeAdresse(personAdresse: Persondata.Adresse?, tredjepartsPersonAdresse: Persondata.Adresse?): Boolean {
+        if (personAdresse == null || tredjepartsPersonAdresse == null) {
+            return false
+        }
+        return personAdresse == tredjepartsPersonAdresse
     }
 
     private fun hentAlder(data: Data): Int? {
