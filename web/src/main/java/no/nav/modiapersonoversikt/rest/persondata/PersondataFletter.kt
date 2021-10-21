@@ -619,7 +619,9 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
         if (personAdresse == null || tredjepartsPersonAdresse == null) {
             return false
         }
-        return personAdresse == tredjepartsPersonAdresse
+        return (personAdresse.linje1 == tredjepartsPersonAdresse.linje1) &&
+            (personAdresse.linje2 == tredjepartsPersonAdresse.linje2) &&
+            (personAdresse.linje3 == tredjepartsPersonAdresse.linje3)
     }
 
     private fun hentAlder(data: Data): Int? {
