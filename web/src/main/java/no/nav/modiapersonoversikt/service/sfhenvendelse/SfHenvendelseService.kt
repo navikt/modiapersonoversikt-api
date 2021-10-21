@@ -64,7 +64,7 @@ class SfHenvendelseServiceImpl(
 ) : SfHenvendelseService {
     private val logger = LoggerFactory.getLogger(SfHenvendelseServiceImpl::class.java)
     private val adminKodeverkApiForPing = KodeverkApi(
-        SfHenvendelseApiFactory.url,
+        SfHenvendelseApiFactory.url(),
         SfHenvendelseApiFactory.createClient {
             stsService.systemUserToken
         }
@@ -339,7 +339,7 @@ class SfHenvendelseServiceImpl(
 }
 
 object SfHenvendelseApiFactory {
-    internal val url = getRequiredProperty("SF_HENVENDELSE_URL")
+    fun url(): String = getRequiredProperty("SF_HENVENDELSE_URL")
     private val client = createClient {
         SubjectHandler.getSsoToken(SsoToken.Type.OIDC)
             .orElseThrow { IllegalStateException("Fant ikke OIDC-token") }
@@ -357,8 +357,8 @@ object SfHenvendelseApiFactory {
             AuthorizationInterceptor(tokenProvider)
         )
         .build()
-    fun createHenvendelseBehandlingApi() = HenvendelseBehandlingApi(url, client)
-    fun createHenvendelseInfoApi() = HenvendelseInfoApi(url, client)
-    fun createHenvendelseJournalApi() = JournalApi(url, client)
-    fun createHenvendelseOpprettApi() = NyHenvendelseApi(url, client)
+    fun createHenvendelseBehandlingApi() = HenvendelseBehandlingApi(url(), client)
+    fun createHenvendelseInfoApi() = HenvendelseInfoApi(url(), client)
+    fun createHenvendelseJournalApi() = JournalApi(url(), client)
+    fun createHenvendelseOpprettApi() = NyHenvendelseApi(url(), client)
 }
