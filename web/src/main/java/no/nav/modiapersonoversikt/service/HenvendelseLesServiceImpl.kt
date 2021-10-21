@@ -6,27 +6,37 @@ import no.nav.common.json.JsonMapper
 import no.nav.common.rest.client.RestClient
 import no.nav.common.sts.SystemUserTokenProvider
 import no.nav.common.utils.EnvironmentUtils.getRequiredProperty
+import no.nav.modiapersonoversikt.infrastructure.http.getCallId
+import no.nav.modiapersonoversikt.legacy.api.domain.sfhenvendelse.generated.apis.HenvendelseInfoApi
 import no.nav.modiapersonoversikt.legacy.api.service.HenvendelseLesService
+import no.nav.modiapersonoversikt.service.sfhenvendelse.fixKjedeId
+import no.nav.modiapersonoversikt.service.unleash.Feature
+import no.nav.modiapersonoversikt.service.unleash.UnleashService
 import okhttp3.Request
 
-class HenvendelseLesServiceImpl(private val systemTokenProvider: SystemUserTokenProvider) : HenvendelseLesService {
+class HenvendelseLesServiceImpl(
+    private val systemTokenProvider: SystemUserTokenProvider,
+    private val sfHenvendelse: HenvendelseInfoApi,
+    private val unleash: UnleashService
+) : HenvendelseLesService {
     private val objectMapper = JsonMapper.defaultObjectMapper()
     private val baseUrl: String = getRequiredProperty("HENVENDELSE_LES_API_URL")
 
     override fun alleBehandlingsIderTilhorerBruker(fnr: String, behandlingsIder: List<String>): Boolean {
-        val queryparams = byggQueryparams(
-            "fnr" to fnr,
-            "id" to behandlingsIder
-        )
-        return fetch("$baseUrl/behandlingsider?$queryparams")
-    }
-
-    override fun alleHenvendelseIderTilhorerBruker(fnr: String, henvendelseIder: List<String>): Boolean {
-        val queryparams = byggQueryparams(
-            "fnr" to fnr,
-            "id" to henvendelseIder
-        )
-        return fetch("$baseUrl/henvendelseider?$queryparams")
+        return if (unleash.isEnabled(Feature.USE_SALESFORCE_DIALOG)) {
+            val kjedeId = behandlingsIder.map { it.fixKjedeId() }.distinct()
+            require(kjedeId.size == 1) {
+                "Fant flere unike kjedeIder i samme spørring. Dette skal ikke være mulig mot SF"
+            }
+            val henvendelse = sfHenvendelse.henvendelseinfoHenvendelseKjedeIdGet(kjedeId.first(), getCallId())
+            henvendelse.fnr == fnr
+        } else {
+            val queryparams = byggQueryparams(
+                "fnr" to fnr,
+                "id" to behandlingsIder
+            )
+            fetch("$baseUrl/behandlingsider?$queryparams")
+        }
     }
 
     private inline fun <reified T : Any> fetch(url: String): T {

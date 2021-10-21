@@ -52,6 +52,7 @@ interface SfHenvendelseService {
     fun ping()
 }
 
+private val logger = LoggerFactory.getLogger(SfHenvendelseServiceImpl::class.java)
 class SfHenvendelseServiceImpl(
     private val henvendelseBehandlingApi: HenvendelseBehandlingApi = SfHenvendelseApiFactory.createHenvendelseBehandlingApi(),
     private val henvendelseInfoApi: HenvendelseInfoApi = SfHenvendelseApiFactory.createHenvendelseInfoApi(),
@@ -62,7 +63,6 @@ class SfHenvendelseServiceImpl(
     private val ansattService: AnsattService,
     private val stsService: SystemUserTokenProvider
 ) : SfHenvendelseService {
-    private val logger = LoggerFactory.getLogger(SfHenvendelseServiceImpl::class.java)
     private val adminKodeverkApiForPing = KodeverkApi(
         SfHenvendelseApiFactory.url(),
         SfHenvendelseApiFactory.createClient {
@@ -381,14 +381,13 @@ class SfHenvendelseServiceImpl(
             }
         }
     }
-
-    internal fun String.fixKjedeId(): String {
-        val fragments = this.split("---")
-        if (fragments.size > 1) {
-            logger.warn("Mottok kjedeId med meldings-id-hack $this")
-        }
-        return fragments.first()
+}
+fun String.fixKjedeId(): String {
+    val fragments = this.split("---")
+    if (fragments.size > 1) {
+        logger.warn("Mottok kjedeId med meldings-id-hack $this")
     }
+    return fragments.first()
 }
 
 object SfHenvendelseApiFactory {
