@@ -257,7 +257,7 @@ class SfLegacyDialogController(
         val meldinger: List<MeldingDTO> = (henvendelse.meldinger ?: emptyList()).map { melding ->
             MeldingDTO(
                 mapOf(
-                    "id" to "${henvendelse.kjedeId}-${(henvendelse.hashCode())}",
+                    "id" to "${henvendelse.kjedeId}---${(henvendelse.hashCode())}",
                     "oppgaveId" to null,
                     "meldingstype" to meldingstypeFraSfTyper(henvendelse, melding),
                     "temagruppe" to henvendelse.gjeldendeTemagruppe,

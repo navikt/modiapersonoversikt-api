@@ -104,7 +104,7 @@ class SfHenvendelseServiceImpl(
     }
 
     override fun hentHenvendelse(kjedeId: String): HenvendelseDTO {
-        return henvendelseInfoApi.henvendelseinfoHenvendelseKjedeIdGet(kjedeId, getCallId())
+        return henvendelseInfoApi.henvendelseinfoHenvendelseKjedeIdGet(kjedeId.fixKjedeId(), getCallId())
     }
 
     override fun journalforHenvendelse(enhet: String, kjedeId: String, saksTema: String, saksId: String?, fagsakSystem: String?) {
@@ -122,7 +122,7 @@ class SfHenvendelseServiceImpl(
                 getCallId(),
                 JournalRequestDTO(
                     journalforendeEnhet = enhet,
-                    kjedeId = kjedeId,
+                    kjedeId = kjedeId.fixKjedeId(),
                     temakode = saksTema,
                     saksId = saksId,
                     fagsaksystem = fagsaksystem
@@ -148,7 +148,7 @@ class SfHenvendelseServiceImpl(
                     kanal = kanal,
                     fritekst = fritekst
                 ),
-                kjedeId = kjedeId
+                kjedeId = kjedeId?.fixKjedeId()
             )
     }
 
@@ -178,7 +178,7 @@ class SfHenvendelseServiceImpl(
         fritekst: String
     ): HenvendelseDTO {
         val callId = getCallId()
-        val henvendelse = henvendelseInfoApi.henvendelseinfoHenvendelseKjedeIdGet(kjedeId, callId)
+        val henvendelse = henvendelseInfoApi.henvendelseinfoHenvendelseKjedeIdGet(kjedeId.fixKjedeId(), callId)
         val kjedeTilhorerBruker = sjekkEierskap(bruker, henvendelse)
         if (!kjedeTilhorerBruker) {
             throw IllegalStateException("Henvendelse $kjedeId tilhørte ikke bruker")
@@ -186,7 +186,7 @@ class SfHenvendelseServiceImpl(
         return henvendelseOpprettApi
             .henvendelseNyMeldingPost(
                 callId,
-                kjedeId = kjedeId,
+                kjedeId = kjedeId.fixKjedeId(),
                 meldingRequestDTO = MeldingRequestDTO(
                     aktorId = bruker.aktorId(),
                     temagruppe = henvendelse.gjeldendeTemagruppe!!, // TODO må fikses av SF-api. Temagruppe kan ikke være null
@@ -197,7 +197,7 @@ class SfHenvendelseServiceImpl(
     }
 
     override fun henvendelseTilhorerBruker(bruker: EksternBruker, kjedeId: String): Boolean {
-        val henvendelse = henvendelseInfoApi.henvendelseinfoHenvendelseKjedeIdGet(kjedeId, getCallId())
+        val henvendelse = henvendelseInfoApi.henvendelseinfoHenvendelseKjedeIdGet(kjedeId.fixKjedeId(), getCallId())
         return sjekkEierskap(bruker, henvendelse)
     }
 
@@ -210,7 +210,7 @@ class SfHenvendelseServiceImpl(
 
     override fun merkSomKontorsperret(kjedeId: String, enhet: String) {
         val request: RequestConfig<Map<String, Any?>> = createPatchRequest(
-            kjedeId,
+            kjedeId.fixKjedeId(),
             PatchNote<HenvendelseDTO>()
                 .set(HenvendelseDTO::kontorsperre).to(true)
         )
@@ -219,7 +219,7 @@ class SfHenvendelseServiceImpl(
 
     override fun merkSomFeilsendt(kjedeId: String) {
         val request: RequestConfig<Map<String, Any?>> = createPatchRequest(
-            kjedeId,
+            kjedeId.fixKjedeId(),
             PatchNote<HenvendelseDTO>()
                 .set(HenvendelseDTO::feilsendt).to(true)
         )
@@ -228,7 +228,7 @@ class SfHenvendelseServiceImpl(
 
     override fun lukkTraad(kjedeId: String) {
         henvendelseBehandlingApi.henvendelseMeldingskjedeLukkPost(
-            kjedeId,
+            kjedeId.fixKjedeId(),
             getCallId()
         )
     }
@@ -380,6 +380,14 @@ class SfHenvendelseServiceImpl(
                 "Fant ikke aktørid for ${this.ident}"
             }
         }
+    }
+
+    internal fun String.fixKjedeId(): String {
+        val fragments = this.split("---")
+        if (fragments.size > 1) {
+            logger.warn("Mottok kjedeId med meldings-id-hack $this")
+        }
+        return fragments.first()
     }
 }
 
