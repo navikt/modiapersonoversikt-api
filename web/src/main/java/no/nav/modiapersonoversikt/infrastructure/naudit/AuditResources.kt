@@ -55,6 +55,7 @@ class AuditResources {
                     val Feilsendt = AuditResource("person.henvendelse.merk.feilsendt")
                     val Bidrag = AuditResource("person.henvendelse.merk.bidrag")
                     val Kontorsperre = AuditResource("person.henvendelse.merk.kontorsperre")
+                    val Sladding = AuditResource("person.henvendelse.merk.sladding")
                     val Avslutt = AuditResource("person.henvendelse.merk.avslutt")
                     val Slett = AuditResource("person.henvendelse.merk.slett")
                 }

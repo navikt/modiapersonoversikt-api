@@ -286,6 +286,7 @@ class SfLegacyDialogController(
                     "ferdigstiltUtenSvarAv" to null, // TODO Informasjon finnes ikke i SF
                     "kontorsperretEnhet" to kontorsperretEnhet,
                     "kontorsperretAv" to kontorsperretAv,
+                    "sendtTilSladding" to (henvendelse.sladding ?: false),
                     "markertSomFeilsendtAv" to markertSomFeilsendtAv,
                     "erDokumentMelding" to false // Brukes ikke
                 )

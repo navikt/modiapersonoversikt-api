@@ -45,8 +45,8 @@ interface SfHenvendelseService {
 
     fun henvendelseTilhorerBruker(bruker: EksternBruker, kjedeId: String): Boolean
     fun sjekkEierskap(bruker: EksternBruker, henvendelse: HenvendelseDTO): Boolean
-    fun merkSomKontorsperret(kjedeId: String, enhet: String)
     fun merkSomFeilsendt(kjedeId: String)
+    fun sendTilSladding(kjedeId: String)
     fun lukkTraad(kjedeId: String)
 
     fun ping()
@@ -124,7 +124,7 @@ class SfHenvendelseServiceImpl(
                     journalforendeEnhet = enhet,
                     kjedeId = kjedeId.fixKjedeId(),
                     temakode = saksTema,
-                    saksId = saksId,
+                    fagsakId = saksId,
                     fagsaksystem = fagsaksystem
                 )
             )
@@ -208,20 +208,20 @@ class SfHenvendelseServiceImpl(
         }
     }
 
-    override fun merkSomKontorsperret(kjedeId: String, enhet: String) {
-        val request: RequestConfig<Map<String, Any?>> = createPatchRequest(
-            kjedeId.fixKjedeId(),
-            PatchNote<HenvendelseDTO>()
-                .set(HenvendelseDTO::kontorsperre).to(true)
-        )
-        henvendelseBehandlingApi.client.request<Map<String, Any?>, Unit>(request)
-    }
-
     override fun merkSomFeilsendt(kjedeId: String) {
         val request: RequestConfig<Map<String, Any?>> = createPatchRequest(
             kjedeId.fixKjedeId(),
             PatchNote<HenvendelseDTO>()
                 .set(HenvendelseDTO::feilsendt).to(true)
+        )
+        henvendelseBehandlingApi.client.request<Map<String, Any?>, Unit>(request)
+    }
+
+    override fun sendTilSladding(kjedeId: String) {
+        val request: RequestConfig<Map<String, Any?>> = createPatchRequest(
+            kjedeId.fixKjedeId(),
+            PatchNote<HenvendelseDTO>()
+                .set(HenvendelseDTO::sladding).to(true)
         )
         henvendelseBehandlingApi.client.request<Map<String, Any?>, Unit>(request)
     }
