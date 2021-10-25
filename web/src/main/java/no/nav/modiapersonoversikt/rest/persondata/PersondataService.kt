@@ -83,7 +83,11 @@ class PersondataServiceImpl(
     private fun hentNavEnhet(
         persondata: HentPersondata.Person,
         geografiskeTilknytning: PersondataResult<String?>
-    ): PersondataResult<EnhetKontaktinformasjon> {
+    ): PersondataResult<EnhetKontaktinformasjon>? {
+        if (geografiskeTilknytning.getOrNull() == null) {
+            return null
+        }
+
         var diskresjonskode = ""
         val adressebeskyttelse = persondata.adressebeskyttelse
         for (beskyttelse in adressebeskyttelse) {
