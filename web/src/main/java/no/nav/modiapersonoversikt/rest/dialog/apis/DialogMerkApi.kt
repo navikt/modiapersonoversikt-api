@@ -6,6 +6,7 @@ interface DialogMerkApi {
     fun merkSomFeilsendt(request: FeilmerkRequest): ResponseEntity<Void>
     fun merkSomBidrag(request: BidragRequest): ResponseEntity<Void>
     fun merkSomKontorsperret(request: KontorsperretRequest): ResponseEntity<Void>
+    fun sendTilSladding(request: SendTilSladdingRequest): ResponseEntity<Void>
     fun avsluttUtenSvar(request: AvsluttUtenSvarRequest): ResponseEntity<Void>
     fun tvungenFerdigstill(request: TvungenFerdigstillRequest): ResponseEntity<Void>
     fun avsluttGosysOppgave(request: FerdigstillOppgaveRequest): ResponseEntity<Void>
@@ -21,6 +22,11 @@ data class KontorsperretRequest(
     val fnr: String,
     val enhet: String,
     val meldingsidListe: List<String>
+)
+
+data class SendTilSladdingRequest(
+    val fnr: String,
+    val traadId: String
 )
 
 data class AvsluttUtenSvarRequest(

@@ -61,6 +61,20 @@ class DialogMerkController @Autowired constructor(
             }
     }
 
+    @PostMapping("/sladding")
+    fun sendTilSladding(@RequestBody request: SendTilSladdingRequest): ResponseEntity<Void> {
+        val auditIdentifier = arrayOf(
+            AuditIdentifier.FNR to request.fnr,
+            AuditIdentifier.BEHANDLING_ID to request.traadId
+        )
+        return tilgangskontroll
+            .check(Policies.tilgangTilBruker.with(request.fnr))
+            .check(Policies.behandlingsIderTilhorerBruker.with(BehandlingsIdTilgangData(request.fnr, listOf(request.traadId))))
+            .get(Audit.describe(UPDATE, Henvendelse.Merk.Sladding, *auditIdentifier)) {
+                dialogMerkApi.sendTilSladding(request)
+            }
+    }
+
     @PostMapping("/avslutt")
     fun avsluttUtenSvar(@RequestBody request: AvsluttUtenSvarRequest): ResponseEntity<Void> {
         val auditIdentifier = arrayOf(

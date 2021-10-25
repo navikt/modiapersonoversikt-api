@@ -189,8 +189,8 @@ class SfDialogController @Autowired constructor(
             }
     }
 
-    @PostMapping("/{fnr}/{kjedeId}/merkSomKontorsperret")
-    fun merkSomKontorsperret(
+    @PostMapping("/{fnr}/{kjedeId}/sendTilSladding")
+    fun sendTilSladding(
         @PathVariable("fnr") fnr: String,
         @PathVariable("kjedeId") kjedeId: String,
         @RequestParam(value = "enhet") enhet: String
@@ -203,7 +203,7 @@ class SfDialogController @Autowired constructor(
             .check(Policies.tilgangTilBruker.with(fnr))
             .check(Policies.sfDialogTilhorerBruker.with(KjedeIdTilgangData(fnr, kjedeId)))
             .get(Audit.describe(Audit.Action.UPDATE, AuditResources.Person.Henvendelse.Merk.Kontorsperre, *auditIdentifier)) {
-                sfHenvendelseService.merkSomKontorsperret(kjedeId, enhet)
+                sfHenvendelseService.sendTilSladding(kjedeId)
             }
     }
 }

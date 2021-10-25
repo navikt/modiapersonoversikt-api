@@ -84,6 +84,7 @@ private fun meldingMapping(melding: Melding): MeldingDTO =
             "ferdigstiltUtenSvarAv" to melding.ferdigstiltUtenSvarAv?.let(::hentSaksbehandler),
             "kontorsperretEnhet" to melding.kontorsperretEnhet,
             "kontorsperretAv" to melding.kontorsperretAv?.let(::hentSaksbehandler),
+            "sendtTilSladding" to false,
             "markertSomFeilsendtAv" to melding.markertSomFeilsendtAv?.let(::hentSaksbehandler),
             "erDokumentMelding" to melding.erDokumentMelding
         )
