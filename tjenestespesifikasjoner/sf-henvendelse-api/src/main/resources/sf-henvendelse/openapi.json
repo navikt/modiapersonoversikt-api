@@ -383,7 +383,7 @@
             "example": "3410"
           }
         },
-        "required": ["markeringstype", "markertDato", "markertAv"]
+        "required": ["markeringstype"]
       },
       "MeldingRequest": {
         "type": "object",
