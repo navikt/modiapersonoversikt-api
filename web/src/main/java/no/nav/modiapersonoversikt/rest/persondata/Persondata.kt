@@ -72,7 +72,16 @@ object Persondata {
 
     data class Sivilstand(
         val type: KodeBeskrivelse<SivilstandType>,
-        val gyldigFraOgMed: LocalDate?
+        val gyldigFraOgMed: LocalDate?,
+        val sivilstandRelasjon: SivilstandRelasjon?
+    )
+
+    data class SivilstandRelasjon(
+        val fnr: String?,
+        val navn: List<Navn>,
+        val alder: Int?,
+        val adressebeskyttelse: List<KodeBeskrivelse<AdresseBeskyttelse>>,
+        val harSammeAdresse: Boolean
     )
 
     data class Sikkerhetstiltak(
