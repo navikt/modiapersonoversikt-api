@@ -14,21 +14,26 @@ class TredjepartspersonMapper(val kodeverk: EnhetligKodeverk.Service) {
     ): Persondata.TredjepartsPerson? {
         if (person == null) return null
         val fodselsdato = person.foedsel.mapNotNull { it.foedselsdato?.value }
+        val harTilgang = person.harTilgang(tilganger)
         return Persondata.TredjepartsPerson(
-            fnr = ident,
-            navn = person.navn.map {
-                Persondata.Navn(
-                    fornavn = it.fornavn,
-                    mellomnavn = it.mellomnavn,
-                    etternavn = it.etternavn
-                )
+            fnr = if (harTilgang) ident else "",
+            navn = person.navn.mapNotNull {
+                if (harTilgang) {
+                    Persondata.Navn(
+                        fornavn = it.fornavn,
+                        mellomnavn = it.mellomnavn,
+                        etternavn = it.etternavn
+                    )
+                } else {
+                    null
+                }
             },
-            fodselsdato = fodselsdato,
-            alder = hentAlder(fodselsdato),
-            kjonn = hentKjonn(person),
+            fodselsdato = if (harTilgang) fodselsdato else emptyList(),
+            alder = if (harTilgang) hentAlder(fodselsdato) else null,
+            kjonn = if (harTilgang) hentKjonn(person) else emptyList(),
             adressebeskyttelse = person.adressebeskyttelse.let(::hentAdressebeskyttelse),
             bostedAdresse = person.bostedsadresse.mapNotNull {
-                if (person.harTilgang(tilganger)) {
+                if (harTilgang) {
                     hentBostedAdresse(it)
                 } else {
                     null
