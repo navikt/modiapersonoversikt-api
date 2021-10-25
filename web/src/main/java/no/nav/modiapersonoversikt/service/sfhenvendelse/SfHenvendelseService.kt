@@ -238,7 +238,7 @@ class SfHenvendelseServiceImpl(
     }
 
     enum class ApiFeilType {
-        IDENT, TEMAGRUPPE, JOURNALFORENDE_IDENT
+        IDENT, TEMAGRUPPE, JOURNALFORENDE_IDENT, MARKERT_DATO, MARKERT_AV
     }
     data class ApiFeil(val type: ApiFeilType, val kjedeId: String)
     private fun loggFeilSomErSpesialHandtert(bruker: EksternBruker, henvendelser: List<HenvendelseDTO>): List<HenvendelseDTO> {
@@ -254,6 +254,14 @@ class SfHenvendelseServiceImpl(
             val journalposter = henvendelse.journalposter ?: emptyList()
             if (journalposter.any { it.journalforerNavIdent == null }) {
                 feil.add(ApiFeil(ApiFeilType.JOURNALFORENDE_IDENT, henvendelse.kjedeId))
+            }
+
+            val markeringer = henvendelse.markeringer ?: emptyList()
+            if (markeringer.any { it.markertDato == null }) {
+                feil.add(ApiFeil(ApiFeilType.MARKERT_DATO, henvendelse.kjedeId))
+            }
+            if (markeringer.any { it.markertAv == null }) {
+                feil.add(ApiFeil(ApiFeilType.MARKERT_AV, henvendelse.kjedeId))
             }
         }
         val kanJobbesMedIModia = henvendelser.filter { it.gjeldendeTemagruppe != null }
