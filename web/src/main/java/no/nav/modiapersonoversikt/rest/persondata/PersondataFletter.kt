@@ -7,6 +7,7 @@ import no.nav.modiapersonoversikt.legacy.api.domain.pdl.generated.HentPersondata
 import no.nav.modiapersonoversikt.legacy.api.utils.TjenestekallLogger
 import no.nav.modiapersonoversikt.rest.enhet.model.EnhetKontaktinformasjon
 import no.nav.modiapersonoversikt.rest.enhet.model.Gateadresse
+import no.nav.modiapersonoversikt.rest.enhet.model.Klokkeslett
 import no.nav.modiapersonoversikt.rest.enhet.model.Publikumsmottak
 import no.nav.modiapersonoversikt.service.dkif.Dkif
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk
@@ -283,9 +284,32 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
         return publikumsmottak.map {
             Persondata.Publikumsmottak(
                 besoeksadresse = lagAdresseFraBesoksadresse(it.besoksadresse),
-                apningstider = it.apningstider
+                apningstider = it.apningstider.map { apningstid ->
+                    Persondata.Apningstid(
+                        ukedag = apningstid.ukedag,
+                        apningstid = lagApningstid(apningstid.apentFra, apningstid.apentTil)
+                    )
+                }
             )
         }
+    }
+
+    private fun lagApningstid(apentFra: Klokkeslett, apentTil: Klokkeslett): String? {
+        if (apentFra.time == null ||
+            apentFra.minutt == null ||
+            apentTil.time == null ||
+            apentTil.minutt == null
+        ) {
+            return null
+        }
+        return "${formaterApningstid(apentFra.time)}.${formaterApningstid(apentFra.minutt)} - ${formaterApningstid(apentTil.time)}.${formaterApningstid(apentTil.minutt)}"
+    }
+
+    private fun formaterApningstid(tidspunkt: String): String {
+        if (tidspunkt.length == 1) {
+            return "0$tidspunkt"
+        }
+        return tidspunkt
     }
 
     private fun hentStatsborgerskap(data: Data): List<Persondata.Statsborgerskap> {

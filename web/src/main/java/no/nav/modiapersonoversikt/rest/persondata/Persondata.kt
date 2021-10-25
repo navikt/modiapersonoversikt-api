@@ -1,6 +1,5 @@
 package no.nav.modiapersonoversikt.rest.persondata
 
-import no.nav.modiapersonoversikt.rest.enhet.model.Apningstid
 import no.nav.modiapersonoversikt.service.dkif.Dkif
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -106,6 +105,11 @@ object Persondata {
             sistEndret
         )
     }
+
+    data class Apningstid(
+        val ukedag: String,
+        val apningstid: String?
+    )
 
     data class Publikumsmottak(
         val besoeksadresse: Adresse,

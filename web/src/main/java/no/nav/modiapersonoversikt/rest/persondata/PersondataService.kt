@@ -100,12 +100,13 @@ class PersondataServiceImpl(
         }
         return geografiskeTilknytning
             .map("NORG") {
-                val enhetId = organisasjonEnhetV2Service
+                organisasjonEnhetV2Service
                     .finnNAVKontor(it, diskresjonskode)
                     .orElseThrow()
                     .enhetId
-                val kontaktinformasjon = organisasjonEnhetKontaktinformasjonService.hentKontaktinformasjon(enhetId)
-                EnhetKontaktinformasjon(kontaktinformasjon)
+            }
+            .map("NORG Kontaktinformasjon") {
+                EnhetKontaktinformasjon(organisasjonEnhetKontaktinformasjonService.hentKontaktinformasjon(it))
             }
     }
 
