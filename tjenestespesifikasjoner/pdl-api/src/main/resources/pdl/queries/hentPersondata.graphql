@@ -69,6 +69,7 @@ query($ident: ID!){
         sivilstand {
             type
             gyldigFraOgMed
+            relatertVedSivilstand
         }
         sikkerhetstiltak {
             tiltakstype

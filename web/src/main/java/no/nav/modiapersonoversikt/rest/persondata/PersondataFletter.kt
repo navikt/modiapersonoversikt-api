@@ -358,9 +358,22 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
 
             Persondata.Sivilstand(
                 type = kodebeskrivelse,
-                gyldigFraOgMed = sivilstand.gyldigFraOgMed?.value
+                gyldigFraOgMed = sivilstand.gyldigFraOgMed?.value,
+                sivilstandRelasjon = hentSivilstandRelasjon(data, sivilstand.relatertVedSivilstand)
             )
         }
+    }
+
+    private fun hentSivilstandRelasjon(data: Data, relatertVedSivilstand: String?): Persondata.SivilstandRelasjon? {
+        val person = data.tredjepartsPerson.map { it[relatertVedSivilstand] }.getOrNull() ?: return null
+
+        return Persondata.SivilstandRelasjon(
+            fnr = relatertVedSivilstand,
+            navn = person.navn,
+            alder = person.alder,
+            adressebeskyttelse = person.adressebeskyttelse,
+            harSammeAdresse = harSammeAdresse(hentBostedAdresse(data).firstOrNull(), person.bostedAdresse.firstOrNull())
+        )
     }
 
     private fun hentForeldreansvar(data: Data): List<Persondata.Foreldreansvar> {
