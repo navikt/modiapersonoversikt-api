@@ -132,7 +132,7 @@ class SfDialogController @Autowired constructor(
                 if (oppgaveId != null) {
                     oppgaveBehandlingService.ferdigstillOppgaveIGsak(
                         oppgaveId,
-                        Temagruppe.valueOf(henvendelse.gjeldendeTemagruppe),
+                        Temagruppe.valueOf(henvendelse.gjeldendeTemagruppe!!), // TODO må fikses av SF-api. Temagruppe kan ikke være null
                         enhet
                     )
                 }

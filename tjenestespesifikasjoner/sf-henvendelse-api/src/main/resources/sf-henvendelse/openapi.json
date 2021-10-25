@@ -61,7 +61,8 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "$ref": "#/components/schemas/Henvendelse"
           },
           "400": {
             "$ref": "#/components/responses/BadRequest"
@@ -517,7 +518,7 @@
             "description": "Tema for opprettet journalpost",
             "example": "DAG"
           },
-          "saksId": {
+          "fagsakId": {
             "type": "string",
             "description": "Referanse til fagsak",
             "example": "005602185"
@@ -551,7 +552,7 @@
             "example": "509934220"
           }
         },
-        "required": ["journalforerNavIdent", "journalforendeEnhet", "journalfortDato", "journalfortTema"]
+        "required": ["journalfortDato", "journalfortTema"]
       },
       "MeldingFra": {
         "type": "object",
@@ -573,7 +574,7 @@
             "example": "4100"
           }
         },
-        "required": ["identType", "ident"]
+        "required": ["identType"]
       },
       "Melding": {
         "type": "object",
@@ -688,12 +689,10 @@
           "henvendelseType",
           "aktorId",
           "fnr",
-          "opprinneligGT",
           "opprettetDato",
           "kontorsperre",
           "feilsendt",
-          "kjedeId",
-          "gjeldendeTemagruppe"
+          "kjedeId"
         ]
       },
       "Temagruppe": {

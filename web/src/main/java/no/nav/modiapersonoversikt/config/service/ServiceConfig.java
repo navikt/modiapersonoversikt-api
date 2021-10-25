@@ -51,6 +51,8 @@ import no.nav.modiapersonoversikt.service.saker.SakerServiceImpl;
 import no.nav.modiapersonoversikt.service.saker.mediation.BidragApiClient;
 import no.nav.modiapersonoversikt.service.saker.mediation.SakApiGatewayImpl;
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll;
+import no.nav.modiapersonoversikt.service.sfhenvendelse.SfHenvendelseApiFactory;
+import no.nav.modiapersonoversikt.service.unleash.UnleashService;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.behandlehenvendelse.BehandleHenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.senduthenvendelse.SendUtHenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.henvendelse.HenvendelsePortType;
@@ -98,8 +100,15 @@ public class ServiceConfig {
     }
 
     @Bean
-    public HenvendelseLesService henvendelseLesService(SystemUserTokenProvider systemUserTokenProvider) {
-        return new HenvendelseLesServiceImpl(systemUserTokenProvider);
+    public HenvendelseLesService henvendelseLesService(
+            SystemUserTokenProvider systemUserTokenProvider,
+            UnleashService unleashService
+    ) {
+        return new HenvendelseLesServiceImpl(
+                systemUserTokenProvider,
+                SfHenvendelseApiFactory.INSTANCE.createHenvendelseInfoApi(),
+                unleashService
+        );
     }
 
     @Bean
