@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import java.util.*
+import javax.ws.rs.NotSupportedException
 
 class HenvendelseDialogMerk(
     private val behandleHenvendelsePortType: BehandleHenvendelsePortType,
@@ -28,6 +29,10 @@ class HenvendelseDialogMerk(
     override fun merkSomKontorsperret(request: KontorsperretRequest): ResponseEntity<Void> {
         behandleHenvendelsePortType.oppdaterKontorsperre(request.enhet, request.meldingsidListe)
         return ResponseEntity(HttpStatus.OK)
+    }
+
+    override fun sendTilSladding(request: SendTilSladdingRequest): ResponseEntity<Void> {
+        throw NotSupportedException("Operasjonen er kun støttet av SF")
     }
 
     override fun avsluttUtenSvar(request: AvsluttUtenSvarRequest): ResponseEntity<Void> {

@@ -17,6 +17,7 @@ import no.nav.modiapersonoversikt.rest.dialog.apis.*
 import no.nav.modiapersonoversikt.rest.dialog.apis.MeldingDTO
 import no.nav.modiapersonoversikt.service.sfhenvendelse.EksternBruker
 import no.nav.modiapersonoversikt.service.sfhenvendelse.SfHenvendelseService
+import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.server.ResponseStatusException
@@ -35,6 +36,7 @@ class SfLegacyDialogController(
     private val ldapService: LDAPService,
     private val kodeverk: StandardKodeverk
 ) : DialogApi {
+    private val logger = LoggerFactory.getLogger(SfLegacyDialogController::class.java)
     override fun hentMeldinger(request: HttpServletRequest, fnr: String, enhet: String?): List<TraadDTO> {
         val valgtEnhet = RestUtils.hentValgtEnhet(enhet, request)
         val bruker = EksternBruker.Fnr(fnr)
@@ -144,17 +146,17 @@ class SfLegacyDialogController(
                 kjedeId = fortsettDialogRequest.traadId,
                 bruker = bruker,
                 enhet = enhet,
-                temagruppe = henvendelse.gjeldendeTemagruppe,
+                temagruppe = henvendelse.gjeldendeTemagruppe!!, // TODO må fikses av SF-api. Temagruppe kan ikke være null
                 kanal = fortsettDialogRequest.meldingstype.getKanal(),
                 fritekst = fortsettDialogRequest.fritekst
             )
             val journalposter = (henvendelse.journalposter ?: emptyList())
-                .distinctBy { it.saksId }
+                .distinctBy { it.fagsakId }
             journalposter.forEach {
                 sfHenvendelseService.journalforHenvendelse(
                     enhet = enhet,
                     kjedeId = henvendelse.kjedeId,
-                    saksId = it.saksId,
+                    saksId = it.fagsakId,
                     saksTema = it.journalfortTema,
                     fagsakSystem = it.fagsaksystem?.name
                 )
@@ -180,7 +182,7 @@ class SfLegacyDialogController(
         if (oppgaveId != null) {
             oppgaveBehandlingService.ferdigstillOppgaveIGsak(
                 oppgaveId,
-                Temagruppe.valueOf(henvendelse.gjeldendeTemagruppe),
+                Temagruppe.valueOf(henvendelse.gjeldendeTemagruppe!!), // TODO må fikses av SF-api. Temagruppe kan ikke være null
                 enhet
             )
         }
@@ -203,11 +205,11 @@ class SfLegacyDialogController(
             .distinct()
         val identer = henvendelser
             .flatMap { henvendelse ->
-                val journalportIdenter: List<String>? = henvendelse.journalposter?.map { it.journalforerNavIdent }
+                val journalportIdenter: List<String>? = henvendelse.journalposter?.mapNotNull { it.journalforerNavIdent } // TODO SF bør ikke svare med null for ident her. Rapportert feil
                 val markeringIdenter: List<String>? = henvendelse.markeringer?.map { it.markertAv }
                 val meldingFraIdenter: List<String>? = henvendelse.meldinger
-                    ?.filter { it.fra.identType == MeldingFraDTO.IdentType.AKTORID }
-                    ?.map { it.fra.ident }
+                    ?.filter { it.fra.identType == MeldingFraDTO.IdentType.NAVIDENT }
+                    ?.mapNotNull { it.fra.ident }
                 (journalportIdenter ?: emptyList())
                     .plus(markeringIdenter ?: emptyList())
                     .plus(meldingFraIdenter ?: emptyList())
@@ -215,7 +217,14 @@ class SfLegacyDialogController(
             .distinct()
 
         val temakodeMap = temakoder.associateWith { kode -> kodeverk.getArkivtemaNavn(kode) }
-        val identMap = identer.associateWith { ident -> ldapService.hentSaksbehandler(ident) }
+        val identMap = identer.associateWith { ident ->
+            runCatching {
+                ldapService.hentSaksbehandler(ident)
+            }.recover {
+                logger.error("Fant ikke saksbehandler for $ident", it)
+                Saksbehandler("-", "-", ident)
+            }.getOrThrow()
+        }
 
         return Pair(temakodeMap, identMap)
     }
@@ -227,7 +236,7 @@ class SfLegacyDialogController(
     ): TraadDTO {
         val journalpost: JournalpostDTO? = henvendelse.journalposter?.firstOrNull()
 
-        val journalfortSaksid = journalpost?.saksId
+        val journalfortSaksid = journalpost?.fagsakId
         val journalfortDato = journalpost?.journalfortDato?.format(DateTimeFormatter.ofPattern(DATO_TID_FORMAT))
         val journalfortTema = journalpost?.journalfortTema
         val journalfortTemanavn = temakodeMap[journalpost?.journalfortTema ?: ""]
@@ -248,7 +257,7 @@ class SfLegacyDialogController(
         val meldinger: List<MeldingDTO> = (henvendelse.meldinger ?: emptyList()).map { melding ->
             MeldingDTO(
                 mapOf(
-                    "id" to "${henvendelse.kjedeId}-${(henvendelse.hashCode())}",
+                    "id" to "${henvendelse.kjedeId}---${(henvendelse.hashCode())}",
                     "oppgaveId" to null,
                     "meldingstype" to meldingstypeFraSfTyper(henvendelse, melding),
                     "temagruppe" to henvendelse.gjeldendeTemagruppe,
@@ -277,6 +286,7 @@ class SfLegacyDialogController(
                     "ferdigstiltUtenSvarAv" to null, // TODO Informasjon finnes ikke i SF
                     "kontorsperretEnhet" to kontorsperretEnhet,
                     "kontorsperretAv" to kontorsperretAv,
+                    "sendtTilSladding" to (henvendelse.sladding ?: false),
                     "markertSomFeilsendtAv" to markertSomFeilsendtAv,
                     "erDokumentMelding" to false // Brukes ikke
                 )

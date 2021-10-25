@@ -1,0 +1,45 @@
+[
+  {
+    "tilknyttetEnhet": null,
+    "opprinneligGT": "0101",
+    "opprinneligEnhet": null,
+    "opprettetDato": "2021-08-28T16:49:23.000+0200",
+    "meldinger": [
+      {
+        "sendtDato": "2021-08-28T16:49:23.000+0200",
+        "lestDato": null,
+        "kanal": "DIGITAL",
+        "henvendelseId": null,
+        "fritekst": "Vi skriver ett nytt spørsmål 28.08 16:48",
+        "fra": {
+          "navEnhet": null,
+          "identType": "NAVIDENT",
+          "ident": "Z990351"
+        }
+      }
+    ],
+    "markeringer": null,
+    "kontorsperre": null,
+    "kjedeId": "ABBA1001",
+    "kasseringsDato": "2046-08-28T16:49:23.000+02:00",
+    "journalposter": [
+      {
+        "journalpostId": "510849595",
+        "journalfortTema": "PEN",
+        "journalfortDato": "2021-08-28T14:49:23.000+0000",
+        "journalforerNavIdent": "Z990351",
+        "journalforendeEnhet": "0239",
+        "fagsaksystem": null,
+        "fagsakId": null
+      }
+    ],
+    "henvendelseType": "MELDINGSKJEDE",
+    "henvendelseId": "70009278",
+    "gjeldendeTemagruppe": "PENS",
+    "gjeldendeTema": "PEN",
+    "fnr": "10108000398",
+    "feilsendt": null,
+    "avsluttetDato": null,
+    "aktorId": "1000096233942"
+  }
+]

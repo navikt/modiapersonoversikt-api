@@ -61,7 +61,8 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "$ref": "#/components/schemas/Henvendelse"
           },
           "400": {
             "$ref": "#/components/responses/BadRequest"
@@ -452,7 +453,7 @@
             "description": "NAV-enhet til veilder/saksbehandler som opprettet journalposten",
             "example": "4100"
           },
-          "saksId": {
+          "fagsakId": {
             "type": "string",
             "description": "Referanse til fagsak i overenstemmelse med påkrevd input til [Dokarkiv API](https://dokarkiv-q2.nais.preprod.local/swagger-ui.html#/arkiver-og-journalfoer-rest-controller/opprettJournalpostUsingPOST). Ved blank/null som saksId vil journalposten opprettes som generell sak på tema.",
             "example": "005602185"
@@ -517,7 +518,7 @@
             "description": "Tema for opprettet journalpost",
             "example": "DAG"
           },
-          "saksId": {
+          "fagsakId": {
             "type": "string",
             "description": "Referanse til fagsak",
             "example": "005602185"
@@ -551,7 +552,7 @@
             "example": "509934220"
           }
         },
-        "required": ["journalforerNavIdent", "journalforendeEnhet", "journalfortDato", "journalfortTema"]
+        "required": ["journalfortDato", "journalfortTema"]
       },
       "MeldingFra": {
         "type": "object",
@@ -573,7 +574,7 @@
             "example": "4100"
           }
         },
-        "required": ["identType", "ident"]
+        "required": ["identType"]
       },
       "Melding": {
         "type": "object",
@@ -648,6 +649,11 @@
             "description": "Definerer om henvendelsen er markert som kontorsperret. Markeringsinformasjon finnes i listen av markeringer",
             "example": false
           },
+          "sladding": {
+            "type": "boolean",
+            "description": "Definerer om henvendelsen skal vurderes for sladding. Dette sender henvendelsen til en sladdekø",
+            "example": false
+          },
           "feilsendt": {
             "type": "boolean",
             "description": "Definerer om henvendelsen er markert som feilsendt. Markeringsinformasjon finnes i listen av markeringer",
@@ -688,12 +694,10 @@
           "henvendelseType",
           "aktorId",
           "fnr",
-          "opprinneligGT",
           "opprettetDato",
           "kontorsperre",
           "feilsendt",
-          "kjedeId",
-          "gjeldendeTemagruppe"
+          "kjedeId"
         ]
       },
       "Temagruppe": {

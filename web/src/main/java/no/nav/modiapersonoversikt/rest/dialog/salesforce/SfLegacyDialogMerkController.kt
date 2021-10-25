@@ -26,10 +26,11 @@ class SfLegacyDialogMerkController(
     }
 
     override fun merkSomKontorsperret(request: KontorsperretRequest): ResponseEntity<Void> {
-        require(request.meldingsidListe.size == 1) {
-            "Man forventer en enkelt kjedeId"
-        }
-        sfHenvendelseService.merkSomKontorsperret(request.meldingsidListe.first(), request.enhet)
+        throw NotSupportedException("Operasjonen er erstattet med sladding")
+    }
+
+    override fun sendTilSladding(request: SendTilSladdingRequest): ResponseEntity<Void> {
+        sfHenvendelseService.sendTilSladding(request.traadId)
         return ResponseEntity(HttpStatus.OK)
     }
 
