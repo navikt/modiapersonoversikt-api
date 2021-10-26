@@ -77,7 +77,7 @@ object Persondata {
     )
 
     data class SivilstandRelasjon(
-        val fnr: String?,
+        val fnr: String,
         val navn: List<Navn>,
         val alder: Int?,
         val adressebeskyttelse: List<KodeBeskrivelse<AdresseBeskyttelse>>,

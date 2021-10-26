@@ -112,7 +112,8 @@ class PersondataServiceImpl(
             }.toTypedArray(),
             *this.foreldreansvar.mapNotNull { it.ansvarlig }.toTypedArray(),
             *this.foreldreansvar.mapNotNull { it.ansvarssubjekt }.toTypedArray(),
-            *this.sivilstand.mapNotNull { it.relatertVedSivilstand }.toTypedArray()
+            *this.sivilstand.mapNotNull { it.relatertVedSivilstand }.toTypedArray(),
+            *this.forelderBarnRelasjon.mapNotNull { it.relatertPersonsIdent }.toTypedArray()
         ).toList()
     }
 
