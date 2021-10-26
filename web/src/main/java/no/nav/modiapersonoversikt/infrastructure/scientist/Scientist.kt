@@ -13,7 +13,8 @@ object Scientist {
     data class Config(
         val name: String,
         val experimentRate: Double,
-        val reporter: Reporter = defaultReporter
+        val reporter: Reporter = defaultReporter,
+        val logAndCompareValues: Boolean = true
     )
 
     data class TimedValue<T>(val value: T, val time: Long)
@@ -60,17 +61,23 @@ object Scientist {
 
                 if (experimentResult.isFailure) {
                     fields["ok"] = false
-                    fields["control"] = controlResult.value
+                    if (config.logAndCompareValues) {
+                        fields["control"] = controlResult.value
+                    }
                     fields["controlTime"] = controlResult.time
                     fields["exception"] = experimentResult.exceptionOrNull()
                 } else {
-                    val controlValue = controlResult.value
-                    val experimentValue = experimentResult.getOrThrow().value
-                    val (ok, controlJson, experimentJson) = compareAndSerialize(controlValue, experimentValue)
-                    fields["ok"] = ok
-                    fields["control"] = controlJson
+                    if (config.logAndCompareValues) {
+                        val controlValue = controlResult.value
+                        val experimentValue = experimentResult.getOrThrow().value
+                        val (ok, controlJson, experimentJson) = compareAndSerialize(controlValue, experimentValue)
+                        fields["ok"] = ok
+                        fields["control"] = controlJson
+                        fields["experiment"] = experimentJson
+                    } else {
+                        fields["ok"] = true
+                    }
                     fields["controlTime"] = controlResult.time
-                    fields["experiment"] = experimentJson
                     fields["experimentTime"] = experimentResult.getOrThrow().time
                 }
 
