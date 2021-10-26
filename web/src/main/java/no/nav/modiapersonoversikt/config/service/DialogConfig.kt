@@ -71,7 +71,8 @@ open class DialogConfig {
             ifDisabled = HenvendelseDialog(
                 henvendelseService,
                 henvendelseUtsendingService,
-                oppgaveBehandlingService
+                oppgaveBehandlingService,
+                sfHenvendelseService
             )
         )
     }

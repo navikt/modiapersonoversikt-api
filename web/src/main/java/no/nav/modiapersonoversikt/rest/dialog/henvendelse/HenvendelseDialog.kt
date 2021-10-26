@@ -1,6 +1,7 @@
 package no.nav.modiapersonoversikt.rest.dialog.henvendelse
 
 import no.nav.common.auth.subject.SubjectHandler
+import no.nav.modiapersonoversikt.infrastructure.scientist.Scientist
 import no.nav.modiapersonoversikt.legacy.api.domain.Temagruppe
 import no.nav.modiapersonoversikt.legacy.api.domain.henvendelse.Fritekst
 import no.nav.modiapersonoversikt.legacy.api.domain.henvendelse.Melding
@@ -14,6 +15,8 @@ import no.nav.modiapersonoversikt.legacy.sporsmalogsvar.consumer.henvendelse.Hen
 import no.nav.modiapersonoversikt.legacy.sporsmalogsvar.consumer.henvendelse.domain.Traad
 import no.nav.modiapersonoversikt.rest.api.toDTO
 import no.nav.modiapersonoversikt.rest.dialog.apis.*
+import no.nav.modiapersonoversikt.service.sfhenvendelse.EksternBruker
+import no.nav.modiapersonoversikt.service.sfhenvendelse.SfHenvendelseService
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.server.ResponseStatusException
@@ -23,14 +26,30 @@ import javax.servlet.http.HttpServletRequest
 class HenvendelseDialog(
     private val henvendelseService: HenvendelseBehandlingService,
     private val henvendelseUtsendingService: HenvendelseUtsendingService,
-    private val oppgaveBehandlingService: OppgaveBehandlingService
+    private val oppgaveBehandlingService: OppgaveBehandlingService,
+    private val sfDialogController: SfHenvendelseService
 ) : DialogApi {
+    val sfExperiment = Scientist.createExperiment<List<TraadDTO>>(
+        Scientist.Config(
+            name = "SF-Meldinger",
+            experimentRate = 0.01,
+            logAndCompareValues = false
+        )
+    )
+
     override fun hentMeldinger(request: HttpServletRequest, fnr: String, enhet: String?): List<TraadDTO> {
         val valgtEnhet = RestUtils.hentValgtEnhet(enhet, request)
-        return henvendelseService
-            .hentMeldinger(fnr, valgtEnhet)
-            .traader
-            .toDTO()
+        return sfExperiment.run(
+            control = {
+                henvendelseService
+                    .hentMeldinger(fnr, valgtEnhet)
+                    .traader
+                    .toDTO()
+            },
+            experiment = {
+                sfDialogController.hentHenvendelser(EksternBruker.Fnr(fnr), valgtEnhet)
+            }
+        )
     }
 
     override fun sendMelding(
