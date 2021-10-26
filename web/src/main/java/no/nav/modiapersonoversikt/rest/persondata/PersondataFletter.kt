@@ -368,7 +368,7 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
         val person = data.tredjepartsPerson.map { it[relatertVedSivilstand] }.getOrNull() ?: return null
 
         return Persondata.SivilstandRelasjon(
-            fnr = relatertVedSivilstand,
+            fnr = person.fnr,
             navn = person.navn,
             alder = person.alder,
             adressebeskyttelse = person.adressebeskyttelse,
@@ -605,7 +605,7 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
         return data.persondata.forelderBarnRelasjon.map { relasjon ->
             val tredjepartsPerson = data.tredjepartsPerson.map { it[relasjon.relatertPersonsIdent] }.getOrNull()
             Persondata.ForelderBarnRelasjon(
-                ident = relasjon.relatertPersonsIdent,
+                ident = tredjepartsPerson?.fnr ?: "",
                 rolle = when (relasjon.relatertPersonsRolle) {
                     HentPersondata.ForelderBarnRelasjonRolle.MOR -> Persondata.ForelderBarnRelasjonRolle.MOR
                     HentPersondata.ForelderBarnRelasjonRolle.FAR -> Persondata.ForelderBarnRelasjonRolle.FAR
