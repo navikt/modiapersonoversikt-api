@@ -294,22 +294,16 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
         }
     }
 
-    private fun lagApningstid(apentFra: Klokkeslett, apentTil: Klokkeslett): String? {
-        if (apentFra.time == null ||
-            apentFra.minutt == null ||
-            apentTil.time == null ||
-            apentTil.minutt == null
-        ) {
-            return null
-        }
-        return "${formaterApningstid(apentFra.time)}.${formaterApningstid(apentFra.minutt)} - ${formaterApningstid(apentTil.time)}.${formaterApningstid(apentTil.minutt)}"
+    private fun lagApningstid(apentFra: Klokkeslett, apentTil: Klokkeslett): String {
+        return "${lagTidspunkt(apentFra)} - ${lagTidspunkt(apentTil)}"
     }
 
-    private fun formaterApningstid(tidspunkt: String): String {
-        if (tidspunkt.length == 1) {
-            return "0$tidspunkt"
+    private fun lagTidspunkt(tid: Klokkeslett): String {
+        return if (tid.time == null || tid.minutt == null) {
+            "Ukjent"
+        } else {
+            "${tid.time.padStart(2, '0')}.${tid.minutt.padStart(2, '0')}"
         }
-        return tidspunkt
     }
 
     private fun hentStatsborgerskap(data: Data): List<Persondata.Statsborgerskap> {
@@ -665,7 +659,10 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
         }
     }
 
-    private fun harSammeAdresse(personAdresse: Persondata.Adresse?, tredjepartsPersonAdresse: Persondata.Adresse?): Boolean {
+    private fun harSammeAdresse(
+        personAdresse: Persondata.Adresse?,
+        tredjepartsPersonAdresse: Persondata.Adresse?
+    ): Boolean {
         if (personAdresse == null || tredjepartsPersonAdresse == null) {
             return false
         }

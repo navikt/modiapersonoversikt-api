@@ -108,7 +108,7 @@ object Persondata {
 
     data class Apningstid(
         val ukedag: String,
-        val apningstid: String?
+        val apningstid: String
     )
 
     data class Publikumsmottak(
