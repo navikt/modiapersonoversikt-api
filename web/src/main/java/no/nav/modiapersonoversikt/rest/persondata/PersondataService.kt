@@ -118,7 +118,7 @@ class PersondataServiceImpl(
     }
 
     private fun hentTilganger() = PersondataService.Tilganger(
-        kode6 = tilgangskontroll.context().harSaksbehandlerRolle("0000-GA-GOSYS_KODE6"),
-        kode7 = tilgangskontroll.context().harSaksbehandlerRolle("0000-GA-GOSYS_KODE7")
+        kode6 = tilgangskontroll.context().harSaksbehandlerRolle("0000-GA-Strengt_Fortrolig_Adresse"),
+        kode7 = tilgangskontroll.context().harSaksbehandlerRolle("0000-GA-Fortrolig_Adresse")
     )
 }
