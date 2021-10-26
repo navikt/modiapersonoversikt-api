@@ -46,11 +46,13 @@ object Scientist {
         val experimentValue: Any? = null,
         val experimentException: Throwable? = null
     )
+    data class WithFields<T>(val data: T, val fields: Map<String, Any?>)
+
     class Experiment<T> internal constructor(private val config: Config) {
         private val timer = Timer()
         fun runIntrospected(
-            control: () -> T,
-            experiment: () -> Any?
+            control: () -> WithFields<T>,
+            experiment: () -> WithFields<Any?>
         ): Result<T> {
             if (forceExperiment.get() == true || Random.nextDouble() < config.experimentRate) {
                 val fields = mutableMapOf<String, Any?>()
@@ -62,18 +64,21 @@ object Scientist {
                 if (experimentResult.isFailure) {
                     fields["ok"] = false
                     if (config.logAndCompareValues) {
-                        fields["control"] = controlResult.value
+                        fields["control"] = controlResult.value.data
                     }
                     fields["controlTime"] = controlResult.time
                     fields["exception"] = experimentResult.exceptionOrNull()
+                    fields.putAll(controlResult.value.fields)
                 } else {
                     if (config.logAndCompareValues) {
-                        val controlValue = controlResult.value
-                        val experimentValue = experimentResult.getOrThrow().value
+                        val controlValue = controlResult.value.data
+                        val experimentValue = experimentResult.getOrThrow().value.data
                         val (ok, controlJson, experimentJson) = compareAndSerialize(controlValue, experimentValue)
                         fields["ok"] = ok
                         fields["control"] = controlJson
                         fields["experiment"] = experimentJson
+                        fields.putAll(controlResult.value.fields)
+                        fields.putAll(experimentResult.getOrThrow().value.fields)
                     } else {
                         fields["ok"] = true
                     }
@@ -85,20 +90,26 @@ object Scientist {
 
                 return Result(
                     experimentRun = true,
-                    controlValue = controlResult.value,
-                    experimentValue = experimentResult.getOrNull()?.value,
+                    controlValue = controlResult.value.data,
+                    experimentValue = experimentResult.getOrNull()?.value?.data,
                     experimentException = experimentResult.exceptionOrNull()
                 )
             } else {
                 return Result(
                     experimentRun = false,
-                    controlValue = control()
+                    controlValue = control().data
                 )
             }
         }
 
-        fun run(control: () -> T, experiment: () -> Any?): T =
+        fun runWithExtraFields(control: () -> WithFields<T>, experiment: () -> WithFields<Any?>): T =
             runIntrospected(control, experiment).controlValue
+
+        fun run(control: () -> T, experiment: () -> Any?): T =
+            runWithExtraFields(
+                control = { WithFields(control(), emptyMap()) },
+                experiment = { WithFields(experiment(), emptyMap()) }
+            )
     }
 
     fun <T : Any?> createExperiment(config: Config) = Experiment<T>(config)
