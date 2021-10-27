@@ -1,13 +1,14 @@
 package no.nav.modiapersonoversikt.rest.persondata
 
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll
-import no.nav.modiapersonoversikt.legacy.api.domain.norg.AnsattEnhet
 import no.nav.modiapersonoversikt.legacy.api.domain.pdl.generated.HentPersondata
 import no.nav.modiapersonoversikt.legacy.api.service.organisasjonsEnhetV2.OrganisasjonEnhetV2Service
 import no.nav.modiapersonoversikt.legacy.api.service.pdl.PdlOppslagService
 import no.nav.modiapersonoversikt.legacy.kjerneinfo.consumer.egenansatt.EgenAnsattService
+import no.nav.modiapersonoversikt.rest.enhet.model.EnhetKontaktinformasjon
 import no.nav.modiapersonoversikt.service.dkif.Dkif
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk
+import no.nav.modiapersonoversikt.service.organisasjonenhet.kontaktinformasjon.service.OrganisasjonEnhetKontaktinformasjonService
 import no.nav.tjeneste.virksomhet.person.v3.binding.PersonV3
 import no.nav.tjeneste.virksomhet.person.v3.informasjon.Informasjonsbehov
 import no.nav.tjeneste.virksomhet.person.v3.informasjon.NorskIdent
@@ -28,6 +29,7 @@ class PersondataServiceImpl(
     private val pdl: PdlOppslagService,
     private val dkif: Dkif.Service,
     private val organisasjonEnhetV2Service: OrganisasjonEnhetV2Service,
+    private val organisasjonEnhetKontaktinformasjonService: OrganisasjonEnhetKontaktinformasjonService,
     private val personV3: PersonV3,
     private val egenAnsattService: EgenAnsattService,
     private val tilgangskontroll: Tilgangskontroll,
@@ -81,7 +83,11 @@ class PersondataServiceImpl(
     private fun hentNavEnhet(
         persondata: HentPersondata.Person,
         geografiskeTilknytning: PersondataResult<String?>
-    ): PersondataResult<AnsattEnhet> {
+    ): PersondataResult<EnhetKontaktinformasjon>? {
+        if (geografiskeTilknytning.getOrNull() == null) {
+            return null
+        }
+
         var diskresjonskode = ""
         val adressebeskyttelse = persondata.adressebeskyttelse
         for (beskyttelse in adressebeskyttelse) {
@@ -101,6 +107,10 @@ class PersondataServiceImpl(
                 organisasjonEnhetV2Service
                     .finnNAVKontor(it, diskresjonskode)
                     .orElseThrow()
+                    .enhetId
+            }
+            .map("NORG Kontaktinformasjon") {
+                EnhetKontaktinformasjon(organisasjonEnhetKontaktinformasjonService.hentKontaktinformasjon(it))
             }
     }
 

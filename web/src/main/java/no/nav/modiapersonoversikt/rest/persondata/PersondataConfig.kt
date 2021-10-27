@@ -6,6 +6,7 @@ import no.nav.modiapersonoversikt.legacy.api.service.pdl.PdlOppslagService
 import no.nav.modiapersonoversikt.legacy.kjerneinfo.consumer.egenansatt.EgenAnsattService
 import no.nav.modiapersonoversikt.service.dkif.Dkif
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk
+import no.nav.modiapersonoversikt.service.organisasjonenhet.kontaktinformasjon.service.OrganisasjonEnhetKontaktinformasjonService
 import no.nav.tjeneste.virksomhet.person.v3.binding.PersonV3
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.context.annotation.Bean
@@ -18,6 +19,7 @@ open class PersondataConfig {
         pdl: PdlOppslagService,
         @Qualifier("DkifSoap") dkif: Dkif.Service,
         organisasjonEnhetV2Service: OrganisasjonEnhetV2Service,
+        organisasjonEnhetKontaktinformasjonService: OrganisasjonEnhetKontaktinformasjonService,
         personV3: PersonV3,
         egenAnsattService: EgenAnsattService,
         tilgangskontroll: Tilgangskontroll,
@@ -27,6 +29,7 @@ open class PersondataConfig {
             pdl,
             dkif,
             organisasjonEnhetV2Service,
+            organisasjonEnhetKontaktinformasjonService,
             personV3,
             egenAnsattService,
             tilgangskontroll,
