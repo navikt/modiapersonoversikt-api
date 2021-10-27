@@ -18,26 +18,11 @@ object Scientist {
     )
 
     data class TimedValue<T>(val value: T, val time: Long)
-    private class Timer {
-        private var startTime: Long = 0L
-        fun start() {
-            this.startTime = System.currentTimeMillis()
-        }
-
-        fun elapsed(): Long {
-            try {
-                return System.currentTimeMillis() - this.startTime
-            } finally {
-                this.startTime = 0L
-            }
-        }
-
-        fun <T> time(block: () -> T): TimedValue<T> {
-            this.start()
-            val value = block()
-            val time = this.elapsed()
-            return TimedValue(value, time)
-        }
+    fun <T> measureTimeInMillies(block: () -> T): TimedValue<T> {
+        val startTime = System.currentTimeMillis()
+        val value = block()
+        val time = System.currentTimeMillis() - startTime
+        return TimedValue(value, time)
     }
 
     data class Result<T>(
@@ -49,16 +34,15 @@ object Scientist {
     data class WithFields<T>(val data: T, val fields: Map<String, Any?>)
 
     class Experiment<T> internal constructor(private val config: Config) {
-        private val timer = Timer()
         fun runIntrospected(
             control: () -> WithFields<T>,
             experiment: () -> WithFields<Any?>
         ): Result<T> {
             if (forceExperiment.get() == true || Random.nextDouble() < config.experimentRate) {
                 val fields = mutableMapOf<String, Any?>()
-                val controlResult = timer.time(control)
+                val controlResult = measureTimeInMillies(control)
                 val experimentResult = runCatching {
-                    timer.time(experiment)
+                    measureTimeInMillies(experiment)
                 }
 
                 if (experimentResult.isFailure) {
