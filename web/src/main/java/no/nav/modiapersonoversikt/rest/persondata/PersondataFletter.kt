@@ -504,12 +504,37 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
             Persondata.Verge(
                 ident = vergemal.vergeEllerFullmektig.motpartsPersonident,
                 navn = motpart?.firstOrNull() ?: navn,
-                vergesakstype = vergemal.type,
-                omfang = vergemal.vergeEllerFullmektig.omfang,
+                vergesakstype = hentVergemalType(vergemal.type),
+                omfang = hentVergemalOmfang(vergemal.vergeEllerFullmektig.omfang),
                 embete = vergemal.embete,
                 gyldighetstidspunkt = vergemal.folkeregistermetadata?.gyldighetstidspunkt?.value?.toLocalDate(),
                 opphoerstidspunkt = vergemal.folkeregistermetadata?.opphoerstidspunkt?.value?.toLocalDate()
             )
+        }
+    }
+
+    private fun hentVergemalOmfang(omfang: String?): String {
+        return when (omfang) {
+            "utlendingssakerPersonligeOgOekonomiskeInteresser" ->
+                "Ivareta personens interesser innenfor det personlige og økonomiske området herunder utlendingssaken (kun for EMA)"
+            "personligeOgOekonomiskeInteresser" -> "Ivareta personens interesser innenfor det personlige og økonomiske området"
+            "oekonomiskeInteresser" -> "Ivareta personens interesser innenfor det økonomiske området"
+            "personligeInteresser" -> "Ivareta personens interesser innenfor det personlige området"
+            else -> "Ikke oppgitt"
+        }
+    }
+
+    private fun hentVergemalType(type: String?): String {
+        return when (type) {
+            "ensligMindreaarigAsylsoeker" -> "Enslig mindreårig asylsøker"
+            "ensligMindreaarigFlyktning" -> "Enslig mindreårig flyktning inklusive midlertidige saker for denne gruppen"
+            "voksen" -> "Voksen"
+            "midlertidigForVoksen" -> "Voksen midlertidig"
+            "mindreaarig" -> "Mindreårig (unntatt EMF)"
+            "midlertidigForMindreaarig" -> "Mindreårig midlertidig (unntatt EMF)"
+            "forvaltningUtenforVergemaal" -> "Forvaltning utenfor vergemål"
+            "stadfestetFremtidsfullmakt" -> "Fremtidsfullmakt"
+            else -> "Ingen vergesakstype oppgitt"
         }
     }
 
