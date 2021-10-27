@@ -214,7 +214,6 @@ object Persondata {
         val kjonn: List<KodeBeskrivelse<Kjonn>>,
         val alder: Int?,
         val adressebeskyttelse: List<KodeBeskrivelse<AdresseBeskyttelse>>,
-        val bostedAdresse: List<Adresse>,
         val harSammeAdresse: Boolean,
         val personstatus: List<KodeBeskrivelse<PersonStatus>>
     )
