@@ -115,9 +115,20 @@ object Persondata {
         )
     }
 
+    data class Apningstid(
+        val ukedag: String,
+        val apningstid: String
+    )
+
+    data class Publikumsmottak(
+        val besoeksadresse: Adresse,
+        val apningstider: List<Apningstid>
+    )
+
     data class Enhet(
         val id: String,
-        val navn: String
+        val navn: String,
+        val publikumsmottak: List<Publikumsmottak>
     )
 
     data class Dodsbo(
