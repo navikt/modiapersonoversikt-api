@@ -34,13 +34,13 @@ class Policies {
         val tilgangTilDiskresjonskode = PolicyGenerator<TilgangskontrollContext, String>({ "Saksbehandler (${context.hentSaksbehandlerId()}) har ikke tilgang til $data" }) {
             val diskresjonskode = data
             if (arrayOf("6", "SPSF").contains(diskresjonskode)) {
-                if (context.harSaksbehandlerRolle("0000-GA-GOSYS_KODE6")) {
+                if (context.harSaksbehandlerRolle("0000-GA-Strengt_Fortrolig_Adresse")) {
                     DecisionEnums.PERMIT
                 } else {
                     DecisionEnums.DENY
                 }
             } else if (arrayOf("7", "SPFO").contains(diskresjonskode)) {
-                if (context.harSaksbehandlerRolle("0000-GA-GOSYS_KODE7")) {
+                if (context.harSaksbehandlerRolle("0000-GA-Fortrolig_Adresse")) {
                     DecisionEnums.PERMIT
                 } else {
                     DecisionEnums.DENY
