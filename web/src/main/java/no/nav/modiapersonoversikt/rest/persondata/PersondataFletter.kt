@@ -618,7 +618,6 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
                 alder = tredjepartsPerson?.alder,
                 kjonn = tredjepartsPerson?.kjonn ?: emptyList(),
                 adressebeskyttelse = tredjepartsPerson?.adressebeskyttelse ?: emptyList(),
-                bostedAdresse = tredjepartsPerson?.bostedAdresse ?: emptyList(),
                 harSammeAdresse = harSammeAdresse(
                     personAdresse = hentBostedAdresse(data).firstOrNull(),
                     tredjepartsPersonAdresse = tredjepartsPerson?.bostedAdresse?.firstOrNull()
