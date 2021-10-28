@@ -61,13 +61,13 @@ object Scientist {
                         fields["ok"] = ok
                         fields["control"] = controlJson
                         fields["experiment"] = experimentJson
-                        fields.putAll(controlResult.value.fields)
-                        fields.putAll(experimentResult.getOrThrow().value.fields)
                     } else {
                         fields["ok"] = true
                     }
                     fields["controlTime"] = controlResult.time
                     fields["experimentTime"] = experimentResult.getOrThrow().time
+                    fields.putAll(controlResult.value.fields)
+                    fields.putAll(experimentResult.getOrThrow().value.fields)
                 }
 
                 config.reporter("[SCIENCE] ${config.name}", fields)
