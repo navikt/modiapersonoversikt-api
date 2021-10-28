@@ -130,4 +130,24 @@ internal class ScientistTest {
             )
         ).run({ controlResult }, { experimentResult })
     }
+
+    @Test
+    internal fun `should report metadatafields`() {
+        Scientist.createExperiment<String>(
+            Scientist.Config(
+                name = "DummyExperiment",
+                experimentRate = 1.0,
+                reporter = { header, fields ->
+                    assertThat(fields).containsEntry("ok", true)
+                    assertThat(fields).containsKey("control")
+                    assertThat(fields).containsKey("experiment")
+                    assertThat(fields).containsKey("control-extra")
+                    assertThat(fields).containsKey("experiment-extra")
+                }
+            )
+        ).runWithExtraFields(
+            control = { Scientist.WithFields("Hello, World", mapOf("control-extra" to 1)) },
+            experiment = { Scientist.WithFields("Hello, World", mapOf("experiment-extra" to "value")) }
+        )
+    }
 }

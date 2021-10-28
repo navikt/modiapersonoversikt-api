@@ -39,15 +39,17 @@ class HenvendelseDialog(
 
     override fun hentMeldinger(request: HttpServletRequest, fnr: String, enhet: String?): List<TraadDTO> {
         val valgtEnhet = RestUtils.hentValgtEnhet(enhet, request)
-        return sfExperiment.run(
+        return sfExperiment.runWithExtraFields(
             control = {
-                henvendelseService
+                val value: List<TraadDTO> = henvendelseService
                     .hentMeldinger(fnr, valgtEnhet)
                     .traader
                     .toDTO()
+                Scientist.WithFields(value, mapOf("control-length" to value.size))
             },
             experiment = {
-                sfDialogController.hentHenvendelser(EksternBruker.Fnr(fnr), valgtEnhet)
+                val value = sfDialogController.hentHenvendelser(EksternBruker.Fnr(fnr), valgtEnhet)
+                Scientist.WithFields(value, mapOf("experiment-length" to value.size))
             }
         )
     }
