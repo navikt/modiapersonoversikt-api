@@ -345,7 +345,8 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
     private fun hentSikkerhetstiltak(data: Data): List<Persondata.Sikkerhetstiltak> {
         return data.persondata.sikkerhetstiltak.map {
             Persondata.Sikkerhetstiltak(
-                type = Persondata.SikkerhetstiltakType.valueOf(it.tiltakstype),
+                type = it.tiltakstype,
+                beskrivelse = it.beskrivelse,
                 gyldigFraOgMed = it.gyldigFraOgMed.value,
                 gyldigTilOgMed = it.gyldigTilOgMed.value
             )
