@@ -122,7 +122,7 @@ object Persondata {
     )
 
     data class Publikumsmottak(
-        val besoeksadresse: Adresse,
+        val besoksadresse: Adresse,
         val apningstider: List<Apningstid>
     )
 
@@ -184,7 +184,7 @@ object Persondata {
         val motpartsPersonident: String,
         val motpartsPersonNavn: Navn,
         val motpartsRolle: FullmaktsRolle,
-        val omraade: List<String>,
+        val omrade: List<String>,
         val gyldigFraOgMed: LocalDate,
         val gyldigTilOgMed: LocalDate
     )
@@ -203,7 +203,7 @@ object Persondata {
         val omfang: String,
         val embete: String?,
         val gyldighetstidspunkt: LocalDate?,
-        val opphoerstidspunkt: LocalDate?
+        val opphorstidspunkt: LocalDate?
     )
 
     data class Foreldreansvar(
