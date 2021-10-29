@@ -85,7 +85,8 @@ object Persondata {
     )
 
     data class Sikkerhetstiltak(
-        val type: SikkerhetstiltakType,
+        val type: String,
+        val beskrivelse: String,
         val gyldigFraOgMed: LocalDate,
         val gyldigTilOgMed: LocalDate
     )
@@ -265,14 +266,6 @@ object Persondata {
         SEPARERT_PARTNER("SEPA"),
         SKILT_PARTNER("SKPA"),
         GJENLEVENDE_PARTNER("GJPA")
-    }
-
-    enum class SikkerhetstiltakType(val beskrivelse: String) {
-        FYUS("Fysisk utestengelse"),
-        TFUS("Telefonisk utestengelse"),
-        FTUS("Fysisk/telefonisk utestengelse"),
-        DIUS("Digital utestengelse"),
-        TOAN("To ansatte i samtale")
     }
 
     enum class Skifteform {
