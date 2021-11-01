@@ -80,7 +80,7 @@ class RestSakSaker(
         }
 
         private fun convertJavaDateTimeToJoda(dateTime: OffsetDateTime): DateTime {
-            return DateTime(dateTime.toInstant().toEpochMilli())
+            return DateTime(dateTime.toInstant().toEpochMilli()).withTimeAtStartOfDay()
         }
     }
 }
