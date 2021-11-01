@@ -283,7 +283,7 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
     private fun hentPublikumsmottak(publikumsmottak: List<Publikumsmottak>): List<Persondata.Publikumsmottak> {
         return publikumsmottak.map {
             Persondata.Publikumsmottak(
-                besoeksadresse = lagAdresseFraBesoksadresse(it.besoksadresse),
+                besoksadresse = lagAdresseFraBesoksadresse(it.besoksadresse),
                 apningstider = it.apningstider.map { apningstid ->
                     Persondata.Apningstid(
                         ukedag = apningstid.ukedag,
@@ -532,7 +532,7 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
                     HentPersondata.FullmaktsRolle.FULLMEKTIG -> Persondata.FullmaktsRolle.FULLMEKTIG
                     else -> Persondata.FullmaktsRolle.UKJENT
                 },
-                omraade = it.omraader,
+                omrade = it.omraader,
                 gyldigFraOgMed = it.gyldigFraOgMed.value,
                 gyldigTilOgMed = it.gyldigTilOgMed.value
             )
@@ -553,7 +553,7 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
                 omfang = hentVergemalOmfang(vergemal.vergeEllerFullmektig.omfang),
                 embete = vergemal.embete,
                 gyldighetstidspunkt = vergemal.folkeregistermetadata?.gyldighetstidspunkt?.value?.toLocalDate(),
-                opphoerstidspunkt = vergemal.folkeregistermetadata?.opphoerstidspunkt?.value?.toLocalDate()
+                opphorstidspunkt = vergemal.folkeregistermetadata?.opphoerstidspunkt?.value?.toLocalDate()
             )
         }
     }
