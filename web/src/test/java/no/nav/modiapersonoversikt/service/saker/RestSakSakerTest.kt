@@ -163,7 +163,7 @@ class RestSakSakerTest {
     }
 
     @Test
-    fun `kal handtere at FS36 har fagsystemId`() {
+    fun `skal handtere at FS36 har fagsystemId`() {
         val sakDto = SakDto(
             id = SakId_1,
             tema = "AAP",
@@ -176,6 +176,7 @@ class RestSakSakerTest {
         )
 
         val sak = RestSakSaker.TIL_SAK.invoke(sakDto)
+
         assertThat(sak.saksId, `is`(SakId_1))
         assertThat(sak.fagsystemSaksId, `is`(FagsystemSakId_1))
         assertThat(sak.temaKode, `is`(Sak.GODKJENTE_TEMA_FOR_GENERELL_SAK[0]))
@@ -193,5 +194,11 @@ class RestSakSakerTest {
         }
     }
 
-    private fun earlierDateTimeWithOffSet(offset: Long): OffsetDateTime = OffsetDateTime.now().minusDays(offset)
+    private fun earlierDateTimeWithOffSet(offset: Long): OffsetDateTime =
+        OffsetDateTime.now()
+            .withHour(0)
+            .withMinute(0)
+            .withSecond(0)
+            .withNano(0)
+            .minusDays(offset)
 }
