@@ -22,8 +22,10 @@ import java.util.concurrent.atomic.AtomicReference
 private const val MELDING_FRITEKST = """
 Vi skriver til deg fordi du tidligere har mottatt arbeidsavklaringspenger (AAP) som arbeidssøker. Det er nå gjort en endring i det midlertidige regelverket som gjelder under koronapandemien. Hvis du fortsatt oppfyller vilkårene for å få AAP som arbeidssøker, kan du få innvilget en fornyet periode med AAP som arbeidssøker fra vedtaket ditt løp ut og til og med 31. desember 2021. Du må søke om dette senest 31. desember i år. Du må være registrert som arbeidssøker og sende meldekort som vanlig.
 
+
 Hvis du ønsker å søke om en ny periode med AAP som arbeidssøker:
 Svar med denne teksten: Jeg søker om AAP som arbeidssøker fra vedtaket mitt utløp (oppgi dato hvis du ønsker at vedtaket skal starte senere).
+
 
 Hvis du ikke ønsker å søke:
 Svar: Nei
