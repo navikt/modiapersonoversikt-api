@@ -31,7 +31,7 @@ class TredjepartspersonMapper(val kodeverk: EnhetligKodeverk.Service) {
             fodselsdato = if (harTilgang) fodselsdato else emptyList(),
             alder = if (harTilgang) hentAlder(fodselsdato) else null,
             kjonn = if (harTilgang) hentKjonn(person) else emptyList(),
-            adressebeskyttelse = person.adressebeskyttelse.let(::hentAdressebeskyttelse),
+            adressebeskyttelse = hentAdressebeskyttelse(person.adressebeskyttelse),
             bostedAdresse = person.bostedsadresse.mapNotNull {
                 if (harTilgang) {
                     hentBostedAdresse(it)
