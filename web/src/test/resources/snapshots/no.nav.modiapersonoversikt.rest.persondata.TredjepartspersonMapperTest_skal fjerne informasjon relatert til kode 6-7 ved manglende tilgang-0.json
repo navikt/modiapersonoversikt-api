@@ -1,6 +1,6 @@
 {
   "adressebeskyttelse" : [ "java.util.ArrayList", [ {
-    "beskrivelse" : "SPSO",
+    "beskrivelse" : "SPFO",
     "kode" : "KODE7"
   } ] ],
   "alder" : null,
