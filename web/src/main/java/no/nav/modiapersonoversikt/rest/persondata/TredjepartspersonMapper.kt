@@ -16,7 +16,7 @@ class TredjepartspersonMapper(val kodeverk: EnhetligKodeverk.Service) {
         val fodselsdato = person.foedsel.mapNotNull { it.foedselsdato?.value }
         val harTilgang = person.harTilgang(tilganger)
         return Persondata.TredjepartsPerson(
-            fnr = if (harTilgang) ident else "",
+            fnr = ident,
             navn = person.navn.mapNotNull {
                 if (harTilgang) {
                     Persondata.Navn(
