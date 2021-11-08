@@ -10,6 +10,7 @@ enum class KodeverkConfig(private val kilde: EnhetligKodeverk.Kilde) {
     SIVILSTAND(FellesKodeverkKilde("Sivilstander")),
     DISKRESJONSKODER(FellesKodeverkKilde("Diskresjonskoder")),
     VALUTA(FellesKodeverkKilde("Valutaer")),
+    TEMA(FellesKodeverkKilde("Tema")),
     SF_TEMAGRUPPER(SfHenvendelseKodeverkKilde());
 
     fun hentKodeverk(providers: KodeverkProviders) = kilde.hentKodeverk(providers)

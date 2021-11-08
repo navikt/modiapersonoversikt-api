@@ -539,11 +539,15 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
                     HentPersondata.FullmaktsRolle.FULLMEKTIG -> Persondata.FullmaktsRolle.FULLMEKTIG
                     else -> Persondata.FullmaktsRolle.UKJENT
                 },
-                omrade = it.omraader,
+                omrade = hentOmrade(it.omraader),
                 gyldigFraOgMed = it.gyldigFraOgMed.value,
                 gyldigTilOgMed = it.gyldigTilOgMed.value
             )
         }
+    }
+
+    private fun hentOmrade(omraader: List<String>): List<Persondata.KodeBeskrivelse<String>> {
+        return omraader.map { omrade -> kodeverk.hentKodeBeskrivelse(Kodeverk.TEMA, omrade) }
     }
 
     private fun hentVergemal(data: Data): List<Persondata.Verge> {
