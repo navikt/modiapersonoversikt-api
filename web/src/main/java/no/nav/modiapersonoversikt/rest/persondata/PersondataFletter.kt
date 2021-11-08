@@ -460,7 +460,7 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
     private fun hentDodsbo(data: Data): List<Persondata.Dodsbo> {
         return data.persondata.kontaktinformasjonForDoedsbo.map { dodsbo ->
             Persondata.Dodsbo(
-                adressat = hentAdressat(dodsbo),
+                adressat = hentAdressat(dodsbo, data.tredjepartsPerson),
                 adresse = hentAdresse(dodsbo.adresse),
                 registrert = dodsbo.attestutstedelsesdato.value,
                 skifteform = when (dodsbo.skifteform) {
@@ -473,10 +473,13 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
         }
     }
 
-    private fun hentAdressat(dodsbo: HentPersondata.KontaktinformasjonForDoedsbo): Persondata.Adressat {
+    private fun hentAdressat(
+        dodsbo: HentPersondata.KontaktinformasjonForDoedsbo,
+        tredjepartsPerson: PersondataResult<Map<String, Persondata.TredjepartsPerson>>
+    ): Persondata.Adressat {
         return Persondata.Adressat(
             advokatSomAdressat = hentAdvokatSomAdressat(dodsbo),
-            personSomAdressat = hentPersonSomAdressat(dodsbo),
+            personSomAdressat = hentPersonSomAdressat(dodsbo, tredjepartsPerson),
             organisasjonSomAdressat = hentOrganisasjonSomAdressat(dodsbo)
         )
     }
@@ -490,11 +493,15 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
         )
     }
 
-    private fun hentPersonSomAdressat(dodsbo: HentPersondata.KontaktinformasjonForDoedsbo): Persondata.PersonSomAdressat? {
+    private fun hentPersonSomAdressat(
+        dodsbo: HentPersondata.KontaktinformasjonForDoedsbo,
+        tredjepartsPerson: PersondataResult<Map<String, Persondata.TredjepartsPerson>>
+    ): Persondata.PersonSomAdressat? {
         val adressat = dodsbo.personSomKontakt ?: return null
+        val adressatPerson = tredjepartsPerson.map { it[adressat.identifikasjonsnummer] }.getOrNull()
         return Persondata.PersonSomAdressat(
             fnr = adressat.identifikasjonsnummer,
-            navn = adressat.personnavn?.let(::hentNavn),
+            navn = adressatPerson?.navn ?: emptyList(),
             fodselsdato = adressat.foedselsdato?.value
         )
     }
