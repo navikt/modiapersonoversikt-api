@@ -165,6 +165,21 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
     private fun hentKontaktAdresse(data: Data): List<Persondata.Adresse> {
         return data.persondata.kontaktadresse.mapNotNull { adresse ->
             when {
+                adresse.coAdressenavn != null && adresse.vegadresse != null -> {
+                    val coAdressenavn = Persondata.Adresse(
+                        linje1 = adresse.coAdressenavn ?: "Ukjent kommune",
+                        sistEndret = hentSisteEndringFraMetadata(adresse.metadata)
+                    )
+                    val vegadresse = lagAdresseFraVegadresse(
+                        adresse = adresse.vegadresse!!
+                    )
+                    Persondata.Adresse(
+                        linje1 = coAdressenavn.linje1,
+                        linje2 = vegadresse.linje1,
+                        linje3 = vegadresse.linje2,
+                        sistEndret = coAdressenavn.sistEndret
+                    )
+                }
                 adresse.coAdressenavn != null -> Persondata.Adresse(
                     linje1 = adresse.coAdressenavn ?: "Ukjent kommune",
                     sistEndret = hentSisteEndringFraMetadata(adresse.metadata)
