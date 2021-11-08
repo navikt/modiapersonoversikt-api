@@ -16,7 +16,7 @@ class TredjepartspersonMapper(val kodeverk: EnhetligKodeverk.Service) {
         val fodselsdato = person.foedsel.mapNotNull { it.foedselsdato?.value }
         val harTilgang = person.harTilgang(tilganger)
         return Persondata.TredjepartsPerson(
-            fnr = if (harTilgang) ident else "",
+            fnr = ident,
             navn = person.navn.mapNotNull {
                 if (harTilgang) {
                     Persondata.Navn(
@@ -152,7 +152,7 @@ class TredjepartspersonMapper(val kodeverk: EnhetligKodeverk.Service) {
                     Kodeverk.DISKRESJONSKODER,
                     "SPSF"
                 )
-                HentTredjepartspersondata.AdressebeskyttelseGradering.FORTROLIG -> kodeverk.hentKodeBeskrivelse(Kodeverk.DISKRESJONSKODER, "SPSO")
+                HentTredjepartspersondata.AdressebeskyttelseGradering.FORTROLIG -> kodeverk.hentKodeBeskrivelse(Kodeverk.DISKRESJONSKODER, "SPFO")
                 HentTredjepartspersondata.AdressebeskyttelseGradering.UGRADERT -> Persondata.KodeBeskrivelse("", "Ugradert")
                 else -> Persondata.KodeBeskrivelse("", "Ukjent")
             }

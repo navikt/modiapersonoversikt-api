@@ -327,7 +327,7 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
                     Kodeverk.DISKRESJONSKODER,
                     "SPSF"
                 )
-                FORTROLIG -> kodeverk.hentKodeBeskrivelse(Kodeverk.DISKRESJONSKODER, "SPSO")
+                FORTROLIG -> kodeverk.hentKodeBeskrivelse(Kodeverk.DISKRESJONSKODER, "SPFO")
                 UGRADERT -> Persondata.KodeBeskrivelse("", "Ugradert")
                 else -> Persondata.KodeBeskrivelse("", "Ukjent")
             }
