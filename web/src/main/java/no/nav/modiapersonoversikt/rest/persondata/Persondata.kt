@@ -184,7 +184,7 @@ object Persondata {
         val motpartsPersonident: String,
         val motpartsPersonNavn: Navn,
         val motpartsRolle: FullmaktsRolle,
-        val omrade: List<String>,
+        val omrade: List<KodeBeskrivelse<String>>,
         val gyldigFraOgMed: LocalDate,
         val gyldigTilOgMed: LocalDate
     )
