@@ -154,7 +154,7 @@ object Persondata {
 
     data class PersonSomAdressat(
         val fnr: String?,
-        val navn: Navn?,
+        val navn: List<Navn>,
         val fodselsdato: LocalDate?
     )
 
