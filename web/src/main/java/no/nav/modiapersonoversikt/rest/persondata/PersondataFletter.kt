@@ -215,7 +215,7 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
             }
         }
     }
-    
+
     private fun lagAdresseFraPostadresseIFrittFormat(
         adresse: HentPersondata.PostadresseIFrittFormat,
         sistEndret: Persondata.SistEndret?
@@ -229,7 +229,7 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
         ),
         sistEndret = sistEndret
     )
-    
+
     private fun lagAdresseFraPostboksadresse(
         adresse: HentPersondata.Postboksadresse,
         sistEndring: Persondata.SistEndret?
@@ -242,7 +242,7 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
         linje3 = listOf(adresse.postbokseier),
         sistEndret = sistEndring
     )
-    
+
     private fun hentSisteEndringFraMetadata(metadata: HentPersondata.Metadata): Persondata.SistEndret? {
         return metadata.endringer.maxBy { it.registrert.value }
             ?.let {
