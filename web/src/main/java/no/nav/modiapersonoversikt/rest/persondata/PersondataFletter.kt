@@ -164,11 +164,12 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
 
     private fun hentKontaktAdresse(data: Data): List<Persondata.Adresse> {
         return data.persondata.kontaktadresse.mapNotNull { adresse ->
+            val sisteEndring = hentSisteEndringFraMetadata(adresse.metadata)
             when {
                 adresse.coAdressenavn != null && adresse.vegadresse != null -> {
                     val coAdressenavn = Persondata.Adresse(
                         linje1 = adresse.coAdressenavn ?: "Ukjent kommune",
-                        sistEndret = hentSisteEndringFraMetadata(adresse.metadata)
+                        sistEndret = sisteEndring
                     )
                     val vegadresse = lagAdresseFraVegadresse(
                         adresse = adresse.vegadresse!!
@@ -177,20 +178,28 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
                         linje1 = coAdressenavn.linje1,
                         linje2 = vegadresse.linje1,
                         linje3 = vegadresse.linje2,
-                        sistEndret = coAdressenavn.sistEndret
+                        sistEndret = sisteEndring
                     )
                 }
                 adresse.coAdressenavn != null -> Persondata.Adresse(
                     linje1 = adresse.coAdressenavn ?: "Ukjent kommune",
-                    sistEndret = hentSisteEndringFraMetadata(adresse.metadata)
-                )
-                adresse.utenlandskAdresse != null -> lagAdresseFraUtenlandskAdresse(
-                    adresse = adresse.utenlandskAdresse!!,
-                    sisteEndring = hentSisteEndringFraMetadata(adresse.metadata)
+                    sistEndret = sisteEndring
                 )
                 adresse.vegadresse != null -> lagAdresseFraVegadresse(
                     adresse = adresse.vegadresse!!,
-                    sisteEndring = hentSisteEndringFraMetadata(adresse.metadata)
+                    sisteEndring = sisteEndring
+                )
+                adresse.postboksadresse != null -> lagAdresseFraPostboksadresse(
+                    adresse = adresse.postboksadresse!!,
+                    sistEndring = sisteEndring
+                )
+                adresse.postadresseIFrittFormat != null -> lagAdresseFraPostadresseIFrittFormat(
+                    adresse = adresse.postadresseIFrittFormat!!,
+                    sistEndret = sisteEndring
+                )
+                adresse.utenlandskAdresse != null -> lagAdresseFraUtenlandskAdresse(
+                    adresse = adresse.utenlandskAdresse!!,
+                    sisteEndring = sisteEndring
                 )
                 else -> {
                     TjenestekallLogger.warn(
@@ -206,7 +215,34 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
             }
         }
     }
-
+    
+    private fun lagAdresseFraPostadresseIFrittFormat(
+        adresse: HentPersondata.PostadresseIFrittFormat,
+        sistEndret: Persondata.SistEndret?
+    ) = Persondata.Adresse(
+        linje1 = listOf(adresse.adresselinje1),
+        linje2 = listOf(adresse.adresselinje2),
+        linje3 = listOf(
+            adresse.adresselinje3,
+            adresse.postnummer,
+            adresse.postnummer?.let { kodeverk.hentKodeverk(Kodeverk.POSTNUMMER).hentBeskrivelse(it) }
+        ),
+        sistEndret = sistEndret
+    )
+    
+    private fun lagAdresseFraPostboksadresse(
+        adresse: HentPersondata.Postboksadresse,
+        sistEndring: Persondata.SistEndret?
+    ) = Persondata.Adresse(
+        linje1 = listOf(adresse.postboks),
+        linje2 = listOf(
+            adresse.postnummer,
+            adresse.postnummer?.let { kodeverk.hentKodeverk(Kodeverk.POSTNUMMER).hentBeskrivelse(it) }
+        ),
+        linje3 = listOf(adresse.postbokseier),
+        sistEndret = sistEndring
+    )
+    
     private fun hentSisteEndringFraMetadata(metadata: HentPersondata.Metadata): Persondata.SistEndret? {
         return metadata.endringer.maxBy { it.registrert.value }
             ?.let {
