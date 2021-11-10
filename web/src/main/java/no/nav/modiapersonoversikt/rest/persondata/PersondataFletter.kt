@@ -139,18 +139,30 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
 
     private fun hentBostedAdresse(data: Data): List<Persondata.Adresse> {
         return data.persondata.bostedsadresse.mapNotNull { adresse ->
+            val sisteEndring = hentSisteEndringFraMetadata(adresse.metadata)
             when {
+                adresse.coAdressenavn != null && adresse.vegadresse != null -> {
+                    kombinerCoAdressenavnOgVegadresse(
+                        coAdressenavn = adresse.coAdressenavn!!,
+                        vegadresse = lagAdresseFraVegadresse(adresse.vegadresse!!),
+                        sisteEndring = sisteEndring
+                    )
+                }
+                adresse.coAdressenavn != null -> Persondata.Adresse(
+                    linje1 = adresse.coAdressenavn!!,
+                    sistEndret = sisteEndring
+                )
                 adresse.vegadresse != null -> lagAdresseFraVegadresse(
                     adresse = adresse.vegadresse!!,
-                    sisteEndring = hentSisteEndringFraMetadata(adresse.metadata)
+                    sisteEndring = sisteEndring
                 )
                 adresse.matrikkeladresse != null -> lagAdresseFraMatrikkeladresse(
                     adresse = adresse.matrikkeladresse!!,
-                    sisteEndring = hentSisteEndringFraMetadata(adresse.metadata)
+                    sisteEndring = sisteEndring
                 )
                 adresse.utenlandskAdresse != null -> lagAdresseFraUtenlandskAdresse(
                     adresse = adresse.utenlandskAdresse!!,
-                    sisteEndring = hentSisteEndringFraMetadata(adresse.metadata)
+                    sisteEndring = sisteEndring
                 )
                 adresse.ukjentBosted != null -> Persondata.Adresse(
                     linje1 = adresse.ukjentBosted?.bostedskommune ?: "Ukjent kommune",
@@ -176,22 +188,14 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
             val sisteEndring = hentSisteEndringFraMetadata(adresse.metadata)
             when {
                 adresse.coAdressenavn != null && adresse.vegadresse != null -> {
-                    val coAdressenavn = Persondata.Adresse(
-                        linje1 = adresse.coAdressenavn ?: "Ukjent kommune",
-                        sistEndret = sisteEndring
-                    )
-                    val vegadresse = lagAdresseFraVegadresse(
-                        adresse = adresse.vegadresse!!
-                    )
-                    Persondata.Adresse(
-                        linje1 = coAdressenavn.linje1,
-                        linje2 = vegadresse.linje1,
-                        linje3 = vegadresse.linje2,
-                        sistEndret = sisteEndring
+                    kombinerCoAdressenavnOgVegadresse(
+                        coAdressenavn = adresse.coAdressenavn!!,
+                        vegadresse = lagAdresseFraVegadresse(adresse.vegadresse!!),
+                        sisteEndring = sisteEndring
                     )
                 }
                 adresse.coAdressenavn != null -> Persondata.Adresse(
-                    linje1 = adresse.coAdressenavn ?: "Ukjent kommune",
+                    linje1 = adresse.coAdressenavn!!,
                     sistEndret = sisteEndring
                 )
                 adresse.vegadresse != null -> lagAdresseFraVegadresse(
@@ -224,6 +228,17 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
             }
         }
     }
+
+    private fun kombinerCoAdressenavnOgVegadresse(
+        coAdressenavn: String,
+        vegadresse: Persondata.Adresse,
+        sisteEndring: Persondata.SistEndret?
+    ) = Persondata.Adresse(
+        linje1 = coAdressenavn,
+        linje2 = vegadresse.linje1,
+        linje3 = vegadresse.linje2,
+        sistEndret = sisteEndring
+    )
 
     private fun lagAdresseFraPostadresseIFrittFormat(
         adresse: HentPersondata.PostadresseIFrittFormat,
@@ -326,10 +341,6 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
         linje2 = listOf(
             adresse.postnummer,
             adresse.postnummer?.let { kodeverk.hentKodeverk(Kodeverk.POSTNUMMER).hentBeskrivelse(it) }
-        ),
-        linje3 = listOf(
-            adresse.bydelsnummer,
-            adresse.kommunenummer
         ),
         sistEndret = sisteEndring
     )
