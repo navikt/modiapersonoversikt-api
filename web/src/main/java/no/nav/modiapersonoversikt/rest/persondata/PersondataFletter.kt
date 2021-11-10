@@ -142,7 +142,7 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
             val sisteEndring = hentSisteEndringFraMetadata(adresse.metadata)
             when {
                 adresse.coAdressenavn != null && adresse.vegadresse != null -> {
-                    kombinerCoAdresseNavnOgVegadresse(
+                    kombinerCoAdressenavnOgVegadresse(
                         coAdressenavn = adresse.coAdressenavn!!,
                         vegadresse = lagAdresseFraVegadresse(adresse.vegadresse!!),
                         sisteEndring = sisteEndring
@@ -188,7 +188,7 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
             val sisteEndring = hentSisteEndringFraMetadata(adresse.metadata)
             when {
                 adresse.coAdressenavn != null && adresse.vegadresse != null -> {
-                    kombinerCoAdresseNavnOgVegadresse(
+                    kombinerCoAdressenavnOgVegadresse(
                         coAdressenavn = adresse.coAdressenavn!!,
                         vegadresse = lagAdresseFraVegadresse(adresse.vegadresse!!),
                         sisteEndring = sisteEndring
@@ -229,22 +229,16 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
         }
     }
 
-    private fun kombinerCoAdresseNavnOgVegadresse(
+    private fun kombinerCoAdressenavnOgVegadresse(
         coAdressenavn: String,
         vegadresse: Persondata.Adresse,
         sisteEndring: Persondata.SistEndret?
-    ): Persondata.Adresse {
-        val coAdresse = Persondata.Adresse(
-            linje1 = coAdressenavn,
-            sistEndret = sisteEndring
-        )
-        return Persondata.Adresse(
-            linje1 = coAdresse.linje1,
-            linje2 = vegadresse.linje1,
-            linje3 = vegadresse.linje2,
-            sistEndret = sisteEndring
-        )
-    }
+    ) = Persondata.Adresse(
+        linje1 = coAdressenavn,
+        linje2 = vegadresse.linje1,
+        linje3 = vegadresse.linje2,
+        sistEndret = sisteEndring
+    )
 
     private fun lagAdresseFraPostadresseIFrittFormat(
         adresse: HentPersondata.PostadresseIFrittFormat,
