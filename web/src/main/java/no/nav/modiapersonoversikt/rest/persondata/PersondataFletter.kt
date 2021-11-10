@@ -11,6 +11,7 @@ import no.nav.modiapersonoversikt.rest.enhet.model.Klokkeslett
 import no.nav.modiapersonoversikt.rest.enhet.model.Publikumsmottak
 import no.nav.modiapersonoversikt.service.dkif.Dkif
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk
+import no.nav.tjeneste.virksomhet.person.v3.informasjon.Bankkonto
 import no.nav.tjeneste.virksomhet.person.v3.informasjon.BankkontoNorge
 import no.nav.tjeneste.virksomhet.person.v3.informasjon.BankkontoUtland
 import no.nav.tjeneste.virksomhet.person.v3.informasjon.Bruker
@@ -695,26 +696,12 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
                         is BankkontoNorge -> Persondata.Bankkonto(
                             kontonummer = bankkonto.bankkonto.bankkontonummer,
                             banknavn = bankkonto.bankkonto.banknavn,
-                            sistEndret = Persondata.SistEndret(
-                                ident = bankkonto.endretAv,
-                                tidspunkt = bankkonto.endringstidspunkt
-                                    .toGregorianCalendar()
-                                    .toZonedDateTime()
-                                    .toLocalDateTime(),
-                                system = ""
-                            )
+                            sistEndret = hentSistEndretBankkonto(bankkonto)
                         )
                         is BankkontoUtland -> Persondata.Bankkonto(
                             kontonummer = bankkonto.bankkontoUtland.bankkontonummer,
                             banknavn = bankkonto.bankkontoUtland.banknavn,
-                            sistEndret = Persondata.SistEndret(
-                                ident = bankkonto.endretAv,
-                                tidspunkt = bankkonto.endringstidspunkt
-                                    .toGregorianCalendar()
-                                    .toZonedDateTime()
-                                    .toLocalDateTime(),
-                                system = ""
-                            ),
+                            sistEndret = hentSistEndretBankkonto(bankkonto),
                             bankkode = bankkonto.bankkontoUtland.bankkode,
                             swift = bankkonto.bankkontoUtland.swift,
                             landkode = kodeverk.hentKodeBeskrivelse(
@@ -738,6 +725,21 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
                     null
                 }
             }
+    }
+
+    private fun hentSistEndretBankkonto(bankkonto: Bankkonto): Persondata.SistEndret? {
+        return if (bankkonto.endretAv != null && bankkonto.endringstidspunkt != null) {
+            Persondata.SistEndret(
+                ident = bankkonto.endretAv,
+                tidspunkt = bankkonto.endringstidspunkt
+                    .toGregorianCalendar()
+                    .toZonedDateTime()
+                    .toLocalDateTime(),
+                system = ""
+            )
+        } else {
+            null
+        }
     }
 
     private fun hentForelderBarnRelasjon(data: Data): List<Persondata.ForelderBarnRelasjon> {
