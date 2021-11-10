@@ -166,8 +166,8 @@ object Persondata {
 
     data class Bankkonto(
         val kontonummer: String,
-        val banknavn: String,
-        val sistEndret: SistEndret,
+        val banknavn: String?,
+        val sistEndret: SistEndret?,
         val bankkode: String? = null,
         val swift: String? = null,
         val landkode: KodeBeskrivelse<String>? = null,

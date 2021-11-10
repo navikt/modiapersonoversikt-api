@@ -24,6 +24,13 @@ sealed class PersondataResult<T>(val system: String) {
         }
     }
 
+    fun <S> fold(onSuccess: (t: T) -> S, onFailure: (system: String, t: Throwable) -> S): S {
+        return when (this) {
+            is Failure<*> -> onFailure(this.system, this.exception)
+            is Success<T> -> onSuccess(this.value)
+        }
+    }
+
     class Success<T>(name: String, val value: T) : PersondataResult<T>(name)
     class Failure<T>(name: String, val exception: Throwable) : PersondataResult<T>(name)
 

@@ -11,6 +11,7 @@ import no.nav.modiapersonoversikt.rest.enhet.model.Klokkeslett
 import no.nav.modiapersonoversikt.rest.enhet.model.Publikumsmottak
 import no.nav.modiapersonoversikt.service.dkif.Dkif
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk
+import no.nav.tjeneste.virksomhet.person.v3.informasjon.Bankkonto
 import no.nav.tjeneste.virksomhet.person.v3.informasjon.BankkontoNorge
 import no.nav.tjeneste.virksomhet.person.v3.informasjon.BankkontoUtland
 import no.nav.tjeneste.virksomhet.person.v3.informasjon.Bruker
@@ -51,8 +52,9 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
     }
 
     fun flettSammenData(data: Data): Persondata.Data {
+        val feilendeSystemer = data.feilendeSystemer().toMutableList()
         return Persondata.Data(
-            feilendeSystemer = data.feilendeSystemer(),
+            feilendeSystemer = feilendeSystemer,
             person = Persondata.Person(
                 fnr = hentFnr(data),
                 navn = hentNavn(data),
@@ -77,7 +79,14 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
                 tilrettelagtKommunikasjon = hentTilrettelagtKommunikasjon(data),
                 telefonnummer = hentTelefonnummer(data),
                 kontaktOgReservasjon = hentKontaktOgReservasjon(data),
-                bankkonto = hentBankkonto(data),
+                bankkonto = hentBankkonto(data).fold(
+                    onSuccess = { it },
+                    onFailure = { system, cause ->
+                        feilendeSystemer.add(system)
+                        TjenestekallLogger.logger.error("Persondata feilet system: $system", cause)
+                        null
+                    }
+                ),
                 forelderBarnRelasjon = hentForelderBarnRelasjon(data)
             )
         )
@@ -679,34 +688,20 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
         return data.dkifData.getOrNull()
     }
 
-    private fun hentBankkonto(data: Data): Persondata.Bankkonto? {
+    private fun hentBankkonto(data: Data): PersondataResult<Persondata.Bankkonto?> {
         return data.bankkonto
-            .map {
+            .map("Bankkonto") {
                 if (it.person is Bruker) {
                     when (val bankkonto = (it.person as Bruker).bankkonto) {
                         is BankkontoNorge -> Persondata.Bankkonto(
                             kontonummer = bankkonto.bankkonto.bankkontonummer,
                             banknavn = bankkonto.bankkonto.banknavn,
-                            sistEndret = Persondata.SistEndret(
-                                ident = bankkonto.endretAv,
-                                tidspunkt = bankkonto.endringstidspunkt
-                                    .toGregorianCalendar()
-                                    .toZonedDateTime()
-                                    .toLocalDateTime(),
-                                system = ""
-                            )
+                            sistEndret = hentSistEndretBankkonto(bankkonto)
                         )
                         is BankkontoUtland -> Persondata.Bankkonto(
                             kontonummer = bankkonto.bankkontoUtland.bankkontonummer,
                             banknavn = bankkonto.bankkontoUtland.banknavn,
-                            sistEndret = Persondata.SistEndret(
-                                ident = bankkonto.endretAv,
-                                tidspunkt = bankkonto.endringstidspunkt
-                                    .toGregorianCalendar()
-                                    .toZonedDateTime()
-                                    .toLocalDateTime(),
-                                system = ""
-                            ),
+                            sistEndret = hentSistEndretBankkonto(bankkonto),
                             bankkode = bankkonto.bankkontoUtland.bankkode,
                             swift = bankkonto.bankkontoUtland.swift,
                             landkode = kodeverk.hentKodeBeskrivelse(
@@ -730,7 +725,21 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
                     null
                 }
             }
-            .getOrNull()
+    }
+
+    private fun hentSistEndretBankkonto(bankkonto: Bankkonto): Persondata.SistEndret? {
+        return if (bankkonto.endretAv != null && bankkonto.endringstidspunkt != null) {
+            Persondata.SistEndret(
+                ident = bankkonto.endretAv,
+                tidspunkt = bankkonto.endringstidspunkt
+                    .toGregorianCalendar()
+                    .toZonedDateTime()
+                    .toLocalDateTime(),
+                system = ""
+            )
+        } else {
+            null
+        }
     }
 
     private fun hentForelderBarnRelasjon(data: Data): List<Persondata.ForelderBarnRelasjon> {

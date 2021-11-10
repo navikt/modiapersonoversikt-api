@@ -76,7 +76,10 @@ class PersondataServiceImpl(
         return personV3.hentPerson(
             HentPersonRequest()
                 .withAktoer(PersonIdent().withIdent(NorskIdent().withIdent(fnr)))
-                .withInformasjonsbehov(Informasjonsbehov.BANKKONTO)
+                .withInformasjonsbehov(
+                    Informasjonsbehov.BANKKONTO,
+                    Informasjonsbehov.SPORINGSINFORMASJON
+                )
         )
     }
 
