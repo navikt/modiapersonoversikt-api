@@ -51,8 +51,9 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
     }
 
     fun flettSammenData(data: Data): Persondata.Data {
+        val feilendeSystemer = data.feilendeSystemer().toMutableList()
         return Persondata.Data(
-            feilendeSystemer = data.feilendeSystemer(),
+            feilendeSystemer = feilendeSystemer,
             person = Persondata.Person(
                 fnr = hentFnr(data),
                 navn = hentNavn(data),
@@ -77,7 +78,14 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
                 tilrettelagtKommunikasjon = hentTilrettelagtKommunikasjon(data),
                 telefonnummer = hentTelefonnummer(data),
                 kontaktOgReservasjon = hentKontaktOgReservasjon(data),
-                bankkonto = hentBankkonto(data),
+                bankkonto = hentBankkonto(data).fold(
+                    onSuccess = { it },
+                    onFailure = { system, cause ->
+                        feilendeSystemer.add(system)
+                        TjenestekallLogger.logger.error("Persondata feilet system: $system", cause)
+                        null
+                    }
+                ),
                 forelderBarnRelasjon = hentForelderBarnRelasjon(data)
             )
         )
@@ -679,9 +687,9 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
         return data.dkifData.getOrNull()
     }
 
-    private fun hentBankkonto(data: Data): Persondata.Bankkonto? {
+    private fun hentBankkonto(data: Data): PersondataResult<Persondata.Bankkonto?> {
         return data.bankkonto
-            .map {
+            .map("Bankkonto") {
                 if (it.person is Bruker) {
                     when (val bankkonto = (it.person as Bruker).bankkonto) {
                         is BankkontoNorge -> Persondata.Bankkonto(
@@ -730,7 +738,6 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
                     null
                 }
             }
-            .getOrNull()
     }
 
     private fun hentForelderBarnRelasjon(data: Data): List<Persondata.ForelderBarnRelasjon> {
