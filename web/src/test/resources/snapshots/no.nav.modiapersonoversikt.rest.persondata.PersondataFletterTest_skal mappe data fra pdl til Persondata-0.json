@@ -17,7 +17,7 @@
       "adresse" : {
         "linje1" : "Vegadressestien 3",
         "linje2" : "1444 TestPoststed",
-        "linje3" : "0987",
+        "linje3" : null,
         "sistEndret" : null
       },
       "sluttdatoForKontrakt" : null,
@@ -30,11 +30,11 @@
         "personSomAdressat" : {
           "fnr" : "11225666000",
           "fodselsdato" : null,
-          "navn" : {
+          "navn" : [ "java.util.Collections$SingletonList", [ {
             "etternavn" : "Person",
             "fornavn" : "Dødsbo",
             "mellomnavn" : null
-          }
+          } ] ]
         }
       },
       "adresse" : {
@@ -113,7 +113,7 @@
       },
       "motpartsPersonident" : "55555666000",
       "motpartsRolle" : "FULLMEKTIG",
-      "omrade" : [ "kotlin.collections.EmptyList", [ ] ]
+      "omrade" : [ "java.util.ArrayList", [ ] ]
     } ] ],
     "kjonn" : [ "java.util.ArrayList", [ {
       "beskrivelse" : "Mann",
@@ -121,8 +121,8 @@
     } ] ],
     "kontaktAdresse" : [ "java.util.ArrayList", [ {
       "linje1" : "C/O Adressenavn",
-      "linje2" : null,
-      "linje3" : null,
+      "linje2" : "Vegadressestien 3",
+      "linje3" : "1444 TestPoststed",
       "sistEndret" : {
         "ident" : "Folkeregisteret",
         "system" : "FREG",
