@@ -13,7 +13,16 @@
       "linje3" : null,
       "sistEndret" : null
     } ] ],
-    "deltBosted" : [ "java.util.ArrayList", [ ] ],
+    "deltBosted" : [ "java.util.ArrayList", [ {
+      "adresse" : {
+        "linje1" : "Vegadressestien 3",
+        "linje2" : "1444 TestPoststed",
+        "linje3" : "0987",
+        "sistEndret" : null
+      },
+      "sluttdatoForKontrakt" : null,
+      "startdatoForKontrakt" : "2019-09-09"
+    } ] ],
     "dodsbo" : [ "java.util.ArrayList", [ {
       "adressat" : {
         "advokatSomAdressat" : null,
@@ -21,7 +30,11 @@
         "personSomAdressat" : {
           "fnr" : "11225666000",
           "fodselsdato" : null,
-          "navn" : null
+          "navn" : {
+            "etternavn" : "Person",
+            "fornavn" : "Dødsbo",
+            "mellomnavn" : null
+          }
         }
       },
       "adresse" : {
@@ -42,8 +55,54 @@
     "erEgenAnsatt" : "NEI",
     "fnr" : "12345678910",
     "fodselsdato" : [ "java.util.ArrayList", [ "2000-01-02" ] ],
-    "forelderBarnRelasjon" : [ "java.util.ArrayList", [ ] ],
-    "foreldreansvar" : [ "java.util.ArrayList", [ ] ],
+    "forelderBarnRelasjon" : [ "java.util.ArrayList", [ {
+      "adressebeskyttelse" : [ "java.util.Collections$SingletonList", [ {
+        "beskrivelse" : "UGRADERT",
+        "kode" : "UGRADERT"
+      } ] ],
+      "alder" : 20,
+      "fodselsdato" : [ "kotlin.collections.EmptyList", [ ] ],
+      "harSammeAdresse" : false,
+      "ident" : "98765432100",
+      "kjonn" : [ "kotlin.collections.EmptyList", [ ] ],
+      "navn" : [ "java.util.Collections$SingletonList", [ {
+        "etternavn" : "Hans",
+        "fornavn" : "Datteren",
+        "mellomnavn" : null
+      } ] ],
+      "personstatus" : [ "kotlin.collections.EmptyList", [ ] ],
+      "rolle" : "BARN"
+    }, {
+      "adressebeskyttelse" : [ "java.util.Collections$SingletonList", [ {
+        "beskrivelse" : "KODE6",
+        "kode" : "KODE6"
+      } ] ],
+      "alder" : 20,
+      "fodselsdato" : [ "kotlin.collections.EmptyList", [ ] ],
+      "harSammeAdresse" : false,
+      "ident" : "11223344910",
+      "kjonn" : [ "kotlin.collections.EmptyList", [ ] ],
+      "navn" : [ "java.util.Collections$SingletonList", [ {
+        "etternavn" : "Barn",
+        "fornavn" : "Adressebeskyttet",
+        "mellomnavn" : null
+      } ] ],
+      "personstatus" : [ "kotlin.collections.EmptyList", [ ] ],
+      "rolle" : "BARN"
+    } ] ],
+    "foreldreansvar" : [ "java.util.ArrayList", [ {
+      "ansvar" : "felles",
+      "ansvarlig" : {
+        "etternavn" : "MedForeldreansvar",
+        "fornavn" : "Person",
+        "mellomnavn" : null
+      },
+      "ansvarsubject" : {
+        "etternavn" : "Hans",
+        "fornavn" : "Datteren",
+        "mellomnavn" : null
+      }
+    } ] ],
     "fullmakt" : [ "java.util.ArrayList", [ {
       "gyldigFraOgMed" : "2018-01-03",
       "gyldigTilOgMed" : "2018-10-03",
@@ -60,7 +119,16 @@
       "beskrivelse" : "Mann",
       "kode" : "M"
     } ] ],
-    "kontaktAdresse" : [ "java.util.ArrayList", [ ] ],
+    "kontaktAdresse" : [ "java.util.ArrayList", [ {
+      "linje1" : "C/O Adressenavn",
+      "linje2" : null,
+      "linje3" : null,
+      "sistEndret" : {
+        "ident" : "Folkeregisteret",
+        "system" : "FREG",
+        "tidspunkt" : "2020-07-01T10:00:00"
+      }
+    } ] ],
     "kontaktOgReservasjon" : {
       "epostadresse" : {
         "sistOppdatert" : null,
@@ -110,7 +178,7 @@
       "gyldigFraOgMed" : "2015-09-09",
       "sivilstandRelasjon" : {
         "adressebeskyttelse" : [ "java.util.Collections$SingletonList", [ {
-          "beskrivelse" : "Ugradert",
+          "beskrivelse" : "UGRADERT",
           "kode" : "UGRADERT"
         } ] ],
         "alder" : 20,
@@ -135,7 +203,19 @@
         "kode" : "NOR"
       }
     } ] ],
-    "telefonnummer" : [ "java.util.ArrayList", [ ] ],
+    "telefonnummer" : [ "java.util.ArrayList", [ {
+      "identifikator" : "90909090",
+      "prioritet" : -1,
+      "retningsnummer" : {
+        "beskrivelse" : "+47",
+        "kode" : "47"
+      },
+      "sistEndret" : {
+        "ident" : "Folkeregisteret",
+        "system" : "FREG",
+        "tidspunkt" : "2020-07-01T10:00:00"
+      }
+    } ] ],
     "tilrettelagtKommunikasjon" : {
       "talesprak" : [ "java.util.ArrayList", [ {
         "beskrivelse" : "Norsk",
@@ -146,6 +226,18 @@
         "kode" : "NO"
       } ] ]
     },
-    "vergemal" : [ "java.util.ArrayList", [ ] ]
+    "vergemal" : [ "java.util.ArrayList", [ {
+      "embete" : null,
+      "gyldighetstidspunkt" : null,
+      "ident" : "55555111000",
+      "navn" : {
+        "etternavn" : "Vergemål",
+        "fornavn" : "Person",
+        "mellomnavn" : null
+      },
+      "omfang" : "Ikke oppgitt",
+      "opphorstidspunkt" : null,
+      "vergesakstype" : "Ingen vergesakstype oppgitt"
+    } ] ]
   }
 }
