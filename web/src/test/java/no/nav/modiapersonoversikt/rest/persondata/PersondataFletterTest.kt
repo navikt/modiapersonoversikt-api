@@ -6,7 +6,6 @@ import no.nav.modiapersonoversikt.legacy.api.domain.pdl.generated.HentPersondata
 import no.nav.modiapersonoversikt.rest.enhet.model.EnhetKontaktinformasjon
 import no.nav.modiapersonoversikt.service.dkif.Dkif
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk
-import no.nav.modiapersonoversikt.service.enhetligkodeverk.KodeverkConfig
 import no.nav.modiapersonoversikt.service.organisasjonenhet.kontaktinformasjon.domain.*
 import no.nav.modiapersonoversikt.testutils.SnapshotExtension
 import no.nav.tjeneste.virksomhet.person.v3.meldinger.HentPersonResponse
@@ -143,7 +142,7 @@ internal class PersondataFletterTest {
             etternavn = split.last()
         )
     }
-    
+
     private fun gittPersonnavn(navn: String): HentPersondata.Personnavn {
         val persondataNavn = gittNavn(navn)
         return HentPersondata.Personnavn(
@@ -152,7 +151,7 @@ internal class PersondataFletterTest {
             etternavn = persondataNavn.etternavn
         )
     }
-    
+
     private fun gittHentPersondataNavn(navn: String): HentPersondata.Navn {
         val persondataNavn = gittNavn(navn)
         return HentPersondata.Navn(
@@ -161,7 +160,7 @@ internal class PersondataFletterTest {
             etternavn = persondataNavn.etternavn
         )
     }
-    
+
     private val tredjepartsPersoner = mapOf(
         "98765432100" to gittTredjepartsperson(
             navn = "Datteren Hans"
@@ -251,7 +250,7 @@ internal class PersondataFletterTest {
         utenlandskAdresse = null,
         ukjentBosted = null
     )
-    
+
     private val kontaktinformasjonDodsbo = HentPersondata.KontaktinformasjonForDoedsbo(
         skifteform = HentPersondata.KontaktinformasjonForDoedsboSkifteform.OFFENTLIG,
         attestutstedelsesdato = gittDato("2014-05-02"),
@@ -278,31 +277,31 @@ internal class PersondataFletterTest {
         epostadresse = Dkif.Epostadresse(value = "test@test.no"),
         mobiltelefonnummer = Dkif.MobilTelefon(value = "90009900")
     )
-    
+
     private val sivilstandPerson = HentPersondata.Sivilstand(
         type = HentPersondata.Sivilstandstype.GIFT,
         gyldigFraOgMed = gittDato("2015-09-09"),
         relatertVedSivilstand = "11225678910"
     )
-    
+
     private val statsborger = HentPersondata.Statsborgerskap(
         land = "NOR",
         gyldigFraOgMed = gittDato("2000-10-01"),
         gyldigTilOgMed = null
     )
-    
+
     private val sikkerhetstiltakData = HentPersondata.Sikkerhetstiltak(
         tiltakstype = "TFUS",
         beskrivelse = "Telefonisk utestengelse",
         gyldigFraOgMed = gittDato("2019-01-01"),
         gyldigTilOgMed = gittDato("2019-01-14")
     )
-    
+
     private val tilrettelagtKommunikasjonData = HentPersondata.TilrettelagtKommunikasjon(
         talespraaktolk = HentPersondata.Tolk(spraak = "NO"),
         tegnspraaktolk = HentPersondata.Tolk(spraak = "NO")
     )
-    
+
     private val fullmaktPerson = HentPersondata.Fullmakt(
         motpartsPersonident = "55555666000",
         motpartsRolle = HentPersondata.FullmaktsRolle.FULLMEKTIG,
@@ -310,7 +309,7 @@ internal class PersondataFletterTest {
         gyldigFraOgMed = gittDato("2018-01-03"),
         gyldigTilOgMed = gittDato("2018-10-03")
     )
-    
+
     private val vergemal = HentPersondata.VergemaalEllerFremtidsfullmakt(
         type = "Voksen",
         embete = null,
@@ -322,7 +321,7 @@ internal class PersondataFletterTest {
         ),
         folkeregistermetadata = null
     )
-    
+
     private val foreldreansvarData = HentPersondata.Foreldreansvar(
         ansvar = "felles",
         ansvarlig = "55333111000",
@@ -330,7 +329,7 @@ internal class PersondataFletterTest {
         metadata = HentPersondata.Metadata2(historisk = false),
         ansvarligUtenIdentifikator = null
     )
-    
+
     private val forelderBarnRelasjonData = listOf(
         HentPersondata.ForelderBarnRelasjon(
             relatertPersonsIdent = "98765432100",
@@ -341,7 +340,7 @@ internal class PersondataFletterTest {
             relatertPersonsRolle = HentPersondata.ForelderBarnRelasjonRolle.BARN
         )
     )
-    
+
     private val vegadresse = HentPersondata.Vegadresse(
         matrikkelId = null,
         husbokstav = null,
@@ -353,7 +352,7 @@ internal class PersondataFletterTest {
         tilleggsnavn = null,
         postnummer = "1444"
     )
-    
+
     private val deltBostedData = HentPersondata.DeltBosted(
         startdatoForKontrakt = gittDato("2019-09-09"),
         sluttdatoForKontrakt = null,
@@ -363,7 +362,7 @@ internal class PersondataFletterTest {
         utenlandskAdresse = null,
         ukjentBosted = null
     )
-    
+
     private val kontaktadresseData = HentPersondata.Kontaktadresse(
         metadata = metadata,
         coAdressenavn = "C/O Adressenavn",
@@ -372,7 +371,7 @@ internal class PersondataFletterTest {
         vegadresse = vegadresse,
         utenlandskAdresse = null
     )
-    
+
     private fun gittDato(dato: String) = HentPersondata.Date(LocalDate.parse(dato))
 
     private fun ukjentBosted(bosted: String) = listOf(
