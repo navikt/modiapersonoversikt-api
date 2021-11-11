@@ -79,7 +79,7 @@ class PdlOppslagServiceImpl constructor(
             .data
             ?.hentGeografiskTilknytning
             ?.run {
-                gtBydel ?: gtKommune ?: gtLand ?: gtType.toString()
+                gtBydel ?: gtKommune ?: gtLand
             }
     }
 
