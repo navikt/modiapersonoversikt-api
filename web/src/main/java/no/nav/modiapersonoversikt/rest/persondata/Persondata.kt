@@ -154,7 +154,7 @@ object Persondata {
 
     data class PersonSomAdressat(
         val fnr: String?,
-        val navn: Navn?,
+        val navn: List<Navn>,
         val fodselsdato: LocalDate?
     )
 
@@ -166,8 +166,8 @@ object Persondata {
 
     data class Bankkonto(
         val kontonummer: String,
-        val banknavn: String,
-        val sistEndret: SistEndret,
+        val banknavn: String?,
+        val sistEndret: SistEndret?,
         val bankkode: String? = null,
         val swift: String? = null,
         val landkode: KodeBeskrivelse<String>? = null,
@@ -184,7 +184,7 @@ object Persondata {
         val motpartsPersonident: String,
         val motpartsPersonNavn: Navn,
         val motpartsRolle: FullmaktsRolle,
-        val omrade: List<String>,
+        val omrade: List<KodeBeskrivelse<String>>,
         val gyldigFraOgMed: LocalDate,
         val gyldigTilOgMed: LocalDate
     )

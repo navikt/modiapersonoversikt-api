@@ -152,7 +152,7 @@ class TredjepartspersonMapper(val kodeverk: EnhetligKodeverk.Service) {
                     Kodeverk.DISKRESJONSKODER,
                     "SPSF"
                 )
-                HentTredjepartspersondata.AdressebeskyttelseGradering.FORTROLIG -> kodeverk.hentKodeBeskrivelse(Kodeverk.DISKRESJONSKODER, "SPSO")
+                HentTredjepartspersondata.AdressebeskyttelseGradering.FORTROLIG -> kodeverk.hentKodeBeskrivelse(Kodeverk.DISKRESJONSKODER, "SPFO")
                 HentTredjepartspersondata.AdressebeskyttelseGradering.UGRADERT -> Persondata.KodeBeskrivelse("", "Ugradert")
                 else -> Persondata.KodeBeskrivelse("", "Ukjent")
             }

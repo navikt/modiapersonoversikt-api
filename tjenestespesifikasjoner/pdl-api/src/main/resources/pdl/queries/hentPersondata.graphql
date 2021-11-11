@@ -25,6 +25,17 @@ fragment utenlandskadresse on UtenlandskAdresse {
     regionDistriktOmraade
     landkode
 }
+fragment postadresseIFrittFormat on PostadresseIFrittFormat {
+    adresselinje1
+    adresselinje2
+    adresselinje3
+    postnummer
+}
+fragment postboksadresse on Postboksadresse {
+    postbokseier
+    postboks
+    postnummer
+}
 
 fragment sistEndret on Metadata {
     endringer {
@@ -206,6 +217,7 @@ query($ident: ID!){
                 ajourholdstidspunkt
                 kilde
             }
+            coAdressenavn
             vegadresse {
                 ...vegadresse
             }
@@ -224,6 +236,12 @@ query($ident: ID!){
                ...sistEndret
             }
             coAdressenavn
+            postadresseIFrittFormat {
+                ...postadresseIFrittFormat
+            }
+            postboksadresse {
+                ...postboksadresse
+            }
             vegadresse {
                 ...vegadresse
             }

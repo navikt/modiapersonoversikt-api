@@ -76,7 +76,10 @@ class PersondataServiceImpl(
         return personV3.hentPerson(
             HentPersonRequest()
                 .withAktoer(PersonIdent().withIdent(NorskIdent().withIdent(fnr)))
-                .withInformasjonsbehov(Informasjonsbehov.BANKKONTO)
+                .withInformasjonsbehov(
+                    Informasjonsbehov.BANKKONTO,
+                    Informasjonsbehov.SPORINGSINFORMASJON
+                )
         )
     }
 
@@ -123,7 +126,8 @@ class PersondataServiceImpl(
             *this.foreldreansvar.mapNotNull { it.ansvarlig }.toTypedArray(),
             *this.foreldreansvar.mapNotNull { it.ansvarssubjekt }.toTypedArray(),
             *this.sivilstand.mapNotNull { it.relatertVedSivilstand }.toTypedArray(),
-            *this.forelderBarnRelasjon.mapNotNull { it.relatertPersonsIdent }.toTypedArray()
+            *this.forelderBarnRelasjon.mapNotNull { it.relatertPersonsIdent }.toTypedArray(),
+            *this.kontaktinformasjonForDoedsbo.mapNotNull { it.personSomKontakt?.identifikasjonsnummer }.toTypedArray()
         ).toList()
     }
 
