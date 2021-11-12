@@ -86,10 +86,8 @@ class PersondataServiceImpl(
     private fun hentNavEnhet(
         persondata: HentPersondata.Person,
         geografiskeTilknytning: PersondataResult<String?>
-    ): PersondataResult<EnhetKontaktinformasjon>? {
-        if (geografiskeTilknytning.getOrNull() == null) {
-            return null
-        }
+    ): PersondataResult<EnhetKontaktinformasjon> {
+        val gt = geografiskeTilknytning.getOrElse("")
 
         var diskresjonskode = ""
         val adressebeskyttelse = persondata.adressebeskyttelse
@@ -105,13 +103,12 @@ class PersondataServiceImpl(
                 break
             }
         }
-        return geografiskeTilknytning
-            .map("NORG") {
-                organisasjonEnhetV2Service
-                    .finnNAVKontor(it, diskresjonskode)
-                    .orElseThrow()
-                    .enhetId
-            }
+        return PersondataResult.runCatching("NORG") {
+            organisasjonEnhetV2Service
+                .finnNAVKontor(gt, diskresjonskode)
+                .orElseThrow()
+                .enhetId
+        }
             .map("NORG Kontaktinformasjon") {
                 EnhetKontaktinformasjon(organisasjonEnhetKontaktinformasjonService.hentKontaktinformasjon(it))
             }
