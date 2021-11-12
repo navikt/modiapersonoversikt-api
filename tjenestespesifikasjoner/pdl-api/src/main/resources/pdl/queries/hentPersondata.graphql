@@ -249,5 +249,23 @@ query($ident: ID!){
                 ...utenlandskadresse
             }
         }
+        oppholdsadresse {
+            gyldigFraOgMed
+            gyldigTilOgMed
+            oppholdAnnetSted
+            coAdressenavn
+            vegadresse {
+                ...vegadresse
+            }
+            matrikkeladresse {
+                ...matrikkeladresse
+            }
+            utenlandskAdresse {
+                ...utenlandskadresse
+            }
+            metadata {
+                ...sistEndret
+            }
+        }
     }
 }

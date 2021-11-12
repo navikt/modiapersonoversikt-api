@@ -19,6 +19,7 @@ object Persondata {
         val dodsdato: List<LocalDate>,
         val bostedAdresse: List<Adresse>,
         val kontaktAdresse: List<Adresse>,
+        val oppholdsAdresse: List<Adresse>,
         val navEnhet: Enhet?,
         val statsborgerskap: List<Statsborgerskap>,
         val adressebeskyttelse: List<KodeBeskrivelse<AdresseBeskyttelse>>,
@@ -98,17 +99,23 @@ object Persondata {
     )
 
     data class Adresse constructor(
+        val gyldigFraOgMed: LocalDate? = null,
+        val gyldigTilOgMed: LocalDate? = null,
         val linje1: String,
         val linje2: String? = null,
         val linje3: String? = null,
         val sistEndret: SistEndret?
     ) {
         constructor(
+            gyldigFraOgMed: LocalDate? = null,
+            gyldigTilOgMed: LocalDate? = null,
             linje1: List<String?>,
             linje2: List<String?>? = null,
             linje3: List<String?>? = null,
             sistEndret: SistEndret?
         ) : this(
+            gyldigFraOgMed,
+            gyldigTilOgMed,
             linje1.filterNotNull().joinToString(" "),
             linje2?.filterNotNull()?.joinToString(" "),
             linje3?.filterNotNull()?.joinToString(" "),

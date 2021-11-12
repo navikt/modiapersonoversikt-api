@@ -64,6 +64,7 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
                 dodsdato = hentDodsdato(data),
                 bostedAdresse = hentBostedAdresse(data),
                 kontaktAdresse = hentKontaktAdresse(data),
+                oppholdsAdresse = hentOppholdsAdresse(data),
                 navEnhet = hentNavEnhet(data),
                 statsborgerskap = hentStatsborgerskap(data),
                 adressebeskyttelse = hentAdressebeskyttelse(data),
@@ -209,6 +210,50 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
                 adresse.postadresseIFrittFormat != null -> lagAdresseFraPostadresseIFrittFormat(
                     adresse = adresse.postadresseIFrittFormat!!,
                     sistEndret = sisteEndring
+                )
+                adresse.utenlandskAdresse != null -> lagAdresseFraUtenlandskAdresse(
+                    adresse = adresse.utenlandskAdresse!!,
+                    sisteEndring = sisteEndring
+                )
+                else -> {
+                    TjenestekallLogger.warn(
+                        "PersondataFletter",
+                        mapOf(
+                            "fnr" to hentFnr(data),
+                            "feil" to "Ukjent kontaktadresse struktur",
+                            "addresse" to adresse
+                        )
+                    )
+                    null
+                }
+            }
+        }
+    }
+
+    private fun hentOppholdsAdresse(data: Data): List<Persondata.Adresse> {
+        return data.persondata.oppholdsadresse.mapNotNull { adresse ->
+            val sisteEndring = hentSisteEndringFraMetadata(adresse.metadata)
+            adresse.gyldigFraOgMed
+            adresse.gyldigTilOgMed
+            when {
+                adresse.coAdressenavn != null && adresse.vegadresse != null -> {
+                    kombinerCoAdressenavnOgVegadresse(
+                        coAdressenavn = adresse.coAdressenavn!!,
+                        vegadresse = lagAdresseFraVegadresse(adresse.vegadresse!!),
+                        sisteEndring = sisteEndring
+                    )
+                }
+                adresse.coAdressenavn != null -> Persondata.Adresse(
+                    linje1 = adresse.coAdressenavn!!,
+                    sistEndret = sisteEndring
+                )
+                adresse.vegadresse != null -> lagAdresseFraVegadresse(
+                    adresse = adresse.vegadresse!!,
+                    sisteEndring = sisteEndring
+                )
+                adresse.matrikkeladresse != null -> lagAdresseFraMatrikkeladresse(
+                    adresse = adresse.matrikkeladresse!!,
+                    sisteEndring = sisteEndring
                 )
                 adresse.utenlandskAdresse != null -> lagAdresseFraUtenlandskAdresse(
                     adresse = adresse.utenlandskAdresse!!,
