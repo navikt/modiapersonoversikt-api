@@ -46,8 +46,8 @@
     },
     "midlertidigPostadresse" : [ "no.nav.tjeneste.virksomhet.personsoek.v1.informasjon.MidlertidigPostadresseUtland", {
       "postleveringsPeriode" : {
-        "fom" : [ "java.util.GregorianCalendar", 1602460800000 ],
-        "tom" : [ "java.util.GregorianCalendar", 1602460800000 ]
+        "fom" : [ "java.util.GregorianCalendar", "2020-10-12T00:00:00.000+00:00" ],
+        "tom" : [ "java.util.GregorianCalendar", "2020-10-12T00:00:00.000+00:00" ]
       },
       "ustrukturertAdresse" : {
         "adresselinje1" : "adresselinje1",
@@ -138,8 +138,8 @@
     },
     "midlertidigPostadresse" : [ "no.nav.tjeneste.virksomhet.personsoek.v1.informasjon.MidlertidigPostadresseNorge", {
       "postleveringsPeriode" : {
-        "fom" : [ "java.util.GregorianCalendar", 1602460800000 ],
-        "tom" : [ "java.util.GregorianCalendar", 1602460800000 ]
+        "fom" : [ "java.util.GregorianCalendar", "2020-10-12T00:00:00.000+00:00" ],
+        "tom" : [ "java.util.GregorianCalendar", "2020-10-12T00:00:00.000+00:00" ]
       },
       "ustrukturertAdresse" : {
         "adresselinje1" : "adresselinje1",
@@ -234,8 +234,8 @@
     },
     "midlertidigPostadresse" : [ "no.nav.tjeneste.virksomhet.personsoek.v1.informasjon.MidlertidigPostadresseNorge", {
       "postleveringsPeriode" : {
-        "fom" : [ "java.util.GregorianCalendar", 1602460800000 ],
-        "tom" : [ "java.util.GregorianCalendar", 1602460800000 ]
+        "fom" : [ "java.util.GregorianCalendar", "2020-10-12T00:00:00.000+00:00" ],
+        "tom" : [ "java.util.GregorianCalendar", "2020-10-12T00:00:00.000+00:00" ]
       },
       "ustrukturertAdresse" : {
         "adresselinje1" : "adresselinje1",
