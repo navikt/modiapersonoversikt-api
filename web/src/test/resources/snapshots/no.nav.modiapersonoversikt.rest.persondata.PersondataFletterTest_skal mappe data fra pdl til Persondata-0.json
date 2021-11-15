@@ -92,12 +92,14 @@
     } ] ],
     "foreldreansvar" : [ "java.util.ArrayList", [ {
       "ansvar" : "felles",
-      "ansvarlig" : {
+      "ansvarligIdent" : "55333111000",
+      "ansvarligNavn" : {
         "etternavn" : "MedForeldreansvar",
         "fornavn" : "Person",
         "mellomnavn" : null
       },
-      "ansvarsubject" : {
+      "ansvarsubjectIdent" : "98765432100",
+      "ansvarsubjectNavn" : {
         "etternavn" : "Hans",
         "fornavn" : "Datteren",
         "mellomnavn" : null
