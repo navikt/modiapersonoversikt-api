@@ -88,7 +88,8 @@ internal class PersondataFletterTest {
         forelderBarnRelasjon: List<HentPersondata.ForelderBarnRelasjon> = forelderBarnRelasjonData,
         deltBosted: HentPersondata.DeltBosted = deltBostedData,
         bosted: List<HentPersondata.Bostedsadresse> = ukjentBosted("Ukjent adresse"),
-        kontaktadresse: HentPersondata.Kontaktadresse = kontaktadresseData
+        kontaktadresse: HentPersondata.Kontaktadresse = kontaktadresseData,
+        oppholdsadresse: HentPersondata.Oppholdsadresse = oppholdsadresseData
     ) = HentPersondata.Person(
         folkeregisteridentifikator = listOf(HentPersondata.Folkeregisteridentifikator(fnr, "I_BRUK", "FNR")),
         navn = listOf(gittHentPersondataNavn(navn)),
@@ -111,7 +112,8 @@ internal class PersondataFletterTest {
         forelderBarnRelasjon = forelderBarnRelasjon,
         deltBosted = listOf(deltBosted),
         bostedsadresse = bosted,
-        kontaktadresse = listOf(kontaktadresse)
+        kontaktadresse = listOf(kontaktadresse),
+        oppholdsadresse = listOf(oppholdsadresse)
     )
 
     private fun gittTredjepartsperson(
@@ -372,7 +374,20 @@ internal class PersondataFletterTest {
         utenlandskAdresse = null
     )
 
+    private val oppholdsadresseData = HentPersondata.Oppholdsadresse(
+        gyldigFraOgMed = gittDateTime("2021-02-02T00:00:00"),
+        gyldigTilOgMed = gittDateTime("2021-02-02T00:00:00"),
+        oppholdAnnetSted = "UTENRIKS",
+        coAdressenavn = "Kari Hansen",
+        vegadresse = vegadresse,
+        matrikkeladresse = null,
+        utenlandskAdresse = null,
+        metadata = metadata
+    )
+
     private fun gittDato(dato: String) = HentPersondata.Date(LocalDate.parse(dato))
+
+    private fun gittDateTime(dato: String) = HentPersondata.DateTime(LocalDateTime.parse(dato))
 
     private fun ukjentBosted(bosted: String) = listOf(
         adresse.copy(
