@@ -99,16 +99,16 @@ object Persondata {
     )
 
     data class Adresse constructor(
-        val gyldigFraOgMed: LocalDate? = null,
-        val gyldigTilOgMed: LocalDate? = null,
+        val gyldigFraOgMed: LocalDateTime? = null,
+        val gyldigTilOgMed: LocalDateTime? = null,
         val linje1: String,
         val linje2: String? = null,
         val linje3: String? = null,
         val sistEndret: SistEndret?
     ) {
         constructor(
-            gyldigFraOgMed: LocalDate? = null,
-            gyldigTilOgMed: LocalDate? = null,
+            gyldigFraOgMed: LocalDateTime? = null,
+            gyldigTilOgMed: LocalDateTime? = null,
             linje1: List<String?>,
             linje2: List<String?>? = null,
             linje3: List<String?>? = null,

@@ -17,6 +17,7 @@ import no.nav.tjeneste.virksomhet.person.v3.informasjon.BankkontoUtland
 import no.nav.tjeneste.virksomhet.person.v3.informasjon.Bruker
 import no.nav.tjeneste.virksomhet.person.v3.meldinger.HentPersonResponse
 import java.time.LocalDate
+import java.time.LocalDateTime
 import java.time.Period
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.KodeverkConfig as Kodeverk
 
@@ -232,32 +233,44 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
 
     private fun hentOppholdsAdresse(data: Data): List<Persondata.Adresse> {
         return data.persondata.oppholdsadresse.mapNotNull { adresse ->
+            adresse.gyldigFraOgMed?.value
+            adresse.gyldigTilOgMed?.value
             val sisteEndring = hentSisteEndringFraMetadata(adresse.metadata)
-            adresse.gyldigFraOgMed
-            adresse.gyldigTilOgMed
             when {
                 adresse.coAdressenavn != null && adresse.vegadresse != null -> {
                     kombinerCoAdressenavnOgVegadresse(
                         coAdressenavn = adresse.coAdressenavn!!,
-                        vegadresse = lagAdresseFraVegadresse(adresse.vegadresse!!),
+                        vegadresse = lagAdresseFraVegadresse(
+                            adresse = adresse.vegadresse!!,
+                            gyldigFraOgMed = adresse.gyldigFraOgMed?.value,
+                            gyldigTilOgMed = adresse.gyldigTilOgMed?.value
+                        ),
                         sisteEndring = sisteEndring
                     )
                 }
                 adresse.coAdressenavn != null -> Persondata.Adresse(
+                    gyldigFraOgMed = adresse.gyldigFraOgMed?.value,
+                    gyldigTilOgMed = adresse.gyldigTilOgMed?.value,
                     linje1 = adresse.coAdressenavn!!,
                     sistEndret = sisteEndring
                 )
                 adresse.vegadresse != null -> lagAdresseFraVegadresse(
+                    gyldigFraOgMed = adresse.gyldigFraOgMed?.value,
+                    gyldigTilOgMed = adresse.gyldigTilOgMed?.value,
                     adresse = adresse.vegadresse!!,
                     sisteEndring = sisteEndring
                 )
                 adresse.matrikkeladresse != null -> lagAdresseFraMatrikkeladresse(
                     adresse = adresse.matrikkeladresse!!,
-                    sisteEndring = sisteEndring
+                    sisteEndring = sisteEndring,
+                    gyldigFraOgMed = adresse.gyldigFraOgMed?.value,
+                    gyldigTilOgMed = adresse.gyldigTilOgMed?.value
                 )
                 adresse.utenlandskAdresse != null -> lagAdresseFraUtenlandskAdresse(
                     adresse = adresse.utenlandskAdresse!!,
-                    sisteEndring = sisteEndring
+                    sisteEndring = sisteEndring,
+                    gyldigFraOgMed = adresse.gyldigFraOgMed?.value,
+                    gyldigTilOgMed = adresse.gyldigTilOgMed?.value
                 )
                 else -> {
                     TjenestekallLogger.warn(
@@ -279,6 +292,8 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
         vegadresse: Persondata.Adresse,
         sisteEndring: Persondata.SistEndret?
     ) = Persondata.Adresse(
+        gyldigFraOgMed = vegadresse.gyldigFraOgMed,
+        gyldigTilOgMed = vegadresse.gyldigTilOgMed,
         linje1 = coAdressenavn,
         linje2 = vegadresse.linje1,
         linje3 = vegadresse.linje2,
@@ -325,8 +340,12 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
 
     private fun lagAdresseFraMatrikkeladresse(
         adresse: HentPersondata.Matrikkeladresse,
-        sisteEndring: Persondata.SistEndret? = null
+        sisteEndring: Persondata.SistEndret? = null,
+        gyldigFraOgMed: LocalDateTime? = null,
+        gyldigTilOgMed: LocalDateTime? = null
     ) = Persondata.Adresse(
+        gyldigFraOgMed = gyldigFraOgMed,
+        gyldigTilOgMed = gyldigTilOgMed,
         linje1 = listOf(
             adresse.bruksenhetsnummer,
             adresse.tilleggsnavn
@@ -340,8 +359,12 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
 
     private fun lagAdresseFraUtenlandskAdresse(
         adresse: HentPersondata.UtenlandskAdresse,
-        sisteEndring: Persondata.SistEndret? = null
+        sisteEndring: Persondata.SistEndret? = null,
+        gyldigFraOgMed: LocalDateTime? = null,
+        gyldigTilOgMed: LocalDateTime? = null
     ) = Persondata.Adresse(
+        gyldigFraOgMed = gyldigFraOgMed,
+        gyldigTilOgMed = gyldigTilOgMed,
         linje1 = listOf(
             adresse.postboksNummerNavn,
             adresse.adressenavnNummer,
@@ -375,8 +398,12 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
 
     private fun lagAdresseFraVegadresse(
         adresse: HentPersondata.Vegadresse,
-        sisteEndring: Persondata.SistEndret? = null
+        sisteEndring: Persondata.SistEndret? = null,
+        gyldigFraOgMed: LocalDateTime? = null,
+        gyldigTilOgMed: LocalDateTime? = null
     ) = Persondata.Adresse(
+        gyldigFraOgMed = gyldigFraOgMed,
+        gyldigTilOgMed = gyldigTilOgMed,
         linje1 = listOf(
             adresse.adressenavn,
             adresse.husnummer,
