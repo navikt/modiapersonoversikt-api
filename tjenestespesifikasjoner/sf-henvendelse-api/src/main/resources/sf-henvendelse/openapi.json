@@ -605,7 +605,7 @@
             "$ref": "#/components/schemas/MeldingFra"
           }
         },
-        "required": ["fritekst", "sendtDato", "fra"]
+        "required": ["sendtDato", "fra"]
       },
       "Henvendelse": {
         "type": "object",
