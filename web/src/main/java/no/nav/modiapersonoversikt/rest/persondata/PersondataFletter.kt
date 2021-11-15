@@ -25,7 +25,7 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
         val persondata: HentPersondata.Person,
         val geografiskeTilknytning: PersondataResult<String?>,
         val erEgenAnsatt: PersondataResult<Boolean>,
-        val navEnhet: PersondataResult<EnhetKontaktinformasjon>?,
+        val navEnhet: PersondataResult<EnhetKontaktinformasjon>,
         val dkifData: PersondataResult<Dkif.DigitalKontaktinformasjon>,
         val bankkonto: PersondataResult<HentPersonResponse>,
         val tredjepartsPerson: PersondataResult<Map<String, Persondata.TredjepartsPerson>>
@@ -392,8 +392,8 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
 
     private fun hentNavEnhet(data: Data): Persondata.Enhet? {
         return data.navEnhet
-            ?.map { Persondata.Enhet(it.enhetId, it.enhetNavn, hentPublikumsmottak(it.publikumsmottak)) }
-            ?.getOrNull()
+            .map { Persondata.Enhet(it.enhetId, it.enhetNavn, hentPublikumsmottak(it.publikumsmottak)) }
+            .getOrNull()
     }
 
     private fun hentPublikumsmottak(publikumsmottak: List<Publikumsmottak>): List<Persondata.Publikumsmottak> {
@@ -540,7 +540,7 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
     private fun hentForeldreansvar(data: Data): List<Persondata.Foreldreansvar> {
         return data.persondata.foreldreansvar.map { forelderansvar ->
             val ansvarligUtenNavn = forelderansvar.ansvarligUtenIdentifikator?.navn?.let(::hentNavn)
-            val ansvarlig = data.tredjepartsPerson.map { it[forelderansvar.ansvar] }.getOrNull()
+            val ansvarlig = data.tredjepartsPerson.map { it[forelderansvar.ansvarlig] }.getOrNull()
             val ansvarligsubject = data.tredjepartsPerson.map { it[forelderansvar.ansvarssubjekt] }.getOrNull()
             Persondata.Foreldreansvar(
                 ansvar = forelderansvar.ansvar ?: "Kunne ikke hente type ansvar",

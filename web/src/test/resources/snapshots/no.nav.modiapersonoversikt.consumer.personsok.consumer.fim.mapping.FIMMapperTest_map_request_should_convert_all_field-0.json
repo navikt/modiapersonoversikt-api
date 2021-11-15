@@ -8,8 +8,8 @@
     "alderFra" : 10,
     "alderTil" : 20,
     "enhetId" : "kommunenr",
-    "foedselsdatoFra" : [ "java.util.GregorianCalendar", 1602460800000 ],
-    "foedselsdatoTil" : [ "java.util.GregorianCalendar", 1602460800000 ],
+    "foedselsdatoFra" : [ "java.util.GregorianCalendar", "2020-10-12T00:00:00.000+00:00" ],
+    "foedselsdatoTil" : [ "java.util.GregorianCalendar", "2020-10-12T00:00:00.000+00:00" ],
     "kjoenn" : "K"
   },
   "soekekriterie" : {

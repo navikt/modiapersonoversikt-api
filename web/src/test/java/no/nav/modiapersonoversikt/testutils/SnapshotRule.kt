@@ -4,6 +4,8 @@ import com.fasterxml.jackson.databind.MapperFeature
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.databind.jsontype.DefaultBaseTypeLimitingValidator
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
+import com.fasterxml.jackson.module.kotlin.KotlinModule
 import org.junit.rules.TestWatcher
 import org.junit.runner.Description
 import java.io.File
@@ -19,6 +21,9 @@ class SnapshotRule(path: String = "src/test/resources/snapshots") : TestWatcher(
     private var hadMissingFile: Boolean = false
     companion object {
         private val json = ObjectMapper()
+            .registerModule(KotlinModule())
+            .registerModule(JavaTimeModule())
+            .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
             .configure(SerializationFeature.ORDER_MAP_ENTRIES_BY_KEYS, true)
             .configure(MapperFeature.SORT_PROPERTIES_ALPHABETICALLY, true)
             .activateDefaultTyping(DefaultBaseTypeLimitingValidator())
