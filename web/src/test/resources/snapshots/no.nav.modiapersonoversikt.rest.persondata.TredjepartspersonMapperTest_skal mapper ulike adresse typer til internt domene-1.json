@@ -1,0 +1,24 @@
+{
+  "adressebeskyttelse" : [ "java.util.ArrayList", [ {
+    "beskrivelse" : "Ugradert",
+    "kode" : "UGRADERT"
+  } ] ],
+  "alder" : null,
+  "bostedAdresse" : [ "java.util.ArrayList", [ {
+    "gyldigFraOgMed" : null,
+    "gyldigTilOgMed" : null,
+    "linje1" : "Gutua 13 A 01654A",
+    "linje2" : "1234 1234",
+    "linje3" : "000001 Skauen",
+    "sistEndret" : null
+  } ] ],
+  "fnr" : "00000000000",
+  "fodselsdato" : [ "java.util.ArrayList", [ ] ],
+  "kjonn" : [ "java.util.ArrayList", [ ] ],
+  "navn" : [ "java.util.ArrayList", [ {
+    "etternavn" : "Testfamilien",
+    "fornavn" : "Aremark",
+    "mellomnavn" : null
+  } ] ],
+  "personstatus" : [ "java.util.ArrayList", [ ] ]
+}
