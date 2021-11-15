@@ -4,6 +4,8 @@ import com.fasterxml.jackson.databind.MapperFeature
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.databind.jsontype.DefaultBaseTypeLimitingValidator
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
+import com.fasterxml.jackson.module.kotlin.KotlinModule
 import org.junit.jupiter.api.extension.*
 import java.io.File
 import java.nio.charset.StandardCharsets.UTF_8
@@ -22,6 +24,9 @@ class SnapshotExtension(
     private var hadMissingFile: Boolean = false
     companion object {
         private val json = ObjectMapper()
+            .registerModule(KotlinModule())
+            .registerModule(JavaTimeModule())
+            .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
             .configure(SerializationFeature.ORDER_MAP_ENTRIES_BY_KEYS, true)
             .configure(MapperFeature.SORT_PROPERTIES_ALPHABETICALLY, true)
             .activateDefaultTyping(DefaultBaseTypeLimitingValidator())

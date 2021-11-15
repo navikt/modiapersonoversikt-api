@@ -35,7 +35,7 @@ public class YtelseskontraktMapperTest {
     private static final LocalDate FIXED_DATE = LocalDate.parse("2020-10-13");
 
     @Test
-    public void testMappper() throws DatatypeConfigurationException {
+    public void testMapper() throws DatatypeConfigurationException {
         YtelseskontraktMapper mapper = YtelseskontraktMapper.getInstance();
 
         YtelseskontraktRequest ytelseskontraktRequest = new YtelseskontraktRequest();

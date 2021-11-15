@@ -495,7 +495,7 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
     private fun hentForeldreansvar(data: Data): List<Persondata.Foreldreansvar> {
         return data.persondata.foreldreansvar.map { forelderansvar ->
             val ansvarligUtenNavn = forelderansvar.ansvarligUtenIdentifikator?.navn?.let(::hentNavn)
-            val ansvarlig = data.tredjepartsPerson.map { it[forelderansvar.ansvar] }.getOrNull()
+            val ansvarlig = data.tredjepartsPerson.map { it[forelderansvar.ansvarlig] }.getOrNull()
             val ansvarligsubject = data.tredjepartsPerson.map { it[forelderansvar.ansvarssubjekt] }.getOrNull()
             Persondata.Foreldreansvar(
                 ansvar = forelderansvar.ansvar ?: "Kunne ikke hente type ansvar",
