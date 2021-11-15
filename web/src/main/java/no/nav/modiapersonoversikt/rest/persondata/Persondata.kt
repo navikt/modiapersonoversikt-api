@@ -208,10 +208,13 @@ object Persondata {
 
     data class Foreldreansvar(
         val ansvar: String,
-        val ansvarligNavn: Navn?,
-        val ansvarligIdent: String?,
-        val ansvarsubjectNavn: Navn?,
-        val ansvarsubjectIdent: String?
+        val ansvarlig: NavnOgIdent?,
+        val ansvarsubject: NavnOgIdent?
+    )
+
+    data class NavnOgIdent(
+        val navn: Navn?,
+        val ident: String?
     )
 
     data class DeltBosted(

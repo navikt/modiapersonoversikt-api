@@ -499,12 +499,23 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
             val ansvarligsubject = data.tredjepartsPerson.map { it[forelderansvar.ansvarssubjekt] }.getOrNull()
             Persondata.Foreldreansvar(
                 ansvar = forelderansvar.ansvar ?: "Kunne ikke hente type ansvar",
-                ansvarligNavn = ansvarlig?.navn?.firstOrNull() ?: ansvarligUtenNavn,
-                ansvarligIdent = ansvarlig?.fnr,
-                ansvarsubjectNavn = ansvarligsubject?.navn?.firstOrNull(),
-                ansvarsubjectIdent = ansvarligsubject?.fnr
+                ansvarlig = hentNavnOgIdent(ansvarlig) ?: Persondata.NavnOgIdent(
+                    navn = ansvarligUtenNavn,
+                    ident = null
+                ),
+                ansvarsubject = hentNavnOgIdent(ansvarligsubject)
             )
         }
+    }
+
+    private fun hentNavnOgIdent(tredjepartsPerson: Persondata.TredjepartsPerson?): Persondata.NavnOgIdent? {
+        if (tredjepartsPerson?.navn == null && tredjepartsPerson?.fnr == null) {
+            return null
+        }
+        return Persondata.NavnOgIdent(
+            navn = tredjepartsPerson.navn.firstOrNull(),
+            ident = tredjepartsPerson.fnr
+        )
     }
 
     private fun hentDeltBosted(data: Data): List<Persondata.DeltBosted> {

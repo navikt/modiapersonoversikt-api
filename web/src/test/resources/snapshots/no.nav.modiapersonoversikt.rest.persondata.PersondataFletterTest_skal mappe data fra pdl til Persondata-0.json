@@ -92,17 +92,21 @@
     } ] ],
     "foreldreansvar" : [ "java.util.ArrayList", [ {
       "ansvar" : "felles",
-      "ansvarligIdent" : "55333111000",
-      "ansvarligNavn" : {
-        "etternavn" : "MedForeldreansvar",
-        "fornavn" : "Person",
-        "mellomnavn" : null
+      "ansvarlig" : {
+        "ident" : "55333111000",
+        "navn" : {
+          "etternavn" : "MedForeldreansvar",
+          "fornavn" : "Person",
+          "mellomnavn" : null
+        }
       },
-      "ansvarsubjectIdent" : "98765432100",
-      "ansvarsubjectNavn" : {
-        "etternavn" : "Hans",
-        "fornavn" : "Datteren",
-        "mellomnavn" : null
+      "ansvarsubject" : {
+        "ident" : "98765432100",
+        "navn" : {
+          "etternavn" : "Hans",
+          "fornavn" : "Datteren",
+          "mellomnavn" : null
+        }
       }
     } ] ],
     "fullmakt" : [ "java.util.ArrayList", [ {
