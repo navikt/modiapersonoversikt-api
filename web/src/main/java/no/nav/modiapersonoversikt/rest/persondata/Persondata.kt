@@ -290,4 +290,9 @@ object Persondata {
         MEDMOR,
         UKJENT
     }
+
+    fun TredjepartsPerson?.asNavnOgIdent() = when (this) {
+        null -> null
+        else -> NavnOgIdent(this.navn.firstOrNull(), this.fnr)
+    }
 }
