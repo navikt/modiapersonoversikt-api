@@ -8,8 +8,10 @@
     "alder" : 21,
     "bankkonto" : null,
     "bostedAdresse" : [ "java.util.ArrayList", [ {
-      "gyldigFraOgMed" : null,
-      "gyldigTilOgMed" : null,
+      "gyldighetsPeriode" : {
+        "gyldigFraOgMed" : "2021-02-02T00:00:00",
+        "gyldigTilOgMed" : "2021-02-02T00:00:00"
+      },
       "linje1" : "Ukjent adresse",
       "linje2" : null,
       "linje3" : null,
@@ -17,8 +19,7 @@
     } ] ],
     "deltBosted" : [ "java.util.ArrayList", [ {
       "adresse" : {
-        "gyldigFraOgMed" : null,
-        "gyldigTilOgMed" : null,
+        "gyldighetsPeriode" : null,
         "linje1" : "Vegadressestien 3",
         "linje2" : "1444 TestPoststed",
         "linje3" : null,
@@ -42,8 +43,7 @@
         }
       },
       "adresse" : {
-        "gyldigFraOgMed" : null,
-        "gyldigTilOgMed" : null,
+        "gyldighetsPeriode" : null,
         "linje1" : "Gateveien",
         "linje2" : "9988 Poststed",
         "linje3" : null,
@@ -126,8 +126,10 @@
       "kode" : "M"
     } ] ],
     "kontaktAdresse" : [ "java.util.ArrayList", [ {
-      "gyldigFraOgMed" : null,
-      "gyldigTilOgMed" : null,
+      "gyldighetsPeriode" : {
+        "gyldigFraOgMed" : "2021-02-02T00:00:00",
+        "gyldigTilOgMed" : "2021-02-02T00:00:00"
+      },
       "linje1" : "C/O Adressenavn",
       "linje2" : "Vegadressestien 3",
       "linje3" : "1444 TestPoststed",
@@ -160,8 +162,7 @@
           "ukedag" : "MANDAG"
         } ] ],
         "besoksadresse" : {
-          "gyldigFraOgMed" : null,
-          "gyldigTilOgMed" : null,
+          "gyldighetsPeriode" : null,
           "linje1" : "Testgata 10",
           "linje2" : "0110 Ingensteds",
           "linje3" : null,
@@ -175,8 +176,10 @@
       "mellomnavn" : "Ruud"
     } ] ],
     "oppholdsAdresse" : [ "java.util.ArrayList", [ {
-      "gyldigFraOgMed" : "2021-02-02T00:00:00",
-      "gyldigTilOgMed" : "2021-02-02T00:00:00",
+      "gyldighetsPeriode" : {
+        "gyldigFraOgMed" : "2021-02-02T00:00:00",
+        "gyldigTilOgMed" : "2021-02-02T00:00:00"
+      },
       "linje1" : "Kari Hansen",
       "linje2" : "Vegadressestien 3",
       "linje3" : "1444 TestPoststed",

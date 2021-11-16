@@ -244,6 +244,8 @@ internal class PersondataFletterTest {
     )
 
     private val adresse = HentPersondata.Bostedsadresse(
+        gyldigFraOgMed = gittDateTime("2021-02-02T00:00:00"),
+        gyldigTilOgMed = gittDateTime("2021-02-02T00:00:00"),
         metadata = metadata,
         folkeregistermetadata = null,
         coAdressenavn = null,
@@ -366,6 +368,8 @@ internal class PersondataFletterTest {
     )
 
     private val kontaktadresseData = HentPersondata.Kontaktadresse(
+        gyldigFraOgMed = gittDateTime("2021-02-02T00:00:00"),
+        gyldigTilOgMed = gittDateTime("2021-02-02T00:00:00"),
         metadata = metadata,
         coAdressenavn = "C/O Adressenavn",
         postadresseIFrittFormat = null,
