@@ -98,28 +98,30 @@ object Persondata {
         val system: String
     )
 
+    data class GyldighetsPeriode(
+        val gyldigFraOgMed: LocalDateTime?,
+        val gyldigTilOgMed: LocalDateTime?
+    )
+
     data class Adresse constructor(
-        val gyldigFraOgMed: LocalDateTime? = null,
-        val gyldigTilOgMed: LocalDateTime? = null,
         val linje1: String,
         val linje2: String? = null,
         val linje3: String? = null,
-        val sistEndret: SistEndret?
+        val sistEndret: SistEndret?,
+        val gyldighetsPeriode: GyldighetsPeriode? = null
     ) {
         constructor(
-            gyldigFraOgMed: LocalDateTime? = null,
-            gyldigTilOgMed: LocalDateTime? = null,
             linje1: List<String?>,
             linje2: List<String?>? = null,
             linje3: List<String?>? = null,
-            sistEndret: SistEndret?
+            sistEndret: SistEndret?,
+            gyldighetsPeriode: GyldighetsPeriode? = null
         ) : this(
-            gyldigFraOgMed,
-            gyldigTilOgMed,
             linje1.filterNotNull().joinToString(" "),
             linje2?.filterNotNull()?.joinToString(" "),
             linje3?.filterNotNull()?.joinToString(" "),
-            sistEndret
+            sistEndret,
+            gyldighetsPeriode
         )
     }
 

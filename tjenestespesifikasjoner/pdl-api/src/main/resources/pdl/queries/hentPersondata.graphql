@@ -210,6 +210,8 @@ query($ident: ID!){
             }
         }
         bostedsadresse {
+            gyldigFraOgMed
+            gyldigTilOgMed
             metadata {
                 ...sistEndret
             }
@@ -232,6 +234,8 @@ query($ident: ID!){
             }
         }
         kontaktadresse {
+            gyldigFraOgMed
+            gyldigTilOgMed
             metadata {
                ...sistEndret
             }
