@@ -17,7 +17,6 @@ import no.nav.tjeneste.virksomhet.person.v3.informasjon.BankkontoUtland
 import no.nav.tjeneste.virksomhet.person.v3.informasjon.Bruker
 import no.nav.tjeneste.virksomhet.person.v3.meldinger.HentPersonResponse
 import java.time.LocalDate
-import java.time.LocalDateTime
 import java.time.Period
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.KodeverkConfig as Kodeverk
 
