@@ -208,8 +208,13 @@ object Persondata {
 
     data class Foreldreansvar(
         val ansvar: String,
-        val ansvarlig: Navn?,
-        val ansvarsubject: Navn?
+        val ansvarlig: NavnOgIdent?,
+        val ansvarsubject: NavnOgIdent?
+    )
+
+    data class NavnOgIdent(
+        val navn: Navn?,
+        val ident: String?
     )
 
     data class DeltBosted(
@@ -284,5 +289,10 @@ object Persondata {
         FAR,
         MEDMOR,
         UKJENT
+    }
+
+    fun TredjepartsPerson?.asNavnOgIdent() = when (this) {
+        null -> null
+        else -> NavnOgIdent(this.navn.firstOrNull(), this.fnr)
     }
 }

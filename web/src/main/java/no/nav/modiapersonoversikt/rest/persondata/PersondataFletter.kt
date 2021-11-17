@@ -9,6 +9,7 @@ import no.nav.modiapersonoversikt.rest.enhet.model.EnhetKontaktinformasjon
 import no.nav.modiapersonoversikt.rest.enhet.model.Gateadresse
 import no.nav.modiapersonoversikt.rest.enhet.model.Klokkeslett
 import no.nav.modiapersonoversikt.rest.enhet.model.Publikumsmottak
+import no.nav.modiapersonoversikt.rest.persondata.Persondata.asNavnOgIdent
 import no.nav.modiapersonoversikt.service.dkif.Dkif
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk
 import no.nav.tjeneste.virksomhet.person.v3.informasjon.Bankkonto
@@ -495,12 +496,21 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
     private fun hentForeldreansvar(data: Data): List<Persondata.Foreldreansvar> {
         return data.persondata.foreldreansvar.map { forelderansvar ->
             val ansvarligUtenNavn = forelderansvar.ansvarligUtenIdentifikator?.navn?.let(::hentNavn)
-            val ansvarlig = data.tredjepartsPerson.map { it[forelderansvar.ansvarlig] }.getOrNull()
-            val ansvarligsubject = data.tredjepartsPerson.map { it[forelderansvar.ansvarssubjekt] }.getOrNull()
+            val ansvarlig = data.tredjepartsPerson
+                .map { it[forelderansvar.ansvarlig] }
+                .map { it.asNavnOgIdent() }
+                .getOrNull()
+            val ansvarligsubject = data.tredjepartsPerson
+                .map { it[forelderansvar.ansvarssubjekt] }
+                .map { it.asNavnOgIdent() }
+                .getOrNull()
             Persondata.Foreldreansvar(
                 ansvar = forelderansvar.ansvar ?: "Kunne ikke hente type ansvar",
-                ansvarlig = ansvarlig?.navn?.firstOrNull() ?: ansvarligUtenNavn,
-                ansvarsubject = ansvarligsubject?.navn?.firstOrNull()
+                ansvarlig = ansvarlig ?: Persondata.NavnOgIdent(
+                    navn = ansvarligUtenNavn,
+                    ident = null
+                ),
+                ansvarsubject = ansvarligsubject
             )
         }
     }
