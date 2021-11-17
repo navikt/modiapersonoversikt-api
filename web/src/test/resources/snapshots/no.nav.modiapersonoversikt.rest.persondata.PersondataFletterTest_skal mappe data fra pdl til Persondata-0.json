@@ -9,8 +9,8 @@
     "bankkonto" : null,
     "bostedAdresse" : [ "java.util.ArrayList", [ {
       "gyldighetsPeriode" : {
-        "gyldigFraOgMed" : "2021-02-02T00:00:00",
-        "gyldigTilOgMed" : "2021-02-02T00:00:00"
+        "gyldigFraOgMed" : "2021-02-02",
+        "gyldigTilOgMed" : "2021-02-02"
       },
       "linje1" : "Ukjent adresse",
       "linje2" : null,
@@ -127,8 +127,8 @@
     } ] ],
     "kontaktAdresse" : [ "java.util.ArrayList", [ {
       "gyldighetsPeriode" : {
-        "gyldigFraOgMed" : "2021-02-02T00:00:00",
-        "gyldigTilOgMed" : "2021-02-02T00:00:00"
+        "gyldigFraOgMed" : "2021-02-02",
+        "gyldigTilOgMed" : "2021-02-02"
       },
       "linje1" : "C/O Adressenavn",
       "linje2" : "Vegadressestien 3",
@@ -177,8 +177,8 @@
     } ] ],
     "oppholdsAdresse" : [ "java.util.ArrayList", [ {
       "gyldighetsPeriode" : {
-        "gyldigFraOgMed" : "2021-02-02T00:00:00",
-        "gyldigTilOgMed" : "2021-02-02T00:00:00"
+        "gyldigFraOgMed" : "2021-02-02",
+        "gyldigTilOgMed" : "2021-02-02"
       },
       "linje1" : "Kari Hansen",
       "linje2" : "Vegadressestien 3",

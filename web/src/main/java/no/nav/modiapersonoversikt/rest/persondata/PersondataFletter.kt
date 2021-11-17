@@ -142,7 +142,7 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
         if (gyldigFraOgMed == null && gyldigTilOgMed == null) {
             return null
         }
-        return Persondata.GyldighetsPeriode(gyldigFraOgMed?.value, gyldigTilOgMed?.value)
+        return Persondata.GyldighetsPeriode(gyldigFraOgMed?.value?.toLocalDate(), gyldigTilOgMed?.value?.toLocalDate())
     }
 
     private fun hentBostedAdresse(data: Data): List<Persondata.Adresse> {

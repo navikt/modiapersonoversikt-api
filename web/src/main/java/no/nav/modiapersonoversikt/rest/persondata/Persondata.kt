@@ -99,8 +99,8 @@ object Persondata {
     )
 
     data class GyldighetsPeriode(
-        val gyldigFraOgMed: LocalDateTime?,
-        val gyldigTilOgMed: LocalDateTime?
+        val gyldigFraOgMed: LocalDate?,
+        val gyldigTilOgMed: LocalDate?
     )
 
     data class Adresse constructor(
