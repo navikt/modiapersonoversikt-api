@@ -67,8 +67,7 @@ object Persondata {
 
     data class Statsborgerskap(
         val land: KodeBeskrivelse<String>,
-        val gyldigFraOgMed: LocalDate?,
-        val gyldigTilOgMed: LocalDate?
+        val gyldighetsPeriode: GyldighetsPeriode?
     )
 
     data class Sivilstand(
@@ -88,8 +87,7 @@ object Persondata {
     data class Sikkerhetstiltak(
         val type: String,
         val beskrivelse: String,
-        val gyldigFraOgMed: LocalDate,
-        val gyldigTilOgMed: LocalDate
+        val gyldighetsPeriode: GyldighetsPeriode?
     )
 
     data class SistEndret(
@@ -194,8 +192,7 @@ object Persondata {
         val motpartsPersonNavn: Navn,
         val motpartsRolle: FullmaktsRolle,
         val omrade: List<KodeBeskrivelse<String>>,
-        val gyldigFraOgMed: LocalDate,
-        val gyldigTilOgMed: LocalDate
+        val gyldighetsPeriode: GyldighetsPeriode?
     )
 
     data class Telefon(
@@ -211,8 +208,7 @@ object Persondata {
         val vergesakstype: String,
         val omfang: String,
         val embete: String?,
-        val gyldighetstidspunkt: LocalDate?,
-        val opphorstidspunkt: LocalDate?
+        val gyldighetsPeriode: GyldighetsPeriode?
     )
 
     data class Foreldreansvar(
@@ -222,8 +218,7 @@ object Persondata {
     )
 
     data class DeltBosted(
-        val startdatoForKontrakt: LocalDate,
-        val sluttdatoForKontrakt: LocalDate?,
+        val gyldighetsPeriode: GyldighetsPeriode?,
         val adresse: Adresse?
     )
 

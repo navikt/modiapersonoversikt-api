@@ -145,6 +145,13 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
         return Persondata.GyldighetsPeriode(gyldigFraOgMed?.value?.toLocalDate(), gyldigTilOgMed?.value?.toLocalDate())
     }
 
+    private fun hentGyldighetsperiode(gyldigFraOgMed: HentPersondata.Date?, gyldigTilOgMed: HentPersondata.Date?): Persondata.GyldighetsPeriode? {
+        if (gyldigFraOgMed == null && gyldigTilOgMed == null) {
+            return null
+        }
+        return Persondata.GyldighetsPeriode(gyldigFraOgMed?.value, gyldigTilOgMed?.value)
+    }
+
     private fun hentBostedAdresse(data: Data): List<Persondata.Adresse> {
         return data.persondata.bostedsadresse.mapNotNull { adresse ->
             val sisteEndring = hentSisteEndringFraMetadata(adresse.metadata)
@@ -469,8 +476,7 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
             }
             Persondata.Statsborgerskap(
                 land = land,
-                gyldigFraOgMed = it.gyldigFraOgMed?.value,
-                gyldigTilOgMed = it.gyldigTilOgMed?.value
+                gyldighetsPeriode = hentGyldighetsperiode(it.gyldigFraOgMed, it.gyldigTilOgMed)
             )
         }
     }
@@ -502,8 +508,7 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
             Persondata.Sikkerhetstiltak(
                 type = it.tiltakstype,
                 beskrivelse = it.beskrivelse,
-                gyldigFraOgMed = it.gyldigFraOgMed.value,
-                gyldigTilOgMed = it.gyldigTilOgMed.value
+                gyldighetsPeriode = hentGyldighetsperiode(it.gyldigFraOgMed, it.gyldigTilOgMed)
             )
         }
     }
@@ -592,8 +597,7 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
     private fun hentDeltBosted(data: Data): List<Persondata.DeltBosted> {
         return data.persondata.deltBosted.map {
             Persondata.DeltBosted(
-                startdatoForKontrakt = it.startdatoForKontrakt.value,
-                sluttdatoForKontrakt = it.sluttdatoForKontrakt?.value,
+                gyldighetsPeriode = hentGyldighetsperiode(it.startdatoForKontrakt, it.sluttdatoForKontrakt),
                 adresse = when {
                     it.vegadresse != null -> lagAdresseFraVegadresse(it.vegadresse!!)
                     it.matrikkeladresse != null -> lagAdresseFraMatrikkeladresse(it.matrikkeladresse!!)
@@ -695,8 +699,7 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
                     else -> Persondata.FullmaktsRolle.UKJENT
                 },
                 omrade = hentOmrade(it.omraader),
-                gyldigFraOgMed = it.gyldigFraOgMed.value,
-                gyldigTilOgMed = it.gyldigTilOgMed.value
+                gyldighetsPeriode = hentGyldighetsperiode(it.gyldigFraOgMed, it.gyldigTilOgMed)
             )
         }
     }
@@ -718,8 +721,7 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
                 vergesakstype = hentVergemalType(vergemal.type),
                 omfang = hentVergemalOmfang(vergemal.vergeEllerFullmektig.omfang),
                 embete = vergemal.embete,
-                gyldighetstidspunkt = vergemal.folkeregistermetadata?.gyldighetstidspunkt?.value?.toLocalDate(),
-                opphorstidspunkt = vergemal.folkeregistermetadata?.opphoerstidspunkt?.value?.toLocalDate()
+                gyldighetsPeriode = hentGyldighetsperiode(vergemal.folkeregistermetadata?.gyldighetstidspunkt, vergemal.folkeregistermetadata?.opphoerstidspunkt)
             )
         }
     }

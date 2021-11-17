@@ -25,8 +25,10 @@
         "linje3" : null,
         "sistEndret" : null
       },
-      "sluttdatoForKontrakt" : null,
-      "startdatoForKontrakt" : "2019-09-09"
+      "gyldighetsPeriode" : {
+        "gyldigFraOgMed" : "2019-09-09",
+        "gyldigTilOgMed" : null
+      }
     } ] ],
     "dodsbo" : [ "java.util.ArrayList", [ {
       "adressat" : {
@@ -110,8 +112,10 @@
       }
     } ] ],
     "fullmakt" : [ "java.util.ArrayList", [ {
-      "gyldigFraOgMed" : "2018-01-03",
-      "gyldigTilOgMed" : "2018-10-03",
+      "gyldighetsPeriode" : {
+        "gyldigFraOgMed" : "2018-01-03",
+        "gyldigTilOgMed" : "2018-10-03"
+      },
       "motpartsPersonNavn" : {
         "etternavn" : "MedFullmakt",
         "fornavn" : "Person",
@@ -195,8 +199,10 @@
     } ] ],
     "sikkerhetstiltak" : [ "java.util.ArrayList", [ {
       "beskrivelse" : "Telefonisk utestengelse",
-      "gyldigFraOgMed" : "2019-01-01",
-      "gyldigTilOgMed" : "2019-01-14",
+      "gyldighetsPeriode" : {
+        "gyldigFraOgMed" : "2019-01-01",
+        "gyldigTilOgMed" : "2019-01-14"
+      },
       "type" : "TFUS"
     } ] ],
     "sivilstand" : [ "java.util.ArrayList", [ {
@@ -221,8 +227,10 @@
       }
     } ] ],
     "statsborgerskap" : [ "java.util.ArrayList", [ {
-      "gyldigFraOgMed" : "2000-10-01",
-      "gyldigTilOgMed" : null,
+      "gyldighetsPeriode" : {
+        "gyldigFraOgMed" : "2000-10-01",
+        "gyldigTilOgMed" : null
+      },
       "land" : {
         "beskrivelse" : "Norge",
         "kode" : "NOR"
@@ -253,7 +261,10 @@
     },
     "vergemal" : [ "java.util.ArrayList", [ {
       "embete" : null,
-      "gyldighetstidspunkt" : null,
+      "gyldighetsPeriode" : {
+        "gyldigFraOgMed" : "2018-02-02",
+        "gyldigTilOgMed" : null
+      },
       "ident" : "55555111000",
       "navn" : {
         "etternavn" : "Vergemål",
@@ -261,7 +272,6 @@
         "mellomnavn" : null
       },
       "omfang" : "Ikke oppgitt",
-      "opphorstidspunkt" : null,
       "vergesakstype" : "Ingen vergesakstype oppgitt"
     } ] ]
   }

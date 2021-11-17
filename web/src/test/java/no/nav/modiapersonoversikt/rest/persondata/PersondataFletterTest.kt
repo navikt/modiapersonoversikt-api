@@ -323,7 +323,10 @@ internal class PersondataFletterTest {
             omfang = null,
             omfangetErInnenPersonligOmraade = false
         ),
-        folkeregistermetadata = null
+        folkeregistermetadata = HentPersondata.Folkeregistermetadata(
+            gyldighetstidspunkt = gittDateTime("2018-02-02T00:00:00"),
+            opphoerstidspunkt = null
+        )
     )
 
     private val foreldreansvarData = HentPersondata.Foreldreansvar(
