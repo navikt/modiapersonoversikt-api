@@ -19,6 +19,7 @@ object Persondata {
         val dodsdato: List<LocalDate>,
         val bostedAdresse: List<Adresse>,
         val kontaktAdresse: List<Adresse>,
+        val oppholdsAdresse: List<Adresse>,
         val navEnhet: Enhet?,
         val statsborgerskap: List<Statsborgerskap>,
         val adressebeskyttelse: List<KodeBeskrivelse<AdresseBeskyttelse>>,
@@ -66,8 +67,7 @@ object Persondata {
 
     data class Statsborgerskap(
         val land: KodeBeskrivelse<String>,
-        val gyldigFraOgMed: LocalDate?,
-        val gyldigTilOgMed: LocalDate?
+        val gyldighetsPeriode: GyldighetsPeriode?
     )
 
     data class Sivilstand(
@@ -87,8 +87,7 @@ object Persondata {
     data class Sikkerhetstiltak(
         val type: String,
         val beskrivelse: String,
-        val gyldigFraOgMed: LocalDate,
-        val gyldigTilOgMed: LocalDate
+        val gyldighetsPeriode: GyldighetsPeriode?
     )
 
     data class SistEndret(
@@ -97,22 +96,30 @@ object Persondata {
         val system: String
     )
 
+    data class GyldighetsPeriode(
+        val gyldigFraOgMed: LocalDate?,
+        val gyldigTilOgMed: LocalDate?
+    )
+
     data class Adresse constructor(
         val linje1: String,
         val linje2: String? = null,
         val linje3: String? = null,
-        val sistEndret: SistEndret?
+        val sistEndret: SistEndret?,
+        val gyldighetsPeriode: GyldighetsPeriode? = null
     ) {
         constructor(
             linje1: List<String?>,
             linje2: List<String?>? = null,
             linje3: List<String?>? = null,
-            sistEndret: SistEndret?
+            sistEndret: SistEndret?,
+            gyldighetsPeriode: GyldighetsPeriode? = null
         ) : this(
             linje1.filterNotNull().joinToString(" "),
             linje2?.filterNotNull()?.joinToString(" "),
             linje3?.filterNotNull()?.joinToString(" "),
-            sistEndret
+            sistEndret,
+            gyldighetsPeriode
         )
     }
 
@@ -185,8 +192,7 @@ object Persondata {
         val motpartsPersonNavn: Navn,
         val motpartsRolle: FullmaktsRolle,
         val omrade: List<KodeBeskrivelse<String>>,
-        val gyldigFraOgMed: LocalDate,
-        val gyldigTilOgMed: LocalDate
+        val gyldighetsPeriode: GyldighetsPeriode?
     )
 
     data class Telefon(
@@ -202,8 +208,7 @@ object Persondata {
         val vergesakstype: String,
         val omfang: String,
         val embete: String?,
-        val gyldighetstidspunkt: LocalDate?,
-        val opphorstidspunkt: LocalDate?
+        val gyldighetsPeriode: GyldighetsPeriode?
     )
 
     data class Foreldreansvar(
@@ -218,8 +223,7 @@ object Persondata {
     )
 
     data class DeltBosted(
-        val startdatoForKontrakt: LocalDate,
-        val sluttdatoForKontrakt: LocalDate?,
+        val gyldighetsPeriode: GyldighetsPeriode?,
         val adresse: Adresse?
     )
 
