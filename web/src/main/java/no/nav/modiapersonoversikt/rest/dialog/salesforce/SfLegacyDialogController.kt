@@ -21,6 +21,7 @@ import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.server.ResponseStatusException
+import java.time.OffsetDateTime
 import java.time.format.DateTimeFormatter
 import javax.servlet.http.HttpServletRequest
 import javax.ws.rs.NotSupportedException
@@ -254,6 +255,7 @@ class SfLegacyDialogController(
         val markertSomFeilsendtAv = identMap[markertSomFeilsendt?.markertAv ?: ""]
             ?.let { mapOf("fornavn" to it.fornavn, "etternavn" to it.etternavn, "ident" to it.ident) }
 
+        val henvendelseErKassert: Boolean = henvendelse.kasseringsDato?.isBefore(OffsetDateTime.now()) == true
         val meldinger: List<MeldingDTO> = (henvendelse.meldinger ?: emptyList()).map { melding ->
             MeldingDTO(
                 mapOf(
@@ -270,7 +272,7 @@ class SfLegacyDialogController(
                     "journalfortTema" to journalfortTema,
                     "journalfortTemanavn" to journalfortTemanavn,
                     "journalfortSaksid" to journalfortSaksid,
-                    "fritekst" to melding.fritekst,
+                    "fritekst" to hentFritekstFraMelding(henvendelseErKassert, melding),
                     "lestDato" to melding.lestDato?.format(DateTimeFormatter.ofPattern(DATO_TID_FORMAT)),
                     "status" to when {
                         melding.fra.identType == MeldingFraDTO.IdentType.AKTORID -> Status.IKKE_BESVART
@@ -293,6 +295,13 @@ class SfLegacyDialogController(
             )
         }
         return TraadDTO(henvendelse.kjedeId, meldinger)
+    }
+
+    private fun hentFritekstFraMelding(erKassert: Boolean, melding: no.nav.modiapersonoversikt.legacy.api.domain.sfhenvendelse.generated.models.MeldingDTO): String {
+        if (erKassert) {
+            return "Innholdet i denne henvendelsen er slettet av NAV."
+        }
+        return melding.fritekst ?: "Innholdet i denne henvendelsen er ikke tilgjengelig."
     }
 
     private fun meldingstypeFraSfTyper(henvendelse: HenvendelseDTO, melding: no.nav.modiapersonoversikt.legacy.api.domain.sfhenvendelse.generated.models.MeldingDTO): Meldingstype {

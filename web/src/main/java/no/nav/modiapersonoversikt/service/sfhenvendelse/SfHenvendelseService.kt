@@ -238,11 +238,12 @@ class SfHenvendelseServiceImpl(
     }
 
     enum class ApiFeilType {
-        IDENT, TEMAGRUPPE, JOURNALFORENDE_IDENT, MARKERT_DATO, MARKERT_AV
+        IDENT, TEMAGRUPPE, JOURNALFORENDE_IDENT, MARKERT_DATO, MARKERT_AV, FRITEKST
     }
     data class ApiFeil(val type: ApiFeilType, val kjedeId: String)
     private fun loggFeilSomErSpesialHandtert(bruker: EksternBruker, henvendelser: List<HenvendelseDTO>): List<HenvendelseDTO> {
         val feil = mutableListOf<ApiFeil>()
+        val now = OffsetDateTime.now()
         for (henvendelse in henvendelser) {
             val meldinger = henvendelse.meldinger ?: emptyList()
             if (meldinger.any { it.fra.ident == null }) {
@@ -262,6 +263,10 @@ class SfHenvendelseServiceImpl(
             }
             if (markeringer.any { it.markertAv == null }) {
                 feil.add(ApiFeil(ApiFeilType.MARKERT_AV, henvendelse.kjedeId))
+            }
+
+            if (henvendelse.kasseringsDato?.isAfter(now) == true && meldinger.any { it.fritekst == null }) {
+                feil.add(ApiFeil(ApiFeilType.FRITEKST, henvendelse.kjedeId))
             }
         }
         val kanJobbesMedIModia = henvendelser.filter { it.gjeldendeTemagruppe != null }
