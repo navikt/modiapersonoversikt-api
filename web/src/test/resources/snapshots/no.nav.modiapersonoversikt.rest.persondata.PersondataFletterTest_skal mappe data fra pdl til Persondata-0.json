@@ -8,6 +8,10 @@
     "alder" : 21,
     "bankkonto" : null,
     "bostedAdresse" : [ "java.util.ArrayList", [ {
+      "gyldighetsPeriode" : {
+        "gyldigFraOgMed" : "2021-02-02",
+        "gyldigTilOgMed" : "2021-02-02"
+      },
       "linje1" : "Ukjent adresse",
       "linje2" : null,
       "linje3" : null,
@@ -15,13 +19,16 @@
     } ] ],
     "deltBosted" : [ "java.util.ArrayList", [ {
       "adresse" : {
+        "gyldighetsPeriode" : null,
         "linje1" : "Vegadressestien 3",
         "linje2" : "1444 TestPoststed",
         "linje3" : null,
         "sistEndret" : null
       },
-      "sluttdatoForKontrakt" : null,
-      "startdatoForKontrakt" : "2019-09-09"
+      "gyldighetsPeriode" : {
+        "gyldigFraOgMed" : "2019-09-09",
+        "gyldigTilOgMed" : null
+      }
     } ] ],
     "dodsbo" : [ "java.util.ArrayList", [ {
       "adressat" : {
@@ -38,6 +45,7 @@
         }
       },
       "adresse" : {
+        "gyldighetsPeriode" : null,
         "linje1" : "Gateveien",
         "linje2" : "9988 Poststed",
         "linje3" : null,
@@ -110,8 +118,10 @@
       }
     } ] ],
     "fullmakt" : [ "java.util.ArrayList", [ {
-      "gyldigFraOgMed" : "2018-01-03",
-      "gyldigTilOgMed" : "2018-10-03",
+      "gyldighetsPeriode" : {
+        "gyldigFraOgMed" : "2018-01-03",
+        "gyldigTilOgMed" : "2018-10-03"
+      },
       "motpartsPersonNavn" : {
         "etternavn" : "MedFullmakt",
         "fornavn" : "Person",
@@ -126,6 +136,10 @@
       "kode" : "M"
     } ] ],
     "kontaktAdresse" : [ "java.util.ArrayList", [ {
+      "gyldighetsPeriode" : {
+        "gyldigFraOgMed" : "2021-02-02",
+        "gyldigTilOgMed" : "2021-02-02"
+      },
       "linje1" : "C/O Adressenavn",
       "linje2" : "Vegadressestien 3",
       "linje3" : "1444 TestPoststed",
@@ -158,6 +172,7 @@
           "ukedag" : "MANDAG"
         } ] ],
         "besoksadresse" : {
+          "gyldighetsPeriode" : null,
           "linje1" : "Testgata 10",
           "linje2" : "0110 Ingensteds",
           "linje3" : null,
@@ -170,14 +185,30 @@
       "fornavn" : "Teste",
       "mellomnavn" : "Ruud"
     } ] ],
+    "oppholdsAdresse" : [ "java.util.ArrayList", [ {
+      "gyldighetsPeriode" : {
+        "gyldigFraOgMed" : "2021-02-02",
+        "gyldigTilOgMed" : "2021-02-02"
+      },
+      "linje1" : "Kari Hansen",
+      "linje2" : "Vegadressestien 3",
+      "linje3" : "1444 TestPoststed",
+      "sistEndret" : {
+        "ident" : "Folkeregisteret",
+        "system" : "FREG",
+        "tidspunkt" : "2020-07-01T10:00:00"
+      }
+    } ] ],
     "personstatus" : [ "java.util.ArrayList", [ {
       "beskrivelse" : "Bosatt",
       "kode" : "BOSATT"
     } ] ],
     "sikkerhetstiltak" : [ "java.util.ArrayList", [ {
       "beskrivelse" : "Telefonisk utestengelse",
-      "gyldigFraOgMed" : "2019-01-01",
-      "gyldigTilOgMed" : "2019-01-14",
+      "gyldighetsPeriode" : {
+        "gyldigFraOgMed" : "2019-01-01",
+        "gyldigTilOgMed" : "2019-01-14"
+      },
       "type" : "TFUS"
     } ] ],
     "sivilstand" : [ "java.util.ArrayList", [ {
@@ -202,8 +233,10 @@
       }
     } ] ],
     "statsborgerskap" : [ "java.util.ArrayList", [ {
-      "gyldigFraOgMed" : "2000-10-01",
-      "gyldigTilOgMed" : null,
+      "gyldighetsPeriode" : {
+        "gyldigFraOgMed" : "2000-10-01",
+        "gyldigTilOgMed" : null
+      },
       "land" : {
         "beskrivelse" : "Norge",
         "kode" : "NOR"
@@ -234,7 +267,10 @@
     },
     "vergemal" : [ "java.util.ArrayList", [ {
       "embete" : null,
-      "gyldighetstidspunkt" : null,
+      "gyldighetsPeriode" : {
+        "gyldigFraOgMed" : "2018-02-02",
+        "gyldigTilOgMed" : null
+      },
       "ident" : "55555111000",
       "navn" : {
         "etternavn" : "Vergemål",
@@ -242,7 +278,6 @@
         "mellomnavn" : null
       },
       "omfang" : "Ikke oppgitt",
-      "opphorstidspunkt" : null,
       "vergesakstype" : "Ingen vergesakstype oppgitt"
     } ] ]
   }
