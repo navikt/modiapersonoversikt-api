@@ -14,12 +14,22 @@ class SFJournalforing @Autowired constructor(
     }
 
     override fun knyttTilSak(fnr: String, traadId: String, sak: Sak, enhet: String) {
-        sfHenvendelseService.journalforHenvendelse(
-            enhet = enhet,
-            kjedeId = traadId,
-            saksTema = sak.temaKode,
-            fagsakSystem = sak.fagsystemKode,
-            saksId = sak.fagsystemSaksId
-        )
+        if (sak.fagsystemKode == Sak.BIDRAG_MARKOR || sak.temaKode == Sak.BIDRAG_MARKOR) {
+            sfHenvendelseService.journalforHenvendelse(
+                enhet = enhet,
+                kjedeId = traadId,
+                saksTema = "BID",
+                fagsakSystem = Sak.FAGSYSTEMKODE_BIDRAG,
+                saksId = null
+            )
+        } else {
+            sfHenvendelseService.journalforHenvendelse(
+                enhet = enhet,
+                kjedeId = traadId,
+                saksTema = sak.temaKode,
+                fagsakSystem = sak.fagsystemKode,
+                saksId = sak.fagsystemSaksId
+            )
+        }
     }
 }
