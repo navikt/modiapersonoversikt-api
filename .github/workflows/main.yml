@@ -2,6 +2,10 @@ name: Build, push, and deploy
 
 on: [push]
 
+concurrency:
+  group: main-${{ github.ref }}
+  cancel-in-progress: true
+
 env:
   IMAGE: docker.pkg.github.com/${{ github.repository }}/modiapersonoversikt-api:${{ github.sha }}
   CI: true
