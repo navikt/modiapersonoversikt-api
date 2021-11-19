@@ -8,10 +8,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import no.nav.common.log.MDCConstants
 import no.nav.modiapersonoversikt.legacy.api.utils.TjenestekallLogger
-import okhttp3.Interceptor
-import okhttp3.MediaType
-import okhttp3.Request
-import okhttp3.Response
+import okhttp3.*
 import okio.Buffer
 import org.slf4j.LoggerFactory
 import org.slf4j.MDC
@@ -121,6 +118,9 @@ class XCorrelationIdInterceptor() : HeadersInterceptor({
 })
 class AuthorizationInterceptor(val tokenProvider: () -> String) : HeadersInterceptor({
     mapOf("Authorization" to "Bearer ${tokenProvider()}")
+})
+class BasicAuthorizationInterceptor(private val username: String, private val password: String) : HeadersInterceptor({
+    mapOf("Authorization" to Credentials.basic(username, password))
 })
 
 fun getCallId(): String = MDC.get(MDCConstants.MDC_CALL_ID) ?: UUID.randomUUID().toString()
