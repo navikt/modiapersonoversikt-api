@@ -6,6 +6,7 @@ import no.nav.common.health.selftest.SelfTestCheck
 import no.nav.common.rest.client.RestClient
 import no.nav.modiapersonoversikt.infrastructure.http.BasicAuthorizationInterceptor
 import no.nav.modiapersonoversikt.infrastructure.http.LoggingInterceptor
+import no.nav.modiapersonoversikt.infrastructure.http.LoggingInterceptor.Config
 import no.nav.modiapersonoversikt.infrastructure.http.XCorrelationIdInterceptor
 import no.nav.modiapersonoversikt.infrastructure.types.Pingable
 import okhttp3.MediaType
@@ -30,7 +31,7 @@ open class AbacClient(val config: AbacClientConfig) : HealthCheck, Pingable {
         .addInterceptor(BasicAuthorizationInterceptor(config.username, config.password))
         .addInterceptor(XCorrelationIdInterceptor())
         .addInterceptor(
-            LoggingInterceptor("ABAC") { request ->
+            LoggingInterceptor("ABAC", Config(ignoreRequestBody = true)) { request ->
                 requireNotNull(request.header("X-Correlation-ID")) {
                     "Kall uten \"X-Correlation-ID\" er ikke lov"
                 }
