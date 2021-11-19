@@ -292,10 +292,10 @@ private fun lagFortsettDialog(request: FortsettDialogRequest, requestContext: Re
 
 fun lagSendHenvendelseContext(fnr: String, enhet: String?, request: HttpServletRequest): RequestContext {
     val ident = SubjectHandler.getIdent().get()
-    val enhet = RestUtils.hentValgtEnhet(enhet, request)
+    val valgtEnhet = RestUtils.hentValgtEnhet(enhet, request)
 
-    require(enhet != null)
-    return RequestContext(fnr, ident, enhet)
+    require(valgtEnhet != null)
+    return RequestContext(fnr, ident, valgtEnhet)
 }
 
 fun getKanal(type: Meldingstype): String {

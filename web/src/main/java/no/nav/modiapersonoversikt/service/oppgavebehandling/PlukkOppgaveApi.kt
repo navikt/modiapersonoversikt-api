@@ -91,7 +91,7 @@ class PlukkOppgaveApi(private val apiClient: OppgaveApi, private val kodeverksma
         val response = sokEtterOppgaver(correlationId, temagruppe, defaultEnhetGittTemagruppe(temagruppe, valgtEnhet))
 
         val eldsteOppgave = (response.oppgaver ?: emptyList())
-            .minBy {
+            .minByOrNull {
                 requireNotNull(it.opprettetTidspunkt) {
                     "Opprettet tidspunkt kan ikke være null, ved tildeling av eldste oppgave."
                 }

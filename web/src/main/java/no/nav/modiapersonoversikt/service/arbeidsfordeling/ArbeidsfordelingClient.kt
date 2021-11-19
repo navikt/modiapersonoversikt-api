@@ -59,11 +59,11 @@ open class ArbeidsfordelingClient {
         val veilederOidcToken: String = SubjectHandler.getSsoToken(SsoToken.Type.OIDC).orElseThrow { IllegalStateException("Kunne ikke hente ut veileders ssoTOken") }
         val consumerOidcToken: String = stsService.systemUserToken
         val arbeidskritereieFordelingSkjermet = ArbeidskritereieFordelingSkjermet(
-            behandlingstema = behandling?.map(Behandling::getBehandlingstema).orElse(null),
-            behandlingstype = behandling?.map(Behandling::getBehandlingstype).orElse(null),
-            geografiskOmraade = geografiskTilknytning.value?.let { it }.toString(),
+            behandlingstema = behandling.map(Behandling::getBehandlingstema).orElse(null),
+            behandlingstype = behandling.map(Behandling::getBehandlingstype).orElse(null),
+            geografiskOmraade = geografiskTilknytning.value.toString(),
             oppgavetype = oppgavetype,
-            diskresjonskode = geografiskTilknytning?.diskresjonskode ?: null,
+            diskresjonskode = geografiskTilknytning.diskresjonskode ?: null,
             tema = fagomrade,
             enhetsnummer = null,
             temagruppe = null,

@@ -155,7 +155,8 @@ class SfDialogController @Autowired constructor(
         val auditIdentifier = arrayOf(
             AuditIdentifier.FNR to fnr,
             AuditIdentifier.TRAAD_ID to kjedeId,
-            AuditIdentifier.SAK_ID to (request.saksId ?: request.saksTema)
+            AuditIdentifier.SAK_ID to request.saksId,
+            AuditIdentifier.SAK_TEMA to request.saksTema
         )
         tilgangskontroll
             .check(Policies.tilgangTilBruker.with(fnr))

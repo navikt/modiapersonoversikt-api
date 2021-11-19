@@ -14,5 +14,6 @@ enum class AuditIdentifier {
     JOURNALPOST_ID,
     DOKUMENT_REFERERANSE,
     TRAAD_ID,
-    SAK_ID
+    SAK_ID,
+    SAK_TEMA
 }

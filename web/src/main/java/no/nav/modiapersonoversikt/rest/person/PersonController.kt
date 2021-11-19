@@ -190,7 +190,7 @@ class PersonController @Autowired constructor(
         return deltBosted.map {
             val postnummer = it.vegadresse?.postnummer ?: it.matrikkeladresse?.postnummer
             DeltBostedDTO(
-                startdatoForKontrakt = it.startdatoForKontrakt?.value?.format(ISO_DATE),
+                startdatoForKontrakt = it.startdatoForKontrakt.value.format(ISO_DATE),
                 sluttdatoForKontrakt = it.sluttdatoForKontrakt?.value?.format(ISO_DATE),
                 adresse = AdresseDTO(
                     adressenavn = it.vegadresse?.adressenavn,
@@ -227,11 +227,11 @@ class PersonController @Autowired constructor(
         return foreldreansvar.map {
             val ansvarligUtenIdNavn = it.ansvarligUtenIdentifikator?.navn?.let { person -> PersonnavnDTO(person.fornavn, person.mellomnavn, person.etternavn) }
             val ansvarlig = alleNavn[it.ansvarlig]
-            val ansvarssubjekt = alleNavn[it.ansvarssubjekt]
+            val ansvarssubjektNavn = alleNavn[it.ansvarssubjekt]
             ForeldreansvarDTO(
                 ansvar = it.ansvar ?: "Kunne ikke hente type ansvar",
                 ansvarlig = ansvarlig ?: ansvarligUtenIdNavn,
-                ansvarssubjekt = ansvarssubjekt
+                ansvarssubjekt = ansvarssubjektNavn
             )
         }
     }
@@ -470,9 +470,9 @@ class PersonController @Autowired constructor(
 
     private fun getTelefoner(personfakta: Personfakta?) = personfakta?.run {
         mapOf(
-            "mobil" to personfakta?.mobil?.map(::getTelefon)?.orElse(null),
-            "jobbTelefon" to personfakta?.jobbTlf?.map(::getTelefon)?.orElse(null),
-            "hjemTelefon" to personfakta?.hjemTlf?.map(::getTelefon)?.orElse(null)
+            "mobil" to personfakta.mobil?.map(::getTelefon)?.orElse(null),
+            "jobbTelefon" to personfakta.jobbTlf?.map(::getTelefon)?.orElse(null),
+            "hjemTelefon" to personfakta.hjemTlf?.map(::getTelefon)?.orElse(null)
         )
     }
 

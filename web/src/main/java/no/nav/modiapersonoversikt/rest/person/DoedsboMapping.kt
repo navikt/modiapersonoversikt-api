@@ -35,7 +35,7 @@ object DoedsboMapping {
                     "kontaktpersonUtenIdNummerSomAdressat",
                     mapOf(
                         "foedselsdato" to person.foedselsdato?.let { formatDate(it.value) },
-                        "navn" to personNavn(person?.personnavn)
+                        "navn" to personNavn(person.personnavn)
                     )
                 )
             )
@@ -45,7 +45,7 @@ object DoedsboMapping {
                     "kontaktpersonMedIdNummerSomAdressat",
                     mapOf(
                         "idNummer" to person.identifikasjonsnummer,
-                        "navn" to personNavn(person?.personnavn) // TODO person.personnavn vil aldri eksistere her sånn PDL er satt opp idag.
+                        "navn" to personNavn(person.personnavn) // TODO person.personnavn vil aldri eksistere her sånn PDL er satt opp idag.
                     )
                 )
             )
@@ -55,8 +55,8 @@ object DoedsboMapping {
     private fun hentAdvokatSomAdressat(adressat: HentPerson.KontaktinformasjonForDoedsboAdvokatSomKontakt): Map<String, Any?> =
         mapOf(
             "kontaktperson" to personNavn(adressat.personnavn),
-            "organisasjonsnavn" to adressat?.organisasjonsnavn,
-            "organisasjonsnummer" to adressat?.organisasjonsnummer
+            "organisasjonsnavn" to adressat.organisasjonsnavn,
+            "organisasjonsnummer" to adressat.organisasjonsnummer
         )
 
     private fun hentOrganisasjonSomAdressat(adressat: HentPerson.KontaktinformasjonForDoedsboOrganisasjonSomKontakt): Map<String, Any?> =
