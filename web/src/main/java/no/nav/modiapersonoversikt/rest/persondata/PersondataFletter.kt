@@ -17,9 +17,13 @@ import no.nav.tjeneste.virksomhet.person.v3.informasjon.BankkontoNorge
 import no.nav.tjeneste.virksomhet.person.v3.informasjon.BankkontoUtland
 import no.nav.tjeneste.virksomhet.person.v3.informasjon.Bruker
 import no.nav.tjeneste.virksomhet.person.v3.meldinger.HentPersonResponse
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import java.time.LocalDate
 import java.time.Period
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.KodeverkConfig as Kodeverk
+
+val log: Logger = LoggerFactory.getLogger(PersondataFletter::class.java)
 
 class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
     data class Data(
@@ -750,24 +754,28 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
             "fylkesmannenIOsloOgViken" -> "Fylkesmannen i Oslo og Viken"
             "fylkesmannenIVestfoldOgTelemark" -> "Fylkesmannen i Vestfold og Telemark"
             "fylkesmannenITromsOgFinnmark" -> "Fylkesmannen i Troms og Finnmark"
-            "statsforvalterenIInnlandet" -> "Statsforvalteren i Innlandet"
             "fylkesmannenINordland" -> "Fylkesmannen i Nordland"
-            "statsforvalterenINordland" -> "Statsforvalteren i Nordland"
             "fylkesmannenITroendelag" -> "Fylkesmannen i Trøndelag"
-            "statsforvalterenITromsOgFinnmark" -> "Statsforvalteren i Troms og Finnmark"
-            "statsforvalterenITroendelag" -> "Statsforvalteren i Trøndelag"
-            "statsforvaltarenIMoereOgRomsdal" -> "Statsforvaltaren i Møre og Romsdal"
-            "statsforvaltarenIRogaland" -> "Statsforvaltaren i Rogaland"
             "fylkesmannenIInnlandet" -> "Fylkesmannen i Innlandet"
-            "statsforvalterenIAgder" -> "Statsforvalteren i Agder"
-            "statsforvaltarenIVestland" -> "Statsforvaltaren i Vestland"
             "fylkesmannenIMoereOgRomsdal" -> "Fylkesmannen i Møre og Romsdal"
-            "statsforvalterenIOsloOgViken" -> "Statsforvalteren i Oslo og Viken"
             "fylkesmannenIRogaland" -> "Fylkesmannen i Rogaland"
-            "statsforvaltarenIVestfoldOgTelemark" -> "Statsforvaltaren i Vestfold og Telemark"
             "fylkesmannenIVestland" -> "Fylkesmannen i Vestland"
             "fylkesmannenIAgder" -> "Fylkesmannen i Agder"
-            else -> "Ukjent embete"
+            "statsforvalterenIOsloOgViken" -> "Statsforvalteren i Oslo og Viken"
+            "statsforvaltarenIVestfoldOgTelemark" -> "Statsforvaltaren i Vestfold og Telemark"
+            "statsforvalterenITromsOgFinnmark" -> "Statsforvalteren i Troms og Finnmark"
+            "statsforvalterenINordland" -> "Statsforvalteren i Nordland"
+            "statsforvalterenITroendelag" -> "Statsforvalteren i Trøndelag"
+            "statsforvalterenIInnlandet" -> "Statsforvalteren i Innlandet"
+            "statsforvaltarenIMoereOgRomsdal" -> "Statsforvaltaren i Møre og Romsdal"
+            "statsforvaltarenIRogaland" -> "Statsforvaltaren i Rogaland"
+            "statsforvaltarenIVestland" -> "Statsforvaltaren i Vestland"
+            "statsforvalterenIAgder" -> "Statsforvalteren i Agder"
+            null -> "Ikke definert embete"
+            else -> {
+                log.warn("Ukjent embete: $embete")
+                "Ukjent embete: $embete"
+            }
         }
     }
 
