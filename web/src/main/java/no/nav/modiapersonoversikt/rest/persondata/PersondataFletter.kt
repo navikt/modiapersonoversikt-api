@@ -739,9 +739,35 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
                 navn = motpart?.firstOrNull() ?: navn,
                 vergesakstype = hentVergemalType(vergemal.type),
                 omfang = hentVergemalOmfang(vergemal.vergeEllerFullmektig.omfang),
-                embete = vergemal.embete,
+                embete = hentVergemalEmbete(vergemal.embete),
                 gyldighetsPeriode = hentGyldighetsperiode(vergemal.folkeregistermetadata?.gyldighetstidspunkt, vergemal.folkeregistermetadata?.opphoerstidspunkt)
             )
+        }
+    }
+
+    private fun hentVergemalEmbete(embete: String?): String {
+        return when (embete) {
+            "fylkesmannenIOsloOgViken" -> "Fylkesmannen i Oslo og Viken"
+            "fylkesmannenIVestfoldOgTelemark" -> "Fylkesmannen i Vestfold og Telemark"
+            "fylkesmannenITromsOgFinnmark" -> "Fylkesmannen i Troms og Finnmark"
+            "statsforvalterenIInnlandet" -> "Statsforvalteren i Innlandet"
+            "fylkesmannenINordland" -> "Fylkesmannen i Nordland"
+            "statsforvalterenINordland" -> "Statsforvalteren i Nordland"
+            "fylkesmannenITroendelag" -> "Fylkesmannen i Trøndelag"
+            "statsforvalterenITromsOgFinnmark" -> "Statsforvalteren i Troms og Finnmark"
+            "statsforvalterenITroendelag" -> "Statsforvalteren i Trøndelag"
+            "statsforvaltarenIMoereOgRomsdal" -> "Statsforvaltaren i Møre og Romsdal"
+            "statsforvaltarenIRogaland" -> "Statsforvaltaren i Rogaland"
+            "fylkesmannenIInnlandet" -> "Fylkesmannen i Innlandet"
+            "statsforvalterenIAgder" -> "Statsforvalteren i Agder"
+            "statsforvaltarenIVestland" -> "Statsforvaltaren i Vestland"
+            "fylkesmannenIMoereOgRomsdal" -> "Fylkesmannen i Møre og Romsdal"
+            "statsforvalterenIOsloOgViken" -> "Statsforvalteren i Oslo og Viken"
+            "fylkesmannenIRogaland" -> "Fylkesmannen i Rogaland"
+            "statsforvaltarenIVestfoldOgTelemark" -> "Statsforvaltaren i Vestfold og Telemark"
+            "fylkesmannenIVestland" -> "Fylkesmannen i Vestland"
+            "fylkesmannenIAgder" -> "Fylkesmannen i Agder"
+            else -> "Ukjent embete"
         }
     }
 
