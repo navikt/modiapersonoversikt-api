@@ -266,7 +266,7 @@
       } ] ]
     },
     "vergemal" : [ "java.util.ArrayList", [ {
-      "embete" : null,
+      "embete" : "Fylkesmannen i Oslo og Viken",
       "gyldighetsPeriode" : {
         "gyldigFraOgMed" : "2018-02-02",
         "gyldigTilOgMed" : null
@@ -278,7 +278,7 @@
         "mellomnavn" : null
       },
       "omfang" : "Ikke oppgitt",
-      "vergesakstype" : "Ingen vergesakstype oppgitt"
+      "vergesakstype" : "Voksen"
     } ] ]
   }
 }

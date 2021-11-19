@@ -315,8 +315,8 @@ internal class PersondataFletterTest {
     )
 
     private val vergemal = HentPersondata.VergemaalEllerFremtidsfullmakt(
-        type = "Voksen",
-        embete = null,
+        type = "voksen",
+        embete = "fylkesmannenIOsloOgViken",
         vergeEllerFullmektig = HentPersondata.VergeEllerFullmektig(
             navn = gittPersonnavn("Person Vergemål"),
             motpartsPersonident = "55555111000",
