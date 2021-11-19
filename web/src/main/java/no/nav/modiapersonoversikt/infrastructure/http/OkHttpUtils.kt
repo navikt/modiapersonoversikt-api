@@ -50,7 +50,10 @@ class LoggingInterceptor(val name: String, val callIdExtractor: (Request) -> Str
     }
 
     private fun Response.peekContent(): String? {
-        return this.peekBody(Long.MAX_VALUE).string()
+        return when (val contentLength = this.header("Content-Length")) {
+            null, "0" -> "Content-Length: $contentLength, didn't try to peek at body"
+            else -> this.peekBody(Long.MAX_VALUE).string()
+        }
     }
 
     override fun intercept(chain: Interceptor.Chain): Response {
