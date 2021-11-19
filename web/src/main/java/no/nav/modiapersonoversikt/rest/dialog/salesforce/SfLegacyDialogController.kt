@@ -11,7 +11,6 @@ import no.nav.modiapersonoversikt.legacy.api.service.OppgaveBehandlingService
 import no.nav.modiapersonoversikt.legacy.api.service.kodeverk.StandardKodeverk
 import no.nav.modiapersonoversikt.legacy.api.service.ldap.LDAPService
 import no.nav.modiapersonoversikt.legacy.api.utils.RestUtils
-import no.nav.modiapersonoversikt.legacy.api.utils.TemagruppeTemaMapping
 import no.nav.modiapersonoversikt.rest.DATO_TID_FORMAT
 import no.nav.modiapersonoversikt.rest.dialog.apis.*
 import no.nav.modiapersonoversikt.rest.dialog.apis.MeldingDTO
@@ -71,7 +70,7 @@ class SfLegacyDialogController(
         val henvendelse = sfHenvendelseService.opprettNyDialogOgSendMelding(
             bruker = EksternBruker.Fnr(fnr),
             enhet = enhet,
-            temagruppe = TemagruppeTemaMapping.hentTemagruppeForTema(sporsmalsRequest.sak.temaKode),
+            temagruppe = SfTemagruppeTemaMapping.hentTemagruppeForTema(sporsmalsRequest.sak.temaKode),
             fritekst = sporsmalsRequest.fritekst
         )
         sfHenvendelseService.journalforHenvendelse(
@@ -89,7 +88,7 @@ class SfLegacyDialogController(
         val henvendelse = sfHenvendelseService.opprettNyDialogOgSendMelding(
             bruker = EksternBruker.Fnr(fnr),
             enhet = enhet,
-            temagruppe = TemagruppeTemaMapping.hentTemagruppeForTema(infomeldingRequest.sak.temaKode),
+            temagruppe = SfTemagruppeTemaMapping.hentTemagruppeForTema(infomeldingRequest.sak.temaKode),
             fritekst = infomeldingRequest.fritekst
         )
         sfHenvendelseService.journalforHenvendelse(
