@@ -55,7 +55,7 @@ class TilgangskontrollTest {
             .getDecision()
 
         assertEquals(DecisionEnums.DENY, decision)
-        assertEquals("Saksbehandler (Optional[Z999999]) har ikke tilgang til modia. Årsak: FP1_KODE6_UTLAND", message)
+        assertEquals("Saksbehandler (Optional[Z999999]) har ikke tilgang til modia. Årsak: FP1_KODE6", message)
     }
 
     @Test
