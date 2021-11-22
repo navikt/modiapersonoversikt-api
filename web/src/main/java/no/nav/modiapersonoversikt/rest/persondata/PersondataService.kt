@@ -86,7 +86,7 @@ class PersondataServiceImpl(
     private fun hentNavEnhet(
         persondata: HentPersondata.Person,
         geografiskeTilknytning: PersondataResult<String?>
-    ): PersondataResult<EnhetKontaktinformasjon> {
+    ): PersondataResult<EnhetKontaktinformasjon?> {
         val gt = geografiskeTilknytning.getOrElse("")
 
         var diskresjonskode = ""
@@ -106,11 +106,13 @@ class PersondataServiceImpl(
         return PersondataResult.runCatching("NORG") {
             organisasjonEnhetV2Service
                 .finnNAVKontor(gt, diskresjonskode)
-                .orElseThrow()
-                .enhetId
+                .orElse(null)
+                ?.enhetId
         }
             .map("NORG Kontaktinformasjon") {
-                EnhetKontaktinformasjon(organisasjonEnhetKontaktinformasjonService.hentKontaktinformasjon(it))
+                it?.let { enhetId ->
+                    EnhetKontaktinformasjon(organisasjonEnhetKontaktinformasjonService.hentKontaktinformasjon(enhetId))
+                }
             }
     }
 

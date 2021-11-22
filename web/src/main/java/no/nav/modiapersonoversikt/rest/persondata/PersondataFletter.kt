@@ -30,7 +30,7 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
         val persondata: HentPersondata.Person,
         val geografiskeTilknytning: PersondataResult<String?>,
         val erEgenAnsatt: PersondataResult<Boolean>,
-        val navEnhet: PersondataResult<EnhetKontaktinformasjon>,
+        val navEnhet: PersondataResult<EnhetKontaktinformasjon?>,
         val dkifData: PersondataResult<Dkif.DigitalKontaktinformasjon>,
         val bankkonto: PersondataResult<HentPersonResponse>,
         val tredjepartsPerson: PersondataResult<Map<String, Persondata.TredjepartsPerson>>
@@ -443,7 +443,13 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
 
     private fun hentNavEnhet(data: Data): Persondata.Enhet? {
         return data.navEnhet
-            .map { Persondata.Enhet(it.enhetId, it.enhetNavn, hentPublikumsmottak(it.publikumsmottak)) }
+            .map {
+                if (it == null) {
+                    null
+                } else {
+                    Persondata.Enhet(it.enhetId, it.enhetNavn, hentPublikumsmottak(it.publikumsmottak))
+                }
+            }
             .getOrNull()
     }
 
