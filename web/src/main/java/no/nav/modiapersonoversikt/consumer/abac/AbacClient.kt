@@ -4,8 +4,11 @@ import no.nav.common.health.HealthCheck
 import no.nav.common.health.HealthCheckResult
 import no.nav.common.health.selftest.SelfTestCheck
 import no.nav.common.rest.client.RestClient
+import no.nav.modiapersonoversikt.infrastructure.http.BasicAuthorizationInterceptor
+import no.nav.modiapersonoversikt.infrastructure.http.LoggingInterceptor
+import no.nav.modiapersonoversikt.infrastructure.http.LoggingInterceptor.Config
+import no.nav.modiapersonoversikt.infrastructure.http.XCorrelationIdInterceptor
 import no.nav.modiapersonoversikt.infrastructure.types.Pingable
-import okhttp3.Credentials
 import okhttp3.MediaType
 import okhttp3.OkHttpClient
 import okhttp3.RequestBody
@@ -24,15 +27,16 @@ private infix fun Int.inRange(range: Pair<Int, Int>): Boolean = this >= range.fi
 val abacLogger: Logger = LoggerFactory.getLogger(AbacClient::class.java)
 
 open class AbacClient(val config: AbacClientConfig) : HealthCheck, Pingable {
-    private val basicCredential = Credentials.basic(config.username, config.password)
     private val client: OkHttpClient = RestClient.baseClient().newBuilder()
-        .authenticator { _, response ->
-            response
-                .request()
-                .newBuilder()
-                .addHeader("Authorization", basicCredential)
-                .build()
-        }
+        .addInterceptor(BasicAuthorizationInterceptor(config.username, config.password))
+        .addInterceptor(XCorrelationIdInterceptor())
+        .addInterceptor(
+            LoggingInterceptor("ABAC", Config(ignoreRequestBody = true)) { request ->
+                requireNotNull(request.header("X-Correlation-ID")) {
+                    "Kall uten \"X-Correlation-ID\" er ikke lov"
+                }
+            }
+        )
         .build()
 
     @Cacheable("abacClientCache")
