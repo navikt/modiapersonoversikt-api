@@ -61,7 +61,7 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
         return Persondata.Data(
             feilendeSystemer = feilendeSystemer,
             person = Persondata.Person(
-                fnr = hentFnr(data),
+                fnr = hentNaturligIdent(data),
                 navn = hentNavn(data),
                 kjonn = hentKjonn(data),
                 fodselsdato = hentFodselsdato(data),
@@ -98,9 +98,8 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
         )
     }
 
-    private fun hentFnr(data: Data): String {
+    private fun hentNaturligIdent(data: Data): String {
         return data.persondata.folkeregisteridentifikator
-            .filter { it.type == "FNR" }
             .first { it.status == "I_BRUK" }
             .identifikasjonsnummer
     }
@@ -199,7 +198,7 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
                     TjenestekallLogger.warn(
                         "PersondataFletter",
                         mapOf(
-                            "fnr" to hentFnr(data),
+                            "fnr" to hentNaturligIdent(data),
                             "feil" to "Ukjent bostedsadresse struktur",
                             "addresse" to adresse
                         )
@@ -252,7 +251,7 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
                     TjenestekallLogger.warn(
                         "PersondataFletter",
                         mapOf(
-                            "fnr" to hentFnr(data),
+                            "fnr" to hentNaturligIdent(data),
                             "feil" to "Ukjent kontaktadresse struktur",
                             "addresse" to adresse
                         )
@@ -302,7 +301,7 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
                     TjenestekallLogger.warn(
                         "PersondataFletter",
                         mapOf(
-                            "fnr" to hentFnr(data),
+                            "fnr" to hentNaturligIdent(data),
                             "feil" to "Ukjent kontaktadresse struktur",
                             "addresse" to adresse
                         )
