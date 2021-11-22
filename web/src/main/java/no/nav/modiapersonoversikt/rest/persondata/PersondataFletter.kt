@@ -848,7 +848,7 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
                             swift = bankkonto.bankkontoUtland.swift,
                             landkode = kodeverk.hentKodeBeskrivelse(
                                 Kodeverk.LAND,
-                                bankkonto.bankkontoUtland.landkode.kodeverksRef
+                                bankkonto.bankkontoUtland.landkode.value
                             ),
                             adresse = Persondata.Adresse(
                                 linje1 = bankkonto.bankkontoUtland.bankadresse.adresselinje1 ?: "Ukjent adresse",
@@ -858,7 +858,7 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
                             ),
                             valuta = kodeverk.hentKodeBeskrivelse(
                                 Kodeverk.VALUTA,
-                                bankkonto.bankkontoUtland.valuta.kodeverksRef
+                                bankkonto.bankkontoUtland.valuta.value
                             )
                         )
                         else -> null
