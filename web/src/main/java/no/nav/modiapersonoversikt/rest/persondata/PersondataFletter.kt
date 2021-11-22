@@ -162,7 +162,7 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
             val sisteEndring = hentSisteEndringFraMetadata(adresse.metadata)
             val gyldighetsPeriode = hentGyldighetsperiode(adresse.gyldigFraOgMed, adresse.gyldigTilOgMed)
             when {
-                adresse.coAdressenavn != null && adresse.vegadresse != null -> {
+                adresse.coAdressenavn.isNotNullOrBlank() && adresse.vegadresse != null -> {
                     kombinerCoAdressenavnOgVegadresse(
                         coAdressenavn = adresse.coAdressenavn!!,
                         vegadresse = lagAdresseFraVegadresse(adresse.vegadresse!!),
@@ -170,7 +170,7 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
                         gyldighetsPeriode = gyldighetsPeriode
                     )
                 }
-                adresse.coAdressenavn != null -> Persondata.Adresse(
+                adresse.coAdressenavn.isNotNullOrBlank() -> Persondata.Adresse(
                     linje1 = adresse.coAdressenavn!!,
                     sistEndret = sisteEndring,
                     gyldighetsPeriode = gyldighetsPeriode
@@ -215,7 +215,7 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
             val sisteEndring = hentSisteEndringFraMetadata(adresse.metadata)
             val gyldighetsPeriode = hentGyldighetsperiode(adresse.gyldigFraOgMed, adresse.gyldigTilOgMed)
             when {
-                adresse.coAdressenavn != null && adresse.vegadresse != null -> {
+                adresse.coAdressenavn.isNotNullOrBlank() && adresse.vegadresse != null -> {
                     kombinerCoAdressenavnOgVegadresse(
                         coAdressenavn = adresse.coAdressenavn!!,
                         vegadresse = lagAdresseFraVegadresse(adresse.vegadresse!!),
@@ -223,7 +223,7 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
                         gyldighetsPeriode = gyldighetsPeriode
                     )
                 }
-                adresse.coAdressenavn != null -> Persondata.Adresse(
+                adresse.coAdressenavn.isNotNullOrBlank() -> Persondata.Adresse(
                     linje1 = adresse.coAdressenavn!!,
                     sistEndret = sisteEndring,
                     gyldighetsPeriode = gyldighetsPeriode
@@ -268,7 +268,7 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
             val sisteEndring = hentSisteEndringFraMetadata(adresse.metadata)
             val gyldighetsPeriode = hentGyldighetsperiode(adresse.gyldigFraOgMed, adresse.gyldigTilOgMed)
             when {
-                adresse.coAdressenavn != null && adresse.vegadresse != null -> {
+                adresse.coAdressenavn.isNotNullOrBlank() && adresse.vegadresse != null -> {
                     kombinerCoAdressenavnOgVegadresse(
                         coAdressenavn = adresse.coAdressenavn!!,
                         vegadresse = lagAdresseFraVegadresse(
@@ -278,7 +278,7 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
                         gyldighetsPeriode = gyldighetsPeriode
                     )
                 }
-                adresse.coAdressenavn != null -> Persondata.Adresse(
+                adresse.coAdressenavn.isNotNullOrBlank() -> Persondata.Adresse(
                     linje1 = adresse.coAdressenavn!!,
                     sistEndret = sisteEndring,
                     gyldighetsPeriode = gyldighetsPeriode
@@ -625,7 +625,7 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
                     it.vegadresse != null -> lagAdresseFraVegadresse(it.vegadresse!!)
                     it.matrikkeladresse != null -> lagAdresseFraMatrikkeladresse(it.matrikkeladresse!!)
                     it.utenlandskAdresse != null -> lagAdresseFraUtenlandskAdresse(it.utenlandskAdresse!!)
-                    it.coAdressenavn != null -> Persondata.Adresse(
+                    it.coAdressenavn.isNotNullOrBlank() -> Persondata.Adresse(
                         linje1 = it.coAdressenavn!!,
                         sistEndret = null
                     )
@@ -936,6 +936,8 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
                 Period.between(it.value, LocalDate.now()).years
             }
     }
+
+    private fun String?.isNotNullOrBlank() = !this.isNullOrBlank()
 }
 
 fun <T> EnhetligKodeverk.Service.hentKodeBeskrivelse(
