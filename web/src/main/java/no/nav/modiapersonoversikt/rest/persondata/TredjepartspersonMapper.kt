@@ -104,10 +104,6 @@ class TredjepartspersonMapper(val kodeverk: EnhetligKodeverk.Service) {
                 adresse.postnummer,
                 adresse.postnummer?.let { kodeverk.hentKodeverk(Kodeverk.POSTNUMMER).hentBeskrivelse(it) }
             ),
-            linje3 = listOf(
-                adresse.bydelsnummer,
-                adresse.kommunenummer
-            ),
             sistEndret = null
         )
     }
