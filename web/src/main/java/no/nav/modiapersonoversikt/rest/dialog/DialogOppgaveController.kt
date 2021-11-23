@@ -14,6 +14,7 @@ import no.nav.modiapersonoversikt.legacy.api.service.OpprettOppgaveResponse
 import no.nav.modiapersonoversikt.legacy.api.service.OpprettSkjermetOppgaveRequest
 import no.nav.modiapersonoversikt.legacy.api.service.saker.GsakKodeverk
 import no.nav.modiapersonoversikt.legacy.sporsmalogsvar.common.utils.DateUtils.arbeidsdagerFraDatoJava
+import no.nav.modiapersonoversikt.service.sfhenvendelse.fixKjedeId
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*
 import java.time.LocalDate
@@ -115,7 +116,7 @@ class DialogOppgaveController @Autowired constructor(
         opprettetavenhetsnummer = opprettetavenhetsnummer,
         oppgaveFrist = kalkulerFrist(temaKode, oppgaveTypeKode),
         valgtEnhetsId = valgtEnhetId.toString(),
-        behandlingskjedeId = behandlingskjedeId,
+        behandlingskjedeId = behandlingskjedeId.fixKjedeId(),
         dagerFrist = dagerFrist,
         ansvarligEnhetId = ansvarligEnhetId,
         ansvarligIdent = ansvarligIdent

@@ -30,7 +30,7 @@ public class OppfolgingsinfoApiServiceImpl implements OppfolgingsinfoApiService 
             .baseClient()
             .newBuilder()
             .addInterceptor(new XCorrelationIdInterceptor())
-            .addInterceptor(new LoggingInterceptor("Oppfolging", (request) -> request.header("X-Correlation-ID")))
+            .addInterceptor(new LoggingInterceptor("Oppfolging", LoggingInterceptor.DEFAULT_CONFIG, (request) -> request.header("X-Correlation-ID")))
             .addInterceptor(new AuthorizationInterceptor(() ->
                     SubjectHandler
                             .getSsoToken(SsoToken.Type.OIDC)
