@@ -33,7 +33,7 @@ data class AbacResponse(private val response: List<Response>) {
 
         val denyCause = DenyCause
             .values()
-            .find { it.policy == denyReasonPolicy }
+            .find { it.policy.contains(denyReasonPolicy) }
 
         if (denyCause == null) {
             abacLogger.warn("Couldn't determind denyCause", associatedAdvice)
@@ -46,9 +46,13 @@ data class AbacResponse(private val response: List<Response>) {
     fun getBiasedDecision(bias: Decision): Decision = if (applicativeDecisions.contains(result.decision)) result.decision else bias
 }
 
-enum class DenyCause(val policy: String) {
-    FP1_KODE6("fp1_behandle_kode6"),
-    FP2_KODE7("fp2_behandle_kode7"),
+enum class DenyCause(vararg val policy: String) {
+    FP1_KODE6(
+        "fp1_behandle_kode6",
+        "adressebeskyttelse_strengt_fortrolig_adresse",
+        "adressebeskyttelse_strengt_fortrolig_adresse_utland"
+    ),
+    FP2_KODE7("fp2_behandle_kode7", "adressebeskyttelse_fortrolig_adresse"),
     FP3_EGEN_ANSATT("fp3_behandle_egen_ansatt"),
     FP4_GEOGRAFISK("fp4_geografi"),
     AD_ROLLE("modia_ad_tilganger"),
