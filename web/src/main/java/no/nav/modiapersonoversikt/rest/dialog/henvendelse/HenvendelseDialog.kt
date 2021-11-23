@@ -32,7 +32,7 @@ class HenvendelseDialog(
     val sfExperiment = Scientist.createExperiment<List<TraadDTO>>(
         Scientist.Config(
             name = "SF-Meldinger",
-            experimentRate = 0.01,
+            experimentRate = 0.1,
             logAndCompareValues = false
         )
     )
@@ -45,7 +45,9 @@ class HenvendelseDialog(
                     .hentMeldinger(fnr, valgtEnhet)
                     .traader
                     .toDTO()
-                Scientist.WithFields(value, mapOf("control-length" to value.size))
+
+                val sfRelevanteTrader = value.filter(::tradUtenVarselMelding)
+                Scientist.WithFields(value, mapOf("control-length" to sfRelevanteTrader.size))
             },
             experiment = {
                 val value = sfDialogController.hentHenvendelser(EksternBruker.Fnr(fnr), valgtEnhet)
@@ -304,6 +306,13 @@ fun getKanal(type: Meldingstype): String {
         Meldingstype.SAMTALEREFERAT_TELEFON, Meldingstype.SVAR_TELEFON -> Kanal.TELEFON.name
         else -> Kanal.TEKST.name
     }
+}
+
+private fun tradUtenVarselMelding(traad: TraadDTO): Boolean {
+    val meldingstyper = traad.meldinger.map { it.map["meldingstype"] }
+    val harDokumentVarsel = meldingstyper.contains(Meldingstype.DOKUMENT_VARSEL.name)
+    val harOppgaveVarsel = meldingstyper.contains(Meldingstype.OPPGAVE_VARSEL.name)
+    return !harDokumentVarsel && !harOppgaveVarsel
 }
 
 enum class Kanal {
