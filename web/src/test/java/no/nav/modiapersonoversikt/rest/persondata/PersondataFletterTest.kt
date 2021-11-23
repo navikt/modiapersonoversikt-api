@@ -15,6 +15,7 @@ internal class PersondataFletterTest {
 
     val kodeverk: EnhetligKodeverk.Service = mockk()
     val mapper = PersondataFletter(kodeverk)
+    val fnr = "12345678910"
 
     @BeforeEach
     internal fun setUp() {
@@ -29,7 +30,8 @@ internal class PersondataFletterTest {
                 "BOSA" to "Bosatt",
                 "GIFT" to "Gift",
                 "1444" to "TestPoststed",
-                "47" to "+47"
+                "47" to "+47",
+                "ESP" to "Spania"
             )
         )
     }
@@ -38,7 +40,9 @@ internal class PersondataFletterTest {
     internal fun `skal mappe data fra pdl til Persondata`() {
         snapshot.assertMatches(
             mapper.flettSammenData(
-                gittData(persondata = gittPerson())
+                gittData(
+                    persondata = gittPerson(fnr = fnr)
+                )
             )
         )
     }
