@@ -6,7 +6,28 @@
       "kode" : "UGRADERT"
     } ] ],
     "alder" : 21,
-    "bankkonto" : null,
+    "bankkonto" : {
+      "adresse" : {
+        "gyldighetsPeriode" : null,
+        "linje1" : "Utenlandsk bankkontoadresse",
+        "linje2" : null,
+        "linje3" : null,
+        "sistEndret" : null
+      },
+      "bankkode" : null,
+      "banknavn" : null,
+      "kontonummer" : "123",
+      "landkode" : {
+        "beskrivelse" : "Spania",
+        "kode" : "ESP"
+      },
+      "sistEndret" : null,
+      "swift" : "ASD123",
+      "valuta" : {
+        "beskrivelse" : "NOK",
+        "kode" : "NOK"
+      }
+    },
     "bostedAdresse" : [ "java.util.ArrayList", [ {
       "gyldighetsPeriode" : {
         "gyldigFraOgMed" : "2021-02-02",

@@ -4,6 +4,8 @@ import no.nav.modiapersonoversikt.legacy.api.domain.pdl.generated.HentPersondata
 import no.nav.modiapersonoversikt.rest.enhet.model.EnhetKontaktinformasjon
 import no.nav.modiapersonoversikt.service.dkif.Dkif
 import no.nav.modiapersonoversikt.service.organisasjonenhet.kontaktinformasjon.domain.*
+import no.nav.modiapersonoversikt.service.organisasjonenhet.kontaktinformasjon.domain.Gateadresse
+import no.nav.tjeneste.virksomhet.person.v3.informasjon.*
 import no.nav.tjeneste.virksomhet.person.v3.meldinger.HentPersonResponse
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -14,7 +16,7 @@ internal fun gittData(
     erEgenAnsatt: PersondataResult<Boolean> = PersondataResult.runCatching("egenAnsatt") { false },
     navEnhet: PersondataResult<EnhetKontaktinformasjon?> = PersondataResult.runCatching("navEnhet") { navKontorEnhet },
     dkifData: PersondataResult<Dkif.DigitalKontaktinformasjon> = PersondataResult.runCatching("dkif") { digitalKontaktinformasjon },
-    bankkonto: PersondataResult<HentPersonResponse> = PersondataResult.runCatching("bankkonto") { HentPersonResponse() },
+    bankkonto: PersondataResult<HentPersonResponse> = PersondataResult.runCatching("bankkonto") { utenlandskBankkonto },
     tredjepartsPerson: PersondataResult<Map<String, Persondata.TredjepartsPerson>> = PersondataResult.runCatching("tredjepartsperson") { tredjepartsPersoner }
 ) = PersondataFletter.Data(
     persondata = persondata,
@@ -212,6 +214,29 @@ internal val adresse = HentPersondata.Bostedsadresse(
     utenlandskAdresse = null,
     ukjentBosted = null
 )
+
+internal val utenlandskBankkonto = HentPersonResponse()
+    .withPerson(
+        Bruker()
+            .withBankkonto(
+                BankkontoUtland()
+                    .withBankkontoUtland(
+                        BankkontonummerUtland()
+                            .withBankkontonummer("123")
+                            .withLandkode(
+                                Landkoder().withValue("ESP")
+                            )
+                            .withBankadresse(
+                                UstrukturertAdresse()
+                                    .withAdresselinje1("Utenlandsk bankkontoadresse")
+                            )
+                            .withSwift("ASD123")
+                            .withValuta(
+                                Valutaer().withValue("NOK")
+                            )
+                    )
+            )
+    )
 
 internal val kontaktinformasjonDodsbo = HentPersondata.KontaktinformasjonForDoedsbo(
     skifteform = HentPersondata.KontaktinformasjonForDoedsboSkifteform.OFFENTLIG,
