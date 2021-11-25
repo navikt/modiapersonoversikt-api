@@ -63,8 +63,9 @@ class LoggingInterceptor(
 
     private fun Response.peekContent(config: Config): String? {
         if (config.ignoreResponseBody) return "IGNORED"
-        return when (val contentLength = this.header("Content-Length")) {
-            null, "0" -> "Content-Length: $contentLength, didn't try to peek at body"
+        return when {
+            this.header("Content-Length") == "0" -> "Content-Length: 0, didn't try to peek at body"
+            this.code() == 204 -> "StatusCode: 204, didn't try to peek at body"
             else -> this.peekBody(Long.MAX_VALUE).string()
         }
     }
