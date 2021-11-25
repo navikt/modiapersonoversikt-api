@@ -33,6 +33,7 @@ internal class AdresseMappingTest {
         val tredjepartsPerson = gittTredjepartsperson().copy(
             bostedsadresse = HentTredjepartspersondata.Bostedsadresse(
                 folkeregistermetadata = null,
+                coAdressenavn = null,
                 vegadresse = HentTredjepartspersondata.Vegadresse(
                     husnummer = "12",
                     husbokstav = "A",

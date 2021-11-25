@@ -60,8 +60,30 @@ class TredjepartspersonMapper(val kodeverk: EnhetligKodeverk.Service) {
             }
     }
 
+    private fun kombinerCoAdressenavnOgVegadresse(
+        coAdressenavn: String,
+        vegadresse: Persondata.Adresse
+    ) = Persondata.Adresse(
+        linje1 = coAdressenavn,
+        linje2 = vegadresse.linje1,
+        linje3 = vegadresse.linje2,
+        sistEndret = null
+    )
+
+    private fun String?.isNotNullOrBlank() = !this.isNullOrBlank()
+
     private fun hentBostedAdresse(adresse: HentTredjepartspersondata.Bostedsadresse): Persondata.Adresse? {
         return when {
+            adresse.coAdressenavn.isNotNullOrBlank() && adresse.vegadresse != null -> {
+                kombinerCoAdressenavnOgVegadresse(
+                    coAdressenavn = adresse.coAdressenavn!!,
+                    vegadresse = lagAdresseFraVegadresse(adresse.vegadresse!!)
+                )
+            }
+            adresse.coAdressenavn.isNotNullOrBlank() -> Persondata.Adresse(
+                linje1 = adresse.coAdressenavn!!,
+                sistEndret = null
+            )
             adresse.vegadresse != null -> lagAdresseFraVegadresse(adresse.vegadresse!!)
             adresse.matrikkeladresse != null -> lagAdresseFraMatrikkeladresse(adresse.matrikkeladresse!!)
             adresse.utenlandskAdresse != null -> lagAdresseFraUtenlandskAdresse(adresse.utenlandskAdresse!!)

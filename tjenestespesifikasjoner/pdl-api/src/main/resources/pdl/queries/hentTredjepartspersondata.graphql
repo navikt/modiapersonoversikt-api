@@ -30,6 +30,7 @@ query($identer: [ID!]!){
                     ajourholdstidspunkt
                     kilde
                 }
+                coAdressenavn
                 vegadresse {
                     husnummer
                     husbokstav

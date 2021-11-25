@@ -121,6 +121,7 @@ internal class TredjepartspersonMapperTest {
     }
 
     private val adresse = Bostedsadresse(
+        coAdressenavn = null,
         folkeregistermetadata = null,
         vegadresse = null,
         matrikkeladresse = null,
