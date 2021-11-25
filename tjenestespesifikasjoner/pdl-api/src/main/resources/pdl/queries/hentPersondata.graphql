@@ -219,7 +219,6 @@ query($ident: ID!){
                 ajourholdstidspunkt
                 kilde
             }
-            coAdressenavn
             vegadresse {
                 ...vegadresse
             }

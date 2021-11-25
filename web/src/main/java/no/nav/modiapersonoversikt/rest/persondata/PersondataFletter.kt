@@ -161,19 +161,6 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
             val sisteEndring = hentSisteEndringFraMetadata(adresse.metadata)
             val gyldighetsPeriode = hentGyldighetsperiode(adresse.gyldigFraOgMed, adresse.gyldigTilOgMed)
             when {
-                adresse.coAdressenavn.isNotNullOrBlank() && adresse.vegadresse != null -> {
-                    kombinerCoAdressenavnOgVegadresse(
-                        coAdressenavn = adresse.coAdressenavn!!,
-                        vegadresse = lagAdresseFraVegadresse(adresse.vegadresse!!),
-                        sisteEndring = sisteEndring,
-                        gyldighetsPeriode = gyldighetsPeriode
-                    )
-                }
-                adresse.coAdressenavn.isNotNullOrBlank() -> Persondata.Adresse(
-                    linje1 = adresse.coAdressenavn!!,
-                    sistEndret = sisteEndring,
-                    gyldighetsPeriode = gyldighetsPeriode
-                )
                 adresse.vegadresse != null -> lagAdresseFraVegadresse(
                     adresse = adresse.vegadresse!!,
                     sisteEndring = sisteEndring,
