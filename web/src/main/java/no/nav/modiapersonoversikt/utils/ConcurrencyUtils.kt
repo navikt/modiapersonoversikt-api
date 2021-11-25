@@ -33,7 +33,11 @@ object ConcurrencyUtils {
         val original = MDC.getCopyOfContextMap()
         MDC.setContextMap(mdcContextMap)
         val result = fn()
-        MDC.setContextMap(original)
+        if (original == null) {
+            MDC.clear()
+        } else {
+            MDC.setContextMap(original)
+        }
         return result
     }
 
