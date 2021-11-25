@@ -17,6 +17,7 @@ internal class AdresseMappingTest {
         every { kodeverk.hentKodeverk(any()) } returns EnhetligKodeverk.Kodeverk("", emptyMap())
         val hovedperson = gittPerson().copy(
             bostedsadresse = adresse.copy(
+                coAdressenavn = "C/O Her Herrmansen",
                 vegadresse = HentPersondata.Vegadresse(
                     matrikkelId = HentPersondata.Long(1234L),
                     husnummer = "12",
@@ -33,7 +34,7 @@ internal class AdresseMappingTest {
         val tredjepartsPerson = gittTredjepartsperson().copy(
             bostedsadresse = HentTredjepartspersondata.Bostedsadresse(
                 folkeregistermetadata = null,
-                coAdressenavn = null,
+                coAdressenavn = "C/O Her Herrmansen",
                 vegadresse = HentTredjepartspersondata.Vegadresse(
                     husnummer = "12",
                     husbokstav = "A",
