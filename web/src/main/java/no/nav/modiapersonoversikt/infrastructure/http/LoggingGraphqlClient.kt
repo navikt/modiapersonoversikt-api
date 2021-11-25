@@ -10,6 +10,7 @@ import io.ktor.client.engine.cio.CIOEngineConfig
 import io.ktor.client.request.HttpRequestBuilder
 import io.ktor.client.request.header
 import io.ktor.util.KtorExperimentalAPI
+import no.nav.common.utils.IdUtils
 import no.nav.modiapersonoversikt.legacy.api.utils.RestConstants
 import no.nav.modiapersonoversikt.legacy.api.utils.TjenestekallLogger
 import org.slf4j.LoggerFactory
@@ -46,6 +47,7 @@ class LoggingGraphqlClient(
         requestBuilder: HeadersBuilder
     ): GraphQLResponse<T> {
         val callId = getCallId()
+        val requestId = IdUtils.generateId()
         return try {
             val mappedRequestBuilder: HeadersBuilder = {
                 requestBuilder.invoke(this)
@@ -53,33 +55,36 @@ class LoggingGraphqlClient(
                 header("X-Correlation-ID", callId)
             }
             TjenestekallLogger.info(
-                "$name-request: $callId",
+                "$name-request: $callId ($requestId)",
                 mapOf(
                     "operationName" to operationName,
                     "variables" to variables
                 )
             )
 
+            val timer: Long = System.currentTimeMillis()
             val response = super.execute(query, operationName, variables, resultType, mappedRequestBuilder)
 
             val tjenestekallFelt = mapOf(
                 "data" to response.data,
                 "errors" to response.errors,
-                "extensions" to response.extensions
+                "extensions" to response.extensions,
+                "time" to timer.measure()
             )
 
             if (response.errors.isNullOrEmpty()) {
-                TjenestekallLogger.info("$name-response: $callId", tjenestekallFelt)
+                TjenestekallLogger.info("$name-response: $callId ($requestId)", tjenestekallFelt)
             } else {
-                TjenestekallLogger.error("$name-response: $callId", tjenestekallFelt)
+                TjenestekallLogger.error("$name-response: $callId ($requestId)", tjenestekallFelt)
             }
 
             response
         } catch (exception: Exception) {
             log.error("Feilet ved oppslag mot $name (ID: $callId)", exception)
-            TjenestekallLogger.error("$name-response: $callId", mapOf("exception" to exception))
+            TjenestekallLogger.error("$name-response: $callId ($requestId)", mapOf("exception" to exception))
             val error = GraphQLError("Feilet ved oppslag mot $name (ID: $callId)")
             GraphQLResponse(errors = listOf(error))
         }
     }
+    private inline fun Long.measure(): Long = System.currentTimeMillis() - this
 }
