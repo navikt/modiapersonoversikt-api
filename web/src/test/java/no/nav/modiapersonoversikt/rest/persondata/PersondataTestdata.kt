@@ -208,7 +208,6 @@ internal val adresse = HentPersondata.Bostedsadresse(
     gyldigTilOgMed = gittDateTime("2021-02-02T00:00:00"),
     metadata = metadata,
     folkeregistermetadata = null,
-    coAdressenavn = null,
     vegadresse = null,
     matrikkeladresse = null,
     utenlandskAdresse = null,
