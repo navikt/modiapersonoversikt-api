@@ -152,6 +152,7 @@
       "motpartsRolle" : "FULLMEKTIG",
       "omrade" : [ "java.util.ArrayList", [ ] ]
     } ] ],
+    "geografiskTilknytning" : "0123",
     "kjonn" : [ "java.util.ArrayList", [ {
       "beskrivelse" : "Mann",
       "kode" : "M"

@@ -65,6 +65,7 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
                 navn = hentNavn(data),
                 kjonn = hentKjonn(data),
                 fodselsdato = hentFodselsdato(data),
+                geografiskTilknytning = hentGeografiskTilknytning(data),
                 alder = hentAlder(data),
                 dodsdato = hentDodsdato(data),
                 bostedAdresse = hentBostedAdresse(data),
@@ -97,7 +98,11 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
             )
         )
     }
-
+    
+    private fun hentGeografiskTilknytning(data: Data): String? {
+        return data.geografiskeTilknytning.getOrNull()
+    }
+    
     private fun hentNaturligIdent(data: Data): String {
         return data.persondata.folkeregisteridentifikator
             .first { it.status == "I_BRUK" }
