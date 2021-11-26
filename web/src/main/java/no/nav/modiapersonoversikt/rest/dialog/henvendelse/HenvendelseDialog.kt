@@ -50,8 +50,14 @@ class HenvendelseDialog(
                 Scientist.WithFields(value, mapOf("control-length" to sfRelevanteTrader.size))
             },
             experiment = {
-                val value = sfDialogController.hentHenvendelser(EksternBruker.Fnr(fnr), valgtEnhet)
-                Scientist.WithFields(value, mapOf("experiment-length" to value.size))
+                val (value, pdlTime) = sfDialogController.hentHenvendelserRaw(EksternBruker.Fnr(fnr), valgtEnhet)
+                Scientist.WithFields(
+                    value,
+                    mapOf(
+                        "experiment-length" to value.size,
+                        "pdl-time" to pdlTime
+                    )
+                )
             }
         )
     }
