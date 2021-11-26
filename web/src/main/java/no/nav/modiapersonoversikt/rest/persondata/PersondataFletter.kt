@@ -98,11 +98,11 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
             )
         )
     }
-    
+
     private fun hentGeografiskTilknytning(data: Data): String? {
         return data.geografiskeTilknytning.getOrNull()
     }
-    
+
     private fun hentNaturligIdent(data: Data): String {
         return data.persondata.folkeregisteridentifikator
             .first { it.status == "I_BRUK" }
