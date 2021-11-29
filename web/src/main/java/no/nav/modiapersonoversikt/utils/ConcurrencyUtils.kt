@@ -23,21 +23,17 @@ object ConcurrencyUtils {
         return {
             withRequestAttributes(requestAttributes) {
                 withMDC(mdc) {
-                    SubjectHandler.withSubject(subject.get(), fn)
+                    SubjectHandler.withSubject(subject.orElseGet { null }, fn)
                 }
             }
         }
     }
 
-    private fun <T> withMDC(mdcContextMap: Map<String?, String?>, fn: () -> T): T {
+    private fun <T> withMDC(mdcContextMap: Map<String?, String?>?, fn: () -> T): T {
         val original = MDC.getCopyOfContextMap()
-        MDC.setContextMap(mdcContextMap)
+        setMDC(mdcContextMap)
         val result = fn()
-        if (original == null) {
-            MDC.clear()
-        } else {
-            MDC.setContextMap(original)
-        }
+        setMDC(original)
         return result
     }
 
@@ -47,5 +43,13 @@ object ConcurrencyUtils {
         val result = fn()
         RequestContextHolder.setRequestAttributes(original)
         return result
+    }
+
+    private fun setMDC(contextMap: Map<String?, String?>?) {
+        if (contextMap == null) {
+            MDC.clear()
+        } else {
+            MDC.setContextMap(contextMap)
+        }
     }
 }
