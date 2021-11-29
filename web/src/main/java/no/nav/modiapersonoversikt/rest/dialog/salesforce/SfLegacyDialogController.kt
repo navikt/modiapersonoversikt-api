@@ -16,6 +16,7 @@ import no.nav.modiapersonoversikt.rest.dialog.apis.*
 import no.nav.modiapersonoversikt.rest.dialog.apis.MeldingDTO
 import no.nav.modiapersonoversikt.service.sfhenvendelse.EksternBruker
 import no.nav.modiapersonoversikt.service.sfhenvendelse.SfHenvendelseService
+import no.nav.modiapersonoversikt.utils.ConcurrencyUtils.inParallel
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -91,14 +92,19 @@ class SfLegacyDialogController(
             temagruppe = SfTemagruppeTemaMapping.hentTemagruppeForTema(infomeldingRequest.sak.temaKode),
             fritekst = infomeldingRequest.fritekst
         )
-        sfHenvendelseService.journalforHenvendelse(
-            enhet = enhet,
-            kjedeId = henvendelse.kjedeId,
-            saksId = infomeldingRequest.sak.fagsystemSaksId,
-            saksTema = infomeldingRequest.sak.temaKode,
-            fagsakSystem = infomeldingRequest.sak.fagsystemKode
+
+        inParallel(
+            {
+                sfHenvendelseService.journalforHenvendelse(
+                    enhet = enhet,
+                    kjedeId = henvendelse.kjedeId,
+                    saksId = infomeldingRequest.sak.fagsystemSaksId,
+                    saksTema = infomeldingRequest.sak.temaKode,
+                    fagsakSystem = infomeldingRequest.sak.fagsystemKode
+                )
+            },
+            { sfHenvendelseService.lukkTraad(henvendelse.kjedeId) }
         )
-        sfHenvendelseService.lukkTraad(henvendelse.kjedeId)
 
         return ResponseEntity(HttpStatus.OK)
     }
