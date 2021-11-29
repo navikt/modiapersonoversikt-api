@@ -3,13 +3,16 @@ package no.nav.modiapersonoversikt.infrastructure.scientist
 import com.fasterxml.jackson.databind.JsonNode
 import no.nav.modiapersonoversikt.config.JacksonConfig
 import no.nav.modiapersonoversikt.legacy.api.utils.TjenestekallLogger
+import no.nav.modiapersonoversikt.utils.ConcurrencyUtils
 import kotlin.random.Random
 
 typealias Reporter = (header: String, fields: Map<String, Any?>) -> Unit
+
 object Scientist {
 
     internal val forceExperiment: ThreadLocal<Boolean?> = ThreadLocal()
     private val defaultReporter: Reporter = { header, fields -> TjenestekallLogger.info(header, fields) }
+
     data class Config(
         val name: String,
         val experimentRate: Double,
@@ -18,6 +21,7 @@ object Scientist {
     )
 
     data class TimedValue<T>(val value: T, val time: Long)
+
     fun <T> measureTimeInMillies(block: () -> T): TimedValue<T> {
         val startTime = System.currentTimeMillis()
         val value = block()
@@ -31,6 +35,7 @@ object Scientist {
         val experimentValue: Any? = null,
         val experimentException: Throwable? = null
     )
+
     data class WithFields<T>(val data: T, val fields: Map<String, Any?>)
 
     class Experiment<T> internal constructor(private val config: Config) {
@@ -40,10 +45,10 @@ object Scientist {
         ): Result<T> {
             if (forceExperiment.get() == true || Random.nextDouble() < config.experimentRate) {
                 val fields = mutableMapOf<String, Any?>()
-                val controlResult = measureTimeInMillies(control)
-                val experimentResult = runCatching {
-                    measureTimeInMillies(experiment)
-                }
+                val (controlResult, experimentResult) = ConcurrencyUtils.inParallel(
+                    { measureTimeInMillies(control) },
+                    { runCatching { measureTimeInMillies(experiment) } }
+                )
 
                 if (experimentResult.isFailure) {
                     fields["ok"] = false
