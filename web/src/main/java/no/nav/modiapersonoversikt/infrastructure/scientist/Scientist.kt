@@ -73,7 +73,8 @@ object Scientist {
     class Experiment<T> internal constructor(private val config: Config) {
         fun runIntrospected(
             control: () -> WithFields<T>,
-            experiment: () -> WithFields<Any?>
+            experiment: () -> WithFields<Any?>,
+            dataFields: ((T, Any?) -> Map<String, Any?>)?
         ): Result<T> {
             if (forceExperiment.get() == true || Random.nextDouble() < config.experimentRate) {
                 val fields = mutableMapOf<String, Any?>()
@@ -105,6 +106,9 @@ object Scientist {
                     fields["experimentTime"] = experimentResult.getOrThrow().time
                     fields.putAll(controlResult.value.fields)
                     fields.putAll(experimentResult.getOrThrow().value.fields)
+                    if (dataFields != null) {
+                        fields.putAll(dataFields(controlResult.value.data, experimentResult.getOrThrow().value.data))
+                    }
                 }
 
                 config.reporter("[SCIENCE] ${config.name}", fields)
@@ -123,8 +127,12 @@ object Scientist {
             }
         }
 
-        fun runWithExtraFields(control: () -> WithFields<T>, experiment: () -> WithFields<Any?>): T =
-            runIntrospected(control, experiment).controlValue
+        fun runWithExtraFields(
+            control: () -> WithFields<T>,
+            experiment: () -> WithFields<Any?>,
+            dataFields: ((T, Any?) -> Map<String, Any?>)? = null
+        ): T =
+            runIntrospected(control, experiment, dataFields).controlValue
 
         fun run(control: () -> T, experiment: () -> Any?): T =
             runWithExtraFields(

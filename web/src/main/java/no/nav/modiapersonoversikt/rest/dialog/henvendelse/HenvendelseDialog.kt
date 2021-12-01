@@ -52,6 +52,14 @@ class HenvendelseDialog(
             experiment = {
                 val value = sfDialogController.hentHenvendelser(EksternBruker.Fnr(fnr), valgtEnhet)
                 Scientist.WithFields(value, mapOf("experiment-length" to value.size))
+            },
+            dataFields = { control, experiment ->
+                val sfRelevanteTrader = control.filter(::tradUtenVarselMelding).size
+                val experimentSize = when (experiment) {
+                    is List<*> -> experiment.size
+                    else -> -1
+                }
+                mapOf("equal-length" to (sfRelevanteTrader == experimentSize))
             }
         )
     }
