@@ -912,7 +912,7 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
                 ),
                 personstatus = tredjepartsPerson?.personstatus ?: emptyList()
             )
-        }
+        }.sortedByDescending { it.alder }
     }
 
     private fun harSammeAdresse(
