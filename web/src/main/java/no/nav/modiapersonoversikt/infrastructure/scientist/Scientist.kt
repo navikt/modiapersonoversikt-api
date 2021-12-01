@@ -2,14 +2,58 @@ package no.nav.modiapersonoversikt.infrastructure.scientist
 
 import com.fasterxml.jackson.databind.JsonNode
 import no.nav.modiapersonoversikt.config.JacksonConfig
+import no.nav.modiapersonoversikt.infrastructure.scientist.Scientist.UtilityClasses.Try
+import no.nav.modiapersonoversikt.infrastructure.scientist.Scientist.UtilityClasses.measureTimeInMillies
 import no.nav.modiapersonoversikt.legacy.api.utils.TjenestekallLogger
+import no.nav.modiapersonoversikt.utils.ConcurrencyUtils
 import kotlin.random.Random
 
 typealias Reporter = (header: String, fields: Map<String, Any?>) -> Unit
+
 object Scientist {
 
     internal val forceExperiment: ThreadLocal<Boolean?> = ThreadLocal()
     private val defaultReporter: Reporter = { header, fields -> TjenestekallLogger.info(header, fields) }
+
+    private object UtilityClasses {
+        data class TimedValue<T>(val value: T, val time: Long)
+        fun <T> measureTimeInMillies(block: () -> T): TimedValue<T> {
+            val startTime = System.currentTimeMillis()
+            val value = block()
+            val time = System.currentTimeMillis() - startTime
+            return TimedValue(value, time)
+        }
+
+        class Try<out T> private constructor(private val value: Any?) {
+            val isFailure: Boolean = value is Failure
+
+            companion object {
+                fun <T> success(value: T): Try<T> = Try(value)
+                fun <T> failure(exception: Throwable): Try<T> = Try(Failure(exception))
+                fun <T> of(block: () -> T): Try<T> = try {
+                    success(block())
+                } catch (e: Throwable) {
+                    failure(e)
+                }
+            }
+
+            fun getOrNull(): T? = when {
+                isFailure -> null
+                else -> value as T
+            }
+            fun exceptionOrNull(): Throwable? = when (value) {
+                is Failure -> value.exception
+                else -> null
+            }
+            fun getOrThrow(): T = when (value) {
+                is Failure -> throw value.exception
+                else -> value as T
+            }
+
+            data class Failure(val exception: Throwable)
+        }
+    }
+
     data class Config(
         val name: String,
         val experimentRate: Double,
@@ -17,20 +61,13 @@ object Scientist {
         val logAndCompareValues: Boolean = true
     )
 
-    data class TimedValue<T>(val value: T, val time: Long)
-    fun <T> measureTimeInMillies(block: () -> T): TimedValue<T> {
-        val startTime = System.currentTimeMillis()
-        val value = block()
-        val time = System.currentTimeMillis() - startTime
-        return TimedValue(value, time)
-    }
-
     data class Result<T>(
         val experimentRun: Boolean,
         val controlValue: T,
         val experimentValue: Any? = null,
         val experimentException: Throwable? = null
     )
+
     data class WithFields<T>(val data: T, val fields: Map<String, Any?>)
 
     class Experiment<T> internal constructor(private val config: Config) {
@@ -40,10 +77,10 @@ object Scientist {
         ): Result<T> {
             if (forceExperiment.get() == true || Random.nextDouble() < config.experimentRate) {
                 val fields = mutableMapOf<String, Any?>()
-                val controlResult = measureTimeInMillies(control)
-                val experimentResult = runCatching {
-                    measureTimeInMillies(experiment)
-                }
+                val (controlResult, experimentResult) = ConcurrencyUtils.inParallel(
+                    { measureTimeInMillies(control) },
+                    { Try.of { measureTimeInMillies(experiment) } }
+                )
 
                 if (experimentResult.isFailure) {
                     fields["ok"] = false
