@@ -32,7 +32,7 @@ class HenvendelseDialog(
     val sfExperiment = Scientist.createExperiment<List<TraadDTO>>(
         Scientist.Config(
             name = "SF-Meldinger",
-            experimentRate = 0.1,
+            experimentRate = 1.0,
             logAndCompareValues = false
         )
     )
