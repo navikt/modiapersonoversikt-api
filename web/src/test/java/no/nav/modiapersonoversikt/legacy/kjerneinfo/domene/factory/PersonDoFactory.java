@@ -61,7 +61,6 @@ public class PersonDoFactory {
         personfakta.setPersonnavn(createPersonnavn(fornavn, mellomnavn, etternavn, personnavnid, endret));
         personfakta.setPostadresse(createAdresse(bolignummer, gatenavn, gatenummer, id, postnummer, poststed, postadresse, fom, tom));
         personfakta.setSivilstand(sivilstand);
-		personfakta.setSikkerhetstiltak(createSikkerhetstiltak(sikkerhetstiltakBeskrivelse, sikkerhetstiltakKode));
         return personfakta;
     }
 
@@ -149,12 +148,5 @@ public class PersonDoFactory {
         fodselsnummer.setNummer(fodselsnummer.getNummer());
 
         return fodselsnummer;
-    }
-
-	public static Sikkerhetstiltak createSikkerhetstiltak(String sikkerhetstiltakBeskrivelse, String sikkerhetstiltakKode) {
-		Sikkerhetstiltak sikkerhetstiltak = new Sikkerhetstiltak();
-		sikkerhetstiltak.setSikkerhetstiltakskode(sikkerhetstiltakKode);
-		sikkerhetstiltak.setSikkerhetstiltaksbeskrivelse(sikkerhetstiltakBeskrivelse);
-        return sikkerhetstiltak;
     }
 }

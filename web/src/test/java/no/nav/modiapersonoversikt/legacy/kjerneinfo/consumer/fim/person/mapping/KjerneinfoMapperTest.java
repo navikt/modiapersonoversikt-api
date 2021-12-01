@@ -75,15 +75,7 @@ public class KjerneinfoMapperTest {
         assertEqualsPersonnavn(fromPersonnavn, toPersonnavn);
         assertEqualsBankkontoUtland(((no.nav.tjeneste.virksomhet.person.v3.informasjon.BankkontoUtland) wsBruker.getBankkonto()).getBankkontoUtland(), ((BankkontoUtland) person.getPersonfakta().getBankkonto()));
         assertAdresseEquals(wsBruker, person);
-        assertSikkerhetstiltakEquals(wsBruker, person);
         assertEqualsFamilierelasjoner(wsBruker.getHarFraRolleI(), person.getPersonfakta().getHarFraRolleIList());
-    }
-
-    private void assertSikkerhetstiltakEquals(Bruker wsPerson, Person person) {
-        assertEquals(LocalDate.fromDateFields(wsPerson.getSikkerhetstiltak().getPeriode().getFom().toGregorianCalendar().getTime()), person.getPersonfakta().getSikkerhetstiltak().getPeriode().getFrom());
-        assertEquals(LocalDate.fromDateFields(wsPerson.getSikkerhetstiltak().getPeriode().getTom().toGregorianCalendar().getTime()), person.getPersonfakta().getSikkerhetstiltak().getPeriode().getTo());
-        assertEquals(wsPerson.getSikkerhetstiltak().getSikkerhetstiltaksbeskrivelse(), person.getPersonfakta().getSikkerhetstiltak().getSikkerhetstiltaksbeskrivelse());
-        assertEquals(wsPerson.getSikkerhetstiltak().getSikkerhetstiltakskode(), person.getPersonfakta().getSikkerhetstiltak().getSikkerhetstiltakskode());
     }
 
     private void assertAdresseEquals(Bruker wsPerson, Person person) {
@@ -140,18 +132,6 @@ public class KjerneinfoMapperTest {
         Person person = mapper.map(wsPerson, Person.class);
 
         assertEquals(wsPerson.getDoedsdato().getDoedsdato().toGregorianCalendar().getTime(), person.getPersonfakta().getDoedsdato().toDate());
-    }
-
-    @Test
-    public void wSSikkerhetstiltakToSikkerhetstiltak() {
-        String bekrivelse = "Farlig Person.";
-        no.nav.tjeneste.virksomhet.person.v3.informasjon.Sikkerhetstiltak fimSikkerhetsTiltak = new no.nav.tjeneste.virksomhet.person.v3.informasjon.Sikkerhetstiltak().withSikkerhetstiltaksbeskrivelse(bekrivelse);
-        HentSikkerhetstiltakResponse sikkerhetstiltakResponse = new HentSikkerhetstiltakResponse();
-        sikkerhetstiltakResponse.setSikkerhetstiltak(fimSikkerhetsTiltak);
-
-        Sikkerhetstiltak sikkerhetsTiltak = mapper.map(sikkerhetstiltakResponse.getSikkerhetstiltak(), Sikkerhetstiltak.class);
-
-        assertEquals(sikkerhetsTiltak.getSikkerhetstiltaksbeskrivelse(), bekrivelse);
     }
 
     @Test

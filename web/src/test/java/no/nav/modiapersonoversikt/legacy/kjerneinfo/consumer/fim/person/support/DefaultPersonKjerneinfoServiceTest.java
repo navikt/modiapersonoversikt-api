@@ -27,13 +27,10 @@ import no.nav.tjeneste.virksomhet.person.v3.binding.HentPersonSikkerhetsbegrensn
 import no.nav.tjeneste.virksomhet.person.v3.binding.PersonV3;
 import no.nav.tjeneste.virksomhet.person.v3.informasjon.Diskresjonskoder;
 import no.nav.tjeneste.virksomhet.person.v3.informasjon.Kommune;
-import no.nav.tjeneste.virksomhet.person.v3.informasjon.Sikkerhetstiltak;
 import no.nav.tjeneste.virksomhet.person.v3.meldinger.HentGeografiskTilknytningRequest;
 import no.nav.tjeneste.virksomhet.person.v3.meldinger.HentGeografiskTilknytningResponse;
 import no.nav.tjeneste.virksomhet.person.v3.meldinger.HentPersonRequest;
 import no.nav.tjeneste.virksomhet.person.v3.meldinger.HentPersonResponse;
-import no.nav.tjeneste.virksomhet.person.v3.meldinger.HentSikkerhetstiltakRequest;
-import no.nav.tjeneste.virksomhet.person.v3.meldinger.HentSikkerhetstiltakResponse;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -92,18 +89,6 @@ public class DefaultPersonKjerneinfoServiceTest {
         verify(portType, times(1)).hentGeografiskTilknytning(any(HentGeografiskTilknytningRequest.class));
         assertThat(response.getValue(), is(GEOGRAFISK_TILKNYTNING));
         assertThat(response.getDiskresjonskode(), is(STRENGT_FORTROLIG_ADRESSE));
-    }
-
-    @Test
-    public void hentSikkerhetstiltak() throws Exception {
-        HentSikkerhetstiltakResponse response = new HentSikkerhetstiltakResponse()
-                .withSikkerhetstiltak(new Sikkerhetstiltak()
-                        .withSikkerhetstiltaksbeskrivelse("Farlig person."));
-        when(portType.hentSikkerhetstiltak(any(no.nav.tjeneste.virksomhet.person.v3.meldinger.HentSikkerhetstiltakRequest.class))).thenReturn(response);
-
-        service.hentSikkerhetstiltak(new no.nav.modiapersonoversikt.legacy.kjerneinfo.consumer.fim.person.to.HentSikkerhetstiltakRequest(FODSELSNUMMER));
-
-        verify(portType, times(1)).hentSikkerhetstiltak(any(HentSikkerhetstiltakRequest.class));
     }
 
     private HentGeografiskTilknytningResponse lagResponse() {

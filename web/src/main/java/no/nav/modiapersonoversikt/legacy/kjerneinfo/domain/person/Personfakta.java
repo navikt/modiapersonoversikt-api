@@ -32,7 +32,6 @@ public class Personfakta implements Serializable {
     private Kodeverdi sivilstand;
     private LocalDate sivilstandFom;
     private LocalDateTime doedsdato;
-    private Sikkerhetstiltak sikkerhetstiltak;
     private List<Kodeverdi> tilrettelagtKommunikasjon;
     private GeografiskTilknytning geografiskTilknytning;
     private List<Telefon> kontaktinformasjon = new ArrayList<>();
@@ -416,18 +415,6 @@ public class Personfakta implements Serializable {
 
     public boolean isHarTilrettelagtKommunikasjon() {
         return tilrettelagtKommunikasjon != null && !tilrettelagtKommunikasjon.isEmpty();
-    }
-
-    public Sikkerhetstiltak getSikkerhetstiltak() {
-        return sikkerhetstiltak;
-    }
-
-    public void setSikkerhetstiltak(Sikkerhetstiltak sikkerhetstiltak) {
-        this.sikkerhetstiltak = sikkerhetstiltak;
-    }
-
-    public boolean isHarSikkerhetstiltak() {
-        return this.sikkerhetstiltak != null;
     }
 
     public void setKontaktinformasjon(List<Telefon> kontaktinformasjon) {

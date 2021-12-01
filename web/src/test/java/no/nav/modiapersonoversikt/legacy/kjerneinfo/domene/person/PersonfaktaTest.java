@@ -217,18 +217,6 @@ public class PersonfaktaTest {
         assertEquals(2, emptyPersonfakta.getBarn().size());
     }
 
-	@Test
-	public void sjekkHarSikkerhetstiltak() {
-		assertTrue(personfakta.isHarSikkerhetstiltak());
-		assertEquals(personfakta.getSikkerhetstiltak().getSikkerhetstiltaksbeskrivelse(), SIKKERHETSTILTAK_BESKRIVELSE);
-		assertEquals(personfakta.getSikkerhetstiltak().getSikkerhetstiltakskode(), SIKKERHETSTILTAK_KODE);
-	}
-
-	@Test
-	public void sjekkHarIkkeSikkerhetstiltak() {
-		assertFalse(emptyPersonfakta.isHarSikkerhetstiltak());
-	}
-
     @Test
     public void sjekkSortBarnByAge() {
         List<Familierelasjon> barn = new ArrayList<>();
