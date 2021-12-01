@@ -84,7 +84,7 @@
     "erEgenAnsatt" : "NEI",
     "fnr" : "12345678910",
     "fodselsdato" : [ "java.util.ArrayList", [ "2000-01-02" ] ],
-    "forelderBarnRelasjon" : [ "java.util.ArrayList", [ {
+    "forelderBarnRelasjon" : [ "java.util.Arrays$ArrayList", [ {
       "adressebeskyttelse" : [ "java.util.Collections$SingletonList", [ {
         "beskrivelse" : "UGRADERT",
         "kode" : "UGRADERT"
