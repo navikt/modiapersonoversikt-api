@@ -10,8 +10,6 @@ import no.nav.modiapersonoversikt.legacy.kjerneinfo.consumer.egenansatt.EgenAnsa
 import no.nav.modiapersonoversikt.legacy.kjerneinfo.consumer.fim.person.PersonKjerneinfoServiceBi;
 import no.nav.modiapersonoversikt.legacy.kjerneinfo.consumer.fim.person.support.DefaultPersonKjerneinfoService;
 import no.nav.modiapersonoversikt.legacy.kjerneinfo.consumer.fim.person.support.KjerneinfoMapper;
-import no.nav.modiapersonoversikt.legacy.kjerneinfo.consumer.fim.person.vergemal.VergemalService;
-import no.nav.modiapersonoversikt.consumer.kodeverk.consumer.fim.kodeverk.KodeverkmanagerBi;
 import no.nav.modiapersonoversikt.infrastructure.content.ContentRetriever;
 import no.nav.modiapersonoversikt.service.*;
 import no.nav.modiapersonoversikt.legacy.api.service.FodselnummerAktorService;
@@ -216,15 +214,6 @@ public class ServiceConfig {
     public PersonKjerneinfoServiceBi personKjerneinfoServiceBi(PersonV3 personPortType, KjerneinfoMapper kjerneinfoMapper,
                                                                Tilgangskontroll tilgangskontroll, OrganisasjonEnhetV2Service organisasjonEnhetV2Service) {
         return new DefaultPersonKjerneinfoService(personPortType, kjerneinfoMapper, tilgangskontroll, organisasjonEnhetV2Service);
-    }
-
-    @Bean
-    public VergemalService vergemalService(
-            PersonV3 personPortType,
-            PdlOppslagService pdl,
-            KodeverkmanagerBi kodeverkmanagerBi
-    ) {
-        return new VergemalService(personPortType, pdl, kodeverkmanagerBi);
     }
 
     @Bean(name = "DkifSoap")
