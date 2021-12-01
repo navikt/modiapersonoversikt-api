@@ -17,7 +17,9 @@ import no.nav.modiapersonoversikt.legacy.kjerneinfo.domain.person.Person;
 import no.nav.modiapersonoversikt.legacy.kjerneinfo.domain.person.Personfakta;
 import no.nav.modiapersonoversikt.rest.dialog.apis.DelsvarRestRequest;
 import no.nav.modiapersonoversikt.rest.dialog.henvendelse.HenvendelseDelsvar;
+import no.nav.modiapersonoversikt.rest.persondata.*;
 import no.nav.modiapersonoversikt.service.HenvendelseUtsendingServiceImpl;
+import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk;
 import no.nav.modiapersonoversikt.service.henvendelse.DelsvarServiceImpl;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.senduthenvendelse.SendUtHenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.senduthenvendelse.meldinger.WSFerdigstillHenvendelseRequest;
@@ -34,7 +36,6 @@ import org.springframework.cache.CacheManager;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockHttpServletRequest;
-
 import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.SPORSMAL_SKRIFTLIG;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
@@ -62,22 +63,21 @@ class HenvendelseDelsvarTest {
     private HenvendelseUtsendingServiceImpl setupHenvendelseUtsendingService() {
         HenvendelsePortType henvendelsePortTypeMock = getHenvendelsePortTypeMock();
         ContentRetriever propertyResolver = mockPropertyResolver();
-        PersonKjerneinfoServiceBi kjerneinfoMock = mockPersonKjerneinfoService();
         CacheManager cacheManager = mock(CacheManager.class);
         when(cacheManager.getCache(anyString())).thenReturn(mock(Cache.class));
         sendUtHenvendelsePortTypeMock = mock(SendUtHenvendelsePortType.class);
 
         return new HenvendelseUtsendingServiceImpl(
-                henvendelsePortTypeMock,
-                sendUtHenvendelsePortTypeMock,
-                null,
-                null,
-                null,
-                TilgangskontrollMock.get(),
-                propertyResolver,
-                kjerneinfoMock,
-                null,
-                cacheManager
+            henvendelsePortTypeMock,
+            sendUtHenvendelsePortTypeMock,
+            null,
+            null,
+            null,
+            tilgangskontrollMock,
+            propertyResolver,
+            getPersondataServiceMock(),
+            null,
+            cacheManager
         );
     }
 
@@ -91,7 +91,20 @@ class HenvendelseDelsvarTest {
         HenvendelsePortType mock = mock(HenvendelsePortType.class);
         XMLHenvendelse xmlHenvendelse = lagXMLHenvendelse();
         when(mock.hentHenvendelseListe(any(WSHentHenvendelseListeRequest.class)))
-                .thenReturn(new WSHentHenvendelseListeResponse().withAny(xmlHenvendelse));
+            .thenReturn(new WSHentHenvendelseListeResponse().withAny(xmlHenvendelse));
+
+        return mock;
+    }
+
+    private PersondataService getPersondataServiceMock() {
+        PersondataService mock = mock(PersondataService.class);
+        EnhetligKodeverk.Service kodeverk = mock(EnhetligKodeverk.Service.class);
+        when(kodeverk.hentKodeverk(any())).thenReturn(PersondataTestdataKt.gittKodeverk());
+        PersondataFletter fletter = new PersondataFletter(kodeverk);
+        when(mock.hentPerson(any()))
+            .thenReturn(fletter.flettSammenData(PersondataTestdataKt.gittData(
+                PersondataTestdataKt.gittPerson()
+            )));
 
         return mock;
     }

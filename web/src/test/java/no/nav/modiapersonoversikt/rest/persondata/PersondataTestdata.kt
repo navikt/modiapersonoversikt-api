@@ -3,6 +3,7 @@ package no.nav.modiapersonoversikt.rest.persondata
 import no.nav.modiapersonoversikt.legacy.api.domain.pdl.generated.HentPersondata
 import no.nav.modiapersonoversikt.rest.enhet.model.EnhetKontaktinformasjon
 import no.nav.modiapersonoversikt.service.dkif.Dkif
+import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk
 import no.nav.modiapersonoversikt.service.organisasjonenhet.kontaktinformasjon.domain.*
 import no.nav.modiapersonoversikt.service.organisasjonenhet.kontaktinformasjon.domain.Gateadresse
 import no.nav.tjeneste.virksomhet.person.v3.informasjon.*
@@ -10,7 +11,8 @@ import no.nav.tjeneste.virksomhet.person.v3.meldinger.HentPersonResponse
 import java.time.LocalDate
 import java.time.LocalDateTime
 
-internal fun gittData(
+@JvmOverloads
+fun gittData(
     persondata: HentPersondata.Person,
     geografiskeTilknytning: PersondataResult<String?> = PersondataResult.runCatching("gt") { "0123" },
     erEgenAnsatt: PersondataResult<Boolean> = PersondataResult.runCatching("egenAnsatt") { false },
@@ -28,7 +30,8 @@ internal fun gittData(
     tredjepartsPerson = tredjepartsPerson
 )
 
-internal fun gittPerson(
+@JvmOverloads
+fun gittPerson(
     fnr: String = "12345678910",
     navn: String = "Teste Ruud McTestesen",
     kjonn: HentPersondata.KjoennType = HentPersondata.KjoennType.MANN,
@@ -74,6 +77,23 @@ internal fun gittPerson(
     bostedsadresse = bosted,
     kontaktadresse = listOf(kontaktadresse),
     oppholdsadresse = listOf(oppholdsadresse)
+)
+
+@JvmOverloads
+fun gittKodeverk() = EnhetligKodeverk.Kodeverk(
+    navn = "kodeverk",
+    kodeverk = mapOf(
+        "M" to "Mann",
+        "KODE6" to "Sperret adresse, strengt fortrolig",
+        "UGRADERT" to "Ugradert",
+        "NOR" to "Norge",
+        "NO" to "Norsk",
+        "BOSA" to "Bosatt",
+        "GIFT" to "Gift",
+        "1444" to "TestPoststed",
+        "47" to "+47",
+        "ESP" to "Spania"
+    )
 )
 
 internal fun gittTredjepartsperson(
