@@ -129,6 +129,7 @@ class HenvendelseBehandlingServiceImplTest {
 
     @Test
     void skalMerkeSomKontorsperret() {
+        //TODO
         EnhetligKodeverk.Service kodeverk = mock(EnhetligKodeverk.Service.class);
         when(kodeverk.hentKodeverk(any())).thenReturn(PersondataTestdataKt.gittKodeverk());
 
