@@ -6,8 +6,6 @@ import java.io.Serializable;
 
 public class Sikkerhetstiltak implements Serializable {
 	private Periode periode;
-	private String sikkerhetstiltaksbeskrivelse;
-	private String sikkerhetstiltakskode;
 
 	public Periode getPeriode() {
 		return periode;
@@ -15,21 +13,5 @@ public class Sikkerhetstiltak implements Serializable {
 
 	public void setPeriode(Periode periode) {
 		this.periode = periode;
-	}
-
-	public String getSikkerhetstiltakskode() {
-		return sikkerhetstiltakskode;
-	}
-
-	public void setSikkerhetstiltakskode(String sikkerhetstiltakskode) {
-		this.sikkerhetstiltakskode = sikkerhetstiltakskode;
-	}
-
-	public String getSikkerhetstiltaksbeskrivelse() {
-		return sikkerhetstiltaksbeskrivelse;
-	}
-
-	public void setSikkerhetstiltaksbeskrivelse(String sikkerhetstiltaksbeskrivelse) {
-		this.sikkerhetstiltaksbeskrivelse = sikkerhetstiltaksbeskrivelse;
 	}
 }
