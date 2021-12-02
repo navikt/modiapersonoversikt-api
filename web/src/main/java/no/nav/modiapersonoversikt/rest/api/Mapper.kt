@@ -86,7 +86,8 @@ private fun meldingMapping(melding: Melding): MeldingDTO =
             "kontorsperretAv" to melding.kontorsperretAv?.let(::hentSaksbehandler),
             "sendtTilSladding" to false,
             "markertSomFeilsendtAv" to melding.markertSomFeilsendtAv?.let(::hentSaksbehandler),
-            "erDokumentMelding" to melding.erDokumentMelding
+            "erDokumentMelding" to melding.erDokumentMelding,
+            "kassert" to melding.kassert
         )
     )
 

@@ -13,10 +13,13 @@ import no.nav.modiapersonoversikt.legacy.api.utils.RestUtils
 import no.nav.modiapersonoversikt.legacy.api.utils.TemagruppeTemaMapping
 import no.nav.modiapersonoversikt.legacy.sporsmalogsvar.consumer.henvendelse.HenvendelseBehandlingService
 import no.nav.modiapersonoversikt.legacy.sporsmalogsvar.consumer.henvendelse.domain.Traad
+import no.nav.modiapersonoversikt.rest.DATO_TID_FORMAT
 import no.nav.modiapersonoversikt.rest.api.toDTO
 import no.nav.modiapersonoversikt.rest.dialog.apis.*
 import no.nav.modiapersonoversikt.service.sfhenvendelse.EksternBruker
 import no.nav.modiapersonoversikt.service.sfhenvendelse.SfHenvendelseService
+import org.joda.time.LocalDateTime
+import org.joda.time.format.DateTimeFormat
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.server.ResponseStatusException
@@ -32,31 +35,43 @@ class HenvendelseDialog(
     val sfExperiment = Scientist.createExperiment<List<TraadDTO>>(
         Scientist.Config(
             name = "SF-Meldinger",
-            experimentRate = 0.1,
+            experimentRate = Scientist.FixedValueRate(1.0),
             logAndCompareValues = false
         )
     )
 
     override fun hentMeldinger(request: HttpServletRequest, fnr: String, enhet: String?): List<TraadDTO> {
         val valgtEnhet = RestUtils.hentValgtEnhet(enhet, request)
-        return sfExperiment.runWithExtraFields(
+        return sfExperiment.run(
             control = {
-                val value: List<TraadDTO> = henvendelseService
+                henvendelseService
                     .hentMeldinger(fnr, valgtEnhet)
                     .traader
                     .toDTO()
-
-                val sfRelevanteTrader = value.filter(::tradUtenVarselMelding)
-                Scientist.WithFields(value, mapOf("control-length" to sfRelevanteTrader.size))
             },
             experiment = {
-                val (value, pdlTime) = sfDialogController.hentHenvendelserRaw(EksternBruker.Fnr(fnr), valgtEnhet)
-                Scientist.WithFields(
-                    value,
-                    mapOf(
-                        "experiment-length" to value.size,
-                        "pdl-time" to pdlTime
-                    )
+                sfDialogController.hentHenvendelser(EksternBruker.Fnr(fnr), valgtEnhet)
+            },
+            dataFields = { control, triedExperiment ->
+                // Skal synces hvert kvarter, men gir det litt ekstra rom
+                val forventetSFCutoff: String = LocalDateTime.now()
+                    .minusMinutes(20)
+                    .toString(DateTimeFormat.forPattern(DATO_TID_FORMAT))
+
+                val sfRelevanteTrader = control
+                    .filter(::tradUtenVarselMelding)
+                    .filter(::tradHvorIkkeAlleMeldingerErKassert)
+                    .filter(tradHvorEldsteMeldingErForventetAFinneISF(forventetSFCutoff))
+                    .size
+
+                val experimentSize = when (val experiment = triedExperiment.getOrNull()) {
+                    is List<*> -> experiment.size
+                    else -> -1
+                }
+                mapOf(
+                    "equal-length" to (sfRelevanteTrader == experimentSize),
+                    "control-length" to sfRelevanteTrader,
+                    "experiment-length" to experimentSize
                 )
             }
         )
@@ -319,6 +334,19 @@ private fun tradUtenVarselMelding(traad: TraadDTO): Boolean {
     val harDokumentVarsel = meldingstyper.contains(Meldingstype.DOKUMENT_VARSEL.name)
     val harOppgaveVarsel = meldingstyper.contains(Meldingstype.OPPGAVE_VARSEL.name)
     return !harDokumentVarsel && !harOppgaveVarsel
+}
+
+private fun tradHvorIkkeAlleMeldingerErKassert(traad: TraadDTO): Boolean {
+    return traad.meldinger.any { it.map["kassert"] == false }
+}
+
+private const val fallbackDato = "2099-01-01 00:00:00"
+private fun tradHvorEldsteMeldingErForventetAFinneISF(forventetSFCutoff: String): (TraadDTO) -> Boolean = { traad ->
+    val eldsteMelding: MeldingDTO? = traad.meldinger.minBy {
+        (it.map["opprettetDato"] as String?) ?: fallbackDato
+    }
+    val eldsteMeldingOpprettet = (eldsteMelding?.map?.get("opprettetDato") as String?) ?: fallbackDato
+    eldsteMeldingOpprettet < forventetSFCutoff
 }
 
 enum class Kanal {

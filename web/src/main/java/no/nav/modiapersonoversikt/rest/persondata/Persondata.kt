@@ -15,6 +15,7 @@ object Persondata {
         val navn: List<Navn>,
         val kjonn: List<KodeBeskrivelse<Kjonn>>,
         val fodselsdato: List<LocalDate>,
+        val geografiskTilknytning: String?,
         val alder: Int?,
         val dodsdato: List<LocalDate>,
         val bostedAdresse: List<Adresse>,

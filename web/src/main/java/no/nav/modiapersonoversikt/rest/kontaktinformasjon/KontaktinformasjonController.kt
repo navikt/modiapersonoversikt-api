@@ -26,7 +26,7 @@ class KontaktinformasjonController @Autowired constructor(
     val dkifExperiment = Scientist.createExperiment<Dkif.DigitalKontaktinformasjon>(
         Scientist.Config(
             name = "dkif",
-            experimentRate = 0.0
+            experimentRate = Scientist.FixedValueRate(0.0)
         )
     )
 

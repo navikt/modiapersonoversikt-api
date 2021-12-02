@@ -27,7 +27,6 @@ sealed class EksternBruker(val ident: String) {
 
 interface SfHenvendelseService {
     fun hentHenvendelser(bruker: EksternBruker, enhet: String): List<HenvendelseDTO>
-    fun hentHenvendelserRaw(bruker: EksternBruker, enhet: String): Pair<List<HenvendelseDTO>, Long>
     fun hentHenvendelse(kjedeId: String): HenvendelseDTO
     fun journalforHenvendelse(enhet: String, kjedeId: String, saksTema: String, saksId: String?, fagsakSystem: String?)
     fun sendSamtalereferat(kjedeId: String?, bruker: EksternBruker, enhet: String, temagruppe: String, kanal: SamtalereferatRequestDTO.Kanal, fritekst: String): HenvendelseDTO
@@ -102,14 +101,6 @@ class SfHenvendelseServiceImpl(
             .filter(kontorsperreTilgang(enhetOgGTListe))
             .map(kassertInnhold(OffsetDateTime.now()))
             .map(journalfortTemaTilgang(tematilganger))
-    }
-
-    override fun hentHenvendelserRaw(bruker: EksternBruker, enhet: String): Pair<List<HenvendelseDTO>, Long> {
-        val start = System.currentTimeMillis()
-        val aktorId = bruker.aktorId()
-        val time = System.currentTimeMillis() - start
-        val henvendelser = henvendelseInfoApi.henvendelseinfoHenvendelselisteGet(aktorId, getCallId())
-        return Pair(henvendelser, time)
     }
 
     override fun hentHenvendelse(kjedeId: String): HenvendelseDTO {
