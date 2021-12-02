@@ -125,7 +125,8 @@ internal fun gittHentPersondataNavn(navn: String): HentPersondata.Navn {
 
 internal val tredjepartsPersoner = mapOf(
     "98765432100" to gittTredjepartsperson(
-        navn = "Datteren Hans"
+        navn = "Datteren Hans",
+        alder = 15
     ),
     "11225678910" to gittTredjepartsperson(
         fnr = "11225678910",
@@ -138,6 +139,7 @@ internal val tredjepartsPersoner = mapOf(
     "11223344910" to gittTredjepartsperson(
         fnr = "11223344910",
         navn = "Adressebeskyttet Barn",
+        alder = 10,
         adressebeskyttelse = Persondata.AdresseBeskyttelse.KODE6
     ),
     "55555666000" to gittTredjepartsperson(

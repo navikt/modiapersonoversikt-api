@@ -46,7 +46,9 @@ class HenvendelseDialog(
                     .traader
                     .toDTO()
 
-                val sfRelevanteTrader = value.filter(::tradUtenVarselMelding)
+                val sfRelevanteTrader = value
+                    .filter(::tradUtenVarselMelding)
+                    .filter(::tradHvorIkkeAlleMeldingerErKassert)
                 Scientist.WithFields(value, mapOf("control-length" to sfRelevanteTrader.size))
             },
             experiment = {
@@ -321,6 +323,10 @@ private fun tradUtenVarselMelding(traad: TraadDTO): Boolean {
     val harDokumentVarsel = meldingstyper.contains(Meldingstype.DOKUMENT_VARSEL.name)
     val harOppgaveVarsel = meldingstyper.contains(Meldingstype.OPPGAVE_VARSEL.name)
     return !harDokumentVarsel && !harOppgaveVarsel
+}
+
+private fun tradHvorIkkeAlleMeldingerErKassert(traad: TraadDTO): Boolean {
+    return traad.meldinger.any { it.map["kassert"] == false }
 }
 
 enum class Kanal {
