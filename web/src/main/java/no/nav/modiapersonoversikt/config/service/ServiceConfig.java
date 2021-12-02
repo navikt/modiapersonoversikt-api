@@ -7,7 +7,6 @@ import no.nav.common.sts.SystemUserTokenProvider;
 import no.nav.common.utils.EnvironmentUtils;
 import no.nav.modiapersonoversikt.legacy.api.domain.bidragsak.generated.apis.BidragSakControllerApi;
 import no.nav.modiapersonoversikt.legacy.kjerneinfo.consumer.egenansatt.EgenAnsattService;
-import no.nav.modiapersonoversikt.legacy.kjerneinfo.consumer.fim.person.PersonKjerneinfoServiceBi;
 import no.nav.modiapersonoversikt.infrastructure.content.ContentRetriever;
 import no.nav.modiapersonoversikt.rest.persondata.PersondataService;
 import no.nav.modiapersonoversikt.service.*;
@@ -123,8 +122,8 @@ public class ServiceConfig {
     }
 
     @Bean
-    public ArbeidsfordelingV1Service arbeidsfordelingV1Service(ArbeidsfordelingClient arbeidsfordelingClient, EgenAnsattService egenAnsattService, PersonKjerneinfoServiceBi personService, KodeverksmapperService kodeverksmapper) {
-        return new ArbeidsfordelingV1ServiceImpl(arbeidsfordelingClient, egenAnsattService, personService, kodeverksmapper);
+    public ArbeidsfordelingV1Service arbeidsfordelingV1Service(ArbeidsfordelingClient arbeidsfordelingClient, EgenAnsattService egenAnsattService, PersondataService persondataService, KodeverksmapperService kodeverksmapper) {
+        return new ArbeidsfordelingV1ServiceImpl(arbeidsfordelingClient, egenAnsattService, persondataService, kodeverksmapper);
     }
 
     @Bean
