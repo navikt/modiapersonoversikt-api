@@ -363,6 +363,8 @@ class HenvendelseUtsendingServiceImplTest {
         when(mock(persondataService.getClass()).hentPerson(any()))
             .thenReturn(fletter.flettSammenData(PersondataTestdataKt.gittData(
                 PersondataTestdataKt.gittPerson(),
+                PersondataResult.runCatching("gt", () -> null),
+                PersondataResult.runCatching("egenAnsatt", () -> false),
                 PersondataResult.runCatching("navEnhet", () -> null)
             )));
 

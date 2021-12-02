@@ -1,6 +1,5 @@
 package no.nav.modiapersonoversikt.service;
 
-import no.nav.modiapersonoversikt.legacy.kjerneinfo.consumer.fim.person.to.HentKjerneinformasjonRequest;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelse;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType;
 import no.nav.modiapersonoversikt.infrastructure.content.ContentRetriever;
@@ -264,8 +263,6 @@ public class HenvendelseUtsendingServiceImpl implements HenvendelseUtsendingServ
     }
 
     private String getEnhet(String fnr) {
-        HentKjerneinformasjonRequest kjerneinfoRequest = new HentKjerneinformasjonRequest(fnr);
-        kjerneinfoRequest.setBegrunnet(true);
         Persondata.Enhet navEnhet = persondataService.hentPerson(fnr).getPerson().getNavEnhet();
         if (navEnhet != null) {
             return navEnhet.getId();
