@@ -13,10 +13,13 @@ import no.nav.modiapersonoversikt.legacy.api.utils.RestUtils
 import no.nav.modiapersonoversikt.legacy.api.utils.TemagruppeTemaMapping
 import no.nav.modiapersonoversikt.legacy.sporsmalogsvar.consumer.henvendelse.HenvendelseBehandlingService
 import no.nav.modiapersonoversikt.legacy.sporsmalogsvar.consumer.henvendelse.domain.Traad
+import no.nav.modiapersonoversikt.rest.DATO_TID_FORMAT
 import no.nav.modiapersonoversikt.rest.api.toDTO
 import no.nav.modiapersonoversikt.rest.dialog.apis.*
 import no.nav.modiapersonoversikt.service.sfhenvendelse.EksternBruker
 import no.nav.modiapersonoversikt.service.sfhenvendelse.SfHenvendelseService
+import org.joda.time.LocalDateTime
+import org.joda.time.format.DateTimeFormat
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.server.ResponseStatusException
@@ -50,9 +53,15 @@ class HenvendelseDialog(
                 sfDialogController.hentHenvendelser(EksternBruker.Fnr(fnr), valgtEnhet)
             },
             dataFields = { control, triedExperiment ->
+                // Skal synces hvert kvarter, men gir det litt ekstra rom
+                val forventetSFCutoff: String = LocalDateTime.now()
+                    .minusMinutes(20)
+                    .toString(DateTimeFormat.forPattern(DATO_TID_FORMAT))
+
                 val sfRelevanteTrader = control
                     .filter(::tradUtenVarselMelding)
                     .filter(::tradHvorIkkeAlleMeldingerErKassert)
+                    .filter(tradHvorEldsteMeldingErForventetAFinneISF(forventetSFCutoff))
                     .size
 
                 val experimentSize = when (val experiment = triedExperiment.getOrNull()) {
@@ -329,6 +338,15 @@ private fun tradUtenVarselMelding(traad: TraadDTO): Boolean {
 
 private fun tradHvorIkkeAlleMeldingerErKassert(traad: TraadDTO): Boolean {
     return traad.meldinger.any { it.map["kassert"] == false }
+}
+
+private const val fallbackDato = "2099-01-01 00:00:00"
+private fun tradHvorEldsteMeldingErForventetAFinneISF(forventetSFCutoff: String): (TraadDTO) -> Boolean = { traad ->
+    val eldsteMelding: MeldingDTO? = traad.meldinger.minBy {
+        (it.map["opprettetDato"] as String?) ?: fallbackDato
+    }
+    val eldsteMeldingOpprettet = (eldsteMelding?.map?.get("opprettetDato") as String?) ?: fallbackDato
+    eldsteMeldingOpprettet < forventetSFCutoff
 }
 
 enum class Kanal {
