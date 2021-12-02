@@ -53,7 +53,7 @@ class PersonController @Autowired constructor(
     private val standardKodeverk: StandardKodeverk
 ) {
     private val logger = LoggerFactory.getLogger(PersonController::class.java)
-    private val kjoennExperiment = Scientist.createExperiment<String?>(Scientist.Config("PDL-Kjønn", 0.2))
+    private val kjoennExperiment = Scientist.createExperiment<String?>(Scientist.Config("PDL-Kjønn", Scientist.FixedValueRate(0.2)))
 
     @GetMapping
     fun hent(@PathVariable("fnr") fodselsnummer: String): Map<String, Any?> {
