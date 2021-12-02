@@ -146,9 +146,15 @@ internal class ScientistTest {
                     assertThat(fields).containsKey("experiment-extra")
                 }
             )
-        ).runWithExtraFields(
-            control = { Scientist.WithFields("Hello, World", mapOf("control-extra" to 1)) },
-            experiment = { Scientist.WithFields("Hello, World", mapOf("experiment-extra" to "value")) }
+        ).runIntrospected(
+            control = { "Hello, World" },
+            experiment = { "Hello, World" },
+            dataFields = { control, triedExperiment ->
+                mapOf(
+                    "control-extra" to 1,
+                    "experiment-extra" to "value"
+                )
+            }
         )
     }
 

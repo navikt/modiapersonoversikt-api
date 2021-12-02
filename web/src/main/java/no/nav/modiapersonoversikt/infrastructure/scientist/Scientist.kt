@@ -17,7 +17,7 @@ object Scientist {
     internal val forceExperiment: ThreadLocal<Boolean?> = ThreadLocal()
     private val defaultReporter: Reporter = { header, fields -> TjenestekallLogger.info(header, fields) }
 
-    private object UtilityClasses {
+    object UtilityClasses {
         data class TimedValue<T>(val value: T, val time: Long)
         fun <T> measureTimeInMillies(block: () -> T): TimedValue<T> {
             val startTime = System.currentTimeMillis()
@@ -83,33 +83,31 @@ object Scientist {
         val experimentException: Throwable? = null
     )
 
-    data class WithFields<T>(val data: T, val fields: Map<String, Any?>)
-
     class Experiment<T> internal constructor(private val config: Config) {
         fun runIntrospected(
-            control: () -> WithFields<T>,
-            experiment: () -> WithFields<Any?>,
-            dataFields: ((T, Any?) -> Map<String, Any?>)?
+            control: () -> T,
+            experiment: () -> Any?,
+            dataFields: ((T, Try<Any?>) -> Map<String, Any?>)? = null
         ): Result<T> {
             if (forceExperiment.get() == true || config.experimentRate.shouldRunExperiment()) {
                 val fields = mutableMapOf<String, Any?>()
                 val (controlResult, experimentResult) = ConcurrencyUtils.inParallel(
                     { measureTimeInMillies(control) },
-                    { Try.of { measureTimeInMillies(experiment) } }
+                    { measureTimeInMillies { Try.of(experiment) } }
                 )
 
-                if (experimentResult.isFailure) {
+                if (experimentResult.value.isFailure) {
                     fields["ok"] = false
                     if (config.logAndCompareValues) {
-                        fields["control"] = controlResult.value.data
+                        fields["control"] = controlResult.value
                     }
                     fields["controlTime"] = controlResult.time
-                    fields["exception"] = experimentResult.exceptionOrNull()
-                    fields.putAll(controlResult.value.fields)
+                    fields["experimentTime"] = experimentResult.time
+                    fields["exception"] = experimentResult.value.exceptionOrNull()
                 } else {
                     if (config.logAndCompareValues) {
-                        val controlValue = controlResult.value.data
-                        val experimentValue = experimentResult.getOrThrow().value.data
+                        val controlValue = controlResult.value
+                        val experimentValue = experimentResult.value.getOrThrow()
                         val (ok, controlJson, experimentJson) = compareAndSerialize(controlValue, experimentValue)
                         fields["ok"] = ok
                         fields["control"] = controlJson
@@ -118,42 +116,38 @@ object Scientist {
                         fields["ok"] = true
                     }
                     fields["controlTime"] = controlResult.time
-                    fields["experimentTime"] = experimentResult.getOrThrow().time
-                    fields.putAll(controlResult.value.fields)
-                    fields.putAll(experimentResult.getOrThrow().value.fields)
-                    if (dataFields != null) {
-                        fields.putAll(dataFields(controlResult.value.data, experimentResult.getOrThrow().value.data))
-                    }
+                    fields["experimentTime"] = experimentResult.time
+                }
+                if (dataFields != null) {
+                    fields.putAll(dataFields(controlResult.value, experimentResult.value))
                 }
 
                 config.reporter("[SCIENCE] ${config.name}", fields)
 
                 return Result(
                     experimentRun = true,
-                    controlValue = controlResult.value.data,
-                    experimentValue = experimentResult.getOrNull()?.value?.data,
-                    experimentException = experimentResult.exceptionOrNull()
+                    controlValue = controlResult.value,
+                    experimentValue = experimentResult.value.getOrNull(),
+                    experimentException = experimentResult.value.exceptionOrNull()
                 )
             } else {
                 return Result(
                     experimentRun = false,
-                    controlValue = control().data
+                    controlValue = control()
                 )
             }
         }
 
-        fun runWithExtraFields(
-            control: () -> WithFields<T>,
-            experiment: () -> WithFields<Any?>,
-            dataFields: ((T, Any?) -> Map<String, Any?>)? = null
+        fun run(
+            control: () -> T,
+            experiment: () -> Any?,
+            dataFields: ((T, Try<Any?>) -> Map<String, Any?>)? = null
         ): T =
-            runIntrospected(control, experiment, dataFields).controlValue
-
-        fun run(control: () -> T, experiment: () -> Any?): T =
-            runWithExtraFields(
-                control = { WithFields(control(), emptyMap()) },
-                experiment = { WithFields(experiment(), emptyMap()) }
-            )
+            runIntrospected(
+                control = control,
+                experiment = experiment,
+                dataFields = dataFields
+            ).controlValue
     }
 
     fun <T : Any?> createExperiment(config: Config) = Experiment<T>(config)

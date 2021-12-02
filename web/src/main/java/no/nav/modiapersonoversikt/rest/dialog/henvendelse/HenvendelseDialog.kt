@@ -39,32 +39,31 @@ class HenvendelseDialog(
 
     override fun hentMeldinger(request: HttpServletRequest, fnr: String, enhet: String?): List<TraadDTO> {
         val valgtEnhet = RestUtils.hentValgtEnhet(enhet, request)
-        return sfExperiment.runWithExtraFields(
+        return sfExperiment.run(
             control = {
-                val value: List<TraadDTO> = henvendelseService
+                henvendelseService
                     .hentMeldinger(fnr, valgtEnhet)
                     .traader
                     .toDTO()
-
-                val sfRelevanteTrader = value
-                    .filter(::tradUtenVarselMelding)
-                    .filter(::tradHvorIkkeAlleMeldingerErKassert)
-                Scientist.WithFields(value, mapOf("control-length" to sfRelevanteTrader.size))
             },
             experiment = {
-                val value = sfDialogController.hentHenvendelser(EksternBruker.Fnr(fnr), valgtEnhet)
-                Scientist.WithFields(value, mapOf("experiment-length" to value.size))
+                sfDialogController.hentHenvendelser(EksternBruker.Fnr(fnr), valgtEnhet)
             },
-            dataFields = { control, experiment ->
+            dataFields = { control, triedExperiment ->
                 val sfRelevanteTrader = control
                     .filter(::tradUtenVarselMelding)
                     .filter(::tradHvorIkkeAlleMeldingerErKassert)
                     .size
-                val experimentSize = when (experiment) {
+
+                val experimentSize = when (val experiment = triedExperiment.getOrNull()) {
                     is List<*> -> experiment.size
                     else -> -1
                 }
-                mapOf("equal-length" to (sfRelevanteTrader == experimentSize))
+                mapOf(
+                    "equal-length" to (sfRelevanteTrader == experimentSize),
+                    "control-length" to sfRelevanteTrader,
+                    "experiment-length" to experimentSize
+                )
             }
         )
     }
