@@ -12,7 +12,7 @@ internal class ScientistTest {
         Scientist.createExperiment<String>(
             Scientist.Config(
                 name = "DummyExperiment",
-                experimentRate = 1.0,
+                experimentRate = Scientist.FixedValueRate(1.0),
                 reporter = { header, fields ->
                     assertThat(header).contains("[SCIENCE] DummyExperiment")
                 }
@@ -25,7 +25,7 @@ internal class ScientistTest {
         Scientist.createExperiment<String>(
             Scientist.Config(
                 name = "DummyExperiment",
-                experimentRate = 1.0,
+                experimentRate = Scientist.FixedValueRate(1.0),
                 reporter = { header, fields ->
                     assertThat(fields).containsEntry("ok", true)
                     assertThat(fields).containsKey("control")
@@ -40,7 +40,7 @@ internal class ScientistTest {
         Scientist.createExperiment<String>(
             Scientist.Config(
                 name = "DummyExperiment",
-                experimentRate = 1.0,
+                experimentRate = Scientist.FixedValueRate(1.0),
                 reporter = { header, fields ->
                     assertThat(fields).containsEntry("ok", false)
                     assertThat(fields).containsKey("control")
@@ -60,7 +60,7 @@ internal class ScientistTest {
         val experiment = Scientist.createExperiment<String>(
             Scientist.Config(
                 name = "DummyExperiment",
-                experimentRate = 0.7,
+                experimentRate = Scientist.FixedValueRate(0.7),
                 reporter = { _, _ -> experimentsRun++ }
             )
         )
@@ -85,7 +85,7 @@ internal class ScientistTest {
         Scientist.createExperiment<List<Sak>>(
             Scientist.Config(
                 name = "DummyExperiment",
-                experimentRate = 1.0,
+                experimentRate = Scientist.FixedValueRate(1.0),
                 reporter = { header, fields ->
                     assertThat(fields).containsEntry("ok", true)
                     assertThat(fields).containsKey("control")
@@ -120,7 +120,7 @@ internal class ScientistTest {
         Scientist.createExperiment<List<Map<String, Any?>>>(
             Scientist.Config(
                 name = "DummyExperiment",
-                experimentRate = 1.0,
+                experimentRate = Scientist.FixedValueRate(1.0),
                 reporter = { header, fields ->
                     assertThat(fields).containsEntry("ok", true)
                     assertThat(fields).containsKey("control")
@@ -137,7 +137,7 @@ internal class ScientistTest {
         Scientist.createExperiment<String>(
             Scientist.Config(
                 name = "DummyExperiment",
-                experimentRate = 1.0,
+                experimentRate = Scientist.FixedValueRate(1.0),
                 reporter = { header, fields ->
                     assertThat(fields).containsEntry("ok", true)
                     assertThat(fields).containsKey("control")
@@ -158,7 +158,7 @@ internal class ScientistTest {
         Scientist.createExperiment<String>(
             Scientist.Config(
                 name = "DummyExperiment",
-                experimentRate = 1.0,
+                experimentRate = Scientist.FixedValueRate(1.0),
                 reporter = { _, _ ->
                     val endTime = System.currentTimeMillis()
                     assertThat(endTime - startTime).isCloseTo(2000, Percentage.withPercentage(15.0))

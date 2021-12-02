@@ -5,6 +5,8 @@ import no.nav.modiapersonoversikt.config.JacksonConfig
 import no.nav.modiapersonoversikt.infrastructure.scientist.Scientist.UtilityClasses.Try
 import no.nav.modiapersonoversikt.infrastructure.scientist.Scientist.UtilityClasses.measureTimeInMillies
 import no.nav.modiapersonoversikt.legacy.api.utils.TjenestekallLogger
+import no.nav.modiapersonoversikt.service.unleash.Feature
+import no.nav.modiapersonoversikt.service.unleash.UnleashService
 import no.nav.modiapersonoversikt.utils.ConcurrencyUtils
 import kotlin.random.Random
 
@@ -54,9 +56,22 @@ object Scientist {
         }
     }
 
+    interface ExperimentRate {
+        fun shouldRunExperiment(): Boolean
+    }
+    class FixedValueRate(private val rate: Double) : ExperimentRate {
+        override fun shouldRunExperiment(): Boolean {
+            return Random.nextDouble() < rate
+        }
+    }
+    class UnleashRate(private val unleash: UnleashService, val feature: Feature) : ExperimentRate {
+        override fun shouldRunExperiment(): Boolean {
+            return unleash.isEnabled(feature)
+        }
+    }
     data class Config(
         val name: String,
-        val experimentRate: Double,
+        val experimentRate: ExperimentRate,
         val reporter: Reporter = defaultReporter,
         val logAndCompareValues: Boolean = true
     )
@@ -76,7 +91,7 @@ object Scientist {
             experiment: () -> WithFields<Any?>,
             dataFields: ((T, Any?) -> Map<String, Any?>)?
         ): Result<T> {
-            if (forceExperiment.get() == true || Random.nextDouble() < config.experimentRate) {
+            if (forceExperiment.get() == true || config.experimentRate.shouldRunExperiment()) {
                 val fields = mutableMapOf<String, Any?>()
                 val (controlResult, experimentResult) = ConcurrencyUtils.inParallel(
                     { measureTimeInMillies(control) },
