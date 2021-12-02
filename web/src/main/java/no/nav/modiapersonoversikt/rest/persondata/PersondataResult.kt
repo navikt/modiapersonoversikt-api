@@ -35,6 +35,7 @@ sealed class PersondataResult<T>(val system: String) {
     class Failure<T>(name: String, val exception: Throwable) : PersondataResult<T>(name)
 
     companion object {
+        @JvmStatic
         fun <T> runCatching(system: String, block: () -> T): PersondataResult<T> {
             return try {
                 Success(system, block())
