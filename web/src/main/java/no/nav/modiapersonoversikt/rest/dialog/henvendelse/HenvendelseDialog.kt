@@ -56,7 +56,10 @@ class HenvendelseDialog(
                 Scientist.WithFields(value, mapOf("experiment-length" to value.size))
             },
             dataFields = { control, experiment ->
-                val sfRelevanteTrader = control.filter(::tradUtenVarselMelding).size
+                val sfRelevanteTrader = control
+                    .filter(::tradUtenVarselMelding)
+                    .filter(::tradHvorIkkeAlleMeldingerErKassert)
+                    .size
                 val experimentSize = when (experiment) {
                     is List<*> -> experiment.size
                     else -> -1
