@@ -118,7 +118,10 @@ class SfLegacyDialogController(
         /**
          * Artifakt av legacy-henvendelse, beholdt for å holde apiene like.
          */
-        return FortsettDialogDTO(opprettHenvendelseRequest.traadId, null)
+        val traad = sfHenvendelseService.hentHenvendelse(opprettHenvendelseRequest.traadId)
+        val oppgaveId: String? = finnOgTilordneOppgaveIdTilTrad(traad, fnr, opprettHenvendelseRequest.enhet, ignorerConflict ?: false)
+
+        return FortsettDialogDTO(opprettHenvendelseRequest.traadId, oppgaveId)
     }
 
     override fun sendFortsettDialog(
@@ -202,6 +205,34 @@ class SfLegacyDialogController(
         slaaSammenRequest: SlaaSammenRequest
     ): Map<String, Any?> {
         throw NotSupportedException("Operasjonen er ikke støttet av Salesforce")
+    }
+
+    private fun finnOgTilordneOppgaveIdTilTrad(
+        traad: HenvendelseDTO,
+        fnr: String,
+        enhet: String?,
+        ignorerConflict: Boolean
+    ): String? {
+        return if (traad.erSporsmalFraBruker()) {
+            try {
+                oppgaveBehandlingService.finnOgTilordneSTOOppgave(
+                    fnr,
+                    traad.kjedeId,
+                    traad.gjeldendeTemagruppe?.let { Temagruppe.valueOf(it) },
+                    enhet,
+                    ignorerConflict ?: false
+                ).oppgaveId
+            } catch (e: OppgaveBehandlingService.AlleredeTildeltAnnenSaksbehandler) {
+                throw ResponseStatusException(HttpStatus.CONFLICT, e.message)
+            }
+        } else {
+            null
+        }
+    }
+
+    private fun HenvendelseDTO.erSporsmalFraBruker(): Boolean {
+        val nyesteMelding = this.meldinger?.maxBy { it.sendtDato }
+        return nyesteMelding?.fra?.identType == MeldingFraDTO.IdentType.AKTORID
     }
 
     private fun lagOppslagsverk(henvendelser: List<HenvendelseDTO>): Pair<Map<String, String>, Map<String, Saksbehandler>> {
