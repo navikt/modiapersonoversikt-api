@@ -10,10 +10,6 @@ public class AuthorizationWithSikkerhetstiltakException extends AuthorizationExc
 		super(message);
 	}
 
-	public AuthorizationWithSikkerhetstiltakException(String message, Throwable cause) {
-		super(message, cause);
-	}
-
 	public Sikkerhetstiltak getSikkerhetstiltak() {
 		return sikkerhetstiltak;
 	}
