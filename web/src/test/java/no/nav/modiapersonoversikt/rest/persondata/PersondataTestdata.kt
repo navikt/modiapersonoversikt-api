@@ -18,7 +18,7 @@ fun gittData(
     persondata: HentPersondata.Person,
     geografiskeTilknytning: PersondataResult<String?> = PersondataResult.runCatching("gt") { "0123" },
     erEgenAnsatt: PersondataResult<Boolean> = PersondataResult.runCatching("egenAnsatt") { false },
-    navEnhet: PersondataResult<EnhetKontaktinformasjon?> = PersondataResult.runCatching("navEnhet") { navKontorEnhet },
+    navEnhet: PersondataResult<EnhetKontaktinformasjon?> = PersondataResult.runCatching("navEnhet") { gittNavKontorEnhet() },
     dkifData: PersondataResult<Dkif.DigitalKontaktinformasjon> = PersondataResult.runCatching("dkif") { digitalKontaktinformasjon },
     bankkonto: PersondataResult<HentPersonResponse> = PersondataResult.runCatching("bankkonto") { utenlandskBankkonto },
     tredjepartsPerson: PersondataResult<Map<String, Persondata.TredjepartsPerson>> = PersondataResult.runCatching("tredjepartsperson") { tredjepartsPersoner }
@@ -190,10 +190,13 @@ internal val tredjepartsPersoner = mapOf(
     )
 )
 
-internal val navKontorEnhet = EnhetKontaktinformasjon(
+fun gittNavKontorEnhet(
+    enhetId: String = "0123",
+    enhetNavn: String = "NAV Oslo"
+) = EnhetKontaktinformasjon(
     OrganisasjonEnhetKontaktinformasjon()
-        .withEnhetId("0123")
-        .withEnhetNavn("NAV Oslo")
+        .withEnhetId(enhetId)
+        .withEnhetNavn(enhetNavn)
         .withKontaktinformasjon(
             Kontaktinformasjon().withPublikumsmottakliste(
                 listOf(
