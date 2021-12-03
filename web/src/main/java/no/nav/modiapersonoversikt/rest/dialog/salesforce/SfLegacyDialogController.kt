@@ -221,7 +221,7 @@ class SfLegacyDialogController(
                     traad.gjeldendeTemagruppe?.let { Temagruppe.valueOf(it) },
                     enhet,
                     ignorerConflict ?: false
-                ).oppgaveId
+                )?.oppgaveId
             } catch (e: OppgaveBehandlingService.AlleredeTildeltAnnenSaksbehandler) {
                 throw ResponseStatusException(HttpStatus.CONFLICT, e.message)
             }
