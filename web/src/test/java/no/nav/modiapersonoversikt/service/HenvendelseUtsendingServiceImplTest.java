@@ -1,10 +1,5 @@
 package no.nav.modiapersonoversikt.service;
 
-import no.nav.modiapersonoversikt.legacy.kjerneinfo.consumer.fim.person.to.HentKjerneinformasjonResponse;
-import no.nav.modiapersonoversikt.legacy.kjerneinfo.domain.person.Person;
-import no.nav.modiapersonoversikt.legacy.kjerneinfo.domain.person.Personfakta;
-import no.nav.modiapersonoversikt.legacy.kjerneinfo.domain.person.fakta.AnsvarligEnhet;
-import no.nav.modiapersonoversikt.legacy.kjerneinfo.domain.person.fakta.Organisasjonsenhet;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.*;
 import no.nav.modiapersonoversikt.infrastructure.content.ContentRetriever;
 import no.nav.modiapersonoversikt.legacy.api.domain.Saksbehandler;
@@ -64,7 +59,6 @@ class HenvendelseUtsendingServiceImplTest {
 
     private static final String JOURNALFORT_TEMA = "tema jobb";
     private static final String SAKSBEHANDLERS_VALGTE_ENHET = "4300";
-    private static final String SAKSBEHANDLERS_IDENT = "z123456";
 
     private ArgumentCaptor<WSSendUtHenvendelseRequest> wsSendHenvendelseRequestCaptor = ArgumentCaptor.forClass(WSSendUtHenvendelseRequest.class);
     private ArgumentCaptor<WSHentHenvendelseListeRequest> hentHenvendelseListeRequestCaptor = ArgumentCaptor.forClass(WSHentHenvendelseListeRequest.class);
@@ -102,17 +96,6 @@ class HenvendelseUtsendingServiceImplTest {
         when(sendUtHenvendelsePortType.sendUtHenvendelse(any(WSSendUtHenvendelseRequest.class))).thenReturn(
             new WSSendUtHenvendelseResponse().withBehandlingsId(BEHANDLINGS_ID)
         );
-        HentKjerneinformasjonResponse kjerneinformasjonResponse = new HentKjerneinformasjonResponse();
-        Person person = new Person();
-        Personfakta personfakta = new Personfakta();
-        AnsvarligEnhet ansvarligEnhet = new AnsvarligEnhet();
-        Organisasjonsenhet organisasjonsenhet = new Organisasjonsenhet();
-        organisasjonsenhet.setOrganisasjonselementId(ENHET);
-        ansvarligEnhet.setOrganisasjonsenhet(organisasjonsenhet);
-        personfakta.setAnsvarligEnhet(ansvarligEnhet);
-        person.setPersonfakta(personfakta);
-        person.getPersonfakta().getAnsvarligEnhet().getOrganisasjonsenhet().getOrganisasjonselementId();
-        kjerneinformasjonResponse.setPerson(person);
         when(cacheManager.getCache(anyString())).thenReturn(mock(Cache.class));
     }
 
