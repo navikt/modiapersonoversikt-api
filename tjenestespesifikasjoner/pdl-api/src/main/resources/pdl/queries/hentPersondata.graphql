@@ -25,6 +25,14 @@ fragment utenlandskadresse on UtenlandskAdresse {
     regionDistriktOmraade
     landkode
 }
+fragment utenlandskadresseIFrittFormat on UtenlandskAdresseIFrittFormat {
+    adresselinje1
+    adresselinje2
+    adresselinje3
+    postkode
+    byEllerStedsnavn
+    landkode
+}
 fragment postadresseIFrittFormat on PostadresseIFrittFormat {
     adresselinje1
     adresselinje2
@@ -250,6 +258,9 @@ query($ident: ID!){
             }
             utenlandskAdresse {
                 ...utenlandskadresse
+            }
+            utenlandskAdresseIFrittFormat {
+                ...utenlandskadresseIFrittFormat
             }
         }
         oppholdsadresse {

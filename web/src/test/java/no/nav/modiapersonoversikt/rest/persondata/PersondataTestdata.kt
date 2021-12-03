@@ -362,7 +362,8 @@ internal val kontaktadresseData = HentPersondata.Kontaktadresse(
     postadresseIFrittFormat = null,
     postboksadresse = null,
     vegadresse = vegadresse,
-    utenlandskAdresse = null
+    utenlandskAdresse = null,
+    utenlandskAdresseIFrittFormat = null
 )
 
 internal val oppholdsadresseData = HentPersondata.Oppholdsadresse(
