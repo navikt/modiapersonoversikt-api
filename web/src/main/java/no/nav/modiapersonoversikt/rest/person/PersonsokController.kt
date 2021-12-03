@@ -6,8 +6,10 @@ import no.nav.modiapersonoversikt.infrastructure.naudit.AuditIdentifier
 import no.nav.modiapersonoversikt.infrastructure.naudit.AuditResources
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Policies
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll
-import no.nav.modiapersonoversikt.legacy.api.domain.pdl.generated.SokPersonUtenlandskID
+import no.nav.modiapersonoversikt.legacy.api.domain.pdl.generated.SokPerson
 import no.nav.modiapersonoversikt.legacy.api.service.pdl.PdlOppslagService
+import no.nav.modiapersonoversikt.legacy.api.service.pdl.PdlOppslagService.PdlSokbareFelt
+import no.nav.modiapersonoversikt.legacy.api.service.pdl.PdlOppslagService.SokKriterier
 import no.nav.modiapersonoversikt.rest.lagXmlGregorianDato
 import no.nav.tjeneste.virksomhet.personsoek.v1.PersonsokPortType
 import no.nav.tjeneste.virksomhet.personsoek.v1.informasjon.*
@@ -22,6 +24,8 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.server.ResponseStatusException
+import java.time.Clock
+import java.time.LocalDate
 
 @RestController
 @RequestMapping("/rest/personsok")
@@ -44,7 +48,9 @@ class PersonsokController @Autowired constructor(
             .get(auditDescriptor) {
                 handterFeil {
                     if (!personsokRequest.utenlandskID.isNullOrBlank()) {
-                        sokEtterUtenlandskIdMotPDL(personsokRequest.utenlandskID)
+                        pdlOppslagService
+                            .sokPerson(listOf(SokKriterier(PdlSokbareFelt.UTENLANDSK_ID, personsokRequest.utenlandskID)))
+                            .map(::lagPersonResponse)
                     } else {
                         legacySokMotTPS(personsokRequest)
                     }
@@ -52,9 +58,22 @@ class PersonsokController @Autowired constructor(
             }
     }
 
-    private fun sokEtterUtenlandskIdMotPDL(utenlandskID: String): List<PersonSokResponsDTO> {
-        return pdlOppslagService.sokPersonUtenlandskID(utenlandskID)
-            .map(::lagPersonResponse)
+    @PostMapping("/v2")
+    fun sokPdl(@RequestBody personsokRequest: PersonsokRequest): List<PersonSokResponsDTO> {
+        return tilgangskontroll
+            .check(Policies.tilgangTilModia)
+            .get(auditDescriptor) {
+                handterFeil {
+                    if (!personsokRequest.kontonummer.isNullOrBlank()) {
+                        kontonummerSok(personsokRequest.kontonummer)
+                            .map(::lagPersonResponse)
+                    } else {
+                        pdlOppslagService
+                            .sokPerson(personsokRequest.tilPdlKriterier())
+                            .map(::lagPersonResponse)
+                    }
+                }
+            }
     }
 
     private fun legacySokMotTPS(personsokRequest: PersonsokRequest): List<PersonSokResponsDTO> {
@@ -65,21 +84,46 @@ class PersonsokController @Autowired constructor(
             ?: emptyList()
     }
 
+    private fun kontonummerSok(kontonummer: String): List<Person> {
+        val request = FinnPersonRequest()
+            .apply {
+                soekekriterie = Soekekriterie()
+                    .apply {
+                        bankkontoNorge = kontonummer
+                    }
+            }
+        return personsokPortType
+            .finnPerson(request)
+            .personListe
+            ?: emptyList()
+    }
+
     private fun <T> handterFeil(block: () -> T): T = try {
         block()
     } catch (ex: Exception) {
         when {
             ex.message == "For mange forekomster funnet" ->
-                throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Søket gav mer enn 200 treff. Forsøk å begrense søket.")
+                throw ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "Søket gav mer enn 200 treff. Forsøk å begrense søket."
+                )
             ex is GraphQLException ->
-                throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Søket gav feil ved kall til PDL: ${ex.message}", ex)
+                throw ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "Søket gav feil ved kall til PDL: ${ex.message}",
+                    ex
+                )
             else ->
-                throw ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Feil fra søketjeneste: ${ex.message}", ex)
+                throw ResponseStatusException(
+                    HttpStatus.INTERNAL_SERVER_ERROR,
+                    "Feil fra søketjeneste: ${ex.message}",
+                    ex
+                )
         }
     }
 }
 
-fun lagPersonResponse(searchHit: SokPersonUtenlandskID.PersonSearchHit): PersonSokResponsDTO {
+fun lagPersonResponse(searchHit: SokPerson.PersonSearchHit): PersonSokResponsDTO {
     val ident = searchHit.person?.folkeregisteridentifikator?.first()
     val utenlandskID = searchHit.person?.utenlandskIdentifikasjonsnummer
     return PersonSokResponsDTO(
@@ -99,7 +143,7 @@ fun lagPersonResponse(searchHit: SokPersonUtenlandskID.PersonSearchHit): PersonS
     )
 }
 
-private fun lagBostedsadresse(adr: List<SokPersonUtenlandskID.Bostedsadresse>?): String? {
+private fun lagBostedsadresse(adr: List<SokPerson.Bostedsadresse>?): String? {
     if (adr.isNullOrEmpty()) {
         return null
     }
@@ -146,7 +190,7 @@ private fun lagBostedsadresse(adr: List<SokPersonUtenlandskID.Bostedsadresse>?):
     }
 }
 
-fun lagPostadresse(adr: List<SokPersonUtenlandskID.Kontaktadresse>?): String? {
+fun lagPostadresse(adr: List<SokPerson.Kontaktadresse>?): String? {
     if (adr.isNullOrEmpty()) {
         return null
     }
@@ -209,7 +253,7 @@ fun lagPostadresse(adr: List<SokPersonUtenlandskID.Kontaktadresse>?): String? {
     }
 }
 
-fun hentNavn(person: SokPersonUtenlandskID.Person?): PersonnavnDTO? {
+fun hentNavn(person: SokPerson.Person?): PersonnavnDTO? {
     return person
         ?.navn
         ?.first()
@@ -248,11 +292,18 @@ private fun lagPersonResponse(fimPerson: Person) = PersonSokResponsDTO(
 )
 
 private fun lagPostadresse(adr: UstrukturertAdresse): String =
-    arrayOf(adr.adresselinje1, adr.adresselinje2, adr.adresselinje3, adr.adresselinje4, adr.landkode?.value).filterNotNull().joinToString(" ")
+    arrayOf(
+        adr.adresselinje1,
+        adr.adresselinje2,
+        adr.adresselinje3,
+        adr.adresselinje4,
+        adr.landkode?.value
+    ).filterNotNull().joinToString(" ")
 
 private fun lagBostedsadresse(adr: StrukturertAdresse): String? =
     when (adr) {
-        is Gateadresse -> arrayOf(adr.gatenavn, adr.husnummer, adr.husbokstav, adr.poststed?.value).filterNotNull().joinToString(" ")
+        is Gateadresse -> arrayOf(adr.gatenavn, adr.husnummer, adr.husbokstav, adr.poststed?.value).filterNotNull()
+            .joinToString(" ")
         is Matrikkeladresse -> arrayOf(
             adr.matrikkelnummer.bruksnummer,
             adr.matrikkelnummer.festenummer,
@@ -261,7 +312,8 @@ private fun lagBostedsadresse(adr: StrukturertAdresse): String? =
             adr.matrikkelnummer.undernummer,
             adr.poststed?.value
         ).filterNotNull().joinToString(" ")
-        is StedsadresseNorge -> arrayOf(adr.tilleggsadresse, adr.bolignummer, adr.poststed?.value).filterNotNull().joinToString(" ")
+        is StedsadresseNorge -> arrayOf(adr.tilleggsadresse, adr.bolignummer, adr.poststed?.value).filterNotNull()
+            .joinToString(" ")
         is PostboksadresseNorsk -> arrayOf(adr.postboksanlegg, adr.poststed?.value).filterNotNull().joinToString(" ")
         else -> null
     }
@@ -360,3 +412,41 @@ data class PersonsokRequest(
     val husbokstav: String?,
     val postnummer: String?
 )
+
+fun PersonsokRequest.tilPdlKriterier(clock: Clock = Clock.systemDefaultZone()): List<SokKriterier> {
+    val navn = listOf(this.fornavn, this.etternavn).joinNotNullToString(" ")
+    val adresse = listOf(this.gatenavn, this.husnummer, this.husbokstav, this.postnummer).joinNotNullToString(" ")
+    val fodselsdatoFra = this.fodselsdatoFra ?: this.alderTil?.let { finnSenesteDatoGittAlder(it, clock) }
+    val fodselsdatoTil = this.fodselsdatoTil ?: this.alderFra?.let { finnTidligsteDatoGittAlder(it, clock) }
+    val kjonn = when (this.kjonn) {
+        "M" -> "MANN"
+        "K" -> "KVINNE"
+        else -> null
+    }
+
+    return listOf(
+        SokKriterier(PdlSokbareFelt.NAVN, navn),
+        SokKriterier(PdlSokbareFelt.ADRESSE, adresse),
+        SokKriterier(PdlSokbareFelt.UTENLANDSK_ID, this.utenlandskID),
+        SokKriterier(PdlSokbareFelt.FODSELSDATO_FRA, fodselsdatoFra),
+        SokKriterier(PdlSokbareFelt.FODSELSDATO_TIL, fodselsdatoTil),
+        SokKriterier(PdlSokbareFelt.KJONN, kjonn)
+    )
+}
+
+fun finnSenesteDatoGittAlder(alderTil: Int, clock: Clock): String {
+    return LocalDate.now(clock).minusYears(alderTil.toLong() + 1).plusDays(1).toString()
+}
+
+fun finnTidligsteDatoGittAlder(alderFra: Int, clock: Clock): String {
+    return LocalDate.now(clock).minusYears(alderFra.toLong()).toString()
+}
+
+private fun <T : Any> Iterable<T?>.joinNotNullToString(delimiter: String): String? {
+    val nonNullElement = this.filterNotNull()
+    return if (nonNullElement.isEmpty()) {
+        null
+    } else {
+        nonNullElement.joinToString(delimiter)
+    }
+}
