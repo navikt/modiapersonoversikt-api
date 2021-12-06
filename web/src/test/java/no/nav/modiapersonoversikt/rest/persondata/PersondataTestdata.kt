@@ -1,7 +1,5 @@
 package no.nav.modiapersonoversikt.rest.persondata
 
-import io.mockk.every
-import io.mockk.mockk
 import no.nav.modiapersonoversikt.legacy.api.domain.pdl.generated.HentPersondata
 import no.nav.modiapersonoversikt.rest.enhet.model.EnhetKontaktinformasjon
 import no.nav.modiapersonoversikt.service.dkif.Dkif
@@ -80,21 +78,6 @@ fun gittPerson(
     kontaktadresse = listOf(kontaktadresse),
     oppholdsadresse = listOf(oppholdsadresse)
 )
-
-fun hentPersondataServiceMock(): PersondataService {
-    val persondataServiceMock: PersondataService = mockk()
-    val kodeverkMock: EnhetligKodeverk.Service = mockk()
-    val fletter = PersondataFletter(kodeverkMock)
-
-    every { kodeverkMock.hentKodeverk(any()) } returns gittKodeverk()
-    every { persondataServiceMock.hentPerson(any()) } returns fletter.flettSammenData(
-        gittData(
-            gittPerson()
-        )
-    )
-
-    return persondataServiceMock
-}
 
 fun gittKodeverk() = EnhetligKodeverk.Kodeverk(
     navn = "kodeverk",
