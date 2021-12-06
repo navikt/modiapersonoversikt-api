@@ -11,7 +11,6 @@ import no.nav.tjeneste.virksomhet.person.v3.meldinger.HentPersonResponse
 import java.time.LocalDate
 import java.time.LocalDateTime
 
-@JvmOverloads
 fun gittData(
     persondata: HentPersondata.Person,
     geografiskeTilknytning: PersondataResult<String?> = PersondataResult.runCatching("gt") { "0123" },
@@ -30,7 +29,6 @@ fun gittData(
     tredjepartsPerson = tredjepartsPerson
 )
 
-@JvmOverloads
 fun gittPerson(
     fnr: String = "12345678910",
     navn: String = "Teste Ruud McTestesen",
