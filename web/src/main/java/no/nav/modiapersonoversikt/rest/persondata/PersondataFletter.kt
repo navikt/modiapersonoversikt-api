@@ -414,7 +414,7 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
             adresse.adresselinje3,
             adresse.postkode,
             adresse.byEllerStedsnavn,
-            adresse.landkode
+            kodeverk.hentKodeverk(Kodeverk.LAND).hentBeskrivelse(adresse.landkode)
         ),
         sistEndret = sisteEndring,
         gyldighetsPeriode = gyldighetsPeriode
