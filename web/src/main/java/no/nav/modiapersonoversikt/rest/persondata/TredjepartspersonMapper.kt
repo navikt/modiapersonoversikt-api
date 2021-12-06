@@ -39,7 +39,8 @@ class TredjepartspersonMapper(val kodeverk: EnhetligKodeverk.Service) {
                     null
                 }
             },
-            personstatus = hentTredjepartspersonstatus(person.folkeregisterpersonstatus)
+            personstatus = hentTredjepartspersonstatus(person.folkeregisterpersonstatus),
+            dodsdato = person.doedsfall.mapNotNull { it.doedsdato?.value }
         )
     }
 

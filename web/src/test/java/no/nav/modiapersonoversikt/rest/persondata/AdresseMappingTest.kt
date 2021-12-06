@@ -72,7 +72,8 @@ internal class AdresseMappingTest {
         foedsel = emptyList(),
         folkeregisterpersonstatus = emptyList(),
         adressebeskyttelse = emptyList(),
-        bostedsadresse = emptyList()
+        bostedsadresse = emptyList(),
+        doedsfall = emptyList()
     )
 
     private fun <T : Any> T.asList(): List<T> = listOf(this)

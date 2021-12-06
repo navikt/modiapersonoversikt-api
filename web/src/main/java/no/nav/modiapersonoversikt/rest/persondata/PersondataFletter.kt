@@ -932,7 +932,8 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
                     personAdresse = hentBostedAdresse(data).firstOrNull(),
                     tredjepartsPersonAdresse = tredjepartsPerson?.bostedAdresse?.firstOrNull()
                 ),
-                personstatus = tredjepartsPerson?.personstatus ?: emptyList()
+                personstatus = tredjepartsPerson?.personstatus ?: emptyList(),
+                dodsdato = tredjepartsPerson?.dodsdato ?: emptyList()
             )
         }.sortedBy { it.alder }
     }
