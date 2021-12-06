@@ -239,6 +239,11 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
                     sisteEndring = sisteEndring,
                     gyldighetsPeriode = gyldighetsPeriode
                 )
+                adresse.utenlandskAdresseIFrittFormat != null -> lagAdresseFraUtenlandskAdresseIFrittFormat(
+                    adresse = adresse.utenlandskAdresseIFrittFormat!!,
+                    sisteEndring = sisteEndring,
+                    gyldighetsPeriode = gyldighetsPeriode
+                )
                 else -> {
                     TjenestekallLogger.warn(
                         "PersondataFletter",
@@ -393,6 +398,23 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
         ),
         linje3 = listOf(
             kodeverk.hentKodeverk(Kodeverk.LAND).hentBeskrivelse(adresse.landkode)
+        ),
+        sistEndret = sisteEndring,
+        gyldighetsPeriode = gyldighetsPeriode
+    )
+
+    private fun lagAdresseFraUtenlandskAdresseIFrittFormat(
+        adresse: HentPersondata.UtenlandskAdresseIFrittFormat,
+        sisteEndring: Persondata.SistEndret? = null,
+        gyldighetsPeriode: Persondata.GyldighetsPeriode? = null
+    ) = Persondata.Adresse(
+        linje1 = listOf(adresse.adresselinje1),
+        linje2 = listOf(adresse.adresselinje2),
+        linje3 = listOf(
+            adresse.adresselinje3,
+            adresse.postkode,
+            adresse.byEllerStedsnavn,
+            adresse.landkode
         ),
         sistEndret = sisteEndring,
         gyldighetsPeriode = gyldighetsPeriode
