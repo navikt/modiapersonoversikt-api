@@ -51,7 +51,8 @@ class HenvendelseUtsendingServiceImplTest {
 
     private static final String NYESTE_HENVENDELSE_ID = "Nyeste henvendelse";
     private static final String ELDSTE_HENVENDELSE = "Eldste henvendelse";
-    private static final String ENHET = "0123";
+    private static final String ENHET_ID = "1234";
+    private static final Persondata.Enhet ENHET = new Persondata.Enhet(ENHET_ID, "Enhet Navn", new ArrayList<>());
 
     private static final String JOURNALFORT_TEMA = "tema jobb";
     private static final String SAKSBEHANDLERS_VALGTE_ENHET = "4300";
@@ -290,16 +291,16 @@ class HenvendelseUtsendingServiceImplTest {
 
     @Test
     void kontorsperrerHenvendelsePaaAndreSosialeTjenester() {
-        when(persondataService.hentNavEnhet(any())).thenReturn(new Persondata.Enhet(ENHET, "Enhet Navn", new ArrayList<>()));
+        when(persondataService.hentNavEnhet(any())).thenReturn(ENHET);
         Melding melding = new Melding().withFnr(FNR).withFritekst(mockFritekst()).withType(SAMTALEREFERAT_OPPMOTE).withTemagruppe(Temagruppe.ANSOS.toString());
         henvendelseUtsendingService.sendHenvendelse(melding, Optional.empty(), Optional.empty(), SAKSBEHANDLERS_VALGTE_ENHET);
 
-        verify(behandleHenvendelsePortType).oppdaterKontorsperre(ENHET, singletonList(BEHANDLINGS_ID));
+        verify(behandleHenvendelsePortType).oppdaterKontorsperre(ENHET_ID, singletonList(BEHANDLINGS_ID));
     }
 
     @Test
     void kontorsperrerIkkeHenvendelsePaaOkonomiskSosialhjelp() {
-        when(persondataService.hentNavEnhet(any())).thenReturn(new Persondata.Enhet(ENHET, "Enhet Navn", new ArrayList<>()));
+        when(persondataService.hentNavEnhet(any())).thenReturn(ENHET);
         Melding melding = new Melding().withFnr(FNR).withFritekst(mockFritekst()).withType(SAMTALEREFERAT_OPPMOTE).withTemagruppe(Temagruppe.OKSOS.toString());
         henvendelseUtsendingService.sendHenvendelse(melding, Optional.empty(), Optional.empty(), SAKSBEHANDLERS_VALGTE_ENHET);
 
@@ -308,31 +309,31 @@ class HenvendelseUtsendingServiceImplTest {
 
     @Test
     void knyttetHenvendelsenTilBrukersEnhetFraPDL() {
-        when(persondataService.hentNavEnhet(any())).thenReturn(new Persondata.Enhet(ENHET, "Enhet Navn", new ArrayList<>()));
+        when(persondataService.hentNavEnhet(any())).thenReturn(ENHET);
 
         Melding melding = new Melding().withFnr(FNR).withFritekst(mockFritekst()).withType(SAMTALEREFERAT_OPPMOTE).withTemagruppe(Temagruppe.ARBD.toString());
         henvendelseUtsendingService.sendHenvendelse(melding, Optional.empty(), Optional.empty(), SAKSBEHANDLERS_VALGTE_ENHET);
 
         verify(sendUtHenvendelsePortType).sendUtHenvendelse(wsSendHenvendelseRequestCaptor.capture());
         XMLHenvendelse xmlHenvendelse = (XMLHenvendelse) wsSendHenvendelseRequestCaptor.getValue().getAny();
-        assertThat(xmlHenvendelse.getBrukersEnhet(), is(ENHET));
+        assertThat(xmlHenvendelse.getBrukersEnhet(), is(ENHET_ID));
     }
 
     @Test
     void knyttetHenvendelsenTilBrukersEnhetFraMelding() {
-        when(persondataService.hentNavEnhet(any())).thenReturn(new Persondata.Enhet(ENHET, "Enhet Navn", new ArrayList<>()));
+        when(persondataService.hentNavEnhet(any())).thenReturn(ENHET);
 
         Melding melding = new Melding()
                 .withFnr(FNR)
                 .withFritekst(mockFritekst())
                 .withType(SAMTALEREFERAT_OPPMOTE)
                 .withTemagruppe(Temagruppe.ARBD.toString())
-                .withBrukersEnhet(ENHET);
+                .withBrukersEnhet(ENHET_ID);
         henvendelseUtsendingService.sendHenvendelse(melding, Optional.empty(), Optional.empty(), SAKSBEHANDLERS_VALGTE_ENHET);
 
         verify(sendUtHenvendelsePortType).sendUtHenvendelse(wsSendHenvendelseRequestCaptor.capture());
         XMLHenvendelse xmlHenvendelse = (XMLHenvendelse) wsSendHenvendelseRequestCaptor.getValue().getAny();
-        assertThat(xmlHenvendelse.getBrukersEnhet(), is(ENHET));
+        assertThat(xmlHenvendelse.getBrukersEnhet(), is(ENHET_ID));
     }
 
     @Test

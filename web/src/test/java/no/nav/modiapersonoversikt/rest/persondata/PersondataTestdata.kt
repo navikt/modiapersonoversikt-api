@@ -175,7 +175,7 @@ internal val tredjepartsPersoner = mapOf(
     )
 )
 
-fun gittNavKontorEnhet(
+internal fun gittNavKontorEnhet(
     enhetId: String = "0123",
     enhetNavn: String = "NAV Oslo"
 ) = EnhetKontaktinformasjon(
