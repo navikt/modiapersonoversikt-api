@@ -102,16 +102,7 @@ class ArbeidsfordelingV1ServiceTest {
 
     private void gitt_at_alt_fungerer() {
         sneaky(() -> {
-            //TODO
-            EnhetligKodeverk.Service kodeverk = mock(EnhetligKodeverk.Service.class);
-            when(kodeverk.hentKodeverk(any())).thenReturn(PersondataTestdataKt.gittKodeverk());
-
-            PersondataFletter fletter = new PersondataFletter(kodeverk);
-            when(persondataService.hentPerson(any()))
-                .thenReturn(fletter.flettSammenData(PersondataTestdataKt.gittData(
-                    PersondataTestdataKt.gittPerson(),
-                    PersondataResult.runCatching("gt", () -> GEOGRAFISK_TILKNYTNING)
-                )));
+            when(persondataService.hentGeografiskTilknytning(anyString())).thenReturn(GEOGRAFISK_TILKNYTNING);
             when(kodeverksmapper.mapOppgavetype(anyString())).thenReturn(MAPPET_OPPGAVETYPE);
             when(kodeverksmapper.mapUnderkategori(anyString())).thenReturn(Optional.of(new Behandling().withBehandlingstema(BEHANDLINGSTEMA).withBehandlingstype(BEHANDLINGSTYPE)));
 
@@ -131,8 +122,7 @@ class ArbeidsfordelingV1ServiceTest {
     }
 
     private void gitt_feil_ved_henting_av_geografisk_tilknytning() {
-        //TODO
-        when(persondataService.hentPerson(PERSON).getPerson().getGeografiskTilknytning()).thenThrow(new RuntimeException());
+        when(persondataService.hentGeografiskTilknytning(PERSON)).thenThrow(new RuntimeException());
     }
 
     private void gitt_feil_ved_henting_av_enheter() {

@@ -38,9 +38,7 @@ public class ArbeidsfordelingV1ServiceImpl implements ArbeidsfordelingV1Service 
     public List<AnsattEnhet> finnBehandlendeEnhetListe(String brukerIdent, String fagomrade, String oppgavetype, String underkategori) {
         try {
             Optional<Behandling> behandling = kodeverksmapper.mapUnderkategori(underkategori);
-            Persondata.Person person = persondataService.hentPerson(brukerIdent).getPerson();
-            String geografiskTilknytning = person.getGeografiskTilknytning();
-            String diskresjonskode = hentDiskresjonskode(person.getAdressebeskyttelse());
+            String geografiskTilknytning = persondataService.hentGeografiskTilknytning(brukerIdent);
             boolean erEgenAnsatt = egenAnsattService.erEgenAnsatt(brukerIdent);
 
             if ("ANSOS_KNA".equals(underkategori)) {

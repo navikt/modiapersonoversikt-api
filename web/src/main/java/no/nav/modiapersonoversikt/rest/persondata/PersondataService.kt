@@ -18,6 +18,7 @@ import no.nav.tjeneste.virksomhet.person.v3.meldinger.HentPersonResponse
 
 interface PersondataService {
     fun hentPerson(fnr: String): Persondata.Data
+    fun hentGeografiskTilknytning(fnr: String): String?
     fun hentNavEnhet(fnr: String): Persondata.Enhet?
 
     data class Tilganger(
@@ -72,6 +73,10 @@ class PersondataServiceImpl(
                 tredjepartsPerson
             )
         )
+    }
+
+    override fun hentGeografiskTilknytning(fnr: String): String? {
+        return PersondataResult.runCatching("PDL-GT") { pdl.hentGeografiskTilknyttning(fnr) }.getOrNull()
     }
 
     override fun hentNavEnhet(fnr: String): Persondata.Enhet? {
