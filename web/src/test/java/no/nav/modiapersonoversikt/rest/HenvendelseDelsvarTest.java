@@ -12,6 +12,7 @@ import no.nav.modiapersonoversikt.legacy.api.utils.http.HttpRequestUtil;
 import no.nav.modiapersonoversikt.legacy.api.utils.http.SubjectHandlerUtil;
 import no.nav.modiapersonoversikt.rest.dialog.apis.DelsvarRestRequest;
 import no.nav.modiapersonoversikt.rest.dialog.henvendelse.HenvendelseDelsvar;
+import no.nav.modiapersonoversikt.rest.persondata.PersondataService;
 import no.nav.modiapersonoversikt.service.HenvendelseUtsendingServiceImpl;
 import no.nav.modiapersonoversikt.service.henvendelse.DelsvarServiceImpl;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.senduthenvendelse.SendUtHenvendelsePortType;
@@ -30,7 +31,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockHttpServletRequest;
 import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.SPORSMAL_SKRIFTLIG;
-import static no.nav.modiapersonoversikt.rest.persondata.PersondataTestdataKt.hentPersondataServiceMock;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
@@ -47,6 +47,7 @@ class HenvendelseDelsvarTest {
     private HenvendelseDelsvar delsvarController;
     private SendUtHenvendelsePortType sendUtHenvendelsePortTypeMock;
     private Tilgangskontroll tilgangskontrollMock = TilgangskontrollMock.get();
+    private PersondataService persondataService;
 
     @BeforeEach
     void before() {
@@ -60,6 +61,7 @@ class HenvendelseDelsvarTest {
         CacheManager cacheManager = mock(CacheManager.class);
         when(cacheManager.getCache(anyString())).thenReturn(mock(Cache.class));
         sendUtHenvendelsePortTypeMock = mock(SendUtHenvendelsePortType.class);
+        persondataService = mock(PersondataService.class);
 
         return new HenvendelseUtsendingServiceImpl(
             henvendelsePortTypeMock,
@@ -69,7 +71,7 @@ class HenvendelseDelsvarTest {
             null,
             tilgangskontrollMock,
             propertyResolver,
-            hentPersondataServiceMock(),
+            persondataService,
             null,
             cacheManager
         );
