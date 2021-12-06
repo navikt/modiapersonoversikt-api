@@ -15,7 +15,6 @@ import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontro
 import no.nav.modiapersonoversikt.legacy.sporsmalogsvar.consumer.henvendelse.HenvendelseBehandlingServiceImpl;
 import no.nav.modiapersonoversikt.legacy.sporsmalogsvar.legacy.TraadVM;
 import no.nav.modiapersonoversikt.rest.persondata.*;
-import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.behandlehenvendelse.BehandleHenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.henvendelse.HenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.meldinger.WSHentHenvendelseListeRequest;
@@ -38,7 +37,6 @@ import static java.util.Collections.emptyMap;
 import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.*;
 import static no.nav.modiapersonoversikt.legacy.api.domain.Temagruppe.OKSOS;
 import static no.nav.modiapersonoversikt.legacy.sporsmalogsvar.legacy.TestUtils.*;
-import static no.nav.modiapersonoversikt.rest.persondata.PersondataTestdataKt.gittNavKontorEnhet;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
@@ -129,22 +127,10 @@ class HenvendelseBehandlingServiceImplTest {
 
     @Test
     void skalMerkeSomKontorsperret() {
-        //TODO
-        EnhetligKodeverk.Service kodeverk = mock(EnhetligKodeverk.Service.class);
-        when(kodeverk.hentKodeverk(any())).thenReturn(PersondataTestdataKt.gittKodeverk());
-
-        PersondataFletter fletter = new PersondataFletter(kodeverk);
-        when(mock(persondataService.getClass()).hentPerson(any()))
-            .thenReturn(fletter.flettSammenData(PersondataTestdataKt.gittData(
-                PersondataTestdataKt.gittPerson(),
-                PersondataResult.runCatching("gt", () -> null),
-                PersondataResult.runCatching("egenAnsatt", () -> false),
-                PersondataResult.runCatching("navEnhet", () -> gittNavKontorEnhet(VALGT_ENHET, NAVBRUKERS_ENHET))
-            )));
-
+        when(persondataService.hentNavEnhet(any())).thenReturn(new Persondata.Enhet(VALGT_ENHET, NAVBRUKERS_ENHET, new ArrayList<>()));
         henvendelseBehandlingService.merkSomKontorsperret("navbrukers fnr", VALGT_TRAAD);
 
-        verify(behandleHenvendelsePortType).oppdaterKontorsperre(NAVBRUKERS_ENHET, IDER_I_VALGT_TRAAD);
+        verify(behandleHenvendelsePortType).oppdaterKontorsperre(VALGT_ENHET, IDER_I_VALGT_TRAAD);
     }
 
     @Test

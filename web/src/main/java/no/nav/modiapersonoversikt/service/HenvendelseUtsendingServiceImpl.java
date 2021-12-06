@@ -263,7 +263,7 @@ public class HenvendelseUtsendingServiceImpl implements HenvendelseUtsendingServ
     }
 
     private String getEnhet(String fnr) {
-        Persondata.Enhet navEnhet = persondataService.hentPerson(fnr).getPerson().getNavEnhet();
+        Persondata.Enhet navEnhet = persondataService.hentNavEnhet(fnr);
         if (navEnhet != null) {
             return navEnhet.getId();
         } else {

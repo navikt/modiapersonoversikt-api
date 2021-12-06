@@ -12,11 +12,8 @@ import no.nav.modiapersonoversikt.legacy.api.service.saker.SakerService;
 import no.nav.modiapersonoversikt.legacy.api.service.ldap.LDAPService;
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll;
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.TilgangskontrollContext;
-import no.nav.modiapersonoversikt.rest.persondata.PersondataFletter;
-import no.nav.modiapersonoversikt.rest.persondata.PersondataResult;
+import no.nav.modiapersonoversikt.rest.persondata.Persondata;
 import no.nav.modiapersonoversikt.rest.persondata.PersondataService;
-import no.nav.modiapersonoversikt.rest.persondata.PersondataTestdataKt;
-import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.behandlehenvendelse.BehandleHenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.senduthenvendelse.SendUtHenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.senduthenvendelse.meldinger.WSFerdigstillHenvendelseRequest;
@@ -38,7 +35,6 @@ import java.util.*;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static no.nav.modiapersonoversikt.legacy.api.domain.henvendelse.Meldingstype.*;
-import static no.nav.modiapersonoversikt.rest.persondata.PersondataTestdataKt.hentPersondataServiceMock;
 import static org.hamcrest.Matchers.*;
 import static org.joda.time.DateTime.now;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -74,7 +70,7 @@ class HenvendelseUtsendingServiceImplTest {
     private HenvendelsePortType henvendelsePortType = mock(HenvendelsePortType.class);
     private SendUtHenvendelsePortType sendUtHenvendelsePortType = mock(SendUtHenvendelsePortType.class);
     private BehandleHenvendelsePortType behandleHenvendelsePortType = mock(BehandleHenvendelsePortType.class);
-    private PersondataService persondataService = hentPersondataServiceMock();
+    private PersondataService persondataService = mock(PersondataService.class);
     private LDAPService ldapService = mock(LDAPService.class);
     private CacheManager cacheManager = mock(CacheManager.class);
 
@@ -294,6 +290,7 @@ class HenvendelseUtsendingServiceImplTest {
 
     @Test
     void kontorsperrerHenvendelsePaaAndreSosialeTjenester() {
+        when(persondataService.hentNavEnhet(any())).thenReturn(new Persondata.Enhet(ENHET, "Enhet Navn", new ArrayList<>()));
         Melding melding = new Melding().withFnr(FNR).withFritekst(mockFritekst()).withType(SAMTALEREFERAT_OPPMOTE).withTemagruppe(Temagruppe.ANSOS.toString());
         henvendelseUtsendingService.sendHenvendelse(melding, Optional.empty(), Optional.empty(), SAKSBEHANDLERS_VALGTE_ENHET);
 
@@ -302,6 +299,7 @@ class HenvendelseUtsendingServiceImplTest {
 
     @Test
     void kontorsperrerIkkeHenvendelsePaaOkonomiskSosialhjelp() {
+        when(persondataService.hentNavEnhet(any())).thenReturn(new Persondata.Enhet(ENHET, "Enhet Navn", new ArrayList<>()));
         Melding melding = new Melding().withFnr(FNR).withFritekst(mockFritekst()).withType(SAMTALEREFERAT_OPPMOTE).withTemagruppe(Temagruppe.OKSOS.toString());
         henvendelseUtsendingService.sendHenvendelse(melding, Optional.empty(), Optional.empty(), SAKSBEHANDLERS_VALGTE_ENHET);
 
@@ -310,48 +308,36 @@ class HenvendelseUtsendingServiceImplTest {
 
     @Test
     void knyttetHenvendelsenTilBrukersEnhetFraPDL() {
+        when(persondataService.hentNavEnhet(any())).thenReturn(new Persondata.Enhet(ENHET, "Enhet Navn", new ArrayList<>()));
+
         Melding melding = new Melding().withFnr(FNR).withFritekst(mockFritekst()).withType(SAMTALEREFERAT_OPPMOTE).withTemagruppe(Temagruppe.ARBD.toString());
         henvendelseUtsendingService.sendHenvendelse(melding, Optional.empty(), Optional.empty(), SAKSBEHANDLERS_VALGTE_ENHET);
 
         verify(sendUtHenvendelsePortType).sendUtHenvendelse(wsSendHenvendelseRequestCaptor.capture());
-        verify(persondataService, times(1)).hentPerson(any());
         XMLHenvendelse xmlHenvendelse = (XMLHenvendelse) wsSendHenvendelseRequestCaptor.getValue().getAny();
         assertThat(xmlHenvendelse.getBrukersEnhet(), is(ENHET));
     }
 
     @Test
     void knyttetHenvendelsenTilBrukersEnhetFraMelding() {
-        String brukersEnhet = "0123";
+        when(persondataService.hentNavEnhet(any())).thenReturn(new Persondata.Enhet(ENHET, "Enhet Navn", new ArrayList<>()));
 
         Melding melding = new Melding()
                 .withFnr(FNR)
                 .withFritekst(mockFritekst())
                 .withType(SAMTALEREFERAT_OPPMOTE)
                 .withTemagruppe(Temagruppe.ARBD.toString())
-                .withBrukersEnhet(brukersEnhet);
+                .withBrukersEnhet(ENHET);
         henvendelseUtsendingService.sendHenvendelse(melding, Optional.empty(), Optional.empty(), SAKSBEHANDLERS_VALGTE_ENHET);
 
         verify(sendUtHenvendelsePortType).sendUtHenvendelse(wsSendHenvendelseRequestCaptor.capture());
-        verify(persondataService, times(1)).hentPerson(any());
         XMLHenvendelse xmlHenvendelse = (XMLHenvendelse) wsSendHenvendelseRequestCaptor.getValue().getAny();
-        assertThat(xmlHenvendelse.getBrukersEnhet(), is(brukersEnhet));
+        assertThat(xmlHenvendelse.getBrukersEnhet(), is(ENHET));
     }
 
     @Test
     void knyttetHenvendelsenTilTomEnhetDersomBrukerIkkeHarNavkontor() {
-        EnhetligKodeverk.Service kodeverk = mock(EnhetligKodeverk.Service.class);
-        when(kodeverk.hentKodeverk(any())).thenReturn(PersondataTestdataKt.gittKodeverk());
-
-        PersondataFletter fletter = new PersondataFletter(kodeverk);
-        when(mock(persondataService.getClass()).hentPerson(any()))
-            .thenReturn(fletter.flettSammenData(PersondataTestdataKt.gittData(
-                PersondataTestdataKt.gittPerson(),
-                PersondataResult.runCatching("gt", () -> null),
-                PersondataResult.runCatching("egenAnsatt", () -> false),
-                PersondataResult.runCatching("navEnhet", () -> null)
-            )));
-
-
+        when(persondataService.hentNavEnhet(any())).thenReturn(null);
         Melding melding = new Melding()
                 .withFnr(FNR)
                 .withFritekst(mockFritekst())
@@ -362,7 +348,7 @@ class HenvendelseUtsendingServiceImplTest {
 
         verify(sendUtHenvendelsePortType).sendUtHenvendelse(wsSendHenvendelseRequestCaptor.capture());
         XMLHenvendelse xmlHenvendelse = (XMLHenvendelse) wsSendHenvendelseRequestCaptor.getValue().getAny();
-        assertThat(xmlHenvendelse.getBrukersEnhet(), is(null));
+        assertThat(xmlHenvendelse.getBrukersEnhet(), nullValue());
     }
 
     @Test

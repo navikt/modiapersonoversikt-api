@@ -71,7 +71,7 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
                 bostedAdresse = hentBostedAdresse(data),
                 kontaktAdresse = hentKontaktAdresse(data),
                 oppholdsAdresse = hentOppholdsAdresse(data),
-                navEnhet = hentNavEnhet(data),
+                navEnhet = hentNavEnhet(data.navEnhet),
                 statsborgerskap = hentStatsborgerskap(data),
                 adressebeskyttelse = hentAdressebeskyttelse(data),
                 sikkerhetstiltak = hentSikkerhetstiltak(data),
@@ -432,8 +432,8 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
         gyldighetsPeriode = gyldighetsPeriode
     )
 
-    private fun hentNavEnhet(data: Data): Persondata.Enhet? {
-        return data.navEnhet
+    fun hentNavEnhet(navEnhet: PersondataResult<EnhetKontaktinformasjon?>): Persondata.Enhet? {
+        return navEnhet
             .map {
                 if (it == null) {
                     null

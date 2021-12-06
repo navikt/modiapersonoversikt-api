@@ -18,6 +18,7 @@ import no.nav.tjeneste.virksomhet.person.v3.meldinger.HentPersonResponse
 
 interface PersondataService {
     fun hentPerson(fnr: String): Persondata.Data
+    fun hentNavEnhet(fnr: String): Persondata.Enhet?
 
     data class Tilganger(
         val kode6: Boolean,
@@ -43,7 +44,8 @@ class PersondataServiceImpl(
             "Fant ikke person med fnr $fnr"
         }
         val geografiskeTilknytning = PersondataResult.runCatching("PDL-GT") { pdl.hentGeografiskTilknyttning(fnr) }
-        val navEnhet = hentNavEnhet(persondata, geografiskeTilknytning)
+        val adressebeskyttelse = persondataFletter.hentAdressebeskyttelse(persondata.adressebeskyttelse)
+        val navEnhet = hentNavEnhetFraNorg(adressebeskyttelse, geografiskeTilknytning)
         val erEgenAnsatt = PersondataResult.runCatching("TPS-EGEN-ANSATT") { egenAnsattService.erEgenAnsatt(fnr) }
         val tilganger = PersondataResult
             .runCatching("TILGANGSKONTROLL") { hentTilganger() }
@@ -72,6 +74,11 @@ class PersondataServiceImpl(
         )
     }
 
+    override fun hentNavEnhet(fnr: String): Persondata.Enhet? {
+        val geografiskeTilknytning = PersondataResult.runCatching("PDL-GT") { pdl.hentGeografiskTilknyttning(fnr) }
+        val adressebeskyttelse = hentAdressebeskyttelse(fnr)
+        return hentNavEnhetFraNorg(adressebeskyttelse, geografiskeTilknytning).let { persondataFletter.hentNavEnhet(it) }
+    }
     private fun hentBankkonto(fnr: String): HentPersonResponse {
         return personV3.hentPerson(
             HentPersonRequest()
@@ -83,22 +90,21 @@ class PersondataServiceImpl(
         )
     }
 
-    private fun hentNavEnhet(
-        persondata: HentPersondata.Person,
+    private fun hentNavEnhetFraNorg(
+        adressebeskyttelse: List<Persondata.KodeBeskrivelse<Persondata.AdresseBeskyttelse>>,
         geografiskeTilknytning: PersondataResult<String?>
     ): PersondataResult<EnhetKontaktinformasjon?> {
         val gt = geografiskeTilknytning.getOrElse("")
 
         var diskresjonskode = ""
-        val adressebeskyttelse = persondata.adressebeskyttelse
         for (beskyttelse in adressebeskyttelse) {
-            if (beskyttelse.gradering == HentPersondata.AdressebeskyttelseGradering.STRENGT_FORTROLIG_UTLAND) {
+            if (beskyttelse.kode == Persondata.AdresseBeskyttelse.KODE6) {
                 diskresjonskode = "SPSF"
                 break
-            } else if (beskyttelse.gradering == HentPersondata.AdressebeskyttelseGradering.STRENGT_FORTROLIG) {
+            } else if (beskyttelse.kode == Persondata.AdresseBeskyttelse.KODE6_UTLAND) {
                 diskresjonskode = "SPSF"
                 break
-            } else if (beskyttelse.gradering == HentPersondata.AdressebeskyttelseGradering.FORTROLIG) {
+            } else if (beskyttelse.kode == Persondata.AdresseBeskyttelse.KODE7) {
                 diskresjonskode = "SPFO"
                 break
             }
