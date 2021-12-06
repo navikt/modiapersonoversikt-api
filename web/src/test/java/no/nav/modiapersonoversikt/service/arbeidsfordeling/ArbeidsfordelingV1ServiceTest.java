@@ -3,11 +3,7 @@ package no.nav.modiapersonoversikt.service.arbeidsfordeling;
 import no.nav.modiapersonoversikt.legacy.kjerneinfo.consumer.egenansatt.EgenAnsattService;
 import no.nav.modiapersonoversikt.legacy.api.service.arbeidsfordeling.ArbeidsfordelingV1Service;
 import no.nav.modiapersonoversikt.legacy.api.service.arbeidsfordeling.FinnBehandlendeEnhetException;
-import no.nav.modiapersonoversikt.rest.persondata.PersondataFletter;
-import no.nav.modiapersonoversikt.rest.persondata.PersondataResult;
-import no.nav.modiapersonoversikt.rest.persondata.PersondataService;
-import no.nav.modiapersonoversikt.rest.persondata.PersondataTestdataKt;
-import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk;
+import no.nav.modiapersonoversikt.rest.persondata.*;
 import no.nav.modiapersonoversikt.service.kodeverksmapper.KodeverksmapperService;
 import no.nav.modiapersonoversikt.service.kodeverksmapper.domain.Behandling;
 import no.nav.modiapersonoversikt.utils.PropertyRule;
@@ -19,6 +15,7 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Optional;
 
 import static no.nav.modiapersonoversikt.service.unleash.strategier.ByEnvironmentStrategy.ENVIRONMENT_PROPERTY;
@@ -101,8 +98,11 @@ class ArbeidsfordelingV1ServiceTest {
     }
 
     private void gitt_at_alt_fungerer() {
+        ArrayList<Persondata.KodeBeskrivelse<Persondata.AdresseBeskyttelse>> adressebeskyttelseMock = new ArrayList<>();
+        adressebeskyttelseMock.add(new Persondata.KodeBeskrivelse<>(Persondata.AdresseBeskyttelse.UGRADERT, "UGRADERT"));
         sneaky(() -> {
             when(persondataService.hentGeografiskTilknytning(anyString())).thenReturn(GEOGRAFISK_TILKNYTNING);
+            when(persondataService.hentAdressebeskyttelse(anyString())).thenReturn(adressebeskyttelseMock);
             when(kodeverksmapper.mapOppgavetype(anyString())).thenReturn(MAPPET_OPPGAVETYPE);
             when(kodeverksmapper.mapUnderkategori(anyString())).thenReturn(Optional.of(new Behandling().withBehandlingstema(BEHANDLINGSTEMA).withBehandlingstype(BEHANDLINGSTYPE)));
 

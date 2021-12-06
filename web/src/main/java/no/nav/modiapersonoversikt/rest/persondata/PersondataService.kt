@@ -20,6 +20,7 @@ interface PersondataService {
     fun hentPerson(fnr: String): Persondata.Data
     fun hentGeografiskTilknytning(fnr: String): String?
     fun hentNavEnhet(fnr: String): Persondata.Enhet?
+    fun hentAdressebeskyttelse(fnr: String): List<Persondata.KodeBeskrivelse<Persondata.AdresseBeskyttelse>>
 
     data class Tilganger(
         val kode6: Boolean,
@@ -84,6 +85,17 @@ class PersondataServiceImpl(
         val adressebeskyttelse = hentAdressebeskyttelse(fnr)
         return hentNavEnhetFraNorg(adressebeskyttelse, geografiskeTilknytning).let { persondataFletter.hentNavEnhet(it) }
     }
+
+    override fun hentAdressebeskyttelse(fnr: String): List<Persondata.KodeBeskrivelse<Persondata.AdresseBeskyttelse>> {
+        return pdl.hentTredjepartspersondata(listOf(fnr)).mapNotNull {
+            tredjepartspersonMapper.lagTredjepartsperson(
+                ident = it.ident,
+                person = it.person,
+                tilganger = PersondataService.Tilganger(false, false)
+            )
+        }.firstOrNull()?.adressebeskyttelse ?: emptyList()
+    }
+
     private fun hentBankkonto(fnr: String): HentPersonResponse {
         return personV3.hentPerson(
             HentPersonRequest()

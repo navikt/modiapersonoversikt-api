@@ -39,6 +39,7 @@ public class ArbeidsfordelingV1ServiceImpl implements ArbeidsfordelingV1Service 
         try {
             Optional<Behandling> behandling = kodeverksmapper.mapUnderkategori(underkategori);
             String geografiskTilknytning = persondataService.hentGeografiskTilknytning(brukerIdent);
+            String diskresjonskode = hentDiskresjonskode(persondataService.hentAdressebeskyttelse(brukerIdent));
             boolean erEgenAnsatt = egenAnsattService.erEgenAnsatt(brukerIdent);
 
             if ("ANSOS_KNA".equals(underkategori)) {
