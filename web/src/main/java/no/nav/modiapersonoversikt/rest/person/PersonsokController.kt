@@ -4,6 +4,7 @@ import no.nav.modiapersonoversikt.infrastructure.http.GraphQLException
 import no.nav.modiapersonoversikt.infrastructure.naudit.Audit
 import no.nav.modiapersonoversikt.infrastructure.naudit.AuditIdentifier
 import no.nav.modiapersonoversikt.infrastructure.naudit.AuditResources
+import no.nav.modiapersonoversikt.infrastructure.scientist.Scientist
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Policies
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll
 import no.nav.modiapersonoversikt.legacy.api.domain.pdl.generated.SokPerson
@@ -11,6 +12,8 @@ import no.nav.modiapersonoversikt.legacy.api.service.pdl.PdlOppslagService
 import no.nav.modiapersonoversikt.legacy.api.service.pdl.PdlOppslagService.PdlSokbareFelt
 import no.nav.modiapersonoversikt.legacy.api.service.pdl.PdlOppslagService.SokKriterier
 import no.nav.modiapersonoversikt.rest.lagXmlGregorianDato
+import no.nav.modiapersonoversikt.service.unleash.Feature
+import no.nav.modiapersonoversikt.service.unleash.UnleashService
 import no.nav.tjeneste.virksomhet.personsoek.v1.PersonsokPortType
 import no.nav.tjeneste.virksomhet.personsoek.v1.informasjon.*
 import no.nav.tjeneste.virksomhet.personsoek.v1.meldinger.AdresseFilter
@@ -32,29 +35,50 @@ import java.time.LocalDate
 class PersonsokController @Autowired constructor(
     private val personsokPortType: PersonsokPortType,
     private val pdlOppslagService: PdlOppslagService,
+    unleashService: UnleashService,
     val tilgangskontroll: Tilgangskontroll
 ) {
-    private val auditDescriptor = Audit.describe<List<PersonSokResponsDTO>>(Audit.Action.READ, AuditResources.Personsok.Resultat) { resultat ->
-        val fnr = resultat?.map { it.ident }?.joinToString(", ") ?: "--"
-        listOf(
-            AuditIdentifier.FNR to fnr
+    private val auditDescriptor =
+        Audit.describe<List<PersonSokResponsDTO>>(Audit.Action.READ, AuditResources.Personsok.Resultat) { resultat ->
+            val fnr = resultat?.map { it.ident }?.joinToString(", ") ?: "--"
+            listOf(
+                AuditIdentifier.FNR to fnr
+            )
+        }
+
+    val experiment = Scientist.createExperiment<List<PersonSokResponsDTO>>(
+        Scientist.Config(
+            name = "personsok",
+            experimentRate = Scientist.UnleashRate(unleashService, Feature.USE_PDL_PERSONSOK),
+            logAndCompareValues = false
         )
-    }
+    )
 
     @PostMapping
     fun sok(@RequestBody personsokRequest: PersonsokRequest): List<PersonSokResponsDTO> {
         return tilgangskontroll
             .check(Policies.tilgangTilModia)
             .get(auditDescriptor) {
-                handterFeil {
-                    if (!personsokRequest.utenlandskID.isNullOrBlank()) {
-                        pdlOppslagService
-                            .sokPerson(listOf(SokKriterier(PdlSokbareFelt.UTENLANDSK_ID, personsokRequest.utenlandskID)))
-                            .map(::lagPersonResponse)
-                    } else {
-                        legacySokMotTPS(personsokRequest)
+                experiment.run(
+                    control = { legacyPersonsok(personsokRequest) },
+                    experiment = { pdlPersonsok(personsokRequest) },
+                    dataFields = { control, triedExperiment ->
+                        val experiment = when (val experiment = triedExperiment.getOrNull()) {
+                            is List<*> -> experiment as List<PersonSokResponsDTO>
+                            else -> emptyList()
+                        }
+                        val controlIdenter = control.mapNotNull { it.ident?.ident }
+                        val experimentIdenter = experiment.mapNotNull { it.ident?.ident }
+                        val missing = controlIdenter.filter { !experimentIdenter.contains(it) }
+
+                        mapOf(
+                            "equal-length" to (control.size == experiment.size),
+                            "missing" to missing.joinNotNullToString(", "),
+                            "control-length" to control.size,
+                            "experiment-length" to experiment.size
+                        )
                     }
-                }
+                )
             }
     }
 
@@ -63,17 +87,40 @@ class PersonsokController @Autowired constructor(
         return tilgangskontroll
             .check(Policies.tilgangTilModia)
             .get(auditDescriptor) {
-                handterFeil {
-                    if (!personsokRequest.kontonummer.isNullOrBlank()) {
-                        kontonummerSok(personsokRequest.kontonummer)
-                            .map(::lagPersonResponse)
-                    } else {
-                        pdlOppslagService
-                            .sokPerson(personsokRequest.tilPdlKriterier())
-                            .map(::lagPersonResponse)
-                    }
-                }
+                pdlPersonsok(personsokRequest)
             }
+    }
+
+    private fun legacyPersonsok(personsokRequest: PersonsokRequest): List<PersonSokResponsDTO> {
+        return handterFeil {
+            if (!personsokRequest.utenlandskID.isNullOrBlank()) {
+                pdlOppslagService
+                    .sokPerson(
+                        listOf(
+                            SokKriterier(
+                                PdlSokbareFelt.UTENLANDSK_ID,
+                                personsokRequest.utenlandskID
+                            )
+                        )
+                    )
+                    .map(::lagPersonResponse)
+            } else {
+                legacySokMotTPS(personsokRequest)
+            }
+        }
+    }
+
+    private fun pdlPersonsok(personsokRequest: PersonsokRequest): List<PersonSokResponsDTO> {
+        return handterFeil {
+            if (!personsokRequest.kontonummer.isNullOrBlank()) {
+                kontonummerSok(personsokRequest.kontonummer)
+                    .map(::lagPersonResponse)
+            } else {
+                pdlOppslagService
+                    .sokPerson(personsokRequest.tilPdlKriterier())
+                    .map(::lagPersonResponse)
+            }
+        }
     }
 
     private fun legacySokMotTPS(personsokRequest: PersonsokRequest): List<PersonSokResponsDTO> {
