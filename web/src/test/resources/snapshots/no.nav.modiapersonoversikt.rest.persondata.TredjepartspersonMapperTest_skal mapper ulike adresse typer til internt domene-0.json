@@ -19,6 +19,5 @@
     "etternavn" : "Testfamilien",
     "fornavn" : "Aremark",
     "mellomnavn" : null
-  } ] ],
-  "personstatus" : [ "java.util.ArrayList", [ ] ]
+  } ] ]
 }
