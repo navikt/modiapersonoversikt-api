@@ -90,6 +90,7 @@
         "kode" : "KODE6"
       } ] ],
       "alder" : 10,
+      "dodsdato" : [ "kotlin.collections.EmptyList", [ ] ],
       "fodselsdato" : [ "kotlin.collections.EmptyList", [ ] ],
       "harSammeAdresse" : false,
       "ident" : "11223344910",
@@ -107,6 +108,7 @@
         "kode" : "UGRADERT"
       } ] ],
       "alder" : 15,
+      "dodsdato" : [ "kotlin.collections.EmptyList", [ ] ],
       "fodselsdato" : [ "kotlin.collections.EmptyList", [ ] ],
       "harSammeAdresse" : false,
       "ident" : "98765432100",

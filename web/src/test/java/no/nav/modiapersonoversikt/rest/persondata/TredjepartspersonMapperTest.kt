@@ -102,7 +102,8 @@ internal class TredjepartspersonMapperTest {
         bostedsadresse = bosted,
         kjoenn = emptyList(),
         foedsel = emptyList(),
-        folkeregisterpersonstatus = emptyList()
+        folkeregisterpersonstatus = emptyList(),
+        doedsfall = emptyList()
     )
 
     private fun gittTilganger(kode6: Boolean, kode7: Boolean) = PersondataService.Tilganger(kode6, kode7)
