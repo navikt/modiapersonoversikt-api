@@ -70,7 +70,6 @@ internal class AdresseMappingTest {
         navn = emptyList(),
         kjoenn = emptyList(),
         foedsel = emptyList(),
-        folkeregisterpersonstatus = emptyList(),
         adressebeskyttelse = emptyList(),
         bostedsadresse = emptyList(),
         doedsfall = emptyList()

@@ -100,7 +100,6 @@
         "fornavn" : "Adressebeskyttet",
         "mellomnavn" : null
       } ] ],
-      "personstatus" : [ "kotlin.collections.EmptyList", [ ] ],
       "rolle" : "BARN"
     }, {
       "adressebeskyttelse" : [ "java.util.Collections$SingletonList", [ {
@@ -118,7 +117,6 @@
         "fornavn" : "Datteren",
         "mellomnavn" : null
       } ] ],
-      "personstatus" : [ "kotlin.collections.EmptyList", [ ] ],
       "rolle" : "BARN"
     } ] ],
     "foreldreansvar" : [ "java.util.ArrayList", [ {
