@@ -102,7 +102,6 @@ internal class TredjepartspersonMapperTest {
         bostedsadresse = bosted,
         kjoenn = emptyList(),
         foedsel = emptyList(),
-        folkeregisterpersonstatus = emptyList(),
         doedsfall = emptyList()
     )
 

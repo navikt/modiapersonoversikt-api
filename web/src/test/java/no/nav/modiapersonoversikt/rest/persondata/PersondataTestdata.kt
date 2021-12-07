@@ -91,7 +91,6 @@ internal fun gittTredjepartsperson(
     kjonn = emptyList(),
     adressebeskyttelse = listOf(Persondata.KodeBeskrivelse(adressebeskyttelse, adressebeskyttelse.toString())),
     bostedAdresse = emptyList(),
-    personstatus = emptyList(),
     dodsdato = emptyList()
 )
 

@@ -9,6 +9,5 @@
   "fnr" : "00000000000",
   "fodselsdato" : [ "kotlin.collections.EmptyList", [ ] ],
   "kjonn" : [ "kotlin.collections.EmptyList", [ ] ],
-  "navn" : [ "java.util.ArrayList", [ ] ],
-  "personstatus" : [ "java.util.ArrayList", [ ] ]
+  "navn" : [ "java.util.ArrayList", [ ] ]
 }

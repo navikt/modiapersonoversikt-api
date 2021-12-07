@@ -39,7 +39,6 @@ class TredjepartspersonMapper(val kodeverk: EnhetligKodeverk.Service) {
                     null
                 }
             },
-            personstatus = hentTredjepartspersonstatus(person.folkeregisterpersonstatus),
             dodsdato = person.doedsfall.mapNotNull { it.doedsdato?.value }
         )
     }
@@ -71,25 +70,6 @@ class TredjepartspersonMapper(val kodeverk: EnhetligKodeverk.Service) {
                 sistEndret = null
             )
             else -> null
-        }
-    }
-
-    private fun hentTredjepartspersonstatus(folkeregisterpersonstatus: List<HentTredjepartspersondata.Folkeregisterpersonstatus>): List<Persondata.KodeBeskrivelse<Persondata.PersonStatus>> {
-        return folkeregisterpersonstatus.map {
-            val tpsKode = when (it.status) {
-                "bosatt" -> Persondata.PersonStatus.BOSATT
-                "doed" -> Persondata.PersonStatus.DOD
-                "opphoert" -> Persondata.PersonStatus.OPPHORT
-                "inaktiv" -> Persondata.PersonStatus.INAKTIV
-                "midlertidig" -> Persondata.PersonStatus.MIDLERTIDIG
-                "forsvunnet" -> Persondata.PersonStatus.FORSVUNNET
-                "utflyttet" -> Persondata.PersonStatus.UTFLYTTET
-                "ikkeBosatt" -> Persondata.PersonStatus.IKKE_BOSATT
-                "foedselsregistrert" -> Persondata.PersonStatus.FODSELSREGISTERT
-                else -> Persondata.PersonStatus.UKJENT
-            }
-            val beskrivelse = kodeverk.hentKodeBeskrivelse(Kodeverk.PERSONSTATUSER, tpsKode.tpsKode)
-            Persondata.KodeBeskrivelse(tpsKode, beskrivelse.beskrivelse)
         }
     }
 
