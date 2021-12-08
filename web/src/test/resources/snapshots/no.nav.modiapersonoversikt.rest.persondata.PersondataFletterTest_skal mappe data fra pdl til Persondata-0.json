@@ -90,6 +90,7 @@
         "kode" : "KODE6"
       } ] ],
       "alder" : 10,
+      "dodsdato" : [ "kotlin.collections.EmptyList", [ ] ],
       "fodselsdato" : [ "kotlin.collections.EmptyList", [ ] ],
       "harSammeAdresse" : false,
       "ident" : "11223344910",
@@ -99,7 +100,6 @@
         "fornavn" : "Adressebeskyttet",
         "mellomnavn" : null
       } ] ],
-      "personstatus" : [ "kotlin.collections.EmptyList", [ ] ],
       "rolle" : "BARN"
     }, {
       "adressebeskyttelse" : [ "java.util.Collections$SingletonList", [ {
@@ -107,6 +107,7 @@
         "kode" : "UGRADERT"
       } ] ],
       "alder" : 15,
+      "dodsdato" : [ "kotlin.collections.EmptyList", [ ] ],
       "fodselsdato" : [ "kotlin.collections.EmptyList", [ ] ],
       "harSammeAdresse" : false,
       "ident" : "98765432100",
@@ -116,7 +117,6 @@
         "fornavn" : "Datteren",
         "mellomnavn" : null
       } ] ],
-      "personstatus" : [ "kotlin.collections.EmptyList", [ ] ],
       "rolle" : "BARN"
     } ] ],
     "foreldreansvar" : [ "java.util.ArrayList", [ {

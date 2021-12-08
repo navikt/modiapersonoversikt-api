@@ -396,6 +396,43 @@ class RestOppgaveBehandlingServiceImpl(
         return oppgave.status == OppgaveJsonDTO.Status.FERDIGSTILT
     }
 
+    override fun finnOgTilordneSTOOppgave(
+        fnr: String,
+        henvendelseId: String,
+        temagruppe: Temagruppe?,
+        enhet: String?,
+        tvungenTilordning: Boolean
+    ): Oppgave? {
+        val aktorId = fodselnummerAktorService.hentAktorIdForFnr(fnr)
+            ?: throw IllegalArgumentException("Fant ikke aktorId for $fnr")
+        val oppgaveType = kodeverksmapperService.mapOppgavetype(SPORSMAL_OG_SVAR)
+        val correlationId = correlationId()
+
+        val oppgaver = hentOppgaverPaginertOgTilgangskontroll { offset ->
+            apiClient.finnOppgaver(
+                aktoerId = listOf(aktorId),
+                xCorrelationID = correlationId,
+                tema = listOf(Utils.KONTAKT_NAV),
+                oppgavetype = listOf(oppgaveType),
+                aktivDatoTom = LocalDate.now(clock).toString(),
+                statuskategori = "AAPEN",
+                limit = OPPGAVE_MAX_LIMIT,
+                offset = offset
+            )
+        }
+        val henvendelseOppgave = oppgaver.firstOrNull { it.henvendelseId == henvendelseId }
+        if (henvendelseOppgave != null) {
+            tilordneOppgaveIGsak(
+                henvendelseOppgave.oppgaveId,
+                temagruppe,
+                enhet,
+                tvungenTilordning
+            )
+        }
+
+        return henvendelseOppgave
+    }
+
     private fun hentOppgaveJsonDTO(oppgaveId: String): OppgaveJsonDTO {
         return apiClient.hentOppgave(
             xCorrelationID = correlationId(),

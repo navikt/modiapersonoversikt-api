@@ -13,6 +13,7 @@ import no.nav.modiapersonoversikt.infrastructure.http.LoggingGraphqlClient
 import no.nav.modiapersonoversikt.infrastructure.http.assertNoErrors
 import no.nav.modiapersonoversikt.legacy.api.domain.pdl.generated.*
 import no.nav.modiapersonoversikt.legacy.api.service.pdl.PdlOppslagService
+import no.nav.modiapersonoversikt.legacy.api.service.pdl.PdlOppslagService.*
 import no.nav.modiapersonoversikt.legacy.api.utils.RestConstants.*
 import java.net.URL
 import kotlin.collections.set
@@ -93,24 +94,19 @@ class PdlOppslagServiceImpl constructor(
             ?.ident
     }
 
-    override fun sokPersonUtenlandskID(utenlandskID: String): List<SokPersonUtenlandskID.PersonSearchHit> =
-        runBlocking {
-            val utenlandskIDPaging = SokPersonUtenlandskID.Paging(
-                pageNumber = 1,
-                resultsPerPage = 30
-            )
-            val utenlandskIDKriterie = SokPersonUtenlandskID.Criterion(
-                fieldName = "person.utenlandskIdentifikasjonsnummer.identifikasjonsnummer",
-                searchRule = SokPersonUtenlandskID.SearchRule(
-                    equals = utenlandskID
-                )
-            )
-            SokPersonUtenlandskID(pdlClient)
+    override fun sokPerson(kriterier: List<SokKriterier>): List<SokPerson.PersonSearchHit> = runBlocking {
+        val paging = SokPerson.Paging(
+            pageNumber = 1,
+            resultsPerPage = 30
+        )
+
+        val criteria = kriterier.mapNotNull { it.asCriterion() }
+        if (criteria.isEmpty()) {
+            emptyList()
+        } else {
+            SokPerson(pdlClient)
                 .execute(
-                    SokPersonUtenlandskID.Variables(
-                        paging = utenlandskIDPaging,
-                        criteria = listOf(utenlandskIDKriterie)
-                    ),
+                    SokPerson.Variables(paging, criteria),
                     userTokenAuthorizationHeaders
                 )
                 .assertNoErrors()
@@ -119,6 +115,7 @@ class PdlOppslagServiceImpl constructor(
                 ?.hits
                 ?: emptyList()
         }
+    }
 
     private val userTokenAuthorizationHeaders: HeadersBuilder = {
         val systemuserToken: String = stsService.systemUserToken

@@ -53,7 +53,7 @@ enum class DenyCause(vararg val policy: String) {
         "adressebeskyttelse_strengt_fortrolig_adresse_utland"
     ),
     FP2_KODE7("fp2_behandle_kode7", "adressebeskyttelse_fortrolig_adresse"),
-    FP3_EGEN_ANSATT("fp3_behandle_egen_ansatt"),
+    FP3_EGEN_ANSATT("fp3_behandle_egen_ansatt", "skjermede_navansatte_og_familiemedlemmer"),
     FP4_GEOGRAFISK("fp4_geografi"),
     AD_ROLLE("modia_ad_tilganger"),
     UNKNOWN("*");

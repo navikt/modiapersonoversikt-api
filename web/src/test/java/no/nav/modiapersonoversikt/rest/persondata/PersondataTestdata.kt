@@ -108,7 +108,7 @@ internal fun gittTredjepartsperson(
     kjonn = emptyList(),
     adressebeskyttelse = listOf(Persondata.KodeBeskrivelse(adressebeskyttelse, adressebeskyttelse.toString())),
     bostedAdresse = emptyList(),
-    personstatus = emptyList()
+    dodsdato = emptyList()
 )
 
 internal fun gittNavn(navn: String): Persondata.Navn {
@@ -382,7 +382,8 @@ internal val kontaktadresseData = HentPersondata.Kontaktadresse(
     postadresseIFrittFormat = null,
     postboksadresse = null,
     vegadresse = vegadresse,
-    utenlandskAdresse = null
+    utenlandskAdresse = null,
+    utenlandskAdresseIFrittFormat = null
 )
 
 internal val oppholdsadresseData = HentPersondata.Oppholdsadresse(

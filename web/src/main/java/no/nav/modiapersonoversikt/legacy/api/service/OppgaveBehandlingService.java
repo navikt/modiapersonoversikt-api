@@ -36,6 +36,8 @@ public interface OppgaveBehandlingService {
 
     boolean oppgaveErFerdigstilt(String oppgaveid);
 
+    Oppgave finnOgTilordneSTOOppgave(String fnr, String henvendelseId, Temagruppe temagruppe, String enhet, boolean tvungenTilordning);
+
     class FikkIkkeTilordnet extends Exception {
         public FikkIkkeTilordnet(Throwable cause) {
             super(cause);

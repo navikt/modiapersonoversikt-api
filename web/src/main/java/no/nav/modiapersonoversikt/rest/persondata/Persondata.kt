@@ -48,7 +48,7 @@ object Persondata {
         val kjonn: List<KodeBeskrivelse<Kjonn>>,
         val adressebeskyttelse: List<KodeBeskrivelse<AdresseBeskyttelse>>,
         val bostedAdresse: List<Adresse>,
-        val personstatus: List<KodeBeskrivelse<PersonStatus>>
+        val dodsdato: List<LocalDate>
     )
 
     data class KodeBeskrivelse<T>(
@@ -237,7 +237,7 @@ object Persondata {
         val alder: Int?,
         val adressebeskyttelse: List<KodeBeskrivelse<AdresseBeskyttelse>>,
         val harSammeAdresse: Boolean,
-        val personstatus: List<KodeBeskrivelse<PersonStatus>>
+        val dodsdato: List<LocalDate>
     )
 
     enum class Kjonn {
