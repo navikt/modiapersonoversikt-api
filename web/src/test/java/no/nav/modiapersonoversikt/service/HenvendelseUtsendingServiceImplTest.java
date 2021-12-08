@@ -1,12 +1,5 @@
 package no.nav.modiapersonoversikt.service;
 
-import no.nav.modiapersonoversikt.legacy.kjerneinfo.consumer.fim.person.PersonKjerneinfoServiceBi;
-import no.nav.modiapersonoversikt.legacy.kjerneinfo.consumer.fim.person.to.HentKjerneinformasjonRequest;
-import no.nav.modiapersonoversikt.legacy.kjerneinfo.consumer.fim.person.to.HentKjerneinformasjonResponse;
-import no.nav.modiapersonoversikt.legacy.kjerneinfo.domain.person.Person;
-import no.nav.modiapersonoversikt.legacy.kjerneinfo.domain.person.Personfakta;
-import no.nav.modiapersonoversikt.legacy.kjerneinfo.domain.person.fakta.AnsvarligEnhet;
-import no.nav.modiapersonoversikt.legacy.kjerneinfo.domain.person.fakta.Organisasjonsenhet;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.*;
 import no.nav.modiapersonoversikt.infrastructure.content.ContentRetriever;
 import no.nav.modiapersonoversikt.legacy.api.domain.Saksbehandler;
@@ -19,6 +12,8 @@ import no.nav.modiapersonoversikt.legacy.api.service.saker.SakerService;
 import no.nav.modiapersonoversikt.legacy.api.service.ldap.LDAPService;
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll;
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.TilgangskontrollContext;
+import no.nav.modiapersonoversikt.rest.persondata.Persondata;
+import no.nav.modiapersonoversikt.rest.persondata.PersondataService;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.behandlehenvendelse.BehandleHenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.senduthenvendelse.SendUtHenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.senduthenvendelse.meldinger.WSFerdigstillHenvendelseRequest;
@@ -56,11 +51,11 @@ class HenvendelseUtsendingServiceImplTest {
 
     private static final String NYESTE_HENVENDELSE_ID = "Nyeste henvendelse";
     private static final String ELDSTE_HENVENDELSE = "Eldste henvendelse";
-    private static final String ENHET = "1234";
+    private static final String ENHET_ID = "1234";
+    private static final Persondata.Enhet ENHET = new Persondata.Enhet(ENHET_ID, "Enhet Navn", new ArrayList<>());
 
     private static final String JOURNALFORT_TEMA = "tema jobb";
     private static final String SAKSBEHANDLERS_VALGTE_ENHET = "4300";
-    private static final String SAKSBEHANDLERS_IDENT = "z123456";
 
     private ArgumentCaptor<WSSendUtHenvendelseRequest> wsSendHenvendelseRequestCaptor = ArgumentCaptor.forClass(WSSendUtHenvendelseRequest.class);
     private ArgumentCaptor<WSHentHenvendelseListeRequest> hentHenvendelseListeRequestCaptor = ArgumentCaptor.forClass(WSHentHenvendelseListeRequest.class);
@@ -76,7 +71,7 @@ class HenvendelseUtsendingServiceImplTest {
     private HenvendelsePortType henvendelsePortType = mock(HenvendelsePortType.class);
     private SendUtHenvendelsePortType sendUtHenvendelsePortType = mock(SendUtHenvendelsePortType.class);
     private BehandleHenvendelsePortType behandleHenvendelsePortType = mock(BehandleHenvendelsePortType.class);
-    private PersonKjerneinfoServiceBi kjerneinfo = mock(PersonKjerneinfoServiceBi.class);
+    private PersondataService persondataService = mock(PersondataService.class);
     private LDAPService ldapService = mock(LDAPService.class);
     private CacheManager cacheManager = mock(CacheManager.class);
 
@@ -88,7 +83,7 @@ class HenvendelseUtsendingServiceImplTest {
             sakerService,
             tilgangskontroll,
             propertyResolver,
-            kjerneinfo,
+            persondataService,
             ldapService,
             cacheManager
     );
@@ -96,20 +91,8 @@ class HenvendelseUtsendingServiceImplTest {
     @BeforeEach
     void init() {
         when(sendUtHenvendelsePortType.sendUtHenvendelse(any(WSSendUtHenvendelseRequest.class))).thenReturn(
-                new WSSendUtHenvendelseResponse().withBehandlingsId(BEHANDLINGS_ID)
+            new WSSendUtHenvendelseResponse().withBehandlingsId(BEHANDLINGS_ID)
         );
-        HentKjerneinformasjonResponse kjerneinformasjonResponse = new HentKjerneinformasjonResponse();
-        Person person = new Person();
-        Personfakta personfakta = new Personfakta();
-        AnsvarligEnhet ansvarligEnhet = new AnsvarligEnhet();
-        Organisasjonsenhet organisasjonsenhet = new Organisasjonsenhet();
-        organisasjonsenhet.setOrganisasjonselementId(ENHET);
-        ansvarligEnhet.setOrganisasjonsenhet(organisasjonsenhet);
-        personfakta.setAnsvarligEnhet(ansvarligEnhet);
-        person.setPersonfakta(personfakta);
-        person.getPersonfakta().getAnsvarligEnhet().getOrganisasjonsenhet().getOrganisasjonselementId();
-        kjerneinformasjonResponse.setPerson(person);
-        when(kjerneinfo.hentKjerneinformasjon(any(HentKjerneinformasjonRequest.class))).thenReturn(kjerneinformasjonResponse);
         when(cacheManager.getCache(anyString())).thenReturn(mock(Cache.class));
     }
 
@@ -279,7 +262,7 @@ class HenvendelseUtsendingServiceImplTest {
     @Test
     void skalHenteSortertListeAvSvarEllerReferatForSporsmalMedEldsteForst() {
         WSHentHenvendelseListeResponse wsHentHenvendelseListeResponse =
-                new WSHentHenvendelseListeResponse().withAny(createTraad(TRAAD_ID).toArray());
+            new WSHentHenvendelseListeResponse().withAny(createTraad(TRAAD_ID).toArray());
 
         when(henvendelsePortType.hentHenvendelseListe(any(WSHentHenvendelseListeRequest.class))).thenReturn(wsHentHenvendelseListeResponse);
 
@@ -308,14 +291,16 @@ class HenvendelseUtsendingServiceImplTest {
 
     @Test
     void kontorsperrerHenvendelsePaaAndreSosialeTjenester() {
+        when(persondataService.hentNavEnhet(any())).thenReturn(ENHET);
         Melding melding = new Melding().withFnr(FNR).withFritekst(mockFritekst()).withType(SAMTALEREFERAT_OPPMOTE).withTemagruppe(Temagruppe.ANSOS.toString());
         henvendelseUtsendingService.sendHenvendelse(melding, Optional.empty(), Optional.empty(), SAKSBEHANDLERS_VALGTE_ENHET);
 
-        verify(behandleHenvendelsePortType).oppdaterKontorsperre(ENHET, singletonList(BEHANDLINGS_ID));
+        verify(behandleHenvendelsePortType).oppdaterKontorsperre(ENHET_ID, singletonList(BEHANDLINGS_ID));
     }
 
     @Test
     void kontorsperrerIkkeHenvendelsePaaOkonomiskSosialhjelp() {
+        when(persondataService.hentNavEnhet(any())).thenReturn(ENHET);
         Melding melding = new Melding().withFnr(FNR).withFritekst(mockFritekst()).withType(SAMTALEREFERAT_OPPMOTE).withTemagruppe(Temagruppe.OKSOS.toString());
         henvendelseUtsendingService.sendHenvendelse(melding, Optional.empty(), Optional.empty(), SAKSBEHANDLERS_VALGTE_ENHET);
 
@@ -323,57 +308,48 @@ class HenvendelseUtsendingServiceImplTest {
     }
 
     @Test
-    void knyttetHenvendelsenTilBrukersEnhetFraTPS() {
+    void knyttetHenvendelsenTilBrukersEnhetFraPDL() {
+        when(persondataService.hentNavEnhet(any())).thenReturn(ENHET);
+
         Melding melding = new Melding().withFnr(FNR).withFritekst(mockFritekst()).withType(SAMTALEREFERAT_OPPMOTE).withTemagruppe(Temagruppe.ARBD.toString());
         henvendelseUtsendingService.sendHenvendelse(melding, Optional.empty(), Optional.empty(), SAKSBEHANDLERS_VALGTE_ENHET);
 
         verify(sendUtHenvendelsePortType).sendUtHenvendelse(wsSendHenvendelseRequestCaptor.capture());
-        verify(kjerneinfo, times(1)).hentKjerneinformasjon(any(HentKjerneinformasjonRequest.class));
         XMLHenvendelse xmlHenvendelse = (XMLHenvendelse) wsSendHenvendelseRequestCaptor.getValue().getAny();
-        assertThat(xmlHenvendelse.getBrukersEnhet(), is(ENHET));
+        assertThat(xmlHenvendelse.getBrukersEnhet(), is(ENHET_ID));
     }
 
     @Test
     void knyttetHenvendelsenTilBrukersEnhetFraMelding() {
-        String brukersEnhet = "0123";
+        when(persondataService.hentNavEnhet(any())).thenReturn(ENHET);
 
         Melding melding = new Melding()
                 .withFnr(FNR)
                 .withFritekst(mockFritekst())
                 .withType(SAMTALEREFERAT_OPPMOTE)
                 .withTemagruppe(Temagruppe.ARBD.toString())
-                .withBrukersEnhet(brukersEnhet);
+                .withBrukersEnhet(ENHET_ID);
         henvendelseUtsendingService.sendHenvendelse(melding, Optional.empty(), Optional.empty(), SAKSBEHANDLERS_VALGTE_ENHET);
 
         verify(sendUtHenvendelsePortType).sendUtHenvendelse(wsSendHenvendelseRequestCaptor.capture());
-        verify(kjerneinfo, never()).hentKjerneinformasjon(any(HentKjerneinformasjonRequest.class));
         XMLHenvendelse xmlHenvendelse = (XMLHenvendelse) wsSendHenvendelseRequestCaptor.getValue().getAny();
-        assertThat(xmlHenvendelse.getBrukersEnhet(), is(brukersEnhet));
+        assertThat(xmlHenvendelse.getBrukersEnhet(), is(ENHET_ID));
     }
 
     @Test
     void knyttetHenvendelsenTilTomEnhetDersomBrukerIkkeHarNavkontor() {
-        String brukersEnhet = null;
-
-        HentKjerneinformasjonResponse kjerneinformasjonResponse = new HentKjerneinformasjonResponse();
-        Person person = new Person();
-        Personfakta personfakta = new Personfakta();
-        personfakta.setAnsvarligEnhet(null);
-        person.setPersonfakta(personfakta);
-        kjerneinformasjonResponse.setPerson(person);
-        when(kjerneinfo.hentKjerneinformasjon(any(HentKjerneinformasjonRequest.class))).thenReturn(kjerneinformasjonResponse);
-
+        when(persondataService.hentNavEnhet(any())).thenReturn(null);
         Melding melding = new Melding()
                 .withFnr(FNR)
                 .withFritekst(mockFritekst())
                 .withType(SAMTALEREFERAT_OPPMOTE)
                 .withTemagruppe(Temagruppe.ARBD.toString())
-                .withBrukersEnhet(brukersEnhet);
+                .withBrukersEnhet(null);
         henvendelseUtsendingService.sendHenvendelse(melding, Optional.empty(), Optional.empty(), SAKSBEHANDLERS_VALGTE_ENHET);
 
         verify(sendUtHenvendelsePortType).sendUtHenvendelse(wsSendHenvendelseRequestCaptor.capture());
         XMLHenvendelse xmlHenvendelse = (XMLHenvendelse) wsSendHenvendelseRequestCaptor.getValue().getAny();
-        assertThat(xmlHenvendelse.getBrukersEnhet(), is(brukersEnhet));
+        assertThat(xmlHenvendelse.getBrukersEnhet(), nullValue());
     }
 
     @Test

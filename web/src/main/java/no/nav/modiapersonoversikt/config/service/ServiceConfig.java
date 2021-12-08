@@ -7,12 +7,8 @@ import no.nav.common.sts.SystemUserTokenProvider;
 import no.nav.common.utils.EnvironmentUtils;
 import no.nav.modiapersonoversikt.legacy.api.domain.bidragsak.generated.apis.BidragSakControllerApi;
 import no.nav.modiapersonoversikt.legacy.kjerneinfo.consumer.egenansatt.EgenAnsattService;
-import no.nav.modiapersonoversikt.legacy.kjerneinfo.consumer.fim.person.PersonKjerneinfoServiceBi;
-import no.nav.modiapersonoversikt.legacy.kjerneinfo.consumer.fim.person.support.DefaultPersonKjerneinfoService;
-import no.nav.modiapersonoversikt.legacy.kjerneinfo.consumer.fim.person.support.KjerneinfoMapper;
-import no.nav.modiapersonoversikt.legacy.kjerneinfo.consumer.fim.person.vergemal.VergemalService;
-import no.nav.modiapersonoversikt.consumer.kodeverk.consumer.fim.kodeverk.KodeverkmanagerBi;
 import no.nav.modiapersonoversikt.infrastructure.content.ContentRetriever;
+import no.nav.modiapersonoversikt.rest.persondata.PersondataService;
 import no.nav.modiapersonoversikt.service.*;
 import no.nav.modiapersonoversikt.legacy.api.service.FodselnummerAktorService;
 import no.nav.modiapersonoversikt.legacy.api.service.HenvendelseLesService;
@@ -60,7 +56,6 @@ import no.nav.tjeneste.virksomhet.digitalkontaktinformasjon.v1.DigitalKontaktinf
 import no.nav.tjeneste.virksomhet.oppfoelging.v1.OppfoelgingPortType;
 import no.nav.tjeneste.virksomhet.organisasjonenhetkontaktinformasjon.v1.OrganisasjonEnhetKontaktinformasjonV1;
 import no.nav.tjeneste.virksomhet.pensjonsak.v1.PensjonSakV1;
-import no.nav.tjeneste.virksomhet.person.v3.binding.PersonV3;
 import org.springframework.cache.CacheManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -90,13 +85,13 @@ public class ServiceConfig {
                                                                    SakerService sakerService,
                                                                    Tilgangskontroll tilgangskontroll,
                                                                    ContentRetriever propertyResolver,
-                                                                   PersonKjerneinfoServiceBi personKjerneinfoServiceBi,
+                                                                   PersondataService persondataService,
                                                                    LDAPService ldapService,
                                                                    CacheManager cacheManager) {
 
         return new HenvendelseUtsendingServiceImpl(henvendelsePortType, sendUtHenvendelsePortType,
                 behandleHenvendelsePortType, oppgaveBehandlingService, sakerService, tilgangskontroll,
-                propertyResolver, personKjerneinfoServiceBi, ldapService, cacheManager);
+                propertyResolver, persondataService, ldapService, cacheManager);
     }
 
     @Bean
@@ -127,8 +122,8 @@ public class ServiceConfig {
     }
 
     @Bean
-    public ArbeidsfordelingV1Service arbeidsfordelingV1Service(ArbeidsfordelingClient arbeidsfordelingClient, EgenAnsattService egenAnsattService, PersonKjerneinfoServiceBi personService, KodeverksmapperService kodeverksmapper) {
-        return new ArbeidsfordelingV1ServiceImpl(arbeidsfordelingClient, egenAnsattService, personService, kodeverksmapper);
+    public ArbeidsfordelingV1Service arbeidsfordelingV1Service(ArbeidsfordelingClient arbeidsfordelingClient, EgenAnsattService egenAnsattService, PersondataService persondataService, KodeverksmapperService kodeverksmapper) {
+        return new ArbeidsfordelingV1ServiceImpl(arbeidsfordelingClient, egenAnsattService, persondataService, kodeverksmapper);
     }
 
     @Bean
@@ -212,21 +207,6 @@ public class ServiceConfig {
         return new OppfolgingsenhetServiceImpl(oppfoelgingPortType, organisasjonEnhetV2Service);
     }
 
-    @Bean
-    public PersonKjerneinfoServiceBi personKjerneinfoServiceBi(PersonV3 personPortType, KjerneinfoMapper kjerneinfoMapper,
-                                                               Tilgangskontroll tilgangskontroll, OrganisasjonEnhetV2Service organisasjonEnhetV2Service) {
-        return new DefaultPersonKjerneinfoService(personPortType, kjerneinfoMapper, tilgangskontroll, organisasjonEnhetV2Service);
-    }
-
-    @Bean
-    public VergemalService vergemalService(
-            PersonV3 personPortType,
-            PdlOppslagService pdl,
-            KodeverkmanagerBi kodeverkmanagerBi
-    ) {
-        return new VergemalService(personPortType, pdl, kodeverkmanagerBi);
-    }
-
     @Bean(name = "DkifSoap")
     public Dkif.Service defaultDkifService(DigitalKontaktinformasjonV1 dkifV1) {
         return new DkifServiceImpl(dkifV1);
@@ -266,4 +246,5 @@ public class ServiceConfig {
     public PdlOppslagService pdlOppslagService(SystemUserTokenProvider sts) {
         return new PdlOppslagServiceImpl(sts);
     }
+
 }

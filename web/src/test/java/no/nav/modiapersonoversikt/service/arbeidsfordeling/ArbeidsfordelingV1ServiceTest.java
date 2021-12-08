@@ -1,11 +1,9 @@
 package no.nav.modiapersonoversikt.service.arbeidsfordeling;
 
 import no.nav.modiapersonoversikt.legacy.kjerneinfo.consumer.egenansatt.EgenAnsattService;
-import no.nav.modiapersonoversikt.legacy.kjerneinfo.consumer.fim.person.PersonKjerneinfoServiceBi;
-import no.nav.modiapersonoversikt.legacy.kjerneinfo.domain.person.GeografiskTilknytning;
-import no.nav.modiapersonoversikt.legacy.kjerneinfo.domain.person.GeografiskTilknytningstyper;
 import no.nav.modiapersonoversikt.legacy.api.service.arbeidsfordeling.ArbeidsfordelingV1Service;
 import no.nav.modiapersonoversikt.legacy.api.service.arbeidsfordeling.FinnBehandlendeEnhetException;
+import no.nav.modiapersonoversikt.rest.persondata.*;
 import no.nav.modiapersonoversikt.service.kodeverksmapper.KodeverksmapperService;
 import no.nav.modiapersonoversikt.service.kodeverksmapper.domain.Behandling;
 import no.nav.modiapersonoversikt.utils.PropertyRule;
@@ -17,6 +15,7 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Optional;
 
 import static no.nav.modiapersonoversikt.service.unleash.strategier.ByEnvironmentStrategy.ENVIRONMENT_PROPERTY;
@@ -40,7 +39,7 @@ class ArbeidsfordelingV1ServiceTest {
     private static final String PERSON = "11111111111";
     private static final String STRENGT_FORTROLIG_ADRESSE = "SPSF";
 
-    private PersonKjerneinfoServiceBi personService = mock(PersonKjerneinfoServiceBi.class);
+    private PersondataService persondataService = mock(PersondataService.class);
     private KodeverksmapperService kodeverksmapper = mock(KodeverksmapperService.class);
     private ArbeidsfordelingClient arbeidsfordelingClient = mock(ArbeidsfordelingClient.class);
     private EgenAnsattService egenAnsattService = mock(EgenAnsattService.class);
@@ -49,12 +48,12 @@ class ArbeidsfordelingV1ServiceTest {
     @BeforeEach
     void setupMocks() {
         Mockito.reset(
-                personService,
+                persondataService,
                 kodeverksmapper,
                 arbeidsfordelingClient,
                 egenAnsattService
         );
-        arbeidsfordelingService = new ArbeidsfordelingV1ServiceImpl(arbeidsfordelingClient, egenAnsattService, personService, kodeverksmapper);
+        arbeidsfordelingService = new ArbeidsfordelingV1ServiceImpl(arbeidsfordelingClient, egenAnsattService, persondataService, kodeverksmapper);
     }
 
     @Test
@@ -67,8 +66,8 @@ class ArbeidsfordelingV1ServiceTest {
     }
 
     @Test
-    @DisplayName("Kaster exception hvis kall mot PersonService feiler")
-    void kasterExceptionHvisKallMotPersonServiceFeiler() {
+    @DisplayName("Kaster exception hvis kall mot PersondataService feiler")
+    void kasterExceptionHvisKallMotPersondataServiceFeiler() {
         gitt_at_alt_fungerer();
         gitt_feil_ved_henting_av_geografisk_tilknytning();
 
@@ -93,15 +92,17 @@ class ArbeidsfordelingV1ServiceTest {
         arbeidsfordelingService.finnBehandlendeEnhetListe(PERSON, FAGOMRADE, OPPGAVETYPE, UNDERKATEGORI);
 
         ArgumentCaptor<Boolean> erEgenAnsattCaptor = ArgumentCaptor.forClass(Boolean.class);
-        verify(arbeidsfordelingClient, times(1)).hentArbeidsfordeling(any(), any(), any(), any(), erEgenAnsattCaptor.capture());
+        verify(arbeidsfordelingClient, times(1)).hentArbeidsfordeling(any(), any(), any(), any(), erEgenAnsattCaptor.capture(), any());
 
         assertTrue(erEgenAnsattCaptor.getValue());
     }
 
     private void gitt_at_alt_fungerer() {
+        ArrayList<Persondata.KodeBeskrivelse<Persondata.AdresseBeskyttelse>> adressebeskyttelseMock = new ArrayList<>();
+        adressebeskyttelseMock.add(new Persondata.KodeBeskrivelse<>(Persondata.AdresseBeskyttelse.UGRADERT, "UGRADERT"));
         sneaky(() -> {
-            when(personService.hentGeografiskTilknytning(anyString())).thenReturn(new GeografiskTilknytning().withType(GeografiskTilknytningstyper.KOMMUNE).withValue(GEOGRAFISK_TILKNYTNING));
-
+            when(persondataService.hentGeografiskTilknytning(anyString())).thenReturn(GEOGRAFISK_TILKNYTNING);
+            when(persondataService.hentAdressebeskyttelse(anyString())).thenReturn(adressebeskyttelseMock);
             when(kodeverksmapper.mapOppgavetype(anyString())).thenReturn(MAPPET_OPPGAVETYPE);
             when(kodeverksmapper.mapUnderkategori(anyString())).thenReturn(Optional.of(new Behandling().withBehandlingstema(BEHANDLINGSTEMA).withBehandlingstype(BEHANDLINGSTYPE)));
 
@@ -121,12 +122,12 @@ class ArbeidsfordelingV1ServiceTest {
     }
 
     private void gitt_feil_ved_henting_av_geografisk_tilknytning() {
-        when(personService.hentGeografiskTilknytning(anyString())).thenThrow(new RuntimeException());
+        when(persondataService.hentGeografiskTilknytning(PERSON)).thenThrow(new RuntimeException());
     }
 
     private void gitt_feil_ved_henting_av_enheter() {
         sneaky(() ->
-                when(arbeidsfordelingClient.hentArbeidsfordeling(any(), any(), any(), any(), anyBoolean())).thenThrow(new IllegalStateException())
+                when(arbeidsfordelingClient.hentArbeidsfordeling(any(), any(), any(), any(), anyBoolean(), any())).thenThrow(new IllegalStateException())
         );
     }
 }

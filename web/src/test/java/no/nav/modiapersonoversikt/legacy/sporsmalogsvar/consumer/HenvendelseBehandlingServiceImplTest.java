@@ -4,13 +4,6 @@ import no.nav.common.auth.subject.IdentType;
 import no.nav.common.auth.subject.SsoToken;
 import no.nav.common.auth.subject.Subject;
 import no.nav.common.auth.subject.SubjectHandler;
-import no.nav.modiapersonoversikt.legacy.kjerneinfo.consumer.fim.person.PersonKjerneinfoServiceBi;
-import no.nav.modiapersonoversikt.legacy.kjerneinfo.consumer.fim.person.to.HentKjerneinformasjonRequest;
-import no.nav.modiapersonoversikt.legacy.kjerneinfo.consumer.fim.person.to.HentKjerneinformasjonResponse;
-import no.nav.modiapersonoversikt.legacy.kjerneinfo.domain.person.Person;
-import no.nav.modiapersonoversikt.legacy.kjerneinfo.domain.person.Personfakta;
-import no.nav.modiapersonoversikt.legacy.kjerneinfo.domain.person.fakta.AnsvarligEnhet;
-import no.nav.modiapersonoversikt.legacy.kjerneinfo.domain.person.fakta.Organisasjonsenhet;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.*;
 import no.nav.modiapersonoversikt.infrastructure.content.ContentRetriever;
 import no.nav.modiapersonoversikt.legacy.api.domain.henvendelse.Melding;
@@ -21,6 +14,7 @@ import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontro
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.TilgangskontrollContext;
 import no.nav.modiapersonoversikt.legacy.sporsmalogsvar.consumer.henvendelse.HenvendelseBehandlingServiceImpl;
 import no.nav.modiapersonoversikt.legacy.sporsmalogsvar.legacy.TraadVM;
+import no.nav.modiapersonoversikt.rest.persondata.*;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.behandlehenvendelse.BehandleHenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.henvendelse.HenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.meldinger.WSHentHenvendelseListeRequest;
@@ -62,7 +56,7 @@ class HenvendelseBehandlingServiceImplTest {
 
     private final HenvendelsePortType henvendelsePortType = mock(HenvendelsePortType.class);
     private final BehandleHenvendelsePortType behandleHenvendelsePortType = mock(BehandleHenvendelsePortType.class);
-    private final PersonKjerneinfoServiceBi kjerneinfo = mock(PersonKjerneinfoServiceBi.class);
+    private PersondataService persondataService = mock(PersondataService.class);
     private final StandardKodeverk standardKodeverk = mock(StandardKodeverk.class);
     private final ContentRetriever propertyResolver = mock(ContentRetriever.class);
     private final LDAPService ldapService = mock(LDAPService.class);
@@ -72,7 +66,7 @@ class HenvendelseBehandlingServiceImplTest {
     private final HenvendelseBehandlingServiceImpl henvendelseBehandlingService = new HenvendelseBehandlingServiceImpl(
             henvendelsePortType,
             behandleHenvendelsePortType,
-            kjerneinfo,
+            persondataService,
             new Tilgangskontroll(tilgangskontrollContext),
             standardKodeverk,
             propertyResolver,
@@ -133,19 +127,10 @@ class HenvendelseBehandlingServiceImplTest {
 
     @Test
     void skalMerkeSomKontorsperret() {
-        HentKjerneinformasjonResponse hentKjerneinformasjonResponse = new HentKjerneinformasjonResponse();
-        Personfakta personfakta = new Personfakta();
-        personfakta.setAnsvarligEnhet(new AnsvarligEnhet.With()
-                .organisasjonsenhet(new Organisasjonsenhet.With().organisasjonselementId(NAVBRUKERS_ENHET).done())
-                .done());
-        hentKjerneinformasjonResponse.setPerson(
-                new Person.With().personfakta(personfakta).done()
-        );
-
-        when(kjerneinfo.hentKjerneinformasjon(any(HentKjerneinformasjonRequest.class))).thenReturn(hentKjerneinformasjonResponse);
+        when(persondataService.hentNavEnhet(any())).thenReturn(new Persondata.Enhet(VALGT_ENHET, NAVBRUKERS_ENHET, new ArrayList<>()));
         henvendelseBehandlingService.merkSomKontorsperret("navbrukers fnr", VALGT_TRAAD);
 
-        verify(behandleHenvendelsePortType).oppdaterKontorsperre(NAVBRUKERS_ENHET, IDER_I_VALGT_TRAAD);
+        verify(behandleHenvendelsePortType).oppdaterKontorsperre(VALGT_ENHET, IDER_I_VALGT_TRAAD);
     }
 
     @Test

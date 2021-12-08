@@ -19,21 +19,7 @@ internal class PersondataFletterTest {
 
     @BeforeEach
     internal fun setUp() {
-        every { kodeverk.hentKodeverk(any()) } returns EnhetligKodeverk.Kodeverk(
-            navn = "kodeverk",
-            kodeverk = mapOf(
-                "M" to "Mann",
-                "KODE6" to "Sperret adresse, strengt fortrolig",
-                "UGRADERT" to "Ugradert",
-                "NOR" to "Norge",
-                "NO" to "Norsk",
-                "BOSA" to "Bosatt",
-                "GIFT" to "Gift",
-                "1444" to "TestPoststed",
-                "47" to "+47",
-                "ESP" to "Spania"
-            )
-        )
+        every { kodeverk.hentKodeverk(any()) } returns gittKodeverk()
     }
 
     @Test

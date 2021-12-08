@@ -3,7 +3,6 @@ package no.nav.modiapersonoversikt.legacy.sporsmalogsvar.config;
 import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navansatt.GOSYSNAVansatt;
 import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navorgenhet.GOSYSNAVOrgEnhet;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import no.nav.modiapersonoversikt.legacy.kjerneinfo.consumer.fim.person.PersonKjerneinfoServiceBi;
 import no.nav.modiapersonoversikt.infrastructure.content.ContentRetriever;
 import no.nav.modiapersonoversikt.legacy.api.domain.norg.AnsattEnhet;
 import no.nav.modiapersonoversikt.legacy.api.service.HenvendelseUtsendingService;
@@ -94,11 +93,6 @@ public class MockServiceTestContext {
     @Bean
     public GOSYSNAVOrgEnhet GOSYSNAVOrgEnhet() {
         return mock(GOSYSNAVOrgEnhet.class);
-    }
-
-    @Bean
-    public PersonKjerneinfoServiceBi personKjerneinfoServiceBi() {
-        return mock(PersonKjerneinfoServiceBi.class);
     }
 
     @Bean
