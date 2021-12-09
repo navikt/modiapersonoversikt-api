@@ -21,7 +21,7 @@ interface PdlOppslagService {
 
     enum class PdlSokbareFelt(val feltnavn: String, val rule: SokKriterieRule) {
         NAVN("fritekst.navn", SokKriterieRule.CONTAINS),
-        ADRESSE("fritekst.adresse", SokKriterieRule.CONTAINS),
+        ADRESSE("fritekst.adresser", SokKriterieRule.CONTAINS),
         UTENLANDSK_ID("person.utenlandskIdentifikasjonsnummer.identifikasjonsnummer", SokKriterieRule.EQUALS),
         FODSELSDATO_FRA("person.foedsel.foedselsdato", SokKriterieRule.AFTER),
         FODSELSDATO_TIL("person.foedsel.foedselsdato", SokKriterieRule.BEFORE),
