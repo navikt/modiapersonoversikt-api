@@ -12,7 +12,6 @@ import no.nav.modiapersonoversikt.legacy.api.domain.norg.AnsattEnhet
 import no.nav.modiapersonoversikt.legacy.api.domain.norg.EnhetsGeografiskeTilknytning
 import no.nav.modiapersonoversikt.legacy.api.service.arbeidsfordeling.ArbeidsfordelingEnhet
 import no.nav.modiapersonoversikt.legacy.api.utils.RestConstants.*
-import no.nav.modiapersonoversikt.legacy.kjerneinfo.domain.person.GeografiskTilknytning
 import no.nav.modiapersonoversikt.service.kodeverksmapper.domain.Behandling
 import no.nav.modiapersonoversikt.service.unleash.strategier.ByEnvironmentStrategy.ENVIRONMENT_PROPERTY
 import okhttp3.MediaType
@@ -55,15 +54,15 @@ open class ArbeidsfordelingClient {
             .let { objectMapper.readValue(it, EnhetsGeografiskTilknytningResponse) }
     }
 
-    open fun hentArbeidsfordeling(behandling: Optional<Behandling>, geografiskTilknytning: GeografiskTilknytning, oppgavetype: String, fagomrade: String, erEgenAnsatt: Boolean): List<AnsattEnhet> {
+    open fun hentArbeidsfordeling(behandling: Optional<Behandling>, geografiskTilknytning: String?, oppgavetype: String, fagomrade: String, erEgenAnsatt: Boolean, diskresjonskode: String?): List<AnsattEnhet> {
         val veilederOidcToken: String = SubjectHandler.getSsoToken(SsoToken.Type.OIDC).orElseThrow { IllegalStateException("Kunne ikke hente ut veileders ssoTOken") }
         val consumerOidcToken: String = stsService.systemUserToken
         val arbeidskritereieFordelingSkjermet = ArbeidskritereieFordelingSkjermet(
-            behandlingstema = behandling?.map(Behandling::getBehandlingstema).orElse(null),
-            behandlingstype = behandling?.map(Behandling::getBehandlingstype).orElse(null),
-            geografiskOmraade = geografiskTilknytning.value?.let { it }.toString(),
+            behandlingstema = behandling.map(Behandling::getBehandlingstema).orElse(null),
+            behandlingstype = behandling.map(Behandling::getBehandlingstype).orElse(null),
+            geografiskOmraade = geografiskTilknytning ?: "",
             oppgavetype = oppgavetype,
-            diskresjonskode = geografiskTilknytning?.diskresjonskode ?: null,
+            diskresjonskode = diskresjonskode,
             tema = fagomrade,
             enhetsnummer = null,
             temagruppe = null,
@@ -87,11 +86,11 @@ open class ArbeidsfordelingClient {
             )
             .execute()
 
-        if (response.code() != 200) {
+        return if (response.code() != 200) {
             log.error("Kunne ikke hente enheter fra arbeidsfordeling. ResponseStatus: ${response.code()}")
-            return emptyList()
+            emptyList()
         } else {
-            return response
+            response
                 .body()!!
                 .string()
                 .let {

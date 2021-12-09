@@ -71,9 +71,9 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
                 bostedAdresse = hentBostedAdresse(data),
                 kontaktAdresse = hentKontaktAdresse(data),
                 oppholdsAdresse = hentOppholdsAdresse(data),
-                navEnhet = hentNavEnhet(data),
+                navEnhet = hentNavEnhet(data.navEnhet),
                 statsborgerskap = hentStatsborgerskap(data),
-                adressebeskyttelse = hentAdressebeskyttelse(data),
+                adressebeskyttelse = hentAdressebeskyttelse(data.persondata.adressebeskyttelse),
                 sikkerhetstiltak = hentSikkerhetstiltak(data),
                 erEgenAnsatt = hentErEgenAnsatt(data),
                 personstatus = hentPersonstatus(data),
@@ -454,8 +454,8 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
         gyldighetsPeriode = gyldighetsPeriode
     )
 
-    private fun hentNavEnhet(data: Data): Persondata.Enhet? {
-        return data.navEnhet
+    fun hentNavEnhet(navEnhet: PersondataResult<EnhetKontaktinformasjon?>): Persondata.Enhet? {
+        return navEnhet
             .map {
                 if (it == null) {
                     null
@@ -505,8 +505,8 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
         }
     }
 
-    private fun hentAdressebeskyttelse(data: Data): List<Persondata.KodeBeskrivelse<Persondata.AdresseBeskyttelse>> {
-        return data.persondata.adressebeskyttelse.map {
+    fun hentAdressebeskyttelse(adressebeskyttelse: List<HentPersondata.Adressebeskyttelse>): List<Persondata.KodeBeskrivelse<Persondata.AdresseBeskyttelse>> {
+        return adressebeskyttelse.map {
             val kodebeskrivelse = when (it.gradering) {
                 STRENGT_FORTROLIG_UTLAND, STRENGT_FORTROLIG -> kodeverk.hentKodeBeskrivelse(
                     Kodeverk.DISKRESJONSKODER,
