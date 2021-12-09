@@ -326,7 +326,7 @@ data class PersonSokResponsDTO(
     val utenlandskID: List<UtenlandskIdDTO>?
 )
 
-private fun lagPersonResponse(fimPerson: Person) = PersonSokResponsDTO(
+fun lagPersonResponse(fimPerson: Person) = PersonSokResponsDTO(
     diskresjonskode = fimPerson.diskresjonskode?.let { lagKodeverdi(it) },
     postadresse = fimPerson.postadresse?.ustrukturertAdresse?.let { lagPostadresse(it) },
     bostedsadresse = fimPerson.bostedsadresse?.strukturertAdresse?.let { lagBostedsadresse(it) },
