@@ -462,7 +462,7 @@ data class PersonsokRequest(
 
 fun PersonsokRequest.tilPdlKriterier(clock: Clock = Clock.systemDefaultZone()): List<SokKriterier> {
     val navn = listOf(this.fornavn, this.etternavn).joinNotNullToString(" ")
-    val adresse = listOf(this.gatenavn, this.husnummer, this.husbokstav, this.postnummer).joinNotNullToString(" ")
+    val adresse = listOf(this.gatenavn, this.husnummer, this.husbokstav, this.postnummer, this.kommunenummer).joinNotNullToString(" ")
     val fodselsdatoFra = this.fodselsdatoFra ?: this.alderTil?.let { finnSenesteDatoGittAlder(it, clock) }
     val fodselsdatoTil = this.fodselsdatoTil ?: this.alderFra?.let { finnTidligsteDatoGittAlder(it, clock) }
     val kjonn = when (this.kjonn) {
