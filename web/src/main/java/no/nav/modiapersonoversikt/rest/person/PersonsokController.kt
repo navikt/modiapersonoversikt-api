@@ -73,7 +73,7 @@ class PersonsokController @Autowired constructor(
 
                         mapOf(
                             "equal-length" to (control.size == experiment.size),
-                            "missing" to missing.joinNotNullToString(", "),
+                            "missing" to missing.joinToString(", "),
                             "control-length" to control.size,
                             "experiment-length" to experiment.size
                         )
@@ -103,7 +103,7 @@ class PersonsokController @Autowired constructor(
                             )
                         )
                     )
-                    .map(::lagPersonResponse)
+                    .mapNotNull(::lagPersonResponse)
             } else {
                 legacySokMotTPS(personsokRequest)
             }
@@ -114,11 +114,11 @@ class PersonsokController @Autowired constructor(
         return handterFeil {
             if (!personsokRequest.kontonummer.isNullOrBlank()) {
                 kontonummerSok(personsokRequest.kontonummer)
-                    .map(::lagPersonResponse)
+                    .mapNotNull(::lagPersonResponse)
             } else {
                 pdlOppslagService
                     .sokPerson(personsokRequest.tilPdlKriterier())
-                    .map(::lagPersonResponse)
+                    .mapNotNull(::lagPersonResponse)
             }
         }
     }
@@ -127,7 +127,7 @@ class PersonsokController @Autowired constructor(
         return personsokPortType
             .finnPerson(lagPersonsokRequest(personsokRequest))
             .personListe
-            ?.map { lagPersonResponse(it) }
+            ?.mapNotNull(::lagPersonResponse)
             ?: emptyList()
     }
 
@@ -170,15 +170,16 @@ class PersonsokController @Autowired constructor(
     }
 }
 
-fun lagPersonResponse(searchHit: SokPerson.PersonSearchHit): PersonSokResponsDTO {
-    val ident = searchHit.person?.folkeregisteridentifikator?.first()
+fun lagPersonResponse(searchHit: SokPerson.PersonSearchHit): PersonSokResponsDTO? {
+    val ident: SokPerson.Folkeregisteridentifikator = searchHit.person?.folkeregisteridentifikator?.firstOrNull() ?: return null
+    val navn: PersonnavnDTO = hentNavn(searchHit.person) ?: return null
     val utenlandskID = searchHit.person?.utenlandskIdentifikasjonsnummer
     return PersonSokResponsDTO(
         diskresjonskode = null,
         kjonn = null,
         status = null,
-        ident = ident?.let { NorskIdentDTO(it.identifikasjonsnummer, KodeverdiDTO(it.type, null)) },
-        navn = hentNavn(searchHit.person),
+        ident = NorskIdentDTO(ident.identifikasjonsnummer, KodeverdiDTO(ident.type, null)),
+        navn = navn,
         postadresse = lagPostadresse(searchHit.person?.kontaktadresse),
         bostedsadresse = lagBostedsadresse(searchHit.person?.bostedsadresse),
         brukerinfo = BrukerinfoDTO(
@@ -315,29 +316,33 @@ fun hentNavn(person: SokPerson.Person?): PersonnavnDTO? {
 }
 
 data class PersonSokResponsDTO(
+    val ident: NorskIdentDTO,
+    val navn: PersonnavnDTO,
     val diskresjonskode: KodeverdiDTO?,
     val postadresse: String?,
     val bostedsadresse: String?,
     val kjonn: KodeverdiDTO?,
-    val navn: PersonnavnDTO?,
     val status: KodeverdiDTO?,
-    val ident: NorskIdentDTO?,
     val brukerinfo: BrukerinfoDTO?,
     val utenlandskID: List<UtenlandskIdDTO>?
 )
 
-fun lagPersonResponse(fimPerson: Person) = PersonSokResponsDTO(
-    diskresjonskode = fimPerson.diskresjonskode?.let { lagKodeverdi(it) },
-    postadresse = fimPerson.postadresse?.ustrukturertAdresse?.let { lagPostadresse(it) },
-    bostedsadresse = fimPerson.bostedsadresse?.strukturertAdresse?.let { lagBostedsadresse(it) },
-    kjonn = fimPerson.kjoenn?.kjoenn?.let { lagKodeverdi(it) },
-    navn = fimPerson.personnavn?.let { lagNavn(it) },
-    status = fimPerson.personstatus?.personstatus?.let { lagKodeverdi(it) },
-    ident = fimPerson.ident?.let { lagNorskIdent(it) },
-    brukerinfo = lagBrukerinfo(fimPerson),
-    utenlandskID = null
-)
+fun lagPersonResponse(fimPerson: Person): PersonSokResponsDTO? {
+    val ident = fimPerson.ident?.let(::lagNorskIdent) ?: return null
+    val navn = fimPerson.personnavn?.let(::lagNavn) ?: return null
 
+    return PersonSokResponsDTO(
+        diskresjonskode = fimPerson.diskresjonskode?.let { lagKodeverdi(it) },
+        postadresse = fimPerson.postadresse?.ustrukturertAdresse?.let { lagPostadresse(it) },
+        bostedsadresse = fimPerson.bostedsadresse?.strukturertAdresse?.let { lagBostedsadresse(it) },
+        kjonn = fimPerson.kjoenn?.kjoenn?.let { lagKodeverdi(it) },
+        navn = navn,
+        status = fimPerson.personstatus?.personstatus?.let { lagKodeverdi(it) },
+        ident = ident,
+        brukerinfo = lagBrukerinfo(fimPerson),
+        utenlandskID = null
+    )
+}
 private fun lagPostadresse(adr: UstrukturertAdresse): String =
     arrayOf(
         adr.adresselinje1,
