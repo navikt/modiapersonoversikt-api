@@ -10,7 +10,6 @@ import no.nav.modiapersonoversikt.legacy.kjerneinfo.consumer.egenansatt.EgenAnsa
 import no.nav.modiapersonoversikt.infrastructure.content.ContentRetriever;
 import no.nav.modiapersonoversikt.rest.persondata.PersondataService;
 import no.nav.modiapersonoversikt.service.*;
-import no.nav.modiapersonoversikt.legacy.api.service.FodselnummerAktorService;
 import no.nav.modiapersonoversikt.legacy.api.service.HenvendelseLesService;
 import no.nav.modiapersonoversikt.legacy.api.service.HenvendelseUtsendingService;
 import no.nav.modiapersonoversikt.legacy.api.service.OppgaveBehandlingService;
@@ -238,8 +237,8 @@ public class ServiceConfig {
     }
 
     @Bean
-    public FodselnummerAktorService fodselnummerAktorService() {
-        return new FodselnummerAktorServiceImpl();
+    public FodselnummerAktorService fodselnummerAktorService(PdlOppslagService pdlOppslagService) {
+        return new FodselnummerAktorServiceImpl(pdlOppslagService);
     }
 
     @Bean

@@ -10,6 +10,7 @@ interface PdlOppslagService {
     fun hentGeografiskTilknyttning(fnr: String): String?
     fun hentIdenter(fnr: String): HentIdenter.Identliste?
     fun hentAktorId(fnr: String): String?
+    fun hentFnr(aktorid: String): String?
     fun hentNavnBolk(fnrs: List<String>): Map<String, HentNavnBolk.Navn?>?
 
     enum class SokKriterieRule {
