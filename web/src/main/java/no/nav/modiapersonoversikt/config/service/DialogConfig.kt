@@ -72,7 +72,8 @@ open class DialogConfig {
                 henvendelseService,
                 henvendelseUtsendingService,
                 oppgaveBehandlingService,
-                sfHenvendelseService
+                sfHenvendelseService,
+                unleashService
             )
         )
     }

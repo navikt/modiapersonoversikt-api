@@ -49,7 +49,7 @@ class PersonsokController @Autowired constructor(
     val experiment = Scientist.createExperiment<List<PersonSokResponsDTO>>(
         Scientist.Config(
             name = "personsok",
-            experimentRate = Scientist.UnleashRate(unleashService, Feature.USE_PDL_PERSONSOK),
+            experimentRate = Scientist.UnleashRate(unleashService, Feature.PDL_PERSONSOK_RATE),
             logAndCompareValues = false
         )
     )
