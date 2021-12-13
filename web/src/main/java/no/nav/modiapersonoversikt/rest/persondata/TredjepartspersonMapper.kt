@@ -39,7 +39,7 @@ class TredjepartspersonMapper(val kodeverk: EnhetligKodeverk.Service) {
                     null
                 }
             },
-            personstatus = hentTredjepartspersonstatus(person.folkeregisterpersonstatus)
+            dodsdato = person.doedsfall.mapNotNull { it.doedsdato?.value }
         )
     }
 
@@ -73,25 +73,6 @@ class TredjepartspersonMapper(val kodeverk: EnhetligKodeverk.Service) {
         }
     }
 
-    private fun hentTredjepartspersonstatus(folkeregisterpersonstatus: List<HentTredjepartspersondata.Folkeregisterpersonstatus>): List<Persondata.KodeBeskrivelse<Persondata.PersonStatus>> {
-        return folkeregisterpersonstatus.map {
-            val tpsKode = when (it.status) {
-                "bosatt" -> Persondata.PersonStatus.BOSATT
-                "doed" -> Persondata.PersonStatus.DOD
-                "opphoert" -> Persondata.PersonStatus.OPPHORT
-                "inaktiv" -> Persondata.PersonStatus.INAKTIV
-                "midlertidig" -> Persondata.PersonStatus.MIDLERTIDIG
-                "forsvunnet" -> Persondata.PersonStatus.FORSVUNNET
-                "utflyttet" -> Persondata.PersonStatus.UTFLYTTET
-                "ikkeBosatt" -> Persondata.PersonStatus.IKKE_BOSATT
-                "foedselsregistrert" -> Persondata.PersonStatus.FODSELSREGISTERT
-                else -> Persondata.PersonStatus.UKJENT
-            }
-            val beskrivelse = kodeverk.hentKodeBeskrivelse(Kodeverk.PERSONSTATUSER, tpsKode.tpsKode)
-            Persondata.KodeBeskrivelse(tpsKode, beskrivelse.beskrivelse)
-        }
-    }
-
     private fun lagAdresseFraVegadresse(adresse: HentTredjepartspersondata.Vegadresse): Persondata.Adresse {
         return Persondata.Adresse(
             linje1 = listOf(
@@ -103,10 +84,6 @@ class TredjepartspersonMapper(val kodeverk: EnhetligKodeverk.Service) {
             linje2 = listOf(
                 adresse.postnummer,
                 adresse.postnummer?.let { kodeverk.hentKodeverk(Kodeverk.POSTNUMMER).hentBeskrivelse(it) }
-            ),
-            linje3 = listOf(
-                adresse.bydelsnummer,
-                adresse.kommunenummer
             ),
             sistEndret = null
         )

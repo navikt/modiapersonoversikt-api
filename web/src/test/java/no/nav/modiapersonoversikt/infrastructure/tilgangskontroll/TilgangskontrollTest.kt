@@ -24,8 +24,38 @@ class TilgangskontrollTest {
             .check(Policies.tilgangTilModia)
             .getDecision()
 
-        assertEquals("Saksbehandler (Optional[Z999999]) har ikke tilgang til modia. Årsak: FP3_EGEN_ANSATT", message)
         assertEquals(DecisionEnums.DENY, decision)
+        assertEquals("Saksbehandler (Optional[Z999999]) har ikke tilgang til modia. Årsak: FP3_EGEN_ANSATT", message)
+    }
+
+    @Test
+    fun `deny om ny deny_policy for kode6 er brukt`() {
+        val (message, decision) = Tilgangskontroll(
+            mockContext(
+                abacTilgang = Decision.Deny,
+                denyPolicy = "adressebeskyttelse_strengt_fortrolig_adresse"
+            )
+        )
+            .check(Policies.tilgangTilModia)
+            .getDecision()
+
+        assertEquals(DecisionEnums.DENY, decision)
+        assertEquals("Saksbehandler (Optional[Z999999]) har ikke tilgang til modia. Årsak: FP1_KODE6", message)
+    }
+
+    @Test
+    fun `deny om strengt fortrolig utland`() {
+        val (message, decision) = Tilgangskontroll(
+            mockContext(
+                abacTilgang = Decision.Deny,
+                denyPolicy = "adressebeskyttelse_strengt_fortrolig_adresse_utland"
+            )
+        )
+            .check(Policies.tilgangTilModia)
+            .getDecision()
+
+        assertEquals(DecisionEnums.DENY, decision)
+        assertEquals("Saksbehandler (Optional[Z999999]) har ikke tilgang til modia. Årsak: FP1_KODE6", message)
     }
 
     @Test
@@ -57,7 +87,8 @@ class TilgangskontrollTest {
 private fun mockContext(
     saksbehandlerIdent: String = "Z999999",
     tematilganger: Set<String> = setOf(),
-    abacTilgang: Decision = Decision.Permit
+    abacTilgang: Decision = Decision.Permit,
+    denyPolicy: String = "fp3_behandle_egen_ansatt"
 ): TilgangskontrollContext {
     val context: TilgangskontrollContext = mockk()
     every { context.hentSaksbehandlerId() } returns Optional.of(saksbehandlerIdent)
@@ -71,7 +102,7 @@ private fun mockContext(
                         NavAttributes.ADVICE_DENY_REASON.attributeId,
                         listOf(
                             AttributeAssignment(NavAttributes.ADVICEOROBLIGATION_CAUSE.attributeId, "cause-0001-manglerrolle"),
-                            AttributeAssignment(NavAttributes.ADVICEOROBLIGATION_DENY_POLICY.attributeId, "fp3_behandle_egen_ansatt"),
+                            AttributeAssignment(NavAttributes.ADVICEOROBLIGATION_DENY_POLICY.attributeId, denyPolicy),
                             AttributeAssignment(NavAttributes.ADVICEOROBLIGATION_DENY_RULE.attributeId, "intern_behandle_kode6_mangler_gruppetilgang")
                         )
                     )

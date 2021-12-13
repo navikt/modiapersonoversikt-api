@@ -19,8 +19,8 @@ query($identer: [ID!]!){
             foedsel {
                 foedselsdato
             }
-            folkeregisterpersonstatus {
-                status
+            doedsfall {
+                doedsdato
             }
             adressebeskyttelse {
                 gradering

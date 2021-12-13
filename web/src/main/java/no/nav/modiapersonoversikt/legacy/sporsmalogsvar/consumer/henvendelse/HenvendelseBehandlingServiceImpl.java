@@ -2,9 +2,6 @@ package no.nav.modiapersonoversikt.legacy.sporsmalogsvar.consumer.henvendelse;
 
 import kotlin.Pair;
 import no.nav.common.auth.subject.SubjectHandler;
-import no.nav.modiapersonoversikt.legacy.kjerneinfo.consumer.fim.person.PersonKjerneinfoServiceBi;
-import no.nav.modiapersonoversikt.legacy.kjerneinfo.consumer.fim.person.to.HentKjerneinformasjonRequest;
-import no.nav.modiapersonoversikt.legacy.kjerneinfo.domain.person.Person;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelse;
 import no.nav.modiapersonoversikt.infrastructure.content.ContentRetriever;
 import no.nav.modiapersonoversikt.legacy.api.domain.Temagruppe;
@@ -22,6 +19,8 @@ import no.nav.modiapersonoversikt.infrastructure.naudit.AuditResources;
 import no.nav.modiapersonoversikt.legacy.sporsmalogsvar.consumer.henvendelse.domain.Meldinger;
 import no.nav.modiapersonoversikt.legacy.sporsmalogsvar.legacy.MeldingVM;
 import no.nav.modiapersonoversikt.legacy.sporsmalogsvar.legacy.TraadVM;
+import no.nav.modiapersonoversikt.rest.persondata.Persondata;
+import no.nav.modiapersonoversikt.rest.persondata.PersondataService;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.behandlehenvendelse.BehandleHenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.henvendelse.HenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.meldinger.WSHentHenvendelseListeRequest;
@@ -51,7 +50,7 @@ public class HenvendelseBehandlingServiceImpl implements HenvendelseBehandlingSe
 
     private final HenvendelsePortType henvendelsePortType;
     private final BehandleHenvendelsePortType behandleHenvendelsePortType;
-    private final PersonKjerneinfoServiceBi kjerneinfo;
+    private final PersondataService persondataService;
     private final Tilgangskontroll tilgangskontroll;
     private final StandardKodeverk standardKodeverk;
     private final ContentRetriever propertyResolver;
@@ -62,7 +61,7 @@ public class HenvendelseBehandlingServiceImpl implements HenvendelseBehandlingSe
     public HenvendelseBehandlingServiceImpl(
             HenvendelsePortType henvendelsePortType,
             BehandleHenvendelsePortType behandleHenvendelsePortType,
-            PersonKjerneinfoServiceBi kjerneinfo,
+            PersondataService persondataService,
             Tilgangskontroll tilgangskontroll,
             StandardKodeverk standardKodeverk,
             ContentRetriever propertyResolver,
@@ -71,7 +70,7 @@ public class HenvendelseBehandlingServiceImpl implements HenvendelseBehandlingSe
     ) {
         this.henvendelsePortType = henvendelsePortType;
         this.behandleHenvendelsePortType = behandleHenvendelsePortType;
-        this.kjerneinfo = kjerneinfo;
+        this.persondataService = persondataService;
         this.tilgangskontroll = tilgangskontroll;
         this.standardKodeverk = standardKodeverk;
         this.propertyResolver = propertyResolver;
@@ -154,12 +153,9 @@ public class HenvendelseBehandlingServiceImpl implements HenvendelseBehandlingSe
 
     @Override
     public String getEnhet(String fnr) {
-        HentKjerneinformasjonRequest kjerneinfoRequest = new HentKjerneinformasjonRequest(fnr);
-        kjerneinfoRequest.setBegrunnet(true);
-        Person person = kjerneinfo.hentKjerneinformasjon(kjerneinfoRequest).getPerson();
-
-        if (person.getPersonfakta().getAnsvarligEnhet() != null) {
-            return person.getPersonfakta().getAnsvarligEnhet().getOrganisasjonsenhet().getOrganisasjonselementId();
+        Persondata.Enhet navEnhet = persondataService.hentNavEnhet(fnr);
+        if (navEnhet != null) {
+            return navEnhet.getId();
         } else {
             return null;
         }

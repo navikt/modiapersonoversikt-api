@@ -3,6 +3,7 @@ package no.nav.modiapersonoversikt.infrastructure.scientist
 import no.nav.modiapersonoversikt.legacy.sak.providerdomain.Sak
 import org.assertj.core.api.AssertionsForInterfaceTypes.assertThat
 import org.assertj.core.data.Offset.offset
+import org.assertj.core.data.Percentage
 import org.junit.jupiter.api.Test
 
 internal class ScientistTest {
@@ -11,7 +12,7 @@ internal class ScientistTest {
         Scientist.createExperiment<String>(
             Scientist.Config(
                 name = "DummyExperiment",
-                experimentRate = 1.0,
+                experimentRate = Scientist.FixedValueRate(1.0),
                 reporter = { header, fields ->
                     assertThat(header).contains("[SCIENCE] DummyExperiment")
                 }
@@ -24,7 +25,7 @@ internal class ScientistTest {
         Scientist.createExperiment<String>(
             Scientist.Config(
                 name = "DummyExperiment",
-                experimentRate = 1.0,
+                experimentRate = Scientist.FixedValueRate(1.0),
                 reporter = { header, fields ->
                     assertThat(fields).containsEntry("ok", true)
                     assertThat(fields).containsKey("control")
@@ -39,7 +40,7 @@ internal class ScientistTest {
         Scientist.createExperiment<String>(
             Scientist.Config(
                 name = "DummyExperiment",
-                experimentRate = 1.0,
+                experimentRate = Scientist.FixedValueRate(1.0),
                 reporter = { header, fields ->
                     assertThat(fields).containsEntry("ok", false)
                     assertThat(fields).containsKey("control")
@@ -59,7 +60,7 @@ internal class ScientistTest {
         val experiment = Scientist.createExperiment<String>(
             Scientist.Config(
                 name = "DummyExperiment",
-                experimentRate = 0.7,
+                experimentRate = Scientist.FixedValueRate(0.7),
                 reporter = { _, _ -> experimentsRun++ }
             )
         )
@@ -84,7 +85,7 @@ internal class ScientistTest {
         Scientist.createExperiment<List<Sak>>(
             Scientist.Config(
                 name = "DummyExperiment",
-                experimentRate = 1.0,
+                experimentRate = Scientist.FixedValueRate(1.0),
                 reporter = { header, fields ->
                     assertThat(fields).containsEntry("ok", true)
                     assertThat(fields).containsKey("control")
@@ -119,7 +120,7 @@ internal class ScientistTest {
         Scientist.createExperiment<List<Map<String, Any?>>>(
             Scientist.Config(
                 name = "DummyExperiment",
-                experimentRate = 1.0,
+                experimentRate = Scientist.FixedValueRate(1.0),
                 reporter = { header, fields ->
                     assertThat(fields).containsEntry("ok", true)
                     assertThat(fields).containsKey("control")
@@ -136,7 +137,7 @@ internal class ScientistTest {
         Scientist.createExperiment<String>(
             Scientist.Config(
                 name = "DummyExperiment",
-                experimentRate = 1.0,
+                experimentRate = Scientist.FixedValueRate(1.0),
                 reporter = { header, fields ->
                     assertThat(fields).containsEntry("ok", true)
                     assertThat(fields).containsKey("control")
@@ -145,9 +146,39 @@ internal class ScientistTest {
                     assertThat(fields).containsKey("experiment-extra")
                 }
             )
-        ).runWithExtraFields(
-            control = { Scientist.WithFields("Hello, World", mapOf("control-extra" to 1)) },
-            experiment = { Scientist.WithFields("Hello, World", mapOf("experiment-extra" to "value")) }
+        ).runIntrospected(
+            control = { "Hello, World" },
+            experiment = { "Hello, World" },
+            dataFields = { control, triedExperiment ->
+                mapOf(
+                    "control-extra" to 1,
+                    "experiment-extra" to "value"
+                )
+            }
+        )
+    }
+
+    @Test
+    internal fun `should run experiment in parallel`() {
+        val startTime = System.currentTimeMillis()
+        Scientist.createExperiment<String>(
+            Scientist.Config(
+                name = "DummyExperiment",
+                experimentRate = Scientist.FixedValueRate(1.0),
+                reporter = { _, _ ->
+                    val endTime = System.currentTimeMillis()
+                    assertThat(endTime - startTime).isCloseTo(2000, Percentage.withPercentage(15.0))
+                }
+            )
+        ).run(
+            control = {
+                Thread.sleep(2000L)
+                "Control"
+            },
+            experiment = {
+                Thread.sleep(500L)
+                "Experiment"
+            }
         )
     }
 }

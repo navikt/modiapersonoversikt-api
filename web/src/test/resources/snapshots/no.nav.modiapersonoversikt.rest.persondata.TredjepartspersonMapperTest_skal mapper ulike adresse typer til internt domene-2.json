@@ -11,6 +11,7 @@
     "linje3" : null,
     "sistEndret" : null
   } ] ],
+  "dodsdato" : [ "java.util.ArrayList", [ ] ],
   "fnr" : "00000000000",
   "fodselsdato" : [ "java.util.ArrayList", [ ] ],
   "kjonn" : [ "java.util.ArrayList", [ ] ],
@@ -18,6 +19,5 @@
     "etternavn" : "Testfamilien",
     "fornavn" : "Aremark",
     "mellomnavn" : null
-  } ] ],
-  "personstatus" : [ "java.util.ArrayList", [ ] ]
+  } ] ]
 }

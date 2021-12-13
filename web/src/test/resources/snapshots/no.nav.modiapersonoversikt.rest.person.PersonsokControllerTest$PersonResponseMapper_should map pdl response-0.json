@@ -1,0 +1,29 @@
+{
+  "bostedsadresse" : "123101 Supergården 1234 654321",
+  "brukerinfo" : {
+    "ansvarligEnhet" : null,
+    "gjeldendePostadresseType" : null,
+    "midlertidigPostadresse" : null
+  },
+  "diskresjonskode" : null,
+  "ident" : {
+    "ident" : "12345678910",
+    "type" : {
+      "beskrivelse" : null,
+      "kodeRef" : "FNR"
+    }
+  },
+  "kjonn" : null,
+  "navn" : {
+    "etternavn" : "etternavn",
+    "fornavn" : "fornavn",
+    "mellomnavn" : "mellomnavn",
+    "sammensatt" : "fornavn mellomnavn etternavn"
+  },
+  "postadresse" : "Supervegen 10 Z 1234 654321",
+  "status" : null,
+  "utenlandskID" : [ "java.util.ArrayList", [ {
+    "identifikasjonsnummer" : "987654-987",
+    "utstederland" : "SWE"
+  } ] ]
+}

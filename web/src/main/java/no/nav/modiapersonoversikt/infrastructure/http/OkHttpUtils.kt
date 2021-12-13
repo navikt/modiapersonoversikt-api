@@ -7,6 +7,7 @@ import com.fasterxml.jackson.datatype.jdk8.Jdk8Module
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import no.nav.common.log.MDCConstants
+import no.nav.common.utils.IdUtils
 import no.nav.modiapersonoversikt.legacy.api.utils.TjenestekallLogger
 import okhttp3.*
 import okio.Buffer
@@ -62,8 +63,9 @@ class LoggingInterceptor(
 
     private fun Response.peekContent(config: Config): String? {
         if (config.ignoreResponseBody) return "IGNORED"
-        return when (val contentLength = this.header("Content-Length")) {
-            null, "0" -> "Content-Length: $contentLength, didn't try to peek at body"
+        return when {
+            this.header("Content-Length") == "0" -> "Content-Length: 0, didn't try to peek at body"
+            this.code() == 204 -> "StatusCode: 204, didn't try to peek at body"
             else -> this.peekBody(Long.MAX_VALUE).string()
         }
     }
@@ -71,10 +73,11 @@ class LoggingInterceptor(
     override fun intercept(chain: Interceptor.Chain): Response {
         val request = chain.request()
         val callId = callIdExtractor(request)
+        val requestId = IdUtils.generateId()
         val requestBody = request.peekContent(config)
 
         TjenestekallLogger.info(
-            "$name-request: $callId",
+            "$name-request: $callId ($requestId)",
             mapOf(
                 "url" to request.url().toString(),
                 "headers" to request.headers().names().joinToString(", "),
@@ -82,13 +85,15 @@ class LoggingInterceptor(
             )
         )
 
+        val timer: Long = System.currentTimeMillis()
         val response: Response = runCatching { chain.proceed(request) }
             .onFailure { exception ->
-                log.error("$name-response-error (ID: $callId)", exception)
+                log.error("$name-response-error (ID: $callId / $requestId)", exception)
                 TjenestekallLogger.error(
-                    "$name-response-error: $callId",
+                    "$name-response-error: $callId ($requestId))",
                     mapOf(
-                        "exception" to exception
+                        "exception" to exception,
+                        "time" to timer.measure()
                     )
                 )
             }
@@ -98,18 +103,19 @@ class LoggingInterceptor(
 
         if (response.code() in 200..299) {
             TjenestekallLogger.info(
-                "$name-response: $callId",
+                "$name-response: $callId ($requestId)",
                 mapOf(
                     "status" to "${response.code()} ${response.message()}",
+                    "time" to timer.measure(),
                     "body" to responseBody
                 )
             )
         } else {
             TjenestekallLogger.error(
-                "$name-response-error: $callId",
+                "$name-response-error: $callId ($requestId)",
                 mapOf(
                     "status" to "${response.code()} ${response.message()}",
-                    "request" to request,
+                    "time" to timer.measure(),
                     "body" to responseBody
                 )
             )
@@ -117,6 +123,8 @@ class LoggingInterceptor(
         return response
     }
 }
+
+private inline fun Long.measure(): Long = System.currentTimeMillis() - this
 
 open class HeadersInterceptor(val headersProvider: () -> Map<String, String>) : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {

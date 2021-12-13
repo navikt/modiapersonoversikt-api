@@ -16,6 +16,7 @@ import no.nav.modiapersonoversikt.rest.dialog.apis.*
 import no.nav.modiapersonoversikt.rest.dialog.apis.MeldingDTO
 import no.nav.modiapersonoversikt.service.sfhenvendelse.EksternBruker
 import no.nav.modiapersonoversikt.service.sfhenvendelse.SfHenvendelseService
+import no.nav.modiapersonoversikt.utils.ConcurrencyUtils.inParallel
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -91,14 +92,19 @@ class SfLegacyDialogController(
             temagruppe = SfTemagruppeTemaMapping.hentTemagruppeForTema(infomeldingRequest.sak.temaKode),
             fritekst = infomeldingRequest.fritekst
         )
-        sfHenvendelseService.journalforHenvendelse(
-            enhet = enhet,
-            kjedeId = henvendelse.kjedeId,
-            saksId = infomeldingRequest.sak.fagsystemSaksId,
-            saksTema = infomeldingRequest.sak.temaKode,
-            fagsakSystem = infomeldingRequest.sak.fagsystemKode
+
+        inParallel(
+            {
+                sfHenvendelseService.journalforHenvendelse(
+                    enhet = enhet,
+                    kjedeId = henvendelse.kjedeId,
+                    saksId = infomeldingRequest.sak.fagsystemSaksId,
+                    saksTema = infomeldingRequest.sak.temaKode,
+                    fagsakSystem = infomeldingRequest.sak.fagsystemKode
+                )
+            },
+            { sfHenvendelseService.lukkTraad(henvendelse.kjedeId) }
         )
-        sfHenvendelseService.lukkTraad(henvendelse.kjedeId)
 
         return ResponseEntity(HttpStatus.OK)
     }
@@ -112,7 +118,10 @@ class SfLegacyDialogController(
         /**
          * Artifakt av legacy-henvendelse, beholdt for å holde apiene like.
          */
-        return FortsettDialogDTO(opprettHenvendelseRequest.traadId, null)
+        val traad = sfHenvendelseService.hentHenvendelse(opprettHenvendelseRequest.traadId)
+        val oppgaveId: String? = finnOgTilordneOppgaveIdTilTrad(traad, fnr, opprettHenvendelseRequest.enhet, ignorerConflict ?: false)
+
+        return FortsettDialogDTO(opprettHenvendelseRequest.traadId, oppgaveId)
     }
 
     override fun sendFortsettDialog(
@@ -196,6 +205,34 @@ class SfLegacyDialogController(
         slaaSammenRequest: SlaaSammenRequest
     ): Map<String, Any?> {
         throw NotSupportedException("Operasjonen er ikke støttet av Salesforce")
+    }
+
+    private fun finnOgTilordneOppgaveIdTilTrad(
+        traad: HenvendelseDTO,
+        fnr: String,
+        enhet: String?,
+        ignorerConflict: Boolean
+    ): String? {
+        return if (traad.erSporsmalFraBruker()) {
+            try {
+                oppgaveBehandlingService.finnOgTilordneSTOOppgave(
+                    fnr,
+                    traad.kjedeId,
+                    traad.gjeldendeTemagruppe?.let { Temagruppe.valueOf(it) },
+                    enhet,
+                    ignorerConflict ?: false
+                )?.oppgaveId
+            } catch (e: OppgaveBehandlingService.AlleredeTildeltAnnenSaksbehandler) {
+                throw ResponseStatusException(HttpStatus.CONFLICT, e.message)
+            }
+        } else {
+            null
+        }
+    }
+
+    private fun HenvendelseDTO.erSporsmalFraBruker(): Boolean {
+        val nyesteMelding = this.meldinger?.maxBy { it.sendtDato }
+        return nyesteMelding?.fra?.identType == MeldingFraDTO.IdentType.AKTORID
     }
 
     private fun lagOppslagsverk(henvendelser: List<HenvendelseDTO>): Pair<Map<String, String>, Map<String, Saksbehandler>> {
