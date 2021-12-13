@@ -345,7 +345,7 @@ private fun tradHvorIkkeAlleMeldingerErKassert(traad: TraadDTO): Boolean {
 
 private const val fallbackDato = "2099-01-01 00:00:00"
 private fun tradHvorEldsteMeldingErForventetAFinneISF(forventetSFCutoff: String): (TraadDTO) -> Boolean = { traad ->
-    val eldsteMelding: MeldingDTO? = traad.meldinger.minBy {
+    val eldsteMelding: MeldingDTO? = traad.meldinger.minByOrNull {
         (it.map["opprettetDato"] as String?) ?: fallbackDato
     }
     val eldsteMeldingOpprettet = (eldsteMelding?.map?.get("opprettetDato") as String?) ?: fallbackDato
