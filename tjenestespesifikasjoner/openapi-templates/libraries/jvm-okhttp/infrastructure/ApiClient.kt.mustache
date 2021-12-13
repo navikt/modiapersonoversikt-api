@@ -65,13 +65,13 @@ import com.squareup.moshi.adapter
 
 {{#nonPublicApi}}internal {{/nonPublicApi}}open class ApiClient(val baseUrl: String, val client: OkHttpClient) {
     {{#nonPublicApi}}internal {{/nonPublicApi}}companion object {
-        protected const val ContentType = "Content-Type"
-        protected const val Accept = "Accept"
-        protected const val Authorization = "Authorization"
-        protected const val JsonMediaType = "application/json"
-        protected const val FormDataMediaType = "multipart/form-data"
-        protected const val FormUrlEncMediaType = "application/x-www-form-urlencoded"
-        protected const val XmlMediaType = "application/xml"
+        const val ContentType = "Content-Type"
+        const val Accept = "Accept"
+        const val Authorization = "Authorization"
+        const val JsonMediaType = "application/json"
+        const val FormDataMediaType = "multipart/form-data"
+        const val FormUrlEncMediaType = "application/x-www-form-urlencoded"
+        const val XmlMediaType = "application/xml"
 
         val apiKey: MutableMap<String, String> = mutableMapOf()
         val apiKeyPrefix: MutableMap<String, String> = mutableMapOf()
@@ -86,12 +86,12 @@ import com.squareup.moshi.adapter
      * @param file The given file
      * @return The guessed Content-Type
      */
-    protected fun guessContentTypeFromFile(file: File): String {
+    fun guessContentTypeFromFile(file: File): String {
         val contentType = URLConnection.guessContentTypeFromName(file.name)
         return contentType ?: "application/octet-stream"
     }
 
-    protected inline fun <reified T> requestBody(content: T, mediaType: String = JsonMediaType): RequestBody =
+    inline fun <reified T> requestBody(content: T, mediaType: String = JsonMediaType): RequestBody =
         when {
             {{#jvm-okhttp3}}
             content is File -> RequestBody.create(MediaType.parse(mediaType), content)
@@ -172,7 +172,7 @@ import com.squareup.moshi.adapter
             else -> throw UnsupportedOperationException("requestBody currently only supports JSON body and File body.")
         }
 
-    protected inline fun <reified T: Any?> responseBody(body: ResponseBody?, mediaType: String? = JsonMediaType): T? {
+    inline fun <reified T: Any?> responseBody(body: ResponseBody?, mediaType: String? = JsonMediaType): T? {
         if(body == null || T::class == Unit::class) {
             return null
         }
@@ -206,7 +206,7 @@ import com.squareup.moshi.adapter
     }
 
     {{#hasAuthMethods}}
-    protected fun <T> updateAuthParams(requestConfig: RequestConfig<T>) {
+    fun <T> updateAuthParams(requestConfig: RequestConfig<T>) {
         {{#authMethods}}
         {{#isApiKey}}
         {{#isKeyInHeader}}
@@ -352,7 +352,7 @@ import com.squareup.moshi.adapter
         }
     }
 
-    protected fun parameterToString(value: Any?): String = when (value) {
+    fun parameterToString(value: Any?): String = when (value) {
         null -> ""
         is Array<*> -> toMultiValue(value, "csv").toString()
         is Iterable<*> -> toMultiValue(value, "csv").toString()
