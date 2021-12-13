@@ -18,6 +18,8 @@ import no.nav.modiapersonoversikt.rest.api.toDTO
 import no.nav.modiapersonoversikt.rest.dialog.apis.*
 import no.nav.modiapersonoversikt.service.sfhenvendelse.EksternBruker
 import no.nav.modiapersonoversikt.service.sfhenvendelse.SfHenvendelseService
+import no.nav.modiapersonoversikt.service.unleash.Feature
+import no.nav.modiapersonoversikt.service.unleash.UnleashService
 import org.joda.time.LocalDateTime
 import org.joda.time.format.DateTimeFormat
 import org.springframework.http.HttpStatus
@@ -30,12 +32,13 @@ class HenvendelseDialog(
     private val henvendelseService: HenvendelseBehandlingService,
     private val henvendelseUtsendingService: HenvendelseUtsendingService,
     private val oppgaveBehandlingService: OppgaveBehandlingService,
-    private val sfDialogController: SfHenvendelseService
+    private val sfDialogController: SfHenvendelseService,
+    unleashService: UnleashService
 ) : DialogApi {
     val sfExperiment = Scientist.createExperiment<List<TraadDTO>>(
         Scientist.Config(
             name = "SF-Meldinger",
-            experimentRate = Scientist.FixedValueRate(1.0),
+            experimentRate = Scientist.UnleashRate(unleashService, Feature.SF_HENVENDELSE_RATE),
             logAndCompareValues = false
         )
     )
