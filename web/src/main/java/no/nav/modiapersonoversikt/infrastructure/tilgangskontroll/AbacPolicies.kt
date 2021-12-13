@@ -1,18 +1,17 @@
 package no.nav.modiapersonoversikt.infrastructure.tilgangskontroll
 
-import no.nav.common.auth.subject.SsoToken
-import no.nav.common.auth.subject.SubjectHandler
+import no.nav.common.auth.context.AuthContextHolderThreadLocal
 import no.nav.modiapersonoversikt.consumer.abac.*
 import no.nav.modiapersonoversikt.consumer.abac.NavAttributes.*
 import no.nav.modiapersonoversikt.consumer.abac.StandardAttributter.ACTION_ID
 import java.util.*
 
-private fun parseOidcToken(ssoToken: SsoToken): String {
-    val fragments = ssoToken.token.split('.')
+private fun parseOidcToken(ssoToken: String): String {
+    val fragments = ssoToken.split('.')
     return if (fragments.size == 1) fragments[0] else fragments[1]
 }
 
-private fun Optional<SsoToken>.createWithTokenBody(block: Request.(token: String) -> Unit): AbacRequest {
+private fun Optional<String>.createWithTokenBody(block: Request.(token: String) -> Unit): AbacRequest {
     return this
         .map(::parseOidcToken)
         .map { token -> abacRequest { block(this, token) } }
@@ -20,7 +19,8 @@ private fun Optional<SsoToken>.createWithTokenBody(block: Request.(token: String
 }
 
 object AbacPolicies {
-    fun tilgangTilModia(): AbacRequest = SubjectHandler.getSsoToken()
+    private val authcontext = AuthContextHolderThreadLocal.instance()
+    fun tilgangTilModia(): AbacRequest = authcontext.idTokenString
         .createWithTokenBody { tokenBody ->
             environment {
                 attribute(ENVIRONMENT_FELLES_PEP_ID, "modia")
@@ -32,7 +32,7 @@ object AbacPolicies {
             }
         }
 
-    fun tilgangTilBruker(fnr: String): AbacRequest = SubjectHandler.getSsoToken()
+    fun tilgangTilBruker(fnr: String): AbacRequest = authcontext.idTokenString
         .createWithTokenBody { tokenBody ->
             environment {
                 attribute(ENVIRONMENT_FELLES_PEP_ID, "modia")
@@ -45,7 +45,7 @@ object AbacPolicies {
             }
         }
 
-    fun tilgangTilBrukerMedAktorId(aktorId: String): AbacRequest = SubjectHandler.getSsoToken()
+    fun tilgangTilBrukerMedAktorId(aktorId: String): AbacRequest = authcontext.idTokenString
         .createWithTokenBody { tokenBody ->
             environment {
                 attribute(ENVIRONMENT_FELLES_PEP_ID, "modia")
@@ -58,7 +58,7 @@ object AbacPolicies {
             }
         }
 
-    fun kanPlukkeOppgave(): AbacRequest = SubjectHandler.getSsoToken()
+    fun kanPlukkeOppgave(): AbacRequest = authcontext.idTokenString
         .createWithTokenBody { tokenBody ->
             environment {
                 attribute(ENVIRONMENT_FELLES_PEP_ID, "modia")

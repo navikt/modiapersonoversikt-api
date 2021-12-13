@@ -1,8 +1,8 @@
 package no.nav.modiapersonoversikt.rest.aaputsending
 
-import no.nav.common.auth.subject.Subject
-import no.nav.common.auth.subject.SubjectHandler
-import no.nav.common.leaderelection.LeaderElectionClient
+import no.nav.common.auth.context.AuthContext
+import no.nav.common.auth.context.AuthContextHolderThreadLocal
+import no.nav.common.job.leader_election.LeaderElectionClient
 import no.nav.common.log.MDCConstants
 import no.nav.modiapersonoversikt.infrastructure.http.getCallId
 import no.nav.modiapersonoversikt.legacy.api.domain.henvendelse.Fritekst
@@ -37,7 +37,7 @@ private const val MELDING_TEMAGRUPPE = "ARBD"
 class FnrEnhet(val fnr: String, val enhet: String)
 
 class Prosessor<S>(
-    private val subject: Subject,
+    private val authContext: AuthContext,
     private val list: Collection<S>,
     private val block: (s: S) -> Unit
 ) {
@@ -59,7 +59,7 @@ class Prosessor<S>(
     init {
         job = executor.submit {
             MDC.put(MDCConstants.MDC_CALL_ID, callId)
-            SubjectHandler.withSubject(subject) {
+            AuthContextHolderThreadLocal.instance().withContext(authContext) {
                 list.forEach { element ->
                     try {
                         block(element)
@@ -137,11 +137,11 @@ class AAPUtsendingService(
             if (processorReference.get() != null) {
                 return status()
             }
-            val subject = SubjectHandler.getSubject().orElseThrow { IllegalStateException("Fant ikke subject") }
-            val ident = subject.uid
+            val authContext = AuthContextHolderThreadLocal.instance().context.orElseThrow { IllegalStateException("Fant ikke authcontext") }
+            val ident = AuthContextHolderThreadLocal.instance().requireSubject()
 
             processorReference.set(
-                Prosessor(subject, data) { element ->
+                Prosessor(authContext, data) { element ->
                     sendHenvendelse(ident, element)
                     Thread.sleep(500)
                 }

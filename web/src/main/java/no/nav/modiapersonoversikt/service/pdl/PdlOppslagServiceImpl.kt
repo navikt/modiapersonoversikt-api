@@ -4,8 +4,7 @@ import com.expediagroup.graphql.client.GraphQLClient
 import io.ktor.client.request.*
 import io.ktor.util.*
 import kotlinx.coroutines.runBlocking
-import no.nav.common.auth.subject.SsoToken
-import no.nav.common.auth.subject.SubjectHandler
+import no.nav.common.auth.context.AuthContextHolderThreadLocal
 import no.nav.common.sts.SystemUserTokenProvider
 import no.nav.common.utils.EnvironmentUtils
 import no.nav.modiapersonoversikt.infrastructure.http.HeadersBuilder
@@ -119,8 +118,7 @@ class PdlOppslagServiceImpl constructor(
 
     private val userTokenAuthorizationHeaders: HeadersBuilder = {
         val systemuserToken: String = stsService.systemUserToken
-        val userToken: String = SubjectHandler.getSsoToken(SsoToken.Type.OIDC)
-            .orElseThrow { IllegalStateException("Kunne ikke hente ut veileders ssoTOken") }
+        val userToken: String = AuthContextHolderThreadLocal.instance().requireIdTokenString()
 
         header(NAV_CONSUMER_TOKEN_HEADER, AUTH_METHOD_BEARER + AUTH_SEPERATOR + systemuserToken)
         header(AUTHORIZATION, AUTH_METHOD_BEARER + AUTH_SEPERATOR + userToken)

@@ -1,8 +1,7 @@
 package no.nav.modiapersonoversikt.service.oppfolgingsinfo;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import no.nav.common.auth.subject.SsoToken;
-import no.nav.common.auth.subject.SubjectHandler;
+import no.nav.common.auth.context.AuthContextHolderThreadLocal;
 import no.nav.common.json.JsonMapper;
 import no.nav.common.rest.client.RestClient;
 import no.nav.modiapersonoversikt.infrastructure.http.AuthorizationInterceptor;
@@ -32,9 +31,8 @@ public class OppfolgingsinfoApiServiceImpl implements OppfolgingsinfoApiService 
             .addInterceptor(new XCorrelationIdInterceptor())
             .addInterceptor(new LoggingInterceptor("Oppfolging", LoggingInterceptor.DEFAULT_CONFIG, (request) -> request.header("X-Correlation-ID")))
             .addInterceptor(new AuthorizationInterceptor(() ->
-                    SubjectHandler
-                            .getSsoToken(SsoToken.Type.OIDC)
-                            .orElseThrow(() -> new RuntimeException("Fant ikke OIDC-token"))))
+                    AuthContextHolderThreadLocal.instance().requireIdTokenString()
+            ))
             .build();
 
     @Autowired

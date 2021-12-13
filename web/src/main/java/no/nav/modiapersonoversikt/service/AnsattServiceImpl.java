@@ -5,7 +5,7 @@ import _0._0.nav_cons_sak_gosys_3.no.nav.asbo.navansatt.ASBOGOSYSHentNAVAnsattFa
 import _0._0.nav_cons_sak_gosys_3.no.nav.asbo.navansatt.ASBOGOSYSNAVAnsatt;
 import _0._0.nav_cons_sak_gosys_3.no.nav.asbo.navorgenhet.ASBOGOSYSNavEnhet;
 import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navansatt.*;
-import no.nav.common.auth.subject.SubjectHandler;
+import no.nav.common.auth.context.AuthContextHolderThreadLocal;
 import no.nav.modiapersonoversikt.legacy.api.domain.norg.Ansatt;
 import no.nav.modiapersonoversikt.legacy.api.domain.norg.AnsattEnhet;
 import no.nav.modiapersonoversikt.legacy.api.service.norg.AnsattService;
@@ -34,7 +34,7 @@ public class AnsattServiceImpl implements AnsattService {
     }
 
     public List<AnsattEnhet> hentEnhetsliste() {
-        return SubjectHandler.getIdent()
+        return AuthContextHolderThreadLocal.instance().getSubject()
                 .map((ident) -> {
                     try {
                         ASBOGOSYSNAVAnsatt request = new ASBOGOSYSNAVAnsatt();

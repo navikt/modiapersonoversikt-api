@@ -4,8 +4,7 @@ import com.expediagroup.graphql.types.GraphQLResponse
 import io.ktor.client.request.*
 import io.ktor.util.*
 import kotlinx.coroutines.runBlocking
-import no.nav.common.auth.subject.SsoToken
-import no.nav.common.auth.subject.SubjectHandler
+import no.nav.common.auth.context.AuthContextHolderThreadLocal
 import no.nav.common.rest.client.RestClient
 import no.nav.common.utils.EnvironmentUtils
 import no.nav.modiapersonoversikt.infrastructure.http.*
@@ -107,7 +106,7 @@ class SafGraphqlServiceImpl : SafService {
     }
 
     private fun httpHeaders(): Map<String, String> {
-        val token = SubjectHandler.getSsoToken(SsoToken.Type.OIDC)
+        val token = AuthContextHolderThreadLocal.instance().idTokenString
             .orElseThrow { IllegalStateException("Fant ikke OIDC-token") }
         val callId = getCallId()
         return mapOf(

@@ -1,6 +1,6 @@
 package no.nav.modiapersonoversikt.service.oppgavebehandling
 
-import no.nav.common.auth.subject.SubjectHandler
+import no.nav.common.auth.context.AuthContextHolderThreadLocal
 import no.nav.modiapersonoversikt.legacy.api.domain.Temagruppe
 import no.nav.modiapersonoversikt.legacy.api.domain.oppgave.generated.apis.OppgaveApi
 import no.nav.modiapersonoversikt.legacy.api.domain.oppgave.generated.models.GetOppgaverResponseJsonDTO
@@ -42,7 +42,7 @@ class PlukkOppgaveApi(private val apiClient: OppgaveApi, private val kodeverksma
     }
 
     private fun tilordneAlleOppgaver(correlationId: String, enhet: String, oppgaver: List<OppgaveJsonDTO>): MutableList<OppgaveJsonDTO> {
-        val ident: String = SubjectHandler.getIdent().orElseThrow { IllegalStateException("Fant ikke ident") }
+        val ident: String = AuthContextHolderThreadLocal.instance().requireSubject()
         val tildelteOppgaver = mutableListOf<OppgaveJsonDTO>()
         for (oppgave in oppgaver) {
             try {
@@ -87,7 +87,7 @@ class PlukkOppgaveApi(private val apiClient: OppgaveApi, private val kodeverksma
         requireNotNull(temagruppe)
         requireNotNull(valgtEnhet)
 
-        val ident: String = SubjectHandler.getIdent().orElseThrow { IllegalStateException("Fant ikke ident") }
+        val ident: String = AuthContextHolderThreadLocal.instance().requireSubject()
         val response = sokEtterOppgaver(correlationId, temagruppe, defaultEnhetGittTemagruppe(temagruppe, valgtEnhet))
 
         val eldsteOppgave = (response.oppgaver ?: emptyList())
@@ -121,7 +121,7 @@ class PlukkOppgaveApi(private val apiClient: OppgaveApi, private val kodeverksma
         aktoerId: String? = null,
         limit: Long = 20
     ): GetOppgaverResponseJsonDTO {
-        val ident: String = SubjectHandler.getIdent().orElseThrow { IllegalStateException("Fant ikke ident") }
+        val ident: String = AuthContextHolderThreadLocal.instance().requireSubject()
         val behandling = kodeverksmapperService.mapUnderkategori(temagruppe.underkategori)
         val oppgaveType = kodeverksmapperService.mapOppgavetype(SPORSMAL_OG_SVAR)
         val aktoerIdList = if (aktoerId == null) null else listOf(aktoerId)

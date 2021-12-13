@@ -1,7 +1,6 @@
 package no.nav.modiapersonoversikt.service.oppgavebehandling
 
-import no.nav.common.auth.subject.SsoToken
-import no.nav.common.auth.subject.SubjectHandler
+import no.nav.common.auth.context.AuthContextHolderThreadLocal
 import no.nav.common.sts.SystemUserTokenProvider
 import no.nav.modiapersonoversikt.infrastructure.http.getCallId
 import no.nav.modiapersonoversikt.infrastructure.rsbac.DecisionEnums
@@ -49,7 +48,7 @@ class RestOppgaveBehandlingServiceImpl(
     private val tilgangskontroll: Tilgangskontroll,
     private val stsService: SystemUserTokenProvider,
     private val apiClient: OppgaveApi = OppgaveApiFactory.createClient {
-        SubjectHandler.getSsoToken(SsoToken.Type.OIDC).orElseThrow { IllegalStateException("Fant ikke OIDC-token") }
+        AuthContextHolderThreadLocal.instance().requireIdTokenString()
     },
     private val systemApiClient: OppgaveApi = OppgaveApiFactory.createClient {
         stsService.systemUserToken
@@ -83,7 +82,7 @@ class RestOppgaveBehandlingServiceImpl(
 
     override fun opprettOppgave(request: OpprettOppgaveRequest?): OpprettOppgaveResponse {
         requireNotNull(request)
-        val ident: String = SubjectHandler.getIdent().orElseThrow { IllegalStateException("Fant ikke ident") }
+        val ident: String = AuthContextHolderThreadLocal.instance().requireSubject()
         val behandling = kodeverksmapperService.mapUnderkategori(request.underkategoriKode)
         val oppgaveType = kodeverksmapperService.mapOppgavetype(request.oppgavetype)
         val aktorId = fodselnummerAktorService.hentAktorIdForFnr(request.fnr)
@@ -122,7 +121,7 @@ class RestOppgaveBehandlingServiceImpl(
 
     override fun opprettSkjermetOppgave(request: OpprettSkjermetOppgaveRequest?): OpprettOppgaveResponse {
         requireNotNull(request)
-        val ident: String = SubjectHandler.getIdent().orElseThrow { IllegalStateException("Fant ikke ident") }
+        val ident: String = AuthContextHolderThreadLocal.instance().requireSubject()
         val behandling = kodeverksmapperService.mapUnderkategori(request.underkategoriKode)
         val oppgaveType = kodeverksmapperService.mapOppgavetype(request.oppgavetype)
         val aktorId = fodselnummerAktorService.hentAktorIdForFnr(request.fnr)
@@ -169,7 +168,7 @@ class RestOppgaveBehandlingServiceImpl(
         tvungenTilordning: Boolean
     ) {
         requireNotNull(oppgaveId)
-        val ident: String = SubjectHandler.getIdent().orElseThrow { IllegalStateException("Fant ikke ident") }
+        val ident: String = AuthContextHolderThreadLocal.instance().requireSubject()
 
         val oppgave = hentOppgaveJsonDTO(oppgaveId)
         if (oppgave.tilordnetRessurs == ident) {
@@ -191,7 +190,7 @@ class RestOppgaveBehandlingServiceImpl(
     }
 
     override fun finnTildelteOppgaverIGsak(): MutableList<Oppgave> {
-        val ident: String = SubjectHandler.getIdent().orElseThrow { IllegalStateException("Fant ikke ident") }
+        val ident: String = AuthContextHolderThreadLocal.instance().requireSubject()
         val correlationId = correlationId()
 
         return hentOppgaverPaginertOgTilgangskontroll { offset ->
@@ -207,7 +206,7 @@ class RestOppgaveBehandlingServiceImpl(
     }
 
     override fun finnTildelteOppgaverIGsak(fnr: String): MutableList<Oppgave> {
-        val ident: String = SubjectHandler.getIdent().orElseThrow { IllegalStateException("Fant ikke ident") }
+        val ident: String = AuthContextHolderThreadLocal.instance().requireSubject()
         val aktorId = fodselnummerAktorService.hentAktorIdForFnr(fnr)
             ?: throw IllegalArgumentException("Fant ikke aktorId for $fnr")
         val correlationId = correlationId()
@@ -226,7 +225,7 @@ class RestOppgaveBehandlingServiceImpl(
     }
 
     override fun finnTildelteKNAOppgaverIGsak(): MutableList<Oppgave> {
-        val ident: String = SubjectHandler.getIdent().orElseThrow { IllegalStateException("Fant ikke ident") }
+        val ident: String = AuthContextHolderThreadLocal.instance().requireSubject()
         val correlationId = correlationId()
         val oppgaveType = kodeverksmapperService.mapOppgavetype(SPORSMAL_OG_SVAR)
 
@@ -288,7 +287,7 @@ class RestOppgaveBehandlingServiceImpl(
         beskrivelse: String?
     ) {
         requireNotNull(oppgaveId)
-        val ident: String = SubjectHandler.getIdent().orElseThrow { IllegalStateException("Fant ikke ident") }
+        val ident: String = AuthContextHolderThreadLocal.instance().requireSubject()
         val oppgave = hentOppgaveJsonDTO(oppgaveId)
 
         apiClient.endreOppgave(
@@ -325,7 +324,7 @@ class RestOppgaveBehandlingServiceImpl(
     override fun leggTilbakeOppgaveIGsak(request: LeggTilbakeOppgaveIGsakRequest?) {
         requireNotNull(request)
         requireNotNull(request.oppgaveId)
-        val ident: String = SubjectHandler.getIdent().orElseThrow { IllegalStateException("Fant ikke ident") }
+        val ident: String = AuthContextHolderThreadLocal.instance().requireSubject()
         val oppgave = hentOppgaveJsonDTO(request.oppgaveId)
 
         if (oppgave.tilordnetRessurs != ident) {

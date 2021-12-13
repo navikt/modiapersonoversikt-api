@@ -1,7 +1,6 @@
 package no.nav.modiapersonoversikt.service.dkif
 
-import no.nav.common.auth.subject.SsoToken
-import no.nav.common.auth.subject.SubjectHandler
+import no.nav.common.auth.context.AuthContextHolderThreadLocal
 import no.nav.common.health.HealthCheck
 import no.nav.common.health.HealthCheckResult
 import no.nav.common.health.selftest.SelfTestCheck
@@ -37,7 +36,7 @@ class DkifServiceRestImpl(
 
     override fun hentDigitalKontaktinformasjon(fnr: String): Dkif.DigitalKontaktinformasjon {
         val (feil, kontaktinfo) = client.digitalKontaktinformasjonUsingGET(
-            authorization = SubjectHandler.getSsoToken(SsoToken.Type.OIDC)
+            authorization = AuthContextHolderThreadLocal.instance().idTokenString
                 .map { "Bearer $it" }
                 .orElseThrow { IllegalStateException("Fant ikke OIDC-token") },
             navCallId = getCallId(),

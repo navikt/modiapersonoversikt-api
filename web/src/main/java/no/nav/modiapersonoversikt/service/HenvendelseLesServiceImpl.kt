@@ -1,7 +1,6 @@
 package no.nav.modiapersonoversikt.service
 
-import no.nav.common.auth.subject.SsoToken
-import no.nav.common.auth.subject.SubjectHandler
+import no.nav.common.auth.context.AuthContextHolderThreadLocal
 import no.nav.common.json.JsonMapper
 import no.nav.common.rest.client.RestClient
 import no.nav.common.sts.SystemUserTokenProvider
@@ -40,7 +39,7 @@ class HenvendelseLesServiceImpl(
     }
 
     private inline fun <reified T : Any> fetch(url: String): T {
-        val token = SubjectHandler.getSsoToken(SsoToken.Type.OIDC).orElseThrow { RuntimeException("Fant ikke OIDC-token") }
+        val token = AuthContextHolderThreadLocal.instance().requireIdTokenString()
         return RestClient.baseClient()
             .newCall(
                 Request.Builder()

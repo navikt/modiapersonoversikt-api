@@ -1,6 +1,6 @@
 package no.nav.modiapersonoversikt.utils
 
-import no.nav.common.auth.subject.SubjectHandler
+import no.nav.common.auth.context.AuthContextHolderThreadLocal
 import org.slf4j.MDC
 import org.springframework.web.context.request.RequestAttributes
 import org.springframework.web.context.request.RequestContextHolder
@@ -18,12 +18,12 @@ object ConcurrencyUtils {
 
     private fun <T> makeThreadSwappable(fn: () -> T): () -> T {
         val mdc = MDC.getCopyOfContextMap()
-        val subject = SubjectHandler.getSubject()
+        val context = AuthContextHolderThreadLocal.instance().context
         val requestAttributes: RequestAttributes? = RequestContextHolder.getRequestAttributes()
         return {
             withRequestAttributes(requestAttributes) {
                 withMDC(mdc) {
-                    SubjectHandler.withSubject(subject.orElseGet { null }, fn)
+                    AuthContextHolderThreadLocal.instance().withContext(context.orElse(null), fn)
                 }
             }
         }

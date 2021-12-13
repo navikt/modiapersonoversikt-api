@@ -1,7 +1,7 @@
 package no.nav.modiapersonoversikt.utils
 
 import io.mockk.mockk
-import no.nav.common.auth.subject.SubjectHandler
+import no.nav.common.auth.context.AuthContextHolderThreadLocal
 import no.nav.common.log.MDCConstants
 import no.nav.common.utils.fn.UnsafeSupplier
 import no.nav.modiapersonoversikt.infrastructure.http.getCallId
@@ -46,8 +46,8 @@ internal class ConcurrencyUtilsTest {
             "Z999999",
             UnsafeSupplier {
                 ConcurrencyUtils.inParallel(
-                    { SubjectHandler.getIdent().get() },
-                    { SubjectHandler.getIdent().get() }
+                    { AuthContextHolderThreadLocal.instance().requireSubject() },
+                    { AuthContextHolderThreadLocal.instance().requireSubject() }
                 )
             }
         )

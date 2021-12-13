@@ -1,7 +1,6 @@
 package no.nav.modiapersonoversikt.service.sfhenvendelse
 
-import no.nav.common.auth.subject.SsoToken
-import no.nav.common.auth.subject.SubjectHandler
+import no.nav.common.auth.context.AuthContextHolderThreadLocal
 import no.nav.common.rest.client.RestClient
 import no.nav.common.sts.SystemUserTokenProvider
 import no.nav.common.utils.EnvironmentUtils.getRequiredProperty
@@ -16,6 +15,7 @@ import no.nav.modiapersonoversikt.legacy.api.service.arbeidsfordeling.Arbeidsfor
 import no.nav.modiapersonoversikt.legacy.api.service.norg.AnsattService
 import no.nav.modiapersonoversikt.legacy.api.service.pdl.PdlOppslagService
 import okhttp3.OkHttpClient
+import org.checkerframework.checker.nullness.Opt.orElse
 import org.slf4j.LoggerFactory
 import java.time.OffsetDateTime
 import kotlin.reflect.KProperty1
@@ -91,7 +91,7 @@ class SfHenvendelseServiceImpl(
             .map { it.geografiskOmraade }
             .plus(enhet)
         val tematilganger = ansattService.hentAnsattFagomrader(
-            SubjectHandler.getIdent().orElseThrow(),
+            AuthContextHolderThreadLocal.instance().requireSubject(),
             enhet
         )
 
@@ -326,7 +326,7 @@ class SfHenvendelseServiceImpl(
             if (harTilgangTilAlleJournalforteTema) {
                 henvendelseDTO
             } else {
-                val ident = SubjectHandler.getIdent().orElse("-")
+                val ident = AuthContextHolderThreadLocal.instance().subject.orElse("-")
                 logger.info(
                     """
                     Ikke tilgang til tema. 
@@ -400,8 +400,7 @@ fun String.fixKjedeId(): String {
 object SfHenvendelseApiFactory {
     fun url(): String = getRequiredProperty("SF_HENVENDELSE_URL")
     private val client = createClient {
-        SubjectHandler.getSsoToken(SsoToken.Type.OIDC)
-            .orElseThrow { IllegalStateException("Fant ikke OIDC-token") }
+        AuthContextHolderThreadLocal.instance().requireIdTokenString()
     }
 
     fun createClient(tokenProvider: () -> String): OkHttpClient = RestClient.baseClient().newBuilder()
