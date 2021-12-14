@@ -72,14 +72,6 @@ spec:
       value: "https://sts-q0.preprod.local/SecurityTokenServiceProvider/"
     - name: ABAC_PDP_ENDPOINT_URL
       value: "https://abac-modia-q0.dev.intern.nav.no/application/authorize"
-    - name: AKTOER_V1_ENDPOINTURL
-      value: "https://app-q0.adeo.no/aktoerregister/ws/Aktoer/v1"
-    - name: AKTOER_V2_ENDPOINTURL
-      value: "https://app-q0.adeo.no/aktoerregister/ws/Aktoer/v2"
-    - name: AKTOER_V1_SECURITYTOKEN
-      value: "SAML"
-    - name: AKTOER_V1_WSDLURL
-      value: "http://maven.adeo.no/nexus/content/groups/public/no/nav/tjenester/fim/nav-fim-aktoer-v1-tjenestespesifikasjon/1.0.0/nav-fim-aktoer-v1-tjenestespesifikasjon-1.0.0.zip"
     - name: BRUKERVARSELV1_ENDPOINTURL
       value: "https://app-q0.adeo.no/varsel/ws/Brukervarsel/v1"
     - name: BRUKERVARSELV1_SECURITYTOKEN
