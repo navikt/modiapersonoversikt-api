@@ -8,7 +8,7 @@ interface FodselnummerAktorService {
     fun hentFnrForAktorId(aktorId: String): String?
 }
 
-class FodselnummerAktorServiceImpl @Autowired constructor(
+open class FodselnummerAktorServiceImpl @Autowired constructor(
     val pdlOppslagService: PdlOppslagService
 ) : FodselnummerAktorService {
     override fun hentAktorIdForFnr(fnr: String): String {
