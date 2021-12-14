@@ -34,7 +34,6 @@ import org.hamcrest.CoreMatchers.not
 import org.hamcrest.MatcherAssert.assertThat
 import org.joda.time.DateTime
 import org.joda.time.LocalDate
-import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
@@ -92,16 +91,9 @@ class SakerServiceImplTest {
         every { bidragSakControllerApi.find(any()) } returns listOf(BidragSakDto(roller = listOf(), saksnummer = "123", erParagraf19 = false))
         every { unleashService.isEnabled(any<Feature>()) } returns false
 
-//        mockkStatic(SubjectHandler::class)
-//        every { SubjectHandler.getSubject() } returns Optional.of(Subject("12345678910", MeldingFraDTO.IdentType.EksternBruker, SsoToken.oidcToken("token", HashMap<String, Any?>())))
         every { sakApiGateway.opprettSak(any()) } returns SakDto(id = "123")
 
         MDC.put(MDCConstants.MDC_CALL_ID, "12345")
-    }
-
-    @AfterEach
-    fun destroy() {
-//        unmockkStatic(SubjectHandler::class)
     }
 
     @Test
