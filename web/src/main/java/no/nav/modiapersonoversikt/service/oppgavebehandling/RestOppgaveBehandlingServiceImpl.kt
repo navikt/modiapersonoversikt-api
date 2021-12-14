@@ -23,7 +23,7 @@ import no.nav.modiapersonoversikt.legacy.api.service.*
 import no.nav.modiapersonoversikt.legacy.api.service.OppgaveBehandlingService.AlleredeTildeltAnnenSaksbehandler
 import no.nav.modiapersonoversikt.legacy.api.service.arbeidsfordeling.ArbeidsfordelingV1Service
 import no.nav.modiapersonoversikt.legacy.api.service.norg.AnsattService
-import no.nav.modiapersonoversikt.service.FodselnummerAktorService
+import no.nav.modiapersonoversikt.legacy.api.service.pdl.PdlOppslagService
 import no.nav.modiapersonoversikt.service.kodeverksmapper.KodeverksmapperService
 import no.nav.modiapersonoversikt.service.kodeverksmapper.domain.Behandling
 import no.nav.modiapersonoversikt.service.oppgavebehandling.Utils.OPPGAVE_MAX_LIMIT
@@ -44,7 +44,7 @@ import java.util.Optional.ofNullable
 private val tjenestekallLogg = LoggerFactory.getLogger("SecureLog")
 class RestOppgaveBehandlingServiceImpl(
     private val kodeverksmapperService: KodeverksmapperService,
-    private val fodselnummerAktorService: FodselnummerAktorService,
+    private val pdlOppslagService: PdlOppslagService,
     private val ansattService: AnsattService,
     private val arbeidsfordelingService: ArbeidsfordelingV1Service,
     private val tilgangskontroll: Tilgangskontroll,
@@ -62,14 +62,14 @@ class RestOppgaveBehandlingServiceImpl(
         @JvmStatic
         fun create(
             kodeverksmapperService: KodeverksmapperService,
-            fodselnummerAktorService: FodselnummerAktorService,
+            pdlOppslagService: PdlOppslagService,
             ansattService: AnsattService,
             arbeidsfordelingService: ArbeidsfordelingV1Service,
             tilgangskontroll: Tilgangskontroll,
             stsService: SystemUserTokenProvider
         ): OppgaveBehandlingService = RestOppgaveBehandlingServiceImpl(
             kodeverksmapperService = kodeverksmapperService,
-            fodselnummerAktorService = fodselnummerAktorService,
+            pdlOppslagService = pdlOppslagService,
             ansattService = ansattService,
             arbeidsfordelingService = arbeidsfordelingService,
             tilgangskontroll = tilgangskontroll,
@@ -87,7 +87,7 @@ class RestOppgaveBehandlingServiceImpl(
         val ident: String = SubjectHandler.getIdent().orElseThrow { IllegalStateException("Fant ikke ident") }
         val behandling = kodeverksmapperService.mapUnderkategori(request.underkategoriKode)
         val oppgaveType = kodeverksmapperService.mapOppgavetype(request.oppgavetype)
-        val aktorId = fodselnummerAktorService.hentAktorIdForFnr(request.fnr)
+        val aktorId = pdlOppslagService.hentAktorId(request.fnr)
             ?: throw IllegalArgumentException("Fant ikke aktorId for ${request.fnr}")
 
         val response = apiClient.opprettOppgave(
@@ -126,7 +126,7 @@ class RestOppgaveBehandlingServiceImpl(
         val ident: String = SubjectHandler.getIdent().orElseThrow { IllegalStateException("Fant ikke ident") }
         val behandling = kodeverksmapperService.mapUnderkategori(request.underkategoriKode)
         val oppgaveType = kodeverksmapperService.mapOppgavetype(request.oppgavetype)
-        val aktorId = fodselnummerAktorService.hentAktorIdForFnr(request.fnr)
+        val aktorId = pdlOppslagService.hentAktorId(request.fnr)
             ?: throw IllegalArgumentException("Fant ikke aktorId for ${request.fnr}")
 
         val response = systemApiClient.opprettOppgave(
@@ -209,7 +209,7 @@ class RestOppgaveBehandlingServiceImpl(
 
     override fun finnTildelteOppgaverIGsak(fnr: String): MutableList<Oppgave> {
         val ident: String = SubjectHandler.getIdent().orElseThrow { IllegalStateException("Fant ikke ident") }
-        val aktorId = fodselnummerAktorService.hentAktorIdForFnr(fnr)
+        val aktorId = pdlOppslagService.hentAktorId(fnr)
             ?: throw IllegalArgumentException("Fant ikke aktorId for $fnr")
         val correlationId = correlationId()
 
@@ -404,7 +404,7 @@ class RestOppgaveBehandlingServiceImpl(
         enhet: String?,
         tvungenTilordning: Boolean
     ): Oppgave? {
-        val aktorId = fodselnummerAktorService.hentAktorIdForFnr(fnr)
+        val aktorId = pdlOppslagService.hentAktorId(fnr)
             ?: throw IllegalArgumentException("Fant ikke aktorId for $fnr")
         val oppgaveType = kodeverksmapperService.mapOppgavetype(SPORSMAL_OG_SVAR)
         val correlationId = correlationId()
@@ -474,7 +474,7 @@ class RestOppgaveBehandlingServiceImpl(
     private fun finnAnsvarligEnhet(oppgave: OppgaveJsonDTO, temagruppe: Temagruppe): String {
         val aktorId = requireNotNull(oppgave.aktoerId)
         val enheter: List<AnsattEnhet> = arbeidsfordelingService.finnBehandlendeEnhetListe(
-            fodselnummerAktorService.hentFnrForAktorId(aktorId),
+            pdlOppslagService.hentFnr(aktorId),
             oppgave.tema,
             oppgave.oppgavetype,
             underkategoriOverstyringForArbeidsfordeling(temagruppe)
@@ -492,7 +492,7 @@ class RestOppgaveBehandlingServiceImpl(
             "OppgaveId må være satt for konvertering til Oppgave"
         }
         val aktorId = requireNotNull(oppgave.aktoerId)
-        val fnr = requireNotNull(fodselnummerAktorService.hentFnrForAktorId(aktorId)) {
+        val fnr = requireNotNull(pdlOppslagService.hentFnr(aktorId)) {
             "Fant ikke fnr for aktorId $aktorId"
         }
         val henvendelseId = oppgave.metadata?.get(MetadataKey.EKSTERN_HENVENDELSE_ID.name)

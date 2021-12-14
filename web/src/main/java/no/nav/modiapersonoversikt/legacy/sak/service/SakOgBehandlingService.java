@@ -1,9 +1,9 @@
 package no.nav.modiapersonoversikt.legacy.sak.service;
 
+import no.nav.modiapersonoversikt.legacy.api.service.pdl.PdlOppslagService;
 import no.nav.modiapersonoversikt.legacy.sak.providerdomain.Behandling;
 import no.nav.modiapersonoversikt.legacy.sak.providerdomain.FeilendeBaksystemException;
 import no.nav.modiapersonoversikt.legacy.sak.service.filter.Filter;
-import no.nav.modiapersonoversikt.service.FodselnummerAktorService;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.binding.SakOgBehandlingV1;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.Behandlingskjede;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.Sak;
@@ -33,7 +33,7 @@ public class SakOgBehandlingService {
     private Filter filter;
 
     @Autowired
-    private FodselnummerAktorService fnrAktor;
+    private PdlOppslagService pdlOppslagService;
 
     private static List<Behandling> hentBehandlingerFraBehandlingskjeder(List<Behandlingskjede> behandlingskjedeListe) {
         return behandlingskjedeListe.stream()
@@ -43,7 +43,7 @@ public class SakOgBehandlingService {
 
     protected List<Sak> hentAlleSaker(String fnr) {
         try {
-            String aktorId = fnrAktor.hentAktorIdForFnr(fnr);
+            String aktorId = pdlOppslagService.hentAktorId(fnr);
             FinnSakOgBehandlingskjedeListeRequest request = new FinnSakOgBehandlingskjedeListeRequest();
             request.setAktoerREF(aktorId);
             List<Sak> sobSaker = sakOgBehandlingPortType.finnSakOgBehandlingskjedeListe(request).getSak();

@@ -14,9 +14,9 @@ import no.nav.modiapersonoversikt.legacy.api.domain.bidragsak.generated.models.B
 import no.nav.modiapersonoversikt.legacy.api.domain.saker.Sak
 import no.nav.modiapersonoversikt.legacy.api.domain.saker.Sak.*
 import no.nav.modiapersonoversikt.legacy.api.service.kodeverk.StandardKodeverk
+import no.nav.modiapersonoversikt.legacy.api.service.pdl.PdlOppslagService
 import no.nav.modiapersonoversikt.legacy.api.service.psak.PsakService
 import no.nav.modiapersonoversikt.legacy.api.service.saker.GsakKodeverk
-import no.nav.modiapersonoversikt.service.FodselnummerAktorService
 import no.nav.modiapersonoversikt.service.saker.mediation.SakApiGateway
 import no.nav.modiapersonoversikt.service.saker.mediation.SakDto
 import no.nav.modiapersonoversikt.service.unleash.Feature
@@ -67,7 +67,7 @@ class SakerServiceImplTest {
     private lateinit var sakApiGateway: SakApiGateway
 
     @MockK
-    private lateinit var fodselnummerAktorService: FodselnummerAktorService
+    private lateinit var pdlOppslagService: PdlOppslagService
 
     @MockK
     private lateinit var bidragSakControllerApi: BidragSakControllerApi
@@ -87,7 +87,7 @@ class SakerServiceImplTest {
         every { arbeidOgAktivitet.hentSakListe(WSHentSakListeRequest()) } returns WSHentSakListeResponse()
         every { gsakKodeverk.hentFagsystemMapping() } returns emptyMap()
         every { standardKodeverk.getArkivtemaNavn(any()) } returns null
-        every { fodselnummerAktorService.hentAktorIdForFnr(any()) } returns "123456789"
+        every { pdlOppslagService.hentAktorId(any()) } returns "123456789"
         every { bidragSakControllerApi.find(any()) } returns listOf(BidragSakDto(roller = listOf(), saksnummer = "123", erParagraf19 = false))
         every { unleashService.isEnabled(any<Feature>()) } returns false
 
