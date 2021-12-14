@@ -276,10 +276,10 @@ class SfHenvendelseServiceImpl(
                 .mapValues { apifeil -> apifeil.value.map { it.kjedeId } }
 
             val sb = StringBuilder()
-            sb.appendln("[SF-HENVENDELSE]")
-            sb.appendln("Fant ${feil.size} feil i dataformat til henvendelser fra $bruker")
+            sb.appendLine("[SF-HENVENDELSE]")
+            sb.appendLine("Fant ${feil.size} feil i dataformat til henvendelser fra $bruker")
             for ((feiltype, kjedeIder) in grupperteFeil) {
-                sb.appendln("Type: $feiltype KjedeIder: ${kjedeIder.joinToString(", ")}")
+                sb.appendLine("Type: $feiltype KjedeIder: ${kjedeIder.joinToString(", ")}")
             }
 
             logger.warn(sb.toString())

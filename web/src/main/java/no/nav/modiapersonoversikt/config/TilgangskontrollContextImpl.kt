@@ -19,8 +19,8 @@ open class TilgangskontrollContextImpl(
     private val unleashService: no.nav.modiapersonoversikt.service.unleash.UnleashService
 ) : TilgangskontrollContext {
     override fun checkAbac(request: AbacRequest): AbacResponse = abacClient.evaluate(request)
-    override fun hentSaksbehandlerId(): Optional<String> = SubjectHandler.getIdent().map(String::toUpperCase)
-    override fun harSaksbehandlerRolle(rolle: String) = hentSaksbehandlerRoller().contains(rolle.toLowerCase())
+    override fun hentSaksbehandlerId(): Optional<String> = SubjectHandler.getIdent().map(String::uppercase)
+    override fun harSaksbehandlerRolle(rolle: String) = hentSaksbehandlerRoller().contains(rolle.lowercase())
     override fun hentTemagrupperForSaksbehandler(valgtEnhet: String): Set<String> {
         return ansattService.hentAnsattFagomrader(
             hentSaksbehandlerId().orElseThrow { RuntimeException("Fant ikke saksbehandlerIdent") },
@@ -32,14 +32,14 @@ open class TilgangskontrollContextImpl(
         return EnvironmentUtils.getRequiredProperty("HASTEKASSERING_TILGANG", "")
             .split(",")
             .map(String::trim)
-            .map(String::toUpperCase)
+            .map(String::uppercase)
     }
 
     override fun hentSaksbehandlereMedTilgangTilInternal(): List<String> {
         return EnvironmentUtils.getRequiredProperty("INTERNAL_TILGANG", "")
             .split(",")
             .map(String::trim)
-            .map(String::toUpperCase)
+            .map(String::uppercase)
     }
 
     override fun alleBehandlingsIderTilhorerBruker(fnr: String, behandlingsIder: List<String>): Boolean {
@@ -52,5 +52,5 @@ open class TilgangskontrollContextImpl(
         hentSaksbehandlerId()
             .map(ldap::hentRollerForVeileder)
             .orElse(emptyList())
-            .map { it.toLowerCase() }
+            .map { it.lowercase() }
 }

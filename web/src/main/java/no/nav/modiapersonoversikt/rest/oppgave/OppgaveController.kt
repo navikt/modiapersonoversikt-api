@@ -66,7 +66,7 @@ class OppgaveController @Autowired constructor(
                 } else {
                     plukkOppgaveService
                         .plukkOppgaver(
-                            Temagruppe.valueOf(temagruppe.toUpperCase()),
+                            Temagruppe.valueOf(temagruppe.uppercase()),
                             RestUtils.hentValgtEnhet(enhet, httpRequest)
                         )
                 }
@@ -101,7 +101,6 @@ class OppgaveController @Autowired constructor(
             }
 
     private fun lagLeggTilbakeRequest(request: LeggTilbakeRequest, valgtEnhet: String): LeggTilbakeOppgaveIGsakRequest? {
-        require(request.oppgaveId != null)
         val baseRequest = LeggTilbakeOppgaveIGsakRequest()
             .withOppgaveId(request.oppgaveId)
             .withSaksbehandlersValgteEnhet(valgtEnhet)

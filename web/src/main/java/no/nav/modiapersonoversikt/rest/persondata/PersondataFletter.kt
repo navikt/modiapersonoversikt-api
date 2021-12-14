@@ -354,7 +354,7 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
     )
 
     private fun hentSisteEndringFraMetadata(metadata: HentPersondata.Metadata): Persondata.SistEndret? {
-        return metadata.endringer.maxBy { it.registrert.value }
+        return metadata.endringer.maxByOrNull { it.registrert.value }
             ?.let {
                 Persondata.SistEndret(
                     ident = it.registrertAv,

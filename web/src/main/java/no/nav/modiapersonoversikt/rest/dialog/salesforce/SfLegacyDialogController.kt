@@ -231,7 +231,7 @@ class SfLegacyDialogController(
     }
 
     private fun HenvendelseDTO.erSporsmalFraBruker(): Boolean {
-        val nyesteMelding = this.meldinger?.maxBy { it.sendtDato }
+        val nyesteMelding = this.meldinger?.maxByOrNull { it.sendtDato }
         return nyesteMelding?.fra?.identType == MeldingFraDTO.IdentType.AKTORID
     }
 
