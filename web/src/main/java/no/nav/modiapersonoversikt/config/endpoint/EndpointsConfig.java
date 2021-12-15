@@ -14,7 +14,6 @@ import no.nav.modiapersonoversikt.config.endpoint.v1.pensjonsak.PensjonSakEndpoi
 import no.nav.modiapersonoversikt.config.endpoint.v1.personsok.PersonsokEndpointConfig;
 import no.nav.modiapersonoversikt.config.endpoint.v1.sakogbehandling.SakOgBehandlingEndpointConfig;
 import no.nav.modiapersonoversikt.config.endpoint.v1.utbetaling.UtbetalingEndpointConfig;
-import no.nav.modiapersonoversikt.config.endpoint.v2.aktor.AktorV2EndpointConfig;
 import no.nav.modiapersonoversikt.config.endpoint.v2.henvendelse.BehandleHenvendelseEndpointConfig;
 import no.nav.modiapersonoversikt.config.endpoint.v2.henvendelse.HenvendelseEndpointConfig;
 import no.nav.modiapersonoversikt.config.endpoint.v2.henvendelse.SendUtHenvendelseEndpointConfig;
@@ -37,7 +36,6 @@ import org.springframework.context.annotation.Import;
         HenvendelseEndpointConfig.class,
         JoarkEndpointConfig.class,
         SakOgBehandlingEndpointConfig.class,
-        AktorV2EndpointConfig.class,
         HenvendelseSoknaderEndpointConfig.class,
         NAVAnsattEndpointConfig.class,
         NAVOrgEnhetEndpointConfig.class,

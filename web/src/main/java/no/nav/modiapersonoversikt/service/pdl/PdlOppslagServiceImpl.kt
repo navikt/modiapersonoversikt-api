@@ -11,6 +11,7 @@ import no.nav.modiapersonoversikt.infrastructure.http.HeadersBuilder
 import no.nav.modiapersonoversikt.infrastructure.http.LoggingGraphqlClient
 import no.nav.modiapersonoversikt.infrastructure.http.assertNoErrors
 import no.nav.modiapersonoversikt.legacy.api.domain.pdl.generated.*
+import no.nav.modiapersonoversikt.legacy.api.domain.pdl.generated.HentAktorid.IdentGruppe
 import no.nav.modiapersonoversikt.legacy.api.service.pdl.PdlOppslagService
 import no.nav.modiapersonoversikt.legacy.api.service.pdl.PdlOppslagService.*
 import no.nav.modiapersonoversikt.legacy.api.utils.RestConstants.*
@@ -83,15 +84,8 @@ class PdlOppslagServiceImpl constructor(
             }
     }
 
-    override fun hentAktorId(fnr: String): String? = runBlocking {
-        HentAktorid(pdlClient)
-            .execute(HentAktorid.Variables(fnr), userTokenAuthorizationHeaders)
-            .data
-            ?.hentIdenter
-            ?.identer
-            ?.firstOrNull()
-            ?.ident
-    }
+    override fun hentAktorId(fnr: String): String? = hentAktivIdent(fnr, IdentGruppe.AKTORID)
+    override fun hentFnr(aktorid: String): String? = hentAktivIdent(aktorid, IdentGruppe.FOLKEREGISTERIDENT)
 
     override fun sokPerson(kriterier: List<SokKriterier>): List<SokPerson.PersonSearchHit> = runBlocking {
         val paging = SokPerson.Paging(
@@ -114,6 +108,16 @@ class PdlOppslagServiceImpl constructor(
                 ?.hits
                 ?: emptyList()
         }
+    }
+
+    fun hentAktivIdent(ident: String, gruppe: IdentGruppe): String? = runBlocking {
+        HentAktorid(pdlClient)
+            .execute(HentAktorid.Variables(ident, listOf(gruppe)), userTokenAuthorizationHeaders)
+            .data
+            ?.hentIdenter
+            ?.identer
+            ?.firstOrNull()
+            ?.ident
     }
 
     private val userTokenAuthorizationHeaders: HeadersBuilder = {
