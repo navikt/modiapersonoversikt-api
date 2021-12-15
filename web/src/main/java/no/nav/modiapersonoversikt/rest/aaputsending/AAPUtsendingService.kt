@@ -1,9 +1,9 @@
 package no.nav.modiapersonoversikt.rest.aaputsending
 
 import no.nav.common.auth.context.AuthContext
-import no.nav.common.auth.context.AuthContextHolderThreadLocal
 import no.nav.common.job.leader_election.LeaderElectionClient
 import no.nav.common.log.MDCConstants
+import no.nav.modiapersonoversikt.infrastructure.AuthContextUtils
 import no.nav.modiapersonoversikt.infrastructure.http.getCallId
 import no.nav.modiapersonoversikt.legacy.api.domain.henvendelse.Fritekst
 import no.nav.modiapersonoversikt.legacy.api.domain.henvendelse.Melding
@@ -59,7 +59,7 @@ class Prosessor<S>(
     init {
         job = executor.submit {
             MDC.put(MDCConstants.MDC_CALL_ID, callId)
-            AuthContextHolderThreadLocal.instance().withContext(authContext) {
+            AuthContextUtils.withContext(authContext) {
                 list.forEach { element ->
                     try {
                         block(element)
@@ -137,8 +137,8 @@ class AAPUtsendingService(
             if (processorReference.get() != null) {
                 return status()
             }
-            val authContext = AuthContextHolderThreadLocal.instance().context.orElseThrow { IllegalStateException("Fant ikke authcontext") }
-            val ident = AuthContextHolderThreadLocal.instance().requireSubject()
+            val authContext = AuthContextUtils.requireContext()
+            val ident = AuthContextUtils.requireIdent()
 
             processorReference.set(
                 Prosessor(authContext, data) { element ->

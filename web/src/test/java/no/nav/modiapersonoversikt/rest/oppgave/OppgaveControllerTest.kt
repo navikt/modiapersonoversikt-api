@@ -11,8 +11,8 @@ import no.nav.modiapersonoversikt.legacy.api.domain.Temagruppe
 import no.nav.modiapersonoversikt.legacy.api.service.HenvendelseUtsendingService
 import no.nav.modiapersonoversikt.legacy.api.service.LeggTilbakeOppgaveIGsakRequest
 import no.nav.modiapersonoversikt.legacy.api.service.OppgaveBehandlingService
+import no.nav.modiapersonoversikt.legacy.api.utils.http.AuthContextTestUtils
 import no.nav.modiapersonoversikt.legacy.api.utils.http.HttpRequestUtil
-import no.nav.modiapersonoversikt.legacy.api.utils.http.SubjectHandlerUtil
 import no.nav.modiapersonoversikt.service.plukkoppgave.PlukkOppgaveService
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
@@ -43,7 +43,7 @@ internal class OppgaveControllerTest {
             traadId = "123456"
         )
 
-        SubjectHandlerUtil.withIdent(SAKSBEHANDLERS_IDENT) {
+        AuthContextTestUtils.withIdent(SAKSBEHANDLERS_IDENT) {
             oppgaveController.leggTilbake(httpRequest, leggTilbakeRequest)
         }
 
@@ -67,7 +67,7 @@ internal class OppgaveControllerTest {
         )
 
         every { oppgavebehandlingService.finnTildelteOppgaverIGsak() } returns oppgaveliste
-        val resultat = SubjectHandlerUtil.withIdent(
+        val resultat = AuthContextTestUtils.withIdent(
             SAKSBEHANDLERS_IDENT,
             UnsafeSupplier {
                 oppgaveController.finnTildelte()
@@ -90,7 +90,7 @@ internal class OppgaveControllerTest {
         every { oppgavebehandlingService.finnTildelteKNAOppgaverIGsak() } returns mutableListOf()
         every { plukkOppgaveService.plukkOppgaver(any(), any()) } returns oppgaver
 
-        val resultat = SubjectHandlerUtil.withIdent(
+        val resultat = AuthContextTestUtils.withIdent(
             SAKSBEHANDLERS_IDENT,
             UnsafeSupplier {
                 oppgaveController.plukkOppgaver(TEMAGRUPPE_ARBEID, null, httpRequest)
@@ -111,7 +111,7 @@ internal class OppgaveControllerTest {
         )
         every { oppgavebehandlingService.finnTildelteKNAOppgaverIGsak() } returns oppgaveliste
 
-        val resultat = SubjectHandlerUtil.withIdent(
+        val resultat = AuthContextTestUtils.withIdent(
             SAKSBEHANDLERS_IDENT,
             UnsafeSupplier {
                 oppgaveController.plukkOppgaver(TEMAGRUPPE_ARBEID, null, httpRequest)
@@ -131,7 +131,7 @@ internal class OppgaveControllerTest {
         every { oppgavebehandlingService.finnTildelteKNAOppgaverIGsak() } returns mutableListOf()
         every { plukkOppgaveService.plukkOppgaver(any(), any()) } returns mutableListOf()
 
-        val resultat = SubjectHandlerUtil.withIdent(
+        val resultat = AuthContextTestUtils.withIdent(
             SAKSBEHANDLERS_IDENT,
             UnsafeSupplier {
                 oppgaveController.plukkOppgaver(TEMAGRUPPE_ARBEID, null, httpRequest)

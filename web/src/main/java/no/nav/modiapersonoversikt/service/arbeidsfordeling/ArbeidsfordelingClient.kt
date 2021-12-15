@@ -1,11 +1,11 @@
 package no.nav.modiapersonoversikt.service.arbeidsfordeling
 
 import com.fasterxml.jackson.core.type.TypeReference
-import no.nav.common.auth.context.AuthContextHolderThreadLocal
 import no.nav.common.json.JsonMapper
 import no.nav.common.rest.client.RestClient
 import no.nav.common.sts.SystemUserTokenProvider
 import no.nav.common.utils.EnvironmentUtils
+import no.nav.modiapersonoversikt.infrastructure.AuthContextUtils
 import no.nav.modiapersonoversikt.infrastructure.http.getCallId
 import no.nav.modiapersonoversikt.legacy.api.domain.norg.AnsattEnhet
 import no.nav.modiapersonoversikt.legacy.api.domain.norg.EnhetsGeografiskeTilknytning
@@ -54,7 +54,7 @@ open class ArbeidsfordelingClient {
     }
 
     open fun hentArbeidsfordeling(behandling: Optional<Behandling>, geografiskTilknytning: String?, oppgavetype: String, fagomrade: String, erEgenAnsatt: Boolean, diskresjonskode: String?): List<AnsattEnhet> {
-        val veilederOidcToken: String = AuthContextHolderThreadLocal.instance().requireIdTokenString()
+        val veilederOidcToken: String = AuthContextUtils.requireToken()
         val consumerOidcToken: String = stsService.systemUserToken
         val arbeidskritereieFordelingSkjermet = ArbeidskritereieFordelingSkjermet(
             behandlingstema = behandling.map(Behandling::getBehandlingstema).orElse(null),

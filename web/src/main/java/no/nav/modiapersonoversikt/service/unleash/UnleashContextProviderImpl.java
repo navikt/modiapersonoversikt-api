@@ -2,7 +2,7 @@ package no.nav.modiapersonoversikt.service.unleash;
 
 import no.finn.unleash.UnleashContext;
 import no.finn.unleash.UnleashContextProvider;
-import no.nav.common.auth.context.AuthContextHolderThreadLocal;
+import no.nav.modiapersonoversikt.infrastructure.AuthContextUtils;
 import no.nav.modiapersonoversikt.legacy.api.service.norg.AnsattService;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -24,7 +24,7 @@ public class UnleashContextProviderImpl implements UnleashContextProvider {
     @Override
     public UnleashContext getContext() {
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
-        String ident = AuthContextHolderThreadLocal.instance().getSubject().orElse(null);
+        String ident = AuthContextUtils.getIdent().orElse(null);
         String remoteAddr = null;
 
         try {

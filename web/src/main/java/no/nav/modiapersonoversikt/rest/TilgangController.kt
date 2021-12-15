@@ -1,11 +1,11 @@
 package no.nav.modiapersonoversikt.rest
 
 import com.nimbusds.jwt.JWTClaimsSet
-import no.nav.common.auth.context.AuthContextHolderThreadLocal
 import no.nav.modiapersonoversikt.consumer.abac.AbacClient
 import no.nav.modiapersonoversikt.consumer.abac.AbacResponse
 import no.nav.modiapersonoversikt.consumer.abac.Decision
 import no.nav.modiapersonoversikt.consumer.abac.DenyCause
+import no.nav.modiapersonoversikt.infrastructure.AuthContextUtils
 import no.nav.modiapersonoversikt.infrastructure.naudit.Audit
 import no.nav.modiapersonoversikt.infrastructure.naudit.AuditIdentifier
 import no.nav.modiapersonoversikt.infrastructure.naudit.AuditResources
@@ -41,8 +41,7 @@ class TilgangController @Autowired constructor(private val abacClient: AbacClien
 
     @GetMapping("/auth")
     fun authIntropection(): AuthIntropectionDTO {
-        return AuthContextHolderThreadLocal.instance()
-            .idTokenClaims
+        return AuthContextUtils.getClaims()
             .map(JWTClaimsSet::getExpirationDate)
             .orElse(AuthIntropectionDTO.INVALID)
     }

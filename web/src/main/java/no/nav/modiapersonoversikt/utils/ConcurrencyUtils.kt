@@ -1,12 +1,15 @@
 package no.nav.modiapersonoversikt.utils
 
 import no.nav.common.auth.context.AuthContextHolderThreadLocal
+import no.nav.modiapersonoversikt.infrastructure.AuthContextUtils
 import org.slf4j.MDC
 import org.springframework.web.context.request.RequestAttributes
 import org.springframework.web.context.request.RequestContextHolder
 import java.util.concurrent.CompletableFuture
 
 object ConcurrencyUtils {
+    private val authContextHolder = AuthContextHolderThreadLocal.instance()
+
     fun <S, T> inParallel(first: () -> S, second: () -> T): Pair<S, T> {
         val firstTask = CompletableFuture.supplyAsync(makeThreadSwappable(first))
         val secondTask = CompletableFuture.supplyAsync(makeThreadSwappable(second))
@@ -18,12 +21,12 @@ object ConcurrencyUtils {
 
     private fun <T> makeThreadSwappable(fn: () -> T): () -> T {
         val mdc = MDC.getCopyOfContextMap()
-        val context = AuthContextHolderThreadLocal.instance().context
+        val context = AuthContextUtils.getContext()
         val requestAttributes: RequestAttributes? = RequestContextHolder.getRequestAttributes()
         return {
             withRequestAttributes(requestAttributes) {
                 withMDC(mdc) {
-                    AuthContextHolderThreadLocal.instance().withContext(context.orElse(null), fn)
+                    authContextHolder.withContext(context.orElse(null), fn)
                 }
             }
         }

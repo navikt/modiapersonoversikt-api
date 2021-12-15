@@ -3,8 +3,8 @@ package no.nav.modiapersonoversikt.service.saker.mediation
 import com.nimbusds.jwt.JWTClaimsSet
 import com.nimbusds.jwt.PlainJWT
 import no.nav.common.auth.context.AuthContext
-import no.nav.common.auth.context.AuthContextHolderThreadLocal
 import no.nav.common.auth.context.UserRole
+import no.nav.modiapersonoversikt.infrastructure.AuthContextUtils
 import no.nav.modiapersonoversikt.legacy.api.domain.bidragsak.generated.apis.BidragSakControllerApi
 import no.nav.modiapersonoversikt.legacy.api.domain.bidragsak.generated.models.BidragSakDto
 import no.nav.modiapersonoversikt.legacy.api.domain.bidragsak.generated.models.RolleDto
@@ -55,7 +55,7 @@ internal class BidragApiClientTest {
             stub = WireMockUtils.getWithBody(statusCode = 200, body = bisysResponse),
             verify = {}
         ) { url ->
-            AuthContextHolderThreadLocal.instance().withContext(TEST_SUBJECT) {
+            AuthContextUtils.withContext(TEST_SUBJECT) {
                 val client = BidragSakControllerApi(url, BidragApiClient.client)
                 val saker = client.find("12345678910")
                 assertEquals(2, saker.size)

@@ -3,8 +3,8 @@ package no.nav.modiapersonoversikt.service.dkif
 import com.nimbusds.jwt.JWTClaimsSet
 import com.nimbusds.jwt.PlainJWT
 import no.nav.common.auth.context.AuthContext
-import no.nav.common.auth.context.AuthContextHolderThreadLocal
 import no.nav.common.auth.context.UserRole
+import no.nav.modiapersonoversikt.infrastructure.AuthContextUtils
 import no.nav.modiapersonoversikt.legacy.api.domain.dkif.generated.infrastructure.ServerException
 import no.nav.modiapersonoversikt.utils.WireMockUtils
 import no.nav.modiapersonoversikt.utils.WireMockUtils.getWithBody
@@ -56,7 +56,7 @@ internal class DkifServiceRestImplTest {
             stub = getWithBody(statusCode = 200, body = dkifJsonResponse),
             verify = { }
         ) { url ->
-            AuthContextHolderThreadLocal.instance().withContext(TEST_SUBJECT) {
+            AuthContextUtils.withContext(TEST_SUBJECT) {
                 val dkifRestService = DkifServiceRestImpl(url)
                 val response = dkifRestService.hentDigitalKontaktinformasjon("06073000250")
                 MatcherAssert.assertThat(response.personident, Is.`is`("06073000250"))
@@ -72,7 +72,7 @@ internal class DkifServiceRestImplTest {
             stub = getWithBody(statusCode = 200, body = dkifJsonResponse),
             verify = { }
         ) { url ->
-            AuthContextHolderThreadLocal.instance().withContext(TEST_SUBJECT) {
+            AuthContextUtils.withContext(TEST_SUBJECT) {
                 val dkifRestService = DkifServiceRestImpl(url)
                 val response = dkifRestService.hentDigitalKontaktinformasjon("10108000123")
                 MatcherAssert.assertThat(response.personident, IsNull())
@@ -89,7 +89,7 @@ internal class DkifServiceRestImplTest {
             stub = getWithBody(statusCode = 500, body = null),
             verify = { }
         ) { url ->
-            AuthContextHolderThreadLocal.instance().withContext(TEST_SUBJECT) {
+            AuthContextUtils.withContext(TEST_SUBJECT) {
                 assertThrows<ServerException> {
                     val dkifRestService = DkifServiceRestImpl(url)
                     dkifRestService.hentDigitalKontaktinformasjon("10108000123")

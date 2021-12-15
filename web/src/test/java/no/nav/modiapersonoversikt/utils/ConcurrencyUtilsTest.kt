@@ -1,11 +1,11 @@
 package no.nav.modiapersonoversikt.utils
 
 import io.mockk.mockk
-import no.nav.common.auth.context.AuthContextHolderThreadLocal
 import no.nav.common.log.MDCConstants
 import no.nav.common.utils.fn.UnsafeSupplier
+import no.nav.modiapersonoversikt.infrastructure.AuthContextUtils
 import no.nav.modiapersonoversikt.infrastructure.http.getCallId
-import no.nav.modiapersonoversikt.legacy.api.utils.http.SubjectHandlerUtil
+import no.nav.modiapersonoversikt.legacy.api.utils.http.AuthContextTestUtils
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.data.Percentage.withPercentage
 import org.junit.jupiter.api.Test
@@ -42,12 +42,12 @@ internal class ConcurrencyUtilsTest {
 
     @Test
     internal fun `should copy subject`() {
-        val (taskA, taskB) = SubjectHandlerUtil.withIdent(
+        val (taskA, taskB) = AuthContextTestUtils.withIdent(
             "Z999999",
             UnsafeSupplier {
                 ConcurrencyUtils.inParallel(
-                    { AuthContextHolderThreadLocal.instance().requireSubject() },
-                    { AuthContextHolderThreadLocal.instance().requireSubject() }
+                    { AuthContextUtils.requireIdent() },
+                    { AuthContextUtils.requireIdent() }
                 )
             }
         )

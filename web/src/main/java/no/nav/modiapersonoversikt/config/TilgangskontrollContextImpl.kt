@@ -1,10 +1,10 @@
 package no.nav.modiapersonoversikt.config
 
-import no.nav.common.auth.context.AuthContextHolderThreadLocal
 import no.nav.common.utils.EnvironmentUtils
 import no.nav.modiapersonoversikt.consumer.abac.AbacClient
 import no.nav.modiapersonoversikt.consumer.abac.AbacRequest
 import no.nav.modiapersonoversikt.consumer.abac.AbacResponse
+import no.nav.modiapersonoversikt.infrastructure.AuthContextUtils
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.TilgangskontrollContext
 import no.nav.modiapersonoversikt.legacy.api.service.HenvendelseLesService
 import no.nav.modiapersonoversikt.legacy.api.service.ldap.LDAPService
@@ -19,7 +19,7 @@ open class TilgangskontrollContextImpl(
     private val unleashService: no.nav.modiapersonoversikt.service.unleash.UnleashService
 ) : TilgangskontrollContext {
     override fun checkAbac(request: AbacRequest): AbacResponse = abacClient.evaluate(request)
-    override fun hentSaksbehandlerId(): Optional<String> = AuthContextHolderThreadLocal.instance().subject.map(String::uppercase)
+    override fun hentSaksbehandlerId(): Optional<String> = AuthContextUtils.getIdent().map(String::uppercase)
     override fun harSaksbehandlerRolle(rolle: String) = hentSaksbehandlerRoller().contains(rolle.lowercase())
     override fun hentTemagrupperForSaksbehandler(valgtEnhet: String): Set<String> {
         return ansattService.hentAnsattFagomrader(

@@ -5,7 +5,7 @@ import io.mockk.mockk
 import io.mockk.verify
 import no.nav.modiapersonoversikt.legacy.api.domain.saker.Sak
 import no.nav.modiapersonoversikt.legacy.api.service.FodselnummerAktorService
-import no.nav.modiapersonoversikt.legacy.api.utils.http.SubjectHandlerUtil
+import no.nav.modiapersonoversikt.legacy.api.utils.http.AuthContextTestUtils
 import no.nav.modiapersonoversikt.service.saker.kilder.RestSakSaker
 import no.nav.modiapersonoversikt.service.saker.mediation.OpprettSakDto
 import no.nav.modiapersonoversikt.service.saker.mediation.SakApiGateway
@@ -78,7 +78,7 @@ class RestSakSakerTest {
         every { api.opprettSak(any()) } returns sakDto
         every { fodselnummerAktorService.hentAktorIdForFnr(any()) } returns "123"
         every { fodselnummerAktorService.hentFnrForAktorId(any()) } returns "456"
-        SubjectHandlerUtil.withIdent("Z999999") {
+        AuthContextTestUtils.withIdent("Z999999") {
             restClient.opprettSak("fnr", RestSakSaker.TIL_SAK(sakDto))
         }
 

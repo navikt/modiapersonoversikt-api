@@ -1,11 +1,11 @@
 package no.nav.modiapersonoversikt.service.dkif
 
-import no.nav.common.auth.context.AuthContextHolderThreadLocal
 import no.nav.common.health.HealthCheck
 import no.nav.common.health.HealthCheckResult
 import no.nav.common.health.selftest.SelfTestCheck
 import no.nav.common.rest.client.RestClient
 import no.nav.common.utils.EnvironmentUtils
+import no.nav.modiapersonoversikt.infrastructure.AuthContextUtils
 import no.nav.modiapersonoversikt.infrastructure.http.LoggingInterceptor
 import no.nav.modiapersonoversikt.infrastructure.http.XCorrelationIdInterceptor
 import no.nav.modiapersonoversikt.infrastructure.http.getCallId
@@ -36,7 +36,7 @@ class DkifServiceRestImpl(
 
     override fun hentDigitalKontaktinformasjon(fnr: String): Dkif.DigitalKontaktinformasjon {
         val (feil, kontaktinfo) = client.digitalKontaktinformasjonUsingGET(
-            authorization = AuthContextHolderThreadLocal.instance().idTokenString
+            authorization = AuthContextUtils.getToken()
                 .map { "Bearer $it" }
                 .orElseThrow { IllegalStateException("Fant ikke OIDC-token") },
             navCallId = getCallId(),

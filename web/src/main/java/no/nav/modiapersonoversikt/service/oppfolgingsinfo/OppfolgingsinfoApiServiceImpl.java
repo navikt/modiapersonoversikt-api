@@ -1,9 +1,10 @@
 package no.nav.modiapersonoversikt.service.oppfolgingsinfo;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import no.nav.common.auth.context.AuthContextHolderThreadLocal;
+
 import no.nav.common.json.JsonMapper;
 import no.nav.common.rest.client.RestClient;
+import no.nav.modiapersonoversikt.infrastructure.AuthContextUtils;
 import no.nav.modiapersonoversikt.infrastructure.http.AuthorizationInterceptor;
 import no.nav.modiapersonoversikt.infrastructure.http.LoggingInterceptor;
 import no.nav.modiapersonoversikt.infrastructure.http.XCorrelationIdInterceptor;
@@ -31,7 +32,7 @@ public class OppfolgingsinfoApiServiceImpl implements OppfolgingsinfoApiService 
             .addInterceptor(new XCorrelationIdInterceptor())
             .addInterceptor(new LoggingInterceptor("Oppfolging", LoggingInterceptor.DEFAULT_CONFIG, (request) -> request.header("X-Correlation-ID")))
             .addInterceptor(new AuthorizationInterceptor(() ->
-                    AuthContextHolderThreadLocal.instance().requireIdTokenString()
+                    AuthContextUtils.requireToken()
             ))
             .build();
 

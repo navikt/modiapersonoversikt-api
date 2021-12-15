@@ -3,9 +3,9 @@ package no.nav.modiapersonoversikt.service.sfhenvendelse
 import com.nimbusds.jwt.JWTClaimsSet
 import com.nimbusds.jwt.PlainJWT
 import no.nav.common.auth.context.AuthContext
-import no.nav.common.auth.context.AuthContextHolderThreadLocal
 import no.nav.common.auth.context.UserRole
 import no.nav.modiapersonoversikt.config.endpoint.Utils
+import no.nav.modiapersonoversikt.infrastructure.AuthContextUtils
 import no.nav.modiapersonoversikt.utils.WireMockUtils
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -28,7 +28,7 @@ internal class SfHenvendelseServiceIntegrationTest {
             verify = {}
         ) { url ->
             Utils.withProperty("SF_HENVENDELSE_URL", url) {
-                AuthContextHolderThreadLocal.instance().withContext(TEST_SUBJECT) {
+                AuthContextUtils.withContext(TEST_SUBJECT) {
                     val api = SfHenvendelseApiFactory.createHenvendelseInfoApi()
                     val result = api.henvendelseinfoHenvendelselisteGet("aktorid", "coorId")
                     assertThat(result).hasSize(1)

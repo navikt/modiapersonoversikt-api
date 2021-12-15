@@ -1,7 +1,7 @@
 package no.nav.modiapersonoversikt.rest;
 
 import kotlin.Pair;
-import no.nav.common.auth.context.AuthContextHolderThreadLocal;
+import no.nav.modiapersonoversikt.infrastructure.AuthContextUtils;
 import no.nav.modiapersonoversikt.legacy.api.domain.Person;
 import no.nav.modiapersonoversikt.legacy.api.service.ldap.LDAPService;
 import no.nav.modiapersonoversikt.legacy.api.service.norg.AnsattService;
@@ -77,7 +77,7 @@ public class HodeController {
         return tilgangskontroll
                 .check(Policies.tilgangTilModia)
                 .get(Audit.describe(READ, Saksbehandler.NavnOgEnheter), () -> {
-                    String ident = AuthContextHolderThreadLocal.instance().requireSubject();
+                    String ident = AuthContextUtils.requireIdent();
                     Pair<String, String> saksbehandler = hentSaksbehandlerNavn();
                     String enhetId = hentValgtEnhet(null, request);
                     String enhetNavn = organisasjonEnhetService.hentEnhetGittEnhetId(enhetId, OrganisasjonEnhetV2Service.WSOppgavebehandlerfilter.UFILTRERT)
@@ -92,7 +92,7 @@ public class HodeController {
         return tilgangskontroll
                 .check(Policies.tilgangTilModia)
                 .get(Audit.describe(READ, Saksbehandler.Enheter), () -> {
-                    String ident = AuthContextHolderThreadLocal.instance().requireSubject();
+                    String ident = AuthContextUtils.requireIdent();
                     List<Enhet> enheter = ansattService.hentEnhetsliste()
                             .stream()
                             .map((ansattEnhet) -> new Enhet(ansattEnhet.enhetId, ansattEnhet.enhetNavn))
@@ -113,7 +113,7 @@ public class HodeController {
     }
 
     private Pair<String, String> hentSaksbehandlerNavn() {
-        Person saksbehandler = AuthContextHolderThreadLocal.instance().getSubject()
+        Person saksbehandler = AuthContextUtils.getIdent()
                 .map(ldapService::hentSaksbehandler)
                 .orElseThrow(() -> new RuntimeException("Fant ikke ident til saksbehandler"));
         return new Pair<>(saksbehandler.fornavn, saksbehandler.etternavn);

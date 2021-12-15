@@ -1,10 +1,10 @@
 package no.nav.modiapersonoversikt.service
 
-import no.nav.common.auth.context.AuthContextHolderThreadLocal
 import no.nav.common.json.JsonMapper
 import no.nav.common.rest.client.RestClient
 import no.nav.common.sts.SystemUserTokenProvider
 import no.nav.common.utils.EnvironmentUtils.getRequiredProperty
+import no.nav.modiapersonoversikt.infrastructure.AuthContextUtils
 import no.nav.modiapersonoversikt.infrastructure.http.getCallId
 import no.nav.modiapersonoversikt.legacy.api.domain.sfhenvendelse.generated.apis.HenvendelseInfoApi
 import no.nav.modiapersonoversikt.legacy.api.service.HenvendelseLesService
@@ -39,7 +39,7 @@ class HenvendelseLesServiceImpl(
     }
 
     private inline fun <reified T : Any> fetch(url: String): T {
-        val token = AuthContextHolderThreadLocal.instance().requireIdTokenString()
+        val token = AuthContextUtils.requireToken()
         return RestClient.baseClient()
             .newCall(
                 Request.Builder()

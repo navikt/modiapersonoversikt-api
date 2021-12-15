@@ -1,9 +1,9 @@
 package no.nav.modiapersonoversikt.infrastructure.tilgangskontroll
 
-import no.nav.common.auth.context.AuthContextHolderThreadLocal
 import no.nav.modiapersonoversikt.consumer.abac.*
 import no.nav.modiapersonoversikt.consumer.abac.NavAttributes.*
 import no.nav.modiapersonoversikt.consumer.abac.StandardAttributter.ACTION_ID
+import no.nav.modiapersonoversikt.infrastructure.AuthContextUtils
 import java.util.*
 
 private fun parseOidcToken(ssoToken: String): String {
@@ -19,8 +19,7 @@ private fun Optional<String>.createWithTokenBody(block: Request.(token: String) 
 }
 
 object AbacPolicies {
-    private val authcontext = AuthContextHolderThreadLocal.instance()
-    fun tilgangTilModia(): AbacRequest = authcontext.idTokenString
+    fun tilgangTilModia(): AbacRequest = AuthContextUtils.getToken()
         .createWithTokenBody { tokenBody ->
             environment {
                 attribute(ENVIRONMENT_FELLES_PEP_ID, "modia")
@@ -32,7 +31,7 @@ object AbacPolicies {
             }
         }
 
-    fun tilgangTilBruker(fnr: String): AbacRequest = authcontext.idTokenString
+    fun tilgangTilBruker(fnr: String): AbacRequest = AuthContextUtils.getToken()
         .createWithTokenBody { tokenBody ->
             environment {
                 attribute(ENVIRONMENT_FELLES_PEP_ID, "modia")
@@ -45,7 +44,7 @@ object AbacPolicies {
             }
         }
 
-    fun tilgangTilBrukerMedAktorId(aktorId: String): AbacRequest = authcontext.idTokenString
+    fun tilgangTilBrukerMedAktorId(aktorId: String): AbacRequest = AuthContextUtils.getToken()
         .createWithTokenBody { tokenBody ->
             environment {
                 attribute(ENVIRONMENT_FELLES_PEP_ID, "modia")
@@ -58,7 +57,7 @@ object AbacPolicies {
             }
         }
 
-    fun kanPlukkeOppgave(): AbacRequest = authcontext.idTokenString
+    fun kanPlukkeOppgave(): AbacRequest = AuthContextUtils.getToken()
         .createWithTokenBody { tokenBody ->
             environment {
                 attribute(ENVIRONMENT_FELLES_PEP_ID, "modia")

@@ -1,7 +1,6 @@
 package no.nav.modiapersonoversikt.infrastructure.naudit
 
-import no.nav.common.auth.context.AuthContextHolderThreadLocal
-import no.nav.common.types.identer.NavIdent
+import no.nav.modiapersonoversikt.infrastructure.AuthContextUtils
 import no.nav.modiapersonoversikt.infrastructure.naudit.AuditIdentifier.DENY_REASON
 import no.nav.modiapersonoversikt.infrastructure.naudit.AuditIdentifier.FAIL_REASON
 import org.slf4j.LoggerFactory
@@ -93,7 +92,7 @@ class Audit {
         }
 
         private fun logInternal(action: Action, resourceType: AuditResource, identifiers: Array<Pair<AuditIdentifier, String?>>) {
-            val subject = AuthContextHolderThreadLocal.instance().navIdent.map(NavIdent::get)
+            val subject = AuthContextUtils.getIdent()
             val logline = listOfNotNull(
                 "action='$action'",
                 subject

@@ -1,6 +1,6 @@
 package no.nav.modiapersonoversikt.legacy.api.utils.cache;
 
-import no.nav.common.auth.context.AuthContextHolderThreadLocal;
+import no.nav.modiapersonoversikt.infrastructure.AuthContextUtils;
 import org.springframework.aop.framework.AopProxyUtils;
 import org.springframework.cache.interceptor.SimpleKeyGenerator;
 
@@ -27,7 +27,7 @@ public class AutentisertBrukerKeyGenerator extends SimpleKeyGenerator {
     }
 
     private String getUser() {
-        return AuthContextHolderThreadLocal.instance().getSubject().orElse("uauthentisert");
+        return AuthContextUtils.getIdent().orElse("uauthentisert");
     }
 
     private String getTargetClassName(Object target) {
