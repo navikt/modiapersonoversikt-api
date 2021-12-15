@@ -2,16 +2,15 @@ package no.nav.modiapersonoversikt.legacy.sak.config;
 
 import no.nav.modiapersonoversikt.infrastructure.content.ContentRetriever;
 import no.nav.modiapersonoversikt.consumer.kodeverk2.KodeverkClient;
-import no.nav.modiapersonoversikt.legacy.api.service.FodselnummerAktorService;
 import no.nav.modiapersonoversikt.legacy.api.service.norg.AnsattService;
 import no.nav.modiapersonoversikt.legacy.api.service.saker.SakerService;
+import no.nav.modiapersonoversikt.service.FodselnummerAktorService;
 import no.nav.modiapersonoversikt.service.unleash.UnleashService;
 import no.nav.modiapersonoversikt.legacy.sak.service.HenvendelseService;
 import no.nav.modiapersonoversikt.legacy.sak.service.SakOgBehandlingService;
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll;
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.TilgangskontrollMock;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsesoknader.v1.HenvendelseSoknaderPortType;
-import no.nav.tjeneste.virksomhet.aktoer.v2.Aktoer_v2;
 import no.nav.tjeneste.virksomhet.innsynjournal.v2.binding.InnsynJournalV2;
 import no.nav.tjeneste.virksomhet.journal.v2.JournalV2;
 import no.nav.tjeneste.virksomhet.pensjonsak.v1.PensjonSakV1;
@@ -30,12 +29,6 @@ import static org.mockito.Mockito.when;
  * stubber av de avhengighetene som kommer derfra
  */
 public class ModiaStubConfig {
-
-    @Bean
-    public Aktoer_v2 aktoerPortType() {
-        return mock(Aktoer_v2.class);
-    }
-
     @Bean
     public SakOgBehandlingV1 sakOgBehandlingPortType() throws Exception {
         SakOgBehandlingV1 mock = mock(SakOgBehandlingV1.class);
