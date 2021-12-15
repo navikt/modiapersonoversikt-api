@@ -38,7 +38,7 @@ public class CacheConfig {
                 cache("hentSykmeldingsperioderCache", 300),
                 cache("kodeverkCache", 3600),
                 cache("utbetalingCache", 1800, 10_000),
-                cache("pdlAktorFnrCache", Integer.MAX_VALUE, 100_000),
+                cache("pdlCache", 3600, 100_000),
                 cache("asbogosysEnhet", 86400, 10_000),
                 cache("asbogosysAnsatt", 14400, 10_000),
                 cache("asbogosysAnsattListe", 43200, 10_000),

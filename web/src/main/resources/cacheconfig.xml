@@ -48,8 +48,9 @@
             <cache:cacheable method="finn*"/>
         </cache:caching>
     </cache:advice>
-    <cache:advice id="pdlAktorFnrAdvice" key-generator="methodawarekeygenerator">
-        <cache:caching cache="pdlAktorFnrCache">
+    <cache:advice id="pdlAdvice" key-generator="userkeygenerator">
+        <cache:caching cache="pdlCache">
+            <cache:cacheable method="sok*"/>
             <cache:cacheable method="hent*"/>
         </cache:caching>
     </cache:advice>
@@ -115,7 +116,7 @@
     </cache:advice>
 
     <aop:config>
-        <aop:advisor advice-ref="pdlAktorFnrAdvice" pointcut="bean(fodselnummerAktorService)"/>
+        <aop:advisor advice-ref="pdlAdvice" pointcut="bean(pdlOppslagService)"/>
         <aop:advisor advice-ref="shortlivedAdvice" pointcut="bean(henvendelseSoknaderPortType)"/>
         <aop:advisor advice-ref="shortlivedAdvice" pointcut="bean(sakOgBehandlingPortType)"/>
         <aop:advisor advice-ref="shortlivedAdvice" pointcut="bean(sakEndpoint)"/>
