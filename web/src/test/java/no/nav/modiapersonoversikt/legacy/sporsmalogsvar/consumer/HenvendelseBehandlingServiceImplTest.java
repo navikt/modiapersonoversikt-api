@@ -8,13 +8,13 @@ import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.*;
 import no.nav.modiapersonoversikt.infrastructure.content.ContentRetriever;
 import no.nav.modiapersonoversikt.legacy.api.domain.henvendelse.Melding;
 import no.nav.modiapersonoversikt.legacy.api.service.arbeidsfordeling.ArbeidsfordelingV1Service;
-import no.nav.modiapersonoversikt.legacy.api.service.kodeverk.StandardKodeverk;
 import no.nav.modiapersonoversikt.legacy.api.service.ldap.LDAPService;
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll;
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.TilgangskontrollContext;
 import no.nav.modiapersonoversikt.legacy.sporsmalogsvar.consumer.henvendelse.HenvendelseBehandlingServiceImpl;
 import no.nav.modiapersonoversikt.legacy.sporsmalogsvar.legacy.TraadVM;
 import no.nav.modiapersonoversikt.rest.persondata.*;
+import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.behandlehenvendelse.BehandleHenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.henvendelse.HenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.meldinger.WSHentHenvendelseListeRequest;
@@ -26,10 +26,7 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.stubbing.Answer;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static java.util.Arrays.asList;
@@ -56,8 +53,8 @@ class HenvendelseBehandlingServiceImplTest {
 
     private final HenvendelsePortType henvendelsePortType = mock(HenvendelsePortType.class);
     private final BehandleHenvendelsePortType behandleHenvendelsePortType = mock(BehandleHenvendelsePortType.class);
-    private PersondataService persondataService = mock(PersondataService.class);
-    private final StandardKodeverk standardKodeverk = mock(StandardKodeverk.class);
+    private final PersondataService persondataService = mock(PersondataService.class);
+    private final EnhetligKodeverk.Service kodeverk = mock(EnhetligKodeverk.Service.class);
     private final ContentRetriever propertyResolver = mock(ContentRetriever.class);
     private final LDAPService ldapService = mock(LDAPService.class);
     private final ArbeidsfordelingV1Service arbeidsfordelingService = mock(ArbeidsfordelingV1Service.class);
@@ -68,7 +65,7 @@ class HenvendelseBehandlingServiceImplTest {
             behandleHenvendelsePortType,
             persondataService,
             new Tilgangskontroll(tilgangskontrollContext),
-            standardKodeverk,
+            kodeverk,
             propertyResolver,
             ldapService,
             arbeidsfordelingService
@@ -93,7 +90,10 @@ class HenvendelseBehandlingServiceImplTest {
         when(henvendelsePortType.hentHenvendelseListe(any(WSHentHenvendelseListeRequest.class))).thenReturn(
                 new WSHentHenvendelseListeResponse().withAny(xmlHenvendelseListe));
 
-        when(standardKodeverk.getArkivtemaNavn(anyString())).thenReturn(ARKIVTEMANAVN);
+        EnhetligKodeverk.Kodeverk dummyKodeverk = new EnhetligKodeverk.Kodeverk("Dummy", new HashMap<>() {{
+            put("journalfort tema", ARKIVTEMANAVN);
+        }});
+        when(kodeverk.hentKodeverk(any())).thenReturn(dummyKodeverk);
     }
 
     @Test

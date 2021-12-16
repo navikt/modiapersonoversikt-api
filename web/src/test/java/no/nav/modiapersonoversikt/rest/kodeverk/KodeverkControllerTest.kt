@@ -3,7 +3,6 @@ package no.nav.modiapersonoversikt.rest.kodeverk
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.ninjasquad.springmockk.MockkBean
 import io.mockk.every
-import no.nav.modiapersonoversikt.consumer.kodeverk.consumer.fim.kodeverk.KodeverkmanagerBi
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.TilgangskontrollMock
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk
@@ -24,9 +23,6 @@ internal class KodeverkControllerTest {
         @Bean
         open fun tilgangskontroll(): Tilgangskontroll = TilgangskontrollMock.get()
     }
-
-    @MockkBean
-    lateinit var legacyKodeverk: KodeverkmanagerBi
 
     @MockkBean
     lateinit var kodeverkMock: EnhetligKodeverk.Service

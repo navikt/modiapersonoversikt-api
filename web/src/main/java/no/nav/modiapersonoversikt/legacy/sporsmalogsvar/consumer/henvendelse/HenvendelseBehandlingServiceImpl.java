@@ -10,7 +10,6 @@ import no.nav.modiapersonoversikt.legacy.api.domain.henvendelse.HenvendelseUtils
 import no.nav.modiapersonoversikt.legacy.api.domain.henvendelse.Melding;
 import no.nav.modiapersonoversikt.legacy.api.domain.norg.EnhetsGeografiskeTilknytning;
 import no.nav.modiapersonoversikt.legacy.api.service.arbeidsfordeling.ArbeidsfordelingV1Service;
-import no.nav.modiapersonoversikt.legacy.api.service.kodeverk.StandardKodeverk;
 import no.nav.modiapersonoversikt.legacy.api.service.ldap.LDAPService;
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.*;
 import no.nav.modiapersonoversikt.infrastructure.naudit.Audit;
@@ -21,6 +20,8 @@ import no.nav.modiapersonoversikt.legacy.sporsmalogsvar.legacy.MeldingVM;
 import no.nav.modiapersonoversikt.legacy.sporsmalogsvar.legacy.TraadVM;
 import no.nav.modiapersonoversikt.rest.persondata.Persondata;
 import no.nav.modiapersonoversikt.rest.persondata.PersondataService;
+import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk;
+import no.nav.modiapersonoversikt.service.enhetligkodeverk.KodeverkConfig;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.behandlehenvendelse.BehandleHenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.henvendelse.HenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.meldinger.WSHentHenvendelseListeRequest;
@@ -52,7 +53,7 @@ public class HenvendelseBehandlingServiceImpl implements HenvendelseBehandlingSe
     private final BehandleHenvendelsePortType behandleHenvendelsePortType;
     private final PersondataService persondataService;
     private final Tilgangskontroll tilgangskontroll;
-    private final StandardKodeverk standardKodeverk;
+    private final EnhetligKodeverk.Service kodeverk;
     private final ContentRetriever propertyResolver;
     private final LDAPService ldapService;
     private final ArbeidsfordelingV1Service arbeidsfordelingService;
@@ -63,7 +64,7 @@ public class HenvendelseBehandlingServiceImpl implements HenvendelseBehandlingSe
             BehandleHenvendelsePortType behandleHenvendelsePortType,
             PersondataService persondataService,
             Tilgangskontroll tilgangskontroll,
-            StandardKodeverk standardKodeverk,
+            EnhetligKodeverk.Service kodeverk,
             ContentRetriever propertyResolver,
             LDAPService ldapService,
             ArbeidsfordelingV1Service arbeidsfordelingService
@@ -72,7 +73,7 @@ public class HenvendelseBehandlingServiceImpl implements HenvendelseBehandlingSe
         this.behandleHenvendelsePortType = behandleHenvendelsePortType;
         this.persondataService = persondataService;
         this.tilgangskontroll = tilgangskontroll;
-        this.standardKodeverk = standardKodeverk;
+        this.kodeverk = kodeverk;
         this.propertyResolver = propertyResolver;
         this.ldapService = ldapService;
         this.arbeidsfordelingService = arbeidsfordelingService;
@@ -240,7 +241,7 @@ public class HenvendelseBehandlingServiceImpl implements HenvendelseBehandlingSe
 
     private Melding journalfortTemaTilTemanavn(Melding melding) {
         if (melding.journalfortTema != null) {
-            String temaNavn = standardKodeverk.getArkivtemaNavn(melding.journalfortTema);
+            String temaNavn = kodeverk.hentKodeverk(KodeverkConfig.ARKIVTEMA).hentBeskrivelse(melding.journalfortTema);
             melding.journalfortTemanavn = temaNavn != null ? temaNavn : melding.journalfortTema;
         }
         return melding;

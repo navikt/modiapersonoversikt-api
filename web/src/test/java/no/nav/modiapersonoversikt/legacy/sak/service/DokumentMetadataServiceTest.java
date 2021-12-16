@@ -59,7 +59,7 @@ public class DokumentMetadataServiceTest {
         mockSaf(brukerMottattDokumentFraNavMedLogiskeOgVanligeVedlegg());
         when(bulletproofKodeverkService.getKode(anyString(), any())).thenReturn("FOR");
 
-        when(bulletproofKodeverkService.getTemanavnForTemakode(anyString(), anyString())).thenReturn(new ResultatWrapper<>("Dagpenger"));
+        when(bulletproofKodeverkService.getTemanavnForTemakode(anyString(), any())).thenReturn(new ResultatWrapper<>("Dagpenger"));
         when(henvendelseService.hentInnsendteSoknader(anyString())).thenReturn(singletonList(lagHenvendelse("2")));
 
         ResultatWrapper<List<DokumentMetadata>> wrapper = dokumentMetadataService.hentDokumentMetadata("");

@@ -13,10 +13,10 @@ import no.nav.modiapersonoversikt.legacy.api.domain.bidragsak.generated.apis.Bid
 import no.nav.modiapersonoversikt.legacy.api.domain.bidragsak.generated.models.BidragSakDto
 import no.nav.modiapersonoversikt.legacy.api.domain.saker.Sak
 import no.nav.modiapersonoversikt.legacy.api.domain.saker.Sak.*
-import no.nav.modiapersonoversikt.legacy.api.service.kodeverk.StandardKodeverk
 import no.nav.modiapersonoversikt.legacy.api.service.pdl.PdlOppslagService
 import no.nav.modiapersonoversikt.legacy.api.service.psak.PsakService
 import no.nav.modiapersonoversikt.legacy.api.service.saker.GsakKodeverk
+import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk
 import no.nav.modiapersonoversikt.service.saker.mediation.SakApiGateway
 import no.nav.modiapersonoversikt.service.saker.mediation.SakDto
 import no.nav.modiapersonoversikt.service.unleash.Feature
@@ -52,7 +52,7 @@ class SakerServiceImplTest {
     private lateinit var gsakKodeverk: GsakKodeverk
 
     @MockK
-    private lateinit var standardKodeverk: StandardKodeverk
+    private lateinit var kodeverk: EnhetligKodeverk.Service
 
     @MockK
     private lateinit var arbeidOgAktivitet: ArbeidOgAktivitet
@@ -86,7 +86,7 @@ class SakerServiceImplTest {
         sakerService.setup() // Kaller @PostConstruct manuelt siden vi kjører testen uten spring
         every { arbeidOgAktivitet.hentSakListe(WSHentSakListeRequest()) } returns WSHentSakListeResponse()
         every { gsakKodeverk.hentFagsystemMapping() } returns emptyMap()
-        every { standardKodeverk.getArkivtemaNavn(any()) } returns null
+        every { kodeverk.hentKodeverk(any()) } returns EnhetligKodeverk.Kodeverk("", emptyMap())
         every { pdlOppslagService.hentAktorId(any()) } returns "123456789"
         every { bidragSakControllerApi.find(any()) } returns listOf(BidragSakDto(roller = listOf(), saksnummer = "123", erParagraf19 = false))
         every { unleashService.isEnabled(any<Feature>()) } returns false
