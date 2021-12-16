@@ -19,7 +19,7 @@ import java.net.URL
 import kotlin.collections.set
 
 @KtorExperimentalAPI
-class PdlOppslagServiceImpl constructor(
+open class PdlOppslagServiceImpl constructor(
     private val stsService: SystemUserTokenProvider,
     private val pdlClient: GraphQLClient<*>
 ) : PdlOppslagService {

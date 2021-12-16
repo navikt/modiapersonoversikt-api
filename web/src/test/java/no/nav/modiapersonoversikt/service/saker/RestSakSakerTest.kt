@@ -4,8 +4,8 @@ import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import no.nav.modiapersonoversikt.legacy.api.domain.saker.Sak
+import no.nav.modiapersonoversikt.legacy.api.service.pdl.PdlOppslagService
 import no.nav.modiapersonoversikt.legacy.api.utils.http.AuthContextTestUtils
-import no.nav.modiapersonoversikt.service.FodselnummerAktorService
 import no.nav.modiapersonoversikt.service.saker.kilder.RestSakSaker
 import no.nav.modiapersonoversikt.service.saker.mediation.OpprettSakDto
 import no.nav.modiapersonoversikt.service.saker.mediation.SakApiGateway
@@ -30,13 +30,13 @@ class RestSakSakerTest {
     val FagsystemSakId_1 = "11"
 
     val api = mockk<SakApiGateway>()
-    val fodselnummerAktorService = mockk<FodselnummerAktorService>()
-    val restClient = RestSakSaker(api, fodselnummerAktorService)
+    val pdlOppslagService = mockk<PdlOppslagService>()
+    val restClient = RestSakSaker(api, pdlOppslagService)
 
     @Test
     fun `legg til saker legger til sakene i listen`() {
-        every { fodselnummerAktorService.hentAktorIdForFnr(any()) } returns "123"
-        every { fodselnummerAktorService.hentFnrForAktorId(any()) } returns "456"
+        every { pdlOppslagService.hentAktorId(any()) } returns "123"
+        every { pdlOppslagService.hentFnr(any()) } returns "456"
         every { api.hentSaker(any()) } returns listOf(
             SakDto(
                 id = SakId_1,
@@ -58,8 +58,8 @@ class RestSakSakerTest {
     @Test
     fun `ved feil kastes feilene videre`() {
         every { api.hentSaker(any()) } throws IllegalStateException("Ukjent feil")
-        every { fodselnummerAktorService.hentAktorIdForFnr(any()) } returns "123"
-        every { fodselnummerAktorService.hentFnrForAktorId(any()) } returns "456"
+        every { pdlOppslagService.hentAktorId(any()) } returns "123"
+        every { pdlOppslagService.hentFnr(any()) } returns "456"
 
         val saker = mutableListOf<Sak>()
         assertThrows<IllegalStateException> {
@@ -76,8 +76,8 @@ class RestSakSakerTest {
             fagsakNr = FagsystemSakId_1
         )
         every { api.opprettSak(any()) } returns sakDto
-        every { fodselnummerAktorService.hentAktorIdForFnr(any()) } returns "123"
-        every { fodselnummerAktorService.hentFnrForAktorId(any()) } returns "456"
+        every { pdlOppslagService.hentAktorId(any()) } returns "123"
+        every { pdlOppslagService.hentFnr(any()) } returns "456"
         AuthContextTestUtils.withIdent("Z999999") {
             restClient.opprettSak("fnr", RestSakSaker.TIL_SAK(sakDto))
         }

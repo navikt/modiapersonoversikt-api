@@ -4,11 +4,11 @@ import no.nav.modiapersonoversikt.legacy.api.domain.bidragsak.generated.apis.Bid
 import no.nav.modiapersonoversikt.legacy.api.domain.saker.Sak
 import no.nav.modiapersonoversikt.legacy.api.exceptions.JournalforingFeilet
 import no.nav.modiapersonoversikt.legacy.api.service.kodeverk.StandardKodeverk
+import no.nav.modiapersonoversikt.legacy.api.service.pdl.PdlOppslagService
 import no.nav.modiapersonoversikt.legacy.api.service.psak.PsakService
 import no.nav.modiapersonoversikt.legacy.api.service.saker.GsakKodeverk
 import no.nav.modiapersonoversikt.legacy.api.service.saker.SakerService
 import no.nav.modiapersonoversikt.legacy.api.utils.SakerUtils
-import no.nav.modiapersonoversikt.service.FodselnummerAktorService
 import no.nav.modiapersonoversikt.service.saker.kilder.*
 import no.nav.modiapersonoversikt.service.saker.mediation.SakApiGateway
 import no.nav.modiapersonoversikt.service.unleash.UnleashService
@@ -48,7 +48,7 @@ class SakerServiceImpl : SakerService {
     private lateinit var bidragApiClient: BidragSakControllerApi
 
     @Autowired
-    private lateinit var fodselnummerAktorService: FodselnummerAktorService
+    private lateinit var pdlOppslagService: PdlOppslagService
 
     @Autowired
     private lateinit var unleashService: UnleashService
@@ -65,7 +65,7 @@ class SakerServiceImpl : SakerService {
         arenaSaker = ArenaSaker(arbeidOgAktivitet)
         bidragSaker = BidragSaker(bidragApiClient, unleashService)
         generelleSaker = GenerelleSaker()
-        restSakSaker = RestSakSaker(sakApiGateway, fodselnummerAktorService)
+        restSakSaker = RestSakSaker(sakApiGateway, pdlOppslagService)
         oppfolgingsSaker = OppfolgingsSaker()
         pensjonSaker = PensjonSaker(psakService)
     }

@@ -3,8 +3,8 @@ package no.nav.modiapersonoversikt.legacy.sak.config;
 import no.nav.modiapersonoversikt.infrastructure.content.ContentRetriever;
 import no.nav.modiapersonoversikt.consumer.kodeverk2.KodeverkClient;
 import no.nav.modiapersonoversikt.legacy.api.service.norg.AnsattService;
+import no.nav.modiapersonoversikt.legacy.api.service.pdl.PdlOppslagService;
 import no.nav.modiapersonoversikt.legacy.api.service.saker.SakerService;
-import no.nav.modiapersonoversikt.service.FodselnummerAktorService;
 import no.nav.modiapersonoversikt.service.unleash.UnleashService;
 import no.nav.modiapersonoversikt.legacy.sak.service.HenvendelseService;
 import no.nav.modiapersonoversikt.legacy.sak.service.SakOgBehandlingService;
@@ -89,7 +89,7 @@ public class ModiaStubConfig {
     }
 
     @Bean
-    public FodselnummerAktorService fodselnummerAktorService() { return mock(FodselnummerAktorService.class); }
+    public PdlOppslagService pdlOppslagService() { return mock(PdlOppslagService.class); }
 
     @Bean
     public SakerService sakerService() { return mock(SakerService.class); }

@@ -21,8 +21,8 @@ import no.nav.modiapersonoversikt.legacy.api.service.*
 import no.nav.modiapersonoversikt.legacy.api.service.OppgaveBehandlingService.AlleredeTildeltAnnenSaksbehandler
 import no.nav.modiapersonoversikt.legacy.api.service.arbeidsfordeling.ArbeidsfordelingV1Service
 import no.nav.modiapersonoversikt.legacy.api.service.norg.AnsattService
+import no.nav.modiapersonoversikt.legacy.api.service.pdl.PdlOppslagService
 import no.nav.modiapersonoversikt.legacy.api.utils.http.AuthContextTestUtils
-import no.nav.modiapersonoversikt.service.FodselnummerAktorService
 import no.nav.modiapersonoversikt.service.kodeverksmapper.KodeverksmapperService
 import no.nav.modiapersonoversikt.service.kodeverksmapper.domain.Behandling
 import no.nav.modiapersonoversikt.service.oppgavebehandling.Utils.SPORSMAL_OG_SVAR
@@ -41,7 +41,7 @@ class RestOppgaveBehandlingServiceImplTest {
     private val apiClient: OppgaveApi = mockk()
     private val systemApiClient: OppgaveApi = mockk()
     private val kodeverksmapperService: KodeverksmapperService = mockk()
-    private val fodselnummerAktorService: FodselnummerAktorService = mockk()
+    private val pdlOppslagService: PdlOppslagService = mockk()
     private val tilgangskontrollContext: TilgangskontrollContext = mockk()
     private val tilgangskontroll: Tilgangskontroll = Tilgangskontroll(tilgangskontrollContext)
     private val ansattService: AnsattService = mockk()
@@ -51,7 +51,7 @@ class RestOppgaveBehandlingServiceImplTest {
 
     private val oppgaveBehandlingService = RestOppgaveBehandlingServiceImpl(
         kodeverksmapperService,
-        fodselnummerAktorService,
+        pdlOppslagService,
         ansattService,
         arbeidsfordelingService,
         tilgangskontroll,
@@ -65,11 +65,11 @@ class RestOppgaveBehandlingServiceImplTest {
     fun setupStandardMocker() {
         every { kodeverksmapperService.mapUnderkategori(any()) } returns Optional.empty()
         every { kodeverksmapperService.mapOppgavetype(any()) } returns "SPM_OG_SVR"
-        every { fodselnummerAktorService.hentAktorIdForFnr(any()) } answers {
+        every { pdlOppslagService.hentAktorId(any()) } answers {
             val ident = this.args[0] as String
             "000${ident}000"
         }
-        every { fodselnummerAktorService.hentFnrForAktorId(any()) } answers {
+        every { pdlOppslagService.hentFnr(any()) } answers {
             val ident = this.args[0] as String
             ident.substring(3, ident.length - 3)
         }
@@ -576,8 +576,8 @@ class RestOppgaveBehandlingServiceImplTest {
             every { tilgangskontrollContext.checkAbac(any()) } returns AbacResponse(
                 listOf(Response(Decision.Permit, null))
             )
-            every { fodselnummerAktorService.hentAktorIdForFnr(any()) } returns null
-            every { fodselnummerAktorService.hentFnrForAktorId(any()) } returns null
+            every { pdlOppslagService.hentAktorId(any()) } returns null
+            every { pdlOppslagService.hentFnr(any()) } returns null
 
             val result = withIdent("Z999999") {
                 oppgaveBehandlingService.finnTildelteOppgaverIGsak()
