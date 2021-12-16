@@ -5,7 +5,7 @@ import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navorgenhet.GOSYSNAVOrgEnhet;
 import no.nav.modiapersonoversikt.config.endpoint.kodeverksmapper.Kodeverksmapper;
 import no.nav.modiapersonoversikt.legacy.api.service.ldap.LDAPService;
 import no.nav.modiapersonoversikt.legacy.api.service.oppfolgingsinfo.OppfolgingsinfoApiService;
-import no.nav.modiapersonoversikt.service.FodselnummerAktorService;
+import no.nav.modiapersonoversikt.legacy.api.service.pdl.PdlOppslagService;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.henvendelse.HenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsesoknader.v1.HenvendelseSoknaderPortType;
 import no.nav.tjeneste.virksomhet.innsynjournal.v2.binding.InnsynJournalV2;
@@ -22,11 +22,6 @@ import static org.mockito.Mockito.mock;
 
 @Configuration
 public class CacheTestConfig {
-    @Bean
-    public FodselnummerAktorService fodselnummerAktorService() {
-        return mock(FodselnummerAktorService.class);
-    }
-
     @Bean
     public HenvendelseSoknaderPortType henvendelseSoknaderPortType() {
         return mock(HenvendelseSoknaderPortType.class);
@@ -96,4 +91,7 @@ public class CacheTestConfig {
     public Kodeverksmapper kodeverksmapper() {
         return mock(Kodeverksmapper.class);
     }
+
+    @Bean
+    public PdlOppslagService pdlOppslagService() { return mock(PdlOppslagService.class); }
 }

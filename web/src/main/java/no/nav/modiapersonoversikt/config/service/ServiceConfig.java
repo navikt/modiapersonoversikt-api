@@ -128,7 +128,7 @@ public class ServiceConfig {
     @Bean
     public OppgaveBehandlingService oppgaveBehandlingService(
             KodeverksmapperService kodeverksmapperService,
-            FodselnummerAktorService fodselnummerAktorService,
+            PdlOppslagService pdlOppslagService,
             AnsattService ansattService,
             ArbeidsfordelingV1Service arbeidsfordelingV1Service,
             Tilgangskontroll tilgangskontroll,
@@ -136,7 +136,7 @@ public class ServiceConfig {
     ) {
         return RestOppgaveBehandlingServiceImpl.create(
                 kodeverksmapperService,
-                fodselnummerAktorService,
+                pdlOppslagService,
                 ansattService,
                 arbeidsfordelingV1Service,
                 tilgangskontroll,
@@ -234,11 +234,6 @@ public class ServiceConfig {
                 .username(EnvironmentUtils.getRequiredProperty(SYSTEMUSER_USERNAME))
                 .password(EnvironmentUtils.getRequiredProperty(SYSTEMUSER_PASSWORD))
                 .build();
-    }
-
-    @Bean
-    public FodselnummerAktorService fodselnummerAktorService(PdlOppslagService pdlOppslagService) {
-        return new FodselnummerAktorServiceImpl(pdlOppslagService);
     }
 
     @Bean
