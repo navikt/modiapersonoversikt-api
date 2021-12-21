@@ -30,7 +30,7 @@
     },
     "bostedAdresse" : [ "java.util.Arrays$ArrayList", [ {
       "gyldighetsPeriode" : {
-        "gyldigFraOgMed" : "2021-10-02",
+        "gyldigFraOgMed" : "2021-10-01",
         "gyldigTilOgMed" : null
       },
       "linje1" : "Vegadressestien 3",
@@ -176,8 +176,8 @@
     } ] ],
     "kontaktAdresse" : [ "java.util.Arrays$ArrayList", [ {
       "gyldighetsPeriode" : {
-        "gyldigFraOgMed" : "2021-10-02",
-        "gyldigTilOgMed" : null
+        "gyldigFraOgMed" : "2021-02-02",
+        "gyldigTilOgMed" : "2021-02-02"
       },
       "linje1" : "C/O Adressenavn",
       "linje2" : "Vegadressestien 3",
@@ -188,12 +188,9 @@
         "tidspunkt" : "2020-07-01T10:00:00"
       }
     }, {
-      "gyldighetsPeriode" : {
-        "gyldigFraOgMed" : "2021-02-02",
-        "gyldigTilOgMed" : "2021-02-02"
-      },
+      "gyldighetsPeriode" : null,
       "linje1" : "C/O Adressenavn",
-      "linje2" : "Vegadressestien 3",
+      "linje2" : "Vegadressestien 10",
       "linje3" : "1444 TestPoststed",
       "sistEndret" : {
         "ident" : "Folkeregisteret",
