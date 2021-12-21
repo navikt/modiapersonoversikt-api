@@ -28,15 +28,32 @@
         "kode" : "NOK"
       }
     },
-    "bostedAdresse" : [ "java.util.ArrayList", [ {
+    "bostedAdresse" : [ "java.util.Arrays$ArrayList", [ {
+      "gyldighetsPeriode" : {
+        "gyldigFraOgMed" : "2021-10-02",
+        "gyldigTilOgMed" : null
+      },
+      "linje1" : "Vegadressestien 3",
+      "linje2" : "1444 TestPoststed",
+      "linje3" : null,
+      "sistEndret" : {
+        "ident" : "Folkeregisteret",
+        "system" : "FREG",
+        "tidspunkt" : "2020-07-01T10:00:00"
+      }
+    }, {
       "gyldighetsPeriode" : {
         "gyldigFraOgMed" : "2021-02-02",
         "gyldigTilOgMed" : "2021-02-02"
       },
-      "linje1" : "Ukjent adresse",
-      "linje2" : null,
+      "linje1" : "Vegadressestien 3",
+      "linje2" : "1444 TestPoststed",
       "linje3" : null,
-      "sistEndret" : null
+      "sistEndret" : {
+        "ident" : "Folkeregisteret",
+        "system" : "FREG",
+        "tidspunkt" : "2020-07-01T10:00:00"
+      }
     } ] ],
     "deltBosted" : [ "java.util.ArrayList", [ {
       "adresse" : {
@@ -157,7 +174,20 @@
       "beskrivelse" : "Mann",
       "kode" : "M"
     } ] ],
-    "kontaktAdresse" : [ "java.util.ArrayList", [ {
+    "kontaktAdresse" : [ "java.util.Arrays$ArrayList", [ {
+      "gyldighetsPeriode" : {
+        "gyldigFraOgMed" : "2021-10-02",
+        "gyldigTilOgMed" : null
+      },
+      "linje1" : "C/O Adressenavn",
+      "linje2" : "Vegadressestien 3",
+      "linje3" : "1444 TestPoststed",
+      "sistEndret" : {
+        "ident" : "Folkeregisteret",
+        "system" : "FREG",
+        "tidspunkt" : "2020-07-01T10:00:00"
+      }
+    }, {
       "gyldighetsPeriode" : {
         "gyldigFraOgMed" : "2021-02-02",
         "gyldigTilOgMed" : "2021-02-02"

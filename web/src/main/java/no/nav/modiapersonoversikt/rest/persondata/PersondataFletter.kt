@@ -198,7 +198,7 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
                     null
                 }
             }
-        }
+        }.sortedByDescending { it.gyldighetsPeriode?.gyldigFraOgMed }
     }
 
     private fun hentKontaktAdresse(data: Data): List<Persondata.Adresse> {
@@ -256,7 +256,7 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
                     null
                 }
             }
-        }
+        }.sortedByDescending { it.gyldighetsPeriode?.gyldigFraOgMed }
     }
 
     private fun hentOppholdsAdresse(data: Data): List<Persondata.Adresse> {
