@@ -48,7 +48,7 @@ fun gittPerson(
     foreldreansvar: HentPersondata.Foreldreansvar = foreldreansvarData,
     forelderBarnRelasjon: List<HentPersondata.ForelderBarnRelasjon> = forelderBarnRelasjonData,
     deltBosted: HentPersondata.DeltBosted = deltBostedData,
-    bosted: List<HentPersondata.Bostedsadresse> = ukjentBosted("Ukjent adresse"),
+    bosted: HentPersondata.Bostedsadresse = bostedadresseData,
     kontaktadresse: HentPersondata.Kontaktadresse = kontaktadresseData,
     oppholdsadresse: HentPersondata.Oppholdsadresse = oppholdsadresseData
 ) = HentPersondata.Person(
@@ -72,8 +72,21 @@ fun gittPerson(
     foreldreansvar = listOf(foreldreansvar),
     forelderBarnRelasjon = forelderBarnRelasjon,
     deltBosted = listOf(deltBosted),
-    bostedsadresse = bosted,
-    kontaktadresse = listOf(kontaktadresse),
+    bostedsadresse = listOf(
+        bosted,
+        bosted.copy(
+            gyldigFraOgMed = gittDateTime("2021-10-01T00:00:00"),
+            gyldigTilOgMed = null
+        )
+    ),
+    kontaktadresse = listOf(
+        kontaktadresse,
+        kontaktadresse.copy(
+            gyldigFraOgMed = null,
+            gyldigTilOgMed = null,
+            vegadresse = gittVegadresse(husnummer = "10")
+        )
+    ),
     oppholdsadresse = listOf(oppholdsadresse)
 )
 
@@ -352,23 +365,34 @@ internal val forelderBarnRelasjonData = listOf(
     )
 )
 
-internal val vegadresse = HentPersondata.Vegadresse(
-    matrikkelId = null,
-    husbokstav = null,
-    husnummer = "3",
-    bruksenhetsnummer = null,
-    adressenavn = "Vegadressestien",
-    kommunenummer = "0987",
-    bydelsnummer = null,
-    tilleggsnavn = null,
-    postnummer = "1444"
+internal fun gittVegadresse(
+    matrikkelId: HentPersondata.Long? = null,
+    husbokstav: String? = null,
+    husnummer: String? = "3",
+    bruksenhetsnummer: String? = null,
+    adressenavn: String? = "Vegadressestien",
+    kommunenummer: String? = "0987",
+    bydelsnummer: String? = null,
+    tilleggsnavn: String? = null,
+    postnumme: String? = "1444"
+
+) = HentPersondata.Vegadresse(
+    matrikkelId = matrikkelId,
+    husbokstav = husbokstav,
+    husnummer = husnummer,
+    bruksenhetsnummer = bruksenhetsnummer,
+    adressenavn = adressenavn,
+    kommunenummer = kommunenummer,
+    bydelsnummer = bydelsnummer,
+    tilleggsnavn = tilleggsnavn,
+    postnummer = postnumme
 )
 
 internal val deltBostedData = HentPersondata.DeltBosted(
     startdatoForKontrakt = gittDato("2019-09-09"),
     sluttdatoForKontrakt = null,
     coAdressenavn = null,
-    vegadresse = vegadresse,
+    vegadresse = gittVegadresse(),
     matrikkeladresse = null,
     utenlandskAdresse = null,
     ukjentBosted = null
@@ -381,7 +405,7 @@ internal val kontaktadresseData = HentPersondata.Kontaktadresse(
     coAdressenavn = "C/O Adressenavn",
     postadresseIFrittFormat = null,
     postboksadresse = null,
-    vegadresse = vegadresse,
+    vegadresse = gittVegadresse(),
     utenlandskAdresse = null,
     utenlandskAdresseIFrittFormat = null
 )
@@ -391,10 +415,21 @@ internal val oppholdsadresseData = HentPersondata.Oppholdsadresse(
     gyldigTilOgMed = gittDateTime("2021-02-02T00:00:00"),
     oppholdAnnetSted = "UTENRIKS",
     coAdressenavn = "Kari Hansen",
-    vegadresse = vegadresse,
+    vegadresse = gittVegadresse(),
     matrikkeladresse = null,
     utenlandskAdresse = null,
     metadata = metadata
+)
+
+internal val bostedadresseData = HentPersondata.Bostedsadresse(
+    gyldigFraOgMed = gittDateTime("2021-02-02T00:00:00"),
+    gyldigTilOgMed = gittDateTime("2021-02-02T00:00:00"),
+    metadata = metadata,
+    vegadresse = gittVegadresse(),
+    utenlandskAdresse = null,
+    ukjentBosted = null,
+    folkeregistermetadata = null,
+    matrikkeladresse = null
 )
 
 internal fun gittDato(dato: String) = HentPersondata.Date(LocalDate.parse(dato))
