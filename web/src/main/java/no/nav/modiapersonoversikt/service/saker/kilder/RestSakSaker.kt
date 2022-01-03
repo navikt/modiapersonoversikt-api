@@ -1,6 +1,6 @@
 package no.nav.modiapersonoversikt.service.saker.kilder
 
-import no.nav.common.auth.subject.SubjectHandler
+import no.nav.modiapersonoversikt.infrastructure.AuthContextUtils
 import no.nav.modiapersonoversikt.legacy.api.domain.saker.Sak
 import no.nav.modiapersonoversikt.legacy.api.domain.saker.Sak.FAGSYSTEM_FOR_OPPRETTELSE_AV_GENERELL_SAK
 import no.nav.modiapersonoversikt.legacy.api.service.pdl.PdlOppslagService
@@ -28,7 +28,7 @@ class RestSakSaker(
     }
 
     fun opprettSak(fnr: String, sak: Sak): String {
-        val ident = SubjectHandler.getIdent().orElseThrow { IllegalStateException("Fant ikke ident") }
+        val ident = AuthContextUtils.requireIdent()
         val opprettetSak = sakApiGateway.opprettSak(
             OpprettSakDto(
                 aktoerId = requireNotNull(pdlOppslagService.hentAktorId(fnr)) {

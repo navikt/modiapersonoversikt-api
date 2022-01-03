@@ -7,7 +7,7 @@ import _0._0.nav_cons_sak_gosys_3.no.nav.asbo.navorgenhet.ASBOGOSYSNavEnhet;
 import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navansatt.*;
 import no.nav.modiapersonoversikt.legacy.api.domain.norg.Ansatt;
 import no.nav.modiapersonoversikt.legacy.api.domain.norg.AnsattEnhet;
-import no.nav.modiapersonoversikt.legacy.api.utils.http.SubjectHandlerUtil;
+import no.nav.modiapersonoversikt.legacy.api.utils.http.AuthContextTestUtils;
 import org.junit.jupiter.api.Test;
 
 import java.util.LinkedList;
@@ -32,7 +32,7 @@ class AnsattServiceImplTest {
 
         when(ansattWS.hentNAVAnsattEnhetListe(any(ASBOGOSYSNAVAnsatt.class))).thenReturn(asbogosysnavEnhetListe);
 
-        List<AnsattEnhet> enheter = SubjectHandlerUtil.withIdent("Z999999", () -> ansattServiceImpl.hentEnhetsliste());
+        List<AnsattEnhet> enheter = AuthContextTestUtils.withIdent("Z999999", () -> ansattServiceImpl.hentEnhetsliste());
         List<AnsattEnhet> refEnheter = asbogogsysEnhetListeTilAnsattEnhetListe(asbogosysnavEnhetListe);
 
         verify(ansattWS).hentNAVAnsattEnhetListe(any(ASBOGOSYSNAVAnsatt.class));

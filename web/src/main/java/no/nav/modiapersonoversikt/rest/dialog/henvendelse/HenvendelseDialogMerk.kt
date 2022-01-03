@@ -1,6 +1,6 @@
 package no.nav.modiapersonoversikt.rest.dialog.henvendelse
 
-import no.nav.common.auth.subject.SubjectHandler
+import no.nav.modiapersonoversikt.infrastructure.AuthContextUtils
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll
 import no.nav.modiapersonoversikt.legacy.api.service.OppgaveBehandlingService
 import no.nav.modiapersonoversikt.rest.dialog.apis.*
@@ -59,7 +59,7 @@ class HenvendelseDialogMerk(
 
     override fun kanSlette(): ResponseEntity<Boolean> {
         val godkjenteSaksbehandlere = tilgangskontroll.context().hentSaksbehandlereMedTilgangTilHastekassering()
-        val saksbehandlerId = SubjectHandler.getIdent().map(String::toUpperCase).get()
+        val saksbehandlerId = AuthContextUtils.requireIdent().uppercase()
         return ResponseEntity(godkjenteSaksbehandlere.contains(saksbehandlerId), HttpStatus.OK)
     }
 }

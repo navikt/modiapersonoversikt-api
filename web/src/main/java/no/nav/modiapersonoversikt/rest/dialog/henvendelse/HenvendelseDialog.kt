@@ -1,6 +1,6 @@
 package no.nav.modiapersonoversikt.rest.dialog.henvendelse
 
-import no.nav.common.auth.subject.SubjectHandler
+import no.nav.modiapersonoversikt.infrastructure.AuthContextUtils
 import no.nav.modiapersonoversikt.infrastructure.scientist.Scientist
 import no.nav.modiapersonoversikt.legacy.api.domain.Temagruppe
 import no.nav.modiapersonoversikt.legacy.api.domain.henvendelse.Fritekst
@@ -317,7 +317,7 @@ private fun lagFortsettDialog(request: FortsettDialogRequest, requestContext: Re
 }
 
 fun lagSendHenvendelseContext(fnr: String, enhet: String?, request: HttpServletRequest): RequestContext {
-    val ident = SubjectHandler.getIdent().get()
+    val ident = AuthContextUtils.requireIdent()
     val valgtEnhet = RestUtils.hentValgtEnhet(enhet, request)
 
     require(valgtEnhet != null)
