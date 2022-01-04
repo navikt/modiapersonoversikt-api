@@ -1,10 +1,11 @@
 package no.nav.modiapersonoversikt.service.sfhenvendelse
 
+import com.nimbusds.jwt.JWTClaimsSet
+import com.nimbusds.jwt.PlainJWT
 import io.mockk.every
 import io.mockk.mockk
-import no.nav.common.auth.subject.IdentType
-import no.nav.common.auth.subject.SsoToken
-import no.nav.common.auth.subject.Subject
+import no.nav.common.auth.context.AuthContext
+import no.nav.common.auth.context.UserRole
 import no.nav.common.sts.SystemUserTokenProvider
 import no.nav.modiapersonoversikt.config.endpoint.Utils.withProperty
 import no.nav.modiapersonoversikt.legacy.api.domain.norg.EnhetsGeografiskeTilknytning
@@ -16,7 +17,7 @@ import no.nav.modiapersonoversikt.legacy.api.domain.sfhenvendelse.generated.mode
 import no.nav.modiapersonoversikt.legacy.api.service.arbeidsfordeling.ArbeidsfordelingV1Service
 import no.nav.modiapersonoversikt.legacy.api.service.norg.AnsattService
 import no.nav.modiapersonoversikt.legacy.api.service.pdl.PdlOppslagService
-import no.nav.modiapersonoversikt.testutils.SubjectExtension
+import no.nav.modiapersonoversikt.testutils.AuthContextExtension
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.RegisterExtension
@@ -27,8 +28,14 @@ internal class SfHenvendelseServiceImplTest {
     companion object {
         @JvmField
         @RegisterExtension
-        val subject = SubjectExtension(Subject("Z999999", IdentType.InternBruker, SsoToken.oidcToken("token", emptyMap<String, Any>())))
+        val subject = AuthContextExtension(
+            AuthContext(
+                UserRole.INTERN,
+                PlainJWT(JWTClaimsSet.Builder().subject("Z999999").build())
+            )
+        )
     }
+
     private val henvendelseBehandlingApi: HenvendelseBehandlingApi = mockk()
     private val henvendelseInfoApi: HenvendelseInfoApi = mockk()
     private val henvendelseJournalApi: JournalApi = mockk()
@@ -143,7 +150,11 @@ internal class SfHenvendelseServiceImplTest {
             journalpostId = "1a2sd5a4sd"
         )
         return dummyHenvendelse.copy(
-            journalposter = if (this.journalposter == null) listOf(journalpost) else this.journalposter!!.plus(journalpost)
+            journalposter = if (this.journalposter == null) {
+                listOf(journalpost)
+            } else {
+                this.journalposter!!.plus(journalpost)
+            }
         )
     }
 

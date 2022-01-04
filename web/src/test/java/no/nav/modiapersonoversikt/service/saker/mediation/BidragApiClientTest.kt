@@ -1,9 +1,10 @@
 package no.nav.modiapersonoversikt.service.saker.mediation
 
-import no.nav.common.auth.subject.IdentType
-import no.nav.common.auth.subject.SsoToken
-import no.nav.common.auth.subject.Subject
-import no.nav.common.auth.subject.SubjectHandler
+import com.nimbusds.jwt.JWTClaimsSet
+import com.nimbusds.jwt.PlainJWT
+import no.nav.common.auth.context.AuthContext
+import no.nav.common.auth.context.UserRole
+import no.nav.modiapersonoversikt.infrastructure.AuthContextUtils
 import no.nav.modiapersonoversikt.legacy.api.domain.bidragsak.generated.apis.BidragSakControllerApi
 import no.nav.modiapersonoversikt.legacy.api.domain.bidragsak.generated.models.BidragSakDto
 import no.nav.modiapersonoversikt.legacy.api.domain.bidragsak.generated.models.RolleDto
@@ -13,8 +14,10 @@ import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 
 internal class BidragApiClientTest {
-    private val TEST_SUBJECT =
-        Subject("Z999999", IdentType.InternBruker, SsoToken.oidcToken("token", emptyMap<String, Any>()))
+    private val TEST_SUBJECT = AuthContext(
+        UserRole.INTERN,
+        PlainJWT(JWTClaimsSet.Builder().subject("Z999999").build())
+    )
 
     @Language("json")
     val bisysResponse: String = """
@@ -52,7 +55,7 @@ internal class BidragApiClientTest {
             stub = WireMockUtils.getWithBody(statusCode = 200, body = bisysResponse),
             verify = {}
         ) { url ->
-            SubjectHandler.withSubject(TEST_SUBJECT) {
+            AuthContextUtils.withContext(TEST_SUBJECT) {
                 val client = BidragSakControllerApi(url, BidragApiClient.client)
                 val saker = client.find("12345678910")
                 assertEquals(2, saker.size)

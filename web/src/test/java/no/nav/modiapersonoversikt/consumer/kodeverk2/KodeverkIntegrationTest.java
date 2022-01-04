@@ -4,7 +4,6 @@ package no.nav.modiapersonoversikt.consumer.kodeverk2;
 import no.nav.tjeneste.virksomhet.kodeverk.v2.KodeverkPortType;
 import no.nav.tjeneste.virksomhet.kodeverk.v2.informasjon.XMLEnkeltKodeverk;
 import no.nav.tjeneste.virksomhet.kodeverk.v2.informasjon.XMLSammensattKodeverk;
-import org.apache.cxf.feature.LoggingFeature;
 import org.apache.cxf.jaxws.JaxWsProxyFactoryBean;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -69,7 +68,6 @@ public class KodeverkIntegrationTest {
     private KodeverkPortType createKodeverkPortType() {
         JaxWsProxyFactoryBean jaxwsClient = new JaxWsProxyFactoryBean();
         jaxwsClient.setServiceClass(KodeverkPortType.class);
-        jaxwsClient.getFeatures().add(new LoggingFeature());
         jaxwsClient.setAddress(KODEVERK_ENDPOINT);
         jaxwsClient.setWsdlURL(classpathUrl("kodeverk/no/nav/tjeneste/virksomhet/kodeverk/v2/Kodeverk.wsdl"));
         return jaxwsClient.create(KodeverkPortType.class);

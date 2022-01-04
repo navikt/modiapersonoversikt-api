@@ -1,10 +1,9 @@
 package no.nav.modiapersonoversikt.config;
 
-import no.nav.common.auth.Constants;
+import no.nav.common.auth.context.UserRole;
 import no.nav.common.auth.oidc.filter.OidcAuthenticationFilter;
 import no.nav.common.auth.oidc.filter.OidcAuthenticator;
 import no.nav.common.auth.oidc.filter.OidcAuthenticatorConfig;
-import no.nav.common.auth.subject.IdentType;
 import no.nav.common.log.LogFilter;
 import no.nav.common.rest.filter.SetStandardHttpHeadersFilter;
 import no.nav.common.utils.EnvironmentUtils;
@@ -29,7 +28,7 @@ public class LoginContext {
                 .withClientId(modiaClientId)
                 .withDiscoveryUrl(issoDiscoveryUrl)
                 .withIdTokenCookieName("modia_ID_token")
-                .withIdentType(IdentType.InternBruker)
+                .withUserRole(UserRole.INTERN)
                 .withRefreshUrl(modiaRefreshUrl)
                 .withRefreshTokenCookieName("modia_refresh_token");
 

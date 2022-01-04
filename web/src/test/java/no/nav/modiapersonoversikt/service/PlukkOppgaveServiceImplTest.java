@@ -7,7 +7,7 @@ import no.nav.modiapersonoversikt.consumer.abac.Response;
 import no.nav.modiapersonoversikt.legacy.api.domain.Oppgave;
 import no.nav.modiapersonoversikt.legacy.api.domain.Temagruppe;
 import no.nav.modiapersonoversikt.legacy.api.service.OppgaveBehandlingService;
-import no.nav.modiapersonoversikt.legacy.api.utils.http.SubjectHandlerUtil;
+import no.nav.modiapersonoversikt.legacy.api.utils.http.AuthContextTestUtils;
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll;
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.TilgangskontrollContext;
 import no.nav.modiapersonoversikt.service.plukkoppgave.PlukkOppgaveServiceImpl;
@@ -49,7 +49,7 @@ public class PlukkOppgaveServiceImplTest {
         when(tilgangskontrollContext.checkAbac(any(AbacRequest.class))).thenReturn(
                 new AbacResponse(singletonList(new Response(Decision.Permit, emptyList())))
         );
-        List<Oppgave> oppgaverResponse = SubjectHandlerUtil.withIdent("Z9990322", () -> plukkOppgaveService.plukkOppgaver(Temagruppe.FMLI, SAKSBEHANDLERS_VALGTE_ENHET));
+        List<Oppgave> oppgaverResponse = AuthContextTestUtils.withIdent("Z9990322", () -> plukkOppgaveService.plukkOppgaver(Temagruppe.FMLI, SAKSBEHANDLERS_VALGTE_ENHET));
 
         assertThat(oppgaverResponse, is(equalTo(oppgaver)));
     }
@@ -64,7 +64,7 @@ public class PlukkOppgaveServiceImplTest {
                 new AbacResponse(singletonList(new Response(Decision.Deny, emptyList()))),
                 new AbacResponse(singletonList(new Response(Decision.Permit, emptyList())))
         );
-        List<Oppgave> oppgaver = SubjectHandlerUtil.withIdent("Z9990322", () -> plukkOppgaveService.plukkOppgaver(Temagruppe.FMLI, SAKSBEHANDLERS_VALGTE_ENHET));
+        List<Oppgave> oppgaver = AuthContextTestUtils.withIdent("Z9990322", () -> plukkOppgaveService.plukkOppgaver(Temagruppe.FMLI, SAKSBEHANDLERS_VALGTE_ENHET));
         assertThat(oppgaver, is(equalTo(oppgave2)));
         verify(oppgaveBehandlingService).systemLeggTilbakeOppgaveIGsak(eq(oppgave1.get(0).oppgaveId), eq(Temagruppe.FMLI), eq(SAKSBEHANDLERS_VALGTE_ENHET));
     }

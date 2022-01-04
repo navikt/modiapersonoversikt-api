@@ -1,10 +1,9 @@
 package no.nav.modiapersonoversikt.service.sfhenvendelse
 
-import no.nav.common.auth.subject.SsoToken
-import no.nav.common.auth.subject.SubjectHandler
 import no.nav.common.rest.client.RestClient
 import no.nav.common.sts.SystemUserTokenProvider
 import no.nav.common.utils.EnvironmentUtils.getRequiredProperty
+import no.nav.modiapersonoversikt.infrastructure.AuthContextUtils
 import no.nav.modiapersonoversikt.infrastructure.http.AuthorizationInterceptor
 import no.nav.modiapersonoversikt.infrastructure.http.LoggingInterceptor
 import no.nav.modiapersonoversikt.infrastructure.http.getCallId
@@ -91,7 +90,7 @@ class SfHenvendelseServiceImpl(
             .map { it.geografiskOmraade }
             .plus(enhet)
         val tematilganger = ansattService.hentAnsattFagomrader(
-            SubjectHandler.getIdent().orElseThrow(),
+            AuthContextUtils.requireIdent(),
             enhet
         )
 
@@ -326,7 +325,7 @@ class SfHenvendelseServiceImpl(
             if (harTilgangTilAlleJournalforteTema) {
                 henvendelseDTO
             } else {
-                val ident = SubjectHandler.getIdent().orElse("-")
+                val ident = AuthContextUtils.getIdent().orElse("-")
                 logger.info(
                     """
                     Ikke tilgang til tema. 
@@ -400,8 +399,7 @@ fun String.fixKjedeId(): String {
 object SfHenvendelseApiFactory {
     fun url(): String = getRequiredProperty("SF_HENVENDELSE_URL")
     private val client = createClient {
-        SubjectHandler.getSsoToken(SsoToken.Type.OIDC)
-            .orElseThrow { IllegalStateException("Fant ikke OIDC-token") }
+        AuthContextUtils.requireToken()
     }
 
     fun createClient(tokenProvider: () -> String): OkHttpClient = RestClient.baseClient().newBuilder()

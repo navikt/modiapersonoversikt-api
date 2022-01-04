@@ -1,6 +1,6 @@
 package no.nav.modiapersonoversikt.legacy.api.utils;
 
-import no.nav.common.auth.subject.SubjectHandler;
+import no.nav.modiapersonoversikt.infrastructure.AuthContextUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,12 +12,12 @@ public class RestUtils {
     public static final Logger enhetCookieLogging = LoggerFactory.getLogger("EnhetCookieLogging");
 
     public static String saksbehandlerInnstillingerCookieId() {
-        String ident = SubjectHandler.getIdent().orElseThrow(() -> new RuntimeException("Fant ikke ident"));
+        String ident = AuthContextUtils.requireIdent();
         return "saksbehandlerinnstillinger-" + ident;
     }
 
     public static String saksbehandlerInnstillingerTimeoutCookieId() {
-        String ident = SubjectHandler.getIdent().orElseThrow(() -> new RuntimeException("Fant ikke ident"));
+        String ident = AuthContextUtils.requireIdent();
         return "saksbehandlerinnstillinger-timeout-" + ident;
     }
 

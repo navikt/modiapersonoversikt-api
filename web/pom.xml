@@ -48,7 +48,7 @@
         </dependency>
         <dependency>
             <groupId>no.nav.common</groupId>
-            <artifactId>leader-election</artifactId>
+            <artifactId>job</artifactId>
         </dependency>
         <dependency>
             <groupId>no.nav.common</groupId>

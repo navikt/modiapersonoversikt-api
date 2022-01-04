@@ -1,13 +1,14 @@
 package no.nav.modiapersonoversikt.infrastructure.tilgangskontroll
 
+import com.nimbusds.jwt.JWTClaimsSet
+import com.nimbusds.jwt.PlainJWT
 import io.mockk.every
 import io.mockk.mockk
-import no.nav.common.auth.subject.IdentType
-import no.nav.common.auth.subject.SsoToken
-import no.nav.common.auth.subject.Subject
+import no.nav.common.auth.context.AuthContext
+import no.nav.common.auth.context.UserRole
 import no.nav.modiapersonoversikt.consumer.abac.*
 import no.nav.modiapersonoversikt.infrastructure.rsbac.DecisionEnums
-import no.nav.modiapersonoversikt.testutils.SubjectRule
+import no.nav.modiapersonoversikt.testutils.AuthContextRule
 import org.junit.Rule
 import org.junit.Test
 import java.util.*
@@ -16,7 +17,12 @@ import kotlin.test.assertEquals
 class TilgangskontrollTest {
     @Rule
     @JvmField
-    val subject = SubjectRule(Subject("Z999999", IdentType.InternBruker, SsoToken.oidcToken("token", emptyMap<String, Any>())))
+    val subject = AuthContextRule(
+        AuthContext(
+            UserRole.INTERN,
+            PlainJWT(JWTClaimsSet.Builder().subject("Z999999").build())
+        )
+    )
 
     @Test
     fun `deny om saksbehandler mangler modia-roller`() {

@@ -1,6 +1,6 @@
 package no.nav.modiapersonoversikt.rest.ldap
 
-import no.nav.common.auth.subject.SubjectHandler
+import no.nav.modiapersonoversikt.infrastructure.AuthContextUtils
 import no.nav.modiapersonoversikt.infrastructure.naudit.Audit
 import no.nav.modiapersonoversikt.infrastructure.naudit.Audit.Action.READ
 import no.nav.modiapersonoversikt.infrastructure.naudit.AuditResources.Saksbehandler
@@ -21,7 +21,7 @@ constructor(private val ldapService: LDAPService, private val tilgangskontroll: 
         return tilgangskontroll
             .check(Policies.tilgangTilModia)
             .get(Audit.describe(READ, Saksbehandler.Roller)) {
-                val ident = SubjectHandler.getIdent().get()
+                val ident = AuthContextUtils.requireIdent()
                 mapOf("roller" to ldapService.hentRollerForVeileder(ident))
             }
     }
