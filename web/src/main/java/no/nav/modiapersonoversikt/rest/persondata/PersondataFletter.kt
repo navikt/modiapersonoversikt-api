@@ -19,6 +19,7 @@ import no.nav.tjeneste.virksomhet.person.v3.informasjon.Bruker
 import no.nav.tjeneste.virksomhet.person.v3.meldinger.HentPersonResponse
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import java.time.Clock
 import java.time.LocalDate
 import java.time.Period
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.KodeverkConfig as Kodeverk
@@ -56,7 +57,7 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
         }
     }
 
-    fun flettSammenData(data: Data): Persondata.Data {
+    fun flettSammenData(data: Data, clock: Clock = Clock.systemDefaultZone()): Persondata.Data {
         val feilendeSystemer = data.feilendeSystemer().toMutableList()
         return Persondata.Data(
             feilendeSystemer = feilendeSystemer,
@@ -66,7 +67,7 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
                 kjonn = hentKjonn(data),
                 fodselsdato = hentFodselsdato(data),
                 geografiskTilknytning = hentGeografiskTilknytning(data),
-                alder = hentAlder(data),
+                alder = hentAlder(data, clock),
                 dodsdato = hentDodsdato(data),
                 bostedAdresse = hentBostedAdresse(data),
                 kontaktAdresse = hentKontaktAdresse(data),
@@ -949,10 +950,10 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
             (personAdresse.linje3 == tredjepartsPersonAdresse.linje3)
     }
 
-    private fun hentAlder(data: Data): Int? {
+    private fun hentAlder(data: Data, clock: Clock): Int? {
         return data.persondata.foedsel.firstOrNull()?.foedselsdato
             ?.let {
-                Period.between(it.value, LocalDate.now()).years
+                Period.between(it.value, LocalDate.now(clock)).years
             }
     }
 
