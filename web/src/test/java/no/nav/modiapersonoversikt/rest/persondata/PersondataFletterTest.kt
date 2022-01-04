@@ -7,6 +7,9 @@ import no.nav.modiapersonoversikt.testutils.SnapshotExtension
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.RegisterExtension
+import java.time.Clock
+import java.time.Instant
+import java.time.ZoneId
 
 internal class PersondataFletterTest {
     @JvmField
@@ -26,9 +29,10 @@ internal class PersondataFletterTest {
     internal fun `skal mappe data fra pdl til Persondata`() {
         snapshot.assertMatches(
             mapper.flettSammenData(
-                gittData(
+                data = gittData(
                     persondata = gittPerson(fnr = fnr)
-                )
+                ),
+                clock = Clock.fixed(Instant.parse("2021-10-10T12:00:00.000Z"), ZoneId.systemDefault())
             )
         )
     }
