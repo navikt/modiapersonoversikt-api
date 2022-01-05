@@ -1,10 +1,11 @@
 package no.nav.modiapersonoversikt.legacy.sporsmalogsvar.consumer;
 
-import no.nav.common.auth.subject.IdentType;
-import no.nav.common.auth.subject.SsoToken;
-import no.nav.common.auth.subject.Subject;
-import no.nav.common.auth.subject.SubjectHandler;
+import com.nimbusds.jwt.JWTClaimsSet;
+import com.nimbusds.jwt.PlainJWT;
+import no.nav.common.auth.context.AuthContext;
+import no.nav.common.auth.context.UserRole;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.*;
+import no.nav.modiapersonoversikt.infrastructure.AuthContextUtils;
 import no.nav.modiapersonoversikt.infrastructure.content.ContentRetriever;
 import no.nav.modiapersonoversikt.legacy.api.domain.henvendelse.Melding;
 import no.nav.modiapersonoversikt.legacy.api.service.arbeidsfordeling.ArbeidsfordelingV1Service;
@@ -39,7 +40,10 @@ import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 class HenvendelseBehandlingServiceImplTest {
-    private static final Subject TEST_SUBJECT = new Subject("Z999999", IdentType.InternBruker, SsoToken.oidcToken("token", emptyMap()));
+    private static final AuthContext TEST_SUBJECT = new AuthContext(
+            UserRole.INTERN,
+            new PlainJWT(new JWTClaimsSet.Builder().subject("Z999999").build())
+    );
     private static final String FNR = "11111111";
     private static final String TEMAGRUPPE = "temagruppe";
     private static final String BEHANDLINGS_ID = "id1";
@@ -98,7 +102,7 @@ class HenvendelseBehandlingServiceImplTest {
 
     @Test
     void skalHenteMeldingerMedRiktigType() {
-        SubjectHandler.withSubject(TEST_SUBJECT, () -> henvendelseBehandlingService.hentMeldinger(FNR, VALGT_ENHET));
+        AuthContextUtils.withContext(TEST_SUBJECT, () -> henvendelseBehandlingService.hentMeldinger(FNR, VALGT_ENHET));
 
         verify(henvendelsePortType).hentHenvendelseListe(wsHentHenvendelseListeRequestArgumentCaptor.capture());
         WSHentHenvendelseListeRequest request = wsHentHenvendelseListeRequestArgumentCaptor.getValue();
@@ -115,7 +119,7 @@ class HenvendelseBehandlingServiceImplTest {
 
     @Test
     void skalTransformereResponsenTilMeldingsliste() {
-        List<Melding> meldinger = SubjectHandler.withSubject(TEST_SUBJECT, () -> henvendelseBehandlingService.hentMeldinger(FNR, VALGT_ENHET).getTraader()
+        List<Melding> meldinger = AuthContextUtils.withContext(TEST_SUBJECT, () -> henvendelseBehandlingService.hentMeldinger(FNR, VALGT_ENHET).getTraader()
                 .stream()
                 .flatMap(traader -> traader.getMeldinger().stream())
                 .collect(Collectors.toList())
@@ -161,7 +165,7 @@ class HenvendelseBehandlingServiceImplTest {
 
         when(henvendelsePortType.hentHenvendelseListe(any(WSHentHenvendelseListeRequest.class))).thenReturn(new WSHentHenvendelseListeResponse().withAny(xmlHenvendelsesListe));
 
-        List<Melding> meldinger = SubjectHandler.withSubject(TEST_SUBJECT, () -> henvendelseBehandlingService.hentMeldinger(FNR, VALGT_ENHET).getTraader().stream()
+        List<Melding> meldinger = AuthContextUtils.withContext(TEST_SUBJECT, () -> henvendelseBehandlingService.hentMeldinger(FNR, VALGT_ENHET).getTraader().stream()
                 .flatMap(traad -> traad.getMeldinger().stream())
                 .sorted(Comparator.comparing(melding -> melding.opprettetDato))
                 .collect(Collectors.toList())
@@ -181,7 +185,7 @@ class HenvendelseBehandlingServiceImplTest {
                 .withJournalfortInformasjon(new XMLJournalfortInformasjon().withJournalfortTema("tema")));
 
         when(henvendelsePortType.hentHenvendelseListe(any(WSHentHenvendelseListeRequest.class))).thenReturn(new WSHentHenvendelseListeResponse().withAny(xmlHenvendelsesListe));
-        List<Melding> meldinger = SubjectHandler.withSubject(TEST_SUBJECT, () -> henvendelseBehandlingService.hentMeldinger(FNR, VALGT_ENHET).getTraader().stream()
+        List<Melding> meldinger = AuthContextUtils.withContext(TEST_SUBJECT, () -> henvendelseBehandlingService.hentMeldinger(FNR, VALGT_ENHET).getTraader().stream()
                 .flatMap(traad -> traad.getMeldinger().stream())
                 .sorted(Comparator.comparing(melding -> melding.opprettetDato))
                 .collect(Collectors.toList())
@@ -204,7 +208,7 @@ class HenvendelseBehandlingServiceImplTest {
 
         when(henvendelsePortType.hentHenvendelseListe(any(WSHentHenvendelseListeRequest.class))).thenReturn(new WSHentHenvendelseListeResponse().withAny(xmlHenvendelsesListe));
 
-        List<Melding> meldinger = SubjectHandler.withSubject(TEST_SUBJECT, () -> henvendelseBehandlingService.hentMeldinger(FNR, VALGT_ENHET).getTraader().stream()
+        List<Melding> meldinger = AuthContextUtils.withContext(TEST_SUBJECT, () -> henvendelseBehandlingService.hentMeldinger(FNR, VALGT_ENHET).getTraader().stream()
                 .flatMap(traad -> traad.getMeldinger().stream())
                 .collect(Collectors.toList())
         );
@@ -220,7 +224,7 @@ class HenvendelseBehandlingServiceImplTest {
 
         when(henvendelsePortType.hentHenvendelseListe(any(WSHentHenvendelseListeRequest.class))).thenReturn(new WSHentHenvendelseListeResponse().withAny(xmlHenvendelsesListe));
 
-        List<Melding> meldinger = SubjectHandler.withSubject(TEST_SUBJECT, () -> henvendelseBehandlingService.hentMeldinger(FNR, VALGT_ENHET).getTraader().stream()
+        List<Melding> meldinger = AuthContextUtils.withContext(TEST_SUBJECT, () -> henvendelseBehandlingService.hentMeldinger(FNR, VALGT_ENHET).getTraader().stream()
                 .flatMap(traad -> traad.getMeldinger().stream())
                 .collect(Collectors.toList())
         );
@@ -239,7 +243,7 @@ class HenvendelseBehandlingServiceImplTest {
 
         when(henvendelsePortType.hentHenvendelseListe(any(WSHentHenvendelseListeRequest.class))).thenReturn(new WSHentHenvendelseListeResponse().withAny(okonomiskSosialhjelp));
 
-        List<Melding> meldinger = SubjectHandler.withSubject(TEST_SUBJECT, () -> henvendelseBehandlingService.hentMeldinger(FNR, VALGT_ENHET).getTraader().stream()
+        List<Melding> meldinger = AuthContextUtils.withContext(TEST_SUBJECT, () -> henvendelseBehandlingService.hentMeldinger(FNR, VALGT_ENHET).getTraader().stream()
                 .flatMap(traad -> traad.getMeldinger().stream())
                 .collect(Collectors.toList())
         );

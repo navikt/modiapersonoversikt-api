@@ -7,6 +7,9 @@ import no.nav.modiapersonoversikt.legacy.api.domain.pdl.generated.HentTredjepart
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
+import java.time.Clock
+import java.time.Instant
+import java.time.ZoneId
 
 internal class AdresseMappingTest {
     val kodeverk: EnhetligKodeverk.Service = mockk()
@@ -54,12 +57,13 @@ internal class AdresseMappingTest {
             .lagTredjepartsperson(barnFnr, tredjepartsPerson, PersondataService.Tilganger(true, true))
 
         val persondata = mapper.flettSammenData(
-            gittData(
+            data = gittData(
                 persondata = hovedperson,
                 tredjepartsPerson = PersondataResult.runCatching("tredjepartsperson") {
                     mapOf(barnFnr to requireNotNull(tredjepartsPersonData))
                 }
-            )
+            ),
+            clock = Clock.fixed(Instant.parse("2021-10-10T12:00:00.000Z"), ZoneId.systemDefault())
         )
 
         val harSammeAdresse = persondata.person.forelderBarnRelasjon.find { it.ident == barnFnr }?.harSammeAdresse

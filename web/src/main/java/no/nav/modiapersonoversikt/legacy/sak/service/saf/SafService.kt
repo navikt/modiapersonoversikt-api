@@ -6,10 +6,9 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
-import no.nav.common.auth.subject.SsoToken
-import no.nav.common.auth.subject.SubjectHandler
 import no.nav.common.rest.client.RestClient
 import no.nav.common.utils.EnvironmentUtils
+import no.nav.modiapersonoversikt.infrastructure.AuthContextUtils
 import no.nav.modiapersonoversikt.infrastructure.http.LoggingInterceptor
 import no.nav.modiapersonoversikt.infrastructure.http.XCorrelationIdInterceptor
 import no.nav.modiapersonoversikt.legacy.api.domain.saf.generated.Hentbrukerssaker
@@ -111,8 +110,7 @@ private fun getDokumentMetadata(safDokumentResponse: SafDokumentResponse): List<
         .map { journalpost -> DokumentMetadata().fraSafJournalpost(journalpost) }
 
 private fun veilederAutorisertClient(url: String): Request.Builder {
-    val veilederOidcToken = SubjectHandler.getSsoToken(SsoToken.Type.OIDC)
-        .orElseThrow { IllegalStateException("Fant ikke OIDC-token") }
+    val veilederOidcToken = AuthContextUtils.requireToken()
 
     return Request.Builder()
         .url(url)

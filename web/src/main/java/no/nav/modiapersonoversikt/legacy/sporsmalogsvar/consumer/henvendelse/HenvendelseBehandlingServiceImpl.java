@@ -1,8 +1,8 @@
 package no.nav.modiapersonoversikt.legacy.sporsmalogsvar.consumer.henvendelse;
 
 import kotlin.Pair;
-import no.nav.common.auth.subject.SubjectHandler;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelse;
+import no.nav.modiapersonoversikt.infrastructure.AuthContextUtils;
 import no.nav.modiapersonoversikt.infrastructure.content.ContentRetriever;
 import no.nav.modiapersonoversikt.legacy.api.domain.Temagruppe;
 import no.nav.modiapersonoversikt.legacy.api.domain.henvendelse.Fritekst;
@@ -199,7 +199,7 @@ public class HenvendelseBehandlingServiceImpl implements HenvendelseBehandlingSe
                     .isPermit();
 
             if (melding.gjeldendeTemagruppe == Temagruppe.OKSOS && !tilgangTilMelding) {
-                String ident = SubjectHandler.getIdent().orElseThrow(() -> new RuntimeException("Fant ikke ident"));
+                String ident = AuthContextUtils.requireIdent();
                 logger.info("HenvendelseBehandlingServiceImpl::okonomiskSosialhjelpTilgang feilet. Ident: {} Enhet: {} Tema: {} SaksId: {} JournalpostId: {}",
                         ident,
                         valgtEnhet,
@@ -215,7 +215,7 @@ public class HenvendelseBehandlingServiceImpl implements HenvendelseBehandlingSe
     }
 
     private Function<Melding, Melding> journalfortTemaTilgang(final String valgtEnhet) {
-        String ident = SubjectHandler.getIdent().orElseThrow(() -> new RuntimeException("Fant ikke ident"));
+        String ident = AuthContextUtils.requireIdent();
         return (melding) -> {
             TilgangTilTemaData data = new TilgangTilTemaData(valgtEnhet, melding.journalfortTema);
             boolean tilgangTilTema = tilgangskontroll

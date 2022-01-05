@@ -1,12 +1,12 @@
 package no.nav.modiapersonoversikt.service.saker
 
+import com.nimbusds.jwt.JWTClaimsSet
+import com.nimbusds.jwt.PlainJWT
 import io.mockk.*
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
-import no.nav.common.auth.subject.IdentType
-import no.nav.common.auth.subject.SsoToken
-import no.nav.common.auth.subject.Subject
-import no.nav.common.auth.subject.SubjectHandler
+import no.nav.common.auth.context.AuthContext
+import no.nav.common.auth.context.UserRole
 import no.nav.common.log.MDCConstants
 import no.nav.common.utils.EnvironmentUtils
 import no.nav.modiapersonoversikt.legacy.api.domain.bidragsak.generated.apis.BidragSakControllerApi
@@ -21,6 +21,7 @@ import no.nav.modiapersonoversikt.service.saker.mediation.SakApiGateway
 import no.nav.modiapersonoversikt.service.saker.mediation.SakDto
 import no.nav.modiapersonoversikt.service.unleash.Feature
 import no.nav.modiapersonoversikt.service.unleash.UnleashService
+import no.nav.modiapersonoversikt.testutils.AuthContextExtension
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.behandlehenvendelse.BehandleHenvendelsePortType
 import no.nav.virksomhet.gjennomforing.sak.arbeidogaktivitet.v1.EndringsInfo
 import no.nav.virksomhet.gjennomforing.sak.arbeidogaktivitet.v1.Fagomradekode
@@ -33,11 +34,11 @@ import org.hamcrest.CoreMatchers.not
 import org.hamcrest.MatcherAssert.assertThat
 import org.joda.time.DateTime
 import org.joda.time.LocalDate
-import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.extension.RegisterExtension
 import org.slf4j.MDC
 import java.time.OffsetDateTime
 import java.util.*
@@ -47,7 +48,6 @@ import kotlin.streams.toList
 
 @ExperimentalContracts
 class SakerServiceImplTest {
-
     @MockK
     private lateinit var gsakKodeverk: GsakKodeverk
 
@@ -91,16 +91,9 @@ class SakerServiceImplTest {
         every { bidragSakControllerApi.find(any()) } returns listOf(BidragSakDto(roller = listOf(), saksnummer = "123", erParagraf19 = false))
         every { unleashService.isEnabled(any<Feature>()) } returns false
 
-        mockkStatic(SubjectHandler::class)
-        every { SubjectHandler.getSubject() } returns Optional.of(Subject("12345678910", IdentType.EksternBruker, SsoToken.oidcToken("token", HashMap<String, Any?>())))
         every { sakApiGateway.opprettSak(any()) } returns SakDto(id = "123")
 
         MDC.put(MDCConstants.MDC_CALL_ID, "12345")
-    }
-
-    @AfterEach
-    fun destroy() {
-        unmockkStatic(SubjectHandler::class)
     }
 
     @Test
@@ -281,6 +274,15 @@ class SakerServiceImplTest {
     }
 
     companion object {
+        @JvmField
+        @RegisterExtension
+        val subject = AuthContextExtension(
+            AuthContext(
+                UserRole.INTERN,
+                PlainJWT(JWTClaimsSet.Builder().subject("Z999999").build())
+            )
+        )
+
         const val BEHANDLINGSKJEDEID = "behandlingsKjedeId"
         const val SAKS_ID = "123"
         const val FNR = "fnr"

@@ -1,9 +1,10 @@
 package no.nav.modiapersonoversikt.legacy.sak.service;
 
 
-import no.nav.common.auth.subject.IdentType;
-import no.nav.common.auth.subject.SsoToken;
-import no.nav.common.auth.subject.Subject;
+import com.nimbusds.jwt.JWTClaimsSet;
+import com.nimbusds.jwt.PlainJWT;
+import no.nav.common.auth.context.AuthContext;
+import no.nav.common.auth.context.UserRole;
 import no.nav.modiapersonoversikt.legacy.api.domain.norg.AnsattEnhet;
 import no.nav.modiapersonoversikt.legacy.api.service.norg.AnsattService;
 import no.nav.modiapersonoversikt.legacy.sak.providerdomain.DokumentMetadata;
@@ -24,15 +25,12 @@ import java.util.List;
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 import static java.util.Arrays.asList;
-import static java.util.Collections.emptyMap;
 import static no.nav.modiapersonoversikt.legacy.sak.providerdomain.Feilmelding.*;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 @RunWith(MockitoJUnitRunner.class)
 public class TilgangskontrollServiceTest {
-    private static final Subject TEST_SUBJECT = new Subject("null", IdentType.InternBruker, SsoToken.oidcToken("token", emptyMap()));
-
     @Mock
     private AnsattService ansattService;
 

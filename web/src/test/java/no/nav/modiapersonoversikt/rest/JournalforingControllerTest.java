@@ -3,7 +3,7 @@ package no.nav.modiapersonoversikt.rest;
 import no.nav.modiapersonoversikt.legacy.api.domain.saker.Sak;
 import no.nav.modiapersonoversikt.legacy.api.exceptions.JournalforingFeilet;
 import no.nav.modiapersonoversikt.legacy.api.utils.RestUtils;
-import no.nav.modiapersonoversikt.legacy.api.utils.http.SubjectHandlerUtil;
+import no.nav.modiapersonoversikt.legacy.api.utils.http.AuthContextTestUtils;
 import no.nav.modiapersonoversikt.rest.journalforing.JournalforingApi;
 import no.nav.modiapersonoversikt.rest.journalforing.JournalforingController;
 import no.nav.modiapersonoversikt.service.saker.EnhetIkkeSatt;
@@ -34,7 +34,7 @@ class JournalforingControllerTest {
 
         JournalforingController journalforingController = new JournalforingController(mock(JournalforingApi.class), TilgangskontrollMock.get());
 
-        ResponseEntity response = SubjectHandlerUtil.withIdent(SAKSBEHANDLERS_IDENT, () ->
+        ResponseEntity response = AuthContextTestUtils.withIdent(SAKSBEHANDLERS_IDENT, () ->
                 journalforingController.knyttTilSak("10108000398", "traad-id", new Sak(), null, mockHttpRequest())
         );
 
@@ -49,7 +49,7 @@ class JournalforingControllerTest {
         JournalforingController journalforingController = new JournalforingController(mock, TilgangskontrollMock.get());
 
         ResponseStatusException exception = assertThrows(ResponseStatusException.class, () ->
-                SubjectHandlerUtil.withIdent(SAKSBEHANDLERS_IDENT, () ->
+                AuthContextTestUtils.withIdent(SAKSBEHANDLERS_IDENT, () ->
                         journalforingController.knyttTilSak("10108000398", "traad-id", new Sak(), null, mockHttpRequest())
                 )
         );
@@ -65,7 +65,7 @@ class JournalforingControllerTest {
         JournalforingController journalforingController = new JournalforingController(mock, TilgangskontrollMock.get());
 
         ResponseStatusException exception = assertThrows(ResponseStatusException.class, () ->
-                SubjectHandlerUtil.withIdent(SAKSBEHANDLERS_IDENT, () ->
+                AuthContextTestUtils.withIdent(SAKSBEHANDLERS_IDENT, () ->
                         journalforingController.knyttTilSak("10108000398", "traad-id", new Sak(), null, mockHttpRequest())
                 )
         );
