@@ -14,7 +14,6 @@ import no.nav.modiapersonoversikt.legacy.api.service.HenvendelseLesService;
 import no.nav.modiapersonoversikt.legacy.api.service.HenvendelseUtsendingService;
 import no.nav.modiapersonoversikt.legacy.api.service.OppgaveBehandlingService;
 import no.nav.modiapersonoversikt.legacy.api.service.arbeidsfordeling.ArbeidsfordelingV1Service;
-import no.nav.modiapersonoversikt.legacy.api.service.kodeverk.StandardKodeverk;
 import no.nav.modiapersonoversikt.legacy.api.service.ldap.LDAPService;
 import no.nav.modiapersonoversikt.legacy.api.service.norg.AnsattService;
 import no.nav.modiapersonoversikt.legacy.api.service.oppfolgingsinfo.OppfolgingsenhetService;
@@ -32,7 +31,6 @@ import no.nav.modiapersonoversikt.service.dkif.DkifServiceRestImpl;
 import no.nav.modiapersonoversikt.service.henvendelse.DelsvarService;
 import no.nav.modiapersonoversikt.service.henvendelse.DelsvarServiceImpl;
 import no.nav.modiapersonoversikt.service.kodeverk.GsakKodeverkFraFil;
-import no.nav.modiapersonoversikt.service.kodeverk.StandardKodeverkImpl;
 import no.nav.modiapersonoversikt.service.kodeverksmapper.KodeverksmapperService;
 import no.nav.modiapersonoversikt.service.ldap.LDAPServiceImpl;
 import no.nav.modiapersonoversikt.service.ldap.LdapContextProvider;
@@ -152,11 +150,6 @@ public class ServiceConfig {
     @Bean
     public OrganisasjonEnhetV2Service organisasjonEnhetServiceV2() {
         return new OrganisasjonEnhetV2ServiceImpl();
-    }
-
-    @Bean
-    public StandardKodeverk standardKodeverk() {
-        return new StandardKodeverkImpl();
     }
 
     @Bean

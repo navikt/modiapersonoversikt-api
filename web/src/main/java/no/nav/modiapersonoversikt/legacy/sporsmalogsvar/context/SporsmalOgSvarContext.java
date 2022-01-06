@@ -2,12 +2,12 @@ package no.nav.modiapersonoversikt.legacy.sporsmalogsvar.context;
 
 import no.nav.modiapersonoversikt.infrastructure.content.ContentRetriever;
 import no.nav.modiapersonoversikt.legacy.api.service.arbeidsfordeling.ArbeidsfordelingV1Service;
-import no.nav.modiapersonoversikt.legacy.api.service.kodeverk.StandardKodeverk;
 import no.nav.modiapersonoversikt.legacy.api.service.ldap.LDAPService;
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll;
 import no.nav.modiapersonoversikt.legacy.sporsmalogsvar.consumer.henvendelse.HenvendelseBehandlingService;
 import no.nav.modiapersonoversikt.legacy.sporsmalogsvar.consumer.henvendelse.HenvendelseBehandlingServiceImpl;
 import no.nav.modiapersonoversikt.rest.persondata.PersondataService;
+import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.behandlehenvendelse.BehandleHenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.henvendelse.HenvendelsePortType;
 import org.springframework.context.annotation.Bean;
@@ -22,7 +22,7 @@ public class SporsmalOgSvarContext {
             BehandleHenvendelsePortType behandleHenvendelsePortType,
             PersondataService persondataService,
             Tilgangskontroll tilgangskontroll,
-            StandardKodeverk standardKodeverk,
+            EnhetligKodeverk.Service kodeverk,
             ContentRetriever propertyResolver,
             LDAPService ldapService,
             ArbeidsfordelingV1Service arbeidsfordelingService
@@ -32,7 +32,7 @@ public class SporsmalOgSvarContext {
                 behandleHenvendelsePortType,
                 persondataService,
                 tilgangskontroll,
-                standardKodeverk,
+                kodeverk,
                 propertyResolver,
                 ldapService,
                 arbeidsfordelingService

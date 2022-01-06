@@ -9,7 +9,6 @@ import no.nav.modiapersonoversikt.legacy.api.service.pdl.PdlOppslagService;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.henvendelse.HenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsesoknader.v1.HenvendelseSoknaderPortType;
 import no.nav.tjeneste.virksomhet.innsynjournal.v2.binding.InnsynJournalV2;
-import no.nav.tjeneste.virksomhet.kodeverk.v2.KodeverkPortType;
 import no.nav.tjeneste.virksomhet.oppfoelging.v1.OppfoelgingPortType;
 import no.nav.tjeneste.virksomhet.organisasjon.v4.OrganisasjonV4;
 import no.nav.tjeneste.virksomhet.organisasjonenhet.v2.OrganisasjonEnhetV2;
@@ -55,11 +54,6 @@ public class CacheTestConfig {
     @Bean
     public HenvendelsePortType henvendelsePortType() {
         return mock(HenvendelsePortType.class);
-    }
-
-    @Bean
-    public KodeverkPortType kodeverkPortType() {
-        return mock(KodeverkPortType.class);
     }
 
     @Bean

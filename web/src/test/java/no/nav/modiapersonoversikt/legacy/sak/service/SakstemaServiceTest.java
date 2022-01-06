@@ -1,6 +1,5 @@
 package no.nav.modiapersonoversikt.legacy.sak.service;
 
-import no.nav.modiapersonoversikt.consumer.kodeverk2.KodeverkClient;
 import no.nav.modiapersonoversikt.legacy.sak.BehandlingskjedeBuilder;
 import no.nav.modiapersonoversikt.legacy.sak.SakBuilder;
 import no.nav.modiapersonoversikt.legacy.sak.providerdomain.*;
@@ -46,9 +45,6 @@ public class SakstemaServiceTest {
     private PesysService pesysService;
 
     @Mock
-    private KodeverkClient kodeverkClient;
-
-    @Mock
     private BulletproofKodeverkService kodeverk;
 
     @Mock
@@ -74,7 +70,7 @@ public class SakstemaServiceTest {
 
         List<Sak> saker = asList(lagSakMedAvsluttetDato(of(now().minusDays(30))));
 
-        when(kodeverk.getTemanavnForTemakode(anyString(), anyString())).thenReturn(new ResultatWrapper<>("Dagpenger"));
+        when(kodeverk.getTemanavnForTemakode(anyString(), any())).thenReturn(new ResultatWrapper<>("Dagpenger"));
 
         when(dokumentMetadataService.hentDokumentMetadata(anyString())).thenReturn(new ResultatWrapper<>(dokumentmetadata, emptySet()));
 

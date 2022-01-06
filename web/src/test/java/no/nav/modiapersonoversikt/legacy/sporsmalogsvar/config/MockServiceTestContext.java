@@ -9,7 +9,6 @@ import no.nav.modiapersonoversikt.legacy.api.service.HenvendelseUtsendingService
 import no.nav.modiapersonoversikt.legacy.api.service.OppgaveBehandlingService;
 import no.nav.modiapersonoversikt.legacy.api.service.arbeidsfordeling.ArbeidsfordelingV1Service;
 import no.nav.modiapersonoversikt.legacy.api.service.saker.GsakKodeverk;
-import no.nav.modiapersonoversikt.legacy.api.service.kodeverk.StandardKodeverk;
 import no.nav.modiapersonoversikt.legacy.api.service.ldap.LDAPService;
 import no.nav.modiapersonoversikt.legacy.api.service.norg.AnsattService;
 import no.nav.modiapersonoversikt.legacy.api.service.organisasjonsEnhetV2.OrganisasjonEnhetV2Service;
@@ -17,9 +16,9 @@ import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontro
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.TilgangskontrollMock;
 import no.nav.modiapersonoversikt.legacy.sporsmalogsvar.consumer.henvendelse.HenvendelseBehandlingService;
 import no.nav.modiapersonoversikt.legacy.sporsmalogsvar.consumer.henvendelse.domain.Meldinger;
+import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.behandlehenvendelse.BehandleHenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.henvendelse.HenvendelsePortType;
-import no.nav.tjeneste.virksomhet.kodeverk.v2.KodeverkPortType;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -38,13 +37,8 @@ public class MockServiceTestContext {
     }
 
     @Bean
-    public StandardKodeverk standardKodeverk() {
-        return mock(StandardKodeverk.class);
-    }
-
-    @Bean
-    public KodeverkPortType kodeverkPortType() {
-        return mock(KodeverkPortType.class);
+    public EnhetligKodeverk.Service enhetligKodeverk() {
+        return mock(EnhetligKodeverk.Service.class);
     }
 
     @Bean

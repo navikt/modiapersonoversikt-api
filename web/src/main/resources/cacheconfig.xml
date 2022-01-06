@@ -59,12 +59,6 @@
             <cache:cacheable method="hent*"/>
         </cache:caching>
     </cache:advice>
-    <cache:advice id="kodeverkAdvice" key-generator="defaultkeygenerator">
-        <cache:caching cache="kodeverkCache">
-            <cache:cacheable method="hent*"/>
-            <cache:cacheable method="finn*"/>
-        </cache:caching>
-    </cache:advice>
     <cache:advice id="ldapServiceAdvice" key-generator="methodawarekeygenerator">
         <cache:caching cache="ldap">
             <cache:cacheable method="hent*"/>
@@ -120,7 +114,6 @@
         <aop:advisor advice-ref="shortlivedAdvice" pointcut="bean(henvendelseSoknaderPortType)"/>
         <aop:advisor advice-ref="shortlivedAdvice" pointcut="bean(sakOgBehandlingPortType)"/>
         <aop:advisor advice-ref="shortlivedAdvice" pointcut="bean(sakEndpoint)"/>
-        <aop:advisor advice-ref="kodeverkAdvice" pointcut="bean(kodeverkPortType)"/>
         <aop:advisor advice-ref="shortlivedAdvice" pointcut="bean(henvendelsePortType)"/>
         <aop:advisor advice-ref="asbogosysAnsattAdvice" pointcut="bean(gosysNavAnsatt)"/>
         <aop:advisor advice-ref="asbogosysEnhetAdvice" pointcut="bean(gosysNavOrgEnhet)"/>

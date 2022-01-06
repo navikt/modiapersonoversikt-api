@@ -2,7 +2,7 @@ package no.nav.modiapersonoversikt.legacy.api.utils;
 
 import no.nav.modiapersonoversikt.legacy.api.domain.saker.Sak;
 import no.nav.modiapersonoversikt.legacy.api.service.saker.GsakKodeverk;
-import no.nav.modiapersonoversikt.legacy.api.service.kodeverk.StandardKodeverk;
+import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk;
 import org.joda.time.DateTime;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,6 +14,7 @@ import static java.util.Arrays.asList;
 import static no.nav.modiapersonoversikt.legacy.api.domain.saker.Sak.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
@@ -37,7 +38,7 @@ public class SakerUtilsTest {
     @Mock
     private GsakKodeverk gsakKodeverk;
     @Mock
-    private StandardKodeverk standardKodeverk;
+    private EnhetligKodeverk.Service standardKodeverk;
 
     private ArrayList<Sak> saksliste;
     private List<String> alleTemaer;
@@ -47,12 +48,15 @@ public class SakerUtilsTest {
     @BeforeEach
     public void setup() {
         initMocks(this);
+        EnhetligKodeverk.Kodeverk dummyKodeverk = new EnhetligKodeverk.Kodeverk("Dummy", new HashMap<>() {{
+            put(KODEVERK_TEMAKODE, KODEVERK_TEMANAVN);
+        }});
+        when(standardKodeverk.hentKodeverk(any())).thenReturn(dummyKodeverk);
+        when(gsakKodeverk.hentFagsystemMapping()).thenReturn(KODEVERK_MOCK_MAP);
+
         alleTemaer = getAlleEksisterendeTemaer();
         saksliste = createSakslisteBasertPaTemaMap();
         alleTemagrupper = getAlleEksisterendeTemagrupper();
-
-        when(gsakKodeverk.hentFagsystemMapping()).thenReturn(KODEVERK_MOCK_MAP);
-        when(standardKodeverk.getArkivtemaNavn(KODEVERK_TEMAKODE)).thenReturn(KODEVERK_TEMANAVN);
     }
 
     @Test
