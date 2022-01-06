@@ -2,13 +2,16 @@ package no.nav.modiapersonoversikt.legacy.sak.service;
 
 import no.nav.modiapersonoversikt.infrastructure.core.exception.ApplicationException;
 import no.nav.modiapersonoversikt.consumer.kodeverk2.Kodeverk;
-import no.nav.modiapersonoversikt.consumer.kodeverk2.KodeverkClient;
 import no.nav.modiapersonoversikt.legacy.sak.providerdomain.Baksystem;
 import no.nav.modiapersonoversikt.legacy.sak.providerdomain.resultatwrappere.ResultatWrapper;
+import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk;
+import no.nav.modiapersonoversikt.service.enhetligkodeverk.KodeverkConfig;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+
 import java.util.HashSet;
 import java.util.Set;
 
@@ -19,14 +22,15 @@ import static org.springframework.util.StringUtils.isEmpty;
 public class BulletproofKodeverkService {
 
     private static final Logger LOG = getLogger(BulletproofKodeverkService.class);
-    public static final String BEHANDLINGSTEMA = "Behandlingstema";
-    public static final String ARKIVTEMA = "Arkivtemaer";
+    public static final KodeverkConfig BEHANDLINGSTEMA = KodeverkConfig.BEHANDLINGSTEMA;
+    public static final KodeverkConfig ARKIVTEMA = KodeverkConfig.ARKIVTEMA;
 
     @Autowired
     private Kodeverk lokaltKodeverk;
 
     @Autowired
-    private KodeverkClient kodeverkClient;
+    private EnhetligKodeverk.Service kodeverk;
+
     public String getSkjematittelForSkjemanummer(String vedleggsIdOrSkjemaId) {
         return getSkjematittelForSkjemanummer(vedleggsIdOrSkjemaId, "");
     }
@@ -54,9 +58,9 @@ public class BulletproofKodeverkService {
         }
     }
 
-    public ResultatWrapper<String> getTemanavnForTemakode(String temakode, String kodeverknavn) {
+    public ResultatWrapper<String> getTemanavnForTemakode(String temakode, KodeverkConfig kodeverknavn) {
         try {
-            return new ResultatWrapper<>(kodeverkClient.hentFoersteTermnavnForKode(temakode, kodeverknavn));
+            return new ResultatWrapper<>(kodeverk.hentKodeverk(kodeverknavn).hentBeskrivelse(temakode));
         } catch (ApplicationException e) {
             LOG.warn("Fant ikke kodeverkid '" + temakode + "'. Bruker generisk tittel.", e);
             return new ResultatWrapper<>(temakode);

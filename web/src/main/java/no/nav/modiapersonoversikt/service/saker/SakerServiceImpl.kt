@@ -3,12 +3,12 @@ package no.nav.modiapersonoversikt.service.saker
 import no.nav.modiapersonoversikt.legacy.api.domain.bidragsak.generated.apis.BidragSakControllerApi
 import no.nav.modiapersonoversikt.legacy.api.domain.saker.Sak
 import no.nav.modiapersonoversikt.legacy.api.exceptions.JournalforingFeilet
-import no.nav.modiapersonoversikt.legacy.api.service.kodeverk.StandardKodeverk
 import no.nav.modiapersonoversikt.legacy.api.service.pdl.PdlOppslagService
 import no.nav.modiapersonoversikt.legacy.api.service.psak.PsakService
 import no.nav.modiapersonoversikt.legacy.api.service.saker.GsakKodeverk
 import no.nav.modiapersonoversikt.legacy.api.service.saker.SakerService
 import no.nav.modiapersonoversikt.legacy.api.utils.SakerUtils
+import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk
 import no.nav.modiapersonoversikt.service.saker.kilder.*
 import no.nav.modiapersonoversikt.service.saker.mediation.SakApiGateway
 import no.nav.modiapersonoversikt.service.unleash.UnleashService
@@ -30,7 +30,7 @@ class SakerServiceImpl : SakerService {
     private lateinit var gsakKodeverk: GsakKodeverk
 
     @Autowired
-    private lateinit var standardKodeverk: StandardKodeverk
+    private lateinit var kodeverk: EnhetligKodeverk.Service
 
     @Autowired
     private lateinit var behandleHenvendelsePortType: BehandleHenvendelsePortType
@@ -93,7 +93,7 @@ class SakerServiceImpl : SakerService {
         resultat.leggTilDataFraKilde(fnr, generelleSaker)
         resultat.leggTilDataFraKilde(fnr, oppfolgingsSaker)
 
-        SakerUtils.leggTilFagsystemnavnOgTemanavn(resultat.saker, gsakKodeverk.hentFagsystemMapping(), standardKodeverk)
+        SakerUtils.leggTilFagsystemnavnOgTemanavn(resultat.saker, gsakKodeverk.hentFagsystemMapping(), kodeverk)
 
         /**
          * Bidragssaken må legges til etter `leggTilFagsystemnavnOgTemanavn` siden vi ikke har
@@ -113,7 +113,7 @@ class SakerServiceImpl : SakerService {
     fun hentPensjonSakerResultat(fnr: String?): SakerService.Resultat {
         requireFnrNotNullOrBlank(fnr)
         val resultat = SakerService.Resultat().leggTilDataFraKilde(fnr, pensjonSaker)
-        SakerUtils.leggTilFagsystemnavnOgTemanavn(resultat.saker, gsakKodeverk.hentFagsystemMapping(), standardKodeverk)
+        SakerUtils.leggTilFagsystemnavnOgTemanavn(resultat.saker, gsakKodeverk.hentFagsystemMapping(), kodeverk)
         return resultat
     }
 

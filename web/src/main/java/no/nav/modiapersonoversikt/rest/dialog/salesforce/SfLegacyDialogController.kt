@@ -8,12 +8,13 @@ import no.nav.modiapersonoversikt.legacy.api.domain.henvendelse.Status
 import no.nav.modiapersonoversikt.legacy.api.domain.sfhenvendelse.generated.models.*
 import no.nav.modiapersonoversikt.legacy.api.domain.sfhenvendelse.generated.models.MeldingDTO.*
 import no.nav.modiapersonoversikt.legacy.api.service.OppgaveBehandlingService
-import no.nav.modiapersonoversikt.legacy.api.service.kodeverk.StandardKodeverk
 import no.nav.modiapersonoversikt.legacy.api.service.ldap.LDAPService
 import no.nav.modiapersonoversikt.legacy.api.utils.RestUtils
 import no.nav.modiapersonoversikt.rest.DATO_TID_FORMAT
 import no.nav.modiapersonoversikt.rest.dialog.apis.*
 import no.nav.modiapersonoversikt.rest.dialog.apis.MeldingDTO
+import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk
+import no.nav.modiapersonoversikt.service.enhetligkodeverk.KodeverkConfig
 import no.nav.modiapersonoversikt.service.sfhenvendelse.EksternBruker
 import no.nav.modiapersonoversikt.service.sfhenvendelse.SfHenvendelseService
 import no.nav.modiapersonoversikt.utils.ConcurrencyUtils.inParallel
@@ -35,7 +36,7 @@ class SfLegacyDialogController(
     private val sfHenvendelseService: SfHenvendelseService,
     private val oppgaveBehandlingService: OppgaveBehandlingService,
     private val ldapService: LDAPService,
-    private val kodeverk: StandardKodeverk
+    private val kodeverk: EnhetligKodeverk.Service
 ) : DialogApi {
     private val logger = LoggerFactory.getLogger(SfLegacyDialogController::class.java)
     override fun hentMeldinger(request: HttpServletRequest, fnr: String, enhet: String?): List<TraadDTO> {
@@ -253,7 +254,7 @@ class SfLegacyDialogController(
             }
             .distinct()
 
-        val temakodeMap = temakoder.associateWith { kode -> kodeverk.getArkivtemaNavn(kode) }
+        val temakodeMap = temakoder.associateWith { kode -> kodeverk.hentKodeverk(KodeverkConfig.ARKIVTEMA).hentBeskrivelse(kode) }
         val identMap = identer.associateWith { ident ->
             runCatching {
                 ldapService.hentSaksbehandler(ident)

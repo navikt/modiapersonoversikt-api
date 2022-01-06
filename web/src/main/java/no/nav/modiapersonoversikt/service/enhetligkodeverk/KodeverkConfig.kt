@@ -1,6 +1,8 @@
 package no.nav.modiapersonoversikt.service.enhetligkodeverk
 
 enum class KodeverkConfig(private val kilde: EnhetligKodeverk.Kilde) {
+    ARKIVTEMA(FellesKodeverkKilde("Arkivtemaer")),
+    BEHANDLINGSTEMA(FellesKodeverkKilde("Behandlingstema")),
     KJONN(FellesKodeverkKilde("Kjønnstyper")),
     LAND(FellesKodeverkKilde("Landkoder")),
     SPRAK(FellesKodeverkKilde("Språk")),
