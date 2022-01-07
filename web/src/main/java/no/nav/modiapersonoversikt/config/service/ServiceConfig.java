@@ -5,6 +5,7 @@ import no.nav.common.cxf.StsConfig;
 import no.nav.common.sts.NaisSystemUserTokenProvider;
 import no.nav.common.sts.SystemUserTokenProvider;
 import no.nav.common.utils.EnvironmentUtils;
+import no.nav.modiapersonoversikt.consumer.norg.NorgApi;
 import no.nav.modiapersonoversikt.legacy.api.domain.bidragsak.generated.apis.BidragSakControllerApi;
 import no.nav.modiapersonoversikt.legacy.kjerneinfo.consumer.egenansatt.EgenAnsattService;
 import no.nav.modiapersonoversikt.infrastructure.content.ContentRetriever;
@@ -13,18 +14,15 @@ import no.nav.modiapersonoversikt.service.*;
 import no.nav.modiapersonoversikt.legacy.api.service.HenvendelseLesService;
 import no.nav.modiapersonoversikt.legacy.api.service.HenvendelseUtsendingService;
 import no.nav.modiapersonoversikt.legacy.api.service.OppgaveBehandlingService;
-import no.nav.modiapersonoversikt.legacy.api.service.arbeidsfordeling.ArbeidsfordelingV1Service;
 import no.nav.modiapersonoversikt.legacy.api.service.ldap.LDAPService;
 import no.nav.modiapersonoversikt.legacy.api.service.norg.AnsattService;
-import no.nav.modiapersonoversikt.legacy.api.service.oppfolgingsinfo.OppfolgingsenhetService;
-import no.nav.modiapersonoversikt.legacy.api.service.organisasjonsEnhetV2.OrganisasjonEnhetV2Service;
 import no.nav.modiapersonoversikt.legacy.api.service.pdl.PdlOppslagService;
 import no.nav.modiapersonoversikt.legacy.api.service.psak.PsakService;
 import no.nav.modiapersonoversikt.legacy.api.service.saker.GsakKodeverk;
 import no.nav.modiapersonoversikt.legacy.api.service.saker.SakerService;
 import no.nav.modiapersonoversikt.config.endpoint.kodeverksmapper.Kodeverksmapper;
-import no.nav.modiapersonoversikt.service.arbeidsfordeling.ArbeidsfordelingClient;
-import no.nav.modiapersonoversikt.service.arbeidsfordeling.ArbeidsfordelingV1ServiceImpl;
+import no.nav.modiapersonoversikt.service.arbeidsfordeling.ArbeidsfordelingService;
+import no.nav.modiapersonoversikt.service.arbeidsfordeling.ArbeidsfordelingServiceImpl;
 import no.nav.modiapersonoversikt.service.dkif.Dkif;
 import no.nav.modiapersonoversikt.service.dkif.DkifServiceImpl;
 import no.nav.modiapersonoversikt.service.dkif.DkifServiceRestImpl;
@@ -34,9 +32,7 @@ import no.nav.modiapersonoversikt.service.kodeverk.GsakKodeverkFraFil;
 import no.nav.modiapersonoversikt.service.kodeverksmapper.KodeverksmapperService;
 import no.nav.modiapersonoversikt.service.ldap.LDAPServiceImpl;
 import no.nav.modiapersonoversikt.service.ldap.LdapContextProvider;
-import no.nav.modiapersonoversikt.service.oppfolgingsinfo.OppfolgingsenhetServiceImpl;
 import no.nav.modiapersonoversikt.service.oppgavebehandling.RestOppgaveBehandlingServiceImpl;
-import no.nav.modiapersonoversikt.service.organisasjonenhet.OrganisasjonEnhetV2ServiceImpl;
 import no.nav.modiapersonoversikt.service.organisasjonenhet.kontaktinformasjon.service.OrganisasjonEnhetKontaktinformasjonService;
 import no.nav.modiapersonoversikt.service.organisasjonenhet.kontaktinformasjon.service.OrganisasjonEnhetKontaktinformasjonServiceImpl;
 import no.nav.modiapersonoversikt.service.pdl.PdlOppslagServiceImpl;
@@ -50,7 +46,6 @@ import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.behandlehenvendelse.Be
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.senduthenvendelse.SendUtHenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.henvendelse.HenvendelsePortType;
 import no.nav.tjeneste.virksomhet.digitalkontaktinformasjon.v1.DigitalKontaktinformasjonV1;
-import no.nav.tjeneste.virksomhet.oppfoelging.v1.OppfoelgingPortType;
 import no.nav.tjeneste.virksomhet.organisasjonenhetkontaktinformasjon.v1.OrganisasjonEnhetKontaktinformasjonV1;
 import no.nav.tjeneste.virksomhet.pensjonsak.v1.PensjonSakV1;
 import org.springframework.cache.CacheManager;
@@ -114,21 +109,11 @@ public class ServiceConfig {
     }
 
     @Bean
-    public ArbeidsfordelingClient arbeidsfordelingClient() {
-        return new ArbeidsfordelingClient();
-    }
-
-    @Bean
-    public ArbeidsfordelingV1Service arbeidsfordelingV1Service(ArbeidsfordelingClient arbeidsfordelingClient, EgenAnsattService egenAnsattService, PersondataService persondataService, KodeverksmapperService kodeverksmapper) {
-        return new ArbeidsfordelingV1ServiceImpl(arbeidsfordelingClient, egenAnsattService, persondataService, kodeverksmapper);
-    }
-
-    @Bean
     public OppgaveBehandlingService oppgaveBehandlingService(
             KodeverksmapperService kodeverksmapperService,
             PdlOppslagService pdlOppslagService,
             AnsattService ansattService,
-            ArbeidsfordelingV1Service arbeidsfordelingV1Service,
+            ArbeidsfordelingService arbeidsfordelingService,
             Tilgangskontroll tilgangskontroll,
             SystemUserTokenProvider stsService
     ) {
@@ -136,7 +121,7 @@ public class ServiceConfig {
                 kodeverksmapperService,
                 pdlOppslagService,
                 ansattService,
-                arbeidsfordelingV1Service,
+                arbeidsfordelingService,
                 tilgangskontroll,
                 stsService
         );
@@ -145,11 +130,6 @@ public class ServiceConfig {
     @Bean
     public AnsattService ansattService(GOSYSNAVansatt gosysNavAnsatt) {
         return new AnsattServiceImpl(gosysNavAnsatt);
-    }
-
-    @Bean
-    public OrganisasjonEnhetV2Service organisasjonEnhetServiceV2() {
-        return new OrganisasjonEnhetV2ServiceImpl();
     }
 
     @Bean
@@ -191,12 +171,6 @@ public class ServiceConfig {
     @Bean
     public OrganisasjonEnhetKontaktinformasjonService organisasjonEnhetKontaktinformasjon(OrganisasjonEnhetKontaktinformasjonV1 organisasjonEnhetKontaktinformasjonV1) {
         return new OrganisasjonEnhetKontaktinformasjonServiceImpl(organisasjonEnhetKontaktinformasjonV1);
-    }
-
-    @Bean
-    public OppfolgingsenhetService oppfolgingsenhetService(OppfoelgingPortType oppfoelgingPortType,
-                                                           OrganisasjonEnhetV2Service organisasjonEnhetV2Service) {
-        return new OppfolgingsenhetServiceImpl(oppfoelgingPortType, organisasjonEnhetV2Service);
     }
 
     @Bean(name = "DkifSoap")

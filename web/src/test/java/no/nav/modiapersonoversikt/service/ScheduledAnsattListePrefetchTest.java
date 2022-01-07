@@ -2,8 +2,8 @@ package no.nav.modiapersonoversikt.service;
 
 import _0._0.nav_cons_sak_gosys_3.no.nav.asbo.navorgenhet.ASBOGOSYSNavEnhet;
 import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navansatt.GOSYSNAVansatt;
-import no.nav.modiapersonoversikt.legacy.api.domain.norg.AnsattEnhet;
-import no.nav.modiapersonoversikt.legacy.api.service.organisasjonsEnhetV2.OrganisasjonEnhetV2Service;
+import no.nav.modiapersonoversikt.consumer.norg.NorgApi;
+import no.nav.modiapersonoversikt.consumer.norg.NorgDomain;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
@@ -24,7 +24,7 @@ import static org.mockito.MockitoAnnotations.initMocks;
 public class ScheduledAnsattListePrefetchTest {
 
     @Mock
-    OrganisasjonEnhetV2Service organisasjonEnhetService;
+    NorgApi norgApi;
     @Mock
     GOSYSNAVansatt ansattWS;
     @Mock
@@ -35,13 +35,16 @@ public class ScheduledAnsattListePrefetchTest {
 
     @InjectMocks
     ScheduledAnsattListePrefetch scheduler;
-    private List<AnsattEnhet> enheter;
+    private List<NorgDomain.Enhet> enheter;
 
     @BeforeEach
     public void setUp() {
         initMocks(this);
-        enheter = Arrays.asList(new AnsattEnhet("0100", "Nav Østfold"), new AnsattEnhet("2960", "Nav Drift"));
-        when(organisasjonEnhetService.hentAlleEnheter(OrganisasjonEnhetV2Service.WSOppgavebehandlerfilter.KUN_OPPGAVEBEHANDLERE)).thenReturn(enheter);
+        enheter = Arrays.asList(
+                new NorgDomain.Enhet("0100", "Nav Østfold", NorgDomain.EnhetStatus.AKTIV),
+                new NorgDomain.Enhet("2960", "Nav Drift", NorgDomain.EnhetStatus.AKTIV)
+        );
+        when(norgApi.hentEnheter(null, NorgDomain.OppgaveBehandlerFilter.KUN_OPPGAVEBEHANDLERE, NorgApi.getIKKE_NEDLAGT())).thenReturn(enheter);
         when(cacheManager.getCache(anyString())).thenReturn(mock(Cache.class));
     }
 
@@ -51,10 +54,10 @@ public class ScheduledAnsattListePrefetchTest {
         verify(ansattWS, times(2)).hentNAVAnsattListe(captor.capture());
 
         List<ASBOGOSYSNavEnhet> requestEnheter = captor.getAllValues();
-        assertThat(requestEnheter.get(0).getEnhetsId(), is(enheter.get(0).enhetId));
-        assertThat(requestEnheter.get(0).getEnhetsNavn(), is(enheter.get(0).enhetNavn));
-        assertThat(requestEnheter.get(1).getEnhetsId(), is(enheter.get(1).enhetId));
-        assertThat(requestEnheter.get(1).getEnhetsNavn(), is(enheter.get(1).enhetNavn));
+        assertThat(requestEnheter.get(0).getEnhetsId(), is(enheter.get(0).getEnhetId()));
+        assertThat(requestEnheter.get(0).getEnhetsNavn(), is(enheter.get(0).getEnhetNavn()));
+        assertThat(requestEnheter.get(1).getEnhetsId(), is(enheter.get(1).getEnhetId()));
+        assertThat(requestEnheter.get(1).getEnhetsNavn(), is(enheter.get(1).getEnhetNavn()));
     }
 
     @Test

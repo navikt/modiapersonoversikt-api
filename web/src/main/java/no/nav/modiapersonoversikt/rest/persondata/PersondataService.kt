@@ -1,8 +1,9 @@
 package no.nav.modiapersonoversikt.rest.persondata
 
+import no.nav.modiapersonoversikt.consumer.norg.NorgApi
+import no.nav.modiapersonoversikt.consumer.norg.NorgDomain
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll
 import no.nav.modiapersonoversikt.legacy.api.domain.pdl.generated.HentPersondata
-import no.nav.modiapersonoversikt.legacy.api.service.organisasjonsEnhetV2.OrganisasjonEnhetV2Service
 import no.nav.modiapersonoversikt.legacy.api.service.pdl.PdlOppslagService
 import no.nav.modiapersonoversikt.legacy.kjerneinfo.consumer.egenansatt.EgenAnsattService
 import no.nav.modiapersonoversikt.rest.enhet.model.EnhetKontaktinformasjon
@@ -31,7 +32,7 @@ interface PersondataService {
 class PersondataServiceImpl(
     private val pdl: PdlOppslagService,
     private val dkif: Dkif.Service,
-    private val organisasjonEnhetV2Service: OrganisasjonEnhetV2Service,
+    private val norgApi: NorgApi,
     private val organisasjonEnhetKontaktinformasjonService: OrganisasjonEnhetKontaktinformasjonService,
     private val personV3: PersonV3,
     private val egenAnsattService: EgenAnsattService,
@@ -111,9 +112,11 @@ class PersondataServiceImpl(
         adressebeskyttelse: List<Persondata.KodeBeskrivelse<Persondata.AdresseBeskyttelse>>,
         geografiskeTilknytning: PersondataResult<String?>
     ): PersondataResult<EnhetKontaktinformasjon?> {
-        val gt = geografiskeTilknytning.getOrElse("")
+        val gt: String = geografiskeTilknytning
+            .map { it ?: "" }
+            .getOrElse("")
 
-        var diskresjonskode = ""
+        var diskresjonskode: String = ""
         for (beskyttelse in adressebeskyttelse) {
             if (beskyttelse.kode == Persondata.AdresseBeskyttelse.KODE6) {
                 diskresjonskode = "SPSF"
@@ -127,10 +130,9 @@ class PersondataServiceImpl(
             }
         }
         return PersondataResult.runCatching("NORG") {
-            organisasjonEnhetV2Service
-                .finnNAVKontor(gt, diskresjonskode)
-                .orElse(null)
-                ?.enhetId
+            norgApi
+                .finnNavKontor(gt, NorgDomain.DiskresjonsKode.valueOf(diskresjonskode))
+                .enhetId
         }
             .map("NORG Kontaktinformasjon") {
                 it?.let { enhetId ->

@@ -1,10 +1,11 @@
 package no.nav.modiapersonoversikt.service.arbeidsfordeling;
 
+import no.nav.common.types.identer.Fnr;
+import no.nav.modiapersonoversikt.config.endpoint.kodeverksmapper.Kodeverksmapper;
+import no.nav.modiapersonoversikt.consumer.norg.NorgApi;
 import no.nav.modiapersonoversikt.legacy.kjerneinfo.consumer.egenansatt.EgenAnsattService;
-import no.nav.modiapersonoversikt.legacy.api.service.arbeidsfordeling.ArbeidsfordelingV1Service;
-import no.nav.modiapersonoversikt.legacy.api.service.arbeidsfordeling.FinnBehandlendeEnhetException;
 import no.nav.modiapersonoversikt.rest.persondata.*;
-import no.nav.modiapersonoversikt.service.kodeverksmapper.KodeverksmapperService;
+import no.nav.modiapersonoversikt.service.arbeidsfordeling.ArbeidsfordelingService.ArbeidsfordelingException;
 import no.nav.modiapersonoversikt.service.kodeverksmapper.domain.Behandling;
 import no.nav.modiapersonoversikt.utils.PropertyRule;
 import org.junit.jupiter.api.BeforeEach;
@@ -16,14 +17,14 @@ import org.mockito.Mockito;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Optional;
+import java.util.HashMap;
 
 import static no.nav.modiapersonoversikt.service.unleash.strategier.ByEnvironmentStrategy.ENVIRONMENT_PROPERTY;
 import static no.nav.modiapersonoversikt.utils.TestUtils.sneaky;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-class ArbeidsfordelingV1ServiceTest {
+class ArbeidsfordelingServiceTest {
     @RegisterExtension
     static PropertyRule environment = new PropertyRule(ENVIRONMENT_PROPERTY, "n/a");
 
@@ -36,24 +37,24 @@ class ArbeidsfordelingV1ServiceTest {
     private static final String BEHANDLINGSTYPE = "ae0106";
     private static final String MAPPET_OPPGAVETYPE = "JFR";
     private static final String GEOGRAFISK_TILKNYTNING = "0219";
-    private static final String PERSON = "11111111111";
+    private static final Fnr PERSON = Fnr.of("11111111111");
     private static final String STRENGT_FORTROLIG_ADRESSE = "SPSF";
 
     private PersondataService persondataService = mock(PersondataService.class);
-    private KodeverksmapperService kodeverksmapper = mock(KodeverksmapperService.class);
-    private ArbeidsfordelingClient arbeidsfordelingClient = mock(ArbeidsfordelingClient.class);
+    private Kodeverksmapper kodeverksmapper = mock(Kodeverksmapper.class);
+    private NorgApi norgApi = mock(NorgApi.class);
     private EgenAnsattService egenAnsattService = mock(EgenAnsattService.class);
-    private ArbeidsfordelingV1Service arbeidsfordelingService;
+    private ArbeidsfordelingService arbeidsfordelingService;
 
     @BeforeEach
     void setupMocks() {
         Mockito.reset(
                 persondataService,
                 kodeverksmapper,
-                arbeidsfordelingClient,
+                norgApi,
                 egenAnsattService
         );
-        arbeidsfordelingService = new ArbeidsfordelingV1ServiceImpl(arbeidsfordelingClient, egenAnsattService, persondataService, kodeverksmapper);
+        arbeidsfordelingService = new ArbeidsfordelingServiceImpl(norgApi, persondataService, kodeverksmapper, egenAnsattService);
     }
 
     @Test
@@ -62,7 +63,7 @@ class ArbeidsfordelingV1ServiceTest {
         gitt_at_alt_fungerer();
         gitt_feil_ved_henting_av_kodeverk();
 
-        assertThrows(FinnBehandlendeEnhetException.class, () -> arbeidsfordelingService.finnBehandlendeEnhetListe(PERSON, FAGOMRADE, OPPGAVETYPE, UNDERKATEGORI));
+        assertThrows(ArbeidsfordelingException.class, () -> arbeidsfordelingService.hentBehandlendeEnheter(FAGOMRADE, OPPGAVETYPE, PERSON, UNDERKATEGORI));
     }
 
     @Test
@@ -71,7 +72,7 @@ class ArbeidsfordelingV1ServiceTest {
         gitt_at_alt_fungerer();
         gitt_feil_ved_henting_av_geografisk_tilknytning();
 
-        assertThrows(FinnBehandlendeEnhetException.class, () -> arbeidsfordelingService.finnBehandlendeEnhetListe(PERSON, FAGOMRADE, OPPGAVETYPE, UNDERKATEGORI));
+        assertThrows(ArbeidsfordelingException.class, () -> arbeidsfordelingService.hentBehandlendeEnheter(FAGOMRADE, OPPGAVETYPE, PERSON, UNDERKATEGORI));
     }
 
     @Test
@@ -80,7 +81,7 @@ class ArbeidsfordelingV1ServiceTest {
         gitt_at_alt_fungerer();
         gitt_feil_ved_henting_av_enheter();
 
-        assertThrows(FinnBehandlendeEnhetException.class, () -> arbeidsfordelingService.finnBehandlendeEnhetListe(PERSON, FAGOMRADE, OPPGAVETYPE, UNDERKATEGORI));
+        assertThrows(ArbeidsfordelingException.class, () -> arbeidsfordelingService.hentBehandlendeEnheter(FAGOMRADE, OPPGAVETYPE, PERSON, UNDERKATEGORI));
     }
 
     @Test
@@ -89,10 +90,10 @@ class ArbeidsfordelingV1ServiceTest {
         gitt_at_alt_fungerer();
         gitt_er_egen_ansatt();
 
-        arbeidsfordelingService.finnBehandlendeEnhetListe(PERSON, FAGOMRADE, OPPGAVETYPE, UNDERKATEGORI);
+        arbeidsfordelingService.hentBehandlendeEnheter(FAGOMRADE, OPPGAVETYPE, PERSON, UNDERKATEGORI);
 
         ArgumentCaptor<Boolean> erEgenAnsattCaptor = ArgumentCaptor.forClass(Boolean.class);
-        verify(arbeidsfordelingClient, times(1)).hentArbeidsfordeling(any(), any(), any(), any(), erEgenAnsattCaptor.capture(), any());
+        verify(norgApi, times(1)).hentBehandlendeEnheter(any(), any(), any(), any(), erEgenAnsattCaptor.capture(), any());
 
         assertTrue(erEgenAnsattCaptor.getValue());
     }
@@ -103,8 +104,12 @@ class ArbeidsfordelingV1ServiceTest {
         sneaky(() -> {
             when(persondataService.hentGeografiskTilknytning(anyString())).thenReturn(GEOGRAFISK_TILKNYTNING);
             when(persondataService.hentAdressebeskyttelse(anyString())).thenReturn(adressebeskyttelseMock);
-            when(kodeverksmapper.mapOppgavetype(anyString())).thenReturn(MAPPET_OPPGAVETYPE);
-            when(kodeverksmapper.mapUnderkategori(anyString())).thenReturn(Optional.of(new Behandling().withBehandlingstema(BEHANDLINGSTEMA).withBehandlingstype(BEHANDLINGSTYPE)));
+            when(kodeverksmapper.hentOppgavetype()).thenReturn(new HashMap<>(){{
+                put(OPPGAVETYPE, MAPPET_OPPGAVETYPE);
+            }});
+            when(kodeverksmapper.hentUnderkategori()).thenReturn(new HashMap<>(){{
+                put(UNDERKATEGORI, new Behandling().withBehandlingstema(BEHANDLINGSTEMA).withBehandlingstype(BEHANDLINGSTYPE));
+            }});
 
             when(egenAnsattService.erEgenAnsatt(anyString())).thenReturn(false);
         });
@@ -116,18 +121,18 @@ class ArbeidsfordelingV1ServiceTest {
 
     private void gitt_feil_ved_henting_av_kodeverk() {
         sneaky(() -> {
-            when(kodeverksmapper.mapOppgavetype(anyString())).thenThrow(new IOException());
-            when(kodeverksmapper.mapUnderkategori(anyString())).thenThrow(new IOException());
+            when(kodeverksmapper.hentOppgavetype()).thenThrow(new IOException());
+            when(kodeverksmapper.hentUnderkategori()).thenThrow(new IOException());
         });
     }
 
     private void gitt_feil_ved_henting_av_geografisk_tilknytning() {
-        when(persondataService.hentGeografiskTilknytning(PERSON)).thenThrow(new RuntimeException());
+        when(persondataService.hentGeografiskTilknytning(PERSON.get())).thenThrow(new RuntimeException());
     }
 
     private void gitt_feil_ved_henting_av_enheter() {
         sneaky(() ->
-                when(arbeidsfordelingClient.hentArbeidsfordeling(any(), any(), any(), any(), anyBoolean(), any())).thenThrow(new IllegalStateException())
+                when(norgApi.hentBehandlendeEnheter(any(), any(), any(), any(), anyBoolean(), any())).thenThrow(new IllegalStateException())
         );
     }
 }

@@ -37,6 +37,7 @@
         <module>bisys-api</module>
         <module>dkif-api</module>
         <module>kodeverk-api</module>
+        <module>norg-api</module>
     </modules>
 
     <dependencyManagement>

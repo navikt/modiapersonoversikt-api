@@ -2,12 +2,12 @@ package no.nav.modiapersonoversikt.rest.enhet
 
 import com.ninjasquad.springmockk.MockkBean
 import io.mockk.every
+import no.nav.modiapersonoversikt.consumer.norg.NorgApi
+import no.nav.modiapersonoversikt.consumer.norg.NorgDomain
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.TilgangskontrollMock
-import no.nav.modiapersonoversikt.legacy.api.domain.norg.AnsattEnhet
-import no.nav.modiapersonoversikt.legacy.api.service.arbeidsfordeling.ArbeidsfordelingV1Service
 import no.nav.modiapersonoversikt.legacy.api.service.norg.AnsattService
-import no.nav.modiapersonoversikt.legacy.api.service.organisasjonsEnhetV2.OrganisasjonEnhetV2Service
+import no.nav.modiapersonoversikt.service.arbeidsfordeling.ArbeidsfordelingService
 import no.nav.modiapersonoversikt.service.organisasjonenhet.kontaktinformasjon.domain.*
 import no.nav.modiapersonoversikt.service.organisasjonenhet.kontaktinformasjon.service.OrganisasjonEnhetKontaktinformasjonService
 import no.nav.modiapersonoversikt.testutils.SnapshotExtension
@@ -37,10 +37,10 @@ internal class EnhetControllerSnapshotTest(val snapshot: SnapshotExtension) {
     lateinit var organisasjonEnhetKontaktinformasjonService: OrganisasjonEnhetKontaktinformasjonService
 
     @MockkBean
-    lateinit var organisasjonEnhetV2Service: OrganisasjonEnhetV2Service
+    lateinit var norgapi: NorgApi
 
     @MockkBean
-    lateinit var arbeidsfordeling: ArbeidsfordelingV1Service
+    lateinit var arbeidsfordeling: ArbeidsfordelingService
 
     @MockkBean
     lateinit var ansattService: AnsattService
@@ -61,8 +61,10 @@ internal class EnhetControllerSnapshotTest(val snapshot: SnapshotExtension) {
     @Test
     internal fun `finn enhet gitt gt og diskresjonskode`() {
         gittKontaktinformasjon()
-        every { organisasjonEnhetV2Service.finnNAVKontor(any(), any()) } returns Optional.of(
-            AnsattEnhet("1234", "NAV Test")
+        every { norgapi.finnNavKontor(any(), any()) } returns NorgDomain.Enhet(
+            "1234",
+            "NAV Test",
+            NorgDomain.EnhetStatus.AKTIV
         )
 
         getJson("/rest/enheter?gt=010101")

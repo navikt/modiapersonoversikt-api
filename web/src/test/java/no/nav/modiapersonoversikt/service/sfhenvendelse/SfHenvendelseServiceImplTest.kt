@@ -8,15 +8,15 @@ import no.nav.common.auth.context.AuthContext
 import no.nav.common.auth.context.UserRole
 import no.nav.common.sts.SystemUserTokenProvider
 import no.nav.modiapersonoversikt.config.endpoint.Utils.withProperty
-import no.nav.modiapersonoversikt.legacy.api.domain.norg.EnhetsGeografiskeTilknytning
+import no.nav.modiapersonoversikt.consumer.norg.NorgDomain.EnhetGeografiskTilknyttning
 import no.nav.modiapersonoversikt.legacy.api.domain.sfhenvendelse.generated.apis.HenvendelseBehandlingApi
 import no.nav.modiapersonoversikt.legacy.api.domain.sfhenvendelse.generated.apis.HenvendelseInfoApi
 import no.nav.modiapersonoversikt.legacy.api.domain.sfhenvendelse.generated.apis.JournalApi
 import no.nav.modiapersonoversikt.legacy.api.domain.sfhenvendelse.generated.apis.NyHenvendelseApi
 import no.nav.modiapersonoversikt.legacy.api.domain.sfhenvendelse.generated.models.*
-import no.nav.modiapersonoversikt.legacy.api.service.arbeidsfordeling.ArbeidsfordelingV1Service
 import no.nav.modiapersonoversikt.legacy.api.service.norg.AnsattService
 import no.nav.modiapersonoversikt.legacy.api.service.pdl.PdlOppslagService
+import no.nav.modiapersonoversikt.service.arbeidsfordeling.ArbeidsfordelingService
 import no.nav.modiapersonoversikt.testutils.AuthContextExtension
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -41,7 +41,7 @@ internal class SfHenvendelseServiceImplTest {
     private val henvendelseJournalApi: JournalApi = mockk()
     private val henvendelseOpprettApi: NyHenvendelseApi = mockk()
     private val pdlOppslagService: PdlOppslagService = mockk()
-    private val arbeidsfordeling: ArbeidsfordelingV1Service = mockk()
+    private val arbeidsfordeling: ArbeidsfordelingService = mockk()
     private val stsService: SystemUserTokenProvider = mockk()
     private val ansattService: AnsattService = mockk()
     private val sfHenvendelseServiceImpl = withProperty("SF_HENVENDELSE_URL", "http://dummy.io") {
@@ -60,11 +60,11 @@ internal class SfHenvendelseServiceImplTest {
     @Test
     internal fun `skal fjerne kontorsperrede henvendelser`() {
         every { ansattService.hentAnsattFagomrader(any(), any()) } returns setOf("DAG", "OPP")
-        every { arbeidsfordeling.hentGTnummerForEnhet(any()) } returns listOf(
-            EnhetsGeografiskeTilknytning().also {
-                it.enhetId = 5678
-                it.geografiskOmraade = "005678"
-            }
+        every { arbeidsfordeling.hentGeografiskTilknyttning(any()) } returns listOf(
+            EnhetGeografiskTilknyttning(
+                enhetId = "5678",
+                geografiskOmraade = "005678"
+            )
         )
         every { henvendelseInfoApi.henvendelseinfoHenvendelselisteGet(any(), any()) } returns listOf(
             dummyHenvendelse.medJournalpost("DAG"),
@@ -79,11 +79,11 @@ internal class SfHenvendelseServiceImplTest {
     @Test
     internal fun `skal fjerne innhold om man ikke har tematilgang`() {
         every { ansattService.hentAnsattFagomrader(any(), any()) } returns setOf("DAG", "OPP")
-        every { arbeidsfordeling.hentGTnummerForEnhet(any()) } returns listOf(
-            EnhetsGeografiskeTilknytning().also {
-                it.enhetId = 5678
-                it.geografiskOmraade = "005678"
-            }
+        every { arbeidsfordeling.hentGeografiskTilknyttning(any()) } returns listOf(
+            EnhetGeografiskTilknyttning(
+                enhetId = "5678",
+                geografiskOmraade = "005678"
+            )
         )
         every { henvendelseInfoApi.henvendelseinfoHenvendelselisteGet(any(), any()) } returns listOf(
             dummyHenvendelse.medJournalpost("DAG"),
@@ -99,11 +99,11 @@ internal class SfHenvendelseServiceImplTest {
     @Test
     internal fun `skal fjerne lage dummy innhold om henvendelse er kassert`() {
         every { ansattService.hentAnsattFagomrader(any(), any()) } returns setOf("DAG", "OPP")
-        every { arbeidsfordeling.hentGTnummerForEnhet(any()) } returns listOf(
-            EnhetsGeografiskeTilknytning().also {
-                it.enhetId = 5678
-                it.geografiskOmraade = "005678"
-            }
+        every { arbeidsfordeling.hentGeografiskTilknyttning(any()) } returns listOf(
+            EnhetGeografiskTilknyttning(
+                enhetId = "5678",
+                geografiskOmraade = "005678"
+            )
         )
         every { henvendelseInfoApi.henvendelseinfoHenvendelselisteGet(any(), any()) } returns listOf(
             dummyHenvendelse.somKassert()

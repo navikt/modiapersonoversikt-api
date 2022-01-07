@@ -1,6 +1,8 @@
 package no.nav.modiapersonoversikt.service.oppgavebehandling
 
 import no.nav.common.sts.SystemUserTokenProvider
+import no.nav.common.types.identer.Fnr
+import no.nav.modiapersonoversikt.consumer.norg.NorgDomain
 import no.nav.modiapersonoversikt.infrastructure.AuthContextUtils
 import no.nav.modiapersonoversikt.infrastructure.http.getCallId
 import no.nav.modiapersonoversikt.infrastructure.rsbac.DecisionEnums
@@ -11,7 +13,6 @@ import no.nav.modiapersonoversikt.legacy.api.domain.Oppgave
 import no.nav.modiapersonoversikt.legacy.api.domain.Temagruppe
 import no.nav.modiapersonoversikt.legacy.api.domain.Temagruppe.ANSOS
 import no.nav.modiapersonoversikt.legacy.api.domain.Temagruppe.OKSOS
-import no.nav.modiapersonoversikt.legacy.api.domain.norg.AnsattEnhet
 import no.nav.modiapersonoversikt.legacy.api.domain.oppgave.generated.apis.OppgaveApi
 import no.nav.modiapersonoversikt.legacy.api.domain.oppgave.generated.models.GetOppgaverResponseJsonDTO
 import no.nav.modiapersonoversikt.legacy.api.domain.oppgave.generated.models.OppgaveJsonDTO
@@ -20,9 +21,9 @@ import no.nav.modiapersonoversikt.legacy.api.domain.oppgave.toOppgaveJsonDTO
 import no.nav.modiapersonoversikt.legacy.api.domain.oppgave.toPutOppgaveRequestJsonDTO
 import no.nav.modiapersonoversikt.legacy.api.service.*
 import no.nav.modiapersonoversikt.legacy.api.service.OppgaveBehandlingService.AlleredeTildeltAnnenSaksbehandler
-import no.nav.modiapersonoversikt.legacy.api.service.arbeidsfordeling.ArbeidsfordelingV1Service
 import no.nav.modiapersonoversikt.legacy.api.service.norg.AnsattService
 import no.nav.modiapersonoversikt.legacy.api.service.pdl.PdlOppslagService
+import no.nav.modiapersonoversikt.service.arbeidsfordeling.ArbeidsfordelingService
 import no.nav.modiapersonoversikt.service.kodeverksmapper.KodeverksmapperService
 import no.nav.modiapersonoversikt.service.kodeverksmapper.domain.Behandling
 import no.nav.modiapersonoversikt.service.oppgavebehandling.Utils.OPPGAVE_MAX_LIMIT
@@ -45,7 +46,7 @@ class RestOppgaveBehandlingServiceImpl(
     private val kodeverksmapperService: KodeverksmapperService,
     private val pdlOppslagService: PdlOppslagService,
     private val ansattService: AnsattService,
-    private val arbeidsfordelingService: ArbeidsfordelingV1Service,
+    private val arbeidsfordelingService: ArbeidsfordelingService,
     private val tilgangskontroll: Tilgangskontroll,
     private val stsService: SystemUserTokenProvider,
     private val apiClient: OppgaveApi = OppgaveApiFactory.createClient {
@@ -63,7 +64,7 @@ class RestOppgaveBehandlingServiceImpl(
             kodeverksmapperService: KodeverksmapperService,
             pdlOppslagService: PdlOppslagService,
             ansattService: AnsattService,
-            arbeidsfordelingService: ArbeidsfordelingV1Service,
+            arbeidsfordelingService: ArbeidsfordelingService,
             tilgangskontroll: Tilgangskontroll,
             stsService: SystemUserTokenProvider
         ): OppgaveBehandlingService = RestOppgaveBehandlingServiceImpl(
@@ -472,11 +473,11 @@ class RestOppgaveBehandlingServiceImpl(
 
     private fun finnAnsvarligEnhet(oppgave: OppgaveJsonDTO, temagruppe: Temagruppe): String {
         val aktorId = requireNotNull(oppgave.aktoerId)
-        val enheter: List<AnsattEnhet> = arbeidsfordelingService.finnBehandlendeEnhetListe(
-            pdlOppslagService.hentFnr(aktorId),
-            oppgave.tema,
-            oppgave.oppgavetype,
-            underkategoriOverstyringForArbeidsfordeling(temagruppe)
+        val enheter: List<NorgDomain.Enhet> = arbeidsfordelingService.hentBehandlendeEnheter(
+            brukerIdent = Fnr.of(pdlOppslagService.hentFnr(aktorId)),
+            fagomrade = oppgave.tema,
+            oppgavetype = oppgave.oppgavetype,
+            underkategori = underkategoriOverstyringForArbeidsfordeling(temagruppe)
         )
         return enheter.firstOrNull()?.enhetId ?: oppgave.tildeltEnhetsnr
     }

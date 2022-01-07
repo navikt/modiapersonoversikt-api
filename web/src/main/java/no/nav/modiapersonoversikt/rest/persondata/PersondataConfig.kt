@@ -1,7 +1,7 @@
 package no.nav.modiapersonoversikt.rest.persondata
 
+import no.nav.modiapersonoversikt.consumer.norg.NorgApi
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll
-import no.nav.modiapersonoversikt.legacy.api.service.organisasjonsEnhetV2.OrganisasjonEnhetV2Service
 import no.nav.modiapersonoversikt.legacy.api.service.pdl.PdlOppslagService
 import no.nav.modiapersonoversikt.legacy.kjerneinfo.consumer.egenansatt.EgenAnsattService
 import no.nav.modiapersonoversikt.service.dkif.Dkif
@@ -18,7 +18,7 @@ open class PersondataConfig {
     open fun persondataService(
         pdl: PdlOppslagService,
         @Qualifier("DkifSoap") dkif: Dkif.Service,
-        organisasjonEnhetV2Service: OrganisasjonEnhetV2Service,
+        norgApi: NorgApi,
         organisasjonEnhetKontaktinformasjonService: OrganisasjonEnhetKontaktinformasjonService,
         personV3: PersonV3,
         egenAnsattService: EgenAnsattService,
@@ -28,7 +28,7 @@ open class PersondataConfig {
         return PersondataServiceImpl(
             pdl,
             dkif,
-            organisasjonEnhetV2Service,
+            norgApi,
             organisasjonEnhetKontaktinformasjonService,
             personV3,
             egenAnsattService,

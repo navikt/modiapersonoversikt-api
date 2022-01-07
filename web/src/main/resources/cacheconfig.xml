@@ -42,8 +42,8 @@
             <cache:cacheable method="hentNAVAnsattEnhetListe"/>
         </cache:caching>
     </cache:advice>
-    <cache:advice id="organisasjonEnhetV2Advice" key-generator="defaultkeygenerator">
-        <cache:caching cache="organisasjonEnhetV2">
+    <cache:advice id="norgApiAdvice" key-generator="methodawarekeygenerator">
+        <cache:caching cache="norgApi">
             <cache:cacheable method="hent*"/>
             <cache:cacheable method="finn*"/>
         </cache:caching>
@@ -117,7 +117,7 @@
         <aop:advisor advice-ref="shortlivedAdvice" pointcut="bean(henvendelsePortType)"/>
         <aop:advisor advice-ref="asbogosysAnsattAdvice" pointcut="bean(gosysNavAnsatt)"/>
         <aop:advisor advice-ref="asbogosysEnhetAdvice" pointcut="bean(gosysNavOrgEnhet)"/>
-        <aop:advisor advice-ref="organisasjonEnhetV2Advice" pointcut="bean(organisasjonEnhetV2)"/>
+        <aop:advisor advice-ref="norgApiAdvice" pointcut="bean(norgApi)"/>
         <aop:advisor advice-ref="ldapServiceAdvice" pointcut="bean(ldapService)"/>
         <aop:advisor advice-ref="utbetalingService" pointcut="bean(utbetalingV1)"/>
         <aop:advisor advice-ref="varslingAdvice" pointcut="bean(varslerPortType)"/>
