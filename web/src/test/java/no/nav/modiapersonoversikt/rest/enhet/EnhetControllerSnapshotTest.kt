@@ -8,8 +8,6 @@ import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontro
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.TilgangskontrollMock
 import no.nav.modiapersonoversikt.legacy.api.service.norg.AnsattService
 import no.nav.modiapersonoversikt.service.arbeidsfordeling.ArbeidsfordelingService
-import no.nav.modiapersonoversikt.service.organisasjonenhet.kontaktinformasjon.domain.*
-import no.nav.modiapersonoversikt.service.organisasjonenhet.kontaktinformasjon.service.OrganisasjonEnhetKontaktinformasjonService
 import no.nav.modiapersonoversikt.testutils.SnapshotExtension
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -32,9 +30,6 @@ internal class EnhetControllerSnapshotTest(val snapshot: SnapshotExtension) {
         @Bean
         open fun tilgangskontroll(): Tilgangskontroll = TilgangskontrollMock.get()
     }
-
-    @MockkBean
-    lateinit var organisasjonEnhetKontaktinformasjonService: OrganisasjonEnhetKontaktinformasjonService
 
     @MockkBean
     lateinit var norgapi: NorgApi
@@ -75,26 +70,22 @@ internal class EnhetControllerSnapshotTest(val snapshot: SnapshotExtension) {
     }
 
     private fun gittKontaktinformasjon() {
-        every { organisasjonEnhetKontaktinformasjonService.hentKontaktinformasjon(any()) } returns OrganisasjonEnhetKontaktinformasjon()
-            .withEnhetId("1234")
-            .withEnhetNavn("NAV Test")
-            .withKontaktinformasjon(
-                Kontaktinformasjon().withPublikumsmottakliste(
-                    listOf(
-                        Publikumsmottak()
-                            .withApningstider(
-                                Apningstider().withApningstid(
-                                    listOf(
-                                        Apningstid()
-                                            .withApentFra(Klokkeslett(8, 0, 0))
-                                            .withApentTil(Klokkeslett(8, 0, 0))
-                                            .withUkedag(Ukedag.FREDAG)
-                                    )
-                                )
-                            )
+        every { norgapi.hentKontaktinfo(any()) } returns NorgDomain.EnhetKontaktinformasjon(
+            enhetId = "1234",
+            enhetNavn = "NAV Test",
+            publikumsmottak = listOf(
+                NorgDomain.Publikumsmottak(
+                    besoksadresse = null,
+                    apningstider = listOf(
+                        NorgDomain.Apningstid(
+                            NorgDomain.Ukedag.FREDAG,
+                            apentFra = "08:00",
+                            apentTil = "08:00",
+                        )
                     )
                 )
             )
+        )
     }
 
     private fun getJson(url: String): ResultActions {

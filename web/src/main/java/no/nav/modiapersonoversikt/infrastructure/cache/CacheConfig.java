@@ -30,7 +30,6 @@ public class CacheConfig {
                 cache("ytelseskontrakter", 600),
                 cache("pleiePengerCache", 300),
                 cache("organisasjonCache", 300),
-                cache("organisasjonEnhetKontaktinformasjonCache", 300),
                 cache("oppfolgingsinfoCache", 300),
                 cache("oppfolgingCache", 600),
                 cache("foreldrePengerCache", 300),

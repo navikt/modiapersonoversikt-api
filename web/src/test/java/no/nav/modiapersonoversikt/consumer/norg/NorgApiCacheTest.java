@@ -1,9 +1,7 @@
-package no.nav.modiapersonoversikt.config.endpoint.v2.organisasjonenhet;
+package no.nav.modiapersonoversikt.consumer.norg;
 
 import no.nav.common.types.identer.EnhetId;
 import no.nav.modiapersonoversikt.config.endpoint.util.CacheTest;
-import no.nav.modiapersonoversikt.consumer.norg.NorgApi;
-import no.nav.modiapersonoversikt.consumer.norg.NorgDomain;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,7 +54,9 @@ class NorgApiCacheTest extends CacheTest {
                 () -> norgApi.finnNavKontor("4567", NorgDomain.DiskresjonsKode.ANY),
                 () -> norgApi.hentBehandlendeEnheter(null, null, null, null, null, null),
                 () -> norgApi.hentBehandlendeEnheter(null, "1234", null, null, null, null),
-                () -> norgApi.hentBehandlendeEnheter(null, "4567", null, null, null, null)
+                () -> norgApi.hentBehandlendeEnheter(null, "4567", null, null, null, null),
+                () -> norgApi.hentKontaktinfo("1234"),
+                () -> norgApi.hentKontaktinfo("1235")
         );
         assertThat(getKey(), Matchers.is(generatedByMethodAwareKeyGenerator()));
     }

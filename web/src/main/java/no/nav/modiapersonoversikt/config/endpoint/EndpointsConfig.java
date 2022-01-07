@@ -17,7 +17,6 @@ import no.nav.modiapersonoversikt.config.endpoint.v1.utbetaling.UtbetalingEndpoi
 import no.nav.modiapersonoversikt.config.endpoint.v2.henvendelse.BehandleHenvendelseEndpointConfig;
 import no.nav.modiapersonoversikt.config.endpoint.v2.henvendelse.HenvendelseEndpointConfig;
 import no.nav.modiapersonoversikt.config.endpoint.v2.henvendelse.SendUtHenvendelseEndpointConfig;
-import no.nav.modiapersonoversikt.config.endpoint.v2.organisasjonenhetkontaktinformasjon.OrganisasjonEnhetKontaktinformasjonV1EndpointConfig;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
@@ -40,7 +39,6 @@ import org.springframework.context.annotation.Import;
         ArbeidOgAktivitetEndpointConfig.class,
         PensjonSakEndpointConfig.class,
         VarslingEndpointConfig.class,
-        OrganisasjonEnhetKontaktinformasjonV1EndpointConfig.class,
         EgenAnsattV1EndpointConfig.class,
         KodeverksmapperEndpointConfig.class,
         UnleashEndpointConfig.class,

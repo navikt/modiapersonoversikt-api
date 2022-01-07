@@ -13,10 +13,7 @@ import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontro
 import no.nav.modiapersonoversikt.legacy.api.domain.norg.Ansatt
 import no.nav.modiapersonoversikt.legacy.api.domain.norg.AnsattEnhet
 import no.nav.modiapersonoversikt.legacy.api.service.norg.AnsattService
-import no.nav.modiapersonoversikt.rest.enhet.model.EnhetKontaktinformasjon
 import no.nav.modiapersonoversikt.service.arbeidsfordeling.ArbeidsfordelingService
-import no.nav.modiapersonoversikt.service.organisasjonenhet.kontaktinformasjon.domain.OrganisasjonEnhetKontaktinformasjon
-import no.nav.modiapersonoversikt.service.organisasjonenhet.kontaktinformasjon.service.OrganisasjonEnhetKontaktinformasjonService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.*
@@ -26,24 +23,14 @@ import org.springframework.web.server.ResponseStatusException
 @RequestMapping("/rest/enheter")
 class EnhetController @Autowired
 constructor(
-    private val organisasjonEnhetKontaktinformasjonService: OrganisasjonEnhetKontaktinformasjonService,
     private val norgApi: NorgApi,
     private val arbeidsfordeling: ArbeidsfordelingService,
     private val ansattService: AnsattService,
     private val tilgangskontroll: Tilgangskontroll
 ) {
 
-    @GetMapping("/{id}")
-    fun hentMedId(@PathVariable("id") organisasjonsid: String): OrganisasjonEnhetKontaktinformasjon {
-        return tilgangskontroll
-            .check(Policies.tilgangTilModia)
-            .get(Audit.describe(READ, Enhet.Kontaktinformasjon, AuditIdentifier.ORGANISASJON_ID to organisasjonsid)) {
-                organisasjonEnhetKontaktinformasjonService.hentKontaktinformasjon(organisasjonsid)
-            }
-    }
-
     @GetMapping
-    fun finnEnhet(@RequestParam("gt") geografiskId: String?, @RequestParam("dkode") diskresjonskode: String?): EnhetKontaktinformasjon {
+    fun finnEnhet(@RequestParam("gt") geografiskId: String?, @RequestParam("dkode") diskresjonskode: String?): NorgDomain.EnhetKontaktinformasjon {
         return tilgangskontroll
             .check(Policies.tilgangTilModia)
             .get(Audit.describe(READ, Enhet.Kontaktinformasjon, AuditIdentifier.GEOGRAFISK_ID to geografiskId, AuditIdentifier.DISKRESJONSKODE to diskresjonskode)) {
@@ -60,7 +47,7 @@ constructor(
                     }
                     .map { it.enhetId }
                     .mapCatching { requireNotNull(it) }
-                    .map { EnhetKontaktinformasjon(hentMedId(it)) }
+                    .map { norgApi.hentKontaktinfo(it) }
                     .getOrElse {
                         throw ResponseStatusException(HttpStatus.NOT_FOUND, "Fant ikke enhetsid for gt: $geografiskId dkode: $diskresjonskode")
                     }

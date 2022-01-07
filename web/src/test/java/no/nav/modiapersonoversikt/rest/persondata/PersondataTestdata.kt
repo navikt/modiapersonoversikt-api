@@ -1,11 +1,10 @@
 package no.nav.modiapersonoversikt.rest.persondata
 
+import no.nav.modiapersonoversikt.consumer.norg.NorgDomain
+import no.nav.modiapersonoversikt.consumer.norg.NorgDomain.Publikumsmottak
 import no.nav.modiapersonoversikt.legacy.api.domain.pdl.generated.HentPersondata
-import no.nav.modiapersonoversikt.rest.enhet.model.EnhetKontaktinformasjon
 import no.nav.modiapersonoversikt.service.dkif.Dkif
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk
-import no.nav.modiapersonoversikt.service.organisasjonenhet.kontaktinformasjon.domain.*
-import no.nav.modiapersonoversikt.service.organisasjonenhet.kontaktinformasjon.domain.Gateadresse
 import no.nav.tjeneste.virksomhet.person.v3.informasjon.*
 import no.nav.tjeneste.virksomhet.person.v3.meldinger.HentPersonResponse
 import java.time.LocalDate
@@ -15,7 +14,7 @@ fun gittData(
     persondata: HentPersondata.Person,
     geografiskeTilknytning: PersondataResult<String?> = PersondataResult.runCatching("gt") { "0123" },
     erEgenAnsatt: PersondataResult<Boolean> = PersondataResult.runCatching("egenAnsatt") { false },
-    navEnhet: PersondataResult<EnhetKontaktinformasjon?> = PersondataResult.runCatching("navEnhet") { gittNavKontorEnhet() },
+    navEnhet: PersondataResult<NorgDomain.EnhetKontaktinformasjon?> = PersondataResult.runCatching("navEnhet") { gittNavKontorEnhet() },
     dkifData: PersondataResult<Dkif.DigitalKontaktinformasjon> = PersondataResult.runCatching("dkif") { digitalKontaktinformasjon },
     bankkonto: PersondataResult<HentPersonResponse> = PersondataResult.runCatching("bankkonto") { utenlandskBankkonto },
     tredjepartsPerson: PersondataResult<Map<String, Persondata.TredjepartsPerson>> = PersondataResult.runCatching("tredjepartsperson") { tredjepartsPersoner }
@@ -189,35 +188,26 @@ internal val tredjepartsPersoner = mapOf(
 internal fun gittNavKontorEnhet(
     enhetId: String = "0123",
     enhetNavn: String = "NAV Oslo"
-) = EnhetKontaktinformasjon(
-    OrganisasjonEnhetKontaktinformasjon()
-        .withEnhetId(enhetId)
-        .withEnhetNavn(enhetNavn)
-        .withKontaktinformasjon(
-            Kontaktinformasjon().withPublikumsmottakliste(
-                listOf(
-                    Publikumsmottak()
-                        .withApningstider(
-                            Apningstider()
-                                .withApningstid(
-                                    listOf(
-                                        Apningstid()
-                                            .withApentFra(Klokkeslett(10, 0, 0))
-                                            .withApentTil(Klokkeslett(15, 0, 0))
-                                            .withUkedag(Ukedag.MANDAG)
-                                    )
-                                )
-                        )
-                        .withBesoeksadresse(
-                            Gateadresse()
-                                .withGatenavn("Testgata")
-                                .withHusnummer("10")
-                                .withPostnummer("0110")
-                                .withPoststed("Ingensteds")
-                        )
+) = NorgDomain.EnhetKontaktinformasjon(
+    enhetId = enhetId,
+    enhetNavn = enhetNavn,
+    publikumsmottak = listOf(
+        Publikumsmottak(
+            besoksadresse = NorgDomain.Gateadresse(
+                gatenavn = "Testgata",
+                husnummer = "10",
+                postnummer = "0110",
+                poststed = "Ingensteds"
+            ),
+            apningstider = listOf(
+                NorgDomain.Apningstid(
+                    ukedag = NorgDomain.Ukedag.MANDAG,
+                    apentFra = "10:00",
+                    apentTil = "15:00"
                 )
             )
         )
+    )
 )
 
 internal fun gittEndring(

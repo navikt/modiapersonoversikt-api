@@ -13,7 +13,6 @@ import no.nav.tjeneste.domene.brukerdialog.henvendelsesoknader.v1.HenvendelseSok
 import no.nav.tjeneste.virksomhet.innsynjournal.v2.binding.InnsynJournalV2;
 import no.nav.tjeneste.virksomhet.oppfoelging.v1.OppfoelgingPortType;
 import no.nav.tjeneste.virksomhet.organisasjon.v4.OrganisasjonV4;
-import no.nav.tjeneste.virksomhet.organisasjonenhetkontaktinformasjon.v1.OrganisasjonEnhetKontaktinformasjonV1;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.binding.SakOgBehandlingV1;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -60,11 +59,6 @@ public class CacheTestConfig {
     @Bean
     public NorgApi norgApi() {
         return mock(NorgApi.class);
-    }
-
-    @Bean
-    public OrganisasjonEnhetKontaktinformasjonV1 organisasjonEnhetKontaktinformasjonV1() {
-        return mock(OrganisasjonEnhetKontaktinformasjonV1.class);
     }
 
     @Bean

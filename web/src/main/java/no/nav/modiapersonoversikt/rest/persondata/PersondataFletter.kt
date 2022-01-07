@@ -1,14 +1,11 @@
 package no.nav.modiapersonoversikt.rest.persondata
 
+import no.nav.modiapersonoversikt.consumer.norg.NorgDomain
 import no.nav.modiapersonoversikt.legacy.api.domain.pdl.generated.HentPersondata
 import no.nav.modiapersonoversikt.legacy.api.domain.pdl.generated.HentPersondata.AdressebeskyttelseGradering.*
 import no.nav.modiapersonoversikt.legacy.api.domain.pdl.generated.HentPersondata.KontaktinformasjonForDoedsboSkifteform.ANNET
 import no.nav.modiapersonoversikt.legacy.api.domain.pdl.generated.HentPersondata.KontaktinformasjonForDoedsboSkifteform.OFFENTLIG
 import no.nav.modiapersonoversikt.legacy.api.utils.TjenestekallLogger
-import no.nav.modiapersonoversikt.rest.enhet.model.EnhetKontaktinformasjon
-import no.nav.modiapersonoversikt.rest.enhet.model.Gateadresse
-import no.nav.modiapersonoversikt.rest.enhet.model.Klokkeslett
-import no.nav.modiapersonoversikt.rest.enhet.model.Publikumsmottak
 import no.nav.modiapersonoversikt.rest.persondata.Persondata.asNavnOgIdent
 import no.nav.modiapersonoversikt.service.dkif.Dkif
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk
@@ -31,7 +28,7 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
         val persondata: HentPersondata.Person,
         val geografiskeTilknytning: PersondataResult<String?>,
         val erEgenAnsatt: PersondataResult<Boolean>,
-        val navEnhet: PersondataResult<EnhetKontaktinformasjon?>,
+        val navEnhet: PersondataResult<NorgDomain.EnhetKontaktinformasjon?>,
         val dkifData: PersondataResult<Dkif.DigitalKontaktinformasjon>,
         val bankkonto: PersondataResult<HentPersonResponse>,
         val tredjepartsPerson: PersondataResult<Map<String, Persondata.TredjepartsPerson>>
@@ -422,14 +419,14 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
     )
 
     private fun lagAdresseFraBesoksadresse(
-        adresse: Gateadresse
+        adresse: NorgDomain.Gateadresse
     ) = Persondata.Adresse(
-        linje1 = listOf(
+        linje1 = listOfNotNull(
             adresse.gatenavn,
             adresse.husnummer,
             adresse.husbokstav
         ),
-        linje2 = listOf(
+        linje2 = listOfNotNull(
             adresse.postnummer,
             adresse.poststed
         ),
@@ -455,7 +452,7 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
         gyldighetsPeriode = gyldighetsPeriode
     )
 
-    fun hentNavEnhet(navEnhet: PersondataResult<EnhetKontaktinformasjon?>): Persondata.Enhet? {
+    fun hentNavEnhet(navEnhet: PersondataResult<NorgDomain.EnhetKontaktinformasjon?>): Persondata.Enhet? {
         return navEnhet
             .map {
                 if (it == null) {
@@ -467,30 +464,26 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
             .getOrNull()
     }
 
-    private fun hentPublikumsmottak(publikumsmottak: List<Publikumsmottak>): List<Persondata.Publikumsmottak> {
-        return publikumsmottak.map {
+    private fun hentPublikumsmottak(publikumsmottak: List<NorgDomain.Publikumsmottak>?): List<Persondata.Publikumsmottak> {
+        return publikumsmottak?.map {
             Persondata.Publikumsmottak(
-                besoksadresse = lagAdresseFraBesoksadresse(it.besoksadresse),
+                besoksadresse = lagAdresseFraBesoksadresse(requireNotNull(it.besoksadresse)),
                 apningstider = it.apningstider.map { apningstid ->
                     Persondata.Apningstid(
-                        ukedag = apningstid.ukedag,
+                        ukedag = apningstid.ukedag.name,
                         apningstid = lagApningstid(apningstid.apentFra, apningstid.apentTil)
                     )
                 }
             )
-        }
+        } ?: emptyList()
     }
 
-    private fun lagApningstid(apentFra: Klokkeslett, apentTil: Klokkeslett): String {
+    private fun lagApningstid(apentFra: String?, apentTil: String?): String {
         return "${lagTidspunkt(apentFra)} - ${lagTidspunkt(apentTil)}"
     }
 
-    private fun lagTidspunkt(tid: Klokkeslett): String {
-        return if (tid.time == null || tid.minutt == null) {
-            "Ukjent"
-        } else {
-            "${tid.time.padStart(2, '0')}.${tid.minutt.padStart(2, '0')}"
-        }
+    private fun lagTidspunkt(tid: String?): String {
+        return tid ?: "Ukjent"
     }
 
     private fun hentStatsborgerskap(data: Data): List<Persondata.Statsborgerskap> {

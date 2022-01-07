@@ -224,12 +224,6 @@ spec:
       value: "http://maven.adeo.no/nexus/content/repositories/public/no/nav/tjenester/fim/nav-fim-oppfoelging-v1-tjenestespesifikasjon/1.2.0/nav-fim-oppfoelging-v1-tjenestespesifikasjon-1.2.0.zip"
     - name: EREG_ENDPOINTURL
       value: "https://modapp.adeo.no/ereg/"
-    - name: VIRKSOMHET_ORGANISASJONENHETKONTAKTINFORMASJON_V1_ENDPOINTURL
-      value: "https://app.adeo.no/norg2/ws/OrganisasjonEnhetKontaktinformasjon/v1"
-    - name: VIRKSOMHET_ORGANISASJONENHETKONTAKTINFORMASJON_V1_SECURITYTOKEN
-      value: "SAML"
-    - name: VIRKSOMHET_ORGANISASJONENHETKONTAKTINFORMASJON_V1_WSDLURL
-      value: "http://maven.adeo.no/nexus/content/groups/public/no/nav/tjenester/nav-organisasjonEnhetKontaktinformasjon-v1-tjenestespesifikasjon/1.1.0/nav-organisasjonEnhetKontaktinformasjon-v1-tjenestespesifikasjon-1.1.0.zip"
     - name: VIRKSOMHET_PERSON_V3_ENDPOINTURL
       value: "https://app.adeo.no/tpsws-aura/ws/Person/v3"
     - name: VIRKSOMHET_PERSON_V3_SECURITYTOKEN

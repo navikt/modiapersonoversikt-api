@@ -13,7 +13,6 @@ import kotlin.test.assertEquals
 class EnhetControllerTest {
     private val norgApi: NorgApi = mockk()
     private val controller = EnhetController(
-        mockk(),
         norgApi,
         mockk(),
         mockk(),

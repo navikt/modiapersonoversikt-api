@@ -12,8 +12,6 @@
           class="no.nav.modiapersonoversikt.infrastructure.cache.ASBOGOSYSNAVKeyGenerator"/>
     <bean id="asbogosysansattlistekeygenerator"
           class="no.nav.modiapersonoversikt.infrastructure.cache.ASBOGOSYSNAVAnsattListeKeyGenerator"/>
-    <bean id="organisasjonEnhetKontantinformasjonGenerator"
-          class="no.nav.modiapersonoversikt.infrastructure.cache.OrganisasjonenhetKontaktinformasjonKeyGenerator"/>
     <bean id="defaultkeygenerator"
           class="org.springframework.cache.interceptor.SimpleKeyGenerator"/>
 
@@ -87,11 +85,6 @@
             <cache:cacheable method="hentUnderkategori" key="'hentUnderkategori'" />
         </cache:caching>
     </cache:advice>
-    <cache:advice id="organisasjonEnhetKontantinformasjonAdvice" key-generator="organisasjonEnhetKontantinformasjonGenerator">
-        <cache:caching cache="organisasjonEnhetKontaktinformasjonCache">
-            <cache:cacheable method="hent*" />
-        </cache:caching>
-    </cache:advice>
     <cache:advice id="oppfolgingsinfoAdvice" key-generator="userkeygenerator">
         <cache:caching cache="oppfolgingsinfoCache">
             <cache:cacheable method="hent*" />
@@ -124,7 +117,6 @@
         <aop:advisor advice-ref="pesysServiceAdvice" pointcut="bean(pesysService)"/>
         <aop:advisor advice-ref="organisasjonAdvice" pointcut="bean(organisasjonV4PortType)"/>
         <aop:advisor advice-ref="kodeverksmapperAdvice" pointcut="bean(kodeverksmapper)"/>
-        <aop:advisor advice-ref="organisasjonEnhetKontantinformasjonAdvice" pointcut="bean(organisasjonEnhetKontaktinformasjonV1)"/>
         <aop:advisor advice-ref="oppfolgingsinfoAdvice" pointcut="bean(oppfolgingsApi)"/>
         <aop:advisor advice-ref="oppfolgingsAdvice" pointcut="bean(oppfolgingPortType)"/>
         <aop:advisor advice-ref="innsynJournalAdvice" pointcut="bean(innsynJournalV2)"/>
