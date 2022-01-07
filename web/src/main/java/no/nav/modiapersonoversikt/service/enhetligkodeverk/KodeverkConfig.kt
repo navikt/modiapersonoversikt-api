@@ -16,10 +16,10 @@ enum class KodeverkConfig(private val kilde: EnhetligKodeverk.Kilde) {
     SF_TEMAGRUPPER(SfHenvendelseKodeverkKilde()),
     NAVSKJEMAOGVEDLEGGSKODER(
         FellesKodeverkFletter(
-        "NAVSkjemaOgVedleggskoder",
-        listOf(
-            FellesKodeverkKilde("NAVSkjema"),
-            FellesKodeverkKilde("Vedleggskoder")
+            "NAVSkjemaOgVedleggskoder",
+            listOf(
+                FellesKodeverkKilde("NAVSkjema"),
+                FellesKodeverkKilde("Vedleggskoder")
             )
         )
     );
@@ -27,7 +27,8 @@ enum class KodeverkConfig(private val kilde: EnhetligKodeverk.Kilde) {
     fun hentKodeverk(providers: KodeverkProviders) = kilde.hentKodeverk(providers)
 }
 
-class FellesKodeverkFletter(val nyttKodeverkNavn: String, val kodeverkKilder: List<FellesKodeverkKilde>) : EnhetligKodeverk.Kilde {
+class FellesKodeverkFletter(val nyttKodeverkNavn: String, val kodeverkKilder: List<FellesKodeverkKilde>) :
+    EnhetligKodeverk.Kilde {
     override fun hentKodeverk(providers: KodeverkProviders): EnhetligKodeverk.Kodeverk {
         val kodeverk = kodeverkKilder
             .map { providers.fraFellesKodeverk(it.kodeverkNavn).kodeverk }
