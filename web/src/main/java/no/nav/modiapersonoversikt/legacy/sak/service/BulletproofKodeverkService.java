@@ -6,17 +6,14 @@ import no.nav.modiapersonoversikt.legacy.sak.providerdomain.Baksystem;
 import no.nav.modiapersonoversikt.legacy.sak.providerdomain.resultatwrappere.ResultatWrapper;
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk;
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.KodeverkConfig;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 
 import java.util.HashSet;
 import java.util.Set;
 
 import static org.slf4j.LoggerFactory.getLogger;
-import static org.springframework.util.StringUtils.isEmpty;
 
 @SuppressWarnings("squid:S1166")
 public class BulletproofKodeverkService {
@@ -32,28 +29,13 @@ public class BulletproofKodeverkService {
     private EnhetligKodeverk.Service kodeverk;
 
     public String getSkjematittelForSkjemanummer(String vedleggsIdOrSkjemaId) {
-        return getSkjematittelForSkjemanummer(vedleggsIdOrSkjemaId, "");
-    }
-
-    public String getSkjematittelForSkjemanummer(String vedleggsIdOrSkjemaId, String sprak) {
         try {
-            String tittel;
-            String engelskTittel = lokaltKodeverk.getKode(vedleggsIdOrSkjemaId, Kodeverk.Nokkel.TITTEL_EN);
-            boolean sprakErEngelsk = !StringUtils.isEmpty(sprak) && "en".equals(sprak);
-
-            if (sprakErEngelsk && !isEmpty(engelskTittel)) {
-                tittel = engelskTittel;
-            } else {
-                tittel = lokaltKodeverk.getKode(vedleggsIdOrSkjemaId, Kodeverk.Nokkel.TITTEL);
-            }
-
-            if (tittel == null) {
-                throw new ApplicationException("Tittel er null!");
-            }
-
-            return tittel;
-        } catch (Exception e) {
+            return kodeverk.hentKodeverk(KodeverkConfig.NAVSKJEMAOGVEDLEGGSKODER).hentBeskrivelse(vedleggsIdOrSkjemaId);
+        } catch (ApplicationException e) {
             LOG.warn("Fant ikke kodeverkid '" + vedleggsIdOrSkjemaId + "'. Bruker generisk tittel.", e);
+            return vedleggsIdOrSkjemaId;
+        } catch (RuntimeException e) {
+            LOG.error("Ukjent feil mot kall mot kodeverk", e);
             return vedleggsIdOrSkjemaId;
         }
     }
