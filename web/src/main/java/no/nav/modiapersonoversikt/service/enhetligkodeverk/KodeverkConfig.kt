@@ -14,13 +14,15 @@ enum class KodeverkConfig(private val kilde: EnhetligKodeverk.Kilde) {
     VALUTA(FellesKodeverkKilde("Valutaer")),
     TEMA(FellesKodeverkKilde("Tema")),
     SF_TEMAGRUPPER(SfHenvendelseKodeverkKilde()),
-    NAVSKJEMAOGVEDLEGGSKODER(FellesKodeverkFletter(
+    NAVSKJEMAOGVEDLEGGSKODER(
+        FellesKodeverkFletter(
         "NAVSkjemaOgVedleggskoder",
         listOf(
             FellesKodeverkKilde("NAVSkjema"),
             FellesKodeverkKilde("Vedleggskoder")
+            )
         )
-    ));
+    );
 
     fun hentKodeverk(providers: KodeverkProviders) = kilde.hentKodeverk(providers)
 }
