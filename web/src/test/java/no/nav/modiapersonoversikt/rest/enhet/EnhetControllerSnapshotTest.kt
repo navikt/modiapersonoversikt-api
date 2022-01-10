@@ -6,6 +6,7 @@ import no.nav.modiapersonoversikt.consumer.norg.NorgApi
 import no.nav.modiapersonoversikt.consumer.norg.NorgDomain
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.TilgangskontrollMock
+import no.nav.modiapersonoversikt.legacy.api.domain.norg.Ansatt
 import no.nav.modiapersonoversikt.legacy.api.service.norg.AnsattService
 import no.nav.modiapersonoversikt.service.arbeidsfordeling.ArbeidsfordelingService
 import no.nav.modiapersonoversikt.testutils.SnapshotExtension
@@ -44,9 +45,12 @@ internal class EnhetControllerSnapshotTest(val snapshot: SnapshotExtension) {
     lateinit var mockMvc: MockMvc
 
     @Test
-    internal fun `hent enhetsdata gitt enhetid`() {
-        gittKontaktinformasjon()
-        getJson("/rest/enheter/1234")
+    internal fun `hent ansatte gitt enhetid`() {
+        every { ansattService.ansatteForEnhet(any()) } returns listOf(
+            Ansatt("fornavn", "etternavn", "Z999999")
+        )
+
+        getJson("/rest/enheter/1234/ansatte")
             .andExpect {
                 assertThat(it.response.status).isEqualTo(200)
                 snapshot.assertMatches(it.response.contentAsString)
@@ -54,38 +58,20 @@ internal class EnhetControllerSnapshotTest(val snapshot: SnapshotExtension) {
     }
 
     @Test
-    internal fun `finn enhet gitt gt og diskresjonskode`() {
-        gittKontaktinformasjon()
-        every { norgapi.finnNavKontor(any(), any()) } returns NorgDomain.Enhet(
-            "1234",
-            "NAV Test",
-            NorgDomain.EnhetStatus.AKTIV
+    internal fun `hent alle enheter`() {
+        every { norgapi.hentEnheter(any(), any(), any()) } returns listOf(
+            NorgDomain.Enhet(
+                "1234",
+                "NAV Test",
+                NorgDomain.EnhetStatus.AKTIV,
+                oppgavebehandler = false
+            )
         )
-
-        getJson("/rest/enheter?gt=010101")
+        getJson("/rest/enheter/oppgavebehandlere/alle")
             .andExpect {
                 assertThat(it.response.status).isEqualTo(200)
                 snapshot.assertMatches(it.response.contentAsString)
             }
-    }
-
-    private fun gittKontaktinformasjon() {
-        every { norgapi.hentKontaktinfo(any()) } returns NorgDomain.EnhetKontaktinformasjon(
-            enhetId = "1234",
-            enhetNavn = "NAV Test",
-            publikumsmottak = listOf(
-                NorgDomain.Publikumsmottak(
-                    besoksadresse = null,
-                    apningstider = listOf(
-                        NorgDomain.Apningstid(
-                            NorgDomain.Ukedag.FREDAG,
-                            apentFra = "08:00",
-                            apentTil = "08:00",
-                        )
-                    )
-                )
-            )
-        )
     }
 
     private fun getJson(url: String): ResultActions {
