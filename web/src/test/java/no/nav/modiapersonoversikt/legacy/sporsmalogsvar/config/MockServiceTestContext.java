@@ -93,7 +93,7 @@ public class MockServiceTestContext {
     @Bean
     public NorgApi norgApi() {
         NorgApi norgapi = mock(NorgApi.class);
-        when(norgapi.hentEnheter(any(), NorgDomain.OppgaveBehandlerFilter.KUN_OPPGAVEBEHANDLERE,  any())).thenReturn(asList(new NorgDomain.Enhet("1231", "Sinsen", NorgDomain.EnhetStatus.AKTIV)));
+        when(norgapi.hentEnheter(any(), NorgDomain.OppgaveBehandlerFilter.KUN_OPPGAVEBEHANDLERE,  any())).thenReturn(asList(new NorgDomain.Enhet("1231", "Sinsen", NorgDomain.EnhetStatus.AKTIV, false)));
         return norgapi;
     }
 

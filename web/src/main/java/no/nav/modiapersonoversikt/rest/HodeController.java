@@ -1,6 +1,7 @@
 package no.nav.modiapersonoversikt.rest;
 
 import kotlin.Pair;
+import no.nav.common.types.identer.EnhetId;
 import no.nav.modiapersonoversikt.consumer.norg.NorgApi;
 import no.nav.modiapersonoversikt.consumer.norg.NorgDomain;
 import no.nav.modiapersonoversikt.infrastructure.AuthContextUtils;
@@ -82,7 +83,7 @@ public class HodeController {
                     Pair<String, String> saksbehandler = hentSaksbehandlerNavn();
                     String enhetId = hentValgtEnhet(null, request);
                     String enhetNavn = norgApi
-                            .hentEnheter(enhetId, NorgDomain.OppgaveBehandlerFilter.UFILTRERT, NorgApi.getIKKE_NEDLAGT())
+                            .hentEnheter(EnhetId.of(enhetId), NorgDomain.OppgaveBehandlerFilter.UFILTRERT, NorgApi.getIKKE_NEDLAGT())
                             .stream()
                             .findFirst()
                             .map(NorgDomain.Enhet::getEnhetNavn)

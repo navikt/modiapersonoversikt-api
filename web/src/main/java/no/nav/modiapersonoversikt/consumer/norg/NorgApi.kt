@@ -1,21 +1,32 @@
 package no.nav.modiapersonoversikt.consumer.norg
 
+import com.github.benmanes.caffeine.cache.Caffeine
+import no.nav.common.health.HealthCheckResult
+import no.nav.common.health.selftest.SelfTestCheck
 import no.nav.common.types.identer.EnhetId
 import no.nav.modiapersonoversikt.consumer.norg.NorgDomain.Enhet
 import no.nav.modiapersonoversikt.consumer.norg.NorgDomain.EnhetGeografiskTilknyttning
 import no.nav.modiapersonoversikt.consumer.norg.NorgDomain.EnhetKontaktinformasjon
 import no.nav.modiapersonoversikt.consumer.norg.NorgDomain.EnhetStatus
 import no.nav.modiapersonoversikt.consumer.norg.NorgDomain.OppgaveBehandlerFilter
+import no.nav.modiapersonoversikt.infrastructure.types.Pingable
 import no.nav.modiapersonoversikt.legacy.api.domain.norg.generated.apis.ArbeidsfordelingApi
 import no.nav.modiapersonoversikt.legacy.api.domain.norg.generated.apis.EnhetApi
-import no.nav.modiapersonoversikt.legacy.api.domain.norg.generated.apis.KontaktinformasjonApi
+import no.nav.modiapersonoversikt.legacy.api.domain.norg.generated.apis.EnhetskontaktinfoApi
 import no.nav.modiapersonoversikt.legacy.api.domain.norg.generated.models.*
+import no.nav.modiapersonoversikt.legacy.api.utils.RestConstants
 import no.nav.modiapersonoversikt.service.kodeverksmapper.domain.Behandling
+import no.nav.modiapersonoversikt.utils.Retry
 import okhttp3.OkHttpClient
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import java.time.Clock
+import java.time.Duration
+import java.time.LocalDateTime
+import java.util.*
+import kotlin.concurrent.scheduleAtFixedRate
 
-interface NorgApi {
+interface NorgApi : Pingable {
     companion object {
         @JvmStatic
         val IKKE_NEDLAGT: List<EnhetStatus> = EnhetStatus.values().asList().minus(EnhetStatus.NEDLAGT)
@@ -24,12 +35,12 @@ interface NorgApi {
     fun hentGeografiskTilknyttning(enhet: EnhetId): List<EnhetGeografiskTilknyttning>
 
     fun hentEnheter(
-        enhetId: String?,
+        enhetId: EnhetId?,
         oppgaveBehandlende: OppgaveBehandlerFilter = OppgaveBehandlerFilter.UFILTRERT,
         enhetStatuser: List<EnhetStatus> = IKKE_NEDLAGT
     ): List<Enhet>
 
-    fun finnNavKontor(geografiskTilknytning: String, diskresjonskode: NorgDomain.DiskresjonsKode?): Enhet
+    fun finnNavKontor(geografiskTilknytning: String, diskresjonskode: NorgDomain.DiskresjonsKode?): Enhet?
 
     fun hentBehandlendeEnheter(
         behandling: Behandling?,
@@ -40,40 +51,78 @@ interface NorgApi {
         diskresjonskode: String?
     ): List<Enhet>
 
-    fun hentKontaktinfo(enhet: String): EnhetKontaktinformasjon
+    fun hentKontaktinfo(enhet: EnhetId): EnhetKontaktinformasjon
 }
 
-class NorgApiImpl(url: String, httpClient: OkHttpClient) : NorgApi {
+class NorgApiImpl(
+    url: String,
+    httpClient: OkHttpClient,
+    scheduler: Timer = Timer(),
+    val clock: Clock = Clock.systemDefaultZone()
+) : NorgApi {
     private val log: Logger = LoggerFactory.getLogger(NorgApi::class.java)
+    private val cacheRetention = Duration.ofHours(1)
+    private var cache: Map<EnhetId, EnhetKontaktinformasjon> = emptyMap()
+    private var lastUpdateOfCache: LocalDateTime? = null
+    private val navkontorCache = createNorgCache<String, Enhet>()
+    private val gtCache = createNorgCache<String, List<EnhetGeografiskTilknyttning>>()
+
+    private val retry = Retry(
+        Retry.Config(
+            initDelay = 30 * 1000,
+            growthFactor = 2.0,
+            delayLimit = 60 * 60 * 1000,
+            scheduler = scheduler
+        )
+    )
+
     private val arbeidsfordelingApi = ArbeidsfordelingApi(url, httpClient)
     private val enhetApi = EnhetApi(url, httpClient)
-    private val enhetKontaktinfoApi = KontaktinformasjonApi(url, httpClient)
+    private val enhetKontaktInfoApi = EnhetskontaktinfoApi(url, httpClient)
+
+    init {
+        hentEnheterOgKontaktinformasjon()
+        scheduler.scheduleAtFixedRate(
+            delay = cacheRetention.toMillis(),
+            period = cacheRetention.toMillis(),
+            action = { hentEnheterOgKontaktinformasjon() }
+        )
+    }
 
     override fun hentGeografiskTilknyttning(enhet: EnhetId): List<EnhetGeografiskTilknyttning> {
-        return enhetApi
-            .getNavKontorerByEnhetsnummerUsingGET(enhet.get())
-            .map(::toInternalDomain)
+        return gtCache.get(enhet.get()) {
+            enhetApi
+                .getNavKontorerByEnhetsnummerUsingGET(it)
+                .map(::toInternalDomain)
+        } ?: emptyList()
     }
 
     override fun hentEnheter(
-        enhetId: String?,
+        enhetId: EnhetId?,
         oppgaveBehandlende: OppgaveBehandlerFilter,
         enhetStatuser: List<EnhetStatus>
     ): List<Enhet> {
-        return enhetApi
-            .getAllEnheterUsingGET(
-                enhetStatusListe = enhetStatuser.map { it.name },
-                enhetsnummerListe = enhetId?.let { listOf(it) } ?: emptyList(),
-                oppgavebehandlerFilter = oppgaveBehandlende.name
-            )
-            .map(::toInternalDomain)
+        val kandidater = if (enhetId != null) listOfNotNull(cache[enhetId]) else cache.values
+        val oppgaveBehandlerFilter: (EnhetKontaktinformasjon) -> Boolean = when (oppgaveBehandlende) {
+            OppgaveBehandlerFilter.UFILTRERT -> ({ true })
+            OppgaveBehandlerFilter.INGEN_OPPGAVEBEHANDLERE -> ({ !it.enhet.oppgavebehandler })
+            OppgaveBehandlerFilter.KUN_OPPGAVEBEHANDLERE -> ({ it.enhet.oppgavebehandler })
+        }
+
+        return kandidater
+            .filter(oppgaveBehandlerFilter)
+            .filter { enhetStatuser.contains(it.enhet.status) }
+            .map { it.enhet }
     }
 
-    override fun finnNavKontor(geografiskTilknytning: String, diskresjonskode: NorgDomain.DiskresjonsKode?): Enhet {
-        return enhetApi.getEnhetByGeografiskOmraadeUsingGET(
-            geografiskOmraade = geografiskTilknytning,
-            disk = diskresjonskode?.name
-        ).let(::toInternalDomain)
+    override fun finnNavKontor(geografiskTilknytning: String, diskresjonskode: NorgDomain.DiskresjonsKode?): Enhet? {
+        val key = "finnNavKontor[$geografiskTilknytning,$diskresjonskode]"
+        return navkontorCache.get(key) {
+            enhetApi.getEnhetByGeografiskOmraadeUsingGET(
+                geografiskOmraade = geografiskTilknytning,
+                disk = diskresjonskode?.name
+            ).let(::toInternalDomain)
+        }
     }
 
     override fun hentBehandlendeEnheter(
@@ -107,10 +156,37 @@ class NorgApiImpl(url: String, httpClient: OkHttpClient) : NorgApi {
             .map(::toInternalDomain)
     }
 
-    override fun hentKontaktinfo(enhet: String): EnhetKontaktinformasjon {
-        return enhetKontaktinfoApi
-            .getKontaktinformasjonUsingGET(enhet)
-            .let(::toInternalDomain)
+    override fun hentKontaktinfo(enhet: EnhetId): EnhetKontaktinformasjon {
+        return requireNotNull(cache[enhet]) {
+            "Fant ikke $enhet i cache"
+        }
+    }
+
+    override fun ping() = SelfTestCheck(
+        "NorgApi",
+        false
+    ) {
+        HealthCheckResult.healthy()
+    }
+
+    private fun hentEnheterOgKontaktinformasjon() {
+        retry.run {
+            cache = enhetKontaktInfoApi
+                .hentAlleEnheterInkludertKontaktinformasjonUsingGET(
+                    consumerId = RestConstants.MODIABRUKERDIALOG_SYSTEM_USER
+                )
+                .filter { it.enhet?.enhetId != null }
+                .mapNotNull {
+                    try {
+                        toInternalDomain(it)
+                    } catch (e: Exception) {
+                        log.error("Kunne ikke mappe enhet til lokalt format. $it", e)
+                        null
+                    }
+                }
+                .associateBy { EnhetId(it.enhet.enhetId) }
+            lastUpdateOfCache = LocalDateTime.now(clock)
+        }
     }
 
     private fun toInternalDomain(kontor: RsNavKontorDTO) = EnhetGeografiskTilknyttning(
@@ -121,15 +197,15 @@ class NorgApiImpl(url: String, httpClient: OkHttpClient) : NorgApi {
     )
 
     private fun toInternalDomain(enhet: RsEnhetDTO) = Enhet(
-        enhetId = enhet.enhetNr,
-        enhetNavn = enhet.navn,
-        status = enhet.status?.let(EnhetStatus::valueOf)
+        enhetId = requireNotNull(enhet.enhetNr),
+        enhetNavn = requireNotNull(enhet.navn),
+        status = EnhetStatus.valueOf(requireNotNull(enhet.status)),
+        oppgavebehandler = requireNotNull(enhet.oppgavebehandler)
     )
 
-    private fun toInternalDomain(enhet: RsEnhetKontaktinformasjonDTO) = EnhetKontaktinformasjon(
-        enhetId = requireNotNull(enhet.enhetNr),
-        enhetNavn = requireNotNull(""), // TODO etterspørr om dete kan legges til i APIet
-        publikumsmottak = enhet.publikumsmottak?.map { toInternalDomain(it) } ?: emptyList()
+    private fun toInternalDomain(enhet: RsEnhetInkludertKontaktinformasjonDTO) = EnhetKontaktinformasjon(
+        enhet = toInternalDomain(requireNotNull(enhet.enhet)),
+        publikumsmottak = enhet.kontaktinformasjon?.publikumsmottak?.map { toInternalDomain(it) } ?: emptyList()
     )
 
     private fun toInternalDomain(mottak: RsPublikumsmottakDTO) = NorgDomain.Publikumsmottak(
@@ -150,4 +226,11 @@ class NorgApiImpl(url: String, httpClient: OkHttpClient) : NorgApi {
         apentFra = requireNotNull(aapningstid.fra),
         apentTil = requireNotNull(aapningstid.til)
     )
+
+    private fun <KEY, VALUE> createNorgCache() = Caffeine
+        .newBuilder()
+        .maximumSize(2000)
+        .expireAfterWrite(cacheRetention)
+        .refreshAfterWrite(cacheRetention.minusMinutes(10))
+        .build<KEY, VALUE>()
 }

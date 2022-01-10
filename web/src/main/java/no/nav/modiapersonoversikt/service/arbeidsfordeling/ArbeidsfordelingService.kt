@@ -1,5 +1,6 @@
 package no.nav.modiapersonoversikt.service.arbeidsfordeling
 
+import no.nav.common.types.identer.EnhetId
 import no.nav.common.types.identer.Fnr
 import no.nav.modiapersonoversikt.config.endpoint.kodeverksmapper.Kodeverksmapper
 import no.nav.modiapersonoversikt.consumer.norg.NorgApi
@@ -72,7 +73,7 @@ class ArbeidsfordelingServiceImpl(
     override fun hentGeografiskTilknyttning(valgtEnhet: String): List<EnhetGeografiskTilknyttning> {
         return norgApi
             .runCatching {
-                hentGeografiskTilknyttning(valgtEnhet)
+                this.hentGeografiskTilknyttning(EnhetId.of(valgtEnhet))
             }
             .onFailure { log.error("Kunne ikke hente geografisk tilknyttning", it) }
             .getOrDefault(emptyList())

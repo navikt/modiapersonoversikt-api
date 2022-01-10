@@ -41,8 +41,8 @@ public class ScheduledAnsattListePrefetchTest {
     public void setUp() {
         initMocks(this);
         enheter = Arrays.asList(
-                new NorgDomain.Enhet("0100", "Nav Østfold", NorgDomain.EnhetStatus.AKTIV),
-                new NorgDomain.Enhet("2960", "Nav Drift", NorgDomain.EnhetStatus.AKTIV)
+                new NorgDomain.Enhet("0100", "Nav Østfold", NorgDomain.EnhetStatus.AKTIV, false),
+                new NorgDomain.Enhet("2960", "Nav Drift", NorgDomain.EnhetStatus.AKTIV, false)
         );
         when(norgApi.hentEnheter(null, NorgDomain.OppgaveBehandlerFilter.KUN_OPPGAVEBEHANDLERE, NorgApi.getIKKE_NEDLAGT())).thenReturn(enheter);
         when(cacheManager.getCache(anyString())).thenReturn(mock(Cache.class));

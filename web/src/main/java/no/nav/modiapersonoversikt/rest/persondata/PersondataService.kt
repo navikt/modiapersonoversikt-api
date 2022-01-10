@@ -1,5 +1,6 @@
 package no.nav.modiapersonoversikt.rest.persondata
 
+import no.nav.common.types.identer.EnhetId
 import no.nav.modiapersonoversikt.consumer.norg.NorgApi
 import no.nav.modiapersonoversikt.consumer.norg.NorgDomain
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll
@@ -113,26 +114,26 @@ class PersondataServiceImpl(
             .map { it ?: "" }
             .getOrElse("")
 
-        var diskresjonskode: String = ""
+        var diskresjonskode: NorgDomain.DiskresjonsKode? = null
         for (beskyttelse in adressebeskyttelse) {
             if (beskyttelse.kode == Persondata.AdresseBeskyttelse.KODE6) {
-                diskresjonskode = "SPSF"
+                diskresjonskode = NorgDomain.DiskresjonsKode.SPSF
                 break
             } else if (beskyttelse.kode == Persondata.AdresseBeskyttelse.KODE6_UTLAND) {
-                diskresjonskode = "SPSF"
+                diskresjonskode = NorgDomain.DiskresjonsKode.SPSF
                 break
             } else if (beskyttelse.kode == Persondata.AdresseBeskyttelse.KODE7) {
-                diskresjonskode = "SPFO"
+                diskresjonskode = NorgDomain.DiskresjonsKode.SPFO
                 break
             }
         }
         return PersondataResult.runCatching("NORG") {
             norgApi
-                .finnNavKontor(gt, NorgDomain.DiskresjonsKode.valueOf(diskresjonskode))
-                .enhetId
+                .finnNavKontor(gt, diskresjonskode)
+                ?.enhetId
         }
             .map("NORG Kontaktinformasjon") {
-                it?.let { enhetId -> norgApi.hentKontaktinfo(enhetId) }
+                it?.let { enhetId -> norgApi.hentKontaktinfo(EnhetId(enhetId)) }
             }
     }
 

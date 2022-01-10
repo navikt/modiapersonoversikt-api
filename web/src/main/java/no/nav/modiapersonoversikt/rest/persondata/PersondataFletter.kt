@@ -458,14 +458,14 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
                 if (it == null) {
                     null
                 } else {
-                    Persondata.Enhet(it.enhetId, it.enhetNavn, hentPublikumsmottak(it.publikumsmottak))
+                    Persondata.Enhet(it.enhet.enhetId, it.enhet.enhetNavn, hentPublikumsmottak(it.publikumsmottak))
                 }
             }
             .getOrNull()
     }
 
-    private fun hentPublikumsmottak(publikumsmottak: List<NorgDomain.Publikumsmottak>?): List<Persondata.Publikumsmottak> {
-        return publikumsmottak?.map {
+    private fun hentPublikumsmottak(publikumsmottak: List<NorgDomain.Publikumsmottak>): List<Persondata.Publikumsmottak> {
+        return publikumsmottak.map {
             Persondata.Publikumsmottak(
                 besoksadresse = lagAdresseFraBesoksadresse(requireNotNull(it.besoksadresse)),
                 apningstider = it.apningstider.map { apningstid ->
@@ -475,7 +475,7 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
                     )
                 }
             )
-        } ?: emptyList()
+        }
     }
 
     private fun lagApningstid(apentFra: String?, apentTil: String?): String {
@@ -510,14 +510,14 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
                 UGRADERT -> Persondata.KodeBeskrivelse("", "Ugradert")
                 else -> Persondata.KodeBeskrivelse("", "Ukjent")
             }
-            val adressebeskyttelse = when (it.gradering) {
+            val gradering = when (it.gradering) {
                 STRENGT_FORTROLIG_UTLAND -> Persondata.AdresseBeskyttelse.KODE6_UTLAND
                 STRENGT_FORTROLIG -> Persondata.AdresseBeskyttelse.KODE6
                 FORTROLIG -> Persondata.AdresseBeskyttelse.KODE7
                 UGRADERT -> Persondata.AdresseBeskyttelse.UGRADERT
                 else -> Persondata.AdresseBeskyttelse.UKJENT
             }
-            Persondata.KodeBeskrivelse(kode = adressebeskyttelse, beskrivelse = kodebeskrivelse.beskrivelse)
+            Persondata.KodeBeskrivelse(kode = gradering, beskrivelse = kodebeskrivelse.beskrivelse)
         }
     }
 

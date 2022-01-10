@@ -27,8 +27,8 @@ public class ScheduledAnsattListePrefetchCacheTest extends CacheTest {
     ScheduledAnsattListePrefetch prefetch;
 
     final List<NorgDomain.Enhet> enheter = Arrays.asList(
-            new NorgDomain.Enhet("0100", "Nav Østfold", NorgDomain.EnhetStatus.AKTIV),
-            new NorgDomain.Enhet("2960", "Nav Drift", NorgDomain.EnhetStatus.AKTIV)
+            new NorgDomain.Enhet("0100", "Nav Østfold", NorgDomain.EnhetStatus.AKTIV, false),
+            new NorgDomain.Enhet("2960", "Nav Drift", NorgDomain.EnhetStatus.AKTIV, false)
     );
     public ScheduledAnsattListePrefetchCacheTest() {
         super(CACHE_NAME);

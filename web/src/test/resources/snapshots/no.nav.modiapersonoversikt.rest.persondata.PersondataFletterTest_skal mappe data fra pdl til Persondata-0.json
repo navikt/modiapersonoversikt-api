@@ -217,7 +217,7 @@
       "navn" : "NAV Oslo",
       "publikumsmottak" : [ "java.util.ArrayList", [ {
         "apningstider" : [ "java.util.ArrayList", [ {
-          "apningstid" : "10.00 - 15.00",
+          "apningstid" : "10:00 - 15:00",
           "ukedag" : "MANDAG"
         } ] ],
         "besoksadresse" : {

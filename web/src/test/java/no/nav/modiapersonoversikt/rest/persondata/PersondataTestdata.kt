@@ -189,8 +189,12 @@ internal fun gittNavKontorEnhet(
     enhetId: String = "0123",
     enhetNavn: String = "NAV Oslo"
 ) = NorgDomain.EnhetKontaktinformasjon(
-    enhetId = enhetId,
-    enhetNavn = enhetNavn,
+    enhet = NorgDomain.Enhet(
+        enhetId = enhetId,
+        enhetNavn = enhetNavn,
+        status = NorgDomain.EnhetStatus.AKTIV,
+        oppgavebehandler = false
+    ),
     publikumsmottak = listOf(
         Publikumsmottak(
             besoksadresse = NorgDomain.Gateadresse(

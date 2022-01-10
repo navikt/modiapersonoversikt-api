@@ -22,10 +22,10 @@ class NorgApiCacheTest extends CacheTest {
 
     @Test
     void cacheManagerHarEntryForEndpointCacheEtterKallTilEnhet() {
-        norgApi.hentEnheter("1234", null, null);
-        norgApi.hentEnheter("4321", null, null);
-        norgApi.hentEnheter("1234", null, null);
-        norgApi.hentEnheter("4321", null, null);
+        norgApi.hentEnheter(EnhetId.of("1234"), null, null);
+        norgApi.hentEnheter(EnhetId.of("4321"), null, null);
+        norgApi.hentEnheter(EnhetId.of("1234"), null, null);
+        norgApi.hentEnheter(EnhetId.of("4321"), null, null);
 
         assertThat(getCache().getName(), is(CACHE_NAME));
         assertThat(getNativeCache().estimatedSize(), is(2L));
@@ -49,14 +49,14 @@ class NorgApiCacheTest extends CacheTest {
                 () -> norgApi.hentGeografiskTilknyttning(EnhetId.of("4567")),
                 () -> norgApi.hentEnheter(null, NorgDomain.OppgaveBehandlerFilter.UFILTRERT, NorgApi.getIKKE_NEDLAGT()),
                 () -> norgApi.hentEnheter(null, NorgDomain.OppgaveBehandlerFilter.KUN_OPPGAVEBEHANDLERE, NorgApi.getIKKE_NEDLAGT()),
-                () -> norgApi.hentEnheter("1234", NorgDomain.OppgaveBehandlerFilter.KUN_OPPGAVEBEHANDLERE, NorgApi.getIKKE_NEDLAGT()),
+                () -> norgApi.hentEnheter(EnhetId.of("1234"), NorgDomain.OppgaveBehandlerFilter.KUN_OPPGAVEBEHANDLERE, NorgApi.getIKKE_NEDLAGT()),
                 () -> norgApi.finnNavKontor("1234", NorgDomain.DiskresjonsKode.ANY),
                 () -> norgApi.finnNavKontor("4567", NorgDomain.DiskresjonsKode.ANY),
                 () -> norgApi.hentBehandlendeEnheter(null, null, null, null, null, null),
                 () -> norgApi.hentBehandlendeEnheter(null, "1234", null, null, null, null),
                 () -> norgApi.hentBehandlendeEnheter(null, "4567", null, null, null, null),
-                () -> norgApi.hentKontaktinfo("1234"),
-                () -> norgApi.hentKontaktinfo("1235")
+                () -> norgApi.hentKontaktinfo(EnhetId.of("1234")),
+                () -> norgApi.hentKontaktinfo(EnhetId.of("1235"))
         );
         assertThat(getKey(), Matchers.is(generatedByMethodAwareKeyGenerator()));
     }

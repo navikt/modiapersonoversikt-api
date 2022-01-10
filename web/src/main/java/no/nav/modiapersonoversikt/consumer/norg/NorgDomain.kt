@@ -19,14 +19,13 @@ object NorgDomain {
     )
 
     data class Enhet(
-        val enhetId: String?,
-        val enhetNavn: String?,
-        val status: EnhetStatus?
-    )
-
-    data class EnhetKontaktinformasjon(
         val enhetId: String,
         val enhetNavn: String,
+        val status: EnhetStatus,
+        val oppgavebehandler: Boolean
+    )
+    data class EnhetKontaktinformasjon(
+        val enhet: Enhet,
         val publikumsmottak: List<Publikumsmottak>
     )
     data class Publikumsmottak(
