@@ -218,7 +218,7 @@ class NorgApiImpl(
         internal fun toInternalDomain(enhet: RsEnhetDTO) = Enhet(
             enhetId = requireNotNull(enhet.enhetNr),
             enhetNavn = requireNotNull(enhet.navn),
-            status = EnhetStatus.valueOf(requireNotNull(enhet.status).uppercase()),
+            status = EnhetStatus.safeValueOf(enhet.status),
             oppgavebehandler = requireNotNull(enhet.oppgavebehandler)
         )
 
@@ -243,7 +243,7 @@ class NorgApiImpl(
         )
 
         private fun toInternalDomain(aapningstid: RsAapningstidDTO) = NorgDomain.Apningstid(
-            ukedag = NorgDomain.Ukedag.valueOf(requireNotNull(aapningstid.dag).uppercase()),
+            ukedag = NorgDomain.Ukedag.safeValueOf(aapningstid.dag),
             stengt = aapningstid.stengt ?: false,
             apentFra = aapningstid.fra,
             apentTil = aapningstid.til

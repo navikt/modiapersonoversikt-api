@@ -55,7 +55,7 @@ internal class NorgApiTest {
                   "navn": "NAV Enhet",
                   "enhetNr": "1234",
                   "antallRessurser": 0,
-                  "status": "Aktiv",
+                  "status": "Under avvikling",
                   "orgNivaa": "EN",
                   "type": "TILTAK",
                   "organisasjonsnummer": null,

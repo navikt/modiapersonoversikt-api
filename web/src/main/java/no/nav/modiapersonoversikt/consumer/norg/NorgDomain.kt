@@ -2,7 +2,10 @@ package no.nav.modiapersonoversikt.consumer.norg
 
 object NorgDomain {
     enum class EnhetStatus {
-        UNDER_ETABLERING, AKTIV, UNDER_AVVIKLING, NEDLAGT
+        UNDER_ETABLERING, AKTIV, UNDER_AVVIKLING, NEDLAGT;
+        companion object {
+            fun safeValueOf(status: String?) = valueOf(safeEnumValue(status))
+        }
     }
     enum class OppgaveBehandlerFilter {
         UFILTRERT, KUN_OPPGAVEBEHANDLERE, INGEN_OPPGAVEBEHANDLERE
@@ -42,7 +45,10 @@ object NorgDomain {
     )
 
     enum class Ukedag {
-        MANDAG, TIRSDAG, ONSDAG, TORSDAG, FREDAG, LORDAG, SONDAG
+        MANDAG, TIRSDAG, ONSDAG, TORSDAG, FREDAG, LORDAG, SONDAG;
+        companion object {
+            fun safeValueOf(status: String?) = valueOf(safeEnumValue(status))
+        }
     }
 
     class Apningstid(
@@ -51,4 +57,6 @@ object NorgDomain {
         val apentFra: String?,
         val apentTil: String?
     )
+
+    private fun safeEnumValue(value: String?) = requireNotNull(value).uppercase().replace(' ', '_')
 }
