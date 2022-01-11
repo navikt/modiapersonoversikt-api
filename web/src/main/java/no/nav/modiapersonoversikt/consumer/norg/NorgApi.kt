@@ -229,7 +229,9 @@ class NorgApiImpl(
 
         private fun toInternalDomain(mottak: RsPublikumsmottakDTO) = NorgDomain.Publikumsmottak(
             besoksadresse = mottak.besoeksadresse?.let { toInternalDomain(it) },
-            apningstider = mottak.aapningstider?.map { toInternalDomain(it) } ?: emptyList()
+            apningstider = mottak.aapningstider
+                ?.filter { it.dag != null }
+                ?.map { toInternalDomain(it) } ?: emptyList()
         )
 
         private fun toInternalDomain(adresse: RsStedsadresseDTO) = NorgDomain.Gateadresse(
