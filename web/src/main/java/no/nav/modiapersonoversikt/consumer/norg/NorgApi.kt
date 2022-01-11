@@ -202,47 +202,49 @@ class NorgApiImpl(
         }
     }
 
-    private fun toInternalDomain(kontor: RsNavKontorDTO) = EnhetGeografiskTilknyttning(
-        alternativEnhetId = kontor.alternativEnhetId?.toString(),
-        enhetId = kontor.enhetId?.toString(),
-        geografiskOmraade = kontor.geografiskOmraade,
-        navKontorId = kontor.navKontorId?.toString()
-    )
-
-    private fun toInternalDomain(enhet: RsEnhetDTO) = Enhet(
-        enhetId = requireNotNull(enhet.enhetNr),
-        enhetNavn = requireNotNull(enhet.navn),
-        status = EnhetStatus.valueOf(requireNotNull(enhet.status)),
-        oppgavebehandler = requireNotNull(enhet.oppgavebehandler)
-    )
-
-    private fun toInternalDomain(enhet: RsEnhetInkludertKontaktinformasjonDTO) = EnhetKontaktinformasjon(
-        enhet = toInternalDomain(requireNotNull(enhet.enhet)),
-        publikumsmottak = enhet.kontaktinformasjon?.publikumsmottak?.map { toInternalDomain(it) } ?: emptyList()
-    )
-
-    private fun toInternalDomain(mottak: RsPublikumsmottakDTO) = NorgDomain.Publikumsmottak(
-        besoksadresse = mottak.besoeksadresse?.let { toInternalDomain(it) },
-        apningstider = mottak.aapningstider?.map { toInternalDomain(it) } ?: emptyList()
-    )
-
-    private fun toInternalDomain(adresse: RsStedsadresseDTO) = NorgDomain.Gateadresse(
-        gatenavn = adresse.gatenavn,
-        husnummer = adresse.husnummer,
-        husbokstav = adresse.husbokstav,
-        postnummer = adresse.postnummer,
-        poststed = adresse.poststed
-    )
-
-    private fun toInternalDomain(aapningstid: RsAapningstidDTO) = NorgDomain.Apningstid(
-        ukedag = requireNotNull(aapningstid.dag).uppercase().let(NorgDomain.Ukedag::valueOf),
-        apentFra = requireNotNull(aapningstid.fra),
-        apentTil = requireNotNull(aapningstid.til)
-    )
-
     private fun <KEY, VALUE> createNorgCache() = Caffeine
         .newBuilder()
         .maximumSize(2000)
         .expireAfterWrite(cacheRetention)
         .build<KEY, VALUE>()
+
+    companion object {
+        internal fun toInternalDomain(kontor: RsNavKontorDTO) = EnhetGeografiskTilknyttning(
+            alternativEnhetId = kontor.alternativEnhetId?.toString(),
+            enhetId = kontor.enhetId?.toString(),
+            geografiskOmraade = kontor.geografiskOmraade,
+            navKontorId = kontor.navKontorId?.toString()
+        )
+
+        internal fun toInternalDomain(enhet: RsEnhetDTO) = Enhet(
+            enhetId = requireNotNull(enhet.enhetNr),
+            enhetNavn = requireNotNull(enhet.navn),
+            status = EnhetStatus.valueOf(requireNotNull(enhet.status).uppercase()),
+            oppgavebehandler = requireNotNull(enhet.oppgavebehandler)
+        )
+
+        internal fun toInternalDomain(enhet: RsEnhetInkludertKontaktinformasjonDTO) = EnhetKontaktinformasjon(
+            enhet = toInternalDomain(requireNotNull(enhet.enhet)),
+            publikumsmottak = enhet.kontaktinformasjon?.publikumsmottak?.map { toInternalDomain(it) } ?: emptyList()
+        )
+
+        private fun toInternalDomain(mottak: RsPublikumsmottakDTO) = NorgDomain.Publikumsmottak(
+            besoksadresse = mottak.besoeksadresse?.let { toInternalDomain(it) },
+            apningstider = mottak.aapningstider?.map { toInternalDomain(it) } ?: emptyList()
+        )
+
+        private fun toInternalDomain(adresse: RsStedsadresseDTO) = NorgDomain.Gateadresse(
+            gatenavn = adresse.gatenavn,
+            husnummer = adresse.husnummer,
+            husbokstav = adresse.husbokstav,
+            postnummer = adresse.postnummer,
+            poststed = adresse.poststed
+        )
+
+        private fun toInternalDomain(aapningstid: RsAapningstidDTO) = NorgDomain.Apningstid(
+            ukedag = NorgDomain.Ukedag.valueOf(requireNotNull(aapningstid.dag).uppercase()),
+            apentFra = requireNotNull(aapningstid.fra),
+            apentTil = requireNotNull(aapningstid.til)
+        )
+    }
 }
