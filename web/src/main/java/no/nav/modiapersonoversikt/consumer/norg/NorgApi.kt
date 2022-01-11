@@ -231,6 +231,5 @@ class NorgApiImpl(
         .newBuilder()
         .maximumSize(2000)
         .expireAfterWrite(cacheRetention)
-        .refreshAfterWrite(cacheRetention.minusMinutes(10))
         .build<KEY, VALUE>()
 }
