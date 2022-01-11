@@ -39,7 +39,6 @@ public class CacheConfig {
                 cache("asbogosysEnhet", 86400, 10_000),
                 cache("asbogosysAnsatt", 14400, 10_000),
                 cache("asbogosysAnsattListe", 43200, 10_000),
-                cache("norgApi", 86400, 10_000),
                 cache("ldap", 3600, 20_000),
                 cache("varslingCache", 180, 10_000),
                 cache("kodeverksmapperCache", 86400),
