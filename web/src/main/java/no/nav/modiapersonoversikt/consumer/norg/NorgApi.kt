@@ -242,8 +242,9 @@ class NorgApiImpl(
 
         private fun toInternalDomain(aapningstid: RsAapningstidDTO) = NorgDomain.Apningstid(
             ukedag = NorgDomain.Ukedag.valueOf(requireNotNull(aapningstid.dag).uppercase()),
-            apentFra = requireNotNull(aapningstid.fra),
-            apentTil = requireNotNull(aapningstid.til)
+            stengt = aapningstid.stengt ?: false,
+            apentFra = aapningstid.fra,
+            apentTil = aapningstid.til
         )
     }
 }

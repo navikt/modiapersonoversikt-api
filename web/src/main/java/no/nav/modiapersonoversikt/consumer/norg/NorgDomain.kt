@@ -47,6 +47,7 @@ object NorgDomain {
 
     class Apningstid(
         val ukedag: Ukedag,
+        val stengt: Boolean,
         val apentFra: String?,
         val apentTil: String?
     )

@@ -205,9 +205,16 @@ internal fun gittNavKontorEnhet(
             ),
             apningstider = listOf(
                 NorgDomain.Apningstid(
-                    ukedag = NorgDomain.Ukedag.MANDAG,
+                    ukedag = NorgDomain.Ukedag.TIRSDAG,
+                    stengt = false,
                     apentFra = "10:00",
                     apentTil = "15:00"
+                ),
+                NorgDomain.Apningstid(
+                    ukedag = NorgDomain.Ukedag.MANDAG,
+                    stengt = true,
+                    apentFra = null,
+                    apentTil = null
                 )
             )
         )

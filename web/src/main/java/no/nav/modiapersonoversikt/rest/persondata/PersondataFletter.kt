@@ -468,22 +468,26 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
         return publikumsmottak.map {
             Persondata.Publikumsmottak(
                 besoksadresse = lagAdresseFraBesoksadresse(requireNotNull(it.besoksadresse)),
-                apningstider = it.apningstider.map { apningstid ->
-                    Persondata.Apningstid(
-                        ukedag = apningstid.ukedag.name,
-                        apningstid = lagApningstid(apningstid.apentFra, apningstid.apentTil)
-                    )
-                }
+                apningstider = it.apningstider
+                    .sortedBy { apningstid -> apningstid.ukedag }
+                    .map { apningstid ->
+                        Persondata.Apningstid(
+                            ukedag = apningstid.ukedag.name,
+                            apningstid = lagApningstidString(apningstid)
+                        )
+                    }
             )
         }
     }
 
-    private fun lagApningstid(apentFra: String?, apentTil: String?): String {
-        return "${lagTidspunkt(apentFra)} - ${lagTidspunkt(apentTil)}"
-    }
-
-    private fun lagTidspunkt(tid: String?): String {
-        return tid ?: "Ukjent"
+    private fun lagApningstidString(apningstid: NorgDomain.Apningstid): String {
+        return if (apningstid.stengt) {
+            "Stengt"
+        } else {
+            val fra = apningstid.apentFra ?: "Ukjent"
+            val til = apningstid.apentTil ?: "Ukjent"
+            "$fra - $til"
+        }
     }
 
     private fun hentStatsborgerskap(data: Data): List<Persondata.Statsborgerskap> {
