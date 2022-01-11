@@ -2475,6 +2475,7 @@
     },
     "RsPostboksadresse": {
       "title": "RsPostboksadresse",
+      "x-discriminator-value": "postboksadresse",
       "allOf": [
         {
           "$ref": "#/definitions/RsAdresse"
@@ -2536,6 +2537,7 @@
     },
     "RsStedsadresse": {
       "title": "RsStedsadresse",
+      "x-discriminator-value": "stedsadresse",
       "allOf": [
         {
           "$ref": "#/definitions/RsAdresse"
