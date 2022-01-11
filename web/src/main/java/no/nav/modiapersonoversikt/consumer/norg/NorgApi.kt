@@ -55,13 +55,14 @@ interface NorgApi : Pingable {
 }
 
 class NorgApiImpl(
-    url: String,
+    private val url: String,
     httpClient: OkHttpClient,
     scheduler: Timer = Timer(),
-    val clock: Clock = Clock.systemDefaultZone()
+    private val clock: Clock = Clock.systemDefaultZone()
 ) : NorgApi {
     private val log: Logger = LoggerFactory.getLogger(NorgApi::class.java)
     private val cacheRetention = Duration.ofHours(1)
+    private val cacheGraceperiod = Duration.ofMinutes(2)
     private var cache: Map<EnhetId, EnhetKontaktinformasjon> = emptyMap()
     private var lastUpdateOfCache: LocalDateTime? = null
     private val navkontorCache = createNorgCache<String, Enhet>()
@@ -163,10 +164,22 @@ class NorgApiImpl(
     }
 
     override fun ping() = SelfTestCheck(
-        "NorgApi",
+        "NorgApi via $url (${cache.size}, ${gtCache.estimatedSize()}, ${navkontorCache.estimatedSize()})",
         false
     ) {
-        HealthCheckResult.healthy()
+        val limit = LocalDateTime.now(clock).minus(cacheRetention).plus(cacheGraceperiod)
+        val cacheIsFresh = lastUpdateOfCache?.isAfter(limit) == true
+
+        if (cacheIsFresh && cache.isNotEmpty()) {
+            HealthCheckResult.healthy()
+        } else {
+            HealthCheckResult.unhealthy(
+                """
+                Last updated: $lastUpdateOfCache
+                CacheSize: ${cache.size}
+                """.trimIndent()
+            )
+        }
     }
 
     private fun hentEnheterOgKontaktinformasjon() {
