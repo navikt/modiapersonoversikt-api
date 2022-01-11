@@ -188,7 +188,6 @@ class NorgApiImpl(
                 .hentAlleEnheterInkludertKontaktinformasjonUsingGET(
                     consumerId = RestConstants.MODIABRUKERDIALOG_SYSTEM_USER
                 )
-                .filter { it.enhet?.enhetId != null }
                 .mapNotNull {
                     try {
                         toInternalDomain(it)
