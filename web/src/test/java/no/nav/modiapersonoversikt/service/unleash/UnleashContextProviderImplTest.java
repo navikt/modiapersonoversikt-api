@@ -4,7 +4,7 @@ import no.finn.unleash.UnleashContext;
 import no.finn.unleash.UnleashContextProvider;
 import no.nav.modiapersonoversikt.legacy.api.domain.norg.AnsattEnhet;
 import no.nav.modiapersonoversikt.legacy.api.service.norg.AnsattService;
-import no.nav.modiapersonoversikt.legacy.api.utils.http.SubjectHandlerUtil;
+import no.nav.modiapersonoversikt.legacy.api.utils.http.AuthContextTestUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
@@ -61,7 +61,7 @@ class UnleashContextProviderImplTest {
                         new AnsattEnhet("1234", "NAV Bærum"),
                         new AnsattEnhet("0000", "NAV Test")));
 
-        UnleashContext context = SubjectHandlerUtil.withIdent(IDENT, () -> contextProvider.getContext());
+        UnleashContext context = AuthContextTestUtils.withIdent(IDENT, () -> contextProvider.getContext());
 
         assertThat(context.getUserId().get(), is(IDENT));
         assertThat(context.getRemoteAddress().get(), is(REMOTE_ADDR));

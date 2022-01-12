@@ -1,26 +1,21 @@
 package no.nav.modiapersonoversikt.legacy.sporsmalogsvar.consumer;
 
-import no.nav.common.auth.subject.IdentType;
-import no.nav.common.auth.subject.SsoToken;
-import no.nav.common.auth.subject.Subject;
-import no.nav.common.auth.subject.SubjectHandler;
-import no.nav.modiapersonoversikt.legacy.kjerneinfo.consumer.fim.person.PersonKjerneinfoServiceBi;
-import no.nav.modiapersonoversikt.legacy.kjerneinfo.consumer.fim.person.to.HentKjerneinformasjonRequest;
-import no.nav.modiapersonoversikt.legacy.kjerneinfo.consumer.fim.person.to.HentKjerneinformasjonResponse;
-import no.nav.modiapersonoversikt.legacy.kjerneinfo.domain.person.Person;
-import no.nav.modiapersonoversikt.legacy.kjerneinfo.domain.person.Personfakta;
-import no.nav.modiapersonoversikt.legacy.kjerneinfo.domain.person.fakta.AnsvarligEnhet;
-import no.nav.modiapersonoversikt.legacy.kjerneinfo.domain.person.fakta.Organisasjonsenhet;
+import com.nimbusds.jwt.JWTClaimsSet;
+import com.nimbusds.jwt.PlainJWT;
+import no.nav.common.auth.context.AuthContext;
+import no.nav.common.auth.context.UserRole;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.*;
+import no.nav.modiapersonoversikt.infrastructure.AuthContextUtils;
 import no.nav.modiapersonoversikt.infrastructure.content.ContentRetriever;
 import no.nav.modiapersonoversikt.legacy.api.domain.henvendelse.Melding;
-import no.nav.modiapersonoversikt.legacy.api.service.arbeidsfordeling.ArbeidsfordelingV1Service;
-import no.nav.modiapersonoversikt.legacy.api.service.kodeverk.StandardKodeverk;
 import no.nav.modiapersonoversikt.legacy.api.service.ldap.LDAPService;
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll;
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.TilgangskontrollContext;
 import no.nav.modiapersonoversikt.legacy.sporsmalogsvar.consumer.henvendelse.HenvendelseBehandlingServiceImpl;
 import no.nav.modiapersonoversikt.legacy.sporsmalogsvar.legacy.TraadVM;
+import no.nav.modiapersonoversikt.rest.persondata.*;
+import no.nav.modiapersonoversikt.service.arbeidsfordeling.ArbeidsfordelingService;
+import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.behandlehenvendelse.BehandleHenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.henvendelse.HenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.meldinger.WSHentHenvendelseListeRequest;
@@ -32,10 +27,7 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.stubbing.Answer;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static java.util.Arrays.asList;
@@ -48,7 +40,10 @@ import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 class HenvendelseBehandlingServiceImplTest {
-    private static final Subject TEST_SUBJECT = new Subject("Z999999", IdentType.InternBruker, SsoToken.oidcToken("token", emptyMap()));
+    private static final AuthContext TEST_SUBJECT = new AuthContext(
+            UserRole.INTERN,
+            new PlainJWT(new JWTClaimsSet.Builder().subject("Z999999").build())
+    );
     private static final String FNR = "11111111";
     private static final String TEMAGRUPPE = "temagruppe";
     private static final String BEHANDLINGS_ID = "id1";
@@ -62,19 +57,19 @@ class HenvendelseBehandlingServiceImplTest {
 
     private final HenvendelsePortType henvendelsePortType = mock(HenvendelsePortType.class);
     private final BehandleHenvendelsePortType behandleHenvendelsePortType = mock(BehandleHenvendelsePortType.class);
-    private final PersonKjerneinfoServiceBi kjerneinfo = mock(PersonKjerneinfoServiceBi.class);
-    private final StandardKodeverk standardKodeverk = mock(StandardKodeverk.class);
+    private final PersondataService persondataService = mock(PersondataService.class);
+    private final EnhetligKodeverk.Service kodeverk = mock(EnhetligKodeverk.Service.class);
     private final ContentRetriever propertyResolver = mock(ContentRetriever.class);
     private final LDAPService ldapService = mock(LDAPService.class);
-    private final ArbeidsfordelingV1Service arbeidsfordelingService = mock(ArbeidsfordelingV1Service.class);
+    private final ArbeidsfordelingService arbeidsfordelingService = mock(ArbeidsfordelingService.class);
     private final TilgangskontrollContext tilgangskontrollContext = mock(TilgangskontrollContext.class);
 
     private final HenvendelseBehandlingServiceImpl henvendelseBehandlingService = new HenvendelseBehandlingServiceImpl(
             henvendelsePortType,
             behandleHenvendelsePortType,
-            kjerneinfo,
+            persondataService,
             new Tilgangskontroll(tilgangskontrollContext),
-            standardKodeverk,
+            kodeverk,
             propertyResolver,
             ldapService,
             arbeidsfordelingService
@@ -87,7 +82,7 @@ class HenvendelseBehandlingServiceImplTest {
     void setUp() {
         initMocks(this);
         when(propertyResolver.hentTekst(anyString())).thenAnswer((Answer<String>) invocation -> ((String) invocation.getArguments()[0]));
-        when(arbeidsfordelingService.hentGTnummerForEnhet(anyString())).thenReturn(Collections.emptyList());
+        when(arbeidsfordelingService.hentGeografiskTilknyttning(anyString())).thenReturn(Collections.emptyList());
 
         XMLMeldingFraBruker xmlMeldingFraBruker = new XMLMeldingFraBruker()
                 .withFritekst("fritekst")
@@ -99,12 +94,15 @@ class HenvendelseBehandlingServiceImplTest {
         when(henvendelsePortType.hentHenvendelseListe(any(WSHentHenvendelseListeRequest.class))).thenReturn(
                 new WSHentHenvendelseListeResponse().withAny(xmlHenvendelseListe));
 
-        when(standardKodeverk.getArkivtemaNavn(anyString())).thenReturn(ARKIVTEMANAVN);
+        EnhetligKodeverk.Kodeverk dummyKodeverk = new EnhetligKodeverk.Kodeverk("Dummy", new HashMap<>() {{
+            put("journalfort tema", ARKIVTEMANAVN);
+        }});
+        when(kodeverk.hentKodeverk(any())).thenReturn(dummyKodeverk);
     }
 
     @Test
     void skalHenteMeldingerMedRiktigType() {
-        SubjectHandler.withSubject(TEST_SUBJECT, () -> henvendelseBehandlingService.hentMeldinger(FNR, VALGT_ENHET));
+        AuthContextUtils.withContext(TEST_SUBJECT, () -> henvendelseBehandlingService.hentMeldinger(FNR, VALGT_ENHET));
 
         verify(henvendelsePortType).hentHenvendelseListe(wsHentHenvendelseListeRequestArgumentCaptor.capture());
         WSHentHenvendelseListeRequest request = wsHentHenvendelseListeRequestArgumentCaptor.getValue();
@@ -121,7 +119,7 @@ class HenvendelseBehandlingServiceImplTest {
 
     @Test
     void skalTransformereResponsenTilMeldingsliste() {
-        List<Melding> meldinger = SubjectHandler.withSubject(TEST_SUBJECT, () -> henvendelseBehandlingService.hentMeldinger(FNR, VALGT_ENHET).getTraader()
+        List<Melding> meldinger = AuthContextUtils.withContext(TEST_SUBJECT, () -> henvendelseBehandlingService.hentMeldinger(FNR, VALGT_ENHET).getTraader()
                 .stream()
                 .flatMap(traader -> traader.getMeldinger().stream())
                 .collect(Collectors.toList())
@@ -133,19 +131,10 @@ class HenvendelseBehandlingServiceImplTest {
 
     @Test
     void skalMerkeSomKontorsperret() {
-        HentKjerneinformasjonResponse hentKjerneinformasjonResponse = new HentKjerneinformasjonResponse();
-        Personfakta personfakta = new Personfakta();
-        personfakta.setAnsvarligEnhet(new AnsvarligEnhet.With()
-                .organisasjonsenhet(new Organisasjonsenhet.With().organisasjonselementId(NAVBRUKERS_ENHET).done())
-                .done());
-        hentKjerneinformasjonResponse.setPerson(
-                new Person.With().personfakta(personfakta).done()
-        );
-
-        when(kjerneinfo.hentKjerneinformasjon(any(HentKjerneinformasjonRequest.class))).thenReturn(hentKjerneinformasjonResponse);
+        when(persondataService.hentNavEnhet(any())).thenReturn(new Persondata.Enhet(VALGT_ENHET, NAVBRUKERS_ENHET, new ArrayList<>()));
         henvendelseBehandlingService.merkSomKontorsperret("navbrukers fnr", VALGT_TRAAD);
 
-        verify(behandleHenvendelsePortType).oppdaterKontorsperre(NAVBRUKERS_ENHET, IDER_I_VALGT_TRAAD);
+        verify(behandleHenvendelsePortType).oppdaterKontorsperre(VALGT_ENHET, IDER_I_VALGT_TRAAD);
     }
 
     @Test
@@ -176,7 +165,7 @@ class HenvendelseBehandlingServiceImplTest {
 
         when(henvendelsePortType.hentHenvendelseListe(any(WSHentHenvendelseListeRequest.class))).thenReturn(new WSHentHenvendelseListeResponse().withAny(xmlHenvendelsesListe));
 
-        List<Melding> meldinger = SubjectHandler.withSubject(TEST_SUBJECT, () -> henvendelseBehandlingService.hentMeldinger(FNR, VALGT_ENHET).getTraader().stream()
+        List<Melding> meldinger = AuthContextUtils.withContext(TEST_SUBJECT, () -> henvendelseBehandlingService.hentMeldinger(FNR, VALGT_ENHET).getTraader().stream()
                 .flatMap(traad -> traad.getMeldinger().stream())
                 .sorted(Comparator.comparing(melding -> melding.opprettetDato))
                 .collect(Collectors.toList())
@@ -196,7 +185,7 @@ class HenvendelseBehandlingServiceImplTest {
                 .withJournalfortInformasjon(new XMLJournalfortInformasjon().withJournalfortTema("tema")));
 
         when(henvendelsePortType.hentHenvendelseListe(any(WSHentHenvendelseListeRequest.class))).thenReturn(new WSHentHenvendelseListeResponse().withAny(xmlHenvendelsesListe));
-        List<Melding> meldinger = SubjectHandler.withSubject(TEST_SUBJECT, () -> henvendelseBehandlingService.hentMeldinger(FNR, VALGT_ENHET).getTraader().stream()
+        List<Melding> meldinger = AuthContextUtils.withContext(TEST_SUBJECT, () -> henvendelseBehandlingService.hentMeldinger(FNR, VALGT_ENHET).getTraader().stream()
                 .flatMap(traad -> traad.getMeldinger().stream())
                 .sorted(Comparator.comparing(melding -> melding.opprettetDato))
                 .collect(Collectors.toList())
@@ -219,7 +208,7 @@ class HenvendelseBehandlingServiceImplTest {
 
         when(henvendelsePortType.hentHenvendelseListe(any(WSHentHenvendelseListeRequest.class))).thenReturn(new WSHentHenvendelseListeResponse().withAny(xmlHenvendelsesListe));
 
-        List<Melding> meldinger = SubjectHandler.withSubject(TEST_SUBJECT, () -> henvendelseBehandlingService.hentMeldinger(FNR, VALGT_ENHET).getTraader().stream()
+        List<Melding> meldinger = AuthContextUtils.withContext(TEST_SUBJECT, () -> henvendelseBehandlingService.hentMeldinger(FNR, VALGT_ENHET).getTraader().stream()
                 .flatMap(traad -> traad.getMeldinger().stream())
                 .collect(Collectors.toList())
         );
@@ -235,7 +224,7 @@ class HenvendelseBehandlingServiceImplTest {
 
         when(henvendelsePortType.hentHenvendelseListe(any(WSHentHenvendelseListeRequest.class))).thenReturn(new WSHentHenvendelseListeResponse().withAny(xmlHenvendelsesListe));
 
-        List<Melding> meldinger = SubjectHandler.withSubject(TEST_SUBJECT, () -> henvendelseBehandlingService.hentMeldinger(FNR, VALGT_ENHET).getTraader().stream()
+        List<Melding> meldinger = AuthContextUtils.withContext(TEST_SUBJECT, () -> henvendelseBehandlingService.hentMeldinger(FNR, VALGT_ENHET).getTraader().stream()
                 .flatMap(traad -> traad.getMeldinger().stream())
                 .collect(Collectors.toList())
         );
@@ -254,7 +243,7 @@ class HenvendelseBehandlingServiceImplTest {
 
         when(henvendelsePortType.hentHenvendelseListe(any(WSHentHenvendelseListeRequest.class))).thenReturn(new WSHentHenvendelseListeResponse().withAny(okonomiskSosialhjelp));
 
-        List<Melding> meldinger = SubjectHandler.withSubject(TEST_SUBJECT, () -> henvendelseBehandlingService.hentMeldinger(FNR, VALGT_ENHET).getTraader().stream()
+        List<Melding> meldinger = AuthContextUtils.withContext(TEST_SUBJECT, () -> henvendelseBehandlingService.hentMeldinger(FNR, VALGT_ENHET).getTraader().stream()
                 .flatMap(traad -> traad.getMeldinger().stream())
                 .collect(Collectors.toList())
         );

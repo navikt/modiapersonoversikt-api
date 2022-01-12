@@ -126,7 +126,7 @@ class SakerController @Autowired constructor(
     }
 
     private fun hentDokumentMetadata(dokumenter: List<DokumentMetadata>): List<Map<String, Any?>> {
-        return dokumenter.filterNot { it.baksystem == Baksystem.HENVENDELSE }
+        return dokumenter
             .map {
                 mapOf(
                     "id" to unikId(),

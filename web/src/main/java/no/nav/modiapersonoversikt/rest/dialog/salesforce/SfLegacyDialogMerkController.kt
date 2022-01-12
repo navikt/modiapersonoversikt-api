@@ -1,7 +1,5 @@
 package no.nav.modiapersonoversikt.rest.dialog.salesforce
 
-import no.nav.common.auth.subject.SubjectHandler
-import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll
 import no.nav.modiapersonoversikt.legacy.api.service.OppgaveBehandlingService
 import no.nav.modiapersonoversikt.rest.dialog.apis.*
 import no.nav.modiapersonoversikt.service.sfhenvendelse.SfHenvendelseService
@@ -11,7 +9,6 @@ import java.util.*
 import javax.ws.rs.NotSupportedException
 
 class SfLegacyDialogMerkController(
-    private val tilgangskontroll: Tilgangskontroll,
     private val sfHenvendelseService: SfHenvendelseService,
     private val oppgaveBehandlingService: OppgaveBehandlingService
 ) : DialogMerkApi {
@@ -29,16 +26,19 @@ class SfLegacyDialogMerkController(
     }
 
     override fun merkSomKontorsperret(request: KontorsperretRequest): ResponseEntity<Void> {
-        require(request.meldingsidListe.size == 1) {
-            "Man forventer en enkelt kjedeId"
-        }
-        sfHenvendelseService.merkSomKontorsperret(request.meldingsidListe.first(), request.enhet)
+        throw NotSupportedException("Operasjonen er erstattet med sladding")
+    }
+
+    override fun sendTilSladding(request: SendTilSladdingRequest): ResponseEntity<Void> {
+        sfHenvendelseService.sendTilSladding(request.traadId)
         return ResponseEntity(HttpStatus.OK)
     }
 
     override fun avsluttUtenSvar(request: AvsluttUtenSvarRequest): ResponseEntity<Void> {
-        // TODO kan vi patche avsluttet dato?
-        throw NotSupportedException("Operasjonen er ikke støttet av Salesforce")
+        // TODO SF vil det være innafor å merke meldinger på denne måten.
+        // Hva skjer evt om vi forsøker å gjøre det med samtalereferat etc?
+        sfHenvendelseService.lukkTraad(request.eldsteMeldingTraadId)
+        return ResponseEntity(HttpStatus.OK)
     }
 
     override fun tvungenFerdigstill(request: TvungenFerdigstillRequest): ResponseEntity<Void> {
@@ -51,16 +51,10 @@ class SfLegacyDialogMerkController(
     }
 
     override fun slettBehandlingskjede(request: FeilmerkRequest): ResponseEntity<Void> {
-        require(request.behandlingsidListe.size == 1) {
-            "Man forventer en enkelt kjedeId"
-        }
-        sfHenvendelseService.merkForHastekassering(request.behandlingsidListe.first())
-        return ResponseEntity(HttpStatus.OK)
+        throw NotSupportedException("Operasjonen må gjøres via Salesforce")
     }
 
     override fun kanSlette(): ResponseEntity<Boolean> {
-        val godkjenteSaksbehandlere = tilgangskontroll.context().hentSaksbehandlereMedTilgangTilHastekassering()
-        val saksbehandlerId = SubjectHandler.getIdent().map(String::toUpperCase).get()
-        return ResponseEntity(godkjenteSaksbehandlere.contains(saksbehandlerId), HttpStatus.OK)
+        return ResponseEntity(false, HttpStatus.OK)
     }
 }

@@ -1,0 +1,23 @@
+{
+  "adressebeskyttelse" : [ "java.util.ArrayList", [ {
+    "beskrivelse" : "Ugradert",
+    "kode" : "UGRADERT"
+  } ] ],
+  "alder" : null,
+  "bostedAdresse" : [ "java.util.ArrayList", [ {
+    "gyldighetsPeriode" : null,
+    "linje1" : "000001 Gutu Gard",
+    "linje2" : "1234 Skauen",
+    "linje3" : null,
+    "sistEndret" : null
+  } ] ],
+  "dodsdato" : [ "java.util.ArrayList", [ ] ],
+  "fnr" : "00000000000",
+  "fodselsdato" : [ "java.util.ArrayList", [ ] ],
+  "kjonn" : [ "java.util.ArrayList", [ ] ],
+  "navn" : [ "java.util.ArrayList", [ {
+    "etternavn" : "Testfamilien",
+    "fornavn" : "Aremark",
+    "mellomnavn" : null
+  } ] ]
+}

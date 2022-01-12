@@ -1,19 +1,14 @@
 package no.nav.modiapersonoversikt.legacy.sporsmalogsvar.consumer.henvendelse;
 
 import kotlin.Pair;
-import no.nav.common.auth.subject.SubjectHandler;
-import no.nav.modiapersonoversikt.legacy.kjerneinfo.consumer.fim.person.PersonKjerneinfoServiceBi;
-import no.nav.modiapersonoversikt.legacy.kjerneinfo.consumer.fim.person.to.HentKjerneinformasjonRequest;
-import no.nav.modiapersonoversikt.legacy.kjerneinfo.domain.person.Person;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelse;
+import no.nav.modiapersonoversikt.consumer.norg.NorgDomain;
+import no.nav.modiapersonoversikt.infrastructure.AuthContextUtils;
 import no.nav.modiapersonoversikt.infrastructure.content.ContentRetriever;
 import no.nav.modiapersonoversikt.legacy.api.domain.Temagruppe;
 import no.nav.modiapersonoversikt.legacy.api.domain.henvendelse.Fritekst;
 import no.nav.modiapersonoversikt.legacy.api.domain.henvendelse.HenvendelseUtils;
 import no.nav.modiapersonoversikt.legacy.api.domain.henvendelse.Melding;
-import no.nav.modiapersonoversikt.legacy.api.domain.norg.EnhetsGeografiskeTilknytning;
-import no.nav.modiapersonoversikt.legacy.api.service.arbeidsfordeling.ArbeidsfordelingV1Service;
-import no.nav.modiapersonoversikt.legacy.api.service.kodeverk.StandardKodeverk;
 import no.nav.modiapersonoversikt.legacy.api.service.ldap.LDAPService;
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.*;
 import no.nav.modiapersonoversikt.infrastructure.naudit.Audit;
@@ -22,6 +17,11 @@ import no.nav.modiapersonoversikt.infrastructure.naudit.AuditResources;
 import no.nav.modiapersonoversikt.legacy.sporsmalogsvar.consumer.henvendelse.domain.Meldinger;
 import no.nav.modiapersonoversikt.legacy.sporsmalogsvar.legacy.MeldingVM;
 import no.nav.modiapersonoversikt.legacy.sporsmalogsvar.legacy.TraadVM;
+import no.nav.modiapersonoversikt.rest.persondata.Persondata;
+import no.nav.modiapersonoversikt.rest.persondata.PersondataService;
+import no.nav.modiapersonoversikt.service.arbeidsfordeling.ArbeidsfordelingService;
+import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk;
+import no.nav.modiapersonoversikt.service.enhetligkodeverk.KodeverkConfig;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.behandlehenvendelse.BehandleHenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.henvendelse.HenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.meldinger.WSHentHenvendelseListeRequest;
@@ -51,29 +51,29 @@ public class HenvendelseBehandlingServiceImpl implements HenvendelseBehandlingSe
 
     private final HenvendelsePortType henvendelsePortType;
     private final BehandleHenvendelsePortType behandleHenvendelsePortType;
-    private final PersonKjerneinfoServiceBi kjerneinfo;
+    private final PersondataService persondataService;
     private final Tilgangskontroll tilgangskontroll;
-    private final StandardKodeverk standardKodeverk;
+    private final EnhetligKodeverk.Service kodeverk;
     private final ContentRetriever propertyResolver;
     private final LDAPService ldapService;
-    private final ArbeidsfordelingV1Service arbeidsfordelingService;
+    private final ArbeidsfordelingService arbeidsfordelingService;
 
     @Autowired
     public HenvendelseBehandlingServiceImpl(
             HenvendelsePortType henvendelsePortType,
             BehandleHenvendelsePortType behandleHenvendelsePortType,
-            PersonKjerneinfoServiceBi kjerneinfo,
+            PersondataService persondataService,
             Tilgangskontroll tilgangskontroll,
-            StandardKodeverk standardKodeverk,
+            EnhetligKodeverk.Service kodeverk,
             ContentRetriever propertyResolver,
             LDAPService ldapService,
-            ArbeidsfordelingV1Service arbeidsfordelingService
+            ArbeidsfordelingService arbeidsfordelingService
     ) {
         this.henvendelsePortType = henvendelsePortType;
         this.behandleHenvendelsePortType = behandleHenvendelsePortType;
-        this.kjerneinfo = kjerneinfo;
+        this.persondataService = persondataService;
         this.tilgangskontroll = tilgangskontroll;
-        this.standardKodeverk = standardKodeverk;
+        this.kodeverk = kodeverk;
         this.propertyResolver = propertyResolver;
         this.ldapService = ldapService;
         this.arbeidsfordelingService = arbeidsfordelingService;
@@ -87,11 +87,11 @@ public class HenvendelseBehandlingServiceImpl implements HenvendelseBehandlingSe
     }
 
     private List<Melding> hentMeldingerFraHenvendelse(String fnr, String valgtEnhet) {
-        List<EnhetsGeografiskeTilknytning> valgtEnhetSGTenheter = arbeidsfordelingService.hentGTnummerForEnhet(valgtEnhet);
+        List<NorgDomain.EnhetGeografiskTilknyttning> valgtEnhetSGTenheter = arbeidsfordelingService.hentGeografiskTilknyttning(valgtEnhet);
         List<String> enhetslistGTogEnhet = new ArrayList<>();
         enhetslistGTogEnhet.add(valgtEnhet);
-        for (EnhetsGeografiskeTilknytning enhetsGeografiskeTilknytning : valgtEnhetSGTenheter) {
-            enhetslistGTogEnhet.add(enhetsGeografiskeTilknytning.geografiskOmraade);
+        for (NorgDomain.EnhetGeografiskTilknyttning enhetsGeografiskeTilknytning : valgtEnhetSGTenheter) {
+            enhetslistGTogEnhet.add(enhetsGeografiskeTilknytning.getGeografiskOmraade());
         }
         WSHentHenvendelseListeResponse wsHentHenvendelseListeResponse = henvendelsePortType
                 .hentHenvendelseListe(new WSHentHenvendelseListeRequest().withFodselsnummer(fnr).withTyper(HenvendelseUtils.AKTUELLE_HENVENDELSE_TYPER));
@@ -154,12 +154,9 @@ public class HenvendelseBehandlingServiceImpl implements HenvendelseBehandlingSe
 
     @Override
     public String getEnhet(String fnr) {
-        HentKjerneinformasjonRequest kjerneinfoRequest = new HentKjerneinformasjonRequest(fnr);
-        kjerneinfoRequest.setBegrunnet(true);
-        Person person = kjerneinfo.hentKjerneinformasjon(kjerneinfoRequest).getPerson();
-
-        if (person.getPersonfakta().getAnsvarligEnhet() != null) {
-            return person.getPersonfakta().getAnsvarligEnhet().getOrganisasjonsenhet().getOrganisasjonselementId();
+        Persondata.Enhet navEnhet = persondataService.hentNavEnhet(fnr);
+        if (navEnhet != null) {
+            return navEnhet.getId();
         } else {
             return null;
         }
@@ -202,7 +199,7 @@ public class HenvendelseBehandlingServiceImpl implements HenvendelseBehandlingSe
                     .isPermit();
 
             if (melding.gjeldendeTemagruppe == Temagruppe.OKSOS && !tilgangTilMelding) {
-                String ident = SubjectHandler.getIdent().orElseThrow(() -> new RuntimeException("Fant ikke ident"));
+                String ident = AuthContextUtils.requireIdent();
                 logger.info("HenvendelseBehandlingServiceImpl::okonomiskSosialhjelpTilgang feilet. Ident: {} Enhet: {} Tema: {} SaksId: {} JournalpostId: {}",
                         ident,
                         valgtEnhet,
@@ -218,7 +215,7 @@ public class HenvendelseBehandlingServiceImpl implements HenvendelseBehandlingSe
     }
 
     private Function<Melding, Melding> journalfortTemaTilgang(final String valgtEnhet) {
-        String ident = SubjectHandler.getIdent().orElseThrow(() -> new RuntimeException("Fant ikke ident"));
+        String ident = AuthContextUtils.requireIdent();
         return (melding) -> {
             TilgangTilTemaData data = new TilgangTilTemaData(valgtEnhet, melding.journalfortTema);
             boolean tilgangTilTema = tilgangskontroll
@@ -244,7 +241,7 @@ public class HenvendelseBehandlingServiceImpl implements HenvendelseBehandlingSe
 
     private Melding journalfortTemaTilTemanavn(Melding melding) {
         if (melding.journalfortTema != null) {
-            String temaNavn = standardKodeverk.getArkivtemaNavn(melding.journalfortTema);
+            String temaNavn = kodeverk.hentKodeverk(KodeverkConfig.ARKIVTEMA).hentBeskrivelse(melding.journalfortTema);
             melding.journalfortTemanavn = temaNavn != null ? temaNavn : melding.journalfortTema;
         }
         return melding;

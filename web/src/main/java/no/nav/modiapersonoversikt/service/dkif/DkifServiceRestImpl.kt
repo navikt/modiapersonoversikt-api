@@ -1,23 +1,20 @@
 package no.nav.modiapersonoversikt.service.dkif
 
-import no.nav.common.auth.subject.SsoToken
-import no.nav.common.auth.subject.SubjectHandler
 import no.nav.common.health.HealthCheck
 import no.nav.common.health.HealthCheckResult
 import no.nav.common.health.selftest.SelfTestCheck
-import no.nav.common.log.MDCConstants
 import no.nav.common.rest.client.RestClient
 import no.nav.common.utils.EnvironmentUtils
+import no.nav.modiapersonoversikt.infrastructure.AuthContextUtils
 import no.nav.modiapersonoversikt.infrastructure.http.LoggingInterceptor
 import no.nav.modiapersonoversikt.infrastructure.http.XCorrelationIdInterceptor
+import no.nav.modiapersonoversikt.infrastructure.http.getCallId
 import no.nav.modiapersonoversikt.infrastructure.types.Pingable
 import no.nav.modiapersonoversikt.legacy.api.domain.dkif.generated.apis.DigitalKontaktinformasjonApi
 import no.nav.modiapersonoversikt.legacy.api.domain.dkif.generated.apis.PingApi
 import no.nav.modiapersonoversikt.legacy.api.utils.RestConstants
 import no.nav.modiapersonoversikt.legacy.api.utils.TjenestekallLogger
 import okhttp3.OkHttpClient
-import org.slf4j.MDC
-import java.util.*
 
 class DkifServiceRestImpl(
     baseUrl: String = EnvironmentUtils.getRequiredProperty("DKIF_REST_URL")
@@ -39,10 +36,10 @@ class DkifServiceRestImpl(
 
     override fun hentDigitalKontaktinformasjon(fnr: String): Dkif.DigitalKontaktinformasjon {
         val (feil, kontaktinfo) = client.digitalKontaktinformasjonUsingGET(
-            authorization = SubjectHandler.getSsoToken(SsoToken.Type.OIDC)
+            authorization = AuthContextUtils.getToken()
                 .map { "Bearer $it" }
                 .orElseThrow { IllegalStateException("Fant ikke OIDC-token") },
-            navCallId = MDC.get(MDCConstants.MDC_CALL_ID) ?: UUID.randomUUID().toString(),
+            navCallId = getCallId(),
             navConsumerId = RestConstants.MODIABRUKERDIALOG_SYSTEM_USER,
             navPersonidenter = listOf(fnr),
             inkluderSikkerDigitalPost = true

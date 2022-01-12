@@ -1,7 +1,7 @@
 package no.nav.modiapersonoversikt.consumer.kontrakter.consumer.utils;
 
 import no.nav.modiapersonoversikt.legacy.kjerneinfo.common.utils.DateUtils;
-import no.nav.modiapersonoversikt.legacy.kjerneinfo.common.utils.SnapshotRule;
+import no.nav.modiapersonoversikt.testutils.SnapshotRule;
 import no.nav.modiapersonoversikt.consumer.kontrakter.consumer.fim.mapping.YtelseskontraktMapper;
 import no.nav.modiapersonoversikt.consumer.kontrakter.consumer.fim.ytelseskontrakt.mock.YtelseskontraktMockFactory;
 import no.nav.modiapersonoversikt.consumer.kontrakter.consumer.fim.ytelseskontrakt.to.YtelseskontraktRequest;
@@ -35,7 +35,7 @@ public class YtelseskontraktMapperTest {
     private static final LocalDate FIXED_DATE = LocalDate.parse("2020-10-13");
 
     @Test
-    public void testMappper() throws DatatypeConfigurationException {
+    public void testMapper() throws DatatypeConfigurationException {
         YtelseskontraktMapper mapper = YtelseskontraktMapper.getInstance();
 
         YtelseskontraktRequest ytelseskontraktRequest = new YtelseskontraktRequest();

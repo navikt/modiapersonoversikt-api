@@ -1,8 +1,5 @@
 package no.nav.modiapersonoversikt.service;
 
-import no.nav.modiapersonoversikt.legacy.kjerneinfo.consumer.fim.person.PersonKjerneinfoServiceBi;
-import no.nav.modiapersonoversikt.legacy.kjerneinfo.consumer.fim.person.to.HentKjerneinformasjonRequest;
-import no.nav.modiapersonoversikt.legacy.kjerneinfo.domain.person.Person;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelse;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType;
 import no.nav.modiapersonoversikt.infrastructure.content.ContentRetriever;
@@ -20,6 +17,8 @@ import no.nav.modiapersonoversikt.legacy.api.utils.cache.HenvendelsePortTypeCach
 import no.nav.modiapersonoversikt.legacy.api.utils.henvendelse.delsvar.DelsvarSammenslaaer;
 import no.nav.modiapersonoversikt.legacy.api.utils.henvendelse.delsvar.DelsvarUtils;
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.*;
+import no.nav.modiapersonoversikt.rest.persondata.Persondata;
+import no.nav.modiapersonoversikt.rest.persondata.PersondataService;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.behandlehenvendelse.BehandleHenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.senduthenvendelse.SendUtHenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.senduthenvendelse.WSBehandlingskjedeErAlleredeBesvart;
@@ -56,7 +55,7 @@ public class HenvendelseUtsendingServiceImpl implements HenvendelseUtsendingServ
     private final OppgaveBehandlingService oppgaveBehandlingService;
     private final SakerService sakerService;
     private final ContentRetriever propertyResolver;
-    private final PersonKjerneinfoServiceBi kjerneinfo;
+    private final PersondataService persondataService;
     private final LDAPService ldapService;
     private final CacheManager cacheManager;
     private final Tilgangskontroll tilgangskontroll;
@@ -70,7 +69,7 @@ public class HenvendelseUtsendingServiceImpl implements HenvendelseUtsendingServ
                                            SakerService sakerService,
                                            Tilgangskontroll tilgangskontroll,
                                            ContentRetriever propertyResolver,
-                                           PersonKjerneinfoServiceBi kjerneinfo,
+                                           PersondataService persondataService,
                                            LDAPService ldapService,
                                            CacheManager cacheManager) {
 
@@ -81,7 +80,7 @@ public class HenvendelseUtsendingServiceImpl implements HenvendelseUtsendingServ
         this.sakerService = sakerService;
         this.tilgangskontroll = tilgangskontroll;
         this.propertyResolver = propertyResolver;
-        this.kjerneinfo = kjerneinfo;
+        this.persondataService = persondataService;
         this.ldapService = ldapService;
         this.cacheManager = cacheManager;
     }
@@ -264,12 +263,9 @@ public class HenvendelseUtsendingServiceImpl implements HenvendelseUtsendingServ
     }
 
     private String getEnhet(String fnr) {
-        HentKjerneinformasjonRequest kjerneinfoRequest = new HentKjerneinformasjonRequest(fnr);
-        kjerneinfoRequest.setBegrunnet(true);
-        Person person = kjerneinfo.hentKjerneinformasjon(kjerneinfoRequest).getPerson();
-
-        if (person.getPersonfakta().getAnsvarligEnhet() != null) {
-            return person.getPersonfakta().getAnsvarligEnhet().getOrganisasjonsenhet().getOrganisasjonselementId();
+        Persondata.Enhet navEnhet = persondataService.hentNavEnhet(fnr);
+        if (navEnhet != null) {
+            return navEnhet.getId();
         } else {
             return null;
         }

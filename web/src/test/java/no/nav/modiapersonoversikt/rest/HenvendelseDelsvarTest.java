@@ -9,14 +9,10 @@ import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontro
 import no.nav.modiapersonoversikt.legacy.api.domain.Temagruppe;
 import no.nav.modiapersonoversikt.legacy.api.service.OppgaveBehandlingService;
 import no.nav.modiapersonoversikt.legacy.api.utils.http.HttpRequestUtil;
-import no.nav.modiapersonoversikt.legacy.api.utils.http.SubjectHandlerUtil;
-import no.nav.modiapersonoversikt.legacy.kjerneinfo.consumer.fim.person.PersonKjerneinfoServiceBi;
-import no.nav.modiapersonoversikt.legacy.kjerneinfo.consumer.fim.person.to.HentKjerneinformasjonRequest;
-import no.nav.modiapersonoversikt.legacy.kjerneinfo.consumer.fim.person.to.HentKjerneinformasjonResponse;
-import no.nav.modiapersonoversikt.legacy.kjerneinfo.domain.person.Person;
-import no.nav.modiapersonoversikt.legacy.kjerneinfo.domain.person.Personfakta;
+import no.nav.modiapersonoversikt.legacy.api.utils.http.AuthContextTestUtils;
 import no.nav.modiapersonoversikt.rest.dialog.apis.DelsvarRestRequest;
 import no.nav.modiapersonoversikt.rest.dialog.henvendelse.HenvendelseDelsvar;
+import no.nav.modiapersonoversikt.rest.persondata.PersondataService;
 import no.nav.modiapersonoversikt.service.HenvendelseUtsendingServiceImpl;
 import no.nav.modiapersonoversikt.service.henvendelse.DelsvarServiceImpl;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.senduthenvendelse.SendUtHenvendelsePortType;
@@ -34,7 +30,6 @@ import org.springframework.cache.CacheManager;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockHttpServletRequest;
-
 import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.SPORSMAL_SKRIFTLIG;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
@@ -52,6 +47,7 @@ class HenvendelseDelsvarTest {
     private HenvendelseDelsvar delsvarController;
     private SendUtHenvendelsePortType sendUtHenvendelsePortTypeMock;
     private Tilgangskontroll tilgangskontrollMock = TilgangskontrollMock.get();
+    private PersondataService persondataService;
 
     @BeforeEach
     void before() {
@@ -62,22 +58,22 @@ class HenvendelseDelsvarTest {
     private HenvendelseUtsendingServiceImpl setupHenvendelseUtsendingService() {
         HenvendelsePortType henvendelsePortTypeMock = getHenvendelsePortTypeMock();
         ContentRetriever propertyResolver = mockPropertyResolver();
-        PersonKjerneinfoServiceBi kjerneinfoMock = mockPersonKjerneinfoService();
         CacheManager cacheManager = mock(CacheManager.class);
         when(cacheManager.getCache(anyString())).thenReturn(mock(Cache.class));
         sendUtHenvendelsePortTypeMock = mock(SendUtHenvendelsePortType.class);
+        persondataService = mock(PersondataService.class);
 
         return new HenvendelseUtsendingServiceImpl(
-                henvendelsePortTypeMock,
-                sendUtHenvendelsePortTypeMock,
-                null,
-                null,
-                null,
-                TilgangskontrollMock.get(),
-                propertyResolver,
-                kjerneinfoMock,
-                null,
-                cacheManager
+            henvendelsePortTypeMock,
+            sendUtHenvendelsePortTypeMock,
+            null,
+            null,
+            null,
+            tilgangskontrollMock,
+            propertyResolver,
+            persondataService,
+            null,
+            cacheManager
         );
     }
 
@@ -91,7 +87,7 @@ class HenvendelseDelsvarTest {
         HenvendelsePortType mock = mock(HenvendelsePortType.class);
         XMLHenvendelse xmlHenvendelse = lagXMLHenvendelse();
         when(mock.hentHenvendelseListe(any(WSHentHenvendelseListeRequest.class)))
-                .thenReturn(new WSHentHenvendelseListeResponse().withAny(xmlHenvendelse));
+            .thenReturn(new WSHentHenvendelseListeResponse().withAny(xmlHenvendelse));
 
         return mock;
     }
@@ -106,22 +102,12 @@ class HenvendelseDelsvarTest {
         return xmlHenvendelse;
     }
 
-    private PersonKjerneinfoServiceBi mockPersonKjerneinfoService() {
-        PersonKjerneinfoServiceBi mock = mock(PersonKjerneinfoServiceBi.class);
-        HentKjerneinformasjonResponse response = new HentKjerneinformasjonResponse();
-        Person person = new Person();
-        person.setPersonfakta(new Personfakta());
-        response.setPerson(person);
-        when(mock.hentKjerneinformasjon(any(HentKjerneinformasjonRequest.class))).thenReturn(response);
-        return mock;
-    }
-
     @Test
     @DisplayName("Svar delvis ferdigstiller henvendelse mot Henvendelse-tjenesten")
     void ferdigstillerHenvendelse() {
         ArgumentCaptor<WSFerdigstillHenvendelseRequest> argumentCaptor = ArgumentCaptor.forClass(WSFerdigstillHenvendelseRequest.class);
 
-        SubjectHandlerUtil.withIdent(SAKSBEHANDLERS_IDENT, () -> delsvarController.svarDelvis(httpMockRequest, BRUKERS_FNR, lagDelsvarRequest()));
+        AuthContextTestUtils.withIdent(SAKSBEHANDLERS_IDENT, () -> delsvarController.svarDelvis(httpMockRequest, BRUKERS_FNR, lagDelsvarRequest()));
 
         verify(sendUtHenvendelsePortTypeMock).ferdigstillHenvendelse(argumentCaptor.capture());
         assertEquals(HENVENDELSES_ID, argumentCaptor.getValue().getBehandlingsId().get(0));
@@ -132,7 +118,7 @@ class HenvendelseDelsvarTest {
     void leserValgtEnhetFraCookie() {
         ArgumentCaptor<WSFerdigstillHenvendelseRequest> argumentCaptor = ArgumentCaptor.forClass(WSFerdigstillHenvendelseRequest.class);
 
-        SubjectHandlerUtil.withIdent(SAKSBEHANDLERS_IDENT, () -> delsvarController.svarDelvis(httpMockRequest, BRUKERS_FNR, lagDelsvarRequest()));
+        AuthContextTestUtils.withIdent(SAKSBEHANDLERS_IDENT, () -> delsvarController.svarDelvis(httpMockRequest, BRUKERS_FNR, lagDelsvarRequest()));
 
         verify(sendUtHenvendelsePortTypeMock).ferdigstillHenvendelse(argumentCaptor.capture());
         XMLHenvendelse xmlHenvendelse = (XMLHenvendelse) argumentCaptor.getValue().getAny();
@@ -142,7 +128,7 @@ class HenvendelseDelsvarTest {
     @Test
     @DisplayName("Delvis svar returnerer 200 OK")
     void ferdigstillHenvendelseReturer200OK() {
-        ResponseEntity response = SubjectHandlerUtil.withIdent(SAKSBEHANDLERS_IDENT, () -> delsvarController.svarDelvis(httpMockRequest, BRUKERS_FNR, lagDelsvarRequest()));
+        ResponseEntity response = AuthContextTestUtils.withIdent(SAKSBEHANDLERS_IDENT, () -> delsvarController.svarDelvis(httpMockRequest, BRUKERS_FNR, lagDelsvarRequest()));
         assertEquals(HttpStatus.OK, response.getStatusCode());
     }
 

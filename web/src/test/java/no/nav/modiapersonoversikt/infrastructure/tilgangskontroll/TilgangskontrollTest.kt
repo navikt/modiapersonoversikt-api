@@ -1,13 +1,14 @@
 package no.nav.modiapersonoversikt.infrastructure.tilgangskontroll
 
+import com.nimbusds.jwt.JWTClaimsSet
+import com.nimbusds.jwt.PlainJWT
 import io.mockk.every
 import io.mockk.mockk
-import no.nav.common.auth.subject.IdentType
-import no.nav.common.auth.subject.SsoToken
-import no.nav.common.auth.subject.Subject
+import no.nav.common.auth.context.AuthContext
+import no.nav.common.auth.context.UserRole
 import no.nav.modiapersonoversikt.consumer.abac.*
 import no.nav.modiapersonoversikt.infrastructure.rsbac.DecisionEnums
-import no.nav.modiapersonoversikt.utils.SubjectRule
+import no.nav.modiapersonoversikt.testutils.AuthContextRule
 import org.junit.Rule
 import org.junit.Test
 import java.util.*
@@ -16,7 +17,12 @@ import kotlin.test.assertEquals
 class TilgangskontrollTest {
     @Rule
     @JvmField
-    val subject = SubjectRule(Subject("Z999999", IdentType.InternBruker, SsoToken.oidcToken("token", emptyMap<String, Any>())))
+    val subject = AuthContextRule(
+        AuthContext(
+            UserRole.INTERN,
+            PlainJWT(JWTClaimsSet.Builder().subject("Z999999").build())
+        )
+    )
 
     @Test
     fun `deny om saksbehandler mangler modia-roller`() {
@@ -24,8 +30,38 @@ class TilgangskontrollTest {
             .check(Policies.tilgangTilModia)
             .getDecision()
 
-        assertEquals("Saksbehandler (Optional[Z999999]) har ikke tilgang til modia. Årsak: FP3_EGEN_ANSATT", message)
         assertEquals(DecisionEnums.DENY, decision)
+        assertEquals("Saksbehandler (Optional[Z999999]) har ikke tilgang til modia. Årsak: FP3_EGEN_ANSATT", message)
+    }
+
+    @Test
+    fun `deny om ny deny_policy for kode6 er brukt`() {
+        val (message, decision) = Tilgangskontroll(
+            mockContext(
+                abacTilgang = Decision.Deny,
+                denyPolicy = "adressebeskyttelse_strengt_fortrolig_adresse"
+            )
+        )
+            .check(Policies.tilgangTilModia)
+            .getDecision()
+
+        assertEquals(DecisionEnums.DENY, decision)
+        assertEquals("Saksbehandler (Optional[Z999999]) har ikke tilgang til modia. Årsak: FP1_KODE6", message)
+    }
+
+    @Test
+    fun `deny om strengt fortrolig utland`() {
+        val (message, decision) = Tilgangskontroll(
+            mockContext(
+                abacTilgang = Decision.Deny,
+                denyPolicy = "adressebeskyttelse_strengt_fortrolig_adresse_utland"
+            )
+        )
+            .check(Policies.tilgangTilModia)
+            .getDecision()
+
+        assertEquals(DecisionEnums.DENY, decision)
+        assertEquals("Saksbehandler (Optional[Z999999]) har ikke tilgang til modia. Årsak: FP1_KODE6", message)
     }
 
     @Test
@@ -57,7 +93,8 @@ class TilgangskontrollTest {
 private fun mockContext(
     saksbehandlerIdent: String = "Z999999",
     tematilganger: Set<String> = setOf(),
-    abacTilgang: Decision = Decision.Permit
+    abacTilgang: Decision = Decision.Permit,
+    denyPolicy: String = "fp3_behandle_egen_ansatt"
 ): TilgangskontrollContext {
     val context: TilgangskontrollContext = mockk()
     every { context.hentSaksbehandlerId() } returns Optional.of(saksbehandlerIdent)
@@ -71,7 +108,7 @@ private fun mockContext(
                         NavAttributes.ADVICE_DENY_REASON.attributeId,
                         listOf(
                             AttributeAssignment(NavAttributes.ADVICEOROBLIGATION_CAUSE.attributeId, "cause-0001-manglerrolle"),
-                            AttributeAssignment(NavAttributes.ADVICEOROBLIGATION_DENY_POLICY.attributeId, "fp3_behandle_egen_ansatt"),
+                            AttributeAssignment(NavAttributes.ADVICEOROBLIGATION_DENY_POLICY.attributeId, denyPolicy),
                             AttributeAssignment(NavAttributes.ADVICEOROBLIGATION_DENY_RULE.attributeId, "intern_behandle_kode6_mangler_gruppetilgang")
                         )
                     )

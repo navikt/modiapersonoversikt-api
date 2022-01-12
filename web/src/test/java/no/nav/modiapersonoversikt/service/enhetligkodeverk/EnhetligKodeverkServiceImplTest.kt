@@ -1,10 +1,10 @@
 package no.nav.modiapersonoversikt.service.enhetligkodeverk
 
 import io.mockk.*
+import no.nav.modiapersonoversikt.utils.MutableClock
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
-import java.time.Instant
-import java.time.LocalDate
+import java.time.*
 import java.util.*
 
 internal class EnhetligKodeverkServiceImplTest {
@@ -53,11 +53,13 @@ internal class EnhetligKodeverkServiceImplTest {
         val service = EnhetligKodeverkServiceImpl(providers)
 
         assertThat(service.hentKodeverk(KodeverkConfig.LAND)).isNotNull
+        assertThat(service.hentKodeverk(KodeverkConfig.LAND).hentBeskrivelse("NO")).isEqualTo("Norge")
         every { providers.fraFellesKodeverk(any()) } throws IllegalStateException("Noe gikk feil")
 
         service.prepopulerCache()
 
         assertThat(service.hentKodeverk(KodeverkConfig.LAND)).isNotNull
+        assertThat(service.hentKodeverk(KodeverkConfig.LAND).hentBeskrivelse("NO")).isEqualTo("Norge")
     }
 
     @Test
@@ -92,6 +94,28 @@ internal class EnhetligKodeverkServiceImplTest {
 
         assertThat(periodeSlot.isCaptured).isTrue()
         assertThat(periodeSlot.captured).isEqualTo(24 * 3600 * 1000)
+    }
+
+    @Test
+    internal fun `skal rapportere om utdatert kodeverk i selftesten`() {
+        val providers = withProvidersMock()
+
+        val clock = MutableClock()
+        val service = EnhetligKodeverkServiceImpl(
+            providers = providers,
+            clock = clock
+        )
+
+        service.hentKodeverk(KodeverkConfig.LAND)
+
+        clock.plusDays(1).plusHours(1)
+
+        val result = service.ping().check.checkHealth()
+        assertThat(result.isUnhealthy).isTrue()
+        assertThat(result.errorMessage).hasValueSatisfying { errorMessage ->
+            assertThat(errorMessage).contains("LAND")
+            assertThat(errorMessage).contains("SF_TEMAGRUPPER")
+        }
     }
 
     private fun withTimerMock(): Triple<Timer, CapturingSlot<Date>, CapturingSlot<Long>> {

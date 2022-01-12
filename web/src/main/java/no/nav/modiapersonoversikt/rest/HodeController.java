@@ -1,11 +1,13 @@
 package no.nav.modiapersonoversikt.rest;
 
 import kotlin.Pair;
-import no.nav.common.auth.subject.SubjectHandler;
+import no.nav.common.types.identer.EnhetId;
+import no.nav.modiapersonoversikt.consumer.norg.NorgApi;
+import no.nav.modiapersonoversikt.consumer.norg.NorgDomain;
+import no.nav.modiapersonoversikt.infrastructure.AuthContextUtils;
 import no.nav.modiapersonoversikt.legacy.api.domain.Person;
 import no.nav.modiapersonoversikt.legacy.api.service.ldap.LDAPService;
 import no.nav.modiapersonoversikt.legacy.api.service.norg.AnsattService;
-import no.nav.modiapersonoversikt.legacy.api.service.organisasjonsEnhetV2.OrganisasjonEnhetV2Service;
 import no.nav.modiapersonoversikt.legacy.api.utils.http.CookieUtil;
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Policies;
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll;
@@ -35,7 +37,7 @@ public class HodeController {
     private AnsattService ansattService;
 
     @Autowired
-    private OrganisasjonEnhetV2Service organisasjonEnhetService;
+    private NorgApi norgApi;
 
     @Autowired
     Tilgangskontroll tilgangskontroll;
@@ -77,12 +79,16 @@ public class HodeController {
         return tilgangskontroll
                 .check(Policies.tilgangTilModia)
                 .get(Audit.describe(READ, Saksbehandler.NavnOgEnheter), () -> {
-                    String ident = SubjectHandler.getIdent().orElseThrow(() -> new RuntimeException("Fant ikke ident"));
+                    String ident = AuthContextUtils.requireIdent();
                     Pair<String, String> saksbehandler = hentSaksbehandlerNavn();
                     String enhetId = hentValgtEnhet(null, request);
-                    String enhetNavn = organisasjonEnhetService.hentEnhetGittEnhetId(enhetId, OrganisasjonEnhetV2Service.WSOppgavebehandlerfilter.UFILTRERT)
-                            .map((enhet) -> enhet.enhetNavn)
+                    String enhetNavn = norgApi
+                            .hentEnheter(EnhetId.of(enhetId), NorgDomain.OppgaveBehandlerFilter.UFILTRERT, NorgApi.getIKKE_NEDLAGT())
+                            .stream()
+                            .findFirst()
+                            .map(NorgDomain.Enhet::getEnhetNavn)
                             .orElse("[Ukjent enhetId: " + enhetId + "]");
+
                     return new Me(ident, saksbehandler.getFirst(), saksbehandler.getSecond(), enhetId, enhetNavn);
                 });
     }
@@ -92,7 +98,7 @@ public class HodeController {
         return tilgangskontroll
                 .check(Policies.tilgangTilModia)
                 .get(Audit.describe(READ, Saksbehandler.Enheter), () -> {
-                    String ident = SubjectHandler.getIdent().orElseThrow(() -> new RuntimeException("Fant ikke ident"));
+                    String ident = AuthContextUtils.requireIdent();
                     List<Enhet> enheter = ansattService.hentEnhetsliste()
                             .stream()
                             .map((ansattEnhet) -> new Enhet(ansattEnhet.enhetId, ansattEnhet.enhetNavn))
@@ -113,7 +119,7 @@ public class HodeController {
     }
 
     private Pair<String, String> hentSaksbehandlerNavn() {
-        Person saksbehandler = SubjectHandler.getIdent()
+        Person saksbehandler = AuthContextUtils.getIdent()
                 .map(ldapService::hentSaksbehandler)
                 .orElseThrow(() -> new RuntimeException("Fant ikke ident til saksbehandler"));
         return new Pair<>(saksbehandler.fornavn, saksbehandler.etternavn);

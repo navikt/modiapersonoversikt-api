@@ -4,9 +4,7 @@ package {{packageName}}.infrastructure
 import android.os.Build
 {{/supportAndroidApiLevel25AndBelow}}
 {{#hasAuthMethods}}
-{{#isBasicBasic}}
 import okhttp3.Credentials
-{{/isBasicBasic}}
 {{/hasAuthMethods}}
 import okhttp3.OkHttpClient
 import okhttp3.RequestBody
@@ -55,16 +53,25 @@ import org.threeten.bp.LocalTime
 import org.threeten.bp.OffsetDateTime
 import org.threeten.bp.OffsetTime
 {{/threetenbp}}
+{{#gson}}
+import com.google.gson.reflect.TypeToken
+{{/gson}}
+{{#jackson}}
+import com.fasterxml.jackson.core.type.TypeReference
+{{/jackson}}
+{{#moshi}}
+import com.squareup.moshi.adapter
+{{/moshi}}
 
 {{#nonPublicApi}}internal {{/nonPublicApi}}open class ApiClient(val baseUrl: String, val client: OkHttpClient) {
     {{#nonPublicApi}}internal {{/nonPublicApi}}companion object {
-        protected const val ContentType = "Content-Type"
-        protected const val Accept = "Accept"
-        protected const val Authorization = "Authorization"
-        protected const val JsonMediaType = "application/json"
-        protected const val FormDataMediaType = "multipart/form-data"
-        protected const val FormUrlEncMediaType = "application/x-www-form-urlencoded"
-        protected const val XmlMediaType = "application/xml"
+        const val ContentType = "Content-Type"
+        const val Accept = "Accept"
+        const val Authorization = "Authorization"
+        const val JsonMediaType = "application/json"
+        const val FormDataMediaType = "multipart/form-data"
+        const val FormUrlEncMediaType = "application/x-www-form-urlencoded"
+        const val XmlMediaType = "application/xml"
 
         val apiKey: MutableMap<String, String> = mutableMapOf()
         val apiKeyPrefix: MutableMap<String, String> = mutableMapOf()
@@ -79,12 +86,12 @@ import org.threeten.bp.OffsetTime
      * @param file The given file
      * @return The guessed Content-Type
      */
-    protected fun guessContentTypeFromFile(file: File): String {
+    fun guessContentTypeFromFile(file: File): String {
         val contentType = URLConnection.guessContentTypeFromName(file.name)
         return contentType ?: "application/octet-stream"
     }
 
-    protected inline fun <reified T> requestBody(content: T, mediaType: String = JsonMediaType): RequestBody =
+    inline fun <reified T> requestBody(content: T, mediaType: String = JsonMediaType): RequestBody =
         when {
             {{#jvm-okhttp3}}
             content is File -> RequestBody.create(MediaType.parse(mediaType), content)
@@ -165,8 +172,8 @@ import org.threeten.bp.OffsetTime
             else -> throw UnsupportedOperationException("requestBody currently only supports JSON body and File body.")
         }
 
-    protected inline fun <reified T: Any?> responseBody(body: ResponseBody?, mediaType: String? = JsonMediaType): T? {
-        if(body == null) {
+    inline fun <reified T: Any?> responseBody(body: ResponseBody?, mediaType: String? = JsonMediaType): T? {
+        if(body == null || T::class == Unit::class) {
             return null
         }
         val bodyContent = body.string()
@@ -193,13 +200,13 @@ import org.threeten.bp.OffsetTime
             return f as T
         }
         return when(mediaType) {
-            JsonMediaType -> {{#moshi}}Serializer.moshi.adapter(T::class.java).fromJson(bodyContent){{/moshi}}{{#gson}}Serializer.gson.fromJson(bodyContent, T::class.java){{/gson}}{{#jackson}}Serializer.jacksonObjectMapper.readValue(bodyContent, T::class.java){{/jackson}}{{#kotlinx_serialization}}Serializer.jvmJson.decodeFromString<T>(bodyContent){{/kotlinx_serialization}}
+            JsonMediaType -> {{#moshi}}Serializer.moshi.adapter<T>().fromJson(bodyContent){{/moshi}}{{#gson}}Serializer.gson.fromJson(bodyContent, (object: TypeToken<T>(){}).getType()){{/gson}}{{#jackson}}Serializer.jacksonObjectMapper.readValue(bodyContent, object: TypeReference<T>() {}){{/jackson}}{{#kotlinx_serialization}}Serializer.jvmJson.decodeFromString<T>(bodyContent){{/kotlinx_serialization}}
             else ->  throw UnsupportedOperationException("responseBody currently only supports JSON body.")
         }
     }
 
     {{#hasAuthMethods}}
-    protected fun <T> updateAuthParams(requestConfig: RequestConfig<T>) {
+    fun <T> updateAuthParams(requestConfig: RequestConfig<T>) {
         {{#authMethods}}
         {{#isApiKey}}
         {{#isKeyInHeader}}
@@ -256,7 +263,7 @@ import org.threeten.bp.OffsetTime
     }
     {{/hasAuthMethods}}
 
-    inline fun <reified I, reified T: Any?> request(requestConfig: RequestConfig<I>): ApiInfrastructureResponse<T?> {
+    inline fun <reified I, reified T: Any?> request(requestConfig: RequestConfig<I>): ApiResponse<T?> {
         {{#jvm-okhttp3}}
         val httpUrl = HttpUrl.parse(baseUrl) ?: throw IllegalStateException("baseUrl is invalid.")
         {{/jvm-okhttp3}}
@@ -345,7 +352,7 @@ import org.threeten.bp.OffsetTime
         }
     }
 
-    protected fun parameterToString(value: Any?): String = when (value) {
+    fun parameterToString(value: Any?): String = when (value) {
         null -> ""
         is Array<*> -> toMultiValue(value, "csv").toString()
         is Iterable<*> -> toMultiValue(value, "csv").toString()

@@ -1,6 +1,5 @@
 package no.nav.modiapersonoversikt.config;
 
-import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navansatt.GOSYSNAVansatt;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import no.nav.common.utils.EnvironmentUtils;
 import no.nav.modiapersonoversikt.infrastructure.cache.CacheConfig;
@@ -9,6 +8,7 @@ import no.nav.modiapersonoversikt.consumer.abac.AbacClientConfig;
 import no.nav.modiapersonoversikt.legacy.api.service.HenvendelseLesService;
 import no.nav.modiapersonoversikt.legacy.api.service.OppgaveBehandlingService;
 import no.nav.modiapersonoversikt.legacy.api.service.ldap.LDAPService;
+import no.nav.modiapersonoversikt.legacy.api.service.norg.AnsattService;
 import no.nav.modiapersonoversikt.service.sfhenvendelse.SfHenvendelseService;
 import no.nav.modiapersonoversikt.service.unleash.UnleashService;
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll;
@@ -60,9 +60,8 @@ public class ApplicationContextBeans {
     public Tilgangskontroll tilgangskontroll(
             AbacClient abacClient,
             LDAPService ldapService,
-            GOSYSNAVansatt ansattService, // TODO undersøk om denne kan erstattes med axsys
+            AnsattService ansattService,
             HenvendelseLesService henvendelseLesService,
-            SfHenvendelseService sfHenvendelseService,
             UnleashService unleashService
     ) {
         TilgangskontrollContext context = new TilgangskontrollContextImpl(
@@ -70,7 +69,6 @@ public class ApplicationContextBeans {
                 ldapService,
                 ansattService,
                 henvendelseLesService,
-                sfHenvendelseService,
                 unleashService
         );
         return new Tilgangskontroll(context);

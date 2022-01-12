@@ -40,7 +40,6 @@
             <plugin>
                 <groupId>org.openapitools</groupId>
                 <artifactId>openapi-generator-maven-plugin</artifactId>
-                <version>5.2.0</version>
                 <executions>
                     <execution>
                         <id>default</id>

@@ -1,27 +1,22 @@
 package no.nav.modiapersonoversikt.service.saker
 
-import no.nav.common.auth.subject.SubjectHandler
-import no.nav.common.log.MDCConstants
+import no.nav.modiapersonoversikt.legacy.api.domain.bidragsak.generated.apis.BidragSakControllerApi
 import no.nav.modiapersonoversikt.legacy.api.domain.saker.Sak
 import no.nav.modiapersonoversikt.legacy.api.exceptions.JournalforingFeilet
-import no.nav.modiapersonoversikt.legacy.api.service.FodselnummerAktorService
-import no.nav.modiapersonoversikt.legacy.api.service.kodeverk.StandardKodeverk
+import no.nav.modiapersonoversikt.legacy.api.service.pdl.PdlOppslagService
 import no.nav.modiapersonoversikt.legacy.api.service.psak.PsakService
 import no.nav.modiapersonoversikt.legacy.api.service.saker.GsakKodeverk
 import no.nav.modiapersonoversikt.legacy.api.service.saker.SakerService
 import no.nav.modiapersonoversikt.legacy.api.utils.SakerUtils
+import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk
 import no.nav.modiapersonoversikt.service.saker.kilder.*
-import no.nav.modiapersonoversikt.service.saker.kilder.ArenaSaker
-import no.nav.modiapersonoversikt.service.saker.kilder.GenerelleSaker
-import no.nav.modiapersonoversikt.service.saker.kilder.OppfolgingsSaker
-import no.nav.modiapersonoversikt.service.saker.kilder.PensjonSaker
 import no.nav.modiapersonoversikt.service.saker.mediation.SakApiGateway
+import no.nav.modiapersonoversikt.service.unleash.UnleashService
+import no.nav.modiapersonoversikt.utils.ConcurrencyUtils.inParallel
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.behandlehenvendelse.BehandleHenvendelsePortType
 import no.nav.virksomhet.tjenester.sak.arbeidogaktivitet.v1.ArbeidOgAktivitet
 import org.slf4j.LoggerFactory
-import org.slf4j.MDC
 import org.springframework.beans.factory.annotation.Autowired
-import java.util.concurrent.CompletableFuture
 import java.util.function.Predicate.not
 import javax.annotation.PostConstruct
 import kotlin.contracts.ExperimentalContracts
@@ -35,7 +30,7 @@ class SakerServiceImpl : SakerService {
     private lateinit var gsakKodeverk: GsakKodeverk
 
     @Autowired
-    private lateinit var standardKodeverk: StandardKodeverk
+    private lateinit var kodeverk: EnhetligKodeverk.Service
 
     @Autowired
     private lateinit var behandleHenvendelsePortType: BehandleHenvendelsePortType
@@ -50,7 +45,13 @@ class SakerServiceImpl : SakerService {
     private lateinit var sakApiGateway: SakApiGateway
 
     @Autowired
-    private lateinit var fodselnummerAktorService: FodselnummerAktorService
+    private lateinit var bidragApiClient: BidragSakControllerApi
+
+    @Autowired
+    private lateinit var pdlOppslagService: PdlOppslagService
+
+    @Autowired
+    private lateinit var unleashService: UnleashService
 
     private lateinit var arenaSaker: ArenaSaker
     private lateinit var bidragSaker: BidragSaker
@@ -62,9 +63,9 @@ class SakerServiceImpl : SakerService {
     @PostConstruct
     fun setup() {
         arenaSaker = ArenaSaker(arbeidOgAktivitet)
-        bidragSaker = BidragSaker()
+        bidragSaker = BidragSaker(bidragApiClient, unleashService)
         generelleSaker = GenerelleSaker()
-        restSakSaker = RestSakSaker(sakApiGateway, fodselnummerAktorService)
+        restSakSaker = RestSakSaker(sakApiGateway, pdlOppslagService)
         oppfolgingsSaker = OppfolgingsSaker()
         pensjonSaker = PensjonSaker(psakService)
     }
@@ -92,7 +93,7 @@ class SakerServiceImpl : SakerService {
         resultat.leggTilDataFraKilde(fnr, generelleSaker)
         resultat.leggTilDataFraKilde(fnr, oppfolgingsSaker)
 
-        SakerUtils.leggTilFagsystemnavnOgTemanavn(resultat.saker, gsakKodeverk.hentFagsystemMapping(), standardKodeverk)
+        SakerUtils.leggTilFagsystemnavnOgTemanavn(resultat.saker, gsakKodeverk.hentFagsystemMapping(), kodeverk)
 
         /**
          * Bidragssaken må legges til etter `leggTilFagsystemnavnOgTemanavn` siden vi ikke har
@@ -112,14 +113,14 @@ class SakerServiceImpl : SakerService {
     fun hentPensjonSakerResultat(fnr: String?): SakerService.Resultat {
         requireFnrNotNullOrBlank(fnr)
         val resultat = SakerService.Resultat().leggTilDataFraKilde(fnr, pensjonSaker)
-        SakerUtils.leggTilFagsystemnavnOgTemanavn(resultat.saker, gsakKodeverk.hentFagsystemMapping(), standardKodeverk)
+        SakerUtils.leggTilFagsystemnavnOgTemanavn(resultat.saker, gsakKodeverk.hentFagsystemMapping(), kodeverk)
         return resultat
     }
 
     override fun knyttBehandlingskjedeTilSak(fnr: String?, behandlingskjede: String?, sak: Sak, enhet: String?) {
         requireKnyttTilSakParametereNotNullOrBlank(sak, behandlingskjede, fnr, enhet)
 
-        if (sak.syntetisk && Sak.BIDRAG_MARKOR == sak.fagsystemKode) {
+        if (Sak.FAGSYSTEMKODE_BIDRAG == sak.temaKode || Sak.BIDRAG_MARKOR == sak.temaKode) {
             behandleHenvendelsePortType.knyttBehandlingskjedeTilTema(behandlingskjede, "BID")
             return
         }
@@ -166,15 +167,6 @@ class SakerServiceImpl : SakerService {
             )
         }
 
-        private fun <S, T> inParallel(first: () -> S, second: () -> T): Pair<S, T> {
-            val firstTask = CompletableFuture.supplyAsync(copyAuthAndMDC(first))
-            val secondTask = CompletableFuture.supplyAsync(copyAuthAndMDC(second))
-
-            CompletableFuture.allOf(firstTask, secondTask).get()
-
-            return Pair(firstTask.get(), secondTask.get())
-        }
-
         private fun sakFinnesIkkeIPsakOgGsak(sak: Sak): Boolean {
             return !(sak.finnesIPsak || sak.finnesIGsak)
         }
@@ -194,20 +186,3 @@ class SakerServiceImpl : SakerService {
 }
 
 private infix fun <T> ((T) -> Boolean).or(other: (T) -> Boolean): (T) -> Boolean = { this(it) || other(it) }
-internal fun <T> copyAuthAndMDC(fn: () -> T): () -> T {
-    val callId = MDC.get(MDCConstants.MDC_CALL_ID)
-    val subject = SubjectHandler.getSubject()
-    return {
-        withCallId(callId) {
-            SubjectHandler.withSubject(subject.get(), fn)
-        }
-    }
-}
-
-fun <T> withCallId(callId: String, fn: () -> T): T {
-    val originalCallId = MDC.get(MDCConstants.MDC_CALL_ID)
-    MDC.put(MDCConstants.MDC_CALL_ID, callId)
-    val result = fn()
-    MDC.put(MDCConstants.MDC_CALL_ID, originalCallId)
-    return result
-}

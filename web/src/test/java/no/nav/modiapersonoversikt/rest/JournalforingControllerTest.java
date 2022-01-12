@@ -2,9 +2,9 @@ package no.nav.modiapersonoversikt.rest;
 
 import no.nav.modiapersonoversikt.legacy.api.domain.saker.Sak;
 import no.nav.modiapersonoversikt.legacy.api.exceptions.JournalforingFeilet;
-import no.nav.modiapersonoversikt.legacy.api.service.saker.SakerService;
 import no.nav.modiapersonoversikt.legacy.api.utils.RestUtils;
-import no.nav.modiapersonoversikt.legacy.api.utils.http.SubjectHandlerUtil;
+import no.nav.modiapersonoversikt.legacy.api.utils.http.AuthContextTestUtils;
+import no.nav.modiapersonoversikt.rest.journalforing.JournalforingApi;
 import no.nav.modiapersonoversikt.rest.journalforing.JournalforingController;
 import no.nav.modiapersonoversikt.service.saker.EnhetIkkeSatt;
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.TilgangskontrollMock;
@@ -31,9 +31,10 @@ class JournalforingControllerTest {
     @Test
     @DisplayName("Knytter til sak og returnerer 200 OK")
     void journalforingKnytterTilSak() {
-        JournalforingController journalforingController = new JournalforingController(mock(SakerService.class), TilgangskontrollMock.get());
 
-        ResponseEntity response = SubjectHandlerUtil.withIdent(SAKSBEHANDLERS_IDENT, () ->
+        JournalforingController journalforingController = new JournalforingController(mock(JournalforingApi.class), TilgangskontrollMock.get());
+
+        ResponseEntity response = AuthContextTestUtils.withIdent(SAKSBEHANDLERS_IDENT, () ->
                 journalforingController.knyttTilSak("10108000398", "traad-id", new Sak(), null, mockHttpRequest())
         );
 
@@ -43,12 +44,12 @@ class JournalforingControllerTest {
     @Test
     @DisplayName("Forespørsler som feiler kaster 500 Internal Server Error")
     void journalforingSomFeilerKasterFeil() throws JournalforingFeilet {
-        SakerService mock = mock(SakerService.class);
-        doThrow(RuntimeException.class).when(mock).knyttBehandlingskjedeTilSak(any(), any(), any(), any());
+        JournalforingApi mock = mock(JournalforingApi.class);
+        doThrow(RuntimeException.class).when(mock).knyttTilSak(any(), any(), any(), any());
         JournalforingController journalforingController = new JournalforingController(mock, TilgangskontrollMock.get());
 
         ResponseStatusException exception = assertThrows(ResponseStatusException.class, () ->
-                SubjectHandlerUtil.withIdent(SAKSBEHANDLERS_IDENT, () ->
+                AuthContextTestUtils.withIdent(SAKSBEHANDLERS_IDENT, () ->
                         journalforingController.knyttTilSak("10108000398", "traad-id", new Sak(), null, mockHttpRequest())
                 )
         );
@@ -59,12 +60,12 @@ class JournalforingControllerTest {
     @Test
     @DisplayName("Forespørsler uten enhet kaster 500 Internal Server Error med message satt i body")
     void journalforingUtenEnhetKasterFeil() throws JournalforingFeilet {
-        SakerService mock = mock(SakerService.class);
-        doThrow(EnhetIkkeSatt.class).when(mock).knyttBehandlingskjedeTilSak(any(), any(), any(), any());
+        JournalforingApi mock = mock(JournalforingApi.class);
+        doThrow(EnhetIkkeSatt.class).when(mock).knyttTilSak(any(), any(), any(), any());
         JournalforingController journalforingController = new JournalforingController(mock, TilgangskontrollMock.get());
 
         ResponseStatusException exception = assertThrows(ResponseStatusException.class, () ->
-                SubjectHandlerUtil.withIdent(SAKSBEHANDLERS_IDENT, () ->
+                AuthContextTestUtils.withIdent(SAKSBEHANDLERS_IDENT, () ->
                         journalforingController.knyttTilSak("10108000398", "traad-id", new Sak(), null, mockHttpRequest())
                 )
         );

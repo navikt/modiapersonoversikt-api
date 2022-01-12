@@ -37,6 +37,7 @@
         <module>bisys-api</module>
         <module>dkif-api</module>
         <module>kodeverk-api</module>
+        <module>norg-api</module>
     </modules>
 
     <dependencyManagement>
@@ -164,7 +165,11 @@
                         </dependency>
                     </dependencies>
                 </plugin>
-
+                <plugin>
+                    <groupId>org.openapitools</groupId>
+                    <artifactId>openapi-generator-maven-plugin</artifactId>
+                    <version>5.3.1</version>
+                </plugin>
             </plugins>
         </pluginManagement>
     </build>

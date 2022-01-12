@@ -5,58 +5,43 @@ import no.nav.common.cxf.StsConfig;
 import no.nav.common.sts.NaisSystemUserTokenProvider;
 import no.nav.common.sts.SystemUserTokenProvider;
 import no.nav.common.utils.EnvironmentUtils;
-import no.nav.modiapersonoversikt.service.dkif.Dkif;
-import no.nav.modiapersonoversikt.service.dkif.DkifServiceImpl;
-import no.nav.modiapersonoversikt.legacy.kjerneinfo.consumer.egenansatt.EgenAnsattService;
-import no.nav.modiapersonoversikt.legacy.kjerneinfo.consumer.fim.person.PersonKjerneinfoServiceBi;
-import no.nav.modiapersonoversikt.legacy.kjerneinfo.consumer.fim.person.support.DefaultPersonKjerneinfoService;
-import no.nav.modiapersonoversikt.legacy.kjerneinfo.consumer.fim.person.support.KjerneinfoMapper;
-import no.nav.modiapersonoversikt.legacy.kjerneinfo.consumer.fim.person.vergemal.VergemalService;
-import no.nav.modiapersonoversikt.consumer.kodeverk.consumer.fim.kodeverk.KodeverkmanagerBi;
+import no.nav.modiapersonoversikt.legacy.api.domain.bidragsak.generated.apis.BidragSakControllerApi;
 import no.nav.modiapersonoversikt.infrastructure.content.ContentRetriever;
+import no.nav.modiapersonoversikt.rest.persondata.PersondataService;
 import no.nav.modiapersonoversikt.service.*;
-import no.nav.modiapersonoversikt.legacy.api.service.FodselnummerAktorService;
 import no.nav.modiapersonoversikt.legacy.api.service.HenvendelseLesService;
 import no.nav.modiapersonoversikt.legacy.api.service.HenvendelseUtsendingService;
 import no.nav.modiapersonoversikt.legacy.api.service.OppgaveBehandlingService;
-import no.nav.modiapersonoversikt.legacy.api.service.arbeidsfordeling.ArbeidsfordelingV1Service;
-import no.nav.modiapersonoversikt.legacy.api.service.kodeverk.StandardKodeverk;
 import no.nav.modiapersonoversikt.legacy.api.service.ldap.LDAPService;
 import no.nav.modiapersonoversikt.legacy.api.service.norg.AnsattService;
-import no.nav.modiapersonoversikt.legacy.api.service.oppfolgingsinfo.OppfolgingsenhetService;
-import no.nav.modiapersonoversikt.legacy.api.service.organisasjonsEnhetV2.OrganisasjonEnhetV2Service;
 import no.nav.modiapersonoversikt.legacy.api.service.pdl.PdlOppslagService;
 import no.nav.modiapersonoversikt.legacy.api.service.psak.PsakService;
 import no.nav.modiapersonoversikt.legacy.api.service.saker.GsakKodeverk;
 import no.nav.modiapersonoversikt.legacy.api.service.saker.SakerService;
 import no.nav.modiapersonoversikt.config.endpoint.kodeverksmapper.Kodeverksmapper;
-import no.nav.modiapersonoversikt.service.arbeidsfordeling.ArbeidsfordelingClient;
-import no.nav.modiapersonoversikt.service.arbeidsfordeling.ArbeidsfordelingV1ServiceImpl;
+import no.nav.modiapersonoversikt.service.arbeidsfordeling.ArbeidsfordelingService;
+import no.nav.modiapersonoversikt.service.dkif.Dkif;
+import no.nav.modiapersonoversikt.service.dkif.DkifServiceImpl;
 import no.nav.modiapersonoversikt.service.dkif.DkifServiceRestImpl;
 import no.nav.modiapersonoversikt.service.henvendelse.DelsvarService;
 import no.nav.modiapersonoversikt.service.henvendelse.DelsvarServiceImpl;
 import no.nav.modiapersonoversikt.service.kodeverk.GsakKodeverkFraFil;
-import no.nav.modiapersonoversikt.service.kodeverk.StandardKodeverkImpl;
 import no.nav.modiapersonoversikt.service.kodeverksmapper.KodeverksmapperService;
 import no.nav.modiapersonoversikt.service.ldap.LDAPServiceImpl;
 import no.nav.modiapersonoversikt.service.ldap.LdapContextProvider;
-import no.nav.modiapersonoversikt.service.oppfolgingsinfo.OppfolgingsenhetServiceImpl;
 import no.nav.modiapersonoversikt.service.oppgavebehandling.RestOppgaveBehandlingServiceImpl;
-import no.nav.modiapersonoversikt.service.organisasjonenhet.OrganisasjonEnhetV2ServiceImpl;
-import no.nav.modiapersonoversikt.service.organisasjonenhet.kontaktinformasjon.service.OrganisasjonEnhetKontaktinformasjonService;
-import no.nav.modiapersonoversikt.service.organisasjonenhet.kontaktinformasjon.service.OrganisasjonEnhetKontaktinformasjonServiceImpl;
 import no.nav.modiapersonoversikt.service.pdl.PdlOppslagServiceImpl;
 import no.nav.modiapersonoversikt.service.saker.SakerServiceImpl;
+import no.nav.modiapersonoversikt.service.saker.mediation.BidragApiClient;
 import no.nav.modiapersonoversikt.service.saker.mediation.SakApiGatewayImpl;
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll;
+import no.nav.modiapersonoversikt.service.sfhenvendelse.SfHenvendelseApiFactory;
+import no.nav.modiapersonoversikt.service.unleash.UnleashService;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.behandlehenvendelse.BehandleHenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.senduthenvendelse.SendUtHenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.henvendelse.HenvendelsePortType;
 import no.nav.tjeneste.virksomhet.digitalkontaktinformasjon.v1.DigitalKontaktinformasjonV1;
-import no.nav.tjeneste.virksomhet.oppfoelging.v1.OppfoelgingPortType;
-import no.nav.tjeneste.virksomhet.organisasjonenhetkontaktinformasjon.v1.OrganisasjonEnhetKontaktinformasjonV1;
 import no.nav.tjeneste.virksomhet.pensjonsak.v1.PensjonSakV1;
-import no.nav.tjeneste.virksomhet.person.v3.binding.PersonV3;
 import org.springframework.cache.CacheManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -86,18 +71,25 @@ public class ServiceConfig {
                                                                    SakerService sakerService,
                                                                    Tilgangskontroll tilgangskontroll,
                                                                    ContentRetriever propertyResolver,
-                                                                   PersonKjerneinfoServiceBi personKjerneinfoServiceBi,
+                                                                   PersondataService persondataService,
                                                                    LDAPService ldapService,
                                                                    CacheManager cacheManager) {
 
         return new HenvendelseUtsendingServiceImpl(henvendelsePortType, sendUtHenvendelsePortType,
                 behandleHenvendelsePortType, oppgaveBehandlingService, sakerService, tilgangskontroll,
-                propertyResolver, personKjerneinfoServiceBi, ldapService, cacheManager);
+                propertyResolver, persondataService, ldapService, cacheManager);
     }
 
     @Bean
-    public HenvendelseLesService henvendelseLesService(SystemUserTokenProvider systemUserTokenProvider) {
-        return new HenvendelseLesServiceImpl(systemUserTokenProvider);
+    public HenvendelseLesService henvendelseLesService(
+            SystemUserTokenProvider systemUserTokenProvider,
+            UnleashService unleashService
+    ) {
+        return new HenvendelseLesServiceImpl(
+                systemUserTokenProvider,
+                SfHenvendelseApiFactory.INSTANCE.createHenvendelseInfoApi(),
+                unleashService
+        );
     }
 
     @Bean
@@ -111,29 +103,19 @@ public class ServiceConfig {
     }
 
     @Bean
-    public ArbeidsfordelingClient arbeidsfordelingClient() {
-        return new ArbeidsfordelingClient();
-    }
-
-    @Bean
-    public ArbeidsfordelingV1Service arbeidsfordelingV1Service(ArbeidsfordelingClient arbeidsfordelingClient, EgenAnsattService egenAnsattService, PersonKjerneinfoServiceBi personService, KodeverksmapperService kodeverksmapper) {
-        return new ArbeidsfordelingV1ServiceImpl(arbeidsfordelingClient, egenAnsattService, personService, kodeverksmapper);
-    }
-
-    @Bean
     public OppgaveBehandlingService oppgaveBehandlingService(
             KodeverksmapperService kodeverksmapperService,
-            FodselnummerAktorService fodselnummerAktorService,
+            PdlOppslagService pdlOppslagService,
             AnsattService ansattService,
-            ArbeidsfordelingV1Service arbeidsfordelingV1Service,
+            ArbeidsfordelingService arbeidsfordelingService,
             Tilgangskontroll tilgangskontroll,
             SystemUserTokenProvider stsService
     ) {
         return RestOppgaveBehandlingServiceImpl.create(
                 kodeverksmapperService,
-                fodselnummerAktorService,
+                pdlOppslagService,
                 ansattService,
-                arbeidsfordelingV1Service,
+                arbeidsfordelingService,
                 tilgangskontroll,
                 stsService
         );
@@ -142,16 +124,6 @@ public class ServiceConfig {
     @Bean
     public AnsattService ansattService(GOSYSNAVansatt gosysNavAnsatt) {
         return new AnsattServiceImpl(gosysNavAnsatt);
-    }
-
-    @Bean
-    public OrganisasjonEnhetV2Service organisasjonEnhetServiceV2() {
-        return new OrganisasjonEnhetV2ServiceImpl();
-    }
-
-    @Bean
-    public StandardKodeverk standardKodeverk() {
-        return new StandardKodeverkImpl();
     }
 
     @Bean
@@ -173,6 +145,14 @@ public class ServiceConfig {
     }
 
     @Bean
+    public BidragSakControllerApi bidragSakControllerApi() {
+        return new BidragSakControllerApi(
+                EnvironmentUtils.getRequiredProperty("BISYS_BASEURL"),
+                BidragApiClient.INSTANCE.getClient()
+        );
+    }
+
+    @Bean
     public PsakService psakService(PensjonSakV1 pensjonSakV1) {
         return new PsakServiceImpl(pensjonSakV1);
     }
@@ -180,32 +160,6 @@ public class ServiceConfig {
     @Bean
     public ScheduledAnsattListePrefetch scheduledAnsattListePrefetch() {
         return new ScheduledAnsattListePrefetch();
-    }
-
-    @Bean
-    public OrganisasjonEnhetKontaktinformasjonService organisasjonEnhetKontaktinformasjon(OrganisasjonEnhetKontaktinformasjonV1 organisasjonEnhetKontaktinformasjonV1) {
-        return new OrganisasjonEnhetKontaktinformasjonServiceImpl(organisasjonEnhetKontaktinformasjonV1);
-    }
-
-    @Bean
-    public OppfolgingsenhetService oppfolgingsenhetService(OppfoelgingPortType oppfoelgingPortType,
-                                                           OrganisasjonEnhetV2Service organisasjonEnhetV2Service) {
-        return new OppfolgingsenhetServiceImpl(oppfoelgingPortType, organisasjonEnhetV2Service);
-    }
-
-    @Bean
-    public PersonKjerneinfoServiceBi personKjerneinfoServiceBi(PersonV3 personPortType, KjerneinfoMapper kjerneinfoMapper,
-                                                               Tilgangskontroll tilgangskontroll, OrganisasjonEnhetV2Service organisasjonEnhetV2Service) {
-        return new DefaultPersonKjerneinfoService(personPortType, kjerneinfoMapper, tilgangskontroll, organisasjonEnhetV2Service);
-    }
-
-    @Bean
-    public VergemalService vergemalService(
-            PersonV3 personPortType,
-            PdlOppslagService pdl,
-            KodeverkmanagerBi kodeverkmanagerBi
-    ) {
-        return new VergemalService(personPortType, pdl, kodeverkmanagerBi);
     }
 
     @Bean(name = "DkifSoap")
@@ -239,12 +193,8 @@ public class ServiceConfig {
     }
 
     @Bean
-    public FodselnummerAktorService fodselnummerAktorService() {
-        return new FodselnummerAktorServiceImpl();
-    }
-
-    @Bean
     public PdlOppslagService pdlOppslagService(SystemUserTokenProvider sts) {
         return new PdlOppslagServiceImpl(sts);
     }
+
 }

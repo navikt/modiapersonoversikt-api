@@ -1,0 +1,6 @@
+[ {
+  "enhetId" : "1234",
+  "enhetNavn" : "NAV Test",
+  "status" : "AKTIV",
+  "oppgavebehandler" : false
+} ]

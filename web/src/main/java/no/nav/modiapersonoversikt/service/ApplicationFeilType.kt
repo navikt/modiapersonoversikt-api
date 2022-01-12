@@ -1,8 +1,15 @@
 package no.nav.modiapersonoversikt.service
 
-import no.nav.common.types.feil.Feil
 import javax.ws.rs.core.Response
 
+open class Feil(val type: Type, cause: Throwable? = null) : RuntimeException(type.getName(), cause) {
+    constructor(type: Type, cause: String) : this(type, IllegalStateException(cause))
+
+    interface Type {
+        fun getName(): String
+        fun getStatus(): Response.Status
+    }
+}
 enum class ApplikasjonsFeilType(private val status: Response.Status) : Feil.Type {
     JOURNALFORING_FEILET(Response.Status.INTERNAL_SERVER_ERROR),
     INGEN_MELDINGER(Response.Status.INTERNAL_SERVER_ERROR),

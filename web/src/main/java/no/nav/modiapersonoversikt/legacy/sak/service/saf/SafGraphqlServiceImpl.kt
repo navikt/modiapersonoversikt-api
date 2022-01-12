@@ -1,27 +1,25 @@
 package no.nav.modiapersonoversikt.legacy.sak.service.saf
 
+import com.expediagroup.graphql.types.GraphQLResponse
 import io.ktor.client.request.*
 import io.ktor.util.*
 import kotlinx.coroutines.runBlocking
-import no.nav.common.auth.subject.SsoToken
-import no.nav.common.auth.subject.SubjectHandler
-import no.nav.common.log.MDCConstants
 import no.nav.common.rest.client.RestClient
 import no.nav.common.utils.EnvironmentUtils
+import no.nav.modiapersonoversikt.infrastructure.AuthContextUtils
 import no.nav.modiapersonoversikt.infrastructure.http.*
 import no.nav.modiapersonoversikt.legacy.api.domain.saf.generated.HentBrukersDokumenter
 import no.nav.modiapersonoversikt.legacy.api.domain.saf.generated.HentBrukersDokumenter.Datotype
 import no.nav.modiapersonoversikt.legacy.api.domain.saf.generated.HentBrukersDokumenter.Journalposttype
+import no.nav.modiapersonoversikt.legacy.api.domain.saf.generated.Hentbrukerssaker
 import no.nav.modiapersonoversikt.legacy.sak.providerdomain.*
 import no.nav.modiapersonoversikt.legacy.sak.providerdomain.resultatwrappere.ResultatWrapper
 import no.nav.modiapersonoversikt.legacy.sak.providerdomain.resultatwrappere.TjenesteResultatWrapper
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import org.slf4j.LoggerFactory
-import org.slf4j.MDC
 import java.net.URL
 import java.time.LocalDateTime
-import java.util.*
 
 private val SAF_GRAPHQL_BASEURL: String = EnvironmentUtils.getRequiredProperty("SAF_GRAPHQL_URL")
 private val SAF_HENTDOKUMENT_BASEURL: String = EnvironmentUtils.getRequiredProperty("SAF_HENTDOKUMENT_URL")
@@ -70,6 +68,28 @@ class SafGraphqlServiceImpl : SafService {
         }
     }
 
+    override fun hentSaker(ident: String): GraphQLResponse<Hentbrukerssaker.Result> {
+        val variables = if (ident.length == 11) {
+            Hentbrukerssaker.Variables(
+                Hentbrukerssaker.BrukerIdInput(
+                    id = ident,
+                    type = Hentbrukerssaker.BrukerIdType.FNR
+                )
+            )
+        } else {
+            Hentbrukerssaker.Variables(
+                Hentbrukerssaker.BrukerIdInput(
+                    id = ident,
+                    type = Hentbrukerssaker.BrukerIdType.AKTOERID
+                )
+            )
+        }
+        return runBlocking {
+            Hentbrukerssaker(graphQLClient)
+                .execute(variables, userTokenAuthorizationHeaders)
+        }
+    }
+
     override fun hentDokument(
         journalpostId: String,
         dokumentInfoId: String,
@@ -86,9 +106,8 @@ class SafGraphqlServiceImpl : SafService {
     }
 
     private fun httpHeaders(): Map<String, String> {
-        val token = SubjectHandler.getSsoToken(SsoToken.Type.OIDC)
-            .orElseThrow { IllegalStateException("Fant ikke OIDC-token") }
-        val callId = MDC.get(MDCConstants.MDC_CALL_ID) ?: UUID.randomUUID().toString()
+        val token = AuthContextUtils.requireToken()
+        val callId = getCallId()
         return mapOf(
             "Authorization" to "Bearer $token",
             "Content-Type" to "application/json",

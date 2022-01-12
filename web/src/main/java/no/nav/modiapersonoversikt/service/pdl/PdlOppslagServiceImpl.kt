@@ -4,21 +4,22 @@ import com.expediagroup.graphql.client.GraphQLClient
 import io.ktor.client.request.*
 import io.ktor.util.*
 import kotlinx.coroutines.runBlocking
-import no.nav.common.auth.subject.SsoToken
-import no.nav.common.auth.subject.SubjectHandler
 import no.nav.common.sts.SystemUserTokenProvider
 import no.nav.common.utils.EnvironmentUtils
+import no.nav.modiapersonoversikt.infrastructure.AuthContextUtils
 import no.nav.modiapersonoversikt.infrastructure.http.HeadersBuilder
 import no.nav.modiapersonoversikt.infrastructure.http.LoggingGraphqlClient
 import no.nav.modiapersonoversikt.infrastructure.http.assertNoErrors
 import no.nav.modiapersonoversikt.legacy.api.domain.pdl.generated.*
+import no.nav.modiapersonoversikt.legacy.api.domain.pdl.generated.HentAktorid.IdentGruppe
 import no.nav.modiapersonoversikt.legacy.api.service.pdl.PdlOppslagService
+import no.nav.modiapersonoversikt.legacy.api.service.pdl.PdlOppslagService.*
 import no.nav.modiapersonoversikt.legacy.api.utils.RestConstants.*
 import java.net.URL
 import kotlin.collections.set
 
 @KtorExperimentalAPI
-class PdlOppslagServiceImpl constructor(
+open class PdlOppslagServiceImpl constructor(
     private val stsService: SystemUserTokenProvider,
     private val pdlClient: GraphQLClient<*>
 ) : PdlOppslagService {
@@ -29,6 +30,25 @@ class PdlOppslagServiceImpl constructor(
             .execute(HentPerson.Variables(fnr), userTokenAuthorizationHeaders)
             .data
             ?.hentPerson
+    }
+
+    override fun hentPersondata(fnr: String): HentPersondata.Person? = runBlocking {
+        HentPersondata(pdlClient)
+            .execute(HentPersondata.Variables(fnr), userTokenAuthorizationHeaders)
+            .data
+            ?.hentPerson
+    }
+
+    override fun hentTredjepartspersondata(fnrs: List<String>): List<HentTredjepartspersondata.HentPersonBolkResult> = runBlocking {
+        if (fnrs.isEmpty()) {
+            emptyList()
+        } else {
+            HentTredjepartspersondata(pdlClient)
+                .execute(HentTredjepartspersondata.Variables(fnrs), systemTokenAuthorizationHeaders)
+                .data
+                ?.hentPersonBolk
+                ?: emptyList()
+        }
     }
 
     override fun hentNavnBolk(fnrs: List<String>): Map<String, HentNavnBolk.Navn?>? {
@@ -54,34 +74,32 @@ class PdlOppslagServiceImpl constructor(
             ?.hentIdenter
     }
 
-    override fun hentAktorId(fnr: String): String? = runBlocking {
-        HentAktorid(pdlClient)
-            .execute(HentAktorid.Variables(fnr), userTokenAuthorizationHeaders)
+    override fun hentGeografiskTilknyttning(fnr: String): String? = runBlocking {
+        HentGeografiskTilknyttning(pdlClient)
+            .execute(HentGeografiskTilknyttning.Variables(fnr), userTokenAuthorizationHeaders)
             .data
-            ?.hentIdenter
-            ?.identer
-            ?.firstOrNull()
-            ?.ident
+            ?.hentGeografiskTilknytning
+            ?.run {
+                gtBydel ?: gtKommune ?: gtLand
+            }
     }
 
-    override fun sokPersonUtenlandskID(utenlandskID: String): List<SokPersonUtenlandskID.PersonSearchHit> =
-        runBlocking {
-            val utenlandskIDPaging = SokPersonUtenlandskID.Paging(
-                pageNumber = 1,
-                resultsPerPage = 30
-            )
-            val utenlandskIDKriterie = SokPersonUtenlandskID.Criterion(
-                fieldName = "person.utenlandskIdentifikasjonsnummer.identifikasjonsnummer",
-                searchRule = SokPersonUtenlandskID.SearchRule(
-                    equals = utenlandskID
-                )
-            )
-            SokPersonUtenlandskID(pdlClient)
+    override fun hentAktorId(fnr: String): String? = hentAktivIdent(fnr, IdentGruppe.AKTORID)
+    override fun hentFnr(aktorid: String): String? = hentAktivIdent(aktorid, IdentGruppe.FOLKEREGISTERIDENT)
+
+    override fun sokPerson(kriterier: List<SokKriterier>): List<SokPerson.PersonSearchHit> = runBlocking {
+        val paging = SokPerson.Paging(
+            pageNumber = 1,
+            resultsPerPage = 30
+        )
+
+        val criteria = kriterier.mapNotNull { it.asCriterion() }
+        if (criteria.isEmpty()) {
+            emptyList()
+        } else {
+            SokPerson(pdlClient)
                 .execute(
-                    SokPersonUtenlandskID.Variables(
-                        paging = utenlandskIDPaging,
-                        criteria = listOf(utenlandskIDKriterie)
-                    ),
+                    SokPerson.Variables(paging, criteria),
                     userTokenAuthorizationHeaders
                 )
                 .assertNoErrors()
@@ -90,11 +108,21 @@ class PdlOppslagServiceImpl constructor(
                 ?.hits
                 ?: emptyList()
         }
+    }
+
+    fun hentAktivIdent(ident: String, gruppe: IdentGruppe): String? = runBlocking {
+        HentAktorid(pdlClient)
+            .execute(HentAktorid.Variables(ident, listOf(gruppe)), userTokenAuthorizationHeaders)
+            .data
+            ?.hentIdenter
+            ?.identer
+            ?.firstOrNull()
+            ?.ident
+    }
 
     private val userTokenAuthorizationHeaders: HeadersBuilder = {
         val systemuserToken: String = stsService.systemUserToken
-        val userToken: String = SubjectHandler.getSsoToken(SsoToken.Type.OIDC)
-            .orElseThrow { IllegalStateException("Kunne ikke hente ut veileders ssoTOken") }
+        val userToken: String = AuthContextUtils.requireToken()
 
         header(NAV_CONSUMER_TOKEN_HEADER, AUTH_METHOD_BEARER + AUTH_SEPERATOR + systemuserToken)
         header(AUTHORIZATION, AUTH_METHOD_BEARER + AUTH_SEPERATOR + userToken)
@@ -112,28 +140,6 @@ class PdlOppslagServiceImpl constructor(
     companion object {
         private val pdlApiUrl: URL = EnvironmentUtils.getRequiredProperty("PDL_API_URL").let(::URL)
 
-        fun createClient() = LoggingGraphqlClient("PDL", pdlApiUrl) { variables ->
-            when (variables) {
-                null -> emptyList<String>() to variables
-                is HentPerson.Variables -> {
-                    val ident = variables.ident.let(PdlSyntetiskMapper::mapFnrTilPdl)
-                    HentPerson.Variables(ident)
-                }
-                is HentNavnBolk.Variables -> {
-                    val identer = variables.identer.map(PdlSyntetiskMapper::mapFnrTilPdl)
-                    HentNavnBolk.Variables(identer)
-                }
-                is HentIdenter.Variables -> {
-                    val ident = variables.ident.let(PdlSyntetiskMapper::mapFnrTilPdl)
-                    HentIdenter.Variables(ident)
-                }
-                is HentAktorid.Variables -> {
-                    val ident = variables.ident.let(PdlSyntetiskMapper::mapFnrTilPdl)
-                    HentAktorid.Variables(ident)
-                } //
-                is SokPersonUtenlandskID.Variables -> variables
-                else -> throw IllegalStateException("Unrecognized graphql variables type: ${variables.javaClass.simpleName}")
-            }
-        }
+        fun createClient() = LoggingGraphqlClient("PDL", pdlApiUrl)
     }
 }

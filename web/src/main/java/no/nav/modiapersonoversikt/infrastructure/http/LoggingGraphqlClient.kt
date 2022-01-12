@@ -10,16 +10,13 @@ import io.ktor.client.engine.cio.CIOEngineConfig
 import io.ktor.client.request.HttpRequestBuilder
 import io.ktor.client.request.header
 import io.ktor.util.KtorExperimentalAPI
-import no.nav.common.log.MDCConstants
+import no.nav.common.utils.IdUtils
 import no.nav.modiapersonoversikt.legacy.api.utils.RestConstants
 import no.nav.modiapersonoversikt.legacy.api.utils.TjenestekallLogger
 import org.slf4j.LoggerFactory
-import org.slf4j.MDC
 import java.net.URL
-import java.util.*
 
 typealias HeadersBuilder = HttpRequestBuilder.() -> Unit
-typealias VariablesTransform = (Any?) -> Any?
 
 class GraphQLException(override val message: String, val errors: List<GraphQLError>) : RuntimeException(message)
 fun <T> GraphQLResponse<T>.assertNoErrors(): GraphQLResponse<T> {
@@ -38,8 +35,7 @@ private val mapper = jacksonObjectMapper()
 @KtorExperimentalAPI
 class LoggingGraphqlClient(
     private val name: String,
-    url: URL,
-    private val transformVariables: VariablesTransform? = null
+    url: URL
 ) : GraphQLClient<CIOEngineConfig>(url, CIO, mapper, {}) {
     private val log = LoggerFactory.getLogger(LoggingGraphqlClient::class.java)
 
@@ -51,43 +47,44 @@ class LoggingGraphqlClient(
         requestBuilder: HeadersBuilder
     ): GraphQLResponse<T> {
         val callId = getCallId()
+        val requestId = IdUtils.generateId()
         return try {
-            val mappedVariables = transformVariables?.invoke(variables) ?: variables
             val mappedRequestBuilder: HeadersBuilder = {
                 requestBuilder.invoke(this)
                 header(RestConstants.NAV_CALL_ID_HEADER, callId)
                 header("X-Correlation-ID", callId)
             }
             TjenestekallLogger.info(
-                "$name-request: $callId",
+                "$name-request: $callId ($requestId)",
                 mapOf(
                     "operationName" to operationName,
-                    "variables" to mappedVariables
+                    "variables" to variables
                 )
             )
 
-            val response = super.execute(query, operationName, mappedVariables, resultType, mappedRequestBuilder)
+            val timer: Long = System.currentTimeMillis()
+            val response = super.execute(query, operationName, variables, resultType, mappedRequestBuilder)
 
             val tjenestekallFelt = mapOf(
                 "data" to response.data,
                 "errors" to response.errors,
-                "extensions" to response.extensions
+                "extensions" to response.extensions,
+                "time" to timer.measure()
             )
 
             if (response.errors.isNullOrEmpty()) {
-                TjenestekallLogger.info("$name-response: $callId", tjenestekallFelt)
+                TjenestekallLogger.info("$name-response: $callId ($requestId)", tjenestekallFelt)
             } else {
-                TjenestekallLogger.error("$name-response: $callId", tjenestekallFelt)
+                TjenestekallLogger.error("$name-response: $callId ($requestId)", tjenestekallFelt)
             }
 
             response
         } catch (exception: Exception) {
             log.error("Feilet ved oppslag mot $name (ID: $callId)", exception)
-            TjenestekallLogger.error("$name-response: $callId", mapOf("exception" to exception))
+            TjenestekallLogger.error("$name-response: $callId ($requestId)", mapOf("exception" to exception))
             val error = GraphQLError("Feilet ved oppslag mot $name (ID: $callId)")
             GraphQLResponse(errors = listOf(error))
         }
     }
-
-    private fun getCallId(): String = MDC.get(MDCConstants.MDC_CALL_ID) ?: UUID.randomUUID().toString()
+    private inline fun Long.measure(): Long = System.currentTimeMillis() - this
 }

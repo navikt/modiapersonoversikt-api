@@ -1,0 +1,13 @@
+{
+  "adressebeskyttelse" : [ "java.util.ArrayList", [ {
+    "beskrivelse" : "SPSF",
+    "kode" : "KODE6_UTLAND"
+  } ] ],
+  "alder" : null,
+  "bostedAdresse" : [ "java.util.ArrayList", [ ] ],
+  "dodsdato" : [ "java.util.ArrayList", [ ] ],
+  "fnr" : "00000000000",
+  "fodselsdato" : [ "kotlin.collections.EmptyList", [ ] ],
+  "kjonn" : [ "kotlin.collections.EmptyList", [ ] ],
+  "navn" : [ "java.util.ArrayList", [ ] ]
+}

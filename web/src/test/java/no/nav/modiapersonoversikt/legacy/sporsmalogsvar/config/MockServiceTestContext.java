@@ -3,29 +3,28 @@ package no.nav.modiapersonoversikt.legacy.sporsmalogsvar.config;
 import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navansatt.GOSYSNAVansatt;
 import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navorgenhet.GOSYSNAVOrgEnhet;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import no.nav.modiapersonoversikt.legacy.kjerneinfo.consumer.fim.person.PersonKjerneinfoServiceBi;
+import no.nav.modiapersonoversikt.consumer.norg.NorgApi;
+import no.nav.modiapersonoversikt.consumer.norg.NorgDomain;
 import no.nav.modiapersonoversikt.infrastructure.content.ContentRetriever;
-import no.nav.modiapersonoversikt.legacy.api.domain.norg.AnsattEnhet;
 import no.nav.modiapersonoversikt.legacy.api.service.HenvendelseUtsendingService;
 import no.nav.modiapersonoversikt.legacy.api.service.OppgaveBehandlingService;
-import no.nav.modiapersonoversikt.legacy.api.service.arbeidsfordeling.ArbeidsfordelingV1Service;
 import no.nav.modiapersonoversikt.legacy.api.service.saker.GsakKodeverk;
-import no.nav.modiapersonoversikt.legacy.api.service.kodeverk.StandardKodeverk;
 import no.nav.modiapersonoversikt.legacy.api.service.ldap.LDAPService;
 import no.nav.modiapersonoversikt.legacy.api.service.norg.AnsattService;
-import no.nav.modiapersonoversikt.legacy.api.service.organisasjonsEnhetV2.OrganisasjonEnhetV2Service;
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll;
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.TilgangskontrollMock;
 import no.nav.modiapersonoversikt.legacy.sporsmalogsvar.consumer.henvendelse.HenvendelseBehandlingService;
 import no.nav.modiapersonoversikt.legacy.sporsmalogsvar.consumer.henvendelse.domain.Meldinger;
+import no.nav.modiapersonoversikt.service.arbeidsfordeling.ArbeidsfordelingService;
+import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.behandlehenvendelse.BehandleHenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.henvendelse.HenvendelsePortType;
-import no.nav.tjeneste.virksomhet.kodeverk.v2.KodeverkPortType;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import static java.util.Arrays.asList;
 import static no.nav.modiapersonoversikt.legacy.sporsmalogsvar.legacy.TestUtils.opprettMeldingEksempel;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -39,18 +38,13 @@ public class MockServiceTestContext {
     }
 
     @Bean
-    public StandardKodeverk standardKodeverk() {
-        return mock(StandardKodeverk.class);
+    public EnhetligKodeverk.Service enhetligKodeverk() {
+        return mock(EnhetligKodeverk.Service.class);
     }
 
     @Bean
-    public KodeverkPortType kodeverkPortType() {
-        return mock(KodeverkPortType.class);
-    }
-
-    @Bean
-    public ArbeidsfordelingV1Service arbeidsfordelingV1Service() {
-        return mock(ArbeidsfordelingV1Service.class);
+    public ArbeidsfordelingService arbeidsfordelingService() {
+        return mock(ArbeidsfordelingService.class);
     }
 
     @Bean
@@ -97,15 +91,10 @@ public class MockServiceTestContext {
     }
 
     @Bean
-    public PersonKjerneinfoServiceBi personKjerneinfoServiceBi() {
-        return mock(PersonKjerneinfoServiceBi.class);
-    }
-
-    @Bean
-    public OrganisasjonEnhetV2Service organisasjonEnhetV2Service() {
-        OrganisasjonEnhetV2Service organisasjonEnhetService = mock(OrganisasjonEnhetV2Service.class);
-        when(organisasjonEnhetService.hentAlleEnheter(OrganisasjonEnhetV2Service.WSOppgavebehandlerfilter.KUN_OPPGAVEBEHANDLERE)).thenReturn(asList(new AnsattEnhet("1231", "Sinsen", "AKTIV")));
-        return organisasjonEnhetService;
+    public NorgApi norgApi() {
+        NorgApi norgapi = mock(NorgApi.class);
+        when(norgapi.hentEnheter(any(), NorgDomain.OppgaveBehandlerFilter.KUN_OPPGAVEBEHANDLERE,  any())).thenReturn(asList(new NorgDomain.Enhet("1231", "Sinsen", NorgDomain.EnhetStatus.AKTIV, false)));
+        return norgapi;
     }
 
     public Tilgangskontroll tilgangskontroll() {

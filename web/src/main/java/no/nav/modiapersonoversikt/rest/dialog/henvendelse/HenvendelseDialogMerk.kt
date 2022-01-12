@@ -1,6 +1,6 @@
 package no.nav.modiapersonoversikt.rest.dialog.henvendelse
 
-import no.nav.common.auth.subject.SubjectHandler
+import no.nav.modiapersonoversikt.infrastructure.AuthContextUtils
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll
 import no.nav.modiapersonoversikt.legacy.api.service.OppgaveBehandlingService
 import no.nav.modiapersonoversikt.rest.dialog.apis.*
@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import java.util.*
+import javax.ws.rs.NotSupportedException
 
 class HenvendelseDialogMerk(
     private val behandleHenvendelsePortType: BehandleHenvendelsePortType,
@@ -28,6 +29,10 @@ class HenvendelseDialogMerk(
     override fun merkSomKontorsperret(request: KontorsperretRequest): ResponseEntity<Void> {
         behandleHenvendelsePortType.oppdaterKontorsperre(request.enhet, request.meldingsidListe)
         return ResponseEntity(HttpStatus.OK)
+    }
+
+    override fun sendTilSladding(request: SendTilSladdingRequest): ResponseEntity<Void> {
+        throw NotSupportedException("Operasjonen er kun støttet av SF")
     }
 
     override fun avsluttUtenSvar(request: AvsluttUtenSvarRequest): ResponseEntity<Void> {
@@ -54,7 +59,7 @@ class HenvendelseDialogMerk(
 
     override fun kanSlette(): ResponseEntity<Boolean> {
         val godkjenteSaksbehandlere = tilgangskontroll.context().hentSaksbehandlereMedTilgangTilHastekassering()
-        val saksbehandlerId = SubjectHandler.getIdent().map(String::toUpperCase).get()
+        val saksbehandlerId = AuthContextUtils.requireIdent().uppercase()
         return ResponseEntity(godkjenteSaksbehandlere.contains(saksbehandlerId), HttpStatus.OK)
     }
 }

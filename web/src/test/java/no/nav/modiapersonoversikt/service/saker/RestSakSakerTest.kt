@@ -4,8 +4,8 @@ import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import no.nav.modiapersonoversikt.legacy.api.domain.saker.Sak
-import no.nav.modiapersonoversikt.legacy.api.service.FodselnummerAktorService
-import no.nav.modiapersonoversikt.legacy.api.utils.http.SubjectHandlerUtil
+import no.nav.modiapersonoversikt.legacy.api.service.pdl.PdlOppslagService
+import no.nav.modiapersonoversikt.legacy.api.utils.http.AuthContextTestUtils
 import no.nav.modiapersonoversikt.service.saker.kilder.RestSakSaker
 import no.nav.modiapersonoversikt.service.saker.mediation.OpprettSakDto
 import no.nav.modiapersonoversikt.service.saker.mediation.SakApiGateway
@@ -30,13 +30,13 @@ class RestSakSakerTest {
     val FagsystemSakId_1 = "11"
 
     val api = mockk<SakApiGateway>()
-    val fodselnummerAktorService = mockk<FodselnummerAktorService>()
-    val restClient = RestSakSaker(api, fodselnummerAktorService)
+    val pdlOppslagService = mockk<PdlOppslagService>()
+    val restClient = RestSakSaker(api, pdlOppslagService)
 
     @Test
     fun `legg til saker legger til sakene i listen`() {
-        every { fodselnummerAktorService.hentAktorIdForFnr(any()) } returns "123"
-        every { fodselnummerAktorService.hentFnrForAktorId(any()) } returns "456"
+        every { pdlOppslagService.hentAktorId(any()) } returns "123"
+        every { pdlOppslagService.hentFnr(any()) } returns "456"
         every { api.hentSaker(any()) } returns listOf(
             SakDto(
                 id = SakId_1,
@@ -58,8 +58,8 @@ class RestSakSakerTest {
     @Test
     fun `ved feil kastes feilene videre`() {
         every { api.hentSaker(any()) } throws IllegalStateException("Ukjent feil")
-        every { fodselnummerAktorService.hentAktorIdForFnr(any()) } returns "123"
-        every { fodselnummerAktorService.hentFnrForAktorId(any()) } returns "456"
+        every { pdlOppslagService.hentAktorId(any()) } returns "123"
+        every { pdlOppslagService.hentFnr(any()) } returns "456"
 
         val saker = mutableListOf<Sak>()
         assertThrows<IllegalStateException> {
@@ -76,9 +76,9 @@ class RestSakSakerTest {
             fagsakNr = FagsystemSakId_1
         )
         every { api.opprettSak(any()) } returns sakDto
-        every { fodselnummerAktorService.hentAktorIdForFnr(any()) } returns "123"
-        every { fodselnummerAktorService.hentFnrForAktorId(any()) } returns "456"
-        SubjectHandlerUtil.withIdent("Z999999") {
+        every { pdlOppslagService.hentAktorId(any()) } returns "123"
+        every { pdlOppslagService.hentFnr(any()) } returns "456"
+        AuthContextTestUtils.withIdent("Z999999") {
             restClient.opprettSak("fnr", RestSakSaker.TIL_SAK(sakDto))
         }
 
@@ -163,7 +163,7 @@ class RestSakSakerTest {
     }
 
     @Test
-    fun `kal handtere at FS36 har fagsystemId`() {
+    fun `skal handtere at FS36 har fagsystemId`() {
         val sakDto = SakDto(
             id = SakId_1,
             tema = "AAP",
@@ -176,6 +176,7 @@ class RestSakSakerTest {
         )
 
         val sak = RestSakSaker.TIL_SAK.invoke(sakDto)
+
         assertThat(sak.saksId, `is`(SakId_1))
         assertThat(sak.fagsystemSaksId, `is`(FagsystemSakId_1))
         assertThat(sak.temaKode, `is`(Sak.GODKJENTE_TEMA_FOR_GENERELL_SAK[0]))
@@ -193,5 +194,11 @@ class RestSakSakerTest {
         }
     }
 
-    private fun earlierDateTimeWithOffSet(offset: Long): OffsetDateTime = OffsetDateTime.now().minusDays(offset)
+    private fun earlierDateTimeWithOffSet(offset: Long): OffsetDateTime =
+        OffsetDateTime.now()
+            .withHour(0)
+            .withMinute(0)
+            .withSecond(0)
+            .withNano(0)
+            .minusDays(offset)
 }

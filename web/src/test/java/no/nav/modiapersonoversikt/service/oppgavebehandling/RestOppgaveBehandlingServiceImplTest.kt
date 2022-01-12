@@ -5,12 +5,12 @@ import no.nav.common.sts.SystemUserTokenProvider
 import no.nav.modiapersonoversikt.consumer.abac.AbacResponse
 import no.nav.modiapersonoversikt.consumer.abac.Decision
 import no.nav.modiapersonoversikt.consumer.abac.Response
+import no.nav.modiapersonoversikt.consumer.norg.NorgDomain
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.TilgangskontrollContext
 import no.nav.modiapersonoversikt.legacy.api.domain.MetadataKey
 import no.nav.modiapersonoversikt.legacy.api.domain.Oppgave
 import no.nav.modiapersonoversikt.legacy.api.domain.Temagruppe
-import no.nav.modiapersonoversikt.legacy.api.domain.norg.AnsattEnhet
 import no.nav.modiapersonoversikt.legacy.api.domain.oppgave.generated.apis.OppgaveApi
 import no.nav.modiapersonoversikt.legacy.api.domain.oppgave.generated.models.*
 import no.nav.modiapersonoversikt.legacy.api.domain.oppgave.toGetOppgaveResponseJsonDTO
@@ -19,9 +19,10 @@ import no.nav.modiapersonoversikt.legacy.api.domain.oppgave.toPutOppgaveRequestJ
 import no.nav.modiapersonoversikt.legacy.api.domain.oppgave.toPutOppgaveResponseJsonDTO
 import no.nav.modiapersonoversikt.legacy.api.service.*
 import no.nav.modiapersonoversikt.legacy.api.service.OppgaveBehandlingService.AlleredeTildeltAnnenSaksbehandler
-import no.nav.modiapersonoversikt.legacy.api.service.arbeidsfordeling.ArbeidsfordelingV1Service
 import no.nav.modiapersonoversikt.legacy.api.service.norg.AnsattService
-import no.nav.modiapersonoversikt.legacy.api.utils.http.SubjectHandlerUtil
+import no.nav.modiapersonoversikt.legacy.api.service.pdl.PdlOppslagService
+import no.nav.modiapersonoversikt.legacy.api.utils.http.AuthContextTestUtils
+import no.nav.modiapersonoversikt.service.arbeidsfordeling.ArbeidsfordelingService
 import no.nav.modiapersonoversikt.service.kodeverksmapper.KodeverksmapperService
 import no.nav.modiapersonoversikt.service.kodeverksmapper.domain.Behandling
 import no.nav.modiapersonoversikt.service.oppgavebehandling.Utils.SPORSMAL_OG_SVAR
@@ -40,17 +41,17 @@ class RestOppgaveBehandlingServiceImplTest {
     private val apiClient: OppgaveApi = mockk()
     private val systemApiClient: OppgaveApi = mockk()
     private val kodeverksmapperService: KodeverksmapperService = mockk()
-    private val fodselnummerAktorService: FodselnummerAktorService = mockk()
+    private val pdlOppslagService: PdlOppslagService = mockk()
     private val tilgangskontrollContext: TilgangskontrollContext = mockk()
     private val tilgangskontroll: Tilgangskontroll = Tilgangskontroll(tilgangskontrollContext)
     private val ansattService: AnsattService = mockk()
-    private val arbeidsfordelingService: ArbeidsfordelingV1Service = mockk()
+    private val arbeidsfordelingService: ArbeidsfordelingService = mockk()
     private val stsService: SystemUserTokenProvider = mockk()
     private val fixedClock = Clock.fixed(Instant.parse("2021-01-25T10:15:30Z"), ZoneId.systemDefault())
 
     private val oppgaveBehandlingService = RestOppgaveBehandlingServiceImpl(
         kodeverksmapperService,
-        fodselnummerAktorService,
+        pdlOppslagService,
         ansattService,
         arbeidsfordelingService,
         tilgangskontroll,
@@ -64,11 +65,11 @@ class RestOppgaveBehandlingServiceImplTest {
     fun setupStandardMocker() {
         every { kodeverksmapperService.mapUnderkategori(any()) } returns Optional.empty()
         every { kodeverksmapperService.mapOppgavetype(any()) } returns "SPM_OG_SVR"
-        every { fodselnummerAktorService.hentAktorIdForFnr(any()) } answers {
+        every { pdlOppslagService.hentAktorId(any()) } answers {
             val ident = this.args[0] as String
             "000${ident}000"
         }
-        every { fodselnummerAktorService.hentFnrForAktorId(any()) } answers {
+        every { pdlOppslagService.hentFnr(any()) } answers {
             val ident = this.args[0] as String
             ident.substring(3, ident.length - 3)
         }
@@ -82,6 +83,7 @@ class RestOppgaveBehandlingServiceImplTest {
         prioritet = OppgaveJsonDTO.Prioritet.HOY,
         status = OppgaveJsonDTO.Status.AAPNET,
         tildeltEnhetsnr = "",
+        tema = "DAG",
         beskrivelse = "eksisterende beskrivelse",
         opprettetTidspunkt = OffsetDateTime.now(),
         versjon = 1
@@ -575,8 +577,8 @@ class RestOppgaveBehandlingServiceImplTest {
             every { tilgangskontrollContext.checkAbac(any()) } returns AbacResponse(
                 listOf(Response(Decision.Permit, null))
             )
-            every { fodselnummerAktorService.hentAktorIdForFnr(any()) } returns null
-            every { fodselnummerAktorService.hentFnrForAktorId(any()) } returns null
+            every { pdlOppslagService.hentAktorId(any()) } returns null
+            every { pdlOppslagService.hentFnr(any()) } returns null
 
             val result = withIdent("Z999999") {
                 oppgaveBehandlingService.finnTildelteOppgaverIGsak()
@@ -893,8 +895,8 @@ class RestOppgaveBehandlingServiceImplTest {
             every { apiClient.hentOppgave(any(), any()) } returns testoppgave.toGetOppgaveResponseJsonDTO()
             every { apiClient.endreOppgave(any(), any(), any()) } returns testoppgave.toPutOppgaveResponseJsonDTO()
             every { ansattService.hentAnsattNavn(eq("Z999999")) } returns "Fornavn Etternavn"
-            every { arbeidsfordelingService.finnBehandlendeEnhetListe(any(), any(), any(), any()) } returns listOf(
-                AnsattEnhet("4567", "NAV Mockenhet")
+            every { arbeidsfordelingService.hentBehandlendeEnheter(any(), any(), any(), any()) } returns listOf(
+                NorgDomain.Enhet("4567", "NAV Mockenhet", NorgDomain.EnhetStatus.AKTIV, false)
             )
 
             withIdent("Z999999") {
@@ -934,8 +936,8 @@ class RestOppgaveBehandlingServiceImplTest {
             every { apiClient.hentOppgave(any(), any()) } returns testoppgave.toGetOppgaveResponseJsonDTO()
             every { apiClient.endreOppgave(any(), any(), any()) } returns testoppgave.toPutOppgaveResponseJsonDTO()
             every { ansattService.hentAnsattNavn(eq("Z999999")) } returns "Fornavn Etternavn"
-            every { arbeidsfordelingService.finnBehandlendeEnhetListe(any(), any(), any(), any()) } returns listOf(
-                AnsattEnhet("4567", "NAV Mockenhet")
+            every { arbeidsfordelingService.hentBehandlendeEnheter(any(), any(), any(), any()) } returns listOf(
+                NorgDomain.Enhet("4567", "NAV Mockenhet", NorgDomain.EnhetStatus.AKTIV, false)
             )
             every { kodeverksmapperService.mapUnderkategori(any()) } returns Optional.of(
                 Behandling()
@@ -982,8 +984,8 @@ class RestOppgaveBehandlingServiceImplTest {
             every { apiClient.hentOppgave(any(), any()) } returns testoppgave.toGetOppgaveResponseJsonDTO()
             every { apiClient.endreOppgave(any(), any(), any()) } returns testoppgave.toPutOppgaveResponseJsonDTO()
             every { ansattService.hentAnsattNavn(eq("Z999999")) } returns "Fornavn Etternavn"
-            every { arbeidsfordelingService.finnBehandlendeEnhetListe(any(), any(), any(), any()) } returns listOf(
-                AnsattEnhet("4567", "NAV Mockenhet")
+            every { arbeidsfordelingService.hentBehandlendeEnheter(any(), any(), any(), any()) } returns listOf(
+                NorgDomain.Enhet("4567", "NAV Mockenhet", NorgDomain.EnhetStatus.AKTIV, false)
             )
 
             withIdent("Z999999") {
@@ -1062,7 +1064,7 @@ class RestOppgaveBehandlingServiceImplTest {
     }
 
     private fun <T> withIdent(ident: String, fn: () -> T): T {
-        return SubjectHandlerUtil.withIdent(ident, fn)
+        return AuthContextTestUtils.withIdent(ident, fn)
     }
 
     private fun OppgaveJsonDTO.nybeskrivelse(ident: String, navn: String, enhet: String, tekst: String): String {

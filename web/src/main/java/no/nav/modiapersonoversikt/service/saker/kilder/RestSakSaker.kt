@@ -1,9 +1,9 @@
 package no.nav.modiapersonoversikt.service.saker.kilder
 
-import no.nav.common.auth.subject.SubjectHandler
+import no.nav.modiapersonoversikt.infrastructure.AuthContextUtils
 import no.nav.modiapersonoversikt.legacy.api.domain.saker.Sak
 import no.nav.modiapersonoversikt.legacy.api.domain.saker.Sak.FAGSYSTEM_FOR_OPPRETTELSE_AV_GENERELL_SAK
-import no.nav.modiapersonoversikt.legacy.api.service.FodselnummerAktorService
+import no.nav.modiapersonoversikt.legacy.api.service.pdl.PdlOppslagService
 import no.nav.modiapersonoversikt.service.saker.SakerKilde
 import no.nav.modiapersonoversikt.service.saker.mediation.OpprettSakDto
 import no.nav.modiapersonoversikt.service.saker.mediation.SakApiGateway
@@ -13,13 +13,13 @@ import java.time.OffsetDateTime
 
 class RestSakSaker(
     private val sakApiGateway: SakApiGateway,
-    private val fodselnummerAktorService: FodselnummerAktorService
+    private val pdlOppslagService: PdlOppslagService
 ) : SakerKilde {
     override val kildeNavn: String = "SAK"
 
     override fun leggTilSaker(fnr: String, saker: MutableList<Sak>) {
         val response = sakApiGateway.hentSaker(
-            requireNotNull(fodselnummerAktorService.hentAktorIdForFnr(fnr)) {
+            requireNotNull(pdlOppslagService.hentAktorId(fnr)) {
                 "Kan ikke hente ut saker når mapping til aktorId feilet"
             }
         )
@@ -28,10 +28,10 @@ class RestSakSaker(
     }
 
     fun opprettSak(fnr: String, sak: Sak): String {
-        val ident = SubjectHandler.getIdent().orElseThrow { IllegalStateException("Fant ikke ident") }
+        val ident = AuthContextUtils.requireIdent()
         val opprettetSak = sakApiGateway.opprettSak(
             OpprettSakDto(
-                aktoerId = requireNotNull(fodselnummerAktorService.hentAktorIdForFnr(fnr)) {
+                aktoerId = requireNotNull(pdlOppslagService.hentAktorId(fnr)) {
                     "Kan ikke opprette sak når mapping til aktorId feilet"
                 },
                 tema = sak.temaKode,
@@ -80,7 +80,7 @@ class RestSakSaker(
         }
 
         private fun convertJavaDateTimeToJoda(dateTime: OffsetDateTime): DateTime {
-            return DateTime(dateTime.toInstant().toEpochMilli())
+            return DateTime(dateTime.toInstant().toEpochMilli()).withTimeAtStartOfDay()
         }
     }
 }

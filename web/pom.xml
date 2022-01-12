@@ -48,7 +48,7 @@
         </dependency>
         <dependency>
             <groupId>no.nav.common</groupId>
-            <artifactId>leader-election</artifactId>
+            <artifactId>job</artifactId>
         </dependency>
         <dependency>
             <groupId>no.nav.common</groupId>
@@ -177,6 +177,12 @@
             <scope>test</scope>
         </dependency>
         <dependency>
+            <groupId>com.ninja-squad</groupId>
+            <artifactId>springmockk</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
             <scope>compile</scope>
@@ -186,6 +192,17 @@
         <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>oppgave-api</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>no.nav.sbl.dialogarena</groupId>
+            <artifactId>norg-api</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>no.nav.sbl.dialogarena</groupId>
+            <artifactId>bisys-api</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
@@ -235,14 +252,6 @@
         </dependency>
 
         <!-- tjenester -->
-        <dependency>
-            <groupId>no.nav.tjenestespesifikasjoner</groupId>
-            <artifactId>dial-nav-tjeneste-aktoer_v2</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>no.nav.tjenestespesifikasjoner</groupId>
-            <artifactId>kodeverk-tjenestespesifikasjon</artifactId>
-        </dependency>
         <dependency>
             <groupId>no.nav.tjenestespesifikasjoner</groupId>
             <artifactId>utbetaling-tjenestespesifikasjon</artifactId>
@@ -302,14 +311,6 @@
         <dependency>
             <groupId>no.nav.tjenestespesifikasjoner</groupId>
             <artifactId>dialogarena-behandlingsinformasjon</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>no.nav.tjenestespesifikasjoner</groupId>
-            <artifactId>organisasjonenhet-v2-tjenestespesifikasjon</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>no.nav.tjenestespesifikasjoner</groupId>
-            <artifactId>organisasjonenhetkontaktinformasjon-v1-tjenestespesifikasjon</artifactId>
         </dependency>
         <dependency>
             <groupId>no.nav.tjenestespesifikasjoner</groupId>

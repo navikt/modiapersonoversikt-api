@@ -1,5 +1,6 @@
 package no.nav.modiapersonoversikt.legacy.api.utils
 
+import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.lang.StringBuilder
 
@@ -10,14 +11,16 @@ object TjenestekallLogger {
     fun error(header: String, fields: Map<String, Any?>) = tjenestekallLogg.error(format(header, fields))
     fun error(header: String, fields: Map<String, Any?>, throwable: Throwable) = tjenestekallLogg.error(format(header, fields), throwable)
 
+    val logger: Logger = tjenestekallLogg
+
     private fun format(header: String, fields: Map<String, Any?>): String {
         val sb = StringBuilder()
-        sb.appendln(header)
-        sb.appendln("------------------------------------------------------------------------------------")
+        sb.appendLine(header)
+        sb.appendLine("------------------------------------------------------------------------------------")
         fields.forEach { (key, value) ->
-            sb.appendln("$key: $value")
+            sb.appendLine("$key: $value")
         }
-        sb.appendln("------------------------------------------------------------------------------------")
+        sb.appendLine("------------------------------------------------------------------------------------")
         return sb.toString()
     }
 }

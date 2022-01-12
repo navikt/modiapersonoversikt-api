@@ -3,7 +3,6 @@ package no.nav.modiapersonoversikt.config.service
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll
 import no.nav.modiapersonoversikt.legacy.api.service.HenvendelseUtsendingService
 import no.nav.modiapersonoversikt.legacy.api.service.OppgaveBehandlingService
-import no.nav.modiapersonoversikt.legacy.api.service.kodeverk.StandardKodeverk
 import no.nav.modiapersonoversikt.legacy.api.service.ldap.LDAPService
 import no.nav.modiapersonoversikt.legacy.sporsmalogsvar.consumer.henvendelse.HenvendelseBehandlingService
 import no.nav.modiapersonoversikt.rest.dialog.apis.DialogApi
@@ -15,6 +14,7 @@ import no.nav.modiapersonoversikt.rest.dialog.henvendelse.HenvendelseDialogMerk
 import no.nav.modiapersonoversikt.rest.dialog.salesforce.SfLegacyDelsvarController
 import no.nav.modiapersonoversikt.rest.dialog.salesforce.SfLegacyDialogController
 import no.nav.modiapersonoversikt.rest.dialog.salesforce.SfLegacyDialogMerkController
+import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk
 import no.nav.modiapersonoversikt.service.henvendelse.DelsvarService
 import no.nav.modiapersonoversikt.service.sfhenvendelse.SfHenvendelseService
 import no.nav.modiapersonoversikt.service.unleash.Feature
@@ -43,7 +43,7 @@ open class DialogConfig {
     private lateinit var ldapService: LDAPService
 
     @Autowired
-    private lateinit var kodeverk: StandardKodeverk
+    private lateinit var kodeverk: EnhetligKodeverk.Service
 
     @Autowired
     private lateinit var henvendelseService: HenvendelseBehandlingService
@@ -63,7 +63,6 @@ open class DialogConfig {
             featureToggle = Feature.USE_SALESFORCE_DIALOG,
             unleashService = unleashService,
             ifEnabled = SfLegacyDialogController(
-                tilgangskontroll,
                 sfHenvendelseService,
                 oppgaveBehandlingService,
                 ldapService,
@@ -72,7 +71,9 @@ open class DialogConfig {
             ifDisabled = HenvendelseDialog(
                 henvendelseService,
                 henvendelseUtsendingService,
-                oppgaveBehandlingService
+                oppgaveBehandlingService,
+                sfHenvendelseService,
+                unleashService
             )
         )
     }
@@ -83,7 +84,6 @@ open class DialogConfig {
             featureToggle = Feature.USE_SALESFORCE_DIALOG,
             unleashService = unleashService,
             ifEnabled = SfLegacyDialogMerkController(
-                tilgangskontroll,
                 sfHenvendelseService,
                 oppgaveBehandlingService
             ),

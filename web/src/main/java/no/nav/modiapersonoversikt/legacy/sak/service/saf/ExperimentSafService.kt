@@ -1,7 +1,10 @@
 package no.nav.modiapersonoversikt.legacy.sak.service.saf
 
+import com.expediagroup.graphql.types.GraphQLResponse
+import no.nav.modiapersonoversikt.infrastructure.scientist.Scientist
 import no.nav.modiapersonoversikt.infrastructure.scientist.Scientist.Config
 import no.nav.modiapersonoversikt.infrastructure.scientist.Scientist.createExperiment
+import no.nav.modiapersonoversikt.legacy.api.domain.saf.generated.Hentbrukerssaker
 import no.nav.modiapersonoversikt.legacy.sak.providerdomain.Dokument
 import no.nav.modiapersonoversikt.legacy.sak.providerdomain.DokumentMetadata
 import no.nav.modiapersonoversikt.legacy.sak.providerdomain.resultatwrappere.ResultatWrapper
@@ -11,7 +14,7 @@ class ExperimentSafService(
     private val control: SafService,
     private val experiment: SafService
 ) : SafService {
-    private val experimentRate = 0.05
+    private val experimentRate = Scientist.FixedValueRate(0.05)
     private val journalportExperiment =
         createExperiment<ResultatWrapper<List<DokumentMetadata>>>(Config("SAF-Journalpost", experimentRate))
 
@@ -34,5 +37,9 @@ class ExperimentSafService(
             { control.hentDokument(journalpostId, dokumentInfoId, variantFormat) },
             { experiment.hentDokument(journalpostId, dokumentInfoId, variantFormat) }
         )
+    }
+
+    override fun hentSaker(ident: String): GraphQLResponse<Hentbrukerssaker.Result> {
+        return experiment.hentSaker(ident)
     }
 }

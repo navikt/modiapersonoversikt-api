@@ -1,6 +1,6 @@
 package no.nav.modiapersonoversikt.rest.dialog.henvendelse
 
-import no.nav.common.auth.subject.SubjectHandler
+import no.nav.modiapersonoversikt.infrastructure.AuthContextUtils
 import no.nav.modiapersonoversikt.legacy.api.utils.RestUtils
 import no.nav.modiapersonoversikt.rest.dialog.apis.DelsvarRestRequest
 import no.nav.modiapersonoversikt.rest.dialog.apis.DialogDelsvarApi
@@ -25,7 +25,7 @@ class HenvendelseDelsvar(
             .withTraadId(request.traadId)
             .withBehandlingsId(request.behandlingsId)
             .withSvar(request.fritekst)
-            .withNavIdent(SubjectHandler.getIdent().get())
+            .withNavIdent(AuthContextUtils.requireIdent())
             .withValgtEnhet(saksbehandlersValgteEnhet)
             .withTemagruppe(request.temagruppe)
             .withOppgaveId(request.oppgaveId)

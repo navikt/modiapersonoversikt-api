@@ -1,6 +1,5 @@
 package no.nav.modiapersonoversikt.legacy.api.utils.cache;
 
-import no.nav.common.auth.subject.SubjectHandler;
 import org.springframework.aop.framework.AopProxyUtils;
 import org.springframework.cache.interceptor.SimpleKeyGenerator;
 
@@ -18,7 +17,14 @@ public class MethodAwareKeyGenerator extends SimpleKeyGenerator {
 
     @Override
     public Object generate(Object target, Method method, Object... params) {
-        return super.generate(target, method, method.getName(), params);
+        String cacheKey = Integer.toHexString(super.generate(target, method, params).hashCode());
+        return "cachekey: " + getTargetClassName(target) + "." + method.getName() + "[" + cacheKey + "]";
+    }
 
+    private String getTargetClassName(Object target) {
+        if (Proxy.isProxyClass(target.getClass())) {
+            return AopProxyUtils.proxiedUserInterfaces(target)[0].getName();
+        }
+        return target.getClass().getName();
     }
 }

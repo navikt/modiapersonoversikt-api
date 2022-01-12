@@ -1,9 +1,10 @@
 package no.nav.modiapersonoversikt.service.oppgavebehandling
 
-import no.nav.common.auth.subject.SsoToken
-import no.nav.common.auth.subject.SubjectHandler
-import no.nav.common.log.MDCConstants
 import no.nav.common.sts.SystemUserTokenProvider
+import no.nav.common.types.identer.Fnr
+import no.nav.modiapersonoversikt.consumer.norg.NorgDomain
+import no.nav.modiapersonoversikt.infrastructure.AuthContextUtils
+import no.nav.modiapersonoversikt.infrastructure.http.getCallId
 import no.nav.modiapersonoversikt.infrastructure.rsbac.DecisionEnums
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Policies
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll
@@ -12,7 +13,6 @@ import no.nav.modiapersonoversikt.legacy.api.domain.Oppgave
 import no.nav.modiapersonoversikt.legacy.api.domain.Temagruppe
 import no.nav.modiapersonoversikt.legacy.api.domain.Temagruppe.ANSOS
 import no.nav.modiapersonoversikt.legacy.api.domain.Temagruppe.OKSOS
-import no.nav.modiapersonoversikt.legacy.api.domain.norg.AnsattEnhet
 import no.nav.modiapersonoversikt.legacy.api.domain.oppgave.generated.apis.OppgaveApi
 import no.nav.modiapersonoversikt.legacy.api.domain.oppgave.generated.models.GetOppgaverResponseJsonDTO
 import no.nav.modiapersonoversikt.legacy.api.domain.oppgave.generated.models.OppgaveJsonDTO
@@ -21,8 +21,9 @@ import no.nav.modiapersonoversikt.legacy.api.domain.oppgave.toOppgaveJsonDTO
 import no.nav.modiapersonoversikt.legacy.api.domain.oppgave.toPutOppgaveRequestJsonDTO
 import no.nav.modiapersonoversikt.legacy.api.service.*
 import no.nav.modiapersonoversikt.legacy.api.service.OppgaveBehandlingService.AlleredeTildeltAnnenSaksbehandler
-import no.nav.modiapersonoversikt.legacy.api.service.arbeidsfordeling.ArbeidsfordelingV1Service
 import no.nav.modiapersonoversikt.legacy.api.service.norg.AnsattService
+import no.nav.modiapersonoversikt.legacy.api.service.pdl.PdlOppslagService
+import no.nav.modiapersonoversikt.service.arbeidsfordeling.ArbeidsfordelingService
 import no.nav.modiapersonoversikt.service.kodeverksmapper.KodeverksmapperService
 import no.nav.modiapersonoversikt.service.kodeverksmapper.domain.Behandling
 import no.nav.modiapersonoversikt.service.oppgavebehandling.Utils.OPPGAVE_MAX_LIMIT
@@ -33,7 +34,6 @@ import no.nav.modiapersonoversikt.service.oppgavebehandling.Utils.leggTilBeskriv
 import no.nav.modiapersonoversikt.service.oppgavebehandling.Utils.paginering
 import no.nav.modiapersonoversikt.utils.SafeListAggregate
 import org.slf4j.LoggerFactory
-import org.slf4j.MDC
 import org.springframework.http.HttpStatus
 import org.springframework.web.server.ResponseStatusException
 import java.time.Clock
@@ -44,13 +44,13 @@ import java.util.Optional.ofNullable
 private val tjenestekallLogg = LoggerFactory.getLogger("SecureLog")
 class RestOppgaveBehandlingServiceImpl(
     private val kodeverksmapperService: KodeverksmapperService,
-    private val fodselnummerAktorService: FodselnummerAktorService,
+    private val pdlOppslagService: PdlOppslagService,
     private val ansattService: AnsattService,
-    private val arbeidsfordelingService: ArbeidsfordelingV1Service,
+    private val arbeidsfordelingService: ArbeidsfordelingService,
     private val tilgangskontroll: Tilgangskontroll,
     private val stsService: SystemUserTokenProvider,
     private val apiClient: OppgaveApi = OppgaveApiFactory.createClient {
-        SubjectHandler.getSsoToken(SsoToken.Type.OIDC).orElseThrow { IllegalStateException("Fant ikke OIDC-token") }
+        AuthContextUtils.requireToken()
     },
     private val systemApiClient: OppgaveApi = OppgaveApiFactory.createClient {
         stsService.systemUserToken
@@ -62,14 +62,14 @@ class RestOppgaveBehandlingServiceImpl(
         @JvmStatic
         fun create(
             kodeverksmapperService: KodeverksmapperService,
-            fodselnummerAktorService: FodselnummerAktorService,
+            pdlOppslagService: PdlOppslagService,
             ansattService: AnsattService,
-            arbeidsfordelingService: ArbeidsfordelingV1Service,
+            arbeidsfordelingService: ArbeidsfordelingService,
             tilgangskontroll: Tilgangskontroll,
             stsService: SystemUserTokenProvider
         ): OppgaveBehandlingService = RestOppgaveBehandlingServiceImpl(
             kodeverksmapperService = kodeverksmapperService,
-            fodselnummerAktorService = fodselnummerAktorService,
+            pdlOppslagService = pdlOppslagService,
             ansattService = ansattService,
             arbeidsfordelingService = arbeidsfordelingService,
             tilgangskontroll = tilgangskontroll,
@@ -84,10 +84,10 @@ class RestOppgaveBehandlingServiceImpl(
 
     override fun opprettOppgave(request: OpprettOppgaveRequest?): OpprettOppgaveResponse {
         requireNotNull(request)
-        val ident: String = SubjectHandler.getIdent().orElseThrow { IllegalStateException("Fant ikke ident") }
+        val ident: String = AuthContextUtils.requireIdent()
         val behandling = kodeverksmapperService.mapUnderkategori(request.underkategoriKode)
         val oppgaveType = kodeverksmapperService.mapOppgavetype(request.oppgavetype)
-        val aktorId = fodselnummerAktorService.hentAktorIdForFnr(request.fnr)
+        val aktorId = pdlOppslagService.hentAktorId(request.fnr)
             ?: throw IllegalArgumentException("Fant ikke aktorId for ${request.fnr}")
 
         val response = apiClient.opprettOppgave(
@@ -123,10 +123,10 @@ class RestOppgaveBehandlingServiceImpl(
 
     override fun opprettSkjermetOppgave(request: OpprettSkjermetOppgaveRequest?): OpprettOppgaveResponse {
         requireNotNull(request)
-        val ident: String = SubjectHandler.getIdent().orElseThrow { IllegalStateException("Fant ikke ident") }
+        val ident: String = AuthContextUtils.requireIdent()
         val behandling = kodeverksmapperService.mapUnderkategori(request.underkategoriKode)
         val oppgaveType = kodeverksmapperService.mapOppgavetype(request.oppgavetype)
-        val aktorId = fodselnummerAktorService.hentAktorIdForFnr(request.fnr)
+        val aktorId = pdlOppslagService.hentAktorId(request.fnr)
             ?: throw IllegalArgumentException("Fant ikke aktorId for ${request.fnr}")
 
         val response = systemApiClient.opprettOppgave(
@@ -170,7 +170,7 @@ class RestOppgaveBehandlingServiceImpl(
         tvungenTilordning: Boolean
     ) {
         requireNotNull(oppgaveId)
-        val ident: String = SubjectHandler.getIdent().orElseThrow { IllegalStateException("Fant ikke ident") }
+        val ident: String = AuthContextUtils.requireIdent()
 
         val oppgave = hentOppgaveJsonDTO(oppgaveId)
         if (oppgave.tilordnetRessurs == ident) {
@@ -192,7 +192,7 @@ class RestOppgaveBehandlingServiceImpl(
     }
 
     override fun finnTildelteOppgaverIGsak(): MutableList<Oppgave> {
-        val ident: String = SubjectHandler.getIdent().orElseThrow { IllegalStateException("Fant ikke ident") }
+        val ident: String = AuthContextUtils.requireIdent()
         val correlationId = correlationId()
 
         return hentOppgaverPaginertOgTilgangskontroll { offset ->
@@ -208,8 +208,8 @@ class RestOppgaveBehandlingServiceImpl(
     }
 
     override fun finnTildelteOppgaverIGsak(fnr: String): MutableList<Oppgave> {
-        val ident: String = SubjectHandler.getIdent().orElseThrow { IllegalStateException("Fant ikke ident") }
-        val aktorId = fodselnummerAktorService.hentAktorIdForFnr(fnr)
+        val ident: String = AuthContextUtils.requireIdent()
+        val aktorId = pdlOppslagService.hentAktorId(fnr)
             ?: throw IllegalArgumentException("Fant ikke aktorId for $fnr")
         val correlationId = correlationId()
 
@@ -227,7 +227,7 @@ class RestOppgaveBehandlingServiceImpl(
     }
 
     override fun finnTildelteKNAOppgaverIGsak(): MutableList<Oppgave> {
-        val ident: String = SubjectHandler.getIdent().orElseThrow { IllegalStateException("Fant ikke ident") }
+        val ident: String = AuthContextUtils.requireIdent()
         val correlationId = correlationId()
         val oppgaveType = kodeverksmapperService.mapOppgavetype(SPORSMAL_OG_SVAR)
 
@@ -289,7 +289,7 @@ class RestOppgaveBehandlingServiceImpl(
         beskrivelse: String?
     ) {
         requireNotNull(oppgaveId)
-        val ident: String = SubjectHandler.getIdent().orElseThrow { IllegalStateException("Fant ikke ident") }
+        val ident: String = AuthContextUtils.requireIdent()
         val oppgave = hentOppgaveJsonDTO(oppgaveId)
 
         apiClient.endreOppgave(
@@ -326,7 +326,7 @@ class RestOppgaveBehandlingServiceImpl(
     override fun leggTilbakeOppgaveIGsak(request: LeggTilbakeOppgaveIGsakRequest?) {
         requireNotNull(request)
         requireNotNull(request.oppgaveId)
-        val ident: String = SubjectHandler.getIdent().orElseThrow { IllegalStateException("Fant ikke ident") }
+        val ident: String = AuthContextUtils.requireIdent()
         val oppgave = hentOppgaveJsonDTO(request.oppgaveId)
 
         if (oppgave.tilordnetRessurs != ident) {
@@ -397,6 +397,43 @@ class RestOppgaveBehandlingServiceImpl(
         return oppgave.status == OppgaveJsonDTO.Status.FERDIGSTILT
     }
 
+    override fun finnOgTilordneSTOOppgave(
+        fnr: String,
+        henvendelseId: String,
+        temagruppe: Temagruppe?,
+        enhet: String?,
+        tvungenTilordning: Boolean
+    ): Oppgave? {
+        val aktorId = pdlOppslagService.hentAktorId(fnr)
+            ?: throw IllegalArgumentException("Fant ikke aktorId for $fnr")
+        val oppgaveType = kodeverksmapperService.mapOppgavetype(SPORSMAL_OG_SVAR)
+        val correlationId = correlationId()
+
+        val oppgaver = hentOppgaverPaginertOgTilgangskontroll { offset ->
+            apiClient.finnOppgaver(
+                aktoerId = listOf(aktorId),
+                xCorrelationID = correlationId,
+                tema = listOf(Utils.KONTAKT_NAV),
+                oppgavetype = listOf(oppgaveType),
+                aktivDatoTom = LocalDate.now(clock).toString(),
+                statuskategori = "AAPEN",
+                limit = OPPGAVE_MAX_LIMIT,
+                offset = offset
+            )
+        }
+        val henvendelseOppgave = oppgaver.firstOrNull { it.henvendelseId == henvendelseId }
+        if (henvendelseOppgave != null) {
+            tilordneOppgaveIGsak(
+                henvendelseOppgave.oppgaveId,
+                temagruppe,
+                enhet,
+                tvungenTilordning
+            )
+        }
+
+        return henvendelseOppgave
+    }
+
     private fun hentOppgaveJsonDTO(oppgaveId: String): OppgaveJsonDTO {
         return apiClient.hentOppgave(
             xCorrelationID = correlationId(),
@@ -436,11 +473,11 @@ class RestOppgaveBehandlingServiceImpl(
 
     private fun finnAnsvarligEnhet(oppgave: OppgaveJsonDTO, temagruppe: Temagruppe): String {
         val aktorId = requireNotNull(oppgave.aktoerId)
-        val enheter: List<AnsattEnhet> = arbeidsfordelingService.finnBehandlendeEnhetListe(
-            fodselnummerAktorService.hentFnrForAktorId(aktorId),
-            oppgave.tema,
-            oppgave.oppgavetype,
-            underkategoriOverstyringForArbeidsfordeling(temagruppe)
+        val enheter: List<NorgDomain.Enhet> = arbeidsfordelingService.hentBehandlendeEnheter(
+            brukerIdent = Fnr.of(pdlOppslagService.hentFnr(aktorId)),
+            fagomrade = oppgave.tema,
+            oppgavetype = oppgave.oppgavetype,
+            underkategori = underkategoriOverstyringForArbeidsfordeling(temagruppe)
         )
         return enheter.firstOrNull()?.enhetId ?: oppgave.tildeltEnhetsnr
     }
@@ -455,7 +492,7 @@ class RestOppgaveBehandlingServiceImpl(
             "OppgaveId må være satt for konvertering til Oppgave"
         }
         val aktorId = requireNotNull(oppgave.aktoerId)
-        val fnr = requireNotNull(fodselnummerAktorService.hentFnrForAktorId(aktorId)) {
+        val fnr = requireNotNull(pdlOppslagService.hentFnr(aktorId)) {
             "Fant ikke fnr for aktorId $aktorId"
         }
         val henvendelseId = oppgave.metadata?.get(MetadataKey.EKSTERN_HENVENDELSE_ID.name)
@@ -503,7 +540,7 @@ class RestOppgaveBehandlingServiceImpl(
         }
     }
 
-    private fun correlationId() = MDC.get(MDCConstants.MDC_CALL_ID) ?: UUID.randomUUID().toString()
+    private fun correlationId() = getCallId()
     private fun stripTemakode(prioritet: String) = prioritet.substringBefore("_")
     private fun String?.coerceBlankToNull() = if (this == null || this.isBlank()) null else this
 }

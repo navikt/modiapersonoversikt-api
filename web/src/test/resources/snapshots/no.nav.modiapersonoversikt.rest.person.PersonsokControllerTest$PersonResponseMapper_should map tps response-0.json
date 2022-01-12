@@ -1,0 +1,38 @@
+{
+  "bostedsadresse" : "Supervegen 10 Z Svingen",
+  "brukerinfo" : {
+    "ansvarligEnhet" : "1234",
+    "gjeldendePostadresseType" : {
+      "beskrivelse" : "NA",
+      "kodeRef" : "postadresseRef"
+    },
+    "midlertidigPostadresse" : "adresselinje1 adresselinje2 adresselinje3 adresselinje4 NOR"
+  },
+  "diskresjonskode" : {
+    "beskrivelse" : "SPSF",
+    "kodeRef" : "SPSF"
+  },
+  "ident" : {
+    "ident" : "12345679810",
+    "type" : {
+      "beskrivelse" : "FNR",
+      "kodeRef" : "FNR"
+    }
+  },
+  "kjonn" : {
+    "beskrivelse" : "M",
+    "kodeRef" : "M"
+  },
+  "navn" : {
+    "etternavn" : "etternavn",
+    "fornavn" : "fornavn",
+    "mellomnavn" : "mellomnavn",
+    "sammensatt" : "fornavn mellomnavn etternavn"
+  },
+  "postadresse" : "adresselinje1 adresselinje2 adresselinje3 adresselinje4 NOR",
+  "status" : {
+    "beskrivelse" : "DOD",
+    "kodeRef" : "DOD"
+  },
+  "utenlandskID" : null
+}
