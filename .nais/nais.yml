@@ -269,7 +269,7 @@ spec:
     - name: BISYS_BASEURL
       value: "https://bidrag-sak-nais.adeo.no/bidrag-sak"
     - name: NORG2_BASEURL
-      value: "https://app-q0.adeo.no/norg2"
+      value: "https://app.adeo.no/norg2"
     - name: TILLATMOCK
       value: "false"
     - name: VISUTBETALINGER
