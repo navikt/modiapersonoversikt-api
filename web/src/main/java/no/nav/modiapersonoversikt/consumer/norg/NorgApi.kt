@@ -17,6 +17,7 @@ import no.nav.modiapersonoversikt.legacy.api.domain.norg.generated.models.*
 import no.nav.modiapersonoversikt.legacy.api.utils.RestConstants
 import no.nav.modiapersonoversikt.service.kodeverksmapper.domain.Behandling
 import no.nav.modiapersonoversikt.utils.Retry
+import no.nav.modiapersonoversikt.utils.isNumeric
 import okhttp3.OkHttpClient
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -119,10 +120,17 @@ class NorgApiImpl(
     override fun finnNavKontor(geografiskTilknytning: String, diskresjonskode: NorgDomain.DiskresjonsKode?): Enhet? {
         val key = "finnNavKontor[$geografiskTilknytning,$diskresjonskode]"
         return navkontorCache.get(key) {
-            enhetApi.getEnhetByGeografiskOmraadeUsingGET(
-                geografiskOmraade = geografiskTilknytning,
-                disk = diskresjonskode?.name
-            ).let(::toInternalDomain)
+            if (geografiskTilknytning.isNumeric()) {
+                enhetApi.getEnhetByGeografiskOmraadeUsingGET(
+                    geografiskOmraade = geografiskTilknytning,
+                    disk = diskresjonskode?.name
+                ).let(::toInternalDomain)
+            } else {
+                /**
+                 * Ikke numerisk GT tilsier at det er landkode pga utenlandsk GT og da har vi ingen enhet
+                 */
+                null
+            }
         }
     }
 
