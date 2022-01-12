@@ -11,9 +11,9 @@ import no.nav.modiapersonoversikt.legacy.api.domain.sfhenvendelse.generated.apis
 import no.nav.modiapersonoversikt.legacy.api.domain.sfhenvendelse.generated.infrastructure.RequestConfig
 import no.nav.modiapersonoversikt.legacy.api.domain.sfhenvendelse.generated.infrastructure.RequestMethod
 import no.nav.modiapersonoversikt.legacy.api.domain.sfhenvendelse.generated.models.*
-import no.nav.modiapersonoversikt.legacy.api.service.arbeidsfordeling.ArbeidsfordelingV1Service
 import no.nav.modiapersonoversikt.legacy.api.service.norg.AnsattService
 import no.nav.modiapersonoversikt.legacy.api.service.pdl.PdlOppslagService
+import no.nav.modiapersonoversikt.service.arbeidsfordeling.ArbeidsfordelingService
 import okhttp3.OkHttpClient
 import org.slf4j.LoggerFactory
 import java.time.OffsetDateTime
@@ -58,7 +58,7 @@ class SfHenvendelseServiceImpl(
     private val henvendelseJournalApi: JournalApi = SfHenvendelseApiFactory.createHenvendelseJournalApi(),
     private val henvendelseOpprettApi: NyHenvendelseApi = SfHenvendelseApiFactory.createHenvendelseOpprettApi(),
     private val pdlOppslagService: PdlOppslagService,
-    private val arbeidsfordeling: ArbeidsfordelingV1Service,
+    private val arbeidsfordeling: ArbeidsfordelingService,
     private val ansattService: AnsattService,
     private val stsService: SystemUserTokenProvider
 ) : SfHenvendelseService {
@@ -71,7 +71,7 @@ class SfHenvendelseServiceImpl(
 
     constructor(
         pdlOppslagService: PdlOppslagService,
-        arbeidsfordeling: ArbeidsfordelingV1Service,
+        arbeidsfordeling: ArbeidsfordelingService,
         ansattService: AnsattService,
         stsService: SystemUserTokenProvider
     ) : this(
@@ -86,8 +86,8 @@ class SfHenvendelseServiceImpl(
     )
 
     override fun hentHenvendelser(bruker: EksternBruker, enhet: String): List<HenvendelseDTO> {
-        val enhetOgGTListe = arbeidsfordeling.hentGTnummerForEnhet(enhet)
-            .map { it.geografiskOmraade }
+        val enhetOgGTListe = arbeidsfordeling.hentGeografiskTilknyttning(enhet)
+            .mapNotNull { it.geografiskOmraade }
             .plus(enhet)
         val tematilganger = ansattService.hentAnsattFagomrader(
             AuthContextUtils.requireIdent(),

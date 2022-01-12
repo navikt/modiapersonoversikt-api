@@ -12,7 +12,7 @@ import java.lang.reflect.Proxy;
  * brukers ident, slik at ikke tilgang overstyres av
  * cachede entries.
  */
-public class AutentisertBrukerKeyGenerator extends SimpleKeyGenerator {
+public class AutentisertBrukerKeyGenerator extends MethodAwareKeyGenerator {
 
     public AutentisertBrukerKeyGenerator() {
         super();
@@ -20,20 +20,11 @@ public class AutentisertBrukerKeyGenerator extends SimpleKeyGenerator {
 
     @Override
     public Object generate(Object target, Method method, Object... params) {
-        String cacheKey = Integer.toHexString(
-                super.generate(target, method, params).hashCode()
-        );
-        return "user: " + getUser() + " cachekey: " + getTargetClassName(target) + "." + method.getName() + "[" + cacheKey + "]";
+        String cacheKey = ((String) super.generate(target, method, params));
+        return "user: " + getUser() + " " + cacheKey;
     }
 
     private String getUser() {
         return AuthContextUtils.getIdent().orElse("uauthentisert");
-    }
-
-    private String getTargetClassName(Object target) {
-        if (Proxy.isProxyClass(target.getClass())) {
-            return AopProxyUtils.proxiedUserInterfaces(target)[0].getName();
-        }
-        return target.getClass().getName();
     }
 }

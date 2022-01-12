@@ -22,7 +22,7 @@ public class LdapServiceCacheTest extends CacheTest {
         ldapService.hentSaksbehandler("Z999999");
 
         assertThat(getNativeCache().estimatedSize(), is(1L));
-        assertThat(getKey(), is(generatedByDefaultKeyGenerator()));
+        assertThat(getKey(), is(generatedByMethodAwareKeyGenerator()));
     }
 
     @Test
