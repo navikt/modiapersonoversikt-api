@@ -47,8 +47,7 @@ public class CacheConfig {
                 cache("varslingCache", 180, 10_000),
                 cache("kodeverksmapperCache", 86400),
                 cache("innsynJournalCache", 1800, 10_000),
-                cache("pesysCache", 600),
-                redisCache("test", new TypeReference<String>() {}, 3600, 1000, true)
+                cache("pesysCache", 600)
         ));
 
         return cacheManager;
