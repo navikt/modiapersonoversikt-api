@@ -87,7 +87,7 @@ open class PdlOppslagServiceImpl constructor(
     override fun hentAktorId(fnr: String): String? = hentAktivIdent(fnr, IdentGruppe.AKTORID)
     override fun hentFnr(aktorid: String): String? = hentAktivIdent(aktorid, IdentGruppe.FOLKEREGISTERIDENT)
 
-    override fun sokPerson(kriterier: List<SokKriterier>): List<SokPerson.PersonSearchHit> = runBlocking {
+    override fun sokPerson(kriterier: List<PdlKriterie>): List<SokPerson.PersonSearchHit> = runBlocking {
         val paging = SokPerson.Paging(
             pageNumber = 1,
             resultsPerPage = 30
