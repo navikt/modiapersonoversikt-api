@@ -8,13 +8,13 @@ import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.*;
 import no.nav.modiapersonoversikt.infrastructure.AuthContextUtils;
 import no.nav.modiapersonoversikt.infrastructure.content.ContentRetriever;
 import no.nav.modiapersonoversikt.legacy.api.domain.henvendelse.Melding;
-import no.nav.modiapersonoversikt.legacy.api.service.arbeidsfordeling.ArbeidsfordelingV1Service;
 import no.nav.modiapersonoversikt.legacy.api.service.ldap.LDAPService;
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll;
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.TilgangskontrollContext;
 import no.nav.modiapersonoversikt.legacy.sporsmalogsvar.consumer.henvendelse.HenvendelseBehandlingServiceImpl;
 import no.nav.modiapersonoversikt.legacy.sporsmalogsvar.legacy.TraadVM;
 import no.nav.modiapersonoversikt.rest.persondata.*;
+import no.nav.modiapersonoversikt.service.arbeidsfordeling.ArbeidsfordelingService;
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.behandlehenvendelse.BehandleHenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.henvendelse.HenvendelsePortType;
@@ -61,7 +61,7 @@ class HenvendelseBehandlingServiceImplTest {
     private final EnhetligKodeverk.Service kodeverk = mock(EnhetligKodeverk.Service.class);
     private final ContentRetriever propertyResolver = mock(ContentRetriever.class);
     private final LDAPService ldapService = mock(LDAPService.class);
-    private final ArbeidsfordelingV1Service arbeidsfordelingService = mock(ArbeidsfordelingV1Service.class);
+    private final ArbeidsfordelingService arbeidsfordelingService = mock(ArbeidsfordelingService.class);
     private final TilgangskontrollContext tilgangskontrollContext = mock(TilgangskontrollContext.class);
 
     private final HenvendelseBehandlingServiceImpl henvendelseBehandlingService = new HenvendelseBehandlingServiceImpl(
@@ -82,7 +82,7 @@ class HenvendelseBehandlingServiceImplTest {
     void setUp() {
         initMocks(this);
         when(propertyResolver.hentTekst(anyString())).thenAnswer((Answer<String>) invocation -> ((String) invocation.getArguments()[0]));
-        when(arbeidsfordelingService.hentGTnummerForEnhet(anyString())).thenReturn(Collections.emptyList());
+        when(arbeidsfordelingService.hentGeografiskTilknyttning(anyString())).thenReturn(Collections.emptyList());
 
         XMLMeldingFraBruker xmlMeldingFraBruker = new XMLMeldingFraBruker()
                 .withFritekst("fritekst")

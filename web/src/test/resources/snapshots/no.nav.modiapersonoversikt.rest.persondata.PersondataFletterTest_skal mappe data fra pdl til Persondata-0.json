@@ -217,8 +217,11 @@
       "navn" : "NAV Oslo",
       "publikumsmottak" : [ "java.util.ArrayList", [ {
         "apningstider" : [ "java.util.ArrayList", [ {
-          "apningstid" : "10.00 - 15.00",
+          "apningstid" : "Stengt",
           "ukedag" : "MANDAG"
+        }, {
+          "apningstid" : "10:00 - 15:00",
+          "ukedag" : "TIRSDAG"
         } ] ],
         "besoksadresse" : {
           "gyldighetsPeriode" : null,

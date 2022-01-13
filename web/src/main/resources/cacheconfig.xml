@@ -12,8 +12,6 @@
           class="no.nav.modiapersonoversikt.infrastructure.cache.ASBOGOSYSNAVKeyGenerator"/>
     <bean id="asbogosysansattlistekeygenerator"
           class="no.nav.modiapersonoversikt.infrastructure.cache.ASBOGOSYSNAVAnsattListeKeyGenerator"/>
-    <bean id="organisasjonEnhetKontantinformasjonGenerator"
-          class="no.nav.modiapersonoversikt.infrastructure.cache.OrganisasjonenhetKontaktinformasjonKeyGenerator"/>
     <bean id="defaultkeygenerator"
           class="org.springframework.cache.interceptor.SimpleKeyGenerator"/>
 
@@ -40,12 +38,6 @@
             <cache:cacheable method="finnArenaNAVAnsattListe"/>
             <cache:cacheable method="hentNAVAnsattFagomradeListe"/>
             <cache:cacheable method="hentNAVAnsattEnhetListe"/>
-        </cache:caching>
-    </cache:advice>
-    <cache:advice id="organisasjonEnhetV2Advice" key-generator="defaultkeygenerator">
-        <cache:caching cache="organisasjonEnhetV2">
-            <cache:cacheable method="hent*"/>
-            <cache:cacheable method="finn*"/>
         </cache:caching>
     </cache:advice>
     <cache:advice id="pdlAdvice" key-generator="userkeygenerator">
@@ -87,11 +79,6 @@
             <cache:cacheable method="hentUnderkategori" key="'hentUnderkategori'" />
         </cache:caching>
     </cache:advice>
-    <cache:advice id="organisasjonEnhetKontantinformasjonAdvice" key-generator="organisasjonEnhetKontantinformasjonGenerator">
-        <cache:caching cache="organisasjonEnhetKontaktinformasjonCache">
-            <cache:cacheable method="hent*" />
-        </cache:caching>
-    </cache:advice>
     <cache:advice id="oppfolgingsinfoAdvice" key-generator="userkeygenerator">
         <cache:caching cache="oppfolgingsinfoCache">
             <cache:cacheable method="hent*" />
@@ -117,14 +104,12 @@
         <aop:advisor advice-ref="shortlivedAdvice" pointcut="bean(henvendelsePortType)"/>
         <aop:advisor advice-ref="asbogosysAnsattAdvice" pointcut="bean(gosysNavAnsatt)"/>
         <aop:advisor advice-ref="asbogosysEnhetAdvice" pointcut="bean(gosysNavOrgEnhet)"/>
-        <aop:advisor advice-ref="organisasjonEnhetV2Advice" pointcut="bean(organisasjonEnhetV2)"/>
         <aop:advisor advice-ref="ldapServiceAdvice" pointcut="bean(ldapService)"/>
         <aop:advisor advice-ref="utbetalingService" pointcut="bean(utbetalingV1)"/>
         <aop:advisor advice-ref="varslingAdvice" pointcut="bean(varslerPortType)"/>
         <aop:advisor advice-ref="pesysServiceAdvice" pointcut="bean(pesysService)"/>
         <aop:advisor advice-ref="organisasjonAdvice" pointcut="bean(organisasjonV4PortType)"/>
         <aop:advisor advice-ref="kodeverksmapperAdvice" pointcut="bean(kodeverksmapper)"/>
-        <aop:advisor advice-ref="organisasjonEnhetKontantinformasjonAdvice" pointcut="bean(organisasjonEnhetKontaktinformasjonV1)"/>
         <aop:advisor advice-ref="oppfolgingsinfoAdvice" pointcut="bean(oppfolgingsApi)"/>
         <aop:advisor advice-ref="oppfolgingsAdvice" pointcut="bean(oppfolgingPortType)"/>
         <aop:advisor advice-ref="innsynJournalAdvice" pointcut="bean(innsynJournalV2)"/>

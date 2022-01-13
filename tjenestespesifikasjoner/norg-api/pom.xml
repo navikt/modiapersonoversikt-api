@@ -9,7 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>oppgave-api</artifactId>
+    <artifactId>norg-api</artifactId>
 
     <properties>
         <maven.compiler.source>11</maven.compiler.source>
@@ -33,6 +33,12 @@
             <groupId>org.jetbrains.kotlin</groupId>
             <artifactId>kotlin-stdlib-jdk8</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.openapitools</groupId>
+            <artifactId>openapi-generator-maven-plugin</artifactId>
+            <version>5.3.1</version>
+        </dependency>
+
     </dependencies>
 
     <build>
@@ -47,13 +53,15 @@
                             <goal>generate</goal>
                         </goals>
                         <configuration>
-                            <inputSpec>${project.basedir}/src/main/resources/oppgave/openapi.yaml</inputSpec>
+                            <inputSpec>${project.basedir}/src/main/resources/norg/openapi.json</inputSpec>
                             <generatorName>kotlin</generatorName>
                             <library>jvm-okhttp3</library>
-                            <packageName>no.nav.modiapersonoversikt.legacy.api.domain.oppgave.generated</packageName>
+                            <packageName>no.nav.modiapersonoversikt.legacy.api.domain.norg.generated</packageName>
                             <modelNameSuffix>DTO</modelNameSuffix>
                             <templateDirectory>${project.basedir}/../openapi-templates</templateDirectory>
+                            <apisToGenerate>Arbeidsfordeling,Enhet,Enhetskontaktinfo</apisToGenerate>
                             <configOptions>
+                                <useTags>true</useTags>
                                 <enumPropertyNaming>original</enumPropertyNaming>
                                 <serializationLibrary>jackson</serializationLibrary>
                             </configOptions>

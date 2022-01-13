@@ -2,14 +2,13 @@ package no.nav.modiapersonoversikt.rest.enhet
 
 import com.ninjasquad.springmockk.MockkBean
 import io.mockk.every
+import no.nav.modiapersonoversikt.consumer.norg.NorgApi
+import no.nav.modiapersonoversikt.consumer.norg.NorgDomain
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.TilgangskontrollMock
-import no.nav.modiapersonoversikt.legacy.api.domain.norg.AnsattEnhet
-import no.nav.modiapersonoversikt.legacy.api.service.arbeidsfordeling.ArbeidsfordelingV1Service
+import no.nav.modiapersonoversikt.legacy.api.domain.norg.Ansatt
 import no.nav.modiapersonoversikt.legacy.api.service.norg.AnsattService
-import no.nav.modiapersonoversikt.legacy.api.service.organisasjonsEnhetV2.OrganisasjonEnhetV2Service
-import no.nav.modiapersonoversikt.service.organisasjonenhet.kontaktinformasjon.domain.*
-import no.nav.modiapersonoversikt.service.organisasjonenhet.kontaktinformasjon.service.OrganisasjonEnhetKontaktinformasjonService
+import no.nav.modiapersonoversikt.service.arbeidsfordeling.ArbeidsfordelingService
 import no.nav.modiapersonoversikt.testutils.SnapshotExtension
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -34,13 +33,10 @@ internal class EnhetControllerSnapshotTest(val snapshot: SnapshotExtension) {
     }
 
     @MockkBean
-    lateinit var organisasjonEnhetKontaktinformasjonService: OrganisasjonEnhetKontaktinformasjonService
+    lateinit var norgapi: NorgApi
 
     @MockkBean
-    lateinit var organisasjonEnhetV2Service: OrganisasjonEnhetV2Service
-
-    @MockkBean
-    lateinit var arbeidsfordeling: ArbeidsfordelingV1Service
+    lateinit var arbeidsfordeling: ArbeidsfordelingService
 
     @MockkBean
     lateinit var ansattService: AnsattService
@@ -49,9 +45,12 @@ internal class EnhetControllerSnapshotTest(val snapshot: SnapshotExtension) {
     lateinit var mockMvc: MockMvc
 
     @Test
-    internal fun `hent enhetsdata gitt enhetid`() {
-        gittKontaktinformasjon()
-        getJson("/rest/enheter/1234")
+    internal fun `hent ansatte gitt enhetid`() {
+        every { ansattService.ansatteForEnhet(any()) } returns listOf(
+            Ansatt("fornavn", "etternavn", "Z999999")
+        )
+
+        getJson("/rest/enheter/1234/ansatte")
             .andExpect {
                 assertThat(it.response.status).isEqualTo(200)
                 snapshot.assertMatches(it.response.contentAsString)
@@ -59,40 +58,20 @@ internal class EnhetControllerSnapshotTest(val snapshot: SnapshotExtension) {
     }
 
     @Test
-    internal fun `finn enhet gitt gt og diskresjonskode`() {
-        gittKontaktinformasjon()
-        every { organisasjonEnhetV2Service.finnNAVKontor(any(), any()) } returns Optional.of(
-            AnsattEnhet("1234", "NAV Test")
+    internal fun `hent alle enheter`() {
+        every { norgapi.hentEnheter(any(), any(), any()) } returns listOf(
+            NorgDomain.Enhet(
+                "1234",
+                "NAV Test",
+                NorgDomain.EnhetStatus.AKTIV,
+                oppgavebehandler = false
+            )
         )
-
-        getJson("/rest/enheter?gt=010101")
+        getJson("/rest/enheter/oppgavebehandlere/alle")
             .andExpect {
                 assertThat(it.response.status).isEqualTo(200)
                 snapshot.assertMatches(it.response.contentAsString)
             }
-    }
-
-    private fun gittKontaktinformasjon() {
-        every { organisasjonEnhetKontaktinformasjonService.hentKontaktinformasjon(any()) } returns OrganisasjonEnhetKontaktinformasjon()
-            .withEnhetId("1234")
-            .withEnhetNavn("NAV Test")
-            .withKontaktinformasjon(
-                Kontaktinformasjon().withPublikumsmottakliste(
-                    listOf(
-                        Publikumsmottak()
-                            .withApningstider(
-                                Apningstider().withApningstid(
-                                    listOf(
-                                        Apningstid()
-                                            .withApentFra(Klokkeslett(8, 0, 0))
-                                            .withApentTil(Klokkeslett(8, 0, 0))
-                                            .withUkedag(Ukedag.FREDAG)
-                                    )
-                                )
-                            )
-                    )
-                )
-            )
     }
 
     private fun getJson(url: String): ResultActions {

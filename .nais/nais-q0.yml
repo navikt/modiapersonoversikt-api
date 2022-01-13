@@ -196,12 +196,6 @@ spec:
       value: "LTPA"
     - name: VIRKSOMHET_ARBEIDOGAKTIVITET_V1_WSDLURL
       value: "http://maven.adeo.no/nexus/service/local/artifact/maven/redirect?r=m2internal&g=no.nav.esb.nav&a=nav-tjeneste-arbeidOgAktivitet&v=1.0.6&e=zip&c=wsdlif"
-    - name: VIRKSOMHET_ARBEIDSFORDELING_V1_ENDPOINTURL
-      value: "https://app-q0.adeo.no/norg2/ws/Arbeidsfordeling/v1"
-    - name: VIRKSOMHET_ARBEIDSFORDELING_V1_SECURITYTOKEN
-      value: "SAML"
-    - name: VIRKSOMHET_ARBEIDSFORDELING_V1_WSDLURL
-      value: "http://maven.adeo.no/nexus/content/groups/public/no/nav/tjenester/nav-arbeidsfordeling-v1-tjenestespesifikasjon/1.1.0/nav-arbeidsfordeling-v1-tjenestespesifikasjon-1.1.0.zip"
     - name: VIRKSOMHET_DIGITALKONTAKINFORMASJON_V1_ENDPOINTURL
       value: "https://dkif.nais.preprod.local/ws/DigitalKontaktinformasjon/v1"
     - name: DKIF_REST_URL
@@ -236,18 +230,6 @@ spec:
       value: "http://maven.adeo.no/nexus/content/repositories/public/no/nav/tjenester/fim/nav-fim-oppfoelging-v1-tjenestespesifikasjon/1.2.0/nav-fim-oppfoelging-v1-tjenestespesifikasjon-1.2.0.zip"
     - name: EREG_ENDPOINTURL
       value: "https://modapp-q0.adeo.no/ereg/"
-    - name: VIRKSOMHET_ORGANISASJONENHET_V2_ENDPOINTURL
-      value: "https://app-q0.adeo.no/norg2/ws/OrganisasjonEnhet/v2"
-    - name: VIRKSOMHET_ORGANISASJONENHET_V2_SECURITYTOKEN
-      value: "SAML"
-    - name: VIRKSOMHET_ORGANISASJONENHET_V2_WSDLURL
-      value: "http://maven.adeo.no/nexus/content/groups/public/no/nav/tjenester/nav-organisasjonEnhet-v2-tjenestespesifikasjon/2.1.0/nav-organisasjonEnhet-v2-tjenestespesifikasjon-2.1.0.zip"
-    - name: VIRKSOMHET_ORGANISASJONENHETKONTAKTINFORMASJON_V1_ENDPOINTURL
-      value: "https://app-q0.adeo.no/norg2/ws/OrganisasjonEnhetKontaktinformasjon/v1"
-    - name: VIRKSOMHET_ORGANISASJONENHETKONTAKTINFORMASJON_V1_SECURITYTOKEN
-      value: "SAML"
-    - name: VIRKSOMHET_ORGANISASJONENHETKONTAKTINFORMASJON_V1_WSDLURL
-      value: "http://maven.adeo.no/nexus/content/groups/public/no/nav/tjenester/nav-organisasjonEnhetKontaktinformasjon-v1-tjenestespesifikasjon/1.1.0/nav-organisasjonEnhetKontaktinformasjon-v1-tjenestespesifikasjon-1.1.0.zip"
     - name: VIRKSOMHET_PERSON_V3_ENDPOINTURL
       value: "https://app-q0.adeo.no/tpsws-aura/ws/Person/v3"
     - name: VIRKSOMHET_PERSON_V3_SECURITYTOKEN
@@ -292,6 +274,8 @@ spec:
       value: "https://oppgave-q0.nais.preprod.local/"
     - name: BISYS_BASEURL
       value: "https://bidrag-sak.dev.adeo.no/bidrag-sak"
+    - name: NORG2_BASEURL
+      value: "https://app-q0.adeo.no/norg2"
     - name: TILLATMOCK
       value: "true"
     - name: VISUTBETALINGER

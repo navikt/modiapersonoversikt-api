@@ -2,14 +2,13 @@ package no.nav.modiapersonoversikt.legacy.sporsmalogsvar.consumer.henvendelse;
 
 import kotlin.Pair;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelse;
+import no.nav.modiapersonoversikt.consumer.norg.NorgDomain;
 import no.nav.modiapersonoversikt.infrastructure.AuthContextUtils;
 import no.nav.modiapersonoversikt.infrastructure.content.ContentRetriever;
 import no.nav.modiapersonoversikt.legacy.api.domain.Temagruppe;
 import no.nav.modiapersonoversikt.legacy.api.domain.henvendelse.Fritekst;
 import no.nav.modiapersonoversikt.legacy.api.domain.henvendelse.HenvendelseUtils;
 import no.nav.modiapersonoversikt.legacy.api.domain.henvendelse.Melding;
-import no.nav.modiapersonoversikt.legacy.api.domain.norg.EnhetsGeografiskeTilknytning;
-import no.nav.modiapersonoversikt.legacy.api.service.arbeidsfordeling.ArbeidsfordelingV1Service;
 import no.nav.modiapersonoversikt.legacy.api.service.ldap.LDAPService;
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.*;
 import no.nav.modiapersonoversikt.infrastructure.naudit.Audit;
@@ -20,6 +19,7 @@ import no.nav.modiapersonoversikt.legacy.sporsmalogsvar.legacy.MeldingVM;
 import no.nav.modiapersonoversikt.legacy.sporsmalogsvar.legacy.TraadVM;
 import no.nav.modiapersonoversikt.rest.persondata.Persondata;
 import no.nav.modiapersonoversikt.rest.persondata.PersondataService;
+import no.nav.modiapersonoversikt.service.arbeidsfordeling.ArbeidsfordelingService;
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk;
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.KodeverkConfig;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.behandlehenvendelse.BehandleHenvendelsePortType;
@@ -56,7 +56,7 @@ public class HenvendelseBehandlingServiceImpl implements HenvendelseBehandlingSe
     private final EnhetligKodeverk.Service kodeverk;
     private final ContentRetriever propertyResolver;
     private final LDAPService ldapService;
-    private final ArbeidsfordelingV1Service arbeidsfordelingService;
+    private final ArbeidsfordelingService arbeidsfordelingService;
 
     @Autowired
     public HenvendelseBehandlingServiceImpl(
@@ -67,7 +67,7 @@ public class HenvendelseBehandlingServiceImpl implements HenvendelseBehandlingSe
             EnhetligKodeverk.Service kodeverk,
             ContentRetriever propertyResolver,
             LDAPService ldapService,
-            ArbeidsfordelingV1Service arbeidsfordelingService
+            ArbeidsfordelingService arbeidsfordelingService
     ) {
         this.henvendelsePortType = henvendelsePortType;
         this.behandleHenvendelsePortType = behandleHenvendelsePortType;
@@ -87,11 +87,11 @@ public class HenvendelseBehandlingServiceImpl implements HenvendelseBehandlingSe
     }
 
     private List<Melding> hentMeldingerFraHenvendelse(String fnr, String valgtEnhet) {
-        List<EnhetsGeografiskeTilknytning> valgtEnhetSGTenheter = arbeidsfordelingService.hentGTnummerForEnhet(valgtEnhet);
+        List<NorgDomain.EnhetGeografiskTilknyttning> valgtEnhetSGTenheter = arbeidsfordelingService.hentGeografiskTilknyttning(valgtEnhet);
         List<String> enhetslistGTogEnhet = new ArrayList<>();
         enhetslistGTogEnhet.add(valgtEnhet);
-        for (EnhetsGeografiskeTilknytning enhetsGeografiskeTilknytning : valgtEnhetSGTenheter) {
-            enhetslistGTogEnhet.add(enhetsGeografiskeTilknytning.geografiskOmraade);
+        for (NorgDomain.EnhetGeografiskTilknyttning enhetsGeografiskeTilknytning : valgtEnhetSGTenheter) {
+            enhetslistGTogEnhet.add(enhetsGeografiskeTilknytning.getGeografiskOmraade());
         }
         WSHentHenvendelseListeResponse wsHentHenvendelseListeResponse = henvendelsePortType
                 .hentHenvendelseListe(new WSHentHenvendelseListeRequest().withFodselsnummer(fnr).withTyper(HenvendelseUtils.AKTUELLE_HENVENDELSE_TYPER));

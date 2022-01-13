@@ -1,14 +1,11 @@
 package no.nav.modiapersonoversikt.rest.persondata
 
+import no.nav.modiapersonoversikt.consumer.norg.NorgDomain
 import no.nav.modiapersonoversikt.legacy.api.domain.pdl.generated.HentPersondata
 import no.nav.modiapersonoversikt.legacy.api.domain.pdl.generated.HentPersondata.AdressebeskyttelseGradering.*
 import no.nav.modiapersonoversikt.legacy.api.domain.pdl.generated.HentPersondata.KontaktinformasjonForDoedsboSkifteform.ANNET
 import no.nav.modiapersonoversikt.legacy.api.domain.pdl.generated.HentPersondata.KontaktinformasjonForDoedsboSkifteform.OFFENTLIG
 import no.nav.modiapersonoversikt.legacy.api.utils.TjenestekallLogger
-import no.nav.modiapersonoversikt.rest.enhet.model.EnhetKontaktinformasjon
-import no.nav.modiapersonoversikt.rest.enhet.model.Gateadresse
-import no.nav.modiapersonoversikt.rest.enhet.model.Klokkeslett
-import no.nav.modiapersonoversikt.rest.enhet.model.Publikumsmottak
 import no.nav.modiapersonoversikt.rest.persondata.Persondata.asNavnOgIdent
 import no.nav.modiapersonoversikt.service.dkif.Dkif
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk
@@ -31,7 +28,7 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
         val persondata: HentPersondata.Person,
         val geografiskeTilknytning: PersondataResult<String?>,
         val erEgenAnsatt: PersondataResult<Boolean>,
-        val navEnhet: PersondataResult<EnhetKontaktinformasjon?>,
+        val navEnhet: PersondataResult<NorgDomain.EnhetKontaktinformasjon?>,
         val dkifData: PersondataResult<Dkif.DigitalKontaktinformasjon>,
         val bankkonto: PersondataResult<HentPersonResponse>,
         val tredjepartsPerson: PersondataResult<Map<String, Persondata.TredjepartsPerson>>
@@ -422,14 +419,14 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
     )
 
     private fun lagAdresseFraBesoksadresse(
-        adresse: Gateadresse
+        adresse: NorgDomain.Gateadresse
     ) = Persondata.Adresse(
-        linje1 = listOf(
+        linje1 = listOfNotNull(
             adresse.gatenavn,
             adresse.husnummer,
             adresse.husbokstav
         ),
-        linje2 = listOf(
+        linje2 = listOfNotNull(
             adresse.postnummer,
             adresse.poststed
         ),
@@ -455,41 +452,41 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
         gyldighetsPeriode = gyldighetsPeriode
     )
 
-    fun hentNavEnhet(navEnhet: PersondataResult<EnhetKontaktinformasjon?>): Persondata.Enhet? {
+    fun hentNavEnhet(navEnhet: PersondataResult<NorgDomain.EnhetKontaktinformasjon?>): Persondata.Enhet? {
         return navEnhet
             .map {
                 if (it == null) {
                     null
                 } else {
-                    Persondata.Enhet(it.enhetId, it.enhetNavn, hentPublikumsmottak(it.publikumsmottak))
+                    Persondata.Enhet(it.enhet.enhetId, it.enhet.enhetNavn, hentPublikumsmottak(it.publikumsmottak))
                 }
             }
             .getOrNull()
     }
 
-    private fun hentPublikumsmottak(publikumsmottak: List<Publikumsmottak>): List<Persondata.Publikumsmottak> {
+    private fun hentPublikumsmottak(publikumsmottak: List<NorgDomain.Publikumsmottak>): List<Persondata.Publikumsmottak> {
         return publikumsmottak.map {
             Persondata.Publikumsmottak(
-                besoksadresse = lagAdresseFraBesoksadresse(it.besoksadresse),
-                apningstider = it.apningstider.map { apningstid ->
-                    Persondata.Apningstid(
-                        ukedag = apningstid.ukedag,
-                        apningstid = lagApningstid(apningstid.apentFra, apningstid.apentTil)
-                    )
-                }
+                besoksadresse = lagAdresseFraBesoksadresse(requireNotNull(it.besoksadresse)),
+                apningstider = it.apningstider
+                    .sortedBy { apningstid -> apningstid.ukedag }
+                    .map { apningstid ->
+                        Persondata.Apningstid(
+                            ukedag = apningstid.ukedag.name,
+                            apningstid = lagApningstidString(apningstid)
+                        )
+                    }
             )
         }
     }
 
-    private fun lagApningstid(apentFra: Klokkeslett, apentTil: Klokkeslett): String {
-        return "${lagTidspunkt(apentFra)} - ${lagTidspunkt(apentTil)}"
-    }
-
-    private fun lagTidspunkt(tid: Klokkeslett): String {
-        return if (tid.time == null || tid.minutt == null) {
-            "Ukjent"
+    private fun lagApningstidString(apningstid: NorgDomain.Apningstid): String {
+        return if (apningstid.stengt) {
+            "Stengt"
         } else {
-            "${tid.time.padStart(2, '0')}.${tid.minutt.padStart(2, '0')}"
+            val fra = apningstid.apentFra ?: "Ukjent"
+            val til = apningstid.apentTil ?: "Ukjent"
+            "$fra - $til"
         }
     }
 
@@ -517,14 +514,14 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
                 UGRADERT -> Persondata.KodeBeskrivelse("", "Ugradert")
                 else -> Persondata.KodeBeskrivelse("", "Ukjent")
             }
-            val adressebeskyttelse = when (it.gradering) {
+            val gradering = when (it.gradering) {
                 STRENGT_FORTROLIG_UTLAND -> Persondata.AdresseBeskyttelse.KODE6_UTLAND
                 STRENGT_FORTROLIG -> Persondata.AdresseBeskyttelse.KODE6
                 FORTROLIG -> Persondata.AdresseBeskyttelse.KODE7
                 UGRADERT -> Persondata.AdresseBeskyttelse.UGRADERT
                 else -> Persondata.AdresseBeskyttelse.UKJENT
             }
-            Persondata.KodeBeskrivelse(kode = adressebeskyttelse, beskrivelse = kodebeskrivelse.beskrivelse)
+            Persondata.KodeBeskrivelse(kode = gradering, beskrivelse = kodebeskrivelse.beskrivelse)
         }
     }
 
