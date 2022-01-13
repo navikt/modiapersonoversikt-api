@@ -1,7 +1,9 @@
 package no.nav.modiapersonoversikt.infrastructure.cache;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
+import no.nav.modiapersonoversikt.infrastructure.cache.redis.RedisCaffeineCache;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.cache.caffeine.CaffeineCache;
@@ -10,9 +12,11 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.context.annotation.ImportResource;
+import redis.clients.jedis.HostAndPort;
 
 import java.time.Duration;
 import java.util.Arrays;
+import java.util.HashMap;
 
 @Configuration
 @EnableCaching
@@ -43,7 +47,8 @@ public class CacheConfig {
                 cache("varslingCache", 180, 10_000),
                 cache("kodeverksmapperCache", 86400),
                 cache("innsynJournalCache", 1800, 10_000),
-                cache("pesysCache", 600)
+                cache("pesysCache", 600),
+                redisCache("test", new TypeReference<String>() {}, 3600, 1000, true)
         ));
 
         return cacheManager;
@@ -54,12 +59,34 @@ public class CacheConfig {
     }
 
     private static CaffeineCache cache(String name, int time, int maximumSize) {
+        return cache(name, time, maximumSize, true);
+    }
+
+    private static CaffeineCache cache(String name, int time, int maximumSize, boolean allowNullValues) {
         Cache<Object, Object> cache = Caffeine.newBuilder()
                 .expireAfterAccess(Duration.ofSeconds(time))
                 .expireAfterWrite(Duration.ofSeconds(time))
                 .maximumSize(maximumSize)
                 .build();
-        
-        return new CaffeineCache(name, cache);
+
+        return new CaffeineCache(name, cache, allowNullValues);
+    }
+
+    private static <T> RedisCaffeineCache<T> redisCache(
+            String name,
+            TypeReference<T> valueType,
+            int time,
+            int maximumSize,
+            boolean allowNullValues
+    ) {
+        CaffeineCache localCache = cache(name, time, maximumSize, allowNullValues);
+        return new RedisCaffeineCache<>(new RedisCaffeineCache.Config<>(
+                name,
+                HostAndPort.from(""),
+                Duration.ofSeconds(time),
+                localCache,
+                valueType,
+                allowNullValues
+        ));
     }
 }
