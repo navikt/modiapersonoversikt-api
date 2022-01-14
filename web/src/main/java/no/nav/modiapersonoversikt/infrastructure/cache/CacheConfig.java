@@ -47,7 +47,8 @@ public class CacheConfig {
                 cache("varslingCache", 180, 10_000),
                 cache("kodeverksmapperCache", 86400),
                 cache("innsynJournalCache", 1800, 10_000),
-                cache("pesysCache", 600)
+                cache("pesysCache", 600),
+                redisCache("test", new TypeReference<String>() {}, 3600, 1000, true)
         ));
 
         return cacheManager;
@@ -81,7 +82,7 @@ public class CacheConfig {
         CaffeineCache localCache = cache(name, time, maximumSize, allowNullValues);
         return new RedisCaffeineCache<>(new RedisCaffeineCache.Config<>(
                 name,
-                HostAndPort.from(""),
+                HostAndPort.from("localhost:6379"),
                 Duration.ofSeconds(time),
                 localCache,
                 valueType,

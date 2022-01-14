@@ -59,9 +59,9 @@ class RedisCaffeineCache<T>(
         } else {
             val expire = config.expiry?.seconds ?: -1
             if (expire > 0) {
-                jedis.setex(serialize(key), expire, serialize(value))
+                jedis.setex(serializeKey(key), expire, serialize(value))
             } else {
-                jedis.set(serialize(key), serialize(value))
+                jedis.set(serializeKey(key), serialize(value))
             }
 
             push(CacheMessage(config.name, key))
@@ -74,12 +74,12 @@ class RedisCaffeineCache<T>(
     }
 
     override fun evict(key: Any) {
-        jedis.del(serialize(key))
+        jedis.del(serializeKey(key))
         config.localCache.evict(key)
     }
 
     override fun clear() {
-        val keys: Set<String> = jedis.keys("*")
+        val keys: Set<String> = jedis.keys("$name:*")
         jedis.del(*keys.toTypedArray())
         push(CacheMessage(config.name, null))
         config.localCache.clear()
@@ -90,7 +90,7 @@ class RedisCaffeineCache<T>(
         if (value != null) {
             return value
         }
-        value = deserialize(jedis.get(serialize(key)))
+        value = deserialize(jedis.get(serializeKey(key)))
         if (value != null) {
             config.localCache.put(key, value)
         }
@@ -105,7 +105,10 @@ class RedisCaffeineCache<T>(
         return mapper.writeValueAsString(value)
     }
 
-    private fun deserialize(value: String): T {
+    private fun serializeKey(value: Any?): String = "$name:${serialize(value)}"
+
+    private fun deserialize(value: String?): T? {
+        if (value == null) return null
         return mapper.readValue(value, config.type)
     }
 }
