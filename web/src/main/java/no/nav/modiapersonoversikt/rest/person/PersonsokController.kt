@@ -466,8 +466,8 @@ data class PersonsokRequest(
 )
 
 fun PersonsokRequest.tilPdlKriterier(clock: Clock = Clock.systemDefaultZone()): List<PdlKriterie> {
-    val navn = listOf(this.fornavn, this.etternavn).joinNotNullToString(" ")
-    val adresse = listOf(this.gatenavn, this.husnummer, this.husbokstav, this.postnummer, this.kommunenummer).joinNotNullToString(" ")
+    val navn = listOfNotNull(this.fornavn, this.etternavn).joinToString(" ")
+    val adresse = listOfNotNull(this.gatenavn, this.husnummer, this.husbokstav, this.postnummer, this.kommunenummer).joinToString(" ")
     val fodselsdatoFra = this.fodselsdatoFra ?: this.alderTil?.let { finnSenesteDatoGittAlder(it, clock) }
     val fodselsdatoTil = this.fodselsdatoTil ?: this.alderFra?.let { finnTidligsteDatoGittAlder(it, clock) }
     val kjonn = when (this.kjonn) {
@@ -486,19 +486,10 @@ fun PersonsokRequest.tilPdlKriterier(clock: Clock = Clock.systemDefaultZone()): 
     )
 }
 
-fun finnSenesteDatoGittAlder(alderTil: Int, clock: Clock): String {
+private fun finnSenesteDatoGittAlder(alderTil: Int, clock: Clock): String {
     return LocalDate.now(clock).minusYears(alderTil.toLong() + 1).plusDays(1).toString()
 }
 
-fun finnTidligsteDatoGittAlder(alderFra: Int, clock: Clock): String {
+private fun finnTidligsteDatoGittAlder(alderFra: Int, clock: Clock): String {
     return LocalDate.now(clock).minusYears(alderFra.toLong()).toString()
-}
-
-private fun <T : Any> Iterable<T?>.joinNotNullToString(delimiter: String): String? {
-    val nonNullElement = this.filterNotNull()
-    return if (nonNullElement.isEmpty()) {
-        null
-    } else {
-        nonNullElement.joinToString(delimiter)
-    }
 }

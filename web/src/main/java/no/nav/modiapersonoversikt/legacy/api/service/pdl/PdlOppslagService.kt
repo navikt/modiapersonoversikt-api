@@ -39,7 +39,7 @@ interface PdlOppslagService {
         val boost: Float? = null
     ) {
         fun asCriterion() =
-            if (value == null) {
+            if (value.isNullOrEmpty()) {
                 null
             } else {
                 SokPerson.Criterion(
