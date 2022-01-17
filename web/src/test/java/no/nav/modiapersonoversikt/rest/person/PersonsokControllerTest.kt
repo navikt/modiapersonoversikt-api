@@ -200,14 +200,25 @@ class PersonsokControllerTest {
         )
 
         @Test
-        internal fun `boosting for prioritering av etternavn`() {
+        internal fun `samler navne-felt til ett felt`() {
             val kriterier = request
                 .copy(fornavn = "Fornavn", etternavn = "Etternavn")
                 .tilPdlKriterier(clock)
 
-            assertThat(kriterier).contains(PdlKriterie(PdlFelt.FORNAVN, "Fornavn", 1.5f))
-            assertThat(kriterier).contains(PdlKriterie(PdlFelt.ETTERNAVN, "Etternavn", 1.5f))
-            assertThat(kriterier).contains(PdlKriterie(PdlFelt.MELLOMNAVN, "Etternavn", 1.0f))
+            assertThat(kriterier).contains(PdlKriterie(PdlFelt.NAVN, "Fornavn Etternavn"))
+        }
+
+        @Test
+        internal fun `filtrerer bort navne-felt som er null`() {
+            val bareFornavn = request
+                .copy(fornavn = "Fornavn")
+                .tilPdlKriterier(clock)
+            val bareEtternavn = request
+                .copy(etternavn = "Etternavn")
+                .tilPdlKriterier(clock)
+
+            assertThat(bareFornavn).contains(PdlKriterie(PdlFelt.NAVN, "Fornavn"))
+            assertThat(bareEtternavn).contains(PdlKriterie(PdlFelt.NAVN, "Etternavn"))
         }
 
         @Test

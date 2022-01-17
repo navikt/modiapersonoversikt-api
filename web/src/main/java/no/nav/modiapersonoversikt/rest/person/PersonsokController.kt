@@ -466,6 +466,7 @@ data class PersonsokRequest(
 )
 
 fun PersonsokRequest.tilPdlKriterier(clock: Clock = Clock.systemDefaultZone()): List<PdlKriterie> {
+    val navn = listOf(this.fornavn, this.etternavn).joinNotNullToString(" ")
     val adresse = listOf(this.gatenavn, this.husnummer, this.husbokstav, this.postnummer, this.kommunenummer).joinNotNullToString(" ")
     val fodselsdatoFra = this.fodselsdatoFra ?: this.alderTil?.let { finnSenesteDatoGittAlder(it, clock) }
     val fodselsdatoTil = this.fodselsdatoTil ?: this.alderFra?.let { finnTidligsteDatoGittAlder(it, clock) }
@@ -476,9 +477,7 @@ fun PersonsokRequest.tilPdlKriterier(clock: Clock = Clock.systemDefaultZone()): 
     }
 
     return listOf(
-        PdlKriterie(PdlFelt.FORNAVN, this.fornavn, 1.5f),
-        PdlKriterie(PdlFelt.ETTERNAVN, this.etternavn, 1.5f),
-        PdlKriterie(PdlFelt.MELLOMNAVN, this.etternavn, 1.0f),
+        PdlKriterie(PdlFelt.NAVN, navn),
         PdlKriterie(PdlFelt.ADRESSE, adresse),
         PdlKriterie(PdlFelt.UTENLANDSK_ID, this.utenlandskID),
         PdlKriterie(PdlFelt.FODSELSDATO_FRA, fodselsdatoFra),
