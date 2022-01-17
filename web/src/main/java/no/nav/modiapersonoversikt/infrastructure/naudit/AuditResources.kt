@@ -6,6 +6,7 @@ class AuditResources {
     class Introspection {
         companion object {
             val Tokens = AuditResource("introspection.token")
+            val Pdlsok = AuditResource("introspection.pdlsok")
         }
     }
     class Enhet {
