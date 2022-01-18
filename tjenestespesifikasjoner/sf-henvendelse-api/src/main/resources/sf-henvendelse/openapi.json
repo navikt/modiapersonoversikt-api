@@ -408,9 +408,13 @@
           "fritekst": {
             "type": "string",
             "example": "Dette er en melding"
+          },
+          "tilknyttetAnsatt": {
+            "type": "boolean",
+            "example": false
           }
         },
-        "required": ["aktorId", "temagruppe", "enhet", "fritekst"]
+        "required": ["aktorId", "temagruppe", "enhet", "fritekst", "tilknyttetAnsatt"]
       },
       "SamtalereferatRequest": {
         "type": "object",
