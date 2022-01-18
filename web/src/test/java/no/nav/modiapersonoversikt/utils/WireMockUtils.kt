@@ -3,6 +3,7 @@ package no.nav.modiapersonoversikt.utils
 import com.github.tomakehurst.wiremock.WireMockServer
 import com.github.tomakehurst.wiremock.client.MappingBuilder
 import com.github.tomakehurst.wiremock.client.WireMock
+import com.github.tomakehurst.wiremock.core.WireMockConfiguration
 
 object WireMockUtils {
     fun withMockGateway(
@@ -10,7 +11,11 @@ object WireMockUtils {
         verify: ((WireMockServer) -> Unit),
         test: (String) -> Unit
     ) {
-        val wireMockServer = WireMockServer()
+        val config = WireMockConfiguration
+            .wireMockConfig()
+            .dynamicPort()
+            .dynamicHttpsPort()
+        val wireMockServer = WireMockServer(config)
         try {
             stub(wireMockServer)
             wireMockServer.start()
