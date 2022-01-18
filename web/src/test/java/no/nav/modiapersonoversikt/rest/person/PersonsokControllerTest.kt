@@ -1,8 +1,7 @@
 package no.nav.modiapersonoversikt.rest.person
 
 import no.nav.modiapersonoversikt.legacy.api.domain.pdl.generated.SokPerson
-import no.nav.modiapersonoversikt.legacy.api.service.pdl.PdlOppslagService.PdlSokbareFelt
-import no.nav.modiapersonoversikt.legacy.api.service.pdl.PdlOppslagService.SokKriterier
+import no.nav.modiapersonoversikt.legacy.api.service.pdl.PdlOppslagService.*
 import no.nav.modiapersonoversikt.testutils.SnapshotExtension
 import no.nav.tjeneste.virksomhet.personsoek.v1.informasjon.*
 import org.assertj.core.api.Assertions.assertThat
@@ -206,7 +205,7 @@ class PersonsokControllerTest {
                 .copy(fornavn = "Fornavn", etternavn = "Etternavn")
                 .tilPdlKriterier(clock)
 
-            assertThat(kriterier).contains(SokKriterier(PdlSokbareFelt.NAVN, "Fornavn Etternavn"))
+            assertThat(kriterier).contains(PdlKriterie(PdlFelt.NAVN, "Fornavn Etternavn"))
         }
 
         @Test
@@ -218,8 +217,8 @@ class PersonsokControllerTest {
                 .copy(etternavn = "Etternavn")
                 .tilPdlKriterier(clock)
 
-            assertThat(bareFornavn).contains(SokKriterier(PdlSokbareFelt.NAVN, "Fornavn"))
-            assertThat(bareEtternavn).contains(SokKriterier(PdlSokbareFelt.NAVN, "Etternavn"))
+            assertThat(bareFornavn).contains(PdlKriterie(PdlFelt.NAVN, "Fornavn"))
+            assertThat(bareEtternavn).contains(PdlKriterie(PdlFelt.NAVN, "Etternavn"))
         }
 
         @Test
@@ -233,7 +232,7 @@ class PersonsokControllerTest {
                 )
                 .tilPdlKriterier(clock)
 
-            assertThat(kriterier).contains(SokKriterier(PdlSokbareFelt.ADRESSE, "Gatenavn 1 A 0100"))
+            assertThat(kriterier).contains(PdlKriterie(PdlFelt.ADRESSE, "Gatenavn 1 A 0100"))
         }
 
         @Test
@@ -242,7 +241,7 @@ class PersonsokControllerTest {
                 .copy(alderFra = 30)
                 .tilPdlKriterier(clock)
 
-            assertThat(kriterier).contains(SokKriterier(PdlSokbareFelt.FODSELSDATO_TIL, "1990-12-02"))
+            assertThat(kriterier).contains(PdlKriterie(PdlFelt.FODSELSDATO_TIL, "1990-12-02"))
         }
 
         @Test
@@ -251,7 +250,7 @@ class PersonsokControllerTest {
                 .copy(alderTil = 32)
                 .tilPdlKriterier(clock)
 
-            assertThat(kriterier).contains(SokKriterier(PdlSokbareFelt.FODSELSDATO_FRA, "1987-12-03"))
+            assertThat(kriterier).contains(PdlKriterie(PdlFelt.FODSELSDATO_FRA, "1987-12-03"))
         }
 
         @Test
@@ -260,19 +259,19 @@ class PersonsokControllerTest {
                 .copy(kjonn = "M")
                 .tilPdlKriterier(clock)
 
-            assertThat(mann).contains(SokKriterier(PdlSokbareFelt.KJONN, "MANN"))
+            assertThat(mann).contains(PdlKriterie(PdlFelt.KJONN, "MANN"))
 
             val kvinne = request
                 .copy(kjonn = "K")
                 .tilPdlKriterier(clock)
 
-            assertThat(kvinne).contains(SokKriterier(PdlSokbareFelt.KJONN, "KVINNE"))
+            assertThat(kvinne).contains(PdlKriterie(PdlFelt.KJONN, "KVINNE"))
 
             val ukjent = request
                 .copy(kjonn = "U")
                 .tilPdlKriterier(clock)
 
-            assertThat(ukjent).contains(SokKriterier(PdlSokbareFelt.KJONN, null))
+            assertThat(ukjent).contains(PdlKriterie(PdlFelt.KJONN, null))
         }
 
         val request = PersonsokRequest(
