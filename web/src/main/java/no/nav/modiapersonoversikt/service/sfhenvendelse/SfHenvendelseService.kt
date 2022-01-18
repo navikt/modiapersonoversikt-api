@@ -168,7 +168,7 @@ class SfHenvendelseServiceImpl(
                     aktorId = bruker.aktorId(),
                     temagruppe = temagruppe,
                     enhet = enhet,
-                    tilknyttetAnsatt = tilknyttetAnsatt,
+                    tildelMeg = tilknyttetAnsatt,
                     fritekst = fritekst
                 )
             )
@@ -196,7 +196,7 @@ class SfHenvendelseServiceImpl(
                     temagruppe = henvendelse.gjeldendeTemagruppe!!, // TODO må fikses av SF-api. Temagruppe kan ikke være null
                     enhet = enhet,
                     fritekst = fritekst,
-                    tilknyttetAnsatt = tilknyttetAnsatt
+                    tildelMeg = tilknyttetAnsatt
                 )
             )
     }
