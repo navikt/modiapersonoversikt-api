@@ -1,6 +1,6 @@
 package no.nav.modiapersonoversikt.legacy.sak.config;
 
-import no.nav.modiapersonoversikt.consumer.kodeverk2.config.KodeverkConfig;
+import no.nav.modiapersonoversikt.config.service.EnhetligKodeverkConfig;
 import no.nav.modiapersonoversikt.legacy.sak.service.*;
 import no.nav.modiapersonoversikt.legacy.sak.service.filter.Filter;
 import no.nav.modiapersonoversikt.legacy.sak.service.saf.ExperimentSafService;
@@ -13,7 +13,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
 @Configuration
-@Import({KodeverkConfig.class})
+@Import({EnhetligKodeverkConfig.class})
 public class SakServiceConfig {
 
     @Bean
