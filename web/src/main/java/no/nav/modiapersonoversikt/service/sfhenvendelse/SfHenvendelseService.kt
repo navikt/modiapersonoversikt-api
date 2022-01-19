@@ -33,12 +33,14 @@ interface SfHenvendelseService {
         bruker: EksternBruker,
         enhet: String,
         temagruppe: String,
+        tilknyttetAnsatt: Boolean,
         fritekst: String
     ): HenvendelseDTO
     fun sendMeldingPaEksisterendeDialog(
         bruker: EksternBruker,
         kjedeId: String,
         enhet: String,
+        tilknyttetAnsatt: Boolean,
         fritekst: String
     ): HenvendelseDTO
 
@@ -155,6 +157,7 @@ class SfHenvendelseServiceImpl(
         bruker: EksternBruker,
         enhet: String,
         temagruppe: String,
+        tilknyttetAnsatt: Boolean,
         fritekst: String
     ): HenvendelseDTO {
         return henvendelseOpprettApi
@@ -165,6 +168,7 @@ class SfHenvendelseServiceImpl(
                     aktorId = bruker.aktorId(),
                     temagruppe = temagruppe,
                     enhet = enhet,
+                    tildelMeg = tilknyttetAnsatt,
                     fritekst = fritekst
                 )
             )
@@ -174,6 +178,7 @@ class SfHenvendelseServiceImpl(
         bruker: EksternBruker,
         kjedeId: String,
         enhet: String,
+        tilknyttetAnsatt: Boolean,
         fritekst: String
     ): HenvendelseDTO {
         val callId = getCallId()
@@ -190,7 +195,8 @@ class SfHenvendelseServiceImpl(
                     aktorId = bruker.aktorId(),
                     temagruppe = henvendelse.gjeldendeTemagruppe!!, // TODO må fikses av SF-api. Temagruppe kan ikke være null
                     enhet = enhet,
-                    fritekst = fritekst
+                    fritekst = fritekst,
+                    tildelMeg = tilknyttetAnsatt
                 )
             )
     }

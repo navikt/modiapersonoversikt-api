@@ -46,6 +46,7 @@ class SfDialogController @Autowired constructor(
     data class OpprettOgSendMeldingRequest(
         val type: HenvendelseDTO.HenvendelseType,
         val temagruppe: String,
+        val tilknyttetAnsatt: Boolean,
         val fritekst: String,
         val kanal: SamtalereferatRequestDTO.Kanal?
     )
@@ -78,6 +79,7 @@ class SfDialogController @Autowired constructor(
                             bruker = bruker,
                             enhet = enhet,
                             temagruppe = request.temagruppe,
+                            tilknyttetAnsatt = request.tilknyttetAnsatt,
                             fritekst = request.fritekst
                         )
                     }
@@ -86,7 +88,7 @@ class SfDialogController @Autowired constructor(
             }
     }
 
-    data class SendPaEksisterendeRequest(val fritekst: String)
+    data class SendPaEksisterendeRequest(val tilknyttetAnsatt: Boolean, val fritekst: String)
 
     @PostMapping("/{fnr}/{kjedeId}")
     fun sendMeldingPaEksisterendeDialog(
@@ -126,6 +128,7 @@ class SfDialogController @Autowired constructor(
                     kjedeId = kjedeId,
                     bruker = bruker,
                     enhet = enhet,
+                    tilknyttetAnsatt = request.tilknyttetAnsatt,
                     fritekst = request.fritekst
                 )
 

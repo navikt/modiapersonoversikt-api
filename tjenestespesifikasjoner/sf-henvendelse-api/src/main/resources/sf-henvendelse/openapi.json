@@ -146,6 +146,9 @@
           "200": {
             "description": "OK"
           },
+          "204": {
+            "description": "No Content"
+          },
           "404": {
             "$ref": "#/components/responses/NotFound"
           },
@@ -408,6 +411,11 @@
           "fritekst": {
             "type": "string",
             "example": "Dette er en melding"
+          },
+          "tildelMeg": {
+            "type": "boolean",
+            "example": true,
+            "description": "Sett til true hvis konsument ønsker at svar i tråden skal opprette oppgave tildelt direkte til seg. Dette er på trådnivå og vil effektivt kun gjelde for siste melding i tråden med dette flagget satt."
           }
         },
         "required": ["aktorId", "temagruppe", "enhet", "fritekst"]
