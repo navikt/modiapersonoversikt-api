@@ -24,9 +24,6 @@ internal class EnhetligKodeverkServiceImplTest {
 
         val temagruppe = temagrupper.hentBeskrivelse("ARBD")
         assertThat(temagruppe).isEqualTo("Arbeid")
-
-        val skjemaOgVedleggskoder = service.hentKodeverk(KodeverkConfig.NAVSKJEMAOGVEDLEGGSKODER)
-        assertThat(skjemaOgVedleggskoder).isNotNull
     }
 
     @Test
