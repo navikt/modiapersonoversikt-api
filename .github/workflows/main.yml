@@ -10,7 +10,7 @@ env:
   IMAGE: docker.pkg.github.com/${{ github.repository }}/modiapersonoversikt-api:${{ github.sha }}
   CI: true
   TZ: Europe/Oslo
-  Q1_TEST_BRANCH: refs/heads/OPP_1380_slett_henting_av_søkander_fra_henvendelse
+  Q1_TEST_BRANCH:
 
 jobs:
   build:
