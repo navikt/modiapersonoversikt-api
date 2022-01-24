@@ -12,7 +12,7 @@ import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Policies
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll
 import no.nav.modiapersonoversikt.legacy.api.domain.norg.Ansatt
 import no.nav.modiapersonoversikt.legacy.api.domain.norg.AnsattEnhet
-import no.nav.modiapersonoversikt.legacy.api.service.norg.AnsattService
+import no.nav.modiapersonoversikt.service.ansattservice.AnsattService
 import no.nav.modiapersonoversikt.service.arbeidsfordeling.ArbeidsfordelingService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*

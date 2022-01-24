@@ -1,12 +1,8 @@
 package no.nav.modiapersonoversikt.legacy.sak.service;
 
 
-import com.nimbusds.jwt.JWTClaimsSet;
-import com.nimbusds.jwt.PlainJWT;
-import no.nav.common.auth.context.AuthContext;
-import no.nav.common.auth.context.UserRole;
 import no.nav.modiapersonoversikt.legacy.api.domain.norg.AnsattEnhet;
-import no.nav.modiapersonoversikt.legacy.api.service.norg.AnsattService;
+import no.nav.modiapersonoversikt.service.ansattservice.AnsattService;
 import no.nav.modiapersonoversikt.legacy.sak.providerdomain.DokumentMetadata;
 import no.nav.modiapersonoversikt.legacy.sak.providerdomain.Sakstema;
 import no.nav.modiapersonoversikt.legacy.sak.providerdomain.resultatwrappere.TjenesteResultatWrapper;

@@ -51,6 +51,9 @@ spec:
       - kvPath: /apikey/appdynamics/prod
         mountPath: /var/run/secrets/nais.io/vault
   leaderElection: true
+  azure:
+    application:
+      enabled: true
   env:
     - name: APP_ENVIRONMENT_NAME
       value: "p"
