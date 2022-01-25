@@ -105,7 +105,7 @@ class RestOppgaveBehandlingServiceImpl(
                     innhold = request.beskrivelse,
                     clock = clock
                 ),
-                tema = requireNotNull(request.tema.coerceBlankToNull()),
+                tema = request.tema,
                 oppgavetype = oppgaveType,
                 behandlingstema = behandling.map(Behandling::getBehandlingstema).orElse(null),
                 behandlingstype = behandling.map(Behandling::getBehandlingstype).orElse(null),
@@ -142,7 +142,7 @@ class RestOppgaveBehandlingServiceImpl(
                     innhold = request.beskrivelse,
                     clock = clock
                 ),
-                tema = requireNotNull(request.tema.coerceBlankToNull()),
+                tema = request.tema,
                 oppgavetype = oppgaveType,
                 behandlingstema = behandling.map(Behandling::getBehandlingstema).orElse(null),
                 behandlingstype = behandling.map(Behandling::getBehandlingstype).orElse(null),
