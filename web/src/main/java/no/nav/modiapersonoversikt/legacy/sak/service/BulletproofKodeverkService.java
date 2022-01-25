@@ -10,7 +10,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -22,8 +21,7 @@ import static org.springframework.util.StringUtils.isEmpty;
 public class BulletproofKodeverkService {
 
     private static final Logger LOG = getLogger(BulletproofKodeverkService.class);
-    public static final KodeverkConfig BEHANDLINGSTEMA = KodeverkConfig.BEHANDLINGSTEMA;
-    public static final KodeverkConfig ARKIVTEMA = KodeverkConfig.ARKIVTEMA;
+    public static final EnhetligKodeverk.Kilde<String, String> ARKIVTEMA = KodeverkConfig.ARKIVTEMA;
 
     @Autowired
     private Kodeverk lokaltKodeverk;
@@ -58,9 +56,9 @@ public class BulletproofKodeverkService {
         }
     }
 
-    public ResultatWrapper<String> getTemanavnForTemakode(String temakode, KodeverkConfig kodeverknavn) {
+    public ResultatWrapper<String> getTemanavnForTemakode(String temakode, EnhetligKodeverk.Kilde<String, String> kodeverkKilde) {
         try {
-            return new ResultatWrapper<>(kodeverk.hentKodeverk(kodeverknavn).hentBeskrivelse(temakode));
+            return new ResultatWrapper<>(kodeverk.hentKodeverk(kodeverkKilde).hentVerdi(temakode, temakode));
         } catch (ApplicationException e) {
             LOG.warn("Fant ikke kodeverkid '" + temakode + "'. Bruker generisk tittel.", e);
             return new ResultatWrapper<>(temakode);

@@ -1,21 +1,43 @@
 package no.nav.modiapersonoversikt.service.enhetligkodeverk
 
-enum class KodeverkConfig(private val kilde: EnhetligKodeverk.Kilde) {
-    ARKIVTEMA(FellesKodeverkKilde("Arkivtemaer")),
-    BEHANDLINGSTEMA(FellesKodeverkKilde("Behandlingstema")),
-    KJONN(FellesKodeverkKilde("Kjønnstyper")),
-    LAND(FellesKodeverkKilde("Landkoder")),
-    SPRAK(FellesKodeverkKilde("Språk")),
-    RETNINGSNUMRE(FellesKodeverkKilde("Retningsnumre")),
-    POSTNUMMER(FellesKodeverkKilde("Postnummer")),
-    PERSONSTATUSER(FellesKodeverkKilde("Personstatuser")),
-    SIVILSTAND(FellesKodeverkKilde("Sivilstander")),
-    DISKRESJONSKODER(FellesKodeverkKilde("Diskresjonskoder")),
-    VALUTA(FellesKodeverkKilde("Valutaer")),
-    TEMA(FellesKodeverkKilde("Tema")),
-    SF_TEMAGRUPPER(SfHenvendelseKodeverkKilde());
+import no.nav.modiapersonoversikt.service.enhetligkodeverk.kodeverkproviders.KodeverkProviders
+import no.nav.modiapersonoversikt.service.enhetligkodeverk.kodeverkproviders.Tema
 
-    fun hentKodeverk(providers: KodeverkProviders) = kilde.hentKodeverk(providers)
+object KodeverkConfig {
+    @JvmField
+    val ARKIVTEMA = FellesKodeverkKilde("Arkivtemaer")
+    val BEHANDLINGSTEMA = FellesKodeverkKilde("Behandlingstema")
+    val KJONN = FellesKodeverkKilde("Kjønnstyper")
+    val LAND = FellesKodeverkKilde("Landkoder")
+    val SPRAK = FellesKodeverkKilde("Språk")
+    val RETNINGSNUMRE = FellesKodeverkKilde("Retningsnumre")
+    val POSTNUMMER = FellesKodeverkKilde("Postnummer")
+    val PERSONSTATUSER = FellesKodeverkKilde("Personstatuser")
+    val SIVILSTAND = FellesKodeverkKilde("Sivilstander")
+    val DISKRESJONSKODER = FellesKodeverkKilde("Diskresjonskoder")
+    val VALUTA = FellesKodeverkKilde("Valutaer")
+    val TEMA = FellesKodeverkKilde("Tema")
+    val SF_TEMAGRUPPER = SfHenvendelseKodeverkKilde()
+    val OPPGAVE = OppgaveKodeverkKilde()
+
+    fun values(): List<EnhetligKodeverk.Kilde<*, *>> {
+        return listOf(
+            ARKIVTEMA,
+            BEHANDLINGSTEMA,
+            KJONN,
+            LAND,
+            SPRAK,
+            RETNINGSNUMRE,
+            POSTNUMMER,
+            PERSONSTATUSER,
+            SIVILSTAND,
+            DISKRESJONSKODER,
+            VALUTA,
+            TEMA,
+            SF_TEMAGRUPPER,
+            OPPGAVE
+        )
+    }
 }
 
 class FellesKodeverkKilde(val kodeverkNavn: String) : EnhetligKodeverk.Kilde {

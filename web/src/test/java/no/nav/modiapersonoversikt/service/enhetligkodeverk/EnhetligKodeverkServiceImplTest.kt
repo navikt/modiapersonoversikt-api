@@ -1,6 +1,7 @@
 package no.nav.modiapersonoversikt.service.enhetligkodeverk
 
 import io.mockk.*
+import no.nav.modiapersonoversikt.service.enhetligkodeverk.kodeverkproviders.KodeverkProviders
 import no.nav.modiapersonoversikt.utils.MutableClock
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -19,10 +20,10 @@ internal class EnhetligKodeverkServiceImplTest {
         val temagrupper = service.hentKodeverk(KodeverkConfig.SF_TEMAGRUPPER)
         assertThat(temagrupper).isNotNull
 
-        val landkode = landkoder.hentBeskrivelse("NO")
+        val landkode = landkoder.hentVerdi("NO", "NO")
         assertThat(landkode).isEqualTo("Norge")
 
-        val temagruppe = temagrupper.hentBeskrivelse("ARBD")
+        val temagruppe = temagrupper.hentVerdi("ARBD", "ARBD")
         assertThat(temagruppe).isEqualTo("Arbeid")
     }
 
@@ -32,18 +33,18 @@ internal class EnhetligKodeverkServiceImplTest {
         val service = EnhetligKodeverkServiceImpl(providers)
 
         assertThat(service.hentKodeverk(KodeverkConfig.LAND)).isNotNull
-        every { providers.fraFellesKodeverk(any()) } returns EnhetligKodeverk.Kodeverk(
+        every { providers.fellesKodeverk.hentKodeverk(any()) } returns EnhetligKodeverk.Kodeverk(
             "Land",
             mapOf(
                 "NO" to "Noreg"
             )
         )
-        val landkode = service.hentKodeverk(KodeverkConfig.LAND).hentBeskrivelse("NO")
+        val landkode = service.hentKodeverk(KodeverkConfig.LAND).hentVerdi("NO", "NO")
         assertThat(landkode).isEqualTo("Norge")
 
         service.prepopulerCache()
 
-        val oppdatertLandkode = service.hentKodeverk(KodeverkConfig.LAND).hentBeskrivelse("NO")
+        val oppdatertLandkode = service.hentKodeverk(KodeverkConfig.LAND).hentVerdi("NO", "NO")
         assertThat(oppdatertLandkode).isEqualTo("Noreg")
     }
 
@@ -53,25 +54,25 @@ internal class EnhetligKodeverkServiceImplTest {
         val service = EnhetligKodeverkServiceImpl(providers)
 
         assertThat(service.hentKodeverk(KodeverkConfig.LAND)).isNotNull
-        assertThat(service.hentKodeverk(KodeverkConfig.LAND).hentBeskrivelse("NO")).isEqualTo("Norge")
-        every { providers.fraFellesKodeverk(any()) } throws IllegalStateException("Noe gikk feil")
+        assertThat(service.hentKodeverk(KodeverkConfig.LAND).hentVerdi("NO", "NO")).isEqualTo("Norge")
+        every { providers.fellesKodeverk.hentKodeverk(any()) } throws IllegalStateException("Noe gikk feil")
 
         service.prepopulerCache()
 
         assertThat(service.hentKodeverk(KodeverkConfig.LAND)).isNotNull
-        assertThat(service.hentKodeverk(KodeverkConfig.LAND).hentBeskrivelse("NO")).isEqualTo("Norge")
+        assertThat(service.hentKodeverk(KodeverkConfig.LAND).hentVerdi("NO", "NO")).isEqualTo("Norge")
     }
 
     @Test
     internal fun `skal kunne starte opp selvom alle avhengiheter er nede`() {
         val providers: KodeverkProviders = mockk()
-        every { providers.fraFellesKodeverk(any()) } throws IllegalStateException("Noe gikk feil")
-        every { providers.fraSfHenvendelseKodeverk() } throws IllegalStateException("Noe gikk feil")
+        every { providers.fellesKodeverk.hentKodeverk(any()) } throws IllegalStateException("Noe gikk feil")
+        every { providers.sfHenvendelseKodeverk.hentKodeverk(any()) } throws IllegalStateException("Noe gikk feil")
 
         val service = EnhetligKodeverkServiceImpl(providers)
 
         assertThat(service.hentKodeverk(KodeverkConfig.LAND)).isNotNull
-        assertThat(service.hentKodeverk(KodeverkConfig.LAND).hentBeskrivelse("NO")).isEqualTo("NO")
+        assertThat(service.hentKodeverk(KodeverkConfig.LAND).hentVerdi("NO", "NO")).isEqualTo("NO")
         assertThat(service.hentKodeverk(KodeverkConfig.SF_TEMAGRUPPER)).isNotNull
     }
 
@@ -106,14 +107,14 @@ internal class EnhetligKodeverkServiceImplTest {
             clock = clock
         )
 
-        service.hentKodeverk(KodeverkConfig.LAND)
+        val kodeverk = service.hentKodeverk(KodeverkConfig.LAND)
 
         clock.plusDays(1).plusHours(1)
 
         val result = service.ping().check.checkHealth()
         assertThat(result.isUnhealthy).isTrue()
         assertThat(result.errorMessage).hasValueSatisfying { errorMessage ->
-            assertThat(errorMessage).contains("LAND")
+            assertThat(errorMessage).contains(kodeverk.navn)
             assertThat(errorMessage).contains("SF_TEMAGRUPPER")
         }
     }
@@ -128,17 +129,21 @@ internal class EnhetligKodeverkServiceImplTest {
 
     private fun withProvidersMock(): KodeverkProviders {
         val providers: KodeverkProviders = mockk()
-        every { providers.fraFellesKodeverk(any()) } returns EnhetligKodeverk.Kodeverk(
+        every { providers.fellesKodeverk.hentKodeverk(any()) } returns EnhetligKodeverk.Kodeverk(
             "Land",
             mapOf(
                 "NO" to "Norge"
             )
         )
-        every { providers.fraSfHenvendelseKodeverk() } returns EnhetligKodeverk.Kodeverk(
+        every { providers.sfHenvendelseKodeverk.hentKodeverk(any()) } returns EnhetligKodeverk.Kodeverk(
             "Temagrupper",
             mapOf(
                 "ARBD" to "Arbeid"
             )
+        )
+        every { providers.oppgaveKodeverk.hentKodeverk(any()) } returns EnhetligKodeverk.Kodeverk(
+            "Oppgave",
+            emptyMap()
         )
         return providers
     }

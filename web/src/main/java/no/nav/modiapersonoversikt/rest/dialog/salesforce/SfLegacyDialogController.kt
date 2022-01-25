@@ -254,7 +254,7 @@ class SfLegacyDialogController(
             }
             .distinct()
 
-        val temakodeMap = temakoder.associateWith { kode -> kodeverk.hentKodeverk(KodeverkConfig.ARKIVTEMA).hentBeskrivelse(kode) }
+        val temakodeMap = temakoder.associateWith { kode -> kodeverk.hentKodeverk(KodeverkConfig.ARKIVTEMA).hentVerdi(kode, kode) }
         val identMap = identer.associateWith { ident ->
             runCatching {
                 ldapService.hentSaksbehandler(ident)

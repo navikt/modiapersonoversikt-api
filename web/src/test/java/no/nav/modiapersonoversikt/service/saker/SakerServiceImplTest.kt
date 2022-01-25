@@ -41,7 +41,6 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.RegisterExtension
 import org.slf4j.MDC
 import java.time.OffsetDateTime
-import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.contracts.ExperimentalContracts
 import kotlin.streams.toList
@@ -86,7 +85,7 @@ class SakerServiceImplTest {
         sakerService.setup() // Kaller @PostConstruct manuelt siden vi kjører testen uten spring
         every { arbeidOgAktivitet.hentSakListe(WSHentSakListeRequest()) } returns WSHentSakListeResponse()
         every { gsakKodeverk.hentFagsystemMapping() } returns emptyMap()
-        every { kodeverk.hentKodeverk(any()) } returns EnhetligKodeverk.Kodeverk("", emptyMap())
+        every { kodeverk.hentKodeverk<String, String>(any()) } returns EnhetligKodeverk.Kodeverk("", emptyMap())
         every { pdlOppslagService.hentAktorId(any()) } returns "123456789"
         every { bidragSakControllerApi.find(any()) } returns listOf(BidragSakDto(roller = listOf(), saksnummer = "123", erParagraf19 = false))
         every { unleashService.isEnabled(any<Feature>()) } returns false
