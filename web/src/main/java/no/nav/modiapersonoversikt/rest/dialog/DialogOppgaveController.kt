@@ -14,6 +14,9 @@ import no.nav.modiapersonoversikt.legacy.api.service.OpprettOppgaveResponse
 import no.nav.modiapersonoversikt.legacy.api.service.OpprettSkjermetOppgaveRequest
 import no.nav.modiapersonoversikt.legacy.api.service.saker.GsakKodeverk
 import no.nav.modiapersonoversikt.legacy.sporsmalogsvar.common.utils.DateUtils.arbeidsdagerFraDatoJava
+import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk
+import no.nav.modiapersonoversikt.service.enhetligkodeverk.KodeverkConfig
+import no.nav.modiapersonoversikt.service.enhetligkodeverk.kodeverkproviders.Tema
 import no.nav.modiapersonoversikt.service.sfhenvendelse.fixKjedeId
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*
@@ -26,7 +29,8 @@ private const val HENVENDELSESTYPE_KODE: String = "DIALOG"
 class DialogOppgaveController @Autowired constructor(
     private val gsakKodeverk: GsakKodeverk,
     private val oppgavebehandling: OppgaveBehandlingService,
-    private val tilgangskontroll: Tilgangskontroll
+    private val tilgangskontroll: Tilgangskontroll,
+    private val kodeverkService: EnhetligKodeverk.Service
 ) {
 
     @PostMapping("/opprett")
@@ -64,6 +68,15 @@ class DialogOppgaveController @Autowired constructor(
                         "underkategorier" to hentUnderkategorier(it.underkategorier)
                     )
                 }
+            }
+    }
+
+    @GetMapping("/v2/tema")
+    fun hentAlleTemaV2(): List<Tema> {
+        return tilgangskontroll
+            .check(Policies.tilgangTilModia)
+            .get(Audit.skipAuditLog()) {
+                kodeverkService.hentKodeverk(KodeverkConfig.OPPGAVE).hentAlleVerdier().toList()
             }
     }
 
