@@ -48,11 +48,7 @@ paths:
           content:
             application/json:
               schema:
-                type: string
-              example:
-                string:
-                  - behandlingstema: string
-                    behandlingstype: string
+                $ref: '#/components/schemas/mapTemaGjelder'
         "401":
           description: Konsument mangler gyldig token
         "403":
@@ -81,10 +77,7 @@ paths:
           content:
             application/json:
               schema:
-                type: string
-              example:
-                string:
-                  - oppgavetype: string
+                $ref: '#/components/schemas/mapTemaOppgavetype'
         "401":
           description: Konsument mangler gyldig token
         "403":
@@ -178,7 +171,11 @@ paths:
         "200":
           description: Internt kodeverk hentet
           content:
-            application/json: {}
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Kodeverkkombinasjon'
         "401":
           description: Konsument mangler gyldig token
         "403":
@@ -1480,138 +1477,26 @@ paths:
           description: default response
           content:
             application/json: {}
-  /api/v1/statistikk:
-    get:
-      tags:
-        - Statistikk
-      summary: Finn oppgavestatistikk for angitte kriterier
-      operationId: finnOppgaver_1
-      parameters:
-        - name: X-Correlation-ID
-          in: header
-          required: true
-          schema:
-            type: string
-        - name: ferdigstiltFom
-          in: query
-          description: Nedre grense for filtrering på ferdigstilt tidspunkt
-          schema:
-            type: string
-        - name: ferdigstiltTom
-          in: query
-          description: Øvre grense for filtrering på ferdigstilt tidspunkt
-          schema:
-            type: string
-        - name: opprettetFom
-          in: query
-          description: Nedre grense for filtrering på opprettetTidspunkt
-          schema:
-            type: string
-        - name: opprettetTom
-          in: query
-          description: Øvre grense for filtrering på opprettetTidspunkt
-          schema:
-            type: string
-        - name: endretFom
-          in: query
-          description: Nedre grense for filtrering på endretTidspunkt
-          schema:
-            type: string
-        - name: endretTom
-          in: query
-          description: Øvre grense for filtrering på endretTidspunkt
-          schema:
-            type: string
-        - name: fristFom
-          in: query
-          description: Nedre grense for filtrering på fristFerdigstillelse
-          schema:
-            type: string
-        - name: fristTom
-          in: query
-          description: Øvre grense for filtrering på fristFerdigstillelse
-          schema:
-            type: string
-        - name: aktivDatoFom
-          in: query
-          description: Nedre grense for filtrering på aktivDato
-          schema:
-            type: string
-        - name: aktivDatoTom
-          in: query
-          description: Øvre grense for filtrering på aktivDato
-          schema:
-            type: string
-        - name: tema
-          in: query
-          description: "Filtrering på tema (iht felles kodeverk), her kan flere temaer\
-          \ spesifiseres i samme søk"
-          schema:
-            type: array
-            items:
-              type: string
-        - name: oppgavetype
-          in: query
-          description: "Filtrering på oppgavetype (iht felles kodeverk), her kan flere\
-          \ oppgavetyper spesifiseres i samme søk"
-          schema:
-            type: array
-            items:
-              type: string
-        - name: behandlingstema
-          in: query
-          description: Filtrering på behandlingstema (iht felles kodeverk)
-          schema:
-            type: array
-            items:
-              type: string
-        - name: behandlingstype
-          in: query
-          description: Filtrering på behandlingstype (iht felles kodeverk)
-          schema:
-            type: array
-            items:
-              type: string
-        - name: tildeltEnhetsnr
-          in: query
-          description: Filtrering på tildelt enhet
-          required: true
-          schema:
-            type: string
-        - name: inkluderMappeIgruppering
-          in: query
-          description: Om mappe skal være endel av grupperingen
-          schema:
-            type: boolean
-            default: false
-        - name: status
-          in: query
-          description: "Status på oppgaven, her kan flere statuser spesifiseres i samme\
-          \ søk"
-          schema:
-            type: array
-            items:
-              type: string
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/StatistikkJson'
-        "400":
-          description: Ugyldig input
-        "403":
-          description: Bruker er ikke autorisert for denne operasjonen
-        "401":
-          description: Konsument mangler gyldig token
-        "500":
-          description: Ukjent feilsituasjon har oppstått i Oppgave
-      security:
-        - oidc: []
 components:
   schemas:
+    mapTemaOppgavetype:
+      type: object
+      properties:
+        tema:
+          type: array
+          items:
+            $ref: '#/components/schemas/Oppgavetype'
+    mapTemaGjelder:
+      type: object
+      properties:
+        tema:
+          type: array
+          items:
+            $ref: '#/components/schemas/Gjelder'
     Tema:
+      required:
+        - tema
+        - term
       type: object
       properties:
         tema:
@@ -1629,7 +1514,26 @@ components:
           type: string
         behandlingstypeTerm:
           type: string
+    Kodeverkkombinasjon:
+      required:
+        - oppgavetyper
+        - tema
+      type: object
+      properties:
+        tema:
+          $ref: '#/components/schemas/Tema'
+        oppgavetyper:
+          type: array
+          items:
+            $ref: '#/components/schemas/Oppgavetype'
+        gjelderverdier:
+          type: array
+          items:
+            $ref: '#/components/schemas/Gjelder'
     Oppgavetype:
+      required:
+        - oppgavetype
+        - term
       type: object
       properties:
         oppgavetype:
@@ -1895,8 +1799,8 @@ components:
           type: string
           enum:
             - FOLKEREGISTERIDENT
-            - AKTOERID
             - NPID
+            - AKTOERID
       description: "Identer for en person, Read-only, endringer gjøres via aktørid"
       example: 12345678911
     PutOppgaveResponseJson:
@@ -3417,29 +3321,6 @@ components:
           type: object
           additionalProperties:
             type: object
-    StatistikkJson:
-      type: object
-      properties:
-        antall:
-          type: integer
-          format: int64
-        antallFerdigstilteEtterFrist:
-          type: integer
-          format: int64
-        antallFerdigstilteInnenFrist:
-          type: integer
-          format: int64
-        tema:
-          type: string
-        oppgavetype:
-          type: string
-        behandlingstema:
-          type: string
-        behandlingstype:
-          type: string
-        mappeId:
-          type: integer
-          format: int64
   securitySchemes:
     oidc:
       type: http
