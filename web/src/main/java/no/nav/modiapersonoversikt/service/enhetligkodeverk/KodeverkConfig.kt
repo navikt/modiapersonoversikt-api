@@ -40,14 +40,22 @@ object KodeverkConfig {
     }
 }
 
-class FellesKodeverkKilde(val kodeverkNavn: String) : EnhetligKodeverk.Kilde {
-    override fun hentKodeverk(providers: KodeverkProviders): EnhetligKodeverk.Kodeverk {
-        return providers.fraFellesKodeverk(kodeverkNavn)
+class FellesKodeverkKilde(override val navn: String) : EnhetligKodeverk.Kilde<String, String> {
+    override fun hentKodeverk(providers: KodeverkProviders): EnhetligKodeverk.Kodeverk<String, String> {
+        return providers.fellesKodeverk.hentKodeverk(navn)
     }
 }
 
-class SfHenvendelseKodeverkKilde() : EnhetligKodeverk.Kilde {
-    override fun hentKodeverk(providers: KodeverkProviders): EnhetligKodeverk.Kodeverk {
-        return providers.fraSfHenvendelseKodeverk()
+class SfHenvendelseKodeverkKilde : EnhetligKodeverk.Kilde<String, String> {
+    override val navn = "SF_TEMAGRUPPER"
+    override fun hentKodeverk(providers: KodeverkProviders): EnhetligKodeverk.Kodeverk<String, String> {
+        return providers.sfHenvendelseKodeverk.hentKodeverk(navn)
+    }
+}
+
+class OppgaveKodeverkKilde : EnhetligKodeverk.Kilde<String, Tema> {
+    override val navn = "OPPGAVE"
+    override fun hentKodeverk(providers: KodeverkProviders): EnhetligKodeverk.Kodeverk<String, Tema> {
+        return providers.oppgaveKodeverk.hentKodeverk(navn)
     }
 }
