@@ -8,8 +8,7 @@ import no.nav.modiapersonoversikt.infrastructure.http.AuthorizationInterceptor
 import no.nav.modiapersonoversikt.infrastructure.http.LoggingInterceptor
 import no.nav.modiapersonoversikt.infrastructure.http.getCallId
 import no.nav.modiapersonoversikt.legacy.api.domain.sfhenvendelse.generated.apis.*
-import no.nav.modiapersonoversikt.legacy.api.domain.sfhenvendelse.generated.infrastructure.RequestConfig
-import no.nav.modiapersonoversikt.legacy.api.domain.sfhenvendelse.generated.infrastructure.RequestMethod
+import no.nav.modiapersonoversikt.legacy.api.domain.sfhenvendelse.generated.infrastructure.*
 import no.nav.modiapersonoversikt.legacy.api.domain.sfhenvendelse.generated.models.*
 import no.nav.modiapersonoversikt.legacy.api.service.norg.AnsattService
 import no.nav.modiapersonoversikt.legacy.api.service.pdl.PdlOppslagService
@@ -219,7 +218,7 @@ class SfHenvendelseServiceImpl(
             PatchNote<HenvendelseDTO>()
                 .set(HenvendelseDTO::feilsendt).to(true)
         )
-        henvendelseBehandlingApi.client.request<Map<String, Any?>, Unit>(request)
+        henvendelseBehandlingApi.client.request<Map<String, Any?>, Unit>(request).throwIfError()
     }
 
     override fun sendTilSladding(kjedeId: String) {
@@ -228,7 +227,7 @@ class SfHenvendelseServiceImpl(
             PatchNote<HenvendelseDTO>()
                 .set(HenvendelseDTO::sladding).to(true)
         )
-        henvendelseBehandlingApi.client.request<Map<String, Any?>, Unit>(request)
+        henvendelseBehandlingApi.client.request<Map<String, Any?>, Unit>(request).throwIfError()
     }
 
     override fun lukkTraad(kjedeId: String) {
@@ -391,6 +390,26 @@ class SfHenvendelseServiceImpl(
             is EksternBruker.Fnr -> requireNotNull(pdlOppslagService.hentAktorId(this.ident)) {
                 "Fant ikke aktørid for ${this.ident}"
             }
+        }
+    }
+
+    private fun <T> ApiResponse<T>.throwIfError() {
+        when (this.responseType) {
+            ResponseType.ClientError -> {
+                val localVarError = this as ClientError<*>
+                throw ClientException("Client error : ${localVarError.statusCode} ${localVarError.message.orEmpty()}", localVarError.statusCode, this)
+            }
+            ResponseType.ServerError -> {
+                val localVarError = this as ServerError<*>
+                throw ServerException("Server error : ${localVarError.statusCode} ${localVarError.message.orEmpty()}", localVarError.statusCode, this)
+            }
+            ResponseType.Informational -> {
+                throw UnsupportedOperationException("Client does not support Informational responses.")
+            }
+            ResponseType.Redirection -> {
+                throw UnsupportedOperationException("Client does not support Redirection responses.")
+            }
+            ResponseType.Success -> {}
         }
     }
 }
