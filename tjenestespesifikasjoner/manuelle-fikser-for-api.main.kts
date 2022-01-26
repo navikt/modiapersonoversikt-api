@@ -43,59 +43,6 @@ changeFile(
     }
 }
 
-changeFile(
-    from = YamlSource("oppgave-api/src/main/resources/oppgave/openapi.yaml"),
-    to = YamlSource("oppgave-api/src/main/resources/oppgave/openapi-fixed.yaml")
-) {
-    /**
-     * Oppgave-Api sitt kodeverk endepunkt har ikke riktig response-type.
-     *
-     * Vi lager derfor typene, og legger de til manuell her
-     */
-    forEndpoint("get", "/api/v1/kodeverk") {
-        val schema: Any = mapOf(
-            "type" to "array",
-            "items" to mapOf(
-                "\$ref" to "#/components/schemas/GetInterntKodeverkJson"
-            )
-        )
-        addResponse("200", "application/json", schema)
-    }
-    val schemas = getTyped<Json>("components").getTyped<Json>("schemas")
-    schemas.addDefinition(
-        "GetInterntKodeverkJsonTema",
-        objectOf(
-            Field(name = "tema", type = "string", required = true),
-            Field(name = "term", type = "string", required = true)
-        )
-    )
-    schemas.addDefinition(
-        "GetInterntKodeverkJsonOppgavetyper",
-        objectOf(
-            Field(name = "oppgavetype", type = "string", required = true),
-            Field(name = "term", type = "string", required = true)
-        )
-    )
-    schemas.addDefinition(
-        "GetInterntKodeverkJsonGjelderverdier",
-        objectOf(
-            Field(name = "behandlingstema", type = "string"),
-            Field(name = "behandlingstemaTerm", type = "string"),
-            Field(name = "behandlingstype", type = "string"),
-            Field(name = "behandlingstypeTerm", type = "string"),
-        )
-    )
-
-    schemas.addDefinition(
-        "GetInterntKodeverkJson",
-        objectOf(
-            Field(name = "tema", type = "#/components/schemas/GetInterntKodeverkJsonTema", isReference = true, required = true),
-            Field(name = "oppgavetyper", type = "#/components/schemas/GetInterntKodeverkJsonOppgavetyper", isReference = true, required = true),
-            Field(name = "gjelderverdier", type = "#/components/schemas/GetInterntKodeverkJsonGjelderverdier", isReference = true, required = true),
-        )
-    )
-}
-
 /**
  * Må ligge i samme fil pga bug med kotlin-scripts sin @file:Import funksjon
  * Når det blir løst kan dette flytte ut til egen fil
