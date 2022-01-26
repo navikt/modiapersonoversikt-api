@@ -3,10 +3,8 @@ package no.nav.modiapersonoversikt.config.service
 import no.nav.common.sts.SystemUserTokenProvider
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverkServiceImpl
-import no.nav.modiapersonoversikt.service.enhetligkodeverk.kodeverkproviders.FellesKodeverkProvider
-import no.nav.modiapersonoversikt.service.enhetligkodeverk.kodeverkproviders.KodeverkProviders
-import no.nav.modiapersonoversikt.service.enhetligkodeverk.kodeverkproviders.OppgaveKodeverkProvider
-import no.nav.modiapersonoversikt.service.enhetligkodeverk.kodeverkproviders.SfHenvendelseKodeverkProvider
+import no.nav.modiapersonoversikt.service.enhetligkodeverk.kodeverkproviders.*
+import no.nav.modiapersonoversikt.service.enhetligkodeverk.kodeverkproviders.oppgave.OppgaveKodeverk
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 
@@ -16,9 +14,9 @@ open class EnhetligKodeverkConfig {
     open fun enhetligKodeverk(stsClient: SystemUserTokenProvider): EnhetligKodeverk.Service {
         return EnhetligKodeverkServiceImpl(
             KodeverkProviders(
-                fellesKodeverk = FellesKodeverkProvider(FellesKodeverkProvider.createKodeverkApi()),
-                sfHenvendelseKodeverk = SfHenvendelseKodeverkProvider(SfHenvendelseKodeverkProvider.createKodeverkApi(stsClient)),
-                oppgaveKodeverk = OppgaveKodeverkProvider(OppgaveKodeverkProvider.createKodeverkApi())
+                fellesKodeverk = FellesKodeverk.Provider(),
+                sfHenvendelseKodeverk = SfHenvendelseKodeverk.Provider(stsClient),
+                oppgaveKodeverk = OppgaveKodeverk.Provider()
             )
         )
     }
