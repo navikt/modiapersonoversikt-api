@@ -1,7 +1,7 @@
 package no.nav.modiapersonoversikt.service.enhetligkodeverk
 
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.kodeverkproviders.KodeverkProviders
-import no.nav.modiapersonoversikt.service.enhetligkodeverk.kodeverkproviders.Tema
+import no.nav.modiapersonoversikt.service.enhetligkodeverk.kodeverkproviders.oppgave.OppgaveKodeverk
 
 object KodeverkConfig {
     @JvmField
@@ -53,9 +53,9 @@ class SfHenvendelseKodeverkKilde : EnhetligKodeverk.Kilde<String, String> {
     }
 }
 
-class OppgaveKodeverkKilde : EnhetligKodeverk.Kilde<String, Tema> {
+class OppgaveKodeverkKilde : EnhetligKodeverk.Kilde<String, OppgaveKodeverk.Tema> {
     override val navn = "OPPGAVE"
-    override fun hentKodeverk(providers: KodeverkProviders): EnhetligKodeverk.Kodeverk<String, Tema> {
+    override fun hentKodeverk(providers: KodeverkProviders): EnhetligKodeverk.Kodeverk<String, OppgaveKodeverk.Tema> {
         return providers.oppgaveKodeverk.hentKodeverk(navn)
     }
 }
