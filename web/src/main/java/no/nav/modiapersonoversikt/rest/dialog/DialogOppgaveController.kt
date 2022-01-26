@@ -16,7 +16,7 @@ import no.nav.modiapersonoversikt.legacy.api.service.saker.GsakKodeverk
 import no.nav.modiapersonoversikt.legacy.sporsmalogsvar.common.utils.DateUtils.arbeidsdagerFraDatoJava
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.KodeverkConfig
-import no.nav.modiapersonoversikt.service.enhetligkodeverk.kodeverkproviders.Tema
+import no.nav.modiapersonoversikt.service.enhetligkodeverk.kodeverkproviders.oppgave.OppgaveKodeverk
 import no.nav.modiapersonoversikt.service.sfhenvendelse.fixKjedeId
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*
@@ -43,6 +43,16 @@ class DialogOppgaveController @Autowired constructor(
             }
     }
 
+    @PostMapping("/v2/opprett")
+    fun opprettOppgaveV2(@RequestBody request: OpprettOppgaveRequestDTO): OpprettOppgaveResponseDTO {
+        return tilgangskontroll
+            .check(Policies.tilgangTilBruker.with(request.fnr))
+            .check(Policies.behandlingsIderTilhorerBruker.with(BehandlingsIdTilgangData(request.fnr, listOf(request.behandlingskjedeId))))
+            .get(Audit.describe(CREATE, Henvendelse.Oppgave.Opprett, AuditIdentifier.FNR to request.fnr, AuditIdentifier.BEHANDLING_ID to request.behandlingskjedeId)) {
+                oppgavebehandling.opprettOppgaveV2(request.fromDTO()).toDTO()
+            }
+    }
+
     @PostMapping("/opprettskjermetoppgave")
     fun opprettSkjermetOppgave(
         @RequestBody request: OpprettSkjermetOppgaveDTO
@@ -51,6 +61,17 @@ class DialogOppgaveController @Autowired constructor(
             .check(Policies.tilgangTilModia)
             .get(Audit.describe(CREATE, Henvendelse.Oppgave.Opprett, AuditIdentifier.FNR to request.fnr)) {
                 oppgavebehandling.opprettSkjermetOppgave(request.fromDTO()).toDTO()
+            }
+    }
+
+    @PostMapping("/v2/opprettskjermetoppgave")
+    fun opprettSkjermetOppgaveV2(
+        @RequestBody request: OpprettSkjermetOppgaveDTO
+    ): OpprettOppgaveResponseDTO {
+        return tilgangskontroll
+            .check(Policies.tilgangTilModia)
+            .get(Audit.describe(CREATE, Henvendelse.Oppgave.Opprett, AuditIdentifier.FNR to request.fnr)) {
+                oppgavebehandling.opprettSkjermetOppgaveV2(request.fromDTO()).toDTO()
             }
     }
 
@@ -72,7 +93,7 @@ class DialogOppgaveController @Autowired constructor(
     }
 
     @GetMapping("/v2/tema")
-    fun hentAlleTemaV2(): List<Tema> {
+    fun hentAlleTemaV2(): List<OppgaveKodeverk.Tema> {
         return tilgangskontroll
             .check(Policies.tilgangTilModia)
             .get(Audit.skipAuditLog()) {
