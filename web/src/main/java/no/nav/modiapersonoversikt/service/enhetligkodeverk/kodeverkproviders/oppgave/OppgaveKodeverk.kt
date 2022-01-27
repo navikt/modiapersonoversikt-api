@@ -1,19 +1,15 @@
 package no.nav.modiapersonoversikt.service.enhetligkodeverk.kodeverkproviders.oppgave
 
-import com.fasterxml.jackson.core.type.TypeReference
 import no.nav.common.rest.client.RestClient
 import no.nav.common.utils.EnvironmentUtils
 import no.nav.modiapersonoversikt.infrastructure.http.LoggingInterceptor
 import no.nav.modiapersonoversikt.infrastructure.http.XCorrelationIdInterceptor
 import no.nav.modiapersonoversikt.infrastructure.http.getCallId
 import no.nav.modiapersonoversikt.legacy.api.domain.oppgave.generated.apis.KodeverkApi
-import no.nav.modiapersonoversikt.legacy.api.domain.oppgave.generated.infrastructure.Serializer
 import no.nav.modiapersonoversikt.legacy.api.domain.oppgave.generated.models.GjelderDTO
 import no.nav.modiapersonoversikt.legacy.api.domain.oppgave.generated.models.KodeverkkombinasjonDTO
 import no.nav.modiapersonoversikt.legacy.api.domain.oppgave.generated.models.OppgavetypeDTO
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk
-import java.nio.file.Files
-import java.nio.file.Path
 
 object OppgaveKodeverk {
 
@@ -72,7 +68,7 @@ object OppgaveKodeverk {
     }
 
     internal fun parseTilKodeverk(respons: List<KodeverkkombinasjonDTO>): Map<String, Tema> {
-        return respons.map {
+        return respons.filter { !OppgaveOverstyring.underkjenteTemaer.contains(it.tema.tema) }.map {
             Tema(
                 kode = it.tema.tema,
                 tekst = it.tema.term,
@@ -84,8 +80,8 @@ object OppgaveKodeverk {
     }
 
     internal fun hentPrioriteter(oppgaveKodeverk: KodeverkkombinasjonDTO): List<Prioritet> {
-        return overstyrtOppgaveKodeverk.tema[oppgaveKodeverk.tema.tema]?.prioriteter
-            ?: overstyrtOppgaveKodeverk.prioriteter
+        return OppgaveOverstyring.overstyrtKodeverk.tema[oppgaveKodeverk.tema.tema]?.prioriteter
+            ?: OppgaveOverstyring.overstyrtKodeverk.prioriteter
     }
 
     internal fun hentUnderkategorier(gjelderverdier: List<GjelderDTO>?): List<Underkategori> {
@@ -100,7 +96,7 @@ object OppgaveKodeverk {
     }
 
     internal fun hentOppgavetyper(oppgavetyper: List<OppgavetypeDTO>, tema: String): List<Oppgavetype> {
-        return oppgavetyper.map {
+        return oppgavetyper.filter { OppgaveOverstyring.godkjenteOppgavetyper.contains(it.oppgavetype) }.map {
             Oppgavetype(
                 kode = it.oppgavetype,
                 tekst = it.term,
@@ -110,16 +106,7 @@ object OppgaveKodeverk {
     }
 
     internal fun hentFrist(tema: String, oppgavetype: String): Int {
-        return overstyrtOppgaveKodeverk.tema[tema]?.oppgavetyper?.get(oppgavetype)?.frist
-            ?: overstyrtOppgaveKodeverk.frist
+        return OppgaveOverstyring.overstyrtKodeverk.tema[tema]?.oppgavetyper?.get(oppgavetype)?.frist
+            ?: OppgaveOverstyring.overstyrtKodeverk.frist
     }
-}
-
-fun main() {
-    val fil = Files.readString(Path.of("/Users/eirikdahlen/Documents/code/modiapersonoversikt-api/web/src/main/java/no/nav/modiapersonoversikt/service/enhetligkodeverk/kodeverkproviders/oppgave/oppgave-kodeverk.json"))
-    val type = object : TypeReference<List<KodeverkkombinasjonDTO>>() {}
-    val parsed = Serializer.jacksonObjectMapper.readValue(fil, type)
-    val respons = OppgaveKodeverk.parseTilKodeverk(parsed)
-    val serializedJson = Serializer.jacksonObjectMapper.writeValueAsString(respons)
-    println(serializedJson)
 }
