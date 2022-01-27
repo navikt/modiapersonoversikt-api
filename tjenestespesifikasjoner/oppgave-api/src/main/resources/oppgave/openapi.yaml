@@ -24,24 +24,24 @@ info:
     name: Team Oppgavehåndtering
   version: "1"
 tags:
-- name: Oppgave
-- name: Statistikk
-  description: Operasjoner for å søke på statitiskk for oppgaver
-- name: Mappe
-  description: Operasjoner på mapper
+  - name: Oppgave
+  - name: Statistikk
+    description: Operasjoner for å søke på statitiskk for oppgaver
+  - name: Mappe
+    description: Operasjoner på mapper
 paths:
   /api/v1/kodeverk/tema:
     get:
       tags:
-      - Kodeverk
+        - Kodeverk
       summary: Henter alle gyldige tema kombinasjoner
       operationId: hentAlleTemaer
       parameters:
-      - name: X-Correlation-ID
-        in: header
-        required: true
-        schema:
-          type: string
+        - name: X-Correlation-ID
+          in: header
+          required: true
+          schema:
+            type: string
       responses:
         "200":
           description: Temakombinasjoner hentet
@@ -51,8 +51,8 @@ paths:
                 type: string
               example:
                 string:
-                - behandlingstema: string
-                  behandlingstype: string
+                  - behandlingstema: string
+                    behandlingstype: string
         "401":
           description: Konsument mangler gyldig token
         "403":
@@ -62,24 +62,24 @@ paths:
         "500":
           description: Ukjent feilsituasjon har oppstått
       security:
-      - oidc: []
+        - oidc: []
   /api/v1/kodeverk/tema/{tema}:
     get:
       tags:
-      - Kodeverk
+        - Kodeverk
       summary: Henter tilgjengelige kodeverkstema for angitt tema
       operationId: hentTema
       parameters:
-      - name: X-Correlation-ID
-        in: header
-        required: true
-        schema:
-          type: string
-      - name: tema
-        in: path
-        required: true
-        schema:
-          type: string
+        - name: X-Correlation-ID
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: tema
+          in: path
+          required: true
+          schema:
+            type: string
       responses:
         "200":
           description: Underkategorier hentet
@@ -98,24 +98,24 @@ paths:
         "500":
           description: Ukjent feilsituasjon har oppstått
       security:
-      - oidc: []
+        - oidc: []
   /api/v1/kodeverk/oppgavetype/{tema}:
     get:
       tags:
-      - Kodeverk
+        - Kodeverk
       summary: Henter tilgjengelige oppgavetyper for angitt tema
       operationId: hentOppgavetyperForTema
       parameters:
-      - name: X-Correlation-ID
-        in: header
-        required: true
-        schema:
-          type: string
-      - name: tema
-        in: path
-        required: true
-        schema:
-          type: string
+        - name: X-Correlation-ID
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: tema
+          in: path
+          required: true
+          schema:
+            type: string
       responses:
         "200":
           description: Oppgavetyper hentet
@@ -134,27 +134,27 @@ paths:
         "500":
           description: Ukjent feilsituasjon har oppstått
       security:
-      - oidc: []
+        - oidc: []
   /api/v1/mapper/{id}:
     get:
       tags:
-      - Mappe
+        - Mappe
       summary: Hent mappe
       description: Henter en eksisterende mappe
       operationId: hentMappe
       parameters:
-      - name: X-Correlation-ID
-        in: header
-        required: true
-        schema:
-          type: string
-      - name: id
-        in: path
-        description: Mappen som skal hentes
-        required: true
-        schema:
-          type: integer
-          format: int64
+        - name: X-Correlation-ID
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: id
+          in: path
+          description: Mappen som skal hentes
+          required: true
+          schema:
+            type: integer
+            format: int64
       responses:
         "200":
           description: OK
@@ -173,26 +173,26 @@ paths:
         "500":
           description: Ukjent feilsituasjon har oppstått i Oppgave
       security:
-      - oidc: []
+        - oidc: []
     put:
       tags:
-      - Mappe
+        - Mappe
       summary: Endre mappe
       description: Endrer en eksisterende mappe.
       operationId: endreMappe
       parameters:
-      - name: X-Correlation-ID
-        in: header
-        required: true
-        schema:
-          type: string
-      - name: id
-        in: path
-        description: Mappen som skal endres
-        required: true
-        schema:
-          type: integer
-          format: int64
+        - name: X-Correlation-ID
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: id
+          in: path
+          description: Mappen som skal endres
+          required: true
+          schema:
+            type: integer
+            format: int64
       requestBody:
         description: Endret mappe
         content:
@@ -222,26 +222,26 @@ paths:
         "500":
           description: Ukjent feilsituasjon har oppstått i Oppgave
       security:
-      - oidc: []
+        - oidc: []
     delete:
       tags:
-      - Mappe
+        - Mappe
       summary: Slett mappe
       description: Sletter en eksisterende mappe
       operationId: slettMappe
       parameters:
-      - name: X-Correlation-ID
-        in: header
-        required: true
-        schema:
-          type: string
-      - name: id
-        in: path
-        description: Mappen som skal slettes
-        required: true
-        schema:
-          type: integer
-          format: int64
+        - name: X-Correlation-ID
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: id
+          in: path
+          description: Mappen som skal slettes
+          required: true
+          schema:
+            type: integer
+            format: int64
       responses:
         "200":
           description: OK
@@ -254,82 +254,82 @@ paths:
         "500":
           description: Ukjent feilsituasjon har oppstått i Oppgave
       security:
-      - oidc: []
+        - oidc: []
   /api/v1/mapper:
     get:
       tags:
-      - Mappe
+        - Mappe
       summary: Søk etter mapper
       description: Finner mapper som passer søkekriterie
       operationId: finnMapper
       parameters:
-      - name: X-Correlation-ID
-        in: header
-        required: true
-        schema:
-          type: string
-      - name: opprettetAv
-        in: query
-        description: Hvem som har opprettet mappen
-        schema:
-          type: string
-        example: Z990695
-      - name: opprettetFom
-        in: query
-        description: Nedre grense for filtrering på opprettetTidspunkt
-        schema:
-          type: string
-        example: yyyy-MM-ddThh:mm:ss
-      - name: opprettetTom
-        in: query
-        description: Øvre grense for filtrering på opprettetTidspunkt
-        schema:
-          type: string
-        example: yyyy-MM-ddThh:mm:ss
-      - name: tema
-        in: query
-        description: "Filtrering på tema (iht felles kodeverk), her kan flere temaer\
-          \ spesifiseres i samme søk"
-        schema:
-          type: array
-          items:
+        - name: X-Correlation-ID
+          in: header
+          required: true
+          schema:
             type: string
-        example: FOR
-      - name: enhetsnr
-        in: query
-        description: Filtrering på enhet
-        schema:
-          type: string
-        example: "0100"
-      - name: sorteringsrekkefolge
-        in: query
-        description: Rekkefølgen på de returnerte mappene
-        schema:
-          type: string
-          default: DESC
-        example: ASC
-      - name: sorteringsfelt
-        in: query
-        description: Hvilket felt mappene sorteres etter
-        schema:
-          type: string
-          default: OPPRETTET_TIDSPUNKT
-        example: ENDRET_TIDSPUNKT
-      - name: offset
-        in: query
-        description: Offset for paginering i søk
-        schema:
-          type: integer
-          format: int64
-        example: 10
-      - name: limit
-        in: query
-        description: Begrensning i antall returnerte mapper
-        schema:
-          type: integer
-          format: int64
-          default: 10
-        example: 10
+        - name: opprettetAv
+          in: query
+          description: Hvem som har opprettet mappen
+          schema:
+            type: string
+          example: Z990695
+        - name: opprettetFom
+          in: query
+          description: Nedre grense for filtrering på opprettetTidspunkt
+          schema:
+            type: string
+          example: yyyy-MM-ddThh:mm:ss
+        - name: opprettetTom
+          in: query
+          description: Øvre grense for filtrering på opprettetTidspunkt
+          schema:
+            type: string
+          example: yyyy-MM-ddThh:mm:ss
+        - name: tema
+          in: query
+          description: "Filtrering på tema (iht felles kodeverk), her kan flere temaer\
+          \ spesifiseres i samme søk"
+          schema:
+            type: array
+            items:
+              type: string
+          example: FOR
+        - name: enhetsnr
+          in: query
+          description: Filtrering på enhet
+          schema:
+            type: string
+          example: "0100"
+        - name: sorteringsrekkefolge
+          in: query
+          description: Rekkefølgen på de returnerte mappene
+          schema:
+            type: string
+            default: DESC
+          example: ASC
+        - name: sorteringsfelt
+          in: query
+          description: Hvilket felt mappene sorteres etter
+          schema:
+            type: string
+            default: OPPRETTET_TIDSPUNKT
+          example: ENDRET_TIDSPUNKT
+        - name: offset
+          in: query
+          description: Offset for paginering i søk
+          schema:
+            type: integer
+            format: int64
+          example: 10
+        - name: limit
+          in: query
+          description: Begrensning i antall returnerte mapper
+          schema:
+            type: integer
+            format: int64
+            default: 10
+          example: 10
       responses:
         "200":
           description: OK
@@ -346,19 +346,19 @@ paths:
         "500":
           description: Ukjent feilsituasjon har oppstått i Oppgave
       security:
-      - oidc: []
+        - oidc: []
     post:
       tags:
-      - Mappe
+        - Mappe
       summary: Opprett mappe
       description: Oppretter en ny mappe
       operationId: opprettMappe
       parameters:
-      - name: X-Correlation-ID
-        in: header
-        required: true
-        schema:
-          type: string
+        - name: X-Correlation-ID
+          in: header
+          required: true
+          schema:
+            type: string
       requestBody:
         description: Mappen som skal opprettes
         content:
@@ -386,26 +386,26 @@ paths:
         "500":
           description: Ukjent feilsituasjon har oppstått i Oppgave
       security:
-      - oidc: []
+        - oidc: []
   /api/v1/oppgaver/{id}:
     get:
       tags:
-      - Oppgave
+        - Oppgave
       summary: Hent en oppgave
       operationId: hentOppgave
       parameters:
-      - name: X-Correlation-ID
-        in: header
-        required: true
-        schema:
-          type: string
-      - name: id
-        in: path
-        description: Oppgaven som skal hentes
-        required: true
-        schema:
-          type: integer
-          format: int64
+        - name: X-Correlation-ID
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: id
+          in: path
+          description: Oppgaven som skal hentes
+          required: true
+          schema:
+            type: integer
+            format: int64
       responses:
         "200":
           description: OK
@@ -424,10 +424,10 @@ paths:
         "500":
           description: Ukjent feilsituasjon har oppstått i Oppgave
       security:
-      - oidc: []
+        - oidc: []
     put:
       tags:
-      - Oppgave
+        - Oppgave
       summary: Endre en eksisterende oppgave
       description: "Denne operasjonen påvirker alle verdiene på en eksisterende oppgave.\
         \ <strong> Felter som ikke er med vil bli slettet. </strong> \n\n Operasjonen\
@@ -435,18 +435,18 @@ paths:
         \ behovet er å kunne endre på enkelte felter bruk PATCH-operasjonen"
       operationId: endreOppgave
       parameters:
-      - name: X-Correlation-ID
-        in: header
-        required: true
-        schema:
-          type: string
-      - name: id
-        in: path
-        required: true
-        schema:
-          type: integer
-          format: int64
-        example: "Eksempel: 123"
+        - name: X-Correlation-ID
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+          example: "Eksempel: 123"
       requestBody:
         description: "Endret oppgave, for beskrivelse av feltene trykk på \"Schema\""
         content:
@@ -476,27 +476,27 @@ paths:
         "500":
           description: Ukjent feilsituasjon har oppstått i Oppgave
       security:
-      - oidc: []
+        - oidc: []
     patch:
       tags:
-      - Oppgave
+        - Oppgave
       summary: Endre en eksisterende oppgave
       description: Denne operasjonen endrer kun på verdier som er gitt. Felter som
         ikke er med vil ikke bli berørt.
       operationId: patchOppgave
       parameters:
-      - name: X-Correlation-ID
-        in: header
-        required: true
-        schema:
-          type: string
-      - name: id
-        in: path
-        required: true
-        schema:
-          type: integer
-          format: int64
-        example: "Eksempel: 123"
+        - name: X-Correlation-ID
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+          example: "Eksempel: 123"
       requestBody:
         description: "Endret oppgave, for beskrivelse av feltene trykk på\"Schema\""
         content:
@@ -524,25 +524,25 @@ paths:
         "500":
           description: Ukjent feilsituasjon har oppstått i Oppgave
       security:
-      - oidc: []
+        - oidc: []
   /api/v1/oppgaver/{oppgaveId}/hendelser:
     get:
       tags:
-      - Oppgave
+        - Oppgave
       summary: Henter hendelser for en oppgave
       operationId: hentHendelser
       parameters:
-      - name: X-Correlation-ID
-        in: header
-        required: true
-        schema:
-          type: string
-      - name: oppgaveId
-        in: path
-        required: true
-        schema:
-          type: integer
-          format: int64
+        - name: X-Correlation-ID
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: oppgaveId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
       responses:
         "200":
           description: Hendelser hentet
@@ -557,206 +557,206 @@ paths:
         "500":
           description: Ukjent feilsituasjon har oppstått i Oppgave
       security:
-      - oidc: []
+        - oidc: []
   /api/v1/oppgaver:
     get:
       tags:
-      - Oppgave
+        - Oppgave
       summary: Søk etter oppgaver
       operationId: finnOppgaver
       parameters:
-      - name: X-Correlation-ID
-        in: header
-        required: true
-        schema:
-          type: string
-      - name: statuskategori
-        in: query
-        description: "Statuskategori er en kategorisering av statuser internt i oppgave,\
+        - name: X-Correlation-ID
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: statuskategori
+          in: query
+          description: "Statuskategori er en kategorisering av statuser internt i oppgave,\
           \ dvs at det kan søkes på enten AAPEN eller AVSLUTTET og de relevante oppgave\
           \ vil returneres uten at konsument trenger å spesifisere alle statuser som\
           \ representerer åpne oppgaver eller motsatt (avsluttede oppgaver)"
-        schema:
-          type: string
-        example: AAPEN
-      - name: status
-        in: query
-        description: "Status på oppgaven, her kan flere statuser spesifiseres i samme\
+          schema:
+            type: string
+          example: AAPEN
+        - name: status
+          in: query
+          description: "Status på oppgaven, her kan flere statuser spesifiseres i samme\
           \ søk"
-        schema:
-          type: array
-          items:
-            type: string
-      - name: tema
-        in: query
-        description: "Filtrering på tema (iht felles kodeverk), her kan flere temaer\
+          schema:
+            type: array
+            items:
+              type: string
+        - name: tema
+          in: query
+          description: "Filtrering på tema (iht felles kodeverk), her kan flere temaer\
           \ spesifiseres i samme søk"
-        schema:
-          type: array
-          items:
-            type: string
-        example:
-        - FOR
-      - name: oppgavetype
-        in: query
-        description: "Filtrering på oppgavetype (iht felles kodeverk), her kan flere\
+          schema:
+            type: array
+            items:
+              type: string
+          example:
+            - FOR
+        - name: oppgavetype
+          in: query
+          description: "Filtrering på oppgavetype (iht felles kodeverk), her kan flere\
           \ oppgavetyper spesifiseres i samme søk"
-        schema:
-          type: array
-          items:
+          schema:
+            type: array
+            items:
+              type: string
+        - name: tildeltEnhetsnr
+          in: query
+          description: Filtrering på tildelt enhet
+          schema:
             type: string
-      - name: tildeltEnhetsnr
-        in: query
-        description: Filtrering på tildelt enhet
-        schema:
-          type: string
-      - name: tildeltRessurs
-        in: query
-        description: Om oppgaven er tildelt en ressurs eller ikke
-        schema:
-          type: boolean
-        example: false
-      - name: tilordnetRessurs
-        in: query
-        description: Hvilken ressurs oppgaven er tilordnet
-        schema:
-          type: string
-      - name: behandlingstema
-        in: query
-        description: Filtrering på behandlingstema (iht felles kodeverk)
-        schema:
-          type: string
-      - name: behandlingstype
-        in: query
-        description: Filtrering på behandlingstype (iht felles kodeverk)
-        schema:
-          type: string
-      - name: erUtenMappe
-        in: query
-        description: erUtenMappe
-        schema:
-          type: boolean
-        example: true
-      - name: aktoerId
-        in: query
-        description: Filtrering på oppgaver opprettet for en aktør (person)
-        schema:
-          type: array
-          items:
+        - name: tildeltRessurs
+          in: query
+          description: Om oppgaven er tildelt en ressurs eller ikke
+          schema:
+            type: boolean
+          example: false
+        - name: tilordnetRessurs
+          in: query
+          description: Hvilken ressurs oppgaven er tilordnet
+          schema:
             type: string
-      - name: journalpostId
-        in: query
-        description: Filtrering på journalpost
-        schema:
-          type: array
-          items:
+        - name: behandlingstema
+          in: query
+          description: Filtrering på behandlingstema (iht felles kodeverk)
+          schema:
             type: string
-      - name: saksreferanse
-        in: query
-        description: Filtrering på saksreferanse
-        schema:
-          type: array
-          items:
+        - name: behandlingstype
+          in: query
+          description: Filtrering på behandlingstype (iht felles kodeverk)
+          schema:
             type: string
-      - name: opprettetAv
-        in: query
-        description: Hvem som har opprettet oppgaven
-        schema:
-          type: string
-      - name: opprettetAvEnhetsnr
-        in: query
-        description: Filtrering på enhet som opprettet oppgaven
-        schema:
-          type: string
-      - name: aktivDatoFom
-        in: query
-        description: Nedre grense for filtrering på aktivDato
-        schema:
-          type: string
-          format: yyyy-MM-ddThh:mm:ss
-      - name: aktivDatoTom
-        in: query
-        description: Øvre grense for filtrering på aktivDato
-        schema:
-          type: string
-          format: yyyy-MM-ddThh:mm:ss
-      - name: opprettetFom
-        in: query
-        description: Nedre grense for filtrering på opprettetTidspunkt
-        schema:
-          type: string
-          format: yyyy-MM-ddThh:mm:ss
-      - name: opprettetTom
-        in: query
-        description: Øvre grense for filtrering på opprettetTidspunkt
-        schema:
-          type: string
-          format: yyyy-MM-ddThh:mm:ss
-      - name: ferdigstiltFom
-        in: query
-        description: Nedre grense for filtrering på ferdigstilt tidspunkt
-        schema:
-          type: string
-          format: yyyy-MM-ddThh:mm:ss
-      - name: ferdigstiltTom
-        in: query
-        description: Øvre grense for filtrering på ferdigstilt tidspunkt
-        schema:
-          type: string
-          format: yyyy-MM-ddThh:mm:ss
-      - name: fristFom
-        in: query
-        description: Nedre grense for filtrering på fristFerdigstillelse
-        schema:
-          type: string
-          format: yyyy-MM-dd
-      - name: fristTom
-        in: query
-        description: Øvre grense for filtrering på fristFerdigstillelse
-        schema:
-          type: string
-          format: yyyy-MM-dd
-      - name: ikkeTidligereTilordnetRessurs
-        in: query
-        description: Oppgaven kan ikke tidligere ha vært tilordnet denne ressursen
-        schema:
-          type: string
-        example: Z990695
-      - name: orgnr
-        in: query
-        description: Filtrering på oppgaver opprettet for en organisasjon
-        schema:
-          type: array
-          items:
+        - name: erUtenMappe
+          in: query
+          description: erUtenMappe
+          schema:
+            type: boolean
+          example: true
+        - name: aktoerId
+          in: query
+          description: Filtrering på oppgaver opprettet for en aktør (person)
+          schema:
+            type: array
+            items:
+              type: string
+        - name: journalpostId
+          in: query
+          description: Filtrering på journalpost
+          schema:
+            type: array
+            items:
+              type: string
+        - name: saksreferanse
+          in: query
+          description: Filtrering på saksreferanse
+          schema:
+            type: array
+            items:
+              type: string
+        - name: opprettetAv
+          in: query
+          description: Hvem som har opprettet oppgaven
+          schema:
             type: string
-      - name: sorteringsrekkefolge
-        in: query
-        description: Rekkefølgen på de returnerte oppgavene
-        schema:
-          type: string
-          default: ASC
-      - name: sorteringsfelt
-        in: query
-        description: Hvilket felt oppgavene sorteres etter
-        schema:
-          type: string
-          default: FRIST
-        example: ENDRET_TIDSPUNKT
-      - name: limit
-        in: query
-        description: Begrensning i antall returnerte oppgaver
-        schema:
-          type: integer
-          format: int64
-          default: 10
-        example: 10
-      - name: offset
-        in: query
-        description: Offset for paginering i søk
-        schema:
-          type: integer
-          format: int64
-        example: 0
+        - name: opprettetAvEnhetsnr
+          in: query
+          description: Filtrering på enhet som opprettet oppgaven
+          schema:
+            type: string
+        - name: aktivDatoFom
+          in: query
+          description: Nedre grense for filtrering på aktivDato
+          schema:
+            type: string
+            format: yyyy-MM-ddThh:mm:ss
+        - name: aktivDatoTom
+          in: query
+          description: Øvre grense for filtrering på aktivDato
+          schema:
+            type: string
+            format: yyyy-MM-ddThh:mm:ss
+        - name: opprettetFom
+          in: query
+          description: Nedre grense for filtrering på opprettetTidspunkt
+          schema:
+            type: string
+            format: yyyy-MM-ddThh:mm:ss
+        - name: opprettetTom
+          in: query
+          description: Øvre grense for filtrering på opprettetTidspunkt
+          schema:
+            type: string
+            format: yyyy-MM-ddThh:mm:ss
+        - name: ferdigstiltFom
+          in: query
+          description: Nedre grense for filtrering på ferdigstilt tidspunkt
+          schema:
+            type: string
+            format: yyyy-MM-ddThh:mm:ss
+        - name: ferdigstiltTom
+          in: query
+          description: Øvre grense for filtrering på ferdigstilt tidspunkt
+          schema:
+            type: string
+            format: yyyy-MM-ddThh:mm:ss
+        - name: fristFom
+          in: query
+          description: Nedre grense for filtrering på fristFerdigstillelse
+          schema:
+            type: string
+            format: yyyy-MM-dd
+        - name: fristTom
+          in: query
+          description: Øvre grense for filtrering på fristFerdigstillelse
+          schema:
+            type: string
+            format: yyyy-MM-dd
+        - name: ikkeTidligereTilordnetRessurs
+          in: query
+          description: Oppgaven kan ikke tidligere ha vært tilordnet denne ressursen
+          schema:
+            type: string
+          example: Z990695
+        - name: orgnr
+          in: query
+          description: Filtrering på oppgaver opprettet for en organisasjon
+          schema:
+            type: array
+            items:
+              type: string
+        - name: sorteringsrekkefolge
+          in: query
+          description: Rekkefølgen på de returnerte oppgavene
+          schema:
+            type: string
+            default: ASC
+        - name: sorteringsfelt
+          in: query
+          description: Hvilket felt oppgavene sorteres etter
+          schema:
+            type: string
+            default: FRIST
+          example: ENDRET_TIDSPUNKT
+        - name: limit
+          in: query
+          description: Begrensning i antall returnerte oppgaver
+          schema:
+            type: integer
+            format: int64
+            default: 10
+          example: 10
+        - name: offset
+          in: query
+          description: Offset for paginering i søk
+          schema:
+            type: integer
+            format: int64
+          example: 0
       responses:
         "200":
           description: OK
@@ -773,19 +773,19 @@ paths:
         "500":
           description: Ukjent feilsituasjon har oppstått i Oppgave
       security:
-      - oidc: []
+        - oidc: []
     post:
       tags:
-      - Oppgave
+        - Oppgave
       summary: Opprett en ny oppgave
       description: Oppretter en ny oppgave
       operationId: opprettOppgave
       parameters:
-      - name: X-Correlation-ID
-        in: header
-        required: true
-        schema:
-          type: string
+        - name: X-Correlation-ID
+          in: header
+          required: true
+          schema:
+            type: string
       requestBody:
         description: "Oppgaven som skal opprettes, for å se beskrivelse av feltene\
           \ trykk \"Schema\""
@@ -830,21 +830,21 @@ paths:
         "500":
           description: Ukjent feilsituasjon har oppstått i Oppgave
       security:
-      - oidc: []
+        - oidc: []
     patch:
       tags:
-      - Oppgave
+        - Oppgave
       summary: Endre en bulk av oppgaver
       description: "Denne operasjonen endrer kun på verdier som er gitt. Felter som\
         \ ikke er med vil ikke bli berørt. \n\nDenne operasjonen passer bra dersom\
         \ man f.eks ønsker å endre flere oppgaver til å ha samme mappe samtidig."
       operationId: patchOppgaver
       parameters:
-      - name: X-Correlation-ID
-        in: header
-        required: true
-        schema:
-          type: string
+        - name: X-Correlation-ID
+          in: header
+          required: true
+          schema:
+            type: string
       requestBody:
         content:
           application/json:
@@ -871,19 +871,19 @@ paths:
         "500":
           description: Ukjent feilsituasjon har oppstått i Oppgave
       security:
-      - oidc: []
+        - oidc: []
   /api/v1/oppgaver/statuser:
     get:
       tags:
-      - Oppgave
+        - Oppgave
       summary: Hent oppgavestatuser
       operationId: hentOppgaveStatuser
       parameters:
-      - name: X-Correlation-ID
-        in: header
-        required: true
-        schema:
-          type: string
+        - name: X-Correlation-ID
+          in: header
+          required: true
+          schema:
+            type: string
       responses:
         "200":
           description: OK
@@ -896,19 +896,19 @@ paths:
         "500":
           description: Ukjent feilsituasjon har oppstått i Oppgave
       security:
-      - oidc: []
+        - oidc: []
   /api/v1/oppgaver/metadata:
     get:
       tags:
-      - Oppgave
+        - Oppgave
       summary: Hent lovlige metadatanøkler
       operationId: hentMetadataKeys
       parameters:
-      - name: X-Correlation-ID
-        in: header
-        required: true
-        schema:
-          type: string
+        - name: X-Correlation-ID
+          in: header
+          required: true
+          schema:
+            type: string
       responses:
         "200":
           description: OK
@@ -921,32 +921,32 @@ paths:
         "500":
           description: Ukjent feilsituasjon har oppstått i Oppgave
       security:
-      - oidc: []
+        - oidc: []
   /api/v1/oppgaver/{oppgaveId}/oppfolging/{id}:
     get:
       tags:
-      - Oppgave
+        - Oppgave
       summary: Hent en oppfølging
       description: Henter en spesfikk oppfølging på en eksisterende oppgave
       operationId: hentOppfolging
       parameters:
-      - name: X-Correlation-ID
-        in: header
-        required: true
-        schema:
-          type: string
-      - name: oppgaveId
-        in: path
-        required: true
-        schema:
-          type: integer
-          format: int64
-      - name: id
-        in: path
-        required: true
-        schema:
-          type: integer
-          format: int64
+        - name: X-Correlation-ID
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: oppgaveId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
       responses:
         "200":
           description: OK
@@ -961,32 +961,32 @@ paths:
         "500":
           description: Ukjent feilsituasjon har oppstått i Oppgave
       security:
-      - oidc: []
+        - oidc: []
     put:
       tags:
-      - Oppgave
+        - Oppgave
       summary: Endre eksisterende oppfølging
       description: "Endre eksisterende oppfølging på eksisterende oppgave, \n\n<strong>\
         \ Felter som ikke er med vil bli overskrevet </strong>"
       operationId: endreOppfolging
       parameters:
-      - name: X-Correlation-ID
-        in: header
-        required: true
-        schema:
-          type: string
-      - name: oppgaveId
-        in: path
-        required: true
-        schema:
-          type: integer
-          format: int64
-      - name: id
-        in: path
-        required: true
-        schema:
-          type: integer
-          format: int64
+        - name: X-Correlation-ID
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: oppgaveId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
       requestBody:
         description: Oppfølging som skal opprettes
         content:
@@ -1016,31 +1016,31 @@ paths:
         "500":
           description: Ukjent feilsituasjon har oppstått i Oppgave
       security:
-      - oidc: []
+        - oidc: []
     delete:
       tags:
-      - Oppgave
+        - Oppgave
       summary: Slett oppfølging
       description: Sletter en eksisterende oppfølging
       operationId: slettOppfolging
       parameters:
-      - name: X-Correlation-ID
-        in: header
-        required: true
-        schema:
-          type: string
-      - name: oppgaveId
-        in: path
-        required: true
-        schema:
-          type: integer
-          format: int64
-      - name: id
-        in: path
-        required: true
-        schema:
-          type: integer
-          format: int64
+        - name: X-Correlation-ID
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: oppgaveId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
       responses:
         "200":
           description: OK
@@ -1053,26 +1053,26 @@ paths:
         "500":
           description: Ukjent feilsituasjon har oppstått i Oppgave
       security:
-      - oidc: []
+        - oidc: []
   /api/v1/oppgaver/{oppgaveId}/oppfolging:
     get:
       tags:
-      - Oppgave
+        - Oppgave
       summary: Henter oppfølginger på en oppgave
       description: Henter alle oppfølginger på en eksisterende oppgave
       operationId: hentOppfolginger
       parameters:
-      - name: X-Correlation-ID
-        in: header
-        required: true
-        schema:
-          type: string
-      - name: oppgaveId
-        in: path
-        required: true
-        schema:
-          type: integer
-          format: int64
+        - name: X-Correlation-ID
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: oppgaveId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
       responses:
         "200":
           description: OK
@@ -1087,25 +1087,25 @@ paths:
         "500":
           description: Ukjent feilsituasjon har oppstått i Oppgave
       security:
-      - oidc: []
+        - oidc: []
     post:
       tags:
-      - Oppgave
+        - Oppgave
       summary: Opprett oppfølging
       description: Opprett en oppfølging på en eksisterende oppgave
       operationId: opprettOppfolging
       parameters:
-      - name: X-Correlation-ID
-        in: header
-        required: true
-        schema:
-          type: string
-      - name: oppgaveId
-        in: path
-        required: true
-        schema:
-          type: integer
-          format: int64
+        - name: X-Correlation-ID
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: oppgaveId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
       requestBody:
         description: Oppfølging som skal opprettes
         content:
@@ -1133,25 +1133,25 @@ paths:
         "500":
           description: Ukjent feilsituasjon har oppstått i Oppgave
       security:
-      - oidc: []
+        - oidc: []
     delete:
       tags:
-      - Oppgave
+        - Oppgave
       summary: Slett alle oppfølginger på oppgave
       description: Sletter alle oppfølinger på en oppgave
       operationId: slettOppfolginger
       parameters:
-      - name: X-Correlation-ID
-        in: header
-        required: true
-        schema:
-          type: string
-      - name: oppgaveId
-        in: path
-        required: true
-        schema:
-          type: integer
-          format: int64
+        - name: X-Correlation-ID
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: oppgaveId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
       responses:
         "200":
           description: OK
@@ -1164,136 +1164,136 @@ paths:
         "500":
           description: Ukjent feilsituasjon har oppstått i Oppgave
       security:
-      - oidc: []
+        - oidc: []
   /api/v1/statistikk:
     get:
       tags:
-      - Statistikk
+        - Statistikk
       summary: Finn oppgavestatistikk for angitte kriterier
       operationId: finnOppgaver_1
       parameters:
-      - name: X-Correlation-ID
-        in: header
-        required: true
-        schema:
-          type: string
-      - name: ferdigstiltFom
-        in: query
-        description: Nedre grense for filtrering på ferdigstilt tidspunkt
-        schema:
-          type: string
-        example: 2018-05-24T13:49:00
-      - name: ferdigstiltTom
-        in: query
-        description: Øvre grense for filtrering på ferdigstilt tidspunkt
-        schema:
-          type: string
-        example: 2018-05-24T13:49:00
-      - name: opprettetFom
-        in: query
-        description: Nedre grense for filtrering på opprettetTidspunkt
-        schema:
-          type: string
-        example: 2018-05-24T13:49:00
-      - name: opprettetTom
-        in: query
-        description: Øvre grense for filtrering på opprettetTidspunkt
-        schema:
-          type: string
-        example: 2018-05-25T15:00:00
-      - name: endretFom
-        in: query
-        description: Nedre grense for filtrering på endretTidspunkt
-        schema:
-          type: string
-        example: 2018-05-24T13:49:00
-      - name: endretTom
-        in: query
-        description: Øvre grense for filtrering på endretTidspunkt
-        schema:
-          type: string
-        example: 2018-05-25T15:00:00
-      - name: fristFom
-        in: query
-        description: Nedre grense for filtrering på fristFerdigstillelse
-        schema:
-          type: string
-        example: 2018-12-10
-      - name: fristTom
-        in: query
-        description: Øvre grense for filtrering på fristFerdigstillelse
-        schema:
-          type: string
-        example: 2018-12-21
-      - name: aktivDatoFom
-        in: query
-        description: Nedre grense for filtrering på aktivDato
-        schema:
-          type: string
-        example: 2018-12-30
-      - name: aktivDatoTom
-        in: query
-        description: Øvre grense for filtrering på aktivDato
-        schema:
-          type: string
-        example: 2018-11-25
-      - name: tema
-        in: query
-        description: "Filtrering på tema (iht felles kodeverk), her kan flere temaer\
+        - name: X-Correlation-ID
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: ferdigstiltFom
+          in: query
+          description: Nedre grense for filtrering på ferdigstilt tidspunkt
+          schema:
+            type: string
+          example: 2018-05-24T13:49:00
+        - name: ferdigstiltTom
+          in: query
+          description: Øvre grense for filtrering på ferdigstilt tidspunkt
+          schema:
+            type: string
+          example: 2018-05-24T13:49:00
+        - name: opprettetFom
+          in: query
+          description: Nedre grense for filtrering på opprettetTidspunkt
+          schema:
+            type: string
+          example: 2018-05-24T13:49:00
+        - name: opprettetTom
+          in: query
+          description: Øvre grense for filtrering på opprettetTidspunkt
+          schema:
+            type: string
+          example: 2018-05-25T15:00:00
+        - name: endretFom
+          in: query
+          description: Nedre grense for filtrering på endretTidspunkt
+          schema:
+            type: string
+          example: 2018-05-24T13:49:00
+        - name: endretTom
+          in: query
+          description: Øvre grense for filtrering på endretTidspunkt
+          schema:
+            type: string
+          example: 2018-05-25T15:00:00
+        - name: fristFom
+          in: query
+          description: Nedre grense for filtrering på fristFerdigstillelse
+          schema:
+            type: string
+          example: 2018-12-10
+        - name: fristTom
+          in: query
+          description: Øvre grense for filtrering på fristFerdigstillelse
+          schema:
+            type: string
+          example: 2018-12-21
+        - name: aktivDatoFom
+          in: query
+          description: Nedre grense for filtrering på aktivDato
+          schema:
+            type: string
+          example: 2018-12-30
+        - name: aktivDatoTom
+          in: query
+          description: Øvre grense for filtrering på aktivDato
+          schema:
+            type: string
+          example: 2018-11-25
+        - name: tema
+          in: query
+          description: "Filtrering på tema (iht felles kodeverk), her kan flere temaer\
           \ spesifiseres i samme søk"
-        schema:
-          type: array
-          items:
-            type: string
-        example: FOR
-      - name: oppgavetype
-        in: query
-        description: "Filtrering på oppgavetype (iht felles kodeverk), her kan flere\
+          schema:
+            type: array
+            items:
+              type: string
+          example: FOR
+        - name: oppgavetype
+          in: query
+          description: "Filtrering på oppgavetype (iht felles kodeverk), her kan flere\
           \ oppgavetyper spesifiseres i samme søk"
-        schema:
-          type: array
-          items:
+          schema:
+            type: array
+            items:
+              type: string
+          example: JFR
+        - name: behandlingstema
+          in: query
+          description: Filtrering på behandlingstema (iht felles kodeverk)
+          schema:
+            type: array
+            items:
+              type: string
+          example: ab0317
+        - name: behandlingstype
+          in: query
+          description: Filtrering på behandlingstype (iht felles kodeverk)
+          schema:
+            type: array
+            items:
+              type: string
+          example: ae0106
+        - name: tildeltEnhetsnr
+          in: query
+          description: Filtrering på tildelt enhet
+          required: true
+          schema:
             type: string
-        example: JFR
-      - name: behandlingstema
-        in: query
-        description: Filtrering på behandlingstema (iht felles kodeverk)
-        schema:
-          type: array
-          items:
-            type: string
-        example: ab0317
-      - name: behandlingstype
-        in: query
-        description: Filtrering på behandlingstype (iht felles kodeverk)
-        schema:
-          type: array
-          items:
-            type: string
-        example: ae0106
-      - name: tildeltEnhetsnr
-        in: query
-        description: Filtrering på tildelt enhet
-        required: true
-        schema:
-          type: string
-        example: "0100"
-      - name: inkluderMappeIgruppering
-        in: query
-        description: Om mappe skal være endel av grupperingen
-        schema:
-          type: boolean
-          default: false
-        example: true
-      - name: status
-        in: query
-        description: "Status på oppgaven, her kan flere statuser spesifiseres i samme\
+          example: "0100"
+        - name: inkluderMappeIgruppering
+          in: query
+          description: Om mappe skal være endel av grupperingen
+          schema:
+            type: boolean
+            default: false
+          example: true
+        - name: status
+          in: query
+          description: "Status på oppgaven, her kan flere statuser spesifiseres i samme\
           \ søk"
-        schema:
-          type: array
-          items:
-            type: string
-        example: FERDIGSTILT
+          schema:
+            type: array
+            items:
+              type: string
+          example: FERDIGSTILT
       responses:
         "200":
           description: OK
@@ -1310,7 +1310,7 @@ paths:
         "500":
           description: Ukjent feilsituasjon har oppstått i Oppgave
       security:
-      - oidc: []
+        - oidc: []
 components:
   schemas:
     Tema:
@@ -1327,9 +1327,9 @@ components:
           type: string
     GetMappeResponseJson:
       required:
-      - enhetsnr
-      - navn
-      - versjon
+        - enhetsnr
+        - navn
+        - versjon
       type: object
       properties:
         id:
@@ -1397,9 +1397,9 @@ components:
             $ref: '#/components/schemas/GetMappeResponseJson'
     PostMappeResponseJson:
       required:
-      - enhetsnr
-      - navn
-      - versjon
+        - enhetsnr
+        - navn
+        - versjon
       type: object
       properties:
         id:
@@ -1454,8 +1454,8 @@ components:
           format: date-time
     PostMappeRequestJson:
       required:
-      - enhetsnr
-      - navn
+        - enhetsnr
+        - navn
       type: object
       properties:
         enhetsnr:
@@ -1478,9 +1478,9 @@ components:
           example: AAP
     PutMappeResponseJson:
       required:
-      - enhetsnr
-      - navn
-      - versjon
+        - enhetsnr
+        - navn
+        - versjon
       type: object
       properties:
         id:
@@ -1535,9 +1535,9 @@ components:
           format: date-time
     PutMappeRequestJson:
       required:
-      - enhetsnr
-      - navn
-      - versjon
+        - enhetsnr
+        - navn
+        - versjon
       type: object
       properties:
         id:
@@ -1578,12 +1578,12 @@ components:
           example: 1
     GetOppgaveResponseJson:
       required:
-      - aktivDato
-      - oppgavetype
-      - prioritet
-      - status
-      - tildeltEnhetsnr
-      - versjon
+        - aktivDato
+        - oppgavetype
+        - prioritet
+        - status
+        - tildeltEnhetsnr
+        - versjon
       type: object
       properties:
         id:
@@ -1735,19 +1735,19 @@ components:
           description: Hvilken prioritet oppgaven har
           example: HOY
           enum:
-          - HOY
-          - NORM
-          - LAV
+            - HOY
+            - NORM
+            - LAV
         status:
           type: string
           description: Hvilken status oppgaven har
           example: UNDER_BEHANDLING
           enum:
-          - OPPRETTET
-          - AAPNET
-          - UNDER_BEHANDLING
-          - FERDIGSTILT
-          - FEILREGISTRERT
+            - OPPRETTET
+            - AAPNET
+            - UNDER_BEHANDLING
+            - FERDIGSTILT
+            - FEILREGISTRERT
         metadata:
           type: object
           additionalProperties:
@@ -1796,9 +1796,9 @@ components:
         gruppe:
           type: string
           enum:
-          - FOLKEREGISTERIDENT
-          - AKTOERID
-          - NPID
+            - FOLKEREGISTERIDENT
+            - AKTOERID
+            - NPID
       description: "Identer for en person, Read-only, endringer gjøres via aktørid"
       example: 12345678911
     HendelseJson:
@@ -1855,12 +1855,12 @@ components:
             $ref: '#/components/schemas/OppgaveJson'
     OppgaveJson:
       required:
-      - aktivDato
-      - oppgavetype
-      - prioritet
-      - status
-      - tildeltEnhetsnr
-      - versjon
+        - aktivDato
+        - oppgavetype
+        - prioritet
+        - status
+        - tildeltEnhetsnr
+        - versjon
       type: object
       properties:
         id:
@@ -2012,19 +2012,19 @@ components:
           description: Hvilken prioritet oppgaven har
           example: HOY
           enum:
-          - HOY
-          - NORM
-          - LAV
+            - HOY
+            - NORM
+            - LAV
         status:
           type: string
           description: Hvilken status oppgaven har
           example: UNDER_BEHANDLING
           enum:
-          - OPPRETTET
-          - AAPNET
-          - UNDER_BEHANDLING
-          - FERDIGSTILT
-          - FEILREGISTRERT
+            - OPPRETTET
+            - AAPNET
+            - UNDER_BEHANDLING
+            - FERDIGSTILT
+            - FEILREGISTRERT
         metadata:
           type: object
           additionalProperties:
@@ -2067,7 +2067,7 @@ components:
           format: date-time
     PatchOppgaveRequestJson:
       required:
-      - id
+        - id
       type: object
       properties:
         versjon:
@@ -2093,11 +2093,11 @@ components:
           description: Hvilken status oppgaven skal få
           example: UNDER_BEHANDLING
           enum:
-          - OPPRETTET
-          - AAPNET
-          - UNDER_BEHANDLING
-          - FERDIGSTILT
-          - FEILREGISTRERT
+            - OPPRETTET
+            - AAPNET
+            - UNDER_BEHANDLING
+            - FERDIGSTILT
+            - FEILREGISTRERT
         endretAvEnhetsnr:
           maxLength: 4
           minLength: 4
@@ -2123,9 +2123,9 @@ components:
           description: Hvilken prioritet oppgaven har
           example: HOY
           enum:
-          - HOY
-          - NORM
-          - LAV
+            - HOY
+            - NORM
+            - LAV
         behandlingstema:
           type: string
           description: Behandlingstema slik den er definert i felles kodeverk
@@ -2168,12 +2168,12 @@ components:
           example: "11231123"
     PostOppgaveResponseJson:
       required:
-      - aktivDato
-      - oppgavetype
-      - prioritet
-      - status
-      - tildeltEnhetsnr
-      - versjon
+        - aktivDato
+        - oppgavetype
+        - prioritet
+        - status
+        - tildeltEnhetsnr
+        - versjon
       type: object
       properties:
         id:
@@ -2325,19 +2325,19 @@ components:
           description: Hvilken prioritet oppgaven har
           example: HOY
           enum:
-          - HOY
-          - NORM
-          - LAV
+            - HOY
+            - NORM
+            - LAV
         status:
           type: string
           description: Hvilken status oppgaven har
           example: UNDER_BEHANDLING
           enum:
-          - OPPRETTET
-          - AAPNET
-          - UNDER_BEHANDLING
-          - FERDIGSTILT
-          - FEILREGISTRERT
+            - OPPRETTET
+            - AAPNET
+            - UNDER_BEHANDLING
+            - FERDIGSTILT
+            - FEILREGISTRERT
         metadata:
           type: object
           additionalProperties:
@@ -2380,9 +2380,9 @@ components:
           format: date-time
     PostOppgaveRequestJson:
       required:
-      - aktivDato
-      - oppgavetype
-      - prioritet
+        - aktivDato
+        - oppgavetype
+        - prioritet
       type: object
       properties:
         tildeltEnhetsnr:
@@ -2486,9 +2486,9 @@ components:
           description: Hvilken prioritet oppgaven har
           example: NORM
           enum:
-          - HOY
-          - NORM
-          - LAV
+            - HOY
+            - NORM
+            - LAV
         metadata:
           type: object
           additionalProperties:
@@ -2507,12 +2507,12 @@ components:
             \ dette i bruk"
     PutOppgaveResponseJson:
       required:
-      - aktivDato
-      - oppgavetype
-      - prioritet
-      - status
-      - tildeltEnhetsnr
-      - versjon
+        - aktivDato
+        - oppgavetype
+        - prioritet
+        - status
+        - tildeltEnhetsnr
+        - versjon
       type: object
       properties:
         id:
@@ -2664,19 +2664,19 @@ components:
           description: Hvilken prioritet oppgaven har
           example: HOY
           enum:
-          - HOY
-          - NORM
-          - LAV
+            - HOY
+            - NORM
+            - LAV
         status:
           type: string
           description: Hvilken status oppgaven har
           example: UNDER_BEHANDLING
           enum:
-          - OPPRETTET
-          - AAPNET
-          - UNDER_BEHANDLING
-          - FERDIGSTILT
-          - FEILREGISTRERT
+            - OPPRETTET
+            - AAPNET
+            - UNDER_BEHANDLING
+            - FERDIGSTILT
+            - FEILREGISTRERT
         metadata:
           type: object
           additionalProperties:
@@ -2719,12 +2719,12 @@ components:
           format: date-time
     PutOppgaveRequestJson:
       required:
-      - aktivDato
-      - oppgavetype
-      - prioritet
-      - status
-      - tildeltEnhetsnr
-      - versjon
+        - aktivDato
+        - oppgavetype
+        - prioritet
+        - status
+        - tildeltEnhetsnr
+        - versjon
       type: object
       properties:
         id:
@@ -2857,19 +2857,19 @@ components:
           description: Hvilken prioritet oppgaven har
           example: HOY
           enum:
-          - HOY
-          - NORM
-          - LAV
+            - HOY
+            - NORM
+            - LAV
         status:
           type: string
           description: Hvilken status oppgaven har
           example: UNDER_BEHANDLING
           enum:
-          - OPPRETTET
-          - AAPNET
-          - UNDER_BEHANDLING
-          - FERDIGSTILT
-          - FEILREGISTRERT
+            - OPPRETTET
+            - AAPNET
+            - UNDER_BEHANDLING
+            - FERDIGSTILT
+            - FEILREGISTRERT
         metadata:
           type: object
           additionalProperties:
@@ -2919,7 +2919,7 @@ components:
               format: int64
     PatchJson:
       required:
-      - id
+        - id
       type: object
       properties:
         versjon:
@@ -2930,17 +2930,17 @@ components:
           format: int64
     PatchOppgaverRequestJson:
       required:
-      - oppgaver
+        - oppgaver
       type: object
       properties:
         status:
           type: string
           enum:
-          - OPPRETTET
-          - AAPNET
-          - UNDER_BEHANDLING
-          - FERDIGSTILT
-          - FEILREGISTRERT
+            - OPPRETTET
+            - AAPNET
+            - UNDER_BEHANDLING
+            - FERDIGSTILT
+            - FEILREGISTRERT
         tildeltEnhetsnr:
           maxLength: 4
           minLength: 4
@@ -2974,7 +2974,7 @@ components:
             $ref: '#/components/schemas/PatchJson'
     OppfolgingJson:
       required:
-      - kommentar
+        - kommentar
       type: object
       properties:
         id:
@@ -3001,7 +3001,7 @@ components:
           format: date-time
     PostOppfolgingResponseJson:
       required:
-      - kommentar
+        - kommentar
       type: object
       properties:
         id:
@@ -3028,7 +3028,7 @@ components:
           format: date-time
     PostOppfolgingRequestJson:
       required:
-      - kommentar
+        - kommentar
       type: object
       properties:
         kommentar:
@@ -3036,7 +3036,7 @@ components:
           description: Beskrivelse eller kommentar på oppgaven
     PutOppfolgingResponseJson:
       required:
-      - kommentar
+        - kommentar
       type: object
       properties:
         id:
@@ -3063,7 +3063,7 @@ components:
           format: date-time
     PutOppfolgingRequestJson:
       required:
-      - kommentar
+        - kommentar
       type: object
       properties:
         id:
