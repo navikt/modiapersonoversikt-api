@@ -53,7 +53,7 @@
                             <goal>generate</goal>
                         </goals>
                         <configuration>
-                            <inputSpec>${project.basedir}/src/main/resources/norg/openapi.json</inputSpec>
+                            <inputSpec>${project.basedir}/src/main/resources/norg/openapi-fixed.yaml</inputSpec>
                             <generatorName>kotlin</generatorName>
                             <library>jvm-okhttp3</library>
                             <packageName>no.nav.modiapersonoversikt.legacy.api.domain.norg.generated</packageName>
