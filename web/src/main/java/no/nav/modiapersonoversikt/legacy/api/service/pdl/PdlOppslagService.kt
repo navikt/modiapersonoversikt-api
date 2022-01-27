@@ -1,9 +1,10 @@
 package no.nav.modiapersonoversikt.legacy.api.service.pdl
 
 import no.nav.modiapersonoversikt.legacy.api.domain.pdl.generated.*
+import no.nav.modiapersonoversikt.legacy.api.service.pdl.PdlOppslagService.SokKriterieRule.*
 
 interface PdlOppslagService {
-    fun sokPerson(kriterier: List<SokKriterier>): List<SokPerson.PersonSearchHit>
+    fun sokPerson(kriterier: List<PdlKriterie>): List<SokPerson.PersonSearchHit>
     fun hentPerson(fnr: String): HentPerson.Person?
     fun hentPersondata(fnr: String): HentPersondata.Person?
     fun hentTredjepartspersondata(fnrs: List<String>): List<HentTredjepartspersondata.HentPersonBolkResult>
@@ -16,31 +17,39 @@ interface PdlOppslagService {
     enum class SokKriterieRule {
         EQUALS,
         CONTAINS,
+        FUZZY_MATCH,
         AFTER,
         BEFORE
     }
 
-    enum class PdlSokbareFelt(val feltnavn: String, val rule: SokKriterieRule) {
-        NAVN("fritekst.navn", SokKriterieRule.CONTAINS),
-        ADRESSE("fritekst.adresser", SokKriterieRule.CONTAINS),
-        UTENLANDSK_ID("person.utenlandskIdentifikasjonsnummer.identifikasjonsnummer", SokKriterieRule.EQUALS),
-        FODSELSDATO_FRA("person.foedsel.foedselsdato", SokKriterieRule.AFTER),
-        FODSELSDATO_TIL("person.foedsel.foedselsdato", SokKriterieRule.BEFORE),
-        KJONN("person.kjoenn.kjoenn", SokKriterieRule.EQUALS)
+    enum class PdlFelt(val feltnavn: String, val rule: SokKriterieRule) {
+        NAVN("fritekst.navn", FUZZY_MATCH),
+        FORNAVN("person.navn.fornavn", FUZZY_MATCH),
+        ETTERNAVN("person.navn.etternavn", FUZZY_MATCH),
+        MELLOMNAVN("person.navn.mellomnavn", FUZZY_MATCH),
+        ADRESSE("fritekst.adresser", CONTAINS),
+        UTENLANDSK_ID("person.utenlandskIdentifikasjonsnummer.identifikasjonsnummer", EQUALS),
+        FODSELSDATO_FRA("person.foedsel.foedselsdato", AFTER),
+        FODSELSDATO_TIL("person.foedsel.foedselsdato", BEFORE),
+        KJONN("person.kjoenn.kjoenn", EQUALS)
     }
-
-    data class SokKriterier(val felt: PdlSokbareFelt, val value: String?) {
+    data class PdlKriterie(
+        val felt: PdlFelt,
+        val value: String?,
+        val boost: Float? = null
+    ) {
         fun asCriterion() =
-            if (this.value == null) {
+            if (value.isNullOrEmpty()) {
                 null
             } else {
                 SokPerson.Criterion(
-                    fieldName = this.felt.feltnavn,
-                    searchRule = when (this.felt.rule) {
-                        SokKriterieRule.EQUALS -> SokPerson.SearchRule(equals = this.value)
-                        SokKriterieRule.CONTAINS -> SokPerson.SearchRule(contains = this.value)
-                        SokKriterieRule.AFTER -> SokPerson.SearchRule(after = this.value)
-                        SokKriterieRule.BEFORE -> SokPerson.SearchRule(before = this.value)
+                    fieldName = felt.feltnavn,
+                    searchRule = when (felt.rule) {
+                        EQUALS -> SokPerson.SearchRule(equals = this.value, boost = boost)
+                        CONTAINS -> SokPerson.SearchRule(contains = this.value, boost = boost)
+                        FUZZY_MATCH -> SokPerson.SearchRule(fuzzy = this.value, boost = boost)
+                        AFTER -> SokPerson.SearchRule(after = this.value, boost = boost)
+                        BEFORE -> SokPerson.SearchRule(before = this.value, boost = boost)
                     }
                 )
             }

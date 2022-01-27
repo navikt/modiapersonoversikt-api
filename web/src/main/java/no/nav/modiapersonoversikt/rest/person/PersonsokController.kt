@@ -9,8 +9,8 @@ import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Policies
 import no.nav.modiapersonoversikt.infrastructure.tilgangskontroll.Tilgangskontroll
 import no.nav.modiapersonoversikt.legacy.api.domain.pdl.generated.SokPerson
 import no.nav.modiapersonoversikt.legacy.api.service.pdl.PdlOppslagService
-import no.nav.modiapersonoversikt.legacy.api.service.pdl.PdlOppslagService.PdlSokbareFelt
-import no.nav.modiapersonoversikt.legacy.api.service.pdl.PdlOppslagService.SokKriterier
+import no.nav.modiapersonoversikt.legacy.api.service.pdl.PdlOppslagService.PdlFelt
+import no.nav.modiapersonoversikt.legacy.api.service.pdl.PdlOppslagService.PdlKriterie
 import no.nav.modiapersonoversikt.rest.lagXmlGregorianDato
 import no.nav.modiapersonoversikt.service.unleash.Feature
 import no.nav.modiapersonoversikt.service.unleash.UnleashService
@@ -97,8 +97,8 @@ class PersonsokController @Autowired constructor(
                 pdlOppslagService
                     .sokPerson(
                         listOf(
-                            SokKriterier(
-                                PdlSokbareFelt.UTENLANDSK_ID,
+                            PdlKriterie(
+                                PdlFelt.UTENLANDSK_ID,
                                 personsokRequest.utenlandskID
                             )
                         )
@@ -465,9 +465,9 @@ data class PersonsokRequest(
     val postnummer: String?
 )
 
-fun PersonsokRequest.tilPdlKriterier(clock: Clock = Clock.systemDefaultZone()): List<SokKriterier> {
-    val navn = listOf(this.fornavn, this.etternavn).joinNotNullToString(" ")
-    val adresse = listOf(this.gatenavn, this.husnummer, this.husbokstav, this.postnummer, this.kommunenummer).joinNotNullToString(" ")
+fun PersonsokRequest.tilPdlKriterier(clock: Clock = Clock.systemDefaultZone()): List<PdlKriterie> {
+    val navn = listOfNotNull(this.fornavn, this.etternavn).joinToString(" ")
+    val adresse = listOfNotNull(this.gatenavn, this.husnummer, this.husbokstav, this.postnummer, this.kommunenummer).joinToString(" ")
     val fodselsdatoFra = this.fodselsdatoFra ?: this.alderTil?.let { finnSenesteDatoGittAlder(it, clock) }
     val fodselsdatoTil = this.fodselsdatoTil ?: this.alderFra?.let { finnTidligsteDatoGittAlder(it, clock) }
     val kjonn = when (this.kjonn) {
@@ -477,28 +477,19 @@ fun PersonsokRequest.tilPdlKriterier(clock: Clock = Clock.systemDefaultZone()): 
     }
 
     return listOf(
-        SokKriterier(PdlSokbareFelt.NAVN, navn),
-        SokKriterier(PdlSokbareFelt.ADRESSE, adresse),
-        SokKriterier(PdlSokbareFelt.UTENLANDSK_ID, this.utenlandskID),
-        SokKriterier(PdlSokbareFelt.FODSELSDATO_FRA, fodselsdatoFra),
-        SokKriterier(PdlSokbareFelt.FODSELSDATO_TIL, fodselsdatoTil),
-        SokKriterier(PdlSokbareFelt.KJONN, kjonn)
+        PdlKriterie(PdlFelt.NAVN, navn),
+        PdlKriterie(PdlFelt.ADRESSE, adresse),
+        PdlKriterie(PdlFelt.UTENLANDSK_ID, this.utenlandskID),
+        PdlKriterie(PdlFelt.FODSELSDATO_FRA, fodselsdatoFra),
+        PdlKriterie(PdlFelt.FODSELSDATO_TIL, fodselsdatoTil),
+        PdlKriterie(PdlFelt.KJONN, kjonn)
     )
 }
 
-fun finnSenesteDatoGittAlder(alderTil: Int, clock: Clock): String {
+private fun finnSenesteDatoGittAlder(alderTil: Int, clock: Clock): String {
     return LocalDate.now(clock).minusYears(alderTil.toLong() + 1).plusDays(1).toString()
 }
 
-fun finnTidligsteDatoGittAlder(alderFra: Int, clock: Clock): String {
+private fun finnTidligsteDatoGittAlder(alderFra: Int, clock: Clock): String {
     return LocalDate.now(clock).minusYears(alderFra.toLong()).toString()
-}
-
-private fun <T : Any> Iterable<T?>.joinNotNullToString(delimiter: String): String? {
-    val nonNullElement = this.filterNotNull()
-    return if (nonNullElement.isEmpty()) {
-        null
-    } else {
-        nonNullElement.joinToString(delimiter)
-    }
 }
