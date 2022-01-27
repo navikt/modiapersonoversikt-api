@@ -1,4 +1,4 @@
-package no.nav.modiapersonoversikt.service.enhetligkodeverk.kodeverkproviders
+package no.nav.modiapersonoversikt.service.enhetligkodeverk.kodeverkproviders.felleskodeverk
 
 import no.nav.common.rest.client.RestClient
 import no.nav.common.utils.EnvironmentUtils

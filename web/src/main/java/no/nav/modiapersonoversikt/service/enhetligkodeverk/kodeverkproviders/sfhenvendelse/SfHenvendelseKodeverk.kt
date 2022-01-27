@@ -1,4 +1,4 @@
-package no.nav.modiapersonoversikt.service.enhetligkodeverk.kodeverkproviders
+package no.nav.modiapersonoversikt.service.enhetligkodeverk.kodeverkproviders.sfhenvendelse
 
 import no.nav.common.rest.client.RestClient
 import no.nav.common.sts.SystemUserTokenProvider
