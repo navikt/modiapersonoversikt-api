@@ -73,6 +73,7 @@ class SfLegacyDialogController(
             bruker = EksternBruker.Fnr(fnr),
             enhet = enhet,
             temagruppe = SfTemagruppeTemaMapping.hentTemagruppeForTema(sporsmalsRequest.sak.temaKode),
+            tilknyttetAnsatt = sporsmalsRequest.erOppgaveTilknyttetAnsatt,
             fritekst = sporsmalsRequest.fritekst
         )
         sfHenvendelseService.journalforHenvendelse(
@@ -91,6 +92,7 @@ class SfLegacyDialogController(
             bruker = EksternBruker.Fnr(fnr),
             enhet = enhet,
             temagruppe = SfTemagruppeTemaMapping.hentTemagruppeForTema(infomeldingRequest.sak.temaKode),
+            tilknyttetAnsatt = false,
             fritekst = infomeldingRequest.fritekst
         )
 
@@ -176,6 +178,7 @@ class SfLegacyDialogController(
                 bruker = bruker,
                 kjedeId = fortsettDialogRequest.traadId,
                 enhet = enhet,
+                tilknyttetAnsatt = fortsettDialogRequest.erOppgaveTilknyttetAnsatt,
                 fritekst = fortsettDialogRequest.fritekst
             )
 

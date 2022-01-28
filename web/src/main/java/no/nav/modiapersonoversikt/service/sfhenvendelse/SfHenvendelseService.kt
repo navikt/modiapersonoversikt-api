@@ -7,9 +7,9 @@ import no.nav.modiapersonoversikt.infrastructure.AuthContextUtils
 import no.nav.modiapersonoversikt.infrastructure.http.AuthorizationInterceptor
 import no.nav.modiapersonoversikt.infrastructure.http.LoggingInterceptor
 import no.nav.modiapersonoversikt.infrastructure.http.getCallId
+import no.nav.modiapersonoversikt.legacy.api.domain.saker.Sak
 import no.nav.modiapersonoversikt.legacy.api.domain.sfhenvendelse.generated.apis.*
-import no.nav.modiapersonoversikt.legacy.api.domain.sfhenvendelse.generated.infrastructure.RequestConfig
-import no.nav.modiapersonoversikt.legacy.api.domain.sfhenvendelse.generated.infrastructure.RequestMethod
+import no.nav.modiapersonoversikt.legacy.api.domain.sfhenvendelse.generated.infrastructure.*
 import no.nav.modiapersonoversikt.legacy.api.domain.sfhenvendelse.generated.models.*
 import no.nav.modiapersonoversikt.legacy.api.service.norg.AnsattService
 import no.nav.modiapersonoversikt.legacy.api.service.pdl.PdlOppslagService
@@ -33,12 +33,14 @@ interface SfHenvendelseService {
         bruker: EksternBruker,
         enhet: String,
         temagruppe: String,
+        tilknyttetAnsatt: Boolean,
         fritekst: String
     ): HenvendelseDTO
     fun sendMeldingPaEksisterendeDialog(
         bruker: EksternBruker,
         kjedeId: String,
         enhet: String,
+        tilknyttetAnsatt: Boolean,
         fritekst: String
     ): HenvendelseDTO
 
@@ -107,6 +109,16 @@ class SfHenvendelseServiceImpl(
     }
 
     override fun journalforHenvendelse(enhet: String, kjedeId: String, saksTema: String, saksId: String?, fagsakSystem: String?) {
+        if (fagsakSystem == Sak.BIDRAG_MARKOR || saksTema == Sak.BIDRAG_MARKOR) {
+            // Fikser opp i bidrags-hack verdier, og kaller metoden på nytt
+            return journalforHenvendelse(
+                enhet = enhet,
+                kjedeId = kjedeId,
+                saksTema = "BID",
+                fagsakSystem = Sak.FAGSYSTEMKODE_BIDRAG,
+                saksId = null
+            )
+        }
         val fagsaksystem = if (saksId != null) {
             JournalRequestDTO.Fagsaksystem.valueOf(
                 requireNotNull(fagsakSystem) {
@@ -155,6 +167,7 @@ class SfHenvendelseServiceImpl(
         bruker: EksternBruker,
         enhet: String,
         temagruppe: String,
+        tilknyttetAnsatt: Boolean,
         fritekst: String
     ): HenvendelseDTO {
         return henvendelseOpprettApi
@@ -165,6 +178,7 @@ class SfHenvendelseServiceImpl(
                     aktorId = bruker.aktorId(),
                     temagruppe = temagruppe,
                     enhet = enhet,
+                    tildelMeg = tilknyttetAnsatt,
                     fritekst = fritekst
                 )
             )
@@ -174,6 +188,7 @@ class SfHenvendelseServiceImpl(
         bruker: EksternBruker,
         kjedeId: String,
         enhet: String,
+        tilknyttetAnsatt: Boolean,
         fritekst: String
     ): HenvendelseDTO {
         val callId = getCallId()
@@ -190,7 +205,8 @@ class SfHenvendelseServiceImpl(
                     aktorId = bruker.aktorId(),
                     temagruppe = henvendelse.gjeldendeTemagruppe!!, // TODO må fikses av SF-api. Temagruppe kan ikke være null
                     enhet = enhet,
-                    fritekst = fritekst
+                    fritekst = fritekst,
+                    tildelMeg = tilknyttetAnsatt
                 )
             )
     }
@@ -213,7 +229,7 @@ class SfHenvendelseServiceImpl(
             PatchNote<HenvendelseDTO>()
                 .set(HenvendelseDTO::feilsendt).to(true)
         )
-        henvendelseBehandlingApi.client.request<Map<String, Any?>, Unit>(request)
+        henvendelseBehandlingApi.client.request<Map<String, Any?>, Unit>(request).throwIfError()
     }
 
     override fun sendTilSladding(kjedeId: String) {
@@ -222,7 +238,7 @@ class SfHenvendelseServiceImpl(
             PatchNote<HenvendelseDTO>()
                 .set(HenvendelseDTO::sladding).to(true)
         )
-        henvendelseBehandlingApi.client.request<Map<String, Any?>, Unit>(request)
+        henvendelseBehandlingApi.client.request<Map<String, Any?>, Unit>(request).throwIfError()
     }
 
     override fun lukkTraad(kjedeId: String) {
@@ -385,6 +401,26 @@ class SfHenvendelseServiceImpl(
             is EksternBruker.Fnr -> requireNotNull(pdlOppslagService.hentAktorId(this.ident)) {
                 "Fant ikke aktørid for ${this.ident}"
             }
+        }
+    }
+
+    private fun <T> ApiResponse<T>.throwIfError() {
+        when (this.responseType) {
+            ResponseType.ClientError -> {
+                val localVarError = this as ClientError<*>
+                throw ClientException("Client error : ${localVarError.statusCode} ${localVarError.message.orEmpty()}", localVarError.statusCode, this)
+            }
+            ResponseType.ServerError -> {
+                val localVarError = this as ServerError<*>
+                throw ServerException("Server error : ${localVarError.statusCode} ${localVarError.message.orEmpty()}", localVarError.statusCode, this)
+            }
+            ResponseType.Informational -> {
+                throw UnsupportedOperationException("Client does not support Informational responses.")
+            }
+            ResponseType.Redirection -> {
+                throw UnsupportedOperationException("Client does not support Redirection responses.")
+            }
+            ResponseType.Success -> {}
         }
     }
 }
