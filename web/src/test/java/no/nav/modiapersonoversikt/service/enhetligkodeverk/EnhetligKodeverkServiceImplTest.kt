@@ -1,7 +1,13 @@
 package no.nav.modiapersonoversikt.service.enhetligkodeverk
 
 import io.mockk.*
+import no.nav.modiapersonoversikt.legacy.api.domain.oppgave.generated.apis.KodeverkApi
+import no.nav.modiapersonoversikt.legacy.api.domain.oppgave.generated.models.GjelderDTO
+import no.nav.modiapersonoversikt.legacy.api.domain.oppgave.generated.models.KodeverkkombinasjonDTO
+import no.nav.modiapersonoversikt.legacy.api.domain.oppgave.generated.models.OppgavetypeDTO
+import no.nav.modiapersonoversikt.legacy.api.domain.oppgave.generated.models.TemaDTO
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.kodeverkproviders.KodeverkProviders
+import no.nav.modiapersonoversikt.service.enhetligkodeverk.kodeverkproviders.oppgave.OppgaveKodeverk
 import no.nav.modiapersonoversikt.utils.MutableClock
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -17,14 +23,20 @@ internal class EnhetligKodeverkServiceImplTest {
         val landkoder = service.hentKodeverk(KodeverkConfig.LAND)
         assertThat(landkoder).isNotNull
 
-        val temagrupper = service.hentKodeverk(KodeverkConfig.SF_TEMAGRUPPER)
-        assertThat(temagrupper).isNotNull
+        val sfTemagrupper = service.hentKodeverk(KodeverkConfig.SF_TEMAGRUPPER)
+        assertThat(sfTemagrupper).isNotNull
+
+        val temaer = service.hentKodeverk(KodeverkConfig.OPPGAVE)
+        assertThat(temaer).isNotNull
 
         val landkode = landkoder.hentVerdi("NO", "NO")
         assertThat(landkode).isEqualTo("Norge")
 
-        val temagruppe = temagrupper.hentVerdi("ARBD", "ARBD")
-        assertThat(temagruppe).isEqualTo("Arbeid")
+        val sfTemagruppe = sfTemagrupper.hentVerdi("ARBD", "ARBD")
+        assertThat(sfTemagruppe).isEqualTo("Arbeid")
+
+        val tema = temaer.hentVerdi("AAP")
+        assertThat(tema.tekst).isEqualTo("Arbeidsavklaringspenger")
     }
 
     @Test
@@ -119,6 +131,64 @@ internal class EnhetligKodeverkServiceImplTest {
         }
     }
 
+    @Test
+    internal fun `skal overstyre oppgavekodeverk på frister og prioriteter`() {
+        val oppgaveApi: KodeverkApi = mockk()
+        val provider = OppgaveKodeverk.Provider(oppgaveApi)
+        every { provider.oppgaveKodeverk.hentInterntKodeverk(any()) } returns listOf(
+            KodeverkkombinasjonDTO(
+                tema = TemaDTO(
+                    tema = "AAP",
+                    term = "Arbeidsavklaringspenger"
+                ),
+                oppgavetyper = listOf(
+                    OppgavetypeDTO(
+                        oppgavetype = "VURD_HENV",
+                        term = "Vurder henvendelse"
+                    ),
+                    OppgavetypeDTO(
+                        oppgavetype = "IKKE_STØTTET",
+                        term = "Oppgavetype vi ikke støtter"
+                    )
+                ),
+                gjelderverdier = listOf(
+                    GjelderDTO(
+                        behandlingstema = "ab0241",
+                        behandlingstemaTerm = "Dagliglivet"
+                    ),
+                    GjelderDTO(
+                        behandlingstema = "ab0241",
+                        behandlingstemaTerm = "Dagliglivet",
+                        behandlingstype = "ae0007",
+                        behandlingstypeTerm = "Utbetaling"
+                    )
+                )
+            ),
+            KodeverkkombinasjonDTO(
+                tema = TemaDTO(
+                    tema = "TIL",
+                    term = "Tiltak"
+                ),
+                oppgavetyper = emptyList(),
+                gjelderverdier = null
+            )
+        )
+
+        val kodeverk = provider.hentKodeverk(KodeverkConfig.OPPGAVE.navn)
+        val kodeverkVerdier = kodeverk.hentAlleVerdier().toList()
+
+        assertThat(kodeverkVerdier.size).isEqualTo(1)
+        assertThat(kodeverkVerdier[0].prioriteter.size).isEqualTo(3)
+        assertThat(kodeverkVerdier[0].prioriteter[0].tekst).isEqualTo("Høy")
+        assertThat(kodeverkVerdier[0].oppgavetyper.size).isEqualTo(1)
+        assertThat(kodeverkVerdier[0].oppgavetyper[0].dagerFrist).isEqualTo(0)
+        assertThat(kodeverkVerdier[0].underkategorier.size).isEqualTo(2)
+        assertThat(kodeverkVerdier[0].underkategorier[0].kode).isEqualTo("ab0241:")
+        assertThat(kodeverkVerdier[0].underkategorier[0].tekst).isEqualTo("Dagliglivet")
+        assertThat(kodeverkVerdier[0].underkategorier[1].kode).isEqualTo("ab0241:ae0007")
+        assertThat(kodeverkVerdier[0].underkategorier[1].tekst).isEqualTo("Dagliglivet - Utbetaling")
+    }
+
     private fun withTimerMock(): Triple<Timer, CapturingSlot<Date>, CapturingSlot<Long>> {
         val timer: Timer = mockk()
         val date = slot<Date>()
@@ -143,8 +213,17 @@ internal class EnhetligKodeverkServiceImplTest {
         )
         every { providers.oppgaveKodeverk.hentKodeverk(any()) } returns EnhetligKodeverk.Kodeverk(
             "Oppgave",
-            emptyMap()
+            mapOf(
+                "AAP" to OppgaveKodeverk.Tema(
+                    kode = "AAP",
+                    tekst = "Arbeidsavklaringspenger",
+                    oppgavetyper = emptyList(),
+                    prioriteter = emptyList(),
+                    underkategorier = emptyList()
+                )
+            )
         )
+
         return providers
     }
 }

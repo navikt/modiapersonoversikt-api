@@ -14,7 +14,7 @@ import no.nav.modiapersonoversikt.service.enhetligkodeverk.EnhetligKodeverk
 object OppgaveKodeverk {
 
     class Provider(
-        private val oppgaveKodeverk: KodeverkApi = createKodeverkApi()
+        val oppgaveKodeverk: KodeverkApi = createKodeverkApi()
     ) : EnhetligKodeverk.KodeverkProvider<String, Tema> {
 
         override fun hentKodeverk(kodeverkNavn: String): EnhetligKodeverk.Kodeverk<String, Tema> {
