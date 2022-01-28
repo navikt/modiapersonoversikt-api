@@ -95,7 +95,7 @@ class RestOppgaveBehandlingServiceImpl(
                         it.behandlingstema,
                         it.behandlingstype
                     ).joinToString(":") { it ?: "" }
-                }.get(),
+                }.orElse(null),
             )
         )
     }
@@ -150,7 +150,7 @@ class RestOppgaveBehandlingServiceImpl(
                         it.behandlingstema,
                         it.behandlingstype
                     ).joinToString(":") { it ?: "" }
-                }.get(),
+                }.orElse(null),
             )
         )
     }
@@ -360,6 +360,24 @@ class RestOppgaveBehandlingServiceImpl(
     override fun leggTilbakeOppgaveIGsak(request: LeggTilbakeOppgaveIGsakRequest?) {
         requireNotNull(request)
         requireNotNull(request.oppgaveId)
+        if (request.nyTemagruppe != null) {
+            val behandling = kodeverksmapperService.mapUnderkategori(request.nyTemagruppe.underkategori)
+            val nyUnderkategori = behandling.map {
+                listOf(
+                    it.behandlingstema,
+                    it.behandlingstype
+                ).joinToString(":") { it ?: "" }
+            }.orElse(null)
+            if (nyUnderkategori != null) {
+                request.nyTemagruppe.setUnderkategori(nyUnderkategori)
+            }
+        }
+        leggTilbakeOppgaveIGsakV2(request)
+    }
+
+    override fun leggTilbakeOppgaveIGsakV2(request: LeggTilbakeOppgaveIGsakRequest?) {
+        requireNotNull(request)
+        requireNotNull(request.oppgaveId)
         val ident: String = AuthContextUtils.requireIdent()
         val oppgave = hentOppgaveJsonDTO(request.oppgaveId)
 
@@ -470,7 +488,7 @@ class RestOppgaveBehandlingServiceImpl(
         return henvendelseOppgave
     }
 
-    private fun mapUnderkategori(underkategoriKode: String?): Optional<Behandling> {
+    fun mapUnderkategori(underkategoriKode: String?): Optional<Behandling> {
         return ofNullable(underkategoriKode).map { kode ->
             val behandlingstemaOgType = kode.split(":").map {
                 it.ifEmpty { null }

@@ -36,6 +36,8 @@ public interface OppgaveBehandlingService {
 
     void leggTilbakeOppgaveIGsak(LeggTilbakeOppgaveIGsakRequest request);
 
+    void leggTilbakeOppgaveIGsakV2(LeggTilbakeOppgaveIGsakRequest request);
+
     void systemLeggTilbakeOppgaveIGsak(String oppgaveId, Temagruppe temagruppe, String saksbehandlersValgteEnhet);
 
     boolean oppgaveErFerdigstilt(String oppgaveid);
