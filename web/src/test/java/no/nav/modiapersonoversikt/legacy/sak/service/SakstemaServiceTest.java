@@ -36,9 +36,6 @@ public class SakstemaServiceTest {
     private SakOgBehandlingService sakOgBehandlingService;
 
     @Mock
-    private HenvendelseService henvendelseService;
-
-    @Mock
     private HttpServletRequest request;
 
     @Mock
