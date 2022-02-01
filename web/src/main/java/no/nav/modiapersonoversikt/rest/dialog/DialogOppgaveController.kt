@@ -102,9 +102,8 @@ class DialogOppgaveController @Autowired constructor(
     }
 
     private fun kalkulerFrist(temaKode: String, oppgaveTypeKode: String): LocalDate {
-        val dagerFrist = gsakKodeverk.hentTemaListe()
-            .find { it.kode == temaKode }
-            ?.oppgaveTyper
+        val dagerFrist = kodeverkService.hentKodeverk(KodeverkConfig.OPPGAVE).hentVerdiEllerNull(temaKode)
+            ?.oppgavetyper
             ?.find { it.kode == oppgaveTypeKode }
             ?.dagerFrist
             ?: 2
