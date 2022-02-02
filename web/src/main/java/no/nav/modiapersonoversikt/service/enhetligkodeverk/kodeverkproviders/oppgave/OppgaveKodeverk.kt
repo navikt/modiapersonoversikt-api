@@ -1,5 +1,6 @@
 package no.nav.modiapersonoversikt.service.enhetligkodeverk.kodeverkproviders.oppgave
 
+import com.fasterxml.jackson.annotation.JsonFormat
 import no.nav.common.rest.client.RestClient
 import no.nav.common.utils.EnvironmentUtils
 import no.nav.modiapersonoversikt.infrastructure.http.LoggingInterceptor
@@ -37,12 +38,14 @@ object OppgaveKodeverk {
         val dagerFrist: Int
     )
 
+    @JsonFormat(shape = JsonFormat.Shape.OBJECT)
     enum class Prioritet(
+        val kode: String,
         val tekst: String
     ) {
-        HOY("Høy"),
-        NORM("Normal"),
-        LAV("Lav")
+        HOY("HOY", "Høy"),
+        NORM("NORM", "Normal"),
+        LAV("LAV", "Lav")
     }
 
     data class Underkategori(
