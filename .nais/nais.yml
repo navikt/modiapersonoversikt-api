@@ -187,3 +187,9 @@ spec:
       value: "U143410"
     - name: CXF_SECURE_LOG
       value: "enabled"
+    - name: AXSYS_URL
+      value: "https://axsys.nais.adeo.no"
+    - name: AXSYS_CLUSTER
+      value: "prod-fss"
+    - name: NOM_URL
+      value: "https://nom-api.intern.nav.no"

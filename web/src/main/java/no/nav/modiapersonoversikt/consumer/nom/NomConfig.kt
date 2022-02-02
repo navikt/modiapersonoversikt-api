@@ -17,7 +17,7 @@ import org.springframework.context.annotation.Configuration
 
 @Configuration
 open class NomConfig {
-    val url: String = ""
+    val url: String = EnvironmentUtils.getRequiredProperty("NOM_URL")
     val httpClient: OkHttpClient = RestClient.baseClient()
     private val veilederCache: Cache<NavIdent, VeilederNavn> = TODO("Lage cache")
 
