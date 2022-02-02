@@ -58,7 +58,6 @@ class AnsattServiceImpl @Autowired constructor(
                 log.error("Klarte ikke å hente ansatt fagområder for $ident $enhet", it)
                 emptySet()
             }
-
     }
 
     override fun ansatteForEnhet(enhet: AnsattEnhet): List<Ansatt> {
