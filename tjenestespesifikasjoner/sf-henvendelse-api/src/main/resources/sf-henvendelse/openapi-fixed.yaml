@@ -1,0 +1,669 @@
+---
+openapi: "3.0.2"
+info:
+  title: "Salesforce Henvendelse API"
+  version: "1.0"
+servers:
+- url: "https://sf-henvendelse.dev.intern.nav.no/api"
+- url: "https://sf-henvendelse.intern.nav.no/api"
+- url: "https://navdialog--uat.my.salesforce.com/services/apexrest"
+paths:
+  /henvendelse/kodeverk/temagrupper:
+    get:
+      tags:
+      - "Kodeverk"
+      description: "Returnerer gyldige temagrupper for en henvendelse"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/Temagruppe"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+      parameters:
+      - $ref: "#/components/parameters/X-Correlation-ID"
+  /henvendelse/journal:
+    post:
+      tags:
+      - "Journal"
+      description: "Endepunkt for igangsettelse av journalføring mot JOARK. Referanse\
+        \ til fagsak i overenstemmelse med påkrevd input til [Dokarkiv API](https://dokarkiv-q2.nais.preprod.local/swagger-ui.html#/arkiver-og-journalfoer-rest-controller/opprettJournalpostUsingPOST).\
+        \ Ved blank/null som saksId vil journalposten opprettes som generell sak på\
+        \ tema."
+      requestBody:
+        required: true
+        description: "JSON request med metadata for journalpost"
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/JournalRequest"
+      parameters:
+      - $ref: "#/components/parameters/X-Correlation-ID"
+      responses:
+        "200":
+          description: "OK"
+          $ref: "#/components/schemas/Henvendelse"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+  /henvendelse/behandling/{kjedeId}:
+    put:
+      tags:
+      - "Henvendelse Behandling"
+      description: "Behandling/oppdatering av eksisterende henvendelser. Benyttes\
+        \ til f.eks å oppdatere felter som kasseringsdato, gjeldendeTema. Request\
+        \ body er JSON som følger objektmodellen til henvendelse, men krever kun at\
+        \ du sender med felter hvor dataene skal oppdateres."
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Henvendelse"
+      parameters:
+      - name: "kjedeId"
+        in: "path"
+        required: true
+        schema:
+          type: "string"
+        description: "Unik id til samtalereferat eller tråd som man ønsker å behandle"
+      - $ref: "#/components/parameters/X-Correlation-ID"
+      responses:
+        "200":
+          description: "OK"
+          $ref: "#/components/schemas/Henvendelse"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+  /henvendelse/meldingskjede/lukk:
+    post:
+      tags:
+      - "Henvendelse Behandling"
+      description: "Endepunkt som benyttes for lukking av en meldingskjede. Når kjeden\
+        \ er lukket er det ikke lenger mulig å skrive flere meldinger."
+      parameters:
+      - name: "kjedeId"
+        in: "query"
+        required: true
+        schema:
+          type: "string"
+        description: "Unik kjedeId til meldingstråden som skal lukkes"
+      - $ref: "#/components/parameters/X-Correlation-ID"
+      responses:
+        "204":
+          description: "No Content"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+  /henvendelse/ny/samtalereferat:
+    post:
+      tags:
+      - "Ny Henvendelse"
+      description: "Opprett nytt samtalereferat tilknyttet en aktør"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SamtalereferatRequest"
+      parameters:
+      - $ref: "#/components/parameters/X-Correlation-ID"
+      - name: "kjedeId"
+        in: "query"
+        required: false
+        schema:
+          type: "string"
+        description: "Kjedeid hvis referatet skal knyttes som et oppfølingsreferat."
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                $ref: "#/components/schemas/Henvendelse"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+  /henvendelse/ny/melding:
+    post:
+      tags:
+      - "Ny Henvendelse"
+      description: "Opprett ny melding relatert til en aktør"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MeldingRequest"
+      parameters:
+      - $ref: "#/components/parameters/X-Correlation-ID"
+      - name: "kjedeId"
+        in: "query"
+        required: false
+        schema:
+          type: "string"
+        description: "Kjedeid hvis ny melding skal opprettes på en eksisterende trå\
+          d. Hvis denne er blank opprettes meldingen på en ny tråd."
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                $ref: "#/components/schemas/Henvendelse"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "403":
+          $ref: "#/components/responses/NoNewMessageOnClosedThread"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+  /henvendelseinfo/henvendelseliste:
+    get:
+      tags:
+      - "Henvendelse Info"
+      description: "Returnerer en liste med henvendelser for en gitt aktør"
+      parameters:
+      - name: "aktorid"
+        in: "query"
+        required: true
+        schema:
+          type: "string"
+        description: "Aktørid til person for uthentelse av henvendelseliste"
+      - $ref: "#/components/parameters/X-Correlation-ID"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/Henvendelse"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+  /henvendelseinfo/henvendelse/{kjedeId}:
+    get:
+      tags:
+      - "Henvendelse Info"
+      description: "Returnerer informasjon for en gitt henvendelse"
+      parameters:
+      - name: "kjedeId"
+        in: "path"
+        required: true
+        schema:
+          type: "string"
+        description: "Unik ID til henvendelsen"
+      - $ref: "#/components/parameters/X-Correlation-ID"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Henvendelse"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+security:
+- Salesforce_auth: []
+components:
+  schemas:
+    Markering:
+      type: "object"
+      properties:
+        markeringstype:
+          type: "string"
+          enum:
+          - "FEILSENDT"
+          - "KONTORSPERRE"
+          example: "KONTORSPERRE"
+        markertDato:
+          type: "string"
+          format: "date-time"
+          example: "2021-06-27T12:00:00.000Z"
+        markertAv:
+          type: "string"
+          description: "NAV ident til veileder/saksbehandler som har markert henvendelsen"
+          example: "Z999999"
+        kontorsperreEnhet:
+          type: "string"
+          description: "Enheten henvendelsen er kontorsperret til. Kun definert hvis\
+            \ markeringstype = KONTORSPERRE"
+          example: "3410"
+        kontorsperreGT:
+          type: "string"
+          description: "GT henvendelsen er kontorsperret til. Kun definert hvis markeringstype\
+            \ = KONTORSPERRE"
+          example: "3410"
+      required:
+      - "markeringstype"
+    MeldingRequest:
+      type: "object"
+      properties:
+        aktorId:
+          type: "string"
+          example: "2786793959304"
+        temagruppe:
+          type: "string"
+          example: "ARBD"
+        tema:
+          type: "string"
+          description: "Temakode for journalpost som skal opprettes"
+          example: "DAG"
+        enhet:
+          type: "string"
+          example: "4100"
+        fritekst:
+          type: "string"
+          example: "Dette er en melding"
+        tildelMeg:
+          type: "boolean"
+          example: true
+          description: "Sett til true hvis konsument ønsker at svar i tråden skal\
+            \ opprette oppgave tildelt direkte til seg. Dette er på trådnivå og vil\
+            \ effektivt kun gjelde for siste melding i tråden med dette flagget satt."
+      required:
+      - "aktorId"
+      - "temagruppe"
+      - "enhet"
+      - "fritekst"
+    SamtalereferatRequest:
+      type: "object"
+      properties:
+        aktorId:
+          type: "string"
+          example: "2786793959304"
+        temagruppe:
+          type: "string"
+          example: "ARBD"
+        tema:
+          type: "string"
+          description: "Temakode for journalpost som skal opprettes"
+          example: "DAG"
+        enhet:
+          type: "string"
+          example: "4100"
+        fritekst:
+          type: "string"
+          example: "Dette er en melding"
+        kanal:
+          type: "string"
+          enum:
+          - "TELEFON"
+          - "OPPMOTE"
+          description: "Definerer om referatet er skrevet etter en telefonsamtale\
+            \ eller et fysisk oppmote hos NAV"
+          example: "TELEFON"
+      required:
+      - "aktorId"
+      - "temagruppe"
+      - "enhet"
+      - "fritekst"
+      - "kanal"
+    JournalRequest:
+      type: "object"
+      properties:
+        journalforendeEnhet:
+          type: "string"
+          description: "NAV-enhet til veilder/saksbehandler som opprettet journalposten"
+          example: "4100"
+        fagsakId:
+          type: "string"
+          description: "Referanse til fagsak i overenstemmelse med påkrevd input til\
+            \ [Dokarkiv API](https://dokarkiv-q2.nais.preprod.local/swagger-ui.html#/arkiver-og-journalfoer-rest-controller/opprettJournalpostUsingPOST).\
+            \ Ved blank/null som saksId vil journalposten opprettes som generell sak\
+            \ på tema."
+          example: "005602185"
+        fagsaksystem:
+          type: "string"
+          enum:
+          - "FS38"
+          - "FS36"
+          - "UFM"
+          - "AO01"
+          - "AO11"
+          - "IT01"
+          - "OEBS"
+          - "PP01"
+          - "K9"
+          - "BISYS"
+          - "BA"
+          - "EF"
+          - "KONT"
+          - "SUPSTONAD"
+          - "OMSORGSPENGER"
+          - "HJELPEMIDLER"
+          description: "Fagsystemet som saken behandles i, required hvis saksId er\
+            \ definert"
+          example: "AO01"
+        temakode:
+          type: "string"
+          description: "Temakode for journalpost som skal opprettes"
+          example: "DAG"
+        kjedeId:
+          type: "string"
+          description: "Unik ID til henvendelsen som skal journalføres"
+          example: "a0J3N000004dUBJUA2"
+      required:
+      - "journalforendeEnhet"
+      - "temakode"
+      - "kjedeId"
+    Journalpost:
+      type: "object"
+      properties:
+        journalforerNavIdent:
+          type: "string"
+          description: "NAV-ident til veileder/saksbehandler som opprettet journalposten"
+          example: "Z999999"
+        journalforendeEnhet:
+          type: "string"
+          description: "NAV-enhet til veileder/saksbehandler som opprettet journalposten"
+          example: "4100"
+        journalfortDato:
+          type: "string"
+          description: "Dato for opprettelse av journalpost"
+          format: "date-time"
+          example: "2021-06-27T12:00:00.000Z"
+        journalfortTema:
+          type: "string"
+          description: "Tema for opprettet journalpost"
+          example: "DAG"
+        fagsakId:
+          type: "string"
+          description: "Referanse til fagsak"
+          example: "005602185"
+        fagsaksystem:
+          type: "string"
+          enum:
+          - "FS38"
+          - "FS36"
+          - "UFM"
+          - "AO01"
+          - "AO11"
+          - "IT01"
+          - "OEBS"
+          - "PP01"
+          - "K9"
+          - "BISYS"
+          - "BA"
+          - "EF"
+          - "KONT"
+          - "SUPSTONAD"
+          - "OMSORGSPENGER"
+          - "HJELPEMIDLER"
+          description: "Fagsystemet som saken behandles i."
+          example: "AO01"
+        journalpostId:
+          type: "string"
+          description: "Unik referanse til journalpost i JOARK"
+          example: "509934220"
+      required:
+      - "journalfortDato"
+      - "journalfortTema"
+    MeldingFra:
+      type: "object"
+      properties:
+        identType:
+          type: "string"
+          enum:
+          - "NAVIDENT"
+          - "AKTORID"
+          - "SYSTEM"
+          description: "Type ident for relatert avsender, avsendertype SYSTEM har\
+            \ hverken ident eller navEnhet"
+          example: "NAVIDENT"
+        ident:
+          type: "string"
+          description: "Avsenders ident (AKTORID/NAVIDENT)"
+          example: "Z999999"
+        navEnhet:
+          type: "string"
+          description: "NAV enhet til avsender hvis identType = NAVIDENT"
+          example: "4100"
+      required:
+      - "identType"
+    Melding:
+      type: "object"
+      properties:
+        fritekst:
+          type: "string"
+          description: "Meldingen som ble skrevet"
+        sendtDato:
+          type: "string"
+          description: "Datetime string"
+          format: "date-time"
+          example: "2021-06-27T12:00:00.000Z"
+        lestDato:
+          type: "string"
+          description: "Datetime string"
+          format: "date-time"
+          example: "2021-06-27T12:00:00.000Z"
+        kanal:
+          type: "string"
+          description: "Meldingskanalen"
+          enum:
+          - "TELEFON"
+          - "OPPMOTE"
+          - "DIGITAL"
+          example: "DIGITAL"
+        fra:
+          $ref: "#/components/schemas/MeldingFra"
+      required:
+      - "sendtDato"
+      - "fra"
+    Henvendelse:
+      type: "object"
+      properties:
+        henvendelseType:
+          type: "string"
+          enum:
+          - "SAMTALEREFERAT"
+          - "MELDINGSKJEDE"
+        fnr:
+          type: "string"
+          example: "12345678910"
+        aktorId:
+          type: "string"
+          example: "2786793959304"
+        opprinneligGT:
+          type: "string"
+          example: "2786793959304"
+        opprettetDato:
+          type: "string"
+          description: "Datetime string"
+          format: "date-time"
+          example: "2021-06-27T12:00:00.000Z"
+        avsluttetDato:
+          type: "string"
+          description: "Datetime string"
+          format: "date-time"
+          example: "2021-06-28T12:00:00.000Z"
+        kasseringsDato:
+          type: "string"
+          description: "Datetime string"
+          format: "date-time"
+          example: "2021-06-27T12:00:00.000Z"
+        kontorsperre:
+          type: "boolean"
+          description: "Definerer om henvendelsen er markert som kontorsperret. Markeringsinformasjon\
+            \ finnes i listen av markeringer"
+          example: false
+        sladding:
+          type: "boolean"
+          description: "Definerer om henvendelsen skal vurderes for sladding. Dette\
+            \ sender henvendelsen til en sladdekø"
+          example: false
+        feilsendt:
+          type: "boolean"
+          description: "Definerer om henvendelsen er markert som feilsendt. Markeringsinformasjon\
+            \ finnes i listen av markeringer"
+          example: true
+        kjedeId:
+          type: "string"
+          description: "Unik if for henvendelsen"
+        gjeldendeTemagruppe:
+          type: "string"
+          example: "ARBD"
+        gjeldendeTema:
+          type: "string"
+          example: "DAG"
+        journalposter:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/Journalpost"
+        meldinger:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/Melding"
+        markeringer:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/Markering"
+      required:
+      - "henvendelseType"
+      - "aktorId"
+      - "fnr"
+      - "opprettetDato"
+      - "kontorsperre"
+      - "feilsendt"
+      - "kjedeId"
+    Temagruppe:
+      type: "object"
+      properties:
+        navn:
+          type: "string"
+          example: "Familie"
+        kode:
+          type: "string"
+          example: "FMLI"
+      required:
+      - "navn"
+      - "kode"
+    Error:
+      type: "object"
+      properties:
+        statusCode:
+          type: "integer"
+        message:
+          type: "string"
+      required:
+      - "statusCode"
+      - "message"
+  responses:
+    NotFound:
+      description: "NOT FOUND"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+          examples:
+            ActorNotFound:
+              value:
+                statusCode: 404
+                message: "Could not find actor"
+            HenvendelesNotFound:
+              value:
+                statusCode: 404
+                message: "No henvendelse with Id: {id}"
+    Forbidden:
+      description: "FORBIDDEN"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+          examples:
+            MissingActorId:
+              value:
+                statusCode: 403
+                message: "Invalid or missing sub-claim in auth token"
+    NoNewMessageOnClosedThread:
+      description: "Cannot insert new message on closed thread"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+          examples:
+            MissingActorId:
+              value:
+                statusCode: 403
+                message: "Invalid or missing sub-claim in auth token"
+            ClosedThread:
+              value:
+                statusCode: 400
+                message: "Cannot insert new message on closed thread"
+    BadRequest:
+      description: "BAD REQUEST"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+          examples:
+            MissingRequiredInput:
+              value:
+                statusCode: 400
+                message: "Missing required input"
+    MissingNavIdent:
+      description: "Missing sub claim in bearer token"
+      content:
+        application/json:
+          schema:
+            type: "object"
+            properties:
+              statusCode:
+                type: "integer"
+                example: 403
+              message:
+                type: "string"
+                example: "Invalid or missing sub-claim in auth token"
+    InternalServerError:
+      description: "UNEXPECTED EXCEPTION"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+          examples:
+            InternalError:
+              value:
+                statusCode: 500
+                message: "Service unavailable"
+  parameters:
+    X-Correlation-ID:
+      name: "X-Correlation-ID"
+      in: "header"
+      required: true
+      description: "Unik UUID for inkommende request"
+      schema:
+        type: "string"
+  securitySchemes:
+    Salesforce_auth:
+      type: "http"
+      scheme: "bearer"
