@@ -3,41 +3,32 @@ package no.nav.modiapersonoversikt.service.enhetligkodeverk
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.kodeverkproviders.KodeverkProviders
 import no.nav.modiapersonoversikt.service.enhetligkodeverk.kodeverkproviders.oppgave.OppgaveKodeverk
 
-object KodeverkConfig {
-    @JvmField
-    val ARKIVTEMA = FellesKodeverkKilde("Arkivtemaer")
-    val BEHANDLINGSTEMA = FellesKodeverkKilde("Behandlingstema")
-    val KJONN = FellesKodeverkKilde("Kjønnstyper")
-    val LAND = FellesKodeverkKilde("Landkoder")
-    val SPRAK = FellesKodeverkKilde("Språk")
-    val RETNINGSNUMRE = FellesKodeverkKilde("Retningsnumre")
-    val POSTNUMMER = FellesKodeverkKilde("Postnummer")
-    val PERSONSTATUSER = FellesKodeverkKilde("Personstatuser")
-    val SIVILSTAND = FellesKodeverkKilde("Sivilstander")
-    val DISKRESJONSKODER = FellesKodeverkKilde("Diskresjonskoder")
-    val VALUTA = FellesKodeverkKilde("Valutaer")
-    val TEMA = FellesKodeverkKilde("Tema")
-    val SF_TEMAGRUPPER = SfHenvendelseKodeverkKilde()
-    val OPPGAVE = OppgaveKodeverkKilde()
-
-    fun values(): List<EnhetligKodeverk.Kilde<*, *>> {
-        return listOf(
-            ARKIVTEMA,
-            BEHANDLINGSTEMA,
-            KJONN,
-            LAND,
-            SPRAK,
-            RETNINGSNUMRE,
-            POSTNUMMER,
-            PERSONSTATUSER,
-            SIVILSTAND,
-            DISKRESJONSKODER,
-            VALUTA,
-            TEMA,
-            SF_TEMAGRUPPER,
-            OPPGAVE
-        )
+abstract class ObjectEnum<T> {
+    private val values = mutableListOf<T>()
+    fun values(): List<T> = values
+    
+    protected fun add(value: T): T {
+        values.add(value)
+        return value
     }
+}
+
+object KodeverkConfig : ObjectEnum<EnhetligKodeverk.Kilde<*, *>>() {
+    @JvmField
+    val ARKIVTEMA = add(FellesKodeverkKilde("Arkivtemaer"))
+    val BEHANDLINGSTEMA = add(FellesKodeverkKilde("Behandlingstema"))
+    val KJONN = add(FellesKodeverkKilde("Kjønnstyper"))
+    val LAND = add(FellesKodeverkKilde("Landkoder"))
+    val SPRAK = add(FellesKodeverkKilde("Språk"))
+    val RETNINGSNUMRE = add(FellesKodeverkKilde("Retningsnumre"))
+    val POSTNUMMER = add(FellesKodeverkKilde("Postnummer"))
+    val PERSONSTATUSER = add(FellesKodeverkKilde("Personstatuser"))
+    val SIVILSTAND = add(FellesKodeverkKilde("Sivilstander"))
+    val DISKRESJONSKODER = add(FellesKodeverkKilde("Diskresjonskoder"))
+    val VALUTA = add(FellesKodeverkKilde("Valutaer"))
+    val TEMA = add(FellesKodeverkKilde("Tema"))
+    val SF_TEMAGRUPPER = add(SfHenvendelseKodeverkKilde())
+    val OPPGAVE = add(OppgaveKodeverkKilde())
 }
 
 class FellesKodeverkKilde(override val navn: String) : EnhetligKodeverk.Kilde<String, String> {
