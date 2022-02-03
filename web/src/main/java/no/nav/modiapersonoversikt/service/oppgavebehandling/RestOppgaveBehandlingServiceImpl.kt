@@ -263,14 +263,12 @@ class RestOppgaveBehandlingServiceImpl(
         val ident: String = AuthContextUtils.requireIdent()
         val correlationId = correlationId()
 
-        val oppgaveType = SPORSMAL_OG_SVAR // TODO()
-
         return hentOppgaverPaginertOgTilgangskontroll { offset ->
             apiClient.finnOppgaver(
                 correlationId,
                 tilordnetRessurs = ident,
                 tema = listOf(Utils.KONTAKT_NAV),
-                oppgavetype = listOf(oppgaveType),
+                oppgavetype = listOf(SPORSMAL_OG_SVAR),
                 aktivDatoTom = LocalDate.now(clock).toString(),
                 statuskategori = "AAPEN",
                 limit = OPPGAVE_MAX_LIMIT,
@@ -460,7 +458,6 @@ class RestOppgaveBehandlingServiceImpl(
         val aktorId = pdlOppslagService.hentAktorId(fnr)
             ?: throw IllegalArgumentException("Fant ikke aktorId for $fnr")
 
-        val oppgaveType = SPORSMAL_OG_SVAR // TODO()
         val correlationId = correlationId()
 
         val oppgaver = hentOppgaverPaginertOgTilgangskontroll { offset ->
@@ -468,7 +465,7 @@ class RestOppgaveBehandlingServiceImpl(
                 aktoerId = listOf(aktorId),
                 xCorrelationID = correlationId,
                 tema = listOf(Utils.KONTAKT_NAV),
-                oppgavetype = listOf(oppgaveType),
+                oppgavetype = listOf(SPORSMAL_OG_SVAR),
                 aktivDatoTom = LocalDate.now(clock).toString(),
                 statuskategori = "AAPEN",
                 limit = OPPGAVE_MAX_LIMIT,
