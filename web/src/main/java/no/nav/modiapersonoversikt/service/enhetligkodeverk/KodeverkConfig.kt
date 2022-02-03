@@ -6,7 +6,7 @@ import no.nav.modiapersonoversikt.service.enhetligkodeverk.kodeverkproviders.opp
 abstract class ObjectEnum<T> {
     private val values = mutableListOf<T>()
     fun values(): List<T> = values
-    
+
     protected fun add(value: T): T {
         values.add(value)
         return value
