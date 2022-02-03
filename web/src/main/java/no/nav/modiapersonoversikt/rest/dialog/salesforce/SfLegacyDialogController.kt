@@ -297,16 +297,19 @@ class SfLegacyDialogController(
 
         val henvendelseErKassert: Boolean = henvendelse.kasseringsDato?.isBefore(OffsetDateTime.now()) == true
         val meldinger: List<MeldingDTO> = (henvendelse.meldinger ?: emptyList()).map { melding ->
+            val skrevetAv = when (melding.fra.identType) {
+                MeldingFraDTO.IdentType.NAVIDENT, MeldingFraDTO.IdentType.AKTORID -> identMap[melding.fra.ident]
+                    ?.let { "${it.navn} (${it.ident})" }
+                    ?: "Ukjent"
+                MeldingFraDTO.IdentType.SYSTEM -> "Salesforce system"
+            }
             MeldingDTO(
                 mapOf(
                     "id" to "${henvendelse.kjedeId}---${(melding.hashCode())}",
                     "oppgaveId" to null,
                     "meldingstype" to meldingstypeFraSfTyper(henvendelse, melding),
                     "temagruppe" to henvendelse.gjeldendeTemagruppe,
-                    "skrevetAvTekst" to (
-                        identMap[melding.fra.ident]
-                            ?.let { "${it.navn} (${it.ident})" } ?: "Ukjent"
-                        ),
+                    "skrevetAvTekst" to skrevetAv,
                     "journalfortAv" to journalfortAv,
                     "journalfortDato" to journalfortDato,
                     "journalfortTema" to journalfortTema,
@@ -359,6 +362,7 @@ class SfLegacyDialogController(
                 when (melding.fra.identType) {
                     MeldingFraDTO.IdentType.AKTORID -> if (erForsteMelding) Meldingstype.SPORSMAL_SKRIFTLIG else Meldingstype.SVAR_SBL_INNGAAENDE
                     MeldingFraDTO.IdentType.NAVIDENT -> if (erForsteMelding) Meldingstype.SPORSMAL_MODIA_UTGAAENDE else Meldingstype.SVAR_SKRIFTLIG
+                    MeldingFraDTO.IdentType.SYSTEM -> Meldingstype.SVAR_SKRIFTLIG
                 }
             }
         }
