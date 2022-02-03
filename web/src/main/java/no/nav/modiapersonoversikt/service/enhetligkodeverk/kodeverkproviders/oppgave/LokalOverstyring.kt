@@ -5,7 +5,7 @@ import kotlin.properties.Delegates
 private typealias Prioriteter = List<OppgaveKodeverk.Prioritet>
 private typealias Frist = Int
 
-object Domener {
+object LokalOverstyring {
 
     data class Kodeverk(val frist: Frist, val prioriteter: Prioriteter, val tema: Map<String, Tema>)
 

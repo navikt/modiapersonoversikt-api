@@ -11,7 +11,7 @@ object OppgaveOverstyring {
 
     val underkjenteTemaer: List<String> = listOf("OPA", "SAA", "IAR", "KNA", "OVR", "BII", "MOT", "TIL", "REK", "PER")
 
-    val overstyrtKodeverk = Domener.lagKodeverk {
+    val overstyrtKodeverk = LokalOverstyring.lagKodeverk {
         prioriteter = listOf(HOY, NORM, LAV)
         frist = 2
         tema("AAR") {
