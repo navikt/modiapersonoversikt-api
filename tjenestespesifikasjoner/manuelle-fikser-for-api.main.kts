@@ -11,6 +11,7 @@ import Manuelle_fikser_for_api_main.ChangeUtils.forEndpoint
 import Manuelle_fikser_for_api_main.ChangeUtils.getTyped
 import Manuelle_fikser_for_api_main.ChangeUtils.objectOf
 import Manuelle_fikser_for_api_main.ChangeUtils.removeProperty
+import Manuelle_fikser_for_api_main.ChangeUtils.setRequired
 import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.SerializationFeature
@@ -40,6 +41,32 @@ changeFile(
     forDefinition("RsStedsadresse") {
         put("x-discriminator-value", "stedsadresse")
         removeProperty("postnummer", "poststed")
+    }
+}
+changeFile(
+    from = JsonSource("sf-henvendelse-api/src/main/resources/sf-henvendelse/openapi.json"),
+    to = YamlSource("sf-henvendelse-api/src/main/resources/sf-henvendelse/openapi-fixed.yaml")
+) {
+    /**
+     * Vi har opplevd at disse kan være null selvom APIet sier de ikke skal være det.
+     * For å unngå at modia krasjer pga dette gjør vi de optional, og logger tilfellene fra SfHenvendelseService
+     */
+    forDefinition("Henvendelse") {
+        setRequired("gjeldendeTemagruppe", false)
+    }
+    forDefinition("Markering") {
+        setRequired("markertDato", false)
+        setRequired("markertAv", false)
+    }
+    forDefinition("Journalpost") {
+        setRequired("journalforerNavIdent", false)
+    }
+
+    /**
+     * Regresjon i API fra innføring av IdentType.System
+     */
+    forDefinition("MeldingFra") {
+        setRequired("identType", true)
     }
 }
 
@@ -82,7 +109,13 @@ object ChangeUtils {
     inline fun <reified T> Json.getTyped(key: String): T = this[key] as T
     fun Json.has(key: String): Boolean = this[key] != null
     fun Json.forDefinition(name: String, block: Json.() -> Unit) {
-        block(this.getTyped<Json>("definitions").getTyped(name))
+        if (this.has("definitions")) {
+            block(this.getTyped<Json>("definitions").getTyped(name))
+        } else if (this.has("components")) {
+            block(this.getTyped<Json>("components").getTyped<Json>("schemas").getTyped(name))
+        } else {
+            throw IllegalStateException("Could not find definitions or compontes")
+        }
     }
     fun Json.addDefinition(name: String, definition: Any) {
         assert(!this.has(name)) {
@@ -118,6 +151,20 @@ object ChangeUtils {
         content[contentType] = contentTypeValue
         definition["content"] = content
         responses[statusCode] = definition
+    }
+    fun Json.setRequired(fieldName: String, isRequired: Boolean) {
+        val requiredList = this.getTyped<MutableList<String>?>("required") ?: mutableListOf()
+        if (isRequired) {
+            requiredList.add(fieldName)
+        } else {
+            requiredList.remove(fieldName)
+        }
+
+        if (requiredList.isEmpty()) {
+            this.remove("required")
+        } else {
+            this.put("required", requiredList)
+        }
     }
     fun objectOf(vararg fields: Field): Json {
         return mutableMapOf(

@@ -261,7 +261,7 @@ class SfHenvendelseServiceImpl(
         val now = OffsetDateTime.now()
         for (henvendelse in henvendelser) {
             val meldinger = henvendelse.meldinger ?: emptyList()
-            if (meldinger.any { it.fra.ident == null }) {
+            if (meldinger.any { it.fra.identType != MeldingFraDTO.IdentType.SYSTEM && it.fra.ident == null }) {
                 feil.add(ApiFeil(ApiFeilType.IDENT, henvendelse.kjedeId))
             }
             if (henvendelse.gjeldendeTemagruppe == null) {
