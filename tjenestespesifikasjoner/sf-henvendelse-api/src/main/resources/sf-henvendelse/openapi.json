@@ -143,9 +143,6 @@
           }
         ],
         "responses": {
-          "200": {
-            "description": "OK"
-          },
           "204": {
             "description": "No Content"
           },
@@ -386,7 +383,7 @@
             "example": "3410"
           }
         },
-        "required": ["markeringstype"]
+        "required": ["markeringstype", "markertDato", "markertAv"]
       },
       "MeldingRequest": {
         "type": "object",
@@ -560,7 +557,7 @@
             "example": "509934220"
           }
         },
-        "required": ["journalfortDato", "journalfortTema"]
+        "required": ["journalforerNavIdent", "journalfortDato", "journalfortTema"]
       },
       "MeldingFra": {
         "type": "object",
@@ -568,7 +565,7 @@
           "identType": {
             "type": "string",
             "enum": ["NAVIDENT", "AKTORID", "SYSTEM"],
-            "description": "Type ident for relatert avsender",
+            "description": "Type ident for relatert avsender, avsendertype SYSTEM har hverken ident eller navEnhet",
             "example": "NAVIDENT"
           },
           "ident": {
@@ -581,8 +578,7 @@
             "description": "NAV enhet til avsender hvis identType = NAVIDENT",
             "example": "4100"
           }
-        },
-        "required": ["identType"]
+        }
       },
       "Melding": {
         "type": "object",
@@ -705,7 +701,8 @@
           "opprettetDato",
           "kontorsperre",
           "feilsendt",
-          "kjedeId"
+          "kjedeId",
+          "gjeldendeTemagruppe"
         ]
       },
       "Temagruppe": {
@@ -794,7 +791,7 @@
               },
               "ClosedThread": {
                 "value": {
-                  "statusCode": 403,
+                  "statusCode": 400,
                   "message": "Cannot insert new message on closed thread"
                 }
               }
