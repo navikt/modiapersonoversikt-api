@@ -55,7 +55,7 @@ object OppgaveKodeverk {
     )
 
     fun createKodeverkApi(): KodeverkApi {
-        val url = EnvironmentUtils.getRequiredProperty("OPPGAVE_KODEVERK_URL")
+        val url = EnvironmentUtils.getRequiredProperty("OPPGAVE_BASEURL")
         val client = RestClient.baseClient().newBuilder()
             .addInterceptor(XCorrelationIdInterceptor())
             .addInterceptor(
