@@ -7,6 +7,13 @@ public class Behandling {
     private String behandlingstema;
     private String behandlingstype;
 
+    public Behandling() {}
+
+    public Behandling(String behandlingstema, String behandlingstype) {
+        this.behandlingstema = behandlingstema;
+        this.behandlingstype = behandlingstype;
+    }
+
     public String getBehandlingstema() {
         return this.behandlingstema;
     }

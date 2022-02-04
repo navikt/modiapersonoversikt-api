@@ -1,6 +1,13 @@
 package no.nav.modiapersonoversikt.service.enhetligkodeverk
 
 import io.mockk.*
+import no.nav.modiapersonoversikt.legacy.api.domain.oppgave.generated.apis.KodeverkApi
+import no.nav.modiapersonoversikt.legacy.api.domain.oppgave.generated.models.GjelderDTO
+import no.nav.modiapersonoversikt.legacy.api.domain.oppgave.generated.models.KodeverkkombinasjonDTO
+import no.nav.modiapersonoversikt.legacy.api.domain.oppgave.generated.models.OppgavetypeDTO
+import no.nav.modiapersonoversikt.legacy.api.domain.oppgave.generated.models.TemaDTO
+import no.nav.modiapersonoversikt.service.enhetligkodeverk.kodeverkproviders.KodeverkProviders
+import no.nav.modiapersonoversikt.service.enhetligkodeverk.kodeverkproviders.oppgave.OppgaveKodeverk
 import no.nav.modiapersonoversikt.utils.MutableClock
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -16,14 +23,20 @@ internal class EnhetligKodeverkServiceImplTest {
         val landkoder = service.hentKodeverk(KodeverkConfig.LAND)
         assertThat(landkoder).isNotNull
 
-        val temagrupper = service.hentKodeverk(KodeverkConfig.SF_TEMAGRUPPER)
-        assertThat(temagrupper).isNotNull
+        val sfTemagrupper = service.hentKodeverk(KodeverkConfig.SF_TEMAGRUPPER)
+        assertThat(sfTemagrupper).isNotNull
 
-        val landkode = landkoder.hentBeskrivelse("NO")
+        val temaer = service.hentKodeverk(KodeverkConfig.OPPGAVE)
+        assertThat(temaer).isNotNull
+
+        val landkode = landkoder.hentVerdi("NO", "NO")
         assertThat(landkode).isEqualTo("Norge")
 
-        val temagruppe = temagrupper.hentBeskrivelse("ARBD")
-        assertThat(temagruppe).isEqualTo("Arbeid")
+        val sfTemagruppe = sfTemagrupper.hentVerdi("ARBD", "ARBD")
+        assertThat(sfTemagruppe).isEqualTo("Arbeid")
+
+        val tema = temaer.hentVerdi("AAP")
+        assertThat(tema.tekst).isEqualTo("Arbeidsavklaringspenger")
     }
 
     @Test
@@ -32,18 +45,18 @@ internal class EnhetligKodeverkServiceImplTest {
         val service = EnhetligKodeverkServiceImpl(providers)
 
         assertThat(service.hentKodeverk(KodeverkConfig.LAND)).isNotNull
-        every { providers.fraFellesKodeverk(any()) } returns EnhetligKodeverk.Kodeverk(
+        every { providers.fellesKodeverk.hentKodeverk(any()) } returns EnhetligKodeverk.Kodeverk(
             "Land",
             mapOf(
                 "NO" to "Noreg"
             )
         )
-        val landkode = service.hentKodeverk(KodeverkConfig.LAND).hentBeskrivelse("NO")
+        val landkode = service.hentKodeverk(KodeverkConfig.LAND).hentVerdi("NO", "NO")
         assertThat(landkode).isEqualTo("Norge")
 
         service.prepopulerCache()
 
-        val oppdatertLandkode = service.hentKodeverk(KodeverkConfig.LAND).hentBeskrivelse("NO")
+        val oppdatertLandkode = service.hentKodeverk(KodeverkConfig.LAND).hentVerdi("NO", "NO")
         assertThat(oppdatertLandkode).isEqualTo("Noreg")
     }
 
@@ -53,25 +66,25 @@ internal class EnhetligKodeverkServiceImplTest {
         val service = EnhetligKodeverkServiceImpl(providers)
 
         assertThat(service.hentKodeverk(KodeverkConfig.LAND)).isNotNull
-        assertThat(service.hentKodeverk(KodeverkConfig.LAND).hentBeskrivelse("NO")).isEqualTo("Norge")
-        every { providers.fraFellesKodeverk(any()) } throws IllegalStateException("Noe gikk feil")
+        assertThat(service.hentKodeverk(KodeverkConfig.LAND).hentVerdi("NO", "NO")).isEqualTo("Norge")
+        every { providers.fellesKodeverk.hentKodeverk(any()) } throws IllegalStateException("Noe gikk feil")
 
         service.prepopulerCache()
 
         assertThat(service.hentKodeverk(KodeverkConfig.LAND)).isNotNull
-        assertThat(service.hentKodeverk(KodeverkConfig.LAND).hentBeskrivelse("NO")).isEqualTo("Norge")
+        assertThat(service.hentKodeverk(KodeverkConfig.LAND).hentVerdi("NO", "NO")).isEqualTo("Norge")
     }
 
     @Test
     internal fun `skal kunne starte opp selvom alle avhengiheter er nede`() {
         val providers: KodeverkProviders = mockk()
-        every { providers.fraFellesKodeverk(any()) } throws IllegalStateException("Noe gikk feil")
-        every { providers.fraSfHenvendelseKodeverk() } throws IllegalStateException("Noe gikk feil")
+        every { providers.fellesKodeverk.hentKodeverk(any()) } throws IllegalStateException("Noe gikk feil")
+        every { providers.sfHenvendelseKodeverk.hentKodeverk(any()) } throws IllegalStateException("Noe gikk feil")
 
         val service = EnhetligKodeverkServiceImpl(providers)
 
         assertThat(service.hentKodeverk(KodeverkConfig.LAND)).isNotNull
-        assertThat(service.hentKodeverk(KodeverkConfig.LAND).hentBeskrivelse("NO")).isEqualTo("NO")
+        assertThat(service.hentKodeverk(KodeverkConfig.LAND).hentVerdi("NO", "NO")).isEqualTo("NO")
         assertThat(service.hentKodeverk(KodeverkConfig.SF_TEMAGRUPPER)).isNotNull
     }
 
@@ -106,16 +119,74 @@ internal class EnhetligKodeverkServiceImplTest {
             clock = clock
         )
 
-        service.hentKodeverk(KodeverkConfig.LAND)
+        val kodeverk = service.hentKodeverk(KodeverkConfig.LAND)
 
         clock.plusDays(1).plusHours(1)
 
         val result = service.ping().check.checkHealth()
         assertThat(result.isUnhealthy).isTrue()
         assertThat(result.errorMessage).hasValueSatisfying { errorMessage ->
-            assertThat(errorMessage).contains("LAND")
+            assertThat(errorMessage).contains(kodeverk.navn)
             assertThat(errorMessage).contains("SF_TEMAGRUPPER")
         }
+    }
+
+    @Test
+    internal fun `skal overstyre oppgavekodeverk på frister og prioriteter`() {
+        val oppgaveApi: KodeverkApi = mockk()
+        val provider = OppgaveKodeverk.Provider(oppgaveApi)
+        every { provider.oppgaveKodeverk.hentInterntKodeverk(any()) } returns listOf(
+            KodeverkkombinasjonDTO(
+                tema = TemaDTO(
+                    tema = "AAP",
+                    term = "Arbeidsavklaringspenger"
+                ),
+                oppgavetyper = listOf(
+                    OppgavetypeDTO(
+                        oppgavetype = "VURD_HENV",
+                        term = "Vurder henvendelse"
+                    ),
+                    OppgavetypeDTO(
+                        oppgavetype = "IKKE_STØTTET",
+                        term = "Oppgavetype vi ikke støtter"
+                    )
+                ),
+                gjelderverdier = listOf(
+                    GjelderDTO(
+                        behandlingstema = "ab0241",
+                        behandlingstemaTerm = "Dagliglivet"
+                    ),
+                    GjelderDTO(
+                        behandlingstema = "ab0241",
+                        behandlingstemaTerm = "Dagliglivet",
+                        behandlingstype = "ae0007",
+                        behandlingstypeTerm = "Utbetaling"
+                    )
+                )
+            ),
+            KodeverkkombinasjonDTO(
+                tema = TemaDTO(
+                    tema = "TIL",
+                    term = "Tiltak"
+                ),
+                oppgavetyper = emptyList(),
+                gjelderverdier = null
+            )
+        )
+
+        val kodeverk = provider.hentKodeverk(KodeverkConfig.OPPGAVE.navn)
+        val kodeverkVerdier = kodeverk.hentAlleVerdier().toList()
+
+        assertThat(kodeverkVerdier.size).isEqualTo(1)
+        assertThat(kodeverkVerdier[0].prioriteter.size).isEqualTo(3)
+        assertThat(kodeverkVerdier[0].prioriteter[0].tekst).isEqualTo("Høy")
+        assertThat(kodeverkVerdier[0].oppgavetyper.size).isEqualTo(1)
+        assertThat(kodeverkVerdier[0].oppgavetyper[0].dagerFrist).isEqualTo(0)
+        assertThat(kodeverkVerdier[0].underkategorier.size).isEqualTo(2)
+        assertThat(kodeverkVerdier[0].underkategorier[0].kode).isEqualTo("ab0241:")
+        assertThat(kodeverkVerdier[0].underkategorier[0].tekst).isEqualTo("Dagliglivet")
+        assertThat(kodeverkVerdier[0].underkategorier[1].kode).isEqualTo("ab0241:ae0007")
+        assertThat(kodeverkVerdier[0].underkategorier[1].tekst).isEqualTo("Dagliglivet - Utbetaling")
     }
 
     private fun withTimerMock(): Triple<Timer, CapturingSlot<Date>, CapturingSlot<Long>> {
@@ -128,18 +199,31 @@ internal class EnhetligKodeverkServiceImplTest {
 
     private fun withProvidersMock(): KodeverkProviders {
         val providers: KodeverkProviders = mockk()
-        every { providers.fraFellesKodeverk(any()) } returns EnhetligKodeverk.Kodeverk(
+        every { providers.fellesKodeverk.hentKodeverk(any()) } returns EnhetligKodeverk.Kodeverk(
             "Land",
             mapOf(
                 "NO" to "Norge"
             )
         )
-        every { providers.fraSfHenvendelseKodeverk() } returns EnhetligKodeverk.Kodeverk(
+        every { providers.sfHenvendelseKodeverk.hentKodeverk(any()) } returns EnhetligKodeverk.Kodeverk(
             "Temagrupper",
             mapOf(
                 "ARBD" to "Arbeid"
             )
         )
+        every { providers.oppgaveKodeverk.hentKodeverk(any()) } returns EnhetligKodeverk.Kodeverk(
+            "Oppgave",
+            mapOf(
+                "AAP" to OppgaveKodeverk.Tema(
+                    kode = "AAP",
+                    tekst = "Arbeidsavklaringspenger",
+                    oppgavetyper = emptyList(),
+                    prioriteter = emptyList(),
+                    underkategorier = emptyList()
+                )
+            )
+        )
+
         return providers
     }
 }

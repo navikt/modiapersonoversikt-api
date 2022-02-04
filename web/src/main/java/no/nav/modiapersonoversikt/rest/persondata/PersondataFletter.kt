@@ -330,7 +330,7 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
         linje3 = listOf(
             adresse.adresselinje3,
             adresse.postnummer,
-            adresse.postnummer?.let { kodeverk.hentKodeverk(Kodeverk.POSTNUMMER).hentBeskrivelse(it) }
+            adresse.postnummer?.let { kodeverk.hentKodeverk(Kodeverk.POSTNUMMER).hentVerdi(it, it) }
         ),
         sistEndret = sistEndret,
         gyldighetsPeriode = gyldighetsPeriode
@@ -344,7 +344,7 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
         linje1 = listOf(adresse.postboks),
         linje2 = listOf(
             adresse.postnummer,
-            adresse.postnummer?.let { kodeverk.hentKodeverk(Kodeverk.POSTNUMMER).hentBeskrivelse(it) }
+            adresse.postnummer?.let { kodeverk.hentKodeverk(Kodeverk.POSTNUMMER).hentVerdi(it, it) }
         ),
         linje3 = listOf(adresse.postbokseier),
         sistEndret = sistEndring,
@@ -395,7 +395,7 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
             adresse.regionDistriktOmraade
         ),
         linje3 = listOf(
-            kodeverk.hentKodeverk(Kodeverk.LAND).hentBeskrivelse(adresse.landkode)
+            kodeverk.hentKodeverk(Kodeverk.LAND).hentVerdi(adresse.landkode, adresse.landkode)
         ),
         sistEndret = sisteEndring,
         gyldighetsPeriode = gyldighetsPeriode
@@ -412,7 +412,7 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
             adresse.adresselinje3,
             adresse.postkode,
             adresse.byEllerStedsnavn,
-            kodeverk.hentKodeverk(Kodeverk.LAND).hentBeskrivelse(adresse.landkode)
+            kodeverk.hentKodeverk(Kodeverk.LAND).hentVerdi(adresse.landkode, adresse.landkode)
         ),
         sistEndret = sisteEndring,
         gyldighetsPeriode = gyldighetsPeriode
@@ -446,7 +446,7 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
         ),
         linje2 = listOf(
             adresse.postnummer,
-            adresse.postnummer?.let { kodeverk.hentKodeverk(Kodeverk.POSTNUMMER).hentBeskrivelse(it) }
+            adresse.postnummer?.let { kodeverk.hentKodeverk(Kodeverk.POSTNUMMER).hentVerdi(it, it) }
         ),
         sistEndret = sisteEndring,
         gyldighetsPeriode = gyldighetsPeriode
@@ -958,11 +958,11 @@ class PersondataFletter(val kodeverk: EnhetligKodeverk.Service) {
 }
 
 fun <T> EnhetligKodeverk.Service.hentKodeBeskrivelse(
-    kodeverkRef: Kodeverk,
+    kodeverkRef: EnhetligKodeverk.Kilde<String, String>,
     kodeRef: T
 ): Persondata.KodeBeskrivelse<T> {
     val kodeverk = this.hentKodeverk(kodeverkRef)
-    val beskrivelse = kodeverk.hentBeskrivelse(kodeRef.toString())
+    val beskrivelse = kodeverk.hentVerdi(kodeRef.toString(), kodeRef.toString())
     return Persondata.KodeBeskrivelse(
         kode = kodeRef,
         beskrivelse = beskrivelse

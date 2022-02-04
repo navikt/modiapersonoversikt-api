@@ -899,6 +899,12 @@ class RestOppgaveBehandlingServiceImplTest {
                 NorgDomain.Enhet("4567", "NAV Mockenhet", NorgDomain.EnhetStatus.AKTIV, false)
             )
 
+            every { kodeverksmapperService.mapUnderkategori(any()) } returns Optional.of(
+                Behandling()
+                    .withBehandlingstema("behandlingstema_ANSOS")
+                    .withBehandlingstype("behandlingstype_ANSOS")
+            )
+
             withIdent("Z999999") {
                 oppgaveBehandlingService.leggTilbakeOppgaveIGsak(
                     LeggTilbakeOppgaveIGsakRequest()
@@ -923,7 +929,9 @@ class RestOppgaveBehandlingServiceImplTest {
                             tekst = "ny beskrivelse"
                         ),
                         endretAvEnhetsnr = "4110",
-                        tildeltEnhetsnr = "4567"
+                        tildeltEnhetsnr = "4567",
+                        behandlingstema = "behandlingstema_ANSOS",
+                        behandlingstype = "behandlingstype_ANSOS"
                     )
                 )
             }

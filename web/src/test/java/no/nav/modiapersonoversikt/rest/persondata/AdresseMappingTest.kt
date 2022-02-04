@@ -17,7 +17,7 @@ internal class AdresseMappingTest {
 
     @Test
     internal fun `skal mappe vegadresse likt for person og tredjepartsperson`() {
-        every { kodeverk.hentKodeverk(any()) } returns EnhetligKodeverk.Kodeverk("", emptyMap())
+        every { kodeverk.hentKodeverk<Any, Any>(any()) } returns EnhetligKodeverk.Kodeverk("", emptyMap())
         val hovedperson = gittPerson().copy(
             bostedsadresse = adresse.copy(
                 vegadresse = HentPersondata.Vegadresse(

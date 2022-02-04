@@ -241,7 +241,7 @@ public class HenvendelseBehandlingServiceImpl implements HenvendelseBehandlingSe
 
     private Melding journalfortTemaTilTemanavn(Melding melding) {
         if (melding.journalfortTema != null) {
-            String temaNavn = kodeverk.hentKodeverk(KodeverkConfig.ARKIVTEMA).hentBeskrivelse(melding.journalfortTema);
+            String temaNavn = kodeverk.hentKodeverk(KodeverkConfig.ARKIVTEMA).hentVerdi(melding.journalfortTema, melding.journalfortTema);
             melding.journalfortTemanavn = temaNavn != null ? temaNavn : melding.journalfortTema;
         }
         return melding;

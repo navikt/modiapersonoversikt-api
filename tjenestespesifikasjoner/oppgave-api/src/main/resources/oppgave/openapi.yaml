@@ -30,12 +30,12 @@ tags:
   - name: Mappe
     description: Operasjoner på mapper
 paths:
-  /api/v1/kodeverk/tema:
+  /api/v1/kodeverk/gjelder:
     get:
       tags:
         - Kodeverk
-      summary: Henter alle gyldige tema kombinasjoner
-      operationId: hentAlleTemaer
+      summary: Henter alle gyldige gjelderverdier
+      operationId: hentAlleGjelderverdier
       parameters:
         - name: X-Correlation-ID
           in: header
@@ -44,15 +44,11 @@ paths:
             type: string
       responses:
         "200":
-          description: Temakombinasjoner hentet
+          description: Gjelderverdier hentet
           content:
             application/json:
               schema:
-                type: string
-              example:
-                string:
-                  - behandlingstema: string
-                    behandlingstype: string
+                $ref: '#/components/schemas/mapTemaGjelder'
         "401":
           description: Konsument mangler gyldig token
         "403":
@@ -63,12 +59,72 @@ paths:
           description: Ukjent feilsituasjon har oppstått
       security:
         - oidc: []
-  /api/v1/kodeverk/tema/{tema}:
+  /api/v1/kodeverk/oppgavetype:
     get:
       tags:
         - Kodeverk
-      summary: Henter tilgjengelige kodeverkstema for angitt tema
-      operationId: hentTema
+      summary: Henter alle gyldige oppgavetyper
+      operationId: hentAlleOppgavetyper
+      parameters:
+        - name: X-Correlation-ID
+          in: header
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Oppgavetyper hentet
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/mapTemaOppgavetype'
+        "401":
+          description: Konsument mangler gyldig token
+        "403":
+          description: Bruker er ikke autorisert for denne operasjonen
+        "409":
+          description: Konflikt
+        "500":
+          description: Ukjent feilsituasjon har oppstått
+      security:
+        - oidc: []
+  /api/v1/kodeverk/tema:
+    get:
+      tags:
+        - Kodeverk
+      summary: Henter alle gyldige temaer
+      operationId: hentAlleTemaer
+      parameters:
+        - name: X-Correlation-ID
+          in: header
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Temaer hentet
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Tema'
+        "401":
+          description: Konsument mangler gyldig token
+        "403":
+          description: Bruker er ikke autorisert for denne operasjonen
+        "409":
+          description: Konflikt
+        "500":
+          description: Ukjent feilsituasjon har oppstått
+      security:
+        - oidc: []
+  /api/v1/kodeverk/gjelder/{tema}:
+    get:
+      tags:
+        - Kodeverk
+      summary: Henter tilgjengelige gjelderverdier for angitt tema
+      operationId: hentGjelderverdierForTema
       parameters:
         - name: X-Correlation-ID
           in: header
@@ -82,13 +138,44 @@ paths:
             type: string
       responses:
         "200":
-          description: Underkategorier hentet
+          description: Gjelderverdier hentet
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Tema'
+                  $ref: '#/components/schemas/Gjelder'
+        "401":
+          description: Konsument mangler gyldig token
+        "403":
+          description: Bruker er ikke autorisert for denne operasjonen
+        "409":
+          description: Konflikt
+        "500":
+          description: Ukjent feilsituasjon har oppstått
+      security:
+        - oidc: []
+  /api/v1/kodeverk:
+    get:
+      tags:
+        - Kodeverk
+      summary: Henter komplett internt kodeverk
+      operationId: hentInterntKodeverk
+      parameters:
+        - name: X-Correlation-ID
+          in: header
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Internt kodeverk hentet
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Kodeverkkombinasjon'
         "401":
           description: Konsument mangler gyldig token
         "403":
@@ -326,6 +413,7 @@ paths:
           in: query
           description: Begrensning i antall returnerte mapper
           schema:
+            maximum: 2000
             type: integer
             format: int64
             default: 10
@@ -525,39 +613,6 @@ paths:
           description: Ukjent feilsituasjon har oppstått i Oppgave
       security:
         - oidc: []
-  /api/v1/oppgaver/{oppgaveId}/hendelser:
-    get:
-      tags:
-        - Oppgave
-      summary: Henter hendelser for en oppgave
-      operationId: hentHendelser
-      parameters:
-        - name: X-Correlation-ID
-          in: header
-          required: true
-          schema:
-            type: string
-        - name: oppgaveId
-          in: path
-          required: true
-          schema:
-            type: integer
-            format: int64
-      responses:
-        "200":
-          description: Hendelser hentet
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/HendelseJson'
-        "401":
-          description: Konsument mangler gyldig token
-        "403":
-          description: Bruker er ikke autorisert for denne operasjonen
-        "500":
-          description: Ukjent feilsituasjon har oppstått i Oppgave
-      security:
-        - oidc: []
   /api/v1/oppgaver:
     get:
       tags:
@@ -746,6 +801,7 @@ paths:
           in: query
           description: Begrensning i antall returnerte oppgaver
           schema:
+            maximum: 1000
             type: integer
             format: int64
             default: 10
@@ -868,56 +924,6 @@ paths:
           description: Bruker er ikke autorisert for denne operasjonen
         "409":
           description: Konflikt
-        "500":
-          description: Ukjent feilsituasjon har oppstått i Oppgave
-      security:
-        - oidc: []
-  /api/v1/oppgaver/statuser:
-    get:
-      tags:
-        - Oppgave
-      summary: Hent oppgavestatuser
-      operationId: hentOppgaveStatuser
-      parameters:
-        - name: X-Correlation-ID
-          in: header
-          required: true
-          schema:
-            type: string
-      responses:
-        "200":
-          description: OK
-          content:
-            text/plain:
-              schema:
-                type: string
-        "401":
-          description: Konsument mangler gyldig token
-        "500":
-          description: Ukjent feilsituasjon har oppstått i Oppgave
-      security:
-        - oidc: []
-  /api/v1/oppgaver/metadata:
-    get:
-      tags:
-        - Oppgave
-      summary: Hent lovlige metadatanøkler
-      operationId: hentMetadataKeys
-      parameters:
-        - name: X-Correlation-ID
-          in: header
-          required: true
-          schema:
-            type: string
-      responses:
-        "200":
-          description: OK
-          content:
-            text/plain:
-              schema:
-                type: string
-        "401":
-          description: Konsument mangler gyldig token
         "500":
           description: Ukjent feilsituasjon har oppstått i Oppgave
       security:
@@ -1165,142 +1171,149 @@ paths:
           description: Ukjent feilsituasjon har oppstått i Oppgave
       security:
         - oidc: []
-  /api/v1/statistikk:
+  /api/v1/oppgaver/{oppgaveId}/hendelser:
     get:
       tags:
-        - Statistikk
-      summary: Finn oppgavestatistikk for angitte kriterier
-      operationId: finnOppgaver_1
+        - Oppgave
+      summary: Henter hendelser for en oppgave
+      operationId: hentHendelser
       parameters:
         - name: X-Correlation-ID
           in: header
           required: true
           schema:
             type: string
-        - name: ferdigstiltFom
-          in: query
-          description: Nedre grense for filtrering på ferdigstilt tidspunkt
+        - name: oppgaveId
+          in: path
+          required: true
           schema:
-            type: string
-          example: 2018-05-24T13:49:00
-        - name: ferdigstiltTom
-          in: query
-          description: Øvre grense for filtrering på ferdigstilt tidspunkt
-          schema:
-            type: string
-          example: 2018-05-24T13:49:00
-        - name: opprettetFom
-          in: query
-          description: Nedre grense for filtrering på opprettetTidspunkt
-          schema:
-            type: string
-          example: 2018-05-24T13:49:00
-        - name: opprettetTom
-          in: query
-          description: Øvre grense for filtrering på opprettetTidspunkt
-          schema:
-            type: string
-          example: 2018-05-25T15:00:00
-        - name: endretFom
-          in: query
-          description: Nedre grense for filtrering på endretTidspunkt
-          schema:
-            type: string
-          example: 2018-05-24T13:49:00
-        - name: endretTom
-          in: query
-          description: Øvre grense for filtrering på endretTidspunkt
-          schema:
-            type: string
-          example: 2018-05-25T15:00:00
-        - name: fristFom
-          in: query
-          description: Nedre grense for filtrering på fristFerdigstillelse
-          schema:
-            type: string
-          example: 2018-12-10
-        - name: fristTom
-          in: query
-          description: Øvre grense for filtrering på fristFerdigstillelse
-          schema:
-            type: string
-          example: 2018-12-21
-        - name: aktivDatoFom
-          in: query
-          description: Nedre grense for filtrering på aktivDato
-          schema:
-            type: string
-          example: 2018-12-30
-        - name: aktivDatoTom
-          in: query
-          description: Øvre grense for filtrering på aktivDato
-          schema:
-            type: string
-          example: 2018-11-25
-        - name: tema
-          in: query
-          description: "Filtrering på tema (iht felles kodeverk), her kan flere temaer\
-          \ spesifiseres i samme søk"
-          schema:
-            type: array
-            items:
-              type: string
-          example: FOR
-        - name: oppgavetype
-          in: query
-          description: "Filtrering på oppgavetype (iht felles kodeverk), her kan flere\
-          \ oppgavetyper spesifiseres i samme søk"
-          schema:
-            type: array
-            items:
-              type: string
-          example: JFR
-        - name: behandlingstema
-          in: query
-          description: Filtrering på behandlingstema (iht felles kodeverk)
-          schema:
-            type: array
-            items:
-              type: string
-          example: ab0317
-        - name: behandlingstype
-          in: query
-          description: Filtrering på behandlingstype (iht felles kodeverk)
-          schema:
-            type: array
-            items:
-              type: string
-          example: ae0106
-        - name: tildeltEnhetsnr
-          in: query
-          description: Filtrering på tildelt enhet
+            type: integer
+            format: int64
+      responses:
+        "200":
+          description: Hendelser hentet
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HendelseJson'
+        "401":
+          description: Konsument mangler gyldig token
+        "403":
+          description: Bruker er ikke autorisert for denne operasjonen
+        "500":
+          description: Ukjent feilsituasjon har oppstått i Oppgave
+      security:
+        - oidc: []
+  /api/v1/oppgaver/metadata:
+    get:
+      tags:
+        - Oppgave
+      summary: Hent lovlige metadatanøkler
+      operationId: hentMetadataKeys
+      parameters:
+        - name: X-Correlation-ID
+          in: header
           required: true
           schema:
             type: string
-          example: "0100"
-        - name: inkluderMappeIgruppering
-          in: query
-          description: Om mappe skal være endel av grupperingen
-          schema:
-            type: boolean
-            default: false
-          example: true
-        - name: status
-          in: query
-          description: "Status på oppgaven, her kan flere statuser spesifiseres i samme\
-          \ søk"
-          schema:
-            type: array
-            items:
-              type: string
-          example: FERDIGSTILT
       responses:
         "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/StatistikkJson'
+                type: string
+        "401":
+          description: Konsument mangler gyldig token
+        "500":
+          description: Ukjent feilsituasjon har oppstått i Oppgave
+      security:
+        - oidc: []
+  /api/v1/oppgaver/statuser:
+    get:
+      tags:
+        - Oppgave
+      summary: Hent oppgavestatuser
+      operationId: hentOppgaveStatuser
+      parameters:
+        - name: X-Correlation-ID
+          in: header
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: string
+        "401":
+          description: Konsument mangler gyldig token
+        "500":
+          description: Ukjent feilsituasjon har oppstått i Oppgave
+      security:
+        - oidc: []
+  /api/v1/beholdning:
+    get:
+      tags:
+        - Beholdning
+      summary: Finn beholdning for angitte kriterier
+      operationId: finnBeholdning
+      parameters:
+        - name: X-Correlation-ID
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: tema
+          in: query
+          description: Filtrering på temaer.
+          schema:
+            type: array
+            items:
+              type: string
+        - name: gjelder
+          in: query
+          schema:
+            type: array
+            items:
+              type: string
+        - name: behandlingstema
+          in: query
+          description: 'Filtrering på behandlingstemaer. '
+          schema:
+            type: array
+            items:
+              type: string
+        - name: behandlingstype
+          in: query
+          description: Filtrering på behandlingstyper
+          schema:
+            type: array
+            items:
+              type: string
+        - name: enhetsnr
+          in: query
+          description: Filtrering på tildelt enhet
+          required: true
+          schema:
+            type: string
+        - name: utenGjelder
+          in: query
+          schema:
+            type: boolean
+        - name: utenMappe
+          in: query
+          schema:
+            type: boolean
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Beholdning'
         "400":
           description: Ugyldig input
         "403":
@@ -1311,171 +1324,222 @@ paths:
           description: Ukjent feilsituasjon har oppstått i Oppgave
       security:
         - oidc: []
+  /api/v1/beholdning/kategorisering:
+    get:
+      tags:
+        - Beholdning
+      summary: Finn kategorisert beholdning for angitte kriterier
+      operationId: finnKategorisertBeholdning
+      parameters:
+        - name: X-Correlation-ID
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: tema
+          in: query
+          description: Filtrering på temaer.
+          schema:
+            type: array
+            items:
+              type: string
+        - name: gjelder
+          in: query
+          schema:
+            type: array
+            items:
+              type: string
+        - name: behandlingstema
+          in: query
+          description: 'Filtrering på behandlingstemaer. '
+          schema:
+            type: array
+            items:
+              type: string
+        - name: behandlingstype
+          in: query
+          description: Filtrering på behandlingstyper
+          schema:
+            type: array
+            items:
+              type: string
+        - name: enhetsnr
+          in: query
+          description: Filtrering på tildelt enhet
+          required: true
+          schema:
+            type: string
+        - name: utenGjelder
+          in: query
+          schema:
+            type: boolean
+        - name: utenMappe
+          in: query
+          schema:
+            type: boolean
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Beholdning'
+        "400":
+          description: Ugyldig input
+        "403":
+          description: Bruker er ikke autorisert for denne operasjonen
+        "401":
+          description: Konsument mangler gyldig token
+        "500":
+          description: Ukjent feilsituasjon har oppstått i Oppgave
+      security:
+        - oidc: []
+  /api/v1/beholdning/tema:
+    get:
+      tags:
+        - Beholdning
+      summary: Finn alle tema i beholdningen for angitt enhet
+      operationId: finnTemaIBeholdning
+      parameters:
+        - name: X-Correlation-ID
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: tema
+          in: query
+          description: Filtrering på temaer.
+          schema:
+            type: array
+            items:
+              type: string
+        - name: gjelder
+          in: query
+          schema:
+            type: array
+            items:
+              type: string
+        - name: behandlingstema
+          in: query
+          description: 'Filtrering på behandlingstemaer. '
+          schema:
+            type: array
+            items:
+              type: string
+        - name: behandlingstype
+          in: query
+          description: Filtrering på behandlingstyper
+          schema:
+            type: array
+            items:
+              type: string
+        - name: enhetsnr
+          in: query
+          description: Filtrering på tildelt enhet
+          required: true
+          schema:
+            type: string
+        - name: utenGjelder
+          in: query
+          schema:
+            type: boolean
+        - name: utenMappe
+          in: query
+          schema:
+            type: boolean
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Beholdning'
+        "400":
+          description: Ugyldig input
+        "403":
+          description: Bruker er ikke autorisert for denne operasjonen
+        "401":
+          description: Konsument mangler gyldig token
+        "500":
+          description: Ukjent feilsituasjon har oppstått i Oppgave
+      security:
+        - oidc: []
+  /api/graphql:
+    post:
+      operationId: graphql
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GraphQLRequest'
+      responses:
+        default:
+          description: default response
+          content:
+            application/json: {}
 components:
   schemas:
+    mapTemaOppgavetype:
+      type: object
+      properties:
+        tema:
+          type: array
+          items:
+            $ref: '#/components/schemas/Oppgavetype'
+    mapTemaGjelder:
+      type: object
+      properties:
+        tema:
+          type: array
+          items:
+            $ref: '#/components/schemas/Gjelder'
     Tema:
+      required:
+        - tema
+        - term
+      type: object
+      properties:
+        tema:
+          type: string
+        term:
+          type: string
+    Gjelder:
       type: object
       properties:
         behandlingstema:
           type: string
+        behandlingstemaTerm:
+          type: string
         behandlingstype:
           type: string
+        behandlingstypeTerm:
+          type: string
+    Kodeverkkombinasjon:
+      required:
+        - oppgavetyper
+        - tema
+      type: object
+      properties:
+        tema:
+          $ref: '#/components/schemas/Tema'
+        oppgavetyper:
+          type: array
+          items:
+            $ref: '#/components/schemas/Oppgavetype'
+        gjelderverdier:
+          type: array
+          items:
+            $ref: '#/components/schemas/Gjelder'
     Oppgavetype:
+      required:
+        - oppgavetype
+        - term
       type: object
       properties:
         oppgavetype:
           type: string
-    GetMappeResponseJson:
-      required:
-        - enhetsnr
-        - navn
-        - versjon
-      type: object
-      properties:
-        id:
-          type: integer
-          description: Syntetisk id
-          format: int64
-          example: 123
-        enhetsnr:
-          maxLength: 4
-          minLength: 4
+        term:
           type: string
-          description: Enheten mappen hører til
-          example: "0100"
-        navn:
-          maxLength: 255
-          minLength: 0
-          type: string
-          description: Mappenavn eller beskrivelse
-          example: BIDRAG - Klar til behandling
-        tema:
-          maxLength: 255
-          minLength: 0
-          type: string
-          description: Tema slik den er definert i felles kodeverk
-          example: AAP
-        versjon:
-          type: integer
-          description: "Brukes for å håndtere optimistisk låsing, hvor to brukere\
-            \ har skrevet på samme mappe. Hver gang det gjøres endring på en mappe,\
-            \ økes verdien av VERSJON med 1. Når en klient skal lagre endring på en\
-            \ mappe, sendes verdien av VERSJON mappen hadde da informasjon om mappen\
-            \ som nå er endret ble hentet ut. Dersom verdien av VERSJON er endret,\
-            \ har noen andre lagret mappen i mellomtiden, og mappen kan ikke lagres.\
-            \ 409 Conflict vil returneres fra tjenesten. Under oppretting av mappe\
-            \ trenger man ikke å spesifisere noen verdi for dette feltet, mappen vil\
-            \ starte på versjon 1"
-          format: int32
-          example: 1
-        opprettetAv:
-          type: string
-          description: Hvilken bruker eller system som opprettet mappen
-        endretAv:
-          type: string
-          description: Hvilken bruker eller system som endret mappen sist
-        opprettetTidspunkt:
-          type: string
-          description: Opprettet tidspunkt iht. ISO-8601
-          format: date-time
-        endretTidspunkt:
-          type: string
-          description: Endret tidspunkt iht. ISO-8601
-          format: date-time
-      description: Liste over mapper
-    GetMapperResponseJson:
-      type: object
-      properties:
-        antallTreffTotalt:
-          type: integer
-          description: Totalt antall mapper funnet med dette søket
-          format: int64
-        mapper:
-          type: array
-          description: Liste over mapper
-          items:
-            $ref: '#/components/schemas/GetMappeResponseJson'
-    PostMappeResponseJson:
-      required:
-        - enhetsnr
-        - navn
-        - versjon
-      type: object
-      properties:
-        id:
-          type: integer
-          description: Syntetisk id
-          format: int64
-          example: 123
-        enhetsnr:
-          maxLength: 4
-          minLength: 4
-          type: string
-          description: Enheten mappen hører til
-          example: "0100"
-        navn:
-          maxLength: 255
-          minLength: 0
-          type: string
-          description: Mappenavn eller beskrivelse
-          example: BIDRAG - Klar til behandling
-        tema:
-          maxLength: 255
-          minLength: 0
-          type: string
-          description: Tema slik den er definert i felles kodeverk
-          example: AAP
-        versjon:
-          type: integer
-          description: "Brukes for å håndtere optimistisk låsing, hvor to brukere\
-            \ har skrevet på samme mappe. Hver gang det gjøres endring på en mappe,\
-            \ økes verdien av VERSJON med 1. Når en klient skal lagre endring på en\
-            \ mappe, sendes verdien av VERSJON mappen hadde da informasjon om mappen\
-            \ som nå er endret ble hentet ut. Dersom verdien av VERSJON er endret,\
-            \ har noen andre lagret mappen i mellomtiden, og mappen kan ikke lagres.\
-            \ 409 Conflict vil returneres fra tjenesten. Under oppretting av mappe\
-            \ trenger man ikke å spesifisere noen verdi for dette feltet, mappen vil\
-            \ starte på versjon 1"
-          format: int32
-          example: 1
-        opprettetAv:
-          type: string
-          description: Hvilken bruker eller system som opprettet mappen
-        endretAv:
-          type: string
-          description: Hvilken bruker eller system som endret mappen sist
-        opprettetTidspunkt:
-          type: string
-          description: Opprettet tidspunkt iht. ISO-8601
-          format: date-time
-        endretTidspunkt:
-          type: string
-          description: Endret tidspunkt iht. ISO-8601
-          format: date-time
-    PostMappeRequestJson:
-      required:
-        - enhetsnr
-        - navn
-      type: object
-      properties:
-        enhetsnr:
-          maxLength: 4
-          minLength: 4
-          type: string
-          description: Enheten mappen hører til
-          example: "0100"
-        navn:
-          maxLength: 255
-          minLength: 0
-          type: string
-          description: Mappenavn eller beskrivelse
-          example: BIDRAG - Klar til behandling
-        tema:
-          maxLength: 255
-          minLength: 0
-          type: string
-          description: Tema slik den er definert i felles kodeverk
-          example: AAP
     PutMappeResponseJson:
       required:
         - enhetsnr
@@ -1576,13 +1640,10 @@ components:
             \ starte på versjon 1"
           format: int32
           example: 1
-    GetOppgaveResponseJson:
+    GetMappeResponseJson:
       required:
-        - aktivDato
-        - oppgavetype
-        - prioritet
-        - status
-        - tildeltEnhetsnr
+        - enhetsnr
+        - navn
         - versjon
       type: object
       properties:
@@ -1590,204 +1651,145 @@ components:
           type: integer
           description: Syntetisk id
           format: int64
-          example: 5436732
-        tildeltEnhetsnr:
+          example: 123
+        enhetsnr:
           maxLength: 4
           minLength: 4
           type: string
-          description: Enheten oppgaven er tildelt
+          description: Enheten mappen hører til
           example: "0100"
-        endretAvEnhetsnr:
-          maxLength: 4
-          minLength: 4
-          type: string
-          description: Enheten som endret oppgaven
-          example: "0101"
-        opprettetAvEnhetsnr:
-          maxLength: 4
-          minLength: 4
-          type: string
-          description: Hvilken enhet som har opprettet oppgaven
-          example: "0200"
-        journalpostId:
-          maxLength: 40
-          minLength: 0
-          type: string
-          description: Id for en journalpostreferanse
-          example: "84938201"
-        journalpostkilde:
-          maxLength: 40
-          minLength: 0
-          type: string
-          description: "Hvilken applikasjon journalposten kommer fra, applikasjonskoder\
-            \ finnes i felles kodeverk"
-          example: AS36
-        behandlesAvApplikasjon:
-          maxLength: 40
-          minLength: 0
-          type: string
-          description: "Hvilken applikasjon oppgaven skal behandles i, applikasjonskoder\
-            \ finnes i felles kodeverk"
-          example: FS22
-        saksreferanse:
-          maxLength: 40
-          minLength: 0
-          type: string
-          description: Id for en saksreferanse
-          example: "84942299"
-        bnr:
-          maxLength: 40
-          minLength: 0
-          type: string
-          description: Bostnummer
-          example: "11250199559"
-        samhandlernr:
-          maxLength: 40
-          minLength: 0
-          type: string
-          description: Samnhandlernummer
-          example: "80000999999"
-        aktoerId:
-          maxLength: 40
-          minLength: 0
-          type: string
-          description: "Syntetisk id for en person, kan hentes fra TPS"
-          example: "1234567891113"
-        identer:
-          type: array
-          description: "Identer for en person, Read-only, endringer gjøres via aktø\
-            rid"
-          example: 12345678911
-          items:
-            $ref: '#/components/schemas/IdentJson'
-        orgnr:
-          maxLength: 9
-          minLength: 0
-          type: string
-          description: Organisasjonsnummer
-          example: "979312059"
-        tilordnetRessurs:
-          maxLength: 7
-          minLength: 0
-          type: string
-          description: "Ressurssen som er tilordnet oppgaven, gjerne en saksbehandler"
-          example: Z998323
-        beskrivelse:
-          type: string
-          description: Beskrivelse av oppgaven
-        temagruppe:
+        navn:
           maxLength: 255
           minLength: 0
           type: string
-          description: Temagruppe slik den er definert i felles kodeverk
-          example: ANSOS
+          description: Mappenavn eller beskrivelse
+          example: BIDRAG - Klar til behandling
         tema:
           maxLength: 255
           minLength: 0
           type: string
           description: Tema slik den er definert i felles kodeverk
           example: AAP
-        behandlingstema:
-          maxLength: 255
-          minLength: 0
-          type: string
-          description: Behandlingstema slik den er definert i felles kodeverk
-          example: ab0203
-        oppgavetype:
-          maxLength: 255
-          minLength: 0
-          type: string
-          description: Oppgavetype slik den er definert i felles kodeverk
-          example: HAST_BANK_OPPLYS
-        behandlingstype:
-          maxLength: 255
-          minLength: 0
-          type: string
-          description: Behandlingstype slik den er definert i felles kodeverk
-          example: ae0001
         versjon:
           type: integer
           description: "Brukes for å håndtere optimistisk låsing, hvor to brukere\
-            \ har skrevet på samme oppgave. Hver gang det gjøres endring på en oppgave,\
+            \ har skrevet på samme mappe. Hver gang det gjøres endring på en mappe,\
             \ økes verdien av VERSJON med 1. Når en klient skal lagre endring på en\
-            \ oppgave, sendes verdien av VERSJON oppgaven hadde da informasjon om\
-            \ oppgaven som nå er endret ble hentet ut. Dersom verdien av VERSJON er\
-            \ endret, har noen andre lagret oppgaven i mellomtiden, og oppgaven kan\
-            \ ikke lagres. 409 Conflict vil returneres fra tjenesten. Under oppretting\
-            \ av oppgave trenger man ikke å spesifisere noen verdi for dette feltet,\
-            \ oppgaven vil starte på versjon 1"
+            \ mappe, sendes verdien av VERSJON mappen hadde da informasjon om mappen\
+            \ som nå er endret ble hentet ut. Dersom verdien av VERSJON er endret,\
+            \ har noen andre lagret mappen i mellomtiden, og mappen kan ikke lagres.\
+            \ 409 Conflict vil returneres fra tjenesten. Under oppretting av mappe\
+            \ trenger man ikke å spesifisere noen verdi for dette feltet, mappen vil\
+            \ starte på versjon 1"
           format: int32
           example: 1
-        mappeId:
-          type: integer
-          description: Mapper styres av Oppgave. En oversikt kan hentes fra endepunktet
-            for mapper
-          format: int64
-          example: 848
         opprettetAv:
           type: string
-          description: Hvilken bruker eller system som opprettet oppgaven
+          description: Hvilken bruker eller system som opprettet mappen
         endretAv:
           type: string
-          description: Hvilken bruker eller system som endret oppgaven sist
-        prioritet:
-          type: string
-          description: Hvilken prioritet oppgaven har
-          example: HOY
-          enum:
-            - HOY
-            - NORM
-            - LAV
-        status:
-          type: string
-          description: Hvilken status oppgaven har
-          example: UNDER_BEHANDLING
-          enum:
-            - OPPRETTET
-            - AAPNET
-            - UNDER_BEHANDLING
-            - FERDIGSTILT
-            - FEILREGISTRERT
-        metadata:
-          type: object
-          additionalProperties:
-            type: string
-            description: "Metadata for oppgaven. Dette er en JSON-Objekt struktur\
-              \ (key value pair/hash map) som kan brukes for informasjon som ikke\
-              \ passer direkte inn i hovedmodellen til oppgave, men som fortsatt er\
-              \ nødvendig for en konsument. På dette feltet vil det komme noen restriksjoner\
-              \ så vennligst ta kontakt med oss om deres applikasjon har behov for\
-              \ å ta dette i bruk"
-          description: "Metadata for oppgaven. Dette er en JSON-Objekt struktur (key\
-            \ value pair/hash map) som kan brukes for informasjon som ikke passer\
-            \ direkte inn i hovedmodellen til oppgave, men som fortsatt er nødvendig\
-            \ for en konsument. På dette feltet vil det komme noen restriksjoner så\
-            \ vennligst ta kontakt med oss om deres applikasjon har behov for å ta\
-            \ dette i bruk"
-        fristFerdigstillelse:
-          type: string
-          description: Oppgavens frist for ferdigstillelse.
-          format: date
-          example: 2018-03-24
-        aktivDato:
-          type: string
-          description: "Brukes av saksbehandlere for å planlegge arbeidsdagene sine,\
-            \ aktivDato forteller noe om når saksbehandler selv ønsker å begynne å\
-            \ jobbe på oppgaven"
-          format: date
-          example: 2018-03-10
+          description: Hvilken bruker eller system som endret mappen sist
         opprettetTidspunkt:
           type: string
           description: Opprettet tidspunkt iht. ISO-8601
-          format: date-time
-        ferdigstiltTidspunkt:
-          type: string
-          description: Tidspunktet oppgaven ble ferdigstilt iht. ISO-8601
           format: date-time
         endretTidspunkt:
           type: string
           description: Endret tidspunkt iht. ISO-8601
           format: date-time
+    GetMapperResponseJson:
+      type: object
+      properties:
+        antallTreffTotalt:
+          type: integer
+          description: Totalt antall mapper funnet med dette søket
+          format: int64
+        mapper:
+          type: array
+          description: Liste over mapper
+          items:
+            $ref: '#/components/schemas/GetMappeResponseJson'
+    PostMappeResponseJson:
+      required:
+        - enhetsnr
+        - navn
+        - versjon
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Syntetisk id
+          format: int64
+          example: 123
+        enhetsnr:
+          maxLength: 4
+          minLength: 4
+          type: string
+          description: Enheten mappen hører til
+          example: "0100"
+        navn:
+          maxLength: 255
+          minLength: 0
+          type: string
+          description: Mappenavn eller beskrivelse
+          example: BIDRAG - Klar til behandling
+        tema:
+          maxLength: 255
+          minLength: 0
+          type: string
+          description: Tema slik den er definert i felles kodeverk
+          example: AAP
+        versjon:
+          type: integer
+          description: "Brukes for å håndtere optimistisk låsing, hvor to brukere\
+            \ har skrevet på samme mappe. Hver gang det gjøres endring på en mappe,\
+            \ økes verdien av VERSJON med 1. Når en klient skal lagre endring på en\
+            \ mappe, sendes verdien av VERSJON mappen hadde da informasjon om mappen\
+            \ som nå er endret ble hentet ut. Dersom verdien av VERSJON er endret,\
+            \ har noen andre lagret mappen i mellomtiden, og mappen kan ikke lagres.\
+            \ 409 Conflict vil returneres fra tjenesten. Under oppretting av mappe\
+            \ trenger man ikke å spesifisere noen verdi for dette feltet, mappen vil\
+            \ starte på versjon 1"
+          format: int32
+          example: 1
+        opprettetAv:
+          type: string
+          description: Hvilken bruker eller system som opprettet mappen
+        endretAv:
+          type: string
+          description: Hvilken bruker eller system som endret mappen sist
+        opprettetTidspunkt:
+          type: string
+          description: Opprettet tidspunkt iht. ISO-8601
+          format: date-time
+        endretTidspunkt:
+          type: string
+          description: Endret tidspunkt iht. ISO-8601
+          format: date-time
+    PostMappeRequestJson:
+      required:
+        - enhetsnr
+        - navn
+      type: object
+      properties:
+        enhetsnr:
+          maxLength: 4
+          minLength: 4
+          type: string
+          description: Enheten mappen hører til
+          example: "0100"
+        navn:
+          maxLength: 255
+          minLength: 0
+          type: string
+          description: Mappenavn eller beskrivelse
+          example: BIDRAG - Klar til behandling
+        tema:
+          maxLength: 255
+          minLength: 0
+          type: string
+          description: Tema slik den er definert i felles kodeverk
+          example: AAP
     IdentJson:
       type: object
       properties:
@@ -1797,720 +1799,17 @@ components:
           type: string
           enum:
             - FOLKEREGISTERIDENT
-            - AKTOERID
             - NPID
+            - AKTOERID
       description: "Identer for en person, Read-only, endringer gjøres via aktørid"
       example: 12345678911
-    HendelseJson:
-      type: object
-      properties:
-        id:
-          type: integer
-          description: Syntetisk id
-          format: int64
-          example: 10
-        utfortAv:
-          type: string
-          description: Utført av
-          example: Z998473
-        tildeltEnhetsnr:
-          type: string
-          description: Tildelt enhet for hendelse
-          example: "0100"
-        mappeId:
-          type: integer
-          description: MappeId for hendelse
-          format: int64
-          example: 24543
-        tilordnetRessurs:
-          type: string
-          description: Tilordnet ressurs for hendelse
-          example: Z99388
-        status:
-          type: string
-          description: Status for hendelse
-          example: AAPNET
-        tema:
-          type: string
-          description: Tema for hendelse
-          example: BIL
-        oppgavetype:
-          type: string
-          description: Oppgavetype for hendelse
-          example: "5436732"
-        tidspunkt:
-          type: string
-          description: Tidspunkt hendelse fant sted iht. ISO-8601
-    GetOppgaverResponseJson:
-      type: object
-      properties:
-        antallTreffTotalt:
-          type: integer
-          description: Totalt antall oppgaver funnet med dette søket
-          format: int64
-        oppgaver:
-          type: array
-          description: Liste over oppgaver
-          items:
-            $ref: '#/components/schemas/OppgaveJson'
-    OppgaveJson:
-      required:
-        - aktivDato
-        - oppgavetype
-        - prioritet
-        - status
-        - tildeltEnhetsnr
-        - versjon
-      type: object
-      properties:
-        id:
-          type: integer
-          description: Syntetisk id
-          format: int64
-          example: 5436732
-        tildeltEnhetsnr:
-          maxLength: 4
-          minLength: 4
-          type: string
-          description: Enheten oppgaven er tildelt
-          example: "0100"
-        endretAvEnhetsnr:
-          maxLength: 4
-          minLength: 4
-          type: string
-          description: Enheten som endret oppgaven
-          example: "0101"
-        opprettetAvEnhetsnr:
-          maxLength: 4
-          minLength: 4
-          type: string
-          description: Hvilken enhet som har opprettet oppgaven
-          example: "0200"
-        journalpostId:
-          maxLength: 40
-          minLength: 0
-          type: string
-          description: Id for en journalpostreferanse
-          example: "84938201"
-        journalpostkilde:
-          maxLength: 40
-          minLength: 0
-          type: string
-          description: "Hvilken applikasjon journalposten kommer fra, applikasjonskoder\
-            \ finnes i felles kodeverk"
-          example: AS36
-        behandlesAvApplikasjon:
-          maxLength: 40
-          minLength: 0
-          type: string
-          description: "Hvilken applikasjon oppgaven skal behandles i, applikasjonskoder\
-            \ finnes i felles kodeverk"
-          example: FS22
-        saksreferanse:
-          maxLength: 40
-          minLength: 0
-          type: string
-          description: Id for en saksreferanse
-          example: "84942299"
-        bnr:
-          maxLength: 40
-          minLength: 0
-          type: string
-          description: Bostnummer
-          example: "11250199559"
-        samhandlernr:
-          maxLength: 40
-          minLength: 0
-          type: string
-          description: Samnhandlernummer
-          example: "80000999999"
-        aktoerId:
-          maxLength: 40
-          minLength: 0
-          type: string
-          description: "Syntetisk id for en person, kan hentes fra TPS"
-          example: "1234567891113"
-        identer:
-          type: array
-          description: "Identer for en person, Read-only, endringer gjøres via aktø\
-            rid"
-          example: 12345678911
-          items:
-            $ref: '#/components/schemas/IdentJson'
-        orgnr:
-          maxLength: 9
-          minLength: 0
-          type: string
-          description: Organisasjonsnummer
-          example: "979312059"
-        tilordnetRessurs:
-          maxLength: 7
-          minLength: 0
-          type: string
-          description: "Ressurssen som er tilordnet oppgaven, gjerne en saksbehandler"
-          example: Z998323
-        beskrivelse:
-          type: string
-          description: Beskrivelse av oppgaven
-        temagruppe:
-          maxLength: 255
-          minLength: 0
-          type: string
-          description: Temagruppe slik den er definert i felles kodeverk
-          example: ANSOS
-        tema:
-          maxLength: 255
-          minLength: 0
-          type: string
-          description: Tema slik den er definert i felles kodeverk
-          example: AAP
-        behandlingstema:
-          maxLength: 255
-          minLength: 0
-          type: string
-          description: Behandlingstema slik den er definert i felles kodeverk
-          example: ab0203
-        oppgavetype:
-          maxLength: 255
-          minLength: 0
-          type: string
-          description: Oppgavetype slik den er definert i felles kodeverk
-          example: HAST_BANK_OPPLYS
-        behandlingstype:
-          maxLength: 255
-          minLength: 0
-          type: string
-          description: Behandlingstype slik den er definert i felles kodeverk
-          example: ae0001
-        versjon:
-          type: integer
-          description: "Brukes for å håndtere optimistisk låsing, hvor to brukere\
-            \ har skrevet på samme oppgave. Hver gang det gjøres endring på en oppgave,\
-            \ økes verdien av VERSJON med 1. Når en klient skal lagre endring på en\
-            \ oppgave, sendes verdien av VERSJON oppgaven hadde da informasjon om\
-            \ oppgaven som nå er endret ble hentet ut. Dersom verdien av VERSJON er\
-            \ endret, har noen andre lagret oppgaven i mellomtiden, og oppgaven kan\
-            \ ikke lagres. 409 Conflict vil returneres fra tjenesten. Under oppretting\
-            \ av oppgave trenger man ikke å spesifisere noen verdi for dette feltet,\
-            \ oppgaven vil starte på versjon 1"
-          format: int32
-          example: 1
-        mappeId:
-          type: integer
-          description: Mapper styres av Oppgave. En oversikt kan hentes fra endepunktet
-            for mapper
-          format: int64
-          example: 848
-        opprettetAv:
-          type: string
-          description: Hvilken bruker eller system som opprettet oppgaven
-        endretAv:
-          type: string
-          description: Hvilken bruker eller system som endret oppgaven sist
-        prioritet:
-          type: string
-          description: Hvilken prioritet oppgaven har
-          example: HOY
-          enum:
-            - HOY
-            - NORM
-            - LAV
-        status:
-          type: string
-          description: Hvilken status oppgaven har
-          example: UNDER_BEHANDLING
-          enum:
-            - OPPRETTET
-            - AAPNET
-            - UNDER_BEHANDLING
-            - FERDIGSTILT
-            - FEILREGISTRERT
-        metadata:
-          type: object
-          additionalProperties:
-            type: string
-            description: "Metadata for oppgaven. Dette er en JSON-Objekt struktur\
-              \ (key value pair/hash map) som kan brukes for informasjon som ikke\
-              \ passer direkte inn i hovedmodellen til oppgave, men som fortsatt er\
-              \ nødvendig for en konsument. På dette feltet vil det komme noen restriksjoner\
-              \ så vennligst ta kontakt med oss om deres applikasjon har behov for\
-              \ å ta dette i bruk"
-          description: "Metadata for oppgaven. Dette er en JSON-Objekt struktur (key\
-            \ value pair/hash map) som kan brukes for informasjon som ikke passer\
-            \ direkte inn i hovedmodellen til oppgave, men som fortsatt er nødvendig\
-            \ for en konsument. På dette feltet vil det komme noen restriksjoner så\
-            \ vennligst ta kontakt med oss om deres applikasjon har behov for å ta\
-            \ dette i bruk"
-        fristFerdigstillelse:
-          type: string
-          description: Oppgavens frist for ferdigstillelse.
-          format: date
-          example: 2018-03-24
-        aktivDato:
-          type: string
-          description: "Brukes av saksbehandlere for å planlegge arbeidsdagene sine,\
-            \ aktivDato forteller noe om når saksbehandler selv ønsker å begynne å\
-            \ jobbe på oppgaven"
-          format: date
-          example: 2018-03-10
-        opprettetTidspunkt:
-          type: string
-          description: Opprettet tidspunkt iht. ISO-8601
-          format: date-time
-        ferdigstiltTidspunkt:
-          type: string
-          description: Tidspunktet oppgaven ble ferdigstilt iht. ISO-8601
-          format: date-time
-        endretTidspunkt:
-          type: string
-          description: Endret tidspunkt iht. ISO-8601
-          format: date-time
-    PatchOppgaveRequestJson:
-      required:
-        - id
-      type: object
-      properties:
-        versjon:
-          type: integer
-          description: Nåværende versjon på oppgaven
-          format: int32
-          example: 1
-        id:
-          type: integer
-          description: Oppgavens id
-          format: int64
-          example: 300003939
-        aktoerId:
-          type: string
-          description: "Syntetisk id for en person, kan hentes fra aktørregisteret"
-          example: "123456789"
-        orgnr:
-          type: string
-          description: Organisasjonsnummer
-          example: "979312059"
-        status:
-          type: string
-          description: Hvilken status oppgaven skal få
-          example: UNDER_BEHANDLING
-          enum:
-            - OPPRETTET
-            - AAPNET
-            - UNDER_BEHANDLING
-            - FERDIGSTILT
-            - FEILREGISTRERT
-        endretAvEnhetsnr:
-          maxLength: 4
-          minLength: 4
-          type: string
-          description: Enheten oppgaven er endret av
-          example: "2990"
-        tilordnetRessurs:
-          type: string
-          description: "Ressurssen som er tilordnet oppgaven, gjerne en saksbehandler"
-          example: Z998323
-        tildeltEnhetsnr:
-          type: string
-          description: Enheten oppgaven er tildelt
-          example: "0100"
-        mappeId:
-          type: integer
-          description: Mapper styres av Oppgave. En oversikt kan hentes fra endepunktet
-            for mapper
-          format: int64
-          example: 848
-        prioritet:
-          type: string
-          description: Hvilken prioritet oppgaven har
-          example: HOY
-          enum:
-            - HOY
-            - NORM
-            - LAV
-        behandlingstema:
-          type: string
-          description: Behandlingstema slik den er definert i felles kodeverk
-          example: ab0203
-        behandlingstype:
-          type: string
-          description: Behandlingstype slik den er definert i felles kodeverk
-          example: ae0001
-        fristFerdigstillelse:
-          type: string
-          description: Oppgavens frist for ferdigstillelse.
-          format: date
-          example: 2018-03-24
-        aktivDato:
-          type: string
-          description: "Brukes av saksbehandlere for å planlegge arbeidsdagene sine,\
-            \ aktivDato forteller noe om når saksbehandler selv ønsker å begynne å\
-            \ jobbe på oppgaven"
-          format: date
-          example: 2018-03-10
-        oppgavetype:
-          maxLength: 255
-          minLength: 0
-          type: string
-          description: Oppgavetype slik den er definert i felles kodeverk
-          example: HAST_BANK_OPPLYS
-        tema:
-          maxLength: 255
-          minLength: 0
-          type: string
-          description: Tema slik den er definert i felles kodeverk
-          example: AAP
-        journalpostId:
-          type: string
-          description: Id for en journalpost
-          example: "84938201"
-        saksreferanse:
-          type: string
-          description: Referanse til sak
-          example: "11231123"
-    PostOppgaveResponseJson:
-      required:
-        - aktivDato
-        - oppgavetype
-        - prioritet
-        - status
-        - tildeltEnhetsnr
-        - versjon
-      type: object
-      properties:
-        id:
-          type: integer
-          description: Syntetisk id
-          format: int64
-          example: 5436732
-        tildeltEnhetsnr:
-          maxLength: 4
-          minLength: 4
-          type: string
-          description: Enheten oppgaven er tildelt
-          example: "0100"
-        endretAvEnhetsnr:
-          maxLength: 4
-          minLength: 4
-          type: string
-          description: Enheten som endret oppgaven
-          example: "0101"
-        opprettetAvEnhetsnr:
-          maxLength: 4
-          minLength: 4
-          type: string
-          description: Hvilken enhet som har opprettet oppgaven
-          example: "0200"
-        journalpostId:
-          maxLength: 40
-          minLength: 0
-          type: string
-          description: Id for en journalpostreferanse
-          example: "84938201"
-        journalpostkilde:
-          maxLength: 40
-          minLength: 0
-          type: string
-          description: "Hvilken applikasjon journalposten kommer fra, applikasjonskoder\
-            \ finnes i felles kodeverk"
-          example: AS36
-        behandlesAvApplikasjon:
-          maxLength: 40
-          minLength: 0
-          type: string
-          description: "Hvilken applikasjon oppgaven skal behandles i, applikasjonskoder\
-            \ finnes i felles kodeverk"
-          example: FS22
-        saksreferanse:
-          maxLength: 40
-          minLength: 0
-          type: string
-          description: Id for en saksreferanse
-          example: "84942299"
-        bnr:
-          maxLength: 40
-          minLength: 0
-          type: string
-          description: Bostnummer
-          example: "11250199559"
-        samhandlernr:
-          maxLength: 40
-          minLength: 0
-          type: string
-          description: Samnhandlernummer
-          example: "80000999999"
-        aktoerId:
-          maxLength: 40
-          minLength: 0
-          type: string
-          description: "Syntetisk id for en person, kan hentes fra TPS"
-          example: "1234567891113"
-        identer:
-          type: array
-          description: "Identer for en person, Read-only, endringer gjøres via aktø\
-            rid"
-          example: 12345678911
-          items:
-            $ref: '#/components/schemas/IdentJson'
-        orgnr:
-          maxLength: 9
-          minLength: 0
-          type: string
-          description: Organisasjonsnummer
-          example: "979312059"
-        tilordnetRessurs:
-          maxLength: 7
-          minLength: 0
-          type: string
-          description: "Ressurssen som er tilordnet oppgaven, gjerne en saksbehandler"
-          example: Z998323
-        beskrivelse:
-          type: string
-          description: Beskrivelse av oppgaven
-        temagruppe:
-          maxLength: 255
-          minLength: 0
-          type: string
-          description: Temagruppe slik den er definert i felles kodeverk
-          example: ANSOS
-        tema:
-          maxLength: 255
-          minLength: 0
-          type: string
-          description: Tema slik den er definert i felles kodeverk
-          example: AAP
-        behandlingstema:
-          maxLength: 255
-          minLength: 0
-          type: string
-          description: Behandlingstema slik den er definert i felles kodeverk
-          example: ab0203
-        oppgavetype:
-          maxLength: 255
-          minLength: 0
-          type: string
-          description: Oppgavetype slik den er definert i felles kodeverk
-          example: HAST_BANK_OPPLYS
-        behandlingstype:
-          maxLength: 255
-          minLength: 0
-          type: string
-          description: Behandlingstype slik den er definert i felles kodeverk
-          example: ae0001
-        versjon:
-          type: integer
-          description: "Brukes for å håndtere optimistisk låsing, hvor to brukere\
-            \ har skrevet på samme oppgave. Hver gang det gjøres endring på en oppgave,\
-            \ økes verdien av VERSJON med 1. Når en klient skal lagre endring på en\
-            \ oppgave, sendes verdien av VERSJON oppgaven hadde da informasjon om\
-            \ oppgaven som nå er endret ble hentet ut. Dersom verdien av VERSJON er\
-            \ endret, har noen andre lagret oppgaven i mellomtiden, og oppgaven kan\
-            \ ikke lagres. 409 Conflict vil returneres fra tjenesten. Under oppretting\
-            \ av oppgave trenger man ikke å spesifisere noen verdi for dette feltet,\
-            \ oppgaven vil starte på versjon 1"
-          format: int32
-          example: 1
-        mappeId:
-          type: integer
-          description: Mapper styres av Oppgave. En oversikt kan hentes fra endepunktet
-            for mapper
-          format: int64
-          example: 848
-        opprettetAv:
-          type: string
-          description: Hvilken bruker eller system som opprettet oppgaven
-        endretAv:
-          type: string
-          description: Hvilken bruker eller system som endret oppgaven sist
-        prioritet:
-          type: string
-          description: Hvilken prioritet oppgaven har
-          example: HOY
-          enum:
-            - HOY
-            - NORM
-            - LAV
-        status:
-          type: string
-          description: Hvilken status oppgaven har
-          example: UNDER_BEHANDLING
-          enum:
-            - OPPRETTET
-            - AAPNET
-            - UNDER_BEHANDLING
-            - FERDIGSTILT
-            - FEILREGISTRERT
-        metadata:
-          type: object
-          additionalProperties:
-            type: string
-            description: "Metadata for oppgaven. Dette er en JSON-Objekt struktur\
-              \ (key value pair/hash map) som kan brukes for informasjon som ikke\
-              \ passer direkte inn i hovedmodellen til oppgave, men som fortsatt er\
-              \ nødvendig for en konsument. På dette feltet vil det komme noen restriksjoner\
-              \ så vennligst ta kontakt med oss om deres applikasjon har behov for\
-              \ å ta dette i bruk"
-          description: "Metadata for oppgaven. Dette er en JSON-Objekt struktur (key\
-            \ value pair/hash map) som kan brukes for informasjon som ikke passer\
-            \ direkte inn i hovedmodellen til oppgave, men som fortsatt er nødvendig\
-            \ for en konsument. På dette feltet vil det komme noen restriksjoner så\
-            \ vennligst ta kontakt med oss om deres applikasjon har behov for å ta\
-            \ dette i bruk"
-        fristFerdigstillelse:
-          type: string
-          description: Oppgavens frist for ferdigstillelse.
-          format: date
-          example: 2018-03-24
-        aktivDato:
-          type: string
-          description: "Brukes av saksbehandlere for å planlegge arbeidsdagene sine,\
-            \ aktivDato forteller noe om når saksbehandler selv ønsker å begynne å\
-            \ jobbe på oppgaven"
-          format: date
-          example: 2018-03-10
-        opprettetTidspunkt:
-          type: string
-          description: Opprettet tidspunkt iht. ISO-8601
-          format: date-time
-        ferdigstiltTidspunkt:
-          type: string
-          description: Tidspunktet oppgaven ble ferdigstilt iht. ISO-8601
-          format: date-time
-        endretTidspunkt:
-          type: string
-          description: Endret tidspunkt iht. ISO-8601
-          format: date-time
-    PostOppgaveRequestJson:
-      required:
-        - aktivDato
-        - oppgavetype
-        - prioritet
-      type: object
-      properties:
-        tildeltEnhetsnr:
-          maxLength: 4
-          minLength: 4
-          type: string
-          description: "Enheten oppgaven er tildelt. Dersom enhet ikke er angitt,\
-            \ så vil oppgaven automatisk fordeles iht. standard arbeidsfordelingsregler\
-            \ (se norg2)"
-          example: "4820"
-        opprettetAvEnhetsnr:
-          maxLength: 4
-          minLength: 4
-          type: string
-          description: Hvilken enhet som har opprettet oppgaven
-          example: "4820"
-        aktoerId:
-          maxLength: 40
-          minLength: 0
-          type: string
-          description: Syntetisk id for en person
-          example: "123456789"
-        journalpostId:
-          maxLength: 40
-          minLength: 0
-          type: string
-          description: "Id for en journalpostreferanse. Benyttes når oppgaven skal\
-            \ kobles mot journalposter, i.e for journalføringsoppgaver"
-          example: "84938201"
-        journalpostkilde:
-          maxLength: 40
-          minLength: 0
-          type: string
-          description: "Hvilken applikasjon journalposten kommer fra, applikasjonskoder\
-            \ finnes i felles kodeverk"
-          example: AS36
-        behandlesAvApplikasjon:
-          maxLength: 40
-          minLength: 0
-          type: string
-          description: "Hvilken applikasjon oppgaven skal behandles i, applikasjonskoder\
-            \ finnes i felles kodeverk"
-          example: FS22
-        orgnr:
-          maxLength: 9
-          minLength: 0
-          type: string
-          description: Organisasjonsnummer
-          example: "979312059"
-        tilordnetRessurs:
-          maxLength: 7
-          minLength: 0
-          type: string
-          description: "Ressursen som er tilordnet oppgaven, gjerne en saksbehandler"
-          example: Z998323
-        beskrivelse:
-          type: string
-          description: Beskrivelse av oppgaven
-        temagruppe:
-          maxLength: 255
-          minLength: 0
-          type: string
-          description: Temagruppe slik den er definert i felles kodeverk
-          example: FMLI
-        tema:
-          maxLength: 255
-          minLength: 0
-          type: string
-          description: Tema slik den er definert i felles kodeverk
-          example: KON
-        behandlingstema:
-          maxLength: 255
-          minLength: 0
-          type: string
-          description: Behandlingstema slik den er definert i felles kodeverk
-          example: ab0335
-        oppgavetype:
-          maxLength: 255
-          minLength: 0
-          type: string
-          description: Oppgavetype slik den er definert i felles kodeverk
-          example: JFR
-        behandlingstype:
-          maxLength: 255
-          minLength: 0
-          type: string
-          description: Behandlingstype slik den er definert i felles kodeverk
-          example: ae0034
-        aktivDato:
-          type: string
-          description: "Brukes av saksbehandlere for å planlegge arbeidsdagene sine,\
-            \ aktivDato forteller noe om når saksbehandler selv ønsker å begynne å\
-            \ jobbe på oppgaven"
-          format: date
-        fristFerdigstillelse:
-          type: string
-          description: Oppgavens frist for ferdigstillelse.
-          format: date
-        prioritet:
-          type: string
-          description: Hvilken prioritet oppgaven har
-          example: NORM
-          enum:
-            - HOY
-            - NORM
-            - LAV
-        metadata:
-          type: object
-          additionalProperties:
-            type: string
-            description: "Metadata for oppgaven. Dette er en JSON-Objekt struktur\
-              \ (key value pair/hash map) som kan brukes for informasjon som ikke\
-              \ passer direkte inn i hovedmodellen til oppgave, men som fortsatt er\
-              \ nødvendig for en konsument. På dette feltet vil det komme noen restriksjoner\
-              \ så vennligst ta kontakt med oss om deres applikasjon har behov for\
-              \ å ta dette i bruk"
-          description: "Metadata for oppgaven. Dette er en JSON-Objekt struktur (key\
-            \ value pair/hash map) som kan brukes for informasjon som ikke passer\
-            \ direkte inn i hovedmodellen til oppgave, men som fortsatt er nødvendig\
-            \ for en konsument. På dette feltet vil det komme noen restriksjoner så\
-            \ vennligst ta kontakt med oss om deres applikasjon har behov for å ta\
-            \ dette i bruk"
     PutOppgaveResponseJson:
       required:
         - aktivDato
         - oppgavetype
         - prioritet
         - status
+        - tema
         - tildeltEnhetsnr
         - versjon
       type: object
@@ -2723,6 +2022,7 @@ components:
         - oppgavetype
         - prioritet
         - status
+        - tema
         - tildeltEnhetsnr
         - versjon
       type: object
@@ -2898,6 +2198,1035 @@ components:
             \ jobbe på oppgaven"
           format: date
           example: 2018-03-10
+    GetOppgaverResponseJson:
+      type: object
+      properties:
+        antallTreffTotalt:
+          type: integer
+          description: Totalt antall oppgaver funnet med dette søket
+          format: int64
+        oppgaver:
+          type: array
+          description: Liste over oppgaver
+          items:
+            $ref: '#/components/schemas/OppgaveJson'
+    OppgaveJson:
+      required:
+        - aktivDato
+        - oppgavetype
+        - prioritet
+        - status
+        - tema
+        - tildeltEnhetsnr
+        - versjon
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Syntetisk id
+          format: int64
+          example: 5436732
+        tildeltEnhetsnr:
+          maxLength: 4
+          minLength: 4
+          type: string
+          description: Enheten oppgaven er tildelt
+          example: "0100"
+        endretAvEnhetsnr:
+          maxLength: 4
+          minLength: 4
+          type: string
+          description: Enheten som endret oppgaven
+          example: "0101"
+        opprettetAvEnhetsnr:
+          maxLength: 4
+          minLength: 4
+          type: string
+          description: Hvilken enhet som har opprettet oppgaven
+          example: "0200"
+        journalpostId:
+          maxLength: 40
+          minLength: 0
+          type: string
+          description: Id for en journalpostreferanse
+          example: "84938201"
+        journalpostkilde:
+          maxLength: 40
+          minLength: 0
+          type: string
+          description: "Hvilken applikasjon journalposten kommer fra, applikasjonskoder\
+            \ finnes i felles kodeverk"
+          example: AS36
+        behandlesAvApplikasjon:
+          maxLength: 40
+          minLength: 0
+          type: string
+          description: "Hvilken applikasjon oppgaven skal behandles i, applikasjonskoder\
+            \ finnes i felles kodeverk"
+          example: FS22
+        saksreferanse:
+          maxLength: 40
+          minLength: 0
+          type: string
+          description: Id for en saksreferanse
+          example: "84942299"
+        bnr:
+          maxLength: 40
+          minLength: 0
+          type: string
+          description: Bostnummer
+          example: "11250199559"
+        samhandlernr:
+          maxLength: 40
+          minLength: 0
+          type: string
+          description: Samnhandlernummer
+          example: "80000999999"
+        aktoerId:
+          maxLength: 40
+          minLength: 0
+          type: string
+          description: "Syntetisk id for en person, kan hentes fra TPS"
+          example: "1234567891113"
+        identer:
+          type: array
+          description: "Identer for en person, Read-only, endringer gjøres via aktø\
+            rid"
+          example: 12345678911
+          items:
+            $ref: '#/components/schemas/IdentJson'
+        orgnr:
+          maxLength: 9
+          minLength: 0
+          type: string
+          description: Organisasjonsnummer
+          example: "979312059"
+        tilordnetRessurs:
+          maxLength: 7
+          minLength: 0
+          type: string
+          description: "Ressurssen som er tilordnet oppgaven, gjerne en saksbehandler"
+          example: Z998323
+        beskrivelse:
+          type: string
+          description: Beskrivelse av oppgaven
+        temagruppe:
+          maxLength: 255
+          minLength: 0
+          type: string
+          description: Temagruppe slik den er definert i felles kodeverk
+          example: ANSOS
+        tema:
+          maxLength: 255
+          minLength: 0
+          type: string
+          description: Tema slik den er definert i felles kodeverk
+          example: AAP
+        behandlingstema:
+          maxLength: 255
+          minLength: 0
+          type: string
+          description: Behandlingstema slik den er definert i felles kodeverk
+          example: ab0203
+        oppgavetype:
+          maxLength: 255
+          minLength: 0
+          type: string
+          description: Oppgavetype slik den er definert i felles kodeverk
+          example: HAST_BANK_OPPLYS
+        behandlingstype:
+          maxLength: 255
+          minLength: 0
+          type: string
+          description: Behandlingstype slik den er definert i felles kodeverk
+          example: ae0001
+        versjon:
+          type: integer
+          description: "Brukes for å håndtere optimistisk låsing, hvor to brukere\
+            \ har skrevet på samme oppgave. Hver gang det gjøres endring på en oppgave,\
+            \ økes verdien av VERSJON med 1. Når en klient skal lagre endring på en\
+            \ oppgave, sendes verdien av VERSJON oppgaven hadde da informasjon om\
+            \ oppgaven som nå er endret ble hentet ut. Dersom verdien av VERSJON er\
+            \ endret, har noen andre lagret oppgaven i mellomtiden, og oppgaven kan\
+            \ ikke lagres. 409 Conflict vil returneres fra tjenesten. Under oppretting\
+            \ av oppgave trenger man ikke å spesifisere noen verdi for dette feltet,\
+            \ oppgaven vil starte på versjon 1"
+          format: int32
+          example: 1
+        mappeId:
+          type: integer
+          description: Mapper styres av Oppgave. En oversikt kan hentes fra endepunktet
+            for mapper
+          format: int64
+          example: 848
+        opprettetAv:
+          type: string
+          description: Hvilken bruker eller system som opprettet oppgaven
+        endretAv:
+          type: string
+          description: Hvilken bruker eller system som endret oppgaven sist
+        prioritet:
+          type: string
+          description: Hvilken prioritet oppgaven har
+          example: HOY
+          enum:
+            - HOY
+            - NORM
+            - LAV
+        status:
+          type: string
+          description: Hvilken status oppgaven har
+          example: UNDER_BEHANDLING
+          enum:
+            - OPPRETTET
+            - AAPNET
+            - UNDER_BEHANDLING
+            - FERDIGSTILT
+            - FEILREGISTRERT
+        metadata:
+          type: object
+          additionalProperties:
+            type: string
+            description: "Metadata for oppgaven. Dette er en JSON-Objekt struktur\
+              \ (key value pair/hash map) som kan brukes for informasjon som ikke\
+              \ passer direkte inn i hovedmodellen til oppgave, men som fortsatt er\
+              \ nødvendig for en konsument. På dette feltet vil det komme noen restriksjoner\
+              \ så vennligst ta kontakt med oss om deres applikasjon har behov for\
+              \ å ta dette i bruk"
+          description: "Metadata for oppgaven. Dette er en JSON-Objekt struktur (key\
+            \ value pair/hash map) som kan brukes for informasjon som ikke passer\
+            \ direkte inn i hovedmodellen til oppgave, men som fortsatt er nødvendig\
+            \ for en konsument. På dette feltet vil det komme noen restriksjoner så\
+            \ vennligst ta kontakt med oss om deres applikasjon har behov for å ta\
+            \ dette i bruk"
+        fristFerdigstillelse:
+          type: string
+          description: Oppgavens frist for ferdigstillelse.
+          format: date
+          example: 2018-03-24
+        aktivDato:
+          type: string
+          description: "Brukes av saksbehandlere for å planlegge arbeidsdagene sine,\
+            \ aktivDato forteller noe om når saksbehandler selv ønsker å begynne å\
+            \ jobbe på oppgaven"
+          format: date
+          example: 2018-03-10
+        opprettetTidspunkt:
+          type: string
+          description: Opprettet tidspunkt iht. ISO-8601
+          format: date-time
+        ferdigstiltTidspunkt:
+          type: string
+          description: Tidspunktet oppgaven ble ferdigstilt iht. ISO-8601
+          format: date-time
+        endretTidspunkt:
+          type: string
+          description: Endret tidspunkt iht. ISO-8601
+          format: date-time
+    PutOppfolgingResponseJson:
+      required:
+        - kommentar
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Syntetisk id
+          format: int64
+          example: 5436732
+        kommentar:
+          type: string
+          description: Beskrivelse eller kommentar på oppgaven
+        opprettetAv:
+          type: string
+          description: Hvilken bruker eller system som opprettet mappen
+        endretAv:
+          type: string
+          description: Hvilken bruker eller system som endret oppfølgingen sist
+        opprettetTidspunkt:
+          type: string
+          description: Opprettet tidspunkt iht. ISO-8601
+          format: date-time
+        endretTidspunkt:
+          type: string
+          description: Endret tidspunkt iht. ISO-8601
+          format: date-time
+    PutOppfolgingRequestJson:
+      required:
+        - kommentar
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Syntetisk id
+          format: int64
+          example: 5436732
+        kommentar:
+          type: string
+          description: Beskrivelse eller kommentar på oppgaven
+    OppfolgingJson:
+      required:
+        - kommentar
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Syntetisk id
+          format: int64
+          example: 5436732
+        kommentar:
+          type: string
+          description: Beskrivelse eller kommentar på oppgaven
+        opprettetAv:
+          type: string
+          description: Hvilken bruker eller system som opprettet mappen
+        endretAv:
+          type: string
+          description: Hvilken bruker eller system som endret oppfølgingen sist
+        opprettetTidspunkt:
+          type: string
+          description: Opprettet tidspunkt iht. ISO-8601
+          format: date-time
+        endretTidspunkt:
+          type: string
+          description: Endret tidspunkt iht. ISO-8601
+          format: date-time
+    PostOppfolgingResponseJson:
+      required:
+        - kommentar
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Syntetisk id
+          format: int64
+          example: 5436732
+        kommentar:
+          type: string
+          description: Beskrivelse eller kommentar på oppgaven
+        opprettetAv:
+          type: string
+          description: Hvilken bruker eller system som opprettet mappen
+        endretAv:
+          type: string
+          description: Hvilken bruker eller system som endret oppfølgingen sist
+        opprettetTidspunkt:
+          type: string
+          description: Opprettet tidspunkt iht. ISO-8601
+          format: date-time
+        endretTidspunkt:
+          type: string
+          description: Endret tidspunkt iht. ISO-8601
+          format: date-time
+    PostOppfolgingRequestJson:
+      required:
+        - kommentar
+      type: object
+      properties:
+        kommentar:
+          type: string
+          description: Beskrivelse eller kommentar på oppgaven
+    HendelseJson:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Syntetisk id
+          format: int64
+          example: 10
+        utfortAv:
+          type: string
+          description: Utført av
+          example: Z998473
+        tildeltEnhetsnr:
+          type: string
+          description: Tildelt enhet for hendelse
+          example: "0100"
+        mappeId:
+          type: integer
+          description: MappeId for hendelse
+          format: int64
+          example: 24543
+        tilordnetRessurs:
+          type: string
+          description: Tilordnet ressurs for hendelse
+          example: Z99388
+        status:
+          type: string
+          description: Status for hendelse
+          example: AAPNET
+        tema:
+          type: string
+          description: Tema for hendelse
+          example: BIL
+        oppgavetype:
+          type: string
+          description: Oppgavetype for hendelse
+          example: "5436732"
+        tidspunkt:
+          type: string
+          description: Tidspunkt hendelse fant sted iht. ISO-8601
+    GetOppgaveResponseJson:
+      required:
+        - aktivDato
+        - oppgavetype
+        - prioritet
+        - status
+        - tema
+        - tildeltEnhetsnr
+        - versjon
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Syntetisk id
+          format: int64
+          example: 5436732
+        tildeltEnhetsnr:
+          maxLength: 4
+          minLength: 4
+          type: string
+          description: Enheten oppgaven er tildelt
+          example: "0100"
+        endretAvEnhetsnr:
+          maxLength: 4
+          minLength: 4
+          type: string
+          description: Enheten som endret oppgaven
+          example: "0101"
+        opprettetAvEnhetsnr:
+          maxLength: 4
+          minLength: 4
+          type: string
+          description: Hvilken enhet som har opprettet oppgaven
+          example: "0200"
+        journalpostId:
+          maxLength: 40
+          minLength: 0
+          type: string
+          description: Id for en journalpostreferanse
+          example: "84938201"
+        journalpostkilde:
+          maxLength: 40
+          minLength: 0
+          type: string
+          description: "Hvilken applikasjon journalposten kommer fra, applikasjonskoder\
+            \ finnes i felles kodeverk"
+          example: AS36
+        behandlesAvApplikasjon:
+          maxLength: 40
+          minLength: 0
+          type: string
+          description: "Hvilken applikasjon oppgaven skal behandles i, applikasjonskoder\
+            \ finnes i felles kodeverk"
+          example: FS22
+        saksreferanse:
+          maxLength: 40
+          minLength: 0
+          type: string
+          description: Id for en saksreferanse
+          example: "84942299"
+        bnr:
+          maxLength: 40
+          minLength: 0
+          type: string
+          description: Bostnummer
+          example: "11250199559"
+        samhandlernr:
+          maxLength: 40
+          minLength: 0
+          type: string
+          description: Samnhandlernummer
+          example: "80000999999"
+        aktoerId:
+          maxLength: 40
+          minLength: 0
+          type: string
+          description: "Syntetisk id for en person, kan hentes fra TPS"
+          example: "1234567891113"
+        identer:
+          type: array
+          description: "Identer for en person, Read-only, endringer gjøres via aktø\
+            rid"
+          example: 12345678911
+          items:
+            $ref: '#/components/schemas/IdentJson'
+        orgnr:
+          maxLength: 9
+          minLength: 0
+          type: string
+          description: Organisasjonsnummer
+          example: "979312059"
+        tilordnetRessurs:
+          maxLength: 7
+          minLength: 0
+          type: string
+          description: "Ressurssen som er tilordnet oppgaven, gjerne en saksbehandler"
+          example: Z998323
+        beskrivelse:
+          type: string
+          description: Beskrivelse av oppgaven
+        temagruppe:
+          maxLength: 255
+          minLength: 0
+          type: string
+          description: Temagruppe slik den er definert i felles kodeverk
+          example: ANSOS
+        tema:
+          maxLength: 255
+          minLength: 0
+          type: string
+          description: Tema slik den er definert i felles kodeverk
+          example: AAP
+        behandlingstema:
+          maxLength: 255
+          minLength: 0
+          type: string
+          description: Behandlingstema slik den er definert i felles kodeverk
+          example: ab0203
+        oppgavetype:
+          maxLength: 255
+          minLength: 0
+          type: string
+          description: Oppgavetype slik den er definert i felles kodeverk
+          example: HAST_BANK_OPPLYS
+        behandlingstype:
+          maxLength: 255
+          minLength: 0
+          type: string
+          description: Behandlingstype slik den er definert i felles kodeverk
+          example: ae0001
+        versjon:
+          type: integer
+          description: "Brukes for å håndtere optimistisk låsing, hvor to brukere\
+            \ har skrevet på samme oppgave. Hver gang det gjøres endring på en oppgave,\
+            \ økes verdien av VERSJON med 1. Når en klient skal lagre endring på en\
+            \ oppgave, sendes verdien av VERSJON oppgaven hadde da informasjon om\
+            \ oppgaven som nå er endret ble hentet ut. Dersom verdien av VERSJON er\
+            \ endret, har noen andre lagret oppgaven i mellomtiden, og oppgaven kan\
+            \ ikke lagres. 409 Conflict vil returneres fra tjenesten. Under oppretting\
+            \ av oppgave trenger man ikke å spesifisere noen verdi for dette feltet,\
+            \ oppgaven vil starte på versjon 1"
+          format: int32
+          example: 1
+        mappeId:
+          type: integer
+          description: Mapper styres av Oppgave. En oversikt kan hentes fra endepunktet
+            for mapper
+          format: int64
+          example: 848
+        opprettetAv:
+          type: string
+          description: Hvilken bruker eller system som opprettet oppgaven
+        endretAv:
+          type: string
+          description: Hvilken bruker eller system som endret oppgaven sist
+        prioritet:
+          type: string
+          description: Hvilken prioritet oppgaven har
+          example: HOY
+          enum:
+            - HOY
+            - NORM
+            - LAV
+        status:
+          type: string
+          description: Hvilken status oppgaven har
+          example: UNDER_BEHANDLING
+          enum:
+            - OPPRETTET
+            - AAPNET
+            - UNDER_BEHANDLING
+            - FERDIGSTILT
+            - FEILREGISTRERT
+        metadata:
+          type: object
+          additionalProperties:
+            type: string
+            description: "Metadata for oppgaven. Dette er en JSON-Objekt struktur\
+              \ (key value pair/hash map) som kan brukes for informasjon som ikke\
+              \ passer direkte inn i hovedmodellen til oppgave, men som fortsatt er\
+              \ nødvendig for en konsument. På dette feltet vil det komme noen restriksjoner\
+              \ så vennligst ta kontakt med oss om deres applikasjon har behov for\
+              \ å ta dette i bruk"
+          description: "Metadata for oppgaven. Dette er en JSON-Objekt struktur (key\
+            \ value pair/hash map) som kan brukes for informasjon som ikke passer\
+            \ direkte inn i hovedmodellen til oppgave, men som fortsatt er nødvendig\
+            \ for en konsument. På dette feltet vil det komme noen restriksjoner så\
+            \ vennligst ta kontakt med oss om deres applikasjon har behov for å ta\
+            \ dette i bruk"
+        fristFerdigstillelse:
+          type: string
+          description: Oppgavens frist for ferdigstillelse.
+          format: date
+          example: 2018-03-24
+        aktivDato:
+          type: string
+          description: "Brukes av saksbehandlere for å planlegge arbeidsdagene sine,\
+            \ aktivDato forteller noe om når saksbehandler selv ønsker å begynne å\
+            \ jobbe på oppgaven"
+          format: date
+          example: 2018-03-10
+        opprettetTidspunkt:
+          type: string
+          description: Opprettet tidspunkt iht. ISO-8601
+          format: date-time
+        ferdigstiltTidspunkt:
+          type: string
+          description: Tidspunktet oppgaven ble ferdigstilt iht. ISO-8601
+          format: date-time
+        endretTidspunkt:
+          type: string
+          description: Endret tidspunkt iht. ISO-8601
+          format: date-time
+    PostOppgaveResponseJson:
+      required:
+        - aktivDato
+        - oppgavetype
+        - prioritet
+        - status
+        - tema
+        - tildeltEnhetsnr
+        - versjon
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Syntetisk id
+          format: int64
+          example: 5436732
+        tildeltEnhetsnr:
+          maxLength: 4
+          minLength: 4
+          type: string
+          description: Enheten oppgaven er tildelt
+          example: "0100"
+        endretAvEnhetsnr:
+          maxLength: 4
+          minLength: 4
+          type: string
+          description: Enheten som endret oppgaven
+          example: "0101"
+        opprettetAvEnhetsnr:
+          maxLength: 4
+          minLength: 4
+          type: string
+          description: Hvilken enhet som har opprettet oppgaven
+          example: "0200"
+        journalpostId:
+          maxLength: 40
+          minLength: 0
+          type: string
+          description: Id for en journalpostreferanse
+          example: "84938201"
+        journalpostkilde:
+          maxLength: 40
+          minLength: 0
+          type: string
+          description: "Hvilken applikasjon journalposten kommer fra, applikasjonskoder\
+            \ finnes i felles kodeverk"
+          example: AS36
+        behandlesAvApplikasjon:
+          maxLength: 40
+          minLength: 0
+          type: string
+          description: "Hvilken applikasjon oppgaven skal behandles i, applikasjonskoder\
+            \ finnes i felles kodeverk"
+          example: FS22
+        saksreferanse:
+          maxLength: 40
+          minLength: 0
+          type: string
+          description: Id for en saksreferanse
+          example: "84942299"
+        bnr:
+          maxLength: 40
+          minLength: 0
+          type: string
+          description: Bostnummer
+          example: "11250199559"
+        samhandlernr:
+          maxLength: 40
+          minLength: 0
+          type: string
+          description: Samnhandlernummer
+          example: "80000999999"
+        aktoerId:
+          maxLength: 40
+          minLength: 0
+          type: string
+          description: "Syntetisk id for en person, kan hentes fra TPS"
+          example: "1234567891113"
+        identer:
+          type: array
+          description: "Identer for en person, Read-only, endringer gjøres via aktø\
+            rid"
+          example: 12345678911
+          items:
+            $ref: '#/components/schemas/IdentJson'
+        orgnr:
+          maxLength: 9
+          minLength: 0
+          type: string
+          description: Organisasjonsnummer
+          example: "979312059"
+        tilordnetRessurs:
+          maxLength: 7
+          minLength: 0
+          type: string
+          description: "Ressurssen som er tilordnet oppgaven, gjerne en saksbehandler"
+          example: Z998323
+        beskrivelse:
+          type: string
+          description: Beskrivelse av oppgaven
+        temagruppe:
+          maxLength: 255
+          minLength: 0
+          type: string
+          description: Temagruppe slik den er definert i felles kodeverk
+          example: ANSOS
+        tema:
+          maxLength: 255
+          minLength: 0
+          type: string
+          description: Tema slik den er definert i felles kodeverk
+          example: AAP
+        behandlingstema:
+          maxLength: 255
+          minLength: 0
+          type: string
+          description: Behandlingstema slik den er definert i felles kodeverk
+          example: ab0203
+        oppgavetype:
+          maxLength: 255
+          minLength: 0
+          type: string
+          description: Oppgavetype slik den er definert i felles kodeverk
+          example: HAST_BANK_OPPLYS
+        behandlingstype:
+          maxLength: 255
+          minLength: 0
+          type: string
+          description: Behandlingstype slik den er definert i felles kodeverk
+          example: ae0001
+        versjon:
+          type: integer
+          description: "Brukes for å håndtere optimistisk låsing, hvor to brukere\
+            \ har skrevet på samme oppgave. Hver gang det gjøres endring på en oppgave,\
+            \ økes verdien av VERSJON med 1. Når en klient skal lagre endring på en\
+            \ oppgave, sendes verdien av VERSJON oppgaven hadde da informasjon om\
+            \ oppgaven som nå er endret ble hentet ut. Dersom verdien av VERSJON er\
+            \ endret, har noen andre lagret oppgaven i mellomtiden, og oppgaven kan\
+            \ ikke lagres. 409 Conflict vil returneres fra tjenesten. Under oppretting\
+            \ av oppgave trenger man ikke å spesifisere noen verdi for dette feltet,\
+            \ oppgaven vil starte på versjon 1"
+          format: int32
+          example: 1
+        mappeId:
+          type: integer
+          description: Mapper styres av Oppgave. En oversikt kan hentes fra endepunktet
+            for mapper
+          format: int64
+          example: 848
+        opprettetAv:
+          type: string
+          description: Hvilken bruker eller system som opprettet oppgaven
+        endretAv:
+          type: string
+          description: Hvilken bruker eller system som endret oppgaven sist
+        prioritet:
+          type: string
+          description: Hvilken prioritet oppgaven har
+          example: HOY
+          enum:
+            - HOY
+            - NORM
+            - LAV
+        status:
+          type: string
+          description: Hvilken status oppgaven har
+          example: UNDER_BEHANDLING
+          enum:
+            - OPPRETTET
+            - AAPNET
+            - UNDER_BEHANDLING
+            - FERDIGSTILT
+            - FEILREGISTRERT
+        metadata:
+          type: object
+          additionalProperties:
+            type: string
+            description: "Metadata for oppgaven. Dette er en JSON-Objekt struktur\
+              \ (key value pair/hash map) som kan brukes for informasjon som ikke\
+              \ passer direkte inn i hovedmodellen til oppgave, men som fortsatt er\
+              \ nødvendig for en konsument. På dette feltet vil det komme noen restriksjoner\
+              \ så vennligst ta kontakt med oss om deres applikasjon har behov for\
+              \ å ta dette i bruk"
+          description: "Metadata for oppgaven. Dette er en JSON-Objekt struktur (key\
+            \ value pair/hash map) som kan brukes for informasjon som ikke passer\
+            \ direkte inn i hovedmodellen til oppgave, men som fortsatt er nødvendig\
+            \ for en konsument. På dette feltet vil det komme noen restriksjoner så\
+            \ vennligst ta kontakt med oss om deres applikasjon har behov for å ta\
+            \ dette i bruk"
+        fristFerdigstillelse:
+          type: string
+          description: Oppgavens frist for ferdigstillelse.
+          format: date
+          example: 2018-03-24
+        aktivDato:
+          type: string
+          description: "Brukes av saksbehandlere for å planlegge arbeidsdagene sine,\
+            \ aktivDato forteller noe om når saksbehandler selv ønsker å begynne å\
+            \ jobbe på oppgaven"
+          format: date
+          example: 2018-03-10
+        opprettetTidspunkt:
+          type: string
+          description: Opprettet tidspunkt iht. ISO-8601
+          format: date-time
+        ferdigstiltTidspunkt:
+          type: string
+          description: Tidspunktet oppgaven ble ferdigstilt iht. ISO-8601
+          format: date-time
+        endretTidspunkt:
+          type: string
+          description: Endret tidspunkt iht. ISO-8601
+          format: date-time
+    PostOppgaveRequestJson:
+      required:
+        - aktivDato
+        - oppgavetype
+        - prioritet
+        - tema
+      type: object
+      properties:
+        aktoerId:
+          maxLength: 40
+          minLength: 0
+          type: string
+          description: Syntetisk id for en person
+          example: "123456789"
+        orgnr:
+          maxLength: 9
+          minLength: 0
+          type: string
+          description: Organisasjonsnummer
+          example: "979312059"
+        tildeltEnhetsnr:
+          maxLength: 4
+          minLength: 4
+          type: string
+          description: "Enheten oppgaven er tildelt. Dersom enhet ikke er angitt,\
+            \ så vil oppgaven automatisk fordeles iht. standard arbeidsfordelingsregler\
+            \ (se norg2)"
+          example: "4820"
+        opprettetAvEnhetsnr:
+          maxLength: 4
+          minLength: 4
+          type: string
+          description: Hvilken enhet som har opprettet oppgaven
+          example: "4820"
+        journalpostId:
+          maxLength: 40
+          minLength: 0
+          type: string
+          description: "Id for en journalpostreferanse. Benyttes når oppgaven skal\
+            \ kobles mot journalposter, i.e for journalføringsoppgaver"
+          example: "84938201"
+        journalpostkilde:
+          maxLength: 40
+          minLength: 0
+          type: string
+          description: "Hvilken applikasjon journalposten kommer fra, applikasjonskoder\
+            \ finnes i felles kodeverk"
+          example: AS36
+        behandlesAvApplikasjon:
+          maxLength: 40
+          minLength: 0
+          type: string
+          description: "Hvilken applikasjon oppgaven skal behandles i, applikasjonskoder\
+            \ finnes i felles kodeverk"
+          example: FS22
+        tilordnetRessurs:
+          maxLength: 7
+          minLength: 0
+          type: string
+          description: "Ressursen som er tilordnet oppgaven, gjerne en saksbehandler"
+          example: Z998323
+        beskrivelse:
+          type: string
+          description: Beskrivelse av oppgaven
+        temagruppe:
+          maxLength: 255
+          minLength: 0
+          type: string
+          description: Temagruppe slik den er definert i felles kodeverk
+          example: FMLI
+        tema:
+          maxLength: 255
+          minLength: 0
+          type: string
+          description: Tema slik den er definert i felles kodeverk
+          example: KON
+        behandlingstema:
+          maxLength: 255
+          minLength: 0
+          type: string
+          description: Behandlingstema slik den er definert i felles kodeverk
+          example: ab0335
+        oppgavetype:
+          maxLength: 255
+          minLength: 0
+          type: string
+          description: Oppgavetype slik den er definert i felles kodeverk
+          example: JFR
+        behandlingstype:
+          maxLength: 255
+          minLength: 0
+          type: string
+          description: Behandlingstype slik den er definert i felles kodeverk
+          example: ae0034
+        aktivDato:
+          type: string
+          description: "Brukes av saksbehandlere for å planlegge arbeidsdagene sine,\
+            \ aktivDato forteller noe om når saksbehandler selv ønsker å begynne å\
+            \ jobbe på oppgaven"
+          format: date
+        fristFerdigstillelse:
+          type: string
+          description: Oppgavens frist for ferdigstillelse.
+          format: date
+        prioritet:
+          type: string
+          description: Hvilken prioritet oppgaven har
+          example: NORM
+          enum:
+            - HOY
+            - NORM
+            - LAV
+        metadata:
+          type: object
+          additionalProperties:
+            type: string
+            description: "Metadata for oppgaven. Dette er en JSON-Objekt struktur\
+              \ (key value pair/hash map) som kan brukes for informasjon som ikke\
+              \ passer direkte inn i hovedmodellen til oppgave, men som fortsatt er\
+              \ nødvendig for en konsument. På dette feltet vil det komme noen restriksjoner\
+              \ så vennligst ta kontakt med oss om deres applikasjon har behov for\
+              \ å ta dette i bruk"
+          description: "Metadata for oppgaven. Dette er en JSON-Objekt struktur (key\
+            \ value pair/hash map) som kan brukes for informasjon som ikke passer\
+            \ direkte inn i hovedmodellen til oppgave, men som fortsatt er nødvendig\
+            \ for en konsument. På dette feltet vil det komme noen restriksjoner så\
+            \ vennligst ta kontakt med oss om deres applikasjon har behov for å ta\
+            \ dette i bruk"
+    PatchOppgaveRequestJson:
+      required:
+        - id
+      type: object
+      properties:
+        versjon:
+          type: integer
+          description: Nåværende versjon på oppgaven
+          format: int32
+          example: 1
+        id:
+          type: integer
+          description: Oppgavens id
+          format: int64
+          example: 300003939
+        aktoerId:
+          type: string
+          description: "Syntetisk id for en person, kan hentes fra aktørregisteret"
+          example: "123456789"
+        orgnr:
+          type: string
+          description: Organisasjonsnummer
+          example: "979312059"
+        status:
+          type: string
+          description: Hvilken status oppgaven skal få
+          example: UNDER_BEHANDLING
+          enum:
+            - OPPRETTET
+            - AAPNET
+            - UNDER_BEHANDLING
+            - FERDIGSTILT
+            - FEILREGISTRERT
+        endretAvEnhetsnr:
+          maxLength: 4
+          minLength: 4
+          type: string
+          description: Enheten oppgaven er endret av
+          example: "2990"
+        tilordnetRessurs:
+          type: string
+          description: "Ressurssen som er tilordnet oppgaven, gjerne en saksbehandler"
+          example: Z998323
+        tildeltEnhetsnr:
+          type: string
+          description: Enheten oppgaven er tildelt
+          example: "0100"
+        mappeId:
+          type: integer
+          description: Mapper styres av Oppgave. En oversikt kan hentes fra endepunktet
+            for mapper
+          format: int64
+          example: 848
+        prioritet:
+          type: string
+          description: Hvilken prioritet oppgaven har
+          example: HOY
+          enum:
+            - HOY
+            - NORM
+            - LAV
+        behandlingstema:
+          type: string
+          description: Behandlingstema slik den er definert i felles kodeverk
+          example: ab0203
+        behandlingstype:
+          type: string
+          description: Behandlingstype slik den er definert i felles kodeverk
+          example: ae0001
+        fristFerdigstillelse:
+          type: string
+          description: Oppgavens frist for ferdigstillelse.
+          format: date
+          example: 2018-03-24
+        aktivDato:
+          type: string
+          description: "Brukes av saksbehandlere for å planlegge arbeidsdagene sine,\
+            \ aktivDato forteller noe om når saksbehandler selv ønsker å begynne å\
+            \ jobbe på oppgaven"
+          format: date
+          example: 2018-03-10
+        oppgavetype:
+          maxLength: 255
+          minLength: 0
+          type: string
+          description: Oppgavetype slik den er definert i felles kodeverk
+          example: HAST_BANK_OPPLYS
+        tema:
+          maxLength: 255
+          minLength: 0
+          type: string
+          description: Tema slik den er definert i felles kodeverk
+          example: AAP
+        journalpostId:
+          type: string
+          description: Id for en journalpost
+          example: "84938201"
+        saksreferanse:
+          type: string
+          description: Referanse til sak
+          example: "11231123"
+        behandlesAvApplikasjon:
+          maxLength: 40
+          minLength: 0
+          type: string
+          description: "Hvilken applikasjon oppgaven skal behandles i, applikasjonskoder\
+            \ finnes i felles kodeverk"
+          example: FS22
     PatchOppgaverResponseJson:
       type: object
       properties:
@@ -2972,131 +3301,26 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/PatchJson'
-    OppfolgingJson:
-      required:
-        - kommentar
-      type: object
-      properties:
-        id:
-          type: integer
-          description: Syntetisk id
-          format: int64
-          example: 5436732
-        kommentar:
-          type: string
-          description: Beskrivelse eller kommentar på oppgaven
-        opprettetAv:
-          type: string
-          description: Hvilken bruker eller system som opprettet mappen
-        endretAv:
-          type: string
-          description: Hvilken bruker eller system som endret oppfølgingen sist
-        opprettetTidspunkt:
-          type: string
-          description: Opprettet tidspunkt iht. ISO-8601
-          format: date-time
-        endretTidspunkt:
-          type: string
-          description: Endret tidspunkt iht. ISO-8601
-          format: date-time
-    PostOppfolgingResponseJson:
-      required:
-        - kommentar
-      type: object
-      properties:
-        id:
-          type: integer
-          description: Syntetisk id
-          format: int64
-          example: 5436732
-        kommentar:
-          type: string
-          description: Beskrivelse eller kommentar på oppgaven
-        opprettetAv:
-          type: string
-          description: Hvilken bruker eller system som opprettet mappen
-        endretAv:
-          type: string
-          description: Hvilken bruker eller system som endret oppfølgingen sist
-        opprettetTidspunkt:
-          type: string
-          description: Opprettet tidspunkt iht. ISO-8601
-          format: date-time
-        endretTidspunkt:
-          type: string
-          description: Endret tidspunkt iht. ISO-8601
-          format: date-time
-    PostOppfolgingRequestJson:
-      required:
-        - kommentar
-      type: object
-      properties:
-        kommentar:
-          type: string
-          description: Beskrivelse eller kommentar på oppgaven
-    PutOppfolgingResponseJson:
-      required:
-        - kommentar
-      type: object
-      properties:
-        id:
-          type: integer
-          description: Syntetisk id
-          format: int64
-          example: 5436732
-        kommentar:
-          type: string
-          description: Beskrivelse eller kommentar på oppgaven
-        opprettetAv:
-          type: string
-          description: Hvilken bruker eller system som opprettet mappen
-        endretAv:
-          type: string
-          description: Hvilken bruker eller system som endret oppfølgingen sist
-        opprettetTidspunkt:
-          type: string
-          description: Opprettet tidspunkt iht. ISO-8601
-          format: date-time
-        endretTidspunkt:
-          type: string
-          description: Endret tidspunkt iht. ISO-8601
-          format: date-time
-    PutOppfolgingRequestJson:
-      required:
-        - kommentar
-      type: object
-      properties:
-        id:
-          type: integer
-          description: Syntetisk id
-          format: int64
-          example: 5436732
-        kommentar:
-          type: string
-          description: Beskrivelse eller kommentar på oppgaven
-    StatistikkJson:
+    Beholdning:
       type: object
       properties:
         antall:
           type: integer
           format: int64
-        antallFerdigstilteEtterFrist:
-          type: integer
-          format: int64
-        antallFerdigstilteInnenFrist:
-          type: integer
-          format: int64
-        tema:
+        frist:
           type: string
-        oppgavetype:
+          format: date
+    GraphQLRequest:
+      type: object
+      properties:
+        query:
           type: string
-        behandlingstema:
+        operationName:
           type: string
-        behandlingstype:
-          type: string
-        mappeId:
-          type: integer
-          format: int64
+        variables:
+          type: object
+          additionalProperties:
+            type: object
   securitySchemes:
     oidc:
       type: http
