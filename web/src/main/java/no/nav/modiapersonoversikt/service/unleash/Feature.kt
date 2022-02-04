@@ -5,5 +5,6 @@ enum class Feature(val propertyKey: String) {
     USE_SALESFORCE_DIALOG("modiabrukerdialog.bruker-salesforce-dialoger"),
     HENT_BISYS_SAKER("modiabrukerdialog.hent-bisys-saker"),
     PDL_PERSONSOK_RATE("modiabrukerdialog.science.pdl-personsok-rate"),
-    SF_HENVENDELSE_RATE("modiabrukerdialog.science.sf-henvendelse-rate")
+    SF_HENVENDELSE_RATE("modiabrukerdialog.science.sf-henvendelse-rate"),
+    SAF_RATE("modiabrukerdialog.science.saf-rate")
 }
