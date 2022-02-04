@@ -7,7 +7,7 @@ abstract class ObjectEnum<T> {
     private val values = mutableListOf<T>()
     fun values(): List<T> = values
 
-    protected fun add(value: T): T {
+    protected fun <V : T> add(value: V): V {
         values.add(value)
         return value
     }
