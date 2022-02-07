@@ -18,7 +18,7 @@ open class EnhetligKodeverkConfig {
             KodeverkProviders(
                 fellesKodeverk = FellesKodeverk.Provider(),
                 sfHenvendelseKodeverk = SfHenvendelseKodeverk.Provider(stsClient),
-                oppgaveKodeverk = OppgaveKodeverk.Provider()
+                oppgaveKodeverk = OppgaveKodeverk.Provider(stsClient)
             )
         )
     }
