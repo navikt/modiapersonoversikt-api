@@ -74,9 +74,11 @@ class InternalController @Autowired constructor(
             .check(Policies.tilgangTilModia)
             .check(Policies.kanBrukeInternal)
             .get(Audit.describe(Audit.Action.READ, AuditResources.Introspection.Nom)) {
-                nomClient.finnNavn(tilgangskontroll.context().hentSaksbehandlereMedTilgangTilInternal().map {
+                nomClient.finnNavn(
+                    tilgangskontroll.context().hentSaksbehandlereMedTilgangTilInternal().map {
                     NavIdent(it)
-                })
+                    }
+                )
             }
     }
 
